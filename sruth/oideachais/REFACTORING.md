@@ -1,8 +1,35 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-24
+**Last updated:** 2026-06-25
 
 This file is the canonical refactor backlog for the `oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
+
+---
+
+## Round 11 — Cross-Quadrant Sprawl Audit (2026-06-25, in_progress)
+
+The Round 11 multi-quadrant audit identified sprawl across all 5 quadrants + infrastructure + HF Spaces. The oideachais portion is sequenced in 5 phases; each lands as a discrete openspec change.
+
+### Phase 1 — Delete confirmed-dead code (`oideachais-audit-phase-1-delete-dead-code`)
+
+**Status**: `done` (archived 2026-06-25)
+**Risk**: LOW (all deletions confirmed 0-importer)
+**Impact**: -310 KB, 61 → 56 dirs, 8 root-level files removed
+
+Deleted items (12 total):
+
+| Path | Size | Why dead |
+|:--|--:|:--|
+| `sruth/oideachais/oideachais/` | 4 dirs | Nested legacy shim; 0 importers; legacy `data_platform` PEP 562 registration removed in phase 5 |
+| `sruth/oideachais/services/embedding_service/` | 8 KB | Dead FastAPI; superseded by `clients/embedding_client.py` |
+| `sruth/oideachais/marimo/` | 15 KB | Dead 1-file stub; superseded by `sruth/meaisinfhoghlaim/marimo/` |
+| `sruth/oideachais/exam_scraper/` | 8 KB | Dead 2-script; superseded by `dlt_sources/ireland/examinations.py` |
+| `sruth/oideachais/downloads/curriculum_pdfs/` | 0 B | Empty mount |
+| `sruth/oideachais/leaving_cert_timetable.pdf` | 270 KB | Orphaned binary |
+| `sruth/oideachais/PIPELINE_OPERATIONS.md` | 3.7 KB | Orphaned doc; superseded by `STATUS.md` |
+| 5× `sruth/oideachais/test_*.py` | 5.7 KB | Orphaned root-level tests; not in canonical `tests/` |
+
+
 
 > **Workflow**: pick an item from `backlog`, open an openspec change, change the status to `in_progress` in the same commit as the first code change, then to `done` in the commit that closes the change.
 
