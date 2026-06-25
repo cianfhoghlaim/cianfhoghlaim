@@ -8,8 +8,8 @@ The system SHALL maintain 9 new Convex tables that inventory the monorepo's web 
 
 #### Scenario: tanstackRoutes is populated by the analyzer
 
-- **WHEN** `croilar/scripts/analyze-web-stack.ts` runs
-- **THEN** each TanStack route file under `tuatha/ui/src/routes/`, `oideachais/apps/web/src/routes/`, `oideachais/dashboard/src/routes/`, `croilar/apps/{web,portal}/src/routes/` SHALL become a row in `tanstackRoutes`
+- **WHEN** `sruth/croilar/scripts/analyze-web-stack.ts` runs
+- **THEN** each TanStack route file under `sruth/tuatha/ui/src/routes/`, `sruth/oideachais/apps/web/src/routes/`, `sruth/oideachais/dashboard/src/routes/`, `sruth/croilar/apps/{web,portal}/src/routes/` SHALL become a row in `tanstackRoutes`
 - **AND** `project` SHALL be one of `tuatha | oideachais | croilar | meaisinfhoghlaim`
 - **AND** `isServer`, `hasLoader`, `hasAuth` SHALL reflect the file's actual content (regex match)
 
@@ -41,7 +41,7 @@ The system SHALL maintain 9 new Convex tables that inventory the monorepo's web 
 
 #### Scenario: convexFunctionCalls is populated by the action middleware
 
-- **WHEN** any `loggedAction` wrapper in `croilar/convex/_middleware.ts` runs
+- **WHEN** any `loggedAction` wrapper in `sruth/croilar/convex/_middleware.ts` runs
 - **THEN** a row SHALL be inserted with `{function, kind: "action", project, args, durationMs, ok, error?, calledAt}`
 - **AND** `args` SHALL be JSON-stringified and truncated to 1024 bytes
 - **AND** `ok = false` AND `error` populated on exception
@@ -68,7 +68,7 @@ The system SHALL maintain 9 new Convex tables that inventory the monorepo's web 
 
 ### Requirement: Action-Call Middleware
 
-The system SHALL provide a `loggedAction` helper in `croilar/convex/_middleware.ts` that wraps every Convex action invocation and records to `convexFunctionCalls`.
+The system SHALL provide a `loggedAction` helper in `sruth/croilar/convex/_middleware.ts` that wraps every Convex action invocation and records to `convexFunctionCalls`.
 
 #### Scenario: Middleware records every call
 
@@ -89,7 +89,7 @@ The system SHALL schedule the analyzer and metric refresh on appropriate cadence
 
 #### Scenario: Six new cron entries (added)
 
-- **WHEN** the analyzer cron schedule is added to `croilar/convex/crons.ts`
+- **WHEN** the analyzer cron schedule is added to `sruth/croilar/convex/crons.ts`
 - **THEN** the following 6 new entries SHALL be present:
   - `syncTanstackRoutes` every 6h
   - `syncConvexFunctions` every 12h
@@ -108,12 +108,12 @@ The system SHALL schedule the analyzer and metric refresh on appropriate cadence
 
 ### Requirement: Analyzer Bun Script
 
-The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
+The system SHALL ship `sruth/croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
 
 #### Scenario: Walk succeeds for the 3 present projects
 
-- **WHEN** `bun run croilar/scripts/analyze-web-stack.ts` is executed from the repo root
-- **THEN** the analyzer SHALL walk `tuatha/`, `oideachais/`, `croilar/`
+- **WHEN** `bun run sruth/croilar/scripts/analyze-web-stack.ts` is executed from the repo root
+- **THEN** the analyzer SHALL walk `sruth/tuatha/`, `sruth/oideachais/`, `sruth/croilar/`
 - **AND** it SHALL skip `meaisínfhoghlaim/` (no web app yet) with a warning
 - **AND** it SHALL POST the resulting 5 tables (tanstackRoutes, convexFunctions, cloudflareResources, bamlSchemas, marimoNotebooks) to the Convex HTTP endpoint
 - **AND** authentication SHALL use the `CROILAR_CONVEX_DEPLOY_KEY` from `.env` (loaded from Infisical)
@@ -148,7 +148,7 @@ The system SHALL continue to compile the 9 BAML schemas.
 #### Scenario: No regression
 
 - **WHEN** `bun run baml-cli compile` runs
-- **THEN** the compiler SHALL still emit TypeScript + Python client code from `croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
+- **THEN** the compiler SHALL still emit TypeScript + Python client code from `sruth/croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
 
 ### Requirement: DuckLake Cross-DB Read
 

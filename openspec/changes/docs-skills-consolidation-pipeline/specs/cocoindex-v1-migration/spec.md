@@ -51,7 +51,7 @@ The system SHALL keep `docs/` and `.agents/skills/` indexed in near real-time vi
 The system SHALL expose every CocoIndex flow as a v1 `coco.App` instance with a `@coco.fn` `app_main` function and stable identity.
 
 #### Scenario: App registration
-- **GIVEN** an `oideachais/cocoindex_flows/<flow>.py` module
+- **GIVEN** an `sruth/oideachais/cocoindex_flows/<flow>.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare `app = coco.App(coco.AppConfig(name="<UniqueName>"), app_main, ...)` at module level
 - **AND** the `app_main` function SHALL be decorated with `@coco.fn`
@@ -64,16 +64,16 @@ The system SHALL expose every CocoIndex flow as a v1 `coco.App` instance with a 
 - **AND** the file-watcher SHALL be polled for changes by the local-filesystem source
 
 #### Scenario: New DocsSkillsConsolidation app
-- **GIVEN** the `oideachais/cocoindex_flows/docs_skills_consolidation.py` module
+- **GIVEN** the `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare `app = coco.App(coco.AppConfig(name="DocsSkillsConsolidation"), app_main)`
 - **AND** the `app_main` SHALL mount both `docs/` and `.agents/skills/` via `localfs.walk_dir` with `live=True`
-- **AND** the app SHALL be re-exported from `oideachais/cocoindex_flows/__init__.py` as `docs_skills_app`
+- **AND** the app SHALL be re-exported from `sruth/oideachais/cocoindex_flows/__init__.py` as `docs_skills_app`
 
 #### Scenario: New CodebaseIndex app
-- **GIVEN** the `oideachais/cocoindex_flows/codebase_indexing.py` module
+- **GIVEN** the `sruth/oideachais/cocoindex_flows/codebase_indexing.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare `app = coco.App(coco.AppConfig(name="CodebaseIndex"), app_main)`
 - **AND** the `app_main` SHALL mount `localfs.walk_dir(repo_root, live=True, refresh_interval=60s)` with include patterns `*.py,*.rs,*.ts,*.tsx,*.go,*.md,*.mdx,*.toml`
 - **AND** the app SHALL write to a `codebase_chunks` LanceDB table
-- **AND** the app SHALL be re-exported from `oideachais/cocoindex_flows/__init__.py` as `codebase_app`
+- **AND** the app SHALL be re-exported from `sruth/oideachais/cocoindex_flows/__init__.py` as `codebase_app`

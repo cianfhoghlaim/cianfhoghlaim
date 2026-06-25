@@ -6,7 +6,7 @@ This delta adds 1 new requirement to the existing `celtic-asset-generation` spec
 
 ### Requirement: Culture heritage extraction schema
 
-A new BAML file `oideachais/baml_src/culture_extraction.baml` SHALL define a `CultureHeritageClaim` class and an `ExtractCultureClaims` function over the BAML `LitellmClient` so the existing LLM-routing rules apply unchanged.
+A new BAML file `sruth/oideachais/baml_src/culture_extraction.baml` SHALL define a `CultureHeritageClaim` class and an `ExtractCultureClaims` function over the BAML `LitellmClient` so the existing LLM-routing rules apply unchanged.
 
 The schema extracts cultural-heritage claims from the 6 personal-heritage Gemini Deep Research PDFs at `leabharlann/gemini_deep_research/culture/` and routes them through the canonical 5-stage celtic-asset-generation pipeline (BAML extraction → CocoIndex v1 embedding → Cognee cognify → Graphiti temporal memory → LanceDB vector).
 
@@ -19,7 +19,7 @@ The schema extracts cultural-heritage claims from the 6 personal-heritage Gemini
 
 #### Scenario: When the BAML client is regenerated
 
-- **WHEN** `baml-cli generate` runs against `oideachais/baml_src/culture_extraction.baml`
+- **WHEN** `baml-cli generate` runs against `sruth/oideachais/baml_src/culture_extraction.baml`
 - **THEN** the generated `baml_client/` module exposes `ExtractCultureClaims` as a callable function
 - **AND** the function signature accepts `(pdf_path: str, context: str)` and returns `list[CultureHeritageClaim]`
 - **AND** the generated Pydantic model for `CultureHeritageClaim` validates against the 7-field shape (claim_text, people_mentioned, places_mentioned, dates, evidence_quality, wikipedia_links, confidence)

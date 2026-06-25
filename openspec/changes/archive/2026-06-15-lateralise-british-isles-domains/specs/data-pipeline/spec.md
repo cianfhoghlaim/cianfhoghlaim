@@ -10,7 +10,7 @@ latest stable releases of `dagster`, `dagster-dlt`, `dlt`, `duckdb`, `lancedb`,
 
 The bump SHALL be a *pure upgrade PR*: no behaviour change, no new sources,
 no new tests, no Dagster asset renames. After the bump lands, the existing
-`oideachais/test_crawl*.py` smoke scripts SHALL still pass under
+`sruth/oideachais/test_crawl*.py` smoke scripts SHALL still pass under
 `USE_LOCAL_SCRAPES=true` and the existing `dagster dev -m oideachais.dagster_defs.definitions`
 SHALL still start.
 
@@ -21,7 +21,7 @@ SHALL still start.
 
 #### Scenario: Existing smoke test still green
 - **GIVEN** the upgraded toolchain and `USE_LOCAL_SCRAPES=true`
-- **WHEN** the operator runs `uv run python oideachais/test_crawl.py`
+- **WHEN** the operator runs `uv run python sruth/oideachais/test_crawl.py`
 - **THEN** the script reads from `/stedding/ingest_queue/` and prints a `load_info` line
 
 ### Requirement: Pytest Coverage for DLT × Dagster Asset Graph
@@ -31,23 +31,23 @@ asset graph. Tests SHALL be runnable under `USE_LOCAL_SCRAPES=true` against a
 temporary DuckLake fixture (no live network, no production schema mutation).
 
 #### Scenario: All 16 tests pass in CI
-- **GIVEN** `bun run test` (or `mise run test`) which runs `uv run pytest oideachais/tests/ tuatha/tests/ croilar/tests/ tests/sources/`
+- **GIVEN** `bun run test` (or `mise run test`) which runs `uv run pytest sruth/oideachais/tests/ sruth/tuatha/tests/ sruth/croilar/tests/ tests/sources/`
 - **WHEN** the test runner executes
 - **THEN** all 16 tests in `openspec/changes/lateralise-british-isles-domains/tasks.md` Phase 1b are green
 
 #### Scenario: Cross‑namespace guard
-- **GIVEN** a DLT source under `oideachais/dlt_sources/`
+- **GIVEN** a DLT source under `sruth/oideachais/dlt_sources/`
 - **WHEN** the cross‑namespace test runs
 - **THEN** the test fails if any source imports `oideachais.data_platform.*` (the "Zero Absolute Namespaces" rule)
 
 ### Requirement: Canonical `sources.yaml` + `SourceFactory`
 
-The system SHALL maintain `oideachais/sources.yaml` as the **single source of
+The system SHALL maintain `sruth/oideachais/sources.yaml` as the **single source of
 truth** for every DLT source across the four domains (`education`, `medicine`,
 `law`, `statistics`) and the eight nations
 (`ie, ni, en, sct, wls, iom, jey, ggy`).
 
-The system SHALL provide `oideachais/dlt_utils/source_factory.py` exposing a
+The system SHALL provide `sruth/oideachais/dlt_utils/source_factory.py` exposing a
 7‑method contract: `from_yaml`, `source`, `dlt_asset`, `dagster_asset`,
 `lance_table`, `cognee_dataset`, `marimo_path`, `tests_path`.
 
@@ -64,12 +64,12 @@ The system SHALL provide `oideachais/dlt_utils/source_factory.py` exposing a
 ### Requirement: Domain‑First DLT Source Layout
 
 The system SHALL organise DLT sources by **domain** first, then by **nation**,
-under `oideachais/dlt_sources/domains/{domain}/{nation}/*.py`. The legacy
-addresses `oideachais/dlt_sources/{ireland,uk/*,crown_dependencies}/*` SHALL
+under `sruth/oideachais/dlt_sources/domains/{domain}/{nation}/*.py`. The legacy
+addresses `sruth/oideachais/dlt_sources/{ireland,uk/*,crown_dependencies}/*` SHALL
 remain as 1‑line re‑export shims for one release cycle.
 
 #### Scenario: New and legacy addresses both work
-- **GIVEN** `oideachais/dlt_sources/domains/education/ni/ccea_curriculum.py::ni_curriculum_source`
+- **GIVEN** `sruth/oideachais/dlt_sources/domains/education/ni/ccea_curriculum.py::ni_curriculum_source`
 - **WHEN** an external consumer imports either `from oideachais.dlt_sources.ireland.ccea_curriculum import …` (legacy, removed; that was never an address) **or** `from oideachais.dlt_sources.uk.northern_ireland.ccea_curriculum import …` (legacy)
 - **THEN** both resolve to the same `ni_curriculum_source` callable
 

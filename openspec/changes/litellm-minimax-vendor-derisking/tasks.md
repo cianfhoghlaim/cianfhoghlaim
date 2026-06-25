@@ -44,7 +44,7 @@
   `client<llm> MiniMax` that points at
   `LITELLM_BASE_URL` + `LITELLM_MASTER_KEY` with
   `model "minimax"`.
-- [x] 4.2 In `oideachais/baml_src/clients.baml`, rewire
+- [x] 4.2 In `sruth/oideachais/baml_src/clients.baml`, rewire
   `MiniMaxClient` to also go through the gateway alias
   `minimax` (drop the direct opencode-go URL).
 - [x] 4.3 Re-export the new BAML client via
@@ -72,14 +72,14 @@
 ## 6. Dagster asset + check
 
 - [x] 6.1 Create
-  `oideachais/dagster_defs/assets/llm_gateway_assets.py`
+  `sruth/oideachais/dagster_defs/assets/llm_gateway_assets.py`
   with `minimax_alias_liveliness` (asset, no LLM credits) and
   `minimax_alias_health` (asset_check, gates the asset).
 - [x] 6.2 Register the asset in
-  `oideachais/dagster_defs/assets/__init__.py` and the
+  `sruth/oideachais/dagster_defs/assets/__init__.py` and the
   `all_assets` list.
 - [x] 6.3 Register the check in
-  `oideachais/dagster_defs/asset_checks.py` and the
+  `sruth/oideachais/dagster_defs/asset_checks.py` and the
   `all_asset_checks` list.
 - [x] 6.4 Validate Python AST parses cleanly (verified).
 
@@ -101,7 +101,7 @@
   json.load(open('opencode.json'))"` exits 0. **Verified** in
   this session.
 - [ ] 8.4 `python3 -c "import ast;
-  ast.parse(open('oideachais/dagster_defs/assets/llm_gateway_assets.py').read())"`
+  ast.parse(open('sruth/oideachais/dagster_defs/assets/llm_gateway_assets.py').read())"`
   exits 0. **Verified** in this session.
 - [ ] 8.5 `mise dagster:oideachais` — the `llm_gateway` asset
   group shows the new `minimax_alias_liveliness` asset and the
@@ -139,7 +139,7 @@
   - `infrastructure/stacks/litellm/config/config.yaml`
   - `baml_src/clients.baml`
   - `opencode.json`
-  - `oideachais/dagster_defs/assets/llm_gateway_assets.py`
+  - `sruth/oideachais/dagster_defs/assets/llm_gateway_assets.py`
 - Existing alias pattern:
   `infrastructure/stacks/litellm/config/config.yaml` lines
   519-653 (ocr, vision, document, extract, math, irish, image,

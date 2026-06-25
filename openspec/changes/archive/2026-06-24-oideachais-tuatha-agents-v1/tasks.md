@@ -2,24 +2,24 @@
 
 ## 1. Move tools (5 files)
 
-- [x] `git mv tuatha/agents/tools/curriculum_search.py oideachais/agents/adk/tools/tuatha_curriculum_search.py`
-- [x] `git mv tuatha/agents/tools/mythology_query.py oideachais/agents/adk/tools/tuatha_mythology_query.py`
-- [x] `git mv tuatha/agents/tools/player_progress.py oideachais/agents/adk/tools/tuatha_player_progress.py`
-- [x] `git mv tuatha/agents/tools/spatial_query.py oideachais/agents/adk/tools/tuatha_spatial_query.py`
-- [x] `git mv tuatha/agents/tools/translation.py oideachais/agents/adk/tools/tuatha_translation.py`
-- [x] `rm -rf tuatha/agents/tools/` (empty after moves)
+- [x] `git mv sruth/tuatha/agents/tools/curriculum_search.py sruth/oideachais/agents/adk/tools/tuatha_curriculum_search.py`
+- [x] `git mv sruth/tuatha/agents/tools/mythology_query.py sruth/oideachais/agents/adk/tools/tuatha_mythology_query.py`
+- [x] `git mv sruth/tuatha/agents/tools/player_progress.py sruth/oideachais/agents/adk/tools/tuatha_player_progress.py`
+- [x] `git mv sruth/tuatha/agents/tools/spatial_query.py sruth/oideachais/agents/adk/tools/tuatha_spatial_query.py`
+- [x] `git mv sruth/tuatha/agents/tools/translation.py sruth/oideachais/agents/adk/tools/tuatha_translation.py`
+- [x] `rm -rf sruth/tuatha/agents/tools/` (empty after moves)
 
 ## 2. Move config (1 file)
 
-- [x] `git mv tuatha/agents/config.py oideachais/agents/adk/tuatha_config.py`
+- [x] `git mv sruth/tuatha/agents/config.py sruth/oideachais/agents/adk/tuatha_config.py`
 
 ## 3. Move agent modules (5 files)
 
-- [x] `git mv tuatha/agents/adk/celtic_tutor.py oideachais/agents/adk/celtic_tutor_agent.py`
-- [x] `git mv tuatha/agents/adk/mythology_narrator.py oideachais/agents/adk/mythology_narrator_agent.py`
-- [x] `git mv tuatha/agents/adk/quest_guide.py oideachais/agents/adk/quest_guide_agent.py`
-- [x] `git mv tuatha/agents/adk/research_assistant.py oideachais/agents/adk/research_assistant_agent.py`
-- [x] `git mv tuatha/agents/adk/root_agent.py oideachais/agents/adk/tuatha_root_agent.py`
+- [x] `git mv sruth/tuatha/agents/adk/celtic_tutor.py sruth/oideachais/agents/adk/celtic_tutor_agent.py`
+- [x] `git mv sruth/tuatha/agents/adk/mythology_narrator.py sruth/oideachais/agents/adk/mythology_narrator_agent.py`
+- [x] `git mv sruth/tuatha/agents/adk/quest_guide.py sruth/oideachais/agents/adk/quest_guide_agent.py`
+- [x] `git mv sruth/tuatha/agents/adk/research_assistant.py sruth/oideachais/agents/adk/research_assistant_agent.py`
+- [x] `git mv sruth/tuatha/agents/adk/root_agent.py sruth/oideachais/agents/adk/tuatha_root_agent.py`
 
 ## 4. Fix imports in moved agent modules
 
@@ -33,14 +33,14 @@
 
 ## 5. Make tuatha wrappers (5 files)
 
-- [x] `tuatha/agents/adk/celtic_tutor.py` (12 lines, thin re-export)
-- [x] `tuatha/agents/adk/mythology_narrator.py` (12 lines)
-- [x] `tuatha/agents/adk/quest_guide.py` (12 lines)
-- [x] `tuatha/agents/adk/research_assistant.py` (12 lines)
-- [x] `tuatha/agents/adk/root_agent.py` (28 lines, re-exports all 4 specialists + app + classify_query)
-- [x] `tuatha/agents/adk/__init__.py` (new, 22 lines, package docstring)
+- [x] `sruth/tuatha/agents/adk/celtic_tutor.py` (12 lines, thin re-export)
+- [x] `sruth/tuatha/agents/adk/mythology_narrator.py` (12 lines)
+- [x] `sruth/tuatha/agents/adk/quest_guide.py` (12 lines)
+- [x] `sruth/tuatha/agents/adk/research_assistant.py` (12 lines)
+- [x] `sruth/tuatha/agents/adk/root_agent.py` (28 lines, re-exports all 4 specialists + app + classify_query)
+- [x] `sruth/tuatha/agents/adk/__init__.py` (new, 22 lines, package docstring)
 
-## 6. Update oideachais/agents/adk/__init__.py
+## 6. Update sruth/oideachais/agents/adk/__init__.py
 
 - [x] 5 new import statements for the 4 specialist agents + root_agent
 - [x] 5 new entries in `__all__`
@@ -53,7 +53,7 @@
 - [x] `classify_query("tell me about Cú Chulainn")` returns "mythology"
 - [x] root_agent.sub_agents = [celtic_tutor_agent, mythology_narrator_agent, quest_guide_agent, research_assistant_agent]
 
-## 8. Update oideachais/STATUS.md
+## 8. Update sruth/oideachais/STATUS.md
 
 - [x] §2 (Data flows) — add a `agent` row in the Dagster asset table for
       the tuatha agent code-location

@@ -13,9 +13,9 @@ related_specs:
   - bilingual-content
   - knowledge-graph
 related_apps:
-  - oideachais/web
-  - oideachais/dlt_sources/ireland
-  - oideachais/dlt_sources/uk
+  - sruth/oideachais/web
+  - sruth/oideachais/dlt_sources/ireland
+  - sruth/oideachais/dlt_sources/uk
 related_llm_stack:
   - 'BAML (structured extraction of marking schemes)'
   - 'litellm (BAML→Ollama/openai/anthropic routing)'
@@ -43,8 +43,8 @@ the existing infrastructure.
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `oideachais/` | Data platform (DLT, Dagster, BAML, knowledge graph) |
-| Quadrant | `tuatha/` | Crypto layer (Solana, x402 micropayments) — *deferred for v1* |
+| Quadrant | `sruth/oideachais/` | Data platform (DLT, Dagster, BAML, knowledge graph) |
+| Quadrant | `sruth/tuatha/` | Crypto layer (Solana, x402 micropayments) — *deferred for v1* |
 | Quadrant | `infrastructure/` | Pocket ID (OIDC), Pangolin (routing), Komodo (deploy) |
 | Skill | `.agents/skills/baml/SKILL.md` | BAML extraction patterns |
 | Skill | `.agents/skills/dlt/SKILL.md` | DLT pipeline design |
@@ -62,7 +62,7 @@ any other DLT source.
 
 ### 2.1. DLT sources to ingest
 
-The 8 source registries already declared in `oideachais/sources.yaml`:
+The 8 source registries already declared in `sruth/oideachais/sources.yaml`:
 
 - `ncca_junior_cycle_specs`     — ROI Junior Cycle
 - `ncca_leaving_cert_specs`     — ROI Leaving Certificate
@@ -105,7 +105,7 @@ hardcode political preferences.
 
 ### 2.3. Storage
 
-Writes go to **DuckLake** (`oideachais/dlt_utils/destinations.py:create_ducklake_destination`).
+Writes go to **DuckLake** (`sruth/oideachais/dlt_utils/destinations.py:create_ducklake_destination`).
 Reads go to **MotherDuck** (managed DuckDB). The reasoning is in
 `docs/02-data-platform/storage-mental-model.md`.
 
@@ -142,11 +142,11 @@ provides **OIDC** for the platform. We extend it with a **DID layer**:
 |:--|:--|:--|
 | OIDC | Web login | Pocket ID + PocketBase |
 | DID | Verifiable credential subject | `did:key` for v1, `did:web` for v2 (anchored to `oideachais.ie`) |
-| VC issuance | Sign credentials | BAML-typed JWT over ES256K (`tuatha/crypteolas/` provides the signer) |
+| VC issuance | Sign credentials | BAML-typed JWT over ES256K (`sruth/tuatha/sruth/crypteolas/` provides the signer) |
 
 For v1 we use **`did:key`** (no ledger) because adding a blockchain
 introduces cost and regulatory risk without changing the trust model
-for a closed pilot. v2 with `did:web` is in `tuatha/codeolas/`.
+for a closed pilot. v2 with `did:web` is in `sruth/tuatha/codeolas/`.
 
 ## 5. Verifiable Credentials (VCs)
 
@@ -175,12 +175,12 @@ class MicroCredentialSubject {
 ```
 
 The credential is signed with a service key held in Infisical
-(`/oideachais/credentials/issuer-key`) and validated client-side
-via the `tuatha/crypteolas/` ES256K verifier.
+(`/sruth/oideachais/credentials/issuer-key`) and validated client-side
+via the `sruth/tuatha/sruth/crypteolas/` ES256K verifier.
 
 ## 6. The student wallet
 
-A **TanStack Start** route at `oideachais/web/routes/wallet.$studentId.tsx`
+A **TanStack Start** route at `sruth/oideachais/web/routes/wallet.$studentId.tsx`
 renders the wallet. It:
 
 1. Authenticates via Pocket ID (OIDC).
@@ -206,13 +206,13 @@ directly.
 
 | Phase | Scope | Exit criteria | Where it lives |
 |:--|:--|:--|:--|
-| 0 | Source registry in `oideachais/sources.yaml` complete (8 nations, 7 kinds) | `openspec validate oideachais-pipeline` passes | `oideachais/sources.yaml` |
-| 1 | DLT pipelines for NCCA + DfE + CCEA + SQA + Welsh Gov | All 5 sources materialise in DuckLake | `oideachais/dlt_sources/{ireland,uk}/` |
-| 2 | BAML `EquivalenceAssertion` extractor | 90% precision on a 50-paper gold set | `oideachais/baml_src/equivalence.baml` |
-| 3 | BAML `SkillAssertion` extractor over SEC papers | 10,000 skill assertions extracted | `oideachais/baml_src/skills.baml` |
-| 4 | Knowledge graph (cognee) of learning outcomes | Graph queryable via `cognee.search()` | `oideachais/cognee_integration/` |
+| 0 | Source registry in `sruth/oideachais/sources.yaml` complete (8 nations, 7 kinds) | `openspec validate oideachais-pipeline` passes | `sruth/oideachais/sources.yaml` |
+| 1 | DLT pipelines for NCCA + DfE + CCEA + SQA + Welsh Gov | All 5 sources materialise in DuckLake | `sruth/oideachais/dlt_sources/{ireland,uk}/` |
+| 2 | BAML `EquivalenceAssertion` extractor | 90% precision on a 50-paper gold set | `sruth/oideachais/baml_src/equivalence.baml` |
+| 3 | BAML `SkillAssertion` extractor over SEC papers | 10,000 skill assertions extracted | `sruth/oideachais/baml_src/skills.baml` |
+| 4 | Knowledge graph (cognee) of learning outcomes | Graph queryable via `cognee.search()` | `sruth/oideachais/cognee_integration/` |
 | 5 | Pocket ID + DID layer | OIDC login works, `did:key` resolves | `infrastructure/stacks/identity/` |
-| 6 | VC issuance + wallet UI | Student can issue + share a VC | `oideachais/web/routes/wallet.*` |
+| 6 | VC issuance + wallet UI | Student can issue + share a VC | `sruth/oideachais/web/routes/wallet.*` |
 | 7 | Pilot with 5 schools (3 ROI, 2 NI) | 50 students, 200 VCs issued | `infra/komodo/procedures/pilot-credentials.toml` |
 
 ## 9. Risks and mitigations
@@ -226,7 +226,7 @@ directly.
 
 ## 10. Out of scope (deferred)
 
-- On-chain anchoring (Solana, Ethereum) — `tuatha/crypteolas/` is ready when needed
+- On-chain anchoring (Solana, Ethereum) — `sruth/tuatha/sruth/crypteolas/` is ready when needed
 - x402 micropayments for paid verification — Phase 2 of the tuatha roadmap
 - Mobile wallet (iOS/Android) — web wallet is the v1 surface
 
@@ -235,7 +235,7 @@ directly.
 - `docs/00-core/CLAUDE.md` — 5-quadrant topology
 - `docs/02-data-platform/STORAGE.md` — DuckLake writes / MotherDuck reads
 - `docs/02-data-platform/storage-mental-model.md` — storage mental model
-- `docs/02-data-platform/cross-domain-registry.md` — `oideachais/sources.yaml`
+- `docs/02-data-platform/cross-domain-registry.md` — `sruth/oideachais/sources.yaml`
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML → litellm → Cognee ordering
 - `docs/05-web/frontend-topology.md` — TanStack Start routes
 - `openspec/specs/curriculum-ingestion/spec.md` — DLT patterns

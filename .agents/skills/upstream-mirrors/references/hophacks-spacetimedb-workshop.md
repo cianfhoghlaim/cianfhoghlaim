@@ -4,7 +4,7 @@
 A SpacetimeDB TypeScript + React quickstart chat application, originally built as a HopHacks workshop example. Demonstrates multiplayer real-time chat using SpacetimeDB as the game server with a Vite + React + TypeScript frontend and a Rust module backend. Based on the official SpacetimeDB TypeScript quickstart guide.
 
 ## Why This Matters for Kings' College Galway
-The `tuatha/` educational MMO's multiplayer classroom chat system is directly modeled on this workshop example. The Rust server module pattern (`server-rs/src/lib.rs`) shows how to define SpacetimeDB tables, reducers, and scheduled operations — the same pattern used for the MMO's quiz response system, student presence tracking, and collaborative problem-solving sessions. The React frontend shows how the `@clockworklabs/spacetimedb-sdk` connects to a SpacetimeDB server with auto-generated module bindings.
+The `sruth/tuatha/` educational MMO's multiplayer classroom chat system is directly modeled on this workshop example. The Rust server module pattern (`server-rs/src/lib.rs`) shows how to define SpacetimeDB tables, reducers, and scheduled operations — the same pattern used for the MMO's quiz response system, student presence tracking, and collaborative problem-solving sessions. The React frontend shows how the `@clockworklabs/spacetimedb-sdk` connects to a SpacetimeDB server with auto-generated module bindings.
 
 ## Key Patterns Preserved
 - **README.md** — Project overview and SpacetimeDB quickstart guide references

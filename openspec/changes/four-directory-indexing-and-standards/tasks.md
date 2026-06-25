@@ -17,7 +17,7 @@
 
 ## 2. CocoIndex v1 App: openspec indexing
 
-- [ ] 2.1 Create `oideachais/cocoindex_flows/openspec_indexing.py`
+- [ ] 2.1 Create `sruth/oideachais/cocoindex_flows/openspec_indexing.py`
   with:
   - [ ] 2.1.1 ContextKeys `KG_DB`, `EMBEDDER` (BAAI/bge-m3),
     `BAML_CLIENT` (`detect_change=True`).
@@ -43,12 +43,12 @@
     `app = coco.App(coco.AppConfig(name="OpenSpecIndex"), app_main)`
     at module level.
 - [ ] 2.2 Re-export the new App in
-  `oideachais/cocoindex_flows/__init__.py` as `openspec_app`.
+  `sruth/oideachais/cocoindex_flows/__init__.py` as `openspec_app`.
 
 ## 3. CocoIndex v1 App: leabharlann↔openspec links
 
 - [ ] 3.1 Create
-  `oideachais/cocoindex_flows/leabharlann_openspec_links.py` with:
+  `sruth/oideachais/cocoindex_flows/leabharlann_openspec_links.py` with:
   - [ ] 3.1.1 ContextKeys `KG_DB`, `EMBEDDER`, `BAML_CLIENT`
     (`detect_change=True`).
   - [ ] 3.1.2 `@coco.lifespan` providing FalkorDB
@@ -70,12 +70,12 @@
   - [ ] 3.1.7
     `app = coco.App(coco.AppConfig(name="LeabharlannOpenspecLinks"), app_main)`
     at module level.
-- [ ] 3.2 Re-export in `oideachais/cocoindex_flows/__init__.py` as
+- [ ] 3.2 Re-export in `sruth/oideachais/cocoindex_flows/__init__.py` as
   `leabharlann_openspec_links_app`.
 
 ## 4. Schema-mask + data-type standardisation
 
-- [ ] 4.1 Create `oideachais/core/types.py` with:
+- [ ] 4.1 Create `sruth/oideachais/core/types.py` with:
   - [ ] 4.1.1 `Quadrant` enum: `OIDEACHAIS`, `MEISINFHOGHLAIM`,
     `TUATHA`, `CROILAR`, `SHARED`.
   - [ ] 4.1.2 `DocumentType` enum: `CURRICULUM`, `LEABHARLANN_PDF`,
@@ -89,7 +89,7 @@
 - [ ] 4.2 Re-export from `codeolas/core/types.py` for the
   publishable wheel (so `crypteolas`, `tuath`, and the cocoindex
   flows can all import from one place).
-- [ ] 4.3 Sweep `oideachais/`, `meaisinfhoghlaim/`, `tuatha/`,
+- [ ] 4.3 Sweep `sruth/oideachais/`, `sruth/meaisinfhoghlaim/`, `sruth/tuatha/`,
   `codeolas/`, `baml_src/`, `infrastructure/` for hard-coded
   `"BAAI/bge-m3"` strings and replace with
   `os.environ.get("CODEOLAS_EMBED_MODEL", BgeM3)`.
@@ -100,7 +100,7 @@
 
 ## 5. Dagster assets
 
-- [ ] 5.1 Create `oideachais/dagster_defs/assets/openspec_assets.py`
+- [ ] 5.1 Create `sruth/oideachais/dagster_defs/assets/openspec_assets.py`
   with 3 assets:
   - [ ] 5.1.1 `openspec_chunk_and_tag` (wraps `cocoindex update`
     batch).
@@ -111,7 +111,7 @@
 - [ ] 5.2 Add `leabharlann_openspec_links_build` to the same file
   (or a sibling).
 - [ ] 5.3 Register the 4 assets in
-  `oideachais/dagster_defs/definitions.py` under a new
+  `sruth/oideachais/dagster_defs/definitions.py` under a new
   `four_directory_indexing` asset group.
 
 ## 6. Task aliases
@@ -151,10 +151,10 @@
   — all green.
 - [ ] 9.2 `baml-cli generate` — exits 0.
 - [ ] 9.3
-  `uv run cocoindex update oideachais/cocoindex_flows/openspec_indexing.py`
+  `uv run cocoindex update sruth/oideachais/cocoindex_flows/openspec_indexing.py`
   — materialises ≥ 1 row per openspec spec.
 - [ ] 9.4
-  `uv run cocoindex update oideachais/cocoindex_flows/leabharlann_openspec_links.py`
+  `uv run cocoindex update sruth/oideachais/cocoindex_flows/leabharlann_openspec_links.py`
   — materialises ≥ 50 cite edges on first run.
 - [ ] 9.5 `mise dagster:oideachais` — `openspec_graph_publish`
   asset check passes.
@@ -183,6 +183,6 @@
 - v1 reference patterns:
   `docs/cocoindex/code_embedding/main.py`,
   `docs/cocoindex/docs_to_knowledge_graph/main.py`,
-  `oideachais/cocoindex_flows/leabharlann_embedding.py`
+  `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
 - OpenSpec workflow: `openspec/AGENTS.md`
-- Dagster definitions: `oideachais/dagster_defs/definitions.py`
+- Dagster definitions: `sruth/oideachais/dagster_defs/definitions.py`

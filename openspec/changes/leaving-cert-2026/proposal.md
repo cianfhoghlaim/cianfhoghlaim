@@ -2,7 +2,7 @@
 
 ## Why
 
-The Leaving Certificate 2026 exams run **Friday 5 June (Mathematics Paper 1)** through **Thursday 11 June (Business & Construction Studies)**. This change activates the existing `oideachais/data_platform` infrastructure to produce per-subject study resources for the 7 highest-priority subjects:
+The Leaving Certificate 2026 exams run **Friday 5 June (Mathematics Paper 1)** through **Thursday 11 June (Business & Construction Studies)**. This change activates the existing `sruth/oideachais/data_platform` infrastructure to produce per-subject study resources for the 7 highest-priority subjects:
 
 | Subject | Exam date | Day | Papers | Times |
 |:--|:--|:--|:--|:--|
@@ -33,16 +33,16 @@ These outputs are exposed as **public pages** at `oideachais.cianfhoghlaim.ie/le
 - NEW `oideachais-leaving-cert-portal` — per-subject public pages
 
 ### Existing assets to extend
-- `oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py` — extend to include 7 subjects
-- `oideachais/data_platform/cocoindex_flows/curriculum_specification_extraction.py` — reuse BAML extraction for syllabus
-- `oideachais/data_platform/cocoindex_flows/research_embedding.py` — reuse embeddings for past papers
-- `oideachais/data_platform/dlt_sources/ireland/examinations.py` — extend for 7 subjects
-- `oideachais/data_platform/dlt_sources/ireland/curriculum_source.py` — extend for 7 subjects
+- `sruth/oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py` — extend to include 7 subjects
+- `sruth/oideachais/data_platform/cocoindex_flows/curriculum_specification_extraction.py` — reuse BAML extraction for syllabus
+- `sruth/oideachais/data_platform/cocoindex_flows/research_embedding.py` — reuse embeddings for past papers
+- `sruth/oideachais/data_platform/dlt_sources/ireland/examinations.py` — extend for 7 subjects
+- `sruth/oideachais/data_platform/dlt_sources/ireland/curriculum_source.py` — extend for 7 subjects
 
 ### LLM stack
 - **MiniMax M3** (token-plan API) for analysis via LiteLLM gateway
 - **DeepSeek V4 Pro** for BAML extraction
-- New LiteLLM model entry in `oideachais/data_platform/dlt_utils/foinse/litellm_config.yaml`
+- New LiteLLM model entry in `sruth/oideachais/data_platform/dlt_utils/foinse/litellm_config.yaml`
 
 ### Hosting
 - `oideachais.cianfhoghlaim.ie/leaving-cert/{subject}/` — TanStack Start, CopilotKit AG-UI, MotherDuck Dives, Recharts

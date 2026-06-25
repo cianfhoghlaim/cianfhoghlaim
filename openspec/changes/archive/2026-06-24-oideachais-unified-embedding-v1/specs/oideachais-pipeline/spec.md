@@ -20,7 +20,7 @@ the `unified_embeddings` LanceDB table. The App uses:
   `unified:<doc_id>:<chunk_index>:<content_hash>`.
 
 The Dagster asset `unified_embeddings` (group `embedding`) lives in
-`oideachais/dagster_defs/assets/unified_embedding_assets.py` and
+`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` and
 kicks the v1 App via
 `cocoindex update oideachais.cocoindex_flows.unified_embedding:unified_app`.
 
@@ -46,7 +46,7 @@ embedding, walking a configurable directory and writing to the
 `code_embeddings` LanceDB table. The App uses:
 
 - `UNIFIED_CODE_ROOT` env var (default:
-  `crypteolas/storage/data/code/`).
+  `sruth/crypteolas/storage/data/code/`).
 - `localfs.walk_dir(code_root, recursive=True, live=True, refresh_interval=3600s)`
   with the codebase_indexing.py excludes.
 - 8 file extensions: `*.py`, `*.ts`, `*.tsx`, `*.js`, `*.jsx`, `*.rs`,
@@ -57,7 +57,7 @@ embedding, walking a configurable directory and writing to the
   stable IDs of the form `code:<filename>:<chunk_index>`.
 
 The Dagster asset `code_embeddings` (group `embedding`) lives in
-`oideachais/dagster_defs/assets/unified_embedding_assets.py` and
+`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` and
 kicks the v1 App via
 `cocoindex update oideachais.cocoindex_flows.unified_embedding:code_app`.
 

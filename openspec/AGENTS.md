@@ -4,9 +4,9 @@
 
 The 4 priority specs, the 4 priority commands, the 4 priority
 skills, and the 1 priority mise task at a glance. **Read this
-first**; the rest of the file is the full 32-spec catalogue.
+first**; the rest of the file is the full 33-spec catalogue.
 
-### Priority specs (4 of 32)
+### Priority specs (4 of 33)
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
@@ -18,7 +18,7 @@ first**; the rest of the file is the full 32-spec catalogue.
 ### Priority commands
 
 ```bash
-openspec list --specs              # list all 32 capability specs
+openspec list --specs              # list all 33 capability specs
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy
@@ -32,6 +32,7 @@ openspec archive <change-id> --yes        # after deploy
 | [`dagger-pipelines`](../.agents/skills/dagger-pipelines/SKILL.md) | The 8 callable Dagger functions + the 4 build pipelines |
 | [`infrastructure-stacks`](../.agents/skills/infrastructure-stacks/SKILL.md) | The 6-file GOLD_STANDARD pattern for Docker Compose stacks |
 | [`agent-memory-systems`](../.agents/skills/agent-memory-systems/SKILL.md) | The 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph) |
+| [`oideachais-cocoindex-v1`](../.agents/skills/oideachais-cocoindex-v1/SKILL.md) | CocoIndex v1 App canonical pattern + 4-rule conformance contract + `_lifespan.py` shared home (REFACTORING.md item 12 enforcement precondition) |
 
 ### Priority mise task
 
@@ -92,9 +93,9 @@ The system SHALL provide...
 **Migration**: [How to handle]
 ```
 
-## Capability Specs (32)
+## Capability Specs (33)
 
-The Cianfhoghlaim platform has **32 capability specs** organised into
+The Cianfhoghlaim platform has **33 capability specs** organised into
 **8 groups** by quadrant. Each spec is a thin capability pointer; the
 **authoritative details** live in the corresponding
 `.agents/skills/<skill>/SKILL.md` and the source code.
@@ -107,11 +108,12 @@ The Cianfhoghlaim platform has **32 capability specs** organised into
 | `oideachais-cognify-knowledge-graph` | oideachais | 5-stage cross-stage cognify + 3 leabharlann cognify + 3 cross-archive FalkorDB edges |
 | `oideachais-semantic-search` | oideachais | Cross-corpus LanceDB HNSW search (BGE-M3 + BGE-large-en-v1.5) |
 | `oideachais-marimo-dashboards` | oideachais | 11 Marimo notebooks for the 5 educational stages + leabharlann full-stack demo |
+| `upstream-package-monitoring` | oideachais | 3 CocoIndex v1 Apps + 4 Firecrawl monitors + 1 n8n bridge + 5 Dagster assets + 1 breaking-change sensor for motherduck / dlthub / lancedb / cocoindex |
 | `ireland-primary-jc-dlt-baml` | oideachais | Ireland Primary + Junior Cycle dlt + BAML loop |
 | `official-media-pipeline` | oideachais | Instagram-export → British-Isles government source enrichment (DLT + BAML `ClassifyOfficialMedia` + 4-lookup resolver) |
 | `official-media-fediverse` | oideachais | Mastodon webfinger + Bluesky xrpc + Wikipedia + Companies House / CRO lookup (pure library) |
 | `official-media-marimo` | oideachais | Marimo mission control + TanStack Start `/official-media` + Cognee dataset `oideachais_official_media` |
-| `celtic-data-engineering-pipeline` | oideachais | dbt-duckdb project at `oideachais/dbt_project/` + `CelticDagsterDbtTranslator` + 2 marimo notebooks under `meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
+| `celtic-data-engineering-pipeline` | oideachais | dbt-duckdb project at `sruth/oideachais/dbt_project/` + `CelticDagsterDbtTranslator` + 2 marimo notebooks under `sruth/meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
 | `meaisinfhoghlaim-platform` | meaisinfhoghlaim | 10 sub-packages + 4 heartbeat dagster assets + Dagster code-location |
 | `meaisinfhoghlaim-agent-frameworks` | meaisinfhoghlaim | 12 specialised agents (Root, Curriculum, Translation, Corpus, etc.) |
 | `meaisinfhoghlaim-ocr-htr` | meaisinfhoghlaim | 10 OCR models across 6 backends (Pylaia, TrOCR, PaddleOCR, Tesseract, dots.ocr, VLM) |
@@ -125,10 +127,10 @@ The Cianfhoghlaim platform has **32 capability specs** organised into
 | `agentic-frontend-frameworks` | shared | TanStack Start + CopilotKit + AG-UI + Hono + Convex |
 | `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
-| `data-engineering-pipeline-documentation` | shared | oideachais/STATUS.md + oideachais/REFACTORING.md + per-area READMEs |
+| `data-engineering-pipeline-documentation` | shared | sruth/oideachais/STATUS.md + sruth/oideachais/REFACTORING.md + per-area READMEs |
 | `spaces-cicd-pipeline` | shared | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) |
-| `celtic-data-engineering-pipeline` | shared | dbt-duckdb at `oideachais/dbt_project/` + marimo notebooks at `meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
-| `gradio-ensemble-pattern` | shared | `meaisinfhoghlaim/pipelines/ensemble_gradio.py` + `spaces/_common/hf_hub_push.py` (sister to `celtic-data-engineering-patterns`) |
+| `celtic-data-engineering-pipeline` | shared | dbt-duckdb at `sruth/oideachais/dbt_project/` + marimo notebooks at `sruth/meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
+| `gradio-ensemble-pattern` | shared | `sruth/meaisinfhoghlaim/pipelines/ensemble_gradio.py` + `spaces/_common/hf_hub_push.py` (sister to `celtic-data-engineering-patterns`) |
 | `workflow-automation` | team | n8n + LLM pipelines (OpenCode Go API) |
 | `task-management` | team | Vikunja kanban + Gantt + list + team sharing |
 | `scheduling` | team | cal-diy team + per-member booking pages |
@@ -139,10 +141,10 @@ The Cianfhoghlaim platform has **32 capability specs** organised into
 
 | Quadrant | Path | Wheel name | README | AGENTS.md |
 |:--|:--|:--|:--|:--|
-| **Oideachais** | `oideachais/` | `oideachais` | `oideachais/README.md` | `oideachais/AGENTS.md` |
-| **Meaisínfhoghlaim** | `meaisinfhoghlaim/` | `meaisinfhoghlaim` | `meaisinfhoghlaim/README.md` | `meaisinfhoghlaim/AGENTS.md` |
-| **Tuatha** | `tuatha/` | `tuath` (uv) | `tuatha/README.md` | `tuatha/AGENTS.md` |
-| **Croílár** | `croilar/` | (TypeScript) | `croilar/README.md` | `croilar/AGENTS.md` |
+| **Oideachais** | `sruth/oideachais/` | `oideachais` | `sruth/oideachais/README.md` | `sruth/oideachais/AGENTS.md` |
+| **Meaisínfhoghlaim** | `sruth/meaisinfhoghlaim/` | `meaisinfhoghlaim` | `sruth/meaisinfhoghlaim/README.md` | `sruth/meaisinfhoghlaim/AGENTS.md` |
+| **Tuatha** | `sruth/tuatha/` | `tuath` (uv) | `sruth/tuatha/README.md` | `sruth/tuatha/AGENTS.md` |
+| **Croílár** | `sruth/croilar/` | (TypeScript) | `sruth/croilar/README.md` | `sruth/croilar/AGENTS.md` |
 
 ## Adding a New Capability
 
@@ -178,7 +180,7 @@ When a change introduces a new capability (not a MODIFIED of an existing one), f
 - [`../.agents/skills/stack-ops/SKILL.md`](../.agents/skills/stack-ops/SKILL.md) — operational skill for adding/fixing stacks
 - [`../.agents/skills/chunkhound/SKILL.md`](../.agents/skills/chunkhound/SKILL.md) — semantic code search
 - [`../AGENTS.md`](../AGENTS.md) — root agent instructions
-- [`../oideachais/AGENTS.md`](../oideachais/AGENTS.md) — oideachais quadrant
-- [`../meaisinfhoghlaim/AGENTS.md`](../meaisinfhoghlaim/AGENTS.md) — meaisinfhoghlaim quadrant
-- [`../tuatha/AGENTS.md`](../tuatha/AGENTS.md) — tuatha quadrant
-- [`../croilar/AGENTS.md`](../croilar/AGENTS.md) — croilar quadrant
+- [`../sruth/oideachais/AGENTS.md`](../sruth/oideachais/AGENTS.md) — oideachais quadrant
+- [`../sruth/meaisinfhoghlaim/AGENTS.md`](../sruth/meaisinfhoghlaim/AGENTS.md) — meaisinfhoghlaim quadrant
+- [`../sruth/tuatha/AGENTS.md`](../sruth/tuatha/AGENTS.md) — tuatha quadrant
+- [`../sruth/croilar/AGENTS.md`](../sruth/croilar/AGENTS.md) — croilar quadrant

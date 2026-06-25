@@ -117,10 +117,10 @@ results = results.sort_values("rerank_score", ascending=False).head(10)
 
 ## KCG example
 
-The `oideachais/cocoindex_flows/leabharlann_embedding.py` CocoIndex
+The `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` CocoIndex
 v1 App embeds the books corpus as text + image (BGE-large-en-v1.5
 for text; the multimodal pattern is delegated to a separate
-`oideachais/cocoindex_flows/image_embedding.py` flow if/when
+`sruth/oideachais/cocoindex_flows/image_embedding.py` flow if/when
 the leabharlann includes cover images).
 
 The external `multimodal-recipe-agent` and `multimodal-search`

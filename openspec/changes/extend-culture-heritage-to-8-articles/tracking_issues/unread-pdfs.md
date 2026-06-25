@@ -18,10 +18,10 @@
 - **Expected size on disk:** ~ 200-400 KB (single-page newspaper scan)
 - **Expected content:** a 600-word *Cooke's Corner* column, likely with 1-3 references to Neil Deacy by name, possibly a finishing position in the 8 km race.
 - **Action for follow-up agent:**
-  1. Re-read with a PDF parser that supports OCR (Tesseract, PaddleOCR, or one of the `meaisinfhoghlaim/ocr/` models — olmocr-7b or qwen2.5-vl-7b are recommended).
+  1. Re-read with a PDF parser that supports OCR (Tesseract, PaddleOCR, or one of the `sruth/meaisinfhoghlaim/ocr/` models — olmocr-7b or qwen2.5-vl-7b are recommended).
   2. If the scan is image-only (no text layer), use a VLM to extract the text via the `baml:ExtractCultureClaims` function (the schema already accepts scanned-PDF input).
   3. Append the extracted claim(s) to `culture_heritage` Cognee dataset with `evidence_quality = PRIMARY` (newspaper source).
-  4. Update the corresponding fixture `oideachais/dlt_sources/official_media/fixtures/identity_neil_deacy_cookes_corner.json` (does not yet exist — create with the SHA-256 of the clipped text).
+  4. Update the corresponding fixture `sruth/oideachais/dlt_sources/official_media/fixtures/identity_neil_deacy_cookes_corner.json` (does not yet exist — create with the SHA-256 of the clipped text).
 
 ### PDF 2 — Old passports (dual ROI/UK citizenship verification)
 
@@ -40,7 +40,7 @@
 
 The current agent's PDF input pipeline (configured via the opencode tool configuration) returns empty bodies for image-only PDFs without a text layer. The fix is to either:
 
-1. **Re-OCR the PDFs** with one of the 10 OCR models in `meaisinfhoghlaim/ocr/` (recommended: `olmocr-7b` for accuracy-critical Irish-language content, or `qwen2.5-vl-7b-mlx` for on-device M4 MacBook execution).
+1. **Re-OCR the PDFs** with one of the 10 OCR models in `sruth/meaisinfhoghlaim/ocr/` (recommended: `olmocr-7b` for accuracy-critical Irish-language content, or `qwen2.5-vl-7b-mlx` for on-device M4 MacBook execution).
 2. **Pipe through Firecrawl** with `parsers: ["pdf"]` and `redactPII: true` (for PDF 2).
 3. **Hand-convert** the scans to text via `tesseract <pdf> <output>` with `--psm 6` (uniform block of text) for newspaper-column PDFs (PDF 1).
 
@@ -48,6 +48,6 @@ The current agent's PDF input pipeline (configured via the opencode tool configu
 
 - README lines 455–465: the "Note on 2 unreadable PDFs" section.
 - `openspec/changes/extend-culture-heritage-to-8-articles/proposal.md`: the originating change.
-- `oideachais/cognee_integration/culture_cognify.py`: the Cognee adapter that will accept the new claims on next run.
-- `oideachais/baml_src/culture_extraction.baml`: the BAML extraction schema (`ExtractCultureClaims`).
+- `sruth/oideachais/cognee_integration/culture_cognify.py`: the Cognee adapter that will accept the new claims on next run.
+- `sruth/oideachais/baml_src/culture_extraction.baml`: the BAML extraction schema (`ExtractCultureClaims`).
 - `.agents/skills/celtic-ocr-evaluation/SKILL.md`: the OCR evaluation harness for the 9 OCR models.

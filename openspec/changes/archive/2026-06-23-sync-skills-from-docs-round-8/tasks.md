@@ -45,7 +45,7 @@
       Dagster assets for MMO.
 
 ## 5. Phase 4: Dedup + delete
-- [x] 5 from `docs/tuatha/` (INDEX, ANALYSIS, README,
+- [x] 5 from `docs/sruth/tuatha/` (INDEX, ANALYSIS, README,
       GRAPHICS_INDEX, Agentic Web Scraping Pipeline.md
       duplicate).
 - [x] 5 from `docs/teanga/` (INDEX, README,

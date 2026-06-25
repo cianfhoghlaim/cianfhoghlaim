@@ -65,7 +65,7 @@ source tree / docs only when the summary is insufficient.
 | 3 | `hono` | `references/hono.md` | Hono edge web framework — the API gateway pattern for auth workers, DuckDB API endpoints, and Convex-adjacent microservices |
 | 4 | `orpc` | `references/orpc.md` | oRPC type-safe RPC — the contract-first API layer across the monorepo (auto-OpenAPI generation, TanStack Query client) |
 | 5 | `ag-ui-protocol` | `references/ag-ui-protocol.md` | AG-UI protocol (CopilotKit) — the agent↔UI streaming protocol used by all `sruth/` frontends for agentic UIs |
-| 6 | `cloudflare-workers` | `references/cloudflare-workers.md` | Cloudflare Workers + D1 / R2 / KV / Hyperdrive — the primary deploy target for `oideachais/web/` and several `sruth/` apps |
+| 6 | `cloudflare-workers` | `references/cloudflare-workers.md` | Cloudflare Workers + D1 / R2 / KV / Hyperdrive — the primary deploy target for `sruth/oideachais/web/` and several `sruth/` apps |
 | 7 | `restate-coding-agent` | `references/restate-coding-agent.md` | Restate durable execution + agent coding patterns (orchestrator-agent loop, parallel fan-out, racing, evaluator-optimizer) — the long-running agent pattern |
 
 The 8th `repo-*.md` in `docs/web/08-repos/`
@@ -113,7 +113,7 @@ generated with v0") was trivial and is DELETEd.
 ## Why two mirror skills?
 
 The Cianfhoghlaim monorepo has 4 quadrants
-(`oideachais/`, `sruth/meaisinfhoghlaim/`, `tuatha/`, `croilar/`)
+(`sruth/oideachais/`, `sruth/meaisinfhoghlaim/`, `sruth/tuatha/`, `sruth/croilar/`)
 plus a shared web stack that runs across all of them. The
 shared web stack pulls on a different set of upstream
 projects than the game / infra stack, so the KCG mirror
@@ -121,7 +121,7 @@ policy splits the registry into two complementary skills:
 
 | | `upstream-mirrors` | `web-mirrors` |
 |:--|:--|:--|
-| Quadrant | `tuatha/` (game / 3D / crypto) | `oideachais/web/`, `croilar/`, shared web stack |
+| Quadrant | `sruth/tuatha/` (game / 3D / crypto) | `sruth/oideachais/web/`, `sruth/croilar/`, shared web stack |
 | Tech layer | State engine, GPU, blockchain, ML, cross-platform client | Frontend framework, real-time backend, edge gateway, RPC, agent protocol, deploy target |
 | Mirror count | 11 | 7 |
 | Sample repos | SpacetimeDB, wgpu, x402, AnyLanguageModel, agui_kotlin | TanStack, Convex, Hono, oRPC, AG-UI, Cloudflare Workers, Restate |

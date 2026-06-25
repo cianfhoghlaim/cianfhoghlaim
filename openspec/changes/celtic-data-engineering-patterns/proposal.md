@@ -7,7 +7,7 @@ adopt, adapt, defer, or skip:
 
 1. **`spaces/data-engineering/`** — the BigQuery → Delta Lake → DuckDB → dbt
    → Evidence stack orchestrated by Dagster. The Dagster+DLT+dbt patterns are
-   1:1 applicable to our `oideachais/` quadrant (we already have Dagster and
+   1:1 applicable to our `sruth/oideachais/` quadrant (we already have Dagster and
    DLT, missing dbt + marimo-equivalent of Evidence). The Evidence dashboard
    itself is the wrong default for us — marimo is our standard notebook
    surface — but the SQL-fenced-block pattern (` ```sql name `) translates
@@ -18,7 +18,7 @@ adopt, adapt, defer, or skip:
    pattern (one `Interface` with one `output` per model + `examples=[...]`)
    is the canonical "compare all my models side by side" UI. The HF Hub
    model publish pattern (`foghlaimeoir/phishing-DistilBERT`) is what we
-   already do in `meaisinfhoghlaim/ocr/`; we just don't have a shared helper.
+   already do in `sruth/meaisinfhoghlaim/ocr/`; we just don't have a shared helper.
 
 This change codifies those patterns as **2 new OpenSpec capabilities** and
 provides the shared code artefacts + 2 marimo notebooks that absorb them.
@@ -27,20 +27,20 @@ HF Hub token in `.infisical.env`).
 
 ## What Changes
 
-### 1. dbt-duckdb project at `oideachais/dbt_project/` (Phase 4 — follow-up commit)
+### 1. dbt-duckdb project at `sruth/oideachais/dbt_project/` (Phase 4 — follow-up commit)
 
 Mirror of `spaces/data-engineering/dbt_project/`. Multi-target `dev` (local
 DuckDB) / `prod` (MotherDuck) per pattern A6 from `spaces/README.md` §1.
 Models: `weekly_downloads`, `language_distribution`, `ocr_confidence_by_model`
 — all 3 read from the existing `oideachais.curriculum_*` tables.
 
-### 2. Custom Dagster dbt translator at `oideachais/dagster_defs/dbt_translator.py` (Phase 4)
+### 2. Custom Dagster dbt translator at `sruth/oideachais/dagster_defs/dbt_translator.py` (Phase 4)
 
 `CelticDagsterDbtTranslator(DagsterDbtTranslator)` that flattens
 `dbt_resource_props["name"]` to an `AssetKey` and pins `group_name="prepared"`
 (per pattern A4).
 
-### 3. Ensemble Gradio helper at `meaisinfhoghlaim/pipelines/ensemble_gradio.py` (Phase 4)
+### 3. Ensemble Gradio helper at `sruth/meaisinfhoghlaim/pipelines/ensemble_gradio.py` (Phase 4)
 
 `build_ensemble_interface(models: dict[str, Pipeline], examples: list[str],
 title: str) -> gr.Interface` — wraps patterns B1+B4 from `spaces/README.md` §1.
@@ -52,7 +52,7 @@ title: str) -> gr.Interface` — wraps patterns B1+B4 from `spaces/README.md` §
 manual `pipeline.push_to_hub` so the helper handles OCR checkpoints, sklearn
 pickles, and BAML-compiled artefacts uniformly.
 
-### 5. Marimo notebook directory at `meaisinfhoghlaim/marimo/` (new — this commit)
+### 5. Marimo notebook directory at `sruth/meaisinfhoghlaim/marimo/` (new — this commit)
 
 Two notebooks land in this commit (skeletons with TODO markers for data
 binding in the follow-up commit):
@@ -64,8 +64,8 @@ binding in the follow-up commit):
   materialization lags across the 10 OCR models; correlation heatmap of
   BAML extraction confidence vs OCR WER. Pattern A1 extension.
 
-Both register in `meaisinfhoghlaim/marimo/__init__.py` and a new `[marimo]`
-extra in `meaisinfhoghlaim/pyproject.toml` is added.
+Both register in `sruth/meaisinfhoghlaim/marimo/__init__.py` and a new `[marimo]`
+extra in `sruth/meaisinfhoghlaim/pyproject.toml` is added.
 
 ### 6. Spaces README at `spaces/README.md` (new — this commit)
 
@@ -95,7 +95,7 @@ adopt/adapt/defer/skip decisions).
 - `openspec/specs/spaces-cicd-pipeline/spec.md` (the sister change in
   `spaces-cicd-reusable-pipeline`) — the reusable GH Action that publishes
   Spaces built using the `gradio-ensemble-pattern`
-- `meaisinfhoghlaim/AGENTS.md` "Quick routing" table (this commit) — adds
+- `sruth/meaisinfhoghlaim/AGENTS.md` "Quick routing" table (this commit) — adds
   the `marimo/` row
 - `oideachais-marimo-dashboards` (existing spec) — the sister capability
   for the oideachais quadrant's marimo notebooks; this change adds the

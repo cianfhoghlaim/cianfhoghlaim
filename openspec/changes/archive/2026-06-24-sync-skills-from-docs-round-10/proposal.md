@@ -6,7 +6,7 @@ A tenth round of `docs/*` consolidation. The user asked
 to absorb the remaining docs/ sprawl into .agents/skills/.
 The 9 prior rounds processed `02-data-platform`,
 `05-celtic-language`, `06-product`, `07-skills`,
-`teanga/`, `web/`, `tuatha/`. This round targets the
+`teanga/`, `web/`, `sruth/tuatha/`. This round targets the
 last 10 subtrees: 00-deploy-plans, 01-cognee,
 02-architecture, 02-audit, 03-agents, 03-pipelines,
 06-infrastructure (config only), 07-standards,

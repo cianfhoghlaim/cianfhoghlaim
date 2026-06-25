@@ -9,10 +9,10 @@
   - [ ] `infrastructure/audit/README.md`
 
 - [ ] **Phase B** — Quadrant README updates
-  - [ ] `oideachais/README.md` — Status + Known issues
-  - [ ] `tuatha/README.md` — Status + Known issues
-  - [ ] `croilar/README.md` — Status + Known issues
-  - [ ] `meaisinfhoghlaim/README.md` — Status + Known issues
+  - [ ] `sruth/oideachais/README.md` — Status + Known issues
+  - [ ] `sruth/tuatha/README.md` — Status + Known issues
+  - [ ] `sruth/croilar/README.md` — Status + Known issues
+  - [ ] `sruth/meaisinfhoghlaim/README.md` — Status + Known issues
   - [ ] Root `README.md` — Status column on the Quadrant table
 
 - [ ] **Phase C** — Infrastructure docs

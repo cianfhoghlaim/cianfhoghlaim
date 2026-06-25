@@ -6,25 +6,25 @@
   - `grep -r "oideachais\.datasets" --include="*.py" /Users/cianmacandeisigh/dev/kings_college_galway/`
   - Expected: 0 hits
 - [ ] Confirm no Markdown / YAML / BAML / TOML references the directory
-  - `grep -r "oideachais/datasets" --include="*.md" --include="*.yaml" --include="*.yml" --include="*.toml" --include="*.baml" /Users/cianmacandeisigh/dev/kings_college_galway/`
-  - Expected: 0 hits outside `oideachais/datasets/` itself
-- [ ] Confirm `oideachais/samplaí/` is the canonical sample-data location
-  - `ls /Users/cianmacandeisigh/dev/kings_college_galway/oideachais/samplaí/`
+  - `grep -r "sruth/oideachais/datasets" --include="*.md" --include="*.yaml" --include="*.yml" --include="*.toml" --include="*.baml" /Users/cianmacandeisigh/dev/kings_college_galway/`
+  - Expected: 0 hits outside `sruth/oideachais/datasets/` itself
+- [ ] Confirm `sruth/oideachais/samplaí/` is the canonical sample-data location
+  - `ls /Users/cianmacandeisigh/dev/kings_college_galway/sruth/oideachais/samplaí/`
   - Expected: brezhoneg, cognates.yaml, cymraeg, gaeilge, gaelg, gaidhlig, kernowek, README.md
 
 ## Phase 2: Privacy file removal (PRIORITY)
 
-- [ ] **Delete the privacy-sensitive file** `oideachais/datasets/emily_rachel_2022_2026_gaeilge_ard.pdf`
-- [ ] **Delete its byte-identical twin** `oideachais/datasets/gaeilge.pdf`
-- [ ] Verify deletion: `ls oideachais/datasets/emily*` → "No such file or directory"
-- [ ] Verify byte-identical: `md5 oideachais/datasets/emily_rachel_2022_2026_gaeilge_ard.pdf oideachais/datasets/gaeilge.pdf` (if both still exist, both MD5s match)
+- [ ] **Delete the privacy-sensitive file** `sruth/oideachais/datasets/emily_rachel_2022_2026_gaeilge_ard.pdf`
+- [ ] **Delete its byte-identical twin** `sruth/oideachais/datasets/gaeilge.pdf`
+- [ ] Verify deletion: `ls sruth/oideachais/datasets/emily*` → "No such file or directory"
+- [ ] Verify byte-identical: `md5 sruth/oideachais/datasets/emily_rachel_2022_2026_gaeilge_ard.pdf sruth/oideachais/datasets/gaeilge.pdf` (if both still exist, both MD5s match)
 
 ## Phase 3: Wholesale directory deletion
 
-- [ ] Delete the entire `oideachais/datasets/` directory tree
-  - `rm -rf /Users/cianmacandeisigh/dev/kings_college_galway/oideachais/datasets/`
+- [ ] Delete the entire `sruth/oideachais/datasets/` directory tree
+  - `rm -rf /Users/cianmacandeisigh/dev/kings_college_galway/sruth/oideachais/datasets/`
   - Expected: removes 12 top-level entries + 100+ sub-entries (~3 MB)
-- [ ] Verify deletion: `ls oideachais/datasets/` → "No such file or directory"
+- [ ] Verify deletion: `ls sruth/oideachais/datasets/` → "No such file or directory"
 - [ ] Verify with git: `git status` should show the deletion
 
 ## Phase 4: Documentation migration
@@ -36,14 +36,14 @@
 
 ## Phase 5: .gitignore
 
-- [ ] Add `oideachais/datasets/` to the root `.gitignore`
+- [ ] Add `sruth/oideachais/datasets/` to the root `.gitignore`
   - Add a comment: `# stale scratch directory — see openspec/changes/datasets-cleanup/`
 - [ ] Verify `.gitignore` syntax is correct (no broken patterns)
 
 ## Phase 6: Validation
 
 - [ ] `git status` shows only:
-  - `D oideachais/datasets/` (the deleted tree)
+  - `D sruth/oideachais/datasets/` (the deleted tree)
   - `M AGENTS.md` (the documentation migration)
   - `M .gitignore` (the gitignore addition)
 - [ ] `openspec validate datasets-cleanup --strict` passes

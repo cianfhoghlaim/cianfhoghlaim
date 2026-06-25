@@ -13,7 +13,7 @@ separate service:
 
 1. **Record** — Pipecat transport (WebRTC + WebSocket)
 2. **Transcribe** — ASR (wav2vec2-XLSR-Irish for accuracy + Whisper-large-v3 for speed)
-3. **Translate** — the `oideachais/baml_src/audio_extraction.baml` schema
+3. **Translate** — the `sruth/oideachais/baml_src/audio_extraction.baml` schema
 4. **Synthesise** — TTS (ABAIR + Chatterbox)
 
 This skill captures the 4-stage contract, the 4 Irish dialects,
@@ -97,7 +97,7 @@ which exposes the `transcribe(audio_bytes) -> str` method.
 ## The BAML extraction schema (`audio_extraction.baml`)
 
 ```baml
-// oideachais/baml_src/audio_extraction.baml
+// sruth/oideachais/baml_src/audio_extraction.baml
 class AudioSegment {
     start_ms int
     end_ms int
@@ -186,7 +186,7 @@ The Pipecat transport is wired in
    GGUF-quantised variant.
 
 5. Add a BAML extraction function in
-   `oideachais/baml_src/audio_extraction.baml` for the new model
+   `sruth/oideachais/baml_src/audio_extraction.baml` for the new model
    (if needed).
 
 ## Common failure modes
@@ -209,5 +209,5 @@ The Pipecat transport is wired in
 - `sruth/meaisinfhoghlaim/asr/model_registry.py` — the ASR model registry
 - `sruth/meaisinfhoghlaim/tts/model_registry.py` — the TTS model registry
 - `sruth/meaisinfhoghlaim/agents/api/services/chatterbox.py` — the TTS synthesizer
-- `oideachais/baml_src/audio_extraction.baml` — the audio extraction BAML schema
+- `sruth/oideachais/baml_src/audio_extraction.baml` — the audio extraction BAML schema
 - `sruth/meaisinfhoghlaim/llama-swap-config.yaml` — the 11 GGUF models for Apple Silicon

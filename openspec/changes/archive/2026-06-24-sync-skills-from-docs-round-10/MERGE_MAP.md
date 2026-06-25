@@ -41,7 +41,7 @@ git rm -rf docs/08-mirrors/marimo docs/08-mirrors/marimo-docs
 
 # Verify nothing depends on them (none should)
 grep -rln "08-mirrors/marimo" .agents/skills/ docs/ 2>/dev/null
-grep -rln "08-mirrors/marimo" AGENTS.md infrastructure/ tuatha/ oideachais/ 2>/dev/null
+grep -rln "08-mirrors/marimo" AGENTS.md infrastructure/ sruth/tuatha/ sruth/oideachais/ 2>/dev/null
 
 # Also delete the empty parent shell if it ends up empty
 rmdir docs/08-mirrors 2>/dev/null  # only if no other mirrors remain
@@ -97,7 +97,7 @@ Sorted by src path. `lines` is `wc -l`. `dest` uses the contract from the spec
 
 | src | topic | lines | dest | reason |
 |:--|:--|--:|:--|:--|
-| `docs/02-architecture/TUATH_MMO.md` | tuatha MMO architecture | 73 | `EXPAND: tuatha-mmo §KCG quadrant reference` + delete file | KCG canonical Tuath MMO doc, supersedes earlier tuatha/ subtree content |
+| `docs/02-architecture/TUATH_MMO.md` | tuatha MMO architecture | 73 | `EXPAND: tuatha-mmo §KCG quadrant reference` + delete file | KCG canonical Tuath MMO doc, supersedes earlier sruth/tuatha/ subtree content |
 
 ### 3.5 `docs/02-audit/`
 
@@ -217,7 +217,7 @@ Sorted by src path. `lines` is `wc -l`. `dest` uses the contract from the spec
 
 | src | topic | dest | reason |
 |:--|:--|:--|:--|
-| `docs/scripts/{api_main.py, dagster_definitions.py, …}` (12 .py + 2 .yaml) | KCG code snippets | `EXPAND: oideachas-pipeline §KCG canonical code snippets` (or move under `oideachais/docs/snippets/`) | These are KCG-authored but live in `docs/` by mistake; round 10 only touches .md, flag for round 11 |
+| `docs/scripts/{api_main.py, dagster_definitions.py, …}` (12 .py + 2 .yaml) | KCG code snippets | `EXPAND: oideachas-pipeline §KCG canonical code snippets` (or move under `sruth/oideachais/docs/snippets/`) | These are KCG-authored but live in `docs/` by mistake; round 10 only touches .md, flag for round 11 |
 
 ## 4. Per-skill inventory
 

@@ -2,7 +2,7 @@
 
 ### Requirement: CompareCelticNations Pydantic mirror
 
-The canonical BAML function `CompareCelticNations` (in `tuatha/baml_src/celtic_curriculum.baml`) MUST have a Pydantic v2 mirror in `spaces/meaisin_cliste/curaclam.py`. The Pydantic classes (`PCurriculumMapping`, `PCrossNationComparison`) MUST mirror the BAML class shapes exactly, and `_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `CompareCelticNations` (in `sruth/tuatha/baml_src/celtic_curriculum.baml`) MUST have a Pydantic v2 mirror in `spaces/meaisin_cliste/curaclam.py`. The Pydantic classes (`PCurriculumMapping`, `PCrossNationComparison`) MUST mirror the BAML class shapes exactly, and `_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns valid CrossNationComparison
 

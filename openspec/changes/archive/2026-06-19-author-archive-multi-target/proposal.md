@@ -3,7 +3,7 @@
 ## Why
 
 Stages 0.5-3 of `author-archive-v1` shipped code that runs against a
-single target (the local DuckDB in `~/.cache/oideachais/`). The
+single target (the local DuckDB in `~/.cache/sruth/oideachais/`). The
 codebase has a `oideachais.dlt_utils.destinations` module with
 DuckLake wiring, but the Dagster assets and the DLT sources are hard-
 coded to local DuckDB.
@@ -24,14 +24,14 @@ the 6 DUCKLAKE_* vars + BUCKET.
 
 ### Code
 
-- `oideachais/dlt_utils/target_factory.py` (NEW): the `Target`
+- `sruth/oideachais/dlt_utils/target_factory.py` (NEW): the `Target`
   dataclass + 3 canonical instances (`DEV`, `STAGING`, `PROD`) +
   `get_target(name)` + `validate_target_secrets(target)` +
   `create_pipeline_for_target(target_name, pipeline_name, dataset_name)`
   + 3 shortcut functions (`create_dev_pipeline`, `create_staging_pipeline`,
   `create_prod_pipeline`).
 
-- `oideachais/scripts/make_target.sh` (NEW, 100 LOC): the CLI helper.
+- `sruth/oideachais/scripts/make_target.sh` (NEW, 100 LOC): the CLI helper.
   Validates the target name, sources the env file, exports
   `OIDEACHAIS_TARGET`, runs the pre-flight secret check, and execs
   the user-supplied command.

@@ -60,7 +60,7 @@ croilar).
   social card + the HF Hub push + the demo recorder).
 - **Data-engineering exception** — the canonical exception
   is documented (the only non-gradio Space; it consumes
-  `oideachais/agents/adk/` + `oideachais/baml_src/`
+  `sruth/oideachais/agents/adk/` + `sruth/oideachais/baml_src/`
   directly, not the LiteLLM gateway).
 - **Add-a-new-Space workflow** — the 2 new skills document
   the canonical 4-step workflow (create the 4 files + wire

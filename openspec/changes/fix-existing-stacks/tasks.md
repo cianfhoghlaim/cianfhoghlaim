@@ -1,7 +1,7 @@
 # Tasks — Fix Existing Stacks
 
 - [x] 1. P1.1 — `storage/dagster` activate `secrets.env`, add `sidecar.yaml`, modernise `pangolin.yaml`, add `.env.example`, seed 3 Infisical items
-- [x] 2. P1.2 — `storage/agent-os` rewrite `compose.yaml` build contexts (sruth → oideachais/tuatha/infrastructure), add `sidecar.yaml`, populate `secrets.env`, seed 6 Infisical items
+- [x] 2. P1.2 — `storage/agent-os` rewrite `compose.yaml` build contexts (sruth → sruth/oideachais/sruth/tuatha/infrastructure), add `sidecar.yaml`, populate `secrets.env`, seed 6 Infisical items
 - [x] 3. P1.3 — `storage/browser` rewrite `compose.yaml` build contexts, add `sidecar.yaml`, populate `secrets.env`, seed 3 Infisical items
 - [x] 4. P1.4 — `storage/kafka` add `sidecar.yaml`, populate `secrets.env`, add `kafka-init` one-shot, seed 3 Infisical items
 - [x] 5. P1.5 — `storage/confluent` add `sidecar.yaml`, populate `secrets.env`, add `.env.example`, seed 9 Infisical items

@@ -8,8 +8,8 @@
 - [x] Validate `--strict`.
 
 ## 2. Port language detection (codeolas → oideachais)
-- [x] `git mv codeolas/chunking/languages.py oideachais/cocoindex_flows/chunking/languages.py`
-- [x] Update `oideachais/cocoindex_flows/codebase_indexing.py` to import the new module
+- [x] `git mv codeolas/chunking/languages.py sruth/oideachais/cocoindex_flows/chunking/languages.py`
+- [x] Update `sruth/oideachais/cocoindex_flows/codebase_indexing.py` to import the new module
 - [x] Add `EXTENSION_TO_LANGUAGE` + `get_supported_languages` to the public exports
 
 ## 3. Expand codebase_indexing.py with 7-node / 7-edge model
@@ -26,7 +26,7 @@
 - [x] Add `LANCEDB_GRAPH_TABLE` config
 
 ## 4. 3 new Dagster assets
-- [x] Create `oideachais/dagster_defs/assets/codebase_assets.py`
+- [x] Create `sruth/oideachais/dagster_defs/assets/codebase_assets.py`
 - [x] `codebase_chunks` asset (group_name="codebase")
 - [x] `codebase_code_graph` asset (deps on codebase_chunks)
 - [x] `codebase_architecture_docs` asset (deferred placeholder)
@@ -35,7 +35,7 @@
 - [x] `.agents/skills/ccc/SKILL.md` — update v1 reference to include the 3 new Dagster assets
 - [x] `.agents/skills/cocoindex/SKILL.md` — update v1 pattern with 7-node / 7-edge model
 
-## 6. oideachais/STATUS.md updated
+## 6. sruth/oideachais/STATUS.md updated
 - [x] §3 (CocoIndex v0 vs v1 status) — mark `codebase_chunks` + `codebase_code_graph` as v1
 - [x] §4 (Dagster asset catalogue) — add the 3 new assets to the `codebase` group
 

@@ -2,7 +2,7 @@
 
 ### Requirement: GenerateNpcDialogue Pydantic mirror
 
-The canonical BAML function `GenerateNpcDialogue` (in `tuatha/baml_src/mythology_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/cianfhoghlaim/dialogue.py`. The Pydantic classes (`PNpcDialogue`, `PNpcDialogueExchange`) MUST mirror the BAML class shapes exactly, and `_validate_npc_response` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `GenerateNpcDialogue` (in `sruth/tuatha/baml_src/mythology_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/cianfhoghlaim/dialogue.py`. The Pydantic classes (`PNpcDialogue`, `PNpcDialogueExchange`) MUST mirror the BAML class shapes exactly, and `_validate_npc_response` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns valid NpcDialogueExchange
 

@@ -45,8 +45,8 @@ references live at
 - **THEN** the developer sees:
   - The 7-layer stack (TanStack Start + CopilotKit + AG-UI
     + Convex + Hono + oRPC + BAML)
-  - The 4 canonical surfaces (oideachais/web, croilar/apps/
-    web, croilar/apps/portal, tuatha/ui)
+  - The 4 canonical surfaces (sruth/oideachais/web, sruth/croilar/apps/
+    web, sruth/croilar/apps/portal, sruth/tuatha/ui)
   - The 4 backend options (Pydantic AI / Agno / Google
     ADK / BAML)
   - The 3 auth models (no-auth, OAuth + SIWE + 2FA,
@@ -57,7 +57,7 @@ references live at
 #### Scenario: A new agent UI is added to the existing surface
 
 - **GIVEN** the developer wants to add a chat UI to the
-  oideachais/web surface
+  sruth/oideachais/web surface
 - **WHEN** they look at the AG-UI section of
   `.agents/skills/agentic-frontend-frameworks/SKILL.md`
 - **THEN** the developer sees the 17 AG-UI event types
@@ -78,10 +78,10 @@ plane, user) tuple. The 4 surfaces are:
 
 | # | Surface | Stack | Auth | Data plane | User |
 |:--|:--|:--|:--|:--|:--|
-| 1 | `oideachais/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (MotherDuck) | Irish educators + students |
-| 2 | `croilar/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
-| 3 | `croilar/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
-| 4 | `tuatha/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (realtime) + SpacetimeDB | Tuatha game players |
+| 1 | `sruth/oideachais/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (MotherDuck) | Irish educators + students |
+| 2 | `sruth/croilar/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
+| 3 | `sruth/croilar/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
+| 4 | `sruth/tuatha/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (realtime) + SpacetimeDB | Tuatha game players |
 
 The 5th surface (marimo, analyst notebook) is
 documented separately at
@@ -92,11 +92,11 @@ documented separately at
 - **GIVEN** the user wants to add auth to a surface
 - **WHEN** the developer looks at the 4 surfaces table
 - **THEN** the developer sees:
-  - `oideachais/web` and `croilar/apps/web` have NO auth
+  - `sruth/oideachais/web` and `sruth/croilar/apps/web` have NO auth
     (public)
-  - `croilar/apps/portal` has BetterAuth + Pocket ID +
+  - `sruth/croilar/apps/portal` has BetterAuth + Pocket ID +
     SIWE
-  - `tuatha/ui` has SIWE (Ethereum wallet only)
+  - `sruth/tuatha/ui` has SIWE (Ethereum wallet only)
 - **AND** the developer can pick the right auth pattern
   for the target surface without re-deriving
 

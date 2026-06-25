@@ -150,7 +150,7 @@ schedule and ownership.
 │  Layer 4: Asset Generation (Dagster re-materialization) │
 │  → marimo dashboards (5 educational stages)             │
 │  → FastAPI routes (`/dashboards/*`, `/api/*`)          │
-│  → TanStack Start front-end (`oideachais/web`)         │
+│  → TanStack Start front-end (`sruth/oideachais/web`)         │
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -206,9 +206,9 @@ uv run dagster dev -m oideachais.data_platform.dagster_defs.definitions
 
 The KCG Dagster integration lives at:
 
-- `oideachais/data_platform/dagster_defs/` — the Dagster
+- `sruth/oideachais/data_platform/dagster_defs/` — the Dagster
   definitions module (assets, jobs, schedules, sensors, resources)
-- `oideachais/data_platform/dagster_defs/definitions.py` —
+- `sruth/oideachais/data_platform/dagster_defs/definitions.py` —
   the entry point
 - `dg.toml` — the Dagster workspace config (registers
   oideachais, tuatha, meaisínfhoghlaim, croilar as code-locations)
@@ -267,7 +267,7 @@ When a Dagster asset is materialised:
 
 ### Multi-tenant DLT asset factory
 
-The KCG `oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py`
+The KCG `sruth/oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py`
 defines a factory pattern for the 33+ Ireland curriculum
 assets, each with the canonical
 `MultiPartitionsDefinition(language, subject)` partition:
@@ -292,7 +292,7 @@ def ireland_curriculum_assets(context, dlt_run_resource):
 
 ## KCG: 21-asset-module / 7-group inventory (canonical)
 
-Per `oideachais/dagster_defs/definitions.py` and the
+Per `sruth/oideachais/dagster_defs/definitions.py` and the
 leabharlann stack overview, the KCG Dagster workspace has
 **21 asset modules** across **7 groups**:
 
@@ -325,7 +325,7 @@ is wired as 7 specific Dagster assets that fire in order:
 7. `cognee_cross_archive_edges` (Stage 5: edges, **queued**)
 
 The **first 5 are wired**; the last 2 are queued in
-`oideachais/REFACTORING.md` Feature 2.
+`sruth/oideachais/REFACTORING.md` Feature 2.
 
 ```
 
@@ -390,10 +390,10 @@ The Cianfhoghlaim platform runs 5 code-locations from a single Dagster UI:
 
 | Code-location | Path | Workspace member |
 |:--|:--|:--|
-| `oideachais` | `oideachais/dagster_defs/` | The lakehouse (280+ assets) |
-| `tuath` | `tuatha/dagster_assets/` | The Celtic MMO |
-| `crypteolas` | `tuatha/crypteolas/dagster_assets/` | The crypto data platform |
-| `croilar` | `croilar/definitions.py` | The multi-persona portfolio |
+| `oideachais` | `sruth/oideachais/dagster_defs/` | The lakehouse (280+ assets) |
+| `tuath` | `sruth/tuatha/dagster_assets/` | The Celtic MMO |
+| `crypteolas` | `sruth/tuatha/sruth/crypteolas/dagster_assets/` | The crypto data platform |
+| `croilar` | `sruth/croilar/definitions.py` | The multi-persona portfolio |
 | `meaisin_heartbeat` | `sruth/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
 
 All 5 are registered in the root `dg.toml` workspace file:

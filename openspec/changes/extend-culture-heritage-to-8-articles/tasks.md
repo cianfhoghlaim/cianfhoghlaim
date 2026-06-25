@@ -32,11 +32,11 @@
 
 **Files (5 new):**
 
-- `oideachais/dlt_sources/official_media/fixtures/identity_leath_cuinn_and_leath_moga.json`
-- `oideachais/dlt_sources/official_media/fixtures/identity_cian.json`
-- `oideachais/dlt_sources/official_media/fixtures/identity_aos_si.json`
-- `oideachais/dlt_sources/official_media/fixtures/identity_tuatha_de_danann.json`
-- `oideachais/dlt_sources/official_media/fixtures/identity_deisi.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_leath_cuinn_and_leath_moga.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_cian.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_aos_si.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_tuatha_de_danann.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_deisi.json`
 
 **Schema per fixture (matches first-batch precedent):**
 
@@ -61,9 +61,9 @@
 
 **Files (3 modified):**
 
-- `oideachais/dlt_sources/official_media/fixtures/identity_ui_liathain.json` — `clipping_path` updated.
-- `oideachais/dlt_sources/official_media/fixtures/identity_delbhna.json` — `clipping_path` updated.
-- `oideachais/dlt_sources/official_media/fixtures/identity_eamonn_deacy_park.json` — `clipping_path` updated.
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_ui_liathain.json` — `clipping_path` updated.
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_delbhna.json` — `clipping_path` updated.
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_eamonn_deacy_park.json` — `clipping_path` updated.
 
 **Reason:** The user moved the clippings from `identity/deacy/references/clippings/` to `identity/lineage/references/clippings/` between the first-batch commit (`4444d468f`) and this change. The 3 fixtures still pointed at the legacy `deacy/` path.
 

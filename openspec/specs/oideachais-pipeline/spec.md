@@ -32,7 +32,7 @@ UK sources with caching fallback.
   the 1 tuatha-platform spec AND the 3 croilar-* specs
   (croilar-portfolio, croilar-data-engineering, croilar-cv-extraction)
 - **AND** the 4 quadrant AGENTS.md files (sruth/oideachais/AGENTS.md,
-  sruth/meaisinfhoghlaim/AGENTS.md, tuatha/AGENTS.md, croilar/AGENTS.md)
+  sruth/meaisinfhoghlaim/AGENTS.md, sruth/tuatha/AGENTS.md, sruth/croilar/AGENTS.md)
   are linked from the spec's Cross-references section
 
 #### Scenario: References the right AGENTS.md / README / STATUS
@@ -552,7 +552,7 @@ embedding, walking a configurable directory and writing to the
 `code_embeddings` LanceDB table. The App uses:
 
 - `UNIFIED_CODE_ROOT` env var (default:
-  `crypteolas/storage/data/code/`).
+  `sruth/crypteolas/storage/data/code/`).
 - `localfs.walk_dir(code_root, recursive=True, live=True, refresh_interval=3600s)`
   with the codebase_indexing.py excludes.
 - 8 file extensions: `*.py`, `*.ts`, `*.tsx`, `*.js`, `*.jsx`, `*.rs`,

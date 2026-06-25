@@ -24,7 +24,7 @@ Use when you need to:
 The **upstream-mirrors** skill is the KCG registry of the 11
 mirrored upstream repositories that the Tuatha / Celtic
 Educational MMO + Crypteolas stack depends on. The mirrors
-live under `docs/tuatha/08-mirrors/` (KEEP — the source
+live under `docs/sruth/tuatha/08-mirrors/` (KEEP — the source
 trees stay); the `_summaries/` subdir (the KCG-authored
 annotations) lives under `references/` in this skill.
 
@@ -48,7 +48,7 @@ The 11 mirrors are:
 
 The KCG mirror policy is:
 
-1. **Source trees stay** under `docs/tuatha/08-mirrors/`
+1. **Source trees stay** under `docs/sruth/tuatha/08-mirrors/`
    (the full clone, including the history).
 2. **KCG-authored summaries** live under
    `references/<mirror>.md` in this skill. Each summary
@@ -144,4 +144,4 @@ tree is the verbatim upstream.
   and react-native-reusables mirrors.
 - `.agents/skills/irish-llm-on-device/SKILL.md` — the
   consumer of the AnyLanguageModel mirror.
-- `docs/tuatha/08-mirrors/` — the source trees (KEEP).
+- `docs/sruth/tuatha/08-mirrors/` — the source trees (KEEP).

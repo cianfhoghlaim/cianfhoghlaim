@@ -53,7 +53,7 @@ The system SHALL define BAML schemas for the 4 extraction tasks: CV, teaching, i
 #### Scenario: cv_extraction.baml compiles (preserved)
 
 - **WHEN** `bun run baml-cli compile` is run
-- **THEN** the BAML compiler SHALL still emit from `croilar/baml/cv_extraction.baml`
+- **THEN** the BAML compiler SHALL still emit from `sruth/croilar/baml/cv_extraction.baml`
 - **AND** the client SHALL still expose `ExtractCV`, `ExtractEducationEntry`, `ExtractAward`, `ExtractPublication`, `ExtractReference` functions
 
 #### Scenario: teaching_extraction.baml compiles (preserved)
@@ -79,7 +79,7 @@ The system SHALL define BAML schemas for the 4 extraction tasks: CV, teaching, i
 #### Scenario: researchgate_extraction.baml compiles (new)
 
 - **WHEN** `bun run baml-cli compile` is run
-- **THEN** the compiler SHALL emit TypeScript + Python client code from `croilar/baml/researchgate_extraction.baml`
+- **THEN** the compiler SHALL emit TypeScript + Python client code from `sruth/croilar/baml/researchgate_extraction.baml`
 - **AND** the client SHALL expose `ExtractResearchGateProfile` and `ExtractPublication` functions
 - **AND** the `ResearchGateProfile` class SHALL have `streamId` and `ownerDisplayName` fields consistent with the LinkedIn schema
 
@@ -90,9 +90,9 @@ The system SHALL maintain a YAML-driven `Stream` registry that decouples stream 
 #### Scenario: streams.yaml is the single source of truth
 
 - **WHEN** the Stream registry is loaded
-- **THEN** it SHALL be loaded from `croilar/config/sources.yaml` under the `streams:` key
+- **THEN** it SHALL be loaded from `sruth/croilar/config/sources.yaml` under the `streams:` key
 - **AND** each entry SHALL have `id`, `owner`, `owner_display_name`, `r2_prefix`, `duckdb_dataset`, `sources: list[{type, config, local_only}]`
-- **AND** the schema SHALL be validated by a Pydantic model in `croilar/_shared/streams.py`
+- **AND** the schema SHALL be validated by a Pydantic model in `sruth/croilar/_shared/streams.py`
 
 #### Scenario: local-only streams skip R2
 
@@ -144,4 +144,4 @@ The system SHALL use the existing DuckLake catalog for cross-DB reads.
 
 **Reason**: The `aleyum` / `cianfhoghlaim` / `carlcashman` persona model conflates stream id with owner identity. The `carlcashman` persona is removed entirely; the `aleyum` / `cianfhoghlaim` personas survive as `owner` aliases under domain-`id` streams (`music` / `teaching`). All hard-coded `flow_id` strings, `aleyum` default usernames, and `AleyumSettings` class names are replaced by the Stream registry.
 
-**Migration**: See `croilar/scripts/migrate-personas-to-streams.ts`. The script renames `notebooks/aleyum/` → `notebooks/streams/music/`, `notebooks/cianfhoghlaim/` → `notebooks/streams/teaching/`, rewrites imports, and updates the BAML `flowId` → `streamId`. After migration, `git grep aleyum|cianfhoghlaim|carlcashman` over the data layer SHALL return only the i18n tenant alias and the OG-image tenant class, both of which are UI branding (preserved by design).
+**Migration**: See `sruth/croilar/scripts/migrate-personas-to-streams.ts`. The script renames `notebooks/aleyum/` → `notebooks/streams/music/`, `notebooks/cianfhoghlaim/` → `notebooks/streams/teaching/`, rewrites imports, and updates the BAML `flowId` → `streamId`. After migration, `git grep aleyum|cianfhoghlaim|carlcashman` over the data layer SHALL return only the i18n tenant alias and the OG-image tenant class, both of which are UI branding (preserved by design).

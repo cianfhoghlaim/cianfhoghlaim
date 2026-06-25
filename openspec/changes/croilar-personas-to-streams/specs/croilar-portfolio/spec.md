@@ -33,7 +33,7 @@ The system SHALL process and serve all images via the croilar-assets R2 bucket +
 
 #### Scenario: Image upload processed (preserved)
 
-- **WHEN** an image is added to `croilar/web/public/images/`
+- **WHEN** an image is added to `sruth/croilar/web/public/images/`
 - **THEN** the build-time sharp pipeline SHALL compress it to 3 sizes (thumbnail 200px, card 800px, full 1920px) and convert to WebP
 - **AND** upload the 3 sizes to `croilar-assets/{category}/{slug}/{size}.webp`
 - **AND** the site SHALL reference the CDN URL `https://assets.iomha.cianfhoghlaim.ie/{category}/{slug}/{size}.webp`
@@ -45,7 +45,7 @@ The system SHALL process and serve all images via the croilar-assets R2 bucket +
 
 ### Requirement: Deployment (preserved)
 
-The system SHALL deploy `croilar/web` to Cloudflare Pages.
+The system SHALL deploy `sruth/croilar/web` to Cloudflare Pages.
 
 #### Scenario: Cloudflare Pages deploy (preserved)
 
@@ -59,14 +59,14 @@ The system SHALL encrypt PII (identity documents) at rest using SOPS.
 
 #### Scenario: Identity documents encrypted (preserved)
 
-- **WHEN** a PDF is added to `croilar/identity/raw/`
+- **WHEN** a PDF is added to `sruth/croilar/identity/raw/`
 - **THEN** the file SHALL be GPG-encrypted with the croilar-encryption key from Infisical
 - **AND** only the `verification_metadata.json` (non-PII summary) SHALL be committed to git
 - **AND** runtime decryption SHALL require Pocket ID OIDC authentication via the Pangolin private resource
 
 ### Requirement: Stream-Driven Notebooks (new)
 
-The system SHALL organise marimo notebooks under `croilar/notebooks/streams/<stream-id>/` keyed by Stream id, not by persona.
+The system SHALL organise marimo notebooks under `sruth/croilar/notebooks/streams/<stream-id>/` keyed by Stream id, not by persona.
 
 #### Scenario: Notebook paths are stream-keyed
 
@@ -82,11 +82,11 @@ The system SHALL organise marimo notebooks under `croilar/notebooks/streams/<str
 
 ### Requirement: i18n Resources Are Stream-Keyed (new)
 
-The system SHALL organise i18n resources under `croilar/packages/i18n/src/resources/streams/<stream-id>/{en,ga}/persona.json`.
+The system SHALL organise i18n resources under `sruth/croilar/packages/i18n/src/resources/streams/<stream-id>/{en,ga}/persona.json`.
 
 #### Scenario: i18n imports use stream ids
 
-- **WHEN** `croilar/packages/i18n/src/index.ts` is loaded
+- **WHEN** `sruth/croilar/packages/i18n/src/index.ts` is loaded
 - **THEN** the resource map SHALL be keyed by Stream id
 - **AND** the persona-keyed imports `aleyum` / `cianfhoghlaim` SHALL NOT exist in the data-layer code
 - **AND** the persona-keyed directories `resources/aleyum/`, `resources/cianfhoghlaim/` SHALL NOT exist after the migration
@@ -104,4 +104,4 @@ The system SHALL organise i18n resources under `croilar/packages/i18n/src/resour
 
 **Reason**: The persona-keyed i18n bundle (`packages/i18n` resources at `aleyum/`, `cianfhoghlaim/`) conflated owner identity with translation scope. Translations belong to a stream (what kind of work), not a persona (who owns it). The bundle is replaced by the stream-keyed layout under `resources/streams/<id>/{en,ga}/`.
 
-**Migration**: The migration script `croilar/scripts/migrate-personas-to-streams.ts` moves `resources/aleyum/{en,ga}/persona.json` → `resources/streams/music/{en,ga}/persona.json` and `resources/cianfhoghlaim/{en,ga}/persona.json` → `resources/streams/teaching/{en,ga}/persona.json`. The TypeScript import map in `packages/i18n/src/index.ts` is rewritten to key on Stream id.
+**Migration**: The migration script `sruth/croilar/scripts/migrate-personas-to-streams.ts` moves `resources/aleyum/{en,ga}/persona.json` → `resources/streams/music/{en,ga}/persona.json` and `resources/cianfhoghlaim/{en,ga}/persona.json` → `resources/streams/teaching/{en,ga}/persona.json`. The TypeScript import map in `packages/i18n/src/index.ts` is rewritten to key on Stream id.

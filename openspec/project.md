@@ -18,7 +18,7 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `tuatha` | `tuatha/` | `tuath` (uv) | Educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto | [README](../tuatha/README.md) | [AGENTS](../tuatha/AGENTS.md) |
 | `croilar` | `croilar/` | (bun workspace) | Multi-persona portfolio + CV + data engineering subproject | [README](../croilar/README.md) | [AGENTS](../croilar/AGENTS.md) |
 
-## Capability Areas (32 specs, 8 groups)
+## Capability Areas (33 specs, 8 groups)
 
 ### Oideachais Quadrant (10 specs)
 
@@ -34,6 +34,7 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `official-media-pipeline` | Instagram-export → British-Isles government source enrichment (DLT + BAML `ClassifyOfficialMedia` + 4-lookup resolver + Dagster `group_name="official_media"`); 3 jurisdictions in PR 1 (IE/NI/EN), the `official-media-pipeline` change | Active |
 | `official-media-fediverse` | Pure Python library for Mastodon webfinger + Bluesky xrpc resolution + Wikipedia REST + Companies House / CRO lookup; reusable by the side-loadable-app phase (the `official-media-fediverse` change) | Active |
 | `official-media-marimo` | Marimo mission control + TanStack Start route + Cognee dataset `oideachais_official_media` with 4 edge types + strong-stance footer card; the `official-media-marimo` change | Active |
+| `upstream-package-monitoring` | 3 CocoIndex v1 Apps (`upstream_blog_monitor`, `upstream_api_surface`, `cocoindex_v1_conformance`) + 4 Firecrawl monitor configs + 1 n8n webhook bridge + 5 Dagster assets + 1 breaking-change sensor for the motherduck / dlthub / lancedb / cocoindex upstream surface; the `upstream-package-monitoring` change | Active |
 
 ### Meaisínfhoghlaim Quadrant (3 specs)
 
@@ -115,7 +116,7 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## File Locations
 
-- Specs: `openspec/specs/<capability>/spec.md` (25 canonical specs)
+- Specs: `openspec/specs/<capability>/spec.md` (33 canonical specs)
 - Changes: `openspec/changes/<change-id>/`
 - Archives: `openspec/changes/archive/YYYY-MM-DD-<change-id>/`
 - Historical research: `docs/openspec/` (point-in-time, do not edit)

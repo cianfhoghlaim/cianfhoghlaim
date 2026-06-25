@@ -3,7 +3,7 @@
 `spaces/meaisin_cliste/curaclam.py` (Theme 3 of Space 2:
 Curaclam Trasteorann) is the same pattern as an_scrudu: the
 BAML `CompareCelticNations` function has been promoted to
-`tuatha/baml_src/celtic_curriculum.baml` (A1) and the
+`sruth/tuatha/baml_src/celtic_curriculum.baml` (A1) and the
 LiteLLM gateway is the primary LLM tier (A2), but the Space's
 `_coerce` function still uses the flat legacy schema.
 

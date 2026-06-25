@@ -109,7 +109,7 @@ The `protectedProcedure` oRPC middleware SHALL call `auth.api.getSession()` agai
 The root `app.config.ts` SHALL be replaced by a TanStack Start native `vite.config.ts` at project root that uses `@tanstack/react-start/plugin/vite` and `@vitejs/plugin-react`, removing all Vinxi 0.4 router references and `vinxi/types/client` TypeScript types.
 
 #### Scenario: Dev server starts with TanStack Start native
-- **WHEN** developer runs `bun run dev` in oideachais/web
+- **WHEN** developer runs `bun run dev` in sruth/oideachais/web
 - **THEN** TanStack Start dev server starts on port 3001
 - **AND** file-based routes under `apps/web/src/app/routes/` are discovered
 - **AND** SSR streaming works with React Suspense
@@ -117,6 +117,6 @@ The root `app.config.ts` SHALL be replaced by a TanStack Start native `vite.conf
 
 ## REMOVED Requirements
 
-### Requirement: Vinxi Router `oideachais/web/src/` (empty directory)
+### Requirement: Vinxi Router `sruth/oideachais/web/src/` (empty directory)
 **Reason**: Vinxi 0.4 legacy; TanStack Start is now native.
 **Migration**: None — directory was empty.

@@ -10,7 +10,7 @@ of embedding models and version-anchored retrieval.
 
 #### Scenario: Query a historical version
 
-- **GIVEN** a LanceDB table at `oideachais/lancedb_data/leabharlann_books`
+- **GIVEN** a LanceDB table at `sruth/oideachais/lancedb_data/leabharlann_books`
   with N versions (one per re-index)
 - **WHEN** the user calls `table.checkout(version=2).search(...)`
 - **THEN** the search returns rows from version 2 only

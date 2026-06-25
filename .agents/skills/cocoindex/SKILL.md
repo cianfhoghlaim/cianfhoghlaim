@@ -48,22 +48,22 @@ own state — only when an example writes to a target database).
 
 **Round 8 phase 1 (2026-06-23) — code-graph companion pattern:**
 
-The canonical v1 codebase indexer (`oideachais/cocoindex_flows/codebase_indexing.py`)
+The canonical v1 codebase indexer (`sruth/oideachais/cocoindex_flows/codebase_indexing.py`)
 now has a code-graph companion v1 App (`codebase_graph_app`) that
 extracts AST relationships into 2 LanceDB tables
 (`codebase_graph` + `codebase_graph_edges`). 7 node types +
 7 edge types, 11 languages with Tree-sitter AST mappings,
 29+ languages detected via
-`oideachais/cocoindex_flows/chunking/languages.py`. The companion
+`sruth/oideachais/cocoindex_flows/chunking/languages.py`. The companion
 App is driven by 3 Dagster assets in
-`oideachais/dagster_defs/assets/codebase_assets.py`:
+`sruth/oideachais/dagster_defs/assets/codebase_assets.py`:
 `codebase_chunks`, `codebase_code_graph`, `codebase_architecture_docs`.
 
 **Round 7 phase 2 (2026-06-24) — 4 v1 infrastructure companions:**
 
 The infrastructure surface (HTTP routes, filesystem layout, storage
 backends, config files) is now on v1 CocoIndex via 4 new Apps in
-`oideachais/cocoindex_flows/`:
+`sruth/oideachais/cocoindex_flows/`:
 
 - `api_indexing.py` (v1 App `ApiIndex`) — 4 frameworks (FastAPI +
   Hono + TanStack Start + Convex HTTP) → `api_endpoints` LanceDB
@@ -77,15 +77,15 @@ backends, config files) is now on v1 CocoIndex via 4 new Apps in
   k8s / pulumi / dg / github / justfile) → `config_files` LanceDB
 
 Driven by 4 Dagster assets in
-`oideachais/dagster_defs/assets/infrastructure_assets.py`:
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py`:
 `api_endpoints`, `filesystem_layout`, `storage_backends`,
 `config_files` (group `infrastructure`).
 
 **Round 7 phase 3 (2026-06-24) — 2 v1 embedding Apps:**
 
 The unified embedding pipeline from
-`crypteolas/cocoindex_flows/unified_embedding.py` is now on v1
-CocoIndex via 2 Apps in `oideachais/cocoindex_flows/unified_embedding.py`:
+`sruth/crypteolas/cocoindex_flows/unified_embedding.py` is now on v1
+CocoIndex via 2 Apps in `sruth/oideachais/cocoindex_flows/unified_embedding.py`:
 
 - `unified_app` (v1 App `UnifiedEmbedding`) — reads from any DuckDB
   connection (default: `crypteolas_catalog.docs.scraped_documents`),
@@ -98,7 +98,7 @@ CocoIndex via 2 Apps in `oideachais/cocoindex_flows/unified_embedding.py`:
   with BGE-M3, writes to the `code_embeddings` LanceDB table.
 
 Driven by 2 Dagster assets in
-`oideachais/dagster_defs/assets/unified_embedding_assets.py`:
+`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py`:
 `unified_embeddings`, `code_embeddings` (group `embedding`).
 
 **For detailed documentation:** <https://cocoindex.io/docs/>
@@ -559,8 +559,8 @@ this repo is the source of one or more `DocSkill` nodes in the
 `docs_skills_graph` FalkorDB graph and one or more `docs_skills_chunks`
 rows in LanceDB.
 
-- **App**: `oideachais/cocoindex_flows/docs_skills_consolidation.py`
-- **Dagster assets**: `oideachais/dagster_defs/assets/docs_skills_assets.py`
+- **App**: `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py`
+- **Dagster assets**: `sruth/oideachais/dagster_defs/assets/docs_skills_assets.py`
   (groups `docs_skills` + `codebase`)
 - **BAML schema**: `baml_src/docs_skills_consolidation.baml`
 - **OpenSpec change**: `openspec/changes/docs-skills-consolidation-pipeline/`
@@ -570,7 +570,7 @@ rows in LanceDB.
 
 The companion codebase-indexing v1 App (replacement for the legacy
 `ccc` CLI) lives at
-`oideachais/cocoindex_flows/codebase_indexing.py`; see the `ccc`
+`sruth/oideachais/cocoindex_flows/codebase_indexing.py`; see the `ccc`
 skill's deprecation banner.
 
 **For comprehensive documentation:** <https://cocoindex.io/docs/>
@@ -589,7 +589,7 @@ stedding/huggingface/hub/
 The canonical model is **`vidore/colpali-v1.3`** (1024-d
 multi-vector, vision + text). For LlamaIndex aliasing via
 LiteLLM, use the alias `vision` (set in
-`oideachais/api/router.py`). The KCG marimo dashboard
+`sruth/oideachais/api/router.py`). The KCG marimo dashboard
 `/dashboards/curriculum-images` shows a live demo of the
 multimodal ColPali + Qdrant MaxSim search.
 ## 2026-06 update (CocoIndex v1.0.1–1.0.7)

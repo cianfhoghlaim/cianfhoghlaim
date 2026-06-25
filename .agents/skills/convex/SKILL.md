@@ -644,10 +644,10 @@ LLM agents (Pydantic AI, Agno, Google ADK).
 ## BetterAuth + Hono integration
 
 The KCG auth layer (BetterAuth, see `.agents/skills/better-auth/SKILL.md`)
-runs behind a Hono API in the croilar/portal app:
+runs behind a Hono API in the sruth/croilar/portal app:
 
 ```typescript
-// croilar/apps/portal/src/server/auth.ts
+// sruth/croilar/apps/portal/src/server/auth.ts
 import { Hono } from "hono";
 import { auth } from "@/lib/auth";
 

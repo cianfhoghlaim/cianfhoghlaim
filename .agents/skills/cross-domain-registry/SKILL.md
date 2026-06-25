@@ -1,6 +1,6 @@
 ---
 name: cross-domain-registry
-description: KCG's `{nation}.{domain}.{entity}` asset-key contract for every DLT source and Dagster asset. 8 nations (ie/ni/en/sct/wls/iom/jey/ggy) × 5 domains (education/medicine/law/statistics/site_analysis) × 7 kinds. Sole truth: `oideachais/sources.yaml`. Use when adding a new DLT source, registering a new Dagster asset, migrating from legacy asset keys, or resolving a name collision between nations.
+description: KCG's `{nation}.{domain}.{entity}` asset-key contract for every DLT source and Dagster asset. 8 nations (ie/ni/en/sct/wls/iom/jey/ggy) × 5 domains (education/medicine/law/statistics/site_analysis) × 7 kinds. Sole truth: `sruth/oideachais/sources.yaml`. Use when adding a new DLT source, registering a new Dagster asset, migrating from legacy asset keys, or resolving a name collision between nations.
 ---
 
 # Cross-Domain Asset-Key Registry
@@ -27,7 +27,7 @@ asset-key of the form `{nation}.{domain}.{entity}`:
 | `domain` | `education` / `medicine` / `law` / `statistics` / `site_analysis` | Knowledge domain |
 | `entity` | kebab-case slug (e.g. `primary-curriculum`, `ccea-english`, `irish-statute-book`) | The specific corpus or asset |
 
-The canonical registry is `oideachais/sources.yaml`. Every
+The canonical registry is `sruth/oideachais/sources.yaml`. Every
 DLT source registers there with metadata (URL, schedule,
 auth, etc.).
 
@@ -80,7 +80,7 @@ auth, etc.).
 ## SourceFactory pydantic validator
 
 The contract is enforced at code-load time by
-`oideachais/dlt_utils/source_factory.py:SourceFactory`:
+`sruth/oideachais/dlt_utils/source_factory.py:SourceFactory`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -107,7 +107,7 @@ class Domain(str, Enum):
 
 
 class SourceSpec(BaseModel):
-    """One DLT source, registered in oideachais/sources.yaml."""
+    """One DLT source, registered in sruth/oideachais/sources.yaml."""
 
     nation: Nation
     domain: Domain
@@ -138,7 +138,7 @@ The report shows:
 ## Backwards-compat aliases
 
 The legacy asset keys (e.g. `oideachais.curriculum_pages`)
-are resolved via `oideachais/dagster_defs/definitions.py:BACKWARDS_COMPAT_ASSET_ALIASES`.
+are resolved via `sruth/oideachais/dagster_defs/definitions.py:BACKWARDS_COMPAT_ASSET_ALIASES`.
 The alias table is removed in a follow-on `drop-asset-key-aliases`
 change.
 
@@ -151,8 +151,8 @@ change.
 ## Adding a new source (5-step workflow)
 
 ```bash
-# 1. Add the source to oideachais/sources.yaml
-cat >> oideachais/sources.yaml <<'EOF'
+# 1. Add the source to sruth/oideachais/sources.yaml
+cat >> sruth/oideachais/sources.yaml <<'EOF'
 - name: "IoM Government - Education"
   nation: iom
   domain: education
@@ -165,11 +165,11 @@ EOF
 # 2. Run the contract validator
 uv run --package oideachais python -m oideachais.sources.sources_validation
 
-# 3. Implement the DLT source (under oideachais/dlt_sources/)
-# File: oideachais/dlt_sources/iom/education.py
+# 3. Implement the DLT source (under sruth/oideachais/dlt_sources/)
+# File: sruth/oideachais/dlt_sources/iom/education.py
 
-# 4. Register the Dagster asset (under oideachais/dagster_defs/assets/)
-# File: oideachais/dagster_defs/assets/iom/education.py
+# 4. Register the Dagster asset (under sruth/oideachais/dagster_defs/assets/)
+# File: sruth/oideachais/dagster_defs/assets/iom/education.py
 
 # 5. Re-run validation --strict
 uv run --package oideachais python -m oideachais.sources.sources_validation --strict
@@ -177,7 +177,7 @@ uv run --package oideachais python -m oideachais.sources.sources_validation --st
 
 ## Cross-references
 
-- `oideachais/sources.yaml` — the canonical registry
+- `sruth/oideachais/sources.yaml` — the canonical registry
 - `.agents/skills/oideachas-pipeline/SKILL.md` — the
   oideachais pipeline (the source of the contract)
 - `.agents/skills/change-detection/SKILL.md` — sitemap

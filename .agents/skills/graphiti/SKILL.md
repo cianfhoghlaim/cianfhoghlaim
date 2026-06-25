@@ -51,9 +51,9 @@ Activate when users need:
 |-----------|------|
 | Stack Config | `infrastructure/stacks/graphiti/` |
 | Agent integration | `meaisínfhoghlaim/agents/` |
-| CocoIndex flow | `oideachais/cocoindex_flows/learning_outcome_graph.py` |
-| Cognee (primary) | `oideachais/cognee_integration/` |
-| Dagster assets | `oideachais/dagster_defs/assets/cognify_assets.py` |
+| CocoIndex flow | `sruth/oideachais/cocoindex_flows/learning_outcome_graph.py` |
+| Cognee (primary) | `sruth/oideachais/cognee_integration/` |
+| Dagster assets | `sruth/oideachais/dagster_defs/assets/cognify_assets.py` |
 
 ### Research References
 

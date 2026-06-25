@@ -3,7 +3,7 @@
 ### Requirement: DLT sources MUST live in the canonical {nation}/{domain} layout
 The oideachais quadrant SHALL provide a single canonical layout
 for dlt sources. Every `@dlt.source` function in
-`oideachais/dlt_sources/` MUST live in a file whose path follows
+`sruth/oideachais/dlt_sources/` MUST live in a file whose path follows
 the pattern `dlt_sources/domains/{domain}/{nation}/{source}.py`,
 where `{domain}` is one of `education` / `medicine` / `law` /
 `statistics` / `site_analysis` and `{nation}` is one of `ie` /
@@ -13,7 +13,7 @@ where `{domain}` is one of `education` / `medicine` / `law` /
 - **WHEN** a contributor adds a new `@dlt.source` for the
   education domain (UK, IE, or Crown Dependencies)
 - **THEN** they MUST place it at
-  `oideachais/dlt_sources/domains/education/{nation}/{source}.py`
+  `sruth/oideachais/dlt_sources/domains/education/{nation}/{source}.py`
   (NOT in `dlt_sources/uk/{nation}/` or `dlt_sources/ireland/`
   or `dlt_sources/crown_dependencies/`)
 
@@ -21,7 +21,7 @@ where `{domain}` is one of `education` / `medicine` / `law` /
 - **WHEN** a contributor adds a new `@dlt.source` for the
   medicine or law domain
 - **THEN** they MUST place it at
-  `oideachais/dlt_sources/domains/{medicine|law}/{nation}/{source}.py`
+  `sruth/oideachais/dlt_sources/domains/{medicine|law}/{nation}/{source}.py`
 
 #### Scenario: The legacy directory is encountered
 - **WHEN** a contributor encounters a `dlt_sources/uk/`,
@@ -36,7 +36,7 @@ where `{domain}` is one of `education` / `medicine` / `law` /
 
 ### Requirement: AGENTS.md Quick routing table MUST point to the canonical location
 The system MUST update the "Quick routing" table in
-`oideachais/AGENTS.md` to point new contributors to the canonical
+`sruth/oideachais/AGENTS.md` to point new contributors to the canonical
 `dlt_sources/domains/{domain}/{nation}/` location. The routing
 table MUST NOT include the legacy paths; all references MUST be
 to the canonical {nation}/{domain} location.

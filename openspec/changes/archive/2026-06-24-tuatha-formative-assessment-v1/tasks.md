@@ -15,7 +15,7 @@
       after the 4-agent system
 - [x] 4 cross-references to the new skill
 
-## 3. Update tuatha/AGENTS.md
+## 3. Update sruth/tuatha/AGENTS.md
 
 - [x] Update header (Celtic Educational MMO + Crypto → British Isles
       Formative Assessment MMO)
@@ -23,7 +23,7 @@
 - [x] Add 2 new routing rows (achievement badge + formative quest)
 - [x] Add 4 new skill entries to Related skills
 
-## 4. Update tuatha/README.md
+## 4. Update sruth/tuatha/README.md
 
 - [x] Update header (Celtic Educational MMO + Crypto → British Isles
       Formative Assessment MMO)

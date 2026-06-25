@@ -4,7 +4,7 @@
 The `cianfhoghlaim-base` template is the foundation project for the Cianfhoghlaim stack, generated via Better-T-Stack CLI. It provides a Turborepo monorepo with TanStack Start (web), Expo (mobile), oRPC (type-safe API), Drizzle ORM (database), PostgreSQL, and BetterAuth (authentication). The template supports Cloudflare Workers deployment via Alchemy.
 
 ## Why This Matters for Kings' College Galway
-This is the project's own base template — the starting point from which all sruth/ frontends are scaffolded. Every new Cianfhoghlaim application (`oideachais/web/`, `tuath/ui/`, `aleyum/`, `crypteolas/`) derives from this monorepo pattern. The agent instruction files (AGENTS.md, CLAUDE.md, GEMINI.md) and IDE rules (.roo, .ruler, .github/copilot-instructions.md) define the AI-assisted development conventions used across the entire codebase. The monorepo layout (apps/web, apps/native, packages/api, packages/auth, packages/db) is the canonical structure.
+This is the project's own base template — the starting point from which all sruth/ frontends are scaffolded. Every new Cianfhoghlaim application (`sruth/oideachais/web/`, `tuath/ui/`, `aleyum/`, `sruth/crypteolas/`) derives from this monorepo pattern. The agent instruction files (AGENTS.md, CLAUDE.md, GEMINI.md) and IDE rules (.roo, .ruler, .github/copilot-instructions.md) define the AI-assisted development conventions used across the entire codebase. The monorepo layout (apps/web, apps/native, packages/api, packages/auth, packages/db) is the canonical structure.
 
 ## Key Patterns Preserved
 - **docs/web/cianfhoghlaim-base/README.md** — Base template overview: TanStack Start + Expo + oRPC + Drizzle + BetterAuth monorepo
@@ -17,7 +17,7 @@ This is the project's own base template — the starting point from which all sr
 - **docs/web/cianfhoghlaim-base/.ruler/bts.md** — Ruler configuration for Better-T-Stack project structure
 
 ## Source Files
-This is the project's own base template (not a third-party clone). Full source removed (2026-06-06). Source available in the main repository under `oideachais/web/`. Agent instructions and project conventions retained.
+This is the project's own base template (not a third-party clone). Full source removed (2026-06-06). Source available in the main repository under `sruth/oideachais/web/`. Agent instructions and project conventions retained.
 
 ## What Was Removed
 - All TypeScript/JavaScript source files (.ts, .tsx, .js, .jsx)

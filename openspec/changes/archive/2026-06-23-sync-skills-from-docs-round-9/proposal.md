@@ -4,13 +4,13 @@
 
 A ninth round of `docs/*` consolidation. The user asked
 to process `docs/web/` (98 .md files + 2 cloned subdirs)
-and `docs/tuatha/08-mirrors/` (93 MB of 11 cloned
+and `docs/sruth/tuatha/08-mirrors/` (93 MB of 11 cloned
 upstream repos), then **delete both `docs/web/` and
-`docs/tuatha/` entirely**.
+`docs/sruth/tuatha/` entirely**.
 
 This is the final "clean-up" round for the web +
 mirror sprawl. The web/ directory mirrors the topical
-subdir pattern from `docs/tuatha/` (00-nav / 01-tanstack
+subdir pattern from `docs/sruth/tuatha/` (00-nav / 01-tanstack
 / 02-betterauth / 03-ag-ui / 04-alchemy / 05-convex /
 06-effect / 07-react-frontend / 08-repos / 09-clippings)
 plus 2 cloned repos (`chrome-devtools-mcp/`,
@@ -24,7 +24,7 @@ to the existing `tanstack-start`, `better-auth`,
 `pydantic-ai`, `monorepo`, `ui-components`, `stagehand`,
 `pdf`, `copilotkit`, `celtic-asset-generation`,
 `tuatha-mmo` skills) and the 93 MB of skeletonised
-upstream repos under `docs/tuatha/08-mirrors/`.
+upstream repos under `docs/sruth/tuatha/08-mirrors/`.
 
 The 11 mirror source trees in `08-mirrors/` are
 re-cloneable from upstream (SpacetimeDB, wgpu, x402,
@@ -117,7 +117,7 @@ skill.
 **13 subdirs deleted:**
 - 2 cloned subdirs in `docs/web/`:
   `chrome-devtools-mcp/`, `tanmaxx-17/`
-- 11 cloned upstream repos in `docs/tuatha/08-mirrors/`:
+- 11 cloned upstream repos in `docs/sruth/tuatha/08-mirrors/`:
   SpacetimeDB, wgpu, x402, gdext, agui_kotlin,
   hophacks-spacetimedb-workshop, react-native-godot,
   react-native-reusables, spacetimedb-cookbook,
@@ -125,12 +125,12 @@ skill.
 
 **2 whole directories deleted:**
 - `docs/web/` (after all moves done)
-- `docs/tuatha/` (after the 08-mirrors subdir is gone —
+- `docs/sruth/tuatha/` (after the 08-mirrors subdir is gone —
   this is the final "delete tuatha" step from the user)
 
 ### Disk recovered
 
-- `docs/tuatha/08-mirrors/`: **93 MB** (SpacetimeDB 41M +
+- `docs/sruth/tuatha/08-mirrors/`: **93 MB** (SpacetimeDB 41M +
   x402 26M + spacetimedb-cookbook 9.6M +
   react-native-reusables 7.9M + gdext 5.0M + wgpu 840K +
   spacetimedb-typescript-sdk 944K + hophacks 328K +
@@ -148,7 +148,7 @@ skill.
 - **Affected code**: none. Skills + OpenSpec only.
 - **Affected skills** (16 total): 2 new + 14 expanded
 - **Net docs/ size change**: 96.5 MB → 0 (both `docs/web/`
-  and `docs/tuatha/` deleted entirely)
+  and `docs/sruth/tuatha/` deleted entirely)
 - **Net `.agents/skills/` size change**: +~3,000 lines
   (2 new SKILL.md bodies + 52 references + 14 expanded
   SKILL.md sections)
@@ -164,9 +164,9 @@ skill.
   footer)
 - The 38 listed docs files are removed
 - The 13 subdirs are removed (2 in `docs/web/`, 11 in
-  `docs/tuatha/08-mirrors/`)
+  `docs/sruth/tuatha/08-mirrors/`)
 - `docs/web/` is gone
-- `docs/tuatha/` is gone
+- `docs/sruth/tuatha/` is gone
 - The `agentic-frontend-frameworks` skill has its
   capability spec wired up (the round-6 capability was
   previously unbacked)

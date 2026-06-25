@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`leabharlann-full-stack-demo` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/dagster_defs/assets/leabharlann_demo_assets.py` and `oideachais/notebooks/leabharlann_full_stack_demo.py`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`leabharlann-full-stack-demo` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `sruth/oideachais/dagster_defs/assets/leabharlann_demo_assets.py` and `sruth/oideachais/notebooks/leabharlann_full_stack_demo.py`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 A Dagster asset that processes 2 sample leabharlann PDFs end-to-end through the full stack (pymupdf → BAML → CocoIndex v1 → LanceDB), with asset checks and a Marimo notebook UI.
 

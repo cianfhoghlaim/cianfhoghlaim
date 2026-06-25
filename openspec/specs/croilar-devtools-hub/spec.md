@@ -37,7 +37,7 @@ The system SHALL keep the Glance dashboard in sync with the Convex registry.
 
 #### Scenario: Regenerator emits 5 pages
 
-- **WHEN** `bun run croilar/scripts/regenerate-glance-config.ts` runs
+- **WHEN** `bun run sruth/croilar/scripts/regenerate-glance-config.ts` runs
 - **THEN** the output SHALL contain 5 pages: `Home`, `tuatha`, `oideachais`, `croilar`, `meaisínfhoghlaim`
 - **AND** each project page SHALL have at least: a search box, a routes widget, a Dagster assets widget, a test results widget
 
@@ -120,5 +120,5 @@ The system SHALL require the `CROILAR_CONVEX_DEPLOY_KEY` environment variable to
 
 - **WHEN** the analyzer is run without `CROILAR_CONVEX_DEPLOY_KEY`
 - **THEN** it SHALL exit non-zero with a clear error message
-- **AND** the error message SHALL direct the user to the Infisical `dev-baile/croilar/convex/deploy_key` path
+- **AND** the error message SHALL direct the user to the Infisical `dev-baile/sruth/croilar/convex/deploy_key` path
 

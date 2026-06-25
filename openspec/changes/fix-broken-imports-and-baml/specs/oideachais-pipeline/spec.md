@@ -23,7 +23,7 @@ SHALL NOT be used in any new code.
 
 ### Requirement: BAML functions use canonical clients from clients.baml
 The oideachais quadrant SHALL use the canonical clients declared in
-`oideachais/baml_src/clients.baml` for all BAML function signatures.
+`sruth/oideachais/baml_src/clients.baml` for all BAML function signatures.
 The canonical clients are:
 - `LitellmClient` (deepseek-chat via `http://litellm:4000/v1`)
 - `DeepSeekClient` (deepseek-v4-pro)
@@ -36,7 +36,7 @@ in any new BAML file.
 
 #### Scenario: A new BAML function is added
 - **WHEN** a contributor adds a new BAML function to any
-  `oideachais/baml_src/*.baml` file
+  `sruth/oideachais/baml_src/*.baml` file
 - **THEN** the function MUST use one of the canonical clients from
   `clients.baml` via the `client <Name>` syntax
 - **AND** it MUST NOT define a new inline `client<llm> ... { ... }`
@@ -45,7 +45,7 @@ in any new BAML file.
 ### Requirement: BAML function ClassifyOfficialMedia is defined
 The oideachais quadrant SHALL provide a BAML function
 `ClassifyOfficialMedia(ig_username, ig_bio, ig_external_url)` in
-`oideachais/baml_src/site_analysis.baml`. The function MUST return
+`sruth/oideachais/baml_src/site_analysis.baml`. The function MUST return
 a boolean or structured classification indicating whether the given
 Instagram profile is an official-media account.
 
@@ -60,7 +60,7 @@ Instagram profile is an official-media account.
 The system MUST define `HNSW_DROP_THRESHOLD = 50` and `get_executor(name="duckdb")`
 as canonical constants/functions in `oideachais.dlt_utils.batching` and
 `oideachais.dlt_utils.safety` respectively. The shim
-`oideachais/oideachais/core/__init__.py` MAY exist as a
+`sruth/oideachais/sruth/oideachais/core/__init__.py` MAY exist as a
 backward-compat re-export for one release, but new code MUST import
 directly from `dlt_utils`.
 

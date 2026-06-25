@@ -7,7 +7,7 @@
 The `tuatha-mmo` skill SHALL model the in-game cosmology
 on the five classical Celtic elements (Spirit, Water,
 Fire, Earth, Air) plus the **Anam Cara** mechanic. The
-`tuatha/game/` quadrant module MUST consume the same
+`sruth/tuatha/game/` quadrant module MUST consume the same
 cosmology. The cosmology drives:
 
 - The 5 playable classes

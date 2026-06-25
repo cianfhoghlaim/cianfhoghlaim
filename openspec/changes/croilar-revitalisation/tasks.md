@@ -1,10 +1,10 @@
 # Tasks — croilar-revitalisation
 
 ## Phase 0: Pre-flight cleanup (DONE — PR-0 merged)
-- [x] PR-0. Delete duplicate `croilar/dagster_assets/definitions.py`
+- [x] PR-0. Delete duplicate `sruth/croilar/dagster_assets/definitions.py`
 - [x] PR-0. Create missing `pipelines/cv/__init__.py` re-exports
 - [x] PR-0. Create `.dlt/config.toml` + `.dlt/secrets.toml.example`
-- [x] PR-0. Create `croilar/.gitignore`
+- [x] PR-0. Create `sruth/croilar/.gitignore`
 - [x] PR-0. Refactor 5-level parent traversal → `_shared.config.paths`
 - [x] PR-0. Create `tests/conftest.py` + `tests/test_smoke.py` (27 tests)
 - [x] PR-0. Make `_shared/__init__.py` sruth import optional
@@ -15,7 +15,7 @@
 
 ## Phase 1: Persona registry + monorepo restructure (3 PRs)
 - [ ] PR-1a. Write `openspec/changes/croilar-revitalisation/` (this file + proposal + 5 spec deltas)
-- [ ] PR-1b. Move `croilar/src/` → `croilar/apps/web/`; add `croilar/apps/{portal,storybook}/`; add `croilar/packages/{ui,auth,db,i18n,config,analytics}/`
+- [ ] PR-1b. Move `sruth/croilar/src/` → `sruth/croilar/apps/web/`; add `sruth/croilar/apps/{portal,storybook}/`; add `sruth/croilar/packages/{ui,auth,db,i18n,config,analytics}/`
 - [ ] PR-1c. Update root `package.json` workspaces + `pyproject.toml` uv sources
 - [ ] PR-1d. Persona registry: `_schema.ts`, `_registry.ts`, `aleyum.ts`, `cianfhoghlaim.ts`
 - [ ] PR-1e. Multi-persona routing: `_persona/$persona.tsx` + `__root.tsx` theme + i18n swap + persona switcher
@@ -64,7 +64,7 @@
 - [ ] PR-6c. 5 new multi-arch images: `croilar-web`, `croilar-portal`, `croilar-dagster`, `croilar-marimo`, `croilar-image-pipeline`
 - [ ] PR-6d. 5 existing image multi-arch rebuilds: `browser-grid`, `cal-diy`, `stagehand-local`, `n8n-init`, `vikunja-seed`
 - [ ] PR-6e. SOPS setup for long-lived credentials
-- [ ] PR-6f. 20 new Infisical items in `dev-baile/croilar/`
+- [ ] PR-6f. 20 new Infisical items in `dev-baile/sruth/croilar/`
 - [ ] PR-6g. Dagger module: `infrastructure/dagger/` with 6 functions
 - [ ] PR-6h. R2 bucket `croilar-assets` + sharp 3-size WebP image pipeline
 - [ ] Validate: all 14 workflows pass CI; 8 Komodo procedures are callable; 10 images publishable
@@ -83,7 +83,7 @@
 - [ ] `uv sync` exits 0
 - [ ] `bun install` exits 0
 - [ ] `bun run typecheck` exits 0 (all croilar workspaces)
-- [ ] `uv run pytest croilar/tests/` exits 0
+- [ ] `uv run pytest sruth/croilar/tests/` exits 0
 - [ ] `bunx --yes openspec validate croilar-revitalisation --strict` exits 0
 - [ ] `docker compose -f <stack>/compose.yaml config --quiet` exits 0 for all 4 croilar stacks
-- [ ] `ruff check croilar/ --select E,F,I,W` exits 0 (0 errors on new code)
+- [ ] `ruff check sruth/croilar/ --select E,F,I,W` exits 0 (0 errors on new code)

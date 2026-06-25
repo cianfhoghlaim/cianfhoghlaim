@@ -29,15 +29,15 @@ All work lands on the `feat/author-archive-v1` branch (which builds on
 
 ### 1.1 Dagster assets (DONE)
 
-- [x] Create `oideachais/dagster_defs/assets/official_media/scraping_assets.py`
+- [x] Create `sruth/oideachais/dagster_defs/assets/official_media/scraping_assets.py`
       with 4 assets: `pre_research`, `bulk_scrape`, `condense`, `identify_uis`
 - [x] 17 sample sources covering all 10 official_media categories
-- [x] Register in `oideachais/dagster_defs/assets/official_media/__init__.py`
-- [x] Register in `oideachais/dagster_defs/assets/__init__.py` `all_assets`
+- [x] Register in `sruth/oideachais/dagster_defs/assets/official_media/__init__.py`
+- [x] Register in `sruth/oideachais/dagster_defs/assets/__init__.py` `all_assets`
 
 ### 1.2 Hero example script (DONE)
 
-- [x] Create `oideachais/scripts/pre_research_cps_gov_uk.py` running all
+- [x] Create `sruth/oideachais/scripts/pre_research_cps_gov_uk.py` running all
       4 phases on CPS.gov.uk
 - [x] Persist output to `/tmp/author_archive_cps_gov_uk.json` for marimo
 
@@ -67,7 +67,7 @@ the UoG and Gemini corpora are flowing.
 
 ## Stage 4 — Multi-target deployment (deferred)
 
-`oideachais/dlt_utils/target_factory.py` + 3 targets (dev=DuckDB,
+`sruth/oideachais/dlt_utils/target_factory.py` + 3 targets (dev=DuckDB,
 staging=MotherDuck, prod=Garage S3 + Lakekeeper) + `make_target.sh`.
 Deferred to `author-archive-v4`.
 

@@ -11,11 +11,11 @@
       - 4 mise tasks
       - 4 priority compose stacks (oideachais, litellm,
         langfuse, lakehouse)
-- [x] `/oideachais/AGENTS.md` — add "Priority quick reference"
+- [x] `/sruth/oideachais/AGENTS.md` — add "Priority quick reference"
       section at the top
-- [x] `/meaisinfhoghlaim/AGENTS.md` — add same
-- [x] `/tuatha/AGENTS.md` — add same
-- [x] `/croilar/AGENTS.md` — add same
+- [x] `/sruth/meaisinfhoghlaim/AGENTS.md` — add same
+- [x] `/sruth/tuatha/AGENTS.md` — add same
+- [x] `/sruth/croilar/AGENTS.md` — add same
 - [x] `/infrastructure/AGENTS.md` — add same (with all 94
       stacks surfaced)
 - [x] `/openspec/AGENTS.md` — add "Priority quick reference"

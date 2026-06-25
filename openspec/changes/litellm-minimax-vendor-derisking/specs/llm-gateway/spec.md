@@ -78,7 +78,7 @@ The system SHALL expose a BAML `client<llm> MiniMax` in `baml_src/clients.baml` 
 - **AND** the Langfuse trace SHALL attribute the call to the `minimax` alias
 
 #### Scenario: oideachais MiniMaxClient rewired
-- **GIVEN** `oideachais/baml_src/clients.baml::MiniMaxClient`
+- **GIVEN** `sruth/oideachais/baml_src/clients.baml::MiniMaxClient`
 - **WHEN** the file is read
 - **THEN** it SHALL point at the gateway (not directly at opencode-go)
 - **AND** the file SHALL carry a comment noting the previous direct-to-gateway version is preserved in git history

@@ -3,7 +3,7 @@
 ## Purpose
 
 `tuatha-platform` is a capability of the Cianfhoghlaim platform. The
-corresponding source code lives at `tuatha/` (the Celtic educational
+corresponding source code lives at `sruth/tuatha/` (the Celtic educational
 MMO + crypto platform, ~15K+ LOC, registered as a top-level uv
 workspace member). See `docs/00_index.md` for the quadrant map and
 `docs/00-core/CLAUDE.md` for the project identity.
@@ -16,30 +16,30 @@ The tuatha quadrant houses the Celtic educational MMO (Massively
 Multiplayer Online game) and the `crypteolas` crypto data platform.
 The 4 sub-modules are:
 
-- `tuatha/game/` — the Babylon.js game front-end (the MMO client)
-- `tuatha/crates/` — the Rust + SpacetimeDB game engine (the MMO
+- `sruth/tuatha/game/` — the Babylon.js game front-end (the MMO client)
+- `sruth/tuatha/crates/` — the Rust + SpacetimeDB game engine (the MMO
   server)
-- `tuatha/crypteolas/` — the crypto data platform (uses Bitcoin,
+- `sruth/tuatha/sruth/crypteolas/` — the crypto data platform (uses Bitcoin,
   Ethereum, Solana, SpacetimeDB as a settlement layer)
-- `tuatha/ui/` — the TanStack Start front-end for the educational
+- `sruth/tuatha/ui/` — the TanStack Start front-end for the educational
   game and the BAML-driven Celtic content extraction
 
 The tuatha quadrant is registered in the root `dg.toml` as a
-Dagster code-location (with `tuatha/dg.toml` for the local code-location
+Dagster code-location (with `sruth/tuatha/dg.toml` for the local code-location
 config). The BAML schemas for the tuatha UI components are in
 `baml_src/ui_components.baml` and `baml_src/image_generation.baml`.
 
 The tuatha content extends into croilar: the croilar personal-portfolio
 site has a `game` subproject that consumes the tuatha MMO content, and
 the 3 personas (aleyum, cianfhoghlaim, carlcashman) each have a
-`wow` or `Hades II` content surface (see `tuatha/wow/` and
-`tuatha/Hades II/`).
+`wow` or `Hades II` content surface (see `sruth/tuatha/wow/` and
+`sruth/tuatha/Hades II/`).
 ## Requirements
 ### Requirement: 4 sub-modules
 
-The system SHALL declare 4 sub-modules in `tuatha/`:
+The system SHALL declare 4 sub-modules in `sruth/tuatha/`:
 `game/` (Babylon.js front-end), `crates/` (Rust + SpacetimeDB game
-engine), `crypteolas/` (crypto data platform), `ui/` (TanStack Start
+engine), `sruth/crypteolas/` (crypto data platform), `ui/` (TanStack Start
 front-end).
 
 #### Scenario: Sub-modules import
@@ -50,12 +50,12 @@ front-end).
 
 ### Requirement: Babylon.js game front-end
 
-The system SHALL provide a Babylon.js game front-end in `tuatha/game/`
+The system SHALL provide a Babylon.js game front-end in `sruth/tuatha/game/`
 for the Celtic educational MMO.
 
 #### Scenario: Babylon.js scene renders
 
-- **GIVEN** the Babylon.js scene at `tuatha/game/scenes/celtic_world.ts`
+- **GIVEN** the Babylon.js scene at `sruth/tuatha/game/scenes/celtic_world.ts`
 - **WHEN** the game is launched
 - **THEN** the scene renders the Celtic world (Túatha Dé Danann
   characters, Irish landscape, BAML-driven NPC dialogue)
@@ -63,12 +63,12 @@ for the Celtic educational MMO.
 ### Requirement: Rust + SpacetimeDB game engine
 
 The system SHALL provide a Rust + SpacetimeDB game engine in
-`tuatha/crates/` for the MMO server.
+`sruth/tuatha/crates/` for the MMO server.
 
 #### Scenario: SpacetimeDB server starts
 
 - **GIVEN** the SpacetimeDB server module at
-  `tuatha/crates/game_server/src/lib.rs`
+  `sruth/tuatha/crates/game_server/src/lib.rs`
 - **WHEN** `cargo run --release` runs
 - **THEN** the SpacetimeDB server starts on port 3000
 - **AND** the server registers the Celtic-world tables (Player,
@@ -77,11 +77,11 @@ The system SHALL provide a Rust + SpacetimeDB game engine in
 ### Requirement: Crypteolas crypto data platform
 
 The system SHALL provide an **educational-achievement ledger**
-at `tuatha/crypteolas/achievements/` (rebranded from the v0
+at `sruth/tuatha/sruth/crypteolas/achievements/` (rebranded from the v0
 "Crypteolas crypto data platform" per Phase 6 of the 6-phase
 refactor plan). The ledger holds **skill-tree badges**, NOT
 a financial token. The canonical home is
-`tuatha/crypteolas/achievements/ledger.py`; the public
+`sruth/tuatha/sruth/crypteolas/achievements/ledger.py`; the public
 surface is the `AchievementLedger` class with the 4 methods:
 `issue(badge)`, `list_badges(player_id, framework=...)`,
 `verify_signature(badge_id)`,
@@ -135,7 +135,7 @@ SQA → Spirit).
 
 ### Requirement: TanStack Start UI
 
-The system SHALL provide a TanStack Start UI at `tuatha/ui/` for the
+The system SHALL provide a TanStack Start UI at `sruth/tuatha/ui/` for the
 educational game and the BAML-driven Celtic content extraction.
 
 #### Scenario: BAML UI component renders
@@ -149,7 +149,7 @@ educational game and the BAML-driven Celtic content extraction.
 ### Requirement: Dagster code-location registration
 
 The system SHALL register tuatha as a Dagster code-location in the
-root `dg.toml` (via `tuatha/dg.toml`).
+root `dg.toml` (via `sruth/tuatha/dg.toml`).
 
 #### Scenario: Code-location loads
 
@@ -214,7 +214,7 @@ llama-swap local serving.
 ### Requirement: Babylon.js game client (3D)
 
 The system SHALL provide a Babylon.js-based 3D game client
-at `tuatha/game/` for the Celtic Educational MMO, rendering
+at `sruth/tuatha/game/` for the Celtic Educational MMO, rendering
 interactive 3D learning environments (mathematical concepts
 spatially, Celtic language family tree, gamified study areas)
 via WebGL + WebGPU with Havok physics, particle systems, and
@@ -223,7 +223,7 @@ GLTF 2.0 asset loading.
 #### Scenario: 3D scene renders
 
 - **GIVEN** a student launches the Tuatha MMO client at
-  `tuatha/game/`
+  `sruth/tuatha/game/`
 - **WHEN** the Babylon.js Engine + Scene + ArcRotateCamera
   initialise and the GLTFLoader loads the scene assets
 - **THEN** the 3D classroom / mathematical-concept / Celtic-language
@@ -237,7 +237,7 @@ GLTF 2.0 asset loading.
 The `tuatha-mmo` skill SHALL model the in-game cosmology
 on the five classical Celtic elements (Spirit, Water,
 Fire, Earth, Air) plus the **Anam Cara** mechanic. The
-`tuatha/game/` quadrant module MUST consume the same
+`sruth/tuatha/game/` quadrant module MUST consume the same
 cosmology. The cosmology drives:
 
 - The 5 playable classes
@@ -369,7 +369,7 @@ learning, not a final grade at the end of a term.
 
 ### Requirement: Cross-nation Celtic curriculum comparison
 
-The tuatha quadrant MUST provide a `CompareCelticNations` BAML function (in `tuatha/baml_src/celtic_curriculum.baml`) that returns a `CrossNationComparison` (with `CurriculumMapping` per nation) for a given topic across the 5 Celtic-nation curricula (IE, NI, WLS, IM, SCT). The function MUST use the canonical `LitellmClient`.
+The tuatha quadrant MUST provide a `CompareCelticNations` BAML function (in `sruth/tuatha/baml_src/celtic_curriculum.baml`) that returns a `CrossNationComparison` (with `CurriculumMapping` per nation) for a given topic across the 5 Celtic-nation curricula (IE, NI, WLS, IM, SCT). The function MUST use the canonical `LitellmClient`.
 
 #### Scenario: Agent compares atomic structure across nations
 
@@ -378,7 +378,7 @@ The tuatha quadrant MUST provide a `CompareCelticNations` BAML function (in `tua
 
 ### Requirement: Bilingual EN+GA formative exit cards
 
-The tuatha quadrant MUST provide a `GenerateExitCardQuestions` BAML function (in `tuatha/baml_src/player_assessment.baml`) that returns a bilingual (EN + Gaeilge) `ExitCardSet` (with `ExitCardQuestion[]`) for a 3-minute end-of-lesson check for understanding. The function MUST use the canonical `LitellmClient`.
+The tuatha quadrant MUST provide a `GenerateExitCardQuestions` BAML function (in `sruth/tuatha/baml_src/player_assessment.baml`) that returns a bilingual (EN + Gaeilge) `ExitCardSet` (with `ExitCardQuestion[]`) for a 3-minute end-of-lesson check for understanding. The function MUST use the canonical `LitellmClient`.
 
 #### Scenario: Agent generates 6 exit-card questions
 
@@ -388,7 +388,7 @@ The tuatha quadrant MUST provide a `GenerateExitCardQuestions` BAML function (in
 
 ### Requirement: NPC dialogue generation for the Cianfhoghlaim RPG
 
-The tuatha quadrant MUST provide a `GenerateNpcDialogue` BAML function (in `tuatha/baml_src/mythology_extraction.baml`) that returns an `NpcDialogueExchange` (with `NpcDialogue`) for one of the 6 Celtic NPCs in the Cianfhoghlaim RPG. The function MUST use the canonical `LitellmClient`.
+The tuatha quadrant MUST provide a `GenerateNpcDialogue` BAML function (in `sruth/tuatha/baml_src/mythology_extraction.baml`) that returns an `NpcDialogueExchange` (with `NpcDialogue`) for one of the 6 Celtic NPCs in the Cianfhoghlaim RPG. The function MUST use the canonical `LitellmClient`.
 
 #### Scenario: Agent role-plays an NPC
 
@@ -398,7 +398,7 @@ The tuatha quadrant MUST provide a `GenerateNpcDialogue` BAML function (in `tuat
 
 ### Requirement: GenerateNpcDialogue Pydantic mirror
 
-The canonical BAML function `GenerateNpcDialogue` (in `tuatha/baml_src/mythology_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/cianfhoghlaim/dialogue.py`. The Pydantic classes (`PNpcDialogue`, `PNpcDialogueExchange`) MUST mirror the BAML class shapes exactly, and `_validate_npc_response` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `GenerateNpcDialogue` (in `sruth/tuatha/baml_src/mythology_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/cianfhoghlaim/dialogue.py`. The Pydantic classes (`PNpcDialogue`, `PNpcDialogueExchange`) MUST mirror the BAML class shapes exactly, and `_validate_npc_response` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns valid NpcDialogueExchange
 
@@ -409,7 +409,7 @@ The canonical BAML function `GenerateNpcDialogue` (in `tuatha/baml_src/mythology
 
 ### Requirement: GenerateExitCardQuestions Pydantic mirror
 
-The canonical BAML function `GenerateExitCardQuestions` (in `tuatha/baml_src/player_assessment.baml`) MUST have a Pydantic v2 mirror in `spaces/anam_tuatha/mac_leinn.py`. The Pydantic classes (`PExitCardQuestion`, `PExitCardSet`) MUST mirror the BAML class shapes exactly, and `_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `GenerateExitCardQuestions` (in `sruth/tuatha/baml_src/player_assessment.baml`) MUST have a Pydantic v2 mirror in `spaces/anam_sruth/tuatha/mac_leinn.py`. The Pydantic classes (`PExitCardQuestion`, `PExitCardSet`) MUST mirror the BAML class shapes exactly, and `_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns valid ExitCardSet
 
@@ -422,7 +422,7 @@ The canonical BAML function `GenerateExitCardQuestions` (in `tuatha/baml_src/pla
 
 The system SHALL provide the canonical implementation of the
 Crypteolas educational-achievement ledger at
-`tuatha/crypteolas/achievements/` (6 files):
+`sruth/tuatha/sruth/crypteolas/achievements/` (6 files):
 
 - `__init__.py` — the package marker + the 4 public surfaces
 - `schema.py` — the 8-field `SkillTreeBadge` dataclass + the
@@ -436,7 +436,7 @@ Crypteolas educational-achievement ledger at
   public methods + the `_sign_evidence` + `_verify_evidence`
   helpers (the cryptographic evidence chain)
 - `cli.py` — the 4 CLI commands (issue, list, verify, mastery)
-- `tuatha/crypteolas/__init__.py` — the package marker
+- `sruth/tuatha/sruth/crypteolas/__init__.py` — the package marker
 
 The 4 public methods of `AchievementLedger`:
 
@@ -498,11 +498,11 @@ triggered the mastery).
 
 ### Requirement: MCP server tool shim
 
-The `tuatha/agents/mcp_server/server.py` SHALL import the 5
+The `sruth/tuatha/agents/mcp_server/server.py` SHALL import the 5
 canonical MCP tools (`search_curriculum`,
 `get_learning_outcomes`, `search_mythology`,
 `get_character_lore`, `get_location_lore`) via 3 thin
-re-export shim files at `tuatha/agents/tools/`:
+re-export shim files at `sruth/tuatha/agents/tools/`:
 
 - `__init__.py` — the package marker
 - `curriculum_search.py` — re-exports the canonical
@@ -516,7 +516,7 @@ re-export shim files at `tuatha/agents/tools/`:
 
 The 3 shim files SHALL preserve the historical
 `from ..tools.X import ...` import pattern used by the
-`tuatha/agents/mcp_server/server.py` lines 23-33, while
+`sruth/tuatha/agents/mcp_server/server.py` lines 23-33, while
 delegating to the canonical home in `sruth/oideachais/` (the
 oideachais quadrant is the authoritative source for Celtic
 curriculum + mythology content).
@@ -533,12 +533,12 @@ curriculum + mythology content).
 
 ## Cross-references
 
-- [`tuatha/`](../../tuatha/) (the MMO + crypto quadrant)
-- [`tuatha/README.md`](../../tuatha/README.md) (the overview)
-- [`tuatha/AGENTS.md`](../../tuatha/AGENTS.md) (the developer-quick-reference, created by this change)
-- [`tuatha/dg.toml`](../../tuatha/dg.toml) (the local Dagster code-location config)
+- [`sruth/tuatha/`](../../sruth/tuatha/) (the MMO + crypto quadrant)
+- [`sruth/tuatha/README.md`](../../sruth/tuatha/README.md) (the overview)
+- [`sruth/tuatha/AGENTS.md`](../../sruth/tuatha/AGENTS.md) (the developer-quick-reference, created by this change)
+- [`sruth/tuatha/dg.toml`](../../sruth/tuatha/dg.toml) (the local Dagster code-location config)
 - [`baml_src/ui_components.baml`](../../baml_src/ui_components.baml) (the UI component BAML)
 - [`baml_src/image_generation.baml`](../../baml_src/image_generation.baml) (the image generation BAML)
-- [`croilar/apps/web/`](../../croilar/apps/web/) (the croilar consumer)
+- [`sruth/croilar/apps/web/`](../../sruth/croilar/apps/web/) (the croilar consumer)
 - [`openspec/specs/oideachais-baml-schemas/spec.md`](../oideachais-baml-schemas/spec.md) (the shared BAML stack)
 - [`openspec/specs/agentic-frontend-frameworks/spec.md`](../agentic-frontend-frameworks/spec.md) (the shared TanStack Start stack)

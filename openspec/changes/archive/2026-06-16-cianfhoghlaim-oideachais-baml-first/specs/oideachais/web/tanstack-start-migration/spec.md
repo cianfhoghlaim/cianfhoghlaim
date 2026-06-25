@@ -4,10 +4,10 @@
 
 ### Requirement: Web Framework (TanStack Start)
 
-The system SHALL run the `oideachais/web/apps/web` on real **TanStack Start** with file-based routes, server functions, and SSR streaming. The current Vite SPA is replaced.
+The system SHALL run the `sruth/oideachais/web/apps/web` on real **TanStack Start** with file-based routes, server functions, and SSR streaming. The current Vite SPA is replaced.
 
 #### Scenario: File-Based Route Tree
-- **GIVEN** `oideachais/web/apps/web/src/routes/`
+- **GIVEN** `sruth/oideachais/web/apps/web/src/routes/`
 - **WHEN** the directory is listed
 - **THEN** it contains a `__root.tsx` plus file-based routes:
   - `__root.tsx` (the root layout with `<TranslationToggle>`, `<OideachasChat>`, header, footer)
@@ -16,7 +16,7 @@ The system SHALL run the `oideachais/web/apps/web` on real **TanStack Start** wi
   - Within each: `stages/{aistear,primary,junior_cycle,senior_cycle,tertiary}.tsx`, `subjects/$slug.tsx`, `courses/$courseCode.tsx`, `past-papers/$subject.tsx`, `marking-schemes/$subject.tsx`, `examiner-reports/$subject.tsx`, `practice/$subject.tsx`, `points-calculator.tsx`, `matriculation-auditor.tsx`, `about.tsx`, `chat.tsx`
 
 #### Scenario: TanStack Start Configuration
-- **GIVEN** `oideachais/web/app.config.ts`
+- **GIVEN** `sruth/oideachais/web/app.config.ts`
 - **WHEN** the file is read
 - **THEN** it uses `defineConfig` from `@tanstack/react-start` and the `vinxi` framework
 - **AND** the old Vite-only plugin list is replaced with `tsconfigPaths()`, `tailwindcss()`, `@tanstack/router-plugin()`
@@ -38,7 +38,7 @@ The system SHALL run the `oideachais/web/apps/web` on real **TanStack Start** wi
 - **AND** the `vite.config.ts` plugins are updated to include `@tanstack/router-plugin` for the file-based route generation
 
 #### Scenario: Old tsconfig References Removed
-- **GIVEN** the root `oideachais/web/tsconfig.json` and `app.config.ts`
+- **GIVEN** the root `sruth/oideachais/web/tsconfig.json` and `app.config.ts`
 - **WHEN** they are inspected
 - **THEN** the stale `include: ["app", "src", "vite.config.ts", "app.config.ts"]` and `paths: { "@/*": ["./app/*"] }` references (pointing at a non-existent `./app/`) are removed
 - **AND** the `app.config.ts` no longer references `vinxi.config.ts` (which never existed)
@@ -46,10 +46,10 @@ The system SHALL run the `oideachais/web/apps/web` on real **TanStack Start** wi
 ## ADDED Requirements
 
 ### Requirement: TanStack Start Dependencies
-The system SHALL declare the TanStack Start dependencies in `oideachais/web/package.json`.
+The system SHALL declare the TanStack Start dependencies in `sruth/oideachais/web/package.json`.
 
 #### Scenario: Required Dependencies
-- **GIVEN** `oideachais/web/package.json`
+- **GIVEN** `sruth/oideachais/web/package.json`
 - **WHEN** the dependencies are listed
 - **THEN** `@tanstack/react-start` and `@tanstack/router-plugin` are present (currently installed but unused)
 - **AND** `vinxi` is added as a devDependency

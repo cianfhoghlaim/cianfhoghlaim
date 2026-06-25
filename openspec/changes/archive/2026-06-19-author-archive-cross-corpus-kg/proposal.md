@@ -27,20 +27,20 @@ deterministic rules, 1 unified Cognee dataset.
 
 ### Code
 
-- `oideachais/cognee_integration/author_archive_cognify.py` (NEW): the
+- `sruth/oideachais/cognee_integration/author_archive_cognify.py` (NEW): the
   Cognee cognify helper for the 6 author-archive corpora. Defines
   `cognify_author_archive_rows()` + `cognify_all_corpora()`.
 
-- `oideachais/cognify_rules/author_archive_cross_corpus.py` (NEW): the
+- `sruth/oideachais/cognify_rules/author_archive_cross_corpus.py` (NEW): the
   5-rule cross-corpus edge population. Uses FalkorDB MERGE for
   idempotency.
 
-- `oideachais/dagster_defs/assets/official_media/author_archive_kg_assets.py`
+- `sruth/oideachais/dagster_defs/assets/official_media/author_archive_kg_assets.py`
   (NEW): 3 new Dagster assets
   (`author_archive_cognify`, `author_archive_cross_edges`,
   `author_archive_kg_summary`) in the `author_archive_kg` group.
 
-- `oideachais/notebooks/dashboards/author_archive/unified_dashboard.py`
+- `sruth/oideachais/notebooks/dashboards/author_archive/unified_dashboard.py`
   (NEW): the unified marimo dashboard with 4 tabs (Source provenance,
   UoG coursework, Cross-corpus KG, Credit usage).
 
@@ -62,4 +62,4 @@ deterministic rules, 1 unified Cognee dataset.
 - Multi-target deployment (dev=DuckDB, staging=MotherDuck,
   prod=Garage S3 + Lakekeeper)
 - `make_target.sh` runtime helper
-- `oideachais/dlt_utils/target_factory.py` factory
+- `sruth/oideachais/dlt_utils/target_factory.py` factory

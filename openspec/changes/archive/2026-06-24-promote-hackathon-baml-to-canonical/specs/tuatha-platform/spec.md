@@ -2,7 +2,7 @@
 
 ### Requirement: Cross-nation Celtic curriculum comparison
 
-The tuatha quadrant MUST provide a `CompareCelticNations` BAML function (in `tuatha/baml_src/celtic_curriculum.baml`) that returns a `CrossNationComparison` (with `CurriculumMapping` per nation) for a given topic across the 5 Celtic-nation curricula (IE, NI, WLS, IM, SCT). The function MUST use the canonical `LitellmClient`.
+The tuatha quadrant MUST provide a `CompareCelticNations` BAML function (in `sruth/tuatha/baml_src/celtic_curriculum.baml`) that returns a `CrossNationComparison` (with `CurriculumMapping` per nation) for a given topic across the 5 Celtic-nation curricula (IE, NI, WLS, IM, SCT). The function MUST use the canonical `LitellmClient`.
 
 #### Scenario: Agent compares atomic structure across nations
 
@@ -11,7 +11,7 @@ The tuatha quadrant MUST provide a `CompareCelticNations` BAML function (in `tua
 
 ### Requirement: Bilingual EN+GA formative exit cards
 
-The tuatha quadrant MUST provide a `GenerateExitCardQuestions` BAML function (in `tuatha/baml_src/player_assessment.baml`) that returns a bilingual (EN + Gaeilge) `ExitCardSet` (with `ExitCardQuestion[]`) for a 3-minute end-of-lesson check for understanding. The function MUST use the canonical `LitellmClient`.
+The tuatha quadrant MUST provide a `GenerateExitCardQuestions` BAML function (in `sruth/tuatha/baml_src/player_assessment.baml`) that returns a bilingual (EN + Gaeilge) `ExitCardSet` (with `ExitCardQuestion[]`) for a 3-minute end-of-lesson check for understanding. The function MUST use the canonical `LitellmClient`.
 
 #### Scenario: Agent generates 6 exit-card questions
 
@@ -21,7 +21,7 @@ The tuatha quadrant MUST provide a `GenerateExitCardQuestions` BAML function (in
 
 ### Requirement: NPC dialogue generation for the Cianfhoghlaim RPG
 
-The tuatha quadrant MUST provide a `GenerateNpcDialogue` BAML function (in `tuatha/baml_src/mythology_extraction.baml`) that returns an `NpcDialogueExchange` (with `NpcDialogue`) for one of the 6 Celtic NPCs in the Cianfhoghlaim RPG. The function MUST use the canonical `LitellmClient`.
+The tuatha quadrant MUST provide a `GenerateNpcDialogue` BAML function (in `sruth/tuatha/baml_src/mythology_extraction.baml`) that returns an `NpcDialogueExchange` (with `NpcDialogue`) for one of the 6 Celtic NPCs in the Cianfhoghlaim RPG. The function MUST use the canonical `LitellmClient`.
 
 #### Scenario: Agent role-plays an NPC
 

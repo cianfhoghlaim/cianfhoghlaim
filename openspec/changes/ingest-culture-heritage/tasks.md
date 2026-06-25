@@ -2,7 +2,7 @@
 
 12 tasks. Run in order. Validate at the end with `openspec validate ingest-culture-heritage --strict`.
 
-**Status (2026-06-25):** 12/12 tasks complete; `openspec validate ingest-culture-heritage --strict` → `Change 'ingest-culture-heritage' is valid`. BAML client regeneration blocked by pre-existing `tuatha/crypteolas/pyproject.toml` workspace error (unrelated to this change; tracked separately).
+**Status (2026-06-25):** 12/12 tasks complete; `openspec validate ingest-culture-heritage --strict` → `Change 'ingest-culture-heritage' is valid`. BAML client regeneration blocked by pre-existing `sruth/tuatha/sruth/crypteolas/pyproject.toml` workspace error (unrelated to this change; tracked separately).
 
 ## 1. ✅ Save 3 Wikipedia clippings with Obsidian frontmatter
 
@@ -37,9 +37,9 @@ tags:
 
 **Files (3 new):**
 
-- `oideachais/dlt_sources/official_media/fixtures/identity_ui_liathain.json`
-- `oideachais/dlt_sources/official_media/fixtures/identity_delbhna.json`
-- `oideachais/dlt_sources/official_media/fixtures/identity_eamonn_deacy_park.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_ui_liathain.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_delbhna.json`
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_eamonn_deacy_park.json`
 
 **Schema per fixture:**
 
@@ -59,7 +59,7 @@ tags:
 
 **File (1 new):**
 
-- `oideachais/baml_src/culture_extraction.baml`
+- `sruth/oideachais/baml_src/culture_extraction.baml`
 
 **Schema:**
 
@@ -89,7 +89,7 @@ function ExtractCultureClaims(pdf_path: string, context: string) -> CultureHerit
 
 ## 4. ✅ Add 6 sources.yaml entries under the culture domain
 
-**File (1 edited):** `oideachais/sources.yaml`
+**File (1 edited):** `sruth/oideachais/sources.yaml`
 
 **Entries to add (under `domain: culture, nation: ie`):**
 
@@ -117,9 +117,9 @@ function ExtractCultureClaims(pdf_path: string, context: string) -> CultureHerit
 
 ## 5. ✅ Add culture_heritage_embedding CocoIndex v1 App
 
-**File (1 new):** `oideachais/cocoindex_flows/culture_heritage_embedding.py`
+**File (1 new):** `sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py`
 
-**Pattern mirrors:** `oideachais/cocoindex_flows/leabharlann_embedding.py` (the closest existing v1 App).
+**Pattern mirrors:** `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` (the closest existing v1 App).
 
 **Canonical v1 conventions enforced:**
 
@@ -136,9 +136,9 @@ function ExtractCultureClaims(pdf_path: string, context: string) -> CultureHerit
 
 ## 6. ✅ Add culture_cognify.py Cognee pass
 
-**File (1 new):** `oideachais/cognee_integration/culture_cognify.py`
+**File (1 new):** `sruth/oideachais/cognee_integration/culture_cognify.py`
 
-**Pattern mirrors:** `oideachais/cognee_integration/leabharlann_cognify.py`.
+**Pattern mirrors:** `sruth/oideachais/cognee_integration/leabharlann_cognify.py`.
 
 **Behaviour:** Loads `culture_heritage_chunks` from LanceDB; runs `cognee.cognify(dataset_name="culture_heritage")` with a custom prompt tuned for "extract (person, family-relationship, place, date-range, claim, citation) quintuples"; emits cross-dataset edges from `culture_heritage:person:<name>` to existing `oideachais:place:galway` nodes.
 
@@ -146,7 +146,7 @@ function ExtractCultureClaims(pdf_path: string, context: string) -> CultureHerit
 
 ## 7. ✅ Add 4 Dagster assets (extract/embed/cognify/cross-edges)
 
-**File (1 new):** `oideachais/dagster_defs/assets/culture_heritage_assets.py`
+**File (1 new):** `sruth/oideachais/dagster_defs/assets/culture_heritage_assets.py`
 
 **4 assets in `group_name="culture_heritage"`** (in dependency order):
 
@@ -161,7 +161,7 @@ function ExtractCultureClaims(pdf_path: string, context: string) -> CultureHerit
 
 ## 8. ✅ Add low_confidence_review asset check
 
-**File (same as Task 7):** `oideachais/dagster_defs/assets/culture_heritage_assets.py`
+**File (same as Task 7):** `sruth/oideachais/dagster_defs/assets/culture_heritage_assets.py`
 
 **Asset check:** `@asset_check(asset=culture_heritage_extract)` that warns (severity=WARN, not FAIL) when any emitted claim has `confidence < 0.6`.
 
@@ -169,21 +169,21 @@ function ExtractCultureClaims(pdf_path: string, context: string) -> CultureHerit
 
 ## 9. ✅ Wire the asset group into dg.toml (no change needed — auto-discovery)
 
-**File (1 edited):** `dg.toml` — no change needed. The `oideachais` workspace project already discovers `oideachais/dagster_defs/assets/` via Dagster's standard asset-discovery mechanism (no explicit registration per-asset).
+**File (1 edited):** `dg.toml` — no change needed. The `oideachais` workspace project already discovers `sruth/oideachais/dagster_defs/assets/` via Dagster's standard asset-discovery mechanism (no explicit registration per-asset).
 
 **Verification only:** `dg list assets --location oideachais | grep culture_heritage` returns all 4 assets.
 
 **Acceptance:** All 4 assets visible in `dg dev`.
 
-## 10. ✅ Update oideachais/STATUS.md matrix
+## 10. ✅ Update sruth/oideachais/STATUS.md matrix
 
-**File (1 edited):** `oideachais/STATUS.md`
+**File (1 edited):** `sruth/oideachais/STATUS.md`
 
 **Add 1 new row to § 1 (BAML × dlt × Dagster × CocoIndex matrix):**
 
 | BAML file | Classes | Extraction functions | dlt source(s) | Dagster asset(s) | CocoIndex flow |
 |:--|:--|:--|:--|:--|:--|
-| `culture_extraction.baml` | `CultureHeritageClaim`, `EvidenceQuality` (2) | `ExtractCultureClaims` | `oideachais/dlt_sources/culture/heritage_source.py` | `oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `oideachais/cocoindex_flows/culture_heritage_embedding.py` |
+| `culture_extraction.baml` | `CultureHeritageClaim`, `EvidenceQuality` (2) | `ExtractCultureClaims` | `sruth/oideachais/dlt_sources/culture/heritage_source.py` | `sruth/oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py` |
 
 **Acceptance:** Status file remains well-formed; § 1 has 1 new row; § 5 has a "Culture heritage pipeline" subsection.
 
@@ -197,15 +197,15 @@ openspec validate ingest-culture-heritage --strict
 
 **Acceptance:** Exit code 0; all 3 spec deltas have ≥1 Scenario per ADDED Requirement; all SHALL/MUST language preserved; no parse errors.
 
-## 12. ✅ Update `.erk/docs/agent/index.md` (KCG substitute: `oideachais/AGENTS.md`) with the new culture subtree
+## 12. ✅ Update `.erk/docs/agent/index.md` (KCG substitute: `sruth/oideachais/AGENTS.md`) with the new culture subtree
 
 **File (1 edited):** `.erk/docs/agent/index.md`
 
 **Add a new entry to the routing table pointing at:**
 
-- `oideachais/cognee_integration/culture_cognify.py`
-- `oideachais/cocoindex_flows/culture_heritage_embedding.py`
-- `oideachais/dagster_defs/assets/culture_heritage_assets.py`
-- `oideachais/baml_src/culture_extraction.baml`
+- `sruth/oideachais/cognee_integration/culture_cognify.py`
+- `sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py`
+- `sruth/oideachais/dagster_defs/assets/culture_heritage_assets.py`
+- `sruth/oideachais/baml_src/culture_extraction.baml`
 
 **Acceptance:** Index includes 4 new pointers; routing tables remain in dependency order (BAML → DLT → CocoIndex → Cognee → Dagster).

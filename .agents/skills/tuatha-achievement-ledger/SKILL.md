@@ -1,13 +1,13 @@
 ---
 name: tuatha-achievement-ledger
-description: The KCG Phase 6 educational-achievement ledger in `tuatha/crypteolas/achievements/`. Covers the 8-field skill-tree badge schema (framework × level × subject × competency × learning_outcome_code × date_earned × agent_issuer × evidence), the 5 cross-framework "Cross-British-Isles Achiever" masteries (one per Pent-Elemental realm), the cryptographic evidence chain (the `evidence` field is signed by the issuing agent's wallet), the cross-quest retrieval via the `tuatha/knowledge_graph/hybrid_search.py` engine, and the canonical add-a-new-badge workflow. Use when adding a new badge type, wiring the `quest_guide_agent` → crypteolas handoff, implementing the 5 mastery badges per Pent-Elemental realm, or asking "where is the achievement ledger from Phase 6?".
+description: The KCG Phase 6 educational-achievement ledger in `sruth/tuatha/sruth/crypteolas/achievements/`. Covers the 8-field skill-tree badge schema (framework × level × subject × competency × learning_outcome_code × date_earned × agent_issuer × evidence), the 5 cross-framework "Cross-British-Isles Achiever" masteries (one per Pent-Elemental realm), the cryptographic evidence chain (the `evidence` field is signed by the issuing agent's wallet), the cross-quest retrieval via the `sruth/tuatha/knowledge_graph/hybrid_search.py` engine, and the canonical add-a-new-badge workflow. Use when adding a new badge type, wiring the `quest_guide_agent` → crypteolas handoff, implementing the 5 mastery badges per Pent-Elemental realm, or asking "where is the achievement ledger from Phase 6?".
 ---
 
 # Tuatha Achievement Ledger
 
 ## Purpose
 
-The `tuatha/crypteolas/achievements/` directory houses the
+The `sruth/tuatha/sruth/crypteolas/achievements/` directory houses the
 **educational-achievement ledger** promised by Phase 6 of the
 6-phase refactor plan (the `tuatha-formative-assessment-v1` openspec
 change, archived 2026-06-24). This skill captures the 8-field
@@ -33,7 +33,7 @@ Use when you need to:
 ## The 8-field badge schema (the core dataclass)
 
 ```python
-# tuatha/crypteolas/achievements/ledger.py
+# sruth/tuatha/sruth/crypteolas/achievements/ledger.py
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -99,7 +99,7 @@ agent's wallet**. The signature uses the same SIWE (Sign-In With
 Ethereum) contract as the player's authentication:
 
 ```python
-# tuatha/crypteolas/achievements/ledger.py
+# sruth/tuatha/sruth/crypteolas/achievements/ledger.py
 from eth_account import Account
 from eth_account.messages import encode_defunct
 import hashlib
@@ -122,8 +122,8 @@ field. The verification is run on every ledger query.
 
 ## The cross-quest retrieval (the knowledge graph hook)
 
-The `tuatha/crypteolas/achievements/` ledger integrates with the
-`tuatha/knowledge_graph/hybrid_search.py` engine (the canonical
+The `sruth/tuatha/sruth/crypteolas/achievements/` ledger integrates with the
+`sruth/tuatha/knowledge_graph/hybrid_search.py` engine (the canonical
 home for the knowledge graph). The integration:
 
 - The badge's `evidence` field is indexed in the Cognee knowledge
@@ -131,7 +131,7 @@ home for the knowledge graph). The integration:
 - The cross-quest retrieval returns the 3 most relevant badges
   for any new quest (per the quest's Pent-Elemental realm + the
   player's current framework × level)
-- The retrieval is exposed via the `/crypteolas/achievements/relevant/<player_id>/<realm>`
+- The retrieval is exposed via the `/sruth/crypteolas/achievements/relevant/<player_id>/<realm>`
   endpoint (the FastAPI surface)
 
 ## The 4 CLI commands (the canonical ops surface)
@@ -164,7 +164,7 @@ The badges are stored in LanceDB (the canonical vector + table
 store) at table `crypteolas_achievements`. The schema:
 
 ```python
-# tuatha/crypteolas/achievements/storage.py
+# sruth/tuatha/sruth/crypteolas/achievements/storage.py
 import lancedb
 from lancedb.pydantic import LanceModel
 
@@ -191,7 +191,7 @@ retrieval.
 
 ## Worked example: add a new badge type
 
-1. Add the badge class to `tuatha/crypteolas/achievements/ledger.py`:
+1. Add the badge class to `sruth/tuatha/sruth/crypteolas/achievements/ledger.py`:
 
    ```python
    @dataclass
@@ -203,7 +203,7 @@ retrieval.
    ```
 
 2. Add the BAML extraction at
-   `tuatha/baml_src/achievement_extraction.baml`:
+   `sruth/tuatha/baml_src/achievement_extraction.baml`:
 
    ```baml
    class ReadingComprehensionBadge {
@@ -223,7 +223,7 @@ retrieval.
    ```
 
 3. Wire the `quest_guide_agent` → crypteolas handoff in
-   `oideachais/agents/adk/quest_guide_agent.py`:
+   `sruth/oideachais/agents/adk/quest_guide_agent.py`:
 
    ```python
    async def issue_badge_tool(player_id: str, evidence: str):
@@ -242,7 +242,7 @@ retrieval.
    ```
 
 4. Update the knowledge graph hook at
-   `tuatha/knowledge_graph/hybrid_search.py` to index the new
+   `sruth/tuatha/knowledge_graph/hybrid_search.py` to index the new
    badge type.
 
 ## Common failure modes
@@ -253,7 +253,7 @@ retrieval.
 | The Cross-British-Isles Achiever is not issued | The player has 4 frameworks but not 5 | Issue at least 1 badge in the 5th framework |
 | The LanceDB table is missing | The storage initialisation was never run | Run `AchievementLedger.init_storage()` on first use |
 | The BAML extraction returns the wrong framework | The prompt is ambiguous | Make the prompt more explicit about the framework |
-| The Cognee integration is stale | The hybrid_search engine needs re-indexing | Run `tuatha/knowledge_graph/hybrid_search.py:reindex()` |
+| The Cognee integration is stale | The hybrid_search engine needs re-indexing | Run `sruth/tuatha/knowledge_graph/hybrid_search.py:reindex()` |
 
 ## Cross-references
 
@@ -261,10 +261,10 @@ retrieval.
 - `.agents/skills/british-isles-formative-assessment/SKILL.md` — the pedagogical framework
 - `.agents/skills/pent-elemental-cosmology/SKILL.md` — the 5 realms
 - `.agents/skills/tuatha-mcp-server-tools/SKILL.md` — the 5 MCP tools
-- `tuatha/crypteolas/achievements/ledger.py` — the 8-field badge schema
-- `tuatha/crypteolas/achievements/storage.py` — the LanceDB storage
-- `tuatha/crypteolas/achievements/cli.py` — the 4 CLI commands
-- `tuatha/knowledge_graph/hybrid_search.py` — the cross-quest retrieval
-- `oideachais/agents/adk/quest_guide_agent.py` — the badge-issuing agent
-- `oideachais/baml_src/achievement_extraction.baml` — the BAML extraction
+- `sruth/tuatha/sruth/crypteolas/achievements/ledger.py` — the 8-field badge schema
+- `sruth/tuatha/sruth/crypteolas/achievements/storage.py` — the LanceDB storage
+- `sruth/tuatha/sruth/crypteolas/achievements/cli.py` — the 4 CLI commands
+- `sruth/tuatha/knowledge_graph/hybrid_search.py` — the cross-quest retrieval
+- `sruth/oideachais/agents/adk/quest_guide_agent.py` — the badge-issuing agent
+- `sruth/oideachais/baml_src/achievement_extraction.baml` — the BAML extraction
 - `openspec/specs/tuatha-platform/spec.md` — the canonical spec (the "Crypteolas educational-achievement ledger" MODIFIED Requirement)

@@ -102,7 +102,7 @@ lr.create_scalar_index(
 
 The KCG stack runs Ray on the `bunchloch` M4 Mac (local) for
 leabharlann re-indexing. The Dagster asset
-`oideachais/dagster_defs/assets/leabharlann_assets.py` includes a
+`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` includes a
 `leabharlann_reindex` asset that uses `lance-ray` under the hood.
 
 ## Reference

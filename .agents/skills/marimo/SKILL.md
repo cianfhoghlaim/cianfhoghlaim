@@ -64,7 +64,7 @@ without a `pyproject.toml` in the working directory:
 ```
 
 The `# /// script` block is **mandatory** for any notebook
-that is checked into `oideachais/notebooks/` (or any
+that is checked into `sruth/oideachais/notebooks/` (or any
 subdirectory). `uv` resolves the declared dependencies into
 an isolated cache.
 
@@ -338,11 +338,11 @@ requests to a marimo Container via a Durable Object. See
 
 ## KCG conventions
 
-- Every shareable notebook in `oideachais/notebooks/` MUST
+- Every shareable notebook in `sruth/oideachais/notebooks/` MUST
   have a PEP 723 `# /// script` header
 - The FastAPI app serves notebooks at `/dashboards/<name>`
 - Each dashboard has an asset check in
-  `oideachais/dagster_defs/assets/marimo_dashboards.py` that
+  `sruth/oideachais/dagster_defs/assets/marimo_dashboards.py` that
   verifies the notebook renders without errors
 - Live mode (`marimo edit --watch`) is supported via the
   `marimo-watch` Dagster sensor
@@ -373,9 +373,9 @@ once the analysis is stable.
 
 - Marimo docs: <https://docs.marimo.io/>
 - PEP 723: <https://peps.python.org/pep-0723/>
-- KCG notebooks: `oideachais/notebooks/`
+- KCG notebooks: `sruth/oideachais/notebooks/`
 - KCG dashboard assets:
-  `oideachais/dagster_defs/assets/marimo_dashboards.py`
+  `sruth/oideachais/dagster_defs/assets/marimo_dashboards.py`
 - Reference files in this skill:
   - `references/deployment-cloudflare.md` — Cloudflare Workers
     + Container deployment

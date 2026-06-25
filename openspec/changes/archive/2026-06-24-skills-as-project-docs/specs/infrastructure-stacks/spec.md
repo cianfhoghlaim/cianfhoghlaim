@@ -11,16 +11,16 @@ The Cianfhoghlaim platform MUST maintain a formal feedback loop between projects
 
 #### Scenario: New DLT source updates the dlt skill
 
-- **WHEN** a new DLT source is added under `oideachais/dlt_sources/`
+- **WHEN** a new DLT source is added under `sruth/oideachais/dlt_sources/`
 - **THEN** the `.agents/skills/dlt/SKILL.md` "KCG examples" appendix gets a 1-line addition naming the new source
 
 ### Requirement: Quadrant-specific Related skills
 
 Each quadrant's `AGENTS.md` "Related skills" section MUST list only the skills used by that quadrant (no shared "default" list across quadrants). The 4 quadrants are `oideachais`, `meaisinfhoghlaim`, `tuatha`, `croilar`, plus the cross-cutting `infrastructure` layer.
 
-#### Scenario: oideachais/AGENTS.md lists 12 oideachais-specific skills
+#### Scenario: sruth/oideachais/AGENTS.md lists 12 oideachais-specific skills
 
-- **WHEN** `oideachais/AGENTS.md` is read
+- **WHEN** `sruth/oideachais/AGENTS.md` is read
 - **THEN** the "Related skills" section lists 12+ skills (dagster, dlt, baml, cocoindex, cognee, lancedb, falkordb, duckdb, motherduck, dignified-python, marimo, ccc, oideachais-storage, oideachais-pipeline, oideachais-leabharlann, oideachais-baml-schemas, oideachais-cognify-knowledge-graph)
 - **AND** does NOT list skills specific to other quadrants (e.g. babylonjs for tuatha, hono for croilar)
 

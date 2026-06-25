@@ -9,22 +9,22 @@ endpoints, filesystem layout, storage backends, and config files.
 
 The 4 v1 Apps replace 4 v0 Apps in `codeolas/cocoindex_flows/`:
 
-- `oideachais/cocoindex_flows/api_indexing.py` (v1) — HTTP route
+- `sruth/oideachais/cocoindex_flows/api_indexing.py` (v1) — HTTP route
   surface (FastAPI + Hono + TanStack Start + Convex HTTP) into the
   `api_endpoints` LanceDB table with BGE-M3 embeddings. v0 at
   `codeolas/cocoindex_flows/api_indexing.py:scan_api_endpoints()` had
   no embedding and was regex-only.
-- `oideachais/cocoindex_flows/filesystem_indexing.py` (v1) — directory
+- `sruth/oideachais/cocoindex_flows/filesystem_indexing.py` (v1) — directory
   structure (depth 1-4) with per-directory file-type histogram into the
   `filesystem_layout` LanceDB table. v0 at
   `codeolas/cocoindex_flows/filesystem_indexing.py` had no embedding
   and no file-type histogram.
-- `oideachais/cocoindex_flows/storage_indexing.py` (v1) — every storage
+- `sruth/oideachais/cocoindex_flows/storage_indexing.py` (v1) — every storage
   backend the monorepo touches (LanceDB / DuckDB / DuckLake / Postgres
   / Garage / S3 / R2 / D1 / KV / Iceberg) into the `storage_backends`
   LanceDB table. v0 at `codeolas/cocoindex_flows/storage_indexing.py`
   had no embedding and no `wrangler.jsonc` scanning.
-- `oideachais/cocoindex_flows/config_indexing.py` (v1) — every config
+- `sruth/oideachais/cocoindex_flows/config_indexing.py` (v1) — every config
   file in the repo (compose / mise / turbo / package / pyproject /
   wrangler / env / k8s / pulumi / dg / github workflows / justfile)
   into the `config_files` LanceDB table. v0 at
@@ -32,7 +32,7 @@ The 4 v1 Apps replace 4 v0 Apps in `codeolas/cocoindex_flows/`:
   no structured summary.
 
 The 4 v1 Apps follow the canonical pattern from
-`oideachais/cocoindex_flows/codebase_indexing.py`:
+`sruth/oideachais/cocoindex_flows/codebase_indexing.py`:
 
 - `@coco.fn` + `@coco.lifespan` for processing
 - `lancedb.mount_table_target(...)` for the output
@@ -40,7 +40,7 @@ The 4 v1 Apps follow the canonical pattern from
 - 100-row upsert batches (HNSW-DROP-THRESHOLD respected)
 
 The 4 new Dagster assets live in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` (group
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` (group
 `infrastructure`) and follow the same shape as
 `codebase_assets.py`: each kicks the v1 App's update via `cocoindex
 update` and reports the LanceDB row count + per-category breakdown as
@@ -53,32 +53,32 @@ the user's plan: codeolas/ stays as a standalone subdir for now).
 
 ## What Changes
 
-### 1. `oideachais/cocoindex_flows/api_indexing.py` (NEW)
+### 1. `sruth/oideachais/cocoindex_flows/api_indexing.py` (NEW)
 
 v1 CocoIndex App named `ApiIndex` (group `infrastructure`). Indexes
 the HTTP route surface across 4 frameworks into the `api_endpoints`
 LanceDB table. 5-row batch.
 
-### 2. `oideachais/cocoindex_flows/filesystem_indexing.py` (NEW)
+### 2. `sruth/oideachais/cocoindex_flows/filesystem_indexing.py` (NEW)
 
 v1 CocoIndex App named `FilesystemIndex` (group `infrastructure`).
 Indexes every directory up to depth 4 into the `filesystem_layout`
 LanceDB table. 3-row batch.
 
-### 3. `oideachais/cocoindex_flows/storage_indexing.py` (NEW)
+### 3. `sruth/oideachais/cocoindex_flows/storage_indexing.py` (NEW)
 
 v1 CocoIndex App named `StorageIndex` (group `infrastructure`).
 Indexes every storage backend reference (incl. wrangler manifests) into
 the `storage_backends` LanceDB table. 2-row batch.
 
-### 4. `oideachais/cocoindex_flows/config_indexing.py` (NEW)
+### 4. `sruth/oideachais/cocoindex_flows/config_indexing.py` (NEW)
 
 v1 CocoIndex App named `ConfigIndex` (group `infrastructure`). Indexes
 every config file (compose / mise / turbo / package / pyproject /
 wrangler / env / k8s / pulumi / dg / github workflows / justfile) into
 the `config_files` LanceDB table. 3-row batch.
 
-### 5. `oideachais/dagster_defs/assets/infrastructure_assets.py` (NEW)
+### 5. `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` (NEW)
 
 4 Dagster assets (`group_name="infrastructure"`):
 
@@ -87,7 +87,7 @@ the `config_files` LanceDB table. 3-row batch.
 - `storage_backends` — kicks `oideachais.cocoindex_flows.storage_indexing:storage_app`
 - `config_files` — kicks `oideachais.cocoindex_flows.config_indexing:config_app`
 
-### 6. `oideachais/STATUS.md` (MODIFIED)
+### 6. `sruth/oideachais/STATUS.md` (MODIFIED)
 
 §3 (CocoIndex v0 vs v1) — add 4 new v1 rows.
 §4 (Dagster asset catalogue) — add a new `infrastructure` group row.
@@ -109,22 +109,22 @@ Reference the new v1 companion pattern for the 4 infrastructure apps.
 
 - Affected specs: `oideachais-pipeline` (4 ADDED Requirements)
 - Affected code:
-  - 4 new files in `oideachais/cocoindex_flows/`
-  - 1 new file in `oideachais/dagster_defs/assets/`
+  - 4 new files in `sruth/oideachais/cocoindex_flows/`
+  - 1 new file in `sruth/oideachais/dagster_defs/assets/`
 - Affected skills: `cocoindex` (reference), `ccc` (reference),
   `oideachas-pipeline` (no change)
 - v0 fallback: `codeolas/cocoindex_flows/{api,filesystem,storage,config}_indexing.py`
   retained for 30 days, not deleted
 - v1 App update command: `cocoindex update oideachais.cocoindex_flows.api_indexing:api_app`
   (and 3 more for filesystem / storage / config)
-- Dagster assets register via `oideachais/dagster_defs/definitions.py`
+- Dagster assets register via `sruth/oideachais/dagster_defs/definitions.py`
   import (`infrastructure_assets = [...]`)
 
 ## Success criteria
 
 - All 4 v1 Apps import cleanly under `oideachais.cocoindex_flows.*`
 - All 4 scan helpers produce the expected row count on a 100-file test repo
-- `oideachais/dagster_defs/assets/infrastructure_assets.py` materialises
+- `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` materialises
   without import errors in `dg dev`
 - `openspec validate oideachais-storage-indexing-v1 --strict` passes
 - The 4 Dagster assets show up in the unified `dg` UI

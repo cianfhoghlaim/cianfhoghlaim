@@ -1,6 +1,6 @@
 ---
 name: frontend-topology
-description: Cross-cutting surface map for the Cianfhoghlaim monorepo. Use when "adding a new front-end surface", "choosing between TanStack, Convex, marimo, Babylon.js", or "debugging auth or data-plane routing". Covers 5 surfaces (oideachais/web, croilar/apps/web, croilar/apps/portal, tuatha/ui, marimo), 5 stacks, 5 auth models, 5 data planes.
+description: Cross-cutting surface map for the Cianfhoghlaim monorepo. Use when "adding a new front-end surface", "choosing between TanStack, Convex, marimo, Babylon.js", or "debugging auth or data-plane routing". Covers 5 surfaces (sruth/oideachais/web, sruth/croilar/apps/web, sruth/croilar/apps/portal, sruth/tuatha/ui, marimo), 5 stacks, 5 auth models, 5 data planes.
 ---
 
 # Front-end Topology
@@ -13,7 +13,7 @@ Use when you need to:
 - "Choose between TanStack, Convex, marimo, or Babylon.js for
   a new app"
 - "Debug auth or data-plane routing across surfaces"
-- "Understand 'where does oideachais/web end and croilar/apps/
+- "Understand 'where does sruth/oideachais/web end and sruth/croilar/apps/
   portal begin?'"
 - "Onboard a new dev to the monorepo's front-end shape"
 
@@ -21,17 +21,17 @@ Use when you need to:
 
 | Surface | Stack | Auth | Data plane | User |
 |:--|:--|:--|:--|:--|
-| `oideachais/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (DuckDB / MotherDuck) | Irish educators + students |
-| `croilar/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
-| `croilar/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
-| `tuatha/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (real-time) + SpacetimeDB | Tuatha game players |
+| `sruth/oideachais/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (DuckDB / MotherDuck) | Irish educators + students |
+| `sruth/croilar/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
+| `sruth/croilar/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
+| `sruth/tuatha/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (real-time) + SpacetimeDB | Tuatha game players |
 | `marimo` | marimo notebook | **No auth** (analyst-only) | DuckLake + MotherDuck (read) | KCG analysts (4 dev machines) |
 
 ## Per-surface detail
 
-### oideachais/web — Lakehouse front-end
+### sruth/oideachais/web — Lakehouse front-end
 
-- **Path**: `oideachais/web/`
+- **Path**: `sruth/oideachais/web/`
 - **Stack**: TanStack Start + Hono (just expanded in
   `.agents/skills/tanstack-start/SKILL.md`)
 - **Bun workspace**: `oideachais-web`
@@ -44,9 +44,9 @@ Use when you need to:
   truth backend. The web is a **read-only** viewer over
   the lakehouse.
 
-### croilar/apps/web + croilar/apps/portal — Persona surfaces
+### sruth/croilar/apps/web + sruth/croilar/apps/portal — Persona surfaces
 
-- **Path**: `croilar/apps/web/` + `croilar/apps/portal/`
+- **Path**: `sruth/croilar/apps/web/` + `sruth/croilar/apps/portal/`
 - **Stack**: TanStack Start + Hono + Convex
 - **Auth**: web = none; portal = BetterAuth + Pocket ID + SIWE
   (per `.agents/skills/better-auth/SKILL.md`)
@@ -54,9 +54,9 @@ Use when you need to:
 - **Why two apps**: web is the public portfolio (no auth);
   portal is the authenticated persona dashboard (3 personas)
 
-### tuatha/ui — Celtic MMO
+### sruth/tuatha/ui — Celtic MMO
 
-- **Path**: `tuatha/ui/`
+- **Path**: `sruth/tuatha/ui/`
 - **Stack**: TanStack Start + Babylon.js + Convex + SpacetimeDB
 - **Auth**: SIWE (Sign-In With Ethereum, per
   `.agents/skills/better-auth/SKILL.md`)
@@ -68,7 +68,7 @@ Use when you need to:
 
 ### marimo — Analyst notebook surface
 
-- **Path**: `oideachais/notebooks/`
+- **Path**: `sruth/oideachais/notebooks/`
 - **Stack**: marimo + DuckDB / MotherDuck
 - **Auth**: **None** (analyst-only; bound to the 4 dev machines
   via Pangolin)
@@ -81,13 +81,13 @@ Use when you need to:
 
 ## Why this stack here but not in oideachais
 
-- `oideachais/web` is a read-only viewer over the lakehouse
+- `sruth/oideachais/web` is a read-only viewer over the lakehouse
   (TanStack Start is the right choice)
-- `croilar/apps/web` is a public portfolio (no auth, public
+- `sruth/croilar/apps/web` is a public portfolio (no auth, public
   read-only)
-- `croilar/apps/portal` is the authenticated persona
+- `sruth/croilar/apps/portal` is the authenticated persona
   dashboard (BetterAuth, Convex for real-time)
-- `tuatha/ui` is a 3D game (Babylon.js for the 3D, TanStack for
+- `sruth/tuatha/ui` is a 3D game (Babylon.js for the 3D, TanStack for
   the dashboard)
 - `marimo` is the analyst notebook (reactive Python, no auth)
 
@@ -103,19 +103,19 @@ New front-end surface?
 │
 ├── Read-only public (no auth)
 │   └── TanStack Start + Hono + MotherDuck
-│       Example: oideachais/web
+│       Example: sruth/oideachais/web
 │
 ├── Read-write persona (auth required)
 │   └── TanStack Start + Hono + BetterAuth + Convex
-│       Example: croilar/apps/portal
+│       Example: sruth/croilar/apps/portal
 │
 ├── 3D game (WebGL/WebGPU)
 │   └── TanStack Start + Babylon.js + Convex + SpacetimeDB
-│       Example: tuatha/ui
+│       Example: sruth/tuatha/ui
 │
 └── Analyst notebook
     └── marimo + DuckDB / MotherDuck
-        Example: oideachais/notebooks
+        Example: sruth/oideachais/notebooks
 ```
 
 ## Cross-references

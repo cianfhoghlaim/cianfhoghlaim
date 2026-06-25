@@ -7,7 +7,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: LanceDB Query Handlers
-The system SHALL expose a `search_author_archive` query handler that returns ranked results from the 4 new LanceDB tables in `oideachais/cocoindex_flows/author_archive_embedding.py`.
+The system SHALL expose a `search_author_archive` query handler that returns ranked results from the 4 new LanceDB tables in `sruth/oideachais/cocoindex_flows/author_archive_embedding.py`.
 
 #### Scenario: Search by free-text query
 - **GIVEN** the user invokes `await search_author_archive(query="cross-border medical malpractice", limit=10)`
@@ -39,7 +39,7 @@ The system SHALL expose a `search_author_archive` query handler that returns ran
 The system SHALL use a single English-only embedding model for all `author_archive_*` tables.
 
 #### Scenario: Model selection
-- **GIVEN** the embedding model constant in `oideachais/cocoindex_flows/author_archive_embedding.py`
+- **GIVEN** the embedding model constant in `sruth/oideachais/cocoindex_flows/author_archive_embedding.py`
 - **WHEN** the flow is compiled by `mise run cocoindex:update`
 - **THEN** the model SHALL be `BAAI/bge-large-en-v1.5`
 - **AND** the embedding dimension SHALL be 1024

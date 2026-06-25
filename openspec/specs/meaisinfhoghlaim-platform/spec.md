@@ -15,7 +15,7 @@ This is the first openspec spec for the meaisinfhoghlaim quadrant.
 
 The meaisinfhoghlaim quadrant houses the AI/ML services that feed the
 curriculum knowledge graph consumed by `sruth/oideachais/` and the
-dashboards in `croilar/apps/portal/`. The 10 sub-packages are:
+dashboards in `sruth/croilar/apps/portal/`. The 10 sub-packages are:
 
 - `agents/` — 12 specialised agents (Root, Curriculum, Translation,
   Corpus, Geospatial, Statistics, Research, Curriculum Comparison,

@@ -4,7 +4,7 @@
 
 ### Requirement: Stream Dataclass
 
-The system SHALL define a `Stream` frozen dataclass in `croilar/_shared/streams.py`.
+The system SHALL define a `Stream` frozen dataclass in `sruth/croilar/_shared/streams.py`.
 
 #### Scenario: Stream has the required fields
 
@@ -26,7 +26,7 @@ The system SHALL define a `Stream` frozen dataclass in `croilar/_shared/streams.
 
 ### Requirement: Stream Registry
 
-The system SHALL maintain a Stream registry loaded from `croilar/config/sources.yaml`.
+The system SHALL maintain a Stream registry loaded from `sruth/croilar/config/sources.yaml`.
 
 #### Scenario: Registry is a single map
 
@@ -54,8 +54,8 @@ The system SHALL provide a one-shot migration script that renames persona-keyed 
 #### Scenario: Migration script runs idempotently
 
 - **WHEN** `bun run migrate:personas-to-streams` is executed
-- **THEN** the script SHALL move `croilar/notebooks/aleyum/` → `croilar/notebooks/streams/music/`
-- **AND** `croilar/notebooks/cianfhoghlaim/` → `croilar/notebooks/streams/teaching/`
+- **THEN** the script SHALL move `sruth/croilar/notebooks/aleyum/` → `sruth/croilar/notebooks/streams/music/`
+- **AND** `sruth/croilar/notebooks/cianfhoghlaim/` → `sruth/croilar/notebooks/streams/teaching/`
 - **AND** the script SHALL rewrite TS/Python imports for the rekeyed files
 - **AND** the script SHALL emit a CSV diff of every changed path for review
 - **AND** re-running the script SHALL be a no-op (idempotent)
@@ -63,5 +63,5 @@ The system SHALL provide a one-shot migration script that renames persona-keyed 
 #### Scenario: carlcashman is removed from data code
 
 - **WHEN** the migration completes
-- **THEN** `git grep -nE 'carlcashman' croilar/pipelines croilar/baml croilar/dagster_assets` SHALL return zero matches
+- **THEN** `git grep -nE 'carlcashman' sruth/croilar/pipelines sruth/croilar/baml sruth/croilar/dagster_assets` SHALL return zero matches
 - **AND** any `carlcashman` mention in the data layer SHALL be flagged as a follow-up issue

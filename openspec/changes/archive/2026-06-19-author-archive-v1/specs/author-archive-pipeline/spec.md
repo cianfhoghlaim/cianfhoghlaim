@@ -26,7 +26,7 @@ change (archived 2026-06-18).
 ### Requirement: Per-source pre-research
 
 The system MUST run the `official_media_pre_research` Dagster asset
-exactly once for every source in `oideachais/sources.yaml` with
+exactly once for every source in `sruth/oideachais/sources.yaml` with
 `kind == "official_media"`, before the bulk-scrape asset for that
 source. The pre-research MUST:
 
@@ -190,7 +190,7 @@ marimo notebook. The tab MUST show, for every source:
 
 ### Requirement: CPS.gov.uk hero example
 
-The script `oideachais/scripts/pre_research_cps_gov_uk.py` SHALL run
+The script `sruth/oideachais/scripts/pre_research_cps_gov_uk.py` SHALL run
 all 4 stages on `https://www.cps.gov.uk` and persist the result to
 `/tmp/author_archive_cps_gov_uk.json`. The script SHALL be runnable
 with no Firecrawl key (it falls back to the free path) and SHALL
@@ -227,8 +227,8 @@ sample.
 
 ## Cross-references
 
-- `oideachais/dagster_defs/assets/official_media/scraping_assets.py` — the 4 new assets
-- `oideachais/scripts/pre_research_cps_gov_uk.py` — the hero example
+- `sruth/oideachais/dagster_defs/assets/official_media/scraping_assets.py` — the 4 new assets
+- `sruth/oideachais/scripts/pre_research_cps_gov_uk.py` — the hero example
 - `baml_src/author_archive.baml` — the 6 new BAML functions
 - `infrastructure/browser/sruth_browser/scrape_strategist.py` — the thin wrapper
 - `infrastructure/browser/sruth_browser/credit_budget.py` — the credit ledger

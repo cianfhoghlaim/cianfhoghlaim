@@ -35,18 +35,18 @@ Evidence.dev dashboard, orchestrated by Dagster.
 
 | # | Pattern | Source | Reusable for us? | Where it lands |
 |--:|:--|:--|:--|:--|
-| **A1** | **Multi-stage data pipeline** with `@asset` + `@dbt_assets` + `group_name` partitioning. | `package_analytics/assets.py:16-125` | ✅ Adopt | `oideachais/dagster_defs/` (already have Dagster; missing dbt). Marimo is our preferred dashboard. |
-| **A2** | **Pydantic typed ingestion models** (`FileDownloads`, `Details`, `PypiJobParameters`) + pyarrow validation. | `package_analytics/dlt_sources/models.py:1-108` | ✅ Adopt | `oideachais/dlt_sources/<area>/models.py` (reuse; some already exist) |
-| **A3** | **dlt `@source` / `@resource`** pattern returning pyarrow tables with explicit `name=` per project. | `package_analytics/dlt_sources/bigquery_pipeline.py:140-173` | ✅ Adopt | Already used in `oideachais/dlt_sources/ireland/*`; promote the "yield pa.Table" idiom |
-| **A4** | **`CustomDagsterDbtTranslator`** that flattens `dbt_resource_props["name"]` to an `AssetKey` and pins `group_name`. | `package_analytics/resources.py:9-15` | ✅ Adopt | New `oideachais/dagster_defs/dbt_translator.py` (Phase 4 of the `celtic-data-engineering-patterns` change) |
-| **A5** | **dbt-duckdb multi-target** with `{{ 'incremental' if target.name == 'prod' else 'table' }}` and `+unique_key`. | `dbt_project/{dbt_project.yml,models/pypi_daily_stats.sql}` | ✅ Adopt | New `oideachais/dbt_project/` mirroring this exact shape |
+| **A1** | **Multi-stage data pipeline** with `@asset` + `@dbt_assets` + `group_name` partitioning. | `package_analytics/assets.py:16-125` | ✅ Adopt | `sruth/oideachais/dagster_defs/` (already have Dagster; missing dbt). Marimo is our preferred dashboard. |
+| **A2** | **Pydantic typed ingestion models** (`FileDownloads`, `Details`, `PypiJobParameters`) + pyarrow validation. | `package_analytics/dlt_sources/models.py:1-108` | ✅ Adopt | `sruth/oideachais/dlt_sources/<area>/models.py` (reuse; some already exist) |
+| **A3** | **dlt `@source` / `@resource`** pattern returning pyarrow tables with explicit `name=` per project. | `package_analytics/dlt_sources/bigquery_pipeline.py:140-173` | ✅ Adopt | Already used in `sruth/oideachais/dlt_sources/ireland/*`; promote the "yield pa.Table" idiom |
+| **A4** | **`CustomDagsterDbtTranslator`** that flattens `dbt_resource_props["name"]` to an `AssetKey` and pins `group_name`. | `package_analytics/resources.py:9-15` | ✅ Adopt | New `sruth/oideachais/dagster_defs/dbt_translator.py` (Phase 4 of the `celtic-data-engineering-patterns` change) |
+| **A5** | **dbt-duckdb multi-target** with `{{ 'incremental' if target.name == 'prod' else 'table' }}` and `+unique_key`. | `dbt_project/{dbt_project.yml,models/pypi_daily_stats.sql}` | ✅ Adopt | New `sruth/oideachais/dbt_project/` mirroring this exact shape |
 | **A6** | **DuckDB ⇄ MotherDuck** swap via `DUCKDB_DATABASE` env (`md:db?motherduck_token=...` vs local path). | `.env.template:9-15` + `dbt_project/profiles.yml` | ✅ Adopt | Drop-in for our existing MotherDuck wiring |
 | **A7** | **HF Space deploy via `git subtree split`** + `git push -f` to a "static space" + `sdk: docker` build that uploads to a separate space. | `.github/workflows/main.yml:1-27` + `dashboard/Dockerfile:1-45` | ✅ Adopt | Promoted to reusable workflow at `infrastructure/ci/spaces-sync.yml` (sister change `spaces-cicd-reusable-pipeline`) |
 | **A8** | **Evidence `sources/<name>/connection.yaml` + `*.sql`** layout for typed SQL queries referenced from `pages/*.md` via `` ```sql name ``. | `dashboard/sources/pypi_analytics/*` + `pages/index.md:62-156` | ⚠️ Adapt | Not Evidence (we use marimo) but the **SQL-by-fenced-block** pattern translates to marimo's `mo.sql()` cells or a `queries/<name>.sql` dir |
-| **A9** | **Custom `+layout.svelte`** + `.evidence/customization/.profile.json` for theming Evidence. | `dashboard/{pages/+layout.svelte, .evidence/customization/*}` | ✅ Adapt | Map directly to marimo custom CSS + theme overrides in `oideachais/marimo/theme.py` |
-| **C1** | **`from .resources import dbt_manifest_path, CustomDagsterDbtTranslator`** + module-name-as-Dagster-code-location (`tool.dagster module_name = "package_analytics"`). | `pyproject.toml:5` + `package_analytics/__init__.py` | ✅ Adopt | Apply to our existing `oideachais/dagster_defs/` |
+| **A9** | **Custom `+layout.svelte`** + `.evidence/customization/.profile.json` for theming Evidence. | `dashboard/{pages/+layout.svelte, .evidence/customization/*}` | ✅ Adapt | Map directly to marimo custom CSS + theme overrides in `sruth/oideachais/marimo/theme.py` |
+| **C1** | **`from .resources import dbt_manifest_path, CustomDagsterDbtTranslator`** + module-name-as-Dagster-code-location (`tool.dagster module_name = "package_analytics"`). | `pyproject.toml:5` + `package_analytics/__init__.py` | ✅ Adopt | Apply to our existing `sruth/oideachais/dagster_defs/` |
 | **C2** | **`.env.template` with commented MotherDuck branch** (single source of truth, dev-vs-prod). | `.env.template` | ✅ Already done | We have `.infisical.env` template; one extra comment line per dev-baile secret |
-| **C3** | **Evidence devcontainer** with `evidence.evidence-vscode` + Codespaces `postCreateCommand` cleanup. | `dashboard/.devcontainer/devcontainer.json` + `.vscode/extensions.json` | ⚠️ Defer | Add `oideachais/.devcontainer/` for marimo + dbt + dagster parity — Phase 5+ |
+| **C3** | **Evidence devcontainer** with `evidence.evidence-vscode` + Codespaces `postCreateCommand` cleanup. | `dashboard/.devcontainer/devcontainer.json` + `.vscode/extensions.json` | ⚠️ Defer | Add `sruth/oideachais/.devcontainer/` for marimo + dbt + dagster parity — Phase 5+ |
 
 ### 1.2 Prior-art repository: `spaces/anti-phish/`
 
@@ -55,12 +55,12 @@ PyTorch → HF Transformers → Flower FL → Gradio ensemble UI.
 
 | # | Pattern | Source | Reusable for us? | Where it lands |
 |--:|:--|:--|:--|:--|
-| **B1** | **6-stage ML progression** (extract → classical sklearn → PyTorch → HF Transformers → Flower FL → Gradio) with one model per stage and comparative UI. | `{1..6}_*.ipynb` | ✅ Adopt | Adopt as **canonical ML workflow** in `meaisinfhoghlaim/pipelines/` |
+| **B1** | **6-stage ML progression** (extract → classical sklearn → PyTorch → HF Transformers → Flower FL → Gradio) with one model per stage and comparative UI. | `{1..6}_*.ipynb` | ✅ Adopt | Adopt as **canonical ML workflow** in `sruth/meaisinfhoghlaim/pipelines/` |
 | **B2** | **sklearn pickle models served from S3** loaded with `urllib.request.urlopen` at app boot. | `6_Gradio_Front_End.ipynb:cell-6` | ⚠️ Adapt | Replace S3 with HF Hub `huggingface_hub.hf_hub_download` (cheaper, no egress) |
-| **B3** | **HuggingFace `pipeline("sentiment-analysis", model=…)`** wrapper for fine-tuned model. | `6_Gradio_Front_End.ipynb:cell-6` | ✅ Adopt | Reuse for any of our 10 OCR / classification models (`meaisinfhoghlaim/ocr/model_registry.py`) |
-| **B4** | **Gradio `Interface` with multiple parallel `outputs`** (one per model) + `examples=[…]` + `allow_flagging="never"`. | `6_Gradio_Front_End.ipynb:cell-8` | ✅ Adopt | Adopt as the **ensemble UI pattern** in `meaisinfhoghlaim/pipelines/ensemble_gradio.py` |
+| **B3** | **HuggingFace `pipeline("sentiment-analysis", model=…)`** wrapper for fine-tuned model. | `6_Gradio_Front_End.ipynb:cell-6` | ✅ Adopt | Reuse for any of our 10 OCR / classification models (`sruth/meaisinfhoghlaim/ocr/model_registry.py`) |
+| **B4** | **Gradio `Interface` with multiple parallel `outputs`** (one per model) + `examples=[…]` + `allow_flagging="never"`. | `6_Gradio_Front_End.ipynb:cell-8` | ✅ Adopt | Adopt as the **ensemble UI pattern** in `sruth/meaisinfhoghlaim/pipelines/ensemble_gradio.py` |
 | **B5** | **`Dataset.from_pandas` + `train_test_split` + `Trainer`** with `transformers.set_seed(N)` and `device = "cuda" if available else "mps" else "cpu"`. | `4_Huggingface_Transformers.ipynb:cell-1..7` | ✅ Adopt | Template for fine-tuning Celtic-language classifiers (BGE-M3, mms-tts-ga) |
-| **B6** | **Pushing fine-tuned model to HF Hub** (`foghlaimeoir/phishing-DistilBERT`). | `README.md:25` | ✅ Adopt | Already used in `meaisinfhoghlaim/`; codify as `spaces/_common/hf_hub_push.py` |
+| **B6** | **Pushing fine-tuned model to HF Hub** (`foghlaimeoir/phishing-DistilBERT`). | `README.md:25` | ✅ Adopt | Already used in `sruth/meaisinfhoghlaim/`; codify as `spaces/_common/hf_hub_push.py` |
 | **B7** | **Federated learning with Flower** for distributed fine-tuning. | `5_Flower_Federated_Learning.ipynb` | ⚠️ Defer | Reuse for privacy-preserving Gaelscoil NLP training (not hackathon scope) |
 
 ---
@@ -130,22 +130,22 @@ The full work breakdown is in the OpenSpec change
 
 | Pattern | OpenSpec change | File(s) |
 |:--|:--|:--|
-| A1, A4, A5 | `celtic-data-engineering-patterns` | `oideachais/dbt_project/*`, `oideachais/dagster_defs/dbt_translator.py` |
-| A6 | (no new file — drop-in) | The MotherDuck wiring in `oideachais/dagster_defs/` already supports it |
+| A1, A4, A5 | `celtic-data-engineering-patterns` | `sruth/oideachais/dbt_project/*`, `sruth/oideachais/dagster_defs/dbt_translator.py` |
+| A6 | (no new file — drop-in) | The MotherDuck wiring in `sruth/oideachais/dagster_defs/` already supports it |
 | A7 | `spaces-cicd-reusable-pipeline` (sister) | `infrastructure/ci/spaces-sync.yml` |
-| A8, A9 | (marimo equivalents) | `meaisinfhoghlaim/marimo/01_*.py`, `02_*.py` |
-| B1, B3, B4 | `celtic-data-engineering-patterns` | `meaisinfhoghlaim/pipelines/ensemble_gradio.py` |
-| B5, B6 | `celtic-data-engineering-patterns` | `spaces/_common/hf_hub_push.py` (and existing `meaisinfhoghlaim/ocr/`) |
+| A8, A9 | (marimo equivalents) | `sruth/meaisinfhoghlaim/marimo/01_*.py`, `02_*.py` |
+| B1, B3, B4 | `celtic-data-engineering-patterns` | `sruth/meaisinfhoghlaim/pipelines/ensemble_gradio.py` |
+| B5, B6 | `celtic-data-engineering-patterns` | `spaces/_common/hf_hub_push.py` (and existing `sruth/meaisinfhoghlaim/ocr/`) |
 | B7 | (deferred) | — |
 
 ## 6. Related monorepo docs
 
 - [`openspec/AGENTS.md`](../openspec/AGENTS.md) — change-management workflow
 - [`openspec/project.md`](../openspec/project.md) — 26 capability specs
-- [`oideachais/AGENTS.md`](../oideachais/AGENTS.md) — lakehouse quadrant
-- [`meaisinfhoghlaim/AGENTS.md`](../meaisinfhoghlaim/AGENTS.md) — AI/ML quadrant (now includes the new `marimo/` row)
-- [`tuatha/AGENTS.md`](../tuatha/AGENTS.md) — MMO + crypto
-- [`croilar/AGENTS.md`](../croilar/AGENTS.md) — multi-persona portfolio
+- [`sruth/oideachais/AGENTS.md`](../sruth/oideachais/AGENTS.md) — lakehouse quadrant
+- [`sruth/meaisinfhoghlaim/AGENTS.md`](../sruth/meaisinfhoghlaim/AGENTS.md) — AI/ML quadrant (now includes the new `marimo/` row)
+- [`sruth/tuatha/AGENTS.md`](../sruth/tuatha/AGENTS.md) — MMO + crypto
+- [`sruth/croilar/AGENTS.md`](../sruth/croilar/AGENTS.md) — multi-persona portfolio
 - [`AGENTS.md`](../AGENTS.md) — root agent instructions
 
 ## 7. Change history

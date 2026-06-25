@@ -4,7 +4,7 @@
 The oideachais quadrant SHALL provide BAML functions for each of
 the 5 educational stages (Aistear, Primary, Junior Cycle, Senior
 Cycle, Tertiary). Each function MUST live in its own dedicated
-`.baml` module under `oideachais/baml_src/` and MUST use the
+`.baml` module under `sruth/oideachais/baml_src/` and MUST use the
 canonical `LitellmClient`.
 
 #### Scenario: A new educational stage needs BAML extraction
@@ -28,13 +28,13 @@ The oideachais quadrant SHALL provide an end-to-end Aistear (early
 childhood) extraction pipeline. The pipeline MUST consist of:
 
 1. A BAML function `ExtractAistearFramework` in
-   `oideachais/baml_src/early_childhood.baml`
+   `sruth/oideachais/baml_src/early_childhood.baml`
 2. A dlt source `aistear_curriculum` in
-   `oideachais/dlt_sources/ireland/aistear.py` that invokes the
+   `sruth/oideachais/dlt_sources/ireland/aistear.py` that invokes the
    BAML function and yields 3 resources:
    `aistear_documents`, `aistear_principles`, `aistear_learning_goals`
 3. A Dagster asset wrapper in
-   `oideachais/dagster_defs/assets/ie/education/aistear_dlt_assets.py`
+   `sruth/oideachais/dagster_defs/assets/ie/education/aistear_dlt_assets.py`
    that materialises all 3 resources into a `ie.education.aistear`
    DuckLake dataset
 

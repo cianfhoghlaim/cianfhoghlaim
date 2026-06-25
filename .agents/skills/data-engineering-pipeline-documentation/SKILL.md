@@ -1,6 +1,6 @@
 ---
 name: data-engineering-pipeline-documentation
-description: Router for the data engineering pipeline documentation. The single source of truth for the BAML × DLT × Dagster × CocoIndex matrix is `oideachais/STATUS.md`; the refactor backlog is `oideachais/REFACTORING.md`; the per-area READMEs (`oideachais/README.md`, `oideachais/api/README.md`, etc.) document specific subsystems. Use when you need to add a new BAML extraction, wire a new DLT source, add a new Dagster asset, check the per-source status, or find the right README for a question. Triggers: 'BAML × dlt × Dagster matrix', 'STATUS.md', 'REFACTORING.md', 'pipeline status', 'data engineering doc', 'extraction schema', 'where is the lakehouse README', 'pipeline architecture doc', 'celtic-asset-generation'.
+description: Router for the data engineering pipeline documentation. The single source of truth for the BAML × DLT × Dagster × CocoIndex matrix is `sruth/oideachais/STATUS.md`; the refactor backlog is `sruth/oideachais/REFACTORING.md`; the per-area READMEs (`sruth/oideachais/README.md`, `sruth/oideachais/api/README.md`, etc.) document specific subsystems. Use when you need to add a new BAML extraction, wire a new DLT source, add a new Dagster asset, check the per-source status, or find the right README for a question. Triggers: 'BAML × dlt × Dagster matrix', 'STATUS.md', 'REFACTORING.md', 'pipeline status', 'data engineering doc', 'extraction schema', 'where is the lakehouse README', 'pipeline architecture doc', 'celtic-asset-generation'.
 ---
 
 # Data Engineering Pipeline Documentation — Router
@@ -13,10 +13,10 @@ doc for the question.
 
 | File | What it is | When to use |
 |:--|:--|:--|
-| `oideachais/STATUS.md` | The single source of truth for the BAML × dlt × Dagster × CocoIndex matrix. Every source has a status (DONE / TODO / BLOCKED) and a notes column. | "What's the status of source X?" "Which BAML extractions are wired?" "Which dlt sources have Dagster asset wrappers?" |
-| `oideachais/REFACTORING.md` | The refactor backlog. Every proposed change has a status, an owner, and a deadline. | "What's on the roadmap?" "Who owns refactor Y?" "What's blocked on what?" |
-| `oideachais/README.md` | The quadrant-level overview. Architecture layers, data contracts, the 4 storage layers, the 7 Quick navigation table. | "Where do I add a new DLT source?" "What are the data contracts?" "How does the lakehouse work?" |
-| `oideachais/api/README.md` (and per-area READMEs) | Per-subsystem documentation. | "How do I add a new FastAPI route?" "How does the Dagster webserver start?" |
+| `sruth/oideachais/STATUS.md` | The single source of truth for the BAML × dlt × Dagster × CocoIndex matrix. Every source has a status (DONE / TODO / BLOCKED) and a notes column. | "What's the status of source X?" "Which BAML extractions are wired?" "Which dlt sources have Dagster asset wrappers?" |
+| `sruth/oideachais/REFACTORING.md` | The refactor backlog. Every proposed change has a status, an owner, and a deadline. | "What's on the roadmap?" "Who owns refactor Y?" "What's blocked on what?" |
+| `sruth/oideachais/README.md` | The quadrant-level overview. Architecture layers, data contracts, the 4 storage layers, the 7 Quick navigation table. | "Where do I add a new DLT source?" "What are the data contracts?" "How does the lakehouse work?" |
+| `sruth/oideachais/api/README.md` (and per-area READMEs) | Per-subsystem documentation. | "How do I add a new FastAPI route?" "How does the Dagster webserver start?" |
 
 ## The 4 status columns in STATUS.md
 
@@ -38,11 +38,11 @@ The KCG-canonical pipeline for taking a Celtic PDF
 queryable, time-aware, vector-indexed dataset is the
 5-stage flow in `celtic-asset-generation/SKILL.md`:
 
-1. **BAML extraction** — `oideachais/baml_src/`
-2. **CocoIndex v1 embedding** — `oideachais/cocoindex_flows/`
-3. **Cognee cognify** — `oideachais/cognee_integration/`
-4. **Graphiti temporal memory** — `oideachais/memory/`
-5. **LanceDB vector search** — `oideachais/cocoindex_flows/leabharlann_embedding.py`
+1. **BAML extraction** — `sruth/oideachais/baml_src/`
+2. **CocoIndex v1 embedding** — `sruth/oideachais/cocoindex_flows/`
+3. **Cognee cognify** — `sruth/oideachais/cognee_integration/`
+4. **Graphiti temporal memory** — `sruth/oideachais/memory/`
+5. **LanceDB vector search** — `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
 
 The KCG-leabharlann variant adds 1 stage (the secret injection
 + SHA-256 dedup) at the front; see
@@ -76,7 +76,7 @@ Every change to the data platform SHOULD update one of:
 
 ## Cross-references
 
-- `oideachais/STATUS.md` — the matrix
-- `oideachais/REFACTORING.md` — the backlog
-- `oideachais/README.md` — the quadrant overview
+- `sruth/oideachais/STATUS.md` — the matrix
+- `sruth/oideachais/REFACTORING.md` — the backlog
+- `sruth/oideachais/README.md` — the quadrant overview
 - `openspec/AGENTS.md` — the change-management workflow

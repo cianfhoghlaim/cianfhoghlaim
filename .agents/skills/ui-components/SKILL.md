@@ -57,7 +57,7 @@ bunx shadcn@latest add form
 
 ## 2. Drag-and-drop exam builder (`@dnd-kit`)
 
-The KCG exam builder (used in `oideachais/web/src/components/
+The KCG exam builder (used in `sruth/oideachais/web/src/components/
 exam-builder/`) uses `@dnd-kit` for drag-and-drop question
 reordering. The pattern:
 
@@ -187,7 +187,7 @@ All 7 surfaces share the **Celtic design language** (see
 ```bash
 # 1. Source (Blender .blend, Maya .fbx, or .glb/.gltf)
 # 2. Compression — Draco mesh + KTX2/Basis textures
-# 3. Storage — tuatha/game/assets/models/ (committed) or
+# 3. Storage — sruth/tuatha/game/assets/models/ (committed) or
 #    S3 (for large assets)
 # 4. Loading — Babylon.js SceneLoader.ImportMeshAsync
 # 5. Metadata — BAML extraction of pedagogical content
@@ -274,10 +274,10 @@ mappings to use as design starting points:
 
 | Inspiration | Pattern | Apply to |
 |:--|:--|:--|
-| **MotherDuck** | 3-panel layout (Object Explorer \| SQL Notebook \| Table Explorer), column-explorer sparklines | `crypteolas/` analytics, `aleyum/` monitoring |
-| **PostHog** | Lemon UI depth buttons (`border-b-4` active), Navigation 3000 multi-panel | `oideachais/` dashboards, `aleyum/` infra |
-| **Duolingo** | Streak (loss aversion), hearts, snake path, 3D tactile buttons | `tuath/` XP / quest progression, `oideachais/` learning path |
-| **Khan Academy** | Wonder Blocks design system, mastery levels (Attempted → Familiar → Proficient → Mastered), semantic pills | `oideachais/` curriculum progression, `tuath/` skill trees |
+| **MotherDuck** | 3-panel layout (Object Explorer \| SQL Notebook \| Table Explorer), column-explorer sparklines | `sruth/crypteolas/` analytics, `aleyum/` monitoring |
+| **PostHog** | Lemon UI depth buttons (`border-b-4` active), Navigation 3000 multi-panel | `sruth/oideachais/` dashboards, `aleyum/` infra |
+| **Duolingo** | Streak (loss aversion), hearts, snake path, 3D tactile buttons | `tuath/` XP / quest progression, `sruth/oideachais/` learning path |
+| **Khan Academy** | Wonder Blocks design system, mastery levels (Attempted → Familiar → Proficient → Mastered), semantic pills | `sruth/oideachais/` curriculum progression, `tuath/` skill trees |
 
 ### Game UI inspirations
 

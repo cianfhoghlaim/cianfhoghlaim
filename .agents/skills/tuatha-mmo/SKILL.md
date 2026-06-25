@@ -15,18 +15,18 @@ Use when you need to:
   `.agents/skills/british-isles-formative-assessment/` skill
   for the pedagogical framework
 - "Add a skill-tree badge to the achievement ledger" — see
-  `tuatha/crypteolas/achievements/`
+  `sruth/tuatha/sruth/crypteolas/achievements/`
 - "Wire x402 micropayments for a gated game feature" — x402
   is **only** for paid game features, not for educational
   content
 - "Onboard a new formative feedback agent (tutor / narrator /
-  quest / research)" — see `oideachais/agents/adk/`
+  quest / research)" — see `sruth/oideachais/agents/adk/`
 - "Deploy the MMO to `bunchloch` or `arm1-oci`"
 - "Cross-compile the iOS / KMP / RN / Godot client"
 - "Configure the pent-elemental cosmology (Spirit / Water /
   Fire / Earth / Air + Anam Cara)"
 - "Understand the relationship between `game/`, `crates/`,
-  `crypteolas/`, and `ui/`"
+  `sruth/crypteolas/`, and `ui/`"
 - "Optimise the 60 FPS rendering budget or the embedding 100×
   batch rule"
 
@@ -45,8 +45,8 @@ Research Assistant) that deliver **formative feedback** during
 quests, mapped to the NCCA / CfE / CfW / CCEA / SQA curriculum
 frameworks.
 
-The 4 agents live at `oideachais/agents/adk/` (Phase 5 of the
-6-phase refactor plan moved them from `tuatha/agents/adk/`;
+The 4 agents live at `sruth/oideachais/agents/adk/` (Phase 5 of the
+6-phase refactor plan moved them from `sruth/tuatha/agents/adk/`;
 the tuatha files are now thin re-exports). The pedagogical
 framework they implement lives in
 `.agents/skills/british-isles-formative-assessment/`.
@@ -75,10 +75,10 @@ The 4 sub-modules, in the layout they ship in:
 
 | Path | Tech | Role |
 |:--|:--|:--|
-| `tuatha/game/` | Babylon.js 7 (TS) + WebGPU | 3D game client (the MMO front-end) |
-| `tuatha/crates/` | Rust + SpacetimeDB + Axum | Game engine (authoritative state) |
-| `tuatha/crypteolas/` | Python + educational-achievement ledger | Skill-tree badges + x402 settlement for paid game features |
-| `tuatha/ui/` | TanStack Start | Web front-end for the educational game |
+| `sruth/tuatha/game/` | Babylon.js 7 (TS) + WebGPU | 3D game client (the MMO front-end) |
+| `sruth/tuatha/crates/` | Rust + SpacetimeDB + Axum | Game engine (authoritative state) |
+| `sruth/tuatha/sruth/crypteolas/` | Python + educational-achievement ledger | Skill-tree badges + x402 settlement for paid game features |
+| `sruth/tuatha/ui/` | TanStack Start | Web front-end for the educational game |
 
 The 4 dev servers run in parallel:
 
@@ -134,9 +134,9 @@ agent's memory, the player's mastery) and in Cognee
 
 The full Tuath agent system (1586 lines) is in
 `references/tuath-agent-architecture.md`. The canonical
-implementations live at `oideachais/agents/adk/` (Phase 5 of
+implementations live at `sruth/oideachais/agents/adk/` (Phase 5 of
 the 6-phase refactor plan moved them from
-`tuatha/agents/adk/`; the tuatha files are now thin
+`sruth/tuatha/agents/adk/`; the tuatha files are now thin
 re-exports). Each agent is one of the 4 formative feedback
 channels documented in
 `.agents/skills/british-isles-formative-assessment/`.
@@ -225,10 +225,10 @@ The MMO deploys to the 3-tier KCG topology (see
 | `cax41-hetzner` (storage) | S3 / Lance Namespace REST serves the Babylon.js asset CDN |
 | `bunchloch` (workload) | Runs the SpacetimeDB container + the Axum server + the TanStack Start SSR |
 
-The SpacetimeDB container is published from `tuatha/crates/`
+The SpacetimeDB container is published from `sruth/tuatha/crates/`
 via the GitHub Action at `infrastructure/ci/spaces-sync.yml`
 and the Dagger CI/CD pipeline. The TanStack Start UI is
-deployed to Cloudflare Workers via the `tuatha/ui/`
+deployed to Cloudflare Workers via the `sruth/tuatha/ui/`
 `bun run deploy` script.
 
 Secrets are injected by Locket sidecars from the `dev-baile`
@@ -250,21 +250,21 @@ the root of the repo; see `secrets-management` skill for the
 The full performance tuning guide (883 lines) is in
 `references/tuatha-performance-tuning.md`.
 
-## Quick routing (from `tuatha/AGENTS.md`)
+## Quick routing (from `sruth/tuatha/AGENTS.md`)
 
-When working in `tuatha/`, route to the right sub-area:
+When working in `sruth/tuatha/`, route to the right sub-area:
 
 | Working on | Read | Skill |
 |:--|:--|:--|
-| 3D scenes, MMO client | `tuatha/game/` | `.agents/skills/babylonjs/`, this skill |
-| Rust + SpacetimeDB server | `tuatha/crates/` | this skill + `.agents/skills/upstream-mirrors/SKILL.md` (spacetimedb mirror) |
-| Crypto data platform | `tuatha/crypteolas/` | `.agents/skills/crypteolas/`, this skill |
-| Web front-end | `tuatha/ui/` | `.agents/skills/tanstack-start/`, this skill |
-| SIWE auth | `tuatha/auth/siwe.py` | `.agents/skills/better-auth/` + this skill |
-| x402 micropayments | `tuatha/crypteolas/x402.py` | `.agents/skills/upstream-mirrors/SKILL.md` (x402 mirror) |
-| Celtic-language models | `oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
+| 3D scenes, MMO client | `sruth/tuatha/game/` | `.agents/skills/babylonjs/`, this skill |
+| Rust + SpacetimeDB server | `sruth/tuatha/crates/` | this skill + `.agents/skills/upstream-mirrors/SKILL.md` (spacetimedb mirror) |
+| Crypto data platform | `sruth/tuatha/sruth/crypteolas/` | `.agents/skills/sruth/crypteolas/`, this skill |
+| Web front-end | `sruth/tuatha/ui/` | `.agents/skills/tanstack-start/`, this skill |
+| SIWE auth | `sruth/tuatha/auth/siwe.py` | `.agents/skills/better-auth/` + this skill |
+| x402 micropayments | `sruth/tuatha/sruth/crypteolas/x402.py` | `.agents/skills/upstream-mirrors/SKILL.md` (x402 mirror) |
+| Celtic-language models | `sruth/oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
 | Agent observability | Dagster + Langfuse | `.agents/skills/agent-observability/` |
-| Deploy the stack | `infrastructure/stacks/tuatha/` | `.agents/skills/stack-ops/` |
+| Deploy the stack | `infrastructure/stacks/sruth/tuatha/` | `.agents/skills/stack-ops/` |
 
 ## References (in this skill)
 
@@ -364,7 +364,7 @@ When working in `tuatha/`, route to the right sub-area:
   Tuatha quadrant router (this skill is the deeper dive into
   the MMO + Crypteolas product).
 - `.agents/skills/babylonjs/SKILL.md` — the Babylon.js 3D
-  engine (used in `tuatha/game/`).
+  engine (used in `sruth/tuatha/game/`).
 - `.agents/skills/kcg-bunchloch/SKILL.md` — the 3-tier
   topology where the MMO deploys.
 - `.agents/skills/stack-ops/SKILL.md` — the GOLD_STANDARD
@@ -372,7 +372,7 @@ When working in `tuatha/`, route to the right sub-area:
 - `.agents/skills/secrets-management/SKILL.md` — the
   Infisical + Locket secret injection.
 - `.agents/skills/better-auth/SKILL.md` — the SIWE auth
-  pattern (used for `tuatha/auth/siwe.py`).
+  pattern (used for `sruth/tuatha/auth/siwe.py`).
 - `.agents/skills/celtic-language-ai/SKILL.md` — the Celtic
   LLMs (Celtic Tutor / Mythology Narrator backends).
 - `.agents/skills/agent-observability/SKILL.md` — the
@@ -380,9 +380,9 @@ When working in `tuatha/`, route to the right sub-area:
   agent-os for the 4 agents).
 - `.agents/skills/upstream-mirrors/SKILL.md` — the
   SpacetimeDB / wgpu / x402 KCG mirror summaries.
-- `tuatha/AGENTS.md` — the existing entry point.
-- `tuatha/DEVELOPMENT.md` — 593-line developer guide.
-- `tuatha/README.md` — product spec.
+- `sruth/tuatha/AGENTS.md` — the existing entry point.
+- `sruth/tuatha/DEVELOPMENT.md` — 593-line developer guide.
+- `sruth/tuatha/README.md` — product spec.
 - `openspec/specs/tuatha-platform/spec.md` — the canonical
   spec for the Tuatha quadrant.
 
@@ -515,7 +515,7 @@ NPCs use to assess the player's mastery. Key patterns:
   warns the user if a Foundation question is dropped
   on a Higher paper
 
-The exam builder lives in `oideachais/web/src/components/
+The exam builder lives in `sruth/oideachais/web/src/components/
 exam-builder/` and consumes the leaving-cert TanStack
 paper corpus that the MMO's NPCs cite in dialogue.
 
@@ -526,7 +526,7 @@ British exam builder architecture.
 
 ## KCG quadrant reference
 
-The canonical 73-line reference for the `tuatha/` quadrant
+The canonical 73-line reference for the `sruth/tuatha/` quadrant
 as a whole, viewed from the post-2026-06-06 docs
 restructure. Tuath is the gamified Celtic language learning
 platform — one of the 5 quadrants in the Cianfhoghlaim
@@ -539,21 +539,21 @@ real-time state module, and the Crypteolas token.
 
 | Sub-member | Purpose |
 |:--|:--|
-| `tuatha/codeolas/` | Code intelligence library (Tree-sitter + CocoIndex; ingest of code repos) |
-| `tuatha/crypteolas/` | Crypto / DeFi research (GitHub, protocols, analytics) |
-| `tuatha/apps/crypteolas_demo/` | Demo app |
+| `sruth/tuatha/codeolas/` | Code intelligence library (Tree-sitter + CocoIndex; ingest of code repos) |
+| `sruth/tuatha/sruth/crypteolas/` | Crypto / DeFi research (GitHub, protocols, analytics) |
+| `sruth/crypteolas/apps/crypteolas_demo/` | Demo app |
 
-**Front-end topology**: `tuatha/ui/` uses **Babylon.js**
+**Front-end topology**: `sruth/tuatha/ui/` uses **Babylon.js**
 (not TanStack) — the *only* front-end in the monorepo that
 doesn't use TanStack.
 
 **Data plane**:
 - **In-game state**: SpacetimeDB (real-time, low-latency)
-- **Premium content**: served from `oideachais/` (DuckLake)
+- **Premium content**: served from `sruth/oideachais/` (DuckLake)
   — paid via x402 micro-transactions in Crypteolas token
-- **Dagster assets**: `tuatha/dagster_assets/` for the
+- **Dagster assets**: `sruth/tuatha/dagster_assets/` for the
   MMO's curriculum-in-game asset graph (separate from
-  `oideachais/dagster_defs/`)
+  `sruth/oideachais/dagster_defs/`)
 
 The 6 canonical KCG docs for Tuath live in `docs/06-product/`:
 `babylonjs.md`, `crypteolas.md`, `game-development.md`,
@@ -565,7 +565,7 @@ The frontmatter of the source (`title: Tuath Celtic
 Educational MMO`, `domain: architecture`, `status: stable`,
 `truth: sole`) declares this the **sole** KCG canonical
 for the Tuath quadrant — superseding earlier
-`docs/tuatha/` subtree content (which has been consolidated
+`docs/sruth/tuatha/` subtree content (which has been consolidated
 in rounds 1-9).
 
 See `references/TUATH_MMO.md` for the full 73-line
@@ -575,8 +575,8 @@ SpacetimeDB + Crypteolas), the workspace member table, the
 front-end topology note, the 3-plane data architecture
 (SpacetimeDB + DuckLake + Dagster), the 6-doc cross-reference
 list, and the "see also" runtime pointers
-(`tuatha/DEVELOPMENT.md`, `tuatha/README.md`,
-`tuatha/gaeilge.md`).
+(`sruth/tuatha/DEVELOPMENT.md`, `sruth/tuatha/README.md`,
+`sruth/tuatha/gaeilge.md`).
 
 ## 2026-06 update: Babylon.js 7 + SpacetimeDB v2 + x402
 
@@ -587,7 +587,7 @@ The Tuatha Celtic Educational MMO has 3 framework updates in 2026-06.
 Babylon.js 7 (released 2026-05) is now the KCG-canonical Babylon.js version. The 7 release flips the default renderer from WebGL2 to WebGPU. The KCG pattern:
 
 ```typescript
-// tuatha/game/scenes/init.ts
+// sruth/tuatha/game/scenes/init.ts
 import { Engine, Scene, WebGPUEngine } from "@babylonjs/core";
 
 const canvas = document.getElementById("renderCanvas");
@@ -604,7 +604,7 @@ WebGPU enables:
 
 ### SpacetimeDB v2 (the authoritative state engine)
 
-SpacetimeDB v2 is the Rust-based authoritative state engine. The 4 KCG MMO server modules (`tuatha/crates/{services,solana,stdb-modules,wgpu}/`) are pinned to v2.x.
+SpacetimeDB v2 is the Rust-based authoritative state engine. The 4 KCG MMO server modules (`sruth/tuatha/crates/{services,solana,stdb-modules,wgpu}/`) are pinned to v2.x.
 
 Key v2 features:
 
@@ -613,7 +613,7 @@ Key v2 features:
 - **WebSocket compression** — 60% smaller payloads for the Celtic language graph updates
 - **WASM reducers** — the client can run reducers in WASM (offline-capable quest tracking)
 
-The KCG pattern: `tuatha/crates/stdb-modules/src/tables/` defines the 20+ tables (Player, NPC, Quest, Achievement, Soul, etc.).
+The KCG pattern: `sruth/tuatha/crates/stdb-modules/src/tables/` defines the 20+ tables (Player, NPC, Quest, Achievement, Soul, etc.).
 
 ### x402 micropayments on Base L2 (gated game features only)
 

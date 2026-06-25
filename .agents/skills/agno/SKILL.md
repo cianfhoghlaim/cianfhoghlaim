@@ -391,7 +391,7 @@ The KCG 5-stage pipeline is a Dagster asset that orchestrates
 5 Agno agents:
 
 ```python
-# oideachais/dagster_defs/assets/curriculum_assets.py
+# sruth/oideachais/dagster_defs/assets/curriculum_assets.py
 from dagster import asset, AssetExecutionContext
 from agno.os import AgentOS
 from sruth.oideachais.agents.agno import (
@@ -477,7 +477,7 @@ result = agent.run("https://github.com/agno-agi/agno")
 - **Z.ai GLM-4.6:** <https://docs.z.ai/guides/llm/glm-4.6>
 - **A2A Protocol:** <https://a2a.dev/>
 - **AG-UI Protocol:** <https://ag-ui.com/>
-- **KCG Dagster asset:** `oideachais/dagster_defs/assets/curriculum_assets.py`
+- **KCG Dagster asset:** `sruth/oideachais/dagster_defs/assets/curriculum_assets.py`
 - **Related skills:** `.agents/skills/google-adk/`,
   `.agents/skills/pydantic-ai/`, `.agents/skills/litellm/`,
   `.agents/skills/langfuse/`, `.agents/skills/cognee/`,

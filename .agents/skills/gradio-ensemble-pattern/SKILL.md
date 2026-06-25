@@ -236,7 +236,7 @@ The `spaces/_common/soulbound_svg.py` module exports a
 deterministic Celtic-knot SVG generator:
 
 ```python
-# spaces/anam_tuatha/app.py
+# spaces/anam_sruth/tuatha/app.py
 from spaces._common import soulbound_svg
 
 svg = soulbound_svg.generate(seed="ui-liathain", size=512)
@@ -314,6 +314,6 @@ per-NPC badge + the Anam Cara bond visualization.
 - `spaces/_common/social_card.py` — the HF social card auto-renderer
 - `spaces/_common/hf_hub_push.py` — the HF Hub push helper
 - `spaces/_common/demo_recorder.py` — the programmatic demo sequence
-- `tuatha/baml_src/mythology_extraction.baml` — the canonical BAML for the NPC dialogue
-- `tuatha/baml_src/celtic_curriculum.baml` — the canonical BAML for the cross-nation comparison
+- `sruth/tuatha/baml_src/mythology_extraction.baml` — the canonical BAML for the NPC dialogue
+- `sruth/tuatha/baml_src/celtic_curriculum.baml` — the canonical BAML for the cross-nation comparison
 - `openspec/changes/spaces-bundle-decomposition-v1/` — the round 12 openspec change

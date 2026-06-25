@@ -50,8 +50,8 @@
 ## 4. Expand `dlt` skill (28 lines → ~120 + 13 refs)
 
 - [x] Update `.agents/skills/dlt/SKILL.md` to:
-  - Fix the path bug: `oideachais/dlt_sources/`, not
-    `oideachais/data_platform/dlt_sources/`.
+  - Fix the path bug: `sruth/oideachais/dlt_sources/`, not
+    `sruth/oideachais/data_platform/dlt_sources/`.
   - Add a decision tree that dispatches to sub-skills.
   - Add project-specific recipes (type-safe pipeline,
     multi-destination fan-out, Dagster wrapping, performance
@@ -144,9 +144,9 @@
 - [x] Run `openspec validate sync-skills-from-docs --strict` again
       (post-implementation; passes).
 - [x] Smoke test: `from cocoindex_flows import docs_skills_consolidation`
-      from `oideachais/` (passes with pre-existing warnings).
+      from `sruth/oideachais/` (passes with pre-existing warnings).
 - [x] Smoke test: `from dlt_sources.ireland import *` from
-      `oideachais/` (passes).
+      `sruth/oideachais/` (passes).
 - [x] Re-index the codebase: `bun run ccc:index` (runs; pre-existing
       COCOINDEX_DB env-var requirement, addressed by setting
       `COCOINDEX_DB=./cocoindex.db`).

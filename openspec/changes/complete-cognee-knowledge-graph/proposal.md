@@ -6,7 +6,7 @@ The oideachais knowledge graph has 3 outstanding gaps that prevent
 end-to-end cognify:
 
 ### Gap 1: 3 author-archive cross-corpus edges are missing
-`oideachais/cognify_rules/author_archive_cross_corpus.py`
+`sruth/oideachais/cognify_rules/author_archive_cross_corpus.py`
 documents 8 cross-corpus edge rules but only implements 5:
 
 | Rule | Status |
@@ -21,14 +21,14 @@ documents 8 cross-corpus edge rules but only implements 5:
 | 8. PersonalRecord -[:AFFILIATED_WITH]-> OfficialMediaSource (teaching) | ✅ implemented (line 345) |
 
 The 3 missing rules exist as 100% complete implementations in
-`oideachais/cognify_rules/leabharlann_cross_archive.py`
+`sruth/oideachais/cognify_rules/leabharlann_cross_archive.py`
 (`_build_arxiv_match_query`, `_build_module_title_match_query`,
 `_build_takeout_citation_query`) but are never called from the
 author-archive cross-corpus pass. `cognee_integration/author_archive_cognify.py:48-57`
 lists all 8 in its `EDGE_TYPES` constant but only 5 actually run.
 
 ### Gap 2: cross_stage_cognify.py is a stub
-`oideachais/cognee_integration/cross_stage_cognify.py:94-108`
+`sruth/oideachais/cognee_integration/cross_stage_cognify.py:94-108`
 defines `@asset cross_stage_cognify` that just logs the 8
 `EDGE_DEFINITIONS` and returns `len(EDGE_DEFINITIONS) == 8`. The
 real `cognee.cognify(dataset="oideachais.cross_stage")` call is
@@ -38,7 +38,7 @@ tertiary) are not yet built — but the aistear producer IS now
 available via `wire-baml-with-known-consumers` (C3.1).
 
 ### Gap 3: university_of_galway missing from cognify dict
-`oideachais/cognee_integration/author_archive_cognify.py` only
+`sruth/oideachais/cognee_integration/author_archive_cognify.py` only
 adds `gemini_deep_research` to the cognify dict. The
 `university_of_galway` corpus is not added (per the explore
 agent's report and `cognee_integration/author_archive_cognify.py:130`
@@ -81,11 +81,11 @@ but never cognified).
 ## Impact
 
 ### Affected files
-- **MODIFIED:** `oideachais/cognify_rules/author_archive_cross_corpus.py`
+- **MODIFIED:** `sruth/oideachais/cognify_rules/author_archive_cross_corpus.py`
   (+ 3 builder functions, + 3 lines in `build_all_cross_corpus_queries`)
-- **MODIFIED:** `oideachais/cognee_integration/cross_stage_cognify.py`
+- **MODIFIED:** `sruth/oideachais/cognee_integration/cross_stage_cognify.py`
   (real `cognee.cognify()` call, + 1 `@asset_check`)
-- **MODIFIED:** `oideachais/cognee_integration/author_archive_cognify.py`
+- **MODIFIED:** `sruth/oideachais/cognee_integration/author_archive_cognify.py`
   (+ 2 lines for `university_of_galway` + `personal_records` in the cognify dict)
 
 ### Affected specs
@@ -143,6 +143,6 @@ but never cognified).
 1. `from oideachais.cognify_rules.author_archive_cross_corpus import build_all_cross_corpus_queries, populate_cross_corpus_edges` succeeds
 2. `from oideachais.cognee_integration.cross_stage_cognify import cross_stage_cognify, cross_stage_edges_check` succeeds
 3. `from oideachais.cognee_integration.author_archive_cognify import cognify_all_corpora` succeeds
-4. `grep "def _build_arxiv_match_query\|def _build_module_title_match_query\|def _build_takeout_citation_query" oideachais/cognify_rules/author_archive_cross_corpus.py` shows 3 hits
+4. `grep "def _build_arxiv_match_query\|def _build_module_title_match_query\|def _build_takeout_citation_query" sruth/oideachais/cognify_rules/author_archive_cross_corpus.py` shows 3 hits
 5. `uv run --package oideachais python -c "import dagster_defs.definitions"` still loads
 6. `openspec validate complete-cognee-knowledge-graph --strict` passes

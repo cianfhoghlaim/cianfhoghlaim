@@ -4,7 +4,7 @@
 The SpacetimeDB Cookbook is a curated collection of runnable example projects demonstrating real-time multiplayer patterns with SpacetimeDB. It covers web requests, multi-position updates, Unity chat, OIDC auth, VoIP, and the publish workflow. Each project is a self-contained module with its own README walking through schema, reducers, and client code.
 
 ## Why This Matters for Kings' College Galway
-The `tuatha/` educational MMO borrows heavily from the cookbook's patterns — especially the **web-request-example** (which maps to our `tuatha/ui` Babylon.js client connecting to a SpacetimeDB server) and **multiple-position-updates** (which mirrors the spatial sync of student avatars in the Celtic-themed classroom). **unity-chat-system** informs our text-chat system between students and AI NPCs. The cookbook's **oidc-test** example also informs how we plan to use Pocket ID for federated identity.
+The `sruth/tuatha/` educational MMO borrows heavily from the cookbook's patterns — especially the **web-request-example** (which maps to our `sruth/tuatha/ui` Babylon.js client connecting to a SpacetimeDB server) and **multiple-position-updates** (which mirrors the spatial sync of student avatars in the Celtic-themed classroom). **unity-chat-system** informs our text-chat system between students and AI NPCs. The cookbook's **oidc-test** example also informs how we plan to use Pocket ID for federated identity.
 
 ## Key Patterns Preserved
 - **web-request-example/README.md** — SpacetimeDB web client with request/response pattern

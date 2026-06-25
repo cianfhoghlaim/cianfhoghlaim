@@ -11,9 +11,9 @@ The cianfhoghlaim monorepo has 70+ Docker Compose stacks under `infrastructure/s
 | Stack | Change |
 |:--|:--|
 | `storage/dagster` | Renamed `secrets.env.template` → `secrets.env`. Added `sidecar.yaml`. Rewrote `pangolin.yaml` + `blueprint.yaml` to the modern 6-label pattern. Added `deploy.resources.limits` to both services. Added `.env.example`. |
-| `storage/kafka` | Added `sidecar.yaml` (Locket). Populated `secrets.env` with 3 `{{ infisical:///kafka/* }}` refs. Modernised `pangolin.yaml` (TCP mode for the broker, HTTP for the UI). Added `kafka-init` one-shot container that creates the 5 topics from `oideachais/data_platform/kafka.py`. |
+| `storage/kafka` | Added `sidecar.yaml` (Locket). Populated `secrets.env` with 3 `{{ infisical:///kafka/* }}` refs. Modernised `pangolin.yaml` (TCP mode for the broker, HTTP for the UI). Added `kafka-init` one-shot container that creates the 5 topics from `sruth/oideachais/data_platform/kafka.py`. |
 | `storage/confluent` | Added `sidecar.yaml`. Populated `secrets.env` with 9 `{{ infisical:///confluent/* }}` refs. Added `.env.example`. |
-| `storage/agent-os` | Rewrote `compose.yaml` to fix 4 broken `context: ../../../sruth/*` build paths → `oideachais/data_platform/agent_os/`, `tuatha/crypteolas/agent_os/`, `infrastructure/browser/agent_os/`. Added `sidecar.yaml`. Modernised `pangolin.yaml` (4 separate private resources). Aleyum's build is stubbed until the aleyum/ source is restored. |
+| `storage/agent-os` | Rewrote `compose.yaml` to fix 4 broken `context: ../../../sruth/*` build paths → `sruth/oideachais/data_platform/agent_os/`, `sruth/tuatha/sruth/crypteolas/agent_os/`, `infrastructure/browser/agent_os/`. Added `sidecar.yaml`. Modernised `pangolin.yaml` (4 separate private resources). Aleyum's build is stubbed until the aleyum/ source is restored. |
 | `storage/browser` | Rewrote `compose.yaml` to fix 3 broken `context: ../../../sruth/browser*` build paths. Added `sidecar.yaml`. Populated `secrets.env` with 3 refs. |
 | `storage/lancedb` | Added healthcheck + `deploy.resources.limits` + switched to `cianfhoghlaim` shared network. |
 | `tools/stirling-pdf` | Added `sidecar.yaml`. Populated `secrets.env`. |

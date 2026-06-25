@@ -12,7 +12,7 @@ separate code-location from the `crypteolas` library).
 - **WHEN** running `dg list` from the repo root
 - **THEN** the output contains exactly: `oideachais`, `meaisinfhoghlaim`,
   `tuatha`, `crypteolas`, `crypteolas_demo`, `croilar`
-- **AND** no code-location references the legacy `tuatha/apps/crypteolas_demo`
+- **AND** no code-location references the legacy `sruth/crypteolas/apps/crypteolas_demo`
   path (it is now `sruth/crypteolas/apps/crypteolas_demo`)
 - **AND** no code-location references `meaisin_heartbeat` (the correct
   name is `meaisinfhoghlaim`)

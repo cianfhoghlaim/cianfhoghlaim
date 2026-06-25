@@ -14,7 +14,7 @@ per-Space routing.
 | `an_scrudu/` (An Scrúdú) | 7860 | gradio 5.x | oideachais (Talamh) | Past-paper heatmap + PCLM-XML/PDF download |
 | `meaisin_cliste/` (Meaisín Cliste) | 7860 | gradio 5.x | meaisinfhoghlaim (Uisce + Aer) | 3 Celtic AI tools: cognate dictionary, school-density map, cross-nation curriculum |
 | `cianfhoghlaim/` (RPG) | 7860 | gradio 5.x | tuatha (Aer + Anam) | Hades-style dialogue with 6 Celtic NPCs on a British Isles map |
-| `anam_tuatha/` (Anam) | 7860 | gradio 5.x | croilar (5 elements) | Integration Space: 5 elements + 2 cross-cutting features = 7 panels |
+| `anam_sruth/tuatha/` (Anam) | 7860 | gradio 5.x | croilar (5 elements) | Integration Space: 5 elements + 2 cross-cutting features = 7 panels |
 | `data-engineering/` (PyPI) | 8000 | dagster + dbt + evidence | oideachais (data plane) | PyPI package analytics dashboard (the only non-gradio Space) |
 
 ### Archived Spaces (1)
@@ -67,7 +67,7 @@ For a Space-specific AGENTS.md, see:
 - `spaces/an_scrudu/AGENTS.md`
 - `spaces/meaisin_cliste/AGENTS.md`
 - `spaces/cianfhoghlaim/AGENTS.md`
-- `spaces/anam_tuatha/AGENTS.md`
+- `spaces/anam_sruth/tuatha/AGENTS.md`
 - `spaces/data-engineering/AGENTS.md`
 
 ## When to add a new Space
@@ -81,8 +81,8 @@ For a Space-specific AGENTS.md, see:
 
 - [`../openspec/AGENTS.md`](../openspec/AGENTS.md) — the openspec workflow
 - [`../AGENTS.md`](../AGENTS.md) — the root agent instructions
-- [`../oideachais/AGENTS.md`](../oideachais/AGENTS.md) — the oideachais quadrant
-- [`../meaisinfhoghlaim/AGENTS.md`](../meaisinfhoghlaim/AGENTS.md) — the AI/ML quadrant
-- [`../tuatha/AGENTS.md`](../tuatha/AGENTS.md) — the MMO quadrant
-- [`../croilar/AGENTS.md`](../croilar/AGENTS.md) — the portfolio quadrant
+- [`../sruth/oideachais/AGENTS.md`](../sruth/oideachais/AGENTS.md) — the oideachais quadrant
+- [`../sruth/meaisinfhoghlaim/AGENTS.md`](../sruth/meaisinfhoghlaim/AGENTS.md) — the AI/ML quadrant
+- [`../sruth/tuatha/AGENTS.md`](../sruth/tuatha/AGENTS.md) — the MMO quadrant
+- [`../sruth/croilar/AGENTS.md`](../sruth/croilar/AGENTS.md) — the portfolio quadrant
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) — the 94 Docker Compose stacks

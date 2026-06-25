@@ -83,21 +83,21 @@
 
 ### 3.1 Create 3 new AGENTS.md files
 
-- [ ] Create `oideachais/AGENTS.md` (lakehouse + dlt + BAML + dagster surface; re-export shims to meaisinfhoghlaim/)
-- [ ] Create `tuatha/AGENTS.md` (MMO + crypto scope, SpacetimeDB, BAML `ui_components.baml`)
-- [ ] Create `croilar/AGENTS.md` (multi-persona model, 5 subprojects, the 4 openspec specs)
+- [ ] Create `sruth/oideachais/AGENTS.md` (lakehouse + dlt + BAML + dagster surface; re-export shims to sruth/meaisinfhoghlaim/)
+- [ ] Create `sruth/tuatha/AGENTS.md` (MMO + crypto scope, SpacetimeDB, BAML `ui_components.baml`)
+- [ ] Create `sruth/croilar/AGENTS.md` (multi-persona model, 5 subprojects, the 4 openspec specs)
 
 ### 3.2 Refresh 4 README.md files
 
-- [ ] Refresh `oideachais/README.md` (add link to new `oideachais/AGENTS.md` and the 7 oideachais-* openspec specs)
-- [ ] Refresh `tuatha/README.md` (add link to new `tuatha/AGENTS.md` and the `tuatha-platform` spec)
-- [ ] Refresh `croilar/README.md` (add link to new `croilar/AGENTS.md` and the 3 croilar-* specs)
-- [ ] Refresh `meaisinfhoghlaim/README.md` (light refresh; add links to the 3 new meaisinfhoghlaim-* openspec specs)
+- [ ] Refresh `sruth/oideachais/README.md` (add link to new `sruth/oideachais/AGENTS.md` and the 7 oideachais-* openspec specs)
+- [ ] Refresh `sruth/tuatha/README.md` (add link to new `sruth/tuatha/AGENTS.md` and the `tuatha-platform` spec)
+- [ ] Refresh `sruth/croilar/README.md` (add link to new `sruth/croilar/AGENTS.md` and the 3 croilar-* specs)
+- [ ] Refresh `sruth/meaisinfhoghlaim/README.md` (light refresh; add links to the 3 new meaisinfhoghlaim-* openspec specs)
 
 ### 3.3 Refresh 2 existing AGENTS.md files
 
-- [ ] Light-refresh `meaisinfhoghlaim/AGENTS.md` (add links to the 3 new specs)
-- [ ] Light-refresh `AGENTS.md` (root) — add `meaisinfhoghlaim/` to the workspace table; add `tuatha/AGENTS.md` and `croilar/AGENTS.md` references
+- [ ] Light-refresh `sruth/meaisinfhoghlaim/AGENTS.md` (add links to the 3 new specs)
+- [ ] Light-refresh `AGENTS.md` (root) — add `sruth/meaisinfhoghlaim/` to the workspace table; add `sruth/tuatha/AGENTS.md` and `sruth/croilar/AGENTS.md` references
 
 ### 3.4 Rewrite the 2 openspec meta files
 

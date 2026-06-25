@@ -4,7 +4,7 @@
 
 ### 4.0 target_factory.py (DONE)
 
-- [x] Create `oideachais/dlt_utils/target_factory.py`
+- [x] Create `sruth/oideachais/dlt_utils/target_factory.py`
 - [x] Define the `Target` dataclass (frozen=True, hashable)
 - [x] Define the 3 canonical instances: `DEV` (local DuckDB),
       `STAGING` (MotherDuck), `PROD` (DuckLake)
@@ -17,7 +17,7 @@
 
 ### 4.1 make_target.sh CLI helper (DONE)
 
-- [x] Create `oideachais/scripts/make_target.sh` (100 LOC, executable)
+- [x] Create `sruth/oideachais/scripts/make_target.sh` (100 LOC, executable)
 - [x] Resolves target from `$1` (default `dev`)
 - [x] Sources the `.env` file (if present) with `set -a` / `set +a`
 - [x] Exports `OIDEACHAIS_TARGET`
@@ -33,7 +33,7 @@
 
 ### 4.3 Tests (TODO)
 
-- [ ] `oideachais/tests/test_target_factory.py` covering the 3
+- [ ] `sruth/oideachais/tests/test_target_factory.py` covering the 3
       targets, get_target with env var override, secret validation,
       and the 3 shortcut functions
 
@@ -44,10 +44,10 @@
 openspec validate author-archive-multi-target --strict
 
 # 2. Run the helper with no command (prints the resolved target)
-./oideachais/scripts/make_target.sh dev
+./sruth/oideachais/scripts/make_target.sh dev
 
 # 3. Run the helper with a Python command
-./oideachais/scripts/make_target.sh dev python -c "
+./sruth/oideachais/scripts/make_target.sh dev python -c "
 from oideachais.dlt_utils.target_factory import get_target
 print('target =', get_target().name)
 print('destination =', get_target().destination)

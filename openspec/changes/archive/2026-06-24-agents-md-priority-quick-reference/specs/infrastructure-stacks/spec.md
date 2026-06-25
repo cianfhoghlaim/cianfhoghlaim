@@ -12,7 +12,7 @@ Every AGENTS.md file under the Cianfhoghlaim monorepo (`/AGENTS.md`, the 4 quadr
 
 #### Scenario: Quadrant AGENTS.md leads with priority quick reference
 
-- **WHEN** an agent reads `/oideachais/AGENTS.md` (or any of the 4 quadrant `AGENTS.md` files)
+- **WHEN** an agent reads `/sruth/oideachais/AGENTS.md` (or any of the 4 quadrant `AGENTS.md` files)
 - **THEN** the first section after the title is "Priority quick reference"
 - **AND** it lists the 5-8 skills most relevant to that quadrant + the ccc command + the 4 openspec commands
 

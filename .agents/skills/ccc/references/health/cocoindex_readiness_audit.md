@@ -103,11 +103,11 @@ All 7 queries returned `docs/` files with strong relevance. Docs results frequen
 |------|------|-------|------|
 | #1 | `docs/old/...firecrawl-openapi-research.md` | 0.688 | docs/old |
 | #2 | `docs/bonneagar/firecrawl-openapi-research.md` | 0.688 | docs (dup) |
-| #3 | `docs/tuatha/Multimodal Video Knowledge...` | 0.683 | docs |
+| #3 | `docs/sruth/tuatha/Multimodal Video Knowledge...` | 0.683 | docs |
 | #4 | `docs/agents/ai-sdk-tools.md` | 0.679 | docs |
 | #5 | `docs/bonneagar/firecrawl-openapi-research.md` | 0.678 | docs |
 
-**Assessment**: Good. Duplication between `docs/old/`, `docs/bonneagar/`, and `docs/tuatha/` is visible. Consolidation will deduplicate.
+**Assessment**: Good. Duplication between `docs/old/`, `docs/bonneagar/`, and `docs/sruth/tuatha/` is visible. Consolidation will deduplicate.
 
 ### Query 5: "ADK agent routing"
 
@@ -117,7 +117,7 @@ All 7 queries returned `docs/` files with strong relevance. Docs results frequen
 | #2 | `docs/agents/GOOGLE_ADK_COMPREHENSIVE_REFERENCE.md` | 0.700 | docs |
 | #3 | `openspec/plans/machine_learning_deep_dive.md` | 0.687 | spec |
 | #4 | `docs/context/.../google-adk.md` | 0.684 | docs |
-| #5 | `croilar/_shared/agents/__init__.py` | 0.682 | **code** |
+| #5 | `sruth/croilar/_shared/agents/__init__.py` | 0.682 | **code** |
 
 **Assessment**: Excellent. docs/ outranks code for conceptual queries. Code only appears at #5 for actual implementation.
 
@@ -125,11 +125,11 @@ All 7 queries returned `docs/` files with strong relevance. Docs results frequen
 
 | Rank | File | Score | Type |
 |------|------|-------|------|
-| #1 | `docs/tuatha/celtic_mmo.md` | **0.787** | docs |
-| #2 | `docs/tuatha/tuatha/celtic_mmo.md` (dup) | 0.787 | docs (dup) |
-| #3 | `tuatha/anam.md` | 0.787 | code (dup content) |
+| #1 | `docs/sruth/tuatha/celtic_mmo.md` | **0.787** | docs |
+| #2 | `docs/sruth/tuatha/sruth/tuatha/celtic_mmo.md` (dup) | 0.787 | docs (dup) |
+| #3 | `sruth/tuatha/anam.md` | 0.787 | code (dup content) |
 | #4 | `docs/old/archive-crypteolas-celtic_mmo.md` (dup) | 0.787 | docs/old |
-| #5 | `docs/tuatha/PAYMENT_GUIDE.md` | 0.758 | docs |
+| #5 | `docs/sruth/tuatha/PAYMENT_GUIDE.md` | 0.758 | docs |
 
 **Assessment**: Outstanding. Highest score of any query (0.787). ccc correctly identifies the identical content across 4 locations. Docs-exclusive concept is well-indexed.
 
@@ -177,7 +177,7 @@ All 7 queries returned `docs/` files with strong relevance. Docs results frequen
 | `docs/agents/BAML_COMPREHENSIVE_GUIDE.md` | No | Bare `# BAML Comprehensive Guide...` header |
 | `docs/context/package-ecosystem/ai-frameworks/google-adk.md` | No | Bare `# Google ADK...` header |
 | `docs/data_engineering/dagster-comprehensive.md` | No | Bare `# Dagster Comprehensive Guide` header |
-| `docs/tuatha/celtic_mmo.md` | No | Bare `# Building an "Anam"...` header |
+| `docs/sruth/tuatha/celtic_mmo.md` | No | Bare `# Building an "Anam"...` header |
 | `docs/data_engineering/data-sources.md` | No | Bare `# Geospatial Data Sources...` header |
 
 **0 of 7 sampled files have YAML frontmatter**. This is consistent across the docs tree — the only files with frontmatter appear to be `.agents/skills/*/SKILL.md` files.
@@ -190,7 +190,7 @@ All 7 queries returned `docs/` files with strong relevance. Docs results frequen
 
 1. **Semantic density** — domain-specific terminology, proper nouns, technology names in natural prose context
 2. **Clear hierarchy** — well-structured `# H1` / `## H2` / `### H3` headings that form a searchable outline
-3. **Code cross-references** — links to actual code files (`oideachais/data_platform/...`, `tuatha/...`) create semantic bridges
+3. **Code cross-references** — links to actual code files (`sruth/oideachais/data_platform/...`, `sruth/tuatha/...`) create semantic bridges
 4. **No temporal noise** — dates, timestamps, version numbers that change frequently dilute semantic signal
 5. **YAML frontmatter** — provides structured metadata the embedding model can leverage as anchor tokens
 6. **Single source of truth** — no duplicate content across `docs/`, `docs/old/`, `docs/bonneagar/`, etc.
@@ -231,8 +231,8 @@ related_skills:
   - "dlt"
   - "motherduck"
 related_code:
-  - "oideachais/data_platform/dagster_defs/assets/"
-  - "oideachais/data_platform/dagster_defs/definitions.py"
+  - "sruth/oideachais/data_platform/dagster_defs/assets/"
+  - "sruth/oideachais/data_platform/dagster_defs/definitions.py"
 related_docs:
   - "docs/data_engineering/dlt-comprehensive.md"
   - "docs/context/07-skills/oideachas-pipeline.md"
@@ -257,7 +257,7 @@ related_docs:
 
 1. **Phase 1** — Add frontmatter to `docs/context/package-ecosystem/` files (already structured, small, high-impact)
 2. **Phase 2** — Add frontmatter to consolidated "comprehensive" guides (dagster, BAML, ADK, Convex)
-3. **Phase 3** — Add frontmatter to domain indexes (data_engineering/, bonneagar/, tuatha/)
+3. **Phase 3** — Add frontmatter to domain indexes (data_engineering/, bonneagar/, sruth/tuatha/)
 4. **Phase 4** — Script it: a Python script that reads `INDEX.md`, infers domain/entities from file paths and headings, generates frontmatter stubs
 
 ---
@@ -268,9 +268,9 @@ A significant finding: 4 of 7 queries returned the **identical chunk from duplic
 
 | Duplicate pattern | Files affected |
 |-------------------|---------------|
-| `docs/bonneagar/` vs `docs/tuatha/` vs `docs/old/` | celtic_mmo, firecrawl-openapi, geospatial-linguistics, Backend Strategy |
+| `docs/bonneagar/` vs `docs/sruth/tuatha/` vs `docs/old/` | celtic_mmo, firecrawl-openapi, geospatial-linguistics, Backend Strategy |
 | `docs/data_engineering/` vs `docs/old/` | dagster-comprehensive, geospatial-linguistics, data-sources |
-| `docs/tuatha/` vs `docs/tuatha/tuatha/` (nested dup) | celtic_mmo, PAYMENT_GUIDE |
+| `docs/sruth/tuatha/` vs `docs/sruth/tuatha/sruth/tuatha/` (nested dup) | celtic_mmo, PAYMENT_GUIDE |
 
 **Recommendation**: Consolidation should deduplicate first, then embed. This will:
 - Reduce index bloat (fewer near-identical vectors)
@@ -302,7 +302,7 @@ A significant finding: 4 of 7 queries returned the **identical chunk from duplic
 
 2. **Add YAML frontmatter** to consolidated docs following the convention above. Start with `ccc_query_hints` — it provides the highest ROI per field added.
 
-3. **Deduplicate before consolidating** — remove `docs/old/` copies and nested `docs/tuatha/tuatha/` copies first, then rebuild the index once.
+3. **Deduplicate before consolidating** — remove `docs/old/` copies and nested `docs/sruth/tuatha/sruth/tuatha/` copies first, then rebuild the index once.
 
 4. **Create a `guides.yml`** in `.cocoindex_code/` with concept guides for cross-cutting topics that span docs/ and code/ (e.g., "BAML extraction pipeline end-to-end", "Oideachais curriculum ingestion flow", "Tuath MMO x402 payment flow").
 

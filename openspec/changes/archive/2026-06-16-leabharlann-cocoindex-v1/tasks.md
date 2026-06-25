@@ -8,7 +8,7 @@
 - [ ] 4. Annotate `openspec/changes/author-archive-gemini-and-uos-ingestion/proposal.md` with a "Superseded by" header pointing to the new change id.
 - [ ] 5. Validate the change: `openspec validate leabharlann-cocoindex-v1 --strict`.
 
-## Phase 1 — CocoIndex v0 → v1 migration of `oideachais/cocoindex_flows/` (week 1-2)
+## Phase 1 — CocoIndex v0 → v1 migration of `sruth/oideachais/cocoindex_flows/` (week 1-2)
 
 - [ ] 6. Migrate `curriculum_embedding.py` from v0 (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`) to v1 (`@coco.fn`, `@coco.lifespan`, `coco.App`, `localfs.walk_dir`, `RecursiveSplitter`, `LanceDB` target). Pattern: `docs/cocoindex/pdf_embedding/main.py:1`.
 - [ ] 7. Migrate `curriculum_translation.py` to v1. Use `instructor.from_litellm(acompletion, mode=instructor.Mode.JSON)` for BAML calls. Pattern: `docs/cocoindex/paper_metadata/main.py:122`.
@@ -20,7 +20,7 @@
 - [ ] 13. Add `leabharlann_books_embedding.py` (v1). Pattern: `pdf_embedding/main.py` + `multi_format_indexing/main.py`.
 - [ ] 14. Add `leabharlann_zotero_embedding.py` (v1). BAML `ExtractZoteroMetadata` + abstract chunks. Pattern: `paper_metadata/main.py:1`.
 - [ ] 15. Add `leabharlann_takeout_embedding.py` (v1). Filesystem only. Pattern: `pdf_embedding/main.py:1`.
-- [ ] 16. Update `oideachais/cocoindex_flows/__init__.py` to re-export the 11 v1 Apps + their `query` helpers.
+- [ ] 16. Update `sruth/oideachais/cocoindex_flows/__init__.py` to re-export the 11 v1 Apps + their `query` helpers.
 - [ ] 17. Add `.env.example` (gitignored) documenting `COCOINDEX_DB=storage/cocoindex/oideachais.ldb`, `LANCEDB_URI`, and the `EMBED_MODEL` env var.
 - [ ] 18. Run `baml-cli generate` (no schema changes in this phase; confirms client is current).
 
@@ -33,8 +33,8 @@
 - [ ] 23. Add `zotero.py` (SHA-256 dedup, arxiv-ID regex, `_dup0` and `_(N)` suffix handling).
 - [ ] 24. Add `takeout_v1.py` (auto-discovers `stedding/Takeout/`, `stedding/Takeout/<account>/`, `~/Downloads/takeout-*.zip`).
 - [ ] 25. Update the 3 existing sources' `DEFAULT_*_PATH` constants to point at `leabharlann/`.
-- [ ] 26. Update `oideachais/dlt_sources/author_archive/__init__.py` to re-export the new symbols.
-- [ ] 27. Update `oideachais/pyproject.toml` to add `ebooklib` as an optional dep.
+- [ ] 26. Update `sruth/oideachais/dlt_sources/author_archive/__init__.py` to re-export the new symbols.
+- [ ] 27. Update `sruth/oideachais/pyproject.toml` to add `ebooklib` as an optional dep.
 
 ## Phase 3 — BAML `ZoteroPaper` schema (week 2-3)
 
@@ -44,15 +44,15 @@
 
 ## Phase 4 — Dagster assets + sensor (week 3)
 
-- [ ] 31. Add `oideachais/dagster_defs/assets/leabharlann_assets.py` with the 7 assets and 3 partition definitions.
-- [ ] 32. Add `oideachais/dagster_defs/sensors/leabharlann_sensors.py` with `leabharlann_directory_sensor` (60s poll).
-- [ ] 33. Register the new assets and sensor in `oideachais/dagster_defs/definitions.py`.
-- [ ] 34. Register the sensor in `oideachais/dagster_defs/sensors/__init__.py`.
+- [ ] 31. Add `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` with the 7 assets and 3 partition definitions.
+- [ ] 32. Add `sruth/oideachais/dagster_defs/sensors/leabharlann_sensors.py` with `leabharlann_directory_sensor` (60s poll).
+- [ ] 33. Register the new assets and sensor in `sruth/oideachais/dagster_defs/definitions.py`.
+- [ ] 34. Register the sensor in `sruth/oideachais/dagster_defs/sensors/__init__.py`.
 
 ## Phase 5 — Test + commit (week 3-4)
 
-- [ ] 35. Create `oideachais/tests/test_leabharlann_pipeline.py` with the 15 tests enumerated in the proposal.
-- [ ] 36. Run `uv run pytest oideachais/tests/test_leabharlann_pipeline.py -q` from the repo root; all tests pass.
+- [ ] 35. Create `sruth/oideachais/tests/test_leabharlann_pipeline.py` with the 15 tests enumerated in the proposal.
+- [ ] 36. Run `uv run pytest sruth/oideachais/tests/test_leabharlann_pipeline.py -q` from the repo root; all tests pass.
 - [ ] 37. Run `uv run dagster dev -m dagster_defs.definitions` locally and verify the 7 new assets appear in the asset catalog.
 - [ ] 38. Re-validate: `openspec validate leabharlann-cocoindex-v1 --strict`.
 - [ ] 39. Git: `git pull --rebase`, `git add -A`, `git commit -m "feat(leabharlann): v1 cocoindex + zotero/books/takeout sources"`, `git push`.

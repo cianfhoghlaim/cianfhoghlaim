@@ -11,17 +11,17 @@ The change deliberately does NOT auto-sync the README identity section (per user
 **New files (13):**
 
 - `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/{ui_liathain,delbhna_tir_dha_locha,eamonn_deacy_park}-wikipedia.md` — 3 Obsidian-style clippings following the `deisi-wikipedia.md` precedent.
-- `oideachais/dlt_sources/official_media/fixtures/identity_{ui_liathain,delbhna,eamonn_deacy_park}.json` — 3 JSON fixtures for `lookup_wikipedia()` consumption.
-- `oideachais/baml_src/culture_extraction.baml` — 1 BAML file defining `CultureHeritageClaim` + `ExtractCultureClaims`.
-- `oideachais/cocoindex_flows/culture_heritage_embedding.py` — 1 v1 CocoIndex App (12th in the platform).
-- `oideachais/cognee_integration/culture_cognify.py` — 1 Cognee cognify pass for the `culture_heritage` dataset.
-- `oideachais/dagster_defs/assets/culture_heritage_assets.py` — 1 Dagster asset module with 4 assets + 1 asset check.
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_{ui_liathain,delbhna,eamonn_deacy_park}.json` — 3 JSON fixtures for `lookup_wikipedia()` consumption.
+- `sruth/oideachais/baml_src/culture_extraction.baml` — 1 BAML file defining `CultureHeritageClaim` + `ExtractCultureClaims`.
+- `sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py` — 1 v1 CocoIndex App (12th in the platform).
+- `sruth/oideachais/cognee_integration/culture_cognify.py` — 1 Cognee cognify pass for the `culture_heritage` dataset.
+- `sruth/oideachais/dagster_defs/assets/culture_heritage_assets.py` — 1 Dagster asset module with 4 assets + 1 asset check.
 - `openspec/changes/ingest-culture-heritage/specs/{cross-domain-registry,oideachais-leabharlann,celtic-asset-generation}/spec.md` — 3 spec deltas.
 
 **Edited files (4):**
 
-- `oideachais/sources.yaml` — 6 new entries under `domain: culture, nation: ie`.
-- `oideachais/STATUS.md` — new row in the BAML × DLT × Dagster × CocoIndex matrix.
+- `sruth/oideachais/sources.yaml` — 6 new entries under `domain: culture, nation: ie`.
+- `sruth/oideachais/STATUS.md` — new row in the BAML × DLT × Dagster × CocoIndex matrix.
 - `.erk/docs/agent/index.md` — link to the new culture subtree.
 - `openspec/specs/cross-domain-registry/spec.md` — NEW spec (the cross-domain-registry capability did not yet exist as a top-level spec; it is created by this change as the canonical home for the 8-nation × 7-domain contract).
 

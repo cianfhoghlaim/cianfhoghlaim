@@ -3,7 +3,7 @@
 ## Why
 
 An eighth round of `docs/*` consolidation. The user asked
-to process `docs/tuatha/` (95 MB, 85 .md files) and
+to process `docs/sruth/tuatha/` (95 MB, 85 .md files) and
 `docs/teanga/` (40 MB, 56 .md + 2 PDFs) with two key
 deltas from prior rounds:
 
@@ -13,7 +13,7 @@ deltas from prior rounds:
 2. **Output shape**: new mega-skills (per the user's
    answer), with long-form KCG docs moving into per-skill
    `references/` subdirs (NOT staying in `docs/`).
-3. **teanga/ + tuatha/**: merge `teanga/` into `tuatha/`
+3. **teanga/ + sruth/tuatha/**: merge `teanga/` into `sruth/tuatha/`
    skills, then delete `teanga/`.
 
 The 6 prior rounds absorbed every other `docs/*`
@@ -101,15 +101,15 @@ The 11 KCG-authored mirror summaries in
 
 ### Files deleted (15 total)
 
-- 5 from `docs/tuatha/` (no longer relevant):
-  - `docs/tuatha/INDEX.md` (tombstone — content in
+- 5 from `docs/sruth/tuatha/` (no longer relevant):
+  - `docs/sruth/tuatha/INDEX.md` (tombstone — content in
     `tuatha-mmo` SKILL.md)
-  - `docs/tuatha/ANALYSIS.md` (tombstone — content in
+  - `docs/sruth/tuatha/ANALYSIS.md` (tombstone — content in
     `tuatha-mmo` SKILL.md)
-  - `docs/tuatha/README.md` (rewritten in this change)
-  - `docs/tuatha/00-nav/GRAPHICS_INDEX.md` (content in
+  - `docs/sruth/tuatha/README.md` (rewritten in this change)
+  - `docs/sruth/tuatha/00-nav/GRAPHICS_INDEX.md` (content in
     `tuatha-mmo` references)
-  - `docs/tuatha/03-data-pipelines/Agentic Web Scraping
+  - `docs/sruth/tuatha/03-data-pipelines/Agentic Web Scraping
     Pipeline.md` (duplicate of teanga copy; the teanga
     copy is now `kcg-leabharlann-pipeline/references/...`)
 
@@ -125,7 +125,7 @@ The 11 KCG-authored mirror summaries in
 
 - 1 whole directory:
   - `docs/teanga/` (after all moves done — per the
-    user's "Merge teanga/ into tuatha/, delete teanga/"
+    user's "Merge teanga/ into sruth/tuatha/, delete teanga/"
     answer)
 
 ### `08-mirrors/_summaries/` (11 files)
@@ -144,7 +144,7 @@ untouched.
 - **Affected code**: none. Skills + OpenSpec only.
 - **Affected skills** (12 total): 4 new + 8 expanded
 - **Net docs/` size change**: 95 MB → 1.4 MB (the
-  `08-mirrors/` 93 MB + the 4 tuatha/04-game-tech,
+  `08-mirrors/` 93 MB + the 4 sruth/tuatha/04-game-tech,
   05-ios-ml, 06-tokenomics subdirs which are now empty of
   KCG-authored content)
 - **Net `.agents/skills/` size change**: +~16,500 lines

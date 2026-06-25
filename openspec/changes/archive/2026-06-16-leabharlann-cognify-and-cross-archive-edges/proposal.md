@@ -4,7 +4,7 @@
 
 After the leabharlann dlt sources (books / zotero / takeout) materialise
 their BAML-extracted rows, the structured data is sitting in DuckLake
-but **not connected to a knowledge graph**. The 3rd-party `oideachais/graph/`
+but **not connected to a knowledge graph**. The 3rd-party `sruth/oideachais/graph/`
 module re-implements Graphiti in pure Python without connecting to the
 `graphiti` compose stack on `arm1-oci`; the `cross_stage_cognify.py`
 cognify is wired only for the 5-stage curriculum (Aistear → Tertiary).
@@ -16,7 +16,7 @@ This change adds a dedicated `leabharlann_cognify` asset group that:
      - `GeminiReport -[:CITES]-> ZoteroPaper` (when an arxiv_id matches)
      - `UoGArtifact -[:TEACHES]-> ZoteroPaper` (when a module title matches a paper title)
      - `TakeoutDocument -[:CITES]-> GeminiReport` (when a takeout doc cites a Gemini report's URL)
-  3. Exposes a new `oideachais/api/cross_archive_graph.py` FastAPI route
+  3. Exposes a new `sruth/oideachais/api/cross_archive_graph.py` FastAPI route
      `GET /cross-archive-graph/{query}` that runs a FalkorDB query and
      returns JSON for the web frontend.
 
@@ -24,11 +24,11 @@ This change adds a dedicated `leabharlann_cognify` asset group that:
 
 | Layer | Files | Description |
 |:--|:--|:--|
-| Dagster assets | `oideachais/dagster_defs/assets/leabharlann_cognify_assets.py` (new, 4 assets) | `cognify_leabharlann_books`, `cognify_leabharlann_zotero`, `cognify_leabharlann_takeout`, `cross_archive_edges` |
-| Dagster registration | `oideachais/dagster_defs/definitions.py` (modified, +1 try/except + 1 line) | adds `LEABHARLANN_COGNIFY_ASSETS` to the asset list |
-| Cognee adapter | `oideachais/cognee_integration/leabharlann_cognify.py` (new) | dedicated cognify adapter for leabharlann data classes (UoGArtifact, ZoteroPaper, GeminiReport) |
-| FalkorDB client | `oideachais/api/cross_archive_graph.py` (new) | FastAPI route `GET /cross-archive-graph/{query}` for the web frontend |
-| Cross-archive edge rules | `oideachais/cognify_rules/leabharlann_cross_archive.py` (new) | 3 edge rules: arxiv_id match, module_title match, URL match |
+| Dagster assets | `sruth/oideachais/dagster_defs/assets/leabharlann_cognify_assets.py` (new, 4 assets) | `cognify_leabharlann_books`, `cognify_leabharlann_zotero`, `cognify_leabharlann_takeout`, `cross_archive_edges` |
+| Dagster registration | `sruth/oideachais/dagster_defs/definitions.py` (modified, +1 try/except + 1 line) | adds `LEABHARLANN_COGNIFY_ASSETS` to the asset list |
+| Cognee adapter | `sruth/oideachais/cognee_integration/leabharlann_cognify.py` (new) | dedicated cognify adapter for leabharlann data classes (UoGArtifact, ZoteroPaper, GeminiReport) |
+| FalkorDB client | `sruth/oideachais/api/cross_archive_graph.py` (new) | FastAPI route `GET /cross-archive-graph/{query}` for the web frontend |
+| Cross-archive edge rules | `sruth/oideachais/cognify_rules/leabharlann_cross_archive.py` (new) | 3 edge rules: arxiv_id match, module_title match, URL match |
 
 ## Backlog
 

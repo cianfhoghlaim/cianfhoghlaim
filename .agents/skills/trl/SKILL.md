@@ -61,7 +61,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 tokenizer = AutoTokenizer.from_pretrained("ReliableAI/UCCIX-Llama3.1-8B-Instruct")
 
-dataset = load_dataset("oideachais/irish-curriculum-5k", split="train")
+dataset = load_dataset("sruth/oideachais/irish-curriculum-5k", split="train")
 
 trainer = SFTTrainer(
     model=model,

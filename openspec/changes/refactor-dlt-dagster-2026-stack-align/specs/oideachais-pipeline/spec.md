@@ -9,7 +9,7 @@ re-implement the `urllib.request` or `boto3` request flows are forbidden.
 
 #### Scenario: A new api_table source is added to sources.yaml
 - **WHEN** a contributor adds a new entry with `kind: api_table` to
-  `oideachais/sources.yaml`
+  `sruth/oideachais/sources.yaml`
 - **THEN** the `SourceFactory._build_api_table_source` method
   resolves the YAML to a `rest_api_source(config)` call where `config`
   is built from the YAML's `pagination` + `urls` fields
@@ -18,13 +18,13 @@ re-implement the `urllib.request` or `boto3` request flows are forbidden.
 
 #### Scenario: A new filesystem_parquet source is added
 - **WHEN** a contributor adds a new entry with
-  `kind: filesystem_parquet` to `oideachais/sources.yaml`
+  `kind: filesystem_parquet` to `sruth/oideachais/sources.yaml`
 - **THEN** the `SourceFactory._build_filesystem_parquet_source` method
   resolves the YAML to a `filesystem(bucket_url, file_glob) | read_parquet()`
   pipeline
 
 ### Requirement: DLT 1.0 Safety Helpers
-The `oideachais/dlt_utils/safety.py` module SHALL export two
+The `sruth/oideachais/dlt_utils/safety.py` module SHALL export two
 helper functions in addition to `safe_dlt_run`:
 - `safe_dlt_run_with_progress(pipeline, source)` that streams
   package progress.
@@ -80,7 +80,7 @@ SHALL be `PARTITIONED BY (bucket(1000, id))`.
   set (verified by querying the `ducklake_sort_orders` table)
 
 ### Requirement: MotherDuck Hosting Options
-The `oideachais/dlt_utils/destinations.py` module SHALL support the
+The `sruth/oideachais/dlt_utils/destinations.py` module SHALL support the
 3 MotherDuck hosting options (managed / BYOB / BYOC) via the
 `MOTHERDUCK_MODE` env var. The default SHALL be `byob` (the
 "bring-your-own-bucket" sweet spot per the MotherDuck 2026-04-13
@@ -117,8 +117,8 @@ and MUST follow the canonical 2026-06 LanceDB 0.15 API.
 ### Requirement: Graphiti 0.5 + FalkorDB 1.0
 The system SHALL use the real `graphiti_core` 0.5 client
 backed by the FalkorDB compose stack in
-`oideachais/cognee_integration/cross_stage_cognify.py`. The
-hand-rolled `oideachais/graph/temporal.py` implementation
+`sruth/oideachais/cognee_integration/cross_stage_cognify.py`. The
+hand-rolled `sruth/oideachais/graph/temporal.py` implementation
 MUST be deleted.
 
 #### Scenario: The cross_stage_cognify pipeline runs
@@ -136,16 +136,16 @@ MUST be deleted.
   package introduced in 2026-05)
 
 ### Requirement: CocoIndex v1 Apps Only
-Every CocoIndex flow in `oideachais/cocoindex_flows/` SHALL be
+Every CocoIndex flow in `sruth/oideachais/cocoindex_flows/` SHALL be
 a v1 App using the canonical `@coco.fn` + `@coco.lifespan` +
 `lancedb.mount_table_target()` pattern. The shared
-`oideachais/cocoindex_flows/_lifespan.py` module SHALL export
+`sruth/oideachais/cocoindex_flows/_lifespan.py` module SHALL export
 the shared `@coco.lifespan` and the 3 ContextKeys
 (RESOLVED_FILE_REGISTRY, EMBEDDER, LANCE_DB).
 
 #### Scenario: A new CocoIndex flow is added
 - **WHEN** a contributor adds a new file to
-  `oideachais/cocoindex_flows/`
+  `sruth/oideachais/cocoindex_flows/`
 - **THEN** the file imports the shared `@coco.lifespan` and
   3 ContextKeys from `oideachais.cocoindex_flows._lifespan`
   rather than re-declaring them
@@ -161,33 +161,33 @@ BAML extraction, CocoIndex v1 embedding, and Cognee cognify.
 The directory structure SHALL follow the
 `cross-domain-registry` contract: dlt sources for the
 education domain live in
-`oideachais/dlt_sources/domains/education/{nation}/{source}.py`.
+`sruth/oideachais/dlt_sources/domains/education/{nation}/{source}.py`.
 
 #### Scenario: A contributor adds a new education source for a UK nation
 - **WHEN** a contributor adds a new education source for England
 - **THEN** the file is created at
-  `oideachais/dlt_sources/domains/education/en/{source}.py`
-- **AND** the legacy `oideachais/dlt_sources/uk/england/{source}.py`
+  `sruth/oideachais/dlt_sources/domains/education/en/{source}.py`
+- **AND** the legacy `sruth/oideachais/dlt_sources/uk/england/{source}.py`
   is NOT used
 
 #### Scenario: A contributor adds a Dagster asset
 - **WHEN** a contributor adds a new Dagster asset
 - **THEN** the asset is registered through a `dg.Component`
   (the new `dg` CLI pattern) or through a `.py` file in
-  `oideachais/dagster_defs/assets/`
+  `sruth/oideachais/dagster_defs/assets/`
 - **AND** the asset is discoverable via `dg list defs`
 
 ### Requirement: Source Factory
 The oideachais data platform SHALL expose a `SourceFactory`
-class in `oideachais/dlt_utils/source_factory.py` that reads
-`oideachais/sources.yaml` and produces 7 contract methods:
+class in `sruth/oideachais/dlt_utils/source_factory.py` that reads
+`sruth/oideachais/sources.yaml` and produces 7 contract methods:
 `source(id)`, `dlt_asset(id)`, `dagster_asset(id)`,
 `lance_table(id)`, `cognee_dataset(id)`, `marimo_path(id)`,
 `tests_path(id)`.
 
 #### Scenario: A developer wants to materialise a single source
 - **WHEN** a developer calls
-  `SourceFactory.from_yaml('oideachais/sources.yaml').dlt_asset('ie.education.ncca')`
+  `SourceFactory.from_yaml('sruth/oideachais/sources.yaml').dlt_asset('ie.education.ncca')`
 - **THEN** the returned asset runs the canonical DLT source
   and materialises it to the configured DuckLake destination
 - **AND** the asset is registered in the Dagster definitions
@@ -197,7 +197,7 @@ class in `oideachais/dlt_utils/source_factory.py` that reads
 ### Requirement: Destination Factory
 The oideachais data platform SHALL expose a
 `get_dlt_destination()` function in
-`oideachais/dlt_utils/destinations.py` that returns a
+`sruth/oideachais/dlt_utils/destinations.py` that returns a
 DuckLake destination configured for the local development
 environment (Garage S3 + Lakekeeper Postgres catalog).
 
@@ -216,8 +216,8 @@ environment (Garage S3 + Lakekeeper Postgres catalog).
 ### Requirement: Hand-Rolled Temporal Knowledge Graph
 **Reason**: Replaced by the real `graphiti_core` 0.5 client
 backed by the FalkorDB compose stack.
-**Migration**: Delete `oideachais/graph/temporal.py`. Update
-`oideachais/cognee_integration/cross_stage_cognify.py` to use
+**Migration**: Delete `sruth/oideachais/graph/temporal.py`. Update
+`sruth/oideachais/cognee_integration/cross_stage_cognify.py` to use
 `oideachais.graph.graphiti_client`.
 
 ### Requirement: CocoIndex v0 DSL
@@ -225,6 +225,6 @@ backed by the FalkorDB compose stack.
 v0 DSL (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`)
 is removed. All v0 flows MUST be migrated to v1.
 **Migration**: Use the canonical v1 pattern in
-`oideachais/cocoindex_flows/leabharlann_embedding.py`. The
+`sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`. The
 shared `@coco.lifespan` is in
-`oideachais/cocoindex_flows/_lifespan.py`.
+`sruth/oideachais/cocoindex_flows/_lifespan.py`.

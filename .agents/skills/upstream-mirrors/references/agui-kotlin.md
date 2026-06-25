@@ -4,7 +4,7 @@
 The AG-UI Kotlin SDK is a production-ready Kotlin Multiplatform client library for connecting applications to AI agents that implement the Agent User Interaction Protocol (AG-UI). It supports Android, iOS, and JVM targets, providing streaming agent communication, protocol message types, event handling, and an extensible tool execution framework.
 
 ## Why This Matters for Kings' College Galway
-The `tuatha/` educational MMO uses AG-UI protocol for its agent-to-UI communication — the CopilotKit frontend in `tuatha/ui` streams agent responses via AG-UI events. This Kotlin SDK informs the protocol compliance of our custom TypeScript AG-UI client, validates message serialization patterns, and provides a reference implementation for the tool-calling framework used by the Celtic Tutor, Mythology Narrator, and Quest Guide agents.
+The `sruth/tuatha/` educational MMO uses AG-UI protocol for its agent-to-UI communication — the CopilotKit frontend in `sruth/tuatha/ui` streams agent responses via AG-UI events. This Kotlin SDK informs the protocol compliance of our custom TypeScript AG-UI client, validates message serialization patterns, and provides a reference implementation for the tool-calling framework used by the Celtic Tutor, Mythology Narrator, and Quest Guide agents.
 
 ## Key Patterns Preserved
 - **README.md** — Overview, quick-start, and dependency setup
