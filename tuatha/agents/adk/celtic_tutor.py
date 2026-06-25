@@ -7,6 +7,6 @@ plan. This file is a backwards-compatible re-export so consumers
 like `tuatha.agents.orchestrator.AgentRegistry` can keep doing
 `from .adk.celtic_tutor import celtic_tutor_agent`.
 """
-from oideachais.agents.adk.celtic_tutor_agent import celtic_tutor_agent
+from sruth.oideachais.agents.adk.celtic_tutor_agent import celtic_tutor_agent
 
 __all__ = ["celtic_tutor_agent"]

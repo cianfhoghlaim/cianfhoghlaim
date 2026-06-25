@@ -57,7 +57,7 @@ The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script tha
 #### Scenario: Walk succeeds for the 3 present projects
 
 - **WHEN** `bun run croilar/scripts/analyze-web-stack.ts` is executed from the repo root
-- **THEN** the analyzer SHALL walk `tuatha/`, `oideachais/`, `croilar/`
+- **THEN** the analyzer SHALL walk `tuatha/`, `sruth/oideachais/`, `croilar/`
 - **AND** it SHALL skip `meaisínfhoghlaim/` (no web app yet) with a warning
 - **AND** it SHALL POST the resulting 5 tables (tanstackRoutes, convexFunctions, cloudflareResources, bamlSchemas, marimoNotebooks) to the Convex HTTP endpoint
 - **AND** authentication SHALL use the `CROILAR_CONVEX_DEPLOY_KEY` from `.env` (loaded from Infisical)

@@ -16,7 +16,7 @@ related_specs:
 related_apps:
   - oideachais/dagster_defs
   - oideachais/baml_src
-  - meaisinfhoghlaim/agents/content_synth
+  - sruth/meaisinfhoghlaim/agents/content_synth
   - oideachais/notebooks
 related_llm_stack:
   - 'BAML (curriculum concept extraction)'
@@ -49,7 +49,7 @@ outcomes the learner is enrolled in.
 | Asset | Path | Use |
 |:--|:--|:--|
 | Quadrant | `oideachais/` | Dagster orchestration, BAML extraction, DLT sources |
-| Quadrant | `meaisinfhoghlaim/` | LLM stack, OCR, content synth agents |
+| Quadrant | `sruth/meaisinfhoghlaim/` | LLM stack, OCR, content synth agents |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA patterns, partitions, sensors |
 | Skill | `.agents/skills/baml/SKILL.md` | Concept extraction |
 | Skill | `.agents/skills/marimo/SKILL.md` | Marimo notebook assembly |
@@ -163,7 +163,7 @@ Per `GapAssetSpec { asset_kind: "flashcard" }`:
    }
    ```
 2. **Diagram synthesis** (litellm → image model):
-   - We delegate to `meaisinfhoghlaim/agents/diagram_synth/`
+   - We delegate to `sruth/meaisinfhoghlaim/agents/diagram_synth/`
    - Default: `litellm:openai-gpt-image-1` (or `litellm:flux-pro` if available)
    - Fallback: BAML text-only description + Marimo `matplotlib` diagram
 3. **Assembly**:
@@ -179,7 +179,7 @@ Per `GapAssetSpec { asset_kind: "marimo" }`:
 
 1. **Template selection** (BAML):
    - Subject taxonomy → template registry in
-     `meaisinfhoghlaim/agents/content_synth/templates/`
+     `sruth/meaisinfhoghlaim/agents/content_synth/templates/`
    - Templates: `physics_simulation`, `data_viz`, `algorithm_tracer`,
      `language_scaffolder`, `chemistry_reaction`, `stats_explorer`
 2. **Code synthesis** (litellm):

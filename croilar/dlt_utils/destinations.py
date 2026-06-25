@@ -31,7 +31,7 @@ import dlt
 
 # Backwards-compat: try the oideachais cross-quadrant import first.
 try:
-    from oideachais.dlt_utils.destinations import with_namespace
+    from sruth.oideachais.dlt_utils.destinations import with_namespace
 
     with_namespace("croilar").re_export_into(globals())
 except ImportError:

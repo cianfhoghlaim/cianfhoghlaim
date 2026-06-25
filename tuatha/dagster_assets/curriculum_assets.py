@@ -108,7 +108,7 @@ def tuath_curriculum_context(context: AssetExecutionContext) -> dict:
 
         if not curriculum_table:
             context.log.warning(
-                f"No curriculum embeddings table found in oideachais. "
+                f"No curriculum embeddings table found in sruth.oideachais. "
                 f"Available tables: {tables}"
             )
             return {

@@ -4,7 +4,7 @@
 
 `oideachais-marimo-dashboards` is a capability of the Cianfhoghlaim
 platform. The corresponding source code lives at
-`oideachais/notebooks/` and `oideachais/notebooks/dashboards/`. See
+`sruth/oideachais/notebooks/` and `sruth/oideachais/notebooks/dashboards/`. See
 `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for
 the project identity.
 
@@ -28,7 +28,7 @@ stages (Aistear, Primary, Junior Cycle, Senior Cycle, Tertiary).
 
 #### Scenario: Aistear dashboard renders
 
-- **GIVEN** the `oideachais/notebooks/dashboards/aistear.py` notebook
+- **GIVEN** the `sruth/oideachais/notebooks/dashboards/aistear.py` notebook
 - **WHEN** the user navigates to `/dashboards/aistear`
 - **THEN** the notebook renders with the Aistear theme data from
   DuckLake
@@ -42,7 +42,7 @@ DuckDB metadata write).
 
 #### Scenario: Full-stack demo renders
 
-- **GIVEN** the `oideachais/notebooks/dashboards/leabharlann_full_stack_demo.py`
+- **GIVEN** the `sruth/oideachais/notebooks/dashboards/leabharlann_full_stack_demo.py`
   notebook
 - **WHEN** the user navigates to `/dashboards/leabharlann-full-stack-demo`
 - **THEN** the notebook renders with the 5-step pipeline visualisation
@@ -55,7 +55,7 @@ explorer notebooks.
 
 #### Scenario: DuckLake explorer renders
 
-- **GIVEN** the `oideachais/notebooks/ducklake_explorer.py` notebook
+- **GIVEN** the `sruth/oideachais/notebooks/ducklake_explorer.py` notebook
 - **WHEN** the user navigates to `/dashboards/ducklake`
 - **THEN** the notebook renders with the table list from DuckLake
   and an interactive SQL query interface
@@ -87,7 +87,7 @@ without a `pyproject.toml`).
 
 #### Scenario: Notebook runs with `uv run`
 
-- **GIVEN** a notebook `oideachais/notebooks/<name>.py` with a
+- **GIVEN** a notebook `sruth/oideachais/notebooks/<name>.py` with a
   PEP 723 header (`# /// script ... #`) declaring
   `requires-python = ">=3.12"` and `dependencies = ["marimo", ...]`
 - **WHEN** the user runs `uv run <name>.py`
@@ -130,8 +130,8 @@ search demos end-to-end.
 
 ## Cross-references
 
-- [`oideachais/notebooks/`](../../oideachais/notebooks/) (the 11 Marimo notebooks)
-- [`oideachais/notebooks/dashboards/`](../../oideachais/notebooks/dashboards/) (the dashboard subdir)
+- [`sruth/oideachais/notebooks/`](../../sruth/oideachais/notebooks/) (the 11 Marimo notebooks)
+- [`sruth/oideachais/notebooks/dashboards/`](../../sruth/oideachais/notebooks/dashboards/) (the dashboard subdir)
 - [`.agents/skills/marimo/SKILL.md`](../../.agents/skills/marimo/SKILL.md)
 - [`.agents/skills/build-notebook/SKILL.md`](../../.agents/skills/build-notebook/SKILL.md)
 - [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream pipeline)

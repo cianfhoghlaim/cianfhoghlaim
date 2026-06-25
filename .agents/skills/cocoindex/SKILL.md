@@ -566,7 +566,7 @@ rows in LanceDB.
 - **OpenSpec change**: `openspec/changes/docs-skills-consolidation-pipeline/`
 - **Run catch-up**: `bun run docs:consolidate` (or `mise docs:consolidate`)
 - **Run live**:    `bun run docs:consolidate:live`
-- **Search**: `from oideachais.cocoindex_flows.docs_skills_consolidation import search_docs_skills; asyncio.run(search_docs_skills("<query>"))`
+- **Search**: `from sruth.oideachais.cocoindex_flows.docs_skills_consolidation import search_docs_skills; asyncio.run(search_docs_skills("<query>"))`
 
 The companion codebase-indexing v1 App (replacement for the legacy
 `ccc` CLI) lives at

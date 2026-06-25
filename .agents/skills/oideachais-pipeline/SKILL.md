@@ -47,7 +47,7 @@ Activate when users need:
 | `taighde_scoil/` | Curriculum analysis, indexing strategies |
 | `taighde_teanga/` | Irish NLP resources, dialect handling |
 
-### ML Model Dependencies (meaisinfhoghlaim/)
+### ML Model Dependencies (sruth/meaisinfhoghlaim/)
 
 | Model | Usage |
 |-------|-------|
@@ -123,7 +123,7 @@ sources** with distinct ownership and change cadence:
 | **DES Circulars** | Temporal governance | Monthly | Policy, amendments, repeals | `des_circulars` |
 
 All three ingest into the lakehouse via the
-`oideachais/sources.yaml` registry; every Dagster asset
+`sruth/oideachais/sources.yaml` registry; every Dagster asset
 follows the `{nation}.{domain}.{entity}` contract from
 `.agents/skills/cross-domain-registry/SKILL.md`.
 
@@ -131,7 +131,7 @@ follows the `{nation}.{domain}.{entity}` contract from
 
 The oideachais pipeline uses BAML to convert raw
 extracted text (PDF, HTML) into typed records. The
-canonical schemas live at `oideachais/baml_src/`:
+canonical schemas live at `sruth/oideachais/baml_src/`:
 
 | BAML class | Purpose | Source doc |
 |:--|:--|:--|

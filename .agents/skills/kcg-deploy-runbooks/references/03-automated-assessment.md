@@ -13,8 +13,8 @@ related_specs:
   - assessment-extraction
   - oideachais-pipeline
 related_apps:
-  - meaisinfhoghlaim/ocr
-  - meaisinfhoghlaim/agents/assessor
+  - sruth/meaisinfhoghlaim/ocr
+  - sruth/meaisinfhoghlaim/agents/assessor
   - oideachais/dlt_sources/ireland/sec.py
   - oideachais/dagster_defs
 related_llm_stack:
@@ -31,7 +31,7 @@ last_touched: 2026-06-13
 
 Replace the original Tangent 3 framing (which named Gemini Pro Vision,
 GPT-4o, Google Cloud Vision, AWS Textract as separate options) with a
-deploy plan grounded in the **OCR quadrant** (`meaisinfhoghlaim/ocr/`)
+deploy plan grounded in the **OCR quadrant** (`sruth/meaisinfhoghlaim/ocr/`)
 and the **BAML extraction** discipline. The goal is an oracle that:
 
 1. Reads handwritten or typed student work via OCR.
@@ -43,7 +43,7 @@ and the **BAML extraction** discipline. The goal is an oracle that:
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `meaisinfhoghlaim/ocr/` | OCR/HTR models, Irish metrics, dataset generators |
+| Quadrant | `sruth/meaisinfhoghlaim/ocr/` | OCR/HTR models, Irish metrics, dataset generators |
 | Quadrant | `oideachais/` | DLT historical data, BAML extraction, Dagster orchestration |
 | Skill | `.agents/skills/document-intelligence/SKILL.md` | OCR + layout analysis |
 | Skill | `.agents/skills/baml/SKILL.md` | Typed rubric extraction |
@@ -54,7 +54,7 @@ The 5-quadrant topology is in `docs/00-core/CLAUDE.md` §QUADRANT_MAP.
 
 ## 2. OCR/HTR pipeline
 
-The OCR quadrant exposes 6 backends (per `meaisinfhoghlaim/ocr/README.md`):
+The OCR quadrant exposes 6 backends (per `sruth/meaisinfhoghlaim/ocr/README.md`):
 
 | Backend | Best for | v1 use |
 |:--|:--|:--|
@@ -68,10 +68,10 @@ The OCR quadrant exposes 6 backends (per `meaisinfhoghlaim/ocr/README.md`):
 For v1 we default to **TrOCR + Pylaia** (handwriting) and **PaddleOCR**
 (typed), with Tesseract as the safety net. Selection is per-page
 based on the document classifier in
-`meaisinfhoghlaim/ocr/router.py` (a tiny BAML schema).
+`sruth/meaisinfhoghlaim/ocr/router.py` (a tiny BAML schema).
 
 The layout analysis (equations, diagrams, crossed-out text) is handled
-by **Docling** for PDFs and a custom `meaisinfhoghlaim/ocr/layout.py`
+by **Docling** for PDFs and a custom `sruth/meaisinfhoghlaim/ocr/layout.py`
 heuristic for images.
 
 ## 3. BAML rubric extraction
@@ -141,7 +141,7 @@ For a student submission:
 5. **Human-in-the-loop** flag — if OCR confidence < 0.7 OR alignment
    confidence < 0.6, route to a teacher queue.
 
-The agent lives in `meaisinfhoghlaim/agents/assessor/` and is
+The agent lives in `sruth/meaisinfhoghlaim/agents/assessor/` and is
 exposed as a `fastapi` service at `/api/v1/assess`.
 
 ## 5. Grade forecasting
@@ -184,7 +184,7 @@ This gives a **distribution** over final grades. The `confidence
 interval` is the empirical 5%-95% range.
 
 For v2 we move to a Bayesian hierarchical model trained in
-`meaisinfhoghlaim/evaluation/` (per the skill doc, v0.1+). The model
+`sruth/meaisinfhoghlaim/evaluation/` (per the skill doc, v0.1+). The model
 is logged to **mlflow** for traceability.
 
 ## 6. Student/teacher dashboard

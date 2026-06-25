@@ -3,7 +3,7 @@ Re-export shim. See __init__.py for the canonical home
 (`oideachais.agents.adk.tools.tuatha_mythology_query`).
 """
 
-from oideachais.agents.adk.tools.tuatha_mythology_query import (
+from sruth.oideachais.agents.adk.tools.tuatha_mythology_query import (
     CharacterLore,
     LocationLore,
     MythologyResult,

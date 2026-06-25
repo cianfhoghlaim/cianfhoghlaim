@@ -7,7 +7,7 @@ description: The KCG leabharlann (personal archive) pipeline pattern in `oideach
 
 ## Purpose
 
-The `oideachais/` quadrant houses the **leabharlann** (Irish for
+The `sruth/oideachais/` quadrant houses the **leabharlann** (Irish for
 "library") pipeline — the personal-archive ingestion + embedding
 + cognify + cross-archive edge-rule system that powers the
 KCG knowledge graph. This skill captures the 4-source + 3-App
@@ -29,13 +29,13 @@ Use when you need to:
 
 | Source | Path | Purpose |
 |:--|:--|:--|
-| `books` | `oideachais/dlt_sources/author_archive/books_source.py` | PDFs + DOCX + EPUB + Markdown from `leabharlann/gaeilge/` and `leabharlann/aigne/` |
-| `zotero` | `oideachais/dlt_sources/author_archive/zotero_source.py` | Zotero-exported PDFs with full text + metadata |
-| `takeout_v1` | `oideachais/dlt_sources/author_archive/takeout_source.py` | Google Takeout filesystem (auto-discovered at `stedding/Takeout/`) |
-| `uog_coursework` | `oideachais/dlt_sources/author_archive/uog_coursework_source.py` | University of Galway coursework PDFs |
+| `books` | `sruth/oideachais/dlt_sources/author_archive/books_source.py` | PDFs + DOCX + EPUB + Markdown from `leabharlann/gaeilge/` and `leabharlann/aigne/` |
+| `zotero` | `sruth/oideachais/dlt_sources/author_archive/zotero_source.py` | Zotero-exported PDFs with full text + metadata |
+| `takeout_v1` | `sruth/oideachais/dlt_sources/author_archive/takeout_source.py` | Google Takeout filesystem (auto-discovered at `stedding/Takeout/`) |
+| `uog_coursework` | `sruth/oideachais/dlt_sources/author_archive/uog_coursework_source.py` | University of Galway coursework PDFs |
 
 The 4 dlt sources are registered in
-`oideachais/dagster_defs/assets/leabharlann_assets.py` and are
+`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` and are
 materialised by the `leabharlann_full_stack_demo` asset group
 (the canonical end-to-end pipeline).
 
@@ -47,10 +47,10 @@ materialised by the `leabharlann_full_stack_demo` asset group
 | `leabharlann_zotero_embedding` | `LeabharlannZoteroApp` | `leabharlann_zotero` | `search_leabharlann_zotero(query, limit=10)` |
 | `leabharlann_takeout_embedding` | `LeabharlannTakeoutApp` | `leabharlann_takeout` | `search_leabharlann_takeout(query, limit=10)` |
 
-The 3 Apps live at `oideachais/cocoindex_flows/leabharlann_embedding.py`
+The 3 Apps live at `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
 (the canonical v1 home). Each App is a `coco.App` instance with
 `@coco.lifespan` + `@coco.fn` decorators (per the canonical v1
-pattern in `oideachais/cocoindex_flows/codebase_indexing.py`).
+pattern in `sruth/oideachais/cocoindex_flows/codebase_indexing.py`).
 
 ## The 7 Dagster assets (the orchestration surface)
 
@@ -65,12 +65,12 @@ pattern in `oideachais/cocoindex_flows/codebase_indexing.py`).
 | `leabharlann_full_stack_demo` | `leabharlann_ingestion` | The end-to-end pipeline (all 6 above + the cognify passes) |
 
 The 7 assets are registered in
-`oideachais/dagster_defs/assets/leabharlann_assets.py` (the
+`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` (the
 canonical home for the asset group).
 
 ## The 1 directory-watch sensor
 
-`oideachais/dagster_defs/sensors/leabharlann_sensor.py:LeabharlannDirectorySensor`
+`sruth/oideachais/dagster_defs/sensors/leabharlann_sensor.py:LeabharlannDirectorySensor`
 monitors the `leabharlann/gaeilge/` + `leabharlann/aigne/` +
 `stedding/Takeout/` directories for new files. When a new file
 appears, the sensor materialises the relevant asset. The sensor
@@ -86,7 +86,7 @@ pattern).
 | `leabharlann_takeout_cognify` | `leabharlann_takeout` | Cognifies the Google Takeout into the knowledge graph |
 
 The 3 cognify passes are at
-`oideachais/cognee_integration/leabharlann_cognify.py` (the
+`sruth/oideachais/cognee_integration/leabharlann_cognify.py` (the
 canonical home for the cognify adapters).
 
 ## The 3 cross-archive edge rules (the cross-corpus surface)
@@ -98,7 +98,7 @@ canonical home for the cognify adapters).
 | `TakeoutDoc-CITES-GeminiReport` | A `leabharlann_takeout_doc` cites a `author_archive_gemini_report` (the match is detected by URL substring) |
 
 The 3 edge rules are at
-`oideachais/cognify_rules/leabharlann_cross_archive.py` (the
+`sruth/oideachais/cognify_rules/leabharlann_cross_archive.py` (the
 canonical home for the edge rules).
 
 ## The canonical `leabharlann/` subtree
@@ -128,7 +128,7 @@ The 4 dlt sources auto-discover files in these directories.
 1. Create the corpus directory at `leabharlann/cineáltas/`.
 
 2. Add the dlt source at
-   `oideachais/dlt_sources/author_archive/cinealtas_source.py`:
+   `sruth/oideachais/dlt_sources/author_archive/cinealtas_source.py`:
 
    ```python
    @dlt.resource(name="cinealtas_chunks", write_disposition="merge")
@@ -138,24 +138,24 @@ The 4 dlt sources auto-discover files in these directories.
    ```
 
 3. Add the v1 CocoIndex App at
-   `oideachais/cocoindex_flows/leabharlann_embedding.py:LeabharlannCinealtasApp`
-   (or a new file `oideachais/cocoindex_flows/cinealtas_embedding.py`).
+   `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py:LeabharlannCinealtasApp`
+   (or a new file `sruth/oideachais/cocoindex_flows/cinealtas_embedding.py`).
 
 4. Add the Dagster asset at
-   `oideachais/dagster_defs/assets/leabharlann_assets.py:leabharlann_cinealtas`.
+   `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py:leabharlann_cinealtas`.
 
 5. Update the sensor at
-   `oideachais/dagster_defs/sensors/leabharlann_sensor.py` to also
+   `sruth/oideachais/dagster_defs/sensors/leabharlann_sensor.py` to also
    watch `leabharlann/cineáltas/`.
 
 6. Add the cognify pass at
-   `oideachais/cognee_integration/leabharlann_cognify.py:leabharlann_cinealtas_cognify`.
+   `sruth/oideachais/cognee_integration/leabharlann_cognify.py:leabharlann_cinealtas_cognify`.
 
 7. Add the cross-archive edge rules at
-   `oideachais/cognify_rules/leabharlann_cross_archive.py:LeabharlannCinealtasCrossArchive`.
+   `sruth/oideachais/cognify_rules/leabharlann_cross_archive.py:LeabharlannCinealtasCrossArchive`.
 
 8. Update the BAML extraction schemas at
-   `oideachais/baml_src/leabharlann_extraction.baml`.
+   `sruth/oideachais/baml_src/leabharlann_extraction.baml`.
 
 ## Common failure modes
 
@@ -177,10 +177,10 @@ The 4 dlt sources auto-discover files in these directories.
 - `.agents/skills/oideachais-storage/SKILL.md` — the DuckLake + MotherDuck + LanceDB storage layer
 - `.agents/skills/cross-domain-registry/SKILL.md` — the cross-corpus entity contract
 - `.agents/skills/oideachais-cocoindex-v1/SKILL.md` — the 11 v1 Apps canonical pattern
-- `oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical 3-App v1 home
-- `oideachais/dagster_defs/assets/leabharlann_assets.py` — the 7-asset home
-- `oideachais/dagster_defs/sensors/leabharlann_sensor.py` — the 1-sensor home
-- `oideachais/cognee_integration/leabharlann_cognify.py` — the 3-cognify home
-- `oideachais/cognify_rules/leabharlann_cross_archive.py` — the 3-edge-rule home
-- `oideachais/baml_src/leabharlann_extraction.baml` — the BAML schema
+- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical 3-App v1 home
+- `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` — the 7-asset home
+- `sruth/oideachais/dagster_defs/sensors/leabharlann_sensor.py` — the 1-sensor home
+- `sruth/oideachais/cognee_integration/leabharlann_cognify.py` — the 3-cognify home
+- `sruth/oideachais/cognify_rules/leabharlann_cross_archive.py` — the 3-edge-rule home
+- `sruth/oideachais/baml_src/leabharlann_extraction.baml` — the BAML schema
 - `openspec/specs/oideachais-leabharlann/spec.md` — the canonical spec

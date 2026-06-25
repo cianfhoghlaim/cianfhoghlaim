@@ -1,13 +1,13 @@
 ---
 name: celtic-ocr-evaluation
-description: The KCG Celtic OCR evaluation harness for the 9-model × 6-backend registry in `meaisinfhoghlaim/ocr/`. Covers the 9 OCR models (olmocr-7b, qwen2.5-vl-7b, qwen2.5-vl-7b-mlx, deepseek-ocr, granite-docling, gpt-4o, claude-3.5-sonnet, llama-3.2-vision-11b, uccix-13b), the 6 backends (litellm, mlx, transformers, ollama, openai, anthropic), the Irish-specific evaluation metrics in `gaelic_metrics.py` (CER, WER, tironian detection, punctum-delens normalisation, fada consistency), the `_normalize_irish_text` (NFC) rules, the 3-method comparison runner, and the canonical home for the 9-model × 6-backend registry. Use when adding the 11th OCR model, interpreting a CER number, comparing 2 OCR backends on the same document, or evaluating a new fine-tune (e.g. the `models/llama-3.2-3b-irish` LoRA).
+description: The KCG Celtic OCR evaluation harness for the 9-model × 6-backend registry in `sruth/meaisinfhoghlaim/ocr/`. Covers the 9 OCR models (olmocr-7b, qwen2.5-vl-7b, qwen2.5-vl-7b-mlx, deepseek-ocr, granite-docling, gpt-4o, claude-3.5-sonnet, llama-3.2-vision-11b, uccix-13b), the 6 backends (litellm, mlx, transformers, ollama, openai, anthropic), the Irish-specific evaluation metrics in `gaelic_metrics.py` (CER, WER, tironian detection, punctum-delens normalisation, fada consistency), the `_normalize_irish_text` (NFC) rules, the 3-method comparison runner, and the canonical home for the 9-model × 6-backend registry. Use when adding the 11th OCR model, interpreting a CER number, comparing 2 OCR backends on the same document, or evaluating a new fine-tune (e.g. the `models/llama-3.2-3b-irish` LoRA).
 ---
 
 # Celtic OCR Evaluation
 
 ## Purpose
 
-The `meaisinfhoghlaim/ocr/` directory houses a **9-model × 6-backend**
+The `sruth/meaisinfhoghlaim/ocr/` directory houses a **9-model × 6-backend**
 OCR registry + a Celtic-specific evaluation harness. This skill
 captures the registry anatomy, the evaluation metrics, the
 3-method comparison runner, and the canonical add-a-new-model
@@ -40,7 +40,7 @@ Use when you need to:
 | `llama-3.2-vision-11b` | transformers + litellm | Llama community | The Meta Vision model; good for hand-written Irish |
 | `uccix-13b` | transformers | CC-BY-NC-4.0 | The UCCIX (Údarás na Gaeltachta) Llama2-13B fine-tune for Irish; the canonical Irish-text model |
 
-The 9 models are registered in `meaisinfhoghlaim/ocr/model_registry.py`
+The 9 models are registered in `sruth/meaisinfhoghlaim/ocr/model_registry.py`
 via the `OCR_MODELS` dict (the canonical home for the registry).
 
 ## The 6 backends (the runtime)
@@ -54,12 +54,12 @@ via the `OCR_MODELS` dict (the canonical home for the registry).
 | `openai` | The OpenAI API at `api.openai.com` | The gpt-4o fallback |
 | `anthropic` | The Anthropic API at `api.anthropic.com` | The claude-3.5-sonnet fallback |
 
-The 6 backends are registered in `meaisinfhoghlaim/ocr/model_registry.py`
+The 6 backends are registered in `sruth/meaisinfhoghlaim/ocr/model_registry.py`
 via the `ModelBackend` enum (the canonical home).
 
 ## The 4 Irish-specific metrics (`gaelic_metrics.py`)
 
-The `meaisinfhoghlaim/ocr/gaelic_metrics.py` module computes 4
+The `sruth/meaisinfhoghlaim/ocr/gaelic_metrics.py` module computes 4
 Celtic-specific metrics on top of the standard CER/WER:
 
 1. **CER** (Character Error Rate) — `edit_distance(ground_truth, pred) / len(ground_truth)`
@@ -80,9 +80,9 @@ The 4 metrics are reported as a single `GaelicOcrScore` dataclass.
 ## The 3-method comparison runner (`comparison_runner.py`)
 
 ```python
-# meaisinfhoghlaim/ocr/comparison_runner.py
-from meaisinfhoghlaim.ocr.model_registry import OCR_MODELS
-from meaisinfhoghlaim.ocr.gaelic_metrics import compute_gaelic_score
+# sruth/meaisinfhoghlaim/ocr/comparison_runner.py
+from sruth.meaisinfhoghlaim.ocr.model_registry import OCR_MODELS
+from sruth.meaisinfhoghlaim.ocr.gaelic_metrics import compute_gaelic_score
 
 def compare_3_methods(
     image_path: str,
@@ -100,13 +100,13 @@ def compare_3_methods(
     return ComparisonResult(results=results, winner=min(results, key=lambda k: results[k].cer))
 ```
 
-The runner is invoked by `meaisinfhoghlaim/evaluation/ragas_pipeline.py`
+The runner is invoked by `sruth/meaisinfhoghlaim/evaluation/ragas_pipeline.py`
 to compare the 9 models on the same curriculum documents.
 
 ## The `_normalize_irish_text` NFC rules
 
 ```python
-# meaisinfhoghlaim/ocr/gaelic_metrics.py
+# sruth/meaisinfhoghlaim/ocr/gaelic_metrics.py
 def _normalize_irish_text(text: str) -> str:
     """Normalise Irish text for CER/WER. Apply NFC + lowercase + strip punctuation."""
     import unicodedata
@@ -124,7 +124,7 @@ Without NFC, the CER is artificially inflated.
 
 ## Worked example: add the 11th OCR model
 
-1. Add the model to `meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`:
+1. Add the model to `sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`:
 
    ```python
    OCR_MODELS["gemma-3-vision"] = GemmaVisionModel(
@@ -139,7 +139,7 @@ Without NFC, the CER is artificially inflated.
 2. Add the BAML extraction function (if needed) in
    `oideachais/baml_src/ocr_validation.baml`.
 
-3. Add a new test in `meaisinfhoghlaim/tests/test_ensemble_gradio.py`
+3. Add a new test in `sruth/meaisinfhoghlaim/tests/test_ensemble_gradio.py`
    that runs the 3-method comparison with `gemma-3-vision` as one
    of the 3 methods.
 
@@ -148,7 +148,7 @@ Without NFC, the CER is artificially inflated.
    `gemma-3-vision`, to 10 + the planned additions, document the
    target of 11).
 
-5. Update `meaisinfhoghlaim/llama-swap-config.yaml` to add the
+5. Update `sruth/meaisinfhoghlaim/llama-swap-config.yaml` to add the
    GGUF-quantised variant for Apple Silicon.
 
 ## Common failure modes
@@ -167,8 +167,8 @@ Without NFC, the CER is artificially inflated.
 - `.agents/skills/irish-llm-on-device/SKILL.md` — the Apple Silicon MLX stack
 - `.agents/skills/asr/SKILL.md` — the ASR stack (for the audio side of the curriculum)
 - `.agents/skills/unsloth/SKILL.md` — for the `llama-3.2-3b-irish` fine-tune workflow
-- `meaisinfhoghlaim/ocr/model_registry.py` — the canonical 9-model × 6-backend registry
-- `meaisinfhoghlaim/ocr/gaelic_metrics.py` — the 5 Celtic metrics
-- `meaisinfhoghlaim/ocr/comparison_runner.py` — the 3-method comparison runner
-- `meaisinfhoghlaim/llama-swap-config.yaml` — the 11 GGUF-quantised models for Apple Silicon
+- `sruth/meaisinfhoghlaim/ocr/model_registry.py` — the canonical 9-model × 6-backend registry
+- `sruth/meaisinfhoghlaim/ocr/gaelic_metrics.py` — the 5 Celtic metrics
+- `sruth/meaisinfhoghlaim/ocr/comparison_runner.py` — the 3-method comparison runner
+- `sruth/meaisinfhoghlaim/llama-swap-config.yaml` — the 11 GGUF-quantised models for Apple Silicon
 - `oideachais/baml_src/ocr_validation.baml` — the OCR validation BAML schema

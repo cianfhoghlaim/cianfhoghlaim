@@ -219,7 +219,7 @@ class TestLiteLLMIntegration:
 
 
 class TestOCRObservability:
-    """Test OCR observability from oideachais."""
+    """Test OCR observability from sruth.oideachais."""
 
     def test_ocr_observability_init(self):
         """Test OCR observability module."""

@@ -25,7 +25,7 @@ def test_spotify_ingestion_asset_runs_pipeline() -> None:
     """The wrapper calls `pipelines.spotify.run_spotify_pipeline` and
     returns a `MaterializeResult`. We mock the pipeline call so no
     live network is needed."""
-    from oideachais.dagster_defs.resources import DuckDBResource  # type: ignore  # noqa: F401
+    from sruth.oideachais.dagster_defs.resources import DuckDBResource  # type: ignore  # noqa: F401
     # The croilar assets use a real DuckDBResource from oideachais; we
     # only need to assert the import chain works under the new toolchain.
     importlib.import_module("croilar.dagster_assets.dlt_assets")

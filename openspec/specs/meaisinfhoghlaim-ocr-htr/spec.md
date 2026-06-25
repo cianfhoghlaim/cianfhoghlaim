@@ -3,16 +3,16 @@
 ## Purpose
 
 `meaisinfhoghlaim-ocr-htr` is a capability of the Cianfhoghlaim
-platform. The corresponding source code lives at `meaisinfhoghlaim/ocr/`
-(10 OCR models across 6 backends) and `oideachais/ocr/` (the
+platform. The corresponding source code lives at `sruth/meaisinfhoghlaim/ocr/`
+(10 OCR models across 6 backends) and `sruth/oideachais/ocr/` (the
 application-layer OCR for the leabharlann handwritten_pages resource).
 See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md`
 for the project identity.
 
 This spec was created by the `openspec-consolidation-and-readme-refresh`
 change and supersedes the old `agent-frameworks` spec's "OCR
-backends" section (which is now in `oideachais/ocr/`) plus the
-meaisinfhoghlaim/ocr/ Python module.
+backends" section (which is now in `sruth/oideachais/ocr/`) plus the
+sruth/meaisinfhoghlaim/ocr/ Python module.
 
 ## Background
 
@@ -31,14 +31,14 @@ documents. The 10 OCR models across 6 backends are:
   languages)
 - **VLM-based OCR** — vision-language model OCR (best for
   handwriting + Irish mathematical equations; uses the
-  `meaisinfhoghlaim/pipelines/vlm_bridge.py` VLM adapter)
+  `sruth/meaisinfhoghlaim/pipelines/vlm_bridge.py` VLM adapter)
 
-The 6 backends are exposed via `meaisinfhoghlaim/ocr/adapters.py` and
-the model registry at `meaisinfhoghlaim/ocr/model_registry.py`. The
+The 6 backends are exposed via `sruth/meaisinfhoghlaim/ocr/adapters.py` and
+the model registry at `sruth/meaisinfhoghlaim/ocr/model_registry.py`. The
 Irish HTR dataset is at
-`meaisinfhoghlaim/ocr/irish_htr_dataset.py`.
+`sruth/meaisinfhoghlaim/ocr/irish_htr_dataset.py`.
 
-The application-layer `oideachais/ocr/` (the `author_archive_ocr.py` and
+The application-layer `sruth/oideachais/ocr/` (the `author_archive_ocr.py` and
 `pylaia_comparison.py` modules) wraps these for the leabharlann
 handwritten_pages resource and the leabharlann handwritten equations
 pipeline.
@@ -46,7 +46,7 @@ pipeline.
 ### Requirement: 10-model 6-backend OCR registry
 
 The system SHALL provide an OCR model registry at
-`meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` with
+`sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` with
 **10 models** (not 9). The 10 models are:
 
 1. `olmocr-7b` (transformers, Apache 2.0)
@@ -69,7 +69,7 @@ backends).
 #### Scenario: A developer adds the 11th OCR model
 
 - **GIVEN** a developer adds `pixtral-12b` to
-  `meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`
+  `sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`
 - **WHEN** the registry is imported
 - **THEN** the registry SHALL have 11 entries
 - **AND** the openspec change `meaisinfhoghlaim-ocr-spec-clarify`
@@ -78,7 +78,7 @@ backends).
 ### Requirement: Irish HTR dataset
 
 The system SHALL provide an Irish HTR dataset at
-`meaisinfhoghlaim/ocr/irish_htr_dataset.py` for fine-tuning the Pylaia
+`sruth/meaisinfhoghlaim/ocr/irish_htr_dataset.py` for fine-tuning the Pylaia
 HTR model on Irish manuscripts.
 
 #### Scenario: Dataset loads
@@ -91,7 +91,7 @@ HTR model on Irish manuscripts.
 ### Requirement: VLM bridge for handwriting + math equations
 
 The system SHALL provide a VLM bridge at
-`meaisinfhoghlaim/pipelines/vlm_bridge.py` for handwriting + Irish
+`sruth/meaisinfhoghlaim/pipelines/vlm_bridge.py` for handwriting + Irish
 mathematical equation OCR.
 
 #### Scenario: Handwriting OCR
@@ -110,7 +110,7 @@ mathematical equation OCR.
 ### Requirement: Line segmentation
 
 The system SHALL provide line segmentation at
-`meaisinfhoghlaim/ocr/line_segmentation.py` for splitting scanned
+`sruth/meaisinfhoghlaim/ocr/line_segmentation.py` for splitting scanned
 pages into individual text lines before OCR.
 
 #### Scenario: Page splits into lines
@@ -122,13 +122,13 @@ pages into individual text lines before OCR.
 
 ### Requirement: Application-layer OCR for leabharlann
 
-The system SHALL provide the application-layer `oideachais/ocr/` wrapper
+The system SHALL provide the application-layer `sruth/oideachais/ocr/` wrapper
 that the leabharlann handwritten_pages resource uses.
 
 #### Scenario: leabharlann handwritten_pages OCR
 
 - **GIVEN** a UoG artefact with handwritten mathematical equations
-- **WHEN** the `oideachais/ocr/author_archive_ocr.py` wrapper is
+- **WHEN** the `sruth/oideachais/ocr/author_archive_ocr.py` wrapper is
   invoked
 - **THEN** the wrapper calls the Pylaia HTR or VLM bridge
 - **AND** the recognised text is indexed in the LanceDB
@@ -137,8 +137,8 @@ that the leabharlann handwritten_pages resource uses.
 ### Requirement: OCR evaluation
 
 The system SHALL provide OCR evaluation at
-`meaisinfhoghlaim/ocr/comparison_runner.py` and
-`meaisinfhoghlaim/ocr/gaelic_metrics.py`.
+`sruth/meaisinfhoghlaim/ocr/comparison_runner.py` and
+`sruth/meaisinfhoghlaim/ocr/gaelic_metrics.py`.
 
 #### Scenario: CER / WER computed
 
@@ -174,7 +174,7 @@ live in the application layer.
 #### Scenario: A developer adds a new backend
 
 - **GIVEN** a developer adds `vllm` to
-  `meaisinfhoghlaim/ocr/model_registry.py:ModelBackend`
+  `sruth/meaisinfhoghlaim/ocr/model_registry.py:ModelBackend`
 - **WHEN** the enum is imported
 - **THEN** the enum SHALL have 7 entries
 - **AND** the new `vllm` backend SHALL be available for the 10
@@ -182,8 +182,8 @@ live in the application layer.
 
 ## Cross-references
 
-- [`meaisinfhoghlaim/ocr/`](../../meaisinfhoghlaim/ocr/) (the 10 OCR models)
-- [`oideachais/ocr/`](../../oideachais/ocr/) (the application-layer wrapper)
+- [`sruth/meaisinfhoghlaim/ocr/`](../../sruth/meaisinfhoghlaim/ocr/) (the 10 OCR models)
+- [`sruth/oideachais/ocr/`](../../sruth/oideachais/ocr/) (the application-layer wrapper)
 - [`.agents/skills/document-intelligence/SKILL.md`](../../.agents/skills/document-intelligence/SKILL.md)
 - [`.agents/skills/data-engineer/SKILL.md`](../../.agents/skills/data-engineer/SKILL.md)
 - [`openspec/specs/meaisinfhoghlaim-platform/spec.md`](meaisinfhoghlaim-platform/spec.md) (the quadrant overview)

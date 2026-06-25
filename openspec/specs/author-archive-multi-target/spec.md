@@ -84,7 +84,7 @@ pipeline_name, dataset_name)`` function that returns a configured
 ### Requirement: make_target.sh CLI helper
 
 The system MUST provide a CLI helper at
-``oideachais/scripts/make_target.sh`` that:
+``sruth/oideachais/scripts/make_target.sh`` that:
 
   1. Accepts the target name as ``$1`` (default ``"dev"``)
   2. Sources the ``.env`` file from the repo root
@@ -95,7 +95,7 @@ The system MUST provide a CLI helper at
 
 #### Scenario: Default to dev with no command
 
-- **WHEN** the user runs ``./oideachais/scripts/make_target.sh`` with
+- **WHEN** the user runs ``./sruth/oideachais/scripts/make_target.sh`` with
   no arguments
 - **THEN** the helper prints the resolved target (DEV) and exits
   with status 0
@@ -104,7 +104,7 @@ The system MUST provide a CLI helper at
 #### Scenario: Run a Python command with the prod target
 
 - **WHEN** the user runs
-  ``./oideachais/scripts/make_target.sh prod python -c "print('hi')"``
+  ``./sruth/oideachais/scripts/make_target.sh prod python -c "print('hi')"``
 - **THEN** the helper exports ``OIDEACHAIS_TARGET=prod``
 - **AND** the helper sources the ``.env`` file
 - **AND** the helper execs the python command with the env set

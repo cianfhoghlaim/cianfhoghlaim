@@ -114,8 +114,8 @@ The 1 archived Space:
 The 1 canonical exception:
 
 - `data-engineering/` — the only non-gradio Space (dagster
-  + dbt + evidence); consumes `oideachais/agents/adk/` +
-  `oideachais/baml_src/` directly, not the LiteLLM gateway
+  + dbt + evidence); consumes `sruth/oideachais/agents/adk/` +
+  `sruth/oideachais/baml_src/` directly, not the LiteLLM gateway
 
 Each active Space SHALL have the canonical 4-file structure:
 
@@ -144,7 +144,7 @@ Space-like artefact in the monorepo, before the Celtic AI
 demo suite was built).
 
 The `data-engineering/` Space SHALL consume
-`oideachais/agents/adk/` + `oideachais/baml_src/` directly
+`sruth/oideachais/agents/adk/` + `sruth/oideachais/baml_src/` directly
 (not the LiteLLM gateway) because it is a data plane (not
 a user-facing demo). The `_common/` bundle SHALL NOT be
 imported by the `data-engineering/` Space (the 5-element
@@ -157,8 +157,8 @@ not applicable to a data plane).
 - **THEN** no `from spaces._common import ...` import SHALL
   be present in `data-engineering/app.py` (or the equivalent
   entry point)
-- **AND** the Space SHALL consume `oideachais/agents/adk/`
-  + `oideachais/baml_src/` directly via the canonical
+- **AND** the Space SHALL consume `sruth/oideachais/agents/adk/`
+  + `sruth/oideachais/baml_src/` directly via the canonical
   Dagster + BAML patterns
 - **AND** the Space SHALL be documented as the canonical
   exception in `spaces/AGENTS.md`

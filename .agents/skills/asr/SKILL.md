@@ -172,9 +172,9 @@ transcript = b.ExtractSpeechFromAudio(audio_base64=audio)
 
 ## KCG integration
 
-- The `meaisinfhoghlaim/asr/` service is the canonical ASR
+- The `sruth/meaisinfhoghlaim/asr/` service is the canonical ASR
   pipeline (Dagster asset group `asr_assets`)
-- The `meaisinfhoghlaim/ocr/` service also uses ASR for
+- The `sruth/meaisinfhoghlaim/ocr/` service also uses ASR for
   scanned-document audio (e.g. dictation recordings)
 - The BAML `audio_extraction.baml` schema feeds the
   multimodal extraction pipeline
@@ -198,6 +198,6 @@ transcript = b.ExtractSpeechFromAudio(audio_base64=audio)
 - faster-whisper: <https://github.com/SYSTRAN/faster-whisper>
 - MMS-1B-fl102: <https://huggingface.co/facebook/mms-1b-fl102>
 - Common Voice 18 (Irish): <https://huggingface.co/datasets/mozilla-foundation/common_voice_18_0>
-- KCG ASR service: `meaisinfhoghlaim/asr/`
+- KCG ASR service: `sruth/meaisinfhoghlaim/asr/`
 - Related: `.agents/skills/baml/`, `.agents/skills/dagster/`,
   `.agents/skills/modal/`

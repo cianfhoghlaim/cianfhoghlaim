@@ -15,7 +15,7 @@ related_specs:
   - workflow-automation
 related_apps:
   - oideachais/dagster_defs
-  - meaisinfhoghlaim/agents/simulator
+  - sruth/meaisinfhoghlaim/agents/simulator
   - oideachais/notebooks
 related_llm_stack:
   - 'BAML (diff extraction + ripple annotation)'
@@ -53,7 +53,7 @@ endorsement.
 | Asset | Path | Use |
 |:--|:--|:--|
 | Quadrant | `oideachais/` | DLT sources, Dagster pipeline, DuckLake versioning |
-| Quadrant | `meaisinfhoghlaim/` | LLM stack, simulator agent |
+| Quadrant | `sruth/meaisinfhoghlaim/` | LLM stack, simulator agent |
 | Skill | `.agents/skills/dlt/SKILL.md` | Incremental loading, cursor-based |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA + partitions + sensors |
 | Skill | `.agents/skills/cognee/SKILL.md` | Temporal knowledge graph |

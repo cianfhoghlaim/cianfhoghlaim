@@ -69,7 +69,7 @@ class PrimaryLearningOutcome(BaseModel):
 ```python
 import dlt
 from baml_client import b
-from oideachais.baml_client.types import PrimaryLearningOutcome
+from sruth.oideachais.baml_client.types import PrimaryLearningOutcome
 
 @dlt.resource(
     name="primary_outcomes",
@@ -108,7 +108,7 @@ export const listPrimaryOutcomes = oc
 
 ```python
 # oideachais/web/src/server/router.py
-from oideachais.web.src.server.contracts.curriculum import listPrimaryOutcomes
+from sruth.oideachais.web.src.server.contracts.curriculum import listPrimaryOutcomes
 
 @router.handle(listPrimaryOutcomes)
 async def handle_list_primary_outcomes(input: dict) -> list[dict]:

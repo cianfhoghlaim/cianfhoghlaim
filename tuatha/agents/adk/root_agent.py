@@ -7,7 +7,7 @@ refactor plan. This file is a backwards-compatible re-export that
 preserves the 4 specialist agents + the `app` + `classify_query`
 helper that consumers like `tuatha.agents.orchestrator` rely on.
 """
-from oideachais.agents.adk.tuatha_root_agent import (
+from sruth.oideachais.agents.adk.tuatha_root_agent import (
     celtic_tutor_agent,
     classify_query,
     mythology_narrator_agent,
@@ -15,7 +15,7 @@ from oideachais.agents.adk.tuatha_root_agent import (
     research_assistant_agent,
     root_agent,
 )
-from oideachais.agents.adk.tuatha_root_agent import app
+from sruth.oideachais.agents.adk.tuatha_root_agent import app
 
 __all__ = [
     "root_agent",
