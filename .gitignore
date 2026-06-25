@@ -6,6 +6,15 @@ infrastructure/stacks/stirling-pdf/stirling-data
 infrastructure/stacks/stirling-pdf/stirling-pdf/stirling-data
 
 storage/
+# Phase 2B (2026-06-25): legacy top-level `storage/` dir is now removed (migrated
+# to `core/storage/`). The `storage/` pattern above is too broad — it also
+# matches the new canonical `core/storage/` and the `tests/storage/` test dir.
+# Use the explicit allow-negation patterns below to keep the legacy pattern
+# scoped to top-level only.
+!/sruth/oideachais/core/storage/
+!/sruth/oideachais/core/storage/**
+!/sruth/oideachais/tests/storage/
+!/sruth/oideachais/tests/storage/**
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stirling-pdf/stirling-pdf
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stirling-pdf/stirling-pdf/stirling-data
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stirling-pdf/stirling-data
