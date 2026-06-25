@@ -2117,3 +2117,87 @@ sources:
     schedule: { cron: "0 5 1 * *" }
     asset_key: [sct, official_media, jurisdiction, scottish_parliament, pages]
 
+  # ═══════ CULTURE — IRELAND (added by ingest-culture-heritage) ══════════════
+  # The 6th domain in the cross-domain-registry. Personal-heritage PDFs and
+  # 3 Wikipedia dual-written fixtures. Schema: BAML ExtractCultureClaims.
+  # Pipeline: BAML → CocoIndex v1 (culture_heritage_embedding) → Cognee
+  # (culture_heritage dataset) → cross-dataset edges to oideachais.
+
+  - id: ie.culture.claiming_r_na_gaillimhe
+    name: "Claiming Rí na Gaillimhe — A Synthesis"
+    domain: culture
+    nation: ie
+    kind: filesystem_pdf
+    urls: ["file://leabharlann/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf"]
+    schema: baml:ExtractCultureClaims
+    asset_key: [ie, culture, claiming_r_na_gaillimhe, pdf]
+    embedding: { table: oideachais.culture_heritage_chunks, model: BAAI/bge-m3 }
+    kg:        { dataset: culture_heritage, edges: [Claim->Person, Claim->Place, Person->FamilyRelation] }
+    schedule:  { cron: "0 6 * * 0" }
+    compliance: { licence: self_authored, retain_raw_snapshots_days: 365 }
+
+  - id: ie.culture.claiming_irish_kingship_lineage
+    name: "Claiming Irish Kingship Through Lineage"
+    domain: culture
+    nation: ie
+    kind: filesystem_pdf
+    urls: ["file://leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf"]
+    schema: baml:ExtractCultureClaims
+    asset_key: [ie, culture, claiming_irish_kingship_lineage, pdf]
+    embedding: { table: oideachais.culture_heritage_chunks, model: BAAI/bge-m3 }
+    kg:        { dataset: culture_heritage, edges: [Claim->Person, Claim->Place, Person->FamilyRelation] }
+    schedule:  { cron: "0 6 * * 0" }
+    compliance: { licence: self_authored, retain_raw_snapshots_days: 365 }
+
+  - id: ie.culture.deacy_family_heritage
+    name: "Deacy Family Heritage Research"
+    domain: culture
+    nation: ie
+    kind: filesystem_pdf
+    urls: ["file://leabharlann/gemini_deep_research/culture/deacy_family_heritage_research.pdf"]
+    schema: baml:ExtractCultureClaims
+    asset_key: [ie, culture, deacy_family_heritage, pdf]
+    embedding: { table: oideachais.culture_heritage_chunks, model: BAAI/bge-m3 }
+    kg:        { dataset: culture_heritage, edges: [Claim->Person, Claim->Place, Person->FamilyRelation] }
+    schedule:  { cron: "0 6 * * 0" }
+    compliance: { licence: self_authored, retain_raw_snapshots_days: 365 }
+
+  - id: ie.culture.genealogy_conaire_activism
+    name: "Genealogy and Conaire's Activism"
+    domain: culture
+    nation: ie
+    kind: filesystem_pdf
+    urls: ["file://leabharlann/gemini_deep_research/culture/genealogy_and_conaire_s_activism.pdf"]
+    schema: baml:ExtractCultureClaims
+    asset_key: [ie, culture, genealogy_conaire_activism, pdf]
+    embedding: { table: oideachais.culture_heritage_chunks, model: BAAI/bge-m3 }
+    kg:        { dataset: culture_heritage, edges: [Claim->Person, Claim->Place, Person->FamilyRelation] }
+    schedule:  { cron: "0 6 * * 0" }
+    compliance: { licence: self_authored, retain_raw_snapshots_days: 365 }
+
+  - id: ie.culture.researching_neil_deacy
+    name: "Researching Neil Deacy's Galway Heritage"
+    domain: culture
+    nation: ie
+    kind: filesystem_pdf
+    urls: ["file://leabharlann/gemini_deep_research/culture/researching_neil_deacy_s_galway_heritage.pdf"]
+    schema: baml:ExtractCultureClaims
+    asset_key: [ie, culture, researching_neil_deacy, pdf]
+    embedding: { table: oideachais.culture_heritage_chunks, model: BAAI/bge-m3 }
+    kg:        { dataset: culture_heritage, edges: [Claim->Person, Claim->Place, Person->FamilyRelation] }
+    schedule:  { cron: "0 6 * * 0" }
+    compliance: { licence: self_authored, retain_raw_snapshots_days: 365 }
+
+  - id: ie.culture.deacy_family_topography
+    name: "The Socio-Economic, Athletic, and Genealogical Topography of the Deacy Family in Galway"
+    domain: culture
+    nation: ie
+    kind: filesystem_pdf
+    urls: ["file://leabharlann/gemini_deep_research/culture/the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf"]
+    schema: baml:ExtractCultureClaims
+    asset_key: [ie, culture, deacy_family_topography, pdf]
+    embedding: { table: oideachais.culture_heritage_chunks, model: BAAI/bge-m3 }
+    kg:        { dataset: culture_heritage, edges: [Claim->Person, Claim->Place, Person->FamilyRelation] }
+    schedule:  { cron: "0 6 * * 0" }
+    compliance: { licence: self_authored, retain_raw_snapshots_days: 365 }
+

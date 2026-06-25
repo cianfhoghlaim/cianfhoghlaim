@@ -91,11 +91,12 @@ The re-export shims to `meaisinfhoghlaim/`:
 | Add a new education-domain dlt source for any nation (IE / EN / SCT / WLS / NI / IOM / JEY / GGY) | `oideachais/dlt_sources/domains/education/{nation}/{source}.py` (the canonical location, per `cross-domain-registry/SKILL.md`; replaces the legacy `dlt_sources/uk/`, `dlt_sources/ireland/`, and `dlt_sources/crown_dependencies/` paths) |
 | Add a new medicine or law domain dlt source | `oideachais/dlt_sources/domains/{medicine|law}/{nation}/{source}.py` |
 | Add a new leabharlann source | `oideachais/dlt_sources/author_archive/` (the 4 dlt sources) |
-| Add a new BAML extraction function | `baml_src/` (the 27 BAML files, plus `_archive/` for deferred consumers) + `baml_src/clients.baml` for the canonical client registry |
-| Add a new Dagster asset | `oideachais/dagster_defs/assets/` (40+ modules) |
-| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py`; see `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the canonical pattern. The shared `@coco.lifespan` + 3 ContextKeys live in `oideachais/cocoindex_flows/_lifespan.py` — import from there instead of re-declaring (REFACTORING.md item 12). |
-| Add a new Cognee cognify pass | `oideachais/cognee_integration/` (5 adapters); see `.agents/skills/oideachais-leabharlann/SKILL.md` for the 3 leabharlann cognify passes |
-| Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` (3 rules) or `author_archive_cross_corpus.py` (8 rules); see `.agents/skills/oideachais-leabharlann/SKILL.md` for the leabharlann 3-edge contract |
+| Add a new culture-heritage source (the 6th domain) | `oideachais/dlt_sources/domains/culture/{nation}/{source}.py` (e.g. `ie/heritage_source.py`); see `openspec/specs/cross-domain-registry/SKILL.md` for the Wikipedia dual-write convention |
+| Add a new BAML extraction function | `baml_src/` (the 28 BAML files incl. `culture_extraction.baml`, plus `_archive/` for deferred consumers) + `baml_src/clients.baml` for the canonical client registry |
+| Add a new Dagster asset | `oideachais/dagster_defs/assets/` (40+ modules, including `culture_heritage_assets.py` with 4 assets + `low_confidence_review` asset check) |
+| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py`; the 12th v1 App is `culture_heritage_embedding.py`. See `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the canonical pattern. The shared `@coco.lifespan` + 3 ContextKeys live in `oideachais/cocoindex_flows/_lifespan.py` — import from there instead of re-declaring (REFACTORING.md item 12). |
+| Add a new Cognee cognify pass | `oideachais/cognee_integration/` (6 adapters incl. `culture_cognify.py` for the `culture_heritage` dataset); see `.agents/skills/oideachais-leabharlaim/SKILL.md` for the 3 leabharlann cognify passes |
+| Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` (3 rules) or `author_archive_cross_corpus.py` (8 rules); the culture-heritage cross-dataset edges live in `culture_cognify.py:CROSS_DATASET_EDGES`. See `.agents/skills/oideachais-leabharlann/SKILL.md` for the leabharlann 3-edge contract |
 | Add a new Marimo dashboard | `oideachais/notebooks/` + `oideachais/notebooks/dashboards/` |
 | Add a new FastAPI route | `oideachais/api/routes/` (6 route modules) |
 | Add a new Dagster sensor | `oideachais/dagster_defs/sensors/` (5 sensor modules) |
