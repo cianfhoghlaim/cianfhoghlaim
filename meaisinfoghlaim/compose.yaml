@@ -1,9 +1,0 @@
-# Thin re-export shim for the meaisinfoghlaim deploy quartet (round 7).
-# Canonical location: infrastructure/stacks/meaisinfoghlaim/{compose,sidecar,blueprint,secrets.env}
-# This file is kept for backward compatibility with any tool that imports
-# the deploy files from the meaisinfoghlaim/ directory.
----
-# This file is now a 1-line re-export. The canonical deploy quartet is at
-# infrastructure/stacks/meaisinfoghlaim/. See
-# openspec/changes/archive/2026-06-24-infrastructure-stack-doctor-v1/
-# for the refactor history.
