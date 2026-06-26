@@ -12,7 +12,7 @@ from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
 
-from ..tools.statistics_query import (
+from sruth.oideachais.tools.statistics_query import (
     compare_nations,
     get_trend,
     list_available_metrics,

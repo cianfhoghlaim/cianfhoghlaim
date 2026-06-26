@@ -22,7 +22,7 @@ from google.genai import types as genai_types
 from pydantic import BaseModel
 
 # Import existing tools
-from ..tools.curriculum_search import (
+from sruth.oideachais.tools.curriculum_search import (
     compare_curricula,
     search_curriculum,
 )

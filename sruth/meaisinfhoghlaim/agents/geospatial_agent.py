@@ -12,7 +12,7 @@ from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
 
-from ..tools.spatial_query import (
+from sruth.oideachais.tools.spatial_query import (
     find_nearby_schools,
     get_area_statistics,
     get_deprivation_correlation,

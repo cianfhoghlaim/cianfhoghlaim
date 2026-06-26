@@ -11,7 +11,7 @@ from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
 
-from ..tools.curriculum_search import (
+from sruth.oideachais.tools.curriculum_search import (
     compare_curricula,
     find_similar_content,
     get_learning_outcomes,
