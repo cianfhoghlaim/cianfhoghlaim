@@ -142,8 +142,8 @@ Compose is the right default. K8s is the scale-out trigger.
 - `.agents/skills/pangolin/SKILL.md` — Pangolin networking
 - `.agents/skills/monorepo/SKILL.md` — bun + uv + turbo
 - `.agents/skills/pulumi/SKILL.md` — Pulumi multi-cloud
-- `.agents/skills/agent-observability/SKILL.md` — Datadog APM
-  for K8s workloads
+- `.agents/skills/agent-observability/SKILL.md` — Logfire +
+  Langfuse + MLflow + RAGAS for K8s workloads
 
 ## Resources
 

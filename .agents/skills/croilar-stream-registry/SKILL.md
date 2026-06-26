@@ -86,8 +86,8 @@ The `StreamSettings` class has 14 fields:
 | `browserbase_project_id` | (env) | The Browserbase project id |
 | `default_agent_framework` | `adk` | `adk` or `agno` |
 | `agent_complexity_threshold` | `0.5` | The complexity threshold |
-| `datadog_enabled` | `False` | The Datadog observability toggle |
 | `langfuse_enabled` | `False` | The Langfuse observability toggle |
+| `logfire_enabled` | `False` | The Logfire observability toggle |
 
 ## The `Stream` Pydantic model (the per-stream contract)
 

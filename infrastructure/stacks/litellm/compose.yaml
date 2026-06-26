@@ -98,27 +98,13 @@ services:
       - cianfhoghlaim
 
   # ---------------------------------------------------------------------------
-  # PROMETHEUS (LiteLLM exposes /metrics)
+  # (Prometheus service removed in cleanup-and-boot-stacks change 2026-06-26;
+  # container exited 2026-06-23 with no downstream consumer; no Grafana /
+  # Alertmanager exists. Litellm's /metrics endpoint remains available for
+  # future scraping by a real observability stack.)
   # ---------------------------------------------------------------------------
-  prometheus:
-    image: prom/prometheus
-    container_name: litellm-prometheus
-    restart: unless-stopped
-    volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--storage.tsdb.retention.time=15d"
-    ports:
-      - "9090:9090"
-    networks:
-      - cianfhoghlaim
 
 volumes:
-  prometheus_data:
-    driver: local
   litellm_postgres_data:
     name: litellm_postgres_data
 
