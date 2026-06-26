@@ -5,7 +5,7 @@ Tests for hybrid search functionality.
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from tuath.knowledge_graph import (
+from tuatha.knowledge_graph import (
     HybridSearchConfig,
     HybridSearchEngine,
     SearchMode,

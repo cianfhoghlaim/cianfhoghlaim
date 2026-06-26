@@ -5,7 +5,7 @@ Tests for Graphiti knowledge graph integration.
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from tuath.knowledge_graph.graphiti import (
+from tuatha.knowledge_graph.graphiti import (
     CELTIC_ENTITY_TYPES,
     CELTIC_RELATION_TYPES,
     add_character,

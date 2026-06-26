@@ -116,26 +116,17 @@ crypteolas = { workspace = true }
 crypteolas-demo = { workspace = true }
 
 [tool.hatch.build.targets.wheel]
-# Sub-packages included in the tuath wheel. After the consolidation of
-# códeolas, crypteolas, and crypteolas_demo into tuatha/, this list is
-# extended to include the new sub-packages and the previously-omitted
-# ones (asset_generation, dlt_utils, fibo_generation, tests, demo).
+# Round 11 Phase 11 (tuatha Phase 3): declare the project root (`.`)
+# so hatch auto-detects sub-packages that have an `__init__.py`.
+# Previously this was an explicit sub-packages list (12 entries).
+# The fix mirrors the croilar packaging fix from commit
+# `e9e0fc7d2` ("fix(croilar): close issue #17 — packaging fix
+# for the dagster code-location"). It makes `tuath` itself a
+# real Python package (importable as `from tuath.X import Y`),
+# unblocking `sruth/tuatha/tests/conftest.py:8: from tuath.api.main import app`.
 # Note: codeolas, crypteolas, and crypteolas_demo are loaded as separate
 # workspace members and are NOT included in the tuath wheel.
-packages = [
-    "dlt_sources",
-    "dagster_assets",
-    "cocoindex_flows",
-    "knowledge_graph",
-    "agents",
-    "api",
-    "storage",
-    "asset_generation",
-    "dlt_utils",
-    "fibo_generation",
-    "demo",
-    "tests",
-]
+packages = ["."]
 
 [tool.ruff]
 line-length = 100

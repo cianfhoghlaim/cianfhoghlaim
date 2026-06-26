@@ -1,0 +1,1 @@
+# CocoIndex transforms for Celtic multilingual processing (language detection + transliteration).

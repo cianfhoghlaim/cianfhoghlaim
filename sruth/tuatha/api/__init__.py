@@ -1,0 +1,1 @@
+# Celtic MMO API package (FastAPI + SIWE + x402 + AG-UI).

@@ -5,7 +5,7 @@ Pytest fixtures for Tuath tests.
 import pytest
 from fastapi.testclient import TestClient
 
-from tuath.api.main import app
+from tuatha.api.main import app
 
 
 @pytest.fixture
