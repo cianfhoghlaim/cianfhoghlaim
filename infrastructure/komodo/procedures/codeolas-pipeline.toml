@@ -42,10 +42,9 @@ TREE_SITTER_LANGUAGES=python,typescript,javascript,go,rust
 LANGFUSE_HOST=https://langfuse.cianfhoghlaim.ie
 LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
 LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
-DD_SERVICE=codeolas-api
-DD_ENV=production
-DD_SITE=crypteolas.ie
-DD_APM_ENABLED=true
+LOGFIRE_TOKEN=${LOGFIRE_TOKEN:-}
+LOGFIRE_PROJECT_NAME=codeolas-api
+LOGFIRE_ENVIRONMENT=production
 
 # Infisical
 INFISICAL_HOST=${INFISICAL_HOST:-http://132.145.27.89:8080}

@@ -26,11 +26,9 @@ ENVIRONMENT=production
 LANGFUSE_HOST=https://langfuse.cianfhoghlaim.ie
 LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
 LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
-DD_SERVICE=agentos-api
-DD_ENV=production
-DD_SITE=crypteolas.ie
-DD_APM_ENABLED=true
-DD_LLMOBS_ENABLED=true
+LOGFIRE_TOKEN=${LOGFIRE_TOKEN:-}
+LOGFIRE_PROJECT_NAME=agentos-api
+LOGFIRE_ENVIRONMENT=production
 
 # x402 Payment Configuration
 X402_ENABLED=true

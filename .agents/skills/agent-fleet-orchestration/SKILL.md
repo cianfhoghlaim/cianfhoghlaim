@@ -237,7 +237,7 @@ The contract is documented in
 - `.agents/skills/google-adk/SKILL.md` — the ADK framework patterns
 - `.agents/skills/agno/SKILL.md` — the Agno framework patterns
 - `.agents/skills/agentic-frontend-frameworks/SKILL.md` — the AG-UI + CopilotKit consumer
-- `.agents/skills/agent-observability/SKILL.md` — the Langfuse + MLflow + RAGAS + Logfire + Datadog stack
+- `.agents/skills/agent-observability/SKILL.md` — the Langfuse + MLflow + RAGAS + Logfire stack
 - `.agents/skills/agent-memory-systems/SKILL.md` — the Letta + Graphiti + Cognee + LanceDB + FalkorDB memory stack
 - `.agents/skills/infrastructure-stacks/SKILL.md` — the openclaw stack (6-file GOLD_STANDARD + arm1-oci deploy)
 - `sruth/meaisinfhoghlaim/agents/__init__.py` — the 12-agent registry

@@ -1,0 +1,77 @@
+# Pydantic Logfire — OpenTelemetry collector + Logfire cloud forwarding.
+# ----------------------------------------------------------------------------
+# Pydantic Logfire is SaaS-only at https://logfire.pydantic.dev (no
+# self-hostable Logfire-server image is published as of 2026-06-26).
+# This stack therefore deploys an OpenTelemetry Collector that:
+#   1. Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP)
+#   2. Forwards them to Logfire cloud using the logfire exporter + LOGFIRE_TOKEN
+#   3. Optionally buffers to disk for resilience
+#
+# This gives us:
+#   - A real, deployable local service (so the stack is valid 6-file GOLD_STANDARD)
+#   - Self-hosted collection point (privacy-friendly; raw traces never leave
+#     the cluster unless forwarded)
+#   - Logfire UI + SQL querying at https://logfire.pydantic.dev
+#     (linked from the Pangolin private route logfire.cianfhoghlaim.ie)
+#
+# Application code has TWO paths to send traces:
+#   - SDK direct:   `logfire.configure(token=...)`              -> HTTPS to Logfire
+#   - OTLP indirect: set `OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317`
+#                   -> local collector -> Logfire cloud
+# Both produce identical data on the Logfire dashboard.
+#
+# To start (prod):  docker compose -f compose.yaml -f sidecar.yaml up -d
+# To start (dev):   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+
+services:
+  logfire-otel:
+    image: otel/opentelemetry-collector-contrib:0.104.0
+    container_name: cianfhoghlaim-logfire-otel
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./config/otelcol.yaml:/etc/otelcol/config.yaml:ro
+      - logfire-otel-data:/var/lib/otelcol
+    ports:
+      # OTLP gRPC (preferred by Python OTEL SDKs)
+      - "4317:4317"
+      # OTLP HTTP (fallback for services that don't speak gRPC)
+      - "4318:4318"
+      # Collector health + metrics
+      - "8888:8888"
+      # Prometheus-format metrics (no local Prometheus container; expose
+      # for future scraping by an external observability stack)
+      - "8889:8889"
+    environment:
+      # Forwarded to the collector via Locket sidecar (see secrets.env).
+      # The logfire exporter pulls this from the env at runtime; if empty,
+      # the collector starts but exports fail (matching the SaaS-only
+      # graceful-degradation pattern in sruth/oideachais/observability/logfire_config.py).
+      LOGFIRE_TOKEN: ${LOGFIRE_TOKEN:-}
+      LOGFIRE_PROJECT_NAME: ${LOGFIRE_PROJECT_NAME:-oideachas-celtic-education}
+      LOGFIRE_ENVIRONMENT: ${LOGFIRE_ENVIRONMENT:-production}
+    healthcheck:
+      # otelcol exposes /health/status on its health_check extension
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8888/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+    depends_on:
+      locket:
+        condition: service_healthy
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  logfire-otel-data:
+
+networks:
+  cianfhoghlaim:
+    name: cianfhoghlaim
+    external: true
