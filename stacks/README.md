@@ -33,8 +33,7 @@ file groups them by which workspace-member quadrant consumes them.
 | OIDC identity provider | `infrastructure/stacks/pocket-id/` |
 | Backup / disaster recovery | `infrastructure/stacks/backrest/`, `infrastructure/stacks/vaultwarden/` |
 | IaC for cloud | `infrastructure/stacks/pulumi/` (multi-cloud) |
-| Monitoring (Prom + Graf + Loki) | `infrastructure/stacks/monitoring/` |
-| LLM gateway | `infrastructure/stacks/litellm/` (Postgres + Prometheus) |
+| LLM gateway | `infrastructure/stacks/litellm/` (Postgres) |
 | MLX OpenAI-compatible server | `infrastructure/stacks/mlx-omni/` (Apple Silicon) |
 | Image generation (SDXL) | `infrastructure/stacks/invokeai/` |
 | Data pipeline orchestration | `infrastructure/stacks/dagster/` |
