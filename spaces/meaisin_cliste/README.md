@@ -25,7 +25,7 @@ short_description: 3 Celtic AI tools in one Space: 6-nation cognate dictionary, 
 A 6-nation Celtic cognate dictionary. Type a word in any of the 6
 Celtic languages (or in proto-Celtic) and see cognates across all 6.
 30 hand-picked seed entries; production uses the full DLT pipeline
-at `oideachais/language/cognates.py` (~1,800 rows).
+at `sruth/oideachais/language/cognates.py` (~1,800 rows).
 
 ### Theme 2: Scoil ar an Léarscáil (Uisce)
 

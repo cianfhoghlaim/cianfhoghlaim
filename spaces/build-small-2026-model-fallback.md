@@ -63,7 +63,7 @@ Used by:
 | Fallback 1 | `meta-llama/Llama-3.1-8B-Instruct` | HF Inference | 8B | Best-in-class instruction following; widely deployed on HF Inference; good BAML compliance; explicit function-calling support |
 | Fallback 2 | `google/gemma-2-9b-it` | HF Inference | 9B | Gemma 2 strong on structured output; long context (8K → 1M with Gemma 2); good fallback when Qwen/Llama quota exceeded |
 
-**Hackathon client config** (`tuatha/baml_src/clients_hackathon.baml` — fork of `tuatha_clients.baml`):
+**Hackathon client config** (`sruth/tuatha/baml_src/clients_hackathon.baml` — fork of `tuatha_clients.baml`):
 
 ```baml
 client<BAML_HACKATHON_PRIMARY> {
@@ -209,7 +209,7 @@ Used by:
 
 **Anvil sidecar (bundled Docker image):**
 - Container: `ghcr.io/foundry-rs/foundry:latest` (Anvil)
-- Solidity contract: `CuchulainnNFT.sol` from `tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol`
+- Solidity contract: `CuchulainnNFT.sol` from `sruth/tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol`
 - Mount path: `/app/contracts/CuchulainnNFT.sol`
 - Anvil RPC: `http://anvil:8545` (from the Space's Gradio backend)
 - Deploy script: `forge script script/DeployCuchulainnNFT.s.sol --rpc-url http://anvil:8545 --broadcast`

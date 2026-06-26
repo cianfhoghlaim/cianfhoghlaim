@@ -2,7 +2,7 @@
 title: "Croílár Demo — Per-Quadrant Asset Index"
 domain: hackathons
 status: draft
-description: "Per-quadrant indexes of the existing Cianfhoghlaim monorepo assets (BAML schemas, source code, datasets, agents, services) that the 4 Hackathon Spaces will reuse. Maps the demo's required features to the source-of-truth files in oideachais/, meaisínfhoghlaim/, tuatha/, croílár/, and infrastructure/."
+description: "Per-quadrant indexes of the existing Cianfhoghlaim monorepo assets (BAML schemas, source code, datasets, agents, services) that the 4 Hackathon Spaces will reuse. Maps the demo's required features to the source-of-truth files in sruth/oideachais/, meaisínfhoghlaim/, sruth/tuatha/, croílár/, and infrastructure/."
 entities:
   - OideachaisQuadrant
   - MeaisínfhoghlaimQuadrant
@@ -28,13 +28,13 @@ last_reviewed: 2026-06-08
 
 ---
 
-## Index 1: `oideachais/` quadrant — assets for **Space 1 (An Scrúdú)**
+## Index 1: `sruth/oideachais/` quadrant — assets for **Space 1 (An Scrúdú)**
 
 The oideachais quadrant is the **offline-first ELT engine** that ingests Irish, UK, and pan-Celtic education data — NCCA syllabi, SEC exam papers and marking schemes, Chief Examiner reports, Department of Education circulars — through a unified DuckDB/DuckLake core. Space 1 (An Scrúdú) builds on top of this.
 
 ### 1.1 BAML extraction schemas (the typed spine)
 
-Located in `oideachais/data_platform/baml_src/`:
+Located in `sruth/oideachais/data_platform/baml_src/`:
 
 | BAML file | Key class | Function | Reuse by |
 |:--|:--|:--|:--|
@@ -52,13 +52,13 @@ Located in `oideachais/data_platform/baml_src/`:
 **To add (new BAML, ~30-40 lines each):**
 - `ExtractCircularMeta` — from `docs/03-agents/baml-extraction.md:508-524`
 - `GenerateExitCardQuestions` — from Space 1's "5 NEW features" in the catalogue
-- `ScoreExitCardResponse` — modelled on `ResponseAnalysis` from `tuatha/baml_src/player_assessment.baml:31`
+- `ScoreExitCardResponse` — modelled on `ResponseAnalysis` from `sruth/tuatha/baml_src/player_assessment.baml:31`
 - `ComposeMarkingSchemeDiff` — takes two `MarkingScheme` objects, emits `RubricDelta`
 - `ExtractPrimaryFramework` — from `docs/03-agents/baml-extraction.md:387-425` (Junior Infants → 6th Class)
 
 ### 1.2 DLT source code (the ingestion layer)
 
-Located in `oideachais/data_platform/dlt_sources/`:
+Located in `sruth/oideachais/data_platform/dlt_sources/`:
 
 | Sub-tree | Key file | Purpose | Reuse by |
 |:--|:--|:--|:--|
@@ -78,7 +78,7 @@ Located in `oideachais/data_platform/dlt_sources/`:
 
 ### 1.3 Dagster assets (the orchestration layer)
 
-Located in `oideachais/data_platform/dagster_defs/`:
+Located in `sruth/oideachais/data_platform/dagster_defs/`:
 
 | Asset | Purpose | Reuse by |
 |:--|:--|:--|
@@ -90,7 +90,7 @@ Located in `oideachais/data_platform/dagster_defs/`:
 
 ### 1.4 Samplaí (sample corpora)
 
-Located in `oideachais/samplaí/`:
+Located in `sruth/oideachais/samplaí/`:
 
 | File | Language | ISO | Scope |
 |:--|:--|:--|:--|
@@ -106,7 +106,7 @@ Located in `oideachais/samplaí/`:
 
 ### 1.5 Document factory (the formatters)
 
-Located in `oideachais/document_factory/`:
+Located in `sruth/oideachais/document_factory/`:
 
 | File | Key class | Reuse by |
 |:--|:--|:--|
@@ -121,7 +121,7 @@ Located in `oideachais/document_factory/`:
 
 ### 1.6 Quality + completeness
 
-Located in `oideachais/quality/`:
+Located in `sruth/oideachais/quality/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -131,13 +131,13 @@ Located in `oideachais/quality/`:
 
 ### 1.7 Documented CELT/folk sources
 
-- `oideachais/samplaí/cognates.yaml` (cross-Celtic dictionary, 6 languages)
-- `oideachais/quality/canuint_validator.py` (50+ Irish phonemes)
-- `oideachais/data_platform/dlt_sources/ireland/source_adapters.py:36-69` — `NormalizedPage` dataclass
+- `sruth/oideachais/samplaí/cognates.yaml` (cross-Celtic dictionary, 6 languages)
+- `sruth/oideachais/quality/canuint_validator.py` (50+ Irish phonemes)
+- `sruth/oideachais/data_platform/dlt_sources/ireland/source_adapters.py:36-69` — `NormalizedPage` dataclass
 
 ### 1.8 Training (Unsloth + Qwen2-VL)
 
-Located in `oideachais/training/`:
+Located in `sruth/oideachais/training/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -150,7 +150,7 @@ Located in `oideachais/training/`:
 
 ### 1.9 Asset generation (BAML → FIBO)
 
-Located in `oideachais/asset_generation/`:
+Located in `sruth/oideachais/asset_generation/`:
 
 | File | Purpose | Reuse by |
 |:--|:--|:--|
@@ -170,7 +170,7 @@ Located in `oideachais/asset_generation/`:
 
 ### 1.11 Evaluation (RAGAS)
 
-Located in `oideachais/evaluation/`:
+Located in `sruth/oideachais/evaluation/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -371,13 +371,13 @@ Located in `meaisínfhoghlaim/scripts/`:
 
 ---
 
-## Index 3: `tuatha/` quadrant — assets for **Space 3 (Cianfhoghlaim) + Space 4 (Anam)**
+## Index 3: `sruth/tuatha/` quadrant — assets for **Space 3 (Cianfhoghlaim) + Space 4 (Anam)**
 
 The tuatha quadrant is the **Celtic Educational MMO** — SpacetimeDB real-time game state, Babylon.js/wgpu/WebGPU client, Bria FIBO image gen, 5 mythology cycles, Anam soulbound credentials, 4 Bardic ranks, pent-elemental magic system, x402 micropayments.
 
 ### 3.1 BAML schemas (the game content)
 
-Located in `tuatha/baml_src/`:
+Located in `sruth/tuatha/baml_src/`:
 
 | File | Key classes | Reuse by |
 |:--|:--|:--|
@@ -463,7 +463,7 @@ Located in `tuatha/baml_src/`:
 
 ### 3.4 Asset generation (Bria FIBO + Celtic art)
 
-Located in `tuatha/asset_generation/`:
+Located in `sruth/tuatha/asset_generation/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -480,7 +480,7 @@ Located in `tuatha/asset_generation/`:
 
 ### 3.5 FIBO generation
 
-Located in `tuatha/fibo_generation/`:
+Located in `sruth/tuatha/fibo_generation/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -490,7 +490,7 @@ Located in `tuatha/fibo_generation/`:
 
 ### 3.6 Agents (4 ADK agents + orchestrator)
 
-Located in `tuatha/agents/`:
+Located in `sruth/tuatha/agents/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -502,7 +502,7 @@ Located in `tuatha/agents/`:
 
 ### 3.7 API + game server
 
-Located in `tuatha/api/`:
+Located in `sruth/tuatha/api/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -511,7 +511,7 @@ Located in `tuatha/api/`:
 | `ag_ui_protocol.py` | Space 3 + Space 4 |
 | `services/`, `routes/`, `storage/` | (replaced by Gradio app) |
 
-Located in `tuatha/api-rs/`:
+Located in `sruth/tuatha/api-rs/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -519,11 +519,11 @@ Located in `tuatha/api-rs/`:
 
 ### 3.8 Game data (the SpacetimeDB schema + ECS)
 
-Located in `tuatha/crates/stdb-modules/tuath-game/src/lib.rs:224-244` — `Npc` table struct (the canonical NPC data model). Space 3's 6 NPCs should conform to this schema even if running locally without SpacetimeDB.
+Located in `sruth/tuatha/crates/stdb-modules/tuath-game/src/lib.rs:224-244` — `Npc` table struct (the canonical NPC data model). Space 3's 6 NPCs should conform to this schema even if running locally without SpacetimeDB.
 
 ### 3.9 Graphics (WGSL Celtic shaders + Babylon.js + wgpu)
 
-Located in `tuatha/crates/wgpu/`:
+Located in `sruth/tuatha/crates/wgpu/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -535,7 +535,7 @@ Located in `tuatha/crates/wgpu/`:
 
 ### 3.10 Knowledge graph
 
-Located in `tuatha/knowledge_graph/`:
+Located in `sruth/tuatha/knowledge_graph/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -543,7 +543,7 @@ Located in `tuatha/knowledge_graph/`:
 
 ### 3.11 DLT + CocoIndex flows
 
-Located in `tuatha/dlt_sources/`, `tuatha/cocoindex_flows/`, `tuatha/dagster_assets/`, `tuatha/storage/`:
+Located in `sruth/tuatha/dlt_sources/`, `sruth/tuatha/cocoindex_flows/`, `sruth/tuatha/dagster_assets/`, `sruth/tuatha/storage/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -553,7 +553,7 @@ Located in `tuatha/dlt_sources/`, `tuatha/cocoindex_flows/`, `tuatha/dagster_ass
 
 ### 3.12 Anam contracts (Solidity)
 
-Located in `tuatha/apps/crypteolas_demo/anam-contracts/`:
+Located in `sruth/tuatha/apps/crypteolas_demo/anam-contracts/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -573,7 +573,7 @@ Located in `tuatha/apps/crypteolas_demo/anam-contracts/`:
 
 ### 3.13 Crypteolas crypto data platform
 
-Located in `tuatha/crypteolas/`:
+Located in `sruth/tuatha/crypteolas/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -586,7 +586,7 @@ Located in `tuatha/crypteolas/`:
 
 ### 3.14 Codeolas (code analysis)
 
-Located in `tuatha/codeolas/`:
+Located in `sruth/tuatha/codeolas/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -600,7 +600,7 @@ Located in `tuatha/codeolas/`:
 
 ### 3.15 Crypteolas demo app
 
-Located in `tuatha/apps/crypteolas_demo/`:
+Located in `sruth/tuatha/apps/crypteolas_demo/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -615,7 +615,7 @@ Located in `tuatha/apps/crypteolas_demo/`:
 
 ### 3.16 UI (Babylon.js + Godot 4)
 
-Located in `tuatha/ui/`:
+Located in `sruth/tuatha/ui/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -626,12 +626,12 @@ Located in `tuatha/ui/`:
 
 ### 3.17 Design docs (background)
 
-- `tuatha/anam.md` — the Anam vision (soul, breath, mentorship)
-- `tuatha/summary.txt` — Anam particle simulation (weather-driven wind for Unreal/Unity/Godot)
-- `tuatha/gaeilge.md` — Irish data sources
-- `tuatha/DEVELOPMENT.md` — dev environment setup
-- `tuatha/knowledge_graph/` — KG client code
-- `tuatha/storage/` — storage clients (LanceCatalog, Garage, DuckLake, Lakekeeper)
+- `sruth/tuatha/anam.md` — the Anam vision (soul, breath, mentorship)
+- `sruth/tuatha/summary.txt` — Anam particle simulation (weather-driven wind for Unreal/Unity/Godot)
+- `sruth/tuatha/gaeilge.md` — Irish data sources
+- `sruth/tuatha/DEVELOPMENT.md` — dev environment setup
+- `sruth/tuatha/knowledge_graph/` — KG client code
+- `sruth/tuatha/storage/` — storage clients (LanceCatalog, Garage, DuckLake, Lakekeeper)
 
 ---
 
@@ -641,7 +641,7 @@ The croílár quadrant is the **multi-persona portfolio platform** — the first
 
 ### 4.1 Apps
 
-Located in `croilar/apps/`:
+Located in `sruth/croilar/apps/`:
 
 | App | Stack | Reuse by |
 |:--|:--|:--|
@@ -651,7 +651,7 @@ Located in `croilar/apps/`:
 
 ### 4.2 Packages (shared libraries)
 
-Located in `croilar/packages/`:
+Located in `sruth/croilar/packages/`:
 
 | Package | Reuse by |
 |:--|:--|
@@ -664,7 +664,7 @@ Located in `croilar/packages/`:
 
 ### 4.3 Convex (real-time backend)
 
-Located in `croilar/convex/`:
+Located in `sruth/croilar/convex/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -676,7 +676,7 @@ Located in `croilar/convex/`:
 
 ### 4.4 Hono API (auth-gated REST)
 
-Located in `croilar/hono-api/`:
+Located in `sruth/croilar/hono-api/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -689,7 +689,7 @@ Located in `croilar/hono-api/`:
 
 ### 4.5 BAML extraction schemas (for croílár CV extraction)
 
-Located in `croilar/baml/`:
+Located in `sruth/croilar/baml/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -704,7 +704,7 @@ Located in `croilar/baml/`:
 
 ### 4.6 DLT pipelines (for croílár)
 
-Located in `croilar/pipelines/`:
+Located in `sruth/croilar/pipelines/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -713,7 +713,7 @@ Located in `croilar/pipelines/`:
 
 ### 4.7 Dagster assets
 
-Located in `croilar/dagster_assets/`:
+Located in `sruth/croilar/dagster_assets/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -724,7 +724,7 @@ Located in `croilar/dagster_assets/`:
 
 ### 4.8 CocoIndex flows (embeddings)
 
-Located in `croilar/cocoindex_flows/`:
+Located in `sruth/croilar/cocoindex_flows/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -733,7 +733,7 @@ Located in `croilar/cocoindex_flows/`:
 
 ### 4.9 Notebooks (Marimo reactive)
 
-Located in `croilar/notebooks/`:
+Located in `sruth/croilar/notebooks/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -745,7 +745,7 @@ Located in `croilar/notebooks/`:
 
 ### 4.10 Services (LiteLLM-backed)
 
-Located in `croilar/services/`:
+Located in `sruth/croilar/services/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -754,7 +754,7 @@ Located in `croilar/services/`:
 
 ### 4.11 AgentOS (Agno research agent)
 
-Located in `croilar/agent_os/`:
+Located in `sruth/croilar/agent_os/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -763,7 +763,7 @@ Located in `croilar/agent_os/`:
 
 ### 4.12 Shared utilities
 
-Located in `croilar/_shared/`:
+Located in `sruth/croilar/_shared/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -777,7 +777,7 @@ Located in `croilar/_shared/`:
 
 ### 4.13 Tests (31 pytest)
 
-Located in `croilar/tests/`:
+Located in `sruth/croilar/tests/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -787,7 +787,7 @@ Located in `croilar/tests/`:
 
 ### 4.14 Game showcase (game development prototype)
 
-Located in `croilar/game_showcase/`:
+Located in `sruth/croilar/game_showcase/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -797,7 +797,7 @@ Located in `croilar/game_showcase/`:
 
 ### 4.15 Image pipeline (Node 20)
 
-Located in `croilar/image-pipeline/`:
+Located in `sruth/croilar/image-pipeline/`:
 
 | File | Reuse by |
 |:--|:--|
@@ -805,13 +805,13 @@ Located in `croilar/image-pipeline/`:
 
 ### 4.16 Marimo + Honua
 
-Located in `croilar/marimo/`, `croilar/hono-api/`:
+Located in `sruth/croilar/marimo/`, `sruth/croilar/hono-api/`:
 
 (design references only)
 
 ### 4.17 Demo + portal (design references)
 
-Located in `croilar/portal/`, `croilar/demo/`:
+Located in `sruth/croilar/portal/`, `sruth/croilar/demo/`:
 
 (design references for Space 4's Gradio wrapper)
 
