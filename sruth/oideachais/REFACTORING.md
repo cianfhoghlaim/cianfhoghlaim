@@ -1,10 +1,54 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-26 (Phase 3E done)
+**Last updated:** 2026-06-26 (Phase 4 done)
 
 This file is the canonical refactor backlog for the `sruth/oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
 
 ---
+
+### Phase 4 — Consolidate legacy flat files at `dlt_sources/` root (`oideachais-audit-phase-4-consolidate-legacy-dirs`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: LOW (no domain expansion; pure file relocation + 1 tearma split)
+**Impact**: 5 flat files removed from `dlt_sources/` root, 4 utility files moved to canonical homes, 1 multi-source file (2 sources) split, 6 importer sites rewired, 2 pre-existing fragile imports hardened
+
+#### Files created (5)
+
+| Path | Purpose |
+|:--|:--|
+| `dlt_sources/ie/culture/tearma.py` | `tearma_source` (split from legacy `dlt_sources/tearma.py`) |
+| `dlt_sources/ie/culture/tearma_search.py` | `tearma_search_source` (split from legacy) |
+| `dlt_sources/ie/culture/_tearma_helpers.py` | Shared TEARMA_DOWNLOAD_URL/TEARMA_API_BASE constants + 5 helpers (`_get_tearma_factory`, `_parse_tearma_tsv`, `_download_tearma_export`, `_search_tearma_api`, `_load_tearma_terms`) + `TerminologyLinker` class. Pre-existing fragile `from observability.logging` + `from shared.http` imports hardened with `try/except ImportError`. |
+| `dlt_sources/common/crawl_utils.py` | Moved from `dlt_sources/crawl_utils.py` (pure utility) |
+| `dlt_sources/common/http_client.py` | Moved from `dlt_sources/http_client.py` (pure utility) |
+| `dlt_sources/common/pagination.py` | Moved from `dlt_sources/pagination.py` (pure utility) |
+| `dlt_utils/dlthub_projects.py` | Moved from `dlt_sources/dlthub_projects.py` (pipeline config; sits alongside `batching.py`, `destinations.py`, etc.) |
+
+#### Files deleted (4)
+
+`dlt_sources/tearma.py` + `dlt_sources/crawl_utils.py` + `dlt_sources/http_client.py` + `dlt_sources/pagination.py` + `dlt_sources/dlthub_projects.py` (5 total — git auto-detected 4 renames + 1 deletion).
+
+#### Files modified (4)
+
+| File | Change |
+|:--|:--|
+| `dlt_utils/__init__.py` | Re-exports `apply_dlthub_wrappers` |
+| `dlt_sources/ie/culture/__init__.py` | Re-exports `tearma_search_source` |
+| `dlt_sources/ie/education/curriculum.py:600` | `from dlt_sources.dlthub_projects` → `from dlt_utils.dlthub_projects` |
+| `dlt_sources/ie/education/curriculum_source.py:600` | Same |
+| `dlt_sources/ie/education/exam_source_update.py:2` | Same |
+| `dagster_defs/factories.py:325` | `data_platform.dlt_sources.tearma` → `data_platform.dlt_sources.ie.culture.tearma` |
+| `tests/dlt_sources/test_integration.py` (6 sites) | `from oideachais.dlt_sources.crawl_utils` → `from dlt_sources.common.crawl_utils` (also fixes pre-existing absolute-namespace violation) |
+
+#### Validation
+
+- `openspec validate oideachais-audit-phase-4-consolidate-legacy-dirs --strict` PASS
+- 3/3 Phase 4 new imports succeed (`ie.culture.tearma`, `ie.culture.tearma_search`, `_tearma_helpers`)
+- 4/4 utility imports succeed (`common.crawl_utils`, `common.http_client`, `common.pagination`, `dlt_utils.dlthub_projects`)
+- 6/6 importer rewires succeed (curriculum.py, curriculum_source.py, exam_source_update.py, factories.py, test_integration.py × 6 sites)
+- Phase 3D regression: all 25 canonical imports still succeed
+- Phase 3E regression: 3/3 Crown Dependencies imports still succeed
+- 6/6 previously-broken `TestCrawlUtils` tests now pass (absolute-namespace fix side benefit)
 
 ### Phase 3E — Split Crown Dependencies umbrella + break circular import (`oideachais-audit-phase-3e-split-crown-dependencies`)
 

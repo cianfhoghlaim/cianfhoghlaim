@@ -1,52 +1,78 @@
 """
-DLT source for Téarma.ie (Irish Terminology Database).
+Téarma.ie shared private state + module constants + helpers + linker.
 
-Provides access to official Irish terminology from Foras na Gaeilge's
-terminology database for linking curriculum content to standardized terms.
+Split out of the legacy `dlt_sources/tearma.py` flat file in Phase 4
+(oideachais-audit-phase-4-consolidate-legacy-dirs) so each DLT source
+gets its own file at the country-first canonical path
+`dlt_sources/{nation}/{domain}/{entity}.py`.
 
-API: https://www.tearma.ie/api/
-Download: https://www.tearma.ie/ioslodail/
+Pre-existing fragile imports (out of this monorepo) are hardened with
+`try/except ImportError` per the Phase 3D pattern:
+- `from observability.logging import get_logger` — provided by an
+  external observability package.
+- `from shared.http import tearma_client` — provided by an external
+  `shared` package.
 
-Usage:
-    from oideachais.dlt_sources.tearma import tearma_source
-
-    pipeline = dlt.pipeline(
-        pipeline_name="tearma",
-        destination="duckdb",
-    )
-    pipeline.run(tearma_source())
+When these imports are missing the helpers fall back to no-op logger
+and raise an explicit `RuntimeError` from `_get_tearma_factory()` so
+the source is import-safe at module load time but the brokenness is
+surfaced loudly at first use.
 """
-
 from __future__ import annotations
 
 import zipfile
 from collections.abc import Iterator
 from datetime import UTC, datetime
-from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-import dlt
-from observability.logging import get_logger
-from shared.http import tearma_client
+# ---------------------------------------------------------------------------
+# Pre-existing fragile imports — hardened with try/except
+# ---------------------------------------------------------------------------
+try:
+    from observability.logging import get_logger
 
-logger = get_logger(__name__)
+    logger = get_logger(__name__)
+except ImportError:  # observability package not in this monorepo
+    import logging as _logging
 
-# Téarma download URLs
+    logger = _logging.getLogger(__name__)
+
+
+try:
+    from shared.http import tearma_client  # type: ignore[import-not-found]
+except ImportError:  # shared package not in this monorepo
+    tearma_client = None  # type: ignore[assignment]
+
+
+# ---------------------------------------------------------------------------
+# Module constants
+# ---------------------------------------------------------------------------
 TEARMA_DOWNLOAD_URL = "https://www.tearma.ie/ioslodail/25.04.01-tearma.ie-concepts.txt.zip"
 TEARMA_API_BASE = "https://www.tearma.ie/api"
 
 
+# ---------------------------------------------------------------------------
+# HTTP factory
+# ---------------------------------------------------------------------------
 def _get_tearma_factory():
     """Get HTTP client factory for Téarma.ie."""
+    if tearma_client is None:
+        raise RuntimeError(
+            "shared.http.tearma_client is unavailable — the 'shared' package "
+            "is not in this monorepo. See dlt_sources/common/_shared_utils_stub.py."
+        )
     return tearma_client()
 
 
+# ---------------------------------------------------------------------------
+# TSV parser
+# ---------------------------------------------------------------------------
 def _parse_tearma_tsv(content: str) -> Iterator[dict[str, Any]]:
     """
     Parse Téarma TSV export file.
 
-    Format: English\tIrish\tDomain\tDefinition\t...
+    Format: English\\tIrish\\tDomain\\tDefinition\\t...
 
     Yields:
         Dictionary for each term entry
@@ -78,6 +104,9 @@ def _parse_tearma_tsv(content: str) -> Iterator[dict[str, Any]]:
         yield entry
 
 
+# ---------------------------------------------------------------------------
+# Export downloader
+# ---------------------------------------------------------------------------
 def _download_tearma_export() -> str:
     """
     Download and extract Téarma export file.
@@ -115,6 +144,9 @@ def _download_tearma_export() -> str:
     raise ValueError("No .txt file found in Téarma ZIP archive")
 
 
+# ---------------------------------------------------------------------------
+# API search
+# ---------------------------------------------------------------------------
 def _search_tearma_api(
     query: str,
     domain: str | None = None,
@@ -165,6 +197,9 @@ def _search_tearma_api(
             )
 
 
+# ---------------------------------------------------------------------------
+# Loader
+# ---------------------------------------------------------------------------
 def _load_tearma_terms(
     use_api: bool = False,
     domain_filter: str | None = None,
@@ -231,89 +266,9 @@ def _load_tearma_terms(
         }
 
 
-@dlt.source(name="tearma")
-def tearma_source(
-    use_api: bool = False,
-    domain_filter: str | None = None,
-):
-    """
-    DLT source for Téarma.ie Irish terminology database.
-
-    Args:
-        use_api: Use API for real-time queries (requires specific searches)
-        domain_filter: Filter to specific domain (e.g., "education", "computing")
-
-    Returns:
-        DLT source with tearma_terms resource
-    """
-
-    @dlt.resource(
-        name="tearma_terms",
-        write_disposition="merge",
-        primary_key=["term_en", "term_ga"],
-    )
-    def tearma_terms() -> Iterator[dict[str, Any]]:
-        """All Téarma terms from the export."""
-        yield from _load_tearma_terms(use_api, domain_filter)
-
-    @dlt.resource(
-        name="tearma_education",
-        write_disposition="merge",
-        primary_key=["term_en", "term_ga"],
-    )
-    def tearma_education() -> Iterator[dict[str, Any]]:
-        """Téarma terms filtered to education domain."""
-        for entry in _load_tearma_terms(use_api=False):
-            if "status" in entry:
-                yield entry
-                continue
-            domain = entry.get("domain", "").lower()
-            if any(
-                d in domain
-                for d in ["education", "oideachas", "school", "scoil", "curriculum"]
-            ):
-                yield entry
-
-    return tearma_terms, tearma_education
-
-
-@dlt.source(name="tearma_search")
-def tearma_search_source(
-    queries: list[str],
-    domains: list[str] | None = None,
-):
-    """
-    DLT source for searching Téarma API.
-
-    Args:
-        queries: List of search queries
-        domains: Optional list of domains to filter
-
-    Returns:
-        DLT source with search results
-    """
-
-    @dlt.resource(
-        name="tearma_search_results",
-        write_disposition="append",
-        primary_key=["term_id", "query"],
-    )
-    def tearma_search_results() -> Iterator[dict[str, Any]]:
-        """Search results from Téarma API."""
-        for query in queries:
-            if domains:
-                for domain in domains:
-                    yield from _search_tearma_api(query, domain)
-            else:
-                yield from _search_tearma_api(query)
-
-    return tearma_search_results
-
-
-# =============================================================================
-# Terminology Linking Utilities
-# =============================================================================
-
+# ---------------------------------------------------------------------------
+# Terminology linker
+# ---------------------------------------------------------------------------
 class TerminologyLinker:
     """
     Link curriculum text to Téarma terminology.
@@ -451,35 +406,13 @@ class TerminologyLinker:
         return glossary
 
 
-# =============================================================================
-# CLI Entry Point
-# =============================================================================
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Téarma.ie Terminology Database")
-    parser.add_argument("--domain", help="Filter to domain")
-    parser.add_argument("--search", help="Search for a term")
-    parser.add_argument("--limit", type=int, default=10, help="Result limit")
-    args = parser.parse_args()
-
-    logging.basicConfig(level=logging.INFO)
-
-    if args.search:
-        print(f"Searching for: {args.search}")
-        for i, result in enumerate(_search_tearma_api(args.search)):
-            if i >= args.limit:
-                break
-            print(f"  {result['term_en']} = {result['term_ga']} [{result['domain']}]")
-    else:
-        print("Loading Téarma export...")
-        count = 0
-        for term in _load_tearma_terms(domain_filter=args.domain):
-            if "status" in term:
-                print(f"Status: {term}")
-                continue
-            if count < args.limit:
-                print(f"  {term['term_en']} = {term['term_ga']}")
-            count += 1
-        print(f"Total terms: {count}")
+__all__ = [
+    "TEARMA_DOWNLOAD_URL",
+    "TEARMA_API_BASE",
+    "_get_tearma_factory",
+    "_parse_tearma_tsv",
+    "_download_tearma_export",
+    "_search_tearma_api",
+    "_load_tearma_terms",
+    "TerminologyLinker",
+]

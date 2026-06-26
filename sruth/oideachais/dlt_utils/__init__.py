@@ -75,6 +75,9 @@ from .safety import (
     validate_source_kwargs,
 )
 
+# dlt+ project wrappers (added 2026-06-26, Phase 4)
+from .dlthub_projects import apply_dlthub_wrappers
+
 __all__ = [
     # Mixins
     "PaginatedSourceMixin",
@@ -124,4 +127,6 @@ __all__ = [
     "EmbeddingBatcher",
     "should_drop_hnsw",
     "calculate_optimal_batch_size",
-]
+    # dlt+ project wrappers (added 2026-06-26, Phase 4)
+    "apply_dlthub_wrappers",
+] 

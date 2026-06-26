@@ -597,7 +597,7 @@ def _crawl_subjects(
 
 
 import dlthub
-from dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from dlt_utils.dlthub_projects import apply_dlthub_wrappers
 
 @dlt.source(name="ireland_curriculum")
 def curriculum_source(

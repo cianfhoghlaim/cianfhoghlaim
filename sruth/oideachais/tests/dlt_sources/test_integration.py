@@ -97,7 +97,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_include_patterns(self) -> None:
         """Test URL matching with include patterns."""
-        from oideachais.dlt_sources.crawl_utils import URLMatcher
+        from dlt_sources.common.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             include_patterns=["https://curriculumonline.ie/Junior-Cycle/*"]
@@ -108,7 +108,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_exclude_patterns(self) -> None:
         """Test URL matching with exclude patterns."""
-        from oideachais.dlt_sources.crawl_utils import URLMatcher
+        from dlt_sources.common.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             exclude_patterns=["*.pdf", "*.zip"]
@@ -120,7 +120,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_domain_filtering(self) -> None:
         """Test URL matching with domain filters."""
-        from oideachais.dlt_sources.crawl_utils import URLMatcher
+        from dlt_sources.common.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             include_domains=["curriculumonline.ie", "ncca.ie"]
@@ -132,7 +132,7 @@ class TestCrawlUtils:
 
     def test_normalize_url(self) -> None:
         """Test URL normalization."""
-        from oideachais.dlt_sources.crawl_utils import normalize_url
+        from dlt_sources.common.crawl_utils import normalize_url
 
         # Remove fragment
         assert "anchor" not in normalize_url("https://example.com/page#anchor")
@@ -145,7 +145,7 @@ class TestCrawlUtils:
 
     def test_extract_links(self) -> None:
         """Test link extraction from HTML."""
-        from oideachais.dlt_sources.crawl_utils import extract_links
+        from dlt_sources.common.crawl_utils import extract_links
 
         html = """
         <html>
@@ -165,7 +165,7 @@ class TestCrawlUtils:
 
     def test_crawl_pattern_matching(self) -> None:
         """Test CrawlPattern URL matching."""
-        from oideachais.dlt_sources.crawl_utils import CrawlPattern, ExtractionStrategy
+        from dlt_sources.common.crawl_utils import CrawlPattern, ExtractionStrategy
 
         pattern = CrawlPattern(
             url_pattern="https://curriculumonline.ie/*/specifications/*",

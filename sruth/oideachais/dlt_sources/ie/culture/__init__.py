@@ -42,6 +42,7 @@ from dlt_sources.ie.culture.canuint_word_alignment import (  # noqa: F401
 )
 from dlt_sources.ie.culture.logainm import logainm_source  # noqa: F401
 from dlt_sources.ie.culture.tearma import tearma_source  # noqa: F401
+from dlt_sources.ie.culture.tearma_search import tearma_search_source  # noqa: F401
 from dlt_sources.ie.culture.ainm import ainm_source  # noqa: F401
 from dlt_sources.ie.culture.gaois_combined import gaois_combined_source  # noqa: F401
 
@@ -75,6 +76,7 @@ __all__ = [
     "hidden_heritages_source",
     "logainm_source",
     "tearma_source",
+    "tearma_search_source",
     "ainm_source",
     "gaois_combined_source",
     "local_education_documents_source",

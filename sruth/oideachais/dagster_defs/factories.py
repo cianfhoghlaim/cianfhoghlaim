@@ -322,7 +322,7 @@ def create_celtic_language_assets() -> list[dg.AssetsDefinition]:
         ),
         DLTAssetConfig(
             name="tearma_terminology",
-            source_module="data_platform.dlt_sources.tearma",
+            source_module="data_platform.dlt_sources.ie.culture.tearma",
             source_function="tearma_source",
             group_name="celtic_language",
             description="Téarma.ie Irish terminology database",
