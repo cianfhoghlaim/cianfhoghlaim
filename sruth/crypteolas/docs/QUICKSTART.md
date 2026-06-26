@@ -1,8 +1,8 @@
 # Crypteolas - GitHub Intelligence + DeFi Analytics
 
 Cross-domain crypto research platform combining GitHub development activity
-with DeFi metrics. This package lives at `tuatha/crypteolas/` after the
-[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-tuatha/).
+with DeFi metrics. This package lives at `sruth/tuatha/crypteolas/` after the
+[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-sruth/tuatha/).
 See [`../STATUS.md`](../STATUS.md) for the full dedup + shim + BAML rename
 history.
 
@@ -10,18 +10,18 @@ history.
 
 - Python 3.11+
 - Node.js 20+ (for the TanStack UI — the new frontend is at
-  `tuatha/apps/crypteolas_demo/`; this directory still has a `ui/` subdir
+  `sruth/tuatha/apps/crypteolas_demo/`; this directory still has a `ui/` subdir
   that is no longer the canonical frontend)
 - Docker & Docker Compose
 - uv (Python package manager)
-- Bun 1.3+ (for the new crypteolas_demo frontend at `tuatha/apps/crypteolas_demo/`)
+- Bun 1.3+ (for the new crypteolas_demo frontend at `sruth/tuatha/apps/crypteolas_demo/`)
 
 ## Quick Start
 
 ### 1. Start Infrastructure
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose -f compose.yaml up -d
 ```
 
@@ -36,17 +36,17 @@ This starts:
 Or for the dev overlay (hot-reload + Langfuse/FalkorDB integration):
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose -f compose.yaml -f compose.dev.yaml up -d
 ```
 
 ### 2. Install Dependencies
 
 ```bash
-# From the tuatha/ root (which resolves the crypteolas workspace member)
+# From the sruth/tuatha/ root (which resolves the crypteolas workspace member)
 cd tuatha && uv sync
 
-# TypeScript frontend (now lives at tuatha/apps/crypteolas demo/)
+# TypeScript frontend (now lives at sruth/tuatha/apps/crypteolas demo/)
 cd ../tuatha/apps/crypteolas demo && bun install
 ```
 
@@ -62,7 +62,7 @@ API available at: http://localhost:8001
 ### 4. Run the Frontend (TanStack Start stub)
 
 ```bash
-cd tuatha/apps/crypteolas demo
+cd sruth/tuatha/apps/crypteolas demo
 bun install
 bun run dev
 ```
@@ -76,7 +76,7 @@ FastAPI at :8001)
 ### 5. Run the Demo
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 uv run python -m demo.run_demo
 ```
 
@@ -111,11 +111,11 @@ uv run python -m crypteolas.mcp_server
 ## Testing
 
 ```bash
-# From the tuatha/ root
+# From the sruth/tuatha/ root
 cd tuatha
 
 # Run all crypteolas tests
-uv run pytest crypteolas/tests/ -v
+uv run pytest sruth/crypteolas/tests/ -v
 
 # Or via mise
 mise test:crypteolas

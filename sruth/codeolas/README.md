@@ -147,7 +147,7 @@ uv sync --all-extras
 uv run pytest tests/ -v
 
 # Run linting
-uv run ruff check codeolas/
+uv run ruff check sruth/codeolas/
 
 # Build package
 uv build

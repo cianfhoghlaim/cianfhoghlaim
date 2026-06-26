@@ -1,7 +1,7 @@
 # Tertiary (CAO + QQI + Apprenticeship) — Analysis Plan
 
 Cianfhoghlaim Oideachais — bilingual agentic platform. This analysis plan is
-for the `oideachais/notebooks/dashboards/tertiary.py` marimo notebook,
+for the `sruth/oideachais/notebooks/dashboards/tertiary.py` marimo notebook,
 which reads from the `oideachais.tertiary` Cognee dataset and the
 `tertiary_knowledge_graph` LanceDB table.
 
@@ -40,7 +40,7 @@ which reads from the `oideachais.tertiary` Cognee dataset and the
 - **BAML**: `baml_src/tertiary.baml` (CAOCourse, MatriculationRequirement,
   QqiFetAward, Apprenticeship, Programme, ApplicationTimeline,
   CAOGradeProfile, CoursePointsPrediction, MatriculationAudit)
-- **JSON manifest**: `oideachais/data_platform/subjects/hei.json` (13 HEIs
+- **JSON manifest**: `sruth/oideachais/data_platform/subjects/hei.json` (13 HEIs
   + 8 QQI awards)
 
 ## Chart Specs

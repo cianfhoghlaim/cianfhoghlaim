@@ -97,7 +97,7 @@ artifact of the deferred design.
 ## Anam Soulbound SVG (ERC-5192 mirror)
 
 Mirrors the on-chain logic in
-`tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol:1-231`:
+`sruth/tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol:1-231`:
 
 - **Sétanta** (juvenile): single ring + Anam center
 - **Cúchulainn** (warrior): 3 rings + spear
@@ -111,7 +111,7 @@ no on-chain transaction is needed (Anvil sidecar is local-only).
 
 The hackathon scope is **EN + Gaeilge** as the active pair, with 5 other
 Celtic languages (Manx, Scottish, Welsh, Cornish, Breton) as typed
-placeholders. The pattern is from `croilar/packages/i18n/`:
+placeholders. The pattern is from `sruth/croilar/packages/i18n/`:
 typed dict, no missing-key crashes, EN fallback with `(TODO: <lang>)` marker.
 
 ## Demo Recording

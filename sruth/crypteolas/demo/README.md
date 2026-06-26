@@ -1,14 +1,14 @@
 # Crypteolas Demo
 
 Standalone demonstration of the GitHub Intelligence + DeFi Analytics platform.
-Crypteolas lives at `tuatha/crypteolas/` after the
-[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-tuatha/).
+Crypteolas lives at `sruth/tuatha/crypteolas/` after the
+[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-sruth/tuatha/).
 See [`../STATUS.md`](../STATUS.md) for the full refactor history.
 
 ## Quick Start
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 python demo/run_demo.py
 ```
 
@@ -58,7 +58,7 @@ uv run uvicorn crypteolas.api.main:app --port 8001 --reload
 Then run the demo:
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 python demo/run_demo.py
 ```
 
@@ -81,7 +81,7 @@ cd tuatha
 uv run uvicorn crypteolas.api.main:app --port 8001 --reload
 
 # Terminal 2: Run demo
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 python demo/run_demo.py
 ```
 
@@ -121,7 +121,7 @@ uv run dagster dev -m crypteolas.definitions
 
 # Run tests
 cd tuatha
-uv run pytest crypteolas/tests/ -v
+uv run pytest sruth/crypteolas/tests/ -v
 ```
 
 ## API Endpoints
@@ -246,7 +246,7 @@ Agent:
 ## Dagster Assets
 
 The crypteolas code-location registers these assets in
-`tuatha/crypteolas/dagster_assets/`:
+`sruth/tuatha/crypteolas/dagster_assets/`:
 
 | Asset | Description | Schedule |
 |-------|-------------|----------|
@@ -271,9 +271,9 @@ Integrated observability stack:
 
 ## Related Projects
 
-- **códeolas** (`tuatha/codeolas/`) - Code analysis (imports crypteolas for intelligence)
-- **oideachas** (`oideachais/`) - Education curriculum processing
-- **tuath** (`tuatha/`) - Celtic Educational MMO game
+- **códeolas** (`sruth/tuatha/codeolas/`) - Code analysis (imports crypteolas for intelligence)
+- **oideachas** (`sruth/oideachais/`) - Education curriculum processing
+- **tuath** (`sruth/tuatha/`) - Celtic Educational MMO game
 
 ## Support
 

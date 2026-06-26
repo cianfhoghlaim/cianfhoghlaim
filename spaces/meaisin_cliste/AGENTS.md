@@ -26,7 +26,7 @@ openspec validate <change-id> --strict                      # MUST pass before c
 
 | Function | Source |
 |:--|:--|
-| `CompareCelticNations(topic_query, scope) -> CrossNationComparison` | `tuatha/baml_src/celtic_curriculum.baml` (canonical, promoted from this Space in 2026-06) |
+| `CompareCelticNations(topic_query, scope) -> CrossNationComparison` | `sruth/tuatha/baml_src/celtic_curriculum.baml` (canonical, promoted from this Space in 2026-06) |
 
 ### Priority openspec spec for meaisin_cliste
 
@@ -39,7 +39,7 @@ openspec validate <change-id> --strict                      # MUST pass before c
 3 themes for Celtic AI in one Gradio Space:
 
 - **Theme 1: Foclóir na Sé Náisiún** (Aer) — a 6-nation Celtic cognate dictionary
-  (~30 hand-picked seeds; production reads from `oideachais/language/dlt_sources/cognates.py` ~1,800 rows)
+  (~30 hand-picked seeds; production reads from `sruth/oideachais/language/dlt_sources/cognates.py` ~1,800 rows)
 - **Theme 2: Scoil ar an Léarscáil** (Uisce) — a 26-county school-density SVG
   map (1,629 schools; coloured by the Pobal HP Deprivation Index 2022)
 - **Theme 3: Curaclam Trasteorann** (Aer) — a cross-nation curriculum

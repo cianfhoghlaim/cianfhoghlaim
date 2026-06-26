@@ -1,4 +1,4 @@
-# Anam: Tuatha na nGaelscoil (anam_tuatha/) — Integration Space
+# Anam: Tuatha na nGaelscoil (anam_sruth/tuatha/) — Integration Space
 
 ## Priority quick reference
 
@@ -26,7 +26,7 @@ openspec validate <change-id> --strict                         # MUST pass befor
 
 | Function | Source |
 |:--|:--|
-| `GenerateExitCardQuestions(lesson_topic, subject, level, num_questions, curriculum_extract) -> ExitCardSet` | `tuatha/baml_src/player_assessment.baml` (canonical, promoted from this Space in 2026-06) |
+| `GenerateExitCardQuestions(lesson_topic, subject, level, num_questions, curriculum_extract) -> ExitCardSet` | `sruth/tuatha/baml_src/player_assessment.baml` (canonical, promoted from this Space in 2026-06) |
 
 ### Priority openspec spec for anam_tuatha
 
@@ -52,7 +52,7 @@ The integration Space. 5 Celtic elements + 2 cross-cutting features
 ## Architecture
 
 ```
-spaces/anam_tuatha/
+spaces/anam_sruth/tuatha/
 ├── app.py               # Gradio: 7-tab integration app
 ├── chemistry_visual.py  # 8-molecule CPK-coloured SVG renderer
 ├── gaelscribhneoir.py   # Fada/eclipsis/punctum Irish-text quality checker

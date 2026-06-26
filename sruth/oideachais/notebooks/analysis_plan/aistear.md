@@ -1,7 +1,7 @@
 # Aistear (Early Childhood) — Analysis Plan
 
 Cianfhoghlaim Oideachais — bilingual agentic platform. This analysis plan is
-for the `oideachais/notebooks/dashboards/aistear.py` marimo notebook, which
+for the `sruth/oideachais/notebooks/dashboards/aistear.py` marimo notebook, which
 reads from the `oideachais.aistear` Cognee dataset and the
 `aistear_knowledge_graph` LanceDB table.
 

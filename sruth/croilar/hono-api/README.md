@@ -1,4 +1,4 @@
-# `@croilar/hono-api` — BetterAuth + Hono
+# `@sruth/croilar/hono-api` — BetterAuth + Hono
 
 Self-hosted BetterAuth OIDC issuer for the Croílár multi-persona platform.
 

@@ -45,8 +45,8 @@ openspec archive <change-id> --yes                    # after deploy
 
 `meaisínfhoghlaim/` is the AI/ML services layer. It contains the agents,
 OCR/HTR models, Celtic-language data sources, and RAG evaluation harnesses
-that populate the lakehouse (`oideachais/`) and serve the inference surface
-of the consumer products (`croilar/`, `tuatha/`).
+that populate the lakehouse (`sruth/oideachais/`) and serve the inference surface
+of the consumer products (`sruth/croilar/`, `sruth/tuatha/`).
 
 Eight integrated components live here, ~15,000+ lines of Python. See
 [`README.md`](README.md) for the full component-by-component overview.
@@ -71,13 +71,13 @@ Eight integrated components live here, ~15,000+ lines of Python. See
   workspace member itself; importable only via the dev `PYTHONPATH` or
   through the `oideachais` workspace which lists it as a dep).
 - **All LLM calls** go through LiteLLM — never call `openai`/`anthropic`
-  SDKs directly. Configure routing in `oideachais/foinse/litellm_config.yaml`.
+  SDKs directly. Configure routing in `sruth/oideachais/foinse/litellm_config.yaml`.
 - **All Irish text** must preserve fadas, tironian, and punctum delens
   through the entire pipeline. Never downcast to ASCII.
-- **BAML schemas** live in `oideachais/scéimre/` (the Irish word for
+- **BAML schemas** live in `sruth/oideachais/scéimre/` (the Irish word for
   *schema*) — not here. Reuse them; don't redefine.
 - **Embeddings** are batched at minimum 100 per call (100× performance
-  difference vs unbatched — see `oideachais/README_eile.md` §"Embedding
+  difference vs unbatched — see `sruth/oideachais/README_eile.md` §"Embedding
   Batch Minimum").
 - **HNSW indexes** must be dropped before bulk inserts > 50 rows and
   recreated after.
@@ -99,7 +99,7 @@ RAG evaluation is run separately as a manual harness — see
 
 ```
 ┌─────────────────────┐   populates   ┌──────────────────┐
-│ meaisínfhoghlaim/   │ ────────────► │   oideachais/    │
+│ meaisínfhoghlaim/   │ ────────────► │   sruth/oideachais/    │
 │  (agents, OCR, ML)  │               │  (lakehouse +    │
 │                     │               │   DLT + Dagster) │
 └─────────────────────┘               └──────────────────┘
@@ -107,7 +107,7 @@ RAG evaluation is run separately as a manual harness — see
         │ exposes                              │ reads/writes
         ▼                                      ▼
 ┌─────────────────────┐               ┌──────────────────┐
-│      tuatha/        │               │      croilar/    │
+│      sruth/tuatha/        │               │      sruth/croilar/    │
 │  (crypteolas, etc)  │ ◄─────reads───┤ (persona-driven  │
 │                     │               │  consumer apps)  │
 └─────────────────────┘               └──────────────────┘
@@ -127,9 +127,9 @@ RAG evaluation is run separately as a manual harness — see
 ## Resources
 
 - Root [`AGENTS.md`](../../AGENTS.md) — monorepo agent protocols
-- `oideachais/README.md` — lakehouse data contracts this layer feeds
-- `oideachais/AGENTS.md` (if present) — DLT + Dagster conventions
-- `tuatha/README.md` — crypteolas/crypteolas_demo agent patterns
+- `sruth/oideachais/README.md` — lakehouse data contracts this layer feeds
+- `sruth/oideachais/AGENTS.md` (if present) — DLT + Dagster conventions
+- `sruth/tuatha/README.md` — sruth/crypteolas/crypteolas_demo agent patterns
 - `openspec/AGENTS.md` — change-management workflow
 
 ## Feedback loop (project → openspec → skill)

@@ -7,7 +7,7 @@
 > identically to local Garage S3 or to Cloudflare R2 + PlanetScale +
 > MotherDuck.
 
-> See also: [`oideachais/AGENTS.md`](AGENTS.md) — the developer-quick-reference
+> See also: [`sruth/oideachais/AGENTS.md`](AGENTS.md) — the developer-quick-reference
 > for the oideachais quadrant. The openspec specs that govern oideachais are
 > at:
 > - [`openspec/specs/oideachais-pipeline/spec.md`](../openspec/specs/oideachais-pipeline/spec.md)
@@ -23,7 +23,7 @@
 | Metric | Value |
 |:--|:--|
 | Dagster assets wired | **228 / 228** (211 from `lateralise-british-isles-domains` Phase 0.1 + 7 IE medicine/law Phase 3.1-3.2 + 10 UK medicine/law Phase 3.3) |
-| Test pass rate | **81 / 81** non-network tests pass in 3.10s (`oideachais/tests/`) |
+| Test pass rate | **81 / 81** non-network tests pass in 3.10s (`sruth/oideachais/tests/`) |
 | Container status | `cianfhoghlaim-oideachais-{frontend,api,dagster}` healthy on `bunchloch` (47h uptime, per `infrastructure/stacks/HEALTH_REPORT.md` Session 1) |
 | DuckLake layout | `s3://ducklake/oideachais/{domain}.{nation}.{entity}/{table}/*.parquet` (per `api/ducklake_reader.py:260-300`) |
 | Dagster code-location | `dagster_defs.definitions` (sole entry-point) loads 228 assets from the post-cleanup flat layout |
@@ -37,10 +37,10 @@ Full audit artifacts:
 
 | # | Issue | Tracked in | Severity |
 |--:|:--|:--|:--|
-| 1 | `pyproject.toml` line 47 comments out `sruth-shared[storage,graph,embeddings,observability]>=0.1.0` (the cross-quadrant `sruth/` workspace member is disabled). Any import of `from sruth.shared.http import ...` raises `ModuleNotFoundError`. | `oideachais/pyproject.toml` line 47; observed breaking `tuatha/dlt_sources/geospatial/gaeltacht_boundaries.py:21` | high — affects 1 known cross-quadrant import chain |
-| 2 | The legacy `data_platform.*` namespace is gone (post-cleanup commit `8484a6353`) but a `dagster_assets_model_conversion_skipped` warning is still emitted at module-load. Cosmetic; the test `tests/test_cross_namespace.py` asserts no real import of the banned namespace. | `oideachais/dagster_defs/definitions.py:118-122` (guarded try/except) | low — warning only, no functional impact |
-| 3 | SourceFactory's runtime constructors (`source`, `dlt_asset`, `dagster_asset`) raise `NotImplementedError` (Phase 5 wiring deferred). The 23 manual asset wrappers in `oideachais/dagster_defs/assets/{medicine,law}/{ie,en,ni,sct,wls}/*` bypass the SourceFactory and call the DLT sources directly. | GitHub issue #20 | medium — clean abstraction pending |
-| 4 | Frontend Vite dev overlay has a workaround `stripTsrIgnoredRouteExports` plugin to strip the upstream TanStack Start plugin's duplicate `import.meta.hot` injection. Remove once `@tanstack/start-plugin-core` ships a fix. | `oideachais/web/apps/web/vite.config.ts` (per `HEALTH_REPORT.md` Session 2) | low — dev-only, prod unaffected |
+| 1 | `pyproject.toml` line 47 comments out `sruth-shared[storage,graph,embeddings,observability]>=0.1.0` (the cross-quadrant `sruth/` workspace member is disabled). Any import of `from sruth.shared.http import ...` raises `ModuleNotFoundError`. | `sruth/oideachais/pyproject.toml` line 47; observed breaking `sruth/tuatha/dlt_sources/geospatial/gaeltacht_boundaries.py:21` | high — affects 1 known cross-quadrant import chain |
+| 2 | The legacy `data_platform.*` namespace is gone (post-cleanup commit `8484a6353`) but a `dagster_assets_model_conversion_skipped` warning is still emitted at module-load. Cosmetic; the test `tests/test_cross_namespace.py` asserts no real import of the banned namespace. | `sruth/oideachais/dagster_defs/definitions.py:118-122` (guarded try/except) | low — warning only, no functional impact |
+| 3 | SourceFactory's runtime constructors (`source`, `dlt_asset`, `dagster_asset`) raise `NotImplementedError` (Phase 5 wiring deferred). The 23 manual asset wrappers in `sruth/oideachais/dagster_defs/assets/{medicine,law}/{ie,en,ni,sct,wls}/*` bypass the SourceFactory and call the DLT sources directly. | GitHub issue #20 | medium — clean abstraction pending |
+| 4 | Frontend Vite dev overlay has a workaround `stripTsrIgnoredRouteExports` plugin to strip the upstream TanStack Start plugin's duplicate `import.meta.hot` injection. Remove once `@tanstack/start-plugin-core` ships a fix. | `sruth/oideachais/web/apps/web/vite.config.ts` (per `HEALTH_REPORT.md` Session 2) | low — dev-only, prod unaffected |
 | 5 | 3 frontend routes return 404 (`/exams`, `/lakehouse`, `/runs`) and 1 returns 500 (`/en/matriculation-auditor`, missing `../utils/orpc` import). Pre-existing dead links. | per `HEALTH_REPORT.md` Session 2 route audit | medium — should be fixed or sidebar links removed |
 | 6 | Crown-dependency medicine + law DLT sources (IOM / JEY / GGY) are not yet implemented. The lateralise change wired the 4 IE medicine + 3 IE law + 6 UK medicine + 4 UK law sources, but left crown-deps as stubs. | GitHub issue #19 | medium — follow-up change |
 
@@ -56,10 +56,10 @@ Full audit artifacts:
 | End-to-end pipeline smoke test | `notebooks/pipeline_e2e_test.py` |
 | Work with raw curriculum PDFs | `data_platform/dlt_sources/ireland/pdf_downloader.py` |
 | Add an MCP server | `mcp/` (filesystem, context7, mcpo) |
-| Inspect the consumer-facing web app | `oideachais/web/` |
+| Inspect the consumer-facing web app | `sruth/oideachais/web/` |
 | Operate the operational dashboard | `dashboard/` (separate Vite app) |
 | Deploy a new stack | `infrastructure/stacks/` (lakehouse, dagster, liteLLM, etc.) |
-| Run LLM calls (BAML extraction) | `oideachais/data_platform/baml_src/` + `baml_client/` |
+| Run LLM calls (BAML extraction) | `sruth/oideachais/data_platform/baml_src/` + `baml_client/` |
 | Understand the data contracts | Section 2 below |
 | Add an agent or evaluate RAG quality | `meaisínfhoghlaim/` (sister subproject) |
 | Configure secrets | `.infisical.env` + `bun run secrets:init` |
@@ -68,8 +68,8 @@ Full audit artifacts:
 
 This README documents the engine itself: data contracts, asset topology, DLT
 patterns, environment variables, and the conventions agents must follow when
-extending it. For the consumer-facing web app see `oideachais/web/`; for the
-operations notebooks see `oideachais/notebooks/`; for the storage stack
+extending it. For the consumer-facing web app see `sruth/oideachais/web/`; for the
+operations notebooks see `sruth/oideachais/notebooks/`; for the storage stack
 implementation see `infrastructure/stacks/lakehouse/`.
 
 ---
@@ -134,7 +134,7 @@ and consumed by Dagster assets, marimo notebooks, and the web app.
 
 ## 3. Dagster Asset Topology
 
-Dagster assets live in `oideachais/data_platform/dagster_defs/assets/`. The
+Dagster assets live in `sruth/oideachais/data_platform/dagster_defs/assets/`. The
 combined `defs` is constructed in `definitions.py` and exposed via
 `DAGSTER_HOME=. dagster dev -m dagster.definitions`.
 
@@ -255,7 +255,7 @@ directory hooks or Locket sidecars. **Never** hand-edit `.env` files.
 
 ## 6. Skill & Notebook Inventory
 
-### Notebooks (`oideachais/notebooks/`)
+### Notebooks (`sruth/oideachais/notebooks/`)
 
 | Notebook | Purpose | Tabs |
 |----------|---------|------|
@@ -327,7 +327,7 @@ The complete storage stack implementation lives in
 - `blueprint.yaml` — Pangolin ingress (iceberg/lance/ducklake S3 endpoints, private
   Lakekeeper + Lance API)
 - `secrets.env` — Locket/Infisical injection template
-- `cross_flow_client.py` — Unified search across codeolas/oideachas/crypteolas
+- `cross_flow_client.py` — Unified search across sruth/codeolas/oideachas/crypteolas
 - `lance-sidecar/main.py` — FastAPI that registers Lance tables as Iceberg
   `table_type=lance` properties in Lakekeeper
 - `notebooks/lakehouse_pipeline.py` — Marimo demo of the full stack
@@ -399,7 +399,7 @@ The LiteLLM proxy (`infrastructure/stacks/litellm/`) provides:
 - **Spend caps** in the gateway config (per-model rate limits, monthly budget)
 - **BAML clients** (`baml_src/clients.baml`) that point all functions to
   `client LiteLLM` — no more `client Claude`, no direct Anthropic SDK
-- **Resource**: `oideachais/data_platform/dagster_defs/resources.py`
+- **Resource**: `sruth/oideachais/data_platform/dagster_defs/resources.py`
   defines `LiteLLMResource` so any Dagster asset can call the gateway
   uniformly
 
@@ -500,8 +500,8 @@ If you are extending these pipelines, **assume the `data-engineer` persona**.
 - `infrastructure/AGENTS.md` — Infrastructure stacks and Komodo/Pangolin
 - `infrastructure/stacks/lakehouse/` — Lakehouse source of truth
 - `infrastructure/browser/` — Stagehand + Playwright + Browserbase
-- `oideachais/notebooks/mission_control.py` — Operational dashboard
-- `oideachais/web/` — TanStack Start + CopilotKit consumer app
+- `sruth/oideachais/notebooks/mission_control.py` — Operational dashboard
+- `sruth/oideachais/web/` — TanStack Start + CopilotKit consumer app
 - `.agents/skills/` — Skill library (dlt, dagster, marimo, motherduck, etc.)
 
 ---
@@ -538,7 +538,7 @@ factory), 11.4 (concurrency limits), 11.5 (`USE_LOCAL_SCRAPES`),
 
 ## 13. Adding a New Marimo Notebook (Agent Recipe)
 
-1. **Create** the file under `oideachais/notebooks/`.
+1. **Create** the file under `sruth/oideachais/notebooks/`.
 2. **Use `@app.cell`** for every block; **never** use `return` (marimo
    cells are top-level).
 3. **Prefix cell-private variables** with `_` (e.g. `_con`, `_df`, `_err`)
@@ -576,7 +576,7 @@ of an `openspec/changes/agui-exam-visualiser/` change bundle.
 
 ## 15. TanStack Start Frontend Migration (Phase B)
 
-The `oideachais/web/` directory has been migrated from the previous
+The `sruth/oideachais/web/` directory has been migrated from the previous
 Vite-only setup to TanStack Start (Vinxi + TanStack Router + SSR + server
 functions). The new layout follows the canonical TanStack Start template:
 
@@ -708,8 +708,8 @@ The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
 
 ## Common workflows
 
-1. **Add a new Dagster asset** — `oideachais/dagster_defs/assets/<area>/<asset>.py` + register in `oideachais/definitions.py`
-2. **Add a new DLT source** — `oideachais/dlt_sources/domains/<area>/<nation>/<source>.py`
+1. **Add a new Dagster asset** — `sruth/oideachais/dagster_defs/assets/<area>/<asset>.py` + register in `sruth/oideachais/definitions.py`
+2. **Add a new DLT source** — `sruth/oideachais/dlt_sources/domains/<area>/<nation>/<source>.py`
 3. **Add a new BAML extraction** — `baml_src/<name>.baml` + `bun run baml-cli compile`
-4. **Add a new CocoIndex v1 App** — `oideachais/cocoindex_flows/<app>.py` (see `.agents/skills/oideachais-cocoindex-v1/`)
-5. **Add a new leabharlann source** — `oideachais/dlt_sources/leabharlann/<source>.py`
+4. **Add a new CocoIndex v1 App** — `sruth/oideachais/cocoindex_flows/<app>.py` (see `.agents/skills/oideachais-cocoindex-v1/`)
+5. **Add a new leabharlann source** — `sruth/oideachais/dlt_sources/leabharlann/<source>.py`

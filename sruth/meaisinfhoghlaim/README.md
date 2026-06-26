@@ -2,11 +2,11 @@
 
 > Irish: *machine learning*. The AI/ML quadrant of the Cianfhoghlaim stack —
 > specialised agents, OCR, Celtic-language data, and ML pipelines that feed
-> the curriculum knowledge graph consumed by `oideachais/`, the dashboards in
-> `croilar/apps/portal/`, and the public-facing Marimo notebooks in
-> `croilar/notebooks/`.
+> the curriculum knowledge graph consumed by `sruth/oideachais/`, the dashboards in
+> `sruth/croilar/apps/portal/`, and the public-facing Marimo notebooks in
+> `sruth/croilar/notebooks/`.
 
-> See also: [`meaisinfhoghlaim/AGENTS.md`](AGENTS.md) — the developer-quick-reference.
+> See also: [`sruth/meaisinfhoghlaim/AGENTS.md`](AGENTS.md) — the developer-quick-reference.
 > The openspec specs are at:
 > - [`openspec/specs/meaisinfhoghlaim-platform/spec.md`](../openspec/specs/meaisinfhoghlaim-platform/spec.md)
 > - [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](../openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md)
@@ -28,14 +28,14 @@
 
 | # | Issue | Tracked in | Severity |
 |--:|:--|:--|:--|
-| 1 | Most sub-packages are stubs. The 4 heartbeats added in commit `6afe63dac` (Phase 0.2 of `lateralise-british-isles-domains`) are the first real assets. The 8 components (agents / ocr / language / alignment / evaluation / quality / catalog / scripts) advertised in the README are NOT all implemented; the dir layout exists but most files are placeholders. | `meaisinfhoghlaim/{agents,ocr,language,alignment,evaluation,quality,catalog,scripts,services}/` | high — most of the quadrant is aspirational |
-| 2 | `pyproject.toml` has NO `[tool.uv.sources]` block — sibling workspace members (e.g. `oideachais`, `tuatha`, `croilar`) are not declared as local-path dependencies. Any cross-quadrant import (e.g. `from sruth.oideachais.dagster_defs import ...`) will fail with `ModuleNotFoundError` once the venv is installed outside the repo root. | `meaisinfhoghlaim/pyproject.toml` (no `[tool.uv.sources]`) | high — blocks the AI/ML quadrant from interoperating with the lakehouse |
+| 1 | Most sub-packages are stubs. The 4 heartbeats added in commit `6afe63dac` (Phase 0.2 of `lateralise-british-isles-domains`) are the first real assets. The 8 components (agents / ocr / language / alignment / evaluation / quality / catalog / scripts) advertised in the README are NOT all implemented; the dir layout exists but most files are placeholders. | `sruth/meaisinfhoghlaim/{agents,ocr,language,alignment,evaluation,quality,catalog,scripts,services}/` | high — most of the quadrant is aspirational |
+| 2 | `pyproject.toml` has NO `[tool.uv.sources]` block — sibling workspace members (e.g. `oideachais`, `tuatha`, `croilar`) are not declared as local-path dependencies. Any cross-quadrant import (e.g. `from sruth.oideachais.dagster_defs import ...`) will fail with `ModuleNotFoundError` once the venv is installed outside the repo root. | `sruth/meaisinfhoghlaim/pyproject.toml` (no `[tool.uv.sources]`) | high — blocks the AI/ML quadrant from interoperating with the lakehouse |
 | 3 | The 6 Celtic-language subdirs (`brezhoneg/`, `cymraeg/`, `gaeilge/`, `gaelg/`, `gaidhlig/`, `kernowek/`) have the same stub problem — they exist for `pyproject` layout symmetry but the actual language resources, training data, and evaluation harnesses are not yet built. | the 6 subdirs themselves | medium — Phase 1 of meaisínfhoghlaim's roadmap |
-| 4 | No dagster code-location for production. The `dagster_defs/` dir has 4 heartbeat assets but no `@source_factory` integration (the `SourceFactory` runtime constructors are still `NotImplementedError` stubs — see oideachais Known issue #3). | `meaisinfhoghlaim/dagster_defs/assets/healthchecks.py` | medium — depends on oideachais issue |
-| 5 | The `BAML rename baml_src → scéimre` change promised in `meaisinfhoghlaim/AGENTS.md` was deferred per the `lateralise-british-isles-domains` decision. The `baml_src/` import path is still canonical. | the AGENTS.md + the deferral in the lateralise proposal | low — deferred explicitly |
-| 6 | **The `sruth.*` import debt in the meaisinfhoghlaim source tree** (the predecessor `bonneagar` project's Python package) has been audited (round 8 of the multi-quadrant refactor plan). The audit confirms **0 active `sruth.*` imports** in the live state. The 5 language DLT sources + the 4 alignment modules + the LLM router + the RAGAS runner all import from canonical homes (`oideachais.*` or `meaisinfhoghlaim.*`). This issue is RESOLVED. | `meaisinfhoghlaim/{language/gaeilge,alignment,pipelines,evaluation,quality,agents}/` | RESOLVED (round 8 audit) |
+| 4 | No dagster code-location for production. The `dagster_defs/` dir has 4 heartbeat assets but no `@source_factory` integration (the `SourceFactory` runtime constructors are still `NotImplementedError` stubs — see oideachais Known issue #3). | `sruth/meaisinfhoghlaim/dagster_defs/assets/healthchecks.py` | medium — depends on oideachais issue |
+| 5 | The `BAML rename baml_src → scéimre` change promised in `sruth/meaisinfhoghlaim/AGENTS.md` was deferred per the `lateralise-british-isles-domains` decision. The `baml_src/` import path is still canonical. | the AGENTS.md + the deferral in the lateralise proposal | low — deferred explicitly |
+| 6 | **The `sruth.*` import debt in the meaisinfhoghlaim source tree** (the predecessor `bonneagar` project's Python package) has been audited (round 8 of the multi-quadrant refactor plan). The audit confirms **0 active `sruth.*` imports** in the live state. The 5 language DLT sources + the 4 alignment modules + the LLM router + the RAGAS runner all import from canonical homes (`oideachais.*` or `meaisinfhoghlaim.*`). This issue is RESOLVED. | `sruth/meaisinfhoghlaim/{language/gaeilge,alignment,pipelines,evaluation,quality,agents}/` | RESOLVED (round 8 audit) |
 Meaisínfhoghlaim is the **AI services layer** of the monorepo. Where
-`oideachais/` is the lakehouse and `croilar/` is the multi-persona platform,
+`sruth/oideachais/` is the lakehouse and `sruth/croilar/` is the multi-persona platform,
 Meaisínfhoghlaim is what populates the lakehouse with structured data and
 serves the live inference surface.
 
@@ -337,8 +337,8 @@ auth — clients must be auth'd via the upstream gateway.
 
 | Subsystem | How it integrates |
 |:--|:--|
-| **oideachais/** | DLT sources write to the shared DuckLake; Dagster assets import from `language.*` and `agents.tools.*`; CocoIndex flows consume BAML extracts from here |
-| **croilar/** | The croilar `portal/` reads RAGAS evaluation runs from MLflow; `notebooks/aleyum/` and `notebooks/cianfhoghlaim/` consume DLT outputs; the `motherduck_sync` Dagster asset ships tables to MotherDuck for the Dive iframe |
+| **sruth/oideachais/** | DLT sources write to the shared DuckLake; Dagster assets import from `language.*` and `agents.tools.*`; CocoIndex flows consume BAML extracts from here |
+| **sruth/croilar/** | The croilar `portal/` reads RAGAS evaluation runs from MLflow; `notebooks/aleyum/` and `notebooks/cianfhoghlaim/` consume DLT outputs; the `motherduck_sync` Dagster asset ships tables to MotherDuck for the Dive iframe |
 | **infrastructure/** | Uses the shared `lakehouse_lakehouse` Docker network; llama-swap connects to the LiteLLM gateway; all secrets flow through Infisical → Locket |
 | **código infra** | DLT sources import from `sruth.oideachais.*`; evaluation references oideachais RAG setup; pipelines reference Dagster orchestration, DLT ingestion, LanceDB storage |
 
@@ -371,10 +371,10 @@ uv run pytest tests/ -v
 2. The source should respect `USE_LOCAL_SCRAPES=true` and route to
    `stedding/dev/eile/ingest_queue/<source>/` if the flag is set.
 3. Export the source as a `@dlt.source` decorated function.
-4. Add the source to `oideachais/data_platform/dlt_sources/` (the
+4. Add the source to `sruth/oideachais/data_platform/dlt_sources/` (the
    pipeline registration).
 5. Add the source to `catalog/sources.yaml`.
-6. Add a Dagster asset in `oideachais/data_platform/dagster_defs/assets/`
+6. Add a Dagster asset in `sruth/oideachais/data_platform/dagster_defs/assets/`
    that materialises the source.
 
 ### 7.4 Adding a new agent
@@ -553,13 +553,13 @@ The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
 |:--|:--|:--|
 | llama-swap returns 502 | The model is not loaded | `llama-swap --model <model-id>` |
 | MLX OOMs on a 7B model | The unified memory is full | Switch to a 3B model or use llama-swap |
-| OCR returns `low_confidence` | The model is not the right one | Use `meaisinfhoghlaim/ocr/model_registry.py` to pick |
+| OCR returns `low_confidence` | The model is not the right one | Use `sruth/meaisinfhoghlaim/ocr/model_registry.py` to pick |
 | LiteLLM falls back to a 3rd tier | The primary + secondary are down | Check the OpenCode Go API key |
 
 ## Common workflows
 
-1. **Add a new model** — `meaisinfhoghlaim/registry/<model>.py` (see `.agents/skills/kcg-ml-models/`)
-2. **Add a new OCR model** — `meaisinfhoghlaim/ocr/model_registry.py` (10 models × 6 backends)
-3. **Add a new agent** — `meaisinfhoghlaim/agents/<agent>.py` (see `.agents/skills/agent-fleet-orchestration/`)
-4. **Add a new finetune** — `meaisinfhoghlaim/finetune/<task>.py` (Unsloth + TRL)
-5. **Convert a model to GGUF** — `meaisinfhoghlaim/gguf/convert.py`
+1. **Add a new model** — `sruth/meaisinfhoghlaim/registry/<model>.py` (see `.agents/skills/kcg-ml-models/`)
+2. **Add a new OCR model** — `sruth/meaisinfhoghlaim/ocr/model_registry.py` (10 models × 6 backends)
+3. **Add a new agent** — `sruth/meaisinfhoghlaim/agents/<agent>.py` (see `.agents/skills/agent-fleet-orchestration/`)
+4. **Add a new finetune** — `sruth/meaisinfhoghlaim/finetune/<task>.py` (Unsloth + TRL)
+5. **Convert a model to GGUF** — `sruth/meaisinfhoghlaim/gguf/convert.py`

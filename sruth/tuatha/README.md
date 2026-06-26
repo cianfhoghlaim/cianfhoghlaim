@@ -14,7 +14,7 @@ ledger (skill-tree badges, not a financial token) — all consolidated into the
 > pedagogical framework is documented in
 > [`.agents/skills/british-isles-formative-assessment/`](../.agents/skills/british-isles-formative-assessment/SKILL.md).
 
-> See also: [`tuatha/AGENTS.md`](AGENTS.md) — the developer-quick-reference
+> See also: [`sruth/tuatha/AGENTS.md`](AGENTS.md) — the developer-quick-reference
 > for the tuatha quadrant. The openspec spec is at
 > [`openspec/specs/tuatha-platform/spec.md`](../openspec/specs/tuatha-platform/spec.md).
 
@@ -26,11 +26,11 @@ ledger (skill-tree badges, not a financial token) — all consolidated into the
 |:--|:--|
 | Workspace name | `tuath` (uv) — directory preserves the fada for tooling compatibility |
 | Dagster code-location | Loads in **both** pytest and production as of 2026-06-15 (issue #18 closed). 23 assets wired. |
-| DLT sources | `tuatha/dlt_sources/` has 7+ sources (geospatial gaeltacht_boundaries, leaving_cert, mythology, …) |
-| Frontend / MMO | `tuatha/game/` (Babylon.js client), `tuatha/ui/`, `tuatha/wow/` (legacy MMO reference), `tuatha/fibo_generation/`, `tuatha/asset_generation/` |
-| Crypto / SIWE | `siwe`, `eth-account`, `web3` declared in `pyproject.toml`; x402 micropayments referenced in `tuatha/crypteolas/` |
-| Rust crates | `tuatha/crates/{services, solana, stdb-modules, wgpu}` |
-| Container coupling | `tuatha/crypteolas/` + `tuatha/crypteolas_demo` + `tuatha/codeolas` registered in root `dg.toml`; Komodo stack at `infrastructure/komodo/stacks/croilar-bunchloch.toml` orchestrates the persona apps |
+| DLT sources | `sruth/tuatha/dlt_sources/` has 7+ sources (geospatial gaeltacht_boundaries, leaving_cert, mythology, …) |
+| Frontend / MMO | `sruth/tuatha/game/` (Babylon.js client), `sruth/tuatha/ui/`, `sruth/tuatha/wow/` (legacy MMO reference), `sruth/tuatha/fibo_generation/`, `sruth/tuatha/asset_generation/` |
+| Crypto / SIWE | `siwe`, `eth-account`, `web3` declared in `pyproject.toml`; x402 micropayments referenced in `sruth/tuatha/crypteolas/` |
+| Rust crates | `sruth/tuatha/crates/{services, solana, stdb-modules, wgpu}` |
+| Container coupling | `sruth/tuatha/crypteolas/` + `sruth/tuatha/crypteolas_demo` + `sruth/tuatha/codeolas` registered in root `dg.toml`; Komodo stack at `infrastructure/komodo/stacks/croilar-bunchloch.toml` orchestrates the persona apps |
 
 Full audit artifacts (deferred):
 
@@ -41,14 +41,14 @@ Full audit artifacts (deferred):
 
 | # | Issue | Tracked in | Severity |
 |--:|:--|:--|:--|
-| 1 | **RESOLVED 2026-06-15.** The `sruth.shared.http` import that broke the dagster code-location (per issue #18) is now shimmed at `tuatha/dlt_sources/geospatial/_sruth_shim.py`. The shim tries the real `sruth.shared.http` first (in case a future commit installs the sruth package); falls back to a local stub that returns empty responses. The 3 geospatial DLT source modules now import from the shim instead of from sruth. The dagster code-location loads in production with 23 assets wired. | GitHub issue #18 | **closed** |
-| 2 | `tuatha/dlt_utils/destinations.py` is a defensive shim that re-exports oideachais' namespaced destinations (Phase 2.3 of `lateralise-british-isles-domains`). It falls back to a local copy of the pre-Phase-2.3 implementation if `oideachais` is not on sys.path. Works in pytest (the oideachais workspace member is installed); behaviour in production is the local fallback. The local-fallback code is duplicated and should be deleted once oideachais is a declared workspace dep. | `tuatha/dlt_utils/destinations.py` (75 lines, ~30 of which are the local fallback) | medium — works, but adds maintenance |
-| 3 | Pre-existing packaging issue: `tuatha/__init__.py` does not exist, and `tuatha/pyproject.toml` declares only sub-packages (`dlt_sources`, `dagster_assets`, etc.) under `[tool.hatch.build.targets.wheel].packages`. The `tuath` package itself is not importable. `tuatha/tests/conftest.py:8` does `from tuath.api.main import app` which fails. This blocks pytest collection (the conftest can't even load). Workaround: run `pytest --noconftest`. The proper fix mirrors issue #17 (add `__init__.py`, declare `packages = ["."]`, post-install fix-pth). Same blast radius as the croilar fix. | follow-up to issue #18 | medium — test infrastructure broken |
-| 4 | MMO / Babylon.js side (`tuatha/game/`, `tuatha/ui/`) is reference-quality — no live container or Komodo stack for the game client. Operates as a build target, not a deploy target. | `tuatha/game/` has no matching `infrastructure/stacks/tuatha-game/` | low — by design (out of the 9 user-named stacks) |
+| 1 | **RESOLVED 2026-06-15.** The `sruth.shared.http` import that broke the dagster code-location (per issue #18) is now shimmed at `sruth/tuatha/dlt_sources/geospatial/_sruth_shim.py`. The shim tries the real `sruth.shared.http` first (in case a future commit installs the sruth package); falls back to a local stub that returns empty responses. The 3 geospatial DLT source modules now import from the shim instead of from sruth. The dagster code-location loads in production with 23 assets wired. | GitHub issue #18 | **closed** |
+| 2 | `sruth/tuatha/dlt_utils/destinations.py` is a defensive shim that re-exports oideachais' namespaced destinations (Phase 2.3 of `lateralise-british-isles-domains`). It falls back to a local copy of the pre-Phase-2.3 implementation if `oideachais` is not on sys.path. Works in pytest (the oideachais workspace member is installed); behaviour in production is the local fallback. The local-fallback code is duplicated and should be deleted once oideachais is a declared workspace dep. | `sruth/tuatha/dlt_utils/destinations.py` (75 lines, ~30 of which are the local fallback) | medium — works, but adds maintenance |
+| 3 | Pre-existing packaging issue: `sruth/tuatha/__init__.py` does not exist, and `sruth/tuatha/pyproject.toml` declares only sub-packages (`dlt_sources`, `dagster_assets`, etc.) under `[tool.hatch.build.targets.wheel].packages`. The `tuath` package itself is not importable. `sruth/tuatha/tests/conftest.py:8` does `from tuath.api.main import app` which fails. This blocks pytest collection (the conftest can't even load). Workaround: run `pytest --noconftest`. The proper fix mirrors issue #17 (add `__init__.py`, declare `packages = ["."]`, post-install fix-pth). Same blast radius as the croilar fix. | follow-up to issue #18 | medium — test infrastructure broken |
+| 4 | MMO / Babylon.js side (`sruth/tuatha/game/`, `sruth/tuatha/ui/`) is reference-quality — no live container or Komodo stack for the game client. Operates as a build target, not a deploy target. | `sruth/tuatha/game/` has no matching `infrastructure/stacks/tuatha-game/` | low — by design (out of the 9 user-named stacks) |
 
 ## What This Is
 
-The `tuatha/` sub-package is the Celtic Educational MMO half of the Cianfhoghlaim
+The `sruth/tuatha/` sub-package is the Celtic Educational MMO half of the Cianfhoghlaim
 monorepo, plus three consolidated Python/TypeScript platforms that were
 previously scattered at the repo root. Every sub-package lives inside the single
 `tuath` uv workspace member and shares one `uv.lock`, one Dagster code-location
@@ -59,15 +59,15 @@ Four cooperating streams:
 | Stream | What it does | Stack |
 |:--|:--|:--|
 | **Celtic Educational MMO** (`agents/`, `api/`, `api-rs/`, `baml_src/`, `cocoindex_flows/`, `dagster_assets/`, `dlt_sources/`, `dlt_utils/`, `fibo_generation/`, `game/`, `knowledge_graph/`, `storage/`, `ui/`, `crates/`, `notebooks/`) | Curriculum + mythology + asset generation + Babylon.js game client + Rust+SpacetimeDB backend + the dagster code-location for the Celtic MMO | Babylon.js + Vinxi + Dagster + DLT + BAML + SpacetimeDB + x402 + CopilotKit |
-| **codeolas** (`tuatha/codeolas/`) | Publishable code-analysis library: semantic search over a Python codebase, knowledge graph of AST relationships, `.arch.md` generation, MCP server for Claude Code integration, Dagster assets for code indexing | LanceDB + tree-sitter + BGE-M3 + Dagster + MCP + langfuse + ddtrace |
-| **crypteolas** (`tuatha/crypteolas/`) | GitHub data ingestion (issues, PRs, commits, workflows), DeFi protocol research (TVL, funding rates, yields), knowledge graph construction (Cognee + Graphiti + Memgraph + FalkorDB), interactive marimo notebooks, AgentOS + FastAPI | DLT + CocoIndex + Cognee + Graphiti + Memgraph + FalkorDB + FastAPI + AgentOS + marimo |
-| **apps/crypteolas_demo** (`tuatha/apps/crypteolas_demo/`) | Standalone demo app: TanStack Start frontend (DeFi analytics + AI chat + x402 payments), Agno-based crypto agent team, MCP server for crypto analytics, Gradio UI for FIBO/EduVision curriculum, BAML schemas, Foundry Solidity contracts | TanStack Start + Bun + Agno + Gradio + BAML + Foundry + LiteLLM |
+| **codeolas** (`sruth/tuatha/codeolas/`) | Publishable code-analysis library: semantic search over a Python codebase, knowledge graph of AST relationships, `.arch.md` generation, MCP server for Claude Code integration, Dagster assets for code indexing | LanceDB + tree-sitter + BGE-M3 + Dagster + MCP + langfuse + ddtrace |
+| **crypteolas** (`sruth/tuatha/crypteolas/`) | GitHub data ingestion (issues, PRs, commits, workflows), DeFi protocol research (TVL, funding rates, yields), knowledge graph construction (Cognee + Graphiti + Memgraph + FalkorDB), interactive marimo notebooks, AgentOS + FastAPI | DLT + CocoIndex + Cognee + Graphiti + Memgraph + FalkorDB + FastAPI + AgentOS + marimo |
+| **apps/crypteolas_demo** (`sruth/tuatha/apps/crypteolas_demo/`) | Standalone demo app: TanStack Start frontend (DeFi analytics + AI chat + x402 payments), Agno-based crypto agent team, MCP server for crypto analytics, Gradio UI for FIBO/EduVision curriculum, BAML schemas, Foundry Solidity contracts | TanStack Start + Bun + Agno + Gradio + BAML + Foundry + LiteLLM |
 
 The **3-way interaction** that ties them together:
 
 ```
 ┌─────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-│  codeolas/          │    │  crypteolas/        │    │  apps/crypteolas    │
+│  sruth/codeolas/          │    │  sruth/crypteolas/        │    │  apps/crypteolas    │
 │  ─────────────      │    │  ─────────────────   │    │  demo/              │
 │  CodebaseAnalyzer   │◀──▶│  defs = Definitions  │◀──▶│  CryptoResearchAgent│
 │  Code chunks        │    │  assets[]:           │    │  MCP tools          │
@@ -82,7 +82,7 @@ The **3-way interaction** that ties them together:
                          │                        │
                          ▼                        ▼
               ┌──────────────────────────────────────────────────┐
-              │  Dagster code-location dispatcher (tuatha/dg.toml)│
+              │  Dagster code-location dispatcher (sruth/tuatha/dg.toml)│
               │  - location: tuath                                │
               │  - location: crypteolas                          │
               │  - location: crypteolas_demo                      │
@@ -98,17 +98,17 @@ The **3-way interaction** that ties them together:
               └──────────────────────────────────────────────────┘
 ```
 
-- `codeolas/` is the **code-intelligence backbone** — it indexes the rest of the
+- `sruth/codeolas/` is the **code-intelligence backbone** — it indexes the rest of the
   monorepo, surfaces semantic search results through the MCP server, and feeds
   the `.arch.md` docs that the other agents read.
-- `crypteolas/` is the **data-intelligence backbone** — it ingests the external
+- `sruth/crypteolas/` is the **data-intelligence backbone** — it ingests the external
   world (GitHub repos, DeFiLlama, CoinGecko, Binance, Aave/Pendle subgraphs)
   and surfaces the unified Defi+GitHub knowledge graph to the crypteolas
   agents and the marimo notebooks.
 - `apps/crypteolas_demo/` is the **user-facing shell** that exposes the
   crypteolas data through a TanStack Start dashboard, an Agno multi-agent
   chat, and a Gradio FIBO curriculum-to-asset app. The TanStack frontend is
-  currently a buildable shell of stubs (see `tuatha/apps/crypteolas_demo/STATUS.md`).
+  currently a buildable shell of stubs (see `sruth/tuatha/apps/crypteolas_demo/STATUS.md`).
 - All four streams route through the same `tuath` Dagster code-location
   dispatcher so the three code-locations appear in a single UI.
 
@@ -139,11 +139,11 @@ cd tuatha && uv run uvicorn crypteolas.api.main:app --port 8001
 cd tuatha && uv run uvicorn crypteolas.agent_os.main:app --port 7771
 
 # 6. Start the crypteolas demo frontend (TanStack Start stub)
-cd tuatha/apps/crypteolas_demo && bun install && bun run dev
+cd sruth/tuatha/apps/crypteolas_demo && bun install && bun run dev
 # → http://localhost:3000 (proxies /api → localhost:8001)
 
 # 7. Start the crypteolas demo Gradio UI (FIBO image gen)
-cd tuatha/apps/crypteolas_demo && uv run python -m ui.app
+cd sruth/tuatha/apps/crypteolas_demo && uv run python -m ui.app
 
 # 8. CLI: try the códeolas code-analysis CLI
 cd tuatha && uv run codeolas --help
@@ -156,10 +156,10 @@ cd tuatha && uv run codeolas-mcp
 cd tuatha && uv run python -m crypteolas.mcp_server
 
 # 11. Run the códeolas test suite
-cd tuatha && uv run pytest codeolas/tests/ -v
+cd tuatha && uv run pytest sruth/codeolas/tests/ -v
 
 # 12. Run the crypteolas test suite
-cd tuatha && uv run pytest crypteolas/tests/ -v
+cd tuatha && uv run pytest sruth/crypteolas/tests/ -v
 ```
 
 The first time you boot the crypteolas backend, the `.env` will hydrate the
@@ -193,7 +193,7 @@ cd tuatha && uv run dagster dev -m dagster_assets.definitions
 cd tuatha && uv run dagster dev -m crypteolas.definitions
 
 # Just the crypteolas demo
-cd tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions
+cd sruth/tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions
 
 # Via mise aliases
 mise dagster:tuath              # Celtic MMO only
@@ -202,12 +202,12 @@ mise dagster:crypteolas_demo    # demo only
 ```
 
 The Dagster workspace is configured at the repo root in `dg.toml`, which
-loads `oideachais/`, `tuatha/`, `tuatha/crypteolas/`, and
-`tuatha/apps/crypteolas_demo/` as four projects.
+loads `sruth/oideachais/`, `sruth/tuatha/`, `sruth/tuatha/crypteolas/`, and
+`sruth/tuatha/apps/crypteolas_demo/` as four projects.
 
 ### Códeolas Dagster assets (tuath location)
 
-The códeolas Dagster assets live at `tuatha/codeolas/dagster_assets/` and
+The códeolas Dagster assets live at `sruth/tuatha/codeolas/dagster_assets/` and
 register:
 
 - `code_chunks` — Tree-sitter AST-aware code chunking → LanceDB
@@ -218,7 +218,7 @@ Launch with `cd tuatha && uv run dagster dev -m codeolas.dagster_assets.definiti
 
 ### Crypteolas Dagster assets (crypteolas location)
 
-Two parallel pipelines, registered in `tuatha/crypteolas/definitions.py`:
+Two parallel pipelines, registered in `sruth/tuatha/crypteolas/definitions.py`:
 
 | Pipeline | Source | Destination |
 |:--|:--|:--|
@@ -228,7 +228,7 @@ Two parallel pipelines, registered in `tuatha/crypteolas/definitions.py`:
 ### Crypteolas-demo Dagster assets (FIBO + crypto)
 
 Two parallel pipelines, registered in
-`tuatha/apps/crypteolas_demo/definitions.py`:
+`sruth/tuatha/apps/crypteolas_demo/definitions.py`:
 
 - `defs/curriculum/` — NCCA/SQA/WJEC curriculum → ColPali → Qwen3-VL → FIBO → image gen
 - `defs/fibo_generation/` — visualizable_concepts → fibo_json_configs → generated_images
@@ -243,7 +243,7 @@ Two parallel pipelines, registered in
 
 A publishable Python library for semantic code search, knowledge graph
 construction, and documentation generation. Formerly at
-`códeolas_codebase_indexing/`, now consolidated at `tuatha/codeolas/`.
+`códeolas_codebase_indexing/`, now consolidated at `sruth/tuatha/codeolas/`.
 
 ### Public API (lazy)
 
@@ -301,7 +301,7 @@ uv run codeolas-mcp  # stdio MCP server
 | `mcp/` (whole dir) | `mcp_server/` | The latter has the typed `Tool` dataclass registry |
 | `agents/` (whole dir) | — | All stubs raising `NotImplementedError` |
 
-See `tuatha/codeolas/STATUS.md` for the full dedup + shim history.
+See `sruth/tuatha/codeolas/STATUS.md` for the full dedup + shim history.
 
 ---
 
@@ -311,7 +311,7 @@ A Python data-intelligence platform for GitHub ingestion (issues, PRs, commits,
 workflows), DeFi protocol research (TVL, funding rates, yields), semantic
 code search, knowledge graph construction (Cognee + Graphiti + Memgraph +
 FalkorDB), and interactive analysis (marimo notebooks). Formerly at
-`crypteolas_formative_assessment/`, now consolidated at `tuatha/crypteolas/`.
+`crypteolas_formative_assessment/`, now consolidated at `sruth/tuatha/crypteolas/`.
 
 ### Public API
 
@@ -365,7 +365,7 @@ from crypteolas.knowledge_graph.graphiti.temporal_graph import (
 | `notebooks/03_knowledge_graph.py` | 519 | Cognee + Memgraph knowledge graph explorer |
 | `notebooks/04_unified_dashboard.py` | 423 | GitHub + code search + KG combined dashboard |
 
-Launch with `cd tuatha && uv run marimo edit crypteolas/notebooks/01_github_api_explorer.py`.
+Launch with `cd tuatha && uv run marimo edit sruth/crypteolas/notebooks/01_github_api_explorer.py`.
 
 ### What was dropped during the consolidation
 
@@ -377,7 +377,7 @@ Launch with `cd tuatha && uv run marimo edit crypteolas/notebooks/01_github_api_
 | `uv.lock` (per-member) | — | Root `uv.lock` is the single source of truth |
 | `.tmp_dagster_home_*/` (ephemeral) | — | Leftover `dagster dev` scratch directory |
 
-See `tuatha/crypteolas/STATUS.md` for the full drops + shims + BAML renames.
+See `sruth/tuatha/crypteolas/STATUS.md` for the full drops + shims + BAML renames.
 
 ---
 
@@ -386,8 +386,8 @@ See `tuatha/crypteolas/STATUS.md` for the full drops + shims + BAML renames.
 A standalone demo app combining a TanStack Start TypeScript frontend
 (DeFi analytics + AI chat + x402 micropayments), a Python Agno-based agent
 team, an MCP server, a Gradio FIBO curriculum UI, BAML schemas, and Foundry
-Solidity contracts. Formerly at `tuatha/tuatha_1/`, now flattened at
-`tuatha/apps/crypteolas_demo/`.
+Solidity contracts. Formerly at `sruth/tuatha/tuatha_1/`, now flattened at
+`sruth/tuatha/apps/crypteolas_demo/`.
 
 ### Public API
 
@@ -430,8 +430,8 @@ be installed.
 | Broken `__init__.py` | `from agents.crypto_agents import …` (didn't exist) | `from .crypto_agents import …` (re-exports the public surface) |
 | `fibo.X` imports in `definitions.py` | `from fibo.defs.X import Y` | `from defs.X import Y` |
 | `crypteolas.X` imports | `from crypteolas.pipelines.X import Y` | `from pipelines.X import Y` (the implementations live in this directory) |
-| BAML `output_dir` | `output_dir = "../baml_client"` (would collide with `tuatha/baml_client/`) | `output_dir = "./baml_client"` (isolated) |
-| Docker Compose | 4 services incl. `agno` (broken build context + missing Dockerfile) | 3 services (postgres, litellm, redis); `agno` removed; use `tuatha/agents/orchestrator.py` instead |
+| BAML `output_dir` | `output_dir = "../baml_client"` (would collide with `sruth/tuatha/baml_client/`) | `output_dir = "./baml_client"` (isolated) |
+| Docker Compose | 4 services incl. `agno` (broken build context + missing Dockerfile) | 3 services (postgres, litellm, redis); `agno` removed; use `sruth/tuatha/agents/orchestrator.py` instead |
 | Dockerfile | `node:22-alpine` + `pnpm` | `oven/bun:1.3.0-alpine` + `bun install` |
 
 ### What was stubbed
@@ -446,14 +446,14 @@ succeed:
 - 3 `models/*` modules (colpali, fibo_mlx, qwen_vlm) that raise
   `NotImplementedError` at runtime
 
-See `tuatha/apps/crypteolas_demo/STATUS.md` for the full stub inventory
+See `sruth/tuatha/apps/crypteolas_demo/STATUS.md` for the full stub inventory
 and TODO list.
 
 ---
 
 ## BAML Client Configuration (Collision Resolution)
 
-Both `tuatha/baml_src/` (Celtic MMO) and `tuatha/crypteolas/baml_src/`
+Both `sruth/tuatha/baml_src/` (Celtic MMO) and `sruth/tuatha/crypteolas/baml_src/`
 (Crypteolas) define BAML clients with the **same name** (`GPT4o`,
 `Claude`, `Qwen`, etc.) but with **different settings** (different
 temperature, different `max_tokens`). To resolve the client-name collision
@@ -472,13 +472,13 @@ when both baml_src/ are merged into a single `baml_client/` output:
 | `CodeAnalysis` | `CrypteolasCodeAnalysis` |
 | `RiskAssessment` | `CrypteolasRiskAssessment` |
 
-Plus: `tuatha/baml_src/clients.baml` was renamed to
-`tuatha/baml_src/tuatha_clients.baml` to prevent the two `clients.baml`
+Plus: `sruth/tuatha/baml_src/clients.baml` was renamed to
+`sruth/tuatha/baml_src/tuatha_clients.baml` to prevent the two `clients.baml`
 files from shadowing each other in the merged `baml_client/` output.
 
 The crypteolas_demo app's BAML schemas live in
-`tuatha/apps/crypteolas_demo/scéimre/` and generate to their own isolated
-`tuatha/apps/crypteolas_demo/baml_client/` (the `output_dir = "./baml_client"`
+`sruth/tuatha/apps/crypteolas_demo/scéimre/` and generate to their own isolated
+`sruth/tuatha/apps/crypteolas_demo/baml_client/` (the `output_dir = "./baml_client"`
 in `scéimre/generators.baml`).
 
 To regenerate: `baml-cli generate` from the relevant `baml_src/` (or
@@ -523,14 +523,14 @@ Per-sub-package Docker Compose files:
 
 | Compose file | Services |
 |:--|:--|
-| `tuatha/codeolas/compose.yaml` | `api`, `mcp-server`, `dagster-webserver`, `dagster-daemon` |
-| `tuatha/codeolas/compose.dev.yaml` | Dev overlay (hot-reload, Langfuse/FalkorDB integration) |
-| `tuatha/crypteolas/compose.dev.yaml` | 9-service dev overlay (api, ui, dagster-web, dagster-daemon, memgraph, memgraph-lab, dragonfly, langfuse, lance-viewer) |
-| `tuatha/crypteolas/docker-compose.yaml` | Production stack with Memgraph + Langfuse + LanceDB viewer |
-| `tuatha/apps/crypteolas_demo/docker-compose.yaml` | 3 services (postgres, litellm, redis); `agno` was removed |
+| `sruth/tuatha/codeolas/compose.yaml` | `api`, `mcp-server`, `dagster-webserver`, `dagster-daemon` |
+| `sruth/tuatha/codeolas/compose.dev.yaml` | Dev overlay (hot-reload, Langfuse/FalkorDB integration) |
+| `sruth/tuatha/crypteolas/compose.dev.yaml` | 9-service dev overlay (api, ui, dagster-web, dagster-daemon, memgraph, memgraph-lab, dragonfly, langfuse, lance-viewer) |
+| `sruth/tuatha/crypteolas/docker-compose.yaml` | Production stack with Memgraph + Langfuse + LanceDB viewer |
+| `sruth/tuatha/apps/crypteolas_demo/docker-compose.yaml` | 3 services (postgres, litellm, redis); `agno` was removed |
 
-The `tuatha/crypteolas/wrangler.toml` is preserved with a `# TODO` comment
-explaining the missing `workers/index.ts`. See `tuatha/crypteolas/STATUS.md`.
+The `sruth/tuatha/crypteolas/wrangler.toml` is preserved with a `# TODO` comment
+explaining the missing `workers/index.ts`. See `sruth/tuatha/crypteolas/STATUS.md`.
 
 For the full Bonneagar mesh details (server fleet, gold-standard stack
 pattern, LLM-relevant stacks, secret flow), see the root
@@ -553,9 +553,9 @@ pattern, LLM-relevant stacks, secret flow), see the root
 | **Vector store** | LanceDB (HNSW, MVCC) with Lakekeeper Iceberg REST catalog |
 | **Lakehouse** | DuckDB + DuckLake (PostgreSQL catalog) + Garage S3 |
 | **Knowledge graph** | Graphiti (bi-temporal) + Cognee (GraphRAG) + Memgraph + FalkorDB + Neo4j |
-| **BAML** | 5 schemas in `tuatha/baml_src/` + 6 in `tuatha/crypteolas/baml_src/` + 7 in `tuatha/apps/crypteolas_demo/scéimre/` |
-| **Smart contracts** | Solidity via Foundry (`tuatha/apps/crypteolas_demo/anam-contracts/`) |
-| **Game engine** | Babylon.js + SpacetimeDB (Rust crate at `tuatha/crates/stdb-modules/`) + wgpu shaders |
+| **BAML** | 5 schemas in `sruth/tuatha/baml_src/` + 6 in `sruth/tuatha/crypteolas/baml_src/` + 7 in `sruth/tuatha/apps/crypteolas_demo/scéimre/` |
+| **Smart contracts** | Solidity via Foundry (`sruth/tuatha/apps/crypteolas_demo/anam-contracts/`) |
+| **Game engine** | Babylon.js + SpacetimeDB (Rust crate at `sruth/tuatha/crates/stdb-modules/`) + wgpu shaders |
 | **Micropayments** | x402 protocol (HTTP 402) via TanStack Start + Wagmi |
 | **Notebooks** | marimo 0.17+ with ibis + DuckDB |
 | **Languages** | Python 3.12, TypeScript (Bun), Rust (SpacetimeDB, axum, wgpu), BAML, Solidity (Foundry), TOML |
@@ -566,11 +566,11 @@ pattern, LLM-relevant stacks, secret flow), see the root
 
 The `opencode.json` at the repo root defines 5 specialist sub-agents used
 to build and maintain this sub-package. All five have access to the
-`tuatha/STATUS.md` files as a knowledge base.
+`sruth/tuatha/STATUS.md` files as a knowledge base.
 
 | Agent | Model | Focus for this sub-package |
 |:--|:--|:--|
-| `explorer` | DeepSeek V4 Flash | Codebase search across `tuatha/codeolas/`, `tuatha/crypteolas/`, `apps/crypteolas_demo/` |
+| `explorer` | DeepSeek V4 Flash | Codebase search across `sruth/tuatha/codeolas/`, `sruth/tuatha/crypteolas/`, `apps/crypteolas_demo/` |
 | `data-engineer` | Qwen 3.7 Max | Dagster, DLT, DuckDB, LanceDB, Memgraph, FalkorDB, Graphiti |
 | `ai-engineer` | DeepSeek V4 Pro | BAML, Agno, Google ADK, CopilotKit, knowledge-graph extraction, Celtic language AI |
 | `frontend-dev` | Kimi K2.6 | TanStack Start (crypteolas_demo), Vinxi (Celtic MMO), TanStack Router, x402, Babylon.js |
@@ -578,11 +578,11 @@ to build and maintain this sub-package. All five have access to the
 
 The 3 STATUS.md files are the canonical "what changed" docs:
 
-- `tuatha/codeolas/STATUS.md`
-- `tuatha/crypteolas/STATUS.md`
-- `tuatha/apps/crypteolas_demo/STATUS.md`
+- `sruth/tuatha/codeolas/STATUS.md`
+- `sruth/tuatha/crypteolas/STATUS.md`
+- `sruth/tuatha/apps/crypteolas_demo/STATUS.md`
 
-Plus the `openspec/changes/consolidate-external-libs-into-tuatha/` change
+Plus the `openspec/changes/consolidate-external-libs-into-sruth/tuatha/` change
 proposal with the full refactor spec and task list.
 
 ---
@@ -604,7 +604,7 @@ cd tuatha && uv run dagster dev
 # 4. Run specific code-locations in isolation
 cd tuatha && uv run dagster dev -m dagster_assets.definitions       # Celtic MMO
 cd tuatha && uv run dagster dev -m crypteolas.definitions          # crypteolas
-cd tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions  # demo
+cd sruth/tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions  # demo
 
 # 5. Run the Celtic MMO API (port 8000)
 cd tuatha && uv run uvicorn api.main:app --reload --port 8000
@@ -616,11 +616,11 @@ cd tuatha && uv run uvicorn crypteolas.api.main:app --port 8001
 cd tuatha && uv run uvicorn crypteolas.agent_os.main:app --port 7771
 
 # 8. Start the crypteolas demo frontend
-cd tuatha/apps/crypteolas_demo && bun install && bun run dev
+cd sruth/tuatha/apps/crypteolas_demo && bun install && bun run dev
 # → http://localhost:3000 (proxies /api → localhost:8001)
 
 # 9. Start the crypteolas demo Gradio UI
-cd tuatha/apps/crypteolas_demo && uv run python -m ui.app
+cd sruth/tuatha/apps/crypteolas_demo && uv run python -m ui.app
 
 # 10. Start the códeolas MCP server (for Claude Code integration)
 cd tuatha && uv run codeolas-mcp
@@ -629,10 +629,10 @@ cd tuatha && uv run codeolas-mcp
 cd tuatha && uv run python -m crypteolas.mcp_server
 
 # 12. Run the códeolas test suite
-cd tuatha && uv run pytest codeolas/tests/ -v
+cd tuatha && uv run pytest sruth/codeolas/tests/ -v
 
 # 13. Run the crypteolas test suite
-cd tuatha && uv run pytest crypteolas/tests/ -v
+cd tuatha && uv run pytest sruth/crypteolas/tests/ -v
 ```
 
 After this, every sub-package is running and the unified Dagster UI is
@@ -642,37 +642,37 @@ exposed at `localhost:3000` (or via Pangolin at `dagster.cianfhoghlaim.ie`).
 
 ## Consolidation History
 
-The `tuatha/` sub-package was the consolidation target of
-[`openspec/changes/consolidate-external-libs-into-tuatha/`](../../openspec/changes/consolidate-external-libs-into-tuatha/).
+The `sruth/tuatha/` sub-package was the consolidation target of
+[`openspec/changes/consolidate-external-libs-into-sruth/tuatha/`](../../openspec/changes/consolidate-external-libs-into-sruth/tuatha/).
 That refactor:
 
-- **Moved** `códeolas_codebase_indexing/` → `tuatha/codeolas/` (76 source files → 64 after dedup)
-- **Moved** `crypteolas_formative_assessment/` → `tuatha/crypteolas/` (50 source files + 600 vendored DSPy → 50, −22 MB)
-- **Moved** `tuatha/tuatha_1/` → `tuatha/apps/crypteolas_demo/` (flattened the `fibo` package, stubbed the missing TypeScript infrastructure, dropped the broken `agno` Docker service)
+- **Moved** `códeolas_codebase_indexing/` → `sruth/tuatha/codeolas/` (76 source files → 64 after dedup)
+- **Moved** `crypteolas_formative_assessment/` → `sruth/tuatha/crypteolas/` (50 source files + 600 vendored DSPy → 50, −22 MB)
+- **Moved** `sruth/tuatha/tuatha_1/` → `sruth/tuatha/apps/crypteolas_demo/` (flattened the `fibo` package, stubbed the missing TypeScript infrastructure, dropped the broken `agno` Docker service)
 - **Rewrote** ~90 broken import sites across 30+ files (`sruth.códeolas.*`, `sruth.crypteolas.*`, `sruth.shared.*`, `crypteolas.*`, `fibo.*`)
 - **Updated** the root `pyproject.toml` `[tool.uv.workspace] members` to add the 3 new members
-- **Updated** `tuatha/pyproject.toml` `[tool.hatch.build.targets.wheel] packages` to add the previously-omitted sub-packages
-- **Updated** `tuatha/dg.toml` + the root `dg.toml` to register the 3 Dagster code-locations
+- **Updated** `sruth/tuatha/pyproject.toml` `[tool.hatch.build.targets.wheel] packages` to add the previously-omitted sub-packages
+- **Updated** `sruth/tuatha/dg.toml` + the root `dg.toml` to register the 3 Dagster code-locations
 - **Updated** the root `package.json` `workspaces` to add the crypteolas_demo TypeScript app
 - **Updated** `mise.toml` to add `dagster:tuath`, `dagster:crypteolas`, `dagster:crypteolas_demo`, and per-package test aliases
 
 ### Follow-up (out of scope)
 
 A follow-up issue is filed separately for the pre-existing broken
-`sruth.shared.*` imports in `tuatha/dlt_sources/geospatial/{gaeltacht_boundaries,
+`sruth.shared.*` imports in `sruth/tuatha/dlt_sources/geospatial/{gaeltacht_boundaries,
 welsh_language_areas, gaelic_communities}.py` and
-`tuatha/storage/serial_executor.py`. The plan: simplify the
+`sruth/tuatha/storage/serial_executor.py`. The plan: simplify the
 `sruth.shared.*` abstraction entirely, inline HTTP clients per-source
-(or use the existing `tuatha/http_utils/` layer), avoid external shared
+(or use the existing `sruth/tuatha/http_utils/` layer), avoid external shared
 packages, and keep code directed at fitting in with the existing
-`tuatha/dlt_sources/geospatial/` assets.
+`sruth/tuatha/dlt_sources/geospatial/` assets.
 
 ### Stale-path sweep (this change)
 
 The pre-existing stale `sruth/...` path references in
-`tuatha/DEVELOPMENT.md` and the 3 `tuatha/crypteolas/docs/{QUICKSTART,
+`sruth/tuatha/DEVELOPMENT.md` and the 3 `sruth/tuatha/crypteolas/docs/{QUICKSTART,
 DEVELOPMENT, SETUP}.md` files have also been updated to the new
-`tuatha/...` paths.
+`sruth/tuatha/...` paths.
 
 ---
 
@@ -697,7 +697,7 @@ DEVELOPMENT, SETUP}.md` files have also been updated to the new
 ```mermaid
 flowchart TB
     subgraph clients["Client surfaces"]
-        UI[TanStack Start<br/>ui/<br/>tuatha/ui/]
+        UI[TanStack Start<br/>ui/<br/>sruth/tuatha/ui/]
         GODOT[Godot 4.x<br/>godot-client/]
         WEBGPU[wgpu/shader experiments<br/>crates/]
         GRADIO[Gradio app<br/>crypteolas_demo/ui/]
@@ -720,7 +720,7 @@ flowchart TB
     subgraph agents["Agent runtime"]
         ROOT[orchestrator.py]
         ADK[Google ADK<br/>agents/adk/]
-        AGNO[Agno AgentOS<br/>crypteolas/agent_os/]
+        AGNO[Agno AgentOS<br/>sruth/crypteolas/agent_os/]
     end
 
     subgraph orch["Orchestration + observability"]
@@ -757,8 +757,8 @@ effects described in `summary.txt`.
 
 | Component | Status | Tests | Deployable | Notes |
 |:--|:--|:--|:--|:--|
-| `codeolas/` | **Production** | 100+ pytest | Yes (`uv tool install`) | CLI + library + MCP server; the keystone for forking |
-| `crypteolas/` | **Production** | 80+ pytest | Yes (FastAPI) | Crypto intelligence platform; battle-tested DLT sources |
+| `sruth/codeolas/` | **Production** | 100+ pytest | Yes (`uv tool install`) | CLI + library + MCP server; the keystone for forking |
+| `sruth/crypteolas/` | **Production** | 80+ pytest | Yes (FastAPI) | Crypto intelligence platform; battle-tested DLT sources |
 | `crypteolas_demo/` agents | **Production** | Yes | Yes (Agno AgentOS) | Crypto research / analysis / pipeline agents |
 | `ui/` (crypteolas_demo) | **Stable** | E2E partial | Yes (Vercel) | TanStack Start stub; full UI work planned |
 | `agents/orchestrator.py` | **Active dev** | Smoke | Local only | Root agent routing (Curriculum / Geospatial / Translation / Corpus / Statistics) |
@@ -811,15 +811,15 @@ components are shaped the way they are.
 
 ## Related Documentation
 
-- `tuatha/codeolas/STATUS.md` — dedup + shim history for códeolas
-- `tuatha/crypteolas/STATUS.md` — drops, shims, BAML renames for crypteolas
-- `tuatha/apps/crypteolas_demo/STATUS.md` — TS app stub inventory + TODO list
-- `tuatha/DEVELOPMENT.md` — full development environment setup
-- `tuatha/dg.toml` — Dagster project config (Celtic MMO code-location)
-- `tuatha/crypteolas/dg.toml` — Dagster project config (crypteolas code-location)
-- `tuatha/apps/crypteolas_demo/dg.toml` — Dagster project config (demo code-location)
+- `sruth/tuatha/codeolas/STATUS.md` — dedup + shim history for códeolas
+- `sruth/tuatha/crypteolas/STATUS.md` — drops, shims, BAML renames for crypteolas
+- `sruth/tuatha/apps/crypteolas_demo/STATUS.md` — TS app stub inventory + TODO list
+- `sruth/tuatha/DEVELOPMENT.md` — full development environment setup
+- `sruth/tuatha/dg.toml` — Dagster project config (Celtic MMO code-location)
+- `sruth/tuatha/crypteolas/dg.toml` — Dagster project config (crypteolas code-location)
+- `sruth/tuatha/apps/crypteolas_demo/dg.toml` — Dagster project config (demo code-location)
 - `dg.toml` (root) — workspace-level Dagster config
-- `openspec/changes/consolidate-external-libs-into-tuatha/` — the change proposal, tasks, and spec deltas
+- `openspec/changes/consolidate-external-libs-into-sruth/tuatha/` — the change proposal, tasks, and spec deltas
 - [`README.md`](../../README.md) — the monorepo-level README
 - [`AGENTS.md`](../../AGENTS.md) — agent protocols and guard rails
 - `openspec/AGENTS.md` — OpenSpec workflow
@@ -841,7 +841,7 @@ See [`LICENSE.md`](../../LICENSE.md).
 # 1. Build the docker images + the Rust crate
 cd /Users/cianmacandeisigh/dev/kings_college_galway
 mise run turbo build --filter=tuatha
-cd tuatha/crates/game_server
+cd sruth/tuatha/crates/game_server
 cargo build --release
 
 # 2. Deploy the tuatha stack
@@ -850,7 +850,7 @@ docker compose up -d
 sleep 15
 
 # 3. Start the SpacetimeDB server (the MMO server)
-cd tuatha/crates/game_server
+cd sruth/tuatha/crates/game_server
 cargo run --release &
 
 # 4. Verify
@@ -864,15 +864,15 @@ The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
 
 | Symptom | Cause | Fix |
 |:--|:--|:--|
-| SpacetimeDB refuses to start | The DB file is locked | `rm tuatha/crates/game_server/data/spacetimedb.db` |
-| The MCP server fails to import | The 3 shim files are missing | Restore `tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` |
+| SpacetimeDB refuses to start | The DB file is locked | `rm sruth/tuatha/crates/game_server/data/spacetimedb.db` |
+| The MCP server fails to import | The 3 shim files are missing | Restore `sruth/tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` |
 | The crypteolas ledger returns empty | The LanceDB table is not initialised | `python -c "from tuatha.crypteolas.achievements.storage import AchievementStorage; AchievementStorage().init_storage()"` |
 | The 5 masteries are not issued | The player has 4 frameworks but not 5 | Issue at least 1 badge in the 5th framework |
 
 ## Common workflows
 
-1. **Add a new MMO scene** — `tuatha/game/scenes/<scene>.ts` (Babylon.js)
-2. **Add a new SpacetimeDB table** — `tuatha/crates/game_server/src/tables/<table>.rs`
-3. **Add a new skill-tree badge** — `tuatha/crypteolas/achievements/ledger.py` (see `.agents/skills/tuatha-achievement-ledger/`)
+1. **Add a new MMO scene** — `sruth/tuatha/game/scenes/<scene>.ts` (Babylon.js)
+2. **Add a new SpacetimeDB table** — `sruth/tuatha/crates/game_server/src/tables/<table>.rs`
+3. **Add a new skill-tree badge** — `sruth/tuatha/crypteolas/achievements/ledger.py` (see `.agents/skills/tuatha-achievement-ledger/`)
 4. **Add a new Pent-Elemental quest** — see `.agents/skills/pent-elemental-cosmology/`
-5. **Add a new MCP tool** — `oideachais/agents/adk/tools/<tool>.py` + shim at `tuatha/agents/tools/`
+5. **Add a new MCP tool** — `sruth/oideachais/agents/adk/tools/<tool>.py` + shim at `sruth/tuatha/agents/tools/`

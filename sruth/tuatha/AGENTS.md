@@ -48,27 +48,27 @@ openspec archive <change-id> --yes                    # after deploy
 
 ## Overview
 
-`tuatha/` is the **British Isles Formative Assessment MMO** quadrant
+`sruth/tuatha/` is the **British Isles Formative Assessment MMO** quadrant
 of the Cianfhoghlaim monorepo. It is a uv workspace member that
 contains:
 
-- **Game front-end** — Babylon.js scene graph at `tuatha/game/` for the
+- **Game front-end** — Babylon.js scene graph at `sruth/tuatha/game/` for the
   British Isles formative assessment MMO client
-- **Game engine** — Rust + SpacetimeDB server at `tuatha/crates/` for
+- **Game engine** — Rust + SpacetimeDB server at `sruth/tuatha/crates/` for
   the MMO server
-- **Educational-achievement ledger** — `tuatha/crypteolas/achievements/`
+- **Educational-achievement ledger** — `sruth/tuatha/crypteolas/achievements/`
   for the skill-tree badges (per curriculum framework × level) +
   x402 settlement for **gated game features only** (cosmetics,
   premium quests, paid DLC — never for educational content)
-- **UI** — TanStack Start front-end at `tuatha/ui/` for the educational
+- **UI** — TanStack Start front-end at `sruth/tuatha/ui/` for the educational
   game and the BAML-driven Celtic content extraction
-- **Knowledge graph** — `tuatha/knowledge_graph/` (the Celtic-learning
+- **Knowledge graph** — `sruth/tuatha/knowledge_graph/` (the Celtic-learning
   graph that the MMO uses for NPC dialogue + quest generation)
-- **Celtic language** — `tuatha/gaeilge.md` (Irish) + `tuatha/anam.md`
+- **Celtic language** — `sruth/tuatha/gaeilge.md` (Irish) + `sruth/tuatha/anam.md`
   (soul/spirit) are the Irish-language content surfaces
 - **4 ADK agents** — Canonical implementations live at
-  `oideachais/agents/adk/` (Phase 5 refactor). The
-  `tuatha/agents/adk/*.py` files are thin re-exports:
+  `sruth/oideachais/agents/adk/` (Phase 5 refactor). The
+  `sruth/tuatha/agents/adk/*.py` files are thin re-exports:
   - `celtic_tutor.py` → `celtic_tutor_agent` (Celtic Tutor)
   - `mythology_narrator.py` → `mythology_narrator_agent` (Mythology Narrator)
   - `quest_guide.py` → `quest_guide_agent` (Quest Guide)
@@ -89,8 +89,8 @@ The consumer relationship to croilar:
 - The croilar personal-portfolio platform has a `game` subproject that
   consumes the tuatha MMO content.
 - The 3 croilar personas (aleyum, cianfhoghlaim, carlcashman) each have
-  a `wow` or `Hades II` content surface (see `tuatha/wow/` and
-  `tuatha/Hades II/`).
+  a `wow` or `Hades II` content surface (see `sruth/tuatha/wow/` and
+  `sruth/tuatha/Hades II/`).
 - The croilar `wow` content is integrated with the tuatha Babylon.js
   scene.
 
@@ -98,19 +98,19 @@ The consumer relationship to croilar:
 
 | If you want to... | Look at... |
 |:--|:--|
-| Add a new MMO scene | `tuatha/game/scenes/` (Babylon.js) |
-| Add a new MMO server module | `tuatha/crates/game_server/src/` (Rust + SpacetimeDB) |
-| Add a new educational-achievement badge | `tuatha/crypteolas/achievements/` |
-| Wire x402 micropayments for a gated game feature | `tuatha/crypteolas/x402.py` (paid features only — never for educational content) |
-| Add a new UI component | `tuatha/ui/` (TanStack Start) |
+| Add a new MMO scene | `sruth/tuatha/game/scenes/` (Babylon.js) |
+| Add a new MMO server module | `sruth/tuatha/crates/game_server/src/` (Rust + SpacetimeDB) |
+| Add a new educational-achievement badge | `sruth/tuatha/crypteolas/achievements/` |
+| Wire x402 micropayments for a gated game feature | `sruth/tuatha/crypteolas/x402.py` (paid features only — never for educational content) |
+| Add a new UI component | `sruth/tuatha/ui/` (TanStack Start) |
 | Add a new BAML extraction for Celtic content | `baml_src/ui_components.baml` or `baml_src/image_generation.baml` |
-| Add a new NPC or quest | `tuatha/knowledge_graph/` + `baml_src/ui_components.baml` |
-| Add a new Dagster asset for the tuatha code-location | `tuatha/dagster_assets/` |
-| Add a new Irish-language content surface | `tuatha/gaeilge.md` + `tuatha/anam.md` |
-| Integrate the MMO content with a croilar persona | `croilar/apps/web/` (the `game` subproject) |
-| Add a new SpacetimeDB table | `tuatha/crates/game_server/src/tables/` |
+| Add a new NPC or quest | `sruth/tuatha/knowledge_graph/` + `baml_src/ui_components.baml` |
+| Add a new Dagster asset for the tuatha code-location | `sruth/tuatha/dagster_assets/` |
+| Add a new Irish-language content surface | `sruth/tuatha/gaeilge.md` + `sruth/tuatha/anam.md` |
+| Integrate the MMO content with a croilar persona | `sruth/croilar/apps/web/` (the `game` subproject) |
+| Add a new SpacetimeDB table | `sruth/tuatha/crates/game_server/src/tables/` |
 | Add a new formative-assessment quest | `.agents/skills/british-isles-formative-assessment/` (pedagogical framework) |
-| Modify a 4-agent feedback channel | `oideachais/agents/adk/{celtic_tutor,mythology_narrator,quest_guide,research_assistant,tuatha_root}_agent.py` (canonical; the tuatha files are thin re-exports) |
+| Modify a 4-agent feedback channel | `sruth/oideachais/agents/adk/{celtic_tutor,mythology_narrator,quest_guide,research_assistant,tuatha_root}_agent.py` (canonical; the tuatha files are thin re-exports) |
 
 ## openspec spec that governs tuatha
 
@@ -160,15 +160,15 @@ Plus the shared specs (4):
 
 ## Cross-references
 
-- [`tuatha/README.md`](README.md) — the user-facing overview
-- [`tuatha/dg.toml`](dg.toml) — the local Dagster code-location config
-- [`tuatha/gaeilge.md`](gaeilge.md) — Irish-language content
-- [`tuatha/anam.md`](anam.md) — Irish soul/spirit content
-- [`oideachais/AGENTS.md`](../oideachais/AGENTS.md) — the oideachais
+- [`sruth/tuatha/README.md`](README.md) — the user-facing overview
+- [`sruth/tuatha/dg.toml`](dg.toml) — the local Dagster code-location config
+- [`sruth/tuatha/gaeilge.md`](gaeilge.md) — Irish-language content
+- [`sruth/tuatha/anam.md`](anam.md) — Irish soul/spirit content
+- [`sruth/oideachais/AGENTS.md`](../oideachais/AGENTS.md) — the oideachais
   quadrant
-- [`meaisinfhoghlaim/AGENTS.md`](../meaisinfhoghlaim/AGENTS.md) — the
+- [`sruth/meaisinfhoghlaim/AGENTS.md`](../meaisinfhoghlaim/AGENTS.md) — the
   AI/ML quadrant
-- [`croilar/AGENTS.md`](../croilar/AGENTS.md) — the portfolio quadrant
+- [`sruth/croilar/AGENTS.md`](../croilar/AGENTS.md) — the portfolio quadrant
   (the consumer of tuatha content)
 - [`../openspec/AGENTS.md`](../openspec/AGENTS.md) — openspec workflow
 - [`../AGENTS.md`](../AGENTS.md) — root agent instructions

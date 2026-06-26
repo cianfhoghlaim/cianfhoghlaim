@@ -33,8 +33,8 @@ respective toolchains.
 
 ## What was changed during the consolidation
 
-The prior `tuatha/tuatha_1/` carried the `fibo` Python package as a
-nested project. It was flattened into `tuatha/apps/crypteolas_demo/`
+The prior `sruth/tuatha/tuatha_1/` carried the `fibo` Python package as a
+nested project. It was flattened into `sruth/tuatha/apps/crypteolas_demo/`
 and re-rooted as the `crypteolas_demo` package. The following changes
 were applied:
 
@@ -48,8 +48,8 @@ were applied:
 | `crypteolas.X` imports (Dagster pipelines) | `from crypteolas.pipelines.X import Y` | `from pipelines.X import Y` (the implementations already live in this directory) |
 | `crypteolas.pipelines.knowledge.graph_schema` | External | `from pipelines.knowledge.graph_schema import …` |
 | `sruth.códeolas` import in `agents/adk/architecture_agent.py` | (n/a) | This was in crypteolas, not this app — see the crypteolas STATUS.md. |
-| BAML output_dir | `output_dir = "../baml_client"` (would have collided with `tuatha/baml_client/`) | `output_dir = "./baml_client"` (isolated) |
-| Docker Compose | 4 services incl. `agno` (broken build context + missing Dockerfile) | 3 services (postgres, litellm, redis); `agno` removed; the existing `tuatha/agents/orchestrator.py` covers orchestration |
+| BAML output_dir | `output_dir = "../baml_client"` (would have collided with `sruth/tuatha/baml_client/`) | `output_dir = "./baml_client"` (isolated) |
+| Docker Compose | 4 services incl. `agno` (broken build context + missing Dockerfile) | 3 services (postgres, litellm, redis); `agno` removed; the existing `sruth/tuatha/agents/orchestrator.py` covers orchestration |
 | Dockerfile | `node:22-alpine` + `pnpm` | `oven/bun:1.3.0-alpine` + `bun install` |
 
 ## What was stubbed
@@ -60,10 +60,10 @@ following pieces have been added as stubs so `bun install` and
 
 | Stub | Path | Purpose |
 |:--|:--|:--|
-| `package.json` | `tuatha/apps/crypteolas_demo/package.json` | Bun workspace manifest (Vinxi + React 19 + Wagmi deps). |
-| `tsconfig.json` | `tuatha/apps/crypteolas_demo/tsconfig.json` | TypeScript config; `@/*` alias to `./src/*`. |
-| 12 `src/lib/*` modules | `tuatha/apps/crypteolas_demo/src/lib/{auth,x402,copilot,query,mcp,web3}` | Stubs with `TODO: implement` and minimal type signatures. See "Stubbed TS modules" below. |
-| 3 `models/*` modules | `tuatha/apps/crypteolas_demo/models/{colpali,fibo_mlx,qwen_vlm}.py` | Stubs that raise `NotImplementedError` at runtime so the Dagster assets and the Gradio UI can at least import. |
+| `package.json` | `sruth/tuatha/apps/crypteolas_demo/package.json` | Bun workspace manifest (Vinxi + React 19 + Wagmi deps). |
+| `tsconfig.json` | `sruth/tuatha/apps/crypteolas_demo/tsconfig.json` | TypeScript config; `@/*` alias to `./src/*`. |
+| 12 `src/lib/*` modules | `sruth/tuatha/apps/crypteolas_demo/src/lib/{auth,x402,copilot,query,mcp,web3}` | Stubs with `TODO: implement` and minimal type signatures. See "Stubbed TS modules" below. |
+| 3 `models/*` modules | `sruth/tuatha/apps/crypteolas_demo/models/{colpali,fibo_mlx,qwen_vlm}.py` | Stubs that raise `NotImplementedError` at runtime so the Dagster assets and the Gradio UI can at least import. |
 
 ### Stubbed TS modules (12)
 
@@ -101,11 +101,11 @@ The `crypteolas_demo` Dagster code-location is registered in the tuatha
 workspace. Run it locally with:
 
 ```bash
-cd tuatha/apps/crypteolas_demo && uv run dagster dev -m crypteolas_demo.definitions
+cd sruth/tuatha/apps/crypteolas_demo && uv run dagster dev -m crypteolas_demo.definitions
 ```
 
 (The exact module path depends on how Dagster is launched from the
-workspace root. See `tuatha/dg.toml` for the registered
+workspace root. See `sruth/tuatha/dg.toml` for the registered
 code-locations.)
 
 ## How to use
@@ -119,21 +119,21 @@ from crypteolas_demo import (
 from crypteolas_demo import server, TOOLS  # MCP exports
 
 # Or run from the demo root:
-# cd tuatha/apps/crypteolas_demo
+# cd sruth/tuatha/apps/crypteolas_demo
 # uv run python -m mcp_tools          # starts the MCP server on stdio
 # uv run python -m crypto_agents     # uses the agent team
 ```
 
 ```bash
 # TypeScript — install and typecheck the stub
-cd tuatha/apps/crypteolas_demo
+cd sruth/tuatha/apps/crypteolas_demo
 bun install
 bun run typecheck
 ```
 
 ```bash
 # Docker — postgres + litellm + redis (the broken `agno` service was removed)
-cd tuatha/apps/crypteolas_demo
+cd sruth/tuatha/apps/crypteolas_demo
 docker compose up -d postgres litellm redis
 ```
 
@@ -145,10 +145,10 @@ docker compose up -d postgres litellm redis
    module that does not exist.
 4. `defs/curriculum/sources.py` uses
    `Path(__file__).parent.parent.parent.parent.parent / "education_sources"`
-   — this 5-level-up lookup was correct for the prior `tuatha/tuatha_1/`
+   — this 5-level-up lookup was correct for the prior `sruth/tuatha/tuatha_1/`
    location but is now wrong. Update the path.
 5. `analyze_images` in `defs/fibo_generation/assets.py` instantiates
    the stubbed `FiboMLXGenerator` and will fail at runtime.
-6. `wrangler.toml` (in `tuatha/crypteolas/wrangler.toml`, not here)
+6. `wrangler.toml` (in `sruth/tuatha/crypteolas/wrangler.toml`, not here)
    references a `workers/index.ts` that does not exist; the
    Cloudflare Workers side of the demo is not yet built.

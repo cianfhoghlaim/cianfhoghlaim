@@ -5,7 +5,7 @@ Standalone demonstration of the Code Analysis and Repository Intelligence platfo
 ## Quick Start
 
 ```bash
-cd tuatha/codeolas
+cd sruth/tuatha/codeolas
 python demo/run_demo.py
 ```
 
@@ -81,7 +81,7 @@ demo/
 The demo runs entirely offline with mock data.
 
 ```bash
-# From the tuatha/codeolas directory
+# From the sruth/tuatha/codeolas directory
 python demo/run_demo.py
 ```
 
@@ -296,7 +296,7 @@ Example: 100k chunks = 500MB storage
 ## Support
 
 For issues or questions:
-- Main README: [tuatha/codeolas/README.md](../README.md)
+- Main README: [sruth/tuatha/codeolas/README.md](../README.md)
 - Tuath workspace README: [../../README.md](../../README.md)
 - PyPI: https://pypi.org/project/codeolas/
 - Forgejo: https://git.cianfhoghlaim.ie/cianfhoghlaim/sruth

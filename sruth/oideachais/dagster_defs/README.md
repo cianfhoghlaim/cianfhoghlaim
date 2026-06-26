@@ -1,4 +1,4 @@
-# oideachais/dagster_defs — Dagster definitions for the Celtic Education Lakehouse
+# sruth/oideachais/dagster_defs — Dagster definitions for the Celtic Education Lakehouse
 
 > The 2026-06 refactor (see
 > `openspec/changes/refactor-dlt-dagster-2026-stack-align`):
@@ -56,9 +56,9 @@ dagster_defs/
 
 ### Option A: via the SourceFactory (new in 2026-06)
 
-For a new DLT source, edit `oideachais/sources.yaml` and add an
+For a new DLT source, edit `sruth/oideachais/sources.yaml` and add an
 entry to the `CelticDltSourceComponent` defs (in
-`oideachais/dagster_defs/defs.yaml`):
+`sruth/oideachais/dagster_defs/defs.yaml`):
 
 ```yaml
 - type: oideachais.dagster_defs.components.CelticDltSourceComponent
@@ -72,7 +72,7 @@ The asset is automatically discovered by `dg list defs`.
 
 For an asset that's not a DLT source (e.g. a BAML extraction or
 a Cognee cognify pass), add a file to
-`oideachais/dagster_defs/assets/`:
+`sruth/oideachais/dagster_defs/assets/`:
 
 ```python
 # assets/my_new_asset.py
@@ -93,7 +93,7 @@ Use the `dg scaffold defs` workflow:
 
 ```bash
 uv run --package oideachais dg scaffold defs CelticMyNew \
-  oideachais/dagster_defs/components/celtic_my_new
+  sruth/oideachais/dagster_defs/components/celtic_my_new
 ```
 
 This generates the boilerplate `defs.yaml` + Python module. Edit

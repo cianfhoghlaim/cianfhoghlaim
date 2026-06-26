@@ -2,7 +2,7 @@
 
 > **Read this first if you are picking up work in this sub-package.**
 > This document explains what was dropped during the consolidation into
-> `tuatha/codeolas/`, what shims remain, and where the live entry points live.
+> `sruth/tuatha/codeolas/`, what shims remain, and where the live entry points live.
 
 ## What this package is
 
@@ -56,18 +56,18 @@ been rewritten to point at the new `codeolas.*` paths.
 Two modules are kept only as backwards-compatible shims and will be removed
 in a future version:
 
-- **`tuatha/codeolas/storage/serial_executor.py`** — re-exports
+- **`sruth/tuatha/codeolas/storage/serial_executor.py`** — re-exports
   `SerialDatabaseExecutor`, `get_executor`, `run_serial` from
   `oideachais.core.storage.serial_executor`. Update imports to the
   oideachais path.
-- **`tuatha/codeolas/cocoindex_flows/transforms/treesitter_chunking.py`** —
+- **`sruth/tuatha/codeolas/cocoindex_flows/transforms/treesitter_chunking.py`** —
   re-exports `chunk_code_file`, `detect_language`, `ChunkType`, `CodeChunk`,
   `EXTENSION_TO_LANGUAGE`, `LANGUAGE_EXTENSIONS` from
   `codeolas.chunking`. Update imports to the `codeolas.chunking` path.
 
 ## Stub implementations
 
-- **`tuatha/codeolas/generators/changelog.py`** — `ChangelogGenerator` is a
+- **`sruth/tuatha/codeolas/generators/changelog.py`** — `ChangelogGenerator` is a
   stub. It accepts the same constructor and method signature as the planned
   real implementation but returns a placeholder markdown string. A real
   implementation would shell out to `git log` and group commits by
@@ -81,7 +81,7 @@ in a future version:
 - **`tests/test_multilang_chunking.py`** — path was
   `codesola_root / "codeolas" / "core" / "analyzer.py"`; updated to
   `codesola_root / "core" / "analyzer.py"` (the package is no longer nested
-  inside a parent `codeolas/` directory).
+  inside a parent `sruth/codeolas/` directory).
 - **`tests/conftest.py`** — the `cianfhoghlaim_path` fixture hard-coded
   `/Users/cliste/dev/cianfhoghlaim`. Replaced with a read of
   `os.environ.get("CODEOLAS_REPO_PATH", os.getcwd())` so the test no longer
@@ -98,11 +98,11 @@ in a future version:
 The `.forgejo/workflows/{ci,release}.yaml` files inside this directory are
 preserved as documentation/scaffolding but are **not auto-discovered** by
 Forgejo (which only scans `.forgejo/workflows/*.yaml` at the repo root). The
-ci.yaml `paths` filter is still updated to `tuatha/codeolas/**` so it would
+ci.yaml `paths` filter is still updated to `sruth/tuatha/codeolas/**` so it would
 work if promoted to the repo root. For now, run the tests locally with:
 
 ```bash
-cd tuatha && uv run pytest codeolas/tests/ -v
+cd tuatha && uv run pytest sruth/codeolas/tests/ -v
 ```
 
 ## How to use

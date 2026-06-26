@@ -27,6 +27,7 @@ dependencies = [
     "google-genai>=1.73.1",
     "groq>=1.4.0",
     "logfire>=4.15.1",
+    "marimo>=0.23.10",
     "openai>=2.32.0",
 ]
 

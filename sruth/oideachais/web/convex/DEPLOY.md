@@ -7,7 +7,7 @@
 # 1. Self-hosted backend on bunchloch (current setup):
 #    - Backend: http://localhost:3210  (already running on bunchloch)
 #    - Dashboard: http://localhost:6791
-#    - Schema files: oideachais/web/convex/{schema,index,subject_sessions,...}.ts
+#    - Schema files: sruth/oideachais/web/convex/{schema,index,subject_sessions,...}.ts
 #
 # 2. The `bunx convex@latest dev` CLI auto-starts its OWN local backend
 #    on port 3212 and deploys to that — not to our self-hosted one.
@@ -18,7 +18,7 @@
 #
 # 3. To deploy to the SELF-HOSTED backend on :3210, the admin key
 #    needs to be provisioned in the dashboard first. Then:
-#    cd oideachais/web
+#    cd sruth/oideachais/web
 #    bunx --yes convex@latest deploy --url http://admin:<KEY>@127.0.0.1:3210
 #
 # 4. KNOWN ISSUE: The self-hosted Convex dashboard returns `adminKey: null`

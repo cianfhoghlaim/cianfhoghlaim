@@ -26,7 +26,7 @@ openspec validate <change-id> --strict                      # MUST pass before c
 
 | Function | Source |
 |:--|:--|
-| `ExtractCircularMeta(pdf_text, filename) -> CircularExtraction` | `oideachais/baml_src/circular_extraction.baml` (canonical, promoted from this Space in 2026-06) |
+| `ExtractCircularMeta(pdf_text, filename) -> CircularExtraction` | `sruth/oideachais/baml_src/circular_extraction.baml` (canonical, promoted from this Space in 2026-06) |
 
 ### Priority openspec spec for an_scrudu
 

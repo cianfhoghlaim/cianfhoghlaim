@@ -4,7 +4,7 @@
 > self-hosted, full-stack TypeScript + Python platform** that doubles as a
 > **reference implementation** for the rest of `kings_college_galway`.
 
-> See also: [`croilar/AGENTS.md`](AGENTS.md) — the developer-quick-reference
+> See also: [`sruth/croilar/AGENTS.md`](AGENTS.md) — the developer-quick-reference
 > for the croilar quadrant. The openspec specs are at:
 > - [`openspec/specs/croilar-portfolio/spec.md`](../openspec/specs/croilar-portfolio/spec.md)
 > - [`openspec/specs/croilar-data-engineering/spec.md`](../openspec/specs/croilar-data-engineering/spec.md)
@@ -18,9 +18,9 @@ how to combine:
 | Metric | Value |
 |:--|:--|
 | Workspace name | `croilar` (uv) — directory preserves the síneadh fada |
-| Dagster code-location | `croilar/definitions.py` (root-level, NOT under `dagster_assets/`). Loads in **both** pytest and production as of 2026-06-15 (issue #17 closed). 25 assets wired. |
+| Dagster code-location | `sruth/croilar/definitions.py` (root-level, NOT under `dagster_assets/`). Loads in **both** pytest and production as of 2026-06-15 (issue #17 closed). 25 assets wired. |
 | Test pass rate | 1 / 1 dagster_defs test passes; 3 pre-existing failures in `tests/test_smoke.py` and `tests/dlt_assets/test_spotify_soundcloud_labels.py` (see Known issues #3) |
-| Pipelines | 12 DLT pipelines under `croilar/pipelines/` (artwork, cv, fs_author, github, labels, linkedin, researchgate, shared, soundcloud, spotify, teaching) |
+| Pipelines | 12 DLT pipelines under `sruth/croilar/pipelines/` (artwork, cv, fs_author, github, labels, linkedin, researchgate, shared, soundcloud, spotify, teaching) |
 | 5 user-named stacks | Fully built and wired: `infrastructure/stacks/croilar-{convex, dagster, hono-api, marimo, web}/` |
 | Dagster helpers | `_shared/{agents,config,database,embeddings,mcp,observability}/` — **packaging fixed** (issue #17 closed); all subdirs now importable as `croilar._shared.X` |
 
@@ -28,9 +28,9 @@ how to combine:
 
 | # | Issue | Tracked in | Severity |
 |--:|:--|:--|:--|
-| 1 | **RESOLVED 2026-06-15.** `croilar/__init__.py` did not exist + `_shared` and `dagster_assets` were missing from `croilar/pyproject.toml`. **Fixed by** adding `croilar/__init__.py` + changing `croilar/pyproject.toml [tool.hatch.build.targets.wheel].packages = ["."]` + a post-install `croilar/scripts/fix-pth.sh` script that rewrites uv's broken editable-install `.pth` file. The conftest's `croilar_str` sys.path hack was REMOVED (no longer needed). The Phase 1.6 test now passes cleanly (no more `pytest.xfail`). | GitHub issue #17 | **closed** |
-| 2 | `croilar/dlt_utils/destinations.py` is a defensive shim identical in pattern to `tuatha/dlt_utils/destinations.py` (re-exports oideachais' namespaced destinations, falls back to local if `oideachais` not on sys.path). The local-fallback code duplicates pre-Phase-2.3 logic and should be deleted once the oideachais workspace dep is wired. | `croilar/dlt_utils/destinations.py` (~85 lines, ~40 of which are the local fallback) | medium — same as tuatha #2 |
-| 3 | Pre-existing test failures unrelated to issue #17: (a) `tests/test_smoke.py::test_module_imports[dlt_utils]` imports `DuckLakeConfig` from the shim, but the shim doesn't export it (pre-Phase-2.3 had it). (b) `tests/test_smoke.py::test_dlt_duckdb_fallback` uses old API `get_duckdb_fallback(base_path=...)` but the shim only has `get_duckdb_fallback_destination(database_path=...)`. (c) `tests/dlt_assets/test_spotify_soundcloud_labels.py::test_croilar_dlt_assets_module_imports` asserts a `spotify_ingestion_asset` symbol that doesn't exist. All 3 are pre-existing from the lateralise-british-isles-domains Phase 2.3 change. | git log `croilar/tests/test_smoke.py` | low — pre-existing |
+| 1 | **RESOLVED 2026-06-15.** `sruth/croilar/__init__.py` did not exist + `_shared` and `dagster_assets` were missing from `sruth/croilar/pyproject.toml`. **Fixed by** adding `sruth/croilar/__init__.py` + changing `sruth/croilar/pyproject.toml [tool.hatch.build.targets.wheel].packages = ["."]` + a post-install `sruth/croilar/scripts/fix-pth.sh` script that rewrites uv's broken editable-install `.pth` file. The conftest's `croilar_str` sys.path hack was REMOVED (no longer needed). The Phase 1.6 test now passes cleanly (no more `pytest.xfail`). | GitHub issue #17 | **closed** |
+| 2 | `sruth/croilar/dlt_utils/destinations.py` is a defensive shim identical in pattern to `sruth/tuatha/dlt_utils/destinations.py` (re-exports oideachais' namespaced destinations, falls back to local if `oideachais` not on sys.path). The local-fallback code duplicates pre-Phase-2.3 logic and should be deleted once the oideachais workspace dep is wired. | `sruth/croilar/dlt_utils/destinations.py` (~85 lines, ~40 of which are the local fallback) | medium — same as tuatha #2 |
+| 3 | Pre-existing test failures unrelated to issue #17: (a) `tests/test_smoke.py::test_module_imports[dlt_utils]` imports `DuckLakeConfig` from the shim, but the shim doesn't export it (pre-Phase-2.3 had it). (b) `tests/test_smoke.py::test_dlt_duckdb_fallback` uses old API `get_duckdb_fallback(base_path=...)` but the shim only has `get_duckdb_fallback_destination(database_path=...)`. (c) `tests/dlt_assets/test_spotify_soundcloud_labels.py::test_croilar_dlt_assets_module_imports` asserts a `spotify_ingestion_asset` symbol that doesn't exist. All 3 are pre-existing from the lateralise-british-isles-domains Phase 2.3 change. | git log `sruth/croilar/tests/test_smoke.py` | low — pre-existing |
 
 - a **public-facing** persona-aware portfolio (multiple identities sharing one
   domain),
@@ -55,7 +55,7 @@ infrastructure.
 ## 1. Why this exists
 
 `kings_college_galway` is a polyglot monorepo with four large subprojects
-(`oideachais/`, `meaisínfhoghlaim/`, `tuatha/`, `croilar/`) plus 70+ Docker
+(`sruth/oideachais/`, `meaisínfhoghlaim/`, `sruth/tuatha/`, `sruth/croilar/`) plus 70+ Docker
 Compose stacks under `infrastructure/stacks/`. Each subproject historically
 re-invented its own:
 
@@ -79,7 +79,7 @@ Croílár is the **first** subproject to adopt the unified pattern:
 5. One openspec change (`croilar-revitalisation`) that captures the
    reusable design, validated with `openspec validate --strict`.
 
-If `oideachais/`, `tuatha/`, or any future subproject wants the same surface
+If `sruth/oideachais/`, `sruth/tuatha/`, or any future subproject wants the same surface
 (CV-driven personal site, dashboard, persona switching, multi-tenant auth,
 data-warehouse-backed pages), they can copy the
 [`apps/web/`](apps/web), [`apps/portal/`](apps/portal), [`packages/*`](packages/),
@@ -109,7 +109,7 @@ only re-skin the `personas/` registry.
 - **Live Spotify + SoundCloud iframes** on the music page.
 - **Custom 404** with persona-aware "Back to Home" CTA.
 - **46 shadcn/ui components** lifted from `eile/examples/ui/vibesdk/`
-  in `@croilar/ui` (button, card, dialog, sidebar, form, table, sheet,
+  in `@sruth/croilar/ui` (button, card, dialog, sidebar, form, table, sheet,
   command, sonner, etc.).
 
 ### 2.2 Internal portal (`apps/portal`)
@@ -156,15 +156,15 @@ only re-skin the `personas/` registry.
 
 ### 2.4 Backend
 
-- **Hono 4** server at `croilar/hono-api/` — BetterAuth OIDC issuer
+- **Hono 4** server at `sruth/croilar/hono-api/` — BetterAuth OIDC issuer
   (`auth.croilar.cianfhoghlaim.ie`), Drizzle adapter against
   PlanetScale Postgres (with pgBouncer-safe `prepare: false`), 4-org
   multi-tenant RBAC, Drizzle migrations, OIDC discovery + JWKS.
-- **Convex** at `croilar/convex/` — 9-table schema (personas, orgs,
+- **Convex** at `sruth/croilar/convex/` — 9-table schema (personas, orgs,
   memberships, portfolio pages, CV entries, music entries, GitHub repos,
   contact submissions, invites) with 8 query/mutation functions, 4
   crons, and 2 actions for external API calls.
-- **DuckDB** at `croilar/_shared/database/` — singleton read-only
+- **DuckDB** at `sruth/croilar/_shared/database/` — singleton read-only
   connection helper, env-driven path, writer context manager.
 - **PlanetScale Postgres** (`aws-eu-west-2-1.pg.psdb.cloud`) holds 3
   schemas: `better_auth`, `convex`, `ducklake_catalog`.
@@ -199,10 +199,10 @@ only re-skin the `personas/` registry.
 - **`openspec/changes/croilar-revitalisation/`** — the canonical spec with
   5 capability deltas (3 MODIFIED + 2 NEW), validated
   `openspec validate --strict`.
-- **31 pytest tests** in `croilar/tests/` (smoke + database) all passing
-  via `uv run pytest croilar/tests/`.
-- **TypeScript typecheck** passes for `@croilar/web`, `@croilar/portal`,
-  `@croilar/hono-api`, `@croilar/ui`, `@croilar/db`, `@croilar/i18n`.
+- **31 pytest tests** in `sruth/croilar/tests/` (smoke + database) all passing
+  via `uv run pytest sruth/croilar/tests/`.
+- **TypeScript typecheck** passes for `@sruth/croilar/web`, `@sruth/croilar/portal`,
+  `@sruth/croilar/hono-api`, `@sruth/croilar/ui`, `@sruth/croilar/db`, `@sruth/croilar/i18n`.
 
 ---
 
@@ -283,7 +283,7 @@ Three runtime layers, each independently deployable:
 
 ### 4.1 Bun + Vite + TanStack Router (not Next.js, not Remix)
 
-The monorepo already had `oideachais/web/` and `tuatha/ui/` on
+The monorepo already had `sruth/oideachais/web/` and `sruth/tuatha/ui/` on
 TanStack Router v1 with Vite. Croílár adopts the same. Reasons:
 
 - **One framework, two surface areas** — `apps/web` and `apps/portal`
@@ -393,7 +393,7 @@ app, not the library.
   existing `oideachais` and `tuatha` blueprints. No new vocabulary
   to learn.
 - **Pocket ID OIDC** is the only OIDC IdP the platform trusts
-  (also used by `crypteolas` and `oideachais/dashboard`). BetterAuth
+  (also used by `crypteolas` and `sruth/oideachais/dashboard`). BetterAuth
   issues tokens for *its own* clients (Convex, web, portal); the user
   log-in flow goes through Pocket ID for first-factor SSO.
 
@@ -455,7 +455,7 @@ If a future `kings_college_galway` subproject (`oideachais-portal`,
 fork path is:
 
 1. **Copy `apps/web` → `<new>/apps/web`**; rename the workspace
-   package from `@croilar/web` to `<@new>/web`; re-point the persona
+   package from `@sruth/croilar/web` to `<@new>/web`; re-point the persona
    registry at the new subproject's persona set.
 2. **Copy `apps/portal`** if the new subproject wants an internal
    dashboard; otherwise skip.
@@ -505,7 +505,7 @@ reference; `croilar-revitalisation` is the canonical spec.
 Run with:
 
 ```bash
-uv run pytest croilar/tests/ -v
+uv run pytest sruth/croilar/tests/ -v
 ```
 
 ---
@@ -517,7 +517,7 @@ croilar/
 ├── apps/                         # Bun workspaces (TanStack Start apps)
 │   ├── web/                      # Public persona sites
 │   │   ├── Dockerfile
-│   │   ├── package.json          # @croilar/web
+│   │   ├── package.json          # @sruth/croilar/web
 │   │   ├── src/
 │   │   │   ├── routes/
 │   │   │   │   ├── __root.tsx    # Persona switcher, theme + i18n loader
@@ -732,8 +732,8 @@ openspec/
 mise install           # installs the toolchain
 bun install            # bun workspaces
 uv sync                # uv workspace (croilar)
-cp croilar/.dlt/secrets.toml.example croilar/.dlt/secrets.toml
-cp croilar/hono-api/.env.example croilar/hono-api/.env
+cp sruth/croilar/.dlt/secrets.toml.example sruth/croilar/.dlt/secrets.toml
+cp sruth/croilar/hono-api/.env.example sruth/croilar/hono-api/.env
 bun run secrets:init   # infisical → .env hydration
 
 # bring up the local data services
@@ -747,7 +747,7 @@ docker compose -f infrastructure/stacks/croilar-hono-api/compose.yaml \
                up -d
 
 # generate Drizzle migrations + apply
-cd croilar/hono-api
+cd sruth/croilar/hono-api
 bun run db:generate
 bun run db:migrate
 
@@ -757,7 +757,7 @@ USE_LOCAL_SCRAPES=true DUCKDB_PATH=./croilar/data/croilar.duckdb \
   uv run python -m pipelines.spotify.source
 
 # start the web app
-cd croilar/apps/web
+cd sruth/croilar/apps/web
 bun run dev
 ```
 
@@ -768,13 +768,13 @@ Open <http://localhost:3003/aleyum> and
 
 ```bash
 # from the monorepo root
-uv run pytest croilar/tests/ -v
+uv run pytest sruth/croilar/tests/ -v
 
 # TypeScript
-cd croilar/apps/web && bun run typecheck
-cd croilar/apps/portal && bun run typecheck
-cd croilar/hono-api && bun run typecheck
-cd croilar/packages/ui && bun run typecheck
+cd sruth/croilar/apps/web && bun run typecheck
+cd sruth/croilar/apps/portal && bun run typecheck
+cd sruth/croilar/hono-api && bun run typecheck
+cd sruth/croilar/packages/ui && bun run typecheck
 ```
 
 ### 9.4 OpenSpec
@@ -793,15 +793,15 @@ deliberately *not* the only project in `kings_college_galway`; it is
 the **template** for any other subproject that wants the same
 surface.
 
-If `oideachais/` wants a CV-style "team members" page that shows
+If `sruth/oideachais/` wants a CV-style "team members" page that shows
 every contributor's projects, music, and research papers: copy
 `apps/web`, point the persona registry at the contributors in
-`oideachais/data_platform/agents/`, and you're done. The same
+`sruth/oideachais/data_platform/agents/`, and you're done. The same
 auth, the same i18n, the same theme tokens, the same data wiring.
 
-If `tuatha/` wants to add a "key contributors" persona for its open
+If `sruth/tuatha/` wants to add a "key contributors" persona for its open
 source maintainers: copy `apps/web`, register a new persona, point
-at the `tuatha/` GitHub repos via the existing GitHub DLT pipeline.
+at the `sruth/tuatha/` GitHub repos via the existing GitHub DLT pipeline.
 
 If a brand-new `consulting-site/` subproject is added: copy `apps/web`
 + `apps/portal` + `hono-api/` + `convex/`, register `aleyum` and
@@ -852,8 +852,8 @@ The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
 
 ## Common workflows
 
-1. **Add a new stream** — `croilar/config/sources.yaml` (see `.agents/skills/croilar-stream-registry/`)
-2. **Add a new persona** — `croilar/config/personas.yaml` + `croilar/apps/web/src/routes/`
-3. **Add a new BAML extraction** — `croilar/baml_src/<name>.baml` (the persona-specific schemas)
-4. **Add a new Dagster asset** — `croilar/dagster_assets/<area>/<asset>.py`
-5. **Add a new Convex function** — `croilar/convex/<area>/<function>.ts`
+1. **Add a new stream** — `sruth/croilar/config/sources.yaml` (see `.agents/skills/croilar-stream-registry/`)
+2. **Add a new persona** — `sruth/croilar/config/personas.yaml` + `sruth/croilar/apps/web/src/routes/`
+3. **Add a new BAML extraction** — `sruth/croilar/baml_src/<name>.baml` (the persona-specific schemas)
+4. **Add a new Dagster asset** — `sruth/croilar/dagster_assets/<area>/<asset>.py`
+5. **Add a new Convex function** — `sruth/croilar/convex/<area>/<function>.ts`

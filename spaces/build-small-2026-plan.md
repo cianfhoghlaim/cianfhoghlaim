@@ -106,7 +106,7 @@ Per `docs/05-web/ui-components.md:381-384` and `docs/ui-inspiration/UI_INSPIRATI
 **3 themes × 7 features (4 new added in the audit):**
 
 **Theme A — Foclóir na Sé Náisiún (Aer):**
-1. Type English word → 7-nation cognate table (`oideachais/samplaí/cognates.yaml`)
+1. Type English word → 7-nation cognate table (`sruth/oideachais/samplaí/cognates.yaml`)
 2. Pronunciation playback (Chatterbox for 5 langs + mms-tts-ga for Irish)
 3. **NEW: Live Terminology Cross-Reference** — GaDOIS Tearma API from `docs/04-ai-ml/celtic-language-ai.md:69-70`
 4. **NEW: Bardic Grade Quiz** — Ollamh, Anruth, Clí, Cana, Doss, Macfuirmid, Fochlocon via BAML `CelticWord`
@@ -121,7 +121,7 @@ Per `docs/05-web/ui-components.md:381-384` and `docs/ui-inspiration/UI_INSPIRATI
 5. **NEW: Scottish Gaelic Árainneachd (Environment) Geospatial Explorer** — H3 hex grid from `docs/06-product/celtic-mmo.md:365`
 
 **Theme C — Curaclam Trasteorann (Aer):**
-1. Ask curriculum question in EN/GA → 12 BAML agents vote via BAML `CompareCurricula` from `tuatha/baml_src/celtic_curriculum.baml:188-214`
+1. Ask curriculum question in EN/GA → 12 BAML agents vote via BAML `CompareCurricula` from `sruth/tuatha/baml_src/celtic_curriculum.baml:188-214`
 2. Each agent shows its provenance jurisdiction
 3. **NEW: SQA ↔ NCCA ↔ WJEC ↔ CCEA Alignment Matrix** — from `docs/06-product/educational-platform.md:67-74` + `docs/04-ai-ml/knowledge-graphs.md:389-413`
 4. **NEW: Cornish & Breton Inclusion** — "The Forgotten Nations" panel from `docs/04-ai-ml/celtic-language-ai.md:59-60`
@@ -149,14 +149,14 @@ Per `docs/05-web/ui-components.md:381-384` and `docs/ui-inspiration/UI_INSPIRATI
    - **Rhiannon** (Prysgwyddion, Dyfed) — `en:Rhiannon`
    - **Dian Cécht** (the Leinster Healing Well) — `en:Dian_Cecht`
    - **Cian** (Loughcrew, Co. Meath) — `en:Cian`
-3. **NEW: Uí Liatháin Exile Quest Chain** — traces Uí Liatháin migration Munster → Cornwall → Dyfed via BAML `MythologicalCharacter` (`tuatha/baml_src/mythology_extraction.baml:38-58`)
+3. **NEW: Uí Liatháin Exile Quest Chain** — traces Uí Liatháin migration Munster → Cornwall → Dyfed via BAML `MythologicalCharacter` (`sruth/tuatha/baml_src/mythology_extraction.baml:38-58`)
 4. **NEW: Déisi Living Epic** — re-enactment of the Expulsion of the Déisi from Tara to Waterford via `MythologicalStory`
 5. **NEW: Manannán's Ferryman's Trial** — 3 riddles via BAML `GenerateNPCDialogue` (level-gated)
 6. **NEW: Rhiannon's Justice Mechanic** — investigate evidence via `CharacterRelationship` for branching narrative
-7. **NEW: Cian's Sun-Gem Quest** — shape-shifting minigame (boar/wolf/hawk) using WGSL particle compute shader at `tuatha/crates/wgpu/celtic-shaders/src/lib.rs:1-19`
+7. **NEW: Cian's Sun-Gem Quest** — shape-shifting minigame (boar/wolf/hawk) using WGSL particle compute shader at `sruth/tuatha/crates/wgpu/celtic-shaders/src/lib.rs:1-19`
 8. **Oideachais Dagster assets overlaid** as MotherDuck Dives (CSO Small Areas, Pobal HP, Ofsted/Estyn/ETI inspections, Met Éireann/BBC weather, Pobal Trutz Baicel 2022)
-9. **Anam SBT mounter** — CuchulainnNFT.sol from `tuatha/apps/crypteolas demo/anam-contracts/src/CuchulainnNFT.sol` deployed on local Anvil (Hardhat Network, no real chain, no gas). 5-element system.
-10. **Croílár BAML integration** — `tuatha/baml_src/curriculum_agent.py` + `tuatha/baml_src/celtic_curriculum.baml` for cross-nation curriculum comparison
+9. **Anam SBT mounter** — CuchulainnNFT.sol from `sruth/tuatha/apps/crypteolas demo/anam-contracts/src/CuchulainnNFT.sol` deployed on local Anvil (Hardhat Network, no real chain, no gas). 5-element system.
+10. **Croílár BAML integration** — `sruth/tuatha/baml_src/curriculum_agent.py` + `sruth/tuatha/baml_src/celtic_curriculum.baml` for cross-nation curriculum comparison
 
 **BAML schemas:**
 - **Existing (reused):** `MythologicalCharacter`, `MythologicalStory`, `GenerateNPCDialogue`, `CharacterRelationship`
@@ -203,7 +203,7 @@ Create `spaces/_common/` with:
 - `social_card.py` — auto-renders the social-post card with the HF logo, project name, and a "Built at NUI Galway" line
 - `demo_recorder.py` — 30-second screen-recording helper using `gradio` built-ins + `moviepy`
 - `anam_bonneagar_footer.py` — small per-Space footer showing Pobal HP decile + 32B model alias + linter score
-- `i18n.py` — bilingual EN/GA toggle (using `croilar/packages/i18n/` pattern)
+- `i18n.py` — bilingual EN/GA toggle (using `sruth/croilar/packages/i18n/` pattern)
 
 ---
 
@@ -245,7 +245,7 @@ All models ≤ 32B. Primary: HF Inference (cloud).
 
 - **HF Inference latency for BAML extraction** → 3-tier fallback chain (Qwen2.5-7B → Llama-3.1-8B → Gemma-2-9b-it) automatically retries.
 - **BAML schemas need a cloud client for each Space** → fork `tuatha_clients.baml` → `clients_hackathon.baml` re-pointed to HF Inference; the long-term monorepo `client LiteLLM` stays untouched.
-- **BAML client name collision in the merged `baml_client/`** → follow the same renaming convention as `tuatha/baml_src/clients.baml` → `tuatha_clients.baml`.
+- **BAML client name collision in the merged `baml_client/`** → follow the same renaming convention as `sruth/tuatha/baml_src/clients.baml` → `tuatha_clients.baml`.
 - **Spaces boot time with bundled models** → use HF Inference for chat (fast cold start); only bundle the model in Space 4 (Anvil sidecar, no chat model).
 - **Fada / tironian / punctum delens preservation** → every BAML function uses `_normalize_irish_text()` from `meaisínfhoghlaim/ocr/gaelic_metrics.py:28-61`; fada-accuracy verified at every step.
 - **Anvil sidecar in Space 4 may not start on HF Spaces (CPU-only, no GPU)** → fall back to deterministic SVG-only mounter (no live chain).

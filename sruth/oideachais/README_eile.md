@@ -481,7 +481,7 @@ uv run ruff check --fix .
 ### Type Checking
 
 ```bash
-uv run mypy oideachais/
+uv run mypy sruth/oideachais/
 ```
 
 ## Deployment

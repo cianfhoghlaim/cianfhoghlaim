@@ -35,7 +35,7 @@ token.
 ## Architecture
 
 ```
-spaces/anam_tuatha/
+spaces/anam_sruth/tuatha/
 ├── app.py               # Gradio: 7-tab integration app
 ├── chemistry_visual.py  # 8-molecule CPK-coloured SVG renderer
 ├── gaelscribhneoir.py   # Fada/eclipsis/punctum Irish-text quality checker

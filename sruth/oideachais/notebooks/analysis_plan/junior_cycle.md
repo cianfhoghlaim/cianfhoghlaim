@@ -1,7 +1,7 @@
 # Junior Cycle — Analysis Plan
 
 Cianfhoghlaim Oideachais — bilingual agentic platform. This analysis plan is
-for the `oideachais/notebooks/dashboards/junior_cycle.py` marimo notebook.
+for the `sruth/oideachais/notebooks/dashboards/junior_cycle.py` marimo notebook.
 
 ## Questions
 

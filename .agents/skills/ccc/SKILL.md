@@ -23,7 +23,7 @@ description: "This skill should be used when code search, file/directory summary
 > `IMPORTS`, `CALLS`, `EXTENDS`, `IMPLEMENTS`, `USES`, `DEFINES`).
 > 29+ language detection via
 > `sruth/oideachais/cocoindex_flows/chunking/languages.py` (ported from
-> `codeolas/chunking/languages.py`). Use the v1 Python API
+> `sruth/codeolas/chunking/languages.py`). Use the v1 Python API
 > `search_code_graph(file_path=..., node_type=...)` to query the
 > graph table.
 >

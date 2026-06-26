@@ -3,7 +3,7 @@
 > **Read this first if you are picking up work in this sub-package.**
 > This document explains what was dropped, what shims remain, and what
 > stubs are in place. The full refactor is documented in
-> `openspec/changes/consolidate-external-libs-into-tuatha/`.
+> `openspec/changes/consolidate-external-libs-into-sruth/tuatha/`.
 
 ## What this package is
 
@@ -53,7 +53,7 @@ imports. All have been rewritten.
 | `from crypteolas.knowledge_graph.X import Y` | `from tuatha.crypteolas.knowledge_graph.X import Y` |
 
 58 import sites across 17 files were rewritten. The full list is in the
-consolidation spec under `openspec/changes/consolidate-external-libs-into-tuatha/`.
+consolidation spec under `openspec/changes/consolidate-external-libs-into-sruth/tuatha/`.
 
 ### Class B: `sruth.crypteolas.*` and `sruth.shared.*` (replaced with shims)
 
@@ -65,9 +65,9 @@ consolidation spec under `openspec/changes/consolidate-external-libs-into-tuatha
 | `from sruth.shared.agent_os.a2a import call_agent` | `from tuatha.crypteolas._shims.agent_os.a2a import call_agent` | Shim: returns a placeholder response. |
 | `from sruth.shared.dagster import LakeKeeperResource` | `from tuatha.crypteolas._shims.dagster import LakeKeeperResource` | Shim: `ConfigurableResource` stub. |
 | `from sruth.shared.dagster.components.sruth_components import …` | `from tuatha.crypteolas._shims.dagster.components.sruth_components import …` | Shim: empty `Definitions` for all four component classes. |
-| `from sruth.códeolas import chunk_code_file, detect_language` (in `agents/adk/architecture_agent.py`) | `from codeolas import chunk_code_file, detect_language` | Points at the new `tuatha/codeolas/` package. |
+| `from sruth.códeolas import chunk_code_file, detect_language` (in `agents/adk/architecture_agent.py`) | `from codeolas import chunk_code_file, detect_language` | Points at the new `sruth/tuatha/codeolas/` package. |
 
-The `_shims/` package lives at `tuatha/crypteolas/_shims/`. Each shim
+The `_shims/` package lives at `sruth/tuatha/crypteolas/_shims/`. Each shim
 re-implements just enough of the original API to satisfy the import and
 let the test suite load. Replace with real implementations as the
 broader monorepo work progresses.
@@ -80,19 +80,19 @@ load and be skipped cleanly:
 
 | Shim | Real implementation |
 |:--|:--|
-| `tuatha/crypteolas/knowledge_graph/cognee_client.py` | Re-exports from `cognee/static_knowledge.py` + legacy aliases (`get_cognee_client` → `setup_cognee`, `add_document` → `add_protocol_knowledge`, etc.). |
-| `tuatha/crypteolas/knowledge_graph/graphiti_client.py` | Re-exports from `graphiti/temporal_graph.py` + legacy aliases. |
-| `tuatha/crypteolas/knowledge_graph/falkordb_client.py` | Stub: returns placeholder client + empty Cypher results. |
-| `tuatha/crypteolas/knowledge_graph/memgraph_client.py` | Stub: returns placeholder client + empty query results. |
+| `sruth/tuatha/crypteolas/knowledge_graph/cognee_client.py` | Re-exports from `cognee/static_knowledge.py` + legacy aliases (`get_cognee_client` → `setup_cognee`, `add_document` → `add_protocol_knowledge`, etc.). |
+| `sruth/tuatha/crypteolas/knowledge_graph/graphiti_client.py` | Re-exports from `graphiti/temporal_graph.py` + legacy aliases. |
+| `sruth/tuatha/crypteolas/knowledge_graph/falkordb_client.py` | Stub: returns placeholder client + empty Cypher results. |
+| `sruth/tuatha/crypteolas/knowledge_graph/memgraph_client.py` | Stub: returns placeholder client + empty query results. |
 
 When the test suite is updated to import from the canonical module
 names, these shims can be deleted.
 
 ## BAML client name resolution
 
-`tuatha/baml_src/clients.baml` was renamed to `tuatha/baml_src/tuatha_clients.baml`
-so that the two `baml_src/` directories (`tuatha/baml_src/` and
-`tuatha/crypteolas/baml_src/`) can coexist without a filename collision.
+`sruth/tuatha/baml_src/clients.baml` was renamed to `sruth/tuatha/baml_src/tuatha_clients.baml`
+so that the two `baml_src/` directories (`sruth/tuatha/baml_src/` and
+`sruth/tuatha/crypteolas/baml_src/`) can coexist without a filename collision.
 
 The crypteolas `.baml` files defined clients with the same names as the
 Celtic MMO's clients (`GPT4o`, `Claude`, etc.) but with different
@@ -122,17 +122,17 @@ prefixed names.
 
 ## Cloudflare Workers (TODO)
 
-`tuatha/crypteolas/wrangler.toml` is preserved with a `# TODO` comment
+`sruth/tuatha/crypteolas/wrangler.toml` is preserved with a `# TODO` comment
 explaining that `workers/index.ts` does not yet exist. The wrangler
 config is otherwise valid: the R2 buckets, KV namespaces, and the
 `DEFAULT_PAYMENT_NETWORK = "cronos"` settings are all kept intact.
 When the Workers code is added, it should live at
-`tuatha/crypteolas/workers/index.ts` and serve the x402 payment
+`sruth/tuatha/crypteolas/workers/index.ts` and serve the x402 payment
 middleware + R2 proxy.
 
 ## Document relocation
 
-All `*.md` documentation files have been moved to `tuatha/crypteolas/docs/`:
+All `*.md` documentation files have been moved to `sruth/tuatha/crypteolas/docs/`:
 
 - `ARCHITECTURE.md` (25 KB)
 - `CRYPTEOLAS_INTEGRATION_GUIDE.md` (26 KB)
@@ -159,7 +159,7 @@ The three new `Definitions` registered for the `tuath` workspace are:
 |:--|:--|
 | `tuath` (Celtic MMO) | `dagster_assets.definitions` |
 | `crypteolas` (this package) | `crypteolas.definitions` |
-| `crypteolas_demo` (`tuatha/apps/crypteolas_demo/`) | `crypteolas_demo.definitions` |
+| `crypteolas_demo` (`sruth/tuatha/apps/crypteolas_demo/`) | `crypteolas_demo.definitions` |
 
 ## How to use
 

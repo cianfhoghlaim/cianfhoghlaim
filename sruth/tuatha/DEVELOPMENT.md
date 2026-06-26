@@ -14,11 +14,11 @@ sub-packages — see [`README.md`](README.md) for the full structure).
 | Node.js | 22+ | `mise install node@22` or `brew install node@22` |
 | Bun | 1.3+ | `mise install bun@1.3` or `curl -fsSL https://bun.sh/install \| bash` |
 
-> Note: the `tuatha/ui/` Celtic-MMO frontend still uses `pnpm` historically,
+> Note: the `sruth/tuatha/ui/` Celtic-MMO frontend still uses `pnpm` historically,
 > but the rest of the monorepo (including the new `apps/crypteolas demo/`
 > TypeScript app) has standardised on `bun`. Run `bun install` in
 > `apps/crypteolas demo/` and follow the local README for the legacy
-> `tuatha/ui/` workspace.
+> `sruth/tuatha/ui/` workspace.
 
 ## Environment Setup
 
@@ -79,7 +79,7 @@ cd tuatha
 docker compose up -d
 ```
 
-This starts (per `tuatha/docker-compose.yaml` + `tuatha/compose.dev.yaml`):
+This starts (per `sruth/tuatha/docker-compose.yaml` + `sruth/tuatha/compose.dev.yaml`):
 - **FalkorDB** (port 7687) - Graphiti knowledge graph
 - **LanceDB** - Vector store (file-based, no container)
 - **Redis** (port 6379) - Session cache
@@ -95,7 +95,7 @@ dagster-webserver, dagster-daemon, memgraph, memgraph-lab, dragonfly,
 langfuse, lance-viewer):
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose -f compose.yaml -f compose.dev.yaml up -d
 ```
 
@@ -196,7 +196,7 @@ mise dagster:crypteolas
 ### Materialize Assets (Crypteolas Demo)
 
 ```bash
-cd tuatha/apps/crypteolas_demo
+cd sruth/tuatha/apps/crypteolas_demo
 uv run dagster asset materialize -m definitions --select fibo_json_configs
 ```
 
@@ -249,8 +249,8 @@ Or per-sub-package:
 
 ```bash
 cd tuatha
-uv run pytest codeolas/tests/ -v            # códeolas (35 unit + 31 integration)
-uv run pytest crypteolas/tests/ -v         # crypteolas (61 passing + pre-existing failures)
+uv run pytest sruth/codeolas/tests/ -v            # códeolas (35 unit + 31 integration)
+uv run pytest sruth/crypteolas/tests/ -v         # crypteolas (61 passing + pre-existing failures)
 ```
 
 Per-package mise aliases:
@@ -283,7 +283,7 @@ uv run pytest tests/test_hybrid_search.py tests/test_graphiti_integration.py -v
 uv run pytest tests/test_api_endpoints.py::test_health_check -v
 
 # códeolas unit tests only (skip integration)
-uv run pytest codeolas/tests/ -v -m "not integration and not slow"
+uv run pytest sruth/codeolas/tests/ -v -m "not integration and not slow"
 ```
 
 ### Test Fixtures
@@ -294,7 +294,7 @@ The test suite uses `conftest.py` with fixtures for:
 - Mock FalkorDB connection
 - Sample curriculum data
 
-The `codeolas/tests/conftest.py` honours the `CODEOLAS_REPO_PATH` env var
+The `sruth/codeolas/tests/conftest.py` honours the `CODEOLAS_REPO_PATH` env var
 (falls back to `os.getcwd()`) so the test runs on any machine layout.
 
 ## Running the Demo
@@ -318,7 +318,7 @@ Features demonstrated:
 ### Celtic MMO UI (Vinxi + Babylon.js)
 
 ```bash
-cd tuatha/ui
+cd sruth/tuatha/ui
 bun install
 bun run dev
 # → http://localhost:3000 (proxies to API at :8000)
@@ -327,7 +327,7 @@ bun run dev
 ### Crypteolas Demo (TanStack Start stub)
 
 ```bash
-cd tuatha/apps/crypteolas_demo
+cd sruth/tuatha/apps/crypteolas_demo
 bun install
 bun run typecheck
 bun run dev
@@ -337,7 +337,7 @@ bun run dev
 ### Crypteolas Demo Gradio UI (FIBO image gen)
 
 ```bash
-cd tuatha/apps/crypteolas_demo
+cd sruth/tuatha/apps/crypteolas_demo
 uv run python -m ui.app
 ```
 
@@ -457,14 +457,14 @@ uv run dagster asset wipe -m dagster_assets.definitions --select celtic_curricul
 ### Dagster "Cannot annotate `context` parameter with type AssetExecutionContext"
 
 This is a Dagster 1.12.6 vs prior-version compatibility issue in the crypteolas
-assets. See `tuatha/crypteolas/STATUS.md` for the full list of pre-existing
+assets. See `sruth/tuatha/crypteolas/STATUS.md` for the full list of pre-existing
 issues; the structural refactor is complete but the asset-level API mismatch
 needs separate fix.
 
 ### Crypteolas Demo TanStack app stubs
 
 If `bun run dev` fails because of a missing dependency or import, check
-`tuatha/apps/crypteolas_demo/STATUS.md` §"What was stubbed" for the list of
+`sruth/tuatha/apps/crypteolas_demo/STATUS.md` §"What was stubbed" for the list of
 12 `src/lib/*` modules and 3 `models/*` modules. The shell is buildable but
 the implementations are TODO.
 
@@ -513,7 +513,7 @@ tuatha/
 ├── tests/                         # conftest + 4 pytest files
 ├── ui/                            # TypeScript Vinxi + Babylon.js (bun workspace)
 │
-├── codeolas/                      # === CONSOLIDATED from códeolas_codebase_indexing/ ===
+├── sruth/codeolas/                      # === CONSOLIDATED from códeolas_codebase_indexing/ ===
 │   ├── STATUS.md                  # dedup + shim history
 │   ├── __init__.py                # lazy public API
 │   ├── cli.py, pyproject.toml
@@ -526,7 +526,7 @@ tuatha/
 │   ├── compose.yaml, compose.dev.yaml
 │   └── .forgejo/workflows/        # CI/release (see STATUS.md re: nested workflow)
 │
-├── crypteolas/                    # === CONSOLIDATED from crypteolas_formative_assessment/ ===
+├── sruth/crypteolas/                    # === CONSOLIDATED from crypteolas_formative_assessment/ ===
 │   ├── STATUS.md                  # drops, shims, BAML renames
 │   ├── dg.toml                    # crypteolas Dagster project
 │   ├── definitions.py             # Dagster code-location
@@ -557,7 +557,7 @@ tuatha/
 │   ├── wrangler.toml              # Cloudflare Workers (TODO)
 │   └── dagster.yaml.example
 │
-└── apps/                          # === CONSOLIDATED from tuatha/tuatha_1/ ===
+└── apps/                          # === CONSOLIDATED from sruth/tuatha/tuatha_1/ ===
     └── crypteolas_demo/           # flattened from tuatha_1/
         ├── STATUS.md              # TS app stub inventory
         ├── dg.toml                # crypteolas demo Dagster project
@@ -583,11 +583,11 @@ tuatha/
 ## Related Documentation
 
 - [README.md](README.md) — the sub-package-level README (mirrors the root README)
-- [codeolas/STATUS.md](codeolas/STATUS.md) — códeolas dedup + shim history
-- [crypteolas/STATUS.md](crypteolas/STATUS.md) — crypteolas drops, shims, BAML renames
+- [sruth/codeolas/STATUS.md](sruth/codeolas/STATUS.md) — códeolas dedup + shim history
+- [sruth/crypteolas/STATUS.md](sruth/crypteolas/STATUS.md) — crypteolas drops, shims, BAML renames
 - [apps/crypteolas demo/STATUS.md](apps/crypteolas_demo/STATUS.md) — TS app stub inventory
 - [`AGENTS.md`](../AGENTS.md) — agent protocols and guard rails
-- [`openspec/changes/consolidate-external-libs-into-tuatha/`](../openspec/changes/consolidate-external-libs-into-tuatha/) — the change proposal
+- [`openspec/changes/consolidate-external-libs-into-sruth/tuatha/`](../openspec/changes/consolidate-external-libs-into-sruth/tuatha/) — the change proposal
 - [dg.toml](dg.toml) — Dagster project config (Celtic MMO code-location)
-- [crypteolas/dg.toml](crypteolas/dg.toml) — crypteolas Dagster project config
+- [sruth/crypteolas/dg.toml](sruth/crypteolas/dg.toml) — crypteolas Dagster project config
 - [apps/crypteolas demo/dg.toml](apps/crypteolas_demo/dg.toml) — demo Dagster project config

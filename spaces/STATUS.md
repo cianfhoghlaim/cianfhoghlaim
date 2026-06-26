@@ -23,7 +23,7 @@
 | Space 1 — An Scrúdú (Talamh) | code done | `spaces/an_scrudu/` — BAML extractor + heatmap + PCLM-PDF |
 | Space 2 — Meaisín Cliste (Aer + Uisce) | code done | `spaces/meaisin_cliste/` — 3-tab app, 30 cognates, 26-county map |
 | Space 3 — Cianfhoghlaim (Anam) | code done | `spaces/cianfhoghlaim/` — 6 NPCs, inline-SVG British Isles map |
-| Space 4 — Anam Tuatha (all 5 elements) | code done | `spaces/anam_tuatha/` — 7-panel integration app |
+| Space 4 — Anam Tuatha (all 5 elements) | code done | `spaces/anam_sruth/tuatha/` — 7-panel integration app |
 | 4 social cards (1200×630 PNG) | done | one per Space dir |
 | 4 voiceover scripts + storyboards + JSON sequences | done | one set per Space |
 | Deployment runbook | done | `doc/hackathons/build-small-2026-runbook.md` |
@@ -81,7 +81,7 @@ to all 4 Spaces. Idempotent — safe to re-run.
 | Space 1 source | `spaces/an_scrudu/` |
 | Space 2 source | `spaces/meaisin_cliste/` |
 | Space 3 source | `spaces/cianfhoghlaim/` |
-| Space 4 source | `spaces/anam_tuatha/` |
+| Space 4 source | `spaces/anam_sruth/tuatha/` |
 | Push script (uses `hf`) | `scripts/push_spaces_to_hf.sh` |
 | Social card renderer | `scripts/render_social_cards.py` |
 

@@ -7,7 +7,7 @@ Utilities for dlt data loading
 The canonical `EmbeddingBatcher` lives in `oideachais.dlt_utils.batching`
 and is re-exported via `oideachais.dlt_utils.__init__.EmbeddingBatcher`.
 
-The legacy `oideachais/embeddings/` package has been **removed**
+The legacy `sruth/oideachais/embeddings/` package has been **removed**
 (see `openspec/changes/consolidate-embedding-batcher/`). Do not
 re-introduce it. Import the canonical batcher from `dlt_utils` instead:
 
@@ -23,7 +23,7 @@ from oideachais.dlt_utils import (
 )
 ```
 
-The `oideachais/modal_finetune/embed_batch.py` Modal GPU worker is
+The `sruth/oideachais/modal_finetune/embed_batch.py` Modal GPU worker is
 **not** a duplicate — it is a serverless GPU `@app.cls` worker that
 runs on Modal infrastructure, not a local Python utility. The class
 name `EmbeddingService` is shared but the layer is different.
@@ -33,7 +33,7 @@ name `EmbeddingService` is shared but the layer is different.
 The 2026-06 package updates added new helpers to `dlt_utils`; see
 `openspec/changes/refactor-dlt-dagster-2026-stack-align/`.
 
-### dlt 1.0 safety helpers (`oideachais/dlt_utils/safety.py`)
+### dlt 1.0 safety helpers (`sruth/oideachais/dlt_utils/safety.py`)
 
 - `safe_dlt_run(pipeline, data)` — the canonical serial-executor
   wrapper (no change).
@@ -61,7 +61,7 @@ if mistakes:
 load_info = safe_dlt_run_with_progress(pipeline, my_source())
 ```
 
-### DuckLake 1.0 SQL helpers (`oideachais/dlt_utils/ducklake_options.py`)
+### DuckLake 1.0 SQL helpers (`sruth/oideachais/dlt_utils/ducklake_options.py`)
 
 The 2026-04-13 DuckLake 1.0 launch introduced 3 new features:
 
@@ -79,7 +79,7 @@ The 2026-04-13 DuckLake 1.0 launch introduced 3 new features:
 The `post_create_ducklake_1_0(dataset_name, table)` helper in
 `destinations.py` is the canonical post-create hook.
 
-### MotherDuck hosting options (`oideachais/dlt_utils/motherduck_options.py`)
+### MotherDuck hosting options (`sruth/oideachais/dlt_utils/motherduck_options.py`)
 
 The 2026-04-13 MotherDuck launch introduced 3 hosting options:
 
@@ -92,7 +92,7 @@ The 2026-04-13 MotherDuck launch introduced 3 hosting options:
 - `get_motherduck_destination()` — routes on the
   `MOTHERDUCK_MODE` env var (default `byob`).
 
-### DuckDB + DuckLake schema type helpers (`oideachais/dlt_utils/schema.py`)
+### DuckDB + DuckLake schema type helpers (`sruth/oideachais/dlt_utils/schema.py`)
 
 The 2026-04-13 DuckDB core updates added 2 new types:
 

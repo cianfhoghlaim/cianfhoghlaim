@@ -1,7 +1,7 @@
 # Senior Cycle (Leaving Certificate) — Analysis Plan
 
 Cianfhoghlaim Oideachais — bilingual agentic platform. This analysis plan is
-for the `oideachais/notebooks/dashboards/senior_cycle.py` marimo notebook,
+for the `sruth/oideachais/notebooks/dashboards/senior_cycle.py` marimo notebook,
 which reads from the `oideachais.senior_cycle` Cognee dataset and the
 `senior_cycle_knowledge_graph` LanceDB table.
 
@@ -32,7 +32,7 @@ which reads from the `oideachais.senior_cycle` Cognee dataset and the
 - **DLT**: `senior_cycle_with_lazy_extract` source
 - **BAML**: `baml_src/curriculum_extraction.baml` (extended with
   `LeavingCertSubject`, `RubricStyle`, `SubjectRubric`, `LazyExtractExamPaper`)
-- **JSON manifest**: `oideachais/data_platform/subjects/lc_subjects.json`
+- **JSON manifest**: `sruth/oideachais/data_platform/subjects/lc_subjects.json`
 
 ## Chart Specs
 

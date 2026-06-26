@@ -1,4 +1,4 @@
-# `oideachais/agents/adk/` — Google ADK Agent Surface
+# `sruth/oideachais/agents/adk/` — Google ADK Agent Surface
 
 **Last updated:** 2026-06-16
 
@@ -26,7 +26,7 @@ Google Agent Development Kit (ADK) agents. 17 Python modules implementing resear
 
 ### Tools
 
-`oideachais/agents/tools/`:
+`sruth/oideachais/agents/tools/`:
 - `corpus_search.py`, `corpus_tools.py` — Celtic corpus search.
 - `curriculum_search.py`, `curriculum_tools.py` — Curriculum search.
 - `geospatial_tools.py`, `spatial_query.py` — Geospatial queries.
@@ -36,20 +36,20 @@ Google Agent Development Kit (ADK) agents. 17 Python modules implementing resear
 
 ### Callbacks
 
-`oideachais/agents/adk/callbacks/`:
+`sruth/oideachais/agents/adk/callbacks/`:
 - `citation_callbacks.py` — Citation tracking callbacks for academic integrity.
 
 ## Integrations
 
 - **Google ADK** — `google.adk.agents.LlmAgent`, `SequentialAgent` (from the Google ADK Python SDK).
-- **AG-UI** — CopilotKit front-end streaming via `oideachais/web/apps/api/src/copilotkit/`.
+- **AG-UI** — CopilotKit front-end streaming via `sruth/oideachais/web/apps/api/src/copilotkit/`.
 - **Pydantic** — `BaseModel`, `Field` for response schemas.
-- **LiteLLM** — routes LLM calls through `oideachais/services/litellm/` (the canonical gateway).
+- **LiteLLM** — routes LLM calls through `sruth/oideachais/services/litellm/` (the canonical gateway).
 
 ## Cross-references
 
-- `oideachais/agents/agno/` — the Agno team-based agent surface (parallel to ADK).
-- `oideachais/agents/letta_client.py` — Letta (AgentOS) integration.
-- `oideachais/agent_os/` — AgentOS service (FastAPI).
-- `oideachais/dagster_defs/assets/agent_*` — Dagster assets that wrap agent execution.
+- `sruth/oideachais/agents/agno/` — the Agno team-based agent surface (parallel to ADK).
+- `sruth/oideachais/agents/letta_client.py` — Letta (AgentOS) integration.
+- `sruth/oideachais/agent_os/` — AgentOS service (FastAPI).
+- `sruth/oideachais/dagster_defs/assets/agent_*` — Dagster assets that wrap agent execution.
 - `docs/00-core/PROJECT_SPEC.md` — agent + Dagster + DAG architecture.

@@ -1,8 +1,8 @@
-# `oideachais/dagster_defs/assets/` — Dagster Asset Catalogue
+# `sruth/oideachais/dagster_defs/assets/` — Dagster Asset Catalogue
 
 **Last updated:** 2026-06-16
 
-21 asset modules, ~120 assets, registered in `oideachais/dagster_defs/definitions.py` (loaded into the unified `dg dev` UI via `dg.toml` → `oideachais` code location).
+21 asset modules, ~120 assets, registered in `sruth/oideachais/dagster_defs/definitions.py` (loaded into the unified `dg dev` UI via `dg.toml` → `oideachais` code location).
 
 ## Asset groups
 
@@ -54,7 +54,7 @@ Per-nation assets for `england_dfe_statistics`, `scotland_*_curriculum`, `wales_
 
 ### `author_archive_ingestion`
 
-`author_archive_assets.py`. 7 assets for the UoG / Gemini Deep Research / Google Takeout pipeline. Compute kinds: `dlt`, `ocr`, `baml`, `embedding`. (Currently mostly stubs; the v0 `author_archive_embedding.py` flow is broken — see `oideachais/REFACTORING.md` #6.)
+`author_archive_assets.py`. 7 assets for the UoG / Gemini Deep Research / Google Takeout pipeline. Compute kinds: `dlt`, `ocr`, `baml`, `embedding`. (Currently mostly stubs; the v0 `author_archive_embedding.py` flow is broken — see `sruth/oideachais/REFACTORING.md` #6.)
 
 ### `leabharlann_ingestion`
 
@@ -70,7 +70,7 @@ Per-nation assets for `england_dfe_statistics`, `scotland_*_curriculum`, `wales_
 | `leabharlann_cocoindex_zotero_update` | `leabharlann_zotero_raw`, `leabharlann_paper_metadata` | none |
 | `leabharlann_cocoindex_takeout_update` | `leabharlann_takeout_v1_raw` | none |
 
-The 3 CocoIndex-update assets invoke `subprocess.run(["cocoindex", "update", "oideachais.cocoindex_flows.leabharlann_embedding:..."])`. See `oideachais/REFACTORING.md` #16, #17, #18, #20 for known issues with this approach.
+The 3 CocoIndex-update assets invoke `subprocess.run(["cocoindex", "update", "oideachais.cocoindex_flows.leabharlann_embedding:..."])`. See `sruth/oideachais/REFACTORING.md` #16, #17, #18, #20 for known issues with this approach.
 
 ### `celtic_language`
 
@@ -127,7 +127,7 @@ The 3 CocoIndex-update assets invoke `subprocess.run(["cocoindex", "update", "oi
 
 ## Sensors
 
-`oideachais/dagster_defs/sensors/`:
+`sruth/oideachais/dagster_defs/sensors/`:
 
 - `curriculum_freshness` — Unified curriculum freshness sensor.
 - `domain_sensors` — Curriculum sitemap, exam papers (legacy).
@@ -136,10 +136,10 @@ The 3 CocoIndex-update assets invoke `subprocess.run(["cocoindex", "update", "oi
 
 ## How assets are registered
 
-`oideachais/dagster_defs/definitions.py` imports each asset module's list and concatenates them into `combined_assets`. The unified `dg dev` UI shows them all under the `oideachais` code location.
+`sruth/oideachais/dagster_defs/definitions.py` imports each asset module's list and concatenates them into `combined_assets`. The unified `dg dev` UI shows them all under the `oideachais` code location.
 
 ```python
-# oideachais/dagster_defs/definitions.py
+# sruth/oideachais/dagster_defs/definitions.py
 from .assets.leabharlann_assets import LEABHARLANN_ASSETS
 from .assets.author_archive_assets import AUTHOR_ARCHIVE_ASSETS
 # ...
@@ -165,5 +165,5 @@ defs = dg.Definitions(
 
 ## Related
 
-- `oideachais/STATUS.md` § 4 — asset catalogue.
-- `oideachais/dagster_defs/definitions.py` — the canonical asset registry.
+- `sruth/oideachais/STATUS.md` § 4 — asset catalogue.
+- `sruth/oideachais/dagster_defs/definitions.py` — the canonical asset registry.

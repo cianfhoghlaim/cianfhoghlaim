@@ -37,7 +37,7 @@ last_reviewed: 2026-06-08
 
 The 4-Space lineup is **the 5-element connective tissue** between the existing Cianfhoghlaim quadrants. The 5 elements (Talamh / Uisce / Tine / Aer / Anam) map onto the existing assets:
 
-- **Talamh (Earth)** = syllabus + curriculum + geographic layer → `oideachais/`, Space 1
+- **Talamh (Earth)** = syllabus + curriculum + geographic layer → `sruth/oideachais/`, Space 1
 - **Uisce (Water)** = chemistry/biology visual asset gen + nurturing the RAG → `meaisínfhoghlaim/`, Space 2 themes
 - **Tine (Fire)** = OCR + asset transformation pipeline → the connective tissue itself, Space 4
 - **Aer (Air)** = language + rhetoric + NPC dialogue → Celtic languages + Space 3
@@ -100,22 +100,22 @@ The 30 documents the plan must quote from directly. All have a confirmed, deep m
 **Headline:** 33 subjects, 17 years, 1 typed data pipeline.
 
 **8 features:**
-1. **NCCA syllabus heatmap** — every LO in every Leaving Cert subject, colour-coded against the 6-year attainment distribution from `oideachais/data_platform/`.
+1. **NCCA syllabus heatmap** — every LO in every Leaving Cert subject, colour-coded against the 6-year attainment distribution from `sruth/oideachais/data_platform/`.
 2. **Marking-scheme diff viewer** — BAML `leaving_cert_marking_scheme_extraction.baml` output rendered side-by-side year-on-year.
 3. **Past-paper topic graph** — force-directed graph linking topics to their prerequisite chain (consumed by Space 2).
 4. **PCLM-PDF marking-scheme pack** — `document_factory/curriculum_document.py` re-emits a printable A4 PCLM pack for chosen year × subject.
 5. **NEW: Dúchas Manuscript Explorer** — Surfaces the National Folklore Collection via the Dúchas API data model from `docs/04-ai-ml/celtic-language-ai.md:223-400`. Browse by county/story.
 6. **NEW: Policy Circular Timeline** — Uses the `CircularMetadata` BAML schema at `docs/03-agents/baml-extraction.md:508-524` to render a temporal graph of `CircularStatus`.
 7. **NEW: DPRE Live "New Papers Detected" Feed** — Exposes the DynamicPartitionsDefinition sensor pattern at `docs/02-data-platform/dagster-orchestration.md:198-218`.
-8. **NEW: Cross-Strand Prerequisite Heatmap + Pobal HP Context Overlay** — From the RDF/OWL `maths:validForLevel` at `docs/04-ai-ml/knowledge-graphs.md:402-412` and CSO Small Areas DLT source at `oideachais/data_platform/dlt_sources/geospatial/cso_small_areas.py:342-371`.
+8. **NEW: Cross-Strand Prerequisite Heatmap + Pobal HP Context Overlay** — From the RDF/OWL `maths:validForLevel` at `docs/04-ai-ml/knowledge-graphs.md:402-412` and CSO Small Areas DLT source at `sruth/oideachais/data_platform/dlt_sources/geospatial/cso_small_areas.py:342-371`.
 
 **BAML schemas to ship:**
-- **Existing:** `ExtractCurriculumSyllabus` (`oideachais/data_platform/baml_src/curriculum_extraction.baml:24-45`), `ExtractPastPaper` (`:30-54`), `ExtractMarkingScheme` (`:39-65`), `ExtractLeavingCertSyllabus` (`:28-49`).
-- **New (30-40 lines each):** `ExtractCircularMeta`, `GenerateExitCardQuestions`, `ScoreExitCardResponse` (modelled on `ResponseAnalysis` from `tuatha/baml_src/player_assessment.baml:31`), `ComposeMarkingSchemeDiff`.
+- **Existing:** `ExtractCurriculumSyllabus` (`sruth/oideachais/data_platform/baml_src/curriculum_extraction.baml:24-45`), `ExtractPastPaper` (`:30-54`), `ExtractMarkingScheme` (`:39-65`), `ExtractLeavingCertSyllabus` (`:28-49`).
+- **New (30-40 lines each):** `ExtractCircularMeta`, `GenerateExitCardQuestions`, `ScoreExitCardResponse` (modelled on `ResponseAnalysis` from `sruth/tuatha/baml_src/player_assessment.baml:31`), `ComposeMarkingSchemeDiff`.
 
-**Data sources:** `oideachais/data_platform/` Dagster assets, `oideachais/samplaí/gaeilge/irish_samples.yaml`, `oideachais/quality/completeness.py`.
+**Data sources:** `sruth/oideachais/data_platform/` Dagster assets, `sruth/oideachais/samplaí/gaeilge/irish_samples.yaml`, `sruth/oideachais/quality/completeness.py`.
 
-**Packages:** `oideachais/data_platform/baml_src/`, `oideachais/quality/`, the `document_factory/curriculum_document.py` PCLM emitter.
+**Packages:** `sruth/oideachais/data_platform/baml_src/`, `sruth/oideachais/quality/`, the `document_factory/curriculum_document.py` PCLM emitter.
 
 **Design tokens:** NCCA-branded palette (deep green + amber + stone gray) from `docs/05-web/ui-components.md:381-384`; Cinzel/Cormorant serif headers; Hades-inspired `--hades-base: #1d1d2f` + `--hades-gold: #cc9966` from `docs/ui-inspiration/UI_INSPIRATION_GUIDE.md:159-188`.
 
@@ -153,7 +153,7 @@ The 30 documents the plan must quote from directly. All have a confirmed, deep m
 - **Shared British Isles Map Component** using DuckDB Spatial + LanceDB geospatial pattern + H3 indexing.
 
 **BAML schemas to ship:**
-- **Existing:** `CelticWord` (`tuatha/baml_src/celtic_curriculum.baml:59-68`), `TerminologueEntry` (pattern from GaDOIS), `CompareCurricula` (`:188-214`).
+- **Existing:** `CelticWord` (`sruth/tuatha/baml_src/celtic_curriculum.baml:59-68`), `TerminologueEntry` (pattern from GaDOIS), `CompareCurricula` (`:188-214`).
 - **New (40 lines):** `CrossBorderAlignment` with `learning_outcome (ga, en)`, `subject`, `level`, `jurisdiction`, `equivalent_outcomes`.
 
 **Data sources:** gov.ie / gov.uk / school.wales / Education Scotland / DESC Isle of Man / Cornwall Council; Pobal HP Deprivation Index 2022; Canúint dialect audio.
@@ -177,13 +177,13 @@ The 30 documents the plan must quote from directly. All have a confirmed, deep m
    - **Rhiannon** (Prysgwyddion, Dyfed) — en:Rhiannon
    - **Dian Cécht** (the Leinster Healing Well) — en:Dian_Cecht
    - **Cian** (Loughcrew, Co. Meath) — en:Cian
-4. **NEW: Uí Liatháin Exile Quest Chain** — traces Uí Liatháin migration from Munster to Cornwall to Dyfed. Dialogue via BAML `MythologicalCharacter` (`tuatha/baml_src/mythology_extraction.baml:38-58`).
+4. **NEW: Uí Liatháin Exile Quest Chain** — traces Uí Liatháin migration from Munster to Cornwall to Dyfed. Dialogue via BAML `MythologicalCharacter` (`sruth/tuatha/baml_src/mythology_extraction.baml:38-58`).
 5. **NEW: Déisi Living Epic** — re-enactment of the Expulsion of the Déisi from Tara to Waterford. Powered by `MythologicalStory`.
 6. **NEW: Manannán's Ferryman's Trial** — 3 riddles via BAML `GenerateNPCDialogue` (level-gated). Correct answers grant passage.
 7. **NEW: Rhiannon's Justice Mechanic** — investigate evidence via `CharacterRelationship` schema for branching narrative.
-8. **NEW: Cian's Sun-Gem Quest** — shape-shifting minigame (boar/wolf/hawk) using WGSL particle compute shader at `tuatha/crates/wgpu/celtic-shaders/src/lib.rs:1-19`.
+8. **NEW: Cian's Sun-Gem Quest** — shape-shifting minigame (boar/wolf/hawk) using WGSL particle compute shader at `sruth/tuatha/crates/wgpu/celtic-shaders/src/lib.rs:1-19`.
 9. **Oideachais Dagster assets overlaid** as MotherDuck Dives (CSO Small Areas, Pobal HP, Ofsted/Estyn/ETI inspections, Met Éireann/BBC weather, Pobal Trutz Baicel 2022).
-10. **Anam SBT mounter** — CuchulainnNFT.sol from `tuatha/apps/crypteolas_demo/anam-contracts/` deployed on local Anvil (Hardhat Network, no real chain). 5-element system: Knowledge, Skill, Creativity, Community, Sovereignty.
+10. **Anam SBT mounter** — CuchulainnNFT.sol from `sruth/tuatha/apps/crypteolas_demo/anam-contracts/` deployed on local Anvil (Hardhat Network, no real chain). 5-element system: Knowledge, Skill, Creativity, Community, Sovereignty.
 
 **BAML schemas to ship:**
 - **Existing:** `MythologicalCharacter` (`:38-58`), `MythologicalStory` (`:88-104`), `GenerateNPCDialogue` (`:189-219`), `CharacterRelationship` (`:67-71`).
@@ -191,11 +191,11 @@ The 30 documents the plan must quote from directly. All have a confirmed, deep m
 
 **Hades-diegetic-UI patterns:**
 - **Boon Selection (3 vertical choices)** with deity colours (Lugh = gold, the Dagda = brown, the Morrígan = crimson) from `docs/ui-inspiration/UI_INSPIRATION_GUIDE.md:167-168`.
-- **Chiaroscuro character portraits** from `tuatha/summary.txt:590-596`.
+- **Chiaroscuro character portraits** from `sruth/tuatha/summary.txt:590-596`.
 - **Shadow-First Palette with Celtic Knotwork UI Borders** — gold `#cc9966` on dark base.
 
 **MotherDuck Dive / TanStack / CopilotKit patterns:**
-- MotherDuck Dive for "Player Progress Across the British Isles" (from `croilar/dagster_assets/dlt_assets.py:169-195`).
+- MotherDuck Dive for "Player Progress Across the British Isles" (from `sruth/croilar/dagster_assets/dlt_assets.py:169-195`).
 - TanStack Start isomorphic functions for game state (`docs/05-web/frontend-stack.md:329-342`).
 - CopilotKit `useCopilotAction` for NPC interaction (`docs/05-web/ui-components.md:220-236`).
 
@@ -369,7 +369,7 @@ The 5 elements act as the **connective tissue** between all 4 Spaces:
 | 148 | `docs/bunchloch/web/TanStack Start.md` | TanStack Start reference. | frontend-stack |
 | 149 | `docs/bunchloch/web/repo-tanstack.md` | TanStack upstream README. | frontend-stack |
 | 150 | `docs/bunchloch/web/Overview _ TanStack AI Docs.md` | TanStack AI overview. | agent-frameworks |
-| 151 | `croilar/README.md` | Croílár portfolio README. | croilar |
+| 151 | `sruth/croilar/README.md` | Croílár portfolio README. | croilar |
 
 **One off-list footgun:** `docs/bunchloch/meaisínfhoghlaim/` and `docs/bunchloch/teanga/` are **empty directories**; the canonical meaisínfhoghlaim content has been merged into `docs/04-ai-ml/*.md`. Don't grep those paths for source material.
 
@@ -381,8 +381,8 @@ The 5 elements act as the **connective tissue** between all 4 Spaces:
 |:--|:--|:--|:--|:--|:--|
 | **Gradio HF Space** | `docs/00_index.md` | `docs/cognee/COGNEE_SETUP.md` | `docs/bunchloch/tuatha/Interactive AI Pipeline Development.md` | `docs/archive/2026-06-06-data-engineering/tool-ecosystem.md` | `docs/07-standards/project-conventions.md` |
 | **BAML extraction** | `docs/03-agents/baml-extraction.md` | `docs/bunchloch/agents/BAML_COMPREHENSIVE_GUIDE.md` | `docs/bunchloch/agents/BAML Schemas for Irish Education.md` | `docs/bunchloch/agents/BAML_DUCKDB_DRAGONFLY_ANALYSIS.md` | `docs/bunchloch/agents/baml-patterns-and-best-practices.md` |
-| **Docling / Unstract VLM** | `docs/04-ai-ml/ocr-htr.md` | `docs/04-ai-ml/vector-embeddings.md` | `docs/bunchloch/old/document-intelligence-vlm.md` | `docs/archive/2026-06-06-bonneagar/vlm-ocr-comparison.md` | `docs/archive/2026-06-06-meaisinfhoghlaim/document-processing-reference.md` |
-| **Bria FIBO image gen** | `docs/bunchloch/data_engineering/FIBO Hackathon.md` | `docs/bunchloch/tuatha/Interactive AI Pipeline Development.md` | `docs/bunchloch/tuatha/Web3 Gamified Education & Asset Generation.md` | `docs/bunchloch/tuatha/AI Chemistry Education Image Generation.md` | `docs/archive/2026-06-06-meaisinfhoghlaim/AI Syllabus to JSON Schema.md` |
+| **Docling / Unstract VLM** | `docs/04-ai-ml/ocr-htr.md` | `docs/04-ai-ml/vector-embeddings.md` | `docs/bunchloch/old/document-intelligence-vlm.md` | `docs/archive/2026-06-06-bonneagar/vlm-ocr-comparison.md` | `docs/archive/2026-06-06-sruth/meaisinfhoghlaim/document-processing-reference.md` |
+| **Bria FIBO image gen** | `docs/bunchloch/data_engineering/FIBO Hackathon.md` | `docs/bunchloch/tuatha/Interactive AI Pipeline Development.md` | `docs/bunchloch/tuatha/Web3 Gamified Education & Asset Generation.md` | `docs/bunchloch/tuatha/AI Chemistry Education Image Generation.md` | `docs/archive/2026-06-06-sruth/meaisinfhoghlaim/AI Syllabus to JSON Schema.md` |
 | **LiteLLM gateway / self-hosted models** | `docs/04-ai-ml/ml-pipelines.md` | `docs/04-ai-ml/fine-tuning-guide.md` | `docs/bunchloch/bonneagar/hosting-litellm-pangolin-public-vs-private-access-models.md` | `docs/archive/2026-06-06-bonneagar/overview.md` | `docs/01-platform-architecture/secrets-management.md` |
 | **Cognee / Graphiti knowledge graph** | `docs/cognee/COGNEE_INTEGRATION.md` | `docs/cognee/CCC_INTEGRATION.md` | `docs/cognee/ARCHITECTURE.md` | `docs/cognee/INGESTION.md` | `docs/04-ai-ml/knowledge-graphs.md` |
 | **SpacetimeDB game server** | `docs/bunchloch/tuatha/SpacetimeDB.md` | `docs/bunchloch/tuatha/SPACETIMEDB_GUIDE.md` | `docs/bunchloch/tuatha/repo-spacetimedb-cookbook.md` | `docs/06-product/celtic-mmo.md` | `docs/bunchloch/tuatha/SpacetimeDB Ogham Stone Game Integration.md` |
@@ -498,7 +498,7 @@ Created in `openspec/changes/croilar-hf-build-small-2026-demo/`:
 | 6 | `meaisínfhoghlaim/pyproject.toml` does not exist. | `meaisínfhoghlaim/` | Add a note to the catalogue that meaisínfhoghlaim is a logical quadrant, not a workspace member. |
 | 7 | `pipelines/irish_document_scanner.py:19` references Confluent Kafka; the real path is RisingWave. | `meaisínfhoghlaim/pipelines/irish_document_scanner.py:19` | Document the migration in the catalogue. |
 | 8 | `root_agent.py:16` references Datadog LLMObs; the real observability path is Langfuse. | `meaisínfhoghlaim/agents/root_agent.py:16` | Update to reference Langfuse. |
-| 9 | `tuatha/summary.txt` and `tuatha/anam.md` tell different stories (summary.txt = Anam particle sim, anam.md = MMO architecture). | `tuatha/summary.txt`, `tuatha/anam.md` | Clarify in the catalogue. |
+| 9 | `sruth/tuatha/summary.txt` and `sruth/tuatha/anam.md` tell different stories (summary.txt = Anam particle sim, anam.md = MMO architecture). | `sruth/tuatha/summary.txt`, `sruth/tuatha/anam.md` | Clarify in the catalogue. |
 | 10 | `bunchloch/agents/BAML_DUCKDB_DRAGONFLY_ANALYSIS.md`, `BAML Schemas for Irish Education.md`, `BAML for Syllabus-Driven Data Extraction.md` are all marked MERGED → dead. | `docs/bunchloch/agents/` | Remove from catalogue (consolidated into BAML_COMPREHENSIVE_GUIDE). |
 | 11 | `bunchloch/old/archive-old-project-context-raw-Finetuning Qwen3-VL for Gaelic OCR.md` is the single most complete Qwen-VL finetune doc. | `docs/bunchloch/old/` | Promote to canonical for OCR; supersedes partial coverage in `docs/04-ai-ml/ocr-htr.md`. |
 | 12 | `bunchloch/old/archive-old-ml-skills-mlflow-mlflow-llm-guide.md` has richer MLflow+RAGAS code examples than the canonical. | `docs/bunchloch/old/` | Add to catalogue as recommended reading. |
@@ -508,30 +508,30 @@ Created in `openspec/changes/croilar-hf-build-small-2026-demo/`:
 | 16 | `bunchloch/tuatha/learn-to-earn-model.md` canonical: Four Treasures condensed. `archive/tuatha-mirror/` has the full elemental mapping. | `docs/bunchloch/tuatha/` | Use archive version for Space 4's 5-element framework. |
 | 17 | `docs/archive/2026-06-06-bonneagar/infrastructure-tools.md` has Komodo v2 DB migration, recursive deployment, Ansible role internals not in canonical. | `docs/archive/2026-06-06-bonneagar/` | Add to catalogue. (Note: infrastructure is archived for this hackathon.) |
 | 18 | `docs/archive/2026-06-06-context/AI_ML_PIPELINE.md:199-232` contains the original `MathQuestion` BAML schema with `text_irish`, `requires_diagram`, `topic` enum — the actual exam paper shape. | `docs/archive/2026-06-06-context/` | Add to catalogue; reuse for Space 1's `GenerateExitCardQuestions`. |
-| 19 | `docs/archive/2026-06-06-meaisinfhoghlaim/AI Syllabus to JSON Schema.md` has exhaustive FIBO JSON-native visualization architecture. | `docs/archive/2026-06-06-meaisinfhoghlaim/` | Add to catalogue; reuse for Space 4's Uisce feature. |
+| 19 | `docs/archive/2026-06-06-sruth/meaisinfhoghlaim/AI Syllabus to JSON Schema.md` has exhaustive FIBO JSON-native visualization architecture. | `docs/archive/2026-06-06-sruth/meaisinfhoghlaim/` | Add to catalogue; reuse for Space 4's Uisce feature. |
 | 20 | `docs/archive/2026-06-06-bonneagar/celtic-platform.md:1846-1879` has the 33-subject Irish Leaving Cert structure with strand breakdowns not in canonical. | `docs/archive/2026-06-06-bonneagar/` | Add to catalogue. |
-| 21 | `oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py` uses `ncca_multipartitions` (208 keys) and `sec_multipartitions` (780 keys), both DEPRECATED. | `oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py:101-107` | Use `partitions_v2` (years as `dg.Config`). |
+| 21 | `sruth/oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py` uses `ncca_multipartitions` (208 keys) and `sec_multipartitions` (780 keys), both DEPRECATED. | `sruth/oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py:101-107` | Use `partitions_v2` (years as `dg.Config`). |
 | 22 | `meaisínfhoghlaim/evaluation/ragas_pipeline.py:65` uses `datetime.utcnow()` which is deprecated in Python 3.12. | `meaisínfhoghlaim/evaluation/ragas_pipeline.py:65` | Cosmetic; use `datetime.now(datetime.UTC)`. |
 
 ---
 
 ## 12. References to upstream BAML schemas to REUSE (not redefine)
 
-1. **`tuatha/baml_src/mythology_extraction.baml`** (244 lines) — Full `MythologicalCharacter`, `MythologicalStory`, `MythologicalLocation`, `NPCDialogue`, `FolkloreElement`. The `CelticTradition` enum covers IRISH, WELSH, SCOTTISH, MANX, BRETON, CORNISH, PAN_CELTIC. The `MythologicalCycle` enum covers TUATHA_DE_DANANN, FIANNA, ULSTER, KINGS, MABINOGION, ARTHURIAN, FOLK. **All 6 Space 3 NPCs extract through this schema.**
+1. **`sruth/tuatha/baml_src/mythology_extraction.baml`** (244 lines) — Full `MythologicalCharacter`, `MythologicalStory`, `MythologicalLocation`, `NPCDialogue`, `FolkloreElement`. The `CelticTradition` enum covers IRISH, WELSH, SCOTTISH, MANX, BRETON, CORNISH, PAN_CELTIC. The `MythologicalCycle` enum covers TUATHA_DE_DANANN, FIANNA, ULSTER, KINGS, MABINOGION, ARTHURIAN, FOLK. **All 6 Space 3 NPCs extract through this schema.**
 
-2. **`oideachais/data_platform/baml_src/leaving_cert_syllabus_extraction.baml`** (49 lines) — `SyllabusTopic` + `LeavingCertSyllabus`. The typed foundation for Space 1.
+2. **`sruth/oideachais/data_platform/baml_src/leaving_cert_syllabus_extraction.baml`** (49 lines) — `SyllabusTopic` + `LeavingCertSyllabus`. The typed foundation for Space 1.
 
-3. **`tuatha/baml_src/player_assessment.baml`** — `GenerateAdaptiveAssessment` and `AnalyzePlayerResponse`. Reuse by Space 1 (exam assessment) and Space 3 (in-game skill checks).
+3. **`sruth/tuatha/baml_src/player_assessment.baml`** — `GenerateAdaptiveAssessment` and `AnalyzePlayerResponse`. Reuse by Space 1 (exam assessment) and Space 3 (in-game skill checks).
 
 ---
 
 ## 13. References to upstream notebooks/datasets/assets to reference
 
-1. **`oideachais/notebooks/mission_control.py`** — Dagster status → DLT pipeline runs → LanceDB table counts → BAML extraction success rates. Adapt into Space 1's "Pipeline Health" tab.
+1. **`sruth/oideachais/notebooks/mission_control.py`** — Dagster status → DLT pipeline runs → LanceDB table counts → BAML extraction success rates. Adapt into Space 1's "Pipeline Health" tab.
 
-2. **`oideachais/data_platform/dlt_sources/geospatial/cso_small_areas.py:342-371`** — HP Deprivation Index 2022 + DEIS schools. Reference for Space 2's school heatmap overlay and Space 4's Talamh element.
+2. **`sruth/oideachais/data_platform/dlt_sources/geospatial/cso_small_areas.py:342-371`** — HP Deprivation Index 2022 + DEIS schools. Reference for Space 2's school heatmap overlay and Space 4's Talamh element.
 
-3. **`tuatha/crates/stdb-modules/tuath-game/src/lib.rs:224-244`** — The `Npc` table struct. The canonical NPC data model. Space 3's 6 NPCs should conform to this schema even if running locally without SpacetimeDB.
+3. **`sruth/tuatha/crates/stdb-modules/tuath-game/src/lib.rs:224-244`** — The `Npc` table struct. The canonical NPC data model. Space 3's 6 NPCs should conform to this schema even if running locally without SpacetimeDB.
 
 ---
 

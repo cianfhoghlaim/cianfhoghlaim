@@ -1,4 +1,4 @@
-# `oideachais/cocoindex_flows/` — CocoIndex Embedding Flows
+# `sruth/oideachais/cocoindex_flows/` — CocoIndex Embedding Flows
 
 **Last updated:** 2026-06-16
 
@@ -20,7 +20,7 @@ CocoIndex flows that embed dlt-extracted documents into LanceDB for semantic sea
 | `research_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
 | `site_analysis_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
 
-**`oideachais/cocoindex_flows/__init__.py` uses a guarded `try/except` import so the package loads despite the broken v0 modules. The v0 modules are not re-exported; only the v1 `leabharlann_embedding` module is.**
+**`sruth/oideachais/cocoindex_flows/__init__.py` uses a guarded `try/except` import so the package loads despite the broken v0 modules. The v0 modules are not re-exported; only the v1 `leabharlann_embedding` module is.**
 
 ## The canonical v1 pattern (in `leabharlann_embedding.py`)
 
@@ -154,7 +154,7 @@ The Dagster assets `oideachais_cocoindex_books_update`, `oabharlann_cocoindex_zo
 
 ## How the v0 modules are currently imported
 
-`oideachais/cocoindex_flows/__init__.py`:
+`sruth/oideachais/cocoindex_flows/__init__.py`:
 
 ```python
 try:
@@ -177,11 +177,11 @@ from oideachais.cocoindex_flows.research_embedding import (
 )
 ```
 
-This will raise `AttributeError` on cocoindex==1.0.9. **The migration is the queued work in `oideachais/REFACTORING.md` #6.**
+This will raise `AttributeError` on cocoindex==1.0.9. **The migration is the queued work in `sruth/oideachais/REFACTORING.md` #6.**
 
 ## Related
 
-- `oideachais/STATUS.md` § 3 — CocoIndex v0 vs v1 status.
-- `oideachais/REFACTORING.md` — refactor backlog including the v0 → v1 migration.
+- `sruth/oideachais/STATUS.md` § 3 — CocoIndex v0 vs v1 status.
+- `sruth/oideachais/REFACTORING.md` — refactor backlog including the v0 → v1 migration.
 - `docs/cocoindex/AGENTS.md` — the canonical v1 patterns.
 - `.agents/skills/cocoindex/SKILL.md` — the v1 skill with the v0→v1 mapping table.

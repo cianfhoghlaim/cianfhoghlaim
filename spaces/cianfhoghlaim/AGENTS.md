@@ -26,7 +26,7 @@ openspec validate <change-id> --strict                     # MUST pass before co
 
 | Function | Source |
 |:--|:--|
-| `GenerateNpcDialogue(npc_name, npc_title, nation_code, era, player_utterance, conversation_history, scholarly_source) -> NpcDialogueExchange` | `tuatha/baml_src/mythology_extraction.baml` (canonical, promoted from this Space in 2026-06) |
+| `GenerateNpcDialogue(npc_name, npc_title, nation_code, era, player_utterance, conversation_history, scholarly_source) -> NpcDialogueExchange` | `sruth/tuatha/baml_src/mythology_extraction.baml` (canonical, promoted from this Space in 2026-06) |
 
 ### Priority openspec spec for cianfhoghlaim
 

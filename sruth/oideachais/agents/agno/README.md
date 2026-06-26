@@ -1,8 +1,8 @@
-# `oideachais/agents/agno/` — Agno Team-Based Agent Surface
+# `sruth/oideachais/agents/agno/` — Agno Team-Based Agent Surface
 
 **Last updated:** 2026-06-16
 
-Agno (formerly PhiData) team-based agents. Parallel to the Google ADK agent surface in `oideachais/agents/adk/`.
+Agno (formerly PhiData) team-based agents. Parallel to the Google ADK agent surface in `sruth/oideachais/agents/adk/`.
 
 ## Agents
 
@@ -12,7 +12,7 @@ Agno (formerly PhiData) team-based agents. Parallel to the Google ADK agent surf
 
 ### Sub-teams
 
-`oideachais/agents/agno/stage_teams/`:
+`sruth/oideachais/agents/agno/stage_teams/`:
 
 - **Aistear team** — Aistear (early childhood) specialist agents.
 - **Primary team** — Primary curriculum agents.
@@ -24,11 +24,11 @@ Agno (formerly PhiData) team-based agents. Parallel to the Google ADK agent surf
 ## Integrations
 
 - **Agno** — `agno.Team` instances with stage-specific sub-agents.
-- **BAML** — typed extraction via `oideachais/agents/baml_integration.py` (the canonical adapter).
-- **Pydantic gateway** — `oideachais/agents/pydantic_gateway.py` (LLM routing).
+- **BAML** — typed extraction via `sruth/oideachais/agents/baml_integration.py` (the canonical adapter).
+- **Pydantic gateway** — `sruth/oideachais/agents/pydantic_gateway.py` (LLM routing).
 - **LiteLLM** — same gateway as ADK.
 
 ## Cross-references
 
-- `oideachais/agents/adk/` — the Google ADK agent surface.
+- `sruth/oideachais/agents/adk/` — the Google ADK agent surface.
 - `docs/00-core/PROJECT_SPEC.md` — agent architecture.

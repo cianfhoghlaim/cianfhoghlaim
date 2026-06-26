@@ -1,7 +1,7 @@
 # Primary Curriculum — Analysis Plan
 
 Cianfhoghlaim Oideachais — bilingual agentic platform. This analysis plan is
-for the `oideachais/notebooks/dashboards/primary.py` marimo notebook.
+for the `sruth/oideachais/notebooks/dashboards/primary.py` marimo notebook.
 
 ## Questions
 

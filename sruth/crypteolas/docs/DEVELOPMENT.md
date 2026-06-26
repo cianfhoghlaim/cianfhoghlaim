@@ -1,8 +1,8 @@
 # Crypteolas Development Guide
 
 Complete development environment setup for the GitHub Intelligence + DeFi
-Analytics platform. Crypteolas lives at `tuatha/crypteolas/` after the
-[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-tuatha/).
+Analytics platform. Crypteolas lives at `sruth/tuatha/crypteolas/` after the
+[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-sruth/tuatha/).
 See [`../STATUS.md`](../STATUS.md) for the full refactor history.
 
 ## Prerequisites
@@ -13,9 +13,9 @@ See [`../STATUS.md`](../STATUS.md) for the full refactor history.
 | uv | 0.5+ | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | Docker | 24+ | [Docker Desktop](https://docker.com) |
 | Node.js | 22+ | `mise install node@22` or `brew install node@22` |
-| Bun | 1.3+ | `mise install bun@1.3` (for the new frontend at `tuatha/apps/crypteolas demo/`) |
+| Bun | 1.3+ | `mise install bun@1.3` (for the new frontend at `sruth/tuatha/apps/crypteolas demo/`) |
 
-> The new TypeScript frontend at `tuatha/apps/crypteolas demo/` has
+> The new TypeScript frontend at `sruth/tuatha/apps/crypteolas demo/` has
 > standardised on **bun** (replacing the prior `pnpm` setup).
 
 ## Environment Setup
@@ -75,14 +75,14 @@ LANGFUSE_HOST=http://localhost:3000
 ### 3. Start Infrastructure
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose -f compose.yaml up -d
 ```
 
 Or with the dev overlay (hot-reload + Langfuse/FalkorDB integration):
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose -f compose.yaml -f compose.dev.yaml up -d
 ```
 
@@ -95,7 +95,7 @@ This starts:
 
 Verify services:
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose -f compose.yaml ps
 # All services should show "Up"
 ```
@@ -198,7 +198,7 @@ mise dagster:crypteolas
 
 ```bash
 cd tuatha
-uv run pytest crypteolas/tests/ -v
+uv run pytest sruth/crypteolas/tests/ -v
 ```
 
 Or via mise:
@@ -211,7 +211,7 @@ mise test:crypteolas
 
 ```bash
 cd tuatha
-uv run pytest crypteolas/tests/ --cov=crypteolas --cov-report=html
+uv run pytest sruth/crypteolas/tests/ --cov=crypteolas --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -220,15 +220,15 @@ open htmlcov/index.html
 ```bash
 # Unit tests (61 pass, pre-existing failures are out of scope)
 cd tuatha
-uv run pytest crypteolas/tests/test_api_endpoints.py -v
-uv run pytest crypteolas/tests/test_dlt_sources.py -v
-uv run pytest crypteolas/tests/test_defi_analytics.py -v
+uv run pytest sruth/crypteolas/tests/test_api_endpoints.py -v
+uv run pytest sruth/crypteolas/tests/test_dlt_sources.py -v
+uv run pytest sruth/crypteolas/tests/test_defi_analytics.py -v
 
 # GitHub integration tests
-uv run pytest crypteolas/tests/test_github_intelligence.py -v
+uv run pytest sruth/crypteolas/tests/test_github_intelligence.py -v
 
 # Knowledge graph tests
-uv run pytest crypteolas/tests/test_knowledge_graph.py -v
+uv run pytest sruth/crypteolas/tests/test_knowledge_graph.py -v
 ```
 
 ## Running the Demo
@@ -236,7 +236,7 @@ uv run pytest crypteolas/tests/test_knowledge_graph.py -v
 Interactive demo showcasing features:
 
 ```bash
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 uv run python -m demo.run_demo
 ```
 
@@ -250,13 +250,13 @@ Features demonstrated:
 ## Frontend Development
 
 The TanStack Start frontend has been moved to
-`tuatha/apps/crypteolas demo/`. The legacy `tuatha/crypteolas/ui/` is
+`sruth/tuatha/apps/crypteolas demo/`. The legacy `sruth/tuatha/crypteolas/ui/` is
 no longer the canonical frontend.
 
-### New Frontend (tuatha/apps/crypteolas demo/)
+### New Frontend (sruth/tuatha/apps/crypteolas demo/)
 
 ```bash
-cd tuatha/apps/crypteolas demo
+cd sruth/tuatha/apps/crypteolas demo
 bun install
 bun run dev
 # → http://localhost:3000 (proxies /api → localhost:8001)
@@ -311,7 +311,7 @@ docker ps | grep falkordb
 docker logs crypteolas-falkordb-1
 
 # Restart
-cd tuatha/crypteolas
+cd sruth/tuatha/crypteolas
 docker compose restart falkordb
 ```
 

@@ -12,7 +12,7 @@
 3. **[§ 3 CocoIndex v0 vs v1 status](#3-cocoindex-v0-vs-v1-status)** — which flows are v1 (working on cocoindex==1.0.9), which are v0 (broken), which are unwired.
 4. **[§ 4 Dagster asset catalogue](#4-dagster-asset-catalogue)** — 21 asset modules, 7 groups.
 5. **[§ 5 Leabharlann pipeline status](#5-leabharlann-pipeline-status)** — the 6 dlt sources, 7 Dagster assets, 3 v1 CocoIndex Apps, 4 BAML schemas, 6 search handlers.
-6. **[§ 6 Open refactor backlog](#6-open-refactor-backlog)** — 5 high-leverage features in `oideachais/REFACTORING.md`.
+6. **[§ 6 Open refactor backlog](#6-open-refactor-backlog)** — 5 high-leverage features in `sruth/oideachais/REFACTORING.md`.
 
 ---
 
@@ -20,24 +20,24 @@
 
 | BAML file | Classes | Extraction functions | dlt source(s) that invoke it | Dagster asset(s) | CocoIndex flow |
 |:--|:--|:--|:--|:--|:--|
-| `aistear.baml` | `AistearTheme`, `AistearPrinciple`, `AistearLearningGoal`, `Naionra`, `AistearDocument`, `BridgeEdge` (8) | `ExtractAistearFramework` | `oideachais/dlt_sources/ireland/aistear.py` (planned) | (no Dagster asset) | (none) |
+| `aistear.baml` | `AistearTheme`, `AistearPrinciple`, `AistearLearningGoal`, `Naionra`, `AistearDocument`, `BridgeEdge` (8) | `ExtractAistearFramework` | `sruth/oideachais/dlt_sources/ireland/aistear.py` (planned) | (no Dagster asset) | (none) |
 | `primary.baml` | `PrimaryStage`, `PrimaryAreaCode`, `CompetencyLink`, `PrimaryLearningOutcome`, `PrimaryStrand`, `PrimaryCurriculumArea` (6) | `ExtractPrimaryFramework`, `ExtractPrimaryLearningOutcomes` | **MISSING** — `dlt_sources/ireland/primary.py` does not exist | (none) | (none) |
 | `junior_cycle.baml` | `JuniorCycleSubject`, `JuniorCycleShortCourse`, `AchievementLevel`, `RubricDescriptor`, `CBATask`, `JCWellbeingStatement`, `JCSubjectSpec`, `L2LPOutcome` (8) | `ExtractJCSpec`, `ExtractCBADescriptor` | **MISSING** — `dlt_sources/ireland/junior_cycle.py` does not exist | (none) | (none) |
-| `tertiary.baml` | `NFQLevel`, `EQFLevel`, `HEIType`, `EntryPathway`, `MatriculationRequirement`, `CAOCourse`, `QqiFetAward`, `Apprenticeship`, `Programme`, `ApplicationTimeline` (10) | (TBD) | `oideachais/dlt_sources/ireland/tertiary.py` | (no Dagster asset) | (none) |
-| `curriculum_extraction.baml` | `LearningOutcome`, `ExtractedRelationship`, `RelationshipExtractionResult`, `Skill`, `SkillExtractionResult`, `CurriculumSection`, `ExtractedCurriculumDocument`, `EnhancedLearningOutcome`, `CurriculumStrand`, `AssessmentComponent`, `AssessmentInfo`, `CurriculumSpecification` (12) | `ExtractLearningOutcomeRelationships`, `ExtractSkillsFromOutcome`, `ExtractCurriculumFromDocument` | `oideachais/dlt_sources/ireland/curriculum_source.py` | `ireland/education/curriculum_dlt_assets.py` (70+ @dlt_assets) | `oideachais/cocoindex_flows/curriculum_embedding.py` (v0 — broken) |
-| `ui_components.baml` | `UIComponentKind`, `UIComponentSuggestion` (2) | `SuggestUIComponents` | (called by `oideachais/dagster_defs/assets/ui_suggestion.py`) | `ui_suggestion_asset` (nightly) | (none — populates LanceDB directly) |
-| `author_archive.baml` | `GeminiDomain`, `UoGArtifactKind`, `UoGStage`, `UoGLanguage`, `EquationConfidence`, `CitedUrl`, `GeminiDeepResearchReport`, `UniversityOfGalwayArtifact`, `HandwrittenEquation`, `PaperKind`, `Author`, `ZoteroPaper` (12) | `ExtractGeminiReport`, `ExtractUoGArtifact`, `ExtractHandwrittenEquations`, `ExtractZoteroMetadata` | `oideachais/dlt_sources/leabharlann/{gemini_deep_research,university_of_galway,leabharlann_books,zotero,takeout_v1}.py` (5 sources) | `oideachais/dagster_defs/assets/{author_archive,leabharlann}_assets.py` (14 assets) | `oideachais/cocoindex_flows/{author_archive,leabharlann}_embedding.py` (2 flows; 1 v1 + 1 v0) |
-| `image_generation.baml` | (image-generation helpers) | (FIBO + Z-Image-Turbo extraction) | (called by `oideachais/dagster_defs/assets/asset_generation.py`) | `asset_generation_assets` | (none — image gen) |
-| `culture_extraction.baml` | `EvidenceQuality`, `CultureHeritageClaim` (2) | `ExtractCultureClaims` | `oideachais/dlt_sources/ie/culture/heritage.py` | `oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `oideachais/cocoindex_flows/culture_heritage_embedding.py` (v1 — 12th App) |
+| `tertiary.baml` | `NFQLevel`, `EQFLevel`, `HEIType`, `EntryPathway`, `MatriculationRequirement`, `CAOCourse`, `QqiFetAward`, `Apprenticeship`, `Programme`, `ApplicationTimeline` (10) | (TBD) | `sruth/oideachais/dlt_sources/ireland/tertiary.py` | (no Dagster asset) | (none) |
+| `curriculum_extraction.baml` | `LearningOutcome`, `ExtractedRelationship`, `RelationshipExtractionResult`, `Skill`, `SkillExtractionResult`, `CurriculumSection`, `ExtractedCurriculumDocument`, `EnhancedLearningOutcome`, `CurriculumStrand`, `AssessmentComponent`, `AssessmentInfo`, `CurriculumSpecification` (12) | `ExtractLearningOutcomeRelationships`, `ExtractSkillsFromOutcome`, `ExtractCurriculumFromDocument` | `sruth/oideachais/dlt_sources/ireland/curriculum_source.py` | `ireland/education/curriculum_dlt_assets.py` (70+ @dlt_assets) | `sruth/oideachais/cocoindex_flows/curriculum_embedding.py` (v0 — broken) |
+| `ui_components.baml` | `UIComponentKind`, `UIComponentSuggestion` (2) | `SuggestUIComponents` | (called by `sruth/oideachais/dagster_defs/assets/ui_suggestion.py`) | `ui_suggestion_asset` (nightly) | (none — populates LanceDB directly) |
+| `author_archive.baml` | `GeminiDomain`, `UoGArtifactKind`, `UoGStage`, `UoGLanguage`, `EquationConfidence`, `CitedUrl`, `GeminiDeepResearchReport`, `UniversityOfGalwayArtifact`, `HandwrittenEquation`, `PaperKind`, `Author`, `ZoteroPaper` (12) | `ExtractGeminiReport`, `ExtractUoGArtifact`, `ExtractHandwrittenEquations`, `ExtractZoteroMetadata` | `sruth/oideachais/dlt_sources/leabharlann/{gemini_deep_research,university_of_galway,leabharlann_books,zotero,takeout_v1}.py` (5 sources) | `sruth/oideachais/dagster_defs/assets/{author_archive,leabharlann}_assets.py` (14 assets) | `sruth/oideachais/cocoindex_flows/{author_archive,leabharlann}_embedding.py` (2 flows; 1 v1 + 1 v0) |
+| `image_generation.baml` | (image-generation helpers) | (FIBO + Z-Image-Turbo extraction) | (called by `sruth/oideachais/dagster_defs/assets/asset_generation.py`) | `asset_generation_assets` | (none — image gen) |
+| `culture_extraction.baml` | `EvidenceQuality`, `CultureHeritageClaim` (2) | `ExtractCultureClaims` | `sruth/oideachais/dlt_sources/ie/culture/heritage.py` | `sruth/oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py` (v1 — 12th App) |
 
 **Summary**: 8 BAML files, 44 classes, ~12 extraction functions. **8 of 12 functions are invoked from at least one dlt source / Dagster asset.** 4 are *defined but never invoked*:
 
-- `ExtractHandwrittenEquations` — defined in `author_archive.baml`, called only in `oideachais/ocr/author_archive_ocr.py:1` (not wired to any Dagster asset).
+- `ExtractHandwrittenEquations` — defined in `author_archive.baml`, called only in `sruth/oideachais/ocr/author_archive_ocr.py:1` (not wired to any Dagster asset).
 - `ExtractZoteroMetadata` — defined, called by **no dlt source** (zotero.py yields rows but never calls BAML).
 - `ExtractPrimaryFramework` + `ExtractPrimaryLearningOutcomes` — primary.py dlt source does not exist.
 - `ExtractJCSpec` + `ExtractCBADescriptor` — junior_cycle.py dlt source does not exist.
 
-See `oideachais/REFACTORING.md` for the 5 backlog features that close these gaps.
+See `sruth/oideachais/REFACTORING.md` for the 5 backlog features that close these gaps.
 
 ---
 
@@ -103,23 +103,23 @@ Status: ✅ working · ⚠️ partial · 🟡 planned · ❌ missing
 | **Jersey (JEY)** | `crown_dependencies/channel_islands.py` ✅ | (none) | (planned) | (none) | (none) |
 | **Isle of Man (IOM)** | `crown_dependencies/isle_of_man.py` ✅ | (none) | (planned) | (none) | (none) |
 
-**Cross-cutting coverage gap**: primary and junior cycle BAML schemas exist for Ireland but lack backing dlt sources; **Feature 1 in `oideachais/REFACTORING.md` closes this gap.**
+**Cross-cutting coverage gap**: primary and junior cycle BAML schemas exist for Ireland but lack backing dlt sources; **Feature 1 in `sruth/oideachais/REFACTORING.md` closes this gap.**
 
 ---
 
 ## 3. CocoIndex v0 vs v1 status
 
-The venv has `cocoindex==1.0.9` (v1 API). The v0 DSL (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`, `cocoindex.sources.DuckDB`, `cocoindex.targets.lancedb`) is removed. Status of the 11 modules in `oideachais/cocoindex_flows/`:
+The venv has `cocoindex==1.0.9` (v1 API). The v0 DSL (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`, `cocoindex.sources.DuckDB`, `cocoindex.targets.lancedb`) is removed. Status of the 11 modules in `sruth/oideachais/cocoindex_flows/`:
 
 | Flow | API | Status | Action |
 |:--|:--|:--|:--|
 | `leabharlann_embedding.py` | v1 | ✅ working | — |
-| `codebase_indexing.py` | v1 | ✅ working (round 7+8) | Dagster assets `codebase_chunks` + `codebase_code_graph` in `codebase_assets.py` (round 8 phase 1). 7-node / 7-edge code graph via `CodeNodeType` + `CodeEdgeType`. 29+ languages via `oideachais/cocoindex_flows/chunking/languages.py` (ported from `codeolas/chunking/languages.py`). |
+| `codebase_indexing.py` | v1 | ✅ working (round 7+8) | Dagster assets `codebase_chunks` + `codebase_code_graph` in `codebase_assets.py` (round 8 phase 1). 7-node / 7-edge code graph via `CodeNodeType` + `CodeEdgeType`. 29+ languages via `sruth/oideachais/cocoindex_flows/chunking/languages.py` (ported from `sruth/codeolas/chunking/languages.py`). |
 | `api_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `api_endpoints` in `infrastructure_assets.py`. Indexes FastAPI + Hono + TanStack Start + Convex HTTP routes into the `api_endpoints` LanceDB table with BGE-M3 embeddings. |
 | `filesystem_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `filesystem_layout` in `infrastructure_assets.py`. Walks directories up to depth 4 with per-dir file-type histogram. |
 | `storage_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `storage_backends` in `infrastructure_assets.py`. Scans source files + wrangler manifests for 9 storage backend kinds (lancedb, duckdb, ducklake, postgres, garage, r2, d1, kv, iceberg). |
 | `config_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `config_files` in `infrastructure_assets.py`. Classifies 12 config kinds (compose, mise, package, pyproject, turbo, wrangler, env, k8s, pulumi, dg, github, justfile) with structured summaries. |
-| `unified_embedding.py` | v1 | ✅ working (round 7 phase 3) | Dagster assets `unified_embeddings` + `code_embeddings` in `unified_embedding_assets.py`. v1-native port of `crypteolas/cocoindex_flows/unified_embedding.py` (v0 DSL → v1 `@coco.fn` + `@coco.lifespan`). 2 v1 Apps: `UnifiedEmbedding` (DuckDB → `unified_embeddings` LanceDB) + `CodeEmbedding` (`UNIFIED_CODE_ROOT` → `code_embeddings` LanceDB). |
+| `unified_embedding.py` | v1 | ✅ working (round 7 phase 3) | Dagster assets `unified_embeddings` + `code_embeddings` in `unified_embedding_assets.py`. v1-native port of `sruth/crypteolas/cocoindex_flows/unified_embedding.py` (v0 DSL → v1 `@coco.fn` + `@coco.lifespan`). 2 v1 Apps: `UnifiedEmbedding` (DuckDB → `unified_embeddings` LanceDB) + `CodeEmbedding` (`UNIFIED_CODE_ROOT` → `code_embeddings` LanceDB). |
 | `docs_skills_consolidation.py` | v1 | ✅ working (round 7+8) | — |
 | `author_archive_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
 | `curriculum_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
@@ -132,13 +132,13 @@ The venv has `cocoindex==1.0.9` (v1 API). The v0 DSL (`@cocoindex.flow_def`, `Fl
 | `research_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
 | `site_analysis_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
 
-**`oideachais/cocoindex_flows/__init__.py` uses a guarded `try/except` import so the package loads despite the broken v0 modules. The v0 modules are not re-exported; only the v1 `leabharlann_embedding` module is.**
+**`sruth/oideachais/cocoindex_flows/__init__.py` uses a guarded `try/except` import so the package loads despite the broken v0 modules. The v0 modules are not re-exported; only the v1 `leabharlann_embedding` module is.**
 
 The canonical v1 pattern (in `leabharlann_embedding.py`):
 
 - `@coco.fn` for processing functions
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
-  (now imported from `oideachais/cocoindex_flows/_lifespan.py` — the
+  (now imported from `sruth/oideachais/cocoindex_flows/_lifespan.py` — the
   shared lifespan module, REFACTORING.md item 12)
 - `localfs.walk_dir(sourcedir, recursive=True, path_matcher=PatternFilePathMatcher(...), live=True)`
 - `lancedb.mount_table_target(LANCE_DB, table_name=..., table_schema=lancedb.TableSchema.from_class(...))`
@@ -156,7 +156,7 @@ Reference: `docs/cocoindex/AGENTS.md` and the 5 canonical examples (`pdf_embeddi
 
 ## 4. Dagster asset catalogue
 
-21 asset modules, ~120 assets total, registered in `oideachais/dagster_defs/definitions.py` (loaded into the unified `dg dev` UI via `dg.toml` → `oideachais` code location).
+21 asset modules, ~120 assets total, registered in `sruth/oideachais/dagster_defs/definitions.py` (loaded into the unified `dg dev` UI via `dg.toml` → `oideachais` code location).
 
 | Group | Module | Compute kind | Notable assets |
 |:--|:--|:--|:--|
@@ -185,7 +185,7 @@ Reference: `docs/cocoindex/AGENTS.md` and the 5 canonical examples (`pdf_embeddi
 | `ui_suggestion` | `ui_suggestion.py` | baml | `ui_suggestion_asset` (nightly BAML + Cognee) |
 | `unified_audio` | `unified_audio_dataset_assets.py` | dlt | Unified Celtic audio dataset |
 
-Sensors (`oideachais/dagster_defs/sensors/`): `curriculum_freshness`, `domain_sensors`, `author_archive_directory_sensor` (60 s, UoG + Gemini + Takeout), `leabharlann_directory_sensor` (60 s, leabharlann + zotero + stedding/Takeout + ~/Downloads/takeout-*.zip).
+Sensors (`sruth/oideachais/dagster_defs/sensors/`): `curriculum_freshness`, `domain_sensors`, `author_archive_directory_sensor` (60 s, UoG + Gemini + Takeout), `leabharlann_directory_sensor` (60 s, leabharlann + zotero + stedding/Takeout + ~/Downloads/takeout-*.zip).
 
 ---
 
@@ -203,9 +203,9 @@ Sensors (`oideachais/dagster_defs/sensors/`): `curriculum_freshness`, `domain_se
 | `stedding/Takeout/` | Sample googletakeout (64 .docx + 1 .csv) | 98 MB | `author_archive/takeout_v1.py` (new) | `leabharlann_takeout_v1_raw` | `LeabharlannTakeoutEmbedding` (v1) | `leabharlann_takeout` | (none) |
 | (planned `google_takeout.py`) | OAuth-driven Drive export | (Phase 2) | `author_archive/google_takeout.py` | (TBD) | (TBD) | (TBD) | (TBD) |
 
-OCR pipeline: `oideachais/ocr/author_archive_ocr.py` — Pylaia (Irish HTR) / TrOCR (English) / PaddleOCR (fallback) / VLM (equations) dispatch with graceful degradation. Backs the `author_archive_handwriting_ocr` asset. **Currently underused: only wired to author-archive, not to leabharlann.**
+OCR pipeline: `sruth/oideachais/ocr/author_archive_ocr.py` — Pylaia (Irish HTR) / TrOCR (English) / PaddleOCR (fallback) / VLM (equations) dispatch with graceful degradation. Backs the `author_archive_handwriting_ocr` asset. **Currently underused: only wired to author-archive, not to leabharlann.**
 
-Search handlers (`oideachais/cocoindex_flows/leabharlann_embedding.py`): 3 async helpers, each filtering by domain-specific column:
+Search handlers (`sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`): 3 async helpers, each filtering by domain-specific column:
 - `search_leabharlann_books(query, subject=None, limit=10)` — top-10 chunks from `leabharlann_books`.
 - `search_leabharlann_zotero(query, htr_relevant=None, irish_relevant=None, arxiv_id=None, limit=10)` — top-10 chunks from `leabharlann_zotero`.
 - `search_leabharlann_takeout(query, account=None, domain=None, limit=10)` — top-10 chunks from `leabharlann_takeout`.
@@ -223,7 +223,7 @@ The 6th domain in the cross-domain-registry. 6 Gemini Deep Research PDFs at `lea
 | `researching_neil_deacy_s_galway_heritage.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
 | `the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
 
-**Wikipedia dual-write fixtures** (the new `cross-domain-registry` convention): 3 clippings with Obsidian frontmatter under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` (Uí Liatháin / Delbhna Tír Dhá Locha / Eamonn Deacy Park), each mirrored as a JSON fixture at `oideachais/dlt_sources/official_media/fixtures/identity_*.json` with `asset_key: [ie, culture, ...]`.
+**Wikipedia dual-write fixtures** (the new `cross-domain-registry` convention): 3 clippings with Obsidian frontmatter under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` (Uí Liatháin / Delbhna Tír Dhá Locha / Eamonn Deacy Park), each mirrored as a JSON fixture at `sruth/oideachais/dlt_sources/official_media/fixtures/identity_*.json` with `asset_key: [ie, culture, ...]`.
 
 **Cognee dataset**: `culture_heritage` — the 6th Cognee dataset (alongside `oideachais`, `leabharlann_books`, `leabharlann_zotero`, `leabharlann_takeout`, `site_analysis`, `official_media`, `author_archive`). Edge types: `Claim->Person`, `Claim->Place`, `Person->FamilyRelation`. Cross-dataset edges to `oideachais` and `leabharlann`: `CultureHeritageClaim-MATCHES->LeavingCertLearningOutcome`, `CultureHeritagePerson-COREFERS_WITH->LeabharlannAuthor`.
 
@@ -235,13 +235,13 @@ The 6th domain in the cross-domain-registry. 6 Gemini Deep Research PDFs at `lea
 
 ## 6. Open refactor backlog
 
-See `oideachais/REFACTORING.md` for the 5 queued features in priority order:
+See `sruth/oideachais/REFACTORING.md` for the 5 queued features in priority order:
 
 1. **Primary + Junior Cycle British Isles dlt + BAML loop** (closes the BAML-without-dlt gap).
 2. **Cognee + FalkorDB cross-archive knowledge graph for the leabharlann + primary/secondary archives**.
 3. **LanceDB blob storage via the `lancedb` compose stack + RCLONE FUSE mount** (leabharlann PDFs → blob store).
 4. **Leabharlann full-document processing pipeline (sample PDFs → BAML → Cognee → FalkorDB → LanceDB blob → Dagster UI)**.
-5. **Comprehensive `oideachais/STATUS.md` + per-area READMEs that demystify the stack** — *this is what Phase 1 of the `data-engineering-documentation-and-refactor-roadmap` change is implementing.*
+5. **Comprehensive `sruth/oideachais/STATUS.md` + per-area READMEs that demystify the stack** — *this is what Phase 1 of the `data-engineering-documentation-and-refactor-roadmap` change is implementing.*
 
 ## 7. 2026-06 stack alignment
 
@@ -253,30 +253,30 @@ the codebase up to date with each package. Status per package:
 
 | Package | 2026-06 feature | KCG adoption | Where |
 |:--|:--|:--|:--|
-| `dlt` 1.0 | `dlt.sources.rest_api` + `dlt.sources.filesystem` declarative | ✅ SourceFactory uses the canonical declarative API | `oideachais/dlt_utils/source_factory.py` |
-| `dlt` 1.0 | `safe_dlt_run_with_progress` + `validate_source_kwargs` | ✅ 2 new helpers in `safety.py` | `oideachais/dlt_utils/safety.py` |
-| `dagster` 1.10 | `dg` CLI + Components preview | ✅ 3 KCG-specific Components + `defs.yaml` | `oideachais/dagster_defs/components/` |
-| `ducklake` 1.0 | Data inlining + clustering + bucket partitioning + GEOMETRY + VARIANT | ✅ New `ducklake_options.py` + `schema.py` | `oideachais/dlt_utils/ducklake_options.py` |
-| `motherduck` 2026-04 | Managed / BYOB / BYOC hosting options | ✅ 3 helpers in `motherduck_options.py` | `oideachais/dlt_utils/motherduck_options.py` |
-| `lancedb` 0.15 | HNSW + IVF-PQ + scalar B-tree indexes | ✅ `build_hnsw_index` for the 5 leabharlann tables | `oideachais/lancedb/indexing.py` |
-| `graphiti-core` 0.5 | Real FalkorDB-backed client + FalkorDB Lite fallback | ✅ New `graphiti_client.py` | `oideachais/graph/graphiti_client.py` |
-| `falkordb` 1.0 | Cypher + vector + graph | ✅ `FalkorDBClient` (production) | `oideachais/graph/falkordb_client.py` |
-| `cocoindex` 1.0.9 | Shared lifespan + HNSW index build | ✅ `_lifespan.py` + `build_hnsw_indexes_for_leabharlann` | `oideachais/cocoindex_flows/_lifespan.py` |
+| `dlt` 1.0 | `dlt.sources.rest_api` + `dlt.sources.filesystem` declarative | ✅ SourceFactory uses the canonical declarative API | `sruth/oideachais/dlt_utils/source_factory.py` |
+| `dlt` 1.0 | `safe_dlt_run_with_progress` + `validate_source_kwargs` | ✅ 2 new helpers in `safety.py` | `sruth/oideachais/dlt_utils/safety.py` |
+| `dagster` 1.10 | `dg` CLI + Components preview | ✅ 3 KCG-specific Components + `defs.yaml` | `sruth/oideachais/dagster_defs/components/` |
+| `ducklake` 1.0 | Data inlining + clustering + bucket partitioning + GEOMETRY + VARIANT | ✅ New `ducklake_options.py` + `schema.py` | `sruth/oideachais/dlt_utils/ducklake_options.py` |
+| `motherduck` 2026-04 | Managed / BYOB / BYOC hosting options | ✅ 3 helpers in `motherduck_options.py` | `sruth/oideachais/dlt_utils/motherduck_options.py` |
+| `lancedb` 0.15 | HNSW + IVF-PQ + scalar B-tree indexes | ✅ `build_hnsw_index` for the 5 leabharlann tables | `sruth/oideachais/lancedb/indexing.py` |
+| `graphiti-core` 0.5 | Real FalkorDB-backed client + FalkorDB Lite fallback | ✅ New `graphiti_client.py` | `sruth/oideachais/graph/graphiti_client.py` |
+| `falkordb` 1.0 | Cypher + vector + graph | ✅ `FalkorDBClient` (production) | `sruth/oideachais/graph/falkordb_client.py` |
+| `cocoindex` 1.0.9 | Shared lifespan + HNSW index build | ✅ `_lifespan.py` + `build_hnsw_indexes_for_leabharlann` | `sruth/oideachais/cocoindex_flows/_lifespan.py` |
 
-The `oideachais/dlt_utils/__init__.py` re-exports all 12 new
-helpers; the `oideachais/lancedb/__init__.py` re-exports the 4
-index helpers; the `oideachais/graph/__init__.py` re-exports the
+The `sruth/oideachais/dlt_utils/__init__.py` re-exports all 12 new
+helpers; the `sruth/oideachais/lancedb/__init__.py` re-exports the 4
+index helpers; the `sruth/oideachais/graph/__init__.py` re-exports the
 new `GraphitiClient`.
 
 ---
 
 ## Cross-references
 
-- `oideachais/REFACTORING.md` — refactor backlog with `Status` per item.
-- `oideachais/dlt_sources/uk/README.md` — UK per-nation coverage matrix.
-- `oideachais/dlt_sources/ireland/README.md` — Ireland coverage matrix.
-- `oideachais/cocoindex_flows/README.md` — v0/v1 split per flow.
-- `oideachais/dagster_defs/assets/README.md` — Dagster asset catalogue.
+- `sruth/oideachais/REFACTORING.md` — refactor backlog with `Status` per item.
+- `sruth/oideachais/dlt_sources/uk/README.md` — UK per-nation coverage matrix.
+- `sruth/oideachais/dlt_sources/ireland/README.md` — Ireland coverage matrix.
+- `sruth/oideachais/cocoindex_flows/README.md` — v0/v1 split per flow.
+- `sruth/oideachais/dagster_defs/assets/README.md` — Dagster asset catalogue.
 - `baml_src/README.md` — BAML schema catalogue.
 - `docs/06-infrastructure/leabharlann-stack-overview.md` — end-to-end stack diagram.
 - `openspec/changes/data-engineering-documentation-and-refactor-roadmap/` — this change.
@@ -285,7 +285,7 @@ new `GraphitiClient`.
 
 The following 6 BAML files in `baml_src/_archive/` contain 29 functions
 that have no current Python consumer. See
-`oideachais/baml_src/_archive/README.md` and
+`sruth/oideachais/baml_src/_archive/README.md` and
 `openspec/changes/archive-celtic-baml-orphans/` for re-activation
 instructions.
 

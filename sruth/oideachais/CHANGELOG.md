@@ -1,12 +1,12 @@
 # Oideachais — Cumulative Pipeline Change Log
 
-> This file tracks material changes to the `oideachais/` engine over time.
+> This file tracks material changes to the `sruth/oideachais/` engine over time.
 > Each entry references the file that owns the change so the next agent
 > can navigate to the source of truth. Newest entries at the top.
 
 ## Recent Changes
 
-### 11.12 Frontend Stack — `oideachais/web/`
+### 11.12 Frontend Stack — `sruth/oideachais/web/`
 
 | Tech | Role |
 |------|---------|
@@ -96,7 +96,7 @@ dlt_sources/
 
 ### 11.8 Notebooks — Operational Suite
 
-The `oideachais/notebooks/` directory is the operator console:
+The `sruth/oideachais/notebooks/` directory is the operator console:
 
 | Notebook | Tabs | Role |
 |----------|------|------|
@@ -232,4 +232,4 @@ the LLM-driven fallback when Playwright returns no real materials.
 ## Older Changes
 
 Earlier entries (pre-11.1) are archived in git history:
-`git log --oneline -- oideachais/`
+`git log --oneline -- sruth/oideachais/`
