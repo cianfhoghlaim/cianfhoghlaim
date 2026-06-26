@@ -687,3 +687,7 @@ For the KCG curriculum pipeline specifically, the `sruth/oideachais/cognee_integ
 - Store 5-stage cognify (Aistear → Primary → JC → SC → Tertiary)
 - Run `improve()` after each agent session
 - Use `recall(session_id=...)` to surface the 2024 vs 2025 syllabus facts
+
+## See also
+
+- **[`../INDEXING_AND_COGNITION.md`](../INDEXING_AND_COGNITION.md)** — Consolidated setup + MCP reference for both `ccc` (semantic code search) and `cognee` (knowledge graph over docs). Includes current state, first-time setup, daily-use commands, MCP tool inventory for both, dual-search workflow, and troubleshooting matrix. Read this when an agent or team member asks "how do I set up cognee?", "what MCP tools are available?", or "how do I run cognify against the docs?".
