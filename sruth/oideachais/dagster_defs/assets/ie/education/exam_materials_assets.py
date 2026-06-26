@@ -33,10 +33,10 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-from dlt_sources.ireland.examinations import (
+from dlt_sources.ie.education._examinations_helpers import (
     ALL_JC_SUBJECTS,
-    ALL_LC_SUBJECTS,
     ALL_LCA_SUBJECTS,
+    ALL_LC_SUBJECTS,
 )
 from dlt_utils import (
     get_dlt_destination,
@@ -146,9 +146,7 @@ def create_exam_asset(cycle: str):
         if sys_path_insert not in sys.path:
             sys.path.insert(0, sys_path_insert)
 
-        from dlt_sources.ireland.examinations import (
-            sec_examinations_browser_source,
-        )
+        from dlt_sources.ie.education.sec_examinations_browser import sec_examinations_browser_source
 
         # Extract partition keys
         partition_key_str = context.partition_key

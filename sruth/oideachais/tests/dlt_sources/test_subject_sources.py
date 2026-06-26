@@ -193,7 +193,7 @@ class TestExaminationsSource:
 
     def test_examinations_source_creation(self) -> None:
         """Test examinations source can be created."""
-        from dlt_sources.ireland.examinations import sec_examinations_browser_source
+        from dlt_sources.ie.education.sec_examinations_browser import sec_examinations_browser_source
 
         source = sec_examinations_browser_source(
             subjects=["mathematics"],
@@ -204,7 +204,7 @@ class TestExaminationsSource:
 
     def test_examinations_resources(self) -> None:
         """Test examinations source has expected resources."""
-        from dlt_sources.ireland.examinations import sec_examinations_browser_source
+        from dlt_sources.ie.education.sec_examinations_browser import sec_examinations_browser_source
 
         source = sec_examinations_browser_source(
             subjects=["mathematics"],
@@ -218,7 +218,7 @@ class TestExaminationsSource:
 
     def test_leaving_certificate_source(self) -> None:
         """Test Leaving Certificate convenience source."""
-        from dlt_sources.ireland.examinations import leaving_certificate_source
+        from dlt_sources.ie.education._examinations_helpers import leaving_certificate_source
 
         source = leaving_certificate_source(
             subjects=["mathematics", "english"],
@@ -228,7 +228,7 @@ class TestExaminationsSource:
 
     def test_junior_cycle_exams_source(self) -> None:
         """Test Junior Cycle exams convenience source."""
-        from dlt_sources.ireland.examinations import junior_cycle_exams_source
+        from dlt_sources.ie.education._examinations_helpers import junior_cycle_exams_source
 
         source = junior_cycle_exams_source(
             subjects=["mathematics"],

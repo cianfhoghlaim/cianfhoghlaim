@@ -1,9 +1,6 @@
 """oideachais.dlt_sources.ie.medicine — Ireland medicine DLT sources.
 
-Phase 6 of the openspec change. Each sub-module is a small
-`@dlt.resource` over a public endpoint; the legacy address is
-the same file under `oideachais.dlt_sources.ireland.<entity>` once
-the Phase 5 re-organisation is complete.
+Each sub-module is a small `@dlt.resource` over a public endpoint.
 """
 from __future__ import annotations
 

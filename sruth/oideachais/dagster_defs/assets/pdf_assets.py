@@ -78,7 +78,7 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from dlt_sources.ie.education.pdf_download import pdf_download_source
 
     # DuckDB path for querying curriculum_pdfs
     duckdb_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"

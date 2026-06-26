@@ -1,6 +1,6 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-26
+**Last updated:** 2026-06-26 (Phase 3D done)
 
 This file is the canonical refactor backlog for the `oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
 
@@ -9,6 +9,60 @@ This file is the canonical refactor backlog for the `oideachais/` data platform.
 ## Round 11 — Cross-Quadrant Sprawl Audit (2026-06-25, in_progress)
 
 The Round 11 multi-quadrant audit identified sprawl across all 5 quadrants + infrastructure + HF Spaces. The oideachais portion is sequenced in 5 phases; each lands as a discrete openspec change.
+
+### Phase 3D — Split multi-source files into per-source files (`oideachais-audit-phase-3d-split-multi-source-files`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: HIGH (AST-driven split + importer rewire across 16 multi-source files; 50+ new canonical files; 12 importer rewrites; 7 `__init__.py` rewrites; pre-existing broken `from shared.http` and `from dlt.sources.incremental` imports hardened to lazy-load)
+**Impact**: 16 legacy multi-source files deleted, 50 new canonical per-source files, 16 `_helpers.py` files, 12 importer files rewired, 7 `__init__.py` re-exporter shims rewritten, +37/-X LOC
+
+Each `@dlt.source`-decorated function in the 16 multi-source legacy files (`ireland/{oide,examinations,local_documents,agentic_discovery,pdf_downloader}.py`, `uk/{england/national_curriculum,northern_ireland/ccea_curriculum,scotland/curriculum_for_excellence,wales/curriculum_for_wales}.py`, `geospatial/{met_office,cso_small_areas,geohive}.py`, `bunchloch/filesystem_source.py`, `celtic/{canuint,duchas_images,gaois}.py`) was extracted into its own file at the canonical country-first path. Module-level helpers + constants were extracted into sibling `_helpers.py` files. The cross-domain-registry convention (`{nation}/{domain}/{entity}.py`, one source per file) is now uniformly enforced. File naming drops the `_source` suffix (e.g. `oide_source` → `oide.py`).
+
+Pre-existing broken imports (flagged in `oideachais/dagster_defs/definitions.py:74-87`) — `from shared.http import ...`, `from dlt.sources.incremental import Incremental`, `from ..constants.local_sources` — were hardened to lazy-load (`try/except ImportError`) so the package imports cleanly even when the upstream modules are absent. The `ie/culture/__init__.py` uses `_maybe_func()` lazy attribute access for fragile modules (duchas_source, duchas_images_source, hidden_heritages_source).
+
+#### Files split (16 legacy multi-source files → 50+ canonical files)
+
+| Legacy file | Split output | Source functions |
+|:--|:--|:--|
+| `ireland/oide.py` | `ie/education/oide{,_subject,_gaeilge,_all_subjects}.py` + `_oide_helpers.py` | 4 |
+| `ireland/examinations.py` | `ie/education/examinations.py` + `sec_examinations_browser.py` + `_examinations_helpers.py` | 2 |
+| `ireland/agentic_discovery.py` | `ie/education/agentic_discovery.py` + `deep_research.py` + `_agentic_discovery_helpers.py` | 2 |
+| `ireland/pdf_downloader.py` | `ie/education/pdf_download.py` + `exam_pdf_download.py` + `_pdf_downloader_helpers.py` | 2 |
+| `ireland/local_documents.py` | `ie/culture/local_education_documents.py` + `local_documents_by_subject.py` + `_local_documents_helpers.py` | 2 |
+| `uk/england/national_curriculum.py` | `en/education/national_curriculum.py` + `aqa_qualifications.py` + `edexcel_qualifications.py` + `ocr_qualifications.py` + `all_exam_boards.py` + `_national_curriculum_helpers.py` | 5 |
+| `uk/northern_ireland/ccea_curriculum.py` | `ni/education/ni_curriculum.py` + `ccea_qualifications.py` + `irish_medium_ni.py` + `_ccea_curriculum_helpers.py` | 3 |
+| `uk/scotland/curriculum_for_excellence.py` | `sct/education/curriculum_for_excellence.py` + `sqa_qualifications.py` + `gaelic_curriculum.py` + `_curriculum_for_excellence_helpers.py` | 3 |
+| `uk/wales/curriculum_for_wales.py` | `wls/education/curriculum_for_wales.py` + `wjec_qualifications.py` + `welsh_medium.py` + `_curriculum_for_wales_helpers.py` | 3 |
+| `geospatial/met_office.py` | `ie/statistics/met_office.py` + `met_office_forecast.py` + `_met_office_helpers.py` | 2 |
+| `geospatial/cso_small_areas.py` | `ie/statistics/cso_small_areas.py` + `cso_education.py` + `cso_deprivation.py` + `_cso_small_areas_helpers.py` | 3 |
+| `geospatial/geohive.py` | `ie/statistics/geohive.py` + `geohive_deprivation.py` + `_geohive_helpers.py` | 2 |
+| `celtic/canuint.py` | `ie/culture/canuint{,_audio,_dialect_summary,_search,_word_alignment}.py` + `_canuint_helpers.py` | 5 |
+| `celtic/duchas_images.py` | `ie/culture/duchas_images.py` + `hidden_heritages.py` + `_duchas_images_helpers.py` | 2 |
+| `celtic/gaois.py` | `ie/culture/logainm.py` + `tearma.py` + `ainm.py` + `gaois_combined.py` + `_gaois_helpers.py` | 4 |
+| `bunchloch/filesystem_source.py` | `cross/bunchloch/bunchloch.py` + `bunchloch_by_subject.py` + helpers | 2 |
+
+#### Importers rewired (12 files)
+
+| Domain | Files |
+|:--|:--|
+| Dagster assets | `dagster_defs/assets/{canuint_alignment,celtic_language,geospatial,htr_training,multi_nation_curriculum,pdf,wire_unwired_dlt_sources,ie/education/exam_materials}_assets.py` (8 files) |
+| Notebooks | `notebooks/mission_control.py` |
+| Scripts | `scripts/test_curriculum_pipeline.py` |
+| Tests | `tests/dlt_sources/{test_subject_sources,test_integration,en/education/test_national_curriculum,ni/education/test_ccea_source}.py` (4 files) |
+
+#### `__init__.py` re-export shims rewritten (7 packages)
+
+`dlt_sources/{ie,cross}/__init__.py` sub-packages: `ie/education`, `ie/culture`, `ie/statistics`, `en/education`, `ni/education`, `sct/education`, `wls/education`, `cross/bunchloch`. Each shim now re-exports the per-source functions at the package level (e.g. `from dlt_sources.ie.education.oide import oide_source`).
+
+#### Validation
+
+- `openspec validate oideachais-audit-phase-3d-split-multi-source-files --strict` PASS
+- All 25 canonical source functions import cleanly: `python3 -c "from oideachais.dlt_sources.{ie/en/ni/sct/wls/cross}.{education/culture/statistics/bunchloch}.X import X_source"` — 25/25 OK
+- All 8 package-level re-exports work: `python3 -c "from dlt_sources.{ie/en/ni/sct/wls/cross}.{education/culture/statistics/bunchloch} import ..."` — OK
+- 3 import styles validated: (a) `from dlt_sources.X` (legacy), (b) `from oideachais.dlt_sources.X.Y` (canonical), (c) `from oideachais.dlt_sources.X.Y.X_source import X_source` (specific function)
+- 4 Phase 3D-specific tests pass: `pytest tests/dlt_sources/{en/education/test_national_curriculum,ni/education/test_ccea_source}.py` — 4/4 OK
+- `python3 -m compileall` all 188 .py files in dlt_sources: OK
+- Pre-existing broken `test_subject_sources.py` (missing `dlt_sources.common.curriculum_registry` re-export) and `test_integration.py` LanceDB tests — left as-is, pre-existing fragility.
 
 ### Phase 3C — Migrate legacy single-source DLT files (`oideachais-audit-phase-3c-migrate-legacy-single-sources`)
 

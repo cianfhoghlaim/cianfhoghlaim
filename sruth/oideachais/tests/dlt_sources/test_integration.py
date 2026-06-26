@@ -368,7 +368,7 @@ class TestLocalDocumentsSource:
 
     def test_file_hash_computation(self, temp_dir: Path) -> None:
         """Test file hash computation for change detection."""
-        from oideachais.dlt_sources.ireland.local_documents import _compute_file_hash
+        from dlt_sources.ie.culture._local_documents_helpers import _compute_file_hash
 
         # Create test file
         test_file = temp_dir / "test.txt"

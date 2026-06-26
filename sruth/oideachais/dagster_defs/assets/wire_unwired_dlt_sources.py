@@ -203,7 +203,7 @@ def _ireland_tertiary_source_factory():
 
 
 def _ireland_local_documents_source_factory():
-    from oideachais.dlt_sources.ireland.local_documents import local_education_documents_source
+    from dlt_sources.ie.culture.local_education_documents import local_education_documents_source
     return local_education_documents_source
 
 

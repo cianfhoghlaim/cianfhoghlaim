@@ -19,22 +19,25 @@ pytestmark = pytest.mark.integration
 
 def test_national_curriculum_source_constructs() -> None:
     try:
-        from oideachais.dlt_sources.uk.england import national_curriculum
+        from dlt_sources.en.education._national_curriculum_helpers import (
+            GOV_UK_CURRICULUM_URLS,
+            EXAM_BOARD_URLS,
+        )
     except ModuleNotFoundError as exc:
         if "shared" in str(exc):
             pytest.skip(f"transitive shared.http import is broken upstream: {exc}")
         raise
 
-    assert national_curriculum is not None
-    assert "gov.uk" in national_curriculum.GOV_UK_CURRICULUM_URLS["key_stage_1"]
-    assert "aqa.org.uk" in national_curriculum.EXAM_BOARD_URLS["aqa"]["gcse"]
+    assert GOV_UK_CURRICULUM_URLS is not None
+    assert "gov.uk" in GOV_UK_CURRICULUM_URLS["key_stage_1"]
+    assert "aqa.org.uk" in EXAM_BOARD_URLS["aqa"]["gcse"]
 
 
 def test_national_curriculum_yields_pages_with_local_cache() -> None:
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""
     try:
-        from oideachais.dlt_sources.uk.england.national_curriculum import _crawl_gov_uk_curriculum
+        from dlt_sources.en.education._national_curriculum_helpers import _crawl_gov_uk_curriculum
     except ModuleNotFoundError as exc:
         if "shared" in str(exc):
             pytest.skip(f"transitive shared.http import is broken upstream: {exc}")

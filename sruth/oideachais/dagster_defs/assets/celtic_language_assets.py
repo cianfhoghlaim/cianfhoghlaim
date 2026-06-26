@@ -162,7 +162,7 @@ def canuint_areas(
     """
     context.log.info("Ingesting Canuint dialect areas")
 
-    from oideachais.dlt_sources.celtic.canuint import canuint_source
+    from dlt_sources.ie.culture.canuint import canuint_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="canuint_areas",
@@ -206,7 +206,7 @@ def canuint_recordings(
     dialect = context.partition_key
     context.log.info(f"Ingesting Canuint recordings for dialect: {dialect}")
 
-    from oideachais.dlt_sources.celtic.canuint import canuint_source
+    from dlt_sources.ie.culture.canuint import canuint_source
 
     # Map partition key to province filter
     province_map = {
@@ -259,7 +259,7 @@ def canuint_transcripts(
     dialect = context.partition_key
     context.log.info(f"Ingesting Canuint transcripts for dialect: {dialect}")
 
-    from oideachais.dlt_sources.celtic.canuint import canuint_source
+    from dlt_sources.ie.culture.canuint import canuint_source
 
     province_map = {
         "munster": "Cúige Mumhan",
@@ -367,7 +367,7 @@ def logainm_placenames(
     """
     context.log.info("Ingesting Logainm placenames")
 
-    from oideachais.dlt_sources.celtic.logainm import logainm_source
+    from dlt_sources.ie.culture.logainm import logainm_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="logainm_placenames",
@@ -414,7 +414,7 @@ def tearma_terms(
     """
     context.log.info("Ingesting Téarma terminology")
 
-    from oideachais.dlt_sources.celtic.tearma import tearma_source
+    from dlt_sources.ie.culture.tearma import tearma_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="tearma_terms",

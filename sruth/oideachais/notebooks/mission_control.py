@@ -518,9 +518,10 @@ def _(mo, os):
         try:
             with mo.status.spinner(f"Running {dlt_mode.value}..."):
                 if dlt_mode.value.startswith("exam_materials"):
-                    from oideachais.dlt_sources.ireland.examinations import (
-                        leaving_certificate_source, junior_cycle_exams_source,
-                    )
+                    from dlt_sources.ie.education._examinations_helpers import (
+    junior_cycle_exams_source,
+    leaving_certificate_source,
+)
                     level = "leaving_certificate" if "lc" in dlt_mode.value else "junior_cycle"
                     src_fn = leaving_certificate_source if level == "leaving_certificate" else junior_cycle_exams_source
 
@@ -549,7 +550,7 @@ def _(mo, os):
                     dlt_logs.append(mo.md(f"✅ **curriculum_test** completed.\n\n**Load ID:** `{load_info.loads_ids[0] if load_info.loads_ids else 'unknown'}`"))
 
                 elif dlt_mode.value == "pdf_download":
-                    from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
+                    from dlt_sources.ie.education.pdf_download import pdf_download_source
 
                     duckdb_path = str(Path(os.getcwd()) / "oideachais/data_platform/curriculum_unified.duckdb")
                     pipeline = create_pipeline("curriculum_unified", "curriculum")

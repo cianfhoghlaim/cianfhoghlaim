@@ -1,95 +1,67 @@
 """
 oideachais.dlt_sources.ie.education — Ireland education DLT sources.
 
-Phase 5 of the openspec change re-organisation. Each sub-module in
-this package is a *re-export shim* to the legacy address under
-`oideachais.dlt_sources.ireland.*`. The new path is the canonical
-address used by `SourceFactory`; the legacy address is preserved
-for one release cycle.
-
-Modules that fail to import upstream (e.g. `edcolearning` references a
-missing `oideachais.http_utils` module — a pre-existing fragility
-flagged in `oideachais/dagster_defs/definitions.py:74-87`) are
-deferred-loaded to keep the package import resilient.
+Phase 3D of the openspec change re-organisation. Each sub-module in
+this package is one DLT source per file (per the cross-domain-registry).
+The per-source functions are re-exported at this package level for
+backward compatibility with consumers that do
+`from dlt_sources.ie.education import oide_source, ...`.
 """
 from __future__ import annotations
 
-import importlib
-import importlib as _il
-from typing import Any
+# Per-source re-exports (Phase 3D: one function per file at the canonical path).
+# Each of these resolves to `dlt_sources.ie.education.<source_name>` (a file).
+from dlt_sources.ie.education.oide import oide_source  # noqa: F401
+from dlt_sources.ie.education.oide_subject import oide_subject_source  # noqa: F401
+from dlt_sources.ie.education.oide_gaeilge import oide_gaeilge_source  # noqa: F401
+from dlt_sources.ie.education.oide_all_subjects import oide_all_subjects_source  # noqa: F401
+from dlt_sources.ie.education.examinations import examinations_source  # noqa: F401
+from dlt_sources.ie.education.sec_examinations_browser import (  # noqa: F401
+    sec_examinations_browser_source,
+)
+from dlt_sources.ie.education.pdf_download import pdf_download_source  # noqa: F401
+from dlt_sources.ie.education.exam_pdf_download import (  # noqa: F401
+    exam_pdf_download_source,
+)
+from dlt_sources.ie.education.agentic_discovery import agentic_discovery_source  # noqa: F401
+from dlt_sources.ie.education.deep_research import deep_research_source  # noqa: F401
 
+# Convenience wrappers (from _examinations_helpers.py).
+from dlt_sources.ie.education._examinations_helpers import (  # noqa: F401
+    leaving_certificate_source,
+    junior_cycle_exams_source,
+    mathematics_exams_source,
+    science_subjects_exams_source,
+)
 
-def _lazy(name: str, mod: str) -> Any:
-    """Return a *deferred* module attribute. Importing the legacy module
-    happens on first attribute access, so a broken upstream module does
-    not block the whole re-export package."""
-    def _getattr() -> Any:  # type: ignore[no-redef]
-        return _il.import_module(mod)
-
-    class _LazyModule:
-        def __getattr__(self, item: str) -> Any:
-            return getattr(_getattr(), item)
-
-    obj = _LazyModule()
-    obj.__name__ = name
-    return obj
-
-
-# Re-exported modules. Modules that fail to import are still listed here
-# (so `from ... import edcolearning` works after a manual fix upstream),
-# but a known-broken import does not block the package.
-_REEXPORTS: list[tuple[str, str]] = [
-    ("aistear", "oideachais.dlt_sources.ie.education.aistear"),
-    ("curriculum_source", "oideachais.dlt_sources.ie.education.curriculum_source"),
-    ("examinations", "oideachais.dlt_sources.ireland.examinations"),
-    ("leaving_cert", "oideachais.dlt_sources.ie.education.leaving_cert"),
-    ("ncca", "oideachais.dlt_sources.ie.education.ncca"),
-    ("oide", "oideachais.dlt_sources.ireland.oide"),
-    ("parallel_corpus", "oideachais.dlt_sources.ie.education.parallel_corpus"),
-    ("pdf_downloader", "oideachais.dlt_sources.ireland.pdf_downloader"),
-    ("sec_aural_transcripts", "oideachais.dlt_sources.ie.education.sec_aural_transcripts"),
-    ("senior_cycle", "oideachais.dlt_sources.ie.education.senior_cycle"),
-    ("source_adapters", "oideachais.dlt_sources.common.source_adapters"),
-    ("tertiary", "oideachais.dlt_sources.ie.education.tertiary"),
-]
-
-# Eager re-exports for the modules we know import cleanly.
-ncca = importlib.import_module("oideachais.dlt_sources.ie.education.ncca")
-curriculum_source = importlib.import_module("oideachais.dlt_sources.ie.education.curriculum_source")
-examinations = importlib.import_module("oideachais.dlt_sources.ireland.examinations")
-leaving_cert = importlib.import_module("oideachais.dlt_sources.ie.education.leaving_cert")
-oide = importlib.import_module("oideachais.dlt_sources.ireland.oide")
-senior_cycle = importlib.import_module("oideachais.dlt_sources.ie.education.senior_cycle")
-pdf_downloader = importlib.import_module("oideachais.dlt_sources.ireland.pdf_downloader")
-
-# Lazy re-exports (may be broken upstream).
-aistear = _lazy("aistear", "oideachais.dlt_sources.ie.education.aistear")
-parallel_corpus = _lazy("parallel_corpus", "oideachais.dlt_sources.ie.education.parallel_corpus")
-sec_aural_transcripts = _lazy("sec_aural_transcripts", "oideachais.dlt_sources.ie.education.sec_aural_transcripts")
-source_adapters = _lazy("source_adapters", "oideachais.dlt_sources.common.source_adapters")
-tertiary = _lazy("tertiary", "oideachais.dlt_sources.ie.education.tertiary")
-
-# Subjects re-exports.
-from dlt_sources.ie.education.subjects import (
-    base as subjects_base,
-    junior_cycle,
-    senior_cycle as subjects_senior_cycle,
+# Constants (from _examinations_helpers.py).
+from dlt_sources.ie.education._examinations_helpers import (  # noqa: F401
+    ALL_JC_SUBJECTS,
+    ALL_LC_SUBJECTS,
+    ALL_LCA_SUBJECTS,
 )
 
 
 __all__ = [
-    "aistear",
-    "curriculum_source",
-    "examinations",
-    "leaving_cert",
-    "ncca",
-    "oide",
-    "parallel_corpus",
-    "pdf_downloader",
-    "sec_aural_transcripts",
-    "senior_cycle",
-    "source_adapters",
-    "tertiary",
+    # Phase 3D per-source functions
+    "oide_source",
+    "oide_subject_source",
+    "oide_gaeilge_source",
+    "oide_all_subjects_source",
+    "examinations_source",
+    "sec_examinations_browser_source",
+    "pdf_download_source",
+    "exam_pdf_download_source",
+    "agentic_discovery_source",
+    "deep_research_source",
+    "leaving_certificate_source",
+    "junior_cycle_exams_source",
+    "mathematics_exams_source",
+    "science_subjects_exams_source",
+    "ALL_JC_SUBJECTS",
+    "ALL_LC_SUBJECTS",
+    "ALL_LCA_SUBJECTS",
+    # Subjects re-exports (lazy below)
     "subjects_base",
     "junior_cycle",
     "subjects_senior_cycle",

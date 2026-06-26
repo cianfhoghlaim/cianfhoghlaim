@@ -70,7 +70,7 @@ def gaeltacht_boundaries(
     """
     context.log.info("Ingesting Gaeltacht boundaries")
 
-    from oideachais.dlt_sources.geospatial.geohive import geohive_source
+    from dlt_sources.ie.statistics.geohive import geohive_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="gaeltacht_boundaries",
@@ -642,7 +642,7 @@ def irish_small_areas(
     """
     context.log.info("Ingesting Irish Small Areas")
 
-    from oideachais.dlt_sources.geospatial.cso_small_areas import cso_small_areas_source
+    from dlt_sources.ie.statistics.cso_small_areas import cso_small_areas_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="irish_small_areas",

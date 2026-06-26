@@ -141,7 +141,7 @@ def test_examinations_source(
     """Test SEC examinations source."""
     import dlt
 
-    from dlt_sources.ireland.examinations import sec_examinations_browser_source
+    from dlt_sources.ie.education.sec_examinations_browser import sec_examinations_browser_source
 
     print(f"\n{'='*60}")
     print(f"Testing SEC Examinations: {subject} ({year}, {level})")

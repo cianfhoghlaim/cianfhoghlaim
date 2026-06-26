@@ -21,16 +21,20 @@ def test_ccea_source_constructs() -> None:
     `oideachais/dagster_defs/definitions.py:74-87`).
     """
     try:
-        from oideachais.dlt_sources.uk.northern_ireland import ccea_curriculum
+        from dlt_sources.ni.education import (
+            _ccea_curriculum_helpers,
+            ni_curriculum,
+            ccea_qualifications,
+        )
     except ModuleNotFoundError as exc:
         if "shared" in str(exc):
             pytest.skip(f"transitive shared.http import is broken upstream: {exc}")
         raise
 
-    assert ccea_curriculum is not None
-    assert hasattr(ccea_curriculum, "ni_curriculum_source")
-    assert hasattr(ccea_curriculum, "ccea_qualifications_source")
-    assert "ccea.org.uk" in ccea_curriculum.NI_CURRICULUM_URLS["foundation"]
+    assert _ccea_curriculum_helpers is not None
+    assert hasattr(ni_curriculum, "ni_curriculum_source")
+    assert hasattr(ccea_qualifications, "ccea_qualifications_source")
+    assert "ccea.org.uk" in _ccea_curriculum_helpers.NI_CURRICULUM_URLS["foundation"]
 
 
 def test_ccea_source_yields_pages_with_local_cache() -> None:
@@ -40,7 +44,7 @@ def test_ccea_source_yields_pages_with_local_cache() -> None:
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""
     try:
-        from oideachais.dlt_sources.uk.northern_ireland.ccea_curriculum import _crawl_ni_curriculum
+        from dlt_sources.ni.education._ccea_curriculum_helpers import _crawl_ni_curriculum
     except ModuleNotFoundError as exc:
         if "shared" in str(exc):
             pytest.skip(f"transitive shared.http import is broken upstream: {exc}")
