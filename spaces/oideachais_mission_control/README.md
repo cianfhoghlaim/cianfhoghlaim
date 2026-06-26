@@ -26,7 +26,7 @@ notebooks (one per educational stage) + a Cognee cognify button
 
 - **5 tabs**: Aistear (early childhood) / Primary / JC / SC /
   Tertiary (the 5 educational stages)
-- **Per tab**: a marimo notebook from `oideachais/notebooks/`
+- **Per tab**: a marimo notebook from `sruth/oideachais/notebooks/`
   (the canonical oideachais dashboard)
 - **Cognee cognify button**: runs the 5-stage cognify pass on
   the selected stage's data (per the canonical

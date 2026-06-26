@@ -206,7 +206,7 @@ Each Space has a pre-rendered storyboard PNG and a voiceover script
 | an-scrudu | `spaces/an_scrudu/voiceover_script.txt` | `storyboard.png` | ~50s |
 | cianfhoghlaim | `spaces/cianfhoghlaim/voiceover_script.txt` | `storyboard.png` | ~75s |
 | meaisin-cliste | `spaces/meaisin_cliste/voiceover_script.txt` | `storyboard.png` | ~65s |
-| anam-tuatha | `spaces/anam_tuatha/voiceover_script.txt` | `storyboard.png` | ~70s |
+| anam-tuatha | `spaces/anam_sruth/tuatha/voiceover_script.txt` | `storyboard.png` | ~70s |
 
 ### 4a. Recommended recording setup
 
@@ -385,7 +385,7 @@ monorepo/
     ├── an_scrudu/               (Space 1: Talamh)
     ├── cianfhoghlaim/           (Space 3: Anam)
     ├── meaisin_cliste/          (Space 2: Aer + Uisce)
-    └── anam_tuatha/             (Space 4: all 5 elements)
+    └── anam_sruth/tuatha/             (Space 4: all 5 elements)
 ```
 
 Each Space dir contains:

@@ -250,7 +250,7 @@ curl -s http://tuatha.cianfhoghlaim.ie:7777/health | jq
 curl -s http://tuatha.cianfhoghlaim.ie:3080/ | head -5
 
 # 4. Start the SpacetimeDB server (the MMO server)
-cd tuatha/crates/game_server
+cd sruth/tuatha/crates/game_server
 cargo run --release &
 sleep 10
 
@@ -370,10 +370,10 @@ bash infrastructure/audit/scripts/diff-against-composes.sh
 
 - [`README.md`](README.md) — the monorepo overview (duplicates this playbook)
 - [`infrastructure/README.md`](infrastructure/README.md) — the 94-stack inventory
-- [`oideachais/README.md`](oideachais/README.md) — the lakehouse quadrant
-- [`meaisinfhoghlaim/README.md`](meaisinfhoghlaim/README.md) — the AI/ML quadrant
-- [`tuatha/README.md`](tuatha/README.md) — the MMO + crypto quadrant
-- [`croilar/README.md`](croilar/README.md) — the portfolio quadrant
+- [`sruth/oideachais/README.md`](sruth/oideachais/README.md) — the lakehouse quadrant
+- [`sruth/meaisinfhoghlaim/README.md`](sruth/meaisinfhoghlaim/README.md) — the AI/ML quadrant
+- [`sruth/tuatha/README.md`](sruth/tuatha/README.md) — the MMO + crypto quadrant
+- [`sruth/croilar/README.md`](sruth/croilar/README.md) — the portfolio quadrant
 - [`spaces/README.md`](spaces/README.md) — the HuggingFace Spaces
 - [`.agents/skills/kcg-pangolin-stack/SKILL.md`](.agents/skills/kcg-pangolin-stack/SKILL.md) — the Pangolin pattern
 - [`.agents/skills/kcg-locket-sidecar/SKILL.md`](.agents/skills/kcg-locket-sidecar/SKILL.md) — the Locket pattern

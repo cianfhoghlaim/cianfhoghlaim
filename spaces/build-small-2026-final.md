@@ -17,7 +17,7 @@ spaces/_common/                (10 files, 1,896 lines)  shared bundle
 spaces/an_scrudu/              (8 files, 1,019 lines)   Space 1 (Talamh)
 spaces/cianfhoghlaim/          (7 files, 1,134 lines)   Space 3 (Anam)
 spaces/meaisin_cliste/         (7 files, 944 lines)     Space 2 (Aer + Uisce)
-spaces/anam_tuatha/            (9 files, 1,636 lines)   Space 4 (all 5)
+spaces/anam_sruth/tuatha/            (9 files, 1,636 lines)   Space 4 (all 5)
 scripts/render_social_cards.py (1 file, 74 lines)       build helper
 doc/hackathons/build-small-2026-*.md                   (blog + tweet thread)
 openspec/changes/croilar-hf-build-small-2026-demo/      (archived)

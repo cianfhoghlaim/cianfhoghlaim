@@ -92,12 +92,12 @@ a Rust toolchain).
 ## The numbers
 
 - **10 OCR models × 6 backends** in the underlying meaisínfhoghlaim
-  stack (lifting from `meaisinfhoghlaim/ocr/model_registry.py:330-543`).
+  stack (lifting from `sruth/meaisinfhoghlaim/ocr/model_registry.py:330-543`).
 - **6 Celtic languages × 6 DLT sources** for the Foclóir (lifting from
-  `meaisinfhoghlaim/language/`).
+  `sruth/meaisinfhoghlaim/language/`).
 - **22.7pp RAGAS agentic delta** for the cross-nation curriculum
   comparison (lifting from
-  `meaisinfhoghlaim/evaluation/ragas_pipeline.py:135-411`).
+  `sruth/meaisinfhoghlaim/evaluation/ragas_pipeline.py:135-411`).
 - **4 Spaces + 7 panels + 5 elements** in the final submission.
 - **3 model tiers + 5 trust signals + 1 typed pipeline** in the
   Anam Bonneagar footer.

@@ -54,7 +54,7 @@ The full stack that powers day-to-day development is opinionated and tightly int
 | **bun** | TS runtime, package manager, script runner | One tool replaces `node + npm + yarn + pnpm + npx + tsx`. Powers workspace orchestration, secret sync, OpenSpec, the `ccc` index, the dagster / komodo / pangolin glue. |
 | **uv** | Python package manager + workspace manager | Replaces `pip + poetry + pyenv + virtualenv`. Native PEP 723, lockfile, uv-workspace member resolution. Drives the four `members` of the `pyproject.toml` workspace. |
 | **turbo** | Cross-language task graph | Orchestrates `build`, `dev`, `typecheck`, `lint`, `format`, `test` across the bun and uv graphs. Reachable through `mise turbo <task>`. |
-| **OpenCode** | AI coding agent / IDE companion | Speaks the same OpenAI-compatible protocol as LiteLLM. Dispatches to the 5 specialised subagents (`explore`, `data-engineer`, `ai-engineer`, `frontend-dev`, `devops-architect`) defined in `opencode.json`. |
+| **OpenCode** | AI coding agent / IDE companion | Speaks the same OpenAI-compatible protocol as LiteLLM. Dispatches to the 5 specialised sruth subagents (`oideachais`, `infrastructure`, `meaisinfhoghlaim`, `croilar`, `tuatha`) defined in `opencode.json`. |
 | **OpenChamber** | GUI / web / PWA front-end for OpenCode | Optional VS Code extension / desktop app / self-hostable web UI wrapping the OpenCode CLI with branchable chat timelines, smart tool UIs, multi-agent parallel runs in isolated worktrees, GitHub-native flows. Install: `code --install-extension FedaykinDev.openchamber`. |
 | **LiteLLM** | OpenAI-compatible LLM gateway | One URL (`http://litellm:4000/v1`) routes to local GGUF, local MLX, local image, and cloud providers. Every BAML function, every Dagster asset, every marimo cell, every n8n workflow calls an *alias* — never a provider id. |
 | **HuggingFace GGUF** | Local model format | Q4_K_M quantised GGUFs are small (~4-6 GB per 7 B model) and run on the M4 Max 48 GB via `llama-swap`. Cache at `stedding/huggingface/{hub,gguf,mlx}/`. |
@@ -286,23 +286,18 @@ code. The chain is 3 hops long at most.
 
 ## Multi-agent configuration
 
-`opencode.json` defines 5 sub-agents, each mapped to a model
-alias through the LiteLLM gateway:
+`opencode.json` defines 7 sub-agents (2 generic + 5 sruth specialists),
+each mapped to a model alias through the LiteLLM gateway:
 
 | Agent | Default model | Focus |
 |:--|:--|:--|
 | `build` (default) | DeepSeek V4 Pro | General-purpose coding across the monorepo |
 | `plan` | GLM 5.1 | Read-only planning, code review, architecture |
-| `explore` | DeepSeek V4 Flash | Codebase search, context mapping, ccc semantic search |
-| `data-engineer` | Qwen 3.7 Max | Dagster, DLT, DuckDB, MotherDuck, LanceDB |
-| `ai-engineer` | DeepSeek V4 Pro | BAML, LiteLLM, OCR, Graphiti, Celtic AI |
-| `frontend-dev` | Kimi K2.6 | TanStack Start, Convex, Marimo, canvas design |
-| `devops-architect` | GLM 5.1 | Docker Compose, Komodo, Pangolin, Pulumi |
-| `oideachais` | DeepSeek V4 Pro | Quadrant-specialist for oideachais |
-| `meaisinfhoghlaim` | DeepSeek V4 Pro | Quadrant-specialist for meaisinfhoghlaim |
-| `infrastructure` | GLM 5.1 | Quadrant-specialist for infrastructure |
-| `tuatha` | DeepSeek V4 Pro | Quadrant-specialist for tuatha |
-| `croilar` | DeepSeek V4 Pro | Quadrant-specialist for croilar |
+| `oideachais` | DeepSeek V4 Pro | sruth specialist — DLT, BAML, Dagster, MotherDuck, Celtic curriculum |
+| `infrastructure` | GLM 5.1 | sruth specialist — Komodo, Pangolin, Locket, Infisical, stack-doctor |
+| `meaisinfhoghlaim` | DeepSeek V4 Pro | sruth specialist — agents, OCR, fine-tuning, BAML, LLM routing |
+| `croilar` | DeepSeek V4 Pro | sruth specialist — Convex, Hono, TanStack, BetterAuth, multi-persona portfolio |
+| `tuatha` | DeepSeek V4 Pro | sruth specialist — Babylon.js, SpacetimeDB, crypteolas, educational MMO |
 
 Each subagent can read any of the 123 skills in `.agents/skills/`
 and call any of the configured MCP servers (Browserbase,
