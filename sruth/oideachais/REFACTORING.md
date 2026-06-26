@@ -67,6 +67,55 @@ Deleted items (12 total):
 
 Note: `core/storage/ducklake.py` and `core/storage/clients/ducklake.py` both define `DuckLakeClient` / `DuckLakeSnapshot` / `CELTIC_MANUSCRIPT_SCHEMAS` / `DuckLakeBackend` / `get_ducklake_backend` (different implementations). The `clients/` variant is re-exported as canonical via `core/storage/__init__.py`; the legacy `ducklake.py` remains importable explicitly.
 
+### Phase 3B — Drop `dlt_sources/domains/` wrapper for canonical country-first layout (`oideachais-audit-phase-3b-drop-domains-wrapper`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: MEDIUM (60-file rewire: 53 renames + ~60 importer updates across cognee_integration, dagster_defs/assets, tests, dlt_sources/uk shims; 1 absolute-import refactor in 5 UK-nation legislation.py)
+**Impact**: 92 files changed, +196/-229 LOC
+
+The `dlt_sources/domains/{domain}/{nation}/{entity}.py` wrapper layer was redundant — the canonical `{nation}/{domain}/{entity}.py` paths already existed in legacy trees. The wrapper added ~50 shim files re-exporting the same names.
+
+This change ONLY drops the `domains/` wrapper for canonical files. It does NOT touch the legacy flat trees (`dlt_sources/{ireland,uk,crown_dependencies,celtic,bunchloch,geospatial,official_media}/`) — those are migrated in phases 3C, 3D, 3E.
+
+#### Files moved (53)
+
+| Pattern | Destination |
+|:--|:--|
+| `dlt_sources/domains/cross/upstream/{__init__.py,blog_post.py}` | `dlt_sources/cross/upstream/` |
+| `dlt_sources/domains/culture/ie/{__init__.py,heritage_source.py}` | `dlt_sources/ie/culture/` (renamed `heritage_source.py` → `heritage.py`) |
+| `dlt_sources/domains/education/{nation}/__init__.py` × 8 | `dlt_sources/{nation}/education/` |
+| `dlt_sources/domains/law/{nation}/{__init__.py,legislation.py}` × 5 + 3 IE files | `dlt_sources/{nation}/law/` |
+| `dlt_sources/domains/medicine/{nation}/{__init__.py,entity.py}` × 8 | `dlt_sources/{nation}/medicine/` |
+| `dlt_sources/domains/site_analysis.py` | `dlt_sources/site_analysis/site_analysis.py` |
+| `dlt_sources/domains/law/_legislation_helper.py` | `dlt_sources/law/_legislation_helper.py` |
+
+#### Importer sites rewired (60 sites across 60 files)
+
+- 21 `dlt_sources/{nation}/law/{__init__.py,entity.py}` (rewrote `from dlt_sources.domains.X` → `from dlt_sources.{nation}.X`)
+- 17 `dagster_defs/assets/{law,medicine}/{nation}/__init__.py`
+- 3 `dagster_defs/assets/{ie/law,ie/medicine}/__init__.py`
+- 4 `dlt_sources/uk/{england,northern_ireland,scotland,wales}/__init__.py`
+- 1 `dagster_defs/assets/site_analysis/extract.py`
+- 1 `dagster_defs/assets/upstream_monitoring_assets.py`
+- 1 `cognee_integration/culture_cognify.py`
+- 1 `dlt_sources/cross/upstream/__init__.py`
+- 1 `dlt_sources/cross/upstream/blog_post.py`
+- 3 test files in `tests/dlt_sources/domains/{ie,uk}/`
+- 5 UK-nation `legislation.py` files: relative `from .._legislation_helper` → absolute `from dlt_sources.law._legislation_helper`
+
+#### Shims deleted
+
+- `dlt_sources/law/__init__.py` (domain-level re-export of 4 UK nations) — rewritten as shared-helpers package marker (retained for `_legislation_helper.py` consumers)
+- `dlt_sources/{culture,education,medicine}/` (empty shim dirs with no real content)
+- `dlt_sources/domains/` (the wrapper tree itself)
+
+#### Validation
+
+- `openspec validate oideachais-audit-phase-3b-drop-domains-wrapper --strict` passes
+- `python3 -m compileall` 92 .py files: all OK
+- `mise run lint:skills` 123/123 pass
+- 8-router spot-check (ie.law, ie.law.doj, en.law, en.law.legislation, sct.medicine, sct.medicine.nhs_scotland, ie.culture, ie.culture.heritage): all OK / PARTIAL (relative-import chain stops at legacy `_legislation_helper` → `ireland.curriculum_source` import — expected, fixed in 3C)
+
 ### Phase 3A — Rename `dlt_sources/author_archive/` → `dlt_sources/leabharlann/` (`oideachais-audit-phase-3a-rename-dlt-author-archive-to-leabharlann`)
 
 **Status**: `done` (archived 2026-06-26)

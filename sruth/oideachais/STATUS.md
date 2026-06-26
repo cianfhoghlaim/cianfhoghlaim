@@ -28,7 +28,7 @@
 | `ui_components.baml` | `UIComponentKind`, `UIComponentSuggestion` (2) | `SuggestUIComponents` | (called by `oideachais/dagster_defs/assets/ui_suggestion.py`) | `ui_suggestion_asset` (nightly) | (none — populates LanceDB directly) |
 | `author_archive.baml` | `GeminiDomain`, `UoGArtifactKind`, `UoGStage`, `UoGLanguage`, `EquationConfidence`, `CitedUrl`, `GeminiDeepResearchReport`, `UniversityOfGalwayArtifact`, `HandwrittenEquation`, `PaperKind`, `Author`, `ZoteroPaper` (12) | `ExtractGeminiReport`, `ExtractUoGArtifact`, `ExtractHandwrittenEquations`, `ExtractZoteroMetadata` | `oideachais/dlt_sources/leabharlann/{gemini_deep_research,university_of_galway,leabharlann_books,zotero,takeout_v1}.py` (5 sources) | `oideachais/dagster_defs/assets/{author_archive,leabharlann}_assets.py` (14 assets) | `oideachais/cocoindex_flows/{author_archive,leabharlann}_embedding.py` (2 flows; 1 v1 + 1 v0) |
 | `image_generation.baml` | (image-generation helpers) | (FIBO + Z-Image-Turbo extraction) | (called by `oideachais/dagster_defs/assets/asset_generation.py`) | `asset_generation_assets` | (none — image gen) |
-| `culture_extraction.baml` | `EvidenceQuality`, `CultureHeritageClaim` (2) | `ExtractCultureClaims` | `oideachais/dlt_sources/domains/culture/ie/heritage_source.py` | `oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `oideachais/cocoindex_flows/culture_heritage_embedding.py` (v1 — 12th App) |
+| `culture_extraction.baml` | `EvidenceQuality`, `CultureHeritageClaim` (2) | `ExtractCultureClaims` | `oideachais/dlt_sources/ie/culture/heritage.py` | `oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `oideachais/cocoindex_flows/culture_heritage_embedding.py` (v1 — 12th App) |
 
 **Summary**: 8 BAML files, 44 classes, ~12 extraction functions. **8 of 12 functions are invoked from at least one dlt source / Dagster asset.** 4 are *defined but never invoked*:
 
@@ -216,7 +216,7 @@ The 6th domain in the cross-domain-registry. 6 Gemini Deep Research PDFs at `lea
 
 | Source | BAML extract | dlt source | Dagster asset | CocoIndex App | LanceDB table |
 |:--|:--|:--|:--|:--|:--|
-| `claiming_r_na_gaillimhe_a_synthesis.pdf` | `ExtractCultureClaims` | `domains/culture/ie/heritage_source.py` | `culture_heritage_extract` | `culture_heritage_embedding` (v1) | `oideachais.culture_heritage_chunks` |
+| `claiming_r_na_gaillimhe_a_synthesis.pdf` | `ExtractCultureClaims` | `ie/culture/heritage.py` | `culture_heritage_extract` | `culture_heritage_embedding` (v1) | `oideachais.culture_heritage_chunks` |
 | `claiming_irish_kingship_through_lineage.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
 | `deacy_family_heritage_research.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
 | `genealogy_and_conaire_s_activism.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
