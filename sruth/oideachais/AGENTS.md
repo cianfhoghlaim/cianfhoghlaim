@@ -91,7 +91,7 @@ The re-export shims to `meaisinfhoghlaim/`:
 |:--|:--|
 | Add a new education-domain dlt source for any nation (IE / EN / SCT / WLS / NI / IOM / JEY / GGY) | `oideachais/dlt_sources/domains/education/{nation}/{source}.py` (the canonical location, per `cross-domain-registry/SKILL.md`; replaces the legacy `dlt_sources/uk/`, `dlt_sources/ireland/`, and `dlt_sources/crown_dependencies/` paths) |
 | Add a new medicine or law domain dlt source | `oideachais/dlt_sources/domains/{medicine|law}/{nation}/{source}.py` |
-| Add a new leabharlann source | `oideachais/dlt_sources/author_archive/` (the 4 dlt sources) |
+| Add a new leabharlann source | `oideachais/dlt_sources/leabharlann/` (the 4 dlt sources) |
 | Add a new culture-heritage source (the 6th domain) | `oideachais/dlt_sources/domains/culture/{nation}/{source}.py` (e.g. `ie/heritage_source.py`); see `openspec/specs/cross-domain-registry/SKILL.md` for the Wikipedia dual-write convention |
 | Add a new BAML extraction function | `baml_src/` (the 28 BAML files incl. `culture_extraction.baml`, plus `_archive/` for deferred consumers) + `baml_src/clients.baml` for the canonical client registry |
 | Add a new Dagster asset | `oideachais/dagster_defs/assets/` (40+ modules, including `culture_heritage_assets.py` with 4 assets + `low_confidence_review` asset check) |

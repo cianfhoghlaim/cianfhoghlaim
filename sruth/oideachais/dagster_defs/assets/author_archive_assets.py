@@ -78,7 +78,7 @@ def author_archive_university_of_galway_raw(context) -> dg.MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.author_archive import university_of_galway_source
+    from dlt_sources.leabharlann import university_of_galway_source
 
     subdir = context.partition_key
     base_path = Path(
@@ -139,7 +139,7 @@ def author_archive_gemini_deep_research_raw(
     """
     import dlt
 
-    from dlt_sources.author_archive import gemini_deep_research_source
+    from dlt_sources.leabharlann import gemini_deep_research_source
 
     domain = context.partition_key
     base_path = Path(
@@ -198,7 +198,7 @@ def author_archive_takeout_raw(context) -> dg.MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.author_archive import google_takeout_source
+    from dlt_sources.leabharlann import google_takeout_source
 
     account_label = context.partition_key
     pipeline = dlt.pipeline(

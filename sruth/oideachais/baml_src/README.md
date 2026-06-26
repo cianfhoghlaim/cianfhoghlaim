@@ -104,7 +104,7 @@
 
 ### `author_archive.baml` — Personal-Archive Extraction
 
-12 classes (4 enums), 4 extraction functions. **Backed by `dlt_sources/author_archive/{gemini_deep_research,university_of_galway,leabharlann_books,zotero,takeout_v1}.py`.**
+12 classes (4 enums), 4 extraction functions. **Backed by `dlt_sources/leabharlann/{gemini_deep_research,university_of_galway,leabharlann_books,zotero,takeout_v1}.py`.**
 
 | Class / enum | Description |
 |:--|:--|

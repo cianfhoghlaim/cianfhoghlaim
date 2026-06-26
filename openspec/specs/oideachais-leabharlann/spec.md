@@ -4,7 +4,7 @@
 
 `oideachais-leabharlann` is a capability of the Cianfhoghlaim platform.
 The corresponding source code lives at
-`sruth/oideachais/dlt_sources/author_archive/` (the 4 dlt sources: books,
+`sruth/oideachais/dlt_sources/leabharlann/` (the 4 dlt sources: books,
 zotero, takeout, UoG) and `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
 (the 3 v1 CocoIndex Apps). See `docs/00_index.md` for the quadrant map
 and `docs/00-core/CLAUDE.md` for the project identity.
@@ -357,7 +357,7 @@ source.
 
 ## Cross-references
 
-- [`sruth/oideachais/dlt_sources/author_archive/`](../../sruth/oideachais/dlt_sources/author_archive/) (the 4 dlt sources)
+- [`sruth/oideachais/dlt_sources/leabharlann/`](../../sruth/oideachais/dlt_sources/leabharlann/) (the 4 dlt sources)
 - [`sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`](../../sruth/oideachais/cocoindex_flows/leabharlann_embedding.py) (the 3 v1 Apps)
 - [`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py`](../../sruth/oideachais/dagster_defs/assets/leabharlann_assets.py) (the 7 Dagster assets)
 - [`sruth/oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py`](../../sruth/oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py) (the demo asset)

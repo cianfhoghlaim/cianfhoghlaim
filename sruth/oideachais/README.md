@@ -712,4 +712,4 @@ The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
 2. **Add a new DLT source** — `oideachais/dlt_sources/domains/<area>/<nation>/<source>.py`
 3. **Add a new BAML extraction** — `baml_src/<name>.baml` + `bun run baml-cli compile`
 4. **Add a new CocoIndex v1 App** — `oideachais/cocoindex_flows/<app>.py` (see `.agents/skills/oideachais-cocoindex-v1/`)
-5. **Add a new leabharlann source** — `oideachais/dlt_sources/author_archive/<source>.py`
+5. **Add a new leabharlann source** — `oideachais/dlt_sources/leabharlann/<source>.py`

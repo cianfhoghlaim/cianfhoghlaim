@@ -36,7 +36,7 @@ for p in (str(_REPO_ROOT), str(_REPO_ROOT / "oideachais")):
 
 def test_uog_source_yields_partitioned_rows(tmp_path: Path) -> None:
     """UoG filesystem source stamps `account` and `domain` on every row."""
-    from dlt_sources.author_archive import (
+    from dlt_sources.leabharlann import (
         DEFAULT_UOG_PATH,
         university_of_galway_source,
     )
@@ -81,7 +81,7 @@ def test_uog_source_yields_partitioned_rows(tmp_path: Path) -> None:
 
 def test_gemini_source_yields_citations(tmp_path: Path) -> None:
     """Gemini filesystem source populates `gemini_citations` for PDFs."""
-    from dlt_sources.author_archive import (
+    from dlt_sources.leabharlann import (
         DEFAULT_GEMINI_PATH,
         gemini_deep_research_source,
     )
@@ -245,7 +245,7 @@ def test_author_archive_embedding_module_loads() -> None:
 
 def test_takeout_config_empty(tmp_path: Path) -> None:
     """An absent / empty YAML file yields zero accounts, not an error."""
-    from dlt_sources.author_archive import load_takeout_accounts
+    from dlt_sources.leabharlann import load_takeout_accounts
 
     cfg = load_takeout_accounts(config_path=tmp_path / "nope.yaml")
     assert len(cfg) == 0
@@ -259,7 +259,7 @@ def test_takeout_config_empty(tmp_path: Path) -> None:
 
 def test_takeout_config_with_account(tmp_path: Path) -> None:
     """A YAML file with one account yields one `TakeoutAccountConfig`."""
-    from dlt_sources.author_archive import load_takeout_accounts
+    from dlt_sources.leabharlann import load_takeout_accounts
 
     fake_takeout = tmp_path / "Takeout" / "cian_personal"
     fake_takeout.mkdir(parents=True)

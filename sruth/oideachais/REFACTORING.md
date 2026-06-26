@@ -1,6 +1,6 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-25
+**Last updated:** 2026-06-26
 
 This file is the canonical refactor backlog for the `oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
 
@@ -66,6 +66,62 @@ Deleted items (12 total):
 | `storage/curriculum_vectors.py` | `core/storage/curriculum_vectors.py` | 427 |
 
 Note: `core/storage/ducklake.py` and `core/storage/clients/ducklake.py` both define `DuckLakeClient` / `DuckLakeSnapshot` / `CELTIC_MANUSCRIPT_SCHEMAS` / `DuckLakeBackend` / `get_ducklake_backend` (different implementations). The `clients/` variant is re-exported as canonical via `core/storage/__init__.py`; the legacy `ducklake.py` remains importable explicitly.
+
+### Phase 3A — Rename `dlt_sources/author_archive/` → `dlt_sources/leabharlann/` (`oideachais-audit-phase-3a-rename-dlt-author-archive-to-leabharlann`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: LOW (filesystem rename + import path update + doc reference update; 5 production code files + 2 test files updated)
+**Impact**: 12 files renamed in-place (git mv), 0 net LOC change
+
+The DLT source package for the personal archive was named `author_archive/` but all 6 source callables inside already used the `leabharlann_*` prefix (`leabharlann_books`, `leabharlann_zotero`, `leabharlann_takeout`), and the `oideachais-leabharlann` skill describes it as "leabharlann (personal archive)". This created a name mismatch between the filesystem and the source callable names.
+
+This change ONLY renames the DLT source package directory. It does NOT rename the Dagster assets (`author_archive_assets.py`), Cognee cognify pass (`cognee_integration/author_archive_cognify.py`), cross-corpus rules (`cognify_rules/author_archive_cross_corpus.py`), OCR chain (`ocr/author_archive_ocr.py`), or pipeline/dataset name prefixes in `dlt_utils/target_factory.py` — those subsystem names are scoped separately and out of scope here.
+
+#### Files renamed
+
+| Source | Destination |
+|:--|:--|
+| `dlt_sources/author_archive/__init__.py` | `dlt_sources/leabharlann/__init__.py` |
+| `dlt_sources/author_archive/leabharlann_books.py` | `dlt_sources/leabharlann/leabharlann_books.py` |
+| `dlt_sources/author_archive/zotero.py` | `dlt_sources/leabharlann/zotero.py` |
+| `dlt_sources/author_archive/takeout_v1.py` | `dlt_sources/leabharlann/takeout_v1.py` |
+| `dlt_sources/author_archive/google_takeout.py` | `dlt_sources/leabharlann/google_takeout.py` |
+| `dlt_sources/author_archive/gemini_deep_research.py` | `dlt_sources/leabharlann/gemini_deep_research.py` |
+| `dlt_sources/author_archive/university_of_galway.py` | `dlt_sources/leabharlann/university_of_galway.py` |
+| `dlt_sources/author_archive/previews.py` | `dlt_sources/leabharlann/previews.py` |
+| `dlt_sources/author_archive/_epub_extractor.py` | `dlt_sources/leabharlann/_epub_extractor.py` |
+| `dlt_sources/author_archive/_citation_extractor.py` | `dlt_sources/leabharlann/_citation_extractor.py` |
+| `dlt_sources/author_archive/_scanner.py` | `dlt_sources/leabharlann/_scanner.py` |
+| `dlt_sources/author_archive/_takeout_paths.py` | `dlt_sources/leabharlann/_takeout_paths.py` |
+| `dlt_sources/author_archive/config.example.yaml` | `dlt_sources/leabharlann/config.example.yaml` |
+
+#### Production code imports updated (5 files)
+
+| File | Sites updated |
+|:--|--:|
+| `dagster_defs/assets/author_archive_assets.py` | 3 |
+| `dagster_defs/assets/leabharlann_assets.py` | 3 |
+| `dagster_defs/sensors/author_archive_sensors.py` | 1 |
+| `cognee_integration/leabharlann_cognify.py` | 1 (docstring) |
+| `ocr/author_archive_ocr.py` | 1 (docstring) |
+
+#### Test code imports updated (2 files)
+
+| File | Sites updated |
+|:--|--:|
+| `tests/test_leabharlann_pipeline.py` | 12 |
+| `tests/test_author_archive_pipeline.py` | 4 |
+
+#### Doc references updated (8 files)
+
+`STATUS.md`, `cocoindex_flows/README.md`, `baml_src/README.md`, `oideachais/README.md`, `oideachais/AGENTS.md`, `oideachais/REFACTORING.md`, `dagster_defs/definitions.py` (comment), `dlt_sources/leabharlann/{__init__,_scanner,leabharlann_books,google_takeout}.py` (docstrings), `openspec/specs/{author-archive-uog-coursework,oideachais-leabharlann}/spec.md`, `dlt_sources/ireland/README.md`.
+
+#### Validated
+
+- `openspec validate oideachais-audit-phase-3a-rename-dlt-author-archive-to-leabharlann --strict` passes
+- `from dlt_sources.leabharlann import leabharlann_books_source, zotero_source, takeout_v1_source, university_of_galway_source, gemini_deep_research_source` succeeds (5 sources)
+- `mise run lint:skills` 123/123 pass
+- 0 remaining `dlt_sources.author_archive` references in non-archived files (frozen `openspec/changes/archive/*` records left untouched)
 
 #### Test imports updated (3 files, 11 imports)
 
@@ -195,7 +251,7 @@ Note: `core/storage/ducklake.py` and `core/storage/clients/ducklake.py` both def
 | 6 | 10 v0 CocoIndex flows in `oideachais/cocoindex_flows/` not migrated to v1 (only `leabharlann_embedding.py` is v1) | `backlog` | The package `__init__.py` paper-overs the broken imports. Should be migrated one at a time using the `leabharlann_embedding.py` pattern. |
 | 7 | `oideachais/graph/temporal.py` reimplements Graphiti in pure Python without ever connecting to the Graphiti compose stack | `backlog` | Decision: (a) delete, (b) re-implement as a thin Python client for the Graphiti compose stack, (c) leave alone. |
 | 8 | 2 parallel graph stacks (`oideachais/cognee_integration/` + `oideachais/graph/{memgraph_client,falkordb_client,temporal}.py`) | `backlog` | Unify: Cognee is primary, FalkorDB for cache/queries, Memgraph for the bi-temporal knowledge graph (Cognee uses Memgraph). |
-| 9 | 3 document extraction utilities re-implement pymupdf + python-docx: `oideachais/dlt_sources/author_archive/_scanner._extract_text_from_{pdf,word,code}` + `oideachais/document_factory/pdf_converter.py` + `oideachais/cocoindex_flows/pdf_embedding.py:PDFEmbeddingPipeline` | `backlog` | Consolidate into `oideachais/document_extraction/`. |
+| 9 | 3 document extraction utilities re-implement pymupdf + python-docx: `oideachais/dlt_sources/leabharlann/_scanner._extract_text_from_{pdf,word,code}` + `oideachais/document_factory/pdf_converter.py` + `oideachais/cocoindex_flows/pdf_embedding.py:PDFEmbeddingPipeline` | `backlog` | Consolidate into `oideachais/document_extraction/`. |
 | 10 | BAML `ExtractHandwrittenEquations` is called only in `oideachais/ocr/author_archive_ocr.py:1`, not wired to any Dagster asset | `backlog` | Wire to `leabharlann_handwriting_ocr` asset (currently just a config check, no real OCR). |
 | 11 | BAML `ExtractZoteroMetadata` is defined in `baml_src/author_archive.baml` but never called from any dlt source | `backlog` | Wire to `leabharlann_zotero_raw.extraction_metadata` resource. |
 | 12 | 3 leabharlann CocoIndex Apps re-declare the same `@coco.lifespan` 3 times | `backlog` | Consolidate to one module-level `@coco.lifespan`. |
@@ -205,9 +261,9 @@ Note: `core/storage/ducklake.py` and `core/storage/clients/ducklake.py` both def
 | 16 | `oideachais/dagster_defs/assets/leabharlann_assets.py:cocoindex_books_update` calls `subprocess.run(["cocoindex", "update", ...])` but `cocoindex` may not be on the worker PATH | `in_progress` | Add a try/except + structured error in the asset materialisation. |
 | 17 | `oideachais/dagster_defs/assets/author_archive_assets.py` declares 7 assets but `cocoindex update` is never actually invoked (assets are stubs) | `backlog` | Wire to the v1 `author_archive_embedding.py` flow (after the v0 → v1 migration). |
 | 18 | `oideachais/cognee_integration/cross_stage_cognify.py` declares `cross_stage_cognify` as a Dagster asset but it is a stub — no actual Cognee cognify call is made | `backlog` | Wire to the real Cognee cognify lifecycle. |
-| 19 | `oideachais/dlt_sources/author_archive/google_takeout.py` has `phase2_oauth_drive_export` and `phase2_gmail_export` stubs that raise `NotImplementedError` | `backlog` | Phase 2 of the takeout source. |
+| 19 | `oideachais/dlt_sources/leabharlann/google_takeout.py` has `phase2_oauth_drive_export` and `phase2_gmail_export` stubs that raise `NotImplementedError` | `backlog` | Phase 2 of the takeout source. |
 | 20 | The 3 `leabharlann_cocoindex_*_update` assets use `subprocess.run` to invoke the v1 Apps. If `cocoindex` is not on PATH (likely on the production MacBook which doesn't have cocoindex installed), the asset materialisation fails | `in_progress` | Add a `try/except FileNotFoundError` and skip the update with a warning, allowing the rest of the pipeline to continue. |
-| 21 | The 6 `oideachais/dlt_sources/author_archive/` sources are NOT registered in the `oideachais/dlt_sources/__init__.py` (only the author-archive package itself is) | `done` | Already done — they are re-exported via `oideachais.dlt_sources.author_archive`. |
+| 21 | The 6 `oideachais/dlt_sources/leabharlann/` sources are NOT registered in the `oideachais/dlt_sources/__init__.py` (only the author-archive package itself is) | `done` | Already done — they are re-exported via `oideachais.dlt_sources.leabharlann`. |
 
 ---
 
@@ -224,14 +280,14 @@ Note: `core/storage/ducklake.py` and `core/storage/clients/ducklake.py` both def
 | 7 | `baml_src/README.md` written (BAML schema catalogue) | `done` | this change |
 | 8 | `oideachais/agents/{adk,agno}/README.md` written (agent surface) | `done` | this change |
 | 9 | `docs/06-infrastructure/leabharlann-stack-overview.md` written (end-to-end stack diagram) | `done` | this change |
-| 10 | `oideachais/dlt_sources/author_archive/` package created (6 dlt sources for leabharlann + author archive) | `done` | `openspec/changes/leabharlann-cocoindex-v1` (commit `676db8664`) |
+| 10 | `oideachais/dlt_sources/leabharlann/` package created (6 dlt sources for leabharlann + author archive) | `done` | `openspec/changes/leabharlann-cocoindex-v1` (commit `676db8664`) |
 | 11 | `oideachais/cocoindex_flows/leabharlann_embedding.py` written (3 v1 Apps + 3 search handlers) | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
 | 12 | `baml_src/author_archive.baml` extended with `ZoteroPaper` + `Author` + `PaperKind` enum + `ExtractZoteroMetadata` | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
 | 13 | `oideachais/dagster_defs/assets/leabharlann_assets.py` written (7 assets) | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
 | 14 | `oideachais/dagster_defs/sensors/leabharlann_sensors.py` written (60 s directory-watch sensor) | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
 | 15 | `oideachais/ocr/author_archive_ocr.py` written (Pylaia / TrOCR / PaddleOCR / VLM dispatch) | `done` | `openspec/changes/author-archive-gemini-and-uos-ingestion` |
-| 16 | `oideachais/dlt_sources/author_archive/_epub_extractor.py` written (ebooklib-based, graceful degradation) | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
-| 17 | `oideachais/dlt_sources/author_archive/_citation_extractor.py` written (PyMuPDF link extraction) | `done` | `openspec/changes/author-archive-gemini-and-uos-ingestion` |
+| 16 | `oideachais/dlt_sources/leabharlann/_epub_extractor.py` written (ebooklib-based, graceful degradation) | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
+| 17 | `oideachais/dlt_sources/leabharlann/_citation_extractor.py` written (PyMuPDF link extraction) | `done` | `openspec/changes/author-archive-gemini-and-uos-ingestion` |
 | 18 | `oideachais/dagster_defs/assets/author_archive_assets.py` written (7 author-archive assets) | `done` | `openspec/changes/author-archive-gemini-and-uos-ingestion` |
 | 19 | `oideachais/dlt_utils/safety.py` extended with `validate_source_kwargs` + `safe_dlt_run_with_progress` (dlt 1.0 helpers) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
 | 20 | `oideachais/dlt_utils/ducklake_options.py` written (DuckLake 1.0: inlining + clustering + bucket partitioning) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |

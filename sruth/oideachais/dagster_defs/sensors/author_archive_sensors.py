@@ -138,7 +138,7 @@ def author_archive_directory_sensor(
 
     # Takeout — one RunRequest per affected account (filesystem only Phase 1).
     try:
-        from dlt_sources.author_archive import load_takeout_accounts
+        from dlt_sources.leabharlann import load_takeout_accounts
     except ImportError:
         load_takeout_accounts = None  # type: ignore[assignment]
 

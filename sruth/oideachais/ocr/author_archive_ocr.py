@@ -2,7 +2,7 @@
 Author-Archive OCR / HTR dispatcher.
 
 For pages flagged as `requires_handwriting_ocr=true` by
-`oideachais/dlt_sources/author_archive/_scanner.requires_handwriting_ocr`,
+`oideachais/dlt_sources/leabharlann/_scanner.requires_handwriting_ocr`,
 select the right back-end:
 
 - `pylaia`        — Irish / Gaeilge HTR (when language == "ga" or "mixed").

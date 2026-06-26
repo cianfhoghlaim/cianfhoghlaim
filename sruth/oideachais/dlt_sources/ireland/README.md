@@ -21,7 +21,7 @@ Status: ✅ working · ⚠️ partial · 🟡 planned · ❌ missing
 | **OIDE CPD** | `ireland/oide.py` ✅ | (TBD) | (planned) | (none) | (none) |
 | **Parallel corpus** (EN/GA) | `ireland/parallel_corpus.py` ✅ | (TBD) | (planned) | (none) | (none) |
 | **PDF downloads** (NCCA / SEC PDFs to local cache) | `ireland/pdf_downloader.py` ✅ | (none — pure download) | (none) | (none) | (none) |
-| **Local documents** (UoG archive) | `ireland/local_documents.py` ✅ | (none — the dlt_sources/author_archive/university_of_galway.py is the canonical source) | (none) | (none) | (none) |
+| **Local documents** (UoG archive) | `ireland/local_documents.py` ✅ | (none — the dlt_sources/leabharlann/university_of_galway.py is the canonical source) | (none) | (none) | (none) |
 | **SEC aural transcripts** | `ireland/sec_aural_transcripts.py` ✅ | (TBD) | (planned) | (none) | (none) |
 | **Subjects** (LC subject inventory) | `subjects/{base,junior_cycle,senior_cycle}.py` ✅ | (TBD) | (planned) | (none) | (none) |
 | **Curriculum registry** (registry of all sources) | `ireland/curriculum_registry.py` ✅ | (TBD) | (planned) | (none) | (none) |
