@@ -1,11 +1,13 @@
-"""
-Tuath Storage Layer.
+"""Tuath Storage Layer — re-export shim to canonical oideachais storage.
 
-Provides storage utilities for the Celtic MMO project:
-- SerialDatabaseExecutor: Thread-safe DuckDB operations
+The original `sruth/tuatha/storage/serial_executor.py` shim imported from
+the now-deleted `sruth.shared.storage` (deleted in commit `8484a6353`).
+This `__init__.py` now re-exports the 3 names (`SerialDatabaseExecutor`,
+`get_executor`, `run_serial`) directly from the canonical oideachais home
+at `sruth.oideachais.core.storage.serial_executor`.
 """
 
-from .serial_executor import (
+from sruth.oideachais.core.storage.serial_executor import (
     SerialDatabaseExecutor,
     get_executor,
     run_serial,
