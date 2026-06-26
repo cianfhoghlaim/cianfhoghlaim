@@ -1,7 +1,7 @@
 # oideachais — Celtic education data platform (228 Dagster assets)
 # Phase 0.1 of lateralise-british-isles-domains + refactor-quadrants-to-sruth.
 # Registers the oideachais Dagster code-location with auto-discovery
-# from sruth/oideachais/data_platform/dagster_defs/.
+# from sruth/oideachais/dagster_defs/.
 
 directory_type = "project"
 

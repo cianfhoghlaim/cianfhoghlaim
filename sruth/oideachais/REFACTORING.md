@@ -1,10 +1,41 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-26 (Phase 4 done)
+**Last updated:** 2026-06-26 (Phase 5 done)
 
 This file is the canonical refactor backlog for the `sruth/oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
 
 ---
+
+### Phase 5 — Align `pyproject.toml` + canonical docstrings to `oideachais.*` namespace (`oideachais-audit-phase-5-align-pyproject`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: LOW (4 TOML config lines + 3 docstring updates; no code semantics changed)
+**Impact**: 4 `data_platform.*` references removed from `pyproject.toml`, 3 stale `data_platform` references removed from canonical docstrings, 1 entry removed from the shim enumeration in `dlt_sources/__init__.py`
+
+#### `pyproject.toml` (4 references fixed)
+
+| Line | Section | Before | After |
+|:--|:--|:--|:--|
+| 166 | `[tool.hatch.build.targets.wheel] packages` | `"data_platform.dagster_defs"` | REMOVED (package doesn't exist on disk; was dead weight in the wheel build) |
+| 222 | `[tool.dagster] module_name` | `"data_platform.dagster_defs.definitions"` | `"oideachais.dagster_defs.definitions"` |
+| 229 | `[tool.dg.project] root_module` | `"data_platform.dagster_defs"` | `"oideachais.dagster_defs"` |
+| 230 | `[tool.dg.project] code_location_target_module` | `"data_platform.dagster_defs.definitions"` | `"oideachais.dagster_defs.definitions"` |
+
+#### Docstrings (3 references fixed)
+
+| File | Line | Fix |
+|:--|:--|:--|
+| `dlt_utils/destinations.py:9` | usage example | `from oideachais.data_platform.dlt_utils import …` → `from dlt_utils import …` |
+| `dg.toml:4` | header comment | `# from sruth/oideachais/data_platform/dagster_defs/.` → `# from sruth/oideachais/dagster_defs/.` |
+| `dlt_sources/__init__.py:9` | shim enumeration | Removed `crown_dependencies,` from the legacy list (deleted in Phase 3E); added a note documenting the deletion |
+
+#### Validation
+
+- `openspec validate oideachais-audit-phase-5-align-pyproject --strict` PASS
+- `tomllib.load(sruth/oideachais/pyproject.toml)` parses cleanly
+- `grep -n "data_platform" sruth/oideachais/{pyproject.toml,dg.toml,dlt_sources/__init__.py,dlt_utils/destinations.py}` returns ZERO matches
+- 31/31 prior canonical imports still succeed (Phase 3D + 3E + 4 regression)
+- 8/8 tests pass
 
 ### Phase 4 — Consolidate legacy flat files at `dlt_sources/` root (`oideachais-audit-phase-4-consolidate-legacy-dirs`)
 
