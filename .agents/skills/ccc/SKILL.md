@@ -398,3 +398,7 @@ air-gapped or compliance-constrained project.
 
 The KCG stack uses `ccc` (canonical) or `ChunkHound`
 (per-project self-hosted) for all production code search.
+
+## See also
+
+- **[`../INDEXING_AND_COGNITION.md`](../INDEXING_AND_COGNITION.md)** — Consolidated setup + MCP reference for both `ccc` and `cognee`. Includes current state (index size, chunk count, container status), first-time setup, daily-use commands, MCP tool inventory for both, dual-search workflow, and troubleshooting matrix. Read this when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", or "what MCP tools are available?".

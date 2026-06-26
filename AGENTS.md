@@ -8,7 +8,7 @@ The 5 priority skills, the 4 priority commands, the 4 priority
 compose stacks, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is detail.
 
-### Priority skills (5 of 108)
+### Priority skills (6 of 123)
 
 | Skill | When to load |
 |:--|:--|
@@ -17,6 +17,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
 | [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
 | [`openspec`](openspec/AGENTS.md) | Spec-driven change management (32 specs, 4 shared) |
+| [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
 
 ### ccc code search (always use before grep)
 
@@ -41,7 +42,7 @@ openspec archive <change-id> --yes        # after deploy
 ### Priority mise tasks
 
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata (108/108)
+mise run lint:skills               # validate .agents/skills/ metadata (123/123)
 mise run turbo dev                 # monorepo dev (bun + uv + turbo)
 mise run secrets:init              # sync .infisical.env → dev-baile vault
 mise run dagster:oideachais        # launch the lakehouse Dagster UI
@@ -74,6 +75,25 @@ The root `package.json` declares these `workspaces` and is the only manifest bun
 | `tuatha-ui` | `sruth/tuatha/ui/` | Túatha educational MMO front-end |
 
 There is **no** runtime business logic at the root. The root `package.json` only orchestrates: setup, turbo passthroughs, secret management, dagster, komodo/pangolin/locket glue, ccc indexing, and OpenSpec.
+
+## CCC + Cognee dual-search diagram
+
+ccc searches code; cognee searches docs. An agent asking "find how
+BAML extraction is implemented" gets the code file from ccc and the
+explanation from cognee, then merges.
+
+```
+        ccc                          cognee
+    (code search)             (docs cognition)
+       │                            │
+       ▼                            ▼
+  Find what BAML           Find what BAML extraction
+  extraction calls do      documentation says
+       │                            │
+       └────────────┬───────────────┘
+                    ▼
+            Agent (merged)
+```
 
 ### Python graph (uv workspaces)
 
