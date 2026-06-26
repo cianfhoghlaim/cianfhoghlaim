@@ -43,6 +43,5 @@ services:
     environment:
       POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-devpassword}
 
-  prometheus:
-    env_file:
-      - ../../../../.env
+  # Prometheus dev override removed in cleanup-and-boot-stacks change 2026-06-26
+  # (the prometheus service itself was deleted from compose.yaml).
