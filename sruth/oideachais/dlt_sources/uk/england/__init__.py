@@ -13,7 +13,7 @@ See `openspec/changes/lateralise-dlt-sources-to-domains/`.
 # Lazy import via the canonical `domains/education/en/` package
 # which itself does the lazy import from `uk/england/` to avoid
 # the shared.http breakage (see domains/education/en/__init__.py).
-from sruth.oideachais.dlt_sources.domains.education.en import (
+from sruth.oideachais.dlt_sources.en.education import (
     dfe_explore_statistics,
     national_curriculum,
     ofsted,

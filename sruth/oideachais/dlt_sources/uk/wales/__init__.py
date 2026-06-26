@@ -10,7 +10,7 @@ follow-up openspec change.
 See `openspec/changes/lateralise-dlt-sources-to-domains/`.
 """
 
-from sruth.oideachais.dlt_sources.domains.education.wls import estyn, statswales
+from sruth.oideachais.dlt_sources.wls.education import estyn, statswales
 
 statswales_source = statswales.statswales_source
 estyn_source = estyn.estyn_source

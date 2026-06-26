@@ -100,7 +100,7 @@ def _gpg_recipients() -> list[str] | None:
     Look up the workstation's GPG key fingerprint (if any).
 
     Returns None if GPG is unavailable or no key is present. The OCR/GPG
-    encoder at `oideachais/dlt_sources/author_archive/_gpg.py` (future work)
+    encoder at `oideachais/dlt_sources/leabharlann/_gpg.py` (future work)
     will be the consumer.
     """
     try:
@@ -301,7 +301,7 @@ def phase2_oauth_drive_export(*args: Any, **kwargs: Any) -> Iterator[dict[str, A
 
     Raises `NotImplementedError` in this change. Deferred to a follow-up
     once the user provides the Takeout zips and confirms the OAuth flow.
-    See `oideachais/dlt_sources/author_archive/_oauth.py` for the entry point.
+    See `oideachais/dlt_sources/leabharlann/_oauth.py` for the entry point.
     """
     raise NotImplementedError(
         "phase2_oauth_drive_export: deferred until Takeout zips are available. "

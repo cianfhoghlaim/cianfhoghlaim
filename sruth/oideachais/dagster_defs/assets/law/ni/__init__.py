@@ -14,7 +14,7 @@ from dagster import MaterializeResult, asset
     description="legislation.gov.uk Northern Ireland acts.",
 )
 def law_ni_legislation(context) -> MaterializeResult:
-    from dlt_sources.domains.law.ni.legislation import ni_legislation_source
+    from dlt_sources.ni.law.legislation import ni_legislation_source
 
     src = ni_legislation_source()
     rows = list(src.resources["acts"])

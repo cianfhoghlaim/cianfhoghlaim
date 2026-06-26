@@ -14,7 +14,7 @@ from dagster import MaterializeResult, asset
     description="nidirect (NI government) health pages.",
 )
 def medicine_ni_nidirect(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.ni.nidirect import (
+    from dlt_sources.ni.medicine.nidirect import (
         nidirect_medicine_source,
     )
 

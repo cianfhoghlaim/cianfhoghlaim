@@ -10,7 +10,7 @@ follow-up openspec change.
 See `openspec/changes/lateralise-dlt-sources-to-domains/`.
 """
 
-from sruth.oideachais.dlt_sources.domains.education.sct import (
+from sruth.oideachais.dlt_sources.sct.education import (
     gov_scot_statistics,
     insight_benchmarking,
     simd,

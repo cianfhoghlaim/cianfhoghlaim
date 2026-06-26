@@ -15,11 +15,11 @@ from dagster import MaterializeResult, asset
     compute_kind="dlt",
     description=(
         "Isle of Man Statute Books (legislation portal). "
-        "Source: dlt_sources.domains.law.iom.legislation."
+        "Source: dlt_sources.iom.law.legislation."
     ),
 )
 def law_iom_legislation(context) -> MaterializeResult:
-    from dlt_sources.domains.law.iom.legislation import (
+    from dlt_sources.iom.law.legislation import (
         iom_legislation_source,
     )
 

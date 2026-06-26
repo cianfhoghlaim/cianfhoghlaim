@@ -12,7 +12,7 @@ Resources (5):
 5. `book_chunks` — pre-chunked markdown text (one row per chunk), useful
    for downstream CocoIndex flows that don't want to re-chunk.
 
-The `preview_path` column is populated by `oideachais/dlt_sources/author_archive/previews.py`.
+The `preview_path` column is populated by `oideachais/dlt_sources/leabharlann/previews.py`.
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/specs/leabharlann-ingestion/spec.md
 """

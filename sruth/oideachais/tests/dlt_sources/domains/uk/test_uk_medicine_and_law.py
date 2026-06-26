@@ -20,34 +20,34 @@ import pytest
 # ---------------------------------------------------------------------------
 # UK medicine sources
 # ---------------------------------------------------------------------------
-from dlt_sources.domains.medicine.en.gmc import gmc_source
-from dlt_sources.domains.medicine.en.nhs_england import (
+from dlt_sources.en.medicine.gmc import gmc_source
+from dlt_sources.en.medicine.nhs_england import (
     nhs_england_source,
 )
-from dlt_sources.domains.medicine.en.nice import nice_source
-from dlt_sources.domains.medicine.ni.nidirect import (
+from dlt_sources.en.medicine.nice import nice_source
+from dlt_sources.ni.medicine.nidirect import (
     nidirect_medicine_source,
 )
-from dlt_sources.domains.medicine.sct.nhs_scotland import (
+from dlt_sources.sct.medicine.nhs_scotland import (
     nhs_scotland_source,
 )
-from dlt_sources.domains.medicine.wls.nhs_wales import (
+from dlt_sources.wls.medicine.nhs_wales import (
     nhs_wales_source,
 )
 
 # ---------------------------------------------------------------------------
 # UK law sources
 # ---------------------------------------------------------------------------
-from dlt_sources.domains.law.en.legislation import (
+from dlt_sources.en.law.legislation import (
     en_legislation_source,
 )
-from dlt_sources.domains.law.ni.legislation import (
+from dlt_sources.ni.law.legislation import (
     ni_legislation_source,
 )
-from dlt_sources.domains.law.sct.legislation import (
+from dlt_sources.sct.law.legislation import (
     sct_legislation_source,
 )
-from dlt_sources.domains.law.wls.legislation import (
+from dlt_sources.wls.law.legislation import (
     wls_legislation_source,
 )
 

@@ -14,7 +14,7 @@ from dagster import MaterializeResult, asset
     description="legislation.gov.uk Wales acts.",
 )
 def law_wls_legislation(context) -> MaterializeResult:
-    from dlt_sources.domains.law.wls.legislation import wls_legislation_source
+    from dlt_sources.wls.law.legislation import wls_legislation_source
 
     src = wls_legislation_source()
     rows = list(src.resources["acts"])

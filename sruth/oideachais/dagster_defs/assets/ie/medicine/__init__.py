@@ -27,12 +27,12 @@ from dagster import MaterializeResult, asset
     compute_kind="dlt",
     description=(
         "HSE (Health Service Executive) Ireland public pages. "
-        "Source: dlt_sources.domains.medicine.ie.hse.hse_source"
+        "Source: dlt_sources.ie.medicine.hse.hse_source"
     ),
 )
 def medicine_ie_hse(context) -> MaterializeResult:
     """DLT extract of hse.ie pages into the oideachais lakehouse."""
-    from dlt_sources.domains.medicine.ie.hse import hse_source
+    from dlt_sources.ie.medicine.hse import hse_source
 
     src = hse_source()
     rows = list(src.resources["pages"])
@@ -46,11 +46,11 @@ def medicine_ie_hse(context) -> MaterializeResult:
     compute_kind="dlt",
     description=(
         "Medical Council of Ireland public register search. "
-        "Source: dlt_sources.domains.medicine.ie.medical_council.medical_council_source"
+        "Source: dlt_sources.ie.medicine.medical_council.medical_council_source"
     ),
 )
 def medicine_ie_medical_council(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.ie.medical_council import (
+    from dlt_sources.ie.medicine.medical_council import (
         medical_council_source,
     )
 
@@ -66,11 +66,11 @@ def medicine_ie_medical_council(context) -> MaterializeResult:
     compute_kind="dlt",
     description=(
         "Department of Health (Ireland) public pages. "
-        "Source: dlt_sources.domains.medicine.ie.doh.doh_source"
+        "Source: dlt_sources.ie.medicine.doh.doh_source"
     ),
 )
 def medicine_ie_doh(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.ie.doh import doh_source
+    from dlt_sources.ie.medicine.doh import doh_source
 
     src = doh_source()
     rows = list(src.resources["pages"])
@@ -84,11 +84,11 @@ def medicine_ie_doh(context) -> MaterializeResult:
     compute_kind="dlt",
     description=(
         "Health Protection Surveillance Centre (Ireland) public data. "
-        "Source: dlt_sources.domains.medicine.ie.hpsc.hpsc_source"
+        "Source: dlt_sources.ie.medicine.hpsc.hpsc_source"
     ),
 )
 def medicine_ie_hpsc(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.ie.hpsc import hpsc_source
+    from dlt_sources.ie.medicine.hpsc import hpsc_source
 
     src = hpsc_source()
     rows = list(src.resources["pages"])

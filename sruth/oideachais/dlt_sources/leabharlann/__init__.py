@@ -3,18 +3,18 @@ Author Archive dlt source package.
 
 Ingest, extract, and index personal-archive trees under `leabharlann/`:
 
-1. `oideachais.dlt_sources.author_archive.university_of_galway_source` —
+1. `oideachais.dlt_sources.leabharlann.university_of_galway_source` —
    `leabharlann/ollscoil_na_gaillimhe/` (renamed from the old
    `author_cian_deacy_lyons_…/university_of_galway/`).
-2. `oideachais.dlt_sources.author_archive.gemini_deep_research_source` —
+2. `oideachais.dlt_sources.leabharlann.gemini_deep_research_source` —
    `leabharlann/gemini_deep_research/`.
-3. `oideachais.dlt_sources.author_archive.google_takeout_source` —
+3. `oideachais.dlt_sources.leabharlann.google_takeout_source` —
    `Takeout/<account_label>/` (per-account, configured via YAML).
-4. `oideachais.dlt_sources.author_archive.leabharlann_books_source` —
+4. `oideachais.dlt_sources.leabharlann.leabharlann_books_source` —
    `leabharlann/{gaeilge,aigne}/` with EPUB support + preview pairing.
-5. `oideachais.dlt_sources.author_archive.zotero_source` —
+5. `oideachais.dlt_sources.leabharlann.zotero_source` —
    `leabharlann/zotero/` (real Zotero storage format with arxiv IDs).
-6. `oideachais.dlt_sources.author_archive.takeout_v1_source` —
+6. `oideachais.dlt_sources.leabharlann.takeout_v1_source` —
    `stedding/Takeout/` (single- or multi-account auto-discovery).
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/

@@ -14,7 +14,7 @@ from dagster import MaterializeResult, asset
     description="NHS Scotland public pages.",
 )
 def medicine_sct_nhs_scotland(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.sct.nhs_scotland import (
+    from dlt_sources.sct.medicine.nhs_scotland import (
         nhs_scotland_source,
     )
 

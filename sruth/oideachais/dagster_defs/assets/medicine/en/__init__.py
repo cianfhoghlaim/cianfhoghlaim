@@ -17,7 +17,7 @@ from dagster import MaterializeResult, asset
     description="NHS England public pages.",
 )
 def medicine_en_nhs_england(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.en.nhs_england import (
+    from dlt_sources.en.medicine.nhs_england import (
         nhs_england_source,
     )
 
@@ -34,7 +34,7 @@ def medicine_en_nhs_england(context) -> MaterializeResult:
     description="General Medical Council (UK medical register).",
 )
 def medicine_en_gmc(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.en.gmc import gmc_source
+    from dlt_sources.en.medicine.gmc import gmc_source
 
     src = gmc_source()
     rows = list(src.resources["pages"])
@@ -49,7 +49,7 @@ def medicine_en_gmc(context) -> MaterializeResult:
     description="NICE (National Institute for Health & Care Excellence) guidelines.",
 )
 def medicine_en_nice(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.en.nice import nice_source
+    from dlt_sources.en.medicine.nice import nice_source
 
     src = nice_source()
     rows = list(src.resources["guidelines_pages"])

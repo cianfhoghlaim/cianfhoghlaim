@@ -1,5 +1,5 @@
 """
-oideachais.tests.dlt_sources.domains.uk.test_crown_deps — Crown Dependencies
+oideachais.tests.dlt_sources.{nation}.law.test_crown_deps — Crown Dependencies
 medicine + law DLT source tests.
 
 Per
@@ -36,7 +36,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "medicine",
         "iom",
-        "dlt_sources.domains.medicine.iom.health_social_care",
+        "dlt_sources.iom.medicine.health_social_care",
         "dagster_defs.assets.medicine.iom",
         "iom_health_social_care_source",
         "pages",
@@ -45,7 +45,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "medicine",
         "jey",
-        "dlt_sources.domains.medicine.jey.health_community_services",
+        "dlt_sources.jey.medicine.health_community_services",
         "dagster_defs.assets.medicine.jey",
         "jey_health_community_services_source",
         "pages",
@@ -54,7 +54,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "medicine",
         "ggy",
-        "dlt_sources.domains.medicine.ggy.health_social_care",
+        "dlt_sources.ggy.medicine.health_social_care",
         "dagster_defs.assets.medicine.ggy",
         "ggy_health_social_care_source",
         "pages",
@@ -63,7 +63,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "law",
         "iom",
-        "dlt_sources.domains.law.iom.legislation",
+        "dlt_sources.iom.law.legislation",
         "dagster_defs.assets.law.iom",
         "iom_legislation_source",
         "acts",
@@ -72,7 +72,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "law",
         "jey",
-        "dlt_sources.domains.law.jey.legislation",
+        "dlt_sources.jey.law.legislation",
         "dagster_defs.assets.law.jey",
         "jey_legislation_source",
         "acts",
@@ -81,7 +81,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "law",
         "ggy",
-        "dlt_sources.domains.law.ggy.legislation",
+        "dlt_sources.ggy.law.legislation",
         "dagster_defs.assets.law.ggy",
         "ggy_legislation_source",
         "acts",

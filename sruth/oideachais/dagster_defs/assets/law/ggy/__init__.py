@@ -15,11 +15,11 @@ from dagster import MaterializeResult, asset
     compute_kind="dlt",
     description=(
         "Laws of Guernsey (Royal Court legal resources). "
-        "Source: dlt_sources.domains.law.ggy.legislation."
+        "Source: dlt_sources.ggy.law.legislation."
     ),
 )
 def law_ggy_legislation(context) -> MaterializeResult:
-    from dlt_sources.domains.law.ggy.legislation import (
+    from dlt_sources.ggy.law.legislation import (
         ggy_legislation_source,
     )
 

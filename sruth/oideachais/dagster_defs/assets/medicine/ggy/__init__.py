@@ -15,11 +15,11 @@ from dagster import MaterializeResult, asset
     compute_kind="dlt",
     description=(
         "States of Guernsey — Health & Social Care. "
-        "Source: dlt_sources.domains.medicine.ggy.health_social_care."
+        "Source: dlt_sources.ggy.medicine.health_social_care."
     ),
 )
 def medicine_ggy_health_social_care(context) -> MaterializeResult:
-    from dlt_sources.domains.medicine.ggy.health_social_care import (
+    from dlt_sources.ggy.medicine.health_social_care import (
         ggy_health_social_care_source,
     )
 

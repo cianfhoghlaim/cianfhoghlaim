@@ -54,7 +54,7 @@ async def cognify_culture_heritage_rows(
     rows
         A list of dicts. Expected shape is the BAML-extracted
         `CultureHeritageClaim` produced by
-        `oideachais.dlt_sources.domains.culture.ie.heritage_source`.
+        `oideachais.dlt_sources.ie.culture.heritage`.
 
     Returns
     -------

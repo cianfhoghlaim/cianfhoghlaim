@@ -2,9 +2,9 @@
 Author Archive filesystem scanner.
 
 Generic, path-parameterised, multi-account scanner used by:
-- `oideachais/dlt_sources/author_archive/university_of_galway.py`
-- `oideachais/dlt_sources/author_archive/gemini_deep_research.py`
-- `oideachais/dlt_sources/author_archive/google_takeout.py`
+- `oideachais/dlt_sources/leabharlann/university_of_galway.py`
+- `oideachais/dlt_sources/leabharlann/gemini_deep_research.py`
+- `oideachais/dlt_sources/leabharlann/google_takeout.py`
 
 Refactored from:
 - `oideachais/dlt_sources/bunchloch/filesystem_source.py:1`
@@ -444,7 +444,7 @@ class FileHashTracker:
 
     Uses DuckDB for persistent hash storage. Hoisted from
     `oideachais/dlt_sources/ireland/local_documents.py:420` to
-    `oideachais/dlt_sources/author_archive/_scanner.py`. The old import
+    `oideachais/dlt_sources/leabharlann/_scanner.py`. The old import
     path is preserved by a re-export shim.
     """
 

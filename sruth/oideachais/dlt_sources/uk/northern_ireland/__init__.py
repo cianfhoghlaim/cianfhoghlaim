@@ -10,7 +10,7 @@ follow-up openspec change.
 See `openspec/changes/lateralise-dlt-sources-to-domains/`.
 """
 
-from sruth.oideachais.dlt_sources.domains.education.ni import (
+from sruth.oideachais.dlt_sources.ni.education import (
     education_ni,
     etini,
     nisra,

@@ -13,15 +13,15 @@ from __future__ import annotations
 
 import pytest
 
-from dlt_sources.domains.law.ie.doj import doj_source
-from dlt_sources.domains.law.ie.irish_statute_book import (
+from dlt_sources.ie.law.doj import doj_source
+from dlt_sources.ie.law.irish_statute_book import (
     irish_statute_book_source,
 )
-from dlt_sources.domains.law.ie.lawreform import lawreform_source
-from dlt_sources.domains.medicine.ie.doh import doh_source
-from dlt_sources.domains.medicine.ie.hpsc import hpsc_source
-from dlt_sources.domains.medicine.ie.hse import hse_source
-from dlt_sources.domains.medicine.ie.medical_council import (
+from dlt_sources.ie.law.lawreform import lawreform_source
+from dlt_sources.ie.medicine.doh import doh_source
+from dlt_sources.ie.medicine.hpsc import hpsc_source
+from dlt_sources.ie.medicine.hse import hse_source
+from dlt_sources.ie.medicine.medical_council import (
     medical_council_source,
 )
 
