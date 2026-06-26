@@ -10,6 +10,53 @@ This file is the canonical refactor backlog for the `oideachais/` data platform.
 
 The Round 11 multi-quadrant audit identified sprawl across all 5 quadrants + infrastructure + HF Spaces. The oideachais portion is sequenced in 5 phases; each lands as a discrete openspec change.
 
+### Phase 3C — Migrate legacy single-source DLT files (`oideachais-audit-phase-3c-migrate-legacy-single-sources`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: MEDIUM (35-file rewire: whole-file moves for single-source files + 21 importer updates; multi-source files deferred to 3D)
+**Impact**: 59 files changed, +412/-114 LOC (includes 17 LOC cleanup commit removing accidentally-staged pre-existing modifications)
+
+Single-source legacy files in `dlt_sources/{ireland,uk,celtic}/*.py` were moved to canonical country-first `dlt_sources/{nation}/{domain}/{entity}.py`. Multi-source files (4+ `@dlt.source` defs in one module) are deliberately untouched and deferred to Phase 3D for per-source splitting first.
+
+#### Files moved (35)
+
+| Pattern | Count |
+|:--|--:|
+| IE education single-source → `dlt_sources/ie/education/` | 14 |
+| UK education single-source → `dlt_sources/{en,ni,sct,wls}/education/` | 5 |
+| UK statistics single-source → `dlt_sources/{en,ni,sct,wls}/statistics/` | 6 |
+| Celtic nation-scoped → `dlt_sources/ie/{culture,education}/` | 2 |
+| Shared utilities → `dlt_sources/common/` | 3 |
+| `dlt_sources/ireland/subjects/` → `dlt_sources/ie/education/subjects/` | 4 |
+| `dlt_sources/ireland/{json_seed,parallel_corpus,exam_source_update}` → `dlt_sources/ie/education/` | 3 |
+
+Total: 35 file moves + 24 importer rewrites.
+
+#### Importer updates (21 files)
+
+| Module | Files updated |
+|:--|--:|
+| `dagster_defs/` | 10 (celtic_language_assets, ie/education/{aistear,curriculum}_dlt_assets, leaving_cert/dlt_assets, multi_nation_curriculum_assets, uk_education_assets, unified_audio_dataset_assets, wire_unwired_dlt_sources, factories, partitions_v2) |
+| `dlt_sources/{ie,en,ni,sct,wls}/education/__init__.py` | 5 (shim strings for legacy fallback) |
+| `dlt_sources/ie/education/__init__.py` | 1 (full _REEXPORTS list rewrite) |
+| `dlt_utils/source_factory.py` | 1 |
+| `scripts/test_curriculum_pipeline.py` | 1 |
+| `notebooks/mission_control.py` | 1 |
+| `tests/dlt_sources/{test_subject_sources,test_integration,ie/education/test_curriculum_source_local_cache}.py` | 3 |
+| `tests/test_audio_pipeline.py` | 1 |
+
+#### Multi-source files deferred to 3D
+
+`dlt_sources/ireland/{oide,examinations,local_documents,agentic_discovery,pdf_downloader}.py`, `dlt_sources/uk/{england/national_curriculum,northern_ireland/ccea_curriculum,scotland/curriculum_for_excellence,wales/curriculum_for_wales}.py`, `dlt_sources/geospatial/{met_office,cso_small_areas,geohive}.py`, `dlt_sources/bunchloch/filesystem_source.py`, `dlt_sources/celtic/{canuint,duchas_images,gaois}.py` — these stay in legacy locations until Phase 3D splits them per source.
+
+#### Validation
+
+- `openspec validate oideachais-audit-phase-3c-migrate-legacy-single-sources --strict` PASS
+- `python3 -m compileall` all moved .py files: OK
+- `mise run lint:skills` 123/123 PASS
+- 15-router spot-check: 14/15 OK; 1 PARTIAL (file-based loading fails on relative `from .X` chains — expected)
+- Accidentally-staged pre-existing modifications (`all_nations.py` + marimo session cache) cleaned up in follow-up commit `d7bd329c1`
+
 ### Phase 1 — Delete confirmed-dead code (`oideachais-audit-phase-1-delete-dead-code`)
 
 **Status**: `done` (archived 2026-06-25)
