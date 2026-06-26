@@ -9,7 +9,7 @@
 #   Langfuse: LLM tracing (arm1-oci)
 #   Dozzle: Docker log viewer (arm1-oci)
 #   Beszel: Server monitoring (arm1-oci)
-#   Datadog: APM/metrics/logs agents (all servers)
+#   Logfire: Python tracing (SaaS at logfire.pydantic.dev)
 #
 # Usage:
 #   km run procedure deploy-observability
@@ -17,7 +17,7 @@
 
 [[procedure]]
 name = "deploy-observability"
-description = "Deploy observability stack (MLflow, Langfuse, Dozzle, Beszel, Datadog)"
+description = "Deploy observability stack (MLflow, Langfuse, Dozzle, Beszel, Logfire)"
 
 # =============================================================================
 # STAGE 1: Monitoring Hub (arm1-oci)
@@ -49,20 +49,15 @@ execution = { type = "DeployStack", params = { stack = "mlflow" } }
 execution = { type = "DeployStack", params = { stack = "langfuse" } }
 
 # =============================================================================
-# STAGE 3: Datadog Agents (all servers)
+# STAGE 3: Logfire (SaaS collector)
 # =============================================================================
-# Deploy Datadog agents to collect APM traces, metrics, and logs
-# from all production and development servers
+# Logfire is SaaS at https://logfire.pydantic.dev. The local
+# infrastructure/stacks/logfire/ deploys an OpenTelemetry Collector that
+# forwards OTLP traces to Logfire cloud.
 # -----------------------------------------------------------------------------
 
 [[procedure.config.stages]]
-name = "datadog-agents"
+name = "logfire-collector"
 
 [[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "datadog-oci" } }
-
-[[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "datadog-oracle" } }
-
-[[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "datadog-macbook" } }
+execution = { type = "DeployStack", params = { stack = "logfire" } }

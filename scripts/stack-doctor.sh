@@ -61,7 +61,7 @@ audit_stack() {
 
   if [ "$has_secrets" -eq 1 ]; then
     local refs
-    refs=$(grep -c "{{ infisical://" "$stack_path/secrets.env" 2>/dev/null)
+    refs=$(grep -cE "(infisical://dev-baile/|\{\{ infisical://)" "$stack_path/secrets.env" 2>/dev/null)
     refs=${refs:-0}
     if [ "$refs" = "0" ]; then
       echo "$name: secrets.env has no infisical:// refs" >> "$WARNINGS_FILE"

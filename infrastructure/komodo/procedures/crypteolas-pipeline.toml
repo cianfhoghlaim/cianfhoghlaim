@@ -34,11 +34,9 @@ LANGFUSE_HOST=https://langfuse.cianfhoghlaim.ie
 LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
 LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
 MLFLOW_TRACKING_URI=https://mlflow.cianfhoghlaim.ie
-DD_SERVICE=crypteolas-api
-DD_ENV=production
-DD_SITE=crypteolas.ie
-DD_APM_ENABLED=true
-DD_LLMOBS_ENABLED=true
+LOGFIRE_TOKEN=${LOGFIRE_TOKEN:-}
+LOGFIRE_PROJECT_NAME=crypteolas-api
+LOGFIRE_ENVIRONMENT=production
 
 # Storage
 DUCKDB_PATH=/data/duckdb/crypteolas.duckdb

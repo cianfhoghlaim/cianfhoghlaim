@@ -1,6 +1,6 @@
 ---
 name: agent-observability
-description: Unified agent observability stack — Datadog APM + LLMObs (`@llm`, `@agent`, `@workflow`, `@task`), MLflow experiment tracking + model registry, Langfuse cost + prompt management, Ragas evaluation as a Dagster asset_check, structlog. Use when wiring traces, costs, RAG quality, and experiments across the KCG agent layer.
+description: Unified agent observability stack — Langfuse cost + prompt management (`@observe`), Logfire Python tracing, MLflow experiment tracking + model registry, Ragas evaluation as a Dagster asset_check, structlog. Use when wiring traces, costs, RAG quality, and experiments across the KCG agent layer.
 ---
 
 # Agent Observability
@@ -13,7 +13,7 @@ Use when you need to:
 - "Track experiment runs (RAGAS scores, hyperparams) in MLflow"
 - "Monitor cost per agent invocation (USD) in Langfuse"
 - "Add a RAGAS quality gate to a Dagster asset (asset_check)"
-- "Wire Datadog APM + LLMObs for full-stack tracing"
+- "Wire Logfire Python tracing for full-stack observability"
 - "Set up structured JSON logging in production"
 
 ## Overview
@@ -23,8 +23,8 @@ together. Each layer covers a different concern:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Layer 1: Traces (Datadog APM + LLMObs)                     │
-│  → FastAPI TraceMiddleware, ddtrace.llmobs.decorators      │
+│  Layer 1: Traces (Langfuse + Logfire)                        │
+│  → FastAPI middleware, @observe / logfire.span decorators   │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -48,51 +48,54 @@ together. Each layer covers a different concern:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 1. Datadog APM + LLMObs
+## 1. Langfuse + Logfire tracing
 
 ```python
-import ddtrace
-from ddtrace.llmobs.decorators import agent, llm, workflow, task
+import logfire
+from langfuse.decorators import observe, langfuse_context
 
 
-@workflow(name="kcg_curriculum_search")
+@observe(name="kcg_curriculum_search", as_type="workflow")
 def curriculum_search(query: str) -> list[dict]:
-    """Top-level workflow — emitted as a Datadog workflow span."""
+    """Top-level workflow — emitted as a Langfuse workflow span."""
     results = vector_search(query)
     ranked = rerank_with_bge_m3(results)
     return format_response(ranked)
 
 
-@agent(name="bge_m3_embedder")
+@observe(name="bge_m3_embedder", as_type="agent")
 def bge_m3_embed(text: str) -> list[float]:
     return embed_bge_m3(text)
 
 
-@llm(name="gpt4o_mini", model_provider="openai", model_name="gpt-4o-mini")
+@observe(as_type="generation")  # auto-captures cost + token counts
 def llm_call(prompt: str) -> str:
     return openai_client.chat(prompt)
 
 
-@task(name="vector_search")
+@observe(name="vector_search", as_type="span")
 def vector_search(query: str) -> list[dict]:
     return lance_search(query, top_k=10)
 ```
 
-**FastAPI integration**:
+**FastAPI integration** (Logfire auto-instruments FastAPI via
+`logfire.instrument_fastapi(app)`):
 
 ```python
-from ddtrace.contrib.fastapi import TraceMiddleware
+import logfire
 from fastapi import FastAPI
 
+logfire.configure(token=os.environ["LOGFIRE_TOKEN"])
 app = FastAPI()
-app.add_middleware(TraceMiddleware, service="kcg-api")
+logfire.instrument_fastapi(app)
 ```
 
-`@llm` automatically captures:
+`@observe(as_type="generation")` and Logfire's `logfire.instrument_*`
+automatically capture:
 - model name + provider
 - input + output
 - token counts (prompt + completion)
-- cost (USD)
+- cost (USD, via Langfuse)
 - latency
 
 ## 2. MLflow experiment tracking + model registry
@@ -205,8 +208,8 @@ Output:
 
 For every new agent in the KCG stack, ensure:
 
-- [ ] Every LLM call is wrapped in `@llm` (Datadog LLMObs) or
-  `@observe` (Langfuse)
+- [ ] Every LLM call is wrapped in `logfire.instrument_*` (Logfire)
+  or `@observe` (Langfuse)
 - [ ] Every agent is wrapped in `@agent` for cost tracking
 - [ ] Every workflow is wrapped in `@workflow` for end-to-end
   tracing
@@ -218,7 +221,7 @@ For every new agent in the KCG stack, ensure:
 ## KCG integration
 
 - `sruth/oideachais/observability/` — the integration module
-  (Datadog + MLflow + Langfuse + Ragas)
+  (Logfire + MLflow + Langfuse + Ragas)
 - `sruth/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
 - `sruth/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
   100 samples × 4 metrics
@@ -234,8 +237,8 @@ For every new agent in the KCG stack, ensure:
 - `.agents/skills/ragas/SKILL.md` — RAG evaluation
 - `.agents/skills/dagster/SKILL.md` — Dagster asset_check
   integration
-- `.agents/skills/datadog/SKILL.md` — Datadog APM (upstream
-  reference)
+- `.agents/skills/pydantic-ai/SKILL.md` — Pydantic AI + Logfire
+  agent framework
 
 ## Dagster Cognee integration
 
@@ -517,21 +520,21 @@ outputs, the GraphRAG query templates, the subagent fan-out
 pattern, the 3 monitoring surfaces, the Dagster job
 definition, and the 3 cron schedules.
 
-## Datadog/MLflow/Langfuse/Ragas patterns
+## Logfire/MLflow/Langfuse/Ragas patterns
 
 The 11 canonical observability patterns from the
 round-1 `docs/context/01-patterns/OBSERVABILITY.md` (442
 lines), grouped by tool:
 
-**Datadog** (3 patterns): FastAPI middleware
-(`TraceMiddleware`, `DD_SERVICE`/`DD_ENV`/`DD_VERSION` env
-vars, `tracer.trace()` spans), LLMObs decorators
-(`@llm(model_name=...)`, `@agent(agent_name=...)`,
-`@workflow(workflow_name=...)` with `LLMObs.enable(ml_app=,
-api_key=, site=)`), and a custom `trace_adk_agent` decorator
-that tags `agent.name`/`agent.type`/`agent.duration_ms`/
-`agent.status` and uses `LLMObs.annotate()` for input/output
-data.
+**Logfire** (3 patterns): FastAPI instrumentation
+(`logfire.instrument_fastapi(app)`, `LOGFIRE_TOKEN`/
+`LOGFIRE_PROJECT_NAME`/`LOGFIRE_ENVIRONMENT` env vars,
+`logfire.span()` context managers), Langfuse `@observe` /
+`logfire.instrument_*` decorators (auto-captures
+`logfire.info(msg, **kwargs)` calls with structured fields), and
+a custom `trace_pydantic_agent` decorator that tags
+`agent.name`/`agent.type`/`agent.duration_ms`/`agent.status`
+and uses `logfire.span()` for input/output data.
 
 **MLflow** (2 patterns): experiment tracking
 (`set_tracking_uri`, `set_experiment`, `start_run` +
@@ -564,11 +567,11 @@ MLflow-tracked evaluation (log RAGAS metrics to MLflow
 `StackInfoRenderer`/`format_exc_info`, then either
 `JSONRenderer` for prod or `dev.ConsoleRenderer` for dev).
 
-**6 integration points** in the matrix: Datadog→FastAPI
-(middleware), LLMObs→agents (`@llm`/`@agent`), MLflow→
-training (`log_*` + registry), Langfuse→LLM calls
-(`@observe`), Ragas→RAG pipeline (eval metrics),
-structlog→all services (unified Datadog ingest).
+**6 integration points** in the matrix: Logfire→FastAPI
+(instrument_fastapi middleware), Langfuse→agents (`@observe`/
+`logfire.instrument_*`), MLflow→ training (`log_*` + registry),
+Langfuse→LLM calls (`@observe`), Ragas→RAG pipeline (eval
+metrics), structlog→all services (unified JSON ingest).
 
 **6 common mistakes** to avoid: no LLM cost tracking
 (add Langfuse), missing trace context (use propagation
@@ -577,11 +580,11 @@ without structure (use structlog + JSON), no experiment
 tracking (log all training runs), silent agent failures
 (add error tracing to all agents).
 
-See `references/patterns/observability-patterns.md` for
-the full 442-line reference: the 4 critical constraints
-table, the 11 patterns with full code, the 6 integration
-points, the 6 common mistakes + fixes, and the
-implementation checklist.
+See `.agents/skills/{langfuse,mlflow,ragas,pydantic-ai}/SKILL.md`
+for the per-tool deep dives; the 4 critical constraints are
+inlined above, the 6 common mistakes are summarised at the end
+of this file, and the implementation checklist is the
+"Observability checklist" section above.
 
 ## 2026-06 update: Langfuse v3 + MLflow GenAI + RAGAS trace-based
 
@@ -629,4 +632,3 @@ Pydantic Logfire now ships an MCP server that exposes traces to the agent runtim
 - `langfuse/SKILL.md` — the Langfuse detail
 - `mlflow/SKILL.md` — the MLflow detail
 - `ragas/SKILL.md` — the RAGAS detail
-- `datadog/SKILL.md` — the Datadog APM detail (the umbrella over Langfuse + MLflow)

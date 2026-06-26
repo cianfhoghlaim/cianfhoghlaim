@@ -1,7 +1,7 @@
 # LiteLLM Gateway
 
 ## Overview
-LiteLLM is an open-source AI gateway that provides a single, OpenAI-compatible API for calling 100+ LLM providers including Anthropic, OpenAI, Google, DeepSeek, and HuggingFace models. Created by BerriAI and maintained by a team of contributors, it offers cost tracking, rate limiting, load balancing, guardrails and comprehensive logging. The `ghcr.io/berriai/litellm:main-stable` image runs with a Postgres 16 backend and Prometheus monitoring.
+LiteLLM is an open-source AI gateway that provides a single, OpenAI-compatible API for calling 100+ LLM providers including Anthropic, OpenAI, Google, DeepSeek, and HuggingFace models. Created by BerriAI and maintained by a team of contributors, it offers cost tracking, rate limiting, load balancing, guardrails and comprehensive logging. The `ghcr.io/berriai/litellm:main-stable` image runs with a Postgres 16 backend and exposes Prometheus-format metrics at `/metrics` for future scraping by an external observability stack (no local Prometheus container ships with this stack as of the `cleanup-and-boot-stacks` change on 2026-06-26).
 
 ## Why This Matters for Kings' College Galway
 LiteLLM is the central LLM routing layer for all AI-driven study asset generation at Kings' College Galway. It proxies every AI call — from Leaving Cert exam question extraction to bilingual Irish/English content generation — through a single API surface with unified cost tracking and Langfuse observability. The gateway connects to the OpenCode Go endpoint as the LLM backbone, routes to HuggingFace-hosted models via the shared cache, and federates access control through a single master key. Without LiteLLM, the entire Celtic education curriculum pipeline would lack a unified AI control plane.
@@ -63,7 +63,7 @@ This stack is deployed via Komodo on arm1-oci. Komodo syncs from the Forgejo rep
 
 ## Access
 - **URL**: `https://litellm.cianfhoghlaim.ie` (private, Pangolin Member role required)
-- **Internal port**: 4000 (gateway API), 9090 (Prometheus metrics)
+- **Internal port**: 4000 (gateway API) + `/metrics` endpoint (no local Prometheus container)
 - **Auth**: LiteLLM master key (`LITELLM_MASTER_KEY`)
 
 ## Health Check
