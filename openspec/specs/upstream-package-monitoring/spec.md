@@ -218,3 +218,57 @@ detected.
   `ApiChangeNode` entries per package
 - **AND** the file SHALL be regenerated on every asset run
   (idempotent overwrite, no append)
+
+### Requirement: Canonical Package Enum
+
+The system SHALL expose a canonical `Package` enum at
+`oideachais.core.types.Package` with the values `MOTHERDUCK`,
+`DLTHUB`, `LANCEDB`, `COCOINDEX`, re-exported from
+`codeolas.core.types` for the publishable wheel. The enum SHALL
+be the single source of truth for the four upstream packages
+whose blog posts / docs / changelogs the platform's upstream
+monitoring pipeline watches.
+
+#### Scenario: Single import surface
+
+- **GIVEN** a CocoIndex v1 App or a Dagster asset that needs to
+  tag an artefact by upstream package
+- **WHEN** the module imports `Package`
+- **THEN** the import SHALL resolve to the canonical enum at
+  `oideachais.core.types.Package`
+- **AND** no module SHALL redeclare a local `Package` enum
+
+#### Scenario: BAML client enforcement
+
+- **GIVEN** the BAML function
+  `ExtractBlogPostMetadata(content, url) -> BlogPostMetadata` in
+  `baml_src/upstream_monitoring.baml`
+- **WHEN** the function returns
+- **THEN** the `package` field SHALL be typed as
+  `oideachais.core.types.Package` (not a string)
+- **AND** the BAML client SHALL reject any value not in the
+  enum at validation time
+
+### Requirement: Canonical BlogPostType Enum
+
+The system SHALL expose a canonical `BlogPostType` enum at
+`oideachais.core.types.BlogPostType` with the values
+`ANNOUNCEMENT`, `TUTORIAL`, `BENCHMARK`, `CASE_STUDY`,
+`RELEASE_NOTES`, `API_DOC`, re-exported from
+`codeolas.core.types` for the publishable wheel. The enum SHALL
+be the single source of truth for the classification of upstream
+blog posts by the `ExtractBlogPostMetadata` BAML function.
+
+#### Scenario: BAML client enforcement
+
+- **GIVEN** the BAML function
+  `ExtractBlogPostMetadata(content, url) -> BlogPostMetadata` in
+  `baml_src/upstream_monitoring.baml`
+- **WHEN** the function returns
+- **THEN** the `blog_post_type` field SHALL be typed as
+  `oideachais.core.types.BlogPostType` (not a string)
+- **AND** the BAML client SHALL reject any value not in the
+  enum at validation time
+- **AND** the Firecrawl monitor `--goal` strings for each of
+  the 4 packages SHALL mention at least 3 of the 6 enum values
+  so the LLM judge can classify accurately
