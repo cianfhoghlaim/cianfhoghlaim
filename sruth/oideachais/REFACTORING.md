@@ -1,10 +1,54 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-26 (Phase 3D done)
+**Last updated:** 2026-06-26 (Phase 3E done)
 
 This file is the canonical refactor backlog for the `sruth/oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
 
 ---
+
+### Phase 3E — Split Crown Dependencies umbrella + break circular import (`oideachais-audit-phase-3e-split-crown-dependencies`)
+
+**Status**: `done` (archived 2026-06-26)
+**Risk**: MEDIUM (single circular-import bug fix + 4 importers updated; no domain expansion)
+**Impact**: 1 umbrella deleted, 4 canonical files created (1 single-source move + 1 multi-source split), 4 `__init__.py` shims rewritten, 1 broken pre-existing `iom_source` typo fixed
+
+The `crown_dependencies/` umbrella (`channel_islands.py` containing `jersey_source` + `guernsey_source`, `isle_of_man.py` containing `isle_of_man_source`) was split to canonical country-first paths. The circular import between the per-nation `{iom,jey,ggy}/education/__init__.py` shims and the umbrella was eliminated by rewriting each shim to import directly from its local canonical file.
+
+#### Files created (4)
+
+| Path | Sources |
+|:--|:--|
+| `dlt_sources/iom/education/isle_of_man.py` | `isle_of_man_source` (moved) |
+| `dlt_sources/jey/education/channel_islands.py` | `jersey_source` (split) |
+| `dlt_sources/ggy/education/channel_islands.py` | `guernsey_source` (split) |
+| `dlt_sources/jey/education/_channel_islands_helpers.py` | `CHANNEL_ISLANDS_URLS` + `_crawl_jersey_education` + `_crawl_guernsey_education` (shared) |
+
+#### Files deleted (3 + the umbrella dir)
+
+`dlt_sources/crown_dependencies/{__init__.py, channel_islands.py, isle_of_man.py}` plus the now-empty `crown_dependencies/` directory (with `__pycache__/`).
+
+#### `__init__.py` shims rewritten (3)
+
+| File | Before | After |
+|:--|:--|:--|
+| `iom/education/__init__.py` | `from dlt_sources.crown_dependencies import isle_of_man` | `from dlt_sources.iom.education.isle_of_man import isle_of_man_source` |
+| `jey/education/__init__.py` | `from dlt_sources.crown_dependencies import channel_islands` | `from dlt_sources.jey.education.channel_islands import jersey_source` |
+| `ggy/education/__init__.py` | `from dlt_sources.crown_dependencies import channel_islands` | `from dlt_sources.ggy.education.channel_islands import guernsey_source` |
+
+#### Importers updated (2)
+
+| File | Change |
+|:--|:--|
+| `dagster_defs/assets/uk_education_assets.py:415-423` | `iom_source` (broken — function is actually `isle_of_man_source`) → `isle_of_man_source` from `iom.education.isle_of_man` |
+| `dagster_defs/assets/wire_unwired_dlt_sources.py:167-174` | `crown_dependencies.channel_islands` → `jey.education.channel_islands` + `ggy.education.channel_islands` |
+
+#### Validation
+
+- `openspec validate oideachais-audit-phase-3e-split-crown-dependencies --strict` PASS
+- 3/3 new canonical imports succeed
+- 3/3 per-nation `__init__.py` shims load without circular import
+- 25/25 existing Phase 3D imports still succeed (no regression)
+- 8/8 Phase 3D+E tests pass (test_crown_deps.py skipped — pre-existing `medicine` + `law` asset-module paths don't exist; out of scope)
 
 ## Round 11 — Cross-Quadrant Sprawl Audit (2026-06-25, in_progress)
 

@@ -165,12 +165,12 @@ wales_estyn, wales_estyn_check = _make_dlt_asset(
 
 
 def _jersey_source_factory():
-    from oideachais.dlt_sources.crown_dependencies.channel_islands import jersey_source
+    from oideachais.dlt_sources.jey.education.channel_islands import jersey_source
     return jersey_source
 
 
 def _guernsey_source_factory():
-    from oideachais.dlt_sources.crown_dependencies.channel_islands import guernsey_source
+    from oideachais.dlt_sources.ggy.education.channel_islands import guernsey_source
     return guernsey_source
 
 

@@ -1,17 +1,20 @@
 """
-DLT sources for Channel Islands education data.
+oideachais.dlt_sources.jey.education._channel_islands_helpers — shared helpers
+for Jersey + Guernsey education sources.
 
-Provides sources for:
-- Jersey (Government of Jersey)
-- Guernsey (States of Guernsey)
+Split from `dlt_sources/crown_dependencies/channel_islands.py` in Phase 3E.
+Contains the shared `CHANNEL_ISLANDS_URLS` constants + the per-nation
+crawl helpers `_crawl_jersey_education` (used by `channel_islands.py`)
+and `_crawl_guernsey_education` (used by `ggy/education/channel_islands.py`).
 """
+
+from __future__ import annotations
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+from dlt_sources.common.firecrawl_source import crawl_website
 
-from ...common.firecrawl_source import crawl_website
 
 CHANNEL_ISLANDS_URLS = {
     "jersey": {
@@ -67,49 +70,8 @@ def _crawl_guernsey_education(max_pages: int = 100) -> Iterator[dict[str, Any]]:
         yield page
 
 
-@dlt.source(name="jersey_education")
-def jersey_source(max_pages: int = 100):
-    """
-    DLT source for Jersey education data.
-
-    Args:
-        max_pages: Maximum pages to crawl
-
-    Returns:
-        DLT source with pages resource
-    """
-
-    @dlt.resource(
-        name="pages",
-        write_disposition="merge",
-        primary_key=["url"],
-    )
-    def pages():
-        """Jersey education pages."""
-        yield from _crawl_jersey_education(max_pages)
-
-    return pages
-
-
-@dlt.source(name="guernsey_education")
-def guernsey_source(max_pages: int = 100):
-    """
-    DLT source for Guernsey education data.
-
-    Args:
-        max_pages: Maximum pages to crawl
-
-    Returns:
-        DLT source with pages resource
-    """
-
-    @dlt.resource(
-        name="pages",
-        write_disposition="merge",
-        primary_key=["url"],
-    )
-    def pages():
-        """Guernsey education pages."""
-        yield from _crawl_guernsey_education(max_pages)
-
-    return pages
+__all__ = [
+    "CHANNEL_ISLANDS_URLS",
+    "_crawl_jersey_education",
+    "_crawl_guernsey_education",
+]

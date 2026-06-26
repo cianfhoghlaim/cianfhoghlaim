@@ -1,6 +1,11 @@
-"""Re-export shim: domains.education.jey ↔ crown_dependencies.channel_islands (Jersey)."""
+"""Re-export shim: jey/education (canonical path, Phase 3E).
+
+Per Phase 3E, the canonical home for the Jersey education source
+is `jey.education.channel_islands` (split from the deprecated
+`crown_dependencies/` umbrella in Round 11).
+"""
 from __future__ import annotations
 
-from dlt_sources.crown_dependencies import channel_islands
+from dlt_sources.jey.education.channel_islands import jersey_source
 
-__all__ = ["channel_islands"]
+__all__ = ["jersey_source"]

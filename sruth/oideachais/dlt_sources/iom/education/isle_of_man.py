@@ -1,16 +1,19 @@
 """
-DLT source for Isle of Man education data.
+oideachais.dlt_sources.iom.education.isle_of_man — Isle of Man education DLT source.
 
-Department of Education, Sport and Culture (DESC)
-provides education statistics and school information.
+Moved from `dlt_sources/crown_dependencies/isle_of_man.py` in
+Phase 3E (Round 11 oideachais audit). Single-source file — no helpers
+to extract.
 """
 
+from __future__ import annotations
+
 from collections.abc import Iterator
-from typing import Any
 
 import dlt
 
-from ...common.firecrawl_source import crawl_website
+from dlt_sources.common.firecrawl_source import crawl_website
+
 
 IOM_URLS = {
     "education": "https://www.gov.im/categories/education-training-and-careers/",
@@ -18,7 +21,7 @@ IOM_URLS = {
 }
 
 
-def _crawl_iom_education(max_pages: int = 100) -> Iterator[dict[str, Any]]:
+def _crawl_iom_education(max_pages: int = 100) -> Iterator[dict]:
     """
     Crawl Isle of Man education pages.
 
@@ -47,6 +50,9 @@ def isle_of_man_source(max_pages: int = 100):
     """
     DLT source for Isle of Man education data.
 
+    Department of Education, Sport and Culture (DESC)
+    provides education statistics and school information.
+
     Args:
         max_pages: Maximum pages to crawl
 
@@ -59,8 +65,11 @@ def isle_of_man_source(max_pages: int = 100):
         write_disposition="merge",
         primary_key=["url"],
     )
-    def pages():
+    def pages() -> Iterator[dict]:
         """Isle of Man education pages."""
         yield from _crawl_iom_education(max_pages)
 
     return pages
+
+
+__all__ = ["isle_of_man_source", "IOM_URLS"]

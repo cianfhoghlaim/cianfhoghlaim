@@ -412,7 +412,7 @@ def iom_curriculum(
     """
     context.log.info("Crawling Isle of Man curriculum")
 
-    from oideachais.dlt_sources.crown_dependencies.isle_of_man import iom_source
+    from oideachais.dlt_sources.iom.education.isle_of_man import isle_of_man_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="iom_curriculum",
@@ -420,7 +420,7 @@ def iom_curriculum(
         dataset_name="education",
     )
 
-    source = iom_source()
+    source = isle_of_man_source()
     load_info = pipeline.run(source)
 
     row_counts = pipeline.last_trace.last_normalize_info.row_counts if pipeline.last_trace else {}
