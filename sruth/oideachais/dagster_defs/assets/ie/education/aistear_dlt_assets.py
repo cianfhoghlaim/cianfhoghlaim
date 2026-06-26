@@ -17,7 +17,7 @@ from typing import Any
 
 from dagster import AssetCheckResult, MaterializeResult, asset, asset_check, define_asset_job
 
-from sruth.oideachais.dlt_sources.ireland.aistear import aistear_curriculum
+from sruth.oideachais.dlt_sources.ie.education.aistear import aistear_curriculum
 from sruth.oideachais.dlt_utils.destinations import get_dlt_destination
 from sruth.oideachais.dlt_utils.safety import safe_dlt_run
 

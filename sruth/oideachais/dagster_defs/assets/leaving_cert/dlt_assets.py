@@ -5,7 +5,7 @@ runs the DLT `leaving_cert_source` and materialises the four resource
 tables (syllabus, past_papers, marking_schemes, examiner_reports) into
 DuckLake (Garage S3 + Lakekeeper Postgres catalog).
 
-The DLT source lives in `oideachais.dlt_sources.ireland.leaving_cert`
+The DLT source lives in `oideachais.dlt_sources.ie.education.leaving_cert`
 and reads cached PDFs from `stedding/ingest_queue/`.
 
 This follows the pattern used by `ireland/curriculum_dlt_assets.py`:
@@ -22,7 +22,7 @@ from typing import Any
 
 from dagster import AssetSelection, MaterializeResult, define_asset_job, asset
 
-from dlt_sources.ireland.leaving_cert import (
+from dlt_sources.ie.education.leaving_cert import (
     SUBJECTS,
     leaving_cert_source,
 )

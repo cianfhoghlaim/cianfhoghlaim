@@ -541,7 +541,7 @@ def _(mo, os):
                                 dlt_logs.append(mo.md(f"  📊 {job.job_id}: {rows} rows"))
 
                 elif dlt_mode.value == "curriculum_test":
-                    from oideachais.dlt_sources.ireland.curriculum_source import curriculum_source
+                    from oideachais.dlt_sources.ie.education.curriculum_source import curriculum_source
 
                     pipeline = create_pipeline("curriculum_unified", "curriculum")
                     source = curriculum_source(cycle="senior_cycle", subject="mathematics", language="en")

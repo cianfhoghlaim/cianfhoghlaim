@@ -297,7 +297,7 @@ def _build_stagehand_source(entry: SourceEntry, defaults: Any) -> Callable[[], A
     wrapper at `dlt_sources/ireland/curriculum_source._crawl_source`
     is the fallback. Both are referenced by the SourceFactory.
     """
-    from dlt_sources.ireland.leaving_cert import leaving_cert_source
+    from dlt_sources.ie.education.leaving_cert import leaving_cert_source
 
     def _factory() -> Any:
         # `leaving_cert_source` is the actual DLT source builder for

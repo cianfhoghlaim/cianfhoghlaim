@@ -122,7 +122,7 @@ def edcolearning_audio_extraction(
     subjects = [s.strip() for s in config.subjects.split(",")]
     context.log.info(f"Extracting EdcoLearning audio for subjects: {subjects}")
 
-    from oideachais.dlt_sources.ireland.edcolearning import edcolearning_source
+    from oideachais.dlt_sources.ie.education.edcolearning import edcolearning_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="edcolearning_audio",
@@ -199,7 +199,7 @@ def sec_aural_transcripts(
     subjects = [s.strip() for s in config.subjects.split(",")]
     context.log.info(f"Parsing SEC transcripts for subjects: {subjects}")
 
-    from oideachais.dlt_sources.ireland.sec_aural_transcripts import (
+    from oideachais.dlt_sources.ie.education.sec_aural_transcripts import (
         sec_aural_transcripts_source,
     )
 

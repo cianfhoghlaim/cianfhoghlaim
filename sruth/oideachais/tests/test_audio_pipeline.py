@@ -79,7 +79,7 @@ class TestEdcoLearningSource:
 
     def test_source_imports(self):
         """Test that EdcoLearning source can be imported."""
-        from dlt_sources.ireland.edcolearning import (
+        from dlt_sources.ie.education.edcolearning import (
             EdcoCredentials,
             ExamLevel,
             ExamSubject,
@@ -95,7 +95,7 @@ class TestEdcoLearningSource:
 
     def test_credentials_dataclass(self):
         """Test EdcoCredentials dataclass."""
-        from dlt_sources.ireland.edcolearning import EdcoCredentials
+        from dlt_sources.ie.education.edcolearning import EdcoCredentials
 
         creds = EdcoCredentials(
             username="test",
@@ -107,14 +107,14 @@ class TestEdcoLearningSource:
 
     def test_exam_levels_enum(self):
         """Test ExamLevel enum values."""
-        from dlt_sources.ireland.edcolearning import ExamLevel
+        from dlt_sources.ie.education.edcolearning import ExamLevel
 
         assert ExamLevel.LEAVING_CERT.value == "leaving_certificate"
         assert ExamLevel.JUNIOR_CYCLE.value == "junior_cycle"
 
     def test_exam_subjects_enum(self):
         """Test ExamSubject enum values."""
-        from dlt_sources.ireland.edcolearning import ExamSubject
+        from dlt_sources.ie.education.edcolearning import ExamSubject
 
         assert ExamSubject.IRISH.value == "irish"
         assert ExamSubject.FRENCH.value == "french"
@@ -127,7 +127,7 @@ class TestSECTranscriptsSource:
 
     def test_source_imports(self):
         """Test that SEC transcripts source can be imported."""
-        from dlt_sources.ireland.sec_aural_transcripts import (
+        from dlt_sources.ie.education.sec_aural_transcripts import (
             AuralTranscript,
             IrishDialect,
             SpeakerSegment,
@@ -143,7 +143,7 @@ class TestSECTranscriptsSource:
 
     def test_irish_dialect_enum(self):
         """Test IrishDialect enum values."""
-        from dlt_sources.ireland.sec_aural_transcripts import IrishDialect
+        from dlt_sources.ie.education.sec_aural_transcripts import IrishDialect
 
         assert IrishDialect.CONNACHT.value == "connacht"
         assert IrishDialect.MUNSTER.value == "munster"
@@ -151,7 +151,7 @@ class TestSECTranscriptsSource:
 
     def test_speaker_segment_dataclass(self):
         """Test SpeakerSegment dataclass."""
-        from dlt_sources.ireland.sec_aural_transcripts import (
+        from dlt_sources.ie.education.sec_aural_transcripts import (
             IrishDialect,
             SpeakerSegment,
         )

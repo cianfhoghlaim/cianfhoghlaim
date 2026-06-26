@@ -1,0 +1,46 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.10",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "a6c36a1810209f6079919efcd59da643",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "49c21d861f7bd69f96a0e8c613ff6865",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"education-all-nations-phase-8\">Education \u2014 All Nations (Phase 8)</h1>\n<span class=\"paragraph\">Cross-nation view of the unified lakehouse table\n<code>oideachais.education.&lt;nation&gt;.&lt;entity&gt;</code>. Filter by cycle and\nsubject; charts render on the same x-axis.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "0c977dd3774e5ba1728d35615ced25f6",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "023c6c7c11c13fcdd331ac2c7c4553ab",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "9302ef4b3c60c0deee481e0878fa2ab4",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

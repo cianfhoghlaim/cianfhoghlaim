@@ -44,7 +44,7 @@ def test_subject_source(
     """Test a single subject source."""
     import dlt
 
-    from dlt_sources.ireland.subjects.base import create_subject_source
+    from dlt_sources.ie.education.subjects.base import create_subject_source
 
     print(f"\n{'='*60}")
     print(f"Testing: {subject} ({cycle}, {language})")
@@ -205,14 +205,14 @@ def test_full_cycle_source(
 ) -> dict:
     """Test full cycle source with limited subjects."""
     if cycle == "senior_cycle":
-        from dlt_sources.ireland.subjects.senior_cycle import (
+        from dlt_sources.ie.education.subjects.senior_cycle import (
             SENIOR_CYCLE_SUBJECTS,
             senior_cycle_source,
         )
         subjects = SENIOR_CYCLE_SUBJECTS
         source_fn = senior_cycle_source
     else:
-        from dlt_sources.ireland.subjects.junior_cycle import (
+        from dlt_sources.ie.education.subjects.junior_cycle import (
             JUNIOR_CYCLE_SUBJECTS,
             junior_cycle_source,
         )

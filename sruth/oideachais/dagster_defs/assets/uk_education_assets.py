@@ -97,7 +97,7 @@ def england_ofsted_inspections(
     """
     context.log.info("Ingesting Ofsted inspections for England")
 
-    from oideachais.dlt_sources.uk.england.ofsted import ofsted_source
+    from oideachais.dlt_sources.en.education.ofsted import ofsted_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="england_ofsted",
@@ -235,7 +235,7 @@ def wales_statswales(
     """
     context.log.info("Ingesting StatsWales education data")
 
-    from oideachais.dlt_sources.uk.wales.statswales import statswales_source
+    from oideachais.dlt_sources.wls.statistics.statswales import statswales_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="wales_statswales",
@@ -325,7 +325,7 @@ def ni_nisra_statistics(
     """
     context.log.info("Ingesting NISRA education statistics")
 
-    from oideachais.dlt_sources.uk.northern_ireland.nisra import nisra_source
+    from oideachais.dlt_sources.ni.statistics.nisra import nisra_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ni_nisra",

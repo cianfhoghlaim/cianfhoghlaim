@@ -39,38 +39,38 @@ def _lazy(name: str, mod: str) -> Any:
 # (so `from ... import edcolearning` works after a manual fix upstream),
 # but a known-broken import does not block the package.
 _REEXPORTS: list[tuple[str, str]] = [
-    ("aistear", "oideachais.dlt_sources.ireland.aistear"),
-    ("curriculum_source", "oideachais.dlt_sources.ireland.curriculum_source"),
+    ("aistear", "oideachais.dlt_sources.ie.education.aistear"),
+    ("curriculum_source", "oideachais.dlt_sources.ie.education.curriculum_source"),
     ("examinations", "oideachais.dlt_sources.ireland.examinations"),
-    ("leaving_cert", "oideachais.dlt_sources.ireland.leaving_cert"),
-    ("ncca", "oideachais.dlt_sources.ireland.ncca"),
+    ("leaving_cert", "oideachais.dlt_sources.ie.education.leaving_cert"),
+    ("ncca", "oideachais.dlt_sources.ie.education.ncca"),
     ("oide", "oideachais.dlt_sources.ireland.oide"),
-    ("parallel_corpus", "oideachais.dlt_sources.ireland.parallel_corpus"),
+    ("parallel_corpus", "oideachais.dlt_sources.ie.education.parallel_corpus"),
     ("pdf_downloader", "oideachais.dlt_sources.ireland.pdf_downloader"),
-    ("sec_aural_transcripts", "oideachais.dlt_sources.ireland.sec_aural_transcripts"),
-    ("senior_cycle", "oideachais.dlt_sources.ireland.senior_cycle"),
-    ("source_adapters", "oideachais.dlt_sources.ireland.source_adapters"),
-    ("tertiary", "oideachais.dlt_sources.ireland.tertiary"),
+    ("sec_aural_transcripts", "oideachais.dlt_sources.ie.education.sec_aural_transcripts"),
+    ("senior_cycle", "oideachais.dlt_sources.ie.education.senior_cycle"),
+    ("source_adapters", "oideachais.dlt_sources.common.source_adapters"),
+    ("tertiary", "oideachais.dlt_sources.ie.education.tertiary"),
 ]
 
 # Eager re-exports for the modules we know import cleanly.
-ncca = importlib.import_module("oideachais.dlt_sources.ireland.ncca")
-curriculum_source = importlib.import_module("oideachais.dlt_sources.ireland.curriculum_source")
+ncca = importlib.import_module("oideachais.dlt_sources.ie.education.ncca")
+curriculum_source = importlib.import_module("oideachais.dlt_sources.ie.education.curriculum_source")
 examinations = importlib.import_module("oideachais.dlt_sources.ireland.examinations")
-leaving_cert = importlib.import_module("oideachais.dlt_sources.ireland.leaving_cert")
+leaving_cert = importlib.import_module("oideachais.dlt_sources.ie.education.leaving_cert")
 oide = importlib.import_module("oideachais.dlt_sources.ireland.oide")
-senior_cycle = importlib.import_module("oideachais.dlt_sources.ireland.senior_cycle")
+senior_cycle = importlib.import_module("oideachais.dlt_sources.ie.education.senior_cycle")
 pdf_downloader = importlib.import_module("oideachais.dlt_sources.ireland.pdf_downloader")
 
 # Lazy re-exports (may be broken upstream).
-aistear = _lazy("aistear", "oideachais.dlt_sources.ireland.aistear")
-parallel_corpus = _lazy("parallel_corpus", "oideachais.dlt_sources.ireland.parallel_corpus")
-sec_aural_transcripts = _lazy("sec_aural_transcripts", "oideachais.dlt_sources.ireland.sec_aural_transcripts")
-source_adapters = _lazy("source_adapters", "oideachais.dlt_sources.ireland.source_adapters")
-tertiary = _lazy("tertiary", "oideachais.dlt_sources.ireland.tertiary")
+aistear = _lazy("aistear", "oideachais.dlt_sources.ie.education.aistear")
+parallel_corpus = _lazy("parallel_corpus", "oideachais.dlt_sources.ie.education.parallel_corpus")
+sec_aural_transcripts = _lazy("sec_aural_transcripts", "oideachais.dlt_sources.ie.education.sec_aural_transcripts")
+source_adapters = _lazy("source_adapters", "oideachais.dlt_sources.common.source_adapters")
+tertiary = _lazy("tertiary", "oideachais.dlt_sources.ie.education.tertiary")
 
 # Subjects re-exports.
-from dlt_sources.ireland.subjects import (
+from dlt_sources.ie.education.subjects import (
     base as subjects_base,
     junior_cycle,
     senior_cycle as subjects_senior_cycle,

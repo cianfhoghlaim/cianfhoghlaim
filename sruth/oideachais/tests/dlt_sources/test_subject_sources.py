@@ -25,7 +25,7 @@ class TestSubjectResources:
 
     def test_senior_cycle_source_creation(self) -> None:
         """Test Senior Cycle source can be created."""
-        from dlt_sources.ireland.subjects.senior_cycle import senior_cycle_source
+        from dlt_sources.ie.education.subjects.senior_cycle import senior_cycle_source
 
         source = senior_cycle_source(language="en")
         assert source is not None
@@ -33,7 +33,7 @@ class TestSubjectResources:
 
     def test_junior_cycle_source_creation(self) -> None:
         """Test Junior Cycle source can be created."""
-        from dlt_sources.ireland.subjects.junior_cycle import junior_cycle_source
+        from dlt_sources.ie.education.subjects.junior_cycle import junior_cycle_source
 
         source = junior_cycle_source(language="en")
         assert source is not None
@@ -41,7 +41,7 @@ class TestSubjectResources:
 
     def test_senior_cycle_has_cycle_resources(self) -> None:
         """Test Senior Cycle has cycle-level resources."""
-        from dlt_sources.ireland.subjects.senior_cycle import senior_cycle_source
+        from dlt_sources.ie.education.subjects.senior_cycle import senior_cycle_source
 
         source = senior_cycle_source(language="en")
         resource_names = [r.name for r in source.resources.values()]
@@ -52,7 +52,7 @@ class TestSubjectResources:
 
     def test_junior_cycle_has_cycle_resources(self) -> None:
         """Test Junior Cycle has cycle-level resources."""
-        from dlt_sources.ireland.subjects.junior_cycle import junior_cycle_source
+        from dlt_sources.ie.education.subjects.junior_cycle import junior_cycle_source
 
         source = junior_cycle_source(language="en")
         resource_names = [r.name for r in source.resources.values()]
@@ -63,7 +63,7 @@ class TestSubjectResources:
 
     def test_senior_cycle_subject_count(self) -> None:
         """Test Senior Cycle has expected number of subjects in registry."""
-        from dlt_sources.ireland.subjects.senior_cycle import (
+        from dlt_sources.ie.education.subjects.senior_cycle import (
             SENIOR_CYCLE_SUBJECTS,
             senior_cycle_source,
         )
@@ -75,7 +75,7 @@ class TestSubjectResources:
 
     def test_junior_cycle_subject_count(self) -> None:
         """Test Junior Cycle has expected number of subjects in registry."""
-        from dlt_sources.ireland.subjects.junior_cycle import (
+        from dlt_sources.ie.education.subjects.junior_cycle import (
             JUNIOR_CYCLE_SUBJECTS,
             junior_cycle_source,
         )
@@ -87,14 +87,14 @@ class TestSubjectResources:
 
     def test_irish_language_source(self) -> None:
         """Test sources can be created with Irish language."""
-        from dlt_sources.ireland.subjects.senior_cycle import senior_cycle_source
+        from dlt_sources.ie.education.subjects.senior_cycle import senior_cycle_source
 
         source = senior_cycle_source(language="ga")
         assert source is not None
 
     def test_single_subject_source_creation(self) -> None:
         """Test creating a source for a single subject."""
-        from dlt_sources.ireland.subjects.base import create_subject_source
+        from dlt_sources.ie.education.subjects.base import create_subject_source
 
         pages_resource, pdfs_resource = create_subject_source(
             subject="mathematics",
@@ -118,7 +118,7 @@ class TestBaseSubjectFunctions:
 
     def test_crawl_subject_no_api_key(self) -> None:
         """Test crawl_subject returns error page when no API key."""
-        from dlt_sources.ireland.subjects.base import crawl_subject
+        from dlt_sources.ie.education.subjects.base import crawl_subject
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             results = list(crawl_subject("mathematics", "senior_cycle", "en"))
@@ -131,7 +131,7 @@ class TestBaseSubjectFunctions:
 
     def test_extract_pdfs_no_api_key(self) -> None:
         """Test extract_pdfs_from_subject returns empty when no API key."""
-        from dlt_sources.ireland.subjects.base import extract_pdfs_from_subject
+        from dlt_sources.ie.education.subjects.base import extract_pdfs_from_subject
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             results = list(extract_pdfs_from_subject("mathematics", "senior_cycle", "en"))
@@ -141,7 +141,7 @@ class TestBaseSubjectFunctions:
 
     def test_crawled_page_dataclass(self) -> None:
         """Test CrawledPage dataclass."""
-        from dlt_sources.ireland.subjects.base import CrawledPage, compute_content_hash
+        from dlt_sources.ie.education.subjects.base import CrawledPage, compute_content_hash
 
         content = "# Mathematics\n\nContent here"
         page = CrawledPage(
@@ -165,7 +165,7 @@ class TestBaseSubjectFunctions:
 
     def test_pdf_resource_dataclass(self) -> None:
         """Test PDFResource dataclass."""
-        from dlt_sources.ireland.subjects.base import PDFResource
+        from dlt_sources.ie.education.subjects.base import PDFResource
 
         pdf = PDFResource(
             url="https://curriculumonline.ie/docs/math_spec.pdf",
@@ -273,7 +273,7 @@ class TestMockFirecrawlIntegration:
 
     def test_crawl_subject_with_mock(self, mock_firecrawl_app: MagicMock) -> None:
         """Test crawl_subject with mocked Firecrawl."""
-        from dlt_sources.ireland.subjects.base import crawl_subject
+        from dlt_sources.ie.education.subjects.base import crawl_subject
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": "test_key"}):
             # FirecrawlApp is imported inside the function from firecrawl module
@@ -289,7 +289,7 @@ class TestMockFirecrawlIntegration:
 
     def test_extract_pdfs_with_mock(self, mock_firecrawl_app: MagicMock) -> None:
         """Test extract_pdfs_from_subject with mocked Firecrawl."""
-        from dlt_sources.ireland.subjects.base import extract_pdfs_from_subject
+        from dlt_sources.ie.education.subjects.base import extract_pdfs_from_subject
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": "test_key"}):
             # FirecrawlApp is imported inside the function from firecrawl module

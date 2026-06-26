@@ -209,8 +209,8 @@ def create_cycle_asset(cycle: str):
         sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent))  # Add oideachais to path
         sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))  # Add data_platform to path
 
-        from dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from dlt_sources.ireland.curriculum_source import (
+        from dlt_sources.common.curriculum_registry import SubjectRegistry
+        from dlt_sources.ie.education.curriculum_source import (
             build_subject_urls,
             parallel_scrape_subject,
         )
@@ -226,11 +226,11 @@ def create_cycle_asset(cycle: str):
         )
 
         
-        from dlt_sources.ireland.curriculum_source import curriculum_source
+        from dlt_sources.ie.education.curriculum_source import curriculum_source
         
         # Determine URLs and count (just for logging)
-        from dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from dlt_sources.ireland.curriculum_source import build_subject_urls
+        from dlt_sources.common.curriculum_registry import SubjectRegistry
+        from dlt_sources.ie.education.curriculum_source import build_subject_urls
         registry = SubjectRegistry.from_default()
         urls = build_subject_urls(cycle, subject, registry, language=language)
         
@@ -330,7 +330,7 @@ def create_short_course_asset():
         """Ingest short course curriculum data."""
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        from dlt_sources.ireland.curriculum_source import (
+        from dlt_sources.ie.education.curriculum_source import (
             _scrape_single_url,
         )
 

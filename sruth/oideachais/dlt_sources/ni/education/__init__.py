@@ -27,8 +27,8 @@ def _maybe(name: str, mod: str) -> Any:
 
 
 ccea_curriculum = _maybe("ccea_curriculum", "oideachais.dlt_sources.uk.northern_ireland.ccea_curriculum")
-education_ni = _maybe("education_ni", "oideachais.dlt_sources.uk.northern_ireland.education_ni")
-etini = _maybe("etini", "oideachais.dlt_sources.uk.northern_ireland.etini")
-nisra = _maybe("nisra", "oideachais.dlt_sources.uk.northern_ireland.nisra")
+education_ni = _maybe("education_ni", "oideachais.dlt_sources.ni.education.education_ni")
+etini = _maybe("etini", "oideachais.dlt_sources.ni.education.etini")
+nisra = _maybe("nisra", "oideachais.dlt_sources.ni.statistics.nisra")
 
 __all__ = ["ccea_curriculum", "education_ni", "etini", "nisra"]

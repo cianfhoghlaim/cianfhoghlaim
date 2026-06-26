@@ -126,22 +126,22 @@ def _make_dlt_asset(asset_name: str, source_factory, group_name: str = "unwired_
 
 
 def _gias_source_factory():
-    from oideachais.dlt_sources.uk.england.school_info import gias_source
+    from oideachais.dlt_sources.en.education.school_info import gias_source
     return gias_source
 
 
 def _insight_source_factory():
-    from oideachais.dlt_sources.uk.scotland.insight_benchmarking import insight_source
+    from oideachais.dlt_sources.sct.education.insight_benchmarking import insight_source
     return insight_source
 
 
 def _simd_source_factory():
-    from oideachais.dlt_sources.uk.scotland.simd import simd_source
+    from oideachais.dlt_sources.sct.statistics.simd import simd_source
     return simd_source
 
 
 def _estyn_source_factory():
-    from oideachais.dlt_sources.uk.wales.estyn import estyn_source
+    from oideachais.dlt_sources.wls.education.estyn import estyn_source
     return estyn_source
 
 
@@ -188,17 +188,17 @@ guernsey_education, guernsey_education_check = _make_dlt_asset(
 
 
 def _ireland_primary_source_factory():
-    from oideachais.dlt_sources.ireland.primary import ireland_primary_source
+    from oideachais.dlt_sources.ie.education.primary import ireland_primary_source
     return ireland_primary_source
 
 
 def _ireland_junior_cycle_source_factory():
-    from oideachais.dlt_sources.ireland.junior_cycle import ireland_junior_cycle_source
+    from oideachais.dlt_sources.ie.education.junior_cycle import ireland_junior_cycle_source
     return ireland_junior_cycle_source
 
 
 def _ireland_tertiary_source_factory():
-    from oideachais.dlt_sources.ireland.tertiary import tertiary_courses
+    from oideachais.dlt_sources.ie.education.tertiary import tertiary_courses
     return tertiary_courses
 
 
@@ -208,7 +208,7 @@ def _ireland_local_documents_source_factory():
 
 
 def _ireland_parallel_corpus_source_factory():
-    from oideachais.dlt_sources.ireland.parallel_corpus import parallel_corpus_source
+    from oideachais.dlt_sources.ie.education.parallel_corpus import parallel_corpus_source
     return parallel_corpus_source
 
 

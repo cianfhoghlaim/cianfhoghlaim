@@ -7,9 +7,10 @@ Phase 8 of the openspec change. Reads from
 `oideachais.education.<nation>.curriculum_pages` (DuckLake via the
 MotherDuck MCP `mcp__motherduck__query` or a local DuckLake attach).
 """
+
 import marimo
 
-__generated_with = "0.17.2"
+__generated_with = "0.23.10"
 app = marimo.App(width="medium")
 
 
@@ -17,21 +18,20 @@ app = marimo.App(width="medium")
 def _imports():
     import marimo as mo
     import duckdb
+
     return duckdb, mo
 
 
 @app.cell
 def _header(mo):
-    mo.md(
-        r"""
-        # Education — All Nations (Phase 8)
+    mo.md(r"""
+    # Education — All Nations (Phase 8)
 
-        Cross-nation view of the unified lakehouse table
-        `oideachais.education.<nation>.<entity>`. Filter by cycle and
-        subject; charts render on the same x-axis.
-        """
-    )
-    return ()
+    Cross-nation view of the unified lakehouse table
+    `oideachais.education.<nation>.<entity>`. Filter by cycle and
+    subject; charts render on the same x-axis.
+    """)
+    return
 
 
 @app.cell
@@ -76,9 +76,11 @@ def _summary(con):
 
 
 @app.cell
-def _render(rows, mo):
-    mo.md(f"**Rows per nation/agency (snapshot):** {rows}")
-    return ()
+def _render(mo, rows):
+    mo.md(f"""
+    **Rows per nation/agency (snapshot):** {rows}
+    """)
+    return
 
 
 if __name__ == "__main__":
