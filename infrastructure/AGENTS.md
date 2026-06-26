@@ -122,7 +122,7 @@ Every stack under `infrastructure/stacks/` is listed below. Port numbers reflect
 | `langfuse/` | LLM observability (v3) | 3000 |
 | `LetterFeed/` | Newsletter aggregator | Internal |
 | `linkwarden/` | Bookmark + archive manager | Internal |
-| `litellm/` | LLM proxy gateway (Postgres + Prometheus) | 4000, 5432, 9090 |
+| `litellm/` | LLM proxy gateway (Postgres) | 4000, 5432 |
 | `lmnr/` | LMNR observability | Internal |
 | `logfire/` | Pydantic Logfire (Python tracing) | Internal |
 | `mailcow-dockerized/` | Self-hosted mail server (Postfix + Dovecot) | 25, 143, 465, 587, 993, 4190 |
@@ -132,7 +132,6 @@ Every stack under `infrastructure/stacks/` is listed below. Port numbers reflect
 | `memgraph/` | Graph database (MAGE + Lab UI) | 7687, 7444, 3000 |
 | `mlflow/` | ML experiment tracking | 5000 |
 | `mlx-omni/` | Apple Silicon MLX OpenAI-compatible server | 10240 |
-| `monitoring/` | Prometheus + Grafana + Loki | 9090, 3000 |
 | `motherduck/` | Cloud query engine (MotherDuck adapter) | Internal |
 | `n8n/` | Visual workflow automation | 5678 |
 | `networking-toolbox/` | Network diagnostic tools | Internal |
