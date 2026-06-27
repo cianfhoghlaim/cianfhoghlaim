@@ -1,0 +1,12 @@
+# Graphiti — Pangolin private-resource route
+# Routes graphiti.cianfhoghlaim.ie → graph container at port 8000.
+# TinyAuth protects the route; Graphiti has no built-in auth.
+pangolin:
+  private-resources:
+    graphiti:
+      name: graphiti
+      mode: http
+      full-domain: graphiti.cianfhoghlaim.ie
+      destination-port: 8000
+      protocol: http
+      roles[0]: tinyauth@file
