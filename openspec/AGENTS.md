@@ -2,29 +2,30 @@
 
 ## Priority quick reference
 
-The 4 priority specs, the 4 priority commands, the 4 priority
-skills, and the 1 priority mise task at a glance. **Read this
-first**; the rest of the file is the full 33-spec catalogue.
+The 5 priority specs, the 4 priority commands, the 5 priority
+skills, and the 1 priority mise task at the glance. **Read this
+first**; the rest of the file is the full 34-spec catalogue.
 
-### Priority specs (4 of 33)
+### Priority specs (5 of 34)
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
 | [`oideachais-pipeline`](specs/oideachais-pipeline/spec.md) | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
 | [`infrastructure-stacks`](specs/infrastructure-stacks/spec.md) | shared | 70+ Docker Compose stacks + stack-doctor + Pangolin + Infisical + Locket |
 | [`agent-memory-systems`](specs/agent-memory-systems/spec.md) | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
+| [`indexing-and-cognition`](specs/indexing-and-cognition/spec.md) | shared | CCC v1 code search + Cognee knowledge graph + OpenCode agent/MCP registry |
 | [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 
 ### Priority commands
 
 ```bash
-openspec list --specs              # list all 33 capability specs
+openspec list --specs              # list all 34 capability specs
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy
 ```
 
-### Priority skills (4 of 108)
+### Priority skills (5 of 123)
 
 | Skill | When to load |
 |:--|:--|
@@ -33,11 +34,12 @@ openspec archive <change-id> --yes        # after deploy
 | [`infrastructure-stacks`](../.agents/skills/infrastructure-stacks/SKILL.md) | The 6-file GOLD_STANDARD pattern for Docker Compose stacks |
 | [`agent-memory-systems`](../.agents/skills/agent-memory-systems/SKILL.md) | The 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph) |
 | [`oideachais-cocoindex-v1`](../.agents/skills/oideachais-cocoindex-v1/SKILL.md) | CocoIndex v1 App canonical pattern + 4-rule conformance contract + `_lifespan.py` shared home (REFACTORING.md item 12 enforcement precondition) |
+| [`indexing-and-cognition`](../.agents/skills/INDEXING_AND_COGNITION.md) | CCC code search + Cognee knowledge graph (7 clusters) + OpenCode agent/MCP registry (7 agents, 10 MCPs, 13 model-layer agents) |
 
 ### Priority mise task
 
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata (108/108 pass)
+mise run lint:skills               # validate .agents/skills/ metadata (123/123 pass)
 ```
 
 ### ccc code search (for openspec work)
@@ -93,9 +95,9 @@ The system SHALL provide...
 **Migration**: [How to handle]
 ```
 
-## Capability Specs (33)
+## Capability Specs (34)
 
-The Cianfhoghlaim platform has **33 capability specs** organised into
+The Cianfhoghlaim platform has **34 capability specs** organised into
 **8 groups** by quadrant. Each spec is a thin capability pointer; the
 **authoritative details** live in the corresponding
 `.agents/skills/<skill>/SKILL.md` and the source code.
@@ -123,7 +125,8 @@ The Cianfhoghlaim platform has **33 capability specs** organised into
 | `croilar-data-engineering` | croilar | Dagster + DLT + CocoIndex + BAML pipelines for croilar personas |
 | `croilar-cv-extraction` | croilar | BAML extraction of the author's CV / achievements / teaching PDFs |
 | `agent-memory-systems` | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
-| `agent-observability` | shared | Langfuse + MLflow + RAGAS + Logfire + Datadog |
+| `indexing-and-cognition` | shared | CCC v1 code search + Cognee 7-cluster knowledge graph + OpenCode agent/MCP registry (7 agents, 10 MCPs, 13 model-layer agents); supersedes `chunkhound-code-search` |
+| `agent-observability` | shared | Langfuse + MLflow + RAGAS + Logfire |
 | `agentic-frontend-frameworks` | shared | TanStack Start + CopilotKit + AG-UI + Hono + Convex |
 | `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
