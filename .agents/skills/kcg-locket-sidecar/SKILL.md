@@ -198,4 +198,3 @@ volume across all 86+ stacks without exhausting memory.
 - `.agents/skills/stack-ops/SKILL.md` — the 6-file GOLD_STANDARD pattern
 - `.agents/skills/kcg-convergence/SKILL.md` — the Locket category in the 94-stack layout
 - `infrastructure/SECRETS-MANAGEMENT.md` — the 245-line Infisical + Locket + mise contract
-- `infrastructure/legacy/LOCKET-MODES.md` — the v0 predecessor analysis (now superseded)
