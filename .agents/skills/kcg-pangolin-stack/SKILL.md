@@ -152,4 +152,3 @@ curl -fsSL https://<sub>.cianfhoghlaim.ie/health
 - `.agents/skills/kcg-convergence/SKILL.md` — the port allocation map (3000-3499 user apps, etc.)
 - `.agents/skills/infrastructure-stacks/SKILL.md` — the umbrella router
 - `infrastructure/PANGOLIN-SETUP.md` — the 395-line Fossorial Pangolin reference
-- `infrastructure/legacy/ANALYSIS.md` — the 2025-12 predecessor-project analysis (now superseded)
