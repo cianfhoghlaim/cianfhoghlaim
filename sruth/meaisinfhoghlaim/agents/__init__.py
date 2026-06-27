@@ -12,6 +12,30 @@ Provides AI agents for the Celtic Education Platform:
 - Statistics Agent: Education metrics and benchmarking
 - Curriculum Comparison Agent: Cross-nation curriculum mapping
 """
+from __future__ import annotations
+
+# Canonical model-layer agent registry (1 root + 12 specialists = 13 modules).
+# This tuple is the single source of truth for the model-layer agent
+# inventory; the OpenCode sruth-subagents in `opencode.json` dispatch to
+# these modules via their prompts. The 13 names mirror the actual
+# `.py` modules in this directory; do not list a name that does not
+# have a corresponding module.
+MODEL_LAYER_AGENTS: tuple[str, ...] = (
+    "root_agent",
+    "curriculum_agent",
+    "translation_agent",
+    "corpus_agent",
+    "research_agent",
+    "education_research_agent",
+    "bunchloch_research_agent",
+    "geospatial_agent",
+    "statistics_agent",
+    "curriculum_comparison_agent",
+    "agui_curriculum_agent",
+    "mcp_curriculum_agent",
+    "voice_agent",
+)
+
 from .agui_curriculum_agent import (
     AGUIEventType,
     ComparisonTableRow,
@@ -130,6 +154,8 @@ from .translation_agent import (
 )
 
 __all__ = [
+    # Canonical model-layer agent registry
+    "MODEL_LAYER_AGENTS",
     # Config
     "AgentConfig",
     "config",

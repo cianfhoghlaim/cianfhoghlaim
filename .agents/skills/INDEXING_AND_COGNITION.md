@@ -271,7 +271,7 @@ exposes the following tools to every agent:
 
 ---
 
-## 3. The full MCP inventory (9 servers in `opencode.json`)
+## 3. The full MCP inventory (10 servers in `opencode.json`)
 
 | MCP server | Purpose | Tool count | Required? |
 |:--|:--|--:|:--|
@@ -284,8 +284,9 @@ exposes the following tools to every agent:
 | **chrome** | Local Chrome DevTools MCP (for debugging web apps) | 6 | Optional |
 | **motherduck** | DuckDB / MotherDuck analytics | 8 | ✅ Yes (always on) |
 | **infisical** | Secrets management | 10 | ✅ Yes (always on) |
+| **croilar-devtools** | Croilar dev tools (stagehand, firecrawl, codex-cli, E2B) via `sruth/croilar/mcp/devtools/index.ts` | 9 | ✅ Yes (always on) |
 
-**Total: 9 MCP servers, 75+ tools** wired in `opencode.json`.
+**Total: 10 MCP servers, 85+ tools** wired in `opencode.json`.
 
 All secrets are auto-hydrated from Infisical (`dev-baile`
 environment) — never hard-coded in `opencode.json`.
@@ -383,8 +384,138 @@ documented" — agent merges code (CCC) with architecture
 - [`.agents/skills/graphiti/SKILL.md`](graphiti/SKILL.md) — Temporal knowledge graph (cognee's sibling)
 - [`.agents/skills/motherduck/SKILL.md`](motherduck/SKILL.md) — DuckDB / MotherDuck analytics
 - [`.agents/skills/agent-observability/SKILL.md`](agent-observability/SKILL.md) — Langfuse + MLflow + Ragas
+- [`.agents/skills/agent-fleet-orchestration/SKILL.md`](agent-fleet-orchestration/SKILL.md) — 12-agent fleet + OpenCode agent/skill/MCP registry
 
 ---
 
-**Last updated:** 2026-06-26 (post-upstream-package-monitoring archive).
+## 8. OpenCode agent, skill, and MCP registry
+
+This section is the **single source of truth** for the three
+top-level registries wired into OpenCode. It was added in the
+`centralize-agent-context-and-automate` openspec change
+(2026-06-27) to give a one-glance view of the agent surface.
+
+### 8.1 The 7 OpenCode agents (`opencode.json` → `agent`)
+
+| Agent | Type | Skill filter | Subagent? | Specialises in |
+|:--|:--|:--|:--|:--|
+| `build` | Primary | (none — sees all 123 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
+| `plan` | Primary | (none — sees all 123 skills) | No | Default PLAN agent. Read-only by design. |
+| `oideachais` | Subagent | 9 skills (dlt, dagster, baml, cognee, ccc, oideachais-pipeline, oideachais-storage, oideachais-cocoindex-v1, motherduck) | Yes (`subagent_type: oideachais`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
+| `infrastructure` | Subagent | 16 skills (stack-ops, infrastructure-stacks, secrets-management, kcg-pangolin-stack, kcg-locket-sidecar, kcg-infrastructure-audit, kcg-bunchloch, kcg-convergence, kcg-deploy-runbooks, pangolin, komodo, docker-compose, dagger, dagger-pipelines, pulumi, kubernetes) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
+| `meaisinfhoghlaim` | Subagent | 22 skills (baml, litellm, document-intelligence, celtic-language-ai, irish-llm-on-device, agent-fleet-orchestration, agent-observability, kcg-ml-models, langfuse, mlflow, ragas, cognee, graphiti, graphiti-core, lancedb, falkordb, memgraph, embedding-pipeline, peft, trl, unsloth, huggingface) | Yes (`subagent_type: meaisinfhoghlaim`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
+| `croilar` | Subagent | 12 skills (tanstack-start, copilotkit, hono, convex, better-auth, baml, dagster, dlt, croilar-stream-registry, agentic-frontend-frameworks, frontend-topology, webapp-testing) | Yes (`subagent_type: croilar`) | Multi-persona portfolio (Convex + Hono + TanStack + BetterAuth) |
+| `tuatha` | Subagent | 12 skills (babylonjs, tuatha-mmo, pent-elemental-cosmology, tuatha-achievement-ledger, tuatha-mcp-server-tools, tuatha-platform, british-isles-formative-assessment, baml, dagger, tanstack-start, copilotkit, celtic-language-ai) | Yes (`subagent_type: tuatha`) | Celtic MMO + crypteolas (Babylon.js + SpacetimeDB + BAML) |
+
+**Key invariants:**
+
+- **Primary agents (`build`, `plan`) keep no `skill_filter`** —
+  they need the full 123-skill surface to act as escape hatches
+  when a subagent's scoped skills turn out to be insufficient.
+- **Subagent `skill_filter` is opt-in** — a subagent without a
+  `skill_filter` falls back to the unfiltered default (all 123
+  skills), which preserves the legacy behaviour.
+- **Subagent `prompt` is required** — the skill_filter is paired
+  with a one-line role prompt that names the quadrant and its
+  primary tools.
+- **The 5 sruth-subagents are dispatched via the `task` tool**
+  with `subagent_type` set to one of `oideachais`, `infrastructure`,
+  `meaisinfhoghlaim`, `croilar`, or `tuatha`. The `general` and
+  `explore` subagent types are reserved for OpenCode's own
+  background work.
+
+### 8.2 The 13-agent model-layer registry (`sruth/meaisinfhoghlaim/agents/`)
+
+The Python-side agent inventory lives in
+`sruth/meaisinfhoghlaim/agents/__init__.py` as a tuple
+constant. The 5 sruth-subagents in `opencode.json` dispatch
+to these modules via their prompts.
+
+```python
+# From sruth/meaisinfhoghlaim/agents/__init__.py
+MODEL_LAYER_AGENTS: tuple[str, ...] = (
+    "root_agent",                  # 1 root
+    "curriculum_agent",            # 12 specialists
+    "translation_agent",
+    "corpus_agent",
+    "research_agent",
+    "education_research_agent",
+    "bunchloch_research_agent",
+    "geospatial_agent",
+    "statistics_agent",
+    "curriculum_comparison_agent",
+    "agui_curriculum_agent",
+    "mcp_curriculum_agent",
+    "voice_agent",
+)
+# Total: 13 modules (1 root + 12 specialists)
+```
+
+**Add a new model-layer agent** by (1) creating the new
+`<name>_agent.py` module, (2) appending the new name to
+`MODEL_LAYER_AGENTS` in `__init__.py`, and (3) if the agent
+needs new skills, adding them to the relevant `skill_filter`
+in `opencode.json`.
+
+### 8.3 The 10 MCP servers (`opencode.json` → `mcp`)
+
+See §3 for the full inventory. The 10 servers are:
+
+1. `cocoindex-code` (semantic code search, 9 tools)
+2. `cognee` (knowledge graph over docs, 10 tools)
+3. `graphiti` (temporal knowledge graph, 6 tools)
+4. `langfuse` (LLM observability, 8 tools)
+5. `firecrawl` (web scraping, 6 tools)
+6. `browserbase` (cloud browser automation, 12 tools)
+7. `chrome` (local Chrome DevTools, 6 tools, optional)
+8. `motherduck` (DuckDB / MotherDuck analytics, 8 tools)
+9. `infisical` (secrets management, 10 tools)
+10. `croilar-devtools` (stagehand, firecrawl, codex-cli, E2B, 9 tools)
+
+**Add a new MCP server** by appending an entry to `mcp` in
+`opencode.json` with `command` (the stdio entrypoint),
+optional `enabled: true` (default), and any required
+`env` (use the `infisical://dev-baile/<svc>/<key>` Locket-canonical
+form via the Locket sidecar, not raw values). Then add a 1-line
+row to the §3 table and bump the totals.
+
+### 8.4 Registry health checks
+
+```bash
+# 7 agents, 10 MCPs
+python3 -c "import json; cfg=json.load(open('opencode.json')); \
+print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"
+# Expected: MCPs: 10  Agents: 7
+
+# Per-sruth-subagent skill counts
+python3 -c "import json; cfg=json.load(open('opencode.json')); \
+print({k: len(v.get('skill_filter', [])) \
+       for k, v in cfg['agent'].items()})"
+# Expected: build=0, plan=0, oideachais=9, infrastructure=16,
+#           meaisinfhoghlaim=22, croilar=12, tuatha=12
+
+# 13 model-layer agents
+python3 -c "
+import ast
+with open('sruth/meaisinfhoghlaim/agents/__init__.py') as f:
+    tree = ast.parse(f.read())
+for node in ast.walk(tree):
+    if isinstance(node, ast.AnnAssign) \
+       and getattr(node.target, 'id', None) == 'MODEL_LAYER_AGENTS':
+        print('MODEL_LAYER_AGENTS has', len(node.value.elts), 'entries')
+"
+# Expected: 13 entries
+
+# 7 cognee graph model files
+ls infrastructure/scripts/cognee-graph-models/*.py | wc -l
+# Expected: 7
+
+# CCC index age (CI gate)
+bun run validate-ccc-freshness
+# Exits 1 if >7d old on main / >24h on feature branches
+```
+
+---
+
+**Last updated:** 2026-06-27 (post-`centralize-agent-context-and-automate` archive).
 **Owner:** Build agent (canonical home: `.agents/skills/INDEXING_AND_COGNITION.md`).
