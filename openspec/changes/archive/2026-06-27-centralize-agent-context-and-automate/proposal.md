@@ -8,42 +8,22 @@
 
 ## Why
 
-The 2026-06-26 CCC v1 + Cognee + OpenCode audit identified four
-structural gaps in the agent-context stack:
+The 2026-06-26 audit identified four structural gaps in the
+agent-context stack:
 
-1. **CCC v0 → v1 retirement is incomplete.** The
-   `sruth/oideachais/cocoindex_flows/_v0_archive/` directory still
-   contains 10 deprecated v0 modules. The legacy `ccc search` CLI
-   is still wired into `package.json` and `mise.toml`. The
-   deprecation banner says "until 2026-07-15" — that deadline
-   approaches, but no hard retirement is scheduled.
-2. **No CCC index-freshness CI gate.** The 2.1 GB SQLite index
-   can go stale (last full rebuild was 2026-06-15; the index
-   won't re-embed new skills/changes until someone runs
-   `bun run ccc:index` manually). A 7-day-stale index silently
-   degrades every agent's code-search quality.
-3. **No git hook for CCC refresh.** A pre-commit hook that runs
-   `bun run ccc:index` (incremental, <10s) would catch most
-   staleness automatically. Currently no such hook exists.
+1. **CCC v0 → v1 retirement is incomplete** — 10 deprecated v0
+   modules still live in `cocoindex_flows/_v0_archive/`; the
+   `ccc search` CLI is still wired; no hard retirement scheduled.
+2. **No CCC index-freshness CI gate** — the 2.1 GB SQLite index
+   silently degrades when it goes stale.
+3. **No git hook for CCC refresh** — a pre-commit hook (best-effort)
+   that calls the freshness check would surface staleness early.
 4. **Cognee v1 transition to Postgres+pgvector is partially
-   wired.** The cognee compose stack ALREADY uses
-   `pgvector/pgvector:pg17` (the in-house deployment doesn't
-   depend on a separate Neo4j), and the cognee MCP server's
-   `env` block in `opencode.json` does NOT declare the legacy
-   `NEO4J_*` variables (those are correctly consumed by the
-   `graphiti` MCP server, which IS the Neo4j service). However,
-   the 7 typed cognify clusters are documented in
-   `.agents/skills/INDEXING_AND_COGNITION.md` §2.3 but the
-   `graph_model_file` files for each cluster do not exist on
-   disk in `infrastructure/scripts/cognee-graph-models/`.
-5. **OpenCode agent + skill + MCP registry is over-scoped.**
-   The 7 OpenCode agents all see all 123 skills in
-   `.agents/skills/` — including skills that have nothing to do
-   with the sruth they serve (e.g. the oideachais sruth sees
-   `babylonjs`, `pulumi`, `kubernetes`, `company-research`,
-   `event-prospecting`, `agent-experience`). The 10 MCP servers
-   are wired but the registry is not documented in
-   `INDEXING_AND_COGNITION.md` as the canonical inventory.
+   wired** — the 7 cluster `graph_model_file`s documented in
+   `INDEXING_AND_COGNITION.md` §2.3 do not exist on disk.
+5. **OpenCode agent + skill + MCP registry is over-scoped** — all
+   7 agents see all 123 skills; the 10 MCP servers are not
+   documented as the canonical inventory anywhere.
 
 ## What Changes
 

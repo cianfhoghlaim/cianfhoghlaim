@@ -1,42 +1,5 @@
-# indexing-and-cognition Specification
+## ADDED Requirements
 
-## Purpose
-
-`indexing-and-cognition` is a capability of the Cianfhoghlaim
-platform. It covers the three agent knowledge surfaces — CCC
-(CocoIndex Code semantic search over the monorepo source),
-Cognee (knowledge graph over documentation), and the OpenCode
-agent + skill + MCP registry that exposes those surfaces to the
-build/plan/sruth subagents. The canonical home for the
-operator-facing usage docs is
-[`.agents/skills/INDEXING_AND_COGNITION.md`](../../.agents/skills/INDEXING_AND_COGNITION.md).
-
-## Background
-
-Two parallel knowledge surfaces feed every agent in the monorepo:
-
-- **CCC** (CocoIndex Code) — indexes 8,845 source files /
-  257,957 chunks in a SQLite + BGE-M3 embedding index; backs the
-  `cocoindex-code` MCP server (9 tools).
-- **Cognee** — indexes 1,743 `.md` docs (~2,242 documents across
-  7 typed clusters) in a Postgres+pgvector backend (the in-house
-  cognee stack at `infrastructure/stacks/cognee/`); backs the
-  `cognee` MCP server (10 tools).
-
-A third registry, the **OpenCode agent + skill + MCP registry**,
-is the surface that every agent (`build`, `plan`, `oideachais`,
-`infrastructure`, `meaisinfhoghlaim`, `croilar`, `tuatha`) reads
-on startup from `opencode.json`. Currently the registry has:
-
-- 7 agents (1 primary + 1 read-only + 5 sruth-subagents).
-- 10 MCP servers (browserbase, firecrawl, infisical, motherduck,
-  chrome, cocoindex-code, cognee, graphiti, langfuse,
-  croilar-devtools).
-- 5 sruth-subagents opt in to a `skill_filter` (oideachais=9,
-  infrastructure=16, meaisinfhoghlaim=22, croilar=12, tuatha=12
-  skills); the primary `build`/`plan` agents see all 123 skills.
-
-## Requirements
 ### Requirement: CCC v1 is the canonical CocoIndex code-search surface
 
 The system SHALL provide a single CocoIndex v1 App at
@@ -262,4 +225,3 @@ reference the corresponding `sruth/<name>/AGENTS.md` and the
 - **WHEN** the prompt is read
 - **THEN** it SHALL reference `oideachais/AGENTS.md` + the `agent-fleet-orchestration` skill
 - **AND** it SHALL NOT duplicate the content of `oideachais/AGENTS.md` (the prompt is a thin dispatch contract, not a doc)
-
