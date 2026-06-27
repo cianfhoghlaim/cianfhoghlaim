@@ -240,6 +240,7 @@ The contract is documented in
 - `.agents/skills/agent-observability/SKILL.md` — the Langfuse + MLflow + RAGAS + Logfire stack
 - `.agents/skills/agent-memory-systems/SKILL.md` — the Letta + Graphiti + Cognee + LanceDB + FalkorDB memory stack
 - `.agents/skills/infrastructure-stacks/SKILL.md` — the openclaw stack (6-file GOLD_STANDARD + arm1-oci deploy)
+- `.agents/skills/INDEXING_AND_COGNITION.md` §8 — the OpenCode agent + skill + MCP registry (7 agents, 10 MCPs, 13 model-layer agents; canonical home for `opencode.json` structure)
 - `sruth/meaisinfhoghlaim/agents/__init__.py` — the 12-agent registry
 - `sruth/meaisinfhoghlaim/agents/root_agent.py` — the query router + LiteLLM
 - `sruth/meaisinfhoghlaim/agents/letta_client.py` — the Letta memory layer
