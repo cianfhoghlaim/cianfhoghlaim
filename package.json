@@ -48,7 +48,7 @@
 
     "ccc:init": "ccc init",
     "ccc:index": "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
-    "ccc:search": "ccc search",
+    "ccc:search": "bun run scripts/_ccc-deprecation-banner.ts && ccc search",
     "ccc:v1:index": "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
     "ccc:v1:search": "uv run python -c 'import asyncio, sys; from sruth.oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
     "docs:consolidate": "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
@@ -66,6 +66,8 @@
 
     "validate-stacks": "bash scripts/stack-doctor.sh",
     "doctor:stacks": "bash scripts/stack-doctor.sh --json | jq",
+    "validate-ccc-freshness": "bun run scripts/validate-ccc-freshness.ts",
+    "hooks:install": "bash scripts/install-hooks.sh",
     "mise:run": "mise run",
 
     "validate-docs": "bun run scripts/validate-docs.ts",

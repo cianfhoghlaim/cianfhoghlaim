@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# .git/hooks/pre-commit — best-effort CCC freshness check.
+#
+# This hook warns (but does NOT block) when the CCC (CocoIndex Code)
+# semantic index is stale relative to the branch's policy threshold.
+#
+# Policy (mirrors `scripts/validate-ccc-freshness.ts`):
+#   - main branch:  > 7 days = soft warning (best-effort, see below)
+#   - feature branch: > 24h = soft warning
+#   - missing index:  soft warning
+#
+# Best-effort means: we ALWAYS exit 0 (so the commit is never blocked),
+# but we print a yellow `WARN:` line to stderr when the index is stale.
+# This is intentional — committing should not be blocked by an indexing
+# miss, but the developer should be nudged to refresh.
+#
+# Bypass: `git commit --no-verify` skips this hook entirely.
+set -euo pipefail
+
+# Resolve the repo root regardless of where git invokes us from.
+HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(git -C "$HOOK_DIR/../.." rev-parse --show-toplevel 2>/dev/null || \
+             git rev-parse --show-toplevel)"
+
+# Quick check: does the freshness validator exist? If not, no-op.
+VALIDATOR="$REPO_ROOT/scripts/validate-ccc-freshness.ts"
+if [[ ! -f "$VALIDATOR" ]]; then
+  # Validator missing — nothing to check. Don't block the commit.
+  exit 0
+fi
+
+# Run the validator and capture stdout+stderr. We deliberately do NOT
+# pass the exit code through; the hook is best-effort.
+set +e
+OUTPUT="$(bun run "$VALIDATOR" 2>&1)"
+RC=$?
+set -e
+
+# Detect the WARN/STALE markers in the output. The validator uses
+# "validate-ccc-freshness: STALE" or "validate-ccc-freshness: WARN"
+# in the first line. Anything else (incl. OK) is fine.
+if echo "$OUTPUT" | head -1 | grep -qE 'validate-ccc-freshness: (STALE|WARN)'; then
+  # Yellow ANSI escape; no colour if NO_COLOR is set.
+  if [[ -z "${NO_COLOR:-}" ]]; then
+    YELLOW=$'\033[33m'
+    RESET=$'\033[0m'
+  else
+    YELLOW=""
+    RESET=""
+  fi
+
+  echo "${YELLOW}[pre-commit] CCC index may be stale:${RESET}" >&2
+  echo "$OUTPUT" | sed 's/^/  /' >&2
+  echo "${YELLOW}[pre-commit] Refresh with: bun run ccc:index${RESET}" >&2
+  echo "${YELLOW}[pre-commit] (Bypass with: git commit --no-verify)${RESET}" >&2
+  # Best-effort: NEVER block. Always exit 0.
+fi
+
+# Always exit 0 (best-effort, never blocks).
+exit 0
