@@ -4,7 +4,7 @@ private-resources:
   langfuse:
     name: "Langfuse"
     mode: "http"
-    destination-port: 8080
+    destination-port: 3000
     full-domain: "langfuse.cianfhoghlaim.ie"
     protocol: "http"
     roles:

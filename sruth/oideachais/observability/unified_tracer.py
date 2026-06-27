@@ -293,7 +293,7 @@ class UnifiedTracer:
 
     def __init__(
         self,
-        datadog_enabled: bool = True,
+        datadog_enabled: bool = False,
         langfuse_enabled: bool = True,
         logfire_enabled: bool = True,
     ):

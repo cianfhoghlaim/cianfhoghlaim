@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * - Browser: browserbase, chrome-devtools, firecrawl-mcp
  * - Knowledge: cognee, qdrant, memgraph
  * - Data Flows: dagster-mcp, dlt-workspace, codeolas
- * - Observability: datadog, langfuse, logfire
+ * - Observability: logfire, langfuse, mlflow
  *
  * Request format (JSON-RPC 2.0):
  * {

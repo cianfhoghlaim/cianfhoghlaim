@@ -147,7 +147,7 @@ if _PYDANTIC_V2:
         # =========================================================================
 
         datadog_enabled: bool = Field(
-            default=True,
+            default=False,
             description="Enable Datadog LLMObs tracing",
         )
 
@@ -309,7 +309,7 @@ else:
         # =========================================================================
 
         datadog_enabled: bool = Field(
-            default=True,
+            default=False,
             description="Enable Datadog LLMObs tracing",
         )
 

@@ -4,7 +4,7 @@ private-resources:
   graphiti:
     name: "Graphiti"
     mode: "http"
-    destination-port: 8080
+    destination-port: 8000
     full-domain: "graphiti.cianfhoghlaim.ie"
     protocol: "http"
     roles:
