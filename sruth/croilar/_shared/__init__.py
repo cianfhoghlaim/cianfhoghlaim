@@ -2,8 +2,9 @@
 Croílár Shared Utilities — cross-cutting helpers for the personal portfolio.
 
 This package contains shared utilities for the croilar subproject,
-including path resolution, configuration, database access, embeddings,
-MCP gateway, agent orchestration, and observability.
+including path resolution, configuration, database access, and the
+Stream registry (the canonical replacement for the legacy persona model
+introduced in round 11 phase 0).
 
 The optional `sruth.shared` re-export is performed lazily so that the
 croilar subproject can be imported standalone (e.g. for tests, the web
@@ -38,13 +39,6 @@ except ImportError:  # pragma: no cover — sruth is an optional sister package
     retry_with_backoff = None  # type: ignore[assignment]
     run_serial = None  # type: ignore[assignment]
     _SRUTH_AVAILABLE = False
-
-
-# Aleyum/Croílár-specific exports
-# (populated as modules are implemented — see _shared/{agents,observability,...})
-# from .mcp import MCPGateway
-# from .agents import AgentRouter, select_framework
-# from .observability import AleyumTracer
 
 
 # Stream registry — domain-driven replacement for the legacy persona model.
