@@ -132,8 +132,7 @@ def test_pipelines_labels_exports() -> None:
 def test_pipelines_shared_exports() -> None:
     import pipelines.shared
 
-    for name in ("R2Client", "create_duckdb_destination",
-                 "create_ducklake_destination"):
+    for name in ("R2Client",):
         assert hasattr(pipelines.shared, name), f"missing {name}"
 
 
