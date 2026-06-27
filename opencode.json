@@ -125,7 +125,7 @@
       "command": [
         "bun",
         "run",
-        "croilar/mcp/devtools/index.ts"
+        "sruth/croilar/mcp/devtools/index.ts"
       ],
       "env": {
         "CROILAR_REPO_ROOT": "."

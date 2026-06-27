@@ -1,0 +1,12 @@
+# Lakehouse — Pangolin private-resource route
+# Routes lakehouse.cianfhoghlaim.ie → lakekeeper (Iceberg REST Catalog) at port 8181.
+# TinyAuth protects the route; Lakekeeper has no built-in UI auth.
+pangolin:
+  private-resources:
+    lakehouse:
+      name: lakehouse
+      mode: http
+      full-domain: lakehouse.cianfhoghlaim.ie
+      destination-port: 8181
+      protocol: http
+      roles[0]: tinyauth@file
