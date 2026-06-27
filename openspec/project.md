@@ -18,7 +18,7 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `tuatha` | `tuatha/` | `tuath` (uv) | Educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto | [README](../tuatha/README.md) | [AGENTS](../tuatha/AGENTS.md) |
 | `croilar` | `croilar/` | (bun workspace) | Multi-persona portfolio + CV + data engineering subproject | [README](../croilar/README.md) | [AGENTS](../croilar/AGENTS.md) |
 
-## Capability Areas (33 specs, 8 groups)
+## Capability Areas (34 specs, 8 groups)
 
 ### Oideachais Quadrant (10 specs)
 
@@ -58,12 +58,13 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines for the croilar personas | Active |
 | `croilar-cv-extraction` | BAML extraction of the author's CV / achievements / teaching PDFs | Active |
 
-### Agent + Observability + Frontend (4 specs)
+### Agent + Observability + Frontend (5 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
 | `agent-memory-systems` | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory (renamed from `memory-systems`) | Active |
-| `agent-observability` | Langfuse + MLflow + RAGAS + Logfire + Datadog (renamed from `observability`) | Active |
+| `indexing-and-cognition` | CCC v1 code search (16 Apps) + Cognee 7-cluster knowledge graph + OpenCode agent/MCP registry (7 agents, 10 MCPs, 13 model-layer agents); supersedes `chunkhound-code-search` (the `centralize-agent-context-and-automate` change) | Active |
+| `agent-observability` | Langfuse + MLflow + RAGAS + Logfire (renamed from `observability`; Datadog dropped in `cleanup-and-boot-stacks`) | Active |
 | `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex (renamed from `frontend-frameworks`, merged `agent-frameworks`) | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
 
@@ -116,7 +117,7 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## File Locations
 
-- Specs: `openspec/specs/<capability>/spec.md` (33 canonical specs)
+- Specs: `openspec/specs/<capability>/spec.md` (34 canonical specs)
 - Changes: `openspec/changes/<change-id>/`
 - Archives: `openspec/changes/archive/YYYY-MM-DD-<change-id>/`
 - Historical research: `docs/openspec/` (point-in-time, do not edit)
