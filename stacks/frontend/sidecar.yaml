@@ -1,0 +1,28 @@
+# Locket sidecar — injects Infisical secrets at container startup
+#
+# The Locket sidecar pattern (see other engineering stacks) reads `secrets.env`,
+# resolves each `infisical://dev-baile/...` reference via the Infisical API,
+# and exports them to the application container as a one-shot init container
+# that completes before the main app container starts.
+
+services:
+  infisical-init:
+    image: ghcr.io/cianfhoghlaim/locket:latest
+    container_name: frontend-infisical-init
+    restart: "no"
+    command: ["locket", "exec", "--", "echo", "secrets hydrated"]
+    env_file:
+      - secrets.env
+    environment:
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_CLIENT_SECRET: ${INFISICAL_CLIENT_SECRET}
+      INFISICAL_TOKEN: ${INFISICAL_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - cianfhoghlaim
+
+networks:
+  cianfhoghlaim:
+    external: true

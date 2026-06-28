@@ -1,0 +1,31 @@
+# Croílár Hono API — Pangolin Traefik routing
+# Routes auth.croilar.cianfhoghlaim.ie to the hono-api container at port 4000.
+# TinyAuth is OMITTED — BetterAuth handles its own OIDC authentication.
+http:
+  routers:
+    croilar-hono-api:
+      entryPoints:
+        - websecure
+      rule: "Host(`auth.croilar.cianfhoghlaim.ie`)"
+      service: croilar-hono-api
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - croilar-hono-api-headers
+
+  services:
+    croilar-hono-api:
+      loadBalancer:
+        servers:
+          - url: "http://croilar-hono-api:4000"
+        healthCheck:
+          path: /api/health
+          interval: 30s
+          timeout: 3s
+
+  middlewares:
+    croilar-hono-api-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        sslRedirect: true

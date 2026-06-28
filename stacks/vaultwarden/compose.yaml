@@ -1,0 +1,46 @@
+name: vaultwarden
+
+services:
+  # ---------------------------------------------------------------------------
+  # vaultwarden — Bitwarden-compatible self-hosted password manager
+  # ---------------------------------------------------------------------------
+  # Team secret sharing (Infisical is for ops secrets, not team logins).
+  # SQLite by default; can be backed by Postgres for HA.
+  # ---------------------------------------------------------------------------
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+      - "3012:3012"   # WebSocket (for browser extensions + mobile apps)
+    environment:
+      RUST_LOG: info
+      SIGNUPS_ALLOWED: "false"   # admin-controlled invites only
+      INVITATIONS_ALLOWED: "true"
+      SHOW_PASSWORD_HINT: "false"
+      # PocketID SSO (OIDC) wired in via env below
+      SSO_ENABLED: "true"
+    volumes:
+      - vaultwarden_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/alive || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2'
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  vaultwarden_data:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

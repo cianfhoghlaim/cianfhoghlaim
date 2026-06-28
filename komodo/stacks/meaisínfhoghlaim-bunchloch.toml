@@ -1,0 +1,58 @@
+# =============================================================================
+# MEAISÍNFHOGHLAIM STACKS — Local on-device AI/ML inference
+# =============================================================================
+# Deployed on bunchloch (MacBook M4 Max) which has unified memory
+# sufficient for GGUF model swap. The compose files live under
+# meaisínfhoghlaim/ (not infrastructure/stacks/) because they are
+# application-owned rather than infrastructure-owned.
+#
+# Per the meaisínfhoghlaim/AGENTS.md contract, this stack is a prerequisite
+# for on-device inference but is NOT pulled in by the oideachais deploy
+# procedure (48 GB RAM reservation is too heavy for always-on).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# LLAMA-SWAP — GGUF model swapper
+# -----------------------------------------------------------------------------
+# Reads from meaisínfhoghlaim/llama-swap-config.yaml and serves any of the
+# GGUF models in stedding/huggingface/gguf/ on demand.
+# Memory budget on M4 Max: 48 GB (one FLUX.2 or two 8 GB models).
+# Healthcheck probes llama-swap's own /health endpoint via wget, which
+# is baked into the llama-swap image.
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "llama-swap-bunchloch"
+description = "llama-swap — dynamic GGUF model server for on-device inference. Reads stedding/huggingface/gguf/. Not auto-pulled by oideachais deploy (48 GB RAM)."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:machine-learning",
+  "stack:meaisínfhoghlaim",
+  "optional:on-demand",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/meaisínfhoghlaim"
+file_paths = [
+  "meaisínfhoghlaim/compose.yaml",
+  "meaisínfhoghlaim/sidecar.yaml",
+]
+environment = """
+LLAMA_SWAP_PORT=8080
+LLAMA_SWAP_MEMORY=32G
+LLAMA_SWAP_CPUS=14
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# Resource limits (MacBook M4 Max, 48 GB unified memory)
+# -----------------------------------------------------------------------------
+# Default: 32 GB (leaves headroom for oideachais 13 GB + litellm/lancedb/etc).
+# Bump to 48 GB by editing environment.LLAMA_SWAP_MEMORY when running
+# alone, or set DAGSTER_DEPLOYMENT=off elsewhere.

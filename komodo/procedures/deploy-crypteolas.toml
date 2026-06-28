@@ -1,0 +1,34 @@
+# =============================================================================
+# DEPLOY CRYPTEOLAS PROCEDURE
+# =============================================================================
+# Deploys Crypteolas domain services to oci-devtools server.
+# Domain: crypteolas.ie
+#
+# Usage:
+#   km run procedure deploy-crypteolas
+# =============================================================================
+
+[[procedure]]
+name = "deploy-crypteolas"
+description = "Deploy Crypteolas domain services to crypteolas.ie"
+
+# Stage 1: Deploy Crypteolas pipeline
+[[procedure.config.stages]]
+name = "crypteolas-pipeline"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "crypteolas-pipeline" } }
+
+# Stage 2: Deploy AgentOS API
+[[procedure.config.stages]]
+name = "agentos-api"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "agentos-api" } }
+
+# Stage 3: Deploy Codeolas pipeline
+[[procedure.config.stages]]
+name = "codeolas-pipeline"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "codeolas-pipeline" } }

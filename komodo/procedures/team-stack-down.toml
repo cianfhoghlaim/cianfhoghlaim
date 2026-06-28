@@ -1,0 +1,49 @@
+# =============================================================================
+# TEAM STACK — DOWN
+# =============================================================================
+# Graceful shutdown, reverse dependency order: n8n first, then cal-diy, then
+# vikunja. Preserves Postgres + Redis volumes (use `docker volume rm` to
+# actually delete data).
+# =============================================================================
+
+[[stack]]
+name = "n8n"
+description = "n8n — graceful shutdown (port 5678)"
+tags = ["host:arm1-oci", "tier:production", "type:engineering", "team:workflow"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/n8n"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+INFISICAL_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "cal-diy"
+description = "cal-diy — graceful shutdown (port 3000)"
+tags = ["host:arm1-oci", "tier:production", "type:tool", "team:workflow"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/cal-diy"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+INFISICAL_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "vikunja"
+description = "Vikunja — graceful shutdown (port 3456)"
+tags = ["host:arm1-oci", "tier:production", "type:tool", "team:workflow"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/vikunja"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+INFISICAL_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""

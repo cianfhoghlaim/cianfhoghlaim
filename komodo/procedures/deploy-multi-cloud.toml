@@ -1,0 +1,218 @@
+# =============================================================================
+# MULTI-CLOUD DEPLOYMENT PROCEDURE
+# =============================================================================
+# Deploys all infrastructure stacks across local, OCI, and Oracle Cloud.
+# Executes deployments in dependency order with health checks.
+#
+# USAGE:
+#   komodo-cli execute deploy-multi-cloud --target=all
+#   komodo-cli execute deploy-multi-cloud --target=oci
+#   komodo-cli execute deploy-multi-cloud --target=oci
+#   komodo-cli execute deploy-multi-cloud --target=local
+# =============================================================================
+
+[[procedure]]
+name = "deploy-multi-cloud"
+description = "Deploy all infrastructure across multi-cloud environment"
+type = "shell"
+command = """
+TARGET="${TARGET:-all}"
+
+echo "Starting multi-cloud deployment: $TARGET"
+echo "=========================================="
+
+# -----------------------------------------------------------------------------
+# DEPLOYMENT ORDER (to respect dependencies)
+# -----------------------------------------------------------------------------
+# Phase 1: Control Plane (OCI)
+#   1. garage (S3 storage)
+#   2. postgres (if standalone)
+#   3. lakehouse-oci (Garage + Lakekeeper + Lance)
+#   4. forgejo
+#   5. forgejo-runner
+#
+# Phase 2: Production Workloads (OCI)
+#   1. postgres (shared)
+#   2. lakekeeper-oci
+#   3. lance-oci
+#   4. ducklake-oci
+#   5. forgejo-oci (backup)
+#   6. forgejo-runner-oci
+#   7. dagster-unified
+#
+# Phase 3: Development (Local)
+#   1. lakehouse (dev)
+#   2. dagster-dev
+# -----------------------------------------------------------------------------
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "oci" ]; then
+  echo ""
+  echo ">>> DEPLOYING ORACLE CLOUD (arm1-oci)"
+  echo "-----------------------------------"
+
+  # Control Plane
+  echo "Deploying Garage S3..."
+  komodo-cli deploy garage --server arm1-oci
+
+  echo "Deploying Lakehouse OCI..."
+  komodo-cli deploy lakehouse-oci --server arm1-oci
+
+  echo "Running Lakekeeper migrations..."
+  komodo-cli execute lakehouse-oci-migrate --server arm1-oci
+
+  echo "Deploying Forgejo..."
+  komodo-cli deploy forgejo --server arm1-oci
+
+  echo "Deploying Forgejo Runner..."
+  komodo-cli deploy forgejo-runner --server arm1-oci
+
+  echo "Health checks..."
+  komodo-cli execute lakehouse-oci-health --server arm1-oci
+fi
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "oci" ]; then
+  echo ""
+  echo ">>> DEPLOYING OCI (arm1-oci)"
+  echo "------------------------------------"
+
+  # Databases first
+  echo "Deploying PostgreSQL..."
+  komodo-cli deploy postgres --server arm1-oci
+
+  # Lakehouse components
+  echo "Deploying Lakekeeper OCI..."
+  komodo-cli deploy lakekeeper-oci --server arm1-oci
+
+  echo "Running Lakekeeper migrations..."
+  komodo-cli execute lakekeeper-oci-migrate --server arm1-oci
+
+  echo "Deploying Lance Namespace..."
+  komodo-cli deploy lance-oci --server arm1-oci
+
+  echo "Initializing DuckLake..."
+  komodo-cli deploy ducklake-oci --server arm1-oci
+  komodo-cli execute ducklake-init-cdc --server arm1-oci
+
+  # Forgejo backup
+  echo "Deploying Forgejo backup..."
+  komodo-cli deploy forgejo-oci --server arm1-oci
+
+  echo "Deploying Forgejo Runner OCI..."
+  komodo-cli deploy forgejo-runner-oci --server arm1-oci
+
+  # Pipeline orchestration
+  echo "Deploying Dagster Unified..."
+  komodo-cli deploy dagster-unified --server arm1-oci
+
+  echo "Health checks..."
+  komodo-cli execute lakekeeper-oci-health --server arm1-oci
+  komodo-cli execute lance-oci-health --server arm1-oci
+fi
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "local" ]; then
+  echo ""
+  echo ">>> DEPLOYING LOCAL (bunchloch)"
+  echo "------------------------------"
+
+  echo "Deploying Lakehouse dev..."
+  komodo-cli deploy lakehouse --server bunchloch
+
+  echo "Running migrations..."
+  komodo-cli execute lakehouse-migrate --server bunchloch
+
+  echo "Deploying Dagster dev..."
+  komodo-cli deploy dagster-dev --server bunchloch
+fi
+
+echo ""
+echo ">>> MULTI-CLOUD DEPLOYMENT COMPLETE"
+echo "===================================="
+echo "Verify deployment:"
+echo "  - OCI:      https://komodo.cianfhoghlaim.ie"
+echo "  - OCI:  https://komodo.cianfhoghlaim.ie (filter by server)"
+echo "  - Local:    docker ps"
+"""
+
+# -----------------------------------------------------------------------------
+# ROLLBACK PROCEDURE
+# -----------------------------------------------------------------------------
+[[procedure]]
+name = "rollback-multi-cloud"
+description = "Rollback all stacks to previous stable version"
+type = "shell"
+command = """
+TARGET="${TARGET:-all}"
+
+echo "Starting multi-cloud rollback: $TARGET"
+echo "======================================"
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "oci" ]; then
+  echo "Rolling back OCI stacks..."
+  komodo-cli execute rollback --stack lakehouse-oci --server arm1-oci
+  komodo-cli execute rollback --stack forgejo --server arm1-oci
+fi
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "oci" ]; then
+  echo "Rolling back OCI stacks..."
+  komodo-cli execute rollback --stack lakekeeper-oci --server arm1-oci
+  komodo-cli execute rollback --stack lance-oci --server arm1-oci
+  komodo-cli execute rollback --stack dagster-unified --server arm1-oci
+fi
+
+echo "Rollback complete"
+"""
+
+# -----------------------------------------------------------------------------
+# HEALTH CHECK PROCEDURE
+# -----------------------------------------------------------------------------
+[[procedure]]
+name = "health-check-multi-cloud"
+description = "Health check all deployed stacks across clouds"
+type = "shell"
+command = """
+echo "Multi-Cloud Health Check"
+echo "========================"
+
+# OCI
+echo ""
+echo "Oracle Cloud (arm1-oci):"
+echo "  - Garage:      $(curl -sf http://localhost:3900/health && echo OK || echo FAIL)"
+echo "  - Lakekeeper:  $(curl -sf http://localhost:8181/v1/config && echo OK || echo FAIL)"
+echo "  - Forgejo:     $(curl -sf https://git.cianfhoghlaim.ie/api/v1/version && echo OK || echo FAIL)"
+
+# OCI (via Komodo API)
+echo ""
+echo "OCI (arm1-oci):"
+komodo-cli execute lakekeeper-oci-health --server arm1-oci 2>/dev/null || echo "  Health check not available"
+
+# Local
+echo ""
+echo "Local (bunchloch):"
+docker ps --filter "name=lakehouse" --format "{{.Names}}: {{.Status}}"
+"""
+
+# -----------------------------------------------------------------------------
+# BACKUP PROCEDURE
+# -----------------------------------------------------------------------------
+[[procedure]]
+name = "backup-multi-cloud"
+description = "Backup all lakehouse instances across clouds"
+type = "shell"
+command = """
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+echo "Creating multi-cloud backup: $TIMESTAMP"
+
+# OCI Backup
+echo "Backing up OCI lakehouse..."
+komodo-cli execute lakehouse-oci-backup --server arm1-oci
+
+# OCI Backup
+echo "Backing up OCI databases..."
+docker exec arm1-oci-postgres pg_dump -U lakekeeper lakekeeper_oci | gzip > /tmp/oci_backup_${TIMESTAMP}.sql.gz
+
+# Local Backup
+echo "Backing up local lakehouse..."
+docker exec lakehouse-postgres pg_dump -U lakekeeper lakekeeper | gzip > /tmp/local_backup_${TIMESTAMP}.sql.gz
+
+echo "Backup complete: ${TIMESTAMP}"
+"""

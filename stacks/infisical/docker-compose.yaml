@@ -1,0 +1,59 @@
+services:
+  backend:
+    container_name: infisical-backend
+    image: infisical/infisical:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file: .env
+    ports:
+      - "8081:8080" # Map this through your reverse proxy
+    environment:
+      - NODE_ENV=production
+    networks:
+      - stack
+    volumes:
+      - infisical_keys:/app/keys
+
+  redis:
+    container_name: infisical-redis
+    image: redis:alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - stack
+
+  db:
+    container_name: infisical-db
+    image: postgres:14-alpine
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - stack
+    healthcheck:
+      test: "pg_isready --username=$${POSTGRES_USER} && psql --username=$${POSTGRES_USER} --list"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  pg_data:
+    driver: local
+  redis_data:
+    driver: local
+  infisical_keys:
+    driver: local
+
+networks:
+  stack:
+    external: true
+    name: infrastructure # Adjust based on your Traefik/Pangolin network setup

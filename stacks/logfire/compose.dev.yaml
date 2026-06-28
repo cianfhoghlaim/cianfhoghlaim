@@ -1,0 +1,25 @@
+# Logfire — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the pattern in infrastructure/stacks/cognee/compose.dev.yaml.
+# Replaces the production Locket sidecar with a no-op alpine container and
+# sources secrets from the local .env (hydrated by mise hooks from Infisical).
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: cianfhoghlaim-logfire-locket-dev
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - echo "[dev] no-op logfire locket — secrets from host .env via env_file"; sleep infinity
+    networks:
+      - cianfhoghlaim
+
+  logfire-otel:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env

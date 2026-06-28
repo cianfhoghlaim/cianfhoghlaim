@@ -1,0 +1,15 @@
+# Komodo resource-sync metadata for the Logfire stack.
+#
+# NOTE: The Logfire stack has no `pangolin.yaml` because the actual user-facing
+# UI is SaaS (https://logfire.pydantic.dev). The local OTEL collector only
+# exposes internal OTLP gRPC (:4317) / OTLP HTTP (:4318) ports + health (:8888)
+# — none of which are routed through Pangolin. See:
+#   - `.agents/skills/kcg-pangolin-stack/SKILL.md` §"The 4 host tags" —
+#     logfire is classified as a "Reference stack (not deployed)" with no
+#     host tag.
+#   - `infrastructure/stacks/logfire/README.md` §"Why an OTEL Collector?" —
+#     explains the SaaS-only UI decision and the local-only OTLP ingestion.
+#
+# This blueprint.yaml is kept as a stub for Komodo stack registry consistency
+# (the GOLD_STANDARD pattern requires it). Add a `private-resources:` block
+# here only when a future Pangolin route is wired for logfire.cianfhoghlaim.ie.

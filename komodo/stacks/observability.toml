@@ -1,0 +1,37 @@
+# =============================================================================
+# OBSERVABILITY STACKS — Komodo stack registrations
+# =============================================================================
+# Unified observability stack (Langfuse + MLflow + Logfire + RAGAS)
+#
+# - Langfuse (LLM tracing + cost + prompts)
+# - MLflow (self-hosted experiment tracking + model registry)
+# - Logfire (Pydantic SaaS for Python tracing; local OTEL collector)
+# - Dozzle / Beszel (Docker / server monitoring)
+#
+# The three legacy Datadog stacks (datadog-oci / datadog-oracle /
+# datadog-macbook) have been retired in favor of the Langfuse + Logfire
+# split. See `cleanup-and-boot-stacks` openspec change.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# LOGFIRE - OTEL Collector
+# -----------------------------------------------------------------------------
+# Logfire cloud is SaaS at https://logfire.pydantic.dev. The local
+# infrastructure/stacks/logfire/ deploys an OpenTelemetry Collector that
+# receives OTLP traces on :4317 (gRPC) / :4318 (HTTP) and forwards to
+# Logfire cloud. KCG Python services send via the logfire SDK (HTTPS direct)
+# or via OTLP to the local collector (which fans out to Logfire cloud).
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "logfire"
+description = "Pydantic Logfire OTEL collector (forwards to Logfire cloud)"
+tags = ["host:arm1-oci", "tier:observability", "type:tracing"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/storage/logfire"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+LOGFIRE_PROJECT_NAME=oideachas-celtic-education
+LOGFIRE_ENVIRONMENT=production
+"""
