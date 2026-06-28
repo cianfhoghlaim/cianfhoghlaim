@@ -78,6 +78,7 @@ culture, government, intelligence, statistics, geospatial).
 |:--|:--|:--|
 | `agent-memory-systems` | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory at `cianfhoghlaim/core/{cognee,memory}/` | Active |
 | `indexing-and-cognition` | CCC v1 code search (16 Apps at `cianfhoghlaim/core/cocoindex/`) + Cognee 7-cluster knowledge graph + OpenCode agent/MCP registry | Active |
+| `agent-registry` | OpenCode agent + skill + MCP registry (7 agents, 9 MCPs, 89 skills across data-platform/infrastructure/agent-platform/frontend-apps/research) per `openspec/specs/agent-registry/spec.md`; replaces the legacy 5 sruth-subagents + croilar-devtools MCP at `openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/` | Active |
 | `agent-observability` | Langfuse + MLflow + RAGAS + Logfire at `cianfhoghlaim/core/obs/` | Active |
 | `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex at `cianfhoghlaim/web/` | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
