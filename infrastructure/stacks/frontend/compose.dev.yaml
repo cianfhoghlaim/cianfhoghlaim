@@ -1,0 +1,48 @@
+name: frontend
+
+services:
+  oideachais-web:
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../../../oideachais/web/apps/web/src
+
+  oideachais-api:
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../../../oideachais/web/apps/api/src
+
+  tuatha-ui:
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../../../tuatha/ui/src
+
+  croilar-web:
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../../../croilar/apps/web/src
+
+  croilar-portal:
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../../../croilar/apps/portal/src
+
+networks:
+  cianfhoghlaim:
+    external: true
+  croilar:
+    external: true

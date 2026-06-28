@@ -1,0 +1,92 @@
+# =============================================================================
+# DEPLOY COGNEE-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim Oideachais Cognee knowledge graph to bunchloch (MacBook M4).
+#
+# Architecture:
+#   bunchloch (MacBook M4) — cognee (:8100 host → :8000 container), cognee-postgres (:5432 internal)
+#   litellm (:4000, bunchloch) — LLM proxy used for entity extraction (deepseek/deepseek-chat)
+#   lancedb (:8181-8182, bunchloch) — vector store the cognee LANCEDB_URI points to
+#   Routed through Pangolin on arm1-oci:
+#     cognee.cianfhoghlaim.ie → bunchloch:8100 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-cognee-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-cognee-bunchloch"
+description = "Deploy Cognee knowledge graph to bunchloch — prereqs → litellm + lakehouse + lancedb → cognee → pangolin routes → health checks"
+
+# =============================================================================
+# STAGE 0: Prerequisite docker resources
+# =============================================================================
+# The cognee sidecar requires the cianfhoghlaim_locket_secrets external tmpfs
+# volume. Created idempotently by a build (defined in the locket sidecar).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "cognee-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: Dependency Services
+# =============================================================================
+# Cognee depends on:
+#   - litellm (LLM gateway, port 4000)        → bunchloch
+#   - lakehouse (Garage S3 + Lance Namespace) → arm1-oci
+#   - lancedb (vector store viewer, port 8181) → bunchloch
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "litellm-bunchloch" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lakehouse" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lancedb-bunchloch" } }
+
+# =============================================================================
+# STAGE 2: Cognee (bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "cognee-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "cognee-bunchloch" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the cognee routing blueprint via Pangolin Integration API.
+# Registers:
+#   - cognee.cianfhoghlaim.ie → bunchloch:8100 (Pocket ID SSO)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-cognee-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification (bunchloch)
+# =============================================================================
+# Verify cognee is healthy and responding to /health.
+# Also verify it can reach the LiteLLM proxy (smoke test LLM roundtrip).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "cognee-health-check" } }

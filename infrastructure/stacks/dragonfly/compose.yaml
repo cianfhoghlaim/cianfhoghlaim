@@ -1,0 +1,17 @@
+name: dragonfly
+services:
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    container_name: dragonfly
+    restart: unless-stopped
+    ports: ["6379:6379"]
+    command: ["--port=6379","--maxmemory=8gb","--cache_mode=true","--requirepass=${DRAGONFLY_PASSWORD:-devpassword}"]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a ${DRAGONFLY_PASSWORD:-devpassword} ping || exit 1"]
+      interval: 10s; timeout: 5s; retries: 5; start_period: 10s
+    deploy:
+      resources:
+        limits: {memory: 10G, cpus: '4'}
+    networks: [cianfhoghlaim]
+networks:
+  cianfhoghlaim: {driver: bridge}

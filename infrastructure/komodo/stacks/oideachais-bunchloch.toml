@@ -1,0 +1,73 @@
+# =============================================================================
+# OIDEACHAIS-BUNCHLOCH — Cianfhoghlaim Education Platform on MacBook M4
+# =============================================================================
+# CANONICAL komodo stack for the oideachais deployment.
+#
+# Replaces the prior /oideachais/compose.yaml + sidecar.yaml + pangolin.yaml
+# + blueprint.yaml quartet with a single, komodo-managed stack at
+# infrastructure/stacks/oideachais/.
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) hosts the three app containers:
+#     dagster   (Dagster webserver, :3335 host → :3000 container)
+#     api       (FastAPI AG-UI streaming, :8000 host → :8000 container)
+#     frontend  (TanStack Start dev server, :3000 host → :3000 container)
+#   Networks:
+#     cianfhoghlaim      — shared engineering dev/control plane
+#     lakehouse_lakehouse — Garage S3, Postgres, Lakekeeper, Lance NS, LiteLLM
+#   Secrets: Locket sidecar reads ./secrets.env (Infisical URI refs) and writes
+#     resolved values to the shared tmpfs volume.
+#   Routing: Pocket ID SSO on web/api/dagster, API-key auth on api,
+#     VPN-only on dagster — see ../pangolin.yaml.
+#
+# Procedure: deploy-oideachais-bunchloch (4 stages)
+# =============================================================================
+
+[[stack]]
+name = "oideachais-bunchloch"
+description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA. Merged canonical stack at infrastructure/stacks/oideachais/."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:education",
+  "pipeline:sruth",
+  "stack:oideachais",
+  "merged:canonical",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/oideachais"
+file_paths = [
+  "infrastructure/stacks/oideachais/compose.yaml",
+  "infrastructure/stacks/oideachais/sidecar.yaml",
+]
+environment = """
+DAGSTER_PORT=3335
+API_PORT=8000
+FRONTEND_PORT=3000
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+LLM_BASE_URL=http://litellm:4000
+DAGSTER_DEPLOYMENT=production
+USE_DUCKLAKE=true
+MOTHERDUCK_ENABLED=false
+AWS_ENDPOINT_URL=http://lakehouse-garage:3900
+AWS_REGION=garage
+INFISICAL_PROJECT_ID=dev-baile
+LOCKET_MODE=watch
+--mount type=bind,source=/Users/cianmacandeisigh/dev/kings_college_galway/stedding,target=/stedding,readonly
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# Resource limits (MacBook M4 Max — share with other stacks)
+# -----------------------------------------------------------------------------
+# Dagster: 4 CPUs, 8 GB (pipeline orchestration + DuckLake + LanceDB)
+# API:     2 CPUs, 4 GB (FastAPI + BAML extraction + AG-UI streaming)
+# Frontend: 2 CPUs, 1 GB (TanStack Start SPA dev server)

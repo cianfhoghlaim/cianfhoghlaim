@@ -1,0 +1,62 @@
+name: paperless-ngx
+services:
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    ports: ["8000:8000"]
+    environment:
+      - PAPERLESS_REDIS=redis://redis:6379
+      - PAPERLESS_DBHOST=paperless-pg
+      - PAPERLESS_DBPORT=5432
+      - PAPERLESS_DBNAME=paperless
+      - PAPERLESS_DBUSER=paperless
+      - PAPERLESS_DBPASS=${PAPERLESS_DB_PASSWORD}
+      - PAPERLESS_SECRET_KEY=${PAPERLESS_SECRET_KEY}
+      - PAPERLESS_ADMIN_USER=${PAPERLESS_ADMIN_USER:-admin}
+      - PAPERLESS_ADMIN_PASSWORD=${PAPERLESS_ADMIN_PASSWORD}
+      - PAPERLESS_URL=https://paperless.cianfhoghlaim.ie
+      - PAPERLESS_CONSUMER_POLLING=60
+      - PAPERLESS_OCR_LANGUAGE=eng+gle
+    volumes:
+      - paperless_data:/usr/src/paperless/data
+      - paperless_media:/usr/src/paperless/media
+      - paperless_export:/usr/src/paperless/export
+      - paperless_consume:/usr/src/paperless/consume
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/api/ || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 30s
+    deploy:
+      resources:
+        limits: {memory: 2G, cpus: '2'}
+    networks: [cianfhoghlaim]
+  paperless-pg:
+    image: postgres:16
+    container_name: paperless-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
+    volumes: [paperless_pg_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d paperless -U paperless"]
+      interval: 10s; timeout: 5s; retries: 5
+    networks: [cianfhoghlaim]
+  redis:
+    image: redis:7-alpine
+    container_name: paperless-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s; timeout: 5s; retries: 5
+    networks: [cianfhoghlaim]
+volumes:
+  paperless_data: {driver: local}
+  paperless_media: {driver: local}
+  paperless_export: {driver: local}
+  paperless_consume: {driver: local}
+  paperless_pg_data: {driver: local}
+networks:
+  cianfhoghlaim: {driver: bridge}

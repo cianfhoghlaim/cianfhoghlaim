@@ -1,0 +1,50 @@
+# =============================================================================
+# Croilar Dagster Dockerfile
+# =============================================================================
+# Builds the croilar/a/ Dagster image with the music pipeline dependencies.
+#
+# Layout matches the oideachais dagster image for parity.
+# =============================================================================
+
+FROM python:3.12-slim
+
+WORKDIR /opt/dagster/app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv for fast dependency management
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+# Copy dependency manifest
+COPY pyproject.toml ./
+
+# Install Python dependencies in a single line so shell continuation
+# can't break the version pins. Dagster 1.9.13 + dagster-dlt 0.25+ are
+# pinned so the legacy CompositeStorage code path resolves correctly.
+# dagster-postgres is needed for the Postgres run_storage backend.
+RUN uv pip install --system --no-cache "dagster==1.9.13" "dagster-webserver==1.9.13" "dagster-dlt>=0.25.0" "dagster-postgres>=0.25.0" "dlt[duckdb,parquet]>=1.18.0" "lancedb>=0.17.0" "ibis-framework[duckdb]>=11.0.0" "polars>=1.0.0" "crawl4ai>=0.4.0" "boto3>=1.34.0" "httpx>=0.27.0" "pydantic-settings>=2.0.0"
+
+# Set up Dagster home (writable volume target)
+ENV DAGSTER_HOME=/opt/dagster/dagster_home
+RUN mkdir -p $DAGSTER_HOME/storage $DAGSTER_HOME/compute_logs $DAGSTER_HOME/artifacts
+
+# Copy Dagster configuration
+COPY dagster.yaml $DAGSTER_HOME/dagster.yaml
+
+# Copy workspace configuration
+COPY workspace.yaml /opt/dagster/app/workspace.yaml
+
+# Copy application code (volumes will override in dev)
+COPY definitions.py ./
+COPY dagster_assets/ ./dagster_assets/
+COPY pipelines/ ./pipelines/
+COPY _shared/ ./_shared/
+COPY cocoindex_flows/ ./cocoindex_flows/
+COPY services/ ./services/
+
+EXPOSE 3000
