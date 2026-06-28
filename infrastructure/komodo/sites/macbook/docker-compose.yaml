@@ -39,7 +39,7 @@ services:
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
       - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
-      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}"
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"
     volumes:

@@ -1,7 +1,6 @@
 ---
 name: baml
-description:
-  BAML (Basically, A Made-up Language) — the schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas, defining `@function` and `@class` blocks in `.baml` files under `sruth/oideachais/baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a BAML schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'LLM structured output', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src'.
+description: BAML (Basically, A Made-up Language) — the schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas, defining `@function` and `@class` blocks in `.baml` files under `sruth/oideachais/baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a BAML schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'LLM structured output', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src'.
 ---
 
 # BAML Skill
