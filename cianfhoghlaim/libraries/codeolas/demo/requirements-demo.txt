@@ -1,5 +1,0 @@
-# Demo requirements for códeolas sruth
-# This demo uses mock data and requires NO external dependencies
-# Simply run: python demo/run_demo.py
-
-# No requirements - demo runs with Python standard library only
