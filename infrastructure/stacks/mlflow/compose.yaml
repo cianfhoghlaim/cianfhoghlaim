@@ -1,0 +1,125 @@
+# =============================================================================
+# MLFLOW - ML Experiment Tracking and Model Registry
+# =============================================================================
+# MLflow tracking server with PostgreSQL backend and MinIO artifact storage.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: mlflow
+
+services:
+  # ---------------------------------------------------------------------------
+  # POSTGRESQL - Backend Store
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: mlflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mlflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: ${POSTGRES_DB:-mlflow}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - mlflow-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mlflow}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - mlflow
+
+  # ---------------------------------------------------------------------------
+  # MINIO - Artifact Storage
+  # ---------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: mlflow-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-devpassword}
+    volumes:
+      - mlflow-minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - mlflow
+
+  # ---------------------------------------------------------------------------
+  # MINIO INIT - Create Bucket
+  # ---------------------------------------------------------------------------
+  minio-init:
+    image: minio/mc:latest
+    container_name: mlflow-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: |
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 ${MINIO_ROOT_USER:-minio} ${MINIO_ROOT_PASSWORD:-devpassword}
+      mc mb --ignore-existing myminio/${MINIO_BUCKET:-mlflow}
+      exit 0
+      "
+    restart: "no"
+    networks:
+      - mlflow
+
+  # ---------------------------------------------------------------------------
+  # MLFLOW - Tracking Server
+  # ---------------------------------------------------------------------------
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:${MLFLOW_VERSION:-v2.19.0}
+    container_name: mlflow-server
+    restart: unless-stopped
+    ports:
+      - "${MLFLOW_PORT:-5000}:5000"
+    environment:
+      MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER:-mlflow}:${POSTGRES_PASSWORD:-devpassword}@postgres:5432/${POSTGRES_DB:-mlflow}
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://${MINIO_BUCKET:-mlflow}/artifacts
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minio}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-devpassword}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
+      MLFLOW_S3_IGNORE_TLS: "true"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        pip install --no-cache-dir psycopg2-binary boto3
+        mlflow server \
+          --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI" \
+          --default-artifact-root "$$MLFLOW_DEFAULT_ARTIFACT_ROOT" \
+          --host 0.0.0.0 \
+          --port 5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks:
+      - mlflow
+
+volumes:
+  mlflow-postgres:
+  mlflow-minio:
+
+networks:
+  mlflow:
+    driver: bridge

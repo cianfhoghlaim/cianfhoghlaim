@@ -1,0 +1,32 @@
+# Komodo resource-sync metadata for the Frontend stack
+#
+# Komodo syncs this stack via `docker compose pull && up -d` from the
+# git-tracked compose.yaml. The pangolin.yaml and sidecar.yaml are
+# applied separately by the Komodo periphery runner.
+
+name: frontend
+description: Cianfhoghlaim 5 frontend workspaces (oideachais-web, oideachais-api, tuatha-ui, croilar-web, croilar-portal)
+server: arm1-oci
+compose:
+  path: ./compose.yaml
+  run_docker_tag: ghcr.io/cianfhoghlaim/locket:latest
+resources:
+  - name: oideachais-web
+    kind: stack
+  - name: oideachais-api
+    kind: stack
+  - name: tuatha-ui
+    kind: stack
+  - name: croilar-web
+    kind: stack
+  - name: croilar-portal
+    kind: stack
+schedule:
+  cron: "0 */6 * * *"
+  auto_update: true
+links:
+  - https://oideachais.cianfhoghlaim.ie
+  - https://oideachais-api.cianfhoghlaim.ie
+  - https://tuath.cianfhoghlaim.ie
+  - https://croilar.cianfhoghlaim.ie
+  - https://portal.cianfhoghlaim.ie

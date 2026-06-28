@@ -1,0 +1,34 @@
+# Logfire stack sidecar — Infisical Locket secret injection.
+# Injects LOGFIRE_TOKEN, LOGFIRE_PROJECT_NAME, LOGFIRE_ENVIRONMENT into
+# the otel/opentelemetry-collector-contrib container at runtime via a
+# shared tmpfs volume.
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    restart: unless-stopped
+    container_name: cianfhoghlaim-logfire-locket
+    user: "65532"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    volumes:
+      - type: tmpfs
+        target: /run/secrets/locket
+        tmpfs:
+          mode: 0700
+    env_file:
+      - ./secrets.env
+    networks:
+      - cianfhoghlaim
+
+networks:
+  cianfhoghlaim:
+    name: cianfhoghlaim
+    external: true

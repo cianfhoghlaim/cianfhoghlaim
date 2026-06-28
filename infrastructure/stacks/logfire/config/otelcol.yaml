@@ -1,0 +1,67 @@
+# OpenTelemetry Collector configuration for the Logfire stack.
+# ----------------------------------------------------------------------------
+# Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP),
+# batches them, and forwards to Logfire cloud via the logfire exporter.
+#
+# The logfire exporter is part of opentelemetry-collector-contrib
+# (https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/logfireexporter).
+# It uses HTTP/2 with the project URL + token from environment.
+#
+# Note: when LOGFIRE_TOKEN is empty, the exporter fails per OTEL convention
+# (no silent data loss; matches the SaaS-only graceful-degradation in
+# sruth/oideachais/observability/logfire_config.py).
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 80
+    spike_limit_percentage: 20
+  # Resource attributes that let Logfire group traces by service.
+  resource/logfire_metadata:
+    attributes:
+      - key: deployment.environment
+        value: ${env:LOGFIRE_ENVIRONMENT}
+        action: upsert
+      - key: logfire.project_name
+        value: ${env:LOGFIRE_PROJECT_NAME}
+        action: upsert
+
+exporters:
+  # Logfire cloud (SaaS) — requires LOGFIRE_TOKEN env var.
+  logfire:
+    timeout: 30s
+  # Local debug logging so we can see OTEL pipeline activity.
+  debug:
+    verbosity: basic
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:8888
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource/logfire_metadata, batch]
+      exporters: [logfire, debug]
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8889

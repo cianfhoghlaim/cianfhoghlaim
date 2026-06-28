@@ -1,0 +1,13 @@
+# Langfuse v3 — Pangolin private-resource route
+# Routes langfuse.cianfhoghlaim.ie → langfuse-web container at port 3000.
+# The langfuse-web container listens on 3000 internally; the host maps 3001:3000.
+# TinyAuth is OMITTED — Langfuse has its own built-in authentication.
+pangolin:
+  private-resources:
+    langfuse:
+      name: langfuse
+      mode: http
+      full-domain: langfuse.cianfhoghlaim.ie
+      destination-port: 3000
+      protocol: http
+      roles[0]: secure-headers@file

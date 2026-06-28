@@ -1,0 +1,28 @@
+name: pipecat
+services:
+  pipecat:
+    image: pipecat-ai/pipecat:latest
+    container_name: pipecat
+    restart: unless-stopped
+    ports: ["8765:8765"]
+    environment:
+      - PIPECAT_PORT=8765
+      - PIPECAT_TRANSPORT=daily
+      - DAILY_API_KEY=${DAILY_API_KEY}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+    volumes:
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8765/health || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 30s
+    deploy:
+      resources:
+        limits: {memory: 8G, cpus: '4'}
+    networks: [cianfhoghlaim, lakehouse]
+networks:
+  cianfhoghlaim: {driver: bridge}
+  lakehouse: {name: lakehouse_lakehouse, external: true}

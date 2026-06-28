@@ -1,0 +1,61 @@
+# =============================================================================
+# TEAM STACK — UP
+# =============================================================================
+# Pull images and start the three stacks in dependency order:
+#   1. vikunja   (no upstream dependency)
+#   2. cal-diy   (independent)
+#   3. n8n       (talks to both vikunja and cal-diy)
+#
+# Each stack uses compose.yaml + sidecar.yaml (Locket-injected secrets).
+# n8n-init and vikunja-seed are one-shot init containers that run on first
+# boot of their respective stacks and exit.
+# =============================================================================
+
+[[stack]]
+name = "vikunja"
+description = "Vikunja — kanban + Gantt + list task management (port 3456)"
+tags = ["host:arm1-oci", "tier:production", "type:tool", "domain:vikunja.cianfhoghlaim.ie", "team:workflow"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/vikunja"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+VIKUNJA_SERVICE_PUBLICURL=https://vikunja.cianfhoghlaim.ie/
+VIKUNJA_MAILER_FROMEMAIL=vikunja.cianfhoghlaim.ie
+INFISICAL_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "cal-diy"
+description = "cal-diy (cal.com community build) — scheduling (port 3000)"
+tags = ["host:arm1-oci", "tier:production", "type:tool", "domain:calcom.cianfhoghlaim.ie", "team:workflow"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/cal-diy"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+CALCOM_NEXTAUTH_URL=https://calcom.cianfhoghlaim.ie
+CALCOM_ALLOWED_HOSTNAMES=calcom.cianfhoghlaim.ie
+INFISICAL_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "n8n"
+description = "n8n — workflow automation + OpenCode Go LLM pipelines (port 5678)"
+tags = ["host:arm1-oci", "tier:production", "type:engineering", "domain:n8n.cianfhoghlaim.ie", "team:workflow"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/n8n"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+N8N_HOST=n8n.cianfhoghlaim.ie
+N8N_WEBHOOK_URL=https://n8n.cianfhoghlaim.ie/
+GENERIC_TIMEZONE=Europe/Dublin
+INFISICAL_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""

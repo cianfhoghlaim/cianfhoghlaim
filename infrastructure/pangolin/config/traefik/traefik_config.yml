@@ -1,0 +1,135 @@
+# =============================================================================
+# TRAEFIK STATIC CONFIGURATION
+# =============================================================================
+
+api:
+  insecure: true
+  dashboard: true
+
+# -----------------------------------------------------------------------------
+# Providers Configuration
+# -----------------------------------------------------------------------------
+providers:
+  # Pangolin dynamic configuration via HTTP polling
+  http:
+    endpoint: "http://pangolin:3001/api/v1/traefik-config"
+    pollInterval: "5s"
+  # File-based configuration (dynamic_config.yml + Middleware Manager rules)
+  file:
+    directory: "/etc/traefik"
+    watch: true
+
+# -----------------------------------------------------------------------------
+# Experimental Plugins
+# -----------------------------------------------------------------------------
+experimental:
+  plugins:
+    badger:
+      moduleName: "github.com/fosrl/badger"
+      version: "v1.1.0"
+    crowdsec:
+      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      version: "v1.3.5"
+
+# -----------------------------------------------------------------------------
+# Logging Configuration
+# -----------------------------------------------------------------------------
+log:
+  level: "INFO"
+  format: "common"
+  filePath: "/var/log/traefik/traefik.log"
+
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: "json"
+  bufferingSize: 100
+  filters:
+    statusCodes:
+      - "400-499"
+      - "500-599"
+
+# -----------------------------------------------------------------------------
+# Certificate Resolvers
+# -----------------------------------------------------------------------------
+certificatesResolvers:
+  # HTTP-01 challenge for individual domains (backup)
+  letsencrypt:
+    acme:
+      httpChallenge:
+        entryPoint: web
+      email: admin@cianfhoghlaim.ie
+      storage: "/letsencrypt/acme.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+  # DNS-01 challenge for wildcard certs (primary)
+  letsencrypt-wildcard:
+    acme:
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 30
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+      email: admin@cianfhoghlaim.ie
+      storage: "/letsencrypt/acme-wildcard.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+  # DNS-01 challenge for aleyum.com wildcard certs
+  letsencrypt-aleyum:
+    acme:
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 30
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+      email: admin@aleyum.com
+      storage: "/letsencrypt/acme-aleyum.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+
+# -----------------------------------------------------------------------------
+# Entry Points
+# -----------------------------------------------------------------------------
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+  # Internal entrypoint for OLM/Newt auth (bypasses Cloudflare)
+  # Use direct IP access: http://132.145.27.89:8443
+  internal:
+    address: ":8443"
+    transport:
+      respondingTimeouts:
+        readTimeout: "30m"
+    http:
+      tls:
+        certResolver: "letsencrypt-wildcard"
+        domains:
+          - main: "cianfhoghlaim.ie"
+            sans:
+              - "*.cianfhoghlaim.ie"
+      middlewares:
+        - secure-headers@file
+
+# -----------------------------------------------------------------------------
+# OpenTelemetry Tracing (for Log Dashboard)
+# -----------------------------------------------------------------------------
+tracing:
+  otlp:
+    http:
+      endpoint: "http://log-dashboard-backend:4318/v1/traces"
+    grpc:
+      endpoint: "log-dashboard-backend:4317"
+      insecure: true
+
+# -----------------------------------------------------------------------------
+# Server Transport
+# -----------------------------------------------------------------------------
+# NOTE: insecureSkipVerify is true for internal container communication
+# Backend services use HTTP internally; TLS terminates at Traefik
+serversTransport:
+  insecureSkipVerify: true

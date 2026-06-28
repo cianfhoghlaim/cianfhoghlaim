@@ -1,0 +1,36 @@
+# =============================================================================
+# OPENCLAW — Komodo-Orchestrated Stack (arm1-oci, private Pangolin)
+# =============================================================================
+# Long-running channel-fanout gateway exposing the meaisínfhoghlaim 12-agent
+# fleet through 6 v1 channels (WebChat + Telegram/Slack/Discord/WhatsApp/Teams).
+#
+# Architecture:
+#   arm1-oci — openclaw (:18789 host → :18789 container, gateway WebSocket RPC)
+#              openclaw-locket (Locket sidecar, Infisical injection)
+#   Routed through Pangolin:
+#     openclaw.cianfhoghlaim.ie → arm1-oci:openclaw:18789 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km deploy stack openclaw
+# =============================================================================
+
+[[stack]]
+name = "openclaw"
+description = "OpenClaw — Channel-fanout gateway for the meaisínfhoghlaim 12-agent fleet (arm1-oci, port 18789, openclaw.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci","tier:control-plane","type:agent-runtime","domain:openclaw.cianfhoghlaim.ie"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/infrastructure/stacks/openclaw"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+LOCKET_MODE=watch
+INFISICAL_CLIENT_ID=infisical-machine-identity-openclaw
+INFISICAL_SECRET_FILE=/etc/komodo/secrets/infisical_secret
+OPENCLAW_PORT=18789
+OPENCLAW_BRIDGE_PORT=18790
+OPENCLAW_LOG_LEVEL=info
+OPENCLAW_DM_POLICY=pairing
+PANGOLIN_DOMAIN=openclaw.cianfhoghlaim.ie
+"""

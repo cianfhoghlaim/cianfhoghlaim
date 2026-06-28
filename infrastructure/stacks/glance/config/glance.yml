@@ -1,0 +1,64 @@
+# Glance dashboard config — Cianfhoghlaim platform overview
+# See https://github.com/glanceapp/glance/blob/main/docs/configuration.md
+
+server:
+  host: 0.0.0.0
+  port: 8080
+  base-url: ""
+
+theme:
+  background-color: "#0a0a0a"
+  primary-color: "#6c5ce7"
+  text-color: "#e0e0e0"
+
+pages:
+  - name: "Home"
+    columns:
+      - size: small
+        widgets:
+          - type: search
+            autofocus: true
+            search-engine: https://search.cianfhoghlaim.ie/search?q={QUERY}
+
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - type: monitor
+                title: "LLM Gateway"
+                cache: 1m
+                sites:
+                  - title: "LiteLLM"
+                    url: http://litellm:4000/health/liveliness
+                    icon: si/lit
+              - type: monitor
+                title: "Dagster"
+                cache: 1m
+                sites:
+                  - title: "Dagster"
+                    url: http://dagster:3000/health
+                    icon: si/dagster
+              - type: monitor
+                title: "RisingWave"
+                cache: 1m
+                sites:
+                  - title: "RisingWave Dashboard"
+                    url: http://risingwavedb:5691
+                    icon: si/apachekafka
+                  - title: "RisingWave Meta"
+                    url: http://risingwave:5690
+                    icon: si/apachekafka
+
+      - size: full
+        widgets:
+          - type: rss
+            title: "HuggingFace Releases"
+            feeds:
+              - url: https://huggingface.co/blog/feed.xml
+                limit: 5
+            style: vertical-list
+          - type: rss
+            title: "RisingWave Blog"
+            feeds:
+              - url: https://risingwave.com/blog/rss.xml
+                limit: 5
