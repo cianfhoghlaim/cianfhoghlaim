@@ -1,0 +1,160 @@
+# Cloudflare Workers & R2 Configuration for Crypteolas
+# https://developers.cloudflare.com/workers/wrangler/configuration/
+#
+# Deploy with: wrangler deploy
+# Dev server: wrangler dev
+
+name = "crypteolas-api"
+# TODO: workers/index.ts is not yet implemented. When the Cloudflare Workers
+# code is added, it should live at:
+#   tuatha/crypteolas/workers/index.ts
+# and serve the x402 payment middleware + R2 proxy for the crypteolas
+# platform. Until then, `wrangler deploy` will fail with "entry-point not
+# found". See tuatha/crypteolas/STATUS.md for the work item.
+main = "workers/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Account ID from 1Password: op://crypteolas/cloudflare/account_id
+# Set via: export CLOUDFLARE_ACCOUNT_ID=$(op read op://crypteolas/cloudflare/account_id)
+# account_id = ""
+
+# =============================================================================
+# R2 Storage Buckets
+# =============================================================================
+# Create buckets: wrangler r2 bucket create <bucket-name>
+
+[[r2_buckets]]
+binding = "CRYPTO_DATA"
+bucket_name = "crypto-data"
+
+[[r2_buckets]]
+binding = "LANCE_EMBEDDINGS"
+bucket_name = "lance-embeddings"
+
+[[r2_buckets]]
+binding = "RAW_DOCUMENTS"
+bucket_name = "raw-documents"
+
+# =============================================================================
+# KV Namespaces (for payment state, sessions, rate limiting)
+# =============================================================================
+# Create namespace: wrangler kv:namespace create <name>
+
+[[kv_namespaces]]
+binding = "PAYMENT_STATE"
+id = "" # Fill after: wrangler kv:namespace create PAYMENT_STATE
+
+[[kv_namespaces]]
+binding = "SESSION_CACHE"
+id = "" # Fill after: wrangler kv:namespace create SESSION_CACHE
+
+[[kv_namespaces]]
+binding = "RATE_LIMITS"
+id = "" # Fill after: wrangler kv:namespace create RATE_LIMITS
+
+# =============================================================================
+# D1 Database (optional - for edge SQL)
+# =============================================================================
+# Create database: wrangler d1 create crypteolas-db
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "crypteolas-db"
+# database_id = "" # Fill after creation
+
+# =============================================================================
+# Durable Objects (for x402 payment sessions)
+# =============================================================================
+
+# [durable_objects]
+# bindings = [
+#   { name = "PAYMENT_SESSION", class_name = "PaymentSession" }
+# ]
+
+# [[migrations]]
+# tag = "v1"
+# new_classes = ["PaymentSession"]
+
+# =============================================================================
+# Environment Variables
+# =============================================================================
+# Secrets: wrangler secret put <NAME>
+# Required secrets:
+#   - OPENAI_API_KEY
+#   - PAYMENT_RECIPIENT
+#   - BETTER_AUTH_SECRET
+
+[vars]
+ENVIRONMENT = "development"
+DEFAULT_PAYMENT_NETWORK = "cronos"
+FACILITATOR_URL = "https://x402.org/facilitator"
+DEFILLAMA_API_URL = "https://api.llama.fi"
+CRYPTO_COM_MCP_URL = "https://mcp.crypto.com/market-data/mcp"
+
+# =============================================================================
+# Production Environment
+# =============================================================================
+
+[env.production]
+name = "crypteolas-api-prod"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+
+# =============================================================================
+# Staging Environment
+# =============================================================================
+
+[env.staging]
+name = "crypteolas-api-staging"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+
+# =============================================================================
+# Routes (custom domain)
+# =============================================================================
+# Uncomment and configure after setting up custom domain
+
+# routes = [
+#   { pattern = "api.crypteolas.com/*", zone_name = "crypteolas.com" }
+# ]
+
+# =============================================================================
+# Triggers (Cron)
+# =============================================================================
+# Optional: scheduled data refreshes via Workers
+
+# [triggers]
+# crons = [
+#   "0 * * * *",    # Hourly price refresh
+#   "0 */8 * * *",  # Funding rate updates
+# ]
+
+# =============================================================================
+# Build Configuration
+# =============================================================================
+
+[build]
+command = "npm run build:worker"
+
+# [build.upload]
+# format = "modules"
+# main = "./dist/index.js"
+
+# =============================================================================
+# Observability
+# =============================================================================
+
+# [observability]
+# enabled = true
+# head_sampling_rate = 1
+
+# =============================================================================
+# Wrangler Dev Settings
+# =============================================================================
+
+[dev]
+port = 8787
+local_protocol = "http"

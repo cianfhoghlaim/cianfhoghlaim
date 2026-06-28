@@ -1,0 +1,203 @@
+[project]
+name = "cianfhoghlaim"
+version = "0.1.0"
+description = "Cianfhoghlaim consolidated Celtic education + multi-nation + multi-language data platform (Plan 1 = Ireland + leabharlann)."
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "BUSL-1.1" }
+authors = [
+    { name = "Cianfhoghlaim Team" },
+]
+keywords = [
+    "cianfhoghlaim",
+    "oideachais",
+    "celtic",
+    "irish",
+    "british-isles",
+    "education",
+    "dagster",
+    "dlt",
+    "cocoindex",
+    "baml",
+    "lancedb",
+    "ducklake",
+    "motherduck",
+    "ocr",
+    "vision-model",
+    "browserbase",
+    "firecrawl",
+]
+
+# The cianfhoghlaim package is the single root for the consolidated
+# monorepo (Plan v4). It contains 16 core/ stack packages, 5 pipelines/
+# stages, 7+ sources/ languages × nations files, and the assets/ DAGs
+# + the leabharlann/ corpus. See:
+#   openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/
+
+dependencies = [
+    # Core 16 stack packages — all lazy-imported; only declare what is needed at import time.
+    "dlt>=1.0.0",
+    "duckdb>=1.0.0",
+    "lancedb>=0.10.0",
+    "pyarrow>=18.0.0",
+    "dagster>=1.7.0",
+    "dagster-webserver>=1.7.0",
+    "dagster-graphql>=1.7.0",
+    "cocoindex>=0.2.0",
+    "baml-py>=0.222.0",
+    "marimo>=0.23.10",
+    "cognee>=0.1.0",
+    "langfuse>=2.0.0",
+    "mlflow>=2.18.0",
+    "logfire>=4.15.1",
+    "fastapi>=0.115.0,<0.117",  # upper bound pinned for mlx-omni-server compat
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "httpx>=0.27.0",
+    "firecrawl>=4.28.2",
+    # BrowserBase backend is implemented in-house at cianfhoghlaim/core/browser/
+    # (no PyPI package); see BrowserbaseBackend in sruth_browser/backends/.
+    "openai>=2.32.0",
+    "anthropic>=0.106.0",
+    "google-genai>=1.73.1",
+    "groq>=1.4.0",
+    "agno>=2.6.11",
+    "ibis-framework>=10.0.0",
+]
+
+[project.optional-dependencies]
+ocr-vision = [
+    "transformers>=4.45.0",
+    "torch>=2.4.0",
+    "mlx>=0.20.0",
+    "mlx-omni-server>=0.1.0",
+]
+ocr-classical = [
+    "paddleocr>=2.7.0",
+    "pytesseract>=0.3.10",
+]
+celtic-language = [
+    "transformers>=4.45.0",
+    "sentencepiece>=0.2.0",
+]
+asset-gen = [
+    "diffusers>=0.30.0",
+    "compel>=2.0.0",
+]
+
+[project.scripts]
+# Consolidated CLI entry-points (formerly per-quadrant)
+cianfhoghlaim = "cianfhoghlaim.cli:main"
+cianfhoghlaim-ocr = "cianfhoghlaim.ocr.cli:main"
+cianfhoghlaim-baml = "cianfhoghlaim.core.baml.cli:main"
+cianfhoghlaim-marimo = "cianfhoghlaim.notebooks.cli:main"
+cianfhoghlaim-stack-doctor = "cianfhoghlaim.stacks.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "core",
+    "pipelines",
+    "sources",
+    "assets",
+    "agents",
+    "notebooks",
+    "ocr",
+    "embeddings",
+    "cognify",
+    "libraries/codeolas",
+]
+
+# =============================================================================
+# Ruff (shared with root pyproject.toml)
+# =============================================================================
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = [
+    ".venv",
+    "node_modules",
+    "docs",
+    "stacks",
+    "leabharlann",
+    "notebooks/_oideachais",
+    "notebooks/_croilar_extra",
+    "assets/_*",
+    "agents/_*",
+    "embeddings/_*_src",
+    "core/_*_src",
+    "core/baml/_*",
+    "ocr/_*_src",
+    "web/apps/_*",
+    "docs/legacy",
+    "libraries/codeolas/demo",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+    "E501",  # line-length handled by formatter
+    "B008",  # function-call-in-default-argument (common in dlt sources)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"*/agents/adk/*" = ["E402", "F401"]  # legacy ADK shims
+"*/agents/api/_*/*" = ["E402"]  # legacy API shims
+"*/ocr/alignment/*" = ["N803"]  # Irish language chars
+"*/ocr/_oideachais_src/*" = ["E402"]  # legacy
+"*/pipelines/ingest/_*/*" = ["E402"]  # legacy
+"*/pipelines/process/_*/*" = ["E402"]  # legacy
+"*/tests/_*/*" = ["E402"]  # legacy
+
+[tool.mypy]
+python_version = "3.13"
+strict = false
+warn_unused_ignores = true
+ignore_missing_imports = true
+exclude = [
+    "stacks/",
+    "leabharlann/",
+    "docs/legacy/",
+    "libraries/codeolas/demo/",
+    "assets/_.*",
+    "agents/_.*",
+    "agents/adk/",
+    "agents/api/_.*",
+    "embeddings/_.*_src",
+    "core/_.*_src",
+    "core/baml/_.*",
+    "ocr/_.*_src",
+    "ocr/alignment/",
+    "pipelines/_.*",
+    "web/apps/_.*",
+    "tests/_.*",
+    "notebooks/_oideachais/",
+    "notebooks/_croilar_extra/",
+    "scripts/_.*",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    ".",
+    "core",
+    "pipelines",
+    "sources",
+    "assets",
+    "agents",
+    "notebooks",
+    "ocr",
+    "embeddings",
+    "cognify",
+    "libraries/codeolas",
+]
+testpaths = [
+    "tests",
+    "core",
+    "pipelines",
+    "ocr/evaluation",
+]
+addopts = "-ra --strict-markers --strict-config"

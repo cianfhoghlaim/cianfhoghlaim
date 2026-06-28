@@ -1,0 +1,216 @@
+# Crawl4AI Source Configuration for ncca.ie
+# National Council for Curriculum and Assessment
+
+source:
+  name: ncca_ie
+  display_name: "NCCA - National Council for Curriculum and Assessment"
+  description: "Curriculum development, specifications, research, and policy for Irish education"
+  base_url: "https://ncca.ie"
+  language_variants:
+    - code: en
+      path_prefix: "/en"
+    - code: ga
+      path_prefix: "/ga"
+
+crawler_config:
+  headless: true
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+  wait_for: "networkidle"
+  word_count_threshold: 10
+  exclude_tags: ["nav", "footer"]
+
+# URL patterns to crawl
+url_patterns:
+
+  # Senior Cycle Curriculum Developments (Priority 1)
+  senior_cycle_developments:
+    priority: 1
+    pattern: "/en/senior-cycle/curriculum-developments/{subject}/"
+    subjects:
+      - accounting
+      - agricultural-science
+      - applied-mathematics
+      - arabic
+      - art
+      - biology
+      - business
+      - chemistry
+      - classical-languages-ancient-greek-and-latin
+      - classical-studies
+      - climate-action-and-sustainable-development
+      - computer-science
+      - construction-studies
+      - design-and-communication-graphics
+      - drama-film-and-theatre-studies
+      - economics
+      - engineering
+      - english
+      - english-as-an-additional-language-for-post-primary-schools
+      - gaeilge
+      - geography
+      - history
+      - home-economics
+      - leaving-certificate-foreign-languages
+      - leaving-certificate-physical-education-lcpe
+      - httpsnccaiemediautrdx50nconsultation-report-on-the-draft-lc-life-community-and-work-specification-enpdf  # LCVP Link Modules
+      - mathematics
+      - modern-foreign-languages
+      - music
+      - physics
+      - physics-and-chemistry
+      - politics-and-society
+      - post-primary-special-educational-needs
+      - senior-cycle-physical-education-framework-scpe
+      - senior-cycle-social-personal-and-health-education-sphe
+      - technology
+      - transition-year
+
+  # Senior Cycle Redevelopment Initiative (Priority 1)
+  senior_cycle_redevelopment:
+    priority: 1
+    pattern: "/en/senior-cycle/senior-cycle-redevelopment/**"
+    include:
+      - senior-cycle-advisory-report
+      - student-key-competencies
+      - schedule-of-subjects-for-redevelopment
+      - format-of-specifications
+      - bulletins-and-publications
+
+  # Development Groups and Boards (Priority 2)
+  development_groups:
+    priority: 2
+    pattern: "/en/about-ncca/boards-and-development-groups/{group}/"
+    groups:
+      # Boards
+      - board-for-early-childhood-and-primary
+      - board-for-junior-cycle
+      - board-for-senior-cycle
+      # Primary Development Groups
+      - primary-arts-development-group
+      - primary-language-development-group
+      - primary-science-technology-engineering-and-mathematics-stem-education-development-group
+      - primary-social-and-environmental-education-development-group
+      - primary-wellbeing-development-group
+      - early-childhood-primary-maths-development-group
+      - updating-aistear-development-group
+      # Junior Cycle Development Groups
+      - junior-cycle-modern-foreign-languages
+      - junior-cycle-physical-education-development-group
+      # Senior Cycle Development Groups
+      - agricultural-science-development-group
+      - computer-science-development-group
+      - design-and-communication-graphics-development-group
+      - history-development-group
+      - home-economics-development-group
+      - leaving-certificate-accounting-development-group
+      - leaving-certificate-art-development-group
+      - leaving-certificate-construction-studies-development-group
+      - leaving-certificate-economics-development-group
+      - leaving-certificate-engineering-development-group
+      - leaving-certificate-english-development-group
+      - leaving-certificate-gaeilge-development-group
+      - leaving-certificate-geography-development-group
+      - leaving-certificate-modern-foreign-languages-development-group
+      - leaving-certificate-physical-education-development-group
+      - leaving-certificate-politics-and-society-development-group
+      - leaving-certificate-technology-development-group
+      - leaving-certificate-vocational-programme-development-group
+      - maths-development-group
+      - music-development-group
+      - physics-and-chemistry-development-group
+      - post-primary-special-educational-needs-development-group
+
+  # Junior Cycle (Priority 2)
+  junior_cycle:
+    priority: 2
+    pattern: "/en/junior-cycle/**"
+    include:
+      - framework-for-junior-cycle
+      - subjects-and-short-courses
+      - wellbeing
+      - curriculum-developments
+      - assessment-and-reporting
+      - supporting-the-curriculum
+
+  # Publications and Research (Priority 2)
+  publications:
+    priority: 2
+    pattern: "/en/publications-and-research/**"
+    include:
+      - publications
+      - research-series
+      - consultation-reports
+      - funded-research
+      - our-research
+
+  # Resources (Background Papers, Draft Specs) (Priority 1)
+  resources:
+    priority: 1
+    pattern: "/en/resources/**"
+    include:
+      - "background-paper-*"
+      - "draft-specification-*"
+      - "consultation-*"
+
+  # Primary (Priority 3)
+  primary:
+    priority: 3
+    pattern: "/en/primary/**"
+
+  # Early Childhood (Priority 3)
+  early_childhood:
+    priority: 3
+    pattern: "/en/early-childhood/**"
+
+  # Consultations (Priority 1)
+  consultations:
+    priority: 1
+    pattern: "/en/updates-and-events/consultations/**"
+
+# PDF extraction
+pdf_extraction:
+  enabled: true
+  patterns:
+    - "/media/**/*.pdf"
+    - "/resources/**/*.pdf"
+  save_to: "data/pdf/ncca"
+  organize_by:
+    - curriculum_level
+    - subject
+    - document_type
+
+# Bilingual handling
+bilingual:
+  crawl_both_languages: true
+  english_prefix: "/en"
+  irish_prefix: "/ga"
+  match_parallel_pages: true
+
+# Rate limiting
+rate_limit:
+  requests_per_second: 2
+  concurrent_requests: 5
+  retry_delay_seconds: 5
+  max_retries: 3
+
+# Output configuration
+output:
+  format: json
+  include_markdown: true
+  include_metadata: true
+  include_dublin_core: true
+  output_dir: "data/websites/ncca.ie"
+  filename_from_url: true
+
+# Extraction schema reference
+extraction:
+  baml_schema: "web_content.baml"
+  primary_class: "SeniorCycleDevelopmentPage"
+  development_group_class: "DevelopmentGroupPage"
+
+# Media/document patterns
+media_patterns:
+  draft_specifications: "/media/**/draft-specification-*.pdf"
+  background_papers: "/media/**/background-paper-*.pdf"
+  consultation_reports: "/media/**/consultation-report-*.pdf"
+  specifications: "/media/**/*-specification*.pdf"

@@ -1,0 +1,247 @@
+{
+  "$schema": "https://cianfhoghlaim.ie/schemas/hei.schema.json",
+  "version": "1.0.0",
+  "description": "Irish Higher Education Institutions (HEIs) and their tertiary-course catalog. Bilingual EN/GA.",
+  "institutions": [
+    {
+      "code": "UCD",
+      "name_en": "University College Dublin",
+      "name_ga": "An Coláiste Ollscoile, Baile Átha Cliath",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "NUI",
+      "matriculation_url": "https://www.ucd.ie/students/registration/",
+      "matriculation_rules_url": "https://www.ucd.ie/students/undergraduate/",
+      "cao_code_range": ["DN", "DN1", "DN2", "DN3", "DN4", "DN5", "DN6", "DN7"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": false,
+      "ga_slug": "ucd"
+    },
+    {
+      "code": "UCG",
+      "name_en": "University of Galway",
+      "name_ga": "Ollscoil na Gaillimhe",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "NUI",
+      "matriculation_url": "https://www.universityofgalway.ie/undergraduates/",
+      "matriculation_rules_url": "https://www.universityofgalway.ie/undergraduates/how-to-apply/entry-requirements/",
+      "cao_code_range": ["GY", "GY1", "GY2", "GY3", "GY4", "GY5"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ollscoil-na-gaillimhe"
+    },
+    {
+      "code": "UCC",
+      "name_en": "University College Cork",
+      "name_ga": "An Coláiste Ollscoile, Corcaigh",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "NUI",
+      "matriculation_url": "https://www.ucc.ie/en/study/undergraduate/",
+      "matriculation_rules_url": "https://www.ucc.ie/en/study/undergraduate/entry-requirements/",
+      "cao_code_range": ["CK", "CK1", "CK2", "CK3", "CK4", "CK5", "CK6", "CK7"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ucc"
+    },
+    {
+      "code": "UL",
+      "name_en": "University of Limerick",
+      "name_ga": "Ollscoil Luimnigh",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "NUI",
+      "matriculation_url": "https://www.ul.ie/study/undergraduate",
+      "matriculation_rules_url": "https://www.ul.ie/study/undergraduate/entry-requirements-0",
+      "cao_code_range": ["LM", "LM1", "LM2", "LM3", "LM4", "LM5"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ollscoil-luimnigh"
+    },
+    {
+      "code": "MU",
+      "name_en": "Maynooth University",
+      "name_ga": "Ollscoil Mhá Nuad",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "NUI",
+      "matriculation_url": "https://www.maynoothuniversity.ie/study-maynooth/undergraduate-studies",
+      "matriculation_rules_url": "https://www.maynoothuniversity.ie/study-maynooth/undergraduate-studies/how-apply/entry-requirements",
+      "cao_code_range": ["MH", "MH1", "MH2", "MH3", "MH4", "MH5"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": false,
+      "ga_slug": "ollscoil-mha-nuad"
+    },
+    {
+      "code": "TCD",
+      "name_en": "Trinity College Dublin",
+      "name_ga": "Coláiste na Tríonóide, Baile Átha Cliath",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "Independent (historic Trinity)",
+      "matriculation_url": "https://www.tcd.ie/study/undergraduate/",
+      "matriculation_rules_url": "https://www.tcd.ie/study/undergraduate/how-to-apply/entry-requirements/",
+      "cao_code_range": ["TR", "TR1", "TR2", "TR3", "TR4", "TR5", "TR6"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": false,
+      "ga_slug": "colaiste-na-trionoide"
+    },
+    {
+      "code": "DCU",
+      "name_en": "Dublin City University",
+      "name_ga": "Ollscoil Chathair Bhaile Átha Cliath",
+      "hei_type": "UNIVERSITY",
+      "nfq_max": "NFQ_10",
+      "constituent": "Independent",
+      "matriculation_url": "https://www.dcu.ie/undergraduate",
+      "matriculation_rules_url": "https://www.dcu.ie/undergraduate/entry-requirements",
+      "cao_code_range": ["DC", "DC1", "DC2", "DC3", "DC4", "DC5"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": false,
+      "ga_slug": "dcu"
+    },
+    {
+      "code": "ATU",
+      "name_en": "Atlantic Technological University",
+      "name_ga": "Ollscoil Teicneolaíochta an Atlantaigh",
+      "hei_type": "INSTITUTE_OF_TECHNOLOGY",
+      "nfq_max": "NFQ_9",
+      "constituent": "Multi-campus (GMIT, IT Sligo, Letterkenny IT)",
+      "matriculation_url": "https://www.atu.ie/study/undergraduate",
+      "matriculation_rules_url": "https://www.atu.ie/study/undergraduate/entry-requirements",
+      "cao_code_range": ["GA", "LY", "SG", "AL"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ollscoil-teicneolaiochta-an-atlantaigh"
+    },
+    {
+      "code": "TUS",
+      "name_en": "Technological University of the Shannon",
+      "name_ga": "Ollscoil Teicneolaíochta na Sionna",
+      "hei_type": "INSTITUTE_OF_TECHNOLOGY",
+      "nfq_max": "NFQ_9",
+      "constituent": "Multi-campus (AIT, LIT)",
+      "matriculation_url": "https://tus.ie/study/undergraduate",
+      "matriculation_rules_url": "https://tus.ie/study/undergraduate/entry-requirements",
+      "cao_code_range": ["LC", "TL"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ollscoil-teicneolaiochta-na-sionna"
+    },
+    {
+      "code": "SETU",
+      "name_en": "South East Technological University",
+      "name_ga": "Ollscoil Teicneolaíochta an Oirdheiscirt",
+      "hei_type": "INSTITUTE_OF_TECHNOLOGY",
+      "nfq_max": "NFQ_9",
+      "constituent": "Multi-campus (WIT, IT Carlow)",
+      "matriculation_url": "https://www.setu.ie/study/undergraduate",
+      "matriculation_rules_url": "https://www.setu.ie/study/undergraduate/entry-requirements",
+      "cao_code_range": ["WD", "CW"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ollscoil-teicneolaiochta-an-oirdheiscirt"
+    },
+    {
+      "code": "MTU",
+      "name_en": "Munster Technological University",
+      "name_ga": "Ollscoil Teicneolaíochta an Deiscirt",
+      "hei_type": "INSTITUTE_OF_TECHNOLOGY",
+      "nfq_max": "NFQ_9",
+      "constituent": "Multi-campus (CIT, ITT)",
+      "matriculation_url": "https://www.mtu.ie/study/undergraduate",
+      "matriculation_rules_url": "https://www.mtu.ie/study/undergraduate/entry-requirements",
+      "cao_code_range": ["CR", "MT"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": true,
+      "ga_slug": "ollscoil-teicneolaiochta-an-deiscirt"
+    },
+    {
+      "code": "RCSI",
+      "name_en": "Royal College of Surgeons in Ireland",
+      "name_ga": "Coláiste Ríoga na Máinleá in Éirinn",
+      "hei_type": "RCSI",
+      "nfq_max": "NFQ_10",
+      "constituent": "Independent (specialist medical)",
+      "matriculation_url": "https://www.rcsi.com/undergraduate",
+      "matriculation_rules_url": "https://www.rcsi.com/undergraduate/entry-requirements",
+      "cao_code_range": ["RC"],
+      "has_qqi_ladder": false,
+      "has_apprenticeship": false,
+      "ga_slug": "rcsi"
+    },
+    {
+      "code": "MIC",
+      "name_en": "Mary Immaculate College",
+      "name_ga": "Coláiste Mhuire gan Smál",
+      "hei_type": "MARY_IMMACULATE_COLLEGE",
+      "nfq_max": "NFQ_10",
+      "constituent": "NUI (linked to UL)",
+      "matriculation_url": "https://www.mic.ul.ie/study/undergraduate",
+      "matriculation_rules_url": "https://www.mic.ul.ie/study/undergraduate/entry-requirements",
+      "cao_code_range": ["MI"],
+      "has_qqi_ladder": true,
+      "has_apprenticeship": false,
+      "ga_slug": "colaiste-mhuire-gan-smal"
+    }
+  ],
+  "qqi_awards": [
+    {
+      "award_code": "5M2787",
+      "title_en": "Software Development",
+      "title_ga": "Forbairt Bogearraí",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["DT228", "TU857", "CK401"]
+    },
+    {
+      "award_code": "5M5028",
+      "title_en": "Computer Science",
+      "title_ga": "Ríomheolaíocht",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["TU857", "WD165", "GY301"]
+    },
+    {
+      "award_code": "5M2061",
+      "title_en": "Laboratory Techniques",
+      "title_ga": "Teicnící Saotharlainne",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["DT219", "CR330"]
+    },
+    {
+      "award_code": "5M18396",
+      "title_en": "Nursing Studies (Pre-Nursing)",
+      "title_ga": "Staidéar Altranais",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["GY515", "TR091", "CK710"]
+    },
+    {
+      "award_code": "5M3782",
+      "title_en": "General Nursing",
+      "title_ga": "Altranas Ginearálta",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["GY515", "TR091", "CK710", "DC215"]
+    },
+    {
+      "award_code": "5M2102",
+      "title_en": "Business Studies",
+      "title_ga": "Staidéar Gnó",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["CK201", "GY201", "TU791", "WD137"]
+    },
+    {
+      "award_code": "5M0820",
+      "title_en": "Social Care",
+      "title_ga": "Cúram Sóisialta",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["TU794", "GY2118", "WD191"]
+    },
+    {
+      "award_code": "5M2094",
+      "title_en": "Early Childhood Care & Education",
+      "title_ga": "Cúram agus Oideachas Luath-Óige",
+      "nfq_level": "NFQ_5",
+      "links_to_courses": ["DT591", "GY114", "CK114"]
+    }
+  ]
+}

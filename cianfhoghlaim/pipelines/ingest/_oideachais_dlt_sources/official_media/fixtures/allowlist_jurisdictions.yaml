@@ -1,0 +1,351 @@
+# oideachais/dlt_sources/official_media/fixtures/allowlist_jurisdictions.yaml
+#
+# All active British Isles government, police, defence, and critical
+# national information accounts. The Instagram-export filter matches
+# against this list as the Stage-1 candidate classifier; the BAML
+# Stage-2 fallback handles lookalike handles.
+#
+# Verified via Wikipedia + each body's own home page + the relevant
+# Inspectorate (HMICFRS for police, HM Government for defence,
+# Met Office for weather, etc.).
+
+version: 1
+category: jurisdiction
+description: >-
+  All active British Isles government departments, police forces,
+  defence branches, and critical national information sources. PR 1
+  covers IE + NI + EN + the strategic SCT/WLS/Liverpool locations.
+entries:
+  # === REPUBLIC OF IRELAND — Government Departments ===
+  - ig_username: govireland
+    name: "Government of Ireland"
+    wikipedia_title: "Government of Ireland"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.ie/en/contact/"
+
+  - ig_username: dfatirl
+    name: "Department of Foreign Affairs (Ireland)"
+    wikipedia_title: "Department of Foreign Affairs (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.dfa.ie/contact-us/"
+
+  - ig_username: deptdefenceirl
+    name: "Department of Defence (Ireland)"
+    wikipedia_title: "Department of Defence (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.ie/en/organisation/department-of-defence/"
+
+  - ig_username: defenceforcesie
+    name: "Irish Defence Forces"
+    wikipedia_title: "Defence Forces (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/about-us/contact-us/"
+
+  - ig_username: gardasi
+    name: "An Garda Síochána"
+    wikipedia_title: "Garda Síochána"
+    verified_at: "2026-06-18"
+    source_url: "https://www.garda.ie/en/contact-us/"
+
+  - ig_username: hsenews
+    name: "Health Service Executive (HSE)"
+    wikipedia_title: "Health Service Executive"
+    verified_at: "2026-06-18"
+    source_url: "https://www.hse.ie/eng/about/"
+
+  - ig_username: revenueie
+    name: "Revenue Commissioners (Ireland)"
+    wikipedia_title: "Revenue Commissioners"
+    verified_at: "2026-06-18"
+    source_url: "https://www.revenue.ie/en/contact-us/"
+
+  - ig_username: education_ie
+    name: "Department of Education (Ireland)"
+    wikipedia_title: "Department of Education (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.ie/en/organisation/department-of-education/"
+
+  - ig_username: depthealthirl
+    name: "Department of Health (Ireland)"
+    wikipedia_title: "Department of Health (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.ie/en/organisation/department-of-health/"
+
+  - ig_username: dccahq
+    name: "Department of Climate, Communications and the Environment"
+    wikipedia_title: "Department of Climate, Energy and the Environment"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.ie/en/organisation/department-of-climate-energy-and-the-environment/"
+
+  - ig_username: justicetoday
+    name: "Department of Justice (Ireland)"
+    wikipedia_title: "Department of Justice, Home Affairs and Migration"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.ie/en/organisation/department-of-justice-home-affairs-and-migration/"
+
+  - ig_username: irishcentralstatsoffice
+    name: "Central Statistics Office (CSO) Ireland"
+    wikipedia_title: "Central Statistics Office (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.cso.ie/en/aboutus/contactus/"
+
+  # === IRELAND — Defence Branches ===
+  - ig_username: irisharmy
+    name: "Irish Army (Óglaigh na hÉireann — Army)"
+    wikipedia_title: "Defence Forces (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/the-army/"
+
+  - ig_username: irishaircorps
+    name: "Irish Air Corps"
+    wikipedia_title: "Defence Forces (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/the-air-corps/"
+
+  - ig_username: irishnavalservice
+    name: "Irish Naval Service (Seirbhís Chabhlaigh)"
+    wikipedia_title: "Naval Service (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/the-naval-service/"
+
+  # === NORTHERN IRELAND — Departments + Police + Emergency ===
+  - ig_username: nidirectgov
+    name: "NI Direct Government Services"
+    wikipedia_title: "Northern Ireland Executive"
+    verified_at: "2026-06-18"
+    source_url: "https://www.nidirect.gov.uk/contact"
+
+  - ig_username: ni_police
+    name: "Police Service of Northern Ireland (PSNI)"
+    wikipedia_title: "Police Service of Northern Ireland"
+    verified_at: "2026-06-18"
+    source_url: "https://www.psni.police.uk/contact-us/"
+
+  - ig_username: northernirelandfire
+    name: "Northern Ireland Fire & Rescue Service"
+    wikipedia_title: "Northern Ireland Fire and Rescue Service"
+    verified_at: "2026-06-18"
+    source_url: "https://www.nifrs.org/contact/"
+
+  - ig_username: ambulance_ni
+    name: "Northern Ireland Ambulance Service"
+    wikipedia_title: "Northern Ireland Ambulance Service"
+    verified_at: "2026-06-18"
+    source_url: "https://www.nias.hscni.net/contact-us/"
+
+  - ig_username: police_ombudsman_ni
+    name: "Police Ombudsman for Northern Ireland"
+    wikipedia_title: "Police Ombudsman for Northern Ireland"
+    verified_at: "2026-06-18"
+    source_url: "https://www.policeombudsman.org/contact"
+
+  - ig_username: ni_prisons
+    name: "Northern Ireland Prison Service"
+    wikipedia_title: "Northern Ireland Prison Service"
+    verified_at: "2026-06-18"
+    source_url: "https://www.justice-ni.gov.uk/topics/prisons"
+
+  - ig_username: education_ni
+    name: "Department of Education (Northern Ireland)"
+    wikipedia_title: "Department of Education (Northern Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.education-ni.gov.uk/contact"
+
+  - ig_username: healthdhnI
+    name: "Department of Health (Northern Ireland)"
+    wikipedia_title: "Department of Health (Northern Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.health-ni.gov.uk/contact"
+
+  - ig_username: dfininI
+    name: "Department of Finance (Northern Ireland)"
+    wikipedia_title: "Department of Finance (Northern Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.finance-ni.gov.uk/contact"
+
+  - ig_username: infrastructure_ni
+    name: "Department for Infrastructure (Northern Ireland)"
+    wikipedia_title: "Department for Infrastructure (Northern Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.infrastructure-ni.gov.uk/contact"
+
+  - ig_username: agri_food_ni
+    name: "Department of Agriculture, Environment and Rural Affairs (NI)"
+    wikipedia_title: "Department of Agriculture, Environment and Rural Affairs"
+    verified_at: "2026-06-18"
+    source_url: "https://www.daera-ni.gov.uk/contact"
+
+  - ig_username: nisranews
+    name: "Northern Ireland Statistics and Research Agency"
+    wikipedia_title: "Northern Ireland Statistics and Research Agency"
+    verified_at: "2026-06-18"
+    source_url: "https://www.nisra.gov.uk/contact"
+
+  # === ENGLAND — Major Departments + London + Police + Defence ===
+  - ig_username: ukhomeoffice
+    name: "Home Office (UK)"
+    wikipedia_title: "Home Office"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/home-office"
+
+  - ig_username: ukmod
+    name: "Ministry of Defence (UK)"
+    wikipedia_title: "Ministry of Defence (United Kingdom)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/ministry-of-defence"
+
+  - ig_username: britisharmy
+    name: "British Army"
+    wikipedia_title: "British Army"
+    verified_at: "2026-06-18"
+    source_url: "https://www.army.mod.uk/contact-us/"
+
+  - ig_username: royalnavy
+    name: "Royal Navy"
+    wikipedia_title: "Royal Navy"
+    verified_at: "2026-06-18"
+    source_url: "https://www.royalnavy.mod.uk/contact"
+
+  - ig_username: royalairforce
+    name: "Royal Air Force"
+    wikipedia_title: "Royal Air Force"
+    verified_at: "2026-06-18"
+    source_url: "https://www.raf.mod.uk/contact-us/"
+
+  - ig_username: royalmarinesofficial
+    name: "Royal Marines"
+    wikipedia_title: "Royal Marines"
+    verified_at: "2026-06-18"
+    source_url: "https://www.royalnavy.mod.uk/the-royal-navy/operating-our-ships/royal-marines/"
+
+  - ig_username: metpoliceuk
+    name: "Metropolitan Police Service"
+    wikipedia_title: "Metropolitan Police"
+    verified_at: "2026-06-18"
+    source_url: "https://www.met.police.uk/cp/contact-us/"
+
+  - ig_username: cityoflondonpolice
+    name: "City of London Police"
+    wikipedia_title: "City of London Police"
+    verified_at: "2026-06-18"
+    source_url: "https://www.cityoflondon.police.uk/contact-us/"
+
+  - ig_username: btp_police
+    name: "British Transport Police"
+    wikipedia_title: "British Transport Police"
+    verified_at: "2026-06-18"
+    source_url: "https://www.btp.police.uk/contact-us/"
+
+  - ig_username: londonfire
+    name: "London Fire Brigade"
+    wikipedia_title: "London Fire Brigade"
+    verified_at: "2026-06-18"
+    source_url: "https://www.london-fire.gov.uk/contact-us/"
+
+  - ig_username: londonsambulance
+    name: "London Ambulance Service"
+    wikipedia_title: "London Ambulance Service"
+    verified_at: "2026-06-18"
+    source_url: "https://www.londonambulance.nhs.uk/contact-us/"
+
+  - ig_username: nhsuk
+    name: "NHS England"
+    wikipedia_title: "NHS England"
+    verified_at: "2026-06-18"
+    source_url: "https://www.england.nhs.uk/contact-us/"
+
+  - ig_username: dhscgovuk
+    name: "Department of Health and Social Care (UK)"
+    wikipedia_title: "Department of Health and Social Care"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/department-of-health-and-social-care"
+
+  - ig_username: educationgovuk
+    name: "Department for Education (UK)"
+    wikipedia_title: "Department for Education"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/department-for-education"
+
+  - ig_username: hmtreasury
+    name: "HM Treasury (UK)"
+    wikipedia_title: "HM Treasury"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/hm-treasury"
+
+  - ig_username: hmrcgovuk
+    name: "HM Revenue & Customs"
+    wikipedia_title: "HM Revenue and Customs"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/hm-revenue-customs"
+
+  - ig_username: foreignoffice
+    name: "Foreign, Commonwealth & Development Office (FCDO)"
+    wikipedia_title: "Foreign, Commonwealth and Development Office"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
+
+  - ig_username: ukborder
+    name: "UK Border Force"
+    wikipedia_title: "Border Force"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.uk/government/organisations/border-force"
+
+  - ig_username: ukcivilaviation
+    name: "Civil Aviation Authority (UK)"
+    wikipedia_title: "Civil Aviation Authority (United Kingdom)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.caa.co.uk/Contact-us/"
+
+  - ig_username: onsuk
+    name: "Office for National Statistics (ONS)"
+    wikipedia_title: "Office for National Statistics"
+    verified_at: "2026-06-18"
+    source_url: "https://www.ons.gov.uk/contactus"
+
+  - ig_username: ukparliament
+    name: "UK Parliament"
+    wikipedia_title: "Parliament of the United Kingdom"
+    verified_at: "2026-06-18"
+    source_url: "https://www.parliament.uk/contact/"
+
+  - ig_username: royalmintuk
+    name: "The Royal Mint (UK)"
+    wikipedia_title: "Royal Mint"
+    verified_at: "2026-06-18"
+    source_url: "https://www.royalmint.com/contact-us/"
+
+  - ig_username: metoffice_uk
+    name: "Met Office (UK weather & climate service — met.gov.uk)"
+    wikipedia_title: "Met Office"
+    verified_at: "2026-06-18"
+    source_url: "https://www.metoffice.gov.uk/about-us/contact"
+
+  - ig_username: bbc
+    name: "BBC — British Broadcasting Corporation"
+    wikipedia_title: "BBC"
+    verified_at: "2026-06-18"
+    source_url: "https://www.bbc.co.uk/contact"
+
+  - ig_username: rnli
+    name: "RNLI — Royal National Lifeboat Institution (UK & Ireland)"
+    wikipedia_title: "Royal National Lifeboat Institution"
+    verified_at: "2026-06-18"
+    source_url: "https://rnli.org/about-us/contact-us"
+
+  - ig_username: meteireann
+    name: "Met Éireann (Irish weather service — met.ie)"
+    wikipedia_title: "Met Éireann"
+    verified_at: "2026-06-18"
+    source_url: "https://www.met.ie/about/contact-us/"
+
+  - ig_username: rtenews
+    name: "RTÉ — Raidió Teilifís Éireann (Irish national broadcaster)"
+    wikipedia_title: "RTÉ"
+    verified_at: "2026-06-18"
+    source_url: "https://about.rte.ie/contact/"
+
+  - ig_username: citizensinfo
+    name: "Citizens Information (Ireland)"
+    wikipedia_title: "Citizens Information"
+    verified_at: "2026-06-18"
+    source_url: "https://www.citizensinformation.ie/en/contact_us/"

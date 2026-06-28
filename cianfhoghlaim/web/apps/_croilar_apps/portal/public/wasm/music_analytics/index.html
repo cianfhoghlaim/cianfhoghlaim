@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <!-- Preload is necessary because we show these images when we disconnect from the server,
+    but at that point we cannot load these images from the server -->
+    <link rel="preload" href="./assets/gradient-yHQUC_QB.png" as="image" />
+    <link rel="preload" href="./assets/noise-60BoTA8O.png" as="image" />
+    <!-- Preload the fonts -->
+    <link rel="preload" href="./assets/Lora-VariableFont_wght-CZceb_kH.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Regular-Bam3NpBI.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Bold-C_DwAp7Z.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Regular-CEsLFVD9.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Medium-D5MAsWEG.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Bold-C6PDArdf.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="a marimo app" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <script data-marimo="true">
+      function __resizeIframe(obj) {
+        const scrollbarHeight = 20; // Max between windows, mac, and linux
+
+        function setHeight() {
+          // Guard against race condition where iframe isn't ready
+          if (!obj.contentWindow?.document?.documentElement) {
+            return;
+          }
+          const element = obj.contentWindow.document.documentElement;
+          // If there is no vertical scrollbar, we don't need to resize the iframe
+          if (element.scrollHeight === element.clientHeight) {
+            return;
+          }
+
+          // Create a new height that includes the scrollbar height if it's visible
+          const hasHorizontalScrollbar = element.scrollWidth > element.clientWidth;
+          const newHeight = element.scrollHeight + (hasHorizontalScrollbar ? scrollbarHeight : 0);
+
+          // Only update the height if it's different from the current height
+          if (obj.style.height !== `${newHeight}px`) {
+            obj.style.height = `${newHeight}px`;
+          }
+        }
+
+        // Resize the iframe to the height of the content and bottom scrollbar height
+        setHeight();
+
+        // Resize the iframe when the content changes
+        const resizeObserver = new ResizeObserver((_entries) => {
+          setHeight();
+        });
+        // Only observe if iframe content is ready
+        if (obj.contentWindow?.document?.body) {
+          resizeObserver.observe(obj.contentWindow.document.body);
+        }
+      }
+    </script>
+    <marimo-filename hidden>notebook.py</marimo-filename>
+    <!-- TODO(Trevor): Legacy, required by VS Code plugin. Remove when plugin is updated (see marimo/server/_templates/template.py) -->
+    <marimo-version data-version="{{ version }}" hidden></marimo-version>
+    <marimo-user-config data-config="{{ user_config }}" hidden></marimo-user-config>
+    <marimo-server-token data-token="{{ server_token }}" hidden></marimo-server-token>
+    <!-- /TODO -->
+    <title>music analytics</title>
+    <script type="module" crossorigin src="./assets/index-awsLWRjZ.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/preload-helper-BPPi7vOr.js">
+    <link rel="modulepreload" crossorigin href="./assets/chunk-LvLJmgfZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-Bj1aDYRI.js">
+    <link rel="modulepreload" crossorigin href="./assets/compiler-runtime-B3qBwwSJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/jsx-runtime-BqBOg78p.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEventListener-DvoEXWke.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-BLUna9fQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/precisionRound-Cl9k9ZmS.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-DzliDDTm.js">
+    <link rel="modulepreload" crossorigin href="./assets/vega-loader.browser-C8wT63Va.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-DCL4n9wx.js">
+    <link rel="modulepreload" crossorigin href="./assets/clsx-Dz_KRrWq.js">
+    <link rel="modulepreload" crossorigin href="./assets/cn-DCUzRj2J.js">
+    <link rel="modulepreload" crossorigin href="./assets/badge-j3NGjqhR.js">
+    <link rel="modulepreload" crossorigin href="./assets/button-BbCh-29a.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-dom-CSu739Rf.js">
+    <link rel="modulepreload" crossorigin href="./assets/fullscreen-eipL3i3Y.js">
+    <link rel="modulepreload" crossorigin href="./assets/menu-items-DcP01QzW.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BdyjRhEt.js">
+    <link rel="modulepreload" crossorigin href="./assets/createLucideIcon-D5guW7EU.js">
+    <link rel="modulepreload" crossorigin href="./assets/check-BH35Ndha.js">
+    <link rel="modulepreload" crossorigin href="./assets/x-C-6liIBr.js">
+    <link rel="modulepreload" crossorigin href="./assets/select-DZcFyKFQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/tooltip-DTV9tlSr.js">
+    <link rel="modulepreload" crossorigin href="./assets/use-toast-IPAtJGea.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEvent-D91BmmQi.js">
+    <link rel="modulepreload" crossorigin href="./assets/invariant-BUdrueMv.js">
+    <link rel="modulepreload" crossorigin href="./assets/isObject-DvLSfCY5.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseFor-DKD1r8uL.js">
+    <link rel="modulepreload" crossorigin href="./assets/merge-_9WLTEyt.js">
+    <link rel="modulepreload" crossorigin href="./assets/zod-H_cgTO0M.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-CvI-39U6.js">
+    <link rel="modulepreload" crossorigin href="./assets/Deferred-CP7vq682.js">
+    <link rel="modulepreload" crossorigin href="./assets/uuid-e9lSomwA.js">
+    <link rel="modulepreload" crossorigin href="./assets/DeferredRequestRegistry-CNldVcrP.js">
+    <link rel="modulepreload" crossorigin href="./assets/constants-DMpttj8Q.js">
+    <link rel="modulepreload" crossorigin href="./assets/session-0B5NBztP.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-ClMcu_sV.js">
+    <link rel="modulepreload" crossorigin href="./assets/requests-DIwGYs0l.js">
+    <link rel="modulepreload" crossorigin href="./assets/useLifecycle-DieWOfXE.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNonce-DfoVjkkH.js">
+    <link rel="modulepreload" crossorigin href="./assets/useTheme-CI2eq4XN.js">
+    <link rel="modulepreload" crossorigin href="./assets/arrays-DYDL-3-i.js">
+    <link rel="modulepreload" crossorigin href="./assets/strings-wdPMRf6Z.js">
+    <link rel="modulepreload" crossorigin href="./assets/once-DRroIaBz.js">
+    <link rel="modulepreload" crossorigin href="./assets/capabilities-A_KhFcGV.js">
+    <link rel="modulepreload" crossorigin href="./assets/createReducer-CI9qeK_X.js">
+    <link rel="modulepreload" crossorigin href="./assets/paths-D5zczhUD.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BrR4M-k3.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-HlsDto3K.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CHcznzB-.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-B1U1kGCR.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-ChF5Ln9c.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CpTFpfm_.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CBSMxaO_.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CPczQFlJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-C9ZB41s2.js">
+    <link rel="modulepreload" crossorigin href="./assets/stex-BGrE-q7N.js">
+    <link rel="modulepreload" crossorigin href="./assets/toDate-B5A0DFEz.js">
+    <link rel="modulepreload" crossorigin href="./assets/purify.es-B9KxLTTS.js">
+    <link rel="modulepreload" crossorigin href="./assets/cjs-BRGiG41H.js">
+    <link rel="modulepreload" crossorigin href="./assets/isSymbol-BT6B8Bon.js">
+    <link rel="modulepreload" crossorigin href="./assets/now-CsYTPAhW.js">
+    <link rel="modulepreload" crossorigin href="./assets/debounce-DhnxH9Rh.js">
+    <link rel="modulepreload" crossorigin href="./assets/database-zap-kIkTfzTX.js">
+    <link rel="modulepreload" crossorigin href="./assets/main-B0OX4z33.js">
+    <link rel="modulepreload" crossorigin href="./assets/cells-BsaJrRWi.js">
+    <link rel="modulepreload" crossorigin href="./assets/ErrorBoundary-DyYDV0HI.js">
+    <link rel="modulepreload" crossorigin href="./assets/kbd-CTUAEnEx.js">
+    <link rel="modulepreload" crossorigin href="./assets/useInstallPackage-DUF4IRRI.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-dialog-BqFLkbUc.js">
+    <link rel="modulepreload" crossorigin href="./assets/dialog-DzC_QCtT.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDebounce-7xZwVnnu.js">
+    <link rel="modulepreload" crossorigin href="./assets/numbers-C3BAdHZE.js">
+    <link rel="modulepreload" crossorigin href="./assets/SSRProvider-CkFAAHXw.js">
+    <link rel="modulepreload" crossorigin href="./assets/context-QkTujrKn.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNumberFormatter-ByUv-u9o.js">
+    <link rel="modulepreload" crossorigin href="./assets/usePress-DQ_tAz5W.js">
+    <link rel="modulepreload" crossorigin href="./assets/input-C3Hrdlqq.js">
+    <link rel="modulepreload" crossorigin href="./assets/ImperativeModal-B3Th7k4R.js">
+    <link rel="modulepreload" crossorigin href="./assets/cell-link-B1pHtGWp.js">
+    <link rel="modulepreload" crossorigin href="./assets/multi-map-CUuNtzHt.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-yTS3WpF4.js">
+    <link rel="modulepreload" crossorigin href="./assets/chevron-right-CG5QYXYk.js">
+    <link rel="modulepreload" crossorigin href="./assets/dropdown-menu-CR7cnzLX.js">
+    <link rel="modulepreload" crossorigin href="./assets/links-D1JoyKTt.js">
+    <link rel="modulepreload" crossorigin href="./assets/useRunCells-BiCBGyeW.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-LK56fFow.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-BwrPA9zQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-icon-OjtDb4gO.js">
+    <link rel="modulepreload" crossorigin href="./assets/RenderHTML-ChwPJgPd.js">
+    <link rel="modulepreload" crossorigin href="./assets/datasource-DjDpJnbt.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-D-2KaAHK.js">
+    <link rel="modulepreload" crossorigin href="./assets/package-Tv6ztuzw.js">
+    <link rel="modulepreload" crossorigin href="./assets/sparkles-lWUAsPhp.js">
+    <link rel="modulepreload" crossorigin href="./assets/MarimoErrorOutput-B0h5OVW9.js">
+    <link rel="modulepreload" crossorigin href="./assets/spinner-Bhir8k53.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-to-image-BWL3Ct4n.js">
+    <link rel="modulepreload" crossorigin href="./assets/focus-q38vUCl-.js">
+    <link rel="modulepreload" crossorigin href="./assets/useAsyncData-bgszE9F0.js">
+    <link rel="modulepreload" crossorigin href="./assets/LazyAnyLanguageCodeMirror-BEvXb3VX.js">
+    <link rel="modulepreload" crossorigin href="./assets/micromark-factory-space-BygYYKhs.js">
+    <link rel="modulepreload" crossorigin href="./assets/chunk-5FQGJX7Z-D9iBG0F7.js">
+    <link rel="modulepreload" crossorigin href="./assets/markdown-renderer-CU5Lbyax.js">
+    <link rel="modulepreload" crossorigin href="./assets/command-KARR7KMq.js">
+    <link rel="modulepreload" crossorigin href="./assets/field-zLmMOSA4.js">
+    <link rel="modulepreload" crossorigin href="./assets/popover-Bz_0Vkyf.js">
+    <link rel="modulepreload" crossorigin href="./assets/errors-vr57w7Ul.js">
+    <link rel="modulepreload" crossorigin href="./assets/download-DT8gf0PL.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-BGPSHfig.js">
+    <link rel="modulepreload" crossorigin href="./assets/useIframeCapabilities-CcI1zSdn.js">
+    <link rel="modulepreload" crossorigin href="./assets/error-banner-LdWZDbqd.js">
+    <link rel="modulepreload" crossorigin href="./assets/formats-b7Sf6DAK.js">
+    <link rel="modulepreload" crossorigin href="./assets/en-US-Cb8rIK52.js">
+    <link rel="modulepreload" crossorigin href="./assets/isValid-CklTTytn.js">
+    <link rel="modulepreload" crossorigin href="./assets/dates-CTxr0EqQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/maps-n3GaPJwv.js">
+    <link rel="modulepreload" crossorigin href="./assets/extends-BiFDv3jB.js">
+    <link rel="modulepreload" crossorigin href="./assets/emotion-is-prop-valid.esm-C59xfSYt.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDateFormatter-ICIDGgHf.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-icons.esm-BNzu6e7h.js">
+    <link rel="modulepreload" crossorigin href="./assets/RSPContexts-CdN1NyAt.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-6NxtGaCm.js">
+    <link rel="modulepreload" crossorigin href="./assets/ellipsis-KAhMaCIV.js">
+    <link rel="modulepreload" crossorigin href="./assets/external-link-BTNxSavU.js">
+    <link rel="modulepreload" crossorigin href="./assets/message-circle-CWm2KnSx.js">
+    <link rel="modulepreload" crossorigin href="./assets/plus-BgB18UzY.js">
+    <link rel="modulepreload" crossorigin href="./assets/trash-2-rVklqqFF.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-resizable-panels.browser.esm-CV8-hvjx.js">
+    <link rel="modulepreload" crossorigin href="./assets/JsonOutput-BJaeXQim.js">
+    <link rel="modulepreload" crossorigin href="./assets/chart-no-axes-column-nqk474t8.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-function-uY_yJr5g.js">
+    <link rel="modulepreload" crossorigin href="./assets/spec-CPQR_o92.js">
+    <link rel="modulepreload" crossorigin href="./assets/ellipsis-vertical-CkwWkOQL.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-cw-DHwG4Mac.js">
+    <link rel="modulepreload" crossorigin href="./assets/tree-actions-BM_EJr3E.js">
+    <link rel="modulepreload" crossorigin href="./assets/components-BzBUxUz0.js">
+    <link rel="modulepreload" crossorigin href="./assets/column-preview-BPismotx.js">
+    <link rel="modulepreload" crossorigin href="./assets/icons-Ol38nIbL.js">
+    <link rel="modulepreload" crossorigin href="./assets/radio-group-DlVSuZ_1.js">
+    <link rel="modulepreload" crossorigin href="./assets/floating-outline-BN9sAcQ0.js">
+    <link rel="modulepreload" crossorigin href="./assets/objectWithoutPropertiesLoose-DfWeGRFv.js">
+    <link rel="modulepreload" crossorigin href="./assets/esm-CqWdmSnV.js">
+    <link rel="modulepreload" crossorigin href="./assets/readonly-python-code-D3_kHsDx.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-headphone-BrQspHac.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-BrdxGLRX.js">
+    <link rel="modulepreload" crossorigin href="./assets/image-DQHXdEQn.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-icons-BiMOJy0r.js">
+    <link rel="modulepreload" crossorigin href="./assets/switch-BiU_sAcn.js">
+    <link rel="modulepreload" crossorigin href="./assets/events-CPoJAfgx.js">
+    <link rel="modulepreload" crossorigin href="./assets/globals-7JnRMGd4.js">
+    <link rel="modulepreload" crossorigin href="./assets/share-DMwTZOTH.js">
+    <link rel="modulepreload" crossorigin href="./assets/blob-Bgnx1kuY.js">
+    <link rel="modulepreload" crossorigin href="./assets/memoize-Tp7rARFe.js">
+    <link rel="modulepreload" crossorigin href="./assets/get-C-qh_et5.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseSet-CxV9N1bc.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-BTTshiKq.js">
+    <link rel="modulepreload" crossorigin href="./assets/label-xHqFtfdz.js">
+    <link rel="modulepreload" crossorigin href="./assets/textarea-DwltG8V6.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-ccw-C-n2VFP5.js">
+    <link rel="modulepreload" crossorigin href="./assets/form-BtBTvVVd.js">
+    <link rel="modulepreload" crossorigin href="./assets/renderShortcut-CcFk3m01.js">
+    <link rel="modulepreload" crossorigin href="./assets/useBoolean-Bp18o6XG.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDeepCompareMemoize-zUHU--0D.js">
+    <link rel="modulepreload" crossorigin href="./assets/types-W8WWuumF.js">
+    <link rel="modulepreload" crossorigin href="./assets/semaphore-FlZezxaf.js">
+    <link rel="modulepreload" crossorigin href="./assets/fileToBase64-DZfwJMrG.js">
+    <link rel="modulepreload" crossorigin href="./assets/pathUtils-CJjndqMI.js">
+    <link rel="modulepreload" crossorigin href="./assets/prop-types-DaaA-ptl.js">
+    <link rel="modulepreload" crossorigin href="./assets/es-DGgq-Wes.js">
+    <link rel="modulepreload" crossorigin href="./assets/hasIn-DiS_ryrS.js">
+    <link rel="modulepreload" crossorigin href="./assets/flatten-Dl4V1ub3.js">
+    <link rel="modulepreload" crossorigin href="./assets/pick-DqWUNly1.js">
+    <link rel="modulepreload" crossorigin href="./assets/code-xml-CZN6vNxu.js">
+    <link rel="modulepreload" crossorigin href="./assets/house-mGK3v0Mm.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-B5xWCt0a.js">
+    <link rel="modulepreload" crossorigin href="./assets/triangle-alert-D2p96PEF.js">
+    <link rel="modulepreload" crossorigin href="./assets/bundle.esm-DjhGJy4I.js">
+    <link rel="stylesheet" crossorigin href="./assets/cells-jmgGt1lS.css">
+    <link rel="stylesheet" crossorigin href="./assets/markdown-renderer-DdDKmWlR.css">
+    <link rel="stylesheet" crossorigin href="./assets/JsonOutput-B7vuddcd.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-BIw7BKLH.css">
+  <marimo-wasm hidden=""></marimo-wasm>
+    <script>
+        if (window.location.protocol === 'file:') {
+            alert('Warning: This file must be served by an HTTP server to function correctly.');
+        }
+    </script>
+    
+    <style>
+        #save-button {
+            display: none !important;
+        }
+        #filename-input {
+            display: none !important;
+        }
+    </style>
+    
+<script data-marimo="true">
+    Object.defineProperty(window, "__MARIMO_EXPORT_CONTEXT__", {
+        value: Object.freeze({
+            trusted: true,
+            notebookCode: "\"\"\"Aleyum Music Analytics Dashboard.\n\nInteractive Marimo notebook for exploring music data from Spotify and SoundCloud.\nVisualizes play counts, audio features, and platform comparisons.\n\nRun with: marimo run notebooks/music_analytics.py\n\"\"\"\n\nimport marimo\n\n__generated_with = \"0.23.9\"\napp = marimo.App(width=\"full\")\n\n\n@app.cell\ndef imports():\n    \"\"\"Import dependencies.\"\"\"\n    from pathlib import Path\n\n    import altair as alt\n    import ibis\n    import marimo as mo\n    import polars as pl\n\n    # Configure Altair for better rendering\n    alt.data_transformers.enable(\"vegafusion\")\n    return Path, ibis, mo\n\n\n@app.cell\ndef database_connection(Path, ibis, mo):\n    \"\"\"Connect to the portfolio DuckDB database.\"\"\"\n    db_path = Path(\"./data/aleyum.duckdb\")\n\n    if not db_path.exists():\n        mo.md(\"\"\"\n        ## Database Not Found\n\n        The portfolio database hasn't been created yet. Run the data pipelines first:\n\n        ```bash\n        # Run Spotify pipeline\n        python -m pipelines.spotify.source\n\n        # Run SoundCloud pipeline\n        python -m pipelines.soundcloud.scraper\n        ```\n        \"\"\")\n        conn = None\n    else:\n        conn = ibis.duckdb.connect(str(db_path))\n        mo.md(f\"**Connected to:** `{db_path}`\")\n    return\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"List available tables.\\\"\\\"\\\"\n    if conn is None:\n        return mo.md(\\\"No database connection\\\")\n\n    tables = conn.list_tables()\n\n    mo.md(f\\\"\\\"\\\"\n    ## Available Tables\n\n    {', '.join(f'`{t}`' for t in tables)}\n    \\\"\\\"\\\")\n    \"\"\",\n    name=\"tables_overview\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Spotify tracks overview with audio features.\\\"\\\"\\\"\n    if conn is None or \\\"spotify_data_top_tracks\\\" not in conn.list_tables():\n        return mo.md(\\\"Spotify tracks not loaded yet\\\")\n\n    # Query top tracks\n    tracks = conn.table(\\\"spotify_data_top_tracks\\\").to_polars()\n\n    # Check if audio features are available\n    if \\\"spotify_data_track_audio_features\\\" in conn.list_tables():\n        features = conn.table(\\\"spotify_data_track_audio_features\\\").to_polars()\n        # Join tracks with features\n        tracks = tracks.join(features, on=\\\"id\\\", how=\\\"left\\\")\n\n    mo.md(f\\\"\\\"\\\"\n    ## Spotify Top Tracks\n\n    **{len(tracks)} tracks loaded**\n    \\\"\\\"\\\")\n    \"\"\",\n    name=\"spotify_tracks_overview\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Radar chart of audio features.\\\"\\\"\\\"\n    if \\\"danceability\\\" not in tracks.columns:\n        return mo.md(\\\"Audio features not available. Run pipeline with `fetch_audio_features=True`\\\")\n\n    # Select audio feature columns\n    feature_cols = [\\\"danceability\\\", \\\"energy\\\", \\\"speechiness\\\", \\\"acousticness\\\",\n                    \\\"instrumentalness\\\", \\\"liveness\\\", \\\"valence\\\"]\n\n    available_cols = [c for c in feature_cols if c in tracks.columns]\n\n    if not available_cols:\n        return mo.md(\\\"No audio features found\\\")\n\n    # Calculate average features\n    avg_features = tracks.select(available_cols).mean()\n\n    # Prepare data for radar chart\n    radar_data = pl.DataFrame({\n        \\\"feature\\\": available_cols,\n        \\\"value\\\": [avg_features[c][0] for c in available_cols],\n    })\n\n    # Create bar chart (Altair doesn't have native radar, use bar as alternative)\n    chart = alt.Chart(radar_data.to_pandas()).mark_bar().encode(\n        x=alt.X(\\\"feature:N\\\", title=\\\"Audio Feature\\\", sort=available_cols),\n        y=alt.Y(\\\"value:Q\\\", title=\\\"Average Value (0-1)\\\", scale=alt.Scale(domain=[0, 1])),\n        color=alt.Color(\\\"feature:N\\\", legend=None),\n        tooltip=[\\\"feature\\\", alt.Tooltip(\\\"value:Q\\\", format=\\\".2f\\\")],\n    ).properties(\n        title=\\\"Average Audio Features Across Top Tracks\\\",\n        width=600,\n        height=300,\n    )\n\n    mo.ui.altair_chart(chart)\n    \"\"\",\n    name=\"audio_features_radar\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Distribution of tempo across tracks.\\\"\\\"\\\"\n    if \\\"tempo\\\" not in tracks.columns:\n        return mo.md(\\\"Tempo data not available\\\")\n\n    tempo_chart = alt.Chart(tracks.to_pandas()).mark_bar().encode(\n        x=alt.X(\\\"tempo:Q\\\", bin=alt.Bin(maxbins=20), title=\\\"Tempo (BPM)\\\"),\n        y=alt.Y(\\\"count()\\\", title=\\\"Number of Tracks\\\"),\n        tooltip=[\\\"count()\\\"],\n    ).properties(\n        title=\\\"Tempo Distribution\\\",\n        width=600,\n        height=250,\n    )\n\n    mo.ui.altair_chart(tempo_chart)\n    \"\"\",\n    name=\"tempo_distribution\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Scatter plot of energy vs danceability.\\\"\\\"\\\"\n    if \\\"energy\\\" not in tracks.columns or \\\"danceability\\\" not in tracks.columns:\n        return mo.md(\\\"Energy/danceability data not available\\\")\n\n    scatter = alt.Chart(tracks.to_pandas()).mark_circle(size=100).encode(\n        x=alt.X(\\\"energy:Q\\\", title=\\\"Energy\\\", scale=alt.Scale(domain=[0, 1])),\n        y=alt.Y(\\\"danceability:Q\\\", title=\\\"Danceability\\\", scale=alt.Scale(domain=[0, 1])),\n        color=alt.Color(\\\"valence:Q\\\", title=\\\"Valence (Mood)\\\", scale=alt.Scale(scheme=\\\"viridis\\\")),\n        tooltip=[\\\"name:N\\\", \\\"energy:Q\\\", \\\"danceability:Q\\\", \\\"valence:Q\\\"],\n    ).properties(\n        title=\\\"Energy vs Danceability (colored by mood/valence)\\\",\n        width=600,\n        height=400,\n    )\n\n    mo.ui.altair_chart(scatter)\n    \"\"\",\n    name=\"energy_vs_danceability\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"SoundCloud tracks overview.\\\"\\\"\\\"\n    if conn is None:\n        return mo.md(\\\"No database connection\\\")\n\n    # Check for SoundCloud tables\n    tables = conn.list_tables()\n    sc_tables = [t for t in tables if \\\"soundcloud\\\" in t.lower()]\n\n    if not sc_tables:\n        return mo.md(\\\"\\\"\\\"\n        ## SoundCloud Data Not Loaded\n\n        Run the SoundCloud scraper:\n        ```bash\n        python -m pipelines.soundcloud.scraper\n        ```\n        \\\"\\\"\\\")\n\n    # Try to load tracks\n    if \\\"soundcloud_data_tracks\\\" in tables:\n        sc_tracks = conn.table(\\\"soundcloud_data_tracks\\\").to_polars()\n        mo.md(f\\\"\\\"\\\"\n        ## SoundCloud Tracks\n\n        **{len(sc_tracks)} tracks scraped**\n        \\\"\\\"\\\")\n        return sc_tracks\n    else:\n        return mo.md(f\\\"Found tables: {sc_tables}\\\")\n    \"\"\",\n    name=\"soundcloud_overview\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"SoundCloud play counts bar chart.\\\"\\\"\\\"\n    if sc_tracks is None or len(sc_tracks) == 0:\n        return mo.md(\\\"No SoundCloud tracks available\\\")\n\n    # Sort by play count\n    top_tracks = sc_tracks.sort(\\\"playback_count\\\", descending=True).head(15)\n\n    plays_chart = alt.Chart(top_tracks.to_pandas()).mark_bar().encode(\n        x=alt.X(\\\"playback_count:Q\\\", title=\\\"Play Count\\\"),\n        y=alt.Y(\\\"title:N\\\", title=\\\"Track\\\", sort=\\\"-x\\\"),\n        color=alt.Color(\\\"likes_count:Q\\\", title=\\\"Likes\\\", scale=alt.Scale(scheme=\\\"blues\\\")),\n        tooltip=[\\\"title\\\", \\\"playback_count\\\", \\\"likes_count\\\", \\\"comment_count\\\"],\n    ).properties(\n        title=\\\"Top SoundCloud Tracks by Plays\\\",\n        width=700,\n        height=400,\n    )\n\n    mo.ui.altair_chart(plays_chart)\n    \"\"\",\n    name=\"soundcloud_plays_chart\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Compare metrics across platforms.\\\"\\\"\\\"\n    if tracks is None or sc_tracks is None:\n        return mo.md(\\\"Need both Spotify and SoundCloud data for comparison\\\")\n\n    # Aggregate stats\n    spotify_stats = {\n        \\\"platform\\\": \\\"Spotify\\\",\n        \\\"total_tracks\\\": len(tracks),\n        \\\"avg_popularity\\\": tracks[\\\"popularity\\\"].mean() if \\\"popularity\\\" in tracks.columns else 0,\n    }\n\n    soundcloud_stats = {\n        \\\"platform\\\": \\\"SoundCloud\\\",\n        \\\"total_tracks\\\": len(sc_tracks),\n        \\\"total_plays\\\": sc_tracks[\\\"playback_count\\\"].sum() if \\\"playback_count\\\" in sc_tracks.columns else 0,\n        \\\"total_likes\\\": sc_tracks[\\\"likes_count\\\"].sum() if \\\"likes_count\\\" in sc_tracks.columns else 0,\n    }\n\n    comparison = pl.DataFrame([spotify_stats, soundcloud_stats])\n\n    mo.md(f\\\"\\\"\\\"\n    ## Platform Comparison\n\n    | Platform | Tracks |\n    |----------|--------|\n    | Spotify | {spotify_stats['total_tracks']} |\n    | SoundCloud | {soundcloud_stats['total_tracks']} |\n\n    **SoundCloud Total Plays:** {soundcloud_stats.get('total_plays', 'N/A'):,}\n    **SoundCloud Total Likes:** {soundcloud_stats.get('total_likes', 'N/A'):,}\n    \\\"\\\"\\\")\n    \"\"\",\n    name=\"platform_comparison\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Genre distribution from SoundCloud.\\\"\\\"\\\"\n    if sc_tracks is None or \\\"genre\\\" not in sc_tracks.columns:\n        return mo.md(\\\"Genre data not available\\\")\n\n    # Filter out empty genres\n    genres = sc_tracks.filter(pl.col(\\\"genre\\\") != \\\"\\\").group_by(\\\"genre\\\").count().sort(\\\"count\\\", descending=True)\n\n    if len(genres) == 0:\n        return mo.md(\\\"No genre data found\\\")\n\n    genre_chart = alt.Chart(genres.to_pandas()).mark_arc().encode(\n        theta=alt.Theta(\\\"count:Q\\\"),\n        color=alt.Color(\\\"genre:N\\\", legend=alt.Legend(title=\\\"Genre\\\")),\n        tooltip=[\\\"genre\\\", \\\"count\\\"],\n    ).properties(\n        title=\\\"Genre Distribution\\\",\n        width=400,\n        height=400,\n    )\n\n    mo.ui.altair_chart(genre_chart)\n    \"\"\",\n    name=\"genre_analysis\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Interactive track selector for detailed view.\\\"\\\"\\\"\n    all_tracks = []\n\n    if tracks is not None and len(tracks) \u003E 0:\n        spotify_tracks = tracks.select([\n            pl.col(\\\"id\\\"),\n            pl.col(\\\"name\\\").alias(\\\"title\\\"),\n            pl.lit(\\\"Spotify\\\").alias(\\\"platform\\\"),\n        ]).to_dicts()\n        all_tracks.extend(spotify_tracks)\n\n    if sc_tracks is not None and len(sc_tracks) \u003E 0:\n        soundcloud_tracks = sc_tracks.select([\n            pl.col(\\\"id\\\"),\n            pl.col(\\\"title\\\"),\n            pl.lit(\\\"SoundCloud\\\").alias(\\\"platform\\\"),\n        ]).to_dicts()\n        all_tracks.extend(soundcloud_tracks)\n\n    if not all_tracks:\n        return mo.md(\\\"No tracks available\\\")\n\n    track_options = {f\\\"{t['title']} ({t['platform']})\\\": t['id'] for t in all_tracks[:50]}\n\n    selector = mo.ui.dropdown(\n        options=track_options,\n        label=\\\"Select a track to view details\\\",\n    )\n    \"\"\",\n    name=\"interactive_track_selector\"\n)\n\n\napp._unparsable_cell(\n    \"\"\"\n    \\\"\\\"\\\"Display details for selected track.\\\"\\\"\\\"\n    if selector.value is None:\n        return mo.md(\\\"Select a track above to view details\\\")\n\n    track_id = selector.value\n\n    # Try to find in Spotify\n    if tracks is not None:\n        spotify_match = tracks.filter(pl.col(\\\"id\\\") == track_id)\n        if len(spotify_match) \u003E 0:\n            track = spotify_match.to_dicts()[0]\n            return mo.md(f\\\"\\\"\\\"\n            ## {track.get('name', 'Unknown')}\n\n            **Platform:** Spotify\n            **Duration:** {track.get('duration_ms', 0) / 1000:.0f}s\n            **Popularity:** {track.get('popularity', 'N/A')}\n\n            ### Audio Features\n            - **Danceability:** {track.get('danceability', 'N/A')}\n            - **Energy:** {track.get('energy', 'N/A')}\n            - **Tempo:** {track.get('tempo', 'N/A')} BPM\n            - **Valence (Mood):** {track.get('valence', 'N/A')}\n            \\\"\\\"\\\")\n\n    # Try to find in SoundCloud\n    if sc_tracks is not None:\n        sc_match = sc_tracks.filter(pl.col(\\\"id\\\") == track_id)\n        if len(sc_match) \u003E 0:\n            track = sc_match.to_dicts()[0]\n            return mo.md(f\\\"\\\"\\\"\n            ## {track.get('title', 'Unknown')}\n\n            **Platform:** SoundCloud\n            **Duration:** {track.get('duration_ms', 0) / 1000:.0f}s\n            **Genre:** {track.get('genre', 'N/A')}\n\n            ### Engagement\n            - **Plays:** {track.get('playback_count', 0):,}\n            - **Likes:** {track.get('likes_count', 0):,}\n            - **Reposts:** {track.get('reposts_count', 0):,}\n            - **Comments:** {track.get('comment_count', 0):,}\n            \\\"\\\"\\\")\n    \"\"\",\n    name=\"track_details\"\n)\n\n\n@app.cell\ndef export_data(mo, sc_tracks, tracks):\n    \"\"\"Export data options.\"\"\"\n    mo.md(\"\"\"\n    ## Export Data\n\n    Use the data for the portfolio web application:\n    \"\"\")\n\n    def export_to_json():\n        import json\n        output = {}\n        if tracks is not None:\n            output[\"spotify_tracks\"] = tracks.to_dicts()\n        if sc_tracks is not None:\n            output[\"soundcloud_tracks\"] = sc_tracks.to_dicts()\n        return json.dumps(output, indent=2, default=str)\n\n    export_button = mo.ui.button(\n        label=\"Export to JSON\",\n        on_click=lambda _: mo.download(export_to_json().encode(), filename=\"music_data.json\"),\n    )\n    return\n\n\nif __name__ == \"__main__\":\n    app.run()\n",
+        }),
+        writable: false,
+        configurable: false,
+    });
+</script>
+<marimo-code hidden="">%22%22%22Aleyum%20Music%20Analytics%20Dashboard.%0A%0AInteractive%20Marimo%20notebook%20for%20exploring%20music%20data%20from%20Spotify%20and%20SoundCloud.%0AVisualizes%20play%20counts%2C%20audio%20features%2C%20and%20platform%20comparisons.%0A%0ARun%20with%3A%20marimo%20run%20notebooks%2Fmusic_analytics.py%0A%22%22%22%0A%0Aimport%20marimo%0A%0A__generated_with%20%3D%20%220.23.9%22%0Aapp%20%3D%20marimo.App(width%3D%22full%22)%0A%0A%0A%40app.cell%0Adef%20imports()%3A%0A%20%20%20%20%22%22%22Import%20dependencies.%22%22%22%0A%20%20%20%20from%20pathlib%20import%20Path%0A%0A%20%20%20%20import%20altair%20as%20alt%0A%20%20%20%20import%20ibis%0A%20%20%20%20import%20marimo%20as%20mo%0A%20%20%20%20import%20polars%20as%20pl%0A%0A%20%20%20%20%23%20Configure%20Altair%20for%20better%20rendering%0A%20%20%20%20alt.data_transformers.enable(%22vegafusion%22)%0A%20%20%20%20return%20Path%2C%20ibis%2C%20mo%0A%0A%0A%40app.cell%0Adef%20database_connection(Path%2C%20ibis%2C%20mo)%3A%0A%20%20%20%20%22%22%22Connect%20to%20the%20portfolio%20DuckDB%20database.%22%22%22%0A%20%20%20%20db_path%20%3D%20Path(%22.%2Fdata%2Faleyum.duckdb%22)%0A%0A%20%20%20%20if%20not%20db_path.exists()%3A%0A%20%20%20%20%20%20%20%20mo.md(%22%22%22%0A%20%20%20%20%20%20%20%20%23%23%20Database%20Not%20Found%0A%0A%20%20%20%20%20%20%20%20The%20portfolio%20database%20hasn't%20been%20created%20yet.%20Run%20the%20data%20pipelines%20first%3A%0A%0A%20%20%20%20%20%20%20%20%60%60%60bash%0A%20%20%20%20%20%20%20%20%23%20Run%20Spotify%20pipeline%0A%20%20%20%20%20%20%20%20python%20-m%20pipelines.spotify.source%0A%0A%20%20%20%20%20%20%20%20%23%20Run%20SoundCloud%20pipeline%0A%20%20%20%20%20%20%20%20python%20-m%20pipelines.soundcloud.scraper%0A%20%20%20%20%20%20%20%20%60%60%60%0A%20%20%20%20%20%20%20%20%22%22%22)%0A%20%20%20%20%20%20%20%20conn%20%3D%20None%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20conn%20%3D%20ibis.duckdb.connect(str(db_path))%0A%20%20%20%20%20%20%20%20mo.md(f%22**Connected%20to%3A**%20%60%7Bdb_path%7D%60%22)%0A%20%20%20%20return%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22List%20available%20tables.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20conn%20is%20None%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22No%20database%20connection%5C%22)%0A%0A%20%20%20%20tables%20%3D%20conn.list_tables()%0A%0A%20%20%20%20mo.md(f%5C%22%5C%22%5C%22%0A%20%20%20%20%23%23%20Available%20Tables%0A%0A%20%20%20%20%7B'%2C%20'.join(f'%60%7Bt%7D%60'%20for%20t%20in%20tables)%7D%0A%20%20%20%20%5C%22%5C%22%5C%22)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22tables_overview%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Spotify%20tracks%20overview%20with%20audio%20features.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20conn%20is%20None%20or%20%5C%22spotify_data_top_tracks%5C%22%20not%20in%20conn.list_tables()%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Spotify%20tracks%20not%20loaded%20yet%5C%22)%0A%0A%20%20%20%20%23%20Query%20top%20tracks%0A%20%20%20%20tracks%20%3D%20conn.table(%5C%22spotify_data_top_tracks%5C%22).to_polars()%0A%0A%20%20%20%20%23%20Check%20if%20audio%20features%20are%20available%0A%20%20%20%20if%20%5C%22spotify_data_track_audio_features%5C%22%20in%20conn.list_tables()%3A%0A%20%20%20%20%20%20%20%20features%20%3D%20conn.table(%5C%22spotify_data_track_audio_features%5C%22).to_polars()%0A%20%20%20%20%20%20%20%20%23%20Join%20tracks%20with%20features%0A%20%20%20%20%20%20%20%20tracks%20%3D%20tracks.join(features%2C%20on%3D%5C%22id%5C%22%2C%20how%3D%5C%22left%5C%22)%0A%0A%20%20%20%20mo.md(f%5C%22%5C%22%5C%22%0A%20%20%20%20%23%23%20Spotify%20Top%20Tracks%0A%0A%20%20%20%20**%7Blen(tracks)%7D%20tracks%20loaded**%0A%20%20%20%20%5C%22%5C%22%5C%22)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22spotify_tracks_overview%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Radar%20chart%20of%20audio%20features.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20%5C%22danceability%5C%22%20not%20in%20tracks.columns%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Audio%20features%20not%20available.%20Run%20pipeline%20with%20%60fetch_audio_features%3DTrue%60%5C%22)%0A%0A%20%20%20%20%23%20Select%20audio%20feature%20columns%0A%20%20%20%20feature_cols%20%3D%20%5B%5C%22danceability%5C%22%2C%20%5C%22energy%5C%22%2C%20%5C%22speechiness%5C%22%2C%20%5C%22acousticness%5C%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5C%22instrumentalness%5C%22%2C%20%5C%22liveness%5C%22%2C%20%5C%22valence%5C%22%5D%0A%0A%20%20%20%20available_cols%20%3D%20%5Bc%20for%20c%20in%20feature_cols%20if%20c%20in%20tracks.columns%5D%0A%0A%20%20%20%20if%20not%20available_cols%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22No%20audio%20features%20found%5C%22)%0A%0A%20%20%20%20%23%20Calculate%20average%20features%0A%20%20%20%20avg_features%20%3D%20tracks.select(available_cols).mean()%0A%0A%20%20%20%20%23%20Prepare%20data%20for%20radar%20chart%0A%20%20%20%20radar_data%20%3D%20pl.DataFrame(%7B%0A%20%20%20%20%20%20%20%20%5C%22feature%5C%22%3A%20available_cols%2C%0A%20%20%20%20%20%20%20%20%5C%22value%5C%22%3A%20%5Bavg_features%5Bc%5D%5B0%5D%20for%20c%20in%20available_cols%5D%2C%0A%20%20%20%20%7D)%0A%0A%20%20%20%20%23%20Create%20bar%20chart%20(Altair%20doesn't%20have%20native%20radar%2C%20use%20bar%20as%20alternative)%0A%20%20%20%20chart%20%3D%20alt.Chart(radar_data.to_pandas()).mark_bar().encode(%0A%20%20%20%20%20%20%20%20x%3Dalt.X(%5C%22feature%3AN%5C%22%2C%20title%3D%5C%22Audio%20Feature%5C%22%2C%20sort%3Davailable_cols)%2C%0A%20%20%20%20%20%20%20%20y%3Dalt.Y(%5C%22value%3AQ%5C%22%2C%20title%3D%5C%22Average%20Value%20(0-1)%5C%22%2C%20scale%3Dalt.Scale(domain%3D%5B0%2C%201%5D))%2C%0A%20%20%20%20%20%20%20%20color%3Dalt.Color(%5C%22feature%3AN%5C%22%2C%20legend%3DNone)%2C%0A%20%20%20%20%20%20%20%20tooltip%3D%5B%5C%22feature%5C%22%2C%20alt.Tooltip(%5C%22value%3AQ%5C%22%2C%20format%3D%5C%22.2f%5C%22)%5D%2C%0A%20%20%20%20).properties(%0A%20%20%20%20%20%20%20%20title%3D%5C%22Average%20Audio%20Features%20Across%20Top%20Tracks%5C%22%2C%0A%20%20%20%20%20%20%20%20width%3D600%2C%0A%20%20%20%20%20%20%20%20height%3D300%2C%0A%20%20%20%20)%0A%0A%20%20%20%20mo.ui.altair_chart(chart)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22audio_features_radar%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Distribution%20of%20tempo%20across%20tracks.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20%5C%22tempo%5C%22%20not%20in%20tracks.columns%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Tempo%20data%20not%20available%5C%22)%0A%0A%20%20%20%20tempo_chart%20%3D%20alt.Chart(tracks.to_pandas()).mark_bar().encode(%0A%20%20%20%20%20%20%20%20x%3Dalt.X(%5C%22tempo%3AQ%5C%22%2C%20bin%3Dalt.Bin(maxbins%3D20)%2C%20title%3D%5C%22Tempo%20(BPM)%5C%22)%2C%0A%20%20%20%20%20%20%20%20y%3Dalt.Y(%5C%22count()%5C%22%2C%20title%3D%5C%22Number%20of%20Tracks%5C%22)%2C%0A%20%20%20%20%20%20%20%20tooltip%3D%5B%5C%22count()%5C%22%5D%2C%0A%20%20%20%20).properties(%0A%20%20%20%20%20%20%20%20title%3D%5C%22Tempo%20Distribution%5C%22%2C%0A%20%20%20%20%20%20%20%20width%3D600%2C%0A%20%20%20%20%20%20%20%20height%3D250%2C%0A%20%20%20%20)%0A%0A%20%20%20%20mo.ui.altair_chart(tempo_chart)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22tempo_distribution%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Scatter%20plot%20of%20energy%20vs%20danceability.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20%5C%22energy%5C%22%20not%20in%20tracks.columns%20or%20%5C%22danceability%5C%22%20not%20in%20tracks.columns%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Energy%2Fdanceability%20data%20not%20available%5C%22)%0A%0A%20%20%20%20scatter%20%3D%20alt.Chart(tracks.to_pandas()).mark_circle(size%3D100).encode(%0A%20%20%20%20%20%20%20%20x%3Dalt.X(%5C%22energy%3AQ%5C%22%2C%20title%3D%5C%22Energy%5C%22%2C%20scale%3Dalt.Scale(domain%3D%5B0%2C%201%5D))%2C%0A%20%20%20%20%20%20%20%20y%3Dalt.Y(%5C%22danceability%3AQ%5C%22%2C%20title%3D%5C%22Danceability%5C%22%2C%20scale%3Dalt.Scale(domain%3D%5B0%2C%201%5D))%2C%0A%20%20%20%20%20%20%20%20color%3Dalt.Color(%5C%22valence%3AQ%5C%22%2C%20title%3D%5C%22Valence%20(Mood)%5C%22%2C%20scale%3Dalt.Scale(scheme%3D%5C%22viridis%5C%22))%2C%0A%20%20%20%20%20%20%20%20tooltip%3D%5B%5C%22name%3AN%5C%22%2C%20%5C%22energy%3AQ%5C%22%2C%20%5C%22danceability%3AQ%5C%22%2C%20%5C%22valence%3AQ%5C%22%5D%2C%0A%20%20%20%20).properties(%0A%20%20%20%20%20%20%20%20title%3D%5C%22Energy%20vs%20Danceability%20(colored%20by%20mood%2Fvalence)%5C%22%2C%0A%20%20%20%20%20%20%20%20width%3D600%2C%0A%20%20%20%20%20%20%20%20height%3D400%2C%0A%20%20%20%20)%0A%0A%20%20%20%20mo.ui.altair_chart(scatter)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22energy_vs_danceability%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22SoundCloud%20tracks%20overview.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20conn%20is%20None%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22No%20database%20connection%5C%22)%0A%0A%20%20%20%20%23%20Check%20for%20SoundCloud%20tables%0A%20%20%20%20tables%20%3D%20conn.list_tables()%0A%20%20%20%20sc_tables%20%3D%20%5Bt%20for%20t%20in%20tables%20if%20%5C%22soundcloud%5C%22%20in%20t.lower()%5D%0A%0A%20%20%20%20if%20not%20sc_tables%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22%5C%22%5C%22%0A%20%20%20%20%20%20%20%20%23%23%20SoundCloud%20Data%20Not%20Loaded%0A%0A%20%20%20%20%20%20%20%20Run%20the%20SoundCloud%20scraper%3A%0A%20%20%20%20%20%20%20%20%60%60%60bash%0A%20%20%20%20%20%20%20%20python%20-m%20pipelines.soundcloud.scraper%0A%20%20%20%20%20%20%20%20%60%60%60%0A%20%20%20%20%20%20%20%20%5C%22%5C%22%5C%22)%0A%0A%20%20%20%20%23%20Try%20to%20load%20tracks%0A%20%20%20%20if%20%5C%22soundcloud_data_tracks%5C%22%20in%20tables%3A%0A%20%20%20%20%20%20%20%20sc_tracks%20%3D%20conn.table(%5C%22soundcloud_data_tracks%5C%22).to_polars()%0A%20%20%20%20%20%20%20%20mo.md(f%5C%22%5C%22%5C%22%0A%20%20%20%20%20%20%20%20%23%23%20SoundCloud%20Tracks%0A%0A%20%20%20%20%20%20%20%20**%7Blen(sc_tracks)%7D%20tracks%20scraped**%0A%20%20%20%20%20%20%20%20%5C%22%5C%22%5C%22)%0A%20%20%20%20%20%20%20%20return%20sc_tracks%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(f%5C%22Found%20tables%3A%20%7Bsc_tables%7D%5C%22)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22soundcloud_overview%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22SoundCloud%20play%20counts%20bar%20chart.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20sc_tracks%20is%20None%20or%20len(sc_tracks)%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22No%20SoundCloud%20tracks%20available%5C%22)%0A%0A%20%20%20%20%23%20Sort%20by%20play%20count%0A%20%20%20%20top_tracks%20%3D%20sc_tracks.sort(%5C%22playback_count%5C%22%2C%20descending%3DTrue).head(15)%0A%0A%20%20%20%20plays_chart%20%3D%20alt.Chart(top_tracks.to_pandas()).mark_bar().encode(%0A%20%20%20%20%20%20%20%20x%3Dalt.X(%5C%22playback_count%3AQ%5C%22%2C%20title%3D%5C%22Play%20Count%5C%22)%2C%0A%20%20%20%20%20%20%20%20y%3Dalt.Y(%5C%22title%3AN%5C%22%2C%20title%3D%5C%22Track%5C%22%2C%20sort%3D%5C%22-x%5C%22)%2C%0A%20%20%20%20%20%20%20%20color%3Dalt.Color(%5C%22likes_count%3AQ%5C%22%2C%20title%3D%5C%22Likes%5C%22%2C%20scale%3Dalt.Scale(scheme%3D%5C%22blues%5C%22))%2C%0A%20%20%20%20%20%20%20%20tooltip%3D%5B%5C%22title%5C%22%2C%20%5C%22playback_count%5C%22%2C%20%5C%22likes_count%5C%22%2C%20%5C%22comment_count%5C%22%5D%2C%0A%20%20%20%20).properties(%0A%20%20%20%20%20%20%20%20title%3D%5C%22Top%20SoundCloud%20Tracks%20by%20Plays%5C%22%2C%0A%20%20%20%20%20%20%20%20width%3D700%2C%0A%20%20%20%20%20%20%20%20height%3D400%2C%0A%20%20%20%20)%0A%0A%20%20%20%20mo.ui.altair_chart(plays_chart)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22soundcloud_plays_chart%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Compare%20metrics%20across%20platforms.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20tracks%20is%20None%20or%20sc_tracks%20is%20None%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Need%20both%20Spotify%20and%20SoundCloud%20data%20for%20comparison%5C%22)%0A%0A%20%20%20%20%23%20Aggregate%20stats%0A%20%20%20%20spotify_stats%20%3D%20%7B%0A%20%20%20%20%20%20%20%20%5C%22platform%5C%22%3A%20%5C%22Spotify%5C%22%2C%0A%20%20%20%20%20%20%20%20%5C%22total_tracks%5C%22%3A%20len(tracks)%2C%0A%20%20%20%20%20%20%20%20%5C%22avg_popularity%5C%22%3A%20tracks%5B%5C%22popularity%5C%22%5D.mean()%20if%20%5C%22popularity%5C%22%20in%20tracks.columns%20else%200%2C%0A%20%20%20%20%7D%0A%0A%20%20%20%20soundcloud_stats%20%3D%20%7B%0A%20%20%20%20%20%20%20%20%5C%22platform%5C%22%3A%20%5C%22SoundCloud%5C%22%2C%0A%20%20%20%20%20%20%20%20%5C%22total_tracks%5C%22%3A%20len(sc_tracks)%2C%0A%20%20%20%20%20%20%20%20%5C%22total_plays%5C%22%3A%20sc_tracks%5B%5C%22playback_count%5C%22%5D.sum()%20if%20%5C%22playback_count%5C%22%20in%20sc_tracks.columns%20else%200%2C%0A%20%20%20%20%20%20%20%20%5C%22total_likes%5C%22%3A%20sc_tracks%5B%5C%22likes_count%5C%22%5D.sum()%20if%20%5C%22likes_count%5C%22%20in%20sc_tracks.columns%20else%200%2C%0A%20%20%20%20%7D%0A%0A%20%20%20%20comparison%20%3D%20pl.DataFrame(%5Bspotify_stats%2C%20soundcloud_stats%5D)%0A%0A%20%20%20%20mo.md(f%5C%22%5C%22%5C%22%0A%20%20%20%20%23%23%20Platform%20Comparison%0A%0A%20%20%20%20%7C%20Platform%20%7C%20Tracks%20%7C%0A%20%20%20%20%7C----------%7C--------%7C%0A%20%20%20%20%7C%20Spotify%20%7C%20%7Bspotify_stats%5B'total_tracks'%5D%7D%20%7C%0A%20%20%20%20%7C%20SoundCloud%20%7C%20%7Bsoundcloud_stats%5B'total_tracks'%5D%7D%20%7C%0A%0A%20%20%20%20**SoundCloud%20Total%20Plays%3A**%20%7Bsoundcloud_stats.get('total_plays'%2C%20'N%2FA')%3A%2C%7D%0A%20%20%20%20**SoundCloud%20Total%20Likes%3A**%20%7Bsoundcloud_stats.get('total_likes'%2C%20'N%2FA')%3A%2C%7D%0A%20%20%20%20%5C%22%5C%22%5C%22)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22platform_comparison%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Genre%20distribution%20from%20SoundCloud.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20sc_tracks%20is%20None%20or%20%5C%22genre%5C%22%20not%20in%20sc_tracks.columns%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Genre%20data%20not%20available%5C%22)%0A%0A%20%20%20%20%23%20Filter%20out%20empty%20genres%0A%20%20%20%20genres%20%3D%20sc_tracks.filter(pl.col(%5C%22genre%5C%22)%20!%3D%20%5C%22%5C%22).group_by(%5C%22genre%5C%22).count().sort(%5C%22count%5C%22%2C%20descending%3DTrue)%0A%0A%20%20%20%20if%20len(genres)%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22No%20genre%20data%20found%5C%22)%0A%0A%20%20%20%20genre_chart%20%3D%20alt.Chart(genres.to_pandas()).mark_arc().encode(%0A%20%20%20%20%20%20%20%20theta%3Dalt.Theta(%5C%22count%3AQ%5C%22)%2C%0A%20%20%20%20%20%20%20%20color%3Dalt.Color(%5C%22genre%3AN%5C%22%2C%20legend%3Dalt.Legend(title%3D%5C%22Genre%5C%22))%2C%0A%20%20%20%20%20%20%20%20tooltip%3D%5B%5C%22genre%5C%22%2C%20%5C%22count%5C%22%5D%2C%0A%20%20%20%20).properties(%0A%20%20%20%20%20%20%20%20title%3D%5C%22Genre%20Distribution%5C%22%2C%0A%20%20%20%20%20%20%20%20width%3D400%2C%0A%20%20%20%20%20%20%20%20height%3D400%2C%0A%20%20%20%20)%0A%0A%20%20%20%20mo.ui.altair_chart(genre_chart)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22genre_analysis%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Interactive%20track%20selector%20for%20detailed%20view.%5C%22%5C%22%5C%22%0A%20%20%20%20all_tracks%20%3D%20%5B%5D%0A%0A%20%20%20%20if%20tracks%20is%20not%20None%20and%20len(tracks)%20%3E%200%3A%0A%20%20%20%20%20%20%20%20spotify_tracks%20%3D%20tracks.select(%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%5C%22id%5C%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%5C%22name%5C%22).alias(%5C%22title%5C%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.lit(%5C%22Spotify%5C%22).alias(%5C%22platform%5C%22)%2C%0A%20%20%20%20%20%20%20%20%5D).to_dicts()%0A%20%20%20%20%20%20%20%20all_tracks.extend(spotify_tracks)%0A%0A%20%20%20%20if%20sc_tracks%20is%20not%20None%20and%20len(sc_tracks)%20%3E%200%3A%0A%20%20%20%20%20%20%20%20soundcloud_tracks%20%3D%20sc_tracks.select(%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%5C%22id%5C%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%5C%22title%5C%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.lit(%5C%22SoundCloud%5C%22).alias(%5C%22platform%5C%22)%2C%0A%20%20%20%20%20%20%20%20%5D).to_dicts()%0A%20%20%20%20%20%20%20%20all_tracks.extend(soundcloud_tracks)%0A%0A%20%20%20%20if%20not%20all_tracks%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22No%20tracks%20available%5C%22)%0A%0A%20%20%20%20track_options%20%3D%20%7Bf%5C%22%7Bt%5B'title'%5D%7D%20(%7Bt%5B'platform'%5D%7D)%5C%22%3A%20t%5B'id'%5D%20for%20t%20in%20all_tracks%5B%3A50%5D%7D%0A%0A%20%20%20%20selector%20%3D%20mo.ui.dropdown(%0A%20%20%20%20%20%20%20%20options%3Dtrack_options%2C%0A%20%20%20%20%20%20%20%20label%3D%5C%22Select%20a%20track%20to%20view%20details%5C%22%2C%0A%20%20%20%20)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22interactive_track_selector%22%0A)%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20%22%22%22%0A%20%20%20%20%5C%22%5C%22%5C%22Display%20details%20for%20selected%20track.%5C%22%5C%22%5C%22%0A%20%20%20%20if%20selector.value%20is%20None%3A%0A%20%20%20%20%20%20%20%20return%20mo.md(%5C%22Select%20a%20track%20above%20to%20view%20details%5C%22)%0A%0A%20%20%20%20track_id%20%3D%20selector.value%0A%0A%20%20%20%20%23%20Try%20to%20find%20in%20Spotify%0A%20%20%20%20if%20tracks%20is%20not%20None%3A%0A%20%20%20%20%20%20%20%20spotify_match%20%3D%20tracks.filter(pl.col(%5C%22id%5C%22)%20%3D%3D%20track_id)%0A%20%20%20%20%20%20%20%20if%20len(spotify_match)%20%3E%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20track%20%3D%20spotify_match.to_dicts()%5B0%5D%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20mo.md(f%5C%22%5C%22%5C%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%23%20%7Btrack.get('name'%2C%20'Unknown')%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20**Platform%3A**%20Spotify%0A%20%20%20%20%20%20%20%20%20%20%20%20**Duration%3A**%20%7Btrack.get('duration_ms'%2C%200)%20%2F%201000%3A.0f%7Ds%0A%20%20%20%20%20%20%20%20%20%20%20%20**Popularity%3A**%20%7Btrack.get('popularity'%2C%20'N%2FA')%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%23%23%20Audio%20Features%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Danceability%3A**%20%7Btrack.get('danceability'%2C%20'N%2FA')%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Energy%3A**%20%7Btrack.get('energy'%2C%20'N%2FA')%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Tempo%3A**%20%7Btrack.get('tempo'%2C%20'N%2FA')%7D%20BPM%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Valence%20(Mood)%3A**%20%7Btrack.get('valence'%2C%20'N%2FA')%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%5C%22%5C%22%5C%22)%0A%0A%20%20%20%20%23%20Try%20to%20find%20in%20SoundCloud%0A%20%20%20%20if%20sc_tracks%20is%20not%20None%3A%0A%20%20%20%20%20%20%20%20sc_match%20%3D%20sc_tracks.filter(pl.col(%5C%22id%5C%22)%20%3D%3D%20track_id)%0A%20%20%20%20%20%20%20%20if%20len(sc_match)%20%3E%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20track%20%3D%20sc_match.to_dicts()%5B0%5D%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20mo.md(f%5C%22%5C%22%5C%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%23%20%7Btrack.get('title'%2C%20'Unknown')%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20**Platform%3A**%20SoundCloud%0A%20%20%20%20%20%20%20%20%20%20%20%20**Duration%3A**%20%7Btrack.get('duration_ms'%2C%200)%20%2F%201000%3A.0f%7Ds%0A%20%20%20%20%20%20%20%20%20%20%20%20**Genre%3A**%20%7Btrack.get('genre'%2C%20'N%2FA')%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%23%23%20Engagement%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Plays%3A**%20%7Btrack.get('playback_count'%2C%200)%3A%2C%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Likes%3A**%20%7Btrack.get('likes_count'%2C%200)%3A%2C%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Reposts%3A**%20%7Btrack.get('reposts_count'%2C%200)%3A%2C%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20**Comments%3A**%20%7Btrack.get('comment_count'%2C%200)%3A%2C%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%5C%22%5C%22%5C%22)%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22track_details%22%0A)%0A%0A%0A%40app.cell%0Adef%20export_data(mo%2C%20sc_tracks%2C%20tracks)%3A%0A%20%20%20%20%22%22%22Export%20data%20options.%22%22%22%0A%20%20%20%20mo.md(%22%22%22%0A%20%20%20%20%23%23%20Export%20Data%0A%0A%20%20%20%20Use%20the%20data%20for%20the%20portfolio%20web%20application%3A%0A%20%20%20%20%22%22%22)%0A%0A%20%20%20%20def%20export_to_json()%3A%0A%20%20%20%20%20%20%20%20import%20json%0A%20%20%20%20%20%20%20%20output%20%3D%20%7B%7D%0A%20%20%20%20%20%20%20%20if%20tracks%20is%20not%20None%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20output%5B%22spotify_tracks%22%5D%20%3D%20tracks.to_dicts()%0A%20%20%20%20%20%20%20%20if%20sc_tracks%20is%20not%20None%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20output%5B%22soundcloud_tracks%22%5D%20%3D%20sc_tracks.to_dicts()%0A%20%20%20%20%20%20%20%20return%20json.dumps(output%2C%20indent%3D2%2C%20default%3Dstr)%0A%0A%20%20%20%20export_button%20%3D%20mo.ui.button(%0A%20%20%20%20%20%20%20%20label%3D%22Export%20to%20JSON%22%2C%0A%20%20%20%20%20%20%20%20on_click%3Dlambda%20_%3A%20mo.download(export_to_json().encode()%2C%20filename%3D%22music_data.json%22)%2C%0A%20%20%20%20)%0A%20%20%20%20return%0A%0A%0Aif%20__name__%20%3D%3D%20%22__main__%22%3A%0A%20%20%20%20app.run()%0A</marimo-code></head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a portal for the data editor to render in -->
+    <div id="portal" data-testid="glide-portal" style="position: fixed; left: 0; top: 0; z-index: 9999"></div>
+    <script data-marimo="true">
+      Object.defineProperty(window, "__MARIMO_MOUNT_CONFIG__", {
+        value: Object.freeze({
+            "filename": "notebook.py",
+            "cwd": "",
+            "lspWorkspace": null,
+            "mode": "read",
+            "version": "0.23.9",
+            "serverToken": "unused",
+            "config": {"ai": {"custom_providers": {}, "enabled": true, "models": {"custom_models": [], "displayed_models": []}}, "completion": {"activate_on_typing": true, "auto_close_pairs": true, "copilot": false, "signature_hint_on_typing": false}, "diagnostics": {"sql_linter": true}, "display": {"cell_output": "below", "code_editor_font_size": 14, "dataframes": "rich", "default_table_max_columns": 50, "default_table_page_size": 10, "default_width": "medium", "reference_highlighting": true, "theme": "light"}, "formatting": {"line_length": 79}, "keymap": {"overrides": {}, "preset": "default"}, "language_servers": {"pylsp": {"enable_flake8": false, "enable_mypy": true, "enable_pydocstyle": false, "enable_pyflakes": false, "enable_pylint": false, "enable_ruff": true, "enabled": false}}, "mcp": {"mcpServers": {}, "presets": []}, "package_management": {"manager": "uv"}, "runtime": {"auto_instantiate": false, "auto_reload": "off", "default_csv_encoding": "utf-8", "default_sql_output": "auto", "on_cell_change": "autorun", "output_max_bytes": 8000000, "reactive_tests": true, "show_tracebacks": false, "std_stream_max_bytes": 1000000, "watcher_on_save": "lazy"}, "save": {"autosave": "off", "autosave_delay": 1000, "format_on_save": false}, "server": {"browser": "default", "follow_symlink": false}, "snippets": {"custom_paths": [], "include_default_snippets": true}},
+            "configOverrides": {},
+            "appConfig": {"sql_output": "auto", "width": "full"},
+            "view": {"showAppCode": false},
+            "notebook": null,
+            "session": null,
+            "runtimeConfig": null,
+        }),
+        writable: false,
+        configurable: false,
+      });
+    </script>
+  </body>
+</html>

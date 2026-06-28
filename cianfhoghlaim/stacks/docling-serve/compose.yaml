@@ -1,0 +1,53 @@
+name: docling-serve
+
+services:
+  # ---------------------------------------------------------------------------
+  # docling-serve — IBM Docling as REST API
+  # ---------------------------------------------------------------------------
+  # Unlocks meaisínfhoghlaim/ocr/adapters.py:54-58 (DOCLING_URL=http://localhost:5001).
+  # Provides PDF→DocTags XML structure, table extraction, and document
+  # parsing for the VLM PDF processing pipeline.
+  #
+  # Granular:Docling (258M) + Granite:Docling (MLX) available via mlx-omni;
+  # this stack provides the FastAPI service that wraps the docling-ibm/
+  # docling-serve upstream.
+  # ---------------------------------------------------------------------------
+  docling-serve:
+    image: ghcr.io/ds4sd/docling-serve:latest
+    container_name: docling-serve
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - DOCLING_SERVE_ENABLE_REMOTE_SERVICES=true
+      - DOCLING_SERVE_ENABLE_ENGINES=true
+      # Default to Granite Docling MLX backend; falls back to PyTorch
+      - DOCLING_SERVE_ARTIFACTS_PATH=/home/docling/models
+    volumes:
+      - docling_models:/home/docling/models
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:5001/v1/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4'
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+volumes:
+  docling_models:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

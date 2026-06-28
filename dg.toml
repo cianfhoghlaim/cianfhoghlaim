@@ -1,31 +1,28 @@
 # Dagster dg workspace configuration
-# Loads all data pipeline projects in a unified UI.
-# Run `dg dev` from repository root to start all code locations.
+# Single consolidated code-location — see
+# openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4
+# All 5 former code-locations (oideachais, meaisinfhoghlaim, tuatha, croilar,
+# crypteolas + browser) are now assets in cianfhoghlaim/assets/ and registered
+# via cianfhoghlaim/assets/definitions.py.
 
 directory_type = "workspace"
 
 [workspace]
 
-# Celtic Education Platform — Irish curriculum, Celtic languages, British Isles education
+# Single consolidated code-location: the entire cianfhoghlaim package.
+# Module: cianfhoghlaim.assets.definitions exposes:
+#   - Ireland education assets (Plan 1 active)
+#   - UK nation education + domain assets (Plan 2/3 stubs)
+#   - Legacy Crown Dependencies assets (Jersey, Guernsey)
+#   - leabharlann assets (6 subdirs: aigne, gaeilge, gemini_deep_research,
+#     mata, ollscoil_na_gaillimhe, zotero)
+#   - 4 asset gen pipelines (official_documents, subject_assets,
+#     language_assets, exporters)
+#   - OCR evaluation harness asset (11 vision × 4 classical × ~220 evals)
+#   - 12-agent fleet asset (root, curriculum, translation, corpus, research,
+#     education_research, bunchloch_research, geospatial, statistics,
+#     curriculum_comparison, agui_curriculum, mcp_curriculum)
 [[workspace.locations]]
-path = "sruth/oideachais"
-
-# AI/ML quadrant — 12 agents, OCR/HTR, Celtic-language DLT
-[[workspace.locations]]
-path = "sruth/meaisinfhoghlaim"
-
-# Celtic Educational MMO + Crypto Platform (Babylon.js + SpacetimeDB + crypteolas MMO-crypto)
-[[workspace.locations]]
-path = "sruth/tuatha"
-
-# Crypteolas — crypto data intelligence (the standalone DeFi/crypto platform)
-[[workspace.locations]]
-path = "sruth/crypteolas"
-
-# Crypteolas Demo — the standalone TanStack + Agno demo app
-[[workspace.locations]]
-path = "sruth/crypteolas/apps/crypteolas_demo"
-
-# Croílár — multi-persona portfolio + CV + data engineering (Stream-registry DLT)
-[[workspace.locations]]
-path = "sruth/croilar"
+path = "cianfhoghlaim"
+code_location_name = "cianfhoghlaim"
+module_name = "cianfhoghlaim.assets.definitions"

@@ -1,0 +1,87 @@
+# =============================================================================
+# OPENCLAW — Channel-Fanout Gateway (arm1-oci)
+# =============================================================================
+# Long-running gateway that exposes the meaisínfhoghlaim 12-agent fleet
+# through 8 channels (Telegram, Slack, Discord, WhatsApp, WebChat, MS Teams
+# in v1; Signal/iMessage/Matrix scaffolded but disabled).
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Security model (3-layer):
+#   1. Pangolin TinyAuth (Pocket ID OIDC) at the Traefik layer
+#   2. openclaw dmPolicy="pairing" at the gateway layer
+#   3. openclaw allowFrom allowlist (per-channel) at the routing layer
+#
+# Image pinning: ghcr.io/openclaw/openclaw:<semver>@sha256:<digest>
+# (no :latest). Update on the monthly renovate cycle.
+# =============================================================================
+
+name: openclaw
+
+services:
+  # ---------------------------------------------------------------------------
+  # OPENCLAW GATEWAY
+  # ---------------------------------------------------------------------------
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:1.0.0@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    container_name: openclaw
+    restart: unless-stopped
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    ports:
+      # WebSocket RPC — exposed to Pangolin (Traefik routes 18789)
+      - "127.0.0.1:18789:18789"
+      # Bridge — internal only (used by the gateway itself)
+      - "127.0.0.1:18790:18790"
+      # MS Teams bridge — internal only (Azure Bot Framework outbound webhook)
+      - "127.0.0.1:3978:3978"
+    environment:
+      # State directory (workaround for upstream issue #77436: host-path leak
+      # into container-side OPENCLAW_STATE_DIR causing EACCES)
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG: /home/node/.openclaw/config/openclaw.json
+      OPENCLAW_PORT: "18789"
+      OPENCLAW_BRIDGE_PORT: "18790"
+      OPENCLAW_LOG_LEVEL: ${OPENCLAW_LOG_LEVEL:-info}
+      OPENCLAW_DM_POLICY: ${OPENCLAW_DM_POLICY:-pairing}
+      # LLM provider
+      OPENCODE_GO_BASE_URL: https://opencode.ai/zen/go/v1
+      # Observability
+      OTEL_SERVICE_NAME: openclaw-gateway
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      # Langfuse OTLP endpoint is injected by Locket (secrets.env)
+    volumes:
+      - openclaw-state:/home/node/.openclaw/state
+      - ./config:/home/node/.openclaw/config:ro
+      - ./skills-curated:/home/node/.openclaw/workspace/skills:ro
+    # depends_on locket is declared in sidecar.yaml (canonical pattern)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:18789/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  openclaw-state:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianchoghlaim

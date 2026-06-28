@@ -1,0 +1,96 @@
+# Crypteolas Demo Stack
+# TanStack Start frontend with PostgreSQL, LiteLLM, and supporting services
+
+name: crypteolas-demo
+
+services:
+  # ==========================================================================
+  # PostgreSQL Database (for Better Auth + Payment tracking)
+  # ==========================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: crypteolas-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-crypteolas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crypteolas}
+      POSTGRES_DB: ${POSTGRES_DB:-crypteolas}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crypteolas"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crypteolas-net
+
+  # ==========================================================================
+  # LiteLLM Proxy (Multi-provider LLM gateway)
+  # ==========================================================================
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: crypteolas-litellm
+    command: ["--config", "/config/config.yaml"]
+    ports:
+      - "4000:4000"
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ./litellm-config.yaml:/config/config.yaml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - crypteolas-net
+
+  # ==========================================================================
+  # Redis (for caching and session storage - optional)
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: crypteolas-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crypteolas-net
+
+  # ==========================================================================
+  # Agno Agent Server (Python backend for AI agents)
+  # REMOVED: This service was previously declared with
+  #   build.context: "../../../.."
+  #   dockerfile: demo/Dockerfile.agno
+  # but the demo/Dockerfile.agno does not exist and the volume binds
+  # (../agents, ../pipelines) referenced sibling paths that no longer
+  # exist after the consolidation into tuatha/apps/crypteolas_demo/.
+  # The existing tuatha/agents/orchestrator.py provides the equivalent
+  # multi-agent orchestration and is the recommended replacement path.
+  # See tuatha/apps/crypteolas_demo/STATUS.md for the work item.
+  # ==========================================================================
+
+# ==========================================================================
+# Volumes
+# ==========================================================================
+volumes:
+  postgres-data:
+  redis-data:
+
+# ==========================================================================
+# Networks
+# ==========================================================================
+networks:
+  crypteolas-net:
+    driver: bridge

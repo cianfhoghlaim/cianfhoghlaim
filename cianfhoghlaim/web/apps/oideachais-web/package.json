@@ -1,0 +1,31 @@
+{
+  "name": "oideachais-web",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "../../croilar/packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "typecheck": "turbo typecheck",
+    "lint": "biome check --write .",
+    "clean": "turbo clean",
+    "db:push": "turbo db:push",
+    "db:generate": "turbo db:generate",
+    "db:migrate": "turbo db:migrate",
+    "db:studio": "turbo db:studio"
+  },
+  "dependencies": {
+    "convex": "^1.40.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "turbo": "^2.6.0",
+    "@biomejs/biome": "^2.3.0",
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}

@@ -1,0 +1,37 @@
+# SQLMesh Configuration for Celtic Education Semantic Layer
+# Single-threaded DuckDB access (critical constraint from CLAUDE.md)
+
+gateways:
+  local:
+    connection:
+      type: duckdb
+      database: ../storage/data/celtic_education.duckdb
+
+default_gateway: local
+
+model_defaults:
+  dialect: duckdb
+  start: "2024-01-01"
+  cron: "@daily"
+
+project: celtic_curriculum
+
+# Physical schema naming
+physical_schema_mapping:
+  stg: stg
+  int: int
+  marts: marts
+
+# Variables for cross-nation comparison
+variables:
+  nations:
+    - ireland
+    - england
+    - scotland
+    - wales
+    - northern_ireland
+  celtic_languages:
+    - ga  # Irish
+    - cy  # Welsh
+    - gd  # Scottish Gaelic
+    - gv  # Manx

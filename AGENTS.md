@@ -70,9 +70,14 @@ The root `package.json` declares these `workspaces` and is the only manifest bun
 
 | Workspace | Path | Purpose |
 |:--|:--|:--|
-| `oideachais-web` | `sruth/oideachais/web/` | TanStack Start + React front-end (the public web app) |
-| `oideachais-mcp-filesystem` | `sruth/oideachais/mcp/filesystem/` | Filesystem MCP server for the data platform |
-| `tuatha-ui` | `sruth/tuatha/ui/` | Túatha educational MMO front-end |
+| `oideachais-web` | `cianfhoghlaim/web/apps/oideachais-web/` | TanStack Start + React front-end (the public web app) |
+| `tuatha-ui` | `cianfhoghlaim/web/apps/tuatha-ui/` | Túatha educational MMO front-end |
+| `croilar-web` | `cianfhoghlaim/web/apps/croilar-web/` | Croílár multi-persona portfolio |
+| `croilar-portal` | `cianfhoghlaim/web/apps/croilar-portal/` | Croílár portfolio dashboard |
+| `tuatha-demo` | `cianfhoghlaim/web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
+| `game_showcase` | `cianfhoghlaim/web/apps/game_showcase/` | Web game showcase |
+| `oideachais-mcp-filesystem` | `cianfhoghlaim/web/apps/oideachais-mcp-filesystem/` | Filesystem MCP server for the data platform |
+| `hono-api` | `cianfhoghlaim/web/hono-api/` | Hono API gateway |
 
 There is **no** runtime business logic at the root. The root `package.json` only orchestrates: setup, turbo passthroughs, secret management, dagster, komodo/pangolin/locket glue, ccc indexing, and OpenSpec.
 
@@ -101,14 +106,19 @@ The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no conso
 
 | Member | Path | Purpose |
 |:--|:--|:--|
-| `oideachais` | `sruth/oideachais/` | Celtic education data platform (Dagster, DLT, LanceDB) |
-| `meaisinfhoghlaim` | `sruth/meaisinfhoghlaim/` | AI/ML services (agents, OCR, Celtic-language, ML pipelines) |
-| `tuath` | `sruth/tuatha/` | Educational MMO + crypto platform (Babylon.js, siwe, x402) |
-| `códeolas` | `códeolas/` | Code intelligence library (publishable) |
-| `sruth-browser` | `infrastructure/browser/` | Browser automation client (Stagehand, MCP) |
-| `mcpo` | `sruth/oideachais/mcp/mcpo/` | MCPO bridge (optional) |
+| `cianfhoghlaim` | `cianfhoghlaim/` | Consolidated Celtic education + multi-nation + multi-language data platform |
+| `codeolas` | `cianfhoghlaim/libraries/codeolas/` | Code intelligence library (publishable sub-package) |
 
-Members import each other via `[tool.uv.sources]` (e.g. `oideachais` imports `sruth-browser`, `códeolas`).
+**v4 consolidation (2026-06-28):** All 5 former quadrants
+(`sruth/oideachais`, `sruth/meaisinfhoghlaim`, `sruth/tuatha`,
+`sruth/croilar`, `sruth/codeolas`) plus `infrastructure/browser/` +
+`/leabharlann/` were merged into the single `cianfhoghlaim/` package
+(see `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
+Plan 1 (active): Ireland (5 education stages × EN + GA) + leabharlann
+corpus (6 subdirs × 216 docs).
+
+Members import each other via `[tool.uv.sources]` (e.g. `cianfhoghlaim` imports
+`codeolas`).
 
 ### Pipeline orchestration
 
