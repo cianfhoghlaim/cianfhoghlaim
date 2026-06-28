@@ -1,0 +1,97 @@
+# =============================================================================
+# TRAEFIK STATIC CONFIGURATION
+# =============================================================================
+# Deployed by Ansible pangolin_core role
+# Domain: {{ pangolin_domain }}
+# =============================================================================
+
+api:
+  insecure: true
+  dashboard: true
+
+# -----------------------------------------------------------------------------
+# Providers Configuration
+# -----------------------------------------------------------------------------
+providers:
+  # Pangolin dynamic configuration via HTTP polling
+  http:
+    endpoint: "http://pangolin:3001/api/v1/traefik-config"
+    pollInterval: "5s"
+  # File-based configuration (dynamic_config.yml + Middleware Manager rules)
+  file:
+    directory: "/etc/traefik"
+    watch: true
+
+# -----------------------------------------------------------------------------
+# Experimental Plugins
+# -----------------------------------------------------------------------------
+experimental:
+  plugins:
+    badger:
+      moduleName: "github.com/fosrl/badger"
+      version: "v1.1.0"
+
+# -----------------------------------------------------------------------------
+# Logging Configuration
+# -----------------------------------------------------------------------------
+log:
+  level: "INFO"
+  format: "common"
+  filePath: "/var/log/traefik/traefik.log"
+
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: "json"
+  bufferingSize: 100
+  filters:
+    statusCodes:
+      - "400-499"
+      - "500-599"
+
+# -----------------------------------------------------------------------------
+# Certificate Resolvers
+# -----------------------------------------------------------------------------
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      httpChallenge:
+        entryPoint: web
+      email: {{ pangolin_acme_email }}
+      storage: "/letsencrypt/acme.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+  letsencrypt-wildcard:
+    acme:
+      dnsChallenge:
+        provider: {{ pangolin_dns_provider }}
+        delayBeforeCheck: 10
+      email: {{ pangolin_acme_email }}
+      storage: "/letsencrypt/acme-wildcard.json"
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+
+# -----------------------------------------------------------------------------
+# Entry Points
+# -----------------------------------------------------------------------------
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+    transport:
+      respondingTimeouts:
+        readTimeout: "30m"
+    http:
+      tls:
+        certResolver: "letsencrypt"
+      middlewares:
+        - secure-headers@file
+
+# -----------------------------------------------------------------------------
+# Server Transport
+# -----------------------------------------------------------------------------
+serversTransport:
+  insecureSkipVerify: true

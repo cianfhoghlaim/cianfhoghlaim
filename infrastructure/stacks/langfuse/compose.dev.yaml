@@ -1,0 +1,73 @@
+# Langfuse — local dev override
+# ----------------------------------------------------------------------------
+# See oideachais compose.dev.yaml for the rationale (no-op locket, env_file).
+# The langfuse compose has hardcoded "CHANGEME" placeholders for salt /
+# encryption_key / nextauth_secret that are normally injected by Locket —
+# in dev we provide stable placeholder values.
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: langfuse-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    networks:
+      - default
+
+  langfuse-web:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      SALT: "dev-salt-not-for-production"
+      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+      NEXTAUTH_SECRET: "dev-nextauth-secret-not-for-production-use-32-bytes-min"
+      TELEMETRY_ENABLED: "false"
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
+      CLICKHOUSE_USER: "clickhouse"
+      CLICKHOUSE_PASSWORD: "clickhouse"
+      REDIS_AUTH: "devredissecret"
+      MINIO_ROOT_USER: "minio"
+      MINIO_ROOT_PASSWORD: "miniosecret"
+
+  langfuse-worker:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      SALT: "dev-salt-not-for-production"
+      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+      NEXTAUTH_SECRET: "dev-nextauth-secret-not-for-production-use-32-bytes-min"
+      TELEMETRY_ENABLED: "false"
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
+      CLICKHOUSE_USER: "clickhouse"
+      CLICKHOUSE_PASSWORD: "clickhouse"
+      REDIS_AUTH: "devredissecret"
+      MINIO_ROOT_USER: "minio"
+      MINIO_ROOT_PASSWORD: "miniosecret"
+
+  postgres:
+    env_file:
+      - ../../../../.env
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+
+  clickhouse:
+    environment:
+      CLICKHOUSE_USER: "clickhouse"
+      CLICKHOUSE_PASSWORD: "clickhouse"
+
+  redis:
+    command: ["redis-server", "--requirepass", "devredissecret"]
+
+  minio:
+    environment:
+      MINIO_ROOT_USER: "minio"
+      MINIO_ROOT_PASSWORD: "miniosecret"

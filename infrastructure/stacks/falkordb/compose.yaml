@@ -1,0 +1,49 @@
+# =============================================================================
+# FALKORDB - Redis-based Graph Database
+# =============================================================================
+# High-performance graph database with Redis protocol compatibility.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: falkordb
+
+services:
+  # ---------------------------------------------------------------------------
+  # FALKORDB - Graph Database
+  # ---------------------------------------------------------------------------
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: falkordb
+    restart: unless-stopped
+    ports:
+      - "${FALKORDB_PORT:-6379}:6379"
+      - "${FALKORDB_UI_PORT:-3000}:3000"
+    environment:
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:-devpassword}
+      BROWSER: ${FALKORDB_BROWSER:-1}
+    volumes:
+      - falkordb-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - falkordb
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+volumes:
+  falkordb-data:
+
+networks:
+  falkordb:
+    driver: bridge

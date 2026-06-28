@@ -1,0 +1,34 @@
+# =============================================================================
+# CROILAR-STACK-HEALTH PROCEDURE
+# =============================================================================
+# Health-checks all 5 croilar stacks. Returns a summary table with status.
+# Pulls the latest image, restarts if unhealthy, fails loud if persistent.
+#
+# Usage:
+#   km run procedure croilar-stack-health
+# =============================================================================
+
+[[procedure]]
+name = "croilar-stack-health"
+description = "Health-check all croilar Docker Compose stacks; auto-restart on unhealthy"
+
+[[procedure.config.stages]]
+name = "check-all-stacks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "ReadStackInfo", params = { stack = "croilar-postgres" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "ReadStackInfo", params = { stack = "croilar-web" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "ReadStackInfo", params = { stack = "croilar-hono-api" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "ReadStackInfo", params = { stack = "croilar-convex" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "ReadStackInfo", params = { stack = "croilar-dagster" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "ReadStackInfo", params = { stack = "croilar-marimo" } }

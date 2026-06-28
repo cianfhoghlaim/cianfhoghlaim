@@ -1,0 +1,33 @@
+# =============================================================================
+# RENOVATE - Automated Dependency Updates
+# =============================================================================
+# Runs Renovate to create PRs for Docker image updates.
+# Schedule: Daily at 4am Dublin time
+# =============================================================================
+
+name: renovate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"  # 4am daily
+  push:
+    branches: [main]
+    paths:
+      - 'renovate.json'
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    container: ghcr.io/renovatebot/renovate:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Renovate
+        run: renovate
+        env:
+          RENOVATE_CONFIG_FILE: ${{ forgejo.workspace }}/renovate.json
+          LOG_LEVEL: "info"
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          RENOVATE_PLATFORM: forgejo
+          RENOVATE_ENDPOINT: https://git.cianfhoghlaim.ie/api/v1/

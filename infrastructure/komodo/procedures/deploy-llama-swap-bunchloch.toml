@@ -1,0 +1,39 @@
+# =============================================================================
+# DEPLOY MEAISÍNFHOGHLAIM-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Brings up llama-swap on bunchloch (MacBook M4 Max) for on-device GGUF
+# inference. Reads models from stedding/huggingface/gguf/.
+#
+# This is OPTIONAL — oideachais deploys fine without it (LLM calls go
+# through litellm → remote). Only needed when running an on-device model
+# (e.g. unsloth-trained Celtic-language model).
+#
+# Usage:
+#   km run procedure deploy-llama-swap-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-llama-swap-bunchloch"
+description = "Deploy meaisínfhoghlaim llama-swap to bunchloch for on-device GGUF inference"
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+# Make sure the GGUF model directory is populated before llama-swap starts.
+# The Phase 5 Dagster model_conversion asset converts HF models → GGUF into
+# stedding/huggingface/gguf/. If the directory is empty, llama-swap will
+# boot but have no models to serve.
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "llama-swap-ensure-gguf-dir" } }
+
+[[procedure.config.stages]]
+name = "llama-swap"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "llama-swap-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "llama-swap-health-check" } }

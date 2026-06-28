@@ -1,0 +1,57 @@
+# CocoIndex docs monitor — Firecrawl v2 monitor config.
+#
+# Phase 1 of the `upstream-package-monitoring` openspec change.
+# Watches the 5 canonical cocoindex docs surfaces + the `llms-full.txt`
+# canonical summarisation. Every change here flows into the v1
+# CocoIndex App `upstream_api_surface_app`, which BAML-extracts
+# `ApiChange` records and writes them as `ApiChangeNode` +
+# `AFFECTS_APP` edges to the `upstream_packages_graph` FalkorDB
+# graph.
+#
+# Goal: API-surface changes (new coco.App APIs, new @coco.fn decorators,
+# new connectors like FalkorDB, new coco.auto_refresh behaviour,
+# breaking signature changes). The LLM judge filters these from
+# tutorial rewording and example-document edits.
+
+name: "cocoindex_docs"
+schedule:
+  text: "every 30 minutes"
+  timezone: "UTC"
+
+targets:
+  - type: scrape
+    urls:
+      - "https://cocoindex.io/docs/skill.md"
+      - "https://cocoindex.io/docs/getting_started/quickstart"
+      - "https://cocoindex.io/docs/advanced_topics/live_component"
+      - "https://cocoindex.io/docs/connectors/falkordb"
+      - "https://cocoindex.io/llms-full.txt"
+      - "https://cocoindex.io/docs/changelog"
+
+goal: |
+  Alert on CocoIndex API-surface changes — new `coco.App` methods,
+  new `@coco.fn` / `@coco.lifespan` / `@coco.transform_flow`
+  decorators, new connectors (FalkorDB, Postgres, LanceDB), new
+  `coco.auto_refresh` behaviour, breaking signature changes to
+  existing functions, and new context-key patterns. Ignore tutorial
+  rewording, example-document edits, and typo fixes unless they
+  change the documented behaviour.
+
+judgeEnabled: true
+notification:
+  webhook:
+    url: "https://n8n.cianfhoghlaim.ie/webhook/upstream-blog"
+    headers:
+      X-Package: "cocoindex"
+      X-Upstream-Monitor: "true"
+    payload:
+      package: "cocoindex"
+      blog_post_type: "api_doc"
+
+retentionDays: 90
+
+tags:
+  - "kcg-upstream-monitor"
+  - "package:cocoindex"
+  - "kcg-priority-skill:cocoindex"
+  - "kcg-priority-skill:oideachais-cocoindex-v1"

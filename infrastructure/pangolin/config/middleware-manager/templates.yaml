@@ -1,0 +1,175 @@
+# =============================================================================
+# MIDDLEWARE MANAGER TEMPLATES
+# =============================================================================
+# Predefined middleware templates for common use cases
+# These can be quickly applied to resources via the Middleware Manager UI
+# =============================================================================
+
+templates:
+  # ---------------------------------------------------------------------------
+  # Authentication Middlewares
+  # ---------------------------------------------------------------------------
+  - id: tinyauth
+    name: TinyAuth Forward Auth
+    type: forwardAuth
+    description: "Protect resources with TinyAuth username/password authentication"
+    config:
+      address: "http://tinyauth:10000/api/auth/traefik"
+      trustForwardHeader: true
+      authResponseHeaders:
+        - "Remote-User"
+        - "Remote-Email"
+        - "Remote-Groups"
+
+  - id: tinyauth-oauth
+    name: TinyAuth with OAuth
+    type: forwardAuth
+    description: "TinyAuth with OAuth/OIDC support via Pocket ID"
+    config:
+      address: "http://tinyauth:10000/api/auth/traefik"
+      trustForwardHeader: true
+      authResponseHeaders:
+        - "Remote-User"
+        - "Remote-Email"
+        - "Remote-Groups"
+        - "X-Forwarded-User"
+
+  # ---------------------------------------------------------------------------
+  # Security Middlewares
+  # ---------------------------------------------------------------------------
+  - id: secure-headers
+    name: Security Headers
+    type: headers
+    description: "Apply security headers (HSTS, XSS protection, etc.)"
+    config:
+      browserXssFilter: true
+      contentTypeNosniff: true
+      forceSTSHeader: true
+      stsIncludeSubdomains: true
+      stsPreload: true
+      stsSeconds: 31536000
+      customFrameOptionsValue: "SAMEORIGIN"
+      customResponseHeaders:
+        X-Robots-Tag: "noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+
+  - id: cors-permissive
+    name: CORS Permissive
+    type: headers
+    description: "Allow cross-origin requests from any origin"
+    config:
+      accessControlAllowMethods:
+        - "GET"
+        - "POST"
+        - "PUT"
+        - "DELETE"
+        - "OPTIONS"
+      accessControlAllowHeaders:
+        - "*"
+      accessControlAllowOriginList:
+        - "*"
+      accessControlMaxAge: 86400
+
+  - id: cors-strict
+    name: CORS Strict
+    type: headers
+    description: "Allow cross-origin requests only from cianfhoghlaim.ie subdomains"
+    config:
+      accessControlAllowMethods:
+        - "GET"
+        - "POST"
+        - "PUT"
+        - "DELETE"
+        - "OPTIONS"
+      accessControlAllowHeaders:
+        - "Authorization"
+        - "Content-Type"
+        - "X-Requested-With"
+      accessControlAllowOriginListRegex:
+        - "^https://.*\\.cianfhoghlaim\\.ie$"
+      accessControlAllowCredentials: true
+      accessControlMaxAge: 86400
+
+  # ---------------------------------------------------------------------------
+  # Rate Limiting Middlewares
+  # ---------------------------------------------------------------------------
+  - id: rate-limit-standard
+    name: Standard Rate Limit
+    type: rateLimit
+    description: "100 requests per minute with burst of 50"
+    config:
+      average: 100
+      burst: 50
+      period: 1m
+
+  - id: rate-limit-api
+    name: API Rate Limit
+    type: rateLimit
+    description: "500 requests per minute for API endpoints"
+    config:
+      average: 500
+      burst: 100
+      period: 1m
+
+  - id: rate-limit-auth
+    name: Auth Rate Limit
+    type: rateLimit
+    description: "Strict rate limit for authentication endpoints (10/min)"
+    config:
+      average: 10
+      burst: 5
+      period: 1m
+
+  - id: rate-limit-llm
+    name: LLM API Rate Limit
+    type: rateLimit
+    description: "Rate limit for LLM endpoints (30 requests/minute)"
+    config:
+      average: 30
+      burst: 10
+      period: 1m
+
+  # ---------------------------------------------------------------------------
+  # Compression Middleware
+  # ---------------------------------------------------------------------------
+  - id: compress
+    name: Response Compression
+    type: compress
+    description: "Enable gzip compression for responses"
+    config:
+      excludedContentTypes:
+        - "text/event-stream"
+
+  # ---------------------------------------------------------------------------
+  # IP Filtering Middlewares
+  # ---------------------------------------------------------------------------
+  - id: local-only
+    name: Local Network Only
+    type: ipWhiteList
+    description: "Allow only local/private network IPs"
+    config:
+      sourceRange:
+        - "127.0.0.1/32"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+        - "192.168.0.0/16"
+
+  # ---------------------------------------------------------------------------
+  # Retry and Circuit Breaker
+  # ---------------------------------------------------------------------------
+  - id: retry-default
+    name: Default Retry
+    type: retry
+    description: "Retry failed requests up to 3 times"
+    config:
+      attempts: 3
+      initialInterval: 100ms
+
+  - id: circuit-breaker
+    name: Circuit Breaker
+    type: circuitBreaker
+    description: "Open circuit after 50% error rate over 10 requests"
+    config:
+      expression: "NetworkErrorRatio() > 0.50 || ResponseCodeRatio(500, 600, 0, 600) > 0.50"
+      checkPeriod: 10s
+      fallbackDuration: 30s
+      recoveryDuration: 60s

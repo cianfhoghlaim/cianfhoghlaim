@@ -1,0 +1,127 @@
+---
+# =============================================================================
+# KOMODO CORE ROLE - DEFAULT VARIABLES
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# INSTALLATION
+# -----------------------------------------------------------------------------
+
+# Base directory for Komodo on remote
+komodo_base_dir: /opt/komodo
+
+# Docker images - using 2-dev (v2.0.0-dev branch) for ARM64 support
+komodo_core_image_tag: "2-dev"
+komodo_periphery_image_tag: "2-dev"
+mongo_image: "mongo"
+
+# Periphery root directory
+komodo_periphery_root: /etc/komodo
+
+# -----------------------------------------------------------------------------
+# DOMAIN CONFIGURATION
+# -----------------------------------------------------------------------------
+
+# Komodo dashboard URL
+komodo_host: "https://komodo.example.com"
+
+# Komodo domain (for Traefik routing)
+komodo_domain: "komodo.example.com"
+
+# Dashboard title
+komodo_title: "Komodo Server Management"
+
+# Timezone
+komodo_timezone: "Europe/Dublin"
+
+# -----------------------------------------------------------------------------
+# DATABASE CREDENTIALS
+# -----------------------------------------------------------------------------
+
+# MongoDB credentials (stored in Infisical)
+
+# -----------------------------------------------------------------------------
+# AUTHENTICATION
+# -----------------------------------------------------------------------------
+
+
+
+# Local auth enabled
+komodo_local_auth: true
+
+# User registration
+komodo_disable_user_registration: false
+komodo_enable_new_users: true
+komodo_disable_non_admin_create: false
+
+# -----------------------------------------------------------------------------
+# SECURITY
+# -----------------------------------------------------------------------------
+
+# JWT configuration
+komodo_jwt_secret: "jwt_secret_change_me_to_something_secure"
+komodo_jwt_ttl: "1-day"
+
+# Webhook secret
+komodo_webhook_secret: "webhook_secret_change_me"
+
+# -----------------------------------------------------------------------------
+# MONITORING
+# -----------------------------------------------------------------------------
+
+# Monitoring intervals
+komodo_monitoring_interval: "15-sec"
+komodo_resource_poll_interval: "1-hr"
+
+# -----------------------------------------------------------------------------
+# FIRST SERVER
+# -----------------------------------------------------------------------------
+
+# First server configuration
+komodo_first_server: "https://periphery:8120"
+komodo_first_server_name: "local"
+
+# -----------------------------------------------------------------------------
+# PERIPHERY
+# -----------------------------------------------------------------------------
+
+# SSL for periphery
+komodo_periphery_ssl_enabled: true
+
+# Disable terminals
+komodo_periphery_disable_terminals: false
+
+# Disk mount filtering
+komodo_periphery_include_disk_mounts: "/etc/hostname"
+
+# -----------------------------------------------------------------------------
+# UI OPTIONS
+# -----------------------------------------------------------------------------
+
+# Disable confirmation dialogs
+komodo_disable_confirm_dialog: true
+komodo_transparent_mode: false
+
+# Logging
+komodo_logging_pretty: true
+komodo_pretty_startup_config: true
+
+# -----------------------------------------------------------------------------
+# NETWORK
+# -----------------------------------------------------------------------------
+
+# Core API port
+komodo_core_port: 9120
+
+# -----------------------------------------------------------------------------
+# HEALTH CHECK
+# -----------------------------------------------------------------------------
+
+# Wait for Komodo to be healthy before completing
+komodo_wait_healthy: true
+
+# Timeout for health check (seconds)
+komodo_health_timeout: 120
+
+# Health check interval (seconds)
+komodo_health_interval: 5
