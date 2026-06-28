@@ -5,7 +5,9 @@ License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
 
 **Licensor:** Cian Pierce Lyons (Irish Passport Name: Cian Mac Liatháin)
 
-**Licensed Work:** The Oideachais/Cianfhoghlaim Ecosystem (encompassing all orchestration logic, machine learning pipelines, the Agent Development Kit, blockchain analytics agents, and interactive gamification clients contained within this repository).
+**Licensed Work:** The cianfhoghlaim/cianfhoghlaim monorepo (encompassing all orchestration logic, machine learning pipelines, the Agent Development Kit, blockchain analytics agents, and interactive gamification clients contained within this repository).
+
+The companion repositories [cianfhoghlaim/bonneagar](https://github.com/cianfhoghlaim/bonneagar) (GitOps infrastructure) and [cianfhoghlaim/leabharlann](https://github.com/cianfhoghlaim/leabharlann) (digital library) are separately licensed under the same Business Source License 1.1 by the same Licensor.
 
 **Additional Use Grant:**
 You may make production use of the Licensed Work strictly for non-commercial, non-profit, cultural preservation, and academic research purposes, provided such use occurs entirely within the legal jurisdictions of 

@@ -1,7 +1,7 @@
 [project]
 name = "cianfhoghlaim-monorepo"
-version = "0.0.0"
-description = "Cianfhoghlaim polyglot monorepo shell — uv workspace orchestrator. Delegates all real work to workspace members."
+version = "0.4.0"
+description = "Cianfhoghlaim application monorepo — Celtic education platform, AI research laboratory, and multi-persona portfolio. Companion to cianfhoghlaim/leabharlann (digital library) and cianfhoghlaim/bonneagar (GitOps infrastructure), both consumed as git subtrees."
 readme = "README.md"
 requires-python = ">=3.13"
 license = { text = "BUSL-1.1" }
