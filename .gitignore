@@ -276,3 +276,13 @@ opencode.json
 sruth/oideachais/notebooks/**/__marimo__/session/
 **/__marimo__/session/
 skills2
+
+# Leabharlann corpus lives in a separate repo (https://github.com/cianfhoghlaim/leabharlann)
+# 2,395 PDFs / notebooks / images / audio — 3.4 GB total. The local working copy is
+# useful for offline search but should not be in the main monorepo's git history.
+cianfhoghlaim/leabharlann/
+
+# Stray uv.lock files moved into cianfhoghlaim during the v4 consolidation — uv.lock
+# is regenerated from pyproject.toml and should never be tracked.
+cianfhoghlaim/*_uv.lock
+*_uv.lock

@@ -71,13 +71,13 @@ bun run ccc:index
 bun run ccc:search "Dagster asset partition definition"
 
 # Search with filters
-bun run ccc:search --lang python --path 'sruth/oideachais/*' "BAML extraction function"
+bun run ccc:search --lang python --path 'cianfhoghlaim/*' "BAML extraction function"
 
 # Paginate results
 bun run ccc:search --offset 5 --limit 5 "BAML extraction function"
 
 # Summarise a file or directory (uses project's summary feature)
-ccc describe sruth/oideachais/cocoindex_flows/_lifespan.py
+ccc describe cianfhoghlaim/dlt_sources/_lifespan.py
 
 # List + read concept guides (loaded from .cocoindex_code/guides.yml)
 ccc describe .                       # project overview
@@ -88,7 +88,7 @@ ccc describe .                       # project overview
 
 Per the `docs-skills-consolidation-pipeline` change (2026-06-16),
 the v1-native replacement for the standalone `ccc search` CLI is
-the **`sruth/oideachais/cocoindex_flows/codebase_indexing.py`**
+the **`cianfhoghlaim/cocoindex_flows/codebase_indexing.py`**
 CocoIndex v1 App, registered in Dagster under the `codebase`
 asset group. It uses the **same embedding model** (`BAAI/bge-m3`)
 and the **same LanceDB HNSW index** as the rest of the data
@@ -141,9 +141,9 @@ exposes the following tools to every agent:
 
 | Metric | Value |
 |:--|:--|
-| Stack path | `infrastructure/stacks/cognee/` (Docker Compose) |
+| Stack path | `cianfhoghlaim/stacks/cognee/` (Docker Compose) |
 | Container | `cognee/cognee:latest` (v1.1.2), port 8100 → 8000 |
-| Graph backend | Neo4j (from `infrastructure/stacks/graphiti/`) |
+| Graph backend | Neo4j (from `cianfhoghlaim/stacks/graphiti/`) |
 | Vector store | LanceDB (Cognee local mode) |
 | LLM | DeepSeek V4 Pro via `https://api.deepseek.com/v1` (OpenAI-compatible) |
 | Embedding | OpenAI `text-embedding-3-small` |
@@ -160,7 +160,7 @@ exposes the following tools to every agent:
 
 ```bash
 # 1. Start Neo4j (Cognee's graph backend)
-cd infrastructure/stacks/graphiti
+cd cianfhoghlaim/stacks/graphiti
 docker compose up neo4j -d
 # Verify: curl -s http://localhost:7474 | head -3
 
@@ -284,9 +284,8 @@ exposes the following tools to every agent:
 | **chrome** | Local Chrome DevTools MCP (for debugging web apps) | 6 | Optional |
 | **motherduck** | DuckDB / MotherDuck analytics | 8 | ✅ Yes (always on) |
 | **infisical** | Secrets management | 10 | ✅ Yes (always on) |
-| **croilar-devtools** | Croilar dev tools (stagehand, firecrawl, codex-cli, E2B) via `sruth/croilar/mcp/devtools/index.ts` | 9 | ✅ Yes (always on) |
 
-**Total: 10 MCP servers, 85+ tools** wired in `opencode.json`.
+**Total: 9 MCP servers, 75+ tools** wired in `opencode.json`.
 
 All secrets are auto-hydrated from Infisical (`dev-baile`
 environment) — never hard-coded in `opencode.json`.
@@ -419,20 +418,21 @@ top-level registries wired into OpenCode. It was added in the
   with a one-line role prompt that names the quadrant and its
   primary tools.
 - **The 5 sruth-subagents are dispatched via the `task` tool**
-  with `subagent_type` set to one of `oideachais`, `infrastructure`,
-  `meaisinfhoghlaim`, `croilar`, or `tuatha`. The `general` and
+  with `subagent_type` set to one of `data-platform`,
+  `infrastructure`, `agent-platform`, `frontend-apps`, or
+  `research`. The `general` and
   `explore` subagent types are reserved for OpenCode's own
   background work.
 
-### 8.2 The 13-agent model-layer registry (`sruth/meaisinfhoghlaim/agents/`)
+### 8.2 The 13-agent model-layer registry (`cianfhoghlaim/agents/meaisinfhoghlaim/`)
 
 The Python-side agent inventory lives in
-`sruth/meaisinfhoghlaim/agents/__init__.py` as a tuple
-constant. The 5 sruth-subagents in `opencode.json` dispatch
+`cianfhoghlaim/agents/meaisinfhoghlaim/agents/__init__.py` as a tuple
+constant. The 4 functional subagents in `opencode.json` dispatch
 to these modules via their prompts.
 
 ```python
-# From sruth/meaisinfhoghlaim/agents/__init__.py
+# From cianfhoghlaim/agents/meaisinfhoghlaim/agents/__init__.py
 MODEL_LAYER_AGENTS: tuple[str, ...] = (
     "root_agent",                  # 1 root
     "curriculum_agent",            # 12 specialists
@@ -457,9 +457,9 @@ MODEL_LAYER_AGENTS: tuple[str, ...] = (
 needs new skills, adding them to the relevant `skill_filter`
 in `opencode.json`.
 
-### 8.3 The 10 MCP servers (`opencode.json` → `mcp`)
+### 8.3 The 9 MCP servers (`opencode.json` → `mcp`)
 
-See §3 for the full inventory. The 10 servers are:
+See §3 for the full inventory. The 9 servers are:
 
 1. `cocoindex-code` (semantic code search, 9 tools)
 2. `cognee` (knowledge graph over docs, 10 tools)
@@ -470,7 +470,6 @@ See §3 for the full inventory. The 10 servers are:
 7. `chrome` (local Chrome DevTools, 6 tools, optional)
 8. `motherduck` (DuckDB / MotherDuck analytics, 8 tools)
 9. `infisical` (secrets management, 10 tools)
-10. `croilar-devtools` (stagehand, firecrawl, codex-cli, E2B, 9 tools)
 
 **Add a new MCP server** by appending an entry to `mcp` in
 `opencode.json` with `command` (the stdio entrypoint),
@@ -482,22 +481,22 @@ row to the §3 table and bump the totals.
 ### 8.4 Registry health checks
 
 ```bash
-# 7 agents, 10 MCPs
+# 7 agents, 9 MCPs
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"
-# Expected: MCPs: 10  Agents: 7
+# Expected: MCPs: 9  Agents: 7
 
-# Per-sruth-subagent skill counts
+# Per-subagent skill counts
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print({k: len(v.get('skill_filter', [])) \
        for k, v in cfg['agent'].items()})"
-# Expected: build=0, plan=0, oideachais=9, infrastructure=16,
-#           meaisinfhoghlaim=22, croilar=12, tuatha=12
+# Expected: build=0, plan=0, data-platform=15, infrastructure=16,
+#           agent-platform=23, frontend-apps=20, research=11
 
 # 13 model-layer agents
 python3 -c "
 import ast
-with open('sruth/meaisinfhoghlaim/agents/__init__.py') as f:
+with open('cianfhoghlaim/agents/meaisinfhoghlaim/agents/__init__.py') as f:
     tree = ast.parse(f.read())
 for node in ast.walk(tree):
     if isinstance(node, ast.AnnAssign) \
@@ -507,8 +506,8 @@ for node in ast.walk(tree):
 # Expected: 13 entries
 
 # 7 cognee graph model files
-ls infrastructure/scripts/cognee-graph-models/*.py | wc -l
-# Expected: 7
+ls cianfhoghlaim/cognify/cognee_integration/graph_models/*.py 2>/dev/null | wc -l
+# Expected: 7 (verify path exists; if not, the graph model files may still be at the legacy location)
 
 # CCC index age (CI gate)
 bun run validate-ccc-freshness
@@ -517,5 +516,71 @@ bun run validate-ccc-freshness
 
 ---
 
-**Last updated:** 2026-06-27 (post-`centralize-agent-context-and-automate` archive).
+**Last updated:** 2026-06-28 (post-`2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation`).
 **Owner:** Build agent (canonical home: `.agents/skills/INDEXING_AND_COGNITION.md`).
+
+---
+
+## 9. The cianfhoghlaim v4 consolidation (2026-06-28)
+
+The five former `sruth/<quadrant>/` quadrants were merged into a
+single `cianfhoghlaim/` Python package. The five
+sruth-subagents were rewritten to align with the new tree.
+
+### 9.1 Directory migration map
+
+| Former path (pre-2026-06-28) | Current path (v4) |
+|:--|:--|
+| `sruth/oideachais/` (5-stage PDF pipeline, BAML, dlt_sources) | `cianfhoghlaim/` (root, with `dlt_sources/`, `baml_src/`, `dagster_defs/`, `notebooks/`) |
+| `sruth/oideachais/dlt_sources/official_media/` | `cianfhoghlaim/dlt_sources/official_media/` |
+| `sruth/oideachais/baml_src/` | `cianfhoghlaim/baml_src/` |
+| `sruth/oideachais/notebooks/` | `cianfhoghlaim/notebooks/` |
+| `sruth/oideachais/web/` (TanStack Start) | `cianfhoghlaim/web/apps/oideachais-web/` |
+| `sruth/meaisinfhoghlaim/` (agents, OCR, LLM stack) | `cianfhoghlaim/agents/meaisinfhoghlaim/` (root subpkg) |
+| `sruth/meaisinfhoghlaim/agents/` | `cianfhoghlaim/agents/meaisinfhoghlaim/agents/` |
+| `sruth/meaisinfhoghlaim/ocr/` | `cianfhoghlaim/agents/meaisinfhoghlaim/ocr/` |
+| `sruth/meaisinfhoghlaim/language/gaeilge/` | `cianfhoghlaim/agents/meaisinfhoghlaim/language/gaeilge/` |
+| `sruth/tuatha/` (Babylon.js MMO, crypteolas) | `cianfhoghlaim/web/apps/tuatha-ui/` + `cianfhoghlaim/stacks/tuatha/` |
+| `sruth/tuatha/ui/` | `cianfhoghlaim/web/apps/tuatha-ui/` |
+| `sruth/croilar/` (Convex portfolio) | `cianfhoghlaim/web/apps/croilar-web/` + `cianfhoghlaim/web/apps/croilar-portal/` |
+| `sruth/codeolas/` (code intelligence library) | `cianfhoghlaim/libraries/codeolas/` |
+| `infrastructure/stacks/cognee/` | `cianfhoghlaim/stacks/cognee/` |
+| `infrastructure/stacks/graphiti/` | `cianfhoghlaim/stacks/graphiti/` |
+| `infrastructure/stacks/infisical/` | `cianfhoghlaim/stacks/infisical/` |
+| `infrastructure/stacks/pangolin/` | `cianfhoghlaim/stacks/pangolin/` |
+| `infrastructure/scripts/cognee-graph-models/` | `cianfhoghlaim/cognify/cognee_integration/graph_models/` |
+
+### 9.2 Subagent migration map
+
+The 5 sruth-subagents were replaced with **4 functional
+subagents + 1 research subagent** in `opencode.json`:
+
+| Old subagent (pre-2026-06-28) | New subagent | Skill count | Routes to |
+|:--|:--|--:|:--|
+| `oideachais` | `data-platform` | 15 | `cianfhoghlaim/dlt_sources/`, `dagster_defs/`, `baml_src/`, `notebooks/` |
+| `infrastructure` | `infrastructure` | 16 | `cianfhoghlaim/stacks/*/`, komodo, pangolin, locket |
+| `meaisinfhoghlaim` | `agent-platform` | 23 | `cianfhoghlaim/agents/meaisinfhoghlaim/`, BAML, OCR, LLM routing, Langfuse, MLflow, RAGAS |
+| `croilar` + `tuatha` | `frontend-apps` | 20 | `cianfhoghlaim/web/`, Convex, Babylon.js, Hono |
+| (new) | `research` | 11 | BrowserBase, Firecrawl, CCC, Cognee, change-detection |
+
+The build-agent prompt (this file's owner) was rewritten to
+reference the new subagent names and the `cianfhoghlaim/` paths.
+The five `sruth/`-prefixed subagent types are gone.
+
+### 9.3 MCP migration
+
+The `croilar-devtools` MCP server (which pointed at
+`sruth/croilar/mcp/devtools/index.ts`) was **removed** because
+the `sruth/croilar/` directory no longer exists. The croilar
+dev-tools surface is temporarily un-implementable; a follow-up
+GitHub issue tracks the migration of the MCP server code to
+`cianfhoghlaim/agents/api/_croilar_convex/devtools.ts`.
+
+Total MCP count: **9** (was 10 before the consolidation).
+
+### 9.4 Spec deltas
+
+This rewrite is tracked by
+[`openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/`](../../openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/)
+and defines a new canonical spec:
+[`openspec/specs/agent-registry/spec.md`](../../openspec/specs/agent-registry/spec.md).
