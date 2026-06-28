@@ -746,6 +746,12 @@ general_settings:
   redact_user_api_key_info: true
   forward_client_headers_to_llm_api: ["X-Request-Id", "X-Trace-Id"]
 
+  # Default model: route through the `minimax` alias (7-tier fallback chain).
+  # See openspec/changes/litellm-minimax-vendor-derisking for the slot rotation
+  # and the opencode-go/qwen3.7-max/kimi-k2.6/glm-4.6/local-math fallback chain.
+  # Set in 2026-06-28 Phase 0.4 (Cianfhoghlaim v4 consolidation).
+  default_model: minimax
+
   # Proxy-level request timeouts
   request_timeout: 600
   # Health checks

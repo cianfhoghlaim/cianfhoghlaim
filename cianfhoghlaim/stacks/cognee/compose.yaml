@@ -3,7 +3,8 @@
 # via the REST API on port 8000. Joins the lakehouse_lakehouse external network.
 #
 # LLM is provided by the LiteLLM proxy (infrastructure/stacks/litellm).
-# Default model: deepseek/deepseek-chat (works around the Gemini 403 block).
+# Default model: minimax (Phase 0.4 switch — routes through LiteLLM's 7-tier
+# fallback chain per openspec/changes/litellm-minimax-vendor-derisking).
 # Override with LLM_MODEL=local/irish/uccix to use the local Irish GGUF.
 #
 # To start (prod):  docker compose -f compose.yaml -f sidecar.yaml up -d
@@ -29,7 +30,7 @@ services:
       LLM_API_KEY: no-key-needed
       LLM_PROVIDER: openai
       LLM_BASE_URL: http://litellm:4000/v1
-      LLM_MODEL: ${COGNEE_LLM_MODEL:-deepseek/deepseek-chat}
+      LLM_MODEL: ${COGNEE_LLM_MODEL:-minimax}
       EMBEDDING_API_KEY: no-key-needed
       EMBEDDING_PROVIDER: openai
       EMBEDDING_BASE_URL: http://litellm:4000/v1
