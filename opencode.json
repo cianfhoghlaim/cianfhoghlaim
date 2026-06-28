@@ -2,21 +2,13 @@
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "browserbase": {
-      "type": "local",
-      "command": [
-        "bunx",
-        "-y",
-        "@browserbasehq/mcp",
-        "--modelName",
-        "deepseek/deepseek-chat",
-        "--experimental"
-      ],
-      "env": {
-        "BROWSERBASE_API_KEY": "infisical://dev-baile/browserbase/api_key",
-        "BROWSERBASE_PROJECT_ID": "infisical://dev-baile/browserbase/project_id",
-        "DEEPSEEK_API_KEY": "infisical://dev-baile/deepseek/api_key"
+      "type": "remote",
+      "url": "https://mcp.browserbase.com/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:BROWSERBASE_API_KEY}"
       },
-      "enabled": true
+      "enabled": true,
+      "timeout": 60000
     },
     "firecrawl": {
       "type": "local",
