@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
