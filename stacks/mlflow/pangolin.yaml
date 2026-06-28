@@ -1,0 +1,12 @@
+# MLflow — Pangolin private-resource route
+# Routes mlflow.cianfhoghlaim.ie → mlflow container at port 5000.
+# TinyAuth protects the route; MLflow has no built-in auth.
+pangolin:
+  private-resources:
+    mlflow:
+      name: mlflow
+      mode: http
+      full-domain: mlflow.cianfhoghlaim.ie
+      destination-port: 5000
+      protocol: http
+      roles[0]: tinyauth@file

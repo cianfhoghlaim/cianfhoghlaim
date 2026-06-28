@@ -1,0 +1,72 @@
+# =============================================================================
+# Croilar — Locket sidecar (Infisical secret injection at runtime)
+# =============================================================================
+# Container boots before the croilar services, resolves Infisical references,
+# and writes the resolved values to /run/secrets/locket/secrets.env (tmpfs).
+#
+# compose.yaml declares the dragonfly + dagster services without any locket
+# reference; this file adds:
+#   1. The `locket` sidecar service.
+#   2. `depends_on: locket: service_healthy` and `env_file: /run/secrets/...`
+#      to each croilar service so the secrets volume is mounted and the env
+#      file is loaded before the apps start.
+# =============================================================================
+
+services:
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket:latest
+    container_name: croilar-locket
+    restart: unless-stopped
+    env_file:
+      - ./secrets.env
+    environment:
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-dev-baile}
+      TEMPLATE_PATH: /etc/locket/secrets.env
+      OUTPUT_PATH: /run/secrets/locket/secrets.env
+    volumes:
+      - ./secrets.env:/etc/locket/secrets.env:ro
+      - locket_secrets:/run/secrets/locket:rw
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /run/secrets/locket/secrets.env"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aleyum
+
+  dragonfly:
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - locket_secrets:/run/secrets/locket:ro
+
+  dagster-webserver:
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - locket_secrets:/run/secrets/locket:ro
+
+  dagster-daemon:
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - locket_secrets:/run/secrets/locket:ro
+
+volumes:
+  locket_secrets:
+    external: true
+    name: cianfhoghlaim_locket_secrets
+
+networks:
+  aleyum:
+    driver: bridge

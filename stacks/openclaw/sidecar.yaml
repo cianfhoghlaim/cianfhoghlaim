@@ -1,0 +1,57 @@
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: openclaw-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+
+  openclaw:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+    # env_file path is intentionally a runtime path; only resolves after
+    # locket sidecar hydrates /run/secrets/locket/secrets.env at container start.
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge

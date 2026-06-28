@@ -1,0 +1,13 @@
+{
+  "writer": {
+    "type": "iceberg",
+    "partitioner": {
+      "type": "identity",
+      "keys": ["id"]
+    },
+    "flush_interval_ms": 5000,
+    "batch_size": 10000,
+    "compression": "snappy",
+    "format_version": 2
+  }
+}

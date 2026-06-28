@@ -1,0 +1,23 @@
+name: marimo
+services:
+  marimo:
+    image: marimo/marimo:latest
+    container_name: marimo
+    restart: unless-stopped
+    ports: ["2718:2718"]
+    command: ["edit", "/notebooks/mission_control.py", "--host=0.0.0.0", "--port=2718", "--headless"]
+    volumes:
+      - ../../oideachais/notebooks:/notebooks:ro
+      - marimo_data:/home/marimo
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:2718/api/health || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 15s
+    deploy:
+      resources:
+        limits: {memory: 2G, cpus: '2'}
+    networks: [cianfhoghlaim, lakehouse]
+volumes:
+  marimo_data: {driver: local}
+networks:
+  cianfhoghlaim: {driver: bridge}
+  lakehouse: {name: lakehouse_lakehouse, external: true}

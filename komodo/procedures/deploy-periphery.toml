@@ -1,0 +1,24 @@
+[[procedure]]
+name = "deploy-periphery"
+description = "Deploy Periphery agents to all servers via Ansible"
+
+[[procedure.config.stage]]
+name = "pull-latest"
+enabled = true
+executions = [
+  { execution.type = "PullRepo", execution.params.repo = "bonneagar", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "sync-ansible"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "sync-ansible-files", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "run-playbook"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "run-ansible-playbook", execution.params.services = [], enabled = true }
+]
