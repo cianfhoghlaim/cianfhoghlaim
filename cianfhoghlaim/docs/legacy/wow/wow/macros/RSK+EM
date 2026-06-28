@@ -1,0 +1,6 @@
+#showtooltip Enveloping Mist
+/cast [mod:shift, @focus, harm, nodead] Rising Sun Kick;
+/cast [mod:shift, @mouseover, harm, nodead] Rising Sun Kick;
+/cast [mod:shift] Rising Sun Kick;
+/cast [@mouseover, help] Enveloping Mist;
+/cast Enveloping Mist;

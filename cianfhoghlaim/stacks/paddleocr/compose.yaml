@@ -1,0 +1,19 @@
+name: paddleocr
+services:
+  paddleocr:
+    image: paddlecloud/paddleocr:latest
+    container_name: paddleocr
+    restart: unless-stopped
+    ports: ["8000:8000"]
+    environment:
+      - PADDLEOCR_API_KEY=${PADDLEOCR_API_KEY:-not-needed}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/health || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 30s
+    deploy:
+      resources:
+        limits: {memory: 8G, cpus: '4'}
+    networks: [cianfhoghlaim, lakehouse]
+networks:
+  cianfhoghlaim: {driver: bridge}
+  lakehouse: {name: lakehouse_lakehouse, external: true}

@@ -1,0 +1,24 @@
+name: olmocr
+services:
+  olmocr:
+    image: allenai/olmocr:latest
+    container_name: olmocr
+    restart: unless-stopped
+    ports: ["8003:8003"]
+    environment:
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+      - OLMA_API_KEY=${OLMA_API_KEY:-not-needed}
+    volumes:
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8003/health || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 60s
+    deploy:
+      resources:
+        limits: {memory: 16G, cpus: '4'}
+    networks: [cianfhoghlaim, lakehouse]
+volumes: {}
+networks:
+  cianfhoghlaim: {driver: bridge}
+  lakehouse: {name: lakehouse_lakehouse, external: true}

@@ -140,14 +140,20 @@ The Cianfhoghlaim platform has **34 capability specs** organised into
 | `chunkhound-code-search` | tooling | Semantic code search with MVCC |
 | `documentation` | tooling | Canonical docs/ structure (8 numbered domains), frontmatter schema |
 
-### Quadrant map (4 top-level quadrants)
+### Quadrant map (1 consolidated package — v4)
 
-| Quadrant | Path | Wheel name | README | AGENTS.md |
+> **NOTE:** As of 2026-06-28 (the `2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4` change),
+> the 4 quadrants (oideachais, meaisinfhoghlaim, tuatha, croilar) + browser + crypteolas
+> have been consolidated into a single `cianfhoghlaim/` package. The 4 former quadrant
+> AGENTS.md files are preserved at their new in-package locations for backward navigation.
+
+| Package | Path | Wheel name | README | AGENTS.md |
 |:--|:--|:--|:--|:--|
-| **Oideachais** | `sruth/oideachais/` | `oideachais` | `sruth/oideachais/README.md` | `sruth/oideachais/AGENTS.md` |
-| **Meaisínfhoghlaim** | `sruth/meaisinfhoghlaim/` | `meaisinfhoghlaim` | `sruth/meaisinfhoghlaim/README.md` | `sruth/meaisinfhoghlaim/AGENTS.md` |
-| **Tuatha** | `sruth/tuatha/` | `tuath` (uv) | `sruth/tuatha/README.md` | `sruth/tuatha/AGENTS.md` |
-| **Croílár** | `sruth/croilar/` | (TypeScript) | `sruth/croilar/README.md` | `sruth/croilar/AGENTS.md` |
+| **Cianfhoghlaim** (consolidated) | `cianfhoghlaim/` | `cianfhoghlaim` (uv) + `codeolas` (uv sub-package) | `cianfhoghlaim/README.md` | `cianfhoghlaim/AGENTS.md` |
+| **Oideachais sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/web/apps/oideachais-web/` + `core/baml/_oideachais_src/` + `assets/_oideachais_dagster_defs/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/web/apps/_oideachais_apps/README.md` | `cianfhoghlaim/web/apps/_oideachais_apps/AGENTS.md` |
+| **Meaisínfhoghlaim sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/agents/meaisinfhoghlaim/` + `ocr/_meaisinfhoghlaim_src/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/agents/meaisinfhoghlaim/README.md` | `cianfhoghlaim/agents/meaisinfhoghlaim/AGENTS.md` |
+| **Tuatha sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/agents/tuatha/` + `web/apps/tuatha-ui/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/agents/tuatha/README.md` | `cianfhoghlaim/agents/tuatha/AGENTS.md` |
+| **Croílár sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/web/apps/croilar-web/` + `assets/_croilar_dagster/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/web/apps/_croilar_apps/README.md` | `cianfhoghlaim/web/apps/_croilar_apps/AGENTS.md` |
 
 ## Adding a New Capability
 

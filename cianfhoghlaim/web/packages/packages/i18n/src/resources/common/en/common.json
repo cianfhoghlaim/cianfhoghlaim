@@ -1,0 +1,118 @@
+{
+  "site": {
+    "title": "Croílár",
+    "tagline": "Personal Portfolio + CV + Data Engineering"
+  },
+  "nav": {
+    "home": "Home",
+    "cv": "CV",
+    "music": "Music",
+    "code": "Code",
+    "research": "Research",
+    "teaching": "Teaching",
+    "data": "Data",
+    "identity": "Identity",
+    "contact": "Contact"
+  },
+  "home": {
+    "greeting": "Cian de Búrca",
+    "role": "Software Engineer · Educator · Music Producer",
+    "heroTagline": "Building data platforms for Celtic education, crafting electronic soundscapes, and teaching the next generation of engineers.",
+    "exploreCv": "View CV",
+    "exploreMusic": "Listen",
+    "exploreCode": "View Projects"
+  },
+  "cv": {
+    "title": "Curriculum Vitae",
+    "education": "Education",
+    "awards": "Awards & Honours",
+    "publications": "Publications",
+    "references": "References",
+    "teaching": "Teaching Experience",
+    "searchPlaceholder": "Search CV…",
+    "downloadPdf": "Download PDF"
+  },
+  "music": {
+    "title": "Music",
+    "subtitle": "Productions, remixes, and collaborations across platforms.",
+    "spotify": "Spotify",
+    "soundcloud": "SoundCloud",
+    "youtube": "YouTube",
+    "all": "All",
+    "listenNow": "Listen Now",
+    "tempo": "Tempo",
+    "energy": "Energy",
+    "danceability": "Danceability",
+    "releasedOn": "Released On"
+  },
+  "code": {
+    "title": "Code",
+    "subtitle": "Open source projects and contributions on GitHub.",
+    "repositories": "Repositories",
+    "totalStars": "Total Stars",
+    "totalForks": "Total Forks",
+    "languages": "Languages",
+    "viewOnGithub": "View all on GitHub"
+  },
+  "research": {
+    "title": "Research",
+    "subtitle": "Cross-linked outputs from the oideachais and meaisínfhoghlaim subprojects.",
+    "educationPlatform": "Celtic Education Platform",
+    "mlAi": "Machine Learning & AI",
+    "linkedFrom": "Linked from"
+  },
+  "teaching": {
+    "title": "Teaching",
+    "subtitle": "BCS PGC scholarship, school placements, and student feedback.",
+    "placements": "Placements",
+    "feedback": "Student Feedback",
+    "curriculum": "Curriculum Designed"
+  },
+  "data": {
+    "title": "Data Engineering",
+    "subtitle": "Live status of the Croílár Dagster pipeline assets.",
+    "assets": "Pipeline Assets",
+    "schedules": "Schedules",
+    "materializations": "Recent Materializations",
+    "dagsterUi": "Open Dagster UI",
+    "assetsCount": "Pipeline Assets",
+    "schedulesCount": "Active Schedules",
+    "lastRun": "Last Materialization",
+    "status": "Status"
+  },
+  "identity": {
+    "title": "Identity Verification",
+    "subtitle": "Verification metadata only — PII documents are encrypted at rest and require Pocket ID authentication.",
+    "authRequired": "Pocket ID authentication required",
+    "signIn": "Sign in with Pocket ID",
+    "documentType": "Document Type",
+    "issuingAuthority": "Issuing Authority",
+    "expiryDate": "Expiry Date",
+    "verified": "Verified",
+    "pending": "Pending"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "End-to-end encrypted contact form. All submissions are HMAC-signed and sent via a Hono Worker on Cloudflare.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message",
+    "sent": "Message sent — thank you.",
+    "encrypted": "This form is end-to-end encrypted."
+  },
+  "footer": {
+    "copyright": "Croílár. All rights reserved.",
+    "tagline": "Personal Portfolio + CV + Data Engineering"
+  },
+  "common": {
+    "loading": "Loading…",
+    "comingSoon": "Coming soon",
+    "noData": "No data available yet"
+  },
+  "notFound": {
+    "title": "404 — Not Found",
+    "subtitle": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home"
+  }
+}

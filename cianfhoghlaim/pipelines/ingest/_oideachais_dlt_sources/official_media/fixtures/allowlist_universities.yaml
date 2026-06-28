@@ -1,0 +1,127 @@
+category: university
+description: British Isles universities tracked for the official-media pipeline. PR
+  1 covers the strategic locations the user named (Galway, Belfast, Dublin, Liverpool,
+  London, Edinburgh) plus the Welsh, Scottish, and Cornish institutions referenced
+  in leabharlann/gemini_deep_research/culture/. All handles verified via Wikipedia
+  + the university's own home page.
+entries:
+- ig_username: universityofgalway
+  name: University of Galway
+  wikipedia_title: University of Galway
+  verified_at: '2026-06-18'
+  source_url: https://www.universityofgalway.ie/about-us/
+- ig_username: ucddublin
+  name: University College Dublin
+  wikipedia_title: University College Dublin
+  verified_at: '2026-06-18'
+  source_url: https://www.ucd.ie/about/
+- ig_username: trincolldublin
+  name: Trinity College Dublin
+  wikipedia_title: Trinity College Dublin
+  verified_at: '2026-06-18'
+  source_url: https://www.tcd.ie/about/
+- ig_username: maynoothuni
+  name: Maynooth University
+  wikipedia_title: Maynooth University
+  verified_at: '2026-06-18'
+  source_url: https://www.maynoothuniversity.ie/about
+- ig_username: universitylimerick
+  name: University of Limerick
+  wikipedia_title: University of Limerick
+  verified_at: '2026-06-18'
+  source_url: https://www.ul.ie/about
+- ig_username: queensuniversitybelfast
+  name: Queen's University Belfast
+  wikipedia_title: Queen's University Belfast
+  verified_at: '2026-06-18'
+  source_url: https://www.qub.ac.uk/about/
+- ig_username: ulsteruni
+  name: Ulster University
+  wikipedia_title: Ulster University
+  verified_at: '2026-06-18'
+  source_url: https://www.ulster.ac.uk/about
+- ig_username: ucl
+  name: University College London
+  wikipedia_title: University College London
+  verified_at: '2026-06-18'
+  source_url: https://www.ucl.ac.uk/about
+- ig_username: kingscollegelondon
+  name: King's College London
+  wikipedia_title: King's College London
+  verified_at: '2026-06-18'
+  source_url: https://www.kcl.ac.uk/about
+- ig_username: londonmetuni
+  name: London Metropolitan University
+  wikipedia_title: London Metropolitan University
+  verified_at: '2026-06-18'
+  source_url: https://www.londonmet.ac.uk/about/our-university/
+- ig_username: imperialcollege
+  name: Imperial College London
+  wikipedia_title: Imperial College London
+  verified_at: '2026-06-18'
+  source_url: https://www.imperial.ac.uk/about
+- ig_username: cambridgeuniversity
+  name: University of Cambridge
+  wikipedia_title: University of Cambridge
+  verified_at: '2026-06-18'
+  source_url: https://www.cam.ac.uk/about-the-university
+- ig_username: oxford_uni
+  name: University of Oxford
+  wikipedia_title: University of Oxford
+  verified_at: '2026-06-18'
+  source_url: https://www.ox.ac.uk/about
+- ig_username: liverpoolhopeuni
+  name: Liverpool Hope University
+  wikipedia_title: Liverpool Hope University
+  verified_at: '2026-06-18'
+  source_url: https://www.hope.ac.uk/about-us/
+- ig_username: ljmuofficial
+  name: Liverpool John Moores University
+  wikipedia_title: Liverpool John Moores University
+  verified_at: '2026-06-18'
+  source_url: https://www.ljmu.ac.uk/about-us/
+- ig_username: universityofedinburgh
+  name: University of Edinburgh
+  wikipedia_title: University of Edinburgh
+  verified_at: '2026-06-18'
+  source_url: https://www.ed.ac.uk/about
+- ig_username: unistrathclyde
+  name: University of Strathclyde
+  wikipedia_title: University of Strathclyde
+  verified_at: '2026-06-18'
+  source_url: https://www.strath.ac.uk/whystrathclyde/
+- ig_username: aberystwythuni
+  name: Aberystwyth University
+  wikipedia_title: Aberystwyth University
+  verified_at: '2026-06-18'
+  source_url: https://www.aber.ac.uk/en/about-us/
+- ig_username: cardiffuni
+  name: Cardiff University
+  wikipedia_title: Cardiff University
+  verified_at: '2026-06-18'
+  source_url: https://www.cardiff.ac.uk/about/our-profile/strategy
+- ig_username: bangoruniversity
+  name: Bangor University
+  wikipedia_title: Bangor University
+  verified_at: '2026-06-18'
+  source_url: https://www.bangor.ac.uk/about/
+- ig_username: cardiffmetuni
+  name: Cardiff Metropolitan University
+  wikipedia_title: Cardiff Metropolitan University
+  verified_at: '2026-06-18'
+  source_url: https://www.cardiffmet.ac.uk/about/
+- ig_username: southwalesuni
+  name: University of South Wales
+  wikipedia_title: University of South Wales
+  verified_at: '2026-06-18'
+  source_url: https://www.southwales.ac.uk/about/
+- ig_username: uwtsd
+  name: University of Wales Trinity Saint David
+  wikipedia_title: University of Wales Trinity Saint David
+  verified_at: '2026-06-18'
+  source_url: https://www.uwtsd.ac.uk/about/
+- ig_username: exeteruni
+  name: University of Exeter (Penryn Campus — Cornish Studies)
+  wikipedia_title: University of Exeter
+  verified_at: '2026-06-18'
+  source_url: https://www.exeter.ac.uk/about/

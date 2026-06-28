@@ -1,0 +1,119 @@
+# Babylon.js Web Client
+# Browser-based Celtic MMO client with WebGPU
+
+title: "Celtic MMO Web Client"
+subtitle: "Babylon.js 7 WebGPU Browser Game"
+category: babylon
+order: 5
+
+description: |
+  Browser-based game client for the Tuath Celtic MMO, built with Babylon.js 7
+  and WebGPU. Features automatic fallback to WebGL2, lazy asset loading,
+  zone-based world streaming, and full SpacetimeDB integration. Runs on any
+  modern browser without installation.
+
+technologies:
+  - Babylon.js 7
+  - WebGPU / WebGL2
+  - TypeScript
+  - SpacetimeDB TypeScript SDK
+  - TanStack Router
+  - Vite
+
+features:
+  - WebGPU rendering with WebGL2 fallback
+  - Zone-based lazy asset loading
+  - Real-time multiplayer via SpacetimeDB
+  - Celtic shader effects (WGSL)
+  - Mobile-responsive touch controls
+  - PWA offline support
+
+performance:
+  fps_target: 60
+  draw_calls: "<100 per frame"
+  asset_budget: "50MB initial, lazy load rest"
+  latency: "<50ms to SpacetimeDB"
+
+zones:
+  - id: connemara
+    region: Ireland
+    language: Irish
+
+  - id: skye
+    region: Scotland
+    language: Scottish Gaelic
+
+  - id: anglesey
+    region: Wales
+    language: Welsh
+
+media:
+  thumbnail: "/portfolio/babylon/webclient-thumbnail.png"
+  video: "https://www.youtube.com/watch?v=EXAMPLE"
+  gallery:
+    - "/portfolio/babylon/gameplay.png"
+    - "/portfolio/babylon/webgpu.png"
+    - "/portfolio/babylon/mobile.png"
+  demo: "https://game.cianfhoghlaim.ie"  # Live WebGPU demo
+
+code_samples:
+  - title: "WebGPU Scene Setup"
+    language: typescript
+    code: |
+      import { Engine, Scene, WebGPUEngine } from "@babylonjs/core";
+
+      async function createScene(canvas: HTMLCanvasElement) {
+        // Try WebGPU, fall back to WebGL2
+        let engine: Engine;
+        if (await WebGPUEngine.IsSupportedAsync) {
+          engine = new WebGPUEngine(canvas);
+          await engine.initAsync();
+        } else {
+          engine = new Engine(canvas, true);
+        }
+
+        const scene = new Scene(engine);
+
+        // Load Celtic zone
+        await loadZone(scene, "connemara");
+
+        // Connect to SpacetimeDB
+        const client = await SpacetimeDBClient.connect();
+        client.subscribe("Player", "EntityPosition", "ZonePresence");
+
+        return { engine, scene, client };
+      }
+
+  - title: "Zone Streaming"
+    language: typescript
+    code: |
+      interface ZoneAssets {
+        terrain: Mesh;
+        props: Mesh[];
+        npcs: TransformNode[];
+      }
+
+      async function loadZone(
+        scene: Scene,
+        zoneId: string
+      ): Promise<ZoneAssets> {
+        const manifest = await fetch(`/zones/${zoneId}/manifest.json`);
+        const { terrain, props, npcs } = await manifest.json();
+
+        // Lazy load assets
+        const assets = await Promise.all([
+          SceneLoader.ImportMeshAsync("", `/zones/${zoneId}/`, terrain),
+          ...props.map(p => SceneLoader.ImportMeshAsync("", `/zones/${zoneId}/`, p)),
+        ]);
+
+        return { terrain: assets[0], props: assets.slice(1), npcs: [] };
+      }
+
+links:
+  docs: "/docs/babylon-client"
+  github: "https://github.com/example/celtic-webclient"
+  live: "https://game.cianfhoghlaim.ie"
+
+dates:
+  started: "2024-01"
+  completed: null

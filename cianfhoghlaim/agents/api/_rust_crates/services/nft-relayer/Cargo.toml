@@ -1,0 +1,52 @@
+[package]
+name = "celtic-nft-relayer"
+description = "NFT minting relayer service for Celtic game - bridges SpacetimeDB to Solana"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "nft-relayer"
+path = "src/main.rs"
+
+[dependencies]
+# Async Runtime
+tokio = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+
+# Solana
+solana-sdk = { workspace = true }
+solana-client = { workspace = true }
+anchor-client = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error Handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# HTTP Client (for Arweave/IPFS)
+reqwest = { workspace = true }
+url = { workspace = true }
+
+# Environment
+dotenvy = "0.15"
+
+# Utilities
+chrono = { workspace = true }
+uuid = { workspace = true }
+base64 = "0.22"
+
+# SpacetimeDB SDK
+spacetimedb-sdk = "1.11"
+
+# Shared Types
+cianfhoghlaim-shared-types = { path = "../../stdb-modules/shared-types" }

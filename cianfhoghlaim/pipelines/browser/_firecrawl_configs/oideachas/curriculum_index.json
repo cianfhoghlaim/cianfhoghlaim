@@ -1,0 +1,711 @@
+{
+  "cycles": {
+    "junior_cycle": {
+      "name": {
+        "en": "Junior Cycle",
+        "ga": "An tSraith Sh\u00f3isearach"
+      },
+      "age_range": "12-15"
+    },
+    "senior_cycle": {
+      "name": {
+        "en": "Senior Cycle",
+        "ga": "An tSraith Shinsearach"
+      },
+      "age_range": "15-18"
+    }
+  },
+  "sources": {
+    "curriculumonline": {
+      "base_url": "https://curriculumonline.ie",
+      "languages": {
+        "en": "",
+        "ga": "/ga-ie"
+      }
+    },
+    "ncca": {
+      "base_url": "https://ncca.ie",
+      "languages": {
+        "en": "/en",
+        "ga": "/ga"
+      }
+    },
+    "examinations": {
+      "base_url": "https://examinations.ie",
+      "languages": {
+        "en": "",
+        "ga": ""
+      }
+    }
+  },
+  "subjects": [
+    {
+      "slug": "mathematics",
+      "name": {
+        "en": "Mathematics",
+        "ga": "Matamaitic"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Mathematics",
+        "ncca": "/junior-cycle/subjects/mathematics"
+      }
+    },
+    {
+      "slug": "geography",
+      "name": {
+        "en": "Geography",
+        "ga": "T\u00edreola\u00edocht"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Geography",
+        "ncca": "/junior-cycle/subjects/geography"
+      }
+    },
+    {
+      "slug": "chemistry",
+      "name": {
+        "en": "Chemistry",
+        "ga": "Ceimic"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Chemistry",
+        "ncca": "/senior-cycle/subjects/chemistry"
+      }
+    },
+    {
+      "slug": "gaeilge",
+      "name": {
+        "en": "Gaeilge",
+        "ga": "Gaeilge"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Gaeilge",
+        "ncca": "/junior-cycle/subjects/gaeilge"
+      }
+    },
+    {
+      "slug": "english",
+      "name": {
+        "en": "English",
+        "ga": "B\u00e9arla"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/senior-cycle/senior-cycle-subjects/english",
+        "ncca": "/junior-cycle/subjects/english"
+      }
+    },
+    {
+      "slug": "biology",
+      "name": {
+        "en": "Biology",
+        "ga": "Bitheola\u00edocht"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Biology",
+        "ncca": "/senior-cycle/subjects/biology"
+      }
+    },
+    {
+      "slug": "history",
+      "name": {
+        "en": "History",
+        "ga": "Stair"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/History",
+        "ncca": "/junior-cycle/subjects/history"
+      }
+    },
+    {
+      "slug": "business-studies",
+      "name": {
+        "en": "Business Studies",
+        "ga": "Staid\u00e9ar Gn\u00f3"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Business-Studies",
+        "ncca": "/junior-cycle/subjects/business-studies"
+      }
+    },
+    {
+      "slug": "applied-technology",
+      "name": {
+        "en": "Applied Technology",
+        "ga": "Applied Technology"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Applied-Technology",
+        "ncca": "/junior-cycle/subjects/applied-technology"
+      }
+    },
+    {
+      "slug": "classics",
+      "name": {
+        "en": "Classics",
+        "ga": "Classics"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Classics",
+        "ncca": "/junior-cycle/subjects/classics"
+      }
+    },
+    {
+      "slug": "engineering",
+      "name": {
+        "en": "Engineering",
+        "ga": "Engineering"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Engineering",
+        "ncca": "/junior-cycle/subjects/engineering"
+      }
+    },
+    {
+      "slug": "graphics",
+      "name": {
+        "en": "Graphics",
+        "ga": "Graphics"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Graphics",
+        "ncca": "/junior-cycle/subjects/graphics"
+      }
+    },
+    {
+      "slug": "home-economics",
+      "name": {
+        "en": "Home Economics",
+        "ga": "Home Economics"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Home-Economics",
+        "ncca": "/junior-cycle/subjects/home-economics"
+      }
+    },
+    {
+      "slug": "modern-foreign-languages",
+      "name": {
+        "en": "Modern Foreign Languages",
+        "ga": "Modern Foreign Languages"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Modern-Foreign-Languages",
+        "ncca": "/junior-cycle/subjects/modern-foreign-languages"
+      }
+    },
+    {
+      "slug": "music",
+      "name": {
+        "en": "Music",
+        "ga": "Music"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Music",
+        "ncca": "/junior-cycle/subjects/music"
+      }
+    },
+    {
+      "slug": "physical-education",
+      "name": {
+        "en": "Physical Education",
+        "ga": "Physical Education"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Physical-Education",
+        "ncca": "/junior-cycle/subjects/physical-education"
+      }
+    },
+    {
+      "slug": "religious-education",
+      "name": {
+        "en": "Religious Education",
+        "ga": "Religious Education"
+      },
+      "cycles": [
+        "junior_cycle",
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Religious-Education",
+        "ncca": "/junior-cycle/subjects/religious-education"
+      }
+    },
+    {
+      "slug": "science",
+      "name": {
+        "en": "Science",
+        "ga": "Science"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Science",
+        "ncca": "/junior-cycle/subjects/science"
+      }
+    },
+    {
+      "slug": "visual-art",
+      "name": {
+        "en": "Visual Art",
+        "ga": "Visual Art"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Visual-Art",
+        "ncca": "/junior-cycle/subjects/visual-art"
+      }
+    },
+    {
+      "slug": "wood-technology",
+      "name": {
+        "en": "Wood Technology",
+        "ga": "Wood Technology"
+      },
+      "cycles": [
+        "junior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Wood-Technology",
+        "ncca": "/junior-cycle/subjects/wood-technology"
+      }
+    },
+    {
+      "slug": "accounting",
+      "name": {
+        "en": "Accounting",
+        "ga": "Accounting"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Accounting",
+        "ncca": "/senior-cycle/subjects/accounting"
+      }
+    },
+    {
+      "slug": "agricultural-science",
+      "name": {
+        "en": "Agricultural Science",
+        "ga": "Agricultural Science"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Agricultural-Science",
+        "ncca": "/senior-cycle/subjects/agricultural-science"
+      }
+    },
+    {
+      "slug": "applied-mathematics",
+      "name": {
+        "en": "Applied Mathematics",
+        "ga": "Applied Mathematics"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Applied-Mathematics",
+        "ncca": "/senior-cycle/subjects/applied-mathematics"
+      }
+    },
+    {
+      "slug": "arabic",
+      "name": {
+        "en": "Arabic",
+        "ga": "Arabic"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Arabic",
+        "ncca": "/senior-cycle/subjects/arabic"
+      }
+    },
+    {
+      "slug": "art",
+      "name": {
+        "en": "Art",
+        "ga": "Art"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Art",
+        "ncca": "/senior-cycle/subjects/art"
+      }
+    },
+    {
+      "slug": "business",
+      "name": {
+        "en": "Business",
+        "ga": "Business"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Business",
+        "ncca": "/senior-cycle/subjects/business"
+      }
+    },
+    {
+      "slug": "classical-studies",
+      "name": {
+        "en": "Classical Studies",
+        "ga": "Classical Studies"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Classical-Studies",
+        "ncca": "/senior-cycle/subjects/classical-studies"
+      }
+    },
+    {
+      "slug": "computer-science",
+      "name": {
+        "en": "Computer Science",
+        "ga": "Computer Science"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Computer-Science",
+        "ncca": "/senior-cycle/subjects/computer-science"
+      }
+    },
+    {
+      "slug": "construction-studies",
+      "name": {
+        "en": "Construction Studies",
+        "ga": "Construction Studies"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Construction-Studies",
+        "ncca": "/senior-cycle/subjects/construction-studies"
+      }
+    },
+    {
+      "slug": "design-and-communication-graphics",
+      "name": {
+        "en": "Design And Communication Graphics",
+        "ga": "Design And Communication Graphics"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Design-And-Communication-Graphics",
+        "ncca": "/senior-cycle/subjects/design-and-communication-graphics"
+      }
+    },
+    {
+      "slug": "economics",
+      "name": {
+        "en": "Economics",
+        "ga": "Economics"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Economics",
+        "ncca": "/senior-cycle/subjects/economics"
+      }
+    },
+    {
+      "slug": "french",
+      "name": {
+        "en": "French",
+        "ga": "French"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/French",
+        "ncca": "/senior-cycle/subjects/french"
+      }
+    },
+    {
+      "slug": "german",
+      "name": {
+        "en": "German",
+        "ga": "German"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/German",
+        "ncca": "/senior-cycle/subjects/german"
+      }
+    },
+    {
+      "slug": "italian",
+      "name": {
+        "en": "Italian",
+        "ga": "Italian"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Italian",
+        "ncca": "/senior-cycle/subjects/italian"
+      }
+    },
+    {
+      "slug": "japanese",
+      "name": {
+        "en": "Japanese",
+        "ga": "Japanese"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Japanese",
+        "ncca": "/senior-cycle/subjects/japanese"
+      }
+    },
+    {
+      "slug": "latin",
+      "name": {
+        "en": "Latin",
+        "ga": "Latin"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Latin",
+        "ncca": "/senior-cycle/subjects/latin"
+      }
+    },
+    {
+      "slug": "physics",
+      "name": {
+        "en": "Physics",
+        "ga": "Physics"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Physics",
+        "ncca": "/senior-cycle/subjects/physics"
+      }
+    },
+    {
+      "slug": "physics-and-chemistry",
+      "name": {
+        "en": "Physics And Chemistry",
+        "ga": "Physics And Chemistry"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Physics-And-Chemistry",
+        "ncca": "/senior-cycle/subjects/physics-and-chemistry"
+      }
+    },
+    {
+      "slug": "politics-and-society",
+      "name": {
+        "en": "Politics And Society",
+        "ga": "Politics And Society"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Politics-And-Society",
+        "ncca": "/senior-cycle/subjects/politics-and-society"
+      }
+    },
+    {
+      "slug": "spanish",
+      "name": {
+        "en": "Spanish",
+        "ga": "Spanish"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Spanish",
+        "ncca": "/senior-cycle/subjects/spanish"
+      }
+    },
+    {
+      "slug": "technology",
+      "name": {
+        "en": "Technology",
+        "ga": "Technology"
+      },
+      "cycles": [
+        "senior_cycle"
+      ],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Senior-cycle/Senior-Cycle-Subjects/Technology",
+        "ncca": "/senior-cycle/subjects/technology"
+      }
+    }
+  ],
+  "short_courses": []
+}

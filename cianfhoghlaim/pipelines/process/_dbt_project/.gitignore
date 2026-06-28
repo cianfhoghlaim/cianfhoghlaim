@@ -1,0 +1,8 @@
+# dbt-generated artifacts
+target/
+dbt_packages/
+logs/
+.user.yml
+# local smoke databases (created by `dbt build --target dev` against an in-memory
+# or local file DuckDB)
+*.duckdb

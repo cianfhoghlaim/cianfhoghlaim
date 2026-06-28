@@ -1,0 +1,80 @@
+metadata:
+  generated: "2025-12-17"
+  languages:
+    - code: br
+      name: "Breton (Brezhoneg)"
+      iso_639_3: bre
+      
+# =============================================================================
+# BRETON (BREZHONEG) SAMPLES
+# =============================================================================
+breton:
+  an_drouizig_samples:
+    source: "https://drouizig.org/"
+    description: "Sample resources from An Drouizig Breton language tools"
+
+    dictionary_entries:
+      - breton: "demat"
+        french: "bonjour"
+        english: "hello, good day"
+        usage: "Greeting (any time of day)"
+
+      - breton: "kenavo"
+        french: "au revoir"
+        english: "goodbye"
+        etymology: "ken (until) + a vo (will be)"
+
+      - breton: "trugarez"
+        french: "merci"
+        english: "thank you"
+
+      - breton: "brezhoneg"
+        french: "breton (langue)"
+        english: "Breton language"
+        note: "Name of the language itself"
+
+    sample_sentences:
+      - breton: "Petra a fell deoc'h?"
+        french: "Que voulez-vous?"
+        english: "What do you want?"
+
+      - breton: "Komz a ran brezhoneg."
+        french: "Je parle breton."
+        english: "I speak Breton."
+
+      - breton: "Eus pelec'h emaoc'h?"
+        french: "D'où êtes-vous?"
+        english: "Where are you from?"
+
+  ofis_ar_brezhoneg_samples:
+    source: "https://www.fr.brezhoneg.bzh/"
+    description: "Sample standardized Breton terminology"
+
+    terminology:
+      - breton: "urzhiataer"
+        french: "ordinateur"
+        english: "computer"
+        domain: "Computing"
+
+      - breton: "rouedad"
+        french: "réseau"
+        english: "network"
+        domain: "Computing"
+
+      - breton: "skol"
+        french: "école"
+        english: "school"
+        domain: "Education"
+
+  phonetic_corpus_sample:
+    source: "https://github.com/Ofis-publik-ar-brezhoneg/phonetic-breton-corpus"
+    description: "Sample phonetic transcription data"
+
+    entries:
+      - word: "brezhoneg"
+        ipa: "[bʁezɔ̃ːnek]"
+        dialect: "Standard (KLT)"
+
+      - word: "demat"
+        ipa: "[ˈdeːmat]"
+        dialect: "Standard"

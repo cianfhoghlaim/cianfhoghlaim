@@ -1,5 +1,5 @@
 [project]
-name = "cianfhoghlaim"
+name = "cianfhoghlaim-monorepo"
 version = "0.0.0"
 description = "Cianfhoghlaim polyglot monorepo shell — uv workspace orchestrator. Delegates all real work to workspace members."
 readme = "README.md"
@@ -22,7 +22,7 @@ dependencies = [
     "agno>=2.6.11",
     "anthropic>=0.106.0",
     "baml-py>=0.222.0",
-    "fastapi>=0.136.0",
+    "fastapi>=0.115.0,<0.117",  # upper bound pinned for mlx-omni-server compat
     "firecrawl>=4.28.2",
     "google-genai>=1.73.1",
     "groq>=1.4.0",
@@ -53,29 +53,20 @@ package = false
 # Each member sets [tool.uv] package = true in its own pyproject.toml
 
 [tool.uv.workspace]
+# Consolidated single-workspace layout — see
+# openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4
+# Web apps are managed by bun (see package.json workspaces); only Python
+# packages belong in the uv workspace.
  members = [
-    "sruth/oideachais",
-    "sruth/meaisinfhoghlaim",
-    "sruth/tuatha",
-    "sruth/codeolas",
-    "sruth/crypteolas/apps/crypteolas_demo",
-    "sruth/croilar",
-    "infrastructure/browser",
-] 
+    "cianfhoghlaim",
+    "cianfhoghlaim/libraries/codeolas",
+]
 
 [tool.uv.sources]
 # Members can depend on each other; uv resolves them via the workspace lockfile.
 # Keys are the package names (ASCII); values are the workspace source spec.
+cianfhoghlaim = { workspace = true }
 codeolas = { workspace = true }
-crypteolas = { workspace = true }
-crypteolas-demo = { workspace = true }
-sruth-browser = { workspace = true }
-oideachais = { workspace = true }
-tuath = { workspace = true }
-croilar = { workspace = true }
-# `meaisinfhoghlaim` is the project name (ASCII form; the fada is preserved
-# only in the directory branding and docs/READMEs).
-meaisinfhoghlaim = { workspace = true }
 
 # =============================================================================
 # Shared dev tooling — applied to every workspace member
@@ -92,6 +83,10 @@ extend-exclude = [
     ".cocoindex_code",
     "instagram_output",
     "dlthub",
+    # marimo notebooks inject globals (`mo`, `result`, ...) via AST transform
+    # that ruff can't statically analyse. The existing 11 oideachais notebooks
+    # already trip F821; we follow precedent and exclude the whole class.
+    "**/notebooks/*.py",
 ]
 
 [tool.ruff.lint]

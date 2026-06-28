@@ -1,0 +1,210 @@
+# =============================================================================
+# LLAMA-SWAP DYNAMIC MODEL CONFIG
+# =============================================================================
+# The dynamic model swapper for meaisínfhoghlaim — keeps a single
+# high-VRAM model loaded at a time and swaps them on demand.
+#
+# All GGUF files are in /models/ (mounted from ../../stedding/huggingface/gguf/
+# or meaisínfhoghlaim/models/). After Phase 5 (Dagster model_conversion asset)
+# runs, this directory will contain the Q4_K_M + mmproj f16 variants.
+#
+# Quantization strategy (per docs/meaisínfhoghlaim/llamacpp.md):
+#   - LLM weights: Q4_K_M (~4 bits/weight, balanced quality)
+#   - VLM mmproj: F16 (vision encoder MUST stay high precision to avoid
+#                 catastrophic OCR/recognition failure)
+#   - Apple Silicon: use -ngl 99 to offload all layers to GPU
+#   - Context: 8192 default, 32768 for VLM (visual tokens consume context)
+# =============================================================================
+
+healthCheckTimeout: 300   # 70B models can take 60-90s to load from cold disk
+startPort: 10000
+
+# Groups (formerly called "profiles" in the old mmoehring/llama-swap schema).
+# Each group is mutually exclusive by default (`swap: true`): only one of its
+# member models runs at a time. Cross-group models can co-exist.
+#
+# Schema is the new mostlygeek/llama-swap v166+ form:
+#   groups:
+#     <name>:
+#       members: [model_id, ...]
+#       swap: true   # default; only one member runs at a time
+#       exclusive: true  # default; causes other groups to unload
+groups:
+  text:
+    members:
+      - qwen2.5-math
+      - uccix-13b
+      - gemma-3-9b
+  vision:
+    members:
+      - qwen2.5-vl
+      - gemma-3-vision
+      - deepseek-ocr
+  image:
+    members:
+      - z-image-turbo
+      - qwen-image
+      - qwen-image-edit
+      - flux2-dev
+
+models:
+
+  # ===========================================================================
+  # TEXT — math + reasoning
+  # ===========================================================================
+
+  qwen2.5-math:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/text/Qwen2.5-Math-7B-Instruct-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 8192 -fa --cache-type-k q8_0 --cache-type-v q8_0 \
+        --parallel 2
+    profile: text
+    aliases: ["math", "qwen-math"]
+    ttl: 300   # auto-unload after 5min idle
+
+  # ===========================================================================
+  # TEXT — Irish
+  # ===========================================================================
+
+  uccix-13b:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/text/UCCIX-Llama2-13B-Instruct-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 4096 -fa \
+        --parallel 1
+    profile: text
+    aliases: ["irish", "uccix"]
+    ttl: 300
+    notes: "Irish text generation. 8GB resident. Replace with on-disk stub if conversion not done."
+
+  # ===========================================================================
+  # TEXT — Gemma 3 9B (general English fallback)
+  # ===========================================================================
+
+  gemma-3-9b:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/text/gemma-3-9b-it-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 8192 -fa \
+        --parallel 2
+    profile: text
+    aliases: ["gemma", "general-text"]
+    ttl: 300
+    notes: "Replace gemma-2-9b stub. Use gemma-3 9B as the modern equivalent."
+
+  # ===========================================================================
+  # VISION — Qwen2.5-VL (primary)
+  # ===========================================================================
+
+  qwen2.5-vl:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/vision/Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf \
+        --mmproj /models/vision/Qwen2.5-VL-7B-Instruct-mmproj-f16.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 16384 -fa \
+        --parallel 1
+    profile: vision
+    aliases: ["vision", "qwen-vl"]
+    ttl: 300
+    notes: "mmproj MUST stay f16 — quantizing the vision encoder breaks OCR."
+
+  # ===========================================================================
+  # VISION — Gemma 3 vision (fallback)
+  # ===========================================================================
+
+  gemma-3-vision:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/vision/gemma-3-9b-vision-Q4_K_M.gguf \
+        --mmproj /models/vision/gemma-3-9b-vision-mmproj-f16.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 8192 -fa \
+        --parallel 1
+    profile: vision
+    aliases: ["gemma-vision"]
+    ttl: 300
+
+  # ===========================================================================
+  # VISION — DeepSeek-OCR (specialist)
+  # ===========================================================================
+
+  deepseek-ocr:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/vision/deepseek-ocr-Q4_K_M.gguf \
+        --mmproj /models/vision/deepseek-ocr-mmproj-f16.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 4096 -fa \
+        --parallel 1
+    profile: vision
+    aliases: ["ocr-gguf", "deepseek-ocr"]
+    ttl: 300
+    notes: "Specialized OCR model, smaller than Qwen2.5-VL but more accurate on text-only docs."
+
+  # ===========================================================================
+  # IMAGE — Z-Image-Turbo (fast, FLUX quality at SDXL speed)
+  # ===========================================================================
+
+  z-image-turbo:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/image/Z-Image-Turbo-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 2048 \
+        --parallel 1
+    profile: image
+    aliases: ["image", "z-image", "image-fast"]
+    ttl: 300
+    notes: "Fast image gen, ~6-8GB resident."
+
+  # ===========================================================================
+  # IMAGE — Qwen-Image (accurate)
+  # ===========================================================================
+
+  qwen-image:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/image/Qwen-Image-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 2048 \
+        --parallel 1
+    profile: image
+    aliases: ["image-accurate"]
+    ttl: 300
+    notes: "Bilingual text+image, ~10-12GB resident."
+
+  # ===========================================================================
+  # IMAGE — Qwen-Image-Edit-2511
+  # ===========================================================================
+
+  qwen-image-edit:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/image/Qwen-Image-Edit-2511-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 2048 \
+        --parallel 1
+    profile: image
+    aliases: ["image-edit"]
+    ttl: 300
+
+  # ===========================================================================
+  # IMAGE — FLUX.2-dev (highest quality, 12-17GB)
+  # ===========================================================================
+
+  flux2-dev:
+    cmd: |
+      /usr/local/bin/llama-server \
+        -m /models/image/FLUX.2-dev-Q4_K_M.gguf \
+        --port ${PORT} \
+        -ngl 99 -c 2048 \
+        --parallel 1
+    profile: image
+    aliases: ["image-quality", "flux"]
+    ttl: 300
+    notes: "Highest quality image gen. 12-17GB resident. May evict other image models."

@@ -1,0 +1,6 @@
+# Thin re-export shim for the tuatha deploy quartet (round 7).
+# Canonical location: infrastructure/stacks/tuatha/{pangolin,compose,compose.dev}.yaml
+---
+# This file is now a 1-line re-export. The canonical deploy quartet is at
+# infrastructure/stacks/tuatha/. See
+# openspec/changes/archive/2026-06-24-infrastructure-stack-doctor-v1/.

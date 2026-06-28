@@ -1,0 +1,10 @@
+# Hono API local artifacts
+.env
+.env.local
+.env.*.local
+dist/
+bun.lockb
+.DS_Store
+
+# Keep drizzle/ in git — it's the migration source of truth
+# (do not gitignore)

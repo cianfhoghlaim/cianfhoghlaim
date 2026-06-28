@@ -1,0 +1,4 @@
+# Thin re-export shim for the croilar Locket sidecar (round 7).
+# Canonical location: infrastructure/stacks/croilar/sidecar.yaml
+---
+# See compose.yaml in this directory for the re-export note.

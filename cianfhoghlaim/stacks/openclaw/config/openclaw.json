@@ -1,0 +1,85 @@
+{
+  "$schema": "https://raw.githubusercontent.com/openclaw/openclaw/main/schema/openclaw.config.schema.json",
+  "version": "1.0",
+  "gateway": {
+    "port": 18789,
+    "bridge_port": 18790,
+    "log_level": "info",
+    "dm_policy": "pairing",
+    "allow_from": [],
+    "state_dir": "/home/node/.openclaw/state"
+  },
+  "provider": {
+    "name": "opencode-go",
+    "base_url": "https://opencode.ai/zen/go/v1",
+    "model": "minimax-m3",
+    "api_key_env": "OPENCODE_GO_API_KEY"
+  },
+  "fallback_chain": [
+    {
+      "name": "minimax-coding-plan",
+      "base_url": "https://api.minimax.chat/v1",
+      "model": "minimax-m3",
+      "api_key_env": "MINIMAX_API_KEY"
+    }
+  ],
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "token_env": "TELEGRAM_BOT_TOKEN",
+      "allow_from": []
+    },
+    "slack": {
+      "enabled": true,
+      "token_env": "SLACK_BOT_TOKEN",
+      "allow_from": []
+    },
+    "discord": {
+      "enabled": true,
+      "token_env": "DISCORD_BOT_TOKEN",
+      "allow_from": []
+    },
+    "whatsapp": {
+      "enabled": true,
+      "token_env": "WHATSAPP_ACCESS_TOKEN",
+      "allow_from": []
+    },
+    "webchat": {
+      "enabled": true,
+      "bind": "0.0.0.0:18789",
+      "allow_from": []
+    },
+    "teams": {
+      "enabled": true,
+      "bind": "127.0.0.1:3978",
+      "allow_from": []
+    },
+    "signal": {
+      "enabled": false,
+      "reason": "requires signal-cli (not provisioned in v1)"
+    },
+    "imessage": {
+      "enabled": false,
+      "reason": "requires BlueBubbles on macOS (not provisioned in v1)"
+    },
+    "matrix": {
+      "enabled": false,
+      "reason": "requires Matrix homeserver (not provisioned in v1)"
+    }
+  },
+  "routing": {
+    "default_agent": "celtic-tutor",
+    "channel_overrides": {
+      "discord": "mythology-narrator",
+      "teams": "research-assistant"
+    }
+  },
+  "otel": {
+    "service_name": "openclaw-gateway",
+    "endpoint_env": "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "protocol": "http/protobuf"
+  },
+  "workspace": {
+    "skills_dir": "/home/node/.openclaw/workspace/skills"
+  }
+}
