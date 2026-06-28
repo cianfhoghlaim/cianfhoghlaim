@@ -1,0 +1,6 @@
+# Network overlay — extracted from pangolin.yaml
+# Use: docker compose -f compose.yaml -f compose.network.yaml up -d
+networks:
+  pangolin:
+    name: pangolin
+    external: true

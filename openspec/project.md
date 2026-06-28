@@ -7,78 +7,93 @@ Irish education system: Aistear, Primary, Junior Cycle, Senior Cycle, and
 Tertiary. Powered by BAML extraction, Cognee + LanceDB + DuckLake
 knowledge graph, Agno + Google ADK agents, and a TanStack Start /
 CopilotKit AG-UI front-end. The monorepo is a **bun + uv + turbo polyglot
-orchestration** of multiple subprojects and 70+ Docker Compose stacks.
+orchestration** of a single consolidated `cianfhoghlaim/` package and
+33 user-pre-selected selfhosted Docker Compose stacks (with the remaining
+57 staying at `infrastructure/stacks/`).
 
-## Subprojects (4 top-level quadrants)
+**Plan 1 (active):** Ireland (early childhood / primary / junior cycle /
+senior cycle / Leaving Cert) in EN + GA, plus the leabharlann corpus
+(6 subdirs × 216 docs).
+**Plan 2 (preserved):** UK 4-nation + Isle of Man — full education sources.
+**Plan 3 (preserved):** UK 4-nation + IoM — 7 domains (law, medicine,
+culture, government, intelligence, statistics, geospatial).
+**Legacy:** Jersey + Guernsey (Crown Dependencies).
+
+> See `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`
+> for the v4 consolidation plan that produced this single-package layout.
+
+## Subproject (1 consolidated package)
 
 | Subproject | Path | Wheel / Workspace | Purpose | README | AGENTS.md |
 |:--|:--|:--|:--|:--|:--|
-| `oideachais` | `oideachais/` | `oideachais` (uv) | Celtic education data platform (Dagster, DLT, LanceDB) | [README](../oideachais/README.md) | [AGENTS](../oideachais/AGENTS.md) |
-| `meaisinfhoghlaim` | `meaisinfhoghlaim/` | `meaisinfhoghlaim` (uv) | AI/ML services (agents, OCR, Celtic-language, ML pipelines) | [README](../meaisinfhoghlaim/README.md) | [AGENTS](../meaisinfhoghlaim/AGENTS.md) |
-| `tuatha` | `tuatha/` | `tuath` (uv) | Educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto | [README](../tuatha/README.md) | [AGENTS](../tuatha/AGENTS.md) |
-| `croilar` | `croilar/` | (bun workspace) | Multi-persona portfolio + CV + data engineering subproject | [README](../croilar/README.md) | [AGENTS](../croilar/AGENTS.md) |
+| `cianfhoghlaim` | `cianfhoghlaim/` | `cianfhoghlaim` (uv) + `codeolas` (uv sub-package) | Consolidated Celtic education + multi-nation + multi-language data platform | [README](../cianfhoghlaim/README.md) | [AGENTS](../cianfhoghlaim/AGENTS.md) |
+
+> **NOTE:** Source schema layout is provisional — refactor after Plan 1 informs
+> best CocoIndex + DLT + DuckDB + DuckLake + Lance patterns.
 
 ## Capability Areas (34 specs, 8 groups)
 
-### Oideachais Quadrant (10 specs)
+### Cianfhoghlaim core (10 specs — Plan 1 active)
 
 | Capability | Description | Status |
 |:--|:--|:--|
-| `oideachais-pipeline` | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML, 5 stages) | Active |
-| `oideachais-leabharlann` | 4 dlt sources (books, zotero, takeout, UoG) + 3 v1 CocoIndex Apps + 7 Dagster assets + full-stack demo | Active |
-| `oideachais-baml-schemas` | 9 BAML files + 3 extraction clients (ExtractEn, ExtractEnStrong, LocalVision) | Active |
-| `oideachais-cognify-knowledge-graph` | 5-stage cross-stage cognify + 3 leabharlann cognify datasets + 3 cross-archive FalkorDB edge types | Active |
-| `oideachais-semantic-search` | Cross-corpus LanceDB HNSW search (BGE-M3 multilingual + BGE-large-en-v1.5 English) | Active |
-| `oideachais-marimo-dashboards` | 11 Marimo notebooks (5 educational stages + cross-domain + ducklake + lakehouse + leabharlann full-stack demo) | Active |
-| `ireland-primary-jc-dlt-baml` | Ireland Primary + Junior Cycle dlt + BAML loop (the recent `ireland-primary-jc-dlt-baml-and-full-stack-demo` change) | Active |
+| `oideachais-pipeline` | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML, 5 stages); sources at `cianfhoghlaim/sources/nations/ie/education/{early_childhood,primary,junior_cycle,senior_cycle,leaving_cert}/` (EN + GA); Plan 1 active | Active |
+| `oideachais-leabharlann` | 6 dlt sources (aigne + gaeilge + gemini_deep_research + mata + ollscoil_na_gaillimhe + zotero) at `cianfhoghlaim/pipelines/ingest/leabharlann/`; 3 v1 CocoIndex Apps (`leabharlann_books_embedding`, `leabharlann_zotero_embedding`, `leabharlann_takeout_embedding`) at `cianfhoghlaim/core/cocoindex/leabharlann_flow.py`; 7 Dagster assets at `cianfhoghlaim/assets/definitions.py` | Active |
+| `oideachais-baml-schemas` | 6 consolidated BAML files (`clients.baml`, `curriculum.baml`, `culture.baml`, `document.baml`, `gaois.baml`, `code_intel.baml`) at `cianfhoghlaim/core/baml/`; 3 extraction clients (ExtractEn, ExtractEnStrong, LocalVision) | Active |
+| `oideachais-cognify-knowledge-graph` | 5-stage cross-stage cognify + 3 leabharlann cognify datasets + 3 cross-archive FalkorDB edge types; rules at `cianfhoghlaim/cognify/rules/` | Active |
+| `oideachais-semantic-search` | Cross-corpus LanceDB HNSW search (BGE-M3 multilingual + BGE-large-en-v1.5 English) at `cianfhoghlaim/core/lancedb/` | Active |
+| `oideachais-marimo-dashboards` | 11 Marimo notebooks (5 educational stages + Ireland curriculum analysis + 6 leabharlann subdir analyses + cross-domain) at `cianfhoghlaim/notebooks/` | Active |
+| `ireland-primary-jc-dlt-baml` | Ireland Primary + Junior Cycle dlt + BAML loop | Active |
 | `official-media-pipeline` | Instagram-export → British-Isles government source enrichment (DLT + BAML `ClassifyOfficialMedia` + 4-lookup resolver + Dagster `group_name="official_media"`); 3 jurisdictions in PR 1 (IE/NI/EN), the `official-media-pipeline` change | Active |
 | `official-media-fediverse` | Pure Python library for Mastodon webfinger + Bluesky xrpc resolution + Wikipedia REST + Companies House / CRO lookup; reusable by the side-loadable-app phase (the `official-media-fediverse` change) | Active |
 | `official-media-marimo` | Marimo mission control + TanStack Start route + Cognee dataset `oideachais_official_media` with 4 edge types + strong-stance footer card; the `official-media-marimo` change | Active |
-| `upstream-package-monitoring` | 3 CocoIndex v1 Apps (`upstream_blog_monitor`, `upstream_api_surface`, `cocoindex_v1_conformance`) + 4 Firecrawl monitor configs + 1 n8n webhook bridge + 5 Dagster assets + 1 breaking-change sensor for the motherduck / dlthub / lancedb / cocoindex upstream surface; the `upstream-package-monitoring` change | Active |
+| `upstream-package-monitoring` | 3 CocoIndex v1 Apps (`upstream_blog_monitor`, `upstream_api_surface`, `cocoindex_v1_conformance`) at `cianfhoghlaim/core/cocoindex/`; 4 Firecrawl monitor configs + 1 n8n webhook bridge + 5 Dagster assets + 1 breaking-change sensor for the motherduck / dlthub / lancedb / cocoindex upstream surface | Active |
 
-### Meaisínfhoghlaim Quadrant (3 specs)
-
-| Capability | Description | Status |
-|:--|:--|:--|
-| `meaisinfhoghlaim-platform` | 10 sub-packages + 4 heartbeat dagster assets + Dagster code-location | Active |
-| `meaisinfhoghlaim-agent-frameworks` | 12 specialised agents (Root, Curriculum, Translation, Corpus, Geospatial, Statistics, Research, etc.) | Active |
-| `meaisinfhoghlaim-ocr-htr` | 10 OCR models across 6 backends (Pylaia, TrOCR, PaddleOCR, Tesseract, dots.ocr, VLM) | Active |
-
-### Tuatha Quadrant (1 spec)
+### Meaisínfhoghlaim sub-tree (3 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
-| `tuatha-platform` | Celtic educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto + BAML UI/image extraction | Active |
+| `meaisinfhoghlaim-platform` | 16 sub-packages at `cianfhoghlaim/core/{dlt,duckdb,ducklake,lancedb,motherduck,cocoindex,baml,marimo,browser,cognee,obs,rag,search,curriculum,config,memory}/` + 4 heartbeat Dagster assets + single Dagster code-location `cianfhoghlaim/assets/definitions.py` | Active |
+| `meaisinfhoghlaim-agent-frameworks` | 12 specialised agents (Root, Curriculum, Translation, Corpus, Geospatial, Statistics, Research, Education Research, Bunchloch Research, Curriculum Comparison, AGUI Curriculum, MCP Curriculum) at `cianfhoghlaim/agents/meaisinfhoghlaim/` | Active |
+| `meaisinfhoghlaim-ocr-htr` | **11 OCR vision models** (`unsloth/gemma-4-{31B-it,26B-A4B-it,E4B-it,E2B-it}-GGUF` + `unsloth/Qwen3.6-{27B-GGUF,27B-MLX-8bit,35B-A3B-GGUF,35B-A3B-UD-MLX-4bit}` + `unsloth/GLM-4.6V-Flash-GGUF`) at `cianfhoghlaim/ocr/models/registry.py` + **4 classical OCR Docker stacks** (`stacks/{dots-ocr,docling-serve,olmocr,paddleocr}/`) + 6 backends (litellm, mlx, transformers, ollama, openai, anthropic) + evaluation harness at `cianfhoghlaim/ocr/evaluation/compare.py` running ~220 evals (11 vision × 4 classical × Ireland syllabus + 6 leabharlann subdirs) | Active |
 
-### Croílár Quadrant (4 specs)
+### Tuatha sub-tree (1 spec)
 
 | Capability | Description | Status |
 |:--|:--|:--|
-| `croilar-portfolio` | Public TanStack Start site — multi-persona (aleyum, cianfhoghlaim, carlcashman) | Active |
-| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines for the croilar personas | Active |
-| `croilar-cv-extraction` | BAML extraction of the author's CV / achievements / teaching PDFs | Active |
+| `tuatha-platform` | Celtic educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto platform (legacy snapshot at `cianfhoghlaim/docs/legacy/crypteolas/`) + BAML UI/image extraction; TanStack Start frontend at `cianfhoghlaim/web/apps/tuatha-ui/`; Babylon.js client at `cianfhoghlaim/web/apps/tuatha-demo/` | Active |
+
+### Croílár sub-tree (4 specs)
+
+| Capability | Description | Status |
+|:--|:--|:--|
+| `croilar-portfolio` | Public TanStack Start site at `cianfhoghlaim/web/apps/croilar-web/` — multi-persona (aleyum, cianfhoghlaim, carlcashman) | Active |
+| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines for croilar personas at `cianfhoghlaim/assets/_croilar_dagster/` | Active |
+| `croilar-cv-extraction` | BAML extraction of the author's CV / achievements / teaching PDFs at `cianfhoghlaim/assets/_croilar_assets/` | Active |
+| `croilar-stream-registry` | The 5 aleyum→croilar alias collapses (ALEYUM_→STREAMS_, aleyum.duckdb→croilar.duckdb, etc.) + `StreamSettings` Pydantic BaseSettings + `sruth/croilar/config/sources.yaml` registry | Active |
 
 ### Agent + Observability + Frontend (5 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
-| `agent-memory-systems` | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory (renamed from `memory-systems`) | Active |
-| `indexing-and-cognition` | CCC v1 code search (16 Apps) + Cognee 7-cluster knowledge graph + OpenCode agent/MCP registry (7 agents, 10 MCPs, 13 model-layer agents); supersedes `chunkhound-code-search` (the `centralize-agent-context-and-automate` change) | Active |
-| `agent-observability` | Langfuse + MLflow + RAGAS + Logfire (renamed from `observability`; Datadog dropped in `cleanup-and-boot-stacks`) | Active |
-| `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex (renamed from `frontend-frameworks`, merged `agent-frameworks`) | Active |
+| `agent-memory-systems` | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory at `cianfhoghlaim/core/{cognee,memory}/` | Active |
+| `indexing-and-cognition` | CCC v1 code search (16 Apps at `cianfhoghlaim/core/cocoindex/`) + Cognee 7-cluster knowledge graph + OpenCode agent/MCP registry | Active |
+| `agent-observability` | Langfuse + MLflow + RAGAS + Logfire at `cianfhoghlaim/core/obs/` | Active |
+| `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex at `cianfhoghlaim/web/` | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
 
 ### Infrastructure + Tooling (7 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
-| `infrastructure-stacks` | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket (absorbed `infrastructure` + `stack-audit`) | Active |
-| `data-engineering-pipeline-documentation` | `oideachais/STATUS.md` + `oideachais/REFACTORING.md` + per-area READMEs (the new doc surface from this change) | Active |
-| `spaces-cicd-pipeline` | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs; the new `spaces-cicd-reusable-pipeline` change) | Active |
-| `celtic-data-engineering-pipeline` | dbt-duckdb at `oideachais/dbt_project/` + marimo statistical-analysis notebooks at `meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change; absorbs patterns A1/A4/A5/A8 from `spaces/data-engineering/`) | Active |
-| `gradio-ensemble-pattern` | `meaisinfhoghlaim/pipelines/ensemble_gradio.py` (multi-model Gradio `Interface`) + `spaces/_common/hf_hub_push.py` (HF Hub upload); absorbs patterns B1/B4/B6 from `spaces/anti-phish/` (sister to `celtic-data-engineering-patterns`) | Active |
+| `infrastructure-stacks` | **33 user-pre-selected selfhosted Docker stacks at `cianfhoghlaim/stacks/`** (backrest, browser, cognee, dagster, docling-serve, dots-ocr, dragonfly, falkordb, garage, graphiti, infisical, invokeai, komodo, lakehouse, lancedb, langfuse, litellm, logfire, marimo, memgraph, mlflow, mlx-omni, motherduck, nimtable, olake, olmocr, openchamber, openclaw, paddleocr, pangolin, planetscale, r2, risingwave) + remaining 57 stacks at `infrastructure/stacks/` + stack-doctor + Pangolin + Infisical + Locket | Active |
+| `data-engineering-pipeline-documentation` | `cianfhoghlaim/core/{status,refactoring}.md` + per-area READMEs | Active |
+| `spaces-cicd-pipeline` | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) | Active |
+| `celtic-data-engineering-pipeline` | dbt-duckdb at `cianfhoghlaim/pipelines/process/_dbt_project/` + marimo statistical-analysis notebooks at `cianfhoghlaim/notebooks/meaisinfhoghlaim/` | Active |
+| `gradio-ensemble-pattern` | `cianfhoghlaim/agents/image_pipeline/ensemble_gradio.py` (multi-model Gradio `Interface`) + `spaces/_common/hf_hub_push.py` (HF Hub upload) | Active |
 | `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `documentation` | Canonical `docs/` structure (8 numbered domains), frontmatter schema, Cognee ingestion | Active |
+| `celtic-asset-generation` | **4 successive INDEPENDENT asset gen pipelines** at `cianfhoghlaim/assets/asset_generation/`: `official_documents/{syllabus,exam_papers,marking_schemes}/` → `subject_assets/{chemistry_lab,geography_landscape,biology_specimens,physics_apparatus}/` → `language_assets/{gaeilge,cymraeg,gaidhlig,gaelg,kernewek,brezhoneg}_assets.py` → `exporters/{babylon,godot,unity,unreal}.py` | Active |
 
 ### Team Workflow (3 specs)
 

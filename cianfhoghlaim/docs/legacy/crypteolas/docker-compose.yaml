@@ -1,0 +1,194 @@
+version: "3.9"
+
+services:
+  # =============================================================================
+  # API Server
+  # =============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "8001:8000"
+    environment:
+      - DUCKDB_PATH=/data/duckdb/crypteolas.duckdb
+      - LANCEDB_URI=/data/lance
+      - MEMGRAPH_URL=bolt://memgraph:7687
+      - GRAPHITI_URL=bolt://falkordb:6379
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=http://langfuse:3000
+      - DRAGONFLY_URL=redis://dragonfly:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    volumes:
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+    depends_on:
+      - memgraph
+      - dragonfly
+    networks:
+      - crypteolas-network
+      - bonneagar-network
+
+  # =============================================================================
+  # TanStack UI (Development)
+  # =============================================================================
+  ui:
+    build:
+      context: ./ui
+      dockerfile: ../docker/Dockerfile.ui
+    ports:
+      - "3001:3000"
+    environment:
+      - VITE_API_URL=http://api:8000
+      - VITE_COPILOTKIT_RUNTIME_URL=http://api:8000/copilotkit
+    depends_on:
+      - api
+    networks:
+      - crypteolas-network
+
+  # =============================================================================
+  # Dagster (Data Orchestration)
+  # =============================================================================
+  dagster-webserver:
+    image: dagster/dagster-webserver:1.9.0
+    ports:
+      - "3002:3000"
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+      - DUCKDB_PATH=/data/duckdb/crypteolas.duckdb
+      - LANCEDB_URI=/data/lance
+    volumes:
+      - ./dagster_assets:/opt/dagster/app
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+      - dagster-storage:/opt/dagster/dagster_home
+    depends_on:
+      - dagster-daemon
+    networks:
+      - crypteolas-network
+
+  dagster-daemon:
+    image: dagster/dagster-daemon:1.9.0
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+    volumes:
+      - ./dagster_assets:/opt/dagster/app
+      - dagster-storage:/opt/dagster/dagster_home
+    networks:
+      - crypteolas-network
+
+  # =============================================================================
+  # Memgraph (Knowledge Graph - Static)
+  # =============================================================================
+  memgraph:
+    image: memgraph/memgraph-mage:latest
+    ports:
+      - "7688:7687"
+      - "7445:7444"
+    volumes:
+      - memgraph-data:/var/lib/memgraph
+      - memgraph-log:/var/log/memgraph
+    command: ["--also-log-to-stderr", "--log-level=WARNING"]
+    networks:
+      - crypteolas-network
+      - bonneagar-network
+
+  memgraph-lab:
+    image: memgraph/lab:latest
+    ports:
+      - "3003:3000"
+    depends_on:
+      - memgraph
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
+    networks:
+      - crypteolas-network
+
+  # =============================================================================
+  # DragonflyDB (Redis-compatible cache)
+  # =============================================================================
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    ports:
+      - "6380:6379"
+    volumes:
+      - dragonfly-data:/data
+    ulimits:
+      memlock: -1
+    networks:
+      - crypteolas-network
+      - bonneagar-network
+
+  # =============================================================================
+  # Langfuse (LLM Observability)
+  # =============================================================================
+  langfuse:
+    image: langfuse/langfuse:latest
+    ports:
+      - "3004:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-your-secret-here}
+      - NEXTAUTH_URL=http://localhost:3004
+      - SALT=${LANGFUSE_SALT:-your-salt-here}
+    depends_on:
+      - langfuse-db
+    networks:
+      - crypteolas-network
+
+  langfuse-db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse-db-data:/var/lib/postgresql/data
+    networks:
+      - crypteolas-network
+
+  # =============================================================================
+  # LanceDB Viewer (Optional - for debugging)
+  # =============================================================================
+  lance-viewer:
+    image: python:3.11-slim
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./storage/lance:/data/lance
+    command: >
+      sh -c "pip install streamlit lancedb pyarrow &&
+             streamlit run - --server.port 8501 <<EOF
+      import streamlit as st
+      import lancedb
+      db = lancedb.connect('/data/lance')
+      st.title('LanceDB Viewer - Crypteolas')
+      tables = db.table_names()
+      st.write('Tables:', tables)
+      if tables:
+          selected = st.selectbox('Select table', tables)
+          if selected:
+              table = db.open_table(selected)
+              st.write(f'Rows: {len(table)}')
+              st.dataframe(table.to_pandas().head(100))
+      EOF"
+    networks:
+      - crypteolas-network
+
+networks:
+  crypteolas-network:
+    driver: bridge
+  bonneagar-network:
+    external: true
+    name: bonneagar_default
+
+volumes:
+  memgraph-data:
+  memgraph-log:
+  dragonfly-data:
+  dagster-storage:
+  langfuse-db-data:

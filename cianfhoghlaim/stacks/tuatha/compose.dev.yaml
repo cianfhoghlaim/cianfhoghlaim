@@ -1,0 +1,4 @@
+# Thin re-export shim for the tuatha dev compose (round 7).
+# Canonical location: infrastructure/stacks/tuatha/compose.dev.yaml
+---
+# See pangolin.yaml in this directory for the re-export note.

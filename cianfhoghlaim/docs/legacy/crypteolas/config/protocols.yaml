@@ -1,0 +1,130 @@
+# Crypteolas Protocol Configuration
+# Defines DeFi protocols to track
+
+protocols:
+  # DEXes
+  dexes:
+    - slug: uniswap
+      name: Uniswap
+      category: DEX
+      chains: [ethereum, arbitrum, optimism, polygon, base]
+      docs_url: https://docs.uniswap.org
+      github: Uniswap
+      tokens: [UNI]
+
+    - slug: curve-dex
+      name: Curve Finance
+      category: DEX
+      chains: [ethereum, arbitrum, polygon, avalanche]
+      docs_url: https://resources.curve.fi
+      github: curvefi
+      tokens: [CRV]
+
+    - slug: sushiswap
+      name: SushiSwap
+      category: DEX
+      chains: [ethereum, arbitrum, polygon]
+      docs_url: https://docs.sushi.com
+      github: sushiswap
+      tokens: [SUSHI]
+
+  # Lending
+  lending:
+    - slug: aave
+      name: Aave
+      category: Lending
+      chains: [ethereum, arbitrum, optimism, polygon, avalanche]
+      docs_url: https://docs.aave.com
+      github: aave
+      tokens: [AAVE]
+
+    - slug: compound
+      name: Compound
+      category: Lending
+      chains: [ethereum]
+      docs_url: https://docs.compound.finance
+      github: compound-finance
+      tokens: [COMP]
+
+    - slug: morpho
+      name: Morpho
+      category: Lending
+      chains: [ethereum]
+      docs_url: https://docs.morpho.xyz
+      github: morpho-labs
+      tokens: [MORPHO]
+
+  # Liquid Staking
+  liquid_staking:
+    - slug: lido
+      name: Lido
+      category: Liquid Staking
+      chains: [ethereum, polygon]
+      docs_url: https://docs.lido.fi
+      github: lidofinance
+      tokens: [LDO, stETH]
+
+    - slug: rocket-pool
+      name: Rocket Pool
+      category: Liquid Staking
+      chains: [ethereum]
+      docs_url: https://docs.rocketpool.net
+      github: rocket-pool
+      tokens: [RPL, rETH]
+
+  # Derivatives
+  derivatives:
+    - slug: gmx
+      name: GMX
+      category: Derivatives
+      chains: [arbitrum, avalanche]
+      docs_url: https://docs.gmx.io
+      github: gmx-io
+      tokens: [GMX]
+
+    - slug: synthetix
+      name: Synthetix
+      category: Derivatives
+      chains: [ethereum, optimism]
+      docs_url: https://docs.synthetix.io
+      github: Synthetixio
+      tokens: [SNX]
+
+  # Bridges
+  bridges:
+    - slug: stargate
+      name: Stargate
+      category: Bridge
+      chains: [ethereum, arbitrum, optimism, polygon, bsc, avalanche]
+      docs_url: https://stargateprotocol.gitbook.io
+      github: stargate-protocol
+      tokens: [STG]
+
+    - slug: across
+      name: Across
+      category: Bridge
+      chains: [ethereum, arbitrum, optimism, polygon]
+      docs_url: https://docs.across.to
+      github: across-protocol
+      tokens: [ACX]
+
+# Tracking Configuration
+tracking:
+  # Metrics to track
+  metrics:
+    - tvl
+    - volume_24h
+    - fees_24h
+    - users_24h
+    - transactions_24h
+
+  # Update frequency (minutes)
+  update_frequency: 15
+
+  # Historical data retention (days)
+  retention_days: 365
+
+  # Alert thresholds
+  alerts:
+    tvl_drop_percent: 10
+    tvl_spike_percent: 25

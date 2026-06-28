@@ -10,14 +10,17 @@
     "node": ">=20"
   },
   "workspaces": [
-    "sruth/oideachais/web",
-    "sruth/oideachais/mcp/filesystem",
-    "sruth/tuatha/ui",
-    "sruth/crypteolas/apps/crypteolas_demo",
-    "sruth/croilar/apps/web",
-    "sruth/croilar/apps/portal",
-    "sruth/croilar/hono-api",
-    "sruth/croilar/packages/*"
+    "cianfhoghlaim/web/apps/oideachais-web",
+    "cianfhoghlaim/web/apps/tuatha-ui",
+    "cianfhoghlaim/web/apps/tuatha-demo",
+    "cianfhoghlaim/web/apps/croilar-web",
+    "cianfhoghlaim/web/apps/croilar-portal",
+    "cianfhoghlaim/web/apps/croilar-demo",
+    "cianfhoghlaim/web/apps/game_showcase",
+    "cianfhoghlaim/web/apps/oideachais-mcp-server",
+    "cianfhoghlaim/web/apps/oideachais-mcp-filesystem",
+    "cianfhoghlaim/web/hono-api",
+    "cianfhoghlaim/web/packages/*"
   ],
   "scripts": {
     "postinstall": "turbo run postinstall --filter=./scripts/* || true",
@@ -29,6 +32,7 @@
     "dev": "bunx turbo run dev --concurrency=20",
     "dev:oideachais": "bunx turbo run dev --filter=oideachais-web",
     "dev:tuatha": "bunx turbo run dev --filter=tuatha-ui",
+    "dev:croilar": "bunx turbo run dev --filter=croilar-web",
     "typecheck": "bunx turbo run typecheck",
     "lint": "bunx turbo run lint",
     "format": "bunx turbo run format",
@@ -39,25 +43,25 @@
     "secrets:init": "bun run scripts/init-vault.ts",
     "secrets:sync": "bun run scripts/init-vault.ts",
 
-    "dagster:oideachais": "cd sruth/oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions",
-    "dagster:tuatha": "cd sruth/tuatha && uv run dagster dev -m dagster_assets.definitions",
+    "dagster:oideachais": "uv run dagster dev -m cianfhoghlaim.assets.definitions",
+    "dagster:tuatha": "uv run dagster dev -m cianfhoghlaim.assets.definitions",
 
     "komodo:sync": "mise run komodo:sync",
     "pangolin:check": "mise run pangolin:check",
     "locket:exec": "mise run locket:exec",
 
     "ccc:init": "ccc init",
-    "ccc:index": "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
+    "ccc:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
     "ccc:search": "bun run scripts/_ccc-deprecation-banner.ts && ccc search",
-    "ccc:v1:index": "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
-    "ccc:v1:search": "uv run python -c 'import asyncio, sys; from sruth.oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
-    "docs:consolidate": "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
-    "docs:consolidate:live": "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
+    "ccc:v1:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
+    "ccc:v1:search": "uv run python -c 'import asyncio, sys; from cianfhoghlaim.core.cocoindex.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
+    "docs:consolidate": "uv run cocoindex update cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
+    "docs:consolidate:live": "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
 
-    "upstream:blog": "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor",
-    "upstream:blog:live": "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor",
-    "upstream:conformance": "uv run python -c 'import asyncio; from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'",
-    "upstream:api-surface": "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_api_surface:UpstreamApiSurface",
+    "upstream:blog": "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor",
+    "upstream:blog:live": "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor",
+    "upstream:conformance": "uv run python -c 'import asyncio; from cianfhoghlaim.core.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'",
+    "upstream:api-surface": "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface:UpstreamApiSurface",
     "baml:generate": "uv run baml-cli generate",
 
     "spec:list": "openspec list",
@@ -74,13 +78,13 @@
     "validate-openspec-stale": "bun run scripts/validate-openspec-stale.ts",
     "validate-frontmatter": "bun run scripts/validate-frontmatter.ts",
 
-    "smoke": "bash infrastructure/stacks/frontend/scripts/smoke.sh",
+    "smoke": "bash cianfhoghlaim/stacks/frontend/scripts/smoke.sh",
 
-    "croilar:analyze": "bun run sruth/croilar/scripts/analyze-web-stack.ts",
-    "croilar:glance:regen": "bun run sruth/croilar/scripts/regenerate-glance-config.ts",
-    "croilar:export:wasm": "bun run sruth/croilar/scripts/export-marimo-wasm.ts",
-    "croilar:devtools:refresh": "bun run sruth/croilar/scripts/analyze-web-stack.ts --out sruth/croilar/.cache/webstack-snapshot.json",
-    "croilar:devtools:hub": "bun run sruth/croilar/scripts/regenerate-glance-config.ts && bun run sruth/croilar/scripts/export-marimo-wasm.ts"
+    "croilar:analyze": "bun run cianfhoghlaim/scripts/croilar/analyze-web-stack.ts",
+    "croilar:glance:regen": "bun run cianfhoghlaim/scripts/croilar/regenerate-glance-config.ts",
+    "croilar:export:wasm": "bun run cianfhoghlaim/scripts/croilar/export-marimo-wasm.ts",
+    "croilar:devtools:refresh": "bun run cianfhoghlaim/scripts/croilar/analyze-web-stack.ts --out cianfhoghlaim/.cache/webstack-snapshot.json",
+    "croilar:devtools:hub": "bun run cianfhoghlaim/scripts/croilar/regenerate-glance-config.ts && bun run cianfhoghlaim/scripts/croilar/export-marimo-wasm.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.3.0",

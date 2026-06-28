@@ -1,0 +1,126 @@
+# ML Model Catalog
+# Registry of trained and reference models for Celtic language education
+
+models:
+  # Language Models
+  - id: uccix-llama2-13b-instruct
+    name: UCCIX Llama2 13B Instruct
+    type: text-generation
+    base: meta-llama/Llama-2-13b-hf
+    languages: [irish, english]
+    status: reference
+    huggingface: ReliableAI/UCCIX-Llama2-13B-Instruct
+    metrics:
+      irish_accuracy: "+12% vs Llama-70B"
+    notes: Best Irish text generation model
+
+  - id: llama-3.2-3b-irish
+    name: Llama 3.2 3B Irish
+    type: text-generation
+    base: unsloth/Llama-3.2-3B-Instruct-bnb-4bit
+    languages: [irish, english]
+    status: training
+    artifacts:
+      - models/llama-3.2-3b-irish-lora
+    metrics: {}
+    notes: Mobile-optimized Irish model (target 2GB)
+
+  - id: qwen2.5-math-7b
+    name: Qwen 2.5 Math 7B
+    type: text-generation
+    base: Qwen/Qwen2.5-Math-7B-Instruct
+    languages: [multilingual]
+    status: reference
+    huggingface: Qwen/Qwen2.5-Math-7B-Instruct
+    notes: Bilingual math reasoning
+
+  # Embedding Models
+  - id: gabert
+    name: GaBERT
+    type: embeddings
+    base: bert-base-cased
+    languages: [irish]
+    status: reference
+    huggingface: DCU-NLP/bert-base-irish-cased-v1
+    metrics:
+      corpus_size: "7.9M sentences"
+    notes: Irish-specific BERT embeddings
+
+  - id: bge-m3
+    name: BGE-M3
+    type: embeddings
+    base: BAAI/bge-m3
+    languages: [multilingual]
+    status: reference
+    huggingface: BAAI/bge-m3
+    dimensions: 1024
+    notes: Dense + sparse + multi-vector
+
+  - id: colpali
+    name: ColPali
+    type: visual-embeddings
+    base: vidore/colpali-v1.3
+    languages: [multilingual]
+    status: reference
+    huggingface: vidore/colpali-v1.3
+    dimensions: 128
+    notes: Late-interaction visual retrieval
+
+  # Speech Models
+  - id: wav2vec2-xlsr-irish
+    name: Wav2Vec2 XLSR Irish
+    type: speech-recognition
+    base: facebook/wav2vec2-large-xlsr-53
+    languages: [irish]
+    status: reference
+    huggingface: cpierse/wav2vec2-large-xlsr-53-irish
+    notes: Irish ASR fine-tune
+
+  - id: whisper-irish
+    name: Whisper Irish
+    type: speech-recognition
+    base: openai/whisper-large-v3
+    languages: [irish]
+    status: planned
+    notes: Fine-tuned for Irish dialects
+
+  # Vision-Language Models
+  - id: qwen2-vl-7b-irish
+    name: Qwen2 VL 7B Irish
+    type: vision-language
+    base: Qwen/Qwen2-VL-7B-Instruct
+    languages: [irish, english]
+    status: training
+    artifacts:
+      - models/qwen2-vl-7b-irish-lora
+    notes: Document OCR for Irish manuscripts
+
+  - id: olmocr-2-7b
+    name: olmOCR 2 7B
+    type: vision-language
+    base: Qwen/Qwen2.5-VL-7B
+    languages: [english]
+    status: reference
+    huggingface: allenai/olmocr-2-7b
+    notes: Best document transcription
+
+  - id: granite-docling
+    name: Granite Docling
+    type: vision-language
+    base: IBM/granite-docling-258m
+    languages: [english]
+    status: reference
+    huggingface: IBM/granite-docling-258m
+    notes: Fast table extraction
+
+# Model selection guide
+selection_guide:
+  irish_generation: uccix-llama2-13b-instruct
+  mobile_irish: llama-3.2-3b-irish
+  math_reasoning: qwen2.5-math-7b
+  irish_embeddings: gabert
+  multilingual_embeddings: bge-m3
+  visual_retrieval: colpali
+  irish_asr: wav2vec2-xlsr-irish
+  document_ocr: olmocr-2-7b
+  table_extraction: granite-docling

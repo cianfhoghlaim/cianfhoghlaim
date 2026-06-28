@@ -1,0 +1,76 @@
+tenant:
+  id: cianfhoghlaim
+  name: cianfhoghlaim
+  displayName: Cianfhoghlaim Portal
+  domains:
+    - cianfhoghlaim.ie
+    - localhost:3000
+  type: education
+  description: Bilingual Irish-English education platform
+  tagline: Deep Learning for Celtic Languages
+
+owner:
+  name: Cian Mac an Déisigh
+  title: Data Engineer, AI Researcher, Teacher, Musician
+  email: cian@cianfhoghlaim.ie
+  github: cianfhoghlaim
+  linkedin: cianfhoghlaim
+
+theme:
+  primaryColor: "oklch(0.65 0.15 220)"
+  secondaryColor: "oklch(0.55 0.18 165)"
+  accentColor: "oklch(0.7 0.18 35)"
+  backgroundColor: "oklch(0.06 0.01 240)"
+  foregroundColor: "oklch(0.98 0 0)"
+  logo: /assets/cianfhoghlaim/logo.svg
+  favicon: /assets/cianfhoghlaim/favicon.svg
+  fontFamily: "Inter, system-ui, sans-serif"
+  fontHeading: "Playfair Display, Georgia, serif"
+  borderRadius: "0.625rem"
+  assets:
+    style: celtic
+    patterns:
+      - knotwork
+      - spiral
+
+routes:
+  enabled:
+    - { path: "/", component: DashboardPage, title: "Dashboard" }
+    - { path: "/stacks", component: StacksPage, title: "Stacks" }
+    - { path: "/tools", component: ToolsPage, title: "MCP Tools" }
+    - { path: "/widgets", component: WidgetsPage, title: "Widgets" }
+    - { path: "/agents", component: AgentsIndex, title: "Agents" }
+    - { path: "/agents/chat", component: ChatPage, title: "Agent Chat" }
+    - { path: "/monitoring/logs", component: LogsPage, title: "Logs" }
+    - { path: "/monitoring/metrics", component: MetricsPage, title: "Metrics" }
+    - { path: "/data/pipelines", component: PipelinesPage, title: "Pipelines" }
+    - { path: "/analytics", component: AnalyticsIndex, title: "Analytics" }
+  disabled: []
+
+features:
+  curriculumBrowser: true
+  translationTool: true
+  aiChat: true
+  resourceLibrary: true
+  vocabularyTracker: true
+  examPrep: true
+  musicPlayer: false
+  portfolioMode: false
+  gameShowcase: true
+
+navigation:
+  primary: []
+  footer: []
+
+languages:
+  primary: ga
+  supported:
+    - { code: en, name: "English", nativeName: "English" }
+    - { code: ga, name: "Irish",   nativeName: "Gaeilge" }
+
+seo:
+  title: "Cianfhoghlaim"
+  description: "Celtic Language Education Platform"
+  keywords: ["Celtic", "Irish", "Gaeilge", "Education", "TanStack", "BAML"]
+  ogImage: "/assets/cianfhoghlaim/og.png"
+  twitterHandle: "@cianfhoghlaim"

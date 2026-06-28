@@ -1,0 +1,8 @@
+{
+  "name": "@oideachais/config",
+  "type": "module",
+  "exports": {
+    "./tsconfig": "./tsconfig.base.json",
+    "./biome": "./biome.json"
+  }
+}

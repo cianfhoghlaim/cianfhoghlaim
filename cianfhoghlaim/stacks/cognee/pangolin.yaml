@@ -1,0 +1,14 @@
+# Cognee — Pangolin private-resource route
+# Routes cognee.cianfhoghlaim.ie → cognee container at port 8000.
+# The cognee container listens on 8000 internally; the host maps 8100:8000.
+# TinyAuth is OMITTED — the FastAPI agents (sruth/oideachais) call Cognee directly
+# over the Docker network, not via Pangolin; the route is for ad-hoc UI access.
+pangolin:
+  private-resources:
+    cognee:
+      name: cognee
+      mode: http
+      full-domain: cognee.cianfhoghlaim.ie
+      destination-port: 8000
+      protocol: http
+      roles[0]: tinyauth@file

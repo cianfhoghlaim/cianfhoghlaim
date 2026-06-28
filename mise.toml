@@ -50,27 +50,11 @@ UV_PROJECT_ENVIRONMENT = ".venv"
 # =============================================================================
 
 [tasks.sync]
-description = "Sync all Python workspace packages"
-# NB: `uv sync` from the croilar subdir regenerates a broken
-# `_editable_impl_croilar.pth` file (per issue #17). The fix-pth
-# task below rewrites it. We chain them so `mise run sync` is
-# unbroken end-to-end.
-run = """
-uv sync
-bash croilar/scripts/fix-pth.sh
-"""
-
-# Per https://github.com/cianfhoghlaim/kings_college_galway/issues/17,
-# `uv sync` regenerates a broken `_editable_impl_croilar.pth` file
-# (4 lines, all pointing to the project root, not its parent).
-# Run this task AFTER every `uv sync` to rewrite the pth to the
-# right path (1 line, the project's parent directory).
-[tasks."croilar:fix-pth"]
-description = "Rewrite the broken _editable_impl_croilar.pth file (per issue #17)"
-run = "bash croilar/scripts/fix-pth.sh"
+description = "Sync all Python workspace packages (single cianfhoghlaim workspace member)"
+run = "uv sync"
 
 [tasks.test]
-description = "Run pytest on all Python packages"
+description = "Run pytest on cianfhoghlaim package"
 run = "uv run pytest"
 
 [tasks.lint]
@@ -134,45 +118,37 @@ description = "Run clippy on Locket"
 run = "cd infrastructure/locket && cargo clippy"
 
 # =============================================================================
-# Dagster Tasks (post-sruth-restructure)
+# Dagster Tasks (post-v4-consolidation: single code-location)
 # =============================================================================
 
 [tasks."dagster:oideachais"]
-description = "Run Dagster for oideachais pipeline"
-run = "cd sruth/oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions"
+description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann active)"
+run = "uv run dagster dev -m cianfhoghlaim.assets.definitions"
 
-[tasks."dagster:tuath"]
-description = "Run Dagster for the Celtic MMO (tuath) code-location"
-run = "cd sruth/tuatha && uv run dagster dev -m dagster_assets.definitions"
+[tasks."dagster:tuatha"]
+description = "Run Dagster (alias of dagster:oideachais — single code-location post-v4)"
+run = "uv run dagster dev -m cianfhoghlaim.assets.definitions"
 
 [tasks."dagster:crypteolas"]
-description = "Run Dagster for the crypteolas code-location"
-run = "cd sruth/tuatha && uv run dagster dev -m crypteolas.definitions"
+description = "Run Dagster (alias of dagster:oideachais — single code-location post-v4)"
+run = "uv run dagster dev -m cianfhoghlaim.assets.definitions"
 
 [tasks."dagster:croilar"]
-description = "Run Dagster for the Croílár portfolio code-location"
-run = "cd sruth/croilar && uv run dagster dev -m dagster_assets.definitions"
+description = "Run Dagster (alias of dagster:oideachais — single code-location post-v4)"
+run = "uv run dagster dev -m cianfhoghlaim.assets.definitions"
 
 [tasks."dagster:meaisin"]
-description = "Run Dagster for the meaisínfhoghlaim (AI/ML quadrant) heartbeat code-location"
-run = "cd sruth/meaisinfhoghlaim && uv run dagster dev -m dagster_defs.assets.healthchecks"
-
-[tasks."dagster:crypteolas_demo"]
-description = "Run Dagster for the crypteolas_demo code-location"
-run = "cd sruth/crypteolas/apps/crypteolas_demo && uv run dagster dev -m definitions"
+description = "Run Dagster (alias of dagster:oideachais — single code-location post-v4)"
+run = "uv run dagster dev -m cianfhoghlaim.assets.definitions"
 
 # Per-package test runners
 [tasks."test:codeolas"]
 description = "Run pytest on the códeolas library"
-run = "cd sruth/tuatha && uv run pytest codeolas/tests/"
+run = "uv run pytest cianfhoghlaim/libraries/codeolas/tests/"
 
-[tasks."test:crypteolas"]
-description = "Run pytest on the crypteolas platform"
-run = "cd sruth/tuatha && uv run pytest crypteolas/tests/"
-
-[tasks."test:crypteolas_demo"]
-description = "Run pytest on the crypteolas_demo app"
-run = "cd sruth/crypteolas/apps/crypteolas_demo && uv run pytest"
+[tasks."test:ocr"]
+description = "Run pytest on the OCR evaluation harness (11 vision × 4 classical)"
+run = "uv run pytest cianfhoghlaim/ocr/evaluation/"
 
 # =============================================================================
 # Dagger CI/CD Tasks
@@ -311,7 +287,7 @@ run = "ccc init || true"
 
 [tasks."ccc:index"]
 description = "Build the cocoindex-code semantic index (v1 app; legacy ccc kept as fallback until 2026-07-15)"
-run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
+run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex"
 
 [tasks."ccc:search"]
 description = "[DEPRECATED — use ccc:v1:search] Semantic search via the legacy ccc CLI; emits a deprecation warning to stderr (hard removal: 2026-07-15)"
@@ -319,11 +295,11 @@ run = "bun run scripts/_ccc-deprecation-banner.ts && ccc search ${@}"
 
 [tasks."ccc:v1:index"]
 description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (replacement for the legacy ccc CLI)"
-run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
+run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex"
 
 [tasks."ccc:v1:search"]
 description = "Semantic search the codebase_chunks LanceDB table via the v1 app (Python helper)"
-run = "uv run python -c 'import asyncio, sys; from sruth.oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
+run = "uv run python -c 'import asyncio, sys; from cianfhoghlaim.core.cocoindex.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
 
 [tasks."validate-ccc-freshness"]
 description = "CI gate: exit 1 if CCC (CocoIndex Code) index is >7d old on main or >24h on feature branches"
@@ -335,11 +311,11 @@ run = "bash scripts/install-hooks.sh"
 
 [tasks."docs:consolidate"]
 description = "Run the docs_skills_consolidation CocoIndex v1 App (batch / catch-up mode)"
-run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
+run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation"
 
 [tasks."docs:consolidate:live"]
 description = "Run the docs_skills_consolidation CocoIndex v1 App in live mode (-L)"
-run = "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
+run = "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation"
 
 # ---------------------------------------------------------------------------
 # Upstream package monitoring (Firecrawl monitors for motherduck / dlthub /
@@ -350,19 +326,19 @@ run = "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_c
 
 [tasks."upstream:blog"]
 description = "Run the upstream_blog_monitor v1 CocoIndex App (reprocess all n8n-written Firecrawl payloads)"
-run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor"
+run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor"
 
 [tasks."upstream:blog:live"]
 description = "Run the upstream_blog_monitor v1 CocoIndex App in live mode (-L) — picks up new payloads as they arrive in S3"
-run = "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor"
+run = "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor"
 
 [tasks."upstream:conformance"]
 description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
-run = "uv run python -c 'import asyncio; from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
+run = "uv run python -c 'import asyncio; from cianfhoghlaim.core.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
 
 [tasks."upstream:api-surface"]
 description = "Run the upstream_api_surface v1 CocoIndex App (walks 5 cocoindex docs URLs + llms-full.txt)"
-run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_api_surface:UpstreamApiSurface"
+run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface:UpstreamApiSurface"
 
 [tasks."baml:generate"]
 description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
@@ -489,16 +465,16 @@ run = "bash infrastructure/scripts/deploy-cf.sh --all --preview"
 
 [tasks."author-archive:dev"]
 description = "Author-archive v1 pipeline against the local dev target (DuckDB)"
-run = "bash sruth/oideachais/scripts/make_target.sh dev ${@}"
+run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh dev ${@}"
 
 [tasks."author-archive:staging"]
 description = "Author-archive v1 pipeline against the MotherDuck staging target"
-run = "bash sruth/oideachais/scripts/make_target.sh staging ${@}"
+run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh staging ${@}"
 
 [tasks."author-archive:prod"]
 description = "Author-archive v1 pipeline against the Garage S3 + Lakekeeper prod target"
-run = "bash sruth/oideachais/scripts/make_target.sh prod ${@}"
+run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh prod ${@}"
 
 [tasks."author-archive:cps:hero"]
 description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
-run = "bash sruth/oideachais/scripts/make_target.sh dev python sruth/oideachais/scripts/pre_research_cps_gov_uk.py"
+run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh dev python cianfhoghlaim/scripts/oideachais/pre_research_cps_gov_uk.py"
