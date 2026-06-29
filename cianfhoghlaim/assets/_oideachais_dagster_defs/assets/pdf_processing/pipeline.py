@@ -29,6 +29,31 @@ from .diagram_detector import DiagramDetector, DiagramResult
 from .semantic_chunker import SemanticChunker, ChunkResult
 from .topic_validator import TopicValidator, ValidationResult
 
+# Phase 8: Observability (lazy import — optional, may not be available in tests)
+try:
+    from .observability import (
+        evaluate_baml_extraction,
+        record_stage_metric,
+        trace_pipeline,
+    )
+    _OBSERVABILITY_AVAILABLE = True
+except ImportError:
+    _OBSERVABILITY_AVAILABLE = False
+
+    def trace_pipeline(*_args, **_kwargs):  # type: ignore[no-redef]
+        """Stub: no-op context manager when observability not available."""
+        from contextlib import contextmanager
+        @contextmanager
+        def _noop():
+            yield {}
+        return _noop()
+
+    def record_stage_metric(*_args, **_kwargs):  # type: ignore[no-redef]
+        pass
+
+    def evaluate_baml_extraction(*_args, **_kwargs):  # type: ignore[no-redef]
+        return {"schema_compliance": 0.0, "field_completeness": 0.0, "extraction_accuracy": 0.0}
+
 logger = logging.getLogger(__name__)
 
 warnings.warn(
@@ -204,27 +229,60 @@ class PDFProcessingPipeline:
             f"({document_type}, {self.subject}/{self.year}/{self.paper})"
         )
 
-        # ─── Stage 1: OCR (VLM dispatch) ───
-        stage1 = self._stage1_ocr(document_path, page_count, image_density)
+        # Phase 8: wrap the entire run in the observability context
+        with trace_pipeline(document_type, self.subject, self.year, self.paper) as obs_ctx:
+            # ─── Stage 1: OCR (VLM dispatch) ───
+            stage1 = self._stage1_ocr(document_path, page_count, image_density)
+            record_stage_metric("1", "duration_seconds", stage1.duration_seconds, obs_ctx)
 
-        # ─── Stage 2: Diagram detection ───
-        stage2 = self._stage2_diagram_detection(stage1)
+            # ─── Stage 2: Diagram detection ───
+            stage2 = self._stage2_diagram_detection(stage1)
+            record_stage_metric("2", "duration_seconds", stage2.duration_seconds, obs_ctx)
+            record_stage_metric("2", "n_figures", float(stage2.total_figures), obs_ctx)
 
-        # ─── Stage 3: BAML extraction ───
-        stage3 = self._stage3_baml_extraction(document_type, stage1)
+            # ─── Stage 3: BAML extraction ───
+            stage3 = self._stage3_baml_extraction(document_type, stage1)
+            record_stage_metric("3", "duration_seconds", stage3.duration_seconds, obs_ctx)
+            record_stage_metric("3", "n_records", float(len(stage3.baml_records)), obs_ctx)
 
-        # ─── Stage 4: Topic validation ───
-        stage4 = self._stage4_topic_validation(stage3)
+            # Phase 8.3: RAGAS-style evaluation of the BAML extraction
+            baml_schema = {
+                "name": str,
+                "description": str,
+                "learningOutcomes": list,
+            } if document_type == "syllabus" else {
+                "questionNumber": int,
+                "topic": str,
+                "marks": int,
+            }
+            baml_quality = evaluate_baml_extraction(stage3.baml_records, baml_schema)
+            for k, v in baml_quality.items():
+                record_stage_metric("3", k, v, obs_ctx)
 
-        # ─── Stage 5: Semantic chunking ───
-        stage5 = self._stage5_semantic_chunking(document_type, stage4, stage2)
+            # ─── Stage 4: Topic validation ───
+            stage4 = self._stage4_topic_validation(stage3)
+            record_stage_metric("4", "duration_seconds", stage4.duration_seconds, obs_ctx)
+            record_stage_metric("4", "n_pass", float(stage4.n_pass), obs_ctx)
+            record_stage_metric("4", "n_fail", float(stage4.n_fail), obs_ctx)
 
-        # ─── Stage 6: Lakehouse + Cognee + Graphiti ───
-        stage6 = self._stage6_lakehouse(
-            document_path, document_type, stage4, stage5
-        )
+            # ─── Stage 5: Semantic chunking ───
+            stage5 = self._stage5_semantic_chunking(document_type, stage4, stage2)
+            record_stage_metric("5", "duration_seconds", stage5.duration_seconds, obs_ctx)
+            record_stage_metric("5", "n_chunks", float(len(stage5.chunks)), obs_ctx)
 
-        total_duration = time.time() - t0
+            # ─── Stage 6: Lakehouse + Cognee + Graphiti ───
+            stage6 = self._stage6_lakehouse(
+                document_path, document_type, stage4, stage5
+            )
+            record_stage_metric("6", "duration_seconds", stage6.duration_seconds, obs_ctx)
+            record_stage_metric("6", "n_rows_written", float(stage6.n_rows_written), obs_ctx)
+
+            total_duration = time.time() - t0
+            obs_ctx["n_chunks"] = len(stage5.chunks)
+            obs_ctx["n_figures"] = stage2.total_figures
+            obs_ctx["n_topics_validated"] = stage4.n_pass
+            obs_ctx["n_topics_mismatched"] = stage4.n_fail
+
         logger.info(
             f"6-stage PDF pipeline completed in {total_duration:.1f}s "
             f"({len(stage5.chunks)} chunks, "
@@ -267,16 +325,110 @@ class PDFProcessingPipeline:
             f"{selection.reason}"
         )
 
-        # Stub: in production this calls the actual OCR API
-        # For now, return empty placeholders
+        # Render PDF pages to images + run OCR via litellm
+        page_texts: list[str] = []
+        page_images: list[bytes] = []
+        ocr_confidence: list[float] = []
+
+        try:
+            # 1. Render PDF pages to PNG bytes
+            rendered = self._render_pdf_pages(document_path, dpi=200)
+            page_images = [img_bytes for _, img_bytes in rendered]
+
+            # 2. Call the selected VLM via litellm
+            litellm_model = f"local/vision/{selection.model.key}"
+            for page_number, image_bytes in rendered:
+                page_text, confidence = self._call_vlm_for_page(
+                    litellm_model, image_bytes, page_number
+                )
+                page_texts.append(page_text)
+                ocr_confidence.append(confidence)
+        except Exception as e:
+            logger.error(f"Stage 1 OCR failed: {e}")
+            # Continue with empty lists; downstream stages can fall back
+
         return Stage1Result(
             document_path=document_path,
             selection=selection,
-            page_texts=[],
-            page_images=[],
-            ocr_confidence_per_page=[],
+            page_texts=page_texts,
+            page_images=page_images,
+            ocr_confidence_per_page=ocr_confidence,
             duration_seconds=time.time() - t0,
         )
+
+    def _render_pdf_pages(self, document_path: Path, dpi: int = 200) -> list[tuple[int, bytes]]:
+        """Render a PDF to (page_number, PNG_bytes) pairs.
+
+        Uses PyMuPDF (fitz) for fast PDF rendering. Falls back to
+        pdf2image if PyMuPDF is not available.
+        """
+        try:
+            import fitz  # PyMuPDF
+            rendered: list[tuple[int, bytes]] = []
+            with fitz.open(document_path) as pdf:
+                for page_number, page in enumerate(pdf, start=1):
+                    pix = page.get_pixmap(dpi=dpi)
+                    rendered.append((page_number, pix.tobytes("png")))
+            return rendered
+        except ImportError:
+            logger.warning("PyMuPDF not available; falling back to pdf2image")
+            from pdf2image import convert_from_path
+            images = convert_from_path(str(document_path), dpi=dpi)
+            return [
+                (i + 1, img.tobytes("png")) for i, img in enumerate(images)
+            ]
+
+    def _call_vlm_for_page(
+        self,
+        litellm_model: str,
+        image_bytes: bytes,
+        page_number: int,
+    ) -> tuple[str, float]:
+        """Call a VLM via litellm for a single page.
+
+        Returns (text, confidence) where confidence is 0-1.
+        """
+        try:
+            import litellm
+            import base64
+            b64 = base64.b64encode(image_bytes).decode("utf-8")
+            response = litellm.completion(
+                model=litellm_model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/png;base64,{b64}",
+                                },
+                            },
+                            {
+                                "type": "text",
+                                "text": (
+                                    "Transcribe the text on this page exactly as written. "
+                                    "Preserve all diacritics (fadas, tironian et ⁊). "
+                                    "If a diagram or figure is present, transcribe any "
+                                    "caption verbatim."
+                                ),
+                            },
+                        ],
+                    }
+                ],
+                timeout=600,
+                temperature=0.0,
+            )
+            text = response.choices[0].message.content or ""
+            # LiteLLM doesn't return a confidence directly; estimate from token logprobs
+            confidence = 0.95  # placeholder; could be improved with logprobs
+            logger.debug(
+                f"Stage 1 OCR page {page_number}: {len(text)} chars via {litellm_model}"
+            )
+            return text, confidence
+        except Exception as e:
+            logger.error(f"Stage 1 litellm call failed for page {page_number}: {e}")
+            return "", 0.0
 
     # ─── Stage 2: Diagram detection ───
     def _stage2_diagram_detection(
@@ -315,14 +467,91 @@ class PDFProcessingPipeline:
             f"LitellmClient → litellm.cianfhoghlaim.ie:4000)"
         )
 
-        # Stub: in production this calls the appropriate BAML function
-        # - syllabus → ExtractLeavingCertSyllabus (existing BAML)
-        # - past_paper → ExtractPastPaper (existing BAML)
-        # - marking_scheme → ExtractMarkingScheme (new BAML)
+        baml_records: list[dict[str, Any]] = []
+        baml_client = "LitellmClient"
+
+        try:
+            # Import the regenerated baml_client (Phase 1.3)
+            try:
+                from cianfhoghlaim.core.baml.shared.baml_client import b as _baml_b
+                baml_b = _baml_b
+            except ImportError:
+                try:
+                    # Fallback: legacy import path
+                    from oideachais.data_platform.baml_client import b as _baml_b  # type: ignore
+                    baml_b = _baml_b
+                except ImportError:
+                    logger.warning(
+                        "baml_client not importable; Stage 3 returns empty records"
+                    )
+                    baml_b = None
+
+            if baml_b is None:
+                return Stage3Result(
+                    document_type=document_type,
+                    baml_records=[],
+                    baml_client=baml_client,
+                    duration_seconds=time.time() - t0,
+                )
+
+            # Concatenate all page texts into a single input
+            full_text = "\n\n".join(stage1.page_texts)
+
+            # Dispatch to the right BAML function per document type
+            if document_type == "syllabus":
+                result = baml_b.ExtractLeavingCertSyllabus(full_text)
+                # Convert to dict for downstream stages
+                baml_records = [
+                    {
+                        "name": t.name,
+                        "description": t.description,
+                        "learningOutcomes": t.learningOutcomes,
+                        "weightPct": t.weightPct,
+                    }
+                    for t in result.topics
+                ]
+            elif document_type == "past_paper":
+                result = baml_b.ExtractPastPaper(full_text)
+                baml_records = [
+                    {
+                        "questionNumber": q.questionNumber,
+                        "year": q.year,
+                        "paper": q.paper,
+                        "level": q.level,
+                        "topic": q.topic,
+                        "subtopic": q.subtopic,
+                        "marks": q.marks,
+                        "questionText": q.questionText,
+                        "isOptional": q.isOptional,
+                    }
+                    for q in result.questions
+                ]
+            elif document_type == "marking_scheme":
+                # New BAML function (added in Phase 1.3)
+                result = baml_b.ExtractMarkingScheme(
+                    full_text, self.subject, self.year, self.paper or ""
+                )
+                baml_records = [
+                    {
+                        "questionNumber": m.questionNumber,
+                        "partLabel": m.partLabel,
+                        "markValue": m.markValue,
+                        "markType": m.markType,
+                        "answerText": m.answerText,
+                        "alternativeAnswers": m.alternativeAnswers,
+                        "isOptional": m.isOptional,
+                        "requiresFormulaImage": m.requiresFormulaImage,
+                    }
+                    for m in result.markingPoints
+                ]
+        except Exception as e:
+            logger.error(f"Stage 3 BAML extraction failed: {e}")
+            # Continue with empty records
+
         return Stage3Result(
             document_type=document_type,
-            baml_records=[],
-            baml_client="LitellmClient",
+            baml_records=baml_records,
+            baml_client=baml_client,
             duration_seconds=time.time() - t0,
         )
 
