@@ -60,7 +60,7 @@ loosen individual layers as trust grows.
 
 - **6 v1 channels** (Telegram, Slack, Discord, WhatsApp,
   WebChat, Teams) + 3 scaffolded (Signal, iMessage, Matrix)
-- **Curated skills subset** of 10 (out of 129) mounted
+- **Curated skills subset** of 11 (out of 124) mounted
   read-only into the workspace
 - **OpenCode Go gateway** as the primary LLM path with
   `minimax-coding-plan` as fallback
@@ -69,6 +69,22 @@ loosen individual layers as trust grows.
 - **2 GB memory / 2 CPU limit** (sized for arm1-oci)
 - **`dmPolicy: pairing`** is the upstream-recommended default
   for personal instances
+
+## Curated skills subset
+
+| # | Skill | Purpose |
+|--:|:--|:--|
+| 1 | `agent-fleet-orchestration` | The 12-agent × 5-framework fleet + the LiteLLM routing |
+| 2 | `browser-tools` | Pick the right browser tool (Stagehand / Firecrawl / Playwright) |
+| 3 | `ccc` | Semantic code search via CocoIndex Code |
+| 4 | `cocoindex` | ETL for AI (the v1 App convention + 4-rule conformance) |
+| 5 | `cognee` | Knowledge graph for agent memory + temporal cognify |
+| 6 | `dagster` | The Dagster asset + sensor + multi-partition pattern |
+| 7 | `dlt` | The DLT source pattern (filesystem / REST / SQL) |
+| 8 | `langfuse` | LLM observability (traces, prompts, A/B tests) |
+| 9 | `litellm` | The unified LLM gateway (70+ model routing) |
+| 10 | `oideachais-baml-schemas` | The 9 BAML files + 3 extraction clients |
+| 11 | `oideachais-email-triage` | The leabharlann email-inbox pipeline (Mailcow → DLT → BAML → ADK → openclaw) |
 
 ## Deployment
 

@@ -225,4 +225,6 @@ all_asset_checks = [
     check_weekly_downloads_row_count,
     # LLM gateway vendor-de-risking health check
     minimax_alias_health,
+    # Leabharlann email-inbox demo (5 checks: raw / classify / thread / link / embedding)
+    *LEABHARLANN_INBOX_DEMO_CHECKS,
 ]
