@@ -4,6 +4,8 @@
 
 ### Requirement: 6-stage PDF processing pipeline
 
+The system SHALL orchestrate a 6-stage PDF processing pipeline at `cianfhoghlaim/assets/_oideachais_dagster_defs/assets/pdf_processing/pipeline.py` that processes NCCA syllabus PDFs, SEC past paper PDFs, and SEC marking-scheme PDFs through 6 ordered stages. The pipeline runs at `cianfhoghlaim/assets/_oideachais_dagster_defs/assets/pdf_processing/` and is exposed via the FastAPI `cianfhoghlaim/agents/api/_oideachais_api/routes/pdf_processing.py`.
+
 `oideachais-pdf-processing` is the **end-to-end pipeline** that takes NCCA syllabus PDFs, SEC past paper PDFs, and SEC marking-scheme PDFs and produces structured, chunked, semantically-indexed records in the DuckLake lakehouse. It is the bridge between the raw PDF ingestion (DLT + BAML extraction) and the downstream marimo dashboards, gradio review UIs, and HF Spaces.
 
 This spec is the **PDF-specific extension** of:
@@ -15,10 +17,6 @@ This spec is the **PDF-specific extension** of:
 - `oideachais-semantic-search` (the LanceDB HNSW search layer)
 - `celtic-asset-generation` (the parent asset-generation orchestrator)
 
-The 6-stage pipeline runs at:
-`cianfhoghlaim/assets/_oideachais_dagster_defs/assets/pdf_processing/`
-and is exposed via the FastAPI `cianfhoghlaim/agents/api/_oideachais_api/routes/pdf_processing.py`.
-
 The Irish + UK + pan-Celtic syllabus + exam paper + marking-scheme corpus is the **largest structured-text source** in the lakehouse. As of 2026-06-29, the corpus contains:
 
 - **NCCA syllabi** (5 stages × 33+ subjects × ~80 pages each) ≈ 13,200 pages
@@ -26,7 +24,7 @@ The Irish + UK + pan-Celtic syllabus + exam paper + marking-scheme corpus is the
 - **SEC marking schemes** (parallel to past papers, often image-rich) ≈ 47,520 pages
 - **Total: ~108,000 pages** of structured educational text
 
-Manual processing of this corpus is impossible; the VLM registry + BAML extraction + CocoIndex embedding is the only way to make it queryable. The 6-stage pipeline ensures:
+Manual processing of this corpus is impossible; the VLM registry + BAML extraction + CocoIndex embedding is the only way to make it queryable. The 6-stage pipeline MUST ensure:
 
 1. **Diagram detection** — figures in chemistry/biology/geography papers are identified and cropped (Molmo2-8B pointing + Granite-Docling DocTags).
 2. **Correct topic categorisation** — every question is matched to its NCCA syllabus topic (BAML `ExtractPastPaper` validates against `ExtractLeavingCertSyllabus`).
@@ -34,13 +32,9 @@ Manual processing of this corpus is impossible; the VLM registry + BAML extracti
 4. **Fada / tironian preservation** — Irish text retains diacritics through the entire pipeline (BAML `IrishContentQuality`).
 5. **Marking-scheme alignment** — past paper questions are linked to their marking schemes via topic + question-number key.
 
-The system SHALL orchestrate a 6-stage PDF processing pipeline at `cianfhoghlaim/assets/_oideachais_dagster_defs/assets/pdf_processing/pipeline.py`.
-
-The system SHALL orchestrate a 6-stage PDF processing pipeline at `cianfhoghlaim/assets/_oideachais_dagster_defs/assets/pdf_processing/pipeline.py`.
-
 For every PDF (syllabus / past paper / marking scheme), the pipeline runs the following 6 stages in order:
 
-#### Stage 1 — OCR (VLM dispatch)
+**Stage 1 — OCR (VLM dispatch)**
 
 - **Inputs:** raw PDF bytes from `stedding/ingest_queue/{ncca,examinations,curriculumonline}.ie/`
 - **Action:** call `select_ocr_backend()` from `cianfhoghlaim/core/cocoindex/ocr_aware_flow.py` to pick the optimal (model, backend) pair from `VISION_MODELS`
@@ -52,14 +46,14 @@ For every PDF (syllabus / past paper / marking scheme), the pipeline runs the fo
 - **Outputs:** `page_text` (per-page) + `page_image` (rendered as PNG, 200 DPI)
 - **Sink:** `motherduck://oideachais.pdf_processing.{subject}.{year}.{paper}.ocr_pages`
 
-#### Stage 2 — Diagram detection (region segmentation)
+**Stage 2 — Diagram detection (region segmentation)**
 
 - **Inputs:** `page_image` from Stage 1
 - **Action:** call `Granite-Docling-258M` for DocTags-based layout classification (figure / table / heading / paragraph) AND `Molmo2-8B` for figure-region pointing (returns bounding boxes)
 - **Outputs:** `page_diagrams` (list of `{bbox, type, caption}` per page)
 - **Sink:** `motherduck://oideachais.pdf_processing.{subject}.{year}.{paper}.diagrams`
 
-#### Stage 3 — BAML extraction (typed records)
+**Stage 3 — BAML extraction (typed records)**
 
 - **Inputs:** `page_text` from Stage 1 + `page_diagrams` from Stage 2
 - **Action:** route through BAML clients per the schema type:
@@ -70,14 +64,14 @@ For every PDF (syllabus / past paper / marking scheme), the pipeline runs the fo
 - **Outputs:** typed BAML records (Pydantic-validated)
 - **Sink:** `motherduck://oideachais.pdf_processing.{subject}.{year}.{paper}.extracted`
 
-#### Stage 4 — Topic validation (cross-reference to NCCA taxonomy)
+**Stage 4 — Topic validation (cross-reference to NCCA taxonomy)**
 
 - **Inputs:** BAML records from Stage 3 + NCCA syllabus topics
 - **Action:** for every `topic` field in a past paper question or marking point, fuzzy-match against the NCCA syllabus topic list (95% threshold on `name` field); reject mismatches and flag for human review
 - **Outputs:** `validated_records` (BAML records with `topic_validated: bool` + `topic_match: str | None`)
 - **Sink:** `motherduck://oideachais.pdf_processing.{subject}.{year}.{paper}.validated`
 
-#### Stage 5 — Semantic chunking (CocoIndex v1)
+**Stage 5 — Semantic chunking (CocoIndex v1)**
 
 - **Inputs:** `validated_records` from Stage 4 + `page_diagrams` from Stage 2
 - **Action:** semantic chunker respects:
@@ -90,7 +84,7 @@ For every PDF (syllabus / past paper / marking scheme), the pipeline runs the fo
 - **Outputs:** `chunks` table (chunk_id, doc_id, chunk_type, text, embedding)
 - **Sink:** `lancedb://oideachais.pdf_processing_chunks` (IVF_HNSW + FTS index)
 
-#### Stage 6 — Lakehouse + cognee cognify + Graphiti
+**Stage 6 — Lakehouse + cognee cognify + Graphiti**
 
 - **Inputs:** `chunks` from Stage 5 + `validated_records` from Stage 4
 - **Action:** write to DuckLake + run Cognee cognify (entity extraction) + Graphiti episode append
@@ -133,7 +127,7 @@ For every PDF (syllabus / past paper / marking scheme), the pipeline runs the fo
 
 ### Requirement: 4 BAML clients for PDF processing
 
-The system SHALL use the 3 existing BAML clients + 1 new BAML client for marking-scheme extraction:
+The system SHALL use the 3 existing BAML clients + 1 new BAML client for marking-scheme extraction. The 4 clients are:
 
 1. **`LitellmClient`** (default) — `deepseek/deepseek-chat` via `litellm.cianfhoghlaim.ie:4000` (existing)
 2. **`MiniMaxClient`** (vendor-de-risked) — `minimax` via LiteLLM gateway with 3-key rotation (existing)
@@ -150,7 +144,7 @@ The system SHALL use the 3 existing BAML clients + 1 new BAML client for marking
 
 ### Requirement: NEW BAML schema for marking-scheme extraction
 
-The system SHALL provide a new BAML schema at `cianfhoghlaim/core/baml/_oideachais_src/leaving_cert_marking_scheme_extraction.baml` with classes for `MarkingPoint`, `MarkingScheme`, and `MarkingType` enum, plus a `ExtractMarkingScheme(pdf_text: string) -> MarkingScheme` function with detailed NCCA-aware prompting for marking-point extraction.
+The system SHALL provide a new BAML schema at `cianfhoghlaim/core/baml/_oideachais_src/leaving_cert_marking_scheme_extraction.baml` with classes for `MarkingPoint`, `MarkingScheme`, and `MarkingType` enum, plus a `ExtractMarkingScheme(pdf_text: string) -> MarkingScheme` function. The schema MUST include detailed NCCA-aware prompting for marking-point extraction.
 
 #### Scenario: A marking scheme is extracted
 
@@ -162,7 +156,7 @@ The system SHALL provide a new BAML schema at `cianfhoghlaim/core/baml/_oideacha
 
 ### Requirement: 3 VLM-specific processing tasks
 
-The system SHALL use the 24-entry VISION_MODELS registry to handle 3 VLM-specific tasks in the PDF processing pipeline:
+The system SHALL use the 24-entry VISION_MODELS registry to handle 3 VLM-specific tasks in the PDF processing pipeline. The 3 tasks are:
 
 - **Task A — Figure region detection** (Granite-Docling + Molmo2-8B)
 - **Task B — Figure captioning** (Qwen3-VL 8B or Gemma 4 12B)
@@ -181,7 +175,7 @@ Each task MUST dispatch to a model with the corresponding `ModelCapability.DIAGR
 
 ### Requirement: Marimo dashboard for processed PDFs
 
-The system SHALL provide a marimo notebook at `cianfhoghlaim/notebooks/meaisinfhoghlaim/marimo/03_pdf_processing.py` that visualises the 6-stage pipeline state for any (subject, year, paper) tuple.
+The system SHALL provide a marimo notebook at `cianfhoghlaim/notebooks/meaisinfhoghlaim/marimo/03_pdf_processing.py` that visualises the 6-stage pipeline state for any (subject, year, paper) tuple. The notebook SHALL include a sidebar selector for `(subject, year, paper)` from the DuckLake `pdf_processing` table and a status panel for each of the 6 stages.
 
 The notebook SHALL include:
 - A sidebar selector for `(subject, year, paper)` from the DuckLake `pdf_processing` table
@@ -202,17 +196,7 @@ The notebook SHALL include:
 
 ### Requirement: Gradio interface for human review
 
-The system SHALL provide a Gradio interface at `spaces/oideachais-pdf-review/` (HF Space, deployable via the `spaces-cicd-pipeline` spec) that allows human reviewers to:
-
-- Approve / reject topic validations flagged in Stage 4
-- Correct mis-categorised questions
-- Add notes to marking-scheme ambiguities
-- Export validated records back to the lakehouse
-
-The Gradio interface SHALL be backed by:
-- `unsloth/gemma-3-4b-it-GGUF` for the in-app "suggested correction" feature
-- `unsloth/gemma-4-26B-A4B-it-GGUF` for the in-app "explain why this is mis-categorised" feature
-- The `celtic-asset-generation` `push_model_to_hub()` helper for HF Space deployment
+The system SHALL provide a Gradio interface at `spaces/oideachais-pdf-review/` (HF Space, deployable via the `spaces-cicd-pipeline` spec) that allows human reviewers to approve / reject topic validations flagged in Stage 4, correct mis-categorised questions, add notes to marking-scheme ambiguities, and export validated records back to the lakehouse. The Gradio interface MUST be backed by `unsloth/gemma-3-4b-it-GGUF` for the in-app "suggested correction" feature and `unsloth/gemma-4-26B-A4B-it-GGUF` for the in-app "explain why this is mis-categorised" feature.
 
 #### Scenario: A reviewer corrects a mis-categorised question
 
@@ -225,14 +209,7 @@ The Gradio interface SHALL be backed by:
 
 ### Requirement: CocoIndex v1 OCR-aware flow integration
 
-The system SHALL wire the 6-stage PDF processing pipeline to the existing CocoIndex OCR-aware flow at `cianfhoghlaim/core/cocoindex/ocr_aware_flow.py` for Stages 1-3.
-
-The `select_ocr_backend()` function SHALL be extended to consider:
-- **PDF size** (existing heuristic)
-- **Filename pattern** (existing: SEC / examination / leaving_cert)
-- **NEW: Page count** — single-page PDFs → `gemma-4-E2B`; multi-page (>10) → `qwen3-vl-8b`
-- **NEW: Image density** — high image-to-text ratio → `molmo2-8b` for diagram pointing
-- **NEW: BAML fallback** — if the VLM extraction fails, fall back to classical OCR (Docling-serve) then to text-only BAML
+The system SHALL wire the 6-stage PDF processing pipeline to the existing CocoIndex OCR-aware flow at `cianfhoghlaim/core/cocoindex/ocr_aware_flow.py` for Stages 1-3. The `select_ocr_backend()` function MUST be extended to consider PDF size (existing heuristic), filename pattern (existing: SEC / examination / leaving_cert), page count (single-page PDFs → `gemma-4-E2B`; multi-page >10 → `qwen3-vl-8b`), image density (high image-to-text ratio → `molmo2-8b` for diagram pointing), and BAML fallback (if the VLM extraction fails, fall back to classical OCR (Docling-serve) then to text-only BAML).
 
 #### Scenario: A 50-page marking scheme is processed
 

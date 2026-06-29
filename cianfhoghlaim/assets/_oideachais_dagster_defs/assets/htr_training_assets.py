@@ -44,7 +44,17 @@ IRISH_COUNTIES = [
 county_partitions = StaticPartitionsDefinition(IRISH_COUNTIES)
 
 # VLM model partitions
-VLM_MODELS = ["glm-4.6v-flash", "qwen3-vl-7b", "olmocr-2-7b", "gemma-3-4b"]
+# v4 update (2026-06-29): the v4 VISION_MODELS registry uses the corrected keys
+# (qwen3-vl-7b → qwen3-vl-8b, qwen3-vl-30b → qwen3-vl-30b-a3b,
+#  glm-4.6v-flash was preserved as the real Unsloth ID).
+# See openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority/.
+VLM_MODELS = [
+    "glm-4.6v-flash",
+    "qwen3-vl-8b",
+    "qwen3-vl-30b-a3b",
+    "gemma-4-26B-A4B",
+    "molmo2-8b",
+]
 vlm_partitions = StaticPartitionsDefinition(VLM_MODELS)
 
 
@@ -65,7 +75,7 @@ class HTRDatasetConfig(Config):
 class VLMFinetuneConfig(Config):
     """Configuration for VLM fine-tuning."""
 
-    model_name: str = "glm-4.6v-flash"
+    model_name: str = "gemma-4-26B-A4B"  # v4 default (was glm-4.6v-flash in v3)
     epochs: int = 3
     batch_size: int = 4
     learning_rate: float = 2e-4
