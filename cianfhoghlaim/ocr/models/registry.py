@@ -5,7 +5,7 @@ This is the canonical OCR/VLM model registry for the Cianfhoghlaim
 platform. Every OCR/VLM call in the lakehouse routes through here.
 
 Key changes from the legacy `_meaisinfhoghlaim_src/model_registry.py`:
-- 24-entry `VISION_MODELS` dict (replaces the legacy 10-entry `OCR_MODELS`
+- 20-entry `VISION_MODELS` dict (replaces the legacy 10-entry `OCR_MODELS`
   + 6-entry `VLM_MODELS`)
 - All entries Unsloth-first: every model has `unsloth_id` → `mlx_id` →
   `upstream_id` fallback chain
@@ -257,32 +257,7 @@ VISION_MODELS: dict[str, OCRModel] = {
         available=True,
         max_resolution=(2048, 2048),
         notes="26.5B MoE / 4B active, 14GB. **M4 Max default**. 30.5M downloads. **Diagram-aware for PDF processing**.",
-    ),
-    "gemma-4-31B": OCRModel(
-        key="gemma-4-31B",
-        name="Gemma 4 31B dense (SOTA)",
-        unsloth_id="unsloth/gemma-4-31B-it-GGUF",
-        mlx_id="mlx-community/gemma-4-31b-it-8bit",
-        upstream_id="google/gemma-4-31B-it",
-        backend=ModelBackend.LLAMASWAP,
-        capabilities=[
-            ModelCapability.MULTILINGUAL,
-            ModelCapability.GAELIC,
-            ModelCapability.DENSE_OCR,
-            ModelCapability.REASONING,
-            ModelCapability.LATEX,
-            ModelCapability.MATH,
-            ModelCapability.DIAGRAM,
-            ModelCapability.TABLES,
-        ],
-        unsloth_features=["fast_inference", "imatrix"],
-        role="tier1_heavy",
-        m4_max_48gb_fit=True,
-        arm1_oci_required=False,
-        available=True,
-        max_resolution=(2048, 2048),
-        notes="32.7B dense, 19GB. Top dense. F-19 SOTA baseline. arm1-oci preferred.",
-    ),
+     ),
     # ─── GLM-4.6V Flash (zai-org, Dec 2025) — fast / low-cost ───
     "glm-4.6v-flash": OCRModel(
         key="glm-4.6v-flash",
@@ -306,31 +281,6 @@ VISION_MODELS: dict[str, OCRModel] = {
         available=True,
         max_resolution=(2048, 2048),
         notes="10.3B, 6GB, 128k context. Fast / low-cost. 746K downloads. **Diagram-aware** for marking-scheme figures.",
-    ),
-    "glm-4.6v-full": OCRModel(
-        key="glm-4.6v-full",
-        name="GLM-4.6V full MoE (arm1-oci)",
-        unsloth_id="unsloth/GLM-4.6V-GGUF",
-        mlx_id=None,
-        upstream_id="zai-org/GLM-4.6V",
-        backend=ModelBackend.LLAMASWAP,
-        capabilities=[
-            ModelCapability.DENSE_OCR,
-            ModelCapability.TABLES,
-            ModelCapability.LATEX,
-            ModelCapability.MULTILINGUAL,
-            ModelCapability.GAELIC,
-            ModelCapability.MATH,
-            ModelCapability.REASONING,
-            ModelCapability.DIAGRAM,
-        ],
-        unsloth_features=["moe_12x", "fast_inference", "imatrix"],
-        role="tier1_heavy",
-        m4_max_48gb_fit=False,
-        arm1_oci_required=True,
-        available=True,
-        max_resolution=(2048, 2048),
-        notes="107.7B MoE, 414K downloads. arm1-oci only.",
     ),
     # ─── Qwen 3-VL (Alibaba, Oct 2025) — PRIMARY WORKHORSE ───
     "qwen3-vl-4b": OCRModel(
@@ -409,32 +359,6 @@ VISION_MODELS: dict[str, OCRModel] = {
         max_resolution=(2048, 2048),
         notes="31.1B MoE / 3B active, 18GB. Modal A100 burst for full-year exam corpora. 16.1M downloads.",
     ),
-    "qwen3-vl-235b-a22b": OCRModel(
-        key="qwen3-vl-235b-a22b",
-        name="Qwen 3-VL 235B-A22B MoE (arm1-oci SOTA)",
-        unsloth_id="unsloth/Qwen3-VL-235B-A22B-Instruct-GGUF",
-        mlx_id=None,
-        upstream_id="Qwen/Qwen3-VL-235B-A22B-Instruct",
-        backend=ModelBackend.LLAMASWAP,
-        capabilities=[
-            ModelCapability.DENSE_OCR,
-            ModelCapability.GROUNDING,
-            ModelCapability.REASONING,
-            ModelCapability.MULTILINGUAL,
-            ModelCapability.GAELIC,
-            ModelCapability.TABLES,
-            ModelCapability.LATEX,
-            ModelCapability.MATH,
-            ModelCapability.DIAGRAM,
-        ],
-        unsloth_features=["moe_12x", "fast_inference", "imatrix"],
-        role="tier1_heavy",
-        m4_max_48gb_fit=False,
-        arm1_oci_required=True,
-        available=True,
-        max_resolution=(4096, 4096),
-        notes="235.7B MoE / 22B active, ~130GB. arm1-oci SOTA for full NCCA corpus. 6.2M downloads.",
-    ),
     # ─── Qwen 3.6 (Alibaba, Apr 2026) — MTP speculative decoding ───
     "qwen3.6-27b-mtp": OCRModel(
         key="qwen3.6-27b-mtp",
@@ -456,27 +380,6 @@ VISION_MODELS: dict[str, OCRModel] = {
         available=True,
         max_resolution=(2048, 2048),
         notes="27.8B dense, ~16GB, **MTP speculative decoding**. Text-only but used for marking-scheme text post-processing. 1.8M downloads.",
-    ),
-    "qwen3.6-35b-a3b-mtp": OCRModel(
-        key="qwen3.6-35b-a3b-mtp",
-        name="Qwen 3.6 35B-A3B MTP MoE",
-        unsloth_id="unsloth/Qwen3.6-35B-A3B-MTP-GGUF",
-        mlx_id="unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit",
-        upstream_id="Qwen/Qwen3.6-35B-A3B",
-        backend=ModelBackend.LLAMASWAP,
-        capabilities=[
-            ModelCapability.REASONING,
-            ModelCapability.MATH,
-            ModelCapability.MULTILINGUAL,
-            ModelCapability.GAELIC,
-        ],
-        unsloth_features=["moe_12x", "mtp_speculative", "fast_inference", "imatrix"],
-        role="tier1_heavy",
-        m4_max_48gb_fit=True,
-        arm1_oci_required=False,
-        available=True,
-        max_resolution=(2048, 2048),
-        notes="35.9B MoE / 3B active, ~22GB. **MTP + MoE**. 778K downloads.",
     ),
     # ─── DeepSeek-OCR-2 (Feb 2026) — specialist OCR ───
     "deepseek-ocr-2": OCRModel(
@@ -807,11 +710,10 @@ CLASSICAL_OCR: dict[str, dict[str, Any]] = {
 
 TEXT_MODELS: dict[str, OCRModel] = {
     "qwen3.6-27b-mtp": VISION_MODELS["qwen3.6-27b-mtp"],
-    "qwen3.6-35b-a3b-mtp": VISION_MODELS["qwen3.6-35b-a3b-mtp"],
     "uccix-mistral-24b": VISION_MODELS["uccix-mistral-24b"],
     "uccix-llama-3.1-8b": VISION_MODELS["uccix-llama-3.1-8b"],
 }
-# 4 text-only entries (the Qwen 3.6 + UCCIX models)
+# 3 text-only entries (the Qwen 3.6 27B + UCCIX models — qwen3.6-35b-a3b-mtp removed: marginal on M4 48GB)
 
 
 # ─── Registry helpers ───────────────────────────────────────────────────────

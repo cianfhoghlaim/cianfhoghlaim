@@ -1,4 +1,6 @@
-# llama-swap configuration for the 24-entry VISION_MODELS registry
+# llama-swap configuration for the 20-entry VISION_MODELS registry
+# (post-2026-06-29 trim — 4 models removed that don't fit on M4 48GB:
+#  qwen3-vl-235b-a22b 130GB, glm-4.6v-full 107GB, qwen3.6-35b-a3b-mtp 22GB marginal, gemma-4-31B 19GB marginal)
 # (post-2026-06-29 audit, per the openspec change
 # 2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority).
 #
@@ -54,16 +56,9 @@ models:
     role: "tier2_medium"  # M4 Max default
     vram_gb: 14
     contextSize: 262144
-  - name: "gemma-4-31B"
-    src: "unsloth/gemma-4-31B-it-GGUF"
-    mmproj: "unsloth/gemma-4-31B-it-GGUF/mmproj-F16.gguf"
-    cacheDir: "/models/unsloth/gemma-4-31B-it-GGUF"
-    quantization: "q4_k_m"
-    role: "tier1_heavy"
-    vram_gb: 19
-    contextSize: 262144
+  # gemma-4-31B removed (19GB marginal on M4 48GB; use gemma-4-26B-A4B instead)
 
-  # ─── GLM-4.6V (2 sizes) ───
+  # ─── GLM-4.6V (1 size) ───
   - name: "glm-4.6v-flash"
     src: "unsloth/GLM-4.6V-Flash-GGUF"
     mmproj: "unsloth/GLM-4.6V-Flash-GGUF/mmproj-F16.gguf"
@@ -72,9 +67,9 @@ models:
     role: "tier2_medium"
     vram_gb: 6
     contextSize: 128000
-  # glm-4.6v-full is 107B MoE — only on arm1-oci, not in this llama-swap config.
+  # glm-4.6v-full removed (107B MoE; doesn't fit on M4 48GB)
 
-  # ─── Qwen 3-VL (4 sizes) ───
+  # ─── Qwen 3-VL (3 sizes) ───
   - name: "qwen3-vl-4b"
     src: "unsloth/Qwen3-VL-4B-Instruct-GGUF"
     mmproj: "unsloth/Qwen3-VL-4B-Instruct-GGUF/mmproj-F16.gguf"
@@ -99,9 +94,9 @@ models:
     role: "tier1_heavy"
     vram_gb: 18
     contextSize: 256000
-  # qwen3-vl-235b-a22b is 235B MoE — only on arm1-oci, not in this config.
+  # qwen3-vl-235b-a22b removed (235B MoE; doesn't fit on M4 48GB)
 
-  # ─── Qwen 3.6 (2 sizes with MTP speculative decoding) ───
+  # ─── Qwen 3.6 (1 size with MTP speculative decoding) ───
   - name: "qwen3.6-27b-mtp"
     src: "unsloth/Qwen3.6-27B-MTP-GGUF"
     cacheDir: "/models/unsloth/Qwen3.6-27B-MTP-GGUF"
@@ -110,14 +105,7 @@ models:
     vram_gb: 16
     contextSize: 32768
     mtp: true  # Multi-Token Prediction speculative decoding
-  - name: "qwen3.6-35b-a3b-mtp"
-    src: "unsloth/Qwen3.6-35B-A3B-MTP-GGUF"
-    cacheDir: "/models/unsloth/Qwen3.6-35B-A3B-MTP-GGUF"
-    quantization: "q4_k_m"
-    role: "tier1_heavy"
-    vram_gb: 22
-    contextSize: 32768
-    mtp: true
+  # qwen3.6-35b-a3b-mtp removed (22GB marginal on M4 48GB; use qwen3.6-27b-mtp instead)
 
   # ─── InternVL3_5-8B (document understanding) ───
   - name: "internvl3-8b"

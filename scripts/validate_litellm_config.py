@@ -43,7 +43,7 @@ V4_REQUIRED_MODELS = {
     "local/vision/molmo2-8b",
     "local/vision/uccix-mistral-24b",  # Irish language
     "local/vision/qwen3-vl-30b-a3b",
-    "local/vision/qwen3-vl-235b-a22b",
+    # qwen3-vl-235b-a22b removed (130GB; doesn't fit on M4 48GB)
 }
 
 ALLOWED_API_BASES = {

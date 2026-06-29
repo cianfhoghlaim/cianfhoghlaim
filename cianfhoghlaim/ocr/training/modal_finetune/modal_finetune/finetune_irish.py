@@ -1,7 +1,15 @@
 """
-Modal GPU Job: Irish LLM Fine-tuning
+Modal GPU Job: Irish LLM Fine-tuning (v4 — Unsloth Gemma 4 31B)
 
-Fine-tunes Llama-3.2-3B on SEC exam data using Unsloth for 70% VRAM reduction.
+Fine-tunes Gemma 4 31B (Unsloth GGUF) on Irish curriculum data
+using Unsloth for 70% VRAM reduction.
+
+Per the 2026-06-29 v4 trim, the Modal GPU server is the primary
+target for fine-tuning the largest v4 models. The M4 Max 48 GB
+unified memory can serve Gemma 4 31B at Q4_K_M (~19 GB resident
+plus 6 GB KV cache) for inference, but the full 31B is too tight
+for a 3-epoch Irish fine-tune (which needs ~30 GB at QLoRA r=16).
+Modal H100 80 GB is the right home for this fine-tune.
 
 Usage:
     # Direct Modal execution
@@ -11,19 +19,21 @@ Usage:
     # Dagster orchestration (preferred)
     dagster asset materialize -m oideachais.dagster_defs --select modal_irish_llm_finetune
 
-Cost estimate: ~$100 for 8 hours on A10G GPU
+Cost estimate: ~$30 for 8 hours on H100 GPU (was ~$100 on A10G
+for Llama-3.2-3B; H100 is faster per token despite higher $/hr)
 
 Observability:
     - WandB for training metrics
     - MLflow for experiment tracking and model registry
     - Dagster Pipes for asset materialization
-    - HuggingFace Hub for model publishing
+    - HuggingFace Hub for model publishing (Unsloth GGUF format)
 
-Training Configuration:
+Training Configuration (v4):
+    - Base model: unsloth/gemma-4-31B-it-GGUF (the v4 31B dense SOTA)
     - Unsloth: 70% VRAM reduction, 2x faster training
     - LoRA: r=16, alpha=32 (optimal for Irish)
     - 4-bit quantization: QLoRA for memory efficiency
-    - DeepSpeed: ZeRO-2 for distributed training
+    - 6 Celtic languages (per the v4 Gemma 4 capability)
 """
 
 import time
@@ -60,7 +70,7 @@ model_volume = modal.Volume.from_name("irish-llm-checkpoints", create_if_missing
 
 @app.function(
     image=training_image,
-    gpu="A10G",  # 24GB VRAM - good balance of cost/performance
+    gpu="H100",  # 80GB VRAM - fits Gemma 4 31B QLoRA r=16 (~30GB) + headroom
     timeout=3600 * 8,  # 8 hours max
     secrets=[
         modal.Secret.from_name("huggingface"),
@@ -70,7 +80,7 @@ model_volume = modal.Volume.from_name("irish-llm-checkpoints", create_if_missing
     volumes={"/checkpoints": model_volume},
 )
 def finetune_irish_llm(
-    base_model: str = "unsloth/Llama-3.2-3B-Instruct",
+    base_model: str = "unsloth/gemma-4-31B-it-GGUF",  # v4 — was unsloth/Llama-3.2-3B-Instruct
     dataset_name: str = "cianfhoghlaim/sec-exam-irish",
     max_steps: int = 1000,
     learning_rate: float = 2e-4,
