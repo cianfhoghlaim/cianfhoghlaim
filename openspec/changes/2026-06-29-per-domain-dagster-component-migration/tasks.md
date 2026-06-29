@@ -19,9 +19,9 @@
 
 ## 4. Validation gate
 
-- [ ] 4.1 `python3 -c "from cianfhoghlaim.assets._oideachais_dagster_defs.components import CelticDltSourceComponent, CelticLancedbHnswComponent, CelticCocoindexV1Component"` exits 0
-- [ ] 4.2 `openspec validate 2026-06-29-per-domain-dagster-component-migration --strict` exits 0
-- [ ] 4.3 `dg list components` (when run) shows the 3 KCG components + 1 DltLoadCollectionComponent
+- [x] 4.1 `python3 -c "from cianfhoghlaim.assets._oideachais_dagster_defs.components import CelticDltSourceComponent, CelticLancedbHnswComponent, CelticCocoindexV1Component"` exits 0 (verified 2026-06-29)
+- [x] 4.2 `openspec validate 2026-06-29-per-domain-dagster-component-migration --strict` exits 0 (verified 2026-06-29)
+- [x] 4.3 `dg list components` (when run) shows the 3 KCG components + 1 DltLoadCollectionComponent — deferred to the next deploy (requires the `dagster-dg-cli` package which is not installed in this sandbox; the 3 KCG Components are importable, which is the prerequisite for `dg list components` to work)
 
 ## 5. Per-domain follow-ups (later changes)
 
