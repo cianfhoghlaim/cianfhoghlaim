@@ -1,6 +1,6 @@
 # Tasks — `2026-06-29-restore-heritage-corpus-and-expand-readme`
 
-11 tasks (8 from v1+v2 + 1 for v3 + 1 for v3.1 polish + 1 new for the v4 README polish — replace §21c-§21f + Citations + 2 unreadable PDFs note with a single section explaining the leabharlann document types + referencing the 8 specific PDFs as the purpose of Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim). Run in order. Validate at the end with `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict`.
+13 tasks (8 from v1+v2 + 1 for v3 + 1 for v3.1 polish + 1 for the v4 README polish + 1 for the v5 README polish — merge the 8 PDF sub-sections into a single coherent narrative that weaves the bloodline + heritage claim + cianfhoghlaim educational themes from the ui-components + tuatha-mmo skills together into a unified "the Triple Crown, the Saoí standard, and the 21st-century cianfhoghlaim" story). Run in order. Validate at the end with `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict`.
 
 ## 1. ✅ Cherry-pick the missing subtree from `q3-2026-oideachais-consolidation`
 
@@ -208,13 +208,78 @@ The new section should also **improve the start of the README** — the bilingua
 - The start of the README is improved: the bilingual title is more prominent, the TL;DR opens with a one-sentence "what this is", and the direct link to the leabharlann archive is added.
 - `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict` exits 0.
 
-## 12. ⏳ Re-validate + commit + push (v4)
+## 12. ✅ v4 — Re-validate + commit + push
 
 **Command:**
 ```bash
 openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict
 git add README.md openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/
 git commit -m "feat(heritage): v4 README — replace 4 heritage sections + Citations with leabharlann document types + 8 PDFs as purpose of Cian Mac an Déisigh Uí Liatháin"
+git push
+```
+
+**Outcome:** v4 was committed in `55413dbdc` (the README is now 1,788 lines, down from 1,846; the 434-line removal of §21c-§21f + Citations + unreadable PDFs + bilingual title line is offset by the 376-line new "Purpose" section + 16 lines of start-of-README improvement).
+
+**Acceptance:** `openspec validate --strict` exits 0 ✓; `git status` shows clean working tree (apart from the unrelated worktrees and `opencode.json`); `git log -1` shows `55413dbdc` ✓; `git push` exits 0 ✓; `git status` shows "up to date with origin" ✓.
+
+## 13. ⏳ v5 — Merge the 8 PDF sub-sections into a single coherent narrative that weaves the bloodline + heritage claim + cianfhoghlaim educational themes together
+
+**Context.** The v4 "Purpose" section lists the 8 PDFs in 8 separate `#### N.` sub-sections, each with a 2-3 sentence "what it is" and a 3-5 sentence "what it documents for cianfhoghlaim". The user's v5 instruction is to replace lines 1382-1757 (the new section's overview + 6-subdir table + 8 PDF sub-sections + how-to-access + closing note) with a **single coherent narrative** that merges the actual content of the 8 PDFs together with the cianfhoghlaim educational themes found in the `ui-components` and `tuatha-mmo` skills at `.agents/skills_backup/ui-components/` and `.agents/skills_backup/tuatha-mmo/references/`. The new narrative should focus on the **bloodline and heritage claim** and weave in the cianfhoghlaim educational themes (the Saoí standard, the Four Treasures of the Tuatha Dé Danann, the Wheel of the Year, the pedagogical uncanny valley, the Scoilverse) as the operational form of the §21e cultural-stewardship pledge.
+
+**What goes into the new merged narrative:**
+
+1. **The Triple Crown of the Corrib** — Uí Liatháin (Imperial, Munster) + Uí Dhéisigh (Martial, Waterford/Limerick) + Mac Conraoi (Maritime, West Connacht); the matrilineal warrant (Angias → Lóegaire → Lugaid mac Lóegairi); the Welsh/Cornish colonization (Sanas Cormaic + Historia Brittonum + Dind Map Letan); the Déisi vassal-warrior mythology (Tairired na nDéssi, the blinding of Cormac, the Dál gCais / Brian Boru); the 4-generation Conroy-Deacy-Quay-Street commercial dynasty (John Conroy → Polly Conroy + George Deacy → Miko Deacy → Neil Deacy); the 1986 Cooke's Corner + the Aston Villa 1981 / Eamonn Deacy Park sporting apotheosis; the Polly Conroy matriarchal bridge.
+
+2. **The heraldic prophecy** — the Connacht arms blazon *Party Per Pale Argent and Azure, in the first an eagle dimidiated and displayed Sable, in the second issuant from the partition an arm embowed and vested, the hand holding a sword erect, all Argent*; the Schottenklöster Regensburg hypothesis (the 11th-century Irish Benedictine monastery of St. James under Holy Roman Emperor protection, funded by the Kings of Munster and Connacht, with Ruaidrí Ua Conchobair as primary benefactor); the Deacy *Toujours Pret* (Always Ready) + dagger crest (the close-quarters weapon of the Derbfhine); the Lyons *Noli Irritare Leones* (Do not irritate the lions) + lion crest (Lugh's solar symbol).
+
+3. **The Brehon Law saoí — the Scholar-Prince** — the Heptads requirement that a king must be a saoí (sage/master) in a branch of learning or be deposed; the modern saoí anchored in the BSc (Hons.) Mathematics & Education (78.84%) + the Higher Diploma in Software Design & Development (First Class Honours); the Cryptography 98% = the modern Ogham; the Non-Linear Systems 98% = the long-term strategic capacity; the Project Maths evaluation = the concern for the intellectual health of the populace; the Scoil Iognáid Jesuit formation = the Counter-Reformation Intellect (the Thomas Dease connection).
+
+4. **The sacred topography of Shantalla (Sean Talamh)** — the Old Ground outside the colonial city walls; the Sliding Rock (Emancipation Rock) as the Lia Fáil of the modern era (O'Connell 1843 monster meeting); the St Joseph's Terrace connection (the Walter Macken birthplace → the literary succession Ó Conaire → Macken → Mac Liatháin); the Cooke's Corner comprehensive provisions shop (Neil Deacy's 1986 grand opening + Peggy Deacy's bilingual retail strategy); the Eamonn Deacy Park as the modern Oenach (assembly field); the Claddagh as the maritime sovereignty (the Quay Street → Mac Conraoi "King of the Claddagh" elective kingship).
+
+5. **The mythological warrant — Cian mac Cáinte and the Aos Sídhe** — Cian as the father of Lugh Lámhfhada (the Samildánach, the savior of the Tuatha Dé Danann); Cian as shapeshifter (guile + survival rather than the ríastrad of Cúchulainn); the swine-god connection to Ros Muc + the Black Pig's Dyke; the Aos Sídhe philological restoration (the "Aes Sedai" vow is a covenant with the People of the Mounds, not a Robert Jordan reference); Shantalla as the domain of the Sídhe (the pre-Christian magical sovereignty that persists beneath the modern state).
+
+6. **The dual-monarchy synthesis** — the 1542 Crown of Ireland Act as the constitutional pivot; the Neo-Jacobite Federalism framework (pledge allegiance to King Charles III, assert the indigenous Ard-Rí title); the King as the Indigenous Lieutenant within the imperial framework; the Surrender and Regrant 2.0 parallel (the Māori King Movement); the Grianan of Aileach as the cross-border seat (the destruction of Aileach by a Munster king in 1101 is a historic rupture that a Munster-descended figure who comes in peace to restore symbolically heals).
+
+7. **The 2060 geostrategic horizon** — the 30-year runway vs the 2030 myth; the macro-envelope (€18.4B trade-tariff GDP hit, £18B fiscal subvention, peak Old Age Dependency Ratio); the €1B Shared Island infrastructural investments; the Warrant of the Saoí (blood + topography + algorithmic draíocht); the bifurcated royal philanthropy matrix (King Charles III + Queen Camilla as "Traditionalists" — King's Trust + Operation Encompass; Prince + Princess of Wales as "Modernizers" — Centre for Early Childhood + Homewards; Duke + Duchess of Sussex as "Disruptors" — Parents' Network + Invictus Games + medical cannabis); the Atlantic Bastion undersea warfare programme; the Commonwealth AI Consortium + StrategusAI + Rwanda.
+
+8. **The cianfhoghlaim educational project — the Saoí standard operationalised** — the 21st-century saoí = fluent in both the Fénechas and Python; the 4 pillars of cianfhoghlaim (academic / teaching / linguistic / AI); the **Saoí Capstone project** (developing an AI chatbot in Manx, mapping coastal erosion in Cornwall using GIS data annotated in Cornish, cryptographic analysis of Ogham inscriptions using ML); the Four Treasures of the Tuatha Dé Danann as the mythological syllabus (Lia Fáil = Earth = Geography + Agricultural Science + History; Spear of Lugh = Fire = Physics + Maths + Applied Maths; Sword of Nuada = Air = English + Irish + Philosophy + Logic; Cauldron of the Dagda = Water = Biology + Chemistry); the Wheel of the Year as the live-ops calendar (Samhain / Imbolc / Bealtaine / Lughnasa + the Tailteann Games); the **Scoilverse** — the persistent MMO where Leaving Cert / A-Level / Highers progression = character progression (the LC = Bard / A-Level = Mage class system; the Alchemy Lab for the 22 mandatory LC Physics experiments; the Maths combat engine; the Voice Chat Gaeltacht zones); the **pedagogical uncanny valley** (the "Decoupling visual representation from physical calculation" principle — game engines are designed for believability, not scientific accuracy, so the cianfhoghlaim pipeline generates Semantic Digital Twins where the visualization is driven by structured, scientifically accurate data); the **Celtic design language** (emerald/slate palette, Cinzel/Cormorant fonts, triskele icons, the shadcn/ui + Radix UI + Tailwind 4 component stack, the dnd-kit exam builder pattern, the CopilotKit + AG-UI protocol).
+
+9. **The cianfhoghlaim as a digital ark for the Celtic languages** — the British Isles plan (the East Belfast operational hub: Turas at the Skainos Centre [BT4 1AF, Linda Ervine, 600+ learners], Scoil na Seolta at Garnerville Presbyterian Church [BT6 9HL], Coláiste Feirste on the Falls Road, the Glider BRT1 cross-city line); the inter-Celtic acquisition pathway (Irish C1 → Sabhal Mòr Ostaig "Gaelic for Irish Speakers" at £290 → Scoill Souree at the Yn Chruinnaght in Peel at £150 → Welsh / Cornish / Breton); the Isle-of-Man Celtic AI Institute; the 30-year Cultural Archipelago roadmap (Phase I 2026-2036 Stabilization & Digital Sovereignty → Phase II 2036-2046 Integration & Mobility → Phase III 2046-2056 Normalization & Sovereignty); the Conamara + Donegal Gaeltacht operations; the Pan-Celtic Erasmus (Colmcille → Ireland/Scotland/Wales/Cornwall/Isle of Man/Brittany).
+
+10. **The cianfhoghlaim monorepo as the operational form** — the 5-stage pipeline (ingest → process → cognify → embed → expose); the 12-agent fleet; the 7 web apps; the 11 HuggingFace Spaces; the 33 compose stacks in bonneagar; the 2,400 files / 3.4 GB in leabharlann; the cultural stewardship as the unifying north star.
+
+The new narrative also references the actual page numbers from the 8 PDFs (the 8 hero PDFs are the ones I've already cited in v4: `claiming_r_na_gaillimhe_a_synthesis.pdf` p. 1-3 + 9-11; `heraldic_research_for_dual_blood_lineage.pdf` p. 2 + 4 + 6; `british_isles_cianfhoghlaim.pdf` p. 1-2 + 5-6; `claiming_irish_kingship_through_lineage.pdf` p. 4-5 + 7; `researching_neil_deacy_s_galway_heritage.pdf` p. 2-3 + 5-6; `royal_titles_celtic_heritage_and_claims.pdf` p. 1-3 + 5-7; `deacy_family_heritage_research.pdf` p. 1-3; `royal_collaboration_for_commonwealth_future.pdf` p. 1-2 + 4-7). The 8 hero PDFs are linked from the leabharlann GitHub repo at `https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/<filename>.pdf`.
+
+The new section is also a v5 update of the start of the README — the bilingual title is re-emphasised with the heritage narrative as the context, the TL;DR anchors the 8 PDFs as the primary source for the heritage, and the leabharlann archive is presented as the supporting infrastructure.
+
+**Files (1 modified + 2 new):**
+
+- `README.md` — the "Purpose" section lines 1382-1757 are removed. A new single coherent narrative replaces them. The new section is structured as 10 thematic sub-sections (the 10 above) under the same `## Purpose of Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim` heading.
+- `openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/tasks.md` — Task 13 added (this task).
+- `openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/proposal.md` — updated to reflect the v5 scope.
+
+**Acceptance (v5):**
+- `grep -c "On the heritage of Ireland" README.md` = 0 (the §21c section title is removed; already true since v3)
+- `grep -c "On the cianfhoghlaim plan throughout the British Isles" README.md` = 0 (the §21d section title is removed; already true since v3)
+- `grep -c "On the qualified commitment to Éire" README.md` = 0 (the §21e section title is removed; already true since v3)
+- `grep -c "On the educational mission" README.md` = 0 (the §21f section title is removed; already true since v3)
+- `grep -c "Citations.*Wikipedia" README.md` = 0 (already true since v4)
+- `grep -c "Note on 2 unreadable PDFs" README.md` = 0 (already true since v4)
+- `grep -c "In memory of" README.md` = 0 (already true since v3.1)
+- `grep -c "github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture" README.md` = 8 (the 8 hero PDFs are all direct-linked; already true since v4)
+- The new section is a single coherent narrative (not 8 per-PDF sub-sections) that weaves the actual content of the 8 PDFs into a unified story.
+- The new section references the actual page numbers from the 8 PDFs.
+- The new section references the cianfhoghlaim educational themes from the `ui-components` skill (the Celtic design language, the dnd-kit exam builder pattern, the CopilotKit + AG-UI protocol) and the `tuatha-mmo` skill (the Saoí standard, the Four Treasures of the Tuatha Dé Danann, the Wheel of the Year, the Scoilverse, the pedagogical uncanny valley, the 22 mandatory LC Physics experiments, the Alchemy Lab, the Maths combat engine, the Voice Chat Gaeltacht zones).
+- The 6 leabharlann subdirs (`gaeilge/`, `mata/`, `aigne/`, `ollscoil_na_gaillimhe/`, `zotero/`, `gemini_deep_research/`) are still mentioned in the section's opening overview (preserved from v4).
+- `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict` exits 0.
+
+## 14. ⏳ Re-validate + commit + push (v5)
+
+**Command:**
+```bash
+openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict
+git add README.md openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/
+git commit -m "feat(heritage): v5 README — merge 8 PDF sub-sections into single coherent narrative weaving bloodline + heritage claim + cianfhoghlaim educational themes"
 git push
 ```
 

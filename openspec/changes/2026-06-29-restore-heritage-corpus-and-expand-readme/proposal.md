@@ -18,7 +18,7 @@ The `README.md` personal-heritage section was broken in three ways:
    Coláiste na Déisigh) are too short to ground the constitutional
    claim in the available Gemini Deep Research evidence.
 
-This change is delivered in **4 versions** of the README on a
+This change is delivered in **5 versions** of the README on a
 single openspec change:
 
 - **v1** (commit `7a1243485`) — restore the 48-file subtree + first
@@ -51,53 +51,50 @@ single openspec change:
   origin explanation, fix the "City of Tribes" link
   (`Galway` → `Tribes_of_Galway`), and remove the "In memory of"
   line + the "Note on 2 unreadable PDFs" block.
-- **v4** (this commit) — replace the §21c-§21f + Citations + 2
+- **v4** (commit `55413dbdc`) — replace the §21c-§21f + Citations + 2
   unreadable PDFs note + "Irish-English bilingual title on line 1"
   line (lines 1366-1800) with a single section that **(a)**
-  explains the 6 leabharlann subdirs (`gaeilge/`, `mata/`,
-  `aigne/`, `ollscoil_na_gaillimhe/`, `zotero/`,
-  `gemini_deep_research/`) and the purpose of each, and **(b)**
-  references directly the content and subreferences of the 8
-  specific Gemini Deep Research PDFs in
+  explains the 6 leabharlann subdirs and the purpose of each, and
+  **(b)** references directly the content and subreferences of the
+  8 specific Gemini Deep Research PDFs in
   `leabharlann/gemini_deep_research/culture/` as the purpose of
-  Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim:
-  `claiming_r_na_gaillimhe_a_synthesis.pdf` (Rí na Gaillimhe thesis
-  + Brehon Law saoí + Shantalla topography), `heraldic_research_for_dual_blood_lineage.pdf`
-  (Connacht arms + Deacy/Lyons mottos + Regensburg
-  Schottenklöster hypothesis), `british_isles_cianfhoghlaim.pdf`
-  (East Belfast hub + inter-Celtic acquisition pathway + Celtic
-  AI Institute + 30-year Cultural Archipelago), `claiming_irish_kingship_through_lineage.pdf`
-  (Neo-Jacobite Federalism + Triple Crown table + 1542 Crown of
-  Ireland Act + matrilineal warrant Angias → Uí Néill),
-  `researching_neil_deacy_s_galway_heritage.pdf` (3-generation
-  Conroy-Deacy-Quay-Street dynasty + 1986 Cooke's Corner opening +
-  Peggy Deacy's bilingual retail strategy + Eamonn Deacy Park
-  sporting lineage + Eileen's bakery + Kenny's Bookshop),
-  `royal_titles_celtic_heritage_and_claims.pdf` (Uí Liatháin
-  colonization of Wales/Cornwall + Déisi political theology +
-  Grianan of Aileach + Surrender and Regrant 2.0 + Connacht arms
-  prophecy), `deacy_family_heritage_research.pdf` (Deacy + Conroy
-  commercial/maritime lineage + "ancient arts" + Polly Conroy +
-  Aston Villa 1981 + European Cup 1982), and
-  `royal_collaboration_for_commonwealth_future.pdf` (2060
-  Geostrategic Synthesis + €18.4 billion trade-tariff GDP hit +
-  Shared Island €1B investment + Warrant of the Saoí + King
-  Charles III + Prince + Princess of Wales + Duke + Duchess of
-  Sussex + Atlantic Bastion + Commonwealth AI Consortium +
-  StrategusAI + Rwanda). The v4 also **improves the start of the
-  README** by re-emphasising the bilingual title + opening the
-  TL;DR with a direct link to the leabharlann `gemini_deep_research/culture/`
-  archive as the primary source corpus.
+  Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim. The v4 also
+  **improves the start of the README** by re-emphasising the
+  bilingual title + opening the TL;DR with a direct link to the
+  leabharlann `gemini_deep_research/culture/` archive.
+- **v5** (this commit) — replace the v4 "Purpose" section's
+  overview + 6-subdir table + 8 per-PDF sub-sections + how-to-access
+  + closing note (README lines 1382-1757, ~376 lines) with a **single
+  coherent narrative** that merges the actual content of the 8 PDFs
+  into a unified "the Triple Crown, the Saoí standard, and the
+  21st-century cianfhoghlaim" story. The new narrative is structured
+  as 10 thematic sub-sections: (1) the Triple Crown of the Corrib;
+  (2) the heraldic prophecy; (3) the Brehon Law saoí — the
+  Scholar-Prince; (4) the sacred topography of Shantalla; (5) the
+  mythological warrant — Cian mac Cáinte and the Aos Sídhe; (6) the
+  dual-monarchy synthesis; (7) the 2060 geostrategic horizon; (8) the
+  cianfhoghlaim educational project — the Saoí standard
+  operationalised (with the Four Treasures of the Tuatha Dé Danann,
+  the Wheel of the Year, the Scoilverse, the pedagogical uncanny
+  valley, the Celtic design language); (9) the cianfhoghlaim as a
+  digital ark for the Celtic languages; (10) the cianfhoghlaim
+  monorepo as the operational form. The v5 also references the
+  cianfhoghlaim educational themes from the `ui-components` skill
+  (the Celtic design language, the dnd-kit exam builder pattern,
+  the CopilotKit + AG-UI protocol) and the `tuatha-mmo` skill
+  (the Saoí standard, the Four Treasures, the Wheel of the Year,
+  the Scoilverse, the pedagogical uncanny valley, the 22 mandatory
+  LC Physics experiments, the Alchemy Lab, the Maths combat
+  engine, the Voice Chat Gaeltacht zones).
 
-The v1+v2+v3+v3.1 work remains archived in git history; the v4 is
-the canonical current README. The 8 Gemini Deep Research PDFs
-listed above are the evidence base for the new "Purpose of Cian
-Mac an Déisigh Uí Liatháin and cianfhoghlaim" section that
-replaces the v3 §21c-§21f + Citations + unreadable PDFs block.
+The v1+v2+v3+v3.1+v4 work remains archived in git history; the v5
+is the canonical current README. The 8 Gemini Deep Research PDFs
+listed in the v4 description are the evidence base for the new v5
+merged narrative.
 
 ## What
 
-The v4 README rewrite (delivered as Tasks 1-12) has 12 components:
+The v5 README rewrite (delivered as Tasks 1-14) has 14 components:
 
 ### 1. (v1) Cherry-pick the missing subtree from `q3-2026-oideachais-consolidation`
 
@@ -331,6 +328,11 @@ corpus is the primary source for the author's heritage and purpose".
 - (v4) The new section opens with an explanation of the 6 leabharlann subdirs and points readers to the `gemini_deep_research/culture/` archive as the primary source corpus.
 - (v4) Each of the 8 specific PDFs (`claiming_r_na_gaillimhe_a_synthesis.pdf`, `heraldic_research_for_dual_blood_lineage.pdf`, `british_isles_cianfhoghlaim.pdf`, `claiming_irish_kingship_through_lineage.pdf`, `researching_neil_deacy_s_galway_heritage.pdf`, `royal_titles_celtic_heritage_and_claims.pdf`, `deacy_family_heritage_research.pdf`, `royal_collaboration_for_commonwealth_future.pdf`) is cited with its full title + key claims.
 - (v4) The start of the README is improved: the bilingual title is more prominent, the TL;DR opens with a direct link to the leabharlann archive.
+- (v5) The v4 "Purpose" section's overview + 6-subdir table + 8 per-PDF sub-sections + how-to-access + closing note (README lines 1382-1757, ~376 lines) are removed.
+- (v5) A new single coherent narrative replaces them: 10 thematic sub-sections weaving the actual content of the 8 PDFs into a unified "the Triple Crown, the Saoí standard, and the 21st-century cianfhoghlaim" story.
+- (v5) The new section references the actual page numbers from the 8 PDFs (p. 1-3, 2, 4, 6, etc.).
+- (v5) The new section references the cianfhoghlaim educational themes from the `ui-components` skill (the Celtic design language, the dnd-kit exam builder pattern, the CopilotKit + AG-UI protocol) and the `tuatha-mmo` skill (the Saoí standard, the Four Treasures of the Tuatha Dé Danann, the Wheel of the Year, the Scoilverse, the pedagogical uncanny valley, the 22 mandatory LC Physics experiments, the Alchemy Lab, the Maths combat engine, the Voice Chat Gaeltacht zones).
+- (v5) The 8 hero PDFs (claiming_r_na_gaillimhe_a_synthesis.pdf, heraldic_research_for_dual_blood_lineage.pdf, british_isles_cianfhoghlaim.pdf, claiming_irish_kingship_through_lineage.pdf, researching_neil_deacy_s_galway_heritage.pdf, royal_titles_celtic_heritage_and_claims.pdf, deacy_family_heritage_research.pdf, royal_collaboration_for_commonwealth_future.pdf) are all direct-linked from the leabharlann GitHub repo.
 - `grep -c "Dublin / Leinster consolidation" README.md` = 0.
 - `grep -c "Gaeltacht" README.md` ≥ 5 (actual: 27).
 - `grep -c "High King" README.md` ≥ 3 (actual: 4).
@@ -354,7 +356,7 @@ corpus is the primary source for the author's heritage and purpose".
 - Originating changes: `openspec/changes/extend-culture-heritage-to-8-articles/`
   and `openspec/changes/ingest-culture-heritage/`.
 - Originating branch: `q3-2026-oideachais-consolidation` (last touched 2026-06-28).
-- v1 commit: `7a1243485`. v2 commit: `f3affbde2`. v3 commit: `6fee5eb6a`. v3.1 commit: `3cb8acbfe`. v4 commit: this proposal's commit.
+- v1 commit: `7a1243485`. v2 commit: `f3affbde2`. v3 commit: `6fee5eb6a`. v3.1 commit: `3cb8acbfe`. v4 commit: `55413dbdc`. v5 commit: this proposal's commit.
 - Canonical specs: `openspec/specs/cross-domain-registry/spec.md` and
   `openspec/specs/oideachais-leabharlann/spec.md`.
 - Tracking issue: `openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/tracking_issues/unread-pdfs.md`.
