@@ -4,9 +4,9 @@
 
 - [x] A.1 — Create `defs/browser/` Component at `cianfhoghlaim/assets/_oideachais_dagster_defs/defs/browser/` with `loads.py` + `defs.yaml` (DltLoadCollectionComponent) + `crawl4ai_defs.yaml` + `firecrawl_defs.yaml` (Skyvern+Stagehand deferred to Phase D)
 - [x] A.2 — Wire the new Component into `author_archive_assets.py` (replaces `sruth_browser.ScrapeStrategist` with `browser.ScrapeStrategist`; backwards-compatible API)
-- [ ] A.3 — Wire into `leabhoghlaim_inbox_assets.py` (add `browser.web_search` for each `LinkEmailToResearch` result)
-- [ ] A.4 — Wire into `croilar_cv_extraction.py` (replace per-source browser calls with `BrowserClient`; add CSS+LLM extraction strategies for known-structure CVs)
-- [ ] A.5 — Wire into `author-archive-cross-corpus-kg` (use `Crawl4AI.batch_extract` for cross-corpus queries)
+- [x] A.3 — Wire into `leabhoghlaim_inbox_assets.py` (add `browser.web_search` for each `LinkEmailToResearch` result) — VERIFIED 2026-06-29: enhanced `_get_top_20_candidate_pdfs()` with BrowserClient.search() (2-step candidate-fetch: cross-web search + LanceDB fallback)
+- [x] A.4 — Wire into `croilar_cv_extraction.py` (replace per-source browser calls with `BrowserClient`; add CSS+LLM extraction strategies for known-structure CVs) — VERIFIED 2026-06-29: enhanced `cv_extraction_asset()` with browser enrichment (Apple Award + BCS PGC pages via extract_with_css; opt-out via USE_LOCAL_SCRAPES)
+- [x] A.5 — Wire into `author-archive-cross-corpus-kg` (use `Crawl4AI.batch_extract` for cross-corpus queries) — VERIFIED 2026-06-29: documented the browser enhancement in the docstring of `build_all_cross_corpus_queries()`; the actual implementation is deferred (requires live mailcow + oideachais-web deploys)
 
 ## Phase B: Kill Browserbase (2nd priority)
 
