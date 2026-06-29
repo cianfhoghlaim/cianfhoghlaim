@@ -299,6 +299,7 @@ def populate_cross_archive_edges(
     zotero_papers: Iterable[dict[str, Any]] | None = None,
     uog_artifacts: Iterable[dict[str, Any]] | None = None,
     takeout_docs: Iterable[dict[str, Any]] | None = None,
+    course_descriptors: Iterable[dict[str, Any]] | None = None,
     falkordb_client: Any = None,
 ) -> dict[str, Any]:
     """Populate FalkorDB with cross-archive edges.
@@ -308,6 +309,11 @@ def populate_cross_archive_edges(
     gemini_reports, zotero_papers, uog_artifacts, takeout_docs
         The 4 input corpora (each a list of dicts from the leabharlann
         dlt sources).
+    course_descriptors
+        The 5th input corpus (added in `university-of-galway-deep-extraction`):
+        the scraped UoG course descriptors from the
+        `uog_extract_courses` Dagster asset. Used by the new
+        `UoGArtifact-MATCHES-CourseDescriptor` rule.
     falkordb_client
         An instance of `FalkorDBClient` (from
         `oideachais.graph.falkordb_client`). If None, a new client is
@@ -322,6 +328,7 @@ def populate_cross_archive_edges(
     zotero_papers = list(zotero_papers or [])
     uog_artifacts = list(uog_artifacts or [])
     takeout_docs = list(takeout_docs or [])
+    course_descriptors = list(course_descriptors or [])
 
     # DuckDB may return `gemini_citations` and `cited_urls` as JSON strings
     # rather than parsed lists. Normalise to parsed lists here.
@@ -350,6 +357,22 @@ def populate_cross_archive_edges(
         uog_artifacts=uog_artifacts,
         takeout_docs=takeout_docs,
     )
+
+    # The 4th cross-archive rule (added in `university-of-galway-deep-extraction`):
+    # UoGArtifact -[:MATCHES]-> UniversityCourseDescriptor (course_code exact
+    # OR fuzzy title > 0.85).
+    try:
+        from cianfhoghlaim.cognify.rules.university_cross_archive import (
+            build_uog_matches_course_descriptor_query,
+        )
+        c4, p4 = build_uog_matches_course_descriptor_query(
+            uog_artifacts=uog_artifacts,
+            course_descriptors=course_descriptors,
+        )
+        if c4:
+            queries.append(("uog_matches_course_descriptor", c4, p4))
+    except ImportError:
+        logger.warning("university_cross_archive_rule_not_available_skipping")
 
     if falkordb_client is None:
         try:
@@ -396,6 +419,7 @@ __all__ = [
     "_build_arxiv_match_query",
     "_build_module_title_match_query",
     "_build_takeout_citation_query",
+    "_build_uog_matches_course_descriptor_query",
     "_extract_urls_from_text",
     "_normalise_title",
     "build_all_cross_archive_queries",

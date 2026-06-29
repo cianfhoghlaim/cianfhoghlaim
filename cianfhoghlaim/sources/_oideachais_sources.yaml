@@ -559,13 +559,28 @@ sources:
 
   - id: ie.university.galway
     name: "University of Galway"
-    domain: official_media
+    # Migrated from the generic `official_media / firecrawl_pages` entry to
+    # the new `university_deep_extraction` kind (per the
+    # `oideachais-university-deep-extraction` spec). The
+    # 23 other British Isles universities below (UCD, TCD, Maynooth, Limerick,
+    # QUB, Ulster, UCL, KCL, London Met, Imperial, Cambridge, Oxford,
+    # Liverpool Hope, LJMU, Edinburgh, Strathclyde, Aberystwyth, Cardiff,
+    # Bangor, Cardiff Met, South Wales, UWTSD, Exeter) will get the same
+    # migration in 5-line follow-up changes.
+    domain: education
     nation: ie
-    kind: firecrawl_pages
+    kind: university_deep_extraction
+    base_url: "https://www.universityofgalway.ie"
+    catalogue_paths: ["/courses/**", "/programmes/**"]
+    school_subdomain_paths: ["/colleges/science-engineering/**", "/schools/computer-science/**", "/schools/mathematical-science/**", "/schools/education/**"]
+    handbook_root_path: "/handbooks/2025-26/"
+    academic_year: 2025
+    programme_code_regex: "[A-Z]{2,4}\\d{3,4}"
+    ects_field_label: "ECTS"
+    prefer_free_browser: true
     urls: ["https://www.universityofgalway.ie"]
-    crawl: { include_paths: ["/about-us/**", "/news/**", "/careers/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [ie, official_media, university, galway, pages]
+    asset_key: [ie, education, university, galway, deep]
 
   - id: ie.university.ucd
     name: "University College Dublin"

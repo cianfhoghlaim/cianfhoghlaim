@@ -38,7 +38,7 @@ culture, government, intelligence, statistics, geospatial).
 
 ## Capability Areas (34 specs, 8 groups)
 
-### Cianfhoghlaim core (11 specs — Plan 1 active)
+### Cianfhoghlaim core (12 specs — Plan 1 active)
 
 | Capability | Description | Status |
 |:--|:--|:--|
@@ -54,6 +54,7 @@ culture, government, intelligence, statistics, geospatial).
 | `official-media-marimo` | Marimo mission control + TanStack Start route + Cognee dataset `oideachais_official_media` with 4 edge types + strong-stance footer card; the `official-media-marimo` change | Active |
 | `upstream-package-monitoring` | 3 CocoIndex v1 Apps (`upstream_blog_monitor`, `upstream_api_surface`, `cocoindex_v1_conformance`) at `cianfhoghlaim/core/cocoindex/`; 4 Firecrawl monitor configs + 1 n8n webhook bridge + 5 Dagster assets + 1 breaking-change sensor for the motherduck / dlthub / lancedb / cocoindex upstream surface | Active |
 | `oideachais-email-triage` | 4-account MBOX DLT source (`leabharlann_email_inbox`) + `email.baml` BAML (ClassifyEmail / ExtractEmailThread / LinkEmailToResearch) + 4th v1 CocoIndex App `leabharlann_inbox_embedding` + 5 new Dagster assets + Google ADK `email_triage` agent (port 7778) + marimo notebook `email_inbox_triage.py` (primary manual surface) + openclaw WebChat email sub-UI (secondary) + Mailcow stack with 4 per-account IMAP credentials (DKIT.ie M365, 2 Gmail, Hotmail) + 3 new Cognee cross-archive edge types; the `2026-06-29-leabharlann-email-inbox-pipeline` change | Active |
+| `oideachais-university-deep-extraction` | Per-university website deep extraction (BAML `university_extraction.baml` with 4 classes + 4 functions + 3 new deterministic evals; reusable DLT factory + Pydantic config; case-study Galway DLT source; 5 Dagster assets `uog_{pre_research,bulk_scrape,extract_courses,extract_modules,extract_programmes}`; 2 new v1 CocoIndex Apps `UniversityCoursesApp` + `UniversityModulesApp`; 1 Cognee cross-archive edge `UoGArtifact-MATCHES-CourseDescriptor`; 1 marimo notebook with 4 tabs; the `university-of-galway-deep-extraction` change) | Active |
 
 ### Meaisínfhoghlaim sub-tree (3 specs)
 
@@ -89,13 +90,14 @@ culture, government, intelligence, statistics, geospatial).
 | `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex at `cianfhoghlaim/web/` | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
 
-### Infrastructure + Tooling (7 specs)
+### Infrastructure + Tooling (8 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
-| `infrastructure-stacks` | **88 selfhosted Docker stacks at `bonneagar/stacks/`** (the 6-file GOLD_STANDARD pattern: `compose.yaml` + `sidecar.yaml` + `secrets.env` + `pangolin.yaml` + `blueprint.yaml` + `.env.example`) + the IaC TypeScript client at `bonneagar/iac/komodo/` + the root manifest at `bonneagar/package.json` + the 5-group model (infrastructure / data-engineering / agent-platform / language-model / user-facing-web / ci) + stack-doctor (the CI gate) + Pangolin + Infisical + Locket + Komodo | Active |
+| `infrastructure-stacks` | **88 selfhosted Docker stacks at `bonneagar/stacks/`** (the 6-file GOLD_STANDARD pattern: `compose.yaml` + `sidecar.yaml` + `secrets.env` + `pangolin.yaml` + `blueprint.yaml` + `.env.example`) + the unified IaC TypeScript client at `bonneagar/iac/` (Komodo + Pangolin Integrations API + Infisical) + the root manifest at `bonneagar/package.json` + the 5-group model (infrastructure / data-engineering / agent-platform / language-model / user-facing-web / ci) + stack-doctor (the CI gate) + Pangolin + Infisical + Locket + Komodo | Active |
 | `infrastructure-stacks-documentation` | Per-stack docs at `cianfhoghlaim/docs/stacks/<name>.md` (the 4-section template: Purpose + Why-GitOps + Cross-references + Tags); the contract is enforced by `scripts/stack-doctor.sh` (the CI gate fails if a stack is missing its doc); the `infrastructure-stacks-documentation` SKILL.md is the agent entry point | Active |
 | `data-engineering-pipeline-documentation` | The 4 canonical ops dirs (bonneagar/, cianfhoghlaim/assets/, cianfhoghlaim/docs/stacks/, bonneagar/komodo/) + the per-area READMEs | Active |
+| `bonneagar-iac-merge` | The unified TypeScript IaC at `bonneagar/iac/` that orchestrates the 3 systems (Komodo + Pangolin + Infisical) into a single codebase; 3 typed clients (KomodoClient 18 methods, PangolinClient 12 methods using the Enterprise Edition **Integrations API** at `${PANGOLIN_URL}/v1` + `/api/v1/integration/...`, InfisicalClient 10 methods using `@infisical/sdk`); 4 source-discoverers (auto-derive from the 91 stacks); 15 CLI commands (plan, deploy, bootstrap, teardown, health + 10 sync commands); fixes the 4 known blockers from `DEPLOYMENT-STRATEGY.md` (Newt-Pangolin version mismatch, 3 manual Pangolin resources, 401 PANGOLIN_API_KEY, locket `${INFISICAL_CLIENT_ID}` literal); the `iac:bootstrap` flag `--with-blueprint-import` uses the Pangolin bulk-import API for the initial resource creation | Active |
 | `spaces-cicd-pipeline` | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) | Active |
 | `celtic-data-engineering-pipeline` | dbt-duckdb at `cianfhoghlaim/pipelines/process/_dbt_project/` + marimo statistical-analysis notebooks at `cianfhoghlaim/notebooks/meaisinfhoghlaim/` | Active |
 | `gradio-ensemble-pattern` | `cianfhoghlaim/agents/image_pipeline/ensemble_gradio.py` (multi-model Gradio `Interface`) + `spaces/_common/hf_hub_push.py` (HF Hub upload) | Active |

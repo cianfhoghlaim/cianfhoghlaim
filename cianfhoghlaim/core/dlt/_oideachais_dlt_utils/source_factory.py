@@ -65,6 +65,7 @@ Kind = Literal[
     "api_xml",
     "filesystem_csv",
     "filesystem_parquet",
+    "university_deep_extraction",
 ]
 Sensor = Literal["sitemap_hash", "rss", "webhook", "polling"]
 
@@ -190,6 +191,18 @@ class SourceEntry(BaseModel):
     sensors: list[Sensor] = Field(default_factory=list)
     compliance: ComplianceConfig | None = None
 
+    # University deep-extraction specific fields (kind=university_deep_extraction).
+    # The `_build_university_deep_source` builder consumes these; all other
+    # kinds ignore them.
+    base_url: str | None = None
+    catalogue_paths: list[str] = Field(default_factory=list)
+    school_subdomain_paths: list[str] = Field(default_factory=list)
+    handbook_root_path: str | None = None
+    academic_year: int | None = None
+    programme_code_regex: str | None = None
+    ects_field_label: str | None = None
+    prefer_free_browser: bool = True
+
     @field_validator("id")
     @classmethod
     def _check_id_shape(cls, v: str) -> str:
@@ -215,6 +228,31 @@ class SourceEntry(BaseModel):
             raise ValueError(
                 f"asset_key {self.asset_key!r} must start with nation+domain "
                 f"{expected_prefix!r}"
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _check_university_deep_required_fields(self) -> SourceEntry:
+        """For `kind=university_deep_extraction`, require the 4 fields
+        the factory needs (`base_url`, `handbook_root_path`,
+        `academic_year`, plus at least one of `catalogue_paths` /
+        `school_subdomain_paths`).
+        """
+        if self.kind != "university_deep_extraction":
+            return self
+        missing: list[str] = []
+        if not self.base_url:
+            missing.append("base_url")
+        if not self.handbook_root_path:
+            missing.append("handbook_root_path")
+        if self.academic_year is None:
+            missing.append("academic_year")
+        if not self.catalogue_paths and not self.school_subdomain_paths:
+            missing.append("catalogue_paths or school_subdomain_paths")
+        if missing:
+            raise ValueError(
+                f"SourceEntry {self.id!r} (kind=university_deep_extraction) "
+                f"is missing required field(s): {', '.join(missing)}"
             )
         return self
 
@@ -443,6 +481,70 @@ def _build_filesystem_parquet_source(entry: SourceEntry, defaults: Any) -> Calla
     return _parquet_source
 
 
+def _build_university_deep_source(
+    entry: SourceEntry, defaults: Any
+) -> Callable[[], Any]:
+    """Map `kind=university_deep_extraction` to the reusable factory.
+
+    Consumes the 4 per-university fields on the `SourceEntry`
+    (`base_url`, `catalogue_paths`, `school_subdomain_paths`,
+    `handbook_root_path`, `academic_year`, `programme_code_regex`,
+    `ects_field_label`, `prefer_free_browser`) and returns a
+    callable that yields a `@dlt.source(name=f"university_<id>_deep")`
+    with 5 resources. See
+    `dlt_sources._university_deep_factory.UniversityDeepExtractionConfig`
+    for the full schema.
+    """
+    # The bare `dlt_sources` import is the convention used by the
+    # existing `_oideachais_dlt_sources` builder; the actual module
+    # lives at `cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources`.
+    # We try both names so this works in CI (where `dlt_sources` is
+    # the editable install) and in the monorepo (where the long
+    # path is the canonical import).
+    try:
+        from dlt_sources._university_deep_factory import (  # type: ignore[import-not-found]
+            UniversityDeepExtractionConfig,
+            create_university_deep_extraction_source,
+        )
+    except ImportError:
+        from cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources._university_deep_factory import (  # type: ignore[no-redef]
+            UniversityDeepExtractionConfig,
+            create_university_deep_extraction_source,
+        )
+
+    # The pydantic validator on `SourceEntry` has already enforced
+    # that the 4 required fields are present when kind is
+    # `university_deep_extraction`. The narrow assertion here is a
+    # belt-and-braces guard.
+    assert entry.base_url is not None
+    assert entry.handbook_root_path is not None
+    assert entry.academic_year is not None
+
+    # Derive a kebab-case university_id from the SourceEntry `id`
+    # (e.g. `ie.university.galway` -> `ie-university-galway`).
+    university_id = entry.id.replace(".", "-")
+
+    config = UniversityDeepExtractionConfig(
+        university_id=university_id,
+        institution_name=entry.name,
+        base_url=entry.base_url,
+        catalogue_paths=list(entry.catalogue_paths),
+        school_subdomain_paths=list(entry.school_subdomain_paths),
+        handbook_root_path=entry.handbook_root_path,
+        academic_year=entry.academic_year,
+        programme_code_regex=entry.programme_code_regex or r"[A-Z]{2,4}\d{3,4}",
+        ects_field_label=entry.ects_field_label or "ECTS",
+        prefer_free_browser=entry.prefer_free_browser,
+    )
+
+    dlt_source = create_university_deep_extraction_source(config)
+
+    def _factory() -> Any:
+        return dlt_source
+
+    return _factory
+
+
 def _to_firecrawl_defaults(defaults: Any) -> FirecrawlDefaults:
     """BrowserbaseDefaults → FirecrawlDefaults shim. The two
     pydantic models share field names; we coerce."""
@@ -457,6 +559,7 @@ _KIND_DISPATCH: dict[str, Callable[[SourceEntry, Any], Callable[[], Any]]] = {
     "api_xml": _build_api_xml_source,
     "filesystem_csv": _build_filesystem_csv_source,
     "filesystem_parquet": _build_filesystem_parquet_source,
+    "university_deep_extraction": _build_university_deep_source,
 }
 
 

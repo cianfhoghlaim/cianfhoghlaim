@@ -6,11 +6,12 @@ The 5 priority specs, the 4 priority commands, the 5 priority
 skills, and the 1 priority mise task at the glance. **Read this
 first**; the rest of the file is the full 34-spec catalogue.
 
-### Priority specs (5 of 34)
+### Priority specs (5 of 35)
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
 | [`oideachais-pipeline`](specs/oideachais-pipeline/spec.md) | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
+| [`oideachais-university-deep-extraction`](specs/oideachais-university-deep-extraction/spec.md) | oideachais | Per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for any British Isles university |
 | [`infrastructure-stacks`](specs/infrastructure-stacks/spec.md) | shared | 70+ Docker Compose stacks + stack-doctor + Pangolin + Infisical + Locket |
 | [`agent-memory-systems`](specs/agent-memory-systems/spec.md) | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
 | [`indexing-and-cognition`](specs/indexing-and-cognition/spec.md) | shared | CCC v1 code search + Cognee knowledge graph + OpenCode agent/MCP registry |
