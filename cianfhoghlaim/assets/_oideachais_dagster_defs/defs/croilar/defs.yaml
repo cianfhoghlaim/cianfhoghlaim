@@ -1,0 +1,12 @@
+# croilar — the per-domain Dagster Component defs (Domain 6).
+#
+# Implements Domain 6 of the per-domain Dagster Component migration.
+# Wires the 4 Croilar (multi-persona portfolio) functions as a
+# Python asset module.
+#
+# Per openspec/specs/croilar-portfolio/spec.md (7 requirements,
+# multi-persona portfolio).
+---
+type: dg.python_module
+attributes: {}
+python_module: cianfhoghlaim.assets._oideachais_dagster_defs.defs.croilar.assets

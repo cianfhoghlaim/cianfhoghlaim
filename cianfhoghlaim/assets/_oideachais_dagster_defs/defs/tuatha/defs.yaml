@@ -1,0 +1,12 @@
+# tuatha — the per-domain Dagster Component defs (Domain 5).
+#
+# Implements Domain 5 of the per-domain Dagster Component migration.
+# Wires the 6 Tuatha (Celtic MMO) game-state sources as a Python
+# asset module.
+#
+# Per openspec/specs/tuatha-platform/spec.md (24 requirements,
+# Celtic MMO + crypto data).
+---
+type: dg.python_module
+attributes: {}
+python_module: cianfhoghlaim.assets._oideachais_dagster_defs.defs.tuatha.assets
