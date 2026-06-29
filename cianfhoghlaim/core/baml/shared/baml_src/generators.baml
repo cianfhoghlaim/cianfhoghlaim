@@ -16,13 +16,13 @@
 generator lang_py {
   output_type python/pydantic
   output_dir "../baml_client"
-  version "0.76.2"
+  version "0.222.0"
   default_client_mode async
 }
 
 generator lang_ts {
   output_type typescript
   output_dir "../baml_client_ts"
-  version "0.76.2"
+  version "0.222.0"
   default_client_mode async
 }

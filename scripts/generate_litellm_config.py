@@ -1,0 +1,340 @@
+"""
+Generate the v4 litellm/config/config.yaml from the VISION_MODELS registry.
+
+Per the 2026-06-29 OCR/VLM registry change, the litellm config MUST be
+generated from the v4 `cianfhoghlaim.ocr.models.VISION_MODELS` dict to
+ensure consistency. This script reads the registry and emits a complete
+litellm config with one entry per VISION_MODEL, plus the v4 aliases
+(vision, ocr, diagram, gaelic, irish).
+
+Usage:
+    python scripts/generate_litellm_config.py > cianfhoghlaim/stacks/litellm/config/config.yaml
+
+Exit code 0 on success.
+"""
+
+from __future__ import annotations
+
+import os
+import sys
+import warnings
+from io import StringIO
+
+# Ensure the registry is importable
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+warnings.filterwarnings("ignore")
+from cianfhoghlaim.ocr.models import (  # noqa: E402
+    CLASSICAL_OCR,
+    TEXT_MODELS,
+    VISION_MODELS,
+    ModelBackend,
+    ModelCapability,
+)
+
+# ─── Backend routing per VISION_MODEL.backend ───
+
+# Per-model backend URLs (per cianfhoghlaim/stacks/litellm/config/config.yaml)
+BACKEND_URLS = {
+    ModelBackend.LLAMASWAP: "http://llama-swap:8080/v1",
+    ModelBackend.MLX: "http://mlx-omni:10240/v1",
+    ModelBackend.TRANSFORMERS: "http://transformers:5000/v1",
+    ModelBackend.LITELLM: None,  # routed through BAML clients, no direct URL
+}
+
+BACKEND_API_KEY = "not-needed"  # all local services share this
+
+
+def render_model_entry(key: str, model) -> str:
+    """Render a single litellm model_list entry."""
+    api_base = BACKEND_URLS.get(model.backend)
+    if api_base is None:
+        # LITELLM backend — skip (these are routed through BAML clients)
+        return ""
+
+    # Build the litellm model id (use the unsloth_id or upstream_id with org prefix)
+    if model.unsloth_id:
+        litellm_model = f"openai/{model.unsloth_id.split('/')[-1]}"
+    elif model.upstream_id:
+        litellm_model = f"openai/{model.upstream_id.split('/')[-1]}"
+    else:
+        litellm_model = f"openai/{key}"
+
+    # Capabilities
+    caps = [c.value for c in model.capabilities if c.value != "diagram"]
+    if ModelCapability.DIAGRAM in model.capabilities:
+        caps.append("diagram")
+
+    # Description
+    desc = model.notes[:100] if model.notes else f"{key} (v4)"
+
+    # Timeouts based on size
+    timeout = 1800 if "235b" in key or "31B" in key else 1200 if "30b" in key or "26B" in key else 600
+
+    out = StringIO()
+    out.write(f"  # ─── {key} ({model.role}) ───\n")
+    out.write(f"  - model_name: local/vision/{key}\n")
+    out.write(f"    litellm_params:\n")
+    out.write(f"      model: {litellm_model}\n")
+    out.write(f"      api_base: {api_base}\n")
+    out.write(f"      api_key: {BACKEND_API_KEY}\n")
+    out.write(f"      timeout: {timeout}\n")
+    out.write(f"    model_info:\n")
+    out.write(f"      description: \"{desc}\"\n")
+    out.write(f"      capabilities: {caps}\n")
+    if model.unsloth_id:
+        out.write(f"      unsloth_id: \"{model.unsloth_id}\"\n")
+    out.write(f"      upstream_id: \"{model.upstream_id}\"\n")
+    out.write(f"      tier: paid\n")
+    if model.arm1_oci_required:
+        out.write(f"      arm1_oci_only: true\n")
+    if "moe_12x" in model.unsloth_features:
+        out.write(f"      moe: true\n")
+    if "mtp_speculative" in model.unsloth_features:
+        out.write(f"      mtp_speculative: true\n")
+    out.write(f"\n")
+    return out.getvalue()
+
+
+def render_header() -> str:
+    """Render the config header (v4 preamble)."""
+    return """# =============================================================================
+# LITELLM GATEWAY CONFIG — Oideachais / Cianfhoghlaim
+# =============================================================================
+# v4 (2026-06-29): Generated from `cianfhoghlaim.ocr.models.VISION_MODELS`.
+# Source: openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
+#
+# 24-entry VISION_MODELS registry + 6 CLASSICAL_OCR + 4 TEXT_MODELS
+# Unsloth-first fallback chain (per the v4 spec).
+#
+# Route topology (every URL is internal Docker DNS):
+#   LiteLLM (:4000) ──┬── llama-swap (:8080)   [GGUF Q4_K_M, dynamic swap]
+#                     ├── mlx-omni    (:10240) [MLX-format on M-series]
+#                     ├── transformers (:5000) [PyTorch transformers]
+#                     └── Cloud        (Gemini, GLM, OpenAI, Anthropic, OpenCode Go)
+#
+# To regenerate: python scripts/generate_litellm_config.py > this file
+# =============================================================================
+
+model_list:
+
+"""
+
+
+def render_aliases() -> str:
+    """Render the v4 alias section (vision, ocr, diagram, gaelic, irish, math, extract)."""
+    return """  # ===========================================================================
+  # v4 ALIASES — use these in client code, not the local/vision/* names
+  # ===========================================================================
+
+  - model_name: vision
+    litellm_params:
+      model: openai/qwen3-vl-8b
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: vision → Qwen 3-VL 8B (Unsloth GGUF), falls back to Gemma 4 26B-A4B, then to cloud Gemini"
+      capabilities: ["vision", "vlm", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/qwen3-vl-8b", "local/vision/gemma-4-26B-A4B", "gemini/gemini-2.5-pro"]
+
+  - model_name: ocr
+    litellm_params:
+      model: openai/qwen3-vl-8b
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: ocr → Qwen 3-VL 8B (workhorse for syllabus/past-paper OCR), falls back to GLM-4.6V Flash, then olmOCR-2-7B-1025"
+      capabilities: ["ocr", "vision", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/qwen3-vl-8b", "local/vision/glm-4.6v-flash", "local/vision/olmocr-2-7b-1025"]
+
+  - model_name: diagram
+    litellm_params:
+      model: openai/molmo2-8b
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: diagram → Molmo2-8B (top workhorse for figure pointing), falls back to InternVL3_5-8B"
+      capabilities: ["diagram", "grounding", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/molmo2-8b", "local/vision/internvl3-8b"]
+
+  - model_name: gaelic
+    litellm_params:
+      model: openai/gemma-4-26B-A4B-it-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: gaelic → Gemma 4 26B-A4B (6 Celtic languages, M4 default), falls back to Qwen 3-VL 8B"
+      capabilities: ["gaelic", "multilingual", "vision", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/gemma-4-26B-A4B", "local/vision/qwen3-vl-8b", "local/vision/gemma-4-E4B"]
+
+  - model_name: irish
+    litellm_params:
+      model: openai/uccix-mistral-24b
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: irish → UCCIX-Mistral-24B (modern Irish-language path, Nov 2025), falls back to Gemma 4 26B-A4B"
+      capabilities: ["irish", "gaelic", "text", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/uccix-mistral-24b", "local/vision/gemma-4-26B-A4B"]
+
+  - model_name: default
+    litellm_params:
+      model: openai/gemma-4-26B-A4B-it-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: default → Gemma 4 26B-A4B (M4 Max default per v4 spec)"
+      capabilities: ["vision", "vlm", "default"]
+      tier: paid
+
+  - model_name: math
+    litellm_params:
+      model: openai/qwen3.6-27B-MTP-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: math → Qwen 3.6 27B MTP (best for marking-scheme post-processing), falls back to Qwen 3.6 35B-A3B MTP, then to GLM-4.6"
+      capabilities: ["math", "reasoning", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/qwen3.6-27b-mtp", "local/vision/qwen3.6-35b-a3b-mtp", "openai/glm-4.6"]
+
+  - model_name: extract
+    litellm_params:
+      model: openai/gemma-4-12B
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: extract → Gemma 4 12B Unified (good for BAML extraction with diagram support)"
+      capabilities: ["vision", "vlm", "extraction", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/gemma-4-12B", "local/vision/gemma-4-26B-A4B", "openai/glm-4.6"]
+
+  - model_name: embedding-bge-m3
+    litellm_params:
+      model: openai/text-embedding-3-small
+      api_key: not-needed
+    model_info:
+      description: "Alias: embedding-bge-m3 → 1024-dim multilingual embeddings (for the PDF processing pipeline Stage 5)"
+      capabilities: ["embedding", "alias"]
+      tier: paid
+      fallback_chain: ["openai/text-embedding-3-small", "celtic/embedding/bge-m3"]
+
+"""
+
+
+def render_text_models() -> str:
+    """Render the v4 TEXT_MODELS section (for the agent fleet)."""
+    out = StringIO()
+    out.write("  # =========================================================================\n")
+    out.write("  # LOCAL TEXT MODELS (via llama-swap) — for the agent fleet\n")
+    out.write("  # =========================================================================\n\n")
+    for key, model in TEXT_MODELS.items():
+        out.write(render_model_entry(key, model))
+    return out.getvalue()
+
+
+def render_router_settings() -> str:
+    """Render the router_settings section (preserved from v3)."""
+    return """router_settings:
+  # Master fallback chain (per the v4 spec + litellm-minimax-vendor-derisking change)
+  num_retries: 3
+  timeout: 600
+  retry_policy: exponential_backoff_retry
+
+  fallbacks:
+    - qwen3-vl-8b
+    - gemma-4-26B-A4B
+    - glm-4.6v-flash
+    - openai/glm-4.6
+    - gemini/gemini-2.5-pro
+
+  # Vendor-de-risking for MiniMax-M3 (per the litellm-minimax-vendor-derisking change)
+  # The `minimax` alias uses 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2)
+  # with a 4-tier paid fallback (qwen3.7-max → kimi-k2.6 → glm-4.6)
+  # and a final local GGUF floor (qwen3.6-27b-mtp via llama-swap).
+  contexts:
+    - priority: 0
+      content_policy: "irish-curriculum"
+      fallbacks: ["qwen3-vl-8b", "gemma-4-26B-A4B"]
+
+litellm_settings:
+  drop_params: true
+  set_verbose: false
+  telemetry: false
+  cache: false
+  # Per openspec/changes/litellm-minimax-vendor-derisking/:
+  # The 3 OpenCode Go slots are rotated via 3 separate env vars
+  # (OPENCODE_GO_API_KEY_0, _1, _2). See compose.yaml env section.
+"""
+
+
+def main() -> int:
+    out = StringIO()
+
+    # Header
+    out.write(render_header())
+
+    # Track which keys have been rendered to avoid duplicates
+    rendered_keys: set[str] = set()
+
+    # Group by backend
+    by_backend: dict[ModelBackend, list[tuple[str, object]]] = {
+        ModelBackend.LLAMASWAP: [],
+        ModelBackend.MLX: [],
+        ModelBackend.TRANSFORMERS: [],
+    }
+    for key, model in VISION_MODELS.items():
+        if model.backend in by_backend:
+            by_backend[model.backend].append((key, model))
+
+    # Render each backend section
+    backend_titles = {
+        ModelBackend.LLAMASWAP: "LOCAL GGUF (via llama-swap :8080) — Unsloth Q4_K_M, dynamic swap",
+        ModelBackend.MLX: "LOCAL MLX (via mlx-omni :10240) — Apple Silicon fast path",
+        ModelBackend.TRANSFORMERS: "LOCAL TRANSFORMERS (via transformers :5000) — PyTorch + MLX/Apple fallback",
+    }
+    for backend, items in by_backend.items():
+        out.write(f"  # =========================================================================\n")
+        out.write(f"  # {backend_titles[backend]}\n")
+        out.write(f"  # =========================================================================\n\n")
+        for key, model in items:
+            out.write(render_model_entry(key, model))
+            rendered_keys.add(key)
+
+    # Text models (for the agent fleet) — skip duplicates already rendered
+    out.write("  # =========================================================================\n")
+    out.write("  # LOCAL TEXT MODELS (via llama-swap) — for the agent fleet\n")
+    out.write("  # =========================================================================\n\n")
+    for key, model in TEXT_MODELS.items():
+        if key in rendered_keys:
+            continue  # already rendered as a vision model
+        out.write(render_model_entry(key, model))
+        rendered_keys.add(key)
+
+    # Aliases
+    out.write(render_aliases())
+
+    # Router settings
+    out.write(render_router_settings())
+
+    sys.stdout.write(out.getvalue())
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

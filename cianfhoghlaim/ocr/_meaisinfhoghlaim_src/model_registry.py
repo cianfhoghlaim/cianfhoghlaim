@@ -329,8 +329,8 @@ class OCRModel:
 # Pre-configured models
 OCR_MODELS: dict[str, OCRModel] = {
     "olmocr-7b": OCRModel(
-        name="olmOCR-2-7B",
-        model_id="allenai/olmOCR-2-7B",
+        name="olmOCR-2-7B-1025",
+        model_id="allenai/olmOCR-2-7B-1025",  # P0: v4 fix per the 2026-06-29 HF audit (real v2 ID, not the fictional "2-7B" or "7B-1025-preview")
         backend=ModelBackend.TRANSFORMERS,
         capabilities=[
             ModelCapability.DENSE_OCR,
@@ -366,8 +366,8 @@ OCR_MODELS: dict[str, OCRModel] = {
         notes="Apple Silicon optimized via MLX",
     ),
     "deepseek-ocr": OCRModel(
-        name="DeepSeek-OCR",
-        model_id="deepseek-ai/deepseek-ocr",
+        name="DeepSeek-OCR-2",
+        model_id="deepseek-ai/DeepSeek-OCR-2",  # P0: v4 fix per the 2026-06-29 HF audit (v2 superset; org is "deepseek-ai" with capital OCR)
         backend=ModelBackend.TRANSFORMERS,
         capabilities=[
             ModelCapability.DENSE_OCR,
