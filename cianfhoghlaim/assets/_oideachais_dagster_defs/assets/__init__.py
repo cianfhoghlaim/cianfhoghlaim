@@ -104,6 +104,23 @@ try:
     _UOG_ASSETS_AVAILABLE = True
 except ImportError:
     _UOG_ASSETS_AVAILABLE = False
+# Phase 3 of `university-of-galway-deep-extraction` (case study: UoG).
+# Wrapped in try/except so a branch that ships only the leabharlann
+# assets can still import this module.
+try:
+    from .university_deep_extraction import (
+        UNIVERSITY_GROUP as _UNIVERSITY_DEEP_EXTRACTION_GROUP,
+        UOG_PRE_RESEARCH_GOAL as _UOG_PRE_RESEARCH_GOAL,
+        uog_assets as _uog_deep_assets,
+        uog_bulk_scrape as _uog_bulk_scrape,
+        uog_extract_courses as _uog_extract_courses,
+        uog_extract_modules as _uog_extract_modules,
+        uog_extract_programmes as _uog_extract_programmes,
+        uog_pre_research as _uog_pre_research,
+    )
+    _UNIVERSITY_DEEP_EXTRACTION_ASSETS_AVAILABLE = True
+except ImportError:
+    _UNIVERSITY_DEEP_EXTRACTION_ASSETS_AVAILABLE = False
 from .multi_nation_curriculum_assets import (
     curriculum_comparison_report,
     curriculum_outcome_alignments,
@@ -248,6 +265,18 @@ if _UOG_ASSETS_AVAILABLE:
         author_archive_personal_records_raw,
         author_archive_personal_records_extraction,
     ]
+# Phase 3 of `university-of-galway-deep-extraction` (case study: UoG).
+# 5 new assets in the `university_deep_extraction` group:
+# `uog_pre_research`, `uog_bulk_scrape`, `uog_extract_courses`,
+# `uog_extract_modules`, `uog_extract_programmes`.
+if _UNIVERSITY_DEEP_EXTRACTION_ASSETS_AVAILABLE:
+    all_assets += [
+        _uog_pre_research,
+        _uog_bulk_scrape,
+        _uog_extract_courses,
+        _uog_extract_modules,
+        _uog_extract_programmes,
+    ]
 
 __all__ = [
     "all_assets",
@@ -348,4 +377,15 @@ __all__ = [
     "upstream_api_surface_publish",
     "cocoindex_v1_conformance_check",
     "upstream_breaking_change_sensor",
+    # University deep extraction exports (Phase 3 of
+    # `university-of-galway-deep-extraction`; case study: UoG)
+    "_UNIVERSITY_DEEP_EXTRACTION_ASSETS_AVAILABLE",
+    "_UNIVERSITY_DEEP_EXTRACTION_GROUP",
+    "_UOG_PRE_RESEARCH_GOAL",
+    "_uog_pre_research",
+    "_uog_bulk_scrape",
+    "_uog_extract_courses",
+    "_uog_extract_modules",
+    "_uog_extract_programmes",
+    "_uog_deep_assets",
 ]
