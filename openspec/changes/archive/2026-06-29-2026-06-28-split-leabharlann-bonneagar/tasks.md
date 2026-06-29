@@ -59,13 +59,13 @@
 - [x] Write `proposal.md` (Why / What changes / Impact / Tasks)
 - [x] Write `tasks.md` (this file)
 - [x] Amend proposal + tasks to reflect the worktree approach (this amendment)
-- [ ] Write `specs/` deltas for affected specs
-- [ ] `openspec validate 2026-06-28-split-leabharlann-bonneagar --strict`
-- [ ] `openspec archive 2026-06-28-split-leabharlann-bonneagar --yes`
+- [x] Write `specs/` deltas for affected specs (infrastructure-stacks + oideachais-leabharlann)
+- [x] `openspec validate 2026-06-28-split-leabharlann-bonneagar --strict` (verified 2026-06-29)
+- [x] `openspec archive 2026-06-28-split-leabharlann-bonneagar --yes` (verified 2026-06-29)
 
 ## 9. Push
 
-- [ ] Push the README + openspec changes to `origin/main`
+- [ ] Push the README + openspec changes to `origin/main` (deferred to user — they own push)
 
 ## Notes
 
