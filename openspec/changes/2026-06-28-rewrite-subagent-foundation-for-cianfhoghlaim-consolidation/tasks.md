@@ -75,3 +75,104 @@
 
 - [x] 10.1 Force-pushed `fc7658c67:q3-2026-oideachais-consolidation --force-with-lease` to revert the q3 branch to its pre-push state.
 - [x] 10.2 Confirmed `origin/q3-2026-oideachais-consolidation` is back at `fc7658c67`.
+
+## 11. `skill_filter` audit pass (2026-06-29)
+
+Follow-up discovered after §7 validation: the per-subagent
+`skill_filter` arrays created in §2 referenced 35 legacy skill
+names that no longer exist as top-level directories under
+`.agents/skills/` (e.g. `oideachais-pipeline`, `kcg-pangolin-stack`,
+`agent-fleet-orchestration`, `document-intelligence`, `tuatha-mmo`,
+`pent-elemental-cosmology`, `croilar-stream-registry`,
+`agent-experience`, `company-research`, `event-prospecting`,
+`search`, `fetch`, `kubernetes`, `docker-compose`, etc.). Task 1.4
+was ticked as "pass" but the actual `opencode.json` array entries
+were stale. The audit pass replaces every entry with a current
+top-level skill that resolves to an existing directory.
+
+- [x] 11.1 Enumerate the 53 top-level skill directories under
+  `.agents/skills/` (script: `os.listdir(".agents/skills")` filter
+  to dirs with `SKILL.md` or known subskill bundles).
+- [x] 11.2 Audit each of the 5 `skill_filter` arrays; identify
+  missing/non-resolvable entries: data-platform=5 missing,
+  infrastructure=10 missing, agent-platform=9 missing,
+  frontend-apps=6 missing + 1 duplicate
+  (`agentic-frontend-frameworks` listed twice), research=5 missing.
+- [x] 11.3 Replace `data-platform` filter: removed `oideachais-pipeline`,
+  `oideachais-storage`, `oideachais-cocoindex-v1`,
+  `celtic-ocr-evaluation`, `embedding-pipeline`; added `dlthub`,
+  `ibis`, `marimo`, `langfuse`, `mlflow`. Final 15 entries, all
+  resolve to existing top-level directories.
+- [x] 11.4 Replace `infrastructure` filter: removed `stack-ops`,
+  `infrastructure-stacks`, `kcg-pangolin-stack`, `kcg-locket-sidecar`,
+  `kcg-infrastructure-audit`, `kcg-bunchloch`, `kcg-convergence`,
+  `kcg-deploy-runbooks`, `docker-compose`, `kubernetes`; added
+  `dagger`, `cloudflare`, `dlthub`, `cocoindex`, `langfuse`, `mlflow`,
+  `risingwave`, `olake`, `effect-ts`. Final 15 entries, all resolve.
+- [x] 11.5 Replace `agent-platform` filter: removed
+  `document-intelligence`, `celtic-language-ai`, `irish-llm-on-device`,
+  `agent-fleet-orchestration`, `kcg-ml-models`, `graphiti`,
+  `embedding-pipeline`, `peft`, `trl`; added `agno`, `google-adk`,
+  `dignified-python`, `pydantic`, `ccc`, `dlthub`, `dagster`,
+  `duckdb`, `cocoindex`. Final 23 entries, all resolve.
+- [x] 11.6 Replace `frontend-apps` filter: removed
+  `frontend-topology`, `ui-components`, `webapp-testing`,
+  `copilotkit-develop`, `agent-experience`, `upstream-mirrors`;
+  deduped `agentic-frontend-frameworks` (was listed twice);
+  added `ag-ui`, `marimo`, `dignified-python`, `pydantic`, `ccc`,
+  `langfuse`, `cocoindex`. Final 20 entries, all resolve, no
+  duplicates.
+- [x] 11.7 Replace `research` filter: removed `agent-experience`,
+  `company-research`, `event-prospecting`, `search`, `fetch` (the
+  latter 5 are subskills under `browserbase/` and inaccessible via
+  the directory-based filter; they are accessible transitively via
+  the `browserbase` parent entry); added `crawl4ai`, `langfuse`,
+  `mlflow`, `baml`, `cocoindex`. Final 11 entries, all resolve.
+- [x] 11.8 Update `INDEXING_AND_COGNITION.md` §8.1 table: replace the
+  pre-v4 subagent rows (`oideachais`, `infrastructure` legacy,
+  `meaisinfhoghlaim`, `croilar`, `tuatha`) with the 5 v4
+  subagents (`data-platform`, `infrastructure`, `agent-platform`,
+  `frontend-apps`, `research`); the per-subagent skill-count column
+  now matches the new filter lengths.
+- [x] 11.9 Update `INDEXING_AND_COGNITION.md` §8.4 health-check:
+  fix `infrastructure=16` → `infrastructure=15`.
+- [x] 11.10 Update `INDEXING_AND_COGNITION.md` §9.2 subagent
+  migration table: fix `infrastructure=16` → `infrastructure=15`;
+  append a "Skill name migration notes" footnote documenting the
+  replacement of ~35 legacy names.
+- [x] 11.11 Update `INDEXING_AND_COGNITION.md` "Last updated" date
+  to 2026-06-29 with a one-line summary of the audit pass.
+- [x] 11.12 Update `opencode.json` `build` agent prompt: replace
+  "all 131 skills" with "all 53 top-level skills" (the actual
+  count); add the per-subagent `skill_filter` count summary to
+  step 4; dedupe the "dagster (orchestration)" line in the
+  CONSULT list (it appeared twice); replace the dangling
+  `celtic-asset-generation` + `infrastructure-stacks` references
+  with current top-level skills (`baml`, `komodo`).
+- [x] 11.13 Update `openspec/specs/agent-registry/spec.md` (and
+  its change-delta mirror): fix `graphiti` → `graphiti-core` in
+  the agent-platform Scenario (line 90); rewrite the `research`
+  subagent Requirement body to acknowledge that subskills
+  (`agent-experience`, `company-research`, `event-prospecting`,
+  `search`, `fetch`) are nested under `browserbase/` and need
+  not appear verbatim; replace the "131 skills" claim with the
+  current 53-skill count + per-subagent `skill_filter` summary.
+- [x] 11.14 Re-run final validation: `python3 -m json.tool
+  opencode.json` exits 0; per-subagent counts `build=0, plan=0,
+  data-platform=15, infrastructure=15, agent-platform=23,
+  frontend-apps=20, research=11`; zero missing skill entries;
+  zero duplicates.
+
+## 12. Execution sequence (updated for §11)
+
+1. Run pre-flight (§1) + the §11 audit.
+2. `opencode.json` edits (§2) + §11.3-11.7 + §11.12 — all in
+   one commit candidate.
+3. `INDEXING_AND_COGNITION.md` edits (§3) + §11.8-11.11.
+4. `.gitignore` edits (§4).
+5. Canonical spec creation (§5) + change-delta spec creation
+   (§6) + §11.13.
+6. Validation gate (§7) + §11.14.
+7. Commit + push to `origin/infra/pangolin-newt-infisical-upgrade-2026-06-28`.
+8. **STOP** — user restarts opencode; `research` subagent becomes
+   dispatchable.
