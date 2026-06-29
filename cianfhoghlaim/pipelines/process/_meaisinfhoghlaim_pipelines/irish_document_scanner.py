@@ -211,15 +211,22 @@ class IrishDocumentScanner:
             self.segmenter = None
             logger.warning("Line segmenter not available")
 
-        # VLM models
+        # VLM models (v4: import from the v4 home `cianfhoghlaim.ocr.models`)
         self.models = {}
         try:
-            from ..ocr.vlm_finetune_comparison import VLM_MODELS
+            from cianfhoghlaim.ocr.models import VLM_MODELS as _VLM_MODELS
             for model_name in [self.config.default_model, *self.config.fallback_models]:
-                if model_name in VLM_MODELS:
-                    self.models[model_name] = VLM_MODELS[model_name]
+                if model_name in _VLM_MODELS:
+                    self.models[model_name] = _VLM_MODELS[model_name]
         except ImportError:
-            logger.warning("VLM models not available")
+            # Legacy fallback (the deprecated _meaisinfhoghlaim_src location)
+            try:
+                from ..ocr.vlm_finetune_comparison import VLM_MODELS
+                for model_name in [self.config.default_model, *self.config.fallback_models]:
+                    if model_name in VLM_MODELS:
+                        self.models[model_name] = VLM_MODELS[model_name]
+            except ImportError:
+                logger.warning("VLM models not available")
 
         # Document counter
         self._doc_counter = 0

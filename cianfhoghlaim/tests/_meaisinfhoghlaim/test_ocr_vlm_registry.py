@@ -19,9 +19,18 @@ at least 5 must have "imatrix" (the Unsloth GGUFs).
 
 from __future__ import annotations
 
+import os
+import sys
 import unittest
 
-from cianfhoghlaim.ocr.models import (
+# Add the repo root to sys.path so the `cianfhoghlaim` package is importable.
+# The v4 consolidation has moved everything to `cianfhoghlaim.*` but the
+# tests still run in the legacy `sruth.*` namespace by default.
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+from cianfhoghlaim.ocr.models import (  # noqa: E402
     CLASSICAL_OCR,
     MODEL_BACKEND,
     MODEL_CAPABILITY,
@@ -51,12 +60,18 @@ class TestRegistryStructure(unittest.TestCase):
         self.assertEqual(len(VISION_MODELS), len(set(VISION_MODELS.keys())))
 
     def test_no_cloud_api_backends(self):
-        """Per the v4 spec, no OpenAI or Anthropic backends in the registry."""
+        """Per the v4 spec, no OpenAI or Anthropic backends in the registry.
+
+        The v4 ModelBackend enum has been narrowed to LITELLM, MLX,
+        TRANSFORMERS, and LLAMASWAP — no OPENAI, no ANTHROPIC, no OLLAMA.
+        """
+        # The v4 enum must not contain OPENAI or ANTHROPIC
+        backend_values = {b.value for b in ModelBackend}
+        self.assertNotIn("openai", backend_values)
+        self.assertNotIn("anthropic", backend_values)
+        # And no model should have a backend string value of "openai" or "anthropic"
         for key, model in VISION_MODELS.items():
-            self.assertNotEqual(
-                model.backend, ModelBackend.OPENAI,
-                f"{key} should not have OPENAI backend (removed in v4)",
-            )
+            self.assertNotIn(model.backend.value, ("openai", "anthropic"))
 
     def test_all_entries_have_at_least_one_inference_id(self):
         """Every entry must have at least one of unsloth_id, mlx_id, upstream_id."""

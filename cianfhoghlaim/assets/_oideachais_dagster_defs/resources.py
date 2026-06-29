@@ -281,8 +281,9 @@ class OCRModelRegistry(ConfigurableResource):
     cache_dir: str = "~/.cache/ocr_models"
 
     def get_registry(self):
-        from ..ocr.model_registry import ModelRegistry
-        return ModelRegistry(cache_dir=self.cache_dir)
+        # v4: import from the v4 home `cianfhoghlaim.ocr.models`
+        from cianfhoghlaim.ocr.models import ModelRegistry as _V4ModelRegistry
+        return _V4ModelRegistry(custom_models=None)
 
 
 class GaelicMetricsResource(ConfigurableResource):

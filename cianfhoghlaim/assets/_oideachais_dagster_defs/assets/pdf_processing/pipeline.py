@@ -381,9 +381,15 @@ class PDFProcessingPipeline:
         logger.info("Stage 6 — Lakehouse write + Cognee cognify + Graphiti episode")
 
         # Build the DuckLake target table name
+        # Canonical format: `ducklake://oideachais.assets.official_documents.{type_plural}.{subject}.{year}[.paper]`
+        type_plural = {
+            "syllabus": "syllabi",
+            "past_paper": "past_papers",
+            "marking_scheme": "marking_schemes",
+        }.get(document_type, f"{document_type}s")
         paper_part = f".{self.paper}" if self.paper else ""
         ducklake_table = (
-            f"oideachais.assets.official_documents.{document_type}s"
+            f"ducklake://oideachais.assets.official_documents.{type_plural}"
             f".{self.subject}.{self.year}{paper_part}"
         )
 
