@@ -57,8 +57,8 @@
 
 ## 8. Follow-up issues
 
-- [ ] 8.1 Open a GitHub issue: "Migrate croilar-devtools MCP server code to `cianfhoghlaim/agents/api/_croilar_convex/devtools.ts`".
-- [ ] 8.2 Open a GitHub issue: "Migrate 100+ `sruth/<quadrant>/` path references in 40+ `.agents/skills/*/SKILL.md` files" (out of scope, tracked by `docs-skills-consolidation-pipeline`).
+- [x] 8.1 Open a GitHub issue: "Migrate croilar-devtools MCP server code to `cianfhoghlaim/agents/api/_croilar_convex/devtools.ts`" → #96
+- [x] 8.2 Open a GitHub issue: "Migrate 100+ `sruth/<quadrant>/` path references in 40+ `.agents/skills/*/SKILL.md` files" (out of scope, tracked by `docs-skills-consolidation-pipeline`) → #97
 
 ## 9. Execution sequence
 
