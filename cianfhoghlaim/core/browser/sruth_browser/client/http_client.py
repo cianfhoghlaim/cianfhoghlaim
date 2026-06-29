@@ -404,3 +404,95 @@ class BrowserClient:
         )
         response.raise_for_status()
         return response.json()["urls"]
+
+    # =========================================================================
+    # Phase E.5: Hooks (advanced login automation + cookie capture)
+    # =========================================================================
+
+    async def register_hook(
+        self,
+        hook_name: str,
+        callback: Any,
+    ) -> bool:
+        """Register a Crawl4AI hook callback for advanced page control.
+
+        Supports the 4 Crawl4AI hook points:
+        - `on_page_context_created`: receives the Playwright page
+          (perfect for login automation + cookie capture)
+        - `on_before_fetch`: receives the request (can modify
+          headers, cookies, etc.)
+        - `on_after_fetch`: receives the response (can extract
+          cookies, capture screenshots, etc.)
+        - `on_content_ready`: receives the parsed content (can
+          modify or annotate before extraction)
+
+        The callback is registered on the active backend (the one
+        returned by `client.active_backend`). If the active backend
+        doesn't support hooks (e.g. Firecrawl), this returns False.
+
+        Args:
+            hook_name: One of the 4 hook point names above.
+            callback: An async callable that receives the hook
+                      context (page, request, or response depending
+                      on the hook point).
+
+        Returns:
+            True if the hook was registered successfully.
+
+        Example:
+            async def login(page):
+                await page.goto("https://qubstudent.example.com")
+                await page.fill("#email", "user@example.com")
+                await page.fill("#password", os.environ["PASS"])
+                await page.click("button[type=submit]")
+
+            await client.register_hook("on_page_context_created", login)
+        """
+        from ..backends.selfhosted.crawl4ai_backend import Crawl4AIBackend
+
+        backend = self._get_active_backend()
+        if not isinstance(backend, Crawl4AIBackend):
+            logger.warning(
+                "browser_register_hook_unsupported_backend",
+                backend=type(backend).__name__,
+            )
+            return False
+        return await backend.register_hook(hook_name, callback)
+
+    async def dispatch_hook(
+        self,
+        hook_name: str,
+        context: Any,
+    ) -> None:
+        """Dispatch a registered hook callback on the active backend.
+
+        Called by the agent runtime when a hook point is reached.
+        Catches all exceptions (the hook must never crash the crawl).
+        """
+        from ..backends.selfhosted.crawl4ai_backend import Crawl4AIBackend
+
+        backend = self._get_active_backend()
+        if not isinstance(backend, Crawl4AIBackend):
+            return
+        await backend.dispatch_hook(hook_name, context)
+
+    def _get_active_backend(self) -> Any:
+        """Get the active backend from the strategist or router.
+
+        Returns the currently-active backend (used by the hook
+        helpers). Falls back to the first registered backend if
+        no strategist/router is configured.
+        """
+        from ..backends import get_router
+
+        router = get_router()
+        if not router.backends:
+            # Try to instantiate Crawl4AI as the default
+            from ..config import get_config
+            from ..backends.selfhosted.crawl4ai_backend import (
+                Crawl4AIBackend,
+            )
+            backend = Crawl4AIBackend(get_config())
+            return backend
+        # Return the first registered backend
+        return next(iter(router.backends.values()))
