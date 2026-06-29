@@ -501,3 +501,18 @@ The `deploy-openchamber-arm1-oci` procedure and `openchamber-arm1-oci.toml` stac
 1. **`hf` CLI replaces `huggingface-cli`** — `huggingface_hub` ≥1.20.1 (Sept 2025 line) made `hf` the canonical entry point; `huggingface-cli` is a deprecated shim that prints a warning every invocation. P2-23:74 and `spaces/build-small-2026-runbook.md:26,92,98,304,315-316` still use the old CLI (9 refs total). The `[cli]` extra is also renamed `[hf]` in v1.0+; `infrastructure/ci/spaces-sync.yml:64` is stale. **Conflict with P2-23** + **Conflict with Agent 20** (mlx-omni also assumes `huggingface-cli`-style flow).
 2. **P2-23 has 8 aspirational/fictional model IDs** that DO NOT EXIST on HF Hub today: `unsloth/gemma-4-{31B,26B-A4B,E4B,E2B}-it-GGUF` (Google Gemma 4 not released), `unsloth/Qwen3.6-{27B,35B-A3B}-Instruct-GGUF` (Alibaba Qwen 3.6 not released), `unsloth/Qwen3.6-27B-Instruct-MLX-8bit`, `unsloth/Qwen3.6-35B-A3B-Instruct-UD-MLX-4bit`, `unsloth/GLM-4.6V-Flash-GGUF`. **Agent 20 already cross-flagged the mlx-community subset**; together we have 8 of P2-23's 11 vision models that will fail `hf_hub_download()`. Replace with real `unsloth/gemma-3-...` and `unsloth/Qwen3-...` IDs.
 3. **New HF features (Sept 2025) we should adopt**: (a) `inference-api` OAuth scope for per-user inference routing via Inference Providers; (b) **Public OAuth apps + CIMD** at `/.well-known/oauth-cimd` (no client secret, ideal for native CLIs); (c) Token Exchange (RFC 8693) Enterprise plan for org-scoped token issuance; (d) Webhooks (new `webhooks` OAuth scope) for real-time repo-change push; (e) 5-min `RateLimit` HTTP header (IETF `draft-ietf-httpapi-ratelimit-headers-09`) auto-parsed by `huggingface_hub` ≥1.2.0; (f) 2 new rate tiers: **Enterprise Plus (10K API / 100K Resolvers / 1K Pages / 5-min)** and **Enterprise Plus + IP allowlist (100K / 500K / 10K)**. 15 OAuth scopes total documented at `huggingface.co/docs/hub/oauth`.
+
+## Agent 69 — master-refactor-plan (2026-06-29 01:20 UTC)
+- MASTER_REFACTOR_PLAN.md (422 lines): 6-sprint delivery covering 11 P0 + 13 P1 + 45 P2 + 40 P3 refactors + 26 features
+- Hard deadlines: LiteLLM `main-stable` 2026-06-30, Infisical CLI repo 2026-09-16
+- 36 openspec changes tracked in openspec/changes/2026-06-29-*
+
+## Agent 70 — final-synthesis (2026-06-29 01:30 UTC)
+- FINAL_SYNTHESIS.md (96 lines, 1-pager): 5-section skim with top-10 refactors + top-10 features + 5 next steps
+
+## PROGRAM COMPLETE (Waves 1-7)
+- 64 markdown files, ~21,000 lines of research + specs
+- ~850 BrowserBase credits used (of 6,000 available)
+- 109 refactor items prioritized, 26 features designed, 21 skill files needing updates
+- 5 waves of parallel research agents (~44 total dispatches) + 16 focused-research deep-dives
+- All pushed to origin/main
