@@ -26,7 +26,7 @@ Usage:
 
     pipeline = VLMComparisonPipeline(
         dataset_path="./irish_htr_dataset/unsloth",
-        models=["glm-4.6v-flash", "qwen3-vl-7b", "olmocr-2-7b"],
+        models=["glm-4v-9b", "qwen2.5-vl-7b", "olmocr-2-7b"],
     )
 
     results = pipeline.run_comparison()
@@ -48,8 +48,12 @@ logger = logging.getLogger(__name__)
 
 
 # Model configurations for Irish OCR
+# P0: Name drift fixes per HF audit (docs/audit/ocr-model-audit-batch2.md)
+# - Renamed qwen3-vl-7b → qwen2.5-vl-7b (real Qwen3-VL is 2B/4B/8B)
+# - Renamed qwen3-vl-30b → qwen2.5-vl-72b (the 30B doesn't exist)
+# - Renamed glm-4.6v-flash → glm-4v-9b (the 4.6v-flash doesn't exist on HF)
 VLM_MODELS = {
-    "glm-4.6v-flash": {
+    "glm-4v-9b": {
         "full_name": "THUDM/glm-4v-9b",
         "size_gb": 6.0,
         "context_length": 128000,
@@ -63,7 +67,7 @@ VLM_MODELS = {
             "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
         },
     },
-    "qwen3-vl-7b": {
+    "qwen2.5-vl-7b": {
         "full_name": "Qwen/Qwen2.5-VL-7B-Instruct",
         "size_gb": 8.0,
         "context_length": 32000,
@@ -77,7 +81,7 @@ VLM_MODELS = {
             "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
         },
     },
-    "qwen3-vl-30b": {
+    "qwen2.5-vl-72b": {
         "full_name": "Qwen/Qwen2.5-VL-72B-Instruct",
         "size_gb": 18.0,
         "context_length": 32000,
@@ -188,7 +192,7 @@ class FinetuneConfig:
     """Configuration for VLM fine-tuning."""
 
     # Model selection
-    model_name: str = "glm-4.6v-flash"
+    model_name: str = "glm-4v-9b"
 
     # Training parameters
     epochs: int = 3
@@ -462,9 +466,9 @@ class VLMComparisonPipeline:
 
             # Map model names to LiteLLM format
             litellm_model = {
-                "glm-4.6v-flash": "glm-4v",
-                "qwen3-vl-7b": "qwen/qwen-vl-plus",
-                "qwen3-vl-30b": "qwen/qwen-vl-max",
+                "glm-4v-9b": "glm-4v",
+                "qwen2.5-vl-7b": "qwen/qwen-vl-plus",
+                "qwen2.5-vl-72b": "qwen/qwen-vl-max",
                 "olmocr-2-7b": "ollama/olmocr",
                 "gemma-3-4b": "gemini/gemini-2.0-flash",
             }.get(model_name, model_name)
