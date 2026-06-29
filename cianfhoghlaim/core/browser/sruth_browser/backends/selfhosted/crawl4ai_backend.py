@@ -562,3 +562,125 @@ class Crawl4AIBackend(BrowserBackend):
                 )
                 for url in urls
             ]
+
+    # =========================================================================
+    # Phase E.5: Crawl4AI hooks (advanced login automation + cookie capture)
+    # =========================================================================
+
+    async def register_hook(
+        self,
+        hook_name: str,
+        callback: Any,
+    ) -> bool:
+        """E.5: Register a hook callback for advanced page control.
+
+        Supports the 4 Crawl4AI hook points:
+        - `on_page_context_created`: receives the Playwright page
+          (perfect for login automation + cookie capture)
+        - `on_before_fetch`: receives the request (can modify
+          headers, cookies, etc.)
+        - `on_after_fetch`: receives the response (can extract
+          cookies, capture screenshots, etc.)
+        - `on_content_ready`: receives the parsed content (can
+          modify or annotate before extraction)
+
+        Args:
+            hook_name: One of the 4 hook point names above.
+            callback: An async callable that receives the hook
+                      context (page, request, or response depending
+                      on the hook point).
+
+        Returns:
+            True if the hook was registered successfully.
+
+        Example:
+            async def login(page):
+                await page.goto("https://qubstudent.example.com")
+                await page.fill("#email", "user@example.com")
+                await page.fill("#password", os.environ["PASS"])
+                await page.click("button[type=submit]")
+
+            await client.register_hook("on_page_context_created", login)
+        """
+        if hook_name not in (
+            "on_page_context_created",
+            "on_before_fetch",
+            "on_after_fetch",
+            "on_content_ready",
+        ):
+            logger.warning("crawl4ai_invalid_hook", hook=hook_name)
+            return False
+
+        if not self._client:
+            raise BackendError("Crawl4AI not initialized", self.backend_type)
+
+        # The Crawl4AI server has a hook registry endpoint; we
+        # register the callback by name + serialise a reference
+        # to the in-process callback.
+        try:
+            response = await self._client.post(
+                "/hooks/register",
+                json={
+                    "hook_name": hook_name,
+                    "callback_name": callback.__name__,
+                    "callback_module": callback.__module__,
+                },
+            )
+            response.raise_for_status()
+            # Store the callback locally so the BrowserClient
+            # can dispatch to it on subsequent calls.
+            if not hasattr(self, "_hooks"):
+                self._hooks = {}
+            self._hooks[hook_name] = callback
+            logger.info(
+                "crawl4ai_hook_registered",
+                hook=hook_name,
+                callback=callback.__name__,
+            )
+            return True
+        except Exception as e:  # noqa: BLE001
+            logger.warning(
+                "crawl4ai_hook_register_failed",
+                hook=hook_name,
+                error=str(e),
+            )
+            return False
+
+    async def get_hooks(self) -> list[str]:
+        """E.5: List the registered hook names.
+
+        Returns:
+            A list of the 4 hook point names that have callbacks
+            registered (out of the possible 4).
+        """
+        if not hasattr(self, "_hooks"):
+            return []
+        return list(self._hooks.keys())
+
+    async def dispatch_hook(
+        self,
+        hook_name: str,
+        context: Any,
+    ) -> None:
+        """E.5: Dispatch a registered hook callback.
+
+        Called internally by the BrowserClient when a hook
+        point is reached. Catches all exceptions (the hook
+        must never crash the crawl).
+        """
+        if not hasattr(self, "_hooks"):
+            return
+        callback = self._hooks.get(hook_name)
+        if callback is None:
+            return
+        try:
+            result = callback(context)
+            if hasattr(result, "__await__"):
+                await result
+        except Exception as e:  # noqa: BLE001
+            logger.warning(
+                "crawl4ai_hook_dispatch_failed",
+                hook=hook_name,
+                callback=callback.__name__,
+                error=str(e),
+            )
