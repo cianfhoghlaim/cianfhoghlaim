@@ -6,9 +6,9 @@ the appropriate `compute_kind` and `group_name`. This is the
 Dagster 1.10 Component that replaces the hand-written
 `dlt_asset()` wrapper in `oideachais/dlt_utils/source_factory.py`.
 
-Usage (from a YAML defs file):
+    Usage (from a YAML defs file):
 
-    type: oideachais.dagster_defs.components.CelticDltSourceComponent
+    type: cianfhoghlaim.assets._oideachais_dagster_defs.components.CelticDltSourceComponent
     attributes:
       source_id: ie.education.ncca
       asset_name: ireland_ncca_curriculum
@@ -21,9 +21,9 @@ from typing import Any
 
 import dagster as dg
 
-from sruth.oideachais.dlt_utils.destinations import get_dlt_destination
-from sruth.oideachais.dlt_utils.safety import safe_dlt_run, validate_source_kwargs
-from sruth.oideachais.dlt_utils.source_factory import get_default_factory
+from cianfhoghlaim.core.dlt._oideachais_dlt_utils.destinations import get_dlt_destination
+from cianfhoghlaim.core.dlt._oideachais_dlt_utils.safety import safe_dlt_run, validate_source_kwargs
+from cianfhoghlaim.core.dlt._oideachais_dlt_utils.source_factory import get_default_factory
 
 
 class CelticDltSourceComponent(dg.Component, dg.Model):
