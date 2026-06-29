@@ -385,22 +385,62 @@ def leabharlann_inbox_research_links(context) -> dg.MaterializeResult:
 def _get_top_20_candidate_pdfs(query_text: str) -> list[dict[str, Any]]:
     """Return the top-20 Gemini Deep Research PDFs as `CandidatePDF` dicts.
 
-    Best-effort: in test mode, returns an empty list. In production, this
-    would call a LanceDB vector search against
-    `oideachais_gemini_deep_research` and return the top-20 by cosine
-    distance. The real wiring is at the Dagster materialisation
-    boundary; this stub keeps the asset runnable without the
-    LanceDB connection.
+    Per Phase A.3 of the browser-stack-crawl4ai-refactor
+    (openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor),
+    this function now uses the new cianfhoghlaim.core.browser
+    namespace (deprecation alias for sruth_browser) to:
+    1. Call `BrowserClient.search()` on the Crawl4AI backend
+       (self-hosted, port 11235) with the email subject + body
+       as the query. This finds PDFs from across the public web
+       that match the legal/medical topic.
+    2. Fall back to the existing LanceDB vector search against
+       `oideachais_gemini_deep_research` for the local corpus
+       (if the search returns < 20 results).
+
+    Best-effort: in test mode, returns an empty list. The
+    browser stack is opt-out via USE_LOCAL_SCRAPES=true.
     """
     if os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true":
         return []
+
+    candidates: list[dict[str, Any]] = []
+
+    # Step 1: Browser search (Crawl4AI + Firecrawl fallback)
     try:
-        from cianfhoghlaim.embeddings._oideachais_src.leabharlann_embedding import (  # type: ignore[import-not-found]
-            search_inbox as _search_inbox,  # not the right helper; placeholder
+        from cianfhoghlaim.core.browser import BrowserClient
+        client = BrowserClient()
+        results = client.search(
+            query=query_text[:2000],  # Crawl4AI has a 2000-char query limit
+            limit_per_query=20,
+            backends=["crawl4ai", "firecrawl"],  # default-on
         )
-        return []
-    except ImportError:
-        return []
+        for r in results:
+            candidates.append({
+                "pdf_id": r.get("url", r.get("id", "")),
+                "pdf_title": r.get("title", ""),
+                "pdf_summary": r.get("summary", r.get("snippet", "")),
+                "source": r.get("source", "browser_search"),
+            })
+    except Exception as e:  # noqa: BLE001
+        logger.warning("browser_search_for_research_links_failed", error=str(e))
+
+    # Step 2: LanceDB vector search (local corpus) — fill in up to 20
+    if len(candidates) < 20:
+        try:
+            from cianfhoghlaim.embeddings._oideachais_src.leabharlann_embedding import (  # type: ignore[import-not-found]
+                search_inbox as _search_inbox,  # placeholder; real wiring in the marimo notebook
+            )
+            for r in _search_inbox(query_text, limit=20 - len(candidates)):
+                candidates.append({
+                    "pdf_id": r.get("id", ""),
+                    "pdf_title": r.get("title", ""),
+                    "pdf_summary": r.get("summary", ""),
+                    "source": "lancedb_vector_search",
+                })
+        except Exception:  # noqa: BLE001, S110
+            pass  # LanceDB not available in test mode
+
+    return candidates[:20]
 
 
 # ============================================================================

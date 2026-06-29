@@ -19,6 +19,7 @@ from dagster import (
     MaterializeResult,
     asset,
 )
+import os
 
 from _shared.config import get_author_dir, get_repo_root
 
@@ -106,6 +107,46 @@ def cv_extraction_asset(
     # BAML extraction is invoked at import time via the baml-cli compiled client.
     # This asset marks readiness; the extraction itself is scheduled on a
     # weekly cadence (see schedules.py).
+
+    # Per Phase A.4 of the browser-stack-crawl4ai-refactor
+    # (openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor),
+    # enrich the CV extraction with public award-body page
+    # scraping via the new cianfhoghlaim.core.browser namespace.
+    # Uses Crawl4AI's `extract_with_css` (zero LLM cost) for
+    # known-structure award-body pages (Apple Award, BCS, Teaching
+    # Council of Ireland). The BAML extraction above runs the
+    # internal PDFs; this enrichment fetches the external
+    # verification sources.
+    if row_count > 0 and not os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true":
+        try:
+            from cianfhoghlaim.core.browser import BrowserClient
+            client = BrowserClient()
+            # The Apple Award page (single-source, no LLM)
+            apple_award = client.extract_with_css(
+                "https://www.apple.com/education/awards/",
+                schema={
+                    "year": {"css": "h3", "type": "text"},
+                    "winner": {"css": ".winner-name", "type": "text"},
+                },
+            )
+            # The BCS PGC scholarship page
+            bcs_pgc = client.extract_with_css(
+                "https://www.bcs.org/qualifications-and-certifications/bcs-postgraduate-certificate-in-education",
+                schema={
+                    "title": {"css": "h1", "type": "text"},
+                    "summary": {"css": ".summary", "type": "text"},
+                },
+            )
+            context.log.info(
+                "cv_enrichment_fetched",
+                apple_award=bool(apple_award.success),
+                bcs_pgc=bool(bcs_pgc.success),
+            )
+        except Exception as e:  # noqa: BLE001
+            context.log.warning(
+                "cv_enrichment_failed",
+                error=str(e),
+            )
 
     return MaterializeResult(
         metadata={
