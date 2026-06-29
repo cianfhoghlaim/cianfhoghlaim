@@ -357,7 +357,7 @@ source.
 
 ### Requirement: Leabharlann Corpus Location (v4)
 
-The system SHALL expose the leabharlann (personal archive) corpus at `cianfhoghlaim/leabharlann/{aigne,gaeilge,gemini_deep_research,mata,ollscoil_na_gaillimhe,zotero}/` (6 subdirs × 216 documents = 12 + 45 + 11 + 20 + 8 + 120). The corpus previously lived at `/leabharlann/` at repo root.
+The system SHALL expose the leabharlann (personal archive) corpus at `cianfhoghlaim/leabharlann/{aigne,gaeilge,gemini_deep_research,mata,ollscoil_na_gaillimhe,zotero}/` (6 subdirs × 225 documents = 31 + 57 + 54 + 47 + 24 + 12 on disk, corrected from the v4 figure of 12 + 45 + 11 + 20 + 8 + 120 = 216; the `gemini_deep_research/identity/` subdir is empty on disk and the dlt source no-ops gracefully on it). The corpus previously lived at `/leabharlann/` at repo root.
 
 #### Scenario: dlt source resolution
 
@@ -373,7 +373,7 @@ The system SHALL activate all 6 leabharlann subdirs in Plan 1 — `aigne/`, `gae
 #### Scenario: All 6 sources in Plan 1
 
 - **WHEN** Plan 1 (Ireland + leabharlann) launches
-- **THEN** all 6 leabharlann dlt sources ingest their respective documents (216 total)
+- **THEN** all 6 leabharlann dlt sources ingest their respective documents (225 total on disk, corrected from the v4 figure of 216)
 - **AND** the OCR evaluation harness runs vision vs classical OCR on the leabharlann corpus
 - **AND** the results inform Plan 1.5 refactor of the OCR registry
 
