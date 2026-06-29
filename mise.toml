@@ -151,6 +151,59 @@ description = "Run pytest on the OCR evaluation harness (11 vision × 4 classica
 run = "uv run pytest cianfhoghlaim/ocr/evaluation/"
 
 # =============================================================================
+# llama-swap Tasks (v4 OCR/VLM registry)
+# =============================================================================
+# Per openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
+# The llama-swap service serves the v4 Unsloth GGUFs at :8080.
+# Use these tasks to manage the stack locally.
+
+[tasks."llama-swap:up"]
+description = "Start the llama-swap service (serves v4 Unsloth GGUFs at :8080)"
+run = "docker compose -f cianfhoghlaim/stacks/llama-swap/compose.yaml up -d"
+
+[tasks."llama-swap:down"]
+description = "Stop the llama-swap service"
+run = "docker compose -f cianfhoghlaim/stacks/llama-swap/compose.yaml down"
+
+[tasks."llama-swap:logs"]
+description = "Tail the llama-swap service logs"
+run = "docker logs -f llama-swap"
+
+[tasks."llama-swap:download-models"]
+description = "Download all v4 Unsloth GGUFs to /models/unsloth/ (5-50 GB; run once per machine)"
+run = "python scripts/download_unsloth_models.py"
+
+[tasks."llama-swap:health"]
+description = "Healthcheck the llama-swap service (curl http://localhost:8080/v1/models)"
+run = "curl -s http://localhost:8080/v1/models | python -m json.tool"
+
+# =============================================================================
+# HF Watchdog Tasks (v4 OCR/VLM registry liveness check)
+# =============================================================================
+# Per openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
+# Verifies all 26 VISION_MODELS IDs are live on the HF Hub.
+
+[tasks."hf:verify-ocr-registry"]
+description = "One-shot HF Hub liveness check on all 26 v4 VISION_MODELS (CI-friendly)"
+run = "python scripts/verify_hf_hub_audit.py --strict"
+
+[tasks."hf:watchdog:up"]
+description = "Start the daily HF Hub liveness watchdog (cron-style)"
+run = "docker compose -f infrastructure/stacks/ci/hf-watchdog/compose.yaml up -d"
+
+[tasks."hf:watchdog:down"]
+description = "Stop the HF Hub liveness watchdog"
+run = "docker compose -f infrastructure/stacks/ci/hf-watchdog/compose.yaml down"
+
+[tasks."litellm:regenerate"]
+description = "Regenerate the litellm/config/config.yaml from the v4 VISION_MODELS registry (Phase 2 of the deployment plan)"
+run = "PYTHONPATH=cianfhoghlaim:. python scripts/generate_litellm_config.py > cianfhoghlaim/stacks/litellm/config/config.yaml"
+
+[tasks."litellm:validate"]
+description = "Validate the litellm/config/config.yaml structure (count models, check aliases)"
+run = "python scripts/validate_litellm_config.py"
+
+# =============================================================================
 # Dagger CI/CD Tasks
 # =============================================================================
 # Reference: openspec/changes/dagger-monorepo-integration/

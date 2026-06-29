@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # =============================================================================
-# stack-doctor.sh - Audit every infrastructure/stacks/* for GOLD_STANDARD
+# stack-doctor.sh - Audit every bonneagar/stacks/* for GOLD_STANDARD
 # =============================================================================
 # Bash 3.2 compatible (macOS default).
 #
 # The stacks/ directory uses a FLAT layout (one directory per stack, no
 # category subdirectory). This script iterates every immediate subdirectory
-# of infrastructure/stacks/ and validates the 6-file GOLD_STANDARD pattern.
+# of bonneagar/stacks/ and validates the 6-file GOLD_STANDARD pattern.
+# It also checks that every stack has a corresponding
+# cianfhoghlaim/docs/stacks/<name>.md doc (the per-stack
+# "purpose + why-GitOps" doc).
 #
 # USAGE:
 #   mise turbo doctor             # via turbo task
@@ -16,7 +19,8 @@
 
 set -uo pipefail
 
-STACKS_DIR="${STACKS_DIR:-infrastructure/stacks}"
+STACKS_DIR="${STACKS_DIR:-bonneagar/stacks}"
+DOCS_DIR="${DOCS_DIR:-cianfhoghlaim/docs/stacks}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
@@ -107,6 +111,25 @@ for stack in "$REPO_ROOT/$STACKS_DIR"/*/; do
   [ -d "$stack" ] || continue
   audit_stack "$stack"
 done
+
+# ----------------------------------------------------------------------------
+# Per-stack doc check (added 2026-06-29, openspec/2026-06-29-bonneagar-v4-canonical-and-stack-migration)
+# Every stack in $STACKS_DIR MUST have a corresponding
+# $DOCS_DIR/<stack-name>.md doc. Missing docs are CRITICALS.
+# ----------------------------------------------------------------------------
+DOCS_MISSING_FILE="$(mktemp)"
+trap 'rm -f "$CRITICALS_FILE" "$WARNINGS_FILE" "$INFOS_FILE" "$DOCS_MISSING_FILE"' EXIT
+
+for stack in "$REPO_ROOT/$STACKS_DIR"/*/; do
+  [ -d "$stack" ] || continue
+  stack_name=$(basename "$stack")
+  if [ ! -f "$REPO_ROOT/$DOCS_DIR/$stack_name.md" ]; then
+    echo "$stack_name: missing-doc" >> "$DOCS_MISSING_FILE"
+  fi
+done
+
+# Merge docs-missing into CRITICALS
+cat "$DOCS_MISSING_FILE" >> "$CRITICALS_FILE"
 
 critical_count=$(wc -l < "$CRITICALS_FILE" | tr -d ' ')
 warning_count=$(wc -l < "$WARNINGS_FILE"  | tr -d ' ')
