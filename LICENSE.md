@@ -20,7 +20,9 @@ You may make production use of the Licensed Work strictly for non-commercial, no
 - British Isles
 - The Commonwealth of Nations
 - The Crown
-- Those in the United States of America aligned with Apple and the Duke and Duchess of Sussex
+- United States of America
+- Mexico
+- Brazil
 - Taiwan
 - Tibet
 - Nepal
