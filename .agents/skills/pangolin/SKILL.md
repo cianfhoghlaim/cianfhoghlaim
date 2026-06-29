@@ -5,7 +5,11 @@ description: Expert assistance for Fossorial Pangolin network infrastructure. Us
 
 # Pangolin - Network Infrastructure Platform
 
-**Version:** 1.x | **Last Updated:** 2025-01
+**Version:** 1.19.4 | **Last Updated:** 2026-06-29
+**Upstream docs:** https://docs.pangolin.net (Mintlify-hosted)
+**Repo:** https://github.com/fosrl/pangolin  (note: `fosrl`, not `fossoriale`)
+**Newt connector:** https://github.com/fosrl/newt (v1.13.0+ required for browser SSH/RDP/VNC)
+**Badger plugin:** v1.4.1+ (Traefik plugin required for 1.19 browser SSH)
 
 ## Overview
 
@@ -17,7 +21,7 @@ Pangolin is a network infrastructure management platform:
 - **Service Discovery**: Automatic service registration
 - **Docker Integration**: Container-aware networking
 
-**Repository**: https://github.com/fossoriale/pangolin
+**Repository**: https://github.com/fosrl/pangolin  (renamed from `fossoriale`)
 
 ## When to Use This Skill
 
@@ -70,7 +74,7 @@ Activate when users need:
 # compose.yaml
 services:
   pangolin:
-    image: fossoriale/pangolin:latest
+    image: ghcr.io/fosrl/pangolin:latest
     ports:
       - "3001:3001"
     volumes:
@@ -82,7 +86,7 @@ services:
       - pangolin
 
   gerbil:
-    image: fossoriale/gerbil:latest
+    image: ghcr.io/fosrl/newt:latest
     cap_add:
       - NET_ADMIN
     ports:

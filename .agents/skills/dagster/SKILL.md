@@ -167,10 +167,23 @@ schedule and ownership.
 - `oideachais-marimo-dashboards` — Layer 4 (11 marimo
   notebooks for the 5 educational stages)
 - `oideachais-baml-schemas` — Layer 2 (BAML extraction
+
   schemas, 23+ files)
 - `docs-skills-consolidation` — Layer 4 (the
   `docs_skills_consolidation` v1 App that indexes all
   docs/ + .agents/skills/)
+
+### Hierarchical asset groups (1.13.9+)
+
+Asset group names may now contain `/` separators (e.g. `celtic/duchas`,
+`celtic/gaeilge`, `celtic/bearla`). Wildcards work (`group:"celtic/*"`)
+and the asset graph renders them as nested groups. Combined with the
+new `is:` filter (`is:external`, `is:materializable`) for asset selection.
+
+```python
+@dg.asset(group_name="celtic/duchas", owners=["team:corpdev"])
+def duchas_grammar_table() -> None: ...
+```
 
 ## Dagster ports (KCG-specific)
 
@@ -199,7 +212,7 @@ Use port 3000 only for croilar-specific work.
 ```bash
 # KCG engineering Dagster stack (the canonical one)
 cd oideachais
-uv add dagster dagster-duckdb dagster-dlt
+uv add dagster dagster-duckdb "dagster-dlt>=0.29.11"
 uv run dagster dev -m oideachais.data_platform.dagster_defs.definitions
 # UI at http://localhost:3335
 ```
@@ -265,7 +278,32 @@ When a Dagster asset is materialised:
 4. The asset is marked materialised
 5. Downstream assets (e.g. CocoIndex v1 Apps) are auto-triggered
 
-### Multi-tenant DLT asset factory
+### DLT via the upstream `DltLoadCollectionComponent` (1.13.9+)
+
+The YAML-based Component natively supports `partitions_def` and
+`backfill_policy` — something our bespoke `celtic_dlt_source.py`
+wrapper does not. Migrate `celtic_dlt_source.py` to a thin
+subclass that adds `partitions_def=MultiPartitionsDefinition(...)`
+via `backfill_policy=BackfillPolicy.multi_run()` (1.13.9 release notes).
+
+```bash
+dg scaffold defs dagster_dlt.DltLoadCollectionComponent github_snowflake_ingest \
+  --source github --destination snowflake
+uv add dagster-dlt  # ensure >=0.29.11
+```
+
+```yaml
+# defs/github_snowflake_ingest/defs.yaml
+type: dagster_dlt.DltLoadCollectionComponent
+attributes:
+  loads:
+    - source: .loads.my_source
+      pipeline: .loads.my_pipeline
+      translation:
+        group_name: github_data
+```
+
+### Multi-tenant DLT asset factory (legacy `@dlt_assets`)
 
 The KCG `sruth/oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py`
 defines a factory pattern for the 33+ Ireland curriculum

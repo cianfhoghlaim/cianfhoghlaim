@@ -5,7 +5,7 @@ description: Expert assistance for Komodo infrastructure management platform. Us
 
 # Komodo - Infrastructure Management Platform
 
-**Version:** 1.19.x | **Last Updated:** 2025-01
+**Version:** 2.2.0 | **Last Updated:** 2026-06-29
 
 ## Overview
 

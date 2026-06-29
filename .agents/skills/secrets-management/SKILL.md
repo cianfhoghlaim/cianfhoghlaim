@@ -1,6 +1,6 @@
 ---
 name: secrets-management
-description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06).
+description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists.
 ---
 
 # Secrets Management — Infisical + Locket + mise
@@ -237,8 +237,26 @@ infisical secrets delete OPENAI_API_KEY_OLD
 - `.agents/skills/pulumi/SKILL.md` — Pulumi provisions the
   Infisical organisation
 
+## Verified 2026-06-29 (Wave 2 Agent 93)
+
+- **CLI latest release: `v0.161.9`** (2026-06-26 17:06 UTC, commit `c25d5ab`, by `adilsitos`). Wave 1's `@infisical/cli@0.41.x` pin is stale (≈120 minor versions behind).
+- **OpenAPI Universal Auth login** (v0.161+) accepts `clientId` + `clientSecret` + `organizationSlug` (optional; defaults to identity home org).
+- **OpenAPI Universal Auth attach** defaults: `accessTokenTTL = 2592000` (30 d), `accessTokenMaxTTL = 2592000`, `accessTokenNumUsesLimit = 0` (unlimited), `lockoutEnabled = true`, `lockoutThreshold = 3`, `lockoutDurationSeconds = 300`, `lockoutCounterResetSeconds = 30`, `clientSecretTrustedIps = [0.0.0.0/0, ::/0]`, `accessTokenTrustedIps = [0.0.0.0/0, ::/0]`.
+- **NEW** infisical CLI command: **`infisical export --format dotenv-eval`** (PR #7035, v0.161.9) — switch `bun run secrets:init` consumers to this when available.
+- **NEW** `POST /api/v1/dynamic-secrets/leases/kubernetes` — ephemeral K8s lease per `dynamicSecretName`/`projectSlug`/`environmentSlug`/`namespace`/`ttl`. Pair with `gatewayV2Id` for in-cluster gateways.
+- **REMOVED** documentation reference: `infisical SSH` CLI (#7038). Migrate any `SSH` auth flows to `universal-auth` + a dynamic-secret `ssh` type if available.
+- **NO** first-party Infisical MCP server as of 2026-06-29 — `Link` header advertises `/docs/.well-known/mcp/server-card.json` but the URL returns 404. Wave 1's ref 8.4 in `agent-18-infisical.md` (MCP integration) should be **deleted** until/unless a server card is published.
+- **EU region** is now a 1st-class OpenAPI server: `https://eu.infisical.com`. KCG's `arm1-oci` self-host does not need to migrate; the EU server is for multi-region SaaS customers only.
+- **`trustPayload: boolean`** is new on `kubernetes-auth/login.md` — only `true` in strictly trusted environments (bypasses audience claim validation).
+
 ## Resources
 
-- Infisical: <https://infisical.com/docs>
+- Infisical docs index: <https://infisical.com/docs/llms.txt> (machine-readable, 950+ endpoints, single `## Docs` section)
+- Infisical canonical doc URL pattern: `https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md` (verified 2026-06-29)
+  - Universal Auth login: <https://infisical.com/docs/api-reference/endpoints/universal-auth/login.md> (now requires `organizationSlug`)
+  - Universal Auth attach: <https://infisical.com/docs/api-reference/endpoints/universal-auth/attach.md> (lockout + TTL + IP defaults)
+  - Kubernetes auth login: <https://infisical.com/docs/api-reference/endpoints/kubernetes-auth/login.md>
+  - K8s dynamic-secret lease: <https://infisical.com/docs/api-reference/endpoints/dynamic-secrets/kubernetes/create-lease.md>
+- Infisical releases: <https://github.com/Infisical/infisical/releases> (latest `v0.161.9` 2026-06-26)
 - Locket: <https://github.com/cianfhoghlaim/locket> (KCG)
-- mise: <https://mise.jdx.dev/
+- mise: <https://mise.jdx.dev/>

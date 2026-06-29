@@ -1,6 +1,6 @@
 ---
 name: baml
-description: BAML (Basically, A Made-up Language) — the schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas, defining `@function` and `@class` blocks in `.baml` files under `sruth/oideachais/baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a BAML schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'LLM structured output', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src'.
+description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector'.
 ---
 
 # BAML Skill
@@ -533,3 +533,44 @@ and adaptive TypeBuilder schemas.
   the TanStack AI / oRPC / Zod consumer side
 - [`.agents/skills/celtic-asset-generation/SKILL.md`](../celtic-asset-generation/SKILL.md) —
   canonical BAML usage for NCCA / SEC / Dept-of-Ed tripartite KG
+
+## Pattern 8: Tracing + Collector observability (added 2026-06)
+
+```python
+from baml_client import b
+from baml_client.tracing import trace, set_tags
+from baml_py import Collector
+
+@trace                          # <-- NOT @observe
+async def extract_with_trace(receipt: str, run_id: str):
+    set_tags(parent_id=run_id, app="oideachais")
+    collector = Collector(name=f"extract-{run_id}")
+    result = await b.ExtractReceipt(receipt, baml_options={"collector": collector})
+    log = collector.last
+    if log:
+        print(f"tokens={log.usage.input_tokens}+{log.usage.output_tokens}")
+    return result
+```
+
+Multi-collector fan-out: `b.ExtractReceipt(receipt, baml_options={"collector": [c1, c2]})`.
+For Langfuse: wrap `collector.last.calls[-1].http_request` / `.http_response` (or `.sse_responses()` for streams) into Langfuse spans.
+
+**Wave 1 misnote:** the decorator is `@trace`, not `@observe`. `@observe` is a Langfuse convention — BAML uses `@trace` from `baml_client.tracing`.
+
+## Pattern 9: Semantic streaming attributes (added 0.214+)
+
+```baml
+class BlogPost {
+  title string @stream.done @stream.not_null
+  content string @stream.with_state
+}
+type OutputItem = ToolCall | Message
+function Run(input: string) -> (OutputItem @stream.done)[] {
+  client MyClient
+  prompt #"{{ input }}\n{{ ctx.output_format }}"#
+}
+```
+
+`@stream.with_state` generates Python `StreamState[T]` wrappers; check `state == "Complete"` before committing downstream.
+
+[Collector](https://docs.boundaryml.com/ref/baml_client/collector.md) · [@trace](https://docs.boundaryml.com/ref/baml_client/collector.md#tags) · [client<llm>](https://docs.boundaryml.com/ref/baml/client-llm.md) · [Changelog](https://docs.boundaryml.com/changelog/changelog.md) · [docs llms.txt](https://docs.boundaryml.com/llms.txt)

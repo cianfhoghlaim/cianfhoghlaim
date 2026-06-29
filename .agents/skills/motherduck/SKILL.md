@@ -190,3 +190,22 @@ data-sharing semantics.
   Firecrawl monitor that detects DuckLake / BYOB / Cortex Code
   releases via the LLM-judge `--goal` filter. See the
   `change-detection` skill (Layer 4) for the architecture.
+
+## Verified 2026-06-29 — Dives MCP tool list (8 tools, was 7)
+
+| Tool | Description | Parameters |
+|:--|:--|:--|
+| `list_dives` | List all Dives in the workspace (returns `current_version` per Dive) | SELECT * |
+| `read_dive` | Read a single Dive; supports `version` param | `id`, `version`? |
+| `read_dive_version` | Read a specific historical version of a Dive (read-only) | `id`, `version` |
+| `save_dive` | Persist a Dive to the workspace (creates version 1) | spec JSON |
+| `update_dive` | Update an existing Dive (creates a new version) | `id` + spec JSON |
+| `delete_dive` | Delete a Dive | `id` |
+| `view_dive` | Open a Dive in the UI | `id` |
+| `share_dive_data` | Create org-scoped shares for a Dive's data | `id` |
+
+Source: `/docs/key-tasks/ai-and-motherduck/dives/` and `/sql-reference/mcp/`.
+
+## MotherDuck token — Business-tier required (carry forward)
+
+KCG notebooks use 4 shared databases (`oideachais_public`, `oideachais_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.

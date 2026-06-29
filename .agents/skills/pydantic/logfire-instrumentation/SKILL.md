@@ -235,3 +235,30 @@ Detailed patterns and integration tables, organized by language:
 - **Python**: [logging patterns](./references/python/logging-patterns.md) (log levels, spans, stdlib integration, metrics, capfire testing) and [integrations](./references/python/integrations.md) (full instrumentor table with extras)
 - **JavaScript/TypeScript**: [patterns](./references/javascript/patterns.md) (log levels, spans, error handling, config) and [frameworks](./references/javascript/frameworks.md) (Node.js, Cloudflare Workers, Next.js, Deno setup)
 - **Rust**: [patterns](./references/rust/patterns.md) (macros, spans, tracing/log crate integration, async, shutdown)
+
+## KCG Logfire wiring (Agent 64 — 2026-06-29)
+
+**Pydantic Logfire is partially wired** in the v4-consolidated `cianfhoghlaim/` tree:
+
+- **Deps declared:** `pyproject.toml:29` — `"logfire>=4.15.1"`
+- **Config modules (mirror):** `infrastructure/observability/logfire_config.py` + `cianfhoghlaim/core/obs/observability/logfire_config.py` (both 437 lines, identical)
+- **1 production call site** — `logfire_log_llm()` fires twice in `meaisínfhoghlaim/root_agent.py:333, 552`
+- **1 instrumented integration** — `logfire.instrument_litellm()` in `pydantic_gateway.py:111` (deprecated ADK facade)
+- **1 stub** — `LogfireBackend` in `infrastructure/observability/unified_tracer.py:218-270` pretends to be a Logfire backend but only `logger.debug`s. **Violates** the `agent-observability` spec scenario "a Logfire span is written if `LOGFIRE_TOKEN` is non-empty"
+- **0 Pydantic auto-instrumentation** — `logfire_config.py:341-347` has an `instrument_pydantic()` function but no production caller
+- **0 FastAPI instrumented** — same story for `instrument_fastapi()`
+
+**Recommended 1-PR cutover** (12 files, +180/-40 lines): (a) replace no-op `LogfireBackend.start_span` with `logfire.span(name, **attrs)` context-managers, (b) call `logfire.instrument_pydantic()` at agent boot in `meaisínfhoghlaim/root_agent.py`, (c) call `logfire.instrument_fastapi(app)` in the browser server + FastAPI agent surface — gated on `settings.logfire_enabled` (already a Pydantic field on `croilar_shared/config/settings.py:62` and `_oideachais_config/base.py:159,321`).
+
+**Settings:**
+
+| File | Line | Field |
+|:--|:-:|:--|
+| `cianfhoghlaim/core/config/_croilar_shared/config/settings.py` | 62-63 | `logfire_enabled: bool = False` · `logfire_token: str \| None = None` |
+| `cianfhoghlaim/core/config/_oideachais_config/base.py` | 159, 321 | `logfire_enabled: bool = Field(default_factory=...)` |
+
+**Rule of thumb (from `agent-observability` spec §224-245):**
+- LLM call (any model, any provider) → **Langfuse** (`@observe(as_type="generation")`)
+- Pydantic `BaseModel.model_validate()` or any non-LLM Python function → **Logfire** (`@logfire.span(...)`)
+- ML training run, model registry, hyperparam sweep → **MLflow**
+- RAG quality (faithfulness, answer-relevancy) → **RAGAS** as Dagster `AssetCheck`

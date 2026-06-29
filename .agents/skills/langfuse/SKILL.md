@@ -1,11 +1,11 @@
 ---
 name: langfuse
-description: Expert assistance for LLM observability with Langfuse. Use when users need LLM monitoring, prompt management, A/B testing, or trace-based analytics.
+description: Expert assistance for LLM observability with Langfuse (Python SDK v4, JS/TS SDK v5 on platform v3.125+). Use when users need OpenTelemetry-native tracing, prompt management, evaluation, scores API v3, or experiments.
 ---
 
-# Langfuse - LLM Observability Platform
+# Langfuse - OpenTelemetry-Native LLM Observability Platform
 
-**Version:** >=2.0.0 | **Last Updated:** 2025-04
+**Version:** Python SDK v4.12.0 / JS SDK v5.9.0 / Platform v3.125+ | **Last Updated:** 2026-06-29
 
 ## Overview
 
@@ -262,3 +262,28 @@ npm install langfuse
 - [`ragas`](.skills/ragas/SKILL.md) - RAG evaluation framework
 - [`agno`](.skills/agno/SKILL.md) - Agent framework with observability
 - [`google-adk`](.skills/google-adk/SKILL.md) - Google's agent framework
+
+## Live version (verified 2026-06-29, Agent 90)
+
+- **Python SDK v4.12.0** + **JS/TS SDK v5.9.0** on **Platform v3.125+**
+- The v3 release is **OTEL-native** (no more `langfuse.trace(...).generation(...)` builder)
+- New `get_client()` singleton; v4 prefers env-var auth over `Langfuse(public_key=...)` constructor
+- `start_as_current_observation(as_type="generation"|"agent"|"tool"|"event")` is the v3 pattern (replaces `@observe()` with implicit type)
+- Scores API v3 — typed `value` (NUMERIC/BOOLEAN/CATEGORICAL/TEXT)
+- LiteLLM integration: `callbacks: ["langfuse_otel"]` + `LANGFUSE_OTEL_HOST` (was `callbacks: ["langfuse"]` + `LANGFUSE_HOST`)
+- JS multi-package install: `@langfuse/tracing`, `@langfuse/otel`, `@langfuse/client`, `@langfuse/browser`, `@langfuse/openai`, `@langfuse/langchain`
+- Frontend scores: `@langfuse/browser` (2026-06-18, public-key only)
+- Self-host: must pin to `v3.125.0+` for Python SDK v4
+
+## Anti-patterns (v3/v4)
+
+1. Direct `Langfuse(public_key=..., host=...)` constructor → v4 prefers `get_client()` + env vars.
+2. `openai.langfuse_public_key = "pk-lf-..."` setattr → removed in v4.
+3. `callbacks: ["langfuse"]` (LiteLLM) → replaced by `callbacks: ["langfuse_otel"]`.
+4. `langfuse.score(...)` with float `value` only → v3 typed value.
+5. `@observe()` without explicit `as_type=` → v3 prefers context-manager.
+6. `langfuse.create_experiment(...)` → replaced by `run_experiment()` + Datasets API.
+7. `langfuse.fetch_sessions(...)` → replaced by `/api/public/v2/observations` + `query-via-sdk` (2026-05-15).
+8. Self-host `langfuse/langfuse:latest` → must pin to **v3.125.0+** for Python SDK v4.
+9. Wrapping the whole OpenAI client with `@observe()` → v3 has dedicated `from langfuse.openai import openai` drop-in.
+10. Calling `langfuse.flush()` inside `@observe()` body → v3 flush is global + automatic.

@@ -1,6 +1,6 @@
 ---
 name: dlt
-description: Master routing skill for data load tool (dlt). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping).
+description: Master routing skill for data load tool (dlt 1.28.1, June 2026). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping). Notes the 1.27 `dlt[hub]` plugin split and the 1.28 `refresh` > `replace` deprecation.
 ---
 
 # DLT Master Router & Rules (Cianfhoghlaim)
@@ -8,6 +8,30 @@ description: Master routing skill for data load tool (dlt). Use this to understa
 You are operating within the `cianfhoghlaim` stack which uses `dlt`
 (data load tool) for extracting and loading data. This skill is the
 **router + decision tree + project rules** for all dlt operations.
+
+## 1.1 Live version (verified 2026-06-29)
+
+- **Latest**: `dlt 1.28.1` (released **Jun 19, 2026**) on PyPI.
+- **Python**: `requires-python = ">=3.10, <3.15"` — Python 3.9 dropped in
+  1.28.1; Python 3.14 supported (experimental).
+- **Source count**: **8,000+ sources** (was 5,000+ in Wave 1).
+- **Yanked**: 1.27.0 and 1.27.1 — data-loss bug ("incremental merge
+  truncates destination table"). Pin `dlt>=1.27.2,<1.28` if you must, or
+  upgrade to 1.28.1.
+- **CLI split (1.27.0)**: `pip install dlt[hub]` is now required for
+  `dlt dashboard`, `dlt pipeline ... show`, `dlt pipeline ... mcp`. `dlt ai`
+  is now `dlthub ai`.
+- **`refresh` > `replace` (1.28.0)**: the `replace` write-disposition
+  switch is deprecated; use the `refresh` parameter instead.
+- **Lance destination (1.25.0)** + **Lance REST Namespace (1.27.0)**: a
+  `lance` destination now exists alongside `lancedb` — use the former
+  for local/S3/Az/GCS Lance files, the latter for LanceDB Cloud.
+- **Native Polars (1.27.0)**: `@dlt.resource` can yield Polars DataFrame
+  or LazyFrame directly (auto-routed through Arrow).
+- **Databricks Zerobus (1.27.0)**: `databricks_adapter(...,
+  insert_api="zerobus")`.
+- **`dlt.Relation.join(...)` (1.26.0)** and **`dlt.current.interval()`
+  (1.26.0)** for relational composition and time-windowed incrementals.
 
 ## 1. Project rules (PRESERVED from the original skill, with one fix)
 
@@ -57,6 +81,12 @@ guide to invoke the most appropriate resource:
   sources
 - **`dlt-init-openapi`** (3rd-party): Use to auto-generate a verified
   dlt source from any OpenAPI spec
+- **`dlt init <verified-source>`** (1.28+ recommended): For any of the
+  28 verified sources listed at
+  `https://dlthub.com/docs/dlt-ecosystem/verified-sources` (Airtable,
+  GitHub, Stripe, Notion, Postgres replication, MongoDB, Salesforce,
+  HubSpot, Kafka, Slack, etc.). Verified sources are downloaded into
+  the working directory.
 
 ### Type-safe pipelines (BAML → dlt)
 
@@ -232,6 +262,12 @@ multiprocess_executor, parallel assets, and incremental loading.
   (drains API credits and risks rate limits)
 - Add a BAML client inline in a function (use a named client in
   `baml_src/clients.baml`)
+- Pin `dlt==1.27.0` or `dlt==1.27.1` — both YANKED from PyPI for a
+  data-loss bug; the fix is 1.27.2 (or upgrade to ≥ 1.28.1).
+- Use `write_disposition="replace"` (deprecated in 1.28.0) — use the
+  `refresh` parameter instead.
+- Call `dlt ai ...` (moved to `dlthub ai ...` in 1.27.0).
+- Call `dlt dashboard` without `pip install dlt[hub]` (1.27.0 split).
 
 ## 5. Reference index
 

@@ -1,11 +1,24 @@
 ---
 name: litellm
-description: Expert assistance for unified LLM access with LiteLLM. Use when users need multi-provider LLM integration, model fallbacks, load balancing, cost tracking, or a unified API for OpenAI, Anthropic, Google, and other providers.
+description: Expert assistance for unified LLM access with LiteLLM v1.84–1.90 (per-model routing groups, cosign-verified Docker, OpenAI Realtime GA, OpenTelemetry v2 metrics, MCP gateway, vector stores, workflows, providers incl. OpenAI / Anthropic / Azure AI / Bedrock / DeepSeek / xAI / Gemini / ModelScope / LibertAI / Parasail / Pinstripes / TinyFish / FastCRW).
 ---
 
 # LiteLLM - Unified LLM Interface
 
-**Version:** 1.x | **Last Updated:** 2025-01
+**Version:** 1.90.x | **Last Updated:** 2026-06-29
+**Live evidence**: PyPI `litellm==1.90.0` (2026-06-27); docs latest = "Six New Providers, OpenTelemetry v2 Parity & Streaming Reliability".
+
+## 0. Versioning & cosign verification (v1.84.0+)
+
+Starting with v1.84.0 LiteLLM follows PEP 440. The `-stable` suffix is gone.
+Both `litellm:1.90.0` and `litellm:v1.90.0` resolve to the same image.
+All Docker images are cosign-signed with the key from commit `0112e53`:
+
+```bash
+cosign verify \
+  --key https://raw.githubusercontent.com/BerriAI/litellm/0112e53046018d726492c814b3644b7d376029d0/cosign.pub \
+  ghcr.io/berriai/litellm:v1.90.0
+```
 
 ## Overview
 
@@ -625,3 +638,20 @@ user_settings:
 - **GitHub**: https://github.com/BerriAI/litellm
 - **Supported Models**: https://docs.litellm.ai/docs/providers
 - **Proxy Docs**: https://docs.litellm.ai/docs/proxy
+
+## Recent additions (post 2025-01)
+
+| Version | What changed | Where to apply |
+|:--|:--|:--|
+| 1.84.0  | PEP 440 + cosign-signed Docker | `pip install litellm==1.84.0`; `cosign verify` against commit `0112e53` |
+| 1.84.0  | `router_settings.routing_groups` (per-model strategies) | `router_settings.routing_groups: [{group_name, models, routing_strategy}]` |
+| 1.84.0  | Pass-through endpoints default to `auth: true` | `auth: false` on public webhook entries |
+| 1.84.0  | Master-key alias `litellm_proxy_master_key` | Update spend-log + Prometheus filters |
+| 1.85.0  | OpenAI Realtime GA + `gpt-realtime-2` pricing | `POST /openai/v1/realtime` |
+| 1.85.0  | NVIDIA Riva STT provider | `audio_transcription` |
+| 1.86.0  | OTel-standard server spans + weighted-routing failover | proxy telemetry |
+| 1.87.0  | MCP UI for OAuth servers; Prometheus user budget metrics | UI / `/metrics` |
+| 1.88.0  | Claude Opus 4.8; MCP access-group authorization | `claude-opus-4.8`; MCP gates |
+| 1.89.0  | Claude Fable 5; A2A agent providers | `claude-fable-5`; A2A provider routes |
+| 1.90.0  | 6 new providers (ModelScope, LibertAI, Parasail, Pinstripes, TinyFish, FastCRW) | `<provider>/...` prefix |
+| 1.90.0  | OpenTelemetry v2 metrics parity (`gen_ai.client.*`) | `litellm.observability.opentelemetry_integration` |

@@ -5,7 +5,9 @@ description: Efficient LLM fine-tuning with 70% VRAM reduction and 2x speedup. E
 
 # Unsloth
 
-**Version:** >=2024.12 | **Last Updated:** 2025-04
+**Version:** >=2026.6.9 | **Last Updated:** 2026-06-28
+**Verified upstream:** unsloth v0.1.471-beta (GitHub, 2026-06-18) / unsloth 2026.6.9 (PyPI, 2026-06-22)
+**Docs:** https://unsloth.ai/docs/llms.txt
 
 ## Overview
 

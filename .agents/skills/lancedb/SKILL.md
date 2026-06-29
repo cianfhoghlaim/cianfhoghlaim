@@ -5,7 +5,7 @@ description: Expert assistance for vector database development with LanceDB. Use
 
 # LanceDB - Embedded Vector Database
 
-**Version:** >=0.26.0 (pylance >= 0.26) | **Last Updated:** 2026-06
+**Version:** >=0.33.0 (pylance >= 0.33) | **Last Updated:** 2026-06-29
 
 ## Overview
 
@@ -17,7 +17,11 @@ LanceDB is an open-source, embedded vector database for AI applications:
 - **Scalable**: Billion-scale vectors with disk-based indexes
 - **Cloud-Native**: S3-compatible storage with serverless option
   (LanceDB Cloud, regions: us-east-1, us-west-2, eu-west-1, ap-south-1)
-- **HNSW Indexing**: High-performance approximate nearest neighbor search
+- **HNSW-backed IVF Indexing**: HNSW is **not** a top-level Python
+  index in LanceDB — it is exposed only as a sub-index inside IVF
+  partitions: `IVF_HNSW_FLAT` (no quant), `IVF_HNSW_SQ` (scalar quant,
+  best recall/latency trade-off), `IVF_HNSW_PQ` (product quant).
+  Use the `IvfHnswSq` config class in async Python.
 - **MVCC Safety**: Multi-version concurrency control for safe concurrent
   operations (use `lancedb.connect(...)` + `SerialDatabaseExecutor`)
 - **Hybrid Search**: Combine vector and full-text search with RRF reranking
@@ -192,14 +196,21 @@ table.create_index(
 )
 ```
 
-**HNSW Index** (for accuracy):
+**HNSW-backed IVF Index** (HNSW is NOT top-level — see vector-index.md):
 ```python
 table.create_index(
     metric="cosine",
-    index_type="HNSW",
+    index_type="IVF_HNSW_SQ",   # or "IVF_HNSW_FLAT" for unquantized
+    num_partitions=64,          # num_rows // 1_048_576 starting point
     m=20,
-    ef_construction=150
+    ef_construction=150,
 )
+
+# Async / config-object form (preferred for new code):
+from lancedb.index import IvfHnswSq
+await table.create_index("vector", config=IvfHnswSq(
+    distance_type="cosine", num_partitions=64, m=20, ef_construction=150,
+))
 ```
 
 ## Common Patterns
@@ -368,8 +379,10 @@ const cloud = await lancedb.connect(process.env.LANCEDB_URI!, {
 |----------|-----------|------------|
 | <100K vectors | None (brute force) | - |
 | Memory constrained | IVF_PQ | num_partitions=256 |
-| Accuracy critical | HNSW | m=20, ef_construction=150 |
-| Large scale | IVF_HNSW_PQ | Combine both |
+| Accuracy critical | IVF_HNSW_SQ | num_partitions = num_rows // 1_048_576, m=20, ef_construction=150 |
+| Best recall/size | IVF_HNSW_FLAT | m=20, ef_construction=150, no quant (raw + HNSW) |
+| Max compression | IVF_RQ | num_partitions = num_rows // 4096, RaBitQ |
+| Small dim (≤256) | IVF_PQ | num_partitions = num_rows // 4096, num_sub_vectors = dim // 8 |
 
 ## Advanced Patterns
 

@@ -1,6 +1,6 @@
 ---
 name: cocoindex
-description: Comprehensive toolkit for developing with the CocoIndex v1 library. Use when users need to create data transformation pipelines (flows) using the v1 `coco.App` + `@coco.fn` + `ContextKey` + `mount_table_target` + `Annotated[NDArray, EMBEDDER]` model, write custom functions, or operate flows via CLI or API. Covers building ETL workflows for AI data processing, including embedding documents into vector databases, building knowledge graphs, creating search indexes, or processing data streams with incremental updates.
+description: Comprehensive toolkit for developing with the CocoIndex v1 library (latest pip release v1.0.14, tagged 2026-06-25; docs review string frozen on v1.0.7 / Last reviewed Jun 23, 2026 — verified live 2026-06-29 via webfetch against cocoindex.io/docs, pypi.org/project/cocoindex, and github.com/cocoindex-io/cocoindex/releases). Use when users need pipelines with the v1 `coco.App` + `@coco.fn` + `ContextKey` + `mount_table_target` + `Annotated[NDArray, EMBEDDER]` model, 17 source/target connectors (S3, Doris, FalkorDB, Google Drive, Iggy, Kafka, LanceDB, LocalFS, Neo4j, OCI Object Storage, Postgres, Qdrant, SQLite, SurrealDB, Turbopuffer, Valkey, zvec), execution primitives (`memo=True`, `logic_tracking`, `version`, `deps`, `batching=True`, `runner=coco.GPU`, `as_async`), and lifecycle via `@coco.lifespan` + `coco.start() / coco.stop() / coco.runtime()`. Covers ETL for AI: embeddings into vector DBs (with `declare_fts_index` for keyword), knowledge graphs, search indexes, incremental updates, and the v1.0.8 `use_state` + `LiveMap` + `RateLimiter` suite. PyPI marks 1.0.8 as yanked; pin `>=1.0,<2.0,!=1.0.8`.
 ---
 
 # CocoIndex v1
@@ -528,6 +528,61 @@ for memoisation.
 | `Neo4j` (nodes + relations) | `cocoindex.connectors.neo4j` | No |
 | `FalkorDB` (nodes + relations) | `cocoindex.connectors.falkordb` | No |
 | `Kafka` (stream output) | `cocoindex.connectors.kafka` | No |
+
+### Targets (verified against v1.0.14 docs at https://cocoindex.io/docs/connectors/, 2026-06-29)
+
+See the connector inventory at the top of this skill. KCG v1.0.x only wires **LanceDB / FalkorDB / Postgres**; the 7 NEW connectors since 1.0.7 (Qdrant, Turbopuffer, Valkey, SurrealDB, zvec, Iggy, OCI Object Storage, Doris) are not yet integrated. Track via `openspec/research/2026-06-28-upstream-package-monitoring/`.
+
+#### NEW 1.0.11 — `declare_fts_index` for keyword search
+
+```python
+table.declare_fts_index(column="content", language="English", with_position=True)
+```
+
+> Per docs: "Indexes are reconciled as part of the table's target state: changing a declaration replaces the index in place, removing a declaration drops the index, and dropping the table removes all its indexes."
+
+#### NEW 1.0.12 — `LanceType` typed column override
+
+```python
+from typing import Annotated
+from cocoindex.connectors.lancedb import LanceType
+import pyarrow as pa
+
+@dataclass
+class MyRow:
+    id:    Annotated[int,   LanceType(pa.int32())]
+    value: Annotated[float, LanceType(pa.float32())]
+```
+
+#### NEW 1.0.12 — explicit `TableSchema({…ColumnDef})` form
+
+```python
+schema = lancedb.TableSchema(
+    {"doc_id":    lancedb.ColumnDef(type=pa.string(),  nullable=False),
+     "embedding": lancedb.ColumnDef(type=pa.list_(pa.float32(), list_size=384))},
+    primary_key=["doc_id"],
+)
+```
+
+#### `declare_vector_index` defaults flipped to `ivf_pq`
+
+The default is now IVF-PQ (was HNSW pre-1.0.7). To opt back in:
+
+```python
+table.declare_vector_index(
+    column="embedding",
+    metric="cosine",
+    index_type="hnsw_pq",   # explicit
+    m=16, ef_construction=200,
+)
+```
+
+#### Lifecycle knobs on `declare_table_target`
+
+| Parameter | Default | Purpose |
+|:--|:--|:--|
+| `managed_by` | `"system"` | `"system"` ⇒ CocoIndex manages table; `"user"` ⇒ assume it exists |
+| `num_transactions_before_optimize` | `50` | Background `table.optimize()` cadence (1.0.7 #2008) |
 | `localfs.declare_file` (custom file output) | `cocoindex.connectors.localfs` | No |
 
 **For all targets**: <https://cocoindex.io/docs/targets/>
@@ -592,7 +647,7 @@ LiteLLM, use the alias `vision` (set in
 `sruth/oideachais/api/router.py`). The KCG marimo dashboard
 `/dashboards/curriculum-images` shows a live demo of the
 multimodal ColPali + Qdrant MaxSim search.
-## 2026-06 update (CocoIndex v1.0.1–1.0.7)
+## 2026-06 update (CocoIndex v1.0.1–1.0.14)
 
 The 7 post-v1 releases add the following production-readiness features:
 
@@ -698,3 +753,15 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 - **FalkorDB connector** — used by both new Apps above. Connect via
   `falkordb.mount_table_target(KG_DB, "<NodeName>", ...)` where
   `KG_DB` is `coco.ContextKey[falkordb.ConnectionFactory]`.
+
+### 2026-06-29 update (CocoIndex v1.0.7 → v1.0.14, verified live 2026-06-29)
+
+- **v1.0.14 (25 Jun 2026, `4667e56`) — 19 PRs**: `feat(zvec): add FTS field support` (#2215); `feat(code_match): whole-node boundary \{ P \} ("is")` (#2196); `perf(engine): minimize serialization related to UserStateCache` (#2127); `fix(docs): update broken and redirected documentation links` (#2081).
+- **v1.0.13 (22 Jun 2026) — 18 code-match PRs + Doris fix (#2189) + 17 example walkthroughs (#2185)**.
+- **v1.0.12 (21 Jun 2026) — `Valkey` target (#2027); LanceDB `drop_index` + lancedb 0.33.0 / pyarrow 23.0.0 (#2132); CocoIndex inspection debug tool (#1920); 23 code-match PRs**.
+- **v1.0.11 (17 Jun 2026) — `LanceDB` vector + FTS indexing (#2115); `zvec` target (#2092); OCI incrementality (#2116)**.
+- **v1.0.10 (14 Jun 2026) — Agent experience (.md mirrors, llms.txt, skill endpoint, examples agent docs) (#2104) — drove the "Copy page as Markdown / Open in ChatGPT / Open in Claude / Install the CocoIndex v1 skill" buttons on every docs page**.
+- **v1.0.9 (12 Jun 2026) — `coco.fn` directly callable outside a component context (#2101)**.
+- **v1.0.8 (11 Jun 2026 — YANKED on PyPI per release history) — `coco.use_state()` persistent per-component state (#2034); `LiveMap` in-memory intermediate collection (#2088); Preview mode for update actions (#1945); Token-bucket `RateLimiter` (#2057); `LiteLLMTranscriber` STT (#2059); Tigris alongside MinIO (#2063). Do not install.**
+
+> Docs badge: every page renders `v 1.0.7` / `Last reviewed Jun 23, 2026` — frozen since 2026-06-23, even after 7 newer releases. The "Copy page as Markdown" / "Open in ChatGPT" / "Open in Claude" buttons are present on every URL fetched in this verification (install path: `npx skills install cocoindex/cocoindex --skill <slug>`).

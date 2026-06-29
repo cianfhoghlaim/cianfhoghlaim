@@ -79,7 +79,7 @@ DuckLake is an **open table format** created by DuckDB's team that transforms Du
 - **Cloud-native storage** (Parquet on S3/R2/GCS/Azure)
 - **Lightweight operation** (no heavy metastore like Hive)
 
-**Key Insight:** DuckLake separates metadata (SQL database) from data (Parquet files), enabling collaborative data lake scenarios without complex infrastructure.
+**Key Insight:** DuckLake v1.0 (released 2026-04-13, available in DuckDB v1.5.2+) is a feature-frozen, backward-compatible release with 108 PRs of reliability work. It separates metadata (SQL database) from data (Parquet files), enabling collaborative data lake scenarios without complex infrastructure.
 
 ## When Helping Users
 
@@ -1023,3 +1023,31 @@ notebooks (6 total). Highlights:
 - `data_engineering_ducklake_vega_altair.ipynb` — Vega-Altair charts
 - `data_engineering_ducklake_pointblank.ipynb` — data validation
 - `data_engineering_ducklake_mlflow_kafka_ducklake_notebooks_econ_comp.ipynb` — MLflow + Kafka streaming on DuckLake
+
+## DuckLake 1.0 features (verified 2026-06-29, Agent 87)
+
+- **Data inlining**: small (≤10 row) inserts stay in the catalog DB (default threshold = 10, was 100 in 0.x)
+- **Sorted tables**: `ALTER TABLE t SET SORTED BY (col)` for filter pushdown
+- **Bucket partitioning**: `ALTER TABLE t SET PARTITIONED BY (bucket(N, col))`
+- **VARIANT type with shredding** (replaces JSON for semi-structured)
+- **GEOMETRY type with bounding-box stats**
+- **Experimental deletion vectors** (Iceberg V3 compatibility)
+- **Explicit `AUTOMATIC_MIGRATION` opt-in** (was on by default in 0.x)
+
+## DuckLake 1.0 ATTACH parameters (NEW)
+
+`AUTOMATIC_MIGRATION`, `OVERRIDE_DATA_PATH`, `SNAPSHOT_TIME`, `SNAPSHOT_VERSION`,
+`METADATA_CATALOG`, `METADATA_PATH`, `METADATA_SCHEMA`, `METADATA_PARAMETERS`, `ENCRYPTED`
+
+## DuckLake 1.0 session-level SET options (NEW)
+
+- `ducklake_default_data_inlining_row_limit` (default 10)
+- `ducklake_max_retry_count` (default 10)
+- `ducklake_retry_backoff` (default 1.5)
+- `ducklake_retry_wait_ms` (default 100)
+- `ducklake_write_deletion_vectors` (default false — experimental)
+
+See also: `.agents/skills/iceberg-lakekeeper/SKILL.md` — Iceberg REST catalog backing
+the same lakehouse-net Postgres that DuckLake reads. Use DuckLake for SQL-DDL-style
+append/merge on the same data; use Iceberg REST + PyIceberg for v2/v3 features
+(V3 Variant, soft-delete, undrop, vended creds, branch/tag).

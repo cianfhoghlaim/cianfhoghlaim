@@ -5,7 +5,8 @@ description: Vector + graph hybrid database combining Redis-compatible graph que
 
 # FalkorDB
 
-**Version:** 1.0 | **Last Updated:** 2025-12
+**Version:** 4.18.11 | **Last Updated:** 2026-06-29  (verified live via browserbase + github.com/FalkorDB/FalkorDB/releases)
+**Latest release:** 2026-06-24 by @swilly22 (commit e78f370)  https://github.com/FalkorDB/FalkorDB/releases/tag/v4.18.11
 
 ## Overview
 
@@ -53,7 +54,7 @@ User: falkordb
 from falkordb import FalkorDB
 
 # Connect to FalkorDB
-db = FalkorDB(host="falkordb.cianfhoghlaim.ie", port=7687)
+db = FalkorDB(host="falkordb.cianfhoghlaim.ie", port=6379)   # canonical Redis RESP port; Bolt optional via /integration/bolt-support.html
 graph = db.select_graph("curriculum")
 ```
 
@@ -151,7 +152,7 @@ async def curriculum_rag(question: str):
     # Step 1: Vector search for relevant topics
     q_embedding = get_embedding(question)
     topics = graph.query("""
-        CALL db.idx.vector.queryNodes('topic_embedding', 5, $embedding)
+    CALL db.idx.vector.queryNodes('Topic', 'embedding', 5, vecf32($embedding_list))
         YIELD node, score
         RETURN node.name, node.level, score
     """, {"embedding": q_embedding.tolist()})
@@ -180,3 +181,42 @@ async def curriculum_rag(question: str):
 - **Cypher Reference:** https://docs.falkordb.com/cypher
 - **MCP Integration:** Configured as `neo4j` in `.mcp.json`
 - **Related Skills:** memgraph, lancedb, graphiti
+
+## Graphiti (canonical agentic-memory backend — 2026)
+
+```bash
+pip install graphiti-core[falkordb]
+```
+
+```python
+from graphiti_core import Graphiti
+# Canonical URI: falkor://host:port  (Cloud: falkor://your-instance.falkordb.cloud:6379)
+graphiti = Graphiti(uri="falkor://falkordb:6379")
+await graphiti.build_indices_and_constraints()  # one-time
+# Per-tenant isolation (NEW since Wave 1):
+graphiti_t1 = Graphiti(uri="falkor://falkordb:6379", graph_name="curriculum_tenant_a")
+```
+
+## Vector on relationships (NEW in v4.18.11)
+
+```cypher
+CALL db.idx.vector.queryRelationships(
+  'PREREQUISITE_FOR', 'text_embedding', 5, vecf32([...])
+) YIELD relationship, score
+```
+
+## Production drift alert (open since Wave 1)
+
+`infrastructure/stacks/falkordb/compose.yaml` does NOT currently load `vector.so` — vector queries will silently fail in prod until `command: ["falkordb", "--loadmodule", "/etc/falkordb/vector.so"]` is added. Track via `openspec/changes/.../falkordb-vector-so-loadmodule.yaml`.
+
+## Resources  (verified 2026-06-29)
+
+- **Documentation:** https://docs.falkordb.com  (Homepage; primary path `/<section>/<topic>.html`)
+- **Cypher Reference:** https://docs.falkordb.com/cypher/indexing/vector-index.html
+- **Graphiti integration page:** https://docs.falkordb.com/agentic-memory/graphiti.html
+- **Algorithms index:** https://docs.falkordb.com/algorithms/  (10 procedures: BFS, SPpath, SSpath, MSF, PageRank, BetweennessCentrality, HarmonicCentrality, WCC, CDLP, MaxFlow)
+- **Releases:** https://github.com/FalkorDB/FalkorDB/releases  (latest v4.18.11 / 2026-06-24)
+- **Anchor patterns:**
+    - Vector query nodes: `/cypher/indexing/vector-index.html`
+    - Vector on relationships: `/cypher/indexing/vector-index.html#query-vector-index` (`queryRelationships` procedure)
+    - Agentic memory: `/agentic-memory/graphiti.html`, `/agentic-memory/cognee.html`, `/agentic-memory/mem0.html`

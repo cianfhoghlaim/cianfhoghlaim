@@ -5,7 +5,9 @@ description: Expert assistance for ML lifecycle management with MLflow. Use when
 
 # MLflow - ML Lifecycle Platform
 
-**Version:** 3.x | **Last Updated:** 2025-01
+**Version:** 3.14.0 | **Last Updated:** 2026-06-29
+**Python:** >=3.10 | **PyPI releases:** 182 (latest 3.14.0 on 2026-06-17)
+**LTS branch:** 2.22.5 (2026-05-12)
 
 ## Overview
 
@@ -405,3 +407,65 @@ mlflow ui --port 5000
 - **LLM Guide**: https://mlflow.org/docs/latest/llms/index.html
 - **GenAI Evaluation**: https://mlflow.org/docs/latest/genai/eval-monitor/
 - **GitHub**: https://github.com/mlflow/mlflow
+
+## MLflow 3 — What's New (verified 2026-06-29, Agent 89)
+
+- **`mlflow.search_logged_models()`** — SQL-like filter across experiments
+- **`mlflow.create_external_model()`** — register models trained outside MLflow
+- **`models:/<model_id>` URI** — direct ID-based model loading (replaces `runs:/<run_id>/path`)
+- **Checkpoint-aware `log_metric`** — `step=`, `model_id=`, `dataset=` args
+- **`mlflow agent setup`** — installs `.agents/skills` for Claude Code / Codex / OpenCode
+- **`@mlflow.test`** — pytest marker for GenAI regression tests
+- **Review Queues** — assign traces to reviewers, collect structured feedback
+- **LLM Playground** — browser iteration over AI Gateway + Prompt Registry
+- **WAL tracing** — durable, low-latency Claude Code traces
+
+## v3.14.0 Breaking Changes
+
+- `mlflow.sklearn` `serialization_format` default: `cloudpickle` → `skops` (#23987)
+- `mlflow.pytorch.log_model` / `save_model` default → `pt2` (#23988)
+- `mlflow.lightgbm` default → `skops` (#23986)
+→ Pin `serialization_format="cloudpickle"` explicitly if you need the old behavior.
+
+## MLflow 3 — Model Checkpoint Logging
+
+```python
+with mlflow.start_run() as run:
+    for epoch in range(100):
+        if epoch % 10 == 0:
+            model_info = mlflow.pytorch.log_model(
+                pytorch_model=model,
+                name=f"checkpoint-epoch-{epoch}",
+                step=epoch,
+            )
+            mlflow.log_metric(
+                "accuracy", value, step=epoch,
+                model_id=model_info.model_id,
+                dataset=validation_dataset,
+            )
+
+# Load by model_id (new URI form)
+loaded = mlflow.pyfunc.load_model(f"models:/{model_info.model_id}")
+
+# Search logged models across experiments
+top = mlflow.search_logged_models(
+    experiment_ids=["1"],
+    filter_string="metrics.accuracy > 0.9",
+    order_by=[{"field_name": "metrics.accuracy", "ascending": False}],
+    max_results=1,
+    output_format="list",
+)[0]
+```
+
+## MLflow 3 — External Model Registration
+
+```python
+import mlflow
+mlflow.create_external_model(name="my-external-model")
+```
+
+## Best Practices (Wave 2 additions)
+
+6. **MLflow 3 model_id URIs**: prefer `models:/<model_id>` over `runs:/<run_id>/path` for new code
+7. **Serialization pinning**: set `serialization_format` explicitly on `log_model` calls in v3.14.0+ to avoid the default flip
+8. **Local KCG code**: `cianfhoghlaim/core/obs/observability/mlflow_config.py` should migrate `runs:/{run_id}/model` → `models:/{model_info.model_id}` for MLflow 3
