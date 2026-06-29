@@ -1,14 +1,30 @@
-FROM oven/bun:1.3-slim AS builder
-WORKDIR /app
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
-COPY . .
-RUN bun run build
+# Dockerfile for croilar/apps/web (Vite SPA + Radix + i18n)
+FROM node:20-alpine AS builder
 
-FROM oven/bun:1.3-slim AS runner
 WORKDIR /app
-COPY --from=builder /app/dist /app/dist
-COPY --from=builder /app/node_modules /app/node_modules
+
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY vite.config.ts ./
+COPY wrangler.toml ./
+COPY src/ src/
+COPY public/ public/ 2>/dev/null || true
+COPY config/ config/ 2>/dev/null || true
+RUN npm install
+
+RUN npm run build
+
+# ---------------------------------------------------------------------------
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/dist/ ./dist/
+COPY --from=builder /app/package.json ./
+
+# Build output is a Vite SPA; serve via node static server
+RUN npm install --global http-server 2>/dev/null || npm install http-server
+
 EXPOSE 3003
-HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3003/ || exit 1
-CMD ["bun", "run", "start"]
+CMD ["npx", "http-server", "dist", "-p", "3003", "-a", "0.0.0.0"]
