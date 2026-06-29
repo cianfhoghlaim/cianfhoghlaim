@@ -423,3 +423,16 @@ agent = LlmAgent(
 ```
 
 **Bump:** `google-adk>=1.0.0` → `>=1.5.0` (for the `LiteLlm` class).
+
+## Email triage surface (2026-06-29)
+
+A new oideachais ADK agent `email_triage` (on port 7778) exercises
+the new email-inbox pipeline with 4 read-only tools
+(`classify_email_thread`, `summarise_thread`,
+`link_thread_to_research`, `find_loose_threads`). The agent itself
+is the agent-platform sub-agent's scope, but the ADK framework
+patterns (SequentialAgent, LoopAgent, citation_callbacks, A2A
+Protocol) are reused as-is — see
+[`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md)
+for the full BAML + Dagster + marimo + cognify wiring.
+

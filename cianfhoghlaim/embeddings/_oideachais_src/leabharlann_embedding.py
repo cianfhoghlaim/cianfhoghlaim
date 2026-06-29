@@ -790,28 +790,50 @@ if COCOINDEX_AVAILABLE:
             )
 
     def _get_inbox_body_excerpt(msg: Any) -> str:
-        """Return first 2000 chars of plaintext body. Graceful on failure."""
+        """Return first 2000 chars of plaintext body. Graceful on failure.
+
+        Works with both `email.message.EmailMessage` (modern) and
+        `mailbox.mboxMessage` (default mbox factory). The latter has
+        `get_payload()` returning a `str` directly (or a list of
+        strings for multipart), so we handle both cases.
+        """
         try:
-            if msg.is_multipart():
-                for part in msg.walk():
-                    ctype = part.get_content_type()
-                    disp = str(part.get("Content-Disposition") or "")
-                    if ctype == "text/plain" and "attachment" not in disp.lower():
-                        payload = part.get_payload(decode=True) or b""
-                        try:
-                            return payload.decode(
-                                part.get_content_charset() or "utf-8", errors="replace"
-                            )[:2000]
-                        except (LookupError, UnicodeDecodeError, TypeError):
-                            return payload.decode("utf-8", errors="replace")[:2000]
+            is_multipart = getattr(msg, "is_multipart", None)
+            is_multi = bool(is_multipart()) if callable(is_multipart) else False
+            if is_multi:
+                walk = getattr(msg, "walk", None)
+                if callable(walk):
+                    for part in walk():
+                        ctype = part.get_content_type()
+                        disp = str(part.get("Content-Disposition") or "")
+                        if ctype == "text/plain" and "attachment" not in disp.lower():
+                            payload = part.get_payload(decode=True) or b""
+                            if isinstance(payload, str):
+                                return payload[:2000]
+                            try:
+                                return payload.decode(
+                                    part.get_content_charset() or "utf-8",
+                                    errors="replace",
+                                )[:2000]
+                            except (LookupError, UnicodeDecodeError, TypeError):
+                                return payload.decode("utf-8", errors="replace")[:2000]
                 return ""
             payload = msg.get_payload(decode=True) or b""
+            if isinstance(payload, str):
+                return payload[:2000]
+            if isinstance(payload, list):
+                return "".join(
+                    p[:2000] for p in payload if isinstance(p, str)
+                )[:2000]
             try:
                 return payload.decode(
                     msg.get_content_charset() or "utf-8", errors="replace"
                 )[:2000]
-            except (LookupError, UnicodeDecodeError, TypeError):
-                return payload.decode("utf-8", errors="replace")[:2000]
+            except (LookupError, UnicodeDecodeError, TypeError, AttributeError):
+                try:
+                    return payload.decode("utf-8", errors="replace")[:2000]
+                except (AttributeError, TypeError):
+                    return str(payload)[:2000]
         except (OSError, ValueError, AttributeError):
             return ""
 
