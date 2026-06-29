@@ -1,0 +1,12 @@
+# cognify — the per-domain Dagster Component defs (Domain 4).
+#
+# Implements Domain 4 of the per-domain Dagster Component migration.
+# Wires the 10 cognify functions (7 cognee_integration + 3 cross-archive
+# rules) as a Python asset module.
+#
+# Per openspec/specs/oideachais-cognify-knowledge-graph/spec.md (9 reqs,
+# 5-stage curriculum knowledge graph + cross-archive edges).
+---
+type: dg.python_module
+attributes: {}
+python_module: cianfhoghlaim.assets._oideachais_dagster_defs.defs.cognify.assets
