@@ -634,6 +634,16 @@ def build_all_cross_corpus_queries(
 
     Returns a list of (name, cypher, params) tuples. Empty queries
     (no matches) are filtered out.
+
+    Per Phase A.5 of the browser-stack-crawl4ai-refactor
+    (openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor),
+    the 8th rule (TakeoutDoc CITES GeminiReport) is now also
+    enriched by a BrowserClient.bulk_crawl() call that searches
+    for any URL mentioned in the Takeout body that matches a
+    Gemini report (via the new cianfhoghlaim.core.browser
+    namespace; deprecation alias for sruth_browser). The helper
+    `_browser_enhanced_takeout_citation_query` is called
+    lazily — only when the local rule returns 0 matches.
     """
     out: list[tuple[str, str, dict[str, Any]]] = []
 
