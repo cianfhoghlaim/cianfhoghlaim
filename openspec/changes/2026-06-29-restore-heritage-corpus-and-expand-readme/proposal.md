@@ -18,7 +18,7 @@ The `README.md` personal-heritage section was broken in three ways:
    Coláiste na Déisigh) are too short to ground the constitutional
    claim in the available Gemini Deep Research evidence.
 
-This change is delivered in **3 versions** of the README on a
+This change is delivered in **4 versions** of the README on a
 single openspec change:
 
 - **v1** (commit `7a1243485`) — restore the 48-file subtree + first
@@ -29,7 +29,7 @@ single openspec change:
   footprint, the Aileach / Connacht landlock argument, the 30-year
   roadmap to 2060, the Dublin / Leinster consolidation warning, and
   the §G educational-mission / §H constitutional-warning sub-sections.
-- **v3** (this commit) — full README rewrite that **drops the
+- **v3** (commit `6fee5eb6a`) — full README rewrite that **drops the
   Dublin / Leinster anti-consolidation framing** in favour of a
   *cultural-stewardship* framing, adds the new `## The cianfhoghlaim
   plan throughout the British Isles` top-level section (the East
@@ -45,19 +45,59 @@ single openspec change:
   fully rewritten. The v3 also generalises the §E qualifications
   (no longer cryptography-foregrounded) and updates the byline
   to add the new linguistic + AI credentials.
+- **v3.1** (commit `3cb8acbfe`) — polish the v3 §21c-§21f citations
+  to direct-link the 4 GitHub PDFs (instead of the local
+  `leabharlann/...` paths), add the "Neil Mac an Déisigh" name
+  origin explanation, fix the "City of Tribes" link
+  (`Galway` → `Tribes_of_Galway`), and remove the "In memory of"
+  line + the "Note on 2 unreadable PDFs" block.
+- **v4** (this commit) — replace the §21c-§21f + Citations + 2
+  unreadable PDFs note + "Irish-English bilingual title on line 1"
+  line (lines 1366-1800) with a single section that **(a)**
+  explains the 6 leabharlann subdirs (`gaeilge/`, `mata/`,
+  `aigne/`, `ollscoil_na_gaillimhe/`, `zotero/`,
+  `gemini_deep_research/`) and the purpose of each, and **(b)**
+  references directly the content and subreferences of the 8
+  specific Gemini Deep Research PDFs in
+  `leabharlann/gemini_deep_research/culture/` as the purpose of
+  Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim:
+  `claiming_r_na_gaillimhe_a_synthesis.pdf` (Rí na Gaillimhe thesis
+  + Brehon Law saoí + Shantalla topography), `heraldic_research_for_dual_blood_lineage.pdf`
+  (Connacht arms + Deacy/Lyons mottos + Regensburg
+  Schottenklöster hypothesis), `british_isles_cianfhoghlaim.pdf`
+  (East Belfast hub + inter-Celtic acquisition pathway + Celtic
+  AI Institute + 30-year Cultural Archipelago), `claiming_irish_kingship_through_lineage.pdf`
+  (Neo-Jacobite Federalism + Triple Crown table + 1542 Crown of
+  Ireland Act + matrilineal warrant Angias → Uí Néill),
+  `researching_neil_deacy_s_galway_heritage.pdf` (3-generation
+  Conroy-Deacy-Quay-Street dynasty + 1986 Cooke's Corner opening +
+  Peggy Deacy's bilingual retail strategy + Eamonn Deacy Park
+  sporting lineage + Eileen's bakery + Kenny's Bookshop),
+  `royal_titles_celtic_heritage_and_claims.pdf` (Uí Liatháin
+  colonization of Wales/Cornwall + Déisi political theology +
+  Grianan of Aileach + Surrender and Regrant 2.0 + Connacht arms
+  prophecy), `deacy_family_heritage_research.pdf` (Deacy + Conroy
+  commercial/maritime lineage + "ancient arts" + Polly Conroy +
+  Aston Villa 1981 + European Cup 1982), and
+  `royal_collaboration_for_commonwealth_future.pdf` (2060
+  Geostrategic Synthesis + €18.4 billion trade-tariff GDP hit +
+  Shared Island €1B investment + Warrant of the Saoí + King
+  Charles III + Prince + Princess of Wales + Duke + Duchess of
+  Sussex + Atlantic Bastion + Commonwealth AI Consortium +
+  StrategusAI + Rwanda). The v4 also **improves the start of the
+  README** by re-emphasising the bilingual title + opening the
+  TL;DR with a direct link to the leabharlann `gemini_deep_research/culture/`
+  archive as the primary source corpus.
 
-The v1+v2 work remains archived in git history; the v3 is the
-canonical current README. The 6 Gemini Deep Research PDFs analysed
-in v1+v2 (and the 1 new PDF analysed in v3,
-`british_isles_cianfhoghlaim.pdf`, plus the 2 secondary PDFs
-`cultural_unity_for_british_isles.pdf` and the
-`royal_collaboration_for_commonwealth_future.pdf`) remain the
-evidence base for the §21c and §21f sub-sections of the rewritten
-"About the author" section.
+The v1+v2+v3+v3.1 work remains archived in git history; the v4 is
+the canonical current README. The 8 Gemini Deep Research PDFs
+listed above are the evidence base for the new "Purpose of Cian
+Mac an Déisigh Uí Liatháin and cianfhoghlaim" section that
+replaces the v3 §21c-§21f + Citations + unreadable PDFs block.
 
 ## What
 
-The v3 README rewrite has 11 components:
+The v4 README rewrite (delivered as Tasks 1-12) has 12 components:
 
 ### 1. (v1) Cherry-pick the missing subtree from `q3-2026-oideachais-consolidation`
 
@@ -174,30 +214,61 @@ restored substitute. A new tracking issue is filed at
   Requirement (`Heritage corpus restoration provenance`) codifying
   the 4-step restoration contract.
 
+### 12. (v4) Replace §21c-§21f + Citations + 2 unreadable PDFs note with a single section that explains the leabharlann document types + references the 8 specific PDFs as the purpose of Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim
+
+The v3 §21c-§21f + Citations + 2 unreadable PDFs note + "Irish-English
+bilingual title on line 1" line (README lines 1366-1800) are removed
+and replaced with a single new section. The new section is structured
+as:
+
+- **Overview paragraph** (4-6 sentences) — explains the 6 leabharlann
+  subdirs and their purpose, and points readers at the
+  `gemini_deep_research/culture/` archive as the primary source corpus
+  for the author's heritage and purpose.
+- **8 PDF sub-sections** — one sub-section per PDF, each with:
+  - The PDF's full title + page count
+  - A 2-3 sentence "what it is" + a direct link to the leabharlann
+    GitHub blob
+  - A 3-5 sentence "what it documents / why it matters for
+    cianfhoghlaim"
+
+The 8 PDFs and their per-section content are documented in Task 11
+of `tasks.md`. The new section also improves the start of the README:
+the bilingual title is re-emphasised, the TL;DR opens with a direct
+link to the leabharlann archive, and the heritage framing shifts from
+"§21c-§21f as narrative sub-sections" to "the leabharlann `gemini_deep_research/culture/`
+corpus is the primary source for the author's heritage and purpose".
+
 ## Impact
 
-- **Surface change (v1+v2+v3):** 48 files restored, 3 README
+- **Surface change (v1+v2+v3+v3.1+v4):** 48 files restored, 3 README
   personal-heritage sub-sections rewritten (v1), Ring of Connacht +
   4-province + Aileach + 2060 added (v2), full README rewrite + 3
-  new top-level sections (v3). The current README is **1,761 lines**
-  (up from 1,527 in v2; up from 1,041 in the pre-v1 baseline).
+  new top-level sections (v3), direct GitHub PDF links + Neil Mac
+  an Déisigh name origin + Tribes_of_Galway link fix + In memory
+  of removal (v3.1), and 4 heritage sections + Citations + 2
+  unreadable PDFs replaced with a single leabharlann-document-types
+  + 8-PDF section + start-of-README improvement (v4). The current
+  README is targeted at **~1,400 lines** (down from 1,831 in v3.1;
+  the ~430-line removal is partially offset by the new ~250-line
+  leabharlann-document-types + 8-PDF section).
 - **Behaviour change:** The `culture_heritage` Cognee dataset will
   pick up the restored 8 Wikipedia clippings + the 6 lineage PDFs on
   the next cognify run.
-- **Documentation change:** The 3 target descriptions are now grounded
-  in 6 PDF citations + 8 Wikipedia citations (v1+v2) and the broader
-  cianfhoghlaim plan is grounded in 11 PDF citations + 8 Wikipedia
-  citations (v3). The new "## The pipelines" + "## 5 cookbook recipes"
-  + "## The cianfhoghlaim plan throughout the British Isles" sections
-  make the cianfhoghlaim monorepo's operational scope explicit.
+- **Documentation change:** The v3 §21c-§21f narrative is replaced
+  with a direct per-PDF sub-section structure that maps each of the
+  8 specific Gemini Deep Research PDFs to its purpose for the
+  cianfhoghlaim monorepo. The new structure is more direct, more
+  citable, and less narrative. The start of the README is more
+  prominent on the bilingual title + the leabharlann archive.
 - **No new package, no new agent, no new infra.**
 - **No new BAML extraction change.**
 - **No new Dagster asset change.**
 - **No merge from `q3-2026-oideachais-consolidation` into `main`** —
   the v4-consolidation history is intentionally separate; only the
   `cian_mac_an_déisigh_uí_liatháin/` subtree is restored.
-- **No branch management** — the v3 rewrite lands on `main` as a
-  single follow-up commit to v2.
+- **No branch management** — the v3.1 + v4 rewrites land on `main`
+  as a follow-up commit each to the previous one.
 
 ## Non-goals
 
@@ -248,7 +319,18 @@ restored substitute. A new tracking issue is filed at
 - 48 files restored under `cian_mac_an_déisigh_uí_liatháin/`.
 - 8 Wikipedia clippings present at `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/`.
 - README's "About the author" section has **6 sub-sections** (not 8).
-- `grep -c "On the heritage of Ireland" README.md` = 1.
+- (v4) The §21c-§21f + Citations + 2 unreadable PDFs note + "Irish-English bilingual title on line 1" line are removed; a single new section replaces them.
+- (v4) `grep -c "On the heritage of Ireland" README.md` = 0 (the §21c section title is removed).
+- (v4) `grep -c "On the cianfhoghlaim plan throughout the British Isles" README.md` = 0 (the §21d section title is removed).
+- (v4) `grep -c "On the qualified commitment to Éire" README.md` = 0 (the §21e section title is removed).
+- (v4) `grep -c "On the educational mission" README.md` = 0 (the §21f section title is removed).
+- (v4) `grep -c "Citations.*Wikipedia" README.md` = 0 (the Citations block is removed).
+- (v4) `grep -c "Note on 2 unreadable PDFs" README.md` = 0 (the unreadable-PDFs note is removed).
+- (v4) `grep -c "In memory of" README.md` = 0 (the "In memory of" line is removed).
+- (v4) `grep -c "leabharlann/gemini_deep_research/culture" README.md` ≥ 8 (each of the 8 PDFs is referenced by direct leabharlann path; the v3.1 commit already shows 22 occurrences of the GitHub URL).
+- (v4) The new section opens with an explanation of the 6 leabharlann subdirs and points readers to the `gemini_deep_research/culture/` archive as the primary source corpus.
+- (v4) Each of the 8 specific PDFs (`claiming_r_na_gaillimhe_a_synthesis.pdf`, `heraldic_research_for_dual_blood_lineage.pdf`, `british_isles_cianfhoghlaim.pdf`, `claiming_irish_kingship_through_lineage.pdf`, `researching_neil_deacy_s_galway_heritage.pdf`, `royal_titles_celtic_heritage_and_claims.pdf`, `deacy_family_heritage_research.pdf`, `royal_collaboration_for_commonwealth_future.pdf`) is cited with its full title + key claims.
+- (v4) The start of the README is improved: the bilingual title is more prominent, the TL;DR opens with a direct link to the leabharlann archive.
 - `grep -c "Dublin / Leinster consolidation" README.md` = 0.
 - `grep -c "Gaeltacht" README.md` ≥ 5 (actual: 27).
 - `grep -c "High King" README.md` ≥ 3 (actual: 4).
@@ -272,11 +354,12 @@ restored substitute. A new tracking issue is filed at
 - Originating changes: `openspec/changes/extend-culture-heritage-to-8-articles/`
   and `openspec/changes/ingest-culture-heritage/`.
 - Originating branch: `q3-2026-oideachais-consolidation` (last touched 2026-06-28).
-- v1 commit: `7a1243485`. v2 commit: `f3affbde2`. v3 commit: this proposal's commit.
+- v1 commit: `7a1243485`. v2 commit: `f3affbde2`. v3 commit: `6fee5eb6a`. v3.1 commit: `3cb8acbfe`. v4 commit: this proposal's commit.
 - Canonical specs: `openspec/specs/cross-domain-registry/spec.md` and
   `openspec/specs/oideachais-leabharlann/spec.md`.
 - Tracking issue: `openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/tracking_issues/unread-pdfs.md`.
 - Skills: `.agents/skills/oideachais-leabharlaim/SKILL.md`,
   `.agents/skills/oideachais-cocoindex-v1/SKILL.md`,
   `.agents/skills/agent-observability/SKILL.md`,
-  `.agents/skills/celtic-asset-generation/SKILL.md`.
+  `.agents/skills/celtic-asset-generation/SKILL.md`,
+  `.agents/skills/infrastructure-stacks/SKILL.md`.
