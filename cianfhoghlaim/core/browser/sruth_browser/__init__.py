@@ -66,6 +66,9 @@ from .exceptions import (
     SessionError,
 )
 
+# Strategist (the thin wrapper used by oideachais DAG assets)
+from .scrape_strategist import ScrapeStrategist
+
 __version__ = "0.1.0"
 __all__ = [
     # Client
@@ -103,4 +106,6 @@ __all__ = [
     "BackendRouter",
     "CircuitBreaker",
     "get_router",
+    # Strategist (the thin wrapper used by oideachais DAG assets)
+    "ScrapeStrategist",
 ]
