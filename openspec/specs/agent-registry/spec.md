@@ -87,7 +87,7 @@ quadrants).
   `cianfhoghlaim/agents/meaisinfhoghlaim/` path
 - **AND** the `skill_filter` includes the 6 core agent skills
   (`baml`, `litellm`, `langfuse`, `mlflow`, `ragas`, `cognee`,
-  `graphiti`)
+  `graphiti-core`)
 
 #### Scenario: frontend-apps covers the web layer
 
@@ -107,12 +107,20 @@ quadrants).
 
 The `opencode.json` `agent` registry SHALL define a dedicated
 `research` subagent whose `skill_filter` includes the browser-
-and search-driven skills needed for autonomous web investigation
-(`browserbase`, `firecrawl`, `ccc`, `cognee`, `agent-experience`,
-`company-research`, `event-prospecting`, `change-detection`,
-`search`, `fetch`, `agent-observability`). The `research`
-subagent is the primary executor for the 43-prompt BrowserBase
-credit program documented in
+and search-driven top-level skills needed for autonomous web
+investigation. The 11 skills SHALL be drawn from the union of
+the top-level `.agents/skills/` directories that specialise in
+browser automation, scraping, observability, and change detection
+— e.g. `browserbase`, `firecrawl`, `ccc`, `cognee`,
+`change-detection`, `agent-observability`, `crawl4ai`, `langfuse`,
+`mlflow`, `baml`, `cocoindex` (the exact set is recorded in
+`opencode.json` and may evolve as new top-level skills land;
+sub-skills nested under `browserbase/` such as `agent-experience`,
+`company-research`, `event-prospecting`, `search`, and `fetch` are
+accessible transitively through the `browserbase` entry and need
+not appear verbatim in the array). The `research` subagent is
+the primary executor for the 43-prompt BrowserBase credit program
+documented in
 `openspec/research/2026-06-28-browserbase-credit-program/`.
 
 #### Scenario: research subagent is dispatchable
@@ -255,12 +263,12 @@ total skill count across all 5 functional + research subagents.
 
 - **GIVEN** the `build` agent prompt in `opencode.json`
 - **WHEN** the prompt enumerates the agent's skill inventory
-- **THEN** the prompt states a total of 131 skills (was 123 in the
-  pre-v4 layout; the 8-skill delta comes from the new
-  `data-platform` (6 added: `celtic-ocr-evaluation`, `cocoindex`,
-  `embedding-pipeline`, `duckdb`, `ducklake`, `indexing-and-cognition`
-  → 5 after drop), `agent-platform` (1 added: `agent-memory-systems`
-  → 0 net after the `indexing-and-cognition` drop), and
-  `research` (13 brand new → 11 after the 2 drops))
+- **THEN** the prompt states the current top-level skill count
+  (53 in the post-`skill_filter`-audit layout) and notes that the
+  per-subagent `skill_filter` arrays are restricted to entries
+  that resolve to existing top-level directories under
+  `.agents/skills/`
 - **AND** the prompt references the per-subagent skill counts as
-  listed in §8.4 of the INDEXING document
+  listed in §8.4 of the INDEXING document (`build=0, plan=0,
+  data-platform=15, infrastructure=15, agent-platform=23,
+  frontend-apps=20, research=11`)

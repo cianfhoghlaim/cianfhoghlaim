@@ -398,13 +398,13 @@ top-level registries wired into OpenCode. It was added in the
 
 | Agent | Type | Skill filter | Subagent? | Specialises in |
 |:--|:--|:--|:--|:--|
-| `build` | Primary | (none — sees all 123 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
-| `plan` | Primary | (none — sees all 123 skills) | No | Default PLAN agent. Read-only by design. |
-| `oideachais` | Subagent | 9 skills (dlt, dagster, baml, cognee, ccc, oideachais-pipeline, oideachais-storage, oideachais-cocoindex-v1, motherduck) | Yes (`subagent_type: oideachais`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
-| `infrastructure` | Subagent | 16 skills (stack-ops, infrastructure-stacks, secrets-management, kcg-pangolin-stack, kcg-locket-sidecar, kcg-infrastructure-audit, kcg-bunchloch, kcg-convergence, kcg-deploy-runbooks, pangolin, komodo, docker-compose, dagger, dagger-pipelines, pulumi, kubernetes) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
-| `meaisinfhoghlaim` | Subagent | 22 skills (baml, litellm, document-intelligence, celtic-language-ai, irish-llm-on-device, agent-fleet-orchestration, agent-observability, kcg-ml-models, langfuse, mlflow, ragas, cognee, graphiti, graphiti-core, lancedb, falkordb, memgraph, embedding-pipeline, peft, trl, unsloth, huggingface) | Yes (`subagent_type: meaisinfhoghlaim`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
-| `croilar` | Subagent | 12 skills (tanstack-start, copilotkit, hono, convex, better-auth, baml, dagster, dlt, croilar-stream-registry, agentic-frontend-frameworks, frontend-topology, webapp-testing) | Yes (`subagent_type: croilar`) | Multi-persona portfolio (Convex + Hono + TanStack + BetterAuth) |
-| `tuatha` | Subagent | 12 skills (babylonjs, tuatha-mmo, pent-elemental-cosmology, tuatha-achievement-ledger, tuatha-mcp-server-tools, tuatha-platform, british-isles-formative-assessment, baml, dagger, tanstack-start, copilotkit, celtic-language-ai) | Yes (`subagent_type: tuatha`) | Celtic MMO + crypteolas (Babylon.js + SpacetimeDB + BAML) |
+| `build` | Primary | (none — sees all 53 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
+| `plan` | Primary | (none — sees all 53 skills) | No | Default PLAN agent. Read-only by design. |
+| `data-platform` | Subagent | 15 skills (dlt, dagster, baml, cognee, ccc, motherduck, lancedb, cocoindex, duckdb, ducklake, dlthub, ibis, marimo, langfuse, mlflow) | Yes (`subagent_type: data-platform`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
+| `infrastructure` | Subagent | 15 skills (komodo, pangolin, pulumi, dagger, dagger-pipelines, secrets-management, cloudflare, ccc, dlthub, cocoindex, langfuse, mlflow, risingwave, olake, effect-ts) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
+| `agent-platform` | Subagent | 23 skills (baml, litellm, agent-observability, agent-memory-systems, langfuse, mlflow, ragas, cognee, graphiti-core, lancedb, falkordb, memgraph, unsloth, huggingface, agno, google-adk, dignified-python, pydantic, ccc, dlthub, dagster, duckdb, cocoindex) | Yes (`subagent_type: agent-platform`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
+| `frontend-apps` | Subagent | 20 skills (tanstack-start, copilotkit, hono, convex, better-auth, baml, dagster, dlt, agentic-frontend-frameworks, babylonjs, orpc, effect-ts, cloudflare, ag-ui, marimo, dignified-python, pydantic, ccc, langfuse, cocoindex) | Yes (`subagent_type: frontend-apps`) | Multi-persona portfolio + Tuatha MMO (Convex + Hono + TanStack + BetterAuth + Babylon.js) |
+| `research` | Subagent | 11 skills (browserbase, firecrawl, ccc, cognee, agent-observability, change-detection, crawl4ai, langfuse, mlflow, baml, cocoindex) | Yes (`subagent_type: research`) | Browser-driven autonomous investigation (BrowserBase + Firecrawl + Cognee) |
 
 **Key invariants:**
 
@@ -490,7 +490,7 @@ print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print({k: len(v.get('skill_filter', [])) \
        for k, v in cfg['agent'].items()})"
-# Expected: build=0, plan=0, data-platform=15, infrastructure=16,
+# Expected: build=0, plan=0, data-platform=15, infrastructure=15,
 #           agent-platform=23, frontend-apps=20, research=11
 
 # 13 model-layer agents
@@ -516,7 +516,7 @@ bun run validate-ccc-freshness
 
 ---
 
-**Last updated:** 2026-06-28 (post-`2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation`).
+**Last updated:** 2026-06-29 (post-`skill_filter` audit pass: replaced ~35 legacy non-resolvable skill names with current top-level skills; counts unchanged at `data-platform=15, infrastructure=15, agent-platform=23, frontend-apps=20, research=11`).
 **Owner:** Build agent (canonical home: `.agents/skills/INDEXING_AND_COGNITION.md`).
 
 ---
@@ -558,10 +558,25 @@ subagents + 1 research subagent** in `opencode.json`:
 | Old subagent (pre-2026-06-28) | New subagent | Skill count | Routes to |
 |:--|:--|--:|:--|
 | `oideachais` | `data-platform` | 15 | `cianfhoghlaim/dlt_sources/`, `dagster_defs/`, `baml_src/`, `notebooks/` |
-| `infrastructure` | `infrastructure` | 16 | `cianfhoghlaim/stacks/*/`, komodo, pangolin, locket |
+| `infrastructure` | `infrastructure` | 15 | `cianfhoghlaim/stacks/*/`, komodo, pangolin, locket |
 | `meaisinfhoghlaim` | `agent-platform` | 23 | `cianfhoghlaim/agents/meaisinfhoghlaim/`, BAML, OCR, LLM routing, Langfuse, MLflow, RAGAS |
 | `croilar` + `tuatha` | `frontend-apps` | 20 | `cianfhoghlaim/web/`, Convex, Babylon.js, Hono |
 | (new) | `research` | 11 | BrowserBase, Firecrawl, CCC, Cognee, change-detection |
+
+**Skill name migration notes (2026-06-29, `skill_filter` audit pass):**
+
+The pre-v4 subagent `skill_filter` arrays referenced ~35 legacy
+skill names that no longer exist as top-level skills (e.g.
+`oideachais-pipeline`, `kcg-pangolin-stack`, `agent-fleet-orchestration`,
+`document-intelligence`, `tuatha-mmo`, `pent-elemental-cosmology`,
+`croilar-stream-registry`, etc.). These have all been replaced with
+top-level skills that resolve to existing directories under
+`.agents/skills/`. The new entries were selected to preserve the
+per-subagent intent (data plane / infrastructure mesh / agent fleet
+/ web surfaces / research), match the per-subagent skill counts
+mandated by the `agent-registry` spec, and dedupe entries that
+appeared twice (e.g. `agentic-frontend-frameworks` was in the
+`frontend-apps` filter twice).
 
 The build-agent prompt (this file's owner) was rewritten to
 reference the new subagent names and the `cianfhoghlaim/` paths.
