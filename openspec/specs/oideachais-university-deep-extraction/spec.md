@@ -1,42 +1,8 @@
 # oideachais-university-deep-extraction Specification
 
 ## Purpose
-
-`oideachais-university-deep-extraction` is a capability of the Cianfhoghlaim
-platform that turns a single British Isles university website (case study:
-University of Galway) into a structured lakehouse of course descriptors,
-module descriptors, programme descriptors, reading lists, and lecturer
-information. The corresponding source code lives at:
-
-- BAML: `cianfhoghlaim/core/baml/_oideachais_src/university_extraction.baml`
-- DLT factory: `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/_university_deep_factory.py`
-- DLT source (Galway): `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/ie/education/university_of_galway_deep.py`
-- Dagster assets: `cianfhoghlaim/assets/_oideachais_dagster_defs/assets/university_deep_extraction/`
-- CocoIndex v1 Apps: `cianfhoghlaim/core/cocoindex/university_embedding.py`
-- Marimo notebook: `cianfhoghlaim/notebooks/_oideachais/university_courses.py`
-- Cross-archive edge: `cianfhoghlaim/cognify/rules/university_cross_archive.py`
-
-See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
-
-## Background
-
-The British Isles tertiary education data is currently scraped only at the
-generic-official-media level (one BAML `CondenseToCriticalInfo` call per
-page; 24 universities registered in `cianfhoghlaim/sources/_oideachais_sources.yaml`
-under `kind: firecrawl_pages`, with `/about-us`/`/news`/`/careers` paths).
-That pattern yields only the surface-level institutional content; it does
-**not** produce structured course / module / programme / reading-list
-data suitable for academic analysis.
-
-The new capability adds 5 BAML classes + 4 BAML extraction functions, a
-reusable factory function + per-university config schema, a single Galway
-DLT source (as the case study + template), 5 Dagster assets, 2 CocoIndex
-v1 Apps, 1 marimo notebook, and 1 Cognee cross-archive edge. Subsequent
-British Isles universities (Maynooth, TCD, UCD, Limerick, QUB, etc.) are
-added in 5-line follow-up changes by editing `sources.yaml` only.
-
+TBD - created by archiving change university-of-galway-deep-extraction. Update Purpose after archive.
 ## Requirements
-
 ### Requirement: Per-university config schema
 
 The system SHALL provide a `UniversityDeepExtractionConfig` Pydantic v2
@@ -300,3 +266,4 @@ against the lakehouse, not against a local Parquet.
 - **WHEN** the user opens the "Cross-archive" tab
 - **THEN** the table SHALL display the user's CT511 assignment on the left, the matching `CourseDescriptor` on the right, and the `match_confidence` between them
 - **AND** clicking the `course_descriptor.url` opens the UoG programme page in a new tab
+

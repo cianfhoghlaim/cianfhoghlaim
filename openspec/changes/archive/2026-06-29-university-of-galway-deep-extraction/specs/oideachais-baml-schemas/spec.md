@@ -49,7 +49,7 @@ spec).
 - **THEN** the asset SHALL log a warning and return 0 rows (graceful degradation, per the `university_of_galway_source` pattern in `leabharlann/`)
 - **AND** the asset run SHALL NOT fail
 
-### Requirement: Runtime deterministic evals (extended for university extraction)
+### Requirement: Runtime deterministic evals
 
 The system SHALL provide 6 deterministic Python evals (the existing set)
 PLUS 3 new evals for the university extraction path:

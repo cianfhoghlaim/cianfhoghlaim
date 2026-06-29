@@ -19,9 +19,9 @@ at `cianfhoghlaim/cognify/rules/university_cross_archive.py` and is
 registered alongside the existing 3 rules in
 `cianfhoghlaim/cognify/rules/leabharlann_cross_archive.py`.
 
-## MODIFIED Requirements
+## ADDED Requirements
 
-### Requirement: Cross-archive edges (4 rules, was 3)
+### Requirement: 4 cross-archive edge rules
 
 The system SHALL provide 4 cross-archive edge rules that link nodes
 across the 4 leabharlann corpora (books, zotero, takeout, UoG personal

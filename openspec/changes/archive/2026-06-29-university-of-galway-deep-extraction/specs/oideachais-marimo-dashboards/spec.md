@@ -15,37 +15,7 @@ to 12. The new notebook has 4 tabs (M.Sc. AI 25/26 modules / All UoG
 courses / Reading lists / Cross-archive) and is mounted at
 `/dashboards/university-courses`.
 
-## MODIFIED Requirements
-
-### Requirement: 12 marimo notebooks (was 11)
-
-The system SHALL provide 12 marimo notebooks in
-`cianfhoghlaim/notebooks/` (was 11 before this change; the new
-`university_courses.py` per the `oideachais-university-deep-extraction`
-spec brings the total to 12). The new notebook is mounted at
-`/dashboards/university-courses`.
-
-The 12 notebooks are:
-
-1. `aistear.py` (mount: `/dashboards/aistear`)
-2. `primary.py` (mount: `/dashboards/primary`)
-3. `junior_cycle.py` (mount: `/dashboards/junior-cycle`)
-4. `senior_cycle.py` (mount: `/dashboards/senior-cycle`)
-5. `leaving_cert.py` (mount: `/dashboards/leaving-cert`)
-6. `tertiary.py` (mount: `/dashboards/tertiary`)
-7. `cross_domain.py` (mount: `/dashboards/cross-domain`)
-8. `lakehouse_inspector.py` (mount: `/dashboards/lakehouse`)
-9. `ducklake_explorer.py` (mount: `/dashboards/ducklake`)
-10. `leabharlann_full_stack_demo.py` (mount: `/dashboards/leabharlann-full-stack-demo`)
-11. `email_inbox_triage.py` (mount: `/dashboards/email-inbox-triage`)
-12. `university_courses.py` (mount: `/dashboards/university-courses`) — **NEW**
-
-#### Scenario: A developer adds the 13th marimo notebook
-
-- **WHEN** a future marimo notebook is added (e.g. a per-university notebook in a follow-up change)
-- **THEN** the marimo app registry SHALL have 13 entries
-- **AND** the new notebook SHALL be mounted at a new `/dashboards/<name>` route
-- **AND** the new notebook SHALL use `mo.sql(engine=md:oideachais)` for any lakehouse queries
+## ADDED Requirements
 
 ### Requirement: University courses dashboard
 

@@ -117,29 +117,32 @@ corpus generation.
 ### Requirement: Author-archive extraction (UoG + Gemini + Zotero)
 
 The system SHALL extract structured records from the 3 author-archive
-corpora: UoG artefacts, Gemini deep research reports, and Zotero papers.
+corpora (UoG artefacts, Gemini deep research reports, Zotero papers)
+PLUS the new `university_extraction.baml` file (5 classes + 4
+functions for course / module / programme / reading-list descriptors)
+on the *website* side (per the `oideachais-university-deep-extraction`
+spec).
 
-#### Scenario: UoG artefact extracted
+#### Scenario: Module descriptor extracted from UoG module page
 
-- **GIVEN** a UoG PDF in `leabharlann/ollscoil_na_gaillimhe/`
-- **WHEN** the `ExtractUoGArtifact` BAML function is called
-- **THEN** the function returns a `UniversityOfGalwayArtifact` with
-  the artifact kind, course code, module title, stage, and key topics
+- **GIVEN** a module page markdown blob (e.g. `https://www.universityofgalway.ie/.../ct516-deep-learning/`)
+- **WHEN** the `ExtractModuleDescriptor` BAML function is called
+- **THEN** the function returns a `ModuleDescriptor` with the module code, title, ECTS, semester, programme codes, learning outcomes, assessment breakdown, prerequisite modules, lecturers, and recommended reading
+- **AND** the function routes through the canonical `ExtractEn` LiteLLM client (no direct Firecrawl call)
 
-#### Scenario: Gemini deep research report extracted
+#### Scenario: Reading list extracted with ISBN-13 validation
 
-- **GIVEN** a Gemini deep research PDF in `leabharlann/gemini_deep_research/`
-- **WHEN** the `ExtractGeminiReport` BAML function is called
-- **THEN** the function returns a `GeminiDeepResearchReport` with the
-  topic, domain, summary, key findings, and cited URLs
+- **GIVEN** a module page markdown blob with a "Recommended reading" section
+- **WHEN** the `ExtractReadingList` BAML function is called
+- **THEN** the function returns a `ReadingListItem[]` with format (`ISBN_13 | DOI | URL`), title, authors, year
+- **AND** the deterministic eval `reading_list_isbn13_format` rejects any record where `format = "ISBN_13"` and the `isbn_13` field doesn't match `^\d{13}$`
 
-#### Scenario: Zotero paper extracted
+#### Scenario: BAML client is missing
 
-- **GIVEN** a Zotero PDF in `leabharlann/zotero/` with an arxiv_id
-- **WHEN** the `ExtractZoteroMetadata` BAML function is called
-- **THEN** the function returns a `ZoteroPaper` with the paper kind,
-  arxiv_id, DOI, title, authors, year, abstract, venue, and the
-  `irish_relevant` / `htr_relevant` flags
+- **GIVEN** the BAML client is not yet generated (the `baml_client/` directory is empty)
+- **WHEN** the `uog_extract_modules` Dagster asset runs
+- **THEN** the asset SHALL log a warning and return 0 rows (graceful degradation, per the `university_of_galway_source` pattern in `leabharlann/`)
+- **AND** the asset run SHALL NOT fail
 
 ### Requirement: UI component + image generation
 
@@ -190,34 +193,34 @@ authoring time.
 
 ### Requirement: Runtime deterministic evals
 
-The system SHALL provide 6 deterministic Python evals that validate
-extraction outputs using pure math/logic, NOT an LLM-as-judge:
+The system SHALL provide 6 deterministic Python evals (the existing set)
+PLUS 3 new evals for the university extraction path:
 
-1. **Sum validation** — `sum(transactions) + charges + tax + rounding - |discount| ≈ grand_total`
-2. **Positive values** — monetary fields ≥ 0 (except `rounding`/`discount`)
-3. **Subtotal consistency** — when `subtotal` present, `sum(transaction totals) ≈ subtotal`
-4. **Unit price accuracy** — `(unit_price - |unit_discount|) × quantity ≈ total_price`
-5. **Grand total calculation** — `subtotal + service + tax + rounding - |discount| ≈ grand_total`
-6. **Data completeness** — `transactions` non-empty, `grand_total` present,
-   every transaction has `item_name`/`quantity`/`unit_price`/`total_price`
+7. **`course_code_format_regex_match`** — every `CourseDescriptor.course_code` SHALL match `^[A-Z]{2,4}\d{3,4}$` (e.g. `MA335`, `CT511`, `HDSD`)
+8. **`programme_ects_sum`** — `sum(ProgrammeDescriptor.modules[*].ects)` SHALL equal `ProgrammeDescriptor.total_ects` within ±1
+9. **`module_count_within_programme`** — `ProgrammeDescriptor.modules` SHALL contain 6-20 modules for a full undergraduate or master's programme (a 1-module or 100-module programme is flagged as suspect)
 
-#### Scenario: Receipt extraction passes all 6 evals
+#### Scenario: Course code format validation
 
-- **GIVEN** a BAML extraction of a CORD-v2 receipt into a `ReceiptData`
-  object with `transactions: Transaction[]` + `subtotal` + `tax` + `grand_total`
-- **WHEN** the 6 evals are run sequentially
-- **THEN** each eval returns an `EvaluationResult { passed, message, expected_value, actual_value }`
-- **AND** the overall pass rate is computed as
-  `passed_count / 6`
+- **GIVEN** a `CourseDescriptor` with `course_code = "MA335"`
+- **WHEN** the `course_code_format_regex_match` eval runs
+- **THEN** the eval returns `passed = true`
 
-#### Scenario: Single failing eval triggers re-extraction
+#### Scenario: Course code format rejection
 
-- **GIVEN** a first-pass extraction where eval #5 (grand total) fails
-- **WHEN** the auto-retry loop runs
-- **THEN** the BAML function is re-called with the same input
-- **AND** the retry attempt is recorded alongside the first attempt for
-  downstream comparison
-- **AND** `max_retries` (default 1) caps the loop to prevent runaway cost
+- **GIVEN** a `CourseDescriptor` with `course_code = "math-335"` (lowercase + dash)
+- **WHEN** the `course_code_format_regex_match` eval runs
+- **THEN** the eval returns `passed = false`
+- **AND** the eval's `message` field SHALL be `"course_code 'math-335' does not match ^[A-Z]{2,4}\\d{3,4}$"`
+- **AND** the auto-retry loop SHALL re-invoke `ExtractCourseDescriptor` with a stronger prompt
+
+#### Scenario: Programme ECTS sum fails — auto-retry triggers
+
+- **GIVEN** a `ProgrammeDescriptor` with `total_ects = 90` but 8 modules whose `ects` sum to `120`
+- **WHEN** the `programme_ects_sum` eval runs
+- **THEN** the eval returns `passed = false`
+- **AND** the asset_check fires
+- **AND** the auto-retry loop re-invokes `ExtractProgrammeDescriptor` with a stronger prompt that emphasises the ECTS sum
 
 ### Requirement: Multimodal (vision) extraction
 
