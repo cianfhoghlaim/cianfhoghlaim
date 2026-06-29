@@ -26,7 +26,7 @@
 ## 5. Per-domain follow-ups (later changes)
 
 - [x] 5.1 Domain 2: oideachais-pipeline
-- [ ] 5.2 Domain 3: meaisinfhoghlaim-platform
+- [x] 5.2 Domain 3: meaisinfhoghlaim-platform
 - [ ] 5.3 Domain 4: cognify
 - [ ] 5.4 Domain 5: tuatha
 - [ ] 5.5 Domain 6: croilar

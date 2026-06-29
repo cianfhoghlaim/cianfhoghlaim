@@ -1,0 +1,12 @@
+# meaisinfhoghlaim_platform — the per-domain Dagster Component defs (Domain 3).
+#
+# Implements Domain 3 of the per-domain Dagster Component migration
+# (see docs/audit/dagster-component-migration-plan.md).
+# Wires the 6 meaisinfhoghlaim AI/ML pipelines as Python assets.
+#
+# Per openspec/specs/meaisinfhoghlaim-platform/spec.md (22 requirements,
+# AI/ML services for Celtic education).
+---
+type: dg.python_module
+attributes: {}
+python_module: cianfhoghlaim.assets._oideachais_dagster_defs.defs.meaisinfhoghlaim_platform.assets
