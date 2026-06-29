@@ -3,7 +3,7 @@
 This module provides a stable API surface for other projects.
 """
 
-from sruth_browser.core.types import (
+from cianfhoghlaim.core.browser.sruth_browser.core.types import (  # noqa: F401
     BACKEND_COST,
     BACKEND_PRIORITY,
     BackendHealth,

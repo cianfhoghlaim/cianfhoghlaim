@@ -17,7 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from .backends.paid import BrowserbaseBackend, FirecrawlBackend
+from .backends.paid import FirecrawlBackend
 from .backends.router import get_router
 from .backends.selfhosted import (
     CDPBackend,
@@ -107,12 +107,12 @@ async def lifespan(app: FastAPI):
             logger.warning("firecrawl_init_failed", error=str(e))
 
     if config.has_browserbase:
-        try:
-            browserbase = BrowserbaseBackend(config)
-            await browserbase.initialize()
-            router.register_backend(browserbase)
-        except Exception as e:
-            logger.warning("browserbase_init_failed", error=str(e))
+        # Browserbase removed 2026-06-29 per the
+        # `2026-06-29-browser-stack-crawl4ai-refactor` change.
+        # (No credits; no replacement plan.) Kept as a no-op branch
+        # for the duration of the deprecation window; will be deleted
+        # in a follow-up commit.
+        logger.info("browserbase_removed_skipping_init")
 
     logger.info("browser_agent_server_started")
 
