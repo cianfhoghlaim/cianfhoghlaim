@@ -71,7 +71,8 @@
     "default_agent": "celtic-tutor",
     "channel_overrides": {
       "discord": "mythology-narrator",
-      "teams": "research-assistant"
+      "teams": "research-assistant",
+      "/email": "email_triage"
     }
   },
   "otel": {
