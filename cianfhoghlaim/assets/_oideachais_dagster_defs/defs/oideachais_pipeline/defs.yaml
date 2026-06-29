@@ -1,0 +1,23 @@
+# oideachais_pipeline — the per-domain Dagster Component defs (Domain 2).
+#
+# Implements Domain 2 of the per-domain Dagster Component migration
+# (see docs/audit/dagster-component-migration-plan.md).
+# Uses the upstream `DltLoadCollectionComponent` to wrap the 4
+# Ireland education cycle DLT sources defined in `loads.py`.
+#
+# Per openspec/specs/oideachais-pipeline/spec.md (Layer 1 ingestion
+# with MultiPartitions by language × subject).
+---
+type: dagster_dlt.DltLoadCollectionComponent
+attributes:
+  loads:
+    - source: .loads.oideachais_pipeline_source
+      pipeline: .loads.oideachais_pipeline_dlt_pipeline
+      translation:
+        group_name: oideachais_pipeline
+        metadata:
+          domain: oideachais_pipeline
+          layer: "1_ingestion"
+          cycle: "all_4"
+          partition_strategy: "language_x_subject"
+          pipeline_version: "v4_2026-06-29"
