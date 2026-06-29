@@ -35,7 +35,7 @@
 - [x] E.2 — Add `LLMExtractionStrategy` with Pydantic schema (new `extract_with_llm(url, pydantic_class)` method; 75 lines; derives schema from Pydantic class)
 - [x] E.3 — Add `BrowserConfig(use_managed_browser=True, user_data_dir=...)` support (new `authenticate(profile_name)` method; 25 lines; for persistent login sessions)
 - [x] E.4 — Add `BFSDeepCrawlStrategy` + `DFSDeepCrawlStrategy` (new `bulk_crawl(seed_url, strategy="BFS", max_depth=3)` method; 60 lines)
-- [ ] E.5 — Add hooks (`on_page_context_created`, `on_before_fetch`, etc.) for login automation + cookie capture (deferred to follow-up; advanced use case)
+- [x] E.5 — Add hooks (`on_page_context_created`, `on_before_fetch`, etc.) for login automation + cookie capture — VERIFIED 2026-06-29: 3 methods on Crawl4AIBackend (register_hook, get_hooks, dispatch_hook) + 3 wrapper methods on BrowserClient; +214 lines; supports the 4 Crawl4AI hook points (on_page_context_created, on_before_fetch, on_after_fetch, on_content_ready)
 
 ## Phase F: Rename + Archive (6th priority)
 
