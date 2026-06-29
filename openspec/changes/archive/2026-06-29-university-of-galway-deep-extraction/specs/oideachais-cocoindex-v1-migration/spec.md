@@ -18,7 +18,7 @@ descriptors.
 
 ## MODIFIED Requirements
 
-### Requirement: V1 CocoIndex Apps (13 total, was 11)
+### Requirement: V1 CocoIndex Apps
 
 The system SHALL provide **13 v1 CocoIndex Apps** in
 `cianfhoghlaim/core/cocoindex/` (was 11 before this change; the
