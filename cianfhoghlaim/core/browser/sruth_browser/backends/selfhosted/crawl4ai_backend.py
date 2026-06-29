@@ -242,6 +242,241 @@ class Crawl4AIBackend(BrowserBackend):
                 error=result.error or "No screenshot in response",
             )
 
+    # =========================================================================
+    # Phase E: New Crawl4AI 0.7.4 features
+    # =========================================================================
+
+    async def extract_with_css(
+        self,
+        url: str,
+        schema: dict[str, Any],
+        *,
+        timeout: float | None = None,
+    ) -> ExtractionResult:
+        """E.1: Zero-cost extraction with JsonCssExtractionStrategy.
+
+        Uses CSS selectors for known-structure pages (NCCA, SEC,
+        DES, Apple Award CVs). NO LLM calls — completely free.
+        Falls back to Firecrawl extract if Crawl4AI returns an
+        error.
+
+        Args:
+            url: The URL to extract from.
+            schema: A dict of {field_name: {"css": str, "type": str}}.
+                e.g. {"title": {"css": "h1", "type": "text"}}.
+
+        Returns:
+            ExtractionResult with the structured data in `extracted_data`.
+        """
+        if not self._client:
+            raise BackendError("Crawl4AI not initialized", self.backend_type)
+
+        payload = {
+            "url": url,
+            "extraction_config": {
+                "type": "json_css",
+                "schema": schema,
+            },
+        }
+        if timeout is not None:
+            payload["timeout"] = timeout
+
+        start = time.time()
+        try:
+            response = await self._client.post("/crawl", json=payload)
+            response.raise_for_status()
+            data = response.json()
+        except Exception as e:
+            logger.warning("crawl4ai_css_extract_failed", url=url, error=str(e))
+            return ExtractionResult(
+                success=False,
+                url=url,
+                content={},
+                backend_used=self.backend_type,
+                latency_ms=(time.time() - start) * 1000,
+                error=str(e),
+            )
+
+        return ExtractionResult(
+            success=True,
+            url=url,
+            content=data.get("extracted_data", {}),
+            backend_used=self.backend_type,
+            latency_ms=(time.time() - start) * 1000,
+            metadata={"strategy": "json_css", "zero_llm_cost": True},
+        )
+
+    async def extract_with_llm(
+        self,
+        url: str,
+        pydantic_class: type,
+        *,
+        instruction: str | None = None,
+        timeout: float | None = None,
+    ) -> ExtractionResult:
+        """E.2: Type-safe structured extraction with LLMExtractionStrategy.
+
+        Uses an LLM (the configured LiteLLM gateway model) to extract
+        structured data into a Pydantic class. For complex/unstructured
+        content. Costs LLM tokens.
+
+        Args:
+            url: The URL to extract from.
+            pydantic_class: The Pydantic class to extract into. The
+                schema is derived from the class.
+            instruction: Optional custom instruction for the LLM.
+
+        Returns:
+            ExtractionResult with the structured data in `extracted_data`
+            (as a dict matching the Pydantic schema).
+        """
+        if not self._client:
+            raise BackendError("Crawl4AI not initialized", self.backend_type)
+
+        # Derive the JSON schema from the Pydantic class
+        try:
+            schema = pydantic_class.model_json_schema()
+        except AttributeError:
+            # Fallback for Pydantic v1
+            schema = pydantic_class.schema()
+
+        payload = {
+            "url": url,
+            "extraction_config": {
+                "type": "llm",
+                "schema": schema,
+                "instruction": instruction or "Extract structured data according to the schema.",
+            },
+        }
+        if timeout is not None:
+            payload["timeout"] = timeout
+
+        start = time.time()
+        try:
+            response = await self._client.post("/crawl", json=payload)
+            response.raise_for_status()
+            data = response.json()
+        except Exception as e:
+            logger.warning("crawl4ai_llm_extract_failed", url=url, error=str(e))
+            return ExtractionResult(
+                success=False,
+                url=url,
+                content={},
+                backend_used=self.backend_type,
+                latency_ms=(time.time() - start) * 1000,
+                error=str(e),
+            )
+
+        return ExtractionResult(
+            success=True,
+            url=url,
+            content=data.get("extracted_data", {}),
+            backend_used=self.backend_type,
+            latency_ms=(time.time() - start) * 1000,
+            metadata={"strategy": "llm", "schema": pydantic_class.__name__},
+        )
+
+    async def authenticate(
+        self,
+        profile_name: str,
+        *,
+        timeout: float | None = None,
+    ) -> bool:
+        """E.3: Use a managed browser with a persistent profile.
+
+        Enables authenticated scraping (QubStudent, Microsoft Forms,
+        etc.) via `use_managed_browser=True` + `user_data_dir=...`.
+
+        Args:
+            profile_name: The name of the profile to load
+                (e.g. "qubstudent", "microsoft").
+
+        Returns:
+            True if the profile was loaded successfully.
+        """
+        if not self._client:
+            raise BackendError("Crawl4AI not initialized", self.backend_type)
+
+        payload = {
+            "profile_name": profile_name,
+            "managed_browser": True,
+        }
+        if timeout is not None:
+            payload["timeout"] = timeout
+
+        try:
+            response = await self._client.post("/auth/load_profile", json=payload)
+            response.raise_for_status()
+            logger.info("crawl4ai_profile_loaded", profile=profile_name)
+            return True
+        except Exception as e:
+            logger.warning("crawl4ai_profile_load_failed", profile=profile_name, error=str(e))
+            return False
+
+    async def bulk_crawl(
+        self,
+        seed_url: str,
+        *,
+        strategy: str = "BFS",
+        max_depth: int = 3,
+        max_pages: int = 100,
+        allowed_domains: list[str] | None = None,
+        timeout: float | None = None,
+    ) -> list[ExtractionResult]:
+        """E.4: Full-site crawling with BFS or DFS deep-crawl strategy.
+
+        Args:
+            seed_url: The starting URL for the crawl.
+            strategy: "BFS" (breadth-first) or "DFS" (depth-first).
+            max_depth: Maximum depth from the seed URL.
+            max_pages: Maximum number of pages to crawl.
+            allowed_domains: Optional list of allowed domains (whitelist).
+
+        Returns:
+            List of ExtractionResult, one per crawled page.
+        """
+        if not self._client:
+            raise BackendError("Crawl4AI not initialized", self.backend_type)
+
+        payload = {
+            "url": seed_url,
+            "strategy": strategy,
+            "max_depth": max_depth,
+            "max_pages": max_pages,
+        }
+        if allowed_domains:
+            payload["allowed_domains"] = allowed_domains
+        if timeout is not None:
+            payload["timeout"] = timeout
+
+        start = time.time()
+        try:
+            response = await self._client.post("/deep_crawl", json=payload)
+            response.raise_for_status()
+            data = response.json()
+        except Exception as e:
+            logger.warning("crawl4ai_bulk_crawl_failed", url=seed_url, error=str(e))
+            return [ExtractionResult(
+                success=False,
+                url=seed_url,
+                content={},
+                backend_used=self.backend_type,
+                latency_ms=(time.time() - start) * 1000,
+                error=str(e),
+            )]
+
+        results = []
+        for page in data.get("pages", []):
+            results.append(ExtractionResult(
+                success=True,
+                url=page.get("url", seed_url),
+                content={"markdown": page.get("markdown", "")},
+                backend_used=self.backend_type,
+                latency_ms=(time.time() - start) * 1000 / max(len(data.get("pages", [])), 1),
+                metadata={"depth": page.get("depth", 0), "strategy": strategy},
+            ))
+        return results
+
         return ScreenshotResult(
             success=True,
             url=url,
