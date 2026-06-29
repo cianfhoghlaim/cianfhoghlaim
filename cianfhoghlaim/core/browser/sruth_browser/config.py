@@ -109,6 +109,16 @@ class BrowserConfig(BaseSettings):
         default=None,
         description="Google Gemini API key",
     )
+
+    # Opt-in backends (per openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor Phase D.2/D.3)
+    enable_skyvern: bool = Field(
+        default=False,
+        description="Enable the Skyvern backend (vision-based semantic navigation). Opt-in via BROWSER_ENABLE_SKYVERN=1 env var.",
+    )
+    enable_stagehand: bool = Field(
+        default=False,
+        description="Enable the Stagehand backend (AI-powered UI interactions + agent mode). Opt-in via BROWSER_ENABLE_STAGEHAND=1 env var.",
+    )
     gemini_flash_model: str = Field(
         default="gemini-2.0-flash",
         description="Gemini Flash model for fast browsing",

@@ -3,25 +3,24 @@
 This module provides the abstract base classes and routing infrastructure
 for browser automation backends.
 
-Backend categories (post browserbase-removal):
+Backend categories (post browserbase-removal + Z.AI deprecation):
 - Self-hosted ($0 cost): CDP, Stagehand, Crawl4AI, Skyvern
-- Paid: Firecrawl, Z.AI Vision
+- Paid: Firecrawl
 
 Browserbase was removed 2026-06-29 per the
 `2026-06-29-browser-stack-crawl4ai-refactor` change (no credits,
-no replacement plan). Z.AI Vision is deprecated and will be
-removed in a follow-up.
+no replacement plan).
+
+Z.AI Vision + Z.AI MCP are deprecated (not in the 5-backend final
+state); the modules still exist in `paid/` for backwards compat
+but are not re-exported from this module. Will be removed in a
+follow-up.
 """
 
 from .base import BrowserBackend, ResearchCapableBackend
 
 # Paid backends
-from .paid import (
-    FirecrawlBackend,
-    ZAIMCPClient,
-    ZAIVisionBackend,
-    get_zai_mcp_client,
-)
+from .paid import FirecrawlBackend
 from .router import BackendRouter, CircuitBreaker, get_router
 
 # Self-hosted backends ($0 cost)
@@ -46,7 +45,5 @@ __all__ = [
     "StagehandBackend",
     # Paid backends
     "FirecrawlBackend",
-    "ZAIVisionBackend",
-    "ZAIMCPClient",
-    "get_zai_mcp_client",
+    # Z.AI removed from public API; modules still exist in paid/
 ]

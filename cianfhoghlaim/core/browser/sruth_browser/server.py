@@ -83,19 +83,26 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning("crawl4ai_init_failed", error=str(e))
 
-    try:
-        skyvern = SkyvernBackend(config)
-        await skyvern.initialize()
-        router.register_backend(skyvern)
-    except Exception as e:
-        logger.warning("skyvern_init_failed", error=str(e))
+    # Opt-in backends (per Phase D.2/D.3 of the browser-stack-crawl4ai-refactor)
+    if config.enable_skyvern:
+        try:
+            skyvern = SkyvernBackend(config)
+            await skyvern.initialize()
+            router.register_backend(skyvern)
+        except Exception as e:
+            logger.warning("skyvern_init_failed", error=str(e))
+    else:
+        logger.info("skyvern_disabled_enable_via_BROWSER_ENABLE_SKYVERN_1")
 
-    try:
-        stagehand = StagehandBackend(config)
-        await stagehand.initialize()
-        router.register_backend(stagehand)
-    except Exception as e:
-        logger.warning("stagehand_init_failed", error=str(e))
+    if config.enable_stagehand:
+        try:
+            stagehand = StagehandBackend(config)
+            await stagehand.initialize()
+            router.register_backend(stagehand)
+        except Exception as e:
+            logger.warning("stagehand_init_failed", error=str(e))
+    else:
+        logger.info("stagehand_disabled_enable_via_BROWSER_ENABLE_STAGEHAND_1")
 
     # Register paid backends if configured
     if config.has_firecrawl:

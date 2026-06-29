@@ -15,7 +15,11 @@ class BackendType(StrEnum):
     FIRECRAWL_MCP = "firecrawl_mcp"
     # BROWSERBASE_MCP removed 2026-06-29 per the
     # `2026-06-29-browser-stack-crawl4ai-refactor` change.
-    ZAI_VISION = "zai_vision"
+    # ZAI_VISION removed 2026-06-29 (deprecated; not in the
+    # 5-backend final state). Use the zai_backend module
+    # directly if you need it.
+    # The 5 final backends: CDP + SKYVERN + CRAWL4AI + STAGEHAND + FIRECRAWL.
+    # Skyvern + Stagehand are opt-in via BROWSER_ENABLE_* env vars.
 
 
 class BrowserOperation(StrEnum):
@@ -166,10 +170,10 @@ BACKEND_PRIORITY: dict[BrowserOperation, list[BackendType]] = {
     BrowserOperation.RESEARCH: [BackendType.FIRECRAWL_MCP, BackendType.SKYVERN_LOCAL],
     BrowserOperation.EXTRACT: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
     BrowserOperation.EXTRACTION: [BackendType.STAGEHAND_LOCAL, BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
-    BrowserOperation.SCREENSHOT: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.ZAI_VISION],
+    BrowserOperation.SCREENSHOT: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL],
     BrowserOperation.FORM: [BackendType.SKYVERN_LOCAL, BackendType.STAGEHAND_LOCAL],
     BrowserOperation.MAP_SITE: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
-    BrowserOperation.VISUAL_GROUNDING: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.ZAI_VISION],
+    BrowserOperation.VISUAL_GROUNDING: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL],
 }
 
 BACKEND_COST: dict[BackendType, float] = {
@@ -178,7 +182,7 @@ BACKEND_COST: dict[BackendType, float] = {
     BackendType.CRAWL4AI_LOCAL: 0.0,
     BackendType.STAGEHAND_LOCAL: 0.0,
     BackendType.FIRECRAWL_MCP: 1.0,
-    BackendType.ZAI_VISION: 0.1,
     # Browserbase removed 2026-06-29 per the
     # `2026-06-29-browser-stack-crawl4ai-refactor` change.
+    # ZAI_VISION removed 2026-06-29 (deprecated).
 }
