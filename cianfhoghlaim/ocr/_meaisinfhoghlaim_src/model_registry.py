@@ -330,7 +330,7 @@ class OCRModel:
 OCR_MODELS: dict[str, OCRModel] = {
     "olmocr-7b": OCRModel(
         name="olmOCR-2-7B",
-        model_id="allenai/olmOCR-7B-1025-preview",  # P0: per HF audit, this is the latest stable ID (not "2-7B" which has been removed)
+        model_id="allenai/olmOCR-2-7B",
         backend=ModelBackend.TRANSFORMERS,
         capabilities=[
             ModelCapability.DENSE_OCR,
@@ -338,7 +338,7 @@ OCR_MODELS: dict[str, OCRModel] = {
             ModelCapability.LATEX,
         ],
         max_resolution=(2048, 2048),
-        notes="Best for structured documents, tables, and LaTeX (1025 preview release)",
+        notes="Best for structured documents, tables, and LaTeX",
     ),
     "qwen2.5-vl-7b": OCRModel(
         name="Qwen2.5-VL-7B",
@@ -367,7 +367,7 @@ OCR_MODELS: dict[str, OCRModel] = {
     ),
     "deepseek-ocr": OCRModel(
         name="DeepSeek-OCR",
-        model_id="DeepSeek-OCR/DeepSeek-OCR",  # P0: per HF audit, correct org is "DeepSeek-OCR" not "deepseek-ai"
+        model_id="deepseek-ai/deepseek-ocr",
         backend=ModelBackend.TRANSFORMERS,
         capabilities=[
             ModelCapability.DENSE_OCR,
@@ -378,14 +378,14 @@ OCR_MODELS: dict[str, OCRModel] = {
     ),
     "granite-docling": OCRModel(
         name="Granite-Docling",
-        model_id="ibm-granite/granite-docling-258M",  # P0: 258M snapshot is the live released model (base was renamed)
+        model_id="ibm-granite/granite-docling-base",
         backend=ModelBackend.TRANSFORMERS,
         capabilities=[
             ModelCapability.DENSE_OCR,
             ModelCapability.TABLES,
         ],
         max_resolution=(1024, 1024),
-        notes="DocTags for document structure (258M parameters)",
+        notes="DocTags for document structure",
     ),
     "gpt-4o": OCRModel(
         name="GPT-4o",
@@ -437,8 +437,8 @@ OCR_MODELS: dict[str, OCRModel] = {
         notes="Best Irish language model, needs multimodal wrapper",
     ),
     "gemma-3-vision": OCRModel(
-        name="Gemma 3 Vision",
-        model_id="google/gemma-3-4b-it",  # P0: per HF audit, the 9B variant doesn't exist; the verified 4B is the closest match for the OCR use case
+        name="Gemma 3 Vision 9B",
+        model_id="google/gemma-3-vision-9b-it",
         backend=ModelBackend.TRANSFORMERS,
         capabilities=[
             ModelCapability.DENSE_OCR,
@@ -446,7 +446,7 @@ OCR_MODELS: dict[str, OCRModel] = {
             ModelCapability.MULTILINGUAL,
         ],
         max_resolution=(1280, 1280),
-        notes="Google's open multimodal vision model (4B IT); good general-purpose OCR with 6 Celtic language support",
+        notes="Google's open multimodal vision model; good general-purpose OCR with 6 Celtic language support",
     ),
 }
 
