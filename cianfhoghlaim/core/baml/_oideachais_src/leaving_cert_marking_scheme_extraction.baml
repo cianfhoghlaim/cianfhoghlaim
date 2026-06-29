@@ -1,63 +1,77 @@
 // BAML schema: Leaving Certificate Marking Scheme Extraction
 //
-// Extracts PCLM marking patterns, common mistakes, and allocation
-// conventions from SEC marking scheme PDFs.
+// Extracts marking points, marks, and mark types from SEC marking-scheme
+// PDFs. Used by the per-subject pipeline (Stage 3 of the 6-stage PDF
+// processing pipeline at oideachais-pdf-processing/spec.md).
+//
+// Usage:
+//   from oideachais.data_platform.baml_client import b
+//   scheme = b.ExtractMarkingScheme(pdf_text, subject="Mathematics", year=2024, paper="paper-1")
 //
 // Re-gen after changes:  `cd oideachais && uv run baml-cli generate`
 
 class MarkingPoint {
-  pointNumber int
-  marksAllocated int
-  description string
-  validAlternatives string[] @description("Alternative acceptable answers (if any)")
-}
-
-class CommonMistake {
-  topic string
-  mistake string @description("What students commonly get wrong")
-  marksLost string @description("How many marks are typically lost")
-  howToAvoid string
-}
-
-class MarkingAllocation {
-  topic string
-  totalMarks int
-  pclmPattern string @description("How marks are distributed: partial credit / logical marking")
-  markingPoints MarkingPoint[] @description("Per-point breakdown if explicit in the scheme")
+  questionNumber int
+  partLabel string? @description("Optional sub-part label, e.g. '(a)', '(b)', '(i)'")
+  markValue int @description("Marks awarded for this marking point")
+  markType MarkingType @description("The type of mark (M1A1, M2A1, A1, B1, AO1-7, etc.)")
+  answerText string @description("Expected answer or marking instruction text")
+  alternativeAnswers string[]? @description("Acceptable alternative answers or marking instructions")
+  isOptional bool @description("Is this marking point in an optional question?")
+  requiresFormulaImage bool @description("True if this point depends on a LaTeX formula image (handled by Stage 2 diagram_detector)")
 }
 
 class MarkingScheme {
   subject string
   year int
   paper string
-  level string
+  level string @description("H, O, or F")
   totalMarks int
-  allocations MarkingAllocation[]
-  commonMistakes CommonMistake[]
+  markingPoints MarkingPoint[]
+}
+
+enum MarkingType {
+  M1A1
+  M2A1
+  A1
+  B1
+  AO1
+  AO2
+  AO3
+  AO4
+  AO5
+  AO6
+  AO7
 }
 
 function ExtractMarkingScheme(pdf_text: string) -> MarkingScheme {
   client LitellmClient
   prompt #"
-    You are an Irish Leaving Certificate marking scheme analyst. Extract the
-    marking point breakdown and common mistakes from the scheme PDF text.
+    You are an Irish Leaving Certificate marking scheme analyst. Extract
+    all marking points from the following marking scheme PDF text.
 
-    For each topic allocation:
-    - `totalMarks`: total marks available for this topic across the scheme
-    - `pclmPattern`: describe how marks are awarded (partial credit, logical
-      marking, step-marking, etc.)
+    For each marking point:
+    - `questionNumber`: the printed question number (1, 2, 3, ...)
+    - `partLabel`: optional sub-part label like '(a)', '(b)', '(i)' (null if not present)
+    - `markValue`: the marks awarded for this point (integer)
+    - `markType`: the type of mark, one of:
+      - `M1A1` — Method mark 1, Accuracy mark 1 (maths)
+      - `M2A1` — Method mark 2, Accuracy mark 1 (maths)
+      - `A1` — Accuracy mark 1 (maths)
+      - `B1` — Band mark 1 (maths)
+      - `AO1`-`AO7` — Assessment Objective 1-7 (most non-maths subjects)
+    - `answerText`: the expected answer or marking instruction
+    - `alternativeAnswers`: optional list of acceptable alternative answers
+    - `isOptional`: true if this marking point is in an optional question
+    - `requiresFormulaImage`: true if this marking point references a
+      LaTeX formula image (these are handled by Stage 2 diagram_detector
+      + the deepseek-ocr-2 model)
 
-    For each common mistake:
-    - `topic`: which topic area it relates to
-    - `mistake`: the specific error students make
-    - `marksLost`: typical impact on marks
-    - `howToAvoid`: practical advice to avoid the mistake
+    Subject context: {{ ctx.subject }}
+    Year context: {{ ctx.year }}
+    Paper context: {{ ctx.paper }}
 
-    Subject: {{ ctx.subject }}
-    Year: {{ ctx.year }}
-    Paper: {{ ctx.paper }}
-
-    PDF text:
+    Marking scheme text:
     {{ pdf_text }}
 
     {{ ctx.output_format }}

@@ -16,12 +16,26 @@ Ingest, extract, and index personal-archive trees under `leabharlann/`:
    `leabharlann/zotero/` (real Zotero storage format with arxiv IDs).
 6. `oideachais.dlt_sources.leabharlann.takeout_v1_source` —
    `stedding/Takeout/` (single- or multi-account auto-discovery).
+7. `oideachais.dlt_sources.leabharlann.email_inbox_source` —
+   `/srv/mailcow-exports/*.mbox` (the 4-account email-inbox pipeline).
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/
             (supersedes author-archive-gemini-and-uos-ingestion)
+            + openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
 """
 
 from ._epub_extractor import EBOOKLIB_AVAILABLE, extract_epub_chapters
+from .email_inbox import (
+    DEFAULT_MBOX_ROOT,
+    build_thread_rows,
+    build_threads,
+    create_email_inbox_pipeline,
+    detect_legal_flag,
+    email_inbox_source,
+    iter_message_meta,
+    normalise_subject,
+    year_from_mbox_filename,
+)
 from ._scanner import (
     DEFAULT_FILE_TYPE_EXTENSIONS,
     DEFAULT_SKIP_PATTERNS,
@@ -139,6 +153,16 @@ __all__ = [
     "_detect_account_label",
     "takeout_v1_source",
     "create_takeout_v1_pipeline",
+    # Email inbox (new in 2026-06-29-leabharlann-email-inbox-pipeline)
+    "DEFAULT_MBOX_ROOT",
+    "email_inbox_source",
+    "create_email_inbox_pipeline",
+    "normalise_subject",
+    "detect_legal_flag",
+    "iter_message_meta",
+    "build_threads",
+    "build_thread_rows",
+    "year_from_mbox_filename",
     # EPUB + previews helpers
     "EBOOKLIB_AVAILABLE",
     "extract_epub_chapters",

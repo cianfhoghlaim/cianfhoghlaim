@@ -68,7 +68,6 @@ from .model_registry import (
 )
 from .vision_comparison import (
     OCR_PROMPTS,
-    VISION_MODELS,
     VisionModel,
     VisionResult,
     compare_vision_models,
@@ -77,11 +76,39 @@ from .vision_comparison import (
 )
 from .vlm_finetune_comparison import (
     MOBILE_TARGETS,
-    VLM_MODELS,
     EvaluationResult,
     FinetuneConfig,
     VLMComparisonPipeline,
 )
+
+# v4 home re-exports (per the 2026-06-29 openspec change)
+# The legacy OCR_MODELS (10 entries) + VLM_MODELS (6 entries) are
+# DEPRECATED. The canonical registry is the 24-entry VISION_MODELS at
+# `cianfhoghlaim.ocr.models.registry`. We re-export the new VISION_MODELS
+# under the legacy `VISION_MODELS` name for back-compat with existing
+# code that imports it from this module.
+import warnings
+
+from cianfhoghlaim.ocr.models.registry import (
+    VISION_MODELS as _V4_VISION_MODELS,
+)
+from cianfhoghlaim.ocr.models.vlm_finetune_comparison import (
+    VLM_MODELS as _V4_VLM_MODELS,
+)
+
+warnings.warn(
+    "cianfhoghlaim.ocr._meaisinfhoghlaim_src is deprecated. "
+    "Import VISION_MODELS, VLM_MODELS, and the registry classes from "
+    "cianfhoghlaim.ocr.models instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+# The legacy `VISION_MODELS` name (from vision_comparison.py) is now
+# shadowed by the v4 VISION_MODELS dict. Existing callers that import
+# `VISION_MODELS` from this module get the new 24-entry dict.
+VISION_MODELS = _V4_VISION_MODELS
+VLM_MODELS = _V4_VLM_MODELS
 
 __all__ = [
     # Legacy

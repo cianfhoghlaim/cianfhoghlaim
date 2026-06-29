@@ -68,7 +68,6 @@ from .model_registry import (
 )
 from .vision_comparison import (
     OCR_PROMPTS,
-    VISION_MODELS,
     VisionModel,
     VisionResult,
     compare_vision_models,
@@ -77,11 +76,31 @@ from .vision_comparison import (
 )
 from .vlm_finetune_comparison import (
     MOBILE_TARGETS,
-    VLM_MODELS,
     EvaluationResult,
     FinetuneConfig,
     VLMComparisonPipeline,
 )
+
+# v4 home re-exports (per the 2026-06-29 openspec change)
+import warnings
+
+from cianfhoghlaim.ocr.models.registry import (
+    VISION_MODELS as _V4_VISION_MODELS,
+)
+from cianfhoghlaim.ocr.models.vlm_finetune_comparison import (
+    VLM_MODELS as _V4_VLM_MODELS,
+)
+
+warnings.warn(
+    "cianfhoghlaim.ocr._oideachais_src is deprecated. "
+    "Import VISION_MODELS, VLM_MODELS, and the registry classes from "
+    "cianfhoghlaim.ocr.models instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+VISION_MODELS = _V4_VISION_MODELS
+VLM_MODELS = _V4_VLM_MODELS
 
 __all__ = [
     # Legacy
