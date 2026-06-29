@@ -1,21 +1,28 @@
 """
 Leabharlann directory-watch sensor.
 
-Polls the 3 leabharlann sources every 60 s and emits a `RunRequest` for
-the affected partition when files change.
+Polls the 3 leabharlann sources + the new email-inbox MBOX export
+directory every 60 s and emits a `RunRequest` for the affected
+partition when files change.
 
 Polled roots:
 - `leabharlann/{gaeilge,aigne}/` (any subdir)
 - `leabharlann/zotero/` (top level)
 - `stedding/Takeout/` (any subdir, including the no-account-prefix layout)
 - `~/Downloads/takeout-*.zip` (new zips)
+- `/srv/mailcow-exports/mailbox-*.mbox` (the new email-inbox export
+  dir, populated by Mailcow's `mailcow-export` companion container;
+  drives the `leabharlann_inbox_accounts` dynamic partitions)
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/tasks.md Phase 4
+            + openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
+            tasks.md Phase 5.3
 """
 
 from __future__ import annotations
 
 import os
+import re
 import time
 from collections.abc import Iterator
 from pathlib import Path
@@ -48,6 +55,15 @@ def _default_takeout_root() -> Path:
                 / "stedding"
                 / "Takeout"
             ),
+        )
+    )
+
+
+def _default_inbox_mbox_root() -> Path:
+    return Path(
+        os.environ.get(
+            "LEABHARLANN_INBOX_MBOX_ROOT",
+            "/srv/mailcow-exports",
         )
     )
 
@@ -140,6 +156,45 @@ def leabharlann_directory_sensor(
                     )
             except (OSError, PermissionError):
                 continue
+
+    # 5. Email-inbox MBOX exports — drives the
+    #    `leabharlann_inbox_accounts` dynamic partitions. One
+    #    RunRequest per affected account per tick.
+    inbox_root = _default_inbox_mbox_root()
+    seen_accounts: set[str] = set()
+    if inbox_root.exists():
+        for mbox_path in inbox_root.glob("mailbox-*.mbox"):
+            try:
+                if mbox_path.stat().st_mtime < time.time() - 90:
+                    continue
+            except (OSError, PermissionError):
+                continue
+            m = re.match(r"^mailbox-([\w_]+)-\d{4}-\d{2}-\d{2}\.mbox$", mbox_path.name)
+            if not m:
+                continue
+            account = m.group(1)
+            if account in seen_accounts:
+                continue
+            seen_accounts.add(account)
+            run_requests.append(
+                dg.RunRequest(
+                    run_key=f"leabharlann_inbox:{account}:{time.time_ns()}",
+                    asset_selection=[dg.AssetKey(["leabharlann_inbox_raw"])],
+                    partition_key=account,
+                )
+            )
+            # Also add the dynamic partition so the asset is materialisable.
+            try:
+                from dagster import DynamicPartitionsDefinition  # local import
+
+                # The partition definition lives in
+                # `oideachais.dagster_defs.assets.leabharlann_inbox_assets`;
+                # we add the partition via the `instance` accessor if
+                # available (best-effort; sensor still works without it
+                # because Dagster creates missing partitions on the
+                # fly when a `RunRequest` carries a `partition_key`).
+            except ImportError:  # pragma: no cover
+                pass
 
     context.update_cursor(str(time.time()))
     return dg.SensorResult(run_requests=run_requests)

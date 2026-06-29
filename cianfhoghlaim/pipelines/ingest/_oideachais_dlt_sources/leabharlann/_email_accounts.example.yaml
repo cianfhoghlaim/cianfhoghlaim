@@ -1,0 +1,57 @@
+# Example author-archive email-account configuration.
+#
+# This file is the template the user copies to `author_archive_accounts.yaml`
+# (at the repo root, or wherever the `AUTHOR_ARCHIVE_ACCOUNTS_PATH` env var
+# points). Each account is a separate `Mailcow` mailbox that the
+# `dovecot_imapsync_runner` ofelia job polls every minute. The exported
+# MBOX files land in `/srv/mailcow-exports/mailbox-<account>-<YYYY-MM-DD>.mbox`
+# and are read by `leabharlann.email_inbox.email_inbox_source()`.
+#
+# Fields:
+#   account_label        — short id used in DuckDB `account` column + the
+#                          Dagster `leabharlann_inbox_accounts` dynamic
+#                          partition. Lowercase + underscores.
+#   mailcow_mailbox      — the local Mailcow mailbox the IMAP-sync job
+#                          deposits mail into (e.g. `inbox-dkit_ie`).
+#   external_imap_host   — the upstream IMAP server (resolvable from
+#                          Mailcow; port 993).
+#   external_username    — the IMAP username (usually the full email
+#                          address).
+#   gpg_encrypt_paths    — list of relative-path prefixes whose `body_excerpt`
+#                          is GPG-encrypted at rest. Reuses the same knob
+#                          as `google_takeout.TakeoutAccountConfig`. Empty
+#                          by default; opt-in for `legal/`, `medical/`,
+#                          `hsc/`, `nhs/`.
+#
+# Reference: openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
+
+accounts:
+  - account_label: dkit_ie
+    mailcow_mailbox: inbox-dkit_ie
+    external_imap_host: imap.outlook.com
+    external_username: cian.deacy@dkit.ie
+    gpg_encrypt_paths:
+      - legal/
+      - medical/
+      - hsc/
+
+  - account_label: gmail_personal
+    mailcow_mailbox: inbox-gmail-personal
+    external_imap_host: imap.gmail.com
+    external_username: cian.deacy@gmail.com
+    gpg_encrypt_paths:
+      - legal/
+      - medical/
+
+  - account_label: gmail_academic
+    mailcow_mailbox: inbox-gmail-academic
+    external_imap_host: imap.gmail.com
+    external_username: cian.deacy@cianfhoghlaim.ie
+    gpg_encrypt_paths:
+      - legal/
+
+  - account_label: hotmail_legacy
+    mailcow_mailbox: inbox-hotmail-legacy
+    external_imap_host: outlook.office365.com
+    external_username: cian.deacy_legacy@hotmail.com
+    gpg_encrypt_paths: []

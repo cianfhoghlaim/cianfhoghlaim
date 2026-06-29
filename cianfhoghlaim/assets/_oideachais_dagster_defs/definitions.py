@@ -255,6 +255,40 @@ except ImportError as e:
     _sl.get_logger().warning("leabharlann_cognify_assets_import_failed: %s", e)
     LEABHARLANN_COGNIFY_ASSETS = []
 
+# Leabharlann Email Inbox Assets (5 + 1 demo) — the new
+# `leabharlann_inbox_*` assets in the `leabharlann_ingestion` group
+# (7 → 12) + the `leabharlann_email_full_stack_demo` end-to-end demo.
+# Reference: openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
+try:
+    from .assets.leabharlann_inbox_assets import LEABHARLANN_INBOX_ASSETS
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("leabharlann_inbox_assets_import_failed: %s", e)
+    LEABHARLANN_INBOX_ASSETS = []
+
+try:
+    from .assets.leabharlann_email_full_stack_demo import (
+        leabharlann_email_full_stack_demo,
+        leabharlann_email_full_stack_demo_raw_ok,
+        leabharlann_email_full_stack_demo_classify_ok,
+        leabharlann_email_full_stack_demo_thread_ok,
+        leabharlann_email_full_stack_demo_link_ok,
+        leabharlann_email_full_stack_demo_embedding_ok,
+    )
+    LEABHARLANN_INBOX_DEMO_ASSET = leabharlann_email_full_stack_demo
+    LEABHARLANN_INBOX_DEMO_CHECKS = [
+        leabharlann_email_full_stack_demo_raw_ok,
+        leabharlann_email_full_stack_demo_classify_ok,
+        leabharlann_email_full_stack_demo_thread_ok,
+        leabharlann_email_full_stack_demo_link_ok,
+        leabharlann_email_full_stack_demo_embedding_ok,
+    ]
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("leabharlann_email_full_stack_demo_import_failed: %s", e)
+    LEABHARLANN_INBOX_DEMO_ASSET = None
+    LEABHARLANN_INBOX_DEMO_CHECKS = []
+
 # Docs-Skills Consolidation + Codebase Index (v1 CocoIndex Apps)
 # Reference: openspec/changes/docs-skills-consolidation-pipeline/
 try:
@@ -453,6 +487,10 @@ combined_assets = [
     # Leabharlann Cognee + FalkorDB cross-archive edges — 4 assets
     # (3 cognify + 1 edge-population; runs after the leabharlann dlt assets).
     *LEABHARLANN_COGNIFY_ASSETS,
+    # Leabharlann Email Inbox — 5 new assets in `leabharlann_ingestion`
+    # (7 → 12) + 1 end-to-end demo asset.
+    *LEABHARLANN_INBOX_ASSETS,
+    *([LEABHARLANN_INBOX_DEMO_ASSET] if LEABHARLANN_INBOX_DEMO_ASSET else []),
     # Docs-Skills consolidation + codebase index (v1 CocoIndex Apps, BAML-driven
     # tag + triple extraction; v1-native replacement for the legacy `ccc` CLI)
     *DOCS_SKILLS_ASSETS,

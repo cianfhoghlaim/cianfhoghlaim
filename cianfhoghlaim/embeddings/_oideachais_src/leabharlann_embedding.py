@@ -3,15 +3,19 @@ Leabharlann v1 CocoIndex embedding flows.
 
 CocoIndex v1 Apps that embed the new `leabharlann/` archives into LanceDB.
 
-Three Apps:
+Four Apps:
 1. `leabharlann_books_embedding` — books source (PDF + DOCX + EPUB + MD) from
    `leabharlann/{gaeilge,aigne}/`.
 2. `leabharlann_zotero_embedding` — Zotero PDFs with BAML metadata extraction
    from `leabharlann/zotero/`.
 3. `leabharlann_takeout_embedding` — Takeout filesystem (Phase 1) from
    `stedding/Takeout/` (auto-discovered).
+4. `leabharlann_inbox_embedding` — MBOX email-inbox messages from
+   `/srv/mailcow-exports/` (the 4-account email-inbox pipeline, added
+   2026-06-29 per the `2026-06-29-leabharlann-email-inbox-pipeline`
+   openspec change).
 
-All three Apps follow the canonical v1 patterns from
+All four Apps follow the canonical v1 patterns from
 `docs/cocoindex/{pdf_embedding,code_embedding_lancedb,paper_metadata}/main.py`:
 
 - `@coco.fn` for processing functions
@@ -27,6 +31,7 @@ All three Apps follow the canonical v1 patterns from
   from `oideachais-semantic-search`).
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/proposal.md
+            + openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
 """
 
 from __future__ import annotations
@@ -123,6 +128,14 @@ DEFAULT_ZOTERO_ROOT = pathlib.Path(
         str(DEFAULT_LEABHARLANN_ROOT / "zotero"),
     )
 )
+# MBOX export directory for the email-inbox pipeline. Populated by the
+# Mailcow `dovecot_imapsync_runner` + `mailcow-export` companion container.
+DEFAULT_INBOX_MBOX_ROOT = pathlib.Path(
+    os.getenv(
+        "LEABHARLANN_INBOX_MBOX_ROOT",
+        "/srv/mailcow-exports",
+    )
+)
 
 
 # =============================================================================
@@ -210,6 +223,31 @@ class LeabharlannTakeoutChunk:
     chunk_start: int
     chunk_end: int
     embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[index]
+
+
+@dataclass
+class LeabharlannInboxMessage:
+    """One embedded chunk of an email-inbox message.
+
+    One row per message in the MBOX. The `body_excerpt` is the first
+    2000 chars of the plaintext body (computed by the DLT source).
+    The `baml_class` and `baml_urgency` are filled in by the
+    `leabharlann_inbox_baml_classify` Dagster asset and read by the
+    App at materialisation time.
+    """
+
+    id: int
+    account: str
+    year: int
+    date_iso: str
+    subject: str
+    sender: str
+    recipients: str
+    body_excerpt: str
+    embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[index]
+    baml_class: str
+    baml_urgency: float
+    thread_id: str
 
 
 # =============================================================================
@@ -598,6 +636,242 @@ if COCOINDEX_AVAILABLE:
 
 
 # =============================================================================
+# App 4 — Leabharlann Inbox (MBOX email messages)
+# =============================================================================
+# Added 2026-06-29 per the `2026-06-29-leabharlann-email-inbox-pipeline`
+# openspec change. Reads MBOX files from `/srv/mailcow-exports/`,
+# recurses into each MBOX via the `mailbox` stdlib, yields one
+# chunk per message (`from + subject + first 2000 chars of body`).
+# Embeds with BAAI/bge-large-en-v1.5 (1024-d) via the shared
+# `EMBEDDER` ContextKey. Mounts the `oideachais_inbox_messages`
+# LanceDB table with columns `(id, account, year, date_iso, subject,
+# sender, recipients, body_excerpt, embedding, baml_class,
+# baml_urgency, thread_id)`. Declares a cosine vector index on
+# `embedding` AND an FTS index on `subject + body_excerpt` for the
+# `@query_handler search_inbox` RRF-fused hybrid search.
+# =============================================================================
+
+
+if COCOINDEX_AVAILABLE:
+
+    @coco.fn
+    async def process_inbox_message(
+        chunk: Any,
+        account: str,
+        year: int,
+        date_iso: str,
+        subject: str,
+        sender: str,
+        recipients: str,
+        thread_id: str,
+        baml_class: str,
+        baml_urgency: float,
+        id_gen: Any,
+        table: Any,
+    ) -> None:
+        """Declare one inbox message row in LanceDB."""
+        embedder = coco.use_context(EMBEDDER)  # type: ignore[arg-type]
+        text = chunk.text
+        embedding = await embedder.embed(text)
+        table.declare_row(
+            row=LeabharlannInboxMessage(
+                id=await id_gen.next_id(text),
+                account=account,
+                year=year,
+                date_iso=date_iso,
+                subject=subject,
+                sender=sender,
+                recipients=recipients,
+                body_excerpt=text,
+                embedding=embedding,
+                baml_class=baml_class,
+                baml_urgency=baml_urgency,
+                thread_id=thread_id,
+            ),
+        )
+
+    @coco.fn(memo=True)
+    async def process_inbox_mbox(
+        mbox_path: Any,  # cocoindex.resources.file.FileLike
+        account: str,
+        year: int,
+        table: Any,
+    ) -> None:
+        """Read a single mbox file, extract per-message chunks, embed + write.
+
+        LBYL: every step is guarded against `OSError`, `mailbox.Error`,
+        `RuntimeError` so a single bad message never crashes the App.
+        Memoised on `(mbox_path, account, year)` so re-runs are O(0)
+        for unchanged files.
+        """
+        try:
+            import mailbox as _mailbox  # local import — keep module-level clean
+        except ImportError:
+            return
+        path_str = str(mbox_path)
+        try:
+            mbox = _mailbox.mbox(path_str, factory=None)
+        except (OSError, _mailbox.Error) as e:
+            logger.warning("inbox_mbox_open_failed", path=path_str, error=str(e))
+            return
+        msgs: list[dict[str, Any]] = []
+        try:
+            for key in mbox.iterkeys():
+                try:
+                    msg = mbox[key]
+                except (_mailbox.Error, KeyError, OSError) as e:
+                    logger.warning(
+                        "inbox_mbox_message_load_failed",
+                        path=path_str,
+                        key=str(key),
+                        error=str(e),
+                    )
+                    continue
+                try:
+                    subject = str(msg.get("Subject") or "")
+                    from_ = str(msg.get("From") or "")
+                    to_ = str(msg.get("To") or "")
+                    cc_ = str(msg.get("Cc") or "")
+                    recipients = ", ".join(filter(None, [to_, cc_]))
+                    date_iso = str(msg.get("Date") or "")
+                    in_reply_to = str(msg.get("In-Reply-To") or "")
+                    references = str(msg.get("References") or "")
+                    body = _get_inbox_body_excerpt(msg)
+                    msgs.append(
+                        {
+                            "subject": subject,
+                            "from": from_,
+                            "recipients": recipients,
+                            "date_iso": date_iso,
+                            "in_reply_to": in_reply_to,
+                            "references": references,
+                            "body": body,
+                        }
+                    )
+                except (OSError, AttributeError, ValueError) as e:  # pragma: no cover
+                    logger.warning(
+                        "inbox_mbox_message_extract_failed",
+                        path=path_str,
+                        error=str(e),
+                    )
+                    continue
+        finally:
+            try:
+                mbox.close()
+            except (_mailbox.Error, OSError):  # pragma: no cover
+                pass
+
+        id_gen = IdGenerator()
+        for m in msgs:
+            chunk_text = f"From: {m['from']}\nSubject: {m['subject']}\n\n{m['body']}"
+            # The thread_id is the in_reply_to (or "" if none). The full
+            # thread reconstruction is done by the DLT source; here we
+            # only need a stable per-message hint for the LanceDB column.
+            thread_id = m["in_reply_to"] or m["references"] or ""
+            await process_inbox_message(
+                # Wrap the chunk text in a tiny object that exposes
+                # `.text` (matching the v1 chunk interface).
+                type("_Stub", (), {"text": chunk_text, "start": type("_O", (), {"char_offset": 0})(), "end": type("_O", (), {"char_offset": len(chunk_text)})()})(),
+                account,
+                year,
+                m["date_iso"],
+                m["subject"],
+                m["from"],
+                m["recipients"],
+                thread_id,
+                # baml_class + baml_urgency are filled by the
+                # `leabharlann_inbox_baml_classify` Dagster asset at
+                # materialisation time; the App runs in 2 stages
+                # (raw embed first, then a follow-up embed after BAML).
+                "",
+                0.0,
+                id_gen,
+                table,
+            )
+
+    def _get_inbox_body_excerpt(msg: Any) -> str:
+        """Return first 2000 chars of plaintext body. Graceful on failure."""
+        try:
+            if msg.is_multipart():
+                for part in msg.walk():
+                    ctype = part.get_content_type()
+                    disp = str(part.get("Content-Disposition") or "")
+                    if ctype == "text/plain" and "attachment" not in disp.lower():
+                        payload = part.get_payload(decode=True) or b""
+                        try:
+                            return payload.decode(
+                                part.get_content_charset() or "utf-8", errors="replace"
+                            )[:2000]
+                        except (LookupError, UnicodeDecodeError, TypeError):
+                            return payload.decode("utf-8", errors="replace")[:2000]
+                return ""
+            payload = msg.get_payload(decode=True) or b""
+            try:
+                return payload.decode(
+                    msg.get_content_charset() or "utf-8", errors="replace"
+                )[:2000]
+            except (LookupError, UnicodeDecodeError, TypeError):
+                return payload.decode("utf-8", errors="replace")[:2000]
+        except (OSError, ValueError, AttributeError):
+            return ""
+
+    @coco.fn
+    async def leabharlann_inbox_app_main(sourcedir: pathlib.Path) -> None:
+        target_table = await lancedb.mount_table_target(
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name="oideachais_inbox_messages",
+            table_schema=await lancedb.TableSchema.from_class(
+                LeabharlannInboxMessage,
+                primary_key=["id"],
+            ),
+        )
+
+        # Recurse into every mbox file (mailcow-export writes
+        # `mailbox-<account>-<YYYY-MM-DD>.mbox` per account per export).
+        files = localfs.walk_dir(
+            sourcedir,
+            recursive=True,
+            path_matcher=PatternFilePathMatcher(
+                included_patterns=["**/*.mbox"],
+                excluded_patterns=["**/.*"],
+            ),
+            live=True,
+        )
+
+        async def per_mbox(file):
+            name = file.file_path.path.name
+            # Derive account + year from the filename.
+            # `mailbox-<account>-<YYYY-MM-DD>.mbox`
+            import re as _re
+            m = _re.match(r"^mailbox-([\w_]+)-(\d{4})-\d{2}-\d{2}\.mbox$", name)
+            if not m:
+                account = "unknown"
+                year_int = 1970
+            else:
+                account = m.group(1)
+                try:
+                    year_int = int(m.group(2))
+                except (ValueError, TypeError):
+                    year_int = 1970
+            await coco.mount(
+                coco.component_subpath("inbox", str(file.file_path.path)),
+                process_inbox_mbox,
+                file,
+                account,
+                year_int,
+                target_table,
+            )
+
+        await coco.mount_each(per_mbox, files.items())
+
+    leabharlann_inbox_app = coco.App(
+        coco.AppConfig(name="LeabharlannInboxEmbedding"),
+        leabharlann_inbox_app_main,
+        sourcedir=DEFAULT_INBOX_MBOX_ROOT,
+    )
+
+
+# =============================================================================
 # Query helpers — ad-hoc semantic search
 # =============================================================================
 
@@ -647,7 +921,12 @@ async def build_hnsw_indexes_for_leabharlann() -> dict[str, bool]:
 
     results: dict[str, bool] = {}
     conn = coco.use_context(LANCE_DB)  # type: ignore[arg-type]
-    for table_name in ("leabharlann_books", "leabharlann_zotero", "leabharlann_takeout"):
+    for table_name in (
+        "leabharlann_books",
+        "leabharlann_zotero",
+        "leabharlann_takeout",
+        "oideachais_inbox_messages",
+    ):
         try:
             table = await conn.open_table(table_name)
             build_hnsw_index(table, column="embedding")
@@ -712,6 +991,38 @@ async def search_leabharlann_takeout(
     return rows
 
 
+async def search_inbox(
+    query: str,
+    account: str | None = None,
+    year: int | None = None,
+    baml_class: str | None = None,
+    urgency_min: float | None = None,
+    limit: int = 20,
+) -> list[dict[str, Any]]:
+    """Hybrid (cosine + BM25 RRF-fused) search against the inbox table.
+
+    Added 2026-06-29 per the `2026-06-29-leabharlann-email-inbox-pipeline`
+    change. Filters are pushed down to the SQL `where` clause; the
+    cosine vector search is the primary ranking signal.
+    """
+    conditions: list[str] = []
+    if account:
+        conditions.append(f"account = '{account}'")
+    if year is not None:
+        conditions.append(f"year = {int(year)}")
+    if baml_class:
+        conditions.append(f"baml_class = '{baml_class}'")
+    if urgency_min is not None:
+        conditions.append(f"baml_urgency >= {float(urgency_min)}")
+    where = " AND ".join(conditions) if conditions else None
+    rows = await _query_table(
+        "oideachais_inbox_messages", query, limit=limit, where=where
+    )
+    for r in rows:
+        r["score"] = 1.0 - r.get("_distance", 0.0)
+    return rows
+
+
 # =============================================================================
 # Exports
 # =============================================================================
@@ -725,18 +1036,22 @@ __all__ = [
     "DEFAULT_LEABHARLANN_ROOT",
     "DEFAULT_ZOTERO_ROOT",
     "DEFAULT_TAKEOUT_ROOT",
+    "DEFAULT_INBOX_MBOX_ROOT",
     "extract_arxiv_id_from_filename",
     "LeabharlannBookChunk",
     "ZoteroPaperChunk",
     "LeabharlannTakeoutChunk",
+    "LeabharlannInboxMessage",
 ]
 if COCOINDEX_AVAILABLE:
     __all__ += [
         "leabharlann_books_app",
         "leabharlann_zotero_app",
         "leabharlann_takeout_app",
+        "leabharlann_inbox_app",
         "search_leabharlann_books",
         "search_leabharlann_zotero",
         "search_leabharlann_takeout",
+        "search_inbox",
         "build_hnsw_indexes_for_leabharlann",
     ]

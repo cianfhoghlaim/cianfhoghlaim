@@ -80,6 +80,17 @@ from .education_research_agent import (
 from .education_research_agent import (
     ResearchFeedback as EducationResearchFeedback,
 )
+from .email_triage_agent import (
+    EmailClassificationResult,
+    EmailThreadSummary,
+    ResearchLink,
+    ThreadSummary,
+    classify_email_thread,
+    email_triage_agent,
+    find_loose_threads,
+    link_thread_to_research,
+    summarise_thread,
+)
 from .enhanced_orchestrator import (
     AgentTask,
     AGUIEventEmitter,
@@ -156,6 +167,9 @@ __all__ = [
     "CurriculumSearchResult",
     "CurriculumUIState",
     "EducationResearchFeedback",
+    # Email Triage Agent (10th ADK agent, leabharlann-email-inbox-pipeline)
+    "EmailClassificationResult",
+    "EmailThreadSummary",
     "EnhancedIntentClassifier",
     "EnhancedOrchestrator",
     "OrchestratorState",
@@ -164,6 +178,7 @@ __all__ = [
     # Education Research Agent
     "ResearchQuery",
     "ResearchReport",
+    "ResearchLink",
     "SchoolAccessAnalysis",
     # Research
     "SearchQuery",
@@ -177,6 +192,8 @@ __all__ = [
     # Enhanced Orchestrator
     "TaskStatus",
     "TerminologyLookup",
+    # Thread summary (email_triage)
+    "ThreadSummary",
     # Translation
     "TranslationRequest",
     "TranslationResult",
@@ -192,6 +209,7 @@ __all__ = [
     "celtic_tutor_agent",
     "citation_replacement_callback",
     "classify_celtic_source",
+    "classify_email_thread",
     "classify_education_source",
     # Callbacks - Celtic
     "collect_celtic_sources_callback",
@@ -212,11 +230,13 @@ __all__ = [
     "education_research_pipeline",
     "education_research_planner",
     "education_researcher",
+    "email_triage_agent",
     "enhance_celtic_source_title",
     "enhance_education_source_title",
     "enhance_root_agent",
     "evaluate_research",
     "execute_research",
+    "find_loose_threads",
     "follow_up_researcher",
     "format_education_citations_callback",
     "generate_search_queries",
@@ -231,6 +251,7 @@ __all__ = [
     "get_supported_pairs",
     "get_translation_models",
     "learning_outcome_mapper",
+    "link_thread_to_research",
     "lookup_dictionary",
     "mythology_narrator_agent",
     "quest_guide_agent",
@@ -239,6 +260,7 @@ __all__ = [
     "school_accessibility_analyst",
     "search_corpus",
     "statistics_agent",
+    "summarise_thread",
     "translate_text",
     "trend_analyst",
     "tuatha_root_agent",
