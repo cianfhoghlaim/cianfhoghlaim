@@ -1,0 +1,35 @@
+# =============================================================================
+# Mailcow-dockerized — Komodo Resource Sync Blueprint
+# =============================================================================
+# v4 consolidation move: this file lives at
+#   cianfhoghlaim/stacks/mailcow-dockerized/blueprint.yaml
+# (moved from bonneagar/stacks/mailcow-dockerized/ on 2026-06-29
+#  per the leabharlann-email-inbox-pipeline change).
+#
+# The shape follows bonneagar/stacks/oideachais/blueprint.yaml
+# (Komodo Resource Sync), extended with the new tag fields
+# (host, tier, type, domain) used by the v4 fleet inventory.
+#
+# The mailcow-export companion container exports Dovecot mailboxes
+# to /srv/mailcow-exports every 6 hours (shared with the Dagster
+# container on the oideachais stack — see leabharlann_inbox_raw).
+# =============================================================================
+
+name: mailcow-dockerized-bunchloch
+description: "Mailcow self-hosted email server (Postfix + Dovecot + SOGo + Rspamd + ClamAV + dovecot_imapsync_runner + mailcow-export companion). Email export spine for the leabharlann-email-inbox-pipeline."
+type: stack
+tags:
+  - host:bunchloch
+  - tier:data-plane
+  - type:email
+domain: mail.cianfhoghlaim.ie
+run_directory: cianfhoghlaim/stacks/mailcow-dockerized
+files:
+  - compose.yaml
+  - sidecar.yaml
+schedule:
+  enabled: false
+metadata:
+  category: email
+  ports: [443, 993, 587, 13306, 7654, 19991]
+  depends_on: [lakehouse]
