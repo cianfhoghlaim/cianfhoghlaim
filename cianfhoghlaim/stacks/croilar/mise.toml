@@ -1,6 +1,0 @@
-[tools]
-1password-cli = "latest"
-bun = "latest"
-docker-compose = "latest"
-pulumi = "latest"
-uv = "latest"

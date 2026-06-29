@@ -1,4 +1,0 @@
-# Thin re-export shim for the croilar dev compose (round 7).
-# Canonical location: infrastructure/stacks/croilar/compose.dev.yaml
----
-# See compose.yaml in this directory for the re-export note.
