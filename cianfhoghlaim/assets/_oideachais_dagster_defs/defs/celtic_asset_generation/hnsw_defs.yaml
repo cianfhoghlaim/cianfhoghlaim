@@ -1,0 +1,19 @@
+# celtic_asset_generation — Stage 5 (LanceDB HNSW index).
+#
+# Wraps the Celtic corpus LanceDB HNSW index build as a
+# `CelticLancedbHnswComponent`. This is the final stage of the
+# 5-stage celtic-asset-generation pipeline (per
+# openspec/specs/celtic-asset-generation/spec.md).
+#
+# Stage 4 (LanceDB table) is built by the CocoIndex v1 App
+# in the leabharlann defs; this Component just builds the
+# HNSW index on top.
+---
+type: cianfhoghlaim.assets._oideachais_dagster_defs.components.CelticLancedbHnswComponent
+attributes:
+  table_name: celtic_corpus_embeddings
+  asset_name: celtic_asset_generation_hnsw_index
+  group_name: celtic_asset_generation
+  vector_column: embedding
+  ef_construction: 100
+  M: 16

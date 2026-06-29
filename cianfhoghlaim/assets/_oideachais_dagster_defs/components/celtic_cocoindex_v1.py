@@ -8,13 +8,14 @@ Component that consumes the shared lifespan in
 
 Usage (from a YAML defs file):
 
-    type: oideachais.dagster_defs.components.CelticCocoindexV1Component
+    type: cianfhoghlaim.assets._oideachais_dagster_defs.components.CelticCocoindexV1Component
     attributes:
       app_name: LeabharlannBooksEmbedding
-      module: oideachais.cocoindex_flows.leabharlann_embedding
+      module: cianfhoghlaim.embeddings._oideachais_src.leabharlann_embedding
       asset_name: leabharlann_books_cocoindex_update
       group_name: leabharlann
 """
+
 from __future__ import annotations
 
 import importlib
@@ -39,7 +40,7 @@ class CelticCocoindexV1Component(dg.Component, dg.Model):
     """
 
     app_name: str
-    module: str = "oideachais.cocoindex_flows.leabharlann_embedding"
+    module: str = "cianfhoghlaim.embeddings._oideachais_src.leabharlann_embedding"
     asset_name: str | None = None
     group_name: str | None = None
 

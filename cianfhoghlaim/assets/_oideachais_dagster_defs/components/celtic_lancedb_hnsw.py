@@ -43,7 +43,7 @@ class CelticLancedbHnswComponent(dg.Component, dg.Model):
 
     def build_defs(self, context: dg.ComponentLoadContext) -> dg.Definitions:
         # Lazy import to avoid a hard lancedb dependency at module load.
-        from oideachais.lancedb.indexing import LANCEDB_AVAILABLE, build_hnsw_index
+        from cianfhoghlaim.core.lancedb.lancedb.indexing import LANCEDB_AVAILABLE, build_hnsw_index
 
         asset_name = self.asset_name or f"{self.table_name}_hnsw_index"
         group_name = self.group_name or "lancedb_indexes"
