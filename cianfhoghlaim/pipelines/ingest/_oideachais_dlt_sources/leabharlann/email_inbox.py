@@ -286,7 +286,12 @@ def _iter_message_meta(
         logger.warning("mailbox_empty", path=str(mbox_path))
         return
     try:
-        mbox = mailbox.mbox(str(mbox_path), factory=None)
+        # Use `EmailMessage` factory so the messages we yield are
+        # `email.message.EmailMessage` instances (not the old
+        # `email.message.Message` API). This unlocks `is_multipart()`,
+        # `get_content_type()`, and the `walk()` method used by
+        # `_get_message_body`.
+        mbox = mailbox.mbox(str(mbox_path), factory=EmailMessage)
     except (mailbox.Error, OSError, FileNotFoundError) as e:
         logger.warning("mbox_open_failed", path=str(mbox_path), error=str(e))
         return
@@ -304,13 +309,10 @@ def _iter_message_meta(
                 )
                 continue
             if not isinstance(msg, EmailMessage):
-                # Defensive: `factory=None` should always yield EmailMessage
-                # but we don't want to crash if a future Python change
-                # changes that.
-                try:
-                    msg = msg.as_email(policy=policy.default)  # type: ignore[attr-defined]
-                except AttributeError:
-                    continue
+                # Defensive: the EmailMessage factory should always yield
+                # EmailMessage instances, but we don't want to crash if a
+                # future Python change alters that.
+                continue
             subject = _safe_decode_header(msg.get("Subject"))
             from_header = _safe_decode_header(msg.get("From"))
             to_header = _safe_decode_header(msg.get("To"))
