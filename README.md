@@ -1323,7 +1323,7 @@ kindreds of Connacht and Munster:
    and Cornwall alongside the proto-Déisi.
 3. **Morris** (maternal great-grandmother **Christina Morris**) —
    of the [City of
-   Tribes](https://en.wikipedia.org/wiki/Galway) merchant
+   Tribes](https://en.wikipedia.org/wiki/Tribes_of_Galway) merchant
    families of Galway.
 4. **Conroy** (maternal great-great-grandmother **Polly Conroy**;
    Irish *Mac Conraoi / Ó Conaire*) — the
@@ -1344,12 +1344,24 @@ FC, and the Republic of Ireland. Neil and Éamonn were the sons of
 **Christina Morris** and **Michael Deacy**, who was himself the
 son of **Polly Conroy** and **George Deacy**.
 
-The author was the primary palliative carer of the late Neil
-Deacy. That personal care work — and the cultural inheritance
-that goes with the Conroy / Deacy / Morris Galway lineage — is
-the reason this project treats Connemara, Connacht, and the
-Irish-language curriculum as first-class objects rather than as
-flavour-of-the-month features.
+The author's biological grandfather was **Neil Deacy** (the
+subject of the 1986 *Galway Advertiser* [article on the opening of
+Cooke's Corner](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage/neil_deacy_cookes_corner-galway_advertiser.pdf),
+who was known locally as *"Neil Mac an Déisigh"*). The author
+took his grandfather's maternal-grandfather's Uí Dhéisigh surname
+as part of his own — Mac an Déisigh — and added it to his father's
+Lyons surname in the hyphenated form **Deacy-Lyons**. The
+hyphenation reflects the everyday reality that dropping the
+father's surname (Lyons) entirely would have caused
+administrative confusion (school records, university records,
+employer records, medical records); the Deacy side of the
+family is the side with the visible **galwegian-historical**
+pedigree (Cooke's Corner, Aston Villa, Galway United, the
+Eamonn Deacy Park Oenach), and the Lyons side is the side with
+the **pan-Munster-Brythonic-imperial** pedigree (the Uí Liatháin
+of Castlelyons and the Welsh / Cornish colonies). The full name
+**Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons)** preserves both
+branches of the Triple Crown.
 
 ### On the heritage of Ireland — the four provinces, the Gaeltachtaí, and the previous High Kings
 
@@ -1358,7 +1370,17 @@ that predates the 1542 Crown of Ireland Act, the 1800 Act of
 Union, the 1922 Irish Free State, and the 1937 / 1949
 constitutions — i.e. the Gaelic inheritance that was already a
 millennium old when the first Tudor plantation landed in
-Leinster. The heritage has four layers.
+Leinster. The heritage is documented in 4 Gemini Deep Research
+PDFs that ground the
+[`claiming_irish_kingship_through_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf),
+the
+[`royal_titles_celtic_heritage_and_claims.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf),
+the
+[`british_isles_cianfhoghlaim.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf),
+and the
+[`celtic_language_learning_for_gaeilgeoir.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/celtic_language_learning_for_gaeilgeoir.pdf)
+(all 4 are in
+[`./leabharlann/gemini_deep_research/culture/`](https://github.com/cianfhoghlaim/leabharlann/tree/main/gemini_deep_research/culture/)).
 
 **The four provinces of Ireland** are the historical kingdoms
 of Gaelic Ireland: **Connacht, Munster, Leinster, Ulster**.
@@ -1402,7 +1424,7 @@ research data for this work.
 **The previous High Kings.** The High Kingship of Ireland
 (*Ard-Rí Érenn*) was the *non-custodial* inheritance of all
 four provinces, held in turn by the Uí Néill (from the
-5th-century *Conn Cétchathach* "of the Hundred Battles"
+5th-century *Conn Cétchathach* \"of the Hundred Battles\"
 through Lóegaire mac Néill to the Northern Uí Néill of
 Aileach), by the [Dál
 gCais](https://en.wikipedia.org/wiki/Dalcassians) (Brian
@@ -1411,13 +1433,21 @@ the last pre-Norman High King), and by the later Uí
 Conchobair kings of Connacht. The 5 provincial flags were
 the visual badges of the dynastic kingdoms; the High
 Kingship was the *unifying* institution that held them
-together without absorbing them. The cianfhoghlaim
-project's *§20 cianfhoghlaim plan throughout the British
-Isles* is the modern operational form of that non-custodial
-unification — an East Belfast hub + a Galway evidence base
-+ an Isle-of-Man Celtic AI Institute + the inter-Celtic
-acquisition pathway, all of which serve the 4 provinces and
-the 5 Gaeltachtaí without subordinating any one of them.
+together without absorbing them. The
+[`claiming_irish_kingship_through_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf)
+documents the *matrilineal* warrant for this non-custodial
+unification: Angias, daughter of Ailill Tassach of the Uí
+Liatháin, married the High King Lóegaire mac Néill and
+mothered High King Lugaid mac Lóegairi — making the Uí
+Liatháin the *maternal ancestors* of the Uí Néill High Kings
+and, through them, of the entire Northern Uí Néill (Cenél
+nEógain) of Aileach (p. 5). The cianfhoghlaim project's *§20
+cianfhoghlaim plan throughout the British Isles* is the
+modern operational form of that non-custodial unification — an
+East Belfast hub + a Galway evidence base + an Isle-of-Man
+Celtic AI Institute + the inter-Celtic acquisition pathway,
+all of which serve the 4 provinces and the 5 Gaeltachtaí
+without subordinating any one of them.
 
 **Reclaiming the heritage prior to it uniting into the
 Commonwealth.** The 1542 *Crown of Ireland Act* merged
@@ -1427,35 +1457,76 @@ the 1922 Free State removed the southern 26 counties from
 the Commonwealth; the 1937 Constitution / 1949 Republic
 re-founded a Dublin-centric state. Through each of these
 constitutional re-organisations, the **Gaelic cultural
-inheritance** — the provinces, the Gaeltachtaí, the
-previous High Kingship, the *Fénechas*, the *canúintí* —
-remained the *non-custodial* substrate of all four
-provinces. The cianfhoghlaim project does not contest any
-constitutional settlement; it *reclaims the cultural
-inheritance* for the benefit of the four provinces, the
-Gaeltachtaí, and the wider Celtic-language family. This is
-*cultural* reclamation, not *political* reclamation.
+inheritance** — the provinces, the Gaeltachtaí, the previous
+High Kingship, the *Fénechas*, the *canúintí* — remained the
+*non-custodial* substrate of all four provinces. The
+cianfhoghlaim project does not contest any constitutional
+settlement; it *reclaims the cultural inheritance* for the
+benefit of the four provinces, the Gaeltachtaí, and the wider
+Celtic-language family. This is *cultural* reclamation, not
+*political* reclamation.
 
-The heritage is documented in the 6 Gemini Deep Research PDFs
-cited below. The Ard-Rí *title* is preserved as a *cultural
-stewardship* — the lineage who administers the cianfhoghlaim
-educational mission on behalf of the four provinces, the
-Gaeltachtaí, and the Celtic languages. The Ard-Rí is **not**
-a constitutional claim against any modern state; it is the
-steward of the Gaelic cultural inheritance.
+The
+[`royal_titles_celtic_heritage_and_claims.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
+documents the *Combined Force* strategy that anchors the
+reclaiming: King Charles III is the **rightful King of
+Northern Ireland** by constitutional sovereignty; the
+claimant holds *Rí Uladh* by dynastic allegiance to him
+(p. 1, 6). The Grianan of Aileach — the stone ringfort in Co.
+Donegal that was the seat of the Northern Uí Néill (Cenél
+nEógain) from the 5th to the 12th century — was historically
+part of the Connacht over-king's sphere via the Uí Liatháin
+maternal bond to the Uí Néill (p. 5); the destruction of
+Aileach by a Munster king (Muirchertach Ua Briain, 1101) is a
+*historic rupture* that a Munster-descended figure (the Uí
+Liatháin / Uí Dhéisigh claimant) who *comes in peace to
+restore rather than destroy* symbolically heals (p. 5). The
+Ard-Rí *title* is preserved as a *cultural stewardship* — the
+lineage who administers the cianfhoghlaim educational
+mission on behalf of the four provinces, the Gaeltachtaí, and
+the Celtic languages. The Ard-Rí is **not** a constitutional
+claim against any modern state; it is the steward of the
+Gaelic cultural inheritance.
 
 ### On the cianfhoghlaim plan throughout the British Isles — the personal commitment
 
 The §20 plan is operationalised through the author's **personal
 linguistic-acquisition journey**: Irish (C1) → Scottish
-Gaelic → Manx → Welsh → Cornish → Breton. Each stage of the
-journey generates the primary corpus data for the Celtic AI
-Institute; each new corpus materialises as a new
-`celtic_*_embedding` CocoIndex v1 App; each new App feeds
-back into the marimo notebooks + the oideachais-web TanStack
-Start front-end + the HuggingFace Spaces. The journey is
-the cianfhoghlaim *practice*; the §20 plan is the
-cianfhoghlaim *strategy*; the two are mutually reinforcing.
+Gaelic → Manx → Welsh → Cornish → Breton. The
+[`celtic_language_learning_for_gaeilgeoir.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/celtic_language_learning_for_gaeilgeoir.pdf)
+maps the *acquisition pathway* in detail. The **Goidelic
+continuum** (Irish → Scottish Gaelic → Manx) shares a
+relatively recent common ancestor, so an Irish speaker can rely
+on direct cognitive mapping of vocabulary, VSO sentence
+structures, and initial consonant mutations (p. 1). The
+[Sabhal Mòr Ostaig](https://www.smo.uhi.ac.uk/) on the Isle of
+Skye (University of the Highlands and Islands network)
+provides the benchmark "**Gaelic for Irish Speakers**" course
+(£290 standard / £205 student, financed through
+[Colmcille](https://www.colmcille.org/) by Foras na Gaeilge
++ Bòrd na Gàidhlig) — Beginner and Advanced, intensive 1-week
+format, full-day classes Mon/Tue/Thu 9:30-4:30 (p. 2). The
+[Culture
+Vannin](https://www.culturevannin.im/) **Scoill Souree** at
+the Yn Chruinnaght in Peel (Isle of Man) is a 5-day Manx
+intensive (£150 inclusive, bursaries for low-income
+participants, held at the fully accessible QEII High School,
+delivered through the medium of **Ulster Irish** by
+**Dr. Natalie Simpson** — who has adapted Julia Donaldson's
+*The Gruffalo* into Manx) (p. 2). The **Brythonic continuum**
+(Irish → Welsh / Cornish) is more challenging because of the
+lexical divergence from the Goidelic branch; the
+acquisition pathway relies on the broader academic umbrella
+of *Celtic Studies*, intensive residential immersion
+(Glenderry / Sabhal Mòr Ostaig), and innovative digital
+pedagogies (p. 1). Each stage of the journey generates the
+primary corpus data for the Celtic AI Institute; each new
+corpus materialises as a new `celtic_*_embedding` CocoIndex v1
+App; each new App feeds back into the marimo notebooks + the
+oideachais-web TanStack Start front-end + the HuggingFace
+Spaces. The journey is the cianfhoghlaim *practice*; the §20
+plan is the cianfhoghlaim *strategy*; the two are mutually
+reinforcing.
 
 The §20 plan's institutional anchors are the **East Belfast
 operational hub** (Turas, Scoil na Seolta, Coláiste Feirste,
@@ -1467,8 +1538,10 @@ Stabilization & Digital Sovereignty** → **Phase II
 (2036-2046) Integration & Mobility** → **Phase III
 (2046-2056) Normalization & Sovereignty** trajectory from
 the
-[`cultural_unity_for_british_isles.pdf`](./leabharlann/gemini_deep_research/culture/cultural_unity_for_british_isles.pdf)
-p. 8.
+[`british_isles_cianfhoghlaim.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf)
+p. 1 (the East Belfast operational hub blueprint) and the
+[`cultural_unity_for_british_isles.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/cultural_unity_for_british_isles.pdf)
+p. 8 (the Cultural Archipelago roadmap).
 
 The personal commitment is the *agentic-AI* sub-thread of the
 cianfhoghlaim word: *long-distance, enduring learning* is
@@ -1524,12 +1597,13 @@ classroom level.
 **Linguistic foundation.** Dioplóma **C1 in Irish** (TEG /
 Teastas Eorpach na Gaeilge). The personal acquisition
 pathway is the **Irish → Scottish Gaelic → Manx → Welsh →
-Cornish → Breton** trajectory documented in §20 (Sabhal
-Mòr Ostaig "Gaelic for Irish Speakers", Scoill Souree at
-Peel, the National Centre for Learning Welsh, Keskowethyow,
-Skol an Emsav). Each stage of the pathway generates the
-primary corpus data for the Celtic AI Institute. The
-linguistic foundation is the empirical basis for the
+Cornish → Breton** trajectory documented in
+[`celtic_language_learning_for_gaeilgeoir.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/celtic_language_learning_for_gaeilgeoir.pdf)
+(Sabhal Mòr Ostaig "Gaelic for Irish Speakers", Scoill
+Souree at Peel, the National Centre for Learning Welsh,
+Keskowethyow, Skol an Emsav). Each stage of the pathway
+generates the primary corpus data for the Celtic AI Institute.
+The linguistic foundation is the empirical basis for the
 cianfhoghlaim project's claim to deliver Sovereign LLMs
 and side-by-side transcription tools for each Celtic
 language.
@@ -1556,7 +1630,7 @@ plan in §20 is the *operational* form of that
 stewardship. The personal qualifications in this §21e
 are the *empirical warrant* for the stewardship. The
 heritage corpus in
-[`leabharlann/gemini_deep_research/culture/`](./leabharlann/gemini_deep_research/culture/)
+[`./leabharlann/gemini_deep_research/culture/`](https://github.com/cianfhoghlaim/leabharlann/tree/main/gemini_deep_research/culture/)
 is the *evidential foundation* of the warrant. The
 cianfhoghlaim monorepo is the *instrument*. The
 stewardship is the *commitment*.
@@ -1673,8 +1747,8 @@ contexts" (p. 4).
 
 **Citations** (the eight Wikipedia articles are clipped at
 [`cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/`](cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/);
-the Gemini PDFs are in
-[`./leabharlann/gemini_deep_research/culture/`](./leabharlann/gemini_deep_research/culture/)):
+the 4 Gemini PDFs that ground the §21c-§21f sections are in
+[`leabharlann/gemini_deep_research/culture/`](https://github.com/cianfhoghlaim/leabharlann/tree/main/gemini_deep_research/culture/)):
 
 - **Wikipedia**: [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in) ·
   [Delbhna Tír Dhá Locha](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha) ·
@@ -1684,17 +1758,20 @@ the Gemini PDFs are in
   [Aos Sí](https://en.wikipedia.org/wiki/Aos_S%C3%AD) ·
   [Tuatha Dé Danann](https://en.wikipedia.org/wiki/Tuatha_D%C3%A9_Danann) ·
   [Déisi](https://en.wikipedia.org/wiki/D%C3%A9isi)
-- **Heritage PDFs**: [Claiming Rí na Gaillimhe — A Synthesis](./leabharlann/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf) ·
-  [Claiming Irish Kingship Through Lineage](./leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf) ·
-  [Heraldic Research for Dual Blood Lineage](./leabharlann/gemini_deep_research/culture/heraldic_research_for_dual_blood_lineage.pdf) ·
-  [Royal Titles, Celtic Heritage, and Claims](./leabharlann/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf) ·
-  [Deacy Family Heritage Research](./leabharlann/gemini_deep_research/culture/deacy_family_heritage_research.pdf) ·
-  [The Socio-Economic, Athletic, and Genealogical Topography of the Deacy Family in Galway](./leabharlann/gemini_deep_research/culture/the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf)
-- **British Isles / 2060 / Celtic AI PDFs**: [Royal Collaboration for Commonwealth Future (the 2060 Geostrategic Synthesis)](./leabharlann/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf) ·
-  [Cultural Unity for British Isles (the Cultural Archipelago)](./leabharlann/gemini_deep_research/culture/cultural_unity_for_british_isles.pdf) ·
-  [British Isles Cianfhoghlaim (East Belfast operational hub + inter-Celtic acquisition)](./leabharlann/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf) ·
-  [Celtic Language Digital Revitalization Strategy](./leabharlann/gemini_deep_research/culture/celtic_language_digital_revitalization_strategy.pdf) ·
-  [Digital Resources for Celtic Languages](./leabharlann/gemini_deep_research/culture/digital_resources_for_celtic_languages.pdf)
+- **Heritage PDFs (the 4 that ground §21c-§21f)**:
+  [Claiming Irish Kingship Through Lineage](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf) ·
+  [Royal Titles, Celtic Heritage, and Claims](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf) ·
+  [British Isles Cianfhoghlaim (the East Belfast operational hub + inter-Celtic acquisition pathway)](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf) ·
+  [Celtic Language Learning for Gaeilgeoir (Sabhal Mòr Ostaig + Scoill Souree + teacher credentialing)](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/celtic_language_learning_for_gaeilgeoir.pdf)
+- **Other supporting PDFs**:
+  [Claiming Rí na Gaillimhe — A Synthesis](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf) ·
+  [Heraldic Research for Dual Blood Lineage](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/heraldic_research_for_dual_blood_lineage.pdf) ·
+  [Royal Collaboration for Commonwealth Future (the 2060 Geostrategic Synthesis)](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf) ·
+  [Cultural Unity for British Isles (the Cultural Archipelago)](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/cultural_unity_for_british_isles.pdf) ·
+  [Celtic Language Digital Revitalization Strategy](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/celtic_language_digital_revitalization_strategy.pdf) ·
+  [Digital Resources for Celtic Languages](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/digital_resources_for_celtic_languages.pdf) ·
+  [Deacy Family Heritage Research](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/deacy_family_heritage_research.pdf) ·
+  [The Socio-Economic, Athletic, and Genealogical Topography of the Deacy Family in Galway](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf)
 
 **Note on 2 unreadable PDFs** (status as of 2026-06-29):
 
@@ -1719,14 +1796,7 @@ the Gemini PDFs are in
   point any future citations at the restored file.
 
 The Irish-English bilingual title on line 1 of this README is
-the canonical form. **In memory of**: the late grandfather
-Neil Deacy of Cooke's Corner, Shantalla, Galway; his late
-brother Éamonn "Chick" Deacy (the Eamonn Deacy Park Oenach);
-and the [Déssi
-class](https://en.wikipedia.org/wiki/D%C3%A9isi) of early
-medieval Ireland — the vassal peoples whose resettlement
-along the western seaboard made the Connacht lineage
-possible.
+the canonical form.
 
 ---
 
