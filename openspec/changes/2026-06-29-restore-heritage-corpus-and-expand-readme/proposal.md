@@ -86,15 +86,50 @@ single openspec change:
   the Scoilverse, the pedagogical uncanny valley, the 22 mandatory
   LC Physics experiments, the Alchemy Lab, the Maths combat
   engine, the Voice Chat Gaeltacht zones).
+- **v5.1** (this commit) — replace the v5 §7 "The 2060 geostrategic
+  horizon" sub-section with a new §7 "The Tuath Celtic Educational
+  MMO — the engineering reality of the cultural stewardship" that
+  better outlines the 13 tuatha-mmo reference files in
+  `.agents/skills_backup/tuatha-mmo/references/`:
+  `tuatha-pipelines.md` (data pipeline: NCCA + SQA + WJEC +
+  Dúchas + GeoJSON → DLT → DuckDB + LanceDB + FalkorDB →
+  Dagster), `tuatha-tanstack-frontend.md` (TanStack Start frontend
+  + SIWEConnect + X402Paywall + TuathCopilot + A2UIComponents),
+  `tuatha-performance-tuning.md` (BGE-M3 batching + HNSW index
+  management + DuckDB single-threading + Babylon.js WebGPU + LOD
+  + Prometheus metrics), `tuath-api-reference.md` (the 8 API module
+  groups + 30+ endpoints), `tuatha-deployment-guide.md` (Cloudflare
+  Workers + Python API :8000 + Rust API :8080 + SpacetimeDB +
+  DuckDB + LanceDB + FalkorDB + Dagster + Traefik), `tuath-agent-architecture.md`
+  (Google ADK + Root Agent + 4 specialist sub-agents + 5 tools
+  + AgUI protocol), `TUATH_MMO.md` (architecture overview),
+  `spacetimedb-tuatha-guide.md` (real-time multiplayer + tables
+  + reducers + subscriptions), `rust-fullstack-gaming.md` (Rust
+  full-stack + Wasm + GDExtension + Cargo workspaces + `just`),
+  `hades-bitcraft-pipeline.md` (Hades pre-rendered visual +
+  BitCraft SpacetimeDB backend synthesis), `british-isles-game-dev-pipeline.md`
+  (Ordnance Survey + Tailte Éireann + Met Office + Met Éireann
+  + SpacetimeDB State Mirroring + glTF + OpenUSD),
+  `agentic-education-platform.md` (CopilotKit + AgUI + MCP + x402
+  + Pinginn + Screpall + UMA), and `anam-meteorological-particles.md`
+  (Anam + Sídhe Gaoithe + bicubic GRIB2 + SpacetimeDB chunked
+  wind-field + Fast Third-Order Texture Filtering 16→4 taps).
+  The new §7 is structured as 13 thematic sub-sections (A-M) that
+  map each reference file to its role in the cultural-stewardship
+  operational form. The section ends with a closing M
+  sub-section that ties the §20 British Isles plan to the Tuath
+  platform: "The §20 is the vision; the Tuath platform is the
+  implementation."
 
-The v1+v2+v3+v3.1+v4 work remains archived in git history; the v5
-is the canonical current README. The 8 Gemini Deep Research PDFs
-listed in the v4 description are the evidence base for the new v5
-merged narrative.
+The v1+v2+v3+v3.1+v4 work remains archived in git history; the
+v5.1 is the canonical current README. The 8 Gemini Deep Research
+PDFs + the 13 tuatha-mmo reference files are the evidence base
+for the new "Purpose" section + the new "§7 Tuath Celtic
+Educational MMO" sub-section.
 
 ## What
 
-The v5 README rewrite (delivered as Tasks 1-14) has 14 components:
+The v5.1 README rewrite (delivered as Tasks 1-16) has 16 components:
 
 ### 1. (v1) Cherry-pick the missing subtree from `q3-2026-oideachais-consolidation`
 
@@ -333,6 +368,10 @@ corpus is the primary source for the author's heritage and purpose".
 - (v5) The new section references the actual page numbers from the 8 PDFs (p. 1-3, 2, 4, 6, etc.).
 - (v5) The new section references the cianfhoghlaim educational themes from the `ui-components` skill (the Celtic design language, the dnd-kit exam builder pattern, the CopilotKit + AG-UI protocol) and the `tuatha-mmo` skill (the Saoí standard, the Four Treasures of the Tuatha Dé Danann, the Wheel of the Year, the Scoilverse, the pedagogical uncanny valley, the 22 mandatory LC Physics experiments, the Alchemy Lab, the Maths combat engine, the Voice Chat Gaeltacht zones).
 - (v5) The 8 hero PDFs (claiming_r_na_gaillimhe_a_synthesis.pdf, heraldic_research_for_dual_blood_lineage.pdf, british_isles_cianfhoghlaim.pdf, claiming_irish_kingship_through_lineage.pdf, researching_neil_deacy_s_galway_heritage.pdf, royal_titles_celtic_heritage_and_claims.pdf, deacy_family_heritage_research.pdf, royal_collaboration_for_commonwealth_future.pdf) are all direct-linked from the leabharlann GitHub repo.
+- (v5.1) The v5 §7 "The 2060 geostrategic horizon" content is removed and replaced with a new §7 "The Tuath Celtic Educational MMO — the engineering reality of the cultural stewardship".
+- (v5.1) The new §7 references all 13 tuatha-mmo reference files by name: `tuatha-pipelines.md`, `tuatha-tanstack-frontend.md`, `tuatha-performance-tuning.md`, `tuath-api-reference.md`, `tuatha-deployment-guide.md`, `tuath-agent-architecture.md`, `TUATH_MMO.md`, `spacetimedb-tuatha-guide.md`, `rust-fullstack-gaming.md`, `hades-bitcraft-pipeline.md`, `british-isles-game-dev-pipeline.md`, `agentic-education-platform.md`, `anam-meteorological-particles.md`.
+- (v5.1) The new §7 preserves the specific engineering details from each reference file: the BGE-M3 batch sizes 32-500, the Lanczos HNSW index with num_partitions=256 + num_sub_vectors=96, the DuckDB SerialDatabaseExecutor single-threading pattern, the 20Hz position sync rate, the BGE-M3 1024-dim vector, the OS NGD API + LiDAR resolutions (TII 2.0m, GSI 1.0m, WMCC 0.25m, DCHG 0.13m, OPW 2.0m), the Anam system with the Fast Third-Order Texture Filtering 16→4 tap optimization, the Pinginn stablecoin + Screpall soulbound token dual-token system, the UMA Optimistic Oracle pattern, the x402 protocol for Pay-per-Compute learning economy, the Catmull-Rom bicubic interpolation for the GRIB2/NetCDF wind fields, and the 32×32 or 64×64 SpacetimeDB WindChunk BLOBs.
+- (v5.1) The new §7 references the §20 British Isles plan (East Belfast operational hub + Galway evidence base + Isle-of-Man Celtic AI Institute + 30-year Cultural Archipelago) as the §20 deployment context; the §20 is the vision, the Tuath platform is the implementation.
 - `grep -c "Dublin / Leinster consolidation" README.md` = 0.
 - `grep -c "Gaeltacht" README.md` ≥ 5 (actual: 27).
 - `grep -c "High King" README.md` ≥ 3 (actual: 4).
@@ -356,7 +395,7 @@ corpus is the primary source for the author's heritage and purpose".
 - Originating changes: `openspec/changes/extend-culture-heritage-to-8-articles/`
   and `openspec/changes/ingest-culture-heritage/`.
 - Originating branch: `q3-2026-oideachais-consolidation` (last touched 2026-06-28).
-- v1 commit: `7a1243485`. v2 commit: `f3affbde2`. v3 commit: `6fee5eb6a`. v3.1 commit: `3cb8acbfe`. v4 commit: `55413dbdc`. v5 commit: this proposal's commit.
+- v1 commit: `7a1243485`. v2 commit: `f3affbde2`. v3 commit: `6fee5eb6a`. v3.1 commit: `3cb8acbfe`. v4 commit: `55413dbdc`. v5 commit: `62b9dbe21`. v5.1 commit: this proposal's commit.
 - Canonical specs: `openspec/specs/cross-domain-registry/spec.md` and
   `openspec/specs/oideachais-leabharlann/spec.md`.
 - Tracking issue: `openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/tracking_issues/unread-pdfs.md`.

@@ -1916,116 +1916,553 @@ New Zealand (the Māori King Movement)
 ([`royal_titles_celtic_heritage_and_claims.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
 p. 6).
 
-#### 7. The 2060 geostrategic horizon — the 30-year runway, the macro-envelope, and the bifurcated royal philanthropy
+#### 7. The Tuath Celtic Educational MMO — the engineering reality of the cultural stewardship
 
-The 2060 horizon is the modern operational form of the
-cultural stewardship. The year 2060 is not arbitrary: it
-is the mathematically and economically mandated horizon
-for the constitutional unification of Ireland as an
-independent republic within the Commonwealth of Nations.
-The push for a United Ireland by 2030 is "less an economic
-blueprint and more a manufactured psychological mandate,
-heavily propagated through social media ecosystems that
-are structurally incapable of facilitating nuanced
-constitutional debate"
-([`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf)
-p. 1-2).
+The cultural stewardship is operationalised through the
+**Tuath** (Irish: *tribe / people*) platform — the
+`sruth/tuatha/` quadrant of the cianfhoghlaim monorepo.
+Tuath is a gamified Celtic language learning platform that
+combines an MMO-style game world with AI-powered
+educational content, documented in
+[`.agents/skills_backup/tuatha-mmo/references/TUATH_MMO.md`](.agents/skills_backup/tuatha-mmo/references/TUATH_MMO.md)
+and the 13 sub-reference files. It exposes a **FastAPI
+backend** (Python, :8000), an **Axum API** (Rust, :8080)
+for payment-protected premium endpoints, **Google ADK
+agents** for multi-agent orchestration, a **TanStack Start
+frontend**, a **Babylon.js game client**, a **SpacetimeDB
+module** for real-time multiplayer, and a **Crypteolas
+token** for x402 payments. The platform is the
+"machine" that converts the heritage claim documented in
+§§1-6 into operational infrastructure. The §20 British
+Isles plan (East Belfast hub + Galway evidence base +
+Isle-of-Man Celtic AI Institute) is the §20 deployment
+context; Tuath is the §20 software substrate. The 13
+sub-reference files in `.agents/skills_backup/tuatha-mmo/references/`
+detail the engineering patterns:
 
-The macro-envelope of the 30-year runway:
+**A. The data pipeline — NCCA + SQA + WJEC + Dúchas + GeoJSON
+→ DLT Sources → DuckDB / CocoIndex / Graphiti →
+LanceDB → Dagster**
+([tuatha-pipelines.md](.agents/skills_backup/tuatha-mmo/references/tuatha-pipelines.md)).
+The Celtic Education DLT Sources ingest curriculum content
+from the **NCCA** (Ireland — Junior Cycle + Leaving
+Certificate specifications + learning outcomes +
+assessment criteria), the **SQA** (Scottish Qualifications
+Authority — National 5 Gaelic + Higher Gaelic + Advanced
+Higher), the **WJEC** (Wales — GCSE Welsh + A Level
+Welsh), and **Dúchas** (Irish folklore from duchas.ie —
+the Schools' Collection + audio recordings + manuscript
+pages). The Geospatial DLT Sources ingest the **Gaeltacht
+boundaries** (Irish-speaking region polygons with
+population statistics and language usage data), the
+**Welsh Language Areas** (Fro Gymraeg boundaries with
+census language data), and the **Scottish Gaelic
+Communities** (the Gàidhealtachd regions — Isle of Skye,
+Outer Hebrides, other Gaelic areas). The CocoIndex
+embedding flows create BGE-M3 embeddings for curriculum
+content (chunked by learning outcome) and mythology
+content (with character/location entity preservation).
+The Dagster assets schedule a daily curriculum refresh
+(`0 2 * * *`) and a weekly mythology rebuild
+(`0 3 * * 0`). The asset graph is: `celtic_curriculum
+→ curriculum_embeddings → search_index`; `mythology_content
+→ mythology_embeddings → search_index`; and
+`mythology_content → knowledge_graph → search_index`. The
+DuckDB single-threading pattern (the `SerialDatabaseExecutor`
+that prevents segfault from concurrent access) and the
+LanceDB MVCC pattern (the `LanceDBClient` with retry
+logic) are documented for the operator.
 
-- **Trade tariffs**: The 2025 US tariffs created a de
-  facto economic partition on the island. While the
-  Republic of Ireland faces a 15% tariff on most EU goods
-  exported to the US, Northern Ireland, benefiting from a
-  separate UK-US trade deal, is subject to a significantly
-  lower 10% tariff rate. The macroeconomic impact on the
-  Republic is projected to be a 3.7% lower GDP over five
-  to seven years, equating to an €18.4 billion hit.
-- **Fiscal subvention**: The £18 billion fiscal subvention
-  required to elevate Northern Irish public pay and welfare
-  systems to the Republic's standards would instantly
-  consume nearly 10% of Ireland's Modified Gross National
-  Income (GNI*), triggering unsustainable taxation and
-  severe reductions in public services in the South.
-- **Demographic burden**: The peak Old Age Dependency
-  Ratio hits both jurisdictions between the mid-2030s
-  and 2040. The combined working-age tax burden required
-  to fund both unification and the elderly population in
-  2030 would be economically fatal.
-- **Shared Island**: The maturation of the Irish
-  government's €1 billion Shared Island infrastructural
-  investments is a prerequisite for the 2060 horizon.
-  This 30-year interregnum requires a unifying cultural
-  and technological force.
+**B. The TanStack Start frontend — routes, SIWE wallet
+auth, X402 paywall, TuathCopilot, A2UIComponents,
+Zustand stores, Tailwind**
+([tuatha-tanstack-frontend.md](.agents/skills_backup/tuatha-mmo/references/tuatha-tanstack-frontend.md)).
+The frontend is built on **TanStack Start** (1.x, SSR
+React framework) + **TanStack Router** (1.x, file-based
+routing) + **React Query** (5.x, server state) +
+**Zustand** (5.x, client state) + **Tailwind CSS** (3.x)
++ **CopilotKit** (1.x, AI agent UI) + **wagmi/viem**
+(2.x, SIWE wallet connection). The file-based routes are
+`/` (landing page with language selection — Fáilte go
+Tuath / Fàilte gu Tuath / Croeso i Tuath), `/game` (3D
+game viewport with Babylon.js integration), `/map`
+(interactive MapLibre GL map of Celtic regions),
+`/mythology` (mythology browser with hybrid search), and
+`/learn/{irish,gaelic,welsh}` (language-specific learning
+paths). The component library includes `SIWEConnect` (Sign-
+In With Ethereum wallet authentication, EIP-4361
+standard, 10-minute nonce expiry), `TuathCopilot` (AI
+assistant integration with CopilotKit/AG-UI, with
+language + level + currentQuest + currentZone context
+props), `X402Paywall` (micropayment UI for premium
+content — chat_message $0.01, knowledge_search $0.02,
+premium_quest $0.05; USDC or ETH on Base chain), and
+`A2UIComponents` (XPIndicator, ToolCallIndicator,
+A2UIRenderer for the AG-UI protocol Generative UI).
+The Zustand stores are `useAuthStore` (sessionId,
+address, playerId with persistence to localStorage as
+`tuath-auth`) and `useGameStore` (currentZone, currentQuest,
+xp, level). The Tailwind config extends the Celtic color
+palette: `celtic.emerald` (#10b981), `celtic.amber`
+(#f59e0b), `celtic.slate` (#1e293b), with the Cinzel
+display font and the Inter body font.
 
-The **Warrant of the Saoí**
-([`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf)
-p. 4) is the tripartite foundation: **blood** (the Triple
-Crown of Uí Liatháin / Déisi / Mac Conraoi) + **topography**
-(Shantalla + the Sliding Rock Lia Fáil) + **algorithmic
-draíocht** (the code, the modern magic of machine
-learning, cryptography, and AI engineering). The
-practitioner possesses the *eagna* (wisdom), the *dán*
-(skill), and the *éigse* (learning) required of a High
-King. He is a **Saoí of Mathematics and Code**, fit to
-judge and to rule.
+**C. The performance tuning — BGE-M3 batching, HNSW
+index management, DuckDB single-threading, async
+concurrency, Babylon.js WebGPU + LOD + instancing,
+Prometheus metrics**
+([tuatha-performance-tuning.md](.agents/skills_backup/tuatha-mmo/references/tuatha-performance-tuning.md)).
+The performance-critical areas are embedding generation
+(100x speedup from batching: ~100s for 1000 unbatched
+texts vs ~1s for 1000 batched texts), vector search
+(HNSW index management: drop the index for bulk inserts
+of >50 rows, recreate after — the
+`VectorIndexManager.bulk_insert` with `IVF_HNSW_SQ`,
+num_partitions=256, num_sub_vectors=96), graph queries
+(FalkorDB Cypher optimization: index lookups not full
+scans, single parameterized queries not multiple
+separate queries), and the game client (60 FPS target
+with WebGPU; LOD at distances [50, 100, 200]; instanced
+meshes for repeated objects; position sync rate-limited
+to 20Hz with a 0.1 unit position threshold; materials
+frozen when static; frustum culling enabled). The
+`VectorIndexManager` is the canonical class; the
+`SerialDatabaseExecutor` prevents DuckDB corruption from
+concurrent access; the `LanceDBClient` provides MVCC
+retry with exponential backoff. The Prometheus metrics
+are `tuath_http_requests_total` (Counter, labelled by
+method + endpoint + status), `tuath_http_request_duration_seconds`
+(Histogram), `tuath_embedding_batch_size`, and
+`tuath_search_duration_seconds`. The slow query detector
+logs any database operation >1 second.
 
-The **bifurcated royal philanthropy matrix** is the
-institutional context for the cultural stewardship
-([`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf)
-p. 5-11). The Ard-Rí serves as the technological
-connective tissue for the House of Windsor's three
-branches:
+**D. The API reference — Authentication + Agent streaming
++ Curriculum + Mythology + Hybrid Search + Geospatial
++ Game State + Payments**
+([tuath-api-reference.md](.agents/skills_backup/tuatha-mmo/references/tuath-api-reference.md)).
+The **Authentication** endpoints are `GET /auth/nonce`
+(returns 10-minute nonce), `POST /auth/verify` (verifies
+SIWE message signature, creates session), `GET
+/auth/session`, `POST /auth/logout` (returns "Slán!").
+The **Agent streaming** endpoint `POST
+/copilotkit/stream` uses the AG-UI protocol with SSE
+events: `lifecycle.start`, `state.snapshot`, `state.delta`,
+`message.delta`, `message.complete`, `tool.call.start`,
+`tool.call.result`, `lifecycle.complete`. The available
+agents are `celtic_tutor` (language learning), `mythology_narrator`
+(Celtic stories), `quest_guide` (in-game quest
+assistance), `research_assistant` (deep research). The
+**Curriculum** endpoints are `GET /curriculum/subjects`,
+`GET /curriculum/search` (with nation + language + level
++ limit parameters), `GET /curriculum/{subject}/{level}`.
+The **Mythology** endpoints are `GET /mythology/characters`
+(with tradition + role filters), `GET /mythology/stories`,
+`GET /mythology/search`. The **Hybrid Search** endpoint
+`POST /search` supports 3 modes: `vector` (pure semantic
+similarity), `graph` (knowledge graph traversal),
+`hybrid` (combined with rank fusion, vector_weight +
+graph_weight, include_relationships). The
+**Geospatial** endpoints are `GET /geospatial/gaeltacht`
+(Donegal Gaeltacht 23k population, 67.5% Irish speakers),
+`GET /geospatial/celtic-regions`. The **Game State**
+endpoints are `GET /game/player` (Fionn level 5, 4500xp,
+8 quests completed), `POST /game/progress`, `GET
+/game/quests`. The **Payments** endpoints are `GET
+/payments/pricing`, `POST /payments/request/{resource_type}`,
+`POST /payments/verify`. The rate limits are 10/min auth,
+5/min unauthenticated agent streaming, 60/min
+authenticated, 20/min search, 60/min game state, 30/min
+payments. The error codes follow the standard format
+`{"error": {"code", "message", "details"}}`.
 
-- **King Charles III + Queen Camilla** as the
-  **Traditionalists** — the King's Trust (1.1 million
-  young people since 1976, £1.4 billion in value
-  generated) + Operation Encompass (the 24-hour
-  police-to-school notification for children at domestic
-  violence incidents) + the SafeLives domestic-violence
-  advocacy.
-- **Prince + Princess of Wales** as the **Modernizers**
-  — the Royal Foundation Centre for Early Childhood +
-  the *Shaping Us* framework (the 0-5 "critical window"
-  of one million neural connections per second) +
-  Homewards (the £500,000-per-location, 5-year
-  homelessness eradication programme; the Lloyds £50
-  million lending commitment; the Multibank partnership
-  with Gordon Brown + IKEA + B&Q).
-- **Duke + Duchess of Sussex** as the **Disruptors** —
-  The Parents' Network (Archewell) + the Invictus Games
-  2027 at the Birmingham NEC + medical cannabis
-  advocacy (anchored in the UK Medical Cannabis Registry
-  / Project T21 data) + the ParentsTogether fiscal
-  sponsorship for child online safety.
+**E. The production deployment — Cloudflare Workers +
+Python API (FastAPI :8000) + Rust API (Axum :8080) +
+SpacetimeDB (WebSocket) + DuckDB + LanceDB + FalkorDB
++ Dagster + Traefik + Prometheus**
+([tuatha-deployment-guide.md](.agents/skills_backup/tuatha-mmo/references/tuatha-deployment-guide.md)).
+The architecture is: Cloudflare CDN → TanStack UI
+(Workers) + SpacetimeDB (WebSocket) → API Gateway
+(Traefik) → Python API :8000 + Rust API :8080 → DuckDB +
+LanceDB + FalkorDB + Embedding Service. The
+`docker-compose.yml` defines 5 services: `api`
+(FastAPI), `api-rs` (Axum), `falkordb` (FalkorDB with
+the falkordb.so Redis module, 60s save policy,
+appendonly), `redis` (Redis 7-alpine), `dagster`
+(Dagster UI :3000), `traefik` (Traefik v3.0 with Let's
+Encrypt for `api.tuath.cianfhoghlaim.dev`). The
+environment variables include `DUCKDB_PATH`,
+`LANCEDB_PATH`, `FALKORDB_URI`, `EMBEDDING_MODEL=BAAI/bge-m3`,
+`EMBEDDING_BATCH_SIZE=100`, `SPACETIMEDB_URI`,
+`SPACETIMEDB_MODULE=tuath-celtic-mmo`, `SIWE_DOMAIN`,
+`SESSION_EXPIRY_HOURS=24`, `PAYMENT_RECEIVER_ADDRESS`,
+`PAYMENT_CHAIN_ID=8453` (Base), `SENTRY_DSN`,
+`LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY`. The
+Cloudflare deployment uses `pnpm wrangler deploy` with
+`compatibility_date = "2024-01-01"` and
+`compatibility_flags = ["nodejs_compat"]`. The R2 asset
+upload uses `wrangler r2 object put tuath-assets/{textures,
+audio,models}/ --file ./public/{textures,audio,models}/
+--recursive`. The SpacetimeDB deployment is `spacetime
+publish tuath-celtic-mmo` (or self-hosted via
+`spacetimedb:latest` with the `/var/lib/spacetimedb`
+volume). The SSL/TLS is via Traefik with the Let's
+Encrypt httpChallenge. The daily backup script at
+`/etc/cron.d/tuath-backup` runs `0 3 * * * root
+/opt/tuath/scripts/backup.sh` and uploads to S3 / R2.
+The horizontal scaling uses `replicas: 3` with `cpus: "2"`
++ `memory: 4G`. The production checklist covers
+security (SSL/TLS, CORS, rate limiting, secret rotation,
+DB access restricted to internal network), performance
+(HNSW indexes, Redis caching, Gzip compression, CDN),
+reliability (health checks, automated backups, log
+aggregation, alerting), and monitoring (Prometheus
+metrics, Grafana dashboards, Sentry error tracking,
+uptime monitoring).
 
-The **Atlantic Bastion** undersea warfare programme is the
-defensive perimeter. Approximately 75% of all
-telecommunications traffic in the Northern Hemisphere
-passes through or near Irish territorial waters via subsea
-fiber-optic cables. The UK's response (autonomous
-technologies, AI-powered sensors, world-class warships and
-aircraft) plus the EU's €347 million submarine cable
-resilience fund define the physical defence envelope. The
-**British Isles Security Clearance Protocol** (a proposed
-transnational treaty framework that allows for reciprocal
-background vetting between the Garda National Vetting
-Bureau and the UK Disclosure and Barring Service) dissolves
-the artificial border that excludes the highly trained
-Irish technology workforce from the UKIC.
+**F. The agent architecture — Google ADK + Root Agent
+orchestrator + 4 specialist sub-agents + 5 tools +
+AG-UI protocol**
+([tuath-agent-architecture.md](.agents/skills_backup/tuatha-mmo/references/tuath-agent-architecture.md)).
+The multi-agent system is built on **Google ADK (Agent
+Developer Kit)** with `LlmAgent` for agent definitions,
+sub-agent routing for specialization, tool integration
+via function decorators, and the **AG-UI protocol** for
+streaming responses. The **Root Agent** (orchestrator)
+routes queries to specialist sub-agents based on
+keyword classification: `translate, grammar, vocabulary,
+pronunciation` → `celtic_tutor`; `story, legend, myth, who
+is, tell me about` → `mythology_narrator`; `quest,
+mission, objective, complete, hint` → `quest_guide`;
+`research, history, compare` → `research_assistant`. The
+model configuration is `claude-sonnet-4-20250514` (fast
+orchestrator routing) + `claude-opus-4-20250514` (deep
+specialist expertise). The 4 specialist agents are:
+**Celtic Tutor** (handles grammar explanations,
+vocabulary practice, translation help, pronunciation
+guidance for Irish / Scottish Gaelic / Welsh), **Mythology
+Narrator** (Tuatha Dé Danann, Ulster Cycle, Fianna Cycle,
+Mabinogion, Scottish hero tales), **Quest Guide** (language
+quests, mythology quests, culture quests, exploration
+quests), **Research Assistant** (historical context,
+curriculum mapping, comparative analysis, academic
+citations). The 5 tools are `curriculum_search` (NCCA +
+SQA + WJEC), `mythology_query` (FalkorDB graph), `translation`
+(Irish ↔ Welsh ↔ English via English pivot),
+`player_progress` (SpacetimeDB), `spatial_query`
+(geospatial regions). The AG-UI endpoint `POST
+/copilotkit/chat` streams events: `text`, `tool_call`,
+`tool_result`, `agent_handoff`, `done`. The prompt
+engineering patterns include Celtic language awareness
+(use Celtic language when relevant, provide English
+explanations alongside, include pronunciation guides,
+note dialect variations — Connacht / Munster / Ulster),
+curriculum integration (link to NCCA / SQA / WJEC
+learning outcomes), and immersive MMO context
+(reference in-game locations, mention NPC characters,
+track player quest progress). The citation callbacks
+(`CitationCallback.on_tool_call`) capture the curriculum
+and mythology sources for every agent response.
 
-The **Commonwealth AI Consortium** + **StrategusAI** +
-the **Rwanda partnership** is the global AI governance
-arm. The CAIC (launched 2023) is dedicated to bridging
-the digital divide, empowering small states and youth
-through AI-driven innovation, capacity building, and
-sustainable development. The StrategusAI toolkit
-(developed in partnership with Intel Corporation) helps
-member governments rapidly draft comprehensive, tailored
-AI policies. The Ard-Rí, combining his fluency in
-constructivist pedagogy and algorithmic logic, can operate
-as the primary educational and technical liaison for the
-CAIC.
+**G. The SpacetimeDB real-time multiplayer — tables +
+reducers + subscriptions + identity-based auth**
+([spacetimedb-tuatha-guide.md](.agents/skills_backup/tuatha-mmo/references/spacetimedb-tuatha-guide.md)).
+The `Player` table is the core state: `id` (primary key,
+u64), `identity` (unique SpacetimeDB Identity, the
+cryptographic public key associated with the connected
+client), `name` (String), `position_x/y/z` (f32), `rotation_y`
+(f32), `zone_id` (String, with valid_zones = ["gaeltacht",
+"alba", "cymru"]), `sub_region` (String), `xp` (u32),
+`level` (u16), `created_at/updated_at` (Timestamp). The
+`ChatMessage` table is `id` (autoinc primary key, u64),
+`sender_id` (u64), `zone_id` (String), `content` (String,
+1-500 chars), `timestamp` (Timestamp). The 4 reducers
+are: `create_player(ctx, name)` (checks if player already
+exists, validates name 2-20 chars, generates unique ID,
+inserts with default zone_id="gaeltacht" + sub_region="village");
+`update_position(ctx, x, y, z, rotation_y)` (finds player
+by identity, updates position + updated_at); `enter_zone(ctx,
+zone_id, sub_region)` (validates against valid_zones,
+updates player); `send_chat(ctx, content)` (validates
+1-500 chars, inserts ChatMessage). Subscriptions define
+what data clients receive, e.g.
+`#[subscription] fn players_in_zone(zone_id, sub_region)`
+subscribes to all players in the same zone/region for
+real-time multiplayer visibility. The SpacetimeDB
+"State Mirroring" feature enables sub-100μs per
+transaction latency, suitable for high-throughput
+MMORPG-scale Celtic nations. The Rust module compiles to
+WebAssembly (`wasm32-unknown-unknown`) and is loaded
+directly into the database process — the "database as
+server" model. The Wasm-to-Wasm Oracle pattern allows
+the module to make outbound HTTP requests (e.g. to
+Ethereum RPC nodes for NFT verification) within the
+transactional scope. The Hybrid OIDC + Wallet
+authentication model: anonymous/OIDC Connect via
+WebSocket (SpacetimeDB assigns Identity + issues JWT),
+then optional wallet linking via a signed challenge
+string verified by a `link_wallet` reducer.
+
+**H. The Rust full-stack — SpacetimeDB Wasm + Godot 4
+GDExtension + Cargo workspaces + `just` task runner +
+`godot_tokio` async bridge**
+([rust-fullstack-gaming.md](.agents/skills_backup/tuatha-mmo/references/rust-fullstack-gaming.md)).
+The Rust unification strategy uses the same language for
+all tiers: backend (SpacetimeDB module compiles to
+Wasm), game client (Godot via GDExtension), blockchain
+integration (Alloy for Ethereum, solana-sdk for Solana).
+The Cargo workspace structure is `crates/server`
+(SpacetimeDB module), `crates/client` (Godot
+GDExtension library), `crates/shared` (common structs
+used by both server and client), `crates/blockchain`
+(specialized on-chain interaction). The `just` task
+runner (preferred over cargo-make for cross-platform
+support) drives the build chain: `build-server →
+gen-bindings → build-client`. The
+`rust-toolchain.toml` pins the Rust version to ensure
+all developers + CI use the same compiler. The
+profile configuration: dev profile (debug=0, incremental=true
+for fast iteration); release profile (LTO, codegen-units=1
+for optimized final binary). The Godot-Rust interop
+uses the `Gd<T>` smart pointer (manages the Godot
+reference count while appearing to Rust as a normal
+pointer) and the `gdext` library (GDExtension interface
+to Godot 4's C API). The `godot_tokio` singleton bridges
+the sync Godot main thread with the async Tokio runtime
+— async ops (reqwest, websockets, alloy RPC) run on
+background Tokio threads; results that need to update
+the SceneTree use `call_deferred` to marshal back to
+the main thread. The CI pipeline compiles the
+SpacetimeDB module to Wasm, generates Rust client
+bindings via `spacetime generate --lang rust --out-dir
+crates/client/src/bindings --project-path crates/server`,
+and builds the Godot GDExtension library for the
+target native architecture (e.g. `x86_64-pc-windows-msvc`
+or `aarch64-apple-darwin`).
+
+**I. The Hades pre-rendered visual pipeline + BitCraft
+SpacetimeDB backend — the synthesis pattern**
+([hades-bitcraft-pipeline.md](.agents/skills_backup/tuatha-mmo/references/hades-bitcraft-pipeline.md)).
+The Tuath platform is the practical synthesis of two
+divergent indie-game technical philosophies. The
+**Hades pipeline** (Supergiant Games) is the visual
+reference: a 3D-game-baked-into-2D-sprites technique
+(pre-rendered isometric projection) where complex 3D
+characters are rendered to 2D sprites with World Normal
+maps + Opacity + Emissive maps exported via Unreal
+Engine 5's Movie Render Queue. This allows the visual
+density and "crunch" of 3D rendering to be combined with
+the input latency of 2D sprites. The **BitCraft
+backend** (Clockwork Labs) is the state-management
+reference: SpacetimeDB as the "universe brain" that
+combines database and game-server into a single
+in-memory module, eliminating the traditional API
+synchronization overhead. The synthesis is
+**Unreal Engine 5 as the source engine** (for visual
+asset generation) + **Godot or Unity as the runtime
+client** (for the player-facing MMO) + **SpacetimeDB
+as the persistent authoritative state**. The agentic
+research pipeline is the LangGraph-based "Plan-Execute-
+Verify" loop: the Planner Node deconstructs queries, the
+Executor Node uses specific tools (the GDC Vault Scraper
+with BeautifulSoup + Selenium + mechanize + requests.Session
+for session token authentication; the GitHub Miner for
+the `clockworklabs/SpacetimeDB` and `godot-rust/gdext`
+repositories; the Discord Miner for community
+intelligence), the Synthesizer Node aggregates the
+findings, and the Critique Node re-loops if the
+information is incomplete. This autonomous workflow
+keeps the Tuath knowledge base current as Supergiant or
+Clockwork Labs release new information.
+
+**J. The British Isles 2.5D geospatial pipeline —
+Ordnance Survey + Tailte Éireann + Met Office + Met
+Éireann + SpacetimeDB State Mirroring + glTF + OpenUSD**
+([british-isles-game-dev-pipeline.md](.agents/skills_backup/tuatha-mmo/references/british-isles-game-dev-pipeline.md)).
+The 2.5D geospatial synthesis is the data foundation
+that grounds the §20 British Isles plan in real-world
+geography. The **Ordnance Survey Data Hub** provides
+the OS Maps API (WMTS / RESTful ZXY raster tiles for
+basemap streaming), the OS Features API (WFS / GeoJSON
+for procedural building extrusion), the OS Vector Tile
+API (PBF / Mapbox Vector Tiles for dynamic labeling),
+the OS Names API (gazetteers for geocoding), the OS NGD
+API (multi-dimensional features for temporal queries),
+and OS Linked Identifiers (cross-referencing property
+data). The **Irish geospatial infrastructure** is
+**Tailte Éireann + GeoHive** (centralized hub for
+Agriculture, Housing, Environment data) + **LiDAR**
+from Transport Infrastructure Ireland (2.0m), Geological
+Survey Ireland (1.0m), Westmeath County Council (0.25m),
+the Dept. of Culture, Heritage and Gaeltacht (0.13m),
+and the Office of Public Works (2.0m) — the high-
+resolution LiDAR allows centimetre-precise Digital
+Terrain Models + Digital Surface Models + Normalized
+Digital Surface Models (nDSM = DSM − DTM) for 2.5D
+building extrusion. The **Crown Dependencies** are
+the Isle of Man Department of Infrastructure Mapping
+Service (with MANNGIS infrastructure for the "Island
+Navigator" and "Flood Risk Viewer") and Jersey Digimap
+(10cm orthophotography + 5m contours + historical maps
+dating back to 1795 for temporal 2.5D animation). The
+**Met Office DataPoint API** provides real-time weather
+data: rainfall radar (PNG, 15-min updates) for
+precipitation shaders, cloud cover (PNG, hourly) for
+skybox blending, wind speed + direction (XML/JSON,
+hourly) for foliage displacement, temperature for
+post-processing color grading. The **Met Éireann MERA**
+reanalysis dataset + WDB point forecast API (XML,
+hourly) provides Irish weather data. The GRIB2/NetCDF
+formats are processed with GDAL or xarray; the
+U + V wind components are converted to total vectors
+for shader variables. The **SpacetimeDB State Mirroring**
+subscribes clients to the relevant data subset (e.g.
+all buildings and weather within 5km of the camera)
+and pushes state deltas automatically. The **glTF
+("JPEG of 3D")** and **OpenUSD (non-destructive
+layering)** formats ensure engine interoperability
+between Godot, Unity, and Unreal. The terrain
+generation workflow is: LiDAR retrieval → GeoTIFF
+processing (Houdini or World Machine for RAW 16-bit
+heightmaps) → Unity terrain import with terrain
+settings specifying resolution and geographic scale.
+The procedural precipitation uses geometry shaders to
+generate millions of vertices on the GPU in a 3x3 grid
+around the camera, modulated by the real-time wind
+vector.
+
+**K. The agentic education platform — CopilotKit + AgUI
++ MCP + x402 + dual-token system (Pinginn + Screpall) +
+UMA Optimistic Oracle**
+([agentic-education-platform.md](.agents/skills_backup/tuatha-mmo/references/agentic-education-platform.md)).
+The educational layer is the AG-UI + CopilotKit v1.50
++ AgUI protocol + Model Context Protocol (MCP) stack
+that turns the Tuath game world into an Agentic Academy
+("Awen Hub"). The **AgUI protocol** decouples the AI
+agent backend (LangGraph on Python) from the user
+interface (React/Next.js) — the agent emits semantic
+events (e.g. `show_exercise`), AgUI transmits them, and
+the React frontend renders the appropriate interactive
+component (a drag-and-drop Gaelic sentence constructor,
+a Welsh counties map, etc.) — this is **Generative UI**.
+The bi-directional state synchronization means the
+student's progress is automatically synced back to the
+agent's context, enabling proactive tutoring. The
+**Model Context Protocol (MCP)** unifies the knowledge
+graph: the "Dictionary MCP" wraps multilingual
+dictionary search (eDIL for Irish), the "Curriculum MCP"
+exposes lesson plans and exam banks, the "User Record
+MCP" provides safe access to student learning history
+and current "Honor Price" (reputation score). The
+**x402 protocol** revives HTTP 402 "Payment Required"
+for autonomous agent-to-agent payments: the student's
+Tutor Agent requests a premium resource (e.g. a
+generated exam), the server returns 402 with the cost
++ currency + address in the header, the Tutor Agent
+(cryptographically signed via Coinbase AgentKit) makes
+the micropayment, and the server releases the content.
+x402 (EVM + Solana) is recommended over L402 (Lightning)
+because of the EVM smart contract composability for
+complex conditional payments ("Pay only if the homework
+grading script returns >50%"). The **dual-token
+system** mirrors historical Irish currency: the
+**Pinginn** is an ERC-20 stablecoin (USDC) for medium
+of exchange (lesson generation, tipping educators, UI
+upgrades), and the **Screpall** is a Soulbound Token
+(SBT) for reputation (academic achievement, can only
+be earned through proof-of-learning, cannot be bought
+or sold) — mirroring the *pinginn* and *screpall* of
+Brehon Law. The **UMA Optimistic Oracle pattern**
+bridges off-chain activity (a student writing an essay)
+with on-chain verification (minting a Screpall
+reward): an Asserter submits a claim ("Student X
+completed Lesson Y with score 95%"), the contract
+assumes the claim is true, a 2-hour Challenge Window
+allows any Disputer to challenge (other high-ranking
+students / "Druids" / rival AI agents), and if no
+dispute, the claim is settled and the reward is
+minted. The *Learn-to-Earn* + *Pay-per-Compute* model
+avoids "Subscription Fatigue" — students only pay for
+the AI resources they actually consume.
+
+**L. The Anam system — "Dust of Krypton" mapped to Irish
+"féth anam" + Sídhe Gaoithe + bicubic GRIB2
+interpolation + SpacetimeDB chunked wind-field blobs +
+Fast Third-Order Texture Filtering (16→4 taps)**
+([anam-meteorological-particles.md](.agents/skills_backup/tuatha-mmo/references/anam-meteorological-particles.md)).
+The Anam Initiative is the visual manifestation of the
+cultural-stewardship meteorological commitment: the
+*Anam* (Irish for "soul") is a particle system that
+visualises the soul-wind of the Celtic world, mapping
+the "Dust of Krypton" aesthetic to the Irish *Sídhe
+Gaoithe* (Fairy Wind) and *Anam Cara* (soul friend)
+concepts. The particles flow according to real-world
+meteorological data — GRIB2/NetCDF files from Met
+Éireann (the MERA reanalysis) and the Met Office
+DataPoint API. The **mathematics of flow** uses
+**bicubic interpolation + Catmull-Rom splines** to
+upsample the coarse 0.25° global grid (≈27km) to
+fine-grained, organic flow fields at the player
+scale. The Catmull-Rom weight function preserves C0
+(value) and C1 (rate of change) continuity. The
+**Fast Third-Order Texture Filtering Optimization**
+exploits the GPU's fixed-function bilinear filtering
+hardware to reduce the 16 texture fetches per particle
+per frame to 4 fetches — a 4x speedup that makes
+high-density particle systems (1M+ particles) viable
+in real-time. The decomposition is: 4 Catmull-Rom
+weights grouped into (w0, w1) and (w2, w3) pairs; 2
+bilinear samples at coordinates h0 and h1 (where the
+fractional position is offset to match the ratio of
+the cubic weights); the GPU's bilinear filter performs
+the weighted sum in a single tap. The **backend
+ingestion** uses a SpacetimeDB Rust module with the
+`grib` crate for GRIB2 parsing (iterating over the
+"messages" without decoding the entire dataset) and
+the `netcdf` crate for NetCDF. The module extracts
+the U-component + V-component of the 10m wind + the
+Pressure Reduced to MSL (for particle density), maps
+the spherical Lat/Long to the Cartesian game world
+via Mercator or local-tangent-plane projection, and
+partitions the world into spatial Chunks of 32×32 or
+64×64 grid cells, each stored as a single
+`WindChunk { x, y, u_blob, v_blob, density_blob }` row.
+The **Irish-folklore personality** of the wind is
+encoded: the gentle *feothan* becomes sparse glittering
+golden particles, the violent *scuab* becomes a dense
+choking wall of red dust, the sudden *Sídhe Gaoithe*
+becomes a high-velocity stream of red dust traversing
+the map. The Anam system is the §20 cultural
+commitment to the "wind that carries the memory of the
+land" — the soul of the heritage, made visible through
+the meteorological data of the British Isles.
+
+**M. The §20 British Isles plan — the operational
+deployment of the cultural stewardship.** The §20
+plan is operationalised through the Tuath platform.
+The East Belfast operational hub (Turas + Scoil na
+Seolta + Coláiste Feirste + the Glider BRT1) is the
+physical §20 node; the Tuath UI at `/learn/{irish,gaelic,welsh}`
+is the digital §20 surface. The inter-Celtic
+acquisition pathway (Sabhal Mòr Ostaig + Scoill
+Souree + National Centre for Learning Welsh +
+Keskowethyow + Skol an Emsav) is the §20 practitioner-
+journey, operationalised through the BGE-M3 embeddings
+of each curriculum corpus in the `gemini_deep_research/culture/`
++ `ollscoil_na_gaillimhe/` + `zotero/` leabharlann
+subdirs. The 30-year Cultural Archipelago roadmap
+(Phase I 2026-2036 Stabilization → Phase II 2036-2046
+Integration → Phase III 2046-2056 Normalization) is
+the §20 deployment plan; the Tuath deployment guide
+documents the Phase I production architecture
+(Cloudflare Workers + Python API :8000 + Rust API :8080
++ SpacetimeDB WebSocket). The Pan-Celtic Erasmus
+(Colmcille expansion) is the §20 educational mobility
+strategy; the Tuath CopilotKit + AgUI architecture
+enables cross-platform content delivery. The Celtic
+AI Institute on the Isle of Man is the §20 institutional
+form; the Tuath platform is the §20 software substrate.
+The §20 is the vision; the Tuath platform is the
+implementation.
 
 #### 8. The cianfhoghlaim educational project — the Saoí standard operationalised
 

@@ -1,6 +1,6 @@
 # Tasks — `2026-06-29-restore-heritage-corpus-and-expand-readme`
 
-13 tasks (8 from v1+v2 + 1 for v3 + 1 for v3.1 polish + 1 for the v4 README polish + 1 for the v5 README polish — merge the 8 PDF sub-sections into a single coherent narrative that weaves the bloodline + heritage claim + cianfhoghlaim educational themes from the ui-components + tuatha-mmo skills together into a unified "the Triple Crown, the Saoí standard, and the 21st-century cianfhoghlaim" story). Run in order. Validate at the end with `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict`.
+15 tasks (8 from v1+v2 + 1 for v3 + 1 for v3.1 polish + 1 for the v4 README polish + 1 for the v5 README polish + 1 for the v5.1 README polish — replace the §7 "2060 geostrategic horizon" section with a new §7 "Tuath Celtic Educational MMO — the engineering reality of the cultural stewardship" that better outlines the 13 tuatha-mmo reference files). Run in order. Validate at the end with `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict`.
 
 ## 1. ✅ Cherry-pick the missing subtree from `q3-2026-oideachais-consolidation`
 
@@ -273,13 +273,59 @@ The new section is also a v5 update of the start of the README — the bilingual
 - The 6 leabharlann subdirs (`gaeilge/`, `mata/`, `aigne/`, `ollscoil_na_gaillimhe/`, `zotero/`, `gemini_deep_research/`) are still mentioned in the section's opening overview (preserved from v4).
 - `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict` exits 0.
 
-## 14. ⏳ Re-validate + commit + push (v5)
+## 14. ✅ v5 — Re-validate + commit + push
 
 **Command:**
 ```bash
 openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict
 git add README.md openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/
-git commit -m "feat(heritage): v5 README — merge 8 PDF sub-sections into single coherent narrative weaving bloodline + heritage claim + cianfhoghlaim educational themes"
+git commit -m "feat(heritage): v5 README — merge 8 PDF sub-sections into single coherent narrative"
+git push
+```
+
+**Outcome:** v5 was committed in `62b9dbe21` (the README is now 2,274 lines, up from 1,412; the 376-line removal of the v4 per-PDF sub-sections is offset by the 865-line new merged narrative that draws on the actual content of the 8 PDFs and weaves in the cianfhoghlaim educational themes from the ui-components + tuatha-mmo skills). Pushed to `origin/main`.
+
+**Acceptance:** `openspec validate --strict` exits 0 ✓; `git status` shows clean working tree; `git log -1` shows `62b9dbe21` ✓; `git push` exits 0 ✓; `git status` shows "up to date with origin" ✓.
+
+## 15. ⏳ v5.1 — Replace §7 "2060 geostrategic horizon" with a new §7 that better outlines the tuatha-mmo platform
+
+**Context.** The user requested that the content of the existing §7 "The 2060 geostrategic horizon — the 30-year runway, the macro-envelope, and the bifurcated royal philanthropy" (README lines 1919-2029, ~110 lines) be removed and replaced with content that better outlines the 13 tuatha-mmo reference files in
+[`.agents/skills_backup/tuatha-mmo/references/`](.agents/skills_backup/tuatha-mmo/references/):
+
+- [`tuatha-pipelines.md`](.agents/skills_backup/tuatha-mmo/references/tuatha-pipelines.md) — data ingestion pipeline (NCCA + SQA + WJEC + Dúchas + GeoJSON → DLT → DuckDB + LanceDB + FalkorDB → Dagster)
+- [`tuatha-tanstack-frontend.md`](.agents/skills_backup/tuatha-mmo/references/tuatha-tanstack-frontend.md) — TanStack Start frontend (routes, SIWE wallet auth, X402 paywall, TuathCopilot, A2UIComponents, Zustand stores, Tailwind)
+- [`tuatha-performance-tuning.md`](.agents/skills_backup/tuatha-mmo/references/tuatha-performance-tuning.md) — performance optimization (BGE-M3 batching, HNSW index management, DuckDB single-threading, async concurrency, Babylon.js WebGPU + LOD + instancing, Prometheus metrics)
+- [`tuath-api-reference.md`](.agents/skills_backup/tuatha-mmo/references/tuath-api-reference.md) — API reference (Authentication + Agent streaming + Curriculum + Mythology + Hybrid Search + Geospatial + Game State + Payments)
+- [`tuatha-deployment-guide.md`](.agents/skills_backup/tuatha-mmo/references/tuatha-deployment-guide.md) — production deployment (Cloudflare Workers + Python API :8000 + Rust API :8080 + SpacetimeDB + DuckDB + LanceDB + FalkorDB + Dagster + Traefik)
+- [`tuath-agent-architecture.md`](.agents/skills_backup/tuatha-mmo/references/tuath-agent-architecture.md) — multi-agent system (Google ADK + Root Agent orchestrator + 4 specialist sub-agents + 5 tools + AgUI protocol)
+- [`TUATH_MMO.md`](.agents/skills_backup/tuatha-mmo/references/TUATH_MMO.md) — architecture overview (FastAPI + Axum + Babylon.js + Crypteolas + x402)
+- [`spacetimedb-tuatha-guide.md`](.agents/skills_backup/tuatha-mmo/references/spacetimedb-tuatha-guide.md) — SpacetimeDB real-time multiplayer (tables + reducers + subscriptions + identity-based auth)
+- [`rust-fullstack-gaming.md`](.agents/skills_backup/tuatha-mmo/references/rust-fullstack-gaming.md) — Rust full-stack (SpacetimeDB Wasm + Godot 4 GDExtension + Cargo workspaces + `just` task runner + godot_tokio async bridge)
+- [`hades-bitcraft-pipeline.md`](.agents/skills_backup/tuatha-mmo/references/hades-bitcraft-pipeline.md) — Hades pre-rendered visual pipeline + BitCraft SpacetimeDB backend synthesis
+- [`british-isles-game-dev-pipeline.md`](.agents/skills_backup/tuatha-mmo/references/british-isles-game-dev-pipeline.md) — 2.5D geospatial synthesis (Ordnance Survey + Tailte Éireann + Met Office + Met Éireann + SpacetimeDB State Mirroring + glTF + OpenUSD)
+- [`agentic-education-platform.md`](.agents/skills_backup/tuatha-mmo/references/agentic-education-platform.md) — CopilotKit + AgUI + MCP + x402 + dual-token system (Pinginn + Screpall) + UMA Optimistic Oracle
+- [`anam-meteorological-particles.md`](.agents/skills_backup/tuatha-mmo/references/anam-meteorological-particles.md) — "Dust of Krypton" mapped to Irish "Anam Cara" + Sídhe Gaoithe + bicubic GRIB2 interpolation + SpacetimeDB chunked wind-field blobs + Fast Third-Order Texture Filtering (16→4 taps)
+
+The new §7 is structured as 13 thematic sub-sections (A-M) that map each tuatha-mmo reference file to its role in the cultural-stewardship operational form. The section ends with a closing paragraph that ties the §20 British Isles plan to the Tuath platform: "The §20 is the vision; the Tuath platform is the implementation."
+
+**What landed:** v5.1 was committed in `<this commit>`. The README is now ~2,711 lines (up from 2,274 in v5). The §7 change is +546/-109 = +437 net lines.
+
+**Acceptance (v5.1):**
+- The old §7 "2060 geostrategic horizon" content is removed
+- A new §7 "The Tuath Celtic Educational MMO — the engineering reality of the cultural stewardship" replaces it
+- The new section references all 13 tuatha-mmo reference files by name
+- The new section preserves the original Tuath architecture (FastAPI :8000 + Rust Axum :8080 + Babylon.js + SpacetimeDB + DuckDB + LanceDB + FalkorDB + Dagster + Cloudflare Workers + Traefik)
+- The new section weaves in the specific engineering details from each reference file (e.g. the BGE-M3 batch sizes 32-500, the 20Hz position sync rate, the Lanczos HNSW index with num_partitions=256 / num_sub_vectors=96, the OS NGD API + LiDAR resolutions, the Anam system with the Fast Third-Order Texture Filtering 16→4 tap optimization)
+- The cianfhoghlaim educational themes (the §20 British Isles plan) are preserved in the closing M sub-section
+- `openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict` exits 0
+
+## 16. ⏳ Re-validate + commit + push (v5.1)
+
+**Command:**
+```bash
+openspec validate 2026-06-29-restore-heritage-corpus-and-expand-readme --strict
+git add README.md openspec/changes/2026-06-29-restore-heritage-corpus-and-expand-readme/
+git commit -m "feat(heritage): v5.1 README — replace §7 2060 horizon with Tuath platform outline from 13 tuatha-mmo reference files"
 git push
 ```
 
