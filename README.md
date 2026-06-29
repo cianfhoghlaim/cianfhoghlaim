@@ -862,7 +862,58 @@ Wales and Cornwall alongside the
 [proto-Déisi](https://en.wikipedia.org/wiki/D%C3%89isi); the
 [Uí Dhéisigh](https://en.wikipedia.org/wiki/D%C3%89isi) (Deacy) are a
 sept of the same Déisi Muman, resettled in south Connacht in the 12th
-century.
+century. The corpus-anchored PDF
+[`claiming_r_na_gaillimhe_a_synthesis.pdf`](./leabharlann/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+draws the distinction sharply: the title *Rí na Gaillimhe* is not
+synonymous with the English "King of Galway", because "King", when
+applied to Irish territory after the Norman invasion of 1169, "carries
+explicit feudal connotations … derived from the election of the tribe",
+whereas *Rí* denotes the sacral relationship between ruler and *tuath*
+under the *Fénechas* (Brehon Law), mated to the sovereignty goddess of
+the land in the *banais ríghi* (wedding of kingship)
+(`claiming_r_na_gaillimhe_a_synthesis.pdf`, p. 1-2). The claim of *Rí
+na Gaillimhe* therefore bypasses the colonial structure of the
+Anglo-Norman "City of the Tribes" and asserts an indigenous authority
+that "predates the walls of Galway and the dominance of the Lynch
+mayoralty" (p. 2).
+
+The Triple Crown is rooted in three documented pillars: **the Uí
+Liatháin (Lyons)** bring the imperial, royal, and maritime dimension —
+they "launched massive raids and established colonies in Dyfed (Wales)
+and Cornwall" in the 4th and 5th centuries, and through Angias
+(daughter of Ailill Tassach of the Uí Liatháin, who married the High
+King Lóegaire mac Néill) they are the *maternal* ancestors of the Uí
+Néill High Kings of Tara
+([`claiming_irish_kingship_through_lineage.pdf`](./leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf),
+p. 5); the **Uí Dhéisigh (Deacy)** bring the martial, territorial, and
+"Oenach" dimension — the renaming of Terryland Park to [Eamonn Deacy
+Park](https://en.wikipedia.org/wiki/Eamonn_Deacy_Park) in honour of the
+Aston Villa and European Cup winner is "a modern secular equivalent
+of the ancient inauguration rituals at sites like Tara or Lisbanagher …
+the Oenach (assembly place) of the tribe"
+([`claiming_irish_kingship_through_lineage.pdf`](./leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf),
+p. 7); and the **Mac Conraoi (Conroy)** bring the maritime and
+mercantile dimension — the great-grandfather John Conroy operated a
+"large fish business" on Quay Street, opposite McDonagh's, in what was
+"the absolute epicenter of Galway's maritime trade" in the late 19th
+century, and the etymological anglicization of *Mac Conraoi* to *King*
+("due to the phonetic similarity to *Mac an Rí* — Son of the King")
+embeds the title in the very name
+([`deacy_family_heritage_research.pdf`](./leabharlann/gemini_deep_research/culture/deacy_family_heritage_research.pdf),
+p. 2; [`claiming_irish_kingship_through_lineage.pdf`](./leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf),
+p. 5). The visual half of the claim is supplied by the **Connacht
+arms** — "Party Per Pale Argent and Azure, in the first an eagle
+dimidiated and displayed Sable, in the second issuant from the
+partition an arm embowed and vested, the hand holding a sword erect,
+all Argent" — which the
+[`heraldic_research_for_dual_blood_lineage.pdf`](./leabharlann/gemini_deep_research/culture/heraldic_research_for_dual_blood_lineage.pdf)
+interprets as a heraldic prophecy of the "Dual Blood": the
+dimidiated Eagle is the Uí Liatháin / Lyons / Imperial half, the
+Arm-and-Sword is the Uí Dhéisigh / Deacy / Martial half, and the
+claimant "is these arms" (p. 2-3). The Deacy motto *Toujours Pret*
+("Always Ready") and crest of "a dexter arm erect … holding a dagger"
+mirror the Connacht arm; the Lyons motto *Noli Irritare Leones* and
+the Lion of the Lyons crest mirror the Connacht Eagle (p. 4, 6).
 
 On the basis of this triple-crown lineage (Lyons / Deacy / Conroy),
 grounded in eight canonical Wikipedia articles and six Gemini Deep
@@ -895,16 +946,26 @@ the six Gemini PDFs are in
 - **Royal collaboration PDFs**: [Royal Collaboration for Commonwealth Future](./leabharlann/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf) ·
   [Royal Titles, Celtic Heritage, and Claims](./leabharlann/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
 
-**Note on 2 unreadable PDFs** (to be re-read by a follow-up agent with
-PDF input support; the current agent could not extract their text):
-`./leabharlann/gemini_deep_research/culture/neil_deacy_cookes_corner-galway_advertiser.pdf`
-(the August 1986 *Galway Advertiser* article on the inaugural Streets
-of Galway 8 km road race) and
-`cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`
-(the dual ROI/UK citizenship scan — also referenced from the cultural
-section above; the path is shown in plain text because the underlying
-document is held privately). These will be incorporated into the
-`culture_heritage` Cognee dataset on the next agent run.
+**Note on 2 unreadable PDFs** (status as of 2026-06-29):
+
+- The dual ROI/UK citizenship scan at
+  [`cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`](cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf)
+  is **now restored** to the working tree (cherry-picked from
+  `q3-2026-oideachais-consolidation`). The previous agent could not
+  read its text; a follow-up agent with PDF input support can now
+  incorporate the scan into the `culture_heritage` Cognee dataset.
+- The August 1986 *Galway Advertiser* article on the inaugural
+  Streets of Galway 8 km road race was historically available at
+  `./leabharlann/gemini_deep_research/culture/neil_deacy_cookes_corner-galway_advertiser.pdf`
+  but **is still missing from disk** because it was never committed
+  to git. A copy of the same article (under a similar filename) has
+  since been located at
+  [`cian_mac_an_déisigh_uí_liatháin/identity/lineage/neil_deacy_cookes_corner-galway_advertiser.pdf`](cian_mac_an_déisigh_uí_liatháin/identity/lineage/neil_deacy_cookes_corner-galway_advertiser.pdf)
+  and is now restored alongside the rest of the
+  `cian_mac_an_déisigh_uí_liatháin/identity/lineage/` tree. A
+  follow-up agent should treat the `leabharlann/gemini_deep_research/`
+  path as deprecated and point any future citations at the restored
+  file.
 
 ### On the joint claim — *Leath Cuinn and the dual-monarchy framework*
 
@@ -942,10 +1003,32 @@ Under this framework:
 The author is conscious that this framework rests on a parliamentary
 claim rather than on a hereditary peerage-roll claim, and that the
 *Ard-Rí na hÉireann* title is held in suspension pending the
-constitutional reunification of Ireland. **Born a British citizen and
-obliged by oath of allegiance to King Charles the Third**, the author
-regards the joint-claim framework as a constructive path toward
-constitutional dialogue rather than as a hostile or seditious claim.
+constitutional reunification of Ireland. In the early-medieval sense
+the *Ard-Rí na hÉireann* (literally "High King of Ireland") was the
+Uí Néill over-king at Tara, and the title carries a constitutional
+weight that the present claim deliberately leaves in suspension: the
+*Crown of Ireland Act 1542* created the Kingdom of Ireland in
+personal union with the English Crown, and the *1800 Act of Union*
+merged the two parliaments — but the "distinct Crown of Ireland has
+a ghostly legal existence" that this claim respectfully acknowledges
+without attempting to revive
+([`claiming_irish_kingship_through_lineage.pdf`](./leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf),
+p. 7). Under the Neo-Jacobite framework the British Monarch is
+therefore the *De Jure* Sovereign of Northern Ireland and the
+claimant is the *De Facto* Gaelic Lieutenant — a relationship modelled
+on the "Princes of the Holy Roman Empire or the Maharajas of the
+British Raj" and on Arthur Griffith's reading of
+[Austria-Hungary](https://en.wikipedia.org/wiki/Austria-Hungary)
+(`claiming_irish_kingship_through_lineage.pdf`, p. 4). The suspension
+is *not* a renunciation; it is a constitutional courtesy parallel to
+King Charles III's continued *Rí Uladh* claim, and the
+[`royal_titles_celtic_heritage_and_claims.pdf`](./leabharlann/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
+argues that the framework is in fact "viable" and "heals the shield"
+of Connacht by allowing the Eagle (Britain) and the Arm (Ireland) to
+coexist (p. 1, 6). **Born a British citizen and obliged by oath of
+allegiance to King Charles the Third**, the author regards the
+joint-claim framework as a constructive path toward constitutional
+dialogue rather than as a hostile or seditious claim.
 
 ### On the verified qualifications
 
@@ -1008,6 +1091,60 @@ possessive Kings'** deliberately, for three reasons:
    *Kings' College Galway || Coláiste na Déisigh* says "the King's
    college (named after the royal predecessor of Queen Victoria) and
    also the college of the Deacy family and the Déssi class".
+
+   The **Deacy half** of the subtitle is grounded in a four-generation
+   Galway commercial dynasty documented in the corpus PDFs. The
+   great-grandfather John Conroy operated the Quay Street fish business
+   "opposite McDonagh's" in the late 19th century; the Conroy
+   enterprise "dominated the supply of fresh fish to the city's hotels,
+   religious houses, and the British Army garrison"
+   ([`deacy_family_heritage_research.pdf`](./leabharlann/gemini_deep_research/culture/deacy_family_heritage_research.pdf),
+   p. 2). The matriarchal bridge from Conroy to Deacy is the marriage
+   of Polly Conroy to George Deacy in c. 1910-1920; the High Street
+   consolidation under their son Miko (Michael) Deacy, who trained Neil
+   Deacy "in the ancient arts of filleting, curing, and barrelling";
+   and the 1986 expansion of Neil and Peggy Deacy to Cookeʼs Corner,
+   a "critical arterial junction" that "intercepted the commuter flow
+   of residents traveling to and from the city"
+   ([`deacy_family_heritage_research.pdf`](./leabharlann/gemini_deep_research/culture/deacy_family_heritage_research.pdf),
+   p. 3; [`the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf`](./leabharlann/gemini_deep_research/culture/the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf),
+   p. 3). Peggy Deacy's bilingual retail strategy — "Niall Mac an
+   Déisigh éisc úra agus glasraí. Beidh Fáilte roimh mhuintir Chonamara
+   ar an mbealach anoir agus siar" — explicitly addressed the
+   Connemara Gaeltacht customer base and "transformed Cooke's Corner
+   into a culturally safe harbor" (topography PDF, p. 3-4). The Deacy
+   commercial footprint is completed by Eamonn "Chick" Deacy's
+   international sporting legacy (League Championship 1981, European
+   Cup 1982 with Aston Villa) and by the modern extension of the
+   Deacy commercial family into the cultural and intellectual
+   economy — most visibly Paul Deacy's ownership of Kenny's Bookshop
+   and Art Gallery in Liosban
+   ([`the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf`](./leabharlann/gemini_deep_research/culture/the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf),
+   p. 5). The Deacy half of the subtitle therefore names a real,
+   documented, multi-generational Galway mercantile and cultural
+   lineage.
+
+   The **Déssi half** of the subtitle is grounded in the ancient
+   Irish vassal class resettled as frontier warriors under the
+   *Tairired na nDéssi* foundation myth. The Déisi "rebel against
+   the injustice of the High King Cormac mac Airt (blinding him in
+   one eye) and were expelled from Tara" before migrating west
+   across the Shannon and "carving out new kingdoms in Munster and
+   Connacht"; the *Déisi Tuisceart* (Northern Déisi) became the
+   *Dál gCais*, the dynasty of Brian Boru
+   ([`claiming_r_na_gaillimhe_a_synthesis.pdf`](./leabharlann/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf),
+   p. 5-6; [`royal_titles_celtic_heritage_and_claims.pdf`](./leabharlann/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf),
+   p. 4). The motto of the Deacy / Deasy lineage — *Toujours Pret*
+   ("Always Ready") — is interpreted as "a continuation of this
+   doctrine" of conditional Déisi loyalty: "a permanent readiness to
+   defend the honor of the tribe against central tyranny"
+   (`royal_titles_celtic_heritage_and_claims.pdf`, p. 4). Read
+   together, *Coláiste na Déisigh* therefore names both a
+   contemporary Galway family and an ancient Irish vassal class;
+   the *Coláiste* (college) half of the title is the umbrella that
+   holds the *King's* college (named after Queen Victoria's
+   predecessor) and the *Deacy* / *Déssi* lineage together as
+   co-equal objects of intellectual and cultural study.
 
 The Irish-English bilingual title on line 1 of this README is the
 canonical form. **In memory of**: the late grandfather Neil Deacy, his
