@@ -12,13 +12,8 @@
   "workspaces": [
     "cianfhoghlaim/web/apps/oideachais-web",
     "cianfhoghlaim/web/apps/tuatha-ui",
-    "cianfhoghlaim/web/apps/tuatha-demo",
     "cianfhoghlaim/web/apps/croilar-web",
     "cianfhoghlaim/web/apps/croilar-portal",
-    "cianfhoghlaim/web/apps/croilar-demo",
-    "cianfhoghlaim/web/apps/game_showcase",
-    "cianfhoghlaim/web/apps/oideachais-mcp-server",
-    "cianfhoghlaim/web/apps/oideachais-mcp-filesystem",
     "cianfhoghlaim/web/hono-api",
     "cianfhoghlaim/web/packages/*"
   ],
