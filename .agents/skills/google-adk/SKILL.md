@@ -397,3 +397,29 @@ workflows (Live API, A2A, Agent Engine); use **Pydantic AI**
 for type-safe I/O with Pydantic models (the KCG standard);
 use **Agno** for multi-agent teams with Z.ai GLM-4.6
 (cost-effective).
+
+## KCG LiteLLM wire-up (Agent 63 — 2026-06-29)
+
+**The 32 `LlmAgent(model=config.model_name)` constructors in `meaisínfhoghlaim/agents/` hardcode `"gemini-2.0-flash"`** and route through Google's native `generativelanguage.googleapis.com` endpoint via `GOOGLE_API_KEY`, BYPASSING the KCG `minimax` 7-tier LiteLLM fallback alias (Agent 06 P0-#1 drift finding). ADK 1.5+ ships `from google.adk.models.lite_llm import LiteLlm` — a 1-line swap per agent.
+
+```python
+from google.adk.models.lite_llm import LiteLlm
+from collections.abc import Callable
+
+def _minimax_model() -> LiteLlm:
+    """Resolve the KCG `minimax` 7-tier LiteLLM alias at agent-construction time."""
+    return LiteLlm(
+        model="minimax",                                                  # KCG canonical alias
+        api_base=os.getenv("LITELLM_API_BASE", "https://litellm.cianfhoghlaim.ie"),
+    )
+
+# In each LlmAgent constructor:
+agent = LlmAgent(
+    name="celtic_education_research_planner",
+    model=LiteLlm(model="minimax", api_base="https://litellm.cianfhoghlaim.ie"),
+    description="...",
+    instruction="...",
+)
+```
+
+**Bump:** `google-adk>=1.0.0` → `>=1.5.0` (for the `LiteLlm` class).

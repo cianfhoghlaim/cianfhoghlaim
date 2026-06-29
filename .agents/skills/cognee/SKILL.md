@@ -5,7 +5,9 @@ description: Expert assistance for AI memory systems with Cognee. Use when users
 
 # Cognee - AI Memory Platform
 
-**Version:** >=0.1.0 | **Last Updated:** 2025-04
+**Version:** >=1.0.0,<2 (v1.0 surface) — verified against **cognee 1.2.2** (PyPI 2026-06-26) | **Last Updated:** 2026-06-29
+**Live docs root:** https://docs.cognee.ai (Mintlify) | **Verified URLs:** `/getting-started/{installation,quickstart}`, `/python-api`, `/python-api/{remember,recall,search-type}`, `/cognee-mcp/{mcp-overview,mcp-tools}` | **llms.txt:** https://docs.cognee.ai/llms.txt
+**Python:** >=3.10,<3.15 | **Default LLM:** openai/gpt-5-mini | **Default embeddings:** openai/text-embedding-3-large (3072-d)
 
 ## Overview
 
@@ -691,3 +693,10 @@ For the KCG curriculum pipeline specifically, the `sruth/oideachais/cognee_integ
 ## See also
 
 - **[`../INDEXING_AND_COGNITION.md`](../INDEXING_AND_COGNITION.md)** — Consolidated setup + MCP reference for both `ccc` (semantic code search) and `cognee` (knowledge graph over docs). Includes current state, first-time setup, daily-use commands, MCP tool inventory for both, dual-search workflow, and troubleshooting matrix. Read this when an agent or team member asks "how do I set up cognee?", "what MCP tools are available?", or "how do I run cognify against the docs?".
+
+## Live version (verified 2026-06-29, Agent 79)
+
+- **Latest**: `cognee 1.2.2` (PyPI 2026-06-26). The v1.0+ surface uses `remember` / `recall` (replaces the legacy `add` + `cognify` + `search` ECL pipeline).
+- **Search types**: 15 values; `GRAPH_COMPLETION` is default. Verbatim: `SUMMARIES, CHUNKS, CHUNKS_LEXICAL, RAG_COMPLETION, TRIPLET_COMPLETION, GRAPH_COMPLETION (default), GRAPH_COMPLETION_DECOMPOSITION, GRAPH_SUMMARY_COMPLETION, CYPHER, NATURAL_LANGUAGE, GRAPH_COMPLETION_COT, GRAPH_COMPLETION_CONTEXT_EXTENSION, FEELING_LUCKY, TEMPORAL, CODING_RULES`.
+- **Per-call override**: `LLMConfig(provider="anthropic", model="claude-3-5-sonnet", api_key="...")` via `cognee.infrastructure.llm.config`.
+- **Dataset delete**: `await cognee.forget(everything=True)` (v1.0 clean-slate) or `await cognee.forget(dataset="<name>")`. The legacy `cognee.prune.prune_data()` is deprecated.
