@@ -13,7 +13,12 @@ orchestration** of a single consolidated `cianfhoghlaim/` package and
 
 **Plan 1 (active):** Ireland (early childhood / primary / junior cycle /
 senior cycle / Leaving Cert) in EN + GA, plus the leabharlann corpus
-(6 subdirs × 216 docs).
+(6 subdirs × 225 docs on disk; `identity/` is empty and the dlt source
+no-ops gracefully), plus the new `oideachais-email-triage` capability
+that ingests the user's personal + professional email from 4 accounts
+(DKIT.ie M365, 2 Gmail, Hotmail) via Mailcow + a MBOX DLT source +
+BAML classification + CocoIndex embedding + Google ADK `email_triage`
+agent + a marimo notebook.
 **Plan 2 (preserved):** UK 4-nation + Isle of Man — full education sources.
 **Plan 3 (preserved):** UK 4-nation + IoM — 7 domains (law, medicine,
 culture, government, intelligence, statistics, geospatial).
@@ -33,7 +38,7 @@ culture, government, intelligence, statistics, geospatial).
 
 ## Capability Areas (34 specs, 8 groups)
 
-### Cianfhoghlaim core (10 specs — Plan 1 active)
+### Cianfhoghlaim core (11 specs — Plan 1 active)
 
 | Capability | Description | Status |
 |:--|:--|:--|
@@ -48,6 +53,7 @@ culture, government, intelligence, statistics, geospatial).
 | `official-media-fediverse` | Pure Python library for Mastodon webfinger + Bluesky xrpc resolution + Wikipedia REST + Companies House / CRO lookup; reusable by the side-loadable-app phase (the `official-media-fediverse` change) | Active |
 | `official-media-marimo` | Marimo mission control + TanStack Start route + Cognee dataset `oideachais_official_media` with 4 edge types + strong-stance footer card; the `official-media-marimo` change | Active |
 | `upstream-package-monitoring` | 3 CocoIndex v1 Apps (`upstream_blog_monitor`, `upstream_api_surface`, `cocoindex_v1_conformance`) at `cianfhoghlaim/core/cocoindex/`; 4 Firecrawl monitor configs + 1 n8n webhook bridge + 5 Dagster assets + 1 breaking-change sensor for the motherduck / dlthub / lancedb / cocoindex upstream surface | Active |
+| `oideachais-email-triage` | 4-account MBOX DLT source (`leabharlann_email_inbox`) + `email.baml` BAML (ClassifyEmail / ExtractEmailThread / LinkEmailToResearch) + 4th v1 CocoIndex App `leabharlann_inbox_embedding` + 5 new Dagster assets + Google ADK `email_triage` agent (port 7778) + marimo notebook `email_inbox_triage.py` (primary manual surface) + openclaw WebChat email sub-UI (secondary) + Mailcow stack with 4 per-account IMAP credentials (DKIT.ie M365, 2 Gmail, Hotmail) + 3 new Cognee cross-archive edge types; the `2026-06-29-leabharlann-email-inbox-pipeline` change | Active |
 
 ### Meaisínfhoghlaim sub-tree (3 specs)
 
