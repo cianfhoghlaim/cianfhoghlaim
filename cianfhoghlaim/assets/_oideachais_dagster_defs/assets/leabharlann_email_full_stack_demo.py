@@ -26,11 +26,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import dagster as dg
 import structlog
 from dagster import (
-    AssetCheckExecutionContext,
     AssetCheckResult,
-    AssetExecutionContext,
     AssetKey,
     Output,
     asset,
@@ -128,7 +127,7 @@ def _select_3_law_pdfs(gemini_path: Path) -> list[str]:
     ),
 )
 def leabharlann_email_full_stack_demo(
-    context: AssetExecutionContext,
+    context,
 ) -> Output[dict[str, Any]]:
     """Process 1 sample legal thread through the entire stack."""
     mbox_root = _mbox_path()
@@ -216,7 +215,7 @@ def leabharlann_email_full_stack_demo(
     description="DLT raw ingest produced ≥ 1 row (raw OK).",
 )
 def leabharlann_email_full_stack_demo_raw_ok(
-    context: AssetCheckExecutionContext,
+    context,
     leabharlann_email_full_stack_demo: dict[str, Any],
 ) -> AssetCheckResult:
     mbox_status = leabharlann_email_full_stack_demo.get("mbox_check", {}).get("status")
@@ -232,7 +231,7 @@ def leabharlann_email_full_stack_demo_raw_ok(
     description="BAML ClassifyEmail reachable (classify OK).",
 )
 def leabharlann_email_full_stack_demo_classify_ok(
-    context: AssetCheckExecutionContext,
+    context,
     leabharlann_email_full_stack_demo: dict[str, Any],
 ) -> AssetCheckResult:
     return AssetCheckResult(
@@ -250,7 +249,7 @@ def leabharlann_email_full_stack_demo_classify_ok(
     description="BAML ExtractEmailThread reachable (thread OK).",
 )
 def leabharlann_email_full_stack_demo_thread_ok(
-    context: AssetCheckExecutionContext,
+    context,
     leabharlann_email_full_stack_demo: dict[str, Any],
 ) -> AssetCheckResult:
     return AssetCheckResult(
@@ -268,7 +267,7 @@ def leabharlann_email_full_stack_demo_thread_ok(
     description="BAML LinkEmailToResearch linked ≥ 1 PDF (link OK).",
 )
 def leabharlann_email_full_stack_demo_link_ok(
-    context: AssetCheckExecutionContext,
+    context,
     leabharlann_email_full_stack_demo: dict[str, Any],
 ) -> AssetCheckResult:
     pdfs = leabharlann_email_full_stack_demo.get("law_pdfs_selected", [])
@@ -283,7 +282,7 @@ def leabharlann_email_full_stack_demo_link_ok(
     description="CocoIndex v1 update reached a terminal state (embedding OK).",
 )
 def leabharlann_email_full_stack_demo_embedding_ok(
-    context: AssetCheckExecutionContext,
+    context,
     leabharlann_email_full_stack_demo: dict[str, Any],
 ) -> AssetCheckResult:
     coco = leabharlann_email_full_stack_demo.get("cocoindex", {})
@@ -305,7 +304,3 @@ __all__ = [
     "BAML_LINK_RESEARCH",
     "LEABHARLANN_INBOX_APP",
 ]
-
-
-# Late import to keep the module top-level light.
-import dagster as dg  # noqa: E402

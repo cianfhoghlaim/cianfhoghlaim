@@ -243,25 +243,54 @@ def _detect_legal_flag(
     return False
 
 
-def _get_message_body(msg: EmailMessage) -> str:
-    """Extract a plaintext body excerpt (first 2000 chars). Graceful on failure."""
+def _get_message_body(msg: Any) -> str:
+    """Extract a plaintext body excerpt (first 2000 chars). Graceful on failure.
+
+    Works with both `email.message.EmailMessage` (modern API) and
+    `mailbox.mboxMessage` (the default mbox factory). On
+    `mboxMessage`, `get_payload(decode=True)` may return a `str` directly.
+    """
     try:
-        if msg.is_multipart():
-            for part in msg.walk():
+        is_multipart = getattr(msg, "is_multipart", None)
+        is_multi = bool(is_multipart()) if callable(is_multipart) else False
+        if is_multi:
+            walk = getattr(msg, "walk", None)
+            if not callable(walk):
+                return ""
+            for part in walk():
                 ctype = part.get_content_type()
                 disp = str(part.get("Content-Disposition") or "")
                 if ctype == "text/plain" and not _ATTACHMENT_DISPOSITION_RE.match(disp):
                     payload = part.get_payload(decode=True) or b""
+                    if isinstance(payload, str):
+                        return payload[:2000]
                     try:
-                        return payload.decode(part.get_content_charset() or "utf-8", errors="replace")[:2000]
+                        return payload.decode(
+                            part.get_content_charset() or "utf-8", errors="replace"
+                        )[:2000]
                     except (LookupError, UnicodeDecodeError, TypeError):
-                        return payload.decode("utf-8", errors="replace")[:2000]
+                        try:
+                            return payload.decode("utf-8", errors="replace")[:2000]
+                        except (AttributeError, TypeError):
+                            return str(payload)[:2000]
             return ""
         payload = msg.get_payload(decode=True) or b""
+        if isinstance(payload, str):
+            return payload[:2000]
+        if isinstance(payload, list):
+            # multipart fallback — concat text parts.
+            return "".join(
+                p[:2000] for p in payload if isinstance(p, str)
+            )[:2000]
         try:
-            return payload.decode(msg.get_content_charset() or "utf-8", errors="replace")[:2000]
-        except (LookupError, UnicodeDecodeError, TypeError):
-            return payload.decode("utf-8", errors="replace")[:2000]
+            return payload.decode(
+                msg.get_content_charset() or "utf-8", errors="replace"
+            )[:2000]
+        except (LookupError, UnicodeDecodeError, TypeError, AttributeError):
+            try:
+                return payload.decode("utf-8", errors="replace")[:2000]
+            except (AttributeError, TypeError):
+                return str(payload)[:2000]
     except (OSError, ValueError, AttributeError):
         return ""
 
@@ -286,12 +315,13 @@ def _iter_message_meta(
         logger.warning("mailbox_empty", path=str(mbox_path))
         return
     try:
-        # Use `EmailMessage` factory so the messages we yield are
-        # `email.message.EmailMessage` instances (not the old
-        # `email.message.Message` API). This unlocks `is_multipart()`,
-        # `get_content_type()`, and the `walk()` method used by
-        # `_get_message_body`.
-        mbox = mailbox.mbox(str(mbox_path), factory=EmailMessage)
+        # Use the default `mboxMessage` factory — it has `.get()`,
+        # `.get_payload()`, and works with the standard `mailbox.mbox()`
+        # writer. We intentionally do NOT pass `factory=EmailMessage`
+        # because in Python 3.13 that path silently returns empty
+        # headers; the default `mboxMessage` is the only reliable
+        # option for mbox files written by `mailbox.mbox()`.
+        mbox = mailbox.mbox(str(mbox_path))
     except (mailbox.Error, OSError, FileNotFoundError) as e:
         logger.warning("mbox_open_failed", path=str(mbox_path), error=str(e))
         return
@@ -307,11 +337,6 @@ def _iter_message_meta(
                     key=str(key),
                     error=str(e),
                 )
-                continue
-            if not isinstance(msg, EmailMessage):
-                # Defensive: the EmailMessage factory should always yield
-                # EmailMessage instances, but we don't want to crash if a
-                # future Python change alters that.
                 continue
             subject = _safe_decode_header(msg.get("Subject"))
             from_header = _safe_decode_header(msg.get("From"))
@@ -357,25 +382,68 @@ def _iter_message_meta(
             pass
 
 
-def _classify_attachments(msg: EmailMessage) -> list[dict[str, Any]]:
-    """Return one metadata row per attachment. Empty list if none."""
+def _classify_attachments(msg: Any) -> list[dict[str, Any]]:
+    """Return one metadata row per attachment. Empty list if none.
+
+    Works with both `EmailMessage` and `mboxMessage`. The latter does
+    not implement `iter_attachments()`; we fall back to scanning the
+    payload list for parts with a `Content-Disposition: attachment`
+    header.
+    """
     rows: list[dict[str, Any]] = []
     try:
-        for part in msg.iter_attachments():
-            filename = part.get_filename() or ""
-            content_type = part.get_content_type() or "application/octet-stream"
+        iter_attachments = getattr(msg, "iter_attachments", None)
+        if callable(iter_attachments):
+            for part in iter_attachments():
+                filename = part.get_filename() or ""
+                content_type = part.get_content_type() or "application/octet-stream"
+                try:
+                    payload = part.get_payload(decode=True) or b""
+                    if isinstance(payload, str):
+                        size = len(payload.encode("utf-8"))
+                    else:
+                        size = len(payload)
+                except (OSError, ValueError, TypeError):
+                    size = 0
+                rows.append(
+                    {
+                        "filename": filename,
+                        "content_type": content_type,
+                        "size_bytes": size,
+                    }
+                )
+            return rows
+        # Fallback: scan the payload for sub-messages.
+        payload = msg.get_payload() or []
+        if not isinstance(payload, list):
+            return rows
+        for part in payload:
             try:
-                payload = part.get_payload(decode=True) or b""
-                size = len(payload)
-            except (OSError, ValueError, TypeError):
-                size = 0
-            rows.append(
-                {
-                    "filename": filename,
-                    "content_type": content_type,
-                    "size_bytes": size,
-                }
-            )
+                disp = str(part.get("Content-Disposition") or "")
+            except (AttributeError, TypeError):
+                continue
+            if "attachment" not in disp.lower():
+                continue
+            try:
+                filename = part.get_filename() or ""
+                content_type = part.get_content_type() or "application/octet-stream"
+                try:
+                    raw = part.get_payload(decode=True) or b""
+                    if isinstance(raw, str):
+                        size = len(raw.encode("utf-8"))
+                    else:
+                        size = len(raw)
+                except (OSError, ValueError, TypeError):
+                    size = 0
+                rows.append(
+                    {
+                        "filename": filename,
+                        "content_type": content_type,
+                        "size_bytes": size,
+                    }
+                )
+            except (OSError, ValueError, AttributeError):
+                continue
     except (OSError, ValueError, AttributeError):
         return []
     return rows
