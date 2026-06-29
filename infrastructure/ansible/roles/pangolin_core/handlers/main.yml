@@ -1,9 +1,0 @@
----
-# =============================================================================
-# PANGOLIN CORE ROLE - HANDLERS
-# =============================================================================
-
-- name: Restart Pangolin
-  community.docker.docker_compose_v2:
-    project_src: "{{ pangolin_base_dir }}"
-    state: restarted

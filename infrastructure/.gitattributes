@@ -1,2 +1,0 @@
-# Renovate will manage Docker image versions in compose files
-**/compose.yaml linguist-language=Docker-Compose
