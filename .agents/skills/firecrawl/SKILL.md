@@ -1,6 +1,6 @@
 ---
 name: firecrawl
-description: Integrate Firecrawl into application code or use it as a one-off research tool. Use when the project needs web scraping, search results, structured extraction, browser interaction, or research paper retrieval. Triggers for Firecrawl API calls, firecrawl-research, firecrawl scrape/search/interact, "fire girl" shorthand, or any app-level web-data requirement that should map to /scrape, /search, /interact, or /research. Do not use this skill for terminal-only research tasks; use the specific sub-skill instead.
+description: Use the Firecrawl MCP server (the 12 Firecrawl tools exposed to the agent runtime). Use when integrating Firecrawl into application code or as an agent tool for web scraping, search results, structured extraction, browser interaction, or research paper retrieval. For the Bash CLI variant (terminal/CI/scheduled jobs), use the `firecrawl-cli` skill instead. For the routing decision (when to use Firecrawl vs Crawl4AI vs Skyvern vs Stagehand vs Playwright), use the `browser-tools` skill. Triggers for Firecrawl API calls, "fire girl" shorthand, or any app-level web-data requirement that should map to /scrape, /search, /interact, or /research.
 license: ISC
 metadata:
   author: firecrawl
