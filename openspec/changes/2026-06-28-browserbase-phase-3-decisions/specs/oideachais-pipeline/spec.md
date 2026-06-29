@@ -102,3 +102,102 @@ entries to enable multilingual search.
 - **THEN** each language gets its own Iceberg table
 - **AND** a cross-language search query (e.g., "calculus") returns
   both English and Irish matches
+
+### Requirement: per-site BAML extraction schema with T&Cs gate (Wave 2)
+
+The system SHALL maintain a BAML extraction schema **per source site**
+in `cianfhoghlaim/core/baml/_oideachais_src/site_schemas/` (one
+`ClassifyExamination`, `ClassifyCurriculumOutcome`,
+`ClassifyZoteroItem`, `ClassifyArxivPaper`, etc. per site), and SHALL
+gate every site-specific BAML call behind the site's T&Cs /
+robots.txt / rate-limit posture recorded in the `site_posture` Iceberg
+table.
+
+#### Scenario: BAML extraction gated on site posture
+
+- **GIVEN** the `site_posture` table records
+  `(site="examinations.ie", tcs="OK-rate-limited", rate_limit=2)`
+- **WHEN** a dlt pipeline runs the BAML extraction on the fetched
+  examinations.ie PDFs
+- **THEN** it caps the BAML call rate at 2 req/sec (matching the
+  site's T&Cs)
+- **AND** sets the `User-Agent` header to
+  `Cianfhoghlaim/1.0 (research; contact: cian@cianfhoghlaim.ie)`
+- **AND** records every BAML call in Langfuse with the site posture
+  context
+
+### Requirement: Wave 3 marimo dashboard is the canonical ingestion-health surface
+
+The system SHALL publish a **Wave 3 marimo dashboard**
+(`oideachais_ingestion_health.py`) that displays, for each of the 12
+source sites, the following columns: last successful run timestamp,
+row count, asset-check status, T&Cs posture, anti-scraping incidents
+in the last 7 days, and any TCA-only or sitemap-absent markers.
+
+#### Scenario: Marimo dashboard renders 12-site health grid
+
+- **GIVEN** the marimo notebook is served from
+  `oideachais-web/observability/ingestion-health`
+- **WHEN** a user opens the page
+- **THEN** it shows a 12-row table (one per source site) with the
+  ingestion health columns
+- **AND** a "last 7 days incidents" stacked bar chart
+- **AND** a "TCA-only" filter that highlights the 3 sites with
+  teacher-only content (curriculumonline, NCCA, education-ni)
+
+### Requirement: examinations.ie PHP-form dropdown cascade + arxiv OAI-PMH are the canonical exam + research sources
+
+The system SHALL scrape the `examinations.ie` exam archive at
+`https://www.examinations.ie/exammaterialarchive` via a headless
+browser interaction (Stagehand MCP / Playwright) that handles the
+PHP-style checkbox-gated dropdown form (year → cycle → subject →
+component → language), and SHALL ingest arxiv papers via the OAI-PMH
+endpoint (`https://export.arxiv.org/oai2`) with the canonical
+category filter `[cs.LG, cs.CL, cs.AI, cs.CV]` and rate limiting at
+1 req/3 sec (per the Wave-2 update to the arxiv v2 etiquette).
+
+#### Scenario: examinations.ie dropdown cascade
+
+- **GIVEN** the dlt source for examinations.ie needs to discover all
+  Leaving Cert 2024 papers
+- **WHEN** a Playwright session opens the dropdown form
+- **WHEN** it selects year=2024, cycle="Leaving Certificate",
+  subject="Mathematics", component="Paper 1", language="English"
+- **THEN** the form POSTs to `exammaterialarchive.php` and returns
+  the list of PDF URLs
+- **AND** the dlt source fetches each PDF and stores it in the
+  Iceberg `examination_papers` table
+
+#### Scenario: arxiv OAI-PMH daily incremental
+
+- **GIVEN** the arxiv sync cron runs daily at 02:00 UTC
+- **WHEN** the dlt source makes an OAI-PMH `ListRecords` request
+  with `from=2026-06-28&set=cs.LG`
+- **THEN** the response contains all cs.LG papers since 2026-06-28
+- **AND** the dlt source respects the 1 req/3 sec rate limit
+- **AND** the `User-Agent` header is set to
+  `Cianfhoghlaim/1.0 (research; mailto:cian@cianfhoghlaim.ie)`
+- **AND** each paper's abstract is embedded via BGE-M3 and written
+  to the `leabharlann_arxiv_papers` Iceberg table
+
+### Requirement: gov.scot / gov.wales / education-ni rate-limited ingestion
+
+The system SHALL respect the rate limits of the 3 British regional
+government sources as documented in their T&Cs: **education.gov.scot**
+at ≤5 req/sec (the Scottish server is the slowest), **gov.wales** at
+≤10 req/sec with bilingual content split, and
+**education-ni.gov.uk** at ≤2 req/sec (the NI server also has
+intermittent 503s on Friday afternoons — retry with exponential
+backoff).
+
+#### Scenario: education-ni.gov.uk Friday backoff
+
+- **GIVEN** the dlt source for education-ni.gov.uk is running on a
+  Friday at 15:00 BST
+- **WHEN** a request returns 503
+- **THEN** the source retries with exponential backoff (1s, 2s, 4s,
+  8s, capped at 30s)
+- **AND** the Langfuse trace records `metadata.retry_count=N` and
+  `metadata.backoff_ms=M`
+- **AND** after 3 consecutive failures, the asset is marked
+  `BLOCKED` and a Dagster alert is raised

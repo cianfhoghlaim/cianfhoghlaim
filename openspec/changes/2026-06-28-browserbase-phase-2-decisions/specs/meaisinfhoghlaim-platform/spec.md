@@ -137,3 +137,95 @@ generation server (SDXL + Z-Image-Turbo).
 - **WHEN** the request hits LiteLLM's `image` alias
 - **THEN** LiteLLM forwards to InvokeAI at `http://invokeai:9090/api/v1`
 - **AND** InvokeAI generates the image via SDXL or Z-Image-Turbo
+
+### Requirement: Unsloth 3.0 FastModel + `train_on_responses_only` is the canonical fine-tuning loader (Wave 2)
+
+The system SHALL use **Unsloth 3.0+ `FastModel`** (the unified loader
+that supersedes `FastVisionModel` for Gemma 4) and SHALL apply the
+four Wave-2 patch categories: (1) `use_cache=False` for Gemma-4 E2B/E4B
+(fixes garbage logits), (2) `num_kv_shared_layers=0` for Gemma-4
+31B/26B (fixes IndexError), (3) `train_on_responses_only` in
+`UnslothTrainer.train()` (the +1% accuracy booster per the QLoRA
+paper), and (4) Dynamic 2.0 GGUFs for the export.
+
+#### Scenario: Fine-tune Gemma-4 26B-A4B with FastModel
+
+- **GIVEN** an Irish OCR fine-tuning task for
+  `unsloth/gemma-4-26B-A4B-it`
+- **WHEN** the user runs `unsloth_finetune.py --base-model
+  gemma-4-26B-A4B`
+- **THEN** Unsloth loads the model via
+  `FastModel.from_pretrained(model_name=..., max_seq_length=8192,
+  load_in_4bit=True)`
+- **AND** the LoRA is applied via `FastModel.get_peft_model(...)` with
+  `finetune_vision_layers=False, finetune_language_layers=True,
+  finetune_attention_modules=True, finetune_mlp_modules=True, r=16`
+- **AND** `train_on_responses_only=True` is set in `SFTConfig`
+- **AND** the resulting Dynamic 2.0 GGUF Q4_K_M checkpoint is exported
+
+### Requirement: Google ADK agents SHALL route through LiteLLM via `LiteLlm` 1-line swap (bypass fix)
+
+The system SHALL replace every `LlmAgent(model="gemini-2.0-flash")`
+hardcode in the 5 specialised meaisínfhoghlaim agents (32 `LlmAgent`
+sites total across `research_agent`, `education_research_agent`,
+`bunchloch_research_agent`, `curriculum_comparison_agent`,
+`statistics_agent`, `geospatial_agent`, `agui_curriculum_agent`) with
+`LlmAgent(model=LiteLlm(model="minimax",
+api_base="http://litellm:4000"))` (ADK 1.5+ ships
+`from google.adk.models.lite_llm import LiteLlm`), gated on the
+`minimax_alias_health` Dagster asset check.
+
+#### Scenario: ADK agent routes through minimax fallback chain
+
+- **GIVEN** an ADK agent constructed with
+  `LlmAgent(model=LiteLlm(model="minimax",
+  api_base="http://litellm:4000"))`
+- **WHEN** the agent receives a prompt and the underlying provider
+  returns 503
+- **THEN** the LiteLlm wrapper transparently retries through the
+  `minimax` 7-tier fallback chain
+- **AND** the response is attributed to whichever fallback entry
+  answered (e.g. `opencode-go/kimi-k2.6`)
+- **AND** Langfuse auto-traces the call with
+  `metadata.fallback_triggered=true`
+
+### Requirement: Pydantic Logfire is the canonical Python tracing layer (Wave 2 confirmed)
+
+The system SHALL use **Pydantic Logfire** as the canonical Python-side
+tracing layer for every FastAPI service, every Celery worker, and every
+BAML extraction call (Langfuse is reserved for the LLM-call-side
+telemetry), and SHALL install `logfire[fastapi,celery,baml]` in
+`pyproject.toml` and configure it via `LOGFIRE_TOKEN` (Locket-injected).
+
+#### Scenario: Logfire traces a BAML extraction
+
+- **GIVEN** a FastAPI service calls
+  `await baml.ExtractExaminationPDF(input)`
+- **WHEN** the call returns the structured `ExaminationForm` model
+- **THEN** Logfire auto-captures the span tree (HTTP request → BAML
+  function → LiteLLM `minimax` call → JSON parser)
+- **AND** the Logfire dashboard at `logfire.pydantic.dev` shows p50 /
+  p95 latency, token usage, and exception rate
+- **AND** the matching Langfuse trace (captured by the BAML `@observe`
+  decorator) cross-links via the `trace_id`
+
+### Requirement: BAML 0.13+ is the canonical LLM-structured-output layer
+
+The system SHALL use **BAML 0.13+** as the canonical
+LLM-structured-output layer for every extraction (`Examination`,
+`CurriculumOutcome`, `IrishOCRDocument`, `WelshOCRDocument`,
+`OfficialMediaPost`), defining schemas in `.baml` files under
+`cianfhoghlaim/core/baml/_oideachais_src/` and using the
+`ExtractEn` (cheap, fast) and `ExtractEnStrong` (expensive, accurate)
+clients that both route through LiteLLM `minimax` alias.
+
+#### Scenario: BAML extraction of Leaving Cert Maths 2024 PDF
+
+- **GIVEN** an examinations.ie PDF for Leaving Cert Maths 2024
+- **WHEN** `b.ExtractExaminationPDF(input={"pdf": "lc_maths_2024.pdf"},
+  client="ExtractEnStrong")` runs
+- **THEN** BAML returns a Pydantic `Examination` object with
+  `subject="Mathematics", year=2024, component="Paper 2",
+  question_count=8, max_marks=150`
+- **AND** the underlying LiteLLM call traces to Langfuse + Logfire
+  with the prompt + response + parsed-JSON
