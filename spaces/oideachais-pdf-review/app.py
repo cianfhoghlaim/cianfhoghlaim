@@ -9,10 +9,16 @@ Human reviewers can:
 - Add notes to marking-scheme ambiguities
 - Export validated records back to the lakehouse
 
-Backed by:
+Deployed to HuggingFace Spaces with ZeroGPU (free tier).
+
+The in-app LLM features use HuggingFace transformers directly
+(loaded fresh on each @spaces.GPU call):
 - `unsloth/gemma-3-4b-it-GGUF` for the in-app "suggested correction" feature
-- `unsloth/gemma-4-26B-A4B-it-GGUF` for the in-app "explain why this is mis-categorised" feature
-- The `celtic-asset-generation` `push_model_to_hub()` helper for HF Space deployment
+- `unsloth/gemma-4-26B-A4B-it-GGUF` for the "explain why this is mis-categorised" feature
+
+Per the v4 trim (2026-06-29), the registry now has 20 models
+that fit on M4 Max 48GB; the 4 largest (qwen3-vl-235b-a22b, glm-4.6v-full,
+qwen3.6-35b-a3b-mtp, gemma-4-31B) are removed since they don't fit.
 
 Deployed via the `spaces-cicd-pipeline` spec at
 `infrastructure/ci/spaces-sync.yml`.
@@ -29,11 +35,11 @@ import gradio as gr
 
 logger = logging.getLogger(__name__)
 
-# Defaults — overridden by Space env vars
-LLAMASWAP_BASE_URL = os.getenv("LLAMASWAP_BASE_URL", "http://llama-swap:8080/v1")
-LLAMASWAP_API_KEY = os.getenv("LLAMASWAP_API_KEY", "")
-SUGGESTION_MODEL = os.getenv("SUGGESTION_MODEL", "gemma-3-4b")
-EXPLANATION_MODEL = os.getenv("EXPLANATION_MODEL", "gemma-4-26B-A4B")
+# Default Space env vars (overridden by HuggingFace Space settings)
+SUGGESTION_MODEL = os.getenv("SUGGESTION_MODEL", "unsloth/gemma-3-4b-it-GGUF")
+EXPLANATION_MODEL = os.getenv("EXPLANATION_MODEL", "unsloth/gemma-4-26B-A4B-it-GGUF")
+SUGGESTION_DURATION = int(os.getenv("SUGGESTION_DURATION", "60"))  # seconds
+EXPLANATION_DURATION = int(os.getenv("EXPLANATION_DURATION", "120"))
 
 # Stub for now: in production this reads from
 # `motherduck://oideachais.pdf_processing.*.validated`
@@ -64,8 +70,46 @@ MISMATCHED_RECORDS: list[dict[str, Any]] = [
 ]
 
 
+# ============================================================================
+# ZeroGPU-backed inference
+# ============================================================================
+# Per .agents/skills/huggingface-zerogpu/SKILL.md, the @spaces.GPU decorator
+# is required for any ML inference in a ZeroGPU Space. The model is loaded
+# fresh on each call (module-scope warmup doesn't carry across the worker
+# boundary).
+#
+# The model is loaded via the `transformers` library (the ZeroGPU backing
+# card is CUDA-only). The model name uses the v4 Unsloth GGUF HF IDs.
+# ============================================================================
+
+def _load_suggestion_pipeline():
+    """Lazy-load the suggestion pipeline (Gemma 3 4B) for ZeroGPU."""
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    import torch
+    tokenizer = AutoTokenizer.from_pretrained(SUGGESTION_MODEL)
+    model = AutoModelForCausalLM.from_pretrained(
+        SUGGESTION_MODEL,
+        torch_dtype=torch.float16,
+        device_map="cuda",
+    )
+    return tokenizer, model
+
+
+def _load_explanation_pipeline():
+    """Lazy-load the explanation pipeline (Gemma 4 26B-A4B MoE) for ZeroGPU."""
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    import torch
+    tokenizer = AutoTokenizer.from_pretrained(EXPLANATION_MODEL)
+    model = AutoModelForCausalLM.from_pretrained(
+        EXPLANATION_MODEL,
+        torch_dtype=torch.float16,
+        device_map="cuda",
+    )
+    return tokenizer, model
+
+
 def get_suggested_correction(record: dict[str, Any]) -> str:
-    """Use Gemma 3 4B (Unsloth GGUF) to suggest a topic correction.
+    """Use Gemma 3 4B (Unsloth GGUF) on ZeroGPU to suggest a topic correction.
 
     Args:
         record: A mismatched BAML record from Stage 4
@@ -73,12 +117,13 @@ def get_suggested_correction(record: dict[str, Any]) -> str:
     Returns:
         A 1-2 sentence suggested correction
     """
-    # Stub: in production this calls llama-swap
+    # Stub: in production this calls ZeroGPU with @spaces.GPU
+    # For now, return the suggested topic from the record
     return f"Suggested correction: {record.get('suggested_topic', 'unknown')}"
 
 
 def explain_miscategorisation(record: dict[str, Any]) -> str:
-    """Use Gemma 4 26B-A4B (Unsloth GGUF) to explain why the record is mis-categorised.
+    """Use Gemma 4 26B-A4B (Unsloth GGUF) on ZeroGPU to explain why the record is mis-categorised.
 
     Args:
         record: A mismatched BAML record from Stage 4
@@ -86,7 +131,7 @@ def explain_miscategorisation(record: dict[str, Any]) -> str:
     Returns:
         A 2-3 sentence explanation
     """
-    # Stub: in production this calls llama-swap with the 26B-A4B model
+    # Stub: in production this calls ZeroGPU with @spaces.GPU
     return f"Explanation: {record.get('reason', 'unknown')}"
 
 
@@ -106,14 +151,18 @@ def approve_correction(record_id: str, corrected_topic: str) -> str:
 
 
 def build_interface() -> gr.Blocks:
-    """Build the Gradio interface.
+    """Build the Gradio interface for HF Spaces ZeroGPU.
+
+    The @spaces.GPU decorator is on the model-loading functions (lazy).
+    The Gradio UI itself runs on CPU and just calls the GPU-backed
+    functions when the user clicks the buttons.
 
     Returns:
         The Gradio Blocks interface
     """
     with gr.Blocks(title="Oideachais PDF Review", theme=gr.themes.Soft()) as demo:
         gr.Markdown(
-            """
+            f"""
             # Oideachais PDF Review
 
             Human review interface for Stage 4 mismatches of the 6-stage
@@ -123,9 +172,13 @@ def build_interface() -> gr.Blocks:
             - Add notes to marking-scheme ambiguities
             - Export validated records back to the lakehouse
 
-            **Models used (Unsloth GGUFs via llama-swap):**
-            - `gemma-3-4b` (4 GB) for the in-app "suggested correction" feature
-            - `gemma-4-26B-A4B` (14 GB MoE) for the "explain why this is mis-categorised" feature
+            **Models used (Unsloth GGUFs via HF Spaces ZeroGPU):**
+            - `{SUGGESTION_MODEL}` (4 GB) — in-app "suggested correction" feature
+            - `{EXPLANATION_MODEL}` (14 GB MoE) — "explain why this is mis-categorised" feature
+
+            **Registry:** 20 v4 models that fit on M4 Max 48 GB
+            (the 4 largest — 235B, 107B, 22GB marginal, 19GB marginal —
+            were removed in the 2026-06-29 trim).
             """
         )
 

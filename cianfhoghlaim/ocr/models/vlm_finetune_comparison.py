@@ -156,29 +156,6 @@ VLM_MODELS: dict[str, dict[str, Any]] = {
             ],
         },
     },
-    "qwen3-vl-235b-a22b": {
-        "full_name": "Qwen/Qwen3-VL-235B-A22B-Instruct",
-        "unsloth_id": "unsloth/Qwen3-VL-235B-A22B-Instruct-GGUF",
-        "mlx_id": None,
-        "size_gb": 130.0,
-        "context_length": 256000,
-        "capabilities": [
-            "vision", "ocr", "document_understanding",
-            "reasoning", "multilingual", "moe", "diagram",
-        ],
-        "backend": "llama-swap",
-        "unsloth_compatible": False,  # too large for M4
-        "mobile_friendly": False,
-        "arm1_oci_only": True,
-        "lora_config": {
-            "r": 64,
-            "lora_alpha": 128,
-            "target_modules": [
-                "q_proj", "k_proj", "v_proj", "o_proj",
-                "gate_proj", "up_proj", "down_proj",
-            ],
-        },
-    },
     "gemma-4-E2B": {
         "full_name": "google/gemma-4-E2B-it",
         "unsloth_id": "unsloth/gemma-4-E2B-it-GGUF",
@@ -242,24 +219,7 @@ VLM_MODELS: dict[str, dict[str, Any]] = {
             "lora_alpha": 32,
         },
     },
-    "gemma-4-31B": {
-        "full_name": "google/gemma-4-31B-it",
-        "unsloth_id": "unsloth/gemma-4-31B-it-GGUF",
-        "mlx_id": "mlx-community/gemma-4-31b-it-8bit",
-        "size_gb": 19.0,
-        "context_length": 262144,
-        "capabilities": [
-            "vision", "ocr", "multilingual", "6_celtic_languages",
-            "dense_sota", "diagram", "math", "latex",
-        ],
-        "backend": "llama-swap",
-        "unsloth_compatible": True,
-        "mobile_friendly": False,
-        "lora_config": {
-            "r": 16,
-            "lora_alpha": 32,
-        },
-    },
+    # gemma-4-31B removed (19GB marginal on M4 48GB; use gemma-4-26B-A4B instead)
     "molmo2-8b": {
         "full_name": "allenai/Molmo2-8B",
         "unsloth_id": None,
@@ -612,12 +572,12 @@ class VLMComparisonPipeline:
                 "qwen3-vl-4b": "qwen/qwen3-vl-4b",
                 "qwen3-vl-8b": "qwen/qwen3-vl-8b",
                 "qwen3-vl-30b-a3b": "qwen/qwen3-vl-30b-a3b",
-                "qwen3-vl-235b-a22b": "qwen/qwen3-vl-235b-a22b",
+                # qwen3-vl-235b-a22b removed (130GB; doesn't fit on M4 48GB)
                 "gemma-4-E2B": "gemma-4-e2b",
                 "gemma-4-E4B": "gemma-4-e4b",
                 "gemma-4-12B": "gemma-4-12b",
                 "gemma-4-26B-A4B": "gemma-4-26b-a4b",
-                "gemma-4-31B": "gemma-4-31b",
+                # gemma-4-31B removed (19GB marginal on M4 48GB; use gemma-4-26B-A4B instead)
                 "molmo2-8b": "allenai/molmo2-8b",
                 "olmocr-2-7b-1025": "allenai/olmocr-2-7b-1025",
                 "dots-ocr": "rednote-hilab/dots.ocr",

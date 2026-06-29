@@ -49,10 +49,10 @@ class TestRegistryStructure(unittest.TestCase):
     """Structural tests for the 24-entry VISION_MODELS registry."""
 
     def test_vision_models_count(self):
-        """The registry must have at least 24 entries per the v4 spec."""
+        """The registry must have at least 20 entries per the v4 spec (post-2026-06-29 trim)."""
         self.assertGreaterEqual(
-            len(VISION_MODELS), 24,
-            f"Expected at least 24 VISION_MODELS entries, got {len(VISION_MODELS)}",
+            len(VISION_MODELS), 20,
+            f"Expected at least 20 VISION_MODELS entries, got {len(VISION_MODELS)}",
         )
 
     def test_vision_models_keys_unique(self):
@@ -110,32 +110,32 @@ class TestRegistryStructure(unittest.TestCase):
 class TestRegistryContent(unittest.TestCase):
     """Content tests for specific VISION_MODELS entries."""
 
-    def test_gemma_4_5_size_ladder(self):
-        """The Gemma 4 ladder must have 5 sizes."""
+    def test_gemma_4_4_size_ladder(self):
+        """The Gemma 4 ladder must have 4 sizes (post-2026-06-29 trim: gemma-4-31B removed)."""
         gemma4_keys = [k for k in VISION_MODELS if k.startswith("gemma-4-")]
         self.assertEqual(
-            len(gemma4_keys), 5,
-            f"Expected 5 Gemma 4 sizes, got {len(gemma4_keys)}: {gemma4_keys}",
+            len(gemma4_keys), 4,
+            f"Expected 4 Gemma 4 sizes, got {len(gemma4_keys)}: {gemma4_keys}",
         )
-        expected = {"gemma-4-E2B", "gemma-4-E4B", "gemma-4-12B", "gemma-4-26B-A4B", "gemma-4-31B"}
+        expected = {"gemma-4-E2B", "gemma-4-E4B", "gemma-4-12B", "gemma-4-26B-A4B"}
         self.assertEqual(set(gemma4_keys), expected)
 
-    def test_qwen3_vl_4_size_ladder(self):
-        """The Qwen 3-VL ladder must have 4 sizes (4B + 8B + 30B-A3B + 235B-A22B)."""
+    def test_qwen3_vl_3_size_ladder(self):
+        """The Qwen 3-VL ladder must have 3 sizes (4B + 8B + 30B-A3B; 235B-A22B removed)."""
         qwen3_vl_keys = [k for k in VISION_MODELS if k.startswith("qwen3-vl-")]
         self.assertEqual(
-            len(qwen3_vl_keys), 4,
-            f"Expected 4 Qwen 3-VL sizes, got {len(qwen3_vl_keys)}: {qwen3_vl_keys}",
+            len(qwen3_vl_keys), 3,
+            f"Expected 3 Qwen 3-VL sizes, got {len(qwen3_vl_keys)}: {qwen3_vl_keys}",
         )
-        expected = {"qwen3-vl-4b", "qwen3-vl-8b", "qwen3-vl-30b-a3b", "qwen3-vl-235b-a22b"}
+        expected = {"qwen3-vl-4b", "qwen3-vl-8b", "qwen3-vl-30b-a3b"}
         self.assertEqual(set(qwen3_vl_keys), expected)
 
-    def test_qwen3_6_2_size_mtp_ladder(self):
-        """The Qwen 3.6 ladder must have 2 sizes with MTP speculative decoding."""
+    def test_qwen3_6_1_size_mtp_ladder(self):
+        """The Qwen 3.6 ladder must have 1 size with MTP speculative decoding (post-trim: 35B-A3B-MTP removed)."""
         qwen36_keys = [k for k in VISION_MODELS if k.startswith("qwen3.6-")]
         self.assertEqual(
-            len(qwen36_keys), 2,
-            f"Expected 2 Qwen 3.6 sizes, got {len(qwen36_keys)}: {qwen36_keys}",
+            len(qwen36_keys), 1,
+            f"Expected 1 Qwen 3.6 size, got {len(qwen36_keys)}: {qwen36_keys}",
         )
         for k in qwen36_keys:
             self.assertIn(
@@ -148,14 +148,14 @@ class TestRegistryContent(unittest.TestCase):
         self.assertEqual(get_default_for_m4_max(), "gemma-4-26B-A4B")
 
     def test_moe_12x_models_count(self):
-        """At least 3 models must have moe_12x (the 3 MoE models)."""
+        """At least 1 model must have moe_12x (the qwen3-vl-30b-a3b MoE; 2 others removed in trim)."""
         moe_models = [
             k for k, m in VISION_MODELS.items()
             if "moe_12x" in m.unsloth_features
         ]
         self.assertGreaterEqual(
-            len(moe_models), 3,
-            f"Expected at least 3 moe_12x models, got {len(moe_models)}",
+            len(moe_models), 1,
+            f"Expected at least 1 moe_12x model, got {len(moe_models)}",
         )
 
     def test_uccix_mistral_24b_is_primary(self):
@@ -316,10 +316,10 @@ class TestSelectOCRBackend(unittest.TestCase):
 class TestModelRegistry(unittest.TestCase):
     """Tests for the ModelRegistry class."""
 
-    def test_default_registry_has_24_models(self):
-        """A default ModelRegistry must have at least 24 models."""
+    def test_default_registry_has_20_models(self):
+        """A default ModelRegistry must have at least 20 models (post-2026-06-29 trim)."""
         reg = ModelRegistry()
-        self.assertGreaterEqual(len(reg.list_models()), 24)
+        self.assertGreaterEqual(len(reg.list_models()), 20)
 
     def test_get_model_by_key(self):
         """get_model must return the correct model by key."""

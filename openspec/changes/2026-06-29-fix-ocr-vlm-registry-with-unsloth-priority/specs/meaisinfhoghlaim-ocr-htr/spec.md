@@ -2,14 +2,14 @@
 
 ## ADDED Requirements
 
-### Requirement: 24-entry vision model registry with Unsloth-first priority
+### Requirement: 20-entry vision model registry with Unsloth-first priority
 
-The system SHALL expose a vision model registry at `cianfhoghlaim/ocr/models/registry.py:VISION_MODELS` with **at least 24 entries** (replacing the legacy 10-entry `OCR_MODELS` + 6-entry `VLM_MODELS`). The registry MUST cover, at minimum, these VLM families and specialist OCR families:
+The system SHALL expose a vision model registry at `cianfhoghlaim/ocr/models/registry.py:VISION_MODELS` with **at least 20 entries** (replacing the legacy 10-entry `OCR_MODELS` + 6-entry `VLM_MODELS`). The registry MUST cover, at minimum, these VLM families and specialist OCR families:
 
-- **Gemma 4** — 5 sizes (E2B, E4B, 12B, 26B-A4B MoE, 31B)
-- **GLM-4.6V Flash** — single 9-10B class + 107B MoE full
-- **Qwen 3-VL** — 4 sizes (4B, 8B, 30B-A3B MoE, 235B-A22B MoE)
-- **Qwen 3.6** — 2 sizes with MTP speculative decoding (27B MTP, 35B-A3B MTP)
+- **Gemma 4** — 4 sizes (E2B, E4B, 12B, 26B-A4B MoE) — **31B removed (19GB marginal on M4 48GB)**
+- **GLM-4.6V Flash** — single 9-10B class — **full MoE 107B removed (doesn't fit on M4 48GB)**
+- **Qwen 3-VL** — 3 sizes (4B, 8B, 30B-A3B MoE) — **235B-A22B removed (130GB doesn't fit on M4)**
+- **Qwen 3.6** — 1 size with MTP speculative decoding (27B MTP) — **35B-A3B MTP removed (22GB marginal)**
 - **Qwen 2.5-VL** — kept as legacy
 - **DeepSeek-OCR-2** — single 3.4B specialist
 - **Granite-Docling** — single 258M specialist
@@ -21,6 +21,8 @@ The system SHALL expose a vision model registry at `cianfhoghlaim/ocr/models/reg
 - **Llama 3.2 Vision** — single 11B as legacy
 - **Gemma 3** — single 4B as legacy
 - **UCCIX** — 3 variants (Llama-3.1-8B, Mistral-24B primary, Llama-2-13B legacy)
+
+The 4 removed models (qwen3-vl-235b-a22b, glm-4.6v-full, qwen3.6-35b-a3b-mtp, gemma-4-31B) are documented in `openspec/changes/deploy-v4-ocr-vlm-on-m4-max/proposal.md` as "too large for M4 48GB; use a smaller alternative".
 
 Each entry MUST have:
 
@@ -36,15 +38,19 @@ Each entry MUST have:
 - `available: bool` — `False` for known-broken or legacy entries
 - `notes: str` — provenance + last-verified date
 
-The registry MUST NOT include cloud-API-only models (no OpenAI, no Anthropic, no Ollama-only tags). Every entry MUST have at least one local-Mac or M4-OCI inference path.
+The registry MUST NOT include cloud-API-only models (no OpenAI, no Anthropic, no Ollama). Every entry MUST have at least one local inference path.
 
-#### Scenario: A developer adds a new model
+The registry MUST have at least 20 entries that all fit on the M4 Max 48 GB unified memory host (per the v4 M4-fit criterion). Larger models (235B, 107B, 22 GB marginal, 19 GB marginal) are not in the v4 registry — they are documented in `openspec/changes/deploy-v4-ocr-vlm-on-m4-max/` as "too large for M4; use a smaller alternative".
 
-- **GIVEN** a developer adds a new Gemma 4 size variant to `cianfhoghlaim/ocr/models/registry.py:VISION_MODELS`
+#### Scenario: A developer adds a new Gemma 4 size
+
+- **GIVEN** a developer adds a new Gemma 4 size variant to
+  `cianfhoghlaim/ocr/models/registry.py:VISION_MODELS`
 - **WHEN** the registry is imported
-- **THEN** the registry MUST have ≥25 entries
+- **THEN** the registry MUST have ≥21 entries
 - **AND** the entry MUST have all 11 required fields populated
 - **AND** if `unsloth_id` is `None`, the entry MUST include a comment explaining why (gap request status)
+- **AND** the entry's `m4_max_48gb_fit` MUST be `True` (per the v4 M4-first policy)
 
 ### Requirement: Unsloth-first fallback chain
 

@@ -682,7 +682,7 @@ copy is a stale duplicate and MUST be deleted.
 
 ### Requirement: OCR Model Registry Location (v4)
 
-The system SHALL expose the OCR model registry at `cianfhoghlaim/ocr/models/registry.py`. The registry SHALL list 11 vision models (Gemma-4×4 + Qwen3.6×4 + GLM-4.6V-Flash) and 3 image generation models (Qwen-Image-2512 + Z-Image-Turbo + FLUX.2-klein-9B). The legacy 9×6 model registry at `sruth/meaisinfhoghlaim/ocr/model_registry.py` is REPLACED (gpt_4o, claude_3_5_sonnet, llama_3_2_vision, uccix_13b are removed; classical OCR stacks stay separate as Docker compose).
+The system SHALL expose the OCR model registry at `cianfhoghlaim/ocr/models/registry.py`. The registry SHALL list **at least 20 vision models** (the 24-entry v4 registry trimmed of 4 models that don't fit on M4 48GB: qwen3-vl-235b-a22b 130GB, glm-4.6v-full 107GB, qwen3.6-35b-a3b-mtp 22GB marginal, gemma-4-31B 19GB marginal). The legacy 9×6 model registry at `sruth/meaisinfhoghlaim/ocr/model_registry.py` is REPLACED (gpt_4o, claude_3_5_sonnet, llama_3_2_vision, uccix_13b are removed; classical OCR stacks stay separate as Docker compose).
 
 #### Scenario: Vision model dispatch
 
