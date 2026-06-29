@@ -13,7 +13,8 @@ class BackendType(StrEnum):
     CRAWL4AI_LOCAL = "crawl4ai_local"
     STAGEHAND_LOCAL = "stagehand_local"
     FIRECRAWL_MCP = "firecrawl_mcp"
-    BROWSERBASE_MCP = "browserbase_mcp"
+    # BROWSERBASE_MCP removed 2026-06-29 per the
+    # `2026-06-29-browser-stack-crawl4ai-refactor` change.
     ZAI_VISION = "zai_vision"
 
 
@@ -160,15 +161,15 @@ class VisionAnalysisResult(BaseModel):
 
 BACKEND_PRIORITY: dict[BrowserOperation, list[BackendType]] = {
     BrowserOperation.SCRAPE: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
-    BrowserOperation.INTERACT: [BackendType.CDP_LOCAL, BackendType.STAGEHAND_LOCAL, BackendType.BROWSERBASE_MCP],
-    BrowserOperation.NAVIGATE: [BackendType.CDP_LOCAL, BackendType.SKYVERN_LOCAL, BackendType.BROWSERBASE_MCP],
+    BrowserOperation.INTERACT: [BackendType.CDP_LOCAL, BackendType.STAGEHAND_LOCAL],
+    BrowserOperation.NAVIGATE: [BackendType.CDP_LOCAL, BackendType.SKYVERN_LOCAL],
     BrowserOperation.RESEARCH: [BackendType.FIRECRAWL_MCP, BackendType.SKYVERN_LOCAL],
     BrowserOperation.EXTRACT: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
     BrowserOperation.EXTRACTION: [BackendType.STAGEHAND_LOCAL, BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
-    BrowserOperation.SCREENSHOT: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.BROWSERBASE_MCP, BackendType.ZAI_VISION],
-    BrowserOperation.FORM: [BackendType.SKYVERN_LOCAL, BackendType.STAGEHAND_LOCAL, BackendType.BROWSERBASE_MCP],
+    BrowserOperation.SCREENSHOT: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.ZAI_VISION],
+    BrowserOperation.FORM: [BackendType.SKYVERN_LOCAL, BackendType.STAGEHAND_LOCAL],
     BrowserOperation.MAP_SITE: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
-    BrowserOperation.VISUAL_GROUNDING: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.BROWSERBASE_MCP, BackendType.ZAI_VISION],
+    BrowserOperation.VISUAL_GROUNDING: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.ZAI_VISION],
 }
 
 BACKEND_COST: dict[BackendType, float] = {
@@ -177,6 +178,7 @@ BACKEND_COST: dict[BackendType, float] = {
     BackendType.CRAWL4AI_LOCAL: 0.0,
     BackendType.STAGEHAND_LOCAL: 0.0,
     BackendType.FIRECRAWL_MCP: 1.0,
-    BackendType.BROWSERBASE_MCP: 0.5,
     BackendType.ZAI_VISION: 0.1,
+    # Browserbase removed 2026-06-29 per the
+    # `2026-06-29-browser-stack-crawl4ai-refactor` change.
 }

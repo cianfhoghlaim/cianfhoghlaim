@@ -66,14 +66,9 @@ class BrowserConfig(BaseSettings):
     )
 
     # Paid service API keys (fallback)
-    browserbase_api_key: str | None = Field(
-        default=None,
-        description="Browserbase API key for fallback",
-    )
-    browserbase_project_id: str | None = Field(
-        default=None,
-        description="Browserbase project ID",
-    )
+    # Browserbase removed 2026-06-29 per the
+    # `2026-06-29-browser-stack-crawl4ai-refactor` change.
+    # (No credits; no replacement plan.)
     firecrawl_api_key: str | None = Field(
         default=None,
         description="Firecrawl API key for fallback",
@@ -237,11 +232,6 @@ class BrowserConfig(BaseSettings):
     )
 
     @property
-    def has_browserbase(self) -> bool:
-        """Check if Browserbase is configured."""
-        return bool(self.browserbase_api_key and self.browserbase_project_id)
-
-    @property
     def has_firecrawl(self) -> bool:
         """Check if Firecrawl is configured."""
         return bool(self.firecrawl_api_key)
@@ -259,7 +249,7 @@ class BrowserConfig(BaseSettings):
     @property
     def has_paid_fallback(self) -> bool:
         """Check if any paid fallback is available."""
-        return self.has_browserbase or self.has_firecrawl or self.has_zai
+        return self.has_firecrawl or self.has_zai
 
     @property
     def zai_base_url(self) -> str:
