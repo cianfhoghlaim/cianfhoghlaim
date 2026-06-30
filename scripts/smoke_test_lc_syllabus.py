@@ -58,7 +58,7 @@ _stub_dlt_sources()
 # ============================================================================
 _MODULE_PATH = (
     Path(__file__).parent.parent
-    / "cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/ie/education/curriculumonline_syllabi.py"
+    / "cianfhoghlaim/pipelines/ingest/ie/education/curriculumonline_syllabi.py"
 )
 spec = importlib.util.spec_from_file_location(
     "curriculumonline_syllabi_smoke", _MODULE_PATH
