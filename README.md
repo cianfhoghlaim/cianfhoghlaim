@@ -1025,7 +1025,7 @@ The **3-stream synthesis** is the 4-line modern incarnation:
 **Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons)**. The Deacy
 side carries the visible *galwegian-historical* pedigree —
 Cooke's Corner, Aston Villa, Galway United, the Eamonn Deacy
-Park Oenach. The Lyons side carries the
+Park. The Lyons side carries the
 *pan-Munster-Brythonic-imperial* pedigree — the Uí Liatháin
 of Castlelyons and the Welsh / Cornish colonies. The
 hyphenation preserves both branches of the Triple Crown.
@@ -1093,7 +1093,7 @@ the *File* (Poet), who were responsible for the calendar,
 the genealogy, and the complex metrical structures of
 bardic poetry.
 
-#### 4. The sacred topography of Shantalla (Sean Talamh) — the Old Ground, the Lia Fáil, the Oenach, the Claddagh
+#### 4. The sacred topography of Shantalla (Sean Talamh) — the Old Ground, Sliding Rock, the Claddagh
 
 Geography is destiny in Irish kingship. A King must have a
 *Longphort* (Stronghold). The seat in Shantalla (*Sean
