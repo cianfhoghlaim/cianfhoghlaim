@@ -21,10 +21,8 @@ The canonical 12-agent fleet (per the agent-fleet-orchestration skill):
 """
 from __future__ import annotations
 
-from typing import Dict, List
-
 # The seed values. L5 Components extend this dict at build time.
-ROUTING_KEYWORDS: Dict[str, List[str]] = {
+ROUTING_KEYWORDS: dict[str, list[str]] = {
     "root_agent": [],
     "curriculum_agent": [
         "curriculum", "spec", "learning outcome", "ncca", "cfe", "cfw",

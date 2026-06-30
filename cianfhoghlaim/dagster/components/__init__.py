@@ -34,8 +34,8 @@ from cianfhoghlaim.dagster.components.layer2_materials import (
     CelticMaterialsComponent,
 )
 from cianfhoghlaim.dagster.components.layer3_model_lifecycle import (
-    ConformanceViolation,
     CelticModelLifecycleComponent,
+    ConformanceError,
 )
 from cianfhoghlaim.dagster.components.layer4_asset_generation import (
     CelticAssetGenerationComponent,
@@ -48,12 +48,10 @@ from cianfhoghlaim.dagster.components.layer5_agent_ops import (
 # replaced in the 5-layer rewrite; existing consumers can import
 # the new names without breaking).
 __all__ = [
-    # The 5 KCG Components (canonical)
+    "CelticAgentOpsComponent",
+    "CelticAssetGenerationComponent",
     "CelticIngestionComponent",
     "CelticMaterialsComponent",
     "CelticModelLifecycleComponent",
-    "CelticAssetGenerationComponent",
-    "CelticAgentOpsComponent",
-    # Conformance exception (used by L3 R1-R4 enforcement)
-    "ConformanceViolation",
+    "ConformanceError",
 ]

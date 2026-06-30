@@ -33,12 +33,10 @@ change (per user direction).
 from __future__ import annotations
 
 import logging
-import os
-from typing import List, Literal
+from typing import Literal
 
 import dagster as dg
 from dagster.components import Component, ComponentLoadContext
-
 
 Framework = Literal["custom", "adk", "agno"]   # pipecat deferred
 MemoryBackend = Literal["letta", "graphiti", "cognee", "lancedb"]
@@ -85,13 +83,13 @@ class CelticAgentOpsComponent(Component):
 
     agent_name: str
     framework: Framework
-    tools: List[str] = []
+    tools: list[str] = []  # noqa: RUF012 — Dagster Component mutable default
     memory_backend: MemoryBackend = "letta"
     event_stream: EventStream = "risingwave"
     event_stream_endpoint: str = "risingwave.cianfhoghlaim.ie:4566"
     langfuse_trace_tag: str = ""
     langfuse_drop_smoke_spans: bool = True
-    routing_keywords: List[str] = []
+    routing_keywords: list[str] = []  # noqa: RUF012 — Dagster Component mutable default
     health_endpoint: str = ""
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
@@ -313,7 +311,7 @@ class CelticAgentOpsComponent(Component):
 
 __all__ = [
     "CelticAgentOpsComponent",
+    "EventStream",
     "Framework",
     "MemoryBackend",
-    "EventStream",
 ]

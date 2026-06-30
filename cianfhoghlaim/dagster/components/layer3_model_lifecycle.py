@@ -4,7 +4,7 @@ Component (rewrite of CelticCocoindexV1Component + CelticLancedbHnswComponent).
 
 Wraps one CocoIndex v1 App and registers it as a `is_virtual=True`
 Dagster asset so the LanceDB table mirrors its upstream (the L1
-filesystem scan) automatically. The R1–R4 conformance contract
+filesystem scan) automatically. The R1-R4 conformance contract
 (oideachais-cocoindex-v1 skill) is enforced at scaffold time.
 
     Usage (from a YAML defs file):
@@ -19,18 +19,16 @@ filesystem scan) automatically. The R1–R4 conformance contract
 from __future__ import annotations
 
 import importlib
-import logging
 from typing import Any, Literal
 
 import dagster as dg
 from dagster.components import Component, ComponentLoadContext
 
-
 EmbeddingModel = Literal["BAAI/bge-m3", "BAAI/bge-large-en-v1.5"]
 
 
-class ConformanceViolation(Exception):
-    """Raised when a CocoIndex v1 App fails the R1–R4 conformance contract."""
+class ConformanceError(Exception):
+    """Raised when a CocoIndex v1 App fails the R1-R4 conformance contract."""
 
     def __init__(self, rule: str, message: str, fix: str) -> None:
         self.rule = rule
@@ -43,7 +41,7 @@ class CelticModelLifecycleComponent(Component):
     """Layer 3 Model Lifecycle Component.
 
     Wraps one CocoIndex v1 App as a `is_virtual=True` Dagster asset. The
-    R1–R4 conformance contract is enforced at scaffold time by
+    R1-R4 conformance contract is enforced at scaffold time by
     calling `cocoindex_v1_conformance.check_module(module)` BEFORE
     emitting the asset.
 
@@ -56,7 +54,7 @@ class CelticModelLifecycleComponent(Component):
             "BAAI/bge-large-en-v1.5".
         hnsw_index: Whether to build an HNSW index on the LanceDB
             table. Default: True.
-        conformance_required: Whether to enforce R1–R4. Default: True.
+        conformance_required: Whether to enforce R1-R4. Default: True.
             Disable only for App migrations in flight.
     """
 
@@ -69,10 +67,10 @@ class CelticModelLifecycleComponent(Component):
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 1 `is_virtual=True` @asset for the CocoIndex v1 App.
 
-        The R1–R4 conformance contract is enforced at scaffold time
+        The R1-R4 conformance contract is enforced at scaffold time
         (and at every build_defs invocation) by
         `cocoindex_v1_conformance.check_module(module)`. On failure,
-        ConformanceViolation is raised with the exact rule + fix
+        ConformanceError is raised with the exact rule + fix
         instructions.
         """
         if self.conformance_required:
@@ -149,7 +147,7 @@ class CelticModelLifecycleComponent(Component):
         return dg.Definitions(assets=[_cocoindex_app_asset])
 
     def _check_r1_to_r4(self) -> None:
-        """Enforce the 4-rule R1–R4 conformance contract.
+        """Enforce the 4-rule R1-R4 conformance contract.
 
         R1: Module imports `from ._lifespan import shared_lifespan`
         R2: Module imports the canonical ContextKeys (LANCE_DB, EMBEDDER,
@@ -161,32 +159,33 @@ class CelticModelLifecycleComponent(Component):
         try:
             mod = importlib.import_module(self.module)
         except ImportError as exc:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R0",
                 message=f"module {self.module!r} failed to import: {exc}",
                 fix="Check the module path + the `from ._lifespan import shared_lifespan` line",
-            )
+            ) from exc
 
         src = getattr(mod, "__file__", None)
         if not src:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R0",
                 message=f"module {self.module!r} has no __file__ (dynamic module?)",
                 fix="Use a file-backed Python module under cianfhoghlaim/cocoindex/",
             )
 
         try:
-            source_text = open(src).read()
+            with open(src) as f:
+                source_text = f.read()
         except OSError as exc:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R0",
                 message=f"cannot read {src}: {exc}",
                 fix="Check the file permissions on the source module",
-            )
+            ) from exc
 
         # R1: shared_lifespan import (the canonical module must be imported)
         if "from ._lifespan import" not in source_text:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R1",
                 message="no `from ._lifespan import` line",
                 fix="Add `from ._lifespan import shared_lifespan` (or another canonical ContextKey) to delegate to the canonical lifespan (see oideachais-cocoindex-v1 skill)",
@@ -208,7 +207,7 @@ class CelticModelLifecycleComponent(Component):
         )
         has_r2_exempt = "# R2-exempt:" in source_text
         if not has_canonical and not has_r2_exempt:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R2",
                 message=(
                     f"no canonical ContextKey ({', '.join(canonical_keys)}) "
@@ -222,7 +221,7 @@ class CelticModelLifecycleComponent(Component):
 
         # R3: `coco.App(...)` at module scope
         if "coco.App(" not in source_text:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R3",
                 message="no `coco.App(...)` construction found",
                 fix="Move the `coco.App(coco.AppConfig(name=...))` construction to module scope",
@@ -230,7 +229,7 @@ class CelticModelLifecycleComponent(Component):
 
         # R4: at least one `@coco.fn(` decorator
         if "@coco.fn(" not in source_text:
-            raise ConformanceViolation(
+            raise ConformanceError(
                 rule="R4",
                 message="no `@coco.fn(` decorator found",
                 fix="Add `@coco.fn(memo=True)` to your processing function",
@@ -257,6 +256,6 @@ def _to_snake(name: str) -> str:
 
 __all__ = [
     "CelticModelLifecycleComponent",
-    "ConformanceViolation",
+    "ConformanceError",
     "EmbeddingModel",
 ]

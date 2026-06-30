@@ -19,11 +19,10 @@ replaces the 33 per-subject BAML extraction asset modules.
 """
 from __future__ import annotations
 
-from typing import Any, Literal, Optional
+from typing import Any, Literal
 
 import dagster as dg
 from dagster.components import Component, ComponentLoadContext
-
 
 PartitionStrategy = Literal["by_cycle", "by_subject", "by_nation", "none"]
 AssetCheckKind = Literal["row_count", "baml_fidelity", "irish_fada", "lang_detect"]
@@ -146,12 +145,12 @@ class CelticMaterialsComponent(Component):
         if self.partition_strategy == "by_nation":
             from dagster import StaticPartitionsDefinition
             return StaticPartitionsDefinition(["ie", "en", "sct", "wls", "ni", "iom", "jey", "ggy"])
-        # by_cycle: use the canonical 4-cycle × 2-language × 33-subject MultiPartition
+        # by_cycle: use the canonical 4-cycle x 2-language x 33-subject MultiPartition
         return default_partitions
 
 
 __all__ = [
+    "AssetCheckKind",
     "CelticMaterialsComponent",
     "PartitionStrategy",
-    "AssetCheckKind",
 ]
