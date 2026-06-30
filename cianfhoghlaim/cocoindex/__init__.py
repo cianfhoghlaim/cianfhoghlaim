@@ -51,5 +51,9 @@ def __getattr__(name: str) -> object:
             "culture_heritage_embedding",
             "upstream_blog_monitor",
             "upstream_api_surface",
+            "agent_registry",
+            "agents_md",
+            "apple_photos_metadata",
+            "apple_photos_chunks",
         )
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

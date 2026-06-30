@@ -423,3 +423,20 @@ The full pipeline (DLT + BAML + Dagster + marimo + cognify) is
 documented in
 [`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
 
+
+---
+
+## v1 App count: 13 → 17 (added 2026-06-30)
+
+Four new v1 Apps added in the `2026-06-30-agent-platform-cluster-hermes-cocoindex` change:
+
+| # | App | Target | Embedding | Source |
+|:--|:--|:--|:--|:--|
+| 14 | `agent_registry` | LanceDB `agent_registry` | BGE-m3 1024-dim | `localfs.read_file("opencode.json")` |
+| 15 | `agents_md` | LanceDB `agents_md` | BGE-m3 1024-dim | `localfs.walk_dir(**/AGENTS.md, depth=3)` |
+| 16 | `apple_photos_metadata` | LanceDB `apple_photos_metadata` | BGE-m3 1024-dim | DuckDB source on `apple_photos` table |
+| 17 | `apple_photos_chunks` | LanceDB `apple_photos_chunks` | BGE-m3 1024-dim | DuckDB source on `apple_photos_ocr_chunks` table |
+
+Plus a 5th non-LanceDB output (`apple_photos_geospatial` → GeoParquet files), in a separate `GEOSPATIAL_APP_REGISTRY`.
+
+`mise run lint:v1-conformance` SHALL report `17/17 apps passed` (was 13/13).

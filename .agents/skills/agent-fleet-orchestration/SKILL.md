@@ -273,3 +273,26 @@ full pipeline (BAML + Dagster + marimo + cognify + openclaw) is
 documented in
 [`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
 
+
+---
+
+## Hermes autonomous runtime (added 2026-06-30)
+
+The agent-platform group is now 3 vertices (was 2):
+
+1. **OpenClaw** — channel-fanout gateway (8 messaging channels + WebChat)
+2. **OpenChamber** — browser IDE (OpenCode UI)
+3. **Hermes** — autonomous long-running agent runtime (NousResearch/hermes-agent v0.17.0)
+
+The Hermes stack lives at `bonneagar/stacks/hermes/` and is
+deployed on `bunchloch` (MacBook M4 Max, 32 GB headroom). The 3
+vertices share the same `litellm` LLM chokepoint (the M3 plan)
+and the same Langfuse observability destination.
+
+The Hermes 3-layer auth model (matches OpenClaw's):
+1. Pangolin TinyAuth (Pocket ID OIDC) at Traefik
+2. `users.allowlist` in `config/hermes.yaml` (Pocket ID subject allowlist, populated from day one with the operator's subject)
+3. `channels.<name>.allow_from` per channel
+
+The `hermes claw migrate` path (which retires OpenClaw) is NOT
+used in v1. The 3 vertices coexist.

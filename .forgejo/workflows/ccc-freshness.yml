@@ -1,0 +1,79 @@
+# Forgejo Actions workflow: CCC freshness gate
+# Hard-fails PRs that touch opencode.json or any AGENTS.md file
+# when the v1 CocoIndex index is stale.
+name: ccc-freshness
+on:
+  pull_request:
+  push:
+    branches: [main, release/*]
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up mise
+        uses: jdx/mise-action@v2
+
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.3.5
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Restore CCC cache
+        uses: actions/cache@v4
+        with:
+          path: .cocoindex_code
+          key: ccc-${{ github.sha }}
+          restore-keys: |
+            ccc-
+
+      - name: Run freshness check
+        id: freshness
+        run: |
+          bun run validate-ccc-freshness
+        continue-on-error: true
+
+      - name: Determine PR-touched files
+        id: touched
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            TOUCHED=$(git diff --name-only origin/main...HEAD)
+          else
+            TOUCHED=$(git diff --name-only HEAD~1...HEAD)
+          fi
+          echo "touched_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$TOUCHED" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Determine if hard fail
+        id: hard_fail
+        run: |
+          if [ "${{ steps.freshness.outcome }}" == "failure" ]; then
+            if echo "${{ steps.touched.outputs.touched_files }}" | grep -qE "(opencode\.json|.*/AGENTS\.md)"; then
+              echo "should_fail=true" >> $GITHUB_OUTPUT
+            else
+              echo "should_fail=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "should_fail=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Print result
+        if: always()
+        run: |
+          if [ "${{ steps.hard_fail.outputs.should_fail }}" == "true" ]; then
+            echo "::error::STALE — last index update was > threshold. PR touches opencode.json or AGENTS.md; run \`bun run ccc:index\` and push the updated index."
+            exit 1
+          elif [ "${{ steps.freshness.outcome }}" == "failure" ]; then
+            echo "::warning::CCC index is stale but PR does not touch opencode.json or AGENTS.md; soft warning only."
+          else
+            echo "OK — index is fresh."
+          fi

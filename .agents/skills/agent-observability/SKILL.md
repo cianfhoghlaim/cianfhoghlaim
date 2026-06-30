@@ -632,3 +632,22 @@ Pydantic Logfire now ships an MCP server that exposes traces to the agent runtim
 - `langfuse/SKILL.md` — the Langfuse detail
 - `mlflow/SKILL.md` — the MLflow detail
 - `ragas/SKILL.md` — the RAGAS detail
+
+---
+
+## Agent-platform cluster (added 2026-06-30)
+
+The agent-platform group now has 3 agent surfaces that all
+trace to Langfuse:
+
+| Surface | Stack | Stack port | Trace |
+|:--|:--|:--|:--|
+| Channel-fanout gateway | openclaw | 18789 | via OTLP/HTTP to `langfuse.cianfhoghlaim.ie` |
+| Browser IDE | openchamber | 3000 | via OTLP/HTTP to `langfuse.cianfhoghlaim.ie` |
+| Autonomous agent runtime | hermes | 9119 | via OTLP/HTTP to `langfuse.cianfhoghlaim.ie` |
+
+All 3 surfaces route LLM through `litellm` (port 4000). The
+`embedding_model_health` asset check polls LiteLLM's
+`/health/liveliness` every 5 min and fails when the rolling avg
+completion latency > 500 ms (degraded LiteLLM is the canary for
+all 3 surfaces).
