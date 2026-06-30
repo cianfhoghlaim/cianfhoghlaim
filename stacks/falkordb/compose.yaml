@@ -23,7 +23,7 @@ services:
       - "${FALKORDB_PORT:-6379}:6379"
       - "${FALKORDB_UI_PORT:-3000}:3000"
     environment:
-      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:-devpassword}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}
       BROWSER: ${FALKORDB_BROWSER:-1}
     volumes:
       - falkordb-data:/data
