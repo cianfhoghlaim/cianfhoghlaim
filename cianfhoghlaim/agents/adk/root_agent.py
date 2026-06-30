@@ -798,6 +798,12 @@ def create_root_agent() -> RootAgent:
     return RootAgent()
 
 
+# Note: ROUTING_KEYWORDS was moved to `cianfhoghlaim.agents.routing_keywords`
+# (a standalone module) so it can be imported independently of the
+# (optional) ADK dependency. The L5 CelticAgentOpsComponent imports
+# it from `cianfhoghlaim.agents`.
+
+
 # ============================================================================
 # CLI Entry Point
 # ============================================================================

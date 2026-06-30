@@ -243,6 +243,13 @@ Issues = "https://github.com/cianfhoghlaim/sruth/issues"
 [tool.uv]
 package = true
 
+# Dagster dg CLI Components registry (5-Layer Component architecture)
+# Per the 2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture
+# change, the 5 KCG-specific Components are auto-discovered by `dg list components`
+# and scaffolded via `dg scaffold defs <Component> ...`.
+[tool.dg]
+registry_modules = ["cianfhoghlaim.dagster.components"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
