@@ -27,6 +27,6 @@ services:
       resources:
         reservations:
           devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+            - driver: metal
+              count: 1
+              capabilities: [gpu]   # Apple Silicon M-series GPU (Metal backend)

@@ -1,15 +1,55 @@
-# Locket sidecar config for the llama-swap stack
-# (per .agents/skills/stack-ops/ GOLD_STANDARD pattern)
+# =============================================================================
+# LLAMA-SWAP - Locket Sidecar Configuration
+# =============================================================================
+# Docker Compose overlay for production deployments with Locket secrets.
 #
-# The Locket sidecar injects secrets from Infisical at runtime
-# so we don't need to bake them into the image.
+# Llama-swap is local-only (binds to 127.0.0.1:8080 on bunchloch); it
+# only needs HF_TOKEN from the llama-swap vault for model downloads.
+# =============================================================================
 
-locket:
-  enabled: true
-  vault: dev-baile
-  environment: dev-baile
-  secrets:
-    - path: dev-baile/llama-swap
-      key: hf_token
-      target: /run/secrets/hf_token
-      optional: true
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: llama-swap-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-secret=file:/run/secrets/infisical_secret"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  llama-swap:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
