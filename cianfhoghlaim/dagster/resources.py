@@ -261,7 +261,7 @@ class AgenticCrawlerResource(ConfigurableResource):
         bb_proj = self.browserbase_project_id or os.getenv("BROWSERBASE_PROJECT_ID", "")
         if not fc_key or not bb_key or not bb_proj:
             raise ValueError("Crawler API keys not fully configured")
-        from ..dlt_sources.ireland.agentic_discovery import AgenticCrawler
+        from cianfhoghlaim.dlt.british_isles.ireland.education.agentic_discovery import AgenticCrawler
         return AgenticCrawler(
             firecrawl_api_key=fc_key,
             browserbase_api_key=bb_key,

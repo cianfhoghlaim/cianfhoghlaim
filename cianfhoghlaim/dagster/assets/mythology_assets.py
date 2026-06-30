@@ -98,7 +98,7 @@ def celtic_characters(context: AssetExecutionContext) -> dict:
 
     # Import from DLT source if available
     try:
-        from dlt_sources.celtic_education.mythology_source import mythology_source
+        from cianfhoghlaim.dlt.british_isles.ireland.culture.mythology_source import mythology_source
 
         source = mythology_source(
             tradition=tradition,
@@ -149,7 +149,7 @@ def celtic_stories(context: AssetExecutionContext) -> dict:
     cycles = config.get("cycles", MYTHOLOGY_CYCLES.get(tradition, []))
 
     try:
-        from dlt_sources.celtic_education.mythology_source import mythology_source
+        from cianfhoghlaim.dlt.british_isles.ireland.culture.mythology_source import mythology_source
 
         source = mythology_source(
             tradition=tradition,
@@ -195,7 +195,7 @@ def celtic_locations(context: AssetExecutionContext) -> dict:
     )
 
     try:
-        from dlt_sources.celtic_education.mythology_source import mythology_source
+        from cianfhoghlaim.dlt.british_isles.ireland.culture.mythology_source import mythology_source
 
         source = mythology_source(
             tradition=tradition,
