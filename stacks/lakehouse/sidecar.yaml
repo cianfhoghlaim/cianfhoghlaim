@@ -74,6 +74,22 @@ services:
     volumes:
       - lakehouse-secrets:/run/secrets/locket:ro
 
+  # ClickHouse (centralised columnar engine; consumed by langfuse)
+  clickhouse:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
+  # Redis (centralised queue; consumed by langfuse)
+  redis:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
 # =============================================================================
 # SECRETS
 # =============================================================================

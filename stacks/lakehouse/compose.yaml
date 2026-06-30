@@ -1,8 +1,20 @@
 # =============================================================================
-# LAKEHOUSE - Unified Data Lakehouse Stack
+# LAKEHOUSE - Centralised Data Plane Stack
 # =============================================================================
-# Integrates Garage S3 + Lakekeeper Iceberg Catalog + Lance Namespace + DuckLake
-# Using PlanetScale PostgreSQL for catalog metadata.
+# The 11-service data plane for the whole Cianfhoghlaim platform.
+# Hosts the S3-compatible object store (Garage), the columnar Postgres
+# with 12 databases, the clickhouse columnar engine, the Redis queue,
+# the Iceberg REST catalog (Lakekeeper), the Lance vector namespace,
+# and the 3 secondary services (Nimtable UI, Olake CDC, LanceDB Viewer).
+#
+# Planetscale PostgreSQL is supported as an OPTIONAL override via the
+# PLANETSCALE_DATABASE_URL env var — but the default (and recommended)
+# for both dev and prod (on bunchloch) is the local lakehouse-postgres
+# container.
+#
+# Downstream consumers (langfuse / litellm / mlflow) use the same
+# Postgres + Garage + ClickHouse + Redis via Docker DNS names. See
+# stedding/docs/stacks/lakehouse.md for the full contract.
 #
 # USAGE:
 #   Development:  docker compose --env-file ../../.env.local up -d
@@ -10,9 +22,18 @@
 #   Standalone:   docker compose up -d  (uses defaults)
 #
 # SERVICES:
-#   - garage:            S3-compatible storage with virtual-host DNS
-#   - garage-init:       Bucket initialization (iceberg, lance, ducklake)
-#   - lakekeeper-migrate: PlanetScale database migrations
+#   - garage:            S3-compatible storage (7 buckets total)
+#   - garage-init:       Bucket initialization (iceberg, lance, ducklake,
+#                        langfuse-events, langfuse-media, langfuse-exports,
+#                        mlflow-artifacts) [centralise-data-plane 2026-07]
+#   - postgres:          Centralised Postgres with 12 databases (ducklake_*,
+#                        dagster_local, olake_state, nimtable, langfuse,
+#                        mlflow, litellm) [centralise-data-plane 2026-07]
+#   - clickhouse:        Centralised columnar engine (consumed by langfuse)
+#                        [centralise-data-plane 2026-07]
+#   - redis:             Centralised queue (consumed by langfuse)
+#                        [centralise-data-plane 2026-07]
+#   - lakekeeper-migrate: Database migrations
 #   - lakekeeper:        Iceberg REST Catalog (port 8181)
 #   - lance-namespace:   Lance table registration sidecar (port 8182)
 #   - nimtable:          Iceberg catalog UI (port 3018) [extend-lakehouse-with-nimtable-olake-lancedb]
@@ -40,8 +61,8 @@ services:
       RUST_LOG: ${RUST_LOG:-garage=info}
       RUST_BACKTRACE: ${RUST_BACKTRACE:-1}
       # Secrets injected via Locket or env
-      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-devsecret0000000000000000000000000000000000000000000000000000000}
-      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?GARAGE_RPC_SECRET must be set via Locket/Infisical}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:?GARAGE_ADMIN_TOKEN must be set via Locket/Infisical}
     volumes:
       - ./garage.toml:/etc/garage.toml:ro
       - lakehouse-garage-meta:/var/lib/garage/meta
@@ -75,9 +96,9 @@ services:
       garage:
         condition: service_healthy
     environment:
-      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
-      GARAGE_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
-      GARAGE_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:?GARAGE_ADMIN_TOKEN must be set via Locket/Infisical}
+      GARAGE_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?GARAGE_ACCESS_KEY_ID must be set via Locket/Infisical}
+      GARAGE_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set via Locket/Infisical}
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -132,7 +153,9 @@ services:
         echo "Access Key ID: $$ACCESS_KEY_ID"
 
         echo "Creating buckets..."
-        for bucket in iceberg lance ducklake; do
+        # 7 buckets total (3 lakehouse-internal + 4 for downstream consumers)
+        # Per the centralise-data-plane rewrite (2026-07)
+        for bucket in iceberg lance ducklake langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
           curl -sf -X POST "$${ADMIN_URL}/v1/bucket" \
             -H "$${AUTH}" \
             -H "Content-Type: application/json" \
@@ -141,7 +164,7 @@ services:
         done
 
         echo "Getting bucket IDs and granting permissions..."
-        for bucket in iceberg lance ducklake; do
+        for bucket in iceberg lance ducklake langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
           BUCKET_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}")
           BUCKET_ID=$$(echo "$$BUCKET_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
           if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then
@@ -160,7 +183,14 @@ services:
       - lakehouse
 
   # ---------------------------------------------------------------------------
-  # POSTGRESQL - Local Database for Lakekeeper & Dagster (Development)
+  # POSTGRESQL - Centralised Database (12 databases)
+  # ---------------------------------------------------------------------------
+  # Hosts 12 databases shared across the platform:
+  #   6 DuckLake (ducklake_oideachais, _crypteolas, _aleyum, _croilar, _tuath,
+  #              _meaisinfhoghlaim)
+  #   dagster_local, olake_state, nimtable, langfuse, mlflow, litellm
+  # See init-db.sql for the complete list.
+  # POSTGRES_PASSWORD must be set via Infisical (never hardcode).
   # ---------------------------------------------------------------------------
   postgres:
     image: postgres:16-alpine
@@ -169,9 +199,9 @@ services:
     ports:
       - "${POSTGRES_PORT:-5433}:5432"
     environment:
-      POSTGRES_USER: lakekeeper
-      POSTGRES_PASSWORD: devpassword
-      POSTGRES_DB: lakekeeper
+      POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
+      POSTGRES_DB: ${POSTGRES_DB:-lakekeeper}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - lakehouse-postgres:/var/lib/postgresql/data
@@ -184,6 +214,80 @@ services:
       - lakehouse
 
   # ---------------------------------------------------------------------------
+  # CLICKHOUSE - Centralised Columnar Engine
+  # ---------------------------------------------------------------------------
+  # Consumed by the langfuse stack for trace analytics (langfuse_s3_event_upload
+  # analytics + LANGFUSE_S3_BATCH_EXPORT).
+  # Tight resource caps — ClickHouse is memory-hungry.
+  # ---------------------------------------------------------------------------
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3
+    container_name: lakehouse-clickhouse
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${CLICKHOUSE_HTTP_PORT:-8123}:8123"
+      - "127.0.0.1:${CLICKHOUSE_NATIVE_PORT:-9000}:9000"
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-default}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-clickhouse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD must be set via Locket/Infisical}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - lakehouse-clickhouse-data:/var/lib/clickhouse
+      - lakehouse-clickhouse-logs:/var/log/clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # REDIS - Centralised Queue / Cache
+  # ---------------------------------------------------------------------------
+  # Consumed by the langfuse stack (REDIS_HOST=lakehouse-redis, REDIS_AUTH).
+  # Tight resource caps; bind direct port to 127.0.0.1 only (internal use).
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: lakehouse-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    command:
+      - "redis-server"
+      - "--requirepass"
+      - "${REDIS_PASSWORD:?REDIS_PASSWORD must be set via Locket/Infisical}"
+      - "--maxmemory-policy"
+      - "${REDIS_MAXMEMORY_POLICY:-allkeys-lru}"
+    volumes:
+      - lakehouse-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:?must be set}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
   # LAKEKEEPER MIGRATE - Database Migrations
   # ---------------------------------------------------------------------------
   lakekeeper-migrate:
@@ -191,8 +295,8 @@ services:
     container_name: lakehouse-lakekeeper-migrate
     command: migrate
     environment:
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper}
-      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789}
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@postgres:5432/${POSTGRES_DB:-lakekeeper}}
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:?LAKEKEEPER_ENCRYPTION_KEY must be set via Locket/Infisical}
       LAKEKEEPER__PG_SSL_MODE: ${LAKEKEEPER_SSL_MODE:-prefer}
     depends_on:
       postgres:
@@ -202,8 +306,7 @@ services:
       # Note: Removed garage-init dependency - service_completed_successfully
       # condition is unreliable with remote Komodo deployments
     restart: "no"
-    networks:
-      - lakehouse
+
 
   # ---------------------------------------------------------------------------
   # LAKEKEEPER - Iceberg REST Catalog
@@ -217,10 +320,11 @@ services:
       - "${LAKEKEEPER_PORT:-8181}:8181"
       - "${LAKEKEEPER_METRICS_PORT:-9100}:9000"
     environment:
-      # PostgreSQL Connection (local dev or PlanetScale production)
-      LAKEKEEPER__PG_DATABASE_URL_READ: ${PLANETSCALE_DATABASE_URL:-postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper}
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper}
-      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789}
+      # PostgreSQL Connection — defaults to local lakehouse-postgres; can
+      # be overridden by PLANETSCALE_DATABASE_URL for managed deployments.
+      LAKEKEEPER__PG_DATABASE_URL_READ: ${PLANETSCALE_DATABASE_URL:-postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@postgres:5432/${POSTGRES_DB:-lakekeeper}}
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@postgres:5432/${POSTGRES_DB:-lakekeeper}}
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:?LAKEKEEPER_ENCRYPTION_KEY must be set via Locket/Infisical}
       LAKEKEEPER__PG_SSL_MODE: ${LAKEKEEPER_SSL_MODE:-prefer}
       # Server Configuration
       LAKEKEEPER__LISTEN_PORT: "8181"
@@ -265,8 +369,8 @@ services:
       # Lance Storage Root (Garage S3)
       LANCE_ROOT: s3://lance/
       # Garage S3 Credentials
-      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
-      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?GARAGE_ACCESS_KEY_ID must be set via Locket/Infisical}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set via Locket/Infisical}
       AWS_ENDPOINT_URL: http://garage:3900
       AWS_REGION: garage
       # Timeouts
@@ -306,8 +410,8 @@ services:
     environment:
       # Spring Boot JDBC connection to shared Postgres
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/nimtable
-      SPRING_DATASOURCE_USERNAME: lakekeeper
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-lakekeeper}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
       # Lakekeeper catalog endpoint (internal Docker network)
       NIMTABLE_CATALOG_URI: http://lakekeeper:8181
       NIMTABLE_CATALOG_WAREHOUSE: ${ICEBERG_WAREHOUSE:-lakehouse}
@@ -315,7 +419,7 @@ services:
       NIMTABLE_S3_ENDPOINT: http://garage:3900
       NIMTABLE_S3_REGION: garage
       NIMTABLE_S3_ACCESS_KEY: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
-      NIMTABLE_S3_SECRET_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      NIMTABLE_S3_SECRET_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set via Locket/Infisical}
       # Server
       SERVER_PORT: "3000"
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
@@ -356,8 +460,8 @@ services:
       # Source connector config (Postgres sample)
       OLAKE_CONFIG_PATH: /mnt/config
       JDBC_URL: jdbc:postgresql://postgres:5432/olake_state
-      JDBC_USERNAME: lakekeeper
-      JDBC_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      JDBC_USERNAME: ${POSTGRES_USER:-lakekeeper}
+      JDBC_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
       # Source Postgres (for the source connector — separate from state DB)
       SOURCE_DB_HOST: ${OLAKE_SOURCE_HOST:-postgres}
       SOURCE_DB_PORT: ${OLAKE_SOURCE_PORT:-5432}
@@ -367,7 +471,7 @@ services:
       SOURCE_DB_SSLMODE: ${OLAKE_SOURCE_SSLMODE:-prefer}
       # Iceberg writer S3 credentials
       WRITER_S3_ACCESS_KEY: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
-      WRITER_S3_SECRET_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      WRITER_S3_SECRET_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set via Locket/Infisical}
       WRITER_S3_ENDPOINT: http://garage:3900
       WRITER_S3_REGION: garage
       # Logging
@@ -412,7 +516,7 @@ services:
       - "${LANCEDB_VIEWER_PORT:-8081}:8080"
     environment:
       LANCEDB_URI: rest://lakehouse-lance-namespace:8182
-      ADMIN_TOKEN: ${LANCEDB_VIEWER_ADMIN_TOKEN:-devtoken}
+      ADMIN_TOKEN: ${LANCEDB_VIEWER_ADMIN_TOKEN:?LANCEDB_VIEWER_ADMIN_TOKEN must be set via Locket/Infisical}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
     depends_on:
       lance-namespace:
@@ -438,6 +542,9 @@ volumes:
   lakehouse-garage-meta:
   lakehouse-garage-data:
   lakehouse-postgres:
+  lakehouse-clickhouse-data:
+  lakehouse-clickhouse-logs:
+  lakehouse-redis-data:
   olake_state:
   nimtable_data:
 
