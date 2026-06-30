@@ -38,6 +38,14 @@ Per-nation assets for `england_dfe_statistics`, `scotland_*_curriculum`, `wales_
 | `ireland_curriculum_pdf_downloads` | none | Downloads NCCA + SEC PDFs to `stedding/ingest_queue/` |
 | `ireland_curriculum_pdf_extracted_text` | `pdf_downloads` | pymupdf + Marker + Docling extraction |
 
+### `lc_syllabus`
+
+`lc_syllabus_download.py`. The currently-taught Leaving Certificate syllabi corpus (8 subjects × 2 languages). Per the `ncca-leaving-cert-syllabi-corpus` openspec change (2026-06-30). The `pdf_processing` asset above scans both `stedding/ingest_queue/ncca.ie/` and `stedding/ingest_queue/curriculumonline.ie/` so this asset is the producer of the latter.
+
+| Asset | Deps | Notes |
+|:--|:--|:--|
+| `lc_syllabus_download` | none | `MultiPartitionsDefinition(subject × language)`. Downloads ~17 syllabi + specifications + guidelines PDFs from `curriculumonline.ie/getmedia/...` to `stedding/ingest_queue/curriculumonline.ie/`. SHA-256 dedup, idempotent. |
+
 ### `leaving_cert_2026`
 
 `leaving_cert/dlt_assets.py`. 7 priority subjects × 10 assets = 70 @dlt_assets for Leaving Cert 2026. Each subject has syllabus, past_papers, marking_schemes, examiner_reports tables in DuckLake.
