@@ -1,7 +1,7 @@
 # Infrastructure GOLD STANDARD
 
 The 6-file template that every Docker Compose stack under
-`infrastructure/stacks/<name>/` SHALL follow. Use this as the
+`bonneagar/stacks/<name>/` SHALL follow. Use this as the
 checklist when adding a new stack, and the audit reference when running
 `bun run validate-stacks` (the `stack-doctor` turbo task).
 
@@ -35,7 +35,7 @@ Plus a `README.md` (recommended but not required) for human readers.
 ## 1. `compose.yaml` — Service Definitions
 
 ```yaml
-# Exemplar: infrastructure/stacks/garage/compose.yaml
+# Exemplar: bonneagar/stacks/garage/compose.yaml
 services:
   garage:
     image: dxflrs/garage:v1.0.1
@@ -86,7 +86,7 @@ networks:
 ## 2. `pangolin.yaml` — Traefik Routing
 
 ```yaml
-# Exemplar: infrastructure/stacks/litellm/pangolin.yaml
+# Exemplar: bonneagar/stacks/litellm/pangolin.yaml
 http:
   routers:
     litellm:
@@ -116,7 +116,7 @@ services) can omit this file or have an empty stub.
 ## 3. `sidecar.yaml` — Locket Secret Injection
 
 ```yaml
-# Exemplar: infrastructure/stacks/litellm/sidecar.yaml
+# Exemplar: bonneagar/stacks/litellm/sidecar.yaml
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket:latest
@@ -151,7 +151,7 @@ networks:
 ## 4. `secrets.env` — Infisical References
 
 ```bash
-# Exemplar: infrastructure/stacks/litellm/secrets.env
+# Exemplar: bonneagar/stacks/litellm/secrets.env
 # COMMITTED: yes. PLAINTEXT: NEVER. Use Infisical URI references.
 
 LITELLM_MASTER_KEY=infisical://dev-baile/litellm/master_key
@@ -173,11 +173,11 @@ DATABASE_URL=infisical://dev-baile/litellm/postgres_url
 ## 5. `blueprint.yaml` — Komodo Resource Sync
 
 ```yaml
-# Exemplar: infrastructure/stacks/litellm/blueprint.yaml
+# Exemplar: bonneagar/stacks/litellm/blueprint.yaml
 name: litellm
 description: "LiteLLM gateway — LLM proxy with Postgres + Prometheus"
 type: stack
-run_directory: infrastructure/stacks/litellm
+run_directory: bonneagar/stacks/litellm
 files:
   - compose.yaml
   - sidecar.yaml
@@ -199,7 +199,7 @@ metadata:
 ## 6. `.env.example` — Local-Dev Placeholders
 
 ```bash
-# Exemplar: infrastructure/stacks/litellm/.env.example
+# Exemplar: bonneagar/stacks/litellm/.env.example
 # COMMITTED: yes. This file is for local development only.
 # For production, Locket resolves secrets via Infisical.
 
@@ -227,7 +227,7 @@ bun run stack:scaffold --name my-new-service
 # 6. Add the secrets to the Infisical vault:
 bun run scripts/init-vault.ts
 # 7. Create the Komodo procedure:
-#    infrastructure/komodo/procedures/<name>-<action>.toml
+#    bonneagar/komodo/procedures/<name>-<action>.toml
 # 8. Validate:
 bun run validate-stacks
 # 9. Commit and let Komodo sync deploy
@@ -240,7 +240,7 @@ bun run validate-stacks
 bun run validate-stacks
 
 # Single stack
-bun run stack-doctor.sh infrastructure/stacks/<name>/
+bun run stack-doctor.sh bonneagar/stacks/<name>/
 ```
 
 The `stack-doctor` checks:
@@ -263,38 +263,38 @@ completeness:
 
 | Stack | Why it's a good exemplar |
 |:--|:--|
-| `infrastructure/stacks/garage/` | Simplest possible stack (one service, S3 API, no web UI) |
-| `infrastructure/stacks/litellm/` | 3-service stack (gateway + postgres + prometheus), web-facing |
-| `infrastructure/stacks/cognee/` | 2-service stack (cognee + postgres) with complex env |
-| `infrastructure/stacks/pangolin/` | The most complex stack — Traefik + WireGuard + Pocket ID + CrowdSec |
+| `bonneagar/stacks/garage/` | Simplest possible stack (one service, S3 API, no web UI) |
+| `bonneagar/stacks/litellm/` | 3-service stack (gateway + postgres + prometheus), web-facing |
+| `bonneagar/stacks/cognee/` | 2-service stack (cognee + postgres) with complex env |
+| `bonneagar/stacks/pangolin/` | The most complex stack — Traefik + WireGuard + Pocket ID + CrowdSec |
 
 When in doubt, copy one of these and adapt.
 
 ## See Also
 
 - `.agents/skills/stack-ops/SKILL.md` — operational skill for working with stacks
-- `infrastructure/AGENTS.md` — agent instructions for the infrastructure layer
-- `infrastructure/stacks/README.md` — the 94-stack flat directory
-- `infrastructure/README.md` — 10-step quickstart bring-up
-- `infrastructure/komodo/procedures/` — Komodo GitOps procedures
-- `infrastructure/dagger/` — Dagger CI/CD modules
-- `infrastructure/PANGOLIN-SETUP.md` — Pangolin installation walkthrough
-- `infrastructure/SECRETS-MANAGEMENT.md` — Infisical + Locket deep-dive
-- `infrastructure/DEPLOYMENT-STRATEGY.md` — the canonical 6-step deploy playbook
+- `bonneagar/AGENTS.md` — agent instructions for the infrastructure layer
+- `bonneagar/stacks/README.md` — the 94-stack flat directory
+- `bonneagar/README.md` — 10-step quickstart bring-up
+- `bonneagar/komodo/procedures/` — Komodo GitOps procedures
+- `bonneagar/dagger/` — Dagger CI/CD modules
+- `bonneagar/PANGOLIN-SETUP.md` — Pangolin installation walkthrough
+- `bonneagar/SECRETS-MANAGEMENT.md` — Infisical + Locket deep-dive
+- `bonneagar/DEPLOYMENT-STRATEGY.md` — the canonical 6-step deploy playbook
 
 ## CI gate — `stack-doctor`
 
 A follow-up change will add a `stack-doctor` turbo task that
-runs the 4 audit scripts under `infrastructure/audit/scripts/`
+runs the 4 audit scripts under `bonneagar/audit/scripts/`
 and the 6-file compliance check, posting the output as a
 GitHub PR comment. The CI gate will be GREEN only when:
 
-1. Every directory under `infrastructure/stacks/**/` that has a
+1. Every directory under `bonneagar/stacks/**/` that has a
    `compose.yaml` also has the other 5 GOLD_STANDARD files
    (`sidecar.yaml`, `secrets.env`, `blueprint.yaml`,
    `.env.example`, `README.md`).
 2. Every `container_name:` declared in any compose is either
-   present in the live `infrastructure/audit/inventory/<host>-<UTC>.json`
+   present in the live `bonneagar/audit/inventory/<host>-<UTC>.json`
    snapshot OR explicitly documented as a "stacked-only, not
    running" service (e.g. the 3 control-plane stacks that
    only run on `arm1-oci`).
@@ -317,4 +317,4 @@ bun run stack-doctor
 ```
 
 For now, the audit scripts are run-on-demand only (see
-`infrastructure/audit/README.md`).
+`bonneagar/audit/README.md`).

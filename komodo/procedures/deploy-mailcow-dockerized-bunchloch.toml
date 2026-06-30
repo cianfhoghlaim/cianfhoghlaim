@@ -1,0 +1,109 @@
+# =============================================================================
+# DEPLOY MAILCOW-DOCKERIZED-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim Mailcow self-hosted email server to
+# bunchloch (MacBook M4 Max). This is the v4 consolidation move
+# (the stack files live at cianfhoghlaim/stacks/mailcow-dockerized/
+# since 2026-06-29, moved from bonneagar/stacks/mailcow-dockerized/).
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) — 15 mailcow containers (Postfix + Dovecot +
+#     SOGo + Rspamd + ClamAV + the built-in dovecot_imapsync_runner
+#     ofelia job + the new mailcow-export companion) listening on
+#     443/993/587/13306/7654/19991
+#   Routed through Pangolin on arm1-oci:
+#     mail.cianfhoghlaim.ie   → bunchloch:443  (TinyAuth + Member)
+#     imap.cianfhoghlaim.ie  → bunchloch:993  (internal, TinyAuth + SDP-MFA)
+#     smtp.cianfhoghlaim.ie  → bunchloch:587  (internal, TinyAuth + SDP-MFA)
+#
+# The 2 internal-only routes (imap, smtp) are bound to 127.0.0.1 only —
+# the IMAP/SMTP clients are the dovecot_imapsync_runner + the
+# mailcow-export companion, both of which connect from inside the
+# mailcow-network bridge. v1 is receive-only; no outbound relay.
+#
+# The mailcow-exports/ shared volume mounts into the Dagster container
+# on the oideachais stack at /srv/mailcow-exports (read-only), feeding
+# the new leabharlann_inbox_raw Dagster asset.
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   komodo run procedure deploy-mailcow-dockerized-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-mailcow-dockerized-bunchloch"
+description = "Deploy Mailcow self-hosted email server to bunchloch (MacBook M4) — mailcow stack → Pangolin routes → SOGo health check (5 stages, receive-only IMAP sync)"
+
+# =============================================================================
+# STAGE 0: Prerequisites
+# =============================================================================
+# Verify the locket tmpfs volume exists + the mailcow data dirs are
+# present. Mailcow expects ./data/conf/ to be writable + 4 IMAP
+# credentials in Infisical (mailcow/imap_credentials/<account>_user +
+# <account>_app_password × 4 accounts).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "mailcow-ensure-locket-volume" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "mailcow-ensure-data-dirs" } }
+
+# =============================================================================
+# STAGE 1: Locket Volume + Mailcow Data Dirs
+# =============================================================================
+# Create the tmpfs volume that the Locket sidecar writes to, and
+# the per-stack data/conf/ subdirectory the imapsync_runner.conf
+# lives in (the source file is committed; we just need the parent
+# dirs for Mailcow's first-boot population of conf/mysql/, conf/dovecot/,
+# conf/rspamd/, conf/sogo/, etc.).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "locket-and-data-dirs"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "mailcow-init-locket-volume" } }
+
+# =============================================================================
+# STAGE 2: Compose Up (mailcow-dockerized-bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "compose-up"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "mailcow-dockerized-bunchloch" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes
+# =============================================================================
+# Apply the Mailcow routing blueprint via the Pangolin Integration API.
+# Registers 3 routes:
+#   mail.cianfhoghlaim.ie  → bunchloch:443  (TinyAuth + Member)
+#   imap.cianfhoghlaim.ie → bunchloch:993  (TinyAuth + SDP-MFA)
+#   smtp.cianfhoghlaim.ie → bunchloch:587  (TinyAuth + SDP-MFA)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-mailcow-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification
+# =============================================================================
+# SOGo + admin UI on mail.cianfhoghlaim.ie + the mailcow-export
+# ofelia job status + the /srv/mailcow-exports/ mount.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "mailcow-health-check" } }

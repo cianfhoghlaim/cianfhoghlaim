@@ -1,0 +1,36 @@
+{
+  "name": "bonneagar",
+  "version": "0.2.0",
+  "module": "iac/cli.ts",
+  "type": "module",
+  "private": true,
+  "description": "IaC root manifest for bonneagar — the 88-stack GitOps home. The new iac/cli.ts entry point orchestrates the 3 systems (Komodo + Pangolin + Infisical) into a single TypeScript codebase. Replaces the 5 v0 iac/komodo/*.ts scripts + the 3 bash scripts at scripts/ + the 2 vault scripts at the repo root. Ready for the future split into github.com/cianfhoghlaim/bonneagar.",
+  "scripts": {
+    "iac": "bun run iac/cli.ts",
+    "iac:plan": "bun run iac/cli.ts plan",
+    "iac:deploy": "bun run iac/cli.ts deploy",
+    "iac:bootstrap": "bun run iac/cli.ts bootstrap",
+    "iac:teardown": "bun run iac/cli.ts teardown --force",
+    "iac:health": "bun run iac/cli.ts health",
+    "iac:sync:secrets": "bun run iac/cli.ts sync:secrets",
+    "iac:sync:resources": "bun run iac/cli.ts sync:resources",
+    "iac:sync:procedures": "bun run iac/cli.ts sync:procedures",
+    "iac:sync:resource-syncs": "bun run iac/cli.ts sync:resource-syncs",
+    "iac:sync:monitors": "bun run iac/cli.ts sync:monitors",
+    "iac:sync:alerts": "bun run iac/cli.ts sync:alerts",
+    "iac:sync:variables": "bun run iac/cli.ts sync:variables",
+    "iac:sync:schedules": "bun run iac/cli.ts sync:schedules",
+    "iac:sync:action-recipients": "bun run iac/cli.ts sync:action-recipients",
+    "iac:sync:olm": "bun run iac/cli.ts sync:olm"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@infisical/sdk": "^5.0.2",
+    "komodo_client": "^2.1.1"
+  }
+}

@@ -1,7 +1,7 @@
 # Quadrant → Stack Map
 
 A 1-page table that, for each of the 4 workspace-member
-quadrants, lists which `infrastructure/stacks/*/` it depends
+quadrants, lists which `bonneagar/stacks/*/` it depends
 on, which ports those stacks expose, which Dagster
 code-location they affect, and which `*.cianfhoghlaim.ie`
 domains they touch.
@@ -9,21 +9,21 @@ domains they touch.
 This map was created as part of
 `openspec/changes/audit-infrastructure-2026-06-15/`. The
 static container inventory lives in
-`infrastructure/stacks/HEALTH_REPORT.md`; the live
+`bonneagar/stacks/HEALTH_REPORT.md`; the live
 counterpart is produced by the audit scripts under
-`infrastructure/audit/scripts/`.
+`bonneagar/audit/scripts/`.
 
 ## 1. Oideachais → lakehouse + LLM + observability + browser
 
 | Stack | Path | Port | Dagster code-location | `*.cianfhoghlaim.ie` domain |
 |:--|:--|:--|:--|:--|
-| lakehouse (Garage + Postgres + Lakekeeper + Lance NS) | `infrastructure/stacks/lakehouse/` | 3900-3904, 5433, 8181, 9100, 8182 | `dagster_defs.definitions` (228 assets) | none (internal only) |
-| LiteLLM | `infrastructure/stacks/litellm/` | 4000, 9090 | (none — pure proxy) | none |
-| llama-swap | `infrastructure/stacks/llama-swap/` | 8080 | (none — model router) | none |
-| Langfuse | `infrastructure/stacks/langfuse/` | 3001, 3030, 9091, 5432, 6379, 8123 | (none — observability) | none |
-| Cognee | `infrastructure/stacks/cognee/` | 8100, 5432 | (none — knowledge graph) | none |
-| LanceDB | `infrastructure/stacks/lancedb/` | 8081 | (none — vector store) | none |
-| browser (browser-grid + browser-litellm + browser-stagehand-proxy) | `infrastructure/stacks/browser/` | 9222-9223, 4001, 4005 | `oideachais.dlt_sources.{education,medicine,law}.*` (uses Stagehand for live scraping) | none |
+| lakehouse (Garage + Postgres + Lakekeeper + Lance NS) | `bonneagar/stacks/lakehouse/` | 3900-3904, 5433, 8181, 9100, 8182 | `dagster_defs.definitions` (228 assets) | none (internal only) |
+| LiteLLM | `bonneagar/stacks/litellm/` | 4000, 9090 | (none — pure proxy) | none |
+| llama-swap | `bonneagar/stacks/llama-swap/` | 8080 | (none — model router) | none |
+| Langfuse | `bonneagar/stacks/langfuse/` | 3001, 3030, 9091, 5432, 6379, 8123 | (none — observability) | none |
+| Cognee | `bonneagar/stacks/cognee/` | 8100, 5432 | (none — knowledge graph) | none |
+| LanceDB | `bonneagar/stacks/lancedb/` | 8081 | (none — vector store) | none |
+| browser (browser-grid + browser-litellm + browser-stagehand-proxy) | `bonneagar/stacks/browser/` | 9222-9223, 4001, 4005 | `oideachais.dlt_sources.{education,medicine,law}.*` (uses Stagehand for live scraping) | none |
 | oRPC server + FastAPI (oideachais-api) | runs in `cianfhoghlaim-oideachais-api` (bunchloch) | 8000 | (none — API layer) | `api.oideachais.cianfhoghlaim.ie` (Pangolin) |
 | TanStack Start (oideachais-frontend) | runs in `cianfhoghlaim-oideachais-frontend` (bunchloch) | 3080 | (none — SPA) | `oideachais.cianfhoghlaim.ie` (Pangolin) |
 | Dagster (oideachais-dagster) | runs in `cianfhoghlaim-oideachais-dagster` (bunchloch) | 3335 | `dagster_defs.definitions` (280+ assets after C4.1) | `dagster.oideachais.cianfhoghlaim.ie` (Pangolin, VPN-only) |
@@ -42,34 +42,34 @@ counterpart is produced by the audit scripts under
 
 | Stack | Path | Port | Dagster code-location | `*.cianfhoghlaim.ie` domain |
 |:--|:--|:--|:--|:--|
-| croilar-convex (Convex backend + dashboard) | `infrastructure/stacks/croilar-convex/` | 3210-3211, 6791 | (none — BaaS) | none (internal Convex) |
-| croilar-dagster | `infrastructure/stacks/croilar-dagster/` | per Komodo | `croilar/definitions.py` (broken — see `croilar/README.md` §Known issues) | none |
-| croilar-hono-api (Hono + BAML on Bun) | `infrastructure/stacks/croilar-hono-api/` | per Komodo | (none — API) | none |
-| croilar-marimo | `infrastructure/stacks/croilar-marimo/` | per Komodo | (none — notebooks) | none |
-| croilar-web (TanStack Start + Convex auth) | `infrastructure/stacks/croilar-web/` | per Komodo | (none — SPA) | per Komodo |
-| croilar-postgres | `infrastructure/stacks/croilar-postgres/` | 5432-5434 | (none — DB) | none |
+| croilar-convex (Convex backend + dashboard) | `bonneagar/stacks/croilar-convex/` | 3210-3211, 6791 | (none — BaaS) | none (internal Convex) |
+| croilar-dagster | `bonneagar/stacks/croilar-dagster/` | per Komodo | `croilar/definitions.py` (broken — see `croilar/README.md` §Known issues) | none |
+| croilar-hono-api (Hono + BAML on Bun) | `bonneagar/stacks/croilar-hono-api/` | per Komodo | (none — API) | none |
+| croilar-marimo | `bonneagar/stacks/croilar-marimo/` | per Komodo | (none — notebooks) | none |
+| croilar-web (TanStack Start + Convex auth) | `bonneagar/stacks/croilar-web/` | per Komodo | (none — SPA) | per Komodo |
+| croilar-postgres | `bonneagar/stacks/croilar-postgres/` | 5432-5434 | (none — DB) | none |
 
 ## 4. Meaisínfhoghlaim → komodo-meaisinfhoghlaim-bunchloch + LLM gateway
 
 | Stack | Path | Port | Dagster code-location | `*.cianfhoghlaim.ie` domain |
 |:--|:--|:--|:--|:--|
-| meaisínfhoghlaim-bunchloch (orchestrated via Komodo) | `infrastructure/komodo/stacks/meaisínfhoghlaim-bunchloch.toml` | per Komodo | `meaisinfhoghlaim/dagster_defs/__init__.py` (4 heartbeat assets) | none |
-| LLM gateway (shared with oideachais) | `infrastructure/stacks/litellm/` | 4000 | (none — proxy) | none |
-| llama-swap (shared) | `infrastructure/stacks/llama-swap/` | 8080 | (none — router) | none |
+| meaisínfhoghlaim-bunchloch (orchestrated via Komodo) | `bonneagar/komodo/stacks/meaisínfhoghlaim-bunchloch.toml` | per Komodo | `meaisinfhoghlaim/dagster_defs/__init__.py` (4 heartbeat assets) | none |
+| LLM gateway (shared with oideachais) | `bonneagar/stacks/litellm/` | 4000 | (none — proxy) | none |
+| llama-swap (shared) | `bonneagar/stacks/llama-swap/` | 8080 | (none — router) | none |
 
 ## 5. Cross-quadrant infrastructure (the 9 user-named deploy targets)
 
 | Stack | Path | Host | `*.cianfhoghlaim.ie` domain | Runbook |
 |:--|:--|:--|:--|:--|
-| infisical | `infrastructure/infisical/` | arm1-oci | `infisical.cianfhoghlaim.ie` | `infrastructure/deploy-runbooks/infisical.md` |
-| komodo | `infrastructure/komodo/` | arm1-oci + bunchloch | `komodo.cianfhoghlaim.ie` | `infrastructure/deploy-runbooks/komodo.md` |
-| pangolin | `infrastructure/pangolin/` | arm1-oci | (Pangolin routes all `*.cianfhoghlaim.ie` domains) | `infrastructure/deploy-runbooks/pangolin.md` |
-| ansible | `infrastructure/ansible/` | n/a (provisioning automation) | n/a | `infrastructure/deploy-runbooks/ansible.md` |
-| cal-diy | `infrastructure/stacks/cal-diy/` | arm1-oci | `calcom.cianfhoghlaim.ie` | `infrastructure/deploy-runbooks/cal-diy.md` |
-| vikunja | `infrastructure/stacks/vikunja/` | (intended: bunchloch) | (per Komodo) | `infrastructure/deploy-runbooks/vikunja.md` |
-| n8n | `infrastructure/stacks/n8n/` | (intended: bunchloch) | (per Komodo) | `infrastructure/deploy-runbooks/n8n.md` |
-| changedetection | `infrastructure/stacks/changedetection/` | (intended: bunchloch) | (per Komodo) | `infrastructure/deploy-runbooks/changedetection.md` |
-| bytebase | `infrastructure/stacks/bytebase/` | (intended: arm1-oci) | (per Komodo) | `infrastructure/deploy-runbooks/bytebase.md` |
+| infisical | `bonneagar/infisical/` | arm1-oci | `infisical.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/infisical.md` |
+| komodo | `bonneagar/komodo/` | arm1-oci + bunchloch | `komodo.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/komodo.md` |
+| pangolin | `bonneagar/pangolin/` | arm1-oci | (Pangolin routes all `*.cianfhoghlaim.ie` domains) | `bonneagar/deploy-runbooks/pangolin.md` |
+| ansible | `bonneagar/ansible/` | n/a (provisioning automation) | n/a | `bonneagar/deploy-runbooks/ansible.md` |
+| cal-diy | `bonneagar/stacks/cal-diy/` | arm1-oci | `calcom.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/cal-diy.md` |
+| vikunja | `bonneagar/stacks/vikunja/` | (intended: bunchloch) | (per Komodo) | `bonneagar/deploy-runbooks/vikunja.md` |
+| n8n | `bonneagar/stacks/n8n/` | (intended: bunchloch) | (per Komodo) | `bonneagar/deploy-runbooks/n8n.md` |
+| changedetection | `bonneagar/stacks/changedetection/` | (intended: bunchloch) | (per Komodo) | `bonneagar/deploy-runbooks/changedetection.md` |
+| bytebase | `bonneagar/stacks/bytebase/` | (intended: arm1-oci) | (per Komodo) | `bonneagar/deploy-runbooks/bytebase.md` |
 
 ## 6. Domain → Host routing summary
 

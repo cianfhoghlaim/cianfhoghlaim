@@ -1,4 +1,4 @@
-# infrastructure/DEPLOYMENT-STRATEGY.md
+# bonneagar/DEPLOYMENT-STRATEGY.md
 
 The canonical playbook for taking a new Docker Compose stack
 from "code on disk" to "served at `*.cianfhoghlaim.ie`" on the
@@ -12,7 +12,7 @@ satisfies the `infrastructure-stacks` spec requirement
 `vikunja`, `n8n`, `changedetection`, `bytebase`).
 
 The per-stack deployment runbooks themselves live in
-`infrastructure/deploy-runbooks/<name>.md`.
+`bonneagar/deploy-runbooks/<name>.md`.
 
 ## 1. The 2-host topology
 
@@ -34,21 +34,21 @@ A new stack is composed of 4 deploy surfaces:
 
 | Surface | Where it lives | What it does |
 |:--|:--|:--|
-| **Komodo Core** | `bunchloch` (operator's MacBook) | Orchestrates the fleet via web UI + REST API at `komodo.cianfhoghlaim.ie:9120` (per `infrastructure/komodo/stacks/komodo.toml`) |
-| **Komodo Periphery** | `arm1-oci` + `bunchloch` (2 agents) | Each runs as a `komodo-periphery-{oci,macbook}` container; connects outbound to Core (per `infrastructure/komodo/stacks/komodo.toml`) |
-| **Infisical Vault** | `arm1-oci` (`infisical.cianfhoghlaim.ie`) | Self-hosted; the `dev-baile` environment is the source of truth (per `infrastructure/infisical/` + `infrastructure/SECRETS-MANAGEMENT.md`) |
-| **Pangolin** | `arm1-oci` (Traefik + Gerbil + Pocket ID) | Reverse-proxy + identity + TinyAuth SSO; routes `*.cianfhoghlaim.ie` to internal containers (per `infrastructure/PANGOLIN-SETUP.md`) |
+| **Komodo Core** | `bunchloch` (operator's MacBook) | Orchestrates the fleet via web UI + REST API at `komodo.cianfhoghlaim.ie:9120` (per `bonneagar/komodo/stacks/komodo.toml`) |
+| **Komodo Periphery** | `arm1-oci` + `bunchloch` (2 agents) | Each runs as a `komodo-periphery-{oci,macbook}` container; connects outbound to Core (per `bonneagar/komodo/stacks/komodo.toml`) |
+| **Infisical Vault** | `arm1-oci` (`infisical.cianfhoghlaim.ie`) | Self-hosted; the `dev-baile` environment is the source of truth (per `bonneagar/infisical/` + `bonneagar/SECRETS-MANAGEMENT.md`) |
+| **Pangolin** | `arm1-oci` (Traefik + Gerbil + Pocket ID) | Reverse-proxy + identity + TinyAuth SSO; routes `*.cianfhoghlaim.ie` to internal containers (per `bonneagar/PANGOLIN-SETUP.md`) |
 
 ## 3. The 6-step golden path
 
 For every new stack, follow these 6 steps in order. Each
 step has a dedicated runbook in
-`infrastructure/deploy-runbooks/<name>.md`.
+`bonneagar/deploy-runbooks/<name>.md`.
 
 ### Step 1: Write the 6 GOLD_STANDARD files
 
-In `infrastructure/stacks/<category>/<name>/`, create the 6
-required files (per `infrastructure/GOLD_STANDARD.md`):
+In `bonneagar/stacks/<name>/`, create the 6
+required files (per `bonneagar/GOLD_STANDARD.md`):
 
 | File | Purpose |
 |:--|:--|
@@ -85,7 +85,7 @@ provisioned (per `HEALTH_REPORT.md` Session 3 + 4 blockers):
 
 ### Step 4: Add a `[[stack]]` entry to a Komodo stack file
 
-In `infrastructure/komodo/stacks/<host>.toml`, append a new
+In `bonneagar/komodo/stacks/<host>.toml`, append a new
 `[[stack]]` block. The block declares:
 
 - `name` — the human-friendly name (e.g. `vikunja`)
@@ -124,7 +124,7 @@ docker ps | grep vikunja
 curl -I http://localhost:<port>/health
 
 # 3. The Pangolin private resource is registered
-bash infrastructure/audit/scripts/probe-public-urls.sh | grep vikunja
+bash bonneagar/audit/scripts/probe-public-urls.sh | grep vikunja
 ```
 
 ## 4. The 4 known blockers (from `HEALTH_REPORT.md` Session 3)
@@ -141,12 +141,12 @@ them once, then the 6-step golden path is clean.
 
 ## 5. The 5-stamp Pangolin private-resource blueprint
 
-Per `infrastructure/pangolin/a2a-resources.blueprint.yaml` and
-the schema in `infrastructure/GOLD_STANDARD.md`, every
+Per `bonneagar/pangolin/a2a-resources.blueprint.yaml` and
+the schema in `bonneagar/GOLD_STANDARD.md`, every
 `*.cianfhoghlaim.ie` private resource has the same shape:
 
 ```yaml
-# infrastructure/stacks/<category>/<name>/blueprint.yaml
+# bonneagar/stacks/<name>/blueprint.yaml
 private-resources:
   <name>:
     name: "<Display Name>"
@@ -167,7 +167,7 @@ docs.
 ## 6. Where the runbooks live
 
 The 9 user-named deploy targets each have a runbook at
-`infrastructure/deploy-runbooks/<name>.md`. Each runbook
+`bonneagar/deploy-runbooks/<name>.md`. Each runbook
 follows the 4-section structure mandated by the
 **Deployment Runbook** spec requirement:
 

@@ -8,7 +8,7 @@
 
 This repository was extracted from the former `kings_college_galway` /
 `cianfhoghlaim` monorepo on **2026-06-28** as part of the *sruth → cianfhoghlaim*
-consolidation and the split of `leabharlann/` and `infrastructure/` into
+consolidation and the split of `leabharlann/` and `bonneagar/` into
 independent, GitOps-managed repositories (BUSL-1.1).
 
 It contains:

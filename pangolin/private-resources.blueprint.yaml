@@ -166,3 +166,47 @@ private-resources:
       - eolas@cianfhoghlaim.ie
     machines:
       - crazy-siberian-chipmunk
+
+  # ---------------------------------------------------------------------------
+  # Mailcow (bunchloch) — 3 routes for mail.cianfhoghlaim.ie
+  # ---------------------------------------------------------------------------
+  # v4 move: per-stack canonical sources live at
+  #   cianfhoghlaim/stacks/mailcow-dockerized/pangolin.yaml  (6-label form)
+  #   cianfhoghlaim/stacks/mailcow-dockerized/blueprint.yaml (Komodo resource sync)
+  # These 3 entries mirror the per-stack definitions in v3 alias form
+  # for backward compatibility with the existing Komodo machinery.
+  # The 2 internal-only routes (imap, smtp) are bound to 127.0.0.1 only
+  # — v1 is receive-only for IMAP sync, no outbound relay.
+  # ---------------------------------------------------------------------------
+  mailcow-webmail:
+    name: "Mailcow Webmail (SOGo + Admin)"
+    mode: host
+    destination: nginx-mailcow
+    site: bunchloch
+    alias: mail.cianfhoghlaim.ie
+    users:
+      - eolas@cianfhoghlaim.ie
+    machines:
+      - bunchloch
+
+  mailcow-imap:
+    name: "Mailcow IMAPS (internal)"
+    mode: host
+    destination: dovecot-mailcow
+    site: bunchloch
+    alias: imap.cianfhoghlaim.ie
+    users:
+      - eolas@cianfhoghlaim.ie
+    machines:
+      - bunchloch
+
+  mailcow-smtp:
+    name: "Mailcow SMTP Submission (internal)"
+    mode: host
+    destination: postfix-mailcow
+    site: bunchloch
+    alias: smtp.cianfhoghlaim.ie
+    users:
+      - eolas@cianfhoghlaim.ie
+    machines:
+      - bunchloch
