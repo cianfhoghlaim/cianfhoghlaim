@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: 5-Layer Component Architecture (L1 Ingestion)
 
