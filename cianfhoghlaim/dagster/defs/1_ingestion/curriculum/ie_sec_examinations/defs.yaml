@@ -1,0 +1,13 @@
+# defs/1_ingestion/curriculum/ie_sec_examinations/defs.yaml
+#
+# L1 CelticIngestionComponent for the SEC examinations source (IE).
+# state_backed: true with state_refresh_interval=monthly (per user direction).
+type: cianfhoghlaim.dagster.components.CelticIngestionComponent
+attributes:
+  source_id: ie.education.examinations
+  domain: curriculum
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 3 * * *"
+  state_backed: true
+  state_refresh_interval: monthly

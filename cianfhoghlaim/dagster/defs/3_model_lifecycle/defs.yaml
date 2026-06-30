@@ -1,0 +1,10 @@
+# defs/3_model_lifecycle/defs.yaml — Layer 3 Model Lifecycle root mount.
+#
+# Per the dagster-5-layer-component-architecture spec, Layer 3 wraps
+# one CocoIndex v1 App per @asset (is_virtual=True) via
+# `CelticModelLifecycleComponent`. The R1–R4 conformance contract is
+# enforced at build_defs time. The 3 sub-folders below each hold
+# one or more Component YAML defs files.
+---
+type: dagster.DefsFolderComponent
+attributes: {}

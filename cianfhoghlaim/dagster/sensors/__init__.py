@@ -1,37 +1,20 @@
 """
-Dagster Sensors for Celtic Education Platform.
+Dagster sensors package.
 
-Sensor Groups:
-- Ireland Curriculum: Unified curriculum freshness (recommended)
-- Ireland Domain: Curriculum sitemap, exam papers (legacy)
-- UK sensors: DfE, SQA, Wales curriculum
-- Celtic sensors: Duchas, Tearma updates
-- Geospatial sensors: GeoHive, Met Office
-- Author-archive: directory-watch for UoG / Gemini / Takeout
-- Leabharlann: directory-watch for books / zotero / takeout v1
+The 6 hand-rolled sensors that previously lived here
+(author_archive_sensors, ccc_freshness_sensor, cognee_cron_sensor,
+curriculum_freshness, domain_sensors, leabharlann_sensors) were
+retired in the 2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture
+change. Sensors are now emitted by:
+
+- L1 CelticIngestionComponent (cron-driven; sensor not needed)
+- L5 CelticAgentOpsComponent (auto-fires the 5_agent_ops/<framework>/<agent>/agent_down
+  sensor when the health check returns healthy=False)
+- Upstream package monitoring (the breaking_change_sensor in
+  cianfhoghlaim/dagster/assets/upstream_monitoring_assets.py — kept
+  in the new tree under 3_model_lifecycle/upstream_monitoring_assets/)
+
+This package is intentionally empty. New sensors should be added as
+L5 CelticAgentOpsComponent auto-generated sensors or as new defs
+in the relevant layer folder.
 """
-from __future__ import annotations
-
-from .author_archive_sensors import author_archive_sensors
-from .cognee_cron_sensor import cognee_cron_sensor
-from .curriculum_freshness import curriculum_freshness_sensors
-from .domain_sensors import domain_sensors
-from .leabharlann_sensors import leabharlann_sensors
-
-# All sensors combined
-all_sensors = (
-    list(domain_sensors)
-    + list(curriculum_freshness_sensors)
-    + list(author_archive_sensors)
-    + list(leabharlann_sensors)
-    + [cognee_cron_sensor]
-)
-
-__all__ = [
-    "all_sensors",
-    "domain_sensors",
-    "curriculum_freshness_sensors",
-    "author_archive_sensors",
-    "leabharlann_sensors",
-    "cognee_cron_sensor",
-]

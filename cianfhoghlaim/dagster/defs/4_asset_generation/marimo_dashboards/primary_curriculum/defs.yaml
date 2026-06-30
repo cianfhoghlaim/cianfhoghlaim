@@ -1,0 +1,15 @@
+# defs/4_asset_generation/marimo_dashboards/primary_curriculum/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the primary curriculum
+# marimo dashboard. The dashboard itself lives in
+# cianfhoghlaim/notebooks/dashboards/education/primary_curriculum.py.
+type: cianfhoghlaim.dagster.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/dashboards/education/primary_curriculum.py
+  upstream_assets:
+    - 2_materials/baml_extraction/leaving_cert_pdfs
+    - 3_model_lifecycle/cocoindex_v1/leabharlann_books
+  refresh_on:
+    - "0 6 * * *"
+  slug: primary_curriculum

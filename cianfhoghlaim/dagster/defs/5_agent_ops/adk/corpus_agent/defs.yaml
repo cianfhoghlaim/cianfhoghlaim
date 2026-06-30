@@ -1,0 +1,20 @@
+# defs/5_agent_ops/adk/corpus_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the corpus_agent (adk) agent.
+# The Component emits 5 Dagster assets:
+# - agent_health_corpus_agent
+# - agent_routing_corpus_agent
+# - agent_memory_corpus_agent
+# - agent_event_corpus_agent
+# - agent_trace_corpus_agent
+type: cianfhoghlaim.dagster.components.CelticAgentOpsComponent
+attributes:
+  agent_name: corpus_agent
+  framework: adk
+  tools: ['search_corpus_tool', 'get_duchas_entry_tool', 'get_tearma_term_tool']
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.corpus
+  langfuse_drop_smoke_spans: true
+  routing_keywords: ['corpus', 'duchas', 'gaois', 'tearma', 'logainm', 'canuint', 'foclóir']
