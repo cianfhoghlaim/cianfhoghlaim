@@ -184,18 +184,27 @@ class CelticModelLifecycleComponent(Component):
                 fix="Check the file permissions on the source module",
             )
 
-        # R1: shared_lifespan import
-        if "from ._lifespan import shared_lifespan" not in source_text and "from ._lifespan import" not in source_text:
+        # R1: shared_lifespan import (the canonical module must be imported)
+        if "from ._lifespan import" not in source_text:
             raise ConformanceViolation(
                 rule="R1",
-                message="no `from ._lifespan import shared_lifespan` line",
-                fix="Add the import to delegate to the canonical lifespan (see oideachais-cocoindex-v1 skill)",
+                message="no `from ._lifespan import` line",
+                fix="Add `from ._lifespan import shared_lifespan` (or another canonical ContextKey) to delegate to the canonical lifespan (see oideachais-cocoindex-v1 skill)",
             )
 
-        # R2: canonical ContextKeys
-        canonical_keys = ["LANCE_DB", "EMBEDDER", "RESOLVED_FILE_REGISTRY"]
+        # R2: canonical ContextKeys (handles both single-line and multi-line
+        # `from ._lifespan import (X, Y, Z)` imports)
+        canonical_keys = ["LANCE_DB", "EMBEDDER", "RESOLVED_FILE_REGISTRY", "LANCEDB_URI", "EMBED_MODEL", "EMBED_DIM"]
+        # Split on the first occurrence of `from ._lifespan import` and
+        # check the next ~10 lines (handles the parenthesised multi-line
+        # form).
+        import re
+
+        r2_match = re.search(r"from \._lifespan import\s*\(?\s*([\s\S]{0,500}?)\)?\s*(?:\n\s*\n|\nfrom |\Z)", source_text)
+        r2_block = r2_match.group(1) if r2_match else ""
         has_canonical = any(
-            f"from ._lifespan import {k}" in source_text for k in canonical_keys
+            re.search(rf"\b{k}\b", r2_block) is not None
+            for k in canonical_keys
         )
         has_r2_exempt = "# R2-exempt:" in source_text
         if not has_canonical and not has_r2_exempt:
@@ -203,7 +212,7 @@ class CelticModelLifecycleComponent(Component):
                 rule="R2",
                 message=(
                     f"no canonical ContextKey ({', '.join(canonical_keys)}) "
-                    "and no `# R2-exempt:` comment"
+                    "in the `from ._lifespan import` block and no `# R2-exempt:` comment"
                 ),
                 fix=(
                     "Either import the canonical ContextKeys from `._lifespan`, "
