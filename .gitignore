@@ -311,3 +311,4 @@ cianfhoghlaim/leabharlann/
 # is regenerated from pyproject.toml and should never be tracked.
 cianfhoghlaim/*_uv.lock
 *_uv.lock
+bonneagar/audit
