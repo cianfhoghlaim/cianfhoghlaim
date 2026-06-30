@@ -6,11 +6,12 @@ The 5 priority specs, the 4 priority commands, the 5 priority
 skills, and the 1 priority mise task at the glance. **Read this
 first**; the rest of the file is the full 34-spec catalogue.
 
-### Priority specs (5 of 35)
+### Priority specs (6 of 36)
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
 | [`cianfhoghlaim-educational-mmo`](specs/cianfhoghlaim-educational-mmo/spec.md) | cianfhoghlaim | 8 NCCA LC subjects × per-subject quest packs × 8 ADK agents × hybrid x402 credential × TanStack Start 2D client |
+| [`dagster-5-layer-component-architecture`](specs/dagster-5-layer-component-architecture/spec.md) | shared | 5 KCG Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components + R1–R4 conformance at scaffold time |
 | [`oideachais-pipeline`](specs/oideachais-pipeline/spec.md) | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
 | [`oideachais-university-deep-extraction`](specs/oideachais-university-deep-extraction/spec.md) | oideachais | Per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for any British Isles university |
 | [`infrastructure-stacks`](specs/infrastructure-stacks/spec.md) | shared | 70+ Docker Compose stacks + stack-doctor + Pangolin + Infisical + Locket |
@@ -101,9 +102,9 @@ The system SHALL provide...
 **Migration**: [How to handle]
 ```
 
-## Capability Specs (34)
+## Capability Specs (36)
 
-The Cianfhoghlaim platform has **34 capability specs** organised into
+The Cianfhoghlaim platform has **36 capability specs** organised into
 **8 groups** by quadrant. Each spec is a thin capability pointer; the
 **authoritative details** live in the corresponding
 `.agents/skills/<skill>/SKILL.md` and the source code.
@@ -137,6 +138,7 @@ The Cianfhoghlaim platform has **34 capability specs** organised into
 | `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
 | `data-engineering-pipeline-documentation` | shared | sruth/oideachais/STATUS.md + sruth/oideachais/REFACTORING.md + per-area READMEs |
+| `dagster-5-layer-component-architecture` | shared | 5 KCG Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components |
 | `spaces-cicd-pipeline` | shared | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) |
 | `celtic-data-engineering-pipeline` | shared | dbt-duckdb at `sruth/oideachais/dbt_project/` + marimo notebooks at `sruth/meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
 | `gradio-ensemble-pattern` | shared | `sruth/meaisinfhoghlaim/pipelines/ensemble_gradio.py` + `spaces/_common/hf_hub_push.py` (sister to `celtic-data-engineering-patterns`) |
