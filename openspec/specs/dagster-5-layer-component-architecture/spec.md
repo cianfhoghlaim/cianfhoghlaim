@@ -1,30 +1,9 @@
-# Dagster 5-Layer Component Architecture Capability
+# dagster-5-layer-component-architecture Specification
 
 ## Purpose
-
-This spec defines the canonical Dagster architecture for the
-Cianfhoghlaim platform. It is the single source of truth for
-which Components, groups, automation conditions, and asset shapes
-the 5 KCG-specific Components (`CelticIngestionComponent`,
-`CelticMaterialsComponent`, `CelticModelLifecycleComponent`,
-`CelticAssetGenerationComponent`, `CelticAgentOpsComponent`)
-SHALL emit.
-
-The corresponding source code lives at:
-
-- `cianfhoghlaim/dagster/components/` (the 5 Components)
-- `cianfhoghlaim/dagster/defs/<1..5>_<layer>/` (the YAML defs tree)
-- `cianfhoghlaim/dagster/definitions.py` (the ~30-line bootstrap)
-
-This spec is the **canonical** spec; the corresponding source code
-is the authoritative implementation. See
-`openspec/changes/2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture/`
-for the change that introduced this capability.
-
+TBD - created by archiving change 2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture. Update Purpose after archive.
 ## Requirements
-
 ### Requirement: 5-Layer Hierarchy
-
 The Dagster asset graph SHALL be organised into exactly 5 layers:
 
 - **Layer 1 — Ingestion** (`1_ingestion`): DLT sources → DuckLake raw tables
@@ -186,12 +165,3 @@ be retired and replaced by the 5-layer shape.
 - **AND** the output for `5_agent_ops/` SHALL include at least: `custom/`, `adk/`, `agno/`
 - **AND** the `5_agent_ops/pipecat/` sub-folder is INTENTIONALLY ABSENT (the voice agent is deferred to a follow-on change per user direction)
 
-## Cross-references
-
-- `.agents/skills/dagster/SKILL.md` — the canonical Dagster 1.13+ patterns + KCG conventions
-- `.agents/skills/oideachais-cocoindex-v1/SKILL.md` — the 4-rule R1–R4 conformance contract
-- `.agents/skills/dlt/SKILL.md` — the DLT → Dagster bridge
-- `.agents/skills/agent-fleet-orchestration/SKILL.md` — the 12-agent fleet + L5 Agent Operations
-- `openspec/specs/oideachais-pipeline/spec.md` — the modified spec for L1 + L2 + L3
-- `openspec/specs/meaisinfhoghlaim-platform/spec.md` — the modified spec for L5
-- `openspec/changes/2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture/` — the change that introduced this spec

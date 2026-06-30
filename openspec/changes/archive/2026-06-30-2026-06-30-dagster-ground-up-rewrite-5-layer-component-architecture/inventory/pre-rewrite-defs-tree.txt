@@ -1,0 +1,7 @@
+cianfhoghlaim/dagster/defs/browser
+cianfhoghlaim/dagster/defs/celtic_asset_generation
+cianfhoghlaim/dagster/defs/cognify
+cianfhoghlaim/dagster/defs/croilar
+cianfhoghlaim/dagster/defs/meaisinfhoghlaim_platform
+cianfhoghlaim/dagster/defs/oideachais_pipeline
+cianfhoghlaim/dagster/defs/tuatha
