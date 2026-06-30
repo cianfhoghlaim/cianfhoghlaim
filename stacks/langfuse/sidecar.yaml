@@ -11,7 +11,7 @@ services:
     command:
       - "--provider=infisical"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -28,23 +28,21 @@ services:
     networks:
       - default
 
+  # langfuse-web: depends on locket (already in compose.dev.yaml override;
+  # this sidecar override is the runtime version)
   langfuse-web:
     depends_on:
       locket:
         condition: service_healthy
     volumes:
       - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-      
+
   langfuse-worker:
     depends_on:
       locket:
         condition: service_healthy
     volumes:
       - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
 
 secrets:
   infisical_secret:

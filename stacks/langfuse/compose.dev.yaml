@@ -1,9 +1,24 @@
 # Langfuse — local dev override
 # ----------------------------------------------------------------------------
-# See oideachais compose.dev.yaml for the rationale (no-op locket, env_file).
-# The langfuse compose has hardcoded "CHANGEME" placeholders for salt /
-# encryption_key / nextauth_secret that are normally injected by Locket —
-# in dev we provide stable placeholder values.
+# Mirrors the litellm/lakehouse dev override pattern:
+#   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+#      resolves without booting the real Infisical-injection sidecar.
+#   2. `env_file: ../../../../.env` (mise-hydrated local .env) is mounted
+#      so secrets reach the containers directly from the local development
+#      environment.
+#   3. Production-only env vars are overridden to dev values.
+#
+# Updated for the `centralise-data-plane` rewrite (2026-07-30):
+# - The standalone postgres/redis/clickhouse/minio services are removed.
+# - Local dev now expects the lakehouse stack to be running on the same
+#   network (use `docker compose --project-name lakehouse` upstream).
+# - DATABASE_URL points at `lakehouse-postgres` (the centralised service).
+# - S3 endpoints point at `lakehouse-garage` (the centralised service).
+# - ClickHouse + Redis hostnames point at `lakehouse-clickhouse` /
+#   `lakehouse-redis`.
+#
+# Usage:
+#   docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
 # ----------------------------------------------------------------------------
 
 services:
@@ -27,11 +42,21 @@ services:
       NEXTAUTH_SECRET: "dev-nextauth-secret-not-for-production-use-32-bytes-min"
       TELEMETRY_ENABLED: "false"
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
+      # Centralised data plane (resolves via lakehouse network)
+      DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/langfuse
       CLICKHOUSE_USER: "clickhouse"
       CLICKHOUSE_PASSWORD: "clickhouse"
       REDIS_AUTH: "devredissecret"
-      MINIO_ROOT_USER: "minio"
-      MINIO_ROOT_PASSWORD: "miniosecret"
+      # Garage S3 credentials (the SAME credentials used in lakehouse dev)
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: "lakehouse"
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: "lakehouse"
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
+      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: "lakehouse"
+      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: "devpassword"
+      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: "http://lakehouse-garage:3900"
 
   langfuse-worker:
     depends_on:
@@ -45,29 +70,18 @@ services:
       NEXTAUTH_SECRET: "dev-nextauth-secret-not-for-production-use-32-bytes-min"
       TELEMETRY_ENABLED: "false"
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
+      # Centralised data plane (resolves via lakehouse network)
+      DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/langfuse
       CLICKHOUSE_USER: "clickhouse"
       CLICKHOUSE_PASSWORD: "clickhouse"
       REDIS_AUTH: "devredissecret"
-      MINIO_ROOT_USER: "minio"
-      MINIO_ROOT_PASSWORD: "miniosecret"
-
-  postgres:
-    env_file:
-      - ../../../../.env
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "postgres"
-
-  clickhouse:
-    environment:
-      CLICKHOUSE_USER: "clickhouse"
-      CLICKHOUSE_PASSWORD: "clickhouse"
-
-  redis:
-    command: ["redis-server", "--requirepass", "devredissecret"]
-
-  minio:
-    environment:
-      MINIO_ROOT_USER: "minio"
-      MINIO_ROOT_PASSWORD: "miniosecret"
+      # Garage S3 credentials (the SAME credentials used in lakehouse dev)
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: "lakehouse"
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: "lakehouse"
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
+      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: "lakehouse"
+      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: "devpassword"
+      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: "http://lakehouse-garage:3900"

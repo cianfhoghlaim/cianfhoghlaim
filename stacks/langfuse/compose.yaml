@@ -1,77 +1,151 @@
-# Make sure to update the credential placeholders with your own secrets.
-# We mark them with # CHANGEME in the file below.
-# In addition, we recommend to restrict inbound traffic on the host to langfuse-web (port 3000) and minio (port 9090) only.
-# All other components are bound to localhost (127.0.0.1) to only accept connections from the local machine.
-# External connections from other machines will not be able to reach these services directly.
+# =============================================================================
+# LANGFUSE - LLM Observability (v3)
+# =============================================================================
+# Langfuse v3 is now a PURE APPLICATION TIER — it consumes the
+# centralised data plane from the lakehouse stack. Per the
+# `centralise-data-plane` rewrite (2026-07-30), this stack no longer
+# runs its own postgres / redis / clickhouse / minio. Instead:
+#
+#   • Database:    lakehouse-postgres (db=langfuse)
+#   • Cache/queue: lakehouse-redis (REDIS_HOST=lakehouse-redis)
+#   • Columnar:    lakehouse-clickhouse (CLICKHOUSE_URL=http://lakehouse-clickhouse:8123)
+#   • Object:      lakehouse-garage (3 buckets: langfuse-events/-media/-exports)
+#
+# Stack dependency: this stack MUST come up after `lakehouse-bunchloch`
+# has been deployed + has its 12 databases + 7 buckets initialised.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+#
+# ACCESS:
+#   Web UI: https://langfuse.cianfhoghlaim.ie (private, Pangolin Member)
+#   API:    https://langfuse.cianfhoghlaim.ie/api/public
+#   Auth:   Pocket ID SSO via Tinyauth + Langfuse's built-in auth.
+# =============================================================================
+
 services:
+  # ---------------------------------------------------------------------------
+  # LANGFUSE WORKER - Ingestion Queue + Trace Processor
+  # ---------------------------------------------------------------------------
   langfuse-worker:
     image: langfuse/langfuse-worker:3
-    restart: always
-    depends_on: &langfuse-depends-on
-      postgres:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      clickhouse:
-        condition: service_healthy
-    ports:
-      - 127.0.0.1:3031:3030
-    environment: &langfuse-worker-env
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres # CHANGEME
-      SALT: "mysalt" # CHANGEME
-      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000" # CHANGEME: generate via `openssl rand -hex 32`
+    container_name: langfuse-worker
+    restart: unless-stopped
+    # Cross-project deps are managed by Komodo's [stack.depends_on] in
+    # deploy-langfuse-bunchloch.toml — langfuse MUST come up after
+    # lakehouse-bunchloch has all 12 databases + 7 buckets initialised.
+    # depends_on is OMITTED here because compose can't resolve services
+    # from another compose project.
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/langfuse
+      SALT: ${SALT:?SALT must be set via Locket/Infisical}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY must be set via Locket/Infisical}
       TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-true}
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: ${LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES:-true}
-      CLICKHOUSE_MIGRATION_URL: ${CLICKHOUSE_MIGRATION_URL:-clickhouse://clickhouse:9000}
-      CLICKHOUSE_URL: ${CLICKHOUSE_URL:-http://clickhouse:8123}
+      # Centralised ClickHouse (lakehouse stack)
+      CLICKHOUSE_MIGRATION_URL: ${CLICKHOUSE_MIGRATION_URL:-clickhouse://lakehouse-clickhouse:9000}
+      CLICKHOUSE_URL: ${CLICKHOUSE_URL:-http://lakehouse-clickhouse:8123}
       CLICKHOUSE_USER: ${CLICKHOUSE_USER:-clickhouse}
-      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-clickhouse} # CHANGEME
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD must be set via Locket/Infisical}
       CLICKHOUSE_CLUSTER_ENABLED: ${CLICKHOUSE_CLUSTER_ENABLED:-false}
-      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: ${LANGFUSE_S3_EVENT_UPLOAD_BUCKET:-langfuse}
-      LANGFUSE_S3_EVENT_UPLOAD_REGION: ${LANGFUSE_S3_EVENT_UPLOAD_REGION:-auto}
-      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: ${LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID:-minio}
-      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: ${LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY:-miniosecret} # CHANGEME
-      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: ${LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT:-http://minio:9000}
+      # Centralised Garage S3 (3 separate buckets for events / media / exports)
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse-events
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: ${LANGFUSE_S3_EVENT_UPLOAD_REGION:-garage}
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: ${LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT:-http://lakehouse-garage:3900}
       LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: ${LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE:-true}
-      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: ${LANGFUSE_S3_EVENT_UPLOAD_PREFIX:-events/}
-      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: ${LANGFUSE_S3_MEDIA_UPLOAD_BUCKET:-langfuse}
-      LANGFUSE_S3_MEDIA_UPLOAD_REGION: ${LANGFUSE_S3_MEDIA_UPLOAD_REGION:-auto}
-      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID:-minio}
-      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY:-miniosecret} # CHANGEME
-      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: ${LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT:-http://localhost:9090}
+      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse-media
+      LANGFUSE_S3_MEDIA_UPLOAD_REGION: ${LANGFUSE_S3_MEDIA_UPLOAD_REGION:-garage}
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: ${LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT:-http://lakehouse-garage:3900}
       LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: ${LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE:-true}
-      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: ${LANGFUSE_S3_MEDIA_UPLOAD_PREFIX:-media/}
+      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
       LANGFUSE_S3_BATCH_EXPORT_ENABLED: ${LANGFUSE_S3_BATCH_EXPORT_ENABLED:-false}
-      LANGFUSE_S3_BATCH_EXPORT_BUCKET: ${LANGFUSE_S3_BATCH_EXPORT_BUCKET:-langfuse}
-      LANGFUSE_S3_BATCH_EXPORT_PREFIX: ${LANGFUSE_S3_BATCH_EXPORT_PREFIX:-exports/}
-      LANGFUSE_S3_BATCH_EXPORT_REGION: ${LANGFUSE_S3_BATCH_EXPORT_REGION:-auto}
-      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: ${LANGFUSE_S3_BATCH_EXPORT_ENDPOINT:-http://minio:9000}
-      LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT: ${LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT:-http://localhost:9090}
-      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: ${LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID:-minio}
-      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: ${LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY:-miniosecret} # CHANGEME
+      LANGFUSE_S3_BATCH_EXPORT_BUCKET: langfuse-exports
+      LANGFUSE_S3_BATCH_EXPORT_PREFIX: exports/
+      LANGFUSE_S3_BATCH_EXPORT_REGION: ${LANGFUSE_S3_BATCH_EXPORT_REGION:-garage}
+      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: ${LANGFUSE_S3_BATCH_EXPORT_ENDPOINT:-http://lakehouse-garage:3900}
+      LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT: ${LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT:-https://langfuse.cianfhoghlaim.ie}
+      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
       LANGFUSE_S3_BATCH_EXPORT_FORCE_PATH_STYLE: ${LANGFUSE_S3_BATCH_EXPORT_FORCE_PATH_STYLE:-true}
       LANGFUSE_INGESTION_QUEUE_DELAY_MS: ${LANGFUSE_INGESTION_QUEUE_DELAY_MS:-}
       LANGFUSE_INGESTION_CLICKHOUSE_WRITE_INTERVAL_MS: ${LANGFUSE_INGESTION_CLICKHOUSE_WRITE_INTERVAL_MS:-}
-      REDIS_HOST: ${REDIS_HOST:-redis}
+      # Centralised Redis (lakehouse stack)
+      REDIS_HOST: lakehouse-redis
       REDIS_PORT: ${REDIS_PORT:-6379}
-      REDIS_AUTH: ${REDIS_AUTH:-myredissecret} # CHANGEME
+      REDIS_AUTH: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set via Locket/Infisical}
       REDIS_TLS_ENABLED: ${REDIS_TLS_ENABLED:-false}
-      REDIS_TLS_CA: ${REDIS_TLS_CA:-/certs/ca.crt}
-      REDIS_TLS_CERT: ${REDIS_TLS_CERT:-/certs/redis.crt}
-      REDIS_TLS_KEY: ${REDIS_TLS_KEY:-/certs/redis.key}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    networks:
+      - langfuse
+      - lakehouse
 
+  # ---------------------------------------------------------------------------
+  # LANGFUSE WEB - Web UI + REST API
+  # ---------------------------------------------------------------------------
   langfuse-web:
     image: langfuse/langfuse:3
-    restart: always
-    depends_on: *langfuse-depends-on
+    container_name: langfuse-web
+    restart: unless-stopped
+    # Cross-project deps are managed by Komodo's [stack.depends_on] in
+    # deploy-langfuse-bunchloch.toml — see comment on langfuse-worker.
     ports:
-      - 3001:3000
+      - "127.0.0.1:3001:3000"   # Traefik handles public exposure via pangolin.yaml
     environment:
-      <<: *langfuse-worker-env
-      NEXTAUTH_URL: http://localhost:3000
-      NEXTAUTH_SECRET: mysecret # CHANGEME
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/langfuse
+      SALT: ${SALT:?SALT must be set via Locket/Infisical}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY must be set via Locket/Infisical}
+      NEXTAUTH_URL: https://langfuse.cianfhoghlaim.ie
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?NEXTAUTH_SECRET must be set via Locket/Infisical}
+      TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-true}
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: ${LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES:-true}
+      # Centralised ClickHouse (lakehouse stack)
+      CLICKHOUSE_MIGRATION_URL: ${CLICKHOUSE_MIGRATION_URL:-clickhouse://lakehouse-clickhouse:9000}
+      CLICKHOUSE_URL: ${CLICKHOUSE_URL:-http://lakehouse-clickhouse:8123}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-clickhouse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD must be set via Locket/Infisical}
+      CLICKHOUSE_CLUSTER_ENABLED: ${CLICKHOUSE_CLUSTER_ENABLED:-false}
+      # Centralised Garage S3 (3 separate buckets)
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse-events
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: ${LANGFUSE_S3_EVENT_UPLOAD_REGION:-garage}
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: ${LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT:-http://lakehouse-garage:3900}
+      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: ${LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE:-true}
+      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse-media
+      LANGFUSE_S3_MEDIA_UPLOAD_REGION: ${LANGFUSE_S3_MEDIA_UPLOAD_REGION:-garage}
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: ${LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT:-http://lakehouse-garage:3900}
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: ${LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE:-true}
+      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
+      LANGFUSE_S3_BATCH_EXPORT_ENABLED: ${LANGFUSE_S3_BATCH_EXPORT_ENABLED:-false}
+      LANGFUSE_S3_BATCH_EXPORT_BUCKET: langfuse-exports
+      LANGFUSE_S3_BATCH_EXPORT_PREFIX: exports/
+      LANGFUSE_S3_BATCH_EXPORT_REGION: ${LANGFUSE_S3_BATCH_EXPORT_REGION:-garage}
+      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: ${LANGFUSE_S3_BATCH_EXPORT_ENDPOINT:-http://lakehouse-garage:3900}
+      LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT: ${LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT:-https://langfuse.cianfhoghlaim.ie}
+      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      LANGFUSE_S3_BATCH_EXPORT_FORCE_PATH_STYLE: ${LANGFUSE_S3_BATCH_EXPORT_FORCE_PATH_STYLE:-true}
+      LANGFUSE_INGESTION_QUEUE_DELAY_MS: ${LANGFUSE_INGESTION_QUEUE_DELAY_MS:-}
+      LANGFUSE_INGESTION_CLICKHOUSE_WRITE_INTERVAL_MS: ${LANGFUSE_INGESTION_CLICKHOUSE_WRITE_INTERVAL_MS:-}
+      # Centralised Redis (lakehouse stack)
+      REDIS_HOST: lakehouse-redis
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_AUTH: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set via Locket/Infisical}
+      REDIS_TLS_ENABLED: ${REDIS_TLS_ENABLED:-false}
+      # First-run bootstrap (optional; only used on initial deploy)
       LANGFUSE_INIT_ORG_ID: ${LANGFUSE_INIT_ORG_ID:-}
       LANGFUSE_INIT_ORG_NAME: ${LANGFUSE_INIT_ORG_NAME:-}
       LANGFUSE_INIT_PROJECT_ID: ${LANGFUSE_INIT_PROJECT_ID:-}
@@ -81,86 +155,27 @@ services:
       LANGFUSE_INIT_USER_EMAIL: ${LANGFUSE_INIT_USER_EMAIL:-}
       LANGFUSE_INIT_USER_NAME: ${LANGFUSE_INIT_USER_NAME:-}
       LANGFUSE_INIT_USER_PASSWORD: ${LANGFUSE_INIT_USER_PASSWORD:-}
-
-  clickhouse:
-    image: clickhouse/clickhouse-server
-    restart: always
-    user: "101:101"
-    environment:
-      CLICKHOUSE_DB: default
-      CLICKHOUSE_USER: clickhouse
-      CLICKHOUSE_PASSWORD: clickhouse # CHANGEME
-    volumes:
-      - langfuse_clickhouse_data:/var/lib/clickhouse
-      - langfuse_clickhouse_logs:/var/log/clickhouse-server
-    ports:
-      - 127.0.0.1:8123:8123
-      - 127.0.0.1:9000:9000
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 1s
-
-  minio:
-    image: minio/minio
-    restart: always
-    entrypoint: sh
-    # create the 'langfuse' bucket before starting the service
-    command: -c 'mkdir -p /data/langfuse && minio server --address ":9000" --console-address ":9001" /data'
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: miniosecret # CHANGEME
-    ports:
-      - 9091:9000
-      - 127.0.0.1:9092:9001
-    volumes:
-      - langfuse_minio_data:/data
-    healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
-      interval: 1s
-      timeout: 5s
-      retries: 5
-      start_period: 1s
-
-  redis:
-    image: redis:7
-    restart: always
-    # CHANGEME: row below to secure redis password
-    command: >
-      --requirepass ${REDIS_AUTH:-myredissecret}
-    ports:
-      - 127.0.0.1:6379:6379
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 3s
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/public/health || exit 1"]
+      interval: 30s
       timeout: 10s
-      retries: 10
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    networks:
+      - langfuse
+      - lakehouse
 
-  postgres:
-    image: postgres:${POSTGRES_VERSION:-16}
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres # CHANGEME
-      POSTGRES_DB: postgres
-    ports:
-      - 127.0.0.1:5432:5432
-    volumes:
-      - langfuse_postgres_data:/var/lib/postgresql/data
-
-volumes:
-  langfuse_postgres_data:
-    driver: local
-  langfuse_clickhouse_data:
-    driver: local
-  langfuse_clickhouse_logs:
-    driver: local
-  langfuse_minio_data:
-    driver: local
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  langfuse:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true
