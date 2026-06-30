@@ -17,9 +17,9 @@ from typing import Any
 
 from dagster import AssetCheckResult, MaterializeResult, asset, asset_check, define_asset_job
 
-from sruth.oideachais.dlt_sources.ie.education.aistear import aistear_curriculum
-from sruth.oideachais.dlt_utils.destinations import get_dlt_destination
-from sruth.oideachais.dlt_utils.safety import safe_dlt_run
+from cianfhoghlaim.dlt.british_isles.ie.education.aistear import aistear_curriculum
+from cianfhoghlaim.dlt.destinations import get_dlt_destination
+from cianfhoghlaim.dlt.safety import safe_dlt_run
 
 
 AISTEAR_PIPELINE_NAME = "aistear_curriculum"

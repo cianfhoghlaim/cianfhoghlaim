@@ -387,7 +387,7 @@ def _get_top_20_candidate_pdfs(query_text: str) -> list[dict[str, Any]]:
 
     Per Phase A.3 of the browser-stack-crawl4ai-refactor
     (openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor),
-    this function now uses the new cianfhoghlaim.core.browser
+    this function now uses the new bonneagar.stacks.browser.sruth_browser
     namespace (deprecation alias for sruth_browser) to:
     1. Call `BrowserClient.search()` on the Crawl4AI backend
        (self-hosted, port 11235) with the email subject + body
@@ -407,7 +407,7 @@ def _get_top_20_candidate_pdfs(query_text: str) -> list[dict[str, Any]]:
 
     # Step 1: Browser search (Crawl4AI + Firecrawl fallback)
     try:
-        from cianfhoghlaim.core.browser import BrowserClient
+        from bonneagar.stacks.browser.sruth_browser import BrowserClient
         client = BrowserClient()
         results = client.search(
             query=query_text[:2000],  # Crawl4AI has a 2000-char query limit

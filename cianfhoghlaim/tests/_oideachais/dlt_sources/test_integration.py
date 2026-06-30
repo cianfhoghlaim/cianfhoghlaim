@@ -30,7 +30,7 @@ class TestFirecrawlSource:
 
     def test_scrape_page_no_api_key(self) -> None:
         """Test scrape_page returns client_unavailable when no API key."""
-        from oideachais.dlt_sources.common.firecrawl_source import scrape_page
+        from cianfhoghlaim.dlt.common.firecrawl_source import scrape_page
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             result = scrape_page("https://example.com")
@@ -41,7 +41,7 @@ class TestFirecrawlSource:
 
     def test_scrape_page_with_mock_client(self) -> None:
         """Test scrape_page with mocked Firecrawl client."""
-        from oideachais.dlt_sources.common.firecrawl_source import scrape_page
+        from cianfhoghlaim.dlt.common.firecrawl_source import scrape_page
 
         mock_result = {
             "markdown": "# Test Content",
@@ -69,7 +69,7 @@ class TestFirecrawlSource:
 
     def test_crawl_website_no_api_key(self) -> None:
         """Test crawl_website returns client_unavailable when no API key."""
-        from oideachais.dlt_sources.common.firecrawl_source import crawl_website
+        from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             results = list(crawl_website("https://example.com"))
@@ -79,7 +79,7 @@ class TestFirecrawlSource:
 
     def test_map_urls_no_api_key(self) -> None:
         """Test map_urls returns empty when no API key."""
-        from oideachais.dlt_sources.common.firecrawl_source import map_urls
+        from cianfhoghlaim.dlt.common.firecrawl_source import map_urls
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             results = list(map_urls("https://example.com"))
@@ -188,7 +188,7 @@ class TestDLTPipeline:
 
     def test_firecrawl_source_creation(self) -> None:
         """Test creating a Firecrawl DLT source."""
-        from oideachais.dlt_sources.common.firecrawl_source import create_firecrawl_source
+        from cianfhoghlaim.dlt.common.firecrawl_source import create_firecrawl_source
 
         source_factory = create_firecrawl_source(
             source_name="test_source",
@@ -279,7 +279,7 @@ class TestLanceDBClient:
     @pytest.fixture
     def lancedb_client(self, temp_dir: Path) -> Any:
         """Create a test LanceDB client with local storage."""
-        from oideachais.core.storage.clients.lancedb_cloud import (
+        from cianfhoghlaim.storage.clients.lancedb_cloud import (
             LanceDBCloudClient,
             LanceDBCloudConfig,
             LanceDBEnvironment,
@@ -314,7 +314,7 @@ class TestLanceDBClient:
     @pytest.mark.asyncio
     async def test_add_and_search_embeddings(self, lancedb_client: Any) -> None:
         """Test adding and searching embeddings."""
-        from oideachais.core.storage.clients.lancedb_cloud import EmbeddingBatch
+        from cianfhoghlaim.storage.clients.lancedb_cloud import EmbeddingBatch
 
         # Create batch with 3 embeddings
         batch = EmbeddingBatch(

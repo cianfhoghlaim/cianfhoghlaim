@@ -128,7 +128,7 @@ OFFICIAL_MEDIA_SAMPLE_SOURCES: list[dict[str, str]] = [
 def official_media_pre_research(context) -> dg.MaterializeResult:
     """Run PreResearchSite for every sample source via the ScrapeStrategist."""
     try:
-        from cianfhoghlaim.core.browser import ScrapeStrategist
+        from bonneagar.stacks.browser.sruth_browser import ScrapeStrategist
     except ImportError as e:
         logger.warning(
             "sruth_browser_not_available",
@@ -226,7 +226,7 @@ def official_media_pre_research(context) -> dg.MaterializeResult:
 def official_media_bulk_scrape(context, upstream=None) -> dg.MaterializeResult:
     """Scrape one canonical page per sample source using the strategist."""
     try:
-        from cianfhoghlaim.core.browser import ScrapeStrategist, ResearchSiteMap
+        from bonneagar.stacks.browser.sruth_browser import ScrapeStrategist, ResearchSiteMap
     except ImportError:
         return dg.MaterializeResult(
             metadata={"pages_scraped": 0, "bytes_in": 0, "bytes_out": 0,
@@ -304,7 +304,7 @@ def official_media_condense(context) -> dg.MaterializeResult:
                       "backend": "stub_no_baml_client"}
         )
 
-    from cianfhoghlaim.core.browser import ScrapeStrategist, ResearchSiteMap
+    from bonneagar.stacks.browser.sruth_browser import ScrapeStrategist, ResearchSiteMap
 
     strategist = ScrapeStrategist()
     pages_condensed = 0
@@ -368,7 +368,7 @@ def official_media_identify_uis(context) -> dg.MaterializeResult:
     """Take a screenshot + run visual grounding for any source with a UI."""
     try:
         from baml_client.sync_client import b as baml
-        from cianfhoghlaim.core.browser import ScrapeStrategist, ResearchSiteMap
+        from bonneagar.stacks.browser.sruth_browser import ScrapeStrategist, ResearchSiteMap
     except ImportError:
         return dg.MaterializeResult(
             metadata={"uis_identified": 0, "screenshots_taken": 0,

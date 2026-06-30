@@ -16,7 +16,7 @@ pytestmark = pytest.mark.integration
 def test_scrape_page_returns_client_unavailable_when_no_keys() -> None:
     """With FIRECRAWL_API_KEY='' and BROWSER_API_URL='', the router returns
     the client_unavailable sentinel, NOT a network call."""
-    from oideachais.dlt_sources.common.firecrawl_source import scrape_page
+    from cianfhoghlaim.dlt.common.firecrawl_source import scrape_page
 
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""
@@ -27,7 +27,7 @@ def test_scrape_page_returns_client_unavailable_when_no_keys() -> None:
 
 
 def test_get_scraper_client_returns_none_when_no_keys() -> None:
-    from oideachais.dlt_sources.common.firecrawl_source import get_scraper_client
+    from cianfhoghlaim.dlt.common.firecrawl_source import get_scraper_client
 
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""
@@ -38,7 +38,7 @@ def test_get_scraper_client_returns_none_when_no_keys() -> None:
 
 def test_get_scraper_client_prefers_browser_when_browser_api_set() -> None:
     """When BROWSER_API_URL is set AND firecrawl is set, browser wins."""
-    from oideachais.dlt_sources.common.firecrawl_source import get_scraper_client
+    from cianfhoghlaim.dlt.common.firecrawl_source import get_scraper_client
 
     os.environ["BROWSER_API_URL"] = "http://fake-browser:9999"
     os.environ["FIRECRAWL_API_KEY"] = "fc_fake"
@@ -50,7 +50,7 @@ def test_get_scraper_client_prefers_browser_when_browser_api_set() -> None:
 
 
 def test_crawl_website_with_no_client_yields_sentinel() -> None:
-    from oideachais.dlt_sources.common.firecrawl_source import crawl_website
+    from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
 
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""

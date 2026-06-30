@@ -28,7 +28,7 @@ class TestCognifyLeabharlannRows:
     """The cognify pass is a no-op in stub mode and graceful when Cognee is missing."""
 
     def test_stub_mode_returns_no_edges(self) -> None:
-        from oideachais.cognee_integration.leabharlann_cognify import (
+        from cianfhoghlaim.observability.cognee.leabharlann_cognify import (
             DATASET_BOOKS,
             cognify_leabharlann_rows,
         )
@@ -45,14 +45,14 @@ class TestCognifyLeabharlannRows:
     def test_unknown_dataset_raises(self) -> None:
         import asyncio
 
-        from oideachais.cognee_integration.leabharlann_cognify import (
+        from cianfhoghlaim.observability.cognee.leabharlann_cognify import (
             cognify_leabharlann_rows,
         )
         with pytest.raises(ValueError, match="unknown leabharlann dataset"):
             asyncio.run(cognify_leabharlann_rows("not_a_dataset", rows=[]))
 
     def test_datasets_constant(self) -> None:
-        from oideachais.cognee_integration.leabharlann_cognify import (
+        from cianfhoghlaim.observability.cognee.leabharlann_cognify import (
             DATASET_BOOKS,
             DATASET_TAKEOUT,
             DATASET_ZOTERO,
@@ -64,7 +64,7 @@ class TestCognifyLeabharlannRows:
 
 async def cognify_leabharlain_rows_sync(dataset, rows):
     """Helper to make the async function synchronous in tests."""
-    from oideachais.cognee_integration.leabharlann_cognify import (
+    from cianfhoghlaim.observability.cognee.leabharlann_cognify import (
         cognify_leabharlann_rows,
     )
     return await cognify_leabharlann_rows(dataset, rows)
@@ -77,13 +77,13 @@ async def cognify_leabharlain_rows_sync(dataset, rows):
 
 class TestNormaliseTitle:
     def test_lowercases_and_strips(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _normalise_title,
         )
         assert _normalise_title("Hello, World! 123") == "hello world 123"
 
     def test_handles_empty(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _normalise_title,
         )
         assert _normalise_title("") == ""
@@ -91,7 +91,7 @@ class TestNormaliseTitle:
 
 class TestExtractUrlsFromText:
     def test_extracts_http_and_https(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _extract_urls_from_text,
         )
         text = "See https://arxiv.org/abs/2504.02890 and http://example.com/foo."
@@ -100,7 +100,7 @@ class TestExtractUrlsFromText:
         assert "http://example.com/foo." in urls
 
     def test_empty_input(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _extract_urls_from_text,
         )
         assert _extract_urls_from_text("") == []
@@ -109,7 +109,7 @@ class TestExtractUrlsFromText:
 
 class TestArxivMatchQuery:
     def test_no_matches_returns_empty(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_arxiv_match_query,
         )
         cypher, params = _build_arxiv_match_query(
@@ -120,7 +120,7 @@ class TestArxivMatchQuery:
         assert params == {}
 
     def test_match_produces_edges(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_arxiv_match_query,
         )
         cypher, params = _build_arxiv_match_query(
@@ -143,7 +143,7 @@ class TestArxivMatchQuery:
 
 class TestModuleTitleMatchQuery:
     def test_match_produces_edges(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_module_title_match_query,
         )
         cypher, params = _build_module_title_match_query(
@@ -167,7 +167,7 @@ class TestModuleTitleMatchQuery:
         assert len(params["edges"]) >= 1
 
     def test_no_match(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_module_title_match_query,
         )
         cypher, params = _build_module_title_match_query(
@@ -184,7 +184,7 @@ class TestModuleTitleMatchQuery:
 
 class TestTakeoutCitationQuery:
     def test_match_produces_edges(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_takeout_citation_query,
         )
         cypher, params = _build_takeout_citation_query(
@@ -208,7 +208,7 @@ class TestTakeoutCitationQuery:
         assert params["edges"][0]["target"] == "g1"
 
     def test_no_match(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_takeout_citation_query,
         )
         cypher, params = _build_takeout_citation_query(
@@ -220,7 +220,7 @@ class TestTakeoutCitationQuery:
 
     def test_gemini_citations_fallback(self) -> None:
         """The takeout rule should also try the `gemini_citations` column."""
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             _build_takeout_citation_query,
         )
         _cypher, params = _build_takeout_citation_query(
@@ -243,7 +243,7 @@ class TestTakeoutCitationQuery:
 
 class TestBuildAllCrossArchiveQueries:
     def test_returns_only_matched_rules(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             build_all_cross_archive_queries,
         )
         queries = build_all_cross_archive_queries(
@@ -255,7 +255,7 @@ class TestBuildAllCrossArchiveQueries:
         assert queries == []
 
     def test_arxiv_match_included(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             build_all_cross_archive_queries,
         )
         queries = build_all_cross_archive_queries(
@@ -273,7 +273,7 @@ class TestBuildAllCrossArchiveQueries:
         assert "gemini_cites_zotero_arxiv" in names
 
     def test_all_three_rules_with_full_data(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             build_all_cross_archive_queries,
         )
         queries = build_all_cross_archive_queries(
@@ -310,7 +310,7 @@ class TestBuildAllCrossArchiveQueries:
 
     def test_handles_duckdb_json_string_columns(self) -> None:
         """DuckDB may return `gemini_citations` as a JSON string, not a list."""
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             build_all_cross_archive_queries,
         )
         queries = build_all_cross_archive_queries(
@@ -331,7 +331,7 @@ class TestBuildAllCrossArchiveQueries:
 
 class TestPopulateCrossArchiveEdges:
     def test_falkordb_unavailable_returns_stub(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             populate_cross_archive_edges,
         )
         with patch.dict(sys.modules, {"oideachais.graph.falkordb_client": None}):
@@ -348,7 +348,7 @@ class TestPopulateCrossArchiveEdges:
         assert result["total_edges"] == 0
 
     def test_mocked_falkordb_executes(self) -> None:
-        from oideachais.cognify_rules.leabharlann_cross_archive import (
+        from cianfhoghlaim.cognify.leabharlann_cross_archive import (
             populate_cross_archive_edges,
         )
         mock_client = MagicMock()
@@ -375,14 +375,14 @@ class TestPopulateCrossArchiveEdges:
 
 class TestCrossArchiveGraphRoute:
     def test_route_registers(self) -> None:
-        from oideachais.api.routes.cross_archive_graph import router
+        from cianfhoghlaim.agents.api._oideachais_api.routes.cross_archive_graph import router
 
         assert router.prefix == "" or router.prefix == "/"
         paths = [r.path for r in router.routes]  # type: ignore[attr-defined]
         assert any("/cross-archive-graph/{query}" in p for p in paths)
 
     def test_response_models(self) -> None:
-        from oideachais.api.routes.cross_archive_graph import (
+        from cianfhoghlaim.agents.api._oideachais_api.routes.cross_archive_graph import (
             GraphEdge,
             GraphNode,
             GraphResponse,
@@ -395,7 +395,7 @@ class TestCrossArchiveGraphRoute:
         assert g.total == 2
 
     def test_health_check_unavailable(self) -> None:
-        from oideachais.api.routes import cross_archive_graph as mod
+        from cianfhoghlaim.agents.api._oideachais_api.routes import cross_archive_graph as mod
 
         with patch.object(mod, "_get_falkordb_client", return_value=None):
             import asyncio
@@ -405,7 +405,7 @@ class TestCrossArchiveGraphRoute:
     def test_query_returns_200_with_mock_client(self) -> None:
         """End-to-end test of the route via FastAPI TestClient + mocked FalkorDB."""
         from fastapi.testclient import TestClient
-        from oideachais.api.routes import cross_archive_graph as mod
+        from cianfhoghlaim.agents.api._oideachais_api.routes import cross_archive_graph as mod
 
         mock_client = MagicMock()
         mock_client.query.return_value = [
@@ -425,7 +425,7 @@ class TestCrossArchiveGraphRoute:
         orig_get = mod._get_falkordb_client
         mod._get_falkordb_client = lambda: mock_client
         try:
-            from oideachais.api.main import app
+            from cianfhoghlaim.agents.api._oideachais_api.main import app
             client = TestClient(app)
             resp = client.get("/cross-archive-graph/irish")
             assert resp.status_code == 200
@@ -441,12 +441,12 @@ class TestCrossArchiveGraphRoute:
     def test_query_returns_200_when_falkordb_unavailable(self) -> None:
         """Graceful degradation: empty graph when FalkorDB is missing."""
         from fastapi.testclient import TestClient
-        from oideachais.api.routes import cross_archive_graph as mod
+        from cianfhoghlaim.agents.api._oideachais_api.routes import cross_archive_graph as mod
 
         orig_get = mod._get_falkordb_client
         mod._get_falkordb_client = lambda: None
         try:
-            from oideachais.api.main import app
+            from cianfhoghlaim.agents.api._oideachais_api.main import app
             client = TestClient(app)
             resp = client.get("/cross-archive-graph/anything")
             assert resp.status_code == 200
@@ -459,12 +459,12 @@ class TestCrossArchiveGraphRoute:
 
     def test_query_400_on_empty_string(self) -> None:
         from fastapi.testclient import TestClient
-        from oideachais.api.routes import cross_archive_graph as mod
+        from cianfhoghlaim.agents.api._oideachais_api.routes import cross_archive_graph as mod
 
         orig_get = mod._get_falkordb_client
         mod._get_falkordb_client = lambda: None
         try:
-            from oideachais.api.main import app
+            from cianfhoghlaim.agents.api._oideachais_api.main import app
             client = TestClient(app)
             resp = client.get("/cross-archive-graph/  ")  # whitespace
             # FastAPI may return 200 (whitespace passes) or 400; accept either
@@ -481,7 +481,7 @@ class TestCrossArchiveGraphRoute:
 
 class TestCogneeCronSensor:
     def test_sensor_evaluates_to_run_requests(self) -> None:
-        from oideachais.dagster_defs.sensors.cognee_cron_sensor import (
+        from cianfhoghlaim.dagster.sensors.cognee_cron_sensor import (
             evaluate_cognee_cron,
         )
         context = MagicMock()
@@ -492,7 +492,7 @@ class TestCogneeCronSensor:
         assert result.cursor == "1"
 
     def test_sensor_increments_cursor(self) -> None:
-        from oideachais.dagster_defs.sensors.cognee_cron_sensor import (
+        from cianfhoghlaim.dagster.sensors.cognee_cron_sensor import (
             evaluate_cognee_cron,
         )
         context = MagicMock()
@@ -508,13 +508,13 @@ class TestCogneeCronSensor:
 
 class TestCognifyAssets:
     def test_books_asset_imports(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_cognify_assets import (
+        from cianfhoghlaim.dagster.assets.leabharlann_cognify_assets import (
             LEABHARLANN_COGNIFY_ASSETS,
         )
         assert len(LEABHARLANN_COGNIFY_ASSETS) == 4
 
     def test_dataset_constants(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_cognify_assets import (
+        from cianfhoghlaim.dagster.assets.leabharlann_cognify_assets import (
             COGNEE_DATASET_BOOKS,
             COGNEE_DATASET_TAKEOUT,
             COGNEE_DATASET_ZOTERO,

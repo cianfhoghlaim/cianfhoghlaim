@@ -34,7 +34,7 @@ def get_browser_client():
         return None
 
     try:
-        from cianfhoghlaim.core.browser import BrowserClient
+        from bonneagar.stacks.browser.sruth_browser import BrowserClient
 
         return BrowserClient(base_url=browser_url)
     except ImportError:
@@ -107,7 +107,7 @@ def scrape_page(url: str, formats: list[str] | None = None) -> dict[str, Any]:
     try:
         if client_type == "browser":
             # Use BrowserClient (async)
-            from cianfhoghlaim.core.browser import ExtractionFormat
+            from bonneagar.stacks.browser.sruth_browser import ExtractionFormat
 
             format_map = {
                 "markdown": ExtractionFormat.MARKDOWN,
@@ -199,7 +199,7 @@ def crawl_website(
     try:
         if client_type == "browser":
             # Use BrowserClient: discover URLs then batch scrape
-            from cianfhoghlaim.core.browser import ExtractionFormat
+            from bonneagar.stacks.browser.sruth_browser import ExtractionFormat
 
             format_map = {
                 "markdown": ExtractionFormat.MARKDOWN,

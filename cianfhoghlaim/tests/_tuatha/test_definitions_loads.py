@@ -28,7 +28,7 @@ def test_tuatha_dagster_assets_definitions_imports() -> None:
 
     The `cwd` is `tuatha/`, so `from dagster_assets import definitions`
     works via the cwd-on-sys.path convention. The shim resolves
-    the `from sruth.shared.http import ...` chain in
+    the `from cianfhoghlaim.dlt.common.http_client import ...` chain in
     `dlt_sources/geospatial/gaeltacht_boundaries.py` etc.
 
     NB: the conftest.py imports `from tuath.api.main import app`

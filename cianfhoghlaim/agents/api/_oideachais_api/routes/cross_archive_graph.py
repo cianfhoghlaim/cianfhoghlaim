@@ -64,7 +64,7 @@ class GraphResponse(BaseModel):
 def _get_falkordb_client() -> Any:
     """Return a FalkorDBClient or None when falkordb is unavailable."""
     try:
-        from oideachais.graph.falkordb_client import get_graph_cache
+        from cianfhoghlaim.observability.falkordb_client import get_graph_cache
     except ImportError:
         return None
     try:

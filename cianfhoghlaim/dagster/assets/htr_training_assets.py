@@ -187,7 +187,7 @@ def segmented_lines(
     context.log.info(f"Segmenting lines for county: {county}")
 
     try:
-        from oideachais.ocr.line_segmentation import LineSegmenter, SegmentationConfig
+        from cianfhoghlaim.ocr.line_segmentation import LineSegmenter, SegmentationConfig
 
         segmenter = LineSegmenter(SegmentationConfig(
             target_height=config.target_height,
@@ -281,7 +281,7 @@ def training_dataset(
     context.log.info("Generating unified training dataset")
 
     try:
-        from oideachais.ocr.irish_htr_dataset import (
+        from cianfhoghlaim.ocr.irish_htr_dataset import (
             DatasetConfig,
             IrishHTRDatasetGenerator,
         )
@@ -431,7 +431,7 @@ def model_comparison(
     context.log.info("Running VLM model comparison")
 
     try:
-        from oideachais.ocr.vlm_finetune_comparison import VLMComparisonPipeline
+        from cianfhoghlaim.ocr.vlm_finetune_comparison import VLMComparisonPipeline
 
         pipeline = VLMComparisonPipeline(
             dataset_path="./irish_htr_dataset/unsloth",
@@ -497,7 +497,7 @@ def mobile_deployment(
     context.log.info("Generating mobile deployment artifacts")
 
     try:
-        from oideachais.ocr.vlm_finetune_comparison import (
+        from cianfhoghlaim.ocr.vlm_finetune_comparison import (
             MOBILE_TARGETS,
             VLMComparisonPipeline,
         )

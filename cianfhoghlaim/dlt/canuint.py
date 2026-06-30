@@ -21,8 +21,8 @@ from collections.abc import Iterator
 import dlt
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
-from sruth.oideachais.observability.logging import get_logger
-from sruth.shared.http import canuint_client
+from cianfhoghlaim.observability.logging import get_logger
+from cianfhoghlaim.dlt.common.http_client import canuint_client
 
 logger = get_logger(__name__)
 

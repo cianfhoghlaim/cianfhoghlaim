@@ -278,9 +278,9 @@ def create_pipeline(
 # `croilar/dlt_utils/destinations.py` collapse to a 5-line shim
 # that re-exports `with_namespace("tuath")` etc. See:
 #
-#   tuatha/dlt_utils/destinations.py:    from oideachais.dlt_utils.destinations import with_namespace
+#   tuatha/dlt_utils/destinations.py:    from cianfhoghlaim.dlt.destinations_oideachais import with_namespace
 #                                       with_namespace("tuath").re_export_into(globals())
-#   croilar/dlt_utils/destinations.py:   from oideachais.dlt_utils.destinations import with_namespace
+#   croilar/dlt_utils/destinations.py:   from cianfhoghlaim.dlt.destinations_oideachais import with_namespace
 #                                       with_namespace("croilar").re_export_into(globals())
 
 
@@ -339,7 +339,7 @@ class _NamespacedDestinations:
 
         Lets `tuatha/dlt_utils/destinations.py` be a single line:
 
-            from oideachais.dlt_utils.destinations import with_namespace
+            from cianfhoghlaim.dlt.destinations_oideachais import with_namespace
             with_namespace("tuath").re_export_into(globals())
         """
         g["NAMESPACE"] = self.NAMESPACE

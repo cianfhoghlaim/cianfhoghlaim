@@ -23,7 +23,7 @@ class TestOfficialMediaSampleSources:
     """The OFFICIAL_MEDIA_SAMPLE_SOURCES list must cover all 10 categories."""
 
     def test_all_10_categories_present(self) -> None:
-        from oideachais.dagster_defs.assets.official_media.scraping_assets import (
+        from cianfhoghlaim.dagster.assets.official_media.scraping_assets import (
             OFFICIAL_MEDIA_SAMPLE_SOURCES,
         )
         categories = {s["category"] for s in OFFICIAL_MEDIA_SAMPLE_SOURCES}
@@ -45,7 +45,7 @@ class TestOfficialMediaSampleSources:
     def test_at_least_one_per_category(self) -> None:
         from collections import Counter
 
-        from oideachais.dagster_defs.assets.official_media.scraping_assets import (
+        from cianfhoghlaim.dagster.assets.official_media.scraping_assets import (
             OFFICIAL_MEDIA_SAMPLE_SOURCES,
         )
         counts = Counter(s["category"] for s in OFFICIAL_MEDIA_SAMPLE_SOURCES)
@@ -53,7 +53,7 @@ class TestOfficialMediaSampleSources:
             assert count >= 1, f"{cat} has no sources"
 
     def test_cps_gov_uk_is_included(self) -> None:
-        from oideachais.dagster_defs.assets.official_media.scraping_assets import (
+        from cianfhoghlaim.dagster.assets.official_media.scraping_assets import (
             OFFICIAL_MEDIA_SAMPLE_SOURCES,
         )
         cps = [s for s in OFFICIAL_MEDIA_SAMPLE_SOURCES if s["slug"] == "cps_gov_uk"]
@@ -62,7 +62,7 @@ class TestOfficialMediaSampleSources:
         assert "cps.gov.uk" in cps[0]["url"]
 
     def test_nation_field_set(self) -> None:
-        from oideachais.dagster_defs.assets.official_media.scraping_assets import (
+        from cianfhoghlaim.dagster.assets.official_media.scraping_assets import (
             OFFICIAL_MEDIA_SAMPLE_SOURCES,
         )
         valid_nations = {"ie", "ni", "en", "sct", "wls", "iom", "jey", "ggy"}
@@ -70,7 +70,7 @@ class TestOfficialMediaSampleSources:
             assert s["nation"] in valid_nations, f"{s['slug']} has bad nation {s['nation']}"
 
     def test_each_source_has_url_and_goal(self) -> None:
-        from oideachais.dagster_defs.assets.official_media.scraping_assets import (
+        from cianfhoghlaim.dagster.assets.official_media.scraping_assets import (
             OFFICIAL_MEDIA_SAMPLE_SOURCES,
         )
         for s in OFFICIAL_MEDIA_SAMPLE_SOURCES:
@@ -84,7 +84,7 @@ class TestOfficialMediaPreResearchAsset:
     def test_returns_metadata_when_sruth_browser_missing(
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        from oideachais.dagster_defs.assets.official_media import scraping_assets
+        from cianfhoghlaim.dagster.assets.official_media import scraping_assets
 
         # Make sruth_browser import fail
         monkeypatch.setitem(
@@ -101,7 +101,7 @@ class TestOfficialMediaPreResearchAsset:
     def test_assets_defined(self) -> None:
         """All 4 assets must be importable + decorated with @dg.asset."""
 
-        from oideachais.dagster_defs.assets.official_media import scraping_assets
+        from cianfhoghlaim.dagster.assets.official_media import scraping_assets
 
         for name in [
             "official_media_pre_research",
@@ -127,7 +127,7 @@ class TestOfficialMediaAssetMetadata:
     def test_pre_research_metadata_keys(self) -> None:
         # Simulate the asset by calling its body and inspecting metadata
         import dagster as dg
-        from oideachais.dagster_defs.assets.official_media import scraping_assets
+        from cianfhoghlaim.dagster.assets.official_media import scraping_assets
 
         with patch.dict("sys.modules", {"sruth_browser": None}):
             result = scraping_assets.official_media_pre_research(context=None)
@@ -145,7 +145,7 @@ class TestOfficialMediaAssetMetadata:
     )
     def test_bulk_scrape_metadata_keys(self) -> None:
         import dagster as dg
-        from oideachais.dagster_defs.assets.official_media import scraping_assets
+        from cianfhoghlaim.dagster.assets.official_media import scraping_assets
 
         with patch.dict(
             "sys.modules", {"sruth_browser": None, "baml_client": None}
@@ -162,7 +162,7 @@ class TestOfficialMediaAssetMetadata:
     )
     def test_condense_metadata_keys(self) -> None:
         import dagster as dg
-        from oideachais.dagster_defs.assets.official_media import scraping_assets
+        from cianfhoghlaim.dagster.assets.official_media import scraping_assets
 
         with patch.dict(
             "sys.modules", {"sruth_browser": None, "baml_client": None}
@@ -179,7 +179,7 @@ class TestOfficialMediaAssetMetadata:
     )
     def test_identify_uis_metadata_keys(self) -> None:
         import dagster as dg
-        from oideachais.dagster_defs.assets.official_media import scraping_assets
+        from cianfhoghlaim.dagster.assets.official_media import scraping_assets
 
         with patch.dict(
             "sys.modules", {"sruth_browser": None, "baml_client": None}
@@ -195,7 +195,7 @@ class TestAssetRegistration:
     """The 4 new assets must be registered in all_assets."""
 
     def test_assets_in_official_media_init(self) -> None:
-        from oideachais.dagster_defs.assets import official_media
+        from cianfhoghlaim.dagster.assets import official_media
 
         for name in [
             "official_media_pre_research",
@@ -207,7 +207,7 @@ class TestAssetRegistration:
 
     def test_assets_in_assets_init_all_assets(self) -> None:
         # The new assets are individual exports, not in a list
-        from oideachais.dagster_defs.assets import (
+        from cianfhoghlaim.dagster.assets import (
             all_assets,
             official_media_bulk_scrape,
             official_media_condense,

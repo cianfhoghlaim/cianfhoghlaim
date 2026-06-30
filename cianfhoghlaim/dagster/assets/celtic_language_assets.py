@@ -65,7 +65,7 @@ def duchas_volumes(
     """
     context.log.info("Ingesting Dúchas folklore volumes")
 
-    from oideachais.dlt_sources.ie.culture.duchas import duchas_source
+    from cianfhoghlaim.dlt.british_isles.ie.culture.duchas import duchas_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="duchas_volumes",
@@ -112,7 +112,7 @@ def duchas_schools_collection(
     """
     context.log.info("Ingesting Dúchas Schools Collection")
 
-    from oideachais.dlt_sources.ie.culture.duchas import duchas_source
+    from cianfhoghlaim.dlt.british_isles.ie.culture.duchas import duchas_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="duchas_schools",
@@ -316,7 +316,7 @@ def ud_treebank_sentences(
     language = context.partition_key
     context.log.info(f"Ingesting UD treebank for language: {language}")
 
-    from oideachais.dlt_sources.ie.education.universal_dependencies import ud_source
+    from cianfhoghlaim.dlt.british_isles.ie.education.universal_dependencies import ud_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name=f"ud_treebank_{language}",

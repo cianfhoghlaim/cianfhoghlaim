@@ -25,7 +25,7 @@ Why this exists:
 
 Usage:
 
-    from oideachais.dagster_defs.dbt_translator import CelticDagsterDbtTranslator
+    from cianfhoghlaim.dagster.dbt_translator import CelticDagsterDbtTranslator
     from dagster_dbt import DbtCliResource, dbt_assets
 
     dbt = DbtCliResource(project_dir=Path(__file__).parent / "dbt_project")

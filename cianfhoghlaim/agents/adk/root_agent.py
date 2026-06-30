@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 # Import observability (lazy to handle missing deps)
 try:
-    from oideachais.observability import (
+    from cianfhoghlaim.observability import (
         GeminiLLMSpan,
         annotate_span,
         create_generation,
@@ -53,16 +53,16 @@ except ImportError:
 
 # Import Logfire (lazy)
 try:
-    from oideachais.observability.logfire_config import (
+    from cianfhoghlaim.observability.logfire_config import (
         ensure_initialized as ensure_logfire,
     )
-    from oideachais.observability.logfire_config import (
+    from cianfhoghlaim.observability.logfire_config import (
         instrument as logfire_instrument,
     )
-    from oideachais.observability.logfire_config import (
+    from cianfhoghlaim.observability.logfire_config import (
         log_llm_call as logfire_log_llm,
     )
-    from oideachais.observability.logfire_config import (
+    from cianfhoghlaim.observability.logfire_config import (
         logfire_span,
     )
     HAS_LOGFIRE = True

@@ -21,7 +21,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any
 
-from sruth.oideachais.site_analysis import (
+from cianfhoghlaim.dlt.site_analysis import (
     LayoutFingerprint,
     PageDescription,
     SiteAnalysis,

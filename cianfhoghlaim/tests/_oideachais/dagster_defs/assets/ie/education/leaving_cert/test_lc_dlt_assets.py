@@ -14,7 +14,7 @@ pytestmark = pytest.mark.integration
 def test_leaving_cert_dlt_assets_have_seven_subjects() -> None:
     """The 7 priority subjects per the leaving-cert-2026 proposal."""
     try:
-        from oideachais.dagster_defs.assets.leaving_cert.dlt_assets import (
+        from cianfhoghlaim.dagster.assets.leaving_cert.dlt_assets import (
             LEAVING_CERT_DLT_ASSETS,
         )
     except ImportError as exc:
@@ -35,7 +35,7 @@ def test_leaving_cert_dlt_assets_cover_seven_subjects() -> None:
     name as `leaving_cert_<subject>_ducklake`. We match either form.
     """
     try:
-        from oideachais.dagster_defs.assets.leaving_cert.dlt_assets import (
+        from cianfhoghlaim.dagster.assets.leaving_cert.dlt_assets import (
             LEAVING_CERT_DLT_ASSETS,
         )
     except ImportError as exc:

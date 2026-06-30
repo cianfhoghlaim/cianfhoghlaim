@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from sruth.oideachais.dagster_defs.asset_checks import check_weekly_downloads_row_count
+from cianfhoghlaim.dagster.asset_checks import check_weekly_downloads_row_count
 
 
 def test_check_passes_when_row_count_above_threshold() -> None:

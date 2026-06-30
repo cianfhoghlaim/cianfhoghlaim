@@ -23,7 +23,7 @@ class TestCanonicalTargets:
     """The 3 canonical targets must have the expected shape."""
 
     def test_dev_target(self) -> None:
-        from oideachais.dlt_utils.target_factory import DEV
+        from cianfhoghlaim.dlt.target_factory import DEV
 
         assert DEV.name == "dev"
         assert DEV.destination == "duckdb"
@@ -32,7 +32,7 @@ class TestCanonicalTargets:
         assert DEV.is_production is False
 
     def test_staging_target(self) -> None:
-        from oideachais.dlt_utils.target_factory import STAGING
+        from cianfhoghlaim.dlt.target_factory import STAGING
 
         assert STAGING.name == "staging"
         assert STAGING.destination == "motherduck"
@@ -41,7 +41,7 @@ class TestCanonicalTargets:
         assert STAGING.is_production is False
 
     def test_prod_target(self) -> None:
-        from oideachais.dlt_utils.target_factory import PROD
+        from cianfhoghlaim.dlt.target_factory import PROD
 
         assert PROD.name == "prod"
         assert PROD.destination == "ducklake"
@@ -54,7 +54,7 @@ class TestCanonicalTargets:
         assert "BUCKET" in PROD.requires_secrets
 
     def test_all_targets_dict(self) -> None:
-        from oideachais.dlt_utils.target_factory import ALL_TARGETS, DEV, PROD, STAGING
+        from cianfhoghlaim.dlt.target_factory import ALL_TARGETS, DEV, PROD, STAGING
 
         assert set(ALL_TARGETS) == {"dev", "staging", "prod"}
         assert ALL_TARGETS["dev"] is DEV
@@ -67,20 +67,20 @@ class TestGetTarget:
 
     def test_default_is_dev(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OIDEACHAIS_TARGET", raising=False)
-        from oideachais.dlt_utils.target_factory import DEV, get_target
+        from cianfhoghlaim.dlt.target_factory import DEV, get_target
 
         assert get_target() is DEV
         assert get_target("dev") is DEV
 
     def test_explicit_staging(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OIDEACHAIS_TARGET", raising=False)
-        from oideachais.dlt_utils.target_factory import STAGING, get_target
+        from cianfhoghlaim.dlt.target_factory import STAGING, get_target
 
         assert get_target("staging") is STAGING
 
     def test_explicit_prod(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OIDEACHAIS_TARGET", raising=False)
-        from oideachais.dlt_utils.target_factory import PROD, get_target
+        from cianfhoghlaim.dlt.target_factory import PROD, get_target
 
         assert get_target("prod") is PROD
 
@@ -88,13 +88,13 @@ class TestGetTarget:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setenv("OIDEACHAIS_TARGET", "prod")
-        from oideachais.dlt_utils.target_factory import PROD, get_target
+        from cianfhoghlaim.dlt.target_factory import PROD, get_target
 
         assert get_target() is PROD
 
     def test_unknown_target_raises(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OIDEACHAIS_TARGET", raising=False)
-        from oideachais.dlt_utils.target_factory import get_target
+        from cianfhoghlaim.dlt.target_factory import get_target
 
         with pytest.raises(ValueError, match="Unknown target"):
             get_target("unknown")
@@ -108,7 +108,7 @@ class TestValidateTargetSecrets:
     ) -> None:
         monkeypatch.delenv("MOTHERDUCK_TOKEN", raising=False)
         monkeypatch.delenv("DUCKLAKE_POSTGRES_HOST", raising=False)
-        from oideachais.dlt_utils.target_factory import DEV, validate_target_secrets
+        from cianfhoghlaim.dlt.target_factory import DEV, validate_target_secrets
 
         # Should not raise
         validate_target_secrets(DEV)
@@ -117,7 +117,7 @@ class TestValidateTargetSecrets:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.delenv("MOTHERDUCK_TOKEN", raising=False)
-        from oideachais.dlt_utils.target_factory import STAGING, validate_target_secrets
+        from cianfhoghlaim.dlt.target_factory import STAGING, validate_target_secrets
 
         with pytest.raises(EnvironmentError, match="MOTHERDUCK_TOKEN"):
             validate_target_secrets(STAGING)
@@ -126,7 +126,7 @@ class TestValidateTargetSecrets:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setenv("MOTHERDUCK_TOKEN", "test-token")
-        from oideachais.dlt_utils.target_factory import STAGING, validate_target_secrets
+        from cianfhoghlaim.dlt.target_factory import STAGING, validate_target_secrets
 
         # Should not raise
         validate_target_secrets(STAGING)
@@ -143,7 +143,7 @@ class TestValidateTargetSecrets:
             "BUCKET",
         ):
             monkeypatch.delenv(var, raising=False)
-        from oideachais.dlt_utils.target_factory import PROD, validate_target_secrets
+        from cianfhoghlaim.dlt.target_factory import PROD, validate_target_secrets
 
         with pytest.raises(EnvironmentError) as exc_info:
             validate_target_secrets(PROD)
@@ -162,7 +162,7 @@ class TestValidateTargetSecrets:
             "BUCKET",
         ):
             monkeypatch.setenv(var, f"test-{var}")
-        from oideachais.dlt_utils.target_factory import PROD, validate_target_secrets
+        from cianfhoghlaim.dlt.target_factory import PROD, validate_target_secrets
 
         # Should not raise
         validate_target_secrets(PROD)
@@ -173,7 +173,7 @@ class TestCreatePipelines:
 
     def test_create_dev_pipeline(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("OIDEACHAIS_DEV_DB", raising=False)
-        from oideachais.dlt_utils.target_factory import create_dev_pipeline
+        from cianfhoghlaim.dlt.target_factory import create_dev_pipeline
 
         pipeline = create_dev_pipeline(
             pipeline_name="test_dev", dataset_name="my_data"
@@ -187,7 +187,7 @@ class TestCreatePipelines:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.delenv("MOTHERDUCK_TOKEN", raising=False)
-        from oideachais.dlt_utils.target_factory import create_staging_pipeline
+        from cianfhoghlaim.dlt.target_factory import create_staging_pipeline
 
         with pytest.raises(EnvironmentError, match="MOTHERDUCK_TOKEN"):
             create_staging_pipeline(
@@ -198,7 +198,7 @@ class TestCreatePipelines:
         self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setenv("MOTHERDUCK_TOKEN", "test-token")
-        from oideachais.dlt_utils.target_factory import create_staging_pipeline
+        from cianfhoghlaim.dlt.target_factory import create_staging_pipeline
 
         pipeline = create_staging_pipeline(
             pipeline_name="test_staging", dataset_name="my_data"
@@ -218,7 +218,7 @@ class TestCreatePipelines:
             "BUCKET",
         ):
             monkeypatch.delenv(var, raising=False)
-        from oideachais.dlt_utils.target_factory import create_prod_pipeline
+        from cianfhoghlaim.dlt.target_factory import create_prod_pipeline
 
         with pytest.raises(EnvironmentError):
             create_prod_pipeline(

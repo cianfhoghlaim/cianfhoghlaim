@@ -3,7 +3,7 @@ must not appear anywhere in the oideachais source tree.
 
 Commit 8484a6353 (the "v2 monorepo layout" cleanup) removed the
 `oideachais/data_platform/` directory in favour of the flat post-
-cleanup layout. Any lingering `from oideachais.data_platform.X
+cleanup layout. Any lingering `from cianfhoghlaim.X
 import Y` is a broken import.
 
 This test walks the entire `oideachais/{dagster_defs,dlt_sources,

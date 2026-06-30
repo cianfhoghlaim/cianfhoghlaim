@@ -20,7 +20,7 @@ The factory is invoked from the Dagster assets via
 Usage:
 
     # In a Dagster asset
-    from oideachais.dlt_utils.target_factory import create_pipeline_for_target
+    from cianfhoghlaim.dlt.target_factory import create_pipeline_for_target
 
     pipeline = create_pipeline_for_target(
         target_name="dev",       # or "staging" / "prod"

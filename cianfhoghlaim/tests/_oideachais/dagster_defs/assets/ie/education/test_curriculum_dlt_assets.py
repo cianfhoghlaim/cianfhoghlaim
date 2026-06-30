@@ -14,7 +14,7 @@ pytestmark = pytest.mark.integration
 
 def test_create_cycle_asset_returns_assets_definition() -> None:
     from dagster import AssetsDefinition
-    from oideachais.dagster_defs.assets.ireland.curriculum_dlt_assets import (
+    from cianfhoghlaim.dagster.assets.ireland.curriculum_dlt_assets import (
         CYCLES,
         create_cycle_asset,
     )
@@ -41,7 +41,7 @@ def test_leaving_cert_dlt_assets_loadable() -> None:
     leaving_cert/test_lc_dlt_assets.py test.
     """
     try:
-        from oideachais.dagster_defs.assets.leaving_cert.dlt_assets import (
+        from cianfhoghlaim.dagster.assets.leaving_cert.dlt_assets import (
             LEAVING_CERT_DLT_ASSETS,
         )
     except ImportError as exc:

@@ -8,7 +8,7 @@ Provides adapters that:
 - Support bilingual content (English/Irish)
 
 Usage:
-    from oideachais.dlt_sources.common.source_adapters import (
+    from cianfhoghlaim.dlt.common.source_adapters import (
         CurriculumOnlineAdapter,
         NCCAAdapter,
         ExaminationsAdapter,

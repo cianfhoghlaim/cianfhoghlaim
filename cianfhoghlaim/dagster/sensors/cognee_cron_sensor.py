@@ -25,7 +25,7 @@ DEFAULT_TIMEZONE = "UTC"
 
 def _cognify_assets() -> list[Any]:
     """Lazy import to avoid loading the cognify assets at sensor-import time."""
-    from oideachais.dagster_defs.assets.leabharlann_cognify_assets import (
+    from cianfhoghlaim.dagster.assets.leabharlann_cognify_assets import (
         LEABHARLANN_COGNIFY_ASSETS,
     )
 

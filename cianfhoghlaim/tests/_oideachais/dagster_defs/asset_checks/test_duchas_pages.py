@@ -16,7 +16,7 @@ pytestmark = pytest.mark.integration
 def test_check_duchas_pages_returns_passed_for_nonempty_table(temp_dir: Path) -> None:
     """A non-empty `celtic.duchas_pages` table makes the check pass."""
     import duckdb
-    from oideachais.dagster_defs.asset_checks import check_duchas_pages
+    from cianfhoghlaim.dagster.asset_checks import check_duchas_pages
 
     db_path = temp_dir / "duchas.duckdb"
     conn = duckdb.connect(str(db_path))
@@ -35,7 +35,7 @@ def test_check_duchas_pages_returns_passed_for_nonempty_table(temp_dir: Path) ->
     )
     conn.close()
 
-    from oideachais.dagster_defs.resources import DuckDBResource
+    from cianfhoghlaim.dagster.resources import DuckDBResource
 
     resource = DuckDBResource(database_path=str(db_path))
     result = check_duchas_pages(context=None, duckdb=resource)  # type: ignore[arg-type]

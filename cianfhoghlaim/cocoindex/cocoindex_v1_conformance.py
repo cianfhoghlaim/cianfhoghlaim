@@ -246,7 +246,7 @@ def run_conformance_check(
     """Walk every v1 App file and return a list of ConformanceReports.
 
     Dagster asset_check wrapper:
-    `uv run python -c "from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; ..."`
+    `uv run python -c "from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check; ..."`
     """
     reports: list[ConformanceReport] = []
     for path in sorted(repo_root.glob("*.py")):

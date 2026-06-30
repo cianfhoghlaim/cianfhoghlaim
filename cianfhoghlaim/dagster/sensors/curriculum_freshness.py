@@ -9,7 +9,7 @@ Detects changes across all 3 curriculum sources:
 Triggers the unified curriculum assets with the 4-cycle partition scheme.
 
 Usage:
-    from oideachais.dagster_defs.sensors.curriculum_freshness import (
+    from cianfhoghlaim.dagster.sensors.curriculum_freshness import (
         curriculum_freshness_sensors,
     )
 

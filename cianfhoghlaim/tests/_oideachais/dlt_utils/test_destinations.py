@@ -17,7 +17,7 @@ pytestmark = pytest.mark.integration
 def test_get_dlt_destination_returns_ducklake_object() -> None:
     """With local env defaults, the factory returns a DLT destination
     whose class is one of the ducklake variants."""
-    from oideachais.dlt_utils import get_dlt_destination
+    from cianfhoghlaim.dlt import get_dlt_destination
 
     os.environ["DLT_ENVIRONMENT"] = "local"
     os.environ["USE_DUCKLAKE"] = "true"
@@ -37,7 +37,7 @@ def test_get_dlt_destination_returns_ducklake_object() -> None:
 
 def test_get_duckdb_fallback_destination(tmp_path) -> None:
     """The duckdb fallback returns a plain duckdb destination."""
-    from oideachais.dlt_utils import get_duckdb_fallback_destination
+    from cianfhoghlaim.dlt import get_duckdb_fallback_destination
 
     dest = get_duckdb_fallback_destination(str(tmp_path / "test.duckdb"))
     assert "duckdb" in type(dest).__name__.lower()

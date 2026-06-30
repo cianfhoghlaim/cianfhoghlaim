@@ -224,7 +224,7 @@ def welsh_speaking_boundaries(
     """
     context.log.info("Ingesting Welsh-speaking boundaries")
 
-    from oideachais.dlt_sources.geospatial.ons_lsoa import ons_lsoa_source
+    from cianfhoghlaim.dlt.british_isles.ons_lsoa import ons_lsoa_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="welsh_speaking",
@@ -275,7 +275,7 @@ def gaidhealtachd_boundaries(
     """
     context.log.info("Ingesting Gàidhealtachd boundaries")
 
-    from oideachais.dlt_sources.geospatial.scotland_gov import scotland_datazones_source
+    from cianfhoghlaim.dlt.british_isles.scotland_gov import scotland_datazones_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="gaidhealtachd",
@@ -478,7 +478,7 @@ def celtic_medium_schools(
     """
     context.log.info("Ingesting Celtic-medium school locations")
 
-    from oideachais.dlt_sources.geospatial.schools import celtic_schools_source
+    from cianfhoghlaim.dlt.british_isles.schools import celtic_schools_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="celtic_medium_schools",

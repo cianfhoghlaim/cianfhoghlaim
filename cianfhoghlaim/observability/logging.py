@@ -5,21 +5,65 @@ Provides consistent, structured logging across all modules using structlog.
 Integrates with Dagster, Datadog, and other observability tools.
 
 Usage:
-    from oideachais.observability.logging import get_logger
+    from cianfhoghlaim.observability.logging import get_logger
 
     logger = get_logger(__name__)
     logger.info("processing_started", source="ncca", batch_size=100)
+
+Post-Phase-4 (2026-06-30): the legacy `from settings import settings` (a
+top-level package import that no longer resolves) was replaced with
+direct `os.environ` reads. The three settings used here map to:
+- settings.env           → CIANFHOGHLAIM_ENV / DD_ENV
+- settings.is_production → CIANFHOGHLAIM_ENV == "production"
+- settings.debug         → CIANFHOGHLAIM_LOG_LEVEL == "DEBUG"
 """
 
 from __future__ import annotations
 
 import logging
+import os
 import sys
 from typing import Any
 
 import structlog
-from settings import settings
 from structlog.types import Processor
+
+
+def _settings_env() -> str:
+    """Return the environment name (development / staging / production)."""
+    return os.environ.get("CIANFHOGHLAIM_ENV") or os.environ.get("DD_ENV") or "development"
+
+
+def _settings_is_production() -> bool:
+    return _settings_env().lower() == "production"
+
+
+def _settings_debug() -> bool:
+    return os.environ.get("CIANFHOGHLAIM_LOG_LEVEL", "").upper() == "DEBUG"
+
+
+# Public alias preserved for back-compat (Phase 2 will remove all usages)
+class _SettingsProxy:
+    """Lightweight stand-in for the legacy `settings` object.
+
+    Reads env vars at access time. Replaces the deleted top-level
+    `sruth.oideachais.settings` module.
+    """
+
+    @property
+    def env(self) -> str:
+        return _settings_env()
+
+    @property
+    def is_production(self) -> bool:
+        return _settings_is_production()
+
+    @property
+    def debug(self) -> bool:
+        return _settings_debug()
+
+
+settings = _SettingsProxy()
 
 
 def add_environment(

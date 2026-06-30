@@ -15,7 +15,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 - Automatic retries
 
 Usage:
-    from oideachais.dlt_sources.celtic.duchas import duchas_source
+    from cianfhoghlaim.dlt.british_isles.ie.culture.duchas import duchas_source
 
     pipeline = dlt.pipeline(
         pipeline_name="duchas",
@@ -32,8 +32,8 @@ from xml.etree import ElementTree as ET
 import dlt
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
-from sruth.oideachais.observability.logging import get_logger
-from sruth.shared.http import duchas_client
+from cianfhoghlaim.observability.logging import get_logger
+from cianfhoghlaim.dlt.common.http_client import duchas_client
 
 logger = get_logger(__name__)
 

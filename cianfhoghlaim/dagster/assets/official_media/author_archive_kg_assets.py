@@ -42,7 +42,7 @@ logger = structlog.get_logger(__name__)
 def author_archive_cognify(context) -> dg.MaterializeResult:
     """Cognee cognify pass over the 6 author-archive corpora."""
     try:
-        from oideachais.cognee_integration.author_archive_cognify import (
+        from cianfhoghlaim.observability.cognee.author_archive_cognify import (
             cognify_all_corpora,
         )
     except ImportError as e:
@@ -91,7 +91,7 @@ def author_archive_cognify(context) -> dg.MaterializeResult:
 def author_archive_cross_edges(context) -> dg.MaterializeResult:
     """5 cross-corpus edge rules on the author-archive graph."""
     try:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             populate_cross_corpus_edges,
         )
     except ImportError as e:

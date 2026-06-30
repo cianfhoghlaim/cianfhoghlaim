@@ -44,8 +44,8 @@ from agno.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from pydantic import BaseModel, Field
-from sruth.shared.agent_os.config import init_config
-from sruth.shared.agent_os.middleware import A2AAuthMiddleware, TinyAuthMiddleware
+from agents.api.agent_os.config import init_config
+from agents.api.agent_os.middleware import A2AAuthMiddleware, TinyAuthMiddleware
 
 # Resolve default stream from CLI / env
 _DEFAULT_STREAM_ID = os.getenv("CROILAR_STREAM_ID", "music")
@@ -284,7 +284,7 @@ async def deep_research(request: dict):
     result = research_team.run(query, session_id=session_id, stream=False)
 
     if include_streams:
-        from sruth.shared.agent_os.a2a import A2AClient
+        from agents.api.agent_os.a2a import A2AClient
 
         client = A2AClient()
         cross_stream_data: dict = {}

@@ -58,7 +58,7 @@ def ireland_ncca_curriculum(
     """
     context.log.info("Crawling NCCA curriculum content")
 
-    from oideachais.dlt_sources.ie.education.ncca import ncca_source
+    from cianfhoghlaim.dlt.british_isles.ie.education.ncca import ncca_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ireland_ncca",

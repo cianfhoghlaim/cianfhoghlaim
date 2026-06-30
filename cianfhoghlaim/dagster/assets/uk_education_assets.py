@@ -56,7 +56,7 @@ def england_dfe_statistics(
     """
     context.log.info("Ingesting DfE statistics for England")
 
-    from oideachais.dlt_sources.uk.england.dfe import dfe_source
+    from cianfhoghlaim.dlt.british_isles.england.dfe import dfe_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="england_dfe",
@@ -97,7 +97,7 @@ def england_ofsted_inspections(
     """
     context.log.info("Ingesting Ofsted inspections for England")
 
-    from oideachais.dlt_sources.en.education.ofsted import ofsted_source
+    from cianfhoghlaim.dlt.british_isles.en.education.ofsted import ofsted_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="england_ofsted",
@@ -145,7 +145,7 @@ def scotland_gov_statistics(
     """
     context.log.info("Ingesting Scottish Government statistics")
 
-    from oideachais.dlt_sources.uk.scotland.gov import scotland_gov_source
+    from cianfhoghlaim.dlt.british_isles.scotland.gov import scotland_gov_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="scotland_gov",
@@ -187,7 +187,7 @@ def scotland_sqa_examinations(
     """
     context.log.info("Ingesting SQA examination data")
 
-    from oideachais.dlt_sources.uk.scotland.sqa import sqa_source
+    from cianfhoghlaim.dlt.british_isles.scotland.sqa import sqa_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="scotland_sqa",
@@ -235,7 +235,7 @@ def wales_statswales(
     """
     context.log.info("Ingesting StatsWales education data")
 
-    from oideachais.dlt_sources.wls.statistics.statswales import statswales_source
+    from cianfhoghlaim.dlt.british_isles.wls.statistics.statswales import statswales_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="wales_statswales",
@@ -277,7 +277,7 @@ def wales_curriculum(
     """
     context.log.info("Crawling Curriculum for Wales")
 
-    from oideachais.dlt_sources.uk.wales.curriculum import wales_curriculum_source
+    from cianfhoghlaim.dlt.british_isles.wales.curriculum import wales_curriculum_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="wales_curriculum",
@@ -325,7 +325,7 @@ def ni_nisra_statistics(
     """
     context.log.info("Ingesting NISRA education statistics")
 
-    from oideachais.dlt_sources.ni.statistics.nisra import nisra_source
+    from cianfhoghlaim.dlt.british_isles.ni.statistics.nisra import nisra_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ni_nisra",
@@ -367,7 +367,7 @@ def ni_ccea(
     """
     context.log.info("Ingesting CCEA curriculum and exam data")
 
-    from oideachais.dlt_sources.uk.northern_ireland.ccea import ccea_source
+    from cianfhoghlaim.dlt.british_isles.northern_ireland.ccea import ccea_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ni_ccea",
@@ -412,7 +412,7 @@ def iom_curriculum(
     """
     context.log.info("Crawling Isle of Man curriculum")
 
-    from oideachais.dlt_sources.iom.education.isle_of_man import isle_of_man_source
+    from cianfhoghlaim.dlt.british_isles.iom.education.isle_of_man import isle_of_man_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="iom_curriculum",

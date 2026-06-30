@@ -67,7 +67,7 @@ def codebase_chunks(context: AssetExecutionContext) -> MaterializeResult:
     - HNSW index dropped for bulk inserts >50
     """
     try:
-        from oideachais.cocoindex_flows import codebase_indexing
+        from cianfhoghlaim.cocoindex import codebase_indexing
     except ImportError as e:
         context.log.warning(f"codebase_indexing module not available: {e}")
         return MaterializeResult(
@@ -137,8 +137,8 @@ def codebase_code_graph(context: AssetExecutionContext) -> MaterializeResult:
     discovered.
     """
     try:
-        from oideachais.cocoindex_flows import codebase_indexing
-        from oideachais.cocoindex_flows.chunking.languages import EXTENSION_TO_LANGUAGE
+        from cianfhoghlaim.cocoindex import codebase_indexing
+        from cianfhoghlaim.cocoindex.chunking.languages import EXTENSION_TO_LANGUAGE
     except ImportError as e:
         context.log.warning(f"Dependencies not available: {e}")
         return MaterializeResult(

@@ -12,14 +12,14 @@ pytestmark = pytest.mark.integration
 
 
 def test_ireland_curriculum_partitions_has_4_keys() -> None:
-    from oideachais.dagster_defs.partitions_v2 import ireland_curriculum_partitions
+    from cianfhoghlaim.dagster.partitions_v2 import ireland_curriculum_partitions
 
     keys = list(ireland_curriculum_partitions.get_partition_keys())
     assert keys == ["early_childhood", "primary", "junior_cycle", "senior_cycle"]
 
 
 def test_ireland_curriculum_with_language_has_8_keys() -> None:
-    from oideachais.dagster_defs.partitions_v2 import ireland_curriculum_with_language
+    from cianfhoghlaim.dagster.partitions_v2 import ireland_curriculum_with_language
 
     keys = list(ireland_curriculum_with_language.get_partition_keys())
     # 4 cycles × 2 languages = 8

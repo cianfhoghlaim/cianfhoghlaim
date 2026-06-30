@@ -478,7 +478,7 @@ class PDFProcessingPipeline:
             except ImportError:
                 try:
                     # Fallback: legacy import path
-                    from oideachais.data_platform.baml_client import b as _baml_b  # type: ignore
+                    from cianfhoghlaim.baml_client import b as _baml_b  # type: ignore
                     baml_b = _baml_b
                 except ImportError:
                     logger.warning(

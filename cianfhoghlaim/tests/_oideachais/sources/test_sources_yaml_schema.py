@@ -121,7 +121,7 @@ def test_unknown_id_raises(sources_factory) -> None:
 
 def test_source_factory_rejects_malformed_yaml(tmp_path) -> None:
     """A YAML file with an unknown nation must raise pydantic.ValidationError."""
-    from oideachais.dlt_utils.source_factory import SourceFactory
+    from cianfhoghlaim.dlt.source_factory import SourceFactory
     from pydantic import ValidationError
 
     bad = tmp_path / "bad.yaml"

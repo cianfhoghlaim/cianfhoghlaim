@@ -109,7 +109,7 @@ def linkedin_profile_resource(
         return
 
     # Live mode — use Browserbase CDP
-    from sruth.browser import scrape_linkedin_profile
+    from bonneagar.stacks.browser.sruth_browser import scrape_linkedin_profile
 
     data = scrape_linkedin_profile(profile_url)
     data["profile_id"] = profile_id

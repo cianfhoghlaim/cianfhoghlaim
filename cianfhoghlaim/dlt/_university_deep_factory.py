@@ -223,7 +223,7 @@ async def _scrape_one(
     without crashing the whole asset run.
     """
     try:
-        from cianfhoghlaim.core.browser import BackendRouter, ScrapeStrategist
+        from bonneagar.stacks.browser.sruth_browser import BackendRouter, ScrapeStrategist
     except ImportError as exc:
         logger.warning(
             "browser_module_not_available",
