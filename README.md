@@ -1,12 +1,7 @@
 # Cianfhoghlaim — Coláiste na Déisigh
 
-> **Cianfhoghlaim** — *long-distance, enduring learning*. The cianfhoghlaim application monorepo: a unified Celtic education platform, AI research laboratory, and multi-persona portfolio by **Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons)** of the Deacy-Morris-Conroy tribe of Galway.
->
-> The author's heritage and purpose are documented in 8 Gemini Deep Research PDFs in the [`leabharlann/gemini_deep_research/culture/`](https://github.com/cianfhoghlaim/leabharlann/tree/main/gemini_deep_research/culture/) archive of the [`leabharlann`](https://github.com/cianfhoghlaim/leabharlann) sibling repo — see the **"Purpose of Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim"** section below.
+> **Cianfhoghlaim** — *long-distance, enduring learning*. aims to be a central repository for all official British Isles syllabus and resources pertaining to the education system and Goidelic and Brythonnic languages alongside agentic AI, devops, educational formative assessment, selfhosted stacks and minority language machine learning research by **Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons)**.
 
-[![Polyglot](https://img.shields.io/badge/polyglot-bun_%2B_uv_%2B_turbo-blue)](#)
-[![Dagster](https://img.shields.io/badge/dagster-228_assets-4B8BBE)](cianfhoghlaim/assets/)
-[![v4](https://img.shields.io/badge/consolidation-v4-2026--06--28-orange)](openspec/changes/archive/)
 [![Leabharlann](https://img.shields.io/badge/leabharlann-2.4k_files_/_3.4_GB-blueviolet)](https://github.com/cianfhoghlaim/leabharlann)
 [![Bonneagar](https://img.shields.io/badge/bonneagar-90_compose_stacks-informational)](https://github.com/cianfhoghlaim/bonneagar)
 [![License](https://img.shields.io/badge/license-BUSL_1.1-green)](LICENSE.md)
@@ -34,57 +29,6 @@ PDFs). The platform is wired together by a **5-subagent OpenCode
 foundation** backed by a 59-skill knowledge library indexed by
 [cocoindex-code (ccc)](.agents/skills/ccc/SKILL.md).
 
-The author's purpose — the **Rí na Gaillimhe** claim, the **Ard-Rí na
-hÉireann** stewardship, the East Belfast operational hub, the inter-Celtic
-acquisition pathway, the §21e Saoí standard, the **Celtic AI Institute**
-in the Isle of Man, and the **30-year Cultural Archipelago roadmap** to
-2056 — is documented in 8 Gemini Deep Research PDFs in the
-[`leabharlann/gemini_deep_research/culture/`](https://github.com/cianfhoghlaim/leabharlann/tree/main/gemini_deep_research/culture/)
-archive of the `leabharlann` sibling repo. See the
-**"Purpose of Cian Mac an Déisigh Uí Liatháin and cianfhoghlaim"**
-section below for the direct citations.
-
----
-
-## What cianfhoghlaim is now (post-v4 + post-baml-reorg)
-
-The cianfhoghlaim project has been progressively consolidated through
-**three openspec changes** (all archived):
-
-- `2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4` — the 5
-  `sruthanna` quadrants (`oideachais`, `meaisinfhoghlaim`, `tuatha`,
-  `croilar`, `crypteolas`) + the `browser` core + the `codeolas` C++
-  sub-package + the `leabharlann` corpus were consolidated into a
-  single `cianfhoghlaim/` Python package.
-- `baml-reorganize-by-cluster` — the 60+ BAML files were moved into a
-  **3-cluster taxonomy** (`education/`, `celtic/`, `processing/`) with
-  `_shared/` homes per cluster. The 5 NCCA stage BAML files were
-  merged (eliminating duplicate enums like `ExamLevel`); the
-  1114-LOC `curriculum_extraction.baml` mega-file was split into 5
-  focused `_shared/` files; the 12 dead `_v0_archive/` CocoIndex files
-  were deleted.
-- `wire-baml-to-consolidated-pipelines` — 17 consumer files
-  (`dlt/`, `dagster/`, `agents/`, `cocoindex/`, `notebooks/`) were
-  swept to remove 26 stale `baml_src/X.baml` path references; a BAML
-  project config (`baml/baml.toml`) and `baml_src → baml` symlink
-  were created so the BAML compiler can regenerate the client from
-  the new cluster taxonomy.
-
-The current state (after these 3 changes):
-
-| Surface | Count | Shape |
-|:--|--:|:--|
-| **BAML files** (`cianfhoghlaim/baml/`) | 60+ | 3-cluster taxonomy (education/celtic/processing) with `_shared/` homes |
-| **dlt sources** (`cianfhoghlaim/dlt/`) | 200+ | 8 top-level dirs (api_sources/british_isles/common/filesystem/language/official_media/portfolio + 8 nations × 4 domains in british_isles/) |
-| **CocoIndex v1 Apps** (`cianfhoghlaim/cocoindex/`) | 14+ | v1 Apps with `_lifespan.py` shared runtime + R1-R4 conformance |
-| **Dagster assets** (`cianfhoghlaim/dagster/`) | 228+ | Layered defs/{1_ingestion, 2_materials, 3_model_lifecycle, 4_asset_generation, 5_agent_ops}/ |
-| **meaisinfhoghlaim** (`cianfhoghlaim/meaisinfhoghlaim/`) | 15+ subdirs | 24 OCR models + 5 PDF converters + 8 alignment models + RAGAS harness |
-| **agents** (`cianfhoghlaim/agents/`) | 12-agent fleet | 9 sub-packages flattened from the v3 `_underscore` legacy dirs |
-| **notebooks** (`cianfhoghlaim/notebooks/`) | 29+ | 7 dashboards/ + 12 per-subject pipelines + 3 PDF processing + 5 observability/duckdb/mmo |
-| **web** (`cianfhoghlaim/web/`) | 7 apps + 1 API | TanStack Start + Babylon.js + Hono API gateway |
-| **storage** (`cianfhoghlaim/storage/`) | 4-layer arch | `_shared/{falkordb,memgraph,neo4j,interface}.py` + top-level cache/temporal_client |
-
----
 
 ## The 5-stage pipeline (the architecture)
 
@@ -230,21 +174,6 @@ unified asset group (3 assets: `meaisinfhoghlaim_ocr_models`,
 
 ---
 
-## The Celtic AI Institute (Isle of Man) — the cianfhoghlaim output side
-
-The cianfhoghlaim plan's output side is the **Celtic AI Institute** — a
-proposed open-source research lab that builds **Sovereign LLMs for Irish,
-Welsh, Manx, Scottish Gaelic, and Cornish**. The Institute is hosted in
-the **Isle of Man**, the Celtic jurisdiction that uniquely combines:
-
-- (a) the **Tynwald parliament** (the oldest continuous parliament in
-  the world, est. ~979 AD)
-- (b) the **Manx Pound** pegged 1:1 to Sterling (the model for a future
-  "New Punt" / Monetary Dualism)
-- (c) **data-regulation autonomy** that lets the Institute host the
-  open-source Celtic LLMs without the regulatory friction of UK or EU
-  jurisdiction
-
 The cianfhoghlaim monorepo is the **Phase I delivery vehicle** for the
 Institute. The 5-stage pipeline maps directly to the Institute's data
 infrastructure:
@@ -255,56 +184,8 @@ infrastructure:
 - `cognify/` (Stage 4) populates the cross-dataset knowledge graph
 - `pipelines/distribute/` (Stage 5) exposes everything via the marimo
   notebooks + TanStack Start web apps + HuggingFace Spaces
-
-### The 30-year Cultural Archipelago roadmap (2026-2056)
-
-| Phase | Timeframe | Primary focus | Key deliverables | Strategic objective |
-|:--|:--|:--|:--|:--|
-| **I** | 2026-2036 | Stabilization & Digital Sovereignty | Expansion of the Bunscoill model to NI/ROI; "Protestant Gaelic" curriculum; **Celtic AI Institute founded in the Isle of Man** | Halt language erosion; neutralize sectarian binaries; secure digital borders via Sovereign AI |
-| **II** | 2036-2046 | Integration & Mobility | Pan-Celtic Erasmus (Colmcille expansion); Celtic Broadcasting Union (TG4 + S4C + BBC Alba); Irish Sea Tunnel feasibility study complete | Build "Archipelagic" identity; economic interdependence; joint maritime defense culture |
-| **III** | 2046-2056 | Normalization & Sovereignty | Bilingual Public Service (50% target); **Saoí Education Standard** in exams; New Punt / Dual Currency Zone implementation | De facto Dual Monarchy realization; cultural singularity; total cognitive security |
-
-### The Sãoí Education Standard (Phase III capstone)
-
-The **Saoí Education Standard** ("fluent in both the Fénechas and Python",
-per `cultural_unity_for_british_isles.pdf` p. 4) is the capstone of
-Phase III — a Leaving Cert / A-Level distinction that requires a
-multidisciplinary project combining a Celtic language with a STEM
-discipline (e.g. an AI chatbot in Manx, GIS mapping in Cornish, ML
-analysis of Ogham inscriptions).
-
-The cianfhoghlaim monorepo directly supports the Sãoí standard via
-the 6-asset subject pipeline: a student can materialise
-`gaeilge_embedding` + `computer_science_embedding` + `gaeilge_cognify`
-+ a custom dagster asset to build a Leaving Cert project that combines
-a Celtic language with a STEM discipline.
-
 ---
 
-## What cianfhoghlaim commits to the heritage
-
-The cianfhoghlaim plan, taken as a whole, is a **commitment to the
-cultural stewardship** of the four provinces, the Gaeltachtaí, and
-the wider Celtic-language family. The **Ard-Rí title** described in
-§21c is not a constitutional claim; it is the stewardship role that
-holds the cianfhoghlaim project accountable to the Gaelic inheritance
-it serves. The §20 operational plan — the East Belfast hub, the
-inter-Celtic acquisition pathway, the Isle-of-Man Celtic AI Institute,
-the 30-year Cultural Archipelago roadmap — is the public-good output
-of that stewardship.
-
-The 30-year horizon is deliberately long: Phase I (2026-2036)
-stabilizes, Phase II (2036-2046) integrates, Phase III (2046-2056)
-normalises. Each phase is decoupled from any near-term political
-event; the cianfhoghlaim project will continue to deliver open-source
-Celtic-language LLMs and syllabus-informed resources regardless of
-whether a border poll is held in 2030 or 2060 or never. The cultural
-stewardship is apolitical in the constitutional sense and political in
-the everyday sense (it requires the daily work of language teaching,
-of community organising, of BAML extraction, of LanceDB embedding,
-of marimo notebook maintenance, of Dagster asset materialisation).
-
----
 
 ## Notebooks and demos (29+ marimo notebooks)
 
@@ -371,38 +252,6 @@ All three repositories are licensed under the **Business Source License
 
 > *Bonneagar* — Scottish Gaelic for *infrastructure*.
 > *Leabharlann* — Irish for *library*.
-
-### Why worktrees, not subtrees?
-
-The 3.4 GB of PDFs in `leabharlann` and the 6.9 MB of compose stacks in
-`bonneagar` are too large to commit into the application monorepo's
-git history. Embedding them as `git subtree`s would make every
-`git push` upload 3 GB of binary data, slow CI to a crawl, and bloat
-clone size for every contributor. The worktree approach keeps the
-content *visible and editable* from this workspace without committing
-it to this repo.
-
-### Working with the sibling repos
-
-```bash
-# Edit the leabharlann corpus
-cd leabharlann
-# ... edit a PDF metadata file ...
-git add -A
-git commit -m "docs(zotero): add new paper on Irish NLP"
-git push                       # → leabharlann-main → leabharlann/main → the GitHub repo
-
-# Edit the bonneagar compose stacks
-cd ../bonneagar
-# ... edit infrastructure/stacks/litellm/compose.yaml ...
-git add -A
-git commit -m "chore(litellm): bump image tag"
-git push                       # → bonneagar-main → bonneagar/main → the GitHub repo
-```
-
-From the monorepo's perspective, the worktrees are the canonical
-*upstream* copies of the sibling repos. The monorepo consumes them
-through relative paths:
 
 - `./bonneagar/stacks/litellm/compose.yaml` — referenced in
   `infrastructure/AGENTS.md` (the bonneagar worktree's own quick-ref)
@@ -1159,180 +1008,6 @@ xdg-open http://localhost:2718
 #    → confirm the new BAML-extracted chunks appear in the search results
 ```
 
----
-
-## The cianfhoghlaim plan throughout the British Isles
-
-The cianfhoghlaim project is a **30-year cultural-stewardship
-plan** for the Gaelic and wider Celtic inheritance of the British
-Isles. The plan is grounded in the
-[`british_isles_cianfhoghlaim.pdf`](./leabharlann/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf)
-and
-[`cultural_unity_for_british_isles.pdf`](./leabharlann/gemini_deep_research/culture/cultural_unity_for_british_isles.pdf)
-blueprints, which together operationalise the §21c heritage
-framing in a 3-stage roadmap (2026-2036 Stabilization & Digital
-Sovereignty → 2036-2046 Integration & Mobility → 2046-2056
-Normalization & Sovereignty). This section walks the 3
-operational pillars — the East Belfast hub, the inter-Celtic
-acquisition pathway, and the Celtic AI Institute — and ties each
-to the cianfhoghlaim monorepo's existing packages and Dagster
-asset groups.
-
-### 1. The East Belfast operational hub
-
-The cianfhoghlaim plan's operational centre is **East Belfast**, a
-working-class Unionist / Protestant area that has recently become
-the epicentre of cross-community Irish-language work. The hub is
-intentionally *cross-border* and *cross-community*: it sits in the
-United Kingdom (Belfast, Northern Ireland), but its primary work
-is the Irish language — the language of the Republic to the south
-— and its primary partner communities are Unionist Protestants
-who have chosen to learn Irish as a reconciliation practice.
-
-- **Residential base** — the **Newtownards Road / Castlereagh
-  Road** corridor (BT4 / BT5 / BT6), within a 2-mile radius of
-  the Turas project, Scoil na Seolta, and the Glider BRT1
-  cross-city line. Rental market analysis: 2-bed Strandburn Park
-  ≈ £895/mo, 2-bed Castlereagh Road ≈ £995/mo, 2-bed Oberon
-  Street ≈ £1,075/mo, premium Titanic Quarter ≈ £1,450-1,700/mo
-  (from `british_isles_cianfhoghlaim.pdf`, p. 1-2).
-- **Turas** (the Skainos Centre, 239 Newtownards Road, BT4 1AF) —
-  Linda Ervine's cross-community Irish-language project that
-  scaled from a 2011 women's group to **600+ learners** in 2026.
-  "Equality and inclusiveness are at the core of its ethos,
-  utilizing the Irish language as a mechanism for reconciliation
-  and exploring shared heritage" (`british_isles_cianfhoghlaim.pdf`,
-  p. 2).
-- **Scoil na Seolta** (Garnerville Presbyterian Church, BT6 9HL) —
-  Northern Ireland's first Integrated school teaching through the
-  medium of Irish, with a Naíscoil (nursery) opened October 2021
-  and a planned integrated Bunscoil (primary) cohort for
-  September 2025. The motto is *Páistí sona ag foghlaim le
-  chéile* — "Happy Children Learning Together".
-- **Coláiste Feirste** (the Falls Road, West Belfast) — the
-  preeminent post-primary Irish-medium school in the region, 8
-  minutes from the city centre on the Glider G1.
-- **The Glider (BRT1)** — the Belfast Rapid Transit Phase 1
-  service, every 7-10 minutes, G1 Dundonald → McKinstry Road
-  cutting through the city centre and the entire Falls Road
-  corridor.
-- **Maritime linkages** — Stena Line Belfast → Cairnryan
-  (Scotland, 2h 15m, up to 6 sailings/day); Isle of Man Steam
-  Packet Belfast → Douglas (~2h 50m, fast-craft Manannan); Stena
-  Line Belfast → Birkenhead (Liverpool, 8h day or overnight
-  sleeper). The maritime routes are the *lifelines* of the
-  inter-Celtic acquisition pathway (§2 below).
-
-The cianfhoghlaim monorepo will be physically present in the
-hub: the Dagster UI on `localhost:3000` (Dagit), the marimo
-notebooks on `localhost:2718`, the LiteLLM gateway on
-`localhost:4000/v1`. The `leabharlann/ollscoil_na_gaillimhe/`
-evidence base is the Galway-side counterpart of the hub — the
-NUI Galway coursework archives, the BME1 placement portfolio,
-the Irish-language exam results, the teaching registration, the
-Apple Award. The hub is the *operational* half; the evidence
-base is the *pedagogical* half. Together they form the
-cianfhoghlaim agentic-AI + Celtic-language training pipeline
-that serves the East Belfast, Galway, and (through the marimo
-notebooks + web apps) Donegal and Dublin communities.
-
-### 2. The inter-Celtic acquisition pathway
-
-The cianfhoghlaim plan's *acquisition* side is the personal
-Celtic-language journey of the practitioner — the same
-journey documented in the
-[`british_isles_cianfhoghlaim.pdf`](./leabharlann/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf)
-"Strategic Blueprint for Inter-Celtic Linguistic Acquisition,
-AI Integration, and Transnational Educator Credentialing". The
-journey is the **personal primary data** that feeds the Celtic-AI
-corpus work.
-
-| Language | Family | Pathway | Funding / Logistics | Corpus output |
-|:--|:--|:--|:--|:--|
-| **Irish** (C1) | Goidelic (Q-Celtic) | TEG C1 Dioplóma; Scoil Iognáid Irish-medium stream; NUI Galway Irish-language coursework | self-funded; Galway-resident | The leabharlann/gaeilge/ + leabharlann/ollscoil_na_gaillimhe/irish/ corpora |
-| **Scottish Gaelic** | Goidelic | Sabhal Mòr Ostaig (SMO) "Gaelic for Irish Speakers" 1-week course; Isle of Skye | Colmcille (Foras na Gaeilge + Bòrd na Gàidhlig); £290/course | The future `leabharlann/gaidhlig/` corpus |
-| **Manx** | Goidelic | Scoill Souree at the Yn Chruinnaght Celtic Gathering, Peel (July annually); Manx course for Irish speakers via Ulster Irish | Culture Vannin; Stena Line / Steam Packet maritime route | The future `leabharlann/gaelg/` corpus |
-| **Welsh** | Brythonic (P-Celtic) | National Centre for Learning Welsh pathway; Aberystwyth University summer school | Learn Welsh Cardiff; UK Department for Education | The future `leabharlann/cymraeg/` corpus |
-| **Cornish** | Brythonic | Keskowethyow (Cornish language partnership) courses; Lowender Peran festival | Cornish Language Partnership; Cornwall Council | The future `leabharlann/kernewek/` corpus |
-| **Breton** | Brythonic | Skol an Emsav (Brest / Quimper) | Ofis ar Brezhoneg; Brittany regional government | The future `leabharlann/brezhoneg/` corpus |
-
-The Irish → Scottish Gaelic → Manx transition is **low-friction**
-because all three Goidelic languages share a relatively recent
-common ancestor; the Irish C1 cognitive map transfers directly to
-Scottish Gaelic's VSO sentence structure, initial consonant
-mutations, and shared vocabulary (`british_isles_cianfhoghlaim.pdf`,
-p. 5). The Welsh / Cornish / Breton path is **higher-friction**
-(Brythonic / P-Celtic, not Goidelic) but cognitively supported by
-the same Ogham-inscription and cryptographic-analysis skills that
-the practitioner already possesses.
-
-Each acquisition round generates the **primary corpus data** for
-the next `celtic_languages.baml` BAML extraction function and the
-next `celtic_*_embedding` CocoIndex v1 App. The personal-linguistic
-journey is the data flywheel.
-
-### 3. The Celtic AI Institute (Isle of Man) + the 30-year Cultural Archipelago roadmap
-
-The cianfhoghlaim plan's *output* side is the **Celtic AI
-Institute** — a proposed open-source research lab that builds
-Sovereign LLMs for Irish, Welsh, Manx, Scottish Gaelic, and
-Cornish. The Institute is hosted in the **Isle of Man**, the
-Celtic jurisdiction that uniquely combines (a) the **Tynwald**
-parliament (the oldest continuous parliament in the world), (b)
-the **Manx Pound** pegged 1:1 to Sterling (the model for a future
-"New Punt" / Monetary Dualism), and (c) **data-regulation
-autonomy** that lets the Institute host the open-source Celtic
-LLMs without the regulatory friction of UK or EU jurisdiction
-(`cultural_unity_for_british_isles.pdf`, p. 4 + 6).
-
-The Institute's 30-year roadmap (from `cultural_unity_for_british_isles.pdf`
-p. 8):
-
-| Phase | Timeframe | Primary focus | Key deliverables | Strategic objective |
-|:-:|:--|:--|:--|:--|
-| **I** | 2026-2036 | Stabilization & Digital Sovereignty | Expansion of the Bunscoill model to NI/ROI; "Protestant Gaelic" curriculum; Celtic AI Institute founded in the Isle of Man | Halt language erosion; neutralize sectarian binaries; secure digital borders via Sovereign AI |
-| **II** | 2036-2046 | Integration & Mobility | Pan-Celtic Erasmus (Colmcille expansion); Celtic Broadcasting Union (TG4 + S4C + BBC Alba); Irish Sea Tunnel feasibility study complete | Build "Archipelagic" identity; economic interdependence; joint maritime defense culture |
-| **III** | 2046-2056 | Normalization & Sovereignty | Bilingual Public Service (50% target); Saoí Education Standard in exams; New Punt / Dual Currency Zone implementation | De facto Dual Monarchy realization; cultural singularity; total cognitive security |
-
-The cianfhoghlaim monorepo is the **Phase I delivery vehicle**:
-the `pipelines/ingest/` DLT sources pick up the Gaeltacht PDFs, the
-`pipelines/process/` BAML functions extract the structured claims,
-the `pipelines/embed/` CocoIndex v1 Apps build the per-language
-indices, the `cognify/` stage populates the cross-dataset
-knowledge graph, and the `pipelines/distribute/` stage exposes
-everything via the marimo notebooks + TanStack Start web apps +
-HuggingFace Spaces. The **Saoí Education Standard** ("fluent in
-both the Fénechas and Python", `cultural_unity_for_british_isles.pdf`
-p. 4) is the capstone of Phase III — a Leaving Cert / A-Level
-distinction that requires a multidisciplinary project combining a
-Celtic language with a STEM discipline (e.g. an AI chatbot in
-Manx, GIS mapping in Cornish, ML analysis of Ogham inscriptions).
-
-### What cianfhoghlaim commits to the heritage
-
-The cianfhoghlaim plan, taken as a whole, is a **commitment to
-the cultural stewardship of the four provinces, the Gaeltachtaí,
-and the wider Celtic-language family**. The Ard-Rí title
-described in §21c is not a constitutional claim; it is the
-*stewardship role* that holds the cianfhoghlaim project
-accountable to the Gaelic inheritance it serves. The §20
-operational plan — the East Belfast hub, the inter-Celtic
-acquisition pathway, the Isle-of-Man Celtic AI Institute, the
-30-year Cultural Archipelago roadmap — is the **public-good
-output** of that stewardship.
-
-The 30-year horizon is deliberately long: Phase I (2026-2036)
-stabilizes, Phase II (2036-2046) integrates, Phase III
-(2046-2056) normalises. Each phase is decoupled from any
-near-term political event; the cianfhoghlaim project will
-continue to deliver open-source Celtic-language LLMs and
-syllabus-informed resources regardless of whether a border poll
-is held in 2030 or 2060 or never. The *cultural* stewardship is
-apolitical in the constitutional sense and *political* in the
-everyday sense (it requires the daily work of language teaching,
-of community organising, of BAML extraction, of LanceDB
-embedding, of marimo notebook maintenance, of Dagster asset
-materialisation).
 
 ---
 
@@ -1493,14 +1168,13 @@ cultural-stewardship pledge of the cianfhoghlaim monorepo.
 The 8 PDFs in the leabharlann `gemini_deep_research/culture/`
 sub-archive that ground this narrative are:
 
-1. [`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf) — *Rí na Gaillimhe: An Ethnohistorical and Jurisprudential Warrant for the Indigenization of the Galwegian Sovereignty* (15 pp.)
+1. [`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf) — *Rí na Gaillimhe: An Ethnohistorical and Jurisprudential Warrant for the Indigenization of the Galwegian Sovereignty* (15 pp.)
 2. [`heraldic_research_for_dual_blood_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/heraldic_research_for_dual_blood_lineage.pdf) — *The Heraldry of the Corrib Crown* (14 pp.)
 3. [`british_isles_cianfhoghlaim.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/british_isles_cianfhoghlaim.pdf) — *Strategic Blueprint for Inter-Celtic Linguistic Acquisition, AI Integration, and Transnational Educator Credentialing* (16+ pp.)
 4. [`claiming_irish_kingship_through_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf) — *The Crown of the Corrib: An Ethnohistorical and Genealogical Warrant for the High Kingship of Ireland* (13 pp.)
-5. [`researching_neil_deacy_s_galway_heritage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/researching_neil_deacy_s_galway_heritage.pdf) — *The Socio-Economic, Athletic, and Genealogical Topography of the Deacy Family in Galway: A Multi-Dimensional Analysis* (12 pp.)
+5. [`researching_neil_deacy's_galway_heritage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/researching_neil_deacy_s_galway_heritage.pdf) — *The Socio-Economic, Athletic, and Genealogical Topography of the Deacy Family in Galway: A Multi-Dimensional Analysis* (12 pp.)
 6. [`royal_titles_celtic_heritage_and_claims.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf) — *The Crown of the Corrib and the Imperium of the Irish Sea* (13 pp.)
 7. [`deacy_family_heritage_research.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/deacy_family_heritage_research.pdf) — *The Deacy and Conroy Dynasties: An Ethnohistorical Analysis of Galway's Commercial and Maritime Lineage* (9 pp.)
-8. [`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf) — *The 2060 Geostrategic Synthesis: Aligning Indigenous Irish Kingship with Royal Philanthropy for an Encrypted Commonwealth Sanctuary* (17 pp.)
 
 ### The synthesised story
 
@@ -1612,41 +1286,6 @@ Park Oenach. The Lyons side carries the
 of Castlelyons and the Welsh / Cornish colonies. The
 hyphenation preserves both branches of the Triple Crown.
 
-#### 2. The heraldic prophecy — the Connacht arms, the Schottenklöster, and the Deacy / Lyons mottos
-
-The heraldic visual half of the claim is documented in
-[`heraldic_research_for_dual_blood_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/heraldic_research_for_dual_blood_lineage.pdf)
-p. 2-6. The Connacht arms have a unique blazon: *Party Per
-Pale Argent and Azure, in the first an eagle dimidiated and
-displayed Sable, in the second issuant from the partition an
-arm embowed and vested, the hand holding a sword erect, all
-Argent*. This is a violent fusion: an eagle split in half
-vertically, joined directly to a human arm wielding a sword.
-In heraldry, this technique is known as *dimidiation* and
-was historically used to join the arms of a husband and wife
-(Baron and Femme) or a King and a Town. The fact that the
-eagle is cut in half suggests that the Imperial power is
-incomplete without the Martial arm, and vice versa — a
-prophecy of the Dual Blood.
-
-The **Schottenklöster Regensburg hypothesis** is the
-foundation of the Imperial Eagle: the Irish Benedictine monks
-of St. James (St. Jakob) in Regensburg, Bavaria, founded in
-the 11th century by Marianus Scottus, utilized a coat of
-arms combining the Imperial Eagle (Reichsadler) of the Holy
-Roman Empire with an Arm holding a Sword. The monastery was
-under the direct protection of the Holy Roman Emperor (Henry
-IV and his successors). The Gaelic patronage came from the
-Kings of Munster (MacCarthy, O'Brien) and Connacht (O'Connor).
-**King Ruaidrí Ua Conchobair** (Rory O'Connor), the last
-pre-Norman High King of Ireland, was a primary benefactor. It
-is highly probable that the monks granted these arms to the
-O'Connors as a sign of this trans-European alliance,
-effectively recognizing the O'Connors as "Imperial Princes"
-within the framework of Christendom
-([`heraldic_research_for_dual_blood_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/heraldic_research_for_dual_blood_lineage.pdf)
-p. 2-3).
-
 The **Deacy crest** is *in front of two trefoils slipped in
 saltire a dexter arm erect couped above the elbow … holding
 a dagger*. The Dagger (Scian) is not a sword of state, but
@@ -1709,60 +1348,6 @@ relates closely to the skills of the *Druí* (Druid) and
 the *File* (Poet), who were responsible for the calendar,
 the genealogy, and the complex metrical structures of
 bardic poetry.
-
-The Cryptography (98%) score is the modern equivalent of
-**Ogham**, the secret alphabet of the learned class used for
-inscriptions and magic. The ability to encode and decode
-information is a classic attribute of the saoí, allowing
-the ruler to protect the secrets of the tribe and
-communicate securely with allies. The Non-Linear Systems
-(98%) and Modelling (90%) modules demonstrate a mastery of
-chaos and order — a king's primary duty is to maintain
-*fír flathemon* (the ruler's truth / justice) against the
-chaos of the world. Understanding non-linear systems —
-how small changes can have vast consequences — is the
-scientific expression of understanding the complex,
-unpredictable webs of kinship, politics, and economics. The
-**Project Maths evaluation** demonstrates a concern for the
-intellectual health of the populace, a key kingly duty —
-he is not merely hoarding knowledge; he is evaluating how
-it is transmitted to the *tuath*. This fulfills the Brehon
-requirement that a leader must provide for the instruction
-of the youth.
-
-In the 21st century, computer code is the functioning
-*draíocht* (magic) of the world — it controls communication,
-commerce, and memory. By mastering Algorithmic & Logical
-Methods (77%) and Machine Learning (85%), the practitioner
-possesses the "hidden knowledge" that defines the modern
-elite. The machine-learning-empowered phishing email
-detector is an act of *protection* — the King is the shield
-of his people. In the digital age, protecting the tribe
-from phishing (deception / theft / social engineering) is
-the direct functional equivalent of the ancient King
-protecting the cattle herds from wolves or cattle-raiders.
-
-The **Scoil Iognáid** (The Jesuit School) formation connects
-the practitioner to a specific and powerful intellectual
-lineage in Galway. The Jesuits arrived in the 17th century
-as the primary educators of the Catholic aristocracy. The
-ancestor **Thomas Dease** (Bishop of Meath, 1568-1651) was
-educated in Paris and examined by the Jesuit Père Binet — a
-*saoí* of the highest order, a poet in the Irish language,
-a theologian of the Sorbonne, and a pragmatist politician.
-By attending Scoil Iognáid, the practitioner stands in the
-direct pedagogical succession of Thomas Dease — a product
-of the *Counter-Reformation Intellect*, disciplined,
-multilingual (Irish / English / Code), and politically
-astute. The school itself, transitioning from Latin to Irish
-to bilingual education, mirrors the practitioner's own
-linguistic fluidity
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
-p. 3-5).
-
-The Saoí of the 21st century, the
-[`cultural_unity_for_british_isles.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/cultural_unity_for_british_isles.pdf)
-argues, must be *fluent in both the Fénechas and Python*.
 
 #### 4. The sacred topography of Shantalla (Sean Talamh) — the Old Ground, the Lia Fáil, the Oenach, the Claddagh
 
