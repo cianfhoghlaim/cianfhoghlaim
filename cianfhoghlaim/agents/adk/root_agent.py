@@ -102,6 +102,18 @@ class AgentDomain(StrEnum):
     TRANSLATION = "translation"
     CORPUS = "corpus"
     STATISTICS = "statistics"
+    # NCCA subject domains (added 2026-06-30 per the
+    # cianfhoghlaim-educational-mmo-v1 openspec change).
+    # The 8 NCCA specialist agents live in
+    # cianfhoghlaim/agents/meaisinfhoghlaim/educational/.
+    MATH = "math"             # Mathematics
+    APPM = "appm"             # Applied Mathematics
+    CHEM = "chem"             # Chemistry
+    GEOG = "geog"             # Geography
+    HIST = "hist"             # History
+    ENGL = "engl"             # English
+    GAEL = "gael"             # Gaeilge (Irish)
+    COMP = "comp"             # Computer Science
     GENERAL = "general"
 
 
@@ -170,6 +182,65 @@ class QueryRouter:
             "enrolment", "attainment", "performance",
             "staitisticí", "sonraí", "comparáid",
         ],
+        # ---- 8 NCCA subject domains (cianfhoghlaim-educational-mmo-v1) ----
+        AgentDomain.MATH: [
+            "math", "mathematics", "matamaitic", "algebra", "calculus",
+            "differentiation", "integration", "probability", "geometry",
+            "statistics", "trigonometry", "sequences", "series",
+            "complex numbers", "finance", "equations", "functions",
+            "lc-maths", "jc-maths", "lc-matamaitic", "jc-matamaitic",
+        ],
+        AgentDomain.APPM: [
+            "applied mathematics", "matamaitic fheidhmeach", "mechanics",
+            "dynamics", "appm", "vectors", "projectile", "friction",
+            "work energy power", "circular motion", "shm", "simple harmonic",
+            "rigid body", "statics", "gravity", "hydrostatics",
+            "ode", "differential equation",
+            "lc-appm",
+        ],
+        AgentDomain.CHEM: [
+            "chemistry", "ceimic", "molecule", "reaction", "equilibrium",
+            "organic", "periodic table", "stoichiometry", "acid", "base",
+            "thermodynamics", "electrochemistry", "rates of reaction",
+            "redox", "titration", "spectroscopy",
+            "lc-chem", "jc-science",
+        ],
+        AgentDomain.GEOG: [
+            "geography", "tíreolaíocht", "tireolaiocht", "geog",
+            "river", "coast", "climate", "biome", "tectonic", "glaciation",
+            "ireland geography", "europe geography", "population", "urban",
+            "economic geography", "geoecology", "fieldwork", "os map",
+            "lc-geog", "jc-geography",
+        ],
+        AgentDomain.HIST: [
+            "history", "stair", "hist", "1916", "european history",
+            "irish history", "modern ireland", "cold war", "world war",
+            "research study", "document study", "early modern ireland",
+            "partition", "easter rising", "war of independence",
+            "lc-hist", "jc-history",
+        ],
+        AgentDomain.ENGL: [
+            "english", "béarla", "bearla", "engl", "poetry", "shakespeare",
+            "comparative", "unseen", "composition", "personal essay",
+            "discursive", "argumentative", "narrative", "descriptive",
+            "drama", "film", "media literacy",
+            "lc-engl", "jc-english",
+        ],
+        AgentDomain.GAEL: [
+            "gaeilge", "irish language", "gael", "gramadach", "litriocht",
+            "filíocht", "filiocht", "prós", "pros", "béaloideas", "bealoideas",
+            "léamhthuiscint", "leamhthuiscint", "scríbhneoireacht",
+            "scribhneoireacht", "cluastuiscint", "cuntasaiocht",
+            "translation irish", "gaeilge translation", "gramadaí",
+            "lc-gael", "jc-gaeilge",
+        ],
+        AgentDomain.COMP: [
+            "computer science", "ríomheolaíocht", "riomheolaiocht",
+            "comp", "algorithm", "data structure", "python", "complexity",
+            "programming", "sorting", "searching", "binary", "sql",
+            "database", "network", "ethics", "computer systems",
+            "lc-comp", "jc-coding",
+        ],
     }
 
     # LiteLLM routing model with fallbacks
@@ -224,6 +295,14 @@ Classify this query into one of these domains:
 - translation: Requests to translate text between languages
 - corpus: Questions about folklore, stories, cultural content
 - statistics: Questions about education statistics and data
+- math: NCCA Leaving Certificate Mathematics (Pure)
+- appm: NCCA Leaving Certificate Applied Mathematics (mechanics)
+- chem: NCCA Leaving Certificate Chemistry
+- geog: NCCA Leaving Certificate Geography
+- hist: NCCA Leaving Certificate History
+- engl: NCCA Leaving Certificate English
+- gael: NCCA Leaving Certificate Gaeilge (Irish)
+- comp: NCCA Leaving Certificate Computer Science
 - general: Other queries
 
 Query: {query}
