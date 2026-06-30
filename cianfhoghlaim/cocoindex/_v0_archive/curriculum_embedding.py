@@ -464,7 +464,7 @@ class CurriculumEmbeddingFlow:
         """
         # Import observability if available
         try:
-            from oideachais.observability import log_agent_metrics, mlflow_run
+            from cianfhoghlaim.observability import log_agent_metrics, mlflow_run
             has_observability = True
         except ImportError:
             has_observability = False

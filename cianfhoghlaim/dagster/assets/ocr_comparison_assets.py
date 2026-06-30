@@ -179,7 +179,7 @@ def ocr_model_comparison(context) -> MaterializeResult:
 
     # Import OCR adapters
     try:
-        from oideachais.ocr import (
+        from cianfhoghlaim.ocr import (
             OCRBackend,
             compare_ocr_models,
         )
@@ -252,7 +252,7 @@ def vision_model_comparison(context) -> MaterializeResult:
 
     # Import vision comparison
     try:
-        from oideachais.ocr import (
+        from cianfhoghlaim.ocr import (
             VISION_MODELS,
             compare_vision_models,
             list_vision_models,
@@ -312,7 +312,7 @@ def ocr_irish_validation(context) -> MaterializeResult:
 
     # Import Irish processing
     try:
-        from oideachais.ocr import (
+        from cianfhoghlaim.ocr import (
             IrishOCRProcessor,
             detect_irish_content,
             get_fada_accuracy,

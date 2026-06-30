@@ -292,7 +292,7 @@ def cocoindex_v1_conformance_check(
             "python",
             "-c",
             (
-                "import asyncio; from oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; "
+                "import asyncio; from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check; "
                 "report = asyncio.run(run_conformance_check()); "
                 "print(report.summary()); "
                 "import sys; sys.exit(0 if report.all_passed else 1)"
@@ -383,7 +383,7 @@ def upstream_breaking_change_sensor(
     """
     # Lazy-import the FalkorDB client (defer until the sensor ticks).
     try:
-        from oideachais.graph.falkordb_client import (  # type: ignore[import-not-found]
+        from cianfhoghlaim.observability.falkordb_client import (  # type: ignore[import-not-found]
             falkordb_client,
         )
     except ImportError:

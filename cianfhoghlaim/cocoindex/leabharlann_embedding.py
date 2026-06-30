@@ -939,7 +939,7 @@ async def build_hnsw_indexes_for_leabharlann() -> dict[str, bool]:
     if not COCOINDEX_AVAILABLE:
         return {}
     # Lazy import to avoid a hard lancedb dependency at module load.
-    from oideachais.lancedb.indexing import build_hnsw_index  # type: ignore[import-not-found]
+    from cianfhoghlaim.embeddings.indexing import build_hnsw_index  # type: ignore[import-not-found]
 
     results: dict[str, bool] = {}
     conn = coco.use_context(LANCE_DB)  # type: ignore[arg-type]

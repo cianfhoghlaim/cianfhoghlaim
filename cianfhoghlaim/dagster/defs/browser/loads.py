@@ -1,7 +1,7 @@
 """
 browser — DLT source factory for the per-domain browser asset group.
 
-Wires the refactored cianfhoghlaim.core.browser stack (formerly
+Wires the refactored bonneagar.stacks.browser.sruth_browser stack (formerly
 `sruth_browser`) into a single DltLoadCollectionComponent. This is
 the per-domain implementation of the browser-stack + Crawl4AI
 refactor (see openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor).
@@ -52,7 +52,7 @@ def browser_search_source() -> Iterator:
     extraction). The router picks the cheapest viable backend
     per call.
     """
-    from cianfhoghlaim.core.browser import BrowserClient
+    from bonneagar.stacks.browser.sruth_browser import BrowserClient
 
     client = BrowserClient()
     for backend in DEFAULT_BROWSER_BACKENDS:
@@ -81,7 +81,7 @@ def browser_bulk_crawl_source() -> Iterator:
     crawling of new curriculum sources. Returns 1 row per
     crawled page.
     """
-    from cianfhoghlaim.core.browser import BrowserClient
+    from bonneagar.stacks.browser.sruth_browser import BrowserClient
 
     client = BrowserClient()
     for result in client.bulk_crawl(
@@ -100,7 +100,7 @@ def browser_bulk_scrape_source() -> Iterator:
     as the free fallback. Best for known-structure pages
     (NCCA, SEC, DES, Apple Award CVs).
     """
-    from cianfhoghlaim.core.browser import BrowserClient
+    from bonneagar.stacks.browser.sruth_browser import BrowserClient
 
     client = BrowserClient()
     for result in client.bulk_scrape(

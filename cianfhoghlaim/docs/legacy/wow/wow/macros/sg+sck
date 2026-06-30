@@ -1,4 +1,0 @@
-#showtooltip Sheilun's Gift
-/cast [mod:shift] Spinning Crane Kick;
-/cast [@mouseover, help] Sheilun's Gift;
-/cast Sheilun's Gift;

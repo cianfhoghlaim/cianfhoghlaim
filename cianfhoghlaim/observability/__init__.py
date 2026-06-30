@@ -290,4 +290,121 @@ __all__ = [
     "tracer",
     "track_agent_run",
     "workflow",
+    # ── Added in Phase 4 (2026-06-30): unified init + logfire flat re-exports ──
+    "init_all_observability",
+    "init_logfire",
+    "ensure_initialized",
+    "logfire_span",
+    "log_llm_call",
+    "log_embedding_call",
+    "instrument",
+    "instrument_pydantic",
+    "instrument_httpx",
+    "instrument_fastapi",
+    "log_info",
+    "log_warning",
+    "log_error",
+    "shutdown_logfire",
 ]
+
+
+def init_all_observability() -> dict[str, bool]:
+    """Convenience: call init_observability + init_mlflow + init_langfuse + init_logfire.
+
+    Replaces the per-backend lifespan boilerplate that FastAPI apps used
+    previously (see `agents/api/_oideachais_api/main.py:54-73` for the
+    original 3-line pattern).
+
+    Returns:
+        dict mapping backend name → success flag.
+        Example: {"datadog": True, "mlflow": True, "langfuse": True, "logfire": False}
+    """
+    results: dict[str, bool] = {}
+
+    # 1. Datadog APM + LLMObs
+    try:
+        results["datadog"] = bool(init_observability())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("init_all_observability: Datadog init failed: %s", exc)
+        results["datadog"] = False
+
+    # 2. MLflow
+    try:
+        from cianfhoghlaim.observability.mlflow_config import init_mlflow
+
+        results["mlflow"] = bool(init_mlflow())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("init_all_observability: MLflow init failed: %s", exc)
+        results["mlflow"] = False
+
+    # 3. Langfuse
+    try:
+        from cianfhoghlaim.observability.langfuse_config import init_langfuse
+
+        results["langfuse"] = bool(init_langfuse())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("init_all_observability: Langfuse init failed: %s", exc)
+        results["langfuse"] = False
+
+    # 4. Logfire (Pydantic)
+    try:
+        from cianfhoghlaim.observability.logfire_config import init_logfire
+
+        results["logfire"] = bool(init_logfire())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("init_all_observability: Logfire init failed: %s", exc)
+        results["logfire"] = False
+
+    logger.info("init_all_observability: %s", results)
+    return results
+
+
+# ── Flat re-exports of Logfire symbols (T4.3: was logfire_config.py only) ──
+# These are exposed at the package root so callers don't need the
+# submodule import path. Backward-compat: `from cianfhoghlaim.observability.logfire_config import X`
+# still works (the module still exists).
+try:
+    from cianfhoghlaim.observability.logfire_config import (  # type: ignore[import-not-found]
+        ensure_initialized as _ensure_logfire,
+        init_logfire as _init_logfire,
+        instrument as _instrument,
+        instrument_fastapi as _instrument_fastapi,
+        instrument_httpx as _instrument_httpx,
+        instrument_pydantic as _instrument_pydantic,
+        log_embedding_call as _log_embedding_call,
+        log_error as _log_error,
+        log_info as _log_info,
+        log_llm_call as _log_llm_call,
+        log_warning as _log_warning,
+        logfire_span as _logfire_span,
+        shutdown as _shutdown_logfire,
+    )
+
+    ensure_initialized = _ensure_logfire
+    init_logfire = _init_logfire
+    instrument = _instrument
+    instrument_fastapi = _instrument_fastapi
+    instrument_httpx = _instrument_httpx
+    instrument_pydantic = _instrument_pydantic
+    log_embedding_call = _log_embedding_call
+    log_error = _log_error
+    log_info = _log_info
+    log_llm_call = _log_llm_call
+    log_warning = _log_warning
+    logfire_span = _logfire_span
+    shutdown_logfire = _shutdown_logfire
+except ImportError:
+    # logfire not installed (rare); flat symbols degrade to no-ops.
+    ensure_initialized = lambda: False  # type: ignore[assignment]
+    init_logfire = lambda *a, **kw: False  # type: ignore[assignment]
+    instrument = lambda *a, **kw: None  # type: ignore[assignment]
+    instrument_fastapi = lambda *a, **kw: None  # type: ignore[assignment]
+    instrument_httpx = lambda *a, **kw: None  # type: ignore[assignment]
+    instrument_pydantic = lambda *a, **kw: None  # type: ignore[assignment]
+    log_embedding_call = lambda *a, **kw: None  # type: ignore[assignment]
+    log_error = lambda *a, **kw: None  # type: ignore[assignment]
+    log_info = lambda *a, **kw: None  # type: ignore[assignment]
+    log_llm_call = lambda *a, **kw: None  # type: ignore[assignment]
+    log_warning = lambda *a, **kw: None  # type: ignore[assignment]
+    logfire_span = lambda *a, **kw: None  # type: ignore[assignment]
+    shutdown_logfire = lambda: None  # type: ignore[assignment]

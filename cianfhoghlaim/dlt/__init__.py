@@ -20,8 +20,9 @@ from .batching import (
     should_drop_hnsw,
 )
 
-# Destination factory
-from .destinations import (
+# Destination factory (post-Phase-1 2026-06-30: real home is destinations_oideachais.py;
+# destinations_educational.py is the deprecated v3 shim — preserved for back-compat)
+from .destinations_oideachais import (
     create_pipeline,
     get_dlt_destination,
     get_duckdb_fallback_destination,

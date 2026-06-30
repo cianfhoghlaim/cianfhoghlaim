@@ -35,8 +35,8 @@ from dagster import (
     asset_check,
 )
 
-from sruth.oideachais.dlt_utils.destinations import get_dlt_destination
-from sruth.oideachais.dlt_utils.safety import safe_dlt_run
+from cianfhoghlaim.dlt.destinations import get_dlt_destination
+from cianfhoghlaim.dlt.safety import safe_dlt_run
 
 
 def _dlt_pipeline_name(name: str) -> str:
@@ -126,22 +126,22 @@ def _make_dlt_asset(asset_name: str, source_factory, group_name: str = "unwired_
 
 
 def _gias_source_factory():
-    from oideachais.dlt_sources.en.education.school_info import gias_source
+    from cianfhoghlaim.dlt.british_isles.en.education.school_info import gias_source
     return gias_source
 
 
 def _insight_source_factory():
-    from oideachais.dlt_sources.sct.education.insight_benchmarking import insight_source
+    from cianfhoghlaim.dlt.british_isles.sct.education.insight_benchmarking import insight_source
     return insight_source
 
 
 def _simd_source_factory():
-    from oideachais.dlt_sources.sct.statistics.simd import simd_source
+    from cianfhoghlaim.dlt.british_isles.sct.statistics.simd import simd_source
     return simd_source
 
 
 def _estyn_source_factory():
-    from oideachais.dlt_sources.wls.education.estyn import estyn_source
+    from cianfhoghlaim.dlt.british_isles.wls.education.estyn import estyn_source
     return estyn_source
 
 
@@ -165,12 +165,12 @@ wales_estyn, wales_estyn_check = _make_dlt_asset(
 
 
 def _jersey_source_factory():
-    from oideachais.dlt_sources.jey.education.channel_islands import jersey_source
+    from cianfhoghlaim.dlt.british_isles.jey.education.channel_islands import jersey_source
     return jersey_source
 
 
 def _guernsey_source_factory():
-    from oideachais.dlt_sources.ggy.education.channel_islands import guernsey_source
+    from cianfhoghlaim.dlt.british_isles.ggy.education.channel_islands import guernsey_source
     return guernsey_source
 
 
@@ -188,17 +188,17 @@ guernsey_education, guernsey_education_check = _make_dlt_asset(
 
 
 def _ireland_primary_source_factory():
-    from oideachais.dlt_sources.ie.education.primary import ireland_primary_source
+    from cianfhoghlaim.dlt.british_isles.ie.education.primary import ireland_primary_source
     return ireland_primary_source
 
 
 def _ireland_junior_cycle_source_factory():
-    from oideachais.dlt_sources.ie.education.junior_cycle import ireland_junior_cycle_source
+    from cianfhoghlaim.dlt.british_isles.ie.education.junior_cycle import ireland_junior_cycle_source
     return ireland_junior_cycle_source
 
 
 def _ireland_tertiary_source_factory():
-    from oideachais.dlt_sources.ie.education.tertiary import tertiary_courses
+    from cianfhoghlaim.dlt.british_isles.ie.education.tertiary import tertiary_courses
     return tertiary_courses
 
 
@@ -208,7 +208,7 @@ def _ireland_local_documents_source_factory():
 
 
 def _ireland_parallel_corpus_source_factory():
-    from oideachais.dlt_sources.ie.education.parallel_corpus import parallel_corpus_source
+    from cianfhoghlaim.dlt.british_isles.ie.education.parallel_corpus import parallel_corpus_source
     return parallel_corpus_source
 
 

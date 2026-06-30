@@ -30,7 +30,7 @@ import dlt
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 from observability.logging import get_logger
-from sruth.oideachais.dlt_sources.common._http_factories import HttpClientFactory
+from cianfhoghlaim.dlt.common._http_factories import HttpClientFactory
 
 logger = get_logger(__name__)
 

@@ -36,7 +36,7 @@ def _skyvern_search_asset() -> dg.AssetsDefinition:
         description="Skyvern vision-based semantic navigation (opt-in via BROWSER_ENABLE_SKYVERN=1)",
     )
     def _asset() -> dg.MaterializeResult:
-        from cianfhoghlaim.core.browser import BrowserClient
+        from bonneagar.stacks.browser.sruth_browser import BrowserClient
         client = BrowserClient()
         result = client.search(backend="skyvern_local", limit_per_query=10)
         return dg.MaterializeResult(
@@ -53,7 +53,7 @@ def _stagehand_interact_asset() -> dg.AssetsDefinition:
         description="Stagehand AI-powered UI interactions (opt-in via BROWSER_ENABLE_STAGEHAND=1)",
     )
     def _asset() -> dg.MaterializeResult:
-        from cianfhoghlaim.core.browser import BrowserClient
+        from bonneagar.stacks.browser.sruth_browser import BrowserClient
         client = BrowserClient()
         result = client.interact(backend="stagehand_local")
         return dg.MaterializeResult(

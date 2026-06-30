@@ -231,7 +231,7 @@ def culture_heritage_cognify(
     culture_heritage_embed: dict[str, Any],
 ) -> dict[str, Any]:
     """Cognee cognify pass."""
-    from oideachais.cognee_integration.culture_cognify import (
+    from cianfhoghlaim.observability.cognee.culture_cognify import (
         cognify_culture_heritage_rows,
     )
 
@@ -266,7 +266,7 @@ def culture_heritage_cross_edges(
     culture_heritage_cognify: dict[str, Any],
 ) -> dict[str, Any]:
     """Cross-dataset FalkorDB MERGE for the culture heritage subgraph."""
-    from oideachais.cognee_integration.culture_cognify import (
+    from cianfhoghlaim.observability.cognee.culture_cognify import (
         emit_culture_cross_dataset_edges,
     )
 

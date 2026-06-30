@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from oideachais.dlt_sources.ie.education.curriculum_source import (
+    from cianfhoghlaim.dlt.british_isles.ie.education.curriculum_source import (
         curriculum_source,
     )
 

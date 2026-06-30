@@ -20,7 +20,7 @@ from dagster import (
 )
 
 # Vendor-de-risking health check (see openspec/changes/litellm-minimax-vendor-derisking/)
-from sruth.oideachais.dagster_defs.assets.llm_gateway_assets import minimax_alias_health
+from cianfhoghlaim.dagster.assets.llm_gateway_assets import minimax_alias_health
 
 from .resources import DuckDBResource, LanceDBResource
 

@@ -19,7 +19,7 @@ class TestAuthorArchiveKgAssetsRegistered:
     """The 3 new KG assets must be registered."""
 
     def test_assets_in_official_media_init(self) -> None:
-        from oideachais.dagster_defs.assets import official_media
+        from cianfhoghlaim.dagster.assets import official_media
 
         for name in [
             "author_archive_cognify",
@@ -29,8 +29,8 @@ class TestAuthorArchiveKgAssetsRegistered:
             assert hasattr(official_media, name), f"{name} not exported"
 
     def test_assets_in_assets_init_all_assets(self) -> None:
-        from oideachais.dagster_defs.assets import all_assets
-        from oideachais.dagster_defs.assets.official_media import (
+        from cianfhoghlaim.dagster.assets import all_assets
+        from cianfhoghlaim.dagster.assets.official_media import (
             author_archive_cognify,
             author_archive_cross_edges,
             author_archive_kg_summary,
@@ -43,7 +43,7 @@ class TestAuthorArchiveKgAssetsRegistered:
             assert asset in all_assets, f"{asset.__name__} not in all_assets"
 
     def test_assets_have_dagster_decorator(self) -> None:
-        from oideachais.dagster_defs.assets.official_media import (
+        from cianfhoghlaim.dagster.assets.official_media import (
             author_archive_cognify,
             author_archive_cross_edges,
             author_archive_kg_summary,
@@ -60,7 +60,7 @@ class TestAuthorArchiveKgAssetsRegistered:
     def test_uog_assets_optional(self) -> None:
         """The UoG coursework assets are optional (Stage 1 may be merged
         without Stage 2). The official_media module must still import."""
-        from oideachais.dagster_defs.assets import official_media
+        from cianfhoghlaim.dagster.assets import official_media
 
         # If Stage 2 is present, the assets should be there
         if hasattr(official_media, "_UOG_ASSETS_AVAILABLE"):
@@ -72,12 +72,12 @@ class TestEdgeTypesWellFormed:
     """The 8 edge types must be well-formed strings."""
 
     def test_edge_types_count(self) -> None:
-        from oideachais.cognee_integration.author_archive_cognify import EDGE_TYPES
+        from cianfhoghlaim.observability.cognee.author_archive_cognify import EDGE_TYPES
 
         assert len(EDGE_TYPES) == 8
 
     def test_edge_types_format(self) -> None:
-        from oideachais.cognee_integration.author_archive_cognify import EDGE_TYPES
+        from cianfhoghlaim.observability.cognee.author_archive_cognify import EDGE_TYPES
 
         for et in EDGE_TYPES:
             # Format: <SourceLabel>-><VERB>-><TargetLabel>
@@ -94,13 +94,13 @@ class TestCogneeHelperStubMode:
     """The Cognee helper is a no-op in stub mode."""
 
     def test_dataset_name(self) -> None:
-        from oideachais.cognee_integration.author_archive_cognify import DATASET_NAME
+        from cianfhoghlaim.observability.cognee.author_archive_cognify import DATASET_NAME
 
         assert DATASET_NAME == "oideachais_author_archive"
 
     @pytest.mark.asyncio
     async def test_stub_mode_returns_noop(self) -> None:
-        from oideachais.cognee_integration.author_archive_cognify import (
+        from cianfhoghlaim.observability.cognee.author_archive_cognify import (
             cognify_author_archive_rows,
         )
 
@@ -114,7 +114,7 @@ class TestCogneeHelperStubMode:
 
     @pytest.mark.asyncio
     async def test_cognify_all_corpora_returns_per_corpus(self) -> None:
-        from oideachais.cognee_integration.author_archive_cognify import (
+        from cianfhoghlaim.observability.cognee.author_archive_cognify import (
             cognify_all_corpora,
         )
 
@@ -135,7 +135,7 @@ class TestCrossCorpusEdgeRules:
     """The 5 deterministic rules must build the expected edges."""
 
     def test_om_publishes_zotero_by_arxiv(self) -> None:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             build_all_cross_corpus_queries,
         )
 
@@ -170,7 +170,7 @@ class TestCrossCorpusEdgeRules:
         assert edge["match_kind"] == "arxiv_id"
 
     def test_om_publishes_zotero_by_title(self) -> None:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             build_all_cross_corpus_queries,
         )
 
@@ -198,7 +198,7 @@ class TestCrossCorpusEdgeRules:
         assert om_q[2]["edges"][0]["match_kind"] == "title"
 
     def test_personal_awarded_uog_by_course_code(self) -> None:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             build_all_cross_corpus_queries,
         )
 
@@ -224,7 +224,7 @@ class TestCrossCorpusEdgeRules:
         assert pa_q[2]["edges"][0]["match_kind"] == "course_code"
 
     def test_uog_located_in_om(self) -> None:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             build_all_cross_corpus_queries,
         )
 
@@ -251,7 +251,7 @@ class TestCrossCorpusEdgeRules:
         assert loc_q[2]["edges"][0]["match_kind"] in ("host", "tokens")
 
     def test_personal_affiliated_om_only_teaching(self) -> None:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             build_all_cross_corpus_queries,
         )
 
@@ -283,7 +283,7 @@ class TestCrossCorpusEdgeRules:
         assert aff_q[2]["edges"][0]["source"] == "ref_2"
 
     def test_empty_inputs_return_empty_queries(self) -> None:
-        from oideachais.cognify_rules.author_archive_cross_corpus import (
+        from cianfhoghlaim.cognify.author_archive_cross_corpus import (
             build_all_cross_corpus_queries,
         )
 
@@ -300,7 +300,7 @@ class TestKgSummaryAsset:
     """The kg_summary asset must write a JSON file with the expected shape."""
 
     def test_kg_summary_writes_file(self, tmp_path: Path, monkeypatch) -> None:
-        from oideachais.dagster_defs.assets.official_media import author_archive_kg_assets
+        from cianfhoghlaim.dagster.assets.official_media import author_archive_kg_assets
 
         # Redirect the output path by monkeypatching the Path resolution.
         # We can't easily do that, so just call the function and check

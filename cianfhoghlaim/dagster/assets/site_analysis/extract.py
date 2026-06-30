@@ -23,7 +23,7 @@ def site_analysis_extract(context) -> dg.MaterializeResult:
     """`context` is the AssetExecutionContext; left un-annotated so
     Dagster's type check passes (the type alias `dg.AssetExecutionContext`
     is the same class but the validator wants the literal symbol)."""
-    from oideachais.dlt_sources.site_analysis.site_analysis import site_analysis_source
+    from cianfhoghlaim.dlt.site_analysis.site_analysis import site_analysis_source
 
     rows = list(site_analysis_source().resources["site_analyses"])
     return dg.MaterializeResult(

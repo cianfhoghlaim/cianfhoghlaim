@@ -17,7 +17,7 @@ class TestSamplePdfSelection:
     """The sample-pdf picker should pick the largest non-empty PDF and skip Zotero placeholders."""
 
     def test_picks_largest_pdf(self, tmp_path: Path) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _select_sample_pdf,
         )
 
@@ -28,7 +28,7 @@ class TestSamplePdfSelection:
         assert result.name == "large.pdf"
 
     def test_skips_zotero_placeholders(self, tmp_path: Path) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _select_sample_pdf,
         )
 
@@ -39,7 +39,7 @@ class TestSamplePdfSelection:
         assert result.name == "Real paper.pdf"
 
     def test_returns_none_for_empty_dir(self, tmp_path: Path) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _select_sample_pdf,
         )
 
@@ -47,7 +47,7 @@ class TestSamplePdfSelection:
         assert result is None
 
     def test_returns_none_for_missing_dir(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _select_sample_pdf,
         )
 
@@ -59,7 +59,7 @@ class TestPdfTextExtraction:
     """The pymupdf text extractor should be graceful when pymupdf is missing."""
 
     def test_returns_empty_when_pymupdf_missing(self, tmp_path: Path) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _extract_text_from_pdf,
         )
 
@@ -83,7 +83,7 @@ class TestBamlExtraction:
     """The BAML extractor should be graceful when baml_client is missing."""
 
     def test_skips_no_client(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _baml_extract,
         )
 
@@ -94,7 +94,7 @@ class TestBamlExtraction:
         assert result["status"] == "skipped_no_client"
 
     def test_unknown_function_returns_error(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _baml_extract,
         )
 
@@ -107,7 +107,7 @@ class TestCogneeIntegration:
     """The Cognee add helper should be graceful when cognee is missing."""
 
     def test_skips_no_cognee(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _cognee_add_and_cognify,
         )
 
@@ -122,7 +122,7 @@ class TestCocoindexUpdate:
     """The CocoIndex CLI wrapper should be graceful when the CLI is missing."""
 
     def test_handles_missing_cli(self) -> None:
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             _run_cocoindex_update,
         )
 
@@ -136,7 +136,7 @@ class TestFullStackDemoAsset:
 
     def test_asset_runs_against_real_leabharlann(self) -> None:
         """End-to-end smoke test against the actual leabharlann/ directories."""
-        from oideachais.dagster_defs.assets.leabharlann_full_stack_demo import (
+        from cianfhoghlaim.dagster.assets.leabharlann_full_stack_demo import (
             SAMPLE_UOG_IRISH,
             SAMPLE_ZOTERO,
             leabharlann_full_stack_demo,

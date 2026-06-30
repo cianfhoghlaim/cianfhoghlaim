@@ -5,7 +5,7 @@ Provides per-subject DLT resources for all 34 Leaving Certificate subjects.
 Each subject yields pages and PDF URLs from curriculumonline.ie and ncca.ie.
 
 Usage:
-    from oideachais.dlt_sources.ireland.subjects.senior_cycle import (
+    from cianfhoghlaim.dlt.british_isles.ie.subjects.senior_cycle import (
         senior_cycle_source,
     )
 

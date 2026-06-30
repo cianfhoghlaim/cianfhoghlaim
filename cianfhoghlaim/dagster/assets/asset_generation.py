@@ -45,7 +45,7 @@ GARAGE_BUCKET = os.getenv("GARAGE_BUCKET", "ducklake-assets")
 # ============================================================================
 
 def _get_baml_pipeline():
-    from oideachais.agents.baml_integration import (
+    from cianfhoghlaim.agents.baml_integration import (
         EnhancedBAMLExtractionPipeline,
     )
     return EnhancedBAMLExtractionPipeline()

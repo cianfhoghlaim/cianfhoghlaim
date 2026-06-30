@@ -199,12 +199,12 @@ def pdf_extracted_text_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from oideachais.ocr.adapters import get_adapter
+    from cianfhoghlaim.ocr.adapters import get_adapter
     import duckdb
-    from oideachais.dlt_utils.destinations import get_duckdb_fallback_destination
+    from cianfhoghlaim.dlt.destinations_oideachais import get_duckdb_fallback_destination
 
     # 1. Query DuckDB to find already processed PDFs to avoid infinite loop
-    from oideachais.dagster_defs.assets.ie.education.curriculum_dlt_assets import DLT_PIPELINES_DIR, DLT_PIPELINE_NAME, DLT_DATASET_NAME
+    from cianfhoghlaim.dagster.assets.ie.education.curriculum_dlt_assets import DLT_PIPELINES_DIR, DLT_PIPELINE_NAME, DLT_DATASET_NAME
     db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
     if not os.path.exists(db_path):
         db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"

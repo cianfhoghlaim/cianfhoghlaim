@@ -8,7 +8,7 @@ Provides:
 - Incremental state management
 
 Usage:
-    from oideachais.dlt_sources.common.content_deduplication import (
+    from cianfhoghlaim.dlt.common.content_deduplication import (
         ContentDeduplicator,
         DeduplicationResult,
     )

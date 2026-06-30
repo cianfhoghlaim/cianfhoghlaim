@@ -111,7 +111,7 @@ def cv_extraction_asset(
     # Per Phase A.4 of the browser-stack-crawl4ai-refactor
     # (openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor),
     # enrich the CV extraction with public award-body page
-    # scraping via the new cianfhoghlaim.core.browser namespace.
+    # scraping via the new bonneagar.stacks.browser.sruth_browser namespace.
     # Uses Crawl4AI's `extract_with_css` (zero LLM cost) for
     # known-structure award-body pages (Apple Award, BCS, Teaching
     # Council of Ireland). The BAML extraction above runs the
@@ -119,7 +119,7 @@ def cv_extraction_asset(
     # verification sources.
     if row_count > 0 and not os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true":
         try:
-            from cianfhoghlaim.core.browser import BrowserClient
+            from bonneagar.stacks.browser.sruth_browser import BrowserClient
             client = BrowserClient()
             # The Apple Award page (single-source, no LLM)
             apple_award = client.extract_with_css(

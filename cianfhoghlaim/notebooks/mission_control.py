@@ -508,7 +508,7 @@ def _(mo, os):
     dlt_logs = []
 
     if dlt_run_btn.value:
-        from oideachais.dlt_utils import create_pipeline, safe_dlt_run, get_dlt_destination, get_duckdb_fallback_destination
+        from cianfhoghlaim.dlt import create_pipeline, safe_dlt_run, get_dlt_destination, get_duckdb_fallback_destination
         from pathlib import Path
 
         os.environ["USE_DUCKLAKE"] = str(dlt_ducklake_toggle.value).lower()
@@ -542,7 +542,7 @@ def _(mo, os):
                                 dlt_logs.append(mo.md(f"  📊 {job.job_id}: {rows} rows"))
 
                 elif dlt_mode.value == "curriculum_test":
-                    from oideachais.dlt_sources.ie.education.curriculum_source import curriculum_source
+                    from cianfhoghlaim.dlt.british_isles.ie.education.curriculum_source import curriculum_source
 
                     pipeline = create_pipeline("curriculum_unified", "curriculum")
                     source = curriculum_source(cycle="senior_cycle", subject="mathematics", language="en")

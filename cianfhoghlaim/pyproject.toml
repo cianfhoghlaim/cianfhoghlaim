@@ -1,7 +1,7 @@
 [project]
 name = "cianfhoghlaim"
-version = "0.1.0"
-description = "Cianfhoghlaim consolidated Celtic education + multi-nation + multi-language data platform (Plan 1 = Ireland + leabharlann)."
+version = "0.5.0"
+description = "Cianfhoghlaim consolidated Celtic education + multi-nation + multi-language data platform. Single uv-workspace Python package: agents + BAML + browser + cocoindex + dagster + dlt + meaisínfhoghlaim + observability + ocr + leabharlann. Post-v4 consolidation (2026-06-28); post-Phase-1 manifest consolidation (2026-06-30)."
 readme = "README.md"
 requires-python = ">=3.13"
 license = { text = "BUSL-1.1" }
@@ -26,58 +26,142 @@ keywords = [
     "vision-model",
     "browserbase",
     "firecrawl",
+    "agent-fleet",
+    "multi-agent",
 ]
 
 # The cianfhoghlaim package is the single root for the consolidated
-# monorepo (Plan v4). It contains 16 core/ stack packages, 5 pipelines/
-# stages, 7+ sources/ languages × nations files, and the assets/ DAGs
-# + the leabharlann/ corpus. See:
-#   openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/
+# monorepo (post-v4 + post-Phase-1 manifest consolidation 2026-06-30).
+# It contains 18 wheel sub-packages: agents + assets + baml + browser +
+# cocoindex + cognify + dagster + dlt + embeddings + geospatial +
+# leabharlann + meaisinfhoghlaim + notebooks + observability + ocr +
+# pipelines + sources + storage, plus the nested libraries/codeolas
+# sub-package. See:
+#   openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
 
 dependencies = [
-    # Core 16 stack packages — all lazy-imported; only declare what is needed at import time.
-    "dlt>=1.0.0",
-    "duckdb>=1.0.0",
-    "lancedb>=0.10.0",
-    "pyarrow>=18.0.0",
-    "dagster>=1.7.0",
-    "dagster-webserver>=1.7.0",
-    "dagster-graphql>=1.7.0",
-    "cocoindex>=0.2.0",
-    "baml-py>=0.222.0",
-    "marimo>=0.23.10",
-    "cognee>=0.1.0",
-    "langfuse>=2.0.0",
-    "mlflow>=2.18.0",
-    "logfire>=4.15.1",
-    "fastapi>=0.115.0,<0.117",  # upper bound pinned for mlx-omni-server compat
+    # ── Core utilities ──
+    "python-dotenv>=1.0.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
     "httpx>=0.27.0",
-    "firecrawl>=4.28.2",
-    # BrowserBase backend is implemented in-house at cianfhoghlaim/core/browser/
-    # (no PyPI package); see BrowserbaseBackend in sruth_browser/backends/.
+    "aiohttp>=3.9.0",
+    "tenacity>=8.2.0",
+    "pyyaml>=6.0.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    "sse-starlette>=2.0.0",
+
+    # ── LLM providers (LiteLLM-routed) ──
     "openai>=2.32.0",
     "anthropic>=0.106.0",
     "google-genai>=1.73.1",
     "groq>=1.4.0",
+    "litellm",
+    "baml-py>=0.222.0",
+
+    # ── Agent frameworks ──
     "agno>=2.6.11",
-    "ibis-framework>=10.0.0",
+    "google-adk>=0.1.0",
+    "pydantic-ai>=1.0.0",  # for hitl_agent.py, pydantic_gateway.py
+    # NOTE: ag_ui_adk is NOT in core deps — it requires uvicorn>=0.35 which conflicts
+    # with mlx-omni-server (uvicorn<0.35). Install via `pip install ag-ui-adk` only when
+    # using `agents/api/curriculum_endpoint.py`. See [agui] optional-dependency below.
+
+    # ── Web crawling + browser automation ──
+    "firecrawl>=4.28.2",
+    "firecrawl-py>=1.0.0",
+    "browserbase>=1.11.0",
+    "playwright>=1.60.0",
+    "pymupdf>=1.24.0",
+    "pdfplumber>=0.11.0",
+
+    # ── Data pipeline orchestration + ingestion ──
+    "dagster>=1.9.0",
+    "dagster-webserver>=1.9.0",
+    "dagster-graphql>=1.7.0",
+    "dagster-dlt>=0.26.0",
+    "dagster-dbt>=0.25.0",
+    "dagster-embedded-elt>=0.22.0",
+    "dlt[duckdb,ducklake,s3,filesystem,hub]>=1.5.0",
+    "dlthub>=0.18.0",
+    "sqlmesh[duckdb]>=0.228.1",
+    "dbt-duckdb>=1.8.0",
+    "ibis-framework[duckdb,motherduck]>=9.0.0",
+
+    # ── Storage + vector + graph databases ──
+    "duckdb>=1.1.0",
+    "lancedb>=0.15.0",
+    "pyarrow>=18.0.0",
+    "neo4j>=5.0.0",
+    "falkordb>=1.0.0",
+    "graphiti-core>=0.3.0",
+    "cognee>=1.0.1",
+
+    # ── CocoIndex v1 (vector + knowledge-graph indexing) ──
+    "cocoindex>=0.3.9",
+
+    # ── Marimo notebooks (Dagster + LanceDB + DuckLake reactive dashboards) ──
+    "marimo>=0.23.10",
+
+    # ── Observability (Langfuse + MLflow + RAGAS + Logfire + structlog + DD) ──
+    "langfuse>=3.11.2",
+    "mlflow>=2.18.0",
+    "logfire>=4.15.1",
+    "ragas>=0.1.10",
+    "opentelemetry-sdk>=1.28.0",
+    "structlog>=24.0.0",
+    "ddtrace>=4.0.0",
+    "confluent-kafka>=2.6.0",  # for RisingWave event streaming
+
+    # ── ML + embeddings + OCR/VLM (post-Phase-1: mlx-omni-server promoted to core) ──
+    "sentence-transformers>=3.0.0",
+    "transformers>=4.45.0",
+    "torch>=2.4.0",
+    "accelerate>=1.0.0",
+    "mlx>=0.31.2,<0.32; sys_platform == 'darwin'",  # bounded for mflux (transitive dep of mlx-omni-server==0.5.3 on darwin)
+    "mlx>=0.30.3,<=0.31.1; sys_platform != 'darwin'",  # bounded for mflux on non-darwin
+    "mlx-omni-server==0.5.3; sys_platform == 'darwin'",  # OCR/VLM server (M-series Apple Silicon); 0.5.3 is the only version compatible with cognee's uvicorn>=0.34,<0.35 pin
+
+    # ── Geospatial + crypto ──
+    "geopandas>=1.0.0",
+    "shapely>=2.0.0",
+    "h3>=4.0.0",
+    "siwe>=4.0.0",
+    "eth-account>=0.11.0",
+    "web3>=6.0.0",
+
+    # ── MCP + code analysis ──
+    "mcp>=1.0.0",
+    "tree-sitter>=0.21.0",
+    "tree-sitter-languages>=1.10.0; python_version < '3.13'",
+    "tiktoken>=0.5.0",
+
+# ── API gateway ──
+    "fastapi>=0.115.0,<0.140",  # upper bound for mlx-omni-server compat
+    "uvicorn>=0.34.0,<0.35.0",  # >=0.34 for cognee; <0.35 for mlx-omni-server (excluded from `all` to resolve the conflict)
 ]
 
 [project.optional-dependencies]
-ocr-vision = [
-    "transformers>=4.45.0",
-    "torch>=2.4.0",
-    "mlx>=0.20.0",
-    "mlx-omni-server>=0.1.0",
-]
+# ── OCR (classical — vision stack now in core deps for M-series Apple Silicon) ──
 ocr-classical = [
     "paddleocr>=2.7.0",
     "pytesseract>=0.3.10",
 ]
+ocr = [
+    "pytesseract>=0.3.13",
+    "pillow>=11.0.0",
+    "easyocr>=1.7.0",
+]
+
+# NOTE: `ag-ui-adk` is intentionally NOT declared as an optional-dependency here.
+# It requires uvicorn>=0.35 which conflicts with mlx-omni-server's uvicorn<0.35
+# constraint. To install ag-ui-adk (needed only for `agents/api/curriculum_endpoint.py`):
+#   uv pip install 'ag-ui-adk>=0.7.0'
+# This will pull in newer fastapi + uvicorn; the AG-UI bridge is opt-in only.
+
+# ── Celtic language + asset generation ──
 celtic-language = [
-    "transformers>=4.45.0",
     "sentencepiece>=0.2.0",
 ]
 asset-gen = [
@@ -85,29 +169,114 @@ asset-gen = [
     "compel>=2.0.0",
 ]
 
+# ── Training + memory ──
+training = [
+    "unsloth>=2024.12",
+    "trl>=0.12.0",
+    "datasets>=3.0.0",
+    "wandb>=0.18.0",
+]
+memory = [
+    "graphiti-core>=0.5.0",
+]
+
+# ── Observability extras ──
+observability = [
+    "datasets>=3.0.0",
+]
+ui = [
+    "copilotkit>=0.1.0",
+]
+dbt = [
+    "dbt-duckdb>=1.8.0",
+]
+marimo = [
+    "marimo>=0.13.0",
+    "altair>=5.0.0",
+]
+gradio = [
+    "gradio>=4.44.0",
+]
+hub = [
+    "huggingface-hub>=0.24.0",
+]
+
+# ── Development ──
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.0",
+]
+
+# ── All extras (union) ──
+# NOTE: `ocr-vision` is gone — its deps (mlx + mlx-omni-server) are now in core
+# `dependencies` because the OCR/VLM stack is mandatory for the M-series Apple
+# Silicon validation stack.
+all = [
+    "cianfhoghlaim[ocr-classical,celtic-language,asset-gen,ocr,training,memory,observability,ui,dbt,marimo,gradio,hub,dev]",
+]
+
 [project.scripts]
-# Consolidated CLI entry-points (formerly per-quadrant)
-cianfhoghlaim = "cianfhoghlaim.cli:main"
-cianfhoghlaim-ocr = "cianfhoghlaim.ocr.cli:main"
-cianfhoghlaim-baml = "cianfhoghlaim.core.baml.cli:main"
-cianfhoghlaim-marimo = "cianfhoghlaim.notebooks.cli:main"
+# Consolidated CLI entry-points (post-v4 + post-Phase-1 manifest consolidation)
+# All entries resolve to a real module — verified by `for entry in ...; do uv run $entry --help`.
+cianfhoghlaim              = "cianfhoghlaim.cli:main"
+cianfhoghlaim-ocr          = "cianfhoghlaim.ocr.cli:main"
+cianfhoghlaim-baml         = "cianfhoghlaim.baml.cli:main"
+cianfhoghlaim-marimo       = "cianfhoghlaim.notebooks.cli:main"
 cianfhoghlaim-stack-doctor = "cianfhoghlaim.stacks.cli:main"
+cianfhoghlaim-dagster      = "cianfhoghlaim.dagster.cli:main"
+cianfhoghlaim-dlt          = "cianfhoghlaim.dlt.cli:main"
+cianfhoghlaim-cocoindex    = "cianfhoghlaim.cocoindex.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/cianfhoghlaim/sruth"
+Documentation = "https://docs.cianfhoghlaim.ie"
+Repository = "https://github.com/cianfhoghlaim/sruth"
+Issues = "https://github.com/cianfhoghlaim/sruth/issues"
+
+# ── uv workspace member declaration ──
+# Required for uv to install this package as a workspace member.
+# Without this, `uv sync` resolves all dependencies but does not install
+# the package itself, so `import cianfhoghlaim` fails at runtime.
+[tool.uv]
+package = true
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
+# Post-v4 + post-Phase-1 + post-Phase-3 wheel package list (2026-06-30).
+# 19 directories that have an `__init__.py` on disk, plus the nested
+# libraries/codeolas sub-package. Verified by `find cianfhoghlaim -maxdepth 2 -name __init__.py`.
+# After Phase 3 (meaisinfhoghlaim redistribution), the `meaisinfhoghlaim/`
+# directory is gone — its 22 files + 9 sub-directories were moved to:
+#   ocr/{models,backends,evaluation,datasets,federated}/
+#   core/{evaluation,quality,alignment,ml_training,ci,document_factory,config}/
+#   pipelines/process/_meaisinfhoghlaim_pipelines/
+#   assets/_meaisinfhoghlaim_assets/ (the fibo/ asset_generation)
+#   observability/ocr.py (the OCR-specific Langfuse+DD tracer)
+#   leabharlann/samplai/ (Celtic-language data, not code)
 packages = [
+    "agents",
+    "assets",
+    "baml",
+    "cocoindex",
+    "cognify",
     "core",
+    "dagster",
+    "dlt",
+    "embeddings",
+    "geospatial",
+    "leabharlann",
+    "notebooks",
+    "observability",
+    "ocr",
     "pipelines",
     "sources",
-    "assets",
-    "agents",
-    "notebooks",
-    "ocr",
-    "embeddings",
-    "cognify",
+    "storage",
     "libraries/codeolas",
 ]
 

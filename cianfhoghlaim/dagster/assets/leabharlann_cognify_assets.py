@@ -53,7 +53,7 @@ def _cognee_available() -> bool:
 
 def _falkordb_available() -> bool:
     try:
-        from oideachais.graph.falkordb_client import get_graph_cache  # noqa: F401
+        from cianfhoghlaim.observability.falkordb_client import get_graph_cache  # noqa: F401
 
         return True
     except ImportError:
@@ -65,7 +65,7 @@ async def _cognify_dataset(dataset: str, rows: list[dict[str, Any]]) -> dict[str
 
     Graceful when Cognee is missing or `USE_LOCAL_SCRAPES=true`.
     """
-    from oideachais.cognee_integration.leabharlann_cognify import (
+    from cianfhoghlaim.observability.cognee.leabharlann_cognify import (
         cognify_leabharlann_rows,
     )
 
@@ -203,7 +203,7 @@ def cognify_leabharlann_takeout(context: AssetExecutionContext) -> Output[dict[s
     ],
 )
 def cross_archive_edges(context: AssetExecutionContext) -> Output[dict[str, Any]]:
-    from oideachais.cognify_rules.leabharlann_cross_archive import (
+    from cianfhoghlaim.cognify.leabharlann_cross_archive import (
         populate_cross_archive_edges,
     )
 

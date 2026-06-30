@@ -176,7 +176,7 @@ def uog_pre_research(context) -> dg.MaterializeResult:
     `author-archive-pipeline` spec) but is scoped to the UoG domain.
     """
     try:
-        from cianfhoghlaim.core.browser import ScrapeStrategist
+        from bonneagar.stacks.browser.sruth_browser import ScrapeStrategist
     except ImportError as exc:
         logger.warning("browser_not_available", error=str(exc))
         return dg.MaterializeResult(

@@ -8,7 +8,7 @@ are validated here.
 from __future__ import annotations
 
 import pytest
-from sruth.meaisinfhoghlaim.pipelines.ensemble_gradio import build_ensemble_interface
+from cianfhoghlaim.meaisinfhoghlaim.pipelines.ensemble_gradio import build_ensemble_interface
 
 
 def _sklearn_stub(text: str) -> str:

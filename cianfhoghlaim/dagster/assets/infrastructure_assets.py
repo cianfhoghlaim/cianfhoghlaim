@@ -66,7 +66,7 @@ def api_endpoints(context: AssetExecutionContext) -> MaterializeResult:
     table with BGE-M3 embedding on the `summary` field.
     """
     try:
-        from oideachais.cocoindex_flows import api_indexing
+        from cianfhoghlaim.cocoindex import api_indexing
     except ImportError as e:
         context.log.warning(f"api_indexing module not available: {e}")
         return MaterializeResult(metadata={"status": "skipped", "reason": str(e)})
@@ -110,7 +110,7 @@ def filesystem_layout(context: AssetExecutionContext) -> MaterializeResult:
     with BGE-M3 embedding on the `summary` field.
     """
     try:
-        from oideachais.cocoindex_flows import filesystem_indexing
+        from cianfhoghlaim.cocoindex import filesystem_indexing
     except ImportError as e:
         context.log.warning(f"filesystem_indexing module not available: {e}")
         return MaterializeResult(metadata={"status": "skipped", "reason": str(e)})
@@ -156,7 +156,7 @@ def storage_backends(context: AssetExecutionContext) -> MaterializeResult:
     on the `summary` field.
     """
     try:
-        from oideachais.cocoindex_flows import storage_indexing
+        from cianfhoghlaim.cocoindex import storage_indexing
     except ImportError as e:
         context.log.warning(f"storage_indexing module not available: {e}")
         return MaterializeResult(metadata={"status": "skipped", "reason": str(e)})
@@ -199,7 +199,7 @@ def config_files(context: AssetExecutionContext) -> MaterializeResult:
     with BGE-M3 embedding on the `summary` field.
     """
     try:
-        from oideachais.cocoindex_flows import config_indexing
+        from cianfhoghlaim.cocoindex import config_indexing
     except ImportError as e:
         context.log.warning(f"config_indexing module not available: {e}")
         return MaterializeResult(metadata={"status": "skipped", "reason": str(e)})

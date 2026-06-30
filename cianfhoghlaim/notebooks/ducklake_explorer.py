@@ -280,7 +280,7 @@ def _(mo):
        dagster dev -m oideachais
 
        # Or directly
-       DLT_ENVIRONMENT=local python -c "from oideachais.dlt_utils import create_pipeline; ..."
+       DLT_ENVIRONMENT=local python -c "from cianfhoghlaim.dlt import create_pipeline; ..."
        ```
 
     3. **Validate in this notebook:**

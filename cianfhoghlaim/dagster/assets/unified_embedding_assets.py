@@ -55,7 +55,7 @@ def unified_embeddings(context: AssetExecutionContext) -> MaterializeResult:
     `unified_embeddings` LanceDB table.
     """
     try:
-        from oideachais.cocoindex_flows import unified_embedding
+        from cianfhoghlaim.cocoindex import unified_embedding
     except ImportError as e:
         context.log.warning(f"unified_embedding module not available: {e}")
         return MaterializeResult(metadata={"status": "skipped", "reason": str(e)})
@@ -102,7 +102,7 @@ def code_embeddings(context: AssetExecutionContext) -> MaterializeResult:
     Stores in the `code_embeddings` LanceDB table.
     """
     try:
-        from oideachais.cocoindex_flows import unified_embedding
+        from cianfhoghlaim.cocoindex import unified_embedding
     except ImportError as e:
         context.log.warning(f"unified_embedding module not available: {e}")
         return MaterializeResult(metadata={"status": "skipped", "reason": str(e)})

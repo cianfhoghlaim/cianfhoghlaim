@@ -18,7 +18,7 @@ from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from sruth.croilar._shared.streams import (
+from cianfhoghlaim.agents.api._croilar_shared.streams import (
     DEFAULT_SOURCES_PATH,
     Stream,
     list_streams,

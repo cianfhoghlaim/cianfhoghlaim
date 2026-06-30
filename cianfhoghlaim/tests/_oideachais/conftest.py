@@ -241,7 +241,7 @@ def mock_modal_function() -> Generator[MagicMock]:
 @pytest.fixture
 def serial_executor() -> Generator[Any]:
     """Provide a serial executor for database operations."""
-    from oideachais.core.storage.serial_executor import SerialDatabaseExecutor
+    from cianfhoghlaim.storage.serial_executor import SerialDatabaseExecutor
 
     executor = SerialDatabaseExecutor()
     yield executor
@@ -255,7 +255,7 @@ def serial_executor() -> Generator[Any]:
 @pytest.fixture
 def circuit_breaker() -> Generator[Any]:
     """Provide a circuit breaker for testing."""
-    from oideachais.core.storage.clients.lancedb_cloud import CircuitBreaker
+    from cianfhoghlaim.storage.clients.lancedb_cloud import CircuitBreaker
 
     breaker = CircuitBreaker(
         failure_threshold=2,

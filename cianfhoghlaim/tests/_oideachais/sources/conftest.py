@@ -26,7 +26,7 @@ os.environ.setdefault("BROWSER_API_URL", "")   # None in tests
 @pytest.fixture(scope="session")
 def sources_factory():
     """Module-scoped SourceFactory loaded from oideachais/sources.yaml."""
-    from oideachais.dlt_utils.source_factory import get_default_factory
+    from cianfhoghlaim.dlt.source_factory import get_default_factory
     return get_default_factory()
 
 

@@ -57,7 +57,7 @@ def _try_baml_import():
 
 async def main() -> int:
     try:
-        from cianfhoghlaim.core.browser import ResearchSiteMap, ScrapeStrategist
+        from bonneagar.stacks.browser.sruth_browser import ResearchSiteMap, ScrapeStrategist
     except ImportError as e:
         print(f"ERROR: sruth_browser not importable: {e}")
         print("Run: cd infrastructure/browser && uv pip install -e .")

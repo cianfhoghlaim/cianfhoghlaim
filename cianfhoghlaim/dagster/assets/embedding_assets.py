@@ -56,7 +56,7 @@ def ireland_curriculum_embeddings(context) -> MaterializeResult:
 
     # Import observability
     try:
-        from oideachais.observability import langfuse_trace, log_agent_metrics, mlflow_run
+        from cianfhoghlaim.observability import langfuse_trace, log_agent_metrics, mlflow_run
         has_observability = True
     except ImportError:
         has_observability = False
@@ -325,7 +325,7 @@ def curriculum_rag_evaluation(context) -> MaterializeResult:
     context.log.info("Starting RAG evaluation for curriculum search")
 
     try:
-        from oideachais.observability import (
+        from cianfhoghlaim.observability import (
             EvaluationSample,
             RagasEvaluator,
             log_evaluation_results,
