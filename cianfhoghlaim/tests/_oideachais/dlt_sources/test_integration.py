@@ -56,7 +56,7 @@ class TestFirecrawlSource:
         }
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": "test_key"}):
-            with patch("oideachais.dlt_sources.common.firecrawl_source.get_firecrawl_client") as mock_get:
+            with patch("oideachais.cianfhoghlaim.dlt.common.firecrawl_source.get_firecrawl_client") as mock_get:
                 mock_client = MagicMock()
                 mock_client.scrape_url.return_value = mock_result
                 mock_get.return_value = mock_client
@@ -97,7 +97,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_include_patterns(self) -> None:
         """Test URL matching with include patterns."""
-        from dlt_sources.common.crawl_utils import URLMatcher
+        from cianfhoghlaim.dlt.common.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             include_patterns=["https://curriculumonline.ie/Junior-Cycle/*"]
@@ -108,7 +108,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_exclude_patterns(self) -> None:
         """Test URL matching with exclude patterns."""
-        from dlt_sources.common.crawl_utils import URLMatcher
+        from cianfhoghlaim.dlt.common.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             exclude_patterns=["*.pdf", "*.zip"]
@@ -120,7 +120,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_domain_filtering(self) -> None:
         """Test URL matching with domain filters."""
-        from dlt_sources.common.crawl_utils import URLMatcher
+        from cianfhoghlaim.dlt.common.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             include_domains=["curriculumonline.ie", "ncca.ie"]
@@ -132,7 +132,7 @@ class TestCrawlUtils:
 
     def test_normalize_url(self) -> None:
         """Test URL normalization."""
-        from dlt_sources.common.crawl_utils import normalize_url
+        from cianfhoghlaim.dlt.common.crawl_utils import normalize_url
 
         # Remove fragment
         assert "anchor" not in normalize_url("https://example.com/page#anchor")
@@ -145,7 +145,7 @@ class TestCrawlUtils:
 
     def test_extract_links(self) -> None:
         """Test link extraction from HTML."""
-        from dlt_sources.common.crawl_utils import extract_links
+        from cianfhoghlaim.dlt.common.crawl_utils import extract_links
 
         html = """
         <html>
@@ -165,7 +165,7 @@ class TestCrawlUtils:
 
     def test_crawl_pattern_matching(self) -> None:
         """Test CrawlPattern URL matching."""
-        from dlt_sources.common.crawl_utils import CrawlPattern, ExtractionStrategy
+        from cianfhoghlaim.dlt.common.crawl_utils import CrawlPattern, ExtractionStrategy
 
         pattern = CrawlPattern(
             url_pattern="https://curriculumonline.ie/*/specifications/*",
@@ -368,7 +368,7 @@ class TestLocalDocumentsSource:
 
     def test_file_hash_computation(self, temp_dir: Path) -> None:
         """Test file hash computation for change detection."""
-        from dlt_sources.ie.culture._local_documents_helpers import _compute_file_hash
+        from cianfhoghlaim.dlt.british_isles.ireland.culture._local_documents_helpers import _compute_file_hash
 
         # Create test file
         test_file = temp_dir / "test.txt"

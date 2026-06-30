@@ -99,7 +99,7 @@ def _iter_allowlist_candidates() -> Iterator[CandidateRow]:
     dashboard renders the allowlist when the DLT-managed candidates
     table is empty (the typical first-time-run state).
     """
-    from dlt_sources.official_media.allowlist import allowlist_filter
+    from cianfhoghlaim.dlt.official_media.allowlist import allowlist_filter
 
     for category, usernames in allowlist_filter.categories().items():
         for username in usernames:
@@ -119,7 +119,7 @@ def _iter_allowlist_candidates() -> Iterator[CandidateRow]:
 def _iter_resolved_overrides() -> Iterator[ResolvedSourceRow]:
     """Yield one ResolvedSourceRow per override (the 4 intelligence
     agencies). Used when the resolved_sources table is empty."""
-    from dlt_sources.official_media.source_resolver import source_resolver
+    from cianfhoghlaim.dlt.official_media.source_resolver import source_resolver
 
     for username in ("mi5official", "mi6official", "gchq", "hmgcc"):
         try:

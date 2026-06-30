@@ -19,7 +19,7 @@ pytestmark = pytest.mark.integration
 
 def test_national_curriculum_source_constructs() -> None:
     try:
-        from dlt_sources.en.education._national_curriculum_helpers import (
+        from cianfhoghlaim.dlt.british_isles.england.education._national_curriculum_helpers import (
             EXAM_BOARD_URLS,
             GOV_UK_CURRICULUM_URLS,
         )
@@ -37,7 +37,7 @@ def test_national_curriculum_yields_pages_with_local_cache() -> None:
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""
     try:
-        from dlt_sources.en.education._national_curriculum_helpers import _crawl_gov_uk_curriculum
+        from cianfhoghlaim.dlt.british_isles.england.education._national_curriculum_helpers import _crawl_gov_uk_curriculum
     except ModuleNotFoundError as exc:
         if "shared" in str(exc):
             pytest.skip(f"transitive shared.http import is broken upstream: {exc}")

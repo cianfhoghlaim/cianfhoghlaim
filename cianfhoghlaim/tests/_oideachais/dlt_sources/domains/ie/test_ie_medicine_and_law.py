@@ -12,15 +12,15 @@ Phase 5. For now we just verify the asset graph surface.
 from __future__ import annotations
 
 import pytest
-from dlt_sources.ie.law.doj import doj_source
-from dlt_sources.ie.law.irish_statute_book import (
+from cianfhoghlaim.dlt.british_isles.ireland.law.doj import doj_source
+from cianfhoghlaim.dlt.british_isles.ireland.law.irish_statute_book import (
     irish_statute_book_source,
 )
-from dlt_sources.ie.law.lawreform import lawreform_source
-from dlt_sources.ie.medicine.doh import doh_source
-from dlt_sources.ie.medicine.hpsc import hpsc_source
-from dlt_sources.ie.medicine.hse import hse_source
-from dlt_sources.ie.medicine.medical_council import (
+from cianfhoghlaim.dlt.british_isles.ireland.law.lawreform import lawreform_source
+from cianfhoghlaim.dlt.british_isles.ireland.medicine.doh import doh_source
+from cianfhoghlaim.dlt.british_isles.ireland.medicine.hpsc import hpsc_source
+from cianfhoghlaim.dlt.british_isles.ireland.medicine.hse import hse_source
+from cianfhoghlaim.dlt.british_isles.ireland.medicine.medical_council import (
     medical_council_source,
 )
 

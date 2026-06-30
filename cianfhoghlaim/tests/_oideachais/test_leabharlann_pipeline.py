@@ -35,7 +35,7 @@ for p in (str(_REPO_ROOT), str(_REPO_ROOT / "oideachais")):
 
 def test_leabharlann_path_resolution() -> None:
     """DEFAULT_*_PATH constants point at the new leabharlann/ tree."""
-    from dlt_sources.leabharlann import (
+    from cianfhoghlaim.dlt.leabharlann import (
         DEFAULT_GEMINI_PATH,
         DEFAULT_LEABHARLANN_ROOT,
         DEFAULT_TAKEOUT_ROOT,
@@ -92,7 +92,7 @@ def test_extract_arxiv_id_legacy_and_dup() -> None:
 
 
 def test_zotero_source_yields_arxiv_and_dup_columns() -> None:
-    from dlt_sources.leabharlann import DEFAULT_ZOTERO_ROOT, zotero_source
+    from cianfhoghlaim.dlt.leabharlann import DEFAULT_ZOTERO_ROOT, zotero_source
 
     if not DEFAULT_ZOTERO_ROOT.exists():
         pytest.skip(f"Zotero archive not present: {DEFAULT_ZOTERO_ROOT}")
@@ -118,7 +118,7 @@ def test_zotero_source_yields_arxiv_and_dup_columns() -> None:
 
 
 def test_zotero_source_skips_empty_placeholder() -> None:
-    from dlt_sources.leabharlann import DEFAULT_ZOTERO_ROOT, zotero_source
+    from cianfhoghlaim.dlt.leabharlann import DEFAULT_ZOTERO_ROOT, zotero_source
 
     if not DEFAULT_ZOTERO_ROOT.exists():
         pytest.skip(f"Zotero archive not present: {DEFAULT_ZOTERO_ROOT}")
@@ -137,7 +137,7 @@ def test_zotero_source_skips_empty_placeholder() -> None:
 
 
 def test_leabharlann_books_source_yields_partitioned_rows() -> None:
-    from dlt_sources.leabharlann import DEFAULT_LEABHARLANN_ROOT, leabharlann_books_source
+    from cianfhoghlaim.dlt.leabharlann import DEFAULT_LEABHARLANN_ROOT, leabharlann_books_source
 
     if not DEFAULT_LEABHARLANN_ROOT.exists():
         pytest.skip(f"leabharlann archive not present: {DEFAULT_LEABHARLANN_ROOT}")
@@ -158,7 +158,7 @@ def test_leabharlann_books_source_yields_partitioned_rows() -> None:
 
 
 def test_leabharlann_books_preview_pairing() -> None:
-    from dlt_sources.leabharlann import DEFAULT_LEABHARLANN_ROOT, leabharlann_books_source
+    from cianfhoghlaim.dlt.leabharlann import DEFAULT_LEABHARLANN_ROOT, leabharlann_books_source
 
     if not DEFAULT_LEABHARLANN_ROOT.exists():
         pytest.skip(f"leabharlann archive not present: {DEFAULT_LEABHARLANN_ROOT}")
@@ -187,7 +187,7 @@ def test_leabharlann_books_preview_pairing() -> None:
 
 
 def test_takeout_v1_source_yields_rows() -> None:
-    from dlt_sources.leabharlann import DEFAULT_TAKEOUT_ROOT, takeout_v1_source
+    from cianfhoghlaim.dlt.leabharlann import DEFAULT_TAKEOUT_ROOT, takeout_v1_source
 
     if not DEFAULT_TAKEOUT_ROOT.exists():
         pytest.skip(f"Takeout archive not present: {DEFAULT_TAKEOUT_ROOT}")
@@ -208,7 +208,7 @@ def test_takeout_v1_source_yields_rows() -> None:
 
 def test_takeout_v1_account_fallback() -> None:
     """The no-account-prefix layout falls back to account='stedding_takeout'."""
-    from dlt_sources.leabharlann import _detect_account_label
+    from cianfhoghlaim.dlt.leabharlann import _detect_account_label
 
     # Direct test of the helper: given a path directly under the takeout root
     # with a known product name, the account should be the fallback.
@@ -221,7 +221,7 @@ def test_takeout_v1_account_fallback() -> None:
 
 def test_takeout_v1_account_multi_account() -> None:
     """The multi-account layout uses the directory name as the account."""
-    from dlt_sources.leabharlann import _detect_account_label
+    from cianfhoghlaim.dlt.leabharlann import _detect_account_label
 
     fake_root = Path("/tmp/fake_takeout")
     fake_path = fake_root / "cian_personal" / "Drive" / "foo.docx"
@@ -237,7 +237,7 @@ def test_takeout_v1_account_multi_account() -> None:
 
 def test_epub_extractor_graceful_degradation(tmp_path: Path) -> None:
     """extract_epub_chapters returns 'skipped_no_library' when ebooklib is missing."""
-    from dlt_sources.leabharlann._epub_extractor import extract_epub_chapters
+    from cianfhoghlaim.dlt.leabharlann._epub_extractor import extract_epub_chapters
 
     # If ebooklib IS installed, the file-not-found path returns 'error' instead.
     fake_epub = tmp_path / "does_not_exist.epub"
@@ -254,7 +254,7 @@ def test_epub_extractor_graceful_degradation(tmp_path: Path) -> None:
 
 
 def test_find_preview_for(tmp_path: Path) -> None:
-    from dlt_sources.leabharlann.previews import find_preview_for
+    from cianfhoghlaim.dlt.leabharlann.previews import find_preview_for
 
     book = tmp_path / "book.pdf"
     book.write_text("dummy")
@@ -267,7 +267,7 @@ def test_find_preview_for(tmp_path: Path) -> None:
 
 
 def test_find_preview_for_no_match(tmp_path: Path) -> None:
-    from dlt_sources.leabharlann.previews import find_preview_for
+    from cianfhoghlaim.dlt.leabharlann.previews import find_preview_for
 
     book = tmp_path / "missing.pdf"
     previews = tmp_path / "previews"
