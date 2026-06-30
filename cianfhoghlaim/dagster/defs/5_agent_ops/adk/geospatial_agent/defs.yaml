@@ -1,0 +1,20 @@
+# defs/5_agent_ops/adk/geospatial_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the geospatial_agent (adk) agent.
+# The Component emits 5 Dagster assets:
+# - agent_health_geospatial_agent
+# - agent_routing_geospatial_agent
+# - agent_memory_geospatial_agent
+# - agent_event_geospatial_agent
+# - agent_trace_geospatial_agent
+type: cianfhoghlaim.dagster.components.CelticAgentOpsComponent
+attributes:
+  agent_name: geospatial_agent
+  framework: adk
+  tools: ['map_query_tool', 'school_location_tool', 'dialect_region_tool']
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.geospatial
+  langfuse_drop_smoke_spans: true
+  routing_keywords: ['geospatial', 'lsoa', 'data zone', 'map', 'school location']

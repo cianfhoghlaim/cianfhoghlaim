@@ -1,0 +1,10 @@
+# defs/1_ingestion/medicine/ie_hse/defs.yaml
+#
+# L1 CelticIngestionComponent for the HSE (Health Service Executive, IE).
+type: cianfhoghlaim.dagster.components.CelticIngestionComponent
+attributes:
+  source_id: ie.medicine.hse
+  domain: medicine
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"

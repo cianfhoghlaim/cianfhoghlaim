@@ -1,0 +1,9 @@
+# defs/2_materials/defs.yaml — Layer 2 Materials root mount.
+#
+# Per the dagster-5-layer-component-architecture spec, Layer 2 wraps
+# one BAML extraction function per @asset via
+# `CelticMaterialsComponent`. The 5 layer sub-folders below each hold
+# one or more Component YAML defs files.
+---
+type: dagster.DefsFolderComponent
+attributes: {}

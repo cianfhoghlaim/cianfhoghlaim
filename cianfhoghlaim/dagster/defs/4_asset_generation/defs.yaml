@@ -1,0 +1,9 @@
+# defs/4_asset_generation/defs.yaml — Layer 4 Asset Generation root mount.
+#
+# Per the dagster-5-layer-component-architecture spec, Layer 4 wraps
+# one marimo dashboard / TanStack Start page / oRPC route per @asset
+# via `CelticAssetGenerationComponent`. The 3 sub-folders below each
+# hold one or more Component YAML defs files.
+---
+type: dagster.DefsFolderComponent
+attributes: {}
