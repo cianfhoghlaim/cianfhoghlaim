@@ -125,38 +125,32 @@ from .assets.ie.law import (
 
 # UK Medicine Assets (Phase 3.3 of lateralise-british-isles-domains)
 # Lateralises IE → EN/NI/SCT/WLS for the medicine domain.
-from .assets.medicine.en import (
-    medicine_en_gmc,
-    medicine_en_nhs_england,
-    medicine_en_nice,
+# Per consolidate-cianfhoghlaim-subdirs Phase B: now imported from
+# by_domain.medicine (full country names).
+from .assets.by_domain.medicine import (
+    medicine_england_gmc,
+    medicine_england_nhs_england,
+    medicine_england_nice,
+    medicine_northern_ireland_nidirect,
+    medicine_scotland_nhs_scotland,
+    medicine_wales_nhs_wales,
+    medicine_isle_of_man_health_social_care,
+    medicine_jersey_health_community_services,
+    medicine_guernsey_health_social_care,
 )
-from .assets.medicine.ni import medicine_ni_nidirect
-from .assets.medicine.sct import medicine_sct_nhs_scotland
-from .assets.medicine.wls import medicine_wls_nhs_wales
-
-# Crown Dependencies Medicine Assets (Phase 3.6 of lateralise-british-isles-domains)
-# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the medicine domain.
-from .assets.medicine.iom import medicine_iom_health_social_care
-from .assets.medicine.jey import medicine_jey_health_community_services
-from .assets.medicine.ggy import medicine_ggy_health_social_care
 
 # UK Law Assets (Phase 3.3 of lateralise-british-isles-domains)
-from .assets.law.en import law_en_legislation
-from .assets.law.ni import law_ni_legislation
-from .assets.law.sct import law_sct_legislation
-from .assets.law.wls import law_wls_legislation
-
-# Crown Dependencies Law Assets (Phase 3.6 of lateralise-british-isles-domains)
-# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the law domain.
-from .assets.law.iom import law_iom_legislation
-from .assets.law.jey import law_jey_legislation
-from .assets.law.ggy import law_ggy_legislation
-
-# Crown Dependencies Law Assets (Phase 3.6 of lateralise-british-isles-domains)
-# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the law domain.
-from .assets.law.iom import law_iom_legislation
-from .assets.law.jey import law_jey_legislation
-from .assets.law.ggy import law_ggy_legislation
+# Per consolidate-cianfhoghlaim-subdirs Phase B: now imported from
+# by_domain.law (full country names).
+from .assets.by_domain.law import (
+    law_england_legislation,
+    law_northern_ireland_legislation,
+    law_scotland_legislation,
+    law_wales_legislation,
+    law_isle_of_man_legislation,
+    law_jersey_legislation,
+    law_guernsey_legislation,
+)
 
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets

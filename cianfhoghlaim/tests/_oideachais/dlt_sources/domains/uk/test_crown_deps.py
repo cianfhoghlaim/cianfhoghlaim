@@ -35,7 +35,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "medicine",
         "iom",
-        "dlt_sources.iom.medicine.health_social_care",
+        "cianfhoghlaim.dlt.british_isles.isle_of_man.medicine.health_social_care",
         "dagster_defs.assets.medicine.iom",
         "iom_health_social_care_source",
         "pages",
@@ -44,7 +44,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "medicine",
         "jey",
-        "dlt_sources.jey.medicine.health_community_services",
+        "cianfhoghlaim.dlt.british_isles.jersey.medicine.health_community_services",
         "dagster_defs.assets.medicine.jey",
         "jey_health_community_services_source",
         "pages",
@@ -53,7 +53,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "medicine",
         "ggy",
-        "dlt_sources.ggy.medicine.health_social_care",
+        "cianfhoghlaim.dlt.british_isles.guernsey.medicine.health_social_care",
         "dagster_defs.assets.medicine.ggy",
         "ggy_health_social_care_source",
         "pages",
@@ -62,7 +62,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "law",
         "iom",
-        "dlt_sources.iom.law.legislation",
+        "cianfhoghlaim.dlt.british_isles.isle_of_man.law.legislation",
         "dagster_defs.assets.law.iom",
         "iom_legislation_source",
         "acts",
@@ -71,7 +71,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "law",
         "jey",
-        "dlt_sources.jey.law.legislation",
+        "cianfhoghlaim.dlt.british_isles.jersey.law.legislation",
         "dagster_defs.assets.law.jey",
         "jey_legislation_source",
         "acts",
@@ -80,7 +80,7 @@ PARAMS: list[tuple[str, str, str, str, str, str, str]] = [
     (
         "law",
         "ggy",
-        "dlt_sources.ggy.law.legislation",
+        "cianfhoghlaim.dlt.british_isles.guernsey.law.legislation",
         "dagster_defs.assets.law.ggy",
         "ggy_legislation_source",
         "acts",

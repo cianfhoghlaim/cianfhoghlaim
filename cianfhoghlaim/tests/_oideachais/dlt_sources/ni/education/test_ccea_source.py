@@ -21,7 +21,7 @@ def test_ccea_source_constructs() -> None:
     `oideachais/dagster_defs/definitions.py:74-87`).
     """
     try:
-        from dlt_sources.ni.education import (
+        from cianfhoghlaim.dlt.british_isles.northern_ireland.education import (
             _ccea_curriculum_helpers,
             ccea_qualifications,
             ni_curriculum,
@@ -44,7 +44,7 @@ def test_ccea_source_yields_pages_with_local_cache() -> None:
     os.environ["FIRECRAWL_API_KEY"] = ""
     os.environ["BROWSER_API_URL"] = ""
     try:
-        from dlt_sources.ni.education._ccea_curriculum_helpers import _crawl_ni_curriculum
+        from cianfhoghlaim.dlt.british_isles.northern_ireland.education._ccea_curriculum_helpers import _crawl_ni_curriculum
     except ModuleNotFoundError as exc:
         if "shared" in str(exc):
             pytest.skip(f"transitive shared.http import is broken upstream: {exc}")

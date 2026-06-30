@@ -20,34 +20,34 @@ import pytest
 # ---------------------------------------------------------------------------
 # UK law sources
 # ---------------------------------------------------------------------------
-from dlt_sources.en.law.legislation import (
+from cianfhoghlaim.dlt.british_isles.england.law.legislation import (
     en_legislation_source,
 )
 
 # ---------------------------------------------------------------------------
 # UK medicine sources
 # ---------------------------------------------------------------------------
-from dlt_sources.en.medicine.gmc import gmc_source
-from dlt_sources.en.medicine.nhs_england import (
+from cianfhoghlaim.dlt.british_isles.england.medicine.gmc import gmc_source
+from cianfhoghlaim.dlt.british_isles.england.medicine.nhs_england import (
     nhs_england_source,
 )
-from dlt_sources.en.medicine.nice import nice_source
-from dlt_sources.ni.law.legislation import (
+from cianfhoghlaim.dlt.british_isles.england.medicine.nice import nice_source
+from cianfhoghlaim.dlt.british_isles.northern_ireland.law.legislation import (
     ni_legislation_source,
 )
-from dlt_sources.ni.medicine.nidirect import (
+from cianfhoghlaim.dlt.british_isles.northern_ireland.medicine.nidirect import (
     nidirect_medicine_source,
 )
-from dlt_sources.sct.law.legislation import (
+from cianfhoghlaim.dlt.british_isles.scotland.law.legislation import (
     sct_legislation_source,
 )
-from dlt_sources.sct.medicine.nhs_scotland import (
+from cianfhoghlaim.dlt.british_isles.scotland.medicine.nhs_scotland import (
     nhs_scotland_source,
 )
-from dlt_sources.wls.law.legislation import (
+from cianfhoghlaim.dlt.british_isles.wales.law.legislation import (
     wls_legislation_source,
 )
-from dlt_sources.wls.medicine.nhs_wales import (
+from cianfhoghlaim.dlt.british_isles.wales.medicine.nhs_wales import (
     nhs_wales_source,
 )
 
