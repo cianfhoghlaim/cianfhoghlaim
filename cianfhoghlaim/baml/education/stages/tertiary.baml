@@ -57,13 +57,6 @@ enum EntryPathway {
   APPRENTICESHIP      @description("Craft/apprenticeship-to-degree progression")
 }
 
-enum ExamLevel {
-  HIGHER           @description("Higher Level")
-  ORDINARY         @description("Ordinary Level")
-  FOUNDATION       @description("Foundation Level")
-  COMMON           @description("Common Level")
-}
-
 // -----------------------------------------------------------------------------
 // Classes
 // -----------------------------------------------------------------------------
