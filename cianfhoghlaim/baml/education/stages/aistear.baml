@@ -1,6 +1,10 @@
 // =============================================================================
 // Aistear (Early Childhood, ages 0-6) — BAML Schema
 // Bilingual EN/GA extraction of the Irish Aistear framework.
+// Merged from:
+//   - baml/aistear.baml (208 LOC) — the canonical aistear schema
+//   - baml/oideachais_other/aistear.baml (31 LOC) — the URL-extraction variant
+//   - baml/early_childhood.baml (82 LOC) — the simplified early_childhood variant
 // See: docs/meaisínfhoghlaim/celtic/Celtic Data Scraping and Integration Plan.md
 //      docs/bonneagar/education-subject-inventory.md (14 Aistear source PDFs)
 // =============================================================================
@@ -33,6 +37,13 @@ enum AistearLanguageMedium {
   BILINGUAL       @description("Bilingual pre-school (Irish + English)")
 }
 
+enum AistearDialect {
+  MUNSTER    @description("Gaeilge na Mumhan - Kerry, Cork, Waterford")
+  CONNACHT   @description("Gaeilge Chonnacht - Galway, Mayo, Roscommon")
+  ULSTER     @description("Gaeilge Uladh - Donegal")
+  STANDARD   @description("An Caighdeán Oifigiúil - Official Standard")
+}
+
 // -----------------------------------------------------------------------------
 // Classes
 // -----------------------------------------------------------------------------
@@ -48,6 +59,13 @@ class AistearPrinciple {
   examples_ga string?   @description("Concrete practice examples in Irish (newline-separated)")
 }
 
+// Simplified version from early_childhood.baml — kept for backward compat
+class AistearPrincipleSimple {
+  name string @description("Short name of the principle (e.g. 'Children are capable and confident').")
+  description string @description("One-paragraph explanation of the principle.")
+  age_band string @description("Applicable age band: 'BIRTH_TO_3', '3_TO_4', '4_TO_5', '5_TO_6', or 'ALL'.")
+}
+
 class AistearLearningGoal {
   id string                       @description("Unique code, e.g., 'AISTEAR-WB-INF-1'")
   theme AistearTheme
@@ -59,6 +77,20 @@ class AistearLearningGoal {
   parent_tip_en string?           @description("Actionable parenting advice in English")
   parent_tip_ga string?           @description("Actionable parenting advice in Irish")
   linked_primary_outcome string? @description("Primary Stage 1 outcome code if bridged, e.g., 'LO-PRI-EN-1.1'")
+}
+
+// Simplified version from early_childhood.baml — kept for backward compat
+class AistearLearningGoalSimple {
+  goal_id string @description("Stable ID, e.g. 'WB_1', 'IB_2', 'CO_3', 'ET_4'.")
+  description string @description("The full text of the learning goal (often bilingual EN/GA).")
+  theme string @description("One of: 'WELL_BEING', 'IDENTITY_BELONGING', 'COMMUNICATING', 'EXPLORING_THINKING'.")
+  age_band string @description("Applicable age band: 'BIRTH_TO_3', '3_TO_4', '4_TO_5', '5_TO_6', or 'ALL'.")
+}
+
+class AistearFramework {
+  themes string[] @description("The 4 Aistear themes in English: 'Well-being', 'Identity and Belonging', 'Communicating', 'Exploring and Thinking'.")
+  principles AistearPrincipleSimple[] @description("The 12 Aistear principles extracted from the document.")
+  learning_goals AistearLearningGoalSimple[] @description("All learning goals extracted (typically 40-60 per document).")
 }
 
 class GeoPoint {
@@ -90,6 +122,7 @@ class AistearDocument {
   learning_goals AistearLearningGoal[]
   extracted_at string             @description("ISO 8601 timestamp")
   language string                 @description("en | ga | bilingual")
+  framework AistearFramework?     @description("The full framework extracted from the document (from early_childhood.baml)")
 }
 
 class BridgeEdge {
@@ -104,7 +137,7 @@ class BridgeEdge {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractAistearFramework(text: string,
+function ExtractAistearFrameworkFromText(text: string,
   language: string) -> AistearDocument {
   client "anthropic/claude-sonnet-4-20250514"
   prompt #"You are an expert at parsing the Irish Aistear Framework for early childhood education (ages 0-6).
@@ -206,3 +239,102 @@ These edges power the cross-stage cognify pass and enable "What did my pre-schoo
 "#
 }
 
+
+function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {
+  client "litellm/gemini-2.0-flash"
+  prompt #"
+    You are an expert Irish early-childhood (Aistear) curriculum analyst
+    working for Cianfhoghlaim Oideachais (the bilingual agentic platform
+    covering Aistear, Primary, Junior Cycle, Senior Cycle, and Tertiary).
+
+    Source: {{ source_url }}
+
+    The 4 Aistear themes are: Well-being, Identity & Belonging, Communicating,
+    Exploring & Thinking. The 4 age bands are: Infants (0-18mo), Toddlers
+    (1-3yr), Pre-school (3-5yr), Early-Primary Bridge (5-6yr).
+
+    Always extract BOTH English and Irish versions of every field. The Irish
+    term for Aistear is "Aistear" (same in both languages). The framework's
+    principles of holistic child development are:
+      - Building partnerships with parents (Comhpháirtíocht le tuismitheoirí)
+      - High-quality early-learning environments
+      - Play as a vehicle for learning (an imirt)
+      - Aistear in practice — Lá na Sráide, Féach, Aimsigh, Déan, Cabhraigh,
+        Smaoinigh, Labhair (the 8 Aistear key messages)
+
+    Return the structured AistearDocument as {{ ctx.output_format }}.
+  "#
+}
+
+
+function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework {
+  client LitellmClient
+  prompt #"
+    You are an Aistear (Irish early childhood curriculum) expert.
+
+    Extract the 4 Aistear themes, 12 principles, and all learning goals
+    from the following Aistear document text.
+
+    The 4 Aistear themes are:
+      1. Well-being (Bheith go maith)
+      2. Identity and Belonging (Féiniúlacht agus Cairdeas)
+      3. Communicating (Cumarsáid)
+      4. Exploring and Thinking (Iniúchadh agus Smaointeoireacht)
+
+    Aistear principles include (but are not limited to):
+      - Children are capable and confident
+      - Children are active learners
+      - Children learn through relationships
+      - Children learn through play
+      - Children learn through meaningful experiences
+      - Children's early years lay the foundation for later learning
+      - Equality and diversity are rights
+      - Parents and families are the primary educators
+      - Quality early childhood experiences make a difference
+      - Holistic development matters
+      - The voice of the child matters
+      - Play is a key context for learning
+
+    For each learning goal, return:
+      - goal_id: stable ID like 'WB_1', 'IB_2', 'CO_3', 'ET_4'
+      - description: full text (often bilingual)
+      - theme: one of the 4 themes
+      - age_band: BIRTH_TO_3 / 3_TO_4 / 4_TO_5 / 5_TO_6 / ALL
+
+    Document text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
+}
+
+// =============================================================================
+// Backward-compat aliases (preserve original call signatures)
+// =============================================================================
+
+// Alias for the canonical aistear.baml ExtractAistearFramework(text, language) call
+function ExtractAistearFramework(text: string,
+  language: string) -> AistearDocument {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Backward-compat alias for ExtractAistearFrameworkFromText.
+
+    LANGUAGE: {{ language }}
+
+    DOCUMENT TEXT:
+    {{ text }}
+
+    {{ ctx.output_format }}
+  "#
+}
+
+// Alias for the early_childhood.baml ExtractAistearFramework(pdf_text) call
+function ExtractAistearFrameworkLegacy(pdf_text: string) -> AistearFramework {
+  client LitellmClient
+  prompt #"Backward-compat alias for ExtractAistearFrameworkFromPdf.
+
+    Document text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
+}

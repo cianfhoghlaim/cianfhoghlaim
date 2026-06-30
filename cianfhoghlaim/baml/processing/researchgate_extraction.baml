@@ -11,10 +11,10 @@
 class ResearchGatePublication {
   title string
   authors string[]
-  venue string | null @description("Journal / conference / preprint server")
-  year int | null
-  doi string | null
-  abstract string | null
+  venue string? @description("Journal / conference / preprint server")
+  year int?
+  doi string?
+  abstract string?
   citationCount int?
   readCount int?
   recommendationCount int?
@@ -24,9 +24,9 @@ class ResearchGatePublication {
 class ResearchGateProfile {
   name string
   headline string @description("Department / affiliation / role")
-  institution string | null
-  location string | null
-  about string | null
+  institution string?
+  location string?
+  about string?
   fieldsOfStudy string[] @description("Self-declared research interests")
   skillsAndExpertise string[]
   publications ResearchGatePublication[]

@@ -2,6 +2,9 @@
 // Junior Cycle (ages 12-15) — BAML Schema
 // Bilingual EN/GA extraction of the NCCA Junior Cycle specifications.
 // 18 core subjects + 16 short courses + Level 1/2 Learning Programmes.
+// Merged from:
+//   - baml/junior_cycle.baml (229 LOC) — the canonical JC schema
+//   - baml/oideachais_other/junior_cycle.baml (39 LOC) — the URL-extraction variant
 // See: docs/bonneagar/education-subject-inventory.md:58-105
 // =============================================================================
 
@@ -86,13 +89,29 @@ class JCWellbeingStatement {
   indicator string            @description("e.g., 'physical activity', 'mental health', 'citizenship'")
 }
 
+class CurriculumStrand {
+  name string
+  name_ga string?
+  description string
+  description_ga string?
+  outcomes LearningOutcome[]
+}
+
+class LearningOutcome {
+  code string
+  description_en string
+  description_ga string?
+  strand string?
+  strand_unit string?
+}
+
 class JCSubjectSpec {
   subject JuniorCycleSubject
   short_course JuniorCycleShortCourse?  @description("Populated only for short courses")
   specification_year int
-  strands CurriculumStrand[]              @description("Reused from senior_cycle extraction (or moved to common.baml)")
+  strands CurriculumStrand[]              @description("Strands with learning outcomes")
   cba_tasks CBATask[]
-  learning_outcomes LearningOutcome[]     @description("Reused from curriculum_extraction.baml")
+  learning_outcomes LearningOutcome[]     @description("Bilingual learning outcomes")
   specification_url string
   language string                         @description("en | ga | bilingual")
 }
@@ -213,6 +232,41 @@ The 16 NCCA Short Courses include: Coding, Digital Media Literacy, Civic Action,
 {{ _.role("user") }}
     COURSE: {{ course_name }}
 "#
+}
+
+
+function ExtractJCSpecFromUrl(
+  source_url: string,
+  subject: JuniorCycleSubject
+) -> JCSubjectSpec {
+  client "litellm/gemini-2.0-flash"
+  prompt #"
+    You are an expert Irish Junior Cycle curriculum analyst working for
+    Cianfhoghlaim Oideachais (the bilingual agentic platform).
+
+    Source: {{ source_url }}
+    Subject: {{ subject }}
+
+    Junior Cycle is the 3-year programme at ages 12-15, ending in a state
+    examination at the end of 3rd Year. Each subject has:
+      - A specification (NCCA-issued)
+      - 2 Classroom-Based Assessments (CBAs) — formative
+      - A final examination — summative
+      - 4 Achievement Levels on the rubric: Exceptional, AboveExpectations,
+        InLineWithExpectations, YetToMeetExpectations
+
+    For Science specifically, there is a 'Nature of Science' Unifying Strand
+    and contextual strands (Physical World, Biological World, Chemical World,
+    Earth & Space).
+
+    For Languages, the assessment includes an aural component.
+
+    For Mathematics, the assessment has 2 papers at Common Level.
+
+    Always extract BOTH English and Irish versions of every field.
+
+    Return the structured JCSubjectSpec as {{ ctx.output_format }}.
+  "#
 }
 
 
