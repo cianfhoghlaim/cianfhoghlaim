@@ -1,30 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.jey — Jersey law DLT assets.
+Backward-compat shim — the legacy jersey law @asset has moved to
+dagster.assets.by_domain.law.law_jersey_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Per
-https://github.com/cianfhoghlaim/kings_college_galway/issues/19
-(closed 2026-06-15) the lateralise change wired this as one of
-the 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT
-sources.
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_jersey_legislation
 
-
-@asset(
-    group_name="law_jey",
-    compute_kind="dlt",
-    description=(
-        "Jersey Law (Jersey Legal Information Board). "
-        "Source: cianfhoghlaim.dlt.british_isles.jersey.law.legislation."
-    ),
-)
-def law_jey_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.jersey.law.legislation import (
-        jey_legislation_source,
-    )
-
-    src = jey_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "jey_legislation"}
-    )
+__all__ = ["law_jersey_legislation"]

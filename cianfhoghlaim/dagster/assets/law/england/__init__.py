@@ -1,23 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.en — England-law DLT assets.
+Backward-compat shim — the legacy england law @asset has moved to
+dagster.assets.by_domain.law.law_england_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 England-law DLT source:
-
-  * legislation → legislation.gov.uk England & Wales acts
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_england_legislation
 
-
-@asset(
-    group_name="law_en",
-    compute_kind="dlt",
-    description="legislation.gov.uk England & Wales acts (statutory register).",
-)
-def law_en_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.england.law.legislation import en_legislation_source
-
-    src = en_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "en_legislation"}
-    )
+__all__ = ["law_england_legislation"]

@@ -1,30 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.ggy — Guernsey law DLT assets.
+Backward-compat shim — the legacy guernsey law @asset has moved to
+dagster.assets.by_domain.law.law_guernsey_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Per
-https://github.com/cianfhoghlaim/kings_college_galway/issues/19
-(closed 2026-06-15) the lateralise change wired this as one of
-the 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT
-sources.
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_guernsey_legislation
 
-
-@asset(
-    group_name="law_ggy",
-    compute_kind="dlt",
-    description=(
-        "Laws of Guernsey (Royal Court legal resources). "
-        "Source: cianfhoghlaim.dlt.british_isles.guernsey.law.legislation."
-    ),
-)
-def law_ggy_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.guernsey.law.legislation import (
-        ggy_legislation_source,
-    )
-
-    src = ggy_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "ggy_legislation"}
-    )
+__all__ = ["law_guernsey_legislation"]

@@ -1,30 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.iom — Isle of Man law DLT assets.
+Backward-compat shim — the legacy isle_of_man law @asset has moved to
+dagster.assets.by_domain.law.law_isle_of_man_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Per
-https://github.com/cianfhoghlaim/kings_college_galway/issues/19
-(closed 2026-06-15) the lateralise change wired this as one of
-the 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT
-sources.
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_isle_of_man_legislation
 
-
-@asset(
-    group_name="law_iom",
-    compute_kind="dlt",
-    description=(
-        "Isle of Man Statute Books (legislation portal). "
-        "Source: cianfhoghlaim.dlt.british_isles.isle_of_man.law.legislation."
-    ),
-)
-def law_iom_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.isle_of_man.law.legislation import (
-        iom_legislation_source,
-    )
-
-    src = iom_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "iom_legislation"}
-    )
+__all__ = ["law_isle_of_man_legislation"]

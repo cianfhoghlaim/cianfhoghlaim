@@ -1,23 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.wls — Wales-law DLT assets.
+Backward-compat shim — the legacy wales law @asset has moved to
+dagster.assets.by_domain.law.law_wales_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 Wales-law DLT source:
-
-  * legislation → legislation.gov.uk Wales acts
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_wales_legislation
 
-
-@asset(
-    group_name="law_wls",
-    compute_kind="dlt",
-    description="legislation.gov.uk Wales acts.",
-)
-def law_wls_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.wales.law.legislation import wls_legislation_source
-
-    src = wls_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "wls_legislation"}
-    )
+__all__ = ["law_wales_legislation"]

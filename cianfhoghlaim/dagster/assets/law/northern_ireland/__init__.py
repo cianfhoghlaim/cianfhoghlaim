@@ -1,23 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.ni — Northern Ireland-law DLT assets.
+Backward-compat shim — the legacy northern_ireland law @asset has moved to
+dagster.assets.by_domain.law.law_northern_ireland_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 NI-law DLT source:
-
-  * legislation → legislation.gov.uk Northern Ireland acts
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_northern_ireland_legislation
 
-
-@asset(
-    group_name="law_ni",
-    compute_kind="dlt",
-    description="legislation.gov.uk Northern Ireland acts.",
-)
-def law_ni_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.northern_ireland.law.legislation import ni_legislation_source
-
-    src = ni_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "ni_legislation"}
-    )
+__all__ = ["law_northern_ireland_legislation"]
