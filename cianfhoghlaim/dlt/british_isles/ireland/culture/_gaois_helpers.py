@@ -7,7 +7,7 @@ Phase 3D of openspec change.
 from __future__ import annotations
 
 try:
-    from shared.http import ainm_client, logainm_client, tearma_client
+    from cianfhoghlaim.dlt.common.http_client import ainm_client, logainm_client, tearma_client
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

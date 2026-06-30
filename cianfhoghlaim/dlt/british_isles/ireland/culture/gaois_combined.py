@@ -11,7 +11,7 @@ from collections.abc import Iterator
 from dlt.sources import DltResource
 
 try:
-    from shared.http import ainm_client, logainm_client, tearma_client  # noqa: F401
+    from cianfhoghlaim.dlt.common.http_client import ainm_client, logainm_client, tearma_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

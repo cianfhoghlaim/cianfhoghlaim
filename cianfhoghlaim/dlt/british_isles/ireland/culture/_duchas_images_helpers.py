@@ -16,7 +16,7 @@ except ImportError:
     pass  # dlt.sources.incremental moved; use dlt.sources.incremental.IncrementalCursorProvider instead
 
 try:
-    from shared.http import doras_client, duchas_client
+    from cianfhoghlaim.dlt.common.http_client import doras_client, duchas_client
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

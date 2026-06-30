@@ -13,7 +13,7 @@ from typing import Any
 import dlt
 import structlog
 
-from ....ireland.curriculum_source import _crawl_source  # type: ignore[import-not-found]
+from cianfhoghlaim.dlt.common.incremental import crawl_source  # type: ignore[import-not-found]
 
 logger = structlog.get_logger(__name__)
 

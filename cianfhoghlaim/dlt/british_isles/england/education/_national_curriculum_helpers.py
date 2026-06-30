@@ -8,8 +8,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-from ...common.firecrawl_source import crawl_website, scrape_page
-from ...common.incremental import compute_content_hash
+from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website, scrape_page
+from cianfhoghlaim.dlt.common.incremental import compute_content_hash
 
 EXAM_BOARD_URLS = {
     "aqa": {

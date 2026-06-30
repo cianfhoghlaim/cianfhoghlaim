@@ -10,7 +10,7 @@ from collections.abc import Iterator
 from typing import Any
 
 try:
-    from shared.http import cso_pxstat_client, data_gov_ie_client
+    from cianfhoghlaim.dlt.common.http_client import cso_pxstat_client, data_gov_ie_client
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

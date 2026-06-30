@@ -13,7 +13,7 @@ import dlt
 from dlt.sources import TDataItem
 
 try:
-    from shared.http import met_office_climate_client, met_office_datahub_client  # noqa: F401
+    from cianfhoghlaim.dlt.common.http_client import met_office_climate_client, met_office_datahub_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 
