@@ -1,14 +1,15 @@
 # LiteLLM — local dev override
 # ----------------------------------------------------------------------------
-# Mirrors the oideachais dev override pattern:
+# Mirrors the langfuse dev override pattern (post centralise-data-plane):
 #   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
 #      resolves without booting the real Infisical-injection sidecar.
-#   2. `env_file: ../../../../.env` (mise-hydrated local .env) is mounted
+#   2. `env_file: ../../../.env` (mise-hydrated local .env) is mounted
 #      so secrets reach the containers directly.
-#   3. Production-only env vars are overridden to dev values.
+#   3. DATABASE_URL points at `lakehouse-postgres` (the centralised service).
+#      The standalone db container was removed.
 #
 # Usage:
-#   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+#   docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
 # ----------------------------------------------------------------------------
 
 services:
@@ -29,19 +30,18 @@ services:
     environment:
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
       LITELLM_LOG: INFO
-      # LiteLLM uses DATABASE_URL for Prisma (not LITELLM_DATABASE_URL).
-      # Point it at the bundled `db` service in dev.
-      DATABASE_URL: postgresql://llmproxy:devpassword@db:5432/litellm
+      # Centralised lakehouse-postgres (db=litellm)
+      DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
+      LITELLM_DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
       STORE_MODEL_IN_DB: "True"
       # Provide stub values for required-but-unused-in-dev vars
       LITELLM_SALT_KEY: ${LITELLM_SALT_KEY:-dev-salt}
-      LITELLM_DATABASE_URL: postgresql://llmproxy:devpassword@db:5432/litellm
-
-  db:
-    env_file:
-      - ../../../.env
-    environment:
-      POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-devpassword}
+      # Stub out cloud-provider keys in dev
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
+      HF_TOKEN: ${HF_TOKEN:-}
 
   # Prometheus dev override removed in cleanup-and-boot-stacks change 2026-06-26
   # (the prometheus service itself was deleted from compose.yaml).

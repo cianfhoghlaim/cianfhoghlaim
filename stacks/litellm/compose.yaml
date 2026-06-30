@@ -1,5 +1,18 @@
 name: litellm
 
+# =============================================================================
+# LITELLM - OpenAI-Compatible LLM Gateway
+# =============================================================================
+# Updated for the `centralise-data-plane` rewrite (2026-07-30):
+# - The standalone `db` (postgres) container is removed. LiteLLM now uses
+#   the centralised lakehouse-postgres (db=litellm).
+# - All other env vars remain unchanged.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+# =============================================================================
+
 services:
   # ---------------------------------------------------------------------------
   # LITELLM GATEWAY
@@ -21,10 +34,11 @@ services:
       - ../../stedding/huggingface:/stedding/huggingface:ro  # shared HF cache (read-only)
     environment:
       # Gateway
-      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?LITELLM_MASTER_KEY must be set via Locket/Infisical}
       LITELLM_SALT_KEY: ${LITELLM_SALT_KEY:-}
-      # Database (LiteLLM's own Postgres, separate from lakehouse)
-      DATABASE_URL: ${LITELLM_DATABASE_URL}
+      # Database — CENTRALISED lakehouse-postgres (db=litellm)
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/litellm
+      LITELLM_DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/litellm
       STORE_MODEL_IN_DB: "True"
       # Cloud LLM providers
       GEMINI_API_KEY: ${GEMINI_API_KEY}
@@ -46,7 +60,7 @@ services:
       HF_HUB_CACHE: /stedding/huggingface/hub
       HF_HUB_DOWNLOAD_TIMEOUT: "600"
       # Observability
-      LANGFUSE_HOST: ${LANGFUSE_HOST}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI:-http://mlflow:5000}
@@ -64,9 +78,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    depends_on:
-      db:
-        condition: service_healthy
+    # Cross-project deps are managed by Komodo's [stack.depends_on] in
+    # deploy-litellm-bunchloch.toml — see the file header.
+    depends_on: []
     deploy:
       resources:
         limits:
@@ -77,36 +91,16 @@ services:
       - lakehouse
 
   # ---------------------------------------------------------------------------
-  # LITELLM POSTGRES (separate from lakehouse, holds model registry)
+  # (db service REMOVED 2026-07-30 — uses centralised lakehouse-postgres)
   # ---------------------------------------------------------------------------
-  db:
-    image: postgres:16
-    container_name: litellm-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${LITELLM_POSTGRES_DB:-litellm}
-      POSTGRES_USER: ${LITELLM_POSTGRES_USER:-llmproxy}
-      POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD}
-    volumes:
-      - litellm_postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d ${LITELLM_POSTGRES_DB:-litellm} -U ${LITELLM_POSTGRES_USER:-llmproxy}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - cianfhoghlaim
-
-  # ---------------------------------------------------------------------------
+  # The standalone litellm-db container was removed in the
+  # centralise-data-plane rewrite. The litellm database now lives on
+  # the shared lakehouse-postgres (db=litellm).
   # (Prometheus service removed in cleanup-and-boot-stacks change 2026-06-26;
   # container exited 2026-06-23 with no downstream consumer; no Grafana /
   # Alertmanager exists. Litellm's /metrics endpoint remains available for
   # future scraping by a real observability stack.)
   # ---------------------------------------------------------------------------
-
-volumes:
-  litellm_postgres_data:
-    name: litellm_postgres_data
 
 networks:
   cianfhoghlaim:
@@ -114,3 +108,4 @@ networks:
   lakehouse:
     name: lakehouse_lakehouse
     external: true
+

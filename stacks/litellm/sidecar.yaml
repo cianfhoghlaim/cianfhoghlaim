@@ -11,7 +11,7 @@ services:
     command:
       - "--provider=infisical"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -28,25 +28,16 @@ services:
     networks:
       - stack
 
-  # litellm service needs the secrets injected
+  # litellm service needs the secrets injected (volume mount only;
+  # the env_file path /run/secrets/locket/secrets.env isn't used after
+  # the centralise-data-plane rewrite — secrets come from the lakehouse
+  # stack via the shared secrets.env + the centralised env vars)
   litellm:
     depends_on:
       locket:
         condition: service_healthy
     volumes:
       - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-
-  # db service also needs credentials from Locket
-  db:
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
 
 secrets:
   infisical_secret:
