@@ -4,7 +4,7 @@ University Deep Extraction — reusable DLT factory.
 The factory in this module turns a `UniversityDeepExtractionConfig` into
 a 5-resource `@dlt.source` for any British Isles university website. The
 case study (`University of Galway`) lives at
-`dlt_sources.ie.education.university_of_galway_deep.py` and is a thin
+`cianfhoghlaim.dlt.british_isles.ireland.education.university_of_galway_deep.py` and is a thin
 wrapper around this factory.
 
 5 resources yielded:

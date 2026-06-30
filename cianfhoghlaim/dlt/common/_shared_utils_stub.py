@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.common._shared_utils_stub — in-tree replacement
+oideachais.cianfhoghlaim.dlt.common._shared_utils_stub — in-tree replacement
 for `shared.utils`.
 
 The `oideachais.dlt_sources.http_client` module does

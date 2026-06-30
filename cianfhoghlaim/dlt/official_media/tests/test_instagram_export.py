@@ -1,4 +1,4 @@
-"""Tests for ``dlt_sources.official_media.instagram_export``.
+"""Tests for ``cianfhoghlaim.dlt.official_media.instagram_export``.
 
 These tests use a synthetic fixture (no PII) to assert the parser
 handles the 3 documented Instagram export shapes:
@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from dlt_sources.official_media.instagram_export import (
+from cianfhoghlaim.dlt.official_media.instagram_export import (
     FOLLOWER_LIST_KINDS,
     InstagramExportParser,
     instagram_export_source,

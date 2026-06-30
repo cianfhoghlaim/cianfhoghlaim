@@ -126,7 +126,7 @@ def _make_dlt_asset(asset_name: str, source_factory, group_name: str = "unwired_
 
 
 def _gias_source_factory():
-    from cianfhoghlaim.dlt.british_isles.en.education.school_info import gias_source
+    from cianfhoghlaim.dlt.british_isles.england.education.school_info import gias_source
     return gias_source
 
 
@@ -188,27 +188,27 @@ guernsey_education, guernsey_education_check = _make_dlt_asset(
 
 
 def _ireland_primary_source_factory():
-    from cianfhoghlaim.dlt.british_isles.ie.education.primary import ireland_primary_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.primary import ireland_primary_source
     return ireland_primary_source
 
 
 def _ireland_junior_cycle_source_factory():
-    from cianfhoghlaim.dlt.british_isles.ie.education.junior_cycle import ireland_junior_cycle_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.junior_cycle import ireland_junior_cycle_source
     return ireland_junior_cycle_source
 
 
 def _ireland_tertiary_source_factory():
-    from cianfhoghlaim.dlt.british_isles.ie.education.tertiary import tertiary_courses
+    from cianfhoghlaim.dlt.british_isles.ireland.education.tertiary import tertiary_courses
     return tertiary_courses
 
 
 def _ireland_local_documents_source_factory():
-    from dlt_sources.ie.culture.local_education_documents import local_education_documents_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.local_education_documents import local_education_documents_source
     return local_education_documents_source
 
 
 def _ireland_parallel_corpus_source_factory():
-    from cianfhoghlaim.dlt.british_isles.ie.education.parallel_corpus import parallel_corpus_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.parallel_corpus import parallel_corpus_source
     return parallel_corpus_source
 
 

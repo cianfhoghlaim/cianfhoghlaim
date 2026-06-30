@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.wls.medicine — Wales medicine (NHS Wales / PHW).
+oideachais.cianfhoghlaim.dlt.british_isles.wales.medicine — Wales medicine (NHS Wales / PHW).
 Phase 7 of the openspec change.
 """
 from __future__ import annotations

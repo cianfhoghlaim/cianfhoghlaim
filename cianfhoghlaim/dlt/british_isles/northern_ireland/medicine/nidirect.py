@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.ni.medicine — Northern Ireland medicine.
+oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.medicine — Northern Ireland medicine.
 
 Phase 7 of the openspec change. nidirect Health & Social Care pages.
 """

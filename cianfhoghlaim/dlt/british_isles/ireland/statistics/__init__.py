@@ -1,21 +1,21 @@
-"""oideachais.dlt_sources.ie.statistics — Ireland statistics sub-package.
+"""oideachais.cianfhoghlaim.dlt.british_isles.ireland.statistics — Ireland statistics sub-package.
 
 Per Phase 3D, each DLT source lives in its own file. Per-source functions
 are re-exported at this package level for backward compatibility.
 """
 from __future__ import annotations
 
-from dlt_sources.ie.statistics.cso_deprivation import cso_deprivation_source
-from dlt_sources.ie.statistics.cso_education import cso_education_source
-from dlt_sources.ie.statistics.cso_small_areas import cso_small_areas_source
-from dlt_sources.ie.statistics.geohive import geohive_source
-from dlt_sources.ie.statistics.geohive_deprivation import (
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.cso_deprivation import cso_deprivation_source
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.cso_education import cso_education_source
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.cso_small_areas import cso_small_areas_source
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.geohive import geohive_source
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.geohive_deprivation import (
     geohive_deprivation_source,
 )
 
 # Phase 3D per-source re-exports.
-from dlt_sources.ie.statistics.met_office import met_office_source
-from dlt_sources.ie.statistics.met_office_forecast import (
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.met_office import met_office_source
+from cianfhoghlaim.dlt.british_isles.ireland.statistics.met_office_forecast import (
     met_office_forecast_source,
 )
 

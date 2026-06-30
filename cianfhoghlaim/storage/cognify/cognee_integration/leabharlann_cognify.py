@@ -61,7 +61,7 @@ async def cognify_leabharlann_rows(
     rows
         A list of dicts. For books/zotero/takeout, the expected shape is
         the BAML-extracted row produced by
-        `oideachais.dlt_sources.leabharlann.{leabharlann_books,zotero,takeout_v1}.py`.
+        `oideachais.cianfhoghlaim.dlt.leabharlann.{leabharlann_books,zotero,takeout_v1}.py`.
 
     Returns
     -------

@@ -322,7 +322,7 @@ def create_celtic_language_assets() -> list[dg.AssetsDefinition]:
         ),
         DLTAssetConfig(
             name="tearma_terminology",
-            source_module="data_platform.dlt_sources.ie.culture.tearma",
+            source_module="data_platform.cianfhoghlaim.dlt.british_isles.ireland.culture.tearma",
             source_function="tearma_source",
             group_name="celtic_language",
             description="Téarma.ie Irish terminology database",
@@ -596,7 +596,7 @@ def create_curriculum_ingestion_asset(
     ) -> dg.MaterializeResult:
         """Ingest curriculum content from all sources with deduplication."""
         import dlt as dlt_lib
-        from cianfhoghlaim.dlt.british_isles.ie.education.curriculum_source import curriculum_source
+        from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import curriculum_source
 
         # Get partition key (cycle)
         cycle = context.partition_key

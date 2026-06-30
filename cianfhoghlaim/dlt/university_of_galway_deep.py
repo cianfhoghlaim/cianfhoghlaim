@@ -2,7 +2,7 @@
 University of Galway — DLT source (the case-study wrapper).
 
 Thin wrapper around the reusable
-`cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources._university_deep_factory.create_university_deep_extraction_source`
+`cianfhoghlaim.dlt._university_deep_factory.create_university_deep_extraction_source`
 configured for the University of Galway (case study + template).
 
 This is the *website* side of the University of Galway pipeline. The
@@ -25,12 +25,12 @@ import dlt
 # editable install) and in the monorepo (where the long path is
 # the canonical import).
 try:
-    from dlt_sources._university_deep_factory import (  # type: ignore[import-not-found]
+    from cianfhoghlaim.dlt._university_deep_factory import (
         UniversityDeepExtractionConfig,
         create_university_deep_extraction_source,
     )
 except ImportError:
-    from cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources._university_deep_factory import (  # type: ignore[no-redef]
+    from cianfhoghlaim.dlt._university_deep_factory import (  # type: ignore[no-redef]
         UniversityDeepExtractionConfig,
         create_university_deep_extraction_source,
     )

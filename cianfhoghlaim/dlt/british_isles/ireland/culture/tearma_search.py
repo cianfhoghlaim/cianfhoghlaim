@@ -3,10 +3,10 @@ DLT source for Téarma.ie (Irish Terminology Database) — live API search.
 
 Searches the Téarma.ie REST API for terms matching a list of queries.
 The companion bulk-export source lives at
-`dlt_sources.ie.culture.tearma`.
+`cianfhoghlaim.dlt.british_isles.ireland.culture.tearma`.
 
 Usage:
-    from dlt_sources.ie.culture.tearma_search import tearma_search_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.tearma_search import tearma_search_source
 
     pipeline = dlt.pipeline(
         pipeline_name="tearma_search",
@@ -17,7 +17,7 @@ Usage:
 Split out of the legacy `dlt_sources/tearma.py` flat file in Phase 4
 (oideachais-audit-phase-4-consolidate-legacy-dirs). Shared helpers +
 module constants + `TerminologyLinker` live at
-`dlt_sources.ie.culture._tearma_helpers`.
+`cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers`.
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ from collections.abc import Iterator
 from typing import Any
 
 import dlt
-from dlt_sources.ie.culture._tearma_helpers import _search_tearma_api
+from cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers import _search_tearma_api
 
 
 @dlt.source(name="tearma_search")

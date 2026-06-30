@@ -16,7 +16,7 @@ Phase 5 (issue #20) wires the 3 runtime constructors:
 
   * `source(source_id)` returns a *callable* DLT source builder
     (no eager evaluation). The builder maps the YAML `kind` to a
-    constructor in `dlt_sources.common`. The caller decides when
+    constructor in `cianfhoghlaim.dlt.common`. The caller decides when
     to materialise.
 
   * `dlt_asset(source_id)` returns a Dagster `AssetsDefinition`
@@ -286,8 +286,8 @@ def _build_firecrawl_source(
     entry: SourceEntry,
     defaults: FirecrawlDefaults,
 ) -> Callable[[], Any]:
-    """Map `kind=firecrawl_pages` to `dlt_sources.common.create_firecrawl_source`."""
-    from dlt_sources.common.firecrawl_source import create_firecrawl_source
+    """Map `kind=firecrawl_pages` to `cianfhoghlaim.dlt.common.firecrawl_source.create_firecrawl_source`."""
+    from cianfhoghlaim.dlt.common.firecrawl_source import create_firecrawl_source
 
     crawl = entry.crawl
     include_paths = (
@@ -334,7 +334,7 @@ def _build_stagehand_source(entry: SourceEntry, defaults: Any) -> Callable[[], A
     wrapper at `dlt_sources/ireland/curriculum_source._crawl_source`
     is the fallback. Both are referenced by the SourceFactory.
     """
-    from dlt_sources.ie.education.leaving_cert import leaving_cert_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.leaving_cert import leaving_cert_source
 
     def _factory() -> Any:
         # `leaving_cert_source` is the actual DLT source builder for
@@ -352,7 +352,7 @@ def _build_browserbase_source(entry: SourceEntry, defaults: BrowserbaseDefaults)
 
     The codebase doesn't have a dedicated browserbase_extract
     constructor yet (it uses the Firecrawl fallback in
-    `dlt_sources.common.create_firecrawl_source`). The kind
+    `cianfhoghlaim.dlt.common.create_firecrawl_source`). The kind
     distinction is preserved for future re-introduction.
     """
     # BrowserbaseDefaults has different fields from FirecrawlDefaults
@@ -492,7 +492,7 @@ def _build_university_deep_source(
     `ects_field_label`, `prefer_free_browser`) and returns a
     callable that yields a `@dlt.source(name=f"university_<id>_deep")`
     with 5 resources. See
-    `dlt_sources._university_deep_factory.UniversityDeepExtractionConfig`
+    `cianfhoghlaim.dlt._university_deep_factory.UniversityDeepExtractionConfig`
     for the full schema.
     """
     # The bare `dlt_sources` import is the convention used by the
@@ -502,12 +502,12 @@ def _build_university_deep_source(
     # the editable install) and in the monorepo (where the long
     # path is the canonical import).
     try:
-        from dlt_sources._university_deep_factory import (  # type: ignore[import-not-found]
+        from cianfhoghlaim.dlt._university_deep_factory import (
             UniversityDeepExtractionConfig,
             create_university_deep_extraction_source,
         )
     except ImportError:
-        from cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources._university_deep_factory import (  # type: ignore[no-redef]
+        from cianfhoghlaim.dlt._university_deep_factory import (  # type: ignore[no-redef]
             UniversityDeepExtractionConfig,
             create_university_deep_extraction_source,
         )

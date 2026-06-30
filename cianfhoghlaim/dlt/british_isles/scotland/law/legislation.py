@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.sct.law.legislation — Scottish legislation.
+oideachais.cianfhoghlaim.dlt.british_isles.scotland.law.legislation — Scottish legislation.
 Phase 7 of the openspec change.
 """
 from __future__ import annotations

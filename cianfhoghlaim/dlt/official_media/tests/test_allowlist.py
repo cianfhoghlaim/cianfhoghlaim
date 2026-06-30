@@ -1,4 +1,4 @@
-"""Tests for ``dlt_sources.official_media.allowlist``.
+"""Tests for ``cianfhoghlaim.dlt.official_media.allowlist``.
 
 Asserts the two-stage filter:
 
@@ -11,7 +11,7 @@ Asserts the two-stage filter:
 from __future__ import annotations
 
 import pytest
-from dlt_sources.official_media.allowlist import (
+from cianfhoghlaim.dlt.official_media.allowlist import (
     AllowlistFilter,
     allowlist_filter,
 )

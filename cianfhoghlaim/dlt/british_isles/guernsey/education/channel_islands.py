@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.ggy.education.channel_islands — Guernsey education DLT source.
+oideachais.cianfhoghlaim.dlt.british_isles.guernsey.education.channel_islands — Guernsey education DLT source.
 
 Split from `dlt_sources/crown_dependencies/channel_islands.py` in
 Phase 3E (Round 11 oideachais audit). The Guernsey source (`guernsey_source`)
@@ -14,7 +14,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 import dlt
-from dlt_sources.jey.education._channel_islands_helpers import (
+from cianfhoghlaim.dlt.british_isles.jersey.education._channel_islands_helpers import (
     CHANNEL_ISLANDS_URLS,
     _crawl_guernsey_education,
 )

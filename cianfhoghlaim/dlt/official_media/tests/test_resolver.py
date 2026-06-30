@@ -1,4 +1,4 @@
-"""Tests for ``dlt_sources.official_media.source_resolver``.
+"""Tests for ``cianfhoghlaim.dlt.official_media.source_resolver``.
 
 Asserts the 4-lookup fan-out + override short-circuit.
 
@@ -12,7 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from dlt_sources.official_media.source_resolver import (
+from cianfhoghlaim.dlt.official_media.source_resolver import (
     ResolvedSource,
     SourceResolver,
     override_title_for,

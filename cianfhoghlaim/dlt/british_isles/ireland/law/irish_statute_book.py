@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.ie.law.irish_statute_book — Irish Statute Book.
+oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.irish_statute_book — Irish Statute Book.
 
 Source: `https://www.irishstatutebook.ie/eli/{year}/act/{number}/enacted/en/xml`.
 XML API. ~30,000 acts / SIs; uses `dlt.sources.incremental` on

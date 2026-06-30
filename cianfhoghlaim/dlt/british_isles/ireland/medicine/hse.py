@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.ie.medicine.hse — Health Service Executive (Ireland).
+oideachais.cianfhoghlaim.dlt.british_isles.ireland.medicine.hse — Health Service Executive (Ireland).
 
 Source: `https://www.hse.ie` (public service). Crawled with Firecrawl
 through the shared firecrawl_source router. Yields one page dict per

@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.jey.education._channel_islands_helpers — shared helpers
+oideachais.cianfhoghlaim.dlt.british_isles.jersey.education._channel_islands_helpers — shared helpers
 for Jersey + Guernsey education sources.
 
 Split from `dlt_sources/crown_dependencies/channel_islands.py` in Phase 3E.
@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
-from dlt_sources.common.firecrawl_source import crawl_website
+from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
 
 CHANNEL_ISLANDS_URLS = {
     "jersey": {

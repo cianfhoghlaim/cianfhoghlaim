@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.official_media — Instagram-export → British-Isles government source enrichment.
+"""oideachais.cianfhoghlaim.dlt.official_media — Instagram-export → British-Isles government source enrichment.
 
 Phase 1 of the ``official-media-pipeline`` openspec change. Parses the
 JSON bundle Instagram ships in the standard export format, filters
@@ -9,7 +9,7 @@ surviving profile.
 
 Public API (the only thing the rest of the stack imports):
 
-    from dlt_sources.official_media import (
+    from cianfhoghlaim.dlt.official_media import (
         instagram_export_source,        # @dlt.source
         allowlist_filter,                # Stage-1 + Stage-2 classifier
         source_resolver,                 # 4-lookup parallel resolver
@@ -17,13 +17,13 @@ Public API (the only thing the rest of the stack imports):
 """
 from __future__ import annotations
 
-from dlt_sources.official_media.allowlist import AllowlistFilter, allowlist_filter
-from dlt_sources.official_media.instagram_export import (
+from cianfhoghlaim.dlt.official_media.allowlist import AllowlistFilter, allowlist_filter
+from cianfhoghlaim.dlt.official_media.instagram_export import (
     FOLLOWER_LIST_KINDS,
     InstagramExportParser,
     instagram_export_source,
 )
-from dlt_sources.official_media.source_resolver import SourceResolver, source_resolver
+from cianfhoghlaim.dlt.official_media.source_resolver import SourceResolver, source_resolver
 
 __all__ = [
     "FOLLOWER_LIST_KINDS",

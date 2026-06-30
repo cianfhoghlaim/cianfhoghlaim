@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.ie.medicine.medical_council — Medical Council of Ireland.
+oideachais.cianfhoghlaim.dlt.british_isles.ireland.medicine.medical_council — Medical Council of Ireland.
 
 Source: `https://www.medicalcouncil.ie/register/` (public search).
 This is a *public search* source (not the authenticated register

@@ -63,7 +63,7 @@ def leabharlann_inbox_raw(context) -> dg.MaterializeResult:
     """Run the MBOX DLT source for the given account partition."""
     import dlt
 
-    from dlt_sources.leabharlann.email_inbox import (
+    from cianfhoghlaim.dlt.leabharlann.email_inbox import (
         DEFAULT_MBOX_ROOT,
         email_inbox_source,
     )

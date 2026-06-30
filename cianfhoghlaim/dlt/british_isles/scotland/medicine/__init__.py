@@ -1,6 +1,6 @@
-"""oideachais.dlt_sources.sct.medicine — Scotland medicine sub-package."""
+"""oideachais.cianfhoghlaim.dlt.british_isles.scotland.medicine — Scotland medicine sub-package."""
 from __future__ import annotations
 
-from dlt_sources.sct.medicine import nhs_scotland
+from cianfhoghlaim.dlt.british_isles.scotland.medicine import nhs_scotland
 
 __all__ = ["nhs_scotland"]

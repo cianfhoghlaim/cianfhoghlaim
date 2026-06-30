@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.iom.law.legislation — Isle of Man Statute Books.
+"""oideachais.cianfhoghlaim.dlt.british_isles.isle_of_man.law.legislation — Isle of Man Statute Books.
 
 Source: `https://www.legislation.gov.im` (Isle of Man Government
 legislation portal, hosted on legislation.gov.uk infrastructure).

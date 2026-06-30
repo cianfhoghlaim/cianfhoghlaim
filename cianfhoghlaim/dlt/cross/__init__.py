@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.cross — the 7th dlt_sources domain.
+"""oideachais.cianfhoghlaim.dlt.cross — the 7th dlt_sources domain.
 
 The `cross/` domain holds sources that span multiple downstream
 quadrants rather than mapping to a single educational jurisdiction.
@@ -17,13 +17,13 @@ Future additions will land here:
 
 Each new sub-package must:
 
-1. Be importable as `dlt_sources.cross.<area>`.
+1. Be importable as `cianfhoghlaim.dlt.cross.<area>`.
 2. Define at least one `@dlt.source(name=...)` with a primary_key on
    each resource.
 3. Document its schema in a `README.md` next to the source.
 """
 from __future__ import annotations
 
-from dlt_sources.cross import upstream
+from cianfhoghlaim.dlt.cross import upstream
 
 __all__ = ["upstream"]

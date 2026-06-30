@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.common._http_factories — in-tree replacement
+oideachais.cianfhoghlaim.dlt.common._http_factories — in-tree replacement
 for the missing `shared.http` module.
 
 Background

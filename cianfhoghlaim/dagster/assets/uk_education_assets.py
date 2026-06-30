@@ -97,7 +97,7 @@ def england_ofsted_inspections(
     """
     context.log.info("Ingesting Ofsted inspections for England")
 
-    from cianfhoghlaim.dlt.british_isles.en.education.ofsted import ofsted_source
+    from cianfhoghlaim.dlt.british_isles.england.education.ofsted import ofsted_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="england_ofsted",
