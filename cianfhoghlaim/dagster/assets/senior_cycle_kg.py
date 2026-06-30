@@ -96,8 +96,8 @@ def senior_cycle_knowledge_graph(
             text = pdf_file.read_text(encoding="utf-8", errors="ignore")
             fingerprint = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
-            # The real BAML calls live in baml_src/curriculum_extraction.baml
-            # and baml_src/subjects/baml_context/senior_cycle.baml. Here we
+            # The real BAML calls live in baml/education/_shared/curriculum_relationships.baml
+            # and baml/education/stages/senior_cycle.baml. Here we
             # only emit a stub ledger row that the cognee cognify pass picks up.
             #
             # In production this would invoke b.ExtractExamPaperStructure(...)

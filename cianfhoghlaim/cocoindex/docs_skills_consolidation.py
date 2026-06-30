@@ -8,7 +8,7 @@ Tag, embed, and graph-link every Markdown file under `docs/` and
 - FalkorDB graph `docs_skills_graph` (nodes: DocSkill, Concept, ConsolidationGroup;
   edges: TAGGED, CONSOLIDATED_INTO, RELATES_TO)
 
-All extraction is BAML-driven (see `baml_src/docs_skills_consolidation.baml`).
+All extraction is BAML-driven (see `baml/processing/` cluster for the generic file processing BAML files).
 The BAML client is the canonical LLM surface for this pipeline; litellm +
 instructor is NOT used here (it is reserved for the CocoIndex example paths
 in `docs/cocoindex/`).

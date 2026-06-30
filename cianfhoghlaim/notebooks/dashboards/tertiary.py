@@ -26,7 +26,7 @@ def _(mo):
         + 8+ QQI FET awards + Apprenticeship pathways.
 
         **Source data**: LanceDB `tertiary_knowledge_graph` + Cognee
-        `oideachais.tertiary` + BAML `baml_src/tertiary.baml`.
+        `oideachais.tertiary` + BAML `baml/education/stages/tertiary.baml`.
 
         See `oideachais/notebooks/analysis_plan/tertiary.md` for the full question set.
         """

@@ -20,7 +20,7 @@ Datasets produced (4 resources):
   primary_strands               — PrimaryStrand[] (BAML-extracted)
   primary_learning_outcomes     — PrimaryLearningOutcome[] (BAML-extracted)
 
-BAML extraction (per `baml_src/primary.baml`):
+BAML extraction (per `baml/education/stages/primary.baml`):
   b.ExtractPrimaryFramework(text)         -> PrimaryCurriculumArea[]
   b.ExtractPrimaryLearningOutcomes(text)  -> PrimaryLearningOutcome[]
 """

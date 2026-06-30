@@ -166,7 +166,7 @@ def _make_app() -> Any:
         """Read one BAML-extracted JSONL of CultureHeritageClaim rows,
         embed each, and upsert into the LanceDB table target.
 
-        The JSONL format is the output of `baml_src/culture_extraction.baml`'s
+        The JSONL format is the output of `baml/processing/culture_extraction.baml`'s
         `ExtractCultureHeritageClaims` function: one claim per line, each
         line is JSON with the same fields as `CultureHeritageClaimChunk`.
         """

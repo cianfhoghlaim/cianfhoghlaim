@@ -7,7 +7,7 @@ The Stage-2 fallback in the two-stage filter. Invoked by
   2. The cheap heuristic in ``allowlist._looks_official`` matches.
 
 Uses the BAML function ``ClassifyOfficialMedia`` declared in
-``baml_src/official_media.baml`` (regenerated to ``baml_client/``).
+``baml/processing/official_media.baml`` (regenerated to ``baml_client/``).
 The fallback returns ``None`` (i.e. the candidate is rejected) when
 the BAML call fails for any reason — never raises.
 """

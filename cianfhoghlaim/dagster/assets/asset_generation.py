@@ -16,7 +16,7 @@ Upstream:
   - docs/notebooks/syllabus_visualizer  (which outcomes are most critical)
 
 Reference:
-  - baml_src/image_generation.baml
+  - baml/processing/image_generation.baml
   - infrastructure/stacks/litellm/config/config.yaml (image routes)
   - docs/meaisínfhoghlaim/FIBO/  (FIBO collection)
 """

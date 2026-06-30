@@ -203,7 +203,7 @@ from cognee_integration.cross_stage_cognify import (
 
 # Author Archive Assets (UoG + Gemini Deep Research + Google Takeout Phase 1)
 # Personal-archive ingestion: dlt sources under oideachais/dlt_sources/leabharlann/
-# + BAML extraction (baml_src/author_archive.baml)
+# + BAML extraction (baml/processing/author_archive.baml)
 # + CocoIndex embedding (oideachais/cocoindex_flows/author_archive_embedding.py)
 # + OCR chain (oideachais/ocr/author_archive_ocr.py)
 try:
