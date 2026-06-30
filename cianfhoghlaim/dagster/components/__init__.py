@@ -1,44 +1,59 @@
 """
-cianfhoghlaim.assets._oideachais_dagster_defs.components — Dagster dg CLI Components.
+cianfhoghlaim.dagster.components — the 5 KCG-specific Dagster Components
+(5-Layer Component architecture, see openspec/changes/2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture).
 
-The 3 KCG-specific Components that wrap the canonical
-`cianfhoghlaim.*` patterns as reusable, schema-based Components
-per the Dagster 1.10 Components preview
-(`docs.dagster.io/api/dagster/components`).
+The 5 Components, one per layer:
+- `CelticIngestionComponent` (L1 Ingestion, replaces `CelticDltSourceComponent`)
+- `CelticMaterialsComponent` (L2 Materials, BAML extraction)
+- `CelticModelLifecycleComponent` (L3 Model Lifecycle, CocoIndex v1 + R1-R4 lint,
+  replaces `CelticCocoindexV1Component` + absorbs `CelticLancedbHnswComponent`)
+- `CelticAssetGenerationComponent` (L4 Asset Generation, marimo + TanStack + oRPC)
+- `CelticAgentOpsComponent` (L5 Agent Operations, 12-agent fleet + 5 emitted
+  assets per agent)
 
-Each Component subclasses `dg.Component` and implements
-`build_defs()`. They are discoverable via `dg list components`
-and can be instantiated from YAML via `dg scaffold defs`.
+Each Component subclasses `dagster.Component` and implements
+`build_defs()`. They are discoverable via `dg list components` and
+can be instantiated from YAML via `dg scaffold defs <Component> ...`.
 
-The 3 Components:
-- `CelticDltSourceComponent` — wraps a single DLT source and
-  registers it as a `dg.asset`. (Replaces the hand-written
-  `dlt_asset()` wrapper in
-  `cianfhoghlaim/core/dlt/_oideachais_dlt_utils/source_factory.py`.)
-- `CelticLancedbHnswComponent` — wraps a LanceDB table and
-  registers an `dg.asset` that builds an HNSW index.
-  (Consumes
-  `cianfhoghlaim/core/lancedb/lancedb/indexing.build_hnsw_index`.)
-- `CelticCocoindexV1Component` — wraps a CocoIndex v1 App
-  and registers a `dg.asset` that calls `app.update()`.
-  (Consumes the shared lifespan in
-  `cianfhoghlaim/embeddings/_oideachais_src/_lifespan.py`.)
+Registered in `pyproject.toml:[tool.dg].registry_modules` so the
+`dg` CLI auto-discovers them.
 
-Reference: openspec/changes/refactor-dlt-dagster-2026-stack-align
-openspec/changes/2026-06-29-per-domain-dagster-component-migration
+Dagster 1.13+ features used:
+- `AutomationCondition` (replaces `@schedule`)
+- `is_virtual=True` (on L3 CocoIndex v1 assets)
+- `.resolve_through_virtual()` (on L3 + L5)
+- `StateBackedComponent` (on L1 high-churn sources, monthly refresh)
+- `DefsStateConfig` (L1 state persistence)
 """
-from cianfhoghlaim.assets._oideachais_dagster_defs.components.celtic_cocoindex_v1 import (
-    CelticCocoindexV1Component,
+from __future__ import annotations
+
+from cianfhoghlaim.dagster.components.layer1_ingestion import (
+    CelticIngestionComponent,
 )
-from cianfhoghlaim.assets._oideachais_dagster_defs.components.celtic_dlt_source import (
-    CelticDltSourceComponent,
+from cianfhoghlaim.dagster.components.layer2_materials import (
+    CelticMaterialsComponent,
 )
-from cianfhoghlaim.assets._oideachais_dagster_defs.components.celtic_lancedb_hnsw import (
-    CelticLancedbHnswComponent,
+from cianfhoghlaim.dagster.components.layer3_model_lifecycle import (
+    ConformanceViolation,
+    CelticModelLifecycleComponent,
+)
+from cianfhoghlaim.dagster.components.layer4_asset_generation import (
+    CelticAssetGenerationComponent,
+)
+from cianfhoghlaim.dagster.components.layer5_agent_ops import (
+    CelticAgentOpsComponent,
 )
 
+# Backward-compat aliases (the 3 legacy `celtic_*` Components were
+# replaced in the 5-layer rewrite; existing consumers can import
+# the new names without breaking).
 __all__ = [
-    "CelticCocoindexV1Component",
-    "CelticDltSourceComponent",
-    "CelticLancedbHnswComponent",
+    # The 5 KCG Components (canonical)
+    "CelticIngestionComponent",
+    "CelticMaterialsComponent",
+    "CelticModelLifecycleComponent",
+    "CelticAssetGenerationComponent",
+    "CelticAgentOpsComponent",
+    # Conformance exception (used by L3 R1-R4 enforcement)
+    "ConformanceViolation",
 ]

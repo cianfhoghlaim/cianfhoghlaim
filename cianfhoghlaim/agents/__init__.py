@@ -47,6 +47,11 @@ except Exception:
     GeneralAgent = None
     create_root_agent = None
 
+# ROUTING_KEYWORDS lives in a standalone module so it can be imported
+# independently of the (optional) ADK dependency. Used by the L5
+# CelticAgentOpsComponent in cianfhoghlaim/dagster/components/layer5_agent_ops.py
+from .routing_keywords import ROUTING_KEYWORDS
+
 # Agno team exports (primary framework)
 from .agno import (
     corpus_agent,
