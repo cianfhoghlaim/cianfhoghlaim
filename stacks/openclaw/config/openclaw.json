@@ -10,19 +10,12 @@
     "state_dir": "/home/node/.openclaw/state"
   },
   "provider": {
-    "name": "opencode-go",
-    "base_url": "https://opencode.ai/zen/go/v1",
+    "name": "litellm",
+    "base_url": "http://litellm:4000/v1",
     "model": "minimax-m3",
-    "api_key_env": "OPENCODE_GO_API_KEY"
+    "api_key_env": "OPENAI_API_KEY"
   },
-  "fallback_chain": [
-    {
-      "name": "minimax-coding-plan",
-      "base_url": "https://api.minimax.chat/v1",
-      "model": "minimax-m3",
-      "api_key_env": "MINIMAX_API_KEY"
-    }
-  ],
+  "fallback_chain": [],
   "channels": {
     "telegram": {
       "enabled": true,

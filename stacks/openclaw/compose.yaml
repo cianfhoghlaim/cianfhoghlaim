@@ -52,8 +52,8 @@ services:
       OPENCLAW_BRIDGE_PORT: "18790"
       OPENCLAW_LOG_LEVEL: ${OPENCLAW_LOG_LEVEL:-info}
       OPENCLAW_DM_POLICY: ${OPENCLAW_DM_POLICY:-pairing}
-      # LLM provider
-      OPENCODE_GO_BASE_URL: https://opencode.ai/zen/go/v1
+      # LLM provider — LiteLLM is the only path (M3 chokepoint)
+      # OPENAI_BASE_URL + OPENAI_API_KEY are injected by Locket from secrets.env
       # Observability
       OTEL_SERVICE_NAME: openclaw-gateway
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
