@@ -1,21 +1,24 @@
-"""tuatha/dlt_utils/destinations.py — shim around oideachais.
+"""educational/dlt_utils/destinations.py — shim around oideachais.
 
-Phase 2.3 of the lateralise change: tuatha no longer carries its
-own DuckLake destination implementation. It re-exports the
-oideachais canonical helpers with `namespace="tuath"` pre-bound.
+Phase 2.3 of the lateralise change: the educational (formerly tuatha)
+quadrant no longer carries its own DuckLake destination implementation.
+It re-exports the oideachais canonical helpers with
+`namespace="educational"` pre-bound (was historically `"tuath"`).
 
-The shim is **defensive**: if the `oideachais` workspace member
-isn't on the tuatha venv's `sys.path` (because the workspace
-sync didn't pick it up), the shim falls back to a *local*
-implementation, preserving backwards compatibility.
+This shim is **deprecated** in favour of
+`cianfhoghlaim.dlt.destinations_oideachais`; the v4 consolidation
+(2026-06-28) moved the canonical helpers there. The shim is retained
+only for backwards compatibility with historical imports.
 
 The shim preserves the public surface of the old module
 (`NAMESPACE`, `get_dlt_destination`, `get_duckdb_fallback`,
 `create_pipeline`, `DuckLakeConfig`) so that:
 
   * any historical import keeps working
-  * the tuatha DuckLake data lives under `s3://ducklake/tuath/`
-    with Postgres db `ducklake_tuath`
+  * the educational DuckLake data lives under
+    `s3://ducklake/educational/` (was historically
+    `s3://ducklake/tuath/`) with Postgres db `ducklake_educational`
+    (was historically `ducklake_tuath`)
 """
 from __future__ import annotations
 
@@ -27,14 +30,15 @@ import dlt
 
 # Backwards-compat: try the oideachais cross-quadrant import first.
 try:
-    from sruth.oideachais.dlt_utils.destinations import with_namespace
+    from cianfhoghlaim.dlt.destinations_oideachais import with_namespace
 
-    with_namespace("tuath").re_export_into(globals())
+    with_namespace("educational").re_export_into(globals())
 
-    # tuatha's old API also exposed DuckLakeConfig; re-export it from
-    # oideachais if available. (The new oideachais API doesn't ship a
-    # DuckLakeConfig dataclass — it builds the destination inline —
-    # so we synthesise a minimal stub here for backwards-compat.)
+    # The educational (formerly tuatha) old API also exposed
+    # DuckLakeConfig; re-export it from oideachais if available. (The
+    # new oideachais API doesn't ship a DuckLakeConfig dataclass — it
+    # builds the destination inline — so we synthesise a minimal stub
+    # here for backwards-compat.)
     from dataclasses import dataclass as _dc
 
     @_dc
@@ -43,10 +47,10 @@ try:
 
         The new oideachais destinations API doesn't ship a
         DuckLakeConfig class; the local fallback below still uses
-        one, and historical tuatha code may import it. Keep it
-        as a stub for the cross-quadrant path so typecheckers
-        and `from .destinations import DuckLakeConfig` keep
-        working.
+        one, and historical educational (formerly tuatha) code may
+        import it. Keep it as a stub for the cross-quadrant path so
+        typecheckers and `from .destinations import DuckLakeConfig`
+        keep working.
         """
 
         postgres_host: str = "localhost"
@@ -59,9 +63,9 @@ try:
 
 except ImportError:
     # Local fallback — pre-Phase-2.3 implementation. Kept so the
-    # tuatha code-location doesn't break until the workspace
+    # educational code-location doesn't break until the workspace
     # sync is verified.
-    NAMESPACE = "tuath"
+    NAMESPACE = "educational"
 
     @dataclass
     class DuckLakeConfig:
@@ -123,8 +127,8 @@ except ImportError:
     get_duckdb_fallback_destination = get_duckdb_fallback
 
     def create_pipeline(
-        pipeline_name: str = "tuath",
-        dataset_name: str = "tuath",
+        pipeline_name: str = "educational",
+        dataset_name: str = "educational",
         use_ducklake: bool = True,
         **kwargs: Any,
     ) -> dlt.Pipeline:

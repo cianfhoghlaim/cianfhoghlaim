@@ -10,12 +10,17 @@ first**; the rest of the file is the full 34-spec catalogue.
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
+| [`cianfhoghlaim-educational-mmo`](specs/cianfhoghlaim-educational-mmo/spec.md) | cianfhoghlaim | 8 NCCA LC subjects × per-subject quest packs × 8 ADK agents × hybrid x402 credential × TanStack Start 2D client |
 | [`oideachais-pipeline`](specs/oideachais-pipeline/spec.md) | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
 | [`oideachais-university-deep-extraction`](specs/oideachais-university-deep-extraction/spec.md) | oideachais | Per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for any British Isles university |
 | [`infrastructure-stacks`](specs/infrastructure-stacks/spec.md) | shared | 70+ Docker Compose stacks + stack-doctor + Pangolin + Infisical + Locket |
 | [`agent-memory-systems`](specs/agent-memory-systems/spec.md) | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
 | [`indexing-and-cognition`](specs/indexing-and-cognition/spec.md) | shared | CCC v1 code search + Cognee knowledge graph + OpenCode agent/MCP registry |
 | [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
+
+> **Note:** `tuatha-platform` is now a deprecated alias for
+> `cianfhoghlaim-educational-mmo`. See the
+> `cianfhoghlaim-educational-mmo-v1` openspec change.
 
 ### Priority commands
 
