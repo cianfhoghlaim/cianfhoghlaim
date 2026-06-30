@@ -1,0 +1,64 @@
+# =============================================================================
+# DEPLOY LAKEHOUSE-BUNCHLOCH
+# =============================================================================
+# Centralised data plane for the agent-platform cluster on bunchloch
+# (MacBook M4 Max). Replaces the old standalone PostgreSQL + Minio stack
+# with the unified 11-service lakehouse.
+#
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - Brings up the 11-service lakehouse stack on bunchloch:
+#   Garage + Postgres (12 DBs) + ClickHouse + Redis + Lakekeeper +
+#   Lance-Namespace + Nimtable + Olake + LanceDB-Viewer + Locket sidecar
+# - Auto-provisions the 7 buckets via `garage-init`
+# - Auto-provisions the 12 databases via `init-db.sql`
+#
+# Usage:
+#   km run procedure deploy-lakehouse-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-lakehouse-bunchloch"
+description = "Deploy the 11-service centralised data plane (lakehouse) on bunchloch"
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "CheckEnvVar", params = { vars = ["POSTGRES_PASSWORD", "GARAGE_RPC_SECRET", "GARAGE_ADMIN_TOKEN", "GARAGE_ACCESS_KEY_ID", "GARAGE_SECRET_ACCESS_KEY", "LAKEKEEPER_ENCRYPTION_KEY", "CLICKHOUSE_PASSWORD", "REDIS_PASSWORD"] } }
+
+[[procedure.config.stages]]
+name = "lakehouse"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lakehouse-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://lakekeeper.cianfhoghlaim.ie/health", expected_status = 200, timeout_s = 30 } }
+description = "Verify Lakekeeper is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8123/ping", expected_status = 200, timeout_s = 30 } }
+description = "Verify ClickHouse ping endpoint"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec lakehouse-redis redis-cli -a $REDIS_PASSWORD ping" } }
+description = "Verify Redis password authentication"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec lakehouse-postgres psql -U lakekeeper -d langfuse -c '\\dt' 2>&1 | head -20 || echo 'langfuse db connection or tables check failed'" } }
+description = "Verify langfuse database exists on lakehouse-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec lakehouse-postgres psql -U lakekeeper -d mlflow -c '\\dt' 2>&1 | head -20 || echo 'mlflow db connection or tables check failed'" } }
+description = "Verify mlflow database exists on lakehouse-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec lakehouse-postgres psql -U lakekeeper -d litellm -c '\\dt' 2>&1 | head -20 || echo 'litellm db connection or tables check failed'" } }
+description = "Verify litellm database exists on lakehouse-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "aws --endpoint-url http://lakehouse-garage:3900 s3 ls | grep -E 'iceberg|lance|ducklake|langfuse-(events|media|exports)|mlflow-artifacts' | wc -l" } }
+description = "Verify all 7 Garage buckets exist (expect: 7)"

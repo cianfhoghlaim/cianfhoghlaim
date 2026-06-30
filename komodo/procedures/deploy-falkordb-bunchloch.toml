@@ -1,0 +1,31 @@
+# =============================================================================
+# DEPLOY FALKORDB-BUNCHLOCH
+# =============================================================================
+# FalkorDB is now a Stage 1 prerequisite for graphiti (graphiti's only
+# graph backend after the centralise-data-plane rewrite removed the
+# broken Neo4j profile).
+#
+# Usage:
+#   km run procedure deploy-falkordb-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-falkordb-bunchloch"
+description = "Deploy falkordb-bunchloch (FalkorDB vector + graph hybrid database)"
+
+[[procedure.config.stages]]
+name = "falkordb"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "falkordb-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec falkordb redis-cli -a $FALKORDB_PASSWORD ping || echo 'FalkorDB not accepting AUTH'" } }
+description = "Verify FalkorDB password authentication works"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://falkordb.cianfhoghlaim.ie/api/v1/health", expected_status = 200, timeout_s = 30 } }
+description = "Verify FalkorDB HTTP API is reachable"

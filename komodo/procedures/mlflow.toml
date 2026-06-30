@@ -1,14 +1,21 @@
 # =============================================================================
-# MLFLOW STACK
+# MLFLOW STACK (legacy arm1-oci config — kept for reference)
 # =============================================================================
 # ML experiment tracking and model registry.
 # Domain: mlflow.cianfhoghlaim.ie
 # Server: arm1-oci
+#
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - mlflow.cianfhoghlaim.ie on arm1-oci uses the exact same centralized
+#   data plane wiring as bunchloch (lakehouse-postgres, lakehouse-garage).
+# - MLFLOW_BACKEND_STORE_URI points at the OCI-side lakehouse-postgres
+#   db=mlflow.
+# - The MLFLOW_S3_ENDPOINT_URL points at the OCI-side lakehouse-garage.
 # =============================================================================
 
 [[stack]]
 name = "mlflow"
-description = "ML experiment tracking and model registry"
+description = "ML experiment tracking and model registry (postgreSQL + S3 via centralised lakehouse)"
 tags = ["host:arm1-oci", "tier:observability", "type:ml", "domain:mlflow.cianfhoghlaim.ie"]
 
 [stack.config]
@@ -21,11 +28,17 @@ MLFLOW_DOMAIN=mlflow.cianfhoghlaim.ie
 MLFLOW_NAME=MLflow
 MLFLOW_PORT=5000
 
-# Backend Store (PostgreSQL)
-MLFLOW_BACKEND_STORE=postgresql://mlflow:${MLFLOW_DB_PASSWORD:-mlflow}@postgres:5432/mlflow
+# Centralised Postgres (from lakehouse-oci)
+MLFLOW_BACKEND_STORE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@lakehouse-postgres:5432/mlflow
+POSTGRES_USER=lakekeeper
+POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
-# Default Artifact Store (local filesystem)
-MLFLOW_ARTIFACT_ROOT=/artifacts
+# Centralised Garage S3 (bucket=mlflow-artifacts)
+MLFLOW_S3_ENDPOINT_URL=http://lakehouse-garage:3900
+MLFLOW_DEFAULT_ARTIFACT_ROOT=s3://mlflow-artifacts/
+AWS_ACCESS_KEY_ID=${GARAGE_ACCESS_KEY_ID}
+AWS_SECRET_ACCESS_KEY=${GARAGE_SECRET_ACCESS_KEY}
+AWS_DEFAULT_REGION=garage
 
 # Environment
 ENVIRONMENT=production
@@ -33,4 +46,31 @@ ENVIRONMENT=production
 # Infisical
 INFISICAL_HOST=${INFISICAL_HOST:-http://132.145.27.89:8080}
 LOCKET_MODE=watch
+"""
+
+# Stack dependencies (POST-CENTRALISE-DATA-PLANE)
+# mlflow must wait for the OCI-side lakehouse to be healthy
+[[stack.depends_on]]
+name = "lakehouse-oci"
+condition = "service_healthy"
+
+[[stack.procedures]]
+name = "mlflow-init-experiments"
+description = "Verify the mlflow-artifacts bucket exists on Garage"
+type = "shell"
+command = """
+docker exec lakehouse-garage /garage bucket info mlflow-artifacts 2>&1 | head -3
+"""
+
+[[stack.procedures]]
+name = "mlflow-health"
+description = "Deep health check for the mlflow stack"
+type = "shell"
+command = """
+# Verify mlflow is reachable
+docker exec mlflow python -c 'import urllib.request; urllib.request.urlopen("http://localhost:5000/health")' || echo 'mlflow not healthy'
+
+# Verify mlflow can reach lakehouse services
+docker exec mlflow python -c 'import urllib.request; urllib.request.urlopen("http://lakehouse-postgres:5432", timeout=3)' || echo 'no Postgres access'
+docker exec mlflow wget --no-verbose -O- http://lakehouse-garage:3900/ | head -5 || echo 'no Garage access'
 """

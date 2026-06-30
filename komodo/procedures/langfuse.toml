@@ -1,14 +1,22 @@
 # =============================================================================
-# LANGFUSE STACK
+# LANGFUSE STACK (legacy arm1-oci config — kept for reference)
 # =============================================================================
 # LLM tracing and observability platform.
 # Domain: langfuse.cianfhoghlaim.ie
 # Server: arm1-oci
+#
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - langfuse.cianfhoghlaim.ie on arm1-oci uses the EXACT same centralized
+#   data plane wiring as bunchloch (lakehouse-postgres, lakehouse-garage,
+#   lakehouse-clickhouse, lakehouse-redis) — just with the OCI-side
+#   hostnames.
+# - LANGFUSE_DOMAIN + DATABASE_URL point at the lakehouse-arm1-oci
+#   stack (see bonneagar/komodo/procedures/lakehouse-oci.toml).
 # =============================================================================
 
 [[stack]]
 name = "langfuse"
-description = "LLM tracing and observability platform"
+description = "LLM tracing and observability platform (postgreSQL + S3 + ClickHouse + Redis via centralised lakehouse)"
 tags = ["host:arm1-oci", "tier:observability", "type:llm", "domain:langfuse.cianfhoghlaim.ie"]
 
 [stack.config]
@@ -21,13 +29,40 @@ LANGFUSE_DOMAIN=langfuse.cianfhoghlaim.ie
 LANGFUSE_NAME=Langfuse
 LANGFUSE_PORT=3000
 
-# Database (PostgreSQL)
-DATABASE_URL=postgresql://langfuse:${LANGFUSE_DB_PASSWORD:-langfuse}@postgres:5432/langfuse
+# Centralised Postgres (from lakehouse-oci)
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@lakehouse-postgres:5432/langfuse
+POSTGRES_USER=lakekeeper
+POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
-# NextAuth Configuration
-NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-your-secret-here}
+# ClickHouse (from lakehouse-oci)
+CLICKHOUSE_URL=http://lakehouse-clickhouse:8123
+CLICKHOUSE_USER=${CLICKHOUSE_USER}
+CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+
+# Redis (from lakehouse-oci)
+REDIS_HOST=lakehouse-redis
+REDIS_PORT=6379
+REDIS_AUTH=${REDIS_PASSWORD}
+
+# Garage S3 (3 buckets)
+LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse-events
+LANGFUSE_S3_MEDIA_UPLOAD_BUCKET=langfuse-media
+LANGFUSE_S3_BATCH_EXPORT_BUCKET=langfuse-exports
+LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://lakehouse-garage:3900
+LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT=http://lakehouse-garage:3900
+LANGFUSE_S3_BATCH_EXPORT_ENDPOINT=http://lakehouse-garage:3900
+LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=${GARAGE_ACCESS_KEY_ID}
+LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=${GARAGE_SECRET_ACCESS_KEY}
+LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID=${GARAGE_ACCESS_KEY_ID}
+LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY=${GARAGE_SECRET_ACCESS_KEY}
+LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID=${GARAGE_ACCESS_KEY_ID}
+LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY=${GARAGE_SECRET_ACCESS_KEY}
+
+# Application Secrets
+SALT=${SALT}
+ENCRYPTION_KEY=${ENCRYPTION_KEY}
 NEXTAUTH_URL=https://langfuse.cianfhoghlaim.ie
-SALT=${LANGFUSE_SALT:-your-salt-here}
+NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
 
 # Environment
 ENVIRONMENT=production
@@ -35,4 +70,37 @@ ENVIRONMENT=production
 # Infisical
 INFISICAL_HOST=${INFISICAL_HOST:-http://132.145.27.89:8080}
 LOCKET_MODE=watch
+"""
+
+# Stack dependencies (POST-CENTRALISE-DATA-PLANE)
+# langfuse must wait for the OCI-side lakehouse to be healthy
+[[stack.depends_on]]
+name = "lakehouse-oci"
+condition = "service_healthy"
+
+[[stack.procedures]]
+name = "langfuse-init-buckets"
+description = "Verify the 3 langfuse buckets exist on Garage"
+type = "shell"
+command = """
+docker exec lakehouse-garage /garage bucket info langfuse-events 2>&1 | head -3
+docker exec lakehouse-garage /garage bucket info langfuse-media 2>&1 | head -3
+docker exec lakehouse-garage /garage bucket info langfuse-exports 2>&1 | head -3
+"""
+
+[[stack.procedures]]
+name = "langfuse-health"
+description = "Deep health check for langfuse services"
+type = "shell"
+command = """
+# Verify langfuse-web is reachable
+docker exec langfuse-web wget --no-verbose --spider http://localhost:3000 || echo 'langfuse-web not healthy'
+
+# Verify langfuse-worker can reach lakehouse services
+docker exec langfuse-worker wget --no-verbose --spider http://lakehouse-postgres:5432 || echo 'no Postgres access'
+docker exec langfuse-worker wget --no-verbose --spider http://lakehouse-clickhouse:8123/ping || echo 'no ClickHouse access'
+docker exec langfuse-worker wget --no-verbose --spider http://lakehouse-redis:6379 || echo 'no Redis access'
+
+# Verify the 3 buckets exist
+docker exec lakehouse-garage /garage bucket list | grep langfuse
 """
