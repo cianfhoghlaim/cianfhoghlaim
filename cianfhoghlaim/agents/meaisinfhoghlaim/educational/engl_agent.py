@@ -1,8 +1,5 @@
 """
 English Specialist Agent (engl_agent) — Cianfhoghlaim Educational MMO.
-
-One of 8 NCCA subject agents. Specialised for Leaving Certificate
-English (OL + HL) + Junior Cycle English.
 """
 from __future__ import annotations
 
@@ -12,34 +9,48 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 
 from ..adk.tuatha_config import config
+from .tools.engl_tools import (
+    lookup_engl_lo,
+    lookup_engl_paper,
+    lookup_engl_marking_scheme,
+    generate_engl_item,
+    score_engl_response,
+)
 
 
 async def engl_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
-    return [{"lo_code": f"LC-ENGL-LO-{hash(topic) % 100}", "topic": topic}]
+    try:
+        return await lookup_engl_lo(topic=topic, level=level, language="en", limit=10)
+    except Exception:
+        return []
 
 
-async def engl_past_paper_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
-    return [{"item_id": f"engl-{hash(topic) % 100}", "text": f"Sample English question for {topic}"}]
+async def engl_past_paper_lookup_tool(topic: str, level: str = "lc_hl", year: int | None = None) -> list[dict]:
+    try:
+        return await lookup_engl_paper(topic=topic, level=level, year=year, limit=5)
+    except Exception:
+        return []
 
 
 async def engl_marking_scheme_lookup_tool(lo_code: str) -> dict:
-    return {"lo_code": lo_code, "text_en": f"Marking scheme for {lo_code}"}
+    try:
+        return await lookup_engl_marking_scheme(lo_code=lo_code)
+    except Exception:
+        return {"error": "marking scheme lookup failed"}
 
 
-async def engl_formative_item_generate_tool(
-    lo_code: str, difficulty: int, level: str = "lc_hl", topic: str = ""
-) -> dict:
-    return {"id": f"engl-{lo_code}-{difficulty}", "prompt_en": f"Sample English question for {lo_code}", "lo_code": lo_code}
+async def engl_formative_item_generate_tool(lo_code: str, difficulty: int, level: str = "lc_hl", topic: str = "") -> dict:
+    try:
+        return await generate_engl_item(lo_code=lo_code, difficulty=difficulty, level=level, topic=topic)
+    except Exception as exc:
+        return {"error": f"Item generation failed: {exc}"}
 
 
-async def engl_response_score_tool(
-    item_id: str,
-    student_response: str,
-    response_format: str = "text",
-    time_taken_seconds: int = 0,
-    hints_used: int = 0,
-) -> dict:
-    return {"item_id": item_id, "marks_awarded": 5, "total_marks": 10, "partial_credit_pct": 50}
+async def engl_response_score_tool(item_id: str, student_response: str, response_format: str = "text", time_taken_seconds: int = 0, hints_used: int = 0) -> dict:
+    try:
+        return await score_engl_response(item_id=item_id, student_response=student_response, response_format=response_format, time_taken_seconds=time_taken_seconds, hints_used=hints_used)
+    except Exception as exc:
+        return {"error": f"Scoring failed: {exc}"}
 
 
 engl_syllabus_tool = FunctionTool(func=engl_syllabus_lookup_tool)
@@ -58,47 +69,27 @@ engl_agent = LlmAgent(
         "comparative, poetry, drama, film."
     ),
     instruction=f"""
-    You are the English Specialist Agent for the Cianfhoghlaim
-    Educational MMO. You teach NCCA Leaving Certificate English (OL + HL)
-    + Junior Cycle English.
+    You are the English Specialist Agent for the Cianfhoghlaim Educational MMO.
+    You teach NCCA Leaving Certificate English (OL + HL) + Junior Cycle English.
 
-    **YOUR EXPERTISE:**
-    - All LC-ENGL-LO-* learning outcomes (OL + HL)
-    - All JC-ENGLISH-LO-* learning outcomes (Junior Cycle)
-    - Past paper patterns (ALP for HL, GLP for OL)
-    - Comprehending, Composition (5 modes: personal essay, discursive,
-      argumentative, narrative, descriptive), Comparative (cultural
-      context / vision / literary genre), Poetry (prescribed + unseen),
-      Drama (Shakespeare + Irish playwright), Film (HL only since 2022)
-    - Cross-subject bridge to Gaeilge (translation practice) and
-      History (cultural-context synthesis)
+    **YOUR EXPERTISE:** All LC-ENGL-LO-* + JC-ENGLISH-LO-*; comprehending,
+    composition (5 modes), comparative, poetry (prescribed + unseen),
+    drama, film (HL).
 
-    **AVAILABLE TOOLS:**
-    1. engl_syllabus_lookup_tool - Find NCCA learning outcomes
-    2. engl_past_paper_lookup_tool - Find past paper questions
-    3. engl_marking_scheme_lookup_tool - Get marking schemes
-    4. engl_formative_item_generate_tool - Generate formative items
-    5. engl_response_score_tool - Score student attempts
+    **AVAILABLE TOOLS:** engl_syllabus_lookup_tool, engl_past_paper_lookup_tool,
+    engl_marking_scheme_lookup_tool, engl_formative_item_generate_tool,
+    engl_response_score_tool
 
     **TEACHING APPROACH:**
-    1. Always cite the NCCA LO code (e.g. "LC-ENGL-LO-2.4").
-    2. For composition items, reference the marking-scheme grid
-       (PCLM = Purpose, Coherence, Language, Mechanics).
-    3. For comparative items, focus on key moments / moments of
-       crisis / key moments of revelation.
-    4. Use 4 graduated hints (Level 1 nudge → Level 4 step-by-step).
-    5. Encourage the student. English is about voice.
+    1. Cite the NCCA LO code.
+    2. For composition items, reference the PCLM marking grid.
+    3. For comparative items, focus on key moments.
+    4. 4 graduated hints.
+    5. Encourage the student.
 
     Current date: {datetime.datetime.now().strftime("%Y-%m-%d")}
-
     Go n-éirí an t-ádh leat!
     """,
-    tools=[
-        engl_syllabus_tool,
-        engl_past_paper_tool,
-        engl_marking_scheme_tool,
-        engl_formative_item_tool,
-        engl_response_score_tool,
-    ],
+    tools=[engl_syllabus_tool, engl_past_paper_tool, engl_marking_scheme_tool, engl_formative_item_tool, engl_response_score_tool],
     output_key="engl_response",
 )
