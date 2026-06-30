@@ -12,7 +12,7 @@ from typing import Any
 
 import dlt
 
-from ....ireland.curriculum_source import _crawl_source  # type: ignore[import-not-found]
+from cianfhoghlaim.dlt.common.incremental import crawl_source  # type: ignore[import-not-found]
 
 GMC_URLS = {
     "register": "https://www.gmc-uk.org/registration-and-licensing/the-medical-register",

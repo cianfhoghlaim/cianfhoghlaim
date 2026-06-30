@@ -12,7 +12,7 @@ import dlt
 from dlt.sources import TDataItem
 
 try:
-    from shared.http import cso_pxstat_client, data_gov_ie_client  # noqa: F401
+    from cianfhoghlaim.dlt.common.http_client import cso_pxstat_client, data_gov_ie_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

@@ -7,7 +7,7 @@ Phase 3D of openspec change.
 from __future__ import annotations
 
 try:
-    from shared.http import canuint_client
+    from cianfhoghlaim.dlt.common.http_client import canuint_client
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

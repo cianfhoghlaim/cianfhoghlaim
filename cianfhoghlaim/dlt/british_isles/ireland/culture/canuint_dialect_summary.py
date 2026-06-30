@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 
 try:
-    from shared.http import canuint_client  # noqa: F401
+    from cianfhoghlaim.dlt.common.http_client import canuint_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

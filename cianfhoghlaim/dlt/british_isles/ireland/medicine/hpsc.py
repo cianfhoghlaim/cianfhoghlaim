@@ -11,7 +11,7 @@ from typing import Any
 
 import dlt
 
-from ....ireland.curriculum_source import _crawl_source  # type: ignore[import-not-found]
+from cianfhoghlaim.dlt.common.incremental import crawl_source  # type: ignore[import-not-found]
 
 HPSC_URLS = {
     "homepage": "https://www.hpsc.ie",

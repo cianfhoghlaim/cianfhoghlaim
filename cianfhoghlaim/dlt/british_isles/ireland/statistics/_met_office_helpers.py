@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Any
 
 try:
-    from shared.http import met_office_climate_client, met_office_datahub_client
+    from cianfhoghlaim.dlt.common.http_client import met_office_climate_client, met_office_datahub_client
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

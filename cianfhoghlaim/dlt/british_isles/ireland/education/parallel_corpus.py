@@ -25,7 +25,7 @@ from typing import Any
 
 import dlt
 from dlt.sources import DltResource
-from shared.http import logainm_client, tearma_client
+from cianfhoghlaim.dlt.common.http_client import logainm_client, tearma_client
 
 # Gaois API endpoints
 GAOIS_BASE_URL = "https://www.gaois.ie"
