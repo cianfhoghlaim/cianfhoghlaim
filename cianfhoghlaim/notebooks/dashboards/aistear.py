@@ -24,7 +24,7 @@ def _(mo):
         ## *Aistear (Luath-Óige)*
 
         **Source data**: LanceDB `aistear_knowledge_graph` + Cognee `oideachais.aistear`
-        + BAML `baml_src/aistear.baml`.
+        + BAML `baml/education/stages/aistear.baml`.
 
         See `oideachais/notebooks/analysis_plan/aistear.md` for the full question set.
         """

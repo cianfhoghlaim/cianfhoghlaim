@@ -3,7 +3,7 @@ oideachais.site_analysis — Firecrawl + Browserbase MCP-driven site analysis.
 
 Phase 8 of the openspec change. For every public source in
 `oideachais/sources.yaml`, the `extract` command produces a
-`SiteAnalysis` record (defined in `oideachais/baml_src/site_analysis.baml`)
+`SiteAnalysis` record (defined in `baml/processing/site_analysis.baml`)
 that captures the site's software fingerprint, layout fingerprint,
 sampled page descriptions, and a full‑page screenshot.
 

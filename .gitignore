@@ -5,7 +5,7 @@ oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_po
 infrastructure/stacks/stirling-pdf/stirling-data
 infrastructure/stacks/stirling-pdf/stirling-pdf/stirling-data
 
-storage/
+/Users/cianmacandeisigh/dev/kings_college_galway/storage
 # Phase 2B (2026-06-25): legacy top-level `storage/` dir is now removed (migrated
 # to `core/storage/`). The `storage/` pattern above is too broad — it also
 # matches the new canonical `core/storage/` and the `tests/storage/` test dir.
@@ -135,6 +135,11 @@ oideachais/datasets/
 # -----------------------------------------------------------------------------
 baml_client/
 .baml_events/
+# baml_src is a regen-time symlink that points at baml/ (so the BAML CLI,
+# which hardcodes baml_src/ as the source directory, can discover the new
+# 3-cluster taxonomy). It is NOT a runtime dependency — consumers import
+# from cianfhoghlaim.baml_client, not from cianfhoghlaim.baml_src.
+/cianfhoghlaim/baml_src
 
 # -----------------------------------------------------------------------------
 # IDE & EDITORS

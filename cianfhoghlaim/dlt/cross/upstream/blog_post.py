@@ -19,7 +19,7 @@ load rows whose first_seen_at is > the high-water mark on the previous
 run. This avoids re-processing the entire blog history on every run.
 
 The schema is enforced by the BAML `ExtractBlogPostMetadata` function
-defined in `oideachais/baml_src/upstream_monitoring.baml`.
+defined in `baml/processing/upstream_monitoring.baml`.
 
 Reference: openspec/changes/upstream-package-monitoring/proposal.md
 """
@@ -49,7 +49,7 @@ DEFAULT_PAYLOADS_ROOT = Path(
     )
 )
 
-# Package enum — must match `oideachais/baml_src/upstream_monitoring.baml:Package`
+# Package enum — must match `baml/processing/upstream_monitoring.baml:Package`
 PACKAGES = frozenset({"motherduck", "dlthub", "lancedb", "cocoindex"})
 
 

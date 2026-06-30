@@ -122,7 +122,7 @@ def _(REPO_ROOT, Path, mo, pl, roots_select):
         "game_showcase/project_data/", "apps/portal/", "agent_os/",
         "hono-api/", "dagster_assets/components/", "image-pipeline/",
         # app / framework internals
-        "baml_src/", "baml_client/", ".baml/", "babel.config",
+        "baml_src/", "baml/", "baml_client/", ".baml/", "babel.config",
         "api/", "functions/", "convex/", "marimo/",
         "notebooks/", "dagster_defs/",
         # tests + generated fixtures

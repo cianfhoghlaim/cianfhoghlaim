@@ -21,7 +21,7 @@ import time); the asset pipeline reads them via the standard DLT
 `@dlt.resource` generator pattern.
 
 The schema is enforced by the BAML `ExtractCultureClaims` function
-defined in `oideachais/baml_src/culture_extraction.baml`.
+defined in `baml/processing/culture_extraction.baml`.
 
 Reference: openspec/changes/ingest-culture-heritage/proposal.md
 """

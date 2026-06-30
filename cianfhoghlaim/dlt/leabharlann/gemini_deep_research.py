@@ -41,7 +41,7 @@ DEFAULT_GEMINI_PATH = Path(
 )
 
 # Top-level Gemini sub-directories map cleanly onto the `GeminiDomain` enum
-# in `baml_src/author_archive.baml`.
+# in `baml/processing/author_archive.baml`.
 GEMINI_DOMAINS: set[str] = {
     "culture",
     "law",

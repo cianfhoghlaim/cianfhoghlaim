@@ -140,7 +140,7 @@ class LearningOutcomeExtractor:
         baml = self._get_baml_client()
 
         try:
-            # Call BAML function (defined in baml_src/)
+            # Call BAML function (defined in baml/)
             result = await baml.ExtractLearningOutcomeRelationships(
                 source_outcome=source_outcome,
                 target_outcomes=target_outcomes,

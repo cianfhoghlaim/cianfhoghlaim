@@ -125,7 +125,7 @@ def _(mo):
         r"""
         ## 2. BAML extraction
 
-        The BAML functions are defined in `baml_src/author_archive.baml`
+        The BAML functions are defined in `baml/processing/author_archive.baml`
         and invoked via `b.ExtractUoGArtifact(pdf_text, file_name, file_type)`
         and `b.ExtractZoteroMetadata(pdf_text, file_name, arxiv_id)`. The
         client `ExtractEn` is English-only (BAAI/bge-large-en-v1.5).

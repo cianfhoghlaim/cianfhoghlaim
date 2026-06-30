@@ -19,7 +19,7 @@ Datasets produced (3 resources):
   jc_short_courses     — 16 short courses (Coding, Chinese, etc.)
   cba_tasks            — CBATask[] (2 per JC subject, BAML-extracted)
 
-BAML extraction (per `baml_src/junior_cycle.baml`):
+BAML extraction (per `baml/education/stages/junior_cycle.baml`):
   b.ExtractJCSpec(text)           -> JCSubjectSpec
   b.ExtractCBADescriptor(text)    -> CBATask
 """
@@ -47,7 +47,7 @@ JC_SOURCE_URLS = [
     "https://www.examinations.ie/?l=en&mc=jc&fs=c",
 ]
 
-# 18 NCCA Junior Cycle subjects (kept in sync with `baml_src/junior_cycle.baml:JuniorCycleSubject`).
+# 18 NCCA Junior Cycle subjects (kept in sync with `baml/education/stages/junior_cycle.baml:JuniorCycleSubject`).
 JC_SUBJECTS: list[str] = [
     "english",
     "gaeilge",

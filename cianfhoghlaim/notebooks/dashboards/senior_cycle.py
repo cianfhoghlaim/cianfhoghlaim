@@ -26,7 +26,7 @@ def _(mo):
         Practical · Arts · LCA (Leaving Certificate Applied).
 
         **Source data**: LanceDB `senior_cycle_knowledge_graph` + Cognee
-        `oideachais.senior_cycle` + BAML `baml_src/curriculum_extraction.baml`.
+        `oideachais.senior_cycle` + BAML `baml/education/_shared/curriculum_relationships.baml`.
 
         See `oideachais/notebooks/analysis_plan/senior_cycle.md` for the full question set.
         """

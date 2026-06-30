@@ -132,7 +132,7 @@ def _add_derived_columns(df, pd):
 
     These are computed from `token_count` (a real column in the dbt model)
     using deterministic helpers. In a future iteration these would be
-    pre-computed by a BAML extraction step (see `oideachais/baml_src/`).
+    pre-computed by a BAML extraction step (see `baml/`).
     """
     out = df.copy()
     # fada_preservation: synthetic 0..1 rate; in the real pipeline this
