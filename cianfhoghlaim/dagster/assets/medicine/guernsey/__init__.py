@@ -1,30 +1,13 @@
 """
-oideachais.dagster_defs.assets.medicine.ggy — Guernsey medicine DLT assets.
+Backward-compat shim — the legacy guernsey medicine @assets have moved to
+dagster.assets.by_domain.medicine (per the v3 consolidation plan,
+consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Per
-https://github.com/cianfhoghlaim/kings_college_galway/issues/19
-(closed 2026-06-15) the lateralise change wired this as one of
-the 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT
-sources.
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
-
-
-@asset(
-    group_name="medicine_ggy",
-    compute_kind="dlt",
-    description=(
-        "States of Guernsey — Health & Social Care. "
-        "Source: cianfhoghlaim.dlt.british_isles.guernsey.medicine.health_social_care."
-    ),
+from cianfhoghlaim.dagster.assets.by_domain import (
+    medicine_guernsey_health_social_care,
 )
-def medicine_ggy_health_social_care(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.guernsey.medicine.health_social_care import (
-        ggy_health_social_care_source,
-    )
 
-    src = ggy_health_social_care_source()
-    rows = list(src.resources["pages"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "ggy_health_social_care"}
-    )
+__all__ = ['medicine_guernsey_health_social_care']

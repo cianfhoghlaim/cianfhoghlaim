@@ -1,25 +1,13 @@
 """
-oideachais.dagster_defs.assets.medicine.sct — Scotland-medicine DLT assets.
+Backward-compat shim — the legacy scotland medicine @assets have moved to
+dagster.assets.by_domain.medicine (per the v3 consolidation plan,
+consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 Scotland-medicine DLT source:
-
-  * nhs_scotland → NHS Scotland (national service commissioner)
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
-
-
-@asset(
-    group_name="medicine_sct",
-    compute_kind="dlt",
-    description="NHS Scotland public pages.",
+from cianfhoghlaim.dagster.assets.by_domain import (
+    medicine_scotland_nhs_scotland,
 )
-def medicine_sct_nhs_scotland(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.scotland.medicine.nhs_scotland import (
-        nhs_scotland_source,
-    )
 
-    src = nhs_scotland_source()
-    rows = list(src.resources["pages"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "nhs_scotland"}
-    )
+__all__ = ['medicine_scotland_nhs_scotland']

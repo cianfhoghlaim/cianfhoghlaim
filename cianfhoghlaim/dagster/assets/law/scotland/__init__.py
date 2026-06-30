@@ -1,23 +1,11 @@
 """
-oideachais.dagster_defs.assets.law.sct — Scotland-law DLT assets.
+Backward-compat shim — the legacy scotland law @asset has moved to
+dagster.assets.by_domain.law.law_scotland_legislation (per the v3 consolidation
+plan, consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 Scotland-law DLT source:
-
-  * legislation → legislation.gov.uk Scotland acts
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
+from cianfhoghlaim.dagster.assets.by_domain import law_scotland_legislation
 
-
-@asset(
-    group_name="law_sct",
-    compute_kind="dlt",
-    description="legislation.gov.uk Scotland acts (statutory register).",
-)
-def law_sct_legislation(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.scotland.law.legislation import sct_legislation_source
-
-    src = sct_legislation_source()
-    rows = list(src.resources["acts"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "sct_legislation"}
-    )
+__all__ = ["law_scotland_legislation"]

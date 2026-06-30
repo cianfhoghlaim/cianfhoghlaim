@@ -1,30 +1,13 @@
 """
-oideachais.dagster_defs.assets.medicine.jey — Jersey medicine DLT assets.
+Backward-compat shim — the legacy jersey medicine @assets have moved to
+dagster.assets.by_domain.medicine (per the v3 consolidation plan,
+consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Per
-https://github.com/cianfhoghlaim/kings_college_galway/issues/19
-(closed 2026-06-15) the lateralise change wired this as one of
-the 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT
-sources.
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
-
-
-@asset(
-    group_name="medicine_jey",
-    compute_kind="dlt",
-    description=(
-        "Government of Jersey — Health & Community Services. "
-        "Source: cianfhoghlaim.dlt.british_isles.jersey.medicine.health_community_services."
-    ),
+from cianfhoghlaim.dagster.assets.by_domain import (
+    medicine_jersey_health_community_services,
 )
-def medicine_jey_health_community_services(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.jersey.medicine.health_community_services import (
-        jey_health_community_services_source,
-    )
 
-    src = jey_health_community_services_source()
-    rows = list(src.resources["pages"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "jey_health_community_services"}
-    )
+__all__ = ['medicine_jersey_health_community_services']

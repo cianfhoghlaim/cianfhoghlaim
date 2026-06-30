@@ -1,25 +1,13 @@
 """
-oideachais.dagster_defs.assets.medicine.ni — Northern Ireland-medicine DLT assets.
+Backward-compat shim — the legacy northern_ireland medicine @assets have moved to
+dagster.assets.by_domain.medicine (per the v3 consolidation plan,
+consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 NI-medicine DLT source:
-
-  * nidirect → nidirect (NI government health pages)
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
-
-
-@asset(
-    group_name="medicine_ni",
-    compute_kind="dlt",
-    description="nidirect (NI government) health pages.",
+from cianfhoghlaim.dagster.assets.by_domain import (
+    medicine_northern_ireland_nidirect,
 )
-def medicine_ni_nidirect(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.northern_ireland.medicine.nidirect import (
-        nidirect_medicine_source,
-    )
 
-    src = nidirect_medicine_source()
-    rows = list(src.resources["pages"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "nidirect"}
-    )
+__all__ = ['medicine_northern_ireland_nidirect']

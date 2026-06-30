@@ -1,25 +1,13 @@
 """
-oideachais.dagster_defs.assets.medicine.wls — Wales-medicine DLT assets.
+Backward-compat shim — the legacy wales medicine @assets have moved to
+dagster.assets.by_domain.medicine (per the v3 consolidation plan,
+consolidate-cianfhoghlaim-subdirs Phase B.6).
 
-Phase 3.3 of the lateralise change. 1 Wales-medicine DLT source:
-
-  * nhs_wales → NHS Wales (national service commissioner)
+This file is preserved for one release as a re-export shim. Update
+your imports to use the canonical by_domain/ path.
 """
-from dagster import MaterializeResult, asset
-
-
-@asset(
-    group_name="medicine_wls",
-    compute_kind="dlt",
-    description="NHS Wales public pages.",
+from cianfhoghlaim.dagster.assets.by_domain import (
+    medicine_wales_nhs_wales,
 )
-def medicine_wls_nhs_wales(context) -> MaterializeResult:
-    from cianfhoghlaim.dlt.british_isles.wales.medicine.nhs_wales import (
-        nhs_wales_source,
-    )
 
-    src = nhs_wales_source()
-    rows = list(src.resources["pages"])
-    return MaterializeResult(
-        metadata={"row_count": len(rows), "source": "nhs_wales"}
-    )
+__all__ = ['medicine_wales_nhs_wales']
