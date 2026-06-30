@@ -1,0 +1,15 @@
+# Locket sidecar config for the llama-swap stack
+# (per .agents/skills/stack-ops/ GOLD_STANDARD pattern)
+#
+# The Locket sidecar injects secrets from Infisical at runtime
+# so we don't need to bake them into the image.
+
+locket:
+  enabled: true
+  vault: dev-baile
+  environment: dev-baile
+  secrets:
+    - path: dev-baile/llama-swap
+      key: hf_token
+      target: /run/secrets/hf_token
+      optional: true

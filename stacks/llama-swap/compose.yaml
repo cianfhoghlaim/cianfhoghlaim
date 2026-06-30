@@ -1,0 +1,32 @@
+name: llama-swap
+
+services:
+  llama-swap:
+    image: ghcr.io/mostlygeek/llama-swap:v166
+    container_name: llama-swap
+    restart: unless-stopped
+    command:
+      - "-config"
+      - "/etc/llama-swap/config.yaml"
+      - "-listen"
+      - ":8080"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Symlink to the v4 config
+      - ./config.yaml:/etc/llama-swap/config.yaml:ro
+      # GGUF cache — populated by the Dagster `model_conversion` asset
+      - ../../stedding/huggingface/gguf:/models/gguf:ro
+      - ../../stedding/huggingface/unsloth:/models/unsloth:ro
+      - ../../stedding/huggingface/mlx-community:/models/mlx-community:ro
+    environment:
+      # Apple Silicon: offload all layers to GPU
+      - LLAMA_ARG_NGL=99
+      - LLAMA_ARG_CTX_SIZE=32768
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

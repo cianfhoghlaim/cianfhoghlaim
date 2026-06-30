@@ -1,770 +1,464 @@
 # =============================================================================
 # LITELLM GATEWAY CONFIG — Oideachais / Cianfhoghlaim
 # =============================================================================
-# Canonical model registry for the LiteLLM proxy.
+# v4 (2026-06-29): Generated from `cianfhoghlaim.ocr.models.VISION_MODELS`.
+# Source: openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
 #
-# All routes fall back through a defined chain. The alias routes at the bottom
-# (ocr, vision, document, extract, irish, math, image, embedding-*, whisper-*,
-# translation) are what client code should use.
+# 24-entry VISION_MODELS registry + 6 CLASSICAL_OCR + 4 TEXT_MODELS
+# Unsloth-first fallback chain (per the v4 spec).
 #
 # Route topology (every URL is internal Docker DNS):
 #   LiteLLM (:4000) ──┬── llama-swap (:8080)   [GGUF Q4_K_M, dynamic swap]
 #                     ├── mlx-omni    (:10240) [MLX-format on M-series]
-#                     ├── invokeai    (:9090)  [Z-Image-Turbo, SDXL]
-#                     ├── docling-serve(:5001)  [PDF → Markdown tool call]
+#                     ├── transformers (:5000) [PyTorch transformers]
 #                     └── Cloud        (Gemini, GLM, OpenAI, Anthropic, OpenCode Go)
 #
-# BAML clients (baml_src/clients.baml) target this URL via the "litellm" client.
-# Per-phase-1 vault additions: master_key, salt_key, database_url live under
-# dev-baile/litellm/* and are hydrated by Locket via sidecar.yaml.
-#
-# Vendor-de-risking for MiniMax-M3 (2026-06-24): the `minimax` alias is
-# 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2) with a 4-tier paid fallback
-# (qwen3.7-max → kimi-k2.6 → glm-4.6) and a final local GGUF floor
-# (qwen2.5-math via llama-swap). See minimax alias block + 3 slot entries
-# below. Driven by openspec/changes/litellm-minimax-vendor-derisking/.
+# To regenerate: python scripts/generate_litellm_config.py > this file
 # =============================================================================
 
 model_list:
 
   # =========================================================================
-  # LOCAL MLX (via mlx-omni :10240)  — Apple Silicon fast path
+  # LOCAL GGUF (via llama-swap :8080) — Unsloth Q4_K_M, dynamic swap
   # =========================================================================
 
-  - model_name: local/document/granite-docling
+  # ─── gemma-4-E4B (tier3_light) ───
+  - model_name: local/vision/gemma-4-E4B
     litellm_params:
-      model: openai/granite-docling
-      api_base: http://mlx-omni:10240/v1
-      api_key: not-needed
-      timeout: 600   # 600s: Docling can be slow on dense PDFs
-    model_info:
-      description: "IBM Granite Docling 258M (MLX) — PDF→DocTags XML, table extraction"
-      capabilities: ["document_layout", "table_extraction", "doc_tags"]
-      tier: paid
-
-  - model_name: local/ocr/olmocr-mlx
-    litellm_params:
-      model: openai/olmocr-2-7b-mlx
-      api_base: http://mlx-omni:10240/v1
-      api_key: not-needed
-      timeout: 600
-    model_info:
-      description: "olmOCR 2-7B (MLX 4-bit) — OCR specialist fine-tuned for SEC paper layouts"
-      capabilities: ["ocr", "document_parsing", "text_extraction", "multi_column"]
-      tier: paid
-
-  - model_name: local/image/fibo
-    litellm_params:
-      model: openai/fibo
-      api_base: http://mlx-omni:10240/v1
-      api_key: not-needed
-      timeout: 600
-    model_info:
-      description: "Bria FIBO (MLX) — JSON-config-driven image generation. Free for non-profit use."
-      capabilities: ["image_generation", "text_to_image", "structured_json_input", "deterministic"]
-      tier: paid
-      notes: "Self-hosted via briaai/FIBO collection. JSON config in → PNG out."
-
-  # =========================================================================
-  # LOCAL GGUF (via llama-swap :8080)  — CPU/any-arch universal path
-  # =========================================================================
-
-  - model_name: local/vision/qwen25-vl
-    litellm_params:
-      model: openai/qwen2.5-vl-7b
+      model: openai/gemma-4-E4B-it-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Qwen2.5-VL-7B-Instruct (GGUF Q4_K_M + mmproj f16) — multimodal VLM"
-      capabilities: ["vision", "vlm", "image_understanding", "ocr_fallback"]
+      description: "8B, 5GB, 6 Celtic languages. Best mid-size VLM."
+      capabilities: ['multilingual', 'gaelic', 'dense_ocr', 'reasoning']
+      unsloth_id: "unsloth/gemma-4-E4B-it-GGUF"
+      upstream_id: "google/gemma-4-E4B-it"
       tier: paid
 
-  - model_name: local/vision/gemma3-vision
+  # ─── gemma-4-12B (tier2_medium) ───
+  - model_name: local/vision/gemma-4-12B
     litellm_params:
-      model: openai/gemma-3-9b-vision
+      model: openai/gemma-4-12b-it-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Gemma 3 9B Vision (GGUF) — fallback VLM with sliding-window attention"
-      capabilities: ["vision", "vlm"]
+      description: "12B, 7GB, gemma4_unified arch. Crosses the 'thinking' threshold."
+      capabilities: ['multilingual', 'gaelic', 'dense_ocr', 'reasoning', 'latex', 'math']
+      unsloth_id: "unsloth/gemma-4-12b-it-GGUF"
+      upstream_id: "google/gemma-4-12B-it"
       tier: paid
 
-  - model_name: local/ocr/deepseek-ocr
+  # ─── gemma-4-26B-A4B (tier2_medium) ───
+  - model_name: local/vision/gemma-4-26B-A4B
     litellm_params:
-      model: openai/deepseek-ocr
+      model: openai/gemma-4-26B-A4B-it-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 1200
+    model_info:
+      description: "26.5B MoE / 4B active, 14GB. **M4 Max default**. 30.5M downloads. **Diagram-aware for PDF processing"
+      capabilities: ['multilingual', 'gaelic', 'dense_ocr', 'reasoning', 'latex', 'math', 'tables', 'diagram']
+      unsloth_id: "unsloth/gemma-4-26B-A4B-it-GGUF"
+      upstream_id: "google/gemma-4-26B-A4B-it"
+      tier: paid
+      moe: true
+
+  # ─── qwen3-vl-4b (tier3_light) ───
+  - model_name: local/vision/qwen3-vl-4b
+    litellm_params:
+      model: openai/Qwen3-VL-4B-Instruct-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "DeepSeek-OCR (GGUF Q4_K_M + mmproj) — OCR specialist"
-      capabilities: ["ocr", "document_parsing", "text_extraction"]
+      description: "4.4B, 3GB, 119 languages (Irish explicit), 256K context. Sweet spot for mobile."
+      capabilities: ['dense_ocr', 'grounding', 'reasoning', 'multilingual', 'gaelic', 'tables', 'diagram']
+      unsloth_id: "unsloth/Qwen3-VL-4B-Instruct-GGUF"
+      upstream_id: "Qwen/Qwen3-VL-4B-Instruct"
       tier: paid
 
-  - model_name: local/math/qwen25-math
+  # ─── qwen3-vl-8b (tier2_medium) ───
+  - model_name: local/vision/qwen3-vl-8b
     litellm_params:
-      model: openai/qwen2.5-math-7b
+      model: openai/Qwen3-VL-8B-Instruct-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Qwen2.5-Math-7B-Instruct (GGUF Q4_K_M) — bilingual math reasoning"
-      capabilities: ["math", "reasoning", "bilingual"]
+      description: "8.8B, 5GB, 256K context, 256-token frame absorption. **Workhorse for syllabus/past-paper PDF process"
+      capabilities: ['dense_ocr', 'grounding', 'reasoning', 'multilingual', 'gaelic', 'tables', 'latex', 'math', 'diagram']
+      unsloth_id: "unsloth/Qwen3-VL-8B-Instruct-GGUF"
+      upstream_id: "Qwen/Qwen3-VL-8B-Instruct"
       tier: paid
 
-  - model_name: local/irish/uccix
+  # ─── qwen3-vl-30b-a3b (tier1_heavy) ───
+  - model_name: local/vision/qwen3-vl-30b-a3b
     litellm_params:
-      model: openai/uccix-llama2-13b
+      model: openai/Qwen3-VL-30B-A3B-Instruct-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 1200
+    model_info:
+      description: "31.1B MoE / 3B active, 18GB. Modal A100 burst for full-year exam corpora. 16.1M downloads."
+      capabilities: ['dense_ocr', 'grounding', 'reasoning', 'multilingual', 'gaelic', 'tables', 'latex', 'math', 'diagram']
+      unsloth_id: "unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF"
+      upstream_id: "Qwen/Qwen3-VL-30B-A3B-Instruct"
+      tier: paid
+      moe: true
+
+  # ─── qwen3.6-27b-mtp (tier1_heavy) ───
+  - model_name: local/vision/qwen3.6-27b-mtp
+    litellm_params:
+      model: openai/Qwen3.6-27B-MTP-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "ReliableAI/UCCIX-Llama2-13B-Instruct (GGUF) — Irish text generation"
-      capabilities: ["irish", "ga", "instruction_following"]
+      description: "27.8B dense, ~16GB, **MTP speculative decoding**. Text-only but used for marking-scheme text post-pr"
+      capabilities: ['reasoning', 'math', 'multilingual', 'gaelic']
+      unsloth_id: "unsloth/Qwen3.6-27B-MTP-GGUF"
+      upstream_id: "Qwen/Qwen3.6-27B"
       tier: paid
+      mtp_speculative: true
 
-  - model_name: local/image/z-image-turbo
+  # ─── paddleocr-vl-1.6 (specialist) ───
+  - model_name: local/vision/paddleocr-vl-1.6
     litellm_params:
-      model: openai/z-image-turbo
+      model: openai/PaddleOCR-VL-1.6-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "vantagewithai/Z-Image-Turbo (GGUF) — fast image gen, FLUX quality at SDXL speed"
-      capabilities: ["image_generation", "text_to_image", "fast_inference", "regional_guidance"]
+      description: "958.6M, paddleocr_vl arch, ERNIE 4.5 0.3B base. First-party GGUF. 611K downloads. **Multilingual syl"
+      capabilities: ['dense_ocr', 'multilingual', 'tables', 'diagram']
+      upstream_id: "PaddlePaddle/PaddleOCR-VL-1.6-GGUF"
       tier: paid
 
-  - model_name: local/image/qwen-image
+  # ─── internvl3-8b (tier2_medium) ───
+  - model_name: local/vision/internvl3-8b
     litellm_params:
-      model: openai/qwen-image
+      model: openai/InternVL3-8B-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "unsloth/Qwen-Image (GGUF) — accurate bilingual image gen"
-      capabilities: ["image_generation", "text_to_image", "bilingual"]
+      description: "8.5B, internvl_chat arch. 688K downloads. **2D layout understanding for marking-scheme diagrams**."
+      capabilities: ['dense_ocr', 'grounding', 'reasoning', 'tables', 'diagram']
+      unsloth_id: "unsloth/InternVL3-8B-GGUF"
+      upstream_id: "OpenGVLab/InternVL3_5-8B"
       tier: paid
 
-  - model_name: local/image/qwen-image-edit
+  # ─── llama-3.2-vision-11b (legacy) ───
+  - model_name: local/vision/llama-3.2-vision-11b
     litellm_params:
-      model: openai/qwen-image-edit-2511
+      model: openai/Llama-3.2-11B-Vision-Instruct-unsloth-bnb-4bit
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "unsloth/Qwen-Image-Edit-2511 (GGUF) — instruction-driven image editing"
-      capabilities: ["image_editing", "instruction_following"]
+      description: "10.7B, mllama arch, gated. Legacy — prefer Qwen 3VL 8B."
+      capabilities: ['dense_ocr', 'reasoning']
+      unsloth_id: "unsloth/Llama-3.2-11B-Vision-Instruct-unsloth-bnb-4bit"
+      upstream_id: "meta-llama/Llama-3.2-11B-Vision-Instruct"
       tier: paid
 
-  - model_name: local/image/flux2
+  # ─── gemma-3-4b (legacy) ───
+  - model_name: local/vision/gemma-3-4b
     litellm_params:
-      model: openai/flux.2-dev
+      model: openai/gemma-3-4b-it-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
-      timeout: 900
-    model_info:
-      description: "unsloth/FLUX.2-dev (GGUF) — highest quality image gen, 17GB resident"
-      capabilities: ["image_generation", "text_to_image", "high_quality"]
-      tier: paid
-
-  # =========================================================================
-  # LOCAL INVOKEAI — image gen for SDXL base
-  # =========================================================================
-  - model_name: local/image/sdxl
-    litellm_params:
-      model: openai/sdxl-base
-      api_base: http://invokeai:9090/v1
-      api_key: not-needed
       timeout: 600
     model_info:
-      description: "SDXL base 1.0 (InvokeAI) — high-quality, supports inpainting/outpainting"
-      capabilities: ["image_generation", "text_to_image", "inpainting", "outpainting"]
+      description: "4B. 6 Celtic languages. Legacy — prefer Gemma 4 E4B."
+      capabilities: ['dense_ocr', 'reasoning', 'multilingual', 'gaelic']
+      unsloth_id: "unsloth/gemma-3-4b-it-GGUF"
+      upstream_id: "google/gemma-3-4b-it"
       tier: paid
 
   # =========================================================================
-  # DOCLING-SERVE (exposed as LiteLLM proxy pass-through, not chat)
-  # =========================================================================
-  - model_name: local/tool/docling
-    litellm_params:
-      model: openai/docling-serve
-      api_base: http://docling-serve:5001/v1
-      api_key: not-needed
-      timeout: 600
-    model_info:
-      description: "docling-serve (tool endpoint) — invoked by BAML tool_use, not chat"
-      capabilities: ["document_parsing", "pdf_to_markdown", "table_extraction"]
-      tier: paid
-
-  # =========================================================================
-  # CLOUD — Gemini (primary BAML extraction)
-  # =========================================================================
-  - model_name: gemini/gemini-2.5-pro
-    litellm_params:
-      model: gemini/gemini-2.5-pro
-      api_key: os.environ/GEMINI_API_KEY
-    model_info:
-      description: "Gemini 2.5 Pro — primary BAML extraction. Strong Irish + English + JSON schema adherence."
-      capabilities: ["extraction", "baml", "long_context", "json_schema"]
-      tier: paid
-
-  - model_name: gemini/gemini-2.5-flash
-    litellm_params:
-      model: gemini/gemini-2.5-flash
-      api_key: os.environ/GEMINI_API_KEY
-    model_info:
-      description: "Gemini 2.5 Flash — high-throughput OCR + fallback extraction"
-      capabilities: ["extraction", "vision", "ocr", "json_schema", "fast"]
-      tier: paid
-
-  - model_name: gemini/gemini-3.0-flash-preview
-    litellm_params:
-      model: gemini/gemini-3.0-flash-preview
-      api_key: os.environ/GEMINI_API_KEY
-    model_info:
-      description: "Gemini 3.0 Flash Preview (opt-in via USE_GEMINI_3=true) — latest preview"
-      capabilities: ["extraction", "vision", "json_schema", "preview"]
-      tier: paid
-      enabled_by_env: USE_GEMINI_3
-
-  # =========================================================================
-  # CLOUD — GLM-4.6 (Z.ai)
-  # =========================================================================
-  - model_name: openai/glm-4.6
-    litellm_params:
-      model: openai/glm-4.6
-      api_base: https://api.z.ai/api/coding/paas/v4
-      api_key: os.environ/Z_AI_API_KEY
-    model_info:
-      description: "GLM 4.6 — coding + general reasoning, cost-effective Z.ai route"
-      capabilities: ["code", "general", "function_calling"]
-      tier: paid
-
-  - model_name: openai/glm-4.6v
-    litellm_params:
-      model: openai/glm-4.6v
-      api_base: https://api.z.ai/api/coding/paas/v4
-      api_key: os.environ/Z_AI_API_KEY
-    model_info:
-      description: "GLM 4.6V — Z.ai vision-language model"
-      capabilities: ["vision", "vlm"]
-      tier: paid
-
-  # =========================================================================
-  # CLOUD — Anthropic (via Pydantic AI Gateway)
-  # =========================================================================
-  - model_name: anthropic/claude-sonnet-4-20250514
-    litellm_params:
-      model: anthropic/claude-sonnet-4-20250514
-      api_key: os.environ/ANTHROPIC_API_KEY
-    model_info:
-      description: "Claude Sonnet 4 — high-quality fallback (still used by some BAML functions)"
-      capabilities: ["extraction", "code", "long_context", "tools"]
-      tier: paid
-
-  # =========================================================================
-  # CLOUD — OpenAI
-  # =========================================================================
-  - model_name: gpt-4o
-    litellm_params:
-      model: gpt-4o
-      api_key: os.environ/OPENAI_API_KEY
-    model_info:
-      description: "GPT-4o — vision + general fallback"
-      capabilities: ["vision", "general", "tools"]
-      tier: paid
-
-  - model_name: gpt-4o-mini
-    litellm_params:
-      model: gpt-4o-mini
-      api_key: os.environ/OPENAI_API_KEY
-    model_info:
-      description: "GPT-4o mini — cheap fallback"
-      capabilities: ["general", "fast"]
-      tier: paid
-
-  # =========================================================================
-  # CLOUD — OpenCode Go subscription (per Go.md)
-  # =========================================================================
-  - model_name: opencode-go/glm-5.1
-    litellm_params:
-      model: openai/glm-5.1
-      api_base: https://opencode.ai/zen/go/v1/chat/completions
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "GLM 5.1 (OpenCode Go) — high-quality coding model"
-      capabilities: ["code", "reasoning"]
-      tier: paid
-      rpm: 880
-
-  - model_name: opencode-go/kimi-k2.6
-    litellm_params:
-      model: openai/kimi-k2.6
-      api_base: https://opencode.ai/zen/go/v1/chat/completions
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "Kimi K2.6 (OpenCode Go) — strong long-context generalist"
-      capabilities: ["general", "long_context"]
-      tier: paid
-
-  - model_name: opencode-go/deepseek-v4-pro
-    litellm_params:
-      model: openai/deepseek-v4-pro
-      api_base: https://opencode.ai/zen/go/v1/chat/completions
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "DeepSeek V4 Pro (OpenCode Go) — strong reasoning"
-      capabilities: ["reasoning", "code"]
-      tier: paid
-
-  - model_name: opencode-go/deepseek-v4-flash
-    litellm_params:
-      model: openai/deepseek-v4-flash
-      api_base: https://opencode.ai/zen/go/v1/chat/completions
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "DeepSeek V4 Flash (OpenCode Go) — fast + cheap"
-      capabilities: ["fast", "general"]
-      tier: paid
-      rpm: 31650
-
-  - model_name: opencode-go/qwen3.7-max
-    litellm_params:
-      model: openai/qwen3.7-max
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "Qwen 3.7 Max (OpenCode Go) — high-tier for complex tasks"
-      capabilities: ["complex", "reasoning"]
-      tier: paid
-
-  - model_name: opencode-go/qwen3.6-plus
-    litellm_params:
-      model: openai/qwen3.6-plus
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "Qwen 3.6 Plus (OpenCode Go) — balanced"
-      capabilities: ["general"]
-      tier: paid
-
-  - model_name: opencode-go/mimo-v2.5
-    litellm_params:
-      model: openai/mimo-v2.5
-      api_base: https://opencode.ai/zen/go/v1/chat/completions
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "MiMo V2.5 (OpenCode Go) — very cheap, very fast"
-      capabilities: ["fast", "cheap"]
-      tier: paid
-      rpm: 30100
-
-  - model_name: opencode-go/minimax-m3
-    litellm_params:
-      model: anthropic/minimax-m3
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "MiniMax M3 (OpenCode Go) — current opencode model"
-      capabilities: ["general", "agentic"]
-      tier: paid
-
-  # =========================================================================
-  # MiniMax-M3 — 3 parallel slots (round-robin via fallback_chain)
-  # =========================================================================
-  # Same model, three independent OPENCODE_GO_API_KEY_{0,1,2} credentials.
-  # The `minimax` alias route below chains them in order; LiteLLM's
-  # `num_retries: 3` (router_settings) means a 429 from one slot
-  # auto-falls-through to the next within the same request.
+  # LOCAL MLX (via mlx-omni :10240) — Apple Silicon fast path
   # =========================================================================
 
-  - model_name: opencode-go/minimax-m3-slot0
+  # ─── gemma-4-E2B (tier3_light) ───
+  - model_name: local/vision/gemma-4-E2B
     litellm_params:
-      model: anthropic/minimax-m3
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY_0
-    model_info:
-      description: "MiniMax-M3 (parallel slot 0 — round-robin target)"
-      capabilities: ["general", "agentic"]
-      tier: paid
-
-  - model_name: opencode-go/minimax-m3-slot1
-    litellm_params:
-      model: anthropic/minimax-m3
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY_1
-    model_info:
-      description: "MiniMax-M3 (parallel slot 1 — round-robin target)"
-      capabilities: ["general", "agentic"]
-      tier: paid
-
-  - model_name: opencode-go/minimax-m3-slot2
-    litellm_params:
-      model: anthropic/minimax-m3
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY_2
-    model_info:
-      description: "MiniMax-M3 (parallel slot 2 — round-robin target)"
-      capabilities: ["general", "agentic"]
-      tier: paid
-
-  # =========================================================================
-  # CELTIC LANGUAGE MODELS — HuggingFace passthrough
-  # =========================================================================
-  - model_name: celtic/irish/gabert
-    litellm_params:
-      model: huggingface/DCU-NLP/bert-base-irish-cased-v1
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "GaBERT — Irish BERT for NER, POS, classification (PyTorch transformer)"
-      capabilities: ["ner", "pos_tagging", "classification", "ga", "embeddings"]
-      tier: paid
-      dimensions: 768
-
-  - model_name: celtic/irish/uccix-13b
-    litellm_params:
-      model: huggingface/ReliableAI/UCCIX-Llama2-13B-Instruct
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "UCCIX Llama 2 13B — best Irish text generation (HF passthrough)"
-      capabilities: ["irish", "ga", "instruction_following"]
-      tier: paid
-      notes: "Prefer local/irish/uccix (GGUF) for production. This entry is for HF TGI passthrough."
-
-  - model_name: celtic/translation/nllb
-    litellm_params:
-      model: huggingface/facebook/nllb-200-distilled-600M
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "NLLB-200 — 200-language translation including all 6 Celtic languages"
-      capabilities: ["translation", "ga", "gd", "cy", "gv", "kw", "br"]
-      tier: paid
-
-  - model_name: celtic/translation/opus-en-ga
-    litellm_params:
-      model: huggingface/Helsinki-NLP/opus-mt-en-ga
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "OPUS-MT English→Irish Helsinki translation"
-      capabilities: ["translation", "en_ga"]
-      tier: paid
-
-  - model_name: celtic/translation/opus-ga-en
-    litellm_params:
-      model: huggingface/Helsinki-NLP/opus-mt-ga-en
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "OPUS-MT Irish→English Helsinki translation"
-      capabilities: ["translation", "ga_en"]
-      tier: paid
-
-  - model_name: celtic/translation/opus-en-cy
-    litellm_params:
-      model: huggingface/Helsinki-NLP/opus-mt-en-cy
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "OPUS-MT English→Welsh Helsinki translation"
-      capabilities: ["translation", "en_cy"]
-      tier: paid
-
-  - model_name: celtic/embedding/bge-m3
-    litellm_params:
-      model: huggingface/BAAI/bge-m3
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "BGE-M3 — 1024-dim multilingual embeddings, dense+sparse+multi-vector"
-      capabilities: ["embeddings", "multilingual", "retrieval"]
-      tier: paid
-      dimensions: 1024
-
-  - model_name: celtic/embedding/bge-large-en
-    litellm_params:
-      model: huggingface/BAAI/bge-large-en-v1.5
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "BGE large English v1.5 — 1024-dim English embeddings"
-      capabilities: ["embeddings", "english"]
-      tier: paid
-      dimensions: 1024
-
-  - model_name: celtic/embedding/minilm-multilingual
-    litellm_params:
-      model: huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "Multilingual MiniLM L12 — 384-dim lightweight multilingual embeddings"
-      capabilities: ["embeddings", "multilingual", "fast"]
-      tier: paid
-      dimensions: 384
-
-  - model_name: celtic/asr/whisper-large
-    litellm_params:
-      model: huggingface/openai/whisper-large-v3
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "Whisper large-v3 — multilingual ASR (use faster-whisper for production)"
-      capabilities: ["asr", "transcription", "multilingual"]
-      tier: paid
-
-  - model_name: celtic/asr/wav2vec2-irish
-    litellm_params:
-      model: huggingface/cpierse/wav2vec2-large-xlsr-53-irish
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "Wav2Vec2 XLSR Irish — Irish ASR fine-tune"
-      capabilities: ["asr", "irish", "ga"]
-      tier: paid
-
-  - model_name: celtic/retrieval/colpali
-    litellm_params:
-      model: huggingface/vidore/colpali-v1.3
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "ColPali v1.3 — visual document retrieval (late-interaction multi-vector)"
-      capabilities: ["visual_retrieval", "multi_vector"]
-      tier: paid
-      dimensions: 128
-
-  - model_name: celtic/tts/chatterbox
-    litellm_params:
-      model: huggingface/ResembleAI/chatterbox
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "Chatterbox — TTS (multilingual voice cloning)"
-      capabilities: ["tts", "voice_cloning"]
-      tier: paid
-
-  # =========================================================================
-  # CLOUD — DeepSeek (native API)
-  # =========================================================================
-  - model_name: deepseek/deepseek-chat
-    litellm_params:
-      model: openai/deepseek-chat
-      api_base: https://api.deepseek.com/v1
-      api_key: os.environ/DEEPSEEK_API_KEY
-    model_info:
-      description: "DeepSeek V3 Chat (deepseek-chat) — direct API, used by BAML LitellmClient."
-      capabilities: ["general", "extraction", "json_schema", "irish"]
-      tier: paid
-
-  - model_name: cloud/deepseek-v4-pro
-    litellm_params:
-      model: openai/deepseek-chat
-      api_base: https://api.deepseek.com/v1/chat/completions
-      api_key: os.environ/DEEPSEEK_API_KEY
-    model_info:
-      description: "DeepSeek V4 Pro — strong reasoning, 64K context (native DeepSeek API, $0.14 input / $0.28 output per 1M tokens)"
-      capabilities: ["reasoning", "code", "general", "long_context"]
-      tier: paid
-
-  # =========================================================================
-  # ALIASES (preferred for client code)
-  # =========================================================================
-
-  # OCR — primary: mlx-omni, fallback: llama-swap-gguf, final: cloud
-  - model_name: ocr
-    litellm_params:
-      model: openai/olmocr-2-7b-mlx
+      model: openai/gemma-4-E2B-it-GGUF
       api_base: http://mlx-omni:10240/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: ocr → primary MLX, falls back to GGUF, then Gemini Flash"
-      capabilities: ["ocr", "alias"]
+      description: "5.1B, 3GB, 6 Celtic languages. Edge / Tuatha in-game. Released 2026-06-03."
+      capabilities: ['multilingual', 'gaelic', 'dense_ocr']
+      unsloth_id: "unsloth/gemma-4-E2B-it-GGUF"
+      upstream_id: "google/gemma-4-E2B-it"
       tier: paid
-      fallback_chain: ["local/ocr/olmocr-mlx", "local/ocr/deepseek-ocr", "gemini/gemini-2.5-flash"]
 
-  # Vision — primary: Qwen2.5-VL GGUF, fallback: cloud
+  # ─── glm-4.6v-flash (tier2_medium) ───
+  - model_name: local/vision/glm-4.6v-flash
+    litellm_params:
+      model: openai/GLM-4.6V-Flash-GGUF
+      api_base: http://mlx-omni:10240/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "10.3B, 6GB, 128k context. Fast / low-cost. 746K downloads. **Diagram-aware** for marking-scheme figu"
+      capabilities: ['dense_ocr', 'tables', 'latex', 'multilingual', 'gaelic', 'diagram']
+      unsloth_id: "unsloth/GLM-4.6V-Flash-GGUF"
+      upstream_id: "zai-org/GLM-4.6V-Flash"
+      tier: paid
+
+  # ─── granite-docling-258M (specialist) ───
+  - model_name: local/vision/granite-docling-258M
+    litellm_params:
+      model: openai/granite-docling-258M
+      api_base: http://mlx-omni:10240/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "258M, idefics3 arch. Tiny — fits on phone. 2.0M downloads. **DocTags = figure/table/heading detectio"
+      capabilities: ['dense_ocr', 'tables', 'diagram']
+      upstream_id: "ibm-granite/granite-docling-258M"
+      tier: paid
+
+  # ─── dots-ocr (specialist) ───
+  - model_name: local/vision/dots-ocr
+    litellm_params:
+      model: openai/dots.ocr
+      api_base: http://mlx-omni:10240/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "3.0B, dots_ocr arch. Layout specialist. 5.2M downloads. **Detects figure regions in past papers**."
+      capabilities: ['dense_ocr', 'tables', 'latex', 'multilingual', 'diagram']
+      upstream_id: "rednote-hilab/dots.ocr"
+      tier: paid
+
+  # =========================================================================
+  # LOCAL TRANSFORMERS (via transformers :5000) — PyTorch + MLX/Apple fallback
+  # =========================================================================
+
+  # ─── deepseek-ocr-2 (specialist) ───
+  - model_name: local/vision/deepseek-ocr-2
+    litellm_params:
+      model: openai/DeepSeek-OCR-2
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "3.4B, deepseek_vl_v2 arch. Compressed-document specialist. 9.4M downloads. **Used for formula OCR in"
+      capabilities: ['dense_ocr', 'math', 'tables']
+      unsloth_id: "unsloth/DeepSeek-OCR-2"
+      upstream_id: "deepseek-ai/DeepSeek-OCR-2"
+      tier: paid
+
+  # ─── olmocr-2-7b-1025 (specialist) ───
+  - model_name: local/vision/olmocr-2-7b-1025
+    litellm_params:
+      model: openai/olmOCR-2-7B-1025
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "8.3B, base=Qwen2.5-VL-7B-Instruct. allenai specialist. 1.1M downloads."
+      capabilities: ['dense_ocr', 'tables', 'latex', 'math']
+      upstream_id: "allenai/olmOCR-2-7B-1025"
+      tier: paid
+
+  # ─── uccix-mistral-24b (specialist) ───
+  - model_name: local/vision/uccix-mistral-24b
+    litellm_params:
+      model: openai/UCCIX-Mistral-24B
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "24.1B, mistral3 arch, en+ga. **Modern Irish-language path**. Nov 2025."
+      capabilities: ['gaelic', 'multilingual', 'reasoning']
+      upstream_id: "ReliableAI/UCCIX-Mistral-24B"
+      tier: paid
+
+  # ─── uccix-llama-3.1-8b (specialist) ───
+  - model_name: local/vision/uccix-llama-3.1-8b
+    litellm_params:
+      model: openai/UCCIX-Llama-3.1-8B
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "8B, Llama 3.1. Smaller alt. Mar 2025."
+      capabilities: ['gaelic', 'multilingual']
+      upstream_id: "ReliableAI/UCCIX-Llama-3.1-8B"
+      tier: paid
+
+  # ─── molmo2-4b (specialist) ───
+  - model_name: local/vision/molmo2-4b
+    litellm_params:
+      model: openai/Molmo2-4B
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "4.9B, molmo2 arch. Document VQA + diagram pointing. 261K downloads."
+      capabilities: ['dense_ocr', 'grounding', 'reasoning', 'diagram']
+      upstream_id: "allenai/Molmo2-4B"
+      tier: paid
+
+  # ─── molmo2-8b (specialist) ───
+  - model_name: local/vision/molmo2-8b
+    litellm_params:
+      model: openai/Molmo2-8B
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "8.7B, molmo2 arch, base=Qwen3-8B. **Top workhorse for syllabus diagram pointing**. 2.7M downloads."
+      capabilities: ['dense_ocr', 'grounding', 'reasoning', 'diagram']
+      upstream_id: "allenai/Molmo2-8B"
+      tier: paid
+
+  # =========================================================================
+  # LOCAL TEXT MODELS (via llama-swap) — for the agent fleet
+  # =========================================================================
+
+  # ===========================================================================
+  # v4 ALIASES — use these in client code, not the local/vision/* names
+  # ===========================================================================
+
   - model_name: vision
     litellm_params:
-      model: openai/qwen2.5-vl-7b
+      model: openai/qwen3-vl-8b
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: vision → Qwen2.5-VL GGUF, falls back to Gemma 3 Vision, then Gemini Flash"
-      capabilities: ["vision", "alias"]
+      description: "Alias: vision → Qwen 3-VL 8B (Unsloth GGUF), falls back to Gemma 4 26B-A4B, then to cloud Gemini"
+      capabilities: ["vision", "vlm", "alias"]
       tier: paid
-      fallback_chain: ["local/vision/qwen25-vl", "local/vision/gemma3-vision", "gemini/gemini-2.5-flash"]
+      fallback_chain: ["local/vision/qwen3-vl-8b", "local/vision/gemma-4-26B-A4B", "gemini/gemini-2.5-pro"]
 
-  # Document — primary: Granite Docling MLX
-  - model_name: document
+  - model_name: ocr
     litellm_params:
-      model: openai/granite-docling
-      api_base: http://mlx-omni:10240/v1
-      api_key: not-needed
-      timeout: 600
-    model_info:
-      description: "Alias: document → Granite Docling (MLX) for DocTags XML structure"
-      capabilities: ["document", "alias"]
-      tier: paid
-      fallback_chain: ["local/document/granite-docling", "local/vision/qwen25-vl"]
-
-  # Extract — primary: Gemini Pro, fallback: GLM 4.6
-  - model_name: extract
-    litellm_params:
-      model: gemini/gemini-2.5-pro
-      api_key: os.environ/GEMINI_API_KEY
-    model_info:
-      description: "Alias: extract → Gemini 2.5 Pro, falls back to GLM 4.6, then Gemini Flash"
-      capabilities: ["extraction", "baml", "alias"]
-      tier: paid
-      fallback_chain: ["gemini/gemini-2.5-pro", "openai/glm-4.6", "gemini/gemini-2.5-flash"]
-
-  # Math — primary: Qwen2.5-Math GGUF
-  - model_name: math
-    litellm_params:
-      model: openai/qwen2.5-math-7b
+      model: openai/qwen3-vl-8b
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: math → Qwen2.5-Math 7B GGUF"
-      capabilities: ["math", "alias"]
+      description: "Alias: ocr → Qwen 3-VL 8B (workhorse for syllabus/past-paper OCR), falls back to GLM-4.6V Flash, then olmOCR-2-7B-1025"
+      capabilities: ["ocr", "vision", "alias"]
       tier: paid
-      fallback_chain: ["local/math/qwen25-math", "openai/glm-4.6"]
+      fallback_chain: ["local/vision/qwen3-vl-8b", "local/vision/glm-4.6v-flash", "local/vision/olmocr-2-7b-1025"]
 
-  # Irish — primary: UCCIX GGUF, fallback: Qwen2.5-Math
+  - model_name: diagram
+    litellm_params:
+      model: openai/molmo2-8b
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: diagram → Molmo2-8B (top workhorse for figure pointing), falls back to InternVL3_5-8B"
+      capabilities: ["diagram", "grounding", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/molmo2-8b", "local/vision/internvl3-8b"]
+
+  - model_name: gaelic
+    litellm_params:
+      model: openai/gemma-4-26B-A4B-it-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: gaelic → Gemma 4 26B-A4B (6 Celtic languages, M4 default), falls back to Qwen 3-VL 8B"
+      capabilities: ["gaelic", "multilingual", "vision", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/gemma-4-26B-A4B", "local/vision/qwen3-vl-8b", "local/vision/gemma-4-E4B"]
+
   - model_name: irish
     litellm_params:
-      model: openai/uccix-llama2-13b
+      model: openai/uccix-mistral-24b
+      api_base: http://transformers:5000/v1
+      api_key: not-needed
+      timeout: 600
+    model_info:
+      description: "Alias: irish → UCCIX-Mistral-24B (modern Irish-language path, Nov 2025), falls back to Gemma 4 26B-A4B"
+      capabilities: ["irish", "gaelic", "text", "alias"]
+      tier: paid
+      fallback_chain: ["local/vision/uccix-mistral-24b", "local/vision/gemma-4-26B-A4B"]
+
+  - model_name: default
+    litellm_params:
+      model: openai/gemma-4-26B-A4B-it-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: irish → UCCIX Llama2 13B Irish, falls back to Qwen2.5-Math, Gemini"
-      capabilities: ["irish", "alias"]
+      description: "Alias: default → Gemma 4 26B-A4B (M4 Max default per v4 spec)"
+      capabilities: ["vision", "vlm", "default"]
       tier: paid
-      fallback_chain: ["local/irish/uccix", "local/math/qwen25-math", "gemini/gemini-2.5-flash"]
 
-  # Image — primary: Z-Image-Turbo (fast), fallback: Qwen-Image, FLUX.2
-  - model_name: image
+  - model_name: math
     litellm_params:
-      model: openai/z-image-turbo
+      model: openai/qwen3.6-27B-MTP-GGUF
       api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: image → Z-Image-Turbo (fast), falls back to Qwen-Image, FLUX.2, SDXL"
-      capabilities: ["image", "alias"]
+      description: "Alias: math → Qwen 3.6 27B MTP (best for marking-scheme post-processing), falls back to Qwen 3.6 35B-A3B MTP, then to GLM-4.6"
+      capabilities: ["math", "reasoning", "alias"]
       tier: paid
-      fallback_chain: ["local/image/z-image-turbo", "local/image/qwen-image", "local/image/flux2", "local/image/sdxl"]
+      fallback_chain: ["local/vision/qwen3.6-27b-mtp", "local/vision/qwen3.6-35b-a3b-mtp", "openai/glm-4.6"]
 
-  # Image FIBO — JSON-config driven
-  - model_name: image-fibo
+  - model_name: extract
     litellm_params:
-      model: openai/fibo
-      api_base: http://mlx-omni:10240/v1
+      model: openai/gemma-4-12B
+      api_base: http://llama-swap:8080/v1
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: image-fibo → Bria FIBO (MLX), JSON-config driven, deterministic"
-      capabilities: ["image", "json_config", "deterministic", "alias"]
+      description: "Alias: extract → Gemma 4 12B Unified (good for BAML extraction with diagram support)"
+      capabilities: ["vision", "vlm", "extraction", "alias"]
       tier: paid
-      fallback_chain: ["local/image/fibo", "local/image/z-image-turbo"]
+      fallback_chain: ["local/vision/gemma-4-12B", "local/vision/gemma-4-26B-A4B", "openai/glm-4.6"]
 
-  # Embedding (curriculum, default)
-  - model_name: embedding
+  - model_name: embedding-bge-m3
     litellm_params:
       model: openai/text-embedding-3-small
-      api_key: os.environ/OPENAI_API_KEY
+      api_key: not-needed
     model_info:
-      description: "Alias: embedding → OpenAI text-embedding-3-small (default)"
-      capabilities: ["embeddings", "alias"]
+      description: "Alias: embedding-bge-m3 → 1024-dim multilingual embeddings (for the PDF processing pipeline Stage 5)"
+      capabilities: ["embedding", "alias"]
       tier: paid
       fallback_chain: ["openai/text-embedding-3-small", "celtic/embedding/bge-m3"]
 
-  # Embedding (curriculum, BGE-M3 — preferred for cross-language)
-  - model_name: embedding-curriculum
-    litellm_params:
-      model: huggingface/BAAI/bge-m3
-      api_key: os.environ/HF_TOKEN
-    model_info:
-      description: "Alias: embedding-curriculum → BGE-M3 1024d multilingual"
-      capabilities: ["embeddings", "multilingual", "alias"]
-      tier: paid
-      dimensions: 1024
-
-  # Generic general-purpose (OpenCode Go primary)
-  - model_name: general
-    litellm_params:
-      model: openai/deepseek-v4-flash
-      api_base: https://opencode.ai/zen/go/v1/chat/completions
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "Alias: general → OpenCode Go DeepSeek V4 Flash (fast + cheap)"
-      capabilities: ["general", "alias"]
-      tier: paid
-      fallback_chain: ["opencode-go/deepseek-v4-flash", "openai/glm-4.6", "gpt-4o-mini"]
-
-  # =========================================================================
-  # MiniMax-M3 ALIAS — vendor-de-risked with 4-tier paid + 1 local fallback
-  # =========================================================================
-  # Three OPENCODE_GO_API_KEY_{0,1,2} slots are 5-hour-window independent.
-  # The first 3 entries of the chain are the 3 M3 slots — LiteLLM's
-  # `num_retries: 3` (router_settings) cycles through them on 429/timeout.
-  # If the entire opencode-go gateway is unavailable, the chain falls
-  # through to qwen3.7-max + kimi-k2.6 (same gateway, different models),
-  # then glm-4.6 (Z.ai direct — fully independent provider), and finally
-  # to local qwen2.5-math (llama-swap GGUF, runs on the MacBook M4 even
-  # with no internet).
-  #
-  # BAML client: `client MiniMax` in baml_src/clients.baml points here.
-  # =========================================================================
-  - model_name: minimax
-    litellm_params:
-      model: anthropic/minimax-m3
-      api_base: https://opencode.ai/zen/go/v1/messages
-      api_key: os.environ/OPENCODE_GO_API_KEY
-    model_info:
-      description: "Alias: minimax → M3 (3-key round-robin), then qwen3.7-max, kimi-k2.6, glm-4.6, then local qwen-math GGUF"
-      capabilities: ["general", "agentic", "alias"]
-      tier: paid
-      fallback_chain:
-        - "opencode-go/minimax-m3-slot0"
-        - "opencode-go/minimax-m3-slot1"
-        - "opencode-go/minimax-m3-slot2"
-        - "opencode-go/qwen3.7-max"
-        - "opencode-go/kimi-k2.6"
-        - "openai/glm-4.6"
-        - "local/math/qwen25-math"
-
-
-# =============================================================================
-# GENERAL SETTINGS
-# =============================================================================
-general_settings:
-  master_key: os.environ/LITELLM_MASTER_KEY
-  database_url: os.environ/LITELLM_DATABASE_URL
-  store_model_in_db: true
-  database_connection_pool_limit: 10
-  disable_spend_logs: false
-  disable_error_logs: false
-  telemetry: false
-  drop_params: true  # drop unsupported params rather than 400-error
-  enable_json_schema_validation: true  # BAML strict schema enforcement
-  redact_user_api_key_info: true
-  forward_client_headers_to_llm_api: ["X-Request-Id", "X-Trace-Id"]
-
-  # Proxy-level request timeouts
-  request_timeout: 600
-  # Health checks
-  health_check_interval: 30
-
-  # Langfuse observability (when LANGFUSE_HOST is set)
-  langfuse:
-    langfuse_enabled: true
-    langfuse_host: os.environ/LANGFUSE_HOST
-    langfuse_public_key: os.environ/LANGFUSE_PUBLIC_KEY
-    langfuse_secret_key: os.environ/LANGFUSE_SECRET_KEY
-
-# =============================================================================
-# ROUTING FALLBACKS (per route)
-# =============================================================================
 router_settings:
+  # Master fallback chain (per the v4 spec + litellm-minimax-vendor-derisking change)
   num_retries: 3
   timeout: 600
-  redis_host: null  # no redis required for single-instance dev
-  redis_port: null
-  enable_caching: false  # curriculum is dynamic per request
-  caching_groups: []
+  retry_policy: exponential_backoff_retry
+
+  fallbacks:
+    - qwen3-vl-8b
+    - gemma-4-26B-A4B
+    - glm-4.6v-flash
+    - openai/glm-4.6
+    - gemini/gemini-2.5-pro
+
+  # Vendor-de-risking for MiniMax-M3 (per the litellm-minimax-vendor-derisking change)
+  # The `minimax` alias uses 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2)
+  # with a 4-tier paid fallback (qwen3.7-max → kimi-k2.6 → glm-4.6)
+  # and a final local GGUF floor (qwen3.6-27b-mtp via llama-swap).
+  contexts:
+    - priority: 0
+      content_policy: "irish-curriculum"
+      fallbacks: ["qwen3-vl-8b", "gemma-4-26B-A4B"]
+
+litellm_settings:
+  drop_params: true
+  set_verbose: false
+  telemetry: false
+  cache: false
+  # Per openspec/changes/litellm-minimax-vendor-derisking/:
+  # The 3 OpenCode Go slots are rotated via 3 separate env vars
+  # (OPENCODE_GO_API_KEY_0, _1, _2). See compose.yaml env section.

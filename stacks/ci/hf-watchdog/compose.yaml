@@ -1,0 +1,14 @@
+name: hf-watchdog
+
+services:
+  hf-watchdog:
+    build: .
+    image: kcg/hf-watchdog:1.0
+    container_name: hf-watchdog
+    restart: unless-stopped
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
+    volumes:
+      - ./watchdog.py:/app/watchdog.py:ro
+      - hf-watchdog-logs:/var/log/hf-watchdog
+    command: ["python", "/app/watchdog.py", "--watch", "--interval", "86400"]

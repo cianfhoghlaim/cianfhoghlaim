@@ -1,0 +1,27 @@
+name: hf-watchdog
+
+# The HF Hub liveness watchdog for the v4 OCR/VLM registry
+# (per openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority).
+#
+# Monitors 26+ model_ids in `cianfhoghlaim.ocr.models.VISION_MODELS` and
+# alerts via Slack when any go 404 on the HF Hub.
+#
+# Schedule: daily (24h interval).
+# Owner: openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
+# Docs: https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/infrastructure/stacks/ci/hf-watchdog
+
+description: |
+  Daily HF Hub liveness check for the v4 OCR/VLM registry.
+  Verifies every unsloth_id / mlx_id / upstream_id in
+  cianfhoghlaim.ocr.models.VISION_MODELS against the HF Hub API.
+  Posts a Slack alert on any 404.
+
+resources:
+  cpu: "0.1"
+  memory: "256Mi"
+
+secrets:
+  - SLACK_WEBHOOK_URL  # optional; if set, posts to Slack on failure
+
+depends_on:
+  - llm-router-stack  # not strictly required, but documents the coupling

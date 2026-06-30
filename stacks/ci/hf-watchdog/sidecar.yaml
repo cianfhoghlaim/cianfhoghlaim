@@ -1,0 +1,42 @@
+# =============================================================================
+# HF WATCHDOG — Locket Sidecar Configuration
+# =============================================================================
+# The hf-watchdog runs daily (24h interval) and verifies the
+# cianfhoghlaim.ocr.models.VISION_MODELS registry against the HF Hub.
+# Locket resolves the optional SLACK_WEBHOOK_URL from Infisical at
+# container start; if the secret is absent, the watchdog skips the
+# Slack alert and logs to stdout instead.
+# =============================================================================
+
+services:
+  hf-watchdog-locket:
+    image: ghcr.io/cianfhoghlaim/locket:1.2.3
+    container_name: hf-watchdog-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /run/secrets/locket:size=1m,mode=0700
+    volumes:
+      - hf-watchdog-secrets:/run/secrets/locket:ro
+    environment:
+      - LOCKET_MODE=watch
+      - INFISICAL_PROJECT_ID=dev-baile
+      - INFISICAL_DEFAULT_ENVIRONMENT=dev-baile
+      - INFISICAL_DEFAULT_SECRET_PATH=ci/hf-watchdog
+    healthcheck:
+      test: ["CMD", "test", "-f", "/run/secrets/locket/secrets.env"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - hf-watchdog-net
+
+networks:
+  hf-watchdog-net:
+    driver: bridge

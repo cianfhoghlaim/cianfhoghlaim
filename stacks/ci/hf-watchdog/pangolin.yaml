@@ -1,0 +1,36 @@
+# =============================================================================
+# HF WATCHDOG — Pangolin Traefik Routing (optional)
+# =============================================================================
+# The hf-watchdog has no HTTP surface; it only makes outbound HF Hub
+# API calls. This pangolin.yaml is provided for documentation but
+# the stack is typically NOT exposed via Pangolin. If you want to
+# expose a status dashboard later, uncomment the block below.
+#
+# Middlewares (canonical Cianfhoghlaim):
+#   tinyauth        — Pocket ID OIDC SSO (from the pangolin stack)
+#   secure-headers  — HSTS + X-Frame-Options etc. (from the pangolin stack)
+# =============================================================================
+
+# http:
+#   routers:
+#     hf-watchdog-status:
+#       entryPoints:
+#         - https
+#       rule: "Host(`hf-watchdog.cianfhoghlaim.ie`)"
+#       service: hf-watchdog
+#       tls:
+#         certResolver: letsencrypt
+#       middlewares:
+#         - tinyauth
+#         - secure-headers
+#       priority: 100
+#
+#   services:
+#     hf-watchdog:
+#       loadBalancer:
+#         servers:
+#           - url: "http://hf-watchdog:8080"
+#         healthCheck:
+#           path: /health
+#           interval: 30s
+#           timeout: 3s
