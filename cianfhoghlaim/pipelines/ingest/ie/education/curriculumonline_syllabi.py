@@ -132,12 +132,33 @@ def _classify_document_type(filename: str) -> str:
     return "document"
 
 
+def _is_curriculumonline_syllabus_pdf(url: str) -> bool:
+    """Filter to only accept PDFs that are part of the curriculumonline.ie syllabus corpus.
+
+    curriculumonline.ie subject pages link to:
+    - The subject's own syllabus + spec + guidelines PDFs (which we want)
+    - Sidebar links to other NCCA resources on ncca.ie (NOT curriculumonline.ie)
+    - Footer links to the NCCA library and other publications (NOT syllabi)
+
+    We accept only URLs on the curriculumonline.ie host that are getmedia/*.
+    Other PDF links (sidebar / footer) on different hosts are dropped.
+    """
+    parsed = urlparse(url)
+    if parsed.netloc != "www.curriculumonline.ie" and parsed.netloc != "curriculumonline.ie":
+        return False
+    return "/getmedia/" in parsed.path.lower()
+
+
 def _extract_pdf_links_from_page(
     page: dict[str, Any],
     subject: str,
     language: str,
 ) -> list[DiscoveredPdf]:
-    """Pull all `getmedia/...*.pdf` URLs out of a single Firecrawl page dict."""
+    """Pull all `getmedia/...*.pdf` URLs out of a single Firecrawl page dict.
+
+    Filters to curriculumonline.ie-hosted syllabus PDFs only (drops sidebar /
+    footer links to other NCCA publications on ncca.ie, library, etc.).
+    """
     out: list[DiscoveredPdf] = []
     source_url = page.get("metadata", {}).get("url", "") or page.get("url", "")
     page_title = page.get("metadata", {}).get("title", "") or page.get("title", "")
@@ -155,6 +176,8 @@ def _extract_pdf_links_from_page(
         if not url or url in seen:
             continue
         if ".pdf" not in url.lower():
+            continue
+        if not _is_curriculumonline_syllabus_pdf(url):
             continue
         seen.add(url)
         filename = _filename_from_url(url)
@@ -178,6 +201,8 @@ def _extract_pdf_links_from_page(
             continue
         if not url.startswith("http"):
             url = urljoin(base_url, url)
+        if not _is_curriculumonline_syllabus_pdf(url):
+            continue
         seen.add(url)
         filename = _filename_from_url(url)
         out.append(

@@ -19,6 +19,7 @@ import hashlib
 import logging
 import os
 import warnings
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +37,7 @@ from dagster import (
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-from cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources.ie.education.curriculumonline_syllabi import (  # noqa: E402
+from cianfhoghlaim.pipelines.ingest.ie.education.curriculumonline_syllabi import (  # noqa: E402
     SENIOR_CYCLE_SYLLABI_SUBJECTS,
     _extract_pdf_links_from_page,
     _filename_from_url,
@@ -197,6 +198,12 @@ def lc_syllabus_download(
     aggregate_size = 0
     download_log: list[dict[str, Any]] = []
 
+    # Get today's date for the date-suffixed copy that pdf_processing_syllabus
+    # picks up via `**/*-{today_str}*.pdf` glob (per the established pipeline
+    # convention). We write BOTH a canonical-name file and a date-suffixed
+    # file so the corpus is browsable by name AND picked up by the daily asset.
+    today_str = datetime.now(UTC).strftime("%Y-%m-%d")
+
     for row in discovered:
         url = row["url"]
         filename = row["filename"]
@@ -204,6 +211,9 @@ def lc_syllabus_download(
             # Derive filename from URL if missing
             filename = _filename_from_url(url)
         target_path = target_dir / filename
+        # Date-suffixed companion file (e.g. SCSEC25_..._English_2026-06-30.pdf)
+        stem = target_path.stem
+        dated_path = target_dir / f"{stem}_{today_str}.pdf"
 
         # SHA-256 dedup
         if target_path.exists():
@@ -211,7 +221,7 @@ def lc_syllabus_download(
                 existing_hash = _sha256_bytes(target_path.read_bytes())
             except OSError:
                 existing_hash = None
-            # Re-download to compare if we have no existing hash; otherwise trust it
+            # Re-download to compare if we have no hash; otherwise trust it
             if existing_hash is not None:
                 # Mark as skipped — file already exists. To strictly check
                 # upstream changes we'd need a manifest; for now assume idempotent
@@ -246,6 +256,10 @@ def lc_syllabus_download(
 
         sha = _sha256_bytes(pdf_bytes)
         target_path.write_bytes(pdf_bytes)
+        # Also write a date-suffixed companion file so the daily
+        # pdf_processing_syllabus asset picks it up via `**/*-{today_str}*.pdf`
+        if not dated_path.exists() or _sha256_bytes(dated_path.read_bytes()) != sha:
+            dated_path.write_bytes(pdf_bytes)
         documents_processed += 1
         aggregate_size += len(pdf_bytes)
         download_log.append({
