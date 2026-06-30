@@ -53,18 +53,25 @@ def verify_merkle_path(
 ) -> bool:
     """Verify a Merkle inclusion path against the on-chain root.
 
+    Uses the canonical Bitcoin/Ethereum ordering convention:
+    at each level, the pair is sorted lexicographically before hashing
+    (i.e., `SHA256(min(left, right) + max(left, right))`). This means
+    `position` is not needed in the path tuple, but we accept it for
+    backwards-compatibility.
+
     Args:
         leaf_hash: The leaf hash (evidence_hash of the badge).
         merkle_root: The published Merkle root (from the on-chain anchor).
         path: List of (sibling_hash, position) pairs where position is
-              'left' or 'right'.
+              'left' or 'right' (ignored under canonical ordering).
 
     Returns:
         True iff the leaf is included in the Merkle tree.
     """
     current = leaf_hash
-    for sibling, position in path:
-        pair = (sibling + current) if position == "right" else (current + sibling)
+    for sibling, _position in path:
+        # Canonical ordering: min(left, right) + max(left, right)
+        pair = min(current, sibling) + max(current, sibling)
         current = hashlib.sha256(pair.encode()).hexdigest()
     return current == merkle_root
 

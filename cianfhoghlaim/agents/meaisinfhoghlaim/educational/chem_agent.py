@@ -12,24 +12,43 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 
 from ..adk.tuatha_config import config
+from .tools.chem_syllabus_lookup import lookup_chem_lo
+from .tools.chem_past_paper_lookup import lookup_chem_paper
+from .tools.chem_marking_scheme_lookup import lookup_chem_marking_scheme
+from .tools.chem_formative_item_generate import generate_chem_item
+from .tools.chem_response_score import score_chem_response
 
 
 async def chem_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
-    return [{"lo_code": f"LC-CHEM-LO-{hash(topic) % 100}", "topic": topic}]
+    try:
+        return await lookup_chem_lo(topic=topic, level=level, language="en", limit=10)
+    except Exception:
+        return []
 
 
-async def chem_past_paper_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
-    return [{"item_id": f"chem-{hash(topic) % 100}", "text": f"Sample Chemistry question for {topic}"}]
+async def chem_past_paper_lookup_tool(topic: str, level: str = "lc_hl", year: int | None = None) -> list[dict]:
+    try:
+        return await lookup_chem_paper(topic=topic, level=level, year=year, limit=5)
+    except Exception:
+        return []
 
 
 async def chem_marking_scheme_lookup_tool(lo_code: str) -> dict:
-    return {"lo_code": lo_code, "text_en": f"Marking scheme for {lo_code}"}
+    try:
+        return await lookup_chem_marking_scheme(lo_code=lo_code)
+    except Exception:
+        return {"error": "marking scheme lookup failed"}
 
 
 async def chem_formative_item_generate_tool(
     lo_code: str, difficulty: int, level: str = "lc_hl", topic: str = ""
 ) -> dict:
-    return {"id": f"chem-{lo_code}-{difficulty}", "prompt_en": f"Sample chemistry question for {lo_code}", "lo_code": lo_code}
+    try:
+        return await generate_chem_item(
+            lo_code=lo_code, difficulty=difficulty, level=level, topic=topic
+        )
+    except Exception as exc:
+        return {"error": f"Item generation failed: {exc}"}
 
 
 async def chem_response_score_tool(
@@ -39,7 +58,16 @@ async def chem_response_score_tool(
     time_taken_seconds: int = 0,
     hints_used: int = 0,
 ) -> dict:
-    return {"item_id": item_id, "marks_awarded": 5, "total_marks": 10, "partial_credit_pct": 50}
+    try:
+        return await score_chem_response(
+            item_id=item_id,
+            student_response=student_response,
+            response_format=response_format,
+            time_taken_seconds=time_taken_seconds,
+            hints_used=hints_used,
+        )
+    except Exception as exc:
+        return {"error": f"Scoring failed: {exc}"}
 
 
 chem_syllabus_tool = FunctionTool(func=chem_syllabus_lookup_tool)

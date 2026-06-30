@@ -17,25 +17,51 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 
 from ..adk.tuatha_config import config
+from .tools.gael_syllabus_lookup import lookup_gael_lo
+from .tools.gael_past_paper_lookup import lookup_gael_paper
+from .tools.gael_marking_scheme_lookup import lookup_gael_marking_scheme
+from .tools.gael_gramadach_review import lookup_gael_gramadach
+from .tools.gael_formative_item_generate import generate_gael_item
+from .tools.gael_response_score import score_gael_response
 
 
-# Gaeilge-specific tools (5 minimum)
 async def gael_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
-    return [{"lo_code": f"LC-GAEL-LO-{hash(topic) % 100}", "topic": topic, "competency_text_ga": f"Sample LO for {topic}"}]
+    try:
+        return await lookup_gael_lo(topic=topic, level=level, language="ga", limit=10)
+    except Exception:
+        return []
 
 
 async def gael_past_paper_lookup_tool(topic: str, level: str = "lc_hl", year: int | None = None) -> list[dict]:
-    return [{"item_id": f"item-{hash(topic) % 100}", "text_ga": f"Sample question for {topic}", "level": level}]
+    try:
+        return await lookup_gael_paper(topic=topic, level=level, year=year, limit=5)
+    except Exception:
+        return []
+
+
+async def gael_marking_scheme_lookup_tool(lo_code: str) -> dict:
+    try:
+        return await lookup_gael_marking_scheme(lo_code=lo_code)
+    except Exception:
+        return {"error": "marking scheme lookup failed"}
 
 
 async def gael_gramadach_review_tool(gramadach_topic: str) -> dict:
-    return {"topic": gramadach_topic, "explanation_ga": f"Míniú ar an ghramadach: {gramadach_topic}"}
+    try:
+        return await lookup_gael_gramadach(gramadach_topic)
+    except Exception:
+        return {"topic": gramadach_topic, "error": "gramadach review failed"}
 
 
 async def gael_formative_item_generate_tool(
     lo_code: str, difficulty: int, level: str = "lc_hl", topic: str = ""
 ) -> dict:
-    return {"id": f"gae-{lo_code}-{difficulty}", "prompt_ga": f"Ceist samplach do {lo_code}", "lo_code": lo_code}
+    try:
+        return await generate_gael_item(
+            lo_code=lo_code, difficulty=difficulty, level=level, topic=topic
+        )
+    except Exception as exc:
+        return {"error": f"Item generation failed: {exc}"}
 
 
 async def gael_response_score_tool(
@@ -45,11 +71,21 @@ async def gael_response_score_tool(
     time_taken_seconds: int = 0,
     hints_used: int = 0,
 ) -> dict:
-    return {"item_id": item_id, "marks_awarded": 5, "total_marks": 10, "partial_credit_pct": 50, "feedback_ga": "Maith an iarracht!"}
+    try:
+        return await score_gael_response(
+            item_id=item_id,
+            student_response=student_response,
+            response_format=response_format,
+            time_taken_seconds=time_taken_seconds,
+            hints_used=hints_used,
+        )
+    except Exception as exc:
+        return {"error": f"Scoring failed: {exc}"}
 
 
 gael_syllabus_tool = FunctionTool(func=gael_syllabus_lookup_tool)
 gael_past_paper_tool = FunctionTool(func=gael_past_paper_lookup_tool)
+gael_marking_scheme_tool = FunctionTool(func=gael_marking_scheme_lookup_tool)
 gael_gramadach_tool = FunctionTool(func=gael_gramadach_review_tool)
 gael_formative_item_tool = FunctionTool(func=gael_formative_item_generate_tool)
 gael_response_score_tool = FunctionTool(func=gael_response_score_tool)
@@ -79,9 +115,10 @@ gael_agent = LlmAgent(
     **AVAILABLE TOOLS:**
     1. gael_syllabus_lookup_tool - Find NCCA learning outcomes (Irish)
     2. gael_past_paper_lookup_tool - Find past paper questions
-    3. gael_gramadach_review_tool - Grammar review + conjugation tables
-    4. gael_formative_item_generate_tool - Generate Irish-medium items
-    5. gael_response_score_tool - Score attempts (Irish feedback canonical)
+    3. gael_marking_scheme_lookup_tool - Get the marking scheme
+    4. gael_gramadach_review_tool - Grammar review (réimíreanna, aimsirí, séimhiú, urú)
+    5. gael_formative_item_generate_tool - Generate Irish-medium items
+    6. gael_response_score_tool - Score attempts (Irish feedback canonical)
 
     **TEACHING APPROACH:**
     1. **Always cite the LO code** (e.g. "LC-GAEL-LO-3.1").
@@ -109,6 +146,7 @@ gael_agent = LlmAgent(
     tools=[
         gael_syllabus_tool,
         gael_past_paper_tool,
+        gael_marking_scheme_tool,
         gael_gramadach_tool,
         gael_formative_item_tool,
         gael_response_score_tool,
