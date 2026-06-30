@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.ie.law.lawreform — Law Reform Commission (Ireland).
+oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.lawreform — Law Reform Commission (Ireland).
 
 Source: `https://www.lawreform.ie` — reports and consultation
 papers on Irish statute reform.

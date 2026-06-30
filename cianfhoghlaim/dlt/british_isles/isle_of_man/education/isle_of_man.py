@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.iom.education.isle_of_man — Isle of Man education DLT source.
+oideachais.cianfhoghlaim.dlt.british_isles.isle_of_man.education.isle_of_man — Isle of Man education DLT source.
 
 Moved from `dlt_sources/crown_dependencies/isle_of_man.py` in
 Phase 3E (Round 11 oideachais audit). Single-source file — no helpers
@@ -11,7 +11,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 import dlt
-from dlt_sources.common.firecrawl_source import crawl_website
+from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
 
 IOM_URLS = {
     "education": "https://www.gov.im/categories/education-training-and-careers/",

@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.iom.medicine.health_social_care — Isle of Man Health & Social Care.
+"""oideachais.cianfhoghlaim.dlt.british_isles.isle_of_man.medicine.health_social_care — Isle of Man Health & Social Care.
 
 Source: `https://www.gov.im/categories/health-and-social-care/`.
 Per

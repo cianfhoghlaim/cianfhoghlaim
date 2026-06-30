@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.official_media.fediverse — pure Mastodon + Bluesky library.
+"""oideachais.cianfhoghlaim.dlt.official_media.fediverse — pure Mastodon + Bluesky library.
 
 No Dagster dependency. Used by ``SourceResolver`` and reusable by the
 side-loadable-app phase.

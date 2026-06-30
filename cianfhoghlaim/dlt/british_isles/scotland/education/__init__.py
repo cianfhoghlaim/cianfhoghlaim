@@ -14,22 +14,22 @@ def _maybe(name: str, mod: str) -> Any:
 
 curriculum_for_excellence = _maybe(
     "curriculum_for_excellence",
-    "oideachais.dlt_sources.sct.education._curriculum_for_excellence_helpers",
+    "oideachais.cianfhoghlaim.dlt.british_isles.scotland.education._curriculum_for_excellence_helpers",
 )
 gov_scot_statistics = _maybe(
-    "gov_scot_statistics", "oideachais.dlt_sources.sct.statistics.gov_scot_statistics"
+    "gov_scot_statistics", "oideachais.cianfhoghlaim.dlt.british_isles.scotland.statistics.gov_scot_statistics"
 )
 insight_benchmarking = _maybe(
-    "insight_benchmarking", "oideachais.dlt_sources.sct.education.insight_benchmarking"
+    "insight_benchmarking", "oideachais.cianfhoghlaim.dlt.british_isles.scotland.education.insight_benchmarking"
 )
-simd = _maybe("simd", "oideachais.dlt_sources.sct.statistics.simd")
+simd = _maybe("simd", "oideachais.cianfhoghlaim.dlt.british_isles.scotland.statistics.simd")
 
 # Phase 3D per-source re-exports.
-from dlt_sources.sct.education.curriculum_for_excellence import (
+from cianfhoghlaim.dlt.british_isles.scotland.education.curriculum_for_excellence import (
     curriculum_for_excellence_source,
 )
-from dlt_sources.sct.education.gaelic_curriculum import gaelic_curriculum_source
-from dlt_sources.sct.education.sqa_qualifications import sqa_qualifications_source
+from cianfhoghlaim.dlt.british_isles.scotland.education.gaelic_curriculum import gaelic_curriculum_source
+from cianfhoghlaim.dlt.british_isles.scotland.education.sqa_qualifications import sqa_qualifications_source
 
 __all__ = [
     "curriculum_for_excellence",

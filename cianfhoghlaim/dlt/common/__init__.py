@@ -3,7 +3,7 @@
 Also installs a `sys.modules` alias for the missing `shared` package
 so that every `from shared.http import …` line in the legacy DLT
 sources keeps working. The alias is a *re-export* of the in-tree
-`oideachais.dlt_sources.common._http_factories` module — see that
+`oideachais.cianfhoghlaim.dlt.common._http_factories` module — see that
 file for the contract.
 """
 
@@ -12,8 +12,8 @@ file for the contract.
 import sys as _sys
 import types as _types
 
-from dlt_sources.common import _http_factories as _http_factories
-from dlt_sources.common import _shared_utils_stub as _shared_utils_stub
+from cianfhoghlaim.dlt.common import _http_factories as _http_factories
+from cianfhoghlaim.dlt.common import _shared_utils_stub as _shared_utils_stub
 
 # shared package root
 if "shared" not in _sys.modules:

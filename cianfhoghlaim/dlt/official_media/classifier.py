@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.official_media.classifier — BAML Stage-2 fallback.
+"""oideachais.cianfhoghlaim.dlt.official_media.classifier — BAML Stage-2 fallback.
 
 The Stage-2 fallback in the two-stage filter. Invoked by
 ``AllowlistFilter.classify`` only when:

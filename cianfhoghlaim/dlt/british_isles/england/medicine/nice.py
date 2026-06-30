@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.en.medicine.nice — NICE clinical guidelines.
+oideachais.cianfhoghlaim.dlt.british_isles.england.medicine.nice — NICE clinical guidelines.
 
 Source: `https://www.nice.org.uk/guidance` (publicly browseable,
 bulk-download behind auth).

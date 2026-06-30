@@ -8,7 +8,7 @@ from collections.abc import Iterator
 from typing import Any
 
 import dlt
-from dlt_sources.constants.local_sources import (
+from cianfhoghlaim.dlt.constants.local_sources import (
     BUNCHLOCH_PATH,
     LOCAL_SUBJECT_PATHS,
 )

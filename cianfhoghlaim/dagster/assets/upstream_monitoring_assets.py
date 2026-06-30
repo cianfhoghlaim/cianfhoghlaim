@@ -7,7 +7,7 @@ The 33rd asset group registered in `dagster_defs/assets/__init__.py:all_assets`.
 Five assets + one sensor:
 
 1. `upstream_blog_monitor_ingest` — runs the DLT source
-   `dlt_sources.cross.upstream.blog_post.upstream_blog_post_source`
+   `cianfhoghlaim.dlt.cross.upstream.blog_post.upstream_blog_post_source`
    against the n8n-written payloads in `s3://oideachais-upstream-webhooks/`.
    Materialises `oideachais.upstream_blog_post` (incremental merge) and
    `oideachais.upstream_blog_post_audit` (append-only) in DuckLake.
@@ -69,7 +69,7 @@ logger = structlog.get_logger(__name__)
 # We don't import them at module load to keep `dg list defs` fast.
 def _load_dlt() -> Any:
     """Import the DLT source lazily (keeps `dg list defs` fast)."""
-    from dlt_sources.cross.upstream.blog_post import (
+    from cianfhoghlaim.dlt.cross.upstream.blog_post import (
         upstream_blog_post_source,
     )
 
@@ -97,7 +97,7 @@ def _payloads_root() -> pathlib.Path:
     group_name="upstream_monitoring",
     description=(
         "Runs the DLT incremental source "
-        "`dlt_sources.cross.upstream.blog_post.upstream_blog_post_source` "
+        "`cianfhoghlaim.dlt.cross.upstream.blog_post.upstream_blog_post_source` "
         "against the n8n-written payloads. Materialises "
         "`oideachais.upstream_blog_post` (incremental merge on "
         "`first_seen_at`) and `oideachais.upstream_blog_post_audit` "
@@ -105,7 +105,7 @@ def _payloads_root() -> pathlib.Path:
     ),
     metadata={
         "openspec_change": "upstream-package-monitoring",
-        "dlt_source": "dlt_sources.cross.upstream.blog_post",
+        "dlt_source": "cianfhoghlaim.dlt.cross.upstream.blog_post",
         "primary_key": ("package", "blog_post_id"),
         "incremental_cursor": "first_seen_at",
     },

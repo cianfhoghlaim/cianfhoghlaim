@@ -1,6 +1,6 @@
-"""oideachais.dlt_sources.sct.law — Scotland statutory-law sub-package."""
+"""oideachais.cianfhoghlaim.dlt.british_isles.scotland.law — Scotland statutory-law sub-package."""
 from __future__ import annotations
 
-from dlt_sources.sct.law import legislation
+from cianfhoghlaim.dlt.british_isles.scotland.law import legislation
 
 __all__ = ["legislation"]

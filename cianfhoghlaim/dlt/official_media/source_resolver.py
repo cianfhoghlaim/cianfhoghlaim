@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.official_media.source_resolver — 4-lookup parallel resolver.
+"""oideachais.cianfhoghlaim.dlt.official_media.source_resolver — 4-lookup parallel resolver.
 
 For each surviving official-media profile, resolve the canonical
 official source through 4 parallel lookups (off the main thread):
@@ -136,7 +136,7 @@ class SourceResolver:
             return None
         # The real implementation lives in source_resolver.live; this
         # signature is what `source_resolver.live` implements.
-        from dlt_sources.official_media._resolver_live import lookup_wikipedia
+        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_wikipedia
 
         return await lookup_wikipedia(title)
 
@@ -146,7 +146,7 @@ class SourceResolver:
                 "lookup_skipped_offline", authority="companies_house", name=name
             )
             return None
-        from dlt_sources.official_media._resolver_live import lookup_companies_house
+        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_companies_house
 
         return await lookup_companies_house(name)
 
@@ -154,7 +154,7 @@ class SourceResolver:
         if not self.live_lookups:
             logger.debug("lookup_skipped_offline", authority="cro_ireland", name=name)
             return None
-        from dlt_sources.official_media._resolver_live import lookup_cro
+        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_cro
 
         return await lookup_cro(name)
 
@@ -166,7 +166,7 @@ class SourceResolver:
                 "lookup_skipped_offline", authority="mastodon", ig_username=ig_username
             )
             return None
-        from dlt_sources.official_media._resolver_live import lookup_mastodon
+        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_mastodon
 
         return await lookup_mastodon(ig_username)
 
@@ -176,7 +176,7 @@ class SourceResolver:
                 "lookup_skipped_offline", authority="bluesky", ig_username=ig_username
             )
             return None
-        from dlt_sources.official_media._resolver_live import lookup_bluesky
+        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_bluesky
 
         return await lookup_bluesky(ig_username)
 

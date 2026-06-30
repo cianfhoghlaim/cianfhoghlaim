@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.en.medicine — England medicine (NHS England,
+oideachais.cianfhoghlaim.dlt.british_isles.england.medicine — England medicine (NHS England,
 GMC, NICE). Phase 7 of the openspec change.
 """
 from __future__ import annotations

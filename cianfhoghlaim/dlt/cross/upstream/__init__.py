@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.cross.upstream — upstream package
+"""oideachais.cianfhoghlaim.dlt.cross.upstream — upstream package
 monitoring payloads.
 
 The 7th dlt_sources domain. See `domains/cross/__init__.py` for the
@@ -48,6 +48,6 @@ load rows whose first_seen_at is > the high-water mark on the previous run.
 """
 from __future__ import annotations
 
-from dlt_sources.cross.upstream import blog_post
+from cianfhoghlaim.dlt.cross.upstream import blog_post
 
 __all__ = ["blog_post"]

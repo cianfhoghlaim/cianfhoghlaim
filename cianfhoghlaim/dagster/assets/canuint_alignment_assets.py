@@ -90,7 +90,7 @@ def canuint_word_alignments(
     """
     context.log.info(f"Extracting word alignments, max_recordings={config.max_recordings}")
 
-    from dlt_sources.ie.culture.canuint_word_alignment import canuint_word_alignment_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint_word_alignment import canuint_word_alignment_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="canuint_word_alignments",

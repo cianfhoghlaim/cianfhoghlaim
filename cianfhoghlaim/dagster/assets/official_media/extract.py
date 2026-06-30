@@ -30,8 +30,8 @@ logger = structlog.get_logger(__name__)
 )
 def official_media_extract(context) -> dg.MaterializeResult:
     """Run the DLT source over the Instagram export and materialise."""
-    from dlt_sources.official_media.allowlist import allowlist_filter
-    from dlt_sources.official_media.instagram_export import (
+    from cianfhoghlaim.dlt.official_media.allowlist import allowlist_filter
+    from cianfhoghlaim.dlt.official_media.instagram_export import (
         InstagramExportParser,
     )
 

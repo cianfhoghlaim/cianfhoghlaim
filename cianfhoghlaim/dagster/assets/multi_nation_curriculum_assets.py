@@ -58,7 +58,7 @@ def ireland_ncca_curriculum(
     """
     context.log.info("Crawling NCCA curriculum content")
 
-    from cianfhoghlaim.dlt.british_isles.ie.education.ncca import ncca_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.ncca import ncca_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ireland_ncca",
@@ -104,7 +104,7 @@ def ireland_oide_cpd(
     """
     context.log.info("Crawling Oide CPD resources")
 
-    from dlt_sources.ie.education.oide import oide_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.oide import oide_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ireland_oide",
@@ -152,7 +152,7 @@ def england_national_curriculum(
     """
     context.log.info("Crawling England National Curriculum")
 
-    from dlt_sources.en.education.national_curriculum import national_curriculum_source
+    from cianfhoghlaim.dlt.british_isles.england.education.national_curriculum import national_curriculum_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="england_national_curriculum",
@@ -195,7 +195,7 @@ def england_exam_boards(
     """
     context.log.info("Crawling England exam board specifications")
 
-    from dlt_sources.en.education.all_exam_boards import all_exam_boards_source
+    from cianfhoghlaim.dlt.british_isles.england.education.all_exam_boards import all_exam_boards_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="england_exam_boards",
@@ -243,7 +243,7 @@ def scotland_cfe(
     """
     context.log.info("Crawling Curriculum for Excellence")
 
-    from dlt_sources.sct.education.curriculum_for_excellence import curriculum_for_excellence_source
+    from cianfhoghlaim.dlt.british_isles.scotland.education.curriculum_for_excellence import curriculum_for_excellence_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="scotland_cfe",
@@ -288,7 +288,7 @@ def scotland_sqa(
     """
     context.log.info("Crawling SQA qualifications")
 
-    from dlt_sources.sct.education.sqa_qualifications import sqa_qualifications_source
+    from cianfhoghlaim.dlt.british_isles.scotland.education.sqa_qualifications import sqa_qualifications_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="scotland_sqa",
@@ -336,7 +336,7 @@ def wales_curriculum(
     """
     context.log.info("Crawling Curriculum for Wales")
 
-    from dlt_sources.wls.education.curriculum_for_wales import curriculum_for_wales_source
+    from cianfhoghlaim.dlt.british_isles.wales.education.curriculum_for_wales import curriculum_for_wales_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="wales_curriculum",
@@ -380,7 +380,7 @@ def wales_wjec(
     """
     context.log.info("Crawling WJEC/CBAC qualifications")
 
-    from dlt_sources.wls.education.wjec_qualifications import wjec_qualifications_source
+    from cianfhoghlaim.dlt.british_isles.wales.education.wjec_qualifications import wjec_qualifications_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="wales_wjec",
@@ -427,7 +427,7 @@ def northern_ireland_curriculum(
     """
     context.log.info("Crawling Northern Ireland Curriculum")
 
-    from dlt_sources.ni.education.ni_curriculum import ni_curriculum_source
+    from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ni_curriculum import ni_curriculum_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ni_curriculum",
@@ -471,7 +471,7 @@ def northern_ireland_ccea_quals(
     """
     context.log.info("Crawling CCEA qualifications")
 
-    from dlt_sources.ni.education.ccea_qualifications import ccea_qualifications_source
+    from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ccea_qualifications import ccea_qualifications_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="ni_ccea_quals",

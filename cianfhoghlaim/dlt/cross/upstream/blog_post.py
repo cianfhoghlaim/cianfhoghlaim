@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.cross.upstream.blog_post — DLT incremental
+oideachais.cianfhoghlaim.dlt.cross.upstream.blog_post — DLT incremental
 source for Firecrawl-monitor payloads from upstream package blogs.
 
 The 7th dlt_sources domain. Phase 1 of the `upstream-package-monitoring`

@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.official_media.instagram_export — DLT source over the JSON bundle Instagram ships.
+"""oideachais.cianfhoghlaim.dlt.official_media.instagram_export — DLT source over the JSON bundle Instagram ships.
 
 Reference: Meta's "Download Your Information" export. As of 2026-05
 the relevant subdirectory is ``connections/followers_and_following/``

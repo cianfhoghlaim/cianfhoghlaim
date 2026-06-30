@@ -40,14 +40,14 @@ from typing import Any
 
 import dlt
 import structlog
-from dlt_sources.common.content_deduplication import (
+from cianfhoghlaim.dlt.common.content_deduplication import (
     ContentDeduplicator,
 )
-from dlt_sources.common.curriculum_registry import (
+from cianfhoghlaim.dlt.common.curriculum_registry import (
     SubjectRegistry,
     URLResolver,
 )
-from dlt_sources.common.source_adapters import (
+from cianfhoghlaim.dlt.common.source_adapters import (
     get_all_adapters,
 )
 

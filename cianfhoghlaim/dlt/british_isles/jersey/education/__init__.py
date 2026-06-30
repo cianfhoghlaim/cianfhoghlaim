@@ -6,6 +6,6 @@ is `jey.education.channel_islands` (split from the deprecated
 """
 from __future__ import annotations
 
-from dlt_sources.jey.education.channel_islands import jersey_source
+from cianfhoghlaim.dlt.british_isles.jersey.education.channel_islands import jersey_source
 
 __all__ = ["jersey_source"]

@@ -65,7 +65,7 @@ def leabharlann_books_raw(context) -> dg.MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.leabharlann import leabharlann_books_source
+    from cianfhoghlaim.dlt.leabharlann import leabharlann_books_source
 
     subject = context.partition_key
     base_path = Path(
@@ -118,7 +118,7 @@ def leabharlann_zotero_raw(context) -> dg.MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.leabharlann import zotero_source
+    from cianfhoghlaim.dlt.leabharlann import zotero_source
 
     pipeline = dlt.pipeline(
         pipeline_name=f"leabharlann_zotero_{context.partition_key}",
@@ -159,7 +159,7 @@ def leabharlann_takeout_v1_raw(context) -> dg.MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.leabharlann import takeout_v1_source
+    from cianfhoghlaim.dlt.leabharlann import takeout_v1_source
 
     pipeline = dlt.pipeline(
         pipeline_name=f"leabharlann_takeout_{context.partition_key}",

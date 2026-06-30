@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.jey.medicine.health_community_services — Jersey Health & Community Services.
+"""oideachais.cianfhoghlaim.dlt.british_isles.jersey.medicine.health_community_services — Jersey Health & Community Services.
 
 Source: `https://www.gov.je/health/` (Government of Jersey).
 Per

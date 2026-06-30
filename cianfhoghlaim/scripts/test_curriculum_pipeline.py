@@ -43,7 +43,7 @@ def test_subject_source(
 ) -> dict:
     """Test a single subject source."""
     import dlt
-    from dlt_sources.ie.education.subjects.base import create_subject_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.base import create_subject_source
 
     print(f"\n{'='*60}")
     print(f"Testing: {subject} ({cycle}, {language})")
@@ -139,7 +139,7 @@ def test_examinations_source(
 ) -> dict:
     """Test SEC examinations source."""
     import dlt
-    from dlt_sources.ie.education.sec_examinations_browser import sec_examinations_browser_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.sec_examinations_browser import sec_examinations_browser_source
 
     print(f"\n{'='*60}")
     print(f"Testing SEC Examinations: {subject} ({year}, {level})")
@@ -203,14 +203,14 @@ def test_full_cycle_source(
 ) -> dict:
     """Test full cycle source with limited subjects."""
     if cycle == "senior_cycle":
-        from dlt_sources.ie.education.subjects.senior_cycle import (
+        from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.senior_cycle import (
             SENIOR_CYCLE_SUBJECTS,
             senior_cycle_source,
         )
         subjects = SENIOR_CYCLE_SUBJECTS
         source_fn = senior_cycle_source
     else:
-        from dlt_sources.ie.education.subjects.junior_cycle import (
+        from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.junior_cycle import (
             JUNIOR_CYCLE_SUBJECTS,
             junior_cycle_source,
         )

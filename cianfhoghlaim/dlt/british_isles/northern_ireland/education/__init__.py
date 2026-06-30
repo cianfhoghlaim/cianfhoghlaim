@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.ni.education package init — re-export shim.
+"""oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.education package init — re-export shim.
 
 Phase 3D canonical path: ni/education (per cross-domain-registry).
 """
@@ -17,17 +17,17 @@ def _maybe(name: str, mod: str) -> Any:
 
 
 ccea_curriculum = _maybe(
-    "ccea_curriculum", "oideachais.dlt_sources.ni.education._ccea_curriculum_helpers"
+    "ccea_curriculum", "oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.education._ccea_curriculum_helpers"
 )
-education_ni = _maybe("education_ni", "oideachais.dlt_sources.ni.education.education_ni")
-etini = _maybe("etini", "oideachais.dlt_sources.ni.education.etini")
-nisra = _maybe("nisra", "oideachais.dlt_sources.ni.statistics.nisra")
+education_ni = _maybe("education_ni", "oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.education.education_ni")
+etini = _maybe("etini", "oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.education.etini")
+nisra = _maybe("nisra", "oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.statistics.nisra")
 
 # Phase 3D per-source re-exports.
-from dlt_sources.ni.education._ccea_curriculum_helpers import NI_CURRICULUM_URLS
-from dlt_sources.ni.education.ccea_qualifications import ccea_qualifications_source
-from dlt_sources.ni.education.irish_medium_ni import irish_medium_ni_source
-from dlt_sources.ni.education.ni_curriculum import ni_curriculum_source
+from cianfhoghlaim.dlt.british_isles.northern_ireland.education._ccea_curriculum_helpers import NI_CURRICULUM_URLS
+from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ccea_qualifications import ccea_qualifications_source
+from cianfhoghlaim.dlt.british_isles.northern_ireland.education.irish_medium_ni import irish_medium_ni_source
+from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ni_curriculum import ni_curriculum_source
 
 __all__ = [
     "NI_CURRICULUM_URLS",

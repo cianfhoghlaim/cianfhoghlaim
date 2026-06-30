@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.ggy.law.legislation — Laws of Guernsey.
+"""oideachais.cianfhoghlaim.dlt.british_isles.guernsey.law.legislation — Laws of Guernsey.
 
 Source: `https://www.guernseylegalresources.gg` (Royal Court of
 Guernsey legal resources portal) and the official Guernsey

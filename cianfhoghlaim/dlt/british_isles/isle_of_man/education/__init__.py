@@ -6,6 +6,6 @@ is `iom.education.isle_of_man` (split from the deprecated
 """
 from __future__ import annotations
 
-from dlt_sources.iom.education.isle_of_man import isle_of_man_source
+from cianfhoghlaim.dlt.british_isles.isle_of_man.education.isle_of_man import isle_of_man_source
 
 __all__ = ["isle_of_man_source"]

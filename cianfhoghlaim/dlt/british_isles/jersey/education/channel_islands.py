@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.jey.education.channel_islands — Jersey education DLT source.
+oideachais.cianfhoghlaim.dlt.british_isles.jersey.education.channel_islands — Jersey education DLT source.
 
 Split from `dlt_sources/crown_dependencies/channel_islands.py` in
 Phase 3E (Round 11 oideachais audit). The Jersey source (`jersey_source`)

@@ -1,4 +1,4 @@
-"""oideachais.dlt_sources.official_media.allowlist — Two-stage filter for official-media profiles.
+"""oideachais.cianfhoghlaim.dlt.official_media.allowlist — Two-stage filter for official-media profiles.
 
 Stage 1 is a deterministic O(1) lookup against 4 curated YAML
 allowlists (intelligence / universities / parties / jurisdictions).
@@ -93,7 +93,7 @@ class AllowlistFilter:
         baml_classifier: Optional callable ``(ig_username, bio, external_url)
             -> {is_official_media, confidence, category, reason}`` for
             Stage-2 fallback. Defaults to the BAML-based classifier
-            (``dlt_sources.official_media.classifier.classify_with_baml``)
+            (``cianfhoghlaim.dlt.official_media.classifier.classify_with_baml``)
             which is a no-op when the ``baml_client`` package is not
             generated. Pass ``baml_classifier=None`` to force Stage-1
             only.
@@ -119,7 +119,7 @@ class AllowlistFilter:
         if self.baml_classifier is None:
             # Default to the BAML classifier; it returns None when the
             # baml_client is not generated, so Stage-1 is unaffected.
-            from dlt_sources.official_media.classifier import classify_with_baml
+            from cianfhoghlaim.dlt.official_media.classifier import classify_with_baml
 
             self.baml_classifier = classify_with_baml
         self._load()

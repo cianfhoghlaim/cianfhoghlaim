@@ -65,7 +65,7 @@ def duchas_volumes(
     """
     context.log.info("Ingesting Dúchas folklore volumes")
 
-    from cianfhoghlaim.dlt.british_isles.ie.culture.duchas import duchas_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.duchas import duchas_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="duchas_volumes",
@@ -112,7 +112,7 @@ def duchas_schools_collection(
     """
     context.log.info("Ingesting Dúchas Schools Collection")
 
-    from cianfhoghlaim.dlt.british_isles.ie.culture.duchas import duchas_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.duchas import duchas_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="duchas_schools",
@@ -162,7 +162,7 @@ def canuint_areas(
     """
     context.log.info("Ingesting Canuint dialect areas")
 
-    from dlt_sources.ie.culture.canuint import canuint_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint import canuint_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="canuint_areas",
@@ -206,7 +206,7 @@ def canuint_recordings(
     dialect = context.partition_key
     context.log.info(f"Ingesting Canuint recordings for dialect: {dialect}")
 
-    from dlt_sources.ie.culture.canuint import canuint_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint import canuint_source
 
     # Map partition key to province filter
     province_map = {
@@ -259,7 +259,7 @@ def canuint_transcripts(
     dialect = context.partition_key
     context.log.info(f"Ingesting Canuint transcripts for dialect: {dialect}")
 
-    from dlt_sources.ie.culture.canuint import canuint_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint import canuint_source
 
     province_map = {
         "munster": "Cúige Mumhan",
@@ -316,7 +316,7 @@ def ud_treebank_sentences(
     language = context.partition_key
     context.log.info(f"Ingesting UD treebank for language: {language}")
 
-    from cianfhoghlaim.dlt.british_isles.ie.education.universal_dependencies import ud_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.universal_dependencies import ud_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name=f"ud_treebank_{language}",
@@ -367,7 +367,7 @@ def logainm_placenames(
     """
     context.log.info("Ingesting Logainm placenames")
 
-    from dlt_sources.ie.culture.logainm import logainm_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.logainm import logainm_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="logainm_placenames",
@@ -414,7 +414,7 @@ def tearma_terms(
     """
     context.log.info("Ingesting Téarma terminology")
 
-    from dlt_sources.ie.culture.tearma import tearma_source
+    from cianfhoghlaim.dlt.british_isles.ireland.culture.tearma import tearma_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="tearma_terms",

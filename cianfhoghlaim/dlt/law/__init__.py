@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.law — shared UK statutory-law helpers.
+oideachais.cianfhoghlaim.dlt.law — shared UK statutory-law helpers.
 
 Crown Dependencies + UK nations (EN, NI, SCT, WLS) legislation sources all
 share `_crawl_legislation()`. Canonical per-nation sources live in

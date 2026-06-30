@@ -112,7 +112,7 @@ def duchas_pages(
     try:
         import dlt
 
-        from dlt_sources.ie.culture.duchas_images import duchas_images_source
+        from cianfhoghlaim.dlt.british_isles.ireland.culture.duchas_images import duchas_images_source
 
         pipeline = dlt.pipeline(
             pipeline_name=f"duchas_{county}",

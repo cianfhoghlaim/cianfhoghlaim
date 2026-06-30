@@ -1,4 +1,4 @@
-"""Tests for ``dlt_sources.official_media.fediverse``.
+"""Tests for ``cianfhoghlaim.dlt.official_media.fediverse``.
 
 Asserts the pure (no-Dagster) Mastodon + Bluesky resolution library
 using mocked HTTP responses. The pattern is to define a minimal fake
@@ -10,7 +10,7 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from dlt_sources.official_media.fediverse import (
+from cianfhoghlaim.dlt.official_media.fediverse import (
     resolve_bluesky,
     resolve_mastodon,
 )

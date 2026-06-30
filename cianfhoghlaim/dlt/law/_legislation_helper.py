@@ -1,5 +1,5 @@
 """
-oideachais.dlt_sources.law._legislation_helper — Shared
+oideachais.cianfhoghlaim.dlt.law._legislation_helper — Shared
 helper for crawling legislation.gov.uk XML / HTML endpoints.
 
 The UK has a single legislation.gov.uk domain with sub-paths for
