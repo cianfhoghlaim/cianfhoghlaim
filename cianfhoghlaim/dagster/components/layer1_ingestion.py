@@ -22,17 +22,15 @@ under cianfhoghlaim/dagster/assets/.
 from __future__ import annotations
 
 import os
-from typing import Any, Literal, Optional
+from typing import Literal
 
 import dagster as dg
 from dagster.components import (
     Component,
     ComponentLoadContext,
-    DefsStateConfig,
     DefsStateConfigArgs,
     ResolvedDefsStateConfig,
 )
-
 
 AutomationStrategy = Literal["eager", "on_cron", "on_dlt_freshness", "manual"]
 StateRefreshInterval = Literal["daily", "weekly", "monthly"]
@@ -171,7 +169,13 @@ class CelticIngestionComponent(Component):
             get_default_factory,
         )
 
-        factory = get_default_factory()
+        # Touch the factory so its state is loaded into the
+        # state-backed cache (the factory's `get` method populates
+        # the in-memory state on first access; the actual write to
+        # the cache file is handled by `write_state_to_path`).
+        _factory = get_default_factory()
+        del _factory
+
         state_path = self.defs_state.path_for_key(self.defs_state_key)
         if state_path and state_path.exists():
             return self.build_defs_from_state(context, state_path)
@@ -230,4 +234,4 @@ class CelticIngestionComponent(Component):
         return self.build_defs(context)
 
 
-__all__ = ["CelticIngestionComponent", "StateRefreshInterval", "AutomationStrategy"]
+__all__ = ["AutomationStrategy", "CelticIngestionComponent", "StateRefreshInterval"]

@@ -21,11 +21,10 @@ TanStack Start page generation assets.
 from __future__ import annotations
 
 import os
-from typing import List, Literal
+from typing import Literal
 
 import dagster as dg
 from dagster.components import Component, ComponentLoadContext
-
 
 DashboardKind = Literal["marimo", "tanstack_page", "orpc_route", "hono_route"]
 
@@ -59,8 +58,8 @@ class CelticAssetGenerationComponent(Component):
 
     dashboard_kind: DashboardKind
     dashboard_path: str
-    upstream_assets: List[str] = []
-    refresh_on: List[str] = ["0 6 * * *"]
+    upstream_assets: list[str] = []  # noqa: RUF012 — Dagster Component mutable default
+    refresh_on: list[str] = ["0 6 * * *"]  # noqa: RUF012 — Dagster Component mutable default
     slug: str = ""
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
