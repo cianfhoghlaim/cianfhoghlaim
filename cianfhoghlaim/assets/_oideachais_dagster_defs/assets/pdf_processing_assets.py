@@ -21,7 +21,6 @@ import logging
 import os
 import warnings
 from pathlib import Path
-from typing import Any
 
 from dagster import (
     AssetExecutionContext,
@@ -123,13 +122,18 @@ def _run_pipeline_asset(
     today = context.partition_key
     today_str = today if isinstance(today, str) else today.strftime("%Y-%m-%d")
 
-    # Find PDFs for this document_type in the stedding/ingest_queue/
-    ingest_queue = _get_ingest_queue_path(document_type)
-    pdfs = list(ingest_queue.glob(f"**/*-{today_str}*.pdf")) if ingest_queue.exists() else []
+    # Find PDFs for this document_type in the stedding/ingest_queue/.
+    # The syllabus pipeline now has TWO source subtrees (ncca.ie + curriculumonline.ie)
+    # per the ncca-leaving-cert-syllabi-corpus change, so we glob both and merge.
+    pdfs: list[Path] = []
+    for ingest_queue in _get_ingest_queue_paths(document_type):
+        if ingest_queue.exists():
+            pdfs.extend(ingest_queue.glob(f"**/*-{today_str}*.pdf"))
 
     if not pdfs:
         context.log.info(
-            f"No {document_type} PDFs found for {today_str} in {ingest_queue}; "
+            f"No {document_type} PDFs found for {today_str} in any of "
+            f"{[str(p) for p in _get_ingest_queue_paths(document_type)]}; "
             "skipping materialisation (skip-not-fail policy)"
         )
         return MaterializeResult(
@@ -200,14 +204,35 @@ def _run_pipeline_asset(
     )
 
 
-def _get_ingest_queue_path(document_type: str) -> Path:
-    """Return the stedding/ingest_queue/ path for the given document type."""
+def _get_ingest_queue_paths(document_type: str) -> list[Path]:
+    """Return all stedding/ingest_queue/ paths for the given document type.
+
+    Per the `ncca-leaving-cert-syllabi-corpus` openspec change (2026-06-30),
+    syllabi may now arrive in either of two source subtrees:
+    - `ncca.ie/`             — the existing path (redevelopment meeting notes,
+                              background papers, NCCA-hosted draft specs)
+    - `curriculumonline.ie/` — the new path (currently-taught syllabi, new
+                              redevelopment specs, teacher guidelines)
+
+    Both are scanned so the 6-stage pipeline picks up every syllabus PDF
+    regardless of its source domain.
+    """
     base = Path(os.environ.get("STEDDING_ROOT", "/stedding/ingest_queue"))
     if document_type == "syllabus":
-        return base / "ncca.ie"
+        return [base / "ncca.ie", base / "curriculumonline.ie"]
     elif document_type == "past_paper":
-        return base / "examinations.ie"
+        return [base / "examinations.ie"]
     elif document_type == "marking_scheme":
-        return base / "examinations.ie" / "marking-schemes"
+        return [base / "examinations.ie" / "marking-schemes"]
     else:
-        return base
+        return [base]
+
+
+def _get_ingest_queue_path(document_type: str) -> Path:
+    """Return the **first** stedding/ingest_queue/ path for the given document type.
+
+    Kept for backward compatibility — prefer `_get_ingest_queue_paths` in new
+    code since the syllabus pipeline now has two source subtrees.
+    """
+    paths = _get_ingest_queue_paths(document_type)
+    return paths[0] if paths else Path(os.environ.get("STEDDING_ROOT", "/stedding/ingest_queue"))
