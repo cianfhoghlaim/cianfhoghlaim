@@ -1,5 +1,10 @@
-// BAML Client Configuration for Tuath
-// Celtic Educational MMO - LLM Clients
+// BAML Client Configuration for the Cianfhoghlaim Educational MMO
+// (formerly "Tuath" Celtic Educational MMO - LLM Clients)
+// The clients are reused by the new 8 NCCA subject agents (math_agent,
+// appm_agent, chem_agent, geog_agent, hist_agent, engl_agent, gael_agent,
+// comp_agent). The legacy "Tuath" naming is preserved only in client
+// variable names that may be referenced by historical BAML code; new
+// code SHOULD use the names "CianfhoghlaimContentFallback" etc.
 
 // Primary client for orchestration and complex tasks
 client<llm> GPT4o {

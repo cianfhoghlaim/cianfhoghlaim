@@ -1,7 +1,8 @@
 """
-tuatha — Python asset module for Domain 5.
+educational — Python asset module for Domain 5 (formerly "tuatha").
 
-Wires the 6 Tuatha (Celtic MMO) game-state sources as Dagster assets:
+Wires the 6 Tuatha-derived (now "educational") game-state sources as
+Dagster assets:
 
 1. mythology_cognify — Celtic mythology knowledge graph
 2. celtic_tutor_agent — Celtic language tutor (port 7777)
@@ -10,11 +11,17 @@ Wires the 6 Tuatha (Celtic MMO) game-state sources as Dagster assets:
 5. tuatha_embedding — Player/quest embeddings
 6. tuatha_audio — Audio assets (Celtic music, sound effects)
 
-This is the Layer 1 + 2 of the 4-layer asset graph for the Tuatha
-code-location. The Tuatha code-location lives at
-`infrastructure/stacks/tuatha/` and runs on a separate port (3000).
+**Note (2026-06-30 — cianfhoghlaim-educational-mmo-v1):**
+This module's underlying Python paths still use the legacy
+"tuatha" naming for backwards compatibility with the 6-phase
+refactor's shim pattern. The follow-on rename tasks (Phase 2,
+T2.12 in the openspec change) update the import paths to use
+`cianfhoghlaim.agents.meaisinfhoghlaim.educational.*` once the
+shim compatibility period ends.
 
-Reference: openspec/specs/tuatha-platform/spec.md (24 requirements).
+This is the Layer 1 + 2 of the 4-layer asset graph for the
+educational (formerly Tuatha) code-location. Reference:
+openspec/specs/cianfhoghlaim-educational-mmo/spec.md (8 requirements).
 """
 from __future__ import annotations
 
@@ -49,7 +56,7 @@ tuatha_assets = [
     ),
     _make_tuatha_asset(
         "celtic_tutor_agent",
-        "cianfhoghlaim.agents.tuatha.agents.adk.celtic_tutor",
+        "cianfhoghlaim.agents.meaisinfhoghlaim.educational.agents.adk.celtic_tutor",
         "run_celtic_tutor",
     ),
     _make_tuatha_asset(
