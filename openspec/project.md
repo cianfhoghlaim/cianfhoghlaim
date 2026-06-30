@@ -36,7 +36,7 @@ culture, government, intelligence, statistics, geospatial).
 > **NOTE:** Source schema layout is provisional — refactor after Plan 1 informs
 > best CocoIndex + DLT + DuckDB + DuckLake + Lance patterns.
 
-## Capability Areas (34 specs, 8 groups)
+## Capability Areas (36 specs, 8 groups)
 
 ### Cianfhoghlaim core (12 specs — Plan 1 active)
 
@@ -92,7 +92,7 @@ culture, government, intelligence, statistics, geospatial).
 | `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex at `cianfhoghlaim/web/` | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
 
-### Infrastructure + Tooling (8 specs)
+### Infrastructure + Tooling (9 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
@@ -106,6 +106,7 @@ culture, government, intelligence, statistics, geospatial).
 | `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `documentation` | Canonical `docs/` structure (8 numbered domains), frontmatter schema, Cognee ingestion | Active |
 | `celtic-asset-generation` | **4 successive INDEPENDENT asset gen pipelines** at `cianfhoghlaim/assets/asset_generation/`: `official_documents/{syllabus,exam_papers,marking_schemes}/` → `subject_assets/{chemistry_lab,geography_landscape,biology_specimens,physics_apparatus}/` → `language_assets/{gaeilge,cymraeg,gaidhlig,gaelg,kernewek,brezhoneg}_assets.py` → `exporters/{babylon,godot,unity,unreal}.py` | Active |
+| `dagster-5-layer-component-architecture` | 5 KCG-specific Dagster Components (`CelticIngestionComponent` / `CelticMaterialsComponent` / `CelticModelLifecycleComponent` / `CelticAssetGenerationComponent` / `CelticAgentOpsComponent`) at `cianfhoghlaim/dagster/components/layer{1..5}_*.py` + 5-layer `defs/<1..5>_<layer>/` YAML tree + 260+ assets organised into 5 hierarchical groups (`1_ingestion/*`, `2_materials/*`, `3_model_lifecycle/*`, `4_asset_generation/*`, `5_agent_ops/*`) + Dagster 1.13+ Declarative Automation (`AutomationCondition.eager() | .cron(...)`) + Virtual Assets (`is_virtual=True` on the 17 L3 CocoIndex v1 Apps) + State-Backed Components (the 5 L1 high-churn sources NCCA/SEC/CCEA/SQA/WJEC with `state_refresh_interval="monthly"`) + R1–R4 conformance enforced at scaffold time + L5 Agent Operations (12 agents × 5 emitted assets = 60 new L5 assets, with RisingWave event stream at `risingwave.cianfhoghlaim.ie:4566` + Letta memory + Langfuse traces dropped); the 5-layer rewrite supersedes the legacy 3 KCG Components (`celtic_dlt_source`, `celtic_cocoindex_v1`, `celtic_lancedb_hnsw`); the `2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture` change | Active |
 
 ### Team Workflow (3 specs)
 
