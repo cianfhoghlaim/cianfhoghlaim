@@ -372,6 +372,138 @@ Respond with just the domain name (lowercase, one word).
 
 
 # ============================================================================
+# NCCA Subject Agent Wrapper (added 2026-06-30 per
+# cianfhoghlaim-educational-mmo-v1)
+# ============================================================================
+
+class _SubjectAgentWrapper:
+    """Adapter that wraps the 8 NCCA subject ADK LlmAgents for use as
+    `RootAgent._get_agent` returns.
+
+    The 8 canonical ADK LlmAgents live at:
+        cianfhoghlaim.agents.meaisinfhoghlaim.educational
+            .math_agent / appm_agent / chem_agent / geog_agent
+            / hist_agent / engl_agent / gael_agent / comp_agent
+
+    Each is a `google.adk.agents.LlmAgent`. This wrapper:
+    - Maps `AgentDomain` → the corresponding subject agent module
+    - Wraps `.process(context)` to produce an `AgentResponse` for the
+      root orchestrator (Kafka + Langfuse + Letta + observability)
+    - Surfaces the 5 canonical tools per agent
+    """
+
+    AGENT_MODULES: dict[AgentDomain, str] = {
+        AgentDomain.MATH: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.math_agent",
+        AgentDomain.APPM: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.appm_agent",
+        AgentDomain.CHEM: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.chem_agent",
+        AgentDomain.GEOG: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.geog_agent",
+        AgentDomain.HIST: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.hist_agent",
+        AgentDomain.ENGL: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.engl_agent",
+        AgentDomain.GAEL: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.gael_agent",
+        AgentDomain.COMP: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.comp_agent",
+    }
+
+    SUBJECT_NAMES: dict[AgentDomain, str] = {
+        AgentDomain.MATH: "Mathematics",
+        AgentDomain.APPM: "Applied Mathematics",
+        AgentDomain.CHEM: "Chemistry",
+        AgentDomain.GEOG: "Geography",
+        AgentDomain.HIST: "History",
+        AgentDomain.ENGL: "English",
+        AgentDomain.GAEL: "Gaeilge",
+        AgentDomain.COMP: "Computer Science",
+    }
+
+    def __init__(self, domain: AgentDomain):
+        self.domain = domain
+        self._adk_agent = None
+        self._load_attempted = False
+
+    def _ensure_loaded(self):
+        """Lazy-import the canonical ADK LlmAgent for this subject."""
+        if self._adk_agent is not None or self._load_attempted:
+            return
+        self._load_attempted = True
+        module_path = self.AGENT_MODULES.get(self.domain)
+        if not module_path:
+            return
+        try:
+            import importlib
+            mod = importlib.import_module(module_path)
+            subject_name = self.SUBJECT_NAMES[self.domain]
+            slug = subject_name.lower().replace(" ", "_")
+            agent_attr = f"{slug}_agent"  # e.g. "mathematics_agent"
+            if hasattr(mod, agent_attr):
+                self._adk_agent = getattr(mod, agent_attr)
+            elif hasattr(mod, "math_agent") and self.domain == AgentDomain.MATH:
+                self._adk_agent = getattr(mod, "math_agent")
+            else:
+                logger.debug(
+                    "NCCA subject agent not exported from %s (expected %s)",
+                    module_path,
+                    agent_attr,
+                )
+        except ImportError as exc:
+            logger.debug("Could not import NCCA subject agent %s: %s", module_path, exc)
+
+    async def process(self, context: AgentContext) -> AgentResponse:
+        """Process a user query via the NCCA subject specialist agent."""
+        self._ensure_loaded()
+
+        subject_name = self.SUBJECT_NAMES.get(self.domain, self.domain.value)
+
+        if self._adk_agent is None:
+            return AgentResponse(
+                content=(
+                    f"The {subject_name} specialist agent is not currently loaded. "
+                    f"Please ensure the BAML client and ADK runtime are available."
+                ),
+                domain=self.domain,
+                metadata={
+                    "agent_loaded": False,
+                    "subject": subject_name,
+                },
+                follow_up_queries=[
+                    f"Try a {subject_name} question with concrete NCCA LO code",
+                ],
+            )
+
+        # Run the ADK LlmAgent via its `.run_async()` interface.
+        # Falls back gracefully if the ADK runtime is unavailable.
+        try:
+            from google.adk.runners import InMemoryRunner
+            runner = InMemoryRunner(agent=self._adk_agent)
+            content = await runner.run(
+                user_id=context.metadata.get("user_id", "anonymous"),
+                session_id=context.session_id or f"session-{context.query[:16]}",
+                new_message=context.query,
+            )
+            return AgentResponse(
+                content=str(content),
+                domain=self.domain,
+                metadata={
+                    "agent_loaded": True,
+                    "subject": subject_name,
+                    "agent_name": getattr(self._adk_agent, "name", self.domain.value),
+                },
+            )
+        except Exception as exc:
+            logger.warning("ADK runner failed for %s: %s", self.domain.value, exc)
+            return AgentResponse(
+                content=(
+                    f"The {subject_name} agent encountered an error: {exc}. "
+                    f"Falling back to a placeholder response."
+                ),
+                domain=self.domain,
+                metadata={
+                    "agent_loaded": True,
+                    "subject": subject_name,
+                    "error": str(exc),
+                },
+            )
+
+
+# ============================================================================
 # Root Agent
 # ============================================================================
 
@@ -452,6 +584,16 @@ class RootAgent:
             elif domain == AgentDomain.STATISTICS:
                 from .statistics_agent import StatisticsAgent
                 self._agents[domain] = StatisticsAgent()
+            elif domain in (
+                AgentDomain.MATH, AgentDomain.APPM, AgentDomain.CHEM,
+                AgentDomain.GEOG, AgentDomain.HIST, AgentDomain.ENGL,
+                AgentDomain.GAEL, AgentDomain.COMP,
+            ):
+                # 8 NCCA subject specialists (added 2026-06-30 per the
+                # cianfhoghlaim-educational-mmo-v1 openspec change).
+                # Canonical implementations live at
+                # cianfhoghlaim.agents.meaisinfhoghlaim.educational.
+                self._agents[domain] = _SubjectAgentWrapper(domain)
             else:
                 # General agent handles unrouted queries
                 self._agents[domain] = GeneralAgent()
