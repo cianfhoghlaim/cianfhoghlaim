@@ -1,1 +1,0 @@
-# CocoIndex flows for Celtic MMO content (mythology embedding + Celtic multilingual transforms).
