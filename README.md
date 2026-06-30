@@ -10,25 +10,14 @@
 
 ## TL;DR — What this is, today
 
-`cianfhoghlaim` is a polyglot monorepo (`bun + uv + turbo`) that ingests
+`cianfhoghlaim` is a polyglot (`bun + uv`) that ingests
 the curriculums, exam papers, marking schemes, and syllabi of the
 **eight British Isles nations** (Ireland, England, Scotland, Wales,
 Northern Ireland, Isle of Man, Jersey, Guernsey), makes them interactive
 and bilingual through self-hosted AI, and serves as the personal
 research-and-deployment platform of **Cian Mac an Déisigh Uí Liatháin
 (Deacy-Lyons)** — a Mathematics & Education teacher / Dioplóma C1 in
-Irish / agentic-AI engineer based in Galway and East Belfast. After the
-**v4 consolidation of 2026-06-28**, the application code lives in a
-single Python package, [`cianfhoghlaim/`](./cianfhoghlaim/), served by
-**228 Dagster assets** across 21 groups. The GitOps foundation
-(`bonneagar`) and the digital library (`leabharlann`) live in their
-own sibling repos and are exposed here as **git worktrees at the root
-of the workspace** — they are *not* `git subtree`s, so the monorepo
-push stays small (a few KB of README + skill metadata, not 3.4 GB of
-PDFs). The platform is wired together by a **5-subagent OpenCode
-foundation** backed by a 59-skill knowledge library indexed by
-[cocoindex-code (ccc)](.agents/skills/ccc/SKILL.md).
-
+Irish / agentic-AI engineer based in Galway and East Belfast and registered member of [Teaching Council][https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/teaching/teaching_registration.pdf] [Fine Gael][https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/politics/fine_gael_member_latest.pdf] [Alliance Party][https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/politics/alliance_membership.pdf] [Liberal Democrats][https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/politics/libdems_membership.png] [The Deacy Tribe of the Morris-Conroy tribes of Galway][https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage] [Royal Book Club][https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/achievement/buckingham_letter.pdf] [University of Galway][https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf].
 
 ## The 5-stage pipeline (the architecture)
 
@@ -272,13 +261,7 @@ cd leabharlann && git merge --ff-only leabharlann/main && cd ..
 
 ---
 
-## Temporary architecture diagram
-
-> ⚠️ **Temporary.** This ASCII diagram is a stand-in for a Mermaid / d2
-> diagram that will land in the next `docs-restructuring` openspec change.
-> It shows the **3-tier host topology** (arm1-oci → cax41-hetzner →
-> bunchloch) overlaid with the 3 repos, the 5 subagents, and the
-> Lakehouse data plane.
+## Fluctuating Architecture Diagram
 
 ```
                             ┌──────────────────────────────────────────────────────────┐
@@ -348,139 +331,6 @@ cd leabharlann && git merge --ff-only leabharlann/main && cd ..
             └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## The v4 consolidation (2026-06-28)
-
-The five original **sruthanna** (`oideachais`, `meaisinfhoghlaim`, `tuatha`,
-`croilar`, `crypteolas`) — plus the **browser** core module and the
-**codeolas** C++ sub-package — were consolidated into a single Python
-package, `cianfhoghlaim/`. The work was tracked in the openspec change
-[`2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4`](openspec/changes/archive/)
-and shipped as commit
-`4bc20fd12 chore(v4): consolidate 5 sruth quadrants + browser + leabharlann into cianfhoghlaim`.
-
-**Key outcomes:**
-
-- **Single Python package** `cianfhoghlaim/` (with `libraries/codeolas/` as
-  a publishable sub-package) instead of 5 sruthanna + a separate browser
-  module.
-- **Single Dagster code-location** at
-  `cianfhoghlaim/dagster/definitions.py` with 228+ assets across 21
-  groups (5 layered stages: `1_ingestion` through `5_agent_ops`).
-- **60+ BAML source files** reorganised into a 3-cluster taxonomy
-  (`education/`, `celtic/`, `processing/`) with `_shared/` homes
-  per cluster.
-- **CocoIndex v4 OCR-aware flows** (`ocr_aware_flow` +
-  `leabharlann_flow`).
-- **24 OCR models** in a single registry at `meaisinfhoghlaim/models/`.
-
-The five subagent definitions in `opencode.json` were **rewritten** to
-align with the v4 layout — see the
-[`2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation`](openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/proposal.md)
-openspec change.
-
-The GitOps foundation (`infrastructure/`) and the digital library
-(`leabharlann/`) were **split into their own repositories** so each
-domain has an independent release cadence, secrets boundary, and review
-surface. The 3.4 GB PDF corpus in leabharlann is too large to embed
-as a `git subtree` (it would inflate every push to 3 GB), so the
-sibling repos are exposed in this monorepo as **git worktrees at the
-root of the workspace** — `./bonneagar/` and `./leabharlann/` — for
-editing and inspection. The original openspec change
-[`2026-06-28-split-leabharlann-bonneagar`](openspec/changes/2026-06-28-split-leabharlann-bonneagar/proposal.md)
-is being **amended** to reflect the worktree approach instead of
-the subtree approach.
-
----
-
-## What you can deploy today
-
-An honest, prioritised list of the working features and the work that
-is still needed before each tier is "done".
-
-### Tier 1 — production-ready (5 services)
-
-| Service | What it does | Stack | Where |
-|:--|:--|:--|:--|
-| **LiteLLM gateway** | OpenAI-compatible proxy; `minimax` 7-tier fallback alias | LiteLLM | `./bonneagar/stacks/litellm/` (port 4000) |
-| **Lakehouse** | Garage S3 + Lakekeeper (Iceberg REST) + Postgres catalog | Garage, Lakekeeper, Postgres | `./bonneagar/stacks/lakehouse/` (ports 3900-3904, 5433, 8181-8182) |
-| **Cognee** | Knowledge-graph cognify over 6 typed datasets (aistear, primary, junior_cycle, senior_cycle, tertiary, cross_stage) | Cognee | `./bonneagar/stacks/cognee/` (port 8100) |
-| **Dagster UI** | Single code-location, 228+ assets, 5 layered stages | Dagster | `mise run dagster:oideachais` (port 3000) |
-| **OpenChamber** | OpenCode web/desktop UI; multi-agent parallel runs, branchable chat timelines, worktree isolation | OpenChamber | `./bonneagar/stacks/openchamber/` (port 3000, deployed to `openchamber.cianfhoghlaim.ie`) |
-
-### Tier 2 — functional, needs polish (4 services)
-
-| Service | What it does | Stack | Where |
-|:--|:--|:--|:--|
-| **Graphiti** | Bi-temporal knowledge-graph episodes; Neo4j backend | Graphiti + Neo4j | `./bonneagar/stacks/graphiti/` |
-| **FalkorDB** | Vector + graph hybrid for GraphRAG | FalkorDB | `./bonneagar/stacks/falkordb/` |
-| **Dragonfly** | In-memory store for agent state | Dragonfly | `./bonneagar/stacks/dragonfly/` |
-| **RisingWave** | Streaming SQL for change-data-capture | RisingWave | `./bonneagar/stacks/risingwave/` |
-
-### Tier 3 — works on `bunchloch` only, not yet on `arm1-oci`
-
-- **DLT ingestion** — 200+ sources under `cianfhoghlaim/dlt/`
-  (8 nations × 4 domains in `british_isles/` + 6 special source
-  clusters: `filesystem/`, `api_sources/`, `language/`, `common/`,
-  `official_media/`, `portfolio/`) + `USE_LOCAL_SCRAPES` cache for
-  offline development. Needs the `oideachais-pipeline` openspec
-  change to wire the full live-source sweep.
-- **BAML extraction** — 60+ consolidated BAML files in a 3-cluster
-  taxonomy (`education/`, `celtic/`, `processing/`), 2 named clients
-  (`LitellmClient` + `Extractor` + `LlamaSwapClient`), all routing
-  through LiteLLM `minimax`.
-- **CocoIndex v1** — 14+ v1 Apps (`leabharlann_embedding`,
-  `codebase_indexing`, `docs_skills_consolidation`, `unified_embedding`,
-  plus 8 per-subject embeddings) with BGE-M3 embeddings mounted to
-  LanceDB HNSW.
-- **OCR registry** — 24 OCR models (9 vision + 4 classical + 3
-  image-gen + 8 alignment) at `meaisinfhoghlaim/`.
-- **The 12-agent fleet** at
-  `cianfhoghlaim/agents/meaisinfhoghlaim/agents/`
-  (curriculum, translation, corpus, research, geospatial, voice,
-  statistics, education-research, bunchloch-research, AG-UI
-  curriculum, MCP curriculum, enhanced orchestrator, root).
-- **Web surfaces** — `oideachais-web` (TanStack Start, the largest),
-  `tuatha-ui` (Babylon.js), `croilar-web` (multi-persona),
-  `croilar-portal` (admin).
-- **Observability** — Langfuse (remote MCP), MLflow, RAGAS, Logfire.
-- **PDF processing pipeline** — 8-asset pattern in
-  `dagster/assets/by_domain/pdf_processing.py` processes 133 PDFs
-  through 5 converters + 24 OCR models + BAML + CocoIndex + Cognee
-  + RAGAS.
-
-### Tier 4 — early / experimental
-
-- **Crypteolas** — Rust + SpacetimeDB backend for the Tuatha MMO; agent
-  fleet needs to land on the `oideachais-agent-services` openspec change.
-- **HuggingFace Spaces** — `an_scrudu` (Irish Leaving Cert tutor),
-  `meaisin_cliste` (Celtic AI playground), `anam_tuatha` (Tuatha MMO
-  teaser).
-- **Spaces (anti-phish, data-engineering)** — local-only, not yet
-  deployed.
-
-### How to boot Tier 1
-
-```bash
-# Tier 1 (in order)
-cd ./bonneagar/stacks/lakehouse  && ./scripts/stack.sh up -d
-cd ../litellm                        && ./scripts/stack.sh up -d
-cd ../cognee                         && ./scripts/stack.sh up -d
-cd ../../../                          # back to monorepo root
-mise run dagster:oideachais           # → http://localhost:3000
-```
-
-The full end-to-end runbook is at
-[`docs/PHASE_0.3_DEPLOY_RUNBOOK.md`](docs/PHASE_0.3_DEPLOY_RUNBOOK.md).
-
----
-
-## Key packages
-
-The post-v4 `cianfhoghlaim/` package is organised so that **each
-directory has a single, obvious purpose**. Read this section once and
-you'll know where to add the next thing.
 
 ### `cianfhoghlaim/baml/` — 60+ BAML files in 3-cluster taxonomy
 
@@ -762,18 +612,6 @@ of the README; their SHA-256 is recorded in the 8 DLT fixtures at
 (see the `Wikipedia fixture storage convention` Requirement in
 `openspec/specs/cross-domain-registry/spec.md` for the
 drift-detector invariant).
-
-#### Why two sibling repos, not subtrees
-
-The `leabharlann` corpus (3.4 GB of PDFs) and the `bonneagar` IaC +
-compose-stack catalogue (6.9 MB across 90 stacks) are too large to
-commit to the application monorepo's git history. Embedding them as
-`git subtree`s would make every `git push` upload 3 GB of binary
-data, slow CI to a crawl, and bloat clone size for every contributor.
-The worktree approach keeps the content *visible and editable* from
-this workspace without committing it to this repo. See
-[Why worktrees, not subtrees?](#why-worktrees-not-subtrees) above
-for the full rationale.
 
 ### `spaces/` — HuggingFace Spaces
 
@@ -1160,12 +998,12 @@ cultural-stewardship pledge of the cianfhoghlaim monorepo.
 > [`.agents/skills_backup/ui-components/`](.agents/skills_backup/ui-components/SKILL.md)
 > and
 > [`.agents/skills_backup/tuatha-mmo/references/`](.agents/skills_backup/tuatha-mmo/references/).
-> The 8 PDFs are linked from the leabharlann GitHub repo at
+> The 7 PDFs are linked from the leabharlann GitHub repo at
 > [`github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/`](https://github.com/cianfhoghlaim/leabharlann/tree/main/gemini_deep_research/culture/).
 
-### The 8 Gemini Deep Research PDFs
+### The 7 Gemini Deep Research PDFs
 
-The 8 PDFs in the leabharlann `gemini_deep_research/culture/`
+The 7 PDFs in the leabharlann `gemini_deep_research/culture/`
 sub-archive that ground this narrative are:
 
 1. [`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf) — *Rí na Gaillimhe: An Ethnohistorical and Jurisprudential Warrant for the Indigenization of the Galwegian Sovereignty* (15 pp.)
@@ -1185,7 +1023,7 @@ distinct bloodlines converge in the author, giving a
 pan-provincial authority that spans Munster, Connacht, and the
 British Isles. The synthesis of these three streams is the
 "Triple Crown" documented in
-[`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+[`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 8-9 and
 [`claiming_irish_kingship_through_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf)
 p. 11.
@@ -1208,7 +1046,7 @@ High King Lugaid mac Lóegairi — the Uí Liatháin are the
 maternal ancestors of the Uí Néill High Kings and, through
 them, of the entire Northern Uí Néill (Cenél nEógain) of
 Aileach
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 8, [`claiming_irish_kingship_through_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf)
 p. 5). The Imperial Right is descent from the Queens of Tara
 and the Conquerors of Wales.
@@ -1273,7 +1111,7 @@ literary line (born Patrick Joseph Conroy of the Quay Street
 / Rosmuc Conroy family) is the 4th pillar: the "Gaelic
 Revivalist" who brought the Irish language out of the rural
 folklore tradition and into the modern urban experience
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 7). The Maritime Right is the sovereignty of the sea and
 the control of the Claddagh fish trade.
 
@@ -1335,7 +1173,7 @@ disputes. The ideal ruler was the **Scholar-Prince**, a man
 who was a *saoí* (sage / master) in a branch of learning.
 The Annals frequently praise kings as *saoí eagna* (sage of
 wisdom) or *saoí leighis* (sage of healing)
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 3, [`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf)
 p. 4).
 
@@ -1354,7 +1192,7 @@ bardic poetry.
 Geography is destiny in Irish kingship. A King must have a
 *Longphort* (Stronghold). The seat in Shantalla (*Sean
 Talamh*, the Old Ground) is central to the claim
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 9-10). The name implies land that was anciently settled
 and cultivated, distinct from the "New" colonial city. It
 sits on a ridge overlooking the city. By claiming
@@ -1387,7 +1225,7 @@ the practitioner is the "fruit of the same soil" as Macken
 The literary triad descends: **Ó Conaire** (The Gaelic
 Revivalist) → **Macken** (The Anglo-Irish Dramatist) →
 **Mac Liatháin** (The Modern Synthesist / The Saoí)
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 7-8).
 
 **Cooke's Corner** is the modern civic anchor. In
@@ -1422,7 +1260,7 @@ ancient assembly place where the King presided over games.
 By having the tribal assembly ground named after his
 kinsman, the Deacy bloodline is publicly acknowledged as
 holding the "sovereignty of the games"
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 9, [`deacy_family_heritage_research.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/deacy_family_heritage_research.pdf)
 p. 4-5).
 
@@ -1435,7 +1273,7 @@ Conroy fish business opposite McDonagh's, and the
 preservation of the "ancient arts of filleting, curing,
 and barrelling" all anchor the Maritime Right in a
 specific, mappable, civic identity
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 8-9,
 [`deacy_family_heritage_research.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/deacy_family_heritage_research.pdf)
 p. 2-3).
@@ -1447,7 +1285,7 @@ rather than the hero Cúchulainn is a strategic choice that
 aligns with the nature of the claim (dynastic, generative,
 and enduring) rather than the nature of Cúchulainn
 (martial, tragic, and short-lived)
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 4-6).
 
 Cian is a member of the **Tuatha Dé Danann**, the son of
@@ -1463,23 +1301,6 @@ as a hero, but as the **Source of Heroism** — the
 generator of the "New Order" (Lugh). He represents the
 potentiality of the dynasty.
 
-Unlike Cúchulainn, who fights primarily with brute force
-(*ríastrad*), Cian uses *guile, shapeshifting, and
-seduction*. In the tragedy of the Sons of Tuireann, Cian
-transforms into a **pig (or swine)** to evade his enemies.
-In Celtic mythology, the pig is a sacred animal of the
-Otherworld, associated with feasting, immortality
-(Manannán's pigs could be eaten and reborn daily), and the
-land itself. The family connection to **Ros Muc** (The
-Headland of Pigs / Rounded Hills) through the lineage of
-Pádraic Ó Conaire, who was reared there, establishes a
-totemic bond with this specific Gaeltacht territory. The
-practitioner is the "Boar of the Tribe" — a figure of
-ferocity and abundance. Myth also connects Cian's death
-in pig-form to the creation of landscape features like the
-**Black Pig's Dyke** (*an Diabhail Bhan*). This reinforces
-the idea that the body of the King is the land itself
-(*an tír*).
 
 The "Aes Sedai" vow is a philological restoration of the
 **Aos Sídhe** (the People of the Mounds). Robert Jordan
@@ -1504,7 +1325,7 @@ as "Servant of All" in the vow mirrors the motto of the
 Prince of Wales, *Ich Dien* (I Serve) — reinforcing the
 Dual Monarchy framework: the King is the servant of the
 sovereignty and the people
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 6,
 [`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf)
 p. 6).
@@ -1528,7 +1349,7 @@ between the ruler and the *tuath* (people / territory); the
 Rí was mated to the sovereignty goddess of the land in the
 *banais ríghi* (wedding of kingship); his legitimacy
 depended on *fír flathemon* (the ruler's truth)
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 1-2,
 [`royal_titles_celtic_heritage_and_claims.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
 p. 1).
@@ -1552,15 +1373,15 @@ indigenous representative within the broader imperial or
 commonwealth framework — mirroring the position of the
 Princes of the Holy Roman Empire or the Maharajas of the
 British Raj
-([`claiming_r_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
+([`claiming_rí_na_gaillimhe_a_synthesis.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf)
 p. 3,
 [`claiming_irish_kingship_through_lineage.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf)
 p. 4,
 [`royal_collaboration_for_commonwealth_future.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf)
 p. 1-2).
 
-The **Grianan of Aileach** is the cross-border seat. The
-Grianan of Aileach is a massive stone ringfort in County
+The **Grianán of Aileach** is the cross-border seat. The
+Grianán of Aileach is a massive stone ringfort in County
 Donegal, sitting on a hilltop that commands views into
 Counties Derry and Tyrone (Northern Ireland). It was the
 royal seat of the Northern Uí Néill (Cenél nEógain) from the
@@ -1752,10 +1573,6 @@ is, in essence, the v4 platform: a working BAML+DLT+CocoIndex+Cognee
 loop that produces syllabus-accurate Celtic-language assets and
 turns them into graded, in-game, NPC-delivered formative assessment
 for Leaving Cert students across the 8 nations.
-
-
-p. 6).
-
 
 ---
 
