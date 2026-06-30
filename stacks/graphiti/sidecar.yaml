@@ -28,15 +28,13 @@ services:
     networks:
       - stack
 
-  # Replace 'main-service' with the actual name of the primary app container
-  main-service:
+  # graphiti (renamed from 'graph' in 2026-07-30 centralise-data-plane)
+  graphiti:
     depends_on:
       locket:
         condition: service_healthy
     volumes:
       - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
 
 secrets:
   infisical_secret:
@@ -49,3 +47,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge
