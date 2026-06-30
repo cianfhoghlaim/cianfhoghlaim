@@ -1,125 +1,88 @@
 # =============================================================================
 # MLFLOW - ML Experiment Tracking and Model Registry
 # =============================================================================
-# MLflow tracking server with PostgreSQL backend and MinIO artifact storage.
+# Updated for the `centralise-data-plane` rewrite (2026-07-30):
+# - The standalone `postgres` (postgres:16-alpine) container is removed.
+#   MLflow now uses the centralised lakehouse-postgres (db=mlflow).
+# - The standalone `minio` + `minio-init` containers are removed.
+#   MLflow now uses the centralised lakehouse-garage
+#   (bucket=mlflow-artifacts, auto-created by the lakehouse `garage-init`).
+# - The custom image bakes psycopg2-binary + boto3 so the cold-start
+#   install no longer delays the server boot.
 #
 # USAGE:
-#   Development:  docker compose --env-file ../../.env.local up -d
-#   Production:   locket exec --env-file secrets.env -- docker compose up -d
-#   Standalone:   docker compose up -d  (uses defaults)
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f sidecar.yaml up -d
+#                 (relies on .env for local secrets — see .env.example)
 # =============================================================================
 
 name: mlflow
 
 services:
   # ---------------------------------------------------------------------------
-  # POSTGRESQL - Backend Store
+  # MLFLOW - Tracking Server (centralised data plane)
   # ---------------------------------------------------------------------------
-  postgres:
-    image: postgres:16-alpine
-    container_name: mlflow-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-mlflow}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
-      POSTGRES_DB: ${POSTGRES_DB:-mlflow}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - mlflow-postgres:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mlflow}"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-    networks:
-      - mlflow
-
-  # ---------------------------------------------------------------------------
-  # MINIO - Artifact Storage
-  # ---------------------------------------------------------------------------
-  minio:
-    image: minio/minio:latest
-    container_name: mlflow-minio
-    restart: unless-stopped
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-devpassword}
-    volumes:
-      - mlflow-minio:/data
-    command: server /data --console-address ":9001"
-    healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-    networks:
-      - mlflow
-
-  # ---------------------------------------------------------------------------
-  # MINIO INIT - Create Bucket
-  # ---------------------------------------------------------------------------
-  minio-init:
-    image: minio/mc:latest
-    container_name: mlflow-minio-init
-    depends_on:
-      minio:
-        condition: service_healthy
-    entrypoint: |
-      /bin/sh -c "
-      mc alias set myminio http://minio:9000 ${MINIO_ROOT_USER:-minio} ${MINIO_ROOT_PASSWORD:-devpassword}
-      mc mb --ignore-existing myminio/${MINIO_BUCKET:-mlflow}
-      exit 0
-      "
-    restart: "no"
-    networks:
-      - mlflow
-
-  # ---------------------------------------------------------------------------
-  # MLFLOW - Tracking Server
+  # Custom build wraps upstream ghcr.io/mlflow/mlflow with psycopg2-binary
+  # + boto3 baked in, eliminating the 30s pip-install on first boot.
   # ---------------------------------------------------------------------------
   mlflow:
-    image: ghcr.io/mlflow/mlflow:${MLFLOW_VERSION:-v2.19.0}
-    container_name: mlflow-server
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    image: ghcr.io/cianfhoghlaim/mlflow:v2.19.0
+    container_name: mlflow
     restart: unless-stopped
     ports:
       - "${MLFLOW_PORT:-5000}:5000"
     environment:
-      MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER:-mlflow}:${POSTGRES_PASSWORD:-devpassword}@postgres:5432/${POSTGRES_DB:-mlflow}
-      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-      MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://${MINIO_BUCKET:-mlflow}/artifacts
-      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minio}
-      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-devpassword}
-      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
+      # Centralised lakehouse-postgres (db=mlflow)
+      MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/mlflow
+      # Centralised lakehouse-garage (bucket=mlflow-artifacts)
+      MLFLOW_S3_ENDPOINT_URL: http://lakehouse-garage:3900
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow-artifacts/
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-garage}
       MLFLOW_S3_IGNORE_TLS: "true"
     command:
-      - /bin/bash
-      - -c
-      - |
-        pip install --no-cache-dir psycopg2-binary boto3
-        mlflow server \
-          --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI" \
-          --default-artifact-root "$$MLFLOW_DEFAULT_ARTIFACT_ROOT" \
-          --host 0.0.0.0 \
-          --port 5000
-    depends_on:
-      postgres:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
-      minio-init:
-        condition: service_completed_successfully
+      - mlflow
+      - server
+      - --backend-store-uri
+      - "$${MLFLOW_BACKEND_STORE_URI}"
+      - --default-artifact-root
+      - "$${MLFLOW_DEFAULT_ARTIFACT_ROOT}"
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "5000"
+    # Cross-project deps are managed by Komodo's [stack.depends_on] in
+    # deploy-mlflow-bunchloch.toml — see the file header.
+    depends_on: []
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
       interval: 10s
       timeout: 5s
       retries: 30
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
     networks:
       - mlflow
+      - lakehouse
 
-volumes:
-  mlflow-postgres:
-  mlflow-minio:
+  # ---------------------------------------------------------------------------
+  # (postgres + minio + minio-init REMOVED 2026-07-30 — uses centralised
+  # lakehouse-postgres + lakehouse-garage. The `mlflow` database and the
+  # `mlflow-artifacts` bucket are auto-created by the lakehouse stack's
+  # init-db.sql and garage-init respectively.)
+  # ---------------------------------------------------------------------------
 
 networks:
   mlflow:
     driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

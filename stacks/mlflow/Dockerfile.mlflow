@@ -1,0 +1,19 @@
+# Custom MLflow image with psycopg2-binary + boto3 pre-baked.
+# Eliminates the 30s pip install on first boot.
+#
+# Build:
+#   docker build -t ghcr.io/cianfhoghlaim/mlflow:v2.19.0 -f Dockerfile.mlflow .
+#
+# Pushed to ghcr.io by CI (or `mise run ci:publish-mlflow`).
+
+FROM ghcr.io/mlflow/mlflow:v2.19.0
+
+# Pre-bake the Postgres + S3 client libraries needed for the
+# centralise-data-plane architecture. Reduces cold start by ~30s.
+RUN pip install --no-cache-dir \
+      psycopg2-binary \
+      boto3
+
+# Re-declare the entrypoint (inherits from upstream, but make explicit)
+# MLflow server is started by the docker-compose `command:` block.
+ENTRYPOINT []
