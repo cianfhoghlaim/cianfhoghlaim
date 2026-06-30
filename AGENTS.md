@@ -29,6 +29,7 @@ entry points.
 | `litellm` | 4000 | `litellm.cianfhoghlaim.ie` | LLM gateway (OpenAI-compatible proxy for 70+ models) |
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` | LLM observability (traces, prompts, A/B tests) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal | Garage S3 + Postgres + Lakekeeper (data plane) |
+| `hermes` | 9119, 9120, 8443, 8090, 8080, 8645 | `hermes.cianfhoghlaim.ie` | Hermes autonomous agent runtime (3rd vertex; NousResearch/hermes-agent v0.17.0; bunchloch) |
 
 ### Priority skills (4 of 8)
 
