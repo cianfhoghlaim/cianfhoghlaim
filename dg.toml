@@ -10,19 +10,17 @@ directory_type = "workspace"
 [workspace]
 
 # Single consolidated code-location: the entire cianfhoghlaim package.
-# Module: cianfhoghlaim.assets.definitions exposes:
-#   - Ireland education assets (Plan 1 active)
-#   - UK nation education + domain assets (Plan 2/3 stubs)
-#   - Legacy Crown Dependencies assets (Jersey, Guernsey)
-#   - leabharlann assets (6 subdirs: aigne, gaeilge, gemini_deep_research,
-#     mata, ollscoil_na_gaillimhe, zotero)
-#   - 4 asset gen pipelines (official_documents, subject_assets,
-#     language_assets, exporters)
-#   - OCR evaluation harness asset (11 vision × 4 classical × ~220 evals)
-#   - 12-agent fleet asset (root, curriculum, translation, corpus, research,
-#     education_research, bunchloch_research, geospatial, statistics,
-#     curriculum_comparison, agui_curriculum, mcp_curriculum)
+# Module: cianfhoghlaim.dagster.definitions exposes (post-Phase-1 fix 2026-06-30):
+#   - 199 assets across Ireland education (5 cycles × EN/GA), leabharlann,
+#     OCR/HTR, geospatial, model conversion, ML training, mythology
+#   - 31 jobs, 6 schedules, 16 sensors, 22 asset checks
+#   - 12-agent fleet (root, curriculum, translation, corpus, research, …)
+#   - DLT source wrappers, dbt-duckdb project, CocoIndex v1 Apps
+# Note: prior versions referenced `cianfhoghlaim.assets.definitions` which
+# never existed on disk — that path was a v4-consolidation wiring bug.
+# See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
+# (Phase 1, T1.7).
 [[workspace.locations]]
 path = "cianfhoghlaim"
 code_location_name = "cianfhoghlaim"
-module_name = "cianfhoghlaim.assets.definitions"
+module_name = "cianfhoghlaim.dagster.definitions"

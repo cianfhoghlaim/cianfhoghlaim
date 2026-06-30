@@ -260,3 +260,33 @@ infisical secrets delete OPENAI_API_KEY_OLD
 - Infisical releases: <https://github.com/Infisical/infisical/releases> (latest `v0.161.9` 2026-06-26)
 - Locket: <https://github.com/cianfhoghlaim/locket> (KCG)
 - mise: <https://mise.jdx.dev/>
+
+---
+
+## Hermes + Apple Photos secret contracts (added 2026-06-30)
+
+### Hermes secret contract
+
+The `hermes` stack adds 9 `infisical://dev-baile/hermes/<key>` references:
+- `api_server_key` — admin API token
+- `openai_api_key` — LITELLM_MASTER_KEY (re-keyed at the Infisical layer)
+- `openai_base_url` — http://litellm:4000/v1
+- `langfuse_public_key` + `langfuse_secret_key` + `langfuse_base_url`
+- `telegram_bot_token` + `discord_bot_token` (separate from openclaw's)
+- `operator_pocket_id_subject` — the operator's Pocket ID subject for day-one allowlist population
+
+### Apple Photos secret contract
+
+The `apple_photos` dlt source uses 1 Infisical reference:
+- `paperless_consumer_token` — for POSTing document scans to paperless-ngx
+
+GPS coordinates are NOT a secret; they're gated by the
+`LEABHARLANN_PHOTOS_INCLUDE_GPS` env var (default `false`).
+
+### OpenClaw + OpenChamber LLM rewire
+
+Both stacks now route LLM through LiteLLM:
+- `openai_api_key` = `infisical://dev-baile/<stack>/openai_api_key` (resolves to `LITELLM_MASTER_KEY`)
+- `openai_base_url` = `infisical://dev-baile/<stack>/openai_base_url` (resolves to `http://litellm:4000/v1`)
+
+The previous `opencode-go` + `minimax-coding-plan` fallback chain is removed from `openclaw.json`.

@@ -7,7 +7,7 @@
       "headers": {
         "Authorization": "Bearer {env:BROWSERBASE_API_KEY}"
       },
-      "enabled": true,
+      "enabled": false,
       "timeout": 60000
     },
     "firecrawl": {
@@ -111,6 +111,69 @@
         "LANGFUSE_HOST": "https://langfuse.cianfhoghlaim.ie"
       },
       "enabled": true
+    },
+    "hermes": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "hermes_agent.mcp"
+      ],
+      "env": {
+        "HERMES_API_URL": "http://hermes:9119",
+        "HERMES_API_KEY": "infisical://dev-baile/hermes/api_server_key"
+      },
+      "enabled": true
+    },
+    "agent-registry": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "cianfhoghlaim.cocoindex.agent_registry"
+      ],
+      "env": {
+        "OPENCODE_JSON_PATH": "./opencode.json"
+      },
+      "enabled": true
+    },
+    "agents-md": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "cianfhoghlaim.cocoindex.agents_md"
+      ],
+      "env": {
+        "AGENTS_MD_REPO_ROOT": "./"
+      },
+      "enabled": true
+    },
+    "apple-photos": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "cianfhoghlaim.cocoindex.apple_photos_metadata"
+      ],
+      "env": {
+        "LEABHARLANN_PHOTOS_ROOT": "./leabharlann/photos",
+        "LEABHARLANN_PHOTOS_INCLUDE_GPS": "false"
+      },
+      "enabled": true
+    },
+    "huggingface": {
+      "type": "remote",
+      "url": "https://huggingface.co/mcp?login",
+      "enabled": true
     }
   },
   "provider": {
@@ -161,7 +224,7 @@
   "agent": {
     "build": {
       "description": "Primary build agent \u2014 full read/write/exec, all 53 top-level skills available. Default agent when the user opens a coding task. Uses the MiniMax-M3 direct coding-plan slot (no LiteLLM, no OpenCode Go).",
-      "model": "minimax/MiniMax-M3",
+      "model": "opencode_go/minimax-m3",
       "mode": "primary",
       "color": "primary",
       "prompt": "You are the canonical BUILD agent for the cianfhoghlaim monorepo (post-v4 consolidation). You have full read/write/exec permissions and access to all top-level skills in .agents/skills/.\n\nWORKFLOW:\n1. Receive a task, decompose it into work-streams\n2. Use ccc (CocoIndex Code) for semantic code search \u2014 never grep/find blindly\n3. Run `bun run ccc:index` to refresh the index if it's stale\n4. For multi-area work, dispatch the 5 subagents (data-platform, infrastructure, agent-platform, frontend-apps, research) in parallel via the task tool with subagent_type set to one of those names\n5. Always run quality gates after code changes: `mise run lint && mise run py:typecheck && mise run turbo typecheck`\n6. Commit + push (the user must explicitly ask for commit/push \u2014 never commit proactively)\n\nCONSULT the relevant skills (see AGENTS.md priority quick reference):\n- ccc (code search)\n- dlt (data ingestion)\n- dagster (orchestration)\n- motherduck (storage)\n- cocoindex (v1 indexing)\n- komodo (infrastructure stacks)\n- openspec (spec-driven changes)\n- browserbase (research automation)\n\nCONSTRAINTS:\n- Never write secrets to disk. .env is auto-hydrated via mise + Infisical.\n- For live web scrapes, set `os.environ['USE_LOCAL_SCRAPES'] = 'true'` first.\n- Per openspec workflow: list \u2192 write proposal/tasks/spec deltas \u2192 validate --strict \u2192 implement \u2192 archive.\n- All paths under cianfhoghlaim/ (NOT sruth/<quadrant>/ \u2014 the v4 consolidation merged those quadrants)."
@@ -204,7 +267,8 @@
         "ibis",
         "marimo",
         "langfuse",
-        "mlflow"
+        "mlflow",
+        "apple-photos"
       ]
     },
     "infrastructure": {
@@ -228,7 +292,8 @@
         "mlflow",
         "risingwave",
         "olake",
-        "effect-ts"
+        "effect-ts",
+        "apple-photos"
       ]
     },
     "agent-platform": {
@@ -260,7 +325,8 @@
         "dlthub",
         "dagster",
         "duckdb",
-        "cocoindex"
+        "cocoindex",
+        "apple-photos"
       ]
     },
     "frontend-apps": {
@@ -289,7 +355,8 @@
         "pydantic",
         "ccc",
         "langfuse",
-        "cocoindex"
+        "cocoindex",
+        "apple-photos"
       ]
     },
     "research": {
@@ -308,7 +375,8 @@
         "langfuse",
         "mlflow",
         "baml",
-        "cocoindex"
+        "cocoindex",
+        "apple-photos"
       ],
       "color": "#8a5f3a"
     }

@@ -124,3 +124,19 @@ stages + 8 Dagster inbox assets + 12 vault refs) is documented in
 > **Note:** the mailcow-dockerized stack row itself is the
 > infrastructure sub-agent's scope. This entry is a cross-reference
 > only.
+
+---
+
+## Agent-platform cluster omnibus procedure (added 2026-06-30)
+
+The `deploy-agent-platform-cluster-bunchloch` Komodo procedure brings up the 8-stack agent-platform cluster in dependency order, with `--skip=<foundation|observability|memory|surfaces>` flags for partial re-deploys:
+
+- **Stage 0** — pre-reqs (Pangolin + Pocket ID + Infisical + Bunchloch resource ceiling check)
+- **Stage 1** — `foundation` (lakehouse: Garage S3 + Postgres + Lakekeeper)
+- **Stage 2** — `observability` (litellm + langfuse + mlflow + logfire)
+- **Stage 3** — `memory` (cognee + graphiti + lancedb)
+- **Stage 4** — `surfaces` (openclaw + openchamber + hermes)
+- **Stage 5** — health checks (8 stacks + paperless-ngx + 4 OCR stacks)
+- **Stage 6** — validate (`bun run validate-stacks`)
+
+The `hermes` stack itself is the 89th stack (88 + hermes) at `bonneagar/stacks/hermes/`. Its 7-file GOLD_STANDARD shape matches `openclaw/` and `openchamber/`.

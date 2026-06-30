@@ -22,13 +22,14 @@ dependencies = [
     "agno>=2.6.11",
     "anthropic>=0.106.0",
     "baml-py>=0.222.0",
-    "fastapi>=0.115.0,<0.117",  # upper bound pinned for mlx-omni-server compat
+    "fastapi>=0.115.0,<0.140",  # upper bound for mlx-omni-server compat; ag-ui-adk pinned separately via [agui] extra
     "firecrawl>=4.28.2",
     "google-genai>=1.73.1",
     "groq>=1.4.0",
     "logfire>=4.15.1",
     "marimo>=0.23.10",
     "openai>=2.32.0",
+    "uvicorn>=0.32.0",
 ]
 
 # This root project deliberately has no [project.dependencies] and no
