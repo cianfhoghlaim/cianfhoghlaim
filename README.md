@@ -463,7 +463,7 @@ cd leabharlann && git merge --ff-only leabharlann/main && cd ..
             ┌────────────────────────────────────────────────────────────────────────────────────────┐   │
             │  LLM GATEWAY  (LiteLLM, http://litellm:4000/v1)                                       │   │
             │  default_model = "minimax" alias  →  7-tier fallback                                    │   │
-            │  opencode-go/minimax-m3-slot{0,1,2} → qwen3.7-max → kimi-k2.6 → glm-4.6 → local/math  │   │
+            │  MiniMax-M3 (3 slots) → qwen3.7-max → kimi-k2.6 → glm-4.6 → local/math                │   │
             └────────────────────────────────────────────────────────────────────────────────────────┘   │
                                                                                                         │
             ┌────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -1204,50 +1204,42 @@ p. 6).
 
 ---
 
-## How this project is developed — OpenCode + MiniMax-M3 (for now)
+## How this project is developed — MiniMax-M3 (for now)
 
 The whole monorepo — agents, BAML extraction, Dagster assets,
 CocoIndex flows, marimo dashboards, web apps — is built
 agentically. The current canonical configuration lives at
-[`opencode.json`](./opencode.json). Two providers + one model
+[`opencode.json`](./opencode.json). One provider + one model
 class carry the workload, for now:
 
 | Provider | Model | API shape | Used by |
 |:--|:--|:--|:--|
-| `opencode_go` | `minimax-m3` | OpenAI-compatible (`{env:OPENCODE_GO_BASE_URL}`) | the `build` primary agent |
-| `minimax` | `MiniMax-M3` | Anthropic-compatible (`https://api.minimax.io/anthropic/v1`) | the `plan` agent + the 5 dispatchable subagents |
+| `minimax` | `MiniMax-M3` | Anthropic-compatible (`https://api.minimax.io/anthropic/v1`) | all 7 agents (build + plan + 5 subagents) |
 
-The model class is **MiniMax-M3**, exposed via two
-gateways: (a) the **OpenCode Go gateway** — a hosted
-OpenAI-compatible endpoint that fronts the model's 3-slot
-rotation (`opencode-go/minimax-m3-slot{0,1,2}`); and (b) the
-**direct MiniMax Coding Plan** Anthropic-compatible
-endpoint. The two paths are interchangeable from the
-agent's perspective; switching the build agent from one
-provider to the other is a 1-line change in `opencode.json`.
-Long-term the plan is to fold both paths into the single
-LiteLLM `minimax` 7-tier alias
-(`opencode-go/minimax-m3-slot0/1/2 → qwen3.7-max →
-kimi-k2.6 → glm-4.6 → local/math/qwen25-math`) served at
+The model class is **MiniMax-M3**, served directly from the
+**MiniMax Coding Plan** Anthropic-compatible endpoint. Long-term
+the plan is to fold every agent call through the canonical
+LiteLLM `minimax` 7-tier alias at
 `litellm.cianfhoghlaim.ie:4000` (per the
 [`litellm-minimax-vendor-derisking`](./openspec/changes/litellm-minimax-vendor-derisking/)
-openspec change), but for now the direct OpenCode / MiniMax
-path is what the agent actually hits — hence the "for now"
-qualifier.
+openspec change), but for now every agent hits the MiniMax
+endpoint directly — hence the "for now" qualifier.
 
 ### The 2 primary agents + the 5 dispatchable subagents
+
+All 7 agents share the same `minimax/MiniMax-M3` model:
 
 ```jsonc
 // opencode.json (excerpt — see ./opencode.json for the full 384-line file)
 "default_agent": "build",
 "agent": {
-  "build":          { "model": "opencode_go/minimax-m3", "mode": "primary",  ... },  // full read/write/exec
-  "plan":           { "model": "minimax/MiniMax-M3",     "mode": "primary",  ... },  // read-only, no edits
-  "data-platform":  { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
-  "infrastructure": { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
-  "agent-platform": { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
-  "frontend-apps":  { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
-  "research":       { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... }
+  "build":          { "model": "minimax/MiniMax-M3", "mode": "primary",  ... },  // full read/write/exec
+  "plan":           { "model": "minimax/MiniMax-M3", "mode": "primary",  ... },  // read-only, no edits
+  "data-platform":  { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
+  "infrastructure": { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
+  "agent-platform": { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
+  "frontend-apps":  { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
+  "research":       { "model": "minimax/MiniMax-M3", "mode": "subagent", ... }
 }
 ```
 
@@ -1291,12 +1283,12 @@ typecheck`.
 
 The next milestone (per the
 [`agent-platform-cluster-hermes-cocoindex`](./openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/)
-openspec change) folds every agent's `minimax` call through
-the canonical LiteLLM gateway, with MiniMax-M3 still the
-primary model but with 7 tiers of fallback below it. The
-"for now" qualifier in the section title is exactly this:
-the LiteLLM-mediated path is specced and being staged; the
-direct OpenCode / MiniMax path is what currently runs.
+openspec change) routes every agent's `minimax` call through
+the canonical LiteLLM gateway — MiniMax-M3 still the primary
+model, but with 7 tiers of fallback below it. The "for now"
+qualifier in the section title is exactly this: the
+LiteLLM-mediated path is specced and being staged; the
+direct MiniMax endpoint is what currently runs.
 
 
 ---
@@ -1357,7 +1349,7 @@ program against the live mesh.
 | Stack | Service count | Health check |
 |:--|--:|:--|
 | `lakehouse` | 13 services | `docker ps --format` shows 13 lakehouse containers (Garage + Postgres + Lakekeeper + Lance NS + ClickHouse + Redis + 7 langfuse/litellm/mlflow shared buckets) |
-| `litellm` | 2 services | `curl http://localhost:4000/v1/models` returns `opencode-go/minimax-m3-slot{0,1,2}, qwen3.7-max, kimi-k2.6, minimax (alias), …` |
+| `litellm` | 2 services | `curl http://localhost:4000/v1/models` returns `minimax (alias), qwen3.7-max, kimi-k2.6, glm-4.6, local/math, …` |
 | `cognee` | 2 services | `curl http://localhost:8100/health` returns `{"status":"ok"}` |
 
 **Tier 2 — agent memory plane** (deploy after Tier 1)
