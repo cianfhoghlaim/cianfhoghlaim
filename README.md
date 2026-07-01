@@ -103,6 +103,89 @@ as part of his own and added it to his
 Lyons surname in the hyphenated form **Deacy-Lyons** to avoid confusion and acknowledge previous achievement and previous comfort using the same surname as my older brother and father who do not allow me to be a full member of the Lyons family.
 
 
+### On the verified qualifications
+
+The course material, examination scripts, and the personal
+credential corpus that ground the project's claims live in
+three directories. The full set of signed transcripts and
+original parchments is held privately for data-protection
+reasons; the public copies linked below are the source of
+truth cited throughout the README and the lineage essays.
+
+#### Academic transcript — University of Galway / Ollscoil na Gaillimhe
+
+The BSc (Hons.) Mathematics & Education (First Class
+Honours, 78.84%) + the Higher Diploma in Applied Science in
+Software Design & Development (First Class Honours) are
+grounded in the coursework archives under
+[`leabharlann/ollscoil_na_gaillimhe/`](./leabharlann/ollscoil_na_gaillimhe/).
+The verified parchments live at
+[`cian_mac_an_déisigh_uí_liatháin/achievement/`](./cian_mac_an_déisigh_uí_liatháin/achievement/)
+(`bachelors_degree_parchment.jpeg`,
+`higher_diploma_parchment.jpeg`,
+`ba_and_hdip_transcript.pdf`,
+`2013_2023_transcript_nuig.pdf`).
+
+##### Mathematics (`mata/`, 9 modules)
+
+| Module | Code | Material in archive |
+|:--|:--|:--|
+| Applied Statistics I | ST311 | RStudio project, recap assignment, my_marks PDF, regression chapters, Statistical Tables |
+| Applied Statistics II | ST312 | R exam script, certificate, 3 assignments, my_marks PDF, problem-sheet solutions |
+| Cryptography | CS402 | Koblitz + Smart textbooks, 5 past papers, ElGamal/EllipticCurve slides, Parmar UROP, 2 assignments, 2 Jupyter notebooks |
+| *An Introduction to Statistical Learning* | (ISLP) | 13 chapter notebooks (Ch02–Ch13), Auto dataset, `requirements.txt`, `setup_notebook_env.py` |
+| Maple | — | 7 `.mws` worksheets (intro → commands → calculus → graphics → lists/sets/linalg → if/do → proc) |
+| Modelling II | MP307 | 4 labs + exam script + my_marks PDF + Maple worksheets |
+| Networks | CS4423 | 5 assignments + exam script + summer 2021 paper |
+| Non-Linear Systems | MP491 | 2 assignments + exam script + my_marks PDF + tutorials + readings |
+| Numerical Analysis II | MA378 | Suli & Mayers textbook + solutions, class test, exam script, problem sheets, *Anailís Uimhriúil* notes |
+
+Plus `stokes_workshop_game_physics.pdf` (3 MB, the Stokes
+workshop on game physics) sits at the root of `mata/`.
+
+##### Software Design & Development (`software_development/`, 7 modules — Higher Diploma in Applied Science)
+
+| Module | Code | Material in archive |
+|:--|:--|:--|
+| Databases | CT511 | 2 assignments + past exams + SQL test |
+| Enterprise Java Programming | CT545 | 4 assignments |
+| Algorithmics | CT853 | CT853 assignment (`q1.java`–`q4.java`), mergesort/bubble-sort proofs, 3 past papers, Assignment Template |
+| Computer Architecture & Operating Systems | CT861 | 2 assignments + past exams + *Athbhreithniú Caos* essay |
+| Internet Programming | CT870 | 3 `.docx` assignments + 3 code assignments |
+| Programming I | CT874 | 7 assignments + internet-programming past exams + programming past exams |
+| Software Engineering I | — | Exam prep + past exams |
+
+#### Teaching record (`teaching/`)
+
+- **Teaching Council of Ireland** — full registration ([`teaching_registration.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/teaching_registration.pdf))
+- **Postgraduate Certificate in Education (PGCE), Computing** — BCS scholarship recipient ([`bcs_pgce_computing_scholarship.png`](./cian_mac_an_déisigh_uí_liatháin/teaching/bcs_pgce_computing_scholarship.png))
+- **School placements** — Coláiste na Coiribe ([`colaiste_na_coiribe.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/colaiste_na_coiribe.pdf)), Galway Community College ([`gcc_placement_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/gcc_placement_reference.pdf)), Scoil Iognáid ([`scoil_iognaid.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/scoil_iognaid.pdf) — the Jesuit secondary school in Galway)
+- **Junior + Leaving Certificate** original results ([`leaving_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/leaving_certificate.pdf), [`junior_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/junior_certificate.pdf))
+- **References** — BME ([`bme_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/bme_reference.pdf)), part-time teaching ([`part_time_teaching_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/part_time_teaching_reference.pdf)), placement feedback ([`teaching_placement_feedback.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/teaching_placement_feedback.pdf))
+
+#### Identity, citizenship, and vetting (`identity/`)
+
+- **Dual citizenship** — Irish + British, verified by old passports ([`identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf))
+- **Vetting** — Garda vetting (ROI) ([`identity/vetting/garda_vetting_roi.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/garda_vetting_roi.pdf)), PSNI proof (Belfast) ([`identity/vetting/psni_proof_belfast.jpeg`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/psni_proof_belfast.jpeg)), Enhanced AccessNI cert ([`identity/vetting/enhanced_cert_ni.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/enhanced_cert_ni.pdf)), Enhanced DBS cert (UCL) ([`identity/vetting/enhanced_cert_ucl.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/enhanced_cert_ucl.pdf)), Children First cert ([`identity/vetting/children_first_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/children_first_certificate.pdf))
+- **Political memberships** — Fine Gael (current + former + name-change record), Alliance Party of Northern Ireland, Liberal Democrats
+- **Lineage & heritage** — *Uí Dhéisigh* / Deacy, *Mac Liatháin* / Lyons, Morris (City of Tribes), Mac Conraoi / Conroy (Sea-Kings of Connacht); the 1986 *Galway Advertiser* article on the opening of Deacy's Fruit and Veg at Cooke's Corner; the College des Irlandais (Paris) record; the late Éamonn Deacy's memorial; the Lyons/Deacy birth cert; the Christina Morris + Michael Deacy wedding photo
+- **Disability evidence** — CPTSD + anxiety disorder diagnosis ([`identity/disability/evidence_of_cptsd_anxiety_disorder.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/disability/evidence_of_cptsd_anxiety_disorder.pdf))
+
+#### Achievements (`achievement/`)
+
+- **MSc in Artificial Intelligence (2026–2027, University of Galway)** — admission letter ([`2026_2027_msc_in_ai_university_gaillimhe.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf))
+- **Apple Award** (2013) ([`apple_award.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/apple_award.pdf))
+- **Buckingham letter** (Royal Book Club admission) ([`buckingham_letter.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/buckingham_letter.pdf))
+- **Torthaí Gaeilge** — Irish-language exam results ([`torthai_ghaeilge.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/torthai_ghaeilge.pdf))
+- **Cybersecurity reference** ([`cybersecurity_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/cybersecurity_reference.pdf))
+- **BA + HDip parchments** — original jpegs
+
+The **forthcoming PhD track in Artificial Intelligence** at
+the University of Galway follows the MSc. The **Dioplóma C1
+in Irish** (the highest Irish-language teaching credential)
+is held in parallel with the MSc and the PGCE.
+
+
 ## The 5-stage pipeline (the architecture)
 
 The cianfhoghlaim pipeline takes a corpus (PDFs, DOCX, EPUBs, Zotero
@@ -1117,6 +1200,216 @@ New Zealand (the Māori King Movement)
 ([`royal_titles_celtic_heritage_and_claims.pdf`](https://github.com/cianfhoghlaim/leabharlann/blob/main/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
 p. 6).
 
+
+
+---
+
+## How this project is developed — OpenCode + MiniMax-M3 (for now)
+
+The whole monorepo — agents, BAML extraction, Dagster assets,
+CocoIndex flows, marimo dashboards, web apps — is built
+agentically. The current canonical configuration lives at
+[`opencode.json`](./opencode.json). Two providers + one model
+class carry the workload, for now:
+
+| Provider | Model | API shape | Used by |
+|:--|:--|:--|:--|
+| `opencode_go` | `minimax-m3` | OpenAI-compatible (`{env:OPENCODE_GO_BASE_URL}`) | the `build` primary agent |
+| `minimax` | `MiniMax-M3` | Anthropic-compatible (`https://api.minimax.io/anthropic/v1`) | the `plan` agent + the 5 dispatchable subagents |
+
+The model class is **MiniMax-M3**, exposed via two
+gateways: (a) the **OpenCode Go gateway** — a hosted
+OpenAI-compatible endpoint that fronts the model's 3-slot
+rotation (`opencode-go/minimax-m3-slot{0,1,2}`); and (b) the
+**direct MiniMax Coding Plan** Anthropic-compatible
+endpoint. The two paths are interchangeable from the
+agent's perspective; switching the build agent from one
+provider to the other is a 1-line change in `opencode.json`.
+Long-term the plan is to fold both paths into the single
+LiteLLM `minimax` 7-tier alias
+(`opencode-go/minimax-m3-slot0/1/2 → qwen3.7-max →
+kimi-k2.6 → glm-4.6 → local/math/qwen25-math`) served at
+`litellm.cianfhoghlaim.ie:4000` (per the
+[`litellm-minimax-vendor-derisking`](./openspec/changes/litellm-minimax-vendor-derisking/)
+openspec change), but for now the direct OpenCode / MiniMax
+path is what the agent actually hits — hence the "for now"
+qualifier.
+
+### The 2 primary agents + the 5 dispatchable subagents
+
+```jsonc
+// opencode.json (excerpt — see ./opencode.json for the full 384-line file)
+"default_agent": "build",
+"agent": {
+  "build":          { "model": "opencode_go/minimax-m3", "mode": "primary",  ... },  // full read/write/exec
+  "plan":           { "model": "minimax/MiniMax-M3",     "mode": "primary",  ... },  // read-only, no edits
+  "data-platform":  { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
+  "infrastructure": { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
+  "agent-platform": { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
+  "frontend-apps":  { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... },
+  "research":       { "model": "minimax/MiniMax-M3",     "mode": "subagent", ... }
+}
+```
+
+| Agent | Mode | Routes to |
+|:--|:--|:--|
+| `build` | primary | everything — full read/write/exec + all 53 top-level skills |
+| `plan` | primary | openspec changes, proposals, ADRs (read-only, no edits) |
+| `data-platform` | subagent | `cianfhoghlaim/dlt_sources/`, `dagster_defs/`, `baml_src/`, `notebooks/` |
+| `infrastructure` | subagent | `cianfhoghlaim/stacks/`, Komodo/Pangolin/Locket/Infisical mesh |
+| `agent-platform` | subagent | `cianfhoghlaim/agents/meaisinfhoghlaim/`, OCR fleet, LLM routing, BAML extraction |
+| `frontend-apps` | subagent | `cianfhoghlaim/web/apps/*/`, the Hono API, marimo notebooks |
+| `research` | subagent | browser-driven autonomous investigation (browserbase + firecrawl) |
+
+The `build` agent decomposes every task into work-streams
+and dispatches the 5 subagents in parallel via the `task`
+tool (`subagent_type: data-platform | infrastructure |
+agent-platform | frontend-apps | research`). Each subagent
+returns a structured report; the build agent reconciles and
+writes the final diff. Quality gates run after every change:
+`mise run lint && mise run py:typecheck && mise run turbo
+typecheck`.
+
+### The 14 MCP servers attached to every agent
+
+| MCP | Type | Purpose |
+|:--|:--|:--|
+| `browserbase` | remote | Cloud browser automation (currently disabled pending budget) |
+| `firecrawl` | local | Cloud scraper — every site in the 8-nation × 4-domain matrix |
+| `infisical` | local | The `dev-baile` vault — every secret comes from here |
+| `motherduck` | local | Federated SQL over DuckLake + MotherDuck |
+| `chrome` | local | chrome-devtools-mcp for live browser inspection |
+| `cocoindex-code` (ccc) | local | Semantic code search over the codebase |
+| `cognee` | local | Knowledge-graph memory (`cognee-mcp` against `localhost:8100`) |
+| `graphiti` | local | Bi-temporal episodic memory |
+| `langfuse` | local | LLM observability — every agent trace lands here |
+| `hermes` | local | The Hermes autonomous-agent runtime (3rd vertex) |
+| `agent-registry` | local | The 12-agent fleet registry |
+| `agents-md` | local | The live AGENTS.md indexer |
+| `apple-photos` | local | Photos-library ingestion into the leabharlann corpus |
+| `huggingface` | remote | HF Hub — model + dataset + Space registry |
+
+The next milestone (per the
+[`agent-platform-cluster-hermes-cocoindex`](./openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/)
+openspec change) folds every agent's `minimax` call through
+the canonical LiteLLM gateway, with MiniMax-M3 still the
+primary model but with 7 tiers of fallback below it. The
+"for now" qualifier in the section title is exactly this:
+the LiteLLM-mediated path is specced and being staged; the
+direct OpenCode / MiniMax path is what currently runs.
+
+
+---
+
+## Planned deployed stacks (summary)
+
+The runtime target is **86 Docker Compose stacks** (per
+`bun run validate-stacks`; the v5 prune on 2026-07-01
+removed 2 obsolete stacks — `lakehouse-oci`, `r2` — and 7
+reference-only dirs) wired through **Pangolin + Pocket ID +
+TinyAuth** at `*.cianfhoghlaim.ie`, orchestrated by
+**Komodo Core + Periphery**, secret-managed by **Infisical +
+Locket + mise**, IaC-managed by **Pulumi + Dagger**. The
+full per-stack inventory is at
+[`./bonneagar/stacks/`](./bonneagar/stacks/) and the
+per-stack docs are at [`./docs/stacks/`](./docs/stacks/).
+The header below summarises what's *planned* to land where.
+
+### 3-tier host topology
+
+| Host | Provider | Role | Spec | Planned state |
+|:--|:--|:--|:--|:--|
+| `arm1-oci` | Oracle Cloud (Ampere A1) | Control plane | 4 OCPU, 24 GB RAM, 200 GB | **Planned** — Pangolin, Pocket ID, TinyAuth, Traefik, Infisical, Locket, Komodo Core + Periphery, Backrest, Beszel, Dozzle |
+| `bunchloch` | MacBook M4 Max (48 GB RAM, 2 TB SSD) | Workloads | 14 cores, 48 GB RAM | **Active** — the 35 local containers (lakehouse, LiteLLM, Langfuse, llama-swap, Convex, browser stack, oideachais frontend + API + Dagster, komodo, Cognee, LanceDB) |
+| `cax41-hetzner` | Hetzner Cloud CAX41 ARM | Storage + DR | 16 vCPU, 32 GB RAM | **Planned** — Memgraph, FalkorDB, MLflow (the data plane that today runs in `lakehouse-bunchloch` will mirror here for offsite DR) |
+| `arm2-hetzner` | Hetzner Cloud CAX21 | Disaster-recovery mirror of `arm1-oci` | — | **Future** — currently unprovisioned |
+
+### The 5-group model — 86 stacks in 5 groups + ci + personal-utility
+
+| Group | Count | Primary host | Examples |
+|:--|--:|:--|:--|
+| **infrastructure** | 9 | `arm1-oci` | Pangolin, Pocket ID, TinyAuth, Traefik, Infisical, Locket, Komodo Core + Periphery, Backrest |
+| **data-engineering** | 12 | `bunchloch` | Dagster, Lakehouse, Marimo, CocoIndex, Cognify, LiteLLM, Langfuse, Llama-swap, Cognee, FalkorDB, Graphiti, Marimo |
+| **agent-platform** | 7 | `bunchloch` | Agno AgentOS, Google ADK, OpenClaw, OpenChamber, Cognee, Graphiti, Letta, Hermes, Memgraph, MLX-Omni, LMNR |
+| **language-model** | 6 | `bunchloch` | LiteLLM, llama-swap, MLX-Omni, Logfire, Langfuse, mlflow, MotherDuck, Nimtable |
+| **user-facing-web** | 6 | `bunchloch` | oideachais-web, oideachais-api, oideachais-dagster, oideachais-agent-os, oideachais-adk-agents, openclaw |
+| **ci** | 1 | `bunchloch` | hf-watchdog |
+| **personal-utility** | ~47 | mixed | audiobookshelf, beszel, bytebase, cal-diy, changedetection, coder, convex, crawl4ai, dozzle, enclosed, forgejo, forgejo-runner, frontend, glance, gluetun, headplane, headscale, it-tools, Kapowarr, karakeep, lakefs, linkwarden, lmnr, mailcow-dockerized, n8n, olake, olmocr, paddleocr, paperless-ngx, pastemax, pinchflat, pipecat, pocket-id, pulumi, qdrant, risingwave, romm, rybbit, searxng, skyvern, stirling-pdf, technitium, unstract, vaultwarden, vikunja, windmill, … |
+
+The 4 priority stacks (per the AGENTS.md quick-reference)
+are `oideachais` (5 ports, the Celtic Education Lakehouse),
+`litellm` (port 4000, the LLM gateway), `langfuse` (port
+3000, LLM observability), and `lakehouse` (ports 3900–3904,
+5433, 8181–8182 — Garage S3 + Postgres + Lakekeeper). The
+5th priority stack added in 2026-06 is `hermes` (the
+autonomous agent runtime at `hermes.cianfhoghlaim.ie`).
+
+### Phase 0.3 deploy sequence — Tier 1 (data plane) + Tier 2 (memory plane)
+
+The current staging sequence (per
+[`docs/PHASE_0.3_DEPLOY_RUNBOOK.md`](./docs/PHASE_0.3_DEPLOY_RUNBOOK.md))
+is to land the data plane on `bunchloch` first, then the
+memory plane, then the 43-prompt BrowserBase research
+program against the live mesh.
+
+**Tier 1 — data plane** (deploy first)
+
+| Stack | Service count | Health check |
+|:--|--:|:--|
+| `lakehouse` | 13 services | `docker ps --format` shows 13 lakehouse containers (Garage + Postgres + Lakekeeper + Lance NS + ClickHouse + Redis + 7 langfuse/litellm/mlflow shared buckets) |
+| `litellm` | 2 services | `curl http://localhost:4000/v1/models` returns `opencode-go/minimax-m3-slot{0,1,2}, qwen3.7-max, kimi-k2.6, minimax (alias), …` |
+| `cognee` | 2 services | `curl http://localhost:8100/health` returns `{"status":"ok"}` |
+
+**Tier 2 — agent memory plane** (deploy after Tier 1)
+
+| Stack | Purpose |
+|:--|:--|
+| `graphiti` | Bi-temporal knowledge graph (Neo4j) |
+| `falkordb` | Vector + graph hybrid (Redis-compatible) for GraphRAG |
+| `dragonfly` | In-memory cache (modern Redis fork) |
+| `risingwave` | Streaming SQL for change-data-capture |
+
+After both tiers pass, the opencode client is restarted and
+all 14 MCP servers reconnect — the 43-prompt BrowserBase
+research program then dispatches against the live mesh.
+
+### The 5 deploy surfaces (per the bonneagar golden path)
+
+| Surface | Where | What it does |
+|:--|:--|:--|
+| **Komodo Core** | `bunchloch` | Orchestrates the fleet via web UI + REST API at `komodo.cianfhoghlaim.ie:9120` |
+| **Komodo Periphery** | `arm1-oci` + `bunchloch` (2 agents) | Each runs as a `komodo-periphery-{arm1-oci,bunchloch}` container; connects outbound to Core |
+| **Infisical Vault** | `arm1-oci` | Self-hosted; the `dev-baile` environment is the source of truth (no plaintext secrets anywhere in the repo) |
+| **Pangolin** | `arm1-oci` | Traefik + Gerbil + Pocket ID — reverse-proxy + identity + SSO; routes `*.cianfhoghlaim.ie` to internal containers |
+| **The 6 GOLD_STANDARD files per stack** | `bonneagar/stacks/<name>/` | `compose.yaml` + `sidecar.yaml` + `secrets.env` + `blueprint.yaml` + `.env.example` (+ optional `README.md`) — the contract `bun run validate-stacks` enforces |
+
+The 6-step golden path for adding a new stack is in
+[`./bonneagar/DEPLOYMENT-STRATEGY.md`](./bonneagar/DEPLOYMENT-STRATEGY.md)
+§3 (write the 6 files → `bun run validate-stacks` → `bun
+run secrets:init` → add a `[[stack]]` block to the Komodo
+TOML → sync to Komodo → verify via `docker ps` + `curl
+/health` + `probe-public-urls.sh`).
+
+### Known blockers (from HEALTH_REPORT.md Session 3)
+
+Until these are cleared, the first `bun run stack.sh <name>
+up -d` will hit one of:
+
+1. Newt 1.12.5 + Pangolin server 1.18.4 are incompatible
+   (`CLIENTS WILL NOT WORK ON THIS VERSION OF NEWT WITH THIS
+   PANGOLIN SERVER`) — update Pangolin to ≥1.13.0 or
+   downgrade newt to 1.11.x
+2. 3 manually-created private resources (`komodo`,
+   `cal-diy`, `infisical`) override the blueprints — delete
+   them in the Pangolin UI; the blueprint reapplies on the
+   next newt cycle
+3. Both `PANGOLIN_API_KEY` and `PANGOLIN_API_KEY_0` in
+   `.env` return 401 — mint a fresh machine-identity token
+   in the Pangolin UI and save it as `PANGOLIN_API_KEY`
+4. `komodo-locket` sidecar fails on the
+   `$${INFISICAL_CLIENT_ID}` YAML escape — switch to
+   single-dollar Compose substitution and provision a
+   machine identity with `/komodo` access
 
 
 ---
