@@ -1,0 +1,69 @@
+/* Cianfhoghlaim v2 — based on docs/ui-inspiration/UI_INSPIRATION_GUIDE.md
+   shared tokens + the 8 Celtic adaptations. */
+
+:root {
+  /* Celtic nation colours (8 NCCA subjects × 4 ancient nations) */
+  --ci-nations-irish:    #059669;  /* emerald-600 — primary */
+  --ci-nations-scottish: #2563eb;  /* blue-600 */
+  --ci-nations-welsh:    #dc2626;  /* red-600 */
+  --ci-nations-breton:   #9333ea;  /* purple-600 */
+
+  /* Subject realm colours (8 NCCA subjects) */
+  --ci-subject-mathematics:        #2563eb;  /* blue-600 */
+  --ci-subject-applied_mathematics: #7c3aed;  /* violet-600 */
+  --ci-subject-chemistry:          #16a34a;  /* green-600 */
+  --ci-subject-geography:          #ca8a04;  /* yellow-600 */
+  --ci-subject-history:            #b91c1c;  /* red-700 */
+  --ci-subject-english:            #ea580c;  /* orange-600 */
+  --ci-subject-gaeilge:            #059669;  /* emerald-600 */
+  --ci-subject-computer_science:   #475569;  /* slate-600 */
+
+  /* Brown Ajah accent (per WoT — russet brown) */
+  --ci-brown-ajah:       #92400e;  /* russet brown */
+  --ci-brown-ajah-light: #f59e0b;  /* amber-500 (the cauldron flame) */
+
+  /* 5 NCCA Key Competencies (the 5 land-marks) */
+  --ci-competency-communicating:       #059669;  /* emerald — Brigid */
+  --ci-competency-information:         #2563eb;  /* blue — Ogma */
+  --ci-competency-creative-thinking:   #ca8a04;  /* gold — Lugh */
+  --ci-competency-personal-effective:  #92400e;  /* russet brown — Dian Cecht */
+  --ci-competency-working-with-others: #b91c1c;  /* red — Trí Dé Dána */
+
+  /* UI states (from UI_INSPIRATION_GUIDE.md) */
+  --ci-success: #10b981;  /* emerald-500 */
+  --ci-warning: #f59e0b;  /* amber-500 */
+  --ci-error:   #f43f5e;  /* rose-500 */
+  --ci-info:    #0ea5e9;  /* sky-500 */
+
+  /* Surfaces (dark-mode-first per guide) */
+  --ci-bg-primary:   #0f172a;  /* slate-900 */
+  --ci-bg-secondary: #1e293b;  /* slate-800 */
+  --ci-bg-tertiary:  #334155;  /* slate-700 */
+  --ci-glass:        rgba(30, 41, 59, 0.9);
+
+  /* Tactile button depth (Duolingo) */
+  --ci-btn-border-bottom: 4px;
+  --ci-btn-border-bottom-active: 2px;
+  --ci-btn-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.3);
+  --ci-btn-shadow-active: 0 2px 0 0 rgba(0, 0, 0, 0.3);
+
+  /* Material library (Clair Obscur → Celtic adaptation) */
+  --ci-material-parchment: url('/cdn/materials/parchment.webp');
+  --ci-material-slate:     url('/cdn/materials/slate.webp');
+  --ci-material-ink-wash:   url('/cdn/materials/ink-wash.webp');
+  --ci-material-gold-leaf: url('/cdn/materials/gold-leaf.webp');
+  --ci-material-knotwork:  url('/cdn/materials/insular-knotwork.svg');
+
+  /* 6 subnation colours (accurate British Isles map) */
+  --ci-subnation-eire:            #059669;  /* emerald — Ireland */
+  --ci-subnation-northern-ireland: #2563eb; /* blue — NI */
+  --ci-subnation-scotland:       #0ea5e9;  /* sky — Scotland */
+  --ci-subnation-england:        #dc2626;  /* red — England (St George's Cross) */
+  --ci-subnation-wales:          #b91c1c;  /* red-700 — Y Ddraig Goch */
+  --ci-subnation-isle-of-man:     #475569;  /* slate — Triskelion */
+
+  /* Typography (Cinzel + Inter + JetBrains Mono) */
+  --ci-font-display: "Cinzel", serif;          /* Uncial/Insular display */
+  --ci-font-body:    "Inter", sans-serif;
+  --ci-font-mono:    "JetBrains Mono", monospace;
+}

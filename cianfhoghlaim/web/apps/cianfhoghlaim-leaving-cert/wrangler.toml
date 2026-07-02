@@ -1,0 +1,28 @@
+name = "cianfhoghlaim-leaving-cert"
+compatibility_date = "2026-07-02"
+pages_build_output_dir = "dist"
+main = "apps/web/app.config.ts"
+
+# Worker bindings (apps/api)
+[env.production]
+  routes = [
+    { pattern = "leaving-cert.cianfhoghlaim.ie/*", zone_name = "cianfhoghlaim.ie" },
+    { pattern = "leaving-cert-api.cianfhoghlaim.ie/*", zone_name = "cianfhoghlaim.ie" }
+  ]
+  vars = {
+    CONVEX_DEPLOYMENT = "prod:conic-leaving-cert",
+    COPILOTKIT_RUNTIME_URL = "/api/copilotkit",
+    DASHBOARD_PUBLIC_URL = "https://leaving-cert.cianfhoghlaim.ie",
+    PORTAL_PUBLIC_URL = "https://leaving-cert.cianfhoghlaim.ie",
+    CIANFHLOGHLAIM_BUILD = "production"
+  }
+
+[env.staging]
+  routes = [
+    { pattern = "staging-leaving-cert.cianfhoghlaim.ie/*", zone_name = "cianfhoghlaim.ie" }
+  ]
+  vars = {
+    CONVEX_DEPLOYMENT = "staging:conic-leaving-cert",
+    COPILOTKIT_RUNTIME_URL = "/api/copilotkit",
+    CIANFHLOGHLAIM_BUILD = "staging"
+  }
