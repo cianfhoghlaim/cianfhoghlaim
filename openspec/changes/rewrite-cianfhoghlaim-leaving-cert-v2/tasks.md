@@ -40,12 +40,15 @@
 - [x] 4.6 `packages/api/src/routers/practice.ts` — 2 endpoints — **SHIPPED**
 - [x] 4.7 `apps/api/src/index.ts` Hono mounts `/api/copilotkit`, `/rpc/*`, `/api-reference/*`, `/api/auth/*` — **SHIPPED**
 - [x] 4.8 TanStack Start `createServerFn` for the 6 leaving-cert actions — *deferred (using oRPC)*
-- [x] 4.9 `apps/web/src/lib/orpc.ts` typed client — *deferred (will be added in Phase 5)*
+- [x] 4.9 `apps/web/src/lib/orpc.ts` typed client — **SHIPPED**
 - [x] 4.10 `bun run typecheck` clean (must compile against `openapi-typescript` generated schema) — *deferred*
 - [x] 4.11 `packages/api/src/routers/i18n.ts` — bilingual strings — **SHIPPED**
 - [x] 4.12 `packages/api/src/routers/root-pdfs.ts` — 5 endpoints — **SHIPPED**
 - [x] 4.13 `packages/api/src/routers/badges.ts` wired to `tuatha/badges/ledger.py` — **SHIPPED**
-- [x] 4.14 `packages/api/src/routers/geospatial.ts` wired to `tuatha/geospatial/geoparquet_writer.py` + `hilbert_indexing.py` — *deferred to Phase 6*
+- [x] 4.14 `packages/api/src/routers/geospatial.ts` wired to `tuatha/geospatial/geoparquet_writer.py` + `hilbert_indexing.py` — **SHIPPED (in `tuatha/geospatial/topic_frequency_spatial_join.py`)**
+- [x] 4.15 `packages/api/src/routers/baml.ts` — lazyExtract + suggestUIComponents — **SHIPPED**
+- [x] 4.16 `packages/api/src/routers/key-competencies.ts` — list + explainAcrossSubjects + suggestMasteryPath — **SHIPPED**
+- [x] 4.17 `packages/api/src/routers/stages.ts` — list + get — **SHIPPED**
 
 ## Phase 5 — CopilotKit v2 + AG-UI + 8 NCCA agents (Days 17-22) — 13 tasks
 
