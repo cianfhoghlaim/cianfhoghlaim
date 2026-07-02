@@ -34,7 +34,7 @@ function AssetsPage() {
           Hades dual-mode: 3D meshes via TRELLIS.2 + SAM-3D-Objects + 2D sprite atlases
         </p>
         <p className="text-slate-500 text-sm font-mono italic">
-          Generated from s3://cianfhoghlaim-asset-v2/{3d,2d}/{subject}/
+          Generated from s3://cianfhoghlaim-asset-v2/{"{3d,2d}"}/{subject}/
         </p>
       </div>
 

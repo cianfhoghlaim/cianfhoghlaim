@@ -8,9 +8,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "better-auth": "catalog:",
-    "hono": "catalog:",
-    "zod": "catalog:"
+    "better-auth": "^1.4.0",
+    "hono": "^4.8.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

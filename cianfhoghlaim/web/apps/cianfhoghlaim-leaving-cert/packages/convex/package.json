@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "convex": "^1.40.0",
-    "zod": "catalog:"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0",

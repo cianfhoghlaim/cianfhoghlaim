@@ -8,9 +8,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/server": "catalog:",
-    "@orpc/zod": "catalog:",
-    "zod": "catalog:"
+    "@orpc/server": "^1.12.0",
+    "@orpc/zod": "^1.12.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0"
