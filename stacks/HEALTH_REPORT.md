@@ -6,11 +6,65 @@
 > fix, etc. — lives at
 > [`infrastructure/archive/HEALTH_REPORT-2026-06-12.md`](../archive/HEALTH_REPORT-2026-06-12.md).
 >
-> **Last refreshed:** 2026-07-02 (Session 6 — Wave 1 + Wave 2
-> cold-boot, 27 containers running across 11 stacks). The dynamic
-> counterpart lives at
+> **Last refreshed:** 2026-07-02 (Session 7 — Change 8 code-side
+> env defaults aligned with deployed stacks; 27 containers still
+> running, no regression). The dynamic counterpart lives at
 > [`infrastructure/audit/scripts/inventory-bunchloch.sh`](../audit/scripts/inventory-bunchloch.sh)
 > and is run on demand.
+
+## Session 7 — 2026-07-02 (Change 8: code-side env alignment)
+
+This session's output is the openspec change
+[`2026-07-02-align-cianfhoghlaim-env-with-stacks`](/Users/cianmacandeisigh/dev/kings_college_galway/openspec/changes/2026-07-02-align-cianfhoghlaim-env-with-stacks/)
+(commits 90b42307a in the main repo).
+
+The 7 cianfhoghlaim/ code edits that implement the spec
+deltas are in the separate cianfhoghlaim repo (this repo is
+the openspec+ops monorepo; the cianfhoghlaim/ subdir is
+gitignored here). The 7 file paths + their purpose:
+
+| File | Edit |
+|:--|:--|
+| `dagster/resources.py` | `FalkorDBResource` + `CogneeMemoryResource` + `LiteLLMResource` + `ProgressTrackerResource` env-driven defaults; Memgraph/Neo4j/Temporal deprecation comments |
+| `observability/langfuse_config.py` | `LANGFUSE_HOST` default `:3000` → `:3001` (per langfuse port remap) |
+| `observability/logfire_config.py` | `logfire_instrument_local_otlp_only()` helper for dev mode (no Logfire SaaS) |
+| `cocoindex/_lifespan.py` | `LANCEDB_URI` default → `rest://lakehouse-lance-namespace:8182` |
+| `baml/clients.baml` | 3 LocalVision* `base_url` → `env.LITELLM_BASE_URL` |
+| `baml/clients_llama_swap.baml` | 4 LlamaSwap* `base_url` → `env.LLAMASWAP_BASE_URL` |
+| `dlt/common/destinations_oideachais.py` | `_resolve_aws_credentials()` helper (GARAGE_* → AWS_*) |
+
+Plus the new canonical env file: `cianfhoghlaim/.env.dev.local`.
+
+### Smoke test results (no regression from Change 7)
+
+| # | Test | Result |
+|:-:|:--|:-:|
+| 1 | Garage S3 `:3900/health` | ✅ 403 (auth required = up) |
+| 2 | LanceDB `:8182/health` | ✅ 200 |
+| 3 | ClickHouse `:8123/ping` | ✅ 200 Ok |
+| 4 | LiteLLM `:4000/health/liveliness` | ✅ 200 |
+| 5 | MLflow `:5001/health` | ✅ 200 |
+| 6 | Cognee `:8100/health` | ✅ 200 |
+| 7 | Dagster `:3335/server_info` | ✅ 200 |
+| 8 | `openspec validate 2026-07-02-replace-private-images-and-bring-wave2 --strict` | ✅ valid (no regression) |
+| 9 | `openspec validate 2026-07-02-align-cianfhoghlaim-env-with-stacks --strict` | ✅ valid |
+
+Container count: **27 running (no regression from Change 7)**.
+
+### Known issues (still pending from Session 6)
+
+1. **Langfuse `/api/public/health` returns empty reply** (Next.js 16.2.9 bug; the langfuse-web container is `unhealthy` in `docker ps`) — track as `2026-07-XX-fix-langfuse-health`
+2. **Logfire OTel collector reports `unhealthy`** — the collector is running (OTLP gRPC + HTTP listening) but the docker healthcheck script may be misconfigured. Functional state is OK; the unhealthy flag is cosmetic.
+3. **Litellm-locket-dev + cognee containers report `unhealthy`** — same reason (docker healthcheck script); functional state is OK.
+4. **The 8 stage marimo notebooks** in `cianfhoghlaim/notebooks/dashboards/` are still hardcoded-dataframe — the `Change 8` spec deltas document the wiring, but the actual `## _use live lakehouse data_` code edits are deferred (the user has not yet wired the data sources).
+5. **Wave 3** (invokeai + convex + risingwave) and **Wave 4 partial** (hermes + openclaw) still not deployed — deferred to follow-up sessions.
+6. **Openchamber stack** still private image (no public alternative) — deferred to `2026-07-XX-bring-openchamber-stack-to-spec`.
+7. **Docling-serve** keeps Restarting (model loading + port conflict) — deferred to `2026-07-XX-fix-docling-serve-dev`.
+8. **Paddleocr** is up but unhealthy — deferred to `2026-07-XX-fix-paddleocr-dev`.
+9. **Olmocr** has no arm64 image (Mac M-series) — deferred to `2026-07-XX-bring-olmocr-up-to-spec` (build from `alleninstituteforai/olmocr` source).
+10. **Dots-ocr** broken registry path (`dots-ocr/dots-ocr:latest` doesn't exist) — deferred to `2026-07-XX-bring-dots-ocr-up-to-spec` (build from `rednote-hilab/dots.ocr` source).
+11. **Graphiti** no Dockerfile in stack dir — deferred to `2026-07-XX-bring-graphiti-up-to-spec`.
+12. **CogneePostgres** is the in-stack `pgvector/pgvector:pg17` container (not a separate stack). It works but is not in `pg_isready` form from outside the container; healthcheck reports unhealthy.
 
 ## Session 6 — 2026-07-02 (Wave 1 + Wave 2 cold-boot, dev mode)
 
