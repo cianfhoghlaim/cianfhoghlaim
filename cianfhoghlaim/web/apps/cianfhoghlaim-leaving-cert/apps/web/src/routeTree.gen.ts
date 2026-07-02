@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as GaEiraicTreasuresRouteImport } from './routes/ga/eiraic-treasures'
 import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
+import { Route as EnPracticeRouteImport } from './routes/en/practice'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
 import { Route as EnEiraicTreasuresRouteImport } from './routes/en/eiraic-treasures'
@@ -48,6 +49,11 @@ const GaAboutRoute = GaAboutRouteImport.update({
 const EnSubjectsRoute = EnSubjectsRouteImport.update({
   id: '/en/subjects',
   path: '/en/subjects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnPracticeRoute = EnPracticeRouteImport.update({
+  id: '/en/practice',
+  path: '/en/practice',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnMapRoute = EnMapRouteImport.update({
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/practice': typeof EnPracticeRoute
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/practice': typeof EnPracticeRoute
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/practice': typeof EnPracticeRoute
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/practice'
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/practice'
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/practice'
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
@@ -278,6 +290,7 @@ export interface RootRouteChildren {
   EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
   EnMapRoute: typeof EnMapRoute
+  EnPracticeRoute: typeof EnPracticeRoute
   EnSubjectsRoute: typeof EnSubjectsRoute
   GaAboutRoute: typeof GaAboutRoute
   GaEiraicTreasuresRoute: typeof GaEiraicTreasuresRouteWithChildren
@@ -314,6 +327,13 @@ declare module '@tanstack/react-router' {
       path: '/en/subjects'
       fullPath: '/en/subjects'
       preLoaderRoute: typeof EnSubjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/practice': {
+      id: '/en/practice'
+      path: '/en/practice'
+      fullPath: '/en/practice'
+      preLoaderRoute: typeof EnPracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/map': {
@@ -500,6 +520,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnEiraicTreasuresRoute: EnEiraicTreasuresRouteWithChildren,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
   EnMapRoute: EnMapRoute,
+  EnPracticeRoute: EnPracticeRoute,
   EnSubjectsRoute: EnSubjectsRoute,
   GaAboutRoute: GaAboutRoute,
   GaEiraicTreasuresRoute: GaEiraicTreasuresRouteWithChildren,
