@@ -1,7 +1,8 @@
 // @cianfhoghlaim/api — practice oRPC router
 // Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/tasks.md T4.6.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 const SubjectSchema = z.enum([

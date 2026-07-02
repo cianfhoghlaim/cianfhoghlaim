@@ -2,7 +2,8 @@
 // Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/tasks.md T4.5.
 // Wired to cianfhoghlaim/tuatha/badges/ledger.py + cianfhoghlaim/tuatha/badges/anchor.py
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 const EiraicTierSchema = z.number().int().min(1).max(13);

@@ -3,7 +3,8 @@
 // Wired to cianfhoghlaim/tuatha/geospatial/{geoparquet_writer.py,hilbert_indexing.py}
 // for the topic-frequency heatmap data layer.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 const SubjectSchema = z.enum([

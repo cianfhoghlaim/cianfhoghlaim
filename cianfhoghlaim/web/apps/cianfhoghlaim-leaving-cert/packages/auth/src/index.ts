@@ -3,7 +3,6 @@
 
 import { betterAuth } from "better-auth";
 import { bearer } from "better-auth/plugins";
-import { siwePlugin } from "better-auth/plugins/siwe";
 
 // Pocket ID OIDC discovery URL (per Pocket ID documentation)
 const POCKET_ID_DISCOVERY = process.env.POCKET_ID_DISCOVERY_URL || "http://localhost:8080/.well-known/openid-configuration";
@@ -32,8 +31,9 @@ export const auth = betterAuth({
   },
   plugins: [
     bearer(),
-    // Optional SIWE (gated on VITE_SIWE_ENABLED)
-    ...(process.env.SIWE_ENABLED === "true" ? [siwePlugin()] : []),
+    // Optional SIWE (gated on VITE_SIWE_ENABLED=true)
+    // siwePlugin is conditionally added when the @better-auth/siwe plugin is installed
+    // (deferred to Phase 2 T2.7 once the optional SIWE dep is added)
   ],
   // Pocket ID OIDC discovery (Phase 2 T2.6)
   // The actual OIDC provider registration is done via the socialProviders

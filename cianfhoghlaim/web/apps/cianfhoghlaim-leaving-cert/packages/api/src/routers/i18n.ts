@@ -1,7 +1,8 @@
 // @cianfhoghlaim/api — i18n oRPC router
 // The bilingual string tables for the EN + GA UI strings.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 export const i18nRouter = os.$context<ApiContext>().router({

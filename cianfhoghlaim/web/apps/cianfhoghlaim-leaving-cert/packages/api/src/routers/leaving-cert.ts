@@ -3,7 +3,8 @@
 // The 6 leaving-cert oRPC procedures: list + getSyllabus + getPastExams +
 // getMarkingSchemes + getPrioritisation + getExamTips.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 // ── Zod schemas ──────────────────────────────────────────────────────

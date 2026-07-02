@@ -16,9 +16,9 @@ import { logger } from "hono/logger";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { RPCHandler } from "@orpc/server/fetch";
 import { onError } from "@orpc/server";
-import { appRouter } from "@cianfhoghlaim/api/routers";
-import { createContext } from "@cianfhoghlaim/api/context";
-import { auth } from "@cianfhoghlaim/auth";
+import { appRouter } from "../../../packages/api/src";
+import { createContext } from "../../../packages/api/src";
+import { auth } from "../../../packages/auth/src";
 import { copilotkit } from "./copilotkit/runtime";
 import { serve } from "@hono/node-server";
 

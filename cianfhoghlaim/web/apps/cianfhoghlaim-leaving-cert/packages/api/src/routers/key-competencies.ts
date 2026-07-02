@@ -1,7 +1,8 @@
 // @cianfhoghlaim/api — key_competencies oRPC router
 // The 5 NCCA Key Competencies with the cross-subject reasoning.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 const KeyCompetencySchema = z.enum([
