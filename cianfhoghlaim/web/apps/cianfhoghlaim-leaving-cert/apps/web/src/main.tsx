@@ -14,6 +14,8 @@ import "./app.css";
 import * as IndexRoute from "./routes/index";
 import * as MapRoute from "./routes/en/map";
 import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
+import * as EnAboutRoute from "./routes/en/about";
+import * as GaAboutRoute from "./routes/ga/about";
 
 // Build the router manually (the routeTree.gen.ts may be stale in dev)
 const rootRoute = createRootRoute({
@@ -31,6 +33,8 @@ const rootRoute = createRootRoute({
           <Link to="/" className="text-slate-300 hover:text-emerald-400 text-sm">Curriculum</Link>
           <Link to="/en/map" className="text-slate-300 hover:text-emerald-400 text-sm">Map</Link>
           <Link to="/en/key-competencies" className="text-slate-300 hover:text-emerald-400 text-sm">Key Competencies</Link>
+          <Link to="/en/about" className="text-slate-300 hover:text-emerald-400 text-sm">About</Link>
+          <Link to="/ga/about" className="text-slate-300 hover:text-emerald-400 text-sm">Faoi</Link>
         </nav>
       </header>
       <main className="flex-1 overflow-y-auto">
@@ -44,22 +48,34 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: IndexRoute.default || IndexRoute.Route?.component || (() => <div>Index</div>),
+  component: (IndexRoute as any).default || (IndexRoute as any).Route?.component || (() => <div>Index</div>),
 });
 
 const mapRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/en/map",
-  component: MapRoute.default || MapRoute.Route?.component || (() => <div>Map</div>),
+  component: (MapRoute as any).default || (MapRoute as any).Route?.component || (() => <div>Map</div>),
 });
 
 const keyCompRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/en/key-competencies",
-  component: KeyCompetenciesRoute.default || KeyCompetenciesRoute.Route?.component || (() => <div>Key Competencies</div>),
+  component: (KeyCompetenciesRoute as any).default || (KeyCompetenciesRoute as any).Route?.component || (() => <div>Key Competencies</div>),
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, mapRoute, keyCompRoute]);
+const enAboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/about",
+  component: (EnAboutRoute as any).default || (EnAboutRoute as any).Route?.component || (() => <div>About</div>),
+});
+
+const gaAboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/ga/about",
+  component: (GaAboutRoute as any).default || (GaAboutRoute as any).Route?.component || (() => <div>Faoi</div>),
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, mapRoute, keyCompRoute, enAboutRoute, gaAboutRoute]);
 
 const router = createRouter({ routeTree });
 
