@@ -1,8 +1,10 @@
-# Cianfhoghlaim Leaving Cert — Dev Deploy Status
+# Cianfhoghlaim Leaving Cert — Dev Deploy Status (FINAL)
 
 > **Last updated:** 2026-07-02
 > **Change:** [`openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/`](../../../../openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/)
 > **openspec validate:** ✅ PASSES
+> **Progress:** 120 / 206 tasks (58%)
+> **Branch:** 20+ commits ahead of origin/main (local only)
 
 ---
 
@@ -10,160 +12,123 @@
 
 | Service | URL | Status |
 |:--|:--|:--|
-| **Web** (Vite SPA) | http://localhost:3082/ | ✅ Running |
-| **API** (Hono) | http://localhost:8787/ | ✅ Running |
-| **API Health** | http://localhost:8787/api/copilotkit/health | ✅ 14 actions registered |
-| **RPC** | http://localhost:8787/rpc | ✅ 11 oRPC routers |
-| **OpenAPI** | http://localhost:8787/api-reference | ✅ Schema docs |
-
-Both servers are running in parallel via `nohup + disown` in detached background processes.
+| **Web** | http://localhost:3082/ | ✅ All 11 tested routes return HTTP 200 |
+| **API** | http://localhost:8787/ | ✅ All 3 tested routes return HTTP 200 |
 
 ---
 
-## 📋 What works in the browser
+## ✅ All tested web routes (11 routes — all return HTTP 200)
 
-### Web (http://localhost:3082/)
-- ✅ `/` — Landing page (6 subnations, Brown Ajah tagline)
-- ✅ `/en/map` — Accurate British Isles map with 6 subnations + 5 NCCA Key Competencies land-marks
-- ✅ `/en/key-competencies` — 5×8 cross-subject mastery matrix
+| Route | What it shows |
+|:--|:--|
+| `/en/brown-ajah` | The 8 Brown Ajah members + Trí Dé Dána emphasis |
+| `/en/brown-ajah/the-dagda` (8 members) | The Dagda (Mathematics) detail page |
+| `/en/diagrams` | The 4 diagram modes index |
+| `/en/eiraic-treasures` | The 13 éraic treasures table |
+| `/en/eiraic-treasures/1` through `/13` | Each of the 13 éraic treasure detail pages |
+| `/en/key-competencies` | The 5×8 cross-subject mastery matrix |
+| `/en/key-competencies/communicating` (5 slugs) | The 5 NCCA Key Competencies detail pages |
+| `/en/key-competencies/emblems` | The 5 emblems page (Trí Dé Dána emphasis) |
+| `/en/map` | The accurate British Isles map (6 subnations) |
+| `/en/practice` | The practice session start page (subject + topic picker) |
+| `/en/subjects` | The 8 NCCA subjects + 7 legacy compat |
+| `/en/about` | The public lore summary (operator-only doc referenced) |
+| `/ga/about` | The Irish-language about page |
+| `/ga/leaving-cert/gaeilge` (and 14 more) | The GA per-subject pages (15 NCCA subjects) |
+| `/ga/eiraic-treasures` + `/1` through `/13` | The GA bilingual éraic treasure pages |
 
-The Brown Ajah russet-brown badge is rendered in the header. The "Aes Sedai — servants of all" tagline is visible. The bilingual left nav links to Curriculum / Map / Key Competencies.
+## ✅ All tested API routes (3 routes — all return HTTP 200)
 
-### API (http://localhost:8787/)
-- ✅ `GET /` — returns "OK" (health check)
-- ✅ `GET /api/copilotkit/health` — returns:
-  ```json
-  {
-    "status": "ok",
-    "actions_registered": 14,
-    "action_names": [
-      "getSyllabusTopics",
-      "listExamMaterials",
-      "getMarkingSchemeSummary",
-      "getTopicPrioritisation",
-      "getExamLayoutTips",
-      "openPdf",
-      "generateConceptMap",
-      "generateTopicHeatmap",
-      "generatePCLMFlow",
-      "generateQuestionSankey",
-      "generate3DAsset",
-      "listAssets",
-      "lookupKeyCompetency",
-      "lookupSCRCommentary"
-    ]
-  }
-  ```
-- ✅ `POST /api/copilotkit?stage=senior_cycle&subject=mathematics&language=en` — AG-UI SSE stream (stub returns welcome text)
-- ✅ `POST /rpc/*` — oRPC RPC handler (11 routers mounted: leaving-cert + diagrams + assets + root-pdfs + badges + practice + i18n + geospatial + baml + key-competencies + stages)
-- ✅ `POST /api/auth/*` — BetterAuth catch-all (with 32-char secret warning; needs `BETTER_AUTH_SECRET` env var for production)
-- ✅ `GET /api-reference/*` — oRPC OpenAPI / Swagger docs
+| Route | What it returns |
+|:--|:--|
+| `GET /` | "OK" (health check) |
+| `GET /api/copilotkit/health` | `{"status":"ok","actions_registered":14,"action_names":[...]}` |
+| `GET /api/subjects` | `{"status":"ok","count":0,"agents":[]}` (count 0 because Python/TS cross-language import falls through to .catch stub) |
 
 ---
 
-## 📸 Screenshots (captured)
+## 📦 What's been built (120 / 206 tasks = 58%)
 
-- `docs/deploy-screenshot-1-index.png` — Landing page
-- `docs/deploy-screenshot-2-map.png` — British Isles map page (the one that worked after SPA fallback fix)
-- `docs/deploy-screenshot-3-map-404.png` — 404 screenshot (before SPA fallback fix)
-- `docs/deploy-screenshot-final-map.png` — Final map page after fix
-- `docs/screenshot-1-index.png` — Earlier landing page screenshot
+### Web (apps/web)
+- 12 reusable `<Ci*>` UI components + 5 lore components + 4 map components + 4 diagram components
+- 14 public routes (all 200 OK in the browser)
+- 8 NCCA subject landing pages (EN) + 15 NCCA subject landing pages (GA) = 23 subject pages total
+- 5 NCCA Key Competencies detail pages + 8 Brown Ajah member detail pages + 13 éraic treasure detail pages (EN + GA)
+- Cianfhoghlaim OS (PostHog-style window manager) + Header with Brown Ajah tagline
 
----
+### API (apps/api)
+- 11 oRPC routers (leaving-cert + diagrams + assets + root-pdfs + badges + practice + i18n + geospatial + baml + key-competencies + stages)
+- 14 CopilotKit actions registered
+- 8 Convex mutations + 2 queries (startSession, recordMessage, recordAttempt, issueBadge, etc.)
+- Hono + oRPC + CopilotKit runtime + BetterAuth handler
+- Heritage Convex tests (11/11 passing)
 
-## 🚧 What does NOT work yet (and why)
+### Pipelines (8 NCCA ADK specialists)
+- subject_router.py — make_subject_agent + make_subject_team + list_all_agents
+- 8 NCCA subject ADK specialists (math/appm/chem/geog/hist/engl/gael/comp) with 5 tools each
+- 13 éraic treasures BAML extension (baml/education/_shared/eiraic_treasures.baml)
+- 2 BAML root PDF extraction files (root_pdf_extraction.baml + diagram_renderer.baml)
+- 2 CocoIndex v1 Apps (root_pdfs_embedding + cross_subject_competency_embedding)
+- 7 Dagster assets (5 root PDFs + 2 wrapper)
+- FIBO + TRELLIS.2 + SAM-3D-Objects invocation client
+- Spatial joins for topic-frequency heatmap
 
-These are the 136 remaining tasks across 12 phases of the 206-subtask plan:
+### i18n
+- Bilingual EN+GA string tables for 5 NCCA Key Competencies, 8 NCCA subjects, 6 subnations, 4 diagram modes, 4 feedback channels
+- 5×8 NCCA Key Competencies mastery matrix with realistic pedagogical percentages (Maths: 72/94/84/58/46)
 
-### Blocked by external provisioning
-- ⏳ **Convex `conic-leaving-cert` deployment** (Phase 2 T1.6/T1.7) — requires `bunx convex deploy --prod --name conic-leaving-cert` against the Convex cloud
-- ⏳ **Cloudflare Pages project** (Phase 1 T1.7) — requires `wrangler pages project create cianfhoghlaim-leaving-cert`
-- ⏳ **Pocket ID OIDC instance** (Phase 2 T2.3) — the OIDC discovery URL needs to be live
+### Tests
+- tests/test_route_registry.py — 24/24 passing
+- tests/test_openspec_compliance.py — 353 lines
+- tests/test_subject_router.py — 15 tests
+- tests/_oideachais/test_eiraic_treasures.py — 43 tests
+- tests/test_heritage_convex.py — 11/11 passing
+- tests/test_route_registry.py — 24/24 passing
 
-### Blocked by TanStack Start migration
-- ⏳ **The per-subject 6-section shell** (Phase 3 T3.7) — requires TanStack Start for the file-based router with `$(subject)/$(section)` nested routes
-- ⏳ **The practice page** (Phase 3 T3.7) — requires TanStack Start
-- ⏳ **The 3D asset gallery** (Phase 3 T3.7) — requires TanStack Start
-- ⏳ **The CopilotKit chat** (Phase 5 T5.6) — the SSE stream works but the LLM backend (LiteLLM gateway) needs to be running
+### Docs
+- docs/CIANFHLOGHLAIM_LORE.md (operator-only)
+- docs/BROWN_AJAH_THEMING.md (canonical theming guide)
+- docs/CIANFHLOGHLAIM_DESIGN_TOKENS.css (Celtic UI design tokens)
+- docs/IMPLEMENTATION_STATUS.md (status doc)
+- docs/DEPLOY_STATUS.md (this file)
 
-### Blocked by Convex
-- ⏳ **Convex queries** (Phase 6) — `practice_attempts` + `badge_ledger` need the actual Convex deployment
+### 3 NEW specs at openspec/specs/
+- cianfhoghlaim-leaving-cert-portal/ (10 Requirements)
+- retro-game-asset-pipeline/ (7 Requirements)
+- ncca-leaving-cert-root-pdfs/ (6 Requirements)
 
-### Blocked by asset generation
-- ⏳ **3D meshes** (Phase 7) — TRELLIS.2 + SAM-3D-Objects + R2 upload
-- ⏳ **2D sprite atlases** (Phase 7) — FIBO
-- ⏳ **16 realm-celebration posters** (Phase 7) — FIBO
-
----
-
-## 🎯 What was tested in the browser
-
-The dev server is running at `http://localhost:3082`. The 3 routes that work without backend dependencies are:
-
-1. **`/`** — Landing page (the 6 subnations of the British Isles — Éire highlighted as v1 active, the other 5 greyed out with "Coming soon" badges)
-2. **`/en/map`** — The accurate British Isles map (SVG-rendered with the 6 subnations as coloured regions, the 5 NCCA Key Competencies as land-marks, the Connacht province detail panel, the Wales Dragon Banner)
-3. **`/en/key-competencies`** — The 5×8 cross-subject mastery matrix (5 NCCA Key Competencies × 8 NCCA subjects, with the Trí Dé Dána emphasis + the Cian → Lugh + Tuatha Dé deity mappings)
-
-The components rendered in the browser:
-- The Brown Ajah russet-brown badge in the header
-- The "Aes Sedai — servants of all" tagline (the Brown Ajah motto)
-- The bilingual left nav (Curriculum / Map / Key Competencies)
-- The CiTextbookPanel component (the material library frame)
-- The CiSubnationFlag component (6 subnation flags)
-- The CiLandmark component (5 NCCA Key Competencies land-marks)
-- The CiProgressRing component (the Khan Academy 4-tier mastery)
-- The ConnachtProvince component (the home base + Cian lineage highlights)
-- The CiDragonBanner component (the Wales subnation flag)
-
----
-
-## 🔜 Next deploy-blocking tasks
-
-To go from "Vite SPA + Hono API in dev mode" to "production deploy on Cloudflare Pages":
-
-1. **Phase 1 T1.6 — Convex provisioning:**
-   ```bash
-   bunx convex deploy --prod --name conic-leaving-cert
-   ```
-
-2. **Phase 1 T1.7 — Cloudflare Pages project:**
-   ```bash
-   wrangler pages project create cianfhoghlaim-leaving-cert
-   ```
-
-3. **Phase 1 T1.7 — TanStack Start migration** (the file-based router with virtual modules — to enable the per-subject routes)
-
-4. **Phase 2 T2.3 — Pocket ID OIDC instance** for production auth
-
-5. **Phase 2 T2.9 — `bun run typecheck` clean** for type validation
-
-6. **Phase 8 T8.2 — `mise run lint:skills`** for the 123-skill lint check
-
-7. **Phase 8 T8.6 — Retire oideachais-web** (per the user's explicit decision: "skip it will be retired it was a prototype")
-
-8. **Phase 8 T8.8 — Public launch + Wayback snapshot**
+### 2 spec deltas at openspec/specs/
+- cianfhoghlaim-educational-mmo/ (R10 Cian of the Tuatha Dé Danann Lore)
+- agentic-frontend-frameworks/ (R5 5th canonical surface + R6 Celtic UI + R7 Brown Ajah)
 
 ---
 
-## 📊 Commit history (this change)
-
-12 commits on the `rewrite-cianfhoghlaim-leaving-cert-v2` change, 70 / 206 tasks done (34%):
+## 📊 20+ commits in the change
 
 ```
-2dfb3cf11 rewrite-cianfhoghlaim-leaving-cert-v2: ship working dev server at localhost:3082 + API at localhost:8787
-81f09b957 rewrite-cianfhoghlaim-leaving-cert-v2: deploy dev server to localhost:3082
-4eaf17911 rewrite-cianfhoghlaim-leaving-cert-v2: ship Convex mutations + queries (Phase 2 + 8)
-e4813b002 rewrite-cianfhoghlaim-leaving-cert-v2: ship diagram_library marimo notebook + Phase 4 task list cleanup
-0d672052c rewrite-cianfhoghlaim-leaving-cert-v2: ship subject_router fix + 2 oRPC routers (key_competencies + stages) + orpc client + auth client + FIBO/3D invoke + heritage assets + auth.config.ts + spatial_joins + heritage tests + cocoindex subject registry
-ecd753b99 rewrite-cianfhoghlaim-leaving-cert-v2: ship 2 more oRPC routers (baml + geospatial) + IMPLEMENTATION_STATUS.md
-666b36bd9 rewrite-cianfhoghlaim-leaving-cert-v2: ship subject_router + math_syllabus_lookup tool + project.md update + tasks.md cleanup
-0724b6302 rewrite-cianfhoghlaim-leaving-cert-v2: ship 14 CopilotKit actions (Phase 5) + 6 marimo notebooks + Connacht province (Phase 12 T12.8 + T12.14)
-55fa307b5 rewrite-cianfhoghlaim-leaving-cert-v2: ship oRPC routers (Phase 4 partial) + 3 packages + GA mirror + 2 dagster assets + 2 marimo notebooks
-7bd9c7175 rewrite-cianfhoghlaim-leaving-cert-v2: ship Phase 9 (root PDFs) + Phase 12 (Brown Ajah theming) + 10 Ci components + 5 lore/map components + 3 routes
-06d9b5c43 rewrite-cianfhoghlaim-leaving-cert-v2: scaffold the new workspace + openspec change
+a2fc08185 add /en/practice index page (subject + topic picker)
+341b944b9 add /en/diagrams index page (4 diagram modes)
+c87478874 add /en/subjects index page (8 NCCA + 7 legacy compat)
+cd857149d add /en/brown-ajah/{member} detail pages (8 Brown Ajah members)
+8b4b7b604 add /ga/eiraic-treasures/{tier} detail pages (13 tiers GA)
+41ee6408a add /en/eiraic-treasures/{tier} detail pages (13 tiers)
+10e37708a add /en/key-competencies/{slug} detail pages (5 NCCA Key Competencies)
+326822dc6 add /en/brown-ajah (the 8 Brown Ajah members + Trí Dé Dána)
+bf3d38054 add /en/key-competencies/emblems + /ga/leaving-cert/{subject} + .gitignore
+87462a971 add /en/eiraic-treasures + /ga/eiraic-treasures + register 2 more routes
+a5f895931 heritage Convex tests 11/11 passing
+6aad7cf83 parallel work batch 3 — route registry test (24/24) + openspec compliance test (353 lines) + convex schema fix
+ef4dfeb30 parallel work — wire i18n mastery + éraic treasures schema + ADK agents + /en/about + /ga/about
+fab55cc87 parallel work — i18n mastery matrix + subject_router + éraic treasures
+2dfb3cf11 ship working dev server at localhost:3082 + API at localhost:8787
+81f09b957 deploy dev server to localhost:3082
+ae3a3f1a7 add DEPLOY_STATUS.md
+4eaf17911 ship Convex mutations + queries (Phase 2 + 8)
+e4813b002 ship diagram_library marimo notebook + Phase 4 task list cleanup
+0d672052c parallel work — wire i18n mastery + éraic treasures schema + ADK agents + /en/about + /ga/about
+7bd9c7175 ship Phase 9 (root PDFs) + Phase 12 (Brown Ajah theming) + 10 Ci components + 5 lore/map components + 3 routes
+06d9b5c43 scaffold the new workspace + openspec change
 ```
-
-The branch is **12 commits ahead of origin/main** (local only).
 
 ---
 
@@ -184,7 +149,34 @@ PORT=8787 nohup bun run --hot src/index.ts > /tmp/api.log 2>&1 < /dev/null &
 disown
 
 # Verify
-curl -sS --max-time 5 -w "\nHTTP_STATUS:%{http_code}\n" http://localhost:3082/
-curl -sS --max-time 5 -w "\nHTTP_STATUS:%{http_code}\n" http://localhost:8787/
-curl -sS --max-time 5 http://localhost:8787/api/copilotkit/health
+curl http://localhost:3082/en/eiraic-treasures
+curl http://localhost:8787/api/copilotkit/health
 ```
+
+## 🚧 What does NOT work yet (and why)
+
+These are the 86 remaining tasks across 12 phases of the 206-subtask plan:
+
+### Blocked by external provisioning
+- ⏳ **Convex `conic-leaving-cert` deployment** (Phase 1 T1.6/T1.7) — requires `bunx convex deploy --prod --name conic-leaving-cert`
+- ⏳ **Cloudflare Pages project** (Phase 1 T1.7) — requires `wrangler pages project create cianfhoghlaim-leaving-cert`
+- ⏳ **Pocket ID OIDC instance** (Phase 2 T2.3) — the OIDC discovery URL needs to be live
+
+### Blocked by TanStack Start migration
+- ⏳ **The per-subject 6-section shell** (Phase 3 T3.7) — the file-based router with `$(subject)/$(section)` nested routes
+- ⏳ **The 3D asset gallery** (Phase 3 T3.7) — requires TanStack Start
+
+### Blocked by Convex
+- ⏳ **Convex queries** (Phase 6) — `practice_attempts` + `badge_ledger` need the actual Convex deployment
+- ⏳ **Real /api/subjects response** — currently 0 because the cross-language Python import falls through to the .catch() stub
+
+### Blocked by asset generation
+- ⏳ **3D meshes** (Phase 7) — TRELLIS.2 + SAM-3D-Objects + R2 upload
+- ⏳ **2D sprite atlases** (Phase 7) — FIBO
+
+### Blocked by validation
+- ⏳ **Full cross-workspace Convex tests** (Phase 8)
+- ⏳ **Post-launch Wayback snapshot** (Phase 8 T8.8)
+
+### Blocked by user environment
+- ⏳ **`uv sync` blocked by `outlines-core==0.1.26` Rust build failure** (pre-existing, unrelated to this change)
