@@ -22,6 +22,7 @@ import * as BrownAjahRoute from "./routes/en/brown-ajah";
 import * as SubjectGARoute from "./routes/ga/leaving-cert/$subject";
 import * as AboutRouteGA from "./routes/ga/about";
 import * as EiraicRouteGA from "./routes/ga/eiraic-treasures";
+import * as EiraicTierRouteGA from "./routes/ga/eiraic-treasures.$tier";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -122,6 +123,12 @@ const eiraicGARoute = createRoute({
   component: EiraicRouteGA.default || EiraicRouteGA.Route?.component || (() => <div>13 Éraic (GA)</div>),
 });
 
+const eiraicTierGARoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/ga/eiraic-treasures/$tier",
+  component: EiraicTierRouteGA.default || EiraicTierRouteGA.Route?.component || (() => <div>Éraic Tier (GA)</div>),
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   mapRoute,
@@ -134,6 +141,7 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   aboutGARoute,
   eiraicGARoute,
+  eiraicTierGARoute,
   subjectGARoute,
 ]);
 
