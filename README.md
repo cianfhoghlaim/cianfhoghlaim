@@ -8,6 +8,37 @@
 
 ---
 
+> ## ⚠️ Important Disclaimer — Data Pipelines vs Web UI
+>
+> The **data engineering pipelines** in this repository — DLT
+> ingestion, BAML extraction
+> (`ExtractLeavingCertSyllabus`, `ExtractLeavingCertMarkingScheme`,
+> `ExtractLeavingCertPastPaper`), CocoIndex v1 embeddings, Cognee
+> cognify passes, and the 11 NCCA Leaving Certificate subject
+> asset groups — **do work against the official Government
+> syllabus exam papers and marking schemes** of the Republic of
+> Ireland (NCCA Leaving Certificate, Junior Cycle, Primary,
+> Aistear) and the wider British Isles education system.
+>
+> However, **the web UI has not yet been informed by those
+> extracted assets.** The current web applications —
+> `oideachais-web`, `tuatha-ui`, `croilar-web`, `croilar-portal`,
+> `game_showcase`, `tuatha-demo`, plus the Hono API gateway —
+> have been generated **primarily to focus on the combination
+> of packages** (TanStack Start + CopilotKit + AG-UI + Hono +
+> oRPC + Convex + Babylon.js + BAML / Pydantic AI / Agno /
+> Google ADK), *not* on the UI design yet.
+>
+> The eventual UI design **will be provably informed by
+> official documents** of the Republic of Ireland and the
+> British Isles education system — the same NCCA syllabi,
+> exam papers, and marking schemes that the data pipelines
+> already process. Until that grounding work is complete, the
+> UI is best understood as a packaging / wiring demonstration
+> rather than a polished pedagogical surface.
+
+---
+
 ## TL;DR — What this is, today
 
 `cianfhoghlaim` is a polyglot (`bun + uv`) that ingests
@@ -25,166 +56,6 @@ Irish / agentic-AI engineer based in Galway and East Belfast and registered memb
 [Royal Book Club](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/achievement/buckingham_letter.pdf),
 [The United Kingdom of Great Britain and Northern Ireland](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf),
 [University of Galway](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf).
-
-
-### On the family — *Mac an Déisigh Uí Liatháin (Deacy-Lyons)*
-
-The author is **Cian Mac an Déisigh Uí Liatháin**; the family
-surname in its two anglicised forms is **Deacy-Lyons**. The
-author's verified genealogy and qualifications inform the
-project's design choices and are recorded under
-[`cian_mac_an_déisigh_uí_liatháin/`](cian_mac_an_déisigh_uí_liatháin/):
-
-- `identity/` — background, citizenship, vetting, and the Deacy
-  family record. The `identity/lineage/` subfolder holds the
-  family-lineage documents: the late uncle's memorial, the dual
-  ROI/UK citizenship evidence, the College des Irlandais (Paris)
-  records, the 5-culture-PDF Wikipedia dual-write clippings (8
-  articles: Uí Liatháin, Delbhna Tír Dhá Locha, Eamonn Deacy
-  Park, Leath Cuinn, Cian, Aos Sí, Tuatha Dé Danann, Déisi), and
-  the 1986 *Galway Advertiser* article on Neil Deacy's Cookeʼs
-  Corner shop opening.
-- `teaching/` — the Teaching Council of Ireland registration, the
-  PGCE (BCS Computing scholarship), school placement references,
-  and the Leaving Certificate / Junior Certificate results (the
-  public copies are in the `identity/` folder; the full teaching
-  record is held privately for data-protection reasons).
-- `achievement/` — academic transcripts, parchments, the Apple
-  Award, and the Torthaí Gaeilge (Irish-language exam results)
-  (same privacy caveat).
-
-The author's lineage is the **triple-crown** union of four
-kindreds of Connacht and Munster:
-
-1. **Deacy** (maternal surname; Irish *Uí Dhéisigh*) — the sept
-   of the [Déisi
-   Muman](https://en.wikipedia.org/wiki/D%C3%A9isi) resettled in
-   south Connacht (Co. Galway) during the 12th century; the
-   family gave their name to the late
-   [Éamonn Deacy](cian_mac_an_déisigh_uí_liatháin/identity/lineage/uncle_eamonn_memorial_combined.pdf)
-   and the [Eamonn Deacy
-   Park](https://galwayunitedfc.ie/eamonn-deacy-park) in Galway.
-2. **Lyons** (paternal grandfather's lineage; Irish *Mac
-   Liatháin*) — the [Uí
-   Anmchada](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
-   sept of the
-   [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
-   of Munster, who (per the *Historia Brittonum*) colonized Wales
-   and Cornwall alongside the proto-Déisi.
-3. **Morris** (maternal great-grandmother **Christina Morris**) —
-   of the [City of
-   Tribes](https://en.wikipedia.org/wiki/Tribes_of_Galway) merchant
-   families of Galway.
-4. **Conroy** (maternal great-great-grandmother **Polly Conroy**;
-   Irish *Mac Conraoi / Ó Conaire*) — the
-   [Sea-Kings of
-   Connacht](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
-   who held the tuath of
-   [Delbhna Tír Dhá
-   Locha](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
-   (the barony of Moycullen in Connemara). **Polly Conroy was a
-   cousin of Pádraic Ó Conaire**, the canonical modern
-   Irish-language writer from Galway, who was reared in Rosmuc
-   by his uncle of the same Mac Conraoi kindred.
-
-The author is the grandson and godson of the late **Neil
-Deacy**, the late brother of the late **Éamonn Deacy** — the
-Galwegian footballer who played for Galway United, Aston Villa
-FC, and the Republic of Ireland. Neil and Éamonn were the sons of
-**Christina Morris** and **Michael Deacy**, who was himself the
-son of **Polly Conroy** and **George Deacy**.
-
-The author's grandfather and godfather was **Neil Deacy** (the
-subject of the 1986 *Galway Advertiser* [article on the opening of
-Deacy's Fruit and Veg, Cooke's Corner](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage/neil_deacy_cookes_corner-galway_advertiser.pdf),
-showing active usage of the name *"Neil Mac an Déisigh"*). The author
-took his mother's Mac an Déisigh surname
-as part of his own and added it to his
-Lyons surname in the hyphenated form **Deacy-Lyons** to avoid confusion and acknowledge previous achievement and previous comfort using the same surname as my older brother and father who do not allow me to be a full member of the Lyons family.
-
-
-### On the verified qualifications
-
-The course material, examination scripts, and the personal
-credential corpus that ground the project's claims live in
-three directories. The full set of signed transcripts and
-original parchments is held privately for data-protection
-reasons; the public copies linked below are the source of
-truth cited throughout the README and the lineage essays.
-
-#### Academic transcript — University of Galway / Ollscoil na Gaillimhe
-
-The BSc (Hons.) Mathematics & Education (First Class
-Honours, 78.84%) + the Higher Diploma in Applied Science in
-Software Design & Development (First Class Honours) are
-grounded in the coursework archives under
-[`leabharlann/ollscoil_na_gaillimhe/`](./leabharlann/ollscoil_na_gaillimhe/).
-The verified parchments live at
-[`cian_mac_an_déisigh_uí_liatháin/achievement/`](./cian_mac_an_déisigh_uí_liatháin/achievement/)
-(`bachelors_degree_parchment.jpeg`,
-`higher_diploma_parchment.jpeg`,
-`ba_and_hdip_transcript.pdf`,
-`2013_2023_transcript_nuig.pdf`).
-
-##### Mathematics (`mata/`, 9 modules)
-
-| Module | Code | Material in archive |
-|:--|:--|:--|
-| Applied Statistics I | ST311 | RStudio project, recap assignment, my_marks PDF, regression chapters, Statistical Tables |
-| Applied Statistics II | ST312 | R exam script, certificate, 3 assignments, my_marks PDF, problem-sheet solutions |
-| Cryptography | CS402 | Koblitz + Smart textbooks, 5 past papers, ElGamal/EllipticCurve slides, Parmar UROP, 2 assignments, 2 Jupyter notebooks |
-| *An Introduction to Statistical Learning* | (ISLP) | 13 chapter notebooks (Ch02–Ch13), Auto dataset, `requirements.txt`, `setup_notebook_env.py` |
-| Maple | — | 7 `.mws` worksheets (intro → commands → calculus → graphics → lists/sets/linalg → if/do → proc) |
-| Modelling II | MP307 | 4 labs + exam script + my_marks PDF + Maple worksheets |
-| Networks | CS4423 | 5 assignments + exam script + summer 2021 paper |
-| Non-Linear Systems | MP491 | 2 assignments + exam script + my_marks PDF + tutorials + readings |
-| Numerical Analysis II | MA378 | Suli & Mayers textbook + solutions, class test, exam script, problem sheets, *Anailís Uimhriúil* notes |
-
-Plus `stokes_workshop_game_physics.pdf` (3 MB, the Stokes
-workshop on game physics) sits at the root of `mata/`.
-
-##### Software Design & Development (`software_development/`, 7 modules — Higher Diploma in Applied Science)
-
-| Module | Code | Material in archive |
-|:--|:--|:--|
-| Databases | CT511 | 2 assignments + past exams + SQL test |
-| Enterprise Java Programming | CT545 | 4 assignments |
-| Algorithmics | CT853 | CT853 assignment (`q1.java`–`q4.java`), mergesort/bubble-sort proofs, 3 past papers, Assignment Template |
-| Computer Architecture & Operating Systems | CT861 | 2 assignments + past exams + *Athbhreithniú Caos* essay |
-| Internet Programming | CT870 | 3 `.docx` assignments + 3 code assignments |
-| Programming I | CT874 | 7 assignments + internet-programming past exams + programming past exams |
-| Software Engineering I | — | Exam prep + past exams |
-
-#### Teaching record (`teaching/`)
-
-- **Teaching Council of Ireland** — full registration ([`teaching_registration.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/teaching_registration.pdf))
-- **Postgraduate Certificate in Education (PGCE), Computing** — BCS scholarship recipient ([`bcs_pgce_computing_scholarship.png`](./cian_mac_an_déisigh_uí_liatháin/teaching/bcs_pgce_computing_scholarship.png))
-- **School placements** — Coláiste na Coiribe ([`colaiste_na_coiribe.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/colaiste_na_coiribe.pdf)), Galway Community College ([`gcc_placement_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/gcc_placement_reference.pdf)), Scoil Iognáid ([`scoil_iognaid.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/scoil_iognaid.pdf) — the Jesuit secondary school in Galway)
-- **Junior + Leaving Certificate** original results ([`leaving_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/leaving_certificate.pdf), [`junior_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/junior_certificate.pdf))
-- **References** — BME ([`bme_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/bme_reference.pdf)), part-time teaching ([`part_time_teaching_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/part_time_teaching_reference.pdf)), placement feedback ([`teaching_placement_feedback.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/teaching_placement_feedback.pdf))
-
-#### Identity, citizenship, and vetting (`identity/`)
-
-- **Dual citizenship** — Irish + British, verified by old passports ([`identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf))
-- **Vetting** — Garda vetting (ROI) ([`identity/vetting/garda_vetting_roi.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/garda_vetting_roi.pdf)), PSNI proof (Belfast) ([`identity/vetting/psni_proof_belfast.jpeg`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/psni_proof_belfast.jpeg)), Enhanced AccessNI cert ([`identity/vetting/enhanced_cert_ni.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/enhanced_cert_ni.pdf)), Enhanced DBS cert (UCL) ([`identity/vetting/enhanced_cert_ucl.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/enhanced_cert_ucl.pdf)), Children First cert ([`identity/vetting/children_first_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/children_first_certificate.pdf))
-- **Political memberships** — Fine Gael (current + former + name-change record), Alliance Party of Northern Ireland, Liberal Democrats
-- **Lineage & heritage** — *Uí Dhéisigh* / Deacy, *Mac Liatháin* / Lyons, Morris (City of Tribes), Mac Conraoi / Conroy (Sea-Kings of Connacht); the 1986 *Galway Advertiser* article on the opening of Deacy's Fruit and Veg at Cooke's Corner; the College des Irlandais (Paris) record; the late Éamonn Deacy's memorial; the Lyons/Deacy birth cert; the Christina Morris + Michael Deacy wedding photo
-- **Disability evidence** — CPTSD + anxiety disorder diagnosis ([`identity/disability/evidence_of_cptsd_anxiety_disorder.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/disability/evidence_of_cptsd_anxiety_disorder.pdf))
-
-#### Achievements (`achievement/`)
-
-- **MSc in Artificial Intelligence (2026–2027, University of Galway)** — admission letter ([`2026_2027_msc_in_ai_university_gaillimhe.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf))
-- **Apple Award** (2013) ([`apple_award.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/apple_award.pdf))
-- **Buckingham letter** (Royal Book Club admission) ([`buckingham_letter.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/buckingham_letter.pdf))
-- **Torthaí Gaeilge** — Irish-language exam results ([`torthai_ghaeilge.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/torthai_ghaeilge.pdf))
-- **Cybersecurity reference** ([`cybersecurity_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/cybersecurity_reference.pdf))
-- **BA + HDip parchments** — original jpegs
-
-The **forthcoming PhD track in Artificial Intelligence** at
-the University of Galway follows the MSc. The **Dioplóma C1
-in Irish** (the highest Irish-language teaching credential)
-is held in parallel with the MSc and the PGCE.
-
 
 ## The 5-stage pipeline (the architecture)
 
@@ -656,6 +527,12 @@ file (hand-rolled Graphiti-in-Python) is superseded by `temporal_client.py`
 
 ### `cianfhoghlaim/web/` — 7 web apps + 1 Hono API
 
+> **See the top-of-README disclaimer above** — the UI in these
+> apps is currently a packaging / wiring demonstration and has
+> **not** yet been informed by the extracted NCCA syllabi, exam
+> papers, or marking schemes. The eventual UI design will be
+> provably grounded in those official documents.
+
 | App | Stack | What it is |
 |:--|:--|:--|
 | `apps/oideachais-web/` | TanStack Start | The public Celtic education data platform (the largest) |
@@ -668,10 +545,6 @@ file (hand-rolled Graphiti-in-Python) is superseded by `temporal_client.py`
 
 The 5-web-app → 1-`cio-web` consolidation plan is in
 [`docs/audit/web-app-consolidation-plan.md`](docs/audit/web-app-consolidation-plan.md).
-
-### `cianfhoghlaim/notebooks/` — 29+ marimo notebooks
-
-See **"Notebooks and demos"** above for the full breakdown.
 
 ### `cianfhoghlaim/libraries/codeolas/` — publishable sub-package
 
@@ -758,6 +631,167 @@ corpus from the monorepo, reference it through the relative path
 | `gemini_deep_research/` | 24+ long-form Gemini deep research reports across `culture/`, `medical/`, `politics/` — the corpus that grounds the cianfhoghlaim plan throughout the British Isles | the `culture_extraction.baml:ExtractCultureClaims` BAML function; the `culture_heritage` Cognee dataset; the §20 and §21d/f of the README |
 
 ---
+
+
+
+### On the family — *Mac an Déisigh Uí Liatháin (Deacy-Lyons)*
+
+The author is **Cian Mac an Déisigh Uí Liatháin**; the family
+surname in its two anglicised forms is **Deacy-Lyons**. The
+author's verified genealogy and qualifications inform the
+project's design choices and are recorded under
+[`cian_mac_an_déisigh_uí_liatháin/`](cian_mac_an_déisigh_uí_liatháin/):
+
+- `identity/` — background, citizenship, vetting, and the Deacy
+  family record. The `identity/lineage/` subfolder holds the
+  family-lineage documents: the late uncle's memorial, the dual
+  ROI/UK citizenship evidence, the College des Irlandais (Paris)
+  records, the 5-culture-PDF Wikipedia dual-write clippings (8
+  articles: Uí Liatháin, Delbhna Tír Dhá Locha, Eamonn Deacy
+  Park, Leath Cuinn, Cian, Aos Sí, Tuatha Dé Danann, Déisi), and
+  the 1986 *Galway Advertiser* article on Neil Deacy's Cookeʼs
+  Corner shop opening.
+- `teaching/` — the Teaching Council of Ireland registration, the
+  PGCE (BCS Computing scholarship), school placement references,
+  and the Leaving Certificate / Junior Certificate results (the
+  public copies are in the `identity/` folder; the full teaching
+  record is held privately for data-protection reasons).
+- `achievement/` — academic transcripts, parchments, the Apple
+  Award, and the Torthaí Gaeilge (Irish-language exam results)
+  (same privacy caveat).
+
+The author's lineage is the **triple-crown** union of four
+kindreds of Connacht and Munster:
+
+1. **Deacy** (maternal surname; Irish *Uí Dhéisigh*) — the sept
+   of the [Déisi
+   Muman](https://en.wikipedia.org/wiki/D%C3%A9isi) resettled in
+   south Connacht (Co. Galway) during the 12th century; the
+   family gave their name to the late
+   [Éamonn Deacy](cian_mac_an_déisigh_uí_liatháin/identity/lineage/uncle_eamonn_memorial_combined.pdf)
+   and the [Eamonn Deacy
+   Park](https://galwayunitedfc.ie/eamonn-deacy-park) in Galway.
+2. **Lyons** (paternal grandfather's lineage; Irish *Mac
+   Liatháin*) — the [Uí
+   Anmchada](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
+   sept of the
+   [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
+   of Munster, who (per the *Historia Brittonum*) colonized Wales
+   and Cornwall alongside the proto-Déisi.
+3. **Morris** (maternal great-grandmother **Christina Morris**) —
+   of the [City of
+   Tribes](https://en.wikipedia.org/wiki/Tribes_of_Galway) merchant
+   families of Galway.
+4. **Conroy** (maternal great-great-grandmother **Polly Conroy**;
+   Irish *Mac Conraoi / Ó Conaire*) — the
+   [Sea-Kings of
+   Connacht](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
+   who held the tuath of
+   [Delbhna Tír Dhá
+   Locha](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
+   (the barony of Moycullen in Connemara). **Polly Conroy was a
+   cousin of Pádraic Ó Conaire**, the canonical modern
+   Irish-language writer from Galway, who was reared in Rosmuc
+   by his uncle of the same Mac Conraoi kindred.
+
+The author is the grandson and godson of the late **Neil
+Deacy**, the late brother of the late **Éamonn Deacy** — the
+Galwegian footballer who played for Galway United, Aston Villa
+FC, and the Republic of Ireland. Neil and Éamonn were the sons of
+**Christina Morris** and **Michael Deacy**, who was himself the
+son of **Polly Conroy** and **George Deacy**.
+
+The author's grandfather and godfather was **Neil Deacy** (the
+subject of the 1986 *Galway Advertiser* [article on the opening of
+Deacy's Fruit and Veg, Cooke's Corner](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage/neil_deacy_cookes_corner-galway_advertiser.pdf),
+showing active usage of the name *"Neil Mac an Déisigh"*). The author
+took his mother's Mac an Déisigh surname
+as part of his own and added it to his
+Lyons surname in the hyphenated form **Deacy-Lyons** to avoid confusion and acknowledge previous achievement and previous comfort using the same surname as my older brother and father who do not allow me to be a full member of the Lyons family.
+
+
+### On the verified qualifications
+
+The course material, examination scripts, and the personal
+credential corpus that ground the project's claims live in
+three directories. The full set of signed transcripts and
+original parchments is held privately for data-protection
+reasons; the public copies linked below are the source of
+truth cited throughout the README and the lineage essays.
+
+#### Academic transcript — University of Galway / Ollscoil na Gaillimhe
+
+The BSc (Hons.) Mathematics & Education (First Class
+Honours, 78.84%) + the Higher Diploma in Applied Science in
+Software Design & Development (First Class Honours) are
+grounded in the coursework archives under
+[`leabharlann/ollscoil_na_gaillimhe/`](./leabharlann/ollscoil_na_gaillimhe/).
+The verified parchments live at
+[`cian_mac_an_déisigh_uí_liatháin/achievement/`](./cian_mac_an_déisigh_uí_liatháin/achievement/)
+(`bachelors_degree_parchment.jpeg`,
+`higher_diploma_parchment.jpeg`,
+`ba_and_hdip_transcript.pdf`,
+`2013_2023_transcript_nuig.pdf`).
+
+##### Mathematics (`mata/`, 9 modules)
+
+| Module | Code | Material in archive |
+|:--|:--|:--|
+| Applied Statistics I | ST311 | RStudio project, recap assignment, my_marks PDF, regression chapters, Statistical Tables |
+| Applied Statistics II | ST312 | R exam script, certificate, 3 assignments, my_marks PDF, problem-sheet solutions |
+| Cryptography | CS402 | Koblitz + Smart textbooks, 5 past papers, ElGamal/EllipticCurve slides, Parmar UROP, 2 assignments, 2 Jupyter notebooks |
+| *An Introduction to Statistical Learning* | (ISLP) | 13 chapter notebooks (Ch02–Ch13), Auto dataset, `requirements.txt`, `setup_notebook_env.py` |
+| Maple | — | 7 `.mws` worksheets (intro → commands → calculus → graphics → lists/sets/linalg → if/do → proc) |
+| Modelling II | MP307 | 4 labs + exam script + my_marks PDF + Maple worksheets |
+| Networks | CS4423 | 5 assignments + exam script + summer 2021 paper |
+| Non-Linear Systems | MP491 | 2 assignments + exam script + my_marks PDF + tutorials + readings |
+| Numerical Analysis II | MA378 | Suli & Mayers textbook + solutions, class test, exam script, problem sheets, *Anailís Uimhriúil* notes |
+
+Plus `stokes_workshop_game_physics.pdf` (3 MB, the Stokes
+workshop on game physics) sits at the root of `mata/`.
+
+##### Software Design & Development (`software_development/`, 7 modules — Higher Diploma in Applied Science)
+
+| Module | Code | Material in archive |
+|:--|:--|:--|
+| Databases | CT511 | 2 assignments + past exams + SQL test |
+| Enterprise Java Programming | CT545 | 4 assignments |
+| Algorithmics | CT853 | CT853 assignment (`q1.java`–`q4.java`), mergesort/bubble-sort proofs, 3 past papers, Assignment Template |
+| Computer Architecture & Operating Systems | CT861 | 2 assignments + past exams + *Athbhreithniú Caos* essay |
+| Internet Programming | CT870 | 3 `.docx` assignments + 3 code assignments |
+| Programming I | CT874 | 7 assignments + internet-programming past exams + programming past exams |
+| Software Engineering I | — | Exam prep + past exams |
+
+#### Teaching record (`teaching/`)
+
+- **Teaching Council of Ireland** — full registration ([`teaching_registration.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/teaching_registration.pdf))
+- **Postgraduate Certificate in Education (PGCE), Computing** — BCS scholarship recipient ([`bcs_pgce_computing_scholarship.png`](./cian_mac_an_déisigh_uí_liatháin/teaching/bcs_pgce_computing_scholarship.png))
+- **School placements** — Coláiste na Coiribe ([`colaiste_na_coiribe.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/colaiste_na_coiribe.pdf)), Galway Community College ([`gcc_placement_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/gcc_placement_reference.pdf)), Scoil Iognáid ([`scoil_iognaid.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/scoil_iognaid.pdf) — the Jesuit secondary school in Galway)
+- **Junior + Leaving Certificate** original results ([`leaving_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/leaving_certificate.pdf), [`junior_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/junior_certificate.pdf))
+- **References** — BME ([`bme_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/bme_reference.pdf)), part-time teaching ([`part_time_teaching_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/part_time_teaching_reference.pdf)), placement feedback ([`teaching_placement_feedback.pdf`](./cian_mac_an_déisigh_uí_liatháin/teaching/teaching_placement_feedback.pdf))
+
+#### Identity, citizenship, and vetting (`identity/`)
+
+- **Dual citizenship** — Irish + British, verified by old passports ([`identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf))
+- **Vetting** — Garda vetting (ROI) ([`identity/vetting/garda_vetting_roi.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/garda_vetting_roi.pdf)), PSNI proof (Belfast) ([`identity/vetting/psni_proof_belfast.jpeg`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/psni_proof_belfast.jpeg)), Enhanced AccessNI cert ([`identity/vetting/enhanced_cert_ni.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/enhanced_cert_ni.pdf)), Enhanced DBS cert (UCL) ([`identity/vetting/enhanced_cert_ucl.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/enhanced_cert_ucl.pdf)), Children First cert ([`identity/vetting/children_first_certificate.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/vetting/children_first_certificate.pdf))
+- **Political memberships** — Fine Gael (current + former + name-change record), Alliance Party of Northern Ireland, Liberal Democrats
+- **Lineage & heritage** — *Uí Dhéisigh* / Deacy, *Mac Liatháin* / Lyons, Morris (City of Tribes), Mac Conraoi / Conroy (Sea-Kings of Connacht); the 1986 *Galway Advertiser* article on the opening of Deacy's Fruit and Veg at Cooke's Corner; the College des Irlandais (Paris) record; the late Éamonn Deacy's memorial; the Lyons/Deacy birth cert; the Christina Morris + Michael Deacy wedding photo
+- **Disability evidence** — CPTSD + anxiety disorder diagnosis ([`identity/disability/evidence_of_cptsd_anxiety_disorder.pdf`](./cian_mac_an_déisigh_uí_liatháin/identity/disability/evidence_of_cptsd_anxiety_disorder.pdf))
+
+#### Achievements (`achievement/`)
+
+- **MSc in Artificial Intelligence (2026–2027, University of Galway)** — admission letter ([`2026_2027_msc_in_ai_university_gaillimhe.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf))
+- **Apple Award** (2013) ([`apple_award.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/apple_award.pdf))
+- **Buckingham letter** (Royal Book Club admission) ([`buckingham_letter.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/buckingham_letter.pdf))
+- **Torthaí Gaeilge** — Irish-language exam results ([`torthai_ghaeilge.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/torthai_ghaeilge.pdf))
+- **Cybersecurity reference** ([`cybersecurity_reference.pdf`](./cian_mac_an_déisigh_uí_liatháin/achievement/cybersecurity_reference.pdf))
+- **BA + HDip parchments** — original jpegs
+
+The **forthcoming PhD track in Artificial Intelligence** at
+the University of Galway follows the MSc. The **Dioplóma C1
+in Irish** (the highest Irish-language teaching credential)
+is held in parallel with the MSc and the PGCE.
+
 
 
 ### Tuatha the Cianfhoghlaim MMO faoi Ard-Rí na hÉireann, Tuatha Dé Danann, Anam agus Goidelic and Brythonnic Lore
@@ -1420,14 +1454,3 @@ All three repositories in the constellation
 licensed under BUSL-1.1 by the same Licensor.
 
 ---
-
-*Built by Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons) of the
-Deacy-Morris-Conroy tribe of Galway — BSc (Hons.) Mathematics &
-Education (NUI Galway, First Class Honours), Higher Diploma in
-Software Design & Development (First Class Honours), current MSc /
-forthcoming PhD track in Artificial Intelligence (University of
-Galway), Dioplóma C1 in Irish, qualified Mathematics & Applied
-Mathematics teacher (Teaching Council of Ireland), grandchild of
-the late Neil Deacy of Cooke's Corner, Shantalla, Galway, born a dual
-Irish-British citizen and obliged by oath
-of allegiance to King Charles the Third.
