@@ -1,107 +1,158 @@
-// /en/leaving-cert/$subject/practice/$topic — Practice page
+// /en/leaving-cert/$subject/practice/$topic — Practice detail page
 // Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/specs/
 // cianfhoghlaim-leaving-cert-portal/spec.md Requirement R5.
 
-import { createFileRoute } from "@tanstack/react-router";
-import { CiButton, CiProgressRing, CiBoonsChoice } from "@cianfhoghlaim/ui";
-import { CiTextbookPanel } from "@cianfhoghlaim/ui";
-import { CiStreakFlame } from "@cianfhoghlaim/ui";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CiTextbookPanel, CiBoonsChoice, CiProgressRing, CiStreakFlame } from "@cianfhoghlaim/ui";
+import { useState } from "react";
 
 export const Route = createFileRoute("/en/leaving-cert/$subject/practice/$topic")({
-  component: PracticePage,
+  component: PracticeDetailPage,
 });
 
-function PracticePage() {
+const SAMPLE_QUESTIONS = [
+  {
+    id: "q1",
+    prompt: "Find the complex number z such that z² = -1 and Im(z) > 0.",
+    type: "WORKED_SOLUTION",
+    difficulty: 3,
+    expected_answer: "z = i",
+    marking_scheme: "Setup (1 mark) + Working (2 marks) + Final (1 mark)",
+  },
+  {
+    id: "q2",
+    prompt: "Prove that for any complex number z, |z|² = z · z̄ (where z̄ is the complex conjugate).",
+    type: "PROOF",
+    difficulty: 4,
+    expected_answer: "Let z = a + bi, then z̄ = a - bi, so z · z̄ = (a + bi)(a - bi) = a² + b² = |z|²",
+    marking_scheme: "Setup (2 marks) + Working (4 marks) + QED (1 mark)",
+  },
+  {
+    id: "q3",
+    prompt: "Differentiate f(x) = x² sin(x) with respect to x.",
+    type: "WORD_PROBLEM",
+    difficulty: 2,
+    expected_answer: "f'(x) = 2x sin(x) + x² cos(x)",
+    marking_scheme: "Product rule (2 marks) + Application (2 marks) + Final (1 mark)",
+  },
+];
+
+function PracticeDetailPage() {
   const { subject, topic } = Route.useParams();
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+
+  const currentQuestion = SAMPLE_QUESTIONS[questionIndex % SAMPLE_QUESTIONS.length];
+  const isFirstQuestion = questionIndex === 0;
 
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2 text-sm text-slate-500">
+          <Link to="/en/practice" className="hover:text-emerald-400">Practice</Link>
+          <span>›</span>
+          <Link to={`/en/leaving-cert/${subject}`} className="hover:text-emerald-400">{subject.replace("_", " ")}</Link>
+          <span>›</span>
+          <span className="text-slate-300">{topic.replace("-", " ")}</span>
+        </div>
+        <div className="flex items-center justify-between">
           <h1 className="font-cinzel text-2xl font-bold text-slate-100">
             {subject.replace("_", " ")} — {topic.replace("-", " ")}
           </h1>
-          <p className="text-slate-400 text-sm">
-            NCCA Leaving Certificate · 3-way boon choice · tactile press feedback
-          </p>
+          <CiStreakFlame days={42} />
         </div>
-        <CiStreakFlame days={42} />
+        <div className="flex items-center gap-2">
+          <CiProgressRing value={75} tier="proficient" eiraicTier={4} size={40} />
+          <span className="text-sm text-slate-400">
+            Tier 4/13 (Spear of Assal — Precise Reasoning) ·{" "}
+            <span className="text-amber-400">★ Brown Ajah</span>
+          </span>
+        </div>
       </div>
 
-      {/* Éraic tier progress */}
-      <CiTextbookPanel title="Éraic Tier Progress" material="gold-leaf">
-        <div className="flex items-center gap-4">
-          <CiProgressRing value={75} tier="proficient" eiraicTier={4} label="Spear of Assal" />
-          <div className="flex-1">
-            <div className="text-sm text-slate-300 mb-1">
-              You are working toward Éraic tier 4/13 (Spear of Assal — Precise Reasoning)
-            </div>
-            <div className="w-full bg-slate-700 rounded-full h-2">
-              <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "75%" }} />
-            </div>
+      <CiTextbookPanel title={`Question ${questionIndex + 1} of ${SAMPLE_QUESTIONS.length}`} material="parchment">
+        <div className="space-y-4">
+          <div>
+            <span className="text-xs uppercase tracking-wider text-slate-500">Prompt</span>
+            <p className="text-lg text-slate-100 mt-1">
+              {currentQuestion.prompt}
+            </p>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+              {currentQuestion.type.replace("_", " ")}
+            </span>
+            <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+              Difficulty {currentQuestion.difficulty}/5
+            </span>
+          </div>
+          {!showAnswer ? (
+            <button
+              onClick={() => setShowAnswer(true)}
+              className="px-4 py-2 rounded-lg bg-amber-700 text-amber-100 hover:bg-amber-600 transition-colors"
+            >
+              Show Answer
+            </button>
+          ) : (
+            <div className="space-y-3 p-4 rounded-lg bg-slate-900 border border-amber-700">
+              <div>
+                <span className="text-xs uppercase tracking-wider text-amber-400">Expected Answer</span>
+                <p className="text-base text-slate-100 mt-1 font-mono">
+                  {currentQuestion.expected_answer}
+                </p>
+              </div>
+              <div>
+                <span className="text-xs uppercase tracking-wider text-amber-400">Marking Scheme</span>
+                <p className="text-sm text-slate-300 mt-1">
+                  {currentQuestion.marking_scheme}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </CiTextbookPanel>
 
-      {/* The 3-way boon choice (Hades pattern) */}
-      <CiTextbookPanel title="Question 1 of 5 — Choose Your Approach" material="parchment">
-        <CiBoonsChoice
-          prompt="How would you like to demonstrate mastery of this topic?"
-          choices={[
-            {
-              id: "choice-1",
-              label: "Worked Solution",
-              description: "Multi-step solution with marking-scheme points",
-              color: "#2563eb",
-              difficulty: "medium",
-            },
-            {
-              id: "choice-2",
-              label: "Visual Proof",
-              description: "Read from a graph, table, or diagram",
-              color: "#10b981",
-              difficulty: "high",
-            },
-            {
-              id: "choice-3",
-              label: "Word Problem",
-              description: "Real-world contextual application",
-              color: "#f59e0b",
-              difficulty: "low",
-            },
-          ]}
-          subjectColor={subject.replace("_", "-")}
-        />
-      </CiTextbookPanel>
-
-      {/* Feedback channel */}
-      <CiTextbookPanel title="Feedback Channel (the 4 Brown Ajah members)" material="ink-wash">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 bg-slate-800 rounded-lg">
-            <div className="text-sm font-medium text-blue-400">Math Tutor (concrete + worked-example)</div>
-            <p className="text-xs text-slate-400 mt-1">Step-by-step worked solution</p>
-          </div>
-          <div className="p-3 bg-slate-800 rounded-lg">
-            <div className="text-sm font-medium text-amber-400">Quest Guide (graduated hints)</div>
-            <p className="text-xs text-slate-400 mt-1">4 levels: nudge → step-by-step</p>
-          </div>
-          <div className="p-3 bg-slate-800 rounded-lg">
-            <div className="text-sm font-medium text-emerald-400">Curriculum Lookup (NCCA LO)</div>
-            <p className="text-xs text-slate-400 mt-1">Direct NCCA learning outcome citation</p>
-          </div>
-          <div className="p-3 bg-slate-800 rounded-lg">
-            <div className="text-sm font-medium text-purple-400">Research Assistant (cross-topic)</div>
-            <p className="text-xs text-slate-400 mt-1">Cross-topic + cross-subject synthesis</p>
-          </div>
-        </div>
-      </CiTextbookPanel>
-
-      {/* Submit button */}
-      <div className="flex justify-end">
-        <CiButton variant="primary" size="lg">
-          Submit Response
-        </CiButton>
+      <div className="flex justify-between">
+        <button
+          onClick={() => {
+            setQuestionIndex(Math.max(0, questionIndex - 1));
+            setShowAnswer(false);
+          }}
+          disabled={isFirstQuestion}
+          className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-50 transition-colors"
+        >
+          ← Previous
+        </button>
+        <button
+          onClick={() => {
+            setQuestionIndex(questionIndex + 1);
+            setShowAnswer(false);
+          }}
+          className="px-4 py-2 rounded-lg bg-emerald-700 text-emerald-100 hover:bg-emerald-600 transition-colors"
+        >
+          Next →
+        </button>
       </div>
+
+      <CiTextbookPanel title="Feedback Channels (4 Brown Ajah members)" material="ink-wash">
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { name: "Math Tutor", desc: "Concrete + worked-example feedback" },
+            { name: "Quest Guide", desc: "4 graduated hint levels" },
+            { name: "Curriculum Lookup", desc: "Direct NCCA LO citation" },
+            { name: "Research Assistant", desc: "Cross-topic synthesis" },
+          ].map((f) => (
+            <CiBoonsChoice
+              key={f.name}
+              prompt={`${f.name}: ${f.desc}`}
+              choices={[
+                { id: `${f.name}-start`, label: "Start", description: "Begin this feedback channel" },
+              ]}
+              onChoose={() => {}}
+            />
+          ))}
+        </div>
+      </CiTextbookPanel>
     </div>
   );
 }
