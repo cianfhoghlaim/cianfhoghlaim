@@ -22,4 +22,12 @@ services:
       locket:
         condition: service_started
     env_file:
-      - ../../../../.env
+      - ../../../.env
+    # Mount the dev config (no logfire exporter type) so the
+    # OTel collector doesn't fail on a missing `logfire` exporter.
+    # Also inherit the volume + networks from the base compose.
+    volumes:
+      - logfire-otel-data:/var/lib/otelcol
+      - ./config/otelcol.dev.yaml:/etc/otelcol/config.yaml:ro
+    networks:
+      - cianfhoghlaim

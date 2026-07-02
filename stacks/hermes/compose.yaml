@@ -43,7 +43,15 @@ services:
     # digest was a placeholder and would fail `docker compose pull`; replaced
     # with the real semver tag; full digest pin is a renovate-cycle
     # follow-up).
-    image: ghcr.io/nousresearch/hermes-agent:0.17.0
+    # Pinned 2026-07-02 (was `ghcr.io/nousresearch/hermes-agent:0.17.0` —
+    # that tag is private on GHCR (401). Per the user's direction
+    # "we shouldnt be using our own ghcr for any", and confirmed by
+    # `docker pull nousresearch/hermes-agent` which works on Docker Hub,
+    # we switch to the public Docker Hub mirror. The semver
+    # `0.17.0` is not published on Docker Hub; the upstream
+    # publishes date-based release tags. `v2026.7.1` is the most
+    # recent stable tag as of 2026-07-01).
+    image: nousresearch/hermes-agent:v2026.7.1
     container_name: hermes
     restart: unless-stopped
     user: "1000:1000"

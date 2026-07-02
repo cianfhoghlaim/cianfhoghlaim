@@ -1,0 +1,106 @@
+# =============================================================================
+# DAGSTER - Local Build Dockerfile (cianfhoghlaim lakehouse integration)
+# =============================================================================
+# Local-built image for the dagster stack. Replaces the previous
+# `ghcr.io/cianfhoghlaim/dagster:latest` (org-private) per the 2026-07-02
+# user directive ("use typical public images"). No public dagster
+# webserver image exists; this Dockerfile is the only path to a
+# working dagster in dev mode.
+#
+# Modeled on:
+#   https://github.com/dagster-io/dagster/tree/master/examples/deploy_docker
+#
+# Build:
+#   docker build -t dagster-local:latest -f Dockerfile.dagster .
+#
+# The image is built locally and used by stacks/dagster/compose.yaml
+# (which references `image: dagster-local:latest` with
+# `build: { context: ., dockerfile: Dockerfile.dagster }` so docker
+# compose auto-builds on `up -d` if the image is missing).
+# =============================================================================
+
+FROM python:3.13-slim AS builder
+
+ENV PIP_NO_CACHE_DIR=1 PYTHONUNBUFFERED=1 \
+    DAGSTER_HOME=/opt/dagster/home
+
+# System deps for dagster-aws (libpq for Postgres, libssl for S3,
+# build-essential for any C-extension that needs compiling)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    ca-certificates \
+    libpq-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip + install uv (used for fast, layered installs)
+RUN pip install --upgrade pip uv
+
+# Layer 1: Dagster stack pin (the current public upstream release
+# is 1.13.x). Use the explicitly-versioned packages to match the
+# canonical `dagster` patterns from `examples/deploy_docker`.
+ARG DAGSTER_VERSION=1.13.11
+# Note: `dagster-postgres` is NOT installed in the dev image — it
+# uses independent semver from `dagster` (0.27.x for dagster 1.11.x;
+# 0.28+ for dagster 1.12+). For dev mode, dagster's own run/event/schedule
+# storage falls back to SQLite (the default in `DAGSTER_HOME=./dagster_home`),
+# which is sufficient for the 5 KCG Components. Production deployments
+# would install `dagster-postgres` and use lakehouse-postgres for
+# run storage (handled in a separate ops change).
+RUN uv pip install --system \
+    "dagster==${DAGSTER_VERSION}" \
+    "dagster-webserver==${DAGSTER_VERSION}" \
+    "dagster-duckdb" \
+    "dagster-k8s" \
+    "dagster-aws" \
+    "dagster-dlt"
+
+# Layer 2: Cianfhoghlaim deps (BAML + DuckDB + LanceDB + pyarrow +
+# LLM SDKs). These are the app-side deps that the dagster instance
+# needs to spin up the 5 KCG Components from
+# `cianfhoghlaim.dagster.definitions` and execute the 260+ assets.
+ARG CIANFHOGHLAIM_VERSION=0.5.0
+RUN uv pip install --system \
+    "baml-py>=0.222.0" \
+    "duckdb>=1.0.0" \
+    "lancedb>=0.24.0" \
+    "pyarrow>=15.0.0" \
+    "psycopg2-binary" \
+    "boto3" \
+    "structlog" \
+    "pydantic>=2.0.0" \
+    "pydantic-settings>=2.0.0" \
+    "python-dotenv>=1.0.0" \
+    "click>=8.0.0" \
+    "httpx>=0.27.0" \
+    "alembic"
+
+# Runtime stage
+FROM python:3.13-slim
+ENV DAGSTER_HOME=/opt/dagster/home PYTHONUNBUFFERED=1 \
+    DAGSTER_VERSION=1.13.11
+
+# Runtime system deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    libssl3 \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --shell /bin/bash dagster
+
+# Copy Python env from builder
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+USER dagster
+WORKDIR /opt/dagster
+
+EXPOSE 3000 9090
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -sf http://localhost:3000/server_info || exit 1
+
+# Default entrypoint: dagster webserver on port 3000. The dagster-daemon
+# service in compose.yaml overrides the command with `dagster-daemon run`.
+ENTRYPOINT ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000"]
