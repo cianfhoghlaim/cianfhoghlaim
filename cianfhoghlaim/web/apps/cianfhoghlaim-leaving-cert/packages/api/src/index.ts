@@ -13,6 +13,8 @@ import { practiceRouter } from "./routers/practice";
 import { i18nRouter } from "./routers/i18n";
 import { geospatialRouter } from "./routers/geospatial";
 import { bamlRouter } from "./routers/baml";
+import { keyCompetenciesRouter } from "./routers/key-competencies";
+import { stagesRouter } from "./routers/stages";
 
 // ── Context ────────────────────────────────────────────────────────────
 
@@ -47,10 +49,10 @@ export const appRouter = os.$context<ApiContext>().router({
   i18n: i18nRouter,
   geospatial: geospatialRouter,
   baml: bamlRouter,
+  keyCompetencies: keyCompetenciesRouter,
+  stages: stagesRouter,
 
-  // TODO Phase 4: key_competencies (5 endpoints — the 5 NCCA Key Competencies
-  //   with the cross-subject reasoning), the 5 stages (aistear + primary +
-  //   junior_cycle + senior_cycle + tertiary)
+  // TODO Phase 4: heritage (cross-workspace Convex tests stub)
 });
 
 export type AppRouter = typeof appRouter;
