@@ -44,7 +44,12 @@ def _get_langfuse():
 
 
 # Default configuration
-LANGFUSE_HOST = os.getenv("LANGFUSE_HOST", "http://localhost:3000")
+# Note: langfuse stack exposes :3001 → container :3000 (port-shifted
+# from 3000 to avoid OrbStack collision on bunchloch). When running
+# dagster dev on host, use the host port (http://localhost:3001).
+# When running in a docker container on the cianfhoghlaim network,
+# use the docker DNS (http://langfuse:3000).
+LANGFUSE_HOST = os.getenv("LANGFUSE_HOST", "http://localhost:3001")
 LANGFUSE_PUBLIC_KEY = os.getenv("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.getenv("LANGFUSE_SECRET_KEY", "")
 

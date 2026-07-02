@@ -19,7 +19,7 @@ client<llm> LlamaSwapClient {
   provider openai
   options {
     api_key env.LLAMASWAP_API_KEY
-    base_url "http://llama-swap:8080/v1"
+    base_url env.LLAMASWAP_BASE_URL
     model "qwen3-vl-8b"
     temperature 0.1
   }
@@ -37,7 +37,7 @@ client<llm> LlamaSwapOCRClient {
   provider openai
   options {
     api_key env.LLAMASWAP_API_KEY
-    base_url "http://llama-swap:8080/v1"
+    base_url env.LLAMASWAP_BASE_URL
     model "qwen3-vl-8b"
     temperature 0.1
   }
@@ -47,7 +47,7 @@ client<llm> LlamaSwapExtractionClient {
   provider openai
   options {
     api_key env.LLAMASWAP_API_KEY
-    base_url "http://llama-swap:8080/v1"
+    base_url env.LLAMASWAP_BASE_URL
     model "gemma-4-12B"
     temperature 0.1
   }
@@ -57,7 +57,7 @@ client<llm> LlamaSwapReasoningClient {
   provider openai
   options {
     api_key env.LLAMASWAP_API_KEY
-    base_url "http://llama-swap:8080/v1"
+    base_url env.LLAMASWAP_BASE_URL
     model "qwen3.6-27b-mtp"
     temperature 0.1
   }
