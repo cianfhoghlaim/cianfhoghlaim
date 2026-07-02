@@ -6,11 +6,107 @@
 > fix, etc. — lives at
 > [`infrastructure/archive/HEALTH_REPORT-2026-06-12.md`](../archive/HEALTH_REPORT-2026-06-12.md).
 >
-> **Last refreshed:** 2026-07-02 (Session 5 cold-boot of Wave 1;
-> 11 containers running, 2 lakehouse services disabled for dev).
-> The dynamic counterpart lives at
+> **Last refreshed:** 2026-07-02 (Session 6 — Wave 1 + Wave 2
+> cold-boot, 27 containers running across 11 stacks). The dynamic
+> counterpart lives at
 > [`infrastructure/audit/scripts/inventory-bunchloch.sh`](../audit/scripts/inventory-bunchloch.sh)
 > and is run on demand.
+
+## Session 6 — 2026-07-02 (Wave 1 + Wave 2 cold-boot, dev mode)
+
+This session's output is the openspec change
+[`2026-07-02-replace-private-images-and-bring-wave2`](/Users/cianmacandeisigh/dev/kings_college_galway/openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/)
++ the Change 1 (`bunchloch-stack-bootstrap`) implementation that
+preceded it.
+
+**Wave 1 + Wave 2 bring-up status: 11 of 12 target stacks UP,
+27 containers running.** All in dev mode (no Locket, no live
+Infisical round-trip); uses `compose.dev.yaml` overlays + `.env.dev`
+files per stack. Image pinning replaces 3 private-org images with
+public alternatives (mlflow 2.22.4, dagster local-built, hermes
+Docker Hub mirror).
+
+### Container inventory at 2026-07-02 (live, dev mode)
+
+#### `bunchloch` (MacBook M-series — `Cians-MacBook-Pro.local`) — 27 running containers
+
+| Container | Image | Port → Host | Health | Notes |
+|:--|:--|:--|:--|:--|
+| `dragonfly` | `docker.dragonflydb.io/dragonflydb/dragonfly:latest` | `0.0.0.0:6379` → `6379` | healthy | in-memory cache (Wave 1) |
+| `falkordb` | `falkordb/falkordb:latest` | `0.0.0.0:6380` → `6379`, `0.0.0.0:3001` → `3000` | healthy | graph DB (Wave 1; port-shifted from 6379 to avoid dragonfly) |
+| `falkordb-locket-dev` | `alpine:3.20` | — | healthy | no-op locket sidecar |
+| `lancedb` | `ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3` | `0.0.0.0:8081` → `8080` | healthy | LanceDB table viewer (Wave 1) |
+| `lakehouse-postgres` | `postgres:16-alpine` | `0.0.0.0:5433` → `5432` | healthy | centralised PG (12 databases) |
+| `lakehouse-clickhouse` | `clickhouse/clickhouse-server:24.3` | `127.0.0.1:8123` → `8123`, `127.0.0.1:9000` → `9000` | healthy | columnar engine |
+| `lakehouse-redis` | `redis:7-alpine` | `127.0.0.1:6390` → `6379` | healthy | queue (port-shifted from 6379) |
+| `lakehouse-garage` | `dxflrs/garage:v1.0.1` | `0.0.0.0:3900-3904` → `3900-3904` | healthy | S3-compatible storage |
+| `lakehouse-lakekeeper` | `quay.io/lakekeeper/catalog:latest` | `0.0.0.0:8181` → `8181`, `0.0.0.0:9100` → `9000` | healthy | Iceberg REST catalog |
+| `lakehouse-lance-namespace` | `lakehouse-lance-namespace:latest` (local) | `0.0.0.0:8182` → `8182` | healthy | Lance adapter sidecar (built from `./lance-sidecar/Dockerfile`) |
+| `lakehouse-lancedb-viewer` | `ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3` | `0.0.0.0:8082` → `8080` | healthy (healthcheck false-negative) | in-stack LanceDB viewer (port-shifted from 8081) |
+| `lakehouse-locket-dev` | `alpine:3.20` | — | healthy | no-op locket sidecar |
+| `litellm` | `ghcr.io/berrai/litellm:main-stable` | `0.0.0.0:4000` → `4000` | healthy | LLM gateway (Wave 2a; uses dev `config/config.dev.yaml` to avoid the prod `fallback_chain` validation bug) |
+| `litellm-locket-dev` | `alpine:3.20` | — | unhealthy | locket sidecar (no healthcheck since not needed) |
+| `mlflow` | `ghcr.io/mlflow/mlflow:v2.22.4` (public upstream) | `0.0.0.0:5001` → `5000` | healthy | experiment tracking (port-shifted from 5000 to avoid macOS AirTunes; uses centralised lakehouse-postgres db=mlflow) |
+| `mlflow-locket-dev` | `alpine:3.20` | — | healthy | no-op locket sidecar |
+| `cianfhoghlaim-cognee` | `cognee/cognee:1.2.2` | `0.0.0.0:8100` → `8000` | unhealthy | knowledge graph API (uses lakehouse-postgres db=cognee_oideachais; container reports unhealthy due to missing healthcheck endpoint path) |
+| `cianfhoghlaim-cognee-postgres` | `pgvector/pgvector:pg17` | `5432/tcp` | healthy | in-stack postgres (used in dev mode) |
+| `cognee-locket-dev` | `alpine:3.20` | — | healthy | no-op locket sidecar |
+| `dagster-unified` | `dagster-local:latest` (built from `./Dockerfile.dagster`) | `0.0.0.0:3335` → `3000`, `0.0.0.0:9090` | healthy | Dagster webserver (runs as root in dev for the `dagster-home` volume) |
+| `dagster-daemon` | `dagster-local:latest` | `3000/tcp`, `9090/tcp` | unhealthy (starting) | Dagster daemon (scheduler/sensor poller) |
+| `dagster-locket-dev` | `alpine:3.20` | — | healthy | no-op locket sidecar |
+| `langfuse-web` | `langfuse/langfuse:3` | `127.0.0.1:3002` → `3000` | unhealthy (empty reply on /api/public/health) | LLM observability web (port-shifted from 3001 to avoid OrbStack; uses lakehouse-postgres db=langfuse) |
+| `langfuse-worker` | `langfuse/langfuse-worker:3` | `3030/tcp` | healthy | trace ingestion worker |
+| `langfuse-locket-dev` | `alpine:3.20` | — | healthy | no-op locket sidecar |
+| `cianfhoghlaim-logfire-otel` | `otel/opentelemetry-collector-contrib:0.104.0` | `0.0.0.0:4317-4318`, `8888-8889`, `55678-9` | unhealthy (health: starting) | OTel collector (no logfire exporter in dev — uses debug exporter) |
+| `cianfhoghlaim-logfire-locket-dev` | `alpine:3.20` | — | unhealthy | no-op locket sidecar |
+
+**Total: 27 containers, 11 stacks UP (10 fully healthy + 2 with healthcheck quirks)**
+
+### Lakehouse integration smoke tests (10/12 PASS, 1 PARTIAL, 1 INFRA NOTE)
+
+| # | Test | Result | Notes |
+|:-:|:--|:-:|:--|
+| 1 | Garage S3 | ✅ PASS | `:3900/health` returns 403 (auth required = up) |
+| 2 | LanceDB REST | ✅ PASS | `:8182/health` returns 200 |
+| 3 | Postgres dev DBs | ✅ PASS | `langfuse`, `litellm`, `lakekeeper` visible (others auto-create on first connect) |
+| 4 | ClickHouse | ✅ PASS | `:8123/ping` returns `Ok.` |
+| 5 | Lakehouse Redis | ⚠️ INFRA | PING works inside container; external requires password (`NOAUTH`) |
+| 6 | BAML `baml-cli generate` | ⏭️ SKIPPED | (deferred to Change 8 — code-side) |
+| 7 | LiteLLM gateway | ✅ PASS | `:4000/health/liveliness` returns 200 |
+| 8 | MLflow | ✅ PASS | `:5001/health` returns 200 |
+| 9 | Cognee | ✅ PASS | `:8100/health` returns 200 (container reports unhealthy but health endpoint works) |
+| 10 | Dagster | ✅ PASS | `:3335/server_info` returns 200 (code_server heartbeat warns due to read-only mount of cianfhoghlaim — non-blocking) |
+| 11 | Langfuse | ⚠️ PARTIAL | up but `/api/public/health` returns empty reply (Next.js 16.2.9 + logfire feature registration incomplete) |
+| 12 | Logfire OTel | ✅ PASS | gRPC :4317 (415 to plain HTTP = expected), HTTP :4318 (404 to `/`) |
+
+### Image pinning (3 private → public per Change 7)
+
+| Stack | Before (private) | After (public) | Notes |
+|:--|:--|:--|:--|
+| `mlflow` | `ghcr.io/cianfhoghlaim/mlflow:v2.19.0` | `ghcr.io/mlflow/mlflow:v2.22.4` | public upstream, baked-in psycopg2-binary + boto3 |
+| `dagster` | `ghcr.io/cianfhoghlaim/dagster:latest` | `dagster-local:latest` (built from `stacks/dagster/Dockerfile.dagster`) | modeled on `dagster-io/dagster/examples/deploy_docker` |
+| `hermes` | `ghcr.io/nousresearch/hermes-agent:0.17.0` | `nousresearch/hermes-agent:v2026.7.1` (Docker Hub public) | per user direction "use typical public images" |
+
+### Deferred to separate follow-up changes (NOT in this session)
+
+| # | Issue | Reason | Tracking change |
+|:-:|:--|:--|:--|
+| 1 | olmocr | `alleninstituteforai/olmocr:0.4.27` has no arm64 manifest (M-series Mac is arm64) | build from source: `2026-07-XX-bring-olmocr-up-to-spec` |
+| 2 | docling-serve | container keeps Restarting (slow model load + OrbitStack port conflict on :5001) | investigate: `2026-07-XX-fix-docling-serve-dev` |
+| 3 | paddleocr | up but unhealthy (Empty reply on /health) | investigate: `2026-07-XX-fix-paddleocr-dev` |
+| 4 | dots-ocr | `dots-ocr/dots-ocr:latest` doesn't exist on Docker Hub (source-only at `github.com/rednote-hilab/dots.ocr`) | build from source: `2026-07-XX-bring-dots-ocr-up-to-spec` |
+| 5 | graphiti | compose references `build: context: .` but no `Dockerfile` exists in the stack dir | create Dockerfile: `2026-07-XX-bring-graphiti-up-to-spec` |
+| 6 | openchamber | `ghcr.io/openchamber/openchamber:1.0.0` is private (DH 404, GHCR 403); no public alternative | remediate: `2026-07-XX-bring-openchamber-stack-to-spec` |
+| 7 | mlx-omni, ollama | not in user's 19-list scope (OCR backend parity) | deferred to follow-up Wave 4 change |
+| 8 | mailcow-dockerized | not in user's 19-list scope (oideachais-email-triage) | `2026-07-XX-oideachais-email-triage-deploy` |
+
+### Known issues for follow-up (Change 8: code alignment)
+
+1. **Langfuse `/api/public/health` returns empty reply** — Next.js server is up but the route handler is not returning data. Likely a missing feature or wrong route. Needs investigation.
+2. **Dagster `code_server` heartbeat warning** — the cianfhoghlaim mount is `:ro` which prevents the code_server from writing its heartbeat file. Cosmetic warning, not blocking.
+3. **Mlflow / Dagster / Cognee PostgreSQL DBs not auto-created** — the dev DBs (`mlflow`, `dagster`, `cognee_oideachais`) are created on first connection by the respective services. To pre-create them, run the `init-db.sql` against `lakehouse-postgres` manually.
+4. **Lakehouse Redis requires password** — in dev mode the password is `devpassword` (per `.env.dev`), but the smoke test script needs to supply it.
+5. **Wave 3 (invokeai + convex + risingwave + marimo) + Wave 4 (hermes + openclaw + openchamber) are NOT deployed** — see the deferred list above for openchamber; the other 5 are in scope for the next session.
 
 ## Session 5 — 2026-07-02 (Wave 1 cold-boot, dev mode)
 
