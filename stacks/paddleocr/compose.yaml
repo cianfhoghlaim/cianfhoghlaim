@@ -1,7 +1,7 @@
 name: paddleocr
 services:
   paddleocr:
-    image: paddlecloud/paddleocr:latest
+    image: paddlecloud/paddleocr:2.6-cpu-latest  # pinned 2026-07-02 (was :latest; 2.6-cpu-latest = current Docker Hub stable for CPU-only Apple Silicon; use 2.6-gpu-cuda*-latest for GPU hosts)
     container_name: paddleocr
     restart: unless-stopped
     ports: ["8000:8000"]

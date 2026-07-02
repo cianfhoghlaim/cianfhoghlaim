@@ -25,7 +25,11 @@ services:
   # OPENCLAW GATEWAY
   # ---------------------------------------------------------------------------
   openclaw:
-    image: ghcr.io/openclaw/openclaw:1.0.0@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    # Pinned 2026-07-02 (was `1.0.0@sha256:0000...` — the `1.0.0` tag does not
+    # exist; the actual upstream uses date-based tags; latest published is
+    # `2026.2.6` per GHCR; the `@sha256:0000...` digest was a placeholder and
+    # would fail `docker compose pull`; replaced with the real semver tag).
+    image: ghcr.io/openclaw/openclaw:2026.2.6
     container_name: openclaw
     restart: unless-stopped
     user: "1000:1000"

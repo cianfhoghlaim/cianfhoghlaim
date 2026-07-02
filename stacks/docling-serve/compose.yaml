@@ -13,7 +13,7 @@ services:
   # docling-serve upstream.
   # ---------------------------------------------------------------------------
   docling-serve:
-    image: ghcr.io/ds4sd/docling-serve:latest
+    image: ghcr.io/ds4sd/docling-serve:v0.4.0  # pinned 2026-07-02 (was :latest; v0.4.0 = current GHCR stable)
     container_name: docling-serve
     restart: unless-stopped
     ports:

@@ -26,7 +26,13 @@ services:
   # OPENCHAMBER UI (with bundled opencode-ai runtime)
   # ---------------------------------------------------------------------------
   openchamber:
-    image: ghcr.io/openchamber/openchamber:1.0.0@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    # Pinned 2026-07-02 (the `1.0.0` semver is per the compose header
+    # comment; the upstream image is private at GHCR — requires openchamber
+    # credentials on the `docker login ghcr.io` step; the `@sha256:0000...`
+    # digest was a placeholder and would fail `docker compose pull`; replaced
+    # with the real semver tag; full digest pin is a renovate-cycle
+    # follow-up).
+    image: ghcr.io/openchamber/openchamber:1.0.0
     container_name: openchamber
     restart: unless-stopped
     security_opt:
