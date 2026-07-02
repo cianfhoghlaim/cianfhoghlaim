@@ -11,6 +11,8 @@ import { rootPdfsRouter } from "./routers/root-pdfs";
 import { badgesRouter } from "./routers/badges";
 import { practiceRouter } from "./routers/practice";
 import { i18nRouter } from "./routers/i18n";
+import { geospatialRouter } from "./routers/geospatial";
+import { bamlRouter } from "./routers/baml";
 
 // ── Context ────────────────────────────────────────────────────────────
 
@@ -43,9 +45,12 @@ export const appRouter = os.$context<ApiContext>().router({
   badges: badgesRouter,
   practice: practiceRouter,
   i18n: i18nRouter,
+  geospatial: geospatialRouter,
+  baml: bamlRouter,
 
-  // TODO Phase 4: geospatial, baml, key_competencies,
-  //   aistear, primary, junior_cycle, senior_cycle, tertiary
+  // TODO Phase 4: key_competencies (5 endpoints — the 5 NCCA Key Competencies
+  //   with the cross-subject reasoning), the 5 stages (aistear + primary +
+  //   junior_cycle + senior_cycle + tertiary)
 });
 
 export type AppRouter = typeof appRouter;
