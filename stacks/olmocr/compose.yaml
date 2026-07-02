@@ -1,7 +1,10 @@
 name: olmocr
 services:
   olmocr:
-    image: allenai/olmocr:latest
+    # Pinned + fixed registry path 2026-07-02 (was `allenai/olmocr:latest` — that image
+    # does NOT exist on Docker Hub; the actual upstream registry namespace is
+    # `alleninstituteforai/olmocr`; current stable = 0.4.27, released 2026-03-12).
+    image: alleninstituteforai/olmocr:0.4.27
     container_name: olmocr
     restart: unless-stopped
     ports: ["8003:8003"]
