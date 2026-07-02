@@ -12,6 +12,7 @@ import "./app.css";
 
 import * as IndexRoute from "./routes/index";
 import * as SubjectsRoute from "./routes/en/subjects";
+import * as DiagramsRoute from "./routes/en/diagrams";
 import * as MapRoute from "./routes/en/map";
 import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
 import * as KeyCompetencySlugRoute from "./routes/en/key-competencies.$slug";
@@ -63,6 +64,12 @@ const subjectsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/en/subjects",
   component: SubjectsRoute.default || SubjectsRoute.Route?.component || (() => <div>Subjects</div>),
+});
+
+const diagramsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/diagrams",
+  component: DiagramsRoute.default || DiagramsRoute.Route?.component || (() => <div>Diagrams</div>),
 });
 
 const mapRoute = createRoute({
@@ -146,6 +153,7 @@ const eiraicTierGARoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   subjectsRoute,
+  diagramsRoute,
   mapRoute,
   keyCompRoute,
   keyCompetencySlugRoute,
