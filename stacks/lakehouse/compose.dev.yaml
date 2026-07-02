@@ -1,0 +1,77 @@
+# Lakehouse — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the langfuse/litellm/cognee dev override pattern (post
+# centralise-data-plane):
+#   1. Replace the production locket sidecar with a no-op alpine
+#      container that passes healthcheck. The locket service from the
+#      base sidecar.yaml expects `/locket healthcheck` to succeed; alpine
+#      doesn't have `/locket`, so we override the healthcheck to `true`
+#      (always healthy) and use `sleep infinity` as the main command.
+#   2. `.env.dev` is loaded as a SHELL-LIKE source so the env variables
+#      are available to satisfy the base compose's `${VAR:?...}` checks
+#      at parse time. The base compose's `?` syntax is evaluated at parse
+#      time and CANNOT be satisfied by an `environment:` override — only
+#      by a shell env var or env_file.
+#   3. The 9 required dev secrets (POSTGRES_PASSWORD, CLICKHOUSE_PASSWORD,
+#      REDIS_PASSWORD, GARAGE_RPC_SECRET, GARAGE_ADMIN_TOKEN,
+#      GARAGE_ACCESS_KEY_ID, GARAGE_SECRET_ACCESS_KEY,
+#      LAKEKEEPER_ENCRYPTION_KEY, LANCEDB_VIEWER_ADMIN_TOKEN) live in
+#      .env.dev. None of these are sensitive in dev (the lakehouse stack
+#      is dev-only on bunchloch; production uses Locket + Infisical).
+#
+# Usage:
+#   docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+# ----------------------------------------------------------------------------
+
+services:
+  # Replace the production locket sidecar with a no-op that passes health.
+  # All security settings (user, security_opt, cap_drop, read_only, tmpfs)
+  # are inherited from sidecar.yaml — we only override the command,
+  # healthcheck, container_name, and image (the production locket
+  # image is private and the binary doesn't exist in alpine, so the
+  # healthcheck must be replaced too).
+  locket:
+    image: alpine:3.20
+    container_name: lakehouse-locket-dev
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op locket — secrets from .env.dev'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+
+  garage:
+    env_file:
+      - .env.dev
+
+  garage-init:
+    env_file:
+      - .env.dev
+
+  postgres:
+    env_file:
+      - .env.dev
+
+  clickhouse:
+    env_file:
+      - .env.dev
+
+  redis:
+    env_file:
+      - .env.dev
+
+  lakekeeper:
+    env_file:
+      - .env.dev
+
+  lakekeeper-migrate:
+    env_file:
+      - .env.dev
+
+  lance-namespace:
+    env_file:
+      - .env.dev
+
+  lancedb-viewer:
+    env_file:
+      - .env.dev
