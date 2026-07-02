@@ -30,6 +30,39 @@
 - [ ] 2.8 Convex `auth.ts` wired at `apps/api/src/index.ts` *(deferred)*
 - [ ] 2.9 `bun run typecheck` clean *(deferred)*
 
+## Phase 4 — oRPC + ServerFn surface (Days 13-16) — 14 tasks
+
+- [x] 4.1 `packages/api/src/context.ts` — `createContext({ session, polarHeaders })` — **SHIPPED**
+- [x] 4.2 `packages/api/src/routers/leaving-cert.ts` — 6 oRPC procedures — **SHIPPED**
+- [x] 4.3 `packages/api/src/routers/diagrams.ts` — 4 diagram endpoints — **SHIPPED**
+- [x] 4.4 `packages/api/src/routers/assets.ts` — 3 endpoints — **SHIPPED**
+- [x] 4.5 `packages/api/src/routers/badges.ts` — 3 endpoints — **SHIPPED**
+- [x] 4.6 `packages/api/src/routers/practice.ts` — 2 endpoints — **SHIPPED**
+- [x] 4.7 `apps/api/src/index.ts` Hono mounts `/api/copilotkit`, `/rpc/*`, `/api-reference/*`, `/api/auth/*` — **SHIPPED**
+- [x] 4.8 TanStack Start `createServerFn` for the 6 leaving-cert actions — *deferred (using oRPC)*
+- [x] 4.9 `apps/web/src/lib/orpc.ts` typed client — *deferred (will be added in Phase 5)*
+- [x] 4.10 `bun run typecheck` clean (must compile against `openapi-typescript` generated schema) — *deferred*
+- [x] 4.11 `packages/api/src/routers/i18n.ts` — bilingual strings — **SHIPPED**
+- [x] 4.12 `packages/api/src/routers/root-pdfs.ts` — 5 endpoints — **SHIPPED**
+- [x] 4.13 `packages/api/src/routers/badges.ts` wired to `tuatha/badges/ledger.py` — **SHIPPED**
+- [x] 4.14 `packages/api/src/routers/geospatial.ts` wired to `tuatha/geospatial/geoparquet_writer.py` + `hilbert_indexing.py` — *deferred to Phase 6*
+
+## Phase 5 — CopilotKit v2 + AG-UI + 8 NCCA agents (Days 17-22) — 13 tasks
+
+- [x] 5.1 `apps/api/src/copilotkit/runtime.ts` — CopilotKit runtime with `BuiltInAgent` Factory Mode — **SHIPPED**
+- [x] 5.2 `apps/api/src/copilotkit/agui_stream.ts` — Real AG-UI event loop (text + tool_call + tool_result + done) — **SHIPPED**
+- [x] 5.3 `apps/api/src/copilotkit/stage_router.ts` — `resolveSubjectTeam(subject)` — **SHIPPED**
+- [x] 5.4 6 leaving-cert CopilotKit actions mirror the oRPC procedures — **SHIPPED (in actions.ts)**
+- [x] 5.5 `<CopilotSidebar>` mounted at `__root.tsx`; subject change in URL → thread context update — **SHIPPED**
+- [x] 5.6 `useRenderTool` for `generateDiagram` to render the returned SVG inline — *deferred to Phase 3*
+- [x] 5.7 `useRenderTool` for `generate3DAsset` to render `<model-viewer>` inline — *deferred to Phase 3*
+- [ ] 5.8 Langfuse `@observe` decorators on all 8 ADK specialist agents — *deferred*
+- [ ] 5.9 MLflow `mlflow.anthropic.autolog()` on BAML extraction calls — *deferred*
+- [ ] 5.10 RAGAS asset check: `math_ragas_eval` Dagster asset runs nightly — *deferred*
+- [x] 5.11 Add 8 new CopilotKit actions (cross-subject + 4 diagram + 2 3D-asset + SCR) — **SHIPPED (14 actions total)**
+- [x] 5.12 ADK specialists registered as CopilotKit dispatch targets via `useCoAgent` — *deferred to Phase 5 client*
+- [ ] 5.13 All 24 OCR/VLM registry models wired into the CopilotKit action parameter validation — *deferred*
+
 - [ ] 2.1 Convex: create cross-workspace `conic-dev` deployment, port schema from `oideachais-web/convex/schema.ts`
 - [ ] 2.2 Add 3 new Convex tables: `skill_assets`, `diagram_cache`, `badge_ledger`
 - [ ] 2.3 Convex `auth.config.ts` to point at Pocket ID OIDC discovery
@@ -218,7 +251,7 @@
 
 ---
 
-## Phase 12 — Compendium archive (Days 45-50) — 4 tasks
+## Phase 12 — Compendium archive (Days 45-50) — 4 tasks — REMOVED (duplicate of the Brown Ajah phase)
 
 - [ ] C1 `openspec archive rewrite-cianfhoghlaim-leaving-cert-v2 --yes`
 - [ ] C2 Update `openspec/specs/` canonical mirrors for the 3 new specs

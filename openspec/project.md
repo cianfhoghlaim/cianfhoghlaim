@@ -19,6 +19,18 @@ that ingests the user's personal + professional email from 4 accounts
 (DKIT.ie M365, 2 Gmail, Hotmail) via Mailcow + a MBOX DLT source +
 BAML classification + CocoIndex embedding + Google ADK `email_triage`
 agent + a marimo notebook.
+
+**Plan 1.5 (NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`):** The
+`cianfhoghlaim-leaving-cert-portal` TanStack Start app + the 8 NCCA
+LC subject ADK specialists + the `retro-game-asset-pipeline` (2D + 3D
+asset generator via TRELLIS.2 + SAM-3D-Objects + FIBO) + the
+`ncca-leaving-cert-root-pdfs` (5 NCCA root-level programme PDFs).
+Themed as the Brown Ajah of the Wheel of Time. The map is an accurate
+British Isles map split into 6 subnations (Éire + Northern Ireland +
+Scotland + England + Wales + Isle of Man). Cian of the Tuatha Dé
+Danann (the operator) tries to heal the land and language through
+education.
+
 **Plan 2 (preserved):** UK 4-nation + Isle of Man — full education sources.
 **Plan 3 (preserved):** UK 4-nation + IoM — 7 domains (law, medicine,
 culture, government, intelligence, statistics, geospatial).
