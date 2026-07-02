@@ -15,6 +15,7 @@ import * as SubjectsRoute from "./routes/en/subjects";
 import * as DiagramsRoute from "./routes/en/diagrams";
 import * as PracticeIndexRoute from "./routes/en/practice";
 import * as LoreArchiveRoute from "./routes/en/lore-archive";
+import * as LoreArchiveRouteGA from "./routes/ga/lore-archive";
 import * as MapRoute from "./routes/en/map";
 import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
 import * as KeyCompetencySlugRoute from "./routes/en/key-competencies.$slug";
@@ -84,6 +85,12 @@ const loreArchiveRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/en/lore-archive",
   component: LoreArchiveRoute.default || LoreArchiveRoute.Route?.component || (() => <div>Lore Archive</div>),
+});
+
+const loreArchiveGARoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/ga/lore-archive",
+  component: LoreArchiveRouteGA.default || LoreArchiveRouteGA.Route?.component || (() => <div>Lore Archive (GA)</div>),
 });
 
 const mapRoute = createRoute({
@@ -170,6 +177,7 @@ const routeTree = rootRoute.addChildren([
   diagramsRoute,
   practiceIndexRoute,
   loreArchiveRoute,
+  loreArchiveGARoute,
   mapRoute,
   keyCompRoute,
   keyCompetencySlugRoute,

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GaLoreArchiveRouteImport } from './routes/ga/lore-archive'
 import { Route as GaEiraicTreasuresRouteImport } from './routes/ga/eiraic-treasures'
 import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
@@ -35,6 +36,11 @@ import { Route as EnLeavingCertSubjectPracticeTopicRouteImport } from './routes/
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaLoreArchiveRoute = GaLoreArchiveRouteImport.update({
+  id: '/ga/lore-archive',
+  path: '/ga/lore-archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GaEiraicTreasuresRoute = GaEiraicTreasuresRouteImport.update({
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
+  '/ga/lore-archive': typeof GaLoreArchiveRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/brown-ajah/$member': typeof EnBrownAjahMemberRoute
   '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
+  '/ga/lore-archive': typeof GaLoreArchiveRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/brown-ajah/$member': typeof EnBrownAjahMemberRoute
   '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
+  '/ga/lore-archive': typeof GaLoreArchiveRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/brown-ajah/$member': typeof EnBrownAjahMemberRoute
   '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
+    | '/ga/lore-archive'
     | '/en/assets/$subject'
     | '/en/brown-ajah/$member'
     | '/en/eiraic-treasures/$tier'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
+    | '/ga/lore-archive'
     | '/en/assets/$subject'
     | '/en/brown-ajah/$member'
     | '/en/eiraic-treasures/$tier'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
+    | '/ga/lore-archive'
     | '/en/assets/$subject'
     | '/en/brown-ajah/$member'
     | '/en/eiraic-treasures/$tier'
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   EnSubjectsRoute: typeof EnSubjectsRoute
   GaAboutRoute: typeof GaAboutRoute
   GaEiraicTreasuresRoute: typeof GaEiraicTreasuresRouteWithChildren
+  GaLoreArchiveRoute: typeof GaLoreArchiveRoute
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
   EnLeavingCertSubjectRoute: typeof EnLeavingCertSubjectRouteWithChildren
   GaLeavingCertSubjectRoute: typeof GaLeavingCertSubjectRoute
@@ -319,6 +332,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/lore-archive': {
+      id: '/ga/lore-archive'
+      path: '/ga/lore-archive'
+      fullPath: '/ga/lore-archive'
+      preLoaderRoute: typeof GaLoreArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ga/eiraic-treasures': {
@@ -545,6 +565,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnSubjectsRoute: EnSubjectsRoute,
   GaAboutRoute: GaAboutRoute,
   GaEiraicTreasuresRoute: GaEiraicTreasuresRouteWithChildren,
+  GaLoreArchiveRoute: GaLoreArchiveRoute,
   EnAssetsSubjectRoute: EnAssetsSubjectRoute,
   EnLeavingCertSubjectRoute: EnLeavingCertSubjectRouteWithChildren,
   GaLeavingCertSubjectRoute: GaLeavingCertSubjectRoute,
