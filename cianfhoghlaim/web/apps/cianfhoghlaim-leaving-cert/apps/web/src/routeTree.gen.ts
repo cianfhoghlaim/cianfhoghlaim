@@ -20,6 +20,7 @@ import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
 import { Route as EnLeavingCertSubjectRouteImport } from './routes/en/leaving-cert/$subject'
 import { Route as EnKeyCompetenciesEmblemsRouteImport } from './routes/en/key-competencies.emblems'
+import { Route as EnKeyCompetenciesSlugRouteImport } from './routes/en/key-competencies.$slug'
 import { Route as EnAssetsSubjectRouteImport } from './routes/en/assets/$subject'
 import { Route as EnLeavingCertSubjectSectionRouteImport } from './routes/en/leaving-cert/$subject.$section'
 import { Route as EnLeavingCertSubjectPracticeTopicRouteImport } from './routes/en/leaving-cert/$subject.practice.$topic'
@@ -80,6 +81,11 @@ const EnKeyCompetenciesEmblemsRoute =
     path: '/emblems',
     getParentRoute: () => EnKeyCompetenciesRoute,
   } as any)
+const EnKeyCompetenciesSlugRoute = EnKeyCompetenciesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => EnKeyCompetenciesRoute,
+} as any)
 const EnAssetsSubjectRoute = EnAssetsSubjectRouteImport.update({
   id: '/en/assets/$subject',
   path: '/en/assets/$subject',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
+  '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
+  '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
+  '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
+    | '/en/key-competencies/$slug'
     | '/en/key-competencies/emblems'
     | '/en/leaving-cert/$subject'
     | '/ga/leaving-cert/$subject'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
+    | '/en/key-competencies/$slug'
     | '/en/key-competencies/emblems'
     | '/en/leaving-cert/$subject'
     | '/ga/leaving-cert/$subject'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
+    | '/en/key-competencies/$slug'
     | '/en/key-competencies/emblems'
     | '/en/leaving-cert/$subject'
     | '/ga/leaving-cert/$subject'
@@ -291,6 +303,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnKeyCompetenciesEmblemsRouteImport
       parentRoute: typeof EnKeyCompetenciesRoute
     }
+    '/en/key-competencies/$slug': {
+      id: '/en/key-competencies/$slug'
+      path: '/$slug'
+      fullPath: '/en/key-competencies/$slug'
+      preLoaderRoute: typeof EnKeyCompetenciesSlugRouteImport
+      parentRoute: typeof EnKeyCompetenciesRoute
+    }
     '/en/assets/$subject': {
       id: '/en/assets/$subject'
       path: '/en/assets/$subject'
@@ -316,10 +335,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface EnKeyCompetenciesRouteChildren {
+  EnKeyCompetenciesSlugRoute: typeof EnKeyCompetenciesSlugRoute
   EnKeyCompetenciesEmblemsRoute: typeof EnKeyCompetenciesEmblemsRoute
 }
 
 const EnKeyCompetenciesRouteChildren: EnKeyCompetenciesRouteChildren = {
+  EnKeyCompetenciesSlugRoute: EnKeyCompetenciesSlugRoute,
   EnKeyCompetenciesEmblemsRoute: EnKeyCompetenciesEmblemsRoute,
 }
 
