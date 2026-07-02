@@ -1,24 +1,19 @@
 # Langfuse — local dev override
 # ----------------------------------------------------------------------------
-# Mirrors the litellm/lakehouse dev override pattern:
+# Mirrors the litellm/cognee dev override pattern:
 #   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
 #      resolves without booting the real Infisical-injection sidecar.
-#   2. `env_file: ../../../../.env` (mise-hydrated local .env) is mounted
-#      so secrets reach the containers directly from the local development
-#      environment.
-#   3. Production-only env vars are overridden to dev values.
-#
-# Updated for the `centralise-data-plane` rewrite (2026-07-30):
-# - The standalone postgres/redis/clickhouse/minio services are removed.
-# - Local dev now expects the lakehouse stack to be running on the same
-#   network (use `docker compose --project-name lakehouse` upstream).
-# - DATABASE_URL points at `lakehouse-postgres` (the centralised service).
-# - S3 endpoints point at `lakehouse-garage` (the centralised service).
-# - ClickHouse + Redis hostnames point at `lakehouse-clickhouse` /
-#   `lakehouse-redis`.
+#   2. `env_file: .env.dev` (this stack) provides all the dev secrets
+#      pointing at the lakehouse services (postgres db=langfuse,
+#      redis, clickhouse, garage 3 buckets).
+#   3. The image is `langfuse/langfuse:3` (public Docker Hub).
 #
 # Usage:
-#   docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+#   docker compose \
+#     -f stacks/langfuse/compose.yaml \
+#     -f stacks/langfuse/sidecar.yaml \
+#     -f stacks/langfuse/compose.dev.yaml \
+#     up -d
 # ----------------------------------------------------------------------------
 
 services:
@@ -26,62 +21,65 @@ services:
     image: alpine:3.20
     container_name: langfuse-locket-dev
     restart: "no"
-    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op langfuse locket — secrets from .env.dev'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     networks:
       - default
 
+  # Langfuse web (UI + API)
   langfuse-web:
     depends_on:
       locket:
         condition: service_started
     env_file:
-      - ../../../../.env
+      - .env.dev
     environment:
-      SALT: "dev-salt-not-for-production"
-      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
-      NEXTAUTH_SECRET: "dev-nextauth-secret-not-for-production-use-32-bytes-min"
-      TELEMETRY_ENABLED: "false"
-      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
-      # Centralised data plane (resolves via lakehouse network)
-      DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/langfuse
-      CLICKHOUSE_USER: "clickhouse"
-      CLICKHOUSE_PASSWORD: "clickhouse"
-      REDIS_AUTH: "devredissecret"
-      # Garage S3 credentials (the SAME credentials used in lakehouse dev)
-      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: "lakehouse"
-      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
-      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
-      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: "lakehouse"
-      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
-      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
-      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: "lakehouse"
-      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: "devpassword"
-      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: "http://lakehouse-garage:3900"
+      # The base compose's `${POSTGRES_PASSWORD:?must be set}` is evaluated
+      # at parse time — the dev .env.dev must include this so the interpolation
+      # succeeds. (The env_file already sets POSTGRES_PASSWORD=devpassword, so
+      # this is a belt-and-suspenders override.)
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_USER: lakekeeper
+    networks:
+      - default
+      - cianfhoghlaim
+      - lakehouse
 
+  # Langfuse worker (ingestion queue + trace processor)
   langfuse-worker:
     depends_on:
       locket:
         condition: service_started
     env_file:
-      - ../../../../.env
+      - .env.dev
     environment:
-      SALT: "dev-salt-not-for-production"
-      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
-      NEXTAUTH_SECRET: "dev-nextauth-secret-not-for-production-use-32-bytes-min"
-      TELEMETRY_ENABLED: "false"
-      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
-      # Centralised data plane (resolves via lakehouse network)
-      DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/langfuse
-      CLICKHOUSE_USER: "clickhouse"
-      CLICKHOUSE_PASSWORD: "clickhouse"
-      REDIS_AUTH: "devredissecret"
-      # Garage S3 credentials (the SAME credentials used in lakehouse dev)
-      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: "lakehouse"
-      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
-      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
-      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: "lakehouse"
-      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: "devpassword"
-      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: "http://lakehouse-garage:3900"
-      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: "lakehouse"
-      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: "devpassword"
-      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: "http://lakehouse-garage:3900"
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_USER: lakekeeper
+    networks:
+      - default
+      - cianfhoghlaim
+      - lakehouse
+
+# Top-level secrets: block from sidecar.yaml references the production
+# Infisical secret file (../../infisical_secret). Override with /dev/null
+# so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null
+
+# Top-level networks: block in the base compose declares `cianfhoghlaim`
+# as external, but the network is only created by the logfire stack.
+# In dev mode we don't run logfire, so the network is missing. Override
+# the external declaration to a local bridge network.
+networks:
+  cianfhoghlaim:
+    external: false
+    driver: bridge

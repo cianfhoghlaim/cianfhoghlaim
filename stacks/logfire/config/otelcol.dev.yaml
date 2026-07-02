@@ -1,0 +1,54 @@
+# OpenTelemetry Collector config for dev mode (no Logfire SaaS).
+# ----------------------------------------------------------------------------
+# Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP),
+# batches them, and forwards them via the OTLP exporter to... nothing
+# (we don't have a Logfire SaaS token in dev mode). The traces are
+# batched and dropped (visible via the debug exporter + zpages).
+#
+# This replaces the production config (`config/otelcol.yaml`) in dev mode
+# via the compose.dev.yaml `command:` override:
+#   -v ./config/otelcol.dev.yaml:/etc/otelcol/config.yaml
+# ----------------------------------------------------------------------------
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 80
+    spike_limit_percentage: 20
+
+exporters:
+  # Local debug logging so we can see OTEL pipeline activity.
+  debug:
+    verbosity: basic
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:8888
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8889

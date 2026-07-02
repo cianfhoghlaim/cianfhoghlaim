@@ -32,10 +32,9 @@ services:
     depends_on:
       locket:
         condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
+    # Note: env_file removed for dev mode (the no-op alpine locket
+    # doesn't create /run/secrets/locket/secrets.env; in production
+    # the real locket + tmpfs would be in place).
 
 secrets:
   infisical_secret:
