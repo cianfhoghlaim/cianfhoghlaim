@@ -1,77 +1,48 @@
-"""
-Leaving Certificate Chemistry — Teacher Dashboard (marimo).
-"""
+# Marimo notebook for Chemistry teacher dashboard.
+
 import marimo
 
-__generated_with = "0.23.8"
-app = marimo.App(width="wide")
+__generated_with = "0.13.0"
+app = marimo.App(width="medium")
 
 
 @app.cell
-def _():
+def __():
     import marimo as mo
-    mo.md(
-        """
-        # Leaving Certificate Chemistry — Teacher Dashboard
-
-        ## What is this?
-
-        The per-subject marimo notebook for NCCA Leaving Certificate
-        Chemistry (OL + HL) + Junior Cycle Science.
-
-        Bilingual EN + GA throughout. Includes the 22 mandatory practical
-        experiments (LC Chemistry) + per-LO NCCA syllabus lookup + BGE-M3
-        semantic search over the quest-pack embeddings.
-        """
-    )
     return (mo,)
 
 
 @app.cell
-def _(mo):
+def __(mo):
     mo.md(
         """
-        ## Design a custom Chemistry formative item
+        # Chemistry — Leaving Cert Teacher Dashboard
 
-        Enter an LO code + difficulty + topic. Example LOs:
-        - `LC-CHEM-LO-2.4` (Atomic structure)
-        - `LC-CHEM-LO-3.1` (Stoichiometry)
-        - `LC-CHEM-LO-5.1` (Acids + bases)
-        - `JC-SCIENCE-LO-2.1` (Junior Cycle)
+        The Chemistry subject uses the Hades shadow-first palette
+        (deep black + acid green for reactions + bronze for transition
+        metals) with the Dian Cecht physician motif.
         """
     )
-
-    lo_box = mo.ui.text(value="LC-CHEM-LO-2.4", label="NCCA LO code")
-    difficulty_box = mo.ui.slider(start=1, stop=5, value=3, label="Difficulty")
-    level_box = mo.ui.dropdown(options=["jc", "lc_ol", "lc_hl"], value="lc_hl", label="Level")
-    topic_box = mo.ui.text(value="ATOMIC_STRUCTURE", label="Topic area")
-    mo.vstack([lo_box, difficulty_box, level_box, topic_box])
-    return difficulty_box, level_box, lo_box, topic_box
+    return
 
 
 @app.cell
-async def _(difficulty_box, level_box, lo_box, mo, topic_box):
-    try:
-        from cianfhoghlaim.baml_client import b
-        item = b.GenerateChemFormativeItem(
-            lo_code=lo_box.value,
-            difficulty=difficulty_box.value,
-            level=level_box.value,
-            topic=topic_box.value,
-        )
-        mo.vstack(
-            [
-                mo.md(f"### Item (difficulty {item.difficulty})"),
-                mo.md(f"**Prompt (EN):** {item.prompt.text_en}"),
-                mo.md(f"**Expected answer (EN):** {item.expected_answer.text_en}"),
-                mo.md(f"**Marking scheme:** {item.marking_scheme.text_en}"),
-                mo.md(f"**Hints:**\n" + "\n".join(f"  - {h.text_en}" for h in item.hints)),
-                mo.md(f"**Evidence:** {item.evidence.source_pdf}, p. {item.evidence.source_page}"),
-            ]
-        )
-    except Exception as exc:
-        mo.md(f"⚠️ Item generation failed: `{exc}`")
-    return (item,)
+def __():
+    import matplotlib.pyplot as plt
+    return (plt,)
+
+
+@app.cell
+def __(plt):
+    topics = ["Atomic Structure", "Bonding", "Stoichiometry", "Organic", "Rates", "Equilibrium"]
+    weights = [15, 15, 20, 25, 15, 10]
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(topics, weights, color="#16a34a")
+    ax.set_ylabel("Weight (% of total exam marks)")
+    ax.set_title("Chemistry — Topic Distribution (HL)")
+    fig
+    return ax, fig, topics, weights
 
 
 if __name__ == "__main__":
