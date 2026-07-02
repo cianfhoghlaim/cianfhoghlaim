@@ -4,6 +4,14 @@
 import { os } from "@orpc/server";
 import { z } from "zod";
 
+import { leavingCertRouter } from "./routers/leaving-cert";
+import { diagramsRouter } from "./routers/diagrams";
+import { assetsRouter } from "./routers/assets";
+import { rootPdfsRouter } from "./routers/root-pdfs";
+import { badgesRouter } from "./routers/badges";
+import { practiceRouter } from "./routers/practice";
+import { i18nRouter } from "./routers/i18n";
+
 // ── Context ────────────────────────────────────────────────────────────
 
 export interface ApiContext {
@@ -18,20 +26,26 @@ export interface ApiContext {
 }
 
 export async function createContext(opts: { context: unknown }): Promise<ApiContext> {
-  // TODO: read BetterAuth session from cookies
-  const ctx = opts.context as { req?: { header?: (name: string) => string } };
-  const _ = ctx.req?.header?.("authorization"); // placeholder
+  // TODO: read BetterAuth session from cookies (Phase 2 T2.8)
+  const _ = opts;
   return { session: null };
 }
 
 // ── Root router ────────────────────────────────────────────────────────
 
 export const appRouter = os.$context<ApiContext>().router({
-  // Routers mounted here
   health: os.handler(async () => ({ status: "ok" })),
-  // leaving-cert, diagrams, assets, badges, practice, geospatial, baml,
-  // root_pdfs, key_competencies, aistear, primary, junior_cycle, senior_cycle,
-  // tertiary, i18n are added in Phase 4 (T4.2-T4.14).
+
+  leavingCert: leavingCertRouter,
+  diagrams: diagramsRouter,
+  assets: assetsRouter,
+  rootPdfs: rootPdfsRouter,
+  badges: badgesRouter,
+  practice: practiceRouter,
+  i18n: i18nRouter,
+
+  // TODO Phase 4: geospatial, baml, key_competencies,
+  //   aistear, primary, junior_cycle, senior_cycle, tertiary
 });
 
 export type AppRouter = typeof appRouter;
