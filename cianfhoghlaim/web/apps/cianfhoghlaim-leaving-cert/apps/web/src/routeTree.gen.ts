@@ -21,6 +21,7 @@ import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-ce
 import { Route as EnLeavingCertSubjectRouteImport } from './routes/en/leaving-cert/$subject'
 import { Route as EnKeyCompetenciesEmblemsRouteImport } from './routes/en/key-competencies.emblems'
 import { Route as EnKeyCompetenciesSlugRouteImport } from './routes/en/key-competencies.$slug'
+import { Route as EnEiraicTreasuresTierRouteImport } from './routes/en/eiraic-treasures.$tier'
 import { Route as EnAssetsSubjectRouteImport } from './routes/en/assets/$subject'
 import { Route as EnLeavingCertSubjectSectionRouteImport } from './routes/en/leaving-cert/$subject.$section'
 import { Route as EnLeavingCertSubjectPracticeTopicRouteImport } from './routes/en/leaving-cert/$subject.practice.$topic'
@@ -86,6 +87,11 @@ const EnKeyCompetenciesSlugRoute = EnKeyCompetenciesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => EnKeyCompetenciesRoute,
 } as any)
+const EnEiraicTreasuresTierRoute = EnEiraicTreasuresTierRouteImport.update({
+  id: '/$tier',
+  path: '/$tier',
+  getParentRoute: () => EnEiraicTreasuresRoute,
+} as any)
 const EnAssetsSubjectRoute = EnAssetsSubjectRouteImport.update({
   id: '/en/assets/$subject',
   path: '/en/assets/$subject',
@@ -108,12 +114,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
   '/en/brown-ajah': typeof EnBrownAjahRoute
-  '/en/eiraic-treasures': typeof EnEiraicTreasuresRoute
+  '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
+  '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
@@ -125,12 +132,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
   '/en/brown-ajah': typeof EnBrownAjahRoute
-  '/en/eiraic-treasures': typeof EnEiraicTreasuresRoute
+  '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
+  '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
@@ -143,12 +151,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
   '/en/brown-ajah': typeof EnBrownAjahRoute
-  '/en/eiraic-treasures': typeof EnEiraicTreasuresRoute
+  '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
+  '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
+    | '/en/eiraic-treasures/$tier'
     | '/en/key-competencies/$slug'
     | '/en/key-competencies/emblems'
     | '/en/leaving-cert/$subject'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
+    | '/en/eiraic-treasures/$tier'
     | '/en/key-competencies/$slug'
     | '/en/key-competencies/emblems'
     | '/en/leaving-cert/$subject'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
+    | '/en/eiraic-treasures/$tier'
     | '/en/key-competencies/$slug'
     | '/en/key-competencies/emblems'
     | '/en/leaving-cert/$subject'
@@ -214,7 +226,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EnAboutRoute: typeof EnAboutRoute
   EnBrownAjahRoute: typeof EnBrownAjahRoute
-  EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRoute
+  EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
   EnMapRoute: typeof EnMapRoute
   GaAboutRoute: typeof GaAboutRoute
@@ -310,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnKeyCompetenciesSlugRouteImport
       parentRoute: typeof EnKeyCompetenciesRoute
     }
+    '/en/eiraic-treasures/$tier': {
+      id: '/en/eiraic-treasures/$tier'
+      path: '/$tier'
+      fullPath: '/en/eiraic-treasures/$tier'
+      preLoaderRoute: typeof EnEiraicTreasuresTierRouteImport
+      parentRoute: typeof EnEiraicTreasuresRoute
+    }
     '/en/assets/$subject': {
       id: '/en/assets/$subject'
       path: '/en/assets/$subject'
@@ -333,6 +352,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface EnEiraicTreasuresRouteChildren {
+  EnEiraicTreasuresTierRoute: typeof EnEiraicTreasuresTierRoute
+}
+
+const EnEiraicTreasuresRouteChildren: EnEiraicTreasuresRouteChildren = {
+  EnEiraicTreasuresTierRoute: EnEiraicTreasuresTierRoute,
+}
+
+const EnEiraicTreasuresRouteWithChildren =
+  EnEiraicTreasuresRoute._addFileChildren(EnEiraicTreasuresRouteChildren)
 
 interface EnKeyCompetenciesRouteChildren {
   EnKeyCompetenciesSlugRoute: typeof EnKeyCompetenciesSlugRoute
@@ -365,7 +395,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EnAboutRoute: EnAboutRoute,
   EnBrownAjahRoute: EnBrownAjahRoute,
-  EnEiraicTreasuresRoute: EnEiraicTreasuresRoute,
+  EnEiraicTreasuresRoute: EnEiraicTreasuresRouteWithChildren,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
   EnMapRoute: EnMapRoute,
   GaAboutRoute: GaAboutRoute,
