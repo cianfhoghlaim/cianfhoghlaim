@@ -113,6 +113,7 @@ export default defineSchema({
     on_chain_anchor: v.optional(v.string()),
     anchor_date: v.optional(v.string()),
     date_earned: v.number(),
+    eiraic_treasures_unlocked: v.optional(v.array(v.string())),
   })
     .index("by_student", ["student_id"])
     .index("by_student_subject", ["student_id", "subject"])
