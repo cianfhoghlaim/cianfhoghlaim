@@ -9,21 +9,18 @@
     "start": "bun run dist/index.js"
   },
   "dependencies": {
-    "hono": "catalog:",
-    "@hono/node-server": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/zod": "catalog:",
-    "@copilotkit/runtime": "catalog:",
-    "@copilotkit/shared": "catalog:",
-    "zod": "catalog:",
-    "@cianfhoghlaim/api": "workspace:*",
-    "@cianfhoghlaim/auth": "workspace:*",
-    "@cianfhoghlaim/convex": "workspace:*"
+    "hono": "^4.8.0",
+    "@hono/node-server": "^1.0.0",
+    "@orpc/server": "^1.12.0",
+    "@orpc/openapi": "^1.12.0",
+    "@orpc/zod": "^1.12.0",
+    "@copilotkit/runtime": "^1.62.0",
+    "@copilotkit/shared": "^1.62.0",
+    "zod": "^4.0.0",
+    "better-auth": "^1.4.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0",
-    "@types/bun": "catalog:",
-    "@cianfhoghlaim/config": "workspace:*"
+    "@types/bun": "^1.2.6"
   }
 }
