@@ -13,6 +13,7 @@ import "./app.css";
 import * as IndexRoute from "./routes/index";
 import * as MapRoute from "./routes/en/map";
 import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
+import * as KeyCompetencySlugRoute from "./routes/en/key-competencies.$slug";
 import * as EmblemsRoute from "./routes/en/key-competencies.emblems";
 import * as AboutRoute from "./routes/en/about";
 import * as EiraicRoute from "./routes/en/eiraic-treasures";
@@ -72,6 +73,12 @@ const emblemsRoute = createRoute({
   component: EmblemsRoute.default || EmblemsRoute.Route?.component || (() => <div>5 Emblems</div>),
 });
 
+const keyCompetencySlugRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/key-competencies/$slug",
+  component: KeyCompetencySlugRoute.default || KeyCompetencySlugRoute.Route?.component || (() => <div>KC</div>),
+});
+
 const subjectGARoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/ga/leaving-cert/$subject",
@@ -112,6 +119,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   mapRoute,
   keyCompRoute,
+  keyCompetencySlugRoute,
   emblemsRoute,
   eiraicRoute,
   brownAjahRoute,
