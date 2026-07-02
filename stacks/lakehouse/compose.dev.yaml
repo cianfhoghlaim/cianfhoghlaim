@@ -67,6 +67,12 @@ services:
   lakekeeper-migrate:
     env_file:
       - .env.dev
+    # lakekeeper-migrate in the base compose is missing the `networks:`
+    # block, so Compose puts it in the default network and it can't
+    # reach the `postgres` host (which lives on the `lakehouse` network).
+    # Add the network here so the migration can connect.
+    networks:
+      - lakehouse
 
   lance-namespace:
     env_file:
@@ -75,3 +81,44 @@ services:
   lancedb-viewer:
     env_file:
       - .env.dev
+
+# The olake CDC engine is disabled in the dev overlay because the
+# upstream `ghcr.io/olake-io/olake:0.1.5` image is private (401 on GHCR)
+# and the source build (https://github.com/datazip-inc/olake@v0.1.5)
+# requires a pre-built Maven JAR (`olake-iceberg-java-writer-0.0.1-SNAPSHOT.jar`)
+# + Java 17 + Maven + Go 1.25.11 — none of which are available in this
+# environment. The olake service is documented as "ephemeral admin"
+# (a CDC tool, not a core data plane service), so it can be safely
+# disabled in dev mode. To re-enable, either (a) add credentials for
+# `ghcr.io/olake-io/olake` and remove this override, or (b) build the
+# image locally and push to a local registry.
+#
+# Approach: override the olake service with a no-op alpine image AND
+# add a `profiles: ["never-active"]` filter. By default, services with
+# any `profiles:` are excluded from `docker compose up` unless the
+# profile is explicitly selected. The dev override + this filter
+# means the olake service is never pulled or started in dev mode.
+# The unused `olake_state` named volume (declared in the base
+# compose.yaml) sits harmlessly on disk.
+  olake:
+    image: alpine:3.20
+    container_name: lakehouse-olake-dev
+    profiles: ["never-active"]
+    command: ["sh", "-c", "echo '[dev] olake disabled — see compose.dev.yaml'; sleep infinity"]
+
+  # nimtable needs a config.yaml file that the lakehouse compose doesn't
+  # mount; it crashes immediately on startup. The nimtable service is a
+  # "nice to have" Iceberg catalog UI (not core data plane), so we
+  # disable it in dev mode the same way as olake.
+  nimtable:
+    image: alpine:3.20
+    container_name: lakehouse-nimtable-dev
+    profiles: ["never-active"]
+    command: ["sh", "-c", "echo '[dev] nimtable disabled (config.yaml missing)'; sleep infinity"]
+
+# Top-level secrets: block from sidecar.yaml references the production
+# Infisical secret file (../../infisical_secret). Override with /dev/null
+# so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null
