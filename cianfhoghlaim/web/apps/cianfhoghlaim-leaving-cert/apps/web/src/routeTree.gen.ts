@@ -14,6 +14,7 @@ import { Route as GaLoreArchiveRouteImport } from './routes/ga/lore-archive'
 import { Route as GaEiraicTreasuresRouteImport } from './routes/ga/eiraic-treasures'
 import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
+import { Route as EnSearchRouteImport } from './routes/en/search'
 import { Route as EnPracticeRouteImport } from './routes/en/practice'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnLoreArchiveRouteImport } from './routes/en/lore-archive'
@@ -56,6 +57,11 @@ const GaAboutRoute = GaAboutRouteImport.update({
 const EnSubjectsRoute = EnSubjectsRouteImport.update({
   id: '/en/subjects',
   path: '/en/subjects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSearchRoute = EnSearchRouteImport.update({
+  id: '/en/search',
+  path: '/en/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnPracticeRoute = EnPracticeRouteImport.update({
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
   '/en/practice': typeof EnPracticeRoute
+  '/en/search': typeof EnSearchRoute
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
   '/en/practice': typeof EnPracticeRoute
+  '/en/search': typeof EnSearchRoute
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
   '/en/practice': typeof EnPracticeRoute
+  '/en/search': typeof EnSearchRoute
   '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/en/lore-archive'
     | '/en/map'
     | '/en/practice'
+    | '/en/search'
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/en/lore-archive'
     | '/en/map'
     | '/en/practice'
+    | '/en/search'
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/en/lore-archive'
     | '/en/map'
     | '/en/practice'
+    | '/en/search'
     | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
@@ -316,6 +328,7 @@ export interface RootRouteChildren {
   EnLoreArchiveRoute: typeof EnLoreArchiveRoute
   EnMapRoute: typeof EnMapRoute
   EnPracticeRoute: typeof EnPracticeRoute
+  EnSearchRoute: typeof EnSearchRoute
   EnSubjectsRoute: typeof EnSubjectsRoute
   GaAboutRoute: typeof GaAboutRoute
   GaEiraicTreasuresRoute: typeof GaEiraicTreasuresRouteWithChildren
@@ -360,6 +373,13 @@ declare module '@tanstack/react-router' {
       path: '/en/subjects'
       fullPath: '/en/subjects'
       preLoaderRoute: typeof EnSubjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/search': {
+      id: '/en/search'
+      path: '/en/search'
+      fullPath: '/en/search'
+      preLoaderRoute: typeof EnSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/practice': {
@@ -562,6 +582,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnLoreArchiveRoute: EnLoreArchiveRoute,
   EnMapRoute: EnMapRoute,
   EnPracticeRoute: EnPracticeRoute,
+  EnSearchRoute: EnSearchRoute,
   EnSubjectsRoute: EnSubjectsRoute,
   GaAboutRoute: GaAboutRoute,
   GaEiraicTreasuresRoute: GaEiraicTreasuresRouteWithChildren,
