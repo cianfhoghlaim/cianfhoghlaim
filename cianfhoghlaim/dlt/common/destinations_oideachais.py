@@ -47,6 +47,38 @@ from .ducklake_options import (
 DEFAULT_NAMESPACE = "oideachais"
 
 
+def _resolve_aws_credentials() -> tuple[str, str, str]:
+    """Map lakehouse's GARAGE_* env vars to the AWS_* naming that
+    boto3 / DLT expect.
+
+    The lakehouse stack's :file:`bonneagar/stacks/lakehouse/.env.dev`
+    uses the canonical ``GARAGE_ACCESS_KEY_ID`` /
+    ``GARAGE_SECRET_ACCESS_KEY`` naming convention. DLT + boto3 + the
+    DuckDB S3 extension all expect ``AWS_ACCESS_KEY_ID`` /
+    ``AWS_SECRET_ACCESS_KEY``. This helper maps the former to the
+    latter, preserving any explicit ``AWS_*`` values the operator may
+    have set (e.g., from an old :file:`.env`).
+
+    Returns:
+        (aws_access_key_id, aws_secret_access_key, aws_region) — both
+        keys are non-empty if either GARGE_* or AWS_* is set.
+    """
+    aws_access_key_id = (
+        os.environ.get("AWS_ACCESS_KEY_ID")
+        or os.environ.get("GARAGE_ACCESS_KEY_ID")
+        or ""
+    )
+    aws_secret_access_key = (
+        os.environ.get("AWS_SECRET_ACCESS_KEY")
+        or os.environ.get("GARAGE_SECRET_ACCESS_KEY")
+        or ""
+    )
+    # Region is unambiguous: AWS_REGION (default "garage" for the
+    # lakehouse); the lakehouse doesn't use a separate GARAGE_REGION.
+    aws_region = os.environ.get("AWS_REGION", "garage")
+    return aws_access_key_id, aws_secret_access_key, aws_region
+
+
 def _build_local_destination(namespace: str) -> Any:
     """Build local DuckLake destination using Garage S3 + PostgreSQL.
 
@@ -67,8 +99,9 @@ def _build_local_destination(namespace: str) -> Any:
     # S3/Garage storage config
     bucket_url = f"s3://ducklake/{namespace}/"
     endpoint_url = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900")
-    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", "")
-    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
+    # Map the lakehouse's GARAGE_* env vars to the AWS_* naming
+    # that boto3 + the DuckDB S3 extension expect.
+    aws_access_key_id, aws_secret_access_key, aws_region = _resolve_aws_credentials()
 
     # Build storage credentials dict for filesystem-style config
     storage_config = {
@@ -77,7 +110,7 @@ def _build_local_destination(namespace: str) -> Any:
             "aws_access_key_id": aws_access_key_id,
             "aws_secret_access_key": aws_secret_access_key,
             "endpoint_url": endpoint_url,
-            "region_name": os.environ.get("AWS_REGION", "garage"),
+            "region_name": aws_region,
         },
         # Force path-style URLs for S3-compatible storage (Garage, MinIO)
         # s3fs uses virtual-host style by default which requires DNS for bucket subdomains
@@ -104,7 +137,7 @@ def _build_local_destination(namespace: str) -> Any:
         "s3_url_style": "path",
         "s3_access_key_id": aws_access_key_id,
         "s3_secret_access_key": aws_secret_access_key,
-        "s3_region": os.environ.get("AWS_REGION", "garage"),
+        "s3_region": aws_region,
     }
 
     return dlt.destinations.ducklake(credentials=credentials, global_config=global_config)
@@ -125,11 +158,13 @@ def _build_production_destination(namespace: str) -> Any:
     r2_bucket = os.environ.get("R2_DUCKLAKE_BUCKET", "ducklake")
     bucket_url = f"s3://{r2_bucket}/{namespace}/"
 
+    aws_access_key_id, aws_secret_access_key, _ = _resolve_aws_credentials()
+
     storage_config = {
         "bucket_url": bucket_url,
         "credentials": {
-            "aws_access_key_id": os.environ.get("R2_ACCESS_KEY_ID", ""),
-            "aws_secret_access_key": os.environ.get("R2_SECRET_ACCESS_KEY", ""),
+            "aws_access_key_id": os.environ.get("R2_ACCESS_KEY_ID", aws_access_key_id),
+            "aws_secret_access_key": os.environ.get("R2_SECRET_ACCESS_KEY", aws_secret_access_key),
             "endpoint_url": os.environ.get("R2_ENDPOINT_URL", ""),
         },
     }
