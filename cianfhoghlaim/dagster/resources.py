@@ -108,7 +108,15 @@ class GeoParquetResource(ConfigurableResource):
 
 
 class MemgraphResource(ConfigurableResource):
-    """Memgraph knowledge graph for curriculum relationships."""
+    """Memgraph knowledge graph for curriculum relationships.
+
+    .. deprecated::
+        Memgraph is no longer in the Wave 1+2 stack lineup. The
+        `agent-observability` spec explicitly removed Memgraph in
+        favour of FalkorDB (graph) + lakehouse-postgres (relational).
+        The instance is kept for backwards compatibility but should
+        not be used in new assets. Use ``FalkorDBResource`` instead.
+    """
 
     uri: str = "bolt://localhost:7687"
     username: str = ""
@@ -124,7 +132,14 @@ class MemgraphResource(ConfigurableResource):
 
 
 class Neo4jResource(ConfigurableResource):
-    """Neo4j graph database for linguistic knowledge graphs."""
+    """Neo4j graph database for linguistic knowledge graphs.
+
+    .. deprecated::
+        Neo4j is not in the Wave 1+2 stack lineup. The
+        `agent-observability` spec removed Neo4j in favour of
+        FalkorDB + lakehouse-postgres. Use ``FalkorDBResource``
+        instead.
+    """
 
     uri: str = "bolt://localhost:7687"
     user: str = "neo4j"
@@ -139,23 +154,38 @@ class Neo4jResource(ConfigurableResource):
 
 
 class FalkorDBResource(ConfigurableResource):
-    """FalkorDB for high-performance graph caching."""
+    """FalkorDB for high-performance graph caching.
 
-    host: str = "localhost"
-    port: int = 6379
+    The FalkorDB stack is exposed on host port 6380 (port-shifted
+    from 6379 to avoid a conflict with dragonfly on the same host).
+    Inside docker, the container name ``falkordb`` resolves to the
+    container's internal port 6379. The defaults below use env
+    vars so the same code works inside-docker AND on-host.
+    """
+
+    # Env-driven defaults (set FALKORDB_HOST=falkordb, FALKORDB_PORT=6379
+    # in docker; FALKORDB_HOST=127.0.0.1, FALKORDB_PORT=6380 on host).
+    host: str = ""
+    port: int = 0
     password: str = ""
 
     def get_client(self):
         from ..graph.falkordb_client import FalkorDBClient
         return FalkorDBClient(
-            host=self.host,
-            port=self.port,
-            password=self.password if self.password else None,
+            host=self.host or os.getenv("FALKORDB_HOST", "falkordb"),
+            port=self.port or int(os.getenv("FALKORDB_PORT", "6379")),
+            password=self.password or os.getenv("FALKORDB_PASSWORD") or None,
         )
 
 
 class TemporalGraphResource(ConfigurableResource):
-    """Temporal knowledge graph for bi-temporal curriculum tracking."""
+    """Temporal knowledge graph for bi-temporal curriculum tracking.
+
+    .. deprecated::
+        The temporal graph stack is not in the Wave 1+2 lineup.
+        Use ``FalkorDBResource`` + lakehouse-postgres instead. This
+        resource is kept for backwards compatibility only.
+    """
 
     uri: str = "bolt://localhost:7687"
     username: str = ""
@@ -176,10 +206,24 @@ class TemporalGraphResource(ConfigurableResource):
 
 
 class CogneeMemoryResource(ConfigurableResource):
-    """Cognee AI memory service for education knowledge."""
+    """Cognee AI memory service for education knowledge.
 
-    graph_url: str = "bolt://localhost:7687"
-    vector_url: str = str(LANCEDB_PATH)
+    The deployed cognee stack uses ``USE_UNIFIED_PROVIDER=pghybrid``
+    (postgres + pgvector in the same database, no separate graph DB).
+    The previous default of ``bolt://localhost:7687`` (Memgraph)
+    was incorrect after the ``centralise-data-plane`` rewrite.
+
+    Set ``COGNEE_PG_HOST`` (default ``cognee-postgres`` inside docker,
+    ``localhost`` on host) and ``COGNEE_PG_PASSWORD`` (default
+    ``devpassword``).
+    """
+
+    # Postgres URL for the unified (pgvector) backend
+    postgres_url: str = ""
+    # LanceDB URL for the vector side (the lakehouse-lance-namespace
+    # stack is the canonical vector store; this is the per-table layer
+    # within the same data plane).
+    vector_url: str = ""
     embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
     async def get_service(self):
@@ -187,8 +231,14 @@ class CogneeMemoryResource(ConfigurableResource):
         from ..memory.cognee_service import EducationMemoryService
 
         config = CogneeConfig(
-            graph_url=self.graph_url,
-            vector_url=self.vector_url,
+            postgres_url=self.postgres_url
+            or os.getenv(
+                "COGNEE_PG_URL",
+                f"postgresql://cognee:{os.getenv('COGNEE_POSTGRES_PASSWORD', 'devpassword')}"
+                f"@{os.getenv('COGNEE_PG_HOST', 'cognee-postgres')}:5432/cognee_oideachais",
+            ),
+            vector_url=self.vector_url
+            or os.getenv("LANCEDB_URI", "rest://lakehouse-lance-namespace:8182"),
             embedding_model=self.embedding_model,
         )
         service = EducationMemoryService(config)
@@ -400,10 +450,15 @@ class LiteLLMResource(ConfigurableResource):
       - Langfuse traces the full lineage per request.
       - Rate limits and spend caps are enforced uniformly.
       - New providers are added in one place (the gateway config.yaml).
+
+    Defaults use the env var ``LITELLM_BASE_URL`` (set by
+    ``bonneagar/stacks/dagster/.env.dev``) so the same resource works
+    both in-docker (``http://litellm:4000/v1``) and on-host
+    (``http://127.0.0.1:4000/v1``).
     """
 
-    base_url: str = "http://litellm:4000/v1"
-    master_key: str = "sk-1234"
+    base_url: str = ""
+    master_key: str = ""
     default_model: str = "extract"  # alias from the gateway config
     timeout_s: float = 600.0
 
@@ -417,8 +472,9 @@ class LiteLLMResource(ConfigurableResource):
             ) from exc
 
         return OpenAI(
-            base_url=self.base_url,
-            api_key=self.master_key,
+            base_url=self.base_url
+            or os.getenv("LITELLM_BASE_URL", "http://litellm:4000/v1"),
+            api_key=self.master_key or os.getenv("LITELLM_MASTER_KEY", "sk-1234"),
             timeout=self.timeout_s,
         )
 
