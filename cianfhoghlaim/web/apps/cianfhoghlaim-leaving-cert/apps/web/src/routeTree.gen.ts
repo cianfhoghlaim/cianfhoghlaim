@@ -15,6 +15,7 @@ import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
 import { Route as EnPracticeRouteImport } from './routes/en/practice'
 import { Route as EnMapRouteImport } from './routes/en/map'
+import { Route as EnLoreArchiveRouteImport } from './routes/en/lore-archive'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
 import { Route as EnEiraicTreasuresRouteImport } from './routes/en/eiraic-treasures'
 import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
@@ -59,6 +60,11 @@ const EnPracticeRoute = EnPracticeRouteImport.update({
 const EnMapRoute = EnMapRouteImport.update({
   id: '/en/map',
   path: '/en/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnLoreArchiveRoute = EnLoreArchiveRouteImport.update({
+  id: '/en/lore-archive',
+  path: '/en/lore-archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/en/diagrams': typeof EnDiagramsRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
+  '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
   '/en/practice': typeof EnPracticeRoute
   '/en/subjects': typeof EnSubjectsRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/en/diagrams': typeof EnDiagramsRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
+  '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
   '/en/practice': typeof EnPracticeRoute
   '/en/subjects': typeof EnSubjectsRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/en/diagrams': typeof EnDiagramsRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
+  '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
   '/en/practice': typeof EnPracticeRoute
   '/en/subjects': typeof EnSubjectsRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/en/diagrams'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
+    | '/en/lore-archive'
     | '/en/map'
     | '/en/practice'
     | '/en/subjects'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/en/diagrams'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
+    | '/en/lore-archive'
     | '/en/map'
     | '/en/practice'
     | '/en/subjects'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/en/diagrams'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
+    | '/en/lore-archive'
     | '/en/map'
     | '/en/practice'
     | '/en/subjects'
@@ -289,6 +301,7 @@ export interface RootRouteChildren {
   EnDiagramsRoute: typeof EnDiagramsRoute
   EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
+  EnLoreArchiveRoute: typeof EnLoreArchiveRoute
   EnMapRoute: typeof EnMapRoute
   EnPracticeRoute: typeof EnPracticeRoute
   EnSubjectsRoute: typeof EnSubjectsRoute
@@ -341,6 +354,13 @@ declare module '@tanstack/react-router' {
       path: '/en/map'
       fullPath: '/en/map'
       preLoaderRoute: typeof EnMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/lore-archive': {
+      id: '/en/lore-archive'
+      path: '/en/lore-archive'
+      fullPath: '/en/lore-archive'
+      preLoaderRoute: typeof EnLoreArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/key-competencies': {
@@ -519,6 +539,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnDiagramsRoute: EnDiagramsRoute,
   EnEiraicTreasuresRoute: EnEiraicTreasuresRouteWithChildren,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
+  EnLoreArchiveRoute: EnLoreArchiveRoute,
   EnMapRoute: EnMapRoute,
   EnPracticeRoute: EnPracticeRoute,
   EnSubjectsRoute: EnSubjectsRoute,

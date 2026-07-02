@@ -422,13 +422,24 @@ class TerminologyResource(ConfigurableResource):
 
 
 class ProgressTrackerResource(ConfigurableResource):
-    """Track pipeline progress for UI display."""
+    """Track pipeline progress for UI display.
 
-    redis_url: str = "redis://localhost:6379"
+    Defaults use the env var ``REDIS_URL`` (set by
+    ``bonneagar/stacks/dagster/.env.dev`` to
+    ``redis://lakehouse-redis:6390`` in docker or
+    ``redis://localhost:6390`` on host) so the same code works in
+    both environments. Falls back to the local default for legacy
+    callers.
+    """
+
+    redis_url: str = ""
 
     def get_tracker(self):
         from ..observability.progress_tracker import ProgressTracker
-        return ProgressTracker(redis_url=self.redis_url)
+        return ProgressTracker(
+            redis_url=self.redis_url
+            or os.getenv("REDIS_URL", "redis://localhost:6379")
+        )
 
 
 # ============================================================================

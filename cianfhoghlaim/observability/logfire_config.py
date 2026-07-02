@@ -60,6 +60,13 @@ def init_logfire(
     """
     Initialize Logfire with configuration.
 
+    For dev mode (no Logfire SaaS token), call
+    :func:`logfire_instrument_local_otlp_only` instead — that path
+    bypasses the SaaS and sends all spans to the local OTel
+    collector at ``OTEL_EXPORTER_OTLP_ENDPOINT`` (default
+    ``http://logfire:4317`` inside docker or
+    ``http://127.0.0.1:4317`` on host).
+
     Args:
         token: Logfire write token
         project_name: Project name in Logfire
@@ -94,8 +101,18 @@ def init_logfire(
             LOGFIRE_ENVIRONMENT = environment
 
         if not LOGFIRE_TOKEN:
-            logger.warning("LOGFIRE_TOKEN not set, Logfire disabled")
-            return False
+            # No Logfire SaaS token — fall back to local OTel
+            # collector mode (the canonical path for dev).
+            logger.warning(
+                "LOGFIRE_TOKEN not set — falling back to local OTel "
+                "collector (OTEL_EXPORTER_OTLP_ENDPOINT=%s)",
+                os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://logfire:4317"),
+            )
+            return logfire_instrument_local_otlp_only(
+                project_name=LOGFIRE_PROJECT_NAME,
+                service_name=LOGFIRE_SERVICE_NAME,
+                environment=LOGFIRE_ENVIRONMENT,
+            )
 
         try:
             logfire_module.configure(
@@ -115,6 +132,81 @@ def init_logfire(
         except Exception as e:
             logger.error(f"Failed to initialize Logfire: {e}")
             return False
+
+
+def logfire_instrument_local_otlp_only(
+    project_name: str | None = None,
+    service_name: str | None = None,
+    environment: str | None = None,
+) -> bool:
+    """
+    Self-hosted Logfire mode: bypass ``send_to_logfire=True`` and
+    instead route all spans to the local OTel collector at
+    ``OTEL_EXPORTER_OTLP_ENDPOINT`` (no SaaS token required).
+
+    In the deployed lakehouse, the ``logfire`` stack is an
+    ``otel/opentelemetry-collector-contrib:0.104.0`` instance that
+    listens on :4317 (gRPC) and :4318 (HTTP). It either buffers
+    spans locally (no SaaS) or forwards to Logfire if a
+    ``LOGFIRE_TOKEN`` is configured on the collector.
+
+    Returns:
+        True on success, False if the logfire SDK or the
+        ``opentelemetry-instrumentation-logfire`` package isn't
+        available.
+    """
+    global _logfire_initialized, LOGFIRE_PROJECT_NAME
+    global LOGFIRE_SERVICE_NAME, LOGFIRE_ENVIRONMENT
+
+    logfire_module = _get_logfire()
+    if logfire_module is None:
+        return False
+
+    if project_name:
+        LOGFIRE_PROJECT_NAME = project_name
+    if service_name:
+        LOGFIRE_SERVICE_NAME = service_name
+    if environment:
+        LOGFIRE_ENVIRONMENT = environment
+
+    otlp_endpoint = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://logfire:4317")
+
+    try:
+        # Configure the OTel SDK directly via the underlying
+        # opentelemetry-exporter-otlp (the logfire SDK delegates to
+        # this when send_to_logfire=False). The simplest cross-version
+        # path is to use opentelemetry.sdk.trace directly.
+        from opentelemetry import trace
+        from opentelemetry.sdk.resources import Resource
+        from opentelemetry.sdk.trace import TracerProvider
+        from opentelemetry.sdk.trace.export import BatchSpanProcessor
+        from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+            OTLPSpanExporter,
+        )
+
+        resource = Resource.create(
+            {
+                "service.name": LOGFIRE_SERVICE_NAME,
+                "service.namespace": LOGFIRE_PROJECT_NAME,
+                "deployment.environment": LOGFIRE_ENVIRONMENT,
+            }
+        )
+        provider = TracerProvider(resource=resource)
+        exporter = OTLPSpanExporter(endpoint=otlp_endpoint, insecure=True)
+        provider.add_span_processor(BatchSpanProcessor(exporter))
+        trace.set_tracer_provider(provider)
+
+        _logfire_initialized = True
+        logger.info(
+            f"Logfire (local OTLP) initialized: project={LOGFIRE_PROJECT_NAME}, "
+            f"service={LOGFIRE_SERVICE_NAME}, env={LOGFIRE_ENVIRONMENT}, "
+            f"endpoint={otlp_endpoint}"
+        )
+        return True
+
+    except Exception as e:
+        logger.error(f"Failed to initialize Logfire (local OTLP): {e}")
+        return False
 
 
 def ensure_initialized() -> bool:

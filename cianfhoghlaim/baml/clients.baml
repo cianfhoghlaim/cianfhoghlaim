@@ -12,7 +12,7 @@
 client LocalVisionQwen {
   provider openai
   options {
-    base_url "http://localhost:4000/v1"
+    base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
     model "local/vision/qwen3-vl"
   }
@@ -22,7 +22,7 @@ client LocalVisionQwen {
 client LocalVisionGLM {
   provider openai
   options {
-    base_url "http://localhost:4000/v1"
+    base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
     model "local/vision/glm-4.6v-flash"
   }
@@ -32,7 +32,7 @@ client LocalVisionGLM {
 client LocalVisionMoondream {
   provider openai
   options {
-    base_url "http://localhost:4000/v1"
+    base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
     model "local/vision/moondream2"
   }

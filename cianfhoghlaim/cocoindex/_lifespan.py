@@ -88,7 +88,13 @@ else:
 
 
 # Canonical env-var defaults.
-LANCEDB_URI = os.getenv("LANCEDB_URI", "rest://lance-api.cianfhoghlaim.ie")
+# Note: the production endpoint `rest://lance-api.cianfhoghlaim.ie`
+# is no longer the default — the dev mode default is the local
+# lakehouse-lance-namespace service (in the cianfhoghlaim docker
+# network). For host-side dagster dev, override with
+# `LANCEDB_URI=http://127.0.0.1:8182` or set
+# `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` in `.env.dev.local`.
+LANCEDB_URI = os.getenv("LANCEDB_URI", "rest://lakehouse-lance-namespace:8182")
 EMBED_MODEL = os.getenv("OIDEACHAIS_EMBED_MODEL", "BAAI/bge-large-en-v1.5")
 EMBED_DIM = 1024
 
