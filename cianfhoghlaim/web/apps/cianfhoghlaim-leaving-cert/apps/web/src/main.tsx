@@ -11,6 +11,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import "./app.css";
 
 import * as IndexRoute from "./routes/index";
+import * as SubjectsRoute from "./routes/en/subjects";
 import * as MapRoute from "./routes/en/map";
 import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
 import * as KeyCompetencySlugRoute from "./routes/en/key-competencies.$slug";
@@ -56,6 +57,12 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   component: IndexRoute.default || IndexRoute.Route?.component || (() => <div>Index</div>),
+});
+
+const subjectsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/subjects",
+  component: SubjectsRoute.default || SubjectsRoute.Route?.component || (() => <div>Subjects</div>),
 });
 
 const mapRoute = createRoute({
@@ -138,6 +145,7 @@ const eiraicTierGARoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  subjectsRoute,
   mapRoute,
   keyCompRoute,
   keyCompetencySlugRoute,
