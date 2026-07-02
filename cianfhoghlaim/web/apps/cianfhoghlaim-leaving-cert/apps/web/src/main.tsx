@@ -16,6 +16,7 @@ import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
 import * as EmblemsRoute from "./routes/en/key-competencies.emblems";
 import * as AboutRoute from "./routes/en/about";
 import * as EiraicRoute from "./routes/en/eiraic-treasures";
+import * as BrownAjahRoute from "./routes/en/brown-ajah";
 import * as SubjectGARoute from "./routes/ga/leaving-cert/$subject";
 import * as AboutRouteGA from "./routes/ga/about";
 import * as EiraicRouteGA from "./routes/ga/eiraic-treasures";
@@ -83,6 +84,12 @@ const eiraicRoute = createRoute({
   component: EiraicRoute.default || EiraicRoute.Route?.component || (() => <div>13 Éraic Treasures</div>),
 });
 
+const brownAjahRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/brown-ajah",
+  component: BrownAjahRoute.default || BrownAjahRoute.Route?.component || (() => <div>Brown Ajah</div>),
+});
+
 const aboutRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/en/about",
@@ -107,6 +114,7 @@ const routeTree = rootRoute.addChildren([
   keyCompRoute,
   emblemsRoute,
   eiraicRoute,
+  brownAjahRoute,
   aboutRoute,
   aboutGARoute,
   eiraicGARoute,

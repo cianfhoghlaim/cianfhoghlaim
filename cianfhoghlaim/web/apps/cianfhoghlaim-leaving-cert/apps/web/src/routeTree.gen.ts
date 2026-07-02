@@ -15,6 +15,7 @@ import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
 import { Route as EnEiraicTreasuresRouteImport } from './routes/en/eiraic-treasures'
+import { Route as EnBrownAjahRouteImport } from './routes/en/brown-ajah'
 import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
 import { Route as EnLeavingCertSubjectRouteImport } from './routes/en/leaving-cert/$subject'
@@ -51,6 +52,11 @@ const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
 const EnEiraicTreasuresRoute = EnEiraicTreasuresRouteImport.update({
   id: '/en/eiraic-treasures',
   path: '/en/eiraic-treasures',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnBrownAjahRoute = EnBrownAjahRouteImport.update({
+  id: '/en/brown-ajah',
+  path: '/en/brown-ajah',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnAboutRoute = EnAboutRouteImport.update({
@@ -95,6 +101,7 @@ const EnLeavingCertSubjectPracticeTopicRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
+  '/en/brown-ajah': typeof EnBrownAjahRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRoute
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
+  '/en/brown-ajah': typeof EnBrownAjahRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRoute
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
+  '/en/brown-ajah': typeof EnBrownAjahRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRoute
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/en/about'
+    | '/en/brown-ajah'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/en/about'
+    | '/en/brown-ajah'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/en/about'
+    | '/en/brown-ajah'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
@@ -189,6 +201,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EnAboutRoute: typeof EnAboutRoute
+  EnBrownAjahRoute: typeof EnBrownAjahRoute
   EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRoute
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
   EnMapRoute: typeof EnMapRoute
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/en/eiraic-treasures'
       fullPath: '/en/eiraic-treasures'
       preLoaderRoute: typeof EnEiraicTreasuresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/brown-ajah': {
+      id: '/en/brown-ajah'
+      path: '/en/brown-ajah'
+      fullPath: '/en/brown-ajah'
+      preLoaderRoute: typeof EnBrownAjahRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/about': {
@@ -323,6 +343,7 @@ const EnLeavingCertSubjectRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EnAboutRoute: EnAboutRoute,
+  EnBrownAjahRoute: EnBrownAjahRoute,
   EnEiraicTreasuresRoute: EnEiraicTreasuresRoute,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
   EnMapRoute: EnMapRoute,
