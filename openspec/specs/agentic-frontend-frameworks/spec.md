@@ -180,6 +180,108 @@ The empty `web/packages/packages/auth/src/index.ts` (currently `export {};`) SHA
 - **THEN** the auth instance is available
 - **AND** `auth.signIn.email(...)` calls `POST /api/auth/sign-in/email` on the hono-api
 
+### Requirement: 5th canonical front-end surface — Cianfhoghlaim OS (R5 — NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`)
+
+The system SHALL expose a 5th canonical front-end surface:
+`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/`. The stack tuple
+is: TanStack Start (Vite plugin) + file-based routing; CopilotKit v2
+Factory Mode + AG-UI SSE streaming; Convex (fresh standalone
+`conic-leaving-cert` deployment, NOT cross-workspace with
+`croilar-portal`); Hono + oRPC + BetterAuth + Pocket ID OIDC +
+optional SIWE; React Flow + D3 + Babylon.js + model-viewer; MotherDuck
+(read-only lakehouse) + Convex (read-write persona); map = accurate
+British Isles (OpenStreetMap base) split into 6 subnations; theming =
+Brown Ajah of the Wheel of Time; tagline = "Aes Sedai — servants of all"
+(the Brown Ajah motto).
+
+#### Scenario: A new spec wants to declare a 6th surface
+
+- **GIVEN** the 5 canonical surfaces table is locked
+- **WHEN** a new spec requests a 6th row
+- **THEN** the developer MUST first refactor an existing surface out
+- **AND** no surface count growth without consolidation
+
+### Requirement: Celtic UI Design System (R6 — NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`)
+
+The system SHALL implement the design tokens + 12 reusable `<Ci*>`
+components documented in
+`docs/ui-inspiration/CIANFHLOGHLAIM_DESIGN_TOKENS.css`, drawing on
+the 4 product UIs (MotherDuck 3-panel + PostHog Lemon UI + Duolingo
+streak flame + Khan Academy mastery) and the 4 game UIs (Hades
+diegetic + Clair Obscur material library + WoW semantic icons +
+BitCraft Empire Panel) from
+`docs/ui-inspiration/UI_INSPIRATION_GUIDE.md`, with the 8 Celtic
+adaptations (Belle Époque Ironwork → Insular Art Knotwork; Oil Painting
+→ Ink-Wash & Gold Leaf; Obsidian/Marble → Slate & Ogham Stone; Cinzel
+→ Uncial/Insular Script; Hades diegetic UI → window chrome; WoW
+semantic quest icons → 24 SVG icons; Khan mastery → Brown Ajah éraic
+treasures; Duolingo streak → Cauldron of the Dagda). The 145 comic
+reference images at `docs/comics/` SHALL be ingested as the celtic-art
+reference library for the FIBO asset generator.
+
+The 12 components SHALL be: `<CiButton>`, `<CiProgressRing>`,
+`<CiDetailCell>`, `<CiSemanticPill>`, `<CiStreakFlame>`,
+`<CiBoonsChoice>`, `<CiSkillTree>`, `<CiDiegeticPanel>`,
+`<CiMapZone>`, `<CiWindow>`, `<CiFocusMode>`, `<CiTextbookPanel>`.
+
+#### Scenario: CiButton applies the tactile press feedback
+
+- **GIVEN** the user clicks any CiButton component
+- **WHEN** the click fires
+- **THEN** the button's `border-bottom` compresses from `4px` to `2px`
+- **AND** the CiProgressRing fills per the Khan Academy 4-tier mastery levels
+
+#### Scenario: CiStreakFlame is the Cauldron of the Dagda
+
+- **GIVEN** the user opens any page
+- **WHEN** the Header renders
+- **THEN** the streak indicator shows the user's day count
+- **AND** the indicator is themed as the Cauldron of the Dagda (never empties)
+- **AND** on Beltane (1 May) the indicator resets to 100%
+
+### Requirement: Brown Ajah theming + accurate British Isles map (R7 — NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`)
+
+The system SHALL implement the **Brown Ajah** Wheel of Time theming
+per the 4 WoT excerpts: Aes Sedai = the 8 NCCA subject specialists;
+Amyrlin Seat = the orchestrator agent; Dragon Reborn = the student who
+completes the cross-subject mastery; Dragon Banner = the Wales subnation
+flag (Cadwaladr ap Cadwallon + Owain Glyndwr; red dragon on white);
+Tuatha'an = the Irish Travellers (the student-as-traveller; the
+Cianfhoghlaim mobile client). The realm map SHALL be an **accurate**
+map of the British Isles (NOT fictional). The 6 subnations SHALL be:
+Éire (Ireland, v1 active) + Northern Ireland + Scotland + England +
+Wales + Isle of Man. The 5 NCCA Key Competencies SHALL be the 5
+land-marks (Dublin + Edinburgh + Cardiff + London + Douglas) plus a
+6th Belfast node (Cross-Border Studies). The 8 NCCA subjects SHALL be
+the 8 overlay buttons. The Connacht province SHALL be the "home base"
+with the Cian lineage highlights (Delbhna Tír Dhá Locha + Lough Corrib
++ Galway Bay + Moycullen).
+
+#### Scenario: Accurate British Isles map renders 6 subnations
+
+- **GIVEN** the user opens `/en/map`
+- **WHEN** the page loads
+- **THEN** the accurate British Isles map renders
+- **AND** all 6 subnations are visible with bilingual EN+GA labels
+- **AND** the Éire subnation is highlighted as the v1 active region
+- **AND** the other 5 subnations are greyed out with "Coming soon" badges
+- **AND** the 5 NCCA Key Competencies are placed at their landmark cities
+
+#### Scenario: Wales subnation flies the Dragon Banner
+
+- **GIVEN** the user hovers over the Wales subnation
+- **WHEN** the hover fires
+- **THEN** the Dragon Banner (red dragon on white) animates into view
+- **AND** the bilingual label "Wales / an Bhreatain Bheag" appears
+
+#### Scenario: Personal lineage never appears on the public surface
+
+- **GIVEN** the user opens any page on `oideachais.cianfhoghlaim.ie`
+- **WHEN** the page renders
+- **THEN** no text matches the regex `Ci[ae]n M[ae]c a[nm] D[ée]isi[gh]`
+- **AND** no text matches the family surnames Deacy, Lyons, Morris, Conroy
+- **AND** no text references the 3 Gemini Deep Research warrants
+
 ## Cross-references
 
 - [`.agents/skills/tanstack-start/SKILL.md`](../../.agents/skills/tanstack-start/SKILL.md)

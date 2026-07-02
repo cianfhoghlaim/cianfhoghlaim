@@ -1,0 +1,29 @@
+{
+  "name": "@cianfhoghlaim/api-server",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build src/index.ts --outdir dist",
+    "typecheck": "tsc --noEmit",
+    "start": "bun run dist/index.js"
+  },
+  "dependencies": {
+    "hono": "catalog:",
+    "@hono/node-server": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/zod": "catalog:",
+    "@copilotkit/runtime": "catalog:",
+    "@copilotkit/shared": "catalog:",
+    "zod": "catalog:",
+    "@cianfhoghlaim/api": "workspace:*",
+    "@cianfhoghlaim/auth": "workspace:*",
+    "@cianfhoghlaim/convex": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/bun": "catalog:",
+    "@cianfhoghlaim/config": "workspace:*"
+  }
+}

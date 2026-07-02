@@ -296,6 +296,44 @@ SHALL be bilingual. Every quest content string SHALL be bilingual.
 - **THEN** only the Irish version is shown
 - **AND** the toggle to switch to EN is disabled (Gaeilge is taught in Irish only)
 
+### Requirement: Cian of the Tuatha Dé Danann Lore (R10 — NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`)
+
+The system SHALL document the platform's lore in
+`docs/CIANFHLOGHLAIM_LORE.md`. The lore SHALL identify the hero as
+**Cian Mac an Déisigh Uí Liatháin** of the triple-crown lineage
+(Deacy Uí Dhéisigh + Lyons Mac Liatháin + Morris City of Tribes +
+Conroy Mac Conraoi), grounded in the 7 lineage clippings at
+`cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/`
+(Tuatha Dé Danann + Cian + Aos Sí + Uí Liatháin + Déisi + Delbhna
+Tír Dhá Locha + Leath Cuinn and Leath Moga) and the 4 Wheel of Time
+excerpts (Aes Sedai + Amyrlin Seat + Dragon Reborn + Dragon Banner +
+Tuatha'an). The lore document is operator-only — NEVER linked from
+the public surface. The public app's theming is the Brown Ajah only.
+
+#### Scenario: Lore document is operator-only
+
+- **GIVEN** the operator opens `docs/CIANFHLOGHLAIM_LORE.md`
+- **WHEN** the document is read
+- **THEN** it identifies Cian Mac an Déisigh Uí Liatháin by name + lineage + the 3 Gemini Deep Research warrants
+- **AND** it references all 7 lineage clippings by filename
+- **AND** it references all 4 Wheel of Time excerpts by section title
+
+#### Scenario: Public surface never displays personal lineage
+
+- **GIVEN** the user opens any page on `oideachais.cianfhoghlaim.ie`
+- **WHEN** the page renders
+- **THEN** no text matches the regex `Ci[ae]n M[ae]c a[nm] D[ée]isi[gh]`
+- **AND** no text matches the family surnames Deacy, Lyons, Morris, Conroy
+- **AND** no text references the 3 Gemini Deep Research warrants
+
+#### Scenario: Header shows Brown Ajah tagline + ciphered reference
+
+- **GIVEN** the user opens any page
+- **WHEN** the Header renders
+- **THEN** the tagline reads "Aes Sedai — servants of all" (the Brown Ajah motto)
+- **AND** the Footer shows a small italicized "Cianfhoghlaim — Coláiste na Déisigh" footer credit
+- **AND** the lore document is NEVER linked from the Header or Footer
+
 ## Cross-references
 
 - `openspec/changes/ncca-leaving-cert-syllabi-corpus/` — the
