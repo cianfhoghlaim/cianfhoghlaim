@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GaEiraicTreasuresRouteImport } from './routes/ga/eiraic-treasures'
 import { Route as GaAboutRouteImport } from './routes/ga/about'
+import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
 import { Route as EnEiraicTreasuresRouteImport } from './routes/en/eiraic-treasures'
@@ -41,6 +42,11 @@ const GaEiraicTreasuresRoute = GaEiraicTreasuresRouteImport.update({
 const GaAboutRoute = GaAboutRouteImport.update({
   id: '/ga/about',
   path: '/ga/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSubjectsRoute = EnSubjectsRouteImport.update({
+  id: '/en/subjects',
+  path: '/en/subjects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnMapRoute = EnMapRouteImport.update({
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/subjects': typeof EnSubjectsRoute
   '/ga/about': typeof GaAboutRoute
   '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
@@ -192,6 +201,7 @@ export interface FileRouteTypes {
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/subjects'
     | '/ga/about'
     | '/ga/eiraic-treasures'
     | '/en/assets/$subject'
@@ -253,6 +265,7 @@ export interface RootRouteChildren {
   EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
   EnMapRoute: typeof EnMapRoute
+  EnSubjectsRoute: typeof EnSubjectsRoute
   GaAboutRoute: typeof GaAboutRoute
   GaEiraicTreasuresRoute: typeof GaEiraicTreasuresRouteWithChildren
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
@@ -281,6 +294,13 @@ declare module '@tanstack/react-router' {
       path: '/ga/about'
       fullPath: '/ga/about'
       preLoaderRoute: typeof GaAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects': {
+      id: '/en/subjects'
+      path: '/en/subjects'
+      fullPath: '/en/subjects'
+      preLoaderRoute: typeof EnSubjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/map': {
@@ -459,6 +479,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnEiraicTreasuresRoute: EnEiraicTreasuresRouteWithChildren,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
   EnMapRoute: EnMapRoute,
+  EnSubjectsRoute: EnSubjectsRoute,
   GaAboutRoute: GaAboutRoute,
   GaEiraicTreasuresRoute: GaEiraicTreasuresRouteWithChildren,
   EnAssetsSubjectRoute: EnAssetsSubjectRoute,
