@@ -38,6 +38,9 @@
 
 import type { KeyCompetencySlug, SubjectSlug } from "./index.js";
 
+export type { KeyCompetencySlug, SubjectSlug };
+export { KEY_COMPETENCY_SLUGS, SUBJECT_SLUGS } from "./index.js";
+
 export type MasteryRow = Readonly<Record<KeyCompetencySlug, number>>;
 export type MasteryMatrix = Readonly<Record<SubjectSlug, MasteryRow>>;
 

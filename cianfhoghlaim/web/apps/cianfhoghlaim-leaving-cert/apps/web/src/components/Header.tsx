@@ -14,6 +14,7 @@
 //   - The Brown Ajah tagline is the only user-facing reference to the mythology
 
 import * as React from "react";
+import { Link } from "@tanstack/react-router";
 import { CiButton } from "@cianfhoghlaim/ui";
 import { CiBrownAjahBadge } from "@cianfhoghlaim/ui/lore/brown-ajah-badge";
 import { CiStreakFlame } from "@cianfhoghlaim/ui/streak-flame";
@@ -59,6 +60,20 @@ export function Header({
         >
           <CiTuathanWagon size={20} />
         </button>
+        <Link
+          to={"/en/about" as any}
+          className="text-slate-300 hover:text-emerald-400 text-sm font-medium transition-colors"
+          title="About — the public about page"
+        >
+          {language === "ga" ? "EN About" : "About"}
+        </Link>
+        <Link
+          to={"/ga/about" as any}
+          className="text-slate-300 hover:text-emerald-400 text-sm font-medium transition-colors"
+          title="Faoi Cianfhoghlaim — an leathanach poiblí faoi"
+        >
+          {language === "ga" ? "Faoi" : "GA About"}
+        </Link>
         <TranslationToggle
           language={language}
           onChange={(lang) => onLanguageChange?.(lang)}

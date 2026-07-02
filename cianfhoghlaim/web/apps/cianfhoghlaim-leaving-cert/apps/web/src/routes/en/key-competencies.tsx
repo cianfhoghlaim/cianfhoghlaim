@@ -4,13 +4,29 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { CiTextbookPanel } from "@cianfhoghlaim/ui";
-import { CiSemanticPill } from "@cianfhoghlaim/ui";
+import {
+  getMasteryForCell,
+  getMasteryForSubject,
+  getMasteryRowAverage,
+  KEY_COMPETENCY_SLUGS,
+  MASTERY_MATRIX,
+  SUBJECT_SLUGS,
+  type KeyCompetencySlug,
+  type SubjectSlug,
+} from "@cianfhoghlaim/i18n/mastery";
 
 export const Route = createFileRoute("/en/key-competencies")({
   component: KeyCompetenciesPage,
 });
 
-const KEY_COMPETENCIES = [
+const KEY_COMPETENCIES: ReadonlyArray<{
+  slug: KeyCompetencySlug;
+  name_en: string;
+  name_ga: string;
+  tuatha_de: string;
+  color: string;
+  description: string;
+}> = [
   {
     slug: "communicating",
     name_en: "Communicating",
@@ -53,7 +69,12 @@ const KEY_COMPETENCIES = [
   },
 ];
 
-const SUBJECTS = [
+const SUBJECTS: ReadonlyArray<{
+  slug: SubjectSlug;
+  name_en: string;
+  name_ga: string;
+  color: string;
+}> = [
   { slug: "mathematics", name_en: "Mathematics", name_ga: "Mata", color: "#2563eb" },
   { slug: "applied_mathematics", name_en: "Applied Math", name_ga: "Mata Feidhmíoch", color: "#7c3aed" },
   { slug: "chemistry", name_en: "Chemistry", name_ga: "Ceimic", color: "#16a34a" },
@@ -64,19 +85,80 @@ const SUBJECTS = [
   { slug: "computer_science", name_en: "Computer Sci.", name_ga: "Ríomheol.", color: "#475569" },
 ];
 
-// Cross-subject mastery matrix (placeholder; real values from cross_subject_competency_embedding.py)
-const masteryMatrix: Record<string, Record<string, number>> = {
-  mathematics: { communicating: 70, "information-processing": 90, "critical-creative-thinking": 80, "personal-effectiveness": 60, "working-with-others": 50 },
-  applied_mathematics: { communicating: 60, "information-processing": 95, "critical-creative-thinking": 85, "personal-effectiveness": 70, "working-with-others": 55 },
-  chemistry: { communicating: 65, "information-processing": 80, "critical-creative-thinking": 75, "personal-effectiveness": 85, "working-with-others": 60 },
-  geography: { communicating: 85, "information-processing": 75, "critical-creative-thinking": 70, "personal-effectiveness": 65, "working-with-others": 75 },
-  history: { communicating: 90, "information-processing": 70, "critical-creative-thinking": 90, "personal-effectiveness": 60, "working-with-others": 80 },
-  english: { communicating: 95, "information-processing": 60, "critical-creative-thinking": 95, "personal-effectiveness": 70, "working-with-others": 85 },
-  gaeilge: { communicating: 100, "information-processing": 50, "critical-creative-thinking": 80, "personal-effectiveness": 75, "working-with-others": 70 },
-  computer_science: { communicating: 55, "information-processing": 100, "critical-creative-thinking": 85, "personal-effectiveness": 80, "working-with-others": 65 },
+type MasteryTier = "mastered" | "proficient" | "familiar" | "attempted";
+
+function tierFor(value: number): MasteryTier {
+  if (value >= 90) return "mastered";
+  if (value >= 70) return "proficient";
+  if (value >= 40) return "familiar";
+  return "attempted";
+}
+
+const TIER_BAR: Record<MasteryTier, string> = {
+  mastered: "#10b981",
+  proficient: "#3b82f6",
+  familiar: "#f59e0b",
+  attempted: "#64748b",
 };
 
+const TIER_LABEL: Record<MasteryTier, string> = {
+  mastered: "Mastered",
+  proficient: "Proficient",
+  familiar: "Familiar",
+  attempted: "Attempted",
+};
+
+function MasteryBar({
+  value,
+  showLabel = true,
+  width = "w-full",
+}: {
+  value: number;
+  showLabel?: boolean;
+  width?: string;
+}) {
+  const tier = tierFor(value);
+  const color = TIER_BAR[tier];
+  return (
+    <div className={`flex flex-col gap-1 ${width}`}>
+      {showLabel && (
+        <div className="flex items-baseline justify-between gap-1">
+          <span className="text-xs font-mono font-bold text-slate-100">{value}%</span>
+          <span className="text-[9px] uppercase tracking-wider text-slate-500">
+            {TIER_LABEL[tier]}
+          </span>
+        </div>
+      )}
+      <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${value}%`, backgroundColor: color }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function getColumnAverage(competency: KeyCompetencySlug): number {
+  const sum = SUBJECT_SLUGS.reduce(
+    (acc, s) => acc + getMasteryForCell(s, competency),
+    0,
+  );
+  return Math.round(sum / SUBJECT_SLUGS.length);
+}
+
+function getOverallAverage(): number {
+  const sum = SUBJECT_SLUGS.reduce((acc, s) => acc + getMasteryRowAverage(s), 0);
+  return Math.round(sum / SUBJECT_SLUGS.length);
+}
+
 function KeyCompetenciesPage() {
+  const overallAverage = getOverallAverage();
+  const columnAverages = KEY_COMPETENCY_SLUGS.map((kc) => ({
+    slug: kc,
+    value: getColumnAverage(kc),
+  }));
+
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-6">
       <div className="flex flex-col gap-2 items-center text-center">
@@ -112,44 +194,110 @@ function KeyCompetenciesPage() {
       {/* The 5 × 8 mastery matrix */}
       <CiTextbookPanel title="Cross-Subject Mastery Matrix" material="gold-leaf">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm border-collapse">
             <thead>
               <tr>
-                <th className="text-left text-slate-400 p-2">Subject</th>
+                <th className="text-left text-slate-400 p-2 align-bottom">Subject</th>
                 {KEY_COMPETENCIES.map((kc) => (
-                  <th key={kc.slug} className="text-center p-2" style={{ color: kc.color }}>
-                    {kc.name_en.split(" ")[0]}
+                  <th key={kc.slug} className="text-center p-2 align-bottom" style={{ color: kc.color }}>
+                    <div className="text-[11px] font-bold leading-tight">
+                      {kc.name_en.split(" ")[0]}
+                    </div>
+                    <div className="text-[9px] text-slate-500 italic font-normal mt-0.5">
+                      {kc.tuatha_de}
+                    </div>
                   </th>
                 ))}
+                <th className="text-center p-2 align-bottom bg-slate-900/60 rounded-t-lg">
+                  <div className="text-[11px] font-bold text-amber-400 leading-tight">
+                    Row Avg
+                  </div>
+                  <div className="text-[9px] text-slate-500 italic font-normal mt-0.5">
+                    subject
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
-              {SUBJECTS.map((sub) => (
-                <tr key={sub.slug} className="border-t border-slate-700">
-                  <td className="p-2 font-medium" style={{ color: sub.color }}>
-                    {sub.name_en}
-                    <div className="text-xs text-slate-500 font-mono">{sub.name_ga}</div>
+              {SUBJECTS.map((sub) => {
+                const rowAvg = getMasteryRowAverage(sub.slug);
+                const row = getMasteryForSubject(sub.slug);
+                return (
+                  <tr key={sub.slug} className="border-t border-slate-700">
+                    <td className="p-2 font-medium align-middle" style={{ color: sub.color }}>
+                      {sub.name_en}
+                      <div className="text-xs text-slate-500 font-mono">{sub.name_ga}</div>
+                    </td>
+                    {KEY_COMPETENCIES.map((kc) => {
+                      const value = row[kc.slug];
+                      return (
+                        <td key={kc.slug} className="p-2 align-middle">
+                          <MasteryBar value={value} />
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 align-middle bg-slate-900/40">
+                      <MasteryBar value={rowAvg} />
+                    </td>
+                  </tr>
+                );
+              })}
+              {/* Per-column average row */}
+              <tr className="border-t-2 border-amber-700/60 bg-slate-900/30">
+                <td className="p-2 font-bold text-amber-400 align-middle">
+                  Column Avg
+                  <div className="text-[10px] text-slate-500 font-mono font-normal">
+                    competency
+                  </div>
+                </td>
+                {columnAverages.map(({ slug, value }) => (
+                  <td key={slug} className="p-2 align-middle">
+                    <MasteryBar value={value} />
                   </td>
-                  {KEY_COMPETENCIES.map((kc) => {
-                    const value = masteryMatrix[sub.slug]?.[kc.slug] ?? 0;
-                    return (
-                      <td key={kc.slug} className="p-2 text-center">
-                        <CiSemanticPill
-                          kind={
-                            value >= 90 ? "mastered" :
-                            value >= 70 ? "proficient" :
-                            value >= 40 ? "familiar" :
-                            "attempted"
-                          }
-                          label={`${value}%`}
-                        />
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+                ))}
+                {/* Overall platform average */}
+                <td className="p-2 align-middle bg-amber-900/20 border-l border-amber-700/40">
+                  <div className="flex flex-col gap-1 w-full">
+                    <div className="flex items-baseline justify-between gap-1">
+                      <span className="text-xs font-mono font-bold text-amber-300">
+                        {overallAverage}%
+                      </span>
+                      <span className="text-[9px] uppercase tracking-wider text-amber-500/80">
+                        Platform
+                      </span>
+                    </div>
+                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${overallAverage}%`,
+                          background: "linear-gradient(90deg, #f59e0b, #fbbf24)",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-[10px] text-slate-500">
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-3 h-1.5 rounded-full" style={{ backgroundColor: TIER_BAR.mastered }} />
+            Mastered ≥90
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-3 h-1.5 rounded-full" style={{ backgroundColor: TIER_BAR.proficient }} />
+            Proficient ≥70
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-3 h-1.5 rounded-full" style={{ backgroundColor: TIER_BAR.familiar }} />
+            Familiar ≥40
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-3 h-1.5 rounded-full" style={{ backgroundColor: TIER_BAR.attempted }} />
+            Attempted &lt;40
+          </span>
         </div>
       </CiTextbookPanel>
 
@@ -175,6 +323,14 @@ function KeyCompetenciesPage() {
           </CiTextbookPanel>
         ))}
       </div>
+
+      <div className="text-center text-xs text-slate-600 italic pb-4">
+        Values sourced from <code className="font-mono">packages/i18n/src/mastery.ts</code>
+        {" "}(v1 fallback — the live pipeline will eventually be{" "}
+        <code className="font-mono">cross_subject_competency_embedding.py</code>).
+      </div>
     </div>
   );
 }
+
+export default KeyCompetenciesPage;

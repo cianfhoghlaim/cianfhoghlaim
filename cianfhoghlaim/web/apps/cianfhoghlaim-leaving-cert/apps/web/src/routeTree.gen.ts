@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
+import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
 import { Route as EnLeavingCertSubjectRouteImport } from './routes/en/leaving-cert/$subject'
 import { Route as EnAssetsSubjectRouteImport } from './routes/en/assets/$subject'
@@ -23,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GaAboutRoute = GaAboutRouteImport.update({
+  id: '/ga/about',
+  path: '/ga/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnMapRoute = EnMapRouteImport.update({
   id: '/en/map',
   path: '/en/map',
@@ -31,6 +38,11 @@ const EnMapRoute = EnMapRouteImport.update({
 const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
   id: '/en/key-competencies',
   path: '/en/key-competencies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnAboutRoute = EnAboutRouteImport.update({
+  id: '/en/about',
+  path: '/en/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GaLeavingCertSubjectRoute = GaLeavingCertSubjectRouteImport.update({
@@ -63,8 +75,10 @@ const EnLeavingCertSubjectPracticeTopicRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/en/about': typeof EnAboutRoute
   '/en/key-competencies': typeof EnKeyCompetenciesRoute
   '/en/map': typeof EnMapRoute
+  '/ga/about': typeof GaAboutRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
@@ -73,8 +87,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/en/about': typeof EnAboutRoute
   '/en/key-competencies': typeof EnKeyCompetenciesRoute
   '/en/map': typeof EnMapRoute
+  '/ga/about': typeof GaAboutRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
@@ -84,8 +100,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/en/about': typeof EnAboutRoute
   '/en/key-competencies': typeof EnKeyCompetenciesRoute
   '/en/map': typeof EnMapRoute
+  '/ga/about': typeof GaAboutRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
@@ -96,8 +114,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/en/about'
     | '/en/key-competencies'
     | '/en/map'
+    | '/ga/about'
     | '/en/assets/$subject'
     | '/en/leaving-cert/$subject'
     | '/ga/leaving-cert/$subject'
@@ -106,8 +126,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/en/about'
     | '/en/key-competencies'
     | '/en/map'
+    | '/ga/about'
     | '/en/assets/$subject'
     | '/en/leaving-cert/$subject'
     | '/ga/leaving-cert/$subject'
@@ -116,8 +138,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/en/about'
     | '/en/key-competencies'
     | '/en/map'
+    | '/ga/about'
     | '/en/assets/$subject'
     | '/en/leaving-cert/$subject'
     | '/ga/leaving-cert/$subject'
@@ -127,8 +151,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EnAboutRoute: typeof EnAboutRoute
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRoute
   EnMapRoute: typeof EnMapRoute
+  GaAboutRoute: typeof GaAboutRoute
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
   EnLeavingCertSubjectRoute: typeof EnLeavingCertSubjectRouteWithChildren
   GaLeavingCertSubjectRoute: typeof GaLeavingCertSubjectRoute
@@ -143,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ga/about': {
+      id: '/ga/about'
+      path: '/ga/about'
+      fullPath: '/ga/about'
+      preLoaderRoute: typeof GaAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en/map': {
       id: '/en/map'
       path: '/en/map'
@@ -155,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/en/key-competencies'
       fullPath: '/en/key-competencies'
       preLoaderRoute: typeof EnKeyCompetenciesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/about': {
+      id: '/en/about'
+      path: '/en/about'
+      fullPath: '/en/about'
+      preLoaderRoute: typeof EnAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ga/leaving-cert/$subject': {
@@ -211,8 +251,10 @@ const EnLeavingCertSubjectRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EnAboutRoute: EnAboutRoute,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRoute,
   EnMapRoute: EnMapRoute,
+  GaAboutRoute: GaAboutRoute,
   EnAssetsSubjectRoute: EnAssetsSubjectRoute,
   EnLeavingCertSubjectRoute: EnLeavingCertSubjectRouteWithChildren,
   GaLeavingCertSubjectRoute: GaLeavingCertSubjectRoute,

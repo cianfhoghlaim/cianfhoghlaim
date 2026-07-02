@@ -19,7 +19,7 @@ import { onError } from "@orpc/server";
 import { appRouter } from "../../../packages/api/src";
 import { createContext } from "../../../packages/api/src";
 import { auth } from "../../../packages/auth/src";
-import { copilotkit } from "./copilotkit/runtime";
+import { copilotkit, subjects } from "./copilotkit/runtime";
 import { serve } from "@hono/node-server";
 
 const app = new Hono();
@@ -75,10 +75,15 @@ app.get("/", (c) => c.text("OK"));
 // Mounted at /api/copilotkit?stage=...&subject=...&language=...
 app.route("/api/copilotkit", copilotkit);
 
+// NCCA subject ADK agents metadata (the 8 Brown Ajah members)
+// Mounted at /api/subjects
+app.route("/api/subjects", subjects);
+
 const port = Number(process.env.PORT) || 8787;
 console.log(`Cianfhoghlaim OS API server listening on http://localhost:${port}`);
 console.log(`  RPC:           http://localhost:${port}/rpc`);
 console.log(`  API docs:      http://localhost:${port}/api-reference`);
 console.log(`  CopilotKit:    http://localhost:${port}/api/copilotkit`);
+console.log(`  Subjects:      http://localhost:${port}/api/subjects`);
 
 serve({ fetch: app.fetch, port });

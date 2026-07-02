@@ -14,6 +14,18 @@
   </head>
   <body>
     <div id="root"></div>
+    <script type="module">
+      // Dev-only: ensure the Vite React Refresh preamble is installed
+      // (the index.html is served from /public, not the project root,
+      //  so Vite's automatic preamble injection does not apply).
+      if (import.meta.env && import.meta.env.DEV) {
+        const { default: RefreshRuntime } = await import('/@react-refresh');
+        RefreshRuntime.injectIntoGlobalHook(window);
+        window.$RefreshReg$ = window.$RefreshReg$ || (() => {});
+        window.$RefreshSig$ = window.$RefreshSig$ || (() => (type) => type);
+        window.__vite_plugin_react_preamble_installed__ = true;
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
