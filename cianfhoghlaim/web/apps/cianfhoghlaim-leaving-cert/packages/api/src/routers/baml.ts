@@ -2,7 +2,8 @@
 // Lazy BAML extraction (on-demand from the SPA) + SuggestUIComponents.
 // Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/tasks.md.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 export const bamlRouter = os.$context<ApiContext>().router({

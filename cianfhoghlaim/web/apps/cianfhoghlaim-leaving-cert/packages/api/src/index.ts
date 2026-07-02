@@ -56,4 +56,3 @@ export const appRouter = os.$context<ApiContext>().router({
 });
 
 export type AppRouter = typeof appRouter;
-export { z };

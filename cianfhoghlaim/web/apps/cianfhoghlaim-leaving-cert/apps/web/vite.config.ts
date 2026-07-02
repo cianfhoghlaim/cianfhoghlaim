@@ -11,6 +11,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
+  appType: "spa",
   server: {
     port: 3082,
     host: true,
@@ -26,5 +27,30 @@ export default defineConfig({
       quoteStyle: "single",
       semicolons: false,
     }),
+    {
+      // SPA history fallback — serve index.html for any non-asset route
+      name: "spa-fallback",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          const url = req.url || "";
+          // Skip Vite internals + asset paths
+          if (
+            url.startsWith("/@") ||
+            url.startsWith("/src/") ||
+            url.startsWith("/node_modules/") ||
+            url.startsWith("/.vite/") ||
+            url.startsWith("/assets/") ||
+            url.includes(".") ||
+            url === "/" ||
+            url === "/index.html"
+          ) {
+            return next();
+          }
+          // Fallback to index.html for SPA routes
+          req.url = "/index.html";
+          return next();
+        });
+      },
+    },
   ],
 });

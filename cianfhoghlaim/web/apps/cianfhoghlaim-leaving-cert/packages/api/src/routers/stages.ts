@@ -1,7 +1,8 @@
 // @cianfhoghlaim/api — stages oRPC router
 // The 5 NCCA education stages (aistear + primary + junior_cycle + senior_cycle + tertiary).
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 const StageSchema = z.enum([

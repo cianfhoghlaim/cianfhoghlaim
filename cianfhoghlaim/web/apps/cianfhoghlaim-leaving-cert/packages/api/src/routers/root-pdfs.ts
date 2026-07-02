@@ -2,7 +2,8 @@
 // Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/tasks.md T4.12.
 // The 5 root-level NCCA programme PDF endpoints.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 export const rootPdfsRouter = os.$context<ApiContext>().router({

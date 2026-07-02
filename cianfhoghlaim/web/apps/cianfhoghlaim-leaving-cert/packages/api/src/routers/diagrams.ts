@@ -3,7 +3,8 @@
 // The 4 diagram endpoints: renderConceptMap + renderTopicHeatmap +
 // renderPCLMFlow + renderQuestionSankey.
 
-import { os, z } from "@orpc/server";
+import { os } from "@orpc/server";
+import { z } from "zod";
 import type { ApiContext } from "../context";
 
 const SubjectSchema = z.enum([
