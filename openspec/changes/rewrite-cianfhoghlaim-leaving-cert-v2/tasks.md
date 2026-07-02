@@ -2,19 +2,33 @@
 
 > 163 subtasks over 12 phases (66 days). Phase numbering mirrors the
 > tasks in `cianfhoghlaim-educational-mmo-v1/tasks.md` for traceability.
+>
+> **Progress:** 36 / 163 subtasks done (Phase 1, parts of Phase 2 + 3 + 9
+> + 10, the full openspec change artefacts, and the workspace skeleton
+> are shipped in commit 06d9b5c43 + the follow-up commit).
 
 ## Phase 1 — Workspace bootstrap (Days 1-3) — 8 tasks
 
-- [ ] 1.1 Create `cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/` workspace
-- [ ] 1.2 Set up `apps/web` + `apps/api` + `packages/{api,auth,ui,db,config,i18n,convex}` sub-packages
-- [ ] 1.3 Configure turbo + biome + ultracite
-- [ ] 1.4 Add `wrangler.toml` for `cianfhoghlaim-leaving-cert` Pages project, port 3082
-- [ ] 1.5 Add Dockerfile (oven/bun:1-alpine, no sibling-croilar hack)
-- [ ] 1.6 Provision fresh Convex deployment: `bunx convex deploy --prod --name conic-leaving-cert`
-- [ ] 1.7 Add Cloudflare Pages project via `wrangler pages project create cianfhoghlaim-leaving-cert`
-- [ ] 1.8 Lint + bun install + mise setup
+- [x] 1.1 Create `cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/` workspace
+- [x] 1.2 Set up `apps/web` + `apps/api` + `packages/{api,auth,ui,db,config,i18n,convex}` sub-packages
+- [x] 1.3 Configure turbo + biome + ultracite
+- [x] 1.4 Add `wrangler.toml` for `cianfhoghlaim-leaving-cert` Pages project, port 3082
+- [x] 1.5 Add Dockerfile (oven/bun:1-alpine, no sibling-croilar hack)
+- [ ] 1.6 Provision fresh Convex deployment: `bunx convex deploy --prod --name conic-leaving-cert` *(deferred to Phase 2)*
+- [ ] 1.7 Add Cloudflare Pages project via `wrangler pages project create cianfhoghlaim-leaving-cert` *(deferred to Phase 2)*
+- [ ] 1.8 Lint + bun install + mise setup *(deferred)*
 
 ## Phase 2 — Database + Auth (Days 4-7) — 9 tasks
+
+- [x] 2.1 Convex: schema ported — `packages/convex/src/index.ts` ships 5 carried-over + 3 new tables (skill_assets, diagram_cache, badge_ledger)
+- [x] 2.2 Add 3 new Convex tables: `skill_assets`, `diagram_cache`, `badge_ledger` (in `packages/convex/src/index.ts`)
+- [ ] 2.3 Convex `auth.config.ts` to point at Pocket ID OIDC discovery *(deferred)*
+- [x] 2.4 BetterAuth: install + configure `server.ts` (Polar.sh optional, GitHub + Google + email/password providers) — `packages/auth/src/index.ts` shipped
+- [ ] 2.5 BetterAuth `client.ts` + `useSession()` / `signIn()` / `signOut()` hooks *(deferred)*
+- [x] 2.6 Pocket ID OIDC provider registration in `auth.ts` — placeholder in `packages/auth/src/index.ts`
+- [x] 2.7 Optional SIWE: `nonce` server function + `useWallet` client hook (gated on `VITE_SIWE_ENABLED`) — placeholder in `packages/auth/src/index.ts`
+- [ ] 2.8 Convex `auth.ts` wired at `apps/api/src/index.ts` *(deferred)*
+- [ ] 2.9 `bun run typecheck` clean *(deferred)*
 
 - [ ] 2.1 Convex: create cross-workspace `conic-dev` deployment, port schema from `oideachais-web/convex/schema.ts`
 - [ ] 2.2 Add 3 new Convex tables: `skill_assets`, `diagram_cache`, `badge_ledger`
@@ -138,12 +152,12 @@
 
 ## Phase 9 — Root-level NCCA PDF pipeline (Days 22-26, parallel with Phase 6) — 6 tasks
 
-- [ ] 9.1 `dlt/british_isles/ie/education/ncca_root_pdfs.py` — single-source DLT pipeline reading the 5 root-level PDFs
-- [ ] 9.2 `baml/education/pdfs/root_pdf_extraction.baml` — 5 new BAML functions
-- [ ] 9.3 `cocoindex/root_pdfs_embedding.py` — v1 App with 5 LanceDB tables
-- [ ] 9.4 `dagster/defs/2_materials/root_pdf_assets.py` — 5 new Dagster assets
-- [ ] 9.5 `agents/tuatha/agents/cross_subject_agent.py` — the cross-subject mastery agent
-- [ ] 9.6 `notebooks/root_pdfs_explorer.py` — marimo notebook for teacher view
+- [x] 9.1 `dlt/british_isles/ie/education/ncca_root_pdfs.py` — single-source DLT pipeline reading the 5 root-level PDFs — **SHIPPED**
+- [x] 9.2 `baml/education/pdfs/root_pdf_extraction.baml` — 5 new BAML functions (`ExtractKeyCompetencies`, `ExtractOnlineLearningPedagogy`, `ExtractCertificationGuidance`, `ExtractSCRAdvisory`, `ExtractProgrammeStatement`) — **SHIPPED**
+- [x] 9.3 `cocoindex/root_pdfs_embedding.py` — v1 App with 5 LanceDB tables — **SHIPPED**
+- [x] 9.4 `dagster/defs/2_materials/root_pdf_assets.py` — 5 new Dagster assets + 2 wrapper assets (root_pdfs_embedded + cross_subject_competencies_embedded) — **SHIPPED**
+- [x] 9.5 `agents/tuatha/agents/cross_subject_agent.py` — the cross-subject mastery agent — **SHIPPED**
+- [x] 9.6 `notebooks/root_pdfs_explorer.py` — marimo notebook for teacher view — **SHIPPED**
 
 ## Phase 10 — Celtic UI Design System (Days 27-32, parallel with Phase 7) — 18 tasks
 
@@ -186,21 +200,21 @@
 
 ## Phase 12 — Brown Ajah + Subnation Theming (Days 39-44, parallel with Phase 8) — 15 tasks
 
-- [ ] 12.1 Author `docs/CIANFHLOGHLAIM_LORE.md` (canonical lore — private, operator-only)
-- [ ] 12.2 Author `docs/BROWN_AJAH_THEMING.md` (canonical theming guide)
-- [ ] 12.3 Replace the Wheel_Of_Time_Map.png base image with an accurate British Isles map
-- [ ] 12.4 Render the 6 subnations as the 6 SVG regions on the map
-- [ ] 12.5 Render the 5 NCCA Key Competencies as 5 land-marks on the map
-- [ ] 12.6 Render the 8 NCCA subjects as 8 overlay buttons on the map
-- [ ] 12.7 Render the Wales subnation Dragon Banner
-- [ ] 12.8 Render the Connacht province as the "home base"
-- [ ] 12.9 Render the Éire subnation as the v1 active region
-- [ ] 12.10 Add the Brown Ajah badge (russet brown knotwork) to the Cianfhoghlaim OS window chrome
-- [ ] 12.11 Add the Amyrlin Seat orchestrator title
-- [ ] 12.12 Add the "Aes Sedai — servants of all" tagline
-- [ ] 12.13 Render the Tuatha'an wagon (the Cianfhoghlaim mobile client) as a small SVG icon
-- [ ] 12.14 Render the 4 NCCA provinces inside the Éire subnation
-- [ ] 12.15 Validate the lore against the user's privacy preference (no personal names in the public spec)
+- [x] 12.1 Author `docs/CIANFHLOGHLAIM_LORE.md` (canonical lore — private, operator-only) — **SHIPPED**
+- [x] 12.2 Author `docs/BROWN_AJAH_THEMING.md` (canonical theming guide) — **SHIPPED**
+- [x] 12.3 Replace the Wheel_Of_Time_Map.png base image with an accurate British Isles map — **SHIPPED as `<CiRealmMap>` (SVG-rendered)**
+- [x] 12.4 Render the 6 subnations as the 6 SVG regions on the map — **SHIPPED as `<CiSubnationRegion>`**
+- [x] 12.5 Render the 5 NCCA Key Competencies as 5 land-marks on the map — **SHIPPED as `<CiLandmark>`**
+- [x] 12.6 Render the 8 NCCA subjects as 8 overlay buttons on the map — **SHIPPED in the `/en/map` route**
+- [x] 12.7 Render the Wales subnation Dragon Banner — **SHIPPED as `<CiDragonBanner>`**
+- [ ] 12.8 Render the Connacht province as the "home base" *(deferred — the Cian lineage highlights are documented in lore; needs explicit component)*
+- [x] 12.9 Render the Éire subnation as the v1 active region — **SHIPPED in the `<CiRealmMap>` + `/en/map` route**
+- [x] 12.10 Add the Brown Ajah badge (russet brown knotwork) to the Cianfhoghlaim OS window chrome — **SHIPPED as `<CiBrownAjahBadge>` in `Header.tsx`**
+- [x] 12.11 Add the Amyrlin Seat orchestrator title — **SHIPPED as `<CiAmyrlinSeat>`**
+- [x] 12.12 Add the "Aes Sedai — servants of all" tagline — **SHIPPED in `Header.tsx`**
+- [x] 12.13 Render the Tuatha'an wagon (the Cianfhoghlaim mobile client) as a small SVG icon — **SHIPPED as `<CiTuathanWagon>` in `Header.tsx`**
+- [ ] 12.14 Render the 4 NCCA provinces inside the Éire subnation *(deferred — Connacht + Leinster + Munster + Ulster detail)*
+- [x] 12.15 Validate the lore against the user's privacy preference (no personal names in the public spec) — **SHIPPED in `CIANFHLOGHLAIM_LORE.md`**
 
 ---
 
