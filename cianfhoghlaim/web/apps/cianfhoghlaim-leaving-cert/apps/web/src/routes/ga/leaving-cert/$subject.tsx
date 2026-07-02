@@ -1,6 +1,5 @@
-// /ga/leaving-cert/$subject — Per-subject landing page (Irish version)
-// Mirror of the (en) route group. Bilingual toggle swaps EN ↔ GA per
-// docs/BROWN_AJAH_THEMING.md (the Esker Riada divider).
+// /ga/leaving-cert/{subject} — Per-subject landing page in Irish
+// Mirror of /en/leaving-cert/{subject} with bilingual EN+GA content.
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CiProgressRing } from "@cianfhoghlaim/ui";
@@ -11,13 +10,18 @@ export const Route = createFileRoute("/ga/leaving-cert/$subject")({
 
 const SUBJECT_NAMES_GA: Record<string, { en: string; ga: string }> = {
   mathematics: { en: "Mathematics", ga: "Mata" },
-  "applied_mathematics": { en: "Applied Mathematics", ga: "Mata Feidhmíoch" },
+  applied_mathematics: { en: "Applied Mathematics", ga: "Mata Feidhmíoch" },
   chemistry: { en: "Chemistry", ga: "Ceimic" },
   geography: { en: "Geography", ga: "Tíreolaíocht" },
   history: { en: "History", ga: "Stair" },
   english: { en: "English", ga: "Béarla" },
   gaeilge: { en: "Gaeilge", ga: "Gaeilge" },
   computer_science: { en: "Computer Science", ga: "Ríomheolaíocht" },
+  irish: { en: "Irish (legacy)", ga: "Gaeilge" },
+  biology: { en: "Biology", ga: "Bitheolaíocht" },
+  french: { en: "French", ga: "Fraincis" },
+  business: { en: "Business", ga: "Gnó" },
+  construction_studies: { en: "Construction Studies", ga: "Staidéar Tógála" },
 };
 
 const SECTIONS_GA = [
@@ -27,7 +31,7 @@ const SECTIONS_GA = [
   { id: "prioritisation", title_en: "Topic Prioritisation", title_ga: "Tosaíocht Ábhar" },
   { id: "exam-tips", title_en: "Exam Layout Tips", title_ga: "Leideanna le haghaidh an Scrúdaithe" },
   { id: "pdf-library", title_en: "PDF Library", title_ga: "Leabharlann PDF" },
-] as const;
+];
 
 function SubjectPageGA() {
   const { subject } = Route.useParams();

@@ -13,8 +13,10 @@ import "./app.css";
 import * as IndexRoute from "./routes/index";
 import * as MapRoute from "./routes/en/map";
 import * as KeyCompetenciesRoute from "./routes/en/key-competencies";
+import * as EmblemsRoute from "./routes/en/key-competencies.emblems";
 import * as AboutRoute from "./routes/en/about";
 import * as EiraicRoute from "./routes/en/eiraic-treasures";
+import * as SubjectGARoute from "./routes/ga/leaving-cert/$subject";
 import * as AboutRouteGA from "./routes/ga/about";
 import * as EiraicRouteGA from "./routes/ga/eiraic-treasures";
 
@@ -63,6 +65,18 @@ const keyCompRoute = createRoute({
   component: KeyCompetenciesRoute.default || KeyCompetenciesRoute.Route?.component || (() => <div>Key Competencies</div>),
 });
 
+const emblemsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/key-competencies/emblems",
+  component: EmblemsRoute.default || EmblemsRoute.Route?.component || (() => <div>5 Emblems</div>),
+});
+
+const subjectGARoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/ga/leaving-cert/$subject",
+  component: SubjectGARoute.default || SubjectGARoute.Route?.component || (() => <div>Subject (GA)</div>),
+});
+
 const eiraicRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/en/eiraic-treasures",
@@ -91,10 +105,12 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   mapRoute,
   keyCompRoute,
+  emblemsRoute,
   eiraicRoute,
   aboutRoute,
   aboutGARoute,
   eiraicGARoute,
+  subjectGARoute,
 ]);
 
 const router = createRouter({ routeTree });
