@@ -6,11 +6,111 @@
 > fix, etc. — lives at
 > [`infrastructure/archive/HEALTH_REPORT-2026-06-12.md`](../archive/HEALTH_REPORT-2026-06-12.md).
 >
-> **Last refreshed:** 2026-06-15 (the static report below is
-> the most recent manual snapshot; the dynamic counterpart
-> lives at
+> **Last refreshed:** 2026-07-02 (Session 5 cold-boot of Wave 1;
+> 11 containers running, 2 lakehouse services disabled for dev).
+> The dynamic counterpart lives at
 > [`infrastructure/audit/scripts/inventory-bunchloch.sh`](../audit/scripts/inventory-bunchloch.sh)
-> and is run on demand).
+> and is run on demand.
+
+## Session 5 — 2026-07-02 (Wave 1 cold-boot, dev mode)
+
+This session's output is the openspec change sequence
+[`2026-07-02-bunchloch-stack-bootstrap`](/Users/cianmacandeisigh/dev/kings_college_galway/openspec/changes/2026-07-02-bunchloch-stack-bootstrap/)
++ the 3 sibling changes
+(`2026-07-02-add-lancedb-and-logfire-stacks`,
+`2026-07-02-add-marimo-stack`,
+`2026-07-02-add-agent-surface-stacks`).
+The 4 changes produce 4 openspec change dirs + 9 compose
+edits + 1 new runbook.
+
+**Wave 1 bring-up status: 4 of 4 stacks UP, 11 containers
+running.** All in dev mode (no Locket, no live Infisical
+round-trip); uses `compose.dev.yaml` overlays + `.env.dev`
+files per stack.
+
+### Container inventory at 2026-07-02 (live, dev mode)
+
+#### `bunchloch` (MacBook M4 — `Cians-MacBook-Pro.local`) — 11 running containers
+
+| Container | Image | Port → Host | Health | Notes |
+|:--|:--|:--|:--|:--|
+| `dragonfly` | `docker.dragonflydb.io/dragonflydb/dragonfly:latest` | `0.0.0.0:6379` → `6379` | healthy | in-memory cache (replaces Redis for the cache layer) |
+| `falkordb` | `falkordb/falkordb:latest` | `0.0.0.0:6380` → `6379`, `0.0.0.0:3001` → `3000` | healthy | graph DB (port-shifted to :6380 to avoid dragonfly :6379 conflict); GRAPH.QUERY verified |
+| `falkordb-locket-dev` | `alpine:3.20` | — | healthy | no-op Locket sidecar (sleep infinity + always-healthy) |
+| `lancedb` | `ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3` | `0.0.0.0:8081` → `8080` | healthy | LanceDB table viewer (UI) |
+| `lakehouse-postgres` | `postgres:16-alpine` | `0.0.0.0:5433` → `5432` | healthy | centralised PG (12 databases) |
+| `lakehouse-clickhouse` | `clickhouse/clickhouse-server:24.3` | `127.0.0.1:8123` → `8123`, `127.0.0.1:9000` → `9000` | healthy | columnar engine |
+| `lakehouse-redis` | `redis:7-alpine` | `127.0.0.1:6390` → `6379` | healthy | queue (port-shifted to :6390 to avoid dragonfly :6379) |
+| `lakehouse-garage` | `dxflrs/garage:v1.0.1` | `0.0.0.0:3900-3904` → `3900-3904` | healthy | S3-compatible storage |
+| `lakehouse-lakekeeper` | `quay.io/lakekeeper/catalog:latest` | `0.0.0.0:8181` → `8181`, `0.0.0.0:9100` → `9000` | healthy | Iceberg REST catalog |
+| `lakehouse-lance-namespace` | `lakehouse-lance-namespace:latest` (built from `./lance-sidecar/Dockerfile`) | `0.0.0.0:8182` → `8182` | healthy | Lance adapter sidecar (local build) |
+| `lakehouse-lancedb-viewer` | `ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3` | `0.0.0.0:8082` → `8080` | healthy | in-stack LanceDB viewer (port-shifted to :8082) |
+| `lakehouse-locket-dev` | `alpine:3.20` | — | healthy | no-op Locket sidecar for the lakehouse stack |
+
+### Lakehouse services deliberately disabled in dev mode
+
+| Service | Reason | How to re-enable |
+|:--|:--|:--|
+| `lakehouse-olake` | `ghcr.io/olake-io/olake:0.1.5` is private (401 on GHCR); source build (`github.com/datazip-inc/olake@v0.1.5`) requires Go 1.25.11 + Java 17 + Maven + a pre-built `olake-iceberg-java-writer-0.0.1-SNAPSHOT.jar` (none available in this env). Disabled via `profiles: ["never-active"]` in the dev overlay. | Either (a) add credentials for `ghcr.io/olake-io/olake`, or (b) build the image locally and tag it. |
+| `lakehouse-nimtable` | Requires a `config.yaml` file that the base compose doesn't mount; crashes on startup with `FileNotFoundException: config.yaml`. Disabled the same way as olake. | Mount a valid `config.yaml` into `/var/lib/nimtable/`. |
+
+### Wave 1 bring-up procedure
+
+```bash
+cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar
+
+# Dragonfly + lancedb (no Locket needed)
+./scripts/stack.sh dragonfly up -d
+./scripts/stack.sh lancedb up -d
+
+# Falkordb (needs --env-file + sidecar + dev overlay for dev mode)
+docker compose \
+  --env-file stacks/falkordb/.env.dev \
+  -f stacks/falkordb/compose.yaml \
+  -f stacks/falkordb/sidecar.yaml \
+  -f stacks/falkordb/compose.dev.yaml \
+  up -d
+
+# Lakehouse (needs --env-file + sidecar + dev overlay; 8 services UP, 2 disabled)
+docker compose \
+  --env-file stacks/lakehouse/.env.dev \
+  -f stacks/lakehouse/compose.yaml \
+  -f stacks/lakehouse/sidecar.yaml \
+  -f stacks/lakehouse/compose.dev.yaml \
+  up -d
+```
+
+### Known issues discovered + fixed in this session (10 fixes)
+
+1. **mlflow port** was actually fine (false positive from earlier diagnostic)
+2. **cognee** image: `cognee/cognee:latest` → `cognee/cognee:1.2.2`
+3. **olmocr** image: `allenai/olmocr:latest` → `alleninstituteforai/olmocr:0.4.27` (also fixed wrong registry path; `allenai/olmocr` doesn't exist on Docker Hub)
+4. **paddleocr** image: `paddlecloud/paddleocr:latest` → `paddlecloud/paddleocr:2.6-cpu-latest`
+5. **docling-serve** image: `ghcr.io/ds4sd/docling-serve:latest` → `v0.4.0`
+6. **lancedb/rclone** image: `rclone/rclone:latest` → `rclone/rclone:v1.74-stable`
+7. **dragonfly** compose: split semicolon-separated healthcheck into 4 proper YAML lines
+8. **marimo** compose: fixed wrong registry (`marimo/marimo` → `ghcr.io/marimo-team/marimo:0.11.19`), v3 volume path, v4 notebook path
+9. **hermes / openclaw / openchamber**: removed `@sha256:0000...` placeholder digests; fixed openclaw tag (`1.0.0` doesn't exist → `2026.2.6`)
+10. **lakehouse compose**: nimtable `0.1.6` → `:latest`; `REDIS_PORT` 6379→6390; `LANCEDB_VIEWER_PORT` 8081→8082; lakekeeper-migrate `networks:` block added (was on default network, couldn't reach postgres)
+
+### Deferred for separate changes (this session's stop list)
+
+- **dots-ocr** (compose references `dots-ocr/dots-ocr:latest` which doesn't exist on Docker Hub; upstream `rednote-hilab/dots.ocr` is source-only)
+- **browser** stack (missing 5 of 6 GOLD_STANDARD files)
+- **Wave 2 (12 stacks) + Wave 3 (4 stacks) + Wave 4 (3 stacks)** — all require their own Locket/Infisical overlays or Locket setup
+- **mailcow-dockerized, mlx-omni, ollama, letta** — separate future changes
+- **Komodo IaC registration** — blocked on the in-flight `2026-07-01-bonneagar-v5-drift-refactor-and-komodo-gitops` change
+
+### Related openspec changes in this session
+
+- `2026-07-02-bunchloch-stack-bootstrap` (main repo, commit 70e3110a7) — 19 stacks, 4 waves
+- `2026-07-02-add-lancedb-and-logfire-stacks` (main repo, commit 70e3110a7) — 2 stacks + 5 image pins
+- `2026-07-02-add-marimo-stack` (main repo, commit 70e3110a7) — 1 stack + 3 fixes
+- `2026-07-02-add-agent-surface-stacks` (main repo, commit 70e3110a7) — 3 stacks + new capability spec
+- `516e1054a` (bonneagar) — 9 compose edits + 1 runbook
+- `a14f52ca8` (bonneagar) — dragonfly YAML fix
+- `c008e40d7` (bonneagar) — falkordb + lakehouse dev overlays
+- `c8478d54a` (bonneagar) — lakehouse 4 compose fixes
 
 ## Session 4 — 2026-06-15 (static audit + deferred deploy plan)
 
