@@ -16,6 +16,7 @@ import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
 import { Route as EnEiraicTreasuresRouteImport } from './routes/en/eiraic-treasures'
+import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
 import { Route as EnBrownAjahRouteImport } from './routes/en/brown-ajah'
 import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
@@ -62,6 +63,11 @@ const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
 const EnEiraicTreasuresRoute = EnEiraicTreasuresRouteImport.update({
   id: '/en/eiraic-treasures',
   path: '/en/eiraic-treasures',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnDiagramsRoute = EnDiagramsRouteImport.update({
+  id: '/en/diagrams',
+  path: '/en/diagrams',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnBrownAjahRoute = EnBrownAjahRouteImport.update({
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
   '/en/brown-ajah': typeof EnBrownAjahRouteWithChildren
+  '/en/diagrams': typeof EnDiagramsRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
   '/en/brown-ajah': typeof EnBrownAjahRouteWithChildren
+  '/en/diagrams': typeof EnDiagramsRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/en/about': typeof EnAboutRoute
   '/en/brown-ajah': typeof EnBrownAjahRouteWithChildren
+  '/en/diagrams': typeof EnDiagramsRoute
   '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
@@ -198,6 +207,7 @@ export interface FileRouteTypes {
     | '/'
     | '/en/about'
     | '/en/brown-ajah'
+    | '/en/diagrams'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/'
     | '/en/about'
     | '/en/brown-ajah'
+    | '/en/diagrams'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/'
     | '/en/about'
     | '/en/brown-ajah'
+    | '/en/diagrams'
     | '/en/eiraic-treasures'
     | '/en/key-competencies'
     | '/en/map'
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EnAboutRoute: typeof EnAboutRoute
   EnBrownAjahRoute: typeof EnBrownAjahRouteWithChildren
+  EnDiagramsRoute: typeof EnDiagramsRoute
   EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
   EnMapRoute: typeof EnMapRoute
@@ -322,6 +335,13 @@ declare module '@tanstack/react-router' {
       path: '/en/eiraic-treasures'
       fullPath: '/en/eiraic-treasures'
       preLoaderRoute: typeof EnEiraicTreasuresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/diagrams': {
+      id: '/en/diagrams'
+      path: '/en/diagrams'
+      fullPath: '/en/diagrams'
+      preLoaderRoute: typeof EnDiagramsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/brown-ajah': {
@@ -476,6 +496,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EnAboutRoute: EnAboutRoute,
   EnBrownAjahRoute: EnBrownAjahRouteWithChildren,
+  EnDiagramsRoute: EnDiagramsRoute,
   EnEiraicTreasuresRoute: EnEiraicTreasuresRouteWithChildren,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
   EnMapRoute: EnMapRoute,
