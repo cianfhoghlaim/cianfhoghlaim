@@ -62,7 +62,17 @@ RUN uv pip install --system \
     "dagster-duckdb" \
     "dagster-k8s" \
     "dagster-aws" \
-    "dagster-dlt"
+    "dagster-dlt" \
+    "dagster-dbt" \
+    # Pin grpcio + protobuf to keep the gencode/runtime compatible
+    # (NEW 2026-07-04 in Session 10; without these pins, uv pulls
+    # grpcio 1.81.x which has protobuf 6.33.5 gencode but the runtime
+    # stays at 5.29.6 → `dagster definitions validate` fails with
+    # `Detected incompatible Protobuf Gencode/Runtime versions`).
+    "grpcio<1.70,>=1.66.2" \
+    "grpcio-health-checking<1.70,>=1.66.2" \
+    "grpcio-tools<1.70,>=1.66.2" \
+    "protobuf<6,>=5.26"
 
 # Layer 2: Cianfhoghlaim deps (BAML + DuckDB + LanceDB + pyarrow +
 # LLM SDKs). These are the app-side deps that the dagster instance
