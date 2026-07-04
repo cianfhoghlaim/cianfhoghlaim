@@ -98,3 +98,4 @@ Edges: `HAS_TOPIC`, `ASSESSED_BY`, `EVOLVED_TO`,
 - **Not building the dagster-local image** — the 11 Python packages added in Change A are picked up on next `docker build`.
 - **Not wiring the per-subject ADK agents** (math_agent / appm_agent / etc.) — deferred to `2026-07-XX-wire-adk-agents-to-lc-pipeline`.
 - **Not wiring the marimo notebooks to live data** — the notebooks use stub data; follow-up `2026-07-XX-wire-marimo-to-live-data` change.
+- **Not loading the new LC5 + Gemini 6-corpus assets in the dagster daemon yet.** The new assets use `from dagster import ...` which gets shadowed by `cianfhoghlaim/dagster/` (a legacy code tree) when cianfhoghlaim is on sys.path. The fix (renaming `cianfhoghlaim/dagster/` to `cianfhoghlaim/legacy_dagster/` or similar) is a separate refactor tracked as `2026-07-XX-rename-cianfhoghlaim-dagster-to-avoid-shadowing`. The .py asset files are correct and would load in any environment without the shadowing.
