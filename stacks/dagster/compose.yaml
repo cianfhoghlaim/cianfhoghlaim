@@ -26,8 +26,12 @@ services:
     # dagster in dev mode).
     image: dagster-local:latest
     build:
-      context: .
-      dockerfile: Dockerfile.dagster
+      # Context: 2 dirs up (the repo root) so the Dockerfile can
+      # `COPY cianfhoghlaim` from `../../cianfhoghlaim` (per the
+      # 2026-07-03-infrastructure-foundation change). The Dockerfile
+      # is still in the stack dir.
+      context: ../..
+      dockerfile: bonneagar/stacks/dagster/Dockerfile.dagster
     container_name: dagster-unified
     restart: unless-stopped
     # Run as root in dev so the dagster-home volume (root-owned) is
@@ -38,6 +42,9 @@ services:
       - "${DAGSTER_PORT:-3335}:3000"
     environment:
       DAGSTER_HOME: /opt/dagster/home
+      # PYTHONPATH so the cianfhoghlaim package (mounted at /opt/cianfhoghlaim)
+      # is importable as `import cianfhoghlaim` (the parent dir /opt is on the path)
+      PYTHONPATH: /opt
       # DuckLake (via the cianfhoghlaim DLT destinations factory)
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
@@ -90,8 +97,8 @@ services:
     # policy — no `ghcr.io/cianfhoghlaim/*`).
     image: dagster-local:latest
     build:
-      context: .
-      dockerfile: Dockerfile.dagster
+      context: ../..
+      dockerfile: bonneagar/stacks/dagster/Dockerfile.dagster
     container_name: dagster-daemon
     restart: unless-stopped
     # Run as root in dev (see dagster webserver comment).
@@ -99,6 +106,7 @@ services:
     command: ["dagster-daemon", "run"]
     environment:
       DAGSTER_HOME: /opt/dagster/home
+      PYTHONPATH: /opt
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
       DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
