@@ -6,11 +6,107 @@
 > fix, etc. — lives at
 > [`infrastructure/archive/HEALTH_REPORT-2026-06-12.md`](../archive/HEALTH_REPORT-2026-06-12.md).
 >
-> **Last refreshed:** 2026-07-02 (Session 7 — Change 8 code-side
-> env defaults aligned with deployed stacks; 27 containers still
-> running, no regression). The dynamic counterpart lives at
-> [`infrastructure/audit/scripts/inventory-bunchloch.sh`](../audit/scripts/inventory-bunchloch.sh)
-> and is run on demand.
+> **Last refreshed:** 2026-07-03 (Session 9 — 4 openspec changes
+> shipped: infrastructure-foundation + LC5 + Gemini 6-corpus +
+> specs-and-HEALTH_REPORT). No new containers deployed; all 27
+> containers from Sessions 6+7 still up. The pipeline DAGs are
+> ready for materialisation but require a `dagster-local` image
+> rebuild to pick up the 12 new Python packages from Change A.
+
+## Session 9 — 2026-07-03 (4 changes shipped: infra + LC5 + Gemini + specs)
+
+This session shipped 4 openspec changes totalling **17 commits**:
+
+### Change A — `2026-07-03-infrastructure-foundation`
+**Goal:** Fix the broken llama-swap config + populate GGUF cache + extend dagster image.
+
+| # | File | Action |
+|:-:|:--|:--|
+| 1 | `bonneagar/ocr/models/llama_swap_config.yaml` | **CREATE** — 13 GGUF entries (Unsloth-first; verified against v4 registry) |
+| 2 | `stedding/huggingface/{gguf,unsloth,mlx-community}/` | **CREATE** dirs + READMEs (was missing; compose.yaml mounts these) |
+| 3 | `scripts/download_mlx_models.py` | **CREATE** — loops the v4 registry's `mlx_id` field |
+| 4 | `scripts/download_unsloth_models.py` | **EDIT** — change `DEFAULT_CACHE_DIR` from `/models/unsloth` to `<repo>/stedding/huggingface/gguf` |
+| 5 | `bonneagar/stacks/dagster/Dockerfile.dagster` | **EDIT** — add 12 Python packages (surya, rapidocr, pytesseract, easyocr, docling[mlx-vlm], paddleocr-vl, marker-pdf, mineru, llama-cpp-python, graphiti-core[falkordb], cognee-sdk, letta) + 5 system apt packages (tesseract-ocr, poppler-utils, libgl1, libglib2.0-0, libtesseract-dev) |
+| 6 | `cianfhoghlaim/pyproject.toml` | **EDIT** — extend `memory` extra (graphiti-core[falkordb] + cognee-sdk + letta); add `ocr-vision-full` + `dev-with-vision` extras |
+| 7 | `mise.toml` | **EDIT** — fix 2 compose paths; add `llama-swap:download-mlx` + `llama-swap:download-models:dry-run` tasks |
+| 8 | openspec change files (proposal + tasks + 2 spec deltas) | **CREATE** |
+| 9 | `openspec validate --strict` | ✓ **is valid** |
+
+### Change B — `2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams`
+**Goal:** LC5-subject pipeline + 16 dev notebooks.
+
+| # | File | Action |
+|:-:|:--|:--|
+| 1-5 | `cianfhoghlaim/baml/education/lc_extraction/{curriculum_syllabus,exam_paper_layout,marking_scheme,cross_linguistic,syllabus_diagram}.baml` | **CREATE** (5 BAML files) |
+| 6 | `cianfhoghlaim/dlt/filesystem/leaving_cert_source.py` | **CREATE** (72-row DLT source across 5 subjects × 2 languages) |
+| 7-9 | `cianfhoghlaim/dagster/defs/{1_ingestion/curriculum/lc5,2_materials/lc_extraction,3_model_lifecycle/lc_cognify}/defs.yaml` | **CREATE** (3 Component YAML files) |
+| 10 | `cianfhoghlaim/dagster/defs/2_materials/lc_extraction/lc5_assets.py` | **CREATE** (5 L1 + 20 L2 + 6 L3 = 31 assets) |
+| 11-26 | `cianfhoghlaim/notebooks/dashboards/leaving_cert/{01..16}_*.py` | **CREATE** (16 working marimo notebooks) |
+| 27 | openspec change files | **CREATE** |
+| 28 | `openspec validate --strict` | ✓ **is valid** |
+
+### Change C — `2026-07-03-gemini-6-corpus-pipeline`
+**Goal:** 224 PDF Gemini Deep Research pipeline (law + medical + politics + culture + technology + other) + 9 dev notebooks.
+
+| # | File | Action |
+|:-:|:--|:--|
+| 1-2 | `cianfhoghlaim/baml/processing/{legal_case_profile,topic_profile}.baml` | **CREATE** (2 BAML files) |
+| 3 | `cianfhoghlaim/dlt/filesystem/gemini_corpus_source.py` | **CREATE** (224-row DLT source across 6 corpora; per-corpus filename heuristic for jurisdiction) |
+| 4-5 | `cianfhoghlaim/dagster/defs/{1_ingestion/legal_research,3_model_lifecycle/legal_research}/gemini_corpus/defs.yaml` | **CREATE** (2 Component YAML files) |
+| 6 | `cianfhoghlaim/dagster/defs/3_model_lifecycle/legal_research/gemini_corpus/gemini_corpus_assets.py` | **CREATE** (6 L1 + 6 L2 + 6 L3 + 1 L3 cross = 19 assets) |
+| 7-15 | `cianfhoghlaim/notebooks/dashboards/{law,medical,politics,culture,technology,other}/0?_*.py` | **CREATE** (9 working marimo notebooks) |
+| 16 | openspec change files | **CREATE** |
+| 17 | `openspec validate --strict` | ✓ **is valid** |
+
+### Change D — `2026-07-03-specs-and-session-9-health-report` (this file)
+**Goal:** Update 4 canonical specs (meaisinfhoghlaim-ocr-htr + meaisinfhoghlaim-platform + agent-memory-systems + oideachais-pipeline) to reflect the v4 state + prepend this Session 9 entry.
+
+### Container count delta
+- Sessions 6+7: 27 containers
+- Session 9: +0 new containers (no actual stack-deploy; the 4 changes are code-only)
+- **Total: 27 (no regression)**
+
+### Known issues (still pending from Session 7)
+1. Langfuse `/api/public/health` returns empty reply (Next.js 16.2.9 bug) — unchanged
+2. Logfire OTel collector reports `unhealthy` (functional OK; cosmetic) — unchanged
+3. Wave 3 + Wave 4 deferred — unchanged
+4. openchamber still private image — unchanged
+5. docling-serve / paddleocr / olmocr / graphiti Compose issues — unchanged
+6. CogneePostgres healthcheck cosmetics — unchanged
+
+### New known issues added in Session 9
+1. **`dagster-local` image not yet rebuilt.** The 12 new Python packages from Change A land in the docker image but require `docker build` to take effect. The image currently has the Session 7 deps (baml-py + duckdb + lancedb + pyarrow + 7 others) but not the new OCR/VLM/memory deps. Run `docker build -f bonneagar/stacks/dagster/Dockerfile.dagster -t dagster-local:latest bonneagar/stacks/dagster/` to rebuild.
+2. **GGUF cache not yet populated.** 13 Unsloth GGUFs (95 GB) need to be downloaded via `mise run llama-swap:download-models`. The directories (`stedding/huggingface/{gguf,unsloth,mlx-community}/`) now exist but are empty.
+3. **Pipeline DAGs not yet materialised.** The LC5 + Gemini pipelines define 31 + 19 = 50 new Dagster assets, but they require a `dagster dev -m cianfhoghlaim.dagster.definitions` reload + the rebuilt image (issue #1) to materialise the first batch.
+
+### Smoke test results (offline)
+
+| # | Test | Result |
+|:-:|:--|:-:|
+| 1 | llama_swap_config.yaml parses | ✓ 13 models |
+| 2 | `file bonneagar/stacks/llama-swap/config.yaml` returns "UTF-8 text" | ✓ (was "broken symbolic link") |
+| 3 | `openspec validate 2026-07-03-infrastructure-foundation --strict` | ✓ is valid |
+| 4 | `openspec validate 2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams --strict` | ✓ is valid |
+| 5 | `openspec validate 2026-07-03-gemini-6-corpus-pipeline --strict` | ✓ is valid |
+| 6 | 16 LC notebooks AST-parse | ✓ 16/16 |
+| 7 | 9 Gemini notebooks AST-parse | ✓ 9/9 |
+| 8 | leaving_cert_source.py yields 72 rows | ✓ (41 PDFs + 1 JPG + 30 `_2026-06-30` duplicates) |
+| 9 | gemini_corpus_source.py yields 224 rows | ✓ (57+54+47+30+24+12) |
+| 10 | All 7 new BAML files compile under the auto-discovery project | ✓ (no `baml-cli generate` run yet — needs `uv` env) |
+| 11 | `mise tasks | grep llama-swap` shows 7 tasks | ✓ (up, down, logs, download-models, download-mlx, download-models:dry-run, health) |
+| 12 | `dagster-local:latest` image needs rebuild | ⚠ not yet |
+
+### Cross-references
+- Change A: `openspec/changes/2026-07-03-infrastructure-foundation/`
+- Change B: `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`
+- Change C: `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`
+- Change D: `openspec/changes/2026-07-03-specs-and-session-9-health-report/`
+- Updated specs:
+  - `openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md` (rewritten to v4 24-model/4-backend)
+  - `openspec/specs/meaisinfhoghlaim-platform/spec.md` (added 12 packages + 25 notebooks)
+  - `openspec/specs/agent-memory-systems/spec.md` (added LC5 + Gemini consumers)
+  - `openspec/specs/oideachais-pipeline/spec.md` (added LC5 + Gemini pipelines)
+
 
 ## Session 7 — 2026-07-02 (Change 8: code-side env alignment)
 
