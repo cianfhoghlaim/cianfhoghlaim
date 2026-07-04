@@ -4,10 +4,9 @@
 # edge types (celtic-tutor → mythology, research → statistics, etc.)
 # are computed at L2 time and persisted to FalkorDB. This L3
 # placeholder exists for lineage visibility.
-type: dagster.AssetSpec
-attributes:
-  key: "3_model_lifecycle/cross_archive/edges"
-  group_name: 3_model_lifecycle/cross_archive
-  description: "L3 placeholder: the 3 cross-archive FalkorDB edge types are computed at L2 time; this placeholder preserves the lineage witness."
-  automation_condition:
-    type: eager
+#
+# Per the 2026-07-04 fix, this file is now a DefinitionsFolderComponent
+# (no attributes) — the previous `type: dagster.AssetSpec` was an
+# ABCMeta placeholder that the Component loader rejected.
+type: dagster.DefsFolderComponent
+attributes: {}

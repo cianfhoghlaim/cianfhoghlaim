@@ -75,7 +75,7 @@ CORPUS_BAML_DEFAULT = {
 
 
 @asset(group_name="1_ingestion/legal_research/gemini_corpus/law", description="Ingest 57 Gemini law-research PDFs")
-def gemini_law_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_law_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for the law corpus (57 PDFs)."""
     if not DLT_AVAILABLE:
         return {"rows": 0, "corpus": "law"}
@@ -83,35 +83,35 @@ def gemini_law_ingested(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(group_name="1_ingestion/legal_research/gemini_corpus/medical", description="Ingest 54 Gemini medical-research PDFs")
-def gemini_medical_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_medical_ingested(context) -> dict[str, Any]:
     if not DLT_AVAILABLE:
         return {"rows": 0, "corpus": "medical"}
     return {"rows": 54, "corpus": "medical"}
 
 
 @asset(group_name="1_ingestion/legal_research/gemini_corpus/politics", description="Ingest 47 Gemini politics-research PDFs")
-def gemini_politics_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_politics_ingested(context) -> dict[str, Any]:
     if not DLT_AVAILABLE:
         return {"rows": 0, "corpus": "politics"}
     return {"rows": 47, "corpus": "politics"}
 
 
 @asset(group_name="1_ingestion/legal_research/gemini_corpus/culture", description="Ingest 30 Gemini culture-research PDFs")
-def gemini_culture_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_culture_ingested(context) -> dict[str, Any]:
     if not DLT_AVAILABLE:
         return {"rows": 0, "corpus": "culture"}
     return {"rows": 30, "corpus": "culture"}
 
 
 @asset(group_name="1_ingestion/legal_research/gemini_corpus/technology", description="Ingest 24 Gemini technology-research PDFs")
-def gemini_technology_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_technology_ingested(context) -> dict[str, Any]:
     if not DLT_AVAILABLE:
         return {"rows": 0, "corpus": "technology"}
     return {"rows": 24, "corpus": "technology"}
 
 
 @asset(group_name="1_ingestion/legal_research/gemini_corpus/other", description="Ingest 12 Gemini other-research PDFs")
-def gemini_other_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_other_ingested(context) -> dict[str, Any]:
     if not DLT_AVAILABLE:
         return {"rows": 0, "corpus": "other"}
     return {"rows": 12, "corpus": "other"}
@@ -127,7 +127,7 @@ def _make_corpus_baml_asset(corpus: str, baml_function: str):
         group_name=f"2_materials/gemini_baml/gemini_corpus/{corpus}",
         description=f"BAML {baml_function} for the {corpus} corpus",
     )
-    def gemini_baml_asset(context: AssetExecutionContext) -> dict[str, Any]:
+    def gemini_baml_asset(context) -> dict[str, Any]:
         if not BAML_AVAILABLE:
             return {"rows": 0, "corpus": corpus, "baml_function": baml_function}
         # Real call: b.<baml_function>(source_pdf=..., corpus=corpus, jurisdiction=...)
@@ -147,49 +147,49 @@ for _corpus, _fn in CORPUS_BAML_DEFAULT.items():
 
 
 @asset(group_name="3_model_lifecycle/gemini_cognify/gemini_corpus/law", description="Cognee cognify for law corpus (57 PDFs → 57 episodes)")
-def gemini_law_cognified(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_law_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "corpus": "law"}
     return {"entities": 0, "corpus": "law"}
 
 
 @asset(group_name="3_model_lifecycle/gemini_cognify/gemini_corpus/medical", description="Cognee cognify for medical corpus (54 PDFs)")
-def gemini_medical_cognified(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_medical_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "corpus": "medical"}
     return {"entities": 0, "corpus": "medical"}
 
 
 @asset(group_name="3_model_lifecycle/gemini_cognify/gemini_corpus/politics", description="Cognee cognify for politics corpus (47 PDFs)")
-def gemini_politics_cognified(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_politics_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "corpus": "politics"}
     return {"entities": 0, "corpus": "politics"}
 
 
 @asset(group_name="3_model_lifecycle/gemini_cognify/gemini_corpus/culture", description="Cognee cognify for culture corpus (30 PDFs)")
-def gemini_culture_cognified(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_culture_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "corpus": "culture"}
     return {"entities": 0, "corpus": "culture"}
 
 
 @asset(group_name="3_model_lifecycle/gemini_cognify/gemini_corpus/technology", description="Cognee cognify for technology corpus (24 PDFs)")
-def gemini_technology_cognified(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_technology_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "corpus": "technology"}
     return {"entities": 0, "corpus": "technology"}
 
 
 @asset(group_name="3_model_lifecycle/gemini_cognify/gemini_corpus/other", description="Cognee cognify for other corpus (12 PDFs)")
-def gemini_other_cognified(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_other_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "corpus": "other"}
     return {"entities": 0, "corpus": "other"}
 
 
 @asset(group_name="3_model_lifecycle/gemini_cross_corpus/gemini_corpus", description="Bi-temporal Graphiti stream + FalkorDB cross-corpus graph")
-def gemini_cross_corpus_graphiti_stream(context: AssetExecutionContext) -> dict[str, Any]:
+def gemini_cross_corpus_graphiti_stream(context) -> dict[str, Any]:
     """Cross-corpus Graphiti temporal stream — 6 corpora merged.
 
     `event_time` is extracted from each PDF's prose via BAML

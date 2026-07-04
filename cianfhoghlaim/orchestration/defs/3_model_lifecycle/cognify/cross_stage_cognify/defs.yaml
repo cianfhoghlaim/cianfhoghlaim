@@ -5,10 +5,9 @@
 # emitted by the L2 materials Layer (BAML extraction) and the L4
 # marimo dashboards (cross-stage cognify report). The L3 placeholder
 # exists for lineage visibility.
-type: dagster.AssetSpec
-attributes:
-  key: "3_model_lifecycle/cognify/cross_stage_cognify"
-  group_name: 3_model_lifecycle/cognify
-  description: "L3 placeholder: the 5-stage cross-stage cognify is implemented in the L2 + L4 layers; this placeholder preserves the lineage witness."
-  automation_condition:
-    type: eager
+#
+# Per the 2026-07-04 fix, this file is now a DefinitionsFolderComponent
+# (no attributes) — the previous `type: dagster.AssetSpec` was an
+# ABCMeta placeholder that the Component loader rejected.
+type: dagster.DefsFolderComponent
+attributes: {}
