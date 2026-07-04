@@ -1,0 +1,20 @@
+# defs/5_agent_ops/agno/agui_curriculum_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the agui_curriculum_agent (agno) agent.
+# The Component emits 5 Dagster assets:
+# - agent_health_agui_curriculum_agent
+# - agent_routing_agui_curriculum_agent
+# - agent_memory_agui_curriculum_agent
+# - agent_event_agui_curriculum_agent
+# - agent_trace_agui_curriculum_agent
+type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: agui_curriculum_agent
+  framework: agno
+  tools: ['agui_streaming_tool', 'copilot_kit_bridge_tool']
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.agui_curriculum
+  langfuse_drop_smoke_spans: true
+  routing_keywords: ['ag-ui', 'streaming', 'copilot', 'react']

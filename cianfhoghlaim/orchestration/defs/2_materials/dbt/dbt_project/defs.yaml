@@ -1,0 +1,16 @@
+# defs/2_materials/dbt/weekly_downloads/defs.yaml
+#
+# L2 DbtProjectComponent for the 3 dbt-duckdb models
+# (weekly_downloads, language_distribution, ocr_confidence_by_model).
+# Replaces the hand-written @dbt_assets decorator + DbtCliResource
+# in the legacy cianfhoghlaim.orchestration/definitions.py.
+type: dagster_dbt.DbtProjectComponent
+attributes:
+  dbt:
+    project_dir: cianfhoghlaim/dbt_project
+  asset_attributes:
+    key: "2_materials/dbt/{{ node.name }}"
+    group_name: 2_materials/dbt
+    automation_condition:
+      type: cron
+      cron_schedule: "0 6 * * *"
