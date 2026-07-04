@@ -178,3 +178,45 @@ the canonical default.
 - [`.agents/skills/memgraph/SKILL.md`](../../.agents/skills/memgraph/SKILL.md)
 - [`sruth/oideachais/memory/`](../../sruth/oideachais/memory/) (application-layer wrapper)
 - [`sruth/meaisinfhoghlaim/agents/`](../../sruth/meaisinfhoghlaim/agents/) (model-layer agents)
+
+## ADDED Requirements (v4 extension — 2026-07-03)
+
+### Requirement: LC5 + Gemini consumers of Cognee + Graphiti + FalkorDB
+
+The 3 memory backends (Cognee + Graphiti + FalkorDB) SHALL be
+consumed by the new LC5-subject pipeline (5 subjects) and the new
+Gemini 6-corpus pipeline (224 PDFs across 6 corpora) introduced in
+the 2026-07-03 changes.
+
+#### Scenario: Cognee cognify runs over 5 LC subjects + 6 Gemini corpora
+
+- **GIVEN** the LC5 + Gemini 6-corpus pipelines (per
+  `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`
+  and `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`)
+- **WHEN** the L3 layer materialises
+- **THEN** 5 + 6 = 11 Cognee datasets SHALL be created:
+  - 5 LC: `oideachais_<subject>` for chemistry / computer_science /
+    gaeilge / geography / mathematics
+  - 6 Gemini: `gemini_<corpus>_research` for law / medical /
+    politics / culture / technology / other
+
+#### Scenario: Graphiti temporal streams for LC5 + Gemini
+
+- **GIVEN** the same LC5 + Gemini pipelines
+- **WHEN** Graphiti adds episodes
+- **THEN** 5 LC Graphiti streams + 6 Gemini Graphiti streams = 11
+  total streams SHALL be initialised
+- **AND** for the Gemini pipeline, the `event_time` SHALL be
+  extracted from PDF prose (NOT file mtime) per the user decision
+  "PDF content only"
+
+#### Scenario: FalkorDB cross-subject graph for LC5 + cross-corpus for Gemini
+
+- **GIVEN** the same LC5 + Gemini pipelines
+- **WHEN** FalkorDB labels are queried
+- **THEN** `falkordb_label="lc5_knowledge_graph"` SHALL contain
+  the Subject → Topic → LO → Year → Q graph (5 LC subjects merged)
+- **AND** `falkordb_label="gemini_6_corpus_kg"` SHALL contain the
+  Corpus → CaseProfile → Party → Jurisdiction → Statute → TimelineEvent
+  graph (6 Gemini corpora merged)
+
