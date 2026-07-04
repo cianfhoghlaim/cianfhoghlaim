@@ -52,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
             "cianfhoghlaim-baml",
             "cianfhoghlaim-marimo",
             "cianfhoghlaim-stack-doctor",
-            "cianfhoghlaim-dagster",
+            "cianfhoghlaim.orchestration",
             "cianfhoghlaim-dlt",
             "cianfhoghlaim-cocoindex",
         ):

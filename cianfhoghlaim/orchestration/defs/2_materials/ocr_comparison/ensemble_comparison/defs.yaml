@@ -1,0 +1,14 @@
+# defs/2_materials/ocr_comparison/ensemble_comparison/defs.yaml
+#
+# L2 CelticMaterialsComponent for the OCR ensemble comparison
+# (24 OCR models × 6 backends). Asserts row_count >= 100 (the 100-row
+# upsert batch minimum per the embedding-pipeline skill).
+type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: ocr.ensemble.compare
+  source_asset: 1_ingestion/curriculum/ie/education
+  partition_strategy: by_cycle
+  asset_check_kind: row_count
+  subject: ocr_ensemble
+  language: en
+  automation_cron: "0 5 * * *"

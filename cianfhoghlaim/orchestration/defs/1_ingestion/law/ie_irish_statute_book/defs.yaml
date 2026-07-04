@@ -1,0 +1,11 @@
+# defs/1_ingestion/law/ie_irish_statute_book/defs.yaml
+#
+# L1 CelticIngestionComponent for the Irish Statute Book (IE law).
+# Non-high-churn source, so state_backed: false (default).
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.law.irish_statute_book
+  domain: law
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 4 * * *"

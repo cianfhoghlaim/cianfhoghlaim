@@ -4,7 +4,7 @@ Agent Registry CocoIndex v1 App — the canonical agent discovery surface.
 Indexes the 7 `opencode.json` `agent.*` blocks + the 10 `mcp.*` server
 blocks into a new `agent_registry` LanceDB table, embedded with
 BAAI/bge-m3 1024-dim. Companion Dagster asset: `agent_registry_index`
-in `cianfhoghlaim/dagster/assets/agent_registry_assets.py`.
+in `cianfhoghlaim.orchestration/assets/agent_registry_assets.py`.
 
 This is one of the 4 v1 Apps added in the
 `2026-06-30-agent-platform-cluster-hermes-cocoindex` change (the other 3

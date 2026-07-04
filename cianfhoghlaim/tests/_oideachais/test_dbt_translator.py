@@ -11,7 +11,7 @@ translator are validated here:
 from __future__ import annotations
 
 from dagster import AssetKey
-from cianfhoghlaim.dagster.dbt_translator import CelticDagsterDbtTranslator
+from cianfhoghlaim.orchestration.dbt_translator import CelticDagsterDbtTranslator
 
 
 def _make_props(name: str) -> dict:
