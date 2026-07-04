@@ -90,13 +90,11 @@ RUN uv pip install --system \
     # (cianfhoghlaim/meaisinfhoghlaim/models/registry.py). The Unsloth GGUF
     # models are served by llama-swap on :8080; these are for the 6
     # TRANSFORMERS-backend models + in-process GGUF use cases.
-    "surya-ocr>=0.20.0" \
     "rapidocr>=3.9.0" \
     "pytesseract>=0.3.10" \
     "easyocr>=1.7.2" \
-    "docling[mlx-vlm]>=2.0.0" \
-    "paddleocr-vl>=1.0.0" \
-    "marker-pdf>=1.10.2" \
+    "docling>=2.0.0" \
+    "paddleocr>=3.0.0" \
     "mineru>=3.4" \
     "llama-cpp-python>=0.3.0" \
     # ─── NEW 2026-07-03: Agent memory Python packages ────────────────────────
@@ -104,7 +102,7 @@ RUN uv pip install --system \
     # this change). cognee-sdk complements the cognee/ stack. letta is the
     # 3rd memory backend per the agent-fleet-orchestration skill.
     "graphiti-core[falkordb]>=0.29.2" \
-    "cognee-sdk>=1.0.0" \
+    "cognee>=1.0.0" \
     "letta>=0.5" \
     # HF CLI for model downloads (used by download_unsloth_models.py)
     "huggingface-hub>=0.27.0"
