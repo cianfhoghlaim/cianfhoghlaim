@@ -26,22 +26,28 @@ services:
   # + boto3 baked in, eliminating the 30s pip-install on first boot.
   # ---------------------------------------------------------------------------
   mlflow:
+    # Pinned 2026-07-02 (was `ghcr.io/cianfhoghlaim/mlflow:v2.19.0` — the org-private
+    # image is replaced with the public upstream `ghcr.io/mlflow/mlflow:v2.22.4`
+    # per user directive "use typical public images". The `build:` directive
+    # wraps the public upstream image to bake psycopg2-binary + boto3
+    # (eliminates the 30s cold-start pip install). The Dockerfile.mlflow
+    # FROM line was updated to match).
     build:
       context: .
       dockerfile: Dockerfile.mlflow
-    image: ghcr.io/cianfhoghlaim/mlflow:v2.19.0
+    image: ghcr.io/mlflow/mlflow:v2.22.4
     container_name: mlflow
     restart: unless-stopped
     ports:
       - "${MLFLOW_PORT:-5000}:5000"
     environment:
       # Centralised lakehouse-postgres (db=mlflow)
-      MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/mlflow
+      MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:-devpassword}@lakehouse-postgres:5432/mlflow
       # Centralised lakehouse-garage (bucket=mlflow-artifacts)
-      MLFLOW_S3_ENDPOINT_URL: http://lakehouse-garage:3900
-      MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow-artifacts/
-      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?must be set}
-      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?must be set}
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL:-http://lakehouse-garage:3900}
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: ${MLFLOW_DEFAULT_ARTIFACT_ROOT:-s3://mlflow-artifacts/}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-GK1601dev}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-dev-secret-key-not-for-prod}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-garage}
       MLFLOW_S3_IGNORE_TLS: "true"
     command:

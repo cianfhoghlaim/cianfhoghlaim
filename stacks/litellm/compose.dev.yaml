@@ -30,7 +30,12 @@ services:
     environment:
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
       LITELLM_LOG: INFO
-      # Centralised lakehouse-postgres (db=litellm)
+      # Centralised lakehouse-postgres (db=litellm) — the hardcoded
+      # `devpassword` literal here is also exposed via the POSTGRES_PASSWORD
+      # env var below (which the base compose's `${POSTGRES_PASSWORD:?must
+      # be set}` interpolation needs at parse time).
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_USER: lakekeeper
       DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
       LITELLM_DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
       STORE_MODEL_IN_DB: "True"
@@ -42,6 +47,18 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
       HF_TOKEN: ${HF_TOKEN:-}
+    # Override the litellm config mount with the minimal dev config
+    # (the production config/config.yaml has a fallback_chain validation
+    # bug — see config/config.dev.yaml for the dev-only fix).
+    volumes:
+      - ./config/config.dev.yaml:/app/config/config.yaml:ro
 
   # Prometheus dev override removed in cleanup-and-boot-stacks change 2026-06-26
   # (the prometheus service itself was deleted from compose.yaml).
+
+# Top-level secrets: block from sidecar.yaml references the production
+# Infisical secret file (../../infisical_secret). Override with /dev/null
+# so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null
