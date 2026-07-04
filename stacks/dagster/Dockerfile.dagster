@@ -129,6 +129,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+# NEW 2026-07-03: install cianfhoghlaim as an editable package so the
+# 5 KCG Components + the LC5 + Gemini 6-corpus assets are importable
+# from the dagster container.
+#
+# CRITICAL: We do NOT use `uv pip install -e` for cianfhoghlaim because
+# the package contains its own `dagster/` subdir. When Python adds
+# /opt/workspace/cianfhoghlaim to sys.path (which is what `pip install -e`
+# does), `import dagster` resolves to cianfhoghlaim/dagster instead of
+# the real `dagster` Python package, breaking everything.
+#
+# Instead, we manually create a .pth file pointing to the PARENT dir
+# (/opt/workspace) so Python can find `import cianfhoghlaim` correctly.
+COPY ./cianfhoghlaim /opt/workspace/cianfhoghlaim
+# Clean stale __pycache__ from previous builds
+RUN find /opt/workspace/cianfhoghlaim -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true && \
+    find /opt/workspace/cianfhoghlaim -name '*.pyc' -delete 2>/dev/null || true
+# Manual .pth for cianfhoghlaim (avoids the dagster/ subdir shadowing)
+RUN echo '/opt/workspace' > /usr/local/lib/python3.13/site-packages/cianfhoghlaim.pth && \
+    chown -R dagster:dagster /opt/workspace/cianfhoghlaim
+
 USER dagster
 WORKDIR /opt/dagster
 

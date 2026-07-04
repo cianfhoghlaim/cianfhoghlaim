@@ -64,7 +64,7 @@ services:
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
-      - ../../cianfhoghlaim:/opt/cianfhoghlaim:ro
+      - ../../cianfhoghlaim:/opt/workspace/cianfhoghlaim:ro
     networks:
       - cianfhoghlaim
       - lakehouse
@@ -85,7 +85,7 @@ services:
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
-      - ../../cianfhoghlaim:/opt/cianfhoghlaim:ro
+      - ../../cianfhoghlaim:/opt/workspace/cianfhoghlaim:ro
     networks:
       - cianfhoghlaim
       - lakehouse
