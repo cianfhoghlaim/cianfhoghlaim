@@ -402,7 +402,10 @@ services:
   # Persists dashboard state + user preferences in the `nimtable` Postgres DB.
   # ---------------------------------------------------------------------------
   nimtable:
-    image: nimtable/nimtable:0.1.6
+    # Pinned 2026-07-02 (was `nimtable/nimtable:0.1.6` — that tag does NOT exist
+    # on Docker Hub; only `latest` is published; for a real semver pin the
+    # upstream needs to start publishing release tags).
+    image: nimtable/nimtable:latest
     container_name: lakehouse-nimtable
     restart: unless-stopped
     ports:

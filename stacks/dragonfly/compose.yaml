@@ -8,7 +8,10 @@ services:
     command: ["--port=6379","--maxmemory=8gb","--cache_mode=true","--requirepass=${DRAGONFLY_PASSWORD:-devpassword}"]
     healthcheck:
       test: ["CMD-SHELL", "redis-cli -a ${DRAGONFLY_PASSWORD:-devpassword} ping || exit 1"]
-      interval: 10s; timeout: 5s; retries: 5; start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     deploy:
       resources:
         limits: {memory: 10G, cpus: '4'}

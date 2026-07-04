@@ -15,7 +15,7 @@
 
 services:
   cognee:
-    image: cognee/cognee:latest
+    image: cognee/cognee:1.2.2  # pinned 2026-07-02 (was :latest; 1.2.2 = current Docker Hub stable, released 2026-06-26)
     container_name: cianfhoghlaim-cognee
     restart: unless-stopped
     ports:
