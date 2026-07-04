@@ -1,6 +1,10 @@
 """
 Chemistry LC Analysis — Per-subject pipeline for LC022 Chemistry.
 
+WIRED VERSION (2026-07-03 follow-up): this notebook now actually
+runs the DLT source `lc5_documents` (from cianfhoghlaim.dlt.filesystem
+.leaving_cert_source) and shows real data for the chemistry subject.
+
 Per-subject pipeline stages exercised:
   Stage 1: VLM/OCR via select_ocr_backend() → gemma-4-26B-A4B (M4 default)
   Stage 2: BAML extraction (5 BAML functions from cianfhoghlaim/baml_src/education/lc_extraction/)
@@ -25,7 +29,6 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _setup():
-    """Setup: imports + constants + directory scan."""
     import marimo as mo
     from pathlib import Path
 
@@ -39,7 +42,7 @@ def _setup():
     all_pdfs = pdfs_en + pdfs_ga
 
     mo.md(f"""
-    # Chemistry LC Analysis (LC022)
+    # Chemistry LC Analysis (LC022) — LIVE DATA
 
     **Subject:** {SUBJECT} ({SUBJECT_CODE})
     **Total PDFs:** {len(all_pdfs)} ({len(pdfs_en)} en + {len(pdfs_ga)} ga)
@@ -47,15 +50,24 @@ def _setup():
     Files discovered:
     {chr(10).join(f'- `{f.name}` ({f.stat().st_size / 1024:.1f} KB)' for f in all_pdfs)}
     """)
-    return mo, all_pdfs, pdfs_en, pdfs_ga
+    return mo, all_pdfs, pdfs_en, pdfs_ga, ROOT
+
+
+@app.cell
+def _stage1_dlt_source(ROOT):
+    """Run the real DLT source — yields 16 chemistry rows (8 en + 8 ga)."""
+    import sys
+    sys.path.insert(0, str(ROOT.parent.parent))  # /cianfhoghlaim
+    from cianfhoghlaim.dlt.filesystem.leaving_cert_source import lc5_documents
+    rows = list(lc5_documents(root_path=str(ROOT.parent)))
+    chemistry_rows = [r for r in rows if r["subject"] == "chemistry"]
+    return chemistry_rows
 
 
 @app.cell
 def _stage1_select_ocr(all_pdfs):
     """Stage 1: VLM/OCR routing via select_ocr_backend()."""
-    from cianfhoghlaim.meaisinfhoghlaim.models.registry import (
-        select_ocr_backend, get_default_for_m4_max,
-    )
+    from cianfhoghlaim.meaisinfhoghlaim.models.registry import select_ocr_backend
     selections = []
     for pdf in all_pdfs:
         try:
@@ -68,6 +80,36 @@ def _stage1_select_ocr(all_pdfs):
         except Exception as exc:
             selections.append({"file": pdf.name, "model": "ERROR", "reason": str(exc)})
     return selections
+
+
+@app.cell
+def _stage1_routing_table(selections):
+    """Render the routing table as altair."""
+    import pandas as pd
+    import altair as alt
+    df = pd.DataFrame(selections)
+    chart = alt.Chart(df).mark_bar().encode(
+        x="model:N", y="count()", color="model:N",
+    ).properties(width=400, height=200, title="VLM/OCR model routing across 16 chemistry PDFs")
+    return chart
+
+
+@app.cell
+def _stage1_kind_distribution(chemistry_rows):
+    """Distribution by file kind (exam paper vs syllabus vs marking)."""
+    import pandas as pd
+    import altair as alt
+    df = pd.DataFrame(chemistry_rows)
+    chart = alt.Chart(df).mark_bar().encode(
+        x="count()", y="is_exam_paper:O",
+    ).properties(width=400, height=80, title="Exam papers (N) — chemistry") + \
+    alt.Chart(df).mark_bar().encode(
+        x="count()", y="is_syllabus:O",
+    ).properties(width=400, height=80, title="Syllabus (N) — chemistry") + \
+    alt.Chart(df).mark_bar().encode(
+        x="count()", y="is_marking_scheme:O",
+    ).properties(width=400, height=80, title="Marking schemes (N) — chemistry")
+    return chart
 
 
 @app.cell

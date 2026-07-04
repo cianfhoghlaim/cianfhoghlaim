@@ -1,6 +1,9 @@
 """
 Gemini Law Corpus Overview — 57 PDFs from leabharlann/gemini_deep_research/law/
 
+WIRED VERSION (2026-07-03 follow-up): this notebook now actually
+runs the DLT source `gemini_documents` and shows real data.
+
 Stats: 57 PDFs, ~21 MB, agent-generated long-form legal research.
 Categories visible from filenames: malpractice, discrimination, dual
 citizenship, eviction, Garda misconduct, university disputes, family
@@ -27,7 +30,7 @@ def _setup():
     ROOT = Path("/Users/cianmacandeisigh/dev/kings_college_galway/leabharlann/gemini_deep_research/law")
     pdfs = sorted(ROOT.glob("*.pdf")) if ROOT.exists() else []
     mo.md(f"""
-    # Gemini Law Corpus Overview
+    # Gemini Law Corpus Overview — LIVE DATA
 
     **Path:** `leabharlann/gemini_deep_research/law/`
     **Total PDFs:** {len(pdfs)}
@@ -37,75 +40,83 @@ def _setup():
     First 10 files (sorted):
     {chr(10).join(f'- `{p.name}` ({p.stat().st_size / 1024:.0f} KB)' for p in pdfs[:10])}
     """)
-    return mo, pdfs
+    return mo, pdfs, ROOT
 
 
 @app.cell
-def _stage1_ocr(pdfs):
-    import httpx, time
-    base = "http://localhost:8080/v1"
-    results = []
-    for p in pdfs[:3]:  # Smoke test on first 3
-        t0 = time.monotonic()
-        try:
-            r = httpx.post(f"{base}/chat/completions",
-                json={"model": "qwen3-vl-8b", "messages": [{"role":"user","content":f"Extract: {p.name}"}], "max_tokens": 32},
-                timeout=60)
-            results.append({"file": p.name, "wallclock_s": time.monotonic()-t0, "status": r.status_code})
-        except Exception as exc:
-            results.append({"file": p.name, "error": str(exc)})
-    return results
+def _stage1_dlt_source(ROOT):
+    """Run the real DLT source — yields 57 law rows."""
+    import sys
+    sys.path.insert(0, "/Users/cianmacandeisigh/dev/kings_college_galway/cianfhoghlaim")
+    from cianfhoghlaim.dlt.filesystem.gemini_corpus_source import gemini_documents
+    rows = list(gemini_documents(root_path=str(ROOT.parent.parent)))
+    law_rows = [r for r in rows if r["corpus"] == "law"]
+    return law_rows
 
 
 @app.cell
-def _stage2_classify():
-    """Heuristic category + jurisdiction per PDF (filename-based)."""
-    from pathlib import Path
-    ROOT = Path("/Users/cianmacandeisigh/dev/kings_college_galway/leabharlann/gemini_deep_research/law")
-    pdfs = list(ROOT.glob("*.pdf"))
-    # Count by inferred category
-    cats = {}
-    for p in pdfs:
-        n = p.name.lower()
-        if "malpractice" in n:
-            c = "MEDICAL_MALPRACTICE"
-        elif "discrimination" in n:
-            c = "DISCRIMINATION"
-        elif "citizenship" in n or "passport" in n:
-            c = "DUAL_CITIZENSHIP"
-        elif "tenancy" in n or "eviction" in n or "landlord" in n:
-            c = "TENANCY_DISPUTE"
-        elif "garda" in n:
-            c = "GARDA_MISCONDUCT"
-        elif "hate_crime" in n:
-            c = "HATE_CRIME"
-        elif "university" in n or "qub" in n or "uog" in n or "ucl" in n:
-            c = "UNIVERSITY_DISPUTE"
-        elif "family" in n or "father" in n or "abuse" in n:
-            c = "FAMILY_LAW"
-        else:
-            c = "LEGAL_STRATEGY"
-        cats[c] = cats.get(c, 0) + 1
-    return cats
+def _stage1_summary(law_rows):
+    """Summary stats from the DLT rows."""
+    from collections import Counter
+    by_cat = Counter(r["category"] for r in law_rows)
+    by_jur = Counter(r["jurisdiction"] for r in law_rows)
+    return by_cat, by_jur
 
 
 @app.cell
-def _viz(stage2_classify):
+def _stage1_cat_viz(law_rows):
+    """Visualise the category distribution."""
     import pandas as pd
     import altair as alt
-    df = pd.DataFrame([{"category": k, "count": v} for k, v in stage2_classify.items()]).sort_values("count", ascending=False)
-    chart = alt.Chart(df).mark_bar().encode(
+    df = pd.DataFrame([{"category": r["category"], "count": 1} for r in law_rows])
+    by_cat = df.groupby("category").count().reset_index().sort_values("count", ascending=False)
+    chart = alt.Chart(by_cat).mark_bar().encode(
         x="count:Q", y="category:N", color="category:N",
-        tooltip=["category", "count"],
-    ).properties(width=500, height=300, title="Law corpus: cases by category (filename heuristic)")
+    ).properties(width=500, height=300, title="Law corpus: cases by category (57 PDFs)")
     return chart
 
 
 @app.cell
+def _stage1_jur_viz(law_rows):
+    """Visualise the jurisdiction distribution."""
+    import pandas as pd
+    import altair as alt
+    df = pd.DataFrame([{"jurisdiction": r["jurisdiction"], "count": 1} for r in law_rows])
+    by_jur = df.groupby("jurisdiction").count().reset_index().sort_values("count", ascending=False)
+    chart = alt.Chart(by_jur).mark_bar().encode(
+        x="count:Q", y="jurisdiction:N", color="jurisdiction:N",
+    ).properties(width=500, height=150, title="Law corpus: cases by jurisdiction")
+    return chart
+
+
+@app.cell
+def _stage1_table(law_rows):
+    """Render the first 5 rows as a table."""
+    import pandas as pd
+    df = pd.DataFrame(law_rows[:5])
+    return df[["file_name", "category", "jurisdiction", "baml_function"]]
+
+
+@app.cell
+def _stage2_baml_extract():
+    """Run BAML ExtractLegalCaseProfile on the first law PDF (stub)."""
+    try:
+        from cianfhoghlaim.baml_client import b
+        case = b.ExtractLegalCaseProfile(
+            source_pdf="belfast_legal.pdf",
+            jurisdiction=["NORTHERN_IRELAND"],
+        )
+        return case
+    except Exception as exc:
+        return {"error": str(exc)}
+
+
+@app.cell
 def _stage5_cognify():
+    """Stage 5: Cognee cognify for law corpus (57 episodes)."""
     try:
         import cognee
-        return {"dataset": "gemini_law_research", "ok": True, "corpus_size": 57}
+        return {"dataset": "gemini_law_research", "cognee_available": True, "corpus_size": 57}
     except Exception as exc:
         return {"error": str(exc)}
 
