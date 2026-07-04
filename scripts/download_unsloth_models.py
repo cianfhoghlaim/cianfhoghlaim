@@ -29,7 +29,13 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 warnings.filterwarnings("ignore")
-from cianfhoghlaim.ocr.models import VISION_MODELS  # noqa: E402
+# v4 home: cianfhoghlaim.meaisinfhoghlaim.models.registry
+# (the v4-consolidated path; the legacy cianfhoghlaim.ocr.models is
+# the pre-v4 home and is no longer importable).
+try:
+    from cianfhoghlaim.meaisinfhoghlaim.models.registry import VISION_MODELS  # noqa: E402
+except ImportError:
+    from cianfhoghlaim.ocr.models import VISION_MODELS  # noqa: E402  # legacy
 
 # Default cache dir is the host-path mount point for the llama-swap container
 # (per bonneagar/stacks/llama-swap/compose.yaml line ~21):
