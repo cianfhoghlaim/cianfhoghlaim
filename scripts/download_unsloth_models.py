@@ -31,7 +31,16 @@ if str(_REPO_ROOT) not in sys.path:
 warnings.filterwarnings("ignore")
 from cianfhoghlaim.ocr.models import VISION_MODELS  # noqa: E402
 
-DEFAULT_CACHE_DIR = Path("/models/unsloth")
+# Default cache dir is the host-path mount point for the llama-swap container
+# (per bonneagar/stacks/llama-swap/compose.yaml line ~21):
+#   ../../stedding/huggingface/gguf:/models/gguf:ro
+# Override via --cache-dir if needed (e.g. for an arm1-oci deploy).
+DEFAULT_CACHE_DIR = Path(
+    os.environ.get(
+        "LLAMA_SWAP_CACHE_DIR",
+        str(Path(__file__).resolve().parent.parent / "stedding" / "huggingface" / "gguf"),
+    )
+)
 
 
 def download_model(model_id: str, cache_dir: Path, dry_run: bool = False) -> bool:
