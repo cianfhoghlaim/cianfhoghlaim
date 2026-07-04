@@ -176,9 +176,30 @@ training = [
     "datasets>=3.0.0",
     "wandb>=0.18.0",
 ]
+# Memory extras — extended 2026-07-03 (infrastructure-foundation change A)
+# to add cognee + letta for the LC5 + Gemini 6-corpus pipelines.
 memory = [
-    "graphiti-core>=0.5.0",
+    "graphiti-core[falkordb]>=0.29.2",
+    "cognee-sdk>=1.0.0",
+    "letta>=0.5",
 ]
+
+# ── OCR/VLM extras — NEW 2026-07-03 (infrastructure-foundation change A) ──
+# These support the inline-Python backends for the 6 TRANSFORMERS-backend
+# models in the v4 OCR/VLM registry (cianfhoghlaim/meaisinfhoghlaim/models/registry.py).
+# The Unsloth GGUF models are served by llama-swap on :8080; these are
+# for the 6 TRANSFORMERS-backend models + in-process GGUF use cases.
+ocr-vision-full = [
+    "surya-ocr>=0.20.0",
+    "rapidocr>=3.9.0",
+    "easyocr>=1.7.2",
+    "docling[mlx-vlm]>=2.0.0",
+    "paddleocr-vl>=1.0.0",
+    "marker-pdf>=1.10.2",
+    "mineru>=3.4",
+    "llama-cpp-python>=0.3.0",
+    "huggingface-hub>=0.27.0",
+]                                               
 
 # ── Observability extras ──
 observability = [
@@ -210,13 +231,21 @@ dev = [
     "pre-commit>=4.0.0",
 ]
 
+# NEW 2026-07-03: dev with all OCR/VLM/memory deps pre-installed (for the
+# 25 new dev notebooks under notebooks/dashboards/{leaving_cert,law,...}).
+# Install with:  uv pip install -e '.[dev-with-vision]'
+dev-with-vision = [
+    "cianfhoghlaim[dev,memory,ocr-vision-full]",
+]                                               
+
 # ── All extras (union) ──
 # NOTE: `ocr-vision` is gone — its deps (mlx + mlx-omni-server) are now in core
 # `dependencies` because the OCR/VLM stack is mandatory for the M-series Apple
 # Silicon validation stack.
+# NEW 2026-07-03 (infrastructure-foundation): added `ocr-vision-full` to `all`.
 all = [
-    "cianfhoghlaim[ocr-classical,celtic-language,asset-gen,ocr,training,memory,observability,ui,dbt,marimo,gradio,hub,dev]",
-]
+    "cianfhoghlaim[ocr-classical,celtic-language,asset-gen,ocr,training,memory,ocr-vision-full,observability,ui,dbt,marimo,gradio,hub,dev]",
+]                                               
 
 [project.scripts]
 # Consolidated CLI entry-points (post-v4 + post-Phase-1 manifest consolidation)

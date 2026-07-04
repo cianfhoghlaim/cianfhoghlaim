@@ -288,19 +288,29 @@ run = "uv run pytest cianfhoghlaim/ocr/evaluation/"
 
 [tasks."llama-swap:up"]
 description = "Start the llama-swap service (serves v4 Unsloth GGUFs at :8080)"
-run = "docker compose -f cianfhoghlaim/stacks/llama-swap/compose.yaml up -d"
+run = "docker compose -f bonneagar/stacks/llama-swap/compose.yaml up -d"
 
 [tasks."llama-swap:down"]
 description = "Stop the llama-swap service"
-run = "docker compose -f cianfhoghlaim/stacks/llama-swap/compose.yaml down"
+run = "docker compose -f bonneagar/stacks/llama-swap/compose.yaml down"
 
 [tasks."llama-swap:logs"]
 description = "Tail the llama-swap service logs"
 run = "docker logs -f llama-swap"
 
 [tasks."llama-swap:download-models"]
-description = "Download all v4 Unsloth GGUFs to /models/unsloth/ (5-50 GB; run once per machine)"
+description = "Download all v4 Unsloth GGUFs to stedding/huggingface/gguf/ (5-50 GB; run once per machine)"
 run = "python scripts/download_unsloth_models.py"
+
+# NEW in 2026-07-03: download the 4 MLX-only checkpoints (served by mlx-omni :10240)
+[tasks."llama-swap:download-mlx"]
+description = "Download the 4 v4 MLX-only checkpoints to stedding/huggingface/mlx-community/ (granite-docling, dots-ocr, deepseek-ocr-2, gemma-4-E2B)"
+run = "python scripts/download_mlx_models.py"
+
+# NEW in 2026-07-03: dry-run variant (CI-friendly; prints the 14 Unsloth + 4 MLX targets without downloading)
+[tasks."llama-swap:download-models:dry-run"]
+description = "List the 13 v4 Unsloth + 4 MLX targets without actually downloading"
+run = "python scripts/download_unsloth_models.py --dry-run && python scripts/download_mlx_models.py --dry-run"
 
 [tasks."llama-swap:health"]
 description = "Healthcheck the llama-swap service (curl http://localhost:8080/v1/models)"
