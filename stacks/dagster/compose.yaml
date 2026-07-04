@@ -42,9 +42,6 @@ services:
       - "${DAGSTER_PORT:-3335}:3000"
     environment:
       DAGSTER_HOME: /opt/dagster/home
-      # PYTHONPATH so the cianfhoghlaim package (mounted at /opt/cianfhoghlaim)
-      # is importable as `import cianfhoghlaim` (the parent dir /opt is on the path)
-      PYTHONPATH: /opt
       # DuckLake (via the cianfhoghlaim DLT destinations factory)
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
@@ -106,7 +103,6 @@ services:
     command: ["dagster-daemon", "run"]
     environment:
       DAGSTER_HOME: /opt/dagster/home
-      PYTHONPATH: /opt
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
       DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
