@@ -1,0 +1,18 @@
+# defs/3_model_lifecycle/legal_research/gemini_corpus/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the Gemini 6-corpus cognify +
+# Graphiti temporal episode streams + FalkorDB cross-corpus graph.
+#
+# The 6 cognify datasets: gemini_law_research / gemini_medical_research
+# / gemini_politics_research / gemini_culture_research /
+# gemini_technology_research / gemini_other_research.
+#
+# Per openspec/changes/2026-07-03-gemini-6-corpus-pipeline/
+type: cianfhoghlaim.dagster.components.CelticModelLifecycleComponent
+attributes:
+  app_name: gemini_6_corpus_cognify
+  cognify_datasets: 6
+  graphiti_streams: 6
+  falkordb_label: gemini_6_corpus_kg
+  source_asset: 2_materials/gemini_baml/gemini_all
+  automation_cron: "0 8 * * 0"   # Weekly on Sunday at 08:00 UTC
