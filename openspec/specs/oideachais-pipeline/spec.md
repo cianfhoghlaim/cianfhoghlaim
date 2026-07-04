@@ -1557,3 +1557,42 @@ The legacy `sruth.oideachais.*`, `sruth.meaisinfhoghlaim.*`, `sruth.tuatha.*`, `
 **Reason**: The standalone browser package was renamed from `infrastructure/stacks/browser/` to `bonneagar/stacks/browser/` during the v4 follow-on (`openspec/changes/archive/2026-06-29-2026-06-29-per-domain-web-app-consolidation/`). The local duplicate at `cianfhoghlaim/browser/` is a stale deprecation stub whose `__init__.py` imports from `cianfhoghlaim.core.browser` — a package that was never created.
 
 **Migration**: All Dagster assets, DLT sources, scripts, and notebooks that previously imported `from cianfhoghlaim.core.browser import BrowserClient` (or similar) MUST update to `from bonneagar.stacks.browser.sruth_browser import BrowserClient` (or via the workspace source alias).
+
+
+## ADDED Requirements (v4 extension — 2026-07-03)
+
+### Requirement: LC5-subject + Gemini 6-corpus pipelines
+
+The system SHALL provide two new pipelines under the
+`oideachais-pipeline` capability:
+
+1. **LC5-subject pipeline** (per
+   `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`):
+   41 PDFs + 2 JPGs across chemistry / computer_science / gaeilge /
+   geography / mathematics, organised into 5 DAGs each with 7 stages
+   (VLM/OCR → DuckLake → LanceDB → Cognee → Graphiti → FalkorDB).
+
+2. **Gemini 6-corpus pipeline** (per
+   `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`):
+   224 PDFs across law / medical / politics / culture / technology /
+   other, organised into 6 DAGs each with 7 stages.
+
+#### Scenario: LC5 ingests 72 PDFs (including 30 `_2026-06-30` duplicates)
+
+- **WHEN** `dagster asset materialize --select 'lc5_*_ingested'`
+- **THEN** the sum of rows from `lc5_chemistry_ingested`,
+  `lc5_computer_science_ingested`, `lc5_gaeilge_ingested`,
+  `lc5_geography_ingested`, `lc5_mathematics_ingested` SHALL be 72
+  (41 PDFs + 1 JPG + 30 duplicate copies)
+
+#### Scenario: Gemini ingests 224 PDFs across 6 corpora
+
+- **WHEN** `dagster asset materialize --select 'gemini_*_ingested'`
+- **THEN** the sum of rows SHALL be 224 (57+54+47+30+24+12)
+
+#### Scenario: Both pipelines share the v4 OCR/VLM registry
+
+- **GIVEN** both the LC5 + Gemini pipelines
+- **WHEN** a PDF is ingested by either pipeline
+- **THEN** `select_ocr_backend(pdf_path)` SHALL return a v4 registry
+  model key (NOT the legacy 10-model OCR_MODELS dict)

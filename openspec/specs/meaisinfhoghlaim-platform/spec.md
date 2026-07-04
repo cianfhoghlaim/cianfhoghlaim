@@ -796,3 +796,77 @@ in the root_agent without a manual code edit.
 - [`dg.toml`](../../dg.toml) (the root Dagster code-location config)
 - [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](meaisinfhoghlaim-agent-frameworks/spec.md) (the 12 agents)
 - [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](meaisinfhoghlaim-ocr-htr/spec.md) (the 10 OCR models)
+
+## ADDED Requirements (v4 extension — 2026-07-03)
+
+### Requirement: 12 Python OCR/VLM/memory packages in the dagster-local image
+
+The `dagster-local` Docker image (built from
+`bonneagar/stacks/dagster/Dockerfile.dagster`) SHALL install **12
+Python packages** to support the v4 OCR/VLM/memory stack:
+
+**OCR (4 packages):** `surya-ocr>=0.20.0`, `rapidocr>=3.9.0`,
+`pytesseract>=0.3.10`, `easyocr>=1.7.2`
+
+**VLM (2 packages):** `docling[mlx-vlm]>=2.0.0`, `paddleocr-vl>=1.0.0`
+
+**Doc→MD (2 packages):** `marker-pdf>=1.10.2`, `mineru>=3.4`
+
+**In-process GGUF runtime (1 package):** `llama-cpp-python>=0.3.0`
+
+**Memory (3 packages):** `graphiti-core[falkordb]>=0.29.2`,
+`cognee-sdk>=1.0.0`, `letta>=0.5`
+
+**HF CLI (1 package):** `huggingface-hub>=0.27.0`
+
+These 12 packages are installed in the dagster image so the 6
+TRANSFORMERS-backend models in the v4 OCR/VLM registry are
+loadable from Python. The 13 LLAMASWAP entries + 4 MLX entries are
+served via llama-swap (:8080) and mlx-omni (:10240) respectively.
+
+#### Scenario: The dagster image imports all 12 packages
+
+- **WHEN** `docker run --rm dagster-local:latest python -c "import surya, rapidocr, easyocr, docling, paddleocr_vl, marker_pdf, mineru, llama_cpp, graphiti_core, cognee, letta, huggingface_hub"`
+- **THEN** the command SHALL exit 0 with no ImportError
+
+### Requirement: pyproject.toml extra `ocr-vision-full`
+
+The `cianfhoghlaim/pyproject.toml` SHALL provide a
+`[project.optional-dependencies.ocr-vision-full]` group containing
+the 9 production OCR/VLM/doc→md packages listed above (no `cognee`,
+`graphiti`, `letta`, `huggingface-hub` since those are in the
+`memory` + always-installed groups respectively). Plus a
+`dev-with-vision` composite extra combining `dev + memory +
+ocr-vision-full` for the 25 new dev notebooks under
+`notebooks/dashboards/{leaving_cert,law,...}`.
+
+#### Scenario: dev-with-vision installs all required deps
+
+- **WHEN** `uv pip install -e '.[dev-with-vision]'`
+- **THEN** the venv SHALL contain surya-ocr, rapidocr, easyocr,
+  docling, paddleocr-vl, marker-pdf, mineru, llama-cpp-python,
+  graphiti-core[falkordb], cognee-sdk, letta, huggingface-hub,
+  marimo, altair, pytest, ruff, mypy
+
+### Requirement: 25 dev marimo notebooks for LC5 + Gemini
+
+The system SHALL provide **25 working dev notebooks** (per the
+2026-07-03 LC5 + 2026-07-03 Gemini changes):
+
+- **16 LC notebooks** under `notebooks/dashboards/leaving_cert/`:
+  5 per-subject + 5 cross-subject + 5 model benchmark + 1
+  side-by-side llama-swap vs llama-cpp-python timing
+- **9 Gemini notebooks** under
+  `notebooks/dashboards/{law,medical,politics,culture,technology,other}/`:
+  6 per-corpus overviews + 3 cross-corpus (timeline, jurisdictional
+  map, pattern detection)
+
+Each notebook SHALL have working `@app.cell` cells (not skeletons),
+use the `mo.sql(engine=duckdb)` pattern, and display altair/plotly
+visualisations.
+
+#### Scenario: All 25 notebooks parse
+
+- **WHEN** `for f in notebooks/dashboards/{leaving_cert,law,medical,politics,culture,technology,other}/0*_*.py; do python -c "import ast; ast.parse(open('\$f').read())"; done`
+- **THEN** all 25 notebooks SHALL parse without syntax errors
+
