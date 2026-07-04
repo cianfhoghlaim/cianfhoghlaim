@@ -54,7 +54,7 @@ daily_partitions = DailyPartitionsDefinition(start_date="2026-07-02")
     partitions_def=daily_partitions,
     description="Extract the 5 NCCA Key Competencies from key-competencies-in-senior-cycle_en.pdf",
 )
-def root_key_competencies_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+def root_key_competencies_extracted(context) -> dict[str, Any]:
     """Extract the 5 NCCA Key Competencies (Information Processing, Communicating, Working with Others, Personal Effectiveness, Critical & Creative Thinking)."""
     if not BAML_AVAILABLE:
         context.log.warning("BAML not available; returning stub")
@@ -82,7 +82,7 @@ def root_key_competencies_extracted(context: AssetExecutionContext) -> dict[str,
     partitions_def=daily_partitions,
     description="Extract the online learning pedagogy from the-potential-of-online-learning-environments_en.pdf",
 )
-def root_online_learning_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+def root_online_learning_extracted(context) -> dict[str, Any]:
     if not BAML_AVAILABLE:
         context.log.warning("BAML not available; returning stub")
         return {"pedagogy": None, "language": "en"}
@@ -105,7 +105,7 @@ def root_online_learning_extracted(context: AssetExecutionContext) -> dict[str, 
     partitions_def=daily_partitions,
     description="Extract the certification + reporting guidance from the-potential-of-technology-to-support-online-certification-and-reporting.pdf",
 )
-def root_certification_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+def root_certification_extracted(context) -> dict[str, Any]:
     if not BAML_AVAILABLE:
         return {"guidance": None, "language": "en"}
 
@@ -127,7 +127,7 @@ def root_certification_extracted(context: AssetExecutionContext) -> dict[str, An
     partitions_def=daily_partitions,
     description="Extract the Chief Examiner commentary from scr-advisory-report_en.pdf",
 )
-def root_scr_advisory_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+def root_scr_advisory_extracted(context) -> dict[str, Any]:
     if not BAML_AVAILABLE:
         return {"commentary": None, "language": "en"}
 
@@ -149,7 +149,7 @@ def root_scr_advisory_extracted(context: AssetExecutionContext) -> dict[str, Any
     partitions_def=daily_partitions,
     description="Extract the Senior Cycle L1 + L2 Programme Statement from SC-L1-L2-Programme-Statement.pdf",
 )
-def root_programme_statement_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+def root_programme_statement_extracted(context) -> dict[str, Any]:
     if not BAML_AVAILABLE:
         return {"statement": None, "language": "en"}
 
@@ -171,7 +171,7 @@ def root_programme_statement_extracted(context: AssetExecutionContext) -> dict[s
     partitions_def=daily_partitions,
     description="Dagster asset that wraps the CocoIndex v1 root_pdfs_embedding app — runs the embedding of the 5 root PDF extractions into LanceDB",
 )
-def root_pdfs_embedded(context: AssetExecutionContext) -> None:
+def root_pdfs_embedded(context) -> None:
     """Run the CocoIndex v1 root_pdfs_embedding app once per day."""
     if not COCOINDEX_AVAILABLE or root_pdfs_embedding is None:
         context.log.warning("CocoIndex v1 not available; skipping embedding update")
@@ -187,7 +187,7 @@ def root_pdfs_embedded(context: AssetExecutionContext) -> None:
     partitions_def=daily_partitions,
     description="Dagster asset that wraps the CocoIndex v1 cross_subject_competency_embedding app — embeds the 5 NCCA Key Competencies × 8 subjects × 4 levels × 2 languages = 320 cross-subject mastery vectors",
 )
-def cross_subject_competencies_embedded(context: AssetExecutionContext) -> None:
+def cross_subject_competencies_embedded(context) -> None:
     """Run the CocoIndex v1 cross_subject_competency_embedding app once per day."""
     if not COCOINDEX_AVAILABLE or cross_subject_competency_embedding is None:
         context.log.warning("CocoIndex v1 not available; skipping cross-subject embedding update")
