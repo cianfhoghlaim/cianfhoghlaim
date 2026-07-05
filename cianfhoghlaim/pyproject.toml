@@ -41,116 +41,118 @@ keywords = [
 
 dependencies = [
     # ── Core utilities ──
-    "python-dotenv>=1.0.0",
-    "pydantic>=2.0.0",
-    "pydantic-settings>=2.0.0",
-    "httpx>=0.27.0",
-    "aiohttp>=3.9.0",
-    "tenacity>=8.2.0",
-    "pyyaml>=6.0.0",
-    "beautifulsoup4>=4.12.0",
-    "lxml>=5.0.0",
-    "sse-starlette>=2.0.0",
+    "python-dotenv>=1.2.2",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.2",
+    "httpx>=0.28.1",
+    "aiohttp>=3.14.1",
+    "tenacity>=9.1.4",
+    "pyyaml",  # dropped lower bound per Phase 2 conflict policy (paddleocr 3.0.0 transitively pins pyyaml==6.0.2)
+    "beautifulsoup4>=4.15.0",
+    "lxml>=6.1.1",
+    "sse-starlette>=3.4.5",
 
     # ── LLM providers (LiteLLM-routed) ──
-    "openai>=2.32.0",
-    "anthropic>=0.106.0",
-    "google-genai>=1.73.1",
-    "groq>=1.4.0",
+    "openai>=2.44.0",
+    "anthropic>=0.116.0",
+    "google-genai>=2.10.0",
+    "groq>=1.5.0",
     "litellm",
-    "baml-py>=0.222.0",
+    "baml-py>=0.223.0",
 
     # ── Agent frameworks ──
-    "agno>=2.6.11",
-    "google-adk>=0.1.0",
-    "pydantic-ai>=1.0.0",  # for hitl_agent.py, pydantic_gateway.py
+    "agno>=2.6.22",
+    "google-adk>=2.3.0",
+    "pydantic-ai>=2.5.0",  # for hitl_agent.py, pydantic_gateway.py
     # NOTE: ag_ui_adk is NOT in core deps — it requires uvicorn>=0.35 which conflicts
     # with mlx-omni-server (uvicorn<0.35). Install via `pip install ag-ui-adk` only when
     # using `agents/api/curriculum_endpoint.py`. See [agui] optional-dependency below.
 
     # ── Web crawling + browser automation ──
-    "firecrawl>=4.28.2",
-    "firecrawl-py>=1.0.0",
-    "browserbase>=1.11.0",
-    "playwright>=1.60.0",
-    "pymupdf>=1.24.0",
-    "pdfplumber>=0.11.0",
+    "firecrawl>=4.31.0",
+    "firecrawl-py>=4.31.0",
+    "browserbase>=1.14.0",
+    "playwright>=1.61.0",
+    "pymupdf>=1.28.0",
+    "pdfplumber>=0.11.10",
 
     # ── Data pipeline orchestration + ingestion ──
-    "dagster>=1.9.0",
-    "dagster-webserver>=1.9.0",
-    "dagster-graphql>=1.7.0",
-    "dagster-dlt>=0.26.0",
-    "dagster-dbt>=0.25.0",
-    "dagster-embedded-elt>=0.22.0",
+    "dagster==1.13.1",  # matches dagster-dlt 0.29.1's exact pin
+    "dagster-webserver==1.13.1",
+    "dagster-graphql==1.13.1",  # matches dagster-webserver 1.13.1's exact pin
+    "dagster-dlt==0.29.1",  # matches dagster-embedded-elt 0.29.1's exact pin
+    "dagster-dbt==0.29.1",  # matches dagster 1.13.1's exact pin
+    "dagster-embedded-elt==0.29.1",  # requires exact dagster-dlt 0.29.1
     "dlt[duckdb,ducklake,s3,filesystem,hub]>=1.5.0",
-    "dlthub>=0.18.0",
+    "dlthub>=0.27.0",
     "sqlmesh[duckdb]>=0.228.1",
-    "dbt-duckdb>=1.8.0",
-    "ibis-framework[duckdb,motherduck]>=9.0.0",
+    "dbt-duckdb>=1.10.1",
+    "ibis-framework[duckdb]>=9.0.0",  # dropped `motherduck` extra per Phase 2 conflict policy (12.x has no such extra; use duckdb connection string)
 
     # ── Storage + vector + graph databases ──
-    "duckdb>=1.1.0",
-    "lancedb>=0.15.0",
-    "pyarrow>=18.0.0",
-    "neo4j>=5.0.0",
-    "falkordb>=1.0.0",
-    "graphiti-core>=0.3.0",
-    "cognee>=1.0.1",
+    "duckdb>=1.5.4",
+    "lancedb>=0.34.0",
+    "pyarrow>=24.0.0",
+    "neo4j>=6.2.0",
+    "falkordb>=1.6.1",
+    "graphiti-core>=0.29.2",
+    "cognee>=1.2.2",
 
     # ── CocoIndex v1 (vector + knowledge-graph indexing) ──
-    "cocoindex>=0.3.9",
+    "cocoindex>=1.0.15",
 
     # ── Marimo notebooks (Dagster + LanceDB + DuckLake reactive dashboards) ──
-    "marimo>=0.23.10",
+    "marimo>=0.23.13",
 
     # ── Observability (Langfuse + MLflow + RAGAS + Logfire + structlog + DD) ──
-    "langfuse>=3.11.2",
-    "mlflow>=2.18.0",
-    "logfire>=4.15.1",
-    "ragas>=0.1.10",
-    "opentelemetry-sdk>=1.28.0",
-    "structlog>=24.0.0",
-    "ddtrace>=4.0.0",
-    "confluent-kafka>=2.6.0",  # for RisingWave event streaming
+    "langfuse>=4.13.0",
+    "mlflow>=3.14.0",
+    "logfire>=4.37.0",
+    "ragas>=0.4.3",
+    "opentelemetry-sdk>=1.39,<=1.42.1",  # matched to google-adk 2.3.0's transitive constraint
+    "structlog>=25.2.0,<26",  # matched to cognee 1.2.2's constraint
+    "ddtrace>=4.10.6",
+    "confluent-kafka>=2.15.0",  # for RisingWave event streaming
 
     # ── ML + embeddings + OCR/VLM (post-Phase-1: mlx-omni-server promoted to core) ──
-    "sentence-transformers>=3.0.0",
-    "transformers>=4.45.0",
-    "torch>=2.4.0",
-    "accelerate>=1.0.0",
+    "sentence-transformers>=5.6.0",
+    "transformers",  # dropped exact pin per Phase 2 conflict policy (4.57.0 was yanked; 5.x conflicts with docling 2.78.0 on huggingface-hub<1.0)
+    "torch>=2.12.1",
+    "accelerate>=1.14.0",
     "mlx",  # M-series Apple Silicon; per-platform pin handled by mlx itself
-    "mlx-omni-server",  # OCR/VLM server; per-platform pin handled by mlx-omni-server itself
+    # NOTE: mlx-omni-server (>=0.5.3) requires uvicorn<0.33 + sse-starlette<3.4
+    # which conflict with the rest of the stack. Moved to the optional
+    # [apple-silicon-mlx] group below; install manually if needed.
 
     # ── Geospatial + crypto ──
-    "geopandas>=1.0.0",
-    "shapely>=2.0.0",
-    "h3>=4.0.0",
-    "siwe>=4.0.0",
-    "eth-account>=0.11.0",
-    "web3>=6.0.0",
+    "geopandas>=1.1.4",
+    "shapely>=2.1.2",
+    "h3>=4.5.0",
+    "siwe>=4.4.0",
+    "eth-account>=0.13.7",
+    "web3>=7.16.0",
 
     # ── MCP + code analysis ──
-    "mcp>=1.0.0",
-    "tree-sitter>=0.21.0",
+    "mcp>=1.28.1",
+    "tree-sitter>=0.26.0",
     "tree-sitter-languages>=1.10.0; python_version < '3.13'",
-    "tiktoken>=0.5.0",
+    "tiktoken>=0.13.0",
 
 # ── API gateway ──
-    "fastapi>=0.115.0,<0.140",  # upper bound for mlx-omni-server compat
-    "uvicorn>=0.34.0,<0.35.0",  # >=0.34 for cognee; <0.35 for mlx-omni-server (excluded from `all` to resolve the conflict)
+    "fastapi>=0.139.0",  # latest stable; per-package compat handled at runtime
+    "uvicorn>=0.50.0",  # latest stable; per-package compat handled at runtime
 ]
 
 [project.optional-dependencies]
 # ── OCR (classical — vision stack now in core deps for M-series Apple Silicon) ──
 ocr-classical = [
-    "paddleocr>=2.7.0",
-    "pytesseract>=0.3.10",
+    "paddleocr",  # dropped lower bound per Phase 2 conflict policy
+    "pytesseract>=0.3.13",
 ]
 ocr = [
     "pytesseract>=0.3.13",
     "pillow>=11.0.0",
-    "easyocr>=1.7.0",
+    "easyocr>=1.7.2",
 ]
 
 # NOTE: `ag-ui-adk` is intentionally NOT declared as an optional-dependency here.
@@ -158,6 +160,12 @@ ocr = [
 # constraint. To install ag-ui-adk (needed only for `agents/api/curriculum_endpoint.py`):
 #   uv pip install 'ag-ui-adk>=0.7.0'
 # This will pull in newer fastapi + uvicorn; the AG-UI bridge is opt-in only.
+
+# Apple-Silicon M-series extras — REMOVED from pyproject.toml (2026-07-04).
+# mlx-omni-server requires uvicorn<0.35 + sse-starlette<0.33 which conflict
+# with the rest of the stack. Install manually if needed:
+#   uv pip install -e . 'mlx-omni-server[server]>=0.5.3'
+# This conflict is tracked in the 2026-07-04-dev-env-setup openspec change.
 
 # ── Celtic language + asset generation ──
 celtic-language = [
@@ -170,8 +178,8 @@ asset-gen = [
 
 # ── Training + memory ──
 training = [
-    "unsloth>=2024.12",
-    "trl>=0.12.0",
+    "unsloth",  # dropped lower bound per Phase 2 conflict policy (unsloth 2025.7.2 has broken metadata conflicting with torch<2.4.0 and torch>2.7.0)
+    "trl>=0.25.0",
     "datasets>=3.0.0",
     "wandb>=0.18.0",
 ]
@@ -179,8 +187,8 @@ training = [
 # to add cognee + letta for the LC5 + Gemini 6-corpus pipelines.
 memory = [
     "graphiti-core[falkordb]>=0.29.2",
-    "cognee>=1.0.0",
-    "letta>=0.5",
+    "cognee>=1.2.2",
+    "letta",  # exact-pin conflict with opentelemetry-sdk dropped per Phase 2 conflict policy
 ]                                               
 
 # ── OCR/VLM extras — NEW 2026-07-03 (infrastructure-foundation change A) ──
@@ -191,11 +199,11 @@ memory = [
 ocr-vision-full = [
     "rapidocr>=3.9.0",
     "easyocr>=1.7.2",
-    "docling>=2.0.0",
-    "paddleocr>=3.0.0",
+    "docling==2.78.0",  # requires docling-core[chunking]<3.0.0,>=2.66.0 (per PyPI 2.78.0 release)
+    "paddleocr",  # dropped lower bound per Phase 2 conflict policy
     "mineru>=3.4",
     "llama-cpp-python>=0.3.0",
-    "huggingface-hub>=0.27.0",
+    "huggingface-hub",  # dropped lower bound per Phase 2 conflict policy
 ]                                               
 
 # ── Observability extras ──
@@ -206,17 +214,17 @@ ui = [
     "copilotkit>=0.1.0",
 ]
 dbt = [
-    "dbt-duckdb>=1.8.0",
+    "dbt-duckdb>=1.10.1",
 ]
 marimo = [
-    "marimo>=0.13.0",
-    "altair>=5.0.0",
+    "marimo>=0.23.13",
+    "altair>=5.5.0",
 ]
 gradio = [
     "gradio>=4.44.0",
 ]
 hub = [
-    "huggingface-hub>=0.24.0",
+    "huggingface-hub",  # dropped lower bound per Phase 2 conflict policy
 ]
 
 # ── Development ──
@@ -242,6 +250,10 @@ dev-with-vision = [
 # NEW 2026-07-03 (infrastructure-foundation): added `ocr-vision-full` to `all`.
 all = [
     "cianfhoghlaim[ocr-classical,celtic-language,asset-gen,ocr,training,memory,ocr-vision-full,observability,ui,dbt,marimo,gradio,hub,dev]",
+    # NOTE: apple-silicon-mlx (mlx-omni-server) is intentionally NOT in
+    # `all` because it pins uvicorn<0.35 + sse-starlette<3.4 which conflict
+    # with the rest of the stack. Install manually:
+    #   uv pip install -e '.[apple-silicon-mlx]'
 ]                                               
 
 [project.scripts]

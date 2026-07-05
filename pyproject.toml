@@ -60,14 +60,12 @@ package = false
 # packages belong in the uv workspace.
  members = [
     "cianfhoghlaim",
-    "cianfhoghlaim/libraries/codeolas",
 ]
 
 [tool.uv.sources]
 # Members can depend on each other; uv resolves them via the workspace lockfile.
 # Keys are the package names (ASCII); values are the workspace source spec.
 cianfhoghlaim = { workspace = true }
-codeolas = { workspace = true }
 
 # =============================================================================
 # Shared dev tooling — applied to every workspace member
