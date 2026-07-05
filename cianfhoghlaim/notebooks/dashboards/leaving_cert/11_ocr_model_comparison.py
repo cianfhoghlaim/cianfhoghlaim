@@ -18,6 +18,19 @@ __generated_with__ = "0.13.0"
 app = marimo.App(width="medium")
 
 
+
+
+
+@app.cell
+def _stage1_dlt_models(ROOT):
+    """Run the real DLT source — 72 rows with model_key for comparison charts."""
+    import sys
+    sys.path.insert(0, str(ROOT.parent.parent))
+    from cianfhoghlaim.dlt.filesystem.leaving_cert_source import lc5_documents
+    rows = list(lc5_documents(root_path=str(ROOT.parent)))
+    return rows
+
+
 @app.cell
 def _setup():
     import marimo as mo

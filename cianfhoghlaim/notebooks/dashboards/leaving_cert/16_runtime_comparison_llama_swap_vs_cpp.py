@@ -15,6 +15,29 @@ __generated_with__ = "0.13.0"
 app = marimo.App(width="medium")
 
 
+
+
+
+@app.cell
+def _runtime_status():
+    """The 13 Unsloth GGUF models are queued for download via
+    `mise run llama-swap:download-models` (~95 GB target). Once
+    downloaded, this notebook will populate the timing data by
+    hitting llama-swap's OpenAI-compatible endpoint vs inline
+    llama-cpp-python for the same model on the same PDF.
+    """
+    import marimo as mo
+    return mo.md("""
+    # A/B Runtime Comparison: llama-swap vs llama-cpp-python
+
+    **Status:** The 13 Unsloth GGUF models (qwen3-vl-8b, gemma-4-26B-A4B,
+    etc.) are queued for download. Once `mise run llama-swap:download-models`
+    completes (~95 GB), this notebook will populate the timing data
+    by hitting llama-swap's OpenAI-compatible endpoint vs inline
+    llama-cpp-python for the same model on the same PDF.
+    """)
+
+
 @app.cell
 def _setup():
     import marimo as mo

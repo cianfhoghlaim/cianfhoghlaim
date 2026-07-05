@@ -12,6 +12,19 @@ __generated_with__ = "0.13.0"
 app = marimo.App(width="medium")
 
 
+
+
+
+@app.cell
+def _stage1_dlt_gemini(ROOT):
+    """Run the real DLT source — 224 rows; filter by corpus."""
+    import sys
+    sys.path.insert(0, str(ROOT.parent))
+    from cianfhoghlaim.dlt.filesystem.gemini_corpus_source import gemini_documents
+    rows = list(gemini_documents(root_path=str(ROOT.parent)))
+    return rows
+
+
 @app.cell
 def _setup():
     import marimo as mo
