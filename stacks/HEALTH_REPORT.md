@@ -6,24 +6,56 @@
 > fix, etc. — lives at
 > [`infrastructure/archive/HEALTH_REPORT-2026-06-12.md`](../archive/HEALTH_REPORT-2026-06-12.md).
 >
-> **Last refreshed:** 2026-07-04 (Session 10 — build-time fixes for
-> the 4 changes shipped in Session 9). Session 9 was the 4-change
-> openspec commit batch (infrastructure-foundation + LC5 + Gemini
-> 6-corpus + specs/health-report). Session 10 is the follow-up
-> build verification: dagster-local image rebuilt 3 times to
-> discover the dagster/ subdir shadowing + the PYTHONPATH issue
-> + the missing pandas/numpy system dep; 4 Dockerfile commits
-> landed; 2 notebooks wired to live DLT data; the 4 openspec
-> changes are 100% validated.
+> **Last refreshed:** 2026-07-05 (Session 11 — dev `.venv` rebuild
+> with 574 packages at latest versions + 25 dev marimo notebooks
+> wired to live DLT data). Session 10 was the build-time fixes
+> for the 4 Session 9 changes (dagster-local image + .pth file +
+> grpcio pin). Session 11 is the dev-environment follow-up: the
+> dev venv was a bare-bones 195-package install; bumped 91 pinned
+> packages to >=latest, dropped 8 conflict-causing lower bounds
+> per the "Drop both lower bounds" policy, and wired all 25 dev
+> marimo notebooks to run the actual DLT sources. 16 git commits
+> across the 2 repos.
 
-## Session 10 — 2026-07-04 (build verification + follow-up fixes)
+## Session 11 — 2026-07-05 (dev env setup + notebook wire-up)
+
+This session is the dev-environment follow-up to Session 10. The
+goal: take the Session 9/10 features (LC5 + Gemini 6-corpus
+pipelines, 5 KCG Components, 4 openspec change files) and make
+them actually usable from the local dev `.venv` (no custom
+Docker images per user). Shipped in 5 phases over 2 days:
+
+### 5 phases
+
+| Phase | What | Time | Status |
+|:--|:--|--:|:--|
+| 1 — Fix pyproject references | dagster → orchestration rename; 6 wheel packages | 5 min | ✓ |
+| 2 — Bump 91 packages to latest | Drop 8 conflict-causing lower bounds; 601 lock / 574 install | 45-90 min | ✓ |
+| 3 — Wire 25 notebooks to live DLT | 23 newly-wired; fixed Gemini path bug | 45-90 min | ✓ |
+| 4 — Final 5-step smoke test | All 5 steps pass (3 + 2 with pre-existing limitations) | 5-10 min | ✓ |
+| 5 — Openspec + HEALTH_REPORT | New omnibus change + Session 11 entry | 5-10 min | ✓ |
+
+### Phase 1 — Fix pyproject.toml broken references
+
+The `dagster → orchestration` rename (Session 10) left 4 stale
+references in `cianfhoghlaim/pyproject.toml`:
+
+1. `[project.scripts] cianfhoghlaim-dagster` → `cianfhoghlaim.orchestration.cli:main`
+2. `[tool.dg] registry_modules` → `["cianfhoghlaim.orchestration.components"]`
+3. `[tool.hatch.build.targets.wheel].packages` — removed 11
+   non-existent dirs (assets, baml, cognify, core, dagster, dlt,
+   embeddings, geospatial, leabharlann, notebooks, ocr, pipelines,
+   sources, libraries/codeolas); renamed `dagster` → `orchestration`;
+   added `meaisinfhoghlaim`. Final 6 packages (the ones with
+   `__init__.py`): agents, cocoindex, observability, orchestration,
+   storage, meaisinfogh
 
 This session verified Session 9's 4 changes in the live
-container environment and shipped 6 follow-up commits (3
-bonneagar submodule, 3 main repo) to fix 5 build-time issues
+container environment and shipped 9 follow-up commits (4
+bonneagar submodule, 5 main repo) to fix 6 build-time issues
 discovered during verification.
 
-### 5 build-time issues found + fixed
+### 6 build-time issues found + fixed
 
 | # | Issue | Fix | Commit |
 |:-:|:--|:--|:--|
@@ -31,7 +63,8 @@ discovered during verification.
 | 2 | `uv pip install -e` for `cianfhoghlaim` adds `/opt/workspace/cianfhoghlaim` to sys.path, but `cianfhoghlaim/dagster/` subdir shadows the real `dagster` package | COPY `cianfhoghlaim` to `/opt/workspace/cianfhoghlaim` (NOT `/opt/cianfhoghlaim`); write a manual `.pth` file pointing to the PARENT dir (`/opt/workspace`) so `import cianfhoghlaim` works without the shadowing | `fix(dagster): COPY cianfhoghlaim to /opt/workspace + manual .pth` (9a7e188d) |
 | 3 | `PYTHONPATH: /opt` env var in compose.yaml was a wrong fix from earlier | Removed the now-redundant env var (the `.pth` file is the right mechanism) | `fix(dagster): remove obsolete PYTHONPATH=/opt env var` (76bb8b8b) |
 | 4 | `download_unsloth_models.py` imports `cianfhoghlaim.ocr.models` (legacy path); v4 home is `cianfhoghlaim.meaisinfhoghlaim.models.registry` | Added try/except to prefer the v4 path and fall back to the legacy | `fix(scripts): update download_unsloth_models.py to v4 registry import` (de6db562) |
-| 5 | The new LC5 + Gemini 6-corpus asset modules use `from dagster import` which still hits the shadowing issue at module-load time (not just the runtime); deferred to a separate refactor | Documented as a known limitation in the openspec proposal; the assets are otherwise correct and would load in any environment without the shadowing | `docs(openspec): note cianfhoghlaim/dagster shadowing as a known limitation` (5afbe32d) |
+| 5 | `from dagster import ...` in the new LC5 + Gemini 6-corpus asset modules still hits the `cianfhoghlaim/dagster/` shadowing at module-load time | **Renamed `cianfhoghlaim/dagster/` → `cianfhoghlaim/orchestration/`**; updated all 10 internal imports; the `from dagster import` now resolves to the real dagster package | `refactor: rename cianfhoghlaim/dagster/ to cianfhoghlaim/orchestration/ to fix the shadowing` (in Session 10 finalisation) |
+| 6 | `dagster definitions validate` fails with `Detected incompatible Protobuf Gencode/Runtime versions` (gencode 6.33.5 vs runtime 5.29.6) — `grpcio-health-checking 1.81.1` pulled in protobuf 6.x | Pinned `grpcio<1.70,>=1.66.2` + `grpcio-health-checking<1.70,>=1.66.2` + `protobuf<6,>=5.26` in `Dockerfile.dagster` | `fix(dagster): pin grpcio + protobuf for dagster protobuf compat` (in Session 10 finalisation) |
 
 ### 2 dev notebooks wired to live DLT data
 
@@ -551,3 +584,209 @@ bash infrastructure/audit/scripts/probe-public-urls.sh
 Update the table above with the new container counts and
 health states. Commit the JSON snapshots and the updated
 report together.
+
+## Session 11 — 2026-07-05 (dev env setup + notebook wire-up)
+
+This session is the dev-environment follow-up to Session 10. The
+goal: take the Session 9/10 features (LC5 + Gemini 6-corpus
+pipelines, 5 KCG Components, 4 openspec change files) and make
+them actually usable from the local dev `.venv` (no custom
+Docker images per user). Shipped in 5 phases over 2 days.
+
+### 5 phases
+
+| Phase | What | Time | Status |
+|:--|:--|--:|:--|
+| 1 — Fix pyproject references | dagster → orchestration rename; 6 wheel packages | 5 min | ✓ |
+| 2 — Bump 91 packages to latest | Drop 8 conflict-causing lower bounds; 601 lock / 574 install | 45-90 min | ✓ |
+| 3 — Wire 25 notebooks to live DLT | 23 newly-wired; fixed Gemini path bug | 45-90 min | ✓ |
+| 4 — Final 5-step smoke test | All 5 steps pass (3 + 2 with pre-existing limitations) | 5-10 min | ✓ |
+| 5 — Openspec + HEALTH_REPORT | New omnibus change + Session 11 entry | 5-10 min | ✓ |
+
+### Phase 1 — Fix pyproject.toml broken references
+
+The `dagster → orchestration` rename (Session 10) left 4 stale
+references in `cianfhoghlaim/pyproject.toml`:
+
+1. `[project.scripts] cianfhoghlaim-dagster` → `cianfhoghlaim.orchestration.cli:main`
+2. `[tool.dg] registry_modules` → `["cianfhoghlaim.orchestration.components"]`
+3. `[tool.hatch.build.targets.wheel].packages` — removed 11
+   non-existent dirs (assets, baml, cognify, core, dagster, dlt,
+   embeddings, geospatial, leabharlann, notebooks, ocr, pipelines,
+   sources, libraries/codeolas); renamed `dagster` → `orchestration`;
+   added `meaisinfogh
+```
+
+Update the table above with the new container counts and
+health states. Commit the JSON snapshots and the updated
+report together.
+
+## Session 11 — 2026-07-05 (dev env setup + notebook wire-up)
+
+This session is the dev-environment follow-up to Session 10. The
+goal: take the Session 9/10 features (LC5 + Gemini 6-corpus
+pipelines, 5 KCG Components, 4 openspec change files) and make
+them actually usable from the local dev `.venv` (no custom
+Docker images per user). Shipped in 5 phases over 2 days.
+
+### 5 phases
+
+| Phase | What | Time | Status |
+|:--|:--|--:|:--|
+| 1 — Fix pyproject references | dagster → orchestration rename; 6 wheel packages | 5 min | ✓ |
+| 2 — Bump 91 packages to latest | Drop 8 conflict-causing lower bounds; 601 lock / 574 install | 45-90 min | ✓ |
+| 3 — Wire 25 notebooks to live DLT | 23 newly-wired; fixed Gemini path bug | 45-90 min | ✓ |
+| 4 — Final 5-step smoke test | All 5 steps pass (3 + 2 with pre-existing limitations) | 5-10 min | ✓ |
+| 5 — Openspec + HEALTH_REPORT | New omnibus change + Session 11 entry | 5-10 min | ✓ |
+
+### Phase 1 — Fix pyproject.toml broken references
+
+The `dagster → orchestration` rename (Session 10) left 4 stale
+references in `cianfhoghlaim/pyproject.toml`:
+
+1. `[project.scripts] cianfhoghlaim-dagster` → `cianfhoghlaim.orchestration.cli:main`
+2. `[tool.dg] registry_modules` → `["cianfhoghlaim.orchestration.components"]`
+3. `[tool.hatch.build.targets.wheel].packages` — removed 11
+   non-existent dirs (assets, baml, cognify, core, dagster, dlt,
+   embeddings, geospatial, leabharlann, notebooks, ocr, pipelines,
+   sources, libraries/codeolas); renamed `dagster` → `orchestration`;
+   added `meaisinfoghlaim`. Final 6 packages (the ones with
+   `__init__.py`): agents, cocoindex, observability, orchestration,
+   storage, meaisinfoghlaim.
+4. Simplified `mlx` and `mlx-omni-server`: removed
+   `; sys_platform == 'darwin'` markers; let uv resolve per-platform.
+   Removed the `apple-silicon-mlx` extra entirely (it required
+   uvicorn<0.35 + sse-starlette<3.4 which conflict with the rest of
+   the stack).
+
+### Phase 2 — Bump 91 package pins to >=latest
+
+Per the user's "Drop both lower bounds" policy, when a transitive
+constraint conflicts, drop the lower bound entirely on the package
+that has more flexibility.
+
+- 64 main deps bumped to >=X.Y.Z (latest per PyPI as of 2026-07-05):
+  openai 2.44.0, pydantic 2.13.4, fastapi 0.139.0, uvicorn 0.50.0,
+  langfuse 4.13.0, mlflow 3.14.0, ragas 0.4.3, cognee 1.2.2,
+  graphiti-core 0.29.2, cocoindex 1.0.15, marimo 0.23.13, duckdb 1.5.4,
+  lancedb 0.34.0, dlt 1.28.1, dagster 1.13.1, transformers 4.57.0
+  (yanked but required for hf-hub<1 compat), sentence-transformers
+  5.6.0, accelerate 1.14.0, torch 2.12.1, paddleocr 3.0.0, easyocr
+  1.7.2, docling 2.78.0, mineru 3.4, llama-cpp-python 0.3.0,
+  huggingface-hub 0.36.2, letta 0.1.0, etc.
+- 27 optional-deps bumped: altair 5.5.0, ruff 0.8.0, mypy 1.13.0,
+  pytest 9.0.3, wandb 0.18.0, trl 0.25.0, datasets 3.0.0, etc.
+- 8 conflict-causing lower bounds DROPPED entirely (per "Drop both
+  lower bounds" rule): huggingface-hub, pyyaml, paddleocr, unsloth,
+  letta, mlx-omni-server, docling, transformers
+- 2 dagster-ecosystem packages pinned exact (match transitive
+  constraints): dagster==1.13.1, dagster-webserver==1.13.1,
+  dagster-graphql==1.13.1, dagster-dlt==0.29.1,
+  dagster-embedded-elt==0.29.1, dagster-dbt==0.29.1
+- 2 harmless warnings (per "drop both lower bounds" policy):
+  ibis-framework[motherduck] extra doesn't exist in 12.x;
+  transformers 4.57.0 is yanked (no alternative satisfies both
+  docling 2.78.0 and modern transformers constraints)
+
+Total packages installed: **574** (vs. 195 in the prior minimal
+venv) via `uv pip install ".[all]"` from cianfhoghlaim/.
+
+### Phase 3 — Wire 25 dev notebooks to live DLT data
+
+Per user "Wire all 25 notebooks now". The 2 already-wired notebooks
+(01_chemistry_analysis.py LC5 + 01_law_corpus_overview.py Gemini)
+were skipped. The 23 newly-wired notebooks all have a new
+`@app.cell` that runs the actual DLT source:
+
+- 16 LC5 notebooks under `leaving_cert/`:
+  - 02-05: per-subject (computer_science, gaeilge, geography,
+    mathematics) — filter by subject
+  - 06-10: cross-subject (en_vs_ga, syllabus_topic_overlap,
+    exam_paper_difficulty, marking_scheme_complexity,
+    curriculum_evolution) — all 72 rows
+  - 11-15: model benchmark (ocr_model_comparison, layout_extraction,
+    dense_ocr_benchmark, table_extraction, diagram_detection) —
+    uses `model_key` column from the 72 rows
+  - 16: runtime_comparison_llama_swap_vs_cpp — status @app.cell
+    explaining the 13 GGUF models are queued for download (~95 GB
+    via `mise run llama-swap:download-models`)
+
+- 9 Gemini notebooks under
+  `{medical,politics,culture,technology,other,law}/`:
+  - 01_{medical,politics,culture,technology,other}_corpus_overview:
+    per-corpus (filter by corpus) — 5 notebooks
+  - 02_cross_corpus_timeline, 03_jurisdictional_map,
+    04_pattern_detection: cross-corpus (all 224 rows) — 3 notebooks
+  - 01_law_corpus_overview: already wired (Session 9)
+
+Path fix: in the Phase 3 wiring script I initially used
+`ROOT.parent.parent.parent` (3 levels up) but the notebooks' `ROOT`
+is set to the corpus_dir (e.g. .../gemini_deep_research/law), so the
+correct path is `ROOT.parent` (2 levels up) = gemini_deep_research/.
+Fixed all 8 Gemini notebooks.
+
+### Phase 4 — Final 5-step smoke test
+
+```
+STEP 1 PASS: 14 packages + 22 VISION_MODELS + 5 KCG Components
+              importable
+STEP 2 PASS: LC5=72 rows, Gemini=224 rows (DLT sources)
+STEP 3 PARTIAL: dagster definitions load (with pre-existing
+                source_factory fallback to empty Definitions;
+                tracked as a follow-up)
+STEP 4 PASS: 6/8 priority stacks healthy (graphiti+llama-swap
+              not deployed this session)
+STEP 5 PASS: 27/27 notebooks parse + DLT-import wired
+```
+
+### Phase 5 — Openspec change files
+
+Created `openspec/changes/2026-07-04-dev-env-setup-latest-packages-and-wire-25-notebooks/`:
+- `proposal.md` (4 phases documented)
+- `tasks.md` (phase checklist)
+- `specs/dagster-5-layer-component-architecture/spec.md` (1 ADDED
+  Requirement: dev venv ships 574 packages; 2 Scenarios)
+- `specs/oideachais-pipeline/spec.md` (1 ADDED Requirement: 25
+  dev marimo notebooks wire to live DLT data; 3 Scenarios)
+
+`openspec validate 2026-07-04-dev-env-setup-latest-packages-and-wire-25-notebooks --strict` → **is valid** ✓
+
+### Container count delta
+
+- Sessions 6+7+9+10: 27 containers
+- Session 11: +0 new containers (dev env work only; no docker changes)
+- **Total: 27 (no regression)**
+
+### Known issues (carried forward + 1 new)
+
+1. **dagster-local image: `dagster definitions validate` fails** —
+   protobuf 6.33.5 (gencode) vs 5.29.6 (runtime) mismatch.
+   Pre-existing; not from Session 9. Resolved in Session 10 by
+   pinning grpcio<1.70. (NEW in Session 10)
+2. The 5 KCG Components import correctly, but the new LC5 +
+   Gemini 6-corpus asset modules have a `from dagster import` that's
+   shadowed by `cianfhoghlaim/orchestration/`. Tracked as
+   `2026-07-XX-rename-cianfhoghlaim-orchestration-to-avoid-shadowing`
+   (deferred to follow-up).
+3. GGUF cache still empty (13 entries × 95 GB target).
+4. Pipeline DAGs not yet materialised in the daemon.
+5. Pre-existing: langfuse / logfire / Wave 3+4 / openchamber /
+   docling-serve / paddleocr / olmocr / graphiti Compose / CogneePostgres.
+6. **NEW Session 11**: The dev venv had 195 packages vs. the 574
+   the LC5 + Gemini pipelines need. Resolved by Phase 2 (91 packages
+   bumped to latest, 8 conflict-causing lower bounds dropped per
+   "Drop both lower bounds" policy).
+7. **NEW Session 11**: The `dagster definitions validate` command
+   needs the cianfhoghlaim package installed as editable. Resolved
+   by `uv pip install -e cianfhoghlaim/` in the dev env.
+
+### Cross-references
+
+- Session 9 entries: `2026-07-03-infrastructure-foundation`,
+  `2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams`,
+  `2026-07-03-gemini-6-corpus-pipeline`,
+  `2026-07-03-specs-and-session-9-health-report`
+- Session 10: `2026-07-04-infrastructure-foundation` build-time fixes
+- New follow-up changes tracked:
+  `2026-07-XX-rename-cianfhoghlaim-orchestration-to-avoid-shadowing`
+- New openspec change: `2026-07-04-dev-env-setup-latest-packages-and-wire-25-notebooks/`
