@@ -119,9 +119,8 @@ dependencies = [
     "transformers>=4.45.0",
     "torch>=2.4.0",
     "accelerate>=1.0.0",
-    "mlx>=0.31.2,<0.32; sys_platform == 'darwin'",  # bounded for mflux (transitive dep of mlx-omni-server==0.5.3 on darwin)
-    "mlx>=0.30.3,<=0.31.1; sys_platform != 'darwin'",  # bounded for mflux on non-darwin
-    "mlx-omni-server==0.5.3; sys_platform == 'darwin'",  # OCR/VLM server (M-series Apple Silicon); 0.5.3 is the only version compatible with cognee's uvicorn>=0.34,<0.35 pin
+    "mlx",  # M-series Apple Silicon; per-platform pin handled by mlx itself
+    "mlx-omni-server",  # OCR/VLM server; per-platform pin handled by mlx-omni-server itself
 
     # ── Geospatial + crypto ──
     "geopandas>=1.0.0",
@@ -253,7 +252,7 @@ cianfhoghlaim-ocr          = "cianfhoghlaim.ocr.cli:main"
 cianfhoghlaim-baml         = "cianfhoghlaim.baml.cli:main"
 cianfhoghlaim-marimo       = "cianfhoghlaim.notebooks.cli:main"
 cianfhoghlaim-stack-doctor = "cianfhoghlaim.stacks.cli:main"
-cianfhoghlaim-dagster      = "cianfhoghlaim.dagster.cli:main"
+cianfhoghlaim-dagster      = "cianfhoghlaim.orchestration.cli:main"
 cianfhoghlaim-dlt          = "cianfhoghlaim.dlt.cli:main"
 cianfhoghlaim-cocoindex    = "cianfhoghlaim.cocoindex.cli:main"
 
@@ -275,7 +274,7 @@ package = true
 # change, the 5 KCG-specific Components are auto-discovered by `dg list components`
 # and scaffolded via `dg scaffold defs <Component> ...`.
 [tool.dg]
-registry_modules = ["cianfhoghlaim.dagster.components"]
+registry_modules = ["cianfhoghlaim.orchestration.components"]
 
 [build-system]
 requires = ["hatchling"]
@@ -295,23 +294,11 @@ build-backend = "hatchling.build"
 #   leabharlann/samplai/ (Celtic-language data, not code)
 packages = [
     "agents",
-    "assets",
-    "baml",
     "cocoindex",
-    "cognify",
-    "core",
-    "dagster",
-    "dlt",
-    "embeddings",
-    "geospatial",
-    "leabharlann",
-    "notebooks",
     "observability",
-    "ocr",
-    "pipelines",
-    "sources",
+    "orchestration",
     "storage",
-    "libraries/codeolas",
+    "meaisinfhoghlaim",
 ]
 
 # =============================================================================
