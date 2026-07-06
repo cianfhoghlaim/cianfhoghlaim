@@ -37,6 +37,16 @@ dlthub
 !.agents/skills/dlthub/
 !.agents/skills/dlthub/SKILL.md
 
+# NEW 2026-07-06: per-developer dlthub ai init artifacts. Re-installed on
+# fresh clone via the openspec change Phase 2 commands (run from inside
+# cianfhoghlaim/, the workspace root). See docs/agents/dlthub-run-vs-serve.md.
+/.claude/
+/.claudeignore
+/.mcp.json
+/cianfhoghlaim/.claude/
+/cianfhoghlaim/.claudeignore
+/cianfhoghlaim/.mcp.json
+
 # =============================================================================
 # CIANFHOGHLAIM MONOREPO - GITIGNORE
 # =============================================================================
