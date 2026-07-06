@@ -1,6 +1,6 @@
 ---
 name: cocoindex
-description: Comprehensive toolkit for developing with the CocoIndex v1 library (latest pip release v1.0.14, tagged 2026-06-25; docs review string frozen on v1.0.7 / Last reviewed Jun 23, 2026 — verified live 2026-06-29 via webfetch against cocoindex.io/docs, pypi.org/project/cocoindex, and github.com/cocoindex-io/cocoindex/releases). Use when users need pipelines with the v1 `coco.App` + `@coco.fn` + `ContextKey` + `mount_table_target` + `Annotated[NDArray, EMBEDDER]` model, 17 source/target connectors (S3, Doris, FalkorDB, Google Drive, Iggy, Kafka, LanceDB, LocalFS, Neo4j, OCI Object Storage, Postgres, Qdrant, SQLite, SurrealDB, Turbopuffer, Valkey, zvec), execution primitives (`memo=True`, `logic_tracking`, `version`, `deps`, `batching=True`, `runner=coco.GPU`, `as_async`), and lifecycle via `@coco.lifespan` + `coco.start() / coco.stop() / coco.runtime()`. Covers ETL for AI: embeddings into vector DBs (with `declare_fts_index` for keyword), knowledge graphs, search indexes, incremental updates, and the v1.0.8 `use_state` + `LiveMap` + `RateLimiter` suite. PyPI marks 1.0.8 as yanked; pin `>=1.0,<2.0,!=1.0.8`.
+description: Toolkit for CocoIndex v1 library (pip v1.0.14, 2026-06-25; docs frozen on v1.0.7 / 2026-06-23 — verified live 2026-06-29). Use when users need pipelines with the v1 `coco.App` + `@coco.fn` + `ContextKey` + `mount_table_target` + `Annotated[NDArray, EMBEDDER]` model, 17 source/target connectors (S3, Doris, FalkorDB, Google Drive, Iggy, Kafka, LanceDB, LocalFS, Neo4j, OCI Object Storage, Postgres, Qdrant, SQLite, SurrealDB, Turbopuffer, Valkey, zvec), execution primitives (`memo=True`, `logic_tracking`, `version`, `deps`, `batching=True`, `runner=coco.GPU`, `as_async`), and lifecycle via `@coco.lifespan` + `coco.start() / coco.stop() / coco.runtime()`. Powers the 7 BIEP v1 Apps (6 LC subjects + `government_circulars`) + the canonical `_lifespan.py` shared embedder (`BAAI/bge-m3`, 1024-d). PyPI marks 1.0.8 as yanked; pin `>=1.0,<2.0,!=1.0.8`.
 ---
 
 # CocoIndex v1
@@ -48,22 +48,22 @@ own state — only when an example writes to a target database).
 
 **Round 8 phase 1 (2026-06-23) — code-graph companion pattern:**
 
-The canonical v1 codebase indexer (`sruth/oideachais/cocoindex_flows/codebase_indexing.py`)
+The canonical v1 codebase indexer (`cianfhoghlaim/cocoindex/codebase_indexing.py`)
 now has a code-graph companion v1 App (`codebase_graph_app`) that
 extracts AST relationships into 2 LanceDB tables
 (`codebase_graph` + `codebase_graph_edges`). 7 node types +
 7 edge types, 11 languages with Tree-sitter AST mappings,
 29+ languages detected via
-`sruth/oideachais/cocoindex_flows/chunking/languages.py`. The companion
+`cianfhoghlaim/cocoindex/chunking/languages.py`. The companion
 App is driven by 3 Dagster assets in
-`sruth/oideachais/dagster_defs/assets/codebase_assets.py`:
+`cianfhoghlaim/orchestration/defs/3_model_lifecycle/codebase_assets.py`:
 `codebase_chunks`, `codebase_code_graph`, `codebase_architecture_docs`.
 
 **Round 7 phase 2 (2026-06-24) — 4 v1 infrastructure companions:**
 
 The infrastructure surface (HTTP routes, filesystem layout, storage
 backends, config files) is now on v1 CocoIndex via 4 new Apps in
-`sruth/oideachais/cocoindex_flows/`:
+`cianfhoghlaim/cocoindex/`:
 
 - `api_indexing.py` (v1 App `ApiIndex`) — 4 frameworks (FastAPI +
   Hono + TanStack Start + Convex HTTP) → `api_endpoints` LanceDB
@@ -77,15 +77,15 @@ backends, config files) is now on v1 CocoIndex via 4 new Apps in
   k8s / pulumi / dg / github / justfile) → `config_files` LanceDB
 
 Driven by 4 Dagster assets in
-`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py`:
+`cianfhoghlaim/orchestration/defs/3_model_lifecycle/infrastructure_assets.py`:
 `api_endpoints`, `filesystem_layout`, `storage_backends`,
 `config_files` (group `infrastructure`).
 
 **Round 7 phase 3 (2026-06-24) — 2 v1 embedding Apps:**
 
 The unified embedding pipeline from
-`sruth/crypteolas/cocoindex_flows/unified_embedding.py` is now on v1
-CocoIndex via 2 Apps in `sruth/oideachais/cocoindex_flows/unified_embedding.py`:
+`cianfhoghlaim/cocoindex/unified_embedding.py` is now on v1
+CocoIndex via 2 Apps in `cianfhoghlaim/cocoindex/unified_embedding.py`:
 
 - `unified_app` (v1 App `UnifiedEmbedding`) — reads from any DuckDB
   connection (default: `crypteolas_catalog.docs.scraped_documents`),
@@ -98,7 +98,7 @@ CocoIndex via 2 Apps in `sruth/oideachais/cocoindex_flows/unified_embedding.py`:
   with BGE-M3, writes to the `code_embeddings` LanceDB table.
 
 Driven by 2 Dagster assets in
-`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py`:
+`cianfhoghlaim/orchestration/defs/3_model_lifecycle/unified_embedding_assets.py`:
 `unified_embeddings`, `code_embeddings` (group `embedding`).
 
 **For detailed documentation:** <https://cocoindex.io/docs/>
@@ -614,18 +614,18 @@ this repo is the source of one or more `DocSkill` nodes in the
 `docs_skills_graph` FalkorDB graph and one or more `docs_skills_chunks`
 rows in LanceDB.
 
-- **App**: `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py`
-- **Dagster assets**: `sruth/oideachais/dagster_defs/assets/docs_skills_assets.py`
+- **App**: `cianfhoghlaim/cocoindex/docs_skills_consolidation.py`
+- **Dagster assets**: `cianfhoghlaim/orchestration/defs/4_asset_generation/docs_skills_assets.py`
   (groups `docs_skills` + `codebase`)
-- **BAML schema**: `baml_src/docs_skills_consolidation.baml`
+- **BAML schema**: `cianfhoghlaim/baml/docs_skills_consolidation.baml`
 - **OpenSpec change**: `openspec/changes/docs-skills-consolidation-pipeline/`
 - **Run catch-up**: `bun run docs:consolidate` (or `mise docs:consolidate`)
 - **Run live**:    `bun run docs:consolidate:live`
-- **Search**: `from sruth.oideachais.cocoindex_flows.docs_skills_consolidation import search_docs_skills; asyncio.run(search_docs_skills("<query>"))`
+- **Search**: `from cianfhoghlaim.cocoindex.docs_skills_consolidation import search_docs_skills; asyncio.run(search_docs_skills("<query>"))`
 
 The companion codebase-indexing v1 App (replacement for the legacy
 `ccc` CLI) lives at
-`sruth/oideachais/cocoindex_flows/codebase_indexing.py`; see the `ccc`
+`cianfhoghlaim/cocoindex/codebase_indexing.py`; see the `ccc`
 skill's deprecation banner.
 
 **For comprehensive documentation:** <https://cocoindex.io/docs/>
@@ -644,7 +644,7 @@ stedding/huggingface/hub/
 The canonical model is **`vidore/colpali-v1.3`** (1024-d
 multi-vector, vision + text). For LlamaIndex aliasing via
 LiteLLM, use the alias `vision` (set in
-`sruth/oideachais/api/router.py`). The KCG marimo dashboard
+`cianfhoghlaim/api/router.py`). The KCG marimo dashboard
 `/dashboards/curriculum-images` shows a live demo of the
 multimodal ColPali + Qdrant MaxSim search.
 ## 2026-06 update (CocoIndex v1.0.1–1.0.14)
@@ -725,7 +725,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 ### 2026-06-25 update (CocoIndex v1.0.7 + the `upstream-package-monitoring` skill)
 
 - **`cocoindex_v1_conformance` App** — the 14th v1 App in the KCG
-  oideachais tree (`sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`).
+  oideachais tree (`cianfhoghlaim/cocoindex/cocoindex_v1_conformance.py`).
   It's a static AST linter that checks every other v1 App against
   the 4-rule conformance contract:
   - **R1** — `from ._lifespan import shared_lifespan` (delegates to
@@ -739,12 +739,12 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
   Run via `mise run upstream:conformance`. See the
   `oideachais-cocoindex-v1` skill for the full 14-App registry.
 - **`upstream_api_surface` App** — the 15th v1 App
-  (`sruth/oideachais/cocoindex_flows/upstream_api_surface.py`). Watches
+  (`cianfhoghlaim/cocoindex/upstream_api_surface.py`). Watches
   the 5 canonical cocoindex docs URLs + `llms-full.txt` and BAML-extracts
   `ApiChange` records via `ExtractCocoIndexApiChange`. See
   `openspec/changes/upstream-package-monitoring/proposal.md`.
 - **`upstream_blog_monitor` App** — the 16th v1 App
-  (`sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`).
+  (`cianfhoghlaim/cocoindex/upstream_blog_monitor.py`).
   Reads Firecrawl-monitor payloads from
   `s3://oideachais-upstream-webhooks/<package>/...`, BAML-extracts
   `BlogPostMetadata` via `ExtractBlogPostMetadata`, embeds chunks, and
@@ -763,5 +763,122 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 - **v1.0.10 (14 Jun 2026) — Agent experience (.md mirrors, llms.txt, skill endpoint, examples agent docs) (#2104) — drove the "Copy page as Markdown / Open in ChatGPT / Open in Claude / Install the CocoIndex v1 skill" buttons on every docs page**.
 - **v1.0.9 (12 Jun 2026) — `coco.fn` directly callable outside a component context (#2101)**.
 - **v1.0.8 (11 Jun 2026 — YANKED on PyPI per release history) — `coco.use_state()` persistent per-component state (#2034); `LiveMap` in-memory intermediate collection (#2088); Preview mode for update actions (#1945); Token-bucket `RateLimiter` (#2057); `LiteLLMTranscriber` STT (#2059); Tigris alongside MinIO (#2063). Do not install.**
+
+## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+
+The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) defines
+**7 v1 CocoIndex Apps** — one per LC subject plus the
+`gov.ie` circulars ingester — sharing the canonical
+`cianfhoghlaim/cocoindex/_lifespan.py` (the `LANCE_DB` +
+`EMBEDDER` + `RESOLVED_FILE_REGISTRY` triad per REFACTORING.md
+item 12). The BIEP uses `BAAI/bge-m3` (1024-d, multilingual)
+for the embedder so Gaeilge and English chunks share a single
+vector space.
+
+```python
+import pathlib
+from dataclasses import dataclass
+from typing import Annotated
+from numpy.typing import NDArray
+import cocoindex as coco
+from cocoindex.connectors import lancedb, localfs
+from cocoindex.resources.file import FileLike, PatternFilePathMatcher
+from cocoindex.ops.text import RecursiveSplitter
+from cianfhoghlaim.cocoindex._lifespan import shared_lifespan, LANCE_DB, EMBEDDER
+
+_splitter = RecursiveSplitter()
+
+
+@dataclass
+class MathChunk:
+    chunk_id: str
+    text: str
+    embedding: Annotated[NDArray, EMBEDDER]
+
+
+@coco.fn(memo=True)
+async def process_mathematics_pdf(
+    file: FileLike,
+    table: lancedb.TableTarget,
+) -> None:
+    text = await file.read_text()
+    chunks = _splitter.split(
+        text, chunk_size=512, chunk_overlap=64, language="markdown"
+    )
+    for chunk in chunks:
+        vec = await coco.use_context(EMBEDDER).embed(chunk.text)
+        table.declare_row(
+            row=MathChunk(chunk_id=chunk.id, text=chunk.text, embedding=vec)
+        )
+
+
+@coco.fn
+async def app_main() -> None:
+    table = await lancedb.mount_table_target(
+        LANCE_DB,
+        table_name="oideachais.lc.mathematics.higher_en",
+        table_schema=await lancedb.TableSchema.from_class(
+            MathChunk, primary_key=["chunk_id"]
+        ),
+    )
+    table.declare_vector_index(column="embedding")
+    files = localfs.walk_dir(
+        pathlib.Path("leaving_certificate/mathematics/en/"),
+        recursive=True,
+        path_matcher=PatternFilePathMatcher(included_patterns=["**/*.pdf"]),
+    )
+    await coco.mount_each(process_mathematics_pdf, files.items(), table)
+
+
+mathematics_embedding = coco.App(
+    coco.AppConfig(name="mathematics_embedding"),
+    app_main,
+)
+```
+
+The 7 BIEP v1 Apps follow this template — swap `MathChunk` for
+`ChemChunk` / `GeogChunk` / `GaeilgeChunk` / `EnglishChunk` /
+`CompSciChunk` / `GovCircularChunk`, swap the table name
+(`oideachais.lc.<subject>.<level>_<lang>` /
+`oideachais.education.ie.gov_circulars`), and update the source
+directory. All 7 import `shared_lifespan` from
+`cianfhoghlaim/cocoindex/_lifespan.py` to satisfy the v1
+conformance contract (`R1`–`R4` from
+`oideachais-cocoindex-v1/SKILL.md`).
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects × English / Gaeilge** — Mathematics, Chemistry,
+  Geography, Gaeilge, English, Computer Science; each subject
+  has 2 v1 Apps (one per language) → 12 subject Apps + 1
+  `government_circulars` App = 13 BIEP v1 Apps (counting
+  language partitions; 7 by subject).
+- **`gov.ie` circulars** — the `government_circulars` v1 App
+  walks `leaving_certificate/government_circulars/` (PDFs from
+  `gov.ie/.../circulars/...`) and writes to
+  `oideachais.education.ie.gov_circulars_archive`.
+- **`BAAI/bge-m3` 1024-d embedder** — shared via
+  `_lifespan.py`; supports Gaeilge + English + 100+ languages
+  in one vector space.
+- **Dagster wiring** — each v1 App is driven by a Dagster asset
+  in `cianfhoghlaim/orchestration/defs/3_model_lifecycle/`
+  (group `lc6_embedding`).
+- **Downstream RAG** — the 4 MotherDuck Dives
+  (`lc_syllabus_topics`, `lc_exam_difficulty`,
+  `lc_marking_complexity`, `gov_circulars_archive`) query the
+  resulting LanceDB tables via `lance_scan()` from
+  DuckDB/MotherDuck.
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
+  sources that produce the BAML rows the Apps embed
+- [`.agents/skills/baml/SKILL.md`](../baml/SKILL.md) — the
+  `ExtractCurriculumSyllabus` + 4 sibling functions
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives
+- [`.agents/skills/lancedb/SKILL.md`](../lancedb/SKILL.md) —
+  the `mount_table_target` canonical pattern
+- [`.agents/skills/dagster/SKILL.md`](../dagster/SKILL.md) —
+  the 42 lc5/lc6 assets
 
 > Docs badge: every page renders `v 1.0.7` / `Last reviewed Jun 23, 2026` — frozen since 2026-06-23, even after 7 newer releases. The "Copy page as Markdown" / "Open in ChatGPT" / "Open in Claude" buttons are present on every URL fetched in this verification (install path: `npx skills install cocoindex/cocoindex --skill <slug>`).

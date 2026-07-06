@@ -184,3 +184,41 @@ The 4 dlt sources auto-discover files in these directories.
 - `sruth/oideachais/cognify_rules/leabharlann_cross_archive.py` — the 3-edge-rule home
 - `sruth/oideachais/baml_src/leabharlann_extraction.baml` — the BAML schema
 - `openspec/specs/oideachais-leabharlann/spec.md` — the canonical spec
+
+## Email inbox pipeline (2026-06-29)
+
+Added in the `2026-06-29-leabharlann-email-inbox-pipeline` change
+to ingest the user's personal + professional email (4 accounts:
+DKIT.ie Microsoft 365, 2 Gmail, Hotmail) into the leabharlann
+lakehouse alongside the static Gemini / Zotero / Takeout corpora.
+
+- **DLT source** —
+  `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/leabharlann/email_inbox.py`
+  yields 4 resources (`inbox_index`, `inbox_threads`,
+  `inbox_attachments`, `inbox_legal_threads`) from
+  `/srv/mailcow-exports/mailbox-<account>-*.mbox`. MBOX parsing uses
+  Python's `mailbox` stdlib (single-pass `mailbox.mbox()` iterator —
+  never loads the full file). Thread reconstruction walks the
+  `In-Reply-To` + `References` chain, then falls back to a
+  normalised subject (strip `Re:`, `Fwd:`, `Fwd: Re:`,
+  `[list-tag]`, `(External)`). Partition keys: `account` (from
+  `author_archive_accounts.yaml` — 4 accounts), `year` (from
+  `Date`), `legal_flag` (boolean from a first-500-char keyword scan
+  + sender-domain regex on the first 500 chars). GPG-at-rest is
+  opt-in via the existing
+  `_takeout_paths.TakeoutAccountConfig.gpg_encrypt_paths` knob
+  (prefixes `legal/`, `medical/`, `hsc/`, `nhs/`).
+- **Example config** —
+  `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/leabharlann/_email_accounts.example.yaml`
+  with 4 example accounts (dkit_ie, gmail_personal, gmail_academic,
+  hotmail_legacy).
+- **LBYL exception handling** — every `next()` boundary catches
+  `OSError` + `mailbox.Error` + `RuntimeError` so a single bad
+  message never crashes the source. Empty mbox → 0 rows +
+  `mailbox_empty` log warning.
+- **Cross-reference**: the full BAML + CocoIndex + Dagster + marimo
+  + cognify wiring lives in
+  [`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
+  The canonical openspec change is
+  [`openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/`](../../openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/).
+

@@ -1,6 +1,6 @@
 ---
 name: dlt
-description: Master routing skill for data load tool (dlt 1.28.1, June 2026). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping). Notes the 1.27 `dlt[hub]` plugin split and the 1.28 `refresh` > `replace` deprecation.
+description: Master routing skill for data load tool (dlt 1.28.1, June 2026). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping). Powers the British-Isles Education pipeline (6 LC subjects + gov.ie circulars). Notes the 1.27 `dlt[hub]` plugin split and the 1.28 `refresh` > `replace` deprecation.
 ---
 
 # DLT Master Router & Rules (Cianfhoghlaim)
@@ -42,12 +42,13 @@ When assuming the `data-engineer` persona, use these rules:
   local dev. Set `USE_DUCKLAKE=true` to switch to MotherDuck.
 - **Tests**: disable plugins during testing by setting
   `DLT_DISABLE_PLUGINS=true`.
-- **Source location**: `dlt_sources` lives at `sruth/oideachais/dlt_sources/`
+- **Source location**: `dlt_sources` lives at `cianfhoghlaim/dlt/`
   (NOT `sruth/oideachais/data_platform/dlt_sources/`, which is a deprecated
-  path mentioned in the old skill).
+  path mentioned in the old skill; NOT `sruth/oideachais/dlt_sources/`,
+  which was the pre-v4 path).
 - **Imports**: All `oideachais.data_platform...` absolute imports have
   been removed; use relative or local `dlt_sources` imports
-  (e.g. `from dlt_sources.ireland...`).
+  (e.g. `from cianfhoghlaim.dlt.british_isles.ireland.education.ncca...`).
 - **Offline fallback**: `USE_LOCAL_SCRAPES=true` routes extraction
   to `stedding/ingest_queue/` (the curated local cache) instead of
   live web scraping (avoids API rate limits and credit drain).
@@ -63,7 +64,7 @@ When assuming the `data-engineer` persona, use these rules:
 When tasked with dlt operations or data exploration, use this
 guide to invoke the most appropriate resource:
 
-### Data exploration & notebooks (sruth/oideachais/notebooks)
+### Data exploration & notebooks (cianfhoghlaim/notebooks/)
 
 - **`explore-data`**: Use to analyze datasets and create an
   `analysis_plan.md` artifact
@@ -150,8 +151,8 @@ guide to invoke the most appropriate resource:
 
 ```python
 import dlt
-from baml_client import b
-from baml_client.types import PrimaryLearningOutcome  # auto-generated
+from cianfhoghlaim.baml import b  # post-v4 codegen path
+from cianfhoghlaim.baml.types import PrimaryLearningOutcome  # auto-generated
 from pydantic import BaseModel
 
 class PrimaryOutcomeRow(BaseModel):
@@ -183,6 +184,64 @@ print(load_info)
 
 The BAML class is the **single source of truth** — both the
 Pydantic `BaseModel` and the dlt `primary_key` derive from it.
+
+### Canonical KCG pattern — British-Isles Education pipeline (lc6)
+
+The post-v4 canonical pipeline ingests one of the six Irish Leaving
+Certificate subjects (Mathematics, Chemistry, Geography, Gaeilge,
+English, Computer Science) from a BAML-extracted NCCA/SEC PDF,
+fan-outs to DuckLake + LanceDB, and is scheduled by Dagster via
+`@dlt_assets`:
+
+```python
+import dlt
+from cianfhoghlaim.dlt.british_isles.ireland.education.ncca import (
+    mathematics_syllabus as mathematics_syllabus_source,
+)
+from cianfhoghlaim.baml.education.lc_extraction.curriculum_syllabus import b
+
+
+@dlt.resource(
+    name="lc_mathematics_syllabus",
+    write_disposition="merge",
+    primary_key=["subject", "level", "language", "module_id"],
+)
+def mathematics_syllabus(pdf_path: str):
+    """Extract Mathematics LC syllabus modules from an NCCA PDF via BAML."""
+    doc = b.ExtractCurriculumSyllabus(text=open(pdf_path).read())
+    for module in doc.modules:
+        yield {
+            "subject": "mathematics",
+            "level": doc.level,
+            "language": doc.language,
+            "module_id": module.id,
+            "title": module.title,
+            "hours": module.hours,
+            "learning_outcomes": module.learning_outcomes,
+        }
+
+
+pipeline = dlt.pipeline(
+    pipeline_name="lc6_ncca",
+    destination="ducklake",
+    dataset_name="oideachais.leaving_cert",
+)
+load_info = pipeline.run(
+    mathematics_syllabus("leaving_certificate/mathematics/en/...syllabus.pdf")
+)
+print(load_info)
+```
+
+The same pattern is repeated for the other 5 LC subjects
+(`chemistry_syllabus`, `geography_syllabus`, `gaeilge_syllabus`,
+`english_syllabus`, `computer_science_syllabus`) plus a
+`government_circulars` resource for `gov.ie` education circulars.
+Each resource is wrapped in `@dlt_assets` in
+`cianfhoghlaim/orchestration/defs/2_materials/` and contributes
+to the 7 v1 CocoIndex Apps (6 LC + `government_circulars`) and
+the 4 MotherDuck Dives (`lc_syllabus_topics`,
+`lc_exam_difficulty`, `lc_marking_complexity`,
+`gov_circulars_archive`).
 
 ### Multi-destination fan-out (DuckDB + LanceDB + Memgraph)
 
@@ -255,13 +314,13 @@ multiprocess_executor, parallel assets, and incremental loading.
 - Use `write_disposition="merge"` without a `primary_key` (silently
   appends duplicates)
 - Import `oideachais.data_platform.dlt_sources` from within
-  `sruth/oideachais/` (use relative imports)
+  `cianfhoghlaim/` (use relative imports via `from cianfhoghlaim.dlt...`)
 - Hand-write DDL for the destination (let dlt infer the schema from
   the resource yield)
 - Run live web scraping without `USE_LOCAL_SCRAPES=true` first
   (drains API credits and risks rate limits)
 - Add a BAML client inline in a function (use a named client in
-  `baml_src/clients.baml`)
+  `cianfhoghlaim/baml/clients.baml`)
 - Pin `dlt==1.27.0` or `dlt==1.27.1` — both YANKED from PyPI for a
   data-loss bug; the fix is 1.27.2 (or upgrade to ≥ 1.28.1).
 - Use `write_disposition="replace"` (deprecated in 1.28.0) — use the
@@ -318,6 +377,43 @@ New references (added by the `sync-skills-from-docs` change):
 
 See [`./examples/`](./examples/) for upstream dlt reference
 
+## British-Isles Education pipeline use case (BIEP, post-v4)
+
+The `dlt` skill is the data-load backbone for the British-Isles
+Education pipeline (`openspec/changes/lc6-biep/`). It drives:
+
+- **7 per-subject BAML extraction stages** (syllabus / exam paper
+  layout / marking scheme / cross-linguistic / syllabus diagram)
+  across the 6 LC subjects (Mathematics, Chemistry, Geography,
+  Gaeilge, English, Computer Science) — **42 lc5/lc6 Dagster assets
+  total** in `cianfhoghlaim/orchestration/defs/2_materials/`.
+- **`gov.ie` circulars** — the `government_circulars` resource
+  mirrors the 7th v1 CocoIndex App (`government_circulars`),
+  landing pages from `gov.ie/.../circulars/...` into
+  `oideachais.education.ie.gov_circulars_archive` (one of the 4
+  canonical MotherDuck Dives).
+- **Dual-language fan-out** — every resource is partitioned by
+  `language` (`en` / `ga`) so the Gaeilge syllabus runs in parallel
+  with English via the same `@dlt_assets` wrapper.
+- **BAML → dlt columns** — the `lc5/lc6` extraction schemas (e.g.
+  `ExtractCurriculumSyllabus`, `ExtractMarkingSchemeGuideline`)
+  are the `primary_key` source-of-truth for the `merge` write
+  disposition.
+
+Cross-references:
+- [`baml/SKILL.md`](../baml/SKILL.md) — the BAML extraction functions
+- [`dagster/SKILL.md`](../dagster/SKILL.md) — the `@dlt_assets`
+  wrappers + lc6 schedule
+- [`motherduck/SKILL.md`](../motherduck/SKILL.md) — the 4 Dives
+  (`lc_syllabus_topics`, `lc_exam_difficulty`,
+  `lc_marking_complexity`, `gov_circulars_archive`)
+- [`cocoindex/SKILL.md`](../cocoindex/SKILL.md) — the 7 v1 Apps
+  (6 LC subjects + `government_circulars`)
+- [`marimo/SKILL.md`](../marimo/SKILL.md) — the 6 per-subject marimo
+  notebooks
+- [`change-detection/SKILL.md`](../change-detection/SKILL.md) — the
+  NCCA / SEC / `gov.ie` sitemap-hash sensors
+
 ## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
 
 - **dltHub Pro** launched 2026-04-14. The Pro tier adds 9,700+ known
@@ -332,11 +428,11 @@ See [`./examples/`](./examples/) for upstream dlt reference
   mandate (see `docs/secrets/secrets_management_plan.md` for the
   Infisical + Locket + mise three-way contract).
 - **dlthub upstream monitor** — `dlthub_blog.yml` in
-  `infrastructure/firecrawl/monitors/upstream_packages/` is the
+  `bonneagar/firecrawl/monitors/upstream_packages/` is the
   Firecrawl monitor that detects new source-context additions,
   ADE-Bench results, and Cortex Code integration updates via the
   LLM-judge `--goal` filter. The n8n workflow
-  `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json`
+  `bonneagar/stacks/n8n/workflows/upstream-blog-monitor.json`
   writes the payload to
   `s3://oideachais-upstream-webhooks/dlthub/...jsonl` and triggers
   the Dagster asset `upstream_blog_monitor_ingest`.

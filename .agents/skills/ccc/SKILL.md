@@ -1,7 +1,14 @@
 ---
 name: ccc
-description: "This skill should be used when code search, file/directory summary lookup, or concept-guide lookup is needed (whether explicitly requested or as part of completing a task), when indexing the codebase after changes, or when the user asks about ccc, cocoindex-code, or the codebase index. Trigger phrases include 'search the codebase', 'find code related to', 'describe this file', 'read the concept guide', 'update the index', 'ccc', 'cocoindex-code'."
+description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code search, file/directory summary lookup, or concept-guide lookup is needed, when indexing the codebase after changes, or when the user asks about ccc, cocoindex-code, or the codebase index. RETAINED by user direction past the 2026-07-15 retirement; canonical replacement is the v1 App `codebase_indexing` at cianfhoghlaim/cocoindex/codebase_indexing.py."
 ---
+
+> **DEPRECATION NOTICE (2026-07-06):** This skill was scheduled to retire
+> 2026-07-15 but is retained by user direction. The replacement (CocoIndex
+> v1 App `codebase_indexing`) lives at
+> `cianfhoghlaim/cocoindex/codebase_indexing.py`. Use the v1 App for new
+> work; this skill is retained for the `bun run ccc:init`,
+> `bun run ccc:index`, and `bun run ccc:search` developer shortcuts.
 
 # ccc - Semantic Code Search & Indexing
 

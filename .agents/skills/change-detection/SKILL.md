@@ -1,6 +1,6 @@
 ---
 name: change-detection
-description: How the Cianfhoghlaim platform detects upstream changes for sruth/oideachais/sources.yaml. Use when writing a DLT source that needs to re-run on upstream change, wiring a Dagster sensor, or configuring ChangeDetection.io on `arm1-oci`. Covers the 4-layer pattern: DLT incremental cursor + Dagster sitemap-hash sensor + ChangeDetection.io + Firecrawl monitor (the 4th layer, added 2026-06 for blog/changelog-without-sitemap surfaces via openspec/changes/upstream-package-monitoring).
+description: How the Cianfhoghlaim platform detects upstream changes for `cianfhoghlaim/dlt/sources.yaml`. Use when writing a DLT source that needs to re-run on upstream change, wiring a Dagster sensor, or configuring ChangeDetection.io on `arm1-oci`. Covers the 4-layer pattern: DLT incremental cursor + Dagster sitemap-hash sensor + ChangeDetection.io + Firecrawl monitor (the 4th layer, added 2026-06 for blog/changelog-without-sitemap surfaces). Powers BIEP freshness for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + `gov.ie` education circulars.
 ---
 
 # Change Detection
@@ -42,7 +42,7 @@ each one is appropriate for a different class of source.
 │  Layer 4: Firecrawl monitor (NEW 2026-06)                     │
 │  → for blog / changelog / docs surfaces without sitemaps,     │
 │    using the Firecrawl LLM-judge to filter meaningful change  │
-│    → powers sruth/oideachais/dlt_sources/domains/cross/       │
+│    → powers cianfhoghlaim/dlt/domains/cross/                  │
 │      upstream/blog_post.py + the 3 v1 CocoIndex Apps          │
 │      (upstream_blog_monitor, upstream_api_surface,            │
 │       cocoindex_v1_conformance). See                          │
@@ -81,10 +81,10 @@ The 4 active monitors (canonical YAML in
 | `cocoindex_docs.yml` | cocoindex | API-surface changes (coco.App, @coco.fn, FalkorDB connector) |
 
 Each monitor's webhook → n8n workflow
-`infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json`
+`bonneagar/stacks/n8n/workflows/upstream-blog-monitor.json`
 (which validates the payload + writes to
 `s3://oideachais-upstream-webhooks/<package>/<YYYY-MM-DD>/...jsonl`)
-→ DLT incremental source `dlt_sources.domains.cross.upstream.blog_post`
+→ DLT incremental source `cianfhoghlaim.dlt.domains.cross.upstream.blog_post`
 → CocoIndex v1 App `upstream_blog_monitor` (BAML `ExtractBlogPostMetadata` +
 FalkorDB `BlogPostNode` + `PackageNode` + `PUBLISHED_BY` edges) →
 Dagster asset `upstream_blog_monitor_ingest`.
@@ -155,7 +155,7 @@ def ireland_curriculum_source(
 For sources that publish a `sitemap.xml`, the canonical pattern
 is a Dagster sensor that SHA-256-hashes the sitemap and emits a
 `RunRequest` only when the hash changes. The project ships 5 such
-sensors in `sruth/oideachais/dagster_defs/sensors/`:
+sensors in `cianfhoghlaim/orchestration/defs/sensors/`:
 
 - `curriculum_freshness_sensor.py`
 - `domain_sensors.py`
@@ -200,11 +200,11 @@ def curriculum_sitemap_sensor(context: SensorEvaluationContext):
 For HTML pages without a sitemap (or when a visual diff matters),
 the project runs the [ChangeDetection.io](https://changedetection.io)
 container on `arm1-oci`. The Compose file is at
-`infrastructure/stacks/changedetection/compose.yaml`.
+`bonneagar/stacks/changedetection/compose.yaml`.
 
 ### Configuration
 
-The `sources.yaml` file at `infrastructure/stacks/changedetection/sources.yaml`
+The `sources.yaml` file at `bonneagar/stacks/changedetection/sources.yaml`
 pairs each watched URL with the Dagster job that runs when the
 URL changes:
 
@@ -279,9 +279,59 @@ webhook fans out the `RunRequest` to each.
   here)
 - `.agents/skills/dagster/SKILL.md` — the Dagster skill
   (Layer 2 sensors live here)
-- `infrastructure/stacks/changedetection/` — the Layer 3
+- `bonneagar/stacks/changedetection/` — the Layer 3
   Compose stack + `sources.yaml`
-- `sruth/oideachais/dagster_defs/sensors/` — 5 canonical sensor
+- `cianfhoghlaim/orchestration/defs/sensors/` — 5 canonical sensor
   implementations
-- `sruth/oideachais/dlt_sources/ireland/` — 33+ DLT sources (all
+- `cianfhoghlaim/dlt/british_isles/ireland/` — 33+ DLT sources (all
   with incremental cursors)
+
+## British-Isles Education pipeline — Layer 2 wiring (post-v4)
+
+The BIEP (`openspec/changes/lc6-biep/`) relies on all 4
+change-detection layers for freshness. The canonical Layer 2
+sensors live in `cianfhoghlaim/orchestration/defs/sensors/`:
+
+| Sensor file | Layer | Trigger | Asset re-materialised |
+|:--|:--|:--|:--|
+| `ncca_sitemap_sensor.py` | 2 | SHA-256 of `ncca.ie/sitemap.xml` | `lc6_curriculum_syllabus` (6 subjects × 2 langs) |
+| `sec_past_paper_sensor.py` | 2 | SHA-256 of `examinations.ie/sitemap.xml` | `lc6_exam_paper_layout` + `lc6_marking_scheme` |
+| `gov_ie_circular_sensor.py` | 3 | ChangeDetection.io on `gov.ie/.../circulars/...` | `lc6_government_circulars` (the 7th subject) |
+| `oideachais_lc6_daily_schedule.py` | 1 + 4 | cron + Dagster schedule at 02:00 UTC | All 42 lc5/lc6 assets |
+| `bge_m3_index_rebuild_sensor.py` | 4 | Firecrawl monitor on `huggingface.co/BAAI/bge-m3` | The 24+1 LanceDB tables |
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects** — Mathematics, Chemistry, Geography,
+  Gaeilge, English, Computer Science, each monitored by the
+  `ncca_sitemap_sensor.py` Layer 2 sensor with SHA-256 hash
+  cursor.
+- **`gov.ie` circulars** — the `gov_ie_circular_sensor.py`
+  Layer 3 sensor (ChangeDetection.io on `arm1-oci`) polls the
+  gov.ie circulars pages every hour and re-materialises
+  `lc6_government_circulars` (the 7th BIEP subject).
+- **2 languages per subject** — the `language` partition
+  (`en` / `ga`) is part of the `MultiPartitionsDefinition`, so
+  each sensor fans out to 12 re-materialisations per SHA-256
+  change (6 subjects × 2 langs).
+- **`bge-m3` model freshness** — the
+  `bge_m3_index_rebuild_sensor.py` Layer 4 sensor listens to
+  the HuggingFace blog + release notes via Firecrawl monitor
+  and triggers a LanceDB re-index when the canonical
+  `BAAI/bge-m3` embedder bumps a minor version.
+- **Dagster `MultiPartitionsDefinition`** — the canonical
+  KCG BIEP partition: `(language × subject × level)` for the
+  curriculum + `(year)` for the exam-papers partition.
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
+  `incremental` cursors (Layer 1) for each BIEP source
+- [`.agents/skills/dagster/SKILL.md`](../dagster/SKILL.md) —
+  the `@dlt_assets` wrappers + sensor wiring
+- [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
+  the 7 v1 Apps re-materialised by the Layer 2 sensors
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives
+- [`.agents/skills/secrets-management/SKILL.md`](../secrets-management/SKILL.md) —
+  the `infisical://dev-baile/oideachais/FIRECRAWL_API_KEY` +
+  `GOV_IE_SCRAPER_TOKEN` secret contract

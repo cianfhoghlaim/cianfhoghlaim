@@ -1,6 +1,6 @@
 ---
 name: ducklake
-description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB.
+description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical KCG sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `oideachais.leaving_cert.*` and `oideachais.education.ie.*` schemas in the `md:oideachais` MotherDuck database.
 ---
 
 # DuckLake Expert Assistant
@@ -57,7 +57,7 @@ the 4-layer pipeline (Ingestion → Materials → Model
 Lifecycle → Asset Generation) with the DuckLake sink as the
 final destination.
 
-The canonical client is at `sruth/oideachais/storage/ducklake_client.py`
+The canonical client is at `cianfhoghlaim/storage/ducklake_client.py`
 (Postgres catalog + Garage S3 connection).
 
 ## Key Reference Materials
@@ -948,7 +948,7 @@ con = duckdb.connect("md:oideachais")
 
 ### KCG-cocoindex chunked Parquet writes
 
-The `sruth/oideachais/cocoindex_flows/` Apps write to DuckLake in
+The `cianfhoghlaim/cocoindex/` Apps write to DuckLake in
 ZSTD-compressed Parquet, with row group size tuned for HNSW
 rebuild performance:
 
@@ -1023,6 +1023,92 @@ notebooks (6 total). Highlights:
 - `data_engineering_ducklake_vega_altair.ipynb` — Vega-Altair charts
 - `data_engineering_ducklake_pointblank.ipynb` — data validation
 - `data_engineering_ducklake_mlflow_kafka_ducklake_notebooks_econ_comp.ipynb` — MLflow + Kafka streaming on DuckLake
+
+## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+
+The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
+DuckLake as the **canonical BIEP sink**. The 24+ per-subject
+tables (`6 subjects × 2 languages × 2 levels = 24 partitions`
+per BAML extraction stage) all live in DuckLake under the
+`oideachais.leaving_cert.*` schema, plus the `gov.ie` circulars
+in `oideachais.education.ie.gov_circulars_archive`. The
+canonical MotherDuck-DuckLake pattern is:
+
+```python
+import duckdb
+
+con = duckdb.connect()
+
+# Attach the DuckLake (MotherDuck managed) catalog
+con.execute("INSTALL ducklake; LOAD ducklake;")
+con.execute("""
+    CREATE SECRET motherduck_secret (
+        TYPE MOTHERDUCK,
+        TOKEN '...from_infisical://dev-baile/oideachais/MOTHERDUCK_TOKEN'
+    )
+""")
+con.execute("""
+    ATTACH 'ducklake:md:oideachais' AS oideachais (
+        TYPE ducklake,
+        SECRET motherduck_secret,
+        CATALOG postgres_catalog
+    )
+""")
+
+# Now query the BIEP tables
+df = con.execute("""
+    SELECT subject, level, language, count(*) AS n_modules
+    FROM oideachais.leaving_cert.curriculum_syllabus
+    WHERE subject IN (
+        'mathematics', 'chemistry', 'geography',
+        'gaeilge', 'english', 'computer_science'
+    )
+    GROUP BY subject, level, language
+    ORDER BY subject, level, language
+""").df()
+```
+
+The BIEP DuckLake catalog layout:
+
+- **Schemas**: `oideachais.leaving_cert` (LC subjects),
+  `oideachais.education.ie` (gov.ie circulars + NCCA raw).
+- **Per-subject tables**:
+  `oideachais.leaving_cert.<subject>_<lang>_<level>.curriculum_syllabus`
+  / `exam_paper_layout` / `marking_scheme_guideline` /
+  `cross_linguistic_concept` / `syllabus_diagram`.
+- **`gov.ie` circulars**:
+  `oideachais.education.ie.gov_circulars_archive` — populated
+  by the `government_circulars` CocoIndex v1 App.
+
+**British-Isles Education pipeline use case:**
+
+- **24+1 DuckLake tables** for the BIEP curriculum layer
+- **DuckLake 1.0 features** that the BIEP relies on:
+  `set_sorted_by` for `curriculum_syllabus` (10× filter pushdown),
+  `set_bucket_partition` for `marking_scheme_guideline` (per-topic
+  distribution), `VARIANT` for `cross_linguistic_concept` rows
+  (term mapping payload), `GEOMETRY` for the geospatial subject
+  tables (Geography, in development).
+- **Time-travel for syllabus versions** —
+  `SELECT * FROM oideachais.leaving_cert.mathematics_en_higher.curriculum_syllabus
+  FOR SYSTEM_TIME AS OF '2026-06-01'` lets the marimo notebooks
+  diff academic years.
+- **Lakekeeper Iceberg shadow** — the same data is exposed as
+  Iceberg to PyIceberg / Spark / Trino via the
+  `oideachais_lakekeeper:8181` REST catalog (see
+  `iceberg-lakekeeper/SKILL.md`).
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
+  writers that populate the BIEP tables
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives
+- [`.agents/skills/duckdb/SKILL.md`](../duckdb/SKILL.md) —
+  the federated `lance_scan()` layer
+- [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
+  the 7 v1 Apps that produce the LanceDB companion tables
+- [`.agents/skills/iceberg-lakekeeper/SKILL.md`](../iceberg-lakekeeper/SKILL.md) —
+  the Iceberg shadow of the same data
 
 ## DuckLake 1.0 features (verified 2026-06-29, Agent 87)
 

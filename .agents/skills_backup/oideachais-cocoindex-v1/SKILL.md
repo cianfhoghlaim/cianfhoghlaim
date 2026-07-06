@@ -39,6 +39,7 @@ Use when you need to:
 | 1 | `leabharlann_books_embedding` | `leabharlann_embedding.py` | `leabharlann_books` | `BAAI/bge-large-en-v1.5` |
 | 2 | `leabharlann_zotero_embedding` | `leabharlann_embedding.py` | `leabharlann_zotero` | `BAAI/bge-large-en-v1.5` |
 | 3 | `leabharlann_takeout_embedding` | `leabharlann_embedding.py` | `leabharlann_takeout` | `BAAI/bge-large-en-v1.5` |
+| 3a | `leabharlann_inbox_embedding` | `leabharlann_embedding.py` | `oideachais_inbox_messages` (NEW 2026-06-29; the 4th leabharlann App — see [`oideachais-email-triage`](../oideachais-email-triage/SKILL.md)) | `BAAI/bge-large-en-v1.5` |
 | 4 | `codebase_indexing` | `codebase_indexing.py` | `codebase_chunks` (the 7-node/7-edge code graph) | `BAAI/bge-large-en-v1.5` |
 | 5 | `api_indexing` | `api_indexing.py` | `api_endpoints` (the 4-framework HTTP route surface) | `BAAI/bge-large-en-v1.5` |
 | 6 | `filesystem_indexing` | `filesystem_indexing.py` | `filesystem_layout` (depth 1-4 dirs) | `BAAI/bge-large-en-v1.5` |
@@ -393,9 +394,49 @@ ContextKeys are flagged as `# R2-exempt` (R2).
 - `.agents/skills/oideachais-leabharlann/SKILL.md` — the 3 v1 Apps for the leabharlann pipeline
 - `.agents/skills/oideachais-baml-schemas/SKILL.md` — the 9 + 4 + 6 BAML files
 - `.agents/skills/embedding-pipeline/SKILL.md` — the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule
-- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical v1 home (the 3 leabharlann Apps)
+- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical v1 home (the 4 leabharlann Apps)
 - `sruth/oideachais/cocoindex_flows/codebase_indexing.py` — the canonical v1 home (the codebase 7-node/7-edge graph)
 - `sruth/oideachais/cocoindex_flows/__init__.py` — the v0-vs-v1 guard
 - `sruth/oideachais/cocoindex_flows/README.md` — the v0 vs v1 status table
 - `sruth/oideachais/cocoindex_flows/chunking/languages.py` — the 29-language detection table
 - `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` — the canonical spec
+
+## Leabharlann inbox App (App 3a — 2026-06-29)
+
+Added in the `2026-06-29-leabharlann-email-inbox-pipeline` change.
+The 4th leabharlann App, `leabharlann_inbox_embedding`, lives in the
+same `leabharlann_embedding.py` file as Apps 1-3 and shares the
+same `EMBEDDER` + `LANCE_DB` ContextKeys. It reads MBOX files from
+`/srv/mailcow-exports/` (populated by Mailcow's
+`dovecot_imapsync_runner` + the `mailcow-export` companion
+container), recurses into each MBOX via the `mailbox` stdlib,
+yields one chunk per message (`from + subject + first 2000 chars
+of body`), and writes to the `oideachais_inbox_messages` LanceDB
+table with the columns `(id, account, year, date_iso, subject,
+sender, recipients, body_excerpt, embedding, baml_class,
+baml_urgency, thread_id)`. A cosine vector index on `embedding` +
+an FTS index on `subject + body_excerpt` power the
+`search_inbox(query, account=None, year=None, baml_class=None,
+urgency_min=None, limit=20)` hybrid search handler.
+
+The full pipeline (DLT + BAML + Dagster + marimo + cognify) is
+documented in
+[`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
+
+
+---
+
+## v1 App count: 13 → 17 (added 2026-06-30)
+
+Four new v1 Apps added in the `2026-06-30-agent-platform-cluster-hermes-cocoindex` change:
+
+| # | App | Target | Embedding | Source |
+|:--|:--|:--|:--|:--|
+| 14 | `agent_registry` | LanceDB `agent_registry` | BGE-m3 1024-dim | `localfs.read_file("opencode.json")` |
+| 15 | `agents_md` | LanceDB `agents_md` | BGE-m3 1024-dim | `localfs.walk_dir(**/AGENTS.md, depth=3)` |
+| 16 | `apple_photos_metadata` | LanceDB `apple_photos_metadata` | BGE-m3 1024-dim | DuckDB source on `apple_photos` table |
+| 17 | `apple_photos_chunks` | LanceDB `apple_photos_chunks` | BGE-m3 1024-dim | DuckDB source on `apple_photos_ocr_chunks` table |
+
+Plus a 5th non-LanceDB output (`apple_photos_geospatial` → GeoParquet files), in a separate `GEOSPATIAL_APP_REGISTRY`.
+
+`mise run lint:v1-conformance` SHALL report `17/17 apps passed` (was 13/13).

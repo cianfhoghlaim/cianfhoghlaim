@@ -1,6 +1,6 @@
 ---
 name: ibis
-description: Expert assistance for Ibis portable dataframe library. Use when users need backend-agnostic analytics, pandas migration, SQL generation, or switching between DuckDB, BigQuery, Snowflake, and other backends.
+description: Expert assistance for Ibis portable dataframe library. Use when users need backend-agnostic analytics, pandas migration, SQL generation, or switching between DuckDB, BigQuery, Snowflake, and other backends. KCG-preferred analytics layer over the BIEP `md:oideachais` MotherDuck database — `ibis.duckdb.connect("md:oideachais")` is the canonical entrypoint for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) and `gov.ie` circulars.
 ---
 
 # Ibis - Portable Dataframe Library
@@ -369,3 +369,83 @@ t["column-with-dash"]
 - **API Reference**: https://ibis-project.org/reference/
 - **Backends**: https://ibis-project.org/backends/
 - **GitHub**: https://github.com/ibis-project/ibis
+
+## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+
+The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
+Ibis as the **portable analytics layer** on top of the
+`md:oideachais` MotherDuck database. The canonical connection
+is `ibis.duckdb.connect("md:oideachais")` (where the
+`MOTHERDUCK_TOKEN` env var comes from Infisical via the Locket
+sidecar). The same Ibis expressions run against any of the 24
+BIEP per-subject tables — making the marimo notebooks
+backend-portable:
+
+```python
+import ibis
+from ibis import _
+
+# Canonical KCG entrypoint: MotherDuck + DuckLake via Ibis
+con = ibis.duckdb.connect("md:oideachais")
+
+# 6 LC subjects × 2 languages × 2 levels — 24 partitions
+SUBJECTS = [
+    "mathematics", "chemistry", "geography",
+    "gaeilge", "english", "computer_science",
+]
+
+# Read the BAML-extracted curriculum_syllabus table
+syllabus = con.table("oideachais.leaving_cert.curriculum_syllabus")
+
+# Cross-subject topic-coverage query
+topic_coverage = (
+    syllabus
+    .filter(_.subject.isin(SUBJECTS))
+    .group_by(["subject", "level", "language"])
+    .aggregate(
+        n_modules=_.module_id.nunique(),
+        avg_hours=_.hours.mean(),
+        n_outcomes=_.learning_outcomes.count(),
+    )
+    .order_by([_.subject, _.level, _.language])
+)
+
+# Execute (lazy → DataFrame)
+df = topic_coverage.to_pandas()
+print(df.head(10))
+```
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects × 2 languages × 2 levels** — the BIEP
+  schema is `oideachais.leaving_cert.curriculum_syllabus`
+  partitioned by `(subject, level, language)`. The same Ibis
+  expression runs against all 24 partitions.
+- **`gov.ie` circulars** — join the curriculum tables against
+  `oideachais.education.ie.gov_circulars_archive` to cross-
+  reference syllabus changes with Department-of-Education
+  policy updates.
+- **Cross-linguistic join** — pair the `en` and `ga` partitions
+  of the same subject on `module_id` to verify the
+  BAML `ExtractCrossLinguisticConcept` output:
+  ```python
+  en = syllabus.filter(_.language == "en", _.subject == "mathematics")
+  ga = syllabus.filter(_.language == "ga", _.subject == "mathematics")
+  bilingual = en.join(ga, en.module_id == ga.module_id)
+  ```
+- **Portable across 4 Dives** — the same `topic_coverage`
+  expression runs against `lc_syllabus_topics`,
+  `lc_exam_difficulty`, `lc_marking_complexity`,
+  `gov_circulars_archive` (the 4 MotherDuck Dives).
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
+  sources that populate the BIEP tables
+- [`.agents/skills/duckdb/SKILL.md`](../duckdb/SKILL.md) — the
+  DuckDB-native federated SQL layer
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives
+- [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
+  the DuckLake sink
+- [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
+  per-subject notebooks that consume Ibis queries

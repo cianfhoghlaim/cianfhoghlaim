@@ -1,6 +1,6 @@
 ---
 name: secrets-management
-description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists.
+description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists. Powers the BIEP secret contract: `infisical://dev-baile/oideachais/...` (no `sruth/` prefix).
 ---
 
 # Secrets Management — Infisical + Locket + mise
@@ -30,7 +30,7 @@ The KCG secrets stack has **3 layers**:
 ┌─────────────────────────────────────────────────────────────┐
 │  Layer 2: Template (committed to git)                        │
 │  → .infisical.env (URI refs only, e.g.                        │
-│    infisical://dev-baile/sruth/oideachais/OPENAI_API_KEY)          │
+│    infisical://dev-baile/oideachais/OPENAI_API_KEY)          │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -76,7 +76,7 @@ which calls `infisical export` to hydrate `.env`.
 ### Path 2: Locket sidecar (production containers)
 
 ```yaml
-# infrastructure/stacks/<surface>/sidecar.yaml
+# bonneagar/stacks/<surface>/sidecar.yaml
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket:latest
@@ -197,7 +197,7 @@ read all secrets (no Infisical RBAC by default).
 infisical secrets set OPENAI_API_KEY=sk-...
 
 # 2. Add the URI ref to .infisical.env
-echo 'OPENAI_API_KEY=infisical://dev-baile/sruth/oideachais/OPENAI_API_KEY' \
+echo 'OPENAI_API_KEY=infisical://dev-baile/oideachais/OPENAI_API_KEY' \
   >> .infisical.env
 
 # 3. Re-hydrate locally
@@ -208,7 +208,7 @@ grep OPENAI_API_KEY .env
 # → OPENAI_API_KEY=sk-...
 
 # 5. (Production) Restart Locket
-docker compose -f infrastructure/stacks/<surface>/compose.yaml restart locket
+docker compose -f bonneagar/stacks/<surface>/compose.yaml restart locket
 ```
 
 ## Rotating a secret
@@ -228,14 +228,14 @@ infisical secrets delete OPENAI_API_KEY_OLD
 
 ## Cross-references
 
-- `.agents/skills/stack-ops/SKILL.md` — the 6-file GOLD_STANDARD
-  stack pattern (includes `secrets.env` + `sidecar.yaml`)
-- `.agents/skills/dagger/SKILL.md` — Dagger call for CI parity
-- `.agents/skills/monorepo/SKILL.md` — bun + uv + turbo
+- `.agents/skills/infrastructure-stacks/SKILL.md` — the 6-file
+  GOLD_STANDARD stack pattern (includes `secrets.env` + `sidecar.yaml`)
+- `.agents/skills/dagger-pipelines/SKILL.md` — Dagger call for CI parity
 - `.agents/skills/komodo/SKILL.md` — Komodo deploys the
   Locket sidecar
 - `.agents/skills/pulumi/SKILL.md` — Pulumi provisions the
   Infisical organisation
+- Root `AGENTS.md` — the bun + uv + turbo monorepo layout
 
 ## Verified 2026-06-29 (Wave 2 Agent 93)
 
@@ -290,3 +290,73 @@ Both stacks now route LLM through LiteLLM:
 - `openai_base_url` = `infisical://dev-baile/<stack>/openai_base_url` (resolves to `http://litellm:4000/v1`)
 
 The previous `opencode-go` + `minimax-coding-plan` fallback chain is removed from `openclaw.json`.
+
+## British-Isles Education pipeline (post-v4 secret contract)
+
+The BIEP (`openspec/changes/lc6-biep/`) consumes 12 secrets
+under the canonical `infisical://dev-baile/oideachais/<key>`
+prefix (no `sruth/` segment — the v4 consolidation moved the
+project path to `oideachais/`):
+
+| Secret | Purpose |
+|:--|:--|
+| `MOTHERDUCK_TOKEN` | Business-tier PAT for the `md:oideachais` DB |
+| `BAML_LLM_API_KEY` | BAML client for `ExtractCurriculumSyllabus` + 4 sibling functions |
+| `BGE_M3_MODEL_PATH` | Optional override; defaults to `BAAI/bge-m3` HF cache |
+| `LANCEDB_GARAGE_KEY_ID` | S3 access for the 24+1 LanceDB companion tables |
+| `LANCEDB_GARAGE_SECRET` | S3 secret for the same |
+| `LANCEDB_GARAGE_ENDPOINT` | `https://garage.cianfhoghlaim.ie` |
+| `NCCA_SCRAPER_TOKEN` | Optional — DLT source for NCCA PDFs (cached via `stedding/ingest_queue/`) |
+| `SEC_PAST_PAPER_TOKEN` | Optional — DLT source for SEC past papers |
+| `GOV_IE_SCRAPER_TOKEN` | Optional — DLT source for `gov.ie` circulars |
+| `FIRECRAWL_API_KEY` | Fallback scraper for the BAML extraction pipeline |
+| `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` | BIEP trace routing via `baml_client.tracing` |
+| `LITELLM_MASTER_KEY` | The unified LLM gateway (proxies BAML + Langfuse) |
+
+**Canonical URI form (post-v4):**
+
+```bash
+infisical://dev-baile/oideachais/MOTHERDUCK_TOKEN
+infisical://dev-baile/oideachais/BAML_LLM_API_KEY
+infisical://dev-baile/oideachais/LANCEDB_GARAGE_KEY_ID
+# etc.
+```
+
+The pre-v4 form (`infisical://dev-baile/sruth/oideachais/...`)
+**does not resolve** post-v4 — Infisical returns a 404 on the
+old prefix because the project was renamed during the v4
+consolidation (2026-06-28). If a stack's `.infisical.env` still
+references the old prefix, run `bun run scripts/init-vault.ts`
+after the rename to migrate the URI references.
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects × 2 languages** — Mathematics, Chemistry,
+  Geography, Gaeilge, English, Computer Science, each with
+  `en`/`ga` BAML extraction runs under the same
+  `BAML_LLM_API_KEY`.
+- **`gov.ie` circulars** — `GOV_IE_SCRAPER_TOKEN` powers the
+  7th v1 CocoIndex App (`government_circulars`); the
+  `FIRECRAWL_API_KEY` is the fallback when the gov.ie HTML
+  changes break the BAML extraction.
+- **Secret rotation cadence** — `MOTHERDUCK_TOKEN` rotates
+  every 90 days; `BAML_LLM_API_KEY` rotates every 30 days;
+  `LANCEDB_GARAGE_*` rotates on demand (no fixed cadence).
+  All three are managed via the Locket sidecar in
+  `bonneagar/stacks/<surface>/sidecar.yaml` (note: the
+  `infrastructure/stacks/` prefix is the pre-v4 path).
+
+Cross-references:
+- Root `AGENTS.md` — the canonical
+  `infisical://dev-baile/oideachais/...` contract
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
+  pipelines that consume `NCCA_SCRAPER_TOKEN` and
+  `SEC_PAST_PAPER_TOKEN`
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives that consume `MOTHERDUCK_TOKEN`
+- [`.agents/skills/lancedb/SKILL.md`](../lancedb/SKILL.md) —
+  the 24+1 LanceDB tables that consume `LANCEDB_GARAGE_*`
+- [`.agents/skills/baml/SKILL.md`](../baml/SKILL.md) — the 5
+  BIEP extraction functions that consume `BAML_LLM_API_KEY`
+- [`.agents/skills/change-detection/SKILL.md`](../change-detection/SKILL.md) —
+  the sensors that use `GOV_IE_SCRAPER_TOKEN` + `FIRECRAWL_API_KEY`
