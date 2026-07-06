@@ -41,7 +41,6 @@ export default defineConfig({
             url.startsWith("/.vite/") ||
             url.startsWith("/assets/") ||
             url.includes(".") ||
-            url === "/" ||
             url === "/index.html"
           ) {
             return next();
