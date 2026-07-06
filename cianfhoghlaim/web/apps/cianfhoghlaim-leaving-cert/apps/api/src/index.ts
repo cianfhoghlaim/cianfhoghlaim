@@ -1,13 +1,7 @@
 // Cianfhoghlaim Leaving Cert API server entry
-// Hono + oRPC + CopilotKit runtime + BetterAuth handler
-//
-// Mounts:
-//   GET  /                                     health check
-//   ANY  /api/auth/*                            BetterAuth catch-all
-//   POST /rpc/*                                oRPC RPC handler
-//   GET  /api-reference/*                      oRPC OpenAPI / Swagger
-//   POST /api/copilotkit                       CopilotKit AG-UI runtime
-//                                              (with stage + subject + language query params)
+// Hono + oRPC + CopilotKit runtime.
+// Per openspec/changes/cianfhoghlaim-website-rewrite/proposal.md R5.
+// Wrangler 3.x deploy target (cf. apps/api/wrangler.toml).
 
 import "dotenv/config";
 import { Hono } from "hono";
@@ -16,10 +10,12 @@ import { logger } from "hono/logger";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { RPCHandler } from "@orpc/server/fetch";
 import { onError } from "@orpc/server";
-import { appRouter } from "../../../packages/api/src";
-import { createContext } from "../../../packages/api/src";
-import { auth } from "../../../packages/auth/src";
-import { copilotkit, subjects } from "./copilotkit/runtime";
+import { appRouter } from "@cianfhoghlaim/api";
+import { createContext } from "@cianfhoghlaim/api";
+import { auth } from "@cianfhoghlaim/auth";
+import { copilotkit } from "./copilotkit/runtime";
+import { subjects } from "./routers/subjects";
+import { contentTypes } from "./routers/content-types";
 import { serve } from "@hono/node-server";
 
 const app = new Hono();
@@ -71,19 +67,22 @@ app.use("/api-reference/*", async (c, next) => {
 // Health
 app.get("/", (c) => c.text("OK"));
 
-// CopilotKit AG-UI runtime (Cianfhoghlaim OS)
-// Mounted at /api/copilotkit?stage=...&subject=...&language=...
+// Content types endpoint (the 6 cianfhoghlaim content types)
+app.route("/api/content-types", contentTypes);
+
+// CopilotKit AG-UI runtime
 app.route("/api/copilotkit", copilotkit);
 
-// NCCA subject ADK agents metadata (the 8 Brown Ajah members)
-// Mounted at /api/subjects
+// ADK agents metadata (8 NCCA + 1 cianfhoghlaim operator)
 app.route("/api/subjects", subjects);
 
 const port = Number(process.env.PORT) || 8787;
-console.log(`Cianfhoghlaim OS API server listening on http://localhost:${port}`);
+console.log(`cianfhoghlaim API server listening on http://localhost:${port}`);
+console.log(`  Health:        http://localhost:${port}/`);
+console.log(`  ContentTypes:  http://localhost:${port}/api/content-types`);
+console.log(`  Subjects:      http://localhost:${port}/api/subjects`);
+console.log(`  CopilotKit:    http://localhost:${port}/api/copilotkit`);
 console.log(`  RPC:           http://localhost:${port}/rpc`);
 console.log(`  API docs:      http://localhost:${port}/api-reference`);
-console.log(`  CopilotKit:    http://localhost:${port}/api/copilotkit`);
-console.log(`  Subjects:      http://localhost:${port}/api/subjects`);
 
 serve({ fetch: app.fetch, port });
