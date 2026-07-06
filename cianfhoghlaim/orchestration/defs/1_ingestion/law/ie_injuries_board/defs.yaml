@@ -1,0 +1,13 @@
+# defs/1_ingestion/law/ie_injuries_board/defs.yaml
+#
+# L1 CelticIngestionComponent for the Personal Injuries Assessment Board
+# (PIAB) — `https://www.injuries.ie/eng/` (injuries.ie).
+#
+# Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.law.injuries_board
+  domain: law
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
