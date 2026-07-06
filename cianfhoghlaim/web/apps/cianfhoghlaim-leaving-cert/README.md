@@ -1,53 +1,105 @@
-# Cianfhoghlaim Leaving Cert Portal
+# cianfhoghlaim Web App
 
-> The 5th canonical front-end surface — TanStack Start + CopilotKit v2 + AG-UI + Hono oRPC + Convex `conic-leaving-cert` + Brown Ajah Wheel of Time theming + accurate British Isles map (6 subnations).
+> **cianfhoghlaim** — a self-hostable consolidation of Leaving
+> Certificate education system resources. Anyone can `git clone` and run
+> their own instance. Reduce barriers to education.
+
+A progressive rewrite of the cianfhoghlaim website per
+`openspec/changes/cianfhoghlaim-website-rewrite/`. The site is the
+agentic tutorial for the cianfhoghlaim data engineering pipeline that
+backs it — the 9 ADK agents (8 NCCA subject specialists + 1 cianfhoghlaim
+operator) are wired to the dlt/ + cocoindex/ + baml_src/ + meaisínfhoghlaim/
+pipeline.
 
 ## Stack
 
-| Layer | Choice |
-|:--|:--|
-| Front-end | TanStack Start (Vite plugin) + file-based routing + (en)/(ga) bilingual groups |
-| Agent UI | CopilotKit v2 Factory Mode + AG-UI SSE streaming + `<CopilotSidebar>` |
-| Window manager | Cianfhoghlaim OS (PostHog-style + Framer Motion physics) |
-| Realtime backend | Convex (fresh standalone `conic-leaving-cert` deployment, 5 carried-over + 3 new tables) |
-| API gateway | Hono + oRPC + BetterAuth + Pocket ID OIDC + optional SIWE |
-| Diagram renderer | React Flow + D3 v8 + Babylon.js + `<model-viewer>` |
-| Data plane | MotherDuck (read-only lakehouse) + Convex (read-write persona) |
-| Auth | BetterAuth (email/password + OAuth) backed by Pocket ID OIDC; optional SIWE |
-| User | Irish educators + students |
-| Map | Accurate British Isles (OpenStreetMap base) split into 6 subnations |
-| Theming | Brown Ajah of the Wheel of Time (healers, scholars, Earth-workers) |
-| Tagline | "Aes Sedai — servants of all" (the Brown Ajah motto) |
+- **Frontend**: TanStack Start + Router + AI + DB + Form (per the latest tanstack packages)
+- **Backend**: Hono + oRPC on Cloudflare Workers
+- **Real-time**: Convex
+- **Storage**: Cloudflare R2 (the 5 NCCA root-level PDFs + 8 subject PDF folders)
+- **Auth**: better-auth v1.4 + Pocket ID OIDC
+- **Agents**: CopilotKit v2 + AG-UI + A2UI (the dojo.ag-ui.com pattern)
+- **Content types**: 6 (Subjects / Past Papers / Marking Schemes / Practice / Foundations / Notebooks)
+- **Data engineering**: dlt + CocoIndex + baml_src + meaisínfhoghlaim + LanceDB + DuckLake/MotherDuck
 
-## Setup
+## Local dev
 
 ```bash
 cd cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert
 bun install
 bun run dev
+
+# Web: http://localhost:3082
+# API: http://localhost:8787
 ```
+
+## Routes
+
+### Public
+
+- `/` — Khan-style 4 entry points (Student / Teacher / Family / School)
+- `/en/foundations` — 5 NCCA root-level PDFs index
+- `/en/foundations/:slug` — Each PDF detail page
+- `/en/subjects/:subject` — Per-subject landing (5×8 mastery matrix + 5-tab layout)
+- `/en/subjects/:subject/:section` — Per-section page (syllabus / papers / marking / practice / notebook)
+- `/en/subjects/:subject/practice/:topic` — Per-subject practice (with SubjectChat + 3-way boon choice)
+- `/en/agents` — 9 ADK agents index
+- `/en/agents/:agent` — Per-agent detail (with pipeline integration)
+- `/en/playgrounds` — Per-subject marimo sandboxes
+- `/en/diagrams` — 4 diagram modes index
+- `/en/self-host` — 3-step install guide
+- `/en/search` — Client-side search index
+
+### API
+
+- `GET /` — Health check
+- `GET /api/copilotkit/health` — CopilotKit runtime + actions
+- `POST /api/copilotkit` — AG-UI SSE stream
+- `GET /api/content-types` — 6 content types
+- `GET /api/content-types/:type` — Single content type
+- `GET /api/subjects` — 9 ADK agents metadata
+- `GET /api/subjects/:subject` — Single ADK agent
+- `POST /rpc/*` — oRPC RPC handler
+- `GET /api-reference/*` — oRPC OpenAPI / Swagger
+- `ANY /api/auth/*` — better-auth handler
 
 ## Architecture
 
-See [`docs/CIANFHLOGHLAIM_LORE.md`](./docs/CIANFHLOGHLAIM_LORE.md) (operator-only)
-and the openspec change
-[`openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/`](../../../openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/).
-
-## Specs
-
-- [`cianfhoghlaim-leaving-cert-portal`](../../../openspec/specs/cianfhoghlaim-leaving-cert-portal/spec.md) — the canonical spec
-- [`retro-game-asset-pipeline`](../../../openspec/specs/retro-game-asset-pipeline/spec.md) — the 2D + 3D asset generator
-- [`ncca-leaving-cert-root-pdfs`](../../../openspec/specs/ncca-leaving-cert-root-pdfs/spec.md) — the 5 NCCA root-level PDFs
-- [`cianfhoghlaim-educational-mmo`](../../../openspec/specs/cianfhoghlaim-educational-mmo/spec.md) — the 8 NCCA ADK specialists
-- [`agentic-frontend-frameworks`](../../../openspec/specs/agentic-frontend-frameworks/spec.md) — the 5th canonical surface (R5) + Celtic UI Design System (R6) + Brown Ajah theming (R7)
-
-## Theming inputs
-
-- 7 lineage clippings at `../../../../cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` (operator-only — NEVER on public surface)
-- 145 comic reference images at `../../../../docs/comics/` (the celtic-art reference library)
-- 11 UI inspiration files at `../../../../docs/ui-inspiration/` (the design system)
-- 4 Wheel of Time excerpts (Aes Sedai / Amyrlin Seat / Dragon Reborn / Tuatha'an)
+```
+┌──────────────────────────────────────────────────────────────┐
+│  Browser (port 3082)                                          │
+│  ┌──────────────────────────────────────────────────────────┐│
+│  │ TanStack Start (SSR + streaming + server functions)        ││
+│  │ + TanStack AI + DB (reactive client store)                ││
+│  │ + CopilotKit v2 + AG-UI + A2UI                            ││
+│  │ + 12 reusable <Ci*> UI components                         ││
+│  │ + 9 ADK agent chat surfaces (8 NCCA + 1 operator)        ││
+│  │ + 4 entry points (Student/Teacher/Family/School)          ││
+│  │ + 6 content types (Subjects/Papers/Marking/Practice/...) ││
+│  └──────────────────────────────────────────────────────────┘│
+│              ↑                ↑                                │
+│              oRPC over /rpc    AG-UI over /api/copilotkit      │
+└──────────────────────────────────────────────────────────────┘
+              ↓                ↓
+┌──────────────────────────────────────────────────────────────┐
+│  API (port 8787, Hono + oRPC + CopilotKit on CF Workers)    │
+│  + Cloudflare R2 (5 NCCA PDFs + 8 subject PDF folders)       │
+│  + Convex (real-time state)                                    │
+│  + better-auth v1.4 + Pocket ID OIDC                          │
+└──────────────────────────────────────────────────────────────┘
+              ↓
+┌──────────────────────────────────────────────────────────────┐
+│  Data engineering pipeline                                     │
+│  + dlt/ (extraction)                                          │
+│  + cocoindex/ (embeddings — BGE-M3 1024-dim)                  │
+│  + baml_src/ (typed extraction schemas — 8 subjects + 6 types) │
+│  + meaisínfhoghlaim/ (24-entry OCR/VLM registry)             │
+│  + agents/tuatha/ (9 ADK agents — 8 NCCA + 1 operator)        │
+│  + notebooks/leaving_cert/ (8 NCCA marimo notebooks)          │
+│  + leaving_certificate/ (5 NCCA root-level PDFs)              │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ## License
 
-BUSL-1.1 — non-commercial, cultural preservation, and academic research use permitted within Ireland, UK, EU, Commonwealth, and aligned jurisdictions.
+BUSL-1.1 with a 4-year transition to AGPL v3. Fork + self-host + adapt.
