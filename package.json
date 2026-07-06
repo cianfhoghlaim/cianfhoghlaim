@@ -49,7 +49,7 @@
     "ccc:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
     "ccc:search": "bun run scripts/_ccc-deprecation-banner.ts && ccc search",
     "ccc:v1:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
-    "ccc:v1:search": "uv run python -c 'import asyncio, sys; from cianfhoghlaim.core.cocoindex.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
+    "ccc:v1:search": "uv run python scripts/ccc_v1_search.py",
     "docs:consolidate": "uv run cocoindex update cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
     "docs:consolidate:live": "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
 

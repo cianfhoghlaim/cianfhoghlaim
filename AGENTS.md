@@ -42,7 +42,7 @@ openspec archive <change-id> --yes        # after deploy
 ### Priority mise tasks
 
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata (123/123)
+mise run lint:skills               # validate .agents/skills/ metadata (53/53 as of v4 consolidation)
 mise run turbo dev                 # monorepo dev (bun + uv + turbo)
 mise run secrets:init              # sync .infisical.env → dev-baile vault
 mise run dagster:oideachais        # launch the lakehouse Dagster UI
@@ -132,6 +132,10 @@ Members import each other via `[tool.uv.sources]` (e.g. `cianfhoghlaim` imports
 bun run setup
 # expands to: mise install && bun install && uv sync && bun run secrets:env && bun run secrets:init
 ```
+
+> **Note:** The `mise run lint:skills` task currently reports **53
+> skills pass** (the v4 consolidation reduced the skill count from
+> the historical 123 — see `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
 
 ## Secrets Bootstrap (do not skip)
 
