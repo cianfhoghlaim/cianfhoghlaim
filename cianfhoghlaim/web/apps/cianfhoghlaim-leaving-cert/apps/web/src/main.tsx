@@ -22,6 +22,7 @@ import * as SelfHostRoute from "./routes/en/self-host";
 import * as SearchRoute from "./routes/en/search";
 import * as PlaygroundsRoute from "./routes/en/playgrounds";
 import * as DiagramsRoute from "./routes/en/diagrams";
+import * as AboutRoute from "./routes/en/about";
 import { GlobalChat } from "./components/chat/GlobalChat";
 
 const rootRoute = createRootRoute({
@@ -139,6 +140,12 @@ const diagramsRoute = createRoute({
   component: DiagramsRoute.default || DiagramsRoute.Route?.component || (() => <div>Diagrams</div>),
 });
 
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/about",
+  component: AboutRoute.default || AboutRoute.Route?.component || (() => <div>About</div>),
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   foundationsRoute,
@@ -151,6 +158,7 @@ const routeTree = rootRoute.addChildren([
   searchRoute,
   playgroundsRoute,
   diagramsRoute,
+  aboutRoute,
 ]);
 
 const router = createRouter({ routeTree });
