@@ -227,6 +227,15 @@ hub = [
     "huggingface-hub",  # dropped lower bound per Phase 2 conflict policy
 ]
 
+# ── dltHub Platform (the dlthub CLI + dlt-workspace MCP server) ──
+# NEW 2026-07-06 (2026-07-06-wire-dlthub-platform-toolkits-and-deployment change).
+# `dlthub` is in core deps (>=0.27.0); this extra adds `fastmcp-slim[server]`,
+# which the dlt-workspace MCP server requires to launch via `dlthub ai mcp run`.
+# Install with:  uv pip install -e '.[dlthub-platform]'
+dlthub-platform = [
+    "fastmcp-slim[server]",  # required by `dlthub ai mcp run` (per `dlthub ai status` warning)
+]
+
 # ── Development ──
 dev = [
     "pytest>=9.0.3",
@@ -249,7 +258,7 @@ dev-with-vision = [
 # Silicon validation stack.
 # NEW 2026-07-03 (infrastructure-foundation): added `ocr-vision-full` to `all`.
 all = [
-    "cianfhoghlaim[ocr-classical,celtic-language,asset-gen,ocr,training,memory,ocr-vision-full,observability,ui,dbt,marimo,gradio,hub,dev]",
+    "cianfhoghlaim[ocr-classical,celtic-language,asset-gen,ocr,training,memory,ocr-vision-full,observability,ui,dbt,marimo,gradio,hub,dlthub-platform,dev]",
     # NOTE: apple-silicon-mlx (mlx-omni-server) is intentionally NOT in
     # `all` because it pins uvicorn<0.35 + sse-starlette<3.4 which conflict
     # with the rest of the stack. Install manually:
