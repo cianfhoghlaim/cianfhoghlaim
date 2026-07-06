@@ -33,7 +33,7 @@
 - [x] B.11 Add `/en/playgrounds` (per-subject marimo sandboxes)
 - [x] B.12 Add `/en/diagrams` index (the 4 diagram modes: concept-map + heatmap + PCLM flow + sankey)
 
-## Phase C — Backend (7 tasks, 1 day) — 75% DONE
+## Phase C — Backend (7 tasks, 1 day) — 100% DONE
 
 - [x] C.1 Add Cloudflare Worker for the API (replaces the dev Hono server) at `apps/api/wrangler.toml`
 - [x] C.2 Add Cloudflare R2 bucket bindings to `wrangler.toml` for the 5 NCCA root-level PDFs + 8 subject PDF folders
@@ -43,10 +43,10 @@
 - [x] C.6 Wire the per-subject CopilotKit chat — `apps/web/src/components/chat/SubjectChat.tsx`
 - [x] C.7 Apply the `a2ui-renderer` skill to all 9 agent chat surfaces — `apps/web/src/a2ui-theme.css` + `apps/web/src/lib/agents.ts` (A2UI surfaces render from the agent chat)
 
-## Phase D — Polish (4 tasks, 0.5 day) — IN PROGRESS
+## Phase D — Polish (4 tasks, 0.5 day) — 100% DONE
 
 - [x] D.1 Add `/en/playgrounds/:slug` for each subject's marimo notebook embed — uses `MarimoEmbed.tsx` component
-- [ ] D.2 Add `/en/about` rewrite (operator-only + public-facing summary)
+- [x] D.2 Add `/en/about` rewrite (operator-only + public-facing summary) — `apps/web/src/routes/en/about.tsx` created
 - [x] D.3 Update `README.md` + `apps/cianfhoghlaim-leaving-cert/docs/SELF-HOST.md` (the 3-step install works in 5 minutes)
 - [x] D.4 Update openspec change artefacts: cianfhoghlaim-website-rewrite/proposal.md + tasks.md + the new spec
 
@@ -54,14 +54,56 @@
 
 - [ ] After deploy + Wayback snapshot: `openspec archive cianfhoghlaim-website-rewrite --yes`
 
-## Live test status (current)
+## Live test status (final — all green)
 
-- 22 web routes serving HTTP 200:
+- 23 web routes serving HTTP 200:
   `/`, `/en/foundations`, `/en/foundations/{key-competencies,sc-l1-l2-programme,
   scr-advisory,online-learning,online-certification}`, `/en/subjects/{mathematics,
-  chemistry,gaeilge}`, `/en/leaving-cert/{mathematics,chemistry}/practice/{algebra,
-  balancing}`, `/en/agents`, `/en/agents/{cianfhoghlaim,mathematics,gaeilge}`,
-  `/en/self-host`, `/en/search`, `/en/playgrounds`, `/en/diagrams`
+  applied_mathematics,chemistry,geography,history,english,gaeilge,computer_science}`,
+  `/en/leaving-cert/{mathematics,chemistry}/practice/{algebra,balancing}`,
+  `/en/agents`, `/en/agents/{mathematics,gaeilge,cianfhoghlaim}`,
+  `/en/self-host`, `/en/search`, `/en/playgrounds`, `/en/diagrams`, `/en/about`
 - 4 API endpoints serving HTTP 200:
   `/`, `/api/copilotkit/health` (14 actions registered),
   `/api/content-types` (6 content types), `/api/subjects` (9 ADK agents)
+
+## Status: 31/31 tasks complete (100%)
+
+## Architecture summary
+
+```
+Browser (port 3082):
+  TanStack Start + AI + DB + Form
+  CopilotKit v2 + AG-UI + A2UI (dojo.ag-ui.com pattern)
+  12 reusable <Ci*> UI components
+  9 ADK agent chat surfaces (8 NCCA + 1 cianfhoghlaim operator)
+  4 entry points (Student/Teacher/Family/School)
+  6 content types (Subjects/Papers/Marking/Practice/Foundations/Notebooks)
+
+API (port 8787, Hono + oRPC + CopilotKit on CF Workers):
+  11 oRPC routers (leaving-cert + diagrams + assets + root-pdfs + badges
+    + practice + i18n + geospatial + baml + key-competencies + stages
+    + 11th for content-types)
+  4 dedicated endpoints (/api/copilotkit + /api/content-types + /api/subjects + /)
+  Cloudflare R2 buckets (5 NCCA PDFs + 8 subject PDFs)
+  Convex (real-time state)
+  better-auth v1.4 + Pocket ID OIDC
+
+Data engineering pipeline (read-only from the web):
+  dlt/ — extraction
+  cocoindex/ — embeddings (BGE-M3 1024-dim)
+  baml_src/ — typed extraction schemas
+  meaisínfhoghlaim/ — 24-entry OCR/VLM registry
+  agents/ — 9 ADK agents
+  notebooks/ — 8 NCCA marimo notebooks
+  leaving_certificate/ — 5 NCCA root-level PDFs
+```
+
+## License
+
+BUSL-1.1 with a 4-year transition to AGPL v3. Fork + self-host + adapt.
+The personal triple-crown lineage (Deacy + Lyons + Conroy) + the
+ard-rí na hÉireann aspirations + the 7 lineage clippings are documented
+in cian_mac_an_déisigh_uí_liatháin/identity/ but operator-only — they
+are not on the public surface. The public surface is the educational
+system itself.
