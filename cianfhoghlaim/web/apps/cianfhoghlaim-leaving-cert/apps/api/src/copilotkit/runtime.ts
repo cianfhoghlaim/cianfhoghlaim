@@ -4,67 +4,67 @@
 // The 14 CopilotKit actions (6 leaving-cert + 4 diagram + 2 3D-asset +
 // 1 cross-subject + 1 SCR commentary) are registered as dispatch targets.
 //
-// Endpoints:
-//   POST /api/copilotkit              AG-UI stream (stage + subject + language)
-//   GET  /api/copilotkit/health       runtime + actions health probe
-//   GET  /api/subjects                the 8 NCCA subject ADK agents metadata
-//                                     (lazy-imported from
-//                                      ../../../agents/tuatha/subject_router)
+// Per openspec/changes/cianfhoghlaim-website-rewrite/proposal.md
+// — wired to the apps/api/src/registry.ts (the 9 ADK agent definitions).
 
 import { Hono } from "hono";
 import { streamAGUI } from "./agui_stream";
-import { resolveSubjectTeam } from "./stage_router";
+import { AGENTS, getAgentById } from "../registry";
 import { ALL_ACTIONS } from "./actions";
 
-export const copilotkit = new Hono();
+const copilotkitApp = new Hono();
 
-copilotkit.post("/", async (c) => {
+const SUBJECT_SLUGS = [
+  "mathematics", "applied_mathematics", "chemistry", "geography",
+  "history", "english", "gaeilge", "computer_science",
+] as const;
+type SubjectSlug = typeof SUBJECT_SLUGS[number];
+
+function isSubjectSlug(s: string): s is SubjectSlug {
+  return (SUBJECT_SLUGS as readonly string[]).includes(s);
+}
+
+copilotkitApp.post("/", async (c) => {
   const url = new URL(c.req.url);
   const stage = (url.searchParams.get("stage") ?? "senior_cycle") as
-    | "aistear"
-    | "primary"
-    | "junior_cycle"
-    | "senior_cycle"
-    | "tertiary";
+    | "aistear" | "primary" | "junior_cycle" | "senior_cycle" | "tertiary";
   const subject = url.searchParams.get("subject") ?? "";
   const language = (url.searchParams.get("language") ?? "en") as "en" | "ga";
 
-  const team = await resolveSubjectTeam(subject);
+  // Resolve to a synthetic ADK team — for now, return a fake team for any
+  // subject. The cianfhoghlaim operator agent (id="cianfhoghlaim") is the
+  // default if the subject is unknown.
+  const team: BuiltInAgentLike = isSubjectSlug(subject)
+    ? makeSyntheticTeam(getAgentById(subject))
+    : makeSyntheticTeam(getAgentById("cianfhoghlaim"));
+
   return streamAGUI(c.req.raw, team, { stage, subject, language }, ALL_ACTIONS);
 });
 
-copilotkit.get("/health", (c) => c.json({
+copilotkitApp.get("/health", (c) => c.json({
   status: "ok",
   actions_registered: ALL_ACTIONS.length,
   action_names: ALL_ACTIONS.map((a) => a.name),
 }));
 
-const app = new Hono();
+// The /api/subjects endpoint moved to ../subjects — see apps/api/src/routers/subjects.ts
 
-app.get("/", async (c) => {
-  const { list_all_agents } = await import(
-    /* @vite-ignore */ "../../../agents/tuatha/subject_router" as string
-  ).catch(async () => {
-    return { list_all_agents: () => [] };
-  });
+// Synthetic ADK team shape — wraps an AGENTS entry into a BuiltInAgent-compatible
+// object for the SSE stream.
+function makeSyntheticTeam(agent: typeof AGENTS[number]): BuiltInAgentLike {
+  return {
+    name: agent.id,
+    description: agent.role,
+    model: "minimax-m3",
+    systemPrompt: agent.system_prompt,
+  };
+}
 
-  const agents = (
-    typeof list_all_agents === "function" ? list_all_agents() : []
-  ).map((entry: Record<string, unknown>) => ({
-    subject: entry.subject,
-    display_name: entry.display_name,
-    module_slug: entry.module_slug,
-    tuatha_de: entry.tuatha_de,
-    lore: entry.lore,
-    brown_ajah_member: entry.brown_ajah_member,
-    available: entry.agent !== null && entry.agent !== undefined,
-  }));
+interface BuiltInAgentLike {
+  name: string;
+  description: string;
+  model: string;
+  systemPrompt: string;
+}
 
-  return c.json({
-    status: "ok",
-    count: agents.length,
-    agents,
-  });
-});
-
-export const subjects = app;
+export { copilotkitApp as copilotkit };

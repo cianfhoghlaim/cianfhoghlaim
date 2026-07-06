@@ -1,0 +1,3 @@
+# cianfhoghlaim-website-rewrite
+
+Progressive rewrite of the cianfhoghlaim website to be an official professional educational resource (Khan Academy-class + iximiuz Labs-style + dojo.ag-ui.com-style AG-UI A2UI). 8 NCCA subjects + 5 root-level PDFs + 6 content types (Subjects / Practice / Past Papers / Marking Schemes / Foundations / Notebooks) + 9 ADK agents (8 NCCA subject specialists + 1 cianfhoghlaim operator) + global + per-subject CopilotKit chat with A2UI surface rendering + Cloudflare Workers + R2 + Convex + better-auth v1.4 + Pocket ID OIDC. All integrated with the existing dlt/ + cocoindex/ + baml_src/ + meaisínfhoghlaim/ data engineering pipeline.

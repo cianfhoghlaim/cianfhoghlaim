@@ -6,8 +6,10 @@ import * as React from "react";
 import ReactDOM from "react-dom/client";
 import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet, Link } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { CopilotKit } from "@copilotkit/react-core";
 
 import "./app.css";
+import "./a2ui-theme.css";
 
 import * as IndexRoute from "./routes/index";
 import * as FoundationsRoute from "./routes/en/foundations";
@@ -18,47 +20,54 @@ import * as AgentsRoute from "./routes/en/agents";
 import * as AgentRoute from "./routes/en/agents/$agent";
 import * as SelfHostRoute from "./routes/en/self-host";
 import * as SearchRoute from "./routes/en/search";
+import { GlobalChat } from "./components/chat/GlobalChat";
 
 const rootRoute = createRootRoute({
   component: () => (
-    <div className="h-screen w-screen flex flex-col bg-slate-900 text-slate-100 font-sans">
-      <header className="h-14 bg-slate-950 border-b border-slate-800 flex items-center px-4 justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="w-8 h-8 rounded-md bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
-            C
-          </Link>
-          <div>
-            <Link to="/" className="font-cinzel text-lg font-bold tracking-wider text-emerald-400">
-              cianfhoghlaim
+    <CopilotKit
+      runtimeUrl="/api/copilotkit"
+      agent="cianfhoghlaim"
+    >
+      <div className="h-screen w-screen flex flex-col bg-slate-900 text-slate-100 font-sans">
+        <header className="h-14 bg-slate-950 border-b border-slate-800 flex items-center px-4 justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <Link to="/" className="w-8 h-8 rounded-md bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
+              C
             </Link>
-            <span className="block text-xs text-slate-500">
-              self-hosted NCCA LC education
-            </span>
+            <div>
+              <Link to="/" className="font-cinzel text-lg font-bold tracking-wider text-emerald-400">
+                cianfhoghlaim
+              </Link>
+              <span className="block text-xs text-slate-500">
+                self-hosted NCCA LC education
+              </span>
+            </div>
           </div>
-        </div>
-        <nav className="flex items-center gap-4 text-sm">
-          <Link to="/en/foundations" className="text-slate-300 hover:text-emerald-400">
-            Foundations
-          </Link>
-          <Link to="/en/subjects/mathematics" className="text-slate-300 hover:text-emerald-400">
-            Subjects
-          </Link>
-          <Link to="/en/agents" className="text-slate-300 hover:text-emerald-400">
-            9 ADK Agents
-          </Link>
-          <Link to="/en/self-host" className="text-slate-300 hover:text-emerald-400">
-            Self-host
-          </Link>
-          <Link to="/en/search" className="text-slate-300 hover:text-emerald-400">
-            Search
-          </Link>
-        </nav>
-      </header>
-      <main className="flex-1 overflow-y-auto">
-        <Outlet />
-      </main>
-      {import.meta.env.DEV && <TanStackRouterDevtools position="bottom-right" />}
-    </div>
+          <nav className="flex items-center gap-4 text-sm">
+            <Link to="/en/foundations" className="text-slate-300 hover:text-emerald-400">
+              Foundations
+            </Link>
+            <Link to="/en/subjects/mathematics" className="text-slate-300 hover:text-emerald-400">
+              Subjects
+            </Link>
+            <Link to="/en/agents" className="text-slate-300 hover:text-emerald-400">
+              9 ADK Agents
+            </Link>
+            <Link to="/en/self-host" className="text-slate-300 hover:text-emerald-400">
+              Self-host
+            </Link>
+            <Link to="/en/search" className="text-slate-300 hover:text-emerald-400">
+              Search
+            </Link>
+          </nav>
+        </header>
+        <main className="flex-1 overflow-y-auto">
+          <Outlet />
+        </main>
+        <GlobalChat />
+        {import.meta.env.DEV && <TanStackRouterDevtools position="bottom-right" />}
+      </div>
+    </CopilotKit>
   ),
 });
 

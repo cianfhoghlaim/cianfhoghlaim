@@ -1,42 +1,68 @@
 // /index — cianfhoghlaim landing page
-// One unified flow for all visitor types.
-// Positioned as: self-hostable consolidation of education system resources
-// that helps reduce barriers to education.
+// Khan-style 4 entry points + the 6 content types + the 9 ADK agents
+// Per openspec/changes/cianfhoghlaim-website-rewrite/specs/.../spec.md R2
 
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CiTextbookPanel, CiDetailCell, CiBoonsChoice, CiSemanticPill } from "@cianfhoghlaim/ui";
+import { CiTextbookPanel } from "@cianfhoghlaim/ui";
+import { CONTENT_TYPES_LIST, TOTAL_CONTENT_COUNT } from "@/lib/content-types";
+import { AGENTS } from "@/lib/registry";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const SUBJECTS = [
-  { slug: "mathematics", name: "Mathematics", color: "var(--ci-subject-mathematics)", eiraic: 3 },
-  { slug: "applied_mathematics", name: "Applied Mathematics", color: "var(--ci-subject-applied_mathematics)", eiraic: 4 },
-  { slug: "chemistry", name: "Chemistry", color: "var(--ci-subject-chemistry)", eiraic: 1 },
-  { slug: "geography", name: "Geography", color: "var(--ci-subject-geography)", eiraic: 2 },
-  { slug: "history", name: "History", color: "var(--ci-subject-history)", eiraic: 9 },
-  { slug: "english", name: "English", color: "var(--ci-subject-english)", eiraic: 7 },
-  { slug: "gaeilge", name: "Gaeilge", color: "var(--ci-subject-gaeilge)", eiraic: 8 },
-  { slug: "computer_science", name: "Computer Science", color: "var(--ci-subject-computer_science)", eiraic: 5 },
+const ENTRY_POINTS = [
+  {
+    id: "student",
+    title: "Student",
+    title_ga: "Mac Léinn",
+    blurb: "Learning for myself — explore the 8 NCCA subjects + the 5×8 mastery matrix + practice items.",
+    href: "/en/subjects/mathematics",
+    color: "emerald",
+    icon: "🎓",
+  },
+  {
+    id: "teacher",
+    title: "Teacher",
+    title_ga: "Múinteoir",
+    blurb: "Educator with a classroom — class management tools + curriculum-aligned content + AI tutor (cianfhoghlaim operator agent).",
+    href: "/en/agents",
+    color: "blue",
+    icon: "👩‍🏫",
+  },
+  {
+    id: "family",
+    title: "Family",
+    title_ga: "Teaghlach",
+    blurb: "Supporting my child — dashboard to track progress + 6 content types per subject.",
+    href: "/en/foundations",
+    color: "amber",
+    icon: "🏠",
+  },
+  {
+    id: "school",
+    title: "School / District",
+    title_ga: "Scoil / Ceantar",
+    blurb: "AI-powered solutions — school-wide insights + 9 ADK agents + data engineering pipeline.",
+    href: "/en/self-host",
+    color: "purple",
+    icon: "🏛️",
+  },
 ];
 
 function HomePage() {
   return (
-    <div className="max-w-6xl mx-auto flex flex-col gap-6 p-6">
+    <div className="max-w-6xl mx-auto flex flex-col gap-8 p-6">
       {/* Hero */}
       <section className="text-center pt-12 pb-8">
         <h1 className="font-cinzel text-5xl font-bold text-emerald-400 mb-3">
           cianfhoghlaim
         </h1>
         <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-          A self-hostable consolidation of Leaving Certificate education
-          system resources. Built on the open-source agentic stack.
+          A self-hostable consolidation of Leaving Certificate education system resources.
         </p>
         <p className="text-base text-slate-400 max-w-3xl mx-auto mt-3">
-          NCCA syllabus + past papers + marking schemes + 8 ADK subject
-          agents + Convex real-time + CopilotKit chat. One `git clone`
-          away from a full deployment.
+          8 NCCA subjects + 5 root-level PDFs + 6 content types + 9 ADK agents. Built on the open-source agentic stack.
         </p>
         <div className="mt-6 flex items-center justify-center gap-3">
           <Link
@@ -53,15 +79,61 @@ function HomePage() {
           </Link>
         </div>
         <p className="text-xs text-slate-500 mt-3 font-mono italic">
-          Reduce barriers to education · open source · Convex + TanStack
-          Start + CopilotKit v2 + better-auth + 8 NCCA ADK agents
+          Reduce barriers to education · open source · TanStack Start + CopilotKit v2 AG-UI + A2UI
         </p>
       </section>
 
+      {/* 4 entry points (Khan-style) */}
+      <CiTextbookPanel
+        title="I am a..."
+        material="parchment"
+      >
+        <p className="text-slate-300 mb-4">
+          Choose how you want to use cianfhoghlaim.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {ENTRY_POINTS.map((ep) => (
+            <Link
+              key={ep.id}
+              to={ep.href}
+              className="p-4 rounded-lg bg-slate-900 border-2 transition-colors hover:border-emerald-400"
+              style={{ borderColor: `var(--ci-subject-${ep.color === "emerald" ? "mathematics" : ep.color === "blue" ? "english" : ep.color === "amber" ? "history" : "computer_science"})` }}
+            >
+              <div className="text-3xl mb-2">{ep.icon}</div>
+              <div className="text-base font-bold text-slate-100">{ep.title}</div>
+              <div className="text-xs text-slate-500 italic mb-2">{ep.title_ga}</div>
+              <div className="text-sm text-slate-300">{ep.blurb}</div>
+            </Link>
+          ))}
+        </div>
+      </CiTextbookPanel>
+
+      {/* 6 content types (Khan-style + iximiuz-style) */}
+      <CiTextbookPanel
+        title={`${CONTENT_TYPES_LIST.length} content types · ${TOTAL_CONTENT_COUNT}+ resources`}
+        material="knotwork"
+      >
+        <p className="text-slate-300 mb-4">
+          Each subject has all 6 content types. Borrowed from Khan Academy's mastery-based learning + iximiuz Labs' 6-content-type model.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {CONTENT_TYPES_LIST.map((ct) => (
+            <div
+              key={ct.slug}
+              className="p-3 rounded-lg bg-slate-900 border border-slate-700 text-center"
+            >
+              <div className="text-2xl mb-1">{ct.icon}</div>
+              <div className="text-sm font-bold text-slate-100">{ct.name}</div>
+              <div className="text-xs text-slate-500 mt-1">{ct.count}+ resources</div>
+            </div>
+          ))}
+        </div>
+      </CiTextbookPanel>
+
       {/* 8 NCCA subjects */}
       <CiTextbookPanel
-        title="8 NCCA Subjects"
-        material="parchment"
+        title="8 NCCA subjects"
+        material="knotwork"
       >
         <p className="text-slate-300 mb-4">
           The 8 NCCA Leaving Certificate subjects + their Cianfhoghlaim
@@ -70,121 +142,37 @@ function HomePage() {
           marking schemes + ADK agent + practice page.
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {SUBJECTS.map((s) => (
+          {AGENTS.filter((a) => a.id !== "cianfhoghlaim").map((s) => (
             <Link
-              key={s.slug}
-              to={`/en/subjects/${s.slug}`}
+              key={s.id}
+              to={`/en/leaving-cert/${s.id}`}
               className="p-3 rounded-lg bg-slate-900 border-2 transition-colors hover:border-amber-400"
               style={{ borderColor: s.color }}
             >
               <div className="text-sm font-medium" style={{ color: s.color }}>{s.name}</div>
-              <div className="text-xs text-slate-500 font-mono mt-1">
-                Éraic {s.eiraic}/13
+              <div className="text-xs text-slate-500 italic">{s.name_ga}</div>
+              <div className="text-xs text-slate-400 mt-1">
+                Éraic tier {s.eiraic_tier}/13
               </div>
             </Link>
           ))}
         </div>
       </CiTextbookPanel>
 
-      {/* 9 ADK agents */}
-      <CiTextbookPanel
-        title="9 ADK Agents"
-        material="knotwork"
-      >
-        <p className="text-slate-300 mb-4">
-          8 NCCA subject specialists + 1 cianfhoghlaim operator agent (the
-          repo self-reference). Each agent is a google.adk.agents.LlmAgent
-          with subject-specific tools + 5 NCCA Key Competency mappings.
-          The cianfhoghlaim operator agent has access to the README +
-          dlt/ + cocoindex/ + baml_src/ + meaisinfhoghlaim/ for repo
-          self-reference.
+      {/* CTA */}
+      <section className="text-center pt-8 pb-12">
+        <p className="text-lg text-slate-300 mb-4">
+          cianfhoghlaim is licensed under the BUSL-1.1 with a 4-year
+          transition to AGPL v3. Anyone can fork + self-host + adapt the
+          system for their own country / curriculum / language.
         </p>
-        <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          {SUBJECTS.map((s) => (
-            <Link
-              key={s.slug}
-              to={`/en/agents/${s.slug}`}
-              className="px-2 py-1.5 rounded font-mono hover:underline"
-              style={{ color: s.color }}
-            >
-              {s.slug.replace("_", "_")}_agent
-            </Link>
-          ))}
-          <Link
-            to="/en/agents/cianfhoghlaim"
-            className="px-2 py-1.5 rounded font-mono text-amber-400 hover:underline"
-          >
-            cianfhoghlaim_operator
-          </Link>
-        </div>
-      </CiTextbookPanel>
-
-      {/* 5 Foundations */}
-      <CiTextbookPanel
-        title="5 Foundations"
-        material="ink-wash"
-      >
-        <p className="text-slate-300 mb-4">
-          5 NCCA root-level PDFs at{" "}
-          <code className="text-amber-400">cianfhoghlaim/leaving_certificate/</code>:
-          the key competencies + the SC L1/L2 programme statement + the SCR
-          advisory report + the online learning potential + the online
-          certification potential.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-          {[
-            { slug: "key-competencies", name: "5 Key Competencies", color: "#059669" },
-            { slug: "sc-l1-l2-programme", name: "SC L1/L2 Programme", color: "#2563eb" },
-            { slug: "scr-advisory", name: "SCR Advisory", color: "#b91c1c" },
-            { slug: "online-learning", name: "Online Learning", color: "#ca8a04" },
-            { slug: "online-certification", name: "Online Certification", color: "#16a34a" },
-          ].map((f) => (
-            <Link
-              key={f.slug}
-              to={`/en/foundations/${f.slug}`}
-              className="p-2 rounded border text-center text-xs hover:underline"
-              style={{ borderColor: f.color, color: f.color }}
-            >
-              {f.name}
-            </Link>
-          ))}
-        </div>
-      </CiTextbookPanel>
-
-      {/* 3-way boon choice — what do you want to do? */}
-      <CiTextbookPanel
-        title="What do you want to do?"
-        material="gold-leaf"
-      >
-        <CiBoonsChoice
-          prompt="Choose your path"
-          choices={[
-            {
-              id: "study",
-              label: "Study a subject",
-              description: "Browse the syllabus, past papers, marking schemes",
-            },
-            {
-              id: "agent",
-              label: "Talk to an ADK agent",
-              description: "Ask the 8 NCCA subject agents (or the cianfhoghlaim operator)",
-            },
-            {
-              id: "selfhost",
-              label: "Self-host cianfhoghlaim",
-              description: "Run your own instance in 5 minutes",
-            },
-          ]}
-          onChoose={(id) => {
-            window.location.href =
-              id === "study"
-                ? "/en/subjects/mathematics"
-                : id === "agent"
-                ? "/en/agents"
-                : "/en/self-host";
-          }}
-        />
-      </CiTextbookPanel>
+        <Link
+          to="/en/self-host"
+          className="inline-block px-6 py-3 rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 transition-colors"
+        >
+          Get started in 5 minutes →
+        </Link>
+      </section>
     </div>
   );
 }
