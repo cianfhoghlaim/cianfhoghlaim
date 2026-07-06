@@ -112,7 +112,7 @@ Provide detailed research notes with source attributions.""",
     tools=[google_search],
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(
-            thinking_budget_tokens=2048,
+            include_thoughts=True,
         )
     ),
     output_key="research_notes",

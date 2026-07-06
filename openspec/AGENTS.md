@@ -46,7 +46,7 @@ openspec archive <change-id> --yes        # after deploy
 ### Priority mise task
 
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata (123/123 pass)
+mise run lint:skills               # validate .agents/skills/ metadata (53/53 pass as of v4 consolidation)
 ```
 
 ### ccc code search (for openspec work)
@@ -102,9 +102,9 @@ The system SHALL provide...
 **Migration**: [How to handle]
 ```
 
-## Capability Specs (36)
+## Capability Specs (37)
 
-The Cianfhoghlaim platform has **36 capability specs** organised into
+The Cianfhoghlaim platform has **37 capability specs** organised into
 **8 groups** by quadrant. Each spec is a thin capability pointer; the
 **authoritative details** live in the corresponding
 `.agents/skills/<skill>/SKILL.md` and the source code.
@@ -138,6 +138,7 @@ The Cianfhoghlaim platform has **36 capability specs** organised into
 | `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
 | `data-engineering-pipeline-documentation` | shared | sruth/oideachais/STATUS.md + sruth/oideachais/REFACTORING.md + per-area READMEs |
+| `british-isles-education-pipeline` | cianfhoghlaim | 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + gov.ie DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
 | `dagster-5-layer-component-architecture` | shared | 5 KCG Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components |
 | `spaces-cicd-pipeline` | shared | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) |
 | `celtic-data-engineering-pipeline` | shared | dbt-duckdb at `sruth/oideachais/dbt_project/` + marimo notebooks at `sruth/meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
@@ -147,6 +148,7 @@ The Cianfhoghlaim platform has **36 capability specs** organised into
 | `scheduling` | team | cal-diy team + per-member booking pages |
 | `chunkhound-code-search` | tooling | Semantic code search with MVCC |
 | `documentation` | tooling | Canonical docs/ structure (8 numbered domains), frontmatter schema |
+| `dev-env-demo-tools` | shared | 8 `FunctionTool`-wrapped dev-env capabilities (`ccc_search`, `ccc_index`, `drift_detect`, `firecrawl_refactor_discover`, `hf_best_model`, `openspec_list_specs`, `openspec_validate`, `mise_lint_skills`) + `dev_env_demo_agent` + 6 marimo notebooks + recorded transcript at `docs/agents/dev-env-demo-transcript.md` |
 
 ### Quadrant map (1 consolidated package — v4)
 

@@ -279,7 +279,7 @@ The 3 `logfire_enabled` Pydantic fields (`_croilar_shared/config/settings.py:62`
 
 **Validation gates:**
 
-1. `mise run lint:skills` — 123/123 pass (skill metadata)
+1. `mise run lint:skills` — 53/53 pass (skill metadata; was 123/123 pre-v4-consolidation)
 2. `openspec validate fix/logfire-usage-audit-2026-06-29 --strict` — must pass (this becomes a spec delta under `agent-observability`)
 3. `uv run pytest tests/test_observability_integrations.py::TestLogfireIntegration` — passes with `LOGFIRE_TOKEN=""` (the default)
 4. `uv run pytest tests/test_observability_integrations.py::TestLogfireIntegration` — passes with `LOGFIRE_TOKEN="test-fake-token"` (round-trip without network)
