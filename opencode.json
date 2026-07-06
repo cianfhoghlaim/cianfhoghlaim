@@ -35,7 +35,7 @@
         "INFISICAL_HOST_URL": "http://localhost:8081",
         "INFISICAL_PROJECT_ID": "${INFISICAL_PROJECT_ID}"
       },
-      "enabled": true
+      "enabled": false
     },
     "motherduck": {
       "type": "local",
@@ -80,7 +80,7 @@
         "COGNEE_API_KEY": "infisical://dev-baile/cognee/api_key",
         "LLM_API_KEY": "${DEEPSEEK_API_KEY}"
       },
-      "enabled": true
+      "enabled": false
     },
     "graphiti": {
       "type": "local",
@@ -96,7 +96,7 @@
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "devpassword"
       },
-      "enabled": true
+      "enabled": false
     },
     "langfuse": {
       "type": "local",
@@ -110,7 +110,7 @@
         "LANGFUSE_SECRET_KEY": "infisical://dev-baile/langfuse/secret_key",
         "LANGFUSE_HOST": "https://langfuse.cianfhoghlaim.ie"
       },
-      "enabled": true
+      "enabled": false
     },
     "hermes": {
       "type": "local",
@@ -125,7 +125,7 @@
         "HERMES_API_URL": "http://hermes:9119",
         "HERMES_API_KEY": "infisical://dev-baile/hermes/api_server_key"
       },
-      "enabled": true
+      "enabled": false
     },
     "agent-registry": {
       "type": "local",
@@ -139,7 +139,7 @@
       "env": {
         "OPENCODE_JSON_PATH": "./opencode.json"
       },
-      "enabled": true
+      "enabled": false
     },
     "agents-md": {
       "type": "local",
@@ -153,7 +153,7 @@
       "env": {
         "AGENTS_MD_REPO_ROOT": "./"
       },
-      "enabled": true
+      "enabled": false
     },
     "apple-photos": {
       "type": "local",
@@ -168,7 +168,7 @@
         "LEABHARLANN_PHOTOS_ROOT": "./leabharlann/photos",
         "LEABHARLANN_PHOTOS_INCLUDE_GPS": "false"
       },
-      "enabled": true
+      "enabled": false
     },
     "huggingface": {
       "type": "remote",
