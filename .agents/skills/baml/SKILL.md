@@ -1,6 +1,6 @@
 ---
 name: baml
-description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector'.
+description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `cianfhoghlaim/baml/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers the 5 canonical lc6 extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram) + static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector', 'lc6', 'lc_extraction'.
 ---
 
 # BAML Skill
@@ -14,19 +14,21 @@ LLM extraction framework used across the oideachais lakehouse.
 ## Project rules (PRESERVED from the original 9-line skill)
 
 1. **Location rule** — define all prompt engineering and extraction
-   boundaries in `.baml` files within `sruth/oideachais/baml_src/`. The
-   directory contains 23+ BAML files (audio_extraction,
-   celtic_linguistics, celtic_sources, cognates, curriculum_extraction,
+   boundaries in `.baml` files within `cianfhoghlaim/baml/`
+   (the `baml_src/` symlink points here post-v4). The directory
+   contains 23+ BAML files (audio_extraction, celtic_linguistics,
+   celtic_sources, cognates, curriculum_extraction,
    education_statistics, grammar_patterns, isles_education,
    leaving_cert_*_extraction, morphology, multi_nation_curriculum,
    named_entities, ocr_extraction, ocr_validation, oideachas,
    portfolio_extraction, site_analysis, …). The auto-generated
-   client lives in `baml_client/`.
+   client lives in `cianfhoghlaim/baml_client/`.
 2. **Constraint rule** — use BAML to enforce Zod-like constraints on
    the LLM output, preventing parser crashes downstream in the
    Dagster / DLT pipelines.
 3. **Mapping rule** — ensure the extraction schemas map directly to
-   the `DuckLake` tables defined in `sruth/oideachais/dlt_sources/ireland/`.
+   the `DuckLake` tables defined in
+   `cianfhoghlaim/dlt/british_isles/ireland/education/`.
 
 ## When to use this skill
 
@@ -45,7 +47,7 @@ Use when you need to:
 ## Pattern 1: Static extraction (the existing pattern)
 
 ```baml
-// sruth/oideachais/baml_src/curriculum_extraction.baml
+// cianfhoghlaim/baml/education/curriculum_extraction.baml
 class PrimaryLearningOutcome {
   stage string
   curriculum_area string
@@ -173,7 +175,7 @@ result = b.ExtractDocumentStructure(document=pdf)
 
 See [`references/multimodal-vision.md`](references/multimodal-vision.md)
 for PIL preprocessing, client config, and the OCR pattern (the
-in-repo `sruth/oideachais/baml_src/ocr_extraction.baml` uses this).
+in-repo `cianfhoghlaim/baml/ocr_extraction.baml` uses this).
 
 ## Pattern 4: Streaming extraction
 
@@ -241,7 +243,7 @@ for the retry-loop pattern.
 ## Pattern 6: Named clients + retry policies
 
 ```baml
-// baml_src/clients.baml
+// cianfhoghlaim/baml/clients.baml
 client<llm> ExtractEn {
   provider "openai"
   options {
@@ -380,7 +382,7 @@ Configure two generators so a single `baml-cli generate`
 run produces both client libraries:
 
 ```baml
-// baml_src/generators.baml
+// cianfhoghlaim/baml/generators.baml
 
 // Generator 1: Python data layer (DLT + Dagster)
 generator python_client {
@@ -515,24 +517,27 @@ Add a field once; propagate everywhere.
   worker (Celery, Temporal, or Dagster asset) and use
   optimistic UI / polling.
 
-See [`celtic-asset-generation/references/baml-adaptive-syllabus.md`](../celtic-asset-generation/references/baml-adaptive-syllabus.md) and the full BAML+DLT+TanStack deep dive in
-[`celtic-asset-generation/references/baml-irish-education-kg.md`](../celtic-asset-generation/references/baml-irish-education-kg.md)
+See `openspec/changes/lc6-biep/references/baml-adaptive-syllabus.md` and
+the full BAML+DLT+TanStack deep dive in
+`openspec/changes/lc6-biep/references/baml-irish-education-kg.md`
 for the canonical KCG pattern with Restate workflows
 and adaptive TypeBuilder schemas.
 
 ## Cross-references
 
-- [`baml_src/`](../../../baml_src/) — the 23+ BAML files
-- [`baml_client/`](../../../baml_client/) — the auto-generated client
-- [`baml_src/README.md`](../../../baml_src/README.md) — the BAML file map
+- [`cianfhoghlaim/baml/`](../../../cianfhoghlaim/baml/) — the 23+ BAML files (the `baml_src/` symlink points here)
+- [`cianfhoghlaim/baml_client/`](../../../cianfhoghlaim/baml_client/) — the auto-generated client
+- [`cianfhoghlaim/baml/README.md`](../../../cianfhoghlaim/baml/README.md) — the BAML file map
 - [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) — how
   to use BAML inside a CocoIndex v1 App
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the type-safe
   BAML → dlt pipeline pattern
 - [`.agents/skills/tanstack-start/SKILL.md`](../tanstack-start/SKILL.md) —
   the TanStack AI / oRPC / Zod consumer side
-- [`.agents/skills/celtic-asset-generation/SKILL.md`](../celtic-asset-generation/SKILL.md) —
-  canonical BAML usage for NCCA / SEC / Dept-of-Ed tripartite KG
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 canonical MotherDuck Dives (`lc_syllabus_topics`,
+  `lc_exam_difficulty`, `lc_marking_complexity`,
+  `gov_circulars_archive`) that consume the BAML-extracted rows
 
 ## Pattern 8: Tracing + Collector observability (added 2026-06)
 
@@ -572,5 +577,74 @@ function Run(input: string) -> (OutputItem @stream.done)[] {
 ```
 
 `@stream.with_state` generates Python `StreamState[T]` wrappers; check `state == "Complete"` before committing downstream.
+
+## British-Isles Education pipeline (post-v4 canonical pattern)
+
+The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) defines
+**5 canonical extraction functions** — one per BAML stage —
+shared by all 6 LC subjects (Mathematics, Chemistry, Geography,
+Gaeilge, English, Computer Science) plus the `gov.ie` circulars
+ingester:
+
+```python
+from cianfhoghlaim.baml.education.lc_extraction import (
+    curriculum_syllabus,       # ExtractCurriculumSyllabus
+    exam_paper_layout,         # ExtractExamPaperLayout
+    marking_scheme,            # ExtractMarkingSchemeGuideline
+    cross_linguistic,          # ExtractCrossLinguisticConcept
+    syllabus_diagram,          # ExtractSyllabusDiagram
+)
+```
+
+Each module exposes the matching BAML `@function`. The
+`@function` calls are wired into the `lc5/lc6` Dagster assets
+(42 total = 7 subjects × 6 stages) in
+`cianfhoghlaim/orchestration/defs/2_materials/`. The Pydantic
+classes generated by `baml-cli generate` are the canonical
+`primary_key` source-of-truth for the matching
+`@dlt.resource(write_disposition="merge")` wrappers in
+`cianfhoghlaim/dlt/british_isles/ireland/education/`.
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects × 2 languages** — Mathematics, Chemistry,
+  Geography, Gaeilge, English, Computer Science, each
+  partitioned by `language` (`en` / `ga`) so Gaeilge runs in
+  parallel with English via the same `@dlt_assets` wrapper.
+- **`gov.ie` circulars** — the 7th v1 CocoIndex App
+  (`government_circulars`) uses `ExtractCurriculumSyllabus`
+  against `gov.ie/.../circulars/...` PDFs to populate
+  `oideachais.education.ie.gov_circulars_archive` (one of the 4
+  MotherDuck Dives).
+- **Cross-linguistic concept extraction** —
+  `ExtractCrossLinguisticConcept` aligns Gaeilge and English
+  terminology (e.g. "matamaitic" ↔ "mathematics") so a single
+  RAG query spans both languages.
+- **42 lc5/lc6 Dagster assets** — the per-subject BAML extractions
+  feed the `2_materials/` asset layer, which fans out to the
+  `3_model_lifecycle/` CocoIndex v1 Apps.
+- **4 MotherDuck Dives** — `lc_syllabus_topics`,
+  `lc_exam_difficulty`, `lc_marking_complexity`,
+  `gov_circulars_archive` are the read-only consumer surfaces.
+- **6 per-subject marimo notebooks** — each LC subject gets a
+  notebook in `cianfhoghlaim/notebooks/` that queries its BAML
+  rows via `mo.sql(engine=md:oideachais)`.
+- **7 v1 CocoIndex Apps** — the per-subject embedding pipelines
+  consume the BAML-extracted chunks via the canonical
+  `mount_table_target` pattern (see the `cocoindex/SKILL.md`).
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the
+  `from cianfhoghlaim.baml import b` integration pattern
+- [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
+  the 7 v1 CocoIndex Apps (6 LC subjects + `government_circulars`)
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives
+- [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
+  per-subject notebooks
+- [`.agents/skills/dagster/SKILL.md`](../dagster/SKILL.md) — the
+  42 lc5/lc6 Dagster assets
+- [`.agents/skills/change-detection/SKILL.md`](../change-detection/SKILL.md) —
+  the NCCA / SEC / `gov.ie` sitemap-hash sensors
 
 [Collector](https://docs.boundaryml.com/ref/baml_client/collector.md) · [@trace](https://docs.boundaryml.com/ref/baml_client/collector.md#tags) · [client<llm>](https://docs.boundaryml.com/ref/baml/client-llm.md) · [Changelog](https://docs.boundaryml.com/changelog/changelog.md) · [docs llms.txt](https://docs.boundaryml.com/llms.txt)

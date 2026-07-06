@@ -1,6 +1,6 @@
 ---
 name: duckdb
-description: Expert assistance for DuckDB analytical database. Use when users need fast OLAP queries, file-based analytics, Parquet processing, embedded SQL, or local-first data analysis.
+description: Expert assistance for DuckDB analytical database. Use when users need fast OLAP queries, file-based analytics, Parquet processing, embedded SQL, or local-first data analysis. Powers the BIEP federated SQL layer (`duckdb.connect("md:oideachais")` + `lance_scan()` joins DuckLake + LanceDB) for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) and `gov.ie` circulars.
 ---
 
 # DuckDB - In-Process Analytical Database
@@ -362,4 +362,94 @@ con.close()
 - **Documentation**: https://duckdb.org/docs/
 - **SQL Reference**: https://duckdb.org/docs/sql/introduction
 - **Extensions**: https://duckdb.org/docs/extensions/overview
+- **GitHub**: https://github.com/duckdb/duckdb
+
+## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+
+The post-v4 BIEP (`openspec/changes/lc6-biep/`) uses DuckDB as
+the **federated SQL layer** that joins DuckLake (the OLTP sink
+for BAML-extracted rows) with LanceDB (the vector store for
+chunks) via `lance_scan()`. The canonical connection string is
+`md:oideachais` (MotherDuck + DuckLake + Lance Namespace sidecar
+on port 9000):
+
+```sql
+-- 1. Federated SQL over the lc_mathematics LanceDB chunk table
+SELECT * FROM lance_scan('s3://garage/lance/oideachais.lc.mathematics.higher_en/*.lance');
+
+-- 2. Federated SQL joining DuckLake + LanceDB in one query
+SELECT
+    d.subject,
+    d.module_id,
+    d.title,
+    count(c.chunk_id) AS n_chunks,
+    avg(c.similarity) AS avg_sim
+FROM oideachais.leaving_cert.curriculum_syllabus d
+JOIN lance_scan(
+    's3://garage/lance/oideachais.lc.mathematics.higher_en/*.lance'
+) c
+  ON d.subject = c.subject
+WHERE d.level = 'higher'
+  AND d.language = 'en'
+GROUP BY d.subject, d.module_id, d.title
+ORDER BY n_chunks DESC
+LIMIT 25;
+```
+
+```python
+import duckdb
+
+# The KCG-preferred pattern: federated SQL via MotherDuck + DuckLake
+con = duckdb.connect("md:oideachais")  # MOTHERDUCK_TOKEN from Infisical
+
+# Pull the Mathematics syllabus topics (DuckLake) + LanceDB chunks in one go
+df = con.execute("""
+    SELECT
+        d.subject,
+        d.level || '_' || d.language AS partition,
+        d.module_id,
+        d.title,
+        count(c.chunk_id) AS n_chunks
+    FROM oideachais.leaving_cert.curriculum_syllabus d
+    LEFT JOIN lance_scan(
+        's3://garage/lance/oideachais.lc.mathematics.higher_en/*.lance'
+    ) c ON d.subject = c.subject
+    WHERE d.subject IN (
+        'mathematics', 'chemistry', 'geography',
+        'gaeilge', 'english', 'computer_science'
+    )
+    GROUP BY d.subject, partition, d.module_id, d.title
+    ORDER BY n_chunks DESC
+""").df()
+```
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects × 2 languages × 2 levels** — Mathematics,
+  Chemistry, Geography, Gaeilge, English, Computer Science,
+  each with `en`/`ga` × `higher`/`ordinary` partitions under
+  `oideachais.leaving_cert.<subject>_<lang>_<level>`.
+- **`gov.ie` circulars** — the 7th subject (`government_circulars`)
+  populates `oideachais.education.ie.gov_circulars_archive`
+  in DuckLake + `oideachais.education.ie.gov_circulars` in LanceDB.
+- **Federated SQL** — the marimo notebooks use
+  `duckdb.connect("md:oideachais")` to combine BAML-extracted
+  DuckLake rows with vector-search LanceDB results in a single
+  query.
+- **`QUALIFY` for "latest version"** — the BIEP curriculum
+  tables are partitioned by `academic_year`; use `QUALIFY
+  ROW_NUMBER() OVER (PARTITION BY subject, module_id ORDER BY
+  academic_year DESC) = 1` to fetch the latest.
+
+Cross-references:
+- [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
+  the DuckLake `ATTACH` for the same `md:oideachais` database
+- [`.agents/skills/lancedb/SKILL.md`](../lancedb/SKILL.md) —
+  the LanceDB `lance_scan()` integration
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives that consume the BIEP rows
+- [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
+  per-subject notebooks
+- [`.agents/skills/ibis/SKILL.md`](../ibis/SKILL.md) — the Ibis
+  backend on top of `md:oideachais`
 - **GitHub**: https://github.com/duckdb/duckdb

@@ -1,6 +1,6 @@
 ---
 name: motherduck
-description: Master routing skill for all MotherDuck operations. Use this to determine which of the 4 task-specific MotherDuck sub-skills to invoke (architecture, data-modeling, analytics, connections), or to wire the mcp-server-motherduck (the KCG-preferred agent path).
+description: Master routing skill for all MotherDuck operations. Use this to determine which of the 4 task-specific MotherDuck sub-skills to invoke (architecture, data-modeling, analytics, connections), or to wire the mcp-server-motherduck (the KCG-preferred agent path). Powers the 4 BIEP Dives (`lc_syllabus_topics`, `lc_exam_difficulty`, `lc_marking_complexity`, `gov_circulars_archive`) + the lc6 MotherDuck Flights (scheduled DuckDB queries for BAML row backfill).
 ---
 
 # MotherDuck Master Router
@@ -154,8 +154,8 @@ the secret store, then referenced as
   valid DuckDB SQL)
 - `motherduck-security-governance` — for the
   service-account + read-only token policy
-- `.agents/skills/oideachais-storage/SKILL.md` — for
-  the DuckLake / MotherDuck read-only mental model
+- `.agents/skills/motherduck/` + `.agents/skills/iceberg-lakekeeper/SKILL.md` —
+  for the DuckLake / MotherDuck / Lakekeeper read-only mental model
 
 See [`docs/teanga/motherduck_mcp.md`](../../../docs/teanga/motherduck_mcp.md)
 for the full 457-line reference including all transport
@@ -165,24 +165,24 @@ data-sharing semantics.
 ## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
 
 - **DuckLake 1.0** launched 2026-04-16 on MotherDuck. The KCG
-  production lakehouse (`sruth/oideachais/`) uses DuckLake 1.0. New
+  production lakehouse (`cianfhoghlaim/`) uses DuckLake 1.0. New
   features in 1.0:
   - **Data inlining** — also applies to updates and deletes (not
     just inserts), so small DuckLake tables can live entirely on the
     catalog.
   - **Data clustering** — 10× faster reads on clustered tables via
     the new `set_sorted_by` helper in
-    `sruth/oideachais/dlt_utils/ducklake_options.py`.
+    `cianfhoghlaim/dlt/dlt_utils/ducklake_options.py`.
   - **Bucket partitioning** — new `set_bucket_partition` helper for
     multi-tenant workloads where row counts vary by 10× across
     partitions.
   - **Geometry + variant types** — DuckLake 1.0 adds first-class
     support for the `GEOMETRY` and `VARIANT` types, useful for the
     geospatial assets in
-    `sruth/oideachais/dagster_defs/assets/geospatial_assets.py`.
+    `cianfhoghlaim/orchestration/defs/2_materials/geospatial_assets.py`.
 - **3 hosting options** — fully managed (MotherDuck SaaS, default
   for KCG dev), BYOB (your own Garage S3 bucket, default for KCG
-  production per `sruth/oideachais/dlt_utils/motherduck_options.py:byob_destination`),
+  production per `cianfhoghlaim/dlt/dlt_utils/motherduck_options.py:byob_destination`),
   and BYOC (your own compute + your own bucket — for regulated
   workloads).
 - **MotherDuck upstream monitor** — `motherduck_blog.yml` in
@@ -209,3 +209,85 @@ Source: `/docs/key-tasks/ai-and-motherduck/dives/` and `/sql-reference/mcp/`.
 ## MotherDuck token — Business-tier required (carry forward)
 
 KCG notebooks use 4 shared databases (`oideachais_public`, `oideachais_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
+
+## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+
+The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) consumes
+the BAML-extracted DuckLake tables via **4 MotherDuck Dives**
+(the read-only consumer surface) and **6 MotherDuck Flights**
+(the scheduled backfill surface). All 10 are wired into the
+`oideachais` MotherDuck database under the
+`oideachais.leaving_cert.*` and `oideachais.education.ie.*`
+schemas.
+
+**The 4 Dives (read-only dashboards):**
+
+1. `lc_syllabus_topics` — module / topic coverage per LC subject,
+   partitioned by `language` (en/ga) and `level` (higher/ordinary)
+2. `lc_exam_difficulty` — per-topic difficulty score derived from
+   BAML `ExtractExamPaperLayout` over the last 10 years of SEC
+   past papers
+3. `lc_marking_complexity` — annotation density per topic from
+   BAML `ExtractMarkingSchemeGuideline`
+4. `gov_circulars_archive` — every `gov.ie/.../circulars/...` PDF
+   extracted by the `government_circulars` v1 CocoIndex App
+
+```python
+from motherduck.dives import save_dive
+
+save_dive(
+    name="lc_syllabus_topics",
+    sql="""
+        SELECT
+            subject,
+            level || '_' || language AS partition,
+            module_id,
+            title,
+            hours,
+            cardinality(learning_outcomes) AS n_outcomes
+        FROM oideachais.leaving_cert.curriculum_syllabus
+        WHERE subject IN (
+            'mathematics', 'chemistry', 'geography',
+            'gaeilge', 'english', 'computer_science'
+        )
+    """,
+)
+```
+
+**The 6 Flights (scheduled backfills):**
+
+- `flight_lc_mathematics_backfill` — re-extracts the BAML
+  rows for Mathematics from `oideachais.leaving_cert.mathematics_*`
+  on the 1st of every month
+- `flight_lc_chemistry_backfill`, `flight_lc_geography_backfill`,
+  `flight_lc_gaeilge_backfill`, `flight_lc_english_backfill`,
+  `flight_lc_computer_science_backfill` — same template,
+  per-subject
+- `flight_gov_circulars_backfill` — runs daily at 02:00 UTC to
+  ingest new `gov.ie` circulars
+
+**British-Isles Education pipeline use case:**
+
+- **6 LC subjects × 2 languages × 2 levels** — Mathematics,
+  Chemistry, Geography, Gaeilge, English, Computer Science, each
+  partitioned by `en`/`ga` and `higher`/`ordinary` (24 partitions
+  per BAML extraction stage).
+- **`gov.ie` circulars** — the 7th subject (the
+  `government_circulars` partition) ingests circulars from
+  `gov.ie/.../circulars/...` for cross-referencing with NCCA
+  syllabus changes.
+- **Cross-Dive joins** — the marimo notebooks use
+  `duckdb.connect("md:oideachais")` to join across all 4 Dives
+  for end-to-end analytics.
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DuckLake
+  tables the Dives consume
+- [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
+  the 7 v1 Apps that populate the LanceDB companion tables
+- [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
+  per-subject marimo notebooks that read the Dives
+- [`.agents/skills/dagster/SKILL.md`](../dagster/SKILL.md) —
+  the 42 lc5/lc6 assets that drive the Flights
+- [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
+  the DuckLake sink layer

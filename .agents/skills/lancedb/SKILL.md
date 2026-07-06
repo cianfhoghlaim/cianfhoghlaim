@@ -1,6 +1,6 @@
 ---
 name: lancedb
-description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, time-travel / versioned RAG, LanceDB Cloud, Lance + Iceberg, Ibis + lance_scan, the embeddings registry, or production-scale vector storage.
+description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, time-travel / versioned RAG, LanceDB Cloud, Lance + Iceberg, Ibis + lance_scan, the embeddings registry, or production-scale vector storage. Powers the BIEP `oideachais.lc.<subject>.<level>_<lang>` companion tables (the canonical v1 CocoIndex `mount_table_target` target for the 6 LC subjects + `gov.ie` circulars) using the shared `BAAI/bge-m3` 1024-d embedder.
 ---
 
 # LanceDB - Embedded Vector Database
@@ -593,7 +593,7 @@ table.create_index(metric="cosine", index_type="HNSW", m=20, ef_construction=150
     `stedding/huggingface/hub/models--BAAI--bge-m3/`.
 14. **Reconciled model selection** (resolves the
     `EMBEDDINGS.md` conflict): the
-    `MultiModelEmbedder` in `.agents/skills/embedding-pipeline/SKILL.md`
+    `MultiModelEmbedder` in `.agents/skills/cocoindex/SKILL.md`
     routes Irish (`ga`) to `GaBERT`
     (`DCU-NLP/bert-base-irish-cased-v1`, 768-d) for
     linguistic accuracy (séimhiú, urú, dialectal variation),
@@ -680,7 +680,7 @@ use the rclone-sidecar Compose pattern (see
   blobs are <1 MB) and **Dedicated** for upstream blog payloads
   (where blobs can be >10 MB).
 - **LanceDB embedder model note** — the value actually exported by
-  `sruth/oideachais/cocoindex_flows/_lifespan.py:70` is
+  `cianfhoghlaim/cocoindex/_lifespan.py:70` is
   `BAAI/bge-large-en-v1.5` (English-only, 1024-dim), NOT `BAAI/bge-m3`
   as some CocoIndex v1 App docstrings claim. Both are 1024-dim so the
   discrepancy is latent. Apps whose docstrings claim `bge-m3` will be
@@ -713,3 +713,91 @@ notebooks (8 total, ~17 MB). Highlights:
   — multi-document agentic RAG
 - `data_engineering_lance_multimodal-recipe-agent_*.ipynb` —
   multimodal (image + text) recipe agent
+
+## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+
+The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
+LanceDB as the **vector companion** to DuckLake. Each of the
+7 v1 CocoIndex Apps (6 LC subjects + `government_circulars`)
+mounts a LanceDB table via the canonical `mount_table_target`
+pattern (the v1 conformance R4 contract). The 24+1 BIEP tables
+all live under `oideachais.lc.<subject>.<level>_<lang>` and
+`oideachais.education.ie.gov_circulars`:
+
+```python
+import lancedb
+from lancedb.pydantic import LanceModel, Vector
+from lancedb.embeddings import get_registry
+
+# Shared KCG embedder: BAAI/bge-m3 (1024-d, multilingual)
+embedder = get_registry().get("sentence-transformers").create(
+    name="BAAI/bge-m3",
+    device="mps",  # M-series Mac native
+)
+
+class MathChunk(LanceModel):
+    text: str = embedder.SourceField()
+    vector: Vector(embedder.ndims()) = embedder.VectorField()
+    subject: str
+    level: str
+    language: str
+    module_id: str
+    source_pdf: str
+
+# Connect via the canonical KCG pattern (local + S3-compatible Garage)
+db = lancedb.connect("s3://garage/lance")
+
+# 1 of the 24 BIEP per-subject tables (en/higher/Mathematics)
+table = db.open_table("oideachais.lc.mathematics.higher_en")
+
+# Hybrid vector + BM25 search with RRF reranking (the canonical KCG pattern)
+results = (
+    table.search(query_type="hybrid")
+    .vector(embedder.embed("algebraic fractions").tolist())
+    .text("algebraic fractions")
+    .where("subject = 'mathematics' AND level = 'higher'")
+    .rerank(method="rrf")
+    .limit(10)
+    .to_pandas()
+)
+```
+
+**British-Isles Education pipeline use case:**
+
+- **24+1 LanceDB companion tables** — one per
+  `(subject, level, language)` partition, plus
+  `oideachais.education.ie.gov_circulars` for the `gov.ie`
+  circulars. Each table holds 1024-d `BAAI/bge-m3` vectors
+  over BAML-extracted chunks.
+- **Bilingual RAG** — the `BAAI/bge-m3` embedder is
+  multilingual, so a single query in English retrieves both
+  English and Gaeilge chunks (ranked via the
+  `BAML ExtractCrossLinguisticConcept` mapping).
+- **`lance_scan()` from DuckDB** — the marimo notebooks
+  join `lance_scan('s3://garage/lance/oideachais.lc.<subject>.*')`
+  against the DuckLake `curriculum_syllabus` tables in a single
+  federated SQL query.
+- **Time-travel for syllabus versions** — each BIEP table is
+  versioned per academic year, so `table.checkout(version)`
+  lets the notebooks compare the 2025 vs 2026 syllabus.
+- **Reconciled embedder note** — the canonical BIEP embedder
+  is `BAAI/bge-m3` (multilingual). The 2026-06 release-note
+  claim that `_lifespan.py:70` exports `BAAI/bge-large-en-v1.5`
+  is a latent discrepancy (both are 1024-d, so consumers see
+  no error). The BIEP explicitly uses `bge-m3` for Gaeilge
+  + English coverage; the `_lifespan.py` constant will be
+  corrected to `bge-m3` in a follow-up openspec change.
+
+Cross-references:
+- [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
+  sources that produce the BAML rows
+- [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
+  the canonical `mount_table_target` pattern (v1 conformance R4)
+- [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
+  the 4 Dives that query these tables
+- [`.agents/skills/duckdb/SKILL.md`](../duckdb/SKILL.md) — the
+  `lance_scan()` federated SQL layer
+- [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
+  per-subject notebooks that join DuckLake + LanceDB
+- [`.agents/skills/baml/SKILL.md`](../baml/SKILL.md) — the
+  `ExtractCrossLinguisticConcept` cross-linguistic alignment

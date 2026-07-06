@@ -1,7 +1,16 @@
 ---
 name: graphiti-core
-description: Expert assistance for knowledge graph memory systems with Graphiti Core. Use when users need temporal knowledge graphs, episodic memory for agents, or tracking relationships over time.
+description: "DEPRECATED — canonical replacement is `graphiti` (v0.29.2). Documents Graphiti Core v0.5.0 (2025-04) for temporal knowledge graphs, episodic memory for agents, and tracking relationships over time. Use the canonical `graphiti` skill for new work."
 ---
+
+> **DEPRECATION NOTICE (2026-07-06):** This skill is retained for backward
+> compatibility but is no longer the canonical KCG pattern. It documents
+> Graphiti Core v0.5.0 from 2025-04 and is two minor versions behind the
+> current Graphiti. The canonical replacement is `graphiti` (v0.29.2 with
+> `FalkorDB Lite` embedded mode, `summarize_saga`, `EpisodeType.{text,
+> json,fact_triple,message}`) at
+> `.agents/skills/graphiti/SKILL.md`. Use the canonical `graphiti` skill
+> for new work.
 
 # Graphiti Core - Knowledge Graph Memory
 
