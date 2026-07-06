@@ -20,6 +20,8 @@ import * as AgentsRoute from "./routes/en/agents";
 import * as AgentRoute from "./routes/en/agents/$agent";
 import * as SelfHostRoute from "./routes/en/self-host";
 import * as SearchRoute from "./routes/en/search";
+import * as PlaygroundsRoute from "./routes/en/playgrounds";
+import * as DiagramsRoute from "./routes/en/diagrams";
 import { GlobalChat } from "./components/chat/GlobalChat";
 
 const rootRoute = createRootRoute({
@@ -125,6 +127,18 @@ const searchRoute = createRoute({
   component: SearchRoute.default || SearchRoute.Route?.component || (() => <div>Search</div>),
 });
 
+const playgroundsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/playgrounds",
+  component: PlaygroundsRoute.default || PlaygroundsRoute.Route?.component || (() => <div>Playgrounds</div>),
+});
+
+const diagramsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/en/diagrams",
+  component: DiagramsRoute.default || DiagramsRoute.Route?.component || (() => <div>Diagrams</div>),
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   foundationsRoute,
@@ -135,6 +149,8 @@ const routeTree = rootRoute.addChildren([
   agentRoute,
   selfHostRoute,
   searchRoute,
+  playgroundsRoute,
+  diagramsRoute,
 ]);
 
 const router = createRouter({ routeTree });

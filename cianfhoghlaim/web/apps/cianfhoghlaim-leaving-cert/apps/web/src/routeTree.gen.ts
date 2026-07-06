@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EnSelfHostRouteImport } from './routes/en/self-host'
 import { Route as EnSearchRouteImport } from './routes/en/search'
+import { Route as EnPlaygroundsRouteImport } from './routes/en/playgrounds'
 import { Route as EnMapRouteImport } from './routes/en/map'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
 import { Route as EnFoundationsRouteImport } from './routes/en/foundations'
+import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
 import { Route as EnAgentsRouteImport } from './routes/en/agents'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
 import { Route as EnSubjectsSubjectRouteImport } from './routes/en/subjects.$subject'
@@ -40,6 +42,11 @@ const EnSearchRoute = EnSearchRouteImport.update({
   path: '/en/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnPlaygroundsRoute = EnPlaygroundsRouteImport.update({
+  id: '/en/playgrounds',
+  path: '/en/playgrounds',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnMapRoute = EnMapRouteImport.update({
   id: '/en/map',
   path: '/en/map',
@@ -53,6 +60,11 @@ const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
 const EnFoundationsRoute = EnFoundationsRouteImport.update({
   id: '/en/foundations',
   path: '/en/foundations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnDiagramsRoute = EnDiagramsRouteImport.update({
+  id: '/en/diagrams',
+  path: '/en/diagrams',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnAgentsRoute = EnAgentsRouteImport.update({
@@ -106,9 +118,11 @@ const EnLeavingCertSubjectPracticeTopicRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/en/agents': typeof EnAgentsRouteWithChildren
+  '/en/diagrams': typeof EnDiagramsRoute
   '/en/foundations': typeof EnFoundationsRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/playgrounds': typeof EnPlaygroundsRoute
   '/en/search': typeof EnSearchRoute
   '/en/self-host': typeof EnSelfHostRoute
   '/en/agents/$agent': typeof EnAgentsAgentRoute
@@ -123,9 +137,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/en/agents': typeof EnAgentsRouteWithChildren
+  '/en/diagrams': typeof EnDiagramsRoute
   '/en/foundations': typeof EnFoundationsRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/playgrounds': typeof EnPlaygroundsRoute
   '/en/search': typeof EnSearchRoute
   '/en/self-host': typeof EnSelfHostRoute
   '/en/agents/$agent': typeof EnAgentsAgentRoute
@@ -141,9 +157,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/en/agents': typeof EnAgentsRouteWithChildren
+  '/en/diagrams': typeof EnDiagramsRoute
   '/en/foundations': typeof EnFoundationsRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
   '/en/map': typeof EnMapRoute
+  '/en/playgrounds': typeof EnPlaygroundsRoute
   '/en/search': typeof EnSearchRoute
   '/en/self-host': typeof EnSelfHostRoute
   '/en/agents/$agent': typeof EnAgentsAgentRoute
@@ -160,9 +178,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/en/agents'
+    | '/en/diagrams'
     | '/en/foundations'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/playgrounds'
     | '/en/search'
     | '/en/self-host'
     | '/en/agents/$agent'
@@ -177,9 +197,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/en/agents'
+    | '/en/diagrams'
     | '/en/foundations'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/playgrounds'
     | '/en/search'
     | '/en/self-host'
     | '/en/agents/$agent'
@@ -194,9 +216,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/en/agents'
+    | '/en/diagrams'
     | '/en/foundations'
     | '/en/key-competencies'
     | '/en/map'
+    | '/en/playgrounds'
     | '/en/search'
     | '/en/self-host'
     | '/en/agents/$agent'
@@ -212,9 +236,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EnAgentsRoute: typeof EnAgentsRouteWithChildren
+  EnDiagramsRoute: typeof EnDiagramsRoute
   EnFoundationsRoute: typeof EnFoundationsRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
   EnMapRoute: typeof EnMapRoute
+  EnPlaygroundsRoute: typeof EnPlaygroundsRoute
   EnSearchRoute: typeof EnSearchRoute
   EnSelfHostRoute: typeof EnSelfHostRoute
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
@@ -247,6 +273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/playgrounds': {
+      id: '/en/playgrounds'
+      path: '/en/playgrounds'
+      fullPath: '/en/playgrounds'
+      preLoaderRoute: typeof EnPlaygroundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en/map': {
       id: '/en/map'
       path: '/en/map'
@@ -266,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/en/foundations'
       fullPath: '/en/foundations'
       preLoaderRoute: typeof EnFoundationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/diagrams': {
+      id: '/en/diagrams'
+      path: '/en/diagrams'
+      fullPath: '/en/diagrams'
+      preLoaderRoute: typeof EnDiagramsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/agents': {
@@ -372,9 +412,11 @@ const EnKeyCompetenciesRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EnAgentsRoute: EnAgentsRouteWithChildren,
+  EnDiagramsRoute: EnDiagramsRoute,
   EnFoundationsRoute: EnFoundationsRouteWithChildren,
   EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
   EnMapRoute: EnMapRoute,
+  EnPlaygroundsRoute: EnPlaygroundsRoute,
   EnSearchRoute: EnSearchRoute,
   EnSelfHostRoute: EnSelfHostRoute,
   EnAssetsSubjectRoute: EnAssetsSubjectRoute,
