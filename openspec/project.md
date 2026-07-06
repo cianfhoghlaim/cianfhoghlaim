@@ -48,9 +48,9 @@ culture, government, intelligence, statistics, geospatial).
 > **NOTE:** Source schema layout is provisional — refactor after Plan 1 informs
 > best CocoIndex + DLT + DuckDB + DuckLake + Lance patterns.
 
-## Capability Areas (36 specs, 8 groups)
+## Capability Areas (37 specs, 8 groups)
 
-### Cianfhoghlaim core (12 specs — Plan 1 active)
+### Cianfhoghlaim core (13 specs — Plan 1 active)
 
 | Capability | Description | Status |
 |:--|:--|:--|
@@ -67,6 +67,7 @@ culture, government, intelligence, statistics, geospatial).
 | `upstream-package-monitoring` | 3 CocoIndex v1 Apps (`upstream_blog_monitor`, `upstream_api_surface`, `cocoindex_v1_conformance`) at `cianfhoghlaim/core/cocoindex/`; 4 Firecrawl monitor configs + 1 n8n webhook bridge + 5 Dagster assets + 1 breaking-change sensor for the motherduck / dlthub / lancedb / cocoindex upstream surface | Active |
 | `oideachais-email-triage` | 4-account MBOX DLT source (`leabharlann_email_inbox`) + `email.baml` BAML (ClassifyEmail / ExtractEmailThread / LinkEmailToResearch) + 4th v1 CocoIndex App `leabharlann_inbox_embedding` + 5 new Dagster assets + Google ADK `email_triage` agent (port 7778) + marimo notebook `email_inbox_triage.py` (primary manual surface) + openclaw WebChat email sub-UI (secondary) + Mailcow stack with 4 per-account IMAP credentials (DKIT.ie M365, 2 Gmail, Hotmail) + 3 new Cognee cross-archive edge types; the `2026-06-29-leabharlann-email-inbox-pipeline` change | Active |
 | `oideachais-university-deep-extraction` | Per-university website deep extraction (BAML `university_extraction.baml` with 4 classes + 4 functions + 3 new deterministic evals; reusable DLT factory + Pydantic config; case-study Galway DLT source; 5 Dagster assets `uog_{pre_research,bulk_scrape,extract_courses,extract_modules,extract_programmes}`; 2 new v1 CocoIndex Apps `UniversityCoursesApp` + `UniversityModulesApp`; 1 Cognee cross-archive edge `UoGArtifact-MATCHES-CourseDescriptor`; 1 marimo notebook with 4 tabs; the `university-of-galway-deep-extraction` change) | Active |
+| `british-isles-education-pipeline` | 6 Irish Leaving Certificate priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie education circulars; NCCA + SEC + gov.ie DLT sources; 5 `baml/education/lc_extraction/*.baml` + `circular_extraction.baml`; 7 v1-conformant CocoIndex flows (6 subjects + government_circulars); 42 lc5/lc6 Dagster assets + 2 gov.ie circular assets; 6 per-subject marimo notebooks + cross-subject competency notebook + gov.ie circulars cross-archive notebooks; 4 MotherDuck Dives (syllabus topics, exam paper difficulty, marking scheme complexity, education circulars); 1 daily MotherDuck Flight (`lc_pdf_sync_flight`); Garage S3 PDF storage (`s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/<file>.pdf`); cross-nation extension (Scotland / Wales / England / NI / Crown Dependencies) deferred to v2; the `2026-07-06-british-isles-education-pipeline-v1` change | Active |
 | `apple-photos-ingestion` | 5th leabharlann corpus (Apple Photos export via osxphotos); 3 new v1 CocoIndex Apps (`apple_photos_metadata`, `apple_photos_chunks`, `apple_photos_geospatial` GeoParquet); 5 new Dagster assets + 2 routing assets + 1 cross-frame velocity asset; 2 destination flows (document scans → paperless-ngx via docling-serve; vehicle photos → vehicle_observations via paddleocr + dots-ocr); privacy gate `LEABHARLANN_PHOTOS_INCLUDE_GPS` (default false) | Active |
 | `agent-platform-cluster` | 8-stack agent-platform cluster (lakehouse + litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb) + 3 agent surfaces (openclaw + openchamber + hermes); omnibus Komodo procedure `deploy-agent-platform-cluster-bunchloch` with `--skip` flags; Hermes (NousResearch/hermes-agent v0.17.0) as the 3rd vertex; M3 chokepoint through LiteLLM | Active |
 
@@ -158,7 +159,7 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## File Locations
 
-- Specs: `openspec/specs/<capability>/spec.md` (34 canonical specs)
+- Specs: `openspec/specs/<capability>/spec.md` (37 canonical specs)
 - Changes: `openspec/changes/<change-id>/`
 - Archives: `openspec/changes/archive/YYYY-MM-DD-<change-id>/`
 - Historical research: `docs/openspec/` (point-in-time, do not edit)
