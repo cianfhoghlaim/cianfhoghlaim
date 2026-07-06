@@ -1,8 +1,7 @@
-// /en/search — Public search index for the Cianfhoghlaim OS
-// Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2 —
-// a simple client-side search over the public pages.
+// /en/search — Search the cianfhoghlaim site
+// Per the new branding: cianfhoghlaim, not Cianfhoghlaim OS.
 
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { CiTextbookPanel } from "@cianfhoghlaim/ui";
 import { useState, useMemo } from "react";
 
@@ -11,22 +10,27 @@ export const Route = createFileRoute("/en/search")({
 });
 
 const PAGES = [
-  { path: "/", title: "Home", snippet: "Landing page with 6 subnations of the British Isles" },
-  { path: "/en/brown-ajah", title: "Brown Ajah", snippet: "The 8 Brown Ajah members (healers + scholars + Earth-workers)" },
-  { path: "/en/diagrams", title: "4 Diagram Modes", snippet: "Concept-map + topic-heatmap + PCLM-flow + question-sankey" },
-  { path: "/en/eiraic-treasures", title: "13 Éraic Treasures", snippet: "The 13 magical treasures Lugh demanded as éraic for Cian's death" },
-  { path: "/en/key-competencies", title: "5×8 Mastery Matrix", snippet: "The 5 NCCA Key Competencies × 8 NCCA subjects mastery matrix" },
-  { path: "/en/key-competencies/emblems", title: "5 Emblems", snippet: "The 5 NCCA Key Competencies emblems (Trí Dé Dána emphasis)" },
-  { path: "/en/lore-archive", title: "7 Lineage Clippings", snippet: "The 7 Wikipedia clippings that ground the theming" },
-  { path: "/en/map", title: "British Isles Map", snippet: "Accurate map of the 6 subnations + 5 NCCA Key Competencies land-marks" },
-  { path: "/en/practice", title: "Practice", snippet: "Start a practice session (subject + topic picker)" },
-  { path: "/en/subjects", title: "8 NCCA Subjects", snippet: "Index of all 8 NCCA subjects + 7 legacy compat" },
-  { path: "/en/about", title: "About", snippet: "The public about page (operator-only lore referenced)" },
-  { path: "/ga/about", title: "About (GA)", snippet: "An leathanach faoin (Gaeilge)" },
+  { path: "/", title: "Home", snippet: "Self-hostable consolidation of LC education resources" },
+  { path: "/en/foundations", title: "5 Foundations", snippet: "5 NCCA root-level programme PDFs" },
+  { path: "/en/foundations/key-competencies", title: "5 Key Competencies", snippet: "Communicating, Information Processing, etc." },
+  { path: "/en/foundations/sc-l1-l2-programme", title: "SC L1/L2 Programme", snippet: "Senior Cycle programme statement" },
+  { path: "/en/foundations/scr-advisory", title: "SCR Advisory", snippet: "Chief Examiner commentary" },
+  { path: "/en/foundations/online-learning", title: "Online Learning", snippet: "NCCA online learning potential" },
+  { path: "/en/foundations/online-certification", title: "Online Certification", snippet: "NCCA certification + reporting potential" },
+  { path: "/en/subjects/mathematics", title: "Mathematics", snippet: "Pure mathematics at LC" },
+  { path: "/en/subjects/applied_mathematics", title: "Applied Mathematics", snippet: "Real-world problem modelling" },
+  { path: "/en/subjects/chemistry", title: "Chemistry", snippet: "Atomic structure, bonding, organic" },
+  { path: "/en/subjects/geography", title: "Geography", snippet: "Physical + regional geography" },
+  { path: "/en/subjects/history", title: "History", snippet: "Modern Irish + European history" },
+  { path: "/en/subjects/english", title: "English", snippet: "Comprehension, composition, poetry" },
+  { path: "/en/subjects/gaeilge", title: "Gaeilge", snippet: "Léamh, scríbhneoireacht, cluastuiscint" },
+  { path: "/en/subjects/computer_science", title: "Computer Science", snippet: "Algorithms, data structures, systems" },
+  { path: "/en/agents", title: "9 ADK Agents", snippet: "8 NCCA subject specialists + 1 operator" },
+  { path: "/en/agents/cianfhoghlaim", title: "cianfhoghlaim Operator Agent", snippet: "The repo self-reference agent" },
+  { path: "/en/self-host", title: "Self-host in 5 minutes", snippet: "git clone + bun install + bun run dev" },
 ];
 
 function SearchPage() {
-  const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
   const results = useMemo(() => {
@@ -40,13 +44,13 @@ function SearchPage() {
   }, [query]);
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-6">
+    <div className="max-w-4xl mx-auto flex flex-col gap-6 p-6">
       <div className="flex flex-col gap-2 items-center text-center">
-        <h1 className="font-cinzel text-4xl font-bold text-slate-100">
-          Search the Cianfhoghlaim OS
+        <h1 className="font-cinzel text-4xl font-bold text-emerald-400">
+          Search cianfhoghlaim
         </h1>
         <p className="text-slate-400">
-          Client-side search index over the public pages
+          {PAGES.length} pages indexed · client-side search
         </p>
       </div>
 
@@ -55,7 +59,7 @@ function SearchPage() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type to search (e.g. 'treasures', 'Brown Ajah', 'mathematics')..."
+          placeholder="Type to search (e.g. 'mathematics', 'Brown Ajah', 'Éraic', 'self-host')..."
           className="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-700"
         />
         {query && (

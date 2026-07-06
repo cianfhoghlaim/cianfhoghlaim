@@ -10,27 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as GaLoreArchiveRouteImport } from './routes/ga/lore-archive'
-import { Route as GaEiraicTreasuresRouteImport } from './routes/ga/eiraic-treasures'
-import { Route as GaAboutRouteImport } from './routes/ga/about'
-import { Route as EnSubjectsRouteImport } from './routes/en/subjects'
+import { Route as EnSelfHostRouteImport } from './routes/en/self-host'
 import { Route as EnSearchRouteImport } from './routes/en/search'
-import { Route as EnPracticeRouteImport } from './routes/en/practice'
 import { Route as EnMapRouteImport } from './routes/en/map'
-import { Route as EnLoreArchiveRouteImport } from './routes/en/lore-archive'
 import { Route as EnKeyCompetenciesRouteImport } from './routes/en/key-competencies'
-import { Route as EnEiraicTreasuresRouteImport } from './routes/en/eiraic-treasures'
-import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
-import { Route as EnBrownAjahRouteImport } from './routes/en/brown-ajah'
-import { Route as EnAboutRouteImport } from './routes/en/about'
+import { Route as EnFoundationsRouteImport } from './routes/en/foundations'
+import { Route as EnAgentsRouteImport } from './routes/en/agents'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
-import { Route as GaEiraicTreasuresTierRouteImport } from './routes/ga/eiraic-treasures.$tier'
-import { Route as EnLeavingCertSubjectRouteImport } from './routes/en/leaving-cert/$subject'
-import { Route as EnKeyCompetenciesEmblemsRouteImport } from './routes/en/key-competencies.emblems'
+import { Route as EnSubjectsSubjectRouteImport } from './routes/en/subjects.$subject'
 import { Route as EnKeyCompetenciesSlugRouteImport } from './routes/en/key-competencies.$slug'
-import { Route as EnEiraicTreasuresTierRouteImport } from './routes/en/eiraic-treasures.$tier'
-import { Route as EnBrownAjahMemberRouteImport } from './routes/en/brown-ajah.$member'
+import { Route as EnFoundationsSlugRouteImport } from './routes/en/foundations.$slug'
 import { Route as EnAssetsSubjectRouteImport } from './routes/en/assets/$subject'
+import { Route as EnAgentsAgentRouteImport } from './routes/en/agents.$agent'
 import { Route as EnLeavingCertSubjectSectionRouteImport } from './routes/en/leaving-cert/$subject.$section'
 import { Route as EnLeavingCertSubjectPracticeTopicRouteImport } from './routes/en/leaving-cert/$subject.practice.$topic'
 
@@ -39,24 +30,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GaLoreArchiveRoute = GaLoreArchiveRouteImport.update({
-  id: '/ga/lore-archive',
-  path: '/ga/lore-archive',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GaEiraicTreasuresRoute = GaEiraicTreasuresRouteImport.update({
-  id: '/ga/eiraic-treasures',
-  path: '/ga/eiraic-treasures',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GaAboutRoute = GaAboutRouteImport.update({
-  id: '/ga/about',
-  path: '/ga/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EnSubjectsRoute = EnSubjectsRouteImport.update({
-  id: '/en/subjects',
-  path: '/en/subjects',
+const EnSelfHostRoute = EnSelfHostRouteImport.update({
+  id: '/en/self-host',
+  path: '/en/self-host',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnSearchRoute = EnSearchRouteImport.update({
@@ -64,19 +40,9 @@ const EnSearchRoute = EnSearchRouteImport.update({
   path: '/en/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnPracticeRoute = EnPracticeRouteImport.update({
-  id: '/en/practice',
-  path: '/en/practice',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EnMapRoute = EnMapRouteImport.update({
   id: '/en/map',
   path: '/en/map',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EnLoreArchiveRoute = EnLoreArchiveRouteImport.update({
-  id: '/en/lore-archive',
-  path: '/en/lore-archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
@@ -84,24 +50,14 @@ const EnKeyCompetenciesRoute = EnKeyCompetenciesRouteImport.update({
   path: '/en/key-competencies',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnEiraicTreasuresRoute = EnEiraicTreasuresRouteImport.update({
-  id: '/en/eiraic-treasures',
-  path: '/en/eiraic-treasures',
+const EnFoundationsRoute = EnFoundationsRouteImport.update({
+  id: '/en/foundations',
+  path: '/en/foundations',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnDiagramsRoute = EnDiagramsRouteImport.update({
-  id: '/en/diagrams',
-  path: '/en/diagrams',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EnBrownAjahRoute = EnBrownAjahRouteImport.update({
-  id: '/en/brown-ajah',
-  path: '/en/brown-ajah',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EnAboutRoute = EnAboutRouteImport.update({
-  id: '/en/about',
-  path: '/en/about',
+const EnAgentsRoute = EnAgentsRouteImport.update({
+  id: '/en/agents',
+  path: '/en/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GaLeavingCertSubjectRoute = GaLeavingCertSubjectRouteImport.update({
@@ -109,103 +65,74 @@ const GaLeavingCertSubjectRoute = GaLeavingCertSubjectRouteImport.update({
   path: '/ga/leaving-cert/$subject',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GaEiraicTreasuresTierRoute = GaEiraicTreasuresTierRouteImport.update({
-  id: '/$tier',
-  path: '/$tier',
-  getParentRoute: () => GaEiraicTreasuresRoute,
-} as any)
-const EnLeavingCertSubjectRoute = EnLeavingCertSubjectRouteImport.update({
-  id: '/en/leaving-cert/$subject',
-  path: '/en/leaving-cert/$subject',
+const EnSubjectsSubjectRoute = EnSubjectsSubjectRouteImport.update({
+  id: '/en/subjects/$subject',
+  path: '/en/subjects/$subject',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnKeyCompetenciesEmblemsRoute =
-  EnKeyCompetenciesEmblemsRouteImport.update({
-    id: '/emblems',
-    path: '/emblems',
-    getParentRoute: () => EnKeyCompetenciesRoute,
-  } as any)
 const EnKeyCompetenciesSlugRoute = EnKeyCompetenciesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => EnKeyCompetenciesRoute,
 } as any)
-const EnEiraicTreasuresTierRoute = EnEiraicTreasuresTierRouteImport.update({
-  id: '/$tier',
-  path: '/$tier',
-  getParentRoute: () => EnEiraicTreasuresRoute,
-} as any)
-const EnBrownAjahMemberRoute = EnBrownAjahMemberRouteImport.update({
-  id: '/$member',
-  path: '/$member',
-  getParentRoute: () => EnBrownAjahRoute,
+const EnFoundationsSlugRoute = EnFoundationsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => EnFoundationsRoute,
 } as any)
 const EnAssetsSubjectRoute = EnAssetsSubjectRouteImport.update({
   id: '/en/assets/$subject',
   path: '/en/assets/$subject',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnAgentsAgentRoute = EnAgentsAgentRouteImport.update({
+  id: '/$agent',
+  path: '/$agent',
+  getParentRoute: () => EnAgentsRoute,
+} as any)
 const EnLeavingCertSubjectSectionRoute =
   EnLeavingCertSubjectSectionRouteImport.update({
-    id: '/$section',
-    path: '/$section',
-    getParentRoute: () => EnLeavingCertSubjectRoute,
+    id: '/en/leaving-cert/$subject/$section',
+    path: '/en/leaving-cert/$subject/$section',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const EnLeavingCertSubjectPracticeTopicRoute =
   EnLeavingCertSubjectPracticeTopicRouteImport.update({
-    id: '/practice/$topic',
-    path: '/practice/$topic',
-    getParentRoute: () => EnLeavingCertSubjectRoute,
+    id: '/en/leaving-cert/$subject/practice/$topic',
+    path: '/en/leaving-cert/$subject/practice/$topic',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/en/about': typeof EnAboutRoute
-  '/en/brown-ajah': typeof EnBrownAjahRouteWithChildren
-  '/en/diagrams': typeof EnDiagramsRoute
-  '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
+  '/en/agents': typeof EnAgentsRouteWithChildren
+  '/en/foundations': typeof EnFoundationsRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
-  '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
-  '/en/practice': typeof EnPracticeRoute
   '/en/search': typeof EnSearchRoute
-  '/en/subjects': typeof EnSubjectsRoute
-  '/ga/about': typeof GaAboutRoute
-  '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
-  '/ga/lore-archive': typeof GaLoreArchiveRoute
+  '/en/self-host': typeof EnSelfHostRoute
+  '/en/agents/$agent': typeof EnAgentsAgentRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
-  '/en/brown-ajah/$member': typeof EnBrownAjahMemberRoute
-  '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
+  '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
-  '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
-  '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
-  '/ga/eiraic-treasures/$tier': typeof GaEiraicTreasuresTierRoute
+  '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/en/about': typeof EnAboutRoute
-  '/en/brown-ajah': typeof EnBrownAjahRouteWithChildren
-  '/en/diagrams': typeof EnDiagramsRoute
-  '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
+  '/en/agents': typeof EnAgentsRouteWithChildren
+  '/en/foundations': typeof EnFoundationsRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
-  '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
-  '/en/practice': typeof EnPracticeRoute
   '/en/search': typeof EnSearchRoute
-  '/en/subjects': typeof EnSubjectsRoute
-  '/ga/about': typeof GaAboutRoute
-  '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
-  '/ga/lore-archive': typeof GaLoreArchiveRoute
+  '/en/self-host': typeof EnSelfHostRoute
+  '/en/agents/$agent': typeof EnAgentsAgentRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
-  '/en/brown-ajah/$member': typeof EnBrownAjahMemberRoute
-  '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
+  '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
-  '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
-  '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
-  '/ga/eiraic-treasures/$tier': typeof GaEiraicTreasuresTierRoute
+  '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
@@ -213,26 +140,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/en/about': typeof EnAboutRoute
-  '/en/brown-ajah': typeof EnBrownAjahRouteWithChildren
-  '/en/diagrams': typeof EnDiagramsRoute
-  '/en/eiraic-treasures': typeof EnEiraicTreasuresRouteWithChildren
+  '/en/agents': typeof EnAgentsRouteWithChildren
+  '/en/foundations': typeof EnFoundationsRouteWithChildren
   '/en/key-competencies': typeof EnKeyCompetenciesRouteWithChildren
-  '/en/lore-archive': typeof EnLoreArchiveRoute
   '/en/map': typeof EnMapRoute
-  '/en/practice': typeof EnPracticeRoute
   '/en/search': typeof EnSearchRoute
-  '/en/subjects': typeof EnSubjectsRoute
-  '/ga/about': typeof GaAboutRoute
-  '/ga/eiraic-treasures': typeof GaEiraicTreasuresRouteWithChildren
-  '/ga/lore-archive': typeof GaLoreArchiveRoute
+  '/en/self-host': typeof EnSelfHostRoute
+  '/en/agents/$agent': typeof EnAgentsAgentRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
-  '/en/brown-ajah/$member': typeof EnBrownAjahMemberRoute
-  '/en/eiraic-treasures/$tier': typeof EnEiraicTreasuresTierRoute
+  '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
-  '/en/key-competencies/emblems': typeof EnKeyCompetenciesEmblemsRoute
-  '/en/leaving-cert/$subject': typeof EnLeavingCertSubjectRouteWithChildren
-  '/ga/eiraic-treasures/$tier': typeof GaEiraicTreasuresTierRoute
+  '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
@@ -241,78 +159,51 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/en/about'
-    | '/en/brown-ajah'
-    | '/en/diagrams'
-    | '/en/eiraic-treasures'
+    | '/en/agents'
+    | '/en/foundations'
     | '/en/key-competencies'
-    | '/en/lore-archive'
     | '/en/map'
-    | '/en/practice'
     | '/en/search'
-    | '/en/subjects'
-    | '/ga/about'
-    | '/ga/eiraic-treasures'
-    | '/ga/lore-archive'
+    | '/en/self-host'
+    | '/en/agents/$agent'
     | '/en/assets/$subject'
-    | '/en/brown-ajah/$member'
-    | '/en/eiraic-treasures/$tier'
+    | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
-    | '/en/key-competencies/emblems'
-    | '/en/leaving-cert/$subject'
-    | '/ga/eiraic-treasures/$tier'
+    | '/en/subjects/$subject'
     | '/ga/leaving-cert/$subject'
     | '/en/leaving-cert/$subject/$section'
     | '/en/leaving-cert/$subject/practice/$topic'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/en/about'
-    | '/en/brown-ajah'
-    | '/en/diagrams'
-    | '/en/eiraic-treasures'
+    | '/en/agents'
+    | '/en/foundations'
     | '/en/key-competencies'
-    | '/en/lore-archive'
     | '/en/map'
-    | '/en/practice'
     | '/en/search'
-    | '/en/subjects'
-    | '/ga/about'
-    | '/ga/eiraic-treasures'
-    | '/ga/lore-archive'
+    | '/en/self-host'
+    | '/en/agents/$agent'
     | '/en/assets/$subject'
-    | '/en/brown-ajah/$member'
-    | '/en/eiraic-treasures/$tier'
+    | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
-    | '/en/key-competencies/emblems'
-    | '/en/leaving-cert/$subject'
-    | '/ga/eiraic-treasures/$tier'
+    | '/en/subjects/$subject'
     | '/ga/leaving-cert/$subject'
     | '/en/leaving-cert/$subject/$section'
     | '/en/leaving-cert/$subject/practice/$topic'
   id:
     | '__root__'
     | '/'
-    | '/en/about'
-    | '/en/brown-ajah'
-    | '/en/diagrams'
-    | '/en/eiraic-treasures'
+    | '/en/agents'
+    | '/en/foundations'
     | '/en/key-competencies'
-    | '/en/lore-archive'
     | '/en/map'
-    | '/en/practice'
     | '/en/search'
-    | '/en/subjects'
-    | '/ga/about'
-    | '/ga/eiraic-treasures'
-    | '/ga/lore-archive'
+    | '/en/self-host'
+    | '/en/agents/$agent'
     | '/en/assets/$subject'
-    | '/en/brown-ajah/$member'
-    | '/en/eiraic-treasures/$tier'
+    | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
-    | '/en/key-competencies/emblems'
-    | '/en/leaving-cert/$subject'
-    | '/ga/eiraic-treasures/$tier'
+    | '/en/subjects/$subject'
     | '/ga/leaving-cert/$subject'
     | '/en/leaving-cert/$subject/$section'
     | '/en/leaving-cert/$subject/practice/$topic'
@@ -320,22 +211,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  EnAboutRoute: typeof EnAboutRoute
-  EnBrownAjahRoute: typeof EnBrownAjahRouteWithChildren
-  EnDiagramsRoute: typeof EnDiagramsRoute
-  EnEiraicTreasuresRoute: typeof EnEiraicTreasuresRouteWithChildren
+  EnAgentsRoute: typeof EnAgentsRouteWithChildren
+  EnFoundationsRoute: typeof EnFoundationsRouteWithChildren
   EnKeyCompetenciesRoute: typeof EnKeyCompetenciesRouteWithChildren
-  EnLoreArchiveRoute: typeof EnLoreArchiveRoute
   EnMapRoute: typeof EnMapRoute
-  EnPracticeRoute: typeof EnPracticeRoute
   EnSearchRoute: typeof EnSearchRoute
-  EnSubjectsRoute: typeof EnSubjectsRoute
-  GaAboutRoute: typeof GaAboutRoute
-  GaEiraicTreasuresRoute: typeof GaEiraicTreasuresRouteWithChildren
-  GaLoreArchiveRoute: typeof GaLoreArchiveRoute
+  EnSelfHostRoute: typeof EnSelfHostRoute
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
-  EnLeavingCertSubjectRoute: typeof EnLeavingCertSubjectRouteWithChildren
+  EnSubjectsSubjectRoute: typeof EnSubjectsSubjectRoute
   GaLeavingCertSubjectRoute: typeof GaLeavingCertSubjectRoute
+  EnLeavingCertSubjectSectionRoute: typeof EnLeavingCertSubjectSectionRoute
+  EnLeavingCertSubjectPracticeTopicRoute: typeof EnLeavingCertSubjectPracticeTopicRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -347,32 +233,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ga/lore-archive': {
-      id: '/ga/lore-archive'
-      path: '/ga/lore-archive'
-      fullPath: '/ga/lore-archive'
-      preLoaderRoute: typeof GaLoreArchiveRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ga/eiraic-treasures': {
-      id: '/ga/eiraic-treasures'
-      path: '/ga/eiraic-treasures'
-      fullPath: '/ga/eiraic-treasures'
-      preLoaderRoute: typeof GaEiraicTreasuresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ga/about': {
-      id: '/ga/about'
-      path: '/ga/about'
-      fullPath: '/ga/about'
-      preLoaderRoute: typeof GaAboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/en/subjects': {
-      id: '/en/subjects'
-      path: '/en/subjects'
-      fullPath: '/en/subjects'
-      preLoaderRoute: typeof EnSubjectsRouteImport
+    '/en/self-host': {
+      id: '/en/self-host'
+      path: '/en/self-host'
+      fullPath: '/en/self-host'
+      preLoaderRoute: typeof EnSelfHostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/search': {
@@ -382,25 +247,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/en/practice': {
-      id: '/en/practice'
-      path: '/en/practice'
-      fullPath: '/en/practice'
-      preLoaderRoute: typeof EnPracticeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/en/map': {
       id: '/en/map'
       path: '/en/map'
       fullPath: '/en/map'
       preLoaderRoute: typeof EnMapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/en/lore-archive': {
-      id: '/en/lore-archive'
-      path: '/en/lore-archive'
-      fullPath: '/en/lore-archive'
-      preLoaderRoute: typeof EnLoreArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/key-competencies': {
@@ -410,32 +261,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnKeyCompetenciesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/en/eiraic-treasures': {
-      id: '/en/eiraic-treasures'
-      path: '/en/eiraic-treasures'
-      fullPath: '/en/eiraic-treasures'
-      preLoaderRoute: typeof EnEiraicTreasuresRouteImport
+    '/en/foundations': {
+      id: '/en/foundations'
+      path: '/en/foundations'
+      fullPath: '/en/foundations'
+      preLoaderRoute: typeof EnFoundationsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/en/diagrams': {
-      id: '/en/diagrams'
-      path: '/en/diagrams'
-      fullPath: '/en/diagrams'
-      preLoaderRoute: typeof EnDiagramsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/en/brown-ajah': {
-      id: '/en/brown-ajah'
-      path: '/en/brown-ajah'
-      fullPath: '/en/brown-ajah'
-      preLoaderRoute: typeof EnBrownAjahRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/en/about': {
-      id: '/en/about'
-      path: '/en/about'
-      fullPath: '/en/about'
-      preLoaderRoute: typeof EnAboutRouteImport
+    '/en/agents': {
+      id: '/en/agents'
+      path: '/en/agents'
+      fullPath: '/en/agents'
+      preLoaderRoute: typeof EnAgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ga/leaving-cert/$subject': {
@@ -445,26 +282,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GaLeavingCertSubjectRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ga/eiraic-treasures/$tier': {
-      id: '/ga/eiraic-treasures/$tier'
-      path: '/$tier'
-      fullPath: '/ga/eiraic-treasures/$tier'
-      preLoaderRoute: typeof GaEiraicTreasuresTierRouteImport
-      parentRoute: typeof GaEiraicTreasuresRoute
-    }
-    '/en/leaving-cert/$subject': {
-      id: '/en/leaving-cert/$subject'
-      path: '/en/leaving-cert/$subject'
-      fullPath: '/en/leaving-cert/$subject'
-      preLoaderRoute: typeof EnLeavingCertSubjectRouteImport
+    '/en/subjects/$subject': {
+      id: '/en/subjects/$subject'
+      path: '/en/subjects/$subject'
+      fullPath: '/en/subjects/$subject'
+      preLoaderRoute: typeof EnSubjectsSubjectRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/en/key-competencies/emblems': {
-      id: '/en/key-competencies/emblems'
-      path: '/emblems'
-      fullPath: '/en/key-competencies/emblems'
-      preLoaderRoute: typeof EnKeyCompetenciesEmblemsRouteImport
-      parentRoute: typeof EnKeyCompetenciesRoute
     }
     '/en/key-competencies/$slug': {
       id: '/en/key-competencies/$slug'
@@ -473,19 +296,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnKeyCompetenciesSlugRouteImport
       parentRoute: typeof EnKeyCompetenciesRoute
     }
-    '/en/eiraic-treasures/$tier': {
-      id: '/en/eiraic-treasures/$tier'
-      path: '/$tier'
-      fullPath: '/en/eiraic-treasures/$tier'
-      preLoaderRoute: typeof EnEiraicTreasuresTierRouteImport
-      parentRoute: typeof EnEiraicTreasuresRoute
-    }
-    '/en/brown-ajah/$member': {
-      id: '/en/brown-ajah/$member'
-      path: '/$member'
-      fullPath: '/en/brown-ajah/$member'
-      preLoaderRoute: typeof EnBrownAjahMemberRouteImport
-      parentRoute: typeof EnBrownAjahRoute
+    '/en/foundations/$slug': {
+      id: '/en/foundations/$slug'
+      path: '/$slug'
+      fullPath: '/en/foundations/$slug'
+      preLoaderRoute: typeof EnFoundationsSlugRouteImport
+      parentRoute: typeof EnFoundationsRoute
     }
     '/en/assets/$subject': {
       id: '/en/assets/$subject'
@@ -494,102 +310,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnAssetsSubjectRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/agents/$agent': {
+      id: '/en/agents/$agent'
+      path: '/$agent'
+      fullPath: '/en/agents/$agent'
+      preLoaderRoute: typeof EnAgentsAgentRouteImport
+      parentRoute: typeof EnAgentsRoute
+    }
     '/en/leaving-cert/$subject/$section': {
       id: '/en/leaving-cert/$subject/$section'
-      path: '/$section'
+      path: '/en/leaving-cert/$subject/$section'
       fullPath: '/en/leaving-cert/$subject/$section'
       preLoaderRoute: typeof EnLeavingCertSubjectSectionRouteImport
-      parentRoute: typeof EnLeavingCertSubjectRoute
+      parentRoute: typeof rootRouteImport
     }
     '/en/leaving-cert/$subject/practice/$topic': {
       id: '/en/leaving-cert/$subject/practice/$topic'
-      path: '/practice/$topic'
+      path: '/en/leaving-cert/$subject/practice/$topic'
       fullPath: '/en/leaving-cert/$subject/practice/$topic'
       preLoaderRoute: typeof EnLeavingCertSubjectPracticeTopicRouteImport
-      parentRoute: typeof EnLeavingCertSubjectRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface EnBrownAjahRouteChildren {
-  EnBrownAjahMemberRoute: typeof EnBrownAjahMemberRoute
+interface EnAgentsRouteChildren {
+  EnAgentsAgentRoute: typeof EnAgentsAgentRoute
 }
 
-const EnBrownAjahRouteChildren: EnBrownAjahRouteChildren = {
-  EnBrownAjahMemberRoute: EnBrownAjahMemberRoute,
+const EnAgentsRouteChildren: EnAgentsRouteChildren = {
+  EnAgentsAgentRoute: EnAgentsAgentRoute,
 }
 
-const EnBrownAjahRouteWithChildren = EnBrownAjahRoute._addFileChildren(
-  EnBrownAjahRouteChildren,
+const EnAgentsRouteWithChildren = EnAgentsRoute._addFileChildren(
+  EnAgentsRouteChildren,
 )
 
-interface EnEiraicTreasuresRouteChildren {
-  EnEiraicTreasuresTierRoute: typeof EnEiraicTreasuresTierRoute
+interface EnFoundationsRouteChildren {
+  EnFoundationsSlugRoute: typeof EnFoundationsSlugRoute
 }
 
-const EnEiraicTreasuresRouteChildren: EnEiraicTreasuresRouteChildren = {
-  EnEiraicTreasuresTierRoute: EnEiraicTreasuresTierRoute,
+const EnFoundationsRouteChildren: EnFoundationsRouteChildren = {
+  EnFoundationsSlugRoute: EnFoundationsSlugRoute,
 }
 
-const EnEiraicTreasuresRouteWithChildren =
-  EnEiraicTreasuresRoute._addFileChildren(EnEiraicTreasuresRouteChildren)
+const EnFoundationsRouteWithChildren = EnFoundationsRoute._addFileChildren(
+  EnFoundationsRouteChildren,
+)
 
 interface EnKeyCompetenciesRouteChildren {
   EnKeyCompetenciesSlugRoute: typeof EnKeyCompetenciesSlugRoute
-  EnKeyCompetenciesEmblemsRoute: typeof EnKeyCompetenciesEmblemsRoute
 }
 
 const EnKeyCompetenciesRouteChildren: EnKeyCompetenciesRouteChildren = {
   EnKeyCompetenciesSlugRoute: EnKeyCompetenciesSlugRoute,
-  EnKeyCompetenciesEmblemsRoute: EnKeyCompetenciesEmblemsRoute,
 }
 
 const EnKeyCompetenciesRouteWithChildren =
   EnKeyCompetenciesRoute._addFileChildren(EnKeyCompetenciesRouteChildren)
 
-interface GaEiraicTreasuresRouteChildren {
-  GaEiraicTreasuresTierRoute: typeof GaEiraicTreasuresTierRoute
-}
-
-const GaEiraicTreasuresRouteChildren: GaEiraicTreasuresRouteChildren = {
-  GaEiraicTreasuresTierRoute: GaEiraicTreasuresTierRoute,
-}
-
-const GaEiraicTreasuresRouteWithChildren =
-  GaEiraicTreasuresRoute._addFileChildren(GaEiraicTreasuresRouteChildren)
-
-interface EnLeavingCertSubjectRouteChildren {
-  EnLeavingCertSubjectSectionRoute: typeof EnLeavingCertSubjectSectionRoute
-  EnLeavingCertSubjectPracticeTopicRoute: typeof EnLeavingCertSubjectPracticeTopicRoute
-}
-
-const EnLeavingCertSubjectRouteChildren: EnLeavingCertSubjectRouteChildren = {
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  EnAgentsRoute: EnAgentsRouteWithChildren,
+  EnFoundationsRoute: EnFoundationsRouteWithChildren,
+  EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
+  EnMapRoute: EnMapRoute,
+  EnSearchRoute: EnSearchRoute,
+  EnSelfHostRoute: EnSelfHostRoute,
+  EnAssetsSubjectRoute: EnAssetsSubjectRoute,
+  EnSubjectsSubjectRoute: EnSubjectsSubjectRoute,
+  GaLeavingCertSubjectRoute: GaLeavingCertSubjectRoute,
   EnLeavingCertSubjectSectionRoute: EnLeavingCertSubjectSectionRoute,
   EnLeavingCertSubjectPracticeTopicRoute:
     EnLeavingCertSubjectPracticeTopicRoute,
-}
-
-const EnLeavingCertSubjectRouteWithChildren =
-  EnLeavingCertSubjectRoute._addFileChildren(EnLeavingCertSubjectRouteChildren)
-
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  EnAboutRoute: EnAboutRoute,
-  EnBrownAjahRoute: EnBrownAjahRouteWithChildren,
-  EnDiagramsRoute: EnDiagramsRoute,
-  EnEiraicTreasuresRoute: EnEiraicTreasuresRouteWithChildren,
-  EnKeyCompetenciesRoute: EnKeyCompetenciesRouteWithChildren,
-  EnLoreArchiveRoute: EnLoreArchiveRoute,
-  EnMapRoute: EnMapRoute,
-  EnPracticeRoute: EnPracticeRoute,
-  EnSearchRoute: EnSearchRoute,
-  EnSubjectsRoute: EnSubjectsRoute,
-  GaAboutRoute: GaAboutRoute,
-  GaEiraicTreasuresRoute: GaEiraicTreasuresRouteWithChildren,
-  GaLoreArchiveRoute: GaLoreArchiveRoute,
-  EnAssetsSubjectRoute: EnAssetsSubjectRoute,
-  EnLeavingCertSubjectRoute: EnLeavingCertSubjectRouteWithChildren,
-  GaLeavingCertSubjectRoute: GaLeavingCertSubjectRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
