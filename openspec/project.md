@@ -48,9 +48,9 @@ culture, government, intelligence, statistics, geospatial).
 > **NOTE:** Source schema layout is provisional — refactor after Plan 1 informs
 > best CocoIndex + DLT + DuckDB + DuckLake + Lance patterns.
 
-## Capability Areas (37 specs, 8 groups)
+## Capability Areas (38 specs, 8 groups)
 
-### Cianfhoghlaim core (13 specs — Plan 1 active)
+### Cianfhoghlaim core (14 specs — Plan 1 active)
 
 | Capability | Description | Status |
 |:--|:--|:--|
@@ -70,6 +70,7 @@ culture, government, intelligence, statistics, geospatial).
 | `british-isles-education-pipeline` | 6 Irish Leaving Certificate priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie education circulars; NCCA + SEC + gov.ie DLT sources; 5 `baml/education/lc_extraction/*.baml` + `circular_extraction.baml`; 7 v1-conformant CocoIndex flows (6 subjects + government_circulars); 42 lc5/lc6 Dagster assets + 2 gov.ie circular assets; 6 per-subject marimo notebooks + cross-subject competency notebook + gov.ie circulars cross-archive notebooks; 4 MotherDuck Dives (syllabus topics, exam paper difficulty, marking scheme complexity, education circulars); 1 daily MotherDuck Flight (`lc_pdf_sync_flight`); Garage S3 PDF storage (`s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/<file>.pdf`); cross-nation extension (Scotland / Wales / England / NI / Crown Dependencies) deferred to v2; the `2026-07-06-british-isles-education-pipeline-v1` change | Active |
 | `apple-photos-ingestion` | 5th leabharlann corpus (Apple Photos export via osxphotos); 3 new v1 CocoIndex Apps (`apple_photos_metadata`, `apple_photos_chunks`, `apple_photos_geospatial` GeoParquet); 5 new Dagster assets + 2 routing assets + 1 cross-frame velocity asset; 2 destination flows (document scans → paperless-ngx via docling-serve; vehicle photos → vehicle_observations via paddleocr + dots-ocr); privacy gate `LEABHARLANN_PHOTOS_INCLUDE_GPS` (default false) | Active |
 | `agent-platform-cluster` | 8-stack agent-platform cluster (lakehouse + litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb) + 3 agent surfaces (openclaw + openchamber + hermes); omnibus Komodo procedure `deploy-agent-platform-cluster-bunchloch` with `--skip` flags; Hermes (NousResearch/hermes-agent v0.17.0) as the 3rd vertex; M3 chokepoint through LiteLLM | Active |
+| `dlthub-platform-integration` | dltHub Platform CLI (`dlthub 1.28+`) workspace rooted at `cianfhoghlaim/`; 8 production AI workbench toolkits installed into Claude Code (`init` + `rest-api-pipeline` + `sql-database-pipeline` + `filesystem-pipeline` + `dlthub-platform` + `data-exploration` + `data-quality` + `transformations`) from the vendored `cianfhoghlaim/dlthub-ai-workbench/` marketplace; `fastmcp-slim[server]` for the dlt-workspace MCP server; deployment manifest at `cianfhoghlaim/__deployment__.py` with `@run.pipeline("name")` decorated batch jobs under `__all__` (first job: `government_circulars_ingest`); the `dlthub run` (batch) / `dlthub serve` (interactive) hygiene rule; diagnostic runbook at `docs/agents/dlthub-run-vs-serve.md` capturing the 5 most common CLI errors; the `2026-07-06-wire-dlthub-platform-toolkits-and-deployment` change | Active |
 
 ### Meaisínfhoghlaim sub-tree (3 specs)
 

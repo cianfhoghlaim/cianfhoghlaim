@@ -25,7 +25,27 @@ if "shared" not in _sys.modules:
 _sys.modules.setdefault("shared.http", _http_factories)
 _sys.modules.setdefault("shared.utils", _shared_utils_stub)
 
-from .firecrawl_source import (
+# NEW 2026-07-06 (2026-07-06-wire-dlthub-platform-toolkits-and-deployment):
+# alias the bare `common` module name to the in-tree
+# `cianfhoghlaim.dlt.common` so legacy DLT sources that do
+# `from common.firecrawl_source import crawl_website` keep resolving.
+# The historical `shared` alias above exists for the same reason — see
+# docs/agents/dlthub-run-vs-serve.md for the full diagnostic tree.
+# NB: this must be a fresh top-level ModuleType, not a self-reference to
+# `cianfhoghlaim.dlt.common`, because the package's `__name__` is the
+# fully-qualified path.
+if "common" not in _sys.modules:
+    _common_pkg = _types.ModuleType("common")
+    _common_pkg.__path__ = []  # type: ignore[attr-defined]
+    _sys.modules["common"] = _common_pkg
+# Re-export the in-tree sub-modules under `common.<name>` so legacy imports
+# of the form `from common.firecrawl_source import …` resolve.
+from cianfhoghlaim.dlt.common import firecrawl_source as _firecrawl_source  # noqa: F401
+from cianfhoghlaim.dlt.common import incremental as _incremental  # noqa: F401
+_sys.modules.setdefault("common.firecrawl_source", _firecrawl_source)
+_sys.modules.setdefault("common.incremental", _incremental)
+
+from .firecrawl_source import (  # noqa: E402
     crawl_website,
     create_firecrawl_source,
     get_firecrawl_client,
