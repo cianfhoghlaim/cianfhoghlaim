@@ -3,8 +3,8 @@
 ## Purpose
 
 `agent-memory-systems` is a capability of the Cianfhoghlaim platform. The
-corresponding source code lives at `sruth/meaisinfhoghlaim/agents/` (12 specialised
-agents) and `sruth/oideachais/memory/` (application-layer Cognee + Graphiti wrappers).
+corresponding source code lives at `cianfhoghlaim/agents/` (12 specialised
+agents) and `cianfhoghlaim/memory/` (application-layer Cognee + Graphiti wrappers).
 See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for
 the project identity.
 
@@ -62,23 +62,23 @@ legacy Jinja `{{ infisical:///key_name }}` form to the Locket-canonical
 migration period.
 
 #### Scenario: mlflow stack secrets.env uses canonical form
-- **GIVEN** `infrastructure/stacks/mlflow/secrets.env`
+- **GIVEN** `bonneagar/stacks/mlflow/secrets.env`
 - **WHEN** every `{{ infisical:///` line is read
 - **THEN** the value matches the regex `infisical://dev-baile/mlflow/<key>`
   (canonical Locket form)
 
 #### Scenario: lakehouse stack secrets.env uses canonical form
-- **GIVEN** `infrastructure/stacks/lakehouse/secrets.env`
+- **GIVEN** `bonneagar/stacks/lakehouse/secrets.env`
 - **WHEN** every `{{ infisical:///` line is read
 - **THEN** the value matches the regex `infisical://dev-baile/lakehouse/<key>`
 
 #### Scenario: graphiti stack secrets.env uses canonical form
-- **GIVEN** `infrastructure/stacks/graphiti/secrets.env`
+- **GIVEN** `bonneagar/stacks/graphiti/secrets.env`
 - **WHEN** every `{{ infisical:///` line is read
 - **THEN** the value matches the regex `infisical://dev-baile/graphiti/<key>`
 
 #### Scenario: falkordb stack secrets.env uses canonical form
-- **GIVEN** `infrastructure/stacks/falkordb/secrets.env`
+- **GIVEN** `bonneagar/stacks/falkordb/secrets.env`
 - **WHEN** every `{{ infisical:///` line is read
 - **THEN** the value matches the regex `infisical://dev-baile/falkordb/<key>`
 
@@ -94,23 +94,23 @@ matches the container's internal port (the right side of the
 `host:container` mapping in `compose.yaml`), not the host port.
 
 #### Scenario: langfuse blueprint port is 3000
-- **GIVEN** `infrastructure/stacks/langfuse/blueprint.yaml`
-- **AND** `infrastructure/stacks/langfuse/compose.yaml` web service
+- **GIVEN** `bonneagar/stacks/langfuse/blueprint.yaml`
+- **AND** `bonneagar/stacks/langfuse/compose.yaml` web service
   maps `3001:3000`
 - **WHEN** the blueprint is read
 - **THEN** `private-resources.langfuse.destination-port` is `3000`
   (the container's internal port)
 
 #### Scenario: graphiti blueprint port is 8000
-- **GIVEN** `infrastructure/stacks/graphiti/blueprint.yaml`
-- **AND** `infrastructure/stacks/graphiti/compose.yaml` graph
+- **GIVEN** `bonneagar/stacks/graphiti/blueprint.yaml`
+- **AND** `bonneagar/stacks/graphiti/compose.yaml` graph
   service exposes `8000:8000`
 - **WHEN** the blueprint is read
 - **THEN** `private-resources.graphiti.destination-port` is `8000`
 
 #### Scenario: cognee blueprint port is 8000
-- **GIVEN** `infrastructure/stacks/cognee/blueprint.yaml`
-- **AND** `infrastructure/stacks/cognee/compose.yaml` exposes
+- **GIVEN** `bonneagar/stacks/cognee/blueprint.yaml`
+- **AND** `bonneagar/stacks/cognee/compose.yaml` exposes
   `8100:8000`
 - **WHEN** the blueprint is read
 - **THEN** `private-resources.cognee.destination-port` is `8000`
@@ -125,7 +125,7 @@ because its UI is SaaS at `https://logfire.pydantic.dev`.
 
 #### Scenario: 6 new pangolin.yaml files exist
 - **GIVEN** the 6 stacks listed above
-- **WHEN** each `infrastructure/stacks/<name>/pangolin.yaml` is read
+- **WHEN** each `bonneagar/stacks/<name>/pangolin.yaml` is read
 - **THEN** it contains a `pangolin.private-resources.<name>` block
   with all 6 labels: `name`, `mode`, `full-domain`,
   `destination-port`, `protocol`, `roles[0]`
@@ -152,13 +152,13 @@ the canonical default.
 - **THEN** the function returns `None` without raising
 
 #### Scenario: unified_tracer datadog_enabled default is False
-- **GIVEN** `sruth/oideachais/observability/unified_tracer.py`
+- **GIVEN** `cianfhoghlaim/observability/unified_tracer.py`
 - **WHEN** the `datadog_enabled` parameter is read
 - **THEN** the default value is `False` (not `True`)
 
 #### Scenario: Pydantic Settings datadog_enabled default is False
-- **GIVEN** `sruth/oideachais/config/base.py` or
-  `sruth/meaisinfhoghlaim/ocr/config/base.py`
+- **GIVEN** `cianfhoghlaim/config/base.py` or
+  `cianfhoghlaim/ocr/config/base.py`
 - **WHEN** the `datadog_enabled` field default is read
 - **THEN** the value is `Field(default=False)`
 
@@ -176,8 +176,8 @@ the canonical default.
 - [`.agents/skills/lancedb/SKILL.md`](../../.agents/skills/lancedb/SKILL.md)
 - [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
 - [`.agents/skills/memgraph/SKILL.md`](../../.agents/skills/memgraph/SKILL.md)
-- [`sruth/oideachais/memory/`](../../sruth/oideachais/memory/) (application-layer wrapper)
-- [`sruth/meaisinfhoghlaim/agents/`](../../sruth/meaisinfhoghlaim/agents/) (model-layer agents)
+- [`cianfhoghlaim/memory/`](../../cianfhoghlaim/memory/) (application-layer wrapper)
+- [`cianfhoghlaim/agents/`](../../cianfhoghlaim/agents/) (model-layer agents)
 
 ## ADDED Requirements (v4 extension — 2026-07-03)
 
@@ -220,3 +220,7 @@ the 2026-07-03 changes.
   Corpus → CaseProfile → Party → Jurisdiction → Statute → TimelineEvent
   graph (6 Gemini corpora merged)
 
+
+## Migrated from (2026-07-06)
+
+- `cross-domain-registry` — the 8-nation × 7-domain asset-key contract was absorbed into the agent-memory-systems namespace

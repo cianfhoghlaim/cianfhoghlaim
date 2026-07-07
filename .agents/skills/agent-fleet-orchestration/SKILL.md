@@ -296,3 +296,7 @@ The Hermes 3-layer auth model (matches OpenClaw's):
 
 The `hermes claw migrate` path (which retires OpenClaw) is NOT
 used in v1. The 3 vertices coexist.
+
+## Migrated from (2026-07-06 spec-and-plans-consolidation)
+
+- `openspec/specs/author-archive-ui-grounding/spec.md` (the BAML `UiType` enum with 10 values: SEARCH_BOX / FORM / DASHBOARD / MAP / LOGIN_WALL / FILE_DOWNLOAD / CAROUSEL / TIMELINE / OTHER / NONE) was deleted on 2026-07-06 by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The UiType enum now lives at `cianfhoghlaim/baml/agent_fleet/ui_types.baml` (canonical); UI grounding hints are surfaced by the browser-agent tool calls.

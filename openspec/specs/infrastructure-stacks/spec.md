@@ -5,7 +5,7 @@
 `infrastructure-stacks` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 ## Background
-94 storage, utility, engineering, machine learning, and infrastructure Docker Compose stacks managed via Komodo for the Cianfhoghlaim platform. Organised in a **flat** directory layout (one directory per stack under `infrastructure/stacks/<name>/`) with standardized Pangolin routing, Locket secret injection, and Infisical secret management. The historical 5-category subdirectory split (`storage/`, `engineering/`, `infrastructure/`, `machine_learning/`, `tools/`) was removed on 2026-06-23; functional groups are now informational only and recorded in `infrastructure/AGENTS.md` and `infrastructure/QUADRANT-TO-STACK-MAP.md`.
+94 storage, utility, engineering, machine learning, and infrastructure Docker Compose stacks managed via Komodo for the Cianfhoghlaim platform. Organised in a **flat** directory layout (one directory per stack under `bonneagar/stacks/<name>/`) with standardized Pangolin routing, Locket secret injection, and Infisical secret management. The historical 5-category subdirectory split (`storage/`, `engineering/`, `infrastructure/`, `machine_learning/`, `tools/`) was removed on 2026-06-23; functional groups are now informational only and recorded in `infrastructure/AGENTS.md` and `infrastructure/QUADRANT-TO-STACK-MAP.md`.
 
 | Feature | Description |
 |---------|-------------|
@@ -18,7 +18,7 @@
 ### Requirement: Stack Standardization
 
 The system SHALL enforce a **6-file GOLD_STANDARD** for every
-`infrastructure/stacks/<name>/` directory. The 6 files are:
+`bonneagar/stacks/<name>/` directory. The 6 files are:
 
 1. `compose.yaml` — the Docker Compose stack definition
 2. `sidecar.yaml` — the Locket secret-injection sidecar (uses
@@ -41,7 +41,7 @@ The `pangolin.yaml` SHALL follow the 6-label shape (`name`,
 `mode`, `full-domain`, `destination-port`, `protocol`, `roles[0]`)
 documented in `.agents/skills/kcg-pangolin-stack/SKILL.md`.
 
-#### Scenario: A new stack is added to `infrastructure/stacks/<name>/`
+#### Scenario: A new stack is added to `bonneagar/stacks/<name>/`
 
 - **GIVEN** the stack dir has been created with 1 or 2 of the 6
   GOLD_STANDARD files
@@ -52,7 +52,7 @@ documented in `.agents/skills/kcg-pangolin-stack/SKILL.md`.
 
 #### Scenario: A Locket sidecar uses the canonical security baseline
 
-- **GIVEN** `infrastructure/stacks/oideachais-dagster/sidecar.yaml`
+- **GIVEN** `bonneagar/stacks/oideachais-dagster/sidecar.yaml`
 - **WHEN** the stack is deployed
 - **THEN** the Locket container SHALL have `user: 65532:65532` +
   `no-new-privileges: true` + `cap_drop: [ALL]` + `read_only: true`
@@ -72,7 +72,7 @@ The system SHALL deploy database and data infrastructure for the lakehouse archi
 
 #### Scenario: Lakehouse Iceberg Catalog UI
 
-- **GIVEN** the Nimtable service appended to `infrastructure/stacks/lakehouse/compose.yaml`
+- **GIVEN** the Nimtable service appended to `bonneagar/stacks/lakehouse/compose.yaml`
 - **WHEN** the lakehouse stack deploys
 - **THEN** Nimtable is accessible at `http://localhost:3018` and `https://nimtable.cianfhoghlaim.ie` (via Pangolin)
 - **AND** Nimtable connects to the shared Postgres at `jdbc:postgresql://postgres:5432/nimtable` and surfaces all Iceberg tables registered in Lakekeeper
@@ -80,16 +80,16 @@ The system SHALL deploy database and data infrastructure for the lakehouse archi
 
 #### Scenario: Lakehouse CDC Engine (Olake)
 
-- **GIVEN** the Olake service appended to `infrastructure/stacks/lakehouse/compose.yaml`
+- **GIVEN** the Olake service appended to `bonneagar/stacks/lakehouse/compose.yaml`
 - **WHEN** the lakehouse stack deploys
 - **THEN** Olake is reachable via `https://olake.cianfhoghlaim.ie` (admin via `docker exec`) for CDC jobs
-- **AND** Olake reads its source/catalog/writer config from `infrastructure/stacks/lakehouse/olake/{config,catalog,writer}.json`
+- **AND** Olake reads its source/catalog/writer config from `bonneagar/stacks/lakehouse/olake/{config,catalog,writer}.json`
 - **AND** Olake persists checkpoint + offset state to the named volume `olake_state` and the Postgres DB `olake_state`
 - **AND** the `olake` service resource usage is capped at `cpus: '1'`, `memory: 512M` per service
 
 #### Scenario: Lakehouse LanceDB Viewer
 
-- **GIVEN** the lancedb-viewer service appended to `infrastructure/stacks/lakehouse/compose.yaml`
+- **GIVEN** the lancedb-viewer service appended to `bonneagar/stacks/lakehouse/compose.yaml`
 - **WHEN** the lakehouse stack deploys
 - **THEN** the LanceDB viewer is accessible at `http://localhost:8081` and `https://lance-viewer.cianfhoghlaim.ie` (via Pangolin)
 - **AND** the viewer connects to the Lance namespace at `rest://lakehouse-lance-namespace:8182`
@@ -251,8 +251,8 @@ loop, Dagger = outer loop), documented in
 ### Requirement: Flat Stack Layout
 
 The system SHALL organise the 94 Docker Compose stacks under
-`infrastructure/stacks/` in a **flat** layout — every stack
-is a direct child of `infrastructure/stacks/`, with no
+`bonneagar/stacks/` in a **flat** layout — every stack
+is a direct child of `bonneagar/stacks/`, with no
 category subdirectory. Functional purpose (control plane,
 storage, engineering, ML, tools, browser) is recorded as
 **information only** in `infrastructure/AGENTS.md` § "Stack
@@ -260,14 +260,14 @@ Inventory" and the cross-quadrant routing table at
 `infrastructure/QUADRANT-TO-STACK-MAP.md`, and is not
 encoded in the directory hierarchy.
 
-A new stack's directory is therefore `infrastructure/stacks/<name>/`
-and not `infrastructure/stacks/<category>/<name>/`.
+A new stack's directory is therefore `bonneagar/stacks/<name>/`
+and not `bonneagar/stacks/<category>/<name>/`.
 
 #### Scenario: A new stack is added
 
 - **GIVEN** a developer wants to add a new "Pocket ID
   bridge" stack
-- **WHEN** they create `infrastructure/stacks/pocket-id-bridge/`
+- **WHEN** they create `bonneagar/stacks/pocket-id-bridge/`
   with the 6 GOLD_STANDARD files
 - **THEN** `bun run stack-doctor.sh` validates it under the
   flat layout
@@ -283,17 +283,17 @@ and not `infrastructure/stacks/<category>/<name>/`.
 - **GIVEN** a leabharlann PDF lands at
   `leabharlann/gaeilge/<file>.pdf`
 - **WHEN** the Dagster asset materialises
-- **THEN** the Locket sidecar (infrastructure/stacks/<name>)
+- **THEN** the Locket sidecar (bonneagar/stacks/<name>)
   injects Infisical secrets
-- **AND** the Garage S3 (infrastructure/stacks/garage) holds
+- **AND** the Garage S3 (bonneagar/stacks/garage) holds
   the Parquet
 - **AND** the Dagster + LiteLLM + BAML
-  (infrastructure/stacks/dagster, litellm, oideachais)
+  (bonneagar/stacks/dagster, litellm, oideachais)
   orchestrate + extract
 - **AND** the Cognee + FalkorDB + LanceDB
-  (infrastructure/stacks/cognee, falkordb, lancedb) serve
+  (bonneagar/stacks/cognee, falkordb, lancedb) serve
   the graph + vector
-- **AND** the DevDocs (infrastructure/stacks/DevDocs) hosts
+- **AND** the DevDocs (bonneagar/stacks/DevDocs) hosts
   the analyst dashboard
 
 ### Requirement: Three-Tier Host Convergence
@@ -464,16 +464,16 @@ The Cianfhoghlaim platform MUST maintain a formal feedback loop between projects
 
 #### Scenario: New DLT source updates the dlt skill
 
-- **WHEN** a new DLT source is added under `sruth/oideachais/dlt_sources/`
+- **WHEN** a new DLT source is added under `cianfhoghlaim/dlt_sources/`
 - **THEN** the `.agents/skills/dlt/SKILL.md` "KCG examples" appendix gets a 1-line addition naming the new source
 
 ### Requirement: Quadrant-specific Related skills
 
 Each quadrant's `AGENTS.md` "Related skills" section MUST list only the skills used by that quadrant (no shared "default" list across quadrants). The 4 quadrants are `oideachais`, `meaisinfhoghlaim`, `tuatha`, `croilar`, plus the cross-cutting `infrastructure` layer.
 
-#### Scenario: sruth/oideachais/AGENTS.md lists 12 oideachais-specific skills
+#### Scenario: cianfhoghlaim/AGENTS.md lists 12 oideachais-specific skills
 
-- **WHEN** `sruth/oideachais/AGENTS.md` is read
+- **WHEN** `cianfhoghlaim/AGENTS.md` is read
 - **THEN** the "Related skills" section lists 12+ skills (dagster, dlt, baml, cocoindex, cognee, lancedb, falkordb, duckdb, motherduck, dignified-python, marimo, ccc, oideachais-storage, oideachais-pipeline, oideachais-leabharlann, oideachais-baml-schemas, oideachais-cognify-knowledge-graph)
 - **AND** does NOT list skills specific to other quadrants (e.g. babylonjs for tuatha, hono for croilar)
 
@@ -494,7 +494,7 @@ Every AGENTS.md file under the Cianfhoghlaim monorepo (`/AGENTS.md`, the 4 quadr
 
 #### Scenario: Quadrant AGENTS.md leads with priority quick reference
 
-- **WHEN** an agent reads `/sruth/oideachais/AGENTS.md` (or any of the 4 quadrant `AGENTS.md` files)
+- **WHEN** an agent reads `/cianfhoghlaim/AGENTS.md` (or any of the 4 quadrant `AGENTS.md` files)
 - **THEN** the first section after the title is "Priority quick reference"
 - **AND** it lists the 5-8 skills most relevant to that quadrant + the ccc command + the 4 openspec commands
 
@@ -516,7 +516,7 @@ The system SHALL run `bun run stack-doctor` on every PR via a
 GitHub Action. The 4 gates are:
 
 1. **File gate** (exit code 1) — every
-   `infrastructure/stacks/<name>/compose.yaml` has the other 5
+   `bonneagar/stacks/<name>/compose.yaml` has the other 5
    GOLD_STANDARD files
 2. **Container gate** (exit code 2) — every `container_name:` is
    in the live inventory OR explicitly documented as
@@ -536,7 +536,7 @@ Komodo stack definition; reference stacks MAY have no tag.
 
 #### Scenario: A PR adds a new compose file but is missing the other 5 files
 
-- **GIVEN** a developer adds `infrastructure/stacks/<new>/compose.yaml`
+- **GIVEN** a developer adds `bonneagar/stacks/<new>/compose.yaml`
   with a new service
 - **WHEN** the PR's GitHub Action runs `bun run stack-doctor`
 - **THEN** the File gate (exit code 1) SHALL fail
@@ -547,10 +547,10 @@ Komodo stack definition; reference stacks MAY have no tag.
 #### Scenario: A secret URI in `secrets.env` doesn't resolve in the vault
 
 - **GIVEN** a developer adds
-  `INFI_FOO=infisical://dev-baile/sruth/oideachais/foo` to
-  `infrastructure/stacks/<stack>/secrets.env`
+  `INFI_FOO=infisical://dev-baile/cianfhoghlaim/foo` to
+  `bonneagar/stacks/<stack>/secrets.env`
 - **AND** the `dev-baile` Infisical environment does NOT have a
-  secret at path `sruth/oideachais/foo`
+  secret at path `cianfhoghlaim/foo`
 - **WHEN** the Secret gate runs
 - **THEN** the gate SHALL fail with exit code 4
 - **AND** the developer MUST either create the secret in
@@ -559,7 +559,7 @@ Komodo stack definition; reference stacks MAY have no tag.
 ### Requirement: Image Pinning Policy
 
 The system SHALL pin every `image:` line in every
-`infrastructure/stacks/<name>/compose.yaml` to a specific
+`bonneagar/stacks/<name>/compose.yaml` to a specific
 `<major>.<minor>.<patch>` semver tag. The tag `:latest` is
 **forbidden** for upstream images. Local-build images with
 `pull_policy: never` are exempt and MUST include an inline YAML
@@ -652,7 +652,7 @@ The 4 common Traefik middlewares are `tinyauth@file`,
 
 ### Requirement: Spaces route through the canonical LiteLLM gateway
 
-The Cianfhoghlaim HuggingFace Spaces (`an_scrudu`, `meaisin_cliste`, `cianfhoghlaim`, `anam_tuatha`, `data-engineering`) MUST route every LLM call through the canonical LiteLLM gateway (`http://litellm:4000/v1`) as the primary tier, with the hand-rolled HF Inference 3-tier chain kept as the offline fallback. The gateway is configured in `sruth/oideachais/baml_src/clients.baml` (the `LitellmClient`) and `sruth/oideachais/foinse/litellm_config.yaml` (the 5-key rotation).
+The Cianfhoghlaim HuggingFace Spaces (`an_scrudu`, `meaisin_cliste`, `cianfhoghlaim`, `anam_tuatha`, `data-engineering`) MUST route every LLM call through the canonical LiteLLM gateway (`http://litellm:4000/v1`) as the primary tier, with the hand-rolled HF Inference 3-tier chain kept as the offline fallback. The gateway is configured in `cianfhoghlaim/baml_src/clients.baml` (the `LitellmClient`) and `cianfhoghlaim/foinse/litellm_config.yaml` (the 5-key rotation).
 
 #### Scenario: Space calls LLM via the gateway
 
@@ -746,7 +746,7 @@ The croilar quadrant MUST provide a Portfolio Demo HuggingFace Space at `spaces/
 
 ### Requirement: Cross-Sruth Lakehouse Wiring Contract
 
-Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical dev lakehouse via two contracts: (1) `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` for LanceDB vector RAG (set via `.env` or compose.yaml default), and (2) a dedicated `ducklake_{namespace}` PostgreSQL database created in `infrastructure/stacks/lakehouse/init-db.sql` for DuckLake write-ahead-log storage. The canonical factory for both contracts is `sruth/oideachais/dlt_utils/destinations.py:with_namespace()` (the `with_namespace()` method at line 289 of the file). The 6 active srutha DBs are: `ducklake_oideachais`, `ducklake_crypteolas`, `ducklake_croilar`, `ducklake_tuath`, `ducklake_meaisinfhoghlaim`, `ducklake_aleyum` (legacy — superseded by croilar).
+Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical dev lakehouse via two contracts: (1) `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` for LanceDB vector RAG (set via `.env` or compose.yaml default), and (2) a dedicated `ducklake_{namespace}` PostgreSQL database created in `bonneagar/stacks/lakehouse/init-db.sql` for DuckLake write-ahead-log storage. The canonical factory for both contracts is `cianfhoghlaim/dlt_utils/destinations.py:with_namespace()` (the `with_namespace()` method at line 289 of the file). The 6 active srutha DBs are: `ducklake_oideachais`, `ducklake_crypteolas`, `ducklake_croilar`, `ducklake_tuath`, `ducklake_meaisinfhoghlaim`, `ducklake_aleyum` (legacy — superseded by croilar).
 
 #### Scenario: An active srutha needs LanceDB vector RAG
 
@@ -761,7 +761,7 @@ Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical d
 - **GIVEN** an active srutha (e.g. `oideachais`, `croilar`, `crypteolas`, `tuath`, `meaisinfhoghlaim`)
 - **WHEN** its Dagster code-location runs `with_namespace()` to materialise a DuckLake destination
 - **THEN** the factory MUST produce a connection string referencing `ducklake_{namespace}` on the shared `lakehouse-postgres`
-- **AND** the database MUST exist in `infrastructure/stacks/lakehouse/init-db.sql` with `OWNER lakehouse`
+- **AND** the database MUST exist in `bonneagar/stacks/lakehouse/init-db.sql` with `OWNER lakehouse`
 - **AND** if the database is missing, the `with_namespace()` factory MUST raise an actionable error pointing at the lakehouse `init-db.sql` file
 
 #### Scenario: meaisinfhoghlaim is wired into the lakehouse
@@ -773,14 +773,14 @@ Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical d
 
 #### Scenario: The standalone olake/ and nimtable/ stacks are deprecated
 
-- **GIVEN** the standalone `infrastructure/stacks/olake/` and `infrastructure/stacks/nimtable/` Compose stacks predate this change
+- **GIVEN** the standalone `bonneagar/stacks/olake/` and `bonneagar/stacks/nimtable/` Compose stacks predate this change
 - **WHEN** a contributor searches for the canonical Olake or Nimtable location
-- **THEN** each stack directory MUST contain a `DEPRECATED.md` file pointing at the canonical location (`infrastructure/stacks/lakehouse/olake/` and the `nimtable` service inside `infrastructure/stacks/lakehouse/compose.yaml`)
+- **THEN** each stack directory MUST contain a `DEPRECATED.md` file pointing at the canonical location (`bonneagar/stacks/lakehouse/olake/` and the `nimtable` service inside `bonneagar/stacks/lakehouse/compose.yaml`)
 - **AND** the `compose.yaml` files MUST remain on disk (not deleted) to avoid breaking any automated tests that import from them; deletion is left to a follow-up change after one release cycle
 
 ### Requirement: 33 User-Selected Selfhosted Stacks (v4)
 
-The system SHALL expose the 33 user-selected selfhosted stacks at `cianfhoghlaim/stacks/{backrest,browser,cognee,dagster,docling-serve,dots-ocr,dragonfly,falkordb,garage,graphiti,infisical,invokeai,komodo,lakehouse,lancedb,langfuse,litellm,logfire,marimo,memgraph,mlflow,mlx-omni,motherduck,nimtable,olake,olmocr,openchamber,openclaw,paddleocr,pangolin,planetscale,r2,risingwave}/`. The remaining 57 stacks remain at `infrastructure/stacks/` for archival.
+The system SHALL expose the 33 user-selected selfhosted stacks at `cianfhoghlaim/stacks/{backrest,browser,cognee,dagster,docling-serve,dots-ocr,dragonfly,falkordb,garage,graphiti,infisical,invokeai,komodo,lakehouse,lancedb,langfuse,litellm,logfire,marimo,memgraph,mlflow,mlx-omni,motherduck,nimtable,olake,olmocr,openchamber,openclaw,paddleocr,pangolin,planetscale,r2,risingwave}/`. The remaining 57 stacks remain at `bonneagar/stacks/` for archival.
 
 #### Scenario: Stack discoverability
 
@@ -796,7 +796,7 @@ The system SHALL NOT re-add any of the previously deleted stacks (`blinko`, `cro
 
 - **WHEN** `bun run validate-stacks` runs
 - **THEN** the 33 user-selected stacks validate
-- **AND** the 57 archived stacks at `infrastructure/stacks/` are skipped (marked `archived: true` in `STACKS_INDEX.md`)
+- **AND** the 57 archived stacks at `bonneagar/stacks/` are skipped (marked `archived: true` in `STACKS_INDEX.md`)
 
 ### Requirement: Bonneagar worktree for infrastructure history
 
@@ -900,11 +900,15 @@ Development: `changedetection`, `enclosed`, `pastemax`, `perplexica`, `skyvern`,
 
 | Component | Path |
 |-----------|------|
-| All Stacks | `infrastructure/stacks/` |
-| Gold Standard | `infrastructure/stacks/GOLD_STANDARD.md` |
-| Stack README | `infrastructure/stacks/README.md` |
+| All Stacks | `bonneagar/stacks/` |
+| Gold Standard | `bonneagar/stacks/GOLD_STANDARD.md` |
+| Stack README | `bonneagar/stacks/README.md` |
 
 ## Related Specs
 
 - [infrastructure](../infrastructure/spec.md) — Pangolin convergence, secrets, Komodo GitOps
 - [data-pipeline](../data-pipeline/spec.md) — Pipeline orchestration
+
+## Migrated from (2026-07-06)
+
+- `stack-audit` — the stack-audit capability (5 Requirements covering the stack health + drift detection) was absorbed into the `infrastructure-stacks` GitOps + audit surfaces

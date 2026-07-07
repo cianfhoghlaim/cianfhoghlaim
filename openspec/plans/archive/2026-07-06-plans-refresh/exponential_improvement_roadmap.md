@@ -69,3 +69,6 @@ Students operating near the border or seeking university entry in neighboring ju
 - Review this roadmap within the context of the current `.github/workflows`.
 - Translate approved tangents into specific Dagster assets (`education/dagster_defs/assets/`) and Next.js/React frontend sprints.
 - Initiate exploration of Tangent 1 (Generative Tutoring) utilizing the existing CopilotKit (`agui`) integration.
+---
+
+**Archived 2026-07-06** — moved from `openspec/plans/` to `openspec/plans/archive/2026-07-06-plans-refresh/` by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The content of this plan has been absorbed into the canonical specs listed in the frontmatter `superseded_by` field (refreshed to point at post-v4 spec names).

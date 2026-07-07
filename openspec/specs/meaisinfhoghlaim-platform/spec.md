@@ -3,7 +3,7 @@
 ## Purpose
 
 `meaisinfhoghlaim-platform` is a capability of the Cianfhoghlaim
-platform. The corresponding source code lives at `sruth/meaisinfhoghlaim/`
+platform. The corresponding source code lives at `cianfhoghlaim/`
 (the AI/ML quadrant, 15K+ LOC, 10 sub-packages, registered as a
 top-level uv workspace member with the ASCII wheel name
 `meaisinfhoghlaim`). See `docs/00_index.md` for the quadrant map and
@@ -14,8 +14,8 @@ This is the first openspec spec for the meaisinfhoghlaim quadrant.
 ## Background
 
 The meaisinfhoghlaim quadrant houses the AI/ML services that feed the
-curriculum knowledge graph consumed by `sruth/oideachais/` and the
-dashboards in `sruth/croilar/apps/portal/`. The 10 sub-packages are:
+curriculum knowledge graph consumed by `cianfhoghlaim/` and the
+dashboards in `cianfhoghlaim/apps/portal/`. The 10 sub-packages are:
 
 - `agents/` — 12 specialised agents (Root, Curriculum, Translation,
   Corpus, Geospatial, Statistics, Research, Curriculum Comparison,
@@ -72,7 +72,7 @@ canonical observability logger is at
 #### Scenario: A developer runs the test suite
 
 - **GIVEN** the 13 source files have been migrated
-- **WHEN** `uv run pytest sruth/meaisinfhoghlaim/tests/` runs
+- **WHEN** `uv run pytest cianfhoghlaim/tests/` runs
 - **THEN** no `ModuleNotFoundError: No module named 'sruth'`
   exception is raised
 - **AND** all 22 tests pass (the 3 test files: test_ensemble_gradio,
@@ -122,12 +122,12 @@ The system SHALL ingest from the oideachais DuckLake catalog via the
 ### Requirement: Celtic-language model catalog
 
 The system SHALL maintain a Celtic-language model catalog at
-`sruth/meaisinfhoghlaim/catalog/models.yaml` (UCCIX-Llama2-13B-Instruct,
+`cianfhoghlaim/catalog/models.yaml` (UCCIX-Llama2-13B-Instruct,
 Llama-3.2-3B-Irish, gaBERT, gaHealth, etc.).
 
 #### Scenario: Model catalog is valid YAML
 
-- **GIVEN** the `sruth/meaisinfhoghlaim/catalog/models.yaml` file
+- **GIVEN** the `cianfhoghlaim/catalog/models.yaml` file
 - **WHEN** the file is loaded via `yaml.safe_load()`
 - **THEN** the file parses without errors
 - **AND** each model entry has `id`, `name`, `type`, `base`,
@@ -145,7 +145,7 @@ stored in Garage S3.
 
 - **GIVEN** a BAML-extracted curriculum passage (e.g. a
   NCCA Irish Leaving Cert grammar explanation)
-- **WHEN** the `sruth/meaisinfhoghlaim/tts/` service is invoked with
+- **WHEN** the `cianfhoghlaim/tts/` service is invoked with
   the passage + voice ID
 - **THEN** Chatterbox SHALL render the passage to a 16-bit
   PCM WAV file
@@ -167,7 +167,7 @@ languages.
 
 - **GIVEN** an audio recording of an Irish Leaving Cert oral
   exam (Irish + English mixed)
-- **WHEN** the `sruth/meaisinfhoghlaim/asr/` service is invoked
+- **WHEN** the `cianfhoghlaim/asr/` service is invoked
 - **THEN** the service SHALL route to
   `cpierse/wav2vec2-large-xlsr-53-irish` for the Irish
   segments (auto-detected by language ID)
@@ -221,10 +221,10 @@ for the base model.
 
 ### Requirement: Agent + OCR thin-shim canonicalisation
 
-The system SHALL canonicalise the `sruth/oideachais/agents/{adk,agno}/`
-and `sruth/oideachais/ocr/` directories as **thin re-exports** of the
-model-layer agents + OCR modules in `sruth/meaisinfhoghlaim/agents/` +
-`sruth/meaisinfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
+The system SHALL canonicalise the `cianfhoghlaim/agents/{adk,agno}/`
+and `cianfhoghlaim/ocr/` directories as **thin re-exports** of the
+model-layer agents + OCR modules in `cianfhoghlaim/agents/` +
+`cianfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
 curriculum_agent, translation_agent, corpus_agent,
 research_agent, education_research_agent,
 bunchloch_research_agent, geospatial_agent,
@@ -240,15 +240,15 @@ The system SHALL keep the 5 tuatha-specific agents
 (celtic_tutor_agent, mythology_narrator_agent,
 quest_guide_agent, research_assistant_agent, tuatha_root_agent)
 and the 1 leabharlann-specific OCR file
-(`sruth/oideachais/ocr/author_archive_ocr.py`) as real code (they
+(`cianfhoghlaim/ocr/author_archive_ocr.py`) as real code (they
 are domain-specific, not duplicates).
 
 #### Scenario: A consumer imports the same agent via both paths
 
 - **GIVEN** the canonical agent lives at
-  `sruth/meaisinfhoghlaim/agents/curriculum_agent.py`
+  `cianfhoghlaim/agents/curriculum_agent.py`
 - **AND** the thin-shim re-exports it at
-  `sruth/oideachais/agents/adk/curriculum_agent.py`
+  `cianfhoghlaim/agents/adk/curriculum_agent.py`
 - **WHEN** a consumer does
   `from oideachais.agents.adk.curriculum_agent import curriculum_agent`
 - **THEN** the imported `curriculum_agent` is the **same object**
@@ -259,7 +259,7 @@ are domain-specific, not duplicates).
 
 The meaisínfhoghlaim quadrant MUST NOT contain any reference to
 the non-existent package path `sruth.oideachas/` (Irish nominative
-"education"). The canonical package name is `sruth/oideachais/`
+"education"). The canonical package name is `cianfhoghlaim/`
 (Irish genitive "of education"); `sruth/oideachas/` does not
 exist. References include but are not limited to docstring
 Usage-example code blocks, README examples, and tutorial-style
@@ -267,22 +267,22 @@ inline comments.
 
 #### Scenario: A docstring Usage example references the non-existent path
 
-- **GIVEN** a `.py` file under `sruth/meaisinfhoghlaim/` contains a
+- **GIVEN** a `.py` file under `cianfhoghlaim/` contains a
   docstring with `from sruth.oideachas.X import Y` in a
   Usage-example code block
 - **WHEN** the file is committed
-- **THEN** `grep -rn "sruth\.oideachas" sruth/meaisinfhoghlaim/`
+- **THEN** `grep -rn "sruth\.oideachas" cianfhoghlaim/`
   returns 0 hits
 - **AND** the docstring's Usage example uses the canonical
   `sruth.oideachais.X` path
 
 #### Scenario: A README or AGENTS.md example references the non-existent path
 
-- **GIVEN** a `.md` file under `sruth/meaisinfhoghlaim/` contains
+- **GIVEN** a `.md` file under `cianfhoghlaim/` contains
   the substring `sruth/oideachas` or `sruth.oideachas` (other than
   in an explanatory footnote documenting the typo was fixed)
 - **WHEN** the file is committed
-- **THEN** `grep -rn "sruth/oideachas\|sruth\.oideachas" sruth/meaisinfhoghlaim/*.md sruth/meaisinfhoghlaim/**/*.md`
+- **THEN** `grep -rn "sruth/oideachas\|sruth\.oideachas" cianfhoghlaim/*.md cianfhoghlaim/**/*.md`
   returns 0 hits outside an explicit typo-fix footnote
 
 ### Requirement: No dead stub modules in `meaisínfhoghlaim`
@@ -297,60 +297,60 @@ imported by any production code.
 #### Scenario: A dead stub file is left behind after a prototype is abandoned
 
 - **GIVEN** a `.py` file at e.g.
-  `sruth/meaisinfhoghlaim/<sub>/<name>.py` is a tiny prototype
+  `cianfhoghlaim/<sub>/<name>.py` is a tiny prototype
   (under 30 lines) that is NOT imported by any other file in
   `sruth/` (excluding `.venv/`, `__pycache__/`, installed
   3rd-party packages)
 - **WHEN** the prototype is abandoned without an active consumer
 - **THEN** the file is either deleted or wired into a real
   consumer within the same change that creates it
-- **AND** `find sruth/meaisinfhoghlaim/ -name "*.py" -size -500c -not -path "*/__init__.py"`
+- **AND** `find cianfhoghlaim/ -name "*.py" -size -500c -not -path "*/__init__.py"`
   is reviewed each phase to ensure no new dead stubs were
   introduced
 
 #### Scenario: An empty package directory remains after stubs are deleted
 
-- **GIVEN** the only files in `sruth/meaisinfhoghlaim/<sub>/` are
+- **GIVEN** the only files in `cianfhoghlaim/<sub>/` are
   stubs that have been deleted
 - **WHEN** the deletion is committed
 - **THEN** the empty `<sub>/` directory is either removed (if not
   declared a Python package) or has an `__init__.py` (if it must
   remain as a package marker)
-- **AND** `ls sruth/meaisinfhoghlaim/<sub>/` returns either empty
+- **AND** `ls cianfhoghlaim/<sub>/` returns either empty
   output or contains only `__init__.py`
 
 ### Requirement: AGENTS.md BAML reference points to canonical path
 
-`sruth/meaisinfhoghlaim/AGENTS.md` MUST reference the canonical
-BAML schema home as `sruth/oideachais/baml_src/` (the actual
+`cianfhoghlaim/AGENTS.md` MUST reference the canonical
+BAML schema home as `cianfhoghlaim/baml_src/` (the actual
 on-disk path). The future rename `baml_src → scéimre` was
 explicitly deferred per the `lateralise-british-isles-domains`
 decision and is documented in
 `openspec/specs/meaisinfhoghlaim-platform/spec.md` (Known issues
-#5) and `sruth/meaisinfhoghlaim/README.md`. AGENTS.md MUST NOT
+#5) and `cianfhoghlaim/README.md`. AGENTS.md MUST NOT
 forward-reference a non-existent path.
 
 #### Scenario: AGENTS.md is updated after a deferred rename
 
 - **GIVEN** AGENTS.md line ~77 contains
-  `sruth/oideachais/scéimre/`
+  `cianfhoghlaim/scéimre/`
 - **WHEN** the deferred rename has not yet been executed
 - **THEN** AGENTS.md MUST instead reference
-  `sruth/oideachais/baml_src/`
+  `cianfhoghlaim/baml_src/`
 - **AND** the parenthetical explanation MUST note that the
   `baml_src → scéimre` rename is deferred per
   `lateralise-british-isles-domains`
-- **AND** `grep -rn "sruth/oideachais/scéimre" sruth/meaisinfhoghlaim/*.md`
+- **AND** `grep -rn "cianfhoghlaim/scéimre" cianfhoghlaim/*.md`
   returns 0 hits in the AGENTS.md file (it MAY still appear in
-  `sruth/meaisinfhoghlaim/README.md` and the spec as a
+  `cianfhoghlaim/README.md` and the spec as a
   documentation note about the deferred decision)
 
 ### Requirement: No duplicate DLT source implementations across quadrants
 
 The meaisínfhoghlaim quadrant MUST NOT contain a `.py` file in
-`sruth/meaisinfhoghlaim/language/<lang>/` that re-implements a
+`cianfhoghlaim/language/<lang>/` that re-implements a
 DLT source already living at the canonical home
-`sruth/oideachais/dlt_sources/{nation}/{domain}/<entity>.py`.
+`cianfhoghlaim/dlt_sources/{nation}/{domain}/<entity>.py`.
 Canonical homes are determined by the Round 11 audit:
 
 - `oideachais/data_platform/` umbrella was deleted in commit
@@ -373,26 +373,26 @@ NOT re-implement the source at a meaisínfhoghlaim-local path.
 #### Scenario: A meaisínfhoghlaim `language/gaeilge/` file re-implements a canonical DLT source
 
 - **GIVEN** the canonical DLT source for Dúchas.ie lives at
-  `sruth/oideachais/dlt_sources/ie/culture/duchas.py` with
+  `cianfhoghlaim/dlt_sources/ie/culture/duchas.py` with
   `@dlt.source(name="duchas_folklore") def duchas_source(...)`
 - **AND** the meaisínfhoghlaim quadrant contains a
-  `sruth/meaisinfhoghlaim/language/gaeilge/duchas.py` with the
+  `cianfhoghlaim/language/gaeilge/duchas.py` with the
   same `@dlt.source(name="duchas_folklore") def duchas_source(...)`
   decorator (verified by `grep -n "@dlt.source"`)
 - **WHEN** a contributor tries to add a new Dúchas.ie feature
 - **THEN** the contributor MUST edit the canonical file at
-  `sruth/oideachais/dlt_sources/ie/culture/duchas.py`, NOT the
+  `cianfhoghlaim/dlt_sources/ie/culture/duchas.py`, NOT the
   meaisínfhoghlaim duplicate
 - **AND** the meaisínfhoghlaim duplicate MUST be deleted (zero
   importers; the canonical home is the single source of truth)
 
 #### Scenario: A meaisínfhoghlaim `language/gaeilge/` file has stale `sruth.oideachais.dlt_sources.celtic` import
 
-- **GIVEN** a file under `sruth/meaisinfhoghlaim/language/gaeilge/`
+- **GIVEN** a file under `cianfhoghlaim/language/gaeilge/`
   contains `from sruth.oideachais.dlt_sources.celtic.X import Y`
   in either an active or lazy (`try/except ImportError`) import
   block
-- **AND** `sruth/oideachais/dlt_sources/celtic/` does not exist
+- **AND** `cianfhoghlaim/dlt_sources/celtic/` does not exist
   (it was deleted in Phase 3B)
 - **WHEN** the file is loaded
 - **THEN** the import fails silently (lazy) or with
@@ -403,13 +403,13 @@ NOT re-implement the source at a meaisínfhoghlaim-local path.
 
 ### Requirement: `language/gaeilge/` contains only non-duplicate files
 
-The directory `sruth/meaisinfhoghlaim/language/gaeilge/` MUST
+The directory `cianfhoghlaim/language/gaeilge/` MUST
 contain only the files listed in the post-Phase-2 Scenario
 below.
 
 No additional files MAY be added without first verifying they
 are NOT byte-for-byte duplicates of canonical homes at
-`sruth/oideachais/dlt_sources/ie/{culture,education}/`.
+`cianfhoghlaim/dlt_sources/ie/{culture,education}/`.
 
 - `__init__.py` (the package marker)
 - Files that are NOT byte-for-byte duplicates of canonical
@@ -424,15 +424,15 @@ are NOT byte-for-byte duplicates of canonical homes at
 - **WHEN** a new `@dlt.source` is needed for an Irish-language
   data source
 - **THEN** the contributor MUST first verify whether a canonical
-  home exists at `sruth/oideachais/dlt_sources/ie/culture/<name>.py`
-  via `ls sruth/oideachais/dlt_sources/ie/culture/`
+  home exists at `cianfhoghlaim/dlt_sources/ie/culture/<name>.py`
+  via `ls cianfhoghlaim/dlt_sources/ie/culture/`
 - **AND** if a canonical home exists, the contributor MUST add
   the new source to the canonical home (NOT the meaisínfhoghlaim
   copy) per the no-duplicates invariant
 - **AND** if no canonical home exists, the contributor MUST
-  create one at `sruth/oideachais/dlt_sources/ie/culture/<name>.py`
+  create one at `cianfhoghlaim/dlt_sources/ie/culture/<name>.py`
   with the standard country-first layout, then optionally add
-  a thin re-export shim to `sruth/meaisinfhoghlaim/language/gaeilge/`
+  a thin re-export shim to `cianfhoghlaim/language/gaeilge/`
   if a meaisínfhoghlaim-specific consumer needs it
 
 ### Requirement: No broken cross-package imports in meaisínfhoghlaim
@@ -448,23 +448,23 @@ The canonical homes for cross-quadrant utilities are:
 
 | Utility | Canonical home |
 |:--|:--|
-| `CircuitBreaker`, `RateLimiter`, `retry` | `sruth/oideachais/core/utils/` (importable as `from oideachais.core.utils import ...`) |
-| `get_logger` | `sruth/oideachais/observability/logging.py` |
-| `settings` | `sruth/oideachais/settings.py` |
-| DLT sources (Dúchas, Téarma, Gaois, etc.) | `sruth/oideachais/dlt_sources/ie/culture/` |
+| `CircuitBreaker`, `RateLimiter`, `retry` | `cianfhoghlaim/core/utils/` (importable as `from oideachais.core.utils import ...`) |
+| `get_logger` | `cianfhoghlaim/observability/logging.py` |
+| `settings` | `cianfhoghlaim/settings.py` |
+| DLT sources (Dúchas, Téarma, Gaois, etc.) | `cianfhoghlaim/dlt_sources/ie/culture/` |
 
 If a meaisínfhoghlaim module needs a utility that lives in
 another quadrant, it MUST import from the canonical home
 (e.g. `from sruth.oideachais.core.utils import CircuitBreaker`),
 NOT a phantom meaisínfhoghlaim-local path
 (e.g. `from ..core.utils import CircuitBreaker` when
-`sruth/meaisinfhoghlaim/core/` does not exist).
+`cianfhoghlaim/core/` does not exist).
 
 #### Scenario: A meaisínfhoghlaim module imports from a phantom `meaisinfhoghlaim.core.*` path
 
-- **GIVEN** `sruth/meaisinfhoghlaim/core/` does not exist
-  (verified via `ls sruth/meaisinfhoghlaim/core/`)
-- **AND** `sruth/meaisinfhoghlaim/pipelines/llm_router.py:23`
+- **GIVEN** `cianfhoghlaim/core/` does not exist
+  (verified via `ls cianfhoghlaim/core/`)
+- **AND** `cianfhoghlaim/pipelines/llm_router.py:23`
   contains an active import `from ..core.utils import CircuitBreaker`
 - **WHEN** the module is loaded
 - **THEN** Python raises `ModuleNotFoundError: No module named 'meaisinfhoghlaim.core'`
@@ -489,15 +489,15 @@ NOT a phantom meaisínfhoghlaim-local path
 
 The meaisínfhoghlaim `pipelines/` subtree MUST NOT contain
 `.py` files that define a top-level resource class or function
-without any importer in `sruth/meaisinfhoghlaim/`. A resource
+without any importer in `cianfhoghlaim/`. A resource
 module is "orphan" if:
 
 - It defines at least one top-level class (e.g.
   `BrowserbaseResource`) or top-level function that is not a
   private helper (prefixed with `_`), AND
 - Zero importers exist for any of its top-level symbols
-  anywhere in `sruth/meaisinfhoghlaim/`
-  (verified via `grep -rn "from .* import .*<Symbol>" sruth/meaisinfhoghlaim/`)
+  anywhere in `cianfhoghlaim/`
+  (verified via `grep -rn "from .* import .*<Symbol>" cianfhoghlaim/`)
 
 The exception is `pipelines/__init__.py` itself, which is the
 canonical re-export surface for the 3 main pipelines
@@ -506,9 +506,9 @@ canonical re-export surface for the 3 main pipelines
 
 #### Scenario: A pipeline resource class has zero importers
 
-- **GIVEN** `sruth/meaisinfhoghlaim/pipelines/<name>.py` defines
+- **GIVEN** `cianfhoghlaim/pipelines/<name>.py` defines
   a class `BrowserbaseResource` or similar top-level resource
-- **AND** `grep -rn "BrowserbaseResource" sruth/meaisinfhoghlaim/`
+- **AND** `grep -rn "BrowserbaseResource" cianfhoghlaim/`
   returns only the definition (no importers)
 - **WHEN** the file is audited
 - **THEN** the file MUST be either deleted (if the resource is
@@ -524,25 +524,25 @@ canonical re-export surface for the 3 main pipelines
 #### Scenario: A future contributor adds a new pipeline module
 
 - **GIVEN** a new `.py` file is added to
-  `sruth/meaisinfhoghlaim/pipelines/`
+  `cianfhoghlaim/pipelines/`
 - **WHEN** the file is committed
 - **THEN** at least one of the following MUST be true:
   - The file is added to `pipelines/__init__.py` re-exports
     (becomes a public pipeline module), OR
   - The file is imported by a Dagster asset under
-    `sruth/meaisinfhoghlaim/dagster_defs/`, OR
+    `cianfhoghlaim/dagster_defs/`, OR
   - The file is imported by a test under
-    `sruth/meaisinfhoghlaim/tests/`
+    `cianfhoghlaim/tests/`
 - **AND** if none of the above hold for 30 days, the file
   MUST be either deleted or wired into a real consumer
 
 ### Requirement: No duplicate agent-tools package across quadrants
 
 The meaisínfhoghlaim quadrant MUST NOT contain a `tools/` package
-that duplicates `sruth/oideachais/tools/`. The canonical home for
+that duplicates `cianfhoghlaim/tools/`. The canonical home for
 all Celtic-education agent tools (corpus search, curriculum search,
 spatial query, statistics query, terminology, translation) is
-`sruth/oideachais/tools/`, importable as
+`cianfhoghlaim/tools/`, importable as
 `from sruth.oideachais.tools.X import ...`.
 
 Meaisínfhoghlaim agent code MUST import tools from the canonical
@@ -553,10 +553,10 @@ NOT from a meaisínfhoghlaim-local `tools/` package
 
 #### Scenario: A meaisínfhoghlaim agent file imports from a duplicate `agents/tools/` location
 
-- **GIVEN** `sruth/meaisinfhoghlaim/agents/tools/` does not exist
-  (verified via `ls sruth/meaisinfhoghlaim/agents/tools/`)
-- **AND** `sruth/oideachais/tools/` exists as the canonical home
-  (verified via `ls sruth/oideachais/tools/`)
+- **GIVEN** `cianfhoghlaim/agents/tools/` does not exist
+  (verified via `ls cianfhoghlaim/agents/tools/`)
+- **AND** `cianfhoghlaim/tools/` exists as the canonical home
+  (verified via `ls cianfhoghlaim/tools/`)
 - **WHEN** a meaisínfhoghlaim agent file imports from
   `from sruth.meaisinfhoghlaim.agents.tools.X import ...`
 - **THEN** Python raises
@@ -569,22 +569,22 @@ NOT from a meaisínfhoghlaim-local `tools/` package
 - **GIVEN** a meaisínfhoghlaim agent file needs a new tool
 - **WHEN** the contributor adds the import
 - **THEN** the contributor MUST first check whether the canonical
-  home `sruth/oideachais/tools/` already provides the needed symbol
+  home `cianfhoghlaim/tools/` already provides the needed symbol
   (verified via `PYTHONPATH=./sruth python3 -c "from sruth.oideachais.tools.X import <symbol>"`)
 - **AND** the contributor MUST import from the canonical oideachais
-  location, NOT create a new `sruth/meaisinfhoghlaim/agents/tools/` package
+  location, NOT create a new `cianfhoghlaim/agents/tools/` package
 - **AND** if the symbol is NOT in the canonical home, the contributor
-  MUST add the new tool to `sruth/oideachais/tools/`, NOT to a
+  MUST add the new tool to `cianfhoghlaim/tools/`, NOT to a
   meaisínfhoghlaim-local duplicate
 
 ### Requirement: No broken relative tool imports in meaisínfhoghlaim agent files
 
 The meaisínfhoghlaim `agents/` subtree MUST NOT contain any
 `.py` file with a top-level (module-load-time) `from ..tools.X`
-relative import. The path `sruth/meaisinfhoghlaim/tools/` does not
+relative import. The path `cianfhoghlaim/tools/` does not
 exist; any `from ..tools.X` import from a file under
-`sruth/meaisinfhoghlaim/agents/` resolves to
-`sruth/meaisinfhoghlaim/tools/X` and MUST raise
+`cianfhoghlaim/agents/` resolves to
+`cianfhoghlaim/tools/X` and MUST raise
 `ModuleNotFoundError` at module load time.
 
 Every tool import in meaisínfhoghlaim agent code MUST be either:
@@ -593,21 +593,21 @@ Every tool import in meaisínfhoghlaim agent code MUST be either:
    home (e.g. `from sruth.oideachais.tools.curriculum_search import ...`),
    OR
 2. A relative import that resolves correctly within the same package
-   (e.g. `from .tools.X import ...` if `sruth/meaisinfhoghlaim/agents/tools/`
+   (e.g. `from .tools.X import ...` if `cianfhoghlaim/agents/tools/`
    is the canonical home — but currently no such home exists, so
    option 1 is the only valid path).
 
 #### Scenario: A meaisínfhoghlaim agent file uses `from ..tools.X` for a tool
 
-- **GIVEN** a `.py` file under `sruth/meaisinfhoghlaim/agents/`
+- **GIVEN** a `.py` file under `cianfhoghlaim/agents/`
   (e.g. `agui_curriculum_agent.py:25`,
   `curriculum_comparison_agent.py:14`,
   `geospatial_agent.py:15`,
   `statistics_agent.py:15`)
 - **AND** the file contains a top-level import
   `from ..tools.X import ...`
-- **AND** `sruth/meaisinfhoghlaim/tools/` does not exist
-  (verified via `ls sruth/meaisinfhoghlaim/tools/`)
+- **AND** `cianfhoghlaim/tools/` does not exist
+  (verified via `ls cianfhoghlaim/tools/`)
 - **WHEN** the file is imported by any caller
 - **THEN** Python raises
   `ModuleNotFoundError: No module named 'sruth.meaisinfhoghlaim.tools'`
@@ -633,7 +633,7 @@ Every tool import in meaisínfhoghlaim agent code MUST be either:
 The meaisínfhoghlaim quadrant MUST NOT contain a single `.py` file that
 bundles multiple `@dlt.source` functions together when those same
 source functions already exist as separate canonical files in
-`sruth/oideachais/dlt_sources/ie/{culture,education,...}/`.
+`cianfhoghlaim/dlt_sources/ie/{culture,education,...}/`.
 
 If a DLT source function exists at the canonical split location
 (e.g. `sruth.oideachais.dlt_sources.ie.culture.canuint.canuint_source`),
@@ -647,12 +647,12 @@ copy is a stale duplicate and MUST be deleted.
 #### Scenario: A meaisínfhoghlaim pre-split multi-source DLT file exists
 
 - **GIVEN** a meaisínfhoghlaim file at
-  `sruth/meaisinfhoghlaim/language/gaeilge/canuint.py` (1,041 lines)
+  `cianfhoghlaim/language/gaeilge/canuint.py` (1,041 lines)
   bundles 5 `@dlt.source` functions
   (`canuint_source` + `canuint_search_source` + `canuint_audio_source`
   + `canuint_dialect_summary_source` + `canuint_word_alignment_source`)
 - **AND** the canonical split already exists at
-  `sruth/oideachais/dlt_sources/ie/culture/{canuint,canuint_search,canuint_audio,canuint_dialect_summary,canuint_word_alignment}.py`
+  `cianfhoghlaim/dlt_sources/ie/culture/{canuint,canuint_search,canuint_audio,canuint_dialect_summary,canuint_word_alignment}.py`
   (1,095 lines across 5 files)
 - **AND** the canonical split files all import cleanly via
   `PYTHONPATH=./sruth python3 -c "from sruth.oideachais.dlt_sources.ie.culture.canuint import canuint_source"`
@@ -662,27 +662,27 @@ copy is a stale duplicate and MUST be deleted.
   (via `git mv` into the openspec change archive)
 - **AND** any future DLT source function additions MUST go to a
   NEW canonical file at
-  `sruth/oideachais/dlt_sources/ie/{culture,education,...}/<entity>.py`,
+  `cianfhoghlaim/dlt_sources/ie/{culture,education,...}/<entity>.py`,
   NOT to a pre-split multi-source file in meaisínfhoghlaim
 
 #### Scenario: A future contributor wants to add a 6th canuint source
 
 - **GIVEN** the canonical 5 canuint split files exist at
-  `sruth/oideachais/dlt_sources/ie/culture/`
+  `cianfhoghlaim/dlt_sources/ie/culture/`
 - **WHEN** a 6th canuint source function needs to be added
   (e.g. `canuint_regional_dialect_comparison_source`)
 - **THEN** the contributor MUST create a new file
-  `sruth/oideachais/dlt_sources/ie/culture/canuint_regional_dialect_comparison.py`
+  `cianfhoghlaim/dlt_sources/ie/culture/canuint_regional_dialect_comparison.py`
   (the canonical split location)
 - **AND** the contributor MUST NOT recreate a pre-split multi-source
-  file at `sruth/meaisinfhoghlaim/language/gaeilge/canuint.py`
+  file at `cianfhoghlaim/language/gaeilge/canuint.py`
 - **AND** the contributor MUST update the existing Phase 2 / Phase 5
-  audit-trail rows in `sruth/meaisinfhoghlaim/README.md` if the new
+  audit-trail rows in `cianfhoghlaim/README.md` if the new
   source introduces a fresh canonical split
 
 ### Requirement: OCR Model Registry Location (v4)
 
-The system SHALL expose the OCR model registry at `cianfhoghlaim/ocr/models/registry.py`. The registry SHALL list **at least 20 vision models** (the 24-entry v4 registry trimmed of 4 models that don't fit on M4 48GB: qwen3-vl-235b-a22b 130GB, glm-4.6v-full 107GB, qwen3.6-35b-a3b-mtp 22GB marginal, gemma-4-31B 19GB marginal). The legacy 9×6 model registry at `sruth/meaisinfhoghlaim/ocr/model_registry.py` is REPLACED (gpt_4o, claude_3_5_sonnet, llama_3_2_vision, uccix_13b are removed; classical OCR stacks stay separate as Docker compose).
+The system SHALL expose the OCR model registry at `cianfhoghlaim/ocr/models/registry.py`. The registry SHALL list **at least 20 vision models** (the 24-entry v4 registry trimmed of 4 models that don't fit on M4 48GB: qwen3-vl-235b-a22b 130GB, glm-4.6v-full 107GB, qwen3.6-35b-a3b-mtp 22GB marginal, gemma-4-31B 19GB marginal). The legacy 9×6 model registry at `cianfhoghlaim/ocr/model_registry.py` is REPLACED (gpt_4o, claude_3_5_sonnet, llama_3_2_vision, uccix_13b are removed; classical OCR stacks stay separate as Docker compose).
 
 #### Scenario: Vision model dispatch
 
@@ -777,22 +777,22 @@ in the root_agent without a manual code edit.
 - **THEN** 0 hits SHALL appear (the `5_agent_ops/pipecat/` sub-folder is intentionally absent in this change)
 - **AND** a follow-on change `2026-07-add-pipecat-voice-agent-to-l5` (tracked but out of scope here) will add the 13th L5 sub-folder + 5 emitted assets
 
-## Known issues (from `sruth/meaisinfhoghlaim/README.md`)
+## Known issues (from `cianfhoghlaim/README.md`)
 
 | # | Issue | Tracked in | Severity |
 |--:|:--|:--|:--|
 | 1 | Most sub-packages are stubs; the 4 heartbeats are the first real assets | the 10 sub-packages | high |
-| 2 | No `[tool.uv.sources]` block; sibling workspace members are not declared as local-path dependencies | `sruth/meaisinfhoghlaim/pyproject.toml` | high — blocks cross-quadrant imports |
+| 2 | No `[tool.uv.sources]` block; sibling workspace members are not declared as local-path dependencies | `cianfhoghlaim/pyproject.toml` | high — blocks cross-quadrant imports |
 | 3 | The 6 Celtic-language subdirs are stubs | the 6 subdirs | medium |
-| 4 | No production dagster code-location (only the 4 heartbeats) | `sruth/meaisinfhoghlaim/dagster_defs/assets/healthchecks.py` | medium |
+| 4 | No production dagster code-location (only the 4 heartbeats) | `cianfhoghlaim/dagster_defs/assets/healthchecks.py` | medium |
 | 5 | The `baml_src → scéimre` rename was deferred per `lateralise-british-isles-domains` | the AGENTS.md | low — deferred |
 
 ## Cross-references
 
-- [`sruth/meaisinfhoghlaim/`](../../sruth/meaisinfhoghlaim/) (the AI/ML quadrant)
-- [`sruth/meaisinfhoghlaim/README.md`](../../sruth/meaisinfhoghlaim/README.md) (the status table + known issues)
-- [`sruth/meaisinfhoghlaim/AGENTS.md`](../../sruth/meaisinfhoghlaim/AGENTS.md) (the developer-quick-reference)
-- [`sruth/meaisinfhoghlaim/pyproject.toml`](../../sruth/meaisinfhoghlaim/pyproject.toml) (the uv workspace member)
+- [`cianfhoghlaim/`](../../cianfhoghlaim/) (the AI/ML quadrant)
+- [`cianfhoghlaim/README.md`](../../cianfhoghlaim/README.md) (the status table + known issues)
+- [`cianfhoghlaim/AGENTS.md`](../../cianfhoghlaim/AGENTS.md) (the developer-quick-reference)
+- [`cianfhoghlaim/pyproject.toml`](../../cianfhoghlaim/pyproject.toml) (the uv workspace member)
 - [`dg.toml`](../../dg.toml) (the root Dagster code-location config)
 - [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](meaisinfhoghlaim-agent-frameworks/spec.md) (the 12 agents)
 - [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](meaisinfhoghlaim-ocr-htr/spec.md) (the 10 OCR models)

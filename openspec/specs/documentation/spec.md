@@ -36,10 +36,10 @@ The 7 READMEs in the monorepo are:
 - `README.md` (root) — the monorepo overview + the 8-phase
   end-to-end deploy playbook
 - `infrastructure/README.md` — the 94-stack inventory
-- `sruth/oideachais/README.md` — the lakehouse quadrant
-- `sruth/meaisinfhoghlaim/README.md` — the AI/ML quadrant
-- `sruth/tuatha/README.md` — the MMO + crypto quadrant
-- `sruth/croilar/README.md` — the portfolio quadrant
+- `cianfhoghlaim/README.md` — the lakehouse quadrant
+- `cianfhoghlaim/README.md` — the AI/ML quadrant
+- `cianfhoghlaim/README.md` — the MMO + crypto quadrant
+- `cianfhoghlaim/README.md` — the portfolio quadrant
 - `spaces/README.md` — the HuggingFace Spaces
 
 A standalone `DEPLOY.md` at the repo root SHALL contain the

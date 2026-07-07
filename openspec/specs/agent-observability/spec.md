@@ -3,9 +3,9 @@
 ## Purpose
 
 `agent-observability` is a capability of the Cianfhoghlaim platform. The
-corresponding source code lives at `sruth/oideachais/observability/` (the
+corresponding source code lives at `cianfhoghlaim/observability/` (the
 Langfuse + MLflow + Logfire + Datadog integration) and
-`sruth/meaisinfhoghlaim/evaluation/ragas_pipeline.py` (the RAGAS evaluation
+`cianfhoghlaim/evaluation/ragas_pipeline.py` (the RAGAS evaluation
 harness). See `docs/00_index.md` for the quadrant map and
 `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -45,7 +45,7 @@ The system SHALL evaluate RAG pipelines using RAGAS metrics
 
 #### Scenario: RAGAS evaluation
 
-- **GIVEN** a RAG pipeline (e.g. `sruth/oideachais/api/routes/search.py`)
+- **GIVEN** a RAG pipeline (e.g. `cianfhoghlaim/api/routes/search.py`)
 - **WHEN** the pipeline produces a result for a query
 - **THEN** the RAGAS evaluator computes the 4 metrics and stores the
   scores in MLflow
@@ -119,27 +119,27 @@ inventory`.
 
 ### Requirement: Prometheus Service Removed from litellm
 The system SHALL NOT include a Prometheus service in
-`infrastructure/stacks/litellm/compose.yaml` or
-`infrastructure/stacks/litellm/compose.dev.yaml`. The
-`infrastructure/stacks/litellm/config/prometheus.yml` scrape config
+`bonneagar/stacks/litellm/compose.yaml` or
+`bonneagar/stacks/litellm/compose.dev.yaml`. The
+`bonneagar/stacks/litellm/config/prometheus.yml` scrape config
 SHALL NOT exist.
 
 #### Scenario: Compose no longer references Prometheus
-- **GIVEN** `infrastructure/stacks/litellm/compose.yaml`
+- **GIVEN** `bonneagar/stacks/litellm/compose.yaml`
 - **WHEN** the file is read
 - **THEN** no `prometheus:` service block appears
 - **AND** no `prometheus_data:` volume declaration appears
 - **AND** `bun run validate-stacks` still passes for the litellm stack
 
 #### Scenario: No Grafana / Alertmanager depends on Prometheus
-- **GIVEN** the complete `infrastructure/stacks/` tree
+- **GIVEN** the complete `bonneagar/stacks/` tree
 - **WHEN** every `compose.yaml` is searched for `prometheus:9090`
   references
 - **THEN** zero matches are found (no consumer depends on the
   Prometheus endpoint)
 
 ### Requirement: Logfire Stack Self-Hosted Compose
-The system SHALL provide a deployable `infrastructure/stacks/logfire/`
+The system SHALL provide a deployable `bonneagar/stacks/logfire/`
 stack with at minimum `compose.yaml`, `blueprint.yaml`,
 `secrets.env`, and `sidecar.yaml`. Pydantic Logfire is SaaS-only
 (https://logfire.pydantic.dev) and does not publish a
@@ -151,7 +151,7 @@ collector only exposes OTLP gRPC/HTTP ports (no local HTTP UI),
 SHALL be documented in the stack README.
 
 #### Scenario: Logfire compose file exists and parses
-- **GIVEN** `infrastructure/stacks/logfire/`
+- **GIVEN** `bonneagar/stacks/logfire/`
 - **WHEN** `bun run validate-stacks` runs
 - **THEN** the logfire stack is recognised as a valid 5-file
   GOLD_STANDARD stack (compose + sidecar + secrets + blueprint + README)
@@ -171,20 +171,20 @@ alternative configuration SHALL NOT exist.
 - **AND** no `.opencode.yaml` alternative config exists at repo root
 
 ### Requirement: Infisical URI Format Conformance
-Every `secrets.env` file in `infrastructure/stacks/` SHALL use the
+Every `secrets.env` file in `bonneagar/stacks/` SHALL use the
 canonical `infisical://dev-baile/<service>/<key>` URI format
 compatible with the Locket sidecar at runtime. Jinja template
 syntax (`{{ infisical:///... }}`) SHALL NOT be used.
 
 #### Scenario: All 102 secrets.env files are Locket-compatible
-- **GIVEN** every `infrastructure/stacks/*/secrets.env`
+- **GIVEN** every `bonneagar/stacks/*/secrets.env`
 - **WHEN** the file is grepped for `{{ infisical:///`
 - **THEN** zero matches are found
 - **AND** every secret reference uses the `infisical://dev-baile/...`
   URI form
 
 ### Requirement: Blueprint Port Fidelity
-Every `infrastructure/stacks/*/blueprint.yaml` SHALL declare a port
+Every `bonneagar/stacks/*/blueprint.yaml` SHALL declare a port
 that matches the corresponding `compose.yaml` host port for the
 primary service. The blueprint is documentation-only (Komodo
 consumes `pangolin.yaml`), but the declared port SHALL be accurate.
@@ -209,7 +209,7 @@ that does not exist on disk.
 
 ### Requirement: Pangolin Config Per Operational Stack
 The system SHALL require that every operational Docker Compose stack
-in `infrastructure/stacks/` has a `pangolin.yaml` file in addition to
+in `bonneagar/stacks/` has a `pangolin.yaml` file in addition to
 `blueprint.yaml`, so that Komodo can apply the public/private
 resource routes via the `file_paths` field. The blueprint is
 documentation; the pangolin file is the source of truth for the
@@ -266,5 +266,5 @@ file SHALL NOT exist.
 - [`.agents/skills/mlflow/SKILL.md`](../../.agents/skills/mlflow/SKILL.md)
 - [`.agents/skills/ragas/SKILL.md`](../../.agents/skills/ragas/SKILL.md)
 - [`.agents/skills/datadog/SKILL.md`](../../.agents/skills/datadog/SKILL.md)
-- [`sruth/oideachais/observability/`](../../sruth/oideachais/observability/) (the integration module)
-- [`sruth/meaisinfhoghlaim/evaluation/`](../../sruth/meaisinfhoghlaim/evaluation/) (RAGAS pipeline)
+- [`cianfhoghlaim/observability/`](../../cianfhoghlaim/observability/) (the integration module)
+- [`cianfhoghlaim/evaluation/`](../../cianfhoghlaim/evaluation/) (RAGAS pipeline)

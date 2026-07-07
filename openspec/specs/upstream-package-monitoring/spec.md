@@ -5,27 +5,27 @@
 `upstream-package-monitoring` is a capability of the Cianfhoghlaim
 platform. The corresponding source code lives at:
 
-- `sruth/sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py` —
+- `cianfhoghlaim/cocoindex_flows/upstream_blog_monitor.py` —
   CocoIndex v1 App that ingests Firecrawl webhook payloads +
   publishes LanceDB chunks + FalkorDB graph nodes for the 4
   upstream packages
-- `sruth/sruth/oideachais/cocoindex_flows/upstream_api_surface.py` —
+- `cianfhoghlaim/cocoindex_flows/upstream_api_surface.py` —
   CocoIndex v1 App that watches the cocoindex docs + llms-full.txt
   + extracts API-surface changes
-- `sruth/sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py` —
+- `cianfhoghlaim/cocoindex_flows/cocoindex_v1_conformance.py` —
   CocoIndex v1 App that enforces 4 conformance rules on every v1
   App (the enforcement layer for REFACTORING.md item 12)
-- `sruth/sruth/oideachais/dlt_sources/domains/cross/upstream/blog_post.py` —
+- `cianfhoghlaim/dlt_sources/domains/cross/upstream/blog_post.py` —
   DLT incremental source from the n8n webhook bridge
-- `sruth/sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py` —
+- `cianfhoghlaim/dagster_defs/assets/upstream_monitoring_assets.py` —
   5 Dagster assets + 1 breaking-change sensor
-- `sruth/sruth/oideachais/baml_src/upstream_monitoring.baml` — 3
+- `cianfhoghlaim/baml_src/upstream_monitoring.baml` — 3
   BAML extraction functions (`ExtractBlogPostMetadata`,
   `ExtractCocoIndexApiChange`, `ExtractPackageRelease`)
 - `infrastructure/firecrawl/monitors/upstream_packages/*.yml` —
   4 Firecrawl monitor configs (motherduck / dlthub / lancedb /
   cocoindex)
-- `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json` — n8n
+- `bonneagar/stacks/n8n/workflows/upstream-blog-monitor.json` — n8n
   workflow that bridges Firecrawl webhook → DLT → Dagster
 
 See `docs/00_index.md` for the quadrant map and
@@ -100,7 +100,7 @@ The system SHALL expose a CocoIndex v1 App at
 `oideachais.cocoindex_flows.cocoindex_v1_conformance` (named
 `CocoIndexV1Conformance`) that implements a static linter
 enforcing 4 conformance rules on every v1 CocoIndex App under
-`sruth/oideachais/cocoindex_flows/`, and SHALL expose a
+`cianfhoghlaim/cocoindex_flows/`, and SHALL expose a
 `ConformanceReport` dataclass + a
 `run_conformance_check(repo_root)` entrypoint usable as a Dagster
 `asset_check`.
@@ -108,7 +108,7 @@ enforcing 4 conformance rules on every v1 CocoIndex App under
 #### Scenario: R1 — shared lifespan delegation
 
 - **GIVEN** a v1 CocoIndex App at
-  `sruth/oideachais/cocoindex_flows/<name>.py`
+  `cianfhoghlaim/cocoindex_flows/<name>.py`
 - **WHEN** `run_conformance_check` is invoked
 - **THEN** the App SHALL be flagged as R1-FAILING if the AST
   does NOT contain `from ._lifespan import` AND a reference to
@@ -211,7 +211,7 @@ detected.
 - **GIVEN** the `upstream_api_surface_publish` Dagster asset
   has run for all 4 packages
 - **WHEN** the caller inspects
-  `sruth/sruth/oideachais/docs/upstream/api-changes/{package}.md`
+  `cianfhoghlaim/docs/upstream/api-changes/{package}.md`
 - **THEN** the file SHALL contain a Markdown table with
   columns `(symbol, severity, old_signature, new_signature,
   changelog_url, migration_steps)` for the 30 most recent

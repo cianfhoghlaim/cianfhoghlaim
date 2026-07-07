@@ -31,8 +31,8 @@ UK sources with caching fallback.
   meaisinfhoghlaim-agent-frameworks, meaisinfhoghlaim-ocr-htr) AND
   the 1 tuatha-platform spec AND the 3 croilar-* specs
   (croilar-portfolio, croilar-data-engineering, croilar-cv-extraction)
-- **AND** the 4 quadrant AGENTS.md files (sruth/oideachais/AGENTS.md,
-  sruth/meaisinfhoghlaim/AGENTS.md, sruth/tuatha/AGENTS.md, sruth/croilar/AGENTS.md)
+- **AND** the 4 quadrant AGENTS.md files (cianfhoghlaim/AGENTS.md,
+  cianfhoghlaim/AGENTS.md, cianfhoghlaim/AGENTS.md, cianfhoghlaim/AGENTS.md)
   are linked from the spec's Cross-references section
 
 #### Scenario: References the right AGENTS.md / README / STATUS
@@ -40,8 +40,8 @@ UK sources with caching fallback.
 - **GIVEN** the openspec change `openspec-consolidation-and-readme-refresh`
   is archived
 - **WHEN** a developer navigates to the pipeline
-- **THEN** the canonical `sruth/oideachais/AGENTS.md`,
-  `sruth/oideachais/STATUS.md`, `sruth/oideachais/REFACTORING.md`, and the 4
+- **THEN** the canonical `cianfhoghlaim/AGENTS.md`,
+  `cianfhoghlaim/STATUS.md`, `cianfhoghlaim/REFACTORING.md`, and the 4
   quadrant READMEs are linked from the spec
 
 ### Requirement: Partition Strategy (v2)
@@ -120,18 +120,18 @@ The system SHALL identify every asset by a domain‑first key tuple
 - `entity_slug` is the YAML `id` suffix (e.g. `ccea`, `irish_statute_book`).
 
 The system SHALL maintain a backwards‑compatibility alias table in
-`sruth/oideachais/dagster_defs/definitions.py` mapping legacy asset keys to the
+`cianfhoghlaim/dagster_defs/definitions.py` mapping legacy asset keys to the
 new ones for one (1) release cycle, then the alias table SHALL be removed in
 a follow‑on `drop-asset-key-aliases` change.
 
 #### Scenario: Domain‑first key for an Irish education asset
-- **GIVEN** the existing `sruth/oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py` `create_cycle_asset("senior_cycle")` whose legacy key is `["ireland", "curriculum", "senior_cycle"]`
+- **GIVEN** the existing `cianfhoghlaim/dagster_defs/assets/ireland/curriculum_dlt_assets.py` `create_cycle_asset("senior_cycle")` whose legacy key is `["ireland", "curriculum", "senior_cycle"]`
 - **WHEN** the asset is registered with the SourceFactory
 - **THEN** the new key is `["ie", "education", "curriculum", "senior_cycle"]`
 - **AND** the legacy key is resolvable via the backwards‑compat alias
 
 #### Scenario: Domain‑first key for a Northern Ireland CCEA asset
-- **GIVEN** the existing `sruth/oideachais/dlt_sources/uk/northern_ireland/ccea_curriculum.py::ni_curriculum_source`
+- **GIVEN** the existing `cianfhoghlaim/dlt_sources/uk/northern_ireland/ccea_curriculum.py::ni_curriculum_source`
 - **WHEN** the SourceFactory emits the corresponding Dagster asset
 - **THEN** the new key is `["ni", "education", "ccea", "pages"]`
 - **AND** the legacy key `["uk", "education", "northern_ireland", "ccea_pages"]` is resolvable
@@ -145,14 +145,14 @@ fine‑grained state, but the underlying DuckLake schema SHALL be the
 dotted‑triple.
 
 #### Scenario: One attach, one query
-- **GIVEN** the API reader at `sruth/oideachais/api/ducklake_reader.py`
+- **GIVEN** the API reader at `cianfhoghlaim/api/ducklake_reader.py`
 - **WHEN** the SPA requests a Leaving Cert subject
 - **THEN** the reader does a single `ATTACH 'oideachais'` (or `ducklake:oideachais`)
 - **AND** reads `oideachais.education.ie.leaving_cert WHERE subject = ?`
 - **AND** no per‑subject glob() / per‑subject S3 prefix is used
 
 #### Scenario: New domain schema is auto‑created
-- **GIVEN** a new DLT run for `sruth/oideachais/dlt_sources/domains/medicine/ie/hse.py`
+- **GIVEN** a new DLT run for `cianfhoghlaim/dlt_sources/domains/medicine/ie/hse.py`
 - **WHEN** the pipeline runs
 - **THEN** DuckLake creates the schema `oideachais.medicine.ie` on first write
 - **AND** the table is discoverable by `marimo` against `md:oideachais`
@@ -163,7 +163,7 @@ The system SHALL use the upstream `dagster-ducklake` integration
 (`DuckLakeResource` from `docs/dagster/integrations/dagster-ducklake/`)
 as the canonical KCG lakehouse sink, with the resource config:
 
-- **Postgres catalog** at `sruth/oideachais/core/storage/clients/ducklake.py`
+- **Postgres catalog** at `cianfhoghlaim/core/storage/clients/ducklake.py`
 - **Garage S3 object store** at the `ducklake` bucket
 - **`dg.EnvVar`** for all secrets (no hardcoded values)
 
@@ -196,7 +196,7 @@ The compose file uses healthchecks, a named network, and
 
 #### Scenario: Self-hosted stack runs
 
-- **GIVEN** `docker compose -f infrastructure/stacks/dagster/compose.yaml up -d`
+- **GIVEN** `docker compose -f bonneagar/stacks/dagster/compose.yaml up -d`
 - **WHEN** all 4 services are healthy
 - **THEN** the Dagster UI SHALL be reachable at `http://localhost:3000`
 - **AND** the daemon SHALL poll the schedules/sensors
@@ -218,14 +218,14 @@ DLT → Dagster parallel-asset factories, with:
 
 #### Scenario: Ireland curriculum DLT asset factory
 
-- **GIVEN** the 4+ `sruth/oideachais/dlt_sources/ireland/curriculum/*` REST
+- **GIVEN** the 4+ `cianfhoghlaim/dlt_sources/ireland/curriculum/*` REST
   endpoints
 - **WHEN** the SourceFactory emits the corresponding Dagster assets
 - **THEN** 4+ parallel `@asset`s SHALL be registered in the
   `ireland/curriculum/` group
 - **AND** each asset SHALL be independently re-materialisable
 - **AND** the partition key SHALL be `language + subject` (the
-  `MultiPartitionsDefinition` already in `sruth/oideachais/dagster_defs/`)
+  `MultiPartitionsDefinition` already in `cianfhoghlaim/dagster_defs/`)
 
 ### Requirement: SQLMesh ↔ Dagster translator pattern
 
@@ -238,7 +238,7 @@ assets to prevent key drift.
 #### Scenario: SQLMesh assets register
 
 - **GIVEN** a `SQLMeshResource` configured with the project at
-  `sruth/oideachais/dbt_project/` (or its SQLMesh equivalent)
+  `cianfhoghlaim/dbt_project/` (or its SQLMesh equivalent)
 - **WHEN** the `@sqlmesh_assets` decorator is applied with the
   shared translator
 - **THEN** the SQLMesh models SHALL appear as Dagster assets
@@ -314,14 +314,14 @@ producing both an embedded chunk table and a code-graph table. The
 App uses:
 
 - 29+ language detection (port from `codeolas/chunking/languages.py`
-  to `sruth/oideachais/cocoindex_flows/chunking/languages.py`)
+  to `cianfhoghlaim/cocoindex_flows/chunking/languages.py`)
 - `localfs.walk_dir(repo_root, live=True, refresh_interval=60s)` for
   the source
 - `RecursiveSplitter` with `detect_code_language` for chunking
 - `SentenceTransformerEmbedder("BAAI/bge-m3")` for embedding
 - `lancedb.mount_table_target(...)` for the chunk + graph outputs
 
-The 3 Dagster assets in `sruth/oideachais/dagster_defs/assets/codebase_assets.py`
+The 3 Dagster assets in `cianfhoghlaim/dagster_defs/assets/codebase_assets.py`
 (group_name="codebase"):
 
 1. `codebase_chunks` — chunked + embedded source files
@@ -351,7 +351,7 @@ JavaScript, TSX, JSX, Rust, Go, Java, Kotlin, Ruby, Swift.
 #### Scenario: A developer queries the code graph (Cypher-like)
 
 - **GIVEN** the `codebase_code_graph` Dagster asset has materialised
-- **WHEN** a developer runs `search_code_graph(file_path="sruth/oideachais/dagster_defs/")`
+- **WHEN** a developer runs `search_code_graph(file_path="cianfhoghlaim/dagster_defs/")`
 - **THEN** the v1 App reads the `codebase_graph` LanceDB table and
   returns the 10 most relevant CodeNode dicts (file_path matches the
   glob, with optional `node_type` filter)
@@ -359,7 +359,7 @@ JavaScript, TSX, JSX, Rust, Go, Java, Kotlin, Ruby, Swift.
 #### Scenario: A new language is added to the language table
 
 - **GIVEN** a developer adds a new language (e.g. `dart` with `.dart`
-  extension) to `sruth/oideachais/cocoindex_flows/chunking/languages.py`
+  extension) to `cianfhoghlaim/cocoindex_flows/chunking/languages.py`
 - **WHEN** the `codebase_chunks` Dagster asset re-materialises
 - **THEN** `.dart` files are now chunked using the recursive splitter
   with `language="dart"`
@@ -385,7 +385,7 @@ table. The App uses:
   `.git/`, `docs/cocoindex/`).
 
 The Dagster asset `api_endpoints` (group `infrastructure`) lives in
-`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
+`cianfhoghlaim/dagster_defs/assets/infrastructure_assets.py` and kicks the
 v1 App via `cocoindex update oideachais.cocoindex_flows.api_indexing:api_app`.
 
 #### Scenario: A developer searches the HTTP surface for an agent-memory route
@@ -418,7 +418,7 @@ indexing, producing one row per directory (depth 1-4) in the
 - 100-row upsert batches.
 
 The Dagster asset `filesystem_layout` (group `infrastructure`) lives
-in `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
+in `cianfhoghlaim/dagster_defs/assets/infrastructure_assets.py` and kicks
 the v1 App via `cocoindex update oideachais.cocoindex_flows.filesystem_indexing:fs_app`.
 
 #### Scenario: A developer searches for a directory by description
@@ -432,9 +432,9 @@ the v1 App via `cocoindex update oideachais.cocoindex_flows.filesystem_indexing:
 
 - **GIVEN** the `filesystem_layout` Dagster asset has materialised
 - **WHEN** a developer reads the `largest_descendant` column for the
-  `sruth/oideachais/dagster_defs/` row
+  `cianfhoghlaim/dagster_defs/` row
 - **THEN** the cell value is the relative path of the largest file in
-  the subtree (e.g. `sruth/oideachais/dagster_defs/assets/codebase_assets.py`)
+  the subtree (e.g. `cianfhoghlaim/dagster_defs/assets/codebase_assets.py`)
 
 ### Requirement: V1 storage backend indexer (storage_backends asset)
 
@@ -452,7 +452,7 @@ indexing, producing one row per backend instance in the
 - 100-row upsert batches.
 
 The Dagster asset `storage_backends` (group `infrastructure`) lives in
-`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
+`cianfhoghlaim/dagster_defs/assets/infrastructure_assets.py` and kicks the
 v1 App via `cocoindex update oideachais.cocoindex_flows.storage_indexing:storage_app`.
 
 #### Scenario: A developer finds where the Irish curriculum data is stored
@@ -491,7 +491,7 @@ The App uses:
 - 100-row upsert batches.
 
 The Dagster asset `config_files` (group `infrastructure`) lives in
-`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
+`cianfhoghlaim/dagster_defs/assets/infrastructure_assets.py` and kicks
 the v1 App via `cocoindex update oideachais.cocoindex_flows.config_indexing:config_app`.
 
 #### Scenario: A developer finds the wrangler manifest for a worker
@@ -526,7 +526,7 @@ the `unified_embeddings` LanceDB table. The App uses:
   `unified:<doc_id>:<chunk_index>:<content_hash>`.
 
 The Dagster asset `unified_embeddings` (group `embedding`) lives in
-`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` and
+`cianfhoghlaim/dagster_defs/assets/unified_embedding_assets.py` and
 kicks the v1 App via
 `cocoindex update oideachais.cocoindex_flows.unified_embedding:unified_app`.
 
@@ -552,7 +552,7 @@ embedding, walking a configurable directory and writing to the
 `code_embeddings` LanceDB table. The App uses:
 
 - `UNIFIED_CODE_ROOT` env var (default:
-  `sruth/crypteolas/storage/data/code/`).
+  `cianfhoghlaim/docs/legacy/crypteolas/storage/data/code/`).
 - `localfs.walk_dir(code_root, recursive=True, live=True, refresh_interval=3600s)`
   with the codebase_indexing.py excludes.
 - 8 file extensions: `*.py`, `*.ts`, `*.tsx`, `*.js`, `*.jsx`, `*.rs`,
@@ -563,7 +563,7 @@ embedding, walking a configurable directory and writing to the
   stable IDs of the form `code:<filename>:<chunk_index>`.
 
 The Dagster asset `code_embeddings` (group `embedding`) lives in
-`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` and
+`cianfhoghlaim/dagster_defs/assets/unified_embedding_assets.py` and
 kicks the v1 App via
 `cocoindex update oideachais.cocoindex_flows.unified_embedding:code_app`.
 
@@ -705,7 +705,7 @@ helper for backwards compatibility with
 
 ### Requirement: ExtractCircularMeta Pydantic mirror
 
-The canonical BAML function `ExtractCircularMeta` (in `sruth/oideachais/baml_src/circular_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/an_scrudu/extraction.py`. The Pydantic classes (`PCircularReference`, `PTopicDistribution`, `PMarkingSchemeSummary`, `PCircularExtraction`) MUST mirror the BAML class shapes exactly, and `_validate_and_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `ExtractCircularMeta` (in `cianfhoghlaim/baml_src/circular_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/an_scrudu/extraction.py`. The Pydantic classes (`PCircularReference`, `PTopicDistribution`, `PMarkingSchemeSummary`, `PCircularExtraction`) MUST mirror the BAML class shapes exactly, and `_validate_and_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns the nested BAML shape
 
@@ -735,36 +735,36 @@ The oideachais quadrant MUST provide a Mission Control HuggingFace Space at `spa
 
 The `oideachais-pipeline` capability spec MUST acknowledge that Round 11 of the
 multi-quadrant sprawl audit (executed 2026-06-25) removed 14 confirmed-dead
-items from `sruth/oideachais/`. The deletions were verified via pre-flight
-grep across `sruth/oideachais/dagster_defs`, `sruth/oideachais/api`,
-`sruth/oideachais/dlt_sources`, `sruth/oideachais/scripts`,
-`sruth/oideachais/notebooks`, `sruth/oideachais/tests`,
-`sruth/oideachais/cocoindex_flows`, `sruth/oideachais/cognee_integration`,
-`sruth/oideachais/graph`, `sruth/oideachais/lancedb`, `sruth/oideachais/agents`,
-`sruth/oideachais/alignment`, and `sruth/oideachais/ocr` (0 matches found for
+items from `cianfhoghlaim/`. The deletions were verified via pre-flight
+grep across `cianfhoghlaim/dagster_defs`, `cianfhoghlaim/api`,
+`cianfhoghlaim/dlt_sources`, `cianfhoghlaim/scripts`,
+`cianfhoghlaim/notebooks`, `cianfhoghlaim/tests`,
+`cianfhoghlaim/cocoindex_flows`, `cianfhoghlaim/cognee_integration`,
+`cianfhoghlaim/graph`, `cianfhoghlaim/lancedb`, `cianfhoghlaim/agents`,
+`cianfhoghlaim/alignment`, and `cianfhoghlaim/ocr` (0 matches found for
 each deleted item, excluding `__pycache__`).
 
 #### Scenario: A developer queries the canonical layout
 
 - **GIVEN** the openspec change `oideachais-audit-phase-1-delete-dead-code`
   is archived
-- **WHEN** a developer runs `ls sruth/oideachais/`
+- **WHEN** a developer runs `ls cianfhoghlaim/`
 - **THEN** the directory count is 55 (down from 61)
 - **AND** the following paths no longer exist:
-  - `sruth/oideachais/oideachais/` (nested legacy shim)
-  - `sruth/oideachais/services/` (only contained the deleted embedding_service)
-  - `sruth/oideachais/services/embedding_service/` (dead FastAPI)
-  - `sruth/oideachais/marimo/` (dead 1-file stub)
-  - `sruth/oideachais/exam_scraper/` (dead 2-script)
-  - `sruth/oideachais/downloads/` (empty mount)
+  - `cianfhoghlaim/oideachais/` (nested legacy shim)
+  - `cianfhoghlaim/services/` (only contained the deleted embedding_service)
+  - `cianfhoghlaim/services/embedding_service/` (dead FastAPI)
+  - `cianfhoghlaim/marimo/` (dead 1-file stub)
+  - `cianfhoghlaim/exam_scraper/` (dead 2-script)
+  - `cianfhoghlaim/downloads/` (empty mount)
 - **AND** the following root-level files no longer exist:
-  - `sruth/oideachais/leaving_cert_timetable.pdf` (270 KB orphan)
-  - `sruth/oideachais/PIPELINE_OPERATIONS.md` (orphaned doc)
-  - `sruth/oideachais/test_api.py`
-  - `sruth/oideachais/test_crawl.py`
-  - `sruth/oideachais/test_crawl2.py`
-  - `sruth/oideachais/test_full_crawl.py`
-  - `sruth/oideachais/test_all_sources.py`
+  - `cianfhoghlaim/leaving_cert_timetable.pdf` (270 KB orphan)
+  - `cianfhoghlaim/PIPELINE_OPERATIONS.md` (orphaned doc)
+  - `cianfhoghlaim/test_api.py`
+  - `cianfhoghlaim/test_crawl.py`
+  - `cianfhoghlaim/test_crawl2.py`
+  - `cianfhoghlaim/test_full_crawl.py`
+  - `cianfhoghlaim/test_all_sources.py`
 
 #### Scenario: Embedding service migration path
 
@@ -778,10 +778,10 @@ each deleted item, excluding `__pycache__`).
 #### Scenario: OCR comparison migration path
 
 - **WHEN** any caller needs OCR comparison outputs after the deletion
-- **THEN** they MUST use `sruth/meaisinfhoghlaim/marimo/01_leabharlann_descriptive.py`
+- **THEN** they MUST use `cianfhoghlaim/marimo/01_leabharlann_descriptive.py`
   (the canonical descriptive stats notebook)
 - **OR** the Dagster asset at
-  `sruth/oideachais/dagster_defs/assets/ocr_comparison_assets.py`
+  `cianfhoghlaim/dagster_defs/assets/ocr_comparison_assets.py`
   (the canonical programmatic interface)
 - **AND** NOT import from `sruth.oideachais.marimo.ocr_comparison_enhanced`
   (the deleted module)
@@ -798,9 +798,9 @@ each deleted item, excluding `__pycache__`).
 #### Scenario: Test author path
 
 - **WHEN** any test author writes a new test for the oideachais quadrant
-- **THEN** they MUST place it under `sruth/oideachais/tests/` following the
+- **THEN** they MUST place it under `cianfhoghlaim/tests/` following the
   existing per-test-file or per-test-module pattern with `conftest.py` fixtures
-- **AND** NOT place test scripts at the root of `sruth/oideachais/`
+- **AND** NOT place test scripts at the root of `cianfhoghlaim/`
   (the 5 deleted root-level test scripts are the canonical example of the
   anti-pattern that has now been removed)
 
@@ -808,7 +808,7 @@ each deleted item, excluding `__pycache__`).
 
 The `oideachais-pipeline` capability spec MUST acknowledge that Round 11
 phase 2A (executed 2026-06-25) removed 4 confirmed-pure-duplicate surface
-pairs from `sruth/oideachais/`, with a total of 5,527 LOC and 17 files
+pairs from `cianfhoghlaim/`, with a total of 5,527 LOC and 17 files
 removed. All deletions were byte-identical to canonical surfaces and verified
 to have zero external importers (excluding the deprecated stub's single test
 importer, which was updated to use the canonical replacement).
@@ -817,10 +817,10 @@ The canonical surfaces that retain all functionality:
 
 | Pair | Duplicate (removed) | Canonical (kept) | LOC removed |
 |:--|:--|:--|--:|
-| 1 | `sruth/oideachais/routes/` | `sruth/oideachais/api/routes/` | 2,836 |
-| 2 | `sruth/oideachais/sensors/` | `sruth/oideachais/dagster_defs/sensors/` | 994 |
-| 3 | `sruth/oideachais/middleware/` | `sruth/oideachais/api/middleware/` | 1,668 |
-| 4 | `sruth/oideachais/storage/serial_executor.py` (deprecated) | `sruth/oideachais/core/storage/serial_executor.py` | 29 |
+| 1 | `cianfhoghlaim/routes/` | `cianfhoghlaim/api/routes/` | 2,836 |
+| 2 | `cianfhoghlaim/sensors/` | `cianfhoghlaim/dagster_defs/sensors/` | 994 |
+| 3 | `cianfhoghlaim/middleware/` | `cianfhoghlaim/api/middleware/` | 1,668 |
+| 4 | `cianfhoghlaim/storage/serial_executor.py` (deprecated) | `cianfhoghlaim/core/storage/serial_executor.py` | 29 |
 
 #### Scenario: A developer imports from a canonical route
 
@@ -851,8 +851,8 @@ The canonical surfaces that retain all functionality:
 - **GIVEN** `openspec/changes/oideachais-audit-phase-2a-remove-pure-duplicates` is archived
 - **WHEN** the Dagster Definitions load (`sruth.oideachais.dagster_defs.definitions`)
 - **THEN** `defs.sensors` MUST contain all 5 canonical sensor groups (verified via `from sruth.oideachais.dagster_defs.sensors import all_sensors; assert len(all_sensors) >= 5`)
-- **AND** `sruth/oideachais/api/main.py` MUST successfully `include_router` all 6 routers from `api.routes` (verified via FastAPI app construction without ImportError)
-- **AND** `sruth/oideachais/api/middleware/AuthMiddleware` MUST be importable from the canonical `api.middleware` package
+- **AND** `cianfhoghlaim/api/main.py` MUST successfully `include_router` all 6 routers from `api.routes` (verified via FastAPI app construction without ImportError)
+- **AND** `cianfhoghlaim/api/middleware/AuthMiddleware` MUST be importable from the canonical `api.middleware` package
 
 #### Scenario: No residual references after deletion
 
@@ -863,42 +863,42 @@ The canonical surfaces that retain all functionality:
 
 The `oideachais-pipeline` capability spec MUST acknowledge that Round 11
 phase 2B (executed 2026-06-25) migrated 11 unique legacy files (5,646 LOC)
-from the deprecated `sruth/oideachais/dagster_assets/` and
-`sruth/oideachais/storage/` directories to their canonical homes in
-`sruth/oideachais/dagster_defs/assets/` and
-`sruth/oideachais/core/storage/{clients,config}/`, while removing 5 dead
+from the deprecated `cianfhoghlaim/dagster_assets/` and
+`cianfhoghlaim/storage/` directories to their canonical homes in
+`cianfhoghlaim/dagster_defs/assets/` and
+`cianfhoghlaim/core/storage/{clients,config}/`, while removing 5 dead
 files (1,544 LOC).
 
 The canonical surfaces after this change:
 
 | Legacy (removed) | Canonical (target) | LOC |
 |:--|:--|--:|
-| `sruth/oideachais/dagster_assets/model_conversion.py` | `sruth/oideachais/dagster_defs/assets/model_conversion.py` | 374 |
-| `sruth/oideachais/dagster_assets/asset_generation.py` | `sruth/oideachais/dagster_defs/assets/asset_generation.py` | 281 |
-| `sruth/oideachais/dagster_assets/{grammar_validation,pdf_benchmark,syntactic_parsing}.py` | (deleted — 0 importers) | 1,433 |
-| `sruth/oideachais/storage/config.py` | `sruth/oideachais/core/storage/config.py` | 359 |
-| `sruth/oideachais/storage/connections.py` | `sruth/oideachais/core/storage/connections.py` | 691 |
-| `sruth/oideachais/storage/ducklake.py` | `sruth/oideachais/core/storage/ducklake.py` | 780 |
-| `sruth/oideachais/storage/ducklake_client.py` | `sruth/oideachais/core/storage/clients/ducklake.py` | 882 |
-| `sruth/oideachais/storage/ducklake_filesystem.py` | `sruth/oideachais/core/storage/clients/ducklake_filesystem.py` | 623 |
-| `sruth/oideachais/storage/init_schemas.py` | `sruth/oideachais/core/storage/init_schemas.py` | 418 |
-| `sruth/oideachais/storage/lance_iceberg.py` | `sruth/oideachais/core/storage/lance_iceberg.py` | 603 |
-| `sruth/oideachais/storage/lancedb_cloud.py` | `sruth/oideachais/core/storage/clients/lancedb_cloud.py` | 664 |
-| `sruth/oideachais/storage/curriculum_vectors.py` | `sruth/oideachais/core/storage/curriculum_vectors.py` | 427 |
+| `cianfhoghlaim/dagster_assets/model_conversion.py` | `cianfhoghlaim/dagster_defs/assets/model_conversion.py` | 374 |
+| `cianfhoghlaim/dagster_assets/asset_generation.py` | `cianfhoghlaim/dagster_defs/assets/asset_generation.py` | 281 |
+| `cianfhoghlaim/dagster_assets/{grammar_validation,pdf_benchmark,syntactic_parsing}.py` | (deleted — 0 importers) | 1,433 |
+| `cianfhoghlaim/storage/config.py` | `cianfhoghlaim/core/storage/config.py` | 359 |
+| `cianfhoghlaim/storage/connections.py` | `cianfhoghlaim/core/storage/connections.py` | 691 |
+| `cianfhoghlaim/storage/ducklake.py` | `cianfhoghlaim/core/storage/ducklake.py` | 780 |
+| `cianfhoghlaim/storage/ducklake_client.py` | `cianfhoghlaim/core/storage/clients/ducklake.py` | 882 |
+| `cianfhoghlaim/storage/ducklake_filesystem.py` | `cianfhoghlaim/core/storage/clients/ducklake_filesystem.py` | 623 |
+| `cianfhoghlaim/storage/init_schemas.py` | `cianfhoghlaim/core/storage/init_schemas.py` | 418 |
+| `cianfhoghlaim/storage/lance_iceberg.py` | `cianfhoghlaim/core/storage/lance_iceberg.py` | 603 |
+| `cianfhoghlaim/storage/lancedb_cloud.py` | `cianfhoghlaim/core/storage/clients/lancedb_cloud.py` | 664 |
+| `cianfhoghlaim/storage/curriculum_vectors.py` | `cianfhoghlaim/core/storage/curriculum_vectors.py` | 427 |
 
 #### Scenario: A developer adds a new HF → GGUF conversion asset
 
 - **WHEN** any caller needs to add a new HuggingFace → GGUF model conversion for llama-swap
-- **THEN** they MUST add a new `@asset` function to `sruth/oideachais/dagster_defs/assets/model_conversion.py` (which contains `hf_models_downloaded`, `gguf_qwen2_5_math_7b`, `gguf_uccix_13b`, etc.)
+- **THEN** they MUST add a new `@asset` function to `cianfhoghlaim/dagster_defs/assets/model_conversion.py` (which contains `hf_models_downloaded`, `gguf_qwen2_5_math_7b`, `gguf_uccix_13b`, etc.)
 - **AND** register it in the `model_conversion_assets` list at the bottom of the file
-- **AND** NOT add it to the deleted `sruth/oideachais/dagster_assets/model_conversion.py`
+- **AND** NOT add it to the deleted `cianfhoghlaim/dagster_assets/model_conversion.py`
 
 #### Scenario: A developer adds a new study asset generation asset
 
 - **WHEN** any caller needs to add a new BAML-driven image generation asset (fibo_configs_built, study_assets_rendered, study_assets_published)
-- **THEN** they MUST add a new `@asset` function to `sruth/oideachais/dagster_defs/assets/asset_generation.py`
+- **THEN** they MUST add a new `@asset` function to `cianfhoghlaim/dagster_defs/assets/asset_generation.py`
 - **AND** register it in the `asset_generation_assets` list at the bottom of the file
-- **AND** NOT add it to the deleted `sruth/oideachais/dagster_assets/asset_generation.py`
+- **AND** NOT add it to the deleted `cianfhoghlaim/dagster_assets/asset_generation.py`
 
 #### Scenario: A developer uses the multi-backend storage config
 
@@ -930,8 +930,8 @@ The canonical surfaces after this change:
 - **WHEN** the Dagster Definitions load (`sruth.oideachais.dagster_defs.definitions`)
 - **THEN** `defs.assets` MUST contain `model_conversion_assets` and `asset_generation_assets` (verified via `from sruth.oideachais.dagster_defs.assets.model_conversion import model_conversion_assets; assert len(model_conversion_assets) >= 8`)
 - **AND** `defs.assets` MUST contain `asset_generation_assets` with ≥ 4 assets
-- **AND** `sruth/oideachais/core/storage/__init__.py` MUST re-export all 25 newly-migrated symbols (verified via `from sruth.oideachais.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`)
-- **AND** the legacy `sruth/oideachais/dagster_assets/` and `sruth/oideachais/storage/` directories MUST NOT exist (verified via `not os.path.exists(...)`)
+- **AND** `cianfhoghlaim/core/storage/__init__.py` MUST re-export all 25 newly-migrated symbols (verified via `from sruth.oideachais.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`)
+- **AND** the legacy `cianfhoghlaim/dagster_assets/` and `cianfhoghlaim/storage/` directories MUST NOT exist (verified via `not os.path.exists(...)`)
 
 #### Scenario: No residual references after migration
 
@@ -939,7 +939,7 @@ The canonical surfaces after this change:
 - **THEN** zero matches MUST appear outside `openspec/changes/archive/` (the only residual refs are in archived openspec change metadata, which is intentional)
 
 ### Requirement: Leabharlann DLT Source Package Naming
-The personal-archive DLT source package SHALL be located at `sruth/oideachais/dlt_sources/leabharlann/`.
+The personal-archive DLT source package SHALL be located at `cianfhoghlaim/dlt_sources/leabharlann/`.
 
 The package directory SHALL be named `leabharlann` (Irish for "library") to match:
 - the source callable names inside the package (`leabharlann_books`, `leabharlann_zotero`, `leabharlann_takeout`),
@@ -949,7 +949,7 @@ The package directory SHALL be named `leabharlann` (Irish for "library") to matc
 The previous `dlt_sources/author_archive/` directory SHALL NOT exist after this change is applied.
 
 #### Scenario: dlt_sources/leabharlann package exists
-- **WHEN** a developer lists the contents of `sruth/oideachais/dlt_sources/`
+- **WHEN** a developer lists the contents of `cianfhoghlaim/dlt_sources/`
 - **THEN** a `leabharlann/` directory SHALL be present
 - **AND** the directory SHALL contain `__init__.py`, `leabharlann_books.py`, `zotero.py`, `takeout_v1.py`, `google_takeout.py`, `gemini_deep_research.py`, `university_of_galway.py`, `previews.py`, `_citation_extractor.py`, `_epub_extractor.py`, `_scanner.py`, `_takeout_paths.py`, and `config.example.yaml`
 - **AND** no `author_archive/` directory SHALL be present
@@ -965,19 +965,19 @@ The previous `dlt_sources/author_archive/` directory SHALL NOT exist after this 
 - **AND** the legacy `dlt_sources.author_archive` import path SHALL be fully retired
 
 ### Requirement: Country-First DLT Source Layout
-The canonical DLT source package SHALL use the country-first layout `sruth/oideachais/dlt_sources/{nation}/{domain}/{entity}.py` where `{nation}` is one of `{ie, ni, en, sct, wls, iom, jey, ggy, pan_celtic, cross}` and `{domain}` is one of `{education, culture, law, medicine, statistics, site_analysis}`.
+The canonical DLT source package SHALL use the country-first layout `cianfhoghlaim/dlt_sources/{nation}/{domain}/{entity}.py` where `{nation}` is one of `{ie, ni, en, sct, wls, iom, jey, ggy, pan_celtic, cross}` and `{domain}` is one of `{education, culture, law, medicine, statistics, site_analysis}`.
 
 A `domains/` wrapper directory SHALL NOT exist as an intermediate level in the canonical layout. (The legacy `domains/{domain}/{nation}/` tree, when it existed, has been retired.)
 
 #### Scenario: canonical files live at country-first paths
-- **WHEN** a developer lists the contents of `sruth/oideachais/dlt_sources/`
+- **WHEN** a developer lists the contents of `cianfhoghlaim/dlt_sources/`
 - **THEN** a `ie/` directory SHALL exist with `education/`, `culture/`, `law/`, `medicine/` subdirectories
 - **AND** an `en/` directory SHALL exist with `education/`, `law/`, `medicine/` subdirectories
 - **AND** a `sct/` directory SHALL exist with `education/`, `statistics/`, `medicine/` subdirectories
 - **AND** no `domains/` directory SHALL be present
 
 #### Scenario: no stale imports of dlt_sources.domains.*
-- **WHEN** a developer runs `grep -rn "dlt_sources\.domains\." --include="*.py" sruth/oideachais/`
+- **WHEN** a developer runs `grep -rn "dlt_sources\.domains\." --include="*.py" cianfhoghlaim/`
 - **THEN** zero matches SHALL be returned (excluding frozen `openspec/changes/archive/*` records)
 
 #### Scenario: shims still re-export from legacy ireland/uk/etc.
@@ -1181,22 +1181,22 @@ helpers) or `dlt_utils/{name}.py` (for pipeline config).
 
 ### Requirement: pyproject.toml + canonical docstrings use oideachais.* namespace
 
-The `sruth/oideachais/pyproject.toml` file MUST NOT reference the legacy
+The `cianfhoghlaim/pyproject.toml` file MUST NOT reference the legacy
 `oideachais/data_platform/*` namespace that was deleted in post-cleanup
 commit `8484a6353`. The canonical Python package is `oideachais`
 (the uv workspace name), and the canonical Dagster code-location entry
-point is `sruth/oideachais/dagster_defs/definitions.py`. The 4 sections
+point is `cianfhoghlaim/dagster_defs/definitions.py`. The 4 sections
 in `pyproject.toml` that historically pointed at
 `data_platform.dagster_defs.*` MUST all reference the canonical
 `oideachais.dagster_defs.*` namespace. The 3 canonical docstrings at
-`sruth/oideachais/dlt_utils/destinations.py`,
-`sruth/oideachais/dlt_sources/dg.toml`, and
-`sruth/oideachais/dlt_sources/__init__.py` MUST NOT reference the
+`cianfhoghlaim/dlt_utils/destinations.py`,
+`cianfhoghlaim/dlt_sources/dg.toml`, and
+`cianfhoghlaim/dlt_sources/__init__.py` MUST NOT reference the
 legacy namespace either.
 
 #### Scenario: pyproject.toml has no data_platform references
 
-- **WHEN** `sruth/oideachais/pyproject.toml` is parsed (TOML)
+- **WHEN** `cianfhoghlaim/pyproject.toml` is parsed (TOML)
 - **THEN** the 4 sections MUST point at the canonical
   `oideachais.dagster_defs.*` namespace
 - **AND** the legacy `"data_platform.dagster_defs"` entry MUST be
@@ -1208,10 +1208,10 @@ legacy namespace either.
 
 - **WHEN** `dlt_utils/destinations.py` documents its usage example
 - **THEN** it MUST reference `from dlt_utils import …` (not
-  `from oideachais.data_platform.dlt_utils import …`)
+  `from dlt_sources.dlt_utils import …`)
 - **AND** `dlt_sources/dg.toml` header comment MUST reference the
-  canonical path `sruth/oideachais/dagster_defs/` (not the legacy
-  `sruth/oideachais/data_platform/dagster_defs/`)
+  canonical path `cianfhoghlaim/dagster_defs/` (not the legacy
+  `cianfhoghlaim/data_platform/dagster_defs/`)
 
 #### Scenario: shim docstring excludes deleted crown_dependencies
 
@@ -1254,7 +1254,7 @@ The system SHALL organise stack concerns under 16 `cianfhoghlaim/core/` packages
 #### Scenario: Cross-package import
 
 - **WHEN** a developer imports `from cianfhoghlaim.core.lancedb import HnswConfig`
-- **THEN** the import resolves to `cianfhoghlaim/core/lancedb/hnsw.py` (the canonical home, formerly at `sruth/oideachais/lancedb/indexing.py`)
+- **THEN** the import resolves to `cianfhoghlaim/core/lancedb/hnsw.py` (the canonical home, formerly at `cianfhoghlaim/lancedb/indexing.py`)
 
 ### Requirement: 5-Stage Pipeline Spine (v4)
 
@@ -1433,15 +1433,15 @@ hand-written `_parse_dbt_manifest()` helper SHALL be removed.
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| DLT Sources | `sruth/oideachais/data_platform/dlt_sources/` | Ireland, UK, Celtic, geospatial ingestion |
-| Dagster Definitions | `sruth/oideachais/data_platform/dagster_defs/` | Asset orchestration, jobs, schedules, sensors |
-| DLT Utils | `sruth/oideachais/data_platform/dlt_utils/` | DuckLake destination config, caching |
-| DuckLake Client | `sruth/oideachais/core/storage/clients/ducklake.py` | Postgres catalog + Garage S3 connection |
-| LanceDB Cloud | `sruth/oideachais/core/storage/clients/lancedb_cloud.py` | Local/Cloud/Iceberg vector store modes |
-| Embedding Service | `sruth/oideachais/embeddings/service.py` | Multi-provider batch embedding |
+| DLT Sources | `cianfhoghlaim/data_platform/dlt_sources/` | Ireland, UK, Celtic, geospatial ingestion |
+| Dagster Definitions | `cianfhoghlaim/data_platform/dagster_defs/` | Asset orchestration, jobs, schedules, sensors |
+| DLT Utils | `cianfhoghlaim/data_platform/dlt_utils/` | DuckLake destination config, caching |
+| DuckLake Client | `cianfhoghlaim/core/storage/clients/ducklake.py` | Postgres catalog + Garage S3 connection |
+| LanceDB Cloud | `cianfhoghlaim/core/storage/clients/lancedb_cloud.py` | Local/Cloud/Iceberg vector store modes |
+| Embedding Service | `cianfhoghlaim/embeddings/service.py` | Multi-provider batch embedding |
 | BAML Schemas | `baml_src/` | Type-safe LLM extraction schemas |
 | OCR Models | `meaisínfhoghlaim/ocr/` | Multi-model comparison (Docling, PaddleOCR, ColPali) |
-| ML Training | `sruth/oideachais/training/` | LLM, HTR, TTS training as Dagster assets |
+| ML Training | `cianfhoghlaim/training/` | LLM, HTR, TTS training as Dagster assets |
 | Agents | `meaisínfhoghlaim/agents/` | Root Agent + 6 domain agents |
 
 ## Storage Architecture
@@ -1470,18 +1470,18 @@ Firecrawl/LocalScrape → DLT Pipeline → DuckLake (Parquet + Postgres catalog)
 - **Embeddings:** Batch minimum 100 texts per API call; model: `paraphrase-multilingual-MiniLM-L12-v2`
 - **HNSW:** Drop indexes before bulk inserts >50 rows
 - **Irish Language:** Use UCCIX or GaBERT models
-- **Zero Absolute Namespaces:** NEVER import `oideachais.data_platform...` from within the data platform (use relative imports)
+- **Zero Absolute Namespaces:** NEVER import `dlt_sources...` from within the data platform (use relative imports)
 - **Ingestion Cache:** Test with `USE_LOCAL_SCRAPES=true` before live web scraping to avoid API rate limits
 
 ## Implementation References
 
 | Component | Path |
 |-----------|------|
-| Dagster Definitions | `sruth/oideachais/data_platform/dagster_defs/definitions.py` |
-| DLT Utils | `sruth/oideachais/data_platform/dlt_utils/` |
-| Storage Config | `sruth/oideachais/core/storage/` |
-| Pipeline Ops Guide | `sruth/oideachais/PIPELINE_OPERATIONS.md` |
-| PyProject | `sruth/oideachais/pyproject.toml` |
+| Dagster Definitions | `cianfhoghlaim/data_platform/dagster_defs/definitions.py` |
+| DLT Utils | `cianfhoghlaim/data_platform/dlt_utils/` |
+| Storage Config | `cianfhoghlaim/core/storage/` |
+| Pipeline Ops Guide | `cianfhoghlaim/PIPELINE_OPERATIONS.md` |
+| PyProject | `cianfhoghlaim/pyproject.toml` |
 
 ## Related Specs
 
@@ -1554,7 +1554,7 @@ The legacy `sruth.oideachais.*`, `sruth.meaisinfhoghlaim.*`, `sruth.tuatha.*`, `
 
 #### Requirement: Standalone sruth-browser import alias at `cianfhoghlaim/browser/`
 
-**Reason**: The standalone browser package was renamed from `infrastructure/stacks/browser/` to `bonneagar/stacks/browser/` during the v4 follow-on (`openspec/changes/archive/2026-06-29-2026-06-29-per-domain-web-app-consolidation/`). The local duplicate at `cianfhoghlaim/browser/` is a stale deprecation stub whose `__init__.py` imports from `cianfhoghlaim.core.browser` — a package that was never created.
+**Reason**: The standalone browser package was renamed from `bonneagar/stacks/browser/` to `bonneagar/stacks/browser/` during the v4 follow-on (`openspec/changes/archive/2026-06-29-2026-06-29-per-domain-web-app-consolidation/`). The local duplicate at `cianfhoghlaim/browser/` is a stale deprecation stub whose `__init__.py` imports from `cianfhoghlaim.core.browser` — a package that was never created.
 
 **Migration**: All Dagster assets, DLT sources, scripts, and notebooks that previously imported `from cianfhoghlaim.core.browser import BrowserClient` (or similar) MUST update to `from bonneagar.stacks.browser.sruth_browser import BrowserClient` (or via the workspace source alias).
 
@@ -1596,3 +1596,11 @@ The system SHALL provide two new pipelines under the
 - **WHEN** a PDF is ingested by either pipeline
 - **THEN** `select_ocr_backend(pdf_path)` SHALL return a v4 registry
   model key (NOT the legacy 10-model OCR_MODELS dict)
+
+## Merged from
+
+- `ncca-leaving-cert-root-pdfs` (the 5 NCCA root-level programme PDFs capability was merged into this spec on 2026-07-06)
+
+## Migrated from (2026-07-06)
+
+- `author-archive-multi-target` — the 3 canonical DLT Target instances (DEV / STAGING / PROD) are now the per-source `Target` enum in this spec

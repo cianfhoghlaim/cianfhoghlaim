@@ -71,3 +71,6 @@ To seamlessly route calls between proprietary and open-source models without lea
 
 ## 6. Conclusion
 By combining standardized Cloudflare R2 storage for data/embeddings, Komodo for stateless compute management, and a serverless Cloud Run AI Gateway routing to both Vertex AI and Spot VMs, Oideachais achieves a highly synchronized, scalable, and radically cost-optimized infrastructure. This unified strategy ensures the £200 GCP credit is spent purely on essential compute and tokens, with zero waste on idle infrastructure, while adhering strictly to open-source principles.
+---
+
+**Archived 2026-07-06** — moved from `openspec/plans/` to `openspec/plans/archive/2026-07-06-plans-refresh/` by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The content of this plan has been absorbed into the canonical specs listed in the frontmatter `superseded_by` field (refreshed to point at post-v4 spec names).

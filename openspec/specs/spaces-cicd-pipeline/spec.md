@@ -1,7 +1,19 @@
 # spaces-cicd-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change spaces-cicd-reusable-pipeline. Update Purpose after archive.
+
+`spaces-cicd-pipeline` is a capability of the Cianfhoghlaim platform.
+It is the **reusable Hugging Face Space sync workflow** — a single GitHub
+Actions workflow at `infrastructure/ci/spaces-sync.yml` that any Space
+under `spaces/<name>/` can call via `uses: ./infrastructure/ci/spaces-sync.yml`
+to publish the Space to Hugging Face.
+
+The workflow supports all 3 Space SDKs (gradio + docker + static) and
+handles auth via the `HF_TOKEN` + `SPACE_TOKEN` secrets. The reusable
+workflow is the canonical alternative to per-Space YAMLs (~15 spaces ×
+~50 LOC each → 1 shared workflow).
+
+The corresponding source code lives at `infrastructure/ci/spaces-sync.yml`.
 ## Requirements
 ### Requirement: Reusable Spaces sync workflow
 The system SHALL provide a reusable GitHub Actions workflow at
@@ -30,7 +42,7 @@ to a Hugging Face Space.
 
 #### Scenario: Workflow is path-filtered
 - **GIVEN** the workflow is configured for `spaces/an_scrudu/`
-- **WHEN** a commit touches only `spaces/anam_sruth/tuatha/`
+- **WHEN** a commit touches only `spaces/anam_cianfhoghlaim/`
 - **THEN** the workflow SHALL NOT trigger for the an_scrudu Space
 
 #### Scenario: Failure surfaces a readable error
@@ -71,7 +83,7 @@ The `cianfhoghlaim` Space MUST validate every LLM response against the Pydantic 
 
 ### Requirement: anam_tuatha Pydantic schema validation
 
-The `anam_tuatha` Space MUST validate every LLM response against the Pydantic schema (PExitCardSet) before returning the exit card to the UI. The Space MUST add `pydantic>=2.5` to `spaces/anam_sruth/tuatha/requirements.txt`.
+The `anam_tuatha` Space MUST validate every LLM response against the Pydantic schema (PExitCardSet) before returning the exit card to the UI. The Space MUST add `pydantic>=2.5` to `spaces/anam_cianfhoghlaim/requirements.txt`.
 
 #### Scenario: Pydantic validation fails
 
@@ -92,7 +104,7 @@ Celtic AI demo suite:
    meaisinfhoghlaim (Water + Air), 3 Celtic AI tools
 3. `cianfhoghlaim/` (RPG) — gradio 5.x, tuatha (Air + Spirit),
    Hades-style dialogue with 6 Celtic NPCs
-4. `anam_sruth/tuatha/` (Anam) — gradio 5.x, croilar (5 elements),
+4. `anam_cianfhoghlaim/` (Anam) — gradio 5.x, croilar (5 elements),
    5 elements + 2 cross-cutting features = 7 panels
 
 The 4 new demo Spaces (the 2026-06-24 batch):
@@ -114,8 +126,8 @@ The 1 archived Space:
 The 1 canonical exception:
 
 - `data-engineering/` — the only non-gradio Space (dagster
-  + dbt + evidence); consumes `sruth/oideachais/agents/adk/` +
-  `sruth/oideachais/baml_src/` directly, not the LiteLLM gateway
+  + dbt + evidence); consumes `cianfhoghlaim/agents/adk/` +
+  `cianfhoghlaim/baml_src/` directly, not the LiteLLM gateway
 
 Each active Space SHALL have the canonical 4-file structure:
 
@@ -144,7 +156,7 @@ Space-like artefact in the monorepo, before the Celtic AI
 demo suite was built).
 
 The `data-engineering/` Space SHALL consume
-`sruth/oideachais/agents/adk/` + `sruth/oideachais/baml_src/` directly
+`cianfhoghlaim/agents/adk/` + `cianfhoghlaim/baml_src/` directly
 (not the LiteLLM gateway) because it is a data plane (not
 a user-facing demo). The `_common/` bundle SHALL NOT be
 imported by the `data-engineering/` Space (the 5-element
@@ -157,8 +169,8 @@ not applicable to a data plane).
 - **THEN** no `from spaces._common import ...` import SHALL
   be present in `data-engineering/app.py` (or the equivalent
   entry point)
-- **AND** the Space SHALL consume `sruth/oideachais/agents/adk/`
-  + `sruth/oideachais/baml_src/` directly via the canonical
+- **AND** the Space SHALL consume `cianfhoghlaim/agents/adk/`
+  + `cianfhoghlaim/baml_src/` directly via the canonical
   Dagster + BAML patterns
 - **AND** the Space SHALL be documented as the canonical
   exception in `spaces/AGENTS.md`

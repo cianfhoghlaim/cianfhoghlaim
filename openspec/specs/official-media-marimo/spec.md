@@ -1,18 +1,36 @@
 # official-media-marimo Specification
 
 ## Purpose
-TBD - created by archiving change official-media-pipeline. Update Purpose after archive.
+
+`official-media-marimo` is a capability of the Cianfhoghlaim platform.
+It is the **primary manual surface** for the `official-media-pipeline`
+data + the operator-facing **TanStack Start `/official-media` route**.
+The marimo mission control provides:
+
+- A chronological timeline view of all enriched official-media records
+- A side-by-side identity comparison (the 4-lookup resolver results)
+- A strong-stance footer card with the government organisation's
+  policy positions, verified via the BAML `ClassifyOfficialMedia`
+  extraction
+- A Cognee dataset `oideachais_official_media` with 4 edge types joining
+  the records to other leabharlann corpora
+
+The corresponding source code lives at:
+
+- `cianfhoghlaim/notebooks/dashboards/official_media/official_media.py`
+- `cianfhoghlaim/web/apps/oideachais-web/src/routes/official-media/`
+- `cianfhoghlaim/cognify/datasets/oideachais_official_media.py`
 ## Requirements
 ### Requirement: OfficialMediaMissionControl
 
 The system SHALL provide a marimo notebook at
-`sruth/oideachais/notebooks/dashboards/official_media.py` that renders the
+`cianfhoghlaim/notebooks/dashboards/official_media.py` that renders the
 resolved official-media records as a single-page mission control.
 
 #### Scenario: Dashboard renders
 
 - **GIVEN** `oideachais.official_media.candidates` has at least 1 row
-- **WHEN** `marimo edit sruth/oideachais/notebooks/dashboards/official_media.py`
+- **WHEN** `marimo edit cianfhoghlaim/notebooks/dashboards/official_media.py`
   is run
 - **THEN** the notebook SHALL render with:
   - a top metric strip (total candidates, total resolved, freshness
@@ -38,7 +56,7 @@ resolved official-media records as a single-page mission control.
 ### Requirement: OfficialMediaTanStackRoute
 
 The system SHALL provide a TanStack Start route at
-`sruth/oideachais/web/src/routes/official-media/index.tsx` that exposes the
+`cianfhoghlaim/web/src/routes/official-media/index.tsx` that exposes the
 same data with a card-grid layout grouped by `category`.
 
 #### Scenario: Card grid renders

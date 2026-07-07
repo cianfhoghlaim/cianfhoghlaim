@@ -55,13 +55,13 @@ The system SHALL build a semantic search index over the extracted markdown.
 - **WHEN** the `cv_search_index` Dagster asset materializes
 - **THEN** for each row in `croilar.cv_extracted`, the asset SHALL embed the text via CocoIndex
 - **AND** store the embeddings in LanceDB collection `croilar_cv`
-- **AND** write a JSON index file to `sruth/croilar/cv/search_index.json`
+- **AND** write a JSON index file to `cianfhoghlaim/cv/search_index.json`
 
 #### Scenario: Teaching search index built
 - **WHEN** the `teaching_search` Dagster asset materializes
 - **THEN** for each row in `croilar.teaching_extracted`, the asset SHALL embed the text via CocoIndex
 - **AND** store the embeddings in LanceDB collection `croilar_teaching`
-- **AND** write a JSON index file to `sruth/croilar/teaching/search_index.json`
+- **AND** write a JSON index file to `cianfhoghlaim/teaching/search_index.json`
 
 ### Requirement: Bilingual Output
 The system SHALL extract both English and Irish (Gaeilge) fields from the source PDFs.

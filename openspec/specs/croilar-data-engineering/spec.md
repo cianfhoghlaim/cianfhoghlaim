@@ -22,7 +22,7 @@ The system SHALL continue to compile the 9 BAML schemas.
 #### Scenario: No regression
 
 - **WHEN** `bun run baml-cli compile` runs
-- **THEN** the compiler SHALL still emit TypeScript + Python client code from `sruth/croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
+- **THEN** the compiler SHALL still emit TypeScript + Python client code from `cianfhoghlaim/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
 
 ### Requirement: Dagster Schedules
 The system SHALL schedule the 12+ assets to run on appropriate cadences.
@@ -52,12 +52,12 @@ The system SHALL continue to read from the existing DuckLake catalog.
 
 ### Requirement: Analyzer Bun Script
 
-The system SHALL ship `sruth/croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
+The system SHALL ship `cianfhoghlaim/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
 
 #### Scenario: Walk succeeds for the 3 present projects
 
-- **WHEN** `bun run sruth/croilar/scripts/analyze-web-stack.ts` is executed from the repo root
-- **THEN** the analyzer SHALL walk `sruth/tuatha/`, `sruth/oideachais/`, `sruth/croilar/`
+- **WHEN** `bun run cianfhoghlaim/scripts/analyze-web-stack.ts` is executed from the repo root
+- **THEN** the analyzer SHALL walk `cianfhoghlaim/`, `cianfhoghlaim/`, `cianfhoghlaim/`
 - **AND** it SHALL skip `meaisínfhoghlaim/` (no web app yet) with a warning
 - **AND** it SHALL POST the resulting 5 tables (tanstackRoutes, convexFunctions, cloudflareResources, bamlSchemas, marimoNotebooks) to the Convex HTTP endpoint
 - **AND** authentication SHALL use the `CROILAR_CONVEX_DEPLOY_KEY` from `.env` (loaded from Infisical)
@@ -79,19 +79,19 @@ The system SHALL ship `sruth/croilar/scripts/analyze-web-stack.ts` as a Bun scri
 The Croílár data-engineering layer SHALL NOT reference the
 legacy `aleyum` name in code, env vars, config defaults, or
 documentation (with the exception of the `aleyum` persona
-identifier in `sruth/croilar/config/personas.yaml` + the persona
+identifier in `cianfhoghlaim/config/personas.yaml` + the persona
 site routes, which are 1-persona identifiers, not 5-alias
 registry entries). The 5 collapsed aliases are:
 
 1. **Env prefix** — `ALEYUM_*` env vars SHALL be renamed to
    `STREAMS_*` (already partially retired in
-   `sruth/croilar/_shared/config/settings.py`)
+   `cianfhoghlaim/_shared/config/settings.py`)
 2. **DuckDB file** — the `./data/aleyum.duckdb` default SHALL
    be renamed to `./data/croilar.duckdb`
 3. **R2 bucket** — the `aleyum-data` R2 bucket default SHALL
    be renamed to `croilar-data` (plus the legacy
    `aleyum-assets` R2 bucket constant in
-   `sruth/croilar/pipelines/shared/r2_client.py` SHALL be removed)
+   `cianfhoghlaim/pipelines/shared/r2_client.py` SHALL be removed)
 4. **DLT pipeline names** — the 4 `aleyum_local` /
    `aleyum_ducklake` / `aleyum_vectors` pipeline names SHALL
    be renamed to `croilar_local` / `croilar_ducklake` /
@@ -100,7 +100,7 @@ registry entries). The 5 collapsed aliases are:
    default SHALL be renamed to `./data/croilar_catalog.duckdb`
 
 Plus: the deprecated `AleyumSettings` alias in
-`sruth/croilar/_shared/config/settings.py` SHALL be removed (the
+`cianfhoghlaim/_shared/config/settings.py` SHALL be removed (the
 `StreamSettings` Pydantic BaseSettings is the only API).
 Plus: the `ALEYUM_ENV` env var SHALL be renamed to
 `CROILAR_ENV`.
@@ -111,23 +111,23 @@ Plus: the `ALEYUM_ENV` env var SHALL be renamed to
   layer for `aleyum` (case-insensitive)
 - **THEN** no matches SHALL be found in code, env vars, or
   config defaults (only the `aleyum` persona identifier in
-  `sruth/croilar/config/personas.yaml` + the persona site routes
+  `cianfhoghlaim/config/personas.yaml` + the persona site routes
   SHALL match)
 
 ### Requirement: Stream-registry canonical config surface
 
 The Croílár data-engineering layer SHALL expose a canonical
 config surface via the `StreamSettings` Pydantic BaseSettings
-class at `sruth/croilar/_shared/config/settings.py`. The
+class at `cianfhoghlaim/_shared/config/settings.py`. The
 `StreamSettings` class:
 
-- Loads stream definitions from `sruth/croilar/config/sources.yaml`
+- Loads stream definitions from `cianfhoghlaim/config/sources.yaml`
 - Exposes a typed `streams()` accessor + a `stream(id)` lookup
 - Uses a `STREAMS_` env prefix (the canonical env var namespace)
 - Caches the result via `@lru_cache` (the `get_settings()`
   factory)
 
-The `Stream` Pydantic model at `sruth/croilar/_shared/streams.py`
+The `Stream` Pydantic model at `cianfhoghlaim/_shared/streams.py`
 defines the per-stream contract:
 
 - `id: str` — the stream id (e.g. "music__spotify")
@@ -143,7 +143,7 @@ defines the per-stream contract:
 - `embedding_required: bool` — True for semantic-search streams
 
 The 12 default streams SHALL be declared in
-`sruth/croilar/config/sources.yaml`:
+`cianfhoghlaim/config/sources.yaml`:
 
 - 4 music: `music__spotify`, `music__soundcloud`,
   `music__labels`, `music__artwork`
@@ -155,7 +155,7 @@ The 12 default streams SHALL be declared in
 #### Scenario: A developer adds a new stream via the YAML
 
 - **WHEN** a developer adds a new stream id to
-  `sruth/croilar/config/sources.yaml`
+  `cianfhoghlaim/config/sources.yaml`
 - **THEN** `StreamSettings.streams()` returns the new stream
   in the list
 - **AND** `StreamSettings.stream("<new-id>")` returns the
@@ -163,10 +163,10 @@ The 12 default streams SHALL be declared in
 - **AND** the corresponding Dagster asset materializes the
   new stream on its cron schedule
 
-### Requirement: No local fallback in `sruth/croilar/dlt_utils/destinations.py`
+### Requirement: No local fallback in `cianfhoghlaim/dlt_utils/destinations.py`
 
 The system SHALL NOT include a local pre-Phase-2.3 fallback
-implementation in `sruth/croilar/dlt_utils/destinations.py`.
+implementation in `cianfhoghlaim/dlt_utils/destinations.py`.
 The file SHALL be a thin re-export shim from the canonical
 `sruth.oideachais.dlt_utils.destinations` module via the
 `with_namespace("croilar")` factory.
@@ -189,7 +189,7 @@ the destination API changes.
 #### Scenario: Canonical import is the only code path
 
 - **GIVEN** the croilar packaging fix is in place (commit `e9e0fc7d2`)
-- **AND** `sruth/croilar/scripts/fix-pth.sh` has been run
+- **AND** `cianfhoghlaim/scripts/fix-pth.sh` has been run
 - **WHEN** a developer imports
   `from sruth.croilar.dlt_utils.destinations import NAMESPACE`
 - **THEN** the import succeeds
@@ -221,10 +221,10 @@ the destination API changes.
 - **THEN** `ImportError` is raised
 - **AND** the 3 names are not in `dir(sruth.croilar.dlt_utils.destinations)`
 
-#### Scenario: `sruth/croilar/dlt_utils/__init__.py` re-exports the canonical surface
+#### Scenario: `cianfhoghlaim/dlt_utils/__init__.py` re-exports the canonical surface
 
 - **GIVEN** the thin shim is in place
-- **AND** `sruth/croilar/dlt_utils/__init__.py` has been updated
+- **AND** `cianfhoghlaim/dlt_utils/__init__.py` has been updated
   to import from `.destinations`
 - **WHEN** a developer imports the public surface
   ```python
@@ -239,20 +239,20 @@ the destination API changes.
 
 ### Requirement: No drift in `pipelines/shared/`
 
-The system SHALL NOT include `sruth/croilar/pipelines/shared/destinations.py`
+The system SHALL NOT include `cianfhoghlaim/pipelines/shared/destinations.py`
 (the 4-function destination factory that duplicates the canonical surface at
-`sruth/oideachais/dlt_utils/destinations.py`).
-The system SHALL NOT include `sruth/croilar/pipelines/shared/ducklake.py`
+`cianfhoghlaim/dlt_utils/destinations.py`).
+The system SHALL NOT include `cianfhoghlaim/pipelines/shared/ducklake.py`
 (the 352-line `DuckLakeCatalog` class that has no production callers).
 The croilar data-engineering layer MUST consume the canonical destination
-factory surface at `sruth/oideachais/dlt_utils/destinations.py` (the
+factory surface at `cianfhoghlaim/dlt_utils/destinations.py` (the
 `with_namespace("croilar")` shim introduced in round 11 phase 1 of croilar)
 rather than re-implementing its own destination factory or its own
 `DuckLakeCatalog`.
 
 #### Scenario: Only `r2_client.py` + `__init__.py` remain in `pipelines/shared/`
 
-- **WHEN** `ls sruth/croilar/pipelines/shared/` is run
+- **WHEN** `ls cianfhoghlaim/pipelines/shared/` is run
 - **THEN** the directory SHALL contain only `__init__.py` (1-line `R2Client` re-export) + `r2_client.py` (187 lines)
 - **AND** the directory SHALL NOT contain `destinations.py` or `ducklake.py`
 
@@ -276,33 +276,33 @@ rather than re-implementing its own destination factory or its own
 
 #### Scenario: `tests/test_smoke.py::test_pipelines_shared_exports` updated
 
-- **WHEN** `pytest sruth/croilar/tests/test_smoke.py::test_pipelines_shared_exports` runs
+- **WHEN** `pytest cianfhoghlaim/tests/test_smoke.py::test_pipelines_shared_exports` runs
 - **THEN** the test SHALL assert only `R2Client` is present on `pipelines.shared`
 - **AND** the test SHALL NOT assert `create_duckdb_destination` or `create_ducklake_destination` (those names moved to the canonical `dlt_utils` surface in round 11 phase 1 of croilar)
 
 ### Requirement: No dead `_shared/{observability,agents,mcp,embeddings}` subdirs
 
-The system SHALL NOT include `sruth/croilar/_shared/observability/`,
-`sruth/croilar/_shared/agents/`, `sruth/croilar/_shared/mcp/`,
-or `sruth/croilar/_shared/embeddings/`. These 4 subdirs were
+The system SHALL NOT include `cianfhoghlaim/_shared/observability/`,
+`cianfhoghlaim/_shared/agents/`, `cianfhoghlaim/_shared/mcp/`,
+or `cianfhoghlaim/_shared/embeddings/`. These 4 subdirs were
 written for the pre-Croílár Aleyum agent framework but were
 never wired into the new Stream-registry-driven architecture
 (round 11 phase 0 / commit `6186d70da`). The canonical surfaces
 for all 4 modules already exist in other quadrants:
-`observability/` → `sruth/oideachais/observability/`;
-`agents/` → `sruth/meaisinfhoghlaim/agents/`;
-`mcp/` → `sruth/oideachais/mcp/filesystem/`;
-`embeddings/` → `sruth/codeolas/core/embeddings.py`.
+`observability/` → `cianfhoghlaim/observability/`;
+`agents/` → `cianfhoghlaim/agents/`;
+`mcp/` → `cianfhoghlaim/mcp/filesystem/`;
+`embeddings/` → `codeolas/core/embeddings.py`.
 
 #### Scenario: Only `_shared/{streams,config,database}` remain
 
-- **WHEN** `ls sruth/croilar/_shared/` is run
+- **WHEN** `ls cianfhoghlaim/_shared/` is run
 - **THEN** the directory SHALL contain only `__init__.py` + `streams.py` + `config/` + `database/`
 - **AND** the directory SHALL NOT contain `observability/`, `agents/`, `mcp/`, or `embeddings/`
 
 #### Scenario: `_shared/__init__.py` has no commented-out sibling imports
 
-- **WHEN** `sruth/croilar/_shared/__init__.py` is read
+- **WHEN** `cianfhoghlaim/_shared/__init__.py` is read
 - **THEN** the file SHALL NOT contain `# from .mcp import MCPGateway` or
 - **AND** the file SHALL NOT contain `# from .agents import AgentRouter, select_framework` or
 - **AND** the file SHALL NOT contain `# from .observability import AleyumTracer`

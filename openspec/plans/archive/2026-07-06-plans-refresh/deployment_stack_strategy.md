@@ -49,3 +49,7 @@ The deployment strategy for Oideachais relies on a robust, orchestrated containe
 ## Synchronicity & Scalability
 
 By standardizing on Cloudflare R2 as the definitive source of truth for both raw data (DuckLake) and structured embeddings (LanceDB backups), we ensure synchronicity across potential multi-node deployments. Komodo manages the stateless compute layers, while state is entirely delegated to high-availability object storage and specialized vector filesystems.
+
+---
+
+**Archived 2026-07-06** — moved from `openspec/plans/` to `openspec/plans/archive/2026-07-06-plans-refresh/` by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The content of this plan has been absorbed into the canonical specs listed in the frontmatter `superseded_by` field (refreshed to point at post-v4 spec names).

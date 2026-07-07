@@ -367,3 +367,6 @@ the public surface. The public app's theming is the Brown Ajah only.
   Compose stacks + Pangolin + Infisical + Locket secret pattern
 - `.agents/skills/secrets-management/SKILL.md` — Infisical + Locket +
   mise 3-way secrets contract
+## Migrated from (2026-07-06)
+
+- `tuatha-platform` — the deprecated `tuatha-platform` spec (24 Requirements covering the Celtic educational MMO + crypteolas crypto + SpacetimeDB) was formally superseded by this canonical spec

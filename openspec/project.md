@@ -93,7 +93,7 @@ culture, government, intelligence, statistics, geospatial).
 | `croilar-portfolio` | Public TanStack Start site at `cianfhoghlaim/web/apps/croilar-web/` — multi-persona (aleyum, cianfhoghlaim, carlcashman) | Active |
 | `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines for croilar personas at `cianfhoghlaim/assets/_croilar_dagster/` | Active |
 | `croilar-cv-extraction` | BAML extraction of the author's CV / achievements / teaching PDFs at `cianfhoghlaim/assets/_croilar_assets/` | Active |
-| `croilar-stream-registry` | The 5 aleyum→croilar alias collapses (ALEYUM_→STREAMS_, aleyum.duckdb→croilar.duckdb, etc.) + `StreamSettings` Pydantic BaseSettings + `sruth/croilar/config/sources.yaml` registry | Active |
+| `croilar-stream-registry` | The 5 aleyum→croilar alias collapses (ALEYUM_→STREAMS_, aleyum.duckdb→croilar.duckdb, etc.) + `StreamSettings` Pydantic BaseSettings + `cianfhoghlaim/config/sources.yaml` registry | Active |
 
 ### Agent + Observability + Frontend (5 specs)
 
@@ -116,11 +116,12 @@ culture, government, intelligence, statistics, geospatial).
 | `bonneagar-iac-merge` | The unified TypeScript IaC at `bonneagar/iac/` that orchestrates the 3 systems (Komodo + Pangolin + Infisical) into a single codebase; 3 typed clients (KomodoClient 18 methods, PangolinClient 12 methods using the Enterprise Edition **Integrations API** at `${PANGOLIN_URL}/v1` + `/api/v1/integration/...`, InfisicalClient 10 methods using `@infisical/sdk`); 4 source-discoverers (auto-derive from the 91 stacks); 15 CLI commands (plan, deploy, bootstrap, teardown, health + 10 sync commands); fixes the 4 known blockers from `DEPLOYMENT-STRATEGY.md` (Newt-Pangolin version mismatch, 3 manual Pangolin resources, 401 PANGOLIN_API_KEY, locket `${INFISICAL_CLIENT_ID}` literal); the `iac:bootstrap` flag `--with-blueprint-import` uses the Pangolin bulk-import API for the initial resource creation | Active |
 | `bonneagar-komodo-gitops` | The canonical Komodo GitOps pattern for the `bonneagar/` fleet: 3 resource-syncs — `komodo/resource-syncs/{arm1-oci,bunchloch,cross-cutting}.toml` — that auto-pull from `forgejo.cianfhoghlaim.ie/cliste/kings_college_galway` on every commit (interval 60s, `on_pull: true`, `delete: false`, `managed: true`); the IaC at `iac/` is slimmed to the orchestration layer (only `iac:bootstrap` + 6 sync commands: secrets, resources, variables, action-recipients, olm, health); the pre-v5 `iac:sync:procedures` + `iac:sync:resource-syncs` commands are removed (procedures + stacks are owned by the resource-syncs); the 8-phase `iac:bootstrap` state machine registers the 3 resource-syncs in Phase 7; the 2-host topology (`arm1-oci` + `bunchloch`) is enforced; Hetzner is Pulumi-only (per the v5 user decision) | Active |
 | `spaces-cicd-pipeline` | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) | Active |
-| `celtic-data-engineering-pipeline` | dbt-duckdb at `cianfhoghlaim/pipelines/process/_dbt_project/` + marimo statistical-analysis notebooks at `cianfhoghlaim/notebooks/meaisinfhoghlaim/` | Active |
-| `gradio-ensemble-pattern` | `cianfhoghlaim/agents/image_pipeline/ensemble_gradio.py` (multi-model Gradio `Interface`) + `spaces/_common/hf_hub_push.py` (HF Hub upload) | Active |
-| `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `documentation` | Canonical `docs/` structure (8 numbered domains), frontmatter schema, Cognee ingestion | Active |
 | `celtic-asset-generation` | **4 successive INDEPENDENT asset gen pipelines** at `cianfhoghlaim/assets/asset_generation/`: `official_documents/{syllabus,exam_papers,marking_schemes}/` → `subject_assets/{chemistry_lab,geography_landscape,biology_specimens,physics_apparatus}/` → `language_assets/{gaeilge,cymraeg,gaidhlig,gaelg,kernewek,brezhoneg}_assets.py` → `exporters/{babylon,godot,unity,unreal}.py` | Active |
+| `agent-platform-cluster` | 8-stack agent-platform cluster (lakehouse + litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb) + 3 agent surfaces (openclaw + openchamber + hermes); omnibus Komodo procedure `deploy-agent-platform-cluster-bunchloch` with `--skip` flags; Hermes (NousResearch/hermes-agent v0.17.0) as the 3rd vertex; M3 chokepoint through LiteLLM | Active |
+| `apple-photos-ingestion` | 5th leabharlann corpus (Apple Photos export via osxphotos); 3 new v1 CocoIndex Apps (`apple_photos_metadata`, `apple_photos_chunks`, `apple_photos_geospatial` GeoParquet); 5 new Dagster assets + 2 routing assets + 1 cross-frame velocity asset; 2 destination flows (document scans → paperless-ngx via docling-serve; vehicle photos → `vehicle_observations` via paddleocr + dots-ocr); privacy gate `LEABHARLANN_PHOTOS_INCLUDE_GPS` (default false) | Active |
+| `british-isles-education-pipeline` | 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + gov.ie DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight | Active |
+| `oideachais-university-deep-extraction` | Per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for any British Isles university | Active |
 | `dagster-5-layer-component-architecture` | 5 KCG-specific Dagster Components (`CelticIngestionComponent` / `CelticMaterialsComponent` / `CelticModelLifecycleComponent` / `CelticAssetGenerationComponent` / `CelticAgentOpsComponent`) at `cianfhoghlaim/dagster/components/layer{1..5}_*.py` + 5-layer `defs/<1..5>_<layer>/` YAML tree + 260+ assets organised into 5 hierarchical groups (`1_ingestion/*`, `2_materials/*`, `3_model_lifecycle/*`, `4_asset_generation/*`, `5_agent_ops/*`) + Dagster 1.13+ Declarative Automation (`AutomationCondition.eager() | .cron(...)`) + Virtual Assets (`is_virtual=True` on the 17 L3 CocoIndex v1 Apps) + State-Backed Components (the 5 L1 high-churn sources NCCA/SEC/CCEA/SQA/WJEC with `state_refresh_interval="monthly"`) + R1–R4 conformance enforced at scaffold time + L5 Agent Operations (12 agents × 5 emitted assets = 60 new L5 assets, with RisingWave event stream at `risingwave.cianfhoghlaim.ie:4566` + Letta memory + Langfuse traces dropped); the 5-layer rewrite supersedes the legacy 3 KCG Components (`celtic_dlt_source`, `celtic_cocoindex_v1`, `celtic_lancedb_hnsw`); the `2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture` change | Active |
 
 ### Team Workflow (3 specs)
@@ -160,7 +161,7 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## File Locations
 
-- Specs: `openspec/specs/<capability>/spec.md` (37 canonical specs)
+- Specs: `openspec/specs/<capability>/spec.md` (48 canonical specs)
 - Changes: `openspec/changes/<change-id>/`
 - Archives: `openspec/changes/archive/YYYY-MM-DD-<change-id>/`
 - Historical research: `docs/openspec/` (point-in-time, do not edit)
@@ -180,24 +181,28 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## Current In-Flight Changes
 
-(Updated as changes move through the workflow. The 4 stale changes
-`author-archive-gemini-and-uos-ingestion`, `cianfhoghlaim-oideachais-baml-first`,
-`state-of-art-5-workspaces`, `team-workflow-stack` were archived on
-2026-06-16 by the `openspec-consolidation-and-readme-refresh` change.)
+(Refreshed 2026-07-06 by the `2026-07-06-drift-cleanup-and-v4-alignment` change.
+The 4 stale entries above plus another 11 are now archived; the table
+below reflects the current active set. Use `openspec list` for live state.)
 
 | Change | Status |
 |:--|:--|
-| `consolidate-external-libs-into-tuatha` | in-flight (2/68 tasks) |
-| `croilar-devtools-hub` | in-flight (6/55 tasks) |
-| `croilar-personas-to-streams` | in-flight (6/45 tasks) |
-| `croilar-portfolio` | in-flight (18/34 tasks) |
-| `croilar-revitalisation` | in-flight (11/69 tasks) |
-| `dagger-monorepo-integration` | in-flight (0/22 tasks) |
-| `docs-restructuring` | in-flight (28/30 tasks) |
-| `docs-skills-consolidation-pipeline` | in-flight (0/26 tasks) |
-| `fix-existing-stacks` | in-flight (15/22 tasks) |
-| `ireland-primary-jc-dlt-baml-and-full-stack-demo` | in-flight (0/22 tasks) |
-| `leaving-cert-2026` | scaffold (0/28 tasks) |
+| `2026-07-06-drift-cleanup-and-v4-alignment` | **this change** (skills + notebooks + 56 specs + 6 plans + 12 additional archives; multi-phase) |
+| `2026-07-06-british-isles-education-pipeline-v1` | The flagship BIEP v1 (6 subjects + gov.ie circulars) |
+| `2026-07-04-dev-env-setup-latest-packages-and-wire-25-notebooks` | in-flight (28/34 tasks) |
+| `2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams` | in-flight (10/25 tasks) |
+| `2026-07-03-infrastructure-foundation` | in-flight (14/36 tasks) |
+| `2026-07-02-public-about-route` | in-flight (0/13 tasks) |
+| `2026-07-02-bunchloch-stack-bootstrap` | in-flight (0/45 tasks) |
+| `2026-07-02-align-cianfhoghlaim-env-with-stacks` | in-flight (0/37 tasks) |
+| `2026-07-02-add-agent-surface-stacks` | in-flight (0/30 tasks) |
+| `2026-07-02-add-lancedb-and-logfire-stacks` | in-flight (0/20 tasks) |
+| `2026-07-02-add-marimo-stack` | in-flight (0/17 tasks) |
+| `2026-07-02-replace-private-images-and-bring-wave2` | in-flight (0/70 tasks) |
+| `2026-07-01-bonneagar-v5-drift-refactor-and-komodo-gitops` | in-flight (0/148 tasks) |
 | `monorepo-restructure-v2` | in-flight (19/20 tasks) |
-| `official-media-pipeline` | scaffold (0/45 tasks) |
-| `openspec-consolidation-and-readme-refresh` | **this change** (Phase 1+2 done; Phase 3+4 in-flight) |
+| `litellm-minimax-vendor-derisking` | in-flight (20/33 tasks) |
+| `ncca-leaving-cert-syllabi-corpus` | in-flight (9/36 tasks) |
+| `docs-restructuring` | in-flight (28/30 tasks) |
+| `croilar-portfolio` | in-flight (18/34 tasks) |
+| `rewrite-cianfhoghlaim-leaving-cert-v2` | umbrella in-flight (55/206 tasks) |
