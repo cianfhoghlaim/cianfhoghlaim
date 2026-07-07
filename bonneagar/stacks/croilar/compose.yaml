@@ -1,0 +1,138 @@
+# =============================================================================
+# ALEYUM - Music Intelligence Pipeline
+# =============================================================================
+# Data pipelines for music discovery, Spotify/SoundCloud ingestion, and embeddings.
+#
+# USAGE:
+#   Default (cache only):     docker compose up -d
+#   With Dagster pipelines:   docker compose --profile dagster up -d
+#   With secrets:             op run --env-file=.op.env -- docker compose up -d
+# =============================================================================
+
+name: aleyum
+
+services:
+  # ---------------------------------------------------------------------------
+  # Postgres (bundled with croilar; used for dagster run_storage + event_log
+  # and shared with the oideachais lakehouse stack via the
+  # cianfhoghlaim-postgres_croilar external network)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: aleyum-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    volumes:
+      - aleyum-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aleyum
+
+  # ---------------------------------------------------------------------------
+  # DragonflyDB (Redis-compatible cache for rate limiting)
+  # ---------------------------------------------------------------------------
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    container_name: aleyum-dragonfly
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6381}:6379"
+    volumes:
+      - dragonfly-data:/data
+    ulimits:
+      memlock: -1
+    networks:
+      - aleyum
+
+  # ---------------------------------------------------------------------------
+  # Dagster - Music Pipeline Orchestration
+  # Start with: docker compose --profile dagster up -d
+  # ---------------------------------------------------------------------------
+  dagster-webserver:
+    profiles: ["dagster"]
+    build:
+      context: .
+      dockerfile: Dockerfile.dagster
+    container_name: aleyum-dagster-web
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/opt/dagster/app/workspace.yaml"]
+    ports:
+      - "${DAGSTER_PORT:-3106}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      PYTHONPATH: /opt/dagster/app
+      # Storage paths
+      DUCKDB_PATH: /data/aleyum.duckdb
+      LANCEDB_PATH: /data/music_vectors.lance
+      # Music APIs
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      # Cloud Storage
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      # GitHub
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - .:/opt/dagster/app:ro
+      - aleyum-data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster-daemon:
+        condition: service_started
+    networks:
+      - aleyum
+
+  dagster-daemon:
+    profiles: ["dagster"]
+    build:
+      context: .
+      dockerfile: Dockerfile.dagster
+    container_name: aleyum-dagster-daemon
+    command: ["dagster-daemon", "run", "-w", "/opt/dagster/app/workspace.yaml"]
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      PYTHONPATH: /opt/dagster/app
+      # Storage paths
+      DUCKDB_PATH: /data/aleyum.duckdb
+      LANCEDB_PATH: /data/music_vectors.lance
+      # Music APIs
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      # Cloud Storage
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      # GitHub
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - .:/opt/dagster/app:ro
+      - aleyum-data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - aleyum
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  aleyum-data:
+    driver: local
+  aleyum-postgres-data:
+    driver: local
+  dragonfly-data:
+    driver: local
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  aleyum:
+    driver: bridge

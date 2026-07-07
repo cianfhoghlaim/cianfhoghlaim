@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.dozzle.name=Dozzle"
+      - "pangolin.public-resources.dozzle.full-domain=dozzle.cianfhoghlaim.ie"
+      - "pangolin.public-resources.dozzle.protocol=http"
+      - "pangolin.public-resources.dozzle.targets[0].method=http"
+      - "pangolin.public-resources.dozzle.targets[0].port=8080"

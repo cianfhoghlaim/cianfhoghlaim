@@ -1,0 +1,107 @@
+name: risingwave
+
+services:
+  # ---------------------------------------------------------------------------
+  # RisingWave — streaming database (replaces Confluent Kafka)
+  # ---------------------------------------------------------------------------
+  # Per docs/data_engineering/risingwave-*.md:
+  #   - Cloud-native streaming database (PostgreSQL wire protocol on 4566)
+  #   - SQL-native: CREATE SOURCE / TABLE / MATERIALIZED VIEW / SINK
+  #   - Cascading MVs (hourly_sales -> daily_sales pattern)
+  #   - Watermarks for event-time processing
+  #   - Connectors: kafka (compatibility), postgres-cdc, mysql-cdc,
+  #     s3, iceberg, clickhouse, elasticsearch, bigquery, snowflake
+  #   - Memory-only mode (v2.6+) eliminates cache misses for our scale
+  #   - Dashboard at :5691, Meta at :5690, Compactor at :6660
+  # ---------------------------------------------------------------------------
+  risingwave:
+    image: risingwavelabs/risingwave:latest
+    container_name: risingwave
+    restart: unless-stopped
+    ports:
+      - "4566:4566"   # PostgreSQL wire protocol
+      - "5690:5690"   # Meta service
+      - "5691:5691"   # Dashboard
+    environment:
+      # Local-disk state store (etcd-style)
+      RW_STATE_STORE_URL: "hummock+minio://minio:9201/hummock"
+      RW_OBJECT_STORE_URL: "minio://minio:9201/hummock"
+      RW_DATA_DIR: /risingwave/data
+      RW_META_ADDR: "0.0.0.0:5690"
+      RW_COMPACTOR_ADDR: "0.0.0.0:6660"
+      # Use the local RisingWave Postgres
+      RW_DATABASE_URL: ${RISINGWAVE_DATABASE_URL}
+      # Memory-only mode for our scale (saves disk + latency)
+      RW_MEMORY_MODE: "true"
+      # Logging
+      RUST_LOG: "info,risingwave_meta=info,risingwave_stream=info"
+    volumes:
+      - risingwave_data:/risingwave/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:5691/api/v1/healthy || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+          cpus: '8'
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # MinIO (S3-compatible backing store for RisingWave's state)
+  # ---------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: risingwave-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${RISINGWAVE_MINIO_USER:-risingwave}
+      MINIO_ROOT_PASSWORD: ${RISINGWAVE_MINIO_PASSWORD}
+    volumes:
+      - risingwave_minio_data:/data
+    ports:
+      - "9200:9000"   # S3 API
+      - "9201:9001"   # Web console
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # RisingWave dashboard
+  # ---------------------------------------------------------------------------
+  dashboard:
+    image: risingwavelabs/risingwave-dashboard:latest
+    container_name: risingwave-dashboard
+    restart: unless-stopped
+    depends_on:
+      risingwave:
+        condition: service_healthy
+    ports:
+      - "5691:5691"
+    environment:
+      RW_API_ENDPOINT: "http://risingwave:4566"
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  risingwave_data:
+    driver: local
+  risingwave_minio_data:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

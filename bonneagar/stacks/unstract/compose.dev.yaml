@@ -1,0 +1,127 @@
+# Unstract — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the langfuse/litellm/mlflow dev override pattern (per the
+# upgrade-4-stacks-with-infisical change):
+#   1. Replace the production locket sidecar with a no-op alpine container
+#      that passes healthcheck. The locket service from the base
+#      sidecar.yaml expects `/locket healthcheck` to succeed; alpine
+#      doesn't have `/locket`, so we override the healthcheck to `true`
+#      (always healthy) and use `sleep infinity` as the main command.
+#   2. `.env.dev` (this stack) provides all the dev secrets pulled
+#      from the Infisical vault via `generate-unstract-env.py`.
+#   3. The 15 Unstract services boot with the locket no-op as their
+#      `depends_on` source, so they all start in dependency order.
+#
+# Usage:
+#   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+# ----------------------------------------------------------------------------
+
+services:
+  # Replace the production locket sidecar with a no-op that passes health.
+  # All security settings (user, security_opt, cap_drop, read_only, tmpfs)
+  # are inherited from sidecar.yaml — we only override the command,
+  # healthcheck, container_name, and image (the production locket
+  # image is private and the binary doesn't exist in alpine, so the
+  # healthcheck must be replaced too).
+  locket:
+    image: alpine:3.20
+    container_name: unstract-locket-dev
+    environment:
+      INFISICAL_CLIENT_ID: ${INFISICAL_LOCKET_CLIENT_ID:-placeholder}
+      INFISICAL_CLIENT_SECRET: ${INFISICAL_LOCKET_CLIENT_SECRET:-placeholder}
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-placeholder}
+      LOCKET_MODE: watch
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op unstract locket — secrets from .env.dev'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+    networks:
+      - bunchloch-infra
+
+  # All Unstract services mount the locket materialised secrets at
+  # /run/secrets/locket, but for dev they can ALSO read from the
+  # local .env.dev via env_file. This dual-mount pattern lets the
+  # operator iterate without round-tripping through Infisical.
+  backend:
+    env_file:
+      - .env.dev
+  worker-metrics:
+    env_file:
+      - .env.dev
+  worker-ide-callback:
+    env_file:
+      - .env.dev
+  celery-beat:
+    env_file:
+      - .env.dev
+  celery-flower:
+    env_file:
+      - .env.dev
+  frontend:
+    env_file:
+      - .env.dev
+  platform-service:
+    env_file:
+      - .env.dev
+  x2text-service:
+    env_file:
+      - .env.dev
+  runner:
+    env_file:
+      - .env.dev
+  worker-api-deployment-v2:
+    env_file:
+      - .env.dev
+  worker-callback-v2:
+    env_file:
+      - .env.dev
+  worker-file-processing-v2:
+    env_file:
+      - .env.dev
+  worker-general-v2:
+    env_file:
+      - .env.dev
+  worker-notification-v2:
+    env_file:
+      - .env.dev
+  worker-log-consumer-v2:
+    env_file:
+      - .env.dev
+  worker-log-history-scheduler-v2:
+    env_file:
+      - .env.dev
+  worker-scheduler-v2:
+    env_file:
+      - .env.dev
+  worker-executor-v2:
+    env_file:
+      - .env.dev
+  db:
+    env_file:
+      - .env.dev
+  redis:
+    env_file:
+      - .env.dev
+  minio:
+    env_file:
+      - .env.dev
+  feature-flag:
+    env_file:
+      - .env.dev
+  qdrant:
+    env_file:
+      - .env.dev
+  rabbitmq:
+    env_file:
+      - .env.dev
+
+# Top-level secrets block from sidecar.yaml references the production
+# Infisical secret file. Override with /dev/null so the locket dev
+# container doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null
+  unstract_infisical_secret:
+    file: /dev/null

@@ -1,0 +1,174 @@
+{
+  "name": "upstream-blog-monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "upstream-blog",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook (Firecrawl monitor.page.changed)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "upstream-blog-monitor"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Validate the Firecrawl monitor webhook payload.\n// Mirrors the schema in `oideachais/dlt_sources/domains/cross/upstream/blog_post.py`.\n//\n// Expected input shape:\n//   { type: 'monitor.page.changed', data: { monitorId, package, blogPostType, changeSeverity, url, title, summary, isMeaningful, judgment, blogPost, apiChange } }\n//\n// We enforce:\n//   1. package ∈ {motherduck, dlthub, lancedb, cocoindex}\n//   2. isMeaningful === true (the Firecrawl LLM judge already filtered)\n//   3. changeSeverity ∈ {low, medium, high, critical}\n//   4. url is a valid https:// URL\n//\n// On failure: throw an error so n8n retries (max 3 attempts, then DLQ).\n\nconst item = $input.item.json;\nconst errors = [];\n\nif (item.type !== 'monitor.page.changed') {\n  errors.push(`unexpected event type: ${item.type}`);\n}\n\nconst VALID_PACKAGES = ['motherduck', 'dlthub', 'lancedb', 'cocoindex'];\nif (!VALID_PACKAGES.includes(item.data?.package)) {\n  errors.push(`invalid package: ${item.data?.package}`);\n}\n\nif (item.data?.isMeaningful !== true) {\n  errors.push('isMeaningful must be true (Firecrawl judge already filtered)');\n}\n\nconst VALID_SEVERITIES = ['low', 'medium', 'high', 'critical'];\nif (!VALID_SEVERITIES.includes(item.data?.changeSeverity)) {\n  errors.push(`invalid changeSeverity: ${item.data?.changeSeverity}`);\n}\n\nif (!item.data?.url || !item.data.url.startsWith('https://')) {\n  errors.push(`invalid url: ${item.data?.url}`);\n}\n\nif (errors.length > 0) {\n  throw new Error(`upstream-blog-monitor validation failed: ${errors.join('; ')}`);\n}\n\nreturn [\n  {\n    json: {\n      metadata: {\n        package: item.data.package,\n        blog_post_type: item.data.blogPostType || 'unknown',\n        first_seen_at: item.data.firstSeenAt || new Date().toISOString(),\n        firecrawl_monitor_id: item.data.monitorId,\n        change_severity: item.data.changeSeverity,\n        url: item.data.url,\n        title: item.data.title,\n        summary: item.data.summary,\n        is_meaningful: item.data.isMeaningful,\n        judgment_confidence: item.data.judgment?.confidence || 'low',\n      },\n      blog_post: item.data.blogPost || {},\n      api_change: item.data.apiChange || {},\n    },\n  },\n];\n"
+      },
+      "id": "validate-payload",
+      "name": "Validate Firecrawl payload",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "bucketName": "oideachais-upstream-webhooks",
+        "fileName": "={{ $json.metadata.package }}/{{ $now.format('yyyy-MM-dd') }}/{{ $json.metadata.package }}_{{ $json.metadata.firecrawl_monitor_id }}_{{ $json.metadata.first_seen_at }}.jsonl",
+        "fileFormat": "string",
+        "options": {
+          "append": true
+        }
+      },
+      "id": "write-to-s3",
+      "name": "Write JSONL to S3/Garage",
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "s3": {
+          "id": "garage-s3",
+          "name": "Garage S3 (oideachais-upstream-webhooks)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Build the JSONL content from the validated payload.\n// One line per webhook event (so the DLT incremental source can\n// detect duplicates via the (package, delivery_id) audit table).\n\nconst meta = $json.metadata;\nconst blogPost = $json.blog_post;\nconst apiChange = $json.api_change;\n\nconst payload = {\n  metadata: meta,\n  blog_post: blogPost,\n  api_change: apiChange,\n};\n\nreturn [\n  {\n    json: {\n      ...$json,\n      _jsonl: JSON.stringify(payload),\n    },\n  },\n];\n"
+      },
+      "id": "build-jsonl",
+      "name": "Build JSONL line",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Trigger the Dagster asset `upstream_blog_monitor_ingest` via the\n// Dagster GraphQL `LAUNCH_PARTITION_BACKFILL_MUTATION`. We use the\n// `all_assets` job (defined in oideachais/dagster_defs/jobs.py) with\n// a partition run that targets just this one asset.\n//\n// Endpoint: https://dagster.cianfhoghlaim.ie/graphql\n// Auth: via the n8n `dagster-api` credential (Locket-injected at runtime).\n\nconst endpoint = 'https://dagster.cianfhoghlaim.ie/graphql';\nconst mutation = `\n  mutation LaunchRun($executionParams: ExecutionParams!) {\n    launchRun(executionParams: $executionParams) {\n      __typename\n      ... on LaunchRunSuccess {\n        run {\n          runId\n          status\n        }\n      }\n      ... on RunNotFoundError {\n        message\n      }\n      ... on PythonError {\n        message\n      }\n    }\n  }\n`;\n\nconst variables = {\n  executionParams: {\n    selector: {\n      jobName: 'upstream_monitoring_job',\n    },\n    runConfigData: {\n      assets: {\n        one_of_asset_keys: [\n          {\n            path: ['upstream_blog_monitor_ingest'],\n          },\n        ],\n      },\n    },\n    tags: [\n      { key: 'package', value: $json.metadata.package },\n      { key: 'firecrawl_monitor_id', value: $json.metadata.firecrawl_monitor_id },\n      { key: 'source', value: 'upstream-blog-monitor-n8n' },\n    ],\n  },\n};\n\nconst response = await this.helpers.httpRequest({\n  method: 'POST',\n  url: endpoint,\n  headers: {\n    'Content-Type': 'application/json',\n    Authorization: `Bearer ${$env.DAGSTER_GRAPHQL_TOKEN}`,\n  },\n  body: {\n    query: mutation,\n    variables: variables,\n  },\n  json: true,\n});\n\nreturn [\n  {\n    json: {\n      ...$json,\n      dagster_run_id: response.data?.data?.launchRun?.run?.runId,\n      dagster_run_status: response.data?.data?.launchRun?.run?.status,\n    },\n  },\n];\n"
+      },
+      "id": "trigger-dagster",
+      "name": "Trigger Dagster asset",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, dagster_run_id: $json.dagster_run_id }) }}"
+      },
+      "id": "respond-200",
+      "name": "Respond 200 OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook (Firecrawl monitor.page.changed)": {
+      "main": [
+        [
+          {
+            "node": "Validate Firecrawl payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Firecrawl payload": {
+      "main": [
+        [
+          {
+            "node": "Build JSONL line",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build JSONL line": {
+      "main": [
+        [
+          {
+            "node": "Write JSONL to S3/Garage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write JSONL to S3/Garage": {
+      "main": [
+        [
+          {
+            "node": "Trigger Dagster asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Dagster asset": {
+      "main": [
+        [
+          {
+            "node": "Respond 200 OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "id": "upstream-blog-monitor",
+  "meta": {
+    "instanceId": "kcg-n8n-prod",
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "kcg-upstream-monitor"
+    },
+    {
+      "name": "openspec:upstream-package-monitoring"
+    }
+  ]
+}

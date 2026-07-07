@@ -1,0 +1,211 @@
+version: "3.9"
+
+services:
+  # =============================================================================
+  # API Server
+  # =============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "8002:8000"
+    environment:
+      - DUCKDB_PATH=/data/duckdb/tuath.duckdb
+      - LANCEDB_URI=/data/lance
+      - SPACETIMEDB_URL=ws://spacetimedb:3000
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=http://langfuse:3000
+      - DRAGONFLY_URL=redis://dragonfly:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - X402_PAYMENT_URL=${X402_PAYMENT_URL:-}
+    volumes:
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+      - ./storage/geoparquet:/data/geoparquet
+    depends_on:
+      - spacetimedb
+      - dragonfly
+    networks:
+      - tuath-network
+      - bonneagar-network
+
+  # =============================================================================
+  # TanStack UI (Development)
+  # =============================================================================
+  ui:
+    build:
+      context: ./ui
+      dockerfile: ../docker/Dockerfile.ui
+    ports:
+      - "3010:3000"
+    environment:
+      - VITE_API_URL=http://api:8000
+      - VITE_COPILOTKIT_RUNTIME_URL=http://api:8000/copilotkit
+      - VITE_GAME_URL=http://game:8080
+      - VITE_MAPLIBRE_STYLE=${MAPLIBRE_STYLE:-}
+    depends_on:
+      - api
+    networks:
+      - tuath-network
+
+  # =============================================================================
+  # Babylon.js Game Client (Development Server)
+  # =============================================================================
+  game:
+    build:
+      context: ./game/client
+      dockerfile: ../../docker/Dockerfile.game
+    ports:
+      - "8080:8080"
+    environment:
+      - VITE_SPACETIMEDB_URL=ws://spacetimedb:3000
+      - VITE_API_URL=http://api:8000
+    depends_on:
+      - spacetimedb
+    networks:
+      - tuath-network
+
+  # =============================================================================
+  # SpacetimeDB (Multiplayer State)
+  # =============================================================================
+  spacetimedb:
+    image: clockworklabs/spacetimedb:latest
+    ports:
+      - "3011:3000"
+    volumes:
+      - spacetimedb-data:/stdb
+      - ./game/spacetimedb:/app
+    environment:
+      - SPACETIMEDB_LOG_LEVEL=info
+    networks:
+      - tuath-network
+
+  # =============================================================================
+  # Dagster (Data Orchestration)
+  # =============================================================================
+  dagster-webserver:
+    image: dagster/dagster-webserver:1.9.0
+    ports:
+      - "3012:3000"
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+      - DUCKDB_PATH=/data/duckdb/tuath.duckdb
+      - LANCEDB_URI=/data/lance
+    volumes:
+      - ./dagster_assets:/opt/dagster/app
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+      - dagster-storage:/opt/dagster/dagster_home
+    depends_on:
+      - dagster-daemon
+    networks:
+      - tuath-network
+
+  dagster-daemon:
+    image: dagster/dagster-daemon:1.9.0
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_home
+    volumes:
+      - ./dagster_assets:/opt/dagster/app
+      - dagster-storage:/opt/dagster/dagster_home
+    networks:
+      - tuath-network
+
+  # =============================================================================
+  # DragonflyDB (Redis-compatible cache)
+  # =============================================================================
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    ports:
+      - "6381:6379"
+    volumes:
+      - dragonfly-data:/data
+    ulimits:
+      memlock: -1
+    networks:
+      - tuath-network
+      - bonneagar-network
+
+  # =============================================================================
+  # Langfuse (LLM Observability)
+  # =============================================================================
+  langfuse:
+    image: langfuse/langfuse:latest
+    ports:
+      - "3013:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-your-secret-here}
+      - NEXTAUTH_URL=http://localhost:3013
+      - SALT=${LANGFUSE_SALT:-your-salt-here}
+    depends_on:
+      - langfuse-db
+    networks:
+      - tuath-network
+
+  langfuse-db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse-db-data:/var/lib/postgresql/data
+    networks:
+      - tuath-network
+
+  # =============================================================================
+  # LanceDB Viewer (Optional - for debugging)
+  # =============================================================================
+  lance-viewer:
+    image: python:3.11-slim
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./storage/lance:/data/lance
+    command: >
+      sh -c "pip install streamlit lancedb pyarrow &&
+             streamlit run - --server.port 8501 <<EOF
+      import streamlit as st
+      import lancedb
+      db = lancedb.connect('/data/lance')
+      st.title('LanceDB Viewer - Tuath')
+      tables = db.table_names()
+      st.write('Tables:', tables)
+      if tables:
+          selected = st.selectbox('Select table', tables)
+          if selected:
+              table = db.open_table(selected)
+              st.write(f'Rows: {len(table)}')
+              st.dataframe(table.to_pandas().head(100))
+      EOF"
+    networks:
+      - tuath-network
+
+  # =============================================================================
+  # MapLibre Tile Server (Optional - for offline maps)
+  # =============================================================================
+  tileserver:
+    image: maptiler/tileserver-gl:latest
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./storage/mbtiles:/data
+    networks:
+      - tuath-network
+
+networks:
+  tuath-network:
+    driver: bridge
+  bonneagar-network:
+    external: true
+    name: bonneagar_default
+
+volumes:
+  spacetimedb-data:
+  dragonfly-data:
+  dagster-storage:
+  langfuse-db-data:

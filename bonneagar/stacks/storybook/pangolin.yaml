@@ -1,0 +1,8 @@
+# Pangolin auto-discovery labels for Storybook
+# Include with: docker compose -f storybook.compose.yaml -f storybook.pangolin.yaml up -d
+services:
+  storybook:
+    labels:
+      - "pangolin.resource.name=Storybook"
+      - "pangolin.resource.domain=storybook.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://storybook:6006"

@@ -1,0 +1,90 @@
+# =============================================================================
+# DEPLOY OPENCLAW-ARM1-OCI PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim openclaw channel-fanout gateway to arm1-oci.
+#
+# Architecture:
+#   arm1-oci — openclaw (:18789 host → :18789 container, gateway WebSocket RPC)
+#              openclaw-locket (Infisical secret injection)
+#   Routed through Pangolin on arm1-oci:
+#     openclaw.cianfhoghlaim.ie → arm1-oci:openclaw:18789 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-openclaw-arm1-oci
+# =============================================================================
+
+[[procedure]]
+name = "deploy-openclaw-arm1-oci"
+description = "Deploy OpenClaw channel-fanout gateway to arm1-oci — prereqs → langfuse + forgejo-runner → openclaw → pangolin routes → health checks"
+
+# =============================================================================
+# STAGE 0: Prerequisite docker resources
+# =============================================================================
+# The openclaw locket sidecar requires the openclaw_stack-secrets external
+# tmpfs volume. Created idempotently by a build (defined in the locket sidecar).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: Dependency Services
+# =============================================================================
+# Openclaw depends on:
+#   - langfuse (LLM observability, port 3000) → arm1-oci
+#   - forgejo-runner (GitOps sync, runs the renovate cycle for the openclaw image)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "langfuse" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "forgejo-runner" } }
+
+# =============================================================================
+# STAGE 2: OpenClaw (arm1-oci)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "openclaw-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "openclaw" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the openclaw routing blueprint via Pangolin Integration API.
+# Registers:
+#   - openclaw.cianfhoghlaim.ie → arm1-oci:openclaw:18789 (Pocket ID SSO)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-openclaw-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification (arm1-oci)
+# =============================================================================
+# Verify openclaw is healthy and responding to /api/health.
+# Also verify the gateway's pairing queue is empty (or low).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-health-check" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-pairing-queue-check" } }

@@ -63,6 +63,7 @@ def _():
     from pathlib import Path
 
     import duckdb
+import ibis  # ibis-first entrypoint
 
     use_md = os.environ.get("MOTHERDUCK_ENABLED", "false").lower() == "true"
     df = None
@@ -75,11 +76,11 @@ def _():
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:oideachais")
+                con = ibis.ibis.duckdb.connect("md:oideachais")
                 df = con.execute(
                     "SELECT * FROM leabharlann.full_stack_demo "
                     "ORDER BY started_at DESC LIMIT 1"
-                ).fetchdf()
+                ).to_pandas()
                 db_label = "md:oideachais (MotherDuck + DuckLake)"
             except Exception:
                 df = None
@@ -89,11 +90,11 @@ def _():
         demo_db = Path(db_path)
         if demo_db.exists():
             try:
-                con = duckdb.connect(str(demo_db), read_only=True)
+                con = ibis.duckdb.connect(str(demo_db), read_only=True)
                 df = con.execute(
                     "SELECT * FROM leabharlann_full_stack_demo "
                     "ORDER BY started_at DESC LIMIT 1"
-                ).fetchdf()
+                ).to_pandas()
                 db_label = f"local DuckDB ({demo_db})"
             except Exception:
                 df = None

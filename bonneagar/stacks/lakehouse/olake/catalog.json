@@ -1,0 +1,18 @@
+{
+  "catalog": {
+    "type": "rest",
+    "uri": "http://lakekeeper:8181",
+    "warehouse": "lakehouse",
+    "s3": {
+      "endpoint": "http://garage:3900",
+      "region": "garage",
+      "access-key-id": "${GARAGE_ACCESS_KEY_ID:-lakehouse}",
+      "secret-access-key": "${GARAGE_SECRET_ACCESS_KEY:-devpassword}",
+      "path-style": true
+    },
+    "iceberg": {
+      "namespace": "olake_demo",
+      "prefix": ""
+    }
+  }
+}

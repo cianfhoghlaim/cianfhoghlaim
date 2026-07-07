@@ -1,0 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+private-resources:
+  mlflow:
+    name: "MLflow"
+    mode: "http"
+    destination-port: 5000
+    full-domain: "mlflow.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "mlflow"
+

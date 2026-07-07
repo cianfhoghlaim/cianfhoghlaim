@@ -1,0 +1,32 @@
+# =============================================================================
+# STACK HEALTH SNAPSHOT
+# =============================================================================
+# Runs stack-doctor.sh across all hosts, writes a JSON snapshot to Garage S3.
+# Schedule: nightly at 02:30 via Komodo cron.
+# =============================================================================
+
+[[action]]
+name = "run-stack-doctor"
+type = "command"
+description = "Run stack-doctor.sh and write a JSON snapshot to /tmp"
+command = """
+cd /Users/cianmacoghlaim/dev/kings_college_galway || cd /etc/komodo/sruth
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+bash scripts/stack-doctor.sh --json > /tmp/stack-doctor-${TS}.json
+echo "Snapshot written to /tmp/stack-doctor-${TS}.json"
+ls -la /tmp/stack-doctor-${TS}.json
+"""
+timeout = 120
+
+[[action]]
+name = "upload-snapshot"
+type = "command"
+description = "Upload the latest stack-doctor JSON to Garage S3"
+command = """
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+LATEST=$(ls -t /tmp/stack-doctor-*.json 2>/dev/null | head -1)
+[ -z "$LATEST" ] && { echo "no snapshot found"; exit 1; }
+aws --endpoint-url https://garage.cianfhoghlaim.ie s3 cp "$LATEST" "s3://stack-snapshots/$TS.json" --content-type application/json
+echo "Uploaded $(basename $LATEST) -> s3://stack-snapshots/$TS.json"
+"""
+timeout = 60

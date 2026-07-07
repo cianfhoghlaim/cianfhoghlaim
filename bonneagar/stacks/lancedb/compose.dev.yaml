@@ -1,0 +1,20 @@
+# LanceDB — local dev override
+# ----------------------------------------------------------------------------
+# See oideachais compose.dev.yaml for the rationale (no-op locket, env_file).
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: lancedb-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    networks:
+      - cianfhoghlaim
+
+  lancedb:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env

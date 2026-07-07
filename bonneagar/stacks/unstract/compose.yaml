@@ -1,0 +1,735 @@
+# =============================================================================
+# UNSTRACT - Local OSS Fleet (Zipstack/unstract v0.177.7, 15 services)
+# =============================================================================
+# Vendored 2026-07-07 from https://github.com/Zipstack/unstract @ v0.177.7
+# Applied KCG conventions:
+#   - bare container names (no upstream `-1` suffix)
+#   - all images pinned to v0.177.7 (no `:latest` or `:${VERSION}`)
+#   - joins the `bunchloch-infra` external network for Locket-sidecar access
+#   - secrets pulled from local Infisical vault via Locket sidecar
+#
+# USAGE:
+#   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Or via Locket exec (preferred for production):
+#   ./scripts/locket.sh unstract up -d
+#
+# Open the Unstract UI at http://localhost (Traefik reverse proxy on :80)
+# Default login: unstract / unstract
+# =============================================================================
+
+name: unstract
+
+x-host-gateway: &host_gateway
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+x-lakehouse-host: &lakehouse-host
+  extra_hosts:
+    - "lakehouse-postgres:host-gateway"
+
+services:
+
+  # Backend service
+  backend:
+    <<: *host_gateway
+    image: unstract/backend:v0.177.7
+    container_name: unstract-backend
+    restart: unless-stopped
+    command: --migrate
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+      - reverse-proxy
+      - minio
+      - minio-bootstrap
+      - platform-service
+      - x2text-service
+    volumes:
+      - prompt_studio_data:/app/prompt-studio-data
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`frontend.unstract.localhost`) && (PathPrefix(`/api/v1`) || PathPrefix(`/deployment`) || PathPrefix(`/public`))
+      - traefik.http.services.backend.loadbalancer.server.port=8000
+
+  # Celery worker for dashboard metrics processing
+  worker-metrics:
+    <<: *host_gateway
+    image: unstract/backend:v0.177.7
+    container_name: unstract-worker-metrics
+    restart: unless-stopped
+    entrypoint: .venv/bin/celery
+    command: "-A backend worker --loglevel=info -Q dashboard_metric_events --autoscale=${WORKER_METRICS_AUTOSCALE:-4,1}"
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - rabbitmq
+      - db
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-metrics
+
+    labels:
+      - traefik.enable=false
+
+  # Celery worker for Prompt Studio IDE callbacks.
+  # Processes post-execution callbacks via InternalAPIClient (no Django).
+  # Handles: ide_index_complete/error, ide_prompt_complete/error.
+  worker-ide-callback:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-ide-callback
+    restart: unless-stopped
+    command: ["ide-callback"]
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-ide-callback
+      - WORKER_TYPE=ide_callback
+      - WORKER_NAME=ide-callback-worker
+    labels:
+      - traefik.enable=false
+
+  # Celery Flower
+  celery-flower:
+    <<: *host_gateway
+    image: unstract/backend:v0.177.7
+    container_name: unstract-celery-flower
+    restart: unless-stopped
+    entrypoint: .venv/bin/celery
+    command: "-A backend flower --port=5555 --purge_offline_workers=5"
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - rabbitmq
+    labels:
+      - traefik.enable=false
+    ports:
+      - "5555:5555"
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-celery-flower
+    volumes:
+      - unstract_data:/data
+    profiles:
+      - optional
+
+  # Celery Beat
+  celery-beat:
+    <<: *host_gateway
+    image: unstract/backend:v0.177.7
+    container_name: unstract-celery-beat
+    restart: unless-stopped
+    entrypoint: .venv/bin/celery
+    command: "-A backend beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l INFO"
+    env_file:
+      - ../backend/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-celery-beat
+
+  # Frontend React app
+  frontend:
+    image: unstract/frontend:v0.177.7
+    container_name: unstract-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+      - reverse-proxy
+    environment:
+      - ENVIRONMENT=development
+      # Running platform version, surfaced on the profile page. Reuses the same
+      # ${VERSION} that tags the image, so it always matches what's deployed
+      # (and updates on RC->stable promotion, which only retags — doesn't rebuild).
+      - UNSTRACT_APPS_VERSION=${VERSION}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`frontend.unstract.localhost`) && !PathPrefix(`/api/v1`) && !PathPrefix(`/deployment`) && !PathPrefix(`/public`)
+      - traefik.http.services.frontend.loadbalancer.server.port=80
+
+  platform-service:
+    image: unstract/platform-service:v0.177.7
+    container_name: unstract-platform-service
+    restart: unless-stopped
+    ports:
+      - "3008:3001"
+    env_file:
+      - ../platform-service/.env
+    depends_on:
+      - redis
+      - db
+    labels:
+      - traefik.enable=false
+
+  x2text-service:
+    image: unstract/x2text-service:v0.177.7
+    container_name: unstract-x2text-service
+    restart: unless-stopped
+    ports:
+      - "3009:3004"
+    env_file:
+      - ../x2text-service/.env
+    depends_on:
+      - db
+    labels:
+      - traefik.enable=false
+
+  runner:
+    <<: *host_gateway
+    image: unstract/runner:v0.177.7
+    container_name: unstract-runner
+    restart: unless-stopped
+    ports:
+      - 5002:5002
+    env_file:
+      - ../runner/.env
+    volumes:
+      - ./workflow_data:/data
+      # Docker socket bind mount to spawn tool containers
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - redis
+      - rabbitmq
+    labels:
+      - traefik.enable=false
+
+  # ====================================================================
+  # WORKER SERVICES
+  # ====================================================================
+
+  worker-api-deployment-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-api-deployment-v2
+    restart: unless-stopped
+    command: ["api-deployment"]
+    ports:
+      - "8085:8090"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-api-deployment-v2
+      - WORKER_TYPE=api_deployment
+      - CELERY_QUEUES_API_DEPLOYMENT=${CELERY_QUEUES_API_DEPLOYMENT:-celery_api_deployments}
+      - CELERY_POOL=${WORKER_API_DEPLOYMENT_POOL:-threads}
+      - CELERY_PREFETCH_MULTIPLIER=${WORKER_API_DEPLOYMENT_PREFETCH_MULTIPLIER:-1}
+      - CELERY_CONCURRENCY=${WORKER_API_DEPLOYMENT_CONCURRENCY:-4}
+      - CELERY_EXTRA_ARGS=${WORKER_API_DEPLOYMENT_EXTRA_ARGS:-}
+      - WORKER_NAME=api-deployment-worker-v2
+      - API_DEPLOYMENT_METRICS_PORT=8090
+      - HEALTH_PORT=8090
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-callback-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-callback-v2
+    restart: unless-stopped
+    command: ["callback"]
+    ports:
+      - "8086:8083"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-callback-v2
+      - WORKER_TYPE=callback
+      - WORKER_NAME=callback-worker-v2
+      - CALLBACK_METRICS_PORT=8083
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-file-processing-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-file-processing-v2
+    restart: unless-stopped
+    # command: ["file-processing"]
+    command:
+      [
+        ".venv/bin/celery",
+        "-A",
+        "worker",
+        "worker",
+        "--queues=file_processing,api_file_processing,file_processing_priority",
+        "--loglevel=INFO",
+        "--pool=prefork",
+        "--concurrency=4",
+        "--prefetch-multiplier=1",
+        "--without-gossip",
+        "--without-mingle",
+        "--without-heartbeat",
+      ]
+    ports:
+      - "8087:8082"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-file-processing-v2
+      - WORKER_TYPE=file_processing
+      - WORKER_MODE=oss
+      - WORKER_NAME=file-processing-worker-v2
+      - FILE_PROCESSING_METRICS_PORT=8082
+      # OSS Configuration - Enterprise features disabled
+      - MANUAL_REVIEW_ENABLED=false
+      - ENTERPRISE_FEATURES_ENABLED=false
+      - PLUGIN_REGISTRY_MODE=oss
+      # Configurable Celery options
+      - CELERY_QUEUES_FILE_PROCESSING=${CELERY_QUEUES_FILE_PROCESSING:-file_processing,api_file_processing}
+      - CELERY_POOL=${WORKER_FILE_PROCESSING_POOL:-threads}
+      - CELERY_PREFETCH_MULTIPLIER=${WORKER_FILE_PROCESSING_PREFETCH_MULTIPLIER:-1}
+      - CELERY_CONCURRENCY=${WORKER_FILE_PROCESSING_CONCURRENCY:-4}
+      - CELERY_EXTRA_ARGS=${WORKER_FILE_PROCESSING_EXTRA_ARGS:-}
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-general-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-general-v2
+    restart: unless-stopped
+    command: ["general"]
+    ports:
+      - "9095:8082"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-general-v2
+      - WORKER_TYPE=general
+      - WORKER_NAME=general-worker-v2
+      - GENERAL_METRICS_PORT=8081
+      - HEALTH_PORT=8082
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-notification-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-notification-v2
+    restart: unless-stopped
+    command: ["notification"]
+    ports:
+      - "8089:8085"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-notification-v2
+      - WORKER_TYPE=notification
+      - WORKER_NAME=notification-worker-v2
+      - NOTIFICATION_METRICS_PORT=8085
+      - HEALTH_PORT=8085
+      # Notification specific configs
+      - NOTIFICATION_QUEUE_NAME=notifications
+      - WEBHOOK_QUEUE_NAME=notifications_webhook
+      - EMAIL_QUEUE_NAME=notifications_email
+      - SMS_QUEUE_NAME=notifications_sms
+      - PRIORITY_QUEUE_NAME=notifications_priority
+      # Configurable Celery options
+      - CELERY_QUEUES_NOTIFICATION=${CELERY_QUEUES_NOTIFICATION:-notifications,notifications_webhook,notifications_email,notifications_sms,notifications_priority}
+      - CELERY_POOL=${WORKER_NOTIFICATION_POOL:-prefork}
+      - CELERY_PREFETCH_MULTIPLIER=${WORKER_NOTIFICATION_PREFETCH_MULTIPLIER:-1}
+      - CELERY_CONCURRENCY=${WORKER_NOTIFICATION_CONCURRENCY:-4}
+      - CELERY_EXTRA_ARGS=${WORKER_NOTIFICATION_EXTRA_ARGS:-}
+      # Complete command override (if set, ignores all other options)
+      - CELERY_COMMAND_OVERRIDE=${WORKER_NOTIFICATION_COMMAND_OVERRIDE:-}
+      # Individual argument overrides
+      - CELERY_APP_MODULE=${WORKER_NOTIFICATION_APP_MODULE:-worker}
+      - CELERY_LOG_LEVEL=${WORKER_NOTIFICATION_LOG_LEVEL:-INFO}
+      - CELERY_HOSTNAME=${WORKER_NOTIFICATION_HOSTNAME:-}
+      - CELERY_MAX_TASKS_PER_CHILD=${WORKER_NOTIFICATION_MAX_TASKS_PER_CHILD:-}
+      - CELERY_TIME_LIMIT=${WORKER_NOTIFICATION_TIME_LIMIT:-}
+      - CELERY_SOFT_TIME_LIMIT=${WORKER_NOTIFICATION_SOFT_TIME_LIMIT:-}
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-log-consumer-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-log-consumer-v2
+    restart: unless-stopped
+    command: ["log-consumer"]
+    ports:
+      - "9097:8084"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-log-consumer-v2
+      - WORKER_TYPE=log_consumer
+      - WORKER_NAME=log-consumer-worker-v2
+      - LOG_CONSUMER_METRICS_PORT=8084
+      - HEALTH_PORT=8084
+      # Log consumer specific configs
+      - LOG_CONSUMER_QUEUE_NAME=celery_log_task_queue
+      # Multiple queue support - supports comma-separated queue names
+      - CELERY_QUEUES_LOG_CONSUMER=${CELERY_QUEUES_LOG_CONSUMER:-celery_log_task_queue,celery_periodic_logs}
+      - PERIODIC_LOGS_QUEUE_NAME=${PERIODIC_LOGS_QUEUE_NAME:-celery_periodic_logs}
+      # Log history configuration
+      - LOG_HISTORY_QUEUE_NAME=${LOG_HISTORY_QUEUE_NAME:-log_history_queue}
+      - LOGS_BATCH_LIMIT=${LOGS_BATCH_LIMIT:-100}
+      - ENABLE_LOG_HISTORY=${ENABLE_LOG_HISTORY:-true}
+      - CELERY_POOL=${WORKER_LOG_CONSUMER_POOL:-prefork}
+      - CELERY_PREFETCH_MULTIPLIER=${WORKER_LOG_CONSUMER_PREFETCH_MULTIPLIER:-1}
+      - CELERY_CONCURRENCY=${WORKER_LOG_CONSUMER_CONCURRENCY:-2}
+      - CELERY_EXTRA_ARGS=${WORKER_LOG_CONSUMER_EXTRA_ARGS:-}
+      # Complete command override (if set, ignores all other options)
+      - CELERY_COMMAND_OVERRIDE=${WORKER_LOG_CONSUMER_COMMAND_OVERRIDE:-}
+      # Individual argument overrides
+      - CELERY_APP_MODULE=${WORKER_LOG_CONSUMER_APP_MODULE:-worker}
+      - CELERY_LOG_LEVEL=${WORKER_LOG_CONSUMER_LOG_LEVEL:-INFO}
+      - CELERY_HOSTNAME=${WORKER_LOG_CONSUMER_HOSTNAME:-}
+      - CELERY_MAX_TASKS_PER_CHILD=${WORKER_LOG_CONSUMER_MAX_TASKS_PER_CHILD:-}
+      - CELERY_TIME_LIMIT=${WORKER_LOG_CONSUMER_TIME_LIMIT:-}
+      - CELERY_SOFT_TIME_LIMIT=${WORKER_LOG_CONSUMER_SOFT_TIME_LIMIT:-}
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-log-history-scheduler-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-log-history-scheduler-v2
+    restart: unless-stopped
+    entrypoint: ["/bin/bash"]
+    command: ["/app/log_consumer/scheduler.sh"]
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-log-history-scheduler-v2
+      # Scheduler interval in seconds
+      - LOG_HISTORY_CONSUMER_INTERVAL=${LOG_HISTORY_CONSUMER_INTERVAL:-5}
+      # Override example: TASK_TRIGGER_COMMAND=/custom/trigger/script.sh
+      - TASK_TRIGGER_COMMAND=${TASK_TRIGGER_COMMAND:-}
+    labels:
+      - traefik.enable=false
+
+  worker-scheduler-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-scheduler-v2
+    restart: unless-stopped
+    command: ["scheduler"]
+    ports:
+      - "8091:8087"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-scheduler-v2
+      - WORKER_TYPE=scheduler
+      - WORKER_NAME=scheduler-worker-v2
+      - SCHEDULER_METRICS_PORT=8087
+      - HEALTH_PORT=8087
+      # Scheduler specific configs
+      - SCHEDULER_QUEUE_NAME=scheduler
+      # Configurable Celery options
+      - CELERY_QUEUES_SCHEDULER=${CELERY_QUEUES_SCHEDULER:-scheduler}
+      - CELERY_POOL=${WORKER_SCHEDULER_POOL:-prefork}
+      - CELERY_PREFETCH_MULTIPLIER=${WORKER_SCHEDULER_PREFETCH_MULTIPLIER:-1}
+      - CELERY_CONCURRENCY=${WORKER_SCHEDULER_CONCURRENCY:-2}
+      - CELERY_EXTRA_ARGS=${WORKER_SCHEDULER_EXTRA_ARGS:-}
+      # Complete command override (if set, ignores all other options)
+      - CELERY_COMMAND_OVERRIDE=${WORKER_SCHEDULER_COMMAND_OVERRIDE:-}
+      # Individual argument overrides
+      - CELERY_APP_MODULE=${WORKER_SCHEDULER_APP_MODULE:-worker}
+      - CELERY_LOG_LEVEL=${WORKER_SCHEDULER_LOG_LEVEL:-INFO}
+      - CELERY_HOSTNAME=${WORKER_SCHEDULER_HOSTNAME:-}
+      - CELERY_MAX_TASKS_PER_CHILD=${WORKER_SCHEDULER_MAX_TASKS_PER_CHILD:-}
+      - CELERY_TIME_LIMIT=${WORKER_SCHEDULER_TIME_LIMIT:-}
+      - CELERY_SOFT_TIME_LIMIT=${WORKER_SCHEDULER_SOFT_TIME_LIMIT:-}
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+
+  worker-executor-v2:
+    <<: *host_gateway
+    image: unstract/worker-unified:v0.177.7
+    container_name: unstract-worker-executor-v2
+    restart: unless-stopped
+    command: ["executor"]
+    ports:
+      - "8092:8088"
+    env_file:
+      - ../workers/.env
+      - ./essentials.env
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+      - platform-service
+    environment:
+      - ENVIRONMENT=development
+      - APPLICATION_NAME=unstract-worker-executor-v2
+      - WORKER_TYPE=executor
+      - WORKER_NAME=executor-worker-v2
+      - EXECUTOR_METRICS_PORT=8088
+      - HEALTH_PORT=8088
+      # Configurable Celery options
+      - CELERY_QUEUES_EXECUTOR=${CELERY_QUEUES_EXECUTOR:-celery_executor_legacy,celery_executor_agentic,celery_executor_agentic_table}
+      - CELERY_POOL=${WORKER_EXECUTOR_POOL:-prefork}
+      - CELERY_PREFETCH_MULTIPLIER=${WORKER_EXECUTOR_PREFETCH_MULTIPLIER:-1}
+      - CELERY_CONCURRENCY=${WORKER_EXECUTOR_CONCURRENCY:-2}
+      - CELERY_EXTRA_ARGS=${WORKER_EXECUTOR_EXTRA_ARGS:-}
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./workflow_data:/data
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - prompt_studio_data:/app/prompt-studio-data
+
+
+
+  # ==== DEV ESSENTIALS (infrastructure) ====
+
+  db:
+    image: "pgvector/pgvector:pg15"
+    container_name: unstract-db
+    restart: unless-stopped
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./scripts/db-setup/db_setup.sh:/docker-entrypoint-initdb.d/db_setup.sh
+    env_file:
+      - ./essentials.env
+    labels:
+      - traefik.enable=false
+
+  redis:
+    image: "redis:7.2.3"
+    container_name: unstract-redis
+    restart: unless-stopped
+    # uncomment below command if persistance required.
+    #command: redis-server --save 20 1 --loglevel warning --
+    ports:
+      - "6383:6379"
+    volumes:
+      - redis_data:/data
+    labels:
+      - traefik.enable=false
+
+  minio:
+    image: "minio/minio:RELEASE.2024-10-13T13-34-11Z"
+    container_name: unstract-minio
+    hostname: minio
+    restart: unless-stopped
+    ports:
+      - "9090:9000"
+      - "9006:9001"
+    volumes:
+      - minio_data:/data
+    env_file:
+      - ./essentials.env
+    command: server /data --console-address ":9001"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.minio.rule=Host(`minio.unstract.localhost`)
+      - traefik.http.services.minio.loadbalancer.server.port=9001
+
+  minio-bootstrap:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      mc alias set minio http://unstract-minio:9000 minio minio123;
+      mc mb minio/unstract;
+      mc mirror /app/prompt-studio-data minio/unstract/prompt-studio-data;
+      exit 0;
+      "
+    volumes:
+      - prompt_studio_data:/app/prompt-studio-data
+
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v3.6.2
+    container_name: unstract-proxy
+    restart: unless-stopped
+    # - Enables the web UI.
+    # - Tells Traefik to use docker and file providers.
+    # - Direct Traefik to the correct network for docker provider.
+    #   This is required because Traefik by default tries available networks in a
+    #   round-robin fashion. With multiple providers, services can be on multiple
+    #   networks causing 504 Gateway Timeout.
+    command: --api.insecure=true
+      --accesslog=true --log.level=INFO
+      --providers.docker=true --providers.docker.network=unstract-network
+      --providers.file.filename=/proxy_overrides.yaml --providers.file.watch=true
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8880:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Proxy overrides for components run directly in Docker host
+      - ./proxy_overrides.yaml:/proxy_overrides.yaml
+    # Since any proxy overrides need to point to Docker host for relevant routes.
+    extra_hosts:
+      # "host-gateway" is a special string that translates to host docker0 i/f IP.
+      - "host.docker.internal:host-gateway"
+
+  feature-flag:
+    image: docker.flipt.io/flipt/flipt:v2.3.1
+    container_name: unstract-flipt
+    restart: unless-stopped
+    ports: # Forwarded to available host ports
+      - "9093:8080" # REST API port
+      - "9094:9000" # gRPC port
+    volumes:
+      - flipt_data:/var/opt/flipt
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.feature-flag.rule=Host(`feature-flag.unstract.localhost`)
+      - traefik.http.services.feature-flag.loadbalancer.server.port=8080
+
+  unstructured-io:
+    profiles:
+      - optional
+    image: downloads.unstructured.io/unstructured-io/unstructured-api:0.0.61
+    container_name: unstract-unstructured-io
+    restart: unless-stopped
+    ports: # Forwarded to available host ports
+      - "8083:8000"
+    labels:
+      - traefik.enable=false
+
+  qdrant:
+    # Vector DB for doc indexer.
+    # Server minor version must track qdrant-client pin in unstract/sdk1/pyproject.toml;
+    # the 1.16 client calls endpoints the 1.8 server lacks and returns 404 with empty body.
+    image: "qdrant/qdrant:v1.16.1"
+    container_name: unstract-vector-db
+    restart: unless-stopped
+    ports:
+      - "6336:6333"
+    volumes:
+      - qdrant_data:/var/lib/qdrant/data/
+    labels:
+      - traefik.enable=false
+    env_file:
+      - ./essentials.env
+
+  rabbitmq:
+    image: rabbitmq:4.1.0-management
+    container_name: unstract-rabbitmq
+    hostname: unstract-rabbit
+    restart: unless-stopped
+    env_file:
+      - ./essentials.env
+    ports:
+      - "5672:5672" # AMQP port
+      - "15675:15672" # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+
+volumes:
+  flipt_data:
+  minio_data:
+  postgres_data:
+  qdrant_data:
+  redis_data:
+  prompt_studio_data:
+  rabbitmq_data:
+  workflow_data:
+  unstract_data:
+
+networks:
+  default:
+    name: unstract-network
+  # Bunchloch-infra overlay (for Locket sidecar + cross-stack DNS)
+  bunchloch-infra:
+    external: true
+    name: bunchloch-infra

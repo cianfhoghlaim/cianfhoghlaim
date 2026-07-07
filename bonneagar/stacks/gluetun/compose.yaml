@@ -1,0 +1,57 @@
+name: gluetun
+
+services:
+  # ---------------------------------------------------------------------------
+  # gluetun — VPN client container (WireGuard / OpenVPN)
+  # ---------------------------------------------------------------------------
+  # Used as a network sidecar for crawl4ai (and any other scraper) that
+  # needs to egress through a VPN tunnel. Provides:
+  #   - WireGuard / OpenVPN client
+  #   - Port forwarding
+  #   - DNS over TLS
+  #   - IPv6 support
+  # ---------------------------------------------------------------------------
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      # WireGuard provider block
+      VPN_SERVICE_PROVIDER: custom
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      WIREGUARD_ADDRESSES: ${WIREGUARD_ADDRESSES}
+      WIREGUARD_PUBKEY: ${WIREGUARD_PUBKEY}
+      WIREGUARD_PRESHARED_KEY: ${WIREGUARD_PRESHARED_KEY}
+      WIREGUARD_ENDPOINT: ${WIREGUARD_ENDPOINT}
+      # DNS
+      DNS_OVER_TLS: "1"
+      DOT_PROVIDERS: "1.1.1.1, cloudflare"
+      # Port forwarding
+      VPN_PORT_FORWARDING: "off"   # set to "on" if your provider supports it
+      # Health check
+      HEALTH_VPN_DURATION_INITIAL: 30s
+    ports:
+      - "11235:11235/tcp"   # crawl4ai (consumers join the gluetun network)
+    volumes:
+      - gluetun_config:/gluetun
+    healthcheck:
+      test: ["CMD-SHELL", "/gluetun-entrypoint healthcheck --on-startup.HEALTH_VPN_DURATION_INITIAL=30s"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  gluetun_config:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
