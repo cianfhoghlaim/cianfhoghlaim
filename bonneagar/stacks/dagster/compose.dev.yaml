@@ -1,0 +1,99 @@
+# Dagster — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the litellm/langfuse/cognee dev override pattern (per the
+# 2026-07-02-bunchloch-stack-bootstrap change):
+#   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+#      resolves without booting the real Infisical-injection sidecar.
+#   2. `env_file: .env.dev` (this stack) provides all the dev secrets
+#      pointing at the lakehouse services.
+#   3. The image is `dagster-local:latest` (built from Dockerfile.dagster).
+#
+# Invocation order (note: dev overlay LAST so its locket replacement wins
+# the merge — Compose's `?` syntax in the base compose is evaluated at
+# parse time and CANNOT be satisfied by an `environment:` override).
+#
+# Usage:
+#   docker compose \
+#     -f stacks/dagster/compose.yaml \
+#     -f stacks/dagster/sidecar.yaml \
+#     -f stacks/dagster/compose.dev.yaml \
+#     up -d
+# ----------------------------------------------------------------------------
+
+services:
+  # Replace the production locket sidecar with a no-op that passes health.
+  # Inherits user/security_opt/cap_drop from sidecar.yaml — we only override
+  # the command, container_name, image (alpine), and healthcheck.
+  locket:
+    image: alpine:3.20
+    container_name: dagster-locket-dev
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op dagster locket — secrets from .env.dev'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+      - cianfhoghlaim
+
+  # Dagster webserver: env_file + env override (the dev defaults in
+  # compose.yaml use ?must-be-set syntax that env_file satisfies).
+  # Also explicitly drop the `stack-secrets:/run/secrets/locket:ro` volume
+  # mount from the sidecar (the no-op alpine locket doesn't create that
+  # tmpfs) by NOT inheriting the sidecar's volumes.
+  # In dev mode, also mount the cianfhoghlaim package source and run
+  # with `-m cianfhoghlaim.dagster.definitions` so the 5 KCG Components
+  # actually load. We OVERRIDE entrypoint: to `[""]` (a no-op entrypoint)
+  # so the command runs as-is without the Dockerfile's
+  # `dagster-webserver -h 0.0.0.0 -p 3000` prefix being prepended.
+  dagster:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - .env.locket-dev-placeholder
+      - .env.dev
+    entrypoint: [""]
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-m", "cianfhoghlaim.dagster.definitions"]
+    volumes:
+      - dagster-storage:/opt/dagster/storage
+      - dagster-home:/opt/dagster/home
+      - ../../cianfhoghlaim:/opt/workspace/cianfhoghlaim:ro
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+      - stack
+
+  # Dagster daemon
+  dagster-daemon:
+    depends_on:
+      locket:
+        condition: service_started
+      dagster:
+        condition: service_healthy
+    env_file:
+      - .env.locket-dev-placeholder
+      - .env.dev
+    entrypoint: [""]
+    command: ["dagster-daemon", "run", "-m", "cianfhoghlaim.dagster.definitions"]
+    volumes:
+      - dagster-storage:/opt/dagster/storage
+      - dagster-home:/opt/dagster/home
+      - ../../cianfhoghlaim:/opt/workspace/cianfhoghlaim:ro
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+      - stack
+
+  # Top-level secrets: block from sidecar.yaml references the production
+  # Infisical secret file (../../infisical_secret). Override with /dev/null
+  # so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null

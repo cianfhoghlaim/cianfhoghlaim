@@ -33,6 +33,7 @@ def _():
     import os
     import marimo as mo
     import duckdb
+import ibis  # ibis-first entrypoint
     import boto3
     import pandas as pd
 
@@ -60,7 +61,7 @@ def _(duckdb, mo, os, use_md):
     AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID", "")
     AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
 
-    con = duckdb.connect()
+    con = ibis.duckdb.connect()
     try:
         if use_md:
             token = os.environ.get("MOTHERDUCK_TOKEN", "")
@@ -115,7 +116,7 @@ def _(con, duckdb, mo, os, pd, use_md):
                 ORDER BY pages DESC
                 LIMIT 25
             """
-        df_pages = con.execute(query).fetchdf()
+        df_pages = con.execute(query).to_pandas()
         status = f"✅ Data successfully queried ({len(df_pages)} rows)"
     except Exception as e:
         df_pages = pd.DataFrame({"error": [str(e)]})

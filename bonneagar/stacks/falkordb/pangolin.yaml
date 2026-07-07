@@ -1,0 +1,12 @@
+# FalkorDB — Pangolin private-resource route
+# Routes falkordb.cianfhoghlaim.ie → falkordb UI container at port 3000.
+# TinyAuth protects the route; FalkorDB UI has no built-in auth.
+pangolin:
+  private-resources:
+    falkordb:
+      name: falkordb
+      mode: http
+      full-domain: falkordb.cianfhoghlaim.ie
+      destination-port: 3000
+      protocol: http
+      roles[0]: tinyauth@file

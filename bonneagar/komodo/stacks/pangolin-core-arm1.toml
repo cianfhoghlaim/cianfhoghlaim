@@ -1,0 +1,20 @@
+# =============================================================================
+# PANGOLIN ENTERPRISE EDITION — Core Stack on arm1-oci
+# =============================================================================
+# Fresh PostgreSQL-backed Pangolin EE deployment on Oracle Cloud Free Tier.
+# Includes: Pangolin EE + PostgreSQL 17 + Gerbil + Traefik v3.6 + PocketID + TinyAuth
+# Secrets injected by Locket from Infisical dev-baile.
+# =============================================================================
+
+[[stack]]
+name = "pangolin-core"
+description = "Pangolin Enterprise Edition — Core (PostgreSQL 17, port 443)"
+tags = ["host:arm1-oci","tier:infrastructure","domain:pangolin.cianfhoghlaim.ie"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/core"
+file_paths = ["compose.yaml","sidecar.yaml"]
+environment = """
+PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+LOCKET_MODE=watch
+"""

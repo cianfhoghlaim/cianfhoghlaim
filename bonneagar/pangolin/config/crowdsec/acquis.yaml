@@ -1,0 +1,18 @@
+# =============================================================================
+# CROWDSEC ACQUISITION CONFIGURATION
+# =============================================================================
+# Defines log sources for CrowdSec to analyze
+
+# Traefik access logs
+filenames:
+  - /var/log/traefik/access.log
+labels:
+  type: traefik
+---
+# AppSec configuration (WAF-like protection)
+appsec_config: crowdsecurity/appsec-default
+name: appsec
+listen_addr: 0.0.0.0:7422
+source: appsec
+labels:
+  type: appsec

@@ -38,6 +38,7 @@ def _():
     import os
     import pathlib
     import duckdb
+import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
     import pandas as pd
     import altair as alt
     import marimo as mo
@@ -137,8 +138,9 @@ def _(
     try:
         if MOTHERDUCK_ENABLED:
             _token = os.environ.get("MOTHERDUCK_TOKEN", "")
-            duckdb.sql(f"SET motherduck_token='{_token}'")
-            _con = duckdb.connect("md:oideachais")
+            # ibis.ibis.duckdb.connect() picks up the MotherDuck token from the
+# connection URL (?motherduck_token=...) so no global SET is needed.
+            _con = ibis.duckdb.connect("md:oideachais")
         else:
             if not pathlib.Path(DUCKDB_PATH).exists():
                 err = (
@@ -146,7 +148,7 @@ def _(
                     "Run a `curriculum_*` job first to materialise pdf_extracted_text."
                 )
             else:
-                _con = duckdb.connect(DUCKDB_PATH, read_only=True)
+                _con = ibis.duckdb.connect(DUCKDB_PATH, read_only=True)
 
         if err is None:
             schemes = _con.execute(
@@ -167,7 +169,7 @@ def _(
                     int(year_range.value[0]),
                     int(year_range.value[1]),
                 ],
-            ).fetchdf()
+            ).to_pandas()
             _con.close()
     except Exception as e:
         err = str(e)

@@ -1,0 +1,25 @@
+# =============================================================================
+# FORGEJO RUNNER - CI/CD Runner for Forgejo Actions
+# =============================================================================
+# Runner deployed on same server as Forgejo (arm1-oci)
+# Enables Renovate and other CI/CD workflows
+# =============================================================================
+
+[[stack]]
+name = "forgejo-runner"
+description = "Forgejo Actions CI/CD runner with Docker-in-Docker"
+tags = ["host:arm1-oci", "tier:devtools", "type:cicd"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/storage/forgejo-runner"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+# Runner configuration
+FORGEJO_RUNNER_NAME=oci-runner
+FORGEJO_RUNNER_LABELS=ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:runner-latest
+FORGEJO_URL=https://git.cianfhoghlaim.ie
+# Locket secrets management
+INFISICAL_URL=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""

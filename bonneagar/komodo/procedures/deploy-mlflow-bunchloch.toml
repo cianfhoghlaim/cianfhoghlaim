@@ -1,0 +1,48 @@
+# =============================================================================
+# DEPLOY MLFLOW-BUNCHLOCH
+# =============================================================================
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - mlflow-bunchloch requires lakehouse-bunchloch to be healthy first
+#   (it uses lakehouse-postgres db=mlflow + lakehouse-garage
+#    bucket=mlflow-artifacts).
+# - The custom image (baked with psycopg2 + boto3) is built by CI before
+#   deploy; the procedure assumes it's already at
+#   `ghcr.io/cianfhoghlaim/mlflow:v2.19.0`.
+#
+# Usage:
+#   km run procedure deploy-mlflow-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-mlflow-bunchloch"
+description = "Deploy mlflow-bunchloch (Postgres db=mlflow + Garage bucket=mlflow-artifacts from centralised lakehouse)"
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-lakehouse-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "mlflow"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "mlflow-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://mlflow.cianfhoghlaim.ie/health", expected_status = 200, timeout_s = 30 } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec mlflow python -c 'import urllib.request, sys; sys.exit(0 if urllib.request.urlopen(\"http://lakehouse-postgres:5432\", timeout=3).status == 200 else 1)' || echo 'mlflow cannot reach lakehouse-postgres'" } }
+description = "Verify mlflow can reach lakehouse-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "aws --endpoint-url http://lakehouse-garage:3900 s3 ls | grep mlflow-artifacts || echo 'mlflow-artifacts bucket missing'" } }
+description = "Verify the mlflow-artifacts bucket exists on Garage"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "curl -sf http://localhost:5000/api/2.0/mlflow/experiments/list -H 'Accept: application/json' || echo 'experiment list API failing'" } }
+description = "Verify the mlflow experiments API works"

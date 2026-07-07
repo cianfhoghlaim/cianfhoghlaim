@@ -1,0 +1,45 @@
+# =============================================================================
+# DEPLOY GRAPHITI-BUNCHLOCH
+# =============================================================================
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - graphiti-bunchloch requires falkordb-bunchloch to be healthy first
+#   (FalkorDB is the only graph backend after the broken Neo4j profile
+#    was removed).
+# - LLM is reached via LiteLLM (which is on the same network) — the
+#   OPENAI_API_KEY env points at the LiteLLM gateway.
+#
+# Usage:
+#   km run procedure deploy-graphiti-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-graphiti-bunchloch"
+description = "Deploy graphiti-bunchloch (temporal knowledge graph, FalkorDB backend)"
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-falkordb-bunchloch" } }
+description = "Stage 1 prerequisite: falkordb must be running"
+
+[[procedure.config.stages]]
+name = "graphiti"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "graphiti-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://graphiti.cianfhoghlaim.ie/healthcheck", expected_status = 200, timeout_s = 30 } }
+description = "Verify graphiti HTTP health endpoint"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec graphiti wget --no-verbose --spider http://falkordb:6379 || echo 'graphiti cannot reach falkordb'" } }
+description = "Verify graphiti can reach the shared falkordb stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "curl -sf -X POST https://graphiti.cianfhoghlaim.ie/add_episode -H 'Content-Type: application/json' -d '{\"episode_body\":\"smoke test\",\"source_description\":\"cluster_smoke_test\"}' || echo 'graphiti add_episode API failing'" } }
+description = "Verify the graphiti add_episode API works (FalkorDB write path)"

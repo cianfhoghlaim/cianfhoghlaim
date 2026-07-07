@@ -39,6 +39,7 @@ def _():
     import os
     import marimo as mo
     import duckdb
+import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
 
     mo.md(
         """
@@ -303,9 +304,10 @@ def _(duckdb, mo, os, run_query, sql_area):
     try:
         token = os.environ.get("MOTHERDUCK_TOKEN", "")
         if token:
-            duckdb.sql(f"SET motherduck_token='{token}'")
-        con = duckdb.connect("md:oideachais")
-        df = con.execute(sql_area.value).fetchdf()
+            # ibis.duckdb.connect() picks up the MotherDuck token from the
+# connection URL (?motherduck_token=...) so no global SET is needed.
+        con = ibis.duckdb.connect("md:oideachais")
+        df = con.execute(sql_area.value).to_pandas()
         con.close()
         output_ui = mo.ui.table(df) if not df.empty else mo.md(
             "*Query executed successfully — 0 rows returned.*"

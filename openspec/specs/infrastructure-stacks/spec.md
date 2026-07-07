@@ -809,6 +809,158 @@ The `infrastructure/` directory history SHALL live in the sibling `bonneagar` wo
 - **THEN** the developer sees the canonical history
 - **AND** the monorepo's `git log -- infrastructure/` shows only the 2026-06-29 reset marker
 
+### Requirement: Consumer Stack Locket Pointing at Local Vault
+
+The system SHALL route every consumer stack's Locket sidecar
+(`stack-shared locket container`) at `http://infisical-backend:8080` on the
+shared `bunchloch-infra` external network. The Locket sidecar SHALL read
+machine identity `INFISICAL_CLIENT_ID`, `INFISICAL_CLIENT_SECRET`,
+`INFISICAL_PROJECT_ID` from a file-mounted secret at
+`/run/secrets/infisical_secret` (matching the production secret mount path).
+
+#### Scenario: A consumer stack's Locket sidecar successfully syncs
+
+- **GIVEN** the local Infisical vault from Change 1 is up at
+  `http://infisical-backend:8080`
+- **AND** the `dev-baile/dev/<stack>/<key>` paths are seeded via the bootstrap script
+- **AND** the consumer stack is brought up via
+  `docker compose -f compose.yaml -f sidecar.yaml up -d`
+- **WHEN** `docker logs <stack>-locket` is observed
+- **THEN** the output SHALL contain `secrets synced` within 10 seconds of boot
+- **AND** `${VAR}` interpolation in the consumer's `compose.yaml` SHALL
+  resolve to the Infisical-stored value (NOT the developer's local `.env`)
+
+### Requirement: Lakehouse Stack Versions 2026-07
+
+The system SHALL pin every container in `bonneagar/stacks/lakehouse/` to
+the versions verified via Firecrawl on 2026-07-06.
+
+#### Scenario: All lakehouse containers are semver-pinned
+
+- **WHEN** `bun run validate-stacks` runs against the lakehouse stack
+- **THEN** every `image:` line SHALL be a `<major>.<minor>.<patch>` semver
+  tag (NOT `:latest`)
+- **AND** the canonical versions SHALL be:
+  - `quay.io/lakekeeper/catalog:v0.13.1`
+  - `dxflrs/garage:v2.3.0`
+  - `clickhouse/clickhouse-server:25.8.28.1-lts`
+  - `nimtable/nimtable:v0.1.0`
+  - `ghcr.io/olake-io/olake:v0.8.0`
+
+### Requirement: LiteLLM Production Memory Formula
+
+The `bonneagar/stacks/litellm/compose.yaml` SHALL declare
+`memory: 16G` for the litellm service when `--num_workers=4` is used,
+per the upstream `4Gi × num_workers` formula documented at
+<https://docs.litellm.ai/docs/proxy/prod>.
+
+#### Scenario: Stack honours the memory formula
+
+- **WHEN** `bun run validate-stacks` runs against litellm
+- **THEN** the `litellm` service declaration SHALL contain
+  `deploy.resources.limits.memory: 16G` when `command` includes
+  `--num_workers=4`
+- **AND** the runbook SHALL document the `1×=4G / 2×=8G / 4×=16G` matrix
+
+### Requirement: MLflow v3 Security Middleware
+
+The `bonneagar/stacks/mlflow/` stack SHALL declare the v3-mandatory
+`--allowed-hosts="localhost,mlflow.cianfhoghlaim.ie"` and
+`--cors-allowed-origins="https://oideachais.cianfhoghlaim.ie"` flags on
+the `mlflow server` command, per the upstream v3.5.0+ security
+middleware requirement documented at
+<https://mlflow.org/docs/latest/self-hosting/architecture/tracking-server/>.
+
+#### Scenario: Stack uses the v3 semver + middleware flags
+
+- **WHEN** `compose.yaml` is read
+- **THEN** the image SHALL be `ghcr.io/mlflow/mlflow:v3.12.0` (NOT
+  `v2.22.4` and NOT `:latest`)
+- **AND** the `command:` list SHALL include
+  `--allowed-hosts="localhost,mlflow.cianfhoghlaim.ie"`
+
+### Requirement: Unstract OSS Self-Host at v0.177.7
+
+The `bonneagar/stacks/unstract/` stack SHALL match the upstream
+`Zipstack/unstract:v0.177.7` (released 2026-07-06) 15-service
+docker-compose layout. The stack SHALL NOT pin to `unstract/unstract:latest`
+(which does not exist as a single image).
+
+#### Scenario: Unstract compose is a true 15-service fleet
+
+- **WHEN** `compose.yaml` is read
+- **THEN** it SHALL declare ALL 8 upstream images pinned to `:v0.177.7`:
+  `unstract/{backend,frontend,platform-service,x2text-service,runner,
+  worker-unified,tool-sidecar,llm-whisperer}:v0.177.7`
+- **AND** it SHALL declare the 6 Celery worker services
+  (`worker-metrics`, `worker-ide-callback`, `worker-api-deployment`,
+  `worker-callback`, `worker-file-processing`,
+  `worker-general`)
+- **AND** the `db` image SHALL be `pgvector/pgvector:pg15` (NOT
+  `postgres:16` — per upstream dev essentials)
+- **AND** the `backend` healthcheck SHALL target port `:8000/health` (NOT
+  `:8002`)
+- **AND** the stack SHALL NOT declare `UNSTRACT_API_KEY` (OSS does not
+  require it)
+- **AND** every container SHALL be named with the bare KCG pattern
+  (`unstract-backend`, `unstract-celery-worker-general`, etc.) — NOT the
+  upstream's `*-1` numeric suffixes
+
+### Requirement: Unstract OSS Self-Host at v0.177.7 (15-service fleet)
+
+The `bonneagar/stacks/unstract/` stack MUST match the upstream
+`Zipstack/unstract:v0.177.7` (released 2026-07-06) 15-service
+docker-compose layout, vendored as 731 lines + 6 unstract images +
+7 infrastructure images, with the KCG bare container-name
+convention applied.
+
+#### Scenario: Unstract compose is a true 15-service fleet
+
+- **WHEN** `compose.yaml` is read
+- **THEN** it SHALL declare ALL 6 upstream unstract images pinned to
+  `:v0.177.7`:
+  - `unstract/backend:v0.177.7`
+  - `unstract/frontend:v0.177.7`
+  - `unstract/platform-service:v0.177.7`
+  - `unstract/x2text-service:v0.177.7`
+  - `unstract/runner:v0.177.7`
+  - `unstract/worker-unified:v0.177.7`
+- **AND** it SHALL declare the 6 worker-unified worker services
+  (api-deployment, callback, file-processing, general, notification,
+  log-consumer, scheduler, executor, log-history-scheduler)
+- **AND** it SHALL declare the 7 infrastructure services
+  (pgvector, redis, minio, qdrant, rabbitmq, flipt, traefik) with
+  pinned semver tags
+- **AND** every container SHALL be named with the bare KCG pattern
+  (`unstract-backend`, `unstract-worker-api-deployment`, etc.) — NOT
+  the upstream's `*-1` numeric suffixes
+- **AND** the `db` image SHALL be `pgvector/pgvector:pg15` (matching
+  the upstream dev-essentials default)
+- **AND** the `secrets.env` SHALL declare at least 20 canonical
+  `infisical://dev-baile/unstract/<key>` entries (no Jinja `{{...}}`
+  wrappers)
+- **AND** the `sidecar.yaml` SHALL declare the canonical Locket
+  sidecar (user 65532:65532, no-new-privileges, cap_drop ALL, tmpfs 700)
+- **AND** the `compose.dev.yaml` SHALL override the locket service
+  with a no-op alpine container that passes healthcheck
+
+### Requirement: Unstract secrets in Infisical vault
+
+The bunchloch-local Infisical vault MUST contain at least 20 secrets
+under the path `dev-baile/dev/unstract/*`, covering postgres, minio,
+qdrant, rabbitmq, django, celery, oauth, and LLM-provider keys.
+
+#### Scenario: Universal Auth can read all 21 unstract secrets
+
+- **WHEN** the bunchloch-locket-machine UA identity logs in to the
+  local Infisical and queries `GET /api/v3/secrets/raw/<key>?workspaceId=...&environment=dev&secretPath=/unstract`
+- **THEN** the response SHALL contain the secret value for at least
+  20 distinct keys (postgres_user, postgres_password, postgres_db,
+  postgres_schema, minio_root_user, minio_root_password,
+  minio_access_key, minio_secret_key, qdrant_user, qdrant_pass,
+  qdrant_db, rabbitmq_user, rabbitmq_pass, django_secret_key,
+  celery_broker_url, celery_result_backend, openai_api_key, etc.)
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |

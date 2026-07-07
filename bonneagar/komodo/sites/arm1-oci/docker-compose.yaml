@@ -1,0 +1,38 @@
+# =============================================================================
+# OCI ARM1 - Site Infrastructure
+# =============================================================================
+# Runs on Oracle Cloud ARM free tier for control plane services
+# Includes: Pangolin Newt (Periphery in Komodo stack)
+# =============================================================================
+
+name: oci-site
+
+services:
+  # ---------------------------------------------------------------------------
+  # NEWT - Pangolin Tunnel Agent
+  # ---------------------------------------------------------------------------
+  newt:
+    image: fosrl/newt:latest
+    container_name: newt
+    restart: unless-stopped
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      NEWT_ID: ${NEWT_ID}
+      NEWT_SECRET: ${NEWT_SECRET}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - pangolin
+    cap_add:
+      - NET_ADMIN
+    labels:
+      - "komodo.skip=true"
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  pangolin:
+    external: true

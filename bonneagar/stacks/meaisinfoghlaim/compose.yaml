@@ -1,0 +1,55 @@
+name: meaisínfhoghlaim
+
+services:
+  # ---------------------------------------------------------------------------
+  # LLAMA-SWAP — dynamic GGUF model swapper
+  # ---------------------------------------------------------------------------
+  llama-swap:
+    # Image name updated to the maintained `ghcr.io/mostlygeek/llama-swap`
+    # (the prior `ghcr.io/mmoehring/llama-swap` registry was retired).
+    # `cpu` tag for Apple Silicon; `cuda`/`vulkan` for NVIDIA/AMD GPUs.
+    image: ghcr.io/mostlygeek/llama-swap:cpu
+    container_name: llama-swap
+    restart: unless-stopped
+    # Mount the GGUF directory (converted from stedding/huggingface/hub/ via
+    # the Phase 5 Dagster model_conversion asset, or pre-existing .gguf files
+    # downloaded directly from unsloth/).
+    volumes:
+      - ../../stedding/huggingface/gguf:/models:ro
+      - ./llama-swap-config.yaml:/etc/llama-swap/config.yaml:ro
+    command:
+      - "--config"
+      - "/etc/llama-swap/config.yaml"
+      - "--listen"
+      - "0.0.0.0:8080"
+    environment:
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+      - HF_HUB_DOWNLOAD_TIMEOUT=600
+    ports:
+      - "8080:8080"
+    healthcheck:
+      # mostlygeek/llama-swap ships with curl; probe its /health endpoint.
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          # Apple Silicon unified memory: cap to 32 GB by default so we leave
+          # headroom for oideachais (~13 GB) + litellm/lancedb/langfuse.
+          # Bump to 48 GB by editing here when running alone.
+          memory: 32G
+          cpus: '14'
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

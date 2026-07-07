@@ -50,17 +50,18 @@ def _():
     # Primary path: MotherDuck + DuckLake lakehouse. Fall back to local DuckDB.
     try:
         import duckdb
+import ibis  # ibis-first entrypoint
         db_path = os.environ.get(
             "CIANFHOGHLAIS_UOG_DUCKDB", "/tmp/oideachais.duckdb"
         )
         if os.path.exists(db_path):
-            engine = duckdb.connect(db_path, read_only=True)
+            engine = ibis.duckdb.connect(db_path, read_only=True)
             ENGINE_LABEL = f"local DuckDB ({db_path})"
         else:
             token = os.environ.get("MOTHERDUCK_TOKEN", "")
             if token:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                engine = duckdb.connect("md:oideachais")
+                engine = ibis.duckdb.connect("md:oideachais")
                 ENGINE_LABEL = "md:oideachais (MotherDuck + DuckLake)"
             else:
                 ENGINE_LABEL = "MotherDuck (no token — set MOTHERDUCK_TOKEN)"
@@ -141,7 +142,7 @@ def _(engine, mo, pd):
               AND academic_year = 2025
             ORDER BY module_code
             """
-        ).fetchdf()
+        ).to_pandas()
     except Exception as exc:  # noqa: BLE001
         return mo.md(f"*Query failed: {exc}*"), pd.DataFrame()
     if df.empty:
@@ -188,7 +189,7 @@ def _(engine, mo, pd):
             FROM oideachais.education.ie.university_courses
             ORDER BY school, course_code
             """
-        ).fetchdf()
+        ).to_pandas()
     except Exception as exc:  # noqa: BLE001
         return (
             mo.md(f"*Query failed: {exc}*"),
@@ -267,7 +268,7 @@ def _(engine, mo, pd):
               AND m.recommended_reading != ''
             ORDER BY m.module_code
             """
-        ).fetchdf()
+        ).to_pandas()
     except Exception as exc:  # noqa: BLE001
         return mo.md(f"*Query failed: {exc}*"), group_by, pd.DataFrame()
     if df.empty:
@@ -321,7 +322,7 @@ def _(engine, mo, pd):
             FROM author_archive_uog_artifact
             ORDER BY course_code
             """
-        ).fetchdf()
+        ).to_pandas()
     except Exception as exc:  # noqa: BLE001
         uog = pd.DataFrame({"info": [f"UoG artefacts query failed: {exc}"]})
     try:
@@ -331,7 +332,7 @@ def _(engine, mo, pd):
             FROM oideachais.education.ie.university_courses
             ORDER BY course_code
             """
-        ).fetchdf()
+        ).to_pandas()
     except Exception as exc:  # noqa: BLE001
         courses = pd.DataFrame({"info": [f"Course descriptors query failed: {exc}"]})
     mo.vstack(

@@ -1,0 +1,8 @@
+# Pangolin auto-discovery labels for Ludusavi
+services:
+  ludusavi:
+    labels:
+      - "pangolin.resource.name=Ludusavi"
+      - "pangolin.resource.domain=ludusavi.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://ludusavi:8080"
+      - "pangolin.resource.middlewares=tinyauth"

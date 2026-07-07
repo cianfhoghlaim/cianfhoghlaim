@@ -1,0 +1,151 @@
+# =============================================================================
+# DAGSTER UNIFIED - Production Stack
+# =============================================================================
+# Runs the unified Dagster instance for the oideachais data platform.
+# Connects to the lakehouse for DuckLake / Garage S3 storage.
+#
+# USAGE:
+#   Development:  docker compose --env-file .env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#                 (Locket resolves secrets from Infisical at runtime)
+# =============================================================================
+
+name: dagster
+
+services:
+  # ---------------------------------------------------------------------------
+  # DAGSTER WEBSERVER
+  # ---------------------------------------------------------------------------
+  dagster:
+    # Pinned 2026-07-02 (was `ghcr.io/cianfhoghlaim/dagster:latest` — the
+    # org-private image is replaced with `dagster-local:latest`, a locally-built
+    # image from `stacks/dagster/Dockerfile.dagster` (modeled on
+    # dagster-io/dagster/examples/deploy_docker). Build locally with:
+    #   docker build -f stacks/dagster/Dockerfile.dagster -t dagster-local:latest stacks/dagster/
+    # No public dagster image exists; this is the only path to a working
+    # dagster in dev mode).
+    image: dagster-local:latest
+    build:
+      # Context: 2 dirs up (the repo root) so the Dockerfile can
+      # `COPY cianfhoghlaim` from `../../cianfhoghlaim` (per the
+      # 2026-07-03-infrastructure-foundation change). The Dockerfile
+      # is still in the stack dir.
+      context: ../..
+      dockerfile: bonneagar/stacks/dagster/Dockerfile.dagster
+    container_name: dagster-unified
+    restart: unless-stopped
+    # Run as root in dev so the dagster-home volume (root-owned) is
+    # writable. In production the Dockerfile would `chown` the volume
+    # at build time and the user would be `1000:1000`.
+    user: "0:0"
+    ports:
+      - "${DAGSTER_PORT:-3335}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/home
+      # DuckLake (via the cianfhoghlaim DLT destinations factory)
+      USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
+      DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
+      DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
+      DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
+      DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD:-devpassword}
+      DLT_ENVIRONMENT: ${DLT_ENVIRONMENT:-development}
+      # Garage S3
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-GK1601dev}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-dev-secret-key-not-for-prod}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
+      AWS_REGION: ${AWS_REGION:-garage}
+      # LLM (consumed by BAML + agents that Dagster orchestrates)
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-not-needed-in-dev}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-1234}
+      # LiteLLM gateway (the canonical LLM chokepoint)
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000/v1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      # Langfuse Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-dev}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-sk-lf-dev}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      # Logfire (OTel collector for self-hosted trace sink)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire:4317}
+      # LanceDB (the lakehouse-lance-namespace REST adapter)
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
+    volumes:
+      - dagster-storage:/opt/dagster/storage
+      - dagster-home:/opt/dagster/home
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3000/server_info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # DAGSTER DAEMON - Schedules, Sensors, Run Queue
+  # ---------------------------------------------------------------------------
+  dagster-daemon:
+    # Same local-built image as the webserver (per Change 7 pinning
+    # policy — no `ghcr.io/cianfhoghlaim/*`).
+    image: dagster-local:latest
+    build:
+      context: ../..
+      dockerfile: bonneagar/stacks/dagster/Dockerfile.dagster
+    container_name: dagster-daemon
+    restart: unless-stopped
+    # Run as root in dev (see dagster webserver comment).
+    user: "0:0"
+    command: ["dagster-daemon", "run"]
+    environment:
+      DAGSTER_HOME: /opt/dagster/home
+      USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
+      DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
+      DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
+      DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
+      DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD:-devpassword}
+      DLT_ENVIRONMENT: ${DLT_ENVIRONMENT:-development}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-GK1601dev}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-dev-secret-key-not-for-prod}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
+      AWS_REGION: ${AWS_REGION:-garage}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-not-needed-in-dev}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-1234}
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000/v1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
+    volumes:
+      - dagster-storage:/opt/dagster/storage
+      - dagster-home:/opt/dagster/home
+    depends_on:
+      dagster:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "dagster-daemon"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+volumes:
+  dagster-storage:
+  dagster-home:
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

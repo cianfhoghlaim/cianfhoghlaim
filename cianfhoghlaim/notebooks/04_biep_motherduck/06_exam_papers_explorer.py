@@ -46,6 +46,7 @@ def _():
     from datetime import UTC, datetime, timedelta
 
     import duckdb
+import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
     import lancedb
     import boto3
     import pandas as pd
@@ -199,16 +200,17 @@ def _(
         try:
             if MOTHERDUCK_ENABLED:
                 _token = os.environ.get("MOTHERDUCK_TOKEN", "")
-                duckdb.sql(f"SET motherduck_token='{_token}'")
-                _con = duckdb.connect("md:oideachais")
+                # ibis.ibis.ibis.duckdb.connect() picks up the MotherDuck token from the
+# connection URL (?motherduck_token=...) so no global SET is needed.
+                _con = ibis.duckdb.connect("md:oideachais")
             else:
                 if not pathlib.Path(DUCKDB_PATH).exists():
                     raise FileNotFoundError(
                         f"Local DuckDB not found at {DUCKDB_PATH}. "
                         "Run `uv run python -m cianfhoghlaim.dlt.british_isles.ireland.education.examinations` first."
                     )
-                _con = duckdb.connect(DUCKDB_PATH, read_only=True)
-            query_result = _con.execute(_sql).fetchdf()
+                _con = ibis.duckdb.connect(DUCKDB_PATH, read_only=True)
+            query_result = _con.execute(_sql).to_pandas()
             _con.close()
         except Exception as e:
             query_error = str(e)
@@ -295,15 +297,16 @@ def _(
         try:
             if MOTHERDUCK_ENABLED:
                 _token = os.environ.get("MOTHERDUCK_TOKEN", "")
-                duckdb.sql(f"SET motherduck_token='{_token}'")
-                _con = duckdb.connect("md:oideachais")
+                # ibis.duckdb.connect() picks up the MotherDuck token from the
+# connection URL (?motherduck_token=...) so no global SET is needed.
+                _con = ibis.duckdb.connect("md:oideachais")
             else:
                 if pathlib.Path(DUCKDB_PATH).exists():
-                    _con = duckdb.connect(DUCKDB_PATH, read_only=True)
+                    _con = ibis.duckdb.connect(DUCKDB_PATH, read_only=True)
                 else:
                     err = f"Local DuckDB missing: {DUCKDB_PATH}"
             if err is None:
-                df = _con.execute(_sql, _params).fetchdf()
+                df = _con.execute(_sql, _params).to_pandas()
                 _con.close()
         except Exception as e:
             err = str(e)

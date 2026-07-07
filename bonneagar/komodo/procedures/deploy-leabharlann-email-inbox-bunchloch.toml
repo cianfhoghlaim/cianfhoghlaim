@@ -1,0 +1,123 @@
+# =============================================================================
+# DEPLOY LEABHARLANN-EMAIL-INBOX-BUNCHLOCH PROCEDURE
+# =============================================================================
+# End-to-end deploy of the leabharlann-email-inbox-pipeline to
+# bunchloch (MacBook M4 Max). This is the umbrella procedure that
+# brings up:
+#   1. Mailcow self-hosted email server (15 containers + the
+#      mailcow-export companion) on bunchloch
+#   2. Lakehouse (Garage S3 + Postgres + Lakekeeper + Lance NS) —
+#      shared with oideachais
+#   3. Oideachais ADK agents + the 5 new leabharlann_inbox_*
+#      Dagster assets (which read the MBOX exports from
+#      /srv/mailcow-exports/)
+#   4. Pangolin private routes (mail + imap + smtp)
+#   5. Health checks across all 3 stacks
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) hosts:
+#     - mailcow-dockerized-bunchloch   (15 + 1 containers, ~3 GB)
+#     - lakehouse-oci                  (Garage + Postgres + Lakekeeper)
+#     - oideachais-bunchloch           (Dagster + FastAPI + TanStack +
+#                                       ADK agents including the new
+#                                       email_triage agent on :7778)
+#   arm1-oci hosts:
+#     - pangolin-core                  (the 3 new routes registered
+#                                       here via the Integration API)
+#
+# The 5 leabharlann_inbox_* Dagster assets are part of the
+# leabharlann_ingestion group (7 → 12 assets); they materialise
+# from the MBOX files written by the mailcow-export companion.
+#
+# Usage:
+#   komodo run procedure deploy-leabharlann-email-inbox-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-leabharlann-email-inbox-bunchloch"
+description = "Deploy the end-to-end leabharlann email inbox pipeline to bunchloch (MacBook M4) — mailcow stack → lakehouse → oideachais ADK + Dagster → Pangolin routes → health checks (6 stages)"
+
+# =============================================================================
+# STAGE 0: Prerequisites
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "leabharlann-email-inbox-preflight" } }
+
+# =============================================================================
+# STAGE 1: Mailcow Self-Hosted Email Server
+# =============================================================================
+# The export spine. 15 + 1 containers on bunchloch. The mailcow-export
+# companion writes mailbox-<date>.mbox files to /srv/mailcow-exports/
+# every 6 hours, which the Dagster container (stage 3) reads.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "mailcow-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-mailcow-dockerized-bunchloch" } }
+
+# =============================================================================
+# STAGE 2: Lakehouse
+# =============================================================================
+# The data plane. The new leabharlann_inbox_research_links asset
+# needs the existing leabharlann_gemini_deep_research_raw LanceDB
+# table; the leabharlann_inbox_baml_classify + thread_extract
+# assets write to the ducklake_oideachais.inbox_* tables.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "lakehouse"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lakehouse-oci" } }
+
+# =============================================================================
+# STAGE 3: Oideachais (ADK + Dagster)
+# =============================================================================
+# The Dagster container mounts the mailcow-exports/ shared volume
+# at /srv/mailcow-exports/ (read-only) and the 5 new
+# leabharlann_inbox_* assets materialise. The email_triage ADK
+# agent (port 7778) registers alongside the existing 9 ADK agents.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "oideachais-adk-dagster"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "oideachais-bunchloch" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "leabharlann-inbox-register-adk-agent" } }
+
+# =============================================================================
+# STAGE 4: Pangolin Routes
+# =============================================================================
+# Already applied by stage 1 of the mailcow procedure, but re-applied
+# idempotently here in case stage 3 (oideachais) redeployed.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-mailcow-routes" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-oideachais-routes" } }
+
+# =============================================================================
+# STAGE 5: Health Checks
+# =============================================================================
+# Verify all 3 stacks + the MBOX export pipeline.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "leabharlann-email-inbox-health-check" } }

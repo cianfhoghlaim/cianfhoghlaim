@@ -1,0 +1,48 @@
+# =============================================================================
+# DEPLOY LANGFUSE-BUNCHLOCH
+# =============================================================================
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - langfuse-bunchloch requires lakehouse-bunchloch to be healthy first
+#   (it uses lakehouse-postgres db=langfuse + lakehouse-clickhouse +
+#    lakehouse-redis + lakehouse-garage buckets).
+#
+# Usage:
+#   km run procedure deploy-langfuse-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-langfuse-bunchloch"
+description = "Deploy langfuse-bunchloch (postgreSQL + S3 + ClickHouse + Redis all from lakehouse stack)"
+
+# Stage 0: prerequisites
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-lakehouse-bunchloch" } }
+
+# Stage 1: langfuse
+[[procedure.config.stages]]
+name = "langfuse"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "langfuse-bunchloch" } }
+
+# Stage 2: health checks
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://langfuse.cianfhoghlaim.ie/api/public/health", expected_status = 200, timeout_s = 30 } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec langfuse-web wget --no-verbose --spider http://lakehouse-postgres:5432 || echo 'Postgres unreachable'" } }
+description = "Verify langfuse can reach lakehouse-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "aws --endpoint-url http://lakehouse-garage:3900 s3 ls | grep -E 'langfuse-(events|media|exports)' || echo 'Langfuse buckets missing'" } }
+description = "Verify the 3 langfuse buckets exist on Garage"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec langfuse-worker wget --no-verbose --spider http://lakehouse-clickhouse:8123/ping || echo 'ClickHouse unreachable'" } }
+description = "Verify langfuse can reach lakehouse-clickhouse"
