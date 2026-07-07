@@ -152,12 +152,12 @@ documented in
 The `opencode.json` `mcp` registry SHALL NOT define any MCP server
 whose `command` or `url` points at a non-existent path or URL.
 Specifically, the `croilar-devtools` MCP server (which pointed at
-`sruth/croilar/mcp/devtools/index.ts` before the v4 consolidation)
+`cianfhoghlaim/mcp/devtools/index.ts` before the v4 consolidation)
 SHALL be removed.
 
 #### Scenario: croilar-devtools MCP is gone
 
-- **GIVEN** the v4 consolidation deleted the `sruth/croilar/`
+- **GIVEN** the v4 consolidation deleted the `cianfhoghlaim/`
   directory tree
 - **WHEN** a build agent reads `opencode.json` `mcp` keys
 - **THEN** the `croilar-devtools` key is not present
@@ -190,7 +190,7 @@ SHALL be removed.
 
 The `.agents/skills/INDEXING_AND_COGNITION.md` document SHALL NOT
 contain any path reference to the deleted `sruth/<quadrant>/`
-quadrants or the old `infrastructure/stacks/<name>/` locations.
+quadrants or the old `bonneagar/stacks/<name>/` locations.
 Every reference SHALL point at the v4 `cianfhoghlaim/` equivalent.
 
 #### Scenario: No stale path refs in INDEXING_AND_COGNITION.md
@@ -198,7 +198,7 @@ Every reference SHALL point at the v4 `cianfhoghlaim/` equivalent.
 - **GIVEN** the INDEXING document at
   `.agents/skills/INDEXING_AND_COGNITION.md`
 - **WHEN** the build agent greps for `sruth/`,
-  `infrastructure/stacks/`, `croilar-devtools`, or
+  `bonneagar/stacks/`, `croilar-devtools`, or
   `infrastructure/scripts/` substrings
 - **THEN** zero matches are returned (matches inside §9's
   intentional migration table are excepted as they document the

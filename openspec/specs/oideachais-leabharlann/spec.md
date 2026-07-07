@@ -4,8 +4,8 @@
 
 `oideachais-leabharlann` is a capability of the Cianfhoghlaim platform.
 The corresponding source code lives at
-`sruth/oideachais/dlt_sources/leabharlann/` (the 4 dlt sources: books,
-zotero, takeout, UoG) and `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
+`cianfhoghlaim/dlt_sources/leabharlann/` (the 4 dlt sources: books,
+zotero, takeout, UoG) and `cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py`
 (the 3 v1 CocoIndex Apps). See `docs/00_index.md` for the quadrant map
 and `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -176,7 +176,7 @@ a single-source-of-truth configuration.
 
 #### Scenario: App registration
 
-- **GIVEN** an `sruth/oideachais/cocoindex_flows/<flow>.py` module
+- **GIVEN** an `cianfhoghlaim/cocoindex_flows/<flow>.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare
   `app = coco.App(coco.AppConfig(name="<UniqueName>"), app_main, ...)`
@@ -364,7 +364,7 @@ The system SHALL expose the leabharlann (personal archive) corpus at `cianfhoghl
 - **WHEN** Dagster materialises a leabharlann asset
 - **THEN** the dlt source module is `cianfhoghlaim.pipelines.ingest.leabharlann.{books,zotero,takeout_v1,university_of_galway,gemini_deep_research,google_takeout}` (formerly `sruth.oideachais.dlt_sources.leabharlann.*`)
 - **AND** the CocoIndex embedding flow is `cianfhoghlaim.embeddings.leabharlann` (formerly `sruth.oideachais.cocoindex_flows.leabharlann_embedding`)
-- **AND** the directory-watch sensor is `cianfhoghlaim.pipelines.sensors.leabharlann` (formerly `sruth/oideachais/dagster_defs/sensors/leabharlann_sensors.py`)
+- **AND** the directory-watch sensor is `cianfhoghlaim.pipelines.sensors.leabharlann` (formerly `cianfhoghlaim/dagster_defs/sensors/leabharlann_sensors.py`)
 
 ### Requirement: Plan 1 All 6 Leabharlann Subdirs Active (v4)
 
@@ -429,11 +429,11 @@ the `oideachais-university-deep-extraction` pipeline:
 
 ## Cross-references
 
-- [`sruth/oideachais/dlt_sources/leabharlann/`](../../sruth/oideachais/dlt_sources/leabharlann/) (the 4 dlt sources)
-- [`sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`](../../sruth/oideachais/cocoindex_flows/leabharlann_embedding.py) (the 3 v1 Apps)
-- [`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py`](../../sruth/oideachais/dagster_defs/assets/leabharlann_assets.py) (the 7 Dagster assets)
-- [`sruth/oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py`](../../sruth/oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py) (the demo asset)
-- [`sruth/oideachais/dagster_defs/sensors/leabharlann_sensors.py`](../../sruth/oideachais/dagster_defs/sensors/leabharlann_sensors.py) (the sensor)
+- [`cianfhoghlaim/dlt_sources/leabharlann/`](../../cianfhoghlaim/dlt_sources/leabharlann/) (the 4 dlt sources)
+- [`cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py`](../../cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py) (the 3 v1 Apps)
+- [`cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py`](../../cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py) (the 7 Dagster assets)
+- [`cianfhoghlaim/dagster_defs/assets/leabharlann_full_stack_demo.py`](../../cianfhoghlaim/dagster_defs/assets/leabharlann_full_stack_demo.py) (the demo asset)
+- [`cianfhoghlaim/dagster_defs/sensors/leabharlann_sensors.py`](../../cianfhoghlaim/dagster_defs/sensors/leabharlann_sensors.py) (the sensor)
 - [`openspec/specs/oideachais-baml-schemas/spec.md`](oideachais-baml-schemas/spec.md) (the upstream BAML extraction)
 - [`openspec/specs/oideachais-cognify-knowledge-graph/spec.md`](oideachais-cognify-knowledge-graph/spec.md) (the downstream cognify + edges)
 - [`openspec/specs/oideachais-marimo-dashboards/spec.md`](oideachais-marimo-dashboards/spec.md) (the full-stack demo dashboard)

@@ -1,12 +1,28 @@
 # official-media-fediverse Specification
 
 ## Purpose
-TBD - created by archiving change official-media-pipeline. Update Purpose after archive.
+
+`official-media-fediverse` is a capability of the Cianfhoghlaim
+platform. It is the **pure Python library** for the 4-lookup resolver
+used by the official-media-pipeline. It exposes:
+
+- **Mastodon webfinger** — `webfinger.resolve(handle) → User`
+- **Bluesky xrpc** — `xrpc.resolve_handle(handle) → DID`
+- **Wikipedia REST** — `wikipedia.search(q, lang) → SearchResult[]`
+- **Companies House / CRO lookup** — `companies_house.lookup(name) → Company[]`
+
+The library is reusable by any agent in the fleet (the
+side-loadable-app phase planned post-v5) — it's an isolated package at
+`cianfhoghlaim/core/fediverse/` with no dependencies on the DLT or
+BAML stack.
+
+Migrated from `author-archive-web-scraping` (the prototype pre-research
+backend was the origin of this resolver library post-v4).
 ## Requirements
 ### Requirement: FediverseHandleResolution
 
 The system SHALL provide a module at
-`sruth/oideachais/dlt_sources/official_media/fediverse.py` that resolves
+`cianfhoghlaim/dlt_sources/official_media/fediverse.py` that resolves
 Mastodon and Bluesky handles to their canonical URL via the standard
 public protocols.
 
@@ -51,7 +67,7 @@ public protocols.
 ### Requirement: WikipediaAndCompaniesHouseLookup
 
 The system SHALL provide a module at
-`sruth/oideachais/dlt_sources/official_media/source_resolver.py` that resolves
+`cianfhoghlaim/dlt_sources/official_media/source_resolver.py` that resolves
 the canonical Wikipedia article and Companies House / CRO entity for
 each candidate.
 

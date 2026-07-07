@@ -286,3 +286,7 @@ reference the same `oideachais.retro.design_patterns` LanceDB table.
   regenerated via the pxlkit CLI
 - **AND** the atlas contains the 4 new PNGs in a grid layout (one
   per sprite category)
+
+## Merged from
+
+- `retro-game-asset-pipeline` (the SAM3 / SAM-3D-Objects / TRELLIS.2 / FIBO asset generation pipeline was merged into this spec on 2026-07-06)

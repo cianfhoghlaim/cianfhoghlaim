@@ -1,7 +1,29 @@
 # dagster-5-layer-component-architecture Specification
 
 ## Purpose
-TBD - created by archiving change 2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture. Update Purpose after archive.
+
+`dagster-5-layer-component-architecture` is a capability of the
+Cianfhoghlaim platform. It defines the canonical 5-layer Dagster
+architecture: **Ingestion → Materials → Model Lifecycle → Asset
+Generation → Agent Operations**. The 5 layers map onto 5 KCG-specific
+Dagster Components (`CelticIngestionComponent` /
+`CelticMaterialsComponent` / `CelticModelLifecycleComponent` /
+`CelticAssetGenerationComponent` / `CelticAgentOpsComponent`) at
+`cianfhoghlaim/dagster/components/layer{1..5}_*.py`.
+
+The architecture uses Dagster 1.13+ Declarative Automation
+(`AutomationCondition.eager() | .cron(...)`), Virtual Assets
+(`is_virtual=True` on the 17 L3 CocoIndex v1 Apps), and State-Backed
+Components (the 5 L1 high-churn sources NCCA / SEC / CCEA / SQA / WJEC
+with `state_refresh_interval="monthly"`). R1–R4 conformance is enforced
+at scaffold time.
+
+The 5-layer rewrite supersedes the legacy 3 KCG Components
+(`celtic_dlt_source`, `celtic_cocoindex_v1`, `celtic_lancedb_hnsw`).
+L5 Agent Operations adds 12 agents × 5 emitted assets = 60 new L5
+assets, with RisingWave event stream at
+`risingwave.cianfhoghlaim.ie:4566` + Letta memory + Langfuse traces
+dropped.
 ## Requirements
 ### Requirement: 5-Layer Hierarchy
 The Dagster asset graph SHALL be organised into exactly 5 layers:

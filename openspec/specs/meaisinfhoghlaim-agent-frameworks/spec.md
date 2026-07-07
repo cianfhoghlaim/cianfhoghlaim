@@ -4,8 +4,8 @@
 
 `meaisinfhoghlaim-agent-frameworks` is a capability of the Cianfhoghlaim
 platform. The corresponding source code lives at
-`sruth/meaisinfhoghlaim/agents/` (12 specialised agents) and
-`sruth/oideachais/agents/{adk,agno}/` (the application-layer CopilotKit / AG-UI
+`cianfhoghlaim/agents/` (12 specialised agents) and
+`cianfhoghlaim/agents/{adk,agno}/` (the application-layer CopilotKit / AG-UI
 facades). See `docs/00_index.md` for the quadrant map and
 `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -17,7 +17,7 @@ the Agno + Google ADK + LiteLLM framework, 253 lines).
 
 The meaisinfhoghlaim agent framework is the model layer for the
 Cianfhoghlaim platform. The 12 specialised agents in
-`sruth/meaisinfhoghlaim/agents/` cover the full Irish + UK + pan-Celtic
+`cianfhoghlaim/agents/` cover the full Irish + UK + pan-Celtic
 education surface:
 
 - **Root Agent** — orchestrator that routes to the 6+ specialised agents
@@ -44,13 +44,13 @@ education surface:
 - **Site Analysis Agent** — firecrawl + browserbase MCP-driven site
   audits
 
-The 2 application-layer facades (`sruth/oideachais/agents/{adk,agno}/`) wrap
+The 2 application-layer facades (`cianfhoghlaim/agents/{adk,agno}/`) wrap
 these specialised agents for the front-end CopilotKit / AG-UI.
 ## Requirements
 ### Requirement: 12 specialised agents
 
 The system SHALL provide 12 specialised agents in
-`sruth/meaisinfhoghlaim/agents/` covering the Irish + UK + pan-Celtic
+`cianfhoghlaim/agents/` covering the Irish + UK + pan-Celtic
 education surface.
 
 #### Scenario: Root agent routes to specialists
@@ -113,7 +113,7 @@ The system SHALL trace every agent call with Langfuse + MLflow + RAGAS
 ### Requirement: Application-layer facades
 
 The system SHALL provide 2 application-layer agent facades in
-`sruth/oideachais/agents/{adk,agno}/` for the oideachais web app.
+`cianfhoghlaim/agents/{adk,agno}/` for the oideachais web app.
 
 #### Scenario: CopilotKit AG-UI streaming
 
@@ -148,9 +148,9 @@ The `from cianfhoghlaim.agents.adk import <name>` path SHALL resolve all `LlmAge
 
 ## Cross-references
 
-- [`sruth/meaisinfhoghlaim/agents/`](../../sruth/meaisinfhoghlaim/agents/) (the 12 specialised agents)
-- [`sruth/oideachais/agents/adk/`](../../sruth/oideachais/agents/adk/) (the Google ADK facade)
-- [`sruth/oideachais/agents/agno/`](../../sruth/oideachais/agents/agno/) (the Agno facade)
+- [`cianfhoghlaim/agents/`](../../cianfhoghlaim/agents/) (the 12 specialised agents)
+- [`cianfhoghlaim/agents/adk/`](../../cianfhoghlaim/agents/adk/) (the Google ADK facade)
+- [`cianfhoghlaim/agents/agno/`](../../cianfhoghlaim/agents/agno/) (the Agno facade)
 - [`.agents/skills/agno/SKILL.md`](../../.agents/skills/agno/SKILL.md)
 - [`.agents/skills/google-adk/SKILL.md`](../../.agents/skills/google-adk/SKILL.md)
 - [`.agents/skills/ai-engineer/SKILL.md`](../../.agents/skills/ai-engineer/SKILL.md)

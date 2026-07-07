@@ -3,59 +3,88 @@
 ## Purpose
 
 `infrastructure-stacks-documentation` is a capability of the
-Cianfhoghlaim platform. It defines the contract for the
-per-stack documentation that lives in `cianfhoghlaim/` (the
-code repo) but documents the ops at `bonneagar/` (the
-infra repo).
+Cianfhoghlaim platform. It defines the contract for the per-stack
+documentation that lives in `cianfhoghlaim/` (the code repo) but
+documents the ops at `bonneagar/` (the infra repo).
 
 The corresponding source code lives at:
 
 - `cianfhoghlaim/docs/stacks/README.md` (the index)
-- `cianfhoghlaim/docs/stacks/<name>.md` (the 88 per-stack
-  docs, one per stack in `bonneagar/stacks/`)
-- `scripts/stack-doctor.sh` (the CI gate that fails if a
-  stack is missing its doc)
-- `.agents/skills/infrastructure-stacks-documentation/SKILL.md`
-  (the agent entry point)
+- `cianfhoghlaim/docs/stacks/<name>.md` (the per-stack docs, one per stack in `bonneagar/stacks/`)
+- `scripts/stack-doctor.sh` (the CI gate that fails if a stack is missing its doc)
+- `.agents/skills/infrastructure-stacks-documentation/SKILL.md` (the agent entry point)
 
 ## Background
 
 The Cianfhoghlaim monorepo has a clean separation:
 
-- **`cianfhoghlaim/`** = the code (Python package, agents,
-  web apps, BAML schemas, DLT sources, etc.)
-- **`bonneagar/`** = the ops (Docker compose, Pangolin
-  routing, Infisical secrets, Komodo orchestration, Backrest
-  backups, IaC TypeScript client)
+- **`cianfhoghlaim/`** = the code (Python package, agents, web apps, jupytext notebooks)
+- **`bonneagar/`** = the infra (94 Docker Compose stacks + Komodo + Pangolin + Infisical IaC)
 
-The 88 stacks at `bonneagar/stacks/` need documentation
-that lives in `cianfhoghlaim/` because:
-
-1. The **purpose for the cianfhoghlaim project** is a code
-   concern (which stack is used by which Python module, BAML
-   schema, Dagster asset, ADK agent, etc.)
-2. The **why-GitOps** rationale is an operational concern
-   (which stacks can be removed, which can be combined,
-   which need separate Komodo Peripheries)
-3. The **cross-references** need to point at both repos
-
-The contract: every stack in `bonneagar/stacks/<name>/` MUST
-have a corresponding `cianfhoghlaim/docs/stacks/<name>.md`
-doc with a 4-section template.
+Without a contract that every stack has a per-stack doc in
+`cianfhoghlaim/docs/stacks/`, the agent fleet has no entry point for
+"how do I run `<x>` in production". The `stack-doctor.sh` CI gate
+enforces the contract.
 
 ## Requirements
 
-The full Requirements + Scenarios are in the change-side
-delta file
-`openspec/changes/2026-06-29-bonneagar-v4-canonical-and-stack-migration/specs/infrastructure-stacks-documentation/spec.md`.
+### Requirement: Per-stack docs contract
+
+The system SHALL provide a per-stack doc file at
+`cianfhoghlaim/docs/stacks/<name>.md` for every stack in
+`bonneagar/stacks/<name>/`. Each per-stack doc SHALL have 4 sections:
+
+1. **Purpose** — one paragraph: what the stack does, who owns it, what
+   it depends on.
+2. **Why-GitOps** — one paragraph: why we self-host this stack on
+   `arm1-oci` / `bunchloch` instead of using a SaaS.
+3. **Cross-references** — links to the originating spec (e.g.
+   `oideachais-pipeline/spec.md`), the AGENTS.md entry, and the
+   upstream docs URL.
+4. **Tags** — a `tags: [<space>, <stack-name>, <protocol>]` YAML
+   frontmatter for search.
+
+#### Scenario: New stack added
+
+- **WHEN** a developer adds a new stack at `bonneagar/stacks/<new>/`
+- **THEN** they SHALL also add `cianfhoghlaim/docs/stacks/<new>.md`
+- **AND** the 4 sections (Purpose, Why-GitOps, Cross-references, Tags) SHALL be present
+- **AND** the doc SHALL pass the `scripts/stack-doctor.sh --check-stacks-doc` CI gate
+
+#### Scenario: Stack doc missing
+
+- **WHEN** a stack exists at `bonneagar/stacks/<new>/` but no doc exists at `cianfhoghlaim/docs/stacks/<new>.md`
+- **THEN** `scripts/stack-doctor.sh` SHALL exit non-zero on CI
+- **AND** the PR SHALL fail the gate
+
+### Requirement: stack-doctor.sh CI gate
+
+The system SHALL provide `scripts/stack-doctor.sh` as a CI gate that
+checks:
+
+1. Every `bonneagar/stacks/<name>/` has a `cianfhoghlaim/docs/stacks/<name>.md`
+2. Every doc has the 4 required sections
+3. Every doc's Tags frontmatter is parseable YAML
+4. Every doc's Cross-references link to a live spec at `openspec/specs/`
+5. Every doc's Purpose doesn't reference `sruth/` or pre-v4 paths
+
+#### Scenario: CI gate failure
+
+- **WHEN** a developer pushes a commit that adds a stack without its doc
+- **THEN** the CI pipeline SHALL run `bun run validate-stacks` (which calls `stack-doctor.sh`)
+- **AND** exit non-zero with the missing-stack error
+- **AND** block the merge
+
+#### Scenario: Pre-v4 path detected
+
+- **WHEN** a doc's Purpose section contains `sruth/` or `bonneagar/stacks/` (the pre-v4 path)
+- **THEN** `stack-doctor.sh` SHALL exit non-zero with the `pre-v4-path-detected` error
+- **AND** print the offending file + line + the pre-v4 → post-v4 replacement hint
 
 ## Cross-references
 
-- [`infrastructure-stacks`](../infrastructure-stacks/spec.md) —
-  the 6-file GOLD_STANDARD + 88-stack inventory
-- [`data-engineering-pipeline-documentation`](../data-engineering-pipeline-documentation/spec.md) —
-  the 4 canonical ops dirs
-- [`indexing-and-cognition`](../indexing-and-cognition/spec.md) —
-  the IaC at `bonneagar/iac/komodo/`
-- [`author-archive-pipeline`](../author-archive-pipeline/spec.md) —
-  the hf-watchdog stack + the VISION_MODELS registry
+- [`infrastructure-stacks`](../infrastructure-stacks/spec.md) — the 94 stacks at `bonneagar/stacks/`
+- [.agents/skills/infrastructure-stacks-documentation](../../.agents/skills/infrastructure-stacks-documentation/SKILL.md) — the agent entry point
+- [`data-engineering-pipeline-documentation`](../data-engineering-pipeline-documentation/spec.md) — the docs taxonomy this fits into
+
+## Migrated from: *(none)*

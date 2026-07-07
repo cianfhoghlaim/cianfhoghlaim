@@ -1,7 +1,16 @@
 # oideachais-cocoindex-v1-migration Specification
 
 ## Purpose
-TBD - created by archiving change oideachais-v0-to-v1-migration. Update Purpose after archive.
+
+`oideachais-cocoindex-v1-migration` is a capability of the Cianfhoghlaim
+platform. It defines the canonical pattern for **v1 CocoIndex Apps** in
+the consolidated `cianfhoghlaim/` package: every CocoIndex flow is
+exposed as a v1 `coco.App` instance with a `@coco.fn` `app_main`
+function, a stable identity, v1 R1-R4 rule conformance, and the
+`lancedb.mount_table_target` target pattern. Post-v4, the Apps live at
+`cianfhoghlaim/cocoindex/<app>.py`. There are 15 Apps in current use
+(13 from the BIEP v1 + UoG deep-extraction timeline, plus the 2 from
+`apple-photos-ingestion`).
 ## Requirements
 ### Requirement: V1 CocoIndex Apps
 
@@ -63,7 +72,7 @@ All 13 Apps SHALL use the canonical v1 pattern
 ### Requirement: V0 Archive
 
 The system SHALL archive the **10 v0 broken CocoIndex modules**
-at `sruth/oideachais/cocoindex_flows/_v0_archive/` (the canonical home
+at `cianfhoghlaim/cocoindex_flows/_v0_archive/` (the canonical home
 for deprecated v0 code). The 10 modules are:
 
 1. `author_archive_embedding.py`
@@ -81,17 +90,17 @@ The 10 modules SHALL raise `ImportError` when imported
 (cocoindex==1.0.9 has no `flow_def` DSL). The
 `_v0_archive/__init__.py` SHALL document the deprecation and
 point to the canonical v1 Apps in
-`sruth/oideachais/cocoindex_flows/`.
+`cianfhoghlaim/cocoindex_flows/`.
 
 The system SHALL NOT migrate the 10 v0 modules to v1 in this
 change (the migration is a 6-week project per
-`sruth/oideachais/REFACTORING.md` #6). The 11 v1 Apps cover the
+`cianfhoghlaim/REFACTORING.md` #6). The 11 v1 Apps cover the
 equivalent use cases.
 
 #### Scenario: A developer tries to import a v0 module
 
 - **GIVEN** the v0 module is archived at
-  `sruth/oideachais/cocoindex_flows/_v0_archive/research_embedding.py`
+  `cianfhoghlaim/cocoindex_flows/_v0_archive/research_embedding.py`
 - **WHEN** a developer does
   `from oideachais.cocoindex_flows.research_embedding import ...`
 - **THEN** Python SHALL raise `ModuleNotFoundError` (or
@@ -100,3 +109,7 @@ equivalent use cases.
 - **AND** the developer SHALL use the v1 App instead (e.g.
   `unified_embedding` for the DuckDB-source research use case)
 
+
+## Merged from
+
+- `cocoindex-v1-migration` (the original v1 CocoIndex migration spec was merged into this spec on 2026-07-06)

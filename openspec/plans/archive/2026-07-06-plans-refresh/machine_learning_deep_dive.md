@@ -66,3 +66,7 @@ The ADK delegates specialized tasks to Model Context Protocol (MCP) servers:
 ## Summary
 
 The `education` layer is highly modular. The **ML Pipeline** provides raw capabilities (routing, circuit-breaking, and specialized Gaelic OCR), **BAML** enforces strict schemas over the unstructured data these models produce, and the **ADK/MCP Agent** orchestrates these tools into a unified system that can intelligently scrape, index, parse, and compare curriculums internationally.
+
+---
+
+**Archived 2026-07-06** — moved from `openspec/plans/` to `openspec/plans/archive/2026-07-06-plans-refresh/` by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The content of this plan has been absorbed into the canonical specs listed in the frontmatter `superseded_by` field (refreshed to point at post-v4 spec names).

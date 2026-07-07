@@ -4,9 +4,9 @@
 
 `agentic-frontend-frameworks` is a capability of the Cianfhoghlaim
 platform. The corresponding source code lives at
-`sruth/oideachais/web/` (TanStack Start front-end), `sruth/croilar/apps/web/` (Croilar
-public persona site), `sruth/croilar/apps/portal/` (Croilar self-hosted
-dashboard), and `sruth/meaisinfhoghlaim/agents/agui_*` (the AG-UI integration).
+`cianfhoghlaim/web/` (TanStack Start front-end), `cianfhoghlaim/apps/web/` (Croilar
+public persona site), `cianfhoghlaim/apps/portal/` (Croilar self-hosted
+dashboard), and `cianfhoghlaim/agents/agui_*` (the AG-UI integration).
 See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md`
 for the project identity.
 
@@ -31,7 +31,7 @@ oideachais web app and the croilar apps.
 
 #### Scenario: Routes are auto-generated
 
-- **GIVEN** a file `sruth/oideachais/web/apps/web/src/routes/curriculum.tsx`
+- **GIVEN** a file `cianfhoghlaim/web/apps/web/src/routes/curriculum.tsx`
 - **WHEN** the app is built
 - **THEN** the route `/curriculum` is auto-generated and accessible
 
@@ -103,8 +103,8 @@ references live at
 - **THEN** the developer sees:
   - The 7-layer stack (TanStack Start + CopilotKit + AG-UI
     + Convex + Hono + oRPC + BAML)
-  - The 4 canonical surfaces (sruth/oideachais/web, sruth/croilar/apps/
-    web, sruth/croilar/apps/portal, sruth/tuatha/ui)
+  - The 4 canonical surfaces (cianfhoghlaim/web, cianfhoghlaim/apps/
+    web, cianfhoghlaim/apps/portal, cianfhoghlaim/ui)
   - The 4 backend options (Pydantic AI / Agno / Google
     ADK / BAML)
   - The 3 auth models (no-auth, OAuth + SIWE + 2FA,
@@ -115,7 +115,7 @@ references live at
 #### Scenario: A new agent UI is added to the existing surface
 
 - **GIVEN** the developer wants to add a chat UI to the
-  sruth/oideachais/web surface
+  cianfhoghlaim/web surface
 - **WHEN** they look at the AG-UI section of
   `.agents/skills/agentic-frontend-frameworks/SKILL.md`
 - **THEN** the developer sees the 17 AG-UI event types
@@ -136,10 +136,10 @@ plane, user) tuple. The 4 surfaces are:
 
 | # | Surface | Stack | Auth | Data plane | User |
 |:--|:--|:--|:--|:--|:--|
-| 1 | `sruth/oideachais/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (MotherDuck) | Irish educators + students |
-| 2 | `sruth/croilar/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
-| 3 | `sruth/croilar/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
-| 4 | `sruth/tuatha/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (realtime) + SpacetimeDB | Tuatha game players |
+| 1 | `cianfhoghlaim/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (MotherDuck) | Irish educators + students |
+| 2 | `cianfhoghlaim/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
+| 3 | `cianfhoghlaim/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
+| 4 | `cianfhoghlaim/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (realtime) + SpacetimeDB | Tuatha game players |
 
 The 5th surface (marimo, analyst notebook) is
 documented separately at
@@ -150,11 +150,11 @@ documented separately at
 - **GIVEN** the user wants to add auth to a surface
 - **WHEN** the developer looks at the 4 surfaces table
 - **THEN** the developer sees:
-  - `sruth/oideachais/web` and `sruth/croilar/apps/web` have NO auth
+  - `cianfhoghlaim/web` and `cianfhoghlaim/apps/web` have NO auth
     (public)
-  - `sruth/croilar/apps/portal` has BetterAuth + Pocket ID +
+  - `cianfhoghlaim/apps/portal` has BetterAuth + Pocket ID +
     SIWE
-  - `sruth/tuatha/ui` has SIWE (Ethereum wallet only)
+  - `cianfhoghlaim/ui` has SIWE (Ethereum wallet only)
 - **AND** the developer can pick the right auth pattern
   for the target surface without re-deriving
 
@@ -288,6 +288,6 @@ with the Cian lineage highlights (Delbhna Tír Dhá Locha + Lough Corrib
 - [`.agents/skills/copilotkit/SKILL.md`](../../.agents/skills/copilotkit/SKILL.md)
 - [`.agents/skills/hono/SKILL.md`](../../.agents/skills/hono/SKILL.md)
 - [`.agents/skills/convex/SKILL.md`](../../.agents/skills/convex/SKILL.md)
-- [`sruth/oideachais/web/`](../../sruth/oideachais/web/) (the oideachais web app)
-- [`sruth/croilar/apps/web/`](../../sruth/croilar/apps/web/) (the croilar public site)
-- [`sruth/croilar/apps/portal/`](../../sruth/croilar/apps/portal/) (the croilar dashboard)
+- [`cianfhoghlaim/web/`](../../cianfhoghlaim/web/) (the oideachais web app)
+- [`cianfhoghlaim/apps/web/`](../../cianfhoghlaim/apps/web/) (the croilar public site)
+- [`cianfhoghlaim/apps/portal/`](../../cianfhoghlaim/apps/portal/) (the croilar dashboard)

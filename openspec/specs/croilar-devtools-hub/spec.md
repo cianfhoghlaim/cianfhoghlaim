@@ -1,7 +1,17 @@
 # croilar-devtools-hub Specification
 
 ## Purpose
-TBD - created by archiving change croilar-devtools-hub. Update Purpose after archive.
+
+`croilar-devtools-hub` is a capability of the Cianfhoghlaim platform. It
+is the **croilar-internal dev-tools hub** — a single TanStack Start app
+that surfaces the monorepo's web-stack inventory (TanStack Start + React
+Server Components + Vinxi + Convex + BetterAuth + Hono + BAML +
+CopilotKit) plus the 4-persona portfolio preview surfaces (aleyum +
+cianfhoghlaim + carlcashman). The hub is the developer entry point for
+the croilar sub-tree (`cianfhoghlaim/web/apps/croilar-web/` +
+`cianfhoghlaim/assets/_croilar_dagster/`).
+
+The corresponding source code lives at `cianfhoghlaim/web/apps/croilar-web/` (TanStack Start app).
 ## Requirements
 ### Requirement: Web-Stack Inventory
 
@@ -37,7 +47,7 @@ The system SHALL keep the Glance dashboard in sync with the Convex registry.
 
 #### Scenario: Regenerator emits 5 pages
 
-- **WHEN** `bun run sruth/croilar/scripts/regenerate-glance-config.ts` runs
+- **WHEN** `bun run cianfhoghlaim/scripts/regenerate-glance-config.ts` runs
 - **THEN** the output SHALL contain 5 pages: `Home`, `tuatha`, `oideachais`, `croilar`, `meaisínfhoghlaim`
 - **AND** each project page SHALL have at least: a search box, a routes widget, a Dagster assets widget, a test results widget
 
@@ -120,5 +130,5 @@ The system SHALL require the `CROILAR_CONVEX_DEPLOY_KEY` environment variable to
 
 - **WHEN** the analyzer is run without `CROILAR_CONVEX_DEPLOY_KEY`
 - **THEN** it SHALL exit non-zero with a clear error message
-- **AND** the error message SHALL direct the user to the Infisical `dev-baile/sruth/croilar/convex/deploy_key` path
+- **AND** the error message SHALL direct the user to the Infisical `dev-baile/cianfhoghlaim/convex/deploy_key` path
 

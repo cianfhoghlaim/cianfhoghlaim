@@ -4,9 +4,9 @@
 
 `oideachais-cognify-knowledge-graph` is a capability of the Cianfhoghlaim
 platform. The corresponding source code lives at
-`sruth/oideachais/cognee_integration/` (the 5-stage cross-stage cognify +
+`cianfhoghlaim/cognee_integration/` (the 5-stage cross-stage cognify +
 site-analysis cognify + leabharlann cognify adapters) and
-`sruth/oideachais/graph/` (the application-layer FalkorDB + Memgraph clients).
+`cianfhoghlaim/graph/` (the application-layer FalkorDB + Memgraph clients).
 See `docs/00_index.md` for the quadrant map and
 `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -195,10 +195,14 @@ only sees valid records.
 
 ## Cross-references
 
-- [`sruth/oideachais/cognee_integration/`](../../sruth/oideachais/cognee_integration/) (the 3 cognify adapters)
-- [`sruth/oideachais/cognify_rules/`](../../sruth/oideachais/cognify_rules/) (the cross-archive rules)
-- [`sruth/oideachais/graph/`](../../sruth/oideachais/graph/) (FalkorDB + Memgraph clients)
-- [`sruth/oideachais/api/routes/cross_archive_graph.py`](../../sruth/oideachais/api/routes/cross_archive_graph.py) (the API route)
+- [`cianfhoghlaim/cognee_integration/`](../../cianfhoghlaim/cognee_integration/) (the 3 cognify adapters)
+- [`cianfhoghlaim/cognify_rules/`](../../cianfhoghlaim/cognify_rules/) (the cross-archive rules)
+- [`cianfhoghlaim/graph/`](../../cianfhoghlaim/graph/) (FalkorDB + Memgraph clients)
+- [`cianfhoghlaim/api/routes/cross_archive_graph.py`](../../cianfhoghlaim/api/routes/cross_archive_graph.py) (the API route)
 - [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)
 - [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
 - [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream leabharlann pipeline)
+
+## Migrated from (2026-07-06)
+
+- `author-archive-cross-corpus-kg` — the `oideachais_author_archive` single Cognee dataset pattern was merged into the 5 leabharlann cognify datasets + 3 cross-archive edge types

@@ -84,3 +84,6 @@ Marimo notebooks are organized into numerous functional categories, demonstratin
 ## Conclusion
 
 The presentation layer of the `education` project is highly sophisticated, employing a dual-track approach. The React/TypeScript frontend provides robust, structured user experiences with integrated AI (AGUI, CopilotKit) and real-time backend capabilities (Convex). Simultaneously, the Marimo notebooks provide a powerful, Python-native environment for data exploration, rapid dashboard creation, and complex curriculum/mathematical analysis, deeply integrated with the project's data and AI infrastructure.
+---
+
+**Archived 2026-07-06** — moved from `openspec/plans/` to `openspec/plans/archive/2026-07-06-plans-refresh/` by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The content of this plan has been absorbed into the canonical specs listed in the frontmatter `superseded_by` field (refreshed to point at post-v4 spec names).

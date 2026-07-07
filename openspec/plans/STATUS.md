@@ -2,38 +2,53 @@
 title: 'OpenSpec Plans — Status Index'
 domain: 'standards'
 status: 'stable'
-description: 'Status index for openspec/plans/ (research artefacts and deferred roadmaps). Each plan has a status: research | deferred. Deferral plans are moved to docs/00-deploy-plans/.'
+description: 'Status index for openspec/plans/ (research artefacts and deferred roadmaps). Each plan has a status: active | research | deferred. Fully absorbed plans are moved to plans/archive/2026-07-06-plans-refresh/.'
 read_when:
   - looking for an existing plan before starting a change
-  - reviewing what work was deferred
-updated: '2026-06-13'
+  - reviewing what work was deferred or archived
+updated: '2026-07-06'
 ccc_query_hints:
   - openspec plans status index
   - research deferred roadmap
+  - 2026-07-06-plans-refresh archive
 ---
 
 # OpenSpec Plans — Status Index
 
 > `openspec/plans/` holds **research artefacts and deferred roadmaps** —
 > not active work. Active work is in `openspec/changes/`.
-> See [`docs/00_index.md` §5 OpenSpec workflow](../../docs/00_index.md)
-> for the full lifecycle.
+> See the root [`AGENTS.md`](../AGENTS.md) for the OpenSpec workflow.
+
+**2026-07-06 refresh** (by `2026-07-06-drift-cleanup-and-v4-alignment`):
+6 of the 12 historical plans in this directory were fully absorbed into
+canonical specs and moved to `plans/archive/2026-07-06-plans-refresh/`.
+The 6 plans kept here remain in `plans/` as live research / deferred
+roadmaps.
 
 ## Status: research (kept for traceability)
 
 | Plan | Last touched | Supersedes | Note |
 |---|---|---|---|
-| `data_engineering_deep_dive.md` | 2026-06-13 | superseded by [`oideachais-pipeline` spec](../specs/oideachais-pipeline/spec.md) + [`data-pipeline` spec](../specs/data-pipeline/spec.md) + [`docs/02-data-platform/data-architecture.md`](../../docs/02-data-platform/data-architecture.md) | keep for the architectural insights |
-| `deployment_and_ai_strategy.md` | 2026-06-13 | superseded by [`infrastructure` spec](../specs/infrastructure/spec.md) + [`docs/01-platform-architecture/`](../../docs/01-platform-architecture/) | keep |
-| `deployment_stack_strategy.md` | 2026-06-13 | superseded by [`infrastructure-stacks` spec](../specs/infrastructure-stacks/spec.md) | keep |
 | `education_audit_plan.md` | 2026-06-13 | **the live one** — points at the post-restructure placeholders we fix in Phase 1 | keep |
-| `exponential_improvement_roadmap.md` | 2026-06-13 | research; insights distributed across 4 specs already | keep |
 | `final_exponential_strategy.md` | 2026-06-13 | research; superseded by the LLM-stack-hierarchy doc | keep |
 | `gcp_ai_optimization_strategy.md` | 2026-06-13 | research; never deployed (we run OCI Ampere A1, not GCP) | keep |
-| `infrastructure_deep_dive.md` | 2026-06-13 | superseded by [`infrastructure` spec](../specs/infrastructure/spec.md) | keep |
-| `machine_learning_deep_dive.md` | 2026-06-13 | superseded by [`oideachais-pipeline` spec](../specs/oideachais-pipeline/spec.md) + [`data-pipeline` spec](../specs/data-pipeline/spec.md) | keep |
+| `infrastructure_deep_dive.md` | 2026-06-13 | superseded by [`infrastructure-stacks` spec](../specs/infrastructure-stacks/spec.md) | keep |
 | `package-updates.md` | 2026-06-13 | research (the only plan with substantive content; 277 lines) | keep |
-| `web_and_dashboards_deep_dive.md` | 2026-06-13 | research; partially superseded by [`frontend-frameworks` spec](../specs/frontend-frameworks/spec.md) + [`docs/05-web/frontend-topology.md`](../../docs/05-web/frontend-topology.md) | keep |
+
+## Status: archived (fully absorbed; moved 2026-07-06)
+
+These 6 plans were fully absorbed into canonical specs and moved to
+[`archive/2026-07-06-plans-refresh/`](archive/2026-07-06-plans-refresh/)
+by the `2026-07-06-drift-cleanup-and-v4-alignment` change.
+
+| Original plan (now archived) | Absorbed into |
+|---|---|
+| `archive/2026-07-06-plans-refresh/data_engineering_deep_dive.md` | [`oideachais-pipeline` spec](../specs/oideachais-pipeline/spec.md) + [`oideachais-cognify-knowledge-graph` spec](../specs/oideachais-cognify-knowledge-graph/spec.md) |
+| `archive/2026-07-06-plans-refresh/deployment_and_ai_strategy.md` | [`infrastructure-stacks` spec](../specs/infrastructure-stacks/spec.md) + [`agent-platform-cluster` spec](../specs/agent-platform-cluster/spec.md) |
+| `archive/2026-07-06-plans-refresh/deployment_stack_strategy.md` | [`infrastructure-stacks` spec](../specs/infrastructure-stacks/spec.md) |
+| `archive/2026-07-06-plans-refresh/exponential_improvement_roadmap.md` | [`oideachais-pipeline` spec](../specs/oideachais-pipeline/spec.md) (research only; insights distributed) |
+| `archive/2026-07-06-plans-refresh/machine_learning_deep_dive.md` | [`british-isles-education-pipeline` spec](../specs/british-isles-education-pipeline/spec.md) |
+| `archive/2026-07-06-plans-refresh/web_and_dashboards_deep_dive.md` | [`agentic-frontend-frameworks` spec](../specs/agentic-frontend-frameworks/spec.md) |
 
 ## Status: deferred → moved to `docs/00-deploy-plans/`
 

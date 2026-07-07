@@ -1,7 +1,22 @@
 # celtic-asset-generation Specification
 
 ## Purpose
-TBD - created by archiving change sync-skills-from-docs-round-8. Update Purpose after archive.
+
+`celtic-asset-generation` is a capability of the Cianfhoghlaim platform.
+It runs **4 successive INDEPENDENT asset-generation pipelines** that turn
+the official Irish curriculum documents into the visual + 3D assets the
+agent fleet needs to render the educational MMO. The 4 pipelines are:
+
+1. **Official documents** — `official_documents/{syllabus,exam_papers,marking_schemes}/`
+   turn PDFs into structured records (extracted text + figures + tables).
+2. **Subject assets** — `subject_assets/{chemistry_lab,geography_landscape,biology_specimens,physics_apparatus}/`
+   generate per-subject visual assets (lab equipment photos, terrain tiles, specimen models, apparatus illustrations).
+3. **Language assets** — `language_assets/{gaeilge,cymraeg,gaidhlig,gaelg,kernewek,brezhoneg}_assets.py`
+   generate per-language visual + audio assets for the 6 Celtic languages.
+4. **Exporters** — `exporters/{babylon,godot,unity,unreal}.py` export the
+   generated assets into the 4 target game-engine formats.
+
+The corresponding source code lives at `cianfhoghlaim/assets/asset_generation/`.
 ## Requirements
 ### Requirement: Five-stage Celtic asset generation pipeline
 
@@ -25,8 +40,8 @@ through the 5 stages:
    semantic search
 
 The pipeline runs in
-`sruth/oideachais/dagster_defs/assets/celtic_assets.py` and
-is exposed via the FastAPI `sruth/oideachais/api/` endpoints.
+`cianfhoghlaim/dagster_defs/assets/celtic_assets.py` and
+is exposed via the FastAPI `cianfhoghlaim/api/` endpoints.
 The skill body at
 `.agents/skills/celtic-asset-generation/SKILL.md`
 documents the canonical 5-stage flow; the deep-dive

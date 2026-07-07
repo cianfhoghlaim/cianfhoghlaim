@@ -20,7 +20,7 @@ Two parallel knowledge surfaces feed every agent in the monorepo:
   `cocoindex-code` MCP server (9 tools).
 - **Cognee** — indexes 1,743 `.md` docs (~2,242 documents across
   7 typed clusters) in a Postgres+pgvector backend (the in-house
-  cognee stack at `infrastructure/stacks/cognee/`); backs the
+  cognee stack at `bonneagar/stacks/cognee/`); backs the
   `cognee` MCP server (10 tools).
 
 A third registry, the **OpenCode agent + skill + MCP registry**,
@@ -39,7 +39,7 @@ on startup from `opencode.json`. Currently the registry has:
 ### Requirement: CCC v1 is the canonical CocoIndex code-search surface
 
 The system SHALL provide a single CocoIndex v1 App at
-`sruth/oideachais/cocoindex_flows/codebase_indexing.py` named
+`cianfhoghlaim/cocoindex_flows/codebase_indexing.py` named
 `CodebaseIndex` as the canonical semantic code search surface. The
 system SHALL NOT call the legacy `ccc search` CLI in any production
 code path; the legacy CLI SHALL be retained only as a CLI fallback
@@ -62,7 +62,7 @@ until 2026-07-15 (per the `cocoindex-v1-migration` spec).
 ### Requirement: Cognee uses Postgres+pgvector as the unified backend
 
 The system SHALL run Cognee against a single
-`infrastructure/stacks/cognee/` Docker Compose stack that uses
+`bonneagar/stacks/cognee/` Docker Compose stack that uses
 `pgvector/pgvector:pg17` as the unified graph + vector backend
 (`VECTOR_DB_PROVIDER=pgvector`, `GRAPH_DATABASE_PROVIDER=postgres`,
 `DB_PROVIDER=postgres`). The system SHALL NOT depend on a separate
@@ -71,7 +71,7 @@ deployment.
 
 #### Scenario: Cognee compose uses pgvector
 
-- **GIVEN** `infrastructure/stacks/cognee/compose.yaml`
+- **GIVEN** `bonneagar/stacks/cognee/compose.yaml`
 - **WHEN** the file is read
 - **THEN** the `cognee` service declares `VECTOR_DB_PROVIDER: pgvector`
 - **AND** the `DB_PROVIDER` and `GRAPH_DATABASE_PROVIDER` env vars both point at the same `cognee-postgres` service
@@ -81,7 +81,7 @@ deployment.
 
 - **GIVEN** the 5 sruth-quadrant agents that call `cognee.search()`
 - **WHEN** the agents run against the in-house cognee stack
-- **THEN** they SHALL NOT require the `infrastructure/stacks/graphiti/` Neo4j container to be up
+- **THEN** they SHALL NOT require the `bonneagar/stacks/graphiti/` Neo4j container to be up
 - **AND** the `cognee` MCP server's `env` block SHALL have exactly the 3 canonical keys (`COGNEE_API_URL`, `COGNEE_API_KEY`, `LLM_API_KEY`) and no `NEO4J_*` keys (the `graphiti` MCP server is the canonical consumer of `NEO4J_*` env vars, because it backs the graphiti service)
 
 ### Requirement: The 7 typed cognify clusters are the canonical Cognee dataset shape
@@ -147,7 +147,7 @@ every server that needs a secret SHALL reference it via
 - **GIVEN** `opencode.json` `mcp.<name>` block
 - **WHEN** the JSON is read
 - **THEN** it SHALL contain all 10 servers above
-- **AND** the `croilar-devtools` command path SHALL resolve to `sruth/croilar/mcp/devtools/index.ts` (a file that exists on disk)
+- **AND** the `croilar-devtools` command path SHALL resolve to `cianfhoghlaim/mcp/devtools/index.ts` (a file that exists on disk)
 
 #### Scenario: MCP secrets use Locket-canonical form
 
@@ -237,11 +237,11 @@ are the escape hatch and need the full 123-skill surface).
 ### Requirement: Agent registry is the canonical agent inventory
 
 The system SHALL expose a canonical
-`sruth/meaisinfhoghlaim/agents/` inventory (12 specialists + 1 root
+`cianfhoghlaim/agents/` inventory (12 specialists + 1 root
 agent = 13 `.py` modules) as the model-layer agent surface. The
 13-module list SHALL be exposed at import time as a
 `MODEL_LAYER_AGENTS: tuple[str, ...]` constant in
-`sruth/meaisinfhoghlaim/agents/__init__.py`. The OpenCode
+`cianfhoghlaim/agents/__init__.py`. The OpenCode
 `agent.<name>` blocks SHALL be the runtime surface that dispatches
 to the model-layer inventory; every sruth-subagent's prompt SHALL
 reference the corresponding `sruth/<name>/AGENTS.md` and the
@@ -250,7 +250,7 @@ reference the corresponding `sruth/<name>/AGENTS.md` and the
 #### Scenario: Model-layer inventory has 13 .py modules
 
 - **GIVEN** the 5 sruth subagents
-- **WHEN** the model-layer inventory at `sruth/meaisinfhoghlaim/agents/*.py` is read
+- **WHEN** the model-layer inventory at `cianfhoghlaim/agents/*.py` is read
 - **THEN** it SHALL contain 13 `.py` modules (root + 12 specialists): `root_agent.py`, `curriculum_agent.py`, `translation_agent.py`, `corpus_agent.py`, `research_agent.py`, `education_research_agent.py`, `bunchloch_research_agent.py`, `geospatial_agent.py`, `statistics_agent.py`, `curriculum_comparison_agent.py`, `agui_curriculum_agent.py`, `mcp_curriculum_agent.py`, `voice_agent.py`
 - **AND** the inventory SHALL be importable as `sruth.meaisinfhoghlaim.agents`
 - **AND** the `MODEL_LAYER_AGENTS` tuple SHALL list exactly those 13 module basenames
@@ -387,3 +387,7 @@ The canonical CCC v1 search command SHALL return a JSON array of result chunks o
 - **AND** SHALL NOT raise any error
 - **AND** SHALL return up to 5 structured chunks
 
+
+## Migrated from (2026-07-06)
+
+- `chunkhound-code-search` — the deprecated ChunkHound capability (semantic code search via MVCC + Tree-sitter + LanceDB) was superseded by this spec; users should now use the v1 `codebase_indexing` CocoIndex App

@@ -58,3 +58,6 @@ Once the raw pages are ingested from both English and Irish systems (as well as 
 5. **Dagster Orchestration**: Through `DagsterDltResource`, Dagster seamlessly orchestrates these `dlt` pipelines within its asset graph, allowing complex dependencies (like waiting for `dlt` extraction to finish before running BAML extraction or LanceDB embedding generation) to be managed reliably.
 
 In summary, the Data Engineering layer provides a sophisticated, multi-national data harmonization engine, heavily utilizing `dlt` to abstract the complexity of ingestion and DuckDB/LanceDB to manage the structured and semantic data workloads.
+---
+
+**Archived 2026-07-06** — moved from `openspec/plans/` to `openspec/plans/archive/2026-07-06-plans-refresh/` by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The content of this plan has been absorbed into the canonical specs listed in the frontmatter `superseded_by` field (refreshed to point at post-v4 spec names).

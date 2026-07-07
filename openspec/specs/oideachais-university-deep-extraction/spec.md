@@ -1,7 +1,29 @@
 # oideachais-university-deep-extraction Specification
 
 ## Purpose
-TBD - created by archiving change university-of-galway-deep-extraction. Update Purpose after archive.
+
+`oideachais-university-deep-extraction` is a capability of the
+Cianfhoghlaim platform. It is the **reusable per-university website
+deep-extraction template** for any British Isles university. v1 covers
+the University of Galway (UoG) case study as the worked example; the
+template is general-purpose for any future university (Edinburgh,
+Cambridge, Cardiff, QUB, IoM, etc.).
+
+The pipeline ingests a single university's course catalogue + module
+catalogue + programme pages, structures them via BAML
+`university_extraction.baml` (4 classes + 4 functions + 3
+deterministic evals), embeds them via 2 new v1 CocoIndex Apps
+(`UniversityCoursesApp` + `UniversityModulesApp`), and joins the
+extracted artefacts to the leabharlann corpus via 1 new Cognee
+cross-archive edge `UoGArtifact-MATCHES-CourseDescriptor`.
+
+The corresponding source code lives at:
+
+- `cianfhoghlaim/dlt/british_isles/ie/university/uog/` (the case-study DLT source)
+- `cianfhoghlaim/dlt/british_isles/_university_deep_factory.py` (the reusable factory)
+- `cianfhoghlaim/baml/education/university_extraction.baml`
+- `cianfhoghlaim/cocoindex/university_courses_embedding.py` + `university_modules_embedding.py`
+- 5 Dagster assets `uog_{pre_research,bulk_scrape,extract_courses,extract_modules,extract_programmes}`
 ## Requirements
 ### Requirement: Per-university config schema
 
@@ -267,3 +289,7 @@ against the lakehouse, not against a local Parquet.
 - **THEN** the table SHALL display the user's CT511 assignment on the left, the matching `CourseDescriptor` on the right, and the `match_confidence` between them
 - **AND** clicking the `course_descriptor.url` opens the UoG programme page in a new tab
 
+
+## Migrated from (2026-07-06)
+
+- `author-archive-uog-coursework` — the UoG coursework BAML extraction (Subject enum + module-specific functions like `ExtractUoGMathModule`) is now the per-university UoG case study here

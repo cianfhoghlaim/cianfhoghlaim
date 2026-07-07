@@ -1,12 +1,30 @@
 # official-media-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change official-media-pipeline. Update Purpose after archive.
+
+`official-media-pipeline` is a capability of the Cianfhoghlaim
+platform. It is the **British-Isles government source enrichment
+pipeline**: turn an Instagram-export photo + caption into a structured
+record identifying the government organisation that posted it (or
+should have). The pipeline uses DLT to scrape official government
+sources, BAML `ClassifyOfficialMedia` to classify + entity-link, and a
+4-lookup resolver (Mastodon webfinger + Bluesky xrpc + Wikipedia REST +
+Companies House / CRO lookup) to find the canonical identity.
+
+The corresponding source code lives at:
+
+- `cianfhoghlaim/dlt/official_media/` (the 3 jurisdictions × EN/NI/IE/Scotland prerelease DLT sources)
+- `cianfhoghlaim/baml/official_media/classify_official_media.baml`
+- `cianfhoghlaim/agents/meaisinfhoghlaim/official_media_resolver.py`
+- Dagster group `official_media` for the 2 pre-research + 3 enrichment assets
+
+Migrated from `author-archive-pipeline` (the pre-research logic was the
+prototype of this capability post-v4).
 ## Requirements
 ### Requirement: InstagramExportIngest
 
 The system SHALL provide a DLT source at
-`sruth/oideachais/dlt_sources/official_media/instagram_export.py` that parses
+`cianfhoghlaim/dlt_sources/official_media/instagram_export.py` that parses
 the JSON bundle Instagram ships in the standard export format
 (`connections/followers_and_following/*.json`,
 `logged_information/recent_searches/*.json`,
@@ -158,3 +176,9 @@ The system SHALL write the enriched records to the lakehouse under the
 - **AND** the metadata SHALL record `{"model": "BAAI/bge-m3",
   "vector_dim": 1024, "rows_embedded": 10}`
 
+
+## Migrated from (2026-07-06)
+
+- `author-archive-credit-budget` — the Credit Budget pattern moved here
+- `author-archive-pipeline` — the pre-research pipeline is now the L1 ingestion step here
+- `author-archive-web-scraping` — the BackendRouter is now the `official-media-pipeline` browser layer
