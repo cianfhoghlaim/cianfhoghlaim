@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cianfhoghlaim OS — Aes Sedai — servants of all</title>
+    <title>cianfhoghlaim — self-hostable NCCA LC education</title>
+    <meta name="description" content="cianfhoghlaim — a self-hostable consolidation of Leaving Certificate education system resources. 8 NCCA subjects + 5 root-level PDFs + 6 content types + 9 ADK agents. Reduce barriers to education." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,18 +15,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module">
-      // Dev-only: ensure the Vite React Refresh preamble is installed
-      // (the index.html is served from /public, not the project root,
-      //  so Vite's automatic preamble injection does not apply).
-      if (import.meta.env && import.meta.env.DEV) {
-        const { default: RefreshRuntime } = await import('/@react-refresh');
-        RefreshRuntime.injectIntoGlobalHook(window);
-        window.$RefreshReg$ = window.$RefreshReg$ || (() => {});
-        window.$RefreshSig$ = window.$RefreshSig$ || (() => (type) => type);
-        window.__vite_plugin_react_preamble_installed__ = true;
-      }
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

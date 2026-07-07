@@ -13,7 +13,7 @@ import "./a2ui-theme.css";
 
 import * as IndexRoute from "./routes/index";
 import * as FoundationsRoute from "./routes/en/foundations";
-import * as SubjectRoute from "./routes/en/leaving-cert/$subject";
+import * as SubjectRoute from "./routes/en/subjects.$subject";
 import * as SectionRoute from "./routes/en/leaving-cert/$subject.$section";
 import * as PracticeRoute from "./routes/en/leaving-cert/$subject.practice.$topic";
 import * as AgentsRoute from "./routes/en/agents";
