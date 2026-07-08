@@ -35,7 +35,7 @@ A new stack is composed of 4 deploy surfaces:
 | Surface | Where it lives | What it does |
 |:--|:--|:--|
 | **Komodo Core** | `bunchloch` (operator's MacBook) | Orchestrates the fleet via web UI + REST API at `komodo.cianfhoghlaim.ie:9120` (per `bonneagar/komodo/stacks/komodo.toml`) |
-| **Komodo Periphery** | `arm1-oci` + `bunchloch` (2 agents) | Each runs as a `komodo-periphery-{oci,macbook}` container; connects outbound to Core (per `bonneagar/komodo/stacks/komodo.toml`) |
+| **Komodo Periphery** | `arm1-oci` + `bunchloch` (2 agents) | Each runs as a `komodo-periphery-{arm1-oci,bunchloch}` container; connects outbound to Core (per `bonneagar/komodo/stacks/komodo.toml`) |
 | **Infisical Vault** | `arm1-oci` (`infisical.cianfhoghlaim.ie`) | Self-hosted; the `dev-baile` environment is the source of truth (per `bonneagar/infisical/` + `bonneagar/SECRETS-MANAGEMENT.md`) |
 | **Pangolin** | `arm1-oci` (Traefik + Gerbil + Pocket ID) | Reverse-proxy + identity + TinyAuth SSO; routes `*.cianfhoghlaim.ie` to internal containers (per `bonneagar/PANGOLIN-SETUP.md`) |
 

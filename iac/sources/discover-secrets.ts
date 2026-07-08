@@ -38,7 +38,10 @@ function parseSecretsEnv(
     if (!line || line.startsWith("#")) continue;
 
     // Match: KEY=infisical://dev-baile/<stack>/<key>
-    const m = line.match(/^([A-Z_][A-Z0-9_]*)=infisical:\/\/dev-baile\/([^/]+)\/([^/]+)\/([^/]+)\/?$/);
+    // The canonical 2-segment URI form (e.g. infisical://dev-baile/litellm/master_key).
+    // The pre-v5 regex required 3 path segments, which silently matched
+    // zero secrets — fixed in v5.
+    const m = line.match(/^([A-Z_][A-Z0-9_]*)=infisical:\/\/dev-baile\/([^/]+)\/([^/]+)\/?$/);
     if (!m) continue;
 
     const [, envVar, pathPrefix, secretKey] = m;

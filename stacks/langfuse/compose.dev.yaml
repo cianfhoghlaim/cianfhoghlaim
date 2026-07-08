@@ -48,6 +48,14 @@ services:
       # this is a belt-and-suspenders override.)
       POSTGRES_PASSWORD: devpassword
       POSTGRES_USER: lakekeeper
+      # Dev override: lakehouse-redis is in Created state (port 6379 conflict with
+      # dragonfly). Use the running dragonfly container as the Redis backend.
+      # env_file is loaded first, but environment overrides env_file — so we
+      # need to set this explicitly here to win against the base compose's
+      # `REDIS_HOST: lakehouse-redis` hardcoded.
+      REDIS_HOST: dragonfly
+      REDIS_AUTH: devpassword
+      REDIS_PASSWORD: devpassword
     networks:
       - default
       - cianfhoghlaim
@@ -63,6 +71,9 @@ services:
     environment:
       POSTGRES_PASSWORD: devpassword
       POSTGRES_USER: lakekeeper
+      REDIS_HOST: dragonfly
+      REDIS_AUTH: devpassword
+      REDIS_PASSWORD: devpassword
     networks:
       - default
       - cianfhoghlaim
@@ -76,10 +87,10 @@ secrets:
     file: /dev/null
 
 # Top-level networks: block in the base compose declares `cianfhoghlaim`
-# as external, but the network is only created by the logfire stack.
-# In dev mode we don't run logfire, so the network is missing. Override
-# the external declaration to a local bridge network.
+# as external. In dev mode on bunchloch, this network IS created (by the
+# lakehouse/litellm/etc. cold-boot), so we keep it external. The previous
+# "external: false" override broke DNS for sibling services like dragonfly.
 networks:
   cianfhoghlaim:
-    external: false
-    driver: bridge
+    external: true
+    name: cianchoghlaim

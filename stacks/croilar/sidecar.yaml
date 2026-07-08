@@ -14,7 +14,7 @@
 
 services:
   locket:
-    image: ghcr.io/cianfhoghlaim/locket:latest
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: croilar-locket
     restart: unless-stopped
     env_file:

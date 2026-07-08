@@ -18,7 +18,11 @@ services:
   # LITELLM GATEWAY
   # ---------------------------------------------------------------------------
   litellm:
-    image: ghcr.io/berriai/litellm:main-stable
+    # Pinned 2026-07-06 (was `ghcr.io/berriai/litellm:main-stable` — bumped
+    # to the `:database` variant of v1.91.0 per the upgrade-4-stacks-with-
+    # infisical change. The database variant bundles Prisma binaries
+    # required for the lakehouse-postgres (db=litellm) backend).
+    image: ghcr.io/berriai/litellm-database:v1.91.0
     container_name: litellm
     restart: unless-stopped
     # Command: load the model registry from /app/config/config.yaml
@@ -27,6 +31,9 @@ services:
       - "--host=0.0.0.0"
       - "--port=4000"
       - "--num_workers=4"
+      - "--run_gunicorn"
+      - "--max_requests_before_restart=10000"
+      - "--max_requests_before_restart_jitter=1000"
     ports:
       - "4000:4000" # Map the container port to the host
     volumes:
@@ -40,6 +47,11 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/litellm
       LITELLM_DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/litellm
       STORE_MODEL_IN_DB: "True"
+      # v1.91 production hardening
+      LITELLM_MODE: "PRODUCTION"
+      USE_PRISMA_MIGRATE: "True"
+      MAX_REQUESTS_BEFORE_RESTART: "10000"
+      MAX_REQUESTS_BEFORE_RESTART_JITTER: "1000"
       # Cloud LLM providers
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
@@ -85,7 +97,7 @@ services:
       resources:
         limits:
           cpus: '4'
-          memory: 4G
+          memory: 16G
     networks:
       - cianfhoghlaim
       - lakehouse

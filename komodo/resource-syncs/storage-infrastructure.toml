@@ -11,22 +11,16 @@ description = "Storage stack infrastructure as code"
 
 [resource_sync.config]
 # Repository configuration - Forgejo at git.cianfhoghlaim.ie
-# v5 fix: repo was hardcoded "cliste/bonneagar" (stale pre-v4 reference).
-# The canonical repo is "cianfhoghlaim/bonneagar" — the v4 split moved
-# the iac/komodo/pangolin/infisical code into its own repo at
-# github.com/cianfhoghlaim/bonneagar (the home of this worktree).
-repo = "cianfhoghlaim/bonneagar"
+repo = "cliste/bonneagar"
 git_account = "forgejo"
 branch = "main"
 
 # Resource paths to sync
-# v5 fix: removed "bonneagar/komodo/actions/*.toml" (Komodo Actions
-# live under "actions/" not "komodo/actions/" — and the existing
-# actions/ subdirectory is empty / never populated in this repo).
 resource_path = [
   "bonneagar/komodo/servers/*.toml",
   "bonneagar/komodo/stacks/*.toml",
   "bonneagar/komodo/procedures/*.toml",
+  "bonneagar/komodo/actions/*.toml",
   "bonneagar/komodo/resource-syncs/*.toml"
 ]
 

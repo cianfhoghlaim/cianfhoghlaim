@@ -1,0 +1,45 @@
+# =============================================================================
+# Moonlight - Game Streaming Client (Web)
+# =============================================================================
+# Web-based Moonlight client for game streaming.
+# Note: Moonlight is primarily a client application. This config provides
+# a web-based streaming option using moonlight-web.
+# https://github.com/nicholasalex/moonlight-web
+# =============================================================================
+
+name: moonlight
+
+services:
+  moonlight:
+    image: ghcr.io/nicholasalex/moonlight-web:latest
+    container_name: moonlight
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "${MOONLIGHT_PORT:-8080}:80"
+
+    environment:
+      - TZ=${TZ:-UTC}
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - tools
+
+networks:
+  tools:
+    external: true

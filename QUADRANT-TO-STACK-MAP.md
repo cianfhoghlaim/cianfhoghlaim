@@ -34,7 +34,7 @@ counterpart is produced by the audit scripts under
 
 | Stack | Path | Port | Dagster code-location | `*.cianfhoghlaim.ie` domain |
 |:--|:--|:--|:--|:--|
-| (none live — pre-existing sruth import bug blocks the code-location) | — | — | `tuatha/dagster_assets/definitions.py` (broken — see `tuatha/README.md` §Known issues) | — |
+| (none live — pre-existing sruth import bug blocks the code-location) | — | — | (post-v4: lives at `cianfhoghlaim/dagster/`) | — |
 | Rust crates (services, solana, stdb-modules, wgpu) | `tuatha/crates/` | n/a (compiled binaries) | n/a | n/a |
 | Babylon.js / MMO client | `tuatha/game/` | n/a (build target) | n/a | n/a |
 
@@ -61,15 +61,21 @@ counterpart is produced by the audit scripts under
 
 | Stack | Path | Host | `*.cianfhoghlaim.ie` domain | Runbook |
 |:--|:--|:--|:--|:--|
-| infisical | `bonneagar/infisical/` | arm1-oci | `infisical.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/infisical.md` |
+| infisical | `bonneagar/stacks/infisical/` | arm1-oci | `infisical.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/infisical.md` |
 | komodo | `bonneagar/komodo/` | arm1-oci + bunchloch | `komodo.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/komodo.md` |
-| pangolin | `bonneagar/pangolin/` | arm1-oci | (Pangolin routes all `*.cianfhoghlaim.ie` domains) | `bonneagar/deploy-runbooks/pangolin.md` |
-| ansible | `bonneagar/ansible/` | n/a (provisioning automation) | n/a | `bonneagar/deploy-runbooks/ansible.md` |
+| pangolin | `bonneagar/stacks/pangolin/` | arm1-oci | (Pangolin routes all `*.cianfhoghlaim.ie` domains) | `bonneagar/deploy-runbooks/pangolin.md` |
+| olm-arm1-oci | `bonneagar/stacks/olm-arm1-oci/` | arm1-oci | (OLM TCP tunnel, not a public HTTP service) | (moved from `pangolin/olm-oracle/` in v5) |
 | cal-diy | `bonneagar/stacks/cal-diy/` | arm1-oci | `calcom.cianfhoghlaim.ie` | `bonneagar/deploy-runbooks/cal-diy.md` |
-| vikunja | `bonneagar/stacks/vikunja/` | (intended: bunchloch) | (per Komodo) | `bonneagar/deploy-runbooks/vikunja.md` |
-| n8n | `bonneagar/stacks/n8n/` | (intended: bunchloch) | (per Komodo) | `bonneagar/deploy-runbooks/n8n.md` |
-| changedetection | `bonneagar/stacks/changedetection/` | (intended: bunchloch) | (per Komodo) | `bonneagar/deploy-runbooks/changedetection.md` |
-| bytebase | `bonneagar/stacks/bytebase/` | (intended: arm1-oci) | (per Komodo) | `bonneagar/deploy-runbooks/bytebase.md` |
+| vikunja | `bonneagar/stacks/vikunja/` | bunchloch | (per Komodo) | `bonneagar/deploy-runbooks/vikunja.md` |
+| n8n | `bonneagar/stacks/n8n/` | bunchloch | (per Komodo) | `bonneagar/deploy-runbooks/n8n.md` |
+| changedetection | `bonneagar/stacks/changedetection/` | bunchloch | (per Komodo) | `bonneagar/deploy-runbooks/changedetection.md` |
+| bytebase | `bonneagar/stacks/bytebase/` | arm1-oci | (per Komodo) | `bonneagar/deploy-runbooks/bytebase.md` |
+
+> **v5 update:** The `bonneagar/ansible/` directory was pruned
+> in the v5 drift refactor (functionally dead per the prior
+> runbook's own admission). Hetzner is Pulumi-only (no
+> `cax41-hetzner` references in inventory / IaC / ansible).
+> The 2-host topology is `arm1-oci` + `bunchloch` only.
 
 ## 6. Domain → Host routing summary
 
@@ -85,7 +91,7 @@ bunchloch (35 containers)
 │   └── newt (Pangolin client → arm1-oci)
 ├── control plane
 │   ├── komodo-core (the MacBook is the Core)
-│   ├── komodo-periphery-macbook
+│   ├── komodo-periphery-bunchloch
 │   └── komodo-postgres + komodo-ferretdb
 ├── LLM
 │   ├── LiteLLM + litellm-db + litellm-prometheus
@@ -103,7 +109,7 @@ arm1-oci (~10 containers)
 │   ├── Pangolin + Gerbil + Traefik
 │   ├── Pocket ID + TinyAuth + Middleware Manager + CrowdSec
 │   ├── komodo-core (the orchestrator UI lives here)
-│   ├── komodo-periphery-oci
+│   ├── komodo-periphery-arm1-oci
 │   ├── Infisical + infisical-postgres
 │   └── Dozzle + Beszel + Qdrant
 ├── user-facing

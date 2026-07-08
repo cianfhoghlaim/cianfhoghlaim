@@ -41,7 +41,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical/infisical_secret
 
 volumes:
   stack-secrets:

@@ -29,7 +29,7 @@ services:
     # "Forbidden patterns"). The image is published from the
     # `locket` repo at https://github.com/cianfhoghlaim/locket
     # (private). Update this tag when a new release is published.
-    image: ghcr.io/cianfhoghlaim/locket:1.2.3
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: cianfhoghlaim-oideachais-locket
     restart: unless-stopped
     env_file:

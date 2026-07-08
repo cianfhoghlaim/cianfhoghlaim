@@ -19,10 +19,6 @@ export const CONFIG = {
   komodoUrl: envOr("KOMODO_URL", "http://localhost:9120"),
   komodoJwt: envOr("KOMODO_JWT", ""),
   komodoPassword: envOr("KOMODO_PASSWORD", ""),
-  // v5: env-driven admin username (replaces the pre-v5 hardcoded
-  // "ciansedai"). Default keeps the v4 username as a sane fallback
-  // for the 2-host topology (arm1-oci + bunchloch).
-  komodoUsername: envOr("KOMODO_USERNAME", "ciansedai"),
 
   // Pangolin (Enterprise Edition — Integrations API at /v1/...)
   pangolinUrl: envOr("PANGOLIN_URL", "https://pangolin.cianfhoghlaim.ie"),

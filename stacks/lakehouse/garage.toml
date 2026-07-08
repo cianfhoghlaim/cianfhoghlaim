@@ -1,21 +1,26 @@
 # =============================================================================
 # LAKEHOUSE GARAGE - Enhanced S3-Compatible Storage Configuration
 # =============================================================================
+# Pinned 2026-07-06 to Garage v2.3.0 schema (was v1.0.1 with `replication_mode`
+# key — REMOVED in v2). The v2 schema replaces it with two keys:
+#   - replication_factor (integer)
+#   - consistency_mode   ("consistent" | "available")
+#
 # Virtual-host style addressing for Lance/Iceberg compatibility.
 # This enables bucket-specific subdomains: iceberg.s3.lakehouse.cianfhoghlaim.ie
 #
 # USAGE:
 #   Garage reads this config from /etc/garage.toml in the container.
-#   Environment variable substitution happens at runtime.
 # =============================================================================
 
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
 db_engine = "lmdb"
 
-# Single-node replication for development/small deployments
-# For production clusters, set to "2" or "3" with multiple nodes
-replication_mode = "1"
+# Single-node deployment for development/small deployments
+# For production clusters, set replication_factor >= 2 with multiple nodes
+replication_factor = 1
+consistency_mode = "consistent"
 
 # Compression level (1 = fastest, 9 = best compression)
 compression_level = 1
@@ -32,13 +37,6 @@ rpc_secret = "a113063123736ef390b51302c98099d2abf08eb0e8a7347e7aba331d10779f0d"
 
 # =============================================================================
 # S3 API - Virtual-Host Style (Critical for Lance)
-# =============================================================================
-# Virtual-host addressing allows:
-#   - iceberg.s3.lakehouse.cianfhoghlaim.ie/path/to/file
-#   - lance.s3.lakehouse.cianfhoghlaim.ie/path/to/file
-#   - ducklake.s3.lakehouse.cianfhoghlaim.ie/path/to/file
-#
-# This is REQUIRED for Lance namespace iceberg.py compatibility.
 # =============================================================================
 [s3_api]
 s3_region = "garage"
@@ -62,7 +60,6 @@ api_bind_addr = "[::]:3902"
 # =============================================================================
 # Admin API
 # =============================================================================
-# NOTE: For production, use Locket secret injection with envsubst
 [admin]
 api_bind_addr = "[::]:3904"
 admin_token = "dev-admin-token-change-in-production"

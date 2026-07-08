@@ -1,0 +1,12 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+private-resources:
+  hermes:
+    name: "Hermes Autonomous Agent"
+    mode: "http"
+    destination-port: 9119
+    full-domain: "hermes.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "hermes"

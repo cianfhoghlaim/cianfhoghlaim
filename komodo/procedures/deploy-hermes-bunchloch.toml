@@ -1,0 +1,75 @@
+# Komodo procedure: deploy Hermes (bunchloch)
+# Per the add-openclaw-stack-and-channel-fanout precedent
+
+# Stage 0: pre-reqs
+[[stage.action]]
+type = "CheckEnvVar"
+name = "check-prereqs"
+vars = ["INFISICAL_CLIENT_ID", "INFISICAL_SECRET_FILE", "LITELLM_MASTER_KEY", "HERMES_OPERATOR_POCKET_ID_SUBJECT"]
+
+[[stage.action]]
+type = "CheckResourceCeiling"
+name = "check-bunchloch-utilization"
+server_id = "bunchloch"
+max_cpu_pct = 80
+max_memory_pct = 80
+
+# Stage 1: dependency services
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-litellm-bunchloch"
+procedure = "deploy-litellm-bunchloch"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-langfuse-bunchloch"
+procedure = "deploy-langfuse-bunchloch"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-cognee-bunchloch"
+procedure = "deploy-cognee-bunchloch"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-graphiti-bunchloch"
+procedure = "deploy-graphiti-bunchloch"
+
+# Stage 2: deploy the Hermes stack
+[[stage.action]]
+type = "DeployStack"
+name = "deploy-hermes"
+stack = "hermes"
+server_id = "bunchloch"
+
+# Stage 3: pangolin routes
+[[stage.action]]
+type = "ApplyBlueprint"
+name = "apply-pangolin-blueprint"
+blueprint = "hermes/blueprint.yaml"
+
+# Stage 4: 1-shot init — populate the users.allowlist from day one
+[[stage.action]]
+type = "RunOneShotContainer"
+name = "init-hermes-allowlist"
+image = "ghcr.io/cianfhoghlaim/hermes-init-allowlist:0.17.0"
+env = ["HERMES_OPERATOR_POCKET_ID_SUBJECT", "HERMES_API_SERVER_KEY", "HERMES_DASHBOARD_URL=https://hermes.cianfhoghlaim.ie"]
+script = "init-allowlist.sh"
+
+# Stage 5: health verification
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-dashboard"
+url = "https://hermes.cianfhoghlaim.ie/api/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-allowlist-test"
+url = "https://hermes.cianfhoghlaim.ie/api/users/allowlist/test"
+method = "POST"
+headers = { Authorization = "Bearer ${HERMES_API_SERVER_KEY}" }
+body = "{\"subject\": \"${HERMES_OPERATOR_POCKET_ID_SUBJECT}\"}"
+expected_body_contains = "\"allowed\":true"
+timeout_s = 30
