@@ -97,8 +97,10 @@
       state machine — the skip flag + 8-phase scaffolding is in
       place; phases 1, 4, 5, 6 remain `logWarn` TODOs (require
       Pulumi/Komodo-Periphery/Newt automation that's out of v5 scope)
-- [ ] 1.15 Implement `iac/commands/teardown.ts` (reverse of
-      `iac:bootstrap`; requires `--force`) — DEFERRED
+- [x] 1.15 Implement `iac/commands/teardown.ts` (reverse of
+      `iac:bootstrap`; requires `--force`) — implemented in
+      pick-5b (commit b4deb8722); 8-step reverse, --force + --dry-run
+      supported — DEFERRED
 - [ ] 1.16 Add idempotent `getOrCreateOlmClient()` to
       `iac/commands/sync-olm.ts` — DEFERRED to follow-up
 - [x] 1.17 Use `smol-toml` in

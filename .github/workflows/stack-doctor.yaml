@@ -1,0 +1,67 @@
+# =============================================================================
+# .github/workflows/stack-doctor.yaml
+# =============================================================================
+# Stack-doctor CI gate. Runs on every PR that touches the bonneagar/stacks/ tree
+# + on every push to main. Emits a markdown summary (the canonical INDEX.md) and
+# fails the build if there are any criticals or warnings (with --strict).
+#
+# Per openspec/2026-07-09-infrastructure-gold-standard-compliance-v1.
+# =============================================================================
+
+name: Stack Doctor (GOLD_STANDARD compliance)
+
+on:
+  pull_request:
+    paths:
+      - "bonneagar/stacks/**"
+      - "bonneagar/komodo/stacks/**"
+      - "bonneagar/iac/**"
+      - "scripts/stack-doctor.sh"
+      - "scripts/generate-stack-*.ts"
+      - "scripts/generate-komodo-stacks.ts"
+  push:
+    branches: [main, pick-4-biep-v1]
+    paths:
+      - "bonneagar/stacks/**"
+      - "bonneagar/komodo/stacks/**"
+
+jobs:
+  stack-doctor:
+    name: Validate the 88-stack GOLD_STANDARD fleet
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
+
+      - name: Run stack-doctor --strict
+        run: bash scripts/stack-doctor.sh --strict --emit-md bonneagar/stacks/INDEX.md
+
+      - name: Upload INDEX.md as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stack-doctor-index
+          path: bonneagar/stacks/INDEX.md
+
+      - name: Post INDEX.md to PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'bonneagar/stacks/INDEX.md';
+            if (!fs.existsSync(path)) return;
+            const body = fs.readFileSync(path, 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body.length > 60000 ? body.substring(0, 60000) + '\n\n... (truncated; see artifact for full report)' : body
+            });
