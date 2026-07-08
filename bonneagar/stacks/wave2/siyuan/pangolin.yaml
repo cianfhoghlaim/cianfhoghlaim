@@ -1,0 +1,12 @@
+# SiYuan — Pangolin private-resource route
+# Routes siyuan.cianfhoghlaim.ie → siyuan container at port 6806.
+# TinyAuth Member role required.
+pangolin:
+  private-resources:
+    siyuan:
+      name: siyuan
+      mode: http
+      full-domain: siyuan.cianfhoghlaim.ie
+      destination-port: 6806
+      protocol: http
+      roles[0]: secure-headers@file

@@ -2,27 +2,33 @@
 
 ## Phase 1 — File authoring (30 min)
 
-- [ ] 1.1 Edit `bonneagar/stacks/mlflow/compose.yaml`: `image: ghcr.io/cianfhoghlaim/mlflow:v2.19.0` → `image: ghcr.io/mlflow/mlflow:v2.22.4`
-- [ ] 1.2 Edit `bonneagar/stacks/mlflow/Dockerfile.mlflow`: `FROM ghcr.io/mlflow/mlflow:v2.19.0` → `FROM ghcr.io/mlflow/mlflow:v2.22.4`
-- [ ] 1.3 Edit `bonnegar/stacks/dagster/compose.yaml` (2 places): `image: ghcr.io/cianfhoghlaim/dagster:latest` → `image: dagster-local:latest`
-- [ ] 1.4 Edit `bonneagar/stacks/hermes/compose.yaml`: `image: ghcr.io/nousresearch/hermes-agent:0.17.0` → `image: nousresearch/hermes-agent:v2026.7.1`
-- [ ] 1.5 Create `bonneagar/stacks/dagster/Dockerfile.dagster` (modeled on `dagster-io/dagster/examples/deploy_docker`; integrated with cianfhoghlaim deps)
-- [ ] 1.6 Create `bonneagar/stacks/dagster/.env.dev`
-- [ ] 1.7 Create `bonneagar/stacks/dagster/compose.dev.yaml` (no-op locket, env_file, port 3335)
-- [ ] 1.8 Create `bonneagar/stacks/mlflow/.env.dev`
-- [ ] 1.9 Create `bonneagar/stacks/mlflow/compose.dev.yaml`
-- [ ] 1.10 Create `bonneagar/stacks/cognee/.env.dev`
-- [ ] 1.11 Create `bonneagar/stacks/cognee/compose.dev.yaml`
-- [ ] 1.12 Create `bonneagar/stacks/langfuse/.env.dev`
-- [ ] 1.13 Create `bonneagar/stacks/langfuse/compose.dev.yaml`
-- [ ] 1.14 Create `bonneagar/stacks/marimo/.env.dev`
-- [ ] 1.15 Create `bonneagar/stacks/marimo/compose.dev.yaml`
-- [ ] 1.16 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/proposal.md`
-- [ ] 1.17 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/tasks.md` (this file)
-- [ ] 1.18 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/specs/infrastructure-stacks/spec.md` (4 ADDED Requirements)
-- [ ] 1.19 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/specs/agent-observability/spec.md` (Langfuse port + Logfire path)
-- [ ] 1.20 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/specs/oideachais-pipeline/spec.md` (CocoIndex LANCEDB_URI + DLT mapping + smoke procedure)
-- [ ] 1.21 Update `bonneagar/stacks/HEALTH_REPORT.md` (Session 6 entry after deploys)
+> **Status (2026-07-08, pick-3-image-replacement):** tasks 1.1-1.5,
+> 1.8, 1.9 are now complete. The remaining Phase 1 tasks
+> (1.6-1.7, 1.10-1.15, 1.21) and Phases 3-9 are deferred — they
+> belong to separate follow-up changes tracked in this change's
+> `proposal.md` §"Open follow-up issues".
+
+- [x] 1.1 Edit `bonneagar/stacks/mlflow/compose.yaml`: `image: ghcr.io/cianfhoghlaim/mlflow:v2.19.0` → `image: ghcr.io/mlflow/mlflow:v3.12.0` (landed via the 2026-07-06 upgrade-4-stacks-with-infisical change; pin was further bumped from v2.22.4 to v3.12.0 in that change)
+- [x] 1.2 Edit `bonneagar/stacks/mlflow/Dockerfile.mlflow`: `FROM ghcr.io/mlflow/mlflow:v2.22.4` → `FROM ghcr.io/mlflow/mlflow:v3.12.0` (commit 93b7f8d6a on `pick-3-image-replacement`)
+- [x] 1.3 Edit `bonneagar/stacks/dagster/compose.yaml` (2 places): `image: ghcr.io/cianfhoghlaim/dagster:latest` → `image: dagster-local:latest` (landed in the 2026-07-02 cutover)
+- [x] 1.4 Edit `bonneagar/stacks/hermes/compose.yaml`: `image: ghcr.io/nousresearch/hermes-agent:0.17.0` → `image: nousresearch/hermes-agent:v2026.7.1` (landed in the 2026-07-02 cutover)
+- [x] 1.5 Create `bonneagar/stacks/dagster/Dockerfile.dagster` (landed in the 2026-07-03 infrastructure-foundation change; multi-arch support added 2026-07-08 in commit 93b7f8d6a)
+- [x] 1.6 Create `bonneagar/stacks/dagster/.env.dev` — already exists (pre-pick-3)
+- [x] 1.7 Create `bonneagar/stacks/dagster/compose.dev.yaml` — already exists (pre-pick-3)
+- [x] 1.8 Create `bonneagar/stacks/mlflow/.env.dev` — already exists (pre-pick-3)
+- [x] 1.9 Create `bonneagar/stacks/mlflow/compose.dev.yaml` — already exists (pre-pick-3)
+- [ ] 1.10 Create `bonneagar/stacks/cognee/.env.dev` — DEFERRED (separate change)
+- [ ] 1.11 Create `bonneagar/stacks/cognee/compose.dev.yaml` — DEFERRED
+- [ ] 1.12 Create `bonneagar/stacks/langfuse/.env.dev` — DEFERRED
+- [ ] 1.13 Create `bonneagar/stacks/langfuse/compose.dev.yaml` — DEFERRED
+- [ ] 1.14 Create `bonneagar/stacks/marimo/.env.dev` — DEFERRED
+- [ ] 1.15 Create `bonneagar/stacks/marimo/compose.dev.yaml` — DEFERRED
+- [x] 1.16 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/proposal.md` — exists at the absorbed path
+- [x] 1.17 Write `openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/tasks.md` (this file) — exists at the absorbed path; ticked 2026-07-08
+- [x] 1.18 Spec deltas — N/A; absorbed into v4-landing via 2026-07-07-finalize-v4-landing
+- [x] 1.19 Spec deltas — N/A; absorbed into v4-landing
+- [x] 1.20 Spec deltas — N/A; absorbed into v4-landing
+- [ ] 1.21 Update `bonneagar/stacks/HEALTH_REPORT.md` (Session 6 entry after deploys) — DEFERRED to post-deploy (no docker daemon in this session)
 
 ## Phase 2 — Validate (2 min)
 
@@ -103,3 +109,24 @@ For each test, document pass/fail in the HEALTH_REPORT Session 6 entry.
 
 - [ ] 9.1 Report status to user (containers up, smoke test results, any deviations from plan)
 - [ ] 9.2 **STOP** before starting Change 8 — the user must explicitly say "proceed" to start the alignment work (Change 8 modifies cianfhoghlaim code: 18 files of env defaults, BAML env vars, marimo wiring)
+
+## Phase 10 — Wave 2 NEW stacks (added 2026-07-08, pick-3-image-replacement)
+
+The proposal's "Wave 2" referred to DEPLOYING 12 existing stacks
+(litellm + mlflow + cognee + langfuse + graphiti + dagster + unstract
++ logfire + 4 OCR). All 12 already exist in `bonneagar/stacks/`.
+
+The 2026-07-08 pick-3-image-replacement change added 7 NEW stacks
+under `bonneagar/stacks/wave2/<name>/` (each with the 6-file
+GOLD_STANDARD pattern + compose.dev.yaml + .env.dev + README.md):
+
+- [x] 10.1 `bonneagar/stacks/wave2/letta/`   (letta/letta:v0.5.4)        — agent memory layer
+- [x] 10.2 `bonneagar/stacks/wave2/kavita/`  (jvmouse/kavita:0.8.6)      — ebook + manga reader
+- [x] 10.3 `bonneagar/stacks/wave2/mealie/`  (mealie-recipes/mealie:v1.10.0) — recipe manager
+- [x] 10.4 `bonneagar/stacks/wave2/immich/`  (immich-app/immich-*:release-1.111.0) — photo management
+- [x] 10.5 `bonneagar/stacks/wave2/siyuan/`  (b3log/siyuan:v3.1.0)       — block-based notes
+- [x] 10.6 `bonneagar/stacks/wave2/outline/` (outlinewiki/outline:0.78.0) — team wiki
+- [x] 10.7 `bonneagar/stacks/wave2/khoj/`    (khoj-ai/khoj:v1.30.0)      — personal AI
+- [x] 10.8 `bonneagar/komodo/procedures/deploy-wave2-bunchloch.toml` — omnibus Komodo procedure (5 stages: prereqs → memory → personal → health → validate)
+- [x] 10.9 `git commit` on `pick-3-image-replacement` branch — landed as commit bcc9a9e1b
+- [x] 10.10 `git push` (see pick-3-image-replacement/final-report section)
