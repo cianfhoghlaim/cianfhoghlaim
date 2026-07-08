@@ -1,7 +1,10 @@
 """
 File Graph Flow for Códeolas.
 
-Extracts file/function/class relationships into a Memgraph knowledge graph.
+Extracts file/function/class relationships into a FalkorDB knowledge graph
+(the Cognee code-side backend per the agent-observability spec — Memgraph
+is the legacy fallback for operators who set CIANFHOGHLAIM_COGNEE_BACKEND=memgraph).
+
 Enables Cypher queries for architectural understanding:
 - Which functions call which functions?
 - What files import what modules?
@@ -20,7 +23,13 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 # Default configuration
-DEFAULT_MEMGRAPH_URI = os.getenv("MEMGRAPH_URI", "bolt://localhost:7687")
+#
+# The Cognee code-side default backend is FalkorDB (per the agent-observability
+# spec). The Memgraph URI default is preserved for legacy callers; the
+# CIANFHOGHLAIM_COGNEE_BACKEND env var selects between falkordb|memgraph|postgres.
+DEFAULT_MEMGRAPH_URI = os.getenv("MEMGRAPH_URI", "bolt://memgraph:7687")
+DEFAULT_FALKORDB_HOST = os.getenv("FALKORDB_HOST", "falkordb")
+DEFAULT_FALKORDB_PORT = int(os.getenv("FALKORDB_PORT", "6379"))
 DEFAULT_REPO_PATH = os.getenv(
     "CODEOLAS_REPO_PATH",
     str(Path(__file__).parent.parent.parent.parent.parent)

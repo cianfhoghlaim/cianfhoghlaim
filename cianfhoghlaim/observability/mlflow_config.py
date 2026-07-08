@@ -17,6 +17,8 @@ from contextlib import contextmanager, suppress
 from functools import wraps
 from typing import Any
 
+from .env_config import MLFLOW_URL as _CIANFHOGHLAIM_MLFLOW_URL
+
 logger = logging.getLogger(__name__)
 
 # Lazy imports for optional dependency
@@ -40,7 +42,10 @@ def _get_mlflow():
 
 
 # Default configuration
-MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
+# The canonical default now reads from the CIANFHOGHLAIM_* env-var
+# matrix in cianfhoghlaim/observability/env_config.py. The legacy
+# MLFLOW_TRACKING_URI env var is honoured as a backwards-compat alias.
+MLFLOW_TRACKING_URI = _CIANFHOGHLAIM_MLFLOW_URL
 MLFLOW_EXPERIMENT_NAME = os.getenv("MLFLOW_EXPERIMENT_NAME", "oideachais-celtic-education")
 
 

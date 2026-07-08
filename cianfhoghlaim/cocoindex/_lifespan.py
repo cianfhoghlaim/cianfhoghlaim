@@ -43,6 +43,15 @@ from collections.abc import AsyncIterator
 
 import structlog
 
+# Canonical env-var matrix (CIANFHOGHLAIM_*); the legacy LANCEDB_URI
+# env var is honoured as a backwards-compat alias.
+try:
+    from cianfhoghlaim.observability.env_config import (
+        LANCEDB_URL as _CIANFHOGHLAIM_LANCEDB_URL,
+    )
+except ImportError:  # pragma: no cover - the env-config module ships in the same wheel
+    _CIANFHOGHLAIM_LANCEDB_URL = "rest://lakehouse-lance-namespace:8182"
+
 logger = structlog.get_logger(__name__)
 
 # CocoIndex is optional — degrade gracefully if not installed.
@@ -92,9 +101,9 @@ else:
 # is no longer the default — the dev mode default is the local
 # lakehouse-lance-namespace service (in the cianfhoghlaim docker
 # network). For host-side dagster dev, override with
-# `LANCEDB_URI=http://127.0.0.1:8182` or set
+# `CIANFHOGHLAIM_LANCEDB_URL=http://127.0.0.1:8182` or set
 # `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` in `.env.dev.local`.
-LANCEDB_URI = os.getenv("LANCEDB_URI", "rest://lakehouse-lance-namespace:8182")
+LANCEDB_URI = _CIANFHOGHLAIM_LANCEDB_URL
 EMBED_MODEL = os.getenv("OIDEACHAIS_EMBED_MODEL", "BAAI/bge-large-en-v1.5")
 EMBED_DIM = 1024
 
