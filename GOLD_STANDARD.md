@@ -7,7 +7,7 @@ checklist when adding a new stack, and the audit reference when running
 
 ## Why This Standard Exists
 
-The 94 stacks in this monorepo were built by multiple agents over
+The 87 stacks in this monorepo were built by multiple agents over
 ~2 years. Without a uniform pattern:
 
 - Komodo can't reliably sync them (different file layouts)
@@ -236,7 +236,7 @@ bun run validate-stacks
 ## Validation
 
 ```bash
-# Full audit (all 94 stacks)
+# Full audit (all 87 stacks)
 bun run validate-stacks
 
 # Single stack
@@ -274,7 +274,7 @@ When in doubt, copy one of these and adapt.
 
 - `.agents/skills/stack-ops/SKILL.md` — operational skill for working with stacks
 - `bonneagar/AGENTS.md` — agent instructions for the infrastructure layer
-- `bonneagar/stacks/README.md` — the 94-stack flat directory
+- `bonneagar/stacks/README.md` — the 87-stack flat directory
 - `bonneagar/README.md` — 10-step quickstart bring-up
 - `bonneagar/komodo/procedures/` — Komodo GitOps procedures
 - `bonneagar/dagger/` — Dagger CI/CD modules

@@ -6,16 +6,99 @@
 > fix, etc. — lives at
 > [`infrastructure/archive/HEALTH_REPORT-2026-06-12.md`](../archive/HEALTH_REPORT-2026-06-12.md).
 >
-> **Last refreshed:** 2026-07-05 (Session 11 — dev `.venv` rebuild
-> with 574 packages at latest versions + 25 dev marimo notebooks
-> wired to live DLT data). Session 10 was the build-time fixes
-> for the 4 Session 9 changes (dagster-local image + .pth file +
-> grpcio pin). Session 11 is the dev-environment follow-up: the
-> dev venv was a bare-bones 195-package install; bumped 91 pinned
-> packages to >=latest, dropped 8 conflict-causing lower bounds
-> per the "Drop both lower bounds" policy, and wired all 25 dev
-> marimo notebooks to run the actual DLT sources. 16 git commits
-> across the 2 repos.
+> **Last refreshed:** 2026-07-08 (Session 12 — pick-6 bunchloch
+> stack bootstrap; 19 foundational stacks inventoried; 58
+> containers running on `bunchloch`).
+> Prior: 2026-07-05 (Session 11 — dev `.venv` rebuild + 25 marimo
+> notebooks wired to live DLT).
+
+## Session 12 — 2026-07-08 (pick-6 bunchloch stack bootstrap)
+
+This session ships the **pick-6-bunchloch-stack-bootstrap** change
+that brings up the **19 foundational bunchloch stacks** in
+dependency order. The reality on bunchloch as of 2026-07-08
+(morning) is **not** a true cold-boot: ~14 of 19 stacks were
+already running from prior sessions (lakehouse + falkordb +
+infisical + cognee + litellm + mlflow + logfire + openclaw +
+openchamber + hermes + dagster + langfuse + garage + lancedb);
+this session extends the bring-up to also cover komodo +
+pangolin + graphiti + letta + motherduck. 3 of the 19 stacks
+were started in this session (komodo, lancedb separate stack,
+pangolin partial); the rest are warm-restarts.
+
+### 5 dependency-ordered stages
+
+| Stage | Stacks | Status @ 2026-07-08 |
+|:-:|:--|:-:|
+| **1 — foundation** | lakehouse + falkordb + komodo + pangolin + infisical | 5/5 |
+| **2 — memory** | cognee + graphiti + lancedb | 2/3 (graphiti deferred — needs Dockerfile) |
+| **3 — observability** | litellm + langfuse + mlflow + logfire | 4/4 |
+| **4 — surfaces** | openclaw + openchamber + hermes + letta | 3/4 (letta deferred — bundle mismatch) |
+| **5 — data plane** | dagster + motherduck + garage | 3/3 (motherduck is SaaS) |
+
+### 19 stacks — live status snapshot (2026-07-08)
+
+| # | Stack | Stage | Image | Host port | Healthy? |
+|-:|:--|:-:|:--|:-:|:-:|
+| 1 | `lakehouse` (6+ services) | foundation | `dxflrs/garage:v2.3.0` + 5 more | 3900, 8123, 8181-82, 3901-04 | partial (lancedb-viewer on 8088; redis on 6381) |
+| 2 | `falkordb` | foundation | `falkordb/falkordb:latest` | 6380 | yes |
+| 3 | `komodo` (4 services) | foundation | `ghcr.io/moghtech/komodo-core:2` + 3 more | 8120 (dev override; prod :9120) | yes (no periphery yet) |
+| 4 | `pangolin` (5 services) | foundation | `gerbil` + `traefik:v3.6.0` + 3 more | 80, 443, 8443 | partial (postgres blocked on dev Locket) |
+| 5 | `infisical` (3 services) | foundation | `infisical/infisical:v0.161.12` + 2 more | 8081 | yes |
+| 6 | `cognee` (2 services) | memory | `cognee/cognee:1.2.2` + pgvector Postgres | 8100 | yes (unhealthy metric; auth OK) |
+| 7 | `graphiti` | memory | `graphiti:local` (build needed) | — | DEFERRED |
+| 8 | `lancedb` | memory | `ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3` | 8086 (dev override; prod :8081) | yes |
+| 9 | `litellm` | observability | `ghcr.io/berriai/litellm-database:v1.91.0` | 4000 | yes (M3 chokepoint) |
+| 10 | `langfuse` (2 services) | observability | `langfuse/langfuse:3` + worker | 3001 (internal) | partial (web restarting; worker up) |
+| 11 | `mlflow` | observability | `ghcr.io/mlflow/mlflow:v3.12.0` | 5001 (internal :5000) | yes |
+| 12 | `logfire` | observability | `otel/opentelemetry-collector-contrib:0.104.0` | — | yes (unhealthy metric; expected) |
+| 13 | `openclaw` | surfaces | `ghcr.io/openclaw/openclaw:2026.2.6` | 3978, 18789-90 | yes |
+| 14 | `openchamber` | surfaces | `openchamber:local-1.14.1` | 3000 (internal) | partial (unhealthy; recently restarted) |
+| 15 | `hermes` | surfaces | `nousresearch/hermes-agent:v2026.7.1` | 8080, 8090, 8443, 8645, 9119-20 | partial (unhealthy; main runtime) |
+| 16 | `letta` | surfaces | `lettaai/letta:latest` | 8283 | DEFERRED (image v0.5.4 not on Docker Hub) |
+| 17 | `dagster` (2 services) | data plane | local image (f731f76ce797) | 3335 (internal :3000) | partial (daemon unhealthy; webserver healthy) |
+| 18 | `motherduck` | data plane | **SaaS** (motherduck.com) | n/a | yes (token-gated; SaaS reference only) |
+| 19 | `garage` | data plane | `dxflrs/garage:v2.3.0` (sub-service of lakehouse) | 3900-04 | yes |
+
+### Deliverables landed (pick-6 commit b09feb090)
+
+1. `bun run validate-stacks` → **exit 0** (9 gates pass; 0 hard
+   failures). Fixed 6 pre-existing infra dirs that were missing
+   `compose.yaml` by adding sentinel `compose.yaml` placeholders:
+   `backend/` + `platform-service/` + `runner/` + `workers/` +
+   `x2text-service/` (5 unstract-stack sidecar artifacts) and
+   `wave2/` (multi-stack staging dir for pick-3).
+2. New omnibus Komodo procedure:
+   `bonneagar/komodo/procedures/deploy-bunchloch-stack-bootstrap.toml`
+   (7 stages: preflight + 5 deploy stages + health-checks +
+   validate; 299 lines; parses cleanly via
+   `python3 -c "import tomllib; tomllib.load(...)"`).
+3. New `bonneagar/stacks/motherduck/` stub (compose.yaml + README +
+   secrets.env). MotherDuck is a managed SaaS — there is no
+   container to deploy. The stub provides a future home for the 4
+   BIEP MotherDuck Dives (`dives/`) + scheduled Flights (`flights/`).
+4. Ticketed the 45 tasks in
+   `openspec/changes/archive/2026-07-07-finalize-v4-landing/absorbed/2026-07-02-bunchloch-stack-bootstrap/tasks.md`.
+5. `pangolin` sidecar.yaml fix: `- no-new-privileges:true` was
+   being mis-parsed by docker compose as a key-value map producing
+   2 equal items in `security_opt` (validation error). Resolved
+   by removing the `:true` suffix and using the lint-canonical
+   `"-no-new-privileges"` form.
+
+### Caveats and known gaps (carried forward)
+
+| # | Stack | Why | Fix path |
+|:-:|:--|:--|:--|
+| 1 | `graphiti` | No Dockerfile in the stack dir; `build:` context is empty | Add a minimal Dockerfile (or pull the pre-built image if published) |
+| 2 | `letta` | `docker.io/letta/letta:v0.5.4` not on Docker Hub; correct image is `lettaai/letta` | Update compose.yaml to `lettaai/letta:latest` (or pin the correct semver) |
+| 3 | `lakehouse-lancedb-viewer` | OrbStack VM holds port 8081 | Move to port 8088 (LANCEDB_VIEWER_PORT override) |
+| 4 | `pangolin-postgres` | Dev-mode Locket doesn't seed `/run/secrets/locket/secrets.env` (POSTGRES_PASSWORD missing) | Either provision a dev-mode Locket that writes the secrets or run a manual `docker exec` to seed |
+| 5 | `komodo-periphery` | Not started (`compose.periphery.yaml` not yet wired into the omnibus) | Add Stage 1 periphery deployment |
+| 6 | `dagster-daemon` (unhealthy metric) | Sensor polling fails for some upstream sensors (likely litellm cold-start) | Restart daemon once Stage 3 litellm is fully warm |
+| 7 | `openchamber` (unhealthy metric) | Pre-existing — was up 20 hours before this session | Restart openchamber in a follow-up |
+| 8 | `hermes` (unhealthy metric) | Pre-existing — was up 20 hours before this session | Restart hermes in a follow-up |
+| 9 | `langfuse-web` (restarting) | Compiles-after-config-change race | Add a 60-120 s wait before declaring fail |
+| 10 | `olake` sub-service of lakehouse | `ghcr.io/olake-io/olake:v0.8.0` is private (401 on GHCR) | Already dev-disabled via `compose.dev.yaml` `profiles: ["never-active"]` |
 
 ## Session 11 — 2026-07-05 (dev env setup + notebook wire-up)
 

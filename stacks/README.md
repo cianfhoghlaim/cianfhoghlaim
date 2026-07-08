@@ -11,11 +11,11 @@ stack inventory and `infrastructure/GOLD_STANDARD.md` for the
 | Property | Value |
 |:--|:--|
 | Layout | Flat — every stack is a direct child of `infrastructure/stacks/` |
-| Total stacks | **93** (as of 2026-06-24; changes as new ones are added via the stack-ops skill) |
+| Total stacks | **87** (as of 2026-07-09; 5 Unstract placeholders pruned per `2026-07-09-infrastructure-gold-standard-compliance-v1`; new stacks are added via the stack-ops skill) |
 | Standard file count | 6 (compose, sidecar, pangolin, secrets, blueprint, .env.example) |
 | Stack directory | `infrastructure/stacks/<name>/` |
 
-The 93 stacks are listed in full in `infrastructure/AGENTS.md` § "Stack
+The 87 stacks are listed in full in `bonneagar/AGENTS.md` § "Stack
 Inventory" (alphabetical, with purpose and key ports). The
 [`infrastructure/QUADRANT-TO-STACK-MAP.md`](../QUADRANT-TO-STACK-MAP.md)
 file groups them by which workspace-member quadrant consumes them.
@@ -104,7 +104,7 @@ docker compose logs -f
 # Tear down
 docker compose down
 
-# Validate all 94 stacks against the GOLD_STANDARD
+# Validate all 87 stacks against the GOLD_STANDARD
 bun run validate-stacks
 ```
 
@@ -129,10 +129,10 @@ See `infrastructure/README.md` § "Critical Path" for the full sequence.
 
 ## Related Documentation
 
-- `infrastructure/README.md` — 10-step bring-up, 94-stack flat view, control plane pipeline
-- `infrastructure/AGENTS.md` — agent instructions for working with stacks (canonical inventory)
-- `infrastructure/GOLD_STANDARD.md` — 6-file template + exemplars
-- `infrastructure/QUADRANT-TO-STACK-MAP.md` — quadrant → stack routing
+- `bonneagar/README.md` — 10-step bring-up, 87-stack flat view, control plane pipeline
+- `bonneagar/AGENTS.md` — agent instructions for working with stacks (canonical inventory)
+- `bonneagar/GOLD_STANDARD.md` — 6-file template + exemplars
+- `bonneagar/QUADRANT-TO-STACK-MAP.md` — quadrant → stack routing
 - `.agents/skills/stack-ops/SKILL.md` — operational skill for adding/fixing stacks
 - `infrastructure/komodo/procedures/` — Komodo GitOps procedures (8 for croilar, 5+ for others)
 - `infrastructure/dagger/` — Dagger CI/CD modules

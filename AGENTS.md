@@ -7,30 +7,36 @@
 > for the bring-up playbook.
 
 > **v4 consolidation (2026-06-29):** the canonical stack
-> location is **`bonneagar/stacks/`** (88 stacks). The previous
+> location is **`bonneagar/stacks/`** (87 stacks). The previous
 > v4-canonical `infrastructure/` dir + the premature
 > `cianfhoghlaim/stacks/` split have both been removed. The
-> 88 stacks are documented at
+> 87 stacks are documented at
 > [`../cianfhoghlaim/docs/stacks/<name>.md`](../../cianfhoghlaim/docs/stacks/)
 > (the "purpose + why-GitOps" docs).
 >
 > **v5 cleanup (2026-07-01):** 2 obsolete stacks pruned
 > (`stacks/lakehouse-oci/` + `stacks/r2/`); 7 reference-only
 > dirs without `compose.yaml` removed (ci, motherduck,
-> planetscale, pydantic-gateway, tools, olake, nimtable).
+> planetscale, pydantic-gateway, tools, olake, nimtable);
 > **Actual count: 86 stacks** (per `bun run validate-stacks`).
-> The 88-stacks figure is kept in this header for v4
-> compatibility but will be corrected to 86 in the next
-> docs sync (Phase 8).
+>
+> **v6 cleanup (2026-07-09 — `2026-07-09-infrastructure-gold-standard-compliance-v1`):**
+> 5 Unstract-sidecar placeholders pruned (`backend/`,
+> `platform-service/`, `runner/`, `workers/`,
+> `x2text-service/`) — they were empty compose stubs
+> (`services: {}`) auto-generated in 2026-07 to satisfy the
+> `bun run validate-stacks` GOLD_STANDARD gate; the real
+> services live as containers in `bonneagar/stacks/unstract/`.
+> **Current count: 87 stacks** at `bonneagar/stacks/`.
 
 ## Priority quick reference
 
 The 4 priority compose stacks, the 4 priority skills, and the
 4 priority commands at a glance. **Read this first**; the
-rest of the file is the full 88-stack inventory + the IaC
+rest of the file is the full 87-stack inventory + the IaC
 entry points.
 
-### Priority compose stacks (4 of 88)
+### Priority compose stacks (4 of 87)
 
 | Stack | Port | Domain | Purpose |
 |:--|--:|:--|:--|
@@ -50,7 +56,7 @@ in this repo will reach for first.
 | Skill | When to load |
 |:--|:--|
 | [`stack-ops`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/stack-ops/SKILL.md) | Add / fix / audit a Docker Compose stack (the 6-file GOLD_STANDARD pattern) |
-| [`infrastructure-stacks`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/infrastructure-stacks/SKILL.md) | The router for the 88 stacks + the 3-tier host convergence + the 5-stage deploy |
+| [`infrastructure-stacks`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/infrastructure-stacks/SKILL.md) | The router for the 87 stacks + the 3-tier host convergence + the 5-stage deploy |
 | [`secrets-management`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/secrets-management/SKILL.md) | Infisical + Locket + mise 3-way contract (no manual `.env`) |
 | [`pangolin`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/pangolin/SKILL.md) | VPN + Traefik + Pocket ID SSO (Pangolin Convergence Architecture) |
 
@@ -66,7 +72,7 @@ bun run iac:bootstrap              # Komodo deploy-stacks + create-resources + r
 ### IaC entry points (4 scripts at the root of `bonneagar/`)
 
 ```bash
-bun run iac:deploy-stacks          # upsert the 88 stacks into Komodo
+bun run iac:deploy-stacks          # upsert the 87 stacks into Komodo
 bun run iac:create-resources       # upsert the 88 Pangolin private resources
 bun run iac:read-state             # dump current Komodo + Pangolin state
 bun run iac:bootstrap              # the 1-command full sync
@@ -79,9 +85,9 @@ The IaC TypeScript client lives at `iac/komodo/` (5 files:
 to the root of `bonneagar/` for the future split into
 `github.com/cianfhoghlaim/bonneagar`.
 
-## The 5-group model (88 stacks)
+## The 5-group model (87 stacks)
 
-The 88 stacks are organised into 5 logical groups
+The 87 stacks are organised into 5 logical groups
 (informational only; not a deploy-time constraint):
 
 | Group | Count | Host | Examples |
@@ -104,7 +110,7 @@ linkwarden, lmnr, …).
 
 | Concern | Location |
 |:--|:--|
-| Stack catalogue (88 stacks) | [`stacks/`](./stacks/) |
+| Stack catalogue (87 stacks) | [`stacks/`](./stacks/) |
 | Stack conventions | [`GOLD_STANDARD.md`](./GOLD_STANDARD.md) |
 | Bring-up playbook | [`DEPLOYMENT-STRATEGY.md`](./DEPLOYMENT-STRATEGY.md) |
 | Per-stack docs (purpose + why-GitOps) | [`../cianfhoghlaim/docs/stacks/`](../../cianfhoghlaim/docs/stacks/) |
