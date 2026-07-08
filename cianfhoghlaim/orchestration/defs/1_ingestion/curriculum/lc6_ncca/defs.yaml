@@ -1,0 +1,40 @@
+# defs/1_ingestion/curriculum/lc6_ncca/defs.yaml
+#
+# L1 ingestion for the BIEP v1 NCCA 6-subject crawl.
+#
+# Per the british-isles-education-pipeline spec — `NCCA syllabus
+# corpus for 6 LC subjects` Requirement. Partitions: (cycle,
+# subject, language).
+#
+# Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: ncca_lc6
+  module: cianfhoghlaim.dlt.british_isles.ireland.education.ncca
+  schedule:
+    cron: "0 2 * * *"
+    timezone: UTC
+  partitions:
+    - cycle:
+        values: ["senior_cycle"]
+    - subject:
+        values:
+          - mathematics
+          - chemistry
+          - geography
+          - gaeilge
+          - english
+          - computer_science
+    - language:
+        values: ["en", "ga"]
+  use_local_scrapes: true
+  asset_check: ncca_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - lc6
+    - ncca
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-06-british-isles-education-pipeline-v1
+    spec: british-isles-education-pipeline
