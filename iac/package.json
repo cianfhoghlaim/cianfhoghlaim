@@ -1,0 +1,32 @@
+{
+  "name": "@bonneagar/iac",
+  "version": "0.3.0",
+  "module": "./cli.ts",
+  "type": "module",
+  "private": true,
+  "description": "The IaC sub-package for bonneagar — the Komodo + Pangolin + Infisical TypeScript orchestrator. Replaces the 5 v0 iac/komodo/*.ts scripts + the 3 bash scripts at scripts/ + the 2 vault scripts at the repo root. Boots a fresh arm1-oci + bunchloch topology from empty via `bun run iac:bootstrap`.",
+  "bin": {
+    "bonsai": "./cli.ts"
+  },
+  "scripts": {
+    "bootstrap": "bun run cli.ts bootstrap",
+    "plan": "bun run cli.ts plan",
+    "deploy": "bun run cli.ts deploy",
+    "health": "bun run cli.ts health",
+    "teardown": "bun run cli.ts teardown --force",
+    "sync:secrets": "bun run cli.ts sync:secrets",
+    "sync:resources": "bun run cli.ts sync:resources",
+    "sync:procedures": "bun run cli.ts sync:procedures",
+    "sync:resource-syncs": "bun run cli.ts sync:resource-syncs"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@infisical/sdk": "^5.0.2",
+    "komodo_client": "^2.1.1"
+  }
+}
