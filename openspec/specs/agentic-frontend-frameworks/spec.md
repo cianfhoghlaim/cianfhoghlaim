@@ -191,8 +191,8 @@ Factory Mode + AG-UI SSE streaming; Convex (fresh standalone
 optional SIWE; React Flow + D3 + Babylon.js + model-viewer; MotherDuck
 (read-only lakehouse) + Convex (read-write persona); map = accurate
 British Isles (OpenStreetMap base) split into 6 subnations; theming =
-Brown Ajah of the Wheel of Time; tagline = "Aes Sedai — servants of all"
-(the Brown Ajah motto).
+professional + minimal (the mythology / historical-sources layer is
+deferred to BIEP-v2 per `2026-07-09-remove-brown-ajah-theming-v1`).
 
 #### Scenario: A new spec wants to declare a 6th surface
 
@@ -214,7 +214,7 @@ BitCraft Empire Panel) from
 adaptations (Belle Époque Ironwork → Insular Art Knotwork; Oil Painting
 → Ink-Wash & Gold Leaf; Obsidian/Marble → Slate & Ogham Stone; Cinzel
 → Uncial/Insular Script; Hades diegetic UI → window chrome; WoW
-semantic quest icons → 24 SVG icons; Khan mastery → Brown Ajah éraic
+semantic quest icons → 24 SVG icons; Khan mastery → 4-tier éraic
 treasures; Duolingo streak → Cauldron of the Dagda). The 145 comic
 reference images at `docs/comics/` SHALL be ingested as the celtic-art
 reference library for the FIBO asset generator.
@@ -239,23 +239,25 @@ The 12 components SHALL be: `<CiButton>`, `<CiProgressRing>`,
 - **AND** the indicator is themed as the Cauldron of the Dagda (never empties)
 - **AND** on Beltane (1 May) the indicator resets to 100%
 
-### Requirement: Brown Ajah theming + accurate British Isles map (R7 — NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`)
+### Requirement: (R7 REMOVED 2026-07-09 — Brown Ajah theming)
 
-The system SHALL implement the **Brown Ajah** Wheel of Time theming
-per the 4 WoT excerpts: Aes Sedai = the 8 NCCA subject specialists;
-Amyrlin Seat = the orchestrator agent; Dragon Reborn = the student who
-completes the cross-subject mastery; Dragon Banner = the Wales subnation
-flag (Cadwaladr ap Cadwallon + Owain Glyndwr; red dragon on white);
-Tuatha'an = the Irish Travellers (the student-as-traveller; the
-Cianfhoghlaim mobile client). The realm map SHALL be an **accurate**
-map of the British Isles (NOT fictional). The 6 subnations SHALL be:
-Éire (Ireland, v1 active) + Northern Ireland + Scotland + England +
-Wales + Isle of Man. The 5 NCCA Key Competencies SHALL be the 5
-land-marks (Dublin + Edinburgh + Cardiff + London + Douglas) plus a
-6th Belfast node (Cross-Border Studies). The 8 NCCA subjects SHALL be
-the 8 overlay buttons. The Connacht province SHALL be the "home base"
-with the Cian lineage highlights (Delbhna Tír Dhá Locha + Lough Corrib
-+ Galway Bay + Moycullen).
+The Brown Ajah Wheel of Time theming (Aes Sedai / Amyrlin Seat /
+Dragon Reborn / Dragon Banner / Tuatha'an + the "Aes Sedai — servants
+of all" tagline) was removed per the
+`2026-07-09-remove-brown-ajah-theming-v1` change. The mythology /
+historical-sources theming layer is deferred to BIEP-v2 (see the
+`british-isles-education-pipeline` spec). The accurate British Isles
+map remains (kept below).
+
+The system SHALL render an **accurate** map of the British Isles (NOT
+fictional). The 6 subnations SHALL be: Éire (Ireland, v1 active) +
+Northern Ireland + Scotland + England + Wales + Isle of Man. The 5 NCCA
+Key Competencies SHALL be the 5 land-marks (Dublin + Edinburgh +
+Cardiff + London + Douglas) plus a 6th Belfast node (Cross-Border
+Studies). The 8 NCCA subjects SHALL be the 8 overlay buttons. The
+Connacht province SHALL be the "home base" with the Cian lineage
+highlights (Delbhna Tír Dhá Locha + Lough Corrib + Galway Bay +
+Moycullen).
 
 #### Scenario: Accurate British Isles map renders 6 subnations
 
