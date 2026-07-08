@@ -1,0 +1,37 @@
+# defs/1_ingestion/government/circulars/defs.yaml
+#
+# L1 ingestion for the BIEP v1 gov.ie education circulars crawl
+# (DES / NCCA / SEC / DoE circulars, EN + GA).
+#
+# Per the british-isles-education-pipeline spec — `gov.ie education
+# circulars` Requirement. Partitions: (dept, year, language).
+# Routes through BAML `b.ExtractCircular` from
+# `baml/education/lc_extraction/circular_extraction.baml`.
+#
+# Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: gov_ie_circulars
+  module: cianfhoghlaim.dlt.british_isles.ireland.education.gov_ie_circulars
+  schedule:
+    cron: "0 * * * *"
+    timezone: UTC
+  partitions:
+    - dept:
+        values: ["DES", "NCCA", "SEC", "DOE_NI"]
+    - year:
+        values: "2010..2026"
+    - language:
+        values: ["en", "ga"]
+  use_local_scrapes: true
+  asset_check: circular_year_min
+  asset_check_min_years: 5
+  baml_extract_fn: b.ExtractCircular
+  baml_link_fn: b.LinkCircularToSyllabus
+  tags:
+    - biep
+    - gov-circulars
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-06-british-isles-education-pipeline-v1
+    spec: british-isles-education-pipeline
