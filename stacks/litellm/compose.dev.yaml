@@ -1,15 +1,16 @@
 # LiteLLM — local dev override
 # ----------------------------------------------------------------------------
-# Mirrors the langfuse dev override pattern (post centralise-data-plane):
+# Updated 2026-07-06 for the upgrade-4-stacks-with-infisical change:
 #   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
 #      resolves without booting the real Infisical-injection sidecar.
-#   2. `env_file: ../../../.env` (mise-hydrated local .env) is mounted
-#      so secrets reach the containers directly.
+#   2. `env_file: .env.dev` (this stack) provides all the dev secrets
+#      pointing at the lakehouse-postgres (db=litellm) + lakehouse-garage
+#      (bucket=mlflow-artifacts).
 #   3. DATABASE_URL points at `lakehouse-postgres` (the centralised service).
 #      The standalone db container was removed.
 #
 # Usage:
-#   docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+#   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
 # ----------------------------------------------------------------------------
 
 services:
@@ -17,48 +18,59 @@ services:
     image: alpine:3.20
     container_name: litellm-locket-dev
     restart: "no"
-    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    command: ["sh", "-c", "echo '[dev] no-op litellm locket — secrets from .env.dev'; sleep infinity"]
+    environment:
+      INFISICAL_CLIENT_ID: ${INFISICAL_LOCKET_CLIENT_ID:-placeholder}
+      INFISICAL_CLIENT_SECRET: ${INFISICAL_LOCKET_CLIENT_SECRET:-placeholder}
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-placeholder}
+      LOCKET_MODE: watch
     networks:
       - cianfhoghlaim
+      - lakehouse
 
   litellm:
     depends_on:
       locket:
         condition: service_started
     env_file:
-      - ../../../.env
+      - .env.dev
     environment:
-      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
       LITELLM_LOG: INFO
-      # Centralised lakehouse-postgres (db=litellm) — the hardcoded
-      # `devpassword` literal here is also exposed via the POSTGRES_PASSWORD
-      # env var below (which the base compose's `${POSTGRES_PASSWORD:?must
-      # be set}` interpolation needs at parse time).
-      POSTGRES_PASSWORD: devpassword
-      POSTGRES_USER: lakekeeper
-      DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
-      LITELLM_DATABASE_URL: postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
+      LITELLM_MODE: PRODUCTION
+      USE_PRISMA_MIGRATE: "True"
+      MAX_REQUESTS_BEFORE_RESTART: "10000"
+      MAX_REQUESTS_BEFORE_RESTART_JITTER: "1000"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?must be set}
+      POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/litellm
+      LITELLM_DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/litellm
       STORE_MODEL_IN_DB: "True"
-      # Provide stub values for required-but-unused-in-dev vars
-      LITELLM_SALT_KEY: ${LITELLM_SALT_KEY:-dev-salt}
       # Stub out cloud-provider keys in dev
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      Z_AI_API_KEY: ${Z_AI_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
       OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
+      OPENCODE_GO_API_KEY_0: ${OPENCODE_GO_API_KEY_0:-}
+      OPENCODE_GO_API_KEY_1: ${OPENCODE_GO_API_KEY_1:-}
+      OPENCODE_GO_API_KEY_2: ${OPENCODE_GO_API_KEY_2:-}
       HF_TOKEN: ${HF_TOKEN:-}
-    # Override the litellm config mount with the minimal dev config
-    # (the production config/config.yaml has a fallback_chain validation
-    # bug — see config/config.dev.yaml for the dev-only fix).
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI:-http://mlflow:5000}
     volumes:
       - ./config/config.dev.yaml:/app/config/config.yaml:ro
-
-  # Prometheus dev override removed in cleanup-and-boot-stacks change 2026-06-26
-  # (the prometheus service itself was deleted from compose.yaml).
+    networks:
+      - cianfhoghlaim
+      - lakehouse
 
 # Top-level secrets: block from sidecar.yaml references the production
 # Infisical secret file (../../infisical_secret). Override with /dev/null
 # so the locket sidecar doesn't fail to mount a missing file.
 secrets:
   infisical_secret:
+    file: /dev/null
+  litellm_infisical_secret:
     file: /dev/null

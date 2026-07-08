@@ -11,37 +11,25 @@ komodo-rpc, deploy-stacks, create-resources, read-state)
 sync-blueprints, create-olm-clients) + the 2 vault scripts at
 the repo root (create-env, init-vault).
 
-## The 8 orchestration commands
-
-The v5 drift refactor (per
-`openspec/changes/2026-07-01-bonneagar-v5-drift-refactor-and-komodo-gitops`)
-consolidated 15 → 8 IaC commands. The 2 removed commands
-(`iac:sync:procedures` + `iac:sync:resource-syncs`) are now owned
-by Komodo's resource-syncs (the 3 declared at
-`komodo/resource-syncs/{arm1-oci,bunchloch,cross-cutting}.toml`).
-Procedures and resource-syncs are GitOps artifacts, not state
-mutations, so the IaC no longer pushes them — Komodo auto-pulls.
+## The 15 CLI commands
 
 | Command | Purpose | Systems |
 |:--|:--|:--|
-| `iac` | Omnibus entry: `bun run iac/cli.ts <cmd>` | All 3 |
 | `iac:plan` | Show diff between IaC-declared and actual state | All 3 |
-| `iac:bootstrap` | 1-command full bootstrap (Pulumi → Infisical → Pangolin → Komodo Core → Komodo Periphery → Newt → resource-syncs → all syncs) | All 3 |
-| `iac:deploy` | Deploy the 30 key stacks end-to-end (8 sync sub-commands) | All 3 |
+| `iac:deploy` | Deploy the 30 key stacks end-to-end | All 3 |
+| `iac:bootstrap` | 1-command full bootstrap (Pulumi → Infisical → Pangolin → Komodo → Newt → all syncs) | All 3 |
 | `iac:teardown` | Reverse of bootstrap (requires `--force`) | All 3 |
-| `iac:health` | Health check all 3 systems + verify the 3 resource-syncs are registered | All 3 |
+| `iac:health` | Health check all 3 systems | All 3 |
 | `iac:sync:secrets` | Sync Infisical secrets from `secrets.env` refs | Infisical |
 | `iac:sync:resources` | Sync Pangolin private resources (DELETE-then-CREATE the 3 manual ones) | Pangolin |
+| `iac:sync:procedures` | Sync Komodo procedures from `*.toml` | Komodo |
+| `iac:sync:resource-syncs` | Sync Komodo resource-syncs from `*.toml` | Komodo |
+| `iac:sync:monitors` | Sync Komodo monitors (opt-in) | Komodo |
+| `iac:sync:alerts` | Sync Komodo alerts (opt-in) | Komodo |
 | `iac:sync:variables` | Sync Komodo variables (cross-stack env vars) | Komodo |
+| `iac:sync:schedules` | Sync Komodo schedules (opt-in) | Komodo |
 | `iac:sync:action-recipients` | Sync Komodo ActionRecipients | Komodo |
-| `iac:sync:olm` | Sync Pangolin OLM clients (idempotent getOrCreateOlmClient) | Pangolin |
-| `iac:sync:monitors` | Sync Komodo monitors (opt-in, deprecated post-v5) | Komodo |
-| `iac:sync:alerts` | Sync Komodo alerts (opt-in, deprecated post-v5) | Komodo |
-| `iac:sync:schedules` | Sync Komodo schedules (opt-in, deprecated post-v5) | Komodo |
-
-> **Removed in v5 (no v0 backward-compat aliases):**
-> - `iac:sync:procedures` — now owned by the 3 Komodo resource-syncs
-> - `iac:sync:resource-syncs` — same; Komodo auto-pulls from `komodo/resource-syncs/*.toml`
+| `iac:sync:olm` | Sync Pangolin OLM clients | Pangolin |
 
 ## Flags
 
@@ -53,18 +41,13 @@ mutations, so the IaC no longer pushes them — Komodo auto-pulls.
 - `--with-monitors` — also sync Komodo monitors
 - `--with-alerts` — also sync Komodo alerts
 - `--with-schedules` — also sync Komodo schedules
-- `--skip=<phase>` — for `iac:bootstrap`: skip one of the 8 phases
-  (`pulumi`, `infisical`, `pangolin`, `komodo-core`, `komodo-periphery`,
-  `newt`, `resource-syncs`, `all-syncs`). Useful for re-running a single
-  phase after a failure (e.g. `--skip=pulumi --skip=infisical` to
-  re-run from Pangolin onwards).
 
 ## The 4 source-discoverers
 
-- `sources/discover-stacks.ts` — walks `bonneagar/stacks/*/compose.yaml` (86 stacks post-v5)
+- `sources/discover-stacks.ts` — walks `bonneagar/stacks/*/compose.yaml` (91 stacks)
 - `sources/discover-resources.ts` — walks `bonneagar/stacks/*/pangolin.yaml` (~30 Pangolin-routed)
-- `sources/discover-secrets.ts` — walks `bonneagar/stacks/*/secrets.env` (200+ Infisical refs, 2-segment canonical URI)
-- `sources/key-stacks.ts` — the curated 30-stack list (5-group model filter; phantom names removed in v5)
+- `sources/discover-secrets.ts` — walks `bonneagar/stacks/*/secrets.env` (200+ Infisical refs)
+- `sources/key-stacks.ts` — the curated 30-stack list (5-group model filter)
 
 ## The 3 typed clients
 

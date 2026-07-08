@@ -14,12 +14,8 @@ export async function ensureKomodoAuth(): Promise<KomodoClient> {
   }
   if (CONFIG.komodoPassword) {
     const client = new KomodoClient();
-    // v5: username is env-driven (CONFIG.komodoUsername), not the
-    // hardcoded "ciansedai" that was used pre-v5. This allows the
-    // 2-host topology (arm1-oci + bunchloch) to each have their own
-    // Komodo admin user without code changes.
-    await client.login(CONFIG.komodoUsername, CONFIG.komodoPassword);
-    console.log(`✓ komodo: logged in as ${CONFIG.komodoUsername} via KOMODO_PASSWORD`);
+    await client.login("ciansedai", CONFIG.komodoPassword);
+    console.log("✓ komodo: logged in via KOMODO_PASSWORD");
     return client;
   }
   // TODO: komodo-recover.sh flow (docker exec into komodo-ferretdb to reset the password)

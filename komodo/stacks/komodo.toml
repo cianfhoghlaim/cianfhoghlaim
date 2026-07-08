@@ -40,8 +40,8 @@ LOCKET_MODE=watch
 # =============================================================================
 
 [[stack]]
-name = "komodo-periphery-oci"
-description = "Komodo Periphery agent for OCI workloads"
+name = "komodo-periphery-arm1-oci"
+description = "Komodo Periphery agent for arm1-oci (control plane)"
 tags = ["host:arm1-oci", "tier:control-plane", "type:agent"]
 
 [stack.config]
@@ -50,13 +50,13 @@ run_directory = "/etc/komodo/storage/komodo-periphery"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PERIPHERY_ROOT=/etc/komodo
-INFISICAL_URL=http://132.145.27.89:8080
+INFISICAL_URL=https://infisical.cianfhoghlaim.ie
 LOCKET_MODE=watch
 """
 
 [[stack]]
-name = "komodo-periphery-macbook"
-description = "Komodo Periphery agent for MacBook dev"
+name = "komodo-periphery-bunchloch"
+description = "Komodo Periphery agent for bunchloch (workload host)"
 tags = ["host:bunchloch", "tier:control-plane", "type:agent"]
 
 [stack.config]
@@ -65,6 +65,6 @@ run_directory = "/etc/komodo/storage/komodo-periphery"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PERIPHERY_ROOT=/etc/komodo
-INFISICAL_URL=http://132.145.27.89:8080
+INFISICAL_URL=https://infisical.cianfhoghlaim.ie
 LOCKET_MODE=watch
 """

@@ -1,5 +1,5 @@
 // bonneagar/iac/commands/sync-resources.ts — Sync Pangolin private resources
-// Fixes blocker #2: DELETE-then-CREATE the 3 manually-created resources (komodo, calcom, infisical)
+// Fixes blocker #2: DELETE-then-CREATE the 3 manually-created resources (komodo, cal-diy, infisical)
 
 import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { discoverResources } from "../sources/discover-resources.ts";
@@ -7,7 +7,7 @@ import { ensurePangolinAuth } from "../auth.ts";
 import { CLI_FLAGS } from "../cli.ts";
 
 // The 3 manually-created resources that override the blueprints (per DEPLOYMENT-STRATEGY.md blocker #2)
-const MANUAL_OVERRIDE_NICE_IDS = new Set(["komodo", "calcom", "infisical"]);
+const MANUAL_OVERRIDE_NICE_IDS = new Set(["komodo", "cal-diy", "infisical"]);
 
 export async function syncResources() {
   logStep("sync-resources");

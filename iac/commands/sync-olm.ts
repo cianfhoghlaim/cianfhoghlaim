@@ -5,10 +5,12 @@ import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { ensurePangolinAuth } from "../auth.ts";
 import { CLI_FLAGS } from "../cli.ts";
 
-// The OLM clients (per the v0 olm-resources.blueprint.yaml; the 2 manually-created)
+// The OLM clients. v5: cax41-hetzner-olm removed (Hetzner is
+// Pulumi-only per the 2-host topology decision). The arm1-oci-olm
+// is the only canonical OLM client; bunchloch also gets a Newt
+// tunnel (via stacks/pangolin/newt.yaml) for service exposure.
 const OLM_CLIENTS = [
   { name: "arm1-oci-olm", siteId: 2 },
-  { name: "cax41-hetzner-olm", siteId: 2 },
 ];
 
 export async function syncOlm() {

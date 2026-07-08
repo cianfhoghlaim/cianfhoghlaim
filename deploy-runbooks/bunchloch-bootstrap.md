@@ -75,7 +75,7 @@ done
 
 # 6. Audit baselines
 bun run validate-stacks       # expect zero hard failures (`:latest` WARNINGs are accepted)
-mise run lint:skills          # expect 123/123 pass
+mise run lint:skills          # expect 53/53 pass
 ```
 
 ## Wave 1 — Foundation data layer (10–15 min)

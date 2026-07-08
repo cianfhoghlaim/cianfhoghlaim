@@ -8,7 +8,7 @@
 # - Komodo for stack deployment
 #
 # PREREQUISITES:
-#   1. Newt sites must exist (e.g., arm1-oci-newt, cax41-hetzner-newt)
+#   1. Newt sites must exist (e.g., arm1-oci-newt, bunchloch-newt)
 #   2. Infisical credentials configured
 #   3. Komodo API access
 #
@@ -29,12 +29,9 @@ CLIENTS='[
     "name": "arm1-oci-olm",
     "server": "arm1-oci",
     "siteNames": ["arm1-oci-newt"]
-  },
-  {
-    "name": "cax41-hetzner-olm",
-    "server": "cax41-hetzner",
-    "siteNames": ["cax41-hetzner-newt"]
   }
+  # v5: cax41-hetzner-olm removed (Hetzner is Pulumi-only per the
+  # 2-host topology decision; the fleet is arm1-oci + bunchloch only).
 ]'
 
 # Parse arguments

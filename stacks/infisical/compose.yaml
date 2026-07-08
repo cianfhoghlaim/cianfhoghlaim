@@ -1,0 +1,123 @@
+# =============================================================================
+# INFISICAL - Local Vault Stack (bunchloch)
+# =============================================================================
+# Pinned 2026-07-06 for the `deploy-infisical-bunchloch-local` openspec
+# change. The previous version used `:latest` + `postgres:14-alpine` +
+# the arm1-oci-only `infrastructure` external network — none of which
+# work on bunchloch.
+#
+# - backend: infisical/infisical:v0.161.12 (latest stable 2026-07-03)
+# - db:      postgres:16-alpine (upstream recommends ≥14; 16 has better
+#            JSON perf for audit logs)
+# - redis:   redis:7.4-alpine (upstream requires ≥6.2; 7.4 is current
+#            stable + supports the noeviction cache policy Infisical
+#            requires)
+#
+# Network: `bunchloch-infra` (created by runbook step 0). NEVER use the
+# arm1-oci-only `infrastructure` network — it does not exist on bunchloch.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+# =============================================================================
+
+name: infisical
+
+services:
+  # ---------------------------------------------------------------------------
+  # INFISICAL BACKEND
+  # ---------------------------------------------------------------------------
+  backend:
+    image: infisical/infisical:v0.161.12
+    container_name: infisical-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file: .env.dev
+    ports:
+      - "8081:8080"  # host:container — expose UI on bunchloch only
+    environment:
+      - NODE_ENV=production
+      # The 5 mandated env vars come from .env.dev (see runbook Phase 1 step 2):
+      # ENCRYPTION_KEY    - 16-byte hex  (openssl rand -hex 16)
+      # AUTH_SECRET       - 32-byte base64 (openssl rand -base64 32)
+      # DB_CONNECTION_URI - postgres://infisical:${POSTGRES_PASSWORD}@db:5432/infisical
+      # REDIS_URL         - redis://redis:6379
+      # SITE_URL          - http://localhost:8081
+      # HOST              - 0.0.0.0  (required to accept external conns on bunchloch)
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - DB_CONNECTION_URI=${DB_CONNECTION_URI}
+      - REDIS_URL=${REDIS_URL}
+      - SITE_URL=${SITE_URL}
+      - HOST=${HOST:-0.0.0.0}
+    volumes:
+      - infisical_keys:/app/keys
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - bunchloch-infra
+
+  # ---------------------------------------------------------------------------
+  # REDIS - cache + queue (Infisical recommends 7.x)
+  # ---------------------------------------------------------------------------
+  redis:
+    container_name: infisical-redis
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    env_file: .env.dev
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    command:
+      - redis-server
+      - --maxmemory-policy
+      - noeviction
+      - --appendonly
+      - "yes"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - bunchloch-infra
+
+  # ---------------------------------------------------------------------------
+  # POSTGRES - 16 (upstream recommends ≥14; 16 is current LTS)
+  # ---------------------------------------------------------------------------
+  db:
+    container_name: infisical-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env.dev
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready --username=$${POSTGRES_USER} && psql --username=$${POSTGRES_USER} --list"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      - bunchloch-infra
+
+volumes:
+  pg_data:
+    driver: local
+  redis_data:
+    driver: local
+  infisical_keys:
+    driver: local
+
+networks:
+  bunchloch-infra:
+    external: true
+    name: bunchloch-infra

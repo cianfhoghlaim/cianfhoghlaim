@@ -13,6 +13,15 @@
 > 88 stacks are documented at
 > [`../cianfhoghlaim/docs/stacks/<name>.md`](../../cianfhoghlaim/docs/stacks/)
 > (the "purpose + why-GitOps" docs).
+>
+> **v5 cleanup (2026-07-01):** 2 obsolete stacks pruned
+> (`stacks/lakehouse-oci/` + `stacks/r2/`); 7 reference-only
+> dirs without `compose.yaml` removed (ci, motherduck,
+> planetscale, pydantic-gateway, tools, olake, nimtable).
+> **Actual count: 86 stacks** (per `bun run validate-stacks`).
+> The 88-stacks figure is kept in this header for v4
+> compatibility but will be corrected to 86 in the next
+> docs sync (Phase 8).
 
 ## Priority quick reference
 

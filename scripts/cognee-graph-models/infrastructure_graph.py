@@ -26,9 +26,10 @@ GRAPH_EDGE_TYPES: tuple[str, ...] = (
 
 CLUSTER_NAME = "docs-bonneagar"
 CLUSTER_DESCRIPTION = (
-    "The 94-stack Komodo + Pangolin + Locket + Infisical mesh that "
-    "runs the Cianfhoghlaim platform on the 3-tier KCG topology "
-    "(arm1-oci + bunchloch + cax41-hetzner)."
+    "The 88-stack Komodo + Pangolin + Locket + Infisical mesh that "
+    "runs the Cianfhoghlaim platform on the 2-host KCG topology "
+    "(arm1-oci + bunchloch). Hetzner provisioning is Pulumi-only "
+    "(see bonneagar/pulumi/)."
 )
 
 

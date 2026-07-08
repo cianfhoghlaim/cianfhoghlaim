@@ -89,7 +89,7 @@ Deployed via Komodo on arm1-oci. Locket resolves `GARAGE_RPC_SECRET`, `GARAGE_AD
 | Nimtable | `lakehouse-nimtable` | 3000 → 3018 | `nimtable/nimtable:0.1.6` | Iceberg catalog UI (added in `extend-lakehouse-with-nimtable-olake-lancedb`) |
 | Olake | `lakehouse-olake` | ephemeral | `ghcr.io/olake-io/olake:0.1.5` | CDC engine: Postgres/MySQL/MongoDB → Iceberg (added in `extend-lakehouse-with-nimtable-olake-lancedb`) |
 | LanceDB Viewer | `lakehouse-lancedb-viewer` | 8080 → 8081 | `ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3` | Web UI for LanceDB tables (added in `extend-lakehouse-with-nimtable-olake-lancedb`) |
-| Locket | `lakehouse-locket` | ephemeral | `ghcr.io/cianfhoghlaim/locket:1.2.3` | Infisical secret injector (sidecar) |
+| Locket | `lakehouse-locket` | ephemeral | `ghcr.io/bpbradley/locket:infisical` | Infisical secret injector (sidecar) |
 
 ## Cross-Sruth Lakehouse Wiring
 

@@ -119,7 +119,7 @@ services) can omit this file or have an empty stub.
 # Exemplar: bonneagar/stacks/litellm/sidecar.yaml
 services:
   locket:
-    image: ghcr.io/cianfhoghlaim/locket:latest
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: cianfhoghlaim-litellm-locket
     restart: unless-stopped
     env_file: /run/secrets/locket/secrets.env

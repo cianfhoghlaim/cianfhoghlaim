@@ -26,16 +26,14 @@ services:
   # + boto3 baked in, eliminating the 30s pip-install on first boot.
   # ---------------------------------------------------------------------------
   mlflow:
-    # Pinned 2026-07-02 (was `ghcr.io/cianfhoghlaim/mlflow:v2.19.0` — the org-private
-    # image is replaced with the public upstream `ghcr.io/mlflow/mlflow:v2.22.4`
-    # per user directive "use typical public images". The `build:` directive
-    # wraps the public upstream image to bake psycopg2-binary + boto3
-    # (eliminates the 30s cold-start pip install). The Dockerfile.mlflow
-    # FROM line was updated to match).
+    # Pinned 2026-07-06 (was `ghcr.io/mlflow/mlflow:v2.22.4` — bumped to v3.12.0
+    # per the upgrade-4-stacks-with-infisical openspec change). The
+    # v3.5.0+ security middleware requires --allowed-hosts and
+    # --cors-allowed-origins when binding to 0.0.0.0.
     build:
       context: .
       dockerfile: Dockerfile.mlflow
-    image: ghcr.io/mlflow/mlflow:v2.22.4
+    image: ghcr.io/mlflow/mlflow:v3.12.0
     container_name: mlflow
     restart: unless-stopped
     ports:
@@ -50,6 +48,9 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-dev-secret-key-not-for-prod}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-garage}
       MLFLOW_S3_IGNORE_TLS: "true"
+      # v3.5.0+ security middleware (mandatory when binding 0.0.0.0)
+      MLFLOW_ALLOWED_HOSTS: "localhost,127.0.0.1,mlflow.cianfhoghlaim.ie"
+      MLFLOW_CORS_ALLOWED_ORIGINS: "https://oideachais.cianfhoghlaim.ie,http://localhost:3335"
     command:
       - mlflow
       - server
@@ -61,6 +62,10 @@ services:
       - "0.0.0.0"
       - --port
       - "5000"
+      - --allowed-hosts
+      - "localhost,127.0.0.1,mlflow.cianfhoghlaim.ie"
+      - --cors-allowed-origins
+      - "https://oideachais.cianfhoghlaim.ie,http://localhost:3335"
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
     # deploy-mlflow-bunchloch.toml — see the file header.
     depends_on: []

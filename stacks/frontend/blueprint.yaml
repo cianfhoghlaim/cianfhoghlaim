@@ -9,7 +9,7 @@ description: Cianfhoghlaim 5 frontend workspaces (oideachais-web, oideachais-api
 server: arm1-oci
 compose:
   path: ./compose.yaml
-  run_docker_tag: ghcr.io/cianfhoghlaim/locket:latest
+  run_docker_tag: ghcr.io/bpbradley/locket:infisical
 resources:
   - name: oideachais-web
     kind: stack

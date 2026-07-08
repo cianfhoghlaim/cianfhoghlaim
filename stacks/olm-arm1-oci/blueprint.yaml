@@ -1,0 +1,16 @@
+# OLM (Pangolin Tunnel Client) - ARM1-OCI
+# No Komodo Resource Sync entry needed; OLM is deployed via the
+# `pangolin-tunnels.toml` Komodo stack registration.
+name: olm-arm1-oci
+description: "OLM TCP tunnel client (arm1-oci) — provides SSH + database access via Pangolin"
+run_directory: "/etc/komodo/olm-arm1-oci"
+file_paths:
+  - "compose.yaml"
+  - "sidecar.yaml"
+environment: |
+  SERVICE_NAME=olm-arm1-oci
+  PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+tags:
+  - "host:arm1-oci"
+  - "tier:network"
+  - "tunnel:olm"

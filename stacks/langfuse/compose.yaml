@@ -99,7 +99,7 @@ services:
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
     # deploy-langfuse-bunchloch.toml — see comment on langfuse-worker.
     ports:
-      - "127.0.0.1:3001:3000"   # Traefik handles public exposure via pangolin.yaml
+      - "127.0.0.1:${LANGFUSE_PORT:-3001}:3000"   # Traefik handles public exposure via pangolin.yaml
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/langfuse
       SALT: ${SALT:?SALT must be set via Locket/Infisical}

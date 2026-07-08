@@ -118,7 +118,7 @@ curl -X POST https://komodo.cianfhoghlaim.ie/api/procedure/run \
 | `oideachais-dev-dagster:latest` | `latest` | Local build artifact, `pull_policy: never` |
 | `oideachais-dev-api:latest` | `latest` | Local build artifact, `pull_policy: never` |
 | `oideachais-dev-frontend:latest` | `latest` | Local build artifact, `pull_policy: never` |
-| `ghcr.io/cianfhoghlaim/locket:1.2.3` | **pinned** | Upstream image, MUST be pinned (no `:latest`) |
+| `ghcr.io/bpbradley/locket:infisical` | **pinned** | Upstream image from https://github.com/bpbradley/locket; `:infisical` is the canonical tag (no `:latest`; future change may pin `@sha256:` once bpbradley publishes digest-stable builds) |
 
 ## Health Checks
 

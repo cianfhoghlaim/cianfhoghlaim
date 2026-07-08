@@ -33,6 +33,11 @@ services:
   locket:
     image: alpine:3.20
     container_name: lakehouse-locket-dev
+    environment:
+      INFISICAL_CLIENT_ID: ${INFISICAL_LOCKET_CLIENT_ID:-placeholder}
+      INFISICAL_CLIENT_SECRET: ${INFISICAL_LOCKET_CLIENT_SECRET:-placeholder}
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-placeholder}
+      LOCKET_MODE: watch
     command:
       - sh
       - -c
@@ -117,8 +122,12 @@ services:
     command: ["sh", "-c", "echo '[dev] nimtable disabled (config.yaml missing)'; sleep infinity"]
 
 # Top-level secrets: block from sidecar.yaml references the production
-# Infisical secret file (../../infisical_secret). Override with /dev/null
-# so the locket sidecar doesn't fail to mount a missing file.
+# Infisical secret file (../../infisical_secret). The base compose has
+# `name: lakehouse` so docker compose prefixes the secret as
+# `lakehouse_infisical_secret`. We override BOTH names to ensure docker
+# finds them — using /dev/null for the no-op dev case.
 secrets:
   infisical_secret:
+    file: /dev/null
+  lakehouse_infisical_secret:
     file: /dev/null

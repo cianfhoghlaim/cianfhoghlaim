@@ -7,7 +7,7 @@
 
 services:
   infisical-init:
-    image: ghcr.io/cianfhoghlaim/locket:latest
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: frontend-infisical-init
     restart: "no"
     command: ["locket", "exec", "--", "echo", "secrets hydrated"]

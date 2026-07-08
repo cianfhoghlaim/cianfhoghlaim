@@ -1,7 +1,7 @@
-// bonnegar/iac/sources/discover-stacks.ts — Walks bonnegar/stacks/*/compose.yaml
+// bonneagar/iac/sources/discover-stacks.ts — Walks bonneagar/stacks/*/compose.yaml
 // Produces typed Stack[] with the 6-file GOLD_STANDARD check.
 
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 export interface DiscoveredStack {
@@ -22,32 +22,30 @@ export interface DiscoveredStack {
   imageTags: string[];  // for the image tag validation
 }
 
-export function discoverStacks(rootDir: string = "../../bonnegar/stacks"): DiscoveredStack[] {
+export function discoverStacks(rootDir: string = "../../stacks"): DiscoveredStack[] {
   const stacks: DiscoveredStack[] = [];
   const absRoot = join(import.meta.dir, rootDir);
 
-  // Bun.file is preferred but we use Node fs for portability
-  const fs = require("node:fs");
-  if (!fs.existsSync(absRoot)) return stacks;
+  if (!existsSync(absRoot)) return stacks;
 
-  const entries = fs.readdirSync(absRoot, { withFileTypes: true });
+  const entries = readdirSync(absRoot, { withFileTypes: true });
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     if (entry.name.startsWith(".")) continue;
 
     const stackPath = join(absRoot, entry.name);
     const composePath = join(stackPath, "compose.yaml");
-    if (!fs.existsSync(composePath)) continue; // Not a stack (e.g. .DS_Store, README.md, GOLD_STANDARD.md)
+    if (!existsSync(composePath)) continue; // Not a stack (e.g. .DS_Store, README.md, GOLD_STANDARD.md)
 
     const hasCompose = true;
-    const hasSidecar = fs.existsSync(join(stackPath, "sidecar.yaml"));
-    const hasSecrets = fs.existsSync(join(stackPath, "secrets.env"));
-    const hasPangolin = fs.existsSync(join(stackPath, "pangolin.yaml"));
-    const hasBlueprint = fs.existsSync(join(stackPath, "blueprint.yaml"));
-    const hasEnvExample = fs.existsSync(join(stackPath, ".env.example"));
+    const hasSidecar = existsSync(join(stackPath, "sidecar.yaml"));
+    const hasSecrets = existsSync(join(stackPath, "secrets.env"));
+    const hasPangolin = existsSync(join(stackPath, "pangolin.yaml"));
+    const hasBlueprint = existsSync(join(stackPath, "blueprint.yaml"));
+    const hasEnvExample = existsSync(join(stackPath, ".env.example"));
 
     // Parse compose.yaml to extract service names + image tags
-    const composeText = fs.readFileSync(composePath, "utf8");
+    const composeText = readFileSync(composePath, "utf8");
     const services = parseServiceNames(composeText);
     const imageTags = parseImageTags(composeText);
 

@@ -93,9 +93,12 @@ services:
 # =============================================================================
 # SECRETS
 # =============================================================================
+# The infisical_secret file is mounted into the Locket sidecar. The dev
+# override (`compose.dev.yaml`) replaces this with `/dev/null` so the
+# sidecar healthcheck passes even without the real secret file present.
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical/infisical_secret
 
 # =============================================================================
 # VOLUMES

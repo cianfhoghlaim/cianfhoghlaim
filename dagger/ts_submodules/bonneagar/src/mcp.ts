@@ -437,7 +437,7 @@ ${Object.entries(config.env || {}).map(([k, v]) => `      - ${k}=${v}`).join("\n
       - mcp-network
 
   locket:
-    image: ghcr.io/cianfhoghlaim/locket:latest
+    image: ghcr.io/bpbradley/locket:infisical
     volumes:
       - secrets:/secrets:rw
       - ./sidecar.yaml:/locket/config.yaml:ro

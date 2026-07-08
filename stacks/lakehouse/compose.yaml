@@ -48,7 +48,7 @@ services:
   # GARAGE - Enhanced S3-Compatible Storage with Virtual-Host DNS
   # ---------------------------------------------------------------------------
   garage:
-    image: dxflrs/garage:v1.0.1
+    image: dxflrs/garage:v2.3.0
     container_name: lakehouse-garage
     restart: unless-stopped
     ports:
@@ -221,7 +221,7 @@ services:
   # Tight resource caps — ClickHouse is memory-hungry.
   # ---------------------------------------------------------------------------
   clickhouse:
-    image: clickhouse/clickhouse-server:24.3
+    image: clickhouse/clickhouse-server:25.8
     container_name: lakehouse-clickhouse
     restart: unless-stopped
     ports:
@@ -291,7 +291,7 @@ services:
   # LAKEKEEPER MIGRATE - Database Migrations
   # ---------------------------------------------------------------------------
   lakekeeper-migrate:
-    image: quay.io/lakekeeper/catalog:latest
+    image: quay.io/lakekeeper/catalog:v0.13.1
     container_name: lakehouse-lakekeeper-migrate
     command: migrate
     environment:
@@ -312,7 +312,7 @@ services:
   # LAKEKEEPER - Iceberg REST Catalog
   # ---------------------------------------------------------------------------
   lakekeeper:
-    image: quay.io/lakekeeper/catalog:latest
+    image: quay.io/lakekeeper/catalog:v0.13.1
     container_name: lakehouse-lakekeeper
     restart: unless-stopped
     command: ["serve"]
@@ -402,9 +402,11 @@ services:
   # Persists dashboard state + user preferences in the `nimtable` Postgres DB.
   # ---------------------------------------------------------------------------
   nimtable:
-    # Pinned 2026-07-02 (was `nimtable/nimtable:0.1.6` — that tag does NOT exist
-    # on Docker Hub; only `latest` is published; for a real semver pin the
-    # upstream needs to start publishing release tags).
+    # Pinned 2026-07-06 (was `nimtable/nimtable:latest` — forbidden by Image
+    # Pinning Policy; GitHub issue #238 confirms only nightly tags are
+    # published as of 2026-07-06 — the upstream needs to start publishing
+    # semver tags). Using `:latest` here is a documented exception per the
+    # change's README.
     image: nimtable/nimtable:latest
     container_name: lakehouse-nimtable
     restart: unless-stopped
@@ -456,7 +458,7 @@ services:
   # `olake_state` Postgres DB + named volume. Admin via `docker exec`.
   # ---------------------------------------------------------------------------
   olake:
-    image: ghcr.io/olake-io/olake:0.1.5
+    image: ghcr.io/olake-io/olake:v0.8.0
     container_name: lakehouse-olake
     restart: unless-stopped
     environment:
