@@ -1,0 +1,44 @@
+# defs/1_ingestion/curriculum/lc6_examinations/defs.yaml
+#
+# L1 ingestion for the BIEP v1 SEC examinations.ie crawl (6 LC
+# subjects × 1990-2026 exam papers + marking schemes).
+#
+# Per the british-isles-education-pipeline spec — `SEC examination
+# papers + marking schemes for 6 LC subjects` Requirement.
+# Partitions: (subject, year, language, paper_kind).
+#
+# Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: sec_lc6
+  module: cianfhoghlaim.dlt.british_isles.ireland.education.examinations
+  schedule:
+    cron: "0 3 * * *"
+    timezone: UTC
+  partitions:
+    - subject:
+        values:
+          - mathematics
+          - chemistry
+          - geography
+          - gaeilge
+          - english
+          - computer_science
+    - year:
+        values: "1990..2026"
+    - language:
+        values: ["en", "ga"]
+    - paper_kind:
+        values: ["syllabus", "paper", "marking"]
+  use_local_scrapes: true
+  asset_check: sec_paper_year_coverage
+  asset_check_min_papers: 1
+  asset_check_year_window_years: 5
+  tags:
+    - biep
+    - lc6
+    - sec
+    - examinations
+  metadata:
+    openspec_change: 2026-07-06-british-isles-education-pipeline-v1
+    spec: british-isles-education-pipeline
