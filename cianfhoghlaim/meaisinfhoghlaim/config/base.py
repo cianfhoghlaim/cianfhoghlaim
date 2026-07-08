@@ -7,10 +7,35 @@ should inherit from for consistent configuration across pipelines.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any, TypeVar
 
 from pydantic import Field
+
+# Canonical env-var matrix (the CIANFHOGHLAIM_* env vars). The
+# FlowSettings class uses pydantic's env_prefix=SRUTH_ for backwards
+# compat, but the canonical defaults below read the CIANFHOGHLAIM_*
+# vars first and fall back to the SRUTH_ legacy aliases + the
+# in-docker defaults.
+try:
+    from cianfhoghlaim.observability.env_config import (
+        FALKORDB_HOST as _CIANFHOGHLAIM_FALKORDB_HOST,
+    )
+    from cianfhoghlaim.observability.env_config import (
+        FALKORDB_PASSWORD as _CIANFHOGHLAIM_FALKORDB_PASSWORD,
+    )
+    from cianfhoghlaim.observability.env_config import (
+        FALKORDB_PORT as _CIANFHOGHLAIM_FALKORDB_PORT,
+    )
+    from cianfhoghlaim.observability.env_config import (
+        resolve_cognee_backend_with_fallback as _resolve_cognee_backend,
+    )
+except ImportError:  # pragma: no cover
+    _CIANFHOGHLAIM_FALKORDB_HOST = "falkordb"
+    _CIANFHOGHLAIM_FALKORDB_PORT = 6379
+    _CIANFHOGHLAIM_FALKORDB_PASSWORD = None
+    _resolve_cognee_backend = lambda: "falkordb"  # type: ignore[assignment]
 
 # Handle pydantic v1 vs v2 settings
 _PYDANTIC_V2 = False
@@ -68,10 +93,20 @@ if _PYDANTIC_V2:
         # =========================================================================
         # Graph Database Settings
         # =========================================================================
+        # Graph Database Settings
+        # =========================================================================
+        #
+        # The Cognee code-side backend selection (falkordb primary +
+        # memgraph fallback) is the canonical KCG default per the
+        # agent-observability spec. New code MUST use falkordb; the
+        # memgraph defaults below remain for legacy call-sites only.
 
         memgraph_uri: str = Field(
-            default="bolt://localhost:7687",
-            description="Memgraph Bolt connection URI",
+            default="bolt://memgraph:7687",
+            description=(
+                "Memgraph Bolt connection URI. Default points at the in-docker "
+                "memgraph container (not used by new code; legacy callers only)."
+            ),
         )
 
         memgraph_username: str = Field(
@@ -85,18 +120,30 @@ if _PYDANTIC_V2:
         )
 
         falkordb_host: str = Field(
-            default="localhost",
-            description="FalkorDB Redis host",
+            default_factory=lambda: os.getenv("FALKORDB_HOST") or _CIANFHOGHLAIM_FALKORDB_HOST,
+            description="FalkorDB Redis host (default: CIANFHOGHLAIM_FALKORDB_URL host)",
         )
 
         falkordb_port: int = Field(
-            default=6379,
-            description="FalkorDB Redis port",
+            default_factory=lambda: int(os.getenv("FALKORDB_PORT", "0") or "0") or _CIANFHOGHLAIM_FALKORDB_PORT,
+            description="FalkorDB Redis port (default: CIANFHOGHLAIM_FALKORDB_URL port)",
         )
 
         falkordb_password: str | None = Field(
-            default=None,
-            description="FalkorDB Redis password",
+            default_factory=lambda: os.getenv("FALKORDB_PASSWORD") or _CIANFHOGHLAIM_FALKORDB_PASSWORD,
+            description="FalkorDB Redis password (default: CIANFHOGHLAIM_FALKORDB_URL password)",
+        )
+
+        # Cognee code-side backend selection. Honours
+        # CIANFHOGHLAIM_COGNEE_BACKEND with the falkordb → memgraph
+        # fallback chain (per dispatch hard-deliverable #2).
+        cognee_backend: str = Field(
+            default_factory=lambda: _resolve_cognee_backend(),
+            description=(
+                "Cognee graph backend (falkordb | memgraph | postgres). "
+                "Primary = falkordb; fallback = memgraph. Honours "
+                "CIANFHOGHLAIM_COGNEE_BACKEND."
+            ),
         )
 
         # =========================================================================
@@ -230,10 +277,20 @@ else:
         # =========================================================================
         # Graph Database Settings
         # =========================================================================
+        # Graph Database Settings
+        # =========================================================================
+        #
+        # The Cognee code-side backend selection (falkordb primary +
+        # memgraph fallback) is the canonical KCG default per the
+        # agent-observability spec. New code MUST use falkordb; the
+        # memgraph defaults below remain for legacy call-sites only.
 
         memgraph_uri: str = Field(
-            default="bolt://localhost:7687",
-            description="Memgraph Bolt connection URI",
+            default="bolt://memgraph:7687",
+            description=(
+                "Memgraph Bolt connection URI. Default points at the in-docker "
+                "memgraph container (not used by new code; legacy callers only)."
+            ),
         )
 
         memgraph_username: str = Field(
@@ -247,18 +304,30 @@ else:
         )
 
         falkordb_host: str = Field(
-            default="localhost",
-            description="FalkorDB Redis host",
+            default_factory=lambda: os.getenv("FALKORDB_HOST") or _CIANFHOGHLAIM_FALKORDB_HOST,
+            description="FalkorDB Redis host (default: CIANFHOGHLAIM_FALKORDB_URL host)",
         )
 
         falkordb_port: int = Field(
-            default=6379,
-            description="FalkorDB Redis port",
+            default_factory=lambda: int(os.getenv("FALKORDB_PORT", "0") or "0") or _CIANFHOGHLAIM_FALKORDB_PORT,
+            description="FalkorDB Redis port (default: CIANFHOGHLAIM_FALKORDB_URL port)",
         )
 
         falkordb_password: str | None = Field(
-            default=None,
-            description="FalkorDB Redis password",
+            default_factory=lambda: os.getenv("FALKORDB_PASSWORD") or _CIANFHOGHLAIM_FALKORDB_PASSWORD,
+            description="FalkorDB Redis password (default: CIANFHOGHLAIM_FALKORDB_URL password)",
+        )
+
+        # Cognee code-side backend selection. Honours
+        # CIANFHOGHLAIM_COGNEE_BACKEND with the falkordb → memgraph
+        # fallback chain (per dispatch hard-deliverable #2).
+        cognee_backend: str = Field(
+            default_factory=lambda: _resolve_cognee_backend(),
+            description=(
+                "Cognee graph backend (falkordb | memgraph | postgres). "
+                "Primary = falkordb; fallback = memgraph. Honours "
+                "CIANFHOGHLAIM_COGNEE_BACKEND."
+            ),
         )
 
         # =========================================================================

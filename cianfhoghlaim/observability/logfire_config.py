@@ -20,6 +20,8 @@ from contextlib import contextmanager
 from functools import wraps
 from typing import Any
 
+from .env_config import LOGFIRE_TOKEN as _CIANFHOGHLAIM_LOGFIRE_TOKEN
+
 logger = logging.getLogger(__name__)
 
 # Lazy imports for optional dependency
@@ -45,7 +47,10 @@ def _get_logfire():
 
 
 # Default configuration
-LOGFIRE_TOKEN = os.getenv("LOGFIRE_TOKEN", "")
+# The canonical default now reads from the CIANFHOGHLAIM_* env-var
+# matrix in cianfhoghlaim/observability/env_config.py. The legacy
+# LOGFIRE_TOKEN env var is honoured as a backwards-compat alias.
+LOGFIRE_TOKEN = _CIANFHOGHLAIM_LOGFIRE_TOKEN
 LOGFIRE_PROJECT_NAME = os.getenv("LOGFIRE_PROJECT_NAME", "oideachas-celtic-education")
 LOGFIRE_SERVICE_NAME = os.getenv("LOGFIRE_SERVICE_NAME", "education-pipeline")
 LOGFIRE_ENVIRONMENT = os.getenv("LOGFIRE_ENVIRONMENT", os.getenv("DD_ENV", "development"))
