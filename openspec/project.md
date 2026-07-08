@@ -20,14 +20,18 @@ that ingests the user's personal + professional email from 4 accounts
 BAML classification + CocoIndex embedding + Google ADK `email_triage`
 agent + a marimo notebook.
 
-**Plan 1.5 (NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`):** The
+**Plan 1.5 (NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`; Brown
+Ajah theming REMOVED 2026-07-09):** The
 `cianfhoghlaim-leaving-cert-portal` TanStack Start app + the 8 NCCA
 LC subject ADK specialists + the `retro-game-asset-pipeline` (2D + 3D
 asset generator via TRELLIS.2 + SAM-3D-Objects + FIBO) + the
 `ncca-leaving-cert-root-pdfs` (5 NCCA root-level programme PDFs).
-Themed as the Brown Ajah of the Wheel of Time. The map is an accurate
-British Isles map split into 6 subnations (Éire + Northern Ireland +
-Scotland + England + Wales + Isle of Man). Cian of the Tuatha Dé
+The map is an accurate British Isles map split into 6 subnations
+(Éire + Northern Ireland + Scotland + England + Wales + Isle of Man).
+The public theming is professional + minimal; the mythology /
+historical-sources theming is deferred to BIEP-v2 (post full British
+Isles educational pipelines) per the
+`2026-07-09-remove-brown-ajah-theming-v1` change. Cian of the Tuatha Dé
 Danann (the operator) tries to heal the land and language through
 education.
 
