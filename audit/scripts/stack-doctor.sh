@@ -76,12 +76,18 @@ warn_gate() {
 #   .env.example (only actively-deployed stacks need this)
 run_gate "GOLD_STANDARD minimum: compose.yaml required" '
   bad=0
-  for d in bonneagar/stacks/*/; do
-    if [ -d "$d" ] && [ -z "$(ls "$d"/*.yaml "$d"/*.yml 2>/dev/null)" ]; then
-      echo "  ✗ no yaml files in $d"
-      bad=$((bad + 1))
+  # Find all directories under stacks/ that contain a compose.yaml or
+  # compose.dev.yaml. Directories without compose files are flagged, but
+  # nested stacks (e.g. stacks/croilar/croilar-marimo) are OK if their
+  # leaves have compose files.
+  while IFS= read -r d; do
+    if [ -z "$(ls "$d"/compose.yaml "$d"/compose.dev.yaml 2>/dev/null)" ]; then
+      if [ -z "$(find "$d" -mindepth 2 -maxdepth 2 \( -name compose.yaml -o -name compose.dev.yaml \) 2>/dev/null)" ]; then
+        echo "  ✗ no compose.yaml in $d"
+        bad=$((bad + 1))
+      fi
     fi
-  done
+  done < <(find bonneagar/stacks -mindepth 1 -maxdepth 1 -type d)
   return $bad
 '
 
