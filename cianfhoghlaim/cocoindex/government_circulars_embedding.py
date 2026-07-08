@@ -1,31 +1,32 @@
 """
-Mathematics v1 CocoIndex Embedding App (BIEP v1 canonical).
+Government Circulars v1 CocoIndex Embedding App (BIEP v1 — the 7th v1 App).
 
-Embeds the NCCA Leaving Certificate Mathematics syllabuses, exam
-papers, and marking schemes into LanceDB for semantic search.
+Embeds the BAML-extracted `gov.ie` education circulars into
+LanceDB for semantic search.
 
-Follows the canonical v1 pattern (R1–R4 conformance contract):
+This is the cross-cutting ingestion surface — DES / NCCA / SEC /
+DoE (NI) circulars from `gov.ie/en/circulars` +
+`gov.ie/ga/ciorcláin`, extracted via BAML
+`ExtractCircular` (`baml/education/lc_extraction/circular_extraction.baml`)
+and embedded here.
 
-- **R1** — `from ._lifespan import shared_lifespan` (delegates to the
-  shared lifespan in `_lifespan.py`)
-- **R2** — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
-- **R3** — `app = coco.App(coco.AppConfig(name=...))` at module scope
-- **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
+R1–R4 v1 conformance contract per `_lifespan.py`:
+- R1 — `from ._lifespan import shared_lifespan`
+- R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
+- R3 — `app = coco.App(coco.AppConfig(name=...))` at module scope
+- R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
-Embedder: `BAAI/bge-m3` (multilingual 1024-dim) per the BIEP v1 spec.
-LanceDB table: `oideachais.lc.mathematics.<level>_<language>`.
-
-Driven by Dagster assets in
-`cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/lc_subjects/`.
+Embedder: `BAAI/bge-m3` (multilingual 1024-dim, supports Irish + English).
+LanceDB table: `oideachais.government.circulars.<dept>_<year>_<language>`.
 
 Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+openspec/specs/british-isles-education-pipeline/spec.md
 """
 
 from __future__ import annotations
 
 import os
 import pathlib
-from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from typing import Annotated
 
@@ -34,7 +35,6 @@ from numpy.typing import NDArray
 
 logger = structlog.get_logger(__name__)
 
-# CocoIndex is optional — degrade gracefully if not installed.
 try:
     import cocoindex as coco  # type: ignore[import-not-found]
     from cocoindex.connectors import lancedb  # type: ignore[import-not-found]
@@ -49,7 +49,7 @@ except ImportError as e:
     localfs = None  # type: ignore[assignment]
 
 
-# The shared CocoIndex v1 lifespan (R1 — REFACTORING.md item 12)
+# R1 — delegate to the shared lifespan in _lifespan.py
 from ._lifespan import (  # noqa: E402
     EMBEDDER,
     LANCE_DB,
@@ -61,36 +61,40 @@ from ._lifespan import (  # noqa: E402
 # Configuration
 # ============================================================================
 
-DEFAULT_MATH_ROOT = pathlib.Path(
+# The BAML-extracted circulars land in DuckLake, but the source
+# PDFs live in `leaving_certificate/government_circulars/<dept>/<year>/<lang>/`.
+# The PDF dir layout mirrors the LanceDB table suffix.
+DEFAULT_GOV_CIRCULARS_ROOT = pathlib.Path(
     os.getenv(
-        "CIANFHOGHLAIM_MATH_ROOT",
+        "CIANFHOGHLAIM_GOV_CIRCULARS_ROOT",
         str(
             pathlib.Path(__file__).resolve().parents[2]
             / "leaving_certificate"
-            / "mathematics"
+            / "government_circulars"
         ),
     )
 )
 
-# The 3 BIEP v1 levels + 2 languages = 6 LanceDB tables.
-LC_LEVELS: tuple[str, ...] = ("hl", "ol", "fl")
-LC_LANGUAGES: tuple[str, ...] = ("en", "ga")
+GOV_DEPTS: tuple[str, ...] = ("DES", "NCCA", "SEC", "DOE_NI")
 
 
 # ============================================================================
-# Row schema (the @dataclass that drives the LanceDB target table)
+# Row schema
 # ============================================================================
 
 if COCOINDEX_AVAILABLE:
 
     @dataclass
-    class MathChunk:
-        """One chunked + embedded paragraph from a Mathematics PDF."""
+    class GovCircularChunk:
+        """One chunked + embedded paragraph from a gov.ie circular PDF."""
 
         chunk_id: str
-        subject: str
-        level: str
+        circular_id: str
+        dept: str
+        subject_area: str
+        year: int
         language: str
+        title: str
         filename: str
         chunk_index: int
         text: str
@@ -98,13 +102,12 @@ if COCOINDEX_AVAILABLE:
 
 
 # ============================================================================
-# v1 App: MathematicsEmbedding
+# v1 App: GovernmentCircularsEmbedding
 # ============================================================================
 
 if COCOINDEX_AVAILABLE:
 
     def _chunk_text(text: str, chunk_size: int = 512, overlap: int = 64) -> list[str]:
-        """Naive sliding-window chunker (overlap-friendly)."""
         chunks: list[str] = []
         if not text:
             return chunks
@@ -118,25 +121,31 @@ if COCOINDEX_AVAILABLE:
         return chunks
 
     @coco.fn(memo=True)
-    async def process_mathematics_pdf(
+    async def process_gov_circular_pdf(
         file_path: pathlib.PurePath,
         text: str,
-        level: str,
+        dept: str,
+        year: int,
         language: str,
-        target_table: lancedb.TableTarget[MathChunk],  # type: ignore[type-var]
+        target_table: lancedb.TableTarget[GovCircularChunk],  # type: ignore[type-var]
     ) -> None:
-        """Process one Mathematics PDF into chunked + embedded LanceDB rows."""
+        """Process one gov.ie circular PDF into chunked + embedded rows."""
         embedder = await coco.use_context(EMBEDDER)  # type: ignore[arg-type]
         filename = file_path.name
         chunks = _chunk_text(text)
+        # The circular_id is derived from the filename + dept + year
+        circular_id = f"{dept}-{year}-{filename.replace('.pdf', '')}"
         for i, chunk in enumerate(chunks):
             vec = await embedder.embed(chunk)  # type: ignore[attr-defined]
             target_table.declare_row(
-                row=MathChunk(
+                row=GovCircularChunk(
                     chunk_id=f"{file_path}#{i}",
-                    subject="mathematics",
-                    level=level,
+                    circular_id=circular_id,
+                    dept=dept,
+                    subject_area="GENERAL",  # refined by BAML `ExtractCircular`
+                    year=year,
                     language=language,
+                    title=filename,  # BAML overwrites with proper title
                     filename=filename,
                     chunk_index=i,
                     text=chunk,
@@ -145,35 +154,33 @@ if COCOINDEX_AVAILABLE:
             )
 
     @coco.fn
-    async def mathematics_app_main(
+    async def government_circulars_app_main(
         sourcedir: pathlib.Path,
-        level: str,
+        dept: str,
+        year: int,
         language: str,
     ) -> None:
-        """Mathematics v1 CocoIndex App: walks the corpus + embeds each PDF."""
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name=f"oideachais.lc.mathematics.{level}_{language}",
+            table_name=f"oideachais.government.circulars.{dept.lower()}_{year}_{language}",
             table_schema=await lancedb.TableSchema.from_class(
-                MathChunk, primary_key=["chunk_id"]
+                GovCircularChunk, primary_key=["chunk_id"]
             ),
         )
         target_table.declare_vector_index(column="embedding")
 
         if not sourcedir.exists():
             logger.warning(
-                "mathematics_corpus_dir_not_found",
+                "gov_circulars_corpus_dir_not_found",
                 path=str(sourcedir),
-                level=level,
+                dept=dept,
+                year=year,
                 language=language,
             )
             return
 
         files = localfs.walk_dir(  # type: ignore[attr-defined]
-            sourcedir,
-            recursive=True,
-            path_matcher=None,
-            live=True,
+            sourcedir, recursive=True, path_matcher=None, live=True
         )
         async for record in files.items():
             file_path = pathlib.PurePath(record["path"])
@@ -188,38 +195,40 @@ if COCOINDEX_AVAILABLE:
             except ImportError:
                 logger.warning("pymupdf_not_available", file=str(file_path))
                 continue
-            await process_mathematics_pdf(
-                file_path, text, level, language, target_table
+            await process_gov_circular_pdf(
+                file_path, text, dept, year, language, target_table
             )
 
     app = coco.App(
-        coco.AppConfig(name="MathematicsEmbedding"),
-        mathematics_app_main,
-        sourcedir=DEFAULT_MATH_ROOT,
-        level="hl",
+        coco.AppConfig(name="GovernmentCircularsEmbedding"),
+        government_circulars_app_main,
+        sourcedir=DEFAULT_GOV_CIRCULARS_ROOT,
+        dept="DES",
+        year=2024,
         language="en",
     )
 
 
 # ============================================================================
-# Ad-hoc query helper (unchanged from pre-v4)
+# Ad-hoc query helper
 # ============================================================================
 
 
-async def query_mathematics(
+async def query_government_circulars(
     query: str,
-    level: str = "hl",
+    dept: str = "DES",
+    year: int = 2024,
     language: str = "en",
     top_k: int = 5,
 ) -> list[dict]:
-    """Semantic search over the Mathematics LanceDB table."""
+    """Semantic search over the gov.ie circulars LanceDB table."""
     if not COCOINDEX_AVAILABLE:
         raise RuntimeError("cocoindex is not installed")
 
     from cianfhoghlaim.lancedb.search import semantic_search
 
     return await semantic_search(
-        table=f"oideachais.lc.mathematics.{level}_{language}",
+        table=f"oideachais.government.circulars.{dept.lower()}_{year}_{language}",
         query=query,
         top_k=top_k,
     )
