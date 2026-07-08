@@ -52,7 +52,7 @@
 
 ## Archive
 
-- [ ] After deploy + Wayback snapshot: `openspec archive cianfhoghlaim-website-rewrite --yes`
+-- [x] After deploy + Wayback snapshot: `openspec archive cianfhoghlaim-website-rewrite --yes` (executed via 2026-07-07-finalize-v4-landing absorption on 2026-07-07)
 
 ## Live test status (final — all green)
 

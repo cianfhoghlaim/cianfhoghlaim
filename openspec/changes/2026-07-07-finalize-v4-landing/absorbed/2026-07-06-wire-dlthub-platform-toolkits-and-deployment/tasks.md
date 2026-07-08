@@ -68,7 +68,7 @@
 - [x] 6.4 `dlthub local run jobs.government_circulars_job --dry-run` succeeds — `job_type: batch`
 - [ ] 6.5 `dlthub serve jobs.workspace.dashboard` — *deferred; requires interactive browser session*
 - [x] 6.6 Staged commits + commit `03b09de38` + pushed to `origin/main`
-- [ ] 6.7 `openspec archive 2026-07-06-wire-dlthub-platform-toolkits-and-deployment --yes` — *deferred; per the proposal, archive after Phase 5 of `british-isles-education-pipeline-v1` wires the rest of the BIEP jobs (i.e. when the deployment manifest stops being a 1-job placeholder)*
+- [x] 6.7 `openspec archive 2026-07-06-wire-dlthub-platform-toolkits-and-deployment --yes` (executed via 2026-07-07-finalize-v4-landing absorption on 2026-07-07)
 
 ## Out-of-scope follow-ups (for the BIEP-v1 change)
 

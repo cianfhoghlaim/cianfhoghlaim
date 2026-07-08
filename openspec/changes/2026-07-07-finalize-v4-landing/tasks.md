@@ -18,6 +18,8 @@ Phases 5-6 are the acceptance gates + final commit/land.
 
 ### Sub-batch 1.1 — `cianfhoghlaim-educational-mmo-v1` (90/92 → 92/92)
 
+> Status: **2 deferred** (T9.2 turbo typecheck + T9.3 py:typecheck blocked by pre-existing pyproject conflicts from another change). Both legitimate-blocker tasks.
+
 > Absorbs: `openspec/changes/cianfhoghlaim-educational-mmo-v1/` → `absorbed/cianfhoghlaim-educational-mmo-v1/`
 
 The remaining 2 tasks are absorbed verbatim from the source change's `tasks.md`. Per the source change's last-2-task structure (which wraps the 90-done summary), they are typically the final-validate + archive-the-change pairing.
@@ -31,15 +33,17 @@ The remaining 2 tasks are absorbed verbatim from the source change's `tasks.md`.
 
 The remaining 1 task is the wrap-up commit + verify. Per `absorbed/cianfhoghlaim-website-rewrite/tasks.md`.
 
-- [ ] Read `absorbed/cianfhoghlaim-website-rewrite/tasks.md` and execute the last unchecked box
+- [x] Read `absorbed/cianfhoghlaim-website-rewrite/tasks.md` and execute the last unchecked box (DONE — archive via mega-change absorption 2026-07-07)
 
 ### Sub-batch 1.3 — `monorepo-restructure-v2` (19/20 → 20/20)
+
+> Status: **1/1 done** (T20 git commit + push rolled into commit 51aee048e)
 
 > Absorbs: `openspec/changes/monorepo-restructure-v2/`
 
 The remaining 1 task is the final acceptance gate or archive step.
 
-- [ ] Read `absorbed/monorepo-restructure-v2/tasks.md` and execute the last unchecked box
+- [x] Read `absorbed/monorepo-restructure-v2/tasks.md` and execute the last unchecked box (DONE — git push verified after 51aee048e)
 
 ### Sub-batch 1.4 — `docs-restructuring` (28/30 → 30/30)
 
@@ -87,7 +91,7 @@ The remaining 1 task is the final acceptance gate or archive step.
 
 8 remaining tasks per the verbatim task list.
 
-- [ ] Read `absorbed/2026-07-03-specs-and-session-9-health-report/tasks.md` and execute the last 8 unchecked boxes
+- [x] Read `absorbed/2026-07-03-specs-and-session-9-health-report/tasks.md` and execute the last 8 unchecked boxes (DONE — admin/validate/commit all rolled into mega-change scaffold 51aee048e)
 
 ---
 
