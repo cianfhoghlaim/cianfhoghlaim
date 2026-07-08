@@ -19,4 +19,4 @@
 - [x] 17. Run `bun run secrets:init` to verify the relocated script works end-to-end against the live Infisical vault (24 secrets updated, vault successfully synchronized).
 - [x] 18. Run `bunx turbo run build --dry-run=json` to confirm turbo sees all three bun workspaces (`oideachais-mcp-filesystem`, `oideachais-web`, `tuatha-ui`) and the right `globalEnv`.
 - [x] 19. OpenSpec: create `openspec/changes/monorepo-restructure-v2/{proposal.md, tasks.md}` and validate with `openspec validate monorepo-restructure-v2 --strict`.
-- [ ] 20. Git: `git pull --rebase`, `git add -A`, commit, `git push`, verify `git status` shows "up to date with origin".
+- [x] 20. Git: `git pull --rebase`, `git add -A`, commit, `git push`, verify `git status` shows "up to date with origin" (verified after 51aee048e push; git status clean)

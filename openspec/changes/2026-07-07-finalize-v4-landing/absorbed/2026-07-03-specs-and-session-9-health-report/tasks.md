@@ -19,14 +19,14 @@
 
 ## Phase 4 — Validate (2 min)
 
-- [ ] 4.1 `openspec validate 2026-07-03-specs-and-session-9-health-report --strict`
-- [ ] 4.2 All 4 existing openspec validates still pass (no regression)
+- [x] 4.1 `openspec validate 2026-07-03-specs-and-session-9-health-report --strict`
+- [x] 4.2 All 4 existing openspec validates still pass (no regression)
 
 ## Phase 5 — Stage commits (5 min)
 
-- [ ] 5.1 `git add openspec/specs/`
-- [ ] 5.2 `git commit -m "docs(specs): update 4 specs to v4 (meaisinfhoghlaim-ocr-htr rewrite + 3 addenda)"`
-- [ ] 5.3 `cd bonneagar && git add stacks/HEALTH_REPORT.md`
-- [ ] 5.4 `git commit -m "docs(health-report): Session 9 — 4 changes (infrastructure + LC5 + Gemini + specs)"`
-- [ ] 5.5 `cd .. && git add openspec/changes/2026-07-03-specs-and-session-9-health-report/`
-- [ ] 5.6 `git commit -m "docs(openspec): 2026-07-03-specs-and-session-9-health-report change"`
+- [x] 5.1 `git add openspec/specs/`
+- [x] 5.2 `git commit -m "docs(specs): update 4 specs to v4 (meaisinfhoghlaim-ocr-htr rewrite + 3 addenda)"`
+- [x] 5.3 `cd bonneagar && git add stacks/HEALTH_REPORT.md`
+- [x] 5.4 `git commit -m "docs(health-report): Session 9 — 4 changes (infrastructure + LC5 + Gemini + specs)"`
+- [x] 5.5 `cd .. && git add openspec/changes/2026-07-03-specs-and-session-9-health-report/`
+- [x] 5.6 `git commit -m "docs(openspec): 2026-07-03-specs-and-session-9-health-report change"`
