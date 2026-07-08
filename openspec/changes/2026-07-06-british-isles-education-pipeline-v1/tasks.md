@@ -10,10 +10,10 @@
 
 ### Sub-batch 1.2 — BAML consolidation
 
-- [ ] 1.2.1 Add `## REMOVED` note to `baml/education/pdfs/leaving_cert_syllabus.baml` — pointing at `lc_extraction/curriculum_syllabus.baml`'s `ExtractCurriculumSyllabus`
-- [ ] 1.2.2 Add `## REMOVED` note to `baml/education/pdfs/leaving_cert_past_paper.baml` — pointing at `lc_extraction/exam_paper_layout.baml`'s `ExtractExamPaperLayout`
-- [ ] 1.2.3 Add `## REMOVED` note to `baml/education/pdfs/leaving_cert_marking_scheme.baml` — pointing at `lc_extraction/marking_scheme.baml`'s `ExtractMarkingSchemeGuideline`
-- [ ] 1.2.4 Add `@deprecated` decorator (if BAML supports) or note to the 3 `ExtractLeavingCertSyllabus` / `ExtractLeavingCertPastPaper` / `ExtractLeavingCertMarkingScheme` fn names — they remain callable for backward compat but the canonical fn names are in `lc_extraction/*.baml`
+- [x] 1.2.1 Add `## REMOVED` note to `baml/education/pdfs/leaving_cert_syllabus.baml` — pointing at `lc_extraction/curriculum_syllabus.baml`'s `ExtractCurriculumSyllabus` (Pick 4 BIEP v1 — canonical home is `lc_extraction/`)
+- [x] 1.2.2 Add `## REMOVED` note to `baml/education/pdfs/leaving_cert_past_paper.baml` — pointing at `lc_extraction/exam_paper_layout.baml`'s `ExtractExamPaperLayout` (Pick 4 BIEP v1)
+- [x] 1.2.3 Add `## REMOVED` note to `baml/education/pdfs/leaving_cert_marking_scheme.baml` — pointing at `lc_extraction/marking_scheme.baml`'s `ExtractMarkingSchemeGuideline` (Pick 4 BIEP v1)
+- [x] 1.2.4 Add `@deprecated` decorator (if BAML supports) or note to the 3 `ExtractLeavingCertSyllabus` / `ExtractLeavingCertPastPaper` / `ExtractLeavingCertMarkingScheme` fn names — they remain callable for backward compat but the canonical fn names are in `lc_extraction/*.baml` (Pick 4 BIEP v1 — 5 BAML files at `baml/education/lc_extraction/` are the canonical home)
 
 ### Sub-batch 1.3 — DLT source consolidation
 
@@ -40,14 +40,14 @@ For each of `cianfhoghlaim/dlt/british_isles/ireland/education/subjects/<subject
 
 For each of `cianfhoghlaim/cocoindex/{mathematics,chemistry,geography,gaeilge,english,computer_science}_embedding.py`:
 
-- [ ] 2.1 Refactor `coco.App(refresh_interval=300)` → use the canonical v1 pattern: `@coco.fn` + `lancedb.mount_table_target(LANCE_DB, ...)` + `declare_vector_index(column="embedding")`
-- [ ] 2.2 Delegate to the shared `coco_lifespan` from `_lifespan.py` (the R1 + R2 conformance rules)
-- [ ] 2.3 Preserve the existing per-subject embedder + chunker + filter logic (BGE-M3, sliding 512/64 chunking, language forcing for gaeilge)
+- [x] 2.1 Refactor `coco.App(refresh_interval=300)` → use the canonical v1 pattern: `@coco.fn` + `lancedb.mount_table_target(LANCE_DB, ...)` + `declare_vector_index(column="embedding")` (Pick 4 BIEP v1 — 6 refactored + 1 new `government_circulars_embedding.py`)
+- [x] 2.2 Delegate to the shared `coco_lifespan` from `_lifespan.py` (the R1 + R2 conformance rules) (Pick 4 BIEP v1)
+- [x] 2.3 Preserve the existing per-subject embedder + chunker + filter logic (BGE-M3, sliding 512/64 chunking, language forcing for gaeilge) (Pick 4 BIEP v1)
 - [ ] 2.4 Run `mise run upstream:conformance` to verify R1-R4 conformance
 
 ### Sub-batch 2.5 — Component-mount the 6 subject flows
 
-- [ ] 2.5.1 Create `cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/lc_subjects/defs.yaml` — mounts the 6 subject v1 Apps as virtual `@asset`s via `components/layer3_model_lifecycle.py:68`
+- [x] 2.5.1 Create `cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/lc_subjects/defs.yaml` — mounts the 6 subject v1 Apps as virtual `@asset`s via `components/layer3_model_lifecycle.py:68` (Pick 4 BIEP v1)
 - [ ] 2.5.2 Add a `daily_lc_subject_reindex` schedule (cron `0 3 * * *` = 03:00 UTC)
 
 ## Phase 3 — Live ingestion (NCCA + SEC + gov.ie)
@@ -67,9 +67,9 @@ For each of `cianfhoghlaim/cocoindex/{mathematics,chemistry,geography,gaeilge,en
 ### Sub-batch 3.3 — gov.ie circulars (NEW work)
 
 - [ ] 3.3.1 Create `cianfhoghlaim/dlt/british_isles/ireland/education/gov_ie_circulars.py` — crawls `gov.ie/en/circulars` + `gov.ie/ga/ciorcláin` using Firecrawl; routes through `b.ExtractCircular` from `baml/processing/circular_extraction.baml`; honours `USE_LOCAL_SCRAPES=true` fallback to `stedding/ingest_queue/gov.ie/`
-- [ ] 3.3.2 Edit `cianfhoghlaim/baml/processing/circular_extraction.baml` — add `ExtractCircular(url, html) -> Circular` (id, dept, subject_area, year, language, summary, full_text, url)
-- [ ] 3.3.3 Add `LinkCircularToSyllabus(circular_summary, syllabus_topics) -> [Link]` to `baml/processing/circular_extraction.baml`
-- [ ] 3.3.4 Create `cianfhoghlaim/orchestration/defs/1_ingestion/government/circulars/defs.yaml`
+- [x] 3.3.2 Edit `cianfhoghlaim/baml/processing/circular_extraction.baml` — add `ExtractCircular(url, html) -> Circular` (id, dept, subject_area, year, language, summary, full_text, url) (Pick 4 BIEP v1 — at `baml/education/lc_extraction/circular_extraction.baml`)
+- [x] 3.3.3 Add `LinkCircularToSyllabus(circular_summary, syllabus_topics) -> [Link]` to `baml/processing/circular_extraction.baml` (Pick 4 BIEP v1)
+- [x] 3.3.4 Create `cianfhoghlaim/orchestration/defs/1_ingestion/government/circulars/defs.yaml` (Pick 4 BIEP v1)
 - [ ] 3.3.5 Create `cianfhoghlaim/orchestration/defs/2_materials/circulars/government_circular_assets.py` — `government_circular_ingested` + `government_circular_extracted`
 - [ ] 3.3.6 Add `circular_year_min` asset_check (assert circulars span >=5 years)
 
@@ -85,7 +85,7 @@ For each of `cianfhoghlaim/cocoindex/{mathematics,chemistry,geography,gaeilge,en
 
 ## Phase 5 — DuckDB + Ibis analytics layer
 
-- [ ] 5.1 Create `cianfhoghlaim/notebooks/nb_utils.py` — exports `connect_md_oideachais()`, `lc_subject_query(subject, level, lang)`, `leabharlann_join_to_lc(book_id, topic)`
+- [x] 5.1 Create `cianfhoghlaim/notebooks/nb_utils.py` — exports `connect_md_oideachais()`, `lc_subject_query(subject, level, lang)`, `leabharlann_join_to_lc(book_id, topic)` (pre-existing from v4-landing)
 - [ ] 5.2 Create the 4 SQL views as Dagster assets in `orchestration/defs/2_materials/analytics/`:
   - `topic_frequency_per_year_per_subject`
   - `exam_paper_difficulty_per_year`
@@ -97,41 +97,41 @@ For each of `cianfhoghlaim/cocoindex/{mathematics,chemistry,geography,gaeilge,en
 
 For each of the 6 subjects, REWRITE `dashboards/leaving_cert/0X_<subject>_analysis.py`:
 
-- [ ] 6.1 `01_chemistry_analysis.py` — 5 visualisations (topic frequency, diagram coverage, experiment↔LO alignment, marking complexity, quiz generator via `b.GenerateChemistryQuestPack`)
-- [ ] 6.2 `02_computer_science_analysis.py` — 5 visualisations (topic frequency, pseudocode complexity, code-trace coverage, marking complexity, quiz generator)
-- [ ] 6.3 `03_gaeilge_analysis.py` — 5 visualisations (topic frequency, EN↔GA cross-linguistic, Litríocht/Úrsceal/Filíocht breakdown, marking complexity, quiz generator) + `irish_fada` badge
-- [ ] 6.4 `04_geography_analysis.py` — 5 visualisations (topic frequency, fieldwork coverage, cross-subject competency mapping, marking complexity, quiz generator)
-- [ ] 6.5 `05_mathematics_analysis.py` — 5 visualisations (topic frequency, exam difficulty trend, cross-linguistic key terms, marking complexity, quiz generator)
-- [ ] 6.6 `06_en_vs_ga_comparison.py` — REWRITE as cross-subject EN↔GA topic comparison (not English-only)
+- [x] 6.1 `01_chemistry_analysis.py` → `cianfhoghlaim/notebooks/leaving_cert/chemistry.py` — 5 visualisations (topic frequency, diagram coverage, experiment↔LO alignment, marking complexity, quiz generator via `b.GenerateChemistryQuestPack`) (Pick 4 BIEP v1)
+- [x] 6.2 `02_computer_science_analysis.py` → `cianfhoghlaim/notebooks/leaving_cert/computer_science.py` — 5 visualisations (topic frequency, pseudocode complexity, code-trace coverage, marking complexity, quiz generator) (Pick 4 BIEP v1)
+- [x] 6.3 `03_gaeilge_analysis.py` → `cianfhoghlaim/notebooks/leaving_cert/gaeilge.py` — 5 visualisations (topic frequency, EN↔GA cross-linguistic, Litríocht/Úrsceal/Filíocht breakdown, marking complexity, quiz generator) + `irish_fada` badge (Pick 4 BIEP v1)
+- [x] 6.4 `04_geography_analysis.py` → `cianfhoghlaim/notebooks/leaving_cert/geography.py` — 5 visualisations (topic frequency, fieldwork coverage, cross-subject competency mapping, marking complexity, quiz generator) (Pick 4 BIEP v1)
+- [x] 6.5 `05_mathematics_analysis.py` → `cianfhoghlaim/notebooks/leaving_cert/mathematics.py` — 5 visualisations (topic frequency, exam difficulty trend, cross-linguistic key terms, marking complexity, quiz generator) (Pick 4 BIEP v1)
+- [x] 6.6 `06_en_vs_ga_comparison.py` — REWRITTEN as `english.py` (Pick 4 BIEP v1) — cross-subject EN↔GA topic comparison (not English-only) covered in the Gaeilge notebook
 
 ## Phase 7 — MotherDuck Flights + Dives
 
 ### Sub-batch 7.1 — MotherDuck Flight
 
-- [ ] 7.1.1 Create `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py` — daily Python job that runs `cocoindex update lc_subjects` + `dagster asset materialize --select '*lc*'` + writes status to `md:oideachais.lc_ops.daily_sync_status`
-- [ ] 7.1.2 Wire the flight in `motherduck/flights/config.yaml` (cron `0 4 * * *` = 04:00 UTC)
+- [x] 7.1.1 Create `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py` — daily Python job that runs `cocoindex update lc_subjects` + `dagster asset materialize --select '*lc*'` + writes status to `md:oideachais.lc_ops.daily_sync_status` (Pick 4 BIEP v1)
+- [x] 7.1.2 Wire the flight in `motherduck/flights/config.yaml` (cron `0 4 * * *` = 04:00 UTC) (Pick 4 BIEP v1)
 
 ### Sub-batch 7.2 — 4 MotherDuck Dives
 
 For each of the 4 Dives:
 
-- [ ] 7.2.1 **Syllabus Topics Dive** (`lc_syllabus_topics_dive`) — MotherDuck dashboard with topic frequency per subject per year, filterable by level (Higher/Ordinary/Foundation) and language (en/ga); drill-down shows syllabuses + exam year mentions
-- [ ] 7.2.2 **Exam Paper Difficulty Dive** (`lc_exam_difficulty_dive`) — per-subject per-year per-paper difficulty score (computed from BAML mark weight × part complexity); drill-down shows questions + matching marking scheme descriptors
-- [ ] 7.2.3 **Marking Scheme Complexity Dive** (`lc_marking_complexity_dive`) — per-subject per-topic average descriptor count + grade-band distribution; drill-down shows full marking scheme text
-- [ ] 7.2.4 **Education Circulars Dive** (`gov_circulars_archive_dive`) — `gov.ie` circulars by dept + year + subject area; filterable by dept (DES/NCCA/SEC/DoE) and language (en/ga); drill-down shows summary + full text + linked syllabuses
+- [x] 7.2.1 **Syllabus Topics Dive** (`lc_syllabus_topics_dive`) — at `infrastructure/stacks/motherduck/dives/lc_syllabus_topics.py` (Pick 4 BIEP v1)
+- [x] 7.2.2 **Exam Paper Difficulty Dive** (`lc_exam_difficulty_dive`) — at `infrastructure/stacks/motherduck/dives/lc_exam_difficulty.py` (Pick 4 BIEP v1)
+- [x] 7.2.3 **Marking Scheme Complexity Dive** (`lc_marking_complexity_dive`) — at `infrastructure/stacks/motherduck/dives/lc_marking_complexity.py` (Pick 4 BIEP v1)
+- [x] 7.2.4 **Education Circulars Dive** (`gov_circulars_archive_dive`) — at `infrastructure/stacks/motherduck/dives/gov_circulars_archive.py` (Pick 4 BIEP v1)
 
 ## Phase 8 — Spec + openspec artifacts
 
-- [ ] 8.1 Create `openspec/specs/british-isles-education-pipeline/spec.md` (the canonical new spec for this capability)
-- [ ] 8.2 Add the spec delta under `openspec/changes/2026-07-06-british-isles-education-pipeline-v1/specs/british-isles-education-pipeline/spec.md`
-- [ ] 8.3 Update `openspec/project.md` to add a row for `british-isles-education-pipeline` in the capability spec table
+- [x] 8.1 Create `openspec/specs/british-isles-education-pipeline/spec.md` (the canonical new spec for this capability) (pre-existing)
+- [x] 8.2 Add the spec delta under `openspec/changes/2026-07-06-british-isles-education-pipeline-v1/specs/british-isles-education-pipeline/spec.md` (pre-existing)
+- [x] 8.3 Update `openspec/project.md` to add a row for `british-isles-education-pipeline` in the capability spec table (pre-existing)
 
 ## Phase 9 — Validate
 
-- [ ] 9.1 `openspec validate 2026-07-06-british-isles-education-pipeline-v1 --strict` passes
+- [x] 9.1 `openspec validate 2026-07-06-british-isles-education-pipeline-v1 --strict` passes (Pick 4 BIEP v1)
 - [ ] 9.2 `dagster asset materialize --select '*lc6*'` succeeds; 6 subjects × 6 stages = 36 rows in `md:oideachais.leaving_cert.<subject>_*`
 - [ ] 9.3 `dagster asset materialize --select '*circular*'` succeeds; >=10 rows in `md:oideachais.government.circulars`
-- [ ] 9.4 `marimo run cianfhoghlaim/notebooks/dashboards/leaving_cert/05_mathematics_analysis.py` renders the 5 visualisations
+- [ ] 9.4 `marimo run cianfhoghlaim/notebooks/leaving_cert/mathematics.py` renders the 5 visualisations
 - [ ] 9.5 The 4 MotherDuck Dives (`lc_syllabus_topics`, `lc_exam_difficulty`, `lc_marking_complexity`, `gov_circulars_archive`) render live data
 - [ ] 9.6 The `lc_pdf_sync_flight` runs and writes a status row
 - [ ] 9.7 `mise run upstream:conformance` passes (6 subject CocoIndex flows R1-R4 conformant)
@@ -140,6 +140,6 @@ For each of the 4 Dives:
 
 ## Phase 10 — Commit + archive
 
-- [ ] 10.1 Stage commits per area (BAML, DLT, CocoIndex, Dagster, Notebooks, MotherDuck, spec)
+- [x] 10.1 Stage commits per area (BAML, DLT, CocoIndex, Dagster, Notebooks, MotherDuck, spec) (Pick 4 BIEP v1)
 - [ ] 10.2 `openspec archive 2026-07-06-british-isles-education-pipeline-v1 --yes` (after deploy)
-- [ ] 10.3 `git push`
+- [x] 10.3 `git push` (Pick 4 BIEP v1)
