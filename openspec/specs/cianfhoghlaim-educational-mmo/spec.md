@@ -296,27 +296,31 @@ SHALL be bilingual. Every quest content string SHALL be bilingual.
 - **THEN** only the Irish version is shown
 - **AND** the toggle to switch to EN is disabled (Gaeilge is taught in Irish only)
 
-### Requirement: Cian of the Tuatha Dé Danann Lore (R10 — NEW per `rewrite-cianfhoghlaim-leaving-cert-v2`)
+### Requirement: Cian Mac an Déisigh Uí Liatháin personal lore (R10 — REPHASED 2026-07-09 to remove the Brown Ajah / Wheel of Time lens)
 
-The system SHALL document the platform's lore in
-`docs/CIANFHLOGHLAIM_LORE.md`. The lore SHALL identify the hero as
-**Cian Mac an Déisigh Uí Liatháin** of the triple-crown lineage
-(Deacy Uí Dhéisigh + Lyons Mac Liatháin + Morris City of Tribes +
-Conroy Mac Conraoi), grounded in the 7 lineage clippings at
+The system SHALL document the operator's personal lore in
+`docs/CIANFHLOGHLAIM_LORE.md` (operator-only document).
+
+The lore SHALL identify the hero as **Cian Mac an Déisigh Uí Liatháin**
+of the triple-crown lineage (Deacy Uí Dhéisigh + Lyons Mac Liatháin +
+Morris City of Tribes + Conroy Mac Conraoi), grounded in the 8
+lineage clippings at
 `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/`
-(Tuatha Dé Danann + Cian + Aos Sí + Uí Liatháin + Déisi + Delbhna
-Tír Dhá Locha + Leath Cuinn and Leath Moga) and the 4 Wheel of Time
-excerpts (Aes Sedai + Amyrlin Seat + Dragon Reborn + Dragon Banner +
-Tuatha'an). The lore document is operator-only — NEVER linked from
-the public surface. The public app's theming is the Brown Ajah only.
+(the 8 Wikipedia clippings: Tuatha Dé Danann, Cian, Aos Sí, Uí Liatháin,
+Déisi, Delbhna Tír Dhá Locha, Leath Cuinn and Leath Moga, Éamonn
+Deacy Park).
+
+The lore document is operator-only — NEVER linked from the public
+surface. The public app's theming is professional + minimal until the
+mythology / historical-sources layer is introduced post-BIEP-v2 (per
+the `2026-07-09-remove-brown-ajah-theming-v1` change).
 
 #### Scenario: Lore document is operator-only
 
 - **GIVEN** the operator opens `docs/CIANFHLOGHLAIM_LORE.md`
 - **WHEN** the document is read
 - **THEN** it identifies Cian Mac an Déisigh Uí Liatháin by name + lineage + the 3 Gemini Deep Research warrants
-- **AND** it references all 7 lineage clippings by filename
-- **AND** it references all 4 Wheel of Time excerpts by section title
+- **AND** it references all 8 lineage clippings by filename
 
 #### Scenario: Public surface never displays personal lineage
 
@@ -325,12 +329,13 @@ the public surface. The public app's theming is the Brown Ajah only.
 - **THEN** no text matches the regex `Ci[ae]n M[ae]c a[nm] D[ée]isi[gh]`
 - **AND** no text matches the family surnames Deacy, Lyons, Morris, Conroy
 - **AND** no text references the 3 Gemini Deep Research warrants
+- **AND** no text matches "Aes Sedai", "Amyrlin Seat", "Dragon Reborn", "Dragon Banner", "Tuatha'an" (the WoT lens is removed)
 
-#### Scenario: Header shows Brown Ajah tagline + ciphered reference
+#### Scenario: Footer shows the canonical Cianfhoghlaim credit (no WoT tagline)
 
 - **GIVEN** the user opens any page
 - **WHEN** the Header renders
-- **THEN** the tagline reads "Aes Sedai — servants of all" (the Brown Ajah motto)
+- **THEN** the Header does NOT show "Aes Sedai — servants of all" (the Brown Ajah motto is removed per `2026-07-09-remove-brown-ajah-theming-v1`)
 - **AND** the Footer shows a small italicized "Cianfhoghlaim — Coláiste na Déisigh" footer credit
 - **AND** the lore document is NEVER linked from the Header or Footer
 
