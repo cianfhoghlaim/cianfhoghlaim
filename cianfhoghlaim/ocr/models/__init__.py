@@ -1,36 +1,24 @@
-"""Back-compat re-export for the v4 OCR/VLM model registry.
+"""Canonical v4 home for the OCR/VLM model registry.
 
-The canonical implementation lives at
-`cianfhoghlaim.ocr.models.registry` (per the v4 platform spec
-line 685). This package's `__init__.py` re-exports the same symbols
-so callers can do:
+Per the v4 platform spec line 685, the canonical home for the
+OCR/VLM model registry is `cianfhoghlaim/ocr/models/registry.py`.
+This `__init__.py` re-exports the symbols from `registry.py` so
+callers can do:
 
-    from cianfhoghlaim.meaisinfhoghlaim.models import (
+    from cianfhoghlaim.ocr.models import (
         VISION_MODELS,
         get_default_for_m4_max,
         select_ocr_backend,
     )
 
-A `DeprecationWarning` is emitted on import — callers should
-migrate to `from cianfhoghlaim.ocr.models.registry import ...`.
-This shim will be removed in v5.
+The legacy `OCR_MODELS` and `VLM_MODELS` aliases are also exposed
+for back-compat with pre-v4 callers (they collapse to the v4
+`VISION_MODELS` dict).
 """
 
 from __future__ import annotations
 
-import warnings as _warnings
-
-_warnings.warn(
-    "Importing from `cianfhoghlaim.meaisinfhoghlaim.models` is a "
-    "deprecated v4 back-compat shim. The canonical home is "
-    "`cianfhoghlaim.ocr.models.registry` (per the v4 platform spec "
-    "line 685). This shim will be removed in v5.",
-    DeprecationWarning,
-    stacklevel=2,
-)
-
-# Re-export everything from the canonical v4 home.
-from cianfhoghlaim.ocr.models.registry import (  # noqa: E402
+from cianfhoghlaim.ocr.models.registry import (
     CLASSICAL_OCR,
     MODEL_BACKEND,
     MODEL_CAPABILITY,
@@ -51,7 +39,11 @@ from cianfhoghlaim.ocr.models.registry import (  # noqa: E402
     select_ocr_backend,
 )
 
-# Legacy back-compat aliases (pre-v4 had separate OCR_MODELS + VLM_MODELS)
+# Legacy back-compat aliases (the pre-v4 OCR/VLM registries).
+# Pre-v4, the lakehouse had two separate dicts — `OCR_MODELS` (10
+# entries) and `VLM_MODELS` (6 entries). The v4 registry collapses
+# them into a single 20-entry `VISION_MODELS` dict. These shims
+# make old code keep working.
 OCR_MODELS = VISION_MODELS
 VLM_MODELS = VISION_MODELS
 
