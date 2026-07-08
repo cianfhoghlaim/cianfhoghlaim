@@ -89,8 +89,10 @@
       `iac/auth.ts:17` with `CONFIG.komodoUsername` env var
 - [ ] 1.14 Implement the 8-phase `iac/commands/bootstrap.ts`
       state machine (see IaC spec delta)
-- [ ] 1.15 Implement `iac/commands/teardown.ts` (reverse of
-      `iac:bootstrap`; requires `--force`)
+- [x] 1.15 Implement `iac/commands/teardown.ts` (reverse of
+      `iac:bootstrap`; requires `--force`) — implemented in
+      pick-5b (commit b4deb8722); 8-step reverse, --force + --dry-run
+      supported
 - [ ] 1.16 Add idempotent `getOrCreateOlmClient()` to
       `iac/commands/sync-olm.ts`
 - [ ] 1.17 Use `smol-toml` in

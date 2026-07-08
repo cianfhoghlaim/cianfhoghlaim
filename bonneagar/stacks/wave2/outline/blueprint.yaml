@@ -1,0 +1,12 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+private-resources:
+  outline:
+    name: "Outline Team Wiki"
+    mode: "http"
+    destination-port: 3000
+    full-domain: "outline.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "outline"
