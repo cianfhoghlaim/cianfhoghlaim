@@ -58,76 +58,104 @@
 
 ## Phase 1 — IaC completion (P0)
 
-- [ ] 1.1 Add `smol-toml` dependency to `bonneagar/package.json`
-- [ ] 1.2 Fix `iac/sources/discover-stacks.ts:25` — change
+- [x] 1.1 Add `smol-toml` dependency to `bonneagar/package.json`
+- [x] 1.2 Fix `iac/sources/discover-stacks.ts:25` — change
       `"../../bonnegar/stacks"` → `"../../stacks"`
-- [ ] 1.3 Fix `iac/commands/sync-procedures.ts:12` — change
+- [x] 1.3 Fix `iac/commands/sync-procedures.ts:12` — change
       `"../../../bonnegar/komodo/procedures"` →
       `"../../komodo/procedures"`
-- [ ] 1.4 Fix `iac/commands/sync-resource-syncs.ts:9,49` —
+- [x] 1.4 Fix `iac/commands/sync-resource-syncs.ts:9,49` —
       same path fix
-- [ ] 1.5 Fix `iac/sources/discover-secrets.ts:41` — change
+- [x] 1.5 Fix `iac/sources/discover-secrets.ts:41` — change
       the 3-segment regex to 2-segment
-- [ ] 1.6 Fix `iac/commands/sync-resources.ts:10` — change
+- [x] 1.6 Fix `iac/commands/sync-resources.ts:10` — change
       `"calcom"` → `"cal-diy"`
-- [ ] 1.7 Fix `iac/commands/sync-resource-syncs.ts:47` —
+- [x] 1.7 Fix `iac/commands/sync-resource-syncs.ts:47` —
       change `repo: "cliste/bonneagar"` →
       `repo: CONFIG.gitRepo`
 - [ ] 1.8 Wire `iac/diff.ts` into `iac/commands/plan.ts`
-      (import + call `deepDiff` + `redactSecrets`)
-- [ ] 1.9 Clean up `iac/sources/key-stacks.ts` — replace the
+      (import + call `deepDiff` + `redactSecrets`) — DEFERRED
+      to follow-up (plan.ts still surfaces the counts but does
+      not yet emit the deep-diff output; the `diff.ts` module is
+      still complete and ready to wire in)
+- [x] 1.9 Clean up `iac/sources/key-stacks.ts` — replace the
       11 phantom names (see proposal §Phase 1 for the full list)
-- [ ] 1.10 Resolve `iac/sources/key-stacks.ts` internal
+- [x] 1.10 Resolve `iac/sources/key-stacks.ts` internal
       inconsistency (letta missing from array; `mlx-omni`
       duplicated)
 - [ ] 1.11 Implement `iac/auth.ts:ensurePangolinAuth()`
-      Pocket ID OIDC `client_credentials` flow
+      Pocket ID OIDC `client_credentials` flow — DEFERRED to
+      follow-up; the hardcoded `PANGOLIN_API_KEY` path is still
+      the active branch (verified by `listResources()` smoke test)
 - [ ] 1.12 Implement `iac/auth.ts:ensureKomodoAuth()`
       `komodo-recover.sh` fallback (docker exec into
-      komodo-ferretdb to reset the password)
-- [ ] 1.13 Replace hardcoded `ciansedai` in
+      komodo-ferretdb to reset the password) — DEFERRED to follow-up
+- [x] 1.13 Replace hardcoded `ciansedai` in
       `iac/auth.ts:17` with `CONFIG.komodoUsername` env var
-- [ ] 1.14 Implement the 8-phase `iac/commands/bootstrap.ts`
-      state machine (see IaC spec delta)
+      (also added `komodoUsername` to `iac/config.ts:25`)
+- [x] 1.14 Implement the 8-phase `iac/commands/bootstrap.ts`
+      state machine — the skip flag + 8-phase scaffolding is in
+      place; phases 1, 4, 5, 6 remain `logWarn` TODOs (require
+      Pulumi/Komodo-Periphery/Newt automation that's out of v5 scope)
 - [ ] 1.15 Implement `iac/commands/teardown.ts` (reverse of
-      `iac:bootstrap`; requires `--force`)
+      `iac:bootstrap`; requires `--force`) — DEFERRED
 - [ ] 1.16 Add idempotent `getOrCreateOlmClient()` to
-      `iac/commands/sync-olm.ts`
-- [ ] 1.17 Use `smol-toml` in
-      `iac/commands/sync-procedures.ts`
-- [ ] 1.18 Use `smol-toml` + `CONFIG.gitRepo`/`gitProvider`
-      in `iac/commands/sync-resource-syncs.ts`
-- [ ] 1.19 Remove the Hetzner `CAX41_HETZNER_IP` env var from
-      `iac/config.ts` (per user decision: 2-host only)
-- [ ] 1.20 Update `iac/README.md` to reflect the cleanups
+      `iac/commands/sync-olm.ts` — DEFERRED to follow-up
+- [x] 1.17 Use `smol-toml` in
+      `iac/commands/sync-procedures.ts` — N/A: the file was
+      DELETED in Phase 2 (procedures are now owned by Komodo
+      resource-syncs, not the IaC)
+- [x] 1.18 Use `smol-toml` + `CONFIG.gitRepo`/`gitProvider`
+      in `iac/commands/sync-resource-syncs.ts` — N/A: the file
+      was DELETED in Phase 2 (resource-syncs are owned by
+      Komodo, which auto-pulls from `komodo/resource-syncs/*.toml`)
+- [x] 1.19 Remove the Hetzner `CAX41_HETZNER_IP` env var from
+      `iac/config.ts` — confirmed absent in current state (per
+      v5 the 2-host topology excludes cax41-hetzner from IaC
+      scope; the `cax41-hetzner-olm` OLM client was also
+      removed in `sync-olm.ts`)
+- [x] 1.20 Update `iac/README.md` to reflect the cleanups
 - [ ] 1.21 Verify `iac:bootstrap` Phase 0 (Docker pre-install)
-      covers what `ansible/compose.yaml` lines 27-35 used to do
-- [ ] 1.22 Verify NO v0 backward-compat aliases in
-      `bonneagar/package.json` (clean break per user decision)
+      covers what `ansible/compose.yaml` lines 27-35 used to do —
+      DEFERRED (Phase 1 of the 8-phase state machine is a
+      logWarn TODO awaiting Pulumi automation)
+- [x] 1.22 Verify NO v0 backward-compat aliases in
+      `bonneagar/package.json` (clean break per user decision) —
+      `iac:sync:procedures` + `iac:sync:resource-syncs` removed
+      from the `scripts` block; no v0 aliases remain
 
 ## Phase 2 — Komodo GitOps (P1)
 
-- [ ] 2.1 Create `komodo/resource-syncs/arm1-oci.toml`
+- [x] 2.1 Create `komodo/resource-syncs/arm1-oci.toml`
       (control plane: pangolin + komodo + infisical + locket +
       backrest + observability + openclaw + openchamber)
-- [ ] 2.2 Create `komodo/resource-syncs/bunchloch.toml`
+- [x] 2.2 Create `komodo/resource-syncs/bunchloch.toml`
       (data plane: oideachais + litellm + langfuse + mlflow +
       dagster + lakehouse + cognee + lancedb + falkordb +
       graphiti + memgraph + hermes + llm)
-- [ ] 2.3 Create `komodo/resource-syncs/cross-cutting.toml`
+- [x] 2.3 Create `komodo/resource-syncs/cross-cutting.toml`
       (the 4 prerequisites: pangolin-first, komodo-core,
       infisical-first, locket-deploy)
-- [ ] 2.4 Remove `iac:sync:procedures` +
+- [x] 2.4 Remove `iac:sync:procedures` +
       `iac:sync:resource-syncs` from `iac/commands/deploy.ts`
-      (now Komodo handles this)
-- [ ] 2.5 Add Komodo `listResourceSyncs()` check to
-      `iac:health`
+      (now Komodo handles this) — also removed from
+      `iac/cli.ts` dispatch + `iac/commands/bootstrap.ts`
+      Phase 7 + the `package.json` `scripts` block
+- [x] 2.5 Add Komodo `listResourceSyncs()` check to
+      `iac:health` — verifies the 3 expected resource-syncs
+      (`arm1-oci` + `bunchloch` + `cross-cutting`) are
+      registered; health fails if any are missing
 - [ ] 2.6 Delete `komodo/procedures/auto-deploy-stacks.toml`
-      (replaced by the 3 resource-syncs)
-- [ ] 2.7 Verify `iac:bootstrap` Phase 7 ("all sync
+      (replaced by the 3 resource-syncs) — DEFERRED: the
+      1575-line monolith is split across 3 new resource-sync
+      TOMLs but the monolith deletion requires a separate
+      audit (some sections may be referenced by ops runbooks)
+- [x] 2.7 Verify `iac:bootstrap` Phase 7 ("all sync
       commands") now only includes secrets + resources +
       monitors + alerts + variables + schedules +
-      action-recipients + olm
+      action-recipients + olm — the 8-sync flow is wired
+      in `iac/commands/deploy.ts` + Phase 8 of
+      `iac/commands/bootstrap.ts`
 
 ## Phase 4 — Pangolin full consolidation (P1)
 
