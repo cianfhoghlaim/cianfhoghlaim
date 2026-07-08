@@ -40,15 +40,21 @@ The 8 NCCA LC subjects are:
 - gaeilge
 - computer_science
 
-The theming is the **Brown Ajah** of the Wheel of Time — the healers,
-scholars, and Earth-workers. The 8 NCCA subject specialists are the
-8 Brown Ajah members. The orchestrator is the Amyrlin Seat. The
-student is the Dragon Reborn + the Tuatha'an (Irish Traveller). The
-land is the British Isles; the wound is the language loss; the healing
-is education.
+The public theming is currently professional + minimal (no mythological
+overlay). The 8 NCCA subject specialists are referenced as the 8 subject
+agents. The land is the British Isles; the wound is the language loss;
+the healing is education.
 
-The lore document `docs/CIANFHLOGHLAIM_LORE.md` is operator-only and
-NEVER displayed on the public surface.
+The mythology / historical-sources theming layer will be introduced
+**long after the full BIEP v1 lands** (see the
+`british-isles-education-pipeline` spec for the cross-nation foundation
+and the `2026-07-09-remove-brown-ajah-theming-v1` change for the
+removal of the Brown Ajah / Wheel of Time lens).
+
+The lore document `docs/CIANFHLOGHLAIM_LORE.md` (the operator's personal
+triple-crown lineage — Cian Mac an Déisigh Uí Liatháin + Deacy + Lyons +
+Morris + Conroy) is operator-only and NEVER displayed on the public
+surface.
 
 ## Requirements
 
@@ -135,11 +141,14 @@ British Isles split into 6 subnations (Éire + Northern Ireland +
 Scotland + England + Wales + Isle of Man) with 5 NCCA Key Competencies
 as 5 land-marks + 8 NCCA subjects as 8 overlay buttons.
 
-### Requirement: Brown Ajah theming + Amyrlin Seat orchestrator (R8)
+### Requirement: (R8 REMOVED 2026-07-09 — Brown Ajah theming)
 
-The system SHALL implement the Brown Ajah Wheel of Time theming per the
-4 WoT excerpts (Aes Sedai + Amyrlin Seat + Dragon Reborn + Tuatha'an).
-The lore document `docs/CIANFHLOGHLAIM_LORE.md` is operator-only.
+The Brown Ajah Wheel of Time theming (Aes Sedai / Amyrlin Seat /
+Dragon Reborn / Tuatha'an + the "Aes Sedai — servants of all" tagline)
+was removed per the `2026-07-09-remove-brown-ajah-theming-v1` change.
+The mythology / historical-sources theming is deferred to BIEP-v2
+(see the `british-isles-education-pipeline` spec). The lore document
+`docs/CIANFHLOGHLAIM_LORE.md` is operator-only.
 
 ### Requirement: Celtic UI Design System (R9)
 
