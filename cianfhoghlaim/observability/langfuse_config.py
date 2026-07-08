@@ -19,6 +19,8 @@ from contextlib import contextmanager, suppress
 from functools import wraps
 from typing import Any
 
+from .env_config import LANGFUSE_URL as _CIANFHOGHLAIM_LANGFUSE_URL
+
 logger = logging.getLogger(__name__)
 
 # Lazy imports for optional dependency
@@ -49,7 +51,11 @@ def _get_langfuse():
 # dagster dev on host, use the host port (http://localhost:3001).
 # When running in a docker container on the cianfhoghlaim network,
 # use the docker DNS (http://langfuse:3000).
-LANGFUSE_HOST = os.getenv("LANGFUSE_HOST", "http://localhost:3001")
+#
+# The canonical default now reads from the CIANFHOGHLAIM_* env-var
+# matrix in cianfhoghlaim/observability/env_config.py. The legacy
+# LANGFUSE_HOST env var is honoured as a backwards-compat alias.
+LANGFUSE_HOST = _CIANFHOGHLAIM_LANGFUSE_URL
 LANGFUSE_PUBLIC_KEY = os.getenv("LANGFUSE_PUBLIC_KEY", "")
 LANGFUSE_SECRET_KEY = os.getenv("LANGFUSE_SECRET_KEY", "")
 
