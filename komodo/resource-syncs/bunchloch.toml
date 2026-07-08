@@ -1,0 +1,68 @@
+# =============================================================================
+# BUNCHLOCH RESOURCE SYNC
+# =============================================================================
+# GitOps configuration for ALL workload-plane resources on the
+# bunchloch host (MacBook M4 Max — the data plane + dev host).
+# Komodo auto-pulls this file every 60s and reconciles Komodo
+# state with the TOMLs declared in resource_path.
+#
+# Scope (data plane + dev):
+#   - oideachais + meaisínfhoghlaim + croílár  (BIEP + agent + portfolio)
+#   - litellm + langfuse + mlflow + logfire     (LLM gateway + observability)
+#   - dagster + lakehouse + cognee + lancedb    (lakehouse + semantic memory)
+#   - falkordb + graphiti + memgraph            (graph backends)
+#   - hermes + llm                              (autonomous agent runtime)
+#   - mailcow + browser + media                 (daily-driver stacks)
+#
+# Per the bonneagar-v5 drift refactor:
+#   - 60s interval (sub-minute convergence)
+#   - on_pull=true (Komodo proactively pulls on the schedule)
+#   - delete=false (safety — a typo in TOML never deletes live resources)
+#   - managed=true (Komodo owns the resource state, not the IaC scripts)
+# =============================================================================
+
+[[resource_sync]]
+name = "bunchloch"
+description = "Workload-plane stack + procedure declarations for bunchloch (data plane + dev)"
+
+[resource_sync.config]
+# Repository configuration - Forgejo at git.cianfhoghlaim.ie
+# Same repo + branch as the arm1-oci + storage-infrastructure syncs.
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+# Resource paths under <repo-root>/<branch>/ :
+#   - stacks:    bunchloch-prefixed per-stack registrations
+#   - procedures: shared with arm1-oci (procedures/*.toml is host-agnostic)
+#   - servers:   shared Periphery registrations
+# Per the 2-host topology (no 3rd host), no per-host procedure split.
+resource_path = [
+  "bonneagar/komodo/stacks/bunchloch-analytics.toml",
+  "bonneagar/komodo/stacks/bunchloch-media.toml",
+  "bonneagar/komodo/stacks/bunchloch-support.toml",
+  "bonneagar/komodo/stacks/cognee-bunchloch.toml",
+  "bonneagar/komodo/stacks/croilar-bunchloch.toml",
+  "bonneagar/komodo/stacks/hermes-bunchloch.toml",
+  "bonneagar/komodo/stacks/mailcow-dockerized-bunchloch.toml",
+  "bonneagar/komodo/stacks/meaisínfhoghlaim-bunchloch.toml",
+  "bonneagar/komodo/stacks/oideachais-bunchloch.toml",
+  "bonneagar/komodo/procedures/*.toml",
+  "bonneagar/komodo/servers/*.toml",
+]
+
+# 60s poll interval — Komodo pulls the repo on this cadence.
+interval = "60s"
+
+# Managed mode - Komodo owns these resources.
+managed = true
+
+# Safety: don't delete resources that aren't in this list of files.
+delete = false
+
+# Git provider for webhook + clone semantics.
+git_provider = "git.cianfhoghlaim.ie"
+
+# Sync triggers
+on_sync = true
+on_pull = true
