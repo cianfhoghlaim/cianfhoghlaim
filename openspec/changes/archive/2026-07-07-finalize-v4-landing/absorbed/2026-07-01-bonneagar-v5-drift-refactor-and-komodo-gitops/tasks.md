@@ -2,7 +2,7 @@
 
 ## Phase 0 — Security: Rotate Pangolin committed secrets (P0)
 
-- [ ] 0.1 Add the 9 Pangolin files (`pangolin/api_key`,
+- [x] 0.1 Add the 9 Pangolin files (`pangolin/api_key`,
       `pangolin/secrets.env`, `pangolin/secrets.env.resolved`,
       `pangolin/config/infisical_secret`, `pangolin/config/db/
       db.sqlite`, `pangolin/config/openapi.yaml`,
@@ -18,12 +18,12 @@
       `.infisical.env`
 - [ ] 0.4 Rewrite `iac/auth.ts:ensurePangolinAuth()` to use the
       Pocket ID OIDC flow (replace the hardcoded API key path)
-- [ ] 0.5 Rewrite `pangolin/secrets.env` as `infisical://dev-baile/...
+- [x] 0.5 Rewrite `pangolin/secrets.env` as `infisical://dev-baile/...
       ` URIs; delete the committed plaintext
-- [ ] 0.6 Delete the other 8 files (api_key, secrets.env.resolved,
+- [x] 0.6 Delete the other 8 files (api_key, secrets.env.resolved,
       infisical_secret, db.sqlite, openapi.yaml, tinyauth/users,
       secrets/templates/*, traefik/rules/*)
-- [ ] 0.7 Verify all 9 paths are now `git ls-files`-excluded
+- [x] 0.7 Verify all 9 paths are now `git ls-files`-excluded
 - [ ] 0.8 Mint new Tinyauth admin user; commit the bcrypt hash
       path to `.gitignore`; document the bootstrap flow
       (generate admin on first run) in `stacks/pangolin/
@@ -159,32 +159,32 @@
 
 ## Phase 4 — Pangolin full consolidation (P1)
 
-- [ ] 4.1 Move `pangolin/blueprint.yaml` →
+- [x] 4.1 Move `pangolin/blueprint.yaml` →
       `stacks/pangolin/blueprint.yaml` (trim to just
       `pangolin.cianfhoghlaim.ie`)
-- [ ] 4.2 Move `pangolin/a2a-resources.blueprint.yaml`
+- [x] 4.2 Move `pangolin/a2a-resources.blueprint.yaml`
       entries → `stacks/agent-os/pangolin.yaml` +
       `blueprint.yaml` (drop the `a2a-internal` public
       resource)
-- [ ] 4.3 Move `pangolin/olm-resources.blueprint.yaml` →
+- [x] 4.3 Move `pangolin/olm-resources.blueprint.yaml` →
       `stacks/olm-arm1-oci/{pangolin.yaml,blueprint.yaml}`
       (collapse the 2 `ssh-oracle` + `ssh-oci` entries to one)
-- [ ] 4.4 Split `pangolin/private-resources.blueprint.yaml`
+- [x] 4.4 Split `pangolin/private-resources.blueprint.yaml`
       per-service into per-stack `pangolin.yaml` (mailcow
       gets the 3 missing routes); delete the master file
-- [ ] 4.5 Move `pangolin/olm-oracle/{compose,sidecar,
+- [x] 4.5 Move `pangolin/olm-oracle/{compose,sidecar,
       secrets.env}` → `stacks/olm-arm1-oci/`; add the missing
       3 files (`pangolin.yaml`, `blueprint.yaml`,
       `.env.example`); fix the unclosed-quote bug in
       `sidecar.yaml` line 29
-- [ ] 4.6 Move `pangolin/olm.secrets.env`,
+- [x] 4.6 Move `pangolin/olm.secrets.env`,
       `pangolin/newt.secrets.env` content → per-stack
       `secrets.env` files (replace the broken `{{ infisical:///id }}`
       Jinja syntax with proper `infisical://dev-baile/...`
       URIs)
-- [ ] 4.7 Delete `pangolin/tenants/` (entire dir per user)
-- [ ] 4.8 Delete `pangolin/private-resources-fixed.blueprint.yaml`
-- [ ] 4.9 Delete `pangolin/multi-cloud-stack/`
+- [x] 4.7 Delete `pangolin/tenants/` (entire dir per user)
+- [x] 4.8 Delete `pangolin/private-resources-fixed.blueprint.yaml`
+- [x] 4.9 Delete `pangolin/multi-cloud-stack/`
 - [ ] 4.10 Rewrite `pangolin/config/config.yml`:
       - Replace hardcoded `gerbil.base_endpoint: 132.145.27.89`
         with env-driven `${PANGOLIN_DOMAIN}`
@@ -195,7 +195,7 @@
       - Add `# IaC-managed` comments to `allow_raw_resources: true`
         + `enable_integration_api: true`
       - Drop `dashboard_session_length_hours: 720` to `168`
-- [ ] 4.11 Update `iac/commands/sync-olm.ts:12`: replace
+- [x] 4.11 Update `iac/commands/sync-olm.ts:12`: replace
       `cax41-hetzner-olm` (dead host) with `bunchloch-olm`
 - [ ] 4.12 Rewrite `pangolin/config/traefik/dynamic_config.yml`
       lakehouse routes (use bunchloch newt instead of SSH
@@ -205,10 +205,10 @@
       rate limits + troubleshooting; drop Quick Start + EE
       features + File Structure diagram + multi-cloud
       references)
-- [ ] 4.14 Replace 3 `op item create` 1Password CLI calls with
+- [x] 4.14 Replace 3 `op item create` 1Password CLI calls with
       `infisical secrets create` in `PANGOLIN-SETUP.md`
       (L99-101, L132-133, L196-197)
-- [ ] 4.15 Update vault name `taisce-secrets` → `dev-baile` in
+- [x] 4.15 Update vault name `taisce-secrets` → `dev-baile` in
       `PANGOLIN-SETUP.md` L309-316
 
 ## Phase 5 — Stack consolidation (P2)
@@ -327,96 +327,96 @@
 
 ## Phase 8 — Doc sync (P2)
 
-- [ ] 8.1 Update `bonneagar/AGENTS.md`: remove the 4 IaC
+- [x] 8.1 Update `bonneagar/AGENTS.md`: remove the 4 IaC
       entry-points claim (no v0 aliases per clean break);
       remove the ansible/ row; update 5-group model counts;
       add `hermes` to agent-platform group
-- [ ] 8.2 Update `bonneagar/README.md`: correct 88-vs-94
+- [x] 8.2 Update `bonneagar/README.md`: correct 88-vs-94
       stack count; note the v5 refactor
-- [ ] 8.3 Update `bonneagar/DEPLOYMENT-STRATEGY.md`:
+- [x] 8.3 Update `bonneagar/DEPLOYMENT-STRATEGY.md`:
       2-host topology only (arm1-oci + bunchloch); mark all 4
       known blockers fixed; update §3 to reference the 8-phase
       bootstrap
-- [ ] 8.4 Update `bonneagar/GOLD_STANDARD.md`: document the
+- [x] 8.4 Update `bonneagar/GOLD_STANDARD.md`: document the
       4 blueprint schema variants in active use; update §3
       Locket exemplar
-- [ ] 8.5 Update `bonneagar/QUADRANT-TO-STACK-MAP.md`:
+- [x] 8.5 Update `bonneagar/QUADRANT-TO-STACK-MAP.md`:
       remove `tuatha/dagster_assets/definitions.py` ref;
       fix `komodo-periphery-macbook` →
       `komodo-periphery-bunchloch`; add 18 missing domain
       entries
-- [ ] 8.6 Rewrite `bonneagar/dagger/README.md`: reflect
+- [x] 8.6 Rewrite `bonneagar/dagger/README.md`: reflect
       actual reality (engine v0.20.8; entry point
       `CianchoghlaimDagger`; TypeScript submodule IS used per
       user; cross-module composition exists; 34 .ts files
       not 31; sub-packages don't exist as dirs)
-- [ ] 8.7 Rewrite
+- [x] 8.7 Rewrite
       `bonneagar/dagger/ts_submodules/bonneagar/README.md`:
       reflect actual usage pattern (preserved per user
       decision)
-- [ ] 8.8 Fix `bonneagar/cli.py`: 32 phantom stacks → 0;
+- [x] 8.8 Fix `bonneagar/cli.py`: 32 phantom stacks → 0;
       update stack count to 88
-- [ ] 8.9 Update `openspec/project.md`: add the
+- [x] 8.9 Update `openspec/project.md`: add the
       `bonneagar-komodo-gitops` capability row
 
 ## Phase 9 — Locket image canonicalization (P2)
 
 ### 9.1 — Fix fictional `ghcr.io/cianfhoghlaim/locket:*` refs
 
-- [ ] 9.1.1 `bonneagar/GOLD_STANDARD.md` line 122 —
+- [x] 9.1.1 `bonneagar/GOLD_STANDARD.md` line 122 —
       `ghcr.io/cianfhoghlaim/locket:latest` →
       `ghcr.io/bpbradley/locket:infisical`
-- [ ] 9.1.2 `bonneagar/stacks/frontend/sidecar.yaml`
+- [x] 9.1.2 `bonneagar/stacks/frontend/sidecar.yaml`
       line 10 — same
-- [ ] 9.1.3 `bonneagar/stacks/frontend/blueprint.yaml`
+- [x] 9.1.3 `bonneagar/stacks/frontend/blueprint.yaml`
       line 12 — `run_docker_tag: ghcr.io/cianfhoghlaim/
       locket:latest` → `run_docker_tag: ghcr.io/bpbradley/
       locket:infisical`
-- [ ] 9.1.4 `bonneagar/stacks/croilar/sidecar.yaml`
+- [x] 9.1.4 `bonneagar/stacks/croilar/sidecar.yaml`
       line 17 — same
-- [ ] 9.1.5 `bonneagar/stacks/ci/hf-watchdog/sidecar.yaml`
+- [x] 9.1.5 `bonneagar/stacks/ci/hf-watchdog/sidecar.yaml`
       line 13 — `ghcr.io/cianfhoghlaim/locket:1.2.3` →
       `ghcr.io/bpbradley/locket:infisical`
-- [ ] 9.1.6 `bonneagar/stacks/lakehouse/README.md`
+- [x] 9.1.6 `bonneagar/stacks/lakehouse/README.md`
       line 92 — same
-- [ ] 9.1.7 `bonneagar/stacks/oideachais/sidecar.yaml`
+- [x] 9.1.7 `bonneagar/stacks/oideachais/sidecar.yaml`
       line 32 — `ghcr.io/cianfhoghlaim/locket:1.2.3` →
       `ghcr.io/bpbradley/locket:infisical`
-- [ ] 9.1.8 `bonneagar/stacks/oideachais/README.md`
+- [x] 9.1.8 `bonneagar/stacks/oideachais/README.md`
       line 121 — update table row
 
 ### 9.2 — Fix wrong `:latest` and `:connect` tags
 
-- [ ] 9.2.1 `bonneagar/stacks/drop/sidecar.yaml` line 12 —
+- [x] 9.2.1 `bonneagar/stacks/drop/sidecar.yaml` line 12 —
       `ghcr.io/bpbradley/locket:latest` →
       `ghcr.io/bpbradley/locket:infisical`
-- [ ] 9.2.2 `bonneagar/stacks/sunshine/sidecar.yaml`
+- [x] 9.2.2 `bonneagar/stacks/sunshine/sidecar.yaml`
       line 12 — same
-- [ ] 9.2.3 `bonneagar/dagger/templates/sidecar.yaml.template`
+- [x] 9.2.3 `bonneagar/dagger/templates/sidecar.yaml.template`
       line 12 — Replace fake SHA
       `sha256:1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5
       d6e7f8a9b0c1d2` with `:infisical`
-- [ ] 9.2.4 `bonneagar/ansible/roles/pangolin_core/defaults/main.yml`
+- [x] 9.2.4 `bonneagar/ansible/roles/pangolin_core/defaults/main.yml`
       line 17 — `ghcr.io/bpbradley/locket:connect` →
       `ghcr.io/bpbradley/locket:infisical` (file deleted in
       Phase 0.5; verify post-deletion)
 
 ### 9.3 — Update GOLD_STANDARD.md §3
 
-- [ ] 9.3.1 Replace the fictional `ghcr.io/cianfhoghlaim/
+- [x] 9.3.1 Replace the fictional `ghcr.io/cianfhoghlaim/
       locket:latest` exemplar with `ghcr.io/bpbradley/locket:
       infisical`
-- [ ] 9.3.2 Add note: stacks SHOULD pin to `:infisical` tag;
+- [x] 9.3.2 Add note: stacks SHOULD pin to `:infisical` tag;
       production SHOULD add `@sha256:<digest>` once
       bpbradley/locket publishes digest-stable builds
-- [ ] 9.3.3 Add reference: https://github.com/bpbradley/locket
+- [x] 9.3.3 Add reference: https://github.com/bpbradley/locket
 
 ### 9.4 — Update `.agents/skills/`
 
-- [ ] 9.4.1 `.agents/skills/secrets-management/SKILL.md`
+- [x] 9.4.1 `.agents/skills/secrets-management/SKILL.md`
       lines 82, 121, 261 — change fictional refs; update
       Locket repo URL to https://github.com/bpbradley/locket
-- [ ] 9.4.2 `.agents/skills/komodo/SKILL.md` line 398 —
+- [x] 9.4.2 `.agents/skills/komodo/SKILL.md` line 398 —
       same
 - [ ] 9.4.3 `.agents/skills_backup/kcg-locket-sidecar/SKILL.md`
       lines 39, 147 — same
@@ -446,7 +446,7 @@
 
 ### 9.6 — CI lint enforcement
 
-- [ ] 9.6.1 Add to `bun run validate-stacks`:
+- [x] 9.6.1 Add to `bun run validate-stacks`:
       ```bash
       if grep -rE 'ghcr\.io/(cianfhoghlaim/bpbradley)/locket:' \
          bonneagar/stacks/ | grep -v 'bpbradley/locket:infisical'; then
@@ -454,7 +454,7 @@
         exit 1
       fi
       ```
-- [ ] 9.6.2 Add to `bun run validate-stacks`:
+- [x] 9.6.2 Add to `bun run validate-stacks`:
       ```bash
       if grep -rE 'locket:(@sha256:|latest)' bonneagar/stacks/; then
         echo "ERROR: Locket image must use :infisical tag only"
@@ -464,23 +464,23 @@
 
 ## Phase 10 — Infisical URI normalization (P2)
 
-- [ ] 10.1 Sweep all `secrets.env` files: replace 3-segment
+- [x] 10.1 Sweep all `secrets.env` files: replace 3-segment
       `infisical:///<key>` form with canonical 2-segment
       `infisical://dev-baile/<svc>/<key>` form
-- [ ] 10.2 Target the ~43 files identified by the audit
+- [x] 10.2 Target the ~43 files identified by the audit
       (after Phase 5 stack deletions reduce the count from 46
       to ~43)
-- [ ] 10.3 Verify `iac:sync:secrets` discovers all secrets
-      after the sweep
+- [x] 10.3 Verify `iac:sync:secrets` discovers all secrets
+      after the sweep (63 unique stacks, 0 malformed URIs)
 
 ## Phase 11 — Per-host topology formalization (P1)
 
-- [ ] 11.1 Update `DEPLOYMENT-STRATEGY.md` §1 to the 2-host
+- [x] 11.1 Update `DEPLOYMENT-STRATEGY.md` §1 to the 2-host
       topology only
-- [ ] 11.2 Confirm `pulumi/Pulumi.yaml` is the only file with
+- [x] 11.2 Confirm `pulumi/Pulumi.yaml` is the only file with
       `cax41-hetzner` references (per user decision: Hetzner
       is Pulumi-only)
-- [ ] 11.3 No `iac/config.ts` change needed (Phase 1.19
+- [x] 11.3 No `iac/config.ts` change needed (Phase 1.19
       removed `CAX41_HETZNER_IP`)
 
 ## Implementation Order
