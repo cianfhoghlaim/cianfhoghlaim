@@ -1,0 +1,12 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+private-resources:
+  immich:
+    name: "Immich Photo Management"
+    mode: "http"
+    destination-port: 2283
+    full-domain: "immich.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "immich-server"

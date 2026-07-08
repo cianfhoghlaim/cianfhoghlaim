@@ -1,0 +1,12 @@
+# Outline — Pangolin private-resource route
+# Routes outline.cianfhoghlaim.ie → outline container at port 3000.
+# TinyAuth Member role required.
+pangolin:
+  private-resources:
+    outline:
+      name: outline
+      mode: http
+      full-domain: outline.cianfhoghlaim.ie
+      destination-port: 3000
+      protocol: http
+      roles[0]: secure-headers@file
