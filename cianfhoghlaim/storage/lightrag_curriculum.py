@@ -1,11 +1,15 @@
 """
 LightRAG Integration for Curriculum Knowledge Graph.
 
-Provides dual-level knowledge graph retrieval alongside existing
-Cognee/Memgraph infrastructure. LightRAG offers:
+Provides dual-level knowledge graph retrieval alongside the canonical
+Cognee + FalkorDB infrastructure (the agent-observability spec removed
+Memgraph + Neo4j from the production stack lineup). LightRAG offers:
 - Hybrid graph-vector retrieval
 - Entity-relationship extraction
 - Citation tracking for academic integrity
+
+The Cognee code-side backend defaults to FalkorDB; Memgraph is the
+legacy fallback (set CIANFHOGHLAIM_COGNEE_BACKEND=memgraph to override).
 
 Based on /taighde/teanga/LightRAG/ reference implementation.
 
@@ -37,7 +41,10 @@ class LightRAGConfig:
     """Configuration for LightRAG curriculum integration."""
 
     working_dir: Path = field(default_factory=lambda: DEFAULT_WORKING_DIR)
-    graph_storage: str = "memgraph"  # Use existing Memgraph
+    # The Cognee code-side backend defaults to FalkorDB (per
+    # CIANFHOGHLAIM_COGNEE_BACKEND). Memgraph remains as a legacy
+    # fallback for operators who need it.
+    graph_storage: str = "falkordb"
     vector_storage: str = "lancedb"  # Use existing LanceDB
     llm_provider: str = "litellm"
     llm_model: str = "gpt-4o-mini"
@@ -387,11 +394,13 @@ class CurriculumRAGProvider:
 
         Args:
             lightrag_config: Configuration for LightRAG
-            memgraph_uri: Memgraph connection URI
+            memgraph_uri: Memgraph connection URI (legacy fallback;
+                default is `bolt://memgraph:7687`. The Cognee code-side
+                default backend is FalkorDB per CIANFHOGHLAIM_COGNEE_BACKEND.)
         """
         self.lightrag = CurriculumLightRAG(lightrag_config)
         self.memgraph_uri = memgraph_uri or os.getenv(
-            "MEMGRAPH_URI", "bolt://localhost:7687"
+            "MEMGRAPH_URI", "bolt://memgraph:7687"
         )
 
     async def initialize(self) -> None:

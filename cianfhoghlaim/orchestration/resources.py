@@ -12,6 +12,28 @@ from pathlib import Path
 from dagster import ConfigurableResource
 from dagster_dlt import DagsterDltResource
 
+# Centralised env-var matrix (the CIANFHOGHLAIM_* env vars). Imported
+# once at module import; every resource below falls back to the
+# canonical defaults when its legacy alias is unset.
+from cianfhoghlaim.observability.env_config import (
+    FALKORDB_HOST as _CIANFHOGHLAIM_FALKORDB_HOST,
+)
+from cianfhoghlaim.observability.env_config import (
+    FALKORDB_PASSWORD as _CIANFHOGHLAIM_FALKORDB_PASSWORD,
+)
+from cianfhoghlaim.observability.env_config import (
+    FALKORDB_PORT as _CIANFHOGHLAIM_FALKORDB_PORT,
+)
+from cianfhoghlaim.observability.env_config import (
+    LANCEDB_URL as _CIANFHOGHLAIM_LANCEDB_URL,
+)
+from cianfhoghlaim.observability.env_config import (
+    LITELLM_URL as _CIANFHOGHLAIM_LITELLM_URL,
+)
+from cianfhoghlaim.observability.env_config import (
+    resolve_cognee_backend_with_fallback as _resolve_cognee_backend,
+)
+
 # ============================================================================
 # Configuration
 # ============================================================================
@@ -161,10 +183,14 @@ class FalkorDBResource(ConfigurableResource):
     Inside docker, the container name ``falkordb`` resolves to the
     container's internal port 6379. The defaults below use env
     vars so the same code works inside-docker AND on-host.
+
+    Env-var precedence (highest to lowest):
+      1. ``CIANFHOGHLAIM_FALKORDB_URL`` — full redis:// URL (preferred)
+      2. Legacy ``FALKORDB_HOST`` + ``FALKORDB_PORT`` + ``FALKORDB_PASSWORD``
+      3. In-docker default ``falkordb:6379``
     """
 
-    # Env-driven defaults (set FALKORDB_HOST=falkordb, FALKORDB_PORT=6379
-    # in docker; FALKORDB_HOST=127.0.0.1, FALKORDB_PORT=6380 on host).
+    # Env-driven defaults.
     host: str = ""
     port: int = 0
     password: str = ""
@@ -172,9 +198,13 @@ class FalkorDBResource(ConfigurableResource):
     def get_client(self):
         from ..graph.falkordb_client import FalkorDBClient
         return FalkorDBClient(
-            host=self.host or os.getenv("FALKORDB_HOST", "falkordb"),
-            port=self.port or int(os.getenv("FALKORDB_PORT", "6379")),
-            password=self.password or os.getenv("FALKORDB_PASSWORD") or None,
+            host=self.host or os.getenv("FALKORDB_HOST") or _CIANFHOGHLAIM_FALKORDB_HOST,
+            port=self.port
+            or int(os.getenv("FALKORDB_PORT", "0") or "0")
+            or _CIANFHOGHLAIM_FALKORDB_PORT,
+            password=self.password
+            or os.getenv("FALKORDB_PASSWORD")
+            or _CIANFHOGHLAIM_FALKORDB_PASSWORD,
         )
 
 
@@ -213,6 +243,12 @@ class CogneeMemoryResource(ConfigurableResource):
     The previous default of ``bolt://localhost:7687`` (Memgraph)
     was incorrect after the ``centralise-data-plane`` rewrite.
 
+    For the *code-side* Cognee client, the canonical backend is
+    FalkorDB (per the ``agent-observability`` spec which removed
+    Memgraph + Neo4j from the production stack lineup) with Memgraph
+    as the legacy fallback. Set ``CIANFHOGHLAIM_COGNEE_BACKEND``
+    (``falkordb`` | ``memgraph`` | ``postgres``) to override.
+
     Set ``COGNEE_PG_HOST`` (default ``cognee-postgres`` inside docker,
     ``localhost`` on host) and ``COGNEE_PG_PASSWORD`` (default
     ``devpassword``).
@@ -225,12 +261,20 @@ class CogneeMemoryResource(ConfigurableResource):
     # within the same data plane).
     vector_url: str = ""
     embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    # Code-side graph backend selection (falkordb|memgraph|postgres).
+    # Reads from CIANFHOGHLAIM_COGNEE_BACKEND at construction time.
+    backend: str = ""
 
     async def get_service(self):
         from ..memory.cognee_config import CogneeConfig
         from ..memory.cognee_service import EducationMemoryService
 
+        # Resolve the code-side Cognee backend with the falkordb →
+        # memgraph fallback chain (per dispatch hard-deliverable #2).
+        backend = self.backend or _resolve_cognee_backend()
+
         config = CogneeConfig(
+            backend=backend,
             postgres_url=self.postgres_url
             or os.getenv(
                 "COGNEE_PG_URL",
@@ -238,7 +282,8 @@ class CogneeMemoryResource(ConfigurableResource):
                 f"@{os.getenv('COGNEE_PG_HOST', 'cognee-postgres')}:5432/cognee_oideachais",
             ),
             vector_url=self.vector_url
-            or os.getenv("LANCEDB_URI", "rest://lakehouse-lance-namespace:8182"),
+            or os.getenv("LANCEDB_URI")
+            or _CIANFHOGHLAIM_LANCEDB_URL,
             embedding_model=self.embedding_model,
         )
         service = EducationMemoryService(config)
@@ -426,7 +471,7 @@ class ProgressTrackerResource(ConfigurableResource):
 
     Defaults use the env var ``REDIS_URL`` (set by
     ``bonneagar/stacks/dagster/.env.dev`` to
-    ``redis://lakehouse-redis:6390`` in docker or
+    ``redis://lakehouse-redis:6379`` in docker or
     ``redis://localhost:6390`` on host) so the same code works in
     both environments. Falls back to the local default for legacy
     callers.
@@ -438,7 +483,7 @@ class ProgressTrackerResource(ConfigurableResource):
         from ..observability.progress_tracker import ProgressTracker
         return ProgressTracker(
             redis_url=self.redis_url
-            or os.getenv("REDIS_URL", "redis://localhost:6379")
+            or os.getenv("REDIS_URL", "redis://lakehouse-redis:6379")
         )
 
 
@@ -462,10 +507,11 @@ class LiteLLMResource(ConfigurableResource):
       - Rate limits and spend caps are enforced uniformly.
       - New providers are added in one place (the gateway config.yaml).
 
-    Defaults use the env var ``LITELLM_BASE_URL`` (set by
+    Defaults use the env var ``CIANFHOGHLAIM_LITELLM_URL`` (set by
     ``bonneagar/stacks/dagster/.env.dev``) so the same resource works
     both in-docker (``http://litellm:4000/v1``) and on-host
-    (``http://127.0.0.1:4000/v1``).
+    (``http://127.0.0.1:4000/v1``). The legacy ``LITELLM_BASE_URL``
+    env var is honoured as a backwards-compat alias.
     """
 
     base_url: str = ""
@@ -484,7 +530,8 @@ class LiteLLMResource(ConfigurableResource):
 
         return OpenAI(
             base_url=self.base_url
-            or os.getenv("LITELLM_BASE_URL", "http://litellm:4000/v1"),
+            or os.getenv("LITELLM_BASE_URL")
+            or _CIANFHOGHLAIM_LITELLM_URL,
             api_key=self.master_key or os.getenv("LITELLM_MASTER_KEY", "sk-1234"),
             timeout=self.timeout_s,
         )
