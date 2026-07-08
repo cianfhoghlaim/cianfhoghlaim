@@ -55,8 +55,6 @@ export async function dispatch(command: string) {
     case "health": return (await import("./commands/health.ts")).health();
     case "sync:secrets": return (await import("./commands/sync-secrets.ts")).syncSecrets();
     case "sync:resources": return (await import("./commands/sync-resources.ts")).syncResources();
-    case "sync:procedures": return (await import("./commands/sync-procedures.ts")).syncProcedures();
-    case "sync:resource-syncs": return (await import("./commands/sync-resource-syncs.ts")).syncResourceSyncs();
     case "sync:monitors": return (await import("./commands/sync-monitors.ts")).syncMonitors();
     case "sync:alerts": return (await import("./commands/sync-alerts.ts")).syncAlerts();
     case "sync:variables": return (await import("./commands/sync-variables.ts")).syncVariables();
@@ -83,8 +81,6 @@ Commands:
   health                            Health check all 3 systems
   sync:secrets                       Sync Infisical secrets
   sync:resources                     Sync Pangolin private resources
-  sync:procedures                    Sync Komodo procedures
-  sync:resource-syncs                Sync Komodo resource-syncs
   sync:monitors                      Sync Komodo monitors (opt-in)
   sync:alerts                        Sync Komodo alerts (opt-in)
   sync:variables                     Sync Komodo variables
