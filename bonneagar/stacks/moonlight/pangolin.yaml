@@ -1,8 +1,0 @@
-# Pangolin auto-discovery labels for Moonlight
-services:
-  moonlight:
-    labels:
-      - "pangolin.resource.name=Moonlight"
-      - "pangolin.resource.domain=moonlight.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://moonlight:80"
-      - "pangolin.resource.middlewares=tinyauth"

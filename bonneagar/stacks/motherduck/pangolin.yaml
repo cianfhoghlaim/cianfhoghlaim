@@ -1,4 +1,0 @@
-pangolin:
-  private-resources: {}
-  noop: true
-  noop-reason: "non-web-facing stack (storage/sidecar/infra-tool)"
