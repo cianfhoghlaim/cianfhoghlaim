@@ -10,6 +10,14 @@
 # Modeled on:
 #   https://github.com/dagster-io/dagster/tree/master/examples/deploy_docker
 #
+# Multi-arch support (NEW 2026-07-08 pick-3-image-replacement):
+#   The base `python:3.13-slim` and the runtime deps are all
+#   multi-arch. Build with:
+#     docker buildx build --platform=linux/amd64,linux/arm64 \
+#       -t dagster-local:latest -f Dockerfile.dagster .
+#   so the same image runs on bunchloch (arm64) and any future
+#   x86_64 host.
+#
 # Build:
 #   docker build -t dagster-local:latest -f Dockerfile.dagster .
 #
@@ -19,7 +27,7 @@
 # compose auto-builds on `up -d` if the image is missing).
 # =============================================================================
 
-FROM python:3.13-slim AS builder
+FROM --platform=$BUILDPLATFORM python:3.13-slim AS builder
 
 ENV PIP_NO_CACHE_DIR=1 PYTHONUNBUFFERED=1 \
     DAGSTER_HOME=/opt/dagster/home
@@ -118,7 +126,7 @@ RUN uv pip install --system \
     "huggingface-hub>=0.27.0"
 
 # Runtime stage
-FROM python:3.13-slim
+FROM --platform=$BUILDPLATFORM python:3.13-slim
 ENV DAGSTER_HOME=/opt/dagster/home PYTHONUNBUFFERED=1 \
     DAGSTER_VERSION=1.13.11
 

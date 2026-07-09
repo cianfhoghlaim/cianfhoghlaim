@@ -4,7 +4,7 @@
   "module": "iac/cli.ts",
   "type": "module",
   "private": true,
-  "description": "IaC root manifest for bonneagar — the 87-stack GitOps home. The new iac/cli.ts entry point orchestrates the 3 systems (Komodo + Pangolin + Infisical) into a single TypeScript codebase. Replaces the 5 v0 iac/komodo/*.ts scripts + the 3 bash scripts at scripts/ + the 2 vault scripts at the repo root. Ready for the future split into github.com/cianfhoghlaim/bonneagar.",
+  "description": "IaC root manifest for bonneagar — the 88-stack GitOps home. The new iac/cli.ts entry point orchestrates the 3 systems (Komodo + Pangolin + Infisical) into a single TypeScript codebase. Replaces the 5 v0 iac/komodo/*.ts scripts + the 3 bash scripts at scripts/ + the 2 vault scripts at the repo root. Ready for the future split into github.com/cianfhoghlaim/bonneagar.",
   "scripts": {
     "validate-stacks": "bash audit/scripts/stack-doctor.sh",
     "iac": "bun run iac/cli.ts",
