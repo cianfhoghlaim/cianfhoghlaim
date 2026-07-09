@@ -7,36 +7,31 @@
 > for the bring-up playbook.
 
 > **v4 consolidation (2026-06-29):** the canonical stack
-> location is **`bonneagar/stacks/`** (87 stacks). The previous
+> location is **`bonneagar/stacks/`** (88 stacks). The previous
 > v4-canonical `infrastructure/` dir + the premature
 > `cianfhoghlaim/stacks/` split have both been removed. The
-> 87 stacks are documented at
+> 88 stacks are documented at
 > [`../cianfhoghlaim/docs/stacks/<name>.md`](../../cianfhoghlaim/docs/stacks/)
 > (the "purpose + why-GitOps" docs).
 >
 > **v5 cleanup (2026-07-01):** 2 obsolete stacks pruned
 > (`stacks/lakehouse-oci/` + `stacks/r2/`); 7 reference-only
 > dirs without `compose.yaml` removed (ci, motherduck,
-> planetscale, pydantic-gateway, tools, olake, nimtable);
-> **Actual count: 86 stacks** (per `bun run validate-stacks`).
->
-> **v6 cleanup (2026-07-09 — `2026-07-09-infrastructure-gold-standard-compliance-v1`):**
-> 5 Unstract-sidecar placeholders pruned (`backend/`,
-> `platform-service/`, `runner/`, `workers/`,
-> `x2text-service/`) — they were empty compose stubs
-> (`services: {}`) auto-generated in 2026-07 to satisfy the
-> `bun run validate-stacks` GOLD_STANDARD gate; the real
-> services live as containers in `bonneagar/stacks/unstract/`.
-> **Current count: 87 stacks** at `bonneagar/stacks/`.
+> planetscale, pydantic-gateway, tools, olake, nimtable).
+> **Actual count: 88 stacks** (post-v6: 5 placeholder dirs
+> `backend/`, `platform-service/`, `runner/`, `workers/`,
+> `x2text-service/` deleted by the
+> `2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1`
+> openspec change).
 
 ## Priority quick reference
 
 The 4 priority compose stacks, the 4 priority skills, and the
 4 priority commands at a glance. **Read this first**; the
-rest of the file is the full 87-stack inventory + the IaC
+rest of the file is the full 88-stack inventory + the IaC
 entry points.
 
-### Priority compose stacks (4 of 87)
+### Priority compose stacks (4 of 88)
 
 | Stack | Port | Domain | Purpose |
 |:--|--:|:--|:--|
@@ -56,7 +51,7 @@ in this repo will reach for first.
 | Skill | When to load |
 |:--|:--|
 | [`stack-ops`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/stack-ops/SKILL.md) | Add / fix / audit a Docker Compose stack (the 6-file GOLD_STANDARD pattern) |
-| [`infrastructure-stacks`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/infrastructure-stacks/SKILL.md) | The router for the 87 stacks + the 3-tier host convergence + the 5-stage deploy |
+| [`infrastructure-stacks`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/infrastructure-stacks/SKILL.md) | The router for the 88 stacks + the 3-tier host convergence + the 5-stage deploy |
 | [`secrets-management`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/secrets-management/SKILL.md) | Infisical + Locket + mise 3-way contract (no manual `.env`) |
 | [`pangolin`](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/.agents/skills/pangolin/SKILL.md) | VPN + Traefik + Pocket ID SSO (Pangolin Convergence Architecture) |
 
@@ -72,7 +67,7 @@ bun run iac:bootstrap              # Komodo deploy-stacks + create-resources + r
 ### IaC entry points (4 scripts at the root of `bonneagar/`)
 
 ```bash
-bun run iac:deploy-stacks          # upsert the 87 stacks into Komodo
+bun run iac:deploy-stacks          # upsert the 88 stacks into Komodo
 bun run iac:create-resources       # upsert the 88 Pangolin private resources
 bun run iac:read-state             # dump current Komodo + Pangolin state
 bun run iac:bootstrap              # the 1-command full sync
@@ -85,9 +80,9 @@ The IaC TypeScript client lives at `iac/komodo/` (5 files:
 to the root of `bonneagar/` for the future split into
 `github.com/cianfhoghlaim/bonneagar`.
 
-## The 5-group model (87 stacks)
+## The 5-group model (88 stacks)
 
-The 87 stacks are organised into 5 logical groups
+The 88 stacks are organised into 5 logical groups
 (informational only; not a deploy-time constraint):
 
 | Group | Count | Host | Examples |
@@ -110,7 +105,7 @@ linkwarden, lmnr, …).
 
 | Concern | Location |
 |:--|:--|
-| Stack catalogue (87 stacks) | [`stacks/`](./stacks/) |
+| Stack catalogue (88 stacks) | [`stacks/`](./stacks/) |
 | Stack conventions | [`GOLD_STANDARD.md`](./GOLD_STANDARD.md) |
 | Bring-up playbook | [`DEPLOYMENT-STRATEGY.md`](./DEPLOYMENT-STRATEGY.md) |
 | Per-stack docs (purpose + why-GitOps) | [`../cianfhoghlaim/docs/stacks/`](../../cianfhoghlaim/docs/stacks/) |
@@ -162,3 +157,40 @@ resolves them at container runtime.
 - [cianfhoghlaim/leabharlann](https://github.com/cianfhoghlaim/leabharlann)
   — the digital library that also consumes parts of this
   mesh (e.g. the Gemma inference target via LiteLLM).
+
+## IaC Repo Boundary
+
+This repo owns the **IaC** layer of the Cianfhoghlaim
+constellation. The boundary is enforced by the
+`2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1`
+openspec change.
+
+### What lives here
+
+| Domain | Location |
+|:--|:--|
+| 88 Docker Compose stacks | `stacks/<name>/` |
+| IaC TypeScript client | `iac/` (15 CLI commands + 3 typed clients) |
+| Komodo fleet definitions | `komodo/` (resource-syncs + procedures + stacks + servers) |
+| Pangolin mesh config | `pangolin/` |
+| Deploy runbooks | `deploy-runbooks/` |
+| Pulumi cross-cloud IaC | `pulumi/` |
+| Ansible bootstrap | `ansible/` |
+| Audit scripts | `audit/` |
+| IaC CLI entry point | `iac/cli.ts` + `package.json` scripts (`iac:bootstrap`, `iac:plan`, `iac:health`, etc.) |
+
+### What does NOT live here
+
+- Application code (data platform, agent fleet, frontend apps) — that's `cianfhoghlaim/`
+- OpenSpec changes + specs — those live in the cianfhoghlaim repo's `openspec/` (even if they reference this repo's stacks)
+- The leabharlann corpus — that's `leabharlann/` (separate worktree)
+
+### Cross-repo sync convention
+
+When an openspec change touches both cianfhoghlaim + bonneagar,
+it MUST include a `cross-repo-sync.md` file at
+`openspec/changes/<id>/cross-repo-sync.md` that lists the commit
+plan + branch names + push targets for each repo. The 2 repos
+MUST be committed in this order: bonneagar first, then
+cianfhoghlaim (the IaC tests in bonneagar are a prerequisite
+for the cianfhoghlaim openspec archive).

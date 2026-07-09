@@ -237,4 +237,4 @@ All 19 stacks concurrently: ~36–42 GB RAM. The M4 baseline is
 - `bonneagar/stacks/HEALTH_REPORT.md` (2026-06-15 stale
   snapshot; refresh after Wave 3 lands).
 - `.agents/skills/infrastructure-stacks/SKILL.md` — the
-  router skill for the 87-stack catalogue.
+  router skill for the 86-stack catalogue.
