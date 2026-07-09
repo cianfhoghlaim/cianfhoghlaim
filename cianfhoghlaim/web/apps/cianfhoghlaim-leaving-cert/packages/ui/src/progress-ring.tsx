@@ -2,7 +2,7 @@
 
 // <CiProgressRing> — Khan Academy 4-tier mastery ring
 // Attempted (0%) → Familiar (33%) → Proficient (66%) → Mastered (100%)
-// Plus the Brown Ajah éraic tier (13 treasures × 4 levels = 52 total)
+// Optionally surfaces the 13 éraic tiers as a pedagogical anchor.
 
 import * as React from "react";
 import { cn } from "./utils";

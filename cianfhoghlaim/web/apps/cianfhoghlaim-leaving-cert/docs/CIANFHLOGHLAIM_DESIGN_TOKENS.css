@@ -1,5 +1,7 @@
 /* Cianfhoghlaim v2 — based on docs/ui-inspiration/UI_INSPIRATION_GUIDE.md
-   shared tokens + the 8 Celtic adaptations. */
+   shared tokens. Professional + minimal theming (per the 2026-07-09
+   WoT-theming cleanup). The mythology / historical-sources layer is
+   deferred to BIEP-v2. */
 
 :root {
   /* Celtic nation colours (8 NCCA subjects × 4 ancient nations) */
@@ -18,16 +20,16 @@
   --ci-subject-gaeilge:            #059669;  /* emerald-600 */
   --ci-subject-computer_science:   #475569;  /* slate-600 */
 
-  /* Brown Ajah accent (per WoT — russet brown) */
-  --ci-brown-ajah:       #92400e;  /* russet brown */
-  --ci-brown-ajah-light: #f59e0b;  /* amber-500 (the cauldron flame) */
+  /* Brand accent (the "C" letter mark on the Header) */
+  --ci-brand-primary:  #059669;  /* emerald-600 */
+  --ci-brand-secondary: #2563eb; /* blue-600 (links) */
 
   /* 5 NCCA Key Competencies (the 5 land-marks) */
-  --ci-competency-communicating:       #059669;  /* emerald — Brigid */
-  --ci-competency-information:         #2563eb;  /* blue — Ogma */
-  --ci-competency-creative-thinking:   #ca8a04;  /* gold — Lugh */
-  --ci-competency-personal-effective:  #92400e;  /* russet brown — Dian Cecht */
-  --ci-competency-working-with-others: #b91c1c;  /* red — Trí Dé Dána */
+  --ci-competency-communicating:       #059669;  /* emerald */
+  --ci-competency-information:         #2563eb;  /* blue */
+  --ci-competency-creative-thinking:   #ca8a04;  /* gold */
+  --ci-competency-personal-effective:  #92400e;  /* warm brown (accidental — will revisit in BIEP-v2) */
+  --ci-competency-working-with-others: #b91c1c;  /* red */
 
   /* UI states (from UI_INSPIRATION_GUIDE.md) */
   --ci-success: #10b981;  /* emerald-500 */
@@ -59,11 +61,11 @@
   --ci-subnation-northern-ireland: #2563eb; /* blue — NI */
   --ci-subnation-scotland:       #0ea5e9;  /* sky — Scotland */
   --ci-subnation-england:        #dc2626;  /* red — England (St George's Cross) */
-  --ci-subnation-wales:          #b91c1c;  /* red-700 — Y Ddraig Goch */
+  --ci-subnation-wales:          #b91c1c;  /* red-700 — Y Ddraig Goch (Welsh Dragon) */
   --ci-subnation-isle-of-man:     #475569;  /* slate — Triskelion */
 
   /* Typography (Cinzel + Inter + JetBrains Mono) */
-  --ci-font-display: "Cinzel", serif;          /* Uncial/Insular display */
+  --ci-font-display: "Cinzel", serif;          /* display headings */
   --ci-font-body:    "Inter", sans-serif;
   --ci-font-mono:    "JetBrains Mono", monospace;
 }

@@ -3,9 +3,9 @@
 // cianfhoghlaim/agents/tuatha/subject_router.py via
 // `../../../agents/tuatha/subject_router`.
 //
-// Per the Brown Ajah theming (docs/BROWN_AJAH_THEMING.md), the 8 NCCA
-// subject specialists are the 8 Brown Ajah members; the orchestrator
-// (the Amyrlin Seat) routes to the right Brown Ajah based on the URL param.
+// The 8 NCCA subject specialists are addressed as 8 subject teams; the
+// orchestrator (the cianfhoghlaim operator agent) routes to the right
+// subject based on the URL param.
 
 import type { BuiltInAgent } from "@copilotkit/runtime";
 

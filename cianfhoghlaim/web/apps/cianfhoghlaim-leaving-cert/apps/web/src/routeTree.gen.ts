@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GaAboutRouteImport } from './routes/ga/about'
 import { Route as EnSelfHostRouteImport } from './routes/en/self-host'
 import { Route as EnSearchRouteImport } from './routes/en/search'
 import { Route as EnPlaygroundsRouteImport } from './routes/en/playgrounds'
@@ -19,7 +20,19 @@ import { Route as EnFoundationsRouteImport } from './routes/en/foundations'
 import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
 import { Route as EnAgentsRouteImport } from './routes/en/agents'
 import { Route as EnAboutRouteImport } from './routes/en/about'
+import { Route as GaSubjectsTireolaiochtRouteImport } from './routes/ga/subjects/tireolaiocht'
+import { Route as GaSubjectsRiomheolaiochtRouteImport } from './routes/ga/subjects/riomheolaiocht'
+import { Route as GaSubjectsMataRouteImport } from './routes/ga/subjects/mata'
+import { Route as GaSubjectsGaeilgeRouteImport } from './routes/ga/subjects/gaeilge'
+import { Route as GaSubjectsCeimicRouteImport } from './routes/ga/subjects/ceimic'
+import { Route as GaSubjectsBearlaRouteImport } from './routes/ga/subjects/bearla'
 import { Route as GaLeavingCertSubjectRouteImport } from './routes/ga/leaving-cert/$subject'
+import { Route as EnSubjectsMathematicsRouteImport } from './routes/en/subjects/mathematics'
+import { Route as EnSubjectsGeographyRouteImport } from './routes/en/subjects/geography'
+import { Route as EnSubjectsGaeilgeRouteImport } from './routes/en/subjects/gaeilge'
+import { Route as EnSubjectsEnglishRouteImport } from './routes/en/subjects/english'
+import { Route as EnSubjectsComputer_scienceRouteImport } from './routes/en/subjects/computer_science'
+import { Route as EnSubjectsChemistryRouteImport } from './routes/en/subjects/chemistry'
 import { Route as EnSubjectsSubjectRouteImport } from './routes/en/subjects.$subject'
 import { Route as EnKeyCompetenciesSlugRouteImport } from './routes/en/key-competencies.$slug'
 import { Route as EnFoundationsSlugRouteImport } from './routes/en/foundations.$slug'
@@ -31,6 +44,11 @@ import { Route as EnLeavingCertSubjectPracticeTopicRouteImport } from './routes/
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaAboutRoute = GaAboutRouteImport.update({
+  id: '/ga/about',
+  path: '/ga/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnSelfHostRoute = EnSelfHostRouteImport.update({
@@ -78,9 +96,71 @@ const EnAboutRoute = EnAboutRouteImport.update({
   path: '/en/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GaSubjectsTireolaiochtRoute = GaSubjectsTireolaiochtRouteImport.update({
+  id: '/ga/subjects/tireolaiocht',
+  path: '/ga/subjects/tireolaiocht',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaSubjectsRiomheolaiochtRoute =
+  GaSubjectsRiomheolaiochtRouteImport.update({
+    id: '/ga/subjects/riomheolaiocht',
+    path: '/ga/subjects/riomheolaiocht',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const GaSubjectsMataRoute = GaSubjectsMataRouteImport.update({
+  id: '/ga/subjects/mata',
+  path: '/ga/subjects/mata',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaSubjectsGaeilgeRoute = GaSubjectsGaeilgeRouteImport.update({
+  id: '/ga/subjects/gaeilge',
+  path: '/ga/subjects/gaeilge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaSubjectsCeimicRoute = GaSubjectsCeimicRouteImport.update({
+  id: '/ga/subjects/ceimic',
+  path: '/ga/subjects/ceimic',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaSubjectsBearlaRoute = GaSubjectsBearlaRouteImport.update({
+  id: '/ga/subjects/bearla',
+  path: '/ga/subjects/bearla',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GaLeavingCertSubjectRoute = GaLeavingCertSubjectRouteImport.update({
   id: '/ga/leaving-cert/$subject',
   path: '/ga/leaving-cert/$subject',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSubjectsMathematicsRoute = EnSubjectsMathematicsRouteImport.update({
+  id: '/en/subjects/mathematics',
+  path: '/en/subjects/mathematics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSubjectsGeographyRoute = EnSubjectsGeographyRouteImport.update({
+  id: '/en/subjects/geography',
+  path: '/en/subjects/geography',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSubjectsGaeilgeRoute = EnSubjectsGaeilgeRouteImport.update({
+  id: '/en/subjects/gaeilge',
+  path: '/en/subjects/gaeilge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSubjectsEnglishRoute = EnSubjectsEnglishRouteImport.update({
+  id: '/en/subjects/english',
+  path: '/en/subjects/english',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnSubjectsComputer_scienceRoute =
+  EnSubjectsComputer_scienceRouteImport.update({
+    id: '/en/subjects/computer_science',
+    path: '/en/subjects/computer_science',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const EnSubjectsChemistryRoute = EnSubjectsChemistryRouteImport.update({
+  id: '/en/subjects/chemistry',
+  path: '/en/subjects/chemistry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnSubjectsSubjectRoute = EnSubjectsSubjectRouteImport.update({
@@ -132,12 +212,25 @@ export interface FileRoutesByFullPath {
   '/en/playgrounds': typeof EnPlaygroundsRoute
   '/en/search': typeof EnSearchRoute
   '/en/self-host': typeof EnSelfHostRoute
+  '/ga/about': typeof GaAboutRoute
   '/en/agents/$agent': typeof EnAgentsAgentRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
+  '/en/subjects/chemistry': typeof EnSubjectsChemistryRoute
+  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRoute
+  '/en/subjects/english': typeof EnSubjectsEnglishRoute
+  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRoute
+  '/en/subjects/geography': typeof EnSubjectsGeographyRoute
+  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRoute
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
+  '/ga/subjects/bearla': typeof GaSubjectsBearlaRoute
+  '/ga/subjects/ceimic': typeof GaSubjectsCeimicRoute
+  '/ga/subjects/gaeilge': typeof GaSubjectsGaeilgeRoute
+  '/ga/subjects/mata': typeof GaSubjectsMataRoute
+  '/ga/subjects/riomheolaiocht': typeof GaSubjectsRiomheolaiochtRoute
+  '/ga/subjects/tireolaiocht': typeof GaSubjectsTireolaiochtRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
@@ -152,12 +245,25 @@ export interface FileRoutesByTo {
   '/en/playgrounds': typeof EnPlaygroundsRoute
   '/en/search': typeof EnSearchRoute
   '/en/self-host': typeof EnSelfHostRoute
+  '/ga/about': typeof GaAboutRoute
   '/en/agents/$agent': typeof EnAgentsAgentRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
+  '/en/subjects/chemistry': typeof EnSubjectsChemistryRoute
+  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRoute
+  '/en/subjects/english': typeof EnSubjectsEnglishRoute
+  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRoute
+  '/en/subjects/geography': typeof EnSubjectsGeographyRoute
+  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRoute
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
+  '/ga/subjects/bearla': typeof GaSubjectsBearlaRoute
+  '/ga/subjects/ceimic': typeof GaSubjectsCeimicRoute
+  '/ga/subjects/gaeilge': typeof GaSubjectsGaeilgeRoute
+  '/ga/subjects/mata': typeof GaSubjectsMataRoute
+  '/ga/subjects/riomheolaiocht': typeof GaSubjectsRiomheolaiochtRoute
+  '/ga/subjects/tireolaiocht': typeof GaSubjectsTireolaiochtRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
@@ -173,12 +279,25 @@ export interface FileRoutesById {
   '/en/playgrounds': typeof EnPlaygroundsRoute
   '/en/search': typeof EnSearchRoute
   '/en/self-host': typeof EnSelfHostRoute
+  '/ga/about': typeof GaAboutRoute
   '/en/agents/$agent': typeof EnAgentsAgentRoute
   '/en/assets/$subject': typeof EnAssetsSubjectRoute
   '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
+  '/en/subjects/chemistry': typeof EnSubjectsChemistryRoute
+  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRoute
+  '/en/subjects/english': typeof EnSubjectsEnglishRoute
+  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRoute
+  '/en/subjects/geography': typeof EnSubjectsGeographyRoute
+  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRoute
   '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
+  '/ga/subjects/bearla': typeof GaSubjectsBearlaRoute
+  '/ga/subjects/ceimic': typeof GaSubjectsCeimicRoute
+  '/ga/subjects/gaeilge': typeof GaSubjectsGaeilgeRoute
+  '/ga/subjects/mata': typeof GaSubjectsMataRoute
+  '/ga/subjects/riomheolaiocht': typeof GaSubjectsRiomheolaiochtRoute
+  '/ga/subjects/tireolaiocht': typeof GaSubjectsTireolaiochtRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
@@ -195,12 +314,25 @@ export interface FileRouteTypes {
     | '/en/playgrounds'
     | '/en/search'
     | '/en/self-host'
+    | '/ga/about'
     | '/en/agents/$agent'
     | '/en/assets/$subject'
     | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
     | '/en/subjects/$subject'
+    | '/en/subjects/chemistry'
+    | '/en/subjects/computer_science'
+    | '/en/subjects/english'
+    | '/en/subjects/gaeilge'
+    | '/en/subjects/geography'
+    | '/en/subjects/mathematics'
     | '/ga/leaving-cert/$subject'
+    | '/ga/subjects/bearla'
+    | '/ga/subjects/ceimic'
+    | '/ga/subjects/gaeilge'
+    | '/ga/subjects/mata'
+    | '/ga/subjects/riomheolaiocht'
+    | '/ga/subjects/tireolaiocht'
     | '/en/leaving-cert/$subject/$section'
     | '/en/leaving-cert/$subject/practice/$topic'
   fileRoutesByTo: FileRoutesByTo
@@ -215,12 +347,25 @@ export interface FileRouteTypes {
     | '/en/playgrounds'
     | '/en/search'
     | '/en/self-host'
+    | '/ga/about'
     | '/en/agents/$agent'
     | '/en/assets/$subject'
     | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
     | '/en/subjects/$subject'
+    | '/en/subjects/chemistry'
+    | '/en/subjects/computer_science'
+    | '/en/subjects/english'
+    | '/en/subjects/gaeilge'
+    | '/en/subjects/geography'
+    | '/en/subjects/mathematics'
     | '/ga/leaving-cert/$subject'
+    | '/ga/subjects/bearla'
+    | '/ga/subjects/ceimic'
+    | '/ga/subjects/gaeilge'
+    | '/ga/subjects/mata'
+    | '/ga/subjects/riomheolaiocht'
+    | '/ga/subjects/tireolaiocht'
     | '/en/leaving-cert/$subject/$section'
     | '/en/leaving-cert/$subject/practice/$topic'
   id:
@@ -235,12 +380,25 @@ export interface FileRouteTypes {
     | '/en/playgrounds'
     | '/en/search'
     | '/en/self-host'
+    | '/ga/about'
     | '/en/agents/$agent'
     | '/en/assets/$subject'
     | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
     | '/en/subjects/$subject'
+    | '/en/subjects/chemistry'
+    | '/en/subjects/computer_science'
+    | '/en/subjects/english'
+    | '/en/subjects/gaeilge'
+    | '/en/subjects/geography'
+    | '/en/subjects/mathematics'
     | '/ga/leaving-cert/$subject'
+    | '/ga/subjects/bearla'
+    | '/ga/subjects/ceimic'
+    | '/ga/subjects/gaeilge'
+    | '/ga/subjects/mata'
+    | '/ga/subjects/riomheolaiocht'
+    | '/ga/subjects/tireolaiocht'
     | '/en/leaving-cert/$subject/$section'
     | '/en/leaving-cert/$subject/practice/$topic'
   fileRoutesById: FileRoutesById
@@ -256,9 +414,22 @@ export interface RootRouteChildren {
   EnPlaygroundsRoute: typeof EnPlaygroundsRoute
   EnSearchRoute: typeof EnSearchRoute
   EnSelfHostRoute: typeof EnSelfHostRoute
+  GaAboutRoute: typeof GaAboutRoute
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
   EnSubjectsSubjectRoute: typeof EnSubjectsSubjectRoute
+  EnSubjectsChemistryRoute: typeof EnSubjectsChemistryRoute
+  EnSubjectsComputer_scienceRoute: typeof EnSubjectsComputer_scienceRoute
+  EnSubjectsEnglishRoute: typeof EnSubjectsEnglishRoute
+  EnSubjectsGaeilgeRoute: typeof EnSubjectsGaeilgeRoute
+  EnSubjectsGeographyRoute: typeof EnSubjectsGeographyRoute
+  EnSubjectsMathematicsRoute: typeof EnSubjectsMathematicsRoute
   GaLeavingCertSubjectRoute: typeof GaLeavingCertSubjectRoute
+  GaSubjectsBearlaRoute: typeof GaSubjectsBearlaRoute
+  GaSubjectsCeimicRoute: typeof GaSubjectsCeimicRoute
+  GaSubjectsGaeilgeRoute: typeof GaSubjectsGaeilgeRoute
+  GaSubjectsMataRoute: typeof GaSubjectsMataRoute
+  GaSubjectsRiomheolaiochtRoute: typeof GaSubjectsRiomheolaiochtRoute
+  GaSubjectsTireolaiochtRoute: typeof GaSubjectsTireolaiochtRoute
   EnLeavingCertSubjectSectionRoute: typeof EnLeavingCertSubjectSectionRoute
   EnLeavingCertSubjectPracticeTopicRoute: typeof EnLeavingCertSubjectPracticeTopicRoute
 }
@@ -270,6 +441,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/about': {
+      id: '/ga/about'
+      path: '/ga/about'
+      fullPath: '/ga/about'
+      preLoaderRoute: typeof GaAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/self-host': {
@@ -335,11 +513,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ga/subjects/tireolaiocht': {
+      id: '/ga/subjects/tireolaiocht'
+      path: '/ga/subjects/tireolaiocht'
+      fullPath: '/ga/subjects/tireolaiocht'
+      preLoaderRoute: typeof GaSubjectsTireolaiochtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/subjects/riomheolaiocht': {
+      id: '/ga/subjects/riomheolaiocht'
+      path: '/ga/subjects/riomheolaiocht'
+      fullPath: '/ga/subjects/riomheolaiocht'
+      preLoaderRoute: typeof GaSubjectsRiomheolaiochtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/subjects/mata': {
+      id: '/ga/subjects/mata'
+      path: '/ga/subjects/mata'
+      fullPath: '/ga/subjects/mata'
+      preLoaderRoute: typeof GaSubjectsMataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/subjects/gaeilge': {
+      id: '/ga/subjects/gaeilge'
+      path: '/ga/subjects/gaeilge'
+      fullPath: '/ga/subjects/gaeilge'
+      preLoaderRoute: typeof GaSubjectsGaeilgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/subjects/ceimic': {
+      id: '/ga/subjects/ceimic'
+      path: '/ga/subjects/ceimic'
+      fullPath: '/ga/subjects/ceimic'
+      preLoaderRoute: typeof GaSubjectsCeimicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/subjects/bearla': {
+      id: '/ga/subjects/bearla'
+      path: '/ga/subjects/bearla'
+      fullPath: '/ga/subjects/bearla'
+      preLoaderRoute: typeof GaSubjectsBearlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ga/leaving-cert/$subject': {
       id: '/ga/leaving-cert/$subject'
       path: '/ga/leaving-cert/$subject'
       fullPath: '/ga/leaving-cert/$subject'
       preLoaderRoute: typeof GaLeavingCertSubjectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects/mathematics': {
+      id: '/en/subjects/mathematics'
+      path: '/en/subjects/mathematics'
+      fullPath: '/en/subjects/mathematics'
+      preLoaderRoute: typeof EnSubjectsMathematicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects/geography': {
+      id: '/en/subjects/geography'
+      path: '/en/subjects/geography'
+      fullPath: '/en/subjects/geography'
+      preLoaderRoute: typeof EnSubjectsGeographyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects/gaeilge': {
+      id: '/en/subjects/gaeilge'
+      path: '/en/subjects/gaeilge'
+      fullPath: '/en/subjects/gaeilge'
+      preLoaderRoute: typeof EnSubjectsGaeilgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects/english': {
+      id: '/en/subjects/english'
+      path: '/en/subjects/english'
+      fullPath: '/en/subjects/english'
+      preLoaderRoute: typeof EnSubjectsEnglishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects/computer_science': {
+      id: '/en/subjects/computer_science'
+      path: '/en/subjects/computer_science'
+      fullPath: '/en/subjects/computer_science'
+      preLoaderRoute: typeof EnSubjectsComputer_scienceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/subjects/chemistry': {
+      id: '/en/subjects/chemistry'
+      path: '/en/subjects/chemistry'
+      fullPath: '/en/subjects/chemistry'
+      preLoaderRoute: typeof EnSubjectsChemistryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/subjects/$subject': {
@@ -440,9 +702,22 @@ const rootRouteChildren: RootRouteChildren = {
   EnPlaygroundsRoute: EnPlaygroundsRoute,
   EnSearchRoute: EnSearchRoute,
   EnSelfHostRoute: EnSelfHostRoute,
+  GaAboutRoute: GaAboutRoute,
   EnAssetsSubjectRoute: EnAssetsSubjectRoute,
   EnSubjectsSubjectRoute: EnSubjectsSubjectRoute,
+  EnSubjectsChemistryRoute: EnSubjectsChemistryRoute,
+  EnSubjectsComputer_scienceRoute: EnSubjectsComputer_scienceRoute,
+  EnSubjectsEnglishRoute: EnSubjectsEnglishRoute,
+  EnSubjectsGaeilgeRoute: EnSubjectsGaeilgeRoute,
+  EnSubjectsGeographyRoute: EnSubjectsGeographyRoute,
+  EnSubjectsMathematicsRoute: EnSubjectsMathematicsRoute,
   GaLeavingCertSubjectRoute: GaLeavingCertSubjectRoute,
+  GaSubjectsBearlaRoute: GaSubjectsBearlaRoute,
+  GaSubjectsCeimicRoute: GaSubjectsCeimicRoute,
+  GaSubjectsGaeilgeRoute: GaSubjectsGaeilgeRoute,
+  GaSubjectsMataRoute: GaSubjectsMataRoute,
+  GaSubjectsRiomheolaiochtRoute: GaSubjectsRiomheolaiochtRoute,
+  GaSubjectsTireolaiochtRoute: GaSubjectsTireolaiochtRoute,
   EnLeavingCertSubjectSectionRoute: EnLeavingCertSubjectSectionRoute,
   EnLeavingCertSubjectPracticeTopicRoute:
     EnLeavingCertSubjectPracticeTopicRoute,

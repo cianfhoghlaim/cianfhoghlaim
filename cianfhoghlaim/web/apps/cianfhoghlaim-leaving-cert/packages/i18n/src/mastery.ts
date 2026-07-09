@@ -1,22 +1,20 @@
 // @cianfhoghlaim/i18n — 5 × 8 cross-subject mastery matrix
 // Phase 1 T1.3 — bilingual cross-subject mastery percentages.
 //
-// The 5 NCCA Key Competencies (rows × columns? — see below) × 8 NCCA
-// Leaving Certificate subjects is the 5×8 mastery matrix that the
-// Brown Ajah `KeyCompetencies` page renders. The data here are the
-// realistic per-subject percentages (not the placeholder 70/65/55
-// defaults), shaped by the pedagogical reasoning baked into the
-// NCCA syllabus descriptors + the Tuatha Dé deity mappings in
+// The 5 NCCA Key Competencies × 8 NCCA Leaving Certificate subjects is
+// the 5×8 mastery matrix that the public `KeyCompetencies` page renders.
+// The data here are the realistic per-subject percentages (not the
+// placeholder 70/65/55 defaults), shaped by the pedagogical reasoning
+// baked into the NCCA syllabus descriptors in
 // `apps/web/src/routes/en/key-competencies.tsx`.
 //
 // Pedagogical notes per row:
 //   - Mathematics + Applied Mathematics peak at Information Processing
-//     (Ogma) + Critical & Creative Thinking (Lugh) — both are the
-//     reason-heavy subjects.
-//   - Chemistry peaks at Personal Effectiveness (Dian Cecht, the
-//     physician — practical lab discipline) + Information Processing.
-//   - Geography + History peak at Communicating (Brigid) — narrative-
-//     heavy subjects with strong fieldwork + source-based components.
+//     + Critical & Creative Thinking — both are the reason-heavy subjects.
+//   - Chemistry peaks at Personal Effectiveness (practical lab discipline)
+//     + Information Processing.
+//   - Geography peaks at Communicating (narrative-heavy + fieldwork +
+//     source-based components).
 //   - English peaks at Communicating + Critical & Creative Thinking
 //     (the personal-response + comparative pillar).
 //   - Gaeilge peaks at Communicating (the language itself is the LO)
@@ -27,7 +25,7 @@
 //
 // Each row sums to ~340-410, i.e. a per-competency average of 68-82% —
 // matching the realistic end-of-LC6th-year cross-subject mastery for
-// a Cian → Lugh progression student. The matrix is intentionally NOT
+// the 6 priority BIEP subjects. The matrix is intentionally NOT
 // monotonic across rows; it varies by subject to drive the cross-subject
 // synthesis agent's recommendations.
 //

@@ -1,11 +1,12 @@
 // __root.tsx — Cianfhoghlaim OS root layout
 // Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/specs/
 // cianfhoghlaim-leaving-cert-portal/spec.md Requirement R10.
+// Professional + minimal theming (per the 2026-07-09 WoT-theming cleanup).
 //
 // Mounts:
 //   1. <CopilotKit runtimeUrl="/api/copilotkit"> — the CopilotKit v2 context
 //   2. <CianfhoghlaimOSProvider> — the PostHog-style window manager
-//   3. <Header> — the Brown Ajah tagline + Streak flame + Translation toggle
+//   3. <Header> — the Cianfhoghlaim brand + Streak flame + Translation toggle
 //   4. <Sidebar> — the bilingual nav (6 subnations / 8 subjects / 4 diagrams)
 //   5. <Outlet> — the per-route content
 //   6. <CopilotSidebar defaultOpen> — the v2 CopilotKit sidebar
@@ -37,11 +38,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Cianfhoghlaim — Aes Sedai — servants of all" },
+      { title: "Cianfhoghlaim — Coláiste na Déisigh" },
       {
         name: "description",
         content:
-          "Bilingual (EN/GA) agentic educational platform for the Irish Leaving Certificate. 8 NCCA LC subjects, accurate British Isles map, Brown Ajah theming.",
+          "Bilingual (EN/GA) agentic educational platform for the Irish Leaving Certificate. 8 NCCA LC subjects + accurate British Isles map + professional theming.",
       },
     ],
     links: [
