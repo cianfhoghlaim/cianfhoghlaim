@@ -469,6 +469,22 @@ run = "komodo sync || echo 'komodo CLI not in PATH; trigger via Komodo UI.'"
 description = "Verify Pangolin tunnel health"
 run = "pangolin health-check || echo 'pangolin CLI not in PATH; check via Pangolin UI.'"
 
+[tasks."preflight-arm-oci"]
+description = "Pre-flight gate (Pangolin + Komodo + Infisical health + namespace isolation) before any arm-oci stack deploy"
+run = "bun run scripts/preflight-arm-oci.ts ${@:-}"
+
+[tasks."iac-bootstrap"]
+description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt -> all syncs)"
+run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
+
+[tasks."iac-plan"]
+description = "IaC diff: declared vs actual state (no mutation)"
+run = "bun run --cwd bonneagar iac:plan ${@:-}"
+
+[tasks."iac-health"]
+description = "IaC health check: verify Komodo + Pangolin + Infisical state is consistent"
+run = "bun run --cwd bonneagar iac:health ${@:-}"
+
 # =============================================================================
 # Codebase indexing (ccc / cocoindex-code) and OpenSpec
 # =============================================================================

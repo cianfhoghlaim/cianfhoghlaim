@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: CocoIndex v1 App canonical pattern
 
@@ -37,7 +37,7 @@ The system SHALL provide a **`cocoindex_v1_migrate.py`** tool at `cianfhoghlaim/
 
 ### Requirement: 22 priority flows migrated to v1
 
-The system SHALL prioritise 22 flows for v1 conformance: the 6 LC subjects (mathematics / chemistry / geography / gaeilge / english / computer_science) + government_circulars_embedding + the 6 leabharlann flows + the 3 official-media flows + apple_photos_{metadata, chunks, geospatial} + agent_registry + codebase_indexing + upstream_api_surface + upstream_blog_monitor + cross_subject_competency_embedding + ocr_aware_flow.
+The system SHALL prioritise 22 flows for v1 conformance. The list includes the 6 LC subjects (mathematics, chemistry, geography, gaeilge, english, computer_science), government_circulars_embedding, 6 leabharlann flows, 3 official-media flows, apple_photos metadata chunks geospatial, agent_registry, codebase_indexing, upstream_api_surface, upstream_blog_monitor, cross_subject_competency_embedding, and ocr_aware_flow.
 
 #### Scenario: Priority migration list is exhaustive
 
@@ -47,15 +47,13 @@ The system SHALL prioritise 22 flows for v1 conformance: the 6 LC subjects (math
 
 ### Requirement: Conformance helper lifecycle
 
-The `cocoindex_v1_migrate.py` tool SHALL be CI-friendly (exits 0/1 with no exception leakage), and SHALL support `--check-only` / `--apply` / `--priority-list` / `--help` modes.
+The `cocoindex_v1_migrate.py` tool MUST be CI-friendly (exits 0/1 with no exception leakage), and MUST support `--check-only`, `--apply`, `--priority-list`, and `--help` modes.
 
 #### Scenario: CI exit code contract
 
 - **WHEN** the conformance audit runs in CI with zero violations
 - **THEN** it exits 0
 - **AND** prints a one-line summary: `cocoindex_v1_conformance: N/N flows pass`
-
-## ADDED Requirements
 
 ### Requirement: 22-priority flow migration batch completed
 

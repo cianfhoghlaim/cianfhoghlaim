@@ -51,6 +51,10 @@
     "iac:health": "bun run --cwd bonneagar iac:health",
     "iac:teardown": "bun run --cwd bonneagar iac:teardown",
 
+    "preflight:arm-oci": "bun run scripts/preflight-arm-oci.ts",
+    "preflight:arm-oci:strict": "bun run scripts/preflight-arm-oci.ts --strict",
+    "preflight:arm-oci:report": "bun run scripts/preflight-arm-oci.ts --strict --emit-md",
+
     "ccc:init": "ccc init",
     "ccc:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
     "ccc:search": "bun run scripts/_ccc-deprecation-banner.ts && ccc search",
