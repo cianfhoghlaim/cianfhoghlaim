@@ -18,9 +18,7 @@ export const i18nRouter = os.$context<ApiContext>().router({
         namespace: input.namespace,
         strings: {
           // Common UI strings
-          "header.tagline": input.language === "ga"
-            ? "Aes Sedai — freastalaithe ar gach duine"
-            : "Aes Sedai — servants of all",
+          "header.tagline": "Cianfhoghlaim — Coláiste na Déisigh",
           "nav.curriculum": input.language === "ga" ? "Curaclam" : "Curriculum",
           "nav.exams": input.language === "ga" ? "Scrúduithe" : "Exams",
           "nav.marking-schemes": input.language === "ga" ? "Scéimeanna Marcála" : "Marking Schemes",

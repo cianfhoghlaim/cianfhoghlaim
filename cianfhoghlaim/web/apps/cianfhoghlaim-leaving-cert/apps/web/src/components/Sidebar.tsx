@@ -1,5 +1,6 @@
 // Sidebar — Cianfhoghlaim OS left navigation
 // Bilingual nav: 6 subnations / 8 subject realms / 4 diagram modes / practice / assets / dagster runs / lakehouse
+// Professional + minimal theming (no mythology overlay; per 2026-07-09 WoT-theming cleanup).
 
 "use client";
 
@@ -25,7 +26,7 @@ export function Sidebar() {
           Cianfhoghlaim OS
         </h2>
         <p className="text-[10px] text-slate-600 mt-1">
-          Aes Sedai — servants of all
+          Cianfhoghlaim — Coláiste na Déisigh
         </p>
       </div>
       <nav className="flex-1 overflow-y-auto p-2 flex flex-col gap-1">
@@ -52,7 +53,7 @@ export function Sidebar() {
       <div className="p-3 border-t border-slate-800 text-[10px] text-slate-500 font-mono">
         <div>CONVEX=conic-leaving-cert</div>
         <div>API=Hono+oRPC</div>
-        <div>Theming=Brown Ajah</div>
+        <div>Theming=professional</div>
       </div>
     </aside>
   );

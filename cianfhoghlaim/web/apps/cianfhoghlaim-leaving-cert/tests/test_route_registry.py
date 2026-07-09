@@ -1,16 +1,19 @@
 """TanStack Router file-based route registration tests.
 
-Per openspec/specs/cianfhoghlaim-leaving-cert-portal/spec.md Requirements R1 + R2.
+Per openspec/specs/cianfhoghlaim-leaving-cert-portal/spec.md Requirements R1 + R2
++ openspec/changes/2026-07-09-biep-6-subject-web-surfaces-v1/ (T6).
 
-The 6 spec-required routes are emitted by `@tanstack/router-plugin` into
-`apps/web/src/routeTree.gen.ts`. We parse the auto-generated tree and
-verify:
+The 6 BIEP spec-required routes plus the 6 concrete BIEP per-subject routes
+are emitted by `@tanstack/router-plugin` into `apps/web/src/routeTree.gen.ts`.
+We parse the auto-generated tree and verify:
 
   1. ``routeTree.gen.ts`` exists and is non-empty.
   2. All 6 spec-required top-level routes are registered.
   3. ``/en/leaving-cert/$subject`` resolves for all 8 NCCA subjects.
-  4. Route count matches the expected cardinality.
-  5. Any missing routes are reported with full diagnostic output.
+  4. The 6 BIEP concrete + 6 BIEP GA mirror + the dynamic
+     ``/en/subjects/$subject`` route are all registered.
+  5. Route count matches the expected cardinality.
+  6. Any missing routes are reported with full diagnostic output.
 
 Run with::
 
@@ -51,6 +54,17 @@ NCCA_SUBJECTS: tuple[str, ...] = (
     "computer_science",
 )
 
+# Per openspec/changes/2026-07-09-biep-6-subject-web-surfaces-v1/
+# The 6 BIEP priority subjects.
+BIEP_SUBJECTS: tuple[tuple[str, str], ...] = (
+    ("mathematics", "mata"),
+    ("chemistry", "ceimic"),
+    ("geography", "tireolaiocht"),
+    ("gaeilge", "gaeilge"),
+    ("english", "bearla"),
+    ("computer_science", "riomheolaiocht"),
+)
+
 # Per the same spec R1 — these are the 6 spec-required routes that the
 # routeTree MUST emit (the dynamic `/en/leaving-cert/$subject` covers all
 # 8 subjects via the `$subject` path parameter).
@@ -72,9 +86,26 @@ EXPECTED_EXTRA_ROUTES: tuple[str, ...] = (
     "/en/leaving-cert/$subject/practice/$topic",
 )
 
-# Total leaf routes we expect to find in routeTree.gen.ts
-# (6 spec + 4 extras = 10).
-EXPECTED_ROUTE_COUNT = len(SPEC_REQUIRED_ROUTES) + len(EXPECTED_EXTRA_ROUTES)
+# Per openspec/changes/2026-07-09-biep-6-subject-web-surfaces-v1/
+# The 6 BIEP concrete per-subject routes (EN) + the dynamic fallback.
+EXPECTED_BIEP_EN_ROUTES: tuple[str, ...] = tuple(
+    f"/en/subjects/{slug}" for slug, _ in BIEP_SUBJECTS
+)
+
+# The 6 BIEP Irish mirror routes (GA).
+EXPECTED_BIEP_GA_ROUTES: tuple[str, ...] = tuple(
+    f"/ga/subjects/{ga}" for _, ga in BIEP_SUBJECTS
+)
+
+# Total leaf routes we expect to find in routeTree.gen.ts:
+#   6 spec + 4 extras + 6 BIEP EN + 6 BIEP GA + 1 dynamic `/en/subjects/$subject`
+EXPECTED_ROUTE_COUNT = (
+    len(SPEC_REQUIRED_ROUTES)
+    + len(EXPECTED_EXTRA_ROUTES)
+    + len(EXPECTED_BIEP_EN_ROUTES)
+    + len(EXPECTED_BIEP_GA_ROUTES)
+    + 1  # /en/subjects/$subject dynamic fallback
+)
 
 
 def _extract_route_paths(generated_tree: str) -> list[str]:
@@ -243,6 +274,49 @@ def test_all_eight_subjects_accounted_for() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 4b. BIEP 6-subject concrete routes (T6)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("bi_ep_route", EXPECTED_BIEP_EN_ROUTES)
+def test_each_bi_ep_en_route_registered(
+    bi_ep_route: str,
+    parsed_route_paths: list[str],
+) -> None:
+    """Each of the 6 BIEP per-subject EN routes must be registered.
+
+    Per openspec/changes/2026-07-09-biep-6-subject-web-surfaces-v1/.
+    """
+    assert bi_ep_route in parsed_route_paths, (
+        f"Missing BIEP per-subject EN route: {bi_ep_route!r}.\n"
+        f"Parsed routes: {sorted(parsed_route_paths)}"
+    )
+
+
+@pytest.mark.parametrize("bi_ep_route", EXPECTED_BIEP_GA_ROUTES)
+def test_each_bi_ep_ga_route_registered(
+    bi_ep_route: str,
+    parsed_route_paths: list[str],
+) -> None:
+    """Each of the 6 BIEP per-subject GA mirror routes must be registered."""
+    assert bi_ep_route in parsed_route_paths, (
+        f"Missing BIEP per-subject GA route: {bi_ep_route!r}.\n"
+        f"Parsed routes: {sorted(parsed_route_paths)}"
+    )
+
+
+def test_subjects_dynamic_fallback_registered(parsed_route_paths: list[str]) -> None:
+    """The dynamic `/en/subjects/$subject` fallback must remain for the
+    non-BIEP subjects (applied_mathematics + history).
+    """
+    assert "/en/subjects/$subject" in parsed_route_paths, (
+        "Dynamic fallback /en/subjects/$subject is missing — the non-BIEP "
+        "(applied_mathematics + history) subjects lose their landing page. "
+        f"Parsed routes: {sorted(parsed_route_paths)}"
+    )
+
+
+# ---------------------------------------------------------------------------
 # 5. Route count + missing-routes report
 # ---------------------------------------------------------------------------
 
@@ -252,14 +326,21 @@ def test_route_count_matches_expected(parsed_route_paths: list[str]) -> None:
     actual = len(parsed_route_paths)
     assert actual == EXPECTED_ROUTE_COUNT, (
         f"Route count mismatch: expected {EXPECTED_ROUTE_COUNT} "
-        f"(6 spec + 4 extras), got {actual}.\n"
+        f"(6 spec + 4 extras + 6 BIEP EN + 6 BIEP GA + 1 dynamic "
+        f"/en/subjects/$subject), got {actual}.\n"
         f"Parsed routes ({actual}): {sorted(parsed_route_paths)}"
     )
 
 
 def test_no_unexpected_routes(parsed_route_paths: list[str]) -> None:
     """The routeTree must contain exactly the routes we expect, no more."""
-    expected = set(SPEC_REQUIRED_ROUTES) | set(EXPECTED_EXTRA_ROUTES)
+    expected = (
+        set(SPEC_REQUIRED_ROUTES)
+        | set(EXPECTED_EXTRA_ROUTES)
+        | set(EXPECTED_BIEP_EN_ROUTES)
+        | set(EXPECTED_BIEP_GA_ROUTES)
+        | {"/en/subjects/$subject"}
+    )
     actual = set(parsed_route_paths)
     unexpected = sorted(actual - expected)
     assert not unexpected, (
@@ -272,7 +353,13 @@ def test_no_unexpected_routes(parsed_route_paths: list[str]) -> None:
 
 def test_missing_routes_report(parsed_route_paths: list[str]) -> None:
     """Diagnostic: report every route we expected but did not find."""
-    expected = set(SPEC_REQUIRED_ROUTES) | set(EXPECTED_EXTRA_ROUTES)
+    expected = (
+        set(SPEC_REQUIRED_ROUTES)
+        | set(EXPECTED_EXTRA_ROUTES)
+        | set(EXPECTED_BIEP_EN_ROUTES)
+        | set(EXPECTED_BIEP_GA_ROUTES)
+        | {"/en/subjects/$subject"}
+    )
     missing = sorted(expected - set(parsed_route_paths))
     assert not missing, (
         "Missing routes (the canonical, human-readable report):\n"
@@ -281,6 +368,7 @@ def test_missing_routes_report(parsed_route_paths: list[str]) -> None:
         + f"Expected ({len(expected)}): {sorted(expected)}\n"
         + f"Actual   ({len(parsed_route_paths)}): {sorted(parsed_route_paths)}\n"
         + "Spec: openspec/specs/cianfhoghlaim-leaving-cert-portal/spec.md"
+        " + openspec/changes/2026-07-09-biep-6-subject-web-surfaces-v1/"
     )
 
 
@@ -296,9 +384,17 @@ def test_route_tree_prints_route_inventory(
     print("Routes (sorted):")
     for route in sorted(parsed_route_paths):
         marker = " (spec)" if route in SPEC_REQUIRED_ROUTES else ""
+        marker = " (biep-en)" if route in EXPECTED_BIEP_EN_ROUTES else marker
+        marker = " (biep-ga)" if route in EXPECTED_BIEP_GA_ROUTES else marker
         print(f"  - {route}{marker}")
     print(f"NCCA subjects handled via $subject: {len(NCCA_SUBJECTS)}")
     for subject in NCCA_SUBJECTS:
         print(f"  - /en/leaving-cert/{subject}")
+    print(f"BIEP EN per-subject routes: {len(EXPECTED_BIEP_EN_ROUTES)}")
+    for r in EXPECTED_BIEP_EN_ROUTES:
+        print(f"  - {r}")
+    print(f"BIEP GA mirror routes: {len(EXPECTED_BIEP_GA_ROUTES)}")
+    for r in EXPECTED_BIEP_GA_ROUTES:
+        print(f"  - {r}")
     print("--- end inventory ---\n")
     assert captured.out == "" or "route inventory" in captured.out

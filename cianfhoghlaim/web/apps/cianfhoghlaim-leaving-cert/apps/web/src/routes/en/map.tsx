@@ -6,7 +6,6 @@ import { CiRealmMap } from "@cianfhoghlaim/ui/map/realm-map";
 import { CiSubnationFlag } from "@cianfhoghlaim/ui/map/subnation-flag";
 import { CiLandmark, type KeyCompetencySlug } from "@cianfhoghlaim/ui/map/landmark";
 import { ConnachtProvince } from "@cianfhoghlaim/ui/map/connacht-province";
-import { CiDragonBanner } from "@cianfhoghlaim/ui/lore/dragon-banner";
 import { CiTextbookPanel } from "@cianfhoghlaim/ui";
 
 export const Route = createFileRoute("/en/map")({
@@ -33,7 +32,7 @@ function MapPage() {
           The Accurate British Isles Map
         </h1>
         <p className="text-slate-400 text-lg">
-          6 subnations · 5 NCCA Key Competencies as 5 land-marks · Wales flies the Dragon Banner
+          6 subnations · 5 NCCA Key Competencies as 5 land-marks · 5 subnation flags
         </p>
         <p className="text-slate-500 text-sm font-mono italic">
           The Esker Riada (Dublin Bay ↔ Galway Bay) is the EN ↔ GA divider
@@ -76,9 +75,9 @@ function MapPage() {
             <line x1="175" y1="180" x2="100" y2="230" stroke="#fbbf24" strokeWidth="0.5" strokeDasharray="3 2" opacity="0.5" />
             <text x="120" y="210" fill="#fbbf24" fontSize="3" opacity="0.7">Esker Riada</text>
 
-            {/* The Dragon Banner (Wales subnation) */}
+            {/* The Wales subnation flag (Y Ddraig Goch) */}
             <g transform="translate(195, 220)">
-              <CiDragonBanner size={16} />
+              <CiSubnationFlag subnation="wales" size={16} />
             </g>
           </svg>
         </div>

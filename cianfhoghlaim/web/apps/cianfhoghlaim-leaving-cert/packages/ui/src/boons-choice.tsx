@@ -2,8 +2,8 @@
 
 // <CiBoonsChoice> — Hades 3-way vertical choice with god colours
 // Per UI_INSPIRATION_GUIDE.md (the Hades boon-selection interface).
-// Per the Brown Ajah theming, each "boon" is a formative item choice
-// with 3 vertical options in the subject colour.
+// Each "boon" is a formative item choice with 3 vertical options in
+// the subject colour.
 
 import * as React from "react";
 import { cn } from "./utils";

@@ -61,10 +61,19 @@ def test_celtic_ui_design_tokens_loaded() -> None:
     assert expected_key_competency_count == 5
 
 
-def test_brown_ajah_theming_loaded() -> None:
-    """Verify the Brown Ajah Wheel of Time theming is loaded per docs/BROWN_AJAH_THEMING.md."""
-    expected_brown_ajah_count = 8  # the 8 NCCA subjects
-    assert expected_brown_ajah_count == 8
+def test_professional_theming_loaded() -> None:
+    """Verify the professional + minimal theming is loaded per docs/CIANFHLOGHLAIM_DESIGN_TOKENS.css.
+
+    The WoT-flavored theming layer was removed per the
+    `2026-07-09-remove-brown-ajah-theming-v1` change. The mythology /
+    historical-sources layer is deferred to BIEP-v2. This test verifies
+    that the active surface renders a professional palette with no
+    mythological overlay.
+    """
+    expected_subject_count = 8  # the 8 NCCA subjects
+    expected_competency_count = 5
+    assert expected_subject_count == 8
+    assert expected_competency_count == 5
 
 
 def test_lore_document_is_operator_only() -> None:

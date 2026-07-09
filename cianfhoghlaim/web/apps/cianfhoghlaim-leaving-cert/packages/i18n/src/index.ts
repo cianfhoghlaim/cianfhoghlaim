@@ -3,8 +3,9 @@
 //
 // The 5 NCCA Key Competencies, the 8 NCCA subjects, the 6 subnations,
 // the 4 diagram modes, and the 4 formative feedback channels are all
-// bilingual EN + GA so that the Brown Ajah welcome banner can flip
-// between languages without losing the Tuatha Dé Danann lore.
+// bilingual EN + GA. The public surface tagline flips between
+// languages, professional + minimal (no mythology overlay; per the
+// 2026-07-09 WoT-theming cleanup).
 
 export const en = {
   common: {
@@ -21,7 +22,7 @@ export const en = {
     retry: "Retry",
   },
   header: {
-    tagline: "Aes Sedai — servants of all",
+    tagline: "Cianfhoghlaim — Coláiste na Déisigh",
     signIn: "Sign In",
     signOut: "Sign Out",
   },
@@ -160,7 +161,7 @@ export const ga = {
     retry: "Atriail",
   },
   header: {
-    tagline: "Aes Sedai — freastalaithe ar gach duine",
+    tagline: "Cianfhoghlaim — Coláiste na Déisigh",
     signIn: "Sínigh Isteach",
     signOut: "Sínigh Amach",
   },

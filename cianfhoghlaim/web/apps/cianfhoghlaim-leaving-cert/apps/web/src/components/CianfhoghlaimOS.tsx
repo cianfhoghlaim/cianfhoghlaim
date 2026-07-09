@@ -1,9 +1,9 @@
 "use client";
 
 // <CianfhoghlaimOS> — PostHog-style window manager
-// Per docs/BROWN_AJAH_THEMING.md, the platform is themed as the White Tower.
+// Professional + minimal theming (per the 2026-07-09 WoT-theming cleanup).
 // The Cianfhoghlaim OS is the PostHog-style window manager where each
-// subject specialist (Brown Ajah member) can open a floating window.
+// NCCA subject specialist can open a floating window.
 //
 // The state machine is `{windows: Window[], activeId, dispatch}`.
 // The URL reflects the active window (?window=syllabus-mathematics&geometry=200,200,800,600).
