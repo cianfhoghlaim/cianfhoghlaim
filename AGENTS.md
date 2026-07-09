@@ -48,7 +48,7 @@ mise run secrets:init              # sync .infisical.env → dev-baile vault
 mise run dagster:oideachais        # launch the lakehouse Dagster UI
 ```
 
-### Priority compose stacks (4 of 94)
+### Priority compose stacks (4 of 88)
 
 | Stack | Port | Domain |
 |:--|--:|:--|
@@ -57,8 +57,10 @@ mise run dagster:oideachais        # launch the lakehouse Dagster UI
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 94 stacks is at
-[`infrastructure/AGENTS.md`](infrastructure/AGENTS.md).
+The full inventory of 88 stacks is at
+[`../bonneagar/AGENTS.md`](../bonneagar/AGENTS.md) (the IaC
+repo owns the stack catalogue; see the `## IaC Repo Boundary`
+section below for the ownership table).
 
 ## Monorepo Topology (v2 — Polyglot)
 
@@ -113,7 +115,11 @@ The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no conso
 (`sruth/oideachais`, `sruth/meaisinfhoghlaim`, `sruth/tuatha`,
 `sruth/croilar`, `sruth/codeolas`) plus `infrastructure/browser/` +
 `/leabharlann/` were merged into the single `cianfhoghlaim/` package
-(see `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
+(see `openspec/changes/archive/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
+The 4 former quadrant `sruth/<quadrant>/AGENTS.md` files were
+retired; the consolidated cianfhoghlaim sub-tree docs are at
+`cianfhoghlaim/AGENTS.md` + the per-area sub-package AGENTS.md
+files inside `cianfhoghlaim/`.
 Plan 1 (active): Ireland (5 education stages × EN + GA) + leabharlann
 corpus (6 subdirs × 216 docs).
 
@@ -194,15 +200,14 @@ Full workflow in [`openspec/AGENTS.md`](openspec/AGENTS.md).
 
 ## Quadrant AGENTS.md files
 
-Each top-level quadrant has its own `AGENTS.md` with developer-quick-reference routing tables:
+> **Post-v4 (2026-06-28):** the 4 quadrant AGENTS.md files are
+> gone. All quadrant routing happens inside the consolidated
+> `cianfhoghlaim/AGENTS.md` (which itself links to the per-area
+> sub-package `AGENTS.md` files). Use the
+> `## Repo Boundary` section below for the canonical 3-repo split.
 
-- [`sruth/oideachais/AGENTS.md`](sruth/oideachais/AGENTS.md) — Celtic education data platform
-- [`sruth/meaisinfhoghlaim/AGENTS.md`](sruth/meaisinfhoghlaim/AGENTS.md) — AI/ML services
-- [`sruth/tuatha/AGENTS.md`](sruth/tuatha/AGENTS.md) — Educational MMO + crypto
-- [`sruth/croilar/AGENTS.md`](sruth/croilar/AGENTS.md) — Multi-persona portfolio
-
-When the user asks "where do I add X?", route to the matching `AGENTS.md`'s
-"Quick routing" table.
+When the user asks "where do I add X?", route using the
+`## Repo Boundary` table below.
 
 ---
 
@@ -216,6 +221,73 @@ When the user asks "where do I add X?", route to the matching `AGENTS.md`'s
 - Secrets are **automatically injected** via `mise` hooks when entering a directory.
 - `infisical export` resolves all secrets instantly into an ignored `.env` file from a `.infisical.env` template.
 - **DO NOT** attempt to manually manage, write, or look for `.env` files when configuring MCP servers or running tools. The environment is already hydrated.
+
+## Repo Boundary
+
+The 3-repo split (post-v4 consolidation) is enforced by this
+section. When a task touches infrastructure, secrets, or the
+core agent-runtime, route to the correct repo BEFORE writing
+any code.
+
+| Domain | Repo | Path (in cianfhoghlaim worktree) |
+|:--|:--|:--|
+| Data platform (DLT + Dagster + BAML + CocoIndex + marimo) | `cianfhoghlaim` | `cianfhoghlaim/{dlt,orchestration,baml,cocoindex,notebooks}/` |
+| Agent fleet (12 agents + OCR + BAML + LLM routing) | `cianfhoghlaim` | `cianfhoghlaim/agents/meaisinfhoghlaim/` |
+| Frontend apps (TanStack Start + Convex + Hono + CopilotKit) | `cianfhoghlaim` | `cianfhoghlaim/web/apps/*/` |
+| OpenSpec changes + specs | `cianfhoghlaim` | `openspec/` (THIS REPO) |
+| MotherDuck Dives/Flights metadata | `cianfhoghlaim` | `infrastructure/stacks/motherduck/` (sidecar only) |
+| IaC (Komodo + Pangolin + Infisical clients) | `bonneagar` | `bonneagar/iac/` (SEPARATE WORKTREE) |
+| 88 Docker Compose stacks | `bonneagar` | `bonneagar/stacks/<name>/` |
+| Komodo resource-syncs + procedures | `bonneagar` | `bonneagar/komodo/` |
+| Pangolin config | `bonneagar` | `bonneagar/pangolin/` |
+| Deploy runbooks | `bonneagar` | `bonneagar/deploy-runbooks/` |
+| Leabharlann corpus (216 docs × 6 subdirs) | `leabharlann` | `leabharlann/` (SEPARATE WORKTREE) |
+
+> **Hard rule**: An agent MUST NOT write into a directory
+> owned by a different repo. If a task seems to require it,
+> create an openspec change with a `cross-repo-sync.md` file
+> that lists the commit plan for each repo.
+
+## OpenSpec Change Management
+
+Two new conventions land with this change:
+
+1. **`## Dependencies` section** — every `proposal.md` declares
+   `Blocked by: <change-id>` edges. The new change CANNOT
+   archive until the blocker archives.
+2. **`cross-repo-sync.md`** — for any change touching >1 repo,
+   this file lists the commit plan + branches + push targets
+   for each repo.
+
+Both conventions are enforced by the
+`2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1`
+openspec change (see its `specs/bonneagar-iac-merge/spec.md`
+delta).
+
+## OpenCode Safety
+
+Repeatedly deploying arm-oci core stacks (`openchamber`,
+`backrest`, `olm-arm1-oci`) from opencode sessions has broken
+the opencode instance itself when the session shared a
+process namespace with the deployed container. To prevent
+recurrence:
+
+1. **MUST run `bun run preflight:arm-oci`** before any
+   `iac:bootstrap`, `iac:plan`, or `km deploy stack <arm-oci-*>`.
+2. **MUST NOT run `iac:bootstrap` from inside a container** —
+   the process namespace check will refuse it.
+3. **MUST NOT run `iac:bootstrap` from an opencode session
+   whose PID shares a namespace with `openchamber`,
+   `openclaw`, `hermes`, `komodo`, `pangolin`, or `infisical`**.
+4. The pre-flight script is at `scripts/preflight-arm-oci.ts`
+   and exposes `--dry-run` (default), `--strict`,
+   `--emit-md`, and `--skip-namespace` (dev only).
+
+The safety gate is enforced by the
+`2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1`
+openspec change (see its
+`specs/infrastructure-stacks/spec.md` delta — Requirement
+"preflight:arm-oci safety script").
 
 ## Agent Capabilities
 
@@ -272,18 +344,18 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
 
-### Core Data Platform (`sruth/oideachais/data_platform`)
+### Core Data Platform (`cianfhoghlaim/dlt/` + `cianfhoghlaim/orchestration/`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.
 - **Extraction**: Load [`dlt`](.agents/skills/dlt/SKILL.md). This skill router will point you to `create-filesystem-pipeline` (crucial for our `USE_LOCAL_SCRAPES` strategy) or `create-rest-api-pipeline`.
 - **Storage & Lakehouse**: Load [`motherduck`](.agents/skills/motherduck/SKILL.md). This serves as the master router to help you pick between `motherduck-ducklake` (our Garage S3 architecture), `motherduck-duckdb-sql`, or `motherduck-connect`.
 
-### Team Workflow Stack (`infrastructure/stacks/{engineering/n8n,tools/vikunja,tools/cal-diy}/`)
-- **Workflow authoring / debugging**: n8n visual pipeline editor at `n8n.cianfhoghlaim.ie` (private). The 6 seeded workflows live in `engineering/n8n/workflows/team-*.json` and are imported by the `n8n-init` one-shot container.
+### Team Workflow Stack (lives in bonneagar/stacks/{n8n,vikunja,cal-diy}/)
+- **Workflow authoring / debugging**: n8n visual pipeline editor at `n8n.cianfhoghlaim.ie` (private). The 6 seeded workflows live in `bonneagar/stacks/n8n/workflows/team-*.json` and are imported by the `n8n-init` one-shot container.
 - **Task management + Gantt + team sharing**: Vikunja REST API at `vikunja.cianfhoghlaim.ie/api/v1/`. Kanban + Gantt + list views; team group shared across `client-work`, `internal`, `support` projects.
 - **Scheduling**: cal-diy (cal.com community build) at `calcom.cianfhoghlaim.ie`. Team booking page at `/team`, per-member pages at `/<member-slug>`. Outbound webhooks → n8n.
 - **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
 
-### Analytics & Notebooks (`sruth/oideachais/notebooks`)
+### Analytics & Notebooks (`cianfhoghlaim/notebooks/`)
 - **Data Exploration**: Load [`explore-data`](.agents/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
 - **Notebook Assembly**: Load [`build-notebook`](.agents/skills/build-notebook/SKILL.md) to translate the `analysis_plan.md` into a fully functional, highly reactive `marimo` Python notebook.
 
