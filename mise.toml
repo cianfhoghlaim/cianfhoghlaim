@@ -210,6 +210,10 @@ run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:Co
 description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract (R1-R4)"
 run = "uv run python -c 'import asyncio; from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
 
+[tasks."cocoindex:conformance"]
+description = "Run the cocoindex_v1_migrate.py audit (R1-R4). Exits 1 on any violation. This is the CI gate (faster than the v1 App itself)."
+run = "uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only"
+
 [tasks."cic:cocoindex:leabharlann-books"]
 description = "Index the leabharlann books corpus via the v1 leabharlann_books_embedding App"
 run = "uv run cocoindex update cianfhoghlaim.cocoindex.leabharlann_books_embedding:LeabharlannBooksEmbedding"

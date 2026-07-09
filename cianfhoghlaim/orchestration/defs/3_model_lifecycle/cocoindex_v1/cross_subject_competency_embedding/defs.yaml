@@ -1,0 +1,16 @@
+# defs/3_model_lifecycle/cocoindex_v1/cross_subject_competency_embedding/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the CrossSubjectCompetencyEmbedding v1 App.
+# Per the cianfhoghlaim-leaving-cert-portal spec — `NCCA Key Competencies
+# cross-subject mastery` Requirement. The 8 subjects × 5 competencies ×
+# 4 levels × 2 languages = 320 cross-subject mastery vectors are emitted
+# to the `oideachais.lc.cross_subject.competencies` LanceDB table.
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CrossSubjectCompetencyEmbedding
+  module: cianfhoghlaim.cocoindex.cross_subject_competency_embedding
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true
+  table_name: oideachais.lc.cross_subject.competencies
+  total_vectors: 320

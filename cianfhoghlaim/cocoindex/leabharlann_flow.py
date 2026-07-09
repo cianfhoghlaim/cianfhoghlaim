@@ -1,9 +1,10 @@
-"""CocoIndex leabharlann flow — filesystem + Zotero pipeline for the
+"""CocoIndex leabharlann v1 App — filesystem pipeline for the
 personal-archive corpus (6 subdirs × 216 docs).
 
-This is a NEW v4 addition that consolidates the 3 v1 CocoIndex Apps
-(`leabharlann_books_embedding`, `leabharlann_zotero_embedding`,
-`leabharlann_takeout_embedding`) into a single filesystem-source flow.
+Consolidates the 3 v1 CocoIndex Apps (leabharlann_books_embedding,
+leabharlann_zotero_embedding, leabharlann_takeout_embedding) into a
+single filesystem-source flow that walks the 6 leabharlann subdirs
+and mounts a shared `leabharlann_chunks` LanceDB table.
 
 The 6 subdirs are all Plan 1 ACTIVE:
 * aigne/ (12 docs — AI / ML papers)
@@ -15,19 +16,58 @@ The 6 subdirs are all Plan 1 ACTIVE:
 
 The flow:
 1. Walks each subdir for PDFs / EPUBs / Markdown
-2. Extracts text via OCR (11 vision + 4 classical via ocr_aware_flow.py)
-3. Splits via tree-sitter chunking (per-file-type aware)
-4. Embeds via BGE-M3 multilingual
-5. Mounts the LanceDB target `leabharlann_chunks`
+2. Chunks via RecursiveSplitter (markdown-aware)
+3. Embeds via BGE-M3 multilingual
+4. Mounts the LanceDB target `leabharlann_chunks`
 
-NOTE: Skeleton — the @coco.fn decorators land when CocoIndex v1 stabilises.
-The selection logic + registry wiring are production-ready.
+Migrated from the original skeleton (which had no `coco.App(...)` at
+module scope) to the canonical v1 pattern (R1–R4 conformance contract)
+by the `2026-07-09-cocoindex-v1-remaining-apps-v1` change.
+
+- **R1** — `from ._lifespan import shared_lifespan`
+- **R2** — `leabharlann_flow_app = coco.App(coco.AppConfig(name=...))`
+- **R3** — `lancedb.mount_table_target(LANCE_DB, ...)`
+- **R4** — `target_table.declare_vector_index(column="embedding")`
 """
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Annotated
+
+import structlog
+from numpy.typing import NDArray
+
+logger = structlog.get_logger(__name__)
+
+try:
+    import cocoindex as coco  # type: ignore[import-not-found]
+    from cocoindex.connectors import lancedb  # type: ignore[import-not-found]
+    from cocoindex.connectors import localfs  # type: ignore[import-not-found]
+    from cocoindex.ops.text import RecursiveSplitter  # type: ignore[import-not-found]
+    from cocoindex.resources.file import (  # type: ignore[import-not-found]
+        FileLike,
+        PatternFilePathMatcher,
+    )
+
+    COCOINDEX_AVAILABLE = True
+except ImportError as e:
+    logger.warning("cocoindex_v1_not_available: %s", e)
+    COCOINDEX_AVAILABLE = False
+    coco = None  # type: ignore[assignment]
+    lancedb = None  # type: ignore[assignment]
+    localfs = None  # type: ignore[assignment]
+    RecursiveSplitter = None  # type: ignore[assignment]
+    FileLike = None  # type: ignore[assignment]
+    PatternFilePathMatcher = None  # type: ignore[assignment]
+
+
+# R1: shared lifespan + canonical ContextKeys.
+from ._lifespan import (  # noqa: E402
+    EMBEDDER,
+    LANCE_DB,
+    shared_lifespan,
+)
 
 
 @dataclass
@@ -114,27 +154,128 @@ def discover_documents(corpus: LeabharlannCorpus,
     return docs
 
 
-def build_leabharlann_flow():
-    """Build the CocoIndex leabharlann flow.
+# ============================================================================
+# Row schema
+# ============================================================================
 
-    Skeleton — the @coco.fn + @coco.lifespan decorators are added when
-    CocoIndex v1 stabilises. The discovery logic + registry wiring are
-    production-ready.
-    """
-    from cianfhoghlaim.core.cocoindex._lifespan import EMBEDDER, LANCE_DB
+if COCOINDEX_AVAILABLE:
 
-    docs_by_corpus: dict[str, list[Path]] = {}
-    for corpus in LEABHARLANN_CORPORA:
-        docs_by_corpus[corpus.slug] = discover_documents(corpus)
+    @dataclass
+    class LeabharlannChunk:
+        """One chunked + embedded paragraph from a leabharlann doc."""
 
-    # TODO: @coco.fn flow_leabharlann() with:
-    #   - for each (corpus, doc) pair, call select_ocr_backend(doc) → OCRModel
-    #   - dispatch OCR via ocr_aware_flow + cianfhoghlaim.core.browser backends
-    #   - normalise text via cianfhoghlaim.ocr.evaluation.gaelic_metrics
-    #   - chunk via cianfhoghlaim.libraries.codeolas.chunking
-    #   - embed via EMBEDDER (BGE-M3)
-    #   - mount LanceDB target `leabharlann_chunks`
-    return LANCE_DB, EMBEDDER, docs_by_corpus
+        chunk_id: str
+        corpus_slug: str
+        filename: str
+        chunk_index: int
+        text: str
+        embedding: Annotated[NDArray, EMBEDDER]
+
+
+# ============================================================================
+# v1 App: LeabharlannFlow (consolidated filesystem pipeline)
+# ============================================================================
+
+if COCOINDEX_AVAILABLE:
+
+    @coco.fn(memo=True)
+    async def process_leabharlann_chunk(
+        chunk_text: str,
+        corpus_slug: str,
+        filename: str,
+        chunk_index: int,
+        target_table: lancedb.TableTarget[LeabharlannChunk],  # type: ignore[type-var]
+    ) -> None:
+        """Process one chunk into a LanceDB row."""
+        embedder = await coco.use_context(EMBEDDER)  # type: ignore[arg-type]
+        vec = await embedder.embed(chunk_text)  # type: ignore[attr-defined]
+        chunk_id = f"{corpus_slug}::{filename}::{chunk_index}"
+        target_table.declare_row(
+            row=LeabharlannChunk(
+                chunk_id=chunk_id,
+                corpus_slug=corpus_slug,
+                filename=filename,
+                chunk_index=chunk_index,
+                text=chunk_text,
+                embedding=vec,
+            )
+        )
+
+    @coco.fn
+    async def leabharlann_flow_app_main(corpus_root: Path) -> None:
+        """Leabharlann v1 App entry point: walks the 6 subdirs + embeds each doc."""
+        target_table = await lancedb.mount_table_target(
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name="leabharlann_chunks",
+            table_schema=await lancedb.TableSchema.from_class(
+                LeabharlannChunk, primary_key=["chunk_id"]
+            ),
+        )
+        target_table.declare_vector_index(column="embedding")
+
+        for corpus in LEABHARLANN_CORPORA:
+            corpus_dir = corpus_root / corpus.slug
+            if not corpus_dir.exists():
+                logger.warning(
+                    "leabharlann_corpus_missing",
+                    corpus=corpus.slug,
+                    path=str(corpus_dir),
+                )
+                continue
+
+            files = localfs.walk_dir(  # type: ignore[union-attr]
+                corpus_dir,
+                recursive=True,
+                path_matcher=PatternFilePathMatcher(
+                    included_patterns=[
+                        "*.pdf", "*.md", "*.txt", "*.epub", "*.docx",
+                    ],
+                ),
+                live=True,
+            )
+            splitter = RecursiveSplitter()  # type: ignore[call-arg]
+            async for record in files.items():
+                file_path = Path(record["path"])
+                filename = file_path.name
+                text = ""
+                try:
+                    if str(file_path).lower().endswith(".pdf"):
+                        import fitz  # PyMuPDF
+                        doc = fitz.open(str(file_path))
+                        text = "\n".join(page.get_text() for page in doc)
+                        doc.close()
+                    else:
+                        text = file_path.read_text(encoding="utf-8", errors="replace")
+                except Exception as e:  # noqa: BLE001
+                    logger.warning(
+                        "leabharlann_file_read_failed",
+                        file=str(file_path),
+                        error=str(e),
+                    )
+                    continue
+                if not text.strip():
+                    continue
+                chunks = splitter.split(  # type: ignore[union-attr]
+                    text,
+                    chunk_size=1000,
+                    chunk_overlap=200,
+                    language="markdown",
+                )
+                for i, chunk in enumerate(chunks):
+                    chunk_text = chunk.text if hasattr(chunk, "text") else str(chunk)
+                    await process_leabharlann_chunk(
+                        chunk_text,
+                        corpus.slug,
+                        filename,
+                        i,
+                        target_table,
+                    )
+
+    leabharlann_flow_app = coco.App(
+        coco.AppConfig(name="LeabharlannFlow"),
+        leabharlann_flow_app_main,
+        corpus_root=Path("cianfhoghlaim/leabharlann"),
+    )
 
 
 def expected_total_documents() -> int:

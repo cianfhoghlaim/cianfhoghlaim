@@ -356,6 +356,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
 
         for subject in DEFAULT_BOOKS_SUBDIRS:
             subject_dir = sourcedir / subject
@@ -495,6 +496,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
 
         files = localfs.walk_dir(
             sourcedir,
@@ -605,6 +607,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
 
         # The Takeout dir is one level deep (e.g. stedding/Takeout/Drive/*.docx).
         # We walk non-recursively, treating each top-level subdir as a "domain".
@@ -847,6 +850,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
 
         # Recurse into every mbox file (mailcow-export writes
         # `mailbox-<account>-<YYYY-MM-DD>.mbox` per account per export).

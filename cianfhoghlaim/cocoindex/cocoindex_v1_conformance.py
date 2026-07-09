@@ -316,6 +316,7 @@ if COCOINDEX_AVAILABLE:
 
         # Emit a record row so the Dagster asset_check has a
         # queryable history.
+        # R4-exempt: metadata table only (no embedding column).
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
             table_name="conformance_check_history",

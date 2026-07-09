@@ -136,13 +136,16 @@ if COCOINDEX_AVAILABLE:
                     embedding=[],  # filled by the embedder
                 )
 
+        _agents_target = lancedb.mount_table_target(  # type: ignore[union-attr]
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=LANCEDB_TABLE,
+            table_schema=AgentRecord,
+            primary_key="id",
+        )
+        _agents_target.declare_vector_index(column="embedding")
+
         @coco.index(  # type: ignore[misc]
-            target=lancedb.mount_table_target(  # type: ignore[union-attr]
-                LANCE_DB,  # type: ignore[arg-type]
-                table_name=LANCEDB_TABLE,
-                table_schema=AgentRecord,
-                primary_key="id",
-            ),
+            target=_agents_target,
             refresh_interval=datetime.timedelta(seconds=300),  # 5 min
         )
         async def index_agents(  # type: ignore[no-untyped-def,unused-ignore]
@@ -182,13 +185,16 @@ if COCOINDEX_AVAILABLE:
                     embedding=[],
                 )
 
+        _mcps_target = lancedb.mount_table_target(  # type: ignore[union-attr]
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=LANCEDB_TABLE,
+            table_schema=AgentRecord,
+            primary_key="id",
+        )
+        _mcps_target.declare_vector_index(column="embedding")
+
         @coco.index(  # type: ignore[misc]
-            target=lancedb.mount_table_target(  # type: ignore[union-attr]
-                LANCE_DB,  # type: ignore[arg-type]
-                table_name=LANCEDB_TABLE,
-                table_schema=AgentRecord,
-                primary_key="id",
-            ),
+            target=_mcps_target,
             refresh_interval=datetime.timedelta(seconds=300),
         )
         async def index_mcps(  # type: ignore[no-untyped-def,unused-ignore]

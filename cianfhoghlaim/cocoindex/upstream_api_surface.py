@@ -289,6 +289,7 @@ if COCOINDEX_AVAILABLE:
             vector_column="embedding",
             vector_dim=EMBED_DIM,
         )
+        target_table.declare_vector_index(column="embedding")
         kg_db = coco.use_context(KG_DB_UPSTREAM)  # type: ignore[arg-type]
 
         # In a real deployment, the Firecrawl `cocoindex_docs.yml`
