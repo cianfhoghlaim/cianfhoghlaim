@@ -1,0 +1,31 @@
+# defs/5_agent_ops/adk/engl_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the engl_agent (ADK) — one of the
+# 8 NCCA subject agents for the British Isles Educational MMO.
+type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: engl_agent
+  framework: adk
+  tools:
+    - engl_syllabus_tool
+    - engl_past_paper_tool
+    - engl_marking_scheme_tool
+    - engl_formative_item_tool
+    - engl_response_score_tool
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.engl
+  langfuse_drop_smoke_spans: true
+  routing_keywords:
+    - english
+    - english literature
+    - leaving cert english
+    - lc english
+    - ncca english
+    - brigid
+    - poetry
+    - shakespeare
+    - the comparative
+    - comprehending
+    - composing

@@ -1,0 +1,45 @@
+# defs/5_agent_ops/adk/gael_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the gael_agent (ADK) — one of the
+# 8 NCCA subject agents for the British Isles Educational MMO.
+#
+# Per T4 of the 5-tangent modernization, the 8 subject agents that
+# previously existed only at `cianfhoghlaim/agents/tuatha/<slug>_agent.py`
+# are now wired into `defs/5_agent_ops/adk/` as L5 Component mounts.
+#
+# The Component emits 5 Dagster assets:
+# - agent_health_gael_agent
+# - agent_routing_gael_agent
+# - agent_memory_gael_agent
+# - agent_event_gael_agent
+# - agent_trace_gael_agent
+type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: gael_agent
+  framework: adk
+  tools:
+    - gael_syllabus_tool
+    - gael_past_paper_tool
+    - gael_marking_scheme_tool
+    - gael_gramadach_tool
+    - gael_formative_item_tool
+    - gael_response_score_tool
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.gael
+  langfuse_drop_smoke_spans: true
+  routing_keywords:
+    - gaeilge
+    - gaelic
+    - irish
+    - ncca gael
+    - leaving cert irish
+    - junior cycle irish
+    - fonn
+    - filíocht
+    - prós
+    - béaloideas
+    - léamhthuiscint
+    - scríbhneoireacht
+    - cluastuiscint

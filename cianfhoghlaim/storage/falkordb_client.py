@@ -18,7 +18,12 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
-from ..storage.config import FalkorDBConfig, get_config
+# T4 (2026-07-09): the legacy `from ..storage.config import ...`
+# pointed at a non-existent module. We now source `FalkorDBConfig`
+# and `get_config()` from `_memgraph_protocol` (the split-out
+# canonical config location). New code should import directly from
+# `cianfhoghlaim.storage._memgraph_protocol`.
+from ._memgraph_protocol import FalkorDBConfig, get_config
 
 logger = logging.getLogger(__name__)
 
