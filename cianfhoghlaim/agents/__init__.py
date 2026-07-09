@@ -53,15 +53,32 @@ except Exception:
 from .routing_keywords import ROUTING_KEYWORDS
 
 # Agno team exports (primary framework)
-from .agno import (
-    corpus_agent,
-    curriculum_agent,
-    education_team,
-    geospatial_agent,
-    research_agent,
-    statistics_agent,
-    translation_agent,
-)
+# T4 (2026-07-09): wrap in try/except so importing
+# `cianfhoghlaim.agents.tuatha.<slug>_agent` works in environments
+# where `agno` is not installed (most CI runs). The Agno exports
+# below the guard are `None` when agno is missing; consumers
+# that NEED agno explicitly should call `from cianfhoghlaim.agents
+# import _AGNO_AVAILABLE` first.
+try:
+    from .agno import (
+        corpus_agent,
+        curriculum_agent,
+        education_team,
+        geospatial_agent,
+        research_agent,
+        statistics_agent,
+        translation_agent,
+    )
+    _AGNO_AVAILABLE = True
+except Exception:
+    _AGNO_AVAILABLE = False
+    corpus_agent = None
+    curriculum_agent = None
+    education_team = None
+    geospatial_agent = None
+    research_agent = None
+    statistics_agent = None
+    translation_agent = None
 
 __all__ = [
     "AgentContext",

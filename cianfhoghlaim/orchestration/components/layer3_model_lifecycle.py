@@ -254,7 +254,131 @@ def _to_snake(name: str) -> str:
     return s.lower()
 
 
+class CelticFederatedOcrComponent(Component):
+    """Layer 3 Federated-OCR Component (NEW for T4 of the 5-tangent plan).
+
+    Wraps `cianfhoghlaim.meaisinfhoghlaim.federated.run_federated_training()`
+    as a Dagster `@asset` with a cron automation condition. Per the
+    `2026-07-09-agent-fleet-and-observability-facade-v1` change, the
+    federated OCR subsystem was moved from
+    `meaisinfhoghlaim/process/irish_ocr_federated.py` to
+    `meaisinfhoghlaim/federated/`. This Component emits one asset
+    (`irish_ocr_federated_smoke`) that runs the federated simulator
+    warm-up.
+
+    Usage (from a YAML defs file):
+
+        type: cianfhoghlaim.orchestration.components.CelticFederatedOcrComponent
+        attributes:
+          source_module: cianfhoghlaim.meaisinfhoghlaim.federated
+          model_name: gemma-3-4b
+          num_rounds: 10
+          automation_cron: "*/30 * * * *"
+
+    Attributes:
+        source_module: The Python module that exports
+            `run_federated_training`. Default:
+            `"cianfhoghlaim.meaisinfhoghlaim.federated"`.
+        model_name: The federated model name. Default: `"gemma-3-4b"`.
+        num_rounds: The number of federated rounds. Default: 10.
+        data_dir: Local data directory (passed through). Default:
+            `"/tmp/irish_htr_dataset_dummy"`.
+        server_address: The federated server address. Default:
+            `"localhost:8080"`.
+        automation_cron: The cron expression for the AutomationCondition.
+            Default: `"*/30 * * * *"` (every 30 minutes).
+    """
+
+    source_module: str = "cianfhoghlaim.meaisinfhoghlaim.federated"
+    model_name: str = "gemma-3-4b"
+    num_rounds: int = 10
+    data_dir: str = "/tmp/irish_htr_dataset_dummy"
+    server_address: str = "localhost:8080"
+    automation_cron: str = "*/30 * * * *"
+
+    def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
+        """Emit 1 @asset: `irish_ocr_federated_smoke`.
+
+        The asset invokes `self.source_module.run_federated_training(...)`
+        (the canonical post-v4 entry point) and surfaces any
+        exception in the metadata instead of crashing the run.
+        """
+        import json as _json
+        from datetime import datetime as _dt, timezone as _tz
+
+        asset_name = "irish_ocr_federated_smoke"
+        group_name = "3_model_lifecycle/federated_ocr/irish_ocr_federated"
+        description = (
+            f"Federated Irish-OCR simulator smoke run — invokes "
+            f"`{self.source_module}.run_federated_training()` "
+            f"every {self.automation_cron} to keep the v4 federated "
+            f"subsystem warm."
+        )
+
+        @dg.asset(
+            name=asset_name,
+            group_name=group_name,
+            compute_kind="federated-learning",
+            description=description,
+            automation_condition=dg.AutomationCondition.cron(
+                self.automation_cron
+            ),
+        )
+        def _federated_smoke(
+            asset_context: dg.AssetExecutionContext,
+        ) -> dg.MaterializeResult:
+            started_at = _dt.now(tz=_tz.utc)
+            try:
+                import importlib
+
+                mod = importlib.import_module(self.source_module)
+                run_federated_training = getattr(
+                    mod, "run_federated_training", None
+                )
+                if run_federated_training is None:
+                    raise ImportError(
+                        f"{self.source_module} does not export "
+                        f"`run_federated_training`"
+                    )
+                result = run_federated_training(
+                    model_name=self.model_name,
+                    num_rounds=self.num_rounds,
+                    data_dir=self.data_dir,
+                    server_address=self.server_address,
+                )
+                status = "ok"
+                error: str | None = None
+            except Exception as exc:  # noqa: BLE001 — never crash Dagster run
+                result = {"error": str(exc)}
+                status = "error"
+                error = str(exc)
+
+            finished_at = _dt.now(tz=_tz.utc)
+            duration_seconds = (finished_at - started_at).total_seconds()
+            asset_context.log.info(
+                f"irish_ocr_federated_smoke: status={status} "
+                f"duration={duration_seconds:.2f}s"
+            )
+            return dg.MaterializeResult(
+                metadata={
+                    "started_at": started_at.isoformat(),
+                    "finished_at": finished_at.isoformat(),
+                    "duration_seconds": duration_seconds,
+                    "status": status,
+                    "error": error,
+                    "result": _json.dumps(result, default=str)[:4096],
+                    "source_module": self.source_module,
+                    "model_name": self.model_name,
+                    "asset_kind": "federated_smoke",
+                    "layer": "3_model_lifecycle",
+                }
+            )
+
+        return dg.Definitions(assets=[_federated_smoke])
+
+
 __all__ = [
+    "CelticFederatedOcrComponent",
     "CelticModelLifecycleComponent",
     "ConformanceError",
     "EmbeddingModel",

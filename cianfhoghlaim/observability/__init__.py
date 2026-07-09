@@ -225,7 +225,25 @@ from .ragas_evaluator import (
     run_evaluation_suite,
 )
 
+# T4 (2026-07-09) — PlatformTracer facade (Langfuse → MLflow → Logfire).
+# This is the canonical entry point for agent code; the legacy
+# get_langfuse_client() / @observe / log_llm_call patterns remain
+# available as back-compat but new code should call:
+#   from cianfhoghlaim.observability import get_tracer
+#   tracer = get_tracer()
+#   with tracer.span("agent.curriculum_call"):
+#       ...
+from .platform_tracer import (
+    BackendState,
+    PlatformSpan,
+    PlatformTracer,
+    get_tracer,
+    reset_tracer,
+)
+
 __all__ = [
+    # ── T4 PlatformTracer facade (added 2026-07-09) ────────────────────
+    "BackendState",
     "EXPERIMENTS",
     "DatadogAPMMiddleware",
     "DatadogJSONFormatter",
@@ -236,6 +254,8 @@ __all__ = [
     "LogContext",
     "MLPipelineMetrics",
     "MLPipelineMetricsMiddleware",
+    "PlatformSpan",
+    "PlatformTracer",
     # Ragas
     "RagasEvaluator",
     "add_health_endpoints",

@@ -1,5 +1,5 @@
 """
-OCR Adapter Layer for Multiple Backends.
+OCR Adapter Layer for Multiple Backends (v4 + T4 of the 5-tangent plan).
 
 Provides unified interface for OCR extraction via:
 - PaddleOCR (MCP server)
@@ -7,8 +7,17 @@ Provides unified interface for OCR extraction via:
 - Dots.OCR (vLLM OpenAI-compatible)
 - Unstract (REST API)
 
+This module's `OCRAdapterRegistry.get()` + `compare_ocr_models()` are
+the canonical entry points; they are imported directly from this
+module (not from the legacy `oideachas.ocr.adapters` shim). The
+`OCRAdapterRegistry` is also consumed by
+`meaisinfhoghlaim.evaluation.compare` (the standard OCR eval harness).
+
 Usage:
-    from oideachas.ocr.adapters import get_adapter, compare_ocr_models
+    from cianfhoghlaim.meaisinfhoghlaim.backends.adapters import (
+        get_adapter,
+        compare_ocr_models,
+    )
 
     adapter = get_adapter("paddleocr")
     result = await adapter.process_image(image_bytes)
