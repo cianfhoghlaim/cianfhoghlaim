@@ -1,4 +1,4 @@
-"""CocoIndex OCR-aware flow — wires the 11 vision models + 4 classical OCR
+"""CocoIndex OCR-aware v1 App — wires the 11 vision models + 4 classical OCR
 Docker stacks into a CocoIndex v1 pipeline for educational PDFs.
 
 This is a NEW v4 addition that integrates:
@@ -6,24 +6,58 @@ This is a NEW v4 addition that integrates:
 * cianfhoghlaim.ocr.models.registry.CLASSICAL_OCR_REGISTRY (4 classical OCR
   Docker stacks: dots-ocr, docling-serve, olmocr, paddleocr)
 
-with a CocoIndex flow that:
+with a CocoIndex v1 App that:
 1. Walks the Ireland syllabus corpus (Plan 1 active)
 2. For each PDF, selects the optimal (model, backend) pair from the registry
-3. Extracts structured text + layout + fada-aware normalisation
+3. Extracts structured text via the selected backend
 4. Embeds the chunks via the BGE-M3 multilingual embedder
 5. Mounts a LanceDB target table (`ireland_syllabus_chunks`)
 
 The selection logic is in `select_ocr_backend()` below.
 
-NOTE: This is a skeleton. The CocoIndex @coco.fn decorators will be added
-once the upstream CocoIndex v1 release stabilises the new OCR transformer
-API. The selection logic + registry wiring are production-ready.
-"""
+Migrated from the original skeleton (which had no `coco.App(...)` at
+module scope) to the canonical v1 pattern (R1–R4 conformance contract)
+by the `2026-07-09-cocoindex-v1-remaining-apps-v1` change.
 
+- **R1** — `from ._lifespan import shared_lifespan`
+- **R2** — `ocr_aware_flow_app = coco.App(coco.AppConfig(name=...))`
+- **R3** — `lancedb.mount_table_target(LANCE_DB, ...)`
+- **R4** — `target_table.declare_vector_index(column="embedding")`
+"""
 from __future__ import annotations
 
+import os
+import pathlib
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Annotated
+
+import structlog
+from numpy.typing import NDArray
+
+logger = structlog.get_logger(__name__)
+
+try:
+    import cocoindex as coco  # type: ignore[import-not-found]
+    from cocoindex.connectors import lancedb  # type: ignore[import-not-found]
+    from cocoindex.ops.text import RecursiveSplitter  # type: ignore[import-not-found]
+
+    COCOINDEX_AVAILABLE = True
+except ImportError as e:
+    logger.warning("cocoindex_v1_not_available: %s", e)
+    COCOINDEX_AVAILABLE = False
+    coco = None  # type: ignore[assignment]
+    lancedb = None  # type: ignore[assignment]
+    RecursiveSplitter = None  # type: ignore[assignment]
+
+
+# R1: shared lifespan + canonical ContextKeys.
+from ._lifespan import (  # noqa: E402
+    EMBEDDER,
+    LANCE_DB,
+    shared_lifespan,
+)
+
 
 from cianfhoghlaim.ocr.models.registry import (
     OCR_VISION_REGISTRY,
@@ -73,33 +107,155 @@ def select_ocr_backend(document_path: Path) -> OCRAwareSelection:
     return OCRAwareSelection(model, f"Small document ({size_mb:.1f} MB) → Gemma-4 E2B")
 
 
-def build_ireland_syllabus_flow():
-    """Build the CocoIndex OCR-aware flow for the Ireland syllabus corpus.
+# ============================================================================
+# Row schema
+# ============================================================================
 
-    Skeleton — the @coco.fn + @coco.lifespan decorators are added when the
-    upstream CocoIndex v1 OCR transformer API lands. The selection logic
-    above (select_ocr_backend) is already wired into the registry.
-    """
-    from cianfhoghlaim.core.cocoindex._lifespan import EMBEDDER, LANCE_DB
+if COCOINDEX_AVAILABLE:
 
-    # Plan 1 corpora (Ireland education)
-    corpus_dirs = [
-        "cianfhoghlaim/sources/nations/ie/education/early_childhood/{english,gaeilge}",
-        "cianfhoghlaim/sources/nations/ie/education/primary/{english,gaeilge}",
-        "cianfhoghlaim/sources/nations/ie/education/junior_cycle/{english,gaeilge}",
-        "cianfhoghlaim/sources/nations/ie/education/senior_cycle/{english,gaeilge}",
-        "cianfhoghlaim/sources/nations/ie/education/leaving_cert/{english,gaeilge}",
-    ]
+    @dataclass
+    class IrelandSyllabusChunk:
+        """One chunked + embedded paragraph from an Ireland syllabus PDF (OCR-extracted)."""
 
-    # TODO: @coco.fn flow_ireland_syllabus_ocr() with:
-    #   - gather PDFs from each corpus_dir
-    #   - call select_ocr_backend(pdf) → OCRModel
-    #   - dispatch to backend via cianfhoghlaim.core.browser.BrowserbaseBackend
-    #     or LiteLLM / MLX / Ollama clients
-    #   - normalise text with cianfhoghlaim.ocr.evaluation.gaelic_metrics
-    #   - embed with EMBEDDER (BGE-M3)
-    #   - mount LanceDB target `ireland_syllabus_chunks`
-    return LANCE_DB, EMBEDDER, corpus_dirs
+        chunk_id: str
+        subject: str
+        level: str
+        language: str
+        filename: str
+        chunk_index: int
+        ocr_model: str
+        text: str
+        embedding: Annotated[NDArray, EMBEDDER]
+
+
+# ============================================================================
+# v1 App: IrelandSyllabusOCRFflow
+# ============================================================================
+
+if COCOINDEX_AVAILABLE:
+
+    @coco.fn(memo=True)
+    async def process_ireland_syllabus_chunk(
+        chunk_text: str,
+        subject: str,
+        level: str,
+        language: str,
+        filename: str,
+        chunk_index: int,
+        ocr_model: str,
+        target_table: lancedb.TableTarget[IrelandSyllabusChunk],  # type: ignore[type-var]
+    ) -> None:
+        """Process one OCR-extracted chunk into a LanceDB row."""
+        embedder = await coco.use_context(EMBEDDER)  # type: ignore[arg-type]
+        vec = await embedder.embed(chunk_text)  # type: ignore[attr-defined]
+        chunk_id = f"{subject}__{level}__{language}__{filename}::{chunk_index}"
+        target_table.declare_row(
+            row=IrelandSyllabusChunk(
+                chunk_id=chunk_id,
+                subject=subject,
+                level=level,
+                language=language,
+                filename=filename,
+                chunk_index=chunk_index,
+                ocr_model=ocr_model,
+                text=chunk_text,
+                embedding=vec,
+            )
+        )
+
+    @coco.fn
+    async def ocr_aware_flow_app_main(corpus_root: pathlib.Path) -> None:
+        """OCR-aware v1 App: walks the Ireland syllabus corpus + OCR-extracts + embeds.
+
+        Walks the 5 educational-stage corpus dirs (early_childhood, primary,
+        junior_cycle, senior_cycle, leaving_cert), selects an OCR backend
+        per file via `select_ocr_backend()`, extracts text, chunks, and
+        embeds. The OCR call itself is a placeholder — the actual backend
+        dispatch is wired through `cianfhoghlaim.ocr.models.registry` and
+        the registered `BrowserbaseBackend` / `LiteLLM` / `MLX` / `Ollama`
+        clients.
+        """
+        target_table = await lancedb.mount_table_target(
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name="ireland_syllabus_chunks",
+            table_schema=await lancedb.TableSchema.from_class(
+                IrelandSyllabusChunk, primary_key=["chunk_id"]
+            ),
+        )
+        target_table.declare_vector_index(column="embedding")
+
+        # Plan 1 corpora (Ireland education)
+        corpus_paths = [
+            corpus_root / "early_childhood",
+            corpus_root / "primary",
+            corpus_root / "junior_cycle",
+            corpus_root / "senior_cycle",
+            corpus_root / "leaving_cert",
+        ]
+
+        splitter = RecursiveSplitter()  # type: ignore[call-arg]
+
+        for corpus_dir in corpus_paths:
+            if not corpus_dir.exists():
+                logger.warning(
+                    "ireland_syllabus_corpus_missing",
+                    path=str(corpus_dir),
+                )
+                continue
+            for lang_dir in corpus_dir.iterdir():
+                if not lang_dir.is_dir():
+                    continue
+                language = lang_dir.name  # "en" | "ga"
+                for pdf_path in lang_dir.rglob("*.pdf"):
+                    sel = select_ocr_backend(pdf_path)
+                    # NOTE: the actual OCR backend dispatch is wired through
+                    # cianfhoghlaim.ocr.models.registry — for now we use
+                    # PyMuPDF as the placeholder extraction (matches the
+                    # canonical mathematics_embedding.py pattern). Once
+                    # the registry's backend dispatch is plumbed through
+                    # to this flow, replace this block with a call to
+                    # `sel.model.backend.dispatch(pdf_path)`.
+                    try:
+                        import fitz  # PyMuPDF
+                        doc = fitz.open(str(pdf_path))
+                        text = "\n".join(page.get_text() for page in doc)
+                        doc.close()
+                    except Exception as e:  # noqa: BLE001
+                        logger.warning(
+                            "ocr_aware_extract_failed",
+                            file=str(pdf_path),
+                            error=str(e),
+                        )
+                        continue
+                    if not text.strip():
+                        continue
+                    chunks = splitter.split(  # type: ignore[union-attr]
+                        text,
+                        chunk_size=1000,
+                        chunk_overlap=200,
+                        language="markdown",
+                    )
+                    # Heuristic subject/level derivation from the path
+                    subject = pdf_path.parent.parent.name  # leaving_cert/...
+                    level = "hl"
+                    for i, chunk in enumerate(chunks):
+                        chunk_text = chunk.text if hasattr(chunk, "text") else str(chunk)
+                        await process_ireland_syllabus_chunk(
+                            chunk_text,
+                            subject,
+                            level,
+                            language,
+                            pdf_path.name,
+                            i,
+                            sel.model.model_id,
+                            target_table,
+                        )
+
+    ocr_aware_flow_app = coco.App(
+        coco.AppConfig(name="IrelandSyllabusOCRFflow"),
+        ocr_aware_flow_app_main,
+        corpus_root=pathlib.Path("cianfhoghlaim/leaving_certificate"),
+    )
 
 
 if __name__ == "__main__":

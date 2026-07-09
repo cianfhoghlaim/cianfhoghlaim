@@ -370,6 +370,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["chunk_id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
         items = list(_yield_all_chunks())
         id_gen = IdGenerator()
         # 100-row batches (the canonical HNSW-DROP-THRESHOLD rule).

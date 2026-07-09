@@ -298,6 +298,7 @@ if COCOINDEX_AVAILABLE:
             vector_column="embedding",
             vector_dim=EMBED_DIM,
         )
+        target_table.declare_vector_index(column="embedding")
 
         if not payloads_root.exists():
             logger.warning(
