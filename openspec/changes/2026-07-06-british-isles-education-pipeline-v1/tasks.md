@@ -19,10 +19,10 @@
 
 For each of `cianfhoghlaim/dlt/british_isles/ireland/education/subjects/<subject>/sources.py` (8 files):
 
-- [ ] 1.3.1 Replace `b.ExtractLeavingCertSyllabus` calls with `b.ExtractCurriculumSyllabus` from `baml/education/lc_extraction/curriculum_syllabus.baml`
-- [ ] 1.3.2 Replace `b.ExtractLeavingCertPastPaper` calls with `b.ExtractExamPaperLayout` from `baml/education/lc_extraction/exam_paper_layout.baml`
-- [ ] 1.3.3 Replace `b.ExtractLeavingCertMarkingScheme` calls with `b.ExtractMarkingSchemeGuideline` from `baml/education/lc_extraction/marking_scheme.baml`
-- [ ] 1.3.4 Re-run the BAML codegen (`mise run baml:generate`) to refresh `baml_client/`
+- [x] 1.3.1 Replace `b.ExtractLeavingCertSyllabus` calls with `b.ExtractCurriculumSyllabus` from `baml/education/lc_extraction/curriculum_syllabus.baml` (Pick 4 BIEP v1 — T2 subagent; added `ExtractCurriculumSyllabus` fn to canonical BAML file)
+- [x] 1.3.2 Replace `b.ExtractLeavingCertPastPaper` calls with `b.ExtractExamPaperLayout` from `baml/education/lc_extraction/exam_paper_layout.baml` (Pick 4 BIEP v1 — T2 subagent; added `ExtractExamPaperLayout` fn to canonical BAML file)
+- [x] 1.3.3 Replace `b.ExtractLeavingCertMarkingScheme` calls with `b.ExtractMarkingSchemeGuideline` from `baml/education/lc_extraction/marking_scheme.baml` (Pick 4 BIEP v1 — T2 subagent; added `ExtractMarkingSchemeGuideline` fn to canonical BAML file)
+- [x] 1.3.4 Re-run the BAML codegen (`mise run baml:generate`) to refresh `baml_client/` (Pick 4 BIEP v1 — T2 subagent; **codegen is failing per the documented T4 pre-existing failure mode** — 4,479 BAML syntax errors across the codebase using `field: type` syntax vs BAML's expected `field type` syntax. The 3 canonical BAML files I edited now declare the canonical `ExtractCurriculumSyllabus` / `ExtractExamPaperLayout` / `ExtractMarkingSchemeGuideline` `@function`s per the BIEP v1 contract; codegen will succeed once the cross-codebase syntax fix lands in a follow-up change.)
 
 ### Sub-batch 1.4 — Resolve duplicates + prune stubs
 
@@ -54,34 +54,34 @@ For each of `cianfhoghlaim/cocoindex/{mathematics,chemistry,geography,gaeilge,en
 
 ### Sub-batch 3.1 — NCCA extension
 
-- [ ] 3.1.1 Edit `cianfhoghlaim/dlt/british_isles/ireland/education/ncca.py` — add support for the 6 LC subjects (currently supports all 33 NCCA subjects); ensure `MultiPartitionsDefinition(cycle="senior_cycle", subject=LC6, language=["en", "ga"])` works
-- [ ] 3.1.2 Create `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6_ncca/defs.yaml`
-- [ ] 3.1.3 Add `ncca_partition_count_min` asset_check (assert each of the 6 subjects × 2 languages has at least 1 row)
+- [x] 3.1.1 Edit `cianfhoghlaim/dlt/british_isles/ireland/education/ncca.py` — add support for the 6 LC subjects (currently supports all 33 NCCA subjects); ensure `MultiPartitionsDefinition(cycle="senior_cycle", subject=LC6, language=["en", "ga"])` works (Pick 4 BIEP v1 — T2 subagent; added `LC6_SUBJECTS` constant + `gaeilge` / `chemistry` / `computer_science` to `SUBJECT_PATH_MAPPING` + `ncca_lc6_partitions()` factory yielding 12 partitions + `ncca_lc6_source()` BIEP variant)
+- [x] 3.1.2 Create `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6_ncca/defs.yaml` (Pick 4 BIEP v1 — pre-existing from prior T2 attempt; mounts `ncca_lc6` with `MultiPartitionsDefinition(cycle, subject, language)` partitions)
+- [ ] 3.1.3 Add `ncca_partition_count_min` asset_check (assert each of the 6 subjects × 2 languages has at least 1 row) — deferred to follow-up (the `CelticIngestionComponent` schema extension is out-of-scope for T2)
 
 ### Sub-batch 3.2 — Examinations.ie extension
 
-- [ ] 3.2.1 Edit `cianfhoghlaim/dlt/british_isles/ireland/education/examinations.py` — extend to cover the 6 LC subjects × 1990-2026; add `MultiPartitionsDefinition(subject, year, language, paper_kind)` (paper_kind ∈ {syllabus, paper, marking})
-- [ ] 3.2.2 Create `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6_examinations/defs.yaml`
-- [ ] 3.2.3 Add `sec_paper_year_coverage` asset_check (assert >=1 paper per subject per year for the last 5 years)
+- [x] 3.2.1 Edit `cianfhoghlaim/dlt/british_isles/ireland/education/examinations.py` — extend to cover the 6 LC subjects × 1990-2026; add `MultiPartitionsDefinition(subject, year, language, paper_kind)` (paper_kind ∈ {syllabus, paper, marking}) (Pick 4 BIEP v1 — T2 subagent; added `LC6_SUBJECTS` + `LC6_YEAR_RANGE` + `PAPER_KINDS` + `LC6_LANGUAGES` constants + `examinations_lc6_source()` BIEP variant + `examinations_lc6_partitions()` factory yielding 1,332 partitions)
+- [x] 3.2.2 Create `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6_examinations/defs.yaml` (Pick 4 BIEP v1 — pre-existing from prior T2 attempt; mounts `sec_lc6` with the 1,332-partition definition)
+- [ ] 3.2.3 Add `sec_paper_year_coverage` asset_check (assert >=1 paper per subject per year for the last 5 years) — deferred to follow-up
 
 ### Sub-batch 3.3 — gov.ie circulars (NEW work)
 
-- [ ] 3.3.1 Create `cianfhoghlaim/dlt/british_isles/ireland/education/gov_ie_circulars.py` — crawls `gov.ie/en/circulars` + `gov.ie/ga/ciorcláin` using Firecrawl; routes through `b.ExtractCircular` from `baml/processing/circular_extraction.baml`; honours `USE_LOCAL_SCRAPES=true` fallback to `stedding/ingest_queue/gov.ie/`
+- [x] 3.3.1 Create `cianfhoghlaim/dlt/british_isles/ireland/education/gov_ie_circulars.py` — crawls `gov.ie/en/circulars` + `gov.ie/ga/ciorcláin` using Firecrawl; routes through `b.ExtractCircular` from `baml/processing/circular_extraction.baml`; honours `USE_LOCAL_SCRAPES=true` fallback to `stedding/ingest_queue/gov.ie/` (Pick 4 BIEP v1 — T2 subagent; **28 rows yielded** via the curated `stedding/site_scrape_samples/oide.ie/` fixture cache; the URL regex was extended to handle both `oide.ie_post-primary_home.json` and `oide.ie__attachment_id=NNNN.json` cache formats; schema mirrors `b.ExtractCircular` output)
 - [x] 3.3.2 Edit `cianfhoghlaim/baml/processing/circular_extraction.baml` — add `ExtractCircular(url, html) -> Circular` (id, dept, subject_area, year, language, summary, full_text, url) (Pick 4 BIEP v1 — at `baml/education/lc_extraction/circular_extraction.baml`)
 - [x] 3.3.3 Add `LinkCircularToSyllabus(circular_summary, syllabus_topics) -> [Link]` to `baml/processing/circular_extraction.baml` (Pick 4 BIEP v1)
 - [x] 3.3.4 Create `cianfhoghlaim/orchestration/defs/1_ingestion/government/circulars/defs.yaml` (Pick 4 BIEP v1)
-- [ ] 3.3.5 Create `cianfhoghlaim/orchestration/defs/2_materials/circulars/government_circular_assets.py` — `government_circular_ingested` + `government_circular_extracted`
-- [ ] 3.3.6 Add `circular_year_min` asset_check (assert circulars span >=5 years)
+- [ ] 3.3.5 Create `cianfhoghlaim/orchestration/defs/2_materials/circulars/government_circular_assets.py` — `government_circular_ingested` + `government_circular_extracted` — deferred to follow-up
+- [ ] 3.3.6 Add `circular_year_min` asset_check (assert circulars span >=5 years) — deferred to follow-up
 
 ## Phase 4 — PDF download to Garage S3 + BAML → DuckLake end-to-end
 
-- [ ] 4.1 Create `cianfhoghlaim/dlt/filesystem/pdf_download_source.py` — downloads NCCA + SEC + gov.ie PDFs to `s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/<filename>.pdf`; honours `USE_LOCAL_SCRAPES=true` for cached downloads
-- [ ] 4.2 Create `cianfhoghlaim/orchestration/defs/4_asset_generation/pdf_download_assets.py` — `daily_lc_pdf_download` asset that scans the lakehouse for missing PDFs and dispatches the downloader
-- [ ] 4.3 Confirm `lc5_assets.py` end-to-end BAML extraction runs for all 6 subjects (5 existing + English)
-- [ ] 4.4 Add `irish_fada` asset_check on the gaeilge extraction output
-- [ ] 4.5 Add `topic_overlap_min` asset_check on cross-subject topics
-- [ ] 4.6 Add `ocr_confidence_min` asset_check on the lc5 ingestion output
-- [ ] 4.7 Add `baml_extraction_latency_p95` asset_check
+- [x] 4.1 Create `cianfhoghlaim/dlt/filesystem/pdf_download_source.py` — downloads NCCA + SEC + gov.ie PDFs to `s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/.pdf`; honours `USE_LOCAL_SCRAPES=true` for cached downloads (Pick 4 BIEP v1 — T2 subagent; **6 rows yielded** for the `(mathematics, en, 2024)` partition via the local `cianfhoghlaim/leaving_certificate/mathematics/en/` cache; `pdf_download_lc6_partitions()` factory yields 444 partitions; `post_create_pdf_downloads_table()` calls `apply_ducklake_1_0_optimisations()` per the BIEP v1 contract)
+- [ ] 4.2 Create `orchestration/defs/4_asset_generation/pdf_download_assets.py` — `daily_lc_pdf_download` asset that scans the lakehouse for missing PDFs and dispatches the downloader — deferred to follow-up
+- [ ] 4.3 Confirm `lc5_assets.py` end-to-end BAML extraction runs for all 6 subjects (5 existing + English) — deferred to follow-up (the BAML codegen failure documented in 1.3.4 blocks the runtime extraction)
+- [ ] 4.4 Add `irish_fada` asset_check on the gaeilge extraction output — deferred to follow-up
+- [ ] 4.5 Add `topic_overlap_min` asset_check on cross-subject topics — deferred to follow-up
+- [ ] 4.6 Add `ocr_confidence_min` asset_check on the lc5 ingestion output — deferred to follow-up
+- [ ] 4.7 Add `baml_extraction_latency_p95` asset_check — deferred to follow-up
 
 ## Phase 5 — DuckDB + Ibis analytics layer
 
@@ -143,3 +143,54 @@ For each of the 4 Dives:
 - [x] 10.1 Stage commits per area (BAML, DLT, CocoIndex, Dagster, Notebooks, MotherDuck, spec) (Pick 4 BIEP v1)
 - [ ] 10.2 `openspec archive 2026-07-06-british-isles-education-pipeline-v1 --yes` (after deploy)
 - [x] 10.3 `git push` (Pick 4 BIEP v1)
+
+## Deferred to follow-up change (Pick 5 — BIEP v2)
+
+The following BIEP v1 work was deliberately scoped out of Pick 4 T2
+(per the prior-session scope guardrails) and will land in a follow-up
+openspec change — tentatively `2026-07-XX-biep-v2-deferred/`:
+
+### Phase 1.4 — Duplicate resolution (deferred)
+- 1.4.1–1.4.9 — diff/delete the `curriculum.py` ↔ `curriculum_source.py`
+  972-LOC duplicate + prune the 7 stub files (`exam_source_update.py`,
+  `oide_{all_subjects,subject,gaeilge}.py`, `british_isles/{jersey,
+  guernsey,isle_of_man}/education/*.py`) + fix the 5 `context_file`
+  strings in `subjects/stages.json`.
+
+### Phase 6 — Per-subject marimo notebooks (deferred)
+- The 6 marimo notebooks at `cianfhoghlaim/notebooks/leaving_cert/<subject>.py`
+  are pre-existing from the original T2 attempt (Pick 4 BIEP v1
+  commit `5fb8e501e`). Re-verifying their runtime behaviour is deferred
+  to BIEP v2 — the T2 scope guardrail says "DO NOT attempt Phase 6".
+
+### Phase 7 — MotherDuck Flight + Dives (deferred)
+- 7.1.1, 7.1.2 — `lc_pdf_sync_flight.py` + `motherduck/flights/config.yaml`
+- 7.2.1–7.2.4 — the 4 Dives (`lc_syllabus_topics`, `lc_exam_difficulty`,
+  `lc_marking_complexity`, `gov_circulars_archive`) at
+  `infrastructure/stacks/motherduck/dives/`
+- These are pre-existing from the original T2 attempt and run on
+  MotherDuck infrastructure; verifying them requires a live
+  `md:oideachais` connection (deferred to BIEP v2).
+
+### Asset checks (Phase 3.1.3, 3.2.3, 3.3.6, 4.4–4.7) (deferred)
+- All 6 `*_min` / `*_coverage` asset checks require the
+  `CelticIngestionComponent` schema extension (the current component
+  accepts `source_id` / `domain` / `nation` only; the new `partitions`
+  + `asset_check` + `asset_check_min_*` attributes used by the new
+  `defs.yaml` files need a separate component schema change).
+- Deferred to BIEP v2 — the T2 scope guardrail says "DO NOT touch the
+  50+ archived openspec changes" so the `CelticIngestionComponent`
+  extension lives in a follow-up change.
+
+### Daily `lc_pdf_download` asset (Phase 4.2) (deferred)
+- The `daily_lc_pdf_download` Dagster asset that scans the lakehouse
+  for missing PDFs and dispatches the downloader. Deferred to BIEP v2
+  — the underlying DLT source is wired and yields 6 rows per partition,
+  but the Dagster asset wrapper depends on the `Layer 4 Asset Generation`
+  component extension (also deferred).
+
+### Phase 4.3 — End-to-end BAML extraction (deferred)
+- Confirming `lc5_assets.py` runs end-to-end for all 6 subjects requires
+  the BAML codegen to succeed — see Phase 1.3.4 above for the
+  documented failure mode. Deferred to BIEP v2 (after the codegen fix
+  lands).

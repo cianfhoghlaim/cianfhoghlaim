@@ -13,9 +13,9 @@ See:
 from __future__ import annotations
 
 import hashlib
-import os
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 import dlt
 
@@ -79,7 +79,7 @@ def _gael_syllabus_resource(language: str | None, use_baml: bool) -> Iterator[di
             yield {**meta, "syllabus": None, "topics_count": 0, "los_count": 0}
             continue
         text = _pdf_to_text(pdf)
-        syllabus = b.ExtractLeavingCertSyllabus(text)
+        syllabus = b.ExtractCurriculumSyllabus(text)
         yield {
             **meta,
             "syllabus": syllabus.model_dump(),
@@ -126,7 +126,7 @@ def _gael_past_papers_resource(language: str | None, use_baml: bool) -> Iterator
             yield {**meta, "paper": None, "items_count": 0}
             continue
         text = _pdf_to_text(pdf)
-        paper = b.ExtractLeavingCertPastPaper(text)
+        paper = b.ExtractExamPaperLayout(text)
         yield {**meta, "paper": paper.model_dump(), "items_count": len(paper.items) if hasattr(paper, "items") else 0}
 
 
@@ -140,7 +140,7 @@ def _gael_marking_schemes_resource(language: str | None, use_baml: bool) -> Iter
             yield {**meta, "marking_scheme": None, "items_count": 0}
             continue
         text = _pdf_to_text(pdf)
-        scheme = b.ExtractLeavingCertMarkingScheme(text)
+        scheme = b.ExtractMarkingSchemeGuideline(text)
         yield {**meta, "marking_scheme": scheme.model_dump(), "items_count": len(scheme.items) if hasattr(scheme, "items") else 0}
 
 
