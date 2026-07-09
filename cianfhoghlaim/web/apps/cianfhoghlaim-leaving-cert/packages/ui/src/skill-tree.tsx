@@ -2,7 +2,7 @@
 
 // <CiSkillTree> — Clair Obscur material library + BitCraft Empire Panel
 // Per UI_INSPIRATION_GUIDE.md, the skill tree shows the Student → Subject →
-// Mastery hierarchy (per the Brown Ajah theming).
+// Mastery hierarchy. The éraic tiers are an optional pedagogical anchor.
 
 import * as React from "react";
 import { cn } from "./utils";

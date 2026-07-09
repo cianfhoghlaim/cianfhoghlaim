@@ -201,4 +201,41 @@ When a change introduces a new capability (not a MODIFIED of an existing one), f
 - [`../cianfhoghlaim/agents/meaisinfhoghlaim/AGENTS.md`](../cianfhoghlaim/agents/meaisinfhoghlaim/AGENTS.md) — meaisinfhoghlaim quadrant *(if missing, see Cianfhoghlaim root AGENTS.md)*
 - [`../cianfhoghlaim/agents/tuatha/AGENTS.md`](../cianfhoghlaim/agents/tuatha/AGENTS.md) — tuatha quadrant
 - [`../cianfhoghlaim/web/apps/_croilar_apps/AGENTS.md`](../cianfhoghlaim/web/apps/_croilar_apps/AGENTS.md) — croilar quadrant
+
+## Cross-repo sync convention
+
+For openspec changes that touch more than one of the 3 repos
+(cianfhoghlaim + bonneagar + leabharlann), include a
+`cross-repo-sync.md` file at `openspec/changes/<id>/cross-repo-sync.md`
+that lists:
+
+1. The commit plan for each affected repo
+2. The branch name + remote URL for each push target
+3. The order of operations (which repo MUST be committed first)
+
+The 2 repos MUST be committed in this order: **bonneagar first,
+then cianfhoghlaim** (the IaC tests in bonneagar are a prerequisite
+for the cianfhoghlaim openspec archive).
+
+Single-repo changes (the common case) MAY omit the file, but if
+included it MUST be referenced from `proposal.md`.
+
+## Dependencies field convention
+
+Every openspec change's `proposal.md` SHALL include a
+`## Dependencies` section that declares:
+
+```markdown
+## Dependencies
+
+`Blocked by: <change-id>` (topo ordering)
+`Blocked by (soft): <change-id>` (this change extends but doesn't block)
+`Affected repos: cianfhoghlaim, bonneagar, leabharlann` (which repos this change touches)
+```
+
+The change CANNOT archive until the blocker archives. The
+`Blocked by (soft)` line declares an informational dependency
+for sequencing but does not enforce archiving.
+
+If the change has no dependencies, declare `Blocked by: none`.
 - [`../cianfhoghlaim/AGENTS.md`](../cianfhoghlaim/AGENTS.md) — the consolidated cianfhoghlaim AGENTS.md (post-v4)

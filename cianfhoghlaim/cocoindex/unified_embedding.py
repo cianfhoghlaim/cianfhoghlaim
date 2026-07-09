@@ -1,11 +1,13 @@
 """
 Unified Embedding CocoIndex v1 Apps.
 
-Phase 3 of the 6-phase refactor plan: the v1-native port of
-`crypteolas/cocoindex_flows/unified_embedding.py`. The v0 file used
-the removed v0 DSL (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`,
-`cocoindex.sources.DuckDB`, `cocoindex.targets.lancedb`, `GeneratedField.UUID`,
-`VectorIndexDef`, `FtsIndexDef`, `QueryOutput`, `QueryInfo`).
+Phase 3 of the 6-phase refactor plan: the v1-native port of the
+legacy `crypteolas/cocoindex_flows/unified_embedding.py` module.
+The v0 file used the removed v0 DSL (`flow_def`, `FlowBuilder`,
+`DataScope`, `cocoindex.sources.DuckDB`, `cocoindex.targets.lancedb`,
+`GeneratedField.UUID`, `VectorIndexDef`, `FtsIndexDef`,
+`QueryOutput`, `QueryInfo`) — all of which were dropped in
+CocoIndex v1.
 
 The v1 port uses the canonical v1 primitives from
 `oideachais/cocoindex_flows/codebase_indexing.py` and
@@ -14,6 +16,7 @@ The v1 port uses the canonical v1 primitives from
 - `@coco.fn` + `@coco.fn(memo=True)` for processing functions
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
 - `lancedb.mount_table_target(...)` for output
+- `target_table.declare_vector_index(column="embedding")` for vector index
 - `SentenceTransformerEmbedder("BAAI/bge-m3")` for the embedding
 - 100-row upsert batches (HNSW-DROP-THRESHOLD respected)
 - `asyncio.to_thread` for CPU/IO-bound work (DuckDB read, file walk)
@@ -28,7 +31,7 @@ Target: shared oideachais LanceDB (the same `LANCEDB_URI` used by
 codebase / api / filesystem / storage / config / leabharlann v1 Apps)
 
 Reference:
-- v0 source: `crypteolas/cocoindex_flows/unified_embedding.py`
+- v0 source: `crypteolas/cocoindex_flows/unified_embedding.py` (archived)
 - v0 chunker: `crypteolas/cocoindex_flows/transforms/code_chunking.py:chunk_code`
   (5 language-specific chunkers; v1 falls back to RecursiveSplitter
   with detect_code_language for the 24+ others)
@@ -369,6 +372,7 @@ def _make_unified_app():  # noqa: ANN202
                 UnifiedDocumentRow, primary_key=["id"]
             ),
         )
+        target_table.declare_vector_index(column="embedding")
         # 1) Read from DuckDB
         raw_rows = await asyncio.to_thread(
             _read_duckdb_rows, connection_string, query
@@ -475,6 +479,7 @@ def _make_code_app():  # noqa: ANN202
                 CodeChunkRow, primary_key=["id"]
             ),
         )
+        target_table.declare_vector_index(column="embedding")
         if not code_root.exists():
             return
         files = localfs.walk_dir(  # type: ignore[call-arg]

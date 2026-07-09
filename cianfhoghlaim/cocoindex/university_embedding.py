@@ -218,6 +218,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
         rows = _read_ducklake_table(UNIVERSITY_DUCKLAKE_TABLES["courses"])
         id_gen = IdGenerator()
         # 100-row batches (the canonical HNSW-DROP-THRESHOLD rule).
@@ -284,6 +285,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")
         rows = _read_ducklake_table(UNIVERSITY_DUCKLAKE_TABLES["modules"])
         id_gen = IdGenerator()
         for i in range(0, len(rows), 100):

@@ -16,9 +16,9 @@ See:
 from __future__ import annotations
 
 import hashlib
-import os
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 import dlt
 
@@ -91,7 +91,7 @@ def _appm_syllabus_resource(language: str | None, use_baml: bool) -> Iterator[di
             yield {**meta, "syllabus": None, "topics_count": 0, "los_count": 0}
             continue
         text = _pdf_to_text(pdf)
-        syllabus = b.ExtractLeavingCertSyllabus(text)
+        syllabus = b.ExtractCurriculumSyllabus(text)
         yield {
             **meta,
             "syllabus": syllabus.model_dump(),
@@ -134,7 +134,7 @@ def _appm_past_papers_resource(language: str | None, use_baml: bool) -> Iterator
             yield {**meta, "paper": None, "items_count": 0}
             continue
         text = _pdf_to_text(pdf)
-        paper = b.ExtractLeavingCertPastPaper(text)
+        paper = b.ExtractExamPaperLayout(text)
         yield {
             **meta,
             "paper": paper.model_dump(),
@@ -152,7 +152,7 @@ def _appm_marking_schemes_resource(language: str | None, use_baml: bool) -> Iter
             yield {**meta, "marking_scheme": None, "items_count": 0}
             continue
         text = _pdf_to_text(pdf)
-        scheme = b.ExtractLeavingCertMarkingScheme(text)
+        scheme = b.ExtractMarkingSchemeGuideline(text)
         yield {
             **meta,
             "marking_scheme": scheme.model_dump(),

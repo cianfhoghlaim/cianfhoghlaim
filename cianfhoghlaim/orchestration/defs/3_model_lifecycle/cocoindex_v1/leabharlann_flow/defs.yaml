@@ -1,0 +1,23 @@
+# defs/3_model_lifecycle/cocoindex_v1/leabharlann_flow/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the LeabharlannFlow v1 App.
+# Per the oideachais-leabharlann spec — `Consolidated filesystem pipeline
+# for the 6 subdirs × 216 docs` Requirement. The 6 corpora (aigne, gaeilge,
+# gemini_deep_research, mata, ollscoil_na_gaillimhe, zotero) share a single
+# `leabharlann_chunks` LanceDB table.
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: LeabharlannFlow
+  module: cianfhoghlaim.cocoindex.leabharlann_flow
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  table_name: leabharlann_chunks
+  corpora:
+    - aigne
+    - gaeilge
+    - gemini_deep_research
+    - mata
+    - ollscoil_na_gaillimhe
+    - zotero
+  expected_total_documents: 216

@@ -18,6 +18,13 @@ The canonical 12-agent fleet (per the agent-fleet-orchestration skill):
   statistics, curriculum_comparison, mcp_curriculum
 - 3 Agno agents: education_research, bunchloch_research, agui_curriculum
 (Voice agent / pipecat is deferred to a follow-on change.)
+
+T4 (2026-07-09) added seed entries for the 8 NCCA subject agents
+(gael_agent / math_agent / appm_agent / chem_agent / comp_agent /
+engl_agent / geog_agent / hist_agent) — these are mounted under
+`defs/5_agent_ops/adk/<slug>_agent/defs.yaml` and the full bucket
+is appended by `CelticAgentOpsComponent._append_routing_keywords`
+at scaffold time.
 """
 from __future__ import annotations
 
@@ -54,6 +61,20 @@ ROUTING_KEYWORDS: dict[str, list[str]] = {
     ],
     "agui_curriculum_agent": ["ag-ui", "streaming", "copilot", "react"],
     "mcp_curriculum_agent": ["mcp", "model context protocol", "tool"],
+    # T4 (2026-07-09) — the 8 NCCA subject agents from
+    # `cianfhoghlaim/agents/tuatha/<slug>_agent.py`. The full keyword
+    # bucket is appended by `CelticAgentOpsComponent._append_routing_keywords`
+    # at scaffold time; this seed contains only the cross-subject
+    # canonical name(s) so the root_agent can route to the right
+    # specialist before scaffold runs.
+    "gael_agent": ["gaeilge", "irish", "gaelic"],
+    "math_agent": ["mathematics", "maths", "lc maths"],
+    "appm_agent": ["applied mathematics", "applied maths"],
+    "chem_agent": ["chemistry"],
+    "comp_agent": ["computer science", "lc cs", "lc computing"],
+    "engl_agent": ["english"],
+    "geog_agent": ["geography"],
+    "hist_agent": ["history", "irish history"],
 }
 
 

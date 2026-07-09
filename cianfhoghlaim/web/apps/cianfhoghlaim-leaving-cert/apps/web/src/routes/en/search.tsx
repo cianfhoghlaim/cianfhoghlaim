@@ -59,7 +59,7 @@ function SearchPage() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type to search (e.g. 'mathematics', 'Brown Ajah', 'Éraic', 'self-host')..."
+          placeholder="Type to search (e.g. 'mathematics', 'bi-ep', 'Key Competencies', 'self-host')..."
           className="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-700"
         />
         {query && (

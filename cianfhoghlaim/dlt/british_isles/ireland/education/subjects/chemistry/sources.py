@@ -6,8 +6,9 @@ Reads the NCCA Leaving Certificate Chemistry PDFs from
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 import dlt
 
@@ -48,7 +49,7 @@ def _chem_syllabus(language: str | None, use_baml: bool) -> Iterator[dict[str, A
             yield {**meta, "syllabus": None}
             continue
         text = _pdf_to_text(pdf)
-        syllabus = b.ExtractLeavingCertSyllabus(text)
+        syllabus = b.ExtractCurriculumSyllabus(text)
         yield {**meta, "syllabus": syllabus.model_dump(), "topics_count": len(syllabus.topics)}
 
 
@@ -62,7 +63,7 @@ def _chem_papers(language: str | None, use_baml: bool) -> Iterator[dict[str, Any
             yield {**meta, "paper": None}
             continue
         text = _pdf_to_text(pdf)
-        paper = b.ExtractLeavingCertPastPaper(text)
+        paper = b.ExtractExamPaperLayout(text)
         yield {**meta, "paper": paper.model_dump()}
 
 
@@ -75,7 +76,7 @@ def _chem_marking_schemes(language: str | None, use_baml: bool) -> Iterator[dict
             yield {**meta, "marking_scheme": None}
             continue
         text = _pdf_to_text(pdf)
-        scheme = b.ExtractLeavingCertMarkingScheme(text)
+        scheme = b.ExtractMarkingSchemeGuideline(text)
         yield {**meta, "marking_scheme": scheme.model_dump()}
 
 

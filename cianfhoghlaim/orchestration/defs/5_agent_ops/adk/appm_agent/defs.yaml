@@ -1,0 +1,32 @@
+# defs/5_agent_ops/adk/appm_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the appm_agent (ADK) — one of the
+# 8 NCCA subject agents for the British Isles Educational MMO
+# (Applied Mathematics).
+type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: appm_agent
+  framework: adk
+  tools:
+    - appm_syllabus_tool
+    - appm_past_paper_tool
+    - appm_marking_scheme_tool
+    - appm_formative_item_tool
+    - appm_response_score_tool
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.appm
+  langfuse_drop_smoke_spans: true
+  routing_keywords:
+    - applied mathematics
+    - applied maths
+    - mechanics
+    - dynamics
+    - statics
+    - leaving cert applied maths
+    - lc applied maths
+    - lugh
+    - samildanach
+    - newton
+    - kinematics

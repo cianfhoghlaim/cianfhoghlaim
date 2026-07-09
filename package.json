@@ -45,6 +45,16 @@
     "pangolin:check": "mise run pangolin:check",
     "locket:exec": "mise run locket:exec",
 
+    "iac:bootstrap": "bun run --cwd bonneagar iac:bootstrap",
+    "iac:plan": "bun run --cwd bonneagar iac:plan",
+    "iac:deploy": "bun run --cwd bonneagar iac:deploy",
+    "iac:health": "bun run --cwd bonneagar iac:health",
+    "iac:teardown": "bun run --cwd bonneagar iac:teardown",
+
+    "preflight:arm-oci": "bun run scripts/preflight-arm-oci.ts",
+    "preflight:arm-oci:strict": "bun run scripts/preflight-arm-oci.ts --strict",
+    "preflight:arm-oci:report": "bun run scripts/preflight-arm-oci.ts --strict --emit-md",
+
     "ccc:init": "ccc init",
     "ccc:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
     "ccc:search": "bun run scripts/_ccc-deprecation-banner.ts && ccc search",
@@ -65,6 +75,7 @@
 
     "validate-stacks": "bash scripts/stack-doctor.sh",
     "doctor:stacks": "bash scripts/stack-doctor.sh --json | jq",
+    "validate-env": "uv run python scripts/validate_env.py",
     "validate-ccc-freshness": "bun run scripts/validate-ccc-freshness.ts",
     "hooks:install": "bash scripts/install-hooks.sh",
     "mise:run": "mise run",

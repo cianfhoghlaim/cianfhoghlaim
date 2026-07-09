@@ -316,7 +316,7 @@ function KeyCompetenciesPage() {
                 <div className="text-xs text-slate-400 italic">{kc.name_ga}</div>
                 <div className="text-sm text-slate-300 mt-1">{kc.description}</div>
                 <div className="text-xs text-slate-500 mt-1">
-                  Brown Ajah member ↔ Tuatha Dé deity: <strong>{kc.tuatha_de}</strong>
+                  Pedagogical anchor: <strong>{kc.tuatha_de}</strong>
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-# Cianfhoghlaim Leaving Cert — Dev Deploy Status (FINAL)
+# Cianfhoghlaim Leaving Cert — Dev Deploy Status (FINAL — historical snapshot)
 
 > **Last updated:** 2026-07-02
 > **Change:** [`openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/`](../../../../openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/)
@@ -6,36 +6,45 @@
 > **Progress:** 130 / 206 tasks (63%)
 > **Branch:** 27+ commits ahead of origin/main (local only)
 
+> **Note (2026-07-09):** The WoT-flavored theming + the
+> `"/en/brown-ajah"` and `"/en/eiraic-treasures"` routes
+> were removed in the subsequent
+> `2026-07-09-remove-brown-ajah-theming-v1` change. This status file
+> documents the state as of 2026-07-02; the live route inventory has
+> since been trimmed to the 6 spec-required routes + 4 extras. The
+> commit log below is preserved verbatim as a historical record of
+> what was shipped up to that date.
+
 ---
 
-## 🌐 Live URLs (running now)
+## 🌐 Live URLs (running at 2026-07-02)
 
 | Service | URL | Status |
 |:--|:--|:--|
-| **Web** | http://localhost:3082/ | ✅ All 51 tested routes return HTTP 200 |
-| **API** | http://localhost:8787/ | ✅ All 3 tested routes return HTTP 200 |
+| **Web** | http://localhost:3082/ | ✅ 51 tested routes returned HTTP 200 |
+| **API** | http://localhost:8787/ | ✅ 3 tested routes returned HTTP 200 |
 
 ---
 
-## ✅ All tested web routes (51 routes — all return HTTP 200)
+## ✅ Tested web routes as of 2026-07-02 (51 routes — historical snapshot)
 
-### Public landing + nav (12 routes)
+### Public landing + nav (13 routes)
 
-| Route | What it shows |
+| Route | Status (2026-07-02) |
 |:--|:--|
-| `/en/brown-ajah` | The 8 Brown Ajah members + Trí Dé Dána emphasis |
+| `/en/brown-ajah` | Removed 2026-07-09 (WoT theming cleanup) |
 | `/en/diagrams` | The 4 diagram modes index |
-| `/en/eiraic-treasures` | The 13 éraic treasures table |
+| `/en/eiraic-treasures` | Removed 2026-07-09 (WoT theming cleanup) |
 | `/en/key-competencies` | The 5×8 cross-subject mastery matrix |
-| `/en/key-competencies/emblems` | The 5 emblems page |
-| `/en/lore-archive` | The 7 lineage clippings summary |
+| `/en/key-competencies/emblems` | Removed 2026-07-09 |
+| `/en/lore-archive` | Removed 2026-07-09 (operator-only lore) |
 | `/en/map` | The accurate British Isles map (6 subnations) |
 | `/en/practice` | The practice session start page (subject + topic picker) |
 | `/en/search` | The client-side search index |
 | `/en/subjects` | The 8 NCCA subjects + 7 legacy compat |
-| `/en/about` | The public about page (operator-only lore referenced) |
+| `/en/about` | The public about page |
 | `/ga/about` | The Irish-language about page |
-| `/ga/lore-archive` | The GA lore archive mirror |
+| `/ga/lore-archive` | Removed 2026-07-09 |
 
 ### Per-subject 6-section shell (18 routes — 3 subjects × 6 sections)
 
@@ -47,15 +56,15 @@ For each of `mathematics`, `gaeilge`, `chemistry`:
 - `/en/leaving-cert/{subject}/exam-tips` (time per question)
 - `/en/leaving-cert/{subject}/pdf-library` (5 PDF resources)
 
-### Detail pages (20 routes)
+### Detail pages (20 routes — historical snapshot)
 
 - 5 NCCA Key Competencies: `/en/key-competencies/{slug}` (5 pages)
-- 13 éraic treasures: `/en/eiraic-treasures/{tier}` (13 pages)
-- 8 Brown Ajah members: `/en/brown-ajah/{member}` (8 pages)
+- 13 éraic treasures: `/en/eiraic-treasures/{tier}` (13 pages, removed 2026-07-09)
+- 8 lore members: `/en/brown-ajah/{member}` (8 pages, removed 2026-07-09)
 - 15 NCCA subjects: `/en/leaving-cert/{subject}` + `/ga/leaving-cert/{subject}` (15 EN + 15 GA = 30 pages)
 - 1 practice detail: `/en/leaving-cert/{subject}/practice/{topic}` (3 subjects tested)
 
-### API (3 routes — all return HTTP 200)
+### API (3 routes — historical snapshot)
 
 | Route | What it returns |
 |:--|:--|
@@ -65,25 +74,25 @@ For each of `mathematics`, `gaeilge`, `chemistry`:
 
 ---
 
-## 📊 27+ commits in the change
+## 📊 27+ commits in the change (historical snapshot)
 
 ```
 386753b7c add /en/search (client-side search index)
-8d50a6724 add /ga/lore-archive (the Irish mirror)
-b5c95a5f1 add /en/lore-archive (the 7 lineage clippings summary)
+8d50a6724 add /ga/lore-archive (the Irish mirror) — REMOVED 2026-07-09
+b5c95a5f1 add /en/lore-archive (the 7 lineage clippings summary) — REMOVED 2026-07-09
 788d0fa40 ship the 3D+2D asset gallery page
 ec7d64e2d ship the practice detail page
 4e4663a63 implement the full 6-section shell per subject
 a2fc08185 add /en/practice index page (subject + topic picker)
 341b944b9 add /en/diagrams index page (4 diagram modes)
 c87478874 add /en/subjects index page (8 NCCA + 7 legacy compat)
-cd857149d add /en/brown-ajah/{member} detail pages (8 Brown Ajah members)
-8b4b7b604 add /ga/eiraic-treasures/{tier} detail pages (13 tiers GA)
-41ee6408a add /en/eiraic-treasures/{tier} detail pages (13 tiers)
+cd857149d add /en/brown-ajah/{member} detail pages (8 members) — REMOVED 2026-07-09
+8b4b7b604 add /ga/eiraic-treasures/{tier} detail pages (13 tiers GA) — REMOVED 2026-07-09
+41ee6408a add /en/eiraic-treasures/{tier} detail pages (13 tiers) — REMOVED 2026-07-09
 10e37708a add /en/key-competencies/{slug} detail pages (5 NCCA Key Competencies)
-326822dc6 add /en/brown-ajah (the 8 Brown Ajah members + Trí Dé Dána)
-bf3d38054 add /en/key-competencies/emblems + /ga/leaving-cert/{subject} + .gitignore
-87462a971 add /en/eiraic-treasures + /ga/eiraic-treasures + register 2 more routes
+326822dc6 add /en/brown-ajah (the 8 lore members + Trí Dé Dána) — REMOVED 2026-07-09
+bf3d38054 add /en/key-competencies/emblems + /ga/leaving-cert/{subject} + .gitignore — emblems REMOVED
+87462a971 add /en/eiraic-treasures + /ga/eiraic-treasures + register 2 more routes — REMOVED 2026-07-09
 a5f895931 heritage Convex tests 11/11 passing
 6aad7cf83 parallel work batch 3 — route registry test (24/24) + openspec compliance test (353 lines) + convex schema fix
 ef4dfeb30 parallel work — wire i18n mastery + éraic treasures schema + ADK agents + /en/about + /ga/about
@@ -94,7 +103,7 @@ ae3a3f1a7 add DEPLOY_STATUS.md
 4eaf17911 ship Convex mutations + queries (Phase 2 + 8)
 e4813b002 ship diagram_library marimo notebook + Phase 4 task list cleanup
 0d672052c parallel work — wire i18n mastery + éraic treasures schema + ADK agents + /en/about + /ga/about
-7bd9c7175 ship Phase 9 (root PDFs) + Phase 12 (Brown Ajah theming) + 10 Ci components + 5 lore/map components + 3 routes
+7bd9c7175 ship Phase 9 (root PDFs) + Phase 12 (WoT theming) + 10 Ci components + 5 lore/map components + 3 routes — WoT theming REMOVED 2026-07-09
 06d9b5c43 scaffold the new workspace + openspec change
 ```
 
@@ -117,13 +126,13 @@ PORT=8787 nohup bun run --hot src/index.ts > /tmp/api.log 2>&1 < /dev/null &
 disown
 
 # Verify
-curl http://localhost:3082/en/eiraic-treasures
+curl http://localhost:3082/en/about
 curl http://localhost:8787/api/copilotkit/health
 ```
 
-## 🚧 What does NOT work yet (and why)
+## 🚧 What did NOT work yet as of 2026-07-02
 
-These are the 76 remaining tasks across 12 phases of the 206-subtask plan:
+These are the 76 remaining tasks across 12 phases of the 206-subtask plan (historical snapshot):
 
 ### Blocked by external provisioning
 - ⏳ **Convex `conic-leaving-cert` deployment** (Phase 1 T1.6/T1.7)

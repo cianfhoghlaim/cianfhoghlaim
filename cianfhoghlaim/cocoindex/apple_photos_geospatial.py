@@ -27,6 +27,11 @@ import structlog
 
 from ._lifespan import COCOINDEX_AVAILABLE
 
+# R4-exempt: GeoParquet output (no LanceDB table, no embedding column).
+# This App emits the 2 GeoParquet files for QGIS / marimo visualisation
+# (see module docstring); it does NOT write to a LanceDB table with an
+# `embedding` column, so the R4 vector-index requirement is N/A.
+
 logger = structlog.get_logger(__name__)
 
 # CocoIndex is optional — degrade gracefully if not installed.

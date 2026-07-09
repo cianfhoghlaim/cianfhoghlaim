@@ -140,13 +140,16 @@ if COCOINDEX_AVAILABLE:
                 embedding=[],
             )
 
+        _metadata_target = lancedb.mount_table_target(  # type: ignore[union-attr]
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=LANCEDB_TABLE,
+            table_schema=ApplePhotoMetadataRecord,
+            primary_key="photo_id",
+        )
+        _metadata_target.declare_vector_index(column="embedding")
+
         @coco.index(  # type: ignore[misc]
-            target=lancedb.mount_table_target(  # type: ignore[union-attr]
-                LANCE_DB,  # type: ignore[arg-type]
-                table_name=LANCEDB_TABLE,
-                table_schema=ApplePhotoMetadataRecord,
-                primary_key="photo_id",
-            ),
+            target=_metadata_target,
             refresh_interval=datetime.timedelta(seconds=REFRESH_INTERVAL_SECS),
         )
         async def write_records(  # type: ignore[no-untyped-def,unused-ignore]

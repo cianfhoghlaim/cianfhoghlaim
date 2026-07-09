@@ -124,13 +124,16 @@ if COCOINDEX_AVAILABLE:
                 embedding=[],
             )
 
+        _chunks_target = lancedb.mount_table_target(  # type: ignore[union-attr]
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=LANCEDB_TABLE,
+            table_schema=ApplePhotoChunkRecord,
+            primary_key="id",
+        )
+        _chunks_target.declare_vector_index(column="embedding")
+
         @coco.index(  # type: ignore[misc]
-            target=lancedb.mount_table_target(  # type: ignore[union-attr]
-                LANCE_DB,  # type: ignore[arg-type]
-                table_name=LANCEDB_TABLE,
-                table_schema=ApplePhotoChunkRecord,
-                primary_key="id",
-            ),
+            target=_chunks_target,
             refresh_interval=datetime.timedelta(seconds=REFRESH_INTERVAL_SECS),
         )
         async def write_chunks(  # type: ignore[no-untyped-def,unused-ignore]

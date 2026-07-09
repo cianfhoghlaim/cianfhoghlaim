@@ -137,9 +137,6 @@ function KeyCompetencyDetailPage() {
           </div>
           <div className="flex-1">
             <p className="text-slate-300">{kc.tuatha_de_role}</p>
-            {kc.brown_ajah && (
-              <p className="text-xs text-amber-400 mt-1">★ Brown Ajah member (per docs/BROWN_AJAH_THEMING.md)</p>
-            )}
           </div>
         </div>
       </CiTextbookPanel>
@@ -160,9 +157,8 @@ function KeyCompetencyDetailPage() {
 
       <CiTextbookPanel title="The Éraic Treasures that Map" material="gold-leaf">
         <p className="text-slate-300 mb-4">
-          The 13 magical treasures that Lugh demanded as éraic map to the
-          NCCA Key Competencies via the Brown Ajah theming. For{" "}
-          <strong>{kc.name_en}</strong> the relevant treasures are:
+          For <strong>{kc.name_en}</strong> the relevant éraic-tier
+          pedagogical anchors are:
         </p>
         <div className="flex flex-wrap gap-2">
           {kc.ieraic_treasures.map((tier) => (

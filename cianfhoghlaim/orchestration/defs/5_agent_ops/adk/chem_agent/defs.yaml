@@ -1,0 +1,32 @@
+# defs/5_agent_ops/adk/chem_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the chem_agent (ADK) — one of the
+# 8 NCCA subject agents for the British Isles Educational MMO.
+type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: chem_agent
+  framework: adk
+  tools:
+    - chem_syllabus_tool
+    - chem_past_paper_tool
+    - chem_marking_scheme_tool
+    - chem_formative_item_tool
+    - chem_response_score_tool
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.chem
+  langfuse_drop_smoke_spans: true
+  routing_keywords:
+    - chemistry
+    - physical chemistry
+    - organic chemistry
+    - inorganic chemistry
+    - leaving cert chemistry
+    - lc chemistry
+    - ncca chemistry
+    - dian cecht
+    - healing
+    - titration
+    - organic
+    - equilibrium

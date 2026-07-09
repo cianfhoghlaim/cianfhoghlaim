@@ -1,6 +1,7 @@
 // Cianfhoghlaim Leaving Cert API server entry
 // Hono + oRPC + CopilotKit runtime.
-// Per openspec/changes/cianfhoghlaim-website-rewrite/proposal.md R5.
+// Per openspec/changes/cianfhoghlaim-website-rewrite/proposal.md R5
+// + openspec/changes/2026-07-09-biep-6-subject-web-surfaces-v1/.
 // Wrangler 3.x deploy target (cf. apps/api/wrangler.toml).
 
 import "dotenv/config";
@@ -16,6 +17,7 @@ import { auth } from "@cianfhoghlaim/auth";
 import { copilotkit } from "./copilotkit/runtime";
 import { subjects } from "./routers/subjects";
 import { contentTypes } from "./routers/content-types";
+import biEpSubjects from "./routers/bi-ep-subjects";
 import { serve } from "@hono/node-server";
 
 const app = new Hono();
@@ -76,13 +78,17 @@ app.route("/api/copilotkit", copilotkit);
 // ADK agents metadata (8 NCCA + 1 cianfhoghlaim operator)
 app.route("/api/subjects", subjects);
 
+// BIEP v1 6-priority-subjects manifest + per-subject routes (T6)
+app.route("/api/bi-ep-subjects", biEpSubjects);
+
 const port = Number(process.env.PORT) || 8787;
 console.log(`cianfhoghlaim API server listening on http://localhost:${port}`);
-console.log(`  Health:        http://localhost:${port}/`);
-console.log(`  ContentTypes:  http://localhost:${port}/api/content-types`);
-console.log(`  Subjects:      http://localhost:${port}/api/subjects`);
-console.log(`  CopilotKit:    http://localhost:${port}/api/copilotkit`);
-console.log(`  RPC:           http://localhost:${port}/rpc`);
-console.log(`  API docs:      http://localhost:${port}/api-reference`);
+console.log(`  Health:          http://localhost:${port}/`);
+console.log(`  ContentTypes:    http://localhost:${port}/api/content-types`);
+console.log(`  Subjects:        http://localhost:${port}/api/subjects`);
+console.log(`  BIEP Subjects:   http://localhost:${port}/api/bi-ep-subjects/manifest`);
+console.log(`  CopilotKit:      http://localhost:${port}/api/copilotkit`);
+console.log(`  RPC:             http://localhost:${port}/rpc`);
+console.log(`  API docs:        http://localhost:${port}/api-reference`);
 
 serve({ fetch: app.fetch, port });

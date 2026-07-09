@@ -40,7 +40,7 @@ class EvaluationQuestion:
 
     question: str
     question_ga: str | None = None  # Irish translation
-    ground_truth: str
+    ground_truth: str = ""
     ground_truth_ga: str | None = None
     domain: str = "curriculum"  # curriculum, exam, folklore
     subject: str | None = None

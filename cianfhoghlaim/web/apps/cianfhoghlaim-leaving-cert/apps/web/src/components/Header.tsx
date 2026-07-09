@@ -1,24 +1,22 @@
 "use client";
 
 // <Header> — Cianfhoghlaim OS top bar
+// Professional + minimal theming (per the 2026-07-09 WoT-theming cleanup).
 // Renders:
-//   1. The brand + Brown Ajah badge (russet brown knotwork)
-//   2. The Brown Ajah tagline: "Aes Sedai — servants of all" (operator-visible lore only)
-//   3. The Tuatha'an wagon icon (mobile client switch)
-//   4. The BetterAuth user (sign-in / Pocket ID)
-//   5. The TranslationToggle (EN ↔ GA — the Esker Riada divider)
-//   6. The Streak flame (the Cauldron of the Dagda — never empties)
+//   1. The brand + Cianfhoghlaim brand badge (a clean letter-mark — no mythology)
+//   2. The tagline: "Cianfhoghlaim — Coláiste na Déisigh" (bilingual EN+GA)
+//   3. The BetterAuth user (sign-in / Pocket ID)
+//   4. The TranslationToggle (EN ↔ GA — the Esker Riada divider)
+//   5. The Streak flame (a daily-practice indicator)
 //
-// Per docs/CIANFHLOGHLAIM_LORE.md and docs/BROWN_AJAH_THEMING.md:
-//   - The Cian → Lugh mapping is documented in CIANFHLOGHLAIM_LORE.md only
-//   - The Brown Ajah tagline is the only user-facing reference to the mythology
+// The Cian → Lugh mapping is operator-only and NEVER appears on the
+// public surface. The mythology / historical-sources layer is deferred
+// to BIEP-v2 (see openspec/changes/2026-07-09-remove-brown-ajah-theming-v1/).
 
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { CiButton } from "@cianfhoghlaim/ui";
-import { CiBrownAjahBadge } from "@cianfhoghlaim/ui/lore/brown-ajah-badge";
 import { CiStreakFlame } from "@cianfhoghlaim/ui/streak-flame";
-import { CiTuathanWagon } from "@cianfhoghlaim/ui/lore/tuathan-wagon";
 import { TranslationToggle } from "./TranslationToggle";
 
 export interface HeaderProps {
@@ -29,6 +27,11 @@ export interface HeaderProps {
   onSignIn?: () => void;
   onSwitchToMobile?: () => void;
 }
+
+const HEADER_TITLE = {
+  en: "Cianfhoghlaim — Coláiste na Déisigh",
+  ga: "Cianfhoghlaim — Coláiste na Déisigh",
+} as const;
 
 export function Header({
   user,
@@ -41,25 +44,24 @@ export function Header({
   return (
     <header className="h-14 bg-slate-950 border-b border-slate-800 flex items-center px-4 justify-between shrink-0">
       <div className="flex items-center gap-3">
-        <CiBrownAjahBadge size={32} />
+        {/* <CiBrandBadge> — the "C" letter mark (clean professional brand) */}
+        <div
+          aria-label="Cianfhoghlaim"
+          className="w-8 h-8 rounded-md bg-emerald-600 flex items-center justify-center font-bold text-white text-sm"
+        >
+          C
+        </div>
         <div className="flex flex-col">
           <h1 className="font-cinzel font-bold text-lg tracking-wider text-emerald-500">
             CIANFHOGHLAIM
           </h1>
           <span className="text-xs text-slate-500 italic">
-            Aes Sedai — servants of all
+            {HEADER_TITLE[language]}
           </span>
         </div>
       </div>
       <div className="flex items-center gap-3">
         {streakDays > 0 && <CiStreakFlame days={streakDays} />}
-        <button
-          onClick={onSwitchToMobile}
-          className="text-slate-400 hover:text-amber-400 transition-colors"
-          title="Switch to mobile client (Tuatha'an wagon)"
-        >
-          <CiTuathanWagon size={20} />
-        </button>
         <Link
           to={"/en/about" as any}
           className="text-slate-300 hover:text-emerald-400 text-sm font-medium transition-colors"
@@ -86,7 +88,7 @@ export function Header({
           </div>
         ) : (
           <CiButton variant="primary" size="sm" onClick={onSignIn}>
-            Sign In
+            {language === "ga" ? "Sínigh Isteach" : "Sign In"}
           </CiButton>
         )}
       </div>

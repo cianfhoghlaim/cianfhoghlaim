@@ -1,0 +1,16 @@
+# defs/3_model_lifecycle/federated_ocr/defs.yaml — Layer 3 Federated OCR mount.
+#
+# Per T4 of the 5-tangent modernization, the v4 federated OCR subsystem
+# was moved from `meaisinfhoghlaim/process/irish_ocr_federated.py` (a
+# 618-LOC orphaned module post-v4 consolidation) to
+# `meaisinfhoghlaim/federated/`. The CelticFederatedOcrComponent
+# emits 1 Dagster `@asset` — `irish_ocr_federated_smoke` — on a
+# 30-minute cron cadence to keep the federated simulator warm.
+type: cianfhoghlaim.orchestration.components.CelticFederatedOcrComponent
+attributes:
+  source_module: cianfhoghlaim.meaisinfhoghlaim.federated
+  model_name: gemma-3-4b
+  num_rounds: 10
+  data_dir: /tmp/irish_htr_dataset_dummy
+  server_address: localhost:8080
+  automation_cron: "*/30 * * * *"

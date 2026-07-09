@@ -603,6 +603,7 @@ def _make_app():
             table_name=LANCEDB_TABLE,
             table_schema=await lancedb.TableSchema.from_class(CodeChunk, primary_key=["id"]),
         )
+        target_table.declare_vector_index(column="embedding")
 
         files = localfs.walk_dir(  # type: ignore[call-arg]
             repo_root,

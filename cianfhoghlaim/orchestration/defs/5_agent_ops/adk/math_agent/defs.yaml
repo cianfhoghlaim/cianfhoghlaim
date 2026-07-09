@@ -1,0 +1,31 @@
+# defs/5_agent_ops/adk/math_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the math_agent (ADK) — one of the
+# 8 NCCA subject agents for the British Isles Educational MMO.
+type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: math_agent
+  framework: adk
+  tools:
+    - math_syllabus_tool
+    - math_past_paper_tool
+    - math_marking_scheme_tool
+    - math_formative_item_tool
+    - math_response_score_tool
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.math
+  langfuse_drop_smoke_spans: true
+  routing_keywords:
+    - mathematics
+    - maths
+    - algebra
+    - calculus
+    - statistics
+    - geometry
+    - leaving cert maths
+    - lc maths
+    - ncca math
+    - the dagda
+    - cauldron of plenty
