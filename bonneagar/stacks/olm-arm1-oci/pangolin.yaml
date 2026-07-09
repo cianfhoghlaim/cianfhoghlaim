@@ -1,8 +1,0 @@
-# OLM (Pangolin Tunnel Client) - ARM1-OCI
-# This is the OLM TCP tunnel client; no public HTTP routes.
-# The OLM site is created in Pangolin UI (Sites -> Create Site -> OLM)
-# and the credentials are stored in Infisical at path /olm-arm1-oci.
-
-# No private-resources — OLM is a TCP tunnel client, not a public service.
-# All OLM access is via the newt tunnel mesh.
-private-resources: {}

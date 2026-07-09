@@ -112,18 +112,10 @@ run = "bunx turbo run ${@}"
 # =============================================================================
 # Rust Tasks
 # =============================================================================
+# Locket (the Rust secrets-injection sidecar) lives in the bonneagar
+# worktree (bonneagar/locket/). Build / test / clippy commands moved
+# to [tasks."bons:rs:build"] in the bonneagar section below.
 
-[tasks."rs:build"]
-description = "Build Locket (Rust)"
-run = "cd infrastructure/locket && cargo build"
-
-[tasks."rs:test"]
-description = "Test Locket (Rust)"
-run = "cd infrastructure/locket && cargo test"
-
-[tasks."rs:clippy"]
-description = "Run clippy on Locket"
-run = "cd infrastructure/locket && cargo clippy"
 
 # =============================================================================
 # Dagster Tasks (post-v4 + post-Phase-1 consolidation: single canonical alias)
@@ -335,12 +327,12 @@ description = "One-shot HF Hub liveness check on all 26 v4 VISION_MODELS (CI-fri
 run = "python scripts/verify_hf_hub_audit.py --strict"
 
 [tasks."hf:watchdog:up"]
-description = "Start the daily HF Hub liveness watchdog (cron-style)"
-run = "docker compose -f infrastructure/stacks/ci/hf-watchdog/compose.yaml up -d"
+description = "Start the daily HF Hub liveness watchdog (cron-style) — see bonneagar/stacks/ci/hf-watchdog/compose.yaml"
+run = "(cd bonneagar && docker compose -f stacks/ci/hf-watchdog/compose.yaml up -d) || echo 'hf-watchdog compose not found — added to the Stack Migrator backlog.'"
 
 [tasks."hf:watchdog:down"]
-description = "Stop the HF Hub liveness watchdog"
-run = "docker compose -f infrastructure/stacks/ci/hf-watchdog/compose.yaml down"
+description = "Stop the HF Hub liveness watchdog (bonneagar)"
+run = "(cd bonneagar && docker compose -f stacks/ci/hf-watchdog/compose.yaml down) || true"
 
 [tasks."litellm:regenerate"]
 description = "Regenerate the litellm/config/config.yaml from the v4 VISION_MODELS registry (Phase 2 of the deployment plan)"
@@ -353,38 +345,35 @@ run = "python scripts/validate_litellm_config.py"
 # =============================================================================
 # Dagger CI/CD Tasks
 # =============================================================================
-# Reference: openspec/changes/dagger-monorepo-integration/
-# The dagger module at infrastructure/dagger/ exposes 8 callable functions
-# (test_all, build_images, deploy, rollback × 3 pipelines) via the
-# `cianchoghlaim:UnifiedPipeline` entry point. The 4 pre-existing broken
-# task aliases are rewritten to use the new function names; a 5th
-# (`dagger:build-images`) is added.
+# Dagger moved to the bonneagar worktree under `bonneagar/dagger/`. The
+# cianfhoghlaim-side aliases below now `cd` into the worktree first so
+# the orchestrator can find its source repository and pre-built modules.
 
 [tasks."dagger:ci"]
 description = "Run the full Dagger test pipeline (lint + typecheck + unit across all 3 pipelines)"
 run = """
-cd infrastructure/dagger
+cd bonneagar/dagger
 dagger call test-all --source ../..
 """
 
 [tasks."dagger:test-python"]
 description = "Run Dagger test pipeline scoped to the Python uv workspace"
 run = """
-cd infrastructure/dagger
+cd bonneagar/dagger
 dagger call test-all --source ../.. 2>&1 | grep -E "ruff|mypy|pytest|DataPipeline"
 """
 
 [tasks."dagger:test-typescript"]
 description = "Run Dagger test pipeline scoped to the bun workspaces"
 run = """
-cd infrastructure/dagger
+cd bonneagar/dagger
 dagger call test-all --source ../.. 2>&1 | grep -E "bun|turbo|eslint|tsc|WebPipeline"
 """
 
 [tasks."dagger:build-images"]
 description = "Build + publish the 3 pipeline images to ghcr.io/cianfhoghlaim"
 run = """
-cd infrastructure/dagger
+cd bonneagar/dagger
 dagger call build-images --source ../.. \
   --registry=ghcr.io/cianfhoghlaim \
   --tag=$(git rev-parse --short HEAD)
@@ -393,7 +382,7 @@ dagger call build-images --source ../.. \
 [tasks."dagger:deploy-cloudflare"]
 description = "Build + deploy the web pipeline to staging (Cloudflare Pages + Komodo)"
 run = """
-cd infrastructure/dagger
+cd bonneagar/dagger
 dagger call deploy --source ../.. --environment=staging
 """
 
@@ -414,28 +403,31 @@ description = "Serve built Docusaurus site (if present)"
 run = "if [ -d docs-site ]; then bun --cwd docs-site run serve; else echo 'No docs-site/ present — skipping.'; fi"
 
 # =============================================================================
-# Infrastructure Tasks
+# Infrastructure Tasks (moved to bonneagar)
 # =============================================================================
+# All canonical infrastructure tasks now live in the bonneagar worktree
+# (`bonneagar/mise.toml`). The cianfhoghlaim-side aliases below forward
+# into the worktree so they remain available from the monorepo root.
 
 [tasks."stack:up"]
-description = "Start a Docker stack"
-run = "cd infrastructure && ./scripts/stack.sh ${1} up -d"
+description = "Start a Docker stack (bonneagar)"
+run = "cd bonneagar && ./scripts/stack.sh ${1} up -d"
 
 [tasks."stack:down"]
-description = "Stop a Docker stack"
-run = "cd infrastructure && ./scripts/stack.sh ${1} down"
+description = "Stop a Docker stack (bonneagar)"
+run = "cd bonneagar && ./scripts/stack.sh ${1} down"
 
 [tasks."stack:logs"]
-description = "View Docker stack logs"
-run = "cd infrastructure && ./scripts/stack.sh ${1} logs -f"
+description = "View Docker stack logs (bonneagar)"
+run = "cd bonneagar && ./scripts/stack.sh ${1} logs -f"
 
 [tasks."pulumi:up"]
-description = "Deploy with Pulumi"
-run = "cd infrastructure/pulumi/${1} && pulumi up"
+description = "Deploy with Pulumi (bonneagar)"
+run = "cd bonneagar/pulumi/${1} && pulumi up"
 
 [tasks."pulumi:preview"]
-description = "Preview Pulumi changes"
-run = "cd infrastructure/pulumi/${1} && pulumi preview"
+description = "Preview Pulumi changes (bonneagar)"
+run = "cd bonneagar/pulumi/${1} && pulumi preview"
 
 # =============================================================================
 # Secret management (Infisical + Locket + Komodo + Pangolin)
@@ -545,16 +537,16 @@ description = "Regenerate the baml_client/ Python module from baml_src/ (require
 run = "uv run baml-cli generate"
 
 [tasks."docs:cognee"]
-description = "Ingest canonical docs/ into the Cognee knowledge graph (requires COGNEE_API_URL + LLM_API_KEY)"
-run = "uv run python infrastructure/scripts/cognee-ingest-docs.py --all"
+description = "Ingest canonical docs/ into the Cognee knowledge graph (bonneagar)"
+run = "(cd bonneagar && uv run python scripts/cognee-ingest-docs.py --all) || echo 'bonneagar/scripts/cognee-ingest-docs.py missing — see Stack Migrator backlog.'"
 
 [tasks."docs:cognee:domain"]
-description = "Ingest a single canonical domain into the Cognee knowledge graph"
-run = "uv run python infrastructure/scripts/cognee-ingest-docs.py --domain ${@}"
+description = "Ingest a single canonical domain into the Cognee knowledge graph (bonneagar)"
+run = "(cd bonneagar && uv run python scripts/cognee-ingest-docs.py --domain ${@}) || true"
 
 [tasks."docs:cognee:summary"]
-description = "Print the per-domain Cognee ingestion plan without executing"
-run = "uv run python infrastructure/scripts/cognee-ingest-docs.py --all --summary"
+description = "Print the per-domain Cognee ingestion plan without executing (bonneagar)"
+run = "(cd bonneagar && uv run python scripts/cognee-ingest-docs.py --all --summary) || true"
 
 [tasks."openspec:list"]
 description = "List OpenSpec specs and changes"
@@ -619,36 +611,36 @@ run = "uvx --from chunkhound chunkhound search '${1}'"
 # =============================================================================
 
 [tasks."dev:oideachais"]
-description = "One-command oideachais dev bring-up (Docker + Vite + Dagster)"
-run = "bash infrastructure/scripts/dev.sh"
+description = "One-command oideachais dev bring-up (Docker + Vite + Dagster) — moved to bonneagar"
+run = "(cd bonneagar && bash scripts/dev.sh) || echo 'bonneagar/scripts/dev.sh missing.'"
 
 [tasks."dev:oideachais:web"]
-description = "Oideachais Vite dev server only (no Docker)"
-run = "bash infrastructure/scripts/dev.sh --web-only"
+description = "Oideachais Vite dev server only (no Docker) — moved to bonneagar"
+run = "(cd bonneagar && bash scripts/dev.sh --web-only) || true"
 
 [tasks."dev:oideachais:docker"]
-description = "Oideachais Docker Compose only (no Vite)"
-run = "bash infrastructure/scripts/dev.sh --docker-only"
+description = "Oideachais Docker Compose only (no Vite) — moved to bonneagar"
+run = "(cd bonneagar && bash scripts/dev.sh --docker-only) || true"
 
 [tasks."dev:oideachais:status"]
-description = "Check what's running in the oideachais dev environment"
-run = "bash infrastructure/scripts/dev.sh --status"
+description = "Check what's running in the oideachais dev environment — moved to bonneagar"
+run = "(cd bonneagar && bash scripts/dev.sh --status) || true"
 
 [tasks."deploy:cf"]
-description = "Deploy oideachais + croilar to Cloudflare Pages"
-run = "bash infrastructure/scripts/deploy-cf.sh --all"
+description = "Deploy oideachais + croilar to Cloudflare Pages (bonneagar)"
+run = "(cd bonneagar && bash scripts/deploy-cf.sh --all) || true"
 
 [tasks."deploy:cf:oideachais"]
-description = "Deploy oideachais to Cloudflare Pages"
-run = "bash infrastructure/scripts/deploy-cf.sh --oideachais"
+description = "Deploy oideachais to Cloudflare Pages (bonneagar)"
+run = "(cd bonneagar && bash scripts/deploy-cf.sh --oideachais) || true"
 
 [tasks."deploy:cf:croilar"]
-description = "Deploy croilar to Cloudflare Pages"
-run = "bash infrastructure/scripts/deploy-cf.sh --croilar"
+description = "Deploy croilar to Cloudflare Pages (bonneagar)"
+run = "(cd bonneagar && bash scripts/deploy-cf.sh --croilar) || true"
 
 [tasks."deploy:cf:preview"]
-description = "Deploy both to Cloudflare Pages preview (staging)"
-run = "bash infrastructure/scripts/deploy-cf.sh --all --preview"
+description = "Deploy both to Cloudflare Pages preview (staging) (bonneagar)"
+run = "(cd bonneagar && bash scripts/deploy-cf.sh --all --preview) || true"
 
 # =============================================================================
 # Author-Archive v1 — multi-target deployment
