@@ -32,9 +32,9 @@ See:
 from __future__ import annotations
 
 import hashlib
-import os
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 import dlt
 
@@ -133,7 +133,7 @@ def _math_syllabus_resource(
 
         # Read the PDF text (PyMuPDF or pdfplumber — whichever is on the venv)
         text = _pdf_to_text(pdf)
-        syllabus = b.ExtractLeavingCertSyllabus(text)
+        syllabus = b.ExtractCurriculumSyllabus(text)
         yield {
             **meta,
             "syllabus": syllabus.model_dump(),
@@ -187,7 +187,7 @@ def _math_past_papers_resource(
             continue
 
         text = _pdf_to_text(pdf)
-        paper = b.ExtractLeavingCertPastPaper(text)
+        paper = b.ExtractExamPaperLayout(text)
         yield {
             **meta,
             "paper": paper.model_dump(),
@@ -210,7 +210,7 @@ def _math_marking_schemes_resource(
             continue
 
         text = _pdf_to_text(pdf)
-        scheme = b.ExtractLeavingCertMarkingScheme(text)
+        scheme = b.ExtractMarkingSchemeGuideline(text)
         yield {
             **meta,
             "marking_scheme": scheme.model_dump(),

@@ -47,3 +47,75 @@ class MarkingScheme {
   total_pages: int
   descriptor_word_count_avg: int
 }
+
+// ============================================================================
+// BAML function — the canonical extractor (BIEP v1)
+// ============================================================================
+// Replaces the legacy `b.ExtractLeavingCertMarkingScheme` from
+// `baml/education/pdfs/leaving_cert_marking_scheme.baml`.
+//
+// Returns the canonical `MarkingScheme` Pydantic class with
+// `GradeDescriptor[]` + `MarkAllocation[]` for the 5 grade bands.
+
+function ExtractMarkingSchemeGuideline(
+  pdf_text: string,
+  subject: string?,
+  year: int?,
+  paper: string?,
+) -> MarkingScheme {
+  client ExtractEn
+  prompt #"
+    You are an Irish Leaving Certificate marking-scheme guideline
+    analyst. Given the text of an NCCA marking-scheme PDF (the
+    companion document to an exam paper), extract the structured
+    scheme.
+
+    Subject context: {{ subject }}
+    Year: {{ year }}
+    Paper context: {{ paper }} (e.g. "paper-1", "paper-2")
+
+    Grade descriptors (one per band):
+      - band: BAND_I (Distinction, >75%) / BAND_II (Higher Merit, 60-75%) /
+              BAND_III (Merit, 50-60%) / BAND_IV (Achieved, 40-50%) /
+              BAND_V (Low Achieved, <40%)
+      - percentage_min / percentage_max: integer bounds (0-100)
+      - descriptor_text_en: full plain-English descriptor
+      - descriptor_text_ga: Irish translation (null if EN-only)
+      - exemplar_responses: array of quoted exemplar responses
+
+    Mark allocations (one per question):
+      - q_id: deterministic ("q1a", "q2b(i)")
+      - total_marks: integer
+      - partial_credit_rules: array of strings ("M1A1: 1 method mark + 1 accuracy mark")
+      - common_mistakes: array of strings
+      - sample_answer: canonical full-credit answer text (or null)
+
+    Document-level fields:
+      - subject: canonical subject slug
+      - scheme_code: e.g. "SCSEC25_Maths_marking_2024"
+      - language: "EN" or "GA"
+      - level: "HL" / "OL" / "FDN"
+      - year: integer
+      - source_pdf: filename
+      - grade_descriptors[]: the populated descriptors
+      - mark_allocations[]: the populated allocations
+      - total_bands: 5 (always; one per MarkingBand)
+      - total_pages: integer
+      - descriptor_word_count_avg: integer average word count per band
+
+    Marking scheme text:
+    ---
+    {{ pdf_text }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
+// ============================================================================
+// Backward-compatibility alias (BIEP v1 — Phase 1.3 migration)
+// ============================================================================
+// The 8 per-subject DLT sources historically called
+// `b.ExtractLeavingCertMarkingScheme` from `baml/education/pdfs/leaving_cert_marking_scheme.baml`.
+// That legacy function is now `## REMOVED` (per the 1.2.3 task) and
+// replaced by this canonical `ExtractMarkingSchemeGuideline`.

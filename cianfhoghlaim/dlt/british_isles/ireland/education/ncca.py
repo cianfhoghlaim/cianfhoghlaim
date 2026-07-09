@@ -7,20 +7,42 @@ Crawls and extracts:
 - Research reports
 - Early childhood, primary, and post-primary content
 
+Per the british-isles-education-pipeline (BIEP) v1 spec, the source
+covers the **6 LC priority subjects** (Mathematics, Chemistry,
+Geography, Gaeilge, English, Computer Science) at the Senior Cycle
+level, in both EN + GA. Partitions are:
+
+    MultiPartitionsDefinition(
+        cycle="senior_cycle",
+        subject=LC6_SUBJECTS,
+        language=["en", "ga"],
+    )
+
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.education.ncca import ncca_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.ncca import (
+        ncca_source, LC6_SUBJECTS, ncca_lc6_partitions,
+    )
 
     # Full crawl (all cycles, subjects, languages)
     pipeline = dlt.pipeline(pipeline_name="ncca", destination="duckdb")
     pipeline.run(ncca_source())
 
-    # Partitioned crawl (specific cycle/subject/language)
-    pipeline.run(ncca_source(
-        cycle="junior_cycle",
-        subject="mathematics",
-        language="en",
-    ))
-"""
+    # BIEP v1 — Senior Cycle × 6 LC subjects × EN + GA
+    pipeline.run(ncca_source(cycle="senior_cycle", subject="chemistry", language="en"))
+
+    # Dagster asset materialisation (the canonical BIEP v1 wiring):
+    @dg.asset(
+        partitions_def=ncca_lc6_partitions,
+        ...
+    )
+    def ncca_lc6_asset(context: dg.AssetExecutionContext):
+        for partition_key in context.partition_keys:
+            cycle, subject, language = partition_key.values_for_partitions()  # type: ignore
+            pipeline.run(ncca_source(cycle=cycle, subject=subject, language=language))
+
+Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+           tasks.md — Sub-batch 3.1
+"""  # noqa: RUF002
 
 import os
 from collections.abc import Iterator
@@ -31,6 +53,25 @@ import dlt
 from observability.logging import get_logger
 
 logger = get_logger(__name__)
+
+
+# ============================================================================
+# BIEP v1 — the 6 LC priority subjects (Phase 3.1)
+# ============================================================================
+LC6_SUBJECTS: list[str] = [
+    "mathematics",
+    "chemistry",
+    "geography",
+    "gaeilge",
+    "english",
+    "computer_science",
+]
+"""The 6 Irish Leaving Certificate priority subjects per the BIEP v1 spec.
+
+Per `openspec/changes/2026-07-06-british-isles-education-pipeline-v1/tasks.md`
+sub-batch 3.1. The 6 subjects span STEM (Mathematics, Chemistry, Computer
+Science), Humanities (Geography, English), and Irish (Gaeilge).
+"""
 
 
 # ============================================================================
@@ -52,9 +93,19 @@ SUBJECT_PATH_MAPPING: dict[str, dict[str, list[str]]] = {
     "english": {"en": ["english"], "ga": ["bearla"]},
     "irish": {"en": ["irish", "gaeilge"], "ga": ["gaeilge"]},
     "mathematics": {"en": ["mathematics", "maths"], "ga": ["matamaitic"]},
+    # BIEP v1 LC6 additions (Phase 3.1) — the 6 priority LC subjects.
+    # "gaeilge" is the canonical LC subject slug (the file-system path is
+    # `leaving_certificate/gaeilge/`); it maps to NCCA's "gaeilge" /
+    # "irish" Irish-language curriculum pages.
+    "gaeilge": {"en": ["gaeilge", "irish"], "ga": ["gaeilge"]},
+    "chemistry": {"en": ["chemistry"], "ga": ["ceimic"]},
+    "computer_science": {
+        "en": ["computer-science", "computer-science-senior-cycle"],
+        "ga": ["ríomheolaíocht"],
+    },
     # STEM
     "science": {"en": ["science"], "ga": ["eolaiocht"]},
-    "technology": {"en": ["technology"], "ga": ["teicneolaiocht"]},
+    "technology": {"en": ["technology"], "ga": ["teicneolaíocht"]},
     "engineering": {"en": ["engineering"], "ga": ["innealtóireacht"]},
     # Humanities
     "history": {"en": ["history"], "ga": ["stair"]},
@@ -394,3 +445,70 @@ def ncca_source_legacy(
         message="Use ncca_source(cycle=...) instead of section parameter",
     )
     return ncca_source(language=language, cycle=section, max_pages=max_pages)
+
+
+# ============================================================================
+# BIEP v1 — the canonical LC6 partition factory (Phase 3.1)
+# ============================================================================
+# Per openspec/changes/2026-07-06-british-isles-education-pipeline-v1/tasks.md
+# sub-batch 3.1:
+#
+#     MultiPartitionsDefinition(cycle="senior_cycle", subject=LC6, language=["en", "ga"])
+#
+# Note: Dagster's MultiPartitionsDefinition is a 2-dimensional construct — we
+# collapse `cycle` (single value: senior_cycle) into the subject dimension
+# using the `senior_cycle__<subject>` composite key pattern (matching the
+# existing `ncca_multipartitions` definition in
+# `cianfhoghlaim/orchestration/partitions.py:195`).
+#
+# Returns the import lazily so the DLT source module can be imported
+# without dragging Dagster into the runtime path.
+def ncca_lc6_partitions() -> Any:
+    """Return the canonical Dagster MultiPartitionsDefinition for the BIEP v1
+    NCCA crawl: (senior_cycle × 6 LC subjects) × (en + ga) = 12 partitions.
+
+    Lazy import to avoid hard-binding DLT to Dagster at module-load time.
+    """  # noqa: RUF002
+    from dagster import MultiPartitionsDefinition, StaticPartitionsDefinition
+
+    # 6 LC subjects under senior_cycle = 6 composite keys
+    _senior_cycle_lc6 = [
+        f"senior_cycle__{subject}" for subject in LC6_SUBJECTS
+    ]
+    return MultiPartitionsDefinition({
+        "cycle_subject": StaticPartitionsDefinition(_senior_cycle_lc6),
+        "language": StaticPartitionsDefinition(["en", "ga"]),
+    })
+
+
+def ncca_lc6_source(
+    cycle: str = "senior_cycle",
+    subject: str | None = None,
+    language: str = "en",
+    max_pages: int = 100,
+):
+    """BIEP v1 NCCA source variant — guarantees cycle+subject+language.
+
+    The `cycle` defaults to `senior_cycle` (the only cycle for the BIEP v1
+    LC6 corpus). `subject` may be one of `LC6_SUBJECTS` or None (all 6).
+    `language` defaults to `en`.
+
+    The function delegates to `ncca_source()` with a sourced name
+    override (`ncca_lc6`) so the Dagster asset materialisations land
+    in the `ncca_lc6` dataset partition instead of the generic `ncca`.
+
+    Per tasks.md sub-batch 3.1.1 — extends ncca.py to cover the 6 LC
+    subjects with MultiPartitionsDefinition(cycle, subject, language).
+    """
+    if cycle not in CYCLE_PATH_MAPPING:
+        raise ValueError(f"cycle must be one of {VALID_CYCLES}, got {cycle!r}")
+    if subject is not None and subject not in LC6_SUBJECTS:
+        raise ValueError(
+            f"subject must be one of {LC6_SUBJECTS} (or None for all), "
+            f"got {subject!r}"
+        )
+    if language not in VALID_LANGUAGES:
+        raise ValueError(
+            f"language must be one of {VALID_LANGUAGES}, got {language!r}"
+        )
+    return ncca_source(language=language, cycle=cycle, subject=subject, max_pages=max_pages)
