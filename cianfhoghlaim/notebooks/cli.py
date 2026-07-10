@@ -46,6 +46,15 @@ GROUPS = (
     "07_educational_stages",
     "08_sources",
     "09_official_media",
+    "10_cognify",  # added 2026-07-14 per openspec change
+                   # `2026-07-14-oideachais-cognify-knowledge-graph-v1`
+                   # — the 9-requirement cognify KG visualizer
+                   # (5-stage cross-stage + 3 leabharlann + 3 FalkorDB
+                   # cross-archive + 1 notebook at 10_cognify/01_knowledge_graph.py).
+    "10_marimo_dashboards",  # added 2026-07-14 per openspec change
+                            # `2026-07-14-oideachais-marimo-dashboards-v1`
+                            # — the 10 follow-up dashboards for the
+                            # oideachais-marimo-dashboards capability spec.
     "10_mmo",
     "11_speedrun",
     "13_baml_cocoindex_tutorial",
