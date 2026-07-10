@@ -66,7 +66,7 @@ class CurriculumExtraction {
   totalSuggestedHours int
 }
 
-function ExtractCurriculumSyllabus(pdf_text: string) -> CurriculumExtraction {
+function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {
   client LitellmClient
   prompt #"
     You are an Irish Leaving Certificate curriculum expert. Extract the

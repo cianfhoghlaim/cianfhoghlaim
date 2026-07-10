@@ -3,7 +3,7 @@
 // =============================================================================
 // 6 content types per the cianfhoghlaim-website-rewrite spec:
 // 1. Subject (NCCA Leaving Certificate subject)
-// 2. PastPaper (LC past exam paper)
+// 2. PastPaperStorage (LC past exam paper)
 // 3. MarkingScheme (LC marking scheme)
 // 4. PracticeItem (formative assessment item)
 // 5. Foundation (NCCA root-level programme PDF)
@@ -16,6 +16,23 @@
 //
 // Per `openspec/changes/cianfhoghlaim-website-rewrite/proposal.md` and
 // `/specs/cianfhoghlaim-website-rewrite/spec.md` Requirement R1 + R6.
+
+// -----------------------------------------------------------------------------
+// Hoisted canonical BilingualText (added 2026-07-12-baml-rename-42-duplicates-v1)
+// -----------------------------------------------------------------------------
+// Merged from the 2 dups the audit resolved:
+//   - root_pdf_extraction.baml (kept as the EN/GA-only canonical BilingualText)
+//   - isles_education.baml (renamed to BilingualTextIsles, multilingual form)
+// The qpack files use MathBilingualText (per-subject prefixed form).
+
+class BilingualText {
+  text_en: string @description("English text")
+  text_ga: string? @description("Irish (Gaeilge) translation; null if EN-only")
+  text_gd: string? @description("Scottish Gaelic (Gàidhlig) translation")
+  text_cy: string? @description("Welsh (Cymraeg) translation")
+  text_gv: string? @description("Manx (Gaelg) translation")
+  text_kw: string? @description("Cornish (Kernewek) translation")
+}
 
 class Subject {
   slug: string @description("NCCA subject slug (mathematics, applied_mathematics, ...)")
@@ -36,7 +53,7 @@ class SubjectMasteryRow {
   level: string @description("attempted | familiar | proficient | mastered")
 }
 
-class PastPaper {
+class PastPaperStorage {
   year: int
   paper_number: int
   paper_label: string @description("e.g., 'Paper 1' or 'Paper 2 (Higher)'")
@@ -116,7 +133,7 @@ function GetSubjectList(language: string) -> Subject[] {
   prompt #"You are the cianfhoghlaim content catalogue. Return the 8 NCCA Leaving Certificate subjects (Mathematics, Applied Mathematics, Chemistry, Geography, History, English, Gaeilge, Computer Science) in {{ language }} with the 5x8 mastery matrix."
 }
 
-function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaper[] {
+function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {
   client "anthropic/claude-sonnet-4-20250514"
   prompt #"You are the cianfhoghlaim content catalogue. Return the LC past exam papers for {{ subject }} from {{ year_from }} to {{ year_to }}, with the year, paper number, topic tags, and CF R2 keys."
 }

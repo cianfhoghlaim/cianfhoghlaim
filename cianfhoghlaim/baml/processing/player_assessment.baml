@@ -62,7 +62,7 @@ class ResponseAnalysis {
 
   spelling_errors SpellingError[]
   grammar_errors GrammarError[]
-  vocabulary_notes VocabularyNote[]
+  vocabulary_notes VocabularyNotePlayer[]
 
   feedback string @description("Encouraging feedback message")
   celtic_feedback string? @description("Feedback in target language")
@@ -84,7 +84,7 @@ class GrammarError {
   similar_examples string[]
 }
 
-class VocabularyNote {
+class VocabularyNotePlayer {
   word string
   note_type string @description("new, review, mastered")
   definition string

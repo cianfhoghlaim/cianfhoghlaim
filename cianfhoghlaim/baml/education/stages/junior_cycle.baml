@@ -66,7 +66,7 @@ enum AchievementLevel {
 
 // -----------------------------------------------------------------------------
 
-class RubricDescriptor {
+class JcRubricDescriptor {
   level AchievementLevel
   text_en string              @description("The full descriptive paragraph in English")
   text_ga string?             @description("Irish translation")
@@ -78,7 +78,7 @@ class CBATask {
   name_en string
   name_ga string?
   year int                    @description("Year 1, 2, or 3 of Junior Cycle")
-  descriptor RubricDescriptor[]
+  descriptor JcRubricDescriptor[]
   weight_pct int?             @description("CBAs are formative; this is for display only")
   duration_weeks int?
 }
@@ -89,15 +89,15 @@ class JCWellbeingStatement {
   indicator string            @description("e.g., 'physical activity', 'mental health', 'citizenship'")
 }
 
-class CurriculumStrand {
+class JcCurriculumStrand {
   name string
   name_ga string?
   description string
   description_ga string?
-  outcomes LearningOutcome[]
+  outcomes JcLearningOutcome[]
 }
 
-class LearningOutcome {
+class JcLearningOutcome {
   code string
   description_en string
   description_ga string?
@@ -109,9 +109,9 @@ class JCSubjectSpec {
   subject JuniorCycleSubject
   short_course JuniorCycleShortCourse?  @description("Populated only for short courses")
   specification_year int
-  strands CurriculumStrand[]              @description("Strands with learning outcomes")
+  strands JcCurriculumStrand[]              @description("Strands with learning outcomes")
   cba_tasks CBATask[]
-  learning_outcomes LearningOutcome[]     @description("Bilingual learning outcomes")
+  learning_outcomes JcLearningOutcome[]     @description("Bilingual learning outcomes")
   specification_url string
   language string                         @description("en | ga | bilingual")
 }

@@ -7,7 +7,7 @@
 //
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate
 
-enum QuestionType {
+enum LcQuestionType {
   SHORT_ANSWER      @description("1-3 sentence response")
   EXTENDED_RESPONSE @description("Longer paragraph response")
   WORKED_SOLUTION   @description("Step-by-step calculation/proof")
@@ -24,7 +24,7 @@ class Question {
   part: string              @description("e.g. 'a', 'b(i)', 'c(ii)'")
   text_en: string
   text_ga: string?
-  question_type: QuestionType
+  question_type: LcQuestionType
   marks: int
   related_lo_id: string?    @description("Learning outcome from syllabus")
 }

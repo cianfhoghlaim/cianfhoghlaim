@@ -21,7 +21,7 @@ class MarkingPoint {
   requiresFormulaImage bool @description("True if this point depends on a LaTeX formula image (handled by Stage 2 diagram_detector)")
 }
 
-class MarkingScheme {
+class MarkingSchemeSec {
   subject string
   year int
   paper string
@@ -44,7 +44,7 @@ enum MarkingType {
   AO7
 }
 
-function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingScheme {
+function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {
   client OideachaisDefault
   prompt #"
     You are an Irish Leaving Certificate marking scheme analyst. Extract
