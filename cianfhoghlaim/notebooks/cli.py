@@ -55,6 +55,12 @@ GROUPS = (
                             # `2026-07-14-oideachais-marimo-dashboards-v1`
                             # — the 10 follow-up dashboards for the
                             # oideachais-marimo-dashboards capability spec.
+    "11_marimo_dashboards_v2",  # added 2026-07-15 per openspec change
+                                # `2026-07-15-oideachais-marimo-dashboards-extension-v1`
+                                # — the 10-dashboard Phase-2 extension
+                                # (leabharlann corpus + university extraction
+                                # + cross-archive edges + K-12 → university
+                                # pipeline coverage).
     "10_mmo",
     "11_speedrun",
     "12_semantic_search",  # added 2026-07-14 per openspec change
