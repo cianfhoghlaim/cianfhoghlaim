@@ -1,32 +1,35 @@
 """
-LC5-subject Dagster asset module — per-subject pipeline for the 5
+LC6-subject Dagster asset module — per-subject pipeline for the 6
 NCCA Leaving Certificate subjects:
   - chemistry (LC022)
   - computer_science (LC219)
+  - english (LC002)
   - gaeilge (LC001)
   - geography (LC005)
   - mathematics (LC003)
 
-Pipeline stages (per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/):
+Pipeline stages (per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/,
+updated for english by openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/):
 
-  Layer 1 (Ingestion):  5 per-subject dlt assets
+  Layer 1 (Ingestion):  6 per-subject dlt assets
                          - lc5_chemistry_ingested
                          - lc5_computer_science_ingested
+                         - lc5_english_ingested
                          - lc5_gaeilge_ingested
                          - lc5_geography_ingested
                          - lc5_mathematics_ingested
                          (each runs cianfhoghlaim.dlt.filesystem.leaving_cert_source
                           filtered by subject)
 
-  Layer 2 (Materials):  5 BAML extraction assets
+  Layer 2 (Materials):  6 BAML extraction assets (each subject × 4 functions)
                          - lc5_<subject>_syllabus_extracted (ExtractCurriculumSyllabus)
                          - lc5_<subject>_papers_extracted    (ExtractExamPaperLayout)
                          - lc5_<subject>_marking_extracted   (ExtractMarkingSchemeGuideline)
                          - lc5_<subject>_diagrams_extracted  (ExtractSyllabusDiagram via molmo2-8b)
 
-  Layer 3 (Lifecycle):  5 cognify assets + 1 cross-subject Graphiti stream
+  Layer 3 (Lifecycle):  6 cognify assets + 1 cross-subject Graphiti stream
                          - lc5_<subject>_cognified
-                         - lc5_cross_subject_graphiti_stream (5 subjects merged)
+                         - lc5_cross_subject_graphiti_stream (6 subjects merged)
 
 Each asset is keyed by the 5-layer group_name convention
 "<N>_<layer>/<domain>/<slug>" with lc5_ prefix.
@@ -74,10 +77,11 @@ except ImportError:
     Graphiti = None
 
 
-# The 5 LC subjects (must match cianfhoghlaim.dlt.filesystem.leaving_cert_source.LC5_SUBJECTS)
-LC5_SUBJECTS: tuple[str, ...] = (
+# The 6 LC subjects (must match cianfhoghlaim.dlt.filesystem.leaving_cert_source.LC6_SUBJECTS)
+LC6_SUBJECTS: tuple[str, ...] = (
     "chemistry",
     "computer_science",
+    "english",
     "gaeilge",
     "geography",
     "mathematics",
@@ -85,7 +89,7 @@ LC5_SUBJECTS: tuple[str, ...] = (
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Layer 1: Ingestion (5 per-subject assets)
+# Layer 1: Ingestion (6 per-subject assets)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
@@ -111,6 +115,19 @@ def lc5_computer_science_ingested(context) -> dict[str, Any]:
     cs_rows = [r for r in rows if r["subject"] == "computer_science"]
     context.add_output_metadata({"row_count": len(cs_rows)})
     return {"rows": len(cs_rows), "subject": "computer_science"}
+
+
+@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest english LC PDFs (en-only at root; LC002 syllabus + ALP/GLP exam papers)")
+def lc5_english_ingested(context) -> dict[str, Any]:
+    """Layer 1 ingestion for english (LC002) — 8 PDFs at root (en-only),
+    routed via qwen3-vl-8b for exam papers and gemma-4-26B-A4B for syllabi."""
+    if not DLT_AVAILABLE:
+        return {"rows": 0, "subject": "english"}
+    context.log.info("ingesting english LC PDFs")
+    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    en_rows = [r for r in rows if r["subject"] == "english"]
+    context.add_output_metadata({"row_count": len(en_rows)})
+    return {"rows": len(en_rows), "subject": "english"}
 
 
 @asset(group_name="1_ingestion/curriculum/lc5", description="Ingest gaeilge LC PDFs (no en/ subdir; Irish-only at root)")
@@ -147,12 +164,12 @@ def lc5_mathematics_ingested(context) -> dict[str, Any]:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Layer 2: BAML materials extraction (5 subjects × 4 BAML functions = 20 assets)
+# Layer 2: BAML materials extraction (6 subjects × 4 BAML functions = 24 assets)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
 def _make_subject_extraction_asset(subject: str, kind: str):
-    """Factory for the 20 per-subject BAML extraction assets (4 kinds × 5 subjects)."""
+    """Factory for the 24 per-subject BAML extraction assets (4 kinds × 6 subjects)."""
     baml_function_map = {
         "syllabus": "ExtractCurriculumSyllabus",
         "papers": "ExtractExamPaperLayout",
@@ -178,14 +195,14 @@ def _make_subject_extraction_asset(subject: str, kind: str):
     return lc5_extraction_asset
 
 
-# Generate the 20 BAML extraction assets
-for _subject in LC5_SUBJECTS:
+# Generate the 24 BAML extraction assets (6 subjects × 4 kinds)
+for _subject in LC6_SUBJECTS:
     for _kind in ("syllabus", "papers", "marking", "diagrams"):
         globals()[f"lc5_{_subject}_{_kind}_extracted"] = _make_subject_extraction_asset(_subject, _kind)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Layer 3: Model Lifecycle (5 per-subject cognify + 1 cross-subject Graphiti)
+# Layer 3: Model Lifecycle (6 per-subject cognify + 1 cross-subject Graphiti)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
@@ -203,6 +220,15 @@ def lc5_computer_science_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "computer_science"}
     return {"entities": 0, "subject": "computer_science"}
+
+
+@asset(group_name="3_model_lifecycle/lc_cognify/lc5/english", description="Cognee cognify for english LC (text-heavy, monolingual dataset)")
+def lc5_english_cognified(context) -> dict[str, Any]:
+    """Per-subject Cognee cognify (oideachais_english dataset)."""
+    if not COGNEE_AVAILABLE:
+        return {"entities": 0, "subject": "english"}
+    # Real call would be: await cognee.cognify(dataset_name="oideachais_english")
+    return {"entities": 0, "subject": "english"}
 
 
 @asset(group_name="3_model_lifecycle/lc_cognify/lc5/gaeilge", description="Cognee cognify for gaeilge LC (multilingual Irish dataset)")
@@ -228,11 +254,11 @@ def lc5_mathematics_cognified(context) -> dict[str, Any]:
 
 @asset(group_name="3_model_lifecycle/lc_cross_subject/lc5", description="Bi-temporal Graphiti stream + FalkorDB cross-subject graph")
 def lc5_cross_subject_graphiti_stream(context) -> dict[str, Any]:
-    """Cross-subject Graphiti temporal stream — 5 subjects merged into a FalkorDB graph.
+    """Cross-subject Graphiti temporal stream — 6 subjects merged into a FalkorDB graph.
 
     Nodes: Subject, Topic, LearningOutcome, Question, Year, ModuleKind
     Edges: HAS_TOPIC, ASSESSED_BY, EVOLVED_TO, EN_CORRESPONDS_TO_GA (cross-linguistic)
     """
     if not GRAPHITI_AVAILABLE:
-        return {"episodes": 0, "subjects": len(LC5_SUBJECTS)}
-    return {"episodes": 0, "subjects": len(LC5_SUBJECTS)}
+        return {"episodes": 0, "subjects": len(LC6_SUBJECTS)}
+    return {"episodes": 0, "subjects": len(LC6_SUBJECTS)}
