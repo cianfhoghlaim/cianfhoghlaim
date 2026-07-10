@@ -219,12 +219,14 @@ function GenerateArtworkSpec(
 
     Subject/concept: {{ subject }}
     Target music genre: {{ target_genre }}
-    {{ #if preferred_mood }}Preferred mood: {{ preferred_mood }}{{ /if }}
+    {% if preferred_mood %}
+    Preferred mood: {{ preferred_mood }}
+    {% endif %}
 
-    {{ #if reference_artwork }}
+    {% if reference_artwork %}
     Use this reference artwork for style inspiration:
     {{ reference_artwork }}
-    {{ /if }}
+    {% endif %}
 
     Generate a complete specification including:
     - Detailed generation prompt

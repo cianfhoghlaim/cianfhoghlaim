@@ -138,10 +138,10 @@ class ChemQuestPackValidation {
 }
 
 function GenerateChemQuestPack(
-  syllabus LeavingCertSyllabus,
-  past_papers LeavingCertPastPaper[],
-  marking_schemes LeavingCertMarkingScheme[],
-  level string
+  syllabus: LeavingCertSyllabus,
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
+  level: string
 ) -> ChemQuestPack {
   client ExtractEnStrong
   prompt #"
@@ -179,14 +179,14 @@ function ExtractChemLOStatement(paragraph: string) -> string[] {
 // ExtractChemGaStatement (added 2026-07-13-baml-cocoindex-tutorials-ga-v1)
 // -----------------------------------------------------------------------------
 // The bilingual EN+GA variant of ExtractChemLOStatement. Same
-// return shape (`string[]`); routes via `client default`; the
+// return shape (`string[]`); routes via `client Default`; the
 // prompt asks for the Irish (Gaeilge) statements verbatim with a
 // leading '[EN-only]' fallback marker for LOs the NCCA did not
 // translate. LC Chemistry syllabi are mostly English-only, so the
 // fallback path is the common case.
 
 function ExtractChemGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"
     Extract all NCCA Chemistry strand/outcome statements in Irish
     (Gaeilge) from the following NCCA syllabus paragraph. Return
@@ -202,10 +202,10 @@ function ExtractChemGaStatement(paragraph: string) -> string[] {
 }
 
 function GenerateChemFormativeItem(
-  lo_code string,
-  difficulty int,
-  level string,
-  topic string
+  lo_code: string,
+  difficulty: int,
+  level: string,
+  topic: string
 ) -> ChemFormativeItem {
   client ExtractEnStrong
   prompt #"
@@ -224,8 +224,8 @@ function GenerateChemFormativeItem(
 }
 
 function ScoreChemFormativeResponse(
-  item ChemFormativeItem,
-  attempt ChemFormativeItemAttempt
+  item: ChemFormativeItem,
+  attempt: ChemFormativeItemAttempt
 ) -> ChemScoreBreakdown {
   client ExtractEnStrong
   prompt #"

@@ -127,7 +127,7 @@ class GeogQuestPackValidation {
   warnings string[]
 }
 
-function GenerateGeogQuestPack(syllabus: LeavingCertSyllabus, past_papers: LeavingCertPastPaper[], marking_schemes: LeavingCertMarkingScheme[], level: string) -> GeogQuestPack {
+function GenerateGeogQuestPack(syllabus: LeavingCertSyllabus, past_papers: PastPaper[], marking_schemes: MarkingSchemeSec[], level: string) -> GeogQuestPack {
   client ExtractEnStrong
   prompt #"
     You are an Irish Leaving Certificate Geography expert. Build a formative
@@ -159,12 +159,12 @@ function ExtractGeogLOStatement(paragraph: string) -> string[] {
 // ExtractGeogGaStatement (added 2026-07-13-baml-cocoindex-tutorials-ga-v1)
 // -----------------------------------------------------------------------------
 // The bilingual EN+GA variant of ExtractGeogLOStatement. Same
-// return shape; routes via `client default`; the prompt asks for
+// return shape; routes via `client Default`; the prompt asks for
 // the Irish (Gaeilge) statements verbatim with a leading '[EN-only]'
 // fallback marker for LOs the NCCA did not translate.
 
 function ExtractGeogGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"
     Extract all NCCA Geography strand/outcome statements in Irish
     (Gaeilge) from the following NCCA syllabus paragraph. Return

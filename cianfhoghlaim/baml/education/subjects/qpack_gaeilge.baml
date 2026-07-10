@@ -146,10 +146,10 @@ class GaelQuestPackValidation {
 }
 
 function GenerateGaelQuestPack(
-  syllabus LeavingCertSyllabus,
-  past_papers LeavingCertPastPaper[],
-  marking_schemes LeavingCertMarkingScheme[],
-  level string
+  syllabus: LeavingCertSyllabus,
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
+  level: string
 ) -> GaelQuestPack {
   client ExtractEnStrong
   prompt #"
@@ -198,13 +198,13 @@ function ExtractGaelLOStatement(paragraph: string) -> string[] {
 // -----------------------------------------------------------------------------
 // The bilingual EN+GA variant of ExtractGaelLOStatement. Identical
 // shape (`string[]`) but the prompt is Irish-first and routes via
-// `client default` so it can be benchmarked against the EN variant
+// `client Default` so it can be benchmarked against the EN variant
 // (`ExtractGaelLOStatement` → `client ExtractEn`). Both shapes
 // emit the same list-of-strings shape so the qpack pipeline can
 // run either path without code changes.
 
 function ExtractGaelGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"
     Extract all NCCA Gaeilge strand/outcome statements in Irish
     (Gaeilge) from the following NCCA syllabus paragraph. Return
@@ -218,10 +218,10 @@ function ExtractGaelGaStatement(paragraph: string) -> string[] {
 }
 
 function GenerateGaelFormativeItem(
-  lo_code string,
-  difficulty int,
-  level string,
-  topic string
+  lo_code: string,
+  difficulty: int,
+  level: string,
+  topic: string
 ) -> GaelFormativeItem {
   client ExtractEnStrong
   prompt #"
@@ -247,8 +247,8 @@ function GenerateGaelFormativeItem(
 }
 
 function ScoreGaelFormativeResponse(
-  item GaelFormativeItem,
-  attempt GaelFormativeItemAttempt
+  item: GaelFormativeItem,
+  attempt: GaelFormativeItemAttempt
 ) -> GaelScoreBreakdown {
   client ExtractEnStrong
   prompt #"

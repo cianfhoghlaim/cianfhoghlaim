@@ -277,7 +277,7 @@ class EiraicTreasures {
 //   geography, english, gaeilge, history
 
 function GetEiraicTreasures(subject: string) -> EiraicTreasures {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the lore-keeper of the Cianfhoghlaim Educational MMO.
 
 At the Second Battle of Mag Tuired (Cath Maige Tuired), Lugh demanded an

@@ -142,7 +142,7 @@ class BridgeEdge {
 
 function ExtractAistearFrameworkFromText(text: string,
   language: string) -> AistearDocument {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing the Irish Aistear Framework for early childhood education (ages 0-6).
 
 Parse the Aistear framework document and extract its complete structure.
@@ -178,7 +178,7 @@ All content must be BILINGUAL (English and Irish). For each piece of text, provi
 
 
 function ExtractNaionraListing(page_markdown: string) -> Naionra[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing listings of Irish-medium early childhood education services (naíonraí).
 
 Parse a directory listing of naíonraí (Irish-medium pre-schools) and extract structured data.
@@ -211,7 +211,7 @@ This data supports the "Find nearest naíonra" feature in the Aistear team's Nai
 
 function BridgeAistearToPrimary(aistear_doc: AistearDocument,
   primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at identifying bridges between the Aistear early childhood framework and the Primary School curriculum.
 
 Aistear is the curriculum framework for children aged 0-6, while Primary curriculum begins at Junior Infants (age 4-5). Identify how Aistear themes and learning goals support, prepare, or align with the Primary curriculum area.
@@ -244,7 +244,7 @@ These edges power the cross-stage cognify pass and enable "What did my pre-schoo
 
 
 function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {
-  client "litellm/gemini-2.0-flash"
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish early-childhood (Aistear) curriculum analyst
     working for Cianfhoghlaim Oideachais (the bilingual agentic platform
@@ -318,7 +318,7 @@ function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework {
 // Alias for the canonical aistear.baml ExtractAistearFramework(text, language) call
 function ExtractAistearFramework(text: string,
   language: string) -> AistearDocument {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"Backward-compat alias for ExtractAistearFrameworkFromText.
 
     LANGUAGE: {{ language }}

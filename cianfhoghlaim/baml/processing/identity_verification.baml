@@ -46,9 +46,9 @@ class VerificationSummary {
   documents IdentityDocument[]
   vetting GardaVetting | null
   registrations ProfessionalRegistration[]
-  totalVerified number
-  totalPending number
-  totalExpired number
+  totalVerified int
+  totalPending int
+  totalExpired int
   lastUpdated string
 }
 

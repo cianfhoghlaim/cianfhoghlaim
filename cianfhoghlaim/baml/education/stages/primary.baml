@@ -89,7 +89,7 @@ class PrimaryCurriculumArea {
 function ExtractPrimaryFramework(text: string,
   stage: PrimaryStage,
   area: PrimaryAreaCode) -> PrimaryCurriculumArea {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing the Irish Primary School Curriculum (NCCA, ages 4-12).
 
 Parse a Primary curriculum area document for a specific stage and area.
@@ -125,7 +125,7 @@ For bilingual content, provide both description_en and description_ga variants. 
 function ExtractPrimaryLearningOutcomes(text: string,
   stage: PrimaryStage,
   area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at extracting individual learning outcomes from the Irish Primary School Curriculum.
 
 Parse learning outcomes for a specific stage and curriculum area.
@@ -165,7 +165,7 @@ The 4 stages of Primary are:
 function ExtractPrimaryFrameworkFromUrl(source_url: string,
   stage: PrimaryStage,
   area: PrimaryAreaCode) -> PrimaryCurriculumArea {
-  client "litellm/gemini-2.0-flash"
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish primary curriculum analyst working for
     Cianfhoghlaim Oideachais (the bilingual agentic platform).

@@ -8,26 +8,26 @@
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate
 
 class GaelicTopic {
-  ga_term: string
-  ga_part_of_speech: string  @description("noun, verb, adjective, etc.")
-  ga_definition_en: string
-  source_pdf: string
-  subject: string
+  ga_term string
+  ga_part_of_speech string  @description("noun, verb, adjective, etc.")
+  ga_definition_en string
+  source_pdf string
+  subject string
 }
 
 class EnglishEquivalent {
-  en_term: string
-  en_definition: string
-  matches_se_focmara_clause: bool  @description("True if also found in the Foclóir Maith / Gramadach na Gaeilge")
+  en_term string
+  en_definition string
+  matches_se_focmara_clause bool  @description("True if also found in the Foclóir Maith / Gramadach na Gaeilge")
 }
 
 class CrossLinguisticConcept {
-  subject: string
-  concept_id: string
-  gaelic: GaelicTopic
-  english: EnglishEquivalent
+  subject string
+  concept_id string
+  gaelic GaelicTopic
+  english EnglishEquivalent
   // Translation fidelity: 1.0 = exact equivalent, 0.0 = culture-specific
-  translation_fidelity: float
+  translation_fidelity float
   // Cultural / contextual notes
-  notes: string?
+  notes string?
 }

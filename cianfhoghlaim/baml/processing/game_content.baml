@@ -84,10 +84,10 @@ class QuestReward {
 
 // Generate quest from curriculum
 function GenerateLanguageQuest(
-  learning_outcome LearningOutcome,
-  language CelticLanguage,
-  zone string,
-  difficulty QuestDifficulty
+  learning_outcome: LearningOutcome,
+  language: CelticLanguage,
+  zone: string,
+  difficulty: QuestDifficulty
 ) -> Quest {
   client CelticContentFallback
   prompt #"
@@ -116,10 +116,10 @@ function GenerateLanguageQuest(
 
 // Generate mythology-based quest
 function GenerateMythologyQuest(
-  story MythologicalStory,
-  character MythologicalCharacter?,
-  language CelticLanguage,
-  difficulty QuestDifficulty
+  story: MythologicalStory,
+  character: MythologicalCharacter?,
+  language: CelticLanguage,
+  difficulty: QuestDifficulty
 ) -> Quest {
   client Claude
   prompt #"
@@ -179,10 +179,10 @@ class NPCGreeting {
 }
 
 function GenerateNPC(
-  zone string,
-  role string,
-  language CelticLanguage,
-  mythological_inspiration MythologicalCharacter?
+  zone: string,
+  role: string,
+  language: CelticLanguage,
+  mythological_inspiration: MythologicalCharacter?
 ) -> NPC {
   client CelticContentFallback
   prompt #"
@@ -237,15 +237,15 @@ class LocationFeature {
   native_name string
   feature_type string @description("landmark, shop, shrine, etc.")
   description string
- : interaction: string? @description("What players can do")
+  interaction string? @description("What players can do")
   educational_content string? @description("What players learn")
 }
 
 function GenerateGameLocation(
-  zone string,
-  real_world_basis string?,
-  mythology_connection MythologicalLocation?,
-  language CelticLanguage
+  zone: string,
+  real_world_basis: string?,
+  mythology_connection: MythologicalLocation?,
+  language: CelticLanguage
 ) -> GameLocation {
   client Claude
   prompt #"
@@ -293,10 +293,10 @@ class GameItem {
 }
 
 function GenerateGameItem(
-  item_type string,
-  rarity string,
-  mythology_inspiration string?,
-  language CelticLanguage
+  item_type: string,
+  rarity: string,
+  mythology_inspiration: string?,
+  language: CelticLanguage
 ) -> GameItem {
   client FastExtraction
   prompt #"

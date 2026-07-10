@@ -132,7 +132,7 @@ class L2LPOutcome {
 
 function ExtractJCSpec(text: string,
   subject: string) -> JCSubjectSpec {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing NCCA Junior Cycle subject specifications (Irish secondary school, ages 12-15).
 
 Parse a complete Junior Cycle specification for a subject.
@@ -169,7 +169,7 @@ The 18 Junior Cycle subjects are: Art, Business Studies, CSPE, Classics, English
 
 function ExtractCBADescriptor(text: string,
   task_name: string) -> CBATask {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing NCCA Junior Cycle Classroom-Based Assessment (CBA) task descriptors.
 
 Parse a single CBA task description.
@@ -208,7 +208,7 @@ CBAs account for a significant portion of the Junior Cycle final grade, so extra
 
 function ExtractShortCourse(text: string,
   course_name: string) -> JuniorCycleShortCourse {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing NCCA Junior Cycle Short Course specifications.
 
 Parse a Junior Cycle Short Course (typically 100 hours of student work over 1-2 years).
@@ -241,7 +241,7 @@ function ExtractJCSpecFromUrl(
   source_url: string,
   subject: JuniorCycleSubject
 ) -> JCSubjectSpec {
-  client "litellm/gemini-2.0-flash"
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish Junior Cycle curriculum analyst working for
     Cianfhoghlaim Oideachais (the bilingual agentic platform).

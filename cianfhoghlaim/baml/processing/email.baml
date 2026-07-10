@@ -47,10 +47,10 @@ class EmailClassificationResult {
 }
 
 function ClassifyEmail(
-  email_subject string,
-  email_body string,
-  sender_domain string,
-  recipient_domain string
+  email_subject: string,
+  email_body: string,
+  sender_domain: string,
+  recipient_domain: string
 ) -> EmailClassificationResult {
   client ExtractEn
   prompt #"
@@ -102,8 +102,8 @@ class EmailThread {
 }
 
 function ExtractEmailThread(
-  thread_messages string[],
-  thread_subject string
+  thread_messages: string[],
+  thread_subject: string
 ) -> EmailThread {
   client ExtractEn
   prompt #"
@@ -144,8 +144,8 @@ class CandidatePDF {
 }
 
 function LinkEmailToResearch(
-  email_body string,
-  candidate_pdfs CandidatePDF[]
+  email_body: string,
+  candidate_pdfs: CandidatePDF[]
 ) -> ResearchLink[] {
   client ExtractEnStrong
   prompt #"

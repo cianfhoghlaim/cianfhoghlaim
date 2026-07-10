@@ -41,7 +41,7 @@ function ExtractPIABPage(
   page_url: string,
   page_html: string,
 ) -> PIABPage {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Personal Injuries Assessment Board (PIAB)
     extraction specialist working for Cianfhoghlaim Oideachais.

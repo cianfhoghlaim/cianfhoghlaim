@@ -81,7 +81,7 @@ class TriplesResult {
 // -----------------------------------------------------------------------------
 
 function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {
-  client default
+  client Default
   prompt #"
     You are a doc-skill tagger. Given a single documentation file's
     contents ({{ content }}) and its on-disk path ({{ path }}), return
@@ -106,7 +106,7 @@ function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {
 }
 
 function ExtractTriples(content: string, path: string) -> TriplesResult {
-  client default
+  client Default
   prompt #"
     You are a knowledge-graph triple extractor. Given a single
     documentation file's contents ({{ content }}) and its on-disk
@@ -131,15 +131,8 @@ function ExtractTriples(content: string, path: string) -> TriplesResult {
 
 test ExtractDocSkillTagSmokeTest {
   functions [ExtractDocSkillTag]
-  input {
+  args {
     content "Step-by-step tutorial that walks the user through deploying a BAML project locally."
     path "docs/03_quadrants/04_baml/01_tutorials/01_baml_post_v4_syntax.md"
-  }
-  output {
-    category "TUTORIAL"
-    quadrant "OIDEACHAIS"
-    confidence 0.92
-    short_label "BAML post-v4 syntax tutorial"
-    is_canonical false
   }
 }

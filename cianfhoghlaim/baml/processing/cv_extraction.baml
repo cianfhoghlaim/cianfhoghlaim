@@ -46,10 +46,10 @@ class Reference {
   @@stream.done
 }
 
-class SkillCategory {
+class SkillCategoryCv {
   category string @description("e.g. Music Production, Software Development, Languages, Teaching")
   skills string[]
-  proficiency number @description("0-100 self-assessed proficiency level")
+  proficiency float @description("0-100 self-assessed proficiency level")
   @@stream.done
 }
 
@@ -86,7 +86,7 @@ function ExtractReference(text: string) -> Reference[] {
   // Name, title, institution, email, relationship.
 }
 
-function ExtractSkills(text: string) -> SkillCategory[] {
+function ExtractSkills(text: string) -> SkillCategoryCv[] {
   // Extracts skill categories with proficiency levels.
   // Categories: Music Production, Software Development, Languages, Teaching.
 }

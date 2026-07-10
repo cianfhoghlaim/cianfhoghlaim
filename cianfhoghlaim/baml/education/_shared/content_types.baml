@@ -145,32 +145,32 @@ class Notebook {
 }
 
 function GetSubjectList(language: string) -> Subject[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the cianfhoghlaim content catalogue. Return the 8 NCCA Leaving Certificate subjects (Mathematics, Applied Mathematics, Chemistry, Geography, History, English, Gaeilge, Computer Science) in {{ language }} with the 5x8 mastery matrix."
 }
 
 function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the cianfhoghlaim content catalogue. Return the LC past exam papers for {{ subject }} from {{ year_from }} to {{ year_to }}, with the year, paper number, topic tags, and CF R2 keys."
 }
 
 function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> MarkingSchemeShared[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the cianfhoghlaim content catalogue. Return the LC marking schemes for {{ subject }} from {{ year_from }} to {{ year_to }}, with the rubric style, criteria, common mistakes, and penalisations."
 }
 
 function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the cianfhoghlaim formative assessment generator. Generate 3-5 practice items for {{ subject }} {{ lo_code }}, bilingual EN + GA, with the 13-tier éraic mastery progression."
 }
 
 function GetFoundations() -> Foundation[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the cianfhoghlaim content catalogue. Return the 5 NCCA root-level programme PDFs (key-competencies, sc-l1-l2-programme, scr-advisory, online-learning, online-certification) with the page count and description."
 }
 
 function GetNotebooks(subject: string) -> Notebook[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are the cianfhoghlaim content catalogue. Return the marimo notebooks for {{ subject }} (1 main + any cross-subject notebooks) with the title, marimo URL, cocoindex path, and difficulty."
 }
 
@@ -182,19 +182,19 @@ function GetNotebooks(subject: string) -> Notebook[] {
 // `notebooks/13_baml_cocoindex_tutorial/*_ga.py` build on. They
 // accept the bilingual text content + an NCCA strand paragraph and
 // return the EN+GA structured form. The 2 functions deliberately
-// share the same `client default` + the same `@@description` style
+// share the same `client Default` + the same `@@description` style
 // so the bilingual EN+GA path is one of the canonical
-// `client default` extractions (alongside the 121 Extract* functions
+// `client Default` extractions (alongside the 121 Extract* functions
 // from the v0.223.0 / 5-tangent bump).
 
 /// Bilingual EN+GA text extractor; returns the canonical BilingualText shape.
 function ExtractBilingualText(content: string) -> BilingualText {
-  client default
+  client Default
   prompt #"Extract the structured bilingual text from: {{ content }}. Return the English text (text_en) and the Irish (Gaeilge) text (text_ga) where present. If only one language is present in the source, leave the other field as null. The 6-language form (text_gd / text_cy / text_gv / text_kw) stays null unless the source explicitly carries Scottish Gaelic / Welsh / Manx / Cornish text."#
 }
 
 /// NCCA strand/outcome extractor; returns the GA-canonical statement list.
 function ExtractStrandGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"Extract the NCCA strand/outcome statements in Irish (Gaeilge) from: {{ paragraph }}. Return them as a list of full Irish statements, verbatim from the source, with the LO code if present (e.g. 'LC-GAEL-LO-2.4: ...'). Use the same wording and punctuation as the NCCA source PDF."#
 }

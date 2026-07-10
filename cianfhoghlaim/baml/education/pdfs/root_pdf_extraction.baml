@@ -18,32 +18,32 @@
 // Shared types
 // ============================================================================
 
-class BilingualText {
-  text_en: string @description("English text")
-  text_ga: string? @description("Irish translation; null if EN-only")
+class BilingualTextRootPdf {
+  text_en string @description("English text")
+  text_ga string? @description("Irish translation; null if EN-only")
 }
 
 class EvidenceLink {
-  source_pdf: string @description("Filename of the source NCCA root-level PDF")
-  source_page: int @description("PDF page where the content appears (1-indexed)")
-  excerpt_en: string @description("Verbatim English excerpt from the source")
-  excerpt_ga: string? @description("Verbatim Irish excerpt (if available)")
+  source_pdf string @description("Filename of the source NCCA root-level PDF")
+  source_page int @description("PDF page where the content appears (1-indexed)")
+  excerpt_en string @description("Verbatim English excerpt from the source")
+  excerpt_ga string? @description("Verbatim Irish excerpt (if available)")
 }
 
 // ============================================================================
 // Function 1: Extract the 5 NCCA Key Competencies
 // ============================================================================
 
-class NCCAKeyCompetency {
-  code: string @description("Canonical NCCA competency code, e.g., 'KC-IP', 'KC-CO', 'KC-WO', 'KC-PE', 'KC-CT'")
-  name: BilingualText @description("The full competency name (EN + GA)")
-  definition: BilingualText @description("The full competency definition statement")
-  evidence: EvidenceLink
+class NCCAKeyCompetencyRootPdf {
+  code string @description("Canonical NCCA competency code, e.g., 'KC-IP', 'KC-CO', 'KC-WO', 'KC-PE', 'KC-CT'")
+  name BilingualTextRootPdf @description("The full competency name (EN + GA)")
+  definition BilingualTextRootPdf @description("The full competency definition statement")
+  evidence EvidenceLink
   @@stream.done
 }
 
-function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetency[] {
-  client "anthropic/claude-sonnet-4-20250514"
+function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {
+  client Claude
   prompt #"You are an expert at extracting the 5 NCCA Senior Cycle Key Competencies from the official NCCA document.
 
 Given the text of the `key-competencies-in-senior-cycle_en.pdf` document, extract exactly 5 NCCA Key Competencies. Each competency has a code, a name, and a definition statement.
@@ -82,16 +82,16 @@ Return the 5 competencies in this exact order:
 // ============================================================================
 
 class PedagogySet {
-  introduction: BilingualText
-  pedagogical_principles: BilingualText[] @description("The 6-10 pedagogical principles for online learning")
-  recommended_practices: BilingualText[] @description("The recommended practices for educators")
-  technology_recommendations: BilingualText[] @description("The technology recommendations")
-  evidence: EvidenceLink
+  introduction BilingualTextRootPdf
+  pedagogical_principles BilingualTextRootPdf[] @description("The 6-10 pedagogical principles for online learning")
+  recommended_practices BilingualTextRootPdf[] @description("The recommended practices for educators")
+  technology_recommendations BilingualTextRootPdf[] @description("The technology recommendations")
+  evidence EvidenceLink
   @@stream.done
 }
 
 function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at extracting pedagogical guidance from the NCCA document on online learning environments.
 
 Given the text of `the-potential-of-online-learning-environments_en.pdf`, extract:
@@ -110,16 +110,16 @@ Given the text of `the-potential-of-online-learning-environments_en.pdf`, extrac
 // ============================================================================
 
 class CertGuidance {
-  introduction: BilingualText
-  certification_mechanisms: BilingualText[] @description("The mechanisms for online certification (e.g., digital badges, e-portfolios, blockchain credentials)"]
-  reporting_recommendations: BilingualText[] @description("The recommendations for online reporting"]
-  technology_requirements: BilingualText[] @description("The technology requirements for online certification"]
-  evidence: EvidenceLink
+  introduction BilingualTextRootPdf
+  certification_mechanisms BilingualTextRootPdf[] @description("The mechanisms for online certification (e.g., digital badges, e-portfolios, blockchain credentials)")
+  reporting_recommendations BilingualTextRootPdf[] @description("The recommendations for online reporting")
+  technology_requirements BilingualTextRootPdf[] @description("The technology requirements for online certification")
+  evidence EvidenceLink
   @@stream.done
 }
 
 function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at extracting certification + reporting guidance from the NCCA document.
 
 Given the text of `the-potential-of-technology-to-support-online-certification-and-reporting.pdf`, extract:
@@ -138,16 +138,16 @@ Given the text of `the-potential-of-technology-to-support-online-certification-a
 // ============================================================================
 
 class ExaminerCommentary {
-  introduction: BilingualText
-  paper_by_paper_guidance: BilingualText[] @description("The paper-by-paper guidance from the Chief Examiner"]
-  common_mistakes: BilingualText[] @description("The common mistakes flagged by the Chief Examiner"]
-  marker_expectations: BilingualText[] @description("The marker expectations (PCLM conventions, marking patterns)"]
-  evidence: EvidenceLink
+  introduction BilingualTextRootPdf
+  paper_by_paper_guidance BilingualTextRootPdf[] @description("The paper-by-paper guidance from the Chief Examiner")
+  common_mistakes BilingualTextRootPdf[] @description("The common mistakes flagged by the Chief Examiner")
+  marker_expectations BilingualTextRootPdf[] @description("The marker expectations (PCLM conventions, marking patterns)")
+  evidence EvidenceLink
   @@stream.done
 }
 
 function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at extracting Chief Examiner commentary from the SEC State Examinations Commission Advisory Report.
 
 Given the text of `scr-advisory-report_en.pdf`, extract:
@@ -166,16 +166,16 @@ Given the text of `scr-advisory-report_en.pdf`, extract:
 // ============================================================================
 
 class AimsExpectations {
-  introduction: BilingualText
-  aims: BilingualText[] @description("The 4-8 aims of the Senior Cycle programme"]
-  expectations: BilingualText[] @description("The expectations for students at L1 (Foundation) and L2 (Ordinary) levels"]
-  rationale: BilingualText @description("The rationale for the Senior Cycle curriculum"]
-  evidence: EvidenceLink
+  introduction BilingualTextRootPdf
+  aims BilingualTextRootPdf[] @description("The 4-8 aims of the Senior Cycle programme")
+  expectations BilingualTextRootPdf[] @description("The expectations for students at L1 (Foundation) and L2 (Ordinary) levels")
+  rationale BilingualTextRootPdf @description("The rationale for the Senior Cycle curriculum")
+  evidence EvidenceLink
   @@stream.done
 }
 
 function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at extracting the Senior Cycle L1 + L2 Programme Statement from the NCCA document.
 
 Given the text of `SC-L1-L2-Programme-Statement.pdf`, extract:

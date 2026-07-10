@@ -21,36 +21,36 @@ enum DiagramMode {
 }
 
 class DiagramCoordinate {
-  x: float @description("X coordinate in the SVG / Canvas space")
-  y: float @description("Y coordinate in the SVG / Canvas space")
+  x float @description("X coordinate in the SVG / Canvas space")
+  y float @description("Y coordinate in the SVG / Canvas space")
 }
 
 class DiagramNode {
-  id: string @description("Stable UUID for the diagram node")
-  label: BilingualText @description("The visible label on the node")
-  type: string @description("One of: 'root', 'subject', 'topic', 'lo', 'paper', 'year', 'question', 'principle', 'mistake', 'trap'")
-  coordinate: DiagramCoordinate
-  weight_pct: float? @description("Optional weight percentage (e.g., for LOs: percentage of total exam marks)")
-  color: string? @description("Optional hex colour (e.g., the subject colour)")
+  id string @description("Stable UUID for the diagram node")
+  label BilingualText @description("The visible label on the node")
+  type string @description("One of: 'root', 'subject', 'topic', 'lo', 'paper', 'year', 'question', 'principle', 'mistake', 'trap'")
+  coordinate DiagramCoordinate
+  weight_pct float? @description("Optional weight percentage (e.g., for LOs: percentage of total exam marks)")
+  color string? @description("Optional hex colour (e.g., the subject colour)")
 }
 
 class DiagramEdge {
-  source: string @description("Source node ID")
-  target: string @description("Target node ID")
-  label: BilingualText? @description("Optional edge label")
-  weight: float? @description("Optional edge weight (e.g., for question flows: number of questions per topic-paper pair)")
-  kind: string? @description("One of: 'prerequisite', 'assessment', 'mistake', 'trap', 'mastery'")
+  source string @description("Source node ID")
+  target string @description("Target node ID")
+  label BilingualText? @description("Optional edge label")
+  weight float? @description("Optional edge weight (e.g., for question flows: number of questions per topic-paper pair)")
+  kind string? @description("One of: 'prerequisite', 'assessment', 'mistake', 'trap', 'mastery'")
 }
 
 class DiagramPayload {
-  mode: DiagramMode
-  subject: string
-  language: "en" | "ga"
-  nodes: DiagramNode[]
-  edges: DiagramEdge[]
-  caption: BilingualText @description("The descriptive caption above the diagram")
-  source_evidence: BilingualText @description("The source PDF references for the diagram content")
-  rendered_at: string @description("ISO 8601 timestamp of when the diagram was rendered")
+  mode DiagramMode
+  subject string
+  language string @description("Language code: 'en' or 'ga'")
+  nodes DiagramNode[]
+  edges DiagramEdge[]
+  caption BilingualText @description("The descriptive caption above the diagram")
+  source_evidence BilingualText @description("The source PDF references for the diagram content")
+  rendered_at string @description("ISO 8601 timestamp of when the diagram was rendered")
 }
 
 // ============================================================================
@@ -59,13 +59,13 @@ class DiagramPayload {
 
 function RenderConceptMap(
   subject: string,
-  language: "en" | "ga",
+  language: string,
   syllabus_topics_json: string,
   past_papers_json: string,
   marking_schemes_json: string,
   five_key_competencies_json: string,
 ) -> DiagramPayload {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at rendering concept-map diagrams for Irish Leaving Certificate subjects.
 
 Given:
@@ -96,11 +96,11 @@ consuming app will render the SVG via React Flow + D3.
 
 function RenderTopicHeatmap(
   subject: string,
-  language: "en" | "ga",
+  language: string,
   past_papers_json: string,
   year_range: int[],
 ) -> DiagramPayload {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at rendering topic-frequency heatmaps for Irish Leaving Certificate subjects.
 
 Given:
@@ -128,12 +128,12 @@ The diagram will be rendered via D3 v8 + Vega-Lite altair fallback.
 
 function RenderPCLMFlow(
   subject: string,
-  language: "en" | "ga",
+  language: string,
   marking_scheme_json: string,
   paper: string,
   year: int,
 ) -> DiagramPayload {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at rendering PCLM (Partial Credit, Logical Marking) flow diagrams for Irish Leaving Certificate subjects.
 
 Given:
@@ -162,11 +162,11 @@ The diagram will be rendered via React Flow + dagre layout.
 
 function RenderQuestionSankey(
   subject: string,
-  language: "en" | "ga",
+  language: string,
   past_papers_json: string,
   year_range: int[],
 ) -> DiagramPayload {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at rendering question → topic → difficulty → year Sankey diagrams for Irish Leaving Certificate subjects.
 
 Given:
