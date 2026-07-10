@@ -255,8 +255,8 @@ class StatuteLinkExtraction {
 // =============================================================================
 
 function ExtractPIABPage(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> PIABPage {
   client DefaultLiteLLM
   prompt #"
@@ -297,8 +297,8 @@ function ExtractPIABPage(
 }
 
 function ExtractCourtForm(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> CourtForm {
   client DefaultLiteLLM
   prompt #"
@@ -333,8 +333,8 @@ function ExtractCourtForm(
 }
 
 function ExtractJudgement(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> Judgement {
   client Gemini2Flash
   prompt #"
@@ -373,8 +373,8 @@ function ExtractJudgement(
 }
 
 function ExtractCourtFee(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> CourtFee {
   client DefaultLiteLLM
   prompt #"
@@ -402,8 +402,8 @@ function ExtractCourtFee(
 }
 
 function ExtractCourtRule(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> CourtRule {
   client DefaultLiteLLM
   prompt #"
@@ -430,8 +430,8 @@ function ExtractCourtRule(
 }
 
 function ExtractWRCDecision(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> WRCDecision {
   client DefaultLiteLLM
   prompt #"
@@ -481,8 +481,8 @@ function ExtractWRCDecision(
 }
 
 function ExtractWRCProcedure(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> WRCProcedure {
   client DefaultLiteLLM
   prompt #"
@@ -512,8 +512,8 @@ function ExtractWRCProcedure(
 }
 
 function ExtractCitizensInfoArticle(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> CitizensInfoArticle {
   client DefaultLiteLLM
   prompt #"
@@ -549,8 +549,8 @@ function ExtractCitizensInfoArticle(
 }
 
 function ExtractGovIEPressRelease(
-  page_url: string,
-  page_html: string,
+  page_url string,
+  page_html string,
 ) -> GovIEPressRelease {
   client DefaultLiteLLM
   prompt #"
@@ -585,10 +585,10 @@ function ExtractGovIEPressRelease(
 // =============================================================================
 
 function LinkStatutesToActs(
-  source: string,
-  source_id: string,
-  source_url: string,
-  statute_names: string[],
+  source string,
+  source_id string,
+  source_url string,
+  statute_names string[],
 ) -> StatuteLinkExtraction {
   client DefaultLiteLLM
   prompt #"

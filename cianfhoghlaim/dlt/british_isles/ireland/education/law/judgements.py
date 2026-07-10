@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.judgements — Judgements.ie.
+cianfhoghlaim.dlt.british_isles.ireland.law.judgements — Judgements.ie.
 
 Source: `https://www.courts.ie/judgements` (operated by the Courts
 Service of Ireland) — ~30,000 published court decisions across the
@@ -27,7 +27,7 @@ import dlt
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (  # type: ignore[import-not-found]  # noqa: E402
+from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
     _crawl_source,
 )
 

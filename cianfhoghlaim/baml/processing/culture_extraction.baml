@@ -32,8 +32,8 @@ class CultureHeritageClaim {
 }
 
 function ExtractCultureClaims(
-  pdf_path: string,
-  context: string
+  pdf_path string,
+  context string
 ) -> CultureHeritageClaim[] {
   client "litellm"
   prompt #"

@@ -55,7 +55,7 @@ Gaeilge, English, Computer Science.
 ### Requirement: gov.ie education circulars ingestion
 
 The system SHALL ingest `gov.ie` education circulars via a DLT source at
-`cianfhoghlaim/dlt/british_isles/ie/gov_ie_circulars.py`, extract via
+`cianfhoghlaim/dlt/british_isles/ireland/gov_ie_circulars.py`, extract via
 BAML `circular_extraction.baml`, embed via the 7th v1 CocoIndex App
 `government_circulars`, and surface via a dedicated MotherDuck Dive.
 

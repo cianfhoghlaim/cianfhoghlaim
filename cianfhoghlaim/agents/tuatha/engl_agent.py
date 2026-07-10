@@ -17,6 +17,17 @@ from .tools.engl_tools import (
     score_engl_response,
 )
 
+# Feat C (2026-07-10): StorageBackend Protocol + Langfuse + Cognee + BAML.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_ENGL_WIRING = get_wiring("english")
+
 
 async def engl_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
     try:
@@ -93,3 +104,27 @@ engl_agent = LlmAgent(
     tools=[engl_syllabus_tool, engl_past_paper_tool, engl_marking_scheme_tool, engl_formative_item_tool, engl_response_score_tool],
     output_key="engl_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (LlmAgent is a Pydantic model).
+# ---------------------------------------------------------------------------
+
+
+async def engl_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    return await emit_to_cognee(_ENGL_WIRING, response, query)
+
+
+def engl_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    return open_langfuse_trace(_ENGL_WIRING, verb=verb, **kw)
+
+
+engl_agent_baml_quest_pack_fn = resolve_baml_function(
+    _ENGL_WIRING, "QuestPack"
+)
+engl_agent_baml_formative_item_fn = resolve_baml_function(
+    _ENGL_WIRING, "FormativeItem"
+)
+
+
+engl_agent_wire = wire_subject_agent(_ENGL_WIRING)

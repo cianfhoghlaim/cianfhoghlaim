@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.courts — Courts Service of Ireland (forms + fees).
+cianfhoghlaim.dlt.british_isles.ireland.law.courts — Courts Service of Ireland (forms + fees).
 
 Source: `https://www.courts.ie/` — the catalogue of court forms
 (District / Circuit / High / Supreme / Court of Appeal) + the Court Fees
@@ -28,7 +28,7 @@ import dlt
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (  # type: ignore[import-not-found]  # noqa: E402
+from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
     _crawl_source,
 )
 

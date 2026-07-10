@@ -22,6 +22,21 @@ from .tools.appm_marking_scheme_lookup import lookup_appm_marking_scheme
 from .tools.appm_formative_item_generate import generate_appm_item
 from .tools.appm_response_score import score_appm_response
 
+# Feat C (2026-07-10): wire the StorageBackend Protocol + Langfuse
+# tracer + Cognee emit hook + BAML function lookup at agent-
+# construction time.  See `cianfhoghlaim/agents/tuatha/wiring.py`.
+from .wiring import (
+    SubjectAgentWiring,
+    WireSubjectAgent,
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_APPWM_WIRING: SubjectAgentWiring = get_wiring("applied_mathematics")
+
 
 async def appm_syllabus_lookup_tool(topic: str, language: str = "en") -> list[dict]:
     try:
@@ -134,3 +149,41 @@ appm_agent = LlmAgent(
     ],
     output_key="appm_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up: bind the StorageBackend Protocol + Langfuse tracer +
+# Cognee emit hook + BAML function lookup at construction time.  See
+# `wiring.py` for the full contract.  The LlmAgent is a Pydantic
+# model so we expose the wire-up at module level via the
+# `appm_agent_wire` / `appm_agent_emit_to_cognee` / etc. attributes.
+# ---------------------------------------------------------------------------
+
+
+async def appm_agent_emit_to_cognee(
+    response: str, query: str
+) -> list[str]:
+    """Push ``response`` to the Applied Mathematics Cognee dataset.
+
+    Returns up to 5 closest historical responses for ``query``.
+    Backed by ``emit_to_cognee`` in ``wiring.py``.
+    """
+    return await emit_to_cognee(_APPWM_WIRING, response, query)
+
+
+def appm_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    """Open a Langfuse trace for an APPM agent invocation."""
+    return open_langfuse_trace(_APPWM_WIRING, verb=verb, **kw)
+
+
+# Eagerly resolved BAML function references; ``None`` when the BAML
+# client hasn't been codegenned for this environment.
+appm_agent_baml_quest_pack_fn = resolve_baml_function(
+    _APPWM_WIRING, "QuestPack"
+)
+appm_agent_baml_formative_item_fn = resolve_baml_function(
+    _APPWM_WIRING, "FormativeItem"
+)
+
+
+appm_agent_wire = wire_subject_agent(_APPWM_WIRING)

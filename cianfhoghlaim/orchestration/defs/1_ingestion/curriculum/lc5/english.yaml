@@ -1,0 +1,36 @@
+# defs/1_ingestion/curriculum/lc5/english.yaml
+#
+# L1 ingestion cron asset for the LC English filesystem (the 6th LC subject,
+# added 2026-07-10). Discovers 8 PDFs in `cianfhoghlaim/leaving_certificate/english/`
+# (LC002ALP100EV.pdf + LC002ALP200EV.pdf exam papers + LC002GLP100EV.pdf +
+# LC002GLP200EV.pdf Irish-language exam papers + 2× SCSEC14_English_Syllabus*.pdf
+# + 2× SC-English-Spec-ENG-INT*.pdf). Routed through select_ocr_backend()
+# (qwen3-vl-8b for exam papers, gemma-4-26B-A4B for syllabi).
+#
+# Per openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/
+# The English directory mirrors the gaeilge asymmetry: files live at the root,
+# there is no `en/` subdir, and the default language is `en` (the syllabus is
+# monolingual in English).
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: cianfhoghlaim.filesystem.leaving_cert.english
+  domain: curriculum
+  nation: ie
+  subject: english
+  subject_label: English (LC002)
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  state_backed: true
+  state_refresh_interval: monthly
+  asset_check: lc5_english_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - lc6
+    - english
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1
+    spec: british-isles-education-pipeline
+    lc_code: LC002
+    notes: "English is en-only at root; mirrors the gaeilge asymmetry with default language `en`."

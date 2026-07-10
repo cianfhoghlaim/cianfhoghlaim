@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.legal_aid — Legal Aid Board.
+cianfhoghlaim.dlt.british_isles.ireland.law.legal_aid — Legal Aid Board.
 
 Source: `https://www.legalaidboard.ie/` — the Legal Aid Board (formerly
 the Free Legal Advice Centres / FLAC overlap). Provides civil legal aid
@@ -29,7 +29,7 @@ import dlt
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (  # type: ignore[import-not-found]  # noqa: E402
+from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
     _crawl_source,
 )
 

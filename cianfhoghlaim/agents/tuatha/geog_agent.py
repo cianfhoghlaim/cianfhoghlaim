@@ -17,6 +17,17 @@ from .tools.geog_tools import (
     score_geog_response,
 )
 
+# Feat C (2026-07-10): StorageBackend Protocol + Langfuse + Cognee + BAML.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_GEOG_WIRING = get_wiring("geography")
+
 
 async def geog_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
     try:
@@ -93,3 +104,27 @@ geog_agent = LlmAgent(
     tools=[geog_syllabus_tool, geog_past_paper_tool, geog_marking_scheme_tool, geog_formative_item_tool, geog_response_score_tool],
     output_key="geog_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (LlmAgent is a Pydantic model).
+# ---------------------------------------------------------------------------
+
+
+async def geog_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    return await emit_to_cognee(_GEOG_WIRING, response, query)
+
+
+def geog_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    return open_langfuse_trace(_GEOG_WIRING, verb=verb, **kw)
+
+
+geog_agent_baml_quest_pack_fn = resolve_baml_function(
+    _GEOG_WIRING, "QuestPack"
+)
+geog_agent_baml_formative_item_fn = resolve_baml_function(
+    _GEOG_WIRING, "FormativeItem"
+)
+
+
+geog_agent_wire = wire_subject_agent(_GEOG_WIRING)

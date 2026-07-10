@@ -19,7 +19,7 @@ cross-archive edge `UoGArtifact-MATCHES-CourseDescriptor`.
 
 The corresponding source code lives at:
 
-- `cianfhoghlaim/dlt/british_isles/ie/university/uog/` (the case-study DLT source)
+- `cianfhoghlaim/dlt/british_isles/ireland/university/uog/` (the case-study DLT source)
 - `cianfhoghlaim/dlt/british_isles/_university_deep_factory.py` (the reusable factory)
 - `cianfhoghlaim/baml/education/university_extraction.baml`
 - `cianfhoghlaim/cocoindex/university_courses_embedding.py` + `university_modules_embedding.py`

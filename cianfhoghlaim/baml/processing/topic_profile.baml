@@ -19,13 +19,13 @@ enum PoliticalTopic {
 }
 
 class PoliticalTopicProfile {
-  document_id: string
-  topic: PoliticalTopic
-  jurisdiction: string
-  key_entities: string[]               @description("parties, politicians, organisations"]
-  policy_positions: string[]
-  timeline_events: TimelineEvent[]
-  source_pdf: string
+  document_id string
+  topic PoliticalTopic
+  jurisdiction string
+  key_entities string[]               @description("parties, politicians, organisations")
+  policy_positions string[]
+  timeline_events TimelineEvent[]
+  source_pdf string
 }
 
 enum CultureTopic {
@@ -40,12 +40,12 @@ enum CultureTopic {
 }
 
 class CultureTopicProfile {
-  document_id: string
-  topic: CultureTopic
-  key_figures: string[]
-  cultural_entities: string[]
-  timeline_events: TimelineEvent[]
-  source_pdf: string
+  document_id string
+  topic CultureTopic
+  key_figures string[]
+  cultural_entities string[]
+  timeline_events TimelineEvent[]
+  source_pdf string
 }
 
 enum TechTopic {
@@ -60,10 +60,10 @@ enum TechTopic {
 }
 
 class TechTopicProfile {
-  document_id: string
-  topic: TechTopic
-  technical_entities: string[]         @description("frameworks, libraries, protocols"]
-  standards_referenced: string[]
-  timeline_events: TimelineEvent[]
-  source_pdf: string
+  document_id string
+  topic TechTopic
+  technical_entities string[]         @description("frameworks, libraries, protocols")
+  standards_referenced string[]
+  timeline_events TimelineEvent[]
+  source_pdf string
 }

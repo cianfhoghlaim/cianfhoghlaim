@@ -188,7 +188,7 @@ def _statute_linkage_cell(mo, con, engine_label):
 
         The canonical join key: the `statutes_cited` /
         `related_statutes` / `statutory_basis` arrays extracted by the
-        6 BAML functions in `cianfhoghlaim/baml/ie/law/*.baml` are
+        6 BAML functions in `cianfhoghlaim/baml/education/law/*.baml` are
         joined to the canonical
         `oideachais.education.ie.irish_statute_book.acts` table.
         """

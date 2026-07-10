@@ -1,12 +1,15 @@
 """
-Leaving Certificate 5-subject filesystem DLT source.
+Leaving Certificate 6-subject filesystem DLT source.
 
 Ingests every PDF (and JPG for the scanned geography exam page) in
-`cianfhoghlaim/leaving_certificate/{chemistry,computer_science,gaeilge,
-geography,mathematics}/{en,ga}/` into 5 per-subject DuckLake tables:
+`cianfhoghlaim/leaving_certificate/{chemistry,computer_science,english,
+gaeilge,geography,mathematics}/{en,ga}/` into 6 per-subject DuckLake tables:
 
   - lc_chemistry_papers,    lc_chemistry_syllabus,    lc_chemistry_marking
   - lc_computer_science_*,  lc_computer_science_marking
+  - lc_english_*,           lc_english_marking        (english dir is
+                                                       en-only at root,
+                                                       similar to gaeilge)
   - lc_gaeilge_*,           lc_gaeilge_marking        (the gaeilge dir has
                                                        no en/ subdir; files
                                                        live at the root)
@@ -44,10 +47,12 @@ DEFAULT_LC_ROOT = Path(
     )
 )
 
-# The 5 target subjects of the LC5-subject pipeline
-LC5_SUBJECTS: tuple[str, ...] = (
+# The 6 target subjects of the LC6-subject pipeline (added 2026-07-10:
+# english, per openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1)
+LC6_SUBJECTS: tuple[str, ...] = (
     "chemistry",
     "computer_science",
+    "english",
     "gaeilge",
     "geography",
     "mathematics",
@@ -59,9 +64,13 @@ LC5_SUBJECTS: tuple[str, ...] = (
 LC_PDF_KIND_REGISTRY: dict[str, str] = {
     # LC###ALP###EV.pdf / LC###GLP###IV.pdf — exam papers
     r"^LC\d{3}[AG]LP\d{3,4}[EI]V\.pdf$": "qwen3-vl-8b",
+    # LC002ALP200EV.pdf — LC English Annual Leaving Programme exam paper
+    r"^LC002ALP\d{3}[EI]V\.pdf$": "qwen3-vl-8b",
     # SCSEC##_Syllabus_*.pdf / SC-Chemistry-Specification-*.pdf
     r"^SC.*[Ss]yllabus.*\.pdf$": "gemma-4-26B-A4B",
     r"^SC.*[Ss]pecification.*\.pdf$": "gemma-4-26B-A4B",
+    # SC-English-Spec-ENG-INT*.pdf — LC English spec constitution
+    r"^SC-English-Spec-ENG-INT.*\.pdf$": "gemma-4-26B-A4B",
     # Siollabais-Nuashonraithe-* — Irish syllabus
     r"^Siollabais.*\.pdf$": "gemma-4-26B-A4B",
     # SCSEC##_guideline_material_*.pdf — marking scheme guidelines
@@ -104,10 +113,13 @@ def _classify_pdf(pdf_path: Path, language: str) -> str:
 
 
 def _scan_subject(subject_dir: Path) -> Iterator[dict[str, Any]]:
-    """Yield (file_path, language) tuples for one of the 5 LC subjects.
+    """Yield (file_path, language) tuples for one of the 6 LC subjects.
 
-    Handles the gaeilge asymmetry: gaeilge has no en/ subdir; its files
-    live at the root of `gaeilge/`.
+    Handles 2 asymmetries:
+    - gaeilge: no en/ subdir; Irish files live at the root of `gaeilge/`.
+    - english: en-only at root (no ga/ subdir) — mirrors the gaeilge pattern
+      but with default language "en" since the LC English syllabus is
+      taught and examined in English.
     """
     if not subject_dir.exists():
         logger.warning(f"lc_subject_dir_missing: {subject_dir}")
@@ -121,6 +133,15 @@ def _scan_subject(subject_dir: Path) -> Iterator[dict[str, Any]]:
                     "file_path": f,
                     "language": "ga",  # default for gaeilge root
                     "subject": "gaeilge",
+                }
+    elif subject_dir.name == "english":
+        # Files at root (EN-only; the English LC syllabus is monolingual)
+        for ext in (".pdf",) + IMAGE_EXTENSIONS:
+            for f in subject_dir.glob(f"*{ext}"):
+                yield {
+                    "file_path": f,
+                    "language": "en",  # default for english root
+                    "subject": "english",
                 }
     else:
         for lang in ("en", "ga"):
@@ -201,7 +222,7 @@ def _row(record: dict[str, Any]) -> dict[str, Any]:
 def lc5_documents(
     root_path: str = str(DEFAULT_LC_ROOT),
 ) -> Iterator[dict[str, Any]]:
-    """Yield one row per LC PDF (or image) across the 5 subjects × 2 languages.
+    """Yield one row per LC PDF (or image) across the 6 subjects × 2 languages.
 
     Default root: `cianfhoghlaim/leaving_certificate/`.
     Override via the `CIANFHOGHLAIM_LC_ROOT` env var.
@@ -212,13 +233,13 @@ def lc5_documents(
         return
 
     n = 0
-    for subject in LC5_SUBJECTS:
+    for subject in LC6_SUBJECTS:
         subject_dir = root / subject
         for record in _scan_subject(subject_dir):
             row = _row(record)
             yield row
             n += 1
-    logger.info(f"lc5_ingested: {n} documents across {len(LC5_SUBJECTS)} subjects")
+    logger.info(f"lc5_ingested: {n} documents across {len(LC6_SUBJECTS)} subjects")
 
 
 def main() -> int:

@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.piab — Personal Injuries Assessment Board.
+cianfhoghlaim.dlt.british_isles.ireland.law.piab — Personal Injuries Assessment Board.
 
 Source: `https://www.injuries.ie/eng/` — the front-door for every personal
 injury claim in Ireland. The PIAB process (Application → Assessment →
@@ -30,7 +30,7 @@ import dlt
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (  # type: ignore[import-not-found]  # noqa: E402
+from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
     _crawl_source,
 )
 

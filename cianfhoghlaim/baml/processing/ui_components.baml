@@ -50,9 +50,9 @@ class UIComponentSuggestion {
 }
 
 function SuggestUIComponents(
-  extracted_subjects: string[],
-  cognee_index_summary: string,
-  stage: string
+  extracted_subjects string[],
+  cognee_index_summary string,
+  stage string
 ) -> UIComponentSuggestion[] {
   client LiteLLM
   prompt #"You are a UI/UX strategist for the Cianfhoghlaim Oideachais bilingual agentic platform (covering Aistear, Primary, Junior Cycle, Senior Cycle, Tertiary).

@@ -65,8 +65,8 @@ function ExtractStyleFeatures(artwork: image) -> StyleFeatures {
 }
 
 function CreateStyleTransferSpec(
-  content_prompt: string,
-  style_reference: image
+  content_prompt string,
+  style_reference image
 ) -> StyleTransferSpec {
   client ArtworkAnalyzer
   prompt #"
@@ -96,10 +96,10 @@ function CreateStyleTransferSpec(
 }
 
 function BlendStyles(
-  style_a: image,
-  style_b: image,
-  blend_ratio: float,
-  content: string
+  style_a image,
+  style_b image,
+  blend_ratio float,
+  content string
 ) -> StyleBlend {
   client ArtworkAnalyzer
   prompt #"
@@ -125,9 +125,9 @@ function BlendStyles(
 }
 
 function GenerateSeriesPrompts(
-  base_style: image,
-  count: int,
-  variation_axis: string
+  base_style image,
+  count int,
+  variation_axis string
 ) -> string[] {
   client ArtworkAnalyzer
   prompt #"
@@ -173,11 +173,11 @@ function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {
 // Album-specific functions
 
 function GenerateAlbumCoverSpec(
-  album_title: string,
-  artist_name: string,
-  track_list: string[],
-  style_reference: image?,
-  genre: string
+  album_title string,
+  artist_name string,
+  track_list string[],
+  style_reference image?,
+  genre string
 ) -> StyleTransferSpec {
   client ArtworkAnalyzer
   prompt #"
@@ -209,8 +209,8 @@ function GenerateAlbumCoverSpec(
 }
 
 function GenerateSingleCoverVariation(
-  original_album_cover: image,
-  single_title: string
+  original_album_cover image,
+  single_title string
 ) -> string {
   client FastAnalyzer
   prompt #"
