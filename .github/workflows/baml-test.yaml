@@ -57,7 +57,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## baml-cli test — ❌ FAILED
+            ## baml-cli test — FAILED
 
             The hard BAML CI gate failed while running `mise run baml:test`
             (`uv run baml-cli test`) against the test blocks in
