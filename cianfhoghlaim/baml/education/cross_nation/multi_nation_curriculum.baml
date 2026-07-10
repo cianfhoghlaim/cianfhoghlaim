@@ -145,7 +145,7 @@ class CrossNationCurriculumSpec {
   framework CurriculumFramework
   board QualificationBoard?
 
-  title string @description("Specification title in English")
+  title string @description("Specification title in English") @stream.not_null
   title_native string? @description("Title in native Celtic language")
 
   subject string
@@ -167,6 +167,7 @@ class CrossNationCurriculumSpec {
   source_url string
   last_crawled string
   content_hash string? @description("For change detection")
+  @@stream.done
 }
 
 class AssessmentStructure {

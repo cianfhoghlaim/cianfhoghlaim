@@ -1,7 +1,7 @@
 // Celtic Curriculum Extraction Schemas
 // Extract structured data from Celtic language curriculum documents
 
-enum CelticLanguage {
+enum CelticLanguageCurriculum {
   IRISH
   SCOTTISH_GAELIC
   WELSH
@@ -10,7 +10,7 @@ enum CelticLanguage {
   BRETON
 }
 
-enum EducationLevel {
+enum EducationLevelCeltic {
   PRIMARY
   SECONDARY
   HIGHER
@@ -26,7 +26,7 @@ enum SkillDomain {
   CULTURE
 }
 
-class LearningOutcome {
+class CelticLearningOutcome {
   id: string @description("Unique identifier")
   description: string @description("What the learner will achieve")
   skill_domains SkillDomain[] @description("Skills developed")
@@ -41,6 +41,7 @@ class GrammarTopic {
   examples CelticExample[] @description("Usage examples")
   difficulty: int @description("1-5 difficulty scale")
   common_errors: string[] @description("Mistakes learners often make")
+  @@stream.done
 }
 
 class CelticExample {
@@ -54,6 +55,7 @@ class VocabularySet {
   theme: string @description("Vocabulary theme")
   words CelticWord[] @description("Words in the set")
   cultural_context: string? @description("Cultural background")
+  @@stream.done
 }
 
 class CelticWord {
@@ -69,22 +71,23 @@ class CelticWord {
 
 class CurriculumUnit {
   title: string @description("Unit title")
-  language CelticLanguage @description("Target language")
-  level EducationLevel @description("Education level")
+  language CelticLanguageCurriculum @description("Target language")
+  level EducationLevelCeltic @description("Education level")
   grade_year: string? @description("Specific grade/year")
   nation: string @description("Country of origin")
 
-  learning_outcomes LearningOutcome[] @description("Unit outcomes")
+  learning_outcomes CelticLearningOutcome[] @description("Unit outcomes")
   grammar_topics GrammarTopic[] @description("Grammar covered")
   vocabulary VocabularySet[] @description("Vocabulary themes")
 
   cultural_content: string[] @description("Cultural elements")
   assessment_criteria: string[] @description("How to assess")
   resources: string[] @description("Suggested resources")
+  @@stream.done
 }
 
 // Extract curriculum unit from document
-function ExtractCurriculumUnit(document: string, language: CelticLanguage, nation: string) -> CurriculumUnit {
+function ExtractCurriculumUnit(document: string, language: CelticLanguageCurriculum, nation: string) -> CurriculumUnit {
   client CelticContentFallback
   prompt #"
     Extract structured curriculum information from this Celtic language education document.
@@ -103,7 +106,7 @@ function ExtractCurriculumUnit(document: string, language: CelticLanguage, natio
 }
 
 // Extract grammar explanation
-function ExtractGrammarTopic(content: string, language: CelticLanguage) -> GrammarTopic {
+function ExtractGrammarTopic(content: string, language: CelticLanguageCurriculum) -> GrammarTopic {
   client CelticContentFallback
   prompt #"
     Extract a structured grammar explanation from this Celtic language content.
@@ -120,7 +123,7 @@ function ExtractGrammarTopic(content: string, language: CelticLanguage) -> Gramm
 }
 
 // Extract vocabulary from text
-function ExtractVocabulary(text: string, language: CelticLanguage, theme: string?) -> VocabularySet {
+function ExtractVocabulary(text: string, language: CelticLanguageCurriculum, theme: string?) -> VocabularySet {
   client FastExtraction
   prompt #"
     Extract vocabulary from this Celtic language text.
@@ -139,7 +142,7 @@ function ExtractVocabulary(text: string, language: CelticLanguage, theme: string
 
 // Generate learning outcome assessment
 class OutcomeAssessment {
-  outcome LearningOutcome
+  outcome CelticLearningOutcome
   assessment_type: string @description("quiz, oral, written, project")
   questions AssessmentQuestion[]
   rubric: string[] @description("Grading criteria")
@@ -156,8 +159,8 @@ class AssessmentQuestion {
 }
 
 function GenerateAssessment(
-  outcome: LearningOutcome,
-  language: CelticLanguage,
+  outcome: CelticLearningOutcome,
+  language: CelticLanguageCurriculum,
   question_count: int
 ) -> OutcomeAssessment {
   client CelticContentFallback
@@ -185,7 +188,7 @@ class CurriculumComparison {
   recommendations: string[] @description("Cross-curriculum opportunities")
 }
 
-function CompareCurricula(
+function CompareCelticCurricula(
   topic: string,
   irish_content: string?,
   gaelic_content: string?,
@@ -233,7 +236,7 @@ class CurriculumMapping {
   similar_topics string[]  // topic_codes in other nations
 }
 
-class CrossNationComparison {
+class CelticCurriculumComparison {
   topic_query string
   mappings CurriculumMapping[]
   shared_year_levels string[]
@@ -243,7 +246,7 @@ class CrossNationComparison {
 function CompareCelticNations(
   topic_query: string,
   scope: string[] = ["IE", "NI", "WLS", "IM", "SCT"],
-) -> CrossNationComparison {
+) -> CelticCurriculumComparison {
   client LitellmClient
   prompt #"
     The user wants to know how "{{ topic_query }}" is taught across

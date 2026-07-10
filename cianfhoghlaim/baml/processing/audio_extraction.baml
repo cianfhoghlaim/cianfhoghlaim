@@ -36,6 +36,7 @@ class CanuintRecording {
   // Dialect classification
   dialect IrishDialect @description("Dialect classification")
   dialect_features string[]? @description("Notable dialect features identified")
+  @@stream.done
 }
 
 // Speaker information

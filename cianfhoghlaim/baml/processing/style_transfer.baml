@@ -12,6 +12,7 @@ class StyleFeatures {
   lighting_style string @description("soft, harsh, ambient, dramatic")
   perspective string @description("flat, depth, isometric, dynamic")
   edge_treatment string @description("clean, blurred, glowing, rough")
+  @@stream.done
 }
 
 class StyleTransferSpec {

@@ -58,7 +58,7 @@ enum CompositionType {
   COMPLEX
 }
 
-enum MusicGenre {
+enum MusicGenreArtwork {
   ELECTRONIC
   AMBIENT
   DNB
@@ -80,6 +80,7 @@ class ColorInfo {
   hex string @description("Hex color code like #FF5733")
   name string? @description("Common color name if applicable")
   percentage float @description("Percentage of image area")
+  @@stream.done
 }
 
 class StyleAnalysis {
@@ -101,7 +102,7 @@ class StyleAnalysis {
 class ArtworkAnalysis {
   description string @description("2-3 sentence description of the artwork")
   style StyleAnalysis @description("Detailed style analysis")
-  genre_associations MusicGenre[] @description("Music genres this artwork evokes")
+  genre_associations MusicGenreArtwork[] @description("Music genres this artwork evokes")
   visual_elements string[] @description("Key visual elements present")
   text_detected string? @description("Any text visible in the artwork")
   subjects string[] @description("Main subjects or motifs")
@@ -114,7 +115,7 @@ class QuickAnalysis {
   primary_style ArtStyle
   mood MoodCategory
   dominant_color string @description("Main color hex")
-  genre_associations MusicGenre[]
+  genre_associations MusicGenreArtwork[]
 }
 
 class StyleComparison {
@@ -209,7 +210,7 @@ function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparis
 function GenerateArtworkSpec(
   subject: string,
   reference_artwork: image?,
-  target_genre: MusicGenre,
+  target_genre: MusicGenreArtwork,
   preferred_mood: MoodCategory?
 ) -> GenerationSpec {
   client ArtworkAnalyzer

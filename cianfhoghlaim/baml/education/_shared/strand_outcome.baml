@@ -97,7 +97,7 @@ class CurriculumStrand {
   weighting float? @description("Percentage weighting in assessment")
 }
 
-class AssessmentComponent {
+class AssessmentComponentStrand {
   name string @description("Component name (Written Exam, Coursework, Oral)")
   weighting int @description("Percentage weighting")
   duration string? @description("Duration if timed (e.g., '2h 30min')")
@@ -106,16 +106,16 @@ class AssessmentComponent {
 }
 
 class AssessmentInfo {
-  components AssessmentComponent[] @description("Assessment components")
+  components AssessmentComponentStrand[] @description("Assessment components")
   total_marks int? @description("Total marks available")
   coursework_percentage int? @description("Percentage for coursework")
   external_percentage int? @description("Percentage for external exam")
   grading_scheme string? @description("Grading approach")
 }
 
-class CurriculumSpecification {
+class CurriculumSpecStrand {
   document_id string @description("Unique document identifier")
-  title string @description("Full document title")
+  title string @description("Full document title") @stream.not_null
   title_ga string? @description("Irish title")
   subject string @description("Subject code")
   cycle EducationLevel @description("Education cycle")
@@ -123,8 +123,8 @@ class CurriculumSpecification {
   version_year int @description("Specification version year")
   specification_type string @description("syllabus or specification")
   development_status string @description("current, redevelopment, etc.")
-  strands CurriculumStrand[] @description("Curriculum strands")
-  learning_outcomes EnhancedLearningOutcome[] @description("All learning outcomes")
+  strands CurriculumStrand[] @description("Curriculum strands") @stream.with_state
+  learning_outcomes EnhancedLearningOutcome[] @description("All learning outcomes") @stream.with_state
   assessment_info AssessmentInfo? @description("Assessment information")
   key_skills_mapping map<string, string[]> @description("Key skills to outcomes mapping")
   rationale string? @description("Subject rationale/aims")
@@ -135,14 +135,14 @@ class CurriculumSpecification {
 // Examination Paper Types
 // -----------------------------------------------------------------------------
 
-class ExamQuestion {
+class ExamQuestionStrand {
   question_number string @description("Question number (e.g., '1', '2a', '3bii')")
   marks int @description("Marks allocated")
   question_type QuestionType @description("Type of question")
   topic string? @description("Topic or strand covered")
   difficulty_estimate DifficultyLevel? @description("Estimated difficulty")
   text string @description("Question text")
-  sub_questions ExamQuestion[] @description("Sub-parts if any")
+  sub_questions ExamQuestionStrand[] @description("Sub-parts if any")
   learning_outcomes string[] @description("LO codes this question assesses")
 }
 
@@ -155,16 +155,16 @@ class OutcomeQuestionMapping {
   rationale string? @description("Why this question maps to this LO")
 }
 
-class ExamSection {
+class ExamSectionStrand {
   section_name string @description("Section identifier (A, B, C or name)")
   title string? @description("Section title")
   instructions string? @description("Section-specific instructions")
   total_marks int @description("Total marks for section")
-  questions ExamQuestion[] @description("Questions in this section")
+  questions ExamQuestionStrand[] @description("Questions in this section")
   choice_instructions string? @description("e.g., 'Answer 3 of 5'")
 }
 
-class ExamPaper {
+class ExamPaperStrand {
   subject string @description("Subject code")
   year int @description("Examination year")
   level ExamLevel @description("Exam level")
@@ -172,7 +172,7 @@ class ExamPaper {
   language string @description("Paper language (en/ga)")
   duration string @description("Exam duration")
   total_marks int @description("Total marks available")
-  sections ExamSection[] @description("Paper sections")
+  sections ExamSectionStrand[] @description("Paper sections")
   general_instructions string? @description("General exam instructions")
   materials_allowed string[] @description("Permitted materials (calculator, etc.)")
   pdf_url string? @description("Source PDF URL")
@@ -182,13 +182,13 @@ class ExamPaper {
 // Marking Scheme Types
 // -----------------------------------------------------------------------------
 
-class MarkingScheme {
-  subject string @description("Subject code")
+class MarkingSchemeStrand {
+  subject string @description("Subject code") @stream.not_null
   year int @description("Examination year")
   level ExamLevel @description("Exam level")
   paper_number int @description("Paper number")
   language string @description("Scheme language")
-  sections MarkingSection[] @description("Marking sections")
+  sections MarkingSection[] @description("Marking sections") @stream.with_state
   general_guidelines string? @description("General marking guidelines")
 }
 

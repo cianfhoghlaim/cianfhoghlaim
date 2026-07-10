@@ -91,6 +91,7 @@ class AistearFramework {
   themes string[] @description("The 4 Aistear themes in English: 'Well-being', 'Identity and Belonging', 'Communicating', 'Exploring and Thinking'.")
   principles AistearPrincipleSimple[] @description("The 12 Aistear principles extracted from the document.")
   learning_goals AistearLearningGoalSimple[] @description("All learning goals extracted (typically 40-60 per document).")
+  @@stream.done
 }
 
 class GeoPoint {
@@ -109,6 +110,7 @@ class Naionra {
   enrollment int?
   source_url string
   geo GeoPoint
+  @@stream.done
 }
 
 class AistearDocument {
@@ -123,6 +125,7 @@ class AistearDocument {
   extracted_at string             @description("ISO 8601 timestamp")
   language string                 @description("en | ga | bilingual")
   framework AistearFramework?     @description("The full framework extracted from the document (from early_childhood.baml)")
+  @@stream.done
 }
 
 class BridgeEdge {

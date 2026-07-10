@@ -187,8 +187,8 @@ description = "Regenerate the baml_client/ Python module from baml_src/ (alias o
 run = "uv run baml-cli generate"
 
 [tasks."cic:baml:test"]
-description = "Run baml-cli test"
-run = "uv run python -m cianfhoghlaim.baml.cli test"
+description = "Run baml-cli test (alias of baml:test)"
+run = "mise run baml:test"
 
 [tasks."cic:baml:lint"]
 description = "Lint all 56+ .baml schema files for consistency"
@@ -551,6 +551,17 @@ run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface
 [tasks."baml:generate"]
 description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
 run = "uv run baml-cli generate"
+
+[tasks."baml:test"]
+description = "Run BAML test blocks with baml-cli (hard CI gate)"
+run = """
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+if [ ! -e "$ROOT_DIR/cianfhoghlaim/baml_src" ]; then
+  ln -s baml "$ROOT_DIR/cianfhoghlaim/baml_src"
+fi
+cd "$ROOT_DIR"
+uv run baml-cli test --from cianfhoghlaim/baml_src
+"""
 
 [tasks."docs:cognee"]
 description = "Ingest canonical docs/ into the Cognee knowledge graph (bonneagar)"

@@ -44,7 +44,7 @@ enum ProfileType {
     HYBRID @description("Multi-disciplinary profile")
 }
 
-enum SkillCategory {
+enum PortfolioSkillCategory {
     PROGRAMMING_LANGUAGE @description("Programming languages like Python, TypeScript, Rust")
     FRAMEWORK @description("Frameworks like React, FastAPI, TanStack")
     DATABASE @description("Database technologies like PostgreSQL, DuckDB")
@@ -65,7 +65,7 @@ enum ProjectStatus {
     CONCEPT @description("Planning/concept stage")
 }
 
-enum MusicGenre {
+enum MusicGenrePortfolio {
     ELECTRONIC @description("Electronic music including EDM, house, techno")
     AMBIENT @description("Ambient and atmospheric music")
     EXPERIMENTAL @description("Experimental and avant-garde")
@@ -102,9 +102,9 @@ class ContactInfo {
 }
 
 // Technical skill with proficiency level
-class Skill {
-    name string @description("Skill name, e.g., 'Python', 'React', 'Docker'")
-    category SkillCategory @description("Category of the skill")
+class PortfolioSkill {
+    name string @description("PortfolioSkill name, e.g., 'Python', 'React', 'Docker'")
+    category PortfolioSkillCategory @description("Category of the skill")
     proficiency int? @description("Proficiency level 1-5 (1=beginner, 5=expert)")
     yearsExperience int? @description("Years of experience with this skill")
     keywords string[] @description("Related keywords or sub-skills")
@@ -168,7 +168,7 @@ class MusicTrack {
     album string? @description("Album name if part of an album")
     releaseDate string? @description("Release date (YYYY-MM-DD)")
     duration int? @description("Duration in seconds")
-    genres MusicGenre[] @description("Genres of the track")
+    genres MusicGenrePortfolio[] @description("Genres of the track")
     streamingUrls map<string, string> @description("Map of platform to URL")
     playCount int? @description("Total play count across platforms")
     isOriginal bool @description("Whether this is an original composition")
@@ -190,7 +190,7 @@ class MusicProfile {
     artistName string @description("Main artist/producer name")
     aliases string[] @description("Other names/aliases used")
     bio string? @description("Artist biography")
-    genres MusicGenre[] @description("Primary genres")
+    genres MusicGenrePortfolio[] @description("Primary genres")
     monthlyListeners int? @description("Monthly listeners (Spotify)")
     followers int? @description("Total followers across platforms")
     releases MusicRelease[] @description("Discography")
@@ -198,6 +198,7 @@ class MusicProfile {
     collaborators string[] @description("Frequent collaborators")
     equipment string[] @description("Production equipment/software")
     influences string[] @description("Musical influences")
+  @@stream.done
 }
 
 // =============================================================================
@@ -225,6 +226,7 @@ class GameProject {
     repoUrl string? @description("Source code repository")
     mediaUrls string[] @description("Screenshots, videos, etc.")
     releaseDate string? @description("Release date if published")
+  @@stream.done
 }
 
 // =============================================================================
@@ -237,7 +239,7 @@ class DeveloperProfile {
     title string @description("Professional title")
     summary string @description("Professional summary/bio")
     contact ContactInfo @description("Contact information")
-    skills Skill[] @description("Technical skills")
+    skills PortfolioSkill[] @description("Technical skills")
     experience Experience[] @description("Work experience")
     education Education[] @description("Education history")
     projects Project[] @description("Notable projects")
@@ -245,6 +247,7 @@ class DeveloperProfile {
     publications string[] @description("Papers, articles, blog posts")
     socialLinks SocialLink[] @description("Social media/platform links")
     languages string[] @description("Natural languages spoken")
+  @@stream.done
 }
 
 // Music producer profile
@@ -255,7 +258,7 @@ class MusicProducerProfile {
     bio string @description("Artist biography")
     contact ContactInfo @description("Contact information")
     musicProfile MusicProfile @description("Music-specific data")
-    technicalSkills Skill[] @description("Audio/technical skills")
+    technicalSkills PortfolioSkill[] @description("Audio/technical skills")
     gameAudio GameProject[] @description("Game audio projects if any")
     socialLinks SocialLink[] @description("Platform links")
 }
@@ -270,7 +273,7 @@ class HybridProfile {
     profileType ProfileType @description("Primary profile type")
 
     // Developer aspects
-    technicalSkills Skill[] @description("Technical/programming skills")
+    technicalSkills PortfolioSkill[] @description("Technical/programming skills")
     projects Project[] @description("Software projects")
     experience Experience[] @description("Work experience")
     education Education[] @description("Education")
@@ -282,6 +285,7 @@ class HybridProfile {
 
     socialLinks SocialLink[] @description("All social/platform links")
     languages string[] @description("Languages spoken")
+  @@stream.done
 }
 
 // =============================================================================

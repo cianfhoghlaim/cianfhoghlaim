@@ -25,6 +25,7 @@ class PastPaper {
   level string
   totalMarks int
   questions PastExamQuestion[]
+  @@stream.done
 }
 
 function ExtractPastPaper(pdf_text: string) -> PastPaper {

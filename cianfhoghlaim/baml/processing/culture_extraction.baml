@@ -29,6 +29,7 @@ class CultureHeritageClaim {
   evidence_quality EvidenceQuality @description("PRIMARY (a birth cert, a memorial, a verified public record) | SECONDARY (newspaper, biography, Wikipedia) | INFERENCE (analytical interpretation or synthesis).")
   wikipedia_links string[] @description("Direct https://en.wikipedia.org/wiki/... URLs cited or implied in the claim.")
   confidence float @description("0.0-1.0 self-rated extraction confidence. Claims with confidence < 0.6 are routed to low_confidence_review.")
+  @@stream.done
 }
 
 function ExtractCultureClaims(

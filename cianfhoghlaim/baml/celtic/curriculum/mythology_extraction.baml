@@ -55,6 +55,7 @@ class MythologicalCharacter {
 
   modern_relevance: string? @description("Contemporary significance")
   game_role: string? @description("Role in Tuath game")
+  @@stream.done
 }
 
 class NameVariant {
@@ -83,6 +84,7 @@ class MythologicalLocation {
 
   real_world_location: string? @description("Modern location if known")
   game_zone: string? @description("Zone in Tuath game")
+  @@stream.done
 }
 
 class MythologicalStory {
@@ -101,6 +103,7 @@ class MythologicalStory {
 
   source_texts: string[] @description("Original manuscript sources")
   educational_value: string @description("Learning opportunities")
+  @@stream.done
 }
 
 class StoryEvent {
@@ -226,6 +229,7 @@ class FolkloreElement {
   description: string
   celtic_term: string?
   game_application: string @description("How to use in game")
+  @@stream.done
 }
 
 function ExtractFolkloreElements(text: string) -> FolkloreElement[] {

@@ -120,6 +120,7 @@ class StatisticRecord {
 
   // Metadata
   metadata StatisticMetadata
+  @@stream.done
 }
 
 // =============================================================================

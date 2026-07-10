@@ -45,6 +45,7 @@ class HiddenHeritagesTale {
   // Related tales
   related_tales string[]? @description("IDs of related tales")
   same_informant_tales string[]? @description("Other tales from same informant")
+  @@stream.done
 }
 
 // Informant (storyteller) details
@@ -184,6 +185,7 @@ class TalesListingPage {
   total_pages int? @description("Total pages if known")
   tales TaleSummary[] @description("Tale summaries on this page")
   has_next_page bool @description("Whether there's a next page")
+  @@stream.done
 }
 
 // Brief tale summary from listing

@@ -87,16 +87,16 @@ class CompScoreBreakdown {
 }
 class CompQuestPack {
   id: string
-  subject: string @description("Always 'computer_science'")
+  subject: string @description("Always 'computer_science'") @stream.not_null
   framework: string
   level: CompNCCALevel
-  title: CompBilingualText
+  title: CompBilingualText @stream.not_null
   description: CompBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: CompFormativeItem[]
+  items: CompFormativeItem[] @stream.with_state
   prerequisites: string[]
   cross_subject_links: string[] @description("LC-MATHS for algorithms, LC-APPM for computational modelling")
   generated_at: string

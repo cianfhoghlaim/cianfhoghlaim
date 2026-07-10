@@ -15,6 +15,7 @@ class Placement {
   description_ga string | null
   cooperatingTeacher string | null @description("Cooperating teacher name")
   supervisor string | null @description("PME supervisor name")
+  @@stream.done
 }
 
 class StudentFeedback {
@@ -23,6 +24,7 @@ class StudentFeedback {
   quote_ga string | null
   rating number @description("1-5 rating, if numeric")
   category string @description("e.g. Classroom Management, Lesson Planning, Subject Knowledge, Rapport")
+  @@stream.done
 }
 
 class CurriculumDesigned {
@@ -33,6 +35,7 @@ class CurriculumDesigned {
   description_en string
   description_ga string | null
   url string | null @description("Link to resource if hosted online")
+  @@stream.done
 }
 
 class TeachingQualification {
@@ -41,6 +44,7 @@ class TeachingQualification {
   year string
   type string @description("e.g. Degree, Certificate, Registration, Garda Vetting")
   referenceNumber string | null
+  @@stream.done
 }
 
 function ExtractPlacement(text: string) -> Placement[] {

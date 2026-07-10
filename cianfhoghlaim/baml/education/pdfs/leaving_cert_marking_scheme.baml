@@ -21,13 +21,14 @@ class MarkingPoint {
   requiresFormulaImage bool @description("True if this point depends on a LaTeX formula image (handled by Stage 2 diagram_detector)")
 }
 
-class MarkingScheme {
-  subject string
+class MarkingSchemeSec {
+  subject string @stream.not_null
   year int
   paper string
   level string @description("H, O, or F")
   totalMarks int
-  markingPoints MarkingPoint[]
+  markingPoints MarkingPoint[] @stream.with_state
+  @@stream.done
 }
 
 enum MarkingType {
@@ -44,7 +45,7 @@ enum MarkingType {
   AO7
 }
 
-function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingScheme {
+function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {
   client OideachaisDefault
   prompt #"
     You are an Irish Leaving Certificate marking scheme analyst. Extract

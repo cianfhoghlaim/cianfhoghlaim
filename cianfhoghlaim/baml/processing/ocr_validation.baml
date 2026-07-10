@@ -19,7 +19,7 @@ class OCRValidationResult {
   confidence_score float @description("Confidence score 0-1")
 
   // Text analysis
-  detected_language LanguageCode @description("Detected language")
+  detected_language LanguageCodeOcr @description("Detected language")
   text_length int @description("Character count")
   word_count int @description("Word count")
 
@@ -45,7 +45,7 @@ enum OCRQuality {
 }
 
 // Supported language codes
-enum LanguageCode {
+enum LanguageCodeOcr {
   EN @description("English")
   GA @description("Irish (Gaeilge)")
   GD @description("Scottish Gaelic")
@@ -97,13 +97,13 @@ class FadaError {
 // Dialect indicator
 class DialectIndicator {
   feature string @description("The linguistic feature")
-  dialect IrishDialect @description("Which dialect it indicates")
+  dialect IrishDialectOcr @description("Which dialect it indicates")
   example string @description("Example from text")
   confidence float @description("Confidence 0-1")
 }
 
 // Irish dialects
-enum IrishDialect {
+enum IrishDialectOcr {
   CONNACHT @description("Connacht Irish (Galway, Mayo)")
   MUNSTER @description("Munster Irish (Cork, Kerry)")
   ULSTER @description("Ulster Irish (Donegal)")
@@ -136,7 +136,7 @@ enum IrishOCRErrorType {
 // Document structure extracted from OCR
 class DocumentStructure {
   // Document type
-  document_type DocumentType @description("Type of document")
+  document_type DocumentTypeOcr @description("Type of document")
 
   // Structure elements
   has_title bool @description("Document has identifiable title")
@@ -155,10 +155,11 @@ class DocumentStructure {
   page_count int @description("Number of pages")
   column_count int @description("Number of columns per page")
   reading_order ReadingOrder @description("Detected reading order")
+  @@stream.done
 }
 
 // Document types
-enum DocumentType {
+enum DocumentTypeOcr {
   CURRICULUM @description("NCCA curriculum document")
   EXAM_PAPER @description("SEC examination paper")
   COURSE_MATERIAL @description("Educational course material")

@@ -29,11 +29,11 @@ class DuchasXMLRecord {
   school_roll_number string @description("Official school roll number")
 
   // Teacher information
-  teacher_name DuchasPersonName @description("Teacher who supervised collection")
+  teacher_name DuchasPersonNameExtraction @description("Teacher who supervised collection")
 
   // Collector/informant (if specified in XML)
-  collector DuchasPersonName? @description("Student collector if specified")
-  informant DuchasPersonName? @description("Person who told the story")
+  collector DuchasPersonNameExtraction? @description("Student collector if specified")
+  informant DuchasPersonNameExtraction? @description("Person who told the story")
 
   // Story metadata
   title string? @description("Story title if present")
@@ -59,7 +59,7 @@ class DuchasLocation {
 }
 
 // Person name structure from Dúchas XML
-class DuchasPersonName {
+class DuchasPersonNameExtraction {
   pretext string? @description("Name prefix (e.g., 'Seán Ó', 'Máire Ní')")
   text string @description("Main name/surname")
   full_name string? @description("Reconstructed full name")
@@ -119,6 +119,7 @@ class HandwritingExtraction {
   writer_estimated_age string? @description("Estimated age of writer (child/adult)")
   legibility string @description("Legibility assessment: clear, fair, poor")
   special_features string[]? @description("Special features: crossouts, marginalia, etc.")
+  @@stream.done
 }
 
 // Extract text from handwritten manuscript image
@@ -168,6 +169,7 @@ class StoryExtraction {
   topics FolkloreTopic[] @description("Classified folklore topics")
   summary string @description("Brief summary of the story content")
   summary_ga string? @description("Summary in Irish")
+  @@stream.done
 }
 
 // Extract complete story from multiple pages
@@ -216,7 +218,7 @@ class VolumeSummary {
   volume_number string @description("Volume identifier")
   volume_id string @description("Volume entry ID")
   school DuchasLocation @description("School location")
-  teacher DuchasPersonName @description("Supervising teacher")
+  teacher DuchasPersonNameExtraction @description("Supervising teacher")
 
   // Content summary
   total_stories int @description("Number of stories in volume")

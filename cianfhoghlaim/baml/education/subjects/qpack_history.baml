@@ -96,16 +96,16 @@ class HistScoreBreakdown {
 
 class HistQuestPack {
   id: string
-  subject: string @description("Always 'history'")
+  subject: string @description("Always 'history'") @stream.not_null
   framework: string
   level: HistNCCALevel
-  title: HistBilingualText
+  title: HistBilingualText @stream.not_null
   description: HistBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: HistFormativeItem[]
+  items: HistFormativeItem[] @stream.with_state
   prerequisites: string[]
   cross_subject_links: string[] @description("LC-GAEL, LC-ENGL for cultural synthesis")
   generated_at: string
