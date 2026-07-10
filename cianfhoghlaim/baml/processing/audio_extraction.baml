@@ -108,8 +108,8 @@ class VocabularyNote {
 
 // Extract recording metadata from Canúint.ie page using Stagehand
 function ExtractCanuintPage(
-  page_content: string,
-  barony_id: int
+  page_content string,
+  barony_id int
 ) -> CanuintRecording {
   client Extractor
   prompt #"
@@ -144,9 +144,9 @@ function ExtractCanuintPage(
 
 // Extract multiple recordings from barony listing page
 function ExtractBaronyRecordings(
-  page_content: string,
-  barony_id: int,
-  barony_name: string
+  page_content string,
+  barony_id int,
+  barony_name string
 ) -> CanuintRecording[] {
   client Extractor
   prompt #"
@@ -221,9 +221,9 @@ class DialectSimilarity {
 
 // Analyze dialect features from transcription
 function AnalyzeDialect(
-  transcription: CanuintTranscription,
-  speaker: CanuintSpeaker,
-  location: CanuintLocation
+  transcription CanuintTranscription,
+  speaker CanuintSpeaker,
+  location CanuintLocation
 ) -> DialectAnalysis {
   client Extractor
   prompt #"

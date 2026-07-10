@@ -18,85 +18,85 @@ enum AssessmentType {
 }
 
 class PlayerLanguageProfile {
-  player_id: string
+  player_id string
   language CelticLanguage
   overall_level ProficiencyLevel
 
   skill_levels SkillAssessment[]
-  vocabulary_count: int
+  vocabulary_count int
   grammar_mastery GrammarProgress[]
 
-  strengths: string[]
-  areas_for_improvement: string[]
-  recommended_focus: string[]
+  strengths string[]
+  areas_for_improvement string[]
+  recommended_focus string[]
 
-  last_assessment: string @description("ISO datetime")
-  total_learning_hours: float
+  last_assessment string @description("ISO datetime")
+  total_learning_hours float
 }
 
 class SkillAssessment {
   skill SkillDomain
   level ProficiencyLevel
-  confidence: float @description("0-1 assessment confidence")
-  recent_performance: float @description("Recent success rate")
-  examples_correct: int
-  examples_attempted: int
+  confidence float @description("0-1 assessment confidence")
+  recent_performance float @description("Recent success rate")
+  examples_correct int
+  examples_attempted int
 }
 
 class GrammarProgress {
-  topic: string
-  mastery_level: float @description("0-1 mastery")
-  examples_practiced: int
-  last_error: string?
-  next_review: string @description("ISO datetime for spaced repetition")
+  topic string
+  mastery_level float @description("0-1 mastery")
+  examples_practiced int
+  last_error string?
+  next_review string @description("ISO datetime for spaced repetition")
 }
 
 // Analyze player response
 class ResponseAnalysis {
-  player_response: string
-  expected_response: string?
+  player_response string
+  expected_response string?
   language CelticLanguage
 
-  is_correct: bool
-  partial_credit: float @description("0-1 for partial correctness")
+  is_correct bool
+  partial_credit float @description("0-1 for partial correctness")
 
   spelling_errors SpellingError[]
   grammar_errors GrammarError[]
   vocabulary_notes VocabularyNote[]
 
-  feedback: string @description("Encouraging feedback message")
-  celtic_feedback: string? @description("Feedback in target language")
-  improvement_suggestion: string
+  feedback string @description("Encouraging feedback message")
+  celtic_feedback string? @description("Feedback in target language")
+  improvement_suggestion string
 }
 
 class SpellingError {
-  word_written: string
-  word_expected: string
-  error_type: string @description("accent, lenition, vowel, consonant")
-  explanation: string
+  word_written string
+  word_expected string
+  error_type string @description("accent, lenition, vowel, consonant")
+  explanation string
 }
 
 class GrammarError {
-  error_text: string
-  correct_text: string
-  grammar_rule: string
-  explanation: string
-  similar_examples: string[]
+  error_text string
+  correct_text string
+  grammar_rule string
+  explanation string
+  similar_examples string[]
 }
 
 class VocabularyNote {
-  word: string
-  note_type: string @description("new, review, mastered")
-  definition: string
-  usage_note: string?
+  word string
+  note_type string @description("new, review, mastered")
+  definition string
+  usage_note string?
 }
 
 function AnalyzePlayerResponse(
-  player_response: string,
-  expected_response: string?,
-  context: string,
-  language: CelticLanguage,
-  skill_being_tested: SkillDomain
+  player_response string,
+  expected_response string?,
+  context string,
+  language CelticLanguage,
+  skill_being_tested SkillDomain
 ) -> ResponseAnalysis {
   client CelticContentFallback
   prompt #"
@@ -123,43 +123,43 @@ function AnalyzePlayerResponse(
 
 // Generate adaptive assessment
 class AdaptiveAssessment {
-  assessment_id: string
-  player_id: string
+  assessment_id string
+  player_id string
   language CelticLanguage
   assessment_type AssessmentType
 
   questions AdaptiveQuestion[]
-  current_difficulty: float @description("0-1 difficulty")
+  current_difficulty float @description("0-1 difficulty")
   estimated_level ProficiencyLevel
 
-  started_at: string
-  time_limit_minutes: int?
+  started_at string
+  time_limit_minutes int?
 }
 
 class AdaptiveQuestion {
-  question_id: string
-  question_type: string @description("translation, fill_blank, listening, speaking")
-  difficulty: float
+  question_id string
+  question_type string @description("translation, fill_blank, listening, speaking")
+  difficulty float
 
-  prompt: string @description("Question in English")
-  celtic_prompt: string? @description("Question in Celtic if applicable")
+  prompt string @description("Question in English")
+  celtic_prompt string? @description("Question in Celtic if applicable")
 
-  celtic_content: string @description("The Celtic text involved")
-  english_content: string @description("English equivalent")
+  celtic_content string @description("The Celtic text involved")
+  english_content string @description("English equivalent")
 
-  options: string[]? @description("For multiple choice")
-  correct_answer: string
-  grammar_focus: string?
-  vocabulary_focus: string[]
+  options string[]? @description("For multiple choice")
+  correct_answer string
+  grammar_focus string?
+  vocabulary_focus string[]
 
-  hint: string?
-  explanation: string @description("For after answering")
+  hint string?
+  explanation string @description("For after answering")
 }
 
 function GenerateAdaptiveAssessment(
-  player_profile: PlayerLanguageProfile,
-  focus_areas: SkillDomain[],
-  question_count: int
+  player_profile PlayerLanguageProfile,
+  focus_areas SkillDomain[],
+  question_count int
 ) -> AdaptiveAssessment {
   client CelticContentFallback
   prompt #"
@@ -188,24 +188,24 @@ function GenerateAdaptiveAssessment(
 
 // Placement test
 class PlacementResult {
-  player_id: string
+  player_id string
   language CelticLanguage
 
   recommended_level ProficiencyLevel
-  confidence: float
+  confidence float
 
   skill_breakdown SkillAssessment[]
-  known_vocabulary: string[]
+  known_vocabulary string[]
   grammar_familiar GrammarTopic[]
 
-  starting_zone: string @description("Recommended game zone")
-  starting_quests: string[] @description("Recommended first quests")
-  personalized_tips: string[]
+  starting_zone string @description("Recommended game zone")
+  starting_quests string[] @description("Recommended first quests")
+  personalized_tips string[]
 }
 
 function EvaluatePlacementTest(
   responses PlacementResponse[],
-  language: CelticLanguage
+  language CelticLanguage
 ) -> PlacementResult {
   client Claude
   prompt #"
@@ -237,56 +237,56 @@ function EvaluatePlacementTest(
 }
 
 class PlacementResponse {
-  question: string
-  answer: string
-  correct_answer: string
+  question string
+  answer string
+  correct_answer string
   skill SkillDomain
-  difficulty: float
+  difficulty float
 }
 
 // Progress report
 class ProgressReport {
-  player_id: string
-  period: string @description("weekly, monthly, etc.")
+  player_id string
+  period string @description("weekly, monthly, etc.")
   language CelticLanguage
 
-  summary: string @description("Natural language summary")
-  celtic_summary: string? @description("Summary in target language")
+  summary string @description("Natural language summary")
+  celtic_summary string? @description("Summary in target language")
 
   statistics ProgressStatistics
-  achievements: string[]
+  achievements string[]
   vocabulary_learned VocabularyProgress[]
   grammar_improved GrammarProgress[]
 
-  recommendations: string[]
-  next_goals: string[]
-  motivational_message: string
-  celtic_encouragement: string
+  recommendations string[]
+  next_goals string[]
+  motivational_message string
+  celtic_encouragement string
 }
 
 class ProgressStatistics {
-  quests_completed: int
-  xp_earned: int
-  time_played_hours: float
-  conversations_had: int
-  words_learned: int
-  accuracy_rate: float
-  streak_days: int
+  quests_completed int
+  xp_earned int
+  time_played_hours float
+  conversations_had int
+  words_learned int
+  accuracy_rate float
+  streak_days int
 }
 
 class VocabularyProgress {
-  word: string
-  translation: string
-  times_practiced: int
-  mastery_level: float
-  last_seen: string
+  word string
+  translation string
+  times_practiced int
+  mastery_level float
+  last_seen string
 }
 
 function GenerateProgressReport(
-  player_id: string,
-  activity_data: map<string, any>,
-  language: CelticLanguage,
-  period: string
+  player_id string,
+  activity_data map<string, any>,
+  language CelticLanguage,
+  period string
 ) -> ProgressReport {
   client CelticContentFallback
   prompt #"
@@ -343,11 +343,11 @@ class ExitCardSet {
 }
 
 function GenerateExitCardQuestions(
-  lesson_topic: string,
-  subject: string,
-  level: string,
-  num_questions: int,
-  curriculum_extract: CircularExtraction? = null,
+  lesson_topic string,
+  subject string,
+  level string,
+  num_questions int,
+  curriculum_extract CircularExtraction? = null,
 ) -> ExitCardSet {
   client LitellmClient
   prompt #"

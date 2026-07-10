@@ -110,10 +110,10 @@ class FIBOConfig {
 // =============================================================================
 
 function ExtractImagePrompt(
-  outcome_text: string,
-  subject: string,
-  cycle: string,
-  purpose: ImagePurpose
+  outcome_text string,
+  subject string,
+  cycle string,
+  purpose ImagePurpose
 ) -> ImagePromptSpec {
   client LiteLLM
   prompt #"
@@ -144,9 +144,9 @@ function ExtractImagePrompt(
 }
 
 function BuildFIBOConfig(
-  spec: ImagePromptSpec,
-  outcome_id: string,
-  syllabus_path: string
+  spec ImagePromptSpec,
+  outcome_id string,
+  syllabus_path string
 ) -> FIBOConfig {
   client LiteLLM
   prompt #"

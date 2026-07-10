@@ -116,8 +116,8 @@ class TaleType {
 
 // Extract tale from Hidden Heritages page
 function ExtractHiddenHeritagesTale(
-  page_content: string,
-  tale_id: string
+  page_content string,
+  tale_id string
 ) -> HiddenHeritagesTale {
   client Extractor
   prompt #"
@@ -151,8 +151,8 @@ function ExtractHiddenHeritagesTale(
 
 // Extract tales listing from browse page
 function ExtractTalesListing(
-  page_content: string,
-  page_number: int
+  page_content string,
+  page_number int
 ) -> TalesListingPage {
   client Extractor
   prompt #"
