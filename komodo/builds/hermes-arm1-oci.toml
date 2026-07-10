@@ -1,0 +1,47 @@
+# =============================================================================
+# Komodo Build — Hermes (arm1-oci)
+# =============================================================================
+# No-op build for hermes-arm1-oci. The upstream image
+# `nousresearch/hermes-agent:v2026.7.1` is publicly available on Docker Hub
+# (verified 200 on HEAD), so the stack pulls it directly without needing
+# a local Dockerfile build.
+#
+# This `Build` resource exists for symmetry with the other 2 (openchamber
+# + openclaw) and is included in the omnibus deploy-agent-platform-cluster
+# arm1-oci procedure so all 3 surfaces go through the same RunBuild step.
+#
+# Usage:
+#   km run build hermes-arm1-oci     # no-op; pulls public image
+# =============================================================================
+
+[[build]]
+name = "hermes-arm1-oci"
+description = "No-op for hermes-arm1-oci — the upstream `nousresearch/hermes-agent:v2026.7.1` is already public on Docker Hub"
+
+[build.config]
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+build_path = "Dockerfile.noop"
+build_context_path = "."
+
+image_name = "ghcr.io/cianfhoghlaim/hermes"
+image_tag = "v2026.7.1-noop"
+
+build_args = []
+
+cache = false
+push = false
+timeout_s = 30
+
+[build.config.resources]
+memory = "128MB"
+cpus = 1
+
+# Build args instructing Komodo to skip the actual build and just verify
+# the public image is reachable
+[build.config.skip]
+reason = "Hermes uses the public Docker Hub image `nousresearch/hermes-agent:v2026.7.1`; no Dockerfile build is required."
+verify_pull = true
+verify_image = "nousresearch/hermes-agent:v2026.7.1"

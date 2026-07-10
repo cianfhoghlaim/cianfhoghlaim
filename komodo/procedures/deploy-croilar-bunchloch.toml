@@ -17,6 +17,7 @@
 
 [[procedure]]
 name = "deploy-croilar-bunchloch"
+server_id = "bunchloch"
 description = "Deploy Croilar (aleyum) music intelligence pipeline to bunchloch (MacBook M4)"
 
 [[procedure.config.stages]]

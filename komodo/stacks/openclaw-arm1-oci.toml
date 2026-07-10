@@ -4,6 +4,10 @@
 # Long-running channel-fanout gateway exposing the meaisínfhoghlaim 12-agent
 # fleet through 6 v1 channels (WebChat + Telegram/Slack/Discord/WhatsApp/Teams).
 #
+# The image is the CODE-OWNED openclaw:2026.6-arm1 (built from
+# `bonneagar/stacks/openclaw/Dockerfile.openclaw`). The upstream
+# `ghcr.io/openclaw/openclaw:2026.2.6` is private (401 on GHCR HEAD).
+#
 # Architecture:
 #   arm1-oci — openclaw (:18789 host → :18789 container, gateway WebSocket RPC)
 #              openclaw-locket (Locket sidecar, Infisical injection)
@@ -13,15 +17,20 @@
 # Secrets injected via Locket + Infisical vault (dev-baile).
 #
 # Usage:
+#   km run build openclaw-arm1-oci
 #   km deploy stack openclaw
 # =============================================================================
 
 [[stack]]
 name = "openclaw"
-description = "OpenClaw — Channel-fanout gateway for the meaisínfhoghlaim 12-agent fleet (arm1-oci, port 18789, openclaw.cianfhoghlaim.ie)"
+description = "OpenClaw — code-owned openclaw:2026.6-arm1 (arm1-oci, port 18789, openclaw.cianfhoghlaim.ie)"
 tags = ["host:arm1-oci","tier:control-plane","type:agent-runtime","domain:openclaw.cianfhoghlaim.ie"]
 [stack.config]
 server_id = "arm1-oci"
+# The image is built from `komodo/builds/openclaw-arm1-oci.toml` and pushed
+# to `ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1`. The arm1-oci stack
+# references the LOCAL image, not the private upstream.
+image = "ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1"
 run_directory = "/etc/komodo/sruth/infrastructure/stacks/openclaw"
 file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
 environment = """

@@ -11,14 +11,22 @@
 #   - litellm + langfuse + mlflow + logfire     (LLM gateway + observability)
 #   - dagster + lakehouse + cognee + lancedb    (lakehouse + semantic memory)
 #   - falkordb + graphiti + memgraph            (graph backends)
-#   - hermes + llm                              (autonomous agent runtime)
+#   - hermes + openclaw + openchamber           (autonomous agent runtime + UI surfaces)
 #   - mailcow + browser + media                 (daily-driver stacks)
+#   - newt (Pangolin client) + komodo-periphery (operator-laptop site infrastructure)
 #
 # Per the bonneagar-v5 drift refactor:
 #   - 60s interval (sub-minute convergence)
 #   - on_pull=true (Komodo proactively pulls on the schedule)
 #   - delete=false (safety — a typo in TOML never deletes live resources)
 #   - managed=true (Komodo owns the resource state, not the IaC scripts)
+#
+# server_id convention:
+#   This sync pulls every procedure under `komodo/procedures/*.toml`,
+#   but Komodo Core filters the per-host UI + REST API to procedures
+#   whose `server_id` field matches that host. Procedures without
+#   a `server_id` field appear in BOTH hosts (back-compat). The
+#   convention is documented in `komodo/procedures/server_id_legend.md`.
 # =============================================================================
 
 [[resource_sync]]
@@ -33,9 +41,11 @@ git_account = "forgejo"
 branch = "main"
 
 # Resource paths under <repo-root>/<branch>/ :
-#   - stacks:    bunchloch-prefixed per-stack registrations
-#   - procedures: shared with arm1-oci (procedures/*.toml is host-agnostic)
-#   - servers:   shared Periphery registrations
+#   - stacks:     bunchloch-prefixed per-stack registrations
+#   - procedures: shared with arm1-oci (procedures/*.toml is host-agnostic;
+#                 Komodo Core filters by `server_id` field)
+#   - builds:     per-build registrations (code-owned Docker images)
+#   - servers:    shared Periphery registrations
 # Per the 2-host topology (no 3rd host), no per-host procedure split.
 resource_path = [
   "bonneagar/komodo/stacks/bunchloch-analytics.toml",
@@ -47,6 +57,10 @@ resource_path = [
   "bonneagar/komodo/stacks/mailcow-dockerized-bunchloch.toml",
   "bonneagar/komodo/stacks/meaisínfhoghlaim-bunchloch.toml",
   "bonneagar/komodo/stacks/oideachais-bunchloch.toml",
+  "bonneagar/komodo/stacks/newt-bunchloch.toml",
+  "bonneagar/komodo/builds/openchamber-arm1-oci.toml",
+  "bonneagar/komodo/builds/openclaw-arm1-oci.toml",
+  "bonneagar/komodo/builds/hermes-arm1-oci.toml",
   "bonneagar/komodo/procedures/*.toml",
   "bonneagar/komodo/servers/*.toml",
 ]

@@ -14,6 +14,7 @@
 
 [[procedure]]
 name = "deploy-llama-swap-bunchloch"
+server_id = "bunchloch"
 description = "Deploy meaisínfhoghlaim llama-swap to bunchloch for on-device GGUF inference"
 
 [[procedure.config.stages]]
