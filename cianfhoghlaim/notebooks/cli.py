@@ -32,7 +32,10 @@ NB_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = NB_ROOT.parents[2]
 """The repo root (set in __init__.py as REPO_ROOT)."""
 
-# The 11 functional groups (+ legacy/) — what `list [GROUP]` accepts
+# The 12 functional groups (+ legacy/) — what `list [GROUP]` accepts
+# (13_baml_cocoindex_tutorial added 2026-07-12 per openspec change
+# `2026-07-12-baml-cocoindex-tutorials-v1` — see
+# openspec/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md)
 GROUPS = (
     "01_dev_env",
     "02_vision_models",
@@ -45,6 +48,7 @@ GROUPS = (
     "09_official_media",
     "10_mmo",
     "11_speedrun",
+    "13_baml_cocoindex_tutorial",
 )
 
 

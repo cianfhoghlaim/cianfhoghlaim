@@ -25,7 +25,7 @@
 #   ├── _shared/                          #   cross-processing types
 #   ├── email.baml, upstream_monitoring.baml, cv_extraction.baml, etc.
 #   └── ...
-# Output: ./shared/baml_client/ for Python, ./shared/baml_client_ts/ for TypeScript
+# Output: ./baml_client/ for Python, ./baml_client_ts/ for TypeScript
 
 [project]
 name = "cianfhoghlaim-baml"
@@ -37,13 +37,13 @@ description = "BAML extraction schemas for the Cianfhoghlaim platform (3-cluster
 # Python client (Pydantic v2 models — consumed by Dagster + DLT + the Honcho API)
 [generators.lang_py]
 output_type = "python/pydantic"
-output_dir = "../shared/baml_client"
+output_dir = "baml_client"
 version = "0.223.0"
 default_client_mode = "async"
 
 # TypeScript client (Zod-compatible — consumed by TanStack AI + oRPC + croilar-portal UI)
 [generators.lang_ts]
 output_type = "typescript"
-output_dir = "../shared/baml_client_ts"
+output_dir = "baml_client_ts"
 version = "0.223.0"
 default_client_mode = "async"

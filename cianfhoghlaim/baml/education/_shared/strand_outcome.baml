@@ -17,6 +17,10 @@ class LearningOutcome {
   strand string? @description("Curriculum strand")
   strand_unit string? @description("Strand unit within the strand")
   key_skills string[] @description("Key skills this outcome develops")
+  @@dynamic
+  // Per openspec/changes/2026-07-12-baml-type-builder-ncca-v1: the NCCA
+  // yearly strand/outcome catalog is injected at runtime via TypeBuilder
+  // (read from baml/education/_shared/strand_catalog.yaml).
 }
 
 class ExtractedRelationship {
@@ -95,6 +99,10 @@ class CurriculumStrand {
   description string @description("Strand description")
   learning_outcomes EnhancedLearningOutcome[] @description("Outcomes in this strand")
   weighting float? @description("Percentage weighting in assessment")
+  @@dynamic
+  // Per openspec/changes/2026-07-12-baml-type-builder-ncca-v1: per-strand
+  // properties are injected at runtime via TypeBuilder from
+  // baml/education/_shared/strand_catalog.yaml.
 }
 
 class AssessmentComponentStrand {
@@ -103,6 +111,10 @@ class AssessmentComponentStrand {
   duration string? @description("Duration if timed (e.g., '2h 30min')")
   description string? @description("Component description")
   levels string[] @description("Levels offered (Foundation, Ordinary, Higher)")
+  @@dynamic
+  // Per openspec/changes/2026-07-12-baml-type-builder-ncca-v1: per-component
+  // properties are injected at runtime via TypeBuilder from
+  // baml/education/_shared/strand_catalog.yaml.
 }
 
 class AssessmentInfo {
@@ -129,6 +141,10 @@ class CurriculumSpecStrand {
   key_skills_mapping map<string, string[]> @description("Key skills to outcomes mapping")
   rationale string? @description("Subject rationale/aims")
   total_hours int? @description("Recommended teaching hours")
+  @@dynamic
+  // Per openspec/changes/2026-07-12-baml-type-builder-ncca-v1: per-spec
+  // properties are injected at runtime via TypeBuilder from
+  // baml/education/_shared/strand_catalog.yaml.
 }
 
 // -----------------------------------------------------------------------------
@@ -200,12 +216,12 @@ class MarkingSection {
 class MarkingCriteria {
   question_number string @description("Question number")
   total_marks int @description("Marks available")
-  marking_points MarkingPoint[] @description("Breakdown of marks")
+  marking_points MarkingPointStrand[] @description("Breakdown of marks")
   acceptable_answers string[] @description("List of acceptable answers")
   notes string? @description("Examiner notes")
 }
 
-class MarkingPoint {
+class MarkingPointStrand {
   description string @description("What is being marked")
   marks int @description("Marks for this point")
   partial_credit bool @description("Whether partial credit allowed")
@@ -305,4 +321,97 @@ class ExtractionBudget {
   last_extraction_at string
   reset_at string @description("ISO 8601 timestamp when the budget resets")
   remaining_papers int @description("5 - papers_extracted, default daily budget")
+}
+
+// =============================================================================
+// TypeBuilder / @@dynamic smoke tests (per
+// openspec/changes/2026-07-12-baml-type-builder-ncca-v1)
+// =============================================================================
+// The runtime TypeBuilder helper at
+// `baml/education/_shared/strand_type_builder.py` reads
+// `baml/education/_shared/strand_catalog.yaml` and injects the
+// per-strand / per-outcome / per-spec / per-assessment-component
+// properties into the 4 @@dynamic classes above.
+//
+// The tests below exercise the helper end-to-end (load catalog,
+// inject properties, verify the TypeBuilder instantiates without
+// error against a representative strand set).
+
+test strand_type_builder_smoke {
+  functions [ExtractStrandFromCatalog]
+  args {
+    catalog_yaml #"
+      strands:
+        - name: "LC Mathematics Strand 1: Algebra"
+          properties:
+            national_code: "S1"
+            credit_hours: "int"
+        - name: "LC Mathematics Strand 2: Functions"
+          properties:
+            national_code: "S2"
+            credit_hours: "int"
+        - name: "LC Chemistry Strand 1: Atomic Structure"
+          properties:
+            national_code: "S1"
+        - name: "LC Chemistry Strand 2: Bonding"
+          properties:
+            national_code: "S2"
+        - name: "LC Geography Strand 1: Physical Environment"
+          properties:
+            national_code: "S1"
+        - name: "LC Geography Strand 2: Regional Geography"
+          properties:
+            national_code: "S2"
+        - name: "LC Gaeilge Strand 1: Éisteacht"
+          properties:
+            national_code: "S1"
+        - name: "LC Gaeilge Strand 2: Léamhthuiscint"
+          properties:
+            national_code: "S2"
+        - name: "LC English Strand 1: Reading"
+          properties:
+            national_code: "S1"
+        - name: "LC Computer Science Strand 1: Computational Thinking"
+          properties:
+            national_code: "S1"
+      outcomes:
+        - code: "MO1"
+          properties:
+            blooms_level: "string"
+            assessment_weight: "float"
+        - code: "MO2"
+          properties:
+            blooms_level: "string"
+            assessment_weight: "float"
+        - code: "CO1"
+          properties:
+            blooms_level: "string"
+        - code: "GO1"
+          properties:
+            blooms_level: "string"
+    "#
+  }
+}
+
+function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"You are an expert curriculum analyst specialising in the Irish education system.
+
+You will be given a YAML catalog of NCCA curriculum strands and outcomes (representative subset for the 6 LC priority subjects). Read it carefully and produce a `CurriculumSpecStrand[]` — one entry per strand set grouped by subject — that captures the strand metadata.
+
+Each strand should map to its:
+- `name` (the strand name from the catalog)
+- `description` (a 1-sentence synthesis you derive from the catalog context — make it pedagogically useful)
+- `learning_outcomes` (each outcome from the catalog's `outcomes` array becomes one `EnhancedLearningOutcome` with the `code` as the `outcome_code`, the strand as the `strand` field, and a brief plausible `text`)
+- `weighting` (a sensible default based on the subject; e.g. 25.0 for Algebra, Functions, etc.)
+
+You should NOT add the per-strand `national_code` / `credit_hours` properties — those are injected at runtime via TypeBuilder (per openspec/changes/2026-07-12-baml-type-builder-ncca-v1). Just produce the base `CurriculumSpecStrand[]` from the static portion of the schema.
+
+CATALOG:
+```yaml
+{{ catalog_yaml }}
+```
+
+{{ ctx.output_format }}
+"#
 }

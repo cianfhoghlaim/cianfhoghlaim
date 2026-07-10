@@ -10,7 +10,7 @@
 //
 // Re-gen after changes:  `cd oideachais && uv run baml-cli generate`
 
-class MarkingPoint {
+class MarkingPointSec {
   questionNumber int
   partLabel string? @description("Optional sub-part label, e.g. '(a)', '(b)', '(i)'")
   markValue int @description("Marks awarded for this marking point")
@@ -27,7 +27,7 @@ class MarkingSchemeSec {
   paper string
   level string @description("H, O, or F")
   totalMarks int
-  markingPoints MarkingPoint[] @stream.with_state
+  markingPoints MarkingPointSec[] @stream.with_state
   @@stream.done
 }
 
