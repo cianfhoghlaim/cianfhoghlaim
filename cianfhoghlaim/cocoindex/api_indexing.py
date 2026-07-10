@@ -429,6 +429,7 @@ def _make_app():  # noqa: ANN202
                 ApiEndpoint, primary_key=["id"]
             ),
         )
+        target_table.declare_vector_index(column="embedding")  # R4
         # Walk the repo in a thread (CPU-bound regex scan).
         endpoints = await asyncio.to_thread(_walk_repo_for_endpoints, repo_root)
         # Upsert in chunks of 100 to respect the HNSW rule.

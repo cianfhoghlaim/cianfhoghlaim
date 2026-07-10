@@ -202,6 +202,7 @@ if COCOINDEX_AVAILABLE:
                 primary_key=["chunk_id"],
             ),
         )
+        target_table.declare_vector_index(column="embedding")  # R4
         items = list(_yield_piab_chunks())
         id_gen = IdGenerator()
         for i in range(0, len(items), 100):

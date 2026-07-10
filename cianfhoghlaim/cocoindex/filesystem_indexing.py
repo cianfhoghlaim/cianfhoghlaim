@@ -269,6 +269,7 @@ def _make_app():  # noqa: ANN202
                 FsLayoutRow, primary_key=["id"]
             ),
         )
+        target_table.declare_vector_index(column="embedding")  # R4
         rows = await asyncio.to_thread(_walk_repo_for_layout, repo_root)
         for i in range(0, len(rows), 100):
             batch = rows[i : i + 100]

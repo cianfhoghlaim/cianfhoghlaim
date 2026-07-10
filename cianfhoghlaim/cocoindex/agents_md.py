@@ -159,13 +159,16 @@ if COCOINDEX_AVAILABLE:
                     embedding=[],
                 )
 
+        target_table = lancedb.mount_table_target(  # type: ignore[union-attr]
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=LANCEDB_TABLE,
+            table_schema=AgentsMdRecord,
+            primary_key="id",
+        )
+        target_table.declare_vector_index(column="embedding")  # R4
+
         @coco.index(  # type: ignore[misc]
-            target=lancedb.mount_table_target(  # type: ignore[union-attr]
-                LANCE_DB,  # type: ignore[arg-type]
-                table_name=LANCEDB_TABLE,
-                table_schema=AgentsMdRecord,
-                primary_key="id",
-            ),
+            target=target_table,
         )
         async def index_chunks(  # type: ignore[no-untyped-def,unused-ignore]
             records: AsyncIterator[AgentsMdRecord],

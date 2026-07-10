@@ -112,11 +112,13 @@ if COCOINDEX_AVAILABLE:
             embedder: Annotated[Any, EMBEDDER],
             lance_db: Annotated[Any, LANCE_DB],
         ) -> lancedb.TableTarget:
-            return lancedb.TableTarget(
+            target_table = lancedb.TableTarget(
                 db=lance_db,
                 table_name=f"oideachais.lc.root.{table_slug}",
                 embedding=embedder.embedding(),
             )
+            target_table.declare_vector_index(column="embedding")  # R4
+            return target_table
 else:
     app = None
     logger.warning("root_pdfs_embedding_app_disabled: cocoindex_not_available")
