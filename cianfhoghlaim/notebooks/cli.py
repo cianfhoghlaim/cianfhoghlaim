@@ -57,6 +57,11 @@ GROUPS = (
                             # oideachais-marimo-dashboards capability spec.
     "10_mmo",
     "11_speedrun",
+    "12_semantic_search",  # added 2026-07-14 per openspec change
+                          # `2026-07-14-oideachais-semantic-search-v1`
+                          # — the 13-requirement semantic search notebook
+                          # (cross-corpus LanceDB HNSW + BGE-M3 +
+                          # BGE-large-en-v1.5; bilingual EN+GA).
     "13_baml_cocoindex_tutorial",
 )
 
