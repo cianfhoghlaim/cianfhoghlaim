@@ -216,12 +216,12 @@ class MarkingSection {
 class MarkingCriteria {
   question_number string @description("Question number")
   total_marks int @description("Marks available")
-  marking_points MarkingPoint[] @description("Breakdown of marks")
+  marking_points MarkingPointStrand[] @description("Breakdown of marks")
   acceptable_answers string[] @description("List of acceptable answers")
   notes string? @description("Examiner notes")
 }
 
-class MarkingPoint {
+class MarkingPointStrand {
   description string @description("What is being marked")
   marks int @description("Marks for this point")
   partial_credit bool @description("Whether partial credit allowed")

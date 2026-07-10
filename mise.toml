@@ -550,7 +550,14 @@ run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface
 
 [tasks."baml:generate"]
 description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
-run = "uv run baml-cli generate"
+run = """
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+if [ ! -e "$ROOT_DIR/cianfhoghlaim/baml_src" ]; then
+  ln -s baml "$ROOT_DIR/cianfhoghlaim/baml_src"
+fi
+cd "$ROOT_DIR"
+uv run baml-cli generate --from cianfhoghlaim/baml_src
+"""
 
 [tasks."baml:test"]
 description = "Run BAML test blocks with baml-cli (hard CI gate)"
