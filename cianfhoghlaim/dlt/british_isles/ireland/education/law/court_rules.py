@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.court_rules — Court Rules library.
+cianfhoghlaim.dlt.british_isles.ireland.law.court_rules — Court Rules library.
 
 Source: `https://www.courts.ie/rules` (operated by the Courts Service of
 Ireland) — the Rules of Court PDF library (District Court Rules,
