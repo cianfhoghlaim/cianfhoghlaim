@@ -51,97 +51,97 @@ enum ChemFeedbackChannel {
 }
 
 class ChemBilingualText {
-  text_en: string
-  text_ga: string?
+  text_en string
+  text_ga string?
 }
 
 class ChemEvidenceLink {
-  source_pdf: string
-  source_page: int
-  excerpt_en: string
-  excerpt_ga: string?
-  ncca_url: string?
+  source_pdf string
+  source_page int
+  excerpt_en string
+  excerpt_ga string?
+  ncca_url string?
 }
 
 class ChemNCCALearningOutcome {
-  lo_code: string
-  framework: string
-  level: ChemNCCALevel
-  topic: ChemTopicArea
-  competency_text: ChemBilingualText
-  marking_scheme_excerpt: ChemBilingualText?
-  evidence: ChemEvidenceLink
+  lo_code string
+  framework string
+  level ChemNCCALevel
+  topic ChemTopicArea
+  competency_text ChemBilingualText
+  marking_scheme_excerpt ChemBilingualText?
+  evidence ChemEvidenceLink
 }
 
 class ChemFormativeItem {
-  id: string
-  lo_code: string
-  level: ChemNCCALevel
-  topic: ChemTopicArea
-  item_type: ChemItemType
-  difficulty: int @description("1-5")
-  prompt: ChemBilingualText
-  expected_answer: ChemBilingualText
-  marking_scheme: ChemBilingualText
-  common_errors: ChemBilingualText[]
-  hints: ChemBilingualText[] @description("4 graduated hints")
-  evidence: ChemEvidenceLink
-  feedback_channel: ChemFeedbackChannel
-  est_time_minutes: int
+  id string
+  lo_code string
+  level ChemNCCALevel
+  topic ChemTopicArea
+  item_type ChemItemType
+  difficulty int @description("1-5")
+  prompt ChemBilingualText
+  expected_answer ChemBilingualText
+  marking_scheme ChemBilingualText
+  common_errors ChemBilingualText[]
+  hints ChemBilingualText[] @description("4 graduated hints")
+  evidence ChemEvidenceLink
+  feedback_channel ChemFeedbackChannel
+  est_time_minutes int
 }
 
 class ChemFormativeItemAttempt {
-  item_id: string
-  student_response: string
-  response_format: string @description("text / latex / image / structure")
-  time_taken_seconds: int
-  hints_used: int
+  item_id string
+  student_response string
+  response_format string @description("text / latex / image / structure")
+  time_taken_seconds int
+  hints_used int
 }
 
 class ChemScoreBreakdown {
-  item_id: string
-  lo_code: string
-  total_marks: int
-  marks_awarded: int
-  marks_per_step: int[]
-  is_correct: bool
-  partial_credit_pct: float
-  feedback_en: string
-  feedback_ga: string?
-  next_recommended_lo: string?
-  badge_earned: bool
+  item_id string
+  lo_code string
+  total_marks int
+  marks_awarded int
+  marks_per_step int[]
+  is_correct bool
+  partial_credit_pct float
+  feedback_en string
+  feedback_ga string?
+  next_recommended_lo string?
+  badge_earned bool
 }
 
 class ChemQuestPack {
-  id: string
-  subject: string @description("Always 'chemistry'") @stream.not_null
-  framework: string
-  level: ChemNCCALevel
-  title: ChemBilingualText @stream.not_null
-  description: ChemBilingualText
-  total_items: int
-  total_marks: int
-  est_time_minutes: int
-  los_covered: string[]
-  items: ChemFormativeItem[] @stream.with_state
-  prerequisites: string[]
-  cross_subject_links: string[] @description("LC-APPM, LC-MATHS for cross-subject synthesis")
-  generated_at: string
-  generated_by: string @description("Always 'chem_agent'")
+  id string
+  subject string @description("Always 'chemistry'") @stream.not_null
+  framework string
+  level ChemNCCALevel
+  title ChemBilingualText @stream.not_null
+  description ChemBilingualText
+  total_items int
+  total_marks int
+  est_time_minutes int
+  los_covered string[]
+  items ChemFormativeItem[] @stream.with_state
+  prerequisites string[]
+  cross_subject_links string[] @description("LC-APPM, LC-MATHS for cross-subject synthesis")
+  generated_at string
+  generated_by string @description("Always 'chem_agent'")
 }
 
 class ChemQuestPackValidation {
-  pack_id: string
-  is_valid: bool
-  errors: string[]
-  warnings: string[]
+  pack_id string
+  is_valid bool
+  errors string[]
+  warnings string[]
 }
 
 function GenerateChemQuestPack(
-  syllabus: LeavingCertSyllabus,
-  past_papers: LeavingCertPastPaper[],
-  marking_schemes: LeavingCertMarkingScheme[],
-  level: string
+  syllabus LeavingCertSyllabus,
+  past_papers LeavingCertPastPaper[],
+  marking_schemes LeavingCertMarkingScheme[],
+  level string
 ) -> ChemQuestPack {
   client ExtractEnStrong
   prompt #"
@@ -175,11 +175,37 @@ function ExtractChemLOStatement(paragraph: string) -> string[] {
   "#
 }
 
+// -----------------------------------------------------------------------------
+// ExtractChemGaStatement (added 2026-07-13-baml-cocoindex-tutorials-ga-v1)
+// -----------------------------------------------------------------------------
+// The bilingual EN+GA variant of ExtractChemLOStatement. Same
+// return shape (`string[]`); routes via `client default`; the
+// prompt asks for the Irish (Gaeilge) statements verbatim with a
+// leading '[EN-only]' fallback marker for LOs the NCCA did not
+// translate. LC Chemistry syllabi are mostly English-only, so the
+// fallback path is the common case.
+
+function ExtractChemGaStatement(paragraph: string) -> string[] {
+  client default
+  prompt #"
+    Extract all NCCA Chemistry strand/outcome statements in Irish
+    (Gaeilge) from the following NCCA syllabus paragraph. Return
+    them as a list of full Irish statements, verbatim from the
+    source, with the LO code if present (e.g. 'LC-CHEM-LO-2.4: ...').
+    If no Irish translation is available in the paragraph, return
+    the English statements verbatim with a leading '[EN-only]' marker.
+
+    Paragraph: {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
+}
+
 function GenerateChemFormativeItem(
-  lo_code: string,
-  difficulty: int,
-  level: string,
-  topic: string
+  lo_code string,
+  difficulty int,
+  level string,
+  topic string
 ) -> ChemFormativeItem {
   client ExtractEnStrong
   prompt #"
@@ -198,8 +224,8 @@ function GenerateChemFormativeItem(
 }
 
 function ScoreChemFormativeResponse(
-  item: ChemFormativeItem,
-  attempt: ChemFormativeItemAttempt
+  item ChemFormativeItem,
+  attempt ChemFormativeItemAttempt
 ) -> ChemScoreBreakdown {
   client ExtractEnStrong
   prompt #"
