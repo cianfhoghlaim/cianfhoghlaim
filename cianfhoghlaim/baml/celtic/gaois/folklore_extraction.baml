@@ -29,11 +29,11 @@ class DuchasXMLRecord {
   school_roll_number string @description("Official school roll number")
 
   // Teacher information
-  teacher_name DuchasPersonName @description("Teacher who supervised collection")
+  teacher_name DuchasPersonNameExtraction @description("Teacher who supervised collection")
 
   // Collector/informant (if specified in XML)
-  collector DuchasPersonName? @description("Student collector if specified")
-  informant DuchasPersonName? @description("Person who told the story")
+  collector DuchasPersonNameExtraction? @description("Student collector if specified")
+  informant DuchasPersonNameExtraction? @description("Person who told the story")
 
   // Story metadata
   title string? @description("Story title if present")
@@ -59,7 +59,7 @@ class DuchasLocation {
 }
 
 // Person name structure from Dúchas XML
-class DuchasPersonName {
+class DuchasPersonNameExtraction {
   pretext string? @description("Name prefix (e.g., 'Seán Ó', 'Máire Ní')")
   text string @description("Main name/surname")
   full_name string? @description("Reconstructed full name")
@@ -216,7 +216,7 @@ class VolumeSummary {
   volume_number string @description("Volume identifier")
   volume_id string @description("Volume entry ID")
   school DuchasLocation @description("School location")
-  teacher DuchasPersonName @description("Supervising teacher")
+  teacher DuchasPersonNameExtraction @description("Supervising teacher")
 
   // Content summary
   total_stories int @description("Number of stories in volume")

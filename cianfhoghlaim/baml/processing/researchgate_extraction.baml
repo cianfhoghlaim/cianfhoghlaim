@@ -54,7 +54,7 @@ function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {
   //   - streamId and ownerDisplayName from the page metadata
 }
 
-function ExtractPublication(publication_text: string) -> ResearchGatePublication {
+function ExtractResearchGatePublication(publication_text: string) -> ResearchGatePublication {
   // Extracts a single publication record from a snippet of HTML or
   // JSON describing one paper. Used to backfill missing publications
   // discovered after the initial profile scrape.

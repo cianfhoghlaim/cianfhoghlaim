@@ -8,7 +8,7 @@
 // =============================================================================
 
 // Bilingual/Multilingual text field supporting all Celtic languages
-class BilingualText {
+class BilingualTextIsles {
     en string? @description("English text")
     ga string? @description("Irish (Gaeilge) text")
     gd string? @description("Scottish Gaelic (Gàidhlig) text")
@@ -18,7 +18,7 @@ class BilingualText {
 }
 
 // Language codes following ISO 639-1
-enum LanguageCode {
+enum LanguageCodeIsles {
     EN @description("English")
     GA @description("Irish / Gaeilge")
     GD @description("Scottish Gaelic / Gàidhlig")
@@ -43,7 +43,7 @@ enum Region {
 // =============================================================================
 
 // Education levels across different systems
-enum EducationLevel {
+enum EducationLevelIsles {
     // Ireland
     EARLY_CHILDHOOD @description("Aistear framework, ages 0-6")
     PRIMARY @description("Primary school, ages 4-12")
@@ -81,9 +81,9 @@ enum EducationLevel {
 // DOCUMENT TYPES
 // =============================================================================
 
-enum DocumentType {
+enum DocumentTypeIsles {
     CURRICULUM_SPECIFICATION @description("Official curriculum specification document")
-    SYLLABUS @description("Subject syllabus")
+    SYLLABUS @description("SubjectIsles syllabus")
     EXAM_PAPER @description("Past examination paper")
     MARKING_SCHEME @description("Marking scheme for exam")
     CHIEF_EXAMINER_REPORT @description("Examiner's report on exam session")
@@ -99,11 +99,11 @@ enum DocumentType {
 // CURRICULUM STRUCTURES
 // =============================================================================
 
-class LearningOutcome {
+class CrossNationLearningOutcome {
     code string? @description("Learning outcome code (e.g., 'LO 1.1')")
-    description BilingualText @description("Description of what learner should achieve")
+    description BilingualTextIsles @description("Description of what learner should achieve")
     strand string? @description("Curriculum strand or area")
-    level EducationLevel? @description("Education level this applies to")
+    level EducationLevelIsles? @description("Education level this applies to")
     keywords string[]? @description("Key concepts covered")
 }
 
@@ -112,31 +112,31 @@ class AssessmentCriteria {
     weight float? @description("Percentage weight (0-100)")
     format string? @description("Format (written, oral, practical, coursework)")
     duration string? @description("Duration of assessment")
-    description BilingualText? @description("Description of assessment")
+    description BilingualTextIsles? @description("Description of assessment")
 }
 
-class Subject {
-    name BilingualText @description("Subject name in available languages")
-    code string? @description("Subject code (e.g., 'GAE', 'MAT')")
-    levels EducationLevel[] @description("Available levels")
-    strands string[]? @description("Subject strands or units")
+class SubjectIsles {
+    name BilingualTextIsles @description("SubjectIsles name in available languages")
+    code string? @description("SubjectIsles code (e.g., 'GAE', 'MAT')")
+    levels EducationLevelIsles[] @description("Available levels")
+    strands string[]? @description("SubjectIsles strands or units")
     has_oral bool? @description("Has oral/speaking component")
     has_practical bool? @description("Has practical component")
     oral_weight float? @description("Oral component percentage")
 }
 
 // Main curriculum specification schema
-class CurriculumSpecification {
-    title BilingualText @description("Document title")
-    subject Subject @description("Subject information")
+class CurriculumSpecIsles {
+    title BilingualTextIsles @description("Document title")
+    subject SubjectIsles @description("SubjectIsles information")
     region Region @description("Geographic region")
     education_system string? @description("Education system (e.g., 'Curriculum for Excellence')")
-    level EducationLevel @description("Education level")
+    level EducationLevelIsles @description("Education level")
     version string? @description("Specification version")
     effective_date string? @description("Date specification becomes effective")
 
-    rationale BilingualText? @description("Rationale/aims of the specification")
-    outcomes LearningOutcome[] @description("Learning outcomes")
+    rationale BilingualTextIsles? @description("Rationale/aims of the specification")
+    outcomes CrossNationLearningOutcome[] @description("Learning outcomes")
     assessment AssessmentCriteria[]? @description("Assessment information")
 
     cross_curricular_links string[]? @description("Links to other subjects")
@@ -150,37 +150,37 @@ class CurriculumSpecification {
 // EXAM PAPER STRUCTURES
 // =============================================================================
 
-class ExamQuestion {
+class ExamQuestionIsles {
     number string @description("Question number")
     marks int @description("Marks allocated")
-    text BilingualText @description("Question text")
-    parts ExamQuestion[]? @description("Sub-parts of question")
+    text BilingualTextIsles @description("Question text")
+    parts ExamQuestionIsles[]? @description("Sub-parts of question")
     topic string? @description("Topic/strand being assessed")
     skill_type string? @description("Skill type (knowledge, comprehension, application, analysis)")
 }
 
-class ExamPaper {
-    title BilingualText @description("Paper title")
-    subject Subject @description("Subject")
-    level EducationLevel @description("Level")
+class ExamPaperIsles {
+    title BilingualTextIsles @description("Paper title")
+    subject SubjectIsles @description("SubjectIsles")
+    level EducationLevelIsles @description("Level")
     year int @description("Exam year")
     session string? @description("Exam session (e.g., 'Summer', 'Winter')")
     duration string @description("Paper duration")
     total_marks int @description("Total marks available")
 
-    sections ExamSection[]? @description("Paper sections")
-    questions ExamQuestion[] @description("Questions")
+    sections ExamSectionIsles[]? @description("Paper sections")
+    questions ExamQuestionIsles[] @description("Questions")
 
-    instructions BilingualText? @description("Instructions to candidates")
+    instructions BilingualTextIsles? @description("Instructions to candidates")
     materials_required string[]? @description("Required materials")
 
     source_url string @description("Source URL")
     source_org string @description("Source organization")
 }
 
-class ExamSection {
-    name BilingualText @description("Section name")
-    instructions BilingualText? @description("Section instructions")
+class ExamSectionIsles {
+    name BilingualTextIsles @description("Section name")
+    instructions BilingualTextIsles? @description("Section instructions")
     marks int @description("Marks for section")
     questions_required int? @description("Number of questions to answer")
 }
@@ -190,9 +190,9 @@ class ExamSection {
 // =============================================================================
 
 class TermEntry {
-    term BilingualText @description("The term in available languages")
-    definition BilingualText? @description("Definition")
-    domain string @description("Subject domain (e.g., 'Mathematics', 'Science')")
+    term BilingualTextIsles @description("The term in available languages")
+    definition BilingualTextIsles? @description("Definition")
+    domain string @description("SubjectIsles domain (e.g., 'Mathematics', 'Science')")
     context string? @description("Usage context")
     related_terms string[]? @description("Related terms")
     source string? @description("Source of term")
@@ -203,13 +203,13 @@ class TermEntry {
 // =============================================================================
 
 class TeachingResource {
-    title BilingualText @description("Resource title")
-    description BilingualText? @description("Resource description")
+    title BilingualTextIsles @description("Resource title")
+    description BilingualTextIsles? @description("Resource description")
     resource_type string @description("Type (worksheet, lesson plan, video, etc.)")
-    subject Subject? @description("Subject")
-    level EducationLevel[]? @description("Applicable levels")
+    subject SubjectIsles? @description("SubjectIsles")
+    level EducationLevelIsles[]? @description("Applicable levels")
 
-    learning_outcomes LearningOutcome[]? @description("Learning outcomes addressed")
+    learning_outcomes CrossNationLearningOutcome[]? @description("Learning outcomes addressed")
     duration string? @description("Estimated time to complete")
 
     file_url string? @description("URL to resource file")
@@ -224,7 +224,7 @@ class TeachingResource {
 // EXTRACTION FUNCTIONS
 // =============================================================================
 
-function ExtractCurriculumSpec(document: string) -> CurriculumSpecification {
+function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {
     client "openai/gpt-4o"
     prompt #"
         Extract structured curriculum specification data from the following document.
@@ -237,7 +237,7 @@ function ExtractCurriculumSpec(document: string) -> CurriculumSpecification {
     "#
 }
 
-function ExtractExamPaper(document: string) -> ExamPaper {
+function ExtractExamPaper(document: string) -> ExamPaperIsles {
     client "openai/gpt-4o"
     prompt #"
         Extract structured exam paper data from the following document.
@@ -277,7 +277,7 @@ function ExtractTeachingResource(document: string) -> TeachingResource {
     "#
 }
 
-function DetectDocumentType(document: string) -> DocumentType {
+function DetectDocumentType(document: string) -> DocumentTypeIsles {
     client "openai/gpt-4o-mini"
     prompt #"
         Classify the following education document into one of these types:
@@ -300,7 +300,7 @@ function DetectDocumentType(document: string) -> DocumentType {
     "#
 }
 
-function DetectLanguages(text: string) -> LanguageCode[] {
+function DetectLanguages(text: string) -> LanguageCodeIsles[] {
     client "openai/gpt-4o-mini"
     prompt #"
         Detect which languages are present in the following text.

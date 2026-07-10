@@ -38,7 +38,7 @@ class ModuleTopic {
   estimated_hours: int?
 }
 
-class LearningOutcome {
+class LcLearningOutcome {
   lo_id: string
   statement_en: string
   statement_ga: string?
