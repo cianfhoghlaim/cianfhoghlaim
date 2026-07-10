@@ -108,17 +108,17 @@ For each of the 6 subjects, REWRITE `dashboards/leaving_cert/0X_<subject>_analys
 
 ### Sub-batch 7.1 — MotherDuck Flight
 
-- [x] 7.1.1 Create `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py` — daily Python job that runs `cocoindex update lc_subjects` + `dagster asset materialize --select '*lc*'` + writes status to `md:oideachais.lc_ops.daily_sync_status` (Pick 4 BIEP v1)
-- [x] 7.1.2 Wire the flight in `motherduck/flights/config.yaml` (cron `0 4 * * *` = 04:00 UTC) (Pick 4 BIEP v1)
+- [x] 7.1.1 Create `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py` — daily Python job that runs `cocoindex update lc_subjects` + `dagster asset materialize --select '*lc*'` + writes status to `md:oideachais.lc_ops.daily_sync_status` (Pick 4 BIEP v1; re-homed from the prior `infrastructure/stacks/motherduck/flights/` path by the 2026-07-10 cleanup — these are BIEP capability artifacts, not MotherDuck IaC, so they live alongside the rest of the BIEP code in cianfhoghlaim)
+- [x] 7.1.2 Wire the flight in `cianfhoghlaim/motherduck/flights/config.yaml` (cron `0 4 * * *` = 04:00 UTC) (Pick 4 BIEP v1)
 
 ### Sub-batch 7.2 — 4 MotherDuck Dives
 
 For each of the 4 Dives:
 
-- [x] 7.2.1 **Syllabus Topics Dive** (`lc_syllabus_topics_dive`) — at `infrastructure/stacks/motherduck/dives/lc_syllabus_topics.py` (Pick 4 BIEP v1)
-- [x] 7.2.2 **Exam Paper Difficulty Dive** (`lc_exam_difficulty_dive`) — at `infrastructure/stacks/motherduck/dives/lc_exam_difficulty.py` (Pick 4 BIEP v1)
-- [x] 7.2.3 **Marking Scheme Complexity Dive** (`lc_marking_complexity_dive`) — at `infrastructure/stacks/motherduck/dives/lc_marking_complexity.py` (Pick 4 BIEP v1)
-- [x] 7.2.4 **Education Circulars Dive** (`gov_circulars_archive_dive`) — at `infrastructure/stacks/motherduck/dives/gov_circulars_archive.py` (Pick 4 BIEP v1)
+- [x] 7.2.1 **Syllabus Topics Dive** (`lc_syllabus_topics_dive`) — at `cianfhoghlaim/motherduck/dives/lc_syllabus_topics.py` (Pick 4 BIEP v1; re-homed from `infrastructure/stacks/motherduck/dives/`)
+- [x] 7.2.2 **Exam Paper Difficulty Dive** (`lc_exam_difficulty_dive`) — at `cianfhoghlaim/motherduck/dives/lc_exam_difficulty.py` (Pick 4 BIEP v1; re-homed)
+- [x] 7.2.3 **Marking Scheme Complexity Dive** (`lc_marking_complexity_dive`) — at `cianfhoghlaim/motherduck/dives/lc_marking_complexity.py` (Pick 4 BIEP v1; re-homed)
+- [x] 7.2.4 **Education Circulars Dive** (`gov_circulars_archive_dive`) — at `cianfhoghlaim/motherduck/dives/gov_circulars_archive.py` (Pick 4 BIEP v1; re-homed)
 
 ## Phase 8 — Spec + openspec artifacts
 
@@ -164,10 +164,10 @@ openspec change — tentatively `2026-07-XX-biep-v2-deferred/`:
   to BIEP v2 — the T2 scope guardrail says "DO NOT attempt Phase 6".
 
 ### Phase 7 — MotherDuck Flight + Dives (deferred)
-- 7.1.1, 7.1.2 — `lc_pdf_sync_flight.py` + `motherduck/flights/config.yaml`
+- 7.1.1, 7.1.2 — `lc_pdf_sync_flight.py` + `motherduck/flights/config.yaml` (re-homed to `cianfhoghlaim/motherduck/flights/`)
 - 7.2.1–7.2.4 — the 4 Dives (`lc_syllabus_topics`, `lc_exam_difficulty`,
   `lc_marking_complexity`, `gov_circulars_archive`) at
-  `infrastructure/stacks/motherduck/dives/`
+  `cianfhoghlaim/motherduck/dives/`
 - These are pre-existing from the original T2 attempt and run on
   MotherDuck infrastructure; verifying them requires a live
   `md:oideachais` connection (deferred to BIEP v2).

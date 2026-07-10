@@ -33,7 +33,7 @@ Phase 7 (MotherDuck Flight)**:
    required by the spec — bilingual EN ↔ GA competency comparison
    across the 5 EN/GA subjects).
 3. **Create the MotherDuck `lc_pdf_sync_flight`** at
-   `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py`
+   `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
    + the flight `config.yaml` (cron `0 4 * * *` = 04:00 UTC daily)
    that runs `cocoindex update lc_subjects` + `dagster asset materialize
    --select '*lc*'` and writes a status row to
@@ -59,11 +59,11 @@ spec to confirm the Phase 6 / Phase 7 deliverables are live.
      English/Gaeilge shared topics.
 
 2. **Phase 7 — MotherDuck `lc_pdf_sync_flight` (~2h)**
-   - Create `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py`:
+   - Create `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`:
      daily Python job that runs `cocoindex update lc_subjects` +
      `dagster asset materialize --select '*lc*'` and writes a status
      row to `md:oideachais.lc_ops.daily_sync_status`.
-   - Create `infrastructure/stacks/motherduck/flights/config.yaml`:
+   - Create `cianfhoghlaim/motherduck/flights/config.yaml`:
      registers `lc_pdf_sync_flight` with cron `0 4 * * *` (04:00 UTC).
 
 3. **Spec deltas (2 ADDED Requirements)**
@@ -73,7 +73,7 @@ spec to confirm the Phase 6 / Phase 7 deliverables are live.
      render 5 visualisations against live lakehouse data.
    - Add `Phase 7 — MotherDuck lc_pdf_sync_flight` requirement
      confirming the daily Flight at
-     `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py`
+     `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
      + cron `0 4 * * *` writes a status row to
      `md:oideachais.lc_ops.daily_sync_status`.
 
@@ -97,8 +97,10 @@ change augments the already-shipped Phase 0–5 with Phase 6 + 7).
   (owned by the BIEP v1 change — that work has already shipped).
 - Do NOT modify the legacy `notebooks/03_leaving_cert/` 23 old
   notebooks (preserve unchanged).
-- Do NOT modify the existing `infrastructure/stacks/motherduck/`
-  (other than adding the new `flights/` subdir).
+- Do NOT modify the existing `cianfhoghlaim/motherduck/`
+  (the 4 Dives + 1 daily Flight + 2 `__init__.py` + 1 flight
+  `config.yaml` were re-homed here from the prior
+  `infrastructure/stacks/motherduck/` path on 2026-07-10).
 
 ## Validation plan
 
@@ -108,9 +110,9 @@ change augments the already-shipped Phase 0–5 with Phase 6 + 7).
   `chemistry.py`, `computer_science.py`, `gaeilge.py`, `geography.py`,
   `mathematics.py`, `english.py`, plus the new
   `06_en_vs_ga_comparison.py`).
-- `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py`
+- `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
   exists + AST-parses.
-- `infrastructure/stacks/motherduck/flights/config.yaml` has the
+- `cianfhoghlaim/motherduck/flights/config.yaml` has the
   `lc_pdf_sync_flight` entry with cron `0 4 * * *`.
 - 2 ADDED spec deltas on `british-isles-education-pipeline` are
   well-formed.

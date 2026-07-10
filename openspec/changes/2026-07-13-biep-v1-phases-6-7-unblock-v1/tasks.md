@@ -34,9 +34,9 @@
 
 ## 3. Phase 7 — MotherDuck lc_pdf_sync_flight
 
-- [ ] Create `infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py`
+- [ ] Create `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
       (daily Python job: cocoindex update + dagster materialize + status row)
-- [ ] Create `infrastructure/stacks/motherduck/flights/config.yaml`
+- [ ] Create `cianfhoghlaim/motherduck/flights/config.yaml`
       (cron `0 4 * * *`)
 
 ## 4. Spec deltas
