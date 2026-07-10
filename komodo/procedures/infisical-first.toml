@@ -1,0 +1,34 @@
+# =============================================================================
+# INFISICAL-FIRST PROCEDURE
+# =============================================================================
+# Cross-cutting prerequisite: verify the Infisical vault is reachable
+# + the dev-baile project exists + the required machine identities are
+# seeded. Every other procedure depends on Infisical (via Locket) for
+# secrets, so this must pass first.
+#
+# Usage:
+#   km run procedure infisical-first
+# =============================================================================
+
+[[procedure.config]]
+name = "infisical-first"
+description = "Cross-cutting prerequisite: verify Infisical vault + dev-baile project + machine identities are seeded"
+server_id = "arm1-oci"
+
+[[procedure.config.stages]]
+name = "vault-reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://infisical.cianfhoghlaim.ie/api/status", expected_status = 200, timeout_s = 30, name = "infisical-api-reachable" } }
+
+[[procedure.config.stages]]
+name = "project-exists"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "ssh arm1-oci 'curl -fsS -H \"Authorization: Bearer $INFISICAL_UNIVERSAL_AUTH_CLIENT_TOKEN\" \"https://infisical.cianfhoghlaim.ie/api/v3/projects/f3cff583-b74b-4804-b9d3-db8b68885236\" | head -c 200' | grep -q '\"name\":\"dev-baile\"' && echo 'OK: dev-baile project present' || (echo 'ERROR: dev-baile project missing' && exit 1)", timeout_s = 30, name = "dev-baile-project-present", description = "Verify the dev-baile project exists" } }
+
+[[procedure.config.stages]]
+name = "machine-identities"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for id in infisical-machine-identity-openclaw infisical-machine-identity-openchamber infisical-machine-identity-hermes infisical-machine-identity-langfuse; do ssh arm1-oci \"curl -fsS -H 'Authorization: Bearer $INFISICAL_UNIVERSAL_AUTH_CLIENT_TOKEN' https://infisical.cianfhoghlaim.ie/api/v3/projects/f3cff583-b74b-4804-b9d3-db8b68885236/identity-machine-identities | grep -q \\\"$id\\\"\" || (echo \\\"ERROR: machine identity $id not seeded\\\" && exit 1); done; echo 'OK: all 4 machine identities present'", timeout_s = 60, name = "machine-identities-seeded", description = "Verify the 4 machine identities for the agent surfaces are seeded" } }

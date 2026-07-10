@@ -20,6 +20,12 @@
 #   - on_pull=true (Komodo proactively pulls on the schedule)
 #   - delete=false (safety — a typo in TOML never deletes live resources)
 #   - managed=true (Komodo owns the resource state, not the IaC scripts)
+#
+# server_id convention:
+#   The 4 prerequisite procedures in `procedures/*.toml` (this sync) all
+#   declare `server_id` (the convention is documented in
+#   `komodo/procedures/server_id_legend.md`). Procedures without
+#   `server_id` are back-compat-shown in both host UIs.
 # =============================================================================
 
 [[resource_sync]]
@@ -34,7 +40,7 @@ git_account = "forgejo"
 branch = "main"
 
 # Resource paths under <repo-root>/<branch>/ :
-#   - procedures: 4 host-agnostic prerequisite procedures
+#   - procedures: 4 host-agnostic prerequisite procedures (all declare server_id)
 #   - servers: shared Periphery registrations (arm1-oci + bunchloch
 #     peripheries must be registered before the per-host syncs fire)
 resource_path = [
@@ -42,6 +48,7 @@ resource_path = [
   "bonneagar/komodo/procedures/komodo-core.toml",
   "bonneagar/komodo/procedures/infisical-first.toml",
   "bonneagar/komodo/procedures/locket-deploy.toml",
+  "bonneagar/komodo/procedures/server_id_legend.md",
   "bonneagar/komodo/servers/*.toml",
 ]
 

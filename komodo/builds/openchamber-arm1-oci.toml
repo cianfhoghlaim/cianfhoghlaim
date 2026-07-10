@@ -1,0 +1,51 @@
+# =============================================================================
+# Komodo Build — OpenChamber (arm1-oci)
+# =============================================================================
+# Builds `ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1` from the
+# `bonneagar/stacks/openchamber/Dockerfile.openchamber-web` Dockerfile.
+# This replaces the private upstream `ghcr.io/openchamber/openchamber:1.0.0`
+# image (which returns 401 on GHCR HEAD).
+#
+# Build context: repo root (the Dockerfile uses `COPY package/ ./`).
+# Build args: none (the Dockerfile is fully self-contained).
+#
+# Usage:
+#   km run build openchamber-arm1-oci
+# =============================================================================
+
+[[build]]
+name = "openchamber-arm1-oci"
+description = "Build OpenChamber (v1.14.1) from the local Dockerfile.openchamber-web — output: ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1"
+
+[build.config]
+# Source repo + branch
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+# The Dockerfile path (relative to the repo root)
+build_path = "bonneagar/stacks/openchamber/Dockerfile.openchamber-web"
+
+# Build context is the repo root
+build_context_path = "."
+
+# Output image (pushed to the cianfhoghlaim GHCR org on success)
+image_name = "ghcr.io/cianfhoghlaim/openchamber"
+image_tag = "1.14.1-arm1"
+
+# Build arguments (none for v1; the Dockerfile is self-contained)
+build_args = []
+
+# Cache: keep the bun install layer across builds (saves ~2 min on rebuilds)
+cache = true
+
+# Push on success
+push = true
+
+# Timeout (multi-stage build takes ~3 min cold, ~30 s warm)
+timeout_s = 600
+
+# Resource limits during build (2 GB RAM is enough for bun install)
+[build.config.resources]
+memory = "2GB"
+cpus = 2

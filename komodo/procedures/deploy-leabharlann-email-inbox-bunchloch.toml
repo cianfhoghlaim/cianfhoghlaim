@@ -35,6 +35,7 @@
 
 [[procedure]]
 name = "deploy-leabharlann-email-inbox-bunchloch"
+server_id = "bunchloch"
 description = "Deploy the end-to-end leabharlann email inbox pipeline to bunchloch (MacBook M4) — mailcow stack → lakehouse → oideachais ADK + Dagster → Pangolin routes → health checks (6 stages)"
 
 # =============================================================================

@@ -22,6 +22,7 @@
 
 [[procedure]]
 name = "deploy-oideachais-bunchloch"
+server_id = "bunchloch"
 description = "Deploy Oideachais education platform to bunchloch (MacBook M4) — lakehouse + LiteLLM + Lancedb + Langfuse → oideachais-bunchloch → Pangolin routes → health checks"
 
 # =============================================================================

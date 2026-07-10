@@ -49,6 +49,7 @@
 
 [[procedure]]
 name = "deploy-openchamber-bunchloch"
+server_id = "bunchloch"
 description = "Deploy OpenChamber OpenCode UI to bunchloch — prereqs → litellm + langfuse → openchamber → pangolin routes → health checks"
 
 # =============================================================================

@@ -1,0 +1,41 @@
+# =============================================================================
+# Komodo Build — OpenClaw (arm1-oci)
+# =============================================================================
+# Builds `ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1` from the
+# `bonneagar/stacks/openclaw/Dockerfile.openclaw` Dockerfile.
+# This replaces the private upstream `ghcr.io/openclaw/openclaw:2026.2.6`
+# image (which returns 401 on GHCR HEAD).
+#
+# The upstream openclaw image is Node 24 + Bun 1.3.13. Our synthetic
+# Dockerfile matches that shape and builds the openclaw.mjs gateway.
+#
+# Build context: repo root (the Dockerfile uses `COPY package/ ./`).
+#
+# Usage:
+#   km run build openclaw-arm1-oci
+# =============================================================================
+
+[[build]]
+name = "openclaw-arm1-oci"
+description = "Build OpenClaw (v2026.6) from the local Dockerfile.openclaw — output: ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1"
+
+[build.config]
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+build_path = "bonneagar/stacks/openclaw/Dockerfile.openclaw"
+build_context_path = "."
+
+image_name = "ghcr.io/cianfhoghlaim/openclaw"
+image_tag = "2026.6-arm1"
+
+build_args = []
+
+cache = true
+push = true
+timeout_s = 600
+
+[build.config.resources]
+memory = "2GB"
+cpus = 2

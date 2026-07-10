@@ -18,6 +18,7 @@
 
 [[procedure]]
 name = "deploy-cognee-bunchloch"
+server_id = "bunchloch"
 description = "Deploy Cognee knowledge graph to bunchloch — prereqs → litellm + lakehouse + lancedb → cognee → pangolin routes → health checks"
 
 # =============================================================================

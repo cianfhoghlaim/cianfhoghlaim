@@ -1,0 +1,44 @@
+# =============================================================================
+# NEWT-BUNCHLOCH - Komodo stack registration
+# =============================================================================
+# The bunchloch-site (newt + locket + komodo-periphery + beszel-agent) stack
+# runs on this Mac (bunchloch) and bridges it into the Pangolin mesh on
+# arm1-oci. Managed by Komodo for the 6-file GOLD_STANDARD contract at
+# `bonneagar/stacks/newt/`.
+#
+# Labels `komodo.skip=true` so Komodo doesn't try to manage the newt
+# container itself (it's a pre-existing operator-laptop service that
+# must be brought up via `docker compose up -d` from the newt/ dir,
+# not via `km run stack up`).
+#
+# server_id="bunchloch" — this stack lives on this Mac, not on arm1-oci.
+#
+# Usage:
+#   km run procedure deploy-newt-bunchloch
+# =============================================================================
+
+[[stack]]
+name = "newt-bunchloch"
+description = "Bunchloch site infrastructure (newt + locket + komodo-periphery + beszel-agent) — bridges this Mac into the Pangolin mesh on arm1-oci"
+tags = [
+  "host:bunchloch",
+  "tier:control-plane",
+  "type:remote-tunnel",
+  "type:periphery",
+  "komodo.skip=true",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/Users/cianmacandeisigh/.local/newt"
+file_paths = [
+  "bonneagar/stacks/newt/docker-compose.yaml",
+  "bonneagar/stacks/newt/sidecar.yaml",
+  "bonneagar/stacks/newt/pangolin.yaml",
+  "bonneagar/stacks/newt/blueprint.yaml",
+]
+
+# Required env vars: INFISICAL_SECRET_FILE (path to the Infisical machine
+# identity secret file used by Locket to authenticate to dev-baile).
+[stack.config.environment]
+INFISICAL_SECRET_FILE = "${INFISICAL_SECRET_FILE}"

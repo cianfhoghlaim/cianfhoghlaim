@@ -33,6 +33,7 @@
 
 [[procedure]]
 name = "deploy-mailcow-dockerized-bunchloch"
+server_id = "bunchloch"
 description = "Deploy Mailcow self-hosted email server to bunchloch (MacBook M4) — mailcow stack → Pangolin routes → SOGo health check (5 stages, receive-only IMAP sync)"
 
 # =============================================================================
