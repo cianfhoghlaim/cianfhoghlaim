@@ -137,78 +137,69 @@ because its UI is SaaS at `https://logfire.pydantic.dev`.
   warnings for these 6 stacks
 
 ### Requirement: Datadog Python observability is a graceful no-op
-The system SHALL treat Datadog APM + LLMObs as an opt-in optional
-backend. When the `ddtrace` / `datadog` packages are not installed
-(they are not in the production image), the `setup_datadog_apm` and
-`setup_datadog_llmobs` functions SHALL be no-ops. The Pydantic Settings
-`datadog_enabled` field SHALL default to `False` so the no-op path is
-the canonical default.
 
-#### Scenario: setup_datadog_apm is a no-op when ddtrace is missing
-- **GIVEN** a Python service that imports
-  `from cianfhoghlaim.observability.fastapi_middleware import setup_datadog_apm`
-- **AND** the `ddtrace` package is not installed
-- **WHEN** `setup_datadog_apm(app)` is called at app startup
-- **THEN** the function returns `None` without raising
+The system SHALL show actual Python import examples using the v4 `cianfhoghlaim` package root. Legacy `from oideachais...` examples MUST be rewritten when they are code imports rather than documentation shorthand.
 
-#### Scenario: unified_tracer datadog_enabled default is False
-- **GIVEN** `cianfhoghlaim/observability/unified_tracer.py`
-- **WHEN** the `datadog_enabled` parameter is read
-- **THEN** the default value is `False` (not `True`)
+#### Scenario: setup_datadog_apm import example uses cianfhoghlaim
 
-#### Scenario: Pydantic Settings datadog_enabled default is False
-- **GIVEN** `cianfhoghlaim/config/base.py` or
-  `cianfhoghlaim/ocr/config/base.py`
-- **WHEN** the `datadog_enabled` field default is read
-- **THEN** the value is `Field(default=False)`
-
-#### Scenario: logfire is the canonical Python tracing backend
-- **GIVEN** the observability skill
-  `.agents/skills/agent-observability/SKILL.md`
-- **WHEN** "Layer 1: Traces" is read
-- **THEN** it references Langfuse + Logfire (not Datadog APM + LLMObs)
-
-<!-- v4 extension — 2026-07-03 -->
+- **GIVEN** a Python service that imports the optional Datadog setup helper
+- **WHEN** the spec shows the import example
+- **THEN** it uses `from cianfhoghlaim.observability.fastapi_middleware import setup_datadog_apm`
+- **AND** the helper remains a graceful no-op when `ddtrace` is not installed
 
 ### Requirement: LC5 + Gemini consumers of Cognee + Graphiti + FalkorDB
 
-The 3 memory backends (Cognee + Graphiti + FalkorDB) SHALL be
-consumed by the new LC5-subject pipeline (5 subjects) and the new
-Gemini 6-corpus pipeline (224 PDFs across 6 corpora) introduced in
-the 2026-07-03 changes.
+The system SHALL keep the `LC5 + Gemini consumers of Cognee + Graphiti + FalkorDB` requirement inside the main `## Requirements` section of `openspec/specs/agent-memory-systems/spec.md` so OpenSpec strict validation, listing, and archive workflows can see it.
 
-#### Scenario: Cognee cognify runs over 5 LC subjects + 6 Gemini corpora
+The 3 memory backends (Cognee, Graphiti, and FalkorDB) SHALL be consumed by the LC5-subject pipeline and the Gemini 6-corpus pipeline introduced by the 2026-07-03 pipeline changes.
 
-- **GIVEN** the LC5 + Gemini 6-corpus pipelines (per
-  `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`
-  and `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`)
-- **WHEN** the L3 layer materialises
-- **THEN** 5 + 6 = 11 Cognee datasets SHALL be created:
-  - 5 LC: `oideachais_<subject>` for chemistry / computer_science /
-    gaeilge / geography / mathematics
-  - 6 Gemini: `gemini_<corpus>_research` for law / medical /
-    politics / culture / technology / other
+#### Scenario: Requirement is parsed by strict validation
 
-#### Scenario: Graphiti temporal streams for LC5 + Gemini
+- **GIVEN** `openspec/specs/agent-memory-systems/spec.md`
+- **WHEN** `openspec validate agent-memory-systems --strict` runs
+- **THEN** the spec is valid
+- **AND** the LC5/Gemini memory-backend requirement is inside the main `## Requirements` section rather than under a delta-style `## ADDED Requirements` section
 
-- **GIVEN** the same LC5 + Gemini pipelines
-- **WHEN** Graphiti adds episodes
-- **THEN** 5 LC Graphiti streams + 6 Gemini Graphiti streams = 11
-  total streams SHALL be initialised
-- **AND** for the Gemini pipeline, the `event_time` SHALL be
-  extracted from PDF prose (NOT file mtime) per the user decision
-  "PDF content only"
+#### Scenario: Cognee cognify runs over LC5 subjects and Gemini corpora
 
-#### Scenario: FalkorDB cross-subject graph for LC5 + cross-corpus for Gemini
+- **GIVEN** the LC5 + Gemini 6-corpus pipelines
+- **WHEN** the L3 memory layer materialises
+- **THEN** the system SHALL create Cognee datasets for the LC subjects and Gemini corpora
+
+#### Scenario: Graphiti and FalkorDB initialise the pipeline memory views
 
 - **GIVEN** the same LC5 + Gemini pipelines
-- **WHEN** FalkorDB labels are queried
-- **THEN** `falkordb_label="lc5_knowledge_graph"` SHALL contain
-  the Subject → Topic → LO → Year → Q graph (5 LC subjects merged)
-- **AND** `falkordb_label="gemini_6_corpus_kg"` SHALL contain the
-  Corpus → CaseProfile → Party → Jurisdiction → Statute → TimelineEvent
-  graph (6 Gemini corpora merged)
+- **WHEN** Graphiti and FalkorDB assets materialise
+- **THEN** Graphiti streams SHALL be initialised for both pipeline families
+- **AND** FalkorDB labels SHALL distinguish the LC5 knowledge graph from the Gemini 6-corpus knowledge graph
 
+### Requirement: NCCA subject agents MUST depend on the MemoryBackend StorageBackend Protocol
+
+The 8 NCCA subject agents MUST depend on the `MemoryBackend`
+Protocol via
+`from cianfhoghlaim.storage.memf import get_default_backend`
+rather than importing `graphiti_client`, `falkordb_client`, or
+`memgraph_client` directly.
+
+The wire-up SHALL be exposed as the module-level
+`<slug>_agent_wire` attribute holding a `WireSubjectAgent`
+instance (from `cianfhoghlaim/agents/tuatha/wiring.py`).
+
+#### Scenario: gaol_agent does not bypass the Protocol
+
+- **GIVEN** `gael_agent.py` at `cianfhoghlaim/agents/tuatha/`
+- **WHEN** `grep -n "graphiti_client\|falkordb_client\|memgraph_client" gael_agent.py` runs
+- **THEN** the output SHALL be empty (0 matches)
+- **AND** the module exposes `gael_agent_wire` after import
+
+#### Scenario: 8 agents each expose a wire with a known backend kind
+
+- **GIVEN** any of the 8 `<slug>_agent.py` modules
+- **WHEN** `<slug>_agent_<slug>_agent_wire` is read
+- **THEN** `wire.memory_backend_kind` is either `"protocol"`
+  (the canonical case where `get_default_backend` resolves the
+  `MemoryBackend` Protocol) or `None` (when the StorageBackend
+  Protocol could not be imported — a graceful failure mode)
 
 ## Cross-references
 
@@ -220,7 +211,6 @@ the 2026-07-03 changes.
 - [`.agents/skills/memgraph/SKILL.md`](../../.agents/skills/memgraph/SKILL.md)
 - [`cianfhoghlaim/memory/`](../../cianfhoghlaim/memory/) (application-layer wrapper)
 - [`cianfhoghlaim/agents/`](../../cianfhoghlaim/agents/) (model-layer agents)
-
 
 ## Migrated from (2026-07-06)
 
