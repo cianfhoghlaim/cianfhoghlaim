@@ -254,5 +254,5 @@ modal volume ls kcg-models
 - Modal docs: <https://modal.com/docs>
 - Modal examples: <https://github.com/modal-labs/modal-examples>
 - KCG burst-training workflow: see the
-  `sruth/oideachais/sruth/meaisinfhoghlaim/ocr/ensemble_gradio.py` for a
+  `cianfhoghlaim/cianfhoghlaim/meaisinfhoghlaim/ocr/ensemble_gradio.py` for a
   working example

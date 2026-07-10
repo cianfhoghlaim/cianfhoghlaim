@@ -43,8 +43,8 @@ When assuming the `data-engineer` persona, use these rules:
 - **Tests**: disable plugins during testing by setting
   `DLT_DISABLE_PLUGINS=true`.
 - **Source location**: `dlt_sources` lives at `cianfhoghlaim/dlt/`
-  (NOT `sruth/oideachais/data_platform/dlt_sources/`, which is a deprecated
-  path mentioned in the old skill; NOT `sruth/oideachais/dlt_sources/`,
+  (NOT `cianfhoghlaim/data_platform/dlt_sources/`, which is a deprecated
+  path mentioned in the old skill; NOT `cianfhoghlaim/dlt/`,
   which was the pre-v4 path).
 - **Imports**: All `oideachais.data_platform...` absolute imports have
   been removed; use relative or local `dlt_sources` imports

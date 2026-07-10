@@ -114,12 +114,12 @@ def extract_anything(content: str | bytes, content_type: str = "text"):
 - **Ad-hoc corpus ingestion** — user dumps a folder of obscure PDFs
   (e.g. an old Irish-medium exam paper) and the system extracts
   whatever it can without writing a new `.baml` first
-- **Site analysis** — `sruth/oideachais/baml_src/site_analysis.baml`
+- **Site analysis** — `cianfhoghlaim/baml_src/site_analysis.baml`
   extracts site properties (CMS, captcha, robots.txt) where the
   exact set of properties varies by site
-- **UI component extraction** — `sruth/oideachais/baml_src/ui_components.baml`
+- **UI component extraction** — `cianfhoghlaim/baml_src/ui_components.baml`
   can adapt to novel UI patterns (e.g. a new dashboard layout)
-- **Portfolio extraction** — `sruth/oideachais/baml_src/portfolio_extraction.baml`
+- **Portfolio extraction** — `cianfhoghlaim/baml_src/portfolio_extraction.baml`
   for the croilar personal-archive CV / achievements PDFs
 
 ## Limitations

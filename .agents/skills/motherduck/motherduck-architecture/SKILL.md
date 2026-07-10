@@ -62,7 +62,7 @@ MotherDuck reads the catalog + files as one logical database.
 
 ```sql
 ATTACH 'ducklake:postgres://lakehouse-postgres:5432/oideachais_catalog
-        ?data_path=s3://ducklake/sruth/oideachais/' AS oideachais_ducklake;
+        ?data_path=s3://ducklake/cianfhoghlaim/' AS oideachais_ducklake;
 USE oideachais_ducklake;
 ```
 

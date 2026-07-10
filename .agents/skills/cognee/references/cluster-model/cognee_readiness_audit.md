@@ -177,7 +177,7 @@ results = await cognee.recall("query", dataset_name="docs-agents")
 
 **Subtree average:** **A**. Strongest subtree for Cognee readiness — all files are well-structured research reports with clean code blocks.
 
-### 4.7 `docs/sruth/tuatha/` (117 files)
+### 4.7 `docs/legacy/tuatha/` (117 files)
 
 | Sample File | Size | Entities | Rel. Clarity | A:C Ratio | Sections | Score |
 |:--|:--|:--|:--|:--|:--|:--|
@@ -204,7 +204,7 @@ Every file is **A-grade**: well-structured, entity-dense, explicit relationships
 | `meaisínfhoghlaim/` | 104 | **B+** | Strong core references | Redirect stubs dilute the pool |
 | `teanga/` | 295 | **B** | Richest entity diversity (dataset names, APIs, orgs) | Prose-heavy gaois docs, bilingual duplication |
 | `web/` | 68 | **A** | Best structured overall | Some very long files (2000+ lines) |
-| `sruth/tuatha/` | 117 | **A** | Strong technical specs, explicit pipelines | — |
+| `cianfhoghlaim/agents/tuatha/` | 117 | **A** | Strong technical specs, explicit pipelines | — |
 | `cognee/` | 9 | **A** | Reference standard for cognify-clean docs | — |
 | `context/` | 66 | **B+** | Consolidated NotebookLM content | Mixed quality, some raw excerpts |
 

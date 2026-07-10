@@ -152,7 +152,7 @@ app = coco.App(coco.AppConfig(name="TextEmbeddingV1"), app_main,
 
 ## When v0 is still present in the codebase
 
-- `sruth/oideachais/cocoindex_flows/*.py` — most flows are v1 (e.g.
+- `cianfhoghlaim/cocoindex/*.py` — most flows are v1 (e.g.
   `docs_skills_consolidation.py`, `leabharlann_embedding.py`,
   `codebase_indexing.py`); a few older ones (`pdf_embedding.py`,
   `research_embedding.py`) may still be v0
@@ -162,7 +162,7 @@ app = coco.App(coco.AppConfig(name="TextEmbeddingV1"), app_main,
 ## When in doubt
 
 - The canonical in-repo v1 example is
-  `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py`
+  `cianfhoghlaim/cocoindex/docs_skills_consolidation.py`
 - The canonical external v1 examples are in the
   [upstream `docs/cocoindex/` repo](https://github.com/cocoindex-io/cocoindex/tree/main/examples)
   (these were deleted from this repo in the

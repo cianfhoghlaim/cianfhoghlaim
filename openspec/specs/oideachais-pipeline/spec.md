@@ -596,7 +596,7 @@ canonical agent.
 #### Scenario: A consumer imports the agent via the oideachais path
 
 - **GIVEN** the `oideachais.agents.adk.celtic_tutor_agent` module
-- **WHEN** a consumer does `from oideachais.agents.adk.celtic_tutor_agent import celtic_tutor_agent`
+- **WHEN** a consumer does `from cianfhoghlaim.agents.adk.celtic_tutor_agent import celtic_tutor_agent`
 - **THEN** the imported `celtic_tutor_agent` is a fully constructed
   `google.adk.agents.LlmAgent` with name `celtic_tutor_agent`
 
@@ -618,7 +618,7 @@ file is a thin re-export.
 #### Scenario: A consumer imports the agent via the oideachais path
 
 - **GIVEN** the `oideachais.agents.adk.mythology_narrator_agent` module
-- **WHEN** a consumer does `from oideachais.agents.adk.mythology_narrator_agent import mythology_narrator_agent`
+- **WHEN** a consumer does `from cianfhoghlaim.agents.adk.mythology_narrator_agent import mythology_narrator_agent`
 - **THEN** the imported `mythology_narrator_agent` is a fully
   constructed `LlmAgent` with name `mythology_narrator_agent`
 
@@ -641,7 +641,7 @@ exposes the LlmAgent previously at
 #### Scenario: A consumer imports the agent via the oideachais path
 
 - **GIVEN** the `oideachais.agents.adk.quest_guide_agent` module
-- **WHEN** a consumer does `from oideachais.agents.adk.quest_guide_agent import quest_guide_agent`
+- **WHEN** a consumer does `from cianfhoghlaim.agents.adk.quest_guide_agent import quest_guide_agent`
 - **THEN** the imported `quest_guide_agent` is a fully constructed
   `LlmAgent` with name `quest_guide_agent`
 
@@ -662,7 +662,7 @@ Uses 3 tools: `research_curriculum`, `research_mythology`,
 #### Scenario: A consumer imports the agent via the oideachais path
 
 - **GIVEN** the `oideachais.agents.adk.research_assistant_agent` module
-- **WHEN** a consumer does `from oideachais.agents.adk.research_assistant_agent import research_assistant_agent`
+- **WHEN** a consumer does `from cianfhoghlaim.agents.adk.research_assistant_agent import research_assistant_agent`
 - **THEN** the imported `research_assistant_agent` is a fully
   constructed `LlmAgent` with name `research_assistant_agent`
 
@@ -690,7 +690,7 @@ helper for backwards compatibility with
 #### Scenario: A consumer imports the root agent via the oideachais path
 
 - **GIVEN** the `oideachais.agents.adk.tuatha_root_agent` module
-- **WHEN** a consumer does `from oideachais.agents.adk.tuatha_root_agent import root_agent`
+- **WHEN** a consumer does `from cianfhoghlaim.agents.adk.tuatha_root_agent import root_agent`
 - **THEN** the imported `root_agent` is a fully constructed
   `LlmAgent` with name `tuath_agent` and 4 sub_agents
   (`celtic_tutor_agent`, `mythology_narrator_agent`,
@@ -850,13 +850,13 @@ The canonical surfaces that retain all functionality:
 
 - **GIVEN** `openspec/changes/oideachais-audit-phase-2a-remove-pure-duplicates` is archived
 - **WHEN** the Dagster Definitions load (`oideachais.orchestration.defs.definitions`)
-- **THEN** `defs.sensors` MUST contain all 5 canonical sensor groups (verified via `from oideachais.orchestration.defs.sensors import all_sensors; assert len(all_sensors) >= 5`)
+- **THEN** `defs.sensors` MUST contain all 5 canonical sensor groups (verified via `from cianfhoghlaim.orchestration.defs.sensors import all_sensors; assert len(all_sensors) >= 5`)
 - **AND** `cianfhoghlaim/api/main.py` MUST successfully `include_router` all 6 routers from `api.routes` (verified via FastAPI app construction without ImportError)
 - **AND** `cianfhoghlaim/api/middleware/AuthMiddleware` MUST be importable from the canonical `api.middleware` package
 
 #### Scenario: No residual references after deletion
 
-- **WHEN** any developer runs `grep -rn "from oideachais.routes\b\|from oideachais.sensors\b\|from oideachais.middleware\b\|from oideachais.storage.serial_executor" --include="*.py" --include="*.md"`
+- **WHEN** any developer runs `grep -rn "from cianfhoghlaim.routes\b\|from cianfhoghlaim.sensors\b\|from cianfhoghlaim.middleware\b\|from cianfhoghlaim.storage.serial_executor" --include="*.py" --include="*.md"`
 - **THEN** zero matches MUST appear outside `openspec/changes/archive/` (the only residual refs are in archived openspec change metadata, which is intentional)
 
 ### Requirement: Round 11 Phase 2B — Legacy Storage + Dagster Asset Migration (2026-06-25)
@@ -928,14 +928,14 @@ The canonical surfaces after this change:
 
 - **GIVEN** `openspec/changes/oideachais-audit-phase-2b-migrate-legacy-storage-and-dagster-assets` is archived
 - **WHEN** the Dagster Definitions load (`oideachais.orchestration.defs.definitions`)
-- **THEN** `defs.assets` MUST contain `model_conversion_assets` and `asset_generation_assets` (verified via `from oideachais.orchestration.defs.assets.model_conversion import model_conversion_assets; assert len(model_conversion_assets) >= 8`)
+- **THEN** `defs.assets` MUST contain `model_conversion_assets` and `asset_generation_assets` (verified via `from cianfhoghlaim.orchestration.defs.assets.model_conversion import model_conversion_assets; assert len(model_conversion_assets) >= 8`)
 - **AND** `defs.assets` MUST contain `asset_generation_assets` with ≥ 4 assets
-- **AND** `cianfhoghlaim/core/storage/__init__.py` MUST re-export all 25 newly-migrated symbols (verified via `from oideachais.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`)
+- **AND** `cianfhoghlaim/core/storage/__init__.py` MUST re-export all 25 newly-migrated symbols (verified via `from cianfhoghlaim.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`)
 - **AND** the legacy `cianfhoghlaim/dagster_assets/` and `cianfhoghlaim/storage/` directories MUST NOT exist (verified via `not os.path.exists(...)`)
 
 #### Scenario: No residual references after migration
 
-- **WHEN** any developer runs `grep -rn "from oideachais.orchestration.defs.assets\|from oideachais.orchestration.defs.assets\|from oideachais.storage\.[a-z_]\|from oideachais.storage\.[a-z_]" --include="*.py" --include="*.md"`
+- **WHEN** any developer runs `grep -rn "from cianfhoghlaim.orchestration.defs.assets\|from cianfhoghlaim.orchestration.defs.assets\|from cianfhoghlaim.storage\.[a-z_]\|from cianfhoghlaim.storage\.[a-z_]" --include="*.py" --include="*.md"`
 - **THEN** zero matches MUST appear outside `openspec/changes/archive/` (the only residual refs are in archived openspec change metadata, which is intentional)
 
 ### Requirement: Leabharlann DLT Source Package Naming
@@ -1429,6 +1429,45 @@ hand-written `_parse_dbt_manifest()` helper SHALL be removed.
   `cianfhoghlaim/dbt_project/target/manifest.json` (refreshed by `dbt parse` on the
   `AutomationCondition.cron("0 6 * * *")` schedule)
 
+<!-- v4 extension — 2026-07-03 -->
+
+### Requirement: LC5-subject + Gemini 6-corpus pipelines
+
+The system SHALL provide two new pipelines under the
+`oideachais-pipeline` capability:
+
+1. **LC5-subject pipeline** (per
+   `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`):
+   41 PDFs + 2 JPGs across chemistry / computer_science / gaeilge /
+   geography / mathematics, organised into 5 DAGs each with 7 stages
+   (VLM/OCR → DuckLake → LanceDB → Cognee → Graphiti → FalkorDB).
+
+2. **Gemini 6-corpus pipeline** (per
+   `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`):
+   224 PDFs across law / medical / politics / culture / technology /
+   other, organised into 6 DAGs each with 7 stages.
+
+#### Scenario: LC5 ingests 72 PDFs (including 30 `_2026-06-30` duplicates)
+
+- **WHEN** `dagster asset materialize --select 'lc5_*_ingested'`
+- **THEN** the sum of rows from `lc5_chemistry_ingested`,
+  `lc5_computer_science_ingested`, `lc5_gaeilge_ingested`,
+  `lc5_geography_ingested`, `lc5_mathematics_ingested` SHALL be 72
+  (41 PDFs + 1 JPG + 30 duplicate copies)
+
+#### Scenario: Gemini ingests 224 PDFs across 6 corpora
+
+- **WHEN** `dagster asset materialize --select 'gemini_*_ingested'`
+- **THEN** the sum of rows SHALL be 224 (57+54+47+30+24+12)
+
+#### Scenario: Both pipelines share the v4 OCR/VLM registry
+
+- **GIVEN** both the LC5 + Gemini pipelines
+- **WHEN** a PDF is ingested by either pipeline
+- **THEN** `select_ocr_backend(pdf_path)` SHALL return a v4 registry
+  model key (NOT the legacy 10-model OCR_MODELS dict)
+
+
 ## Components
 
 | Component | Path | Purpose |
@@ -1530,7 +1569,7 @@ The system SHALL NOT have any `_quadrant_pyproject.toml` file at the `cianfhoghl
 
 #### Requirement: All Python imports inside cianfhoghlaim use the canonical namespace
 
-The system SHALL have zero `from sruth.*` or `from oideachais.*` imports inside `cianfhoghlaim/`, except inside `.archive/` directories (point-in-time snapshots that are not part of the build) or inside `compat.py` build-time helpers.
+The system SHALL have zero `from sruth.*` or `from cianfhoghlaim.*` imports inside `cianfhoghlaim/`, except inside `.archive/` directories (point-in-time snapshots that are not part of the build) or inside `compat.py` build-time helpers.
 
 The legacy `sruth.shared.*`, `sruth.browser`, and bare `oideachais.*` Python namespaces SHALL NOT be importable at runtime from the consolidated `cianfhoghlaim` package. The legacy `sruth.<quadrant>.*` namespaces were already removed by the v4 consolidation.
 
@@ -1558,44 +1597,6 @@ The legacy `sruth.shared.*`, `sruth.browser`, and bare `oideachais.*` Python nam
 
 **Migration**: All Dagster assets, DLT sources, scripts, and notebooks that previously imported `from cianfhoghlaim.core.browser import BrowserClient` (or similar) MUST update to `from bonneagar.stacks.browser.sruth_browser import BrowserClient` (or via the workspace source alias).
 
-
-## ADDED Requirements (v4 extension — 2026-07-03)
-
-### Requirement: LC5-subject + Gemini 6-corpus pipelines
-
-The system SHALL provide two new pipelines under the
-`oideachais-pipeline` capability:
-
-1. **LC5-subject pipeline** (per
-   `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`):
-   41 PDFs + 2 JPGs across chemistry / computer_science / gaeilge /
-   geography / mathematics, organised into 5 DAGs each with 7 stages
-   (VLM/OCR → DuckLake → LanceDB → Cognee → Graphiti → FalkorDB).
-
-2. **Gemini 6-corpus pipeline** (per
-   `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`):
-   224 PDFs across law / medical / politics / culture / technology /
-   other, organised into 6 DAGs each with 7 stages.
-
-#### Scenario: LC5 ingests 72 PDFs (including 30 `_2026-06-30` duplicates)
-
-- **WHEN** `dagster asset materialize --select 'lc5_*_ingested'`
-- **THEN** the sum of rows from `lc5_chemistry_ingested`,
-  `lc5_computer_science_ingested`, `lc5_gaeilge_ingested`,
-  `lc5_geography_ingested`, `lc5_mathematics_ingested` SHALL be 72
-  (41 PDFs + 1 JPG + 30 duplicate copies)
-
-#### Scenario: Gemini ingests 224 PDFs across 6 corpora
-
-- **WHEN** `dagster asset materialize --select 'gemini_*_ingested'`
-- **THEN** the sum of rows SHALL be 224 (57+54+47+30+24+12)
-
-#### Scenario: Both pipelines share the v4 OCR/VLM registry
-
-- **GIVEN** both the LC5 + Gemini pipelines
-- **WHEN** a PDF is ingested by either pipeline
-- **THEN** `select_ocr_backend(pdf_path)` SHALL return a v4 registry
-  model key (NOT the legacy 10-model OCR_MODELS dict)
 
 ## Merged from
 

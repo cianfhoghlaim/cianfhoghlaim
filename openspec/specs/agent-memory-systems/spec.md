@@ -146,7 +146,7 @@ the canonical default.
 
 #### Scenario: setup_datadog_apm is a no-op when ddtrace is missing
 - **GIVEN** a Python service that imports
-  `from oideachais.observability.fastapi_middleware import setup_datadog_apm`
+  `from cianfhoghlaim.observability.fastapi_middleware import setup_datadog_apm`
 - **AND** the `ddtrace` package is not installed
 - **WHEN** `setup_datadog_apm(app)` is called at app startup
 - **THEN** the function returns `None` without raising
@@ -168,18 +168,7 @@ the canonical default.
 - **WHEN** "Layer 1: Traces" is read
 - **THEN** it references Langfuse + Logfire (not Datadog APM + LLMObs)
 
-## Cross-references
-
-- [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)
-- [`.agents/skills/graphiti/SKILL.md`](../../.agents/skills/graphiti/SKILL.md)
-- [`.agents/skills/graphiti-core/SKILL.md`](../../.agents/skills/graphiti-core/SKILL.md)
-- [`.agents/skills/lancedb/SKILL.md`](../../.agents/skills/lancedb/SKILL.md)
-- [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
-- [`.agents/skills/memgraph/SKILL.md`](../../.agents/skills/memgraph/SKILL.md)
-- [`cianfhoghlaim/memory/`](../../cianfhoghlaim/memory/) (application-layer wrapper)
-- [`cianfhoghlaim/agents/`](../../cianfhoghlaim/agents/) (model-layer agents)
-
-## ADDED Requirements (v4 extension — 2026-07-03)
+<!-- v4 extension — 2026-07-03 -->
 
 ### Requirement: LC5 + Gemini consumers of Cognee + Graphiti + FalkorDB
 
@@ -219,6 +208,18 @@ the 2026-07-03 changes.
 - **AND** `falkordb_label="gemini_6_corpus_kg"` SHALL contain the
   Corpus → CaseProfile → Party → Jurisdiction → Statute → TimelineEvent
   graph (6 Gemini corpora merged)
+
+
+## Cross-references
+
+- [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)
+- [`.agents/skills/graphiti/SKILL.md`](../../.agents/skills/graphiti/SKILL.md)
+- [`.agents/skills/graphiti-core/SKILL.md`](../../.agents/skills/graphiti-core/SKILL.md)
+- [`.agents/skills/lancedb/SKILL.md`](../../.agents/skills/lancedb/SKILL.md)
+- [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
+- [`.agents/skills/memgraph/SKILL.md`](../../.agents/skills/memgraph/SKILL.md)
+- [`cianfhoghlaim/memory/`](../../cianfhoghlaim/memory/) (application-layer wrapper)
+- [`cianfhoghlaim/agents/`](../../cianfhoghlaim/agents/) (model-layer agents)
 
 
 ## Migrated from (2026-07-06)
