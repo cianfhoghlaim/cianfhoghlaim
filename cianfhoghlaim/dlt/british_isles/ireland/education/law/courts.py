@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.courts — Courts Service of Ireland (forms + fees).
+cianfhoghlaim.dlt.british_isles.ireland.law.courts — Courts Service of Ireland (forms + fees).
 
 Source: `https://www.courts.ie/` — the catalogue of court forms
 (District / Circuit / High / Supreme / Court of Appeal) + the Court Fees

@@ -2,7 +2,7 @@
 // BAML context: shared_legal_enums.baml
 //
 // Cross-source enums for the Pick-8 Ireland/law BAML registry.
-// Lives at `cianfhoghlaim/baml/ie/law/shared_legal_enums.baml`.
+// Lives at `cianfhoghlaim/baml.education.law/shared_legal_enums.baml`.
 //
 // Re-used by the 5 source-specific BAML files:
 //   - piab.baml              (PIABPage, ExtractPIABPage)

@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.piab — Personal Injuries Assessment Board.
+cianfhoghlaim.dlt.british_isles.ireland.law.piab — Personal Injuries Assessment Board.
 
 Source: `https://www.injuries.ie/eng/` — the front-door for every personal
 injury claim in Ireland. The PIAB process (Application → Assessment →

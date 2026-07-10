@@ -1,4 +1,4 @@
-"""cianfhoghlaim.baml.ie.law — Pick-8 Ireland/law BAML extraction registry.
+"""cianfhoghlaim.baml.education.law — Pick-8 Ireland/law BAML extraction registry.
 
 5 BAML files + 1 shared enums file for the 5 operational-law sources
 in the Pick-8 Ireland/law quadrant:

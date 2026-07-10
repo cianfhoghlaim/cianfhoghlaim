@@ -242,7 +242,7 @@ bilingual EN + GA throughout. **No Babylon.js, no SpacetimeDB.**
 The system SHALL operate on the NCCA (Ireland) curriculum framework
 only. The `cianfhoghlaim/dlt/british_isles/{sct,wls,ni,jey,iom,ggy}/`
 DLT subdirectories SHALL be archived to `.archive/dlt/british_isles_other/`
-and SHALL NOT be loaded. The `dlt/british_isles/ie/` subdirectory
+and SHALL NOT be loaded. The `dlt/british_isles/ireland/` subdirectory
 SHALL remain active and SHALL be the canonical source for NCCA
 curriculum content.
 

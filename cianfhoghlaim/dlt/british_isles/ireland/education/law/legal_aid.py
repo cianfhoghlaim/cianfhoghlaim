@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.dlt.british_isles.ie.law.legal_aid — Legal Aid Board.
+cianfhoghlaim.dlt.british_isles.ireland.law.legal_aid — Legal Aid Board.
 
 Source: `https://www.legalaidboard.ie/` — the Legal Aid Board (formerly
 the Free Legal Advice Centres / FLAC overlap). Provides civil legal aid

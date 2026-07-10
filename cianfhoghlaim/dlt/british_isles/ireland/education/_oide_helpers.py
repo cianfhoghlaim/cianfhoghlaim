@@ -8,8 +8,10 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-from common.firecrawl_source import crawl_website, scrape_page
-from common.incremental import compute_content_hash
+from cianfhoghlaim.dlt.common import firecrawl_source
+from cianfhoghlaim.dlt.common.incremental import compute_content_hash
+
+crawl_website, scrape_page = firecrawl_source.crawl_website, firecrawl_source.scrape_page
 
 OIDE_SUBJECTS = {
     # Primary

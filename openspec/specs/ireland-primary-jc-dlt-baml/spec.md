@@ -13,8 +13,8 @@ subjects.
 
 The corresponding source code lives at:
 
-- `cianfhoghlaim/dlt/british_isles/ie/education/primary/` (Primary DLT sources per area + per language EN/GA)
-- `cianfhoghlaim/dlt/british_isles/ie/education/junior_cycle/` (Junior Cycle DLT sources per subject + per language)
+- `cianfhoghlaim/dlt/british_isles/ireland/education/primary/` (Primary DLT sources per area + per language EN/GA)
+- `cianfhoghlaim/dlt/british_isles/ireland/education/junior_cycle/` (Junior Cycle DLT sources per subject + per language)
 - `cianfhoghlaim/baml/education/primary/` (Primary BAML extraction schemas)
 - `cianfhoghlaim/baml/education/junior_cycle/` (Junior Cycle BAML extraction schemas)
 - `cianfhoghlaim/cocoindex/primary_embedding.py` + `cianfhoghlaim/cocoindex/junior_cycle_embedding.py` (CocoIndex v1 Apps)
@@ -40,7 +40,7 @@ The system SHALL provide DLT sources for the 4 Primary curriculum
 areas: English, Gaeilge, Mathematics, SESE (Science + Geography +
 History; called "Social, Environmental and Scientific Education").
 Each area SHALL have an EN source + a GA source (8 sources total)
-at `cianfhoghlaim/dlt/british_isles/ie/education/primary/`.
+at `cianfhoghlaim/dlt/british_isles/ireland/education/primary/`.
 
 #### Scenario: Primary EN Gaeilge ingestion
 
@@ -63,7 +63,7 @@ Studies, French, German, Spanish, Italian, Russian, Japanese, Arabic,
 Music, Art, Home Economics, Wood Technology, Metalwork, Technical
 Graphics, Materials Technology Wood, Materials Technology Metal,
 Engineering, Coding). Each subject SHALL have an EN source + a GA
-source at `cianfhoghlaim/dlt/british_isles/ie/education/junior_cycle/`
+source at `cianfhoghlaim/dlt/british_isles/ireland/education/junior_cycle/`
 (48 sources total).
 
 #### Scenario: Junior Cycle English ingestion

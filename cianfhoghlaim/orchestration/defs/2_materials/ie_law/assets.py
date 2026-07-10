@@ -27,7 +27,7 @@ from typing import Any
 from dagster import AssetExecutionContext, asset
 
 # The 8 BAML extraction functions are defined in
-# cianfhoghlaim/baml/ie/law/*.baml and exposed via the canonical
+# cianfhoghlaim/baml/education/law/*.baml and exposed via the canonical
 # baml_client (Pydantic v2 mirror).
 try:
     from cianfhoghlaim.baml_client import b
@@ -50,7 +50,7 @@ except ImportError:
 def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     """BAML ExtractPIABPage → oideachais.law.ie.piab_pages.
 
-    Source DLT: `cianfhoghlaim.dlt.british_isles.ie.law.piab`.
+    Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.piab`.
     """
     if not BAML_AVAILABLE:
         context.log.warning(
@@ -74,7 +74,7 @@ def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 def courts_forms_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     """BAML ExtractCourtForm → oideachais.law.ie.courts_forms.
 
-    Source DLT: `cianfhoghlaim.dlt.british_isles.ie.law.courts`.
+    Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.courts`.
     """
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCourtForm"}
@@ -89,7 +89,7 @@ def courts_forms_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 def court_fees_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     """BAML ExtractCourtFee → oideachais.law.ie.court_fees.
 
-    Source DLT: `cianfhoghlaim.dlt.british_isles.ie.law.courts`.
+    Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.courts`.
     """
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCourtFee"}
@@ -104,7 +104,7 @@ def court_fees_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 def judgements_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     """BAML ExtractJudgement → oideachais.law.ie.judgements.
 
-    Source DLT: `cianfhoghlaim.dlt.british_isles.ie.law.judgements`.
+    Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.judgements`.
     """
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractJudgement"}
@@ -119,7 +119,7 @@ def judgements_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 def court_rules_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     """BAML ExtractCourtRule → oideachais.law.ie.court_rules.
 
-    Source DLT: `cianfhoghlaim.dlt.british_isles.ie.law.court_rules`.
+    Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.court_rules`.
     """
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCourtRule"}
@@ -134,7 +134,7 @@ def court_rules_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 def legal_aid_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     """BAML ExtractLegalAidPage → oideachais.law.ie.legal_aid_pages.
 
-    Source DLT: `cianfhoghlaim.dlt.british_isles.ie.law.legal_aid`.
+    Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.legal_aid`.
     """
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractLegalAidPage"}
