@@ -1454,3 +1454,11 @@ All three repositories in the constellation
 licensed under BUSL-1.1 by the same Licensor.
 
 ---
+
+<!-- AGENT_TELEMETRY_START -->
+> **Agent Telemetry (Last Updated: 2026-07-10 12:08:07 UTC)**
+> - **Total Cached Structural Documents:** 0
+> - **Examinations.ie Cache:**        0 files
+> - **NCCA.ie Cache:**        0 files
+> - **CurriculumOnline Cache:**        0 files
+<!-- AGENT_TELEMETRY_END -->
