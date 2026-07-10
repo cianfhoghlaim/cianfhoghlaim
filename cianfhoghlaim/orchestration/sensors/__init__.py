@@ -10,11 +10,20 @@ change. Sensors are now emitted by:
 - L1 CelticIngestionComponent (cron-driven; sensor not needed)
 - L5 CelticAgentOpsComponent (auto-fires the 5_agent_ops/<framework>/<agent>/agent_down
   sensor when the health check returns healthy=False)
-- Upstream package monitoring (the breaking_change_sensor in
-  cianfhoghlaim.orchestration/assets/upstream_monitoring_assets.py — kept
-  in the new tree under 3_model_lifecycle/upstream_monitoring_assets/)
+- Upstream package monitoring (the breaking-change sensor in
+  ``upstream_breaking_change_sensor.py``), which polls
+  ``md:oideachais_upstream.upstream_monitoring`` for package-level
+  breaking changes.
 
-This package is intentionally empty. New sensors should be added as
-L5 CelticAgentOpsComponent auto-generated sensors or as new defs
-in the relevant layer folder.
+New sensors should normally be added as L5 CelticAgentOpsComponent
+auto-generated sensors or as new defs in the relevant layer folder.
+The upstream-package-monitoring capability keeps its standalone sensor
+here because it is shared by the Firecrawl monitor scripts and the L3
+CocoIndex upstream Apps.
 """
+
+from __future__ import annotations
+
+from .upstream_breaking_change_sensor import upstream_breaking_change_sensor
+
+__all__ = ["upstream_breaking_change_sensor"]
