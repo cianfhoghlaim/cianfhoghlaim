@@ -143,12 +143,14 @@ oideachais/datasets/
 # BAML
 # -----------------------------------------------------------------------------
 baml_client/
+baml_client_tests/
 .baml_events/
 # baml_src is a regen-time symlink that points at baml/ (so the BAML CLI,
 # which hardcodes baml_src/ as the source directory, can discover the new
 # 3-cluster taxonomy). It is NOT a runtime dependency — consumers import
 # from cianfhoghlaim.baml_client, not from cianfhoghlaim.baml_src.
 /cianfhoghlaim/baml_src
+/cianfhoghlaim/baml_client_tests/
 
 # -----------------------------------------------------------------------------
 # IDE & EDITORS
