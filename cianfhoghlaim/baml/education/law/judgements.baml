@@ -27,6 +27,7 @@ class Judgement {
   statutes_cited         StatuteReference[]              @description("Canonical join key against oideachais.education.ie.irish_statute_book.acts")
   cases_cited            string[]                        @description("Other case citations referenced")
   extraction_confidence  float                           @description("0.0-1.0")
+  @@stream.done
 }
 
 function ExtractJudgement(

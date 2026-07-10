@@ -133,6 +133,7 @@ class IrishGrammar {
   verb_grammar IrishVerbGrammar? @description("Verb-specific grammar if applicable")
   adjective_grammar IrishAdjectiveGrammar? @description("Adjective-specific grammar if applicable")
   notes string? @description("Additional grammatical notes")
+  @@stream.done
 }
 
 // Term in a single language
@@ -230,6 +231,7 @@ class TearmaDomainTerms {
   domain_name_en string @description("Domain name in English")
   term_count int @description("Number of terms in this domain")
   terms TearmaTerm[] @description("Terms in this domain")
+  @@stream.done
 }
 
 // ============================================================================
@@ -246,6 +248,7 @@ class EducationalTerm {
   curriculum_code string? @description("NCCA curriculum reference code")
   definition_ga string? @description("Short definition in Irish")
   definition_en string? @description("Short definition in English")
+  @@stream.done
 }
 
 // Legal term (subset for law domain)

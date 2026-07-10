@@ -14,6 +14,7 @@ class EducationEntry {
   description_en string @description("English description of the programme or achievement")
   description_ga string @description("Gaeilge description, if present in the source")
   grade string | null
+  @@stream.done
 }
 
 class Award {
@@ -22,6 +23,7 @@ class Award {
   year string
   description_en string
   category string @description("e.g. Academic, Professional, Teaching, Music")
+  @@stream.done
 }
 
 class Publication {
@@ -31,6 +33,7 @@ class Publication {
   authors string[]
   abstract_en string
   url string | null
+  @@stream.done
 }
 
 class Reference {
@@ -40,12 +43,14 @@ class Reference {
   email string | null
   relationship string @description("e.g. MSc Supervisor, Programme Director, Cooperating Teacher")
   phone string | null
+  @@stream.done
 }
 
 class SkillCategory {
   category string @description("e.g. Music Production, Software Development, Languages, Teaching")
   skills string[]
   proficiency number @description("0-100 self-assessed proficiency level")
+  @@stream.done
 }
 
 class ProfessionalExperience {
@@ -56,6 +61,7 @@ class ProfessionalExperience {
   description_en string
   description_ga string | null
   location string | null
+  @@stream.done
 }
 
 function ExtractCV(text: string) -> EducationEntry[] {

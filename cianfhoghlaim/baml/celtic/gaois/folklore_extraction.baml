@@ -119,6 +119,7 @@ class HandwritingExtraction {
   writer_estimated_age string? @description("Estimated age of writer (child/adult)")
   legibility string @description("Legibility assessment: clear, fair, poor")
   special_features string[]? @description("Special features: crossouts, marginalia, etc.")
+  @@stream.done
 }
 
 // Extract text from handwritten manuscript image
@@ -168,6 +169,7 @@ class StoryExtraction {
   topics FolkloreTopic[] @description("Classified folklore topics")
   summary string @description("Brief summary of the story content")
   summary_ga string? @description("Summary in Irish")
+  @@stream.done
 }
 
 // Extract complete story from multiple pages

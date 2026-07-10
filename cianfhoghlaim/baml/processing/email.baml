@@ -98,6 +98,7 @@ class EmailThread {
   decision_points string[]      @description("Decisions taken in the thread, in chronological order")
   dates_mentioned string[]      @description("ISO 8601 dates (YYYY-MM-DD) explicitly mentioned in the thread body, ordered chronologically")
   key_quotes string[]           @description("3-5 verbatim quotes (max 200 chars each) that capture the thread's most important points")
+  @@stream.done
 }
 
 function ExtractEmailThread(

@@ -58,6 +58,7 @@ class PrimaryLearningOutcome {
   key_competencies CompetencyLink[]
   action_verbs string[]      @description("e.g., 'investigate', 'analyse', 'create'")
   cross_curricular_links string[] @description("Other primary areas this outcome links to")
+  @@stream.done
 }
 
 class PrimaryStrand {
@@ -78,6 +79,7 @@ class PrimaryCurriculumArea {
   source_url string
   document_year int
   language string          @description("en | ga | bilingual")
+  @@stream.done
 }
 
 // -----------------------------------------------------------------------------

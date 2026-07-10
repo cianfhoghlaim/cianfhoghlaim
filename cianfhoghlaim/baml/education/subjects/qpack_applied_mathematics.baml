@@ -131,16 +131,16 @@ class AppmScoreBreakdown {
 
 class AppmQuestPack {
   id: string
-  subject: string @description("Always 'applied_mathematics'")
+  subject: string @description("Always 'applied_mathematics'") @stream.not_null
   framework: string @description("Always 'ncca-lc'")
   level: AppmNCCALevel
-  title: AppmBilingualText
+  title: AppmBilingualText @stream.not_null
   description: AppmBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: AppmFormativeItem[]
+  items: AppmFormativeItem[] @stream.with_state
   prerequisites: string[] @description("Pure Mathematics LOs (LC-MATHS-LO-*) the student should have mastered first")
   cross_subject_links: string[] @description("Suggested cross-subject LO codes (LC-MATHS-*, LC-CHEM, LC-PHYS)")
   generated_at: string @description("ISO datetime")

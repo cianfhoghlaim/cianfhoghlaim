@@ -39,6 +39,7 @@ class NCCAKeyCompetency {
   name: BilingualText @description("The full competency name (EN + GA)")
   definition: BilingualText @description("The full competency definition statement")
   evidence: EvidenceLink
+  @@stream.done
 }
 
 function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetency[] {
@@ -86,6 +87,7 @@ class PedagogySet {
   recommended_practices: BilingualText[] @description("The recommended practices for educators")
   technology_recommendations: BilingualText[] @description("The technology recommendations")
   evidence: EvidenceLink
+  @@stream.done
 }
 
 function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {
@@ -113,6 +115,7 @@ class CertGuidance {
   reporting_recommendations: BilingualText[] @description("The recommendations for online reporting"]
   technology_requirements: BilingualText[] @description("The technology requirements for online certification"]
   evidence: EvidenceLink
+  @@stream.done
 }
 
 function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {
@@ -140,6 +143,7 @@ class ExaminerCommentary {
   common_mistakes: BilingualText[] @description("The common mistakes flagged by the Chief Examiner"]
   marker_expectations: BilingualText[] @description("The marker expectations (PCLM conventions, marking patterns)"]
   evidence: EvidenceLink
+  @@stream.done
 }
 
 function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {
@@ -167,6 +171,7 @@ class AimsExpectations {
   expectations: BilingualText[] @description("The expectations for students at L1 (Foundation) and L2 (Ordinary) levels"]
   rationale: BilingualText @description("The rationale for the Senior Cycle curriculum"]
   evidence: EvidenceLink
+  @@stream.done
 }
 
 function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {

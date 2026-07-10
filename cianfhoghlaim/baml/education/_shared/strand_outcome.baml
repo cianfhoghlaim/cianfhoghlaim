@@ -115,7 +115,7 @@ class AssessmentInfo {
 
 class CurriculumSpecStrand {
   document_id string @description("Unique document identifier")
-  title string @description("Full document title")
+  title string @description("Full document title") @stream.not_null
   title_ga string? @description("Irish title")
   subject string @description("Subject code")
   cycle EducationLevel @description("Education cycle")
@@ -123,8 +123,8 @@ class CurriculumSpecStrand {
   version_year int @description("Specification version year")
   specification_type string @description("syllabus or specification")
   development_status string @description("current, redevelopment, etc.")
-  strands CurriculumStrand[] @description("Curriculum strands")
-  learning_outcomes EnhancedLearningOutcome[] @description("All learning outcomes")
+  strands CurriculumStrand[] @description("Curriculum strands") @stream.with_state
+  learning_outcomes EnhancedLearningOutcome[] @description("All learning outcomes") @stream.with_state
   assessment_info AssessmentInfo? @description("Assessment information")
   key_skills_mapping map<string, string[]> @description("Key skills to outcomes mapping")
   rationale string? @description("Subject rationale/aims")
@@ -183,12 +183,12 @@ class ExamPaperStrand {
 // -----------------------------------------------------------------------------
 
 class MarkingSchemeStrand {
-  subject string @description("Subject code")
+  subject string @description("Subject code") @stream.not_null
   year int @description("Examination year")
   level ExamLevel @description("Exam level")
   paper_number int @description("Paper number")
   language string @description("Scheme language")
-  sections MarkingSection[] @description("Marking sections")
+  sections MarkingSection[] @description("Marking sections") @stream.with_state
   general_guidelines string? @description("General marking guidelines")
 }
 

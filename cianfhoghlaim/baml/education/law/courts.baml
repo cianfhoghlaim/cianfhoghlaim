@@ -25,6 +25,7 @@ class CourtForm {
   fillable_fields        string[]                        @description("Names of fields the form requires (e.g. 'PPSN', 'Date of Birth', 'Solicitor details')")
   related_statutes       StatuteReference[]              @description("Statutes referenced by this form")
   extraction_confidence  float                           @description("0.0-1.0")
+  @@stream.done
 }
 
 class CourtFee {
@@ -36,6 +37,7 @@ class CourtFee {
   effective_date         string?                         @description("ISO 8601 — when the fee schedule came into effect")
   notes                  string?                         @description("Any conditions or exemptions")
   extraction_confidence  float                           @description("0.0-1.0")
+  @@stream.done
 }
 
 function ExtractCourtForm(

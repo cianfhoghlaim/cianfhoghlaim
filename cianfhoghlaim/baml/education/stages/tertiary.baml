@@ -68,6 +68,7 @@ class MatriculationRequirement {
   subject string                 @description("LC subject code, e.g., 'mathematics', 'irish', 'english'")
   minimum_grade string           @description("e.g., 'H4', 'O6', 'H6'")
   notes string?                  @description("e.g., 'required for Modern Languages', 'lab science required for Medicine'")
+  @@stream.done
 }
 
 class CAOCourse {
@@ -87,6 +88,7 @@ class CAOCourse {
   points_required int            @description("Cutoff points from the most recent cycle")
   cao_url string?
   application_pathways EntryPathway[]
+  @@stream.done
 }
 
 class QqiFetAward {
@@ -97,6 +99,7 @@ class QqiFetAward {
   institution string
   links_to_courses string[]      @description("CAO course codes this FET award can ladder into")
   source_url string
+  @@stream.done
 }
 
 class Apprenticeship {
@@ -108,6 +111,7 @@ class Apprenticeship {
   consortia_lead string          @description("Lead coordinating provider")
   consortia_partners string[]
   source_url string
+  @@stream.done
 }
 
 class Programme {
@@ -133,6 +137,7 @@ class ApplicationTimeline {
   offer_round_1 string           @description("e.g., '2026-08-21'")
   offer_round_2 string?
   registration_open string
+  @@stream.done
 }
 
 class CAOGradeProfile {

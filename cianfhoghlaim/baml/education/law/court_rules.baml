@@ -23,6 +23,7 @@ class CourtRule {
   effective_date         string?                         @description("ISO 8601 — when the rule came into effect")
   related_statutes       StatuteReference[]              @description("Statutes the rule is made under")
   extraction_confidence  float                           @description("0.0-1.0")
+  @@stream.done
 }
 
 function ExtractCourtRule(

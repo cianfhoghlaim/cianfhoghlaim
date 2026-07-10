@@ -81,6 +81,7 @@ class CBATask {
   descriptor JcRubricDescriptor[]
   weight_pct int?             @description("CBAs are formative; this is for display only")
   duration_weeks int?
+  @@stream.done
 }
 
 class JCWellbeingStatement {
@@ -114,6 +115,7 @@ class JCSubjectSpec {
   learning_outcomes JcLearningOutcome[]     @description("Bilingual learning outcomes")
   specification_url string
   language string                         @description("en | ga | bilingual")
+  @@stream.done
 }
 
 class L2LPOutcome {

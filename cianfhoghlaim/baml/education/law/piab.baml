@@ -34,6 +34,7 @@ class PIABPage {
   statutory_basis        StatuteReference[]              @description("Statutes referenced (e.g. Personal Injuries Assessment Board Act 2003)")
   summary                string                          @description("2-3 sentence summary of the page")
   extraction_confidence  float                           @description("0.0-1.0 — the model's confidence in the extraction")
+  @@stream.done
 }
 
 function ExtractPIABPage(

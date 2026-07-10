@@ -114,16 +114,16 @@ class ChemScoreBreakdown {
 
 class ChemQuestPack {
   id: string
-  subject: string @description("Always 'chemistry'")
+  subject: string @description("Always 'chemistry'") @stream.not_null
   framework: string
   level: ChemNCCALevel
-  title: ChemBilingualText
+  title: ChemBilingualText @stream.not_null
   description: ChemBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: ChemFormativeItem[]
+  items: ChemFormativeItem[] @stream.with_state
   prerequisites: string[]
   cross_subject_links: string[] @description("LC-APPM, LC-MATHS for cross-subject synthesis")
   generated_at: string

@@ -19,6 +19,7 @@ class ResearchGatePublication {
   readCount int?
   recommendationCount int?
   url string
+  @@stream.done
 }
 
 class ResearchGateProfile {
@@ -39,6 +40,7 @@ class ResearchGateProfile {
   streamId string @description("The croilar Stream id this profile belongs to: music, teaching, cv, or research")
   ownerDisplayName string @description("Canonical owner display name, e.g. 'Cian Mac an Déisigh Uí Liatháin'")
   ownerSlug string? @description("Owner alias from Stream.owner, e.g. 'cianfhoghlaim'")
+  @@stream.done
 }
 
 function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {
