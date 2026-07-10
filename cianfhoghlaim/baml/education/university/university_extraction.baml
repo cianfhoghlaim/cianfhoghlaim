@@ -518,3 +518,452 @@ test ExtractReadingListTest {
     module_url "https://www.universityofgalway.ie/programs/ct511-software-engineering.html"
   }
 }
+
+// =============================================================================
+// Tertiary 18+ stage — 8 universities + 5 TUs + QQI + CAO + SOLAS
+// =============================================================================
+//
+// Added in the `2026-07-15-oideachais-university-deep-extraction-v1`
+// change. The 5+ classes + 4+ enums + 1+ function below cover the
+// **Tertiary 18+ stage** of the K-12 → university pipeline:
+//
+//   1. `University` — the 8 Republic of Ireland universities (TCD, UCD,
+//      UCC, UoG, UL, DCU, Maynooth, RCSI). One row per (institution_id,
+//      language). Distinct from the per-university `CourseDescriptor`
+//      above (which is a single course/module/programme extracted from a
+//      specific page).
+//   2. `TU` — the 5 Technological Universities (TUD, MTU, TUS, ATU,
+//      SETU). One row per (tu_id, language).
+//   3. `QQIAward` — the canonical QQI awards at NFQ 6-10 (Higher
+//      Cert, Ordinary Bachelor, Honours Bachelor, Higher Diploma,
+//      Masters, Ph.D., etc.). One row per (award_code, language).
+//   4. `CAOChoice` — a CAO course choice entry (cao_code, institution
+//      id, nfq_level, points_required). One row per (cao_code, year).
+//   5. `SOLASCourse` — a SOLAS Further Education course (PLC,
+//      apprenticeship, Youthreach). One row per (course_code, etb_slug).
+//
+// Together with the 4 per-university functions above, the 9 total
+// functions + 9 enums + 11 Pydantic classes cover the full Tertiary
+// 18+ surface.
+//
+// All 4 new functions route through the canonical `ExtractEn` LiteLLM
+// client (same as the 4 per-university functions above).
+
+// =============================================================================
+// Enums (Tertiary 18+)
+// =============================================================================
+
+enum UniversityType {
+  TRADITIONAL        @description("Traditional (pre-1997) university: TCD, UCD, UCC, UoG, UL, DCU, Maynooth")
+  SPECIALIST         @description("Specialist institution: RCSI (Royal College of Surgeons in Ireland)")
+  TECHNOLOGICAL      @description("Post-2018 Technological University (TU Dublin, MTU, TUS, ATU, SETU)")
+  PRIVATE            @description("Private university (e.g. NCI — National College of Ireland)")
+  UNKNOWN            @description("University type cannot be inferred")
+}
+
+enum QQILevel {
+  NFQ_6              @description("NFQ Level 6 — Higher Certificate (60 ECTS, 1 year)")
+  NFQ_7              @description("NFQ Level 7 — Ordinary Bachelor Degree (180 ECTS, 3 years)")
+  NFQ_8              @description("NFQ Level 8 — Honours Bachelor Degree / Higher Diploma / Graduate Diploma (240 ECTS, 4 years)")
+  NFQ_9              @description("NFQ Level 9 — Masters Degree / Postgraduate Diploma / Postgraduate Certificate (90 ECTS, 1.5 years taught)")
+  NFQ_10             @description("NFQ Level 10 — Doctoral Degree (Ph.D., DPhil, professional doctorate)")
+  UNKNOWN            @description("NFQ level cannot be inferred")
+}
+
+enum CAOField {
+  ARTS_HUMANITIES    @description("Arts, Humanities, Celtic Studies, Social Sciences")
+  BUSINESS_LAW       @description("Business, Commerce, Law, Economics")
+  SCIENCE            @description("Science (Biology, Chemistry, Physics, Mathematical Science)")
+  COMPUTING_ENGINEERING @description("Computing, Computer Science, Software Engineering, Electronic Engineering")
+  MEDICINE_HEALTH    @description("Medicine, Nursing, Pharmacy, Physiotherapy, Health Sciences")
+  EDUCATION          @description("Education, Teaching, Early Childhood Care")
+  MUSIC_PERFORMING   @description("Music, Drama, Performing Arts, Film")
+  AGRICULTURE_VET    @description("Agriculture, Veterinary Medicine, Food Science")
+  UNKNOWN            @description("Field cannot be inferred from the CAO code")
+}
+
+enum SOLASPath {
+  PLC                @description("Post-Leaving-Cert (PLC) course at one of the 16 ETBs")
+  APPRENTICESHIP     @description("Apprenticeship (designated craft or Generation Apprenticeship)")
+  YOUTHREACH         @description("Youthreach — early-school-leaver programme (NFQ 3-5)")
+  ADULT_LITERACY     @description("Adult Literacy + numeracy programmes")
+  VTOS               @description("Vocational Training Opportunities Scheme")
+  COMMUNITY_TRAINING @description("Community Training Centres")
+  UNKNOWN            @description("SOLAS pathway cannot be inferred")
+}
+
+// =============================================================================
+// University — the 8 Republic of Ireland universities (registry view)
+// =============================================================================
+
+class University {
+  institution_id string @description("Kebab-case institution id, e.g. 'ie-university-galway', 'ie-university-trinity'")
+  institution_name string @description("Canonical full name, e.g. 'University of Galway', 'Trinity College Dublin'")
+  abbreviation string @description("Canonical abbreviation, e.g. 'UoG', 'TCD', 'UCD', 'UCC', 'UL', 'DCU', 'MU', 'RCSI'")
+  university_type UniversityType @description("University type (TRADITIONAL / SPECIALIST / TECHNOLOGICAL / PRIVATE)")
+  founded int? @description("Year founded (e.g. 1592 for TCD, 1784 for RCSI)")
+  home_url string @description("Canonical homepage URL, e.g. 'https://www.universityofgalway.ie'")
+  nfq_min int @description("Lowest NFQ level the institution awards (typically 6 for universities, 8 for RCSI)")
+  nfq_max int @description("Highest NFQ level the institution awards (always 10 for the Tertiary 18+ bracket)")
+  faculty_count int @description("Number of faculties (typical 4-6)")
+  faculty_slugs string[] @description("Faculty slugs, e.g. ['arts-humanities', 'science-engineering']")
+  language string @description("Primary language of instruction ('en' for all 8 IE universities)")
+  source_url string @description("Canonical URL this record was extracted from")
+  scraped_at string @description("ISO-8601 timestamp of the scrape")
+  confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
+}
+
+// =============================================================================
+// TU — the 5 Technological Universities (registry view)
+// =============================================================================
+
+class TU {
+  tu_id string @description("Kebab-case tu id, e.g. 'ie-tu-dublin', 'ie-tu-atlantic'")
+  tu_name string @description("Canonical full name, e.g. 'Technological University Dublin', 'Atlantic Technological University'")
+  abbreviation string @description("Canonical abbreviation, e.g. 'TUD', 'MTU', 'TUS', 'ATU', 'SETU'")
+  established int @description("Year established (post-2018 mergers: TUD=2019, MTU=2021, TUS=2021, ATU=2022, SETU=2022)")
+  home_url string @description("Canonical homepage URL, e.g. 'https://www.tudublin.ie'")
+  parent_iots string[] @description("Predecessor Institutes of Technology, e.g. ['DIT', 'ITB', 'ITT'] for TUD")
+  campus_slugs string[] @description("Campus slugs, e.g. ['city', 'blanchardstown', 'tallaght'] for TUD")
+  campus_count int @description("Number of campuses (typical 3-5)")
+  nfq_min int @description("Lowest NFQ level the TU awards (always 6 for the 5 TUs)")
+  nfq_max int @description("Highest NFQ level the TU awards (typically 10, occasionally 9 only)")
+  language string @description("Primary language of instruction ('en' for all 5 IE TUs)")
+  source_url string @description("Canonical URL this record was extracted from")
+  scraped_at string @description("ISO-8601 timestamp of the scrape")
+  confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
+}
+
+// =============================================================================
+// QQIAward — the canonical QQI awards at NFQ 6-10
+// =============================================================================
+
+class QQIAward {
+  award_code string @description("Canonical award code, e.g. 'NFQ6-HC', 'NFQ8-BA-HONS', 'NFQ9-MASTERS', 'NFQ10-PHD'")
+  award_title string @description("Canonical award title, e.g. 'Bachelor Degree (Honours)', 'Masters Degree'")
+  qqi_level QQILevel @description("NFQ level of the award (NFQ_6 / NFQ_7 / NFQ_8 / NFQ_9 / NFQ_10)")
+  ects int @description("Canonical ECTS value (60 for Higher Cert, 180 for Ord BA, 240 for Hons BA, 90 for Masters, 0 for Ph.D.)")
+  duration_months int @description("Typical duration in months (12 for Higher Cert, 48 for Hons BA, 18 for Masters, 48+ for Ph.D.)")
+  category string @description("Award category, e.g. 'higher_diploma', 'graduate_diploma', 'postgrad_cert', 'masters', 'doctoral'")
+  issuing_body string @description("Always 'QQI' (Quality and Qualifications Ireland)")
+  description string @description("1-3 sentence description of the award type")
+  source_url string @description("Canonical URL this record was extracted from (typically https://www.qqi.ie)")
+  scraped_at string @description("ISO-8601 timestamp of the scrape")
+  confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
+}
+
+// =============================================================================
+// CAOChoice — a CAO course choice entry (cao_code, points, institution)
+// =============================================================================
+
+class CAOChoice {
+  cao_code string @description("5-character CAO course code, e.g. 'CK101', 'GY101', 'DC001', 'TR085'")
+  year int @description("The year this entry applies to (e.g. 2025)")
+  institution_id string @description("The institution id, e.g. 'ie-university-galway' (cross-ref to `University.institution_id`)")
+  programme_title string @description("Programme / course title as listed on CAO, e.g. 'Bachelor of Science (Computer Science)'")
+  cao_field CAOField @description("Broad CAO field of study (ARTS_HUMANITIES / BUSINESS_LAW / SCIENCE / COMPUTING_ENGINEERING / MEDICINE_HEALTH / etc.)")
+  nfq_level QQILevel @description("NFQ level of the final award (NFQ_7 for Ord BA, NFQ_8 for Hons BA, NFQ_9 for Masters)")
+  duration_months int @description("Typical duration in months (36 for Ord BA, 48 for Hons BA, 12 for HDip)")
+  points_required int? @description("Median CAO points required for an offer (latest available round; null if mature applicant only)")
+  mature_applicant_path bool @description("True if the course accepts mature applicants separately (e.g. via the Mature Applicants Office)")
+  source_url string @description("Canonical CAO URL, e.g. 'https://www.cao.ie/index.php?page=courses&course=GY101'")
+  scraped_at string @description("ISO-8601 timestamp of the scrape")
+  confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
+}
+
+// =============================================================================
+// SOLASCourse — a SOLAS Further Education course (PLC / apprenticeship / etc.)
+// =============================================================================
+
+class SOLASCourse {
+  course_code string @description("SOLAS / fetchcourses.ie course code, e.g. 'PLC-DIT-CS-2025'")
+  etb_slug string @description("The 16 ETBs slug, e.g. 'cavan-monaghan', 'city-of-dublin', 'galway-roscommon'")
+  etb_name string @description("The full ETB name, e.g. 'Galway and Roscommon ETB'")
+  course_title string @description("Course title, e.g. 'Post-Leaving-Cert in Software Development'")
+  solas_path SOLASPath @description("The SOLAS pathway (PLC / APPRENTICESHIP / YOUTHREACH / etc.)")
+  qqi_level QQILevel @description("NFQ level the course leads to (NFQ_5 / NFQ_6 most commonly for PLCs)")
+  duration_months int @description("Typical duration in months (8-24 for PLCs, 24-48 for apprenticeships)")
+  award_code string? @description("The QQI award code on completion, e.g. 'NFQ6-HC'; null if not QQI-anchored")
+  fetchcourses_url string @description("The canonical fetchcourses.ie URL for this course")
+  scraped_at string @description("ISO-8601 timestamp of the scrape")
+  confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
+}
+
+// =============================================================================
+// Functions (Tertiary 18+)
+// =============================================================================
+
+function ExtractUniversityInfo(
+  page_markdown: string,
+  institution_id: string
+) -> University {
+  client ExtractEn
+  prompt #"
+    You are a precise institution-registry extractor for the 8 Republic of
+    Ireland universities. The markdown below is the 'About' / 'Our
+    University' page content from one of these institutions' websites.
+
+    Institution id: {{ institution_id }}
+
+    Extract every field of the `University` schema. Rules:
+      - `institution_id`: MUST be one of the 8 kebab-case ids:
+          - 'ie-university-trinity'   (Trinity College Dublin)
+          - 'ie-university-ucd'       (University College Dublin)
+          - 'ie-university-ucc'       (University College Cork)
+          - 'ie-university-galway'    (University of Galway, formerly NUIG)
+          - 'ie-university-limerick'  (University of Limerick)
+          - 'ie-university-dcu'       (Dublin City University)
+          - 'ie-university-maynooth'  (Maynooth University)
+          - 'ie-university-rcsi'      (Royal College of Surgeons in Ireland)
+      - `university_type`: TRADITIONAL for the 7 NUI / pre-1997
+        institutions; SPECIALIST for RCSI (medical school); TECHNOLOGICAL
+        for the 5 TUs (these have a separate TU schema).
+      - `nfq_min`: 6 for the 7 traditional universities (RCSI=8).
+      - `nfq_max`: always 10 (the Tertiary 18+ bracket upper bound).
+      - `faculty_slugs`: derive from the page's navigation. Typical
+        4-6 entries. Slugs are kebab-case.
+      - `language`: always 'en' for the 8 IE universities.
+      - `source_url`: copy the canonical homepage URL (the input
+        `institution_id` resolves to `https://www.<slug>.ie`).
+      - `scraped_at`: current ISO-8601 timestamp.
+      - `confidence`: 0.0-1.0.
+
+    Page markdown (may be truncated with …):
+    ---
+    {{ page_markdown }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
+function ExtractTuInfo(
+  page_markdown: string,
+  tu_id: string
+) -> TU {
+  client ExtractEn
+  prompt #"
+    You are a precise institution-registry extractor for the 5 Republic
+    of Ireland Technological Universities. The markdown below is the
+    'About' / 'Our TU' page content from one of these institutions'
+    websites.
+
+    TU id: {{ tu_id }}
+
+    Extract every field of the `TU` schema. Rules:
+      - `tu_id`: MUST be one of the 5 kebab-case ids:
+          - 'ie-tu-dublin'    (TU Dublin, est. 2019)
+          - 'ie-tu-munster'   (MTU, est. 2021)
+          - 'ie-tu-shannon'   (TUS, est. 2021)
+          - 'ie-tu-atlantic'  (ATU, est. 2022)
+          - 'ie-tu-south-east' (SETU, est. 2022)
+      - `parent_iots`: the predecessor Institutes of Technology.
+        E.g. for TUD: ['DIT', 'ITB', 'ITT'] (3 predecessors).
+      - `campus_slugs`: derive from the page's navigation.
+        Typical 3-5 entries.
+      - `nfq_max`: 10 for TUD/MTU/TUS/ATU, 9 for SETU (which does not
+        yet award doctorates as of 2026).
+      - `language`: always 'en' for the 5 IE TUs.
+      - `source_url`: copy the canonical homepage URL.
+      - `scraped_at`: current ISO-8601 timestamp.
+      - `confidence`: 0.0-1.0.
+
+    Page markdown (may be truncated with …):
+    ---
+    {{ page_markdown }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
+function ExtractQQIAward(
+  page_markdown: string,
+  award_code: string
+) -> QQIAward {
+  client ExtractEn
+  prompt #"
+    You are a precise QQI-award extractor. The markdown below is the
+    canonical award description from https://www.qqi.ie for one of
+    the 10 canonical Tertiary 18+ QQI awards.
+
+    Award code: {{ award_code }}
+
+    Extract every field of the `QQIAward` schema. Rules:
+      - `award_code`: MUST be one of the 10 kebab-case codes:
+          - 'NFQ6-HC'         (Higher Certificate)
+          - 'NFQ7-BA'         (Bachelor Degree, Ordinary)
+          - 'NFQ8-BA-HONS'    (Bachelor Degree, Honours)
+          - 'NFQ8-HDIP'       (Higher Diploma)
+          - 'NFQ8-GDIP'       (Graduate Diploma)
+          - 'NFQ9-PG-CERT'    (Postgraduate Certificate)
+          - 'NFQ9-PG-DIP'     (Postgraduate Diploma)
+          - 'NFQ9-MASTERS'    (Masters Degree)
+          - 'NFQ10-PHD'       (Doctoral Degree)
+          - 'NFQ10-DPROF'     (Professional Doctorate)
+      - `ects`: canonical ECTS for the full award (60 / 180 / 240 /
+        60 / 60 / 30 / 60 / 90 / 0 / 0 respectively).
+      - `duration_months`: typical duration in months (12 / 36 / 48 /
+        12 / 12 / 6 / 12 / 18 / 48 / 48 respectively).
+      - `category`: kebab-case award category, e.g. 'higher_diploma',
+        'masters', 'doctoral'.
+      - `issuing_body`: always 'QQI'.
+      - `source_url`: https://www.qqi.ie/<award_code>.
+      - `scraped_at`: current ISO-8601 timestamp.
+      - `confidence`: 0.0-1.0.
+
+    Page markdown (may be truncated with …):
+    ---
+    {{ page_markdown }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
+function ExtractCAOChoice(
+  page_markdown: string,
+  cao_code: string
+) -> CAOChoice {
+  client ExtractEn
+  prompt #"
+    You are a precise CAO-course-choice extractor. The markdown below is
+    the canonical course page from https://www.cao.ie for a single
+    course in the CAO undergraduate catalog.
+
+    CAO code: {{ cao_code }}
+
+    Extract every field of the `CAOChoice` schema. Rules:
+      - `cao_code`: the 5-character CAO course code, e.g. 'CK101'
+        (UCC Arts), 'GY101' (UoG Arts), 'DC001' (DCU Arts), 'TR085'
+        (TCD Computer Science), 'TU801' (TUD Creative Digital Media).
+      - `year`: the year this record applies to (typically the latest
+        year mentioned on the page).
+      - `institution_id`: the kebab-case institution id (cross-ref to
+        `University.institution_id`). E.g. 'GY101' -> 'ie-university-galway'.
+      - `cao_field`: derive from the course title. E.g. Computer
+        Science -> COMPUTING_ENGINEERING; Medicine -> MEDICINE_HEALTH.
+      - `nfq_level`: typically NFQ_7 for Ord BA, NFQ_8 for Hons BA,
+        NFQ_9 for Masters. Confirm against the duration_months.
+      - `points_required`: latest median points for an offer (integer).
+        Null if the course uses mature applicants only.
+      - `mature_applicant_path`: true if the course is also offered via
+        the Mature Applicants route (most are).
+      - `source_url`: https://www.cao.ie/index.php?page=courses&course=<cao_code>.
+      - `scraped_at`: current ISO-8601 timestamp.
+      - `confidence`: 0.0-1.0.
+
+    Page markdown (may be truncated with …):
+    ---
+    {{ page_markdown }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
+function ExtractSOLASCourse(
+  page_markdown: string,
+  course_code: string
+) -> SOLASCourse {
+  client ExtractEn
+  prompt #"
+    You are a precise SOLAS Further Education course extractor. The
+    markdown below is the canonical course page from
+    https://www.fetchcourses.ie for a single PLC / apprenticeship /
+    Youthreach course.
+
+    Course code: {{ course_code }}
+
+    Extract every field of the `SOLASCourse` schema. Rules:
+      - `course_code`: the SOLAS / fetchcourses.ie course code.
+      - `etb_slug`: the kebab-case slug of the 16 Education and Training
+        Boards. E.g. 'galway-roscommon', 'city-of-dublin', 'cork'.
+      - `etb_name`: the full ETB name (resolve from the slug).
+      - `course_title`: the course title as listed on fetchcourses.ie.
+      - `solas_path`: PLC for most post-Leaving-Cert courses;
+        APPRENTICESHIP for designated crafts; YOUTHREACH for early-school-
+        leaver programmes; etc.
+      - `qqi_level`: the NFQ level on completion (NFQ_5 / NFQ_6 for PLCs,
+        higher for some apprenticeships).
+      - `award_code`: the QQI award code on completion (e.g. 'NFQ6-HC');
+        null if not QQI-anchored.
+      - `fetchcourses_url`: the canonical URL for this course.
+      - `scraped_at`: current ISO-8601 timestamp.
+      - `confidence`: 0.0-1.0.
+
+    Page markdown (may be truncated with …):
+    ---
+    {{ page_markdown }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
+// =============================================================================
+// Tests (Tertiary 18+)
+// =============================================================================
+
+test ExtractUniversityInfoTest {
+  functions [ExtractUniversityInfo]
+  args {
+    page_markdown #"
+      # University of Galway — About Us
+
+      The University of Galway (UoG, formerly NUI Galway, founded 1845)
+      is one of the 8 Republic of Ireland universities. We are a leading
+      research-intensive institution with 5 faculties:
+
+      - Arts, Social Sciences and Celtic Studies
+      - Business, Public Policy and Law
+      - College of Science and Engineering
+      - Medicine, Nursing and Health Sciences
+
+      We award NFQ Level 6 (Higher Certificate) through NFQ Level 10
+      (Doctoral Degree).
+    "#
+    institution_id "ie-university-galway"
+  }
+}
+
+test ExtractQQIAwardTest {
+  functions [ExtractQQIAward]
+  args {
+    page_markdown #"
+      # Bachelor Degree (Honours) — NFQ Level 8
+
+      The Bachelor Degree (Honours) is a 4-year full-time programme
+      at NFQ Level 8, totalling 240 ECTS credits on graduation.
+      It is awarded by QQI and is the standard undergraduate honours
+      degree in Ireland (B.Sc. Hons, B.A. Hons, B.Ed., B.Eng., etc.).
+    "#
+    award_code "NFQ8-BA-HONS"
+  }
+}
+
+test ExtractCAOChoiceTest {
+  functions [ExtractCAOChoice]
+  args {
+    page_markdown #"
+      # GY101 — Bachelor of Arts (Arts, Social Sciences and Celtic Studies)
+
+      Institution: University of Galway
+      Duration: 4 years (NFQ Level 8, Honours Bachelor Degree)
+      Field: Arts, Humanities, Social Sciences
+
+      ## CAO Points
+      Latest round 1: 356 points (median)
+
+      ## Mature Applicants
+      This course accepts applications from mature applicants (21+ on
+      1 January of the year of entry) via the Mature Applicants Office.
+    "#
+    cao_code "GY101"
+  }
+}
