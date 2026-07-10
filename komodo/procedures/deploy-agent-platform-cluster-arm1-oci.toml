@@ -29,12 +29,19 @@ server_id = "arm1-oci"
 # =============================================================================
 # STAGE 0: Pre-flight (4-check safety gate)
 # =============================================================================
+# Hard-gate: if preflight exits non-zero, the omnibus aborts here (the
+# require_success=true flag propagates the exit code). The --emit-md
+# report is captured to a versioned path under /tmp/preflight-reports/
+# so every deploy attempt leaves an auditable artifact.
+#
+# Spec: openspec/changes/2026-07-13-arm-oci-deploy-preflight-hard-gate-v1
+# -----------------------------------------------------------------------------
 
 [[procedure.config.stages]]
 name = "preflight"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "bun run preflight:arm-oci --strict --emit-md", timeout_s = 60, description = "Pangolin + Komodo + Infisical + namespace check; emits a report" } }
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /tmp/preflight-reports/arm-oci && bun run preflight:arm-oci --strict --emit-md > /tmp/preflight-reports/arm-oci/$(date -u +%Y%m%dT%H%M%SZ).md 2>&1; ec=$?; if [ $ec -ne 0 ]; then echo \"preflight:arm-oci failed (exit $ec); report at /tmp/preflight-reports/arm-oci/$(date -u +%Y%m%dT%H%M%SZ).md\"; fi; exit $ec", timeout_s = 60, description = "Pangolin + Komodo + Infisical + namespace check; emits a timestamped report; HARD-GATED by require_success=true", require_success = true } }
 
 # =============================================================================
 # STAGE 1: Control-plane foundation (pangolin + langfuse + observability)
