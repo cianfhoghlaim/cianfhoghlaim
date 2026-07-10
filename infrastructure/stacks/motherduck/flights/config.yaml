@@ -1,0 +1,32 @@
+# MotherDuck Flight config: lc_pdf_sync_flight
+#
+# Wires the BIEP v1 Phase 7 daily Python job at
+# infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py
+# into the MotherDuck Flight scheduler.
+#
+# The IaC orchestration (Docker Compose stack + cron binding) lives in
+# the separate `bonneagar` repo at bonneagar/stacks/motherduck/. This
+# file is the canonical flight manifest that the IaC reads.
+
+flights:
+  - name: lc_pdf_sync_flight
+    description: >-
+      Daily Python job that runs `cocoindex update lc_subjects` +
+      `dagster asset materialize --select '*lc*'` and writes a status
+      row to `md:oideachais.lc_ops.daily_sync_status`. Picks up any
+      new PDFs landed in `s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/`
+      in the last 24h.
+    schedule: "0 4 * * *"  # daily at 04:00 UTC
+    timezone: UTC
+    command: "uv run python infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py"
+    working_dir: "/Users/cianmacandeisigh/dev/kings_college_galway"
+    timeout_seconds: 7200  # 2h hard cap
+    env:
+      MOTHERDUCK_TOKEN: "${env:MOTHERDUCK_TOKEN}"
+      MOTHERDUCK_ENABLED: "true"
+      CIANFHOGHLAIM_ROOT: "/Users/cianmacandeisigh/dev/kings_college_galway"
+    status_table: "md:oideachais.lc_ops.daily_sync_status"
+    owner: data-platform
+    references:
+      - openspec/changes/2026-07-13-biep-v1-phases-6-7-unblock-v1/
+      - openspec/specs/british-isles-education-pipeline/spec.md
