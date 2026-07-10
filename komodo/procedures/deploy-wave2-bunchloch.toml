@@ -35,6 +35,7 @@
 [[procedure]]
 name = "deploy-wave2-bunchloch"
 description = "Deploy 7 new Wave 2 stacks to bunchloch (letta + kavita + mealie + immich + siyuan + outline + khoj) — prereqs → memory → personal → health → validate"
+server_id = "bunchloch"
 
 # =============================================================================
 # STAGE 0: Prerequisites (centralised lakehouse data plane)

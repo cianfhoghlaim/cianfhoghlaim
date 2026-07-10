@@ -17,6 +17,7 @@
 [[procedure.config]]
 name = "deploy-observability-arm1-oci"
 description = "Deploy foundation observability (logfire + dozzle + beszel) to arm1-oci — preflight → DeployStack observability + logfire + dozzle + beszel → health"
+server_id = "arm1-oci"
 
 [[procedure.config.stages]]
 name = "preflight"

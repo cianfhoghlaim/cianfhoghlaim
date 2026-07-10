@@ -12,6 +12,7 @@
 [[procedure]]
 name = "deploy-falkordb-bunchloch"
 description = "Deploy falkordb-bunchloch (FalkorDB vector + graph hybrid database)"
+server_id = "bunchloch"
 
 [[procedure.config.stages]]
 name = "falkordb"

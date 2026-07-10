@@ -18,6 +18,7 @@
 [[procedure]]
 name = "deploy-openclaw-arm1-oci"
 description = "Deploy OpenClaw channel-fanout gateway to arm1-oci — prereqs → langfuse + forgejo-runner → openclaw → pangolin routes → health checks"
+server_id = "arm1-oci"
 
 # =============================================================================
 # STAGE 0: Prerequisite docker resources

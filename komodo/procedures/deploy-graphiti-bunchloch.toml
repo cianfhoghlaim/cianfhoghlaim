@@ -15,6 +15,7 @@
 [[procedure]]
 name = "deploy-graphiti-bunchloch"
 description = "Deploy graphiti-bunchloch (temporal knowledge graph, FalkorDB backend)"
+server_id = "bunchloch"
 
 [[procedure.config.stages]]
 name = "prerequisites"
