@@ -27,7 +27,7 @@ import dlt
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (  # type: ignore[import-not-found]
+from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]
     _crawl_source,
 )
 

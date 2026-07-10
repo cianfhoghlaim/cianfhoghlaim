@@ -20,7 +20,7 @@ def test_local_scrape_cache_emits_success_dict() -> None:
     even when the cache is empty (the dummy page is emitted)."""
     os.environ["USE_LOCAL_SCRAPES"] = "true"
     os.environ["FIRECRAWL_API_KEY"] = ""
-    from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import _crawl_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source
 
     pages = list(_crawl_source(source_name="test", base_url="https://no-such-domain.example/"))
     assert pages, "_crawl_source should yield at least one page (dummy if cache empty)"
@@ -67,7 +67,7 @@ def test_local_scrape_cache_with_actual_file(tmp_path: Path) -> None:
     # The function uses 4 hard-coded candidate `samples_dir` paths; we
     # accept that none of them will match `tmp_path` in this isolated
     # test and only assert the function does not raise.
-    from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import _crawl_source
+    from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source
 
     pages = list(
         _crawl_source(
