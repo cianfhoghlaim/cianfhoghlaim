@@ -484,6 +484,7 @@ def _make_app():  # noqa: ANN202
                 ConfigFile, primary_key=["id"]
             ),
         )
+        target_table.declare_vector_index(column="embedding")  # R4
         configs = await asyncio.to_thread(_walk_repo_for_config, repo_root)
         for i in range(0, len(configs), 100):
             batch = configs[i : i + 100]

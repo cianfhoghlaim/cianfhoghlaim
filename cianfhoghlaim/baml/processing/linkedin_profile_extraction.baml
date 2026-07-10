@@ -12,7 +12,7 @@ class LinkedInExperience {
   startDate string
   endDate string | null
   description string | null
-  isCurrentRole boolean @description("Whether the person currently holds this position")
+  isCurrentRole bool @description("Whether the person currently holds this position")
 }
 
 class LinkedInEducation {

@@ -92,11 +92,11 @@ class VocabularyNotePlayer {
 }
 
 function AnalyzePlayerResponse(
-  player_response string,
-  expected_response string?,
-  context string,
-  language CelticLanguage,
-  skill_being_tested SkillDomain
+  player_response: string,
+  expected_response: string?,
+  context: string,
+  language: CelticLanguage,
+  skill_being_tested: SkillDomain
 ) -> ResponseAnalysis {
   client CelticContentFallback
   prompt #"
@@ -157,9 +157,9 @@ class AdaptiveQuestion {
 }
 
 function GenerateAdaptiveAssessment(
-  player_profile PlayerLanguageProfile,
-  focus_areas SkillDomain[],
-  question_count int
+  player_profile: PlayerLanguageProfile,
+  focus_areas: SkillDomain[],
+  question_count: int
 ) -> AdaptiveAssessment {
   client CelticContentFallback
   prompt #"
@@ -204,8 +204,8 @@ class PlacementResult {
 }
 
 function EvaluatePlacementTest(
-  responses PlacementResponse[],
-  language CelticLanguage
+  responses: PlacementResponse[],
+  language: CelticLanguage
 ) -> PlacementResult {
   client Claude
   prompt #"
@@ -283,10 +283,10 @@ class VocabularyProgress {
 }
 
 function GenerateProgressReport(
-  player_id string,
-  activity_data map<string, any>,
-  language CelticLanguage,
-  period string
+  player_id: string,
+  activity_data: map<string, string>,
+  language: CelticLanguage,
+  period: string
 ) -> ProgressReport {
   client CelticContentFallback
   prompt #"
@@ -343,11 +343,11 @@ class ExitCardSet {
 }
 
 function GenerateExitCardQuestions(
-  lesson_topic string,
-  subject string,
-  level string,
-  num_questions int,
-  curriculum_extract CircularExtraction? = null,
+  lesson_topic: string,
+  subject: string,
+  level: string,
+  num_questions: int,
+  curriculum_extract: CircularExtraction?,
 ) -> ExitCardSet {
   client LitellmClient
   prompt #"

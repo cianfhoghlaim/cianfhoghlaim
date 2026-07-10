@@ -455,6 +455,7 @@ def _make_app():
             table_name=LANCEDB_TABLE,
             table_schema=await lancedb.TableSchema.from_class(DocSkillChunk, primary_key=["id"]),
         )
+        chunk_table.declare_vector_index(column="embedding")  # R4
 
         # Phase 1: walk both roots, mount per-file processing
         per_file_results: list[dict[str, Any]] = []

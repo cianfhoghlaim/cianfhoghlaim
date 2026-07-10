@@ -46,7 +46,7 @@ function ExtractLegalAidPage(
   page_url: string,
   page_html: string,
 ) -> LegalAidPage {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Legal Aid Board (Ireland) extraction specialist
     working for Cianfhoghlaim Oideachais.
@@ -87,7 +87,7 @@ function ExtractLegalAidForm(
   page_url: string,
   page_html: string,
 ) -> LegalAidForm {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Legal Aid Board (Ireland) forms extraction
     specialist.

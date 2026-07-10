@@ -13,7 +13,7 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 # ccc - Semantic Code Search & Indexing
 
 > **Deprecation banner (2026-06-16, retires 2026-07-15):** The v1-native
-> replacement is `sruth/oideachais/cocoindex_flows/codebase_indexing.py` (a
+> replacement is `cianfhoghlaim/cocoindex/codebase_indexing.py` (a
 > CocoIndex v1 App + Dagster asset group). It uses the same embedding
 > model (`BAAI/bge-m3`) and the same LanceDB HNSW index that the rest of
 > the data lakehouse uses, and it is registered in the Dagster UI under
@@ -29,14 +29,14 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 > `Module`, `Interface`, `Variable`) + 7 edge types (`CONTAINS`,
 > `IMPORTS`, `CALLS`, `EXTENDS`, `IMPLEMENTS`, `USES`, `DEFINES`).
 > 29+ language detection via
-> `sruth/oideachais/cocoindex_flows/chunking/languages.py` (ported from
-> `sruth/codeolas/chunking/languages.py`). Use the v1 Python API
+> `cianfhoghlaim/cocoindex/chunking/languages.py` (ported from
+> `cianfhoghlaim/libraries/codeolas/chunking/languages.py`). Use the v1 Python API
 > `search_code_graph(file_path=..., node_type=...)` to query the
 > graph table.
 >
 > **Round 7 phase 2 (2026-06-24):** Four v1 companions for the
 > *infrastructure* surface, all in
-> `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py`:
+> `cianfhoghlaim/orchestration/defs/infrastructure_assets.py`:
 >
 > - `api_endpoints` — FastAPI / Hono / TanStack Start / Convex HTTP
 >   routes → `api_endpoints` LanceDB. Query helper:
@@ -54,11 +54,11 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 >   `search_config(query, kind=None, limit=15)`.
 >
 > **Round 7 phase 3 (2026-06-24):** Two v1 embedding Apps in
-> `sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py`
+> `cianfhoghlaim/orchestration/defs/unified_embedding_assets.py`
 > (group `embedding`):
 >
 > - `unified_embeddings` — v1 port of
->   `sruth/crypteolas/cocoindex_flows/unified_embedding.py:unified_embedding_flow`.
+>   `cianfhoghlaim/agents/tuatha/crypteolas/cocoindex_flows/unified_embedding.py:unified_embedding_flow`.
 >   Reads any DuckDB connection (default:
 >   `crypteolas_catalog.docs.scraped_documents`), chunks with
 >   RecursiveSplitter (markdown) or paragraph+char fallback, embeds
@@ -66,7 +66,7 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 >   Query helper: `unified_search(query, source_types=None, protocol=None)`.
 > - `code_embeddings` — v1 port of the v0 `code_embedding_flow`.
 >   Walks `UNIFIED_CODE_ROOT` (default:
->   `sruth/crypteolas/storage/data/code/`) for `*.py`/`*.ts`/`*.tsx`/
+>   `cianfhoghlaim/agents/tuatha/crypteolas/storage/data/code/`) for `*.py`/`*.ts`/`*.tsx`/
 >   `*.js`/`*.jsx`/`*.rs`/`*.go`/`*.sol`, chunks with
 >   `RecursiveSplitter(detect_code_language)`, embeds with BGE-M3,
 >   writes to the `code_embeddings` LanceDB table. Query helper:
@@ -293,7 +293,7 @@ position):
 | "Convex schema design" | `openspec/.../convex/schema/spec.md` (spec beats docs) | 0.721 |
 | "Firecrawl pipeline configuration" | `docs/old/...firecrawl-openapi-research.md` (dup w/ bonneagar, tuatha) | 0.688 |
 | "ADK agent routing" | `docs/context/.../google-adk.md` (docs outrank code) | 0.721 |
-| "Celtic educational MMO x402 micropayments" | `docs/sruth/tuatha/celtic_mmo.md` (4 dups across dirs) | 0.787 |
+| "Celtic educational MMO x402 micropayments" | `docs/legacy/tuatha/celtic_mmo.md` (4 dups across dirs) | 0.787 |
 | "Gaeltacht language planning areas geoJSON" | `docs/data_engineering/data-sources.md` (4 dups) | 0.741 |
 
 **3 pass / 2 gap findings**: pass on indexing, search
@@ -301,8 +301,8 @@ returns docs/, docs outrank code for concepts,
 docs-exclusive content is searchable, index freshness;
 gap on YAML frontmatter (0 of 7 sampled files) and
 duplicate content (4+ copies of same content across
-`docs/`, `docs/old/`, `docs/bonneagar/`, `docs/sruth/tuatha/`,
-`docs/sruth/tuatha/sruth/tuatha/`).
+`docs/`, `docs/old/`, `docs/bonneagar/`, `docs/legacy/tuatha/`,
+`docs/legacy/tuatha/cianfhoghlaim/agents/tuatha/`).
 
 **The "ccc-clean" frontmatter convention** (the round-1
 recommendation that became the `agent-docs-patterns`
@@ -325,7 +325,7 @@ duplicate content (Gap — 4+ copies), index size
 **5 audit recommendations**: (1) no index refresh needed,
 (2) add frontmatter starting with `ccc_query_hints` for
 highest ROI, (3) deduplicate before consolidating (remove
-`docs/old/` + nested `docs/sruth/tuatha/sruth/tuatha/` first), (4) create
+`docs/old/` + nested `docs/legacy/tuatha/cianfhoghlaim/agents/tuatha/` first), (4) create
 a `guides.yml` for cross-cutting concept guides
 ("BAML extraction end-to-end", "Tuath MMO x402 payment
 flow"), (5) standardize on `--path docs/` for agent

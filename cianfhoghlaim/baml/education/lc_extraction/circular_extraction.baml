@@ -44,32 +44,32 @@ enum CircularSubjectArea {
 // ============================================================================
 
 class EducationCircular {
-  circular_id: string            @description("Deterministic; e.g. 'DES-2024-0042'")
-  circular_number: int
-  dept: CircularDepartment
-  subject_area: CircularSubjectArea
-  year: int                      @description("Issued year (e.g. 2024)")
-  language: string               @description("en or ga")
-  title_en: string
-  title_ga: string?              @description("Irish title; null for EN-only circulars")
-  summary: string                @description("200-500 char summary")
-  full_text: string              @description("Verbatim text (truncated to 24,000 chars)")
-  url: string                    @description("Source URL on gov.ie")
-  published_at: string           @description("ISO 8601 date of publication")
-  extraction_confidence: float   @description("0.0-1.0; 1.0 = perfect parse")
-  extracted_at: string           @description("ISO 8601 datetime of BAML extraction")
+  circular_id string            @description("Deterministic; e.g. 'DES-2024-0042'")
+  circular_number int
+  dept CircularDepartment
+  subject_area CircularSubjectArea
+  year int                      @description("Issued year (e.g. 2024)")
+  language string               @description("en or ga")
+  title_en string
+  title_ga string?              @description("Irish title; null for EN-only circulars")
+  summary string                @description("200-500 char summary")
+  full_text string              @description("Verbatim text (truncated to 24,000 chars)")
+  url string                    @description("Source URL on gov.ie")
+  published_at string           @description("ISO 8601 date of publication")
+  extraction_confidence float   @description("0.0-1.0; 1.0 = perfect parse")
+  extracted_at string           @description("ISO 8601 datetime of BAML extraction")
 }
 
 class CircularToSyllabusLink {
-  circular_id: string            @description("Foreign key to EducationCircular")
-  syllabus_subject: string       @description("subject code; e.g. 'chemistry'")
-  syllabus_stage: string         @description("JC / LC_OL / LC_HL / LC_FDN")
-  syllabus_language: string      @description("en or ga")
-  link_type: string              @description("REFERENCES / AMENDS / SUPERSEDES")
-  syllabus_pdf: string           @description("Path to the NCCA syllabus PDF")
-  syllabus_page: int?            @description("Page number in the syllabus (1-indexed)")
-  confidence: float              @description("0.0-1.0; 1.0 = explicit reference")
-  rationale: string              @description("Plain-English explanation of the link")
+  circular_id string            @description("Foreign key to EducationCircular")
+  syllabus_subject string       @description("subject code; e.g. 'chemistry'")
+  syllabus_stage string         @description("JC / LC_OL / LC_HL / LC_FDN")
+  syllabus_language string      @description("en or ga")
+  link_type string              @description("REFERENCES / AMENDS / SUPERSEDES")
+  syllabus_pdf string           @description("Path to the NCCA syllabus PDF")
+  syllabus_page int?            @description("Page number in the syllabus (1-indexed)")
+  confidence float              @description("0.0-1.0; 1.0 = explicit reference")
+  rationale string              @description("Plain-English explanation of the link")
 }
 
 // ============================================================================
@@ -129,7 +129,7 @@ function ExtractCircular(
 
 function LinkCircularToSyllabus(
   circular: EducationCircular,
-  candidate_syllabi: string[],   @description("List of syllabus PDF paths to consider")
+  candidate_syllabi: string[]   @description("List of syllabus PDF paths to consider"),
 ) -> CircularToSyllabusLink[] {
   client ExtractEnStrong
   prompt #"

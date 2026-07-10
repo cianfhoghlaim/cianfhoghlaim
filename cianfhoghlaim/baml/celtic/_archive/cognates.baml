@@ -100,9 +100,9 @@ enum CelticSoundChange {
 
 // Identify cognates from a word in context
 function IdentifyCognates(
-  word string @description("Word to find cognates for"),
-  language CelticLanguage @description("Language of the word"),
-  meaning string? @description("Meaning if known")
+  word: string @description("Word to find cognates for"),
+  language: CelticLanguage @description("Language of the word"),
+  meaning: string? @description("Meaning if known")
 ) -> CognateSet {
   client Claude
   prompt #"
@@ -110,7 +110,9 @@ function IdentifyCognates(
 
     Word: {{ word }}
     Language: {{ language }}
-    {{#if meaning}}Meaning: {{ meaning }}{{/if}}
+    {% if meaning %}
+    Meaning: {{ meaning }}
+    {% endif %}
 
     Provide cognates in:
     - Goidelic: Irish, Scottish Gaelic, Manx
@@ -132,9 +134,9 @@ function IdentifyCognates(
 
 // Compare vocabulary across two Celtic languages
 function CompareCelticVocabulary(
-  text string @description("Text to analyze for cognates"),
-  language_a CelticLanguage @description("First language"),
-  language_b CelticLanguage @description("Second language to compare")
+  text: string @description("Text to analyze for cognates"),
+  language_a: CelticLanguage @description("First language"),
+  language_b: CelticLanguage @description("Second language to compare")
 ) -> CognatePair[] {
   client Claude
   prompt #"
@@ -159,9 +161,9 @@ function CompareCelticVocabulary(
 
 // Identify false friends between Celtic languages
 function IdentifyFalseFriends(
-  word string @description("Word to check"),
-  language_a CelticLanguage @description("First language"),
-  language_b CelticLanguage @description("Second language")
+  word: string @description("Word to check"),
+  language_a: CelticLanguage @description("First language"),
+  language_b: CelticLanguage @description("Second language")
 ) -> FalseFriend? {
   client ClaudeHaiku
   prompt #"
@@ -187,9 +189,9 @@ function IdentifyFalseFriends(
 
 // Explain sound changes in a cognate set
 function ExplainSoundChanges(
-  proto_form string @description("Reconstructed Proto-Celtic form"),
-  modern_form string @description("Modern form in any Celtic language"),
-  language CelticLanguage @description("Language of modern form")
+  proto_form: string @description("Reconstructed Proto-Celtic form"),
+  modern_form: string @description("Modern form in any Celtic language"),
+  language: CelticLanguage @description("Language of modern form")
 ) -> SoundChange[] {
   client Claude
   prompt #"
@@ -216,8 +218,8 @@ function ExplainSoundChanges(
 
 // Generate cognate vocabulary for a semantic field
 function GenerateCognateVocabulary(
-  semantic_field string @description("Topic: numbers, family, nature, etc."),
-  languages CelticLanguage[] @description("Languages to include")
+  semantic_field: string @description("Topic: numbers, family, nature, etc."),
+  languages: CelticLanguage[] @description("Languages to include")
 ) -> CognateSet[] {
   client Claude
   prompt #"

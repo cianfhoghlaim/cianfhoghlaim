@@ -6,7 +6,7 @@
 function ExtractLearningOutcomeRelationships(source_outcome: LearningOutcome,
   target_outcomes: LearningOutcome[],
   subject_context: string) -> RelationshipExtractionResult {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert curriculum analyst specializing in Irish education.
 
 Analyze relationships between learning outcomes in {{ subject_context }}.
@@ -47,7 +47,7 @@ The relationships should form a directed graph that captures prerequisite chains
 
 function ExtractSkillsFromOutcome(outcome: LearningOutcome,
   curriculum_context: string) -> SkillExtractionResult {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert Irish education curriculum analyst.
 
 Extract the key skills, competencies, and learning dimensions embedded in a single learning outcome from the Irish curriculum.
@@ -82,7 +82,7 @@ Use bilingual labels (English and Irish) for skill names where the Irish curricu
 function ExtractCurriculumFromDocument(document_text: string,
   subject: string,
   level: EducationLevel) -> ExtractedCurriculumDocument {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert curriculum document parser specializing in the Irish education system.
 
 Parse a curriculum specification document and extract its complete structure.
@@ -116,7 +116,7 @@ For bilingual content, extract both English (description_en) and Irish (descript
 function IdentifyPrerequisiteChain(target_outcome: LearningOutcome,
   available_outcomes: LearningOutcome[],
   max_depth: int) -> LearningOutcome[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at identifying prerequisite learning outcome chains in the Irish education curriculum.
 
 TARGET OUTCOME:

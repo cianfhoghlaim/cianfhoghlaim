@@ -43,31 +43,31 @@ enum RegionRole {
 
 class DiagramRegion {
   // Bounding box in PDF coordinates (PDF uses bottom-left origin; we keep raw)
-  bbox_x_min: float
-  bbox_y_min: float
-  bbox_x_max: float
-  bbox_y_max: float
-  page_number: int
-  role: RegionRole
-  text_content: string?     @description("Any text inside this region")
+  bbox_x_min float
+  bbox_y_min float
+  bbox_x_max float
+  bbox_y_max float
+  page_number int
+  role RegionRole
+  text_content string?     @description("Any text inside this region")
 }
 
 class SyllabusDiagram {
-  diagram_id: string
-  kind: DiagramKind
-  caption_en: string?
-  caption_ga: string?
-  page_number: int
-  source_pdf: string
-  subject: string
+  diagram_id string
+  kind DiagramKind
+  caption_en string?
+  caption_ga string?
+  page_number int
+  source_pdf string
+  subject string
 
   // Pointing-data from molmo2-8b (the v4 registry's specialist for this task)
-  pointing_model: string        @description("e.g. 'allenai/Molmo2-8B'")
-  confidence_score: float       @description("0.0 - 1.0; per-page confidence")
+  pointing_model string        @description("e.g. 'allenai/Molmo2-8B'")
+  confidence_score float       @description("0.0 - 1.0; per-page confidence")
 
   // The region decomposition (bounding boxes + roles)
-  regions: DiagramRegion[]
+  regions DiagramRegion[]
 
   // Cross-link to the syllabus Learning Outcome(s) the diagram illustrates
-  related_lo_ids: string[]
+  related_lo_ids string[]
 }

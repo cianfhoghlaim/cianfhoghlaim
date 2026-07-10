@@ -18,7 +18,7 @@ class DocumentMetadata {
 
 function ExtractAllPdfMetadata(page_markdown: string,
   pdf_urls: string[]) -> DocumentMetadata[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at extracting metadata from Irish education PDF documents.
 
 Parse metadata for a batch of PDFs from their pre-extracted text content.

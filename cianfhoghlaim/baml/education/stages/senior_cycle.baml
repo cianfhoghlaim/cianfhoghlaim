@@ -8,7 +8,7 @@ function ExtractSeniorCycleSpecFromUrl(
   source_url: string,
   subject: LeavingCertSubject
 ) -> SubjectRubric {
-  client "litellm/gemini-2.0-flash"
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish Senior Cycle (Leaving Certificate) curriculum
     analyst working for Cianfhoghlaim Oideachais (the bilingual agentic
@@ -49,7 +49,7 @@ function ScoreEssayAgainstRubricStdLib(
   essay: string,
   subject: LeavingCertSubject
 ) -> RubricScore {
-  client "litellm/anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"
     You are an expert Leaving Certificate assessor for {{ subject }}.
 

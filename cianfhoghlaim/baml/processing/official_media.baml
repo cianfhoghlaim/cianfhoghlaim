@@ -27,9 +27,9 @@ class OfficialMediaCategory {
 }
 
 function ClassifyOfficialMedia(
-  ig_username string,
-  ig_bio string,
-  ig_external_url string?
+  ig_username: string,
+  ig_bio: string,
+  ig_external_url: string?
 ) -> OfficialMediaCategory {
   client LitellmClient
   prompt #"

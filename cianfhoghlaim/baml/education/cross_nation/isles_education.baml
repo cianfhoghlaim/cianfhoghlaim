@@ -99,7 +99,7 @@ enum DocumentTypeIsles {
 // CURRICULUM STRUCTURES
 // =============================================================================
 
-class CrossNationLearningOutcome {
+class CrossNationLearningOutcomeIsles {
     code string? @description("Learning outcome code (e.g., 'LO 1.1')")
     description BilingualTextIsles @description("Description of what learner should achieve")
     strand string? @description("Curriculum strand or area")
@@ -136,7 +136,7 @@ class CurriculumSpecIsles {
     effective_date string? @description("Date specification becomes effective")
 
     rationale BilingualTextIsles? @description("Rationale/aims of the specification")
-    outcomes CrossNationLearningOutcome[] @description("Learning outcomes")
+    outcomes CrossNationLearningOutcomeIsles[] @description("Learning outcomes")
     assessment AssessmentCriteria[]? @description("Assessment information")
 
     cross_curricular_links string[]? @description("Links to other subjects")
@@ -212,7 +212,7 @@ class TeachingResource {
     subject SubjectIsles? @description("SubjectIsles")
     level EducationLevelIsles[]? @description("Applicable levels")
 
-    learning_outcomes CrossNationLearningOutcome[]? @description("Learning outcomes addressed")
+    learning_outcomes CrossNationLearningOutcomeIsles[]? @description("Learning outcomes addressed")
     duration string? @description("Estimated time to complete")
 
     file_url string? @description("URL to resource file")
@@ -229,7 +229,7 @@ class TeachingResource {
 // =============================================================================
 
 function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {
-    client "openai/gpt-4o"
+    client Claude
     prompt #"
         Extract structured curriculum specification data from the following document.
         Preserve text in its original language(s) - do not translate.
@@ -242,7 +242,7 @@ function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {
 }
 
 function ExtractExamPaper(document: string) -> ExamPaperIsles {
-    client "openai/gpt-4o"
+    client Claude
     prompt #"
         Extract structured exam paper data from the following document.
         Include all questions with their marks and any sub-parts.
@@ -256,7 +256,7 @@ function ExtractExamPaper(document: string) -> ExamPaperIsles {
 }
 
 function ExtractTerminology(document: string) -> TermEntry[] {
-    client "openai/gpt-4o"
+    client Claude
     prompt #"
         Extract terminology entries from the following document.
         Include terms in all available languages.
@@ -269,7 +269,7 @@ function ExtractTerminology(document: string) -> TermEntry[] {
 }
 
 function ExtractTeachingResource(document: string) -> TeachingResource {
-    client "openai/gpt-4o"
+    client Claude
     prompt #"
         Extract teaching resource metadata from the following document.
         Preserve text in its original language(s).
@@ -282,7 +282,7 @@ function ExtractTeachingResource(document: string) -> TeachingResource {
 }
 
 function DetectDocumentType(document: string) -> DocumentTypeIsles {
-    client "openai/gpt-4o-mini"
+    client ClaudeMini
     prompt #"
         Classify the following education document into one of these types:
         - CURRICULUM_SPECIFICATION
@@ -305,7 +305,7 @@ function DetectDocumentType(document: string) -> DocumentTypeIsles {
 }
 
 function DetectLanguages(text: string) -> LanguageCodeIsles[] {
-    client "openai/gpt-4o-mini"
+    client ClaudeMini
     prompt #"
         Detect which languages are present in the following text.
         Return all languages found, not just the primary one.

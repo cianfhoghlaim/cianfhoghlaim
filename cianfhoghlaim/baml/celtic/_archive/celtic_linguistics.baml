@@ -13,6 +13,11 @@
 // 3. Remove the ARCHIVED header from the top
 // 4. Update STATUS.md to mark the functions as wired
 // 5. Update REFACTORING.md to remove the archive entry
+// 6. The 3 enums below were renamed with an `Archive` suffix (CelticLanguageArchive,
+//    IrishDialectArchive, PartOfSpeechArchive) on 2026-07-13 to avoid a BAML
+//    compile conflict with the active definitions in celtic/sources.baml and
+//    celtic/gaois/tearma.baml. On re-activation, drop the `Archive` suffix
+//    (or merge with the active definitions if their shapes have converged).
 //
 // Reference: openspec/changes/archive-celtic-baml-orphans/
 // =====================================================================
@@ -25,8 +30,8 @@
 // LANGUAGE ENUMS
 // ============================================================================
 
-// Celtic and related languages
-enum CelticLanguage {
+// Celtic and related languages (ARCHIVE — conflicts with celtic/sources.baml)
+enum CelticLanguageArchive {
   GA @alias("Irish (Modern)")
   GD @alias("Scottish Gaelic")
   CY @alias("Welsh")
@@ -46,8 +51,8 @@ enum CelticBranch {
   PROTO_CELTIC @alias("Proto-Celtic (reconstructed)")
 }
 
-// Irish dialect regions
-enum IrishDialect {
+// Irish dialect regions (ARCHIVE — conflicts with celtic/sources.baml)
+enum IrishDialectArchive {
   MUNSTER @alias("Gaeilge na Mumhan - Kerry, Cork, Waterford")
   CONNACHT @alias("Gaeilge Chonnacht - Galway, Mayo, Roscommon")
   ULSTER @alias("Gaeilge Uladh - Donegal")
@@ -58,8 +63,8 @@ enum IrishDialect {
 // PARTS OF SPEECH
 // ============================================================================
 
-// Universal POS tags with Celtic-specific annotations
-enum PartOfSpeech {
+// Universal POS tags with Celtic-specific annotations (ARCHIVE — conflicts with celtic/gaois/tearma.baml)
+enum PartOfSpeechArchive {
   NOUN @alias("Noun - Ainmfhocal")
   VERB @alias("Verb - Briathar")
   ADJ @alias("Adjective - Aidiacht")
@@ -147,7 +152,7 @@ class InitialMutation {
   original_initial string @description("Original initial consonant/vowel")
   mutated_form string @description("Form after mutation")
   trigger string? @description("What triggered the mutation")
-  language CelticLanguage @description("Language context")
+  language CelticLanguageArchive @description("Language context")
 }
 
 // ============================================================================
@@ -176,8 +181,8 @@ class MorphologicalFeatures {
 class LinguisticToken {
   surface_form string @description("Word as it appears in text")
   lemma string @description("Dictionary form / base form")
-  language CelticLanguage @description("Language of the token")
-  pos PartOfSpeech @description("Part of speech tag")
+  language CelticLanguageArchive @description("Language of the token")
+  pos PartOfSpeechArchive @description("Part of speech tag")
   features MorphologicalFeatures? @description("Morphological features")
   mutation InitialMutation? @description("Initial mutation if present")
   gloss string? @description("English translation/gloss")
@@ -189,9 +194,9 @@ class LinguisticToken {
 
 // Extract morphological features from a Celtic word in context
 function ExtractMorphology(
-  word string @description("The word to analyze"),
-  context string @description("Sentence or phrase containing the word"),
-  language CelticLanguage @description("Celtic language of the word")
+  word: string @description("The word to analyze"),
+  context: string @description("Sentence or phrase containing the word"),
+  language: CelticLanguageArchive @description("Celtic language of the word")
 ) -> LinguisticToken {
   client Claude
   prompt #"
@@ -214,8 +219,8 @@ function ExtractMorphology(
 
 // Analyze a complete sentence for linguistic annotation
 function AnalyzeSentence(
-  sentence string @description("Celtic language sentence"),
-  language CelticLanguage @description("Language of the sentence")
+  sentence: string @description("Celtic language sentence"),
+  language: CelticLanguageArchive @description("Language of the sentence")
 ) -> LinguisticToken[] {
   client Claude
   prompt #"
@@ -241,8 +246,8 @@ function AnalyzeSentence(
 
 // Identify the dialect of Irish text
 function IdentifyDialect(
-  text string @description("Irish language text sample")
-) -> IrishDialect {
+  text: string @description("Irish language text sample")
+) -> IrishDialectArchive {
   client ClaudeHaiku
   prompt #"
     Analyze this Irish text and identify which dialect it represents.

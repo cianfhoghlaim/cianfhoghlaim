@@ -64,26 +64,26 @@ enum AppmFeedbackChannel {
 // ============================================================================
 
 class AppmBilingualText {
-  text_en: string
-  text_ga: string? @description("Irish translation; null if EN-only")
+  text_en string
+  text_ga string? @description("Irish translation; null if EN-only")
 }
 
 class AppmEvidenceLink {
-  source_pdf: string
-  source_page: int @description("PDF page (1-indexed)")
-  excerpt_en: string
-  excerpt_ga: string?
-  ncca_url: string?
+  source_pdf string
+  source_page int @description("PDF page (1-indexed)")
+  excerpt_en string
+  excerpt_ga string?
+  ncca_url string?
 }
 
 class AppmNCCALearningOutcome {
-  lo_code: string @description("Canonical NCCA code, e.g. 'LC-APPM-LO-2.4'")
-  framework: string @description("Always 'ncca-lc' for this subject")
-  level: AppmNCCALevel
-  topic: AppmTopicArea
-  competency_text: AppmBilingualText
-  marking_scheme_excerpt: AppmBilingualText?
-  evidence: AppmEvidenceLink
+  lo_code string @description("Canonical NCCA code, e.g. 'LC-APPM-LO-2.4'")
+  framework string @description("Always 'ncca-lc' for this subject")
+  level AppmNCCALevel
+  topic AppmTopicArea
+  competency_text AppmBilingualText
+  marking_scheme_excerpt AppmBilingualText?
+  evidence AppmEvidenceLink
 }
 
 // ============================================================================
@@ -91,67 +91,67 @@ class AppmNCCALearningOutcome {
 // ============================================================================
 
 class AppmFormativeItem {
-  id: string
-  lo_code: string
-  level: AppmNCCALevel
-  topic: AppmTopicArea
-  item_type: AppmItemType
-  difficulty: int @description("1-5")
-  prompt: AppmBilingualText
-  expected_answer: AppmBilingualText
-  marking_scheme: AppmBilingualText
-  common_errors: AppmBilingualText[]
-  hints: AppmBilingualText[] @description("4 graduated hints, indexed 0-3")
-  evidence: AppmEvidenceLink
-  feedback_channel: AppmFeedbackChannel
-  est_time_minutes: int @description("1-30")
+  id string
+  lo_code string
+  level AppmNCCALevel
+  topic AppmTopicArea
+  item_type AppmItemType
+  difficulty int @description("1-5")
+  prompt AppmBilingualText
+  expected_answer AppmBilingualText
+  marking_scheme AppmBilingualText
+  common_errors AppmBilingualText[]
+  hints AppmBilingualText[] @description("4 graduated hints, indexed 0-3")
+  evidence AppmEvidenceLink
+  feedback_channel AppmFeedbackChannel
+  est_time_minutes int @description("1-30")
 }
 
 class AppmFormativeItemAttempt {
-  item_id: string
-  student_response: string
-  response_format: string @description("text / latex / image / multiple_choice")
-  time_taken_seconds: int
-  hints_used: int @description("0-4")
+  item_id string
+  student_response string
+  response_format string @description("text / latex / image / multiple_choice")
+  time_taken_seconds int
+  hints_used int @description("0-4")
 }
 
 class AppmScoreBreakdown {
-  item_id: string
-  lo_code: string
-  total_marks: int
-  marks_awarded: int
-  marks_per_step: int[]
-  is_correct: bool
-  partial_credit_pct: float @description("0-100")
-  feedback_en: string
-  feedback_ga: string?
-  next_recommended_lo: string?
-  badge_earned: bool @description("True iff partial_credit_pct >= 80")
+  item_id string
+  lo_code string
+  total_marks int
+  marks_awarded int
+  marks_per_step int[]
+  is_correct bool
+  partial_credit_pct float @description("0-100")
+  feedback_en string
+  feedback_ga string?
+  next_recommended_lo string?
+  badge_earned bool @description("True iff partial_credit_pct >= 80")
 }
 
 class AppmQuestPack {
-  id: string
-  subject: string @description("Always 'applied_mathematics'") @stream.not_null
-  framework: string @description("Always 'ncca-lc'")
-  level: AppmNCCALevel
-  title: AppmBilingualText @stream.not_null
-  description: AppmBilingualText
-  total_items: int
-  total_marks: int
-  est_time_minutes: int
-  los_covered: string[]
-  items: AppmFormativeItem[] @stream.with_state
-  prerequisites: string[] @description("Pure Mathematics LOs (LC-MATHS-LO-*) the student should have mastered first")
-  cross_subject_links: string[] @description("Suggested cross-subject LO codes (LC-MATHS-*, LC-CHEM, LC-PHYS)")
-  generated_at: string @description("ISO datetime")
-  generated_by: string @description("Always 'appm_agent'")
+  id string
+  subject string @description("Always 'applied_mathematics'") @stream.not_null
+  framework string @description("Always 'ncca-lc'")
+  level AppmNCCALevel
+  title AppmBilingualText @stream.not_null
+  description AppmBilingualText
+  total_items int
+  total_marks int
+  est_time_minutes int
+  los_covered string[]
+  items AppmFormativeItem[] @stream.with_state
+  prerequisites string[] @description("Pure Mathematics LOs (LC-MATHS-LO-*) the student should have mastered first")
+  cross_subject_links string[] @description("Suggested cross-subject LO codes (LC-MATHS-*, LC-CHEM, LC-PHYS)")
+  generated_at string @description("ISO datetime")
+  generated_by string @description("Always 'appm_agent'")
 }
 
 class AppmQuestPackValidation {
-  pack_id: string
-  is_valid: bool
-  errors: string[]
-  warnings: string[]
+  pack_id string
+  is_valid bool
+  errors string[]
+  warnings string[]
 }
 
 // ============================================================================
@@ -160,8 +160,8 @@ class AppmQuestPackValidation {
 
 function GenerateAppmQuestPack(
   syllabus: LeavingCertSyllabus,
-  past_papers: LeavingCertPastPaper[],
-  marking_schemes: LeavingCertMarkingScheme[],
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
   level: string
 ) -> AppmQuestPack {
   client ExtractEnStrong
@@ -188,6 +188,32 @@ function ExtractAppmLOStatement(paragraph: string) -> string[] {
   prompt #"
     Extract all Applied Mathematics learning outcome statements from
     the following NCCA syllabus paragraph.
+
+    Paragraph: {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
+}
+
+// -----------------------------------------------------------------------------
+// ExtractAppmGaStatement (added 2026-07-13-baml-cocoindex-tutorials-ga-v1)
+// -----------------------------------------------------------------------------
+// The bilingual EN+GA variant of ExtractAppmLOStatement. Same
+// return shape (`string[]`); routes via `client Default`; the
+// prompt asks for the Irish (Gaeilge) statements verbatim with a
+// leading '[EN-only]' fallback marker. Applied Mathematics is
+// almost entirely English-language at NCCA level; the fallback
+// path is the common case here.
+
+function ExtractAppmGaStatement(paragraph: string) -> string[] {
+  client Default
+  prompt #"
+    Extract all NCCA Applied Mathematics strand/outcome statements
+    in Irish (Gaeilge) from the following NCCA syllabus paragraph.
+    Return them as a list of full Irish statements, verbatim from
+    the source, with the LO code if present (e.g. 'LC-APPM-LO-2.4: ...').
+    If no Irish translation is available in the paragraph, return
+    the English statements verbatim with a leading '[EN-only]' marker.
 
     Paragraph: {{ paragraph }}
 

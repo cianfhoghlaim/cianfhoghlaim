@@ -15,37 +15,37 @@ enum MarkingBand {
 }
 
 class MarkAllocation {
-  q_id: string
-  total_marks: int
-  partial_credit_rules: string[]
-  common_mistakes: string[]
-  sample_answer: string?
+  q_id string
+  total_marks int
+  partial_credit_rules string[]
+  common_mistakes string[]
+  sample_answer string?
 }
 
 class GradeDescriptor {
-  band: MarkingBand
-  percentage_min: int       @description("e.g. 75 for H1")
-  percentage_max: int       @description("e.g. 100 for H1")
-  descriptor_text_en: string
-  descriptor_text_ga: string?
-  exemplar_responses: string[]
+  band MarkingBand
+  percentage_min int       @description("e.g. 75 for H1")
+  percentage_max int       @description("e.g. 100 for H1")
+  descriptor_text_en string
+  descriptor_text_ga string?
+  exemplar_responses string[]
 }
 
 class MarkingScheme {
-  subject: string
-  scheme_code: string
-  language: string
-  level: string
-  year: int
-  source_pdf: string
+  subject string
+  scheme_code string
+  language string
+  level string
+  year int
+  source_pdf string
 
-  grade_descriptors: GradeDescriptor[]
-  mark_allocations: MarkAllocation[]
+  grade_descriptors GradeDescriptor[]
+  mark_allocations MarkAllocation[]
 
   // Heuristic metrics (used by the 09_marking_scheme_complexity notebook)
-  total_bands: int
-  total_pages: int
-  descriptor_word_count_avg: int
+  total_bands int
+  total_pages int
+  descriptor_word_count_avg int
 }
 
 // ============================================================================

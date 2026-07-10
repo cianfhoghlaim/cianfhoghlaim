@@ -64,8 +64,8 @@ and the agent backends (Pydantic AI, Agno, Google ADK, BAML):
 
 ```
    ┌──────────────────┐
-   │  CopilotKit      │  ← UI (sruth/oideachais/web, sruth/tuatha/ui,
-   │  (React)         │    sruth/croilar/apps/portal)
+   │  CopilotKit      │  ← UI (cianfhoghlaim/web/apps/oideachais-web, cianfhoghlaim/web/apps/tuatha-ui,
+   │  (React)         │    cianfhoghlaim/web/apps/croilar-portal)
    └────────┬─────────┘
             │ consumes SSE
             ▼
@@ -182,10 +182,10 @@ indicators, intermediate tool results, multimodal artifacts
 
 ## KCG integration
 
-- **sruth/oideachais/web** — `sruth/oideachais/web/src/lib/ag-ui/` (the
+- **cianfhoghlaim/web/apps/oideachais-web** — `cianfhoghlaim/web/apps/oideachais-web/src/lib/ag-ui/` (the
   canonical AG-UI client wrappers)
-- **CopilotKit UI** — `sruth/oideachais/web/src/components/copilot/`
-- **Hono (oRPC) proxy** — `sruth/oideachais/web/src/server/router.py`
+- **CopilotKit UI** — `cianfhoghlaim/web/apps/oideachais-web/src/components/copilot/`
+- **Hono (oRPC) proxy** — `cianfhoghlaim/web/apps/oideachais-web/src/server/router.py`
 - **Langfuse** — every AG-UI event is traced (token, tool_call,
   state, done) for full observability
 
@@ -269,7 +269,7 @@ agent.sendMessage("What quests do I have?").collect { state ->
 **Authentication** is per-client: `bearerToken(...)`,
 `apiKey(...)`, or `basicAuth(...)`. For the KCG stack, the
 token is the SIWE session JWT from BetterAuth
-(`sruth/tuatha/auth/siwe.py`).
+(`cianfhoghlaim/agents/tuatha/auth/siwe.py`).
 
 **Streamed events** are auto-rewritten: chunked
 `TEXT_MESSAGE_CHUNK` / `TOOL_CALL_CHUNK` are expanded into
@@ -317,5 +317,5 @@ for the 191-line official Kotlin SDK reference.
 - A2UI: <https://a2ui.org/>
 - CopilotKit: <https://docs.copilotkit.ai/>
 - Pydantic AI AG-UI adapter: <https://ai.pydantic.dev/ui/ag-ui>
-- KCG AG-UI client: `sruth/oideachais/web/src/lib/ag-ui/`
+- KCG AG-UI client: `cianfhoghlaim/web/apps/oideachais-web/src/lib/ag-ui/`
 - AG-UI Kotlin SDK: <https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/kotlin>

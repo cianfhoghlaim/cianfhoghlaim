@@ -52,32 +52,32 @@ enum LCLevel {
 
 class CrossSubjectTopic {
   // The canonical topic key (deterministic; e.g. "MATH-ALGEBRA-LC_HL-2026")
-  topic_id: string
-  subject: SubjectArea
-  topic_label_en: string
-  topic_label_ga: string?     @description("Irish label; null if EN-only")
-  level: LCLevel
-  ncca_lo_code: string?       @description("e.g. 'LC-MATHS-LO-2.4' or null")
-  key_competencies: NCCAKeyCompetency[]
+  topic_id string
+  subject SubjectArea
+  topic_label_en string
+  topic_label_ga string?     @description("Irish label; null if EN-only")
+  level LCLevel
+  ncca_lo_code string?       @description("e.g. 'LC-MATHS-LO-2.4' or null")
+  key_competencies NCCAKeyCompetency[]
 
   // Cross-subject links (the competency backbone)
-  related_subjects: SubjectArea[]  @description("Subjects whose syllabi mention this topic")
-  related_topic_ids: string[]      @description("Cross-subject topic IDs that this topic bridges to")
+  related_subjects SubjectArea[]  @description("Subjects whose syllabi mention this topic")
+  related_topic_ids string[]      @description("Cross-subject topic IDs that this topic bridges to")
 
   // Provenance
-  source_pdf: string
-  source_page: int
-  extraction_confidence: float   @description("0.0-1.0")
-  extracted_at: string           @description("ISO 8601 datetime")
+  source_pdf string
+  source_page int
+  extraction_confidence float   @description("0.0-1.0")
+  extracted_at string           @description("ISO 8601 datetime")
 }
 
 class CrossSubjectTopicSet {
-  subject: SubjectArea
-  level: LCLevel
-  language: string               @description("en or ga")
-  topics: CrossSubjectTopic[]
-  total_topics: int
-  cross_subject_bridges: int     @description("Count of topics linked to >=1 other subject")
+  subject SubjectArea
+  level LCLevel
+  language string               @description("en or ga")
+  topics CrossSubjectTopic[]
+  total_topics int
+  cross_subject_bridges int     @description("Count of topics linked to >=1 other subject")
 }
 
 // ============================================================================

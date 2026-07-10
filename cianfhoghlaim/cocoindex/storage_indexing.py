@@ -448,6 +448,7 @@ def _make_app():  # noqa: ANN202
                 StorageBackend, primary_key=["id"]
             ),
         )
+        target_table.declare_vector_index(column="embedding")  # R4
         backends = await asyncio.to_thread(_walk_repo_for_storage, repo_root)
         for i in range(0, len(backends), 100):
             batch = backends[i : i + 100]

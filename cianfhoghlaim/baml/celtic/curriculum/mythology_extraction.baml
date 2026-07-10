@@ -36,89 +36,89 @@ enum CharacterType {
 }
 
 class MythologicalCharacter {
-  name: string @description("Primary name")
+  name string @description("Primary name")
   native_names NameVariant[] @description("Names in Celtic languages")
-  aliases: string[] @description("Other known names")
+  aliases string[] @description("Other known names")
   character_type CharacterType
   tradition CelticTradition
   cycle MythologicalCycle?
 
-  titles: string[] @description("Epithets and titles")
-  description: string @description("Character summary")
-  personality: string[] @description("Key traits")
-  abilities: string[] @description("Powers and skills")
+  titles string[] @description("Epithets and titles")
+  description string @description("Character summary")
+  personality string[] @description("Key traits")
+  abilities string[] @description("Powers and skills")
 
   relationships CharacterRelationship[]
-  key_stories: string[] @description("Stories featuring this character")
-  symbols: string[] @description("Associated symbols")
-  sacred_items: string[] @description("Magical items")
+  key_stories string[] @description("Stories featuring this character")
+  symbols string[] @description("Associated symbols")
+  sacred_items string[] @description("Magical items")
 
-  modern_relevance: string? @description("Contemporary significance")
-  game_role: string? @description("Role in Tuath game")
+  modern_relevance string? @description("Contemporary significance")
+  game_role string? @description("Role in Tuath game")
   @@stream.done
 }
 
 class NameVariant {
   language CelticLanguage
-  name: string
-  pronunciation: string?
-  meaning: string?
+  name string
+  pronunciation string?
+  meaning string?
 }
 
 class CharacterRelationship {
-  related_character: string @description("Name of related character")
-  relationship_type: string @description("parent, child, spouse, rival, etc.")
-  story_context: string? @description("How they relate in stories")
+  related_character string @description("Name of related character")
+  relationship_type string @description("parent, child, spouse, rival, etc.")
+  story_context string? @description("How they relate in stories")
 }
 
 class MythologicalLocation {
-  name: string
+  name string
   native_names NameVariant[]
   tradition CelticTradition
-  location_type: string @description("realm, fortress, lake, mountain, etc.")
+  location_type string @description("realm, fortress, lake, mountain, etc.")
 
-  description: string
-  significance: string @description("Why this place matters")
-  associated_characters: string[]
-  key_events: string[]
+  description string
+  significance string @description("Why this place matters")
+  associated_characters string[]
+  key_events string[]
 
-  real_world_location: string? @description("Modern location if known")
-  game_zone: string? @description("Zone in Tuath game")
+  real_world_location string? @description("Modern location if known")
+  game_zone string? @description("Zone in Tuath game")
   @@stream.done
 }
 
 class MythologicalStory {
-  title: string
-  native_title: string?
+  title string
+  native_title string?
   tradition CelticTradition
   cycle MythologicalCycle
 
-  summary: string @description("Brief plot summary")
-  themes: string[] @description("Major themes")
-  moral: string? @description("Lesson or message")
+  summary string @description("Brief plot summary")
+  themes string[] @description("Major themes")
+  moral string? @description("Lesson or message")
 
-  main_characters: string[]
-  locations: string[]
+  main_characters string[]
+  locations string[]
   key_events StoryEvent[]
 
-  source_texts: string[] @description("Original manuscript sources")
-  educational_value: string @description("Learning opportunities")
+  source_texts string[] @description("Original manuscript sources")
+  educational_value string @description("Learning opportunities")
   @@stream.done
 }
 
 class StoryEvent {
-  description: string
-  characters_involved: string[]
-  location: string?
-  significance: string
+  description string
+  characters_involved string[]
+  location string?
+  significance string
   celtic_terms CelticTerm[]
 }
 
 class CelticTerm {
-  term: string @description("Word in Celtic language")
+  term string @description("Word in Celtic language")
   language CelticLanguage
-  translation: string
-  context: string @description("How used in story")
+  translation string
+  context string @description("How used in story")
 }
 
 // Extract character from mythology text
@@ -175,18 +175,18 @@ function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -
 
 // Generate NPC dialogue from character
 class NPCDialogue {
-  character_name: string
-  context: string @description("Situation in game")
+  character_name string
+  context string @description("Situation in game")
   dialogue_lines DialogueLine[]
-  teaching_moment: string? @description("Educational opportunity")
+  teaching_moment string? @description("Educational opportunity")
 }
 
 class DialogueLine {
-  speaker: string
-  celtic_text: string @description("Dialogue in Celtic language")
-  english_translation: string
-  tone: string @description("friendly, mysterious, warning, etc.")
-  gesture: string? @description("Character action")
+  speaker string
+  celtic_text string @description("Dialogue in Celtic language")
+  english_translation string
+  tone string @description("friendly, mysterious, warning, etc.")
+  gesture string? @description("Character action")
 }
 
 function GenerateNPCDialogue(
@@ -223,12 +223,12 @@ function GenerateNPCDialogue(
 
 // Extract folklore for NPC behavior
 class FolkloreElement {
-  name: string
+  name string
   tradition CelticTradition
-  element_type: string @description("superstition, custom, belief, etc.")
-  description: string
-  celtic_term: string?
-  game_application: string @description("How to use in game")
+  element_type string @description("superstition, custom, belief, etc.")
+  description string
+  celtic_term string?
+  game_application string @description("How to use in game")
   @@stream.done
 }
 
