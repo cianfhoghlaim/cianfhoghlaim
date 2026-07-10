@@ -168,12 +168,12 @@ The 12 default streams SHALL be declared in
 The system SHALL NOT include a local pre-Phase-2.3 fallback
 implementation in `cianfhoghlaim/dlt_utils/destinations.py`.
 The file SHALL be a thin re-export shim from the canonical
-`sruth.oideachais.dlt_utils.destinations` module via the
+`oideachais.dlt_utils.destinations` module via the
 `with_namespace("croilar")` factory.
 
 The local fallback was originally needed because the croilar
 packaging fix (commit `e9e0fc7d2`) had not yet been applied,
-so `import sruth.oideachais.dlt_utils.destinations` would
+so `import oideachais.dlt_utils.destinations` would
 fail from inside the croilar venv. The packaging fix
 introduced `croilar/__init__.py` + changed pyproject
 `packages = ["."]` + post-install `croilar/scripts/fix-pth.sh`
@@ -191,11 +191,11 @@ the destination API changes.
 - **GIVEN** the croilar packaging fix is in place (commit `e9e0fc7d2`)
 - **AND** `cianfhoghlaim/scripts/fix-pth.sh` has been run
 - **WHEN** a developer imports
-  `from sruth.croilar.dlt_utils.destinations import NAMESPACE`
+  `from croilar.dlt_utils.destinations import NAMESPACE`
 - **THEN** the import succeeds
 - **AND** `NAMESPACE == "croilar"`
 - **AND** the value comes from the canonical
-  `sruth.oideachais.dlt_utils.destinations.with_namespace("croilar")`
+  `oideachais.dlt_utils.destinations.with_namespace("croilar")`
   factory (not from a local fallback)
 
 #### Scenario: The 4 canonical exports are all available
@@ -203,7 +203,7 @@ the destination API changes.
 - **GIVEN** the thin shim is in place
 - **WHEN** a developer imports the 4 canonical names
   ```python
-  from sruth.croilar.dlt_utils.destinations import (
+  from croilar.dlt_utils.destinations import (
       NAMESPACE,
       create_pipeline,
       get_dlt_destination,
@@ -219,7 +219,7 @@ the destination API changes.
   the local fallback used to export (`DuckLakeConfig`,
   `_get_local_config`, `get_duckdb_fallback`)
 - **THEN** `ImportError` is raised
-- **AND** the 3 names are not in `dir(sruth.croilar.dlt_utils.destinations)`
+- **AND** the 3 names are not in `dir(croilar.dlt_utils.destinations)`
 
 #### Scenario: `cianfhoghlaim/dlt_utils/__init__.py` re-exports the canonical surface
 
@@ -265,7 +265,7 @@ rather than re-implementing its own destination factory or its own
 #### Scenario: Production caller of `R2Client` still works
 
 - **WHEN** `pipelines/soundcloud/downloader.py:18` runs `from pipelines.shared.r2_client import R2Client`
-- **THEN** `R2Client` SHALL remain importable from `sruth.croilar.pipelines.shared.r2_client`
+- **THEN** `R2Client` SHALL remain importable from `croilar.pipelines.shared.r2_client`
 - **AND** the production `pipelines.soundcloud.downloader` module SHALL remain importable
 
 #### Scenario: No fallback shims
@@ -310,9 +310,9 @@ for all 4 modules already exist in other quadrants:
 #### Scenario: Production callers of the kept modules still work
 
 - **WHEN** `dagster_assets/dlt_assets.py` runs `from _shared.streams import Stream, StreamSource, ...`
-- **THEN** the canonical Stream registry SHALL remain importable from `sruth.croilar._shared.streams`
+- **THEN** the canonical Stream registry SHALL remain importable from `croilar._shared.streams`
 - **AND** the production `dagster_assets.dlt_assets` module SHALL remain importable
-- **AND** `tests/test_database.py` SHALL remain importable from `sruth.croilar._shared.database`
+- **AND** `tests/test_database.py` SHALL remain importable from `croilar._shared.database`
 
 #### Scenario: No fallback shims
 

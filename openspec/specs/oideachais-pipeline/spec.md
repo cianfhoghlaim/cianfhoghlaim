@@ -769,10 +769,10 @@ each deleted item, excluding `__pycache__`).
 #### Scenario: Embedding service migration path
 
 - **WHEN** any caller needs text embeddings after the deletion
-- **THEN** they MUST use `sruth.oideachais.clients.embedding_client.EmbeddingClient`
+- **THEN** they MUST use `oideachais.clients.embedding_client.EmbeddingClient`
   (the canonical in-process client with BGE-M3 fallback per the
   `embedding-pipeline` skill)
-- **AND** NOT import from `sruth.oideachais.services.embedding_service`
+- **AND** NOT import from `oideachais.services.embedding_service`
   (the deleted module)
 
 #### Scenario: OCR comparison migration path
@@ -783,16 +783,16 @@ each deleted item, excluding `__pycache__`).
 - **OR** the Dagster asset at
   `cianfhoghlaim/dagster_defs/assets/ocr_comparison_assets.py`
   (the canonical programmatic interface)
-- **AND** NOT import from `sruth.oideachais.marimo.ocr_comparison_enhanced`
+- **AND** NOT import from `oideachais.marimo.ocr_comparison_enhanced`
   (the deleted module)
 
 #### Scenario: SEC exam paper ingestion migration path
 
 - **WHEN** any caller needs SEC exam paper ingestion after the deletion
 - **THEN** they MUST use the `ireland_examinations` DLT source via
-  `sruth.oideachais.dlt_sources.ireland.examinations` and the
+  `oideachais.dlt.ireland.examinations` and the
   `ireland/education/exam_materials_assets.py` Dagster asset group
-- **AND** NOT import from `sruth.oideachais.exam_scraper.{retry_failed,scrape_exam_stats}`
+- **AND** NOT import from `oideachais.exam_scraper.{retry_failed,scrape_exam_stats}`
   (the deleted modules)
 
 #### Scenario: Test author path
@@ -825,38 +825,38 @@ The canonical surfaces that retain all functionality:
 #### Scenario: A developer imports from a canonical route
 
 - **WHEN** any caller needs a FastAPI router from the oideachais API
-- **THEN** they MUST import from `sruth.oideachais.api.routes.{agent,curriculum,search,geospatial,tts,cross_archive_graph,leaving_cert,official_media}` (8 routers total — 5 from before + 3 added in canonical during the Phase 6 leabharlann cross-archive work)
-- **AND** NOT import from `sruth.oideachais.routes.*` (the deleted duplicate)
+- **THEN** they MUST import from `oideachais.api.routes.{agent,curriculum,search,geospatial,tts,cross_archive_graph,leaving_cert,official_media}` (8 routers total — 5 from before + 3 added in canonical during the Phase 6 leabharlann cross-archive work)
+- **AND** NOT import from `oideachais.routes.*` (the deleted duplicate)
 
 #### Scenario: A developer imports a Dagster sensor
 
 - **WHEN** any caller needs a Dagster sensor from the oideachais platform
-- **THEN** they MUST import from `sruth.oideachais.dagster_defs.sensors.all_sensors` (which aggregates all 5 canonical sensor groups: `domain_sensors`, `curriculum_freshness_sensors`, `author_archive_sensors`, `leabharlann_sensors`, `cognee_cron_sensor`)
-- **AND** NOT import from `sruth.oideachais.sensors.*` (the deleted duplicate; its stale `__init__.py` only loaded 2 of 5 sensor groups)
+- **THEN** they MUST import from `oideachais.orchestration.defs.sensors.all_sensors` (which aggregates all 5 canonical sensor groups: `domain_sensors`, `curriculum_freshness_sensors`, `author_archive_sensors`, `leabharlann_sensors`, `cognee_cron_sensor`)
+- **AND** NOT import from `oideachais.sensors.*` (the deleted duplicate; its stale `__init__.py` only loaded 2 of 5 sensor groups)
 
 #### Scenario: A developer imports FastAPI middleware
 
 - **WHEN** any caller needs the AG-UI / streaming / auth middleware
-- **THEN** they MUST import from `sruth.oideachais.api.middleware.{AuthMiddleware, agui.event_translator, agui.session_manager, agui.streaming}` (4 middleware components)
-- **AND** NOT import from `sruth.oideachais.middleware.*` (the deleted duplicate)
+- **THEN** they MUST import from `oideachais.api.middleware.{AuthMiddleware, agui.event_translator, agui.session_manager, agui.streaming}` (4 middleware components)
+- **AND** NOT import from `oideachais.middleware.*` (the deleted duplicate)
 
 #### Scenario: A developer imports the serial database executor
 
 - **WHEN** any caller needs `SerialDatabaseExecutor` or `get_executor`
-- **THEN** they MUST import from `sruth.oideachais.core.storage.{SerialDatabaseExecutor, get_executor, run_serial}` (the canonical authoritative implementation)
-- **AND** NOT import from `sruth.oideachais.storage.serial_executor` (the deleted deprecated stub)
+- **THEN** they MUST import from `oideachais.core.storage.{SerialDatabaseExecutor, get_executor, run_serial}` (the canonical authoritative implementation)
+- **AND** NOT import from `oideachais.storage.serial_executor` (the deleted deprecated stub)
 
 #### Scenario: The canonical surface contract is preserved
 
 - **GIVEN** `openspec/changes/oideachais-audit-phase-2a-remove-pure-duplicates` is archived
-- **WHEN** the Dagster Definitions load (`sruth.oideachais.dagster_defs.definitions`)
-- **THEN** `defs.sensors` MUST contain all 5 canonical sensor groups (verified via `from sruth.oideachais.dagster_defs.sensors import all_sensors; assert len(all_sensors) >= 5`)
+- **WHEN** the Dagster Definitions load (`oideachais.orchestration.defs.definitions`)
+- **THEN** `defs.sensors` MUST contain all 5 canonical sensor groups (verified via `from oideachais.orchestration.defs.sensors import all_sensors; assert len(all_sensors) >= 5`)
 - **AND** `cianfhoghlaim/api/main.py` MUST successfully `include_router` all 6 routers from `api.routes` (verified via FastAPI app construction without ImportError)
 - **AND** `cianfhoghlaim/api/middleware/AuthMiddleware` MUST be importable from the canonical `api.middleware` package
 
 #### Scenario: No residual references after deletion
 
-- **WHEN** any developer runs `grep -rn "from sruth.oideachais.routes\b\|from sruth.oideachais.sensors\b\|from sruth.oideachais.middleware\b\|from oideachais.storage.serial_executor" --include="*.py" --include="*.md"`
+- **WHEN** any developer runs `grep -rn "from oideachais.routes\b\|from oideachais.sensors\b\|from oideachais.middleware\b\|from oideachais.storage.serial_executor" --include="*.py" --include="*.md"`
 - **THEN** zero matches MUST appear outside `openspec/changes/archive/` (the only residual refs are in archived openspec change metadata, which is intentional)
 
 ### Requirement: Round 11 Phase 2B — Legacy Storage + Dagster Asset Migration (2026-06-25)
@@ -903,39 +903,39 @@ The canonical surfaces after this change:
 #### Scenario: A developer uses the multi-backend storage config
 
 - **WHEN** any caller needs the multi-backend `StorageConfig` (CogneeConfig, DuckLakeConfig, FalkorDBConfig, GarageConfig, LakehouseConfig, LanceDBConfig, MemgraphConfig, PlanetScaleConfig)
-- **THEN** they MUST import from `sruth.oideachais.core.storage.config` (re-exported via `sruth.oideachais.core.storage`)
-- **AND** NOT import from `sruth.oideachais.storage.config`
+- **THEN** they MUST import from `oideachais.core.storage.config` (re-exported via `oideachais.core.storage`)
+- **AND** NOT import from `oideachais.storage.config`
 
 #### Scenario: A developer uses a DuckLake client
 
 - **WHEN** any caller needs the DuckLake postgres-catalog + Garage-S3 client (`DuckLakeClient`)
-- **THEN** they MUST import from `sruth.oideachais.core.storage.clients.ducklake`
-- **AND** NOT import from `sruth.oideachais.storage.ducklake_client`
+- **THEN** they MUST import from `oideachais.core.storage.clients.ducklake`
+- **AND** NOT import from `oideachais.storage.ducklake_client`
 
 #### Scenario: A developer uses the LanceDB Cloud client
 
 - **WHEN** any caller needs the managed LanceDB Cloud integration (`LanceDBCloudClient`, `LanceDBCloudConfig`, `EmbeddingBatch`, `CircuitBreaker`)
-- **THEN** they MUST import from `sruth.oideachais.core.storage.clients.lancedb_cloud`
-- **AND** NOT import from `sruth.oideachais.storage.lancedb_cloud`
+- **THEN** they MUST import from `oideachais.core.storage.clients.lancedb_cloud`
+- **AND** NOT import from `oideachais.storage.lancedb_cloud`
 
 #### Scenario: A developer uses curriculum vector search
 
 - **WHEN** any caller needs the `CurriculumVectorSearch` BGE-M3-powered semantic search over curriculum content
-- **THEN** they MUST import from `sruth.oideachais.core.storage.curriculum_vectors`
-- **AND** NOT import from `sruth.oideachais.storage.curriculum_vectors`
+- **THEN** they MUST import from `oideachais.core.storage.curriculum_vectors`
+- **AND** NOT import from `oideachais.storage.curriculum_vectors`
 
 #### Scenario: The canonical surface contract is preserved
 
 - **GIVEN** `openspec/changes/oideachais-audit-phase-2b-migrate-legacy-storage-and-dagster-assets` is archived
-- **WHEN** the Dagster Definitions load (`sruth.oideachais.dagster_defs.definitions`)
-- **THEN** `defs.assets` MUST contain `model_conversion_assets` and `asset_generation_assets` (verified via `from sruth.oideachais.dagster_defs.assets.model_conversion import model_conversion_assets; assert len(model_conversion_assets) >= 8`)
+- **WHEN** the Dagster Definitions load (`oideachais.orchestration.defs.definitions`)
+- **THEN** `defs.assets` MUST contain `model_conversion_assets` and `asset_generation_assets` (verified via `from oideachais.orchestration.defs.assets.model_conversion import model_conversion_assets; assert len(model_conversion_assets) >= 8`)
 - **AND** `defs.assets` MUST contain `asset_generation_assets` with ≥ 4 assets
-- **AND** `cianfhoghlaim/core/storage/__init__.py` MUST re-export all 25 newly-migrated symbols (verified via `from sruth.oideachais.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`)
+- **AND** `cianfhoghlaim/core/storage/__init__.py` MUST re-export all 25 newly-migrated symbols (verified via `from oideachais.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`)
 - **AND** the legacy `cianfhoghlaim/dagster_assets/` and `cianfhoghlaim/storage/` directories MUST NOT exist (verified via `not os.path.exists(...)`)
 
 #### Scenario: No residual references after migration
 
-- **WHEN** any developer runs `grep -rn "from sruth.oideachais.dagster_assets\|from oideachais.dagster_assets\|from sruth.oideachais.storage\.[a-z_]\|from oideachais.storage\.[a-z_]" --include="*.py" --include="*.md"`
+- **WHEN** any developer runs `grep -rn "from oideachais.orchestration.defs.assets\|from oideachais.orchestration.defs.assets\|from oideachais.storage\.[a-z_]\|from oideachais.storage\.[a-z_]" --include="*.py" --include="*.md"`
 - **THEN** zero matches MUST appear outside `openspec/changes/archive/` (the only residual refs are in archived openspec change metadata, which is intentional)
 
 ### Requirement: Leabharlann DLT Source Package Naming
@@ -1188,7 +1188,7 @@ commit `8484a6353`. The canonical Python package is `oideachais`
 point is `cianfhoghlaim/dagster_defs/definitions.py`. The 4 sections
 in `pyproject.toml` that historically pointed at
 `data_platform.dagster_defs.*` MUST all reference the canonical
-`oideachais.dagster_defs.*` namespace. The 3 canonical docstrings at
+`oideachais.orchestration.defs.*` namespace. The 3 canonical docstrings at
 `cianfhoghlaim/dlt_utils/destinations.py`,
 `cianfhoghlaim/dlt_sources/dg.toml`, and
 `cianfhoghlaim/dlt_sources/__init__.py` MUST NOT reference the
@@ -1198,7 +1198,7 @@ legacy namespace either.
 
 - **WHEN** `cianfhoghlaim/pyproject.toml` is parsed (TOML)
 - **THEN** the 4 sections MUST point at the canonical
-  `oideachais.dagster_defs.*` namespace
+  `oideachais.orchestration.defs.*` namespace
 - **AND** the legacy `"data_platform.dagster_defs"` entry MUST be
   REMOVED from `[tool.hatch.build.targets.wheel] packages` (the
   package does not exist on disk; it was dead weight in the wheel
@@ -1532,7 +1532,7 @@ The system SHALL NOT have any `_quadrant_pyproject.toml` file at the `cianfhoghl
 
 The system SHALL have zero `from sruth.*` or `from oideachais.*` imports inside `cianfhoghlaim/`, except inside `.archive/` directories (point-in-time snapshots that are not part of the build) or inside `compat.py` build-time helpers.
 
-The legacy `sruth.oideachais.*`, `sruth.meaisinfhoghlaim.*`, `sruth.tuatha.*`, `sruth.shared.*`, `sruth.browser`, and bare `oideachais.*` Python namespaces SHALL NOT be importable at runtime from the consolidated `cianfhoghlaim` package.
+The legacy `sruth.shared.*`, `sruth.browser`, and bare `oideachais.*` Python namespaces SHALL NOT be importable at runtime from the consolidated `cianfhoghlaim` package. The legacy `sruth.<quadrant>.*` namespaces were already removed by the v4 consolidation.
 
 ##### Scenario: Grep finds zero stale imports in active code
 

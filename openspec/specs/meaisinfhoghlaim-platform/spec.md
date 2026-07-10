@@ -108,7 +108,7 @@ the root `dg.toml`.
 ### Requirement: Cross-quadrant ingestion from oideachais DuckLake
 
 The system SHALL ingest from the oideachais DuckLake catalog via the
-`oideachais.dagster_defs` package.
+`oideachais.orchestration` package (formerly `oideachais.dagster_defs`).
 
 #### Scenario: Lakehouse to meaisinfhoghlaim ingest
 
@@ -274,7 +274,7 @@ inline comments.
 - **THEN** `grep -rn "sruth\.oideachas" cianfhoghlaim/`
   returns 0 hits
 - **AND** the docstring's Usage example uses the canonical
-  `sruth.oideachais.X` path
+  `oideachais.X` path
 
 #### Scenario: A README or AGENTS.md example references the non-existent path
 
@@ -367,7 +367,7 @@ Canonical homes are determined by the Round 11 audit:
 
 If meaisínfhoghlaim requires a Celtic-language DLT source, it
 MUST import from the canonical home via
-`from oideachais.dlt_sources.<nation>.<domain> import <entity>_source`,
+`from oideachais.dlt.<nation>.<domain> import <entity>_source`,
 NOT re-implement the source at a meaisínfhoghlaim-local path.
 
 #### Scenario: A meaisínfhoghlaim `language/gaeilge/` file re-implements a canonical DLT source
@@ -386,10 +386,10 @@ NOT re-implement the source at a meaisínfhoghlaim-local path.
 - **AND** the meaisínfhoghlaim duplicate MUST be deleted (zero
   importers; the canonical home is the single source of truth)
 
-#### Scenario: A meaisínfhoghlaim `language/gaeilge/` file has stale `sruth.oideachais.dlt_sources.celtic` import
+#### Scenario: A meaisínfhoghlaim `language/gaeilge/` file has stale `oideachais.dlt.celtic` import
 
 - **GIVEN** a file under `cianfhoghlaim/language/gaeilge/`
-  contains `from sruth.oideachais.dlt_sources.celtic.X import Y`
+  contains `from oideachais.dlt.celtic.X import Y`
   in either an active or lazy (`try/except ImportError`) import
   block
 - **AND** `cianfhoghlaim/dlt_sources/celtic/` does not exist
@@ -455,7 +455,7 @@ The canonical homes for cross-quadrant utilities are:
 
 If a meaisínfhoghlaim module needs a utility that lives in
 another quadrant, it MUST import from the canonical home
-(e.g. `from sruth.oideachais.core.utils import CircuitBreaker`),
+(e.g. `from oideachais.core.utils import CircuitBreaker`),
 NOT a phantom meaisínfhoghlaim-local path
 (e.g. `from ..core.utils import CircuitBreaker` when
 `cianfhoghlaim/core/` does not exist).
@@ -469,7 +469,7 @@ NOT a phantom meaisínfhoghlaim-local path
 - **WHEN** the module is loaded
 - **THEN** Python raises `ModuleNotFoundError: No module named 'meaisinfhoghlaim.core'`
 - **AND** the import MUST be rewired to the canonical home
-  `from sruth.oideachais.core.utils import CircuitBreaker`
+  `from oideachais.core.utils import CircuitBreaker`
 
 #### Scenario: A future contributor adds a new cross-quadrant import
 
@@ -543,13 +543,13 @@ that duplicates `cianfhoghlaim/tools/`. The canonical home for
 all Celtic-education agent tools (corpus search, curriculum search,
 spatial query, statistics query, terminology, translation) is
 `cianfhoghlaim/tools/`, importable as
-`from sruth.oideachais.tools.X import ...`.
+`from oideachais.tools.X import ...`.
 
 Meaisínfhoghlaim agent code MUST import tools from the canonical
 oideachais location (e.g.
-`from sruth.oideachais.tools.curriculum_search import compare_curricula`),
+`from oideachais.tools.curriculum_search import compare_curricula`),
 NOT from a meaisínfhoghlaim-local `tools/` package
-(e.g. `from sruth.meaisinfhoghlaim.tools.curriculum_search import ...`).
+(e.g. `from meaisinfhoghlaim.tools.curriculum_search import ...`).
 
 #### Scenario: A meaisínfhoghlaim agent file imports from a duplicate `agents/tools/` location
 
@@ -558,11 +558,11 @@ NOT from a meaisínfhoghlaim-local `tools/` package
 - **AND** `cianfhoghlaim/tools/` exists as the canonical home
   (verified via `ls cianfhoghlaim/tools/`)
 - **WHEN** a meaisínfhoghlaim agent file imports from
-  `from sruth.meaisinfhoghlaim.agents.tools.X import ...`
+  `from meaisinfhoghlaim.agents.tools.X import ...`
 - **THEN** Python raises
-  `ModuleNotFoundError: No module named 'sruth.meaisinfhoghlaim.agents.tools'`
+  `ModuleNotFoundError: No module named 'meaisinfhoghlaim.agents.tools'`
 - **AND** the import MUST be rewired to the canonical home
-  `from sruth.oideachais.tools.X import ...`
+  `from oideachais.tools.X import ...`
 
 #### Scenario: A future contributor adds a new tool to a meaisínfhoghlaim agent
 
@@ -570,7 +570,7 @@ NOT from a meaisínfhoghlaim-local `tools/` package
 - **WHEN** the contributor adds the import
 - **THEN** the contributor MUST first check whether the canonical
   home `cianfhoghlaim/tools/` already provides the needed symbol
-  (verified via `PYTHONPATH=./sruth python3 -c "from sruth.oideachais.tools.X import <symbol>"`)
+  (verified via `PYTHONPATH=./sruth python3 -c "from oideachais.tools.X import <symbol>"`)
 - **AND** the contributor MUST import from the canonical oideachais
   location, NOT create a new `cianfhoghlaim/agents/tools/` package
 - **AND** if the symbol is NOT in the canonical home, the contributor
@@ -590,7 +590,7 @@ exist; any `from ..tools.X` import from a file under
 Every tool import in meaisínfhoghlaim agent code MUST be either:
 
 1. An absolute cross-quadrant import from the canonical oideachais
-   home (e.g. `from sruth.oideachais.tools.curriculum_search import ...`),
+   home (e.g. `from oideachais.tools.curriculum_search import ...`),
    OR
 2. A relative import that resolves correctly within the same package
    (e.g. `from .tools.X import ...` if `cianfhoghlaim/agents/tools/`
@@ -610,10 +610,10 @@ Every tool import in meaisínfhoghlaim agent code MUST be either:
   (verified via `ls cianfhoghlaim/tools/`)
 - **WHEN** the file is imported by any caller
 - **THEN** Python raises
-  `ModuleNotFoundError: No module named 'sruth.meaisinfhoghlaim.tools'`
+  `ModuleNotFoundError: No module named 'meaisinfhoghlaim.tools'`
   at module load time (NOT at function call time)
 - **AND** the import MUST be rewired to the absolute canonical path
-  `from sruth.oideachais.tools.X import ...`
+  `from oideachais.tools.X import ...`
 
 #### Scenario: A future contributor adds a new tool import to a meaisínfhoghlaim agent
 
@@ -623,9 +623,9 @@ Every tool import in meaisínfhoghlaim agent code MUST be either:
   exists via `ls <target-path>/X.py`
 - **AND** the contributor MUST first verify the canonical symbol is
   importable via
-  `PYTHONPATH=./sruth python3 -c "from sruth.oideachais.tools.X import <symbol>"`
+  `PYTHONPATH=./sruth python3 -c "from oideachais.tools.X import <symbol>"`
 - **AND** the import line MUST use the absolute canonical path
-  `from sruth.oideachais.tools.X import ...`,
+  `from oideachais.tools.X import ...`,
   NOT the broken relative path `from ..tools.X import ...`
 
 ### Requirement: No pre-split multi-source DLT file duplicates in meaisínfhoghlaim
@@ -636,9 +636,9 @@ source functions already exist as separate canonical files in
 `cianfhoghlaim/dlt_sources/ie/{culture,education,...}/`.
 
 If a DLT source function exists at the canonical split location
-(e.g. `sruth.oideachais.dlt_sources.ie.culture.canuint.canuint_source`),
+(e.g. `oideachais.dlt.ie.culture.canuint.canuint_source`),
 meaisínfhoghlaim MUST NOT retain a duplicate copy in a pre-split
-multi-source file (e.g. `sruth.meaisinfhoghlaim.language.gaeilge.canuint`).
+multi-source file (e.g. `meaisinfhoghlaim.language.gaeilge.canuint`).
 
 The canonical home for each multi-source DLT pattern is one
 canonical file per `@dlt.source` function. Any pre-split bundled
@@ -655,7 +655,7 @@ copy is a stale duplicate and MUST be deleted.
   `cianfhoghlaim/dlt_sources/ie/culture/{canuint,canuint_search,canuint_audio,canuint_dialect_summary,canuint_word_alignment}.py`
   (1,095 lines across 5 files)
 - **AND** the canonical split files all import cleanly via
-  `PYTHONPATH=./sruth python3 -c "from sruth.oideachais.dlt_sources.ie.culture.canuint import canuint_source"`
+  `PYTHONPATH=./sruth python3 -c "from oideachais.dlt.ie.culture.canuint import canuint_source"`
 - **WHEN** the audit confirms the pre-split file has 0 active
   importers across `sruth/`
 - **THEN** the pre-split file MUST be deleted
