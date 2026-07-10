@@ -378,10 +378,10 @@ class JsonSchema {
 }
 
 function PreResearchSite(
-  url: string,
-  goal: string,
-  backend_payload: string,
-  backend_name: string
+  url string,
+  goal string,
+  backend_payload string,
+  backend_name string
 ) -> ResearchSiteMap {
   client ExtractEnStrong
   prompt #"
@@ -449,9 +449,9 @@ class CondensedPage {
 }
 
 function CondenseToCriticalInfo(
-  raw_markdown: string,
-  goal: string,
-  max_output_bytes: int
+  raw_markdown string,
+  goal string,
+  max_output_bytes int
 ) -> CondensedPage {
   client ExtractEn
   prompt #"
@@ -516,8 +516,8 @@ class UiIndicator {
 }
 
 function IdentifyUiPatterns(
-  raw_markdown: string,
-  goal: string
+  raw_markdown string,
+  goal string
 ) -> UiIndicator[] {
   client ExtractEn
   prompt #"
@@ -573,8 +573,8 @@ class GroundedElement {
 }
 
 function VisualGroundingFromScreenshot(
-  screenshot_description: string,
-  natural_language_query: string
+  screenshot_description string,
+  natural_language_query string
 ) -> GroundedElement {
   client ExtractEnStrong
   prompt #"
@@ -611,10 +611,10 @@ function VisualGroundingFromScreenshot(
 // -----------------------------------------------------------------------------
 
 function SummarizeSite(
-  url: string,
-  goal: string,
-  sitemap_urls: string[],
-  sample_markdown: string
+  url string,
+  goal string,
+  sitemap_urls string[],
+  sample_markdown string
 ) -> ResearchSiteMap {
   client ExtractEn
   prompt #"
@@ -667,9 +667,9 @@ enum AuthorArchiveCivicCategory {
 }
 
 function ClassifySiteCivic(
-  url: string,
-  site_structure_summary: string,
-  primary_content_types: string[]
+  url string,
+  site_structure_summary string,
+  primary_content_types string[]
 ) -> AuthorArchiveCivicCategory {
   client ExtractEn
   prompt #"

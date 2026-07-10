@@ -417,9 +417,9 @@ function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {
 
 // Generate profile summary for a specific tenant context
 function GenerateProfileSummary(
-    profile: HybridProfile,
-    tenantType: ProfileType,
-    maxLength: int
+    profile HybridProfile,
+    tenantType ProfileType,
+    maxLength int
 ) -> string {
     client ExtractorFast
     prompt #"

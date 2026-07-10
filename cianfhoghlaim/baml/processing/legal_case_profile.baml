@@ -40,45 +40,45 @@ enum Jurisdiction {
 }
 
 class TimelineEvent {
-  event_id: string
-  event_date: string                 @description("ISO 8601 date extracted from the PDF's prose (BAML event_time)")
-  action: string
-  parties_involved: string[]
-  location: string?
-  is_critical: bool
-  source_pdf: string
+  event_id string
+  event_date string                 @description("ISO 8601 date extracted from the PDF's prose (BAML event_time)")
+  action string
+  parties_involved string[]
+  location string?
+  is_critical bool
+  source_pdf string
 }
 
 class LegalCaseProfile {
-  case_id: string                     @description("UUID derived from file_hash + corpus")
-  category: CaseCategory
-  jurisdiction: Jurisdiction[]
-  title: string
-  summary: string
-  key_parties: string[]
-  statutes_referenced: string[]       @description("e.g. 'Irish Constitution Art. 40', 'Employment Equality Act 1998']
-  key_legal_issues: string[]
-  outcome_or_status: string?
-  next_steps: string[]
-  source_pdf: string
+  case_id string                     @description("UUID derived from file_hash + corpus")
+  category CaseCategory
+  jurisdiction Jurisdiction[]
+  title string
+  summary string
+  key_parties string[]
+  statutes_referenced string[]       @description("e.g. 'Irish Constitution Art. 40', 'Employment Equality Act 1998'")
+  key_legal_issues string[]
+  outcome_or_status string?
+  next_steps string[]
+  source_pdf string
 
-  timeline_events: TimelineEvent[]
+  timeline_events TimelineEvent[]
 }
 
 class MedicalCaseProfile {
-  case_id: string
-  jurisdiction: Jurisdiction[]
-  condition_or_complaint: string
-  providers_involved: string[]
-  facilities: string[]
-  diagnoses_or_findings: string[]
-  timeline_events: TimelineEvent[]
-  source_pdf: string
+  case_id string
+  jurisdiction Jurisdiction[]
+  condition_or_complaint string
+  providers_involved string[]
+  facilities string[]
+  diagnoses_or_findings string[]
+  timeline_events TimelineEvent[]
+  source_pdf string
 }
 
 class StatuteReference {
-  act_name: string
-  section: string?
-  jurisdiction: Jurisdiction
-  citation_count: int                @description("How many PDFs in the corpus cite this statute")
+  act_name string
+  section string?
+  jurisdiction Jurisdiction
+  citation_count int                @description("How many PDFs in the corpus cite this statute")
 }

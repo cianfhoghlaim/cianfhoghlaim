@@ -269,9 +269,9 @@ class DisagreementVariant {
 
 // Validate OCR output quality
 function ValidateOCRResult(
-  ocr_text: string,
-  model_id: string,
-  processing_time: float
+  ocr_text string,
+  model_id string,
+  processing_time float
 ) -> OCRValidationResult {
   client Validator
   prompt #"
@@ -303,7 +303,7 @@ function ValidateOCRResult(
 
 // Validate Irish language quality specifically
 function ValidateIrishContent(
-  text: string
+  text string
 ) -> IrishContentQuality {
   client IrishValidator
   prompt #"
@@ -334,8 +334,8 @@ function ValidateIrishContent(
 
 // Extract document structure
 function ExtractDocumentStructure(
-  ocr_text: string,
-  page_count: int
+  ocr_text string,
+  page_count int
 ) -> DocumentStructure {
   client Extractor
   prompt #"
@@ -360,8 +360,8 @@ function ExtractDocumentStructure(
 
 // Compare results from multiple OCR models
 function CompareOCRModels(
-  document_id: string,
-  model_results: ModelResult[]
+  document_id string,
+  model_results ModelResult[]
 ) -> ModelComparisonResult {
   client Analyzer
   prompt #"
