@@ -108,16 +108,16 @@ class EnglScoreBreakdown {
 
 class EnglQuestPack {
   id: string
-  subject: string @description("Always 'english'")
+  subject: string @description("Always 'english'") @stream.not_null
   framework: string
   level: EnglNCCALevel
-  title: EnglBilingualText
+  title: EnglBilingualText @stream.not_null
   description: EnglBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: EnglFormativeItem[]
+  items: EnglFormativeItem[] @stream.with_state
   prerequisites: string[]
   cross_subject_links: string[] @description("LC-GAEL for translation, LC-HIST for cultural context")
   generated_at: string

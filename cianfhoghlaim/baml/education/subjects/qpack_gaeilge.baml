@@ -122,16 +122,16 @@ class GaelScoreBreakdown {
 
 class GaelQuestPack {
   id: string
-  subject: string @description("Always 'gaeilge'")
+  subject: string @description("Always 'gaeilge'") @stream.not_null
   framework: string @description("'ncca-lc' or 'ncca-jc'")
   level: GaelNCCALevel
-  title: GaelBilingualText
+  title: GaelBilingualText @stream.not_null
   description: GaelBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: GaelFormativeItem[]
+  items: GaelFormativeItem[] @stream.with_state
   prerequisites: string[]
   cross_subject_links: string[] @description("LC-ENGL, LC-HIST for cross-language synthesis")
   generated_at: string

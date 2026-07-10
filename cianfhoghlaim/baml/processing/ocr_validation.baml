@@ -155,6 +155,7 @@ class DocumentStructure {
   page_count int @description("Number of pages")
   column_count int @description("Number of columns per page")
   reading_order ReadingOrder @description("Detected reading order")
+  @@stream.done
 }
 
 // Document types

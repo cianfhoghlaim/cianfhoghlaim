@@ -63,6 +63,7 @@ class BlogPostMetadata {
   affected_capabilities string[]
   code_examples string[]
   api_changes string[]
+  @@stream.done
 }
 
 class ApiChange {
@@ -76,6 +77,7 @@ class ApiChange {
   changelog_url string
   detected_at string // ISO 8601
   v1_app_affected string? // e.g. "upstream_blog_monitor", matched by symbol
+  @@stream.done
 }
 
 class PackageRelease {
@@ -86,6 +88,7 @@ class PackageRelease {
   new_features string[]
   deprecations string[]
   release_notes_url string
+  @@stream.done
 }
 
 function ExtractBlogPostMetadata(content: string, url: string) -> BlogPostMetadata {

@@ -62,6 +62,7 @@ class DocSkillTag {
   confidence    float       @description("Calibrated 0-1 confidence in the category+quadrant assignment")
   short_label   string      @description("<= 80-char human label summarising the doc's primary topic")
   is_canonical  bool        @description("True if this doc is the canonical reference for its category+quadrant; False otherwise")
+  @@stream.done
 }
 
 class Triple {
@@ -72,6 +73,7 @@ class Triple {
 
 class TriplesResult {
   triples    Triple[] @description("All (subject, predicate, object) triples extracted from the document")
+  @@stream.done
 }
 
 // -----------------------------------------------------------------------------

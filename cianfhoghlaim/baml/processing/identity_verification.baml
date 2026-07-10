@@ -20,6 +20,7 @@ class IdentityDocument {
   status string @description("Verified, Pending, Expired")
   verifiedBy string | null @description("Entity that verified the document")
   verifiedDate string | null
+  @@stream.done
 }
 
 class GardaVetting {
@@ -28,6 +29,7 @@ class GardaVetting {
   expiryDate string | null
   status string @description("Clear, Pending, Expired")
   issuingBureau string @description("e.g. National Vetting Bureau, An Garda Síochána")
+  @@stream.done
 }
 
 class ProfessionalRegistration {
@@ -37,6 +39,7 @@ class ProfessionalRegistration {
   expiryDate string | null
   status string @description("Active, Provisional, Expired")
   subjects string[] @description("Registered subjects for teaching registrations")
+  @@stream.done
 }
 
 class VerificationSummary {

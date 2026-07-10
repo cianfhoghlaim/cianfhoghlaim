@@ -116,7 +116,7 @@ class AssessmentCriteria {
 }
 
 class SubjectIsles {
-    name BilingualTextIsles @description("SubjectIsles name in available languages")
+    name BilingualTextIsles @description("SubjectIsles name in available languages") @stream.not_null
     code string? @description("SubjectIsles code (e.g., 'GAE', 'MAT')")
     levels EducationLevelIsles[] @description("Available levels")
     strands string[]? @description("SubjectIsles strands or units")
@@ -127,7 +127,7 @@ class SubjectIsles {
 
 // Main curriculum specification schema
 class CurriculumSpecIsles {
-    title BilingualTextIsles @description("Document title")
+    title BilingualTextIsles @description("Document title") @stream.not_null
     subject SubjectIsles @description("SubjectIsles information")
     region Region @description("Geographic region")
     education_system string? @description("Education system (e.g., 'Curriculum for Excellence')")
@@ -144,6 +144,7 @@ class CurriculumSpecIsles {
 
     source_url string @description("Source URL of document")
     source_org string @description("Source organization")
+  @@stream.done
 }
 
 // =============================================================================
@@ -161,14 +162,14 @@ class ExamQuestionIsles {
 
 class ExamPaperIsles {
     title BilingualTextIsles @description("Paper title")
-    subject SubjectIsles @description("SubjectIsles")
+    subject SubjectIsles @description("SubjectIsles") @stream.not_null
     level EducationLevelIsles @description("Level")
     year int @description("Exam year")
     session string? @description("Exam session (e.g., 'Summer', 'Winter')")
     duration string @description("Paper duration")
     total_marks int @description("Total marks available")
 
-    sections ExamSectionIsles[]? @description("Paper sections")
+    sections ExamSectionIsles[]? @description("Paper sections") @stream.with_state
     questions ExamQuestionIsles[] @description("Questions")
 
     instructions BilingualTextIsles? @description("Instructions to candidates")
@@ -176,6 +177,7 @@ class ExamPaperIsles {
 
     source_url string @description("Source URL")
     source_org string @description("Source organization")
+  @@stream.done
 }
 
 class ExamSectionIsles {
@@ -196,6 +198,7 @@ class TermEntry {
     context string? @description("Usage context")
     related_terms string[]? @description("Related terms")
     source string? @description("Source of term")
+  @@stream.done
 }
 
 // =============================================================================
@@ -218,6 +221,7 @@ class TeachingResource {
     source_url string @description("Source URL")
     source_org string @description("Source organization")
     license string? @description("License/copyright")
+  @@stream.done
 }
 
 // =============================================================================

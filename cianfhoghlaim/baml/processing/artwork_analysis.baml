@@ -80,6 +80,7 @@ class ColorInfo {
   hex string @description("Hex color code like #FF5733")
   name string? @description("Common color name if applicable")
   percentage float @description("Percentage of image area")
+  @@stream.done
 }
 
 class StyleAnalysis {

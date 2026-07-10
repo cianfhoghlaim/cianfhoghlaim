@@ -22,12 +22,13 @@ class MarkingPoint {
 }
 
 class MarkingSchemeSec {
-  subject string
+  subject string @stream.not_null
   year int
   paper string
   level string @description("H, O, or F")
   totalMarks int
-  markingPoints MarkingPoint[]
+  markingPoints MarkingPoint[] @stream.with_state
+  @@stream.done
 }
 
 enum MarkingType {

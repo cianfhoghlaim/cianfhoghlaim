@@ -79,6 +79,7 @@ class ReadingListItem {
   library_ref string? @description("Library / shelf reference, set when format = INTERNAL_REF")
   essential bool @description("True if this reading is marked 'essential' or 'core' on the module page")
   confidence float @description("Extraction confidence 0.0-1.0")
+  @@stream.done
 }
 
 // =============================================================================
@@ -129,6 +130,7 @@ class CourseDescriptor {
   source_url string @description("The canonical URL this descriptor was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape, e.g. '2026-06-29T14:00:00Z'")
   confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
 }
 
 // =============================================================================
@@ -158,6 +160,7 @@ class ModuleDescriptor {
   source_url string @description("The canonical URL this descriptor was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
 }
 
 // =============================================================================
@@ -178,6 +181,7 @@ class ProgrammeDescriptor {
   source_url string @description("The canonical URL this descriptor was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
+  @@stream.done
 }
 
 // =============================================================================

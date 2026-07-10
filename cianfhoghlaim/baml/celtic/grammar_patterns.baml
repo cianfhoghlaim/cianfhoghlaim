@@ -61,6 +61,7 @@ class GrammarPattern {
   structure string @description("Structural description")
   language CelticLanguage @description("Language")
   notes string? @description("Usage notes")
+  @@stream.done
 }
 
 // Irish copula pattern analysis
@@ -72,6 +73,7 @@ class IrishCopulaPattern {
   subject string @description("The subject")
   translation string @description("English translation")
   explanation string @description("Why this form is used")
+  @@stream.done
 }
 
 // VSO word order analysis
@@ -91,6 +93,7 @@ class PossessionPattern {
   possessed string @description("What is possessed")
   construction_type string @description("ag + owner, le + owner, etc.")
   translation string @description("English translation")
+  @@stream.done
 }
 
 // Prepositional pronoun

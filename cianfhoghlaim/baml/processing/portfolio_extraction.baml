@@ -198,6 +198,7 @@ class MusicProfile {
     collaborators string[] @description("Frequent collaborators")
     equipment string[] @description("Production equipment/software")
     influences string[] @description("Musical influences")
+  @@stream.done
 }
 
 // =============================================================================
@@ -225,6 +226,7 @@ class GameProject {
     repoUrl string? @description("Source code repository")
     mediaUrls string[] @description("Screenshots, videos, etc.")
     releaseDate string? @description("Release date if published")
+  @@stream.done
 }
 
 // =============================================================================
@@ -245,6 +247,7 @@ class DeveloperProfile {
     publications string[] @description("Papers, articles, blog posts")
     socialLinks SocialLink[] @description("Social media/platform links")
     languages string[] @description("Natural languages spoken")
+  @@stream.done
 }
 
 // Music producer profile
@@ -282,6 +285,7 @@ class HybridProfile {
 
     socialLinks SocialLink[] @description("All social/platform links")
     languages string[] @description("Languages spoken")
+  @@stream.done
 }
 
 // =============================================================================

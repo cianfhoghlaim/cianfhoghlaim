@@ -92,16 +92,16 @@ class GeogScoreBreakdown {
 }
 class GeogQuestPack {
   id: string
-  subject: string @description("Always 'geography'")
+  subject: string @description("Always 'geography'") @stream.not_null
   framework: string
   level: GeogNCCALevel
-  title: GeogBilingualText
+  title: GeogBilingualText @stream.not_null
   description: GeogBilingualText
   total_items: int
   total_marks: int
   est_time_minutes: int
   los_covered: string[]
-  items: GeogFormativeItem[]
+  items: GeogFormativeItem[] @stream.with_state
   prerequisites: string[]
   cross_subject_links: string[] @description("LC-MATHS for statistics, LC-ENGL for essay composition")
   generated_at: string

@@ -38,6 +38,7 @@ class CircularExtraction {
   scheme MarkingSchemeSummary
   raw_text_excerpt string
   extraction_confidence float  // 0.0 - 1.0
+  @@stream.done
 }
 
 function ExtractCircularMeta(

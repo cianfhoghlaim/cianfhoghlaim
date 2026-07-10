@@ -93,6 +93,7 @@ class VerbConjugation {
   imperative_2pl string? @description("2nd person plural imperative")
   imperative_3pl string? @description("3rd person plural imperative")
   imperative_auto string? @description("Autonomous imperative")
+  @@stream.done
 }
 
 // ============================================================================
@@ -130,6 +131,7 @@ class NounDeclension {
   // Notes
   plural_type string? @description("How plural is formed: strong, weak, irregular")
   notes string? @description("Special notes about this noun")
+  @@stream.done
 }
 
 // ============================================================================

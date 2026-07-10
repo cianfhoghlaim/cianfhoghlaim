@@ -26,6 +26,7 @@ class LegalAidPage {
   statutory_basis        StatuteReference[]              @description("Statutes referenced (e.g. Civil Legal Aid Act 1995)")
   summary                string                          @description("2-3 sentence summary of the page")
   extraction_confidence  float                           @description("0.0-1.0")
+  @@stream.done
 }
 
 class LegalAidForm {
@@ -38,6 +39,7 @@ class LegalAidForm {
   fillable_fields        string[]                        @description("Names of fields the form requires (e.g. 'PPSN', 'Income', 'Assets')")
   related_statutes       StatuteReference[]              @description("Statutes the form is made under")
   extraction_confidence  float                           @description("0.0-1.0")
+  @@stream.done
 }
 
 function ExtractLegalAidPage(

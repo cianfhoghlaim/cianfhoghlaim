@@ -81,6 +81,7 @@ class ImagePromptSpec {
   cta_text string? @description("Optional call-to-action or tagline")
   bria_json_config string @description("The Bria FIBO JSON config (filled by BuildFIBOConfig)")
   irish_translation string? @description("Irish (Gaeilge) translation of the subject_text + overlays, if available")
+  @@stream.done
 }
 
 // =============================================================================

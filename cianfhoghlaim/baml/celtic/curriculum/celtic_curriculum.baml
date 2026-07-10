@@ -41,6 +41,7 @@ class GrammarTopic {
   examples CelticExample[] @description("Usage examples")
   difficulty: int @description("1-5 difficulty scale")
   common_errors: string[] @description("Mistakes learners often make")
+  @@stream.done
 }
 
 class CelticExample {
@@ -54,6 +55,7 @@ class VocabularySet {
   theme: string @description("Vocabulary theme")
   words CelticWord[] @description("Words in the set")
   cultural_context: string? @description("Cultural background")
+  @@stream.done
 }
 
 class CelticWord {
@@ -81,6 +83,7 @@ class CurriculumUnit {
   cultural_content: string[] @description("Cultural elements")
   assessment_criteria: string[] @description("How to assess")
   resources: string[] @description("Suggested resources")
+  @@stream.done
 }
 
 // Extract curriculum unit from document

@@ -13,6 +13,7 @@ class DocumentMetadata {
   year_examined int? @description("Extracted from phrases like \"examination to 2028\"")
   language string? @description("en or ga")
   url string @description("The exact URL to the PDF")
+  @@stream.done
 }
 
 function ExtractAllPdfMetadata(page_markdown: string,
@@ -64,6 +65,7 @@ class CurriculumExtraction {
   year int @description("Syllabus year")
   topics CurriculumTopic[]
   totalSuggestedHours int
+  @@stream.done
 }
 
 function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {
