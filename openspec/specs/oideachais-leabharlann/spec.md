@@ -362,8 +362,8 @@ The system SHALL expose the leabharlann (personal archive) corpus at `cianfhoghl
 #### Scenario: dlt source resolution
 
 - **WHEN** Dagster materialises a leabharlann asset
-- **THEN** the dlt source module is `cianfhoghlaim.pipelines.ingest.leabharlann.{books,zotero,takeout_v1,university_of_galway,gemini_deep_research,google_takeout}` (formerly `sruth.oideachais.dlt_sources.leabharlann.*`)
-- **AND** the CocoIndex embedding flow is `cianfhoghlaim.embeddings.leabharlann` (formerly `sruth.oideachais.cocoindex_flows.leabharlann_embedding`)
+- **THEN** the dlt source module is `cianfhoghlaim.pipelines.ingest.leabharlann.{books,zotero,takeout_v1,university_of_galway,gemini_deep_research,google_takeout}` (formerly `oideachais.dlt.leabharlann.*`)
+- **AND** the CocoIndex embedding flow is `cianfhoghlaim.embeddings.leabharlann` (formerly `oideachais.cocoindex_flows.leabharlann_embedding`)
 - **AND** the directory-watch sensor is `cianfhoghlaim.pipelines.sensors.leabharlann` (formerly `cianfhoghlaim/dagster_defs/sensors/leabharlann_sensors.py`)
 
 ### Requirement: Plan 1 All 6 Leabharlann Subdirs Active (v4)

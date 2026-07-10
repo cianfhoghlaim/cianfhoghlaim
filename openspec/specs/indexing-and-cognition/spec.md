@@ -49,7 +49,7 @@ until 2026-07-15 (per the `cocoindex-v1-migration` spec).
 
 - **GIVEN** the `bun run ccc:index` task in `package.json` + `mise.toml`
 - **WHEN** the task runs
-- **THEN** it invokes `uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex`
+- **THEN** it invokes `uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex`
 - **AND** writes the `codebase_chunks` LanceDB table to the `codebase` asset group
 
 #### Scenario: Agent code search uses the v1 App
@@ -252,7 +252,7 @@ reference the corresponding `sruth/<name>/AGENTS.md` and the
 - **GIVEN** the 5 sruth subagents
 - **WHEN** the model-layer inventory at `cianfhoghlaim/agents/*.py` is read
 - **THEN** it SHALL contain 13 `.py` modules (root + 12 specialists): `root_agent.py`, `curriculum_agent.py`, `translation_agent.py`, `corpus_agent.py`, `research_agent.py`, `education_research_agent.py`, `bunchloch_research_agent.py`, `geospatial_agent.py`, `statistics_agent.py`, `curriculum_comparison_agent.py`, `agui_curriculum_agent.py`, `mcp_curriculum_agent.py`, `voice_agent.py`
-- **AND** the inventory SHALL be importable as `sruth.meaisinfhoghlaim.agents`
+- **AND** the inventory SHALL be importable as `meaisinfhoghlaim.agents`
 - **AND** the `MODEL_LAYER_AGENTS` tuple SHALL list exactly those 13 module basenames
 
 #### Scenario: Sruth prompt references the per-sruth AGENTS.md
