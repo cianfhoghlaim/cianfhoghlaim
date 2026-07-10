@@ -32,6 +32,7 @@ generator default {
   provider "openai"
   model "gpt-5-mini"
   retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
@@ -42,6 +43,29 @@ generator local_vision_qwen {
   provider "openai"
   model "local/vision/qwen3-vl"
   retry_policy Exponential
+  timeout { total_ms 60000 }
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+  }
+}
+
+generator local_vision_qwen3vl {
+  provider "openai"
+  model "local/vision/qwen3-vl-8b"
+  retry_policy Exponential
+  timeout { total_ms 60000 }
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+  }
+}
+
+generator local_vision_gemma4 {
+  provider "openai"
+  model "local/vision/gemma-4-26B-A4B"
+  retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
@@ -52,6 +76,7 @@ generator local_vision_glm {
   provider "openai"
   model "local/vision/glm-4.6v-flash"
   retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
@@ -62,6 +87,7 @@ generator local_vision_moondream {
   provider "openai"
   model "local/vision/moondream2"
   retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
@@ -71,6 +97,8 @@ generator local_vision_moondream {
 generator gemini_2_flash {
   provider "google-ai"
   model "gemini-2.0-flash-exp"
+  retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     api_key env.GOOGLE_API_KEY
   }
@@ -79,6 +107,8 @@ generator gemini_2_flash {
 generator gemini_1_5_pro {
   provider "google-ai"
   model "gemini-1.5-pro-latest"
+  retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     api_key env.GOOGLE_API_KEY
   }
@@ -87,6 +117,8 @@ generator gemini_1_5_pro {
 generator gemini_pro {
   provider "google-ai"
   model "gemini-pro"
+  retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     api_key env.GOOGLE_API_KEY
   }
@@ -95,6 +127,8 @@ generator gemini_pro {
 generator gemini_2_5_flash {
   provider "google-ai"
   model "gemini-2.5-flash-preview-05-20"
+  retry_policy Exponential
+  timeout { total_ms 60000 }
   options {
     api_key env.GOOGLE_API_KEY
   }
