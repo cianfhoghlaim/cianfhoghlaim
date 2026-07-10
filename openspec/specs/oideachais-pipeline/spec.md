@@ -1433,40 +1433,46 @@ hand-written `_parse_dbt_manifest()` helper SHALL be removed.
 
 ### Requirement: LC5-subject + Gemini 6-corpus pipelines
 
-The system SHALL provide two new pipelines under the
-`oideachais-pipeline` capability:
+The system SHALL keep the `LC5-subject + Gemini 6-corpus pipelines` requirement inside the main `## Requirements` section of `openspec/specs/oideachais-pipeline/spec.md` so OpenSpec strict validation, listing, and archive workflows can see it.
 
-1. **LC5-subject pipeline** (per
-   `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`):
-   41 PDFs + 2 JPGs across chemistry / computer_science / gaeilge /
-   geography / mathematics, organised into 5 DAGs each with 7 stages
-   (VLM/OCR → DuckLake → LanceDB → Cognee → Graphiti → FalkorDB).
+The system SHALL provide two new pipelines under the `oideachais-pipeline` capability:
 
-2. **Gemini 6-corpus pipeline** (per
-   `openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`):
-   224 PDFs across law / medical / politics / culture / technology /
-   other, organised into 6 DAGs each with 7 stages.
+1. **LC5-subject pipeline**: chemistry, computer_science, gaeilge, geography, and mathematics DAGs with VLM/OCR, DuckLake, LanceDB, Cognee, Graphiti, and FalkorDB stages.
+2. **Gemini 6-corpus pipeline**: law, medical, politics, culture, technology, and other corpora with the same pipeline stages.
 
-#### Scenario: LC5 ingests 72 PDFs (including 30 `_2026-06-30` duplicates)
+#### Scenario: Requirement is parsed by strict validation
 
-- **WHEN** `dagster asset materialize --select 'lc5_*_ingested'`
-- **THEN** the sum of rows from `lc5_chemistry_ingested`,
-  `lc5_computer_science_ingested`, `lc5_gaeilge_ingested`,
-  `lc5_geography_ingested`, `lc5_mathematics_ingested` SHALL be 72
-  (41 PDFs + 1 JPG + 30 duplicate copies)
-
-#### Scenario: Gemini ingests 224 PDFs across 6 corpora
-
-- **WHEN** `dagster asset materialize --select 'gemini_*_ingested'`
-- **THEN** the sum of rows SHALL be 224 (57+54+47+30+24+12)
+- **GIVEN** `openspec/specs/oideachais-pipeline/spec.md`
+- **WHEN** `openspec validate oideachais-pipeline --strict` runs
+- **THEN** the spec is valid
+- **AND** the `LC5-subject + Gemini 6-corpus pipelines` requirement is inside the main `## Requirements` section rather than under a delta-style `## ADDED Requirements` section
 
 #### Scenario: Both pipelines share the v4 OCR/VLM registry
 
-- **GIVEN** both the LC5 + Gemini pipelines
+- **GIVEN** both the LC5 and Gemini pipelines
 - **WHEN** a PDF is ingested by either pipeline
-- **THEN** `select_ocr_backend(pdf_path)` SHALL return a v4 registry
-  model key (NOT the legacy 10-model OCR_MODELS dict)
+- **THEN** `select_ocr_backend(pdf_path)` SHALL return a v4 registry model key
+- **AND** it SHALL NOT use the legacy 10-model `OCR_MODELS` dictionary
 
+### Requirement: All Python imports inside cianfhoghlaim use the canonical namespace
+
+The system SHALL have zero actual code-import examples using `from oideachais.*` inside active OpenSpec specs. Actual Python import examples SHALL use the v4 package root `from cianfhoghlaim...`.
+
+The spec MAY keep bare `oideachais.*` documentation shorthand for MotherDuck/DuckLake schemas, capability names, and logical quadrant references when the text is not a Python import statement.
+
+#### Scenario: Actual import examples use cianfhoghlaim
+
+- **GIVEN** an active spec includes a Python import example for an oideachais module
+- **WHEN** the example is a code path rather than documentation shorthand
+- **THEN** it uses `from cianfhoghlaim.<module> import <symbol>`
+- **AND** `grep -rE "from oideachais\." openspec/specs/ --include='*.md'` returns 0 matches
+
+#### Scenario: Documentation shorthand is preserved
+
+- **GIVEN** a spec refers to the MotherDuck schema `oideachais.education.ie.leaving_cert`
+- **WHEN** the bare `oideachais.*` drift check runs
+- **THEN** the schema reference is preserved as documentation shorthand
+- **AND** it is not treated as a Python import path
 
 ## Components
 
@@ -1567,27 +1573,7 @@ The system SHALL NOT have any `_quadrant_pyproject.toml` file at the `cianfhoghl
 
 ### MODIFIED Requirements
 
-#### Requirement: All Python imports inside cianfhoghlaim use the canonical namespace
-
-The system SHALL have zero `from sruth.*` or `from cianfhoghlaim.*` imports inside `cianfhoghlaim/`, except inside `.archive/` directories (point-in-time snapshots that are not part of the build) or inside `compat.py` build-time helpers.
-
-The legacy `sruth.shared.*`, `sruth.browser`, and bare `oideachais.*` Python namespaces SHALL NOT be importable at runtime from the consolidated `cianfhoghlaim` package. The legacy `sruth.<quadrant>.*` namespaces were already removed by the v4 consolidation.
-
-##### Scenario: Grep finds zero stale imports in active code
-
-- **WHEN** `grep -rE "from sruth\.|from oideachais\." cianfhoghlaim/ --include='*.py' --exclude-dir=.archive --exclude=compat.py` runs
-- **THEN** zero matches are returned
-
-##### Scenario: All Dagster assets resolve
-
-- **WHEN** `mise run dagster:dev` launches and the asset graph is materialised
-- **THEN** all 199 assets load successfully (no `ModuleNotFoundError` from `sruth.*` or `oideachais.*` imports inside asset modules)
-
-##### Scenario: All 14 v1 CocoIndex Apps pass the conformance contract
-
-- **WHEN** `mise run upstream:conformance` runs
-- **THEN** all 14 v1 CocoIndex Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding, codebase_indexing, api_indexing, filesystem_indexing, storage_indexing, config_indexing, unified_embedding, code_embeddings, docs_skills_consolidation, culture_heritage_embedding, upstream_blog_monitor, upstream_api_surface) pass the 4-rule conformance contract R1-R4
-- **AND** `cocoindex_v1_conformance` reports 14/14 PASS
+(Moved to main ## Requirements section; see above. Kept here as an audit pointer.)
 
 ### REMOVED Requirements
 
@@ -1596,7 +1582,6 @@ The legacy `sruth.shared.*`, `sruth.browser`, and bare `oideachais.*` Python nam
 **Reason**: The standalone browser package was renamed from `bonneagar/stacks/browser/` to `bonneagar/stacks/browser/` during the v4 follow-on (`openspec/changes/archive/2026-06-29-2026-06-29-per-domain-web-app-consolidation/`). The local duplicate at `cianfhoghlaim/browser/` is a stale deprecation stub whose `__init__.py` imports from `cianfhoghlaim.core.browser` — a package that was never created.
 
 **Migration**: All Dagster assets, DLT sources, scripts, and notebooks that previously imported `from cianfhoghlaim.core.browser import BrowserClient` (or similar) MUST update to `from bonneagar.stacks.browser.sruth_browser import BrowserClient` (or via the workspace source alias).
-
 
 ## Merged from
 
