@@ -24,6 +24,7 @@
 [[procedure.config]]
 name = "deploy-agent-platform-cluster-arm1-oci"
 description = "Omnibus: 3 agent surfaces (hermes + openclaw + openchamber) on arm1-oci — preflight → control-plane → surfaces → Pangolin routes → health → validate"
+server_id = "arm1-oci"
 
 # =============================================================================
 # STAGE 0: Pre-flight (4-check safety gate)

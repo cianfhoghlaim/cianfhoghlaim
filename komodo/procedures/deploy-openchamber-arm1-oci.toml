@@ -18,6 +18,7 @@
 [[procedure]]
 name = "deploy-openchamber-arm1-oci"
 description = "Deploy OpenChamber OpenCode UI to arm1-oci — prereqs → pangolin → openchamber stack → pangolin routes → health checks"
+server_id = "arm1-oci"
 
 # =============================================================================
 # STAGE 0: Prerequisite docker resources

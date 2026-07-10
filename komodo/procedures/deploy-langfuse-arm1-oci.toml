@@ -23,6 +23,7 @@
 [[procedure.config]]
 name = "deploy-langfuse-arm1-oci"
 description = "Deploy langfuse to arm1-oci — preflight → lakehouse data plane → DeployStack langfuse → ApplyBlueprint + health"
+server_id = "arm1-oci"
 
 # =============================================================================
 # STAGE 0: Pre-flight

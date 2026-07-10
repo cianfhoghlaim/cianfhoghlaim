@@ -38,6 +38,7 @@
 [[procedure]]
 name = "deploy-bunchloch-stack-bootstrap"
 description = "Bring up the 19 foundational bunchloch stacks in 5 dependency-ordered stages (foundation → memory → observability → surfaces → data plane). Stage 0 checks host invariants; Stages 1-5 deploy stacks; Stage 6 health-checks; Stage 7 validates the 9 stack-doctor gates."
+server_id = "bunchloch"
 
 # =============================================================================
 # STAGE 0: Pre-flight checks (host invariants)

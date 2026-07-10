@@ -19,6 +19,7 @@
 [[procedure]]
 name = "deploy-lakehouse-bunchloch"
 description = "Deploy the 11-service centralised data plane (lakehouse) on bunchloch"
+server_id = "bunchloch"
 
 [[procedure.config.stages]]
 name = "prerequisites"

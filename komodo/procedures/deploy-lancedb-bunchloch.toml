@@ -18,6 +18,7 @@
 [[procedure]]
 name = "deploy-lancedb-bunchloch"
 description = "Deploy LanceDB vector viewer to bunchloch — prereqs → lancedb → health checks"
+server_id = "bunchloch"
 
 # =============================================================================
 # STAGE 0: Prerequisites
