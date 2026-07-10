@@ -375,7 +375,7 @@ Memory Bank or a custom backend).
 - Gemini Live API: <https://ai.google.dev/gemini-api/docs/live>
 - KCG agent chain: `oideachais-curriculum-extraction` Dagster
   asset
-- KCG examples: `sruth/oideachais/saoi/` (the canonical KCG ADK
+- KCG examples: `cianfhoghlaim/saoi/` (the canonical KCG ADK
   project layout)
 
 ## Framework comparison (when to use this vs Pydantic AI / Agno)

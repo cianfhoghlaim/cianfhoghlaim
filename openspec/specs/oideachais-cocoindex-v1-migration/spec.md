@@ -102,7 +102,7 @@ equivalent use cases.
 - **GIVEN** the v0 module is archived at
   `cianfhoghlaim/cocoindex_flows/_v0_archive/research_embedding.py`
 - **WHEN** a developer does
-  `from oideachais.cocoindex_flows.research_embedding import ...`
+  `from cianfhoghlaim.cocoindex_flows.research_embedding import ...`
 - **THEN** Python SHALL raise `ModuleNotFoundError` (or
   `ImportError`) with a helpful message pointing at the
   `_v0_archive/` directory

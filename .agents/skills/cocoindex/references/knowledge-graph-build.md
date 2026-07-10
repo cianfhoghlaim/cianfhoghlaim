@@ -73,13 +73,13 @@ await falkordb.mount_table_target(
 
 ## In-repo examples (canonical v1)
 
-- `sruth/oideachais/cocoindex_flows/learning_outcome_graph.py` — the
+- `cianfhoghlaim/cocoindex/learning_outcome_graph.py` — the
   KCG in-repo knowledge-graph flow (5-stage cross-stage + 3
   leabharlann cognify adapters)
-- `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py` —
+- `cianfhoghlaim/cocoindex/docs_skills_consolidation.py` —
   3-phase FalkorDB graph: DocSkill, Concept, ConsolidationGroup with
   TAGGED / CONSOLIDATED_INTO / RELATES_TO edges
-- `sruth/oideachais/cognee_integration/` — Cognee-driven cognify (5
+- `cianfhoghlaim/cocoindex/cognee_integration/` — Cognee-driven cognify (5
   stages)
 
 The external examples `meeting_notes_graph_neo4j/` and

@@ -77,7 +77,7 @@ bun run ccc:search --lang python --path 'cianfhoghlaim/*' "BAML extraction funct
 bun run ccc:search --offset 5 --limit 5 "BAML extraction function"
 
 # Summarise a file or directory (uses project's summary feature)
-ccc describe cianfhoghlaim/dlt_sources/_lifespan.py
+ccc describe cianfhoghlaim/cocoindex/_lifespan.py
 
 # List + read concept guides (loaded from .cocoindex_code/guides.yml)
 ccc describe .                       # project overview
@@ -88,7 +88,7 @@ ccc describe .                       # project overview
 
 Per the `docs-skills-consolidation-pipeline` change (2026-06-16),
 the v1-native replacement for the standalone `ccc search` CLI is
-the **`cianfhoghlaim/cocoindex_flows/codebase_indexing.py`**
+the **`cianfhoghlaim/cocoindex/codebase_indexing.py`**
 CocoIndex v1 App, registered in Dagster under the `codebase`
 asset group. It uses the **same embedding model** (`BAAI/bge-m3`)
 and the **same LanceDB HNSW index** as the rest of the data
@@ -100,7 +100,7 @@ bun run ccc:index
 
 # v1 search via Python (replaces `ccc search "<query>"`)
 uv run python -c "
-from sruth.oideachais.cocoindex_flows.codebase_indexing import code_search
+from cianfhoghlaim.cocoindex.codebase_indexing import code_search
 print(code_search('BAML extraction', limit=5))
 "
 ```
@@ -141,9 +141,9 @@ exposes the following tools to every agent:
 
 | Metric | Value |
 |:--|:--|
-| Stack path | `cianfhoghlaim/stacks/cognee/` (Docker Compose) |
+| Stack path | `bonneagar/stacks/cognee/` (Docker Compose) |
 | Container | `cognee/cognee:latest` (v1.1.2), port 8100 → 8000 |
-| Graph backend | Neo4j (from `cianfhoghlaim/stacks/graphiti/`) |
+| Graph backend | Neo4j (from `bonneagar/stacks/graphiti/`) |
 | Vector store | LanceDB (Cognee local mode) |
 | LLM | DeepSeek V4 Pro via `https://api.deepseek.com/v1` (OpenAI-compatible) |
 | Embedding | OpenAI `text-embedding-3-small` |
@@ -160,7 +160,7 @@ exposes the following tools to every agent:
 
 ```bash
 # 1. Start Neo4j (Cognee's graph backend)
-cd cianfhoghlaim/stacks/graphiti
+cd bonneagar/stacks/graphiti
 docker compose up neo4j -d
 # Verify: curl -s http://localhost:7474 | head -3
 
@@ -523,43 +523,43 @@ bun run validate-ccc-freshness
 
 ## 9. The cianfhoghlaim v4 consolidation (2026-06-28)
 
-The five former `sruth/<quadrant>/` quadrants were merged into a
-single `cianfhoghlaim/` Python package. The five
-sruth-subagents were rewritten to align with the new tree.
+The five former pre-v4 quadrant directories were merged into a
+single `cianfhoghlaim/` Python package. The former quadrant-specific
+subagents were rewritten to align with the new tree.
 
 ### 9.1 Directory migration map
 
-| Former path (pre-2026-06-28) | Current path (v4) |
+| Former surface (pre-2026-06-28) | Current path (v4) |
 |:--|:--|
-| `sruth/oideachais/` (5-stage PDF pipeline, BAML, dlt_sources) | `cianfhoghlaim/` (root, with `dlt_sources/`, `baml_src/`, `dagster_defs/`, `notebooks/`) |
-| `sruth/oideachais/dlt_sources/official_media/` | `cianfhoghlaim/dlt_sources/official_media/` |
-| `sruth/oideachais/baml_src/` | `cianfhoghlaim/baml_src/` |
-| `sruth/oideachais/notebooks/` | `cianfhoghlaim/notebooks/` |
-| `sruth/oideachais/web/` (TanStack Start) | `cianfhoghlaim/web/apps/oideachais-web/` |
-| `sruth/meaisinfhoghlaim/` (agents, OCR, LLM stack) | `cianfhoghlaim/agents/meaisinfhoghlaim/` (root subpkg) |
-| `sruth/meaisinfhoghlaim/agents/` | `cianfhoghlaim/agents/meaisinfhoghlaim/agents/` |
-| `sruth/meaisinfhoghlaim/ocr/` | `cianfhoghlaim/agents/meaisinfhoghlaim/ocr/` |
-| `sruth/meaisinfhoghlaim/language/gaeilge/` | `cianfhoghlaim/agents/meaisinfhoghlaim/language/gaeilge/` |
-| `sruth/tuatha/` (Babylon.js MMO, crypteolas) | `cianfhoghlaim/web/apps/tuatha-ui/` + `cianfhoghlaim/stacks/tuatha/` |
-| `sruth/tuatha/ui/` | `cianfhoghlaim/web/apps/tuatha-ui/` |
-| `sruth/croilar/` (Convex portfolio) | `cianfhoghlaim/web/apps/croilar-web/` + `cianfhoghlaim/web/apps/croilar-portal/` |
-| `sruth/codeolas/` (code intelligence library) | `cianfhoghlaim/libraries/codeolas/` |
-| `infrastructure/stacks/cognee/` | `cianfhoghlaim/stacks/cognee/` |
-| `infrastructure/stacks/graphiti/` | `cianfhoghlaim/stacks/graphiti/` |
-| `infrastructure/stacks/infisical/` | `cianfhoghlaim/stacks/infisical/` |
-| `infrastructure/stacks/pangolin/` | `cianfhoghlaim/stacks/pangolin/` |
-| `infrastructure/scripts/cognee-graph-models/` | `cianfhoghlaim/cognify/cognee_integration/graph_models/` |
+| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | `cianfhoghlaim/` root with `dlt/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
+| Oideachais official-media DLT source | `cianfhoghlaim/dlt/official_media/` |
+| Oideachais BAML schemas | `cianfhoghlaim/baml_src/` |
+| Oideachais notebooks | `cianfhoghlaim/notebooks/` |
+| Oideachais TanStack Start app | `cianfhoghlaim/web/apps/oideachais-web/` |
+| Meaisínfhoghlaim agents, OCR, and LLM stack | `cianfhoghlaim/agents/` + `cianfhoghlaim/meaisinfhoghlaim/` |
+| Meaisínfhoghlaim agent registry | `cianfhoghlaim/agents/` |
+| Meaisínfhoghlaim OCR registry | `cianfhoghlaim/meaisinfhoghlaim/ocr/` |
+| Meaisínfhoghlaim language data | `cianfhoghlaim/dlt/language/` |
+| Tuatha Babylon.js MMO + Crypteolas | `cianfhoghlaim/agents/tuatha/` + `cianfhoghlaim/web/apps/tuatha-ui/` |
+| Tuatha UI | `cianfhoghlaim/web/apps/tuatha-ui/` |
+| Croílár portfolio + portal | `cianfhoghlaim/web/apps/croilar-web/` + `cianfhoghlaim/web/apps/croilar-portal/` |
+| Codeolas code intelligence library | `cianfhoghlaim/libraries/codeolas/` |
+| Cognee stack | `bonneagar/stacks/cognee/` |
+| Graphiti stack | `bonneagar/stacks/graphiti/` |
+| Infisical stack | `bonneagar/stacks/infisical/` |
+| Pangolin stack | `bonneagar/stacks/pangolin/` |
+| Cognee graph models scripts | `cianfhoghlaim/cognify/cognee_integration/graph_models/` |
 
 ### 9.2 Subagent migration map
 
-The 5 sruth-subagents were replaced with **4 functional
+The 5 former quadrant subagents were replaced with **4 functional
 subagents + 1 research subagent** in `opencode.json`:
 
 | Old subagent (pre-2026-06-28) | New subagent | Skill count | Routes to |
 |:--|:--|--:|:--|
-| `oideachais` | `data-platform` | 15 | `cianfhoghlaim/dlt_sources/`, `dagster_defs/`, `baml_src/`, `notebooks/` |
-| `infrastructure` | `infrastructure` | 15 | `cianfhoghlaim/stacks/*/`, komodo, pangolin, locket |
-| `meaisinfhoghlaim` | `agent-platform` | 23 | `cianfhoghlaim/agents/meaisinfhoghlaim/`, BAML, OCR, LLM routing, Langfuse, MLflow, RAGAS |
+| `oideachais` | `data-platform` | 15 | `cianfhoghlaim/dlt/`, `orchestration/`, `baml_src/`, `notebooks/` |
+| `infrastructure` | `infrastructure` | 15 | `bonneagar/stacks/*/`, komodo, pangolin, locket |
+| `meaisinfhoghlaim` | `agent-platform` | 23 | `cianfhoghlaim/agents/`, `cianfhoghlaim/meaisinfhoghlaim/`, BAML, OCR, LLM routing, Langfuse, MLflow, RAGAS |
 | `croilar` + `tuatha` | `frontend-apps` | 20 | `cianfhoghlaim/web/`, Convex, Babylon.js, Hono |
 | (new) | `research` | 11 | BrowserBase, Firecrawl, CCC, Cognee, change-detection |
 
@@ -580,13 +580,13 @@ appeared twice (e.g. `agentic-frontend-frameworks` was in the
 
 The build-agent prompt (this file's owner) was rewritten to
 reference the new subagent names and the `cianfhoghlaim/` paths.
-The five `sruth/`-prefixed subagent types are gone.
+The five pre-v4 quadrant subagent types are gone.
 
 ### 9.3 MCP migration
 
 The `croilar-devtools` MCP server (which pointed at
-`sruth/croilar/mcp/devtools/index.ts`) was **removed** because
-the `sruth/croilar/` directory no longer exists. The croilar
+`cianfhoghlaim/web/apps/croilar-web/mcp/devtools/index.ts`) was **removed** because
+the `cianfhoghlaim/web/apps/croilar-web/` directory no longer exists. The croilar
 dev-tools surface is temporarily un-implementable; a follow-up
 GitHub issue tracks the migration of the MCP server code to
 `cianfhoghlaim/agents/api/_croilar_convex/devtools.ts`.

@@ -1,6 +1,6 @@
 ---
 name: secrets-management
-description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists. Powers the BIEP secret contract: `infisical://dev-baile/oideachais/...` (no `sruth/` prefix).
+description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists. Powers the BIEP secret contract: `infisical://dev-baile/oideachais/...` (no `cianfhoghlaim/` prefix).
 ---
 
 # Secrets Management — Infisical + Locket + mise
@@ -295,7 +295,7 @@ The previous `opencode-go` + `minimax-coding-plan` fallback chain is removed fro
 
 The BIEP (`openspec/changes/lc6-biep/`) consumes 12 secrets
 under the canonical `infisical://dev-baile/oideachais/<key>`
-prefix (no `sruth/` segment — the v4 consolidation moved the
+prefix (no `cianfhoghlaim/` segment — the v4 consolidation moved the
 project path to `oideachais/`):
 
 | Secret | Purpose |
@@ -322,7 +322,7 @@ infisical://dev-baile/oideachais/LANCEDB_GARAGE_KEY_ID
 # etc.
 ```
 
-The pre-v4 form (`infisical://dev-baile/sruth/oideachais/...`)
+The pre-v4 form (`infisical://dev-baile/cianfhoghlaim/...`)
 **does not resolve** post-v4 — Infisical returns a 404 on the
 old prefix because the project was renamed during the v4
 consolidation (2026-06-28). If a stack's `.infisical.env` still

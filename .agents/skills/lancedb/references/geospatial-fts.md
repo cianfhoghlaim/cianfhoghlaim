@@ -68,10 +68,10 @@ table.create_scalar_index("lon")
 
 ## KCG example
 
-The `sruth/oideachais/cocoindex_flows/geospatial_indexing.py` CocoIndex v1
+The `cianfhoghlaim/cocoindex/geospatial_indexing.py` CocoIndex v1
 App embeds + indexes the Celtic place-name corpora (Gaeltacht
 regions, heritage sites, school locations) with geospatial
-metadata. The Dagster asset group `sruth/oideachais/dagster_defs/assets/geospatial_assets.py`
+metadata. The Dagster asset group `cianfhoghlaim/orchestration/defs/geospatial_assets.py`
 schedules a daily materialisation that updates the geo index.
 
 ## Reference

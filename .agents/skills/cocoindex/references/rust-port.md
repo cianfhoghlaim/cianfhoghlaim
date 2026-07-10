@@ -1,7 +1,7 @@
 # Rust Port Reference
 
 CocoIndex v1 has a Rust port of most Python flows. The Rust port
-is in `sruth/oideachais/cocoindex_flows/rust/` and at the upstream
+is in `cianfhoghlaim/cocoindex/rust/` and at the upstream
 `docs/cocoindex/rust/` examples (deleted with the docs; the same
 examples are in the upstream cocoindex repo).
 
@@ -31,14 +31,14 @@ ergonomics of `@coco.fn` + BAML are better.
 
 ## KCG example (Rust port)
 
-- `sruth/oideachais/cocoindex_flows/rust/text_embedding/src/main.rs` —
-  mirror of `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
+- `cianfhoghlaim/cocoindex/rust/text_embedding/src/main.rs` —
+  mirror of `cianfhoghlaim/cocoindex/leabharlann_embedding.py`
   (text embedding + LanceDB target)
 
 ## Running a Rust port
 
 ```bash
-cd sruth/oideachais/cocoindex_flows/rust/text_embedding
+cd cianfhoghlaim/cocoindex/rust/text_embedding
 cargo run -- index    # catch-up
 cargo run -- query "irish gaelic"  # query
 ```

@@ -250,7 +250,7 @@ are domain-specific, not duplicates).
 - **AND** the thin-shim re-exports it at
   `cianfhoghlaim/agents/adk/curriculum_agent.py`
 - **WHEN** a consumer does
-  `from oideachais.agents.adk.curriculum_agent import curriculum_agent`
+  `from cianfhoghlaim.agents.adk.curriculum_agent import curriculum_agent`
 - **THEN** the imported `curriculum_agent` is the **same object**
   as `meaisinfhoghlaim.agents.curriculum_agent.curriculum_agent`
   (verified via `is` comparison)
@@ -367,7 +367,7 @@ Canonical homes are determined by the Round 11 audit:
 
 If meaisínfhoghlaim requires a Celtic-language DLT source, it
 MUST import from the canonical home via
-`from oideachais.dlt.<nation>.<domain> import <entity>_source`,
+`from cianfhoghlaim.dlt.<nation>.<domain> import <entity>_source`,
 NOT re-implement the source at a meaisínfhoghlaim-local path.
 
 #### Scenario: A meaisínfhoghlaim `language/gaeilge/` file re-implements a canonical DLT source
@@ -389,7 +389,7 @@ NOT re-implement the source at a meaisínfhoghlaim-local path.
 #### Scenario: A meaisínfhoghlaim `language/gaeilge/` file has stale `oideachais.dlt.celtic` import
 
 - **GIVEN** a file under `cianfhoghlaim/language/gaeilge/`
-  contains `from oideachais.dlt.celtic.X import Y`
+  contains `from cianfhoghlaim.dlt.celtic.X import Y`
   in either an active or lazy (`try/except ImportError`) import
   block
 - **AND** `cianfhoghlaim/dlt_sources/celtic/` does not exist
@@ -448,14 +448,14 @@ The canonical homes for cross-quadrant utilities are:
 
 | Utility | Canonical home |
 |:--|:--|
-| `CircuitBreaker`, `RateLimiter`, `retry` | `cianfhoghlaim/core/utils/` (importable as `from oideachais.core.utils import ...`) |
+| `CircuitBreaker`, `RateLimiter`, `retry` | `cianfhoghlaim/core/utils/` (importable as `from cianfhoghlaim.core.utils import ...`) |
 | `get_logger` | `cianfhoghlaim/observability/logging.py` |
 | `settings` | `cianfhoghlaim/settings.py` |
 | DLT sources (Dúchas, Téarma, Gaois, etc.) | `cianfhoghlaim/dlt_sources/ie/culture/` |
 
 If a meaisínfhoghlaim module needs a utility that lives in
 another quadrant, it MUST import from the canonical home
-(e.g. `from oideachais.core.utils import CircuitBreaker`),
+(e.g. `from cianfhoghlaim.core.utils import CircuitBreaker`),
 NOT a phantom meaisínfhoghlaim-local path
 (e.g. `from ..core.utils import CircuitBreaker` when
 `cianfhoghlaim/core/` does not exist).
@@ -469,7 +469,7 @@ NOT a phantom meaisínfhoghlaim-local path
 - **WHEN** the module is loaded
 - **THEN** Python raises `ModuleNotFoundError: No module named 'meaisinfhoghlaim.core'`
 - **AND** the import MUST be rewired to the canonical home
-  `from oideachais.core.utils import CircuitBreaker`
+  `from cianfhoghlaim.core.utils import CircuitBreaker`
 
 #### Scenario: A future contributor adds a new cross-quadrant import
 
@@ -543,11 +543,11 @@ that duplicates `cianfhoghlaim/tools/`. The canonical home for
 all Celtic-education agent tools (corpus search, curriculum search,
 spatial query, statistics query, terminology, translation) is
 `cianfhoghlaim/tools/`, importable as
-`from oideachais.tools.X import ...`.
+`from cianfhoghlaim.tools.X import ...`.
 
 Meaisínfhoghlaim agent code MUST import tools from the canonical
 oideachais location (e.g.
-`from oideachais.tools.curriculum_search import compare_curricula`),
+`from cianfhoghlaim.tools.curriculum_search import compare_curricula`),
 NOT from a meaisínfhoghlaim-local `tools/` package
 (e.g. `from meaisinfhoghlaim.tools.curriculum_search import ...`).
 
@@ -562,7 +562,7 @@ NOT from a meaisínfhoghlaim-local `tools/` package
 - **THEN** Python raises
   `ModuleNotFoundError: No module named 'meaisinfhoghlaim.agents.tools'`
 - **AND** the import MUST be rewired to the canonical home
-  `from oideachais.tools.X import ...`
+  `from cianfhoghlaim.tools.X import ...`
 
 #### Scenario: A future contributor adds a new tool to a meaisínfhoghlaim agent
 
@@ -570,7 +570,7 @@ NOT from a meaisínfhoghlaim-local `tools/` package
 - **WHEN** the contributor adds the import
 - **THEN** the contributor MUST first check whether the canonical
   home `cianfhoghlaim/tools/` already provides the needed symbol
-  (verified via `PYTHONPATH=./sruth python3 -c "from oideachais.tools.X import <symbol>"`)
+  (verified via `PYTHONPATH=. python3 -c "from cianfhoghlaim.tools.X import <symbol>"`)
 - **AND** the contributor MUST import from the canonical oideachais
   location, NOT create a new `cianfhoghlaim/agents/tools/` package
 - **AND** if the symbol is NOT in the canonical home, the contributor
@@ -590,7 +590,7 @@ exist; any `from ..tools.X` import from a file under
 Every tool import in meaisínfhoghlaim agent code MUST be either:
 
 1. An absolute cross-quadrant import from the canonical oideachais
-   home (e.g. `from oideachais.tools.curriculum_search import ...`),
+   home (e.g. `from cianfhoghlaim.tools.curriculum_search import ...`),
    OR
 2. A relative import that resolves correctly within the same package
    (e.g. `from .tools.X import ...` if `cianfhoghlaim/agents/tools/`
@@ -613,7 +613,7 @@ Every tool import in meaisínfhoghlaim agent code MUST be either:
   `ModuleNotFoundError: No module named 'meaisinfhoghlaim.tools'`
   at module load time (NOT at function call time)
 - **AND** the import MUST be rewired to the absolute canonical path
-  `from oideachais.tools.X import ...`
+  `from cianfhoghlaim.tools.X import ...`
 
 #### Scenario: A future contributor adds a new tool import to a meaisínfhoghlaim agent
 
@@ -623,9 +623,9 @@ Every tool import in meaisínfhoghlaim agent code MUST be either:
   exists via `ls <target-path>/X.py`
 - **AND** the contributor MUST first verify the canonical symbol is
   importable via
-  `PYTHONPATH=./sruth python3 -c "from oideachais.tools.X import <symbol>"`
+  `PYTHONPATH=. python3 -c "from cianfhoghlaim.tools.X import <symbol>"`
 - **AND** the import line MUST use the absolute canonical path
-  `from oideachais.tools.X import ...`,
+  `from cianfhoghlaim.tools.X import ...`,
   NOT the broken relative path `from ..tools.X import ...`
 
 ### Requirement: No pre-split multi-source DLT file duplicates in meaisínfhoghlaim
@@ -655,7 +655,7 @@ copy is a stale duplicate and MUST be deleted.
   `cianfhoghlaim/dlt_sources/ie/culture/{canuint,canuint_search,canuint_audio,canuint_dialect_summary,canuint_word_alignment}.py`
   (1,095 lines across 5 files)
 - **AND** the canonical split files all import cleanly via
-  `PYTHONPATH=./sruth python3 -c "from oideachais.dlt.ie.culture.canuint import canuint_source"`
+  `PYTHONPATH=. python3 -c "from cianfhoghlaim.dlt.ie.culture.canuint import canuint_source"`
 - **WHEN** the audit confirms the pre-split file has 0 active
   importers across `sruth/`
 - **THEN** the pre-split file MUST be deleted
@@ -777,29 +777,9 @@ in the root_agent without a manual code edit.
 - **THEN** 0 hits SHALL appear (the `5_agent_ops/pipecat/` sub-folder is intentionally absent in this change)
 - **AND** a follow-on change `2026-07-add-pipecat-voice-agent-to-l5` (tracked but out of scope here) will add the 13th L5 sub-folder + 5 emitted assets
 
-## Known issues (from `cianfhoghlaim/README.md`)
-
-| # | Issue | Tracked in | Severity |
-|--:|:--|:--|:--|
-| 1 | Most sub-packages are stubs; the 4 heartbeats are the first real assets | the 10 sub-packages | high |
-| 2 | No `[tool.uv.sources]` block; sibling workspace members are not declared as local-path dependencies | `cianfhoghlaim/pyproject.toml` | high — blocks cross-quadrant imports |
-| 3 | The 6 Celtic-language subdirs are stubs | the 6 subdirs | medium |
-| 4 | No production dagster code-location (only the 4 heartbeats) | `cianfhoghlaim/dagster_defs/assets/healthchecks.py` | medium |
-| 5 | The `baml_src → scéimre` rename was deferred per `lateralise-british-isles-domains` | the AGENTS.md | low — deferred |
-
-## Cross-references
-
-- [`cianfhoghlaim/`](../../cianfhoghlaim/) (the AI/ML quadrant)
-- [`cianfhoghlaim/README.md`](../../cianfhoghlaim/README.md) (the status table + known issues)
-- [`cianfhoghlaim/AGENTS.md`](../../cianfhoghlaim/AGENTS.md) (the developer-quick-reference)
-- [`cianfhoghlaim/pyproject.toml`](../../cianfhoghlaim/pyproject.toml) (the uv workspace member)
-- [`dg.toml`](../../dg.toml) (the root Dagster code-location config)
-- [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](meaisinfhoghlaim-agent-frameworks/spec.md) (the 12 agents)
-- [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](meaisinfhoghlaim-ocr-htr/spec.md) (the 10 OCR models)
-
-## ADDED Requirements (v4 extension — 2026-07-03)
-
 ### Requirement: 12 Python OCR/VLM/memory packages in the dagster-local image
+
+The system SHALL build a `dagster-local` Docker image with the Python packages required for the v4 OCR/VLM/memory stack.
 
 The `dagster-local` Docker image (built from
 `bonneagar/stacks/dagster/Dockerfile.dagster`) SHALL install **12
@@ -870,3 +850,21 @@ visualisations.
 - **WHEN** `for f in notebooks/dashboards/{leaving_cert,law,medical,politics,culture,technology,other}/0*_*.py; do python -c "import ast; ast.parse(open('\$f').read())"; done`
 - **THEN** all 25 notebooks SHALL parse without syntax errors
 
+## Known issues (from `cianfhoghlaim/README.md`)
+| # | Issue | Tracked in | Severity |
+|--:|:--|:--|:--|
+| 1 | Most sub-packages are stubs; the 4 heartbeats are the first real assets | the 10 sub-packages | high |
+| 2 | No `[tool.uv.sources]` block; sibling workspace members are not declared as local-path dependencies | `cianfhoghlaim/pyproject.toml` | high — blocks cross-quadrant imports |
+| 3 | The 6 Celtic-language subdirs are stubs | the 6 subdirs | medium |
+| 4 | No production dagster code-location (only the 4 heartbeats) | `cianfhoghlaim/dagster_defs/assets/healthchecks.py` | medium |
+| 5 | The `baml_src → scéimre` rename was deferred per `lateralise-british-isles-domains` | the AGENTS.md | low — deferred |
+
+## Cross-references
+
+- [`cianfhoghlaim/`](../../cianfhoghlaim/) (the AI/ML quadrant)
+- [`cianfhoghlaim/README.md`](../../cianfhoghlaim/README.md) (the status table + known issues)
+- [`cianfhoghlaim/AGENTS.md`](../../cianfhoghlaim/AGENTS.md) (the developer-quick-reference)
+- [`cianfhoghlaim/pyproject.toml`](../../cianfhoghlaim/pyproject.toml) (the uv workspace member)
+- [`dg.toml`](../../dg.toml) (the root Dagster code-location config)
+- [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](meaisinfhoghlaim-agent-frameworks/spec.md) (the 12 agents)
+- [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](meaisinfhoghlaim-ocr-htr/spec.md) (the 10 OCR models)

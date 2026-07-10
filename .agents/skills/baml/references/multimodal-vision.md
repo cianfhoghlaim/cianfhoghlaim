@@ -140,11 +140,11 @@ pages), consider:
 
 ## In-repo KCG usage
 
-- `sruth/oideachais/baml_src/ocr_extraction.baml` (9,368 bytes) — the
+- `cianfhoghlaim/baml_src/ocr_extraction.baml` (9,368 bytes) — the
   canonical multimodal pattern in the KCG stack. Extracts text from
   scanned NCCA / SEC PDFs via Gemini vision
-- `sruth/oideachais/baml_src/audio_extraction.baml` — for audio transcripts
-- `sruth/oideachais/baml_src/portfolio_extraction.baml` — for the croilar
+- `cianfhoghlaim/baml_src/audio_extraction.baml` — for audio transcripts
+- `cianfhoghlaim/baml_src/portfolio_extraction.baml` — for the croilar
   CV / achievements PDFs (mixed text + image content)
 
 ## Reference

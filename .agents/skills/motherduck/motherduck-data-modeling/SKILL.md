@@ -129,7 +129,7 @@ For analytics modeling, prefer **dbt-duckdb** (with a MotherDuck
 profile) or **SQLMesh** with a DuckDB engine. The pattern:
 
 ```
-sruth/oideachais/dbt_project/
+cianfhoghlaim/orchestration/sqlmesh/
 ├── dbt_project.yml
 ├── profiles.yml                # MotherDuck profile
 ├── models/
