@@ -1,0 +1,49 @@
+# defs/1_ingestion/curriculum/primary_jc_combined/defs.yaml
+#
+# L1 ingestion cron asset for the Ireland Primary + Junior Cycle
+# (combined cross-stage) DLT source.
+#
+# Per the ireland-primary-jc-dlt-baml spec — Phase 1 of the
+# 2026-07-14-ireland-primary-jc-dlt-baml-v1 change ships the
+# cross-stage ingestion loop as a 3rd DLT source. Together with
+# the BIEP v1 flagship (which covers Senior Cycle / Leaving Cert
+# 15-18yo), the 3 specs cover the full K-12 → university pipeline:
+#   - Primary (5-6yo)        ← ireland-primary-jc-dlt-baml
+#   - Junior Cycle (12-15yo) ← ireland-primary-jc-dlt-baml
+#   - Senior Cycle / LC (15-18yo) ← british-isles-education-pipeline
+#
+# Walks the local `/stedding/ingest_queue/{primary,junior_cycle}/`
+# cache and emits one row per (stage, subject, language) tuple,
+# enabling cross-stage analytics (e.g. "language coverage across
+# stages 1-4"). Honours USE_LOCAL_SCRAPES=true.
+#
+# Per openspec/changes/2026-07-14-ireland-primary-jc-dlt-baml-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: ireland_primary_jc
+  module: cianfhoghlaim.dlt.british_isles.ireland.education.primary_jc_combined
+  schedule:
+    cron: "0 5 * * *"
+    timezone: UTC
+  partitions:
+    - stage:
+        values: ["primary", "junior_cycle"]
+    - language:
+        values: ["en", "ga"]
+  use_local_scrapes: true
+  asset_check: primary_jc_combined_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - ireland_primary_jc
+    - primary
+    - junior_cycle
+    - combined
+    - curriculum
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-14-ireland-primary-jc-dlt-baml-v1
+    spec: ireland-primary-jc-dlt-baml
+    stages:
+      - primary
+      - junior_cycle
+    notes: "Ireland Primary + JC combined DLT source — 2 stages × EN+GA (4 partitions) + per-(stage, subject) granularity downstream. Cross-stage analytics companion to the single-stage primary.py + junior_cycle.py sources."

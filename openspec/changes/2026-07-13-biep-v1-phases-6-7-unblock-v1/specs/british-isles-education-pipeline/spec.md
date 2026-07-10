@@ -82,7 +82,7 @@ Each notebook SHALL:
 
 The British-Isles Education Pipeline SHALL schedule a daily MotherDuck
 Flight `lc_pdf_sync_flight` at
-`infrastructure/stacks/motherduck/flights/lc_pdf_sync_flight.py`
+`cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
 that:
 
 1. Runs `uv run cocoindex update lc_subjects` to re-ingest the
@@ -98,7 +98,7 @@ that:
    subprocess exit codes + the full log
 
 The Flight SHALL be registered in
-`infrastructure/stacks/motherduck/flights/config.yaml` with
+`cianfhoghlaim/motherduck/flights/config.yaml` with
 `schedule: "0 4 * * *"` (daily at 04:00 UTC). The IaC orchestration
 (Docker Compose stack + cron binding) lives in the separate
 `bonneagar` repo at `bonneagar/stacks/motherduck/`.
