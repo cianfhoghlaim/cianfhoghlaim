@@ -24,6 +24,19 @@ from .tools.gael_gramadach_review import lookup_gael_gramadach
 from .tools.gael_formative_item_generate import generate_gael_item
 from .tools.gael_response_score import score_gael_response
 
+# Feat C (2026-07-10): wire the StorageBackend Protocol + Langfuse
+# tracer + Cognee emit hook + BAML function lookup at agent-
+# construction time.  See `cianfhoghlaim/agents/tuatha/wiring.py`.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_GAEL_WIRING = get_wiring("gaeilge")
+
 
 async def gael_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
     try:
@@ -153,3 +166,34 @@ gael_agent = LlmAgent(
     ],
     output_key="gael_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (the LlmAgent is a Pydantic
+# model so we cannot attach arbitrary attributes to it directly).
+# The lifecycle tests in `tests/test_subject_router_smoke.py` read
+# these module-level names.
+# ---------------------------------------------------------------------------
+
+
+async def gael_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    """Push ``response`` to the Gaeilge Cognee dataset
+    ``oideachais_lc_gaeilge`` and return closest historical hits.
+    """
+    return await emit_to_cognee(_GAEL_WIRING, response, query)
+
+
+def gael_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    """Open a Langfuse trace (``agent.gael.<verb>``) for invocation."""
+    return open_langfuse_trace(_GAEL_WIRING, verb=verb, **kw)
+
+
+gael_agent_baml_quest_pack_fn = resolve_baml_function(
+    _GAEL_WIRING, "QuestPack"
+)
+gael_agent_baml_formative_item_fn = resolve_baml_function(
+    _GAEL_WIRING, "FormativeItem"
+)
+
+
+gael_agent_wire = wire_subject_agent(_GAEL_WIRING)

@@ -36,6 +36,18 @@ from .tools.math_marking_scheme_lookup import lookup_math_marking_scheme
 from .tools.math_formative_item_generate import generate_math_item
 from .tools.math_response_score import score_math_response
 
+# Feat C (2026-07-10): StorageBackend Protocol + Langfuse tracer +
+# Cognee emit hook + BAML function lookup, wired eagerly.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_MATH_WIRING = get_wiring("mathematics")
+
 
 # ============================================================================
 # Tool wrappers
@@ -225,3 +237,34 @@ math_agent = LlmAgent(
     ],
     output_key="math_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (the LlmAgent is a Pydantic
+# model so we cannot attach arbitrary attributes to it directly).
+# The lifecycle tests in `tests/test_subject_router_smoke.py` read
+# these module-level names.
+# ---------------------------------------------------------------------------
+
+
+async def math_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    """Push ``response`` to the Mathematics Cognee dataset
+    ``oideachais_lc_mathematics`` and return closest historical hits.
+    """
+    return await emit_to_cognee(_MATH_WIRING, response, query)
+
+
+def math_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    """Open a Langfuse trace (``agent.math.<verb>``) for invocation."""
+    return open_langfuse_trace(_MATH_WIRING, verb=verb, **kw)
+
+
+math_agent_baml_quest_pack_fn = resolve_baml_function(
+    _MATH_WIRING, "QuestPack"
+)
+math_agent_baml_formative_item_fn = resolve_baml_function(
+    _MATH_WIRING, "FormativeItem"
+)
+
+
+math_agent_wire = wire_subject_agent(_MATH_WIRING)

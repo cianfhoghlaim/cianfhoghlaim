@@ -17,6 +17,17 @@ from .tools.comp_tools import (
     score_comp_response,
 )
 
+# Feat C (2026-07-10): StorageBackend Protocol + Langfuse + Cognee + BAML.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_COMP_WIRING = get_wiring("computer_science")
+
 
 async def comp_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
     try:
@@ -94,3 +105,27 @@ comp_agent = LlmAgent(
     tools=[comp_syllabus_tool, comp_past_paper_tool, comp_marking_scheme_tool, comp_formative_item_tool, comp_response_score_tool],
     output_key="comp_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (LlmAgent is a Pydantic model).
+# ---------------------------------------------------------------------------
+
+
+async def comp_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    return await emit_to_cognee(_COMP_WIRING, response, query)
+
+
+def comp_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    return open_langfuse_trace(_COMP_WIRING, verb=verb, **kw)
+
+
+comp_agent_baml_quest_pack_fn = resolve_baml_function(
+    _COMP_WIRING, "QuestPack"
+)
+comp_agent_baml_formative_item_fn = resolve_baml_function(
+    _COMP_WIRING, "FormativeItem"
+)
+
+
+comp_agent_wire = wire_subject_agent(_COMP_WIRING)

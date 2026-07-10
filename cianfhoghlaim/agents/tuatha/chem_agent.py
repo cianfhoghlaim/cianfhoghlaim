@@ -18,6 +18,17 @@ from .tools.chem_marking_scheme_lookup import lookup_chem_marking_scheme
 from .tools.chem_formative_item_generate import generate_chem_item
 from .tools.chem_response_score import score_chem_response
 
+# Feat C (2026-07-10): StorageBackend Protocol + Langfuse + Cognee + BAML.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_CHEM_WIRING = get_wiring("chemistry")
+
 
 async def chem_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
     try:
@@ -129,3 +140,27 @@ chem_agent = LlmAgent(
     ],
     output_key="chem_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (LlmAgent is a Pydantic model).
+# ---------------------------------------------------------------------------
+
+
+async def chem_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    return await emit_to_cognee(_CHEM_WIRING, response, query)
+
+
+def chem_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    return open_langfuse_trace(_CHEM_WIRING, verb=verb, **kw)
+
+
+chem_agent_baml_quest_pack_fn = resolve_baml_function(
+    _CHEM_WIRING, "QuestPack"
+)
+chem_agent_baml_formative_item_fn = resolve_baml_function(
+    _CHEM_WIRING, "FormativeItem"
+)
+
+
+chem_agent_wire = wire_subject_agent(_CHEM_WIRING)

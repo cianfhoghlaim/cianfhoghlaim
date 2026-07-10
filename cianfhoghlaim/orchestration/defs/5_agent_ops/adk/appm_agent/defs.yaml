@@ -18,6 +18,15 @@ attributes:
   event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
   langfuse_trace_tag: agent.appm
   langfuse_drop_smoke_spans: true
+  cognify:
+    dataset: oideachais_lc_applied_mathematics
+    top_k: 5
+    emit_on:
+      - response_generated
+      - tool_call_completed
+  langfuse_callbacks:
+    trace_name: agent.appm.explain
+    flush_interval: 30s
   routing_keywords:
     - applied mathematics
     - applied maths
