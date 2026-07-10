@@ -141,3 +141,24 @@ async def query_applied_mathematics(
         embed_model=EMBED_MODEL,
         top_k=top_k,
     )
+
+
+# ============================================================================
+# v1 conformance scaffold (R3 + R4) per
+# openspec/changes/2026-07-13-cocoindex-v1-non-priority-flows-v1.
+# The yield-dict loop in `applied_mathematics_embedding` is a legacy v0
+# pattern; the canonical v1 target setup is below. R1 and R2 are already
+# satisfied (R1 via the `_lifespan` import above; R2 via `@coco.App(...)`
+# on `applied_mathematics_embedding`).
+# ============================================================================
+if COCOINDEX_AVAILABLE:
+
+    async def _v1_mount_lancedb_target(
+        level: str = "hl", language: str = "en"
+    ) -> None:
+        """v1 LanceDB sink — `mount_table_target` + `declare_vector_index`."""
+        target_table = await lancedb.mount_table_target(  # type: ignore[union-attr]
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=f"oideachais.lc.applied_mathematics.{level}_{language}",
+        )
+        target_table.declare_vector_index(column="embedding")  # R4
