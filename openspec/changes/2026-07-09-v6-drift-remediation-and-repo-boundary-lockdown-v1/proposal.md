@@ -164,9 +164,12 @@ The full cross-repo commit plan is in
 - The 5 active openspec changes still being worked on
   (this remediation change is *parallel* to them — they
   continue in Waves 1-3)
-- `infrastructure/stacks/motherduck/` (correctly stays in
-  cianfhoghlaim — it's the MotherDuck Dives/Flights metadata
-  sidecar, not a Compose stack)
+- `infrastructure/stacks/motherduck/` (was the MotherDuck Dives/Flights
+  Python sidecar; re-homed to `cianfhoghlaim/motherduck/{dives,flights}/`
+  on 2026-07-10 since it's BIEP capability code, not MotherDuck
+  compose. The MotherDuck compute substrate — `compose.yaml`,
+  `pangolin.yaml`, `secrets.env`, `.env.example`, `README.md` —
+  stays in bonneagar at `bonneagar/stacks/motherduck/`.)
 - The 3 separate git remotes (`origin` = cianfhoghlaim,
   `bonneagar` = bonneagar, `leabharlann` = leabharlann)
 - The shared `.git/` directory between worktrees (intentional —
