@@ -7,6 +7,11 @@
 # previously existed only at `cianfhoghlaim/agents/tuatha/<slug>_agent.py`
 # are now wired into `defs/5_agent_ops/adk/` as L5 Component mounts.
 #
+# Feat C (2026-07-10) added the `cognify` + `langfuse_callbacks`
+# blocks so each agent emits to `oideachais_lc_gaeilge` + opens a
+# per-subject Langfuse trace at the canonical name
+# `agent.gael.<verb>`.
+#
 # The Component emits 5 Dagster assets:
 # - agent_health_gael_agent
 # - agent_routing_gael_agent
@@ -29,6 +34,21 @@ attributes:
   event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
   langfuse_trace_tag: agent.gael
   langfuse_drop_smoke_spans: true
+  # Feat C: cognify step pushes LLM responses to the per-subject
+  # Cognee dataset `oideachais_lc_gaeilge` and reads the 5 closest
+  # historical responses for the same query as supporting context.
+  cognify:
+    dataset: oideachais_lc_gaeilge
+    top_k: 5
+    emit_on:
+      - response_generated
+      - tool_call_completed
+  # Feat C: explicit Langfuse callback contract — the canonical
+  # `trace_name` template is `agent.<module_slug>.<verb>` so the
+  # 8 subject-agent traces are co-discoverable in Langfuse.
+  langfuse_callbacks:
+    trace_name: agent.gael.explain
+    flush_interval: 30s
   routing_keywords:
     - gaeilge
     - gaelic

@@ -18,6 +18,18 @@ from .tools.hist_marking_scheme_lookup import lookup_hist_marking_scheme
 from .tools.hist_formative_item_generate import generate_hist_item
 from .tools.hist_response_score import score_hist_response
 
+# Feat C (2026-07-10): StorageBackend Protocol + Langfuse tracer +
+# Cognee emit hook + BAML function lookup, wired eagerly.
+from .wiring import (
+    emit_to_cognee,
+    get_wiring,
+    open_langfuse_trace,
+    resolve_baml_function,
+    wire_subject_agent,
+)
+
+_HIST_WIRING = get_wiring("history")
+
 
 async def hist_syllabus_lookup_tool(topic: str, level: str = "lc_hl") -> list[dict]:
     try:
@@ -97,3 +109,27 @@ hist_agent = LlmAgent(
     tools=[hist_syllabus_tool, hist_past_paper_tool, hist_marking_scheme_tool, hist_formative_item_tool, hist_response_score_tool],
     output_key="hist_response",
 )
+
+
+# ---------------------------------------------------------------------------
+# Feat C wire-up — module-level handles (LlmAgent is a Pydantic model).
+# ---------------------------------------------------------------------------
+
+
+async def hist_agent_emit_to_cognee(response: str, query: str) -> list[str]:
+    return await emit_to_cognee(_HIST_WIRING, response, query)
+
+
+def hist_agent_open_trace(verb: str = "explain", **kw: object) -> object:
+    return open_langfuse_trace(_HIST_WIRING, verb=verb, **kw)
+
+
+hist_agent_baml_quest_pack_fn = resolve_baml_function(
+    _HIST_WIRING, "QuestPack"
+)
+hist_agent_baml_formative_item_fn = resolve_baml_function(
+    _HIST_WIRING, "FormativeItem"
+)
+
+
+hist_agent_wire = wire_subject_agent(_HIST_WIRING)
