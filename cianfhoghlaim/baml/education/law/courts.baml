@@ -44,7 +44,7 @@ function ExtractCourtForm(
   page_url: string,
   page_html: string,
 ) -> CourtForm {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Courts Service of Ireland forms extraction
     specialist working for Cianfhoghlaim Oideachais.
@@ -80,7 +80,7 @@ function ExtractCourtFee(
   page_url: string,
   page_html: string,
 ) -> CourtFee {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Courts Service of Ireland fee-schedule extraction
     specialist.

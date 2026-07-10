@@ -33,10 +33,10 @@ class CultureHeritageClaim {
 }
 
 function ExtractCultureClaims(
-  pdf_path string,
-  context string
+  pdf_path: string,
+  context: string
 ) -> CultureHeritageClaim[] {
-  client "litellm"
+  client LitellmClient
   prompt #"
     You are a senior Irish cultural-heritage analyst.
     Read the PDF at `{{ pdf_path }}` and extract every verifiable cultural-heritage claim.

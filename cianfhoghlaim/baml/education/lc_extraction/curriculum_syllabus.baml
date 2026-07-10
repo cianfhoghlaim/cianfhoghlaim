@@ -29,37 +29,37 @@ enum ModuleType {
 }
 
 class ModuleTopic {
-  module_id: string
-  name_en: string
-  name_ga: string?
-  type: ModuleType
+  module_id string
+  name_en string
+  name_ga string?
+  type ModuleType
   // Learning outcomes (specific, measurable)
-  learning_outcomes: string[]
-  estimated_hours: int?
+  learning_outcomes string[]
+  estimated_hours int?
 }
 
 class LcLearningOutcome {
-  lo_id: string
-  statement_en: string
-  statement_ga: string?
-  blooms_taxonomy_level: string?
+  lo_id string
+  statement_en string
+  statement_ga string?
+  blooms_taxonomy_level string?
 }
 
 class SyllabusDocument {
   // Document-level metadata
-  subject: string
-  language: SyllabusLanguage
-  stage: NCCAStage
-  source_pdf: string
-  source_pages: int
+  subject string
+  language SyllabusLanguage
+  stage NCCAStage
+  source_pdf string
+  source_pages int
 
   // Document content
-  module_topics: ModuleTopic[]
-  total_learning_outcomes: int
+  module_topics ModuleTopic[]
+  total_learning_outcomes int
 
   // Cross-cutting
-  cross_curricular: string[]
-  assessment_objectives: string[]
+  cross_curricular string[]
+  assessment_objectives string[]
 }
 
 // ============================================================================

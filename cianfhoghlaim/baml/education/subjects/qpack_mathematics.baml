@@ -160,10 +160,10 @@ class MathQuestPack {
 // ============================================================================
 
 function GenerateMathQuestPack(
-  syllabus LeavingCertSyllabus,
-  past_papers LeavingCertPastPaper[],
-  marking_schemes LeavingCertMarkingScheme[],
-  level string
+  syllabus: LeavingCertSyllabus,
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
+  level: string
 ) -> MathQuestPack {
   client ExtractEnStrong
   prompt #"
@@ -208,13 +208,13 @@ function ExtractMathLOStatement(paragraph: string) -> string[] {
 // ExtractMathGaStatement (added 2026-07-13-baml-cocoindex-tutorials-ga-v1)
 // -----------------------------------------------------------------------------
 // The bilingual EN+GA variant of ExtractMathLOStatement. Same
-// `string[]` return shape but uses `client default` (not the
+// `string[]` return shape but uses `client Default` (not the
 // EN-only `client ExtractEn`) and the prompt asks for the Irish
 // (Gaeilge) statement text. Rare for Mathematics syllabi (most are
 // EN-only) but the shape is canonical so the GA path runs end-to-end.
 
 function ExtractMathGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"
     Extract all NCCA Mathematics strand/outcome statements in Irish
     (Gaeilge) from the following NCCA syllabus paragraph. Return
@@ -232,10 +232,10 @@ function ExtractMathGaStatement(paragraph: string) -> string[] {
 }
 
 function GenerateMathFormativeItem(
-  lo_code string,
-  difficulty int,
-  level string,
-  topic string
+  lo_code: string,
+  difficulty: int,
+  level: string,
+  topic: string
 ) -> MathFormativeItem {
   client ExtractEnStrong
   prompt #"
@@ -262,8 +262,8 @@ function GenerateMathFormativeItem(
 }
 
 function ScoreMathFormativeResponse(
-  item MathFormativeItem,
-  attempt MathFormativeItemAttempt
+  item: MathFormativeItem,
+  attempt: MathFormativeItemAttempt
 ) -> MathScoreBreakdown {
   client ExtractEnStrong
   prompt #"

@@ -394,7 +394,7 @@ test strand_type_builder_smoke {
 }
 
 function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert curriculum analyst specialising in the Irish education system.
 
 You will be given a YAML catalog of NCCA curriculum strands and outcomes (representative subset for the 6 LC priority subjects). Read it carefully and produce a `CurriculumSpecStrand[]` — one entry per strand set grouped by subject — that captures the strand metadata.

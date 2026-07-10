@@ -45,96 +45,96 @@ enum EnglFeedbackChannel {
 }
 
 class EnglBilingualText {
-  text_en: string
-  text_ga: string?
+  text_en string
+  text_ga string?
 }
 
 class EnglEvidenceLink {
-  source_pdf: string
-  source_page: int
-  excerpt_en: string
-  excerpt_ga: string?
-  ncca_url: string?
+  source_pdf string
+  source_page int
+  excerpt_en string
+  excerpt_ga string?
+  ncca_url string?
 }
 
 class EnglNCCALearningOutcome {
-  lo_code: string
-  framework: string
-  level: EnglNCCALevel
-  topic: EnglTopicArea
-  competency_text: EnglBilingualText
-  marking_scheme_excerpt: EnglBilingualText?
-  evidence: EnglEvidenceLink
+  lo_code string
+  framework string
+  level EnglNCCALevel
+  topic EnglTopicArea
+  competency_text EnglBilingualText
+  marking_scheme_excerpt EnglBilingualText?
+  evidence EnglEvidenceLink
 }
 
 class EnglFormativeItem {
-  id: string
-  lo_code: string
-  level: EnglNCCALevel
-  topic: EnglTopicArea
-  item_type: EnglItemType
-  difficulty: int @description("1-5")
-  prompt: EnglBilingualText
-  expected_answer: EnglBilingualText
-  marking_scheme: EnglBilingualText
-  common_errors: EnglBilingualText[]
-  hints: EnglBilingualText[]
-  evidence: EnglEvidenceLink
-  feedback_channel: EnglFeedbackChannel
-  est_time_minutes: int
+  id string
+  lo_code string
+  level EnglNCCALevel
+  topic EnglTopicArea
+  item_type EnglItemType
+  difficulty int @description("1-5")
+  prompt EnglBilingualText
+  expected_answer EnglBilingualText
+  marking_scheme EnglBilingualText
+  common_errors EnglBilingualText[]
+  hints EnglBilingualText[]
+  evidence EnglEvidenceLink
+  feedback_channel EnglFeedbackChannel
+  est_time_minutes int
 }
 
 class EnglFormativeItemAttempt {
-  item_id: string
-  student_response: string
-  response_format: string
-  time_taken_seconds: int
-  hints_used: int
+  item_id string
+  student_response string
+  response_format string
+  time_taken_seconds int
+  hints_used int
 }
 
 class EnglScoreBreakdown {
-  item_id: string
-  lo_code: string
-  total_marks: int
-  marks_awarded: int
-  marks_per_step: int[]
-  is_correct: bool
-  partial_credit_pct: float
-  feedback_en: string
-  feedback_ga: string?
-  next_recommended_lo: string?
-  badge_earned: bool
+  item_id string
+  lo_code string
+  total_marks int
+  marks_awarded int
+  marks_per_step int[]
+  is_correct bool
+  partial_credit_pct float
+  feedback_en string
+  feedback_ga string?
+  next_recommended_lo string?
+  badge_earned bool
 }
 
 class EnglQuestPack {
-  id: string
-  subject: string @description("Always 'english'") @stream.not_null
-  framework: string
-  level: EnglNCCALevel
-  title: EnglBilingualText @stream.not_null
-  description: EnglBilingualText
-  total_items: int
-  total_marks: int
-  est_time_minutes: int
-  los_covered: string[]
-  items: EnglFormativeItem[] @stream.with_state
-  prerequisites: string[]
-  cross_subject_links: string[] @description("LC-GAEL for translation, LC-HIST for cultural context")
-  generated_at: string
-  generated_by: string @description("Always 'engl_agent'")
+  id string
+  subject string @description("Always 'english'") @stream.not_null
+  framework string
+  level EnglNCCALevel
+  title EnglBilingualText @stream.not_null
+  description EnglBilingualText
+  total_items int
+  total_marks int
+  est_time_minutes int
+  los_covered string[]
+  items EnglFormativeItem[] @stream.with_state
+  prerequisites string[]
+  cross_subject_links string[] @description("LC-GAEL for translation, LC-HIST for cultural context")
+  generated_at string
+  generated_by string @description("Always 'engl_agent'")
 }
 
 class EnglQuestPackValidation {
-  pack_id: string
-  is_valid: bool
-  errors: string[]
-  warnings: string[]
+  pack_id string
+  is_valid bool
+  errors string[]
+  warnings string[]
 }
 
 function GenerateEnglQuestPack(
   syllabus: LeavingCertSyllabus,
-  past_papers: LeavingCertPastPaper[],
-  marking_schemes: LeavingCertMarkingScheme[],
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
   level: string
 ) -> EnglQuestPack {
   client ExtractEnStrong

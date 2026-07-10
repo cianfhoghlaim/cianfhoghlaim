@@ -42,8 +42,8 @@ class CircularExtraction {
 }
 
 function ExtractCircularMeta(
-  pdf_text string,
-  filename string,
+  pdf_text: string,
+  filename: string,
 ) -> CircularExtraction {
   client LitellmClient
   prompt #"

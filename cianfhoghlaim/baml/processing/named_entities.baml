@@ -132,8 +132,8 @@ class FestivalEntity {
 
 // Extract all named entities from Celtic text
 function ExtractCelticEntities(
-  text string @description("Celtic folklore or historical text"),
-  language CelticLanguage @description("Language of the text")
+  text: string @description("Celtic folklore or historical text"),
+  language: CelticLanguage @description("Language of the text")
 ) -> CelticNamedEntity[] {
   client Claude
   prompt #"
@@ -163,7 +163,7 @@ function ExtractCelticEntities(
 
 // Extract person entities with detailed metadata
 function ExtractPersonEntities(
-  text string @description("Text containing person references")
+  text: string @description("Text containing person references")
 ) -> PersonEntity[] {
   client Claude
   prompt #"
@@ -190,7 +190,7 @@ function ExtractPersonEntities(
 
 // Extract and link place entities
 function ExtractPlaceEntities(
-  text string @description("Text with place references")
+  text: string @description("Text with place references")
 ) -> PlaceEntity[] {
   client Claude
   prompt #"
@@ -216,7 +216,7 @@ function ExtractPlaceEntities(
 
 // Extract supernatural entities
 function ExtractSupernaturalEntities(
-  text string @description("Folklore text about supernatural beings")
+  text: string @description("Folklore text about supernatural beings")
 ) -> SupernaturalEntity[] {
   client Claude
   prompt #"
@@ -246,7 +246,7 @@ function ExtractSupernaturalEntities(
 
 // Extract festivals and calendar customs
 function ExtractFestivalEntities(
-  text string @description("Text mentioning festivals or customs")
+  text: string @description("Text mentioning festivals or customs")
 ) -> FestivalEntity[] {
   client Claude
   prompt #"

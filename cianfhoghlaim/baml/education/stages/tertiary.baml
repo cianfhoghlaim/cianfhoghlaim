@@ -171,7 +171,7 @@ class MatriculationAudit {
 // -----------------------------------------------------------------------------
 
 function ExtractCAOCourseList(page_markdown: string, year: int) -> CAOCourse[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"Extract the requested data.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
@@ -182,7 +182,7 @@ function ExtractCAOCourseList(page_markdown: string, year: int) -> CAOCourse[] {
 }
 
 function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"Extract the requested data.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
@@ -193,7 +193,7 @@ function ExtractMatriculationRules(page_markdown: string, institution: string) -
 }
 
 function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"Extract the requested data.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
@@ -204,7 +204,7 @@ function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {
 }
 
 function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing Irish Apprenticeship programme listings.
 
 Parse the SOLAS (or equivalent) apprenticeship directory.
@@ -236,7 +236,7 @@ Apprenticeships are an ALTERNATIVE pathway to CAO courses, particularly for craf
 
 function ExtractApplicationTimeline(page_markdown: string,
   year: int) -> ApplicationTimeline {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at parsing the Irish CAO (Central Applications Office) application timeline.
 
 Parse the CAO application timeline for a specific year.
@@ -272,7 +272,7 @@ These dates power the ApplicationTimelineGuide agent in the Tertiary team. Be ex
 function EstimateCoursePoints(course: CAOCourse,
   historical_points: int[],
   applicant_profile: string) -> CoursePointsPrediction {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at predicting CAO course points for an applicant.
 
 Given a course's historical points data and an applicant's profile, estimate the points they'll need.
@@ -305,7 +305,7 @@ This powers the Tertiary team's points estimation feature.
 function AuditMatriculation(institution: string,
   course_code: string,
   applicant_grades: string) -> MatriculationAudit {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at auditing a student's Leaving Certificate grades against NUI/HEI matriculation requirements.
 
 Audit the applicant's grades against the matriculation rules for a specific course.
@@ -342,7 +342,7 @@ This audit is the critical decision-support feature for the MatriculationCheck a
 // =============================================================================
 
 function ExtractCAOCourseListFromUrl(page_url: string, year: int) -> CAOCourse[] {
-  client "litellm/gemini-2.0-flash"
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish CAO course directory analyst working for
     Cianfhoghlaim Oideachais (the bilingual agentic platform).
@@ -365,7 +365,7 @@ function ExtractCAOCourseListFromUrl(page_url: string, year: int) -> CAOCourse[]
 }
 
 function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {
-  client "litellm/gemini-2.0-flash"
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish matriculation requirements analyst working for
     Cianfhoghlaim Oideachais.
@@ -394,7 +394,7 @@ function AuditMatriculationStdLib(
   institution: string,
   applicant_grades: map<string, string>
 ) -> MatriculationAudit {
-  client "litellm/anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"
     You are an expert Irish matriculation auditor working for
     Cianfhoghlaim Oideachais.

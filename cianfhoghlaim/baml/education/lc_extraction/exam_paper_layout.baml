@@ -20,42 +20,42 @@ enum LcQuestionType {
 }
 
 class Question {
-  q_id: string
-  part: string              @description("e.g. 'a', 'b(i)', 'c(ii)'")
-  text_en: string
-  text_ga: string?
-  question_type: LcQuestionType
-  marks: int
-  related_lo_id: string?    @description("Learning outcome from syllabus")
+  q_id string
+  part string              @description("e.g. 'a', 'b(i)', 'c(ii)'")
+  text_en string
+  text_ga string?
+  question_type LcQuestionType
+  marks int
+  related_lo_id string?    @description("Learning outcome from syllabus")
 }
 
 class QuestionSection {
-  section_id: string
-  section_name: string
-  instructions: string?
-  questions: Question[]
-  total_marks: int
+  section_id string
+  section_name string
+  instructions string?
+  questions Question[]
+  total_marks int
 }
 
 class ExamPaper {
-  subject: string
-  paper_code: string         @description("e.g. 'LC022ALP000EV'")
-  language: string           @description("EN or GA")
-  level: string              @description("OL, HL, or FDN")
-  year: int                  @description("Exam year")
+  subject string
+  paper_code string         @description("e.g. 'LC022ALP000EV'")
+  language string           @description("EN or GA")
+  level string              @description("OL, HL, or FDN")
+  year int                  @description("Exam year")
 
-  source_pdf: string
-  total_pages: int
-  total_marks: int
-  total_questions: int
+  source_pdf string
+  total_pages int
+  total_marks int
+  total_questions int
 
-  sections: QuestionSection[]
+  sections QuestionSection[]
 
   // Heuristics
-  duration_minutes: int?
-  has_formula_sheet: bool
-  has_data_booklet: bool
-  formula_sheet_pages: int?
+  duration_minutes int?
+  has_formula_sheet bool
+  has_data_booklet bool
+  formula_sheet_pages int?
 }
 
 // ============================================================================

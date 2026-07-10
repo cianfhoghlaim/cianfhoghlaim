@@ -121,8 +121,8 @@ class MutationTriggerPattern {
 
 // Extract grammar patterns from text
 function ExtractGrammarPatterns(
-  text string @description("Celtic language text"),
-  language CelticLanguage @description("Language of the text")
+  text: string @description("Celtic language text"),
+  language: CelticLanguage @description("Language of the text")
 ) -> GrammarPattern[] {
   client Claude
   prompt #"
@@ -152,7 +152,7 @@ function ExtractGrammarPatterns(
 
 // Analyze Irish copula usage
 function ExtractIrishCopula(
-  sentence string @description("Irish sentence possibly containing copula")
+  sentence: string @description("Irish sentence possibly containing copula")
 ) -> IrishCopulaPattern? {
   client Claude
   prompt #"
@@ -185,8 +185,8 @@ function ExtractIrishCopula(
 
 // Analyze VSO word order
 function AnalyzeVSOOrder(
-  sentence string @description("Celtic sentence"),
-  language CelticLanguage @description("Language")
+  sentence: string @description("Celtic sentence"),
+  language: CelticLanguage @description("Language")
 ) -> VSOPattern {
   client Claude
   prompt #"
@@ -214,7 +214,7 @@ function AnalyzeVSOOrder(
 
 // Extract possession patterns
 function ExtractPossession(
-  sentence string @description("Sentence expressing possession")
+  sentence: string @description("Sentence expressing possession")
 ) -> PossessionPattern {
   client Claude
   prompt #"
@@ -247,8 +247,8 @@ function ExtractPossession(
 
 // Generate prepositional pronoun table
 function GeneratePrepositionalPronouns(
-  preposition string @description("Base preposition"),
-  language CelticLanguage @description("Language")
+  preposition: string @description("Base preposition"),
+  language: CelticLanguage @description("Language")
 ) -> PrepositionalPronoun[] {
   client Claude
   prompt #"
@@ -276,7 +276,7 @@ function GeneratePrepositionalPronouns(
 
 // Document mutation triggers
 function DocumentMutationTriggers(
-  language CelticLanguage @description("Language to document")
+  language: CelticLanguage @description("Language to document")
 ) -> MutationTriggerPattern[] {
   client Claude
   prompt #"

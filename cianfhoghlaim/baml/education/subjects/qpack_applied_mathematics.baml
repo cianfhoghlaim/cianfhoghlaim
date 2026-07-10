@@ -159,10 +159,10 @@ class AppmQuestPackValidation {
 // ============================================================================
 
 function GenerateAppmQuestPack(
-  syllabus LeavingCertSyllabus,
-  past_papers LeavingCertPastPaper[],
-  marking_schemes LeavingCertMarkingScheme[],
-  level string
+  syllabus: LeavingCertSyllabus,
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
+  level: string
 ) -> AppmQuestPack {
   client ExtractEnStrong
   prompt #"
@@ -199,14 +199,14 @@ function ExtractAppmLOStatement(paragraph: string) -> string[] {
 // ExtractAppmGaStatement (added 2026-07-13-baml-cocoindex-tutorials-ga-v1)
 // -----------------------------------------------------------------------------
 // The bilingual EN+GA variant of ExtractAppmLOStatement. Same
-// return shape (`string[]`); routes via `client default`; the
+// return shape (`string[]`); routes via `client Default`; the
 // prompt asks for the Irish (Gaeilge) statements verbatim with a
 // leading '[EN-only]' fallback marker. Applied Mathematics is
 // almost entirely English-language at NCCA level; the fallback
 // path is the common case here.
 
 function ExtractAppmGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"
     Extract all NCCA Applied Mathematics strand/outcome statements
     in Irish (Gaeilge) from the following NCCA syllabus paragraph.
@@ -222,10 +222,10 @@ function ExtractAppmGaStatement(paragraph: string) -> string[] {
 }
 
 function GenerateAppmFormativeItem(
-  lo_code string,
-  difficulty int,
-  level string,
-  topic string
+  lo_code: string,
+  difficulty: int,
+  level: string,
+  topic: string
 ) -> AppmFormativeItem {
   client ExtractEnStrong
   prompt #"
@@ -247,8 +247,8 @@ function GenerateAppmFormativeItem(
 }
 
 function ScoreAppmFormativeResponse(
-  item AppmFormativeItem,
-  attempt AppmFormativeItemAttempt
+  item: AppmFormativeItem,
+  attempt: AppmFormativeItemAttempt
 ) -> AppmScoreBreakdown {
   client ExtractEnStrong
   prompt #"

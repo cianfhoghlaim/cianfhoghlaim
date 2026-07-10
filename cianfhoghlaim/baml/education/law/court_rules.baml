@@ -30,7 +30,7 @@ function ExtractCourtRule(
   page_url: string,
   page_html: string,
 ) -> CourtRule {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish Court Rules extraction specialist working
     for Cianfhoghlaim Oideachais.

@@ -33,7 +33,7 @@ class PageDescription {
   h2_hierarchy string[]
   summary string              @description("LLM-generated one-paragraph summary of the page.")
   links string[]
-  attachments string[]        @description("List of downloadable attachments (PDF / DOCX / etc.)."
+  attachments string[]        @description("List of downloadable attachments (PDF / DOCX / etc.)")
 }
 
 class SiteAnalysis {

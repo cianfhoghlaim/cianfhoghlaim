@@ -7,7 +7,7 @@ function ExtractSubjectRubric(text: string,
   subject: string,
   level: ExamLevel,
   exam_years: int[]) -> SubjectRubric {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at synthesizing assessment rubrics for Irish Leaving Certificate subjects.
 
 Given a subject specification and recent exam years, build a comprehensive scoring rubric that captures both the official marking scheme patterns and trends observed across multiple exam years.
@@ -42,7 +42,7 @@ function ScoreEssayAgainstRubric(essay: string,
   subject: string,
   level: ExamLevel,
   rubric_text: string) -> RubricScore {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at applying an assessment rubric to score an Irish Leaving Certificate student essay.
 
 Apply the rubric rigorously and provide detailed feedback.
@@ -81,7 +81,7 @@ function CompareMarkingSchemes(year_a: int,
   scheme_a: string,
   scheme_b: string,
   subject: string) -> MarkingSchemeDiff {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at comparing State Examination Commission (SEC) marking schemes across years to identify patterns, trends, and shifts in assessment emphasis.
 
 SUBJECT: {{ subject }}
@@ -119,7 +119,7 @@ function LazyExtractExamPaper(text: string,
   subject: string,
   year: int,
   level: ExamLevel) -> ExamPaper {
-  client "anthropic/claude-sonnet-4-20250514"
+  client Claude
   prompt #"You are an expert at lazy/on-demand extraction of exam paper data for the Cianfhoghlaim Oideachais platform.
 
 This is a cost-optimized extraction function used when a user requests specific exam paper data. The function only extracts what is needed to answer the user's request, not the full exam paper structure.

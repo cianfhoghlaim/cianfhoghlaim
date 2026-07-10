@@ -57,7 +57,7 @@ class BlogPostMetadata {
   url string
   author string?
   published_at string // ISO 8601
-  package Package
+  pkg Package
   blog_post_type BlogPostType
   summary string
   affected_capabilities string[]
@@ -68,7 +68,7 @@ class BlogPostMetadata {
 
 class ApiChange {
   symbol string
-  package Package
+  pkg Package
   severity ChangeSeverity
   old_signature string
   new_signature string
@@ -81,7 +81,7 @@ class ApiChange {
 }
 
 class PackageRelease {
-  package Package
+  pkg Package
   version string // semver
   release_date string // ISO 8601
   breaking_changes string[]

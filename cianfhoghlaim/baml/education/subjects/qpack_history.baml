@@ -124,10 +124,10 @@ class HistQuestPackValidation {
 }
 
 function GenerateHistQuestPack(
-  syllabus LeavingCertSyllabus,
-  past_papers LeavingCertPastPaper[],
-  marking_schemes LeavingCertMarkingScheme[],
-  level string
+  syllabus: LeavingCertSyllabus,
+  past_papers: PastPaper[],
+  marking_schemes: MarkingSchemeSec[],
+  level: string
 ) -> HistQuestPack {
   client ExtractEnStrong
   prompt #"
@@ -171,7 +171,7 @@ function ExtractHistLOStatement(paragraph: string) -> string[] {
 // with a leading '[EN-only]' marker otherwise.
 
 function ExtractHistGaStatement(paragraph: string) -> string[] {
-  client default
+  client Default
   prompt #"
     Extract all NCCA History strand/outcome statements in Irish
     (Gaeilge) from the following NCCA syllabus paragraph. Return
@@ -187,10 +187,10 @@ function ExtractHistGaStatement(paragraph: string) -> string[] {
 }
 
 function GenerateHistFormativeItem(
-  lo_code string,
-  difficulty int,
-  level string,
-  topic string
+  lo_code: string,
+  difficulty: int,
+  level: string,
+  topic: string
 ) -> HistFormativeItem {
   client ExtractEnStrong
   prompt #"
@@ -208,8 +208,8 @@ function GenerateHistFormativeItem(
 }
 
 function ScoreHistFormativeResponse(
-  item HistFormativeItem,
-  attempt HistFormativeItemAttempt
+  item: HistFormativeItem,
+  attempt: HistFormativeItemAttempt
 ) -> HistScoreBreakdown {
   client ExtractEnStrong
   prompt #"

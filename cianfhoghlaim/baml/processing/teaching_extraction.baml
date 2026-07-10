@@ -22,7 +22,7 @@ class StudentFeedback {
   source string @description("e.g. Student, Cooperating Teacher, PME Supervisor")
   quote_en string
   quote_ga string | null
-  rating number @description("1-5 rating, if numeric")
+  rating int @description("1-5 rating, if numeric")
   category string @description("e.g. Classroom Management, Lesson Planning, Subject Knowledge, Rapport")
   @@stream.done
 }

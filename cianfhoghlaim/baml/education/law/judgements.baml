@@ -34,7 +34,7 @@ function ExtractJudgement(
   page_url: string,
   page_html: string,
 ) -> Judgement {
-  client Gemini2Flash
+  client Gemini2FlashAlias
   prompt #"
     You are an expert Irish case-law extraction specialist working for
     Cianfhoghlaim Oideachais.

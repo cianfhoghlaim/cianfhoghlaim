@@ -152,8 +152,8 @@ class AdjectiveComparison {
 
 // Extract full verb conjugation
 function ExtractVerbConjugation(
-  verb string @description("Verb infinitive or any form"),
-  language CelticLanguage @description("Language of the verb")
+  verb: string @description("Verb infinitive or any form"),
+  language: CelticLanguage @description("Language of the verb")
 ) -> VerbConjugation {
   client Claude
   prompt #"
@@ -181,8 +181,8 @@ function ExtractVerbConjugation(
 
 // Extract noun declension
 function ExtractNounDeclension(
-  noun string @description("Noun in any form"),
-  language CelticLanguage @description("Language of the noun")
+  noun: string @description("Noun in any form"),
+  language: CelticLanguage @description("Language of the noun")
 ) -> NounDeclension {
   client Claude
   prompt #"
@@ -210,9 +210,9 @@ function ExtractNounDeclension(
 
 // Identify conjugation/declension class
 function IdentifyMorphologicalClass(
-  word string @description("Word to classify"),
-  pos PartOfSpeech @description("Part of speech"),
-  language CelticLanguage @description("Language")
+  word: string @description("Word to classify"),
+  pos: PartOfSpeech @description("Part of speech"),
+  language: CelticLanguage @description("Language")
 ) -> string {
   client ClaudeHaiku
   prompt #"
@@ -236,8 +236,8 @@ function IdentifyMorphologicalClass(
 
 // Compare adjectives
 function CompareAdjective(
-  adjective string @description("Adjective in positive form"),
-  language CelticLanguage @description("Language")
+  adjective: string @description("Adjective in positive form"),
+  language: CelticLanguage @description("Language")
 ) -> AdjectiveComparison {
   client ClaudeHaiku
   prompt #"
