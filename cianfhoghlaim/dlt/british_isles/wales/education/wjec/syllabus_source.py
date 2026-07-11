@@ -41,6 +41,12 @@ from typing import Any
 import dlt
 
 CACHE_DIR = Path("stedding/site_scrape_samples/wjec")
+URLS_CACHE_PATH = Path("stedding/site_scrape_samples/wjec/urls.json")
+WJEC_BASE_URL = "https://www.wjec.co.uk/qualifications"
+"""Phase 1 fix: WJEC was healthy but the discovery URL is now
+``/qualifications`` (the old ``/`` landing page has moved). The
+resource iterates the Firecrawl-discovered URL list at
+``stedding/site_scrape_samples/wjec/urls.json``."""
 
 
 def _cache_path(language: str, subject: str) -> Path:

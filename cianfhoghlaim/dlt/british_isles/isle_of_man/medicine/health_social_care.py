@@ -15,7 +15,25 @@ from typing import Any
 import dlt
 import structlog
 
-from cianfhoghlaim.dlt.common.incremental import crawl_source  # type: ignore[import-not-found]
+from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+
+IOM_RECOVERY_STRATEGY = "stealth"
+"""Phase 1 fix: ``www.gov.im`` returns 403 to plain HTTP + sitemap.xml.
+Routes via the Firecrawl stealth proxy with a 10s wait_for; falls
+back to the Wayback Machine on stealth failure. See the
+:mod:`cianfhoghlaim.dlt.common.endpoint_recovery` helper for the
+operational probe."""
+
+
+def _crawl_source(*args, **kwargs):
+    # The legacy _crawl_source took (source_name, base_url, ...) — source_name
+    # was used only for logging in the legacy helper. The new crawl_site
+    # primitive has no source_name, so we drop it if present.
+    if args and isinstance(args[0], str) and args[0] == kwargs.get("source_name"):
+        args = args[1:]
+    kwargs.pop("source_name", None)
+    for page in crawl_site(*args, **kwargs):
+        yield page.to_dict()
 
 logger = structlog.get_logger(__name__)
 

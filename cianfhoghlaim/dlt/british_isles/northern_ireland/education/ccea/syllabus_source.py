@@ -42,6 +42,13 @@ from typing import Any
 import dlt
 
 CACHE_DIR = Path("stedding/site_scrape_samples/ccea")
+URLS_CACHE_PATH = Path("stedding/site_scrape_samples/ccea/urls.json")
+CCEA_BASE_URL = "https://ccea.org.uk/about/what-we-do/curriculum"
+"""Phase 1 fix: ccea.org.uk returns 403 to plain HTTP + sitemap.xml.
+The new canonical entry point is the curriculum landing page; the
+resource iterates the Firecrawl-discovered URL list at
+``stedding/site_scrape_samples/ccea/urls.json`` (routed via the
+stealth proxy)."""
 
 
 def _cache_path(language: str, subject: str) -> Path:

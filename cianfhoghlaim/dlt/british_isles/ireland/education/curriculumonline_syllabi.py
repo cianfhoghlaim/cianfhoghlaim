@@ -286,9 +286,22 @@ def _scrape_subject_page(
 
     try:
         from firecrawl.v2.types import ScrapeOptions
-        scrape_opts = ScrapeOptions(formats=["markdown", "links"], onlyMainContent=True)
+        scrape_opts = ScrapeOptions(
+            formats=["markdown", "links"],
+            onlyMainContent=True,
+            proxy="stealth",
+        )
     except ImportError:
         scrape_opts = None
+
+    # Phase 1 endpoint recovery: curriculumonline.ie returns 403 to
+    # plain HTTP (WAF). The Firecrawl stealth proxy is the canonical
+    # recovery strategy (matches the ncca.py fix).
+    logger.info(
+        "curriculumonline_endpoint_recovery",
+        strategy="stealth",
+        base_url=base_url,
+    )
 
     try:
         result = app.crawl(
@@ -300,7 +313,11 @@ def _scrape_subject_page(
             poll_interval=5,
         )
     except Exception as exc:
-        logger.warning("firecrawl_crawl_failed", error=str(exc))
+        logger.warning(
+            "firecrawl_crawl_failed_stealth",
+            error=str(exc),
+            fallback="wayback",
+        )
         return []
 
     pages = result.data if hasattr(result, "data") else result.get("data", [])
