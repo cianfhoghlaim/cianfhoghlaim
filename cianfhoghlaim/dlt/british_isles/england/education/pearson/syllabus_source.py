@@ -43,6 +43,14 @@ from typing import Any
 import dlt
 
 CACHE_DIR = Path("stedding/site_scrape_samples/pearson")
+URLS_CACHE_PATH = Path("stedding/site_scrape_samples/pearson/urls.json")
+PEARSON_BASE_URL = (
+    "https://qualifications.pearson.com/en/qualifications/edexcel-gcses.html"
+)
+"""Phase 1 fix: Pearson was healthy but the cache fixture path was
+stale. Now anchors on the new URL + writes
+``stedding/site_scrape_samples/pearson/urls.json`` from
+``firecrawl.map(..., search=<subject>)``."""
 
 
 def _cache_path(language: str, subject: str) -> Path:
