@@ -23,7 +23,8 @@
     "iac:sync:variables": "bun run iac/cli.ts sync:variables",
     "iac:sync:schedules": "bun run iac/cli.ts sync:schedules",
     "iac:sync:action-recipients": "bun run iac/cli.ts sync:action-recipients",
-    "iac:sync:olm": "bun run iac/cli.ts sync:olm"
+    "iac:sync:olm": "bun run iac/cli.ts sync:olm",
+    "iac:rotate-auth": "bun run iac/cli.ts rotate-auth"
   },
   "devDependencies": {
     "@types/bun": "latest"

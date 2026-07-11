@@ -64,6 +64,7 @@ export async function dispatch(command: string) {
     case "sync:schedules": return (await import("./commands/sync-schedules.ts")).syncSchedules();
     case "sync:action-recipients": return (await import("./commands/sync-action-recipients.ts")).syncActionRecipients();
     case "sync:olm": return (await import("./commands/sync-olm.ts")).syncOlm();
+    case "rotate-auth": return (await import("./commands/rotate-auth.ts")).rotateAuth();
     default:
       logError(`unknown command: ${command}`);
       log(`Available commands: plan, deploy, bootstrap, teardown, health, sync:<target>`);
