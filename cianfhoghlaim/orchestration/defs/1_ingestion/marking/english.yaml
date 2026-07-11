@@ -1,0 +1,41 @@
+# defs/1_ingestion/marking/english.yaml
+#
+# L1 ingestion for the BIEP v1 English marking-scheme filesystem
+# (per-subject extension of the canonical examinations crawling path).
+#
+# Source: filesystem.marking.english
+# Per-subject partitions: (year, paper)
+# Cron: weekly (marking schemes update rarely)
+#
+# Per the openspec change
+# 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1.
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: filesystem.marking.english
+  domain: marking
+  nation: ie
+  subject: english
+  subject_label: English (LC Marking Scheme)
+  automation: on_cron
+  automation_cron: "0 4 * * 0"  # weekly Sunday 04:00 UTC
+  state_backed: true
+  state_refresh_interval: monthly
+  asset_check: marking_english_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - lc6
+    - english
+    - marking
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1
+    spec: british-isles-education-pipeline
+    lc_code: LC002
+    baml_functions:
+      - b.ExtractMarkingSchemeGuideline
+      - b.ExtractEnglishMarkingScheme
+    partitions:
+      - year: 1990..2026
+      - paper: ["paper-1", "paper-2"]
+      - level: ["hl", "ol"]
+      - language: ["en"]
