@@ -381,7 +381,7 @@ class _SubjectAgentWrapper:
     `RootAgent._get_agent` returns.
 
     The 8 canonical ADK LlmAgents live at:
-        cianfhoghlaim.agents.meaisinfhoghlaim.educational
+        cianfhoghlaim.agents.tuatha
             .math_agent / appm_agent / chem_agent / geog_agent
             / hist_agent / engl_agent / gael_agent / comp_agent
 
@@ -393,14 +393,14 @@ class _SubjectAgentWrapper:
     """
 
     AGENT_MODULES: dict[AgentDomain, str] = {
-        AgentDomain.MATH: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.math_agent",
-        AgentDomain.APPM: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.appm_agent",
-        AgentDomain.CHEM: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.chem_agent",
-        AgentDomain.GEOG: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.geog_agent",
-        AgentDomain.HIST: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.hist_agent",
-        AgentDomain.ENGL: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.engl_agent",
-        AgentDomain.GAEL: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.gael_agent",
-        AgentDomain.COMP: "cianfhoghlaim.agents.meaisinfhoghlaim.educational.comp_agent",
+        AgentDomain.MATH: "cianfhoghlaim.agents.tuatha.math_agent",
+        AgentDomain.APPM: "cianfhoghlaim.agents.tuatha.appm_agent",
+        AgentDomain.CHEM: "cianfhoghlaim.agents.tuatha.chem_agent",
+        AgentDomain.GEOG: "cianfhoghlaim.agents.tuatha.geog_agent",
+        AgentDomain.HIST: "cianfhoghlaim.agents.tuatha.hist_agent",
+        AgentDomain.ENGL: "cianfhoghlaim.agents.tuatha.engl_agent",
+        AgentDomain.GAEL: "cianfhoghlaim.agents.tuatha.gael_agent",
+        AgentDomain.COMP: "cianfhoghlaim.agents.tuatha.comp_agent",
     }
 
     SUBJECT_NAMES: dict[AgentDomain, str] = {
@@ -592,7 +592,8 @@ class RootAgent:
                 # 8 NCCA subject specialists (added 2026-06-30 per the
                 # cianfhoghlaim-educational-mmo-v1 openspec change).
                 # Canonical implementations live at
-                # cianfhoghlaim.agents.meaisinfhoghlaim.educational.
+                # cianfhoghlaim.agents.tuatha.<math|appm|chem|geog|
+                #   hist|engl|gael|comp>_agent.
                 self._agents[domain] = _SubjectAgentWrapper(domain)
             else:
                 # General agent handles unrouted queries
