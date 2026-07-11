@@ -1,0 +1,26 @@
+# defs/2_materials/grading/computer_science.yaml
+#
+# L2 CelticMaterialsComponent for the per-subject interactive Computer
+# Science grading (BIEP v1 Phase 2).
+#
+# Per the openspec change
+# 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1.
+type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.GradeComputerScienceResponse
+  baml_explain_function: b.ExplainComputerScienceMarkingScheme
+  source_asset: 1_ingestion/marking/ie/education
+  partition_strategy: by_subject
+  asset_check_kind: baml_fidelity
+  subject: computer_science
+  language: en
+  automation_cron: "0 6 * * 0"  # weekly Sunday 06:00 UTC
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1
+    spec: british-isles-education-pipeline
+    feedback_channel: cs_tutor
+    detector_mistakes:
+      - off_by_one
+      - missing_group_by
+      - big_o_miscalculated
+      - infinite_loop
