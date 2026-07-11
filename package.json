@@ -15,6 +15,7 @@
     "iac:health": "bun run iac/cli.ts health",
     "iac:sync:secrets": "bun run iac/cli.ts sync:secrets",
     "iac:sync:resources": "bun run iac/cli.ts sync:resources",
+    "iac:sync:sites": "bun run iac/cli.ts sync:sites",
     "iac:sync:procedures": "bun run iac/cli.ts sync:procedures",
     "iac:sync:resource-syncs": "bun run iac/cli.ts sync:resource-syncs",
     "iac:sync:monitors": "bun run iac/cli.ts sync:monitors",

@@ -5,6 +5,7 @@ import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { CLI_FLAGS } from "../cli.ts";
 import { syncSecrets } from "./sync-secrets.ts";
 import { syncResources } from "./sync-resources.ts";
+import { syncSites } from "./sync-sites.ts";
 import { syncProcedures } from "./sync-procedures.ts";
 import { syncResourceSyncs } from "./sync-resource-syncs.ts";
 import { syncVariables } from "./sync-variables.ts";
@@ -37,9 +38,13 @@ export async function bootstrap() {
   logStep("Phase 5: Komodo Periphery — TODO");
   logWarn("Komodo Periphery deploy not yet automated");
 
-  // Phase 6: Newt (Pangolin tunnel client) — TODO
-  logStep("Phase 6: Newt (Pangolin tunnel client) — TODO");
-  logWarn("Newt deploy not yet automated; pull the fosrl/newt image manually");
+  // Phase 6: Newt (Pangolin tunnel client) — automate via iac:sync:sites
+  // Walks stacks/*/site.yaml + POSTs to the Pangolin Integrations API to
+  // provision each newt site. The returned newtId + newtSecret are
+  // written to .env (and optionally Infisical) for the Komodo procedure
+  // to consume at deploy time.
+  logStep("Phase 6: Newt (Pangolin tunnel client) — sync-sites");
+  await syncSites();
 
   // Phase 7: All sync commands
   logStep("Phase 7: All sync commands");

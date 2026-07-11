@@ -1,0 +1,27 @@
+# =============================================================================
+# BUNCHLOCH-NEWT — Site registration for the Pangolin Integrations API
+# =============================================================================
+# When `iac:sync:sites` runs, it reads this file + POSTs to the Pangolin
+# Integrations API to provision a site named "bunchloch-newt". The
+# returned newtId + newtSecret are written back to .infisical.env as
+# PANGOLIN_NEWT_BUNCHLOCH_ID + PANGOLIN_NEWT_BUNCHLOCH_SECRET.
+#
+# This is the canonical source of truth for the bunchloch newt site.
+# Edit this file to update site metadata; do NOT touch the Pangolin UI
+# directly (that would drift from IaC).
+#
+# Companion to:
+#   - stacks/newt/docker-compose.yaml  (the 4-service site compose)
+#   - stacks/newt/IMAGE                 (the v1.14.0 image pin)
+#   - komodo/procedures/deploy-newt-bunchloch-v2.toml  (the deploy procedure)
+# =============================================================================
+pangolin:
+  sites:
+    - niceId: bunchloch-newt
+      name: bunchloch (MacBook M4 Max)
+      description: Operator-laptop site; bridges bunchloch into the Pangolin mesh on arm1-oci
+      address: 100.64.0.2/32      # WireGuard tunnel IP range (assigned by gerbil)
+      type: local
+      # The Infisical secret names the newt credentials will be written to
+      infisicalSecretPrefix: PANGOLIN_NEWT_BUNCHLOCH
+      infisicalSecretPath: /pangolin
