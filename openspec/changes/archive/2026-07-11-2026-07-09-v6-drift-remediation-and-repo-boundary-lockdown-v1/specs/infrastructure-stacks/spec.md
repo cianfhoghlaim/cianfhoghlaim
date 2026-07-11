@@ -1,25 +1,4 @@
-## MODIFIED Requirements
-
-### Requirement: Selfhosted stack inventory (v6 count fixed)
-
-The system SHALL maintain exactly **88 selfhosted Docker Compose
-stacks** at `bonneagar/stacks/` (post-v6: 5 placeholder dirs
-deleted; the previous count of 94/88/86 was drift).
-
-#### Scenario: A new stack is added to the 88-stack fleet
-
-- **WHEN** a developer adds `bonneagar/stacks/<new>/` with all 6
-  GOLD_STANDARD files
-- **THEN** `bun run validate-stacks` SHALL pass
-- **AND** `bun run stack-doctor --strict` SHALL report
-  coverage ≥90% across all 6-file categories
-
-#### Scenario: The stack-count is queried
-
-- **WHEN** an agent reads any AGENTS.md, GOLD_STANDARD.md,
-  docs/stacks/README.md, or `package.json` in either repo
-- **THEN** the stated count SHALL be `88`
-- **AND** SHALL NOT reference 94 / 86 anywhere
+# Spec Delta: infrastructure-stacks
 
 ## ADDED Requirements
 

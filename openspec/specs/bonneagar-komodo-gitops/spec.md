@@ -24,9 +24,7 @@ via `POST /resource-sync/{sync_id}/sync`, and let Komodo auto-pull from
 the repo on every commit. This change converts the procedures and
 stacks to 3 resource-syncs and slims the IaC to the orchestration layer
 that ensures resource-syncs are configured + secrets are synced.
-
 ## Requirements
-
 ### Requirement: Resource-Sync Per Host
 
 The Komodo fleet SHALL be managed via 3 resource-syncs —
@@ -115,6 +113,27 @@ own the file).
 - **WHEN** the resource-sync auto-pulls
 - **THEN** Komodo SHALL mark the resource as `removing`
 - **AND** if no `.gitignore` or `komodo_skip=true` label blocks it, Komodo SHALL delete the resource on the next sync
+
+### Requirement: Pre-flight gate before resource-sync apply
+
+The 3 Komodo resource-syncs MUST NOT be applied without first
+running `bun run preflight:arm-oci`. The resource-syncs are
+arm1-oci.toml, bunchloch.toml, and cross-cutting.toml.
+
+#### Scenario: Resource-sync apply attempted without preflight
+
+- **WHEN** an agent runs `iac:bootstrap` (which registers the
+  3 resource-syncs) without first running
+  `bun run preflight:arm-oci`
+- **THEN** the IaC SHALL refuse with exit 1 and the message
+  "REFUSING TO APPLY: run `bun run preflight:arm-oci` first"
+
+#### Scenario: Resource-sync apply with preflight green
+
+- **WHEN** an agent runs `bun run preflight:arm-oci` and it
+  exits 0
+- **AND** then runs `iac:bootstrap`
+- **THEN** the resource-syncs SHALL be applied normally
 
 ## Cross-references
 
