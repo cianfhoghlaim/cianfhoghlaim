@@ -1,0 +1,28 @@
+# defs/4_asset_generation/marimo_dashboards/uog_math_coursework/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the UoG math/statistics
+# coursework marimo dashboard group at
+# `cianfhoghlaim/notebooks/14_academic_history/`.
+#
+# Per openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/
+type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/14_academic_history
+  upstream_assets:
+    - 2_materials/baml_extraction/uog_math_coursework
+    - 2_materials/academic_history_validation
+    - 3_model_lifecycle/cocoindex_v1/academic_history_flow
+    - 5_agent_ops/meaisinfhoghlaim/academic_history_agent
+  refresh_on:
+    - "0 6 * * *"
+  slug: uog_math_coursework
+  notebooks:
+    - 01_uog_maths_corpus_overview
+    - 02_module_syllabus_assessment_map
+    - 03_statistics_methods_lab
+    - 04_numerical_analysis_lab
+    - 05_nonlinear_systems_lab
+    - 06_formulas_theorems_worked_solutions
+    - 07_assignments_exams_answers
+    - 08_academic_history_chat

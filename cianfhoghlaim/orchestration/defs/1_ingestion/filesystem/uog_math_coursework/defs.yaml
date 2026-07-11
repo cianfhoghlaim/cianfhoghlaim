@@ -1,0 +1,20 @@
+# defs/1_ingestion/filesystem/uog_math_coursework/defs.yaml
+#
+# L1 CelticIngestionComponent for the UoG math/statistics coursework
+# corpus. Reuses the existing `university_of_galway_source()`
+# DLT source (the canonical filesystem scanner for
+# `leabharlann/ollscoil_na_gaillimhe/`), partitioned on the
+# math-relevant subdirs (`mata` + `past`).
+#
+# Per openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: filesystem.uog_math_coursework
+  domain: filesystem
+  nation: ie
+  automation: on_dlt_freshness
+  automation_cron: "0 6 * * *"
+  include_subdirs:
+    - mata
+    - past
+  privacy_gate: "INCLUDE_IDENTITY_RECORDS=false"
