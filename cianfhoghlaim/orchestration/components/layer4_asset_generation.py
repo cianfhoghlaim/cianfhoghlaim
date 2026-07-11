@@ -66,7 +66,7 @@ class CelticAssetGenerationComponent(Component):
         """Emit 1 @asset that re-runs the dashboard/page on upstream
         changes + cron schedules."""
         slug = self.slug or os.path.splitext(os.path.basename(self.dashboard_path))[0]
-        group_name = f"4_asset_generation/{self.dashboard_kind}/{slug}"
+        group_name = f"4_asset_generation_{self.dashboard_kind}_{slug}"
         asset_name = f"{self.dashboard_kind}_{slug}"
         deps = [dg.AssetDep(key) for key in self.upstream_assets]
 

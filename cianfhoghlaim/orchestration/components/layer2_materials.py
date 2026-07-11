@@ -70,7 +70,7 @@ class CelticMaterialsComponent(Component):
             ireland_curriculum_partitions,
         )
 
-        group_name = f"2_materials/baml_extraction/{self.subject}"
+        group_name = f"2_materials_baml_extraction_{self.subject}"
         asset_name = f"{self.subject}_baml_extraction"
         partitions_def = self._resolve_partitions(ireland_curriculum_partitions)
         automation_condition = dg.AutomationCondition.cron(self.automation_cron)
