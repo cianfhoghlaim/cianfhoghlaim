@@ -1,0 +1,35 @@
+# defs/1_ingestion/commonwealth/can/ns/medicine/defs.yaml
+#
+# L1 CelticIngestionComponent for the Nova Scotia medicine DLT source.
+#
+# Per the cross-region path contract this source lives at
+# `dlt/commonwealth/can/ns/medicine/health_authority.py` with
+# `source_id="commonwealth.can.ns.medicine.health_authority"`.
+#
+# Reference: openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: commonwealth_can_ns_medicine
+  module: cianfhoghlaim.dlt.commonwealth.can.ns.medicine.health_authority
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - province:
+        values: ["ns"]
+    - domain:
+        values: ["medicine"]
+    - language:
+        values: ["en"]
+  use_local_scrapes: true
+  asset_check: commonwealth_can_ns_medicine_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - commonwealth
+    - canada
+    - ns
+    - medicine
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-12-canada-provinces-quebec-montreal-pipeline-v1
+    spec: commonwealth-pipeline

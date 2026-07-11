@@ -1,0 +1,35 @@
+# defs/1_ingestion/commonwealth/can/nu/statistics/defs.yaml
+#
+# L1 CelticIngestionComponent for the Nunavut statistics DLT source.
+#
+# Per the cross-region path contract this source lives at
+# `dlt/commonwealth/can/nu/statistics/stats_office.py` with
+# `source_id="commonwealth.can.nu.statistics.stats_office"`.
+#
+# Reference: openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: commonwealth_can_nu_statistics
+  module: cianfhoghlaim.dlt.commonwealth.can.nu.statistics.stats_office
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - province:
+        values: ["nu"]
+    - domain:
+        values: ["statistics"]
+    - language:
+        values: ["en", "iu", "fr"]
+  use_local_scrapes: true
+  asset_check: commonwealth_can_nu_statistics_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - commonwealth
+    - canada
+    - nu
+    - statistics
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-12-canada-provinces-quebec-montreal-pipeline-v1
+    spec: commonwealth-pipeline
