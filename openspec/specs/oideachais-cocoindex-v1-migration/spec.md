@@ -71,43 +71,23 @@ All 13 Apps SHALL use the canonical v1 pattern
 
 ### Requirement: V0 Archive
 
-The system SHALL archive the **10 v0 broken CocoIndex modules**
-at `cianfhoghlaim/cocoindex_flows/_v0_archive/` (the canonical home
-for deprecated v0 code). The 10 modules are:
+The system SHALL keep actual Python import examples in the `oideachais-cocoindex-v1-migration` spec aligned with the v4 `cianfhoghlaim` package root. When the spec shows a code import for an archived or migrated CocoIndex flow, it SHALL use `from cianfhoghlaim...` rather than `from oideachais...`.
 
-1. `author_archive_embedding.py`
-2. `curriculum_embedding.py`
-3. `curriculum_translation.py`
-4. `curriculum_specification_extraction.py`
-5. `geospatial_indexing.py`
-6. `learning_outcome_graph.py`
-7. `ocr_embedding.py`
-8. `pdf_embedding.py`
-9. `research_embedding.py`
-10. `site_analysis_embedding.py`
+The V0 archive SHALL remain read-only and SHALL preserve retired flow files under the archive path. Consumers SHALL import active v1 Apps from their v4 `cianfhoghlaim` package paths.
 
-The 10 modules SHALL raise `ImportError` when imported
-(cocoindex==1.0.9 has no `flow_def` DSL). The
-`_v0_archive/__init__.py` SHALL document the deprecation and
-point to the canonical v1 Apps in
-`cianfhoghlaim/cocoindex_flows/`.
+#### Scenario: Active research embedding import uses cianfhoghlaim
 
-The system SHALL NOT migrate the 10 v0 modules to v1 in this
-change (the migration is a 6-week project per
-`cianfhoghlaim/REFACTORING.md` #6). The 11 v1 Apps cover the
-equivalent use cases.
+- **GIVEN** a migrated research embedding flow has an active v4 home
+- **WHEN** the spec shows the import replacement for the archived flow
+- **THEN** it uses `from cianfhoghlaim.cocoindex_flows.research_embedding import ...`
+- **AND** it does not use `from oideachais.cocoindex_flows.research_embedding import ...`
 
-#### Scenario: A developer tries to import a v0 module
+#### Scenario: V0 archive remains non-authoritative
 
-- **GIVEN** the v0 module is archived at
-  `cianfhoghlaim/cocoindex_flows/_v0_archive/research_embedding.py`
-- **WHEN** a developer does
-  `from cianfhoghlaim.cocoindex_flows.research_embedding import ...`
-- **THEN** Python SHALL raise `ModuleNotFoundError` (or
-  `ImportError`) with a helpful message pointing at the
-  `_v0_archive/` directory
-- **AND** the developer SHALL use the v1 App instead (e.g.
-  `unified_embedding` for the DuckDB-source research use case)
+- **GIVEN** a file remains under the V0 archive path
+- **WHEN** a contributor needs an active v1 App
+- **THEN** the contributor SHALL use the v4 active app path under `cianfhoghlaim/cocoindex/`
+- **AND** the archive SHALL NOT be treated as the runtime import surface
 
 ### Requirement: CocoIndex v1 App canonical pattern
 

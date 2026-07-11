@@ -221,39 +221,15 @@ for the base model.
 
 ### Requirement: Agent + OCR thin-shim canonicalisation
 
-The system SHALL canonicalise the `cianfhoghlaim/agents/{adk,agno}/`
-and `cianfhoghlaim/ocr/` directories as **thin re-exports** of the
-model-layer agents + OCR modules in `cianfhoghlaim/agents/` +
-`cianfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
-curriculum_agent, translation_agent, corpus_agent,
-research_agent, education_research_agent,
-bunchloch_research_agent, geospatial_agent,
-statistics_agent, curriculum_comparison_agent,
-agui_curriculum_agent, mcp_curriculum_agent) and the 12 OCR
-modules (adapters, comparison_runner, gaelic_metrics,
-irish_htr_dataset, irish_processing, line_segmentation,
-model_registry, observability, pylaia_comparison,
-vision_comparison, vlm_finetune_comparison, gaelscribhneoir)
-SHALL be re-exported, not duplicated.
-
-The system SHALL keep the 5 tuatha-specific agents
-(celtic_tutor_agent, mythology_narrator_agent,
-quest_guide_agent, research_assistant_agent, tuatha_root_agent)
-and the 1 leabharlann-specific OCR file
-(`cianfhoghlaim/ocr/author_archive_ocr.py`) as real code (they
-are domain-specific, not duplicates).
+The system SHALL use `from cianfhoghlaim...` for actual Python import examples in active OpenSpec specs. The older `from oideachais...` examples are logical quadrant shorthand only and MUST NOT be used as real code-import examples.
 
 #### Scenario: A consumer imports the same agent via both paths
 
-- **GIVEN** the canonical agent lives at
-  `cianfhoghlaim/agents/curriculum_agent.py`
-- **AND** the thin-shim re-exports it at
-  `cianfhoghlaim/agents/adk/curriculum_agent.py`
-- **WHEN** a consumer does
-  `from cianfhoghlaim.agents.adk.curriculum_agent import curriculum_agent`
-- **THEN** the imported `curriculum_agent` is the **same object**
-  as `meaisinfhoghlaim.agents.curriculum_agent.curriculum_agent`
-  (verified via `is` comparison)
+- **GIVEN** the canonical agent lives at `cianfhoghlaim/agents/curriculum_agent.py`
+- **AND** the thin-shim re-exports it at `cianfhoghlaim/agents/adk/curriculum_agent.py`
+- **WHEN** a consumer imports `curriculum_agent` through a real Python import example
+- **THEN** the example uses `from cianfhoghlaim.agents.adk.curriculum_agent import curriculum_agent`
+- **AND** the imported object is the same object exposed by the canonical model-layer module
 
 ### Requirement: No stale `sruth.oideachas` path references
 
@@ -779,76 +755,43 @@ in the root_agent without a manual code edit.
 
 ### Requirement: 12 Python OCR/VLM/memory packages in the dagster-local image
 
-The system SHALL build a `dagster-local` Docker image with the Python packages required for the v4 OCR/VLM/memory stack.
+The system SHALL keep the `12 Python OCR/VLM/memory packages in the dagster-local image` requirement inside the main `## Requirements` section of `openspec/specs/meaisinfhoghlaim-platform/spec.md`. This requirement SHALL begin with a normative SHALL/MUST statement so OpenSpec strict validation parses it correctly.
 
-The `dagster-local` Docker image (built from
-`bonneagar/stacks/dagster/Dockerfile.dagster`) SHALL install **12
-Python packages** to support the v4 OCR/VLM/memory stack:
+The `dagster-local` Docker image SHALL install the Python packages required for the v4 OCR/VLM/memory stack: OCR packages, VLM packages, document-to-markdown packages, in-process GGUF runtime support, memory packages, and the Hugging Face CLI package.
 
-**OCR (4 packages):** `surya-ocr>=0.20.0`, `rapidocr>=3.9.0`,
-`pytesseract>=0.3.10`, `easyocr>=1.7.2`
+#### Scenario: Requirement is parsed by strict validation
 
-**VLM (2 packages):** `docling[mlx-vlm]>=2.0.0`, `paddleocr-vl>=1.0.0`
+- **GIVEN** `openspec/specs/meaisinfhoghlaim-platform/spec.md`
+- **WHEN** `openspec validate meaisinfhoghlaim-platform --strict` runs
+- **THEN** the spec is valid
+- **AND** this requirement is visible under the main `## Requirements` section
 
-**Doc→MD (2 packages):** `marker-pdf>=1.10.2`, `mineru>=3.4`
+#### Scenario: The dagster image imports all required packages
 
-**In-process GGUF runtime (1 package):** `llama-cpp-python>=0.3.0`
-
-**Memory (3 packages):** `graphiti-core[falkordb]>=0.29.2`,
-`cognee-sdk>=1.0.0`, `letta>=0.5`
-
-**HF CLI (1 package):** `huggingface-hub>=0.27.0`
-
-These 12 packages are installed in the dagster image so the 6
-TRANSFORMERS-backend models in the v4 OCR/VLM registry are
-loadable from Python. The 13 LLAMASWAP entries + 4 MLX entries are
-served via llama-swap (:8080) and mlx-omni (:10240) respectively.
-
-#### Scenario: The dagster image imports all 12 packages
-
-- **WHEN** `docker run --rm dagster-local:latest python -c "import surya, rapidocr, easyocr, docling, paddleocr_vl, marker_pdf, mineru, llama_cpp, graphiti_core, cognee, letta, huggingface_hub"`
-- **THEN** the command SHALL exit 0 with no ImportError
+- **WHEN** the `dagster-local` image runs a Python import smoke test for the declared OCR/VLM/memory packages
+- **THEN** the command SHALL exit 0 with no `ImportError`
 
 ### Requirement: pyproject.toml extra `ocr-vision-full`
 
-The `cianfhoghlaim/pyproject.toml` SHALL provide a
-`[project.optional-dependencies.ocr-vision-full]` group containing
-the 9 production OCR/VLM/doc→md packages listed above (no `cognee`,
-`graphiti`, `letta`, `huggingface-hub` since those are in the
-`memory` + always-installed groups respectively). Plus a
-`dev-with-vision` composite extra combining `dev + memory +
-ocr-vision-full` for the 25 new dev notebooks under
-`notebooks/dashboards/{leaving_cert,law,...}`.
+The system SHALL keep the `pyproject.toml extra ocr-vision-full` requirement inside the main `## Requirements` section of `openspec/specs/meaisinfhoghlaim-platform/spec.md` so it is visible to strict validation.
 
-#### Scenario: dev-with-vision installs all required deps
+The `cianfhoghlaim/pyproject.toml` SHALL provide an `ocr-vision-full` optional-dependency group and a `dev-with-vision` composite extra for the dev notebooks that require the OCR/VLM stack.
 
-- **WHEN** `uv pip install -e '.[dev-with-vision]'`
-- **THEN** the venv SHALL contain surya-ocr, rapidocr, easyocr,
-  docling, paddleocr-vl, marker-pdf, mineru, llama-cpp-python,
-  graphiti-core[falkordb], cognee-sdk, letta, huggingface-hub,
-  marimo, altair, pytest, ruff, mypy
+#### Scenario: dev-with-vision installs all required dependencies
+
+- **WHEN** `uv pip install -e '.[dev-with-vision]'` runs
+- **THEN** the environment SHALL contain the OCR, VLM, doc-to-markdown, memory, notebook, and quality-tool dependencies required by the v4 dev notebook set
 
 ### Requirement: 25 dev marimo notebooks for LC5 + Gemini
 
-The system SHALL provide **25 working dev notebooks** (per the
-2026-07-03 LC5 + 2026-07-03 Gemini changes):
+The system SHALL keep the `25 dev marimo notebooks for LC5 + Gemini` requirement inside the main `## Requirements` section of `openspec/specs/meaisinfhoghlaim-platform/spec.md` so it is visible to strict validation.
 
-- **16 LC notebooks** under `notebooks/dashboards/leaving_cert/`:
-  5 per-subject + 5 cross-subject + 5 model benchmark + 1
-  side-by-side llama-swap vs llama-cpp-python timing
-- **9 Gemini notebooks** under
-  `notebooks/dashboards/{law,medical,politics,culture,technology,other}/`:
-  6 per-corpus overviews + 3 cross-corpus (timeline, jurisdictional
-  map, pattern detection)
+The system SHALL provide working dev notebooks for the LC5 and Gemini pipelines, with parseable `@app.cell` cells, SQL-backed exploration, and visualisations.
 
-Each notebook SHALL have working `@app.cell` cells (not skeletons),
-use the `mo.sql(engine=duckdb)` pattern, and display altair/plotly
-visualisations.
+#### Scenario: All dev notebooks parse
 
-#### Scenario: All 25 notebooks parse
-
-- **WHEN** `for f in notebooks/dashboards/{leaving_cert,law,medical,politics,culture,technology,other}/0*_*.py; do python -c "import ast; ast.parse(open('\$f').read())"; done`
-- **THEN** all 25 notebooks SHALL parse without syntax errors
+- **WHEN** the notebook parse smoke test runs across the LC5 and Gemini notebook directories
+- **THEN** all notebooks SHALL parse without syntax errors
 
 ## Known issues (from `cianfhoghlaim/README.md`)
 | # | Issue | Tracked in | Severity |

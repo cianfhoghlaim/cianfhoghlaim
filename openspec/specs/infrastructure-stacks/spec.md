@@ -961,6 +961,163 @@ qdrant, rabbitmq, django, celery, oauth, and LLM-provider keys.
   qdrant_db, rabbitmq_user, rabbitmq_pass, django_secret_key,
   celery_broker_url, celery_result_backend, openai_api_key, etc.)
 
+### Requirement: Agent skills use v4 namespace paths
+
+The system SHALL keep every `.agents/skills/` Markdown file aligned with the post-v4 `cianfhoghlaim/` namespace and directory layout. Skill documentation MUST NOT introduce pre-v4 `sruth/<quadrant>/...` path references except in archived point-in-time artifacts outside `.agents/skills/`.
+
+For application code examples, skill documentation SHALL use import paths rooted at `cianfhoghlaim`, `meaisinfhoghlaim`, `tuatha`, or `croilar` as appropriate for the v4 package surface. For filesystem path examples, skill documentation SHALL use the actual v4 homes such as `cianfhoghlaim/dlt/`, `cianfhoghlaim/baml_src/`, `cianfhoghlaim/cocoindex/`, `cianfhoghlaim/orchestration/`, `cianfhoghlaim/agents/`, and `cianfhoghlaim/web/apps/*/`.
+
+#### Scenario: Skill drift check stays clean
+
+- **GIVEN** a contributor edits any file under `.agents/skills/`
+- **WHEN** `grep -rln "sruth/" .agents/skills/` runs
+- **THEN** the command returns 0 files
+- **AND** `mise run lint:skills` reports all registered skills pass
+
+#### Scenario: Skill examples use v4 application paths
+
+- **GIVEN** a skill documents an oideachais DLT source
+- **WHEN** it references the source's filesystem location
+- **THEN** it uses `cianfhoghlaim/dlt/...` rather than `sruth/oideachais/dlt_sources/...`
+- **AND** if it shows a Python import example, the example uses `from cianfhoghlaim...` for actual code imports
+
+#### Scenario: Bonneagar infra drift remains out of repo scope
+
+- **GIVEN** a drift reference exists inside the separate `bonneagar/` repo/worktree
+- **WHEN** this Cianfhoghlaim OpenSpec change is implemented
+- **THEN** the `bonneagar/` file is not modified from this repo
+- **AND** any follow-up is tracked as a separate repo-boundary task
+
+### Requirement: All procedures have `server_id` by 2026-07-13
+
+The system SHALL require every Komodo procedure TOML under `komodo/procedures/` to declare a top-level `server_id` field with one of the values:
+- `"bunchloch"` — for procedures that deploy + verify resources on the `bunchloch` host
+- `"arm1-oci"` — for procedures that deploy + verify resources on the `arm1-oci` host
+
+Procedures added or modified after **2026-07-13** MUST include `server_id = "bunchloch"` or `server_id = "arm1-oci"`. The legacy back-compat path (procedures without `server_id` showing in both hosts' UIs) is **deprecated and SHALL be removed by 2026-08-15**: at that date, any procedure without `server_id` SHALL emit a hard error from `openspec validate` (not just a warning) and SHALL be removed from both UIs.
+
+The convention is documented in `komodo/procedures/server_id_legend.md` (the legend doc added by the `2026-07-13-deploy-agent-platform-cluster-arm1-oci-and-remote-dev-workflow` change).
+
+#### Scenario: New procedure has `server_id`
+
+- **WHEN** a new procedure is added to `komodo/procedures/` after 2026-07-13
+- **THEN** the procedure SHALL include `server_id = "bunchloch"` or `server_id = "arm1-oci"` at the top of the `[[procedure.config]]` (or `[[procedure]]`) block
+- **AND** `openspec validate <change-id> --strict` SHALL emit an error if the field is missing
+- **AND** the procedure SHALL appear in only the matching host's `km` UI
+
+#### Scenario: Backfill of legacy procedures
+
+- **WHEN** a procedure is added to `komodo/procedures/` without a `server_id` field between **2026-07-13** and **2026-08-15**
+- **THEN** the procedure SHALL appear in BOTH hosts' UIs (back-compat path)
+- **AND** Komodo Core SHALL log a deprecation warning: `WARN: procedure '<name>' has no server_id field; defaulting to both hosts. Add server_id = 'bunchloch' or 'arm1-oci'.`
+
+#### Scenario: 2026-08-15 hard cutover
+
+- **WHEN** the 2026-08-15 cutover date passes
+- **THEN** any procedure without a `server_id` field SHALL be hard-rejected by `openspec validate` (not just a warning)
+- **AND** the back-compat path SHALL be removed from Komodo Core (procedures without `server_id` are invisible in both UIs)
+- **AND** the only valid procedure files are ones with `server_id = "bunchloch"` or `server_id = "arm1-oci"`
+
+### Requirement: preflight:arm-oci hard-gates arm1-oci cluster deployment
+
+The system SHALL require the `preflight:arm-oci` safety gate to exit 0
+before any ClusterDeployment procedure on `arm1-oci` proceeds past
+Stage 0. The preflight report (`--emit-md` output) SHALL be captured
+to `/tmp/preflight-reports/arm-oci/<utc-timestamp>.md` for every
+deploy attempt (success or failure).
+
+The omnibus `deploy-agent-platform-cluster-arm1-oci` MUST set
+`require_success = true` on its Stage 0 `preflight` RunShellCommand so
+that a non-zero preflight exit code aborts the omnibus before Stage 1
+(control-plane foundation).
+
+The `--skip=preflight` flag SHALL be rejected (exit code 2) on any
+arm1-oci cluster procedure; preflight is a mandatory first step.
+
+#### Scenario: preflight exits 0 — omnibus proceeds
+
+- **WHEN** `bun run preflight:arm-oci --strict --emit-md` exits 0
+- **THEN** the omnibus proceeds to Stage 1 (control-plane foundation)
+- **AND** the captured report exists at `/tmp/preflight-reports/arm-oci/<utc-ts>.md`
+- **AND** the report ends with `PASS` or `ALL CHECKS PASSED`
+
+#### Scenario: preflight exits non-zero — omnibus aborts at Stage 0
+
+- **WHEN** `bun run preflight:arm-oci --strict --emit-md` exits non-zero
+- **THEN** the omnibus aborts at Stage 0
+- **AND** no Stage 1+ execution is attempted
+- **AND** the captured report retains the failure cause (e.g.
+  `Pangolin unreachable`, `Komodo unreachable`, `Infisical unreachable`,
+  `process-namespace conflict`)
+- **AND** the operator sees the report path in the Komodo log
+
+#### Scenario: --skip=preflight is rejected
+
+- **WHEN** `km run procedure deploy-agent-platform-cluster-arm1-oci -- --skip=preflight` runs
+- **THEN** the procedure exits with code 2
+- **AND** the operator sees the message "preflight is a mandatory first step; --skip=preflight is rejected"
+- **AND** no Stage 0+ execution is attempted
+
+### Requirement: Drift-remediation pass
+
+The IaC at `bonneagar/iac/` SHALL expose a `iac:bootstrap`
+command at the repo root via the cianfhoghlaim `package.json`
+script `iac:bootstrap` (delegating to
+`bun run --cwd bonneagar iac:bootstrap`).
+
+#### Scenario: Root-level iac:bootstrap is callable
+
+- **WHEN** a developer runs `bun run iac:bootstrap` from the
+  cianfhoghlaim repo root
+- **THEN** the IaC SHALL execute the 8-phase Pulumi →
+  Infisical → Pangolin → Komodo → Newt → all syncs sequence
+- **AND** the exit code SHALL be 0 on success
+
+#### Scenario: iac:bootstrap supports --dry-run
+
+- **WHEN** a developer runs `bun run iac:bootstrap --dry-run`
+- **THEN** the IaC SHALL print the diff between the declared
+  state and the actual state
+- **AND** SHALL NOT mutate any remote system
+
+### Requirement: preflight:arm-oci safety script
+
+The repo SHALL provide a `bun run preflight:arm-oci` script
+at `scripts/preflight-arm-oci.ts` that runs 4 checks before any
+arm-oci stack deploy:
+
+1. **Pangolin health** — `GET ${PANGOLIN_URL}/api/v1/` returns 200
+2. **Komodo health** — `GET ${KOMODO_URL}/ping` returns 200
+3. **Infisical health** — `GET ${INFISICAL_URL}/api/status` returns 200
+4. **Process namespace isolation** — the opencode session PID
+   MUST NOT share a PID namespace with any running container
+   named `openchamber`, `openclaw`, `hermes`, `komodo`,
+   `pangolin`, or `infisical`
+
+#### Scenario: All 4 checks pass
+
+- **WHEN** an opencode session runs `bun run preflight:arm-oci`
+- **AND** Pangolin + Komodo + Infisical all return 200
+- **AND** the opencode PID is in a distinct PID namespace
+- **THEN** the script SHALL exit 0 with "ALL CHECKS PASSED"
+
+#### Scenario: Pangolin is unreachable
+
+- **WHEN** an opencode session runs `bun run preflight:arm-oci`
+- **AND** Pangolin returns 5xx or times out
+- **THEN** the script SHALL exit 1 with a clear error message
+  identifying which check failed and how to remediate
+
+#### Scenario: Opencode PID shares namespace with openchamber
+
+- **WHEN** an opencode session runs `bun run preflight:arm-oci`
+- **AND** the current PID is in the same PID namespace as a
+  running openchamber container
+- **THEN** the script SHALL exit 1 with the message
+  "REFUSING TO DEPLOY: opencode PID <X> shares namespace with
+  openchamber container <Y>; restart opencode outside the
+  openchamber namespace first"
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |
