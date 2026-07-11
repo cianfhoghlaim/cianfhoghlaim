@@ -44,7 +44,7 @@ except ImportError:
 
 
 @asset(
-    group_name="2_materials/ie_law/piab",
+    group_name="2_materials_ie_law_piab",
     description="BAML ExtractPIABPage extraction (Pick-8 IE/law).",
 )
 def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -68,7 +68,7 @@ def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(
-    group_name="2_materials/ie_law/courts",
+    group_name="2_materials_ie_law_courts",
     description="BAML ExtractCourtForm extraction (Pick-8 IE/law).",
 )
 def courts_forms_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -83,7 +83,7 @@ def courts_forms_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(
-    group_name="2_materials/ie_law/courts",
+    group_name="2_materials_ie_law_courts",
     description="BAML ExtractCourtFee extraction (Pick-8 IE/law).",
 )
 def court_fees_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -98,7 +98,7 @@ def court_fees_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(
-    group_name="2_materials/ie_law/judgements",
+    group_name="2_materials_ie_law_judgements",
     description="BAML ExtractJudgement extraction (Pick-8 IE/law).",
 )
 def judgements_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -113,7 +113,7 @@ def judgements_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(
-    group_name="2_materials/ie_law/court_rules",
+    group_name="2_materials_ie_law_court_rules",
     description="BAML ExtractCourtRule extraction (Pick-8 IE/law).",
 )
 def court_rules_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -128,7 +128,7 @@ def court_rules_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(
-    group_name="2_materials/ie_law/legal_aid",
+    group_name="2_materials_ie_law_legal_aid",
     description="BAML ExtractLegalAidPage extraction (Pick-8 IE/law).",
 )
 def legal_aid_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -143,7 +143,7 @@ def legal_aid_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset(
-    group_name="2_materials/ie_law/cross_source",
+    group_name="2_materials_ie_law_cross_source",
     description=(
         "Cross-source statute linkage asset (Pick-8 IE/law). "
         "Joins the BAML-extracted statutes_cited arrays from the 5 "

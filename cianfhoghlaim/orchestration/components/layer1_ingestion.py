@@ -109,7 +109,7 @@ class CelticIngestionComponent(Component):
         factory = get_default_factory()
         pipeline_name = f"sf_{self.source_id.replace('.', '_')}"
         dataset_name = self.source_id.replace(".", "_").replace("-", "_")
-        group_name = f"1_ingestion/{self.domain}/{self.nation}"
+        group_name = f"1_ingestion_{self.domain}_{self.nation}"
         automation_condition = self._build_automation_condition()
 
         @dg.asset(

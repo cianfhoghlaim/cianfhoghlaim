@@ -102,7 +102,7 @@ class CelticAgentOpsComponent(Component):
         """
         trace_tag = self.langfuse_trace_tag or f"agent.{self.agent_name}"
         health_endpoint = self.health_endpoint or self._default_health_endpoint()
-        group_prefix = f"5_agent_ops/{self.framework}/{self.agent_name}"
+        group_prefix = f"5_agent_ops_{self.framework}_{self.agent_name}"
 
         # ---- 1. agent_health_{name} ----
         @dg.asset(

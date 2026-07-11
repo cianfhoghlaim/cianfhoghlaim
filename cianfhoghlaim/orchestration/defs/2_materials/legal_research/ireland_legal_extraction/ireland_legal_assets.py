@@ -36,7 +36,7 @@ except ImportError:
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/piab_pages",
+    group_name="2_materials_legal_research_ireland_legal_piab_pages",
     description="BAML ExtractPIABPage extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_piab_extracted(context: AssetExecutionContext) -> dict[str, Any]:
@@ -53,7 +53,7 @@ def ireland_legal_piab_extracted(context: AssetExecutionContext) -> dict[str, An
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/courts_forms",
+    group_name="2_materials_legal_research_ireland_legal_courts_forms",
     description="BAML ExtractCourtForm extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_courts_forms_extracted(
@@ -67,7 +67,7 @@ def ireland_legal_courts_forms_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/judgements",
+    group_name="2_materials_legal_research_ireland_legal_judgements",
     description="BAML ExtractJudgement extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_judgements_extracted(
@@ -81,7 +81,7 @@ def ireland_legal_judgements_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/court_fees",
+    group_name="2_materials_legal_research_ireland_legal_court_fees",
     description="BAML ExtractCourtFee extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_court_fees_extracted(
@@ -95,7 +95,7 @@ def ireland_legal_court_fees_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/court_rules",
+    group_name="2_materials_legal_research_ireland_legal_court_rules",
     description="BAML ExtractCourtRule extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_court_rules_extracted(
@@ -109,7 +109,7 @@ def ireland_legal_court_rules_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/wrc_decisions",
+    group_name="2_materials_legal_research_ireland_legal_wrc_decisions",
     description="BAML ExtractWRCDecision extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_wrc_decisions_extracted(
@@ -123,7 +123,7 @@ def ireland_legal_wrc_decisions_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/wrc_pages",
+    group_name="2_materials_legal_research_ireland_legal_wrc_pages",
     description="BAML ExtractWRCProcedure extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_wrc_pages_extracted(
@@ -137,7 +137,7 @@ def ireland_legal_wrc_pages_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/citizensinfo_articles",
+    group_name="2_materials_legal_research_ireland_legal_citizensinfo_articles",
     description="BAML ExtractCitizensInfoArticle extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_citizensinfo_extracted(
@@ -151,7 +151,7 @@ def ireland_legal_citizensinfo_extracted(
 
 
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/gov_ie_pages",
+    group_name="2_materials_legal_research_ireland_legal_gov_ie_pages",
     description="BAML ExtractGovIEPressRelease extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_gov_ie_extracted(
@@ -168,7 +168,7 @@ def ireland_legal_gov_ie_extracted(
 # `statutes_cited` arrays against the existing
 # `oideachais.education.ie.irish_statute_book.acts` table.
 @asset(
-    group_name="2_materials/legal_research/ireland_legal/statute_links",
+    group_name="2_materials_legal_research_ireland_legal_statute_links",
     description=(
         "Cross-source statute linkage (LinkStatutesToActs). "
         "Joins the BAML-extracted `statutes_cited` arrays from "
