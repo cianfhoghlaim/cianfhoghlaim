@@ -44,7 +44,7 @@ COURTS_FORMS_PATHS = [
 ]
 
 COURTS_JUDGEMENTS_PATHS = [
-    "/judgements/*",
+    "/search/judgements/*",
     "/supreme-court/judgements/*",
     "/court-of-appeal/judgements/*",
     "/high-court/judgements/*",

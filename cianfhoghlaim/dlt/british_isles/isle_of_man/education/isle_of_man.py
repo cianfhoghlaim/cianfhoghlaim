@@ -4,6 +4,11 @@ oideachais.cianfhoghlaim.dlt.british_isles.isle_of_man.education.isle_of_man —
 Moved from `dlt_sources/crown_dependencies/isle_of_man.py` in
 Phase 3E (Round 11 oideachais audit). Single-source file — no helpers
 to extract.
+
+Phase 1 fix (2026-07-12): ``www.gov.im`` returns 403 to plain HTTP +
+sitemap.xml. Routes via the Firecrawl stealth proxy with a 10s
+wait_for; falls back to the Wayback Machine on stealth failure.
+See :mod:`cianfhoghlaim.dlt.common.endpoint_recovery`.
 """
 
 from __future__ import annotations

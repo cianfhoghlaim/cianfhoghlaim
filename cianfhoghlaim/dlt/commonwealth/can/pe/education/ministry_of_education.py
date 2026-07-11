@@ -1,0 +1,90 @@
+"""DLT source for the Prince Edward Island Ministry of Education.
+
+Per the
+[`2026-07-12-canada-provinces-quebec-montreal-pipeline-v1`](../../../openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/)
+change.
+
+Honours ``USE_LOCAL_SCRAPES=true`` by reading from
+``stedding/ingest_queue/commonwealth/can/pe/education/<lang>/``.
+"""
+from __future__ import annotations
+
+from collections.abc import Iterator
+from typing import Any
+
+import dlt
+import structlog
+
+logger = structlog.get_logger(__name__)
+
+
+PROVINCE = "pe"
+DOMAIN = "education"
+SLUG = "ministry_of_education"
+CANONICAL_URL = "https://www.princeedwardisland.ca/en/topic/education-and-lifelong-learning"
+DEFAULT_LANGUAGE = "en"
+
+
+@dlt.resource(
+    name="pe_ministry_of_education",
+    write_disposition="merge",
+    primary_key=["url", "language"],
+    columns={
+        "province": {"data_type": "text"},
+        "domain": {"data_type": "text"},
+        "language": {"data_type": "text"},
+        "url": {"data_type": "text"},
+        "title": {"data_type": "text"},
+        "content_hash": {"data_type": "text"},
+        "source": {"data_type": "text"},
+        "extracted_at": {"data_type": "timestamp"},
+    },
+)
+def pe_ministry_of_education(language=None):
+    """Yield Prince Edward Island Ministry of Education rows from the canonical cache."""
+    import hashlib
+    import json
+    from datetime import UTC, datetime
+    from pathlib import Path
+
+    cache_dir = Path("stedding/ingest_queue/commonwealth/can/pe/education")
+    languages = (language,) if language else ('en',)
+    for lang in languages:
+        lang_dir = cache_dir / lang
+        if not lang_dir.exists():
+            continue
+        for json_path in sorted(lang_dir.glob("*.json")):
+            try:
+                payload = json.loads(json_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                logger.warning("pe_ministry_of_education_cache_parse_failed", path=str(json_path), error=str(exc))
+                continue
+            metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
+            markdown = payload.get("markdown", "") if isinstance(payload, dict) else ""
+            yield {
+                "province": PROVINCE,
+                "domain": DOMAIN,
+                "language": lang,
+                "url": metadata.get("sourceURL") or metadata.get("url") or "",
+                "title": (payload.get("title") or metadata.get("title", "") if isinstance(payload, dict) else ""),
+                "content_hash": f"sha256:{hashlib.sha256(markdown.encode()).hexdigest()[:16]}" if markdown else "",
+                "source": SLUG,
+                "extracted_at": datetime.now(UTC).isoformat(),
+            }
+
+
+@dlt.source(name="pe_ministry_of_education")
+def pe_ministry_of_education_source(language=None):
+    """DLT source for the Prince Edward Island Ministry of Education ingestion."""
+    return pe_ministry_of_education(language=language)
+
+
+__all__ = [
+    "CANONICAL_URL",
+    "DEFAULT_LANGUAGE",
+    "DOMAIN",
+    "PROVINCE",
+    "SLUG",
+    "pe_ministry_of_education",
+    "pe_ministry_of_education_source",
+]

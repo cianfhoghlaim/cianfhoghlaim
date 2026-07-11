@@ -1,0 +1,35 @@
+# defs/1_ingestion/british_isles/sct/education/subjects/mathematics/defs.yaml
+#
+# L1 CelticIngestionComponent for the Scotland mathematics
+# per-subject DLT source (British Isles parity change).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/british_isles/sct/education/subjects/mathematics.py` with
+# `source_id="british_isles.sct.education.subjects.mathematics"`.
+#
+# Reference: openspec/changes/2026-07-12-british-isles-parity-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: biep_sct_mathematics
+  module: cianfhoghlaim.dlt.british_isles.sct.education.subjects.mathematics
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - nation:
+        values: ["sct"]
+    - subject:
+        values: ["mathematics"]
+    - language:
+        values: ["en", "gd"]
+  use_local_scrapes: true
+  asset_check: biep_sct_mathematics_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - parity
+    - sct
+    - mathematics
+  metadata:
+    openspec_change: 2026-07-12-british-isles-parity-pipeline-v1
+    spec: british-isles-education-pipeline

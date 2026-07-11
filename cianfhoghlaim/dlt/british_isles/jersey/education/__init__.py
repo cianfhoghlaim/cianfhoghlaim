@@ -1,11 +1,6 @@
-"""Re-export shim: jey/education (canonical path, Phase 3E).
+"""Government of Jersey (jersey) per-island education sub-tree (Phase 2 split)."""
+from cianfhoghlaim.dlt.british_isles.jersey.education.island import (
+    jersey_education,
+)  # noqa: F401
 
-Per Phase 3E, the canonical home for the Jersey education source
-is `jey.education.channel_islands` (split from the deprecated
-`crown_dependencies/` umbrella in Round 11).
-"""
-from __future__ import annotations
-
-from cianfhoghlaim.dlt.british_isles.jersey.education.channel_islands import jersey_source
-
-__all__ = ["jersey_source"]
+__all__ = ["jersey_education"]

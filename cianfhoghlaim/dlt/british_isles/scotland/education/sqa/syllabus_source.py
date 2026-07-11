@@ -41,6 +41,14 @@ from typing import Any
 import dlt
 
 CACHE_DIR = Path("stedding/site_scrape_samples/sqa")
+URLS_CACHE_PATH = Path("stedding/site_scrape_samples/sqa/urls.json")
+SQA_BASE_URL = "https://www.sqa.org.uk/supporting-others/"
+"""Phase 1 fix: the original ``/sqa/56983.html`` URL returned 404.
+The new canonical entry point is ``/supporting-others/``; the
+resource iterates the Firecrawl-discovered URL list at
+``stedding/site_scrape_samples/sqa/urls.json`` and reads cached
+``sample.json`` per (language, subject) pair when
+``USE_LOCAL_SCRAPES=true``."""
 
 
 def _cache_path(language: str, subject: str) -> Path:

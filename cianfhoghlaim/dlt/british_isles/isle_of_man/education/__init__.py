@@ -1,11 +1,6 @@
-"""Re-export shim: iom/education (canonical path, Phase 3E).
+"""Isle of Man Government (isle_of_man) per-island education sub-tree (Phase 2 split)."""
+from cianfhoghlaim.dlt.british_isles.isle_of_man.education.island import (
+    isle_of_man_education,
+)  # noqa: F401
 
-Per Phase 3E, the canonical home for the Isle of Man education source
-is `iom.education.isle_of_man` (split from the deprecated
-`crown_dependencies/` umbrella in Round 11).
-"""
-from __future__ import annotations
-
-from cianfhoghlaim.dlt.british_isles.isle_of_man.education.isle_of_man import isle_of_man_source
-
-__all__ = ["isle_of_man_source"]
+__all__ = ["isle_of_man_education"]

@@ -1,0 +1,34 @@
+# defs/1_ingestion/commonwealth/nga/states/nga_oyo/law/legislation/defs.yaml
+#
+# L1 CelticIngestionComponent for the Oyo law DLT source.
+#
+# Reference: openspec/changes/2026-07-12-commonwealth-nigeria-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: commonwealth_nga_state_nga_oyo_legislation
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_oyo.law.legislation
+  schedule:
+    cron: "0 5 * * *"
+    timezone: UTC
+  partitions:
+    - country:
+        values: ["nga"]
+    - state_code:
+        values: ["nga_oyo"]
+    - domain:
+        values: ["law"]
+    - language:
+        values: ["en", "yo"]
+  use_local_scrapes: true
+  asset_check: commonwealth_nga_state_nga_oyo_legislation_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - commonwealth
+    - nigeria
+    - nga
+    - nga_oyo
+    - law
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
+    spec: commonwealth-pipeline

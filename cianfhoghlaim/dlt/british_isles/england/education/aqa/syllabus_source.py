@@ -41,6 +41,13 @@ from typing import Any
 import dlt
 
 CACHE_DIR = Path("stedding/site_scrape_samples/aqa")
+URLS_CACHE_PATH = Path("stedding/site_scrape_samples/aqa/urls.json")
+AQA_BASE_URL = "https://www.aqa.org.uk/find-past-papers-and-mark-schemes"
+"""Phase 1 fix: the original ``/subjects/gcse`` + ``/subjects/a-level``
+URLs returned 404. The new canonical entry point is the search
+endpoint at ``/find-past-papers-and-mark-schemes``; the resource
+iterates the Firecrawl-discovered URL list at
+``stedding/site_scrape_samples/aqa/urls.json``."""
 
 
 def _cache_path(language: str, subject: str) -> Path:
