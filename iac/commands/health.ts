@@ -61,31 +61,44 @@ export async function health() {
 
   // 4. Newt (bunchloch) — WireGuard handshake + version
   try {
+    // 4a. Container exists + is Up?
     const psOut = (await execAsync("docker ps --filter name=bunchloch-newt --format '{{.Status}}'")).stdout.trim();
-    if (psOut.includes("Up")) {
+    if (!psOut.includes("Up")) {
+      logError(`newt (bunchloch): container NOT Up (status: ${psOut || "absent"}); run: km run procedure deploy-newt-bunchloch-v2`);
+      allOk = false;
+    } else {
       logOk(`newt (bunchloch): container Up (${psOut})`);
-    } else {
-      logError(`newt (bunchloch): container NOT Up (status: ${psOut || "absent"})`);
-      allOk = false;
-    }
 
-    const versionOut = (await execAsync("docker exec bunchloch-newt -- newt --version 2>&1")).stdout.trim();
-    const versionMatch = versionOut.match(/(\d+\.\d+\.\d+)/);
-    const version = versionMatch ? versionMatch[1] : "unknown";
-    if (version === "1.14.0") {
-      logOk(`newt (bunchloch): version ${version} (matches IMAGE pin)`);
-    } else {
-      logError(`newt (bunchloch): version ${version} MISMATCH (expected 1.14.0)`);
-      allOk = false;
-    }
+      // 4b. newt binary version (only if container is Up)
+      try {
+        const versionOut = (await execAsync("docker exec bunchloch-newt -- newt --version 2>&1")).stdout.trim();
+        const versionMatch = versionOut.match(/(\d+\.\d+\.\d+)/);
+        const version = versionMatch ? versionMatch[1] : "unknown";
+        if (version === "1.14.0") {
+          logOk(`newt (bunchloch): version ${version} (matches IMAGE pin)`);
+        } else {
+          logError(`newt (bunchloch): version ${version} MISMATCH (expected 1.14.0)`);
+          allOk = false;
+        }
+      } catch (e) {
+        logError(`newt (bunchloch): version check failed: ${(e as Error).message.slice(0, 100)}`);
+        allOk = false;
+      }
 
-    const wgOut = (await execAsync("docker exec bunchloch-newt -- wg show 2>&1")).stdout.trim();
-    if (wgOut.includes("latest handshake")) {
-      const handshakeLine = wgOut.split("\n").find((l) => l.includes("latest handshake"));
-      logOk(`newt (bunchloch): WireGuard tunnel LIVE (${handshakeLine?.trim()})`);
-    } else {
-      logError(`newt (bunchloch): NO WireGuard handshake yet (tunnel not established)`);
-      allOk = false;
+      // 4c. WireGuard tunnel handshake (only if container is Up)
+      try {
+        const wgOut = (await execAsync("docker exec bunchloch-newt -- wg show 2>&1")).stdout.trim();
+        if (wgOut.includes("latest handshake")) {
+          const handshakeLine = wgOut.split("\n").find((l) => l.includes("latest handshake"));
+          logOk(`newt (bunchloch): WireGuard tunnel LIVE (${handshakeLine?.trim()})`);
+        } else {
+          logError(`newt (bunchloch): NO WireGuard handshake yet (tunnel not established)`);
+          allOk = false;
+        }
+      } catch (e) {
+        logError(`newt (bunchloch): wg show failed: ${(e as Error).message.slice(0, 100)}`);
+        allOk = false;
+      }
     }
   } catch (e) {
     logError("newt (bunchloch)", e);
