@@ -1,0 +1,42 @@
+# defs/1_ingestion/curriculum/lc6/gaeilge.yaml
+#
+# L1 CelticIngestionComponent for the BIEP v1 Gaeilge NCCA
+# crawl. Per-subject source — Gaeilge only (the 4th of 6).
+#
+# Per the british-isles-education-pipeline spec — the per-subject
+# NCCA syllabus ingestion for the 6 BIEP v1 LC subjects. The
+# Gaeilge variant is special: Gaeilge is the only LC subject
+# taught primarily in Irish, so the canonical `language` is
+# `ga` (with `en` as a rare fallback for English-summary pages).
+# The Gaeilge variant feeds the Gaeilge cocoindex App + the
+# Gaeilge marimo notebook + the gael_agent + the 4 MotherDuck
+# Dives.
+#
+# Reference: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: filesystem.leaving_cert.gaeilge
+  domain: curriculum
+  nation: ie
+  subject: gaeilge
+  subject_label: Gaeilge (LC-Gaeilge, taught in Irish)
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: true
+  state_refresh_interval: monthly
+  asset_check: lc6_gaeilge_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - lc6
+    - gaeilge
+    - ncca
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1
+    spec: british-isles-education-pipeline
+    lc_subject: gaeilge
+    partitions: subject × language (gaeilge × en + ga = 2 partitions; default `ga`)
+    dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_gaeilge
+    baml_extractor: b.ExtractLC6Syllabus(subject="gaeilge", ...)
+    notes: "Per-subject Gaeilge NCCA source; daily 04:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/gaeilge/. Default language is `ga` (Gaeilge is taught in Irish)."
