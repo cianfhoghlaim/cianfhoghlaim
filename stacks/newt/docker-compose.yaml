@@ -62,8 +62,11 @@ services:
   # ---------------------------------------------------------------------------
   # NEWT - Pangolin Tunnel Agent
   # ---------------------------------------------------------------------------
+  # Pinned to v1.14.0 + SHA digest (supply-chain integrity). The IMAGE file
+  # at this directory is the canonical source of truth — bump both together.
+  # See stacks/newt/IMAGE for the version + SHA.
   newt:
-    image: fosrl/newt:latest    # KCG exception to stack-doctor :latest policy
+    image: ghcr.io/fosrl/newt@sha256:60c78391e3b5cb8a260490fb26b8b7329ed5448077629da89a564af80d3a9fad    # NEWT_VERSION=1.14.0
     container_name: bunchloch-newt
     restart: unless-stopped
     depends_on:
