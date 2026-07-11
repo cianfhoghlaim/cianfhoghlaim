@@ -1,0 +1,40 @@
+# defs/1_ingestion/european_nations/bgr/education/subjects/chemistry/defs.yaml
+#
+# L1 CelticIngestionComponent for the Bulgaria Chemistry
+# per-subject DLT source (EU nations full-depth expansion).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/bgr/education/subjects/chemistry.py` with
+# `source_id="european_nations.bgr.education.subjects.chemistry"`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_bgr_chemistry
+  module: cianfhoghlaim.dlt.european_nations.bgr.education.subjects.chemistry
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["european_nations"]
+    - country:
+        values: ["bgr"]
+    - subject:
+        values: ["chemistry"]
+    - language:
+        values: ["bg"]
+  use_local_scrapes: true
+  asset_check: european_nations_bgr_chemistry_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - bgr
+    - education
+    - chemistry
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline
+    exam_board: MES
+    subject_code: CHEM
