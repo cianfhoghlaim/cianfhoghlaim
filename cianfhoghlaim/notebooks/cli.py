@@ -61,6 +61,13 @@ GROUPS = (
                                 # (leabharlann corpus + university extraction
                                 # + cross-archive edges + K-12 → university
                                 # pipeline coverage).
+    "12_subject_study_tools",   # added 2026-07-16 per openspec change
+                                # `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1`
+                                # — the 6 per-subject interactive study tools
+                                # (Math, Chem, Geog, Gaeilge, Eng, CS) shipping
+                                # flashcards + practice questions + mock exams
+                                # + study plans over the per-subject qpack BAML
+                                # functions and the BIEP v1 lakehouse tables.
     "10_mmo",
     "11_speedrun",
     "12_semantic_search",  # added 2026-07-14 per openspec change
