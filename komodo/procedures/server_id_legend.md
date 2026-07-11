@@ -44,6 +44,8 @@ procedures (and vice versa).
 | `deploy-openclaw-bunchloch.toml` | OpenClaw (bunchloch) |
 | `deploy-newt-bunchloch.toml` | newt v1 (legacy, single WireGuard client on this Mac) |
 | `deploy-newt-bunchloch-v2.toml` | newt v2 (RECOMMENDED, v1.14.0 + iac:sync:sites auto-provision) |
+| `deploy-pocket-id-bunchloch.toml` | Pocket ID v2.9.0 OIDC IdP (the bunchloch side; 5th cross-cutting prereq) |
+| `deploy-tinyauth-bunchloch.toml` | Tinyauth v4 ForwardAuth middleware (the bunchloch side; 6th cross-cutting prereq; fixes the crash loop) |
 | `cron-ccc-reindex-bunchloch.toml` | Daily 03:00 UTC CocoIndex Code rebuild |
 
 ### arm1-oci procedures (`server_id = "arm1-oci"`)
@@ -56,6 +58,7 @@ procedures (and vice versa).
 | `deploy-openchamber-arm1-oci.toml` | OpenChamber OpenCode UI |
 | `deploy-langfuse-arm1-oci.toml` | Langfuse observability sink |
 | `deploy-observability-arm1-oci.toml` | logfire + dozzle + beszel foundation |
+| `deploy-pocket-id-arm1-oci.toml` | Pocket ID v2.9.0 OIDC IdP (arm1-oci migration target) |
 | `deploy-pangolin-newt-arm1-oci.toml` | newt client on arm1-oci (secondary, v1.14.0) |
 
 ### Host-agnostic / cross-cutting (4 procedures — all 4 include `server_id` info but are pulled by both syncs)

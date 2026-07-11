@@ -65,6 +65,7 @@ export async function dispatch(command: string) {
     case "sync:action-recipients": return (await import("./commands/sync-action-recipients.ts")).syncActionRecipients();
     case "sync:olm": return (await import("./commands/sync-olm.ts")).syncOlm();
     case "rotate-auth": return (await import("./commands/rotate-auth.ts")).rotateAuth();
+    case "bootstrap-pocketid-admin": return (await import("./commands/bootstrap-pocketid-admin.ts")).bootstrapPocketIdAdmin();
     default:
       logError(`unknown command: ${command}`);
       log(`Available commands: plan, deploy, bootstrap, teardown, health, sync:<target>`);

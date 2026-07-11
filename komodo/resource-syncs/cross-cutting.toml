@@ -11,8 +11,11 @@
 #   2. komodo-core                     — Komodo Core service (the orchestration brain)
 #   3. infisical-first                 — Infisical vault (secrets source of truth)
 #   4. locket-deploy                   — Locket sidecar pattern (secrets injection at runtime)
-#   5. deploy-pangolin-newt-arm1-oci   — arm1-oci newt client (the control-plane side)
-#   6. deploy-newt-bunchloch-v2        — bunchloch newt client (the operator-laptop side)
+#   5. deploy-pocket-id-bunchloch      — Pocket ID OIDC IdP (the bunchloch side)
+#   6. deploy-tinyauth-bunchloch       — Tinyauth ForwardAuth middleware (the bunchloch side)
+#   7. deploy-pocket-id-arm1-oci       — Pocket ID OIDC IdP (the arm1-oci migration target)
+#   8. deploy-pangolin-newt-arm1-oci   — arm1-oci newt client (the control-plane side)
+#   9. deploy-newt-bunchloch-v2        — bunchloch newt client (the operator-laptop side)
 #
 # These 4 procedures run first on EVERY host. The per-host syncs
 # (arm1-oci + bunchloch) only fire after these are healthy.
@@ -24,7 +27,7 @@
 #   - managed=true (Komodo owns the resource state, not the IaC scripts)
 #
 # server_id convention:
-#   The 4 prerequisite procedures in `procedures/*.toml` (this sync) all
+#   The 9 prerequisite procedures in `procedures/*.toml` (this sync) all
 #   declare `server_id` (the convention is documented in
 #   `komodo/procedures/server_id_legend.md`). Procedures without
 #   `server_id` are back-compat-shown in both host UIs.
@@ -50,6 +53,9 @@ resource_path = [
   "bonneagar/komodo/procedures/komodo-core.toml",
   "bonneagar/komodo/procedures/infisical-first.toml",
   "bonneagar/komodo/procedures/locket-deploy.toml",
+  "bonneagar/komodo/procedures/deploy-pocket-id-bunchloch.toml",
+  "bonneagar/komodo/procedures/deploy-tinyauth-bunchloch.toml",
+  "bonneagar/komodo/procedures/deploy-pocket-id-arm1-oci.toml",
   "bonneagar/komodo/procedures/deploy-pangolin-newt-arm1-oci.toml",
   "bonneagar/komodo/procedures/deploy-newt-bunchloch-v2.toml",
   "bonneagar/komodo/procedures/server_id_legend.md",
