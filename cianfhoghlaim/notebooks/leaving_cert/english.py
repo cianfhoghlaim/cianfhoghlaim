@@ -19,7 +19,7 @@ Phase 6 of the BIEP v1 flagship
 2. Single-text vs comparative-text mode
 3. Poetry / prose / drama breakdown
 4. Marking scheme complexity
-5. Asset generator - BAML `GenerateEnglishQuestPack` (v2 target)
+5. Asset generator - BAML `GenerateEnglQuestPack` (canonical qpack signature)
 
 Reference: openspec/specs/british-isles-education-pipeline/spec.md
 """
@@ -304,15 +304,31 @@ def _baml_calls(mo):
         results["diagrams"] = {"status": "offline", "error": str(exc)[:100]}
 
     try:
-        from cianfhoghlaim.baml_client import b
-        results["quest_pack"] = b.GenerateEnglishQuestPack(
-            topic="Comparative",
+        from cianfhoghlaim.baml_client.baml_client import types
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
+
+        syllabus = types.LeavingCertSyllabus(
+            subject="English",
+            year=2025,
+            level="Higher",
+            topics=[
+                types.SyllabusTopic(
+                    topicId="LC-ENGL-COMPARATIVE",
+                    name="Comparative",
+                    description="Comparative study and critical response for Leaving Certificate English.",
+                    learningOutcomes=["LC-ENGL-LO-2.3: Compare texts using evidence and critical terminology."],
+                    weightPct=25,
+                )
+            ],
+        )
+        results["quest_pack"] = b.GenerateEnglQuestPack(
+            syllabus=syllabus,
+            past_papers=[],
+            marking_schemes=[],
             level="higher",
-            language="en",
-            n_items=10,
         )
     except Exception as exc:
-        results["quest_pack"] = {"status": "deferred-to-v2", "error": str(exc)[:100]}
+        results["quest_pack"] = {"status": "error", "error": str(exc)[:100]}
 
     mo.md(
         f"""
@@ -324,8 +340,9 @@ def _baml_calls(mo):
         - `diagrams`: `{type(results.get('diagrams', {})).__name__}`
         - `quest_pack`: `{type(results.get('quest_pack', {})).__name__}`
 
-        Asset generator target: `GenerateEnglishQuestPack` produces
-        10 quiz items per English topic (v2).
+        Asset generator target: `GenerateEnglQuestPack` uses the
+        canonical `(syllabus, past_papers, marking_schemes, level)`
+        signature.
         """
     )
     return results
