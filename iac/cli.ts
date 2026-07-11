@@ -55,6 +55,7 @@ export async function dispatch(command: string) {
     case "health": return (await import("./commands/health.ts")).health();
     case "sync:secrets": return (await import("./commands/sync-secrets.ts")).syncSecrets();
     case "sync:resources": return (await import("./commands/sync-resources.ts")).syncResources();
+    case "sync:sites": return (await import("./commands/sync-sites.ts")).syncSites();
     case "sync:procedures": return (await import("./commands/sync-procedures.ts")).syncProcedures();
     case "sync:resource-syncs": return (await import("./commands/sync-resource-syncs.ts")).syncResourceSyncs();
     case "sync:monitors": return (await import("./commands/sync-monitors.ts")).syncMonitors();

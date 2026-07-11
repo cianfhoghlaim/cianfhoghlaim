@@ -7,10 +7,12 @@
 # reconciles Komodo state with the TOMLs declared in resource_path.
 #
 # Scope (cross-cutting prerequisites, deploy order matters):
-#   1. pangolin-first   — Pangolin mesh backbone + Pocket ID OIDC
-#   2. komodo-core      — Komodo Core service (the orchestration brain)
-#   3. infisical-first  — Infisical vault (secrets source of truth)
-#   4. locket-deploy    — Locket sidecar pattern (secrets injection at runtime)
+#   1. pangolin-first                  — Pangolin mesh backbone + Pocket ID OIDC
+#   2. komodo-core                     — Komodo Core service (the orchestration brain)
+#   3. infisical-first                 — Infisical vault (secrets source of truth)
+#   4. locket-deploy                   — Locket sidecar pattern (secrets injection at runtime)
+#   5. deploy-pangolin-newt-arm1-oci   — arm1-oci newt client (the control-plane side)
+#   6. deploy-newt-bunchloch-v2        — bunchloch newt client (the operator-laptop side)
 #
 # These 4 procedures run first on EVERY host. The per-host syncs
 # (arm1-oci + bunchloch) only fire after these are healthy.
@@ -48,6 +50,8 @@ resource_path = [
   "bonneagar/komodo/procedures/komodo-core.toml",
   "bonneagar/komodo/procedures/infisical-first.toml",
   "bonneagar/komodo/procedures/locket-deploy.toml",
+  "bonneagar/komodo/procedures/deploy-pangolin-newt-arm1-oci.toml",
+  "bonneagar/komodo/procedures/deploy-newt-bunchloch-v2.toml",
   "bonneagar/komodo/procedures/server_id_legend.md",
   "bonneagar/komodo/servers/*.toml",
 ]
