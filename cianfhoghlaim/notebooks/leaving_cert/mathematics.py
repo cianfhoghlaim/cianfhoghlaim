@@ -304,15 +304,31 @@ def _baml_calls(mo):
         results["diagrams"] = {"status": "offline", "error": str(exc)[:100]}
 
     try:
-        from cianfhoghlaim.baml_client import b
+        from cianfhoghlaim.baml_client.baml_client import types
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
+
+        syllabus = types.LeavingCertSyllabus(
+            subject="Mathematics",
+            year=2025,
+            level="Higher",
+            topics=[
+                types.SyllabusTopic(
+                    topicId="LC-MATHS-ALGEBRA",
+                    name="Algebra",
+                    description="Algebraic techniques and functions for Leaving Certificate Mathematics.",
+                    learningOutcomes=["LC-MATHS-LO-2.4: Use algebraic representations to solve problems."],
+                    weightPct=20,
+                )
+            ],
+        )
         results["quest_pack"] = b.GenerateMathQuestPack(
-            topic="Algebra",
+            syllabus=syllabus,
+            past_papers=[],
+            marking_schemes=[],
             level="higher",
-            language="en",
-            n_items=10,
         )
     except Exception as exc:
-        results["quest_pack"] = {"status": "deferred-to-v2", "error": str(exc)[:100]}
+        results["quest_pack"] = {"status": "error", "error": str(exc)[:100]}
 
     mo.md(
         f"""
@@ -324,8 +340,9 @@ def _baml_calls(mo):
         - `diagrams`: `{type(results.get('diagrams', {})).__name__}`
         - `quest_pack`: `{type(results.get('quest_pack', {})).__name__}`
 
-        Asset generator target: `GenerateMathQuestPack` produces 10
-        quiz items per Math topic (v2).
+        Asset generator target: `GenerateMathQuestPack` uses the
+        canonical `(syllabus, past_papers, marking_schemes, level)`
+        signature.
         """
     )
     return results

@@ -22,7 +22,7 @@ Phase 6 of the BIEP v1 flagship
 2. Cross-linguistic concept coverage (EN ↔ GA topic mapping)
 3. Litríocht / Úrsceal / Filíocht breakdown (donut chart)
 4. Marking scheme complexity (heatmap)
-5. Asset generator — BAML ``GenerateGaeilgeQuestPack`` (v2 target)
+5. Asset generator — BAML ``GenerateGaelQuestPack`` (canonical qpack signature)
 
 **Gaeilge is Irish-only** per the BIEP v1 spec requirement
 "gaeilge-only syllabuses (no English sibling)". The notebook UI
@@ -295,8 +295,9 @@ def _baml_extractors(mo):
         - `ExtractMarkingSchemeGuideline` — Gaeilge marking scheme → taifead
         - `ExtractSyllabusDiagram` — Gaeilge syllabus diagram
 
-        Plus the asset generator `GenerateGaeilgeQuestPack` (v2
-        target) — 10 ceist ar an topaic, i nGaeilge.
+        Plus the asset generator `GenerateGaelQuestPack` using the
+        canonical `(syllabus, past_papers, marking_schemes, level)`
+        qpack signature.
         """
     )
     return
@@ -352,15 +353,31 @@ def _baml_calls(mo):
         results["diagrams"] = {"status": "offline", "error": str(exc)[:100]}
 
     try:
-        from cianfhoghlaim.baml_client import b
-        results["quest_pack"] = b.GenerateGaeilgeQuestPack(
-            topic="Litríocht",
+        from cianfhoghlaim.baml_client.baml_client import types
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
+
+        syllabus = types.LeavingCertSyllabus(
+            subject="Gaeilge",
+            year=2025,
+            level="Higher",
+            topics=[
+                types.SyllabusTopic(
+                    topicId="LC-GAEL-LITRIOCHT",
+                    name="Litríocht",
+                    description="Léamh, léirmhíniú, agus freagairt phearsanta ar théacsanna Gaeilge.",
+                    learningOutcomes=["LC-GAEL-LO-2.3: Déan anailís ar théamaí agus ar theicnící i dtéacs Gaeilge."],
+                    weightPct=25,
+                )
+            ],
+        )
+        results["quest_pack"] = b.GenerateGaelQuestPack(
+            syllabus=syllabus,
+            past_papers=[],
+            marking_schemes=[],
             level="higher",
-            language="ga",
-            n_items=10,
         )
     except Exception as exc:
-        results["quest_pack"] = {"status": "deferred-to-v2", "error": str(exc)[:100]}
+        results["quest_pack"] = {"status": "error", "error": str(exc)[:100]}
 
     mo.md(
         f"""

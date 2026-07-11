@@ -23,7 +23,7 @@ Phase 6 of the BIEP v1 flagship
 3. Cross-subject competency mapping (LanceDB
    `oideachais.lc.cross_subject.competencies` via lance_scan)
 4. Marking scheme complexity (heatmap)
-5. Asset generator — BAML ``GenerateGeographyQuestPack`` (v2 target)
+5. Asset generator — BAML ``GenerateGeogQuestPack`` (canonical qpack signature)
 
 Reference: openspec/specs/british-isles-education-pipeline/spec.md
 """
@@ -295,8 +295,9 @@ def _baml_extractors(mo):
         - `ExtractMarkingSchemeGuideline` — Geography marking scheme → typed record
         - `ExtractSyllabusDiagram` — Geography syllabus diagram extraction
 
-        Plus the asset generator `GenerateGeographyQuestPack` (v2
-        target) producing 10 quiz items per Geography topic.
+        Plus the asset generator `GenerateGeogQuestPack` using the
+        canonical `(syllabus, past_papers, marking_schemes, level)`
+        qpack signature.
         """
     )
     return
@@ -352,15 +353,31 @@ def _baml_calls(mo):
         results["diagrams"] = {"status": "offline", "error": str(exc)[:100]}
 
     try:
-        from cianfhoghlaim.baml_client import b
-        results["quest_pack"] = b.GenerateGeographyQuestPack(
-            topic="Physical Geography",
+        from cianfhoghlaim.baml_client.baml_client import types
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
+
+        syllabus = types.LeavingCertSyllabus(
+            subject="Geography",
+            year=2025,
+            level="Higher",
+            topics=[
+                types.SyllabusTopic(
+                    topicId="LC-GEOG-PHYSICAL",
+                    name="Physical Geography",
+                    description="Physical geography processes and landform development for Leaving Certificate Geography.",
+                    learningOutcomes=["LC-GEOG-LO-2.3: Explain physical processes with evidence and diagrams."],
+                    weightPct=25,
+                )
+            ],
+        )
+        results["quest_pack"] = b.GenerateGeogQuestPack(
+            syllabus=syllabus,
+            past_papers=[],
+            marking_schemes=[],
             level="higher",
-            language="en",
-            n_items=10,
         )
     except Exception as exc:
-        results["quest_pack"] = {"status": "deferred-to-v2", "error": str(exc)[:100]}
+        results["quest_pack"] = {"status": "error", "error": str(exc)[:100]}
 
     mo.md(
         f"""

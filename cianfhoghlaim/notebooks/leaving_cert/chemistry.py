@@ -325,8 +325,8 @@ def _baml_extractors(mo):
           extraction via molmo2-8b pointing model
 
         Plus the per-subject asset generator
-        `GenerateChemQuestPack(chemistry_topic, level, language)`
-        which produces 10 quiz items per Chemistry topic.
+        `GenerateChemQuestPack(syllabus, past_papers, marking_schemes, level)`
+        using the canonical qpack signature.
         """
     )
     return
@@ -386,18 +386,34 @@ def _baml_calls(mo):
     except Exception as exc:
         results["diagrams"] = {"status": "offline", "error": str(exc)[:100]}
 
-    # GenerateChemQuestPack (asset generator — v2 target)
+    # GenerateChemQuestPack (asset generator — canonical qpack signature)
     try:
-        from cianfhoghlaim.baml_client import b
+        from cianfhoghlaim.baml_client.baml_client import types
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
+
+        syllabus = types.LeavingCertSyllabus(
+            subject="Chemistry",
+            year=2025,
+            level="Higher",
+            topics=[
+                types.SyllabusTopic(
+                    topicId="LC-CHEM-ATOMIC-STRUCTURE",
+                    name="Atomic Structure",
+                    description="Atomic structure, bonding, and periodic trends for Leaving Certificate Chemistry.",
+                    learningOutcomes=["LC-CHEM-LO-2.3: Explain atomic structure and bonding patterns."],
+                    weightPct=20,
+                )
+            ],
+        )
         results["quest_pack"] = b.GenerateChemQuestPack(
-            topic="Atomic Structure",
+            syllabus=syllabus,
+            past_papers=[],
+            marking_schemes=[],
             level="higher",
-            language="en",
-            n_items=10,
         )
     except Exception as exc:
         results["quest_pack"] = {
-            "status": "deferred-to-v2",
+            "status": "error",
             "function": "GenerateChemQuestPack",
             "note": str(exc)[:100],
         }

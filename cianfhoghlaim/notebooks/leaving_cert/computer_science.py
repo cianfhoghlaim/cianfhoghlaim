@@ -22,7 +22,7 @@ Phase 6 of the BIEP v1 flagship
 2. Pseudocode complexity distribution (bar chart)
 3. Code-trace question coverage (heatmap)
 4. Marking scheme complexity (heatmap)
-5. Asset generator — BAML ``GenerateComputerScienceQuestPack`` (v2 target)
+5. Asset generator — BAML ``GenerateCompQuestPack`` (canonical qpack signature)
 
 Reference: openspec/specs/british-isles-education-pipeline/spec.md
 """
@@ -286,8 +286,9 @@ def _baml_extractors(mo):
         - `ExtractMarkingSchemeGuideline` — CS marking scheme → typed record
         - `ExtractSyllabusDiagram` — CS syllabus diagram extraction
 
-        Plus the asset generator `GenerateComputerScienceQuestPack`
-        (v2 target) producing 10 quiz items per CS topic.
+        Plus the asset generator `GenerateCompQuestPack`
+        using the canonical `(syllabus, past_papers, marking_schemes, level)`
+        qpack signature.
         """
     )
     return
@@ -343,15 +344,31 @@ def _baml_calls(mo):
         results["diagrams"] = {"status": "offline", "error": str(exc)[:100]}
 
     try:
-        from cianfhoghlaim.baml_client import b
-        results["quest_pack"] = b.GenerateComputerScienceQuestPack(
-            topic="Algorithms",
+        from cianfhoghlaim.baml_client.baml_client import types
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
+
+        syllabus = types.LeavingCertSyllabus(
+            subject="Computer Science",
+            year=2025,
+            level="Higher",
+            topics=[
+                types.SyllabusTopic(
+                    topicId="LC-COMP-ALGORITHMS",
+                    name="Algorithms",
+                    description="Algorithms, pseudocode, and computational thinking for Leaving Certificate Computer Science.",
+                    learningOutcomes=["LC-COMP-LO-2.3: Design, trace, and reason about algorithms."],
+                    weightPct=25,
+                )
+            ],
+        )
+        results["quest_pack"] = b.GenerateCompQuestPack(
+            syllabus=syllabus,
+            past_papers=[],
+            marking_schemes=[],
             level="higher",
-            language="en",
-            n_items=10,
         )
     except Exception as exc:
-        results["quest_pack"] = {"status": "deferred-to-v2", "error": str(exc)[:100]}
+        results["quest_pack"] = {"status": "error", "error": str(exc)[:100]}
 
     mo.md(
         f"""

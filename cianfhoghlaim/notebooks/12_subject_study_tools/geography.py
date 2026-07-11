@@ -321,44 +321,48 @@ def _per_subject_baml(mo):
     Wrapped in try/except so the notebook renders offline (without the
     BAML client available).
     """
-    results = {}
+    input_payload = {
+        "lo_code": "LC-GEOG-LO-2.3",
+        "difficulty": 3,
+        "level": "higher",
+        "topic": "Climate",
+    }
 
     try:
-        from cianfhoghlaim.baml_client import b
+        from cianfhoghlaim.baml_client.baml_client.sync_client import b
 
-        results["formative_item"] = {
+        result = b.GenerateGeogFormativeItem(**input_payload)
+        results = {
+            "status": "ok",
             "function": "GenerateGeogFormativeItem",
-            "input": {
-                "lo_code": "LC-GEOG-LO-2.3",
-                "difficulty": 3,
-                "level": "higher",
-                "topic": "Climate",
-            },
-            "status": "invoked",
+            "input": input_payload,
+            "result": result,
         }
-
-        results["quest_pack"] = {
-            "function": "GenerateGeogQuestPack",
-            "input": {"level": "higher"},
-            "status": "deferred-to-pipeline-runner",
-        }
-
-        results["status"] = "online"
     except Exception as exc:
         results = {
-            "status": "offline",
-            "error": str(exc)[:100],
+            "status": "error",
+            "function": "GenerateGeogFormativeItem",
+            "input": input_payload,
+            "error": str(exc),
         }
+
+    result_preview = results.get("result", results.get("error", ""))
 
     mo.md(
         f"""
         ## 5. Per-subject qpack BAML function
 
         Invokes qpack_geography.baml::GenerateGeogFormativeItem
-        (and the deferred GenerateGeogQuestPack for the full pipeline
-        runner).
+        with the canonical `(lo_code, difficulty, level, topic)`
+        signature.
 
         Status: `{results.get('status', 'unknown')}`
+
+        ### Generated Study Card
+
+        ```python
+        {result_preview}
+        ```
         """
     )
     return results
