@@ -75,6 +75,27 @@ ROUTING_KEYWORDS: dict[str, list[str]] = {
     "engl_agent": ["english"],
     "geog_agent": ["geography"],
     "hist_agent": ["history", "irish history"],
+    # T5 (2026-07-11) — the 13th bucket for the academic-history agent
+    # introduced by openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/.
+    # Routes queries like "summarise my degree", "what should I revise",
+    # "show me my stats modules", "mo chuid cuntas", etc. before the
+    # generic statistics_agent bucket.
+    "academic_history_agent": [
+        "my history", "my notes", "my modules", "my assignments",
+        "my exam history", "my answers", "my progress", "my timeline",
+        "what have i done", "what did i cover", "how am i doing",
+        "summarise my degree", "summarise my year",
+        "what should i revise", "next step",
+        "academic record", "transcript", "study history",
+        "stair acadúil", "mo chuid cuntas", "mo nótaí",
+        "mo shonraí", "mo mhodúil", "mo scrúduithe",
+        "mo chuid oibre", "my work", "my essays",
+        "what have i submitted", "my last attempt",
+        "my strengths", "my weaknesses",
+        "st311", "st312", "ma335", "ma347", "ma410",
+        "ms421", "st412", "st419", "cs402",
+        "numerical analysis", "nonlinear systems",
+    ],
 }
 
 

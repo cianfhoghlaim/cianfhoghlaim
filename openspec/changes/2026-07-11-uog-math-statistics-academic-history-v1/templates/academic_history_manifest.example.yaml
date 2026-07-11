@@ -1,0 +1,78 @@
+# Academic History Manifest — generic user template
+#
+# Drop this file at the root of your personal academic archive and
+# point the academic-history pipeline at it. Any user can reuse the
+# same pipeline as the UoG maths/statistics case study.
+
+# ---------------------------------------------------------------------
+# Student profile (pseudonymous only — never commit real names)
+# ---------------------------------------------------------------------
+student_profile:
+  pseudonym: change-me-to-a-stable-pseudonym     # e.g. "math-student-2026"
+  institution: University of Somewhere           # human-readable
+  programme: BSc Mathematics                     # human-readable
+  years:                                         # which academic years
+    - 2024-2025
+    - 2025-2026
+
+# ---------------------------------------------------------------------
+# Module roots — point the pipeline at the folders that contain each
+# module's notes / assignments / exam papers / answers
+# ---------------------------------------------------------------------
+module_roots:
+  # Example: a Probability & Statistics module
+  - path: notes/ST311
+    module_code: ST311
+    module_title: Probability and Statistics
+    institution: University of Somewhere
+    academic_year: 2024-2025
+
+  # Example: an Applied Statistics module
+  - path: notes/ST312
+    module_code: ST312
+    module_title: Applied Statistics
+    institution: University of Somewhere
+    academic_year: 2024-2025
+
+  # Example: a Numerical Analysis module
+  - path: notes/MA335
+    module_code: MA335
+    module_title: Numerical Analysis
+    institution: University of Somewhere
+    academic_year: 2025-2026
+
+# ---------------------------------------------------------------------
+# Optional: separate folders for assignments, exam papers, answers,
+# worked solutions, and feedback (if not co-located with notes)
+# ---------------------------------------------------------------------
+artifact_roots:
+  assignments: assignments
+  exam_papers: exam_papers
+  answers: answers
+  worked_solutions: worked_solutions
+  feedback: feedback
+
+# ---------------------------------------------------------------------
+# Optional: official module descriptors (e.g. hand-typed or scraped
+# from your university's website)
+# ---------------------------------------------------------------------
+official_module_descriptors: official_module_descriptors
+
+# ---------------------------------------------------------------------
+# Privacy gate — DEFAULT OFF
+# ---------------------------------------------------------------------
+privacy:
+  include_identity_records: false               # must be explicit
+  include_answer_scripts: true
+  include_feedback: true
+  pseudonym_salt_env: ACADEMIC_HISTORY_PSEUDONYM_SALT  # stored in Infisical
+
+# ---------------------------------------------------------------------
+# Optional: explicit privacy classification overrides
+# ---------------------------------------------------------------------
+privacy_overrides:
+  # Example: skip any artefact whose filename matches this regex
+  skip_patterns:
+    - ".*identity.*"
+    - ".*medical.*"
+    - ".*financial.*"
