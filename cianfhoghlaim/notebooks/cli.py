@@ -76,6 +76,13 @@ GROUPS = (
                           # (cross-corpus LanceDB HNSW + BGE-M3 +
                           # BGE-large-en-v1.5; bilingual EN+GA).
     "13_baml_cocoindex_tutorial",
+    "14_academic_history",  # added 2026-07-11 per openspec change
+                           # `2026-07-11-uog-math-statistics-academic-history-v1/`
+                           # — the 8-notebook academic-history surface
+                           # (corpus overview + syllabus/assessment map +
+                           # statistics lab + numerical analysis lab +
+                           # nonlinear systems lab + formula/theorem registry +
+                           # assignments/exams/answers + chat prototype).
 )
 
 
