@@ -93,7 +93,7 @@ LC6_SUBJECTS: tuple[str, ...] = (
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest chemistry LC PDFs + JPG via select_ocr_backend() routing")
+@asset(group_name="1_ingestion_curriculum_lc5", description="Ingest chemistry LC PDFs + JPG via select_ocr_backend() routing")
 def lc5_chemistry_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for chemistry (LC022) — 16 PDFs across en/ga."""
     if not DLT_AVAILABLE:
@@ -106,7 +106,7 @@ def lc5_chemistry_ingested(context) -> dict[str, Any]:
     return {"rows": len(chemistry_rows), "subject": "chemistry"}
 
 
-@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest computer_science LC PDFs")
+@asset(group_name="1_ingestion_curriculum_lc5", description="Ingest computer_science LC PDFs")
 def lc5_computer_science_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for computer_science (LC219) — 11 PDFs across en/ga."""
     if not DLT_AVAILABLE:
@@ -117,7 +117,7 @@ def lc5_computer_science_ingested(context) -> dict[str, Any]:
     return {"rows": len(cs_rows), "subject": "computer_science"}
 
 
-@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest english LC PDFs (en-only at root; LC002 syllabus + ALP/GLP exam papers)")
+@asset(group_name="1_ingestion_curriculum_lc5", description="Ingest english LC PDFs (en-only at root; LC002 syllabus + ALP/GLP exam papers)")
 def lc5_english_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for english (LC002) — 8 PDFs at root (en-only),
     routed via qwen3-vl-8b for exam papers and gemma-4-26B-A4B for syllabi."""
@@ -130,7 +130,7 @@ def lc5_english_ingested(context) -> dict[str, Any]:
     return {"rows": len(en_rows), "subject": "english"}
 
 
-@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest gaeilge LC PDFs (no en/ subdir; Irish-only at root)")
+@asset(group_name="1_ingestion_curriculum_lc5", description="Ingest gaeilge LC PDFs (no en/ subdir; Irish-only at root)")
 def lc5_gaeilge_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for gaeilge (LC001) — 11 PDFs at root, GLM-4.6V routing."""
     if not DLT_AVAILABLE:
@@ -141,7 +141,7 @@ def lc5_gaeilge_ingested(context) -> dict[str, Any]:
     return {"rows": len(ga_rows), "subject": "gaeilge"}
 
 
-@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest geography LC PDFs + 1 JPG scanned exam page")
+@asset(group_name="1_ingestion_curriculum_lc5", description="Ingest geography LC PDFs + 1 JPG scanned exam page")
 def lc5_geography_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for geography (LC005) — 18 PDFs + 1 JPG across en/ga."""
     if not DLT_AVAILABLE:
@@ -152,7 +152,7 @@ def lc5_geography_ingested(context) -> dict[str, Any]:
     return {"rows": len(geo_rows), "subject": "geography"}
 
 
-@asset(group_name="1_ingestion/curriculum/lc5", description="Ingest mathematics LC PDFs (LaTeX + formula heavy)")
+@asset(group_name="1_ingestion_curriculum_lc5", description="Ingest mathematics LC PDFs (LaTeX + formula heavy)")
 def lc5_mathematics_ingested(context) -> dict[str, Any]:
     """Layer 1 ingestion for mathematics (LC003) — 16 PDFs across en/ga."""
     if not DLT_AVAILABLE:
@@ -179,7 +179,7 @@ def _make_subject_extraction_asset(subject: str, kind: str):
     baml_function = baml_function_map[kind]
 
     @asset(
-        group_name=f"2_materials/lc_{kind}/lc5/{subject}",
+        group_name=f"2_materials_lc_{kind}_lc5_{subject}",
         description=f"BAML {baml_function} for the {subject} LC subject",
     )
     def lc5_extraction_asset(context) -> dict[str, Any]:
@@ -206,7 +206,7 @@ for _subject in LC6_SUBJECTS:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-@asset(group_name="3_model_lifecycle/lc_cognify/lc5/chemistry", description="Cognee cognify for chemistry LC")
+@asset(group_name="3_model_lifecycle_lc_cognify_lc5_chemistry", description="Cognee cognify for chemistry LC")
 def lc5_chemistry_cognified(context) -> dict[str, Any]:
     """Per-subject Cognee cognify (oideachais_chemistry dataset)."""
     if not COGNEE_AVAILABLE:
@@ -215,14 +215,14 @@ def lc5_chemistry_cognified(context) -> dict[str, Any]:
     return {"entities": 0, "subject": "chemistry"}
 
 
-@asset(group_name="3_model_lifecycle/lc_cognify/lc5/computer_science", description="Cognee cognify for computer_science LC")
+@asset(group_name="3_model_lifecycle_lc_cognify_lc5_computer_science", description="Cognee cognify for computer_science LC")
 def lc5_computer_science_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "computer_science"}
     return {"entities": 0, "subject": "computer_science"}
 
 
-@asset(group_name="3_model_lifecycle/lc_cognify/lc5/english", description="Cognee cognify for english LC (text-heavy, monolingual dataset)")
+@asset(group_name="3_model_lifecycle_lc_cognify_lc5_english", description="Cognee cognify for english LC (text-heavy, monolingual dataset)")
 def lc5_english_cognified(context) -> dict[str, Any]:
     """Per-subject Cognee cognify (oideachais_english dataset)."""
     if not COGNEE_AVAILABLE:
@@ -231,28 +231,28 @@ def lc5_english_cognified(context) -> dict[str, Any]:
     return {"entities": 0, "subject": "english"}
 
 
-@asset(group_name="3_model_lifecycle/lc_cognify/lc5/gaeilge", description="Cognee cognify for gaeilge LC (multilingual Irish dataset)")
+@asset(group_name="3_model_lifecycle_lc_cognify_lc5_gaeilge", description="Cognee cognify for gaeilge LC (multilingual Irish dataset)")
 def lc5_gaeilge_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "gaeilge"}
     return {"entities": 0, "subject": "gaeilge"}
 
 
-@asset(group_name="3_model_lifecycle/lc_cognify/lc5/geography", description="Cognee cognify for geography LC (diagram-heavy)")
+@asset(group_name="3_model_lifecycle_lc_cognify_lc5_geography", description="Cognee cognify for geography LC (diagram-heavy)")
 def lc5_geography_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "geography"}
     return {"entities": 0, "subject": "geography"}
 
 
-@asset(group_name="3_model_lifecycle/lc_cognify/lc5/mathematics", description="Cognee cognify for mathematics LC (formula-heavy)")
+@asset(group_name="3_model_lifecycle_lc_cognify_lc5_mathematics", description="Cognee cognify for mathematics LC (formula-heavy)")
 def lc5_mathematics_cognified(context) -> dict[str, Any]:
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "mathematics"}
     return {"entities": 0, "subject": "mathematics"}
 
 
-@asset(group_name="3_model_lifecycle/lc_cross_subject/lc5", description="Bi-temporal Graphiti stream + FalkorDB cross-subject graph")
+@asset(group_name="3_model_lifecycle_lc_cross_subject_lc5", description="Bi-temporal Graphiti stream + FalkorDB cross-subject graph")
 def lc5_cross_subject_graphiti_stream(context) -> dict[str, Any]:
     """Cross-subject Graphiti temporal stream — 6 subjects merged into a FalkorDB graph.
 

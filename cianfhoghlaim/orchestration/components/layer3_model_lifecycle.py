@@ -77,7 +77,7 @@ class CelticModelLifecycleComponent(Component):
             self._check_r1_to_r4()
 
         asset_name = f"{_to_snake(self.app_name)}_app"
-        group_name = f"3_model_lifecycle/cocoindex_v1/{_to_snake(self.app_name)}"
+        group_name = f"3_model_lifecycle_cocoindex_v1_{_to_snake(self.app_name)}"
         automation_condition = (
             dg.AutomationCondition.eager().resolve_through_virtual()
         )
@@ -307,7 +307,7 @@ class CelticFederatedOcrComponent(Component):
         from datetime import datetime as _dt, timezone as _tz
 
         asset_name = "irish_ocr_federated_smoke"
-        group_name = "3_model_lifecycle/federated_ocr/irish_ocr_federated"
+        group_name = "3_model_lifecycle_federated_ocr_irish_ocr_federated"
         description = (
             f"Federated Irish-OCR simulator smoke run — invokes "
             f"`{self.source_module}.run_federated_training()` "
