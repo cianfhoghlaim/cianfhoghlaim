@@ -1,117 +1,98 @@
-# MotherDuck Flights — BIEP v1 + future flights registry
+# MotherDuck Flight registry for Cianfhoghlaim.
 #
-# Cron schedule + flight definitions for the MotherDuck Flights
-# running on the oideachais MotherDuck database.
-#
-# Each flight is a Python module (under `flights/<flight_name>.py`)
-# that implements a `main()` function returning 0 on success.
-#
-# Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
-# openspec/specs/british-isles-education-pipeline/spec.md
-
-# ============================================================================
-# Top-level config
-# ============================================================================
-
-motherduck_database: md:oideachais
-default_secrets_source: infisical://dev-baile/motherduck
-compute:
-  region: eu-west-1
-  size: small  # S = 1 Duckling, 4 GB RAM
-log_level: info
-
-
-# ============================================================================
-# Flights (scheduled Python jobs on MotherDuck compute)
-# ============================================================================
+# Every flight registered here is published to the
+# `cianfhoghlaim.motherduck.flights` namespace and is callable via
+# the MotherDuck Flight service.
 
 flights:
-
-  # --------------------------------------------------------------------------
-  # lc_pdf_sync_flight — the BIEP v1 daily Flight.
-  #
-  # Runs at 04:00 UTC every day. Re-embeds the 6 LC subject
-  # CocoIndex Apps + the gov.ie circulars App, then materialises
-  # the 42 lc5/lc6 Dagster assets, then writes a status row to
-  # `md:oideachais.lc_ops.daily_sync_status`.
-  # --------------------------------------------------------------------------
-  - name: lc_pdf_sync_flight
-    description: |
-      BIEP v1 daily sync — re-embeds the 7 v1 CocoIndex Apps
-      (6 LC subjects + gov.ie circulars) + materialises the
-      42 lc5/lc6 Dagster assets + writes a status row to
-      `oideachais.lc_ops.daily_sync_status`.
-    module: flights.lc_pdf_sync_flight
-    schedule:
-      cron: "0 4 * * *"
-      timezone: UTC
-    timeout_seconds: 3600  # 1 hour ceiling
-    retry_policy:
-      max_retries: 2
-      backoff:
-        type: exponential
-        delay_seconds: 300
-        multiplier: 2
-    alerts:
-      on_failure: true
-      notify:
-        - n8n.cianfhoghlaim.ie/webhook/flight-failure
-        - langfuse.cianfhoghlaim.ie/trace/flight-status
+  - name: eu_official_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.eu_official_daily_sync_flight
+    callable: build_eu_official_daily_sync_flight
+    cron: "0 5 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the EU institutional pipeline"
+    tags:
+      - european_union
+      - multilingual
+      - daily_sync
+  - name: eu_nation_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.eu_nation_daily_sync_flight
+    callable: build_eu_nation_daily_sync_flight
+    cron: "0 6 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the EU nations + Ukraine pipeline"
+    tags:
+      - european_nations
+      - ukr
+      - fra
+      - deu
+      - pol
+      - esp
+      - ita
+      - daily_sync
+  - name: commonwealth_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.commonwealth_daily_sync_flight
+    callable: build_commonwealth_daily_sync_flight
+    cron: "0 6 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the Commonwealth pipeline"
+    tags:
+      - commonwealth
+      - aus
+      - can
+      - nzl
+      - ind
+      - zaf
+      - daily_sync
+  - name: americas_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.americas_daily_sync_flight
+    callable: build_americas_daily_sync_flight
+    cron: "0 6 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the Americas regional pipeline"
+    tags:
+      - americas
+      - us_us_ca
+      - bra
+      - mex
+      - ven
+      - daily_sync
+  - name: british_isles_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.british_isles_daily_sync_flight
+    callable: build_british_isles_daily_sync_flight
+    cron: "0 5 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the British Isles parity layer (Scotland / Wales / England / Northern Ireland + 3 Crown Dependencies)"
     tags:
       - biep
-      - lc6
-      - daily
-      - sync
-    metadata:
-      openspec_change: 2026-07-06-british-isles-education-pipeline-v1
-      spec: british-isles-education-pipeline
-      openspec_archetype: scheduled-batch
-      kcg_pattern: motherduck-flight-v1
-
-  # --------------------------------------------------------------------------
-  # Future flight placeholder (v2; per BIEP v1 scope, cross-nation
-  # extension is deferred to v2).
-  # --------------------------------------------------------------------------
-  - name: lc_gov_circulars_hourly_flight
-    description: |
-      Hourly gov.ie circulars ingester (deferred to v2).
-      Scrapes gov.ie/en/circulars + gov.ie/ga/ciorcláin, routes
-      through `b.ExtractCircular`, writes to
-      `md:oideachais.government.circulars`.
-    module: flights.gov_circulars_hourly
-    schedule:
-      cron: "0 * * * *"
-      timezone: UTC
-    enabled: false  # v1 leaves this disabled
-    timeout_seconds: 600
-    retry_policy:
-      max_retries: 3
-      backoff:
-        type: exponential
-        delay_seconds: 60
-        multiplier: 2
+      - parity
+      - sct
+      - wls
+      - en
+      - ni
+      - isle_of_man
+      - jersey
+      - guernsey
+      - daily_sync
+  - name: canada_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.canada_daily_sync_flight
+    callable: build_canada_daily_sync_flight
+    cron: "0 6 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the Canada provinces + Quebec/Montreal pipeline"
     tags:
-      - biep
-      - gov-circulars
-      - hourly
-    metadata:
-      openspec_change: 2026-07-06-british-isles-education-pipeline-v1
-      spec: british-isles-education-pipeline
-      status: deferred-to-v2
-
-
-# ============================================================================
-# Per-flight environment (overrides for MotherDuck compute)
-# ============================================================================
-
-environments:
-  production:
-    motherduck_database: md:oideachais
-    compute:
-      region: eu-west-1
-      size: small
-  staging:
-    motherduck_database: md:oideachais_staging
-    compute:
-      region: eu-west-1
-      size: nano
+      - commonwealth
+      - canada
+      - daily_sync
+      - bilingual
+  - name: nigeria_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.nigeria_daily_sync_flight
+    callable: build_nigeria_daily_sync_flight
+    cron: "0 6 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the Nigerian federal + state pipeline"
+    tags:
+      - commonwealth
+      - nigeria
+      - nga
+      - daily_sync
