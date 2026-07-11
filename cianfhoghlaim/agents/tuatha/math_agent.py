@@ -46,6 +46,15 @@ from .wiring import (
     wire_subject_agent,
 )
 
+# BIEP v1 (2026-07-16): the 3 per-subject workflow handlers
+# (study plan + exam paper discussion + marking scheme explanation)
+# for the NCCA Mathematics agent.
+from ._workflow_handlers import (
+    StudyPlanContext,
+    attach_subject_workflow_handlers,
+    build_subject_workflow_handlers,
+)
+
 _MATH_WIRING = get_wiring("mathematics")
 
 
@@ -267,4 +276,48 @@ math_agent_baml_formative_item_fn = resolve_baml_function(
 )
 
 
-math_agent_wire = wire_subject_agent(_MATH_WIRING)
+# ---------------------------------------------------------------------------
+# BIEP v1 (2026-07-16): per-subject workflow handlers — bind the 3
+# handlers (study plan + exam paper + marking scheme) to the per-
+# subject wiring + tool callables, then attach them to the WireSubjectAgent
+# via ``attach_subject_workflow_handlers``.  Module-level handles
+# (``make_study_plan_handler`` / ``discuss_exam_paper_handler`` /
+# ``explain_marking_scheme_handler``) are exposed for the lifecycle tests.
+# ---------------------------------------------------------------------------
+
+math_agent_workflow_handlers = build_subject_workflow_handlers(
+    wiring=_MATH_WIRING,
+    syllabus_lookup_fn=math_syllabus_lookup_tool,
+    past_paper_lookup_fn=math_past_paper_lookup_tool,
+    marking_scheme_lookup_fn=math_marking_scheme_lookup_tool,
+    formative_item_fn=math_formative_item_generate_tool,
+    response_score_fn=math_response_score_tool,
+)
+
+
+async def make_study_plan_handler(
+    ctx: StudyPlanContext | None = None,
+) -> dict[str, object]:
+    """BIEP v1 per-subject study-plan handler (NCCA Mathematics)."""
+    return await math_agent_workflow_handlers.study_plan(
+        ctx if ctx is not None else StudyPlanContext()
+    )
+
+
+async def discuss_exam_paper_handler(exam_paper_id: str) -> dict[str, object]:
+    """BIEP v1 per-subject exam-paper-discussion handler (NCCA Mathematics)."""
+    return await math_agent_workflow_handlers.exam_paper(exam_paper_id)
+
+
+async def explain_marking_scheme_handler(
+    marking_scheme_id: str,
+) -> dict[str, object]:
+    """BIEP v1 per-subject marking-scheme-explanation handler (NCCA Mathematics)."""
+    return await math_agent_workflow_handlers.marking_scheme(marking_scheme_id)
+
+
+# Eager wire-up: the existing Feat C wire-up + the 3 new BIEP v1 handlers.
+math_agent_wire = attach_subject_workflow_handlers(
+    wire_subject_agent(_MATH_WIRING),
+    math_agent_workflow_handlers,
+)

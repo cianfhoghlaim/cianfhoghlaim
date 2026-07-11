@@ -32,7 +32,17 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable, Awaitable, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    # Local imports for type checkers only — the runtime values are
+    # attached dynamically via ``attach_subject_workflow_handlers``.
+    from ._workflow_handlers import (
+        StudyPlanContext,
+        StudyPlanFn,
+        ExamPaperFn,
+        MarkingSchemeFn,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -213,6 +223,28 @@ class WireSubjectAgent:
     memory_backend_kind: str | None = None
     # Whether the BAML function-name lookup was bound.
     baml_prefix: str | None = None
+
+    # --- BIEP v1 per-subject workflow handlers -----------------------------
+    # Each of the 6 in-scope NCCA subject agents (Mathematics, Chemistry,
+    # Geography, Gaeilge, English, Computer Science) attaches 3 user-
+    # facing workflow handlers at module-load time via
+    # ``attach_subject_workflow_handlers`` in ``_workflow_handlers.py``.
+    # The 3 handlers are: study plan + exam paper discussion + marking
+    # scheme explanation.  Each is ``None`` until the agent module
+    # attaches it (back-compat with T4's lazy-import Smoke tests).
+    #
+    # See: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-agent-workflows-v1
+
+    # ``async def (ctx) -> dict[str, Any]`` — accepts a
+    # :class:`StudyPlanContext` and emits a per-subject
+    # lectionary + per-student progress dict.
+    study_plan_handler: Callable[..., Awaitable[dict[str, Any]]] | None = None
+    # ``async def (exam_paper_id: str) -> dict[str, Any]`` — emits the
+    # full discussion dict for a past exam paper.
+    exam_paper_handler: Callable[..., Awaitable[dict[str, Any]]] | None = None
+    # ``async def (marking_scheme_id: str) -> dict[str, Any]`` — emits
+    # the per-subject explanation + exemplar + score dict.
+    marking_scheme_handler: Callable[..., Awaitable[dict[str, Any]]] | None = None
 
 
 # ---------------------------------------------------------------------------
