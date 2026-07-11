@@ -258,6 +258,229 @@ The omnibus procedure `deploy-agent-platform-cluster-arm1-oci` brings all 3 surf
 - **THEN** from this Mac, `curl https://hermes.cianfhoghlaim.ie/api/health` returns 200 (proves the newt → Pangolin → arm1-oci → hermes path works end-to-end)
 - **AND** the same path works for `openclaw.cianfhoghlaim.ie` and `openchamber.cianfhoghlaim.ie`
 
+### Requirement: iac:sync:sites provisions newt sites via the Pangolin Integrations API
+
+The system SHALL provide a `bun run iac:sync:sites` command that walks
+`stacks/*/site.yaml` and provisions each newt site via the Pangolin
+Integrations API (`POST /org/{orgId}/site`). The returned `newtId` +
+`newtSecret` SHALL be written to local `~/.env` (under
+`PANGOLIN_NEWT_<NAME>_ID` + `PANGOLIN_NEWT_<NAME>_SECRET`) AND to the
+Infisical `dev-baile` vault (so other hosts can fetch via Locket).
+
+The command SHALL be idempotent: re-running skips sites that already
+exist (via `GET /org/{orgId}/site/{niceId}`) and does not re-issue
+credentials.
+
+The command SHALL be wired into `iac:bootstrap` Phase 6 (the missing
+"newt deploy" step that was previously a TODO).
+
+#### Scenario: new site is provisioned
+
+- **GIVEN** `stacks/newt/site.yaml` declares `niceId: bunchloch-newt`
+- **AND** the site does NOT exist in Pangolin
+- **WHEN** `bun run iac:sync:sites` runs
+- **THEN** the command POSTs to `/org/{orgId}/site` → gets back `{ id, newtId, newtSecret }`
+- **AND** writes `PANGOLIN_NEWT_BUNCHLOCH_ID` + `PANGOLIN_NEWT_BUNCHLOCH_SECRET` to `~/.env`
+- **AND** writes the same to Infisical `/pangolin/` (if Infisical auth is configured)
+- **AND** the `deploy-newt-bunchloch-v2` procedure can now read the credentials via Locket
+
+#### Scenario: existing site is skipped (idempotent)
+
+- **GIVEN** the bunchloch-newt site already exists in Pangolin
+- **WHEN** `bun run iac:sync:sites` runs
+- **THEN** the command GETs `/org/{orgId}/site/bunchloch-newt` → finds the existing site
+- **AND** does NOT POST a new site
+- **AND** does NOT overwrite the existing credentials in `~/.env`
+- **AND** logs `bunchloch-newt (already exists, id=<n>)`
+
+#### Scenario: credentials are written to local .env
+
+- **WHEN** `bun run iac:sync:sites` runs with a valid Pangolin API key
+- **AND** Infisical auth is NOT configured
+- **THEN** the command writes newtId + newtSecret ONLY to local `~/.env`
+- **AND** logs a warning: `infisical: not configured — credentials will be written to local .env only`
+- **AND** the procedure still succeeds (exit 0)
+
+#### Scenario: iac:bootstrap Phase 6 calls iac:sync:sites
+
+- **WHEN** `bun run iac:bootstrap` runs
+- **THEN** Phase 6 (the "Newt (Pangolin tunnel client)" step) calls `await syncSites()`
+- **AND** the bootstrap is no longer stuck at a TODO for the Newt step
+
+### Requirement: deploy-newt-bunchloch-v2 integrates with iac:sync:sites + asserts newt v1.14.0
+
+The system SHALL provide a `deploy-newt-bunchloch-v2` Komodo procedure
+that supersedes the legacy `deploy-newt-bunchloch` (v1). The v2
+procedure SHALL integrate with the `iac:sync:sites` command (which
+auto-provisions the bunchloch-newt site via the Pangolin Integrations
+API) AND SHALL assert that the running newt container is at v1.14.0
+(the canonical pin from `stacks/newt/IMAGE`).
+
+The v2 procedure SHALL have 5 stages:
+1. **preflight** — verify docker is present, env vars hydrated, locket healthy
+2. **iac-provision** — `bun run iac:sync:sites` (provisions the site if not already)
+3. **stackup** — `mkdir -p ~/.local/newt && docker compose up -d` (creates run-directory on first use)
+4. **wireguard-tunnel** — wait up to 60s for the "tunnel established" log line + dump `wg show`
+5. **health-checks** — all 4 services Up, locket secrets resolved, newt version = 1.14.0, WireGuard handshake present, komodo-core reachable
+
+The v2 procedure is wired into the cross-cutting prereq order (runs
+AFTER `locket-deploy`, BEFORE the per-host syncs).
+
+#### Scenario: iac-provision runs as Stage 2
+
+- **WHEN** `km run procedure deploy-newt-bunchloch-v2` runs
+- **THEN** Stage 2 calls `bun run iac:sync:sites`
+- **AND** the site is auto-provisioned via the Pangolin Integrations API
+- **AND** the newtId + newtSecret are written to local `~/.env` + Infisical
+
+#### Scenario: newt version mismatch detected
+
+- **WHEN** the bunchloch-newt container is at v1.13.0 (or any version ≠ 1.14.0)
+- **THEN** Stage 4 health-checks emits `newt version MISMATCH (expected 1.14.0)`
+- **AND** the procedure exits non-zero
+- **AND** the operator must re-deploy with the pinned IMAGE
+
+#### Scenario: all 5 health-checks pass
+
+- **WHEN** `km run procedure deploy-newt-bunchloch-v2` runs after `iac:sync:sites` has succeeded
+- **THEN** Stage 5 verifies:
+  1. 4 services Up (bunchloch-locket, bunchloch-newt, bunchloch-periphery, bunchloch-beszel-agent)
+  2. Locket has resolved 3 secrets (NEWT_ID, NEWT_SECRET, PERIPHERY_ONBOARDING_KEY)
+  3. newt version = 1.14.0
+  4. WireGuard handshake present (`wg show` returns a "latest handshake" line)
+  5. komodo-core on arm1-oci is reachable via the Pangolin mesh
+- **AND** the procedure exits 0
+
+### Requirement: deploy-pangolin-newt-arm1-oci brings the arm1-oci-side newt client online
+
+The system SHALL provide a `deploy-pangolin-newt-arm1-oci` Komodo
+procedure that brings the secondary newt client online on the
+`arm1-oci` control plane. This secondary newt is required so that
+arm1-oci-hosted services (hermes, openclaw, openchamber, langfuse)
+can route through the local gerbil WireGuard server without going
+back to bunchloch first.
+
+The procedure SHALL have 5 stages (mirrors `deploy-newt-bunchloch-v2`):
+1. **preflight** — verify Pangolin + Infisical are reachable + healthy
+2. **iac-provision** — `bun run iac:sync:sites` (auto-provisions the arm1-oci newt site)
+3. **stackup** — extend the pangolin compose with the newt service (`docker compose -f compose.yaml -f newt.yaml -f newt.sidecar.yaml up -d newt`)
+4. **wireguard-tunnel** — wait up to 60s + dump `wg show`
+5. **health-checks** — 5 verifications including newt v1.14.0 assertion + pangolin-core reachability
+
+The v2 procedure is wired into the cross-cutting prereq order (runs
+AFTER `locket-deploy`, BEFORE `deploy-newt-bunchloch-v2`).
+
+#### Scenario: iac-provision runs as Stage 2
+
+- **WHEN** `km run procedure deploy-pangolin-newt-arm1-oci` runs
+- **THEN** Stage 2 calls `bun run iac:sync:sites`
+- **AND** the arm1-oci newt site is auto-provisioned via the Pangolin Integrations API
+- **AND** the newtId + newtSecret are written to local `~/.env` + Infisical (under `PANGOLIN_NEWT_ARM1_*`)
+
+#### Scenario: newt version mismatch detected
+
+- **WHEN** the pangolin-newt container is at v1.13.0 (or any version ≠ 1.14.0)
+- **THEN** Stage 5 health-checks emits `newt version MISMATCH (expected 1.14.0)`
+- **AND** the procedure exits non-zero
+
+#### Scenario: all 5 health-checks pass
+
+- **WHEN** `km run procedure deploy-pangolin-newt-arm1-oci` runs after `iac:sync:sites` has succeeded
+- **THEN** Stage 5 verifies:
+  1. pangolin-newt container is Up
+  2. newt-sidecar Locket has resolved 2 secrets (NEWT_ARM1_ID, NEWT_ARM1_SECRET)
+  3. newt version = 1.14.0
+  4. WireGuard handshake present
+  5. pangolin-core on arm1-oci remains reachable (the newt shouldn't break the control plane)
+- **AND** the procedure exits 0
+- **AND** the arm1-oci-hosted services (hermes, openclaw, openchamber) are now reachable via the Pangolin mesh without going through bunchloch
+
+### Requirement: iac:bootstrap orchestrates all 5 auth components as a single tightly-integrated system
+
+The system SHALL provide a `bun run iac:bootstrap` command that
+orchestrates all 5 auth components (Pulumi → Infisical → Pocket ID →
+Pangolin → Komodo → Tinyauth → Newt → sync) as a single, idempotent
+end-to-end flow. Each phase checks the current state and (re)deploys as
+needed.
+
+Pocket ID + Tinyauth SHALL be first-class systems in the IaC (not
+manually configured outside the bons). The bootstrap SHALL include a
+new `iac:bootstrap-pocketid-admin` subcommand that creates the first
+admin user + the bons-iac OIDC client via the Pocket ID admin API
+(only the operator's browser-passkey-registration is manual).
+
+The system SHALL also provide `iac:health` that does a 6-way check
+(added Pocket ID + Tinyauth on top of the previous 4-way check of
+Komodo + Pangolin + Infisical + Newt). Each check SHALL report a clear
+actionable error message.
+
+#### Scenario: iac:bootstrap runs end-to-end on cold-boot
+
+- **WHEN** the bons host has no Pocket ID, no Tinyauth, no newt containers
+- **THEN** `iac:bootstrap` orchestrates all 9 phases in order:
+  1. Pulumi (TODO)
+  2. Infisical secrets
+  3. Pocket ID deploy + health check (via `km run procedure deploy-pocket-id-bunchloch`)
+  4. Auth wiring (creates bons-iac OIDC client via admin API; mints Pangolin API key via OIDC client_credentials)
+  5. Pangolin private resources
+  6. Komodo Core + Periphery
+  7. Tinyauth deploy + health check (via `km run procedure deploy-tinyauth-bunchloch`)
+  8. Newt (sync-sites)
+  9. All sync commands
+- **AND** the bootstrap is idempotent: re-running on a warm cluster skips
+  the already-done phases.
+
+#### Scenario: iac:bootstrap-pocketid-admin is run after a DB wipe
+
+- **GIVEN** the Pocket ID DB has 0 users (e.g. after a wipe)
+- **AND** `POCKETID_ADMIN_PASSWORD` is in env
+- **WHEN** `bun run iac:bootstrap-pocketid-admin` runs
+- **THEN** the command:
+  1. Logs in to Pocket ID as admin (uses `POCKETID_ADMIN_PASSWORD`)
+  2. Enables signup
+  3. Creates a signup token (1-hour expiry)
+  4. Prints the signup URL to stdout (operator opens in browser)
+  5. Waits for operator to press ENTER
+  6. Verifies the user was created (via the admin API)
+  7. Disables signup (security)
+  8. Creates the bons-iac OIDC client (with `client_credentials` grant)
+  9. Writes `POCKETID_CLIENT_ID` + `POCKETID_CLIENT_SECRET` to `~/.env`
+  10. Emits a JSON audit record to `/tmp/pocketid-bootstrap-{ts}.json`
+- **AND** the operator's next `bun run iac:health` exits 0 for the
+  Pocket ID + tinyauth checks.
+
+#### Scenario: iac:health returns 6-way actionable errors
+
+- **WHEN** the user runs `bun run iac:health` with a broken auth state
+- **THEN** the command reports the state of each of the 6 surfaces:
+  - `komodo`: count of servers + stacks (or auth error)
+  - `pangolin`: `{"healthy": true|false, "detail": "..."}`
+  - `infisical`: `{"healthy": true|false, "detail": "..."}`
+  - `newt (bunchloch)`: container status + version + WireGuard handshake
+  - `pocket-id`: v{version}, {dbUsers} users, {dbOidcClients} OIDC clients, signup=on|off
+  - `tinyauth`: HTTP status of `/api/health`
+- **AND** if Pocket ID DB is empty, the message is actionable:
+  `pocket-id: v2.9.0 but DB is empty (run: bun run iac:bootstrap-pocketid-admin)`
+- **AND** if Tinyauth container is NOT Up:
+  `tinyauth: http://tinyauth.cianfhoghlaim.ie returned {status_code}`
+
+#### Scenario: Pocket ID + Tinyauth are part of the cross-cutting prereq order
+
+- **GIVEN** the bons cross-cutting prereq order
+- **WHEN** Komodo pulls the resource-sync
+- **THEN** the order is:
+  1. `pangolin-first`
+  2. `komodo-core`
+  3. `infisical-first`
+  4. `locket-deploy`
+  5. `deploy-pocket-id-bunchloch` (NEW in this change)
+  6. `deploy-tinyauth-bunchloch` (NEW in this change)
+  7. `deploy-pocket-id-arm1-oci` (NEW in this change; migration target)
+  8. `deploy-pangolin-newt-arm1-oci`
+  9. `deploy-newt-bunchloch-v2`
+- **AND** the operator can run any one of them in any order (each is
+  idempotent and health-checks its own state)
+
 ## Cross-references
 
 - [`agent-memory-systems`](../agent-memory-systems/spec.md) — the 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph)
