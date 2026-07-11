@@ -1,0 +1,38 @@
+# defs/1_ingestion/european_nations/geo/education/subjects/mathematics/defs.yaml
+#
+# L1 CelticIngestionComponent for the Georgia Mathematics
+# per-subject DLT source (EU candidate/neighbour full-depth
+# expansion).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/geo/education/subjects/mathematics/mathematics.py` with
+# `source_id="european_nations.geo.education.subjects.mathematics"` and lands in
+# the DuckLake table `oideachais.education.european_nations.geo.mathematics`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_geo_mathematics
+  module: cianfhoghlaim.dlt.european_nations.geo.education.subjects.mathematics.mathematics
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - nation:
+        values: ["geo"]
+    - subject:
+        values: ["mathematics"]
+    - language:
+        values: ["ka"]
+  use_local_scrapes: true
+  asset_check: european_nations_geo_mathematics_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - geo
+    - mathematics
+    - education
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline

@@ -1,0 +1,40 @@
+# defs/1_ingestion/european_nations/mlt/education/subjects/language/defs.yaml
+#
+# L1 CelticIngestionComponent for the Malta Native language and literature
+# per-subject DLT source (EU nations full-depth expansion).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/mlt/education/subjects/language.py` with
+# `source_id="european_nations.mlt.education.subjects.language"`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_mlt_language
+  module: cianfhoghlaim.dlt.european_nations.mlt.education.subjects.language
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["european_nations"]
+    - country:
+        values: ["mlt"]
+    - subject:
+        values: ["language"]
+    - language:
+        values: ["mt", "en"]
+  use_local_scrapes: true
+  asset_check: european_nations_mlt_language_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - mlt
+    - education
+    - language
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline
+    exam_board: MATSEC
+    subject_code: LANG

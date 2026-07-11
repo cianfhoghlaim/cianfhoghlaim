@@ -1,0 +1,38 @@
+# defs/1_ingestion/european_nations/xkx/education/subjects/biology/defs.yaml
+#
+# L1 CelticIngestionComponent for the Kosovo Biology
+# per-subject DLT source (EU candidate/neighbour full-depth
+# expansion).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/xkx/education/subjects/biology/biology.py` with
+# `source_id="european_nations.xkx.education.subjects.biology"` and lands in
+# the DuckLake table `oideachais.education.european_nations.xkx.biology`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_xkx_biology
+  module: cianfhoghlaim.dlt.european_nations.xkx.education.subjects.biology.biology
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - nation:
+        values: ["xkx"]
+    - subject:
+        values: ["biology"]
+    - language:
+        values: ["sq", "sr"]
+  use_local_scrapes: true
+  asset_check: european_nations_xkx_biology_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - xkx
+    - biology
+    - education
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline
