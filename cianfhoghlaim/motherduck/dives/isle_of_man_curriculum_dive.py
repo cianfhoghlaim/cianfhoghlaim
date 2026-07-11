@@ -1,0 +1,34 @@
+"""MotherDuck Dive: isle_of_man_curriculum_dive.
+
+A read-only MotherDuck dashboard that surfaces the per-subject
+curriculum coverage matrix for the Isle of Man Government BIEP parity layer.
+"""
+from __future__ import annotations
+
+from motherduck.dives import save_dive
+
+
+DIVE_NAME = "isle_of_man_curriculum_dive"
+DIVE_DESCRIPTION = (
+    "Per-subject curriculum coverage matrix for the Isle of Man Government BIEP "
+    "parity layer. Rows: subject. Columns: language. Cells: row count."
+)
+
+
+def build_isle_of_man_curriculum_dive() -> None:
+    """Persist the MotherDuck Dive for Isle of Man Government."""
+    save_dive(
+        name=DIVE_NAME,
+        sql="""
+            SELECT subject, language, COUNT(*) AS row_count
+            FROM oideachais.education.british_isles.isle_of_man
+            GROUP BY subject, language
+        """,
+    )
+
+
+__all__ = [
+    "DIVE_DESCRIPTION",
+    "DIVE_NAME",
+    "build_isle_of_man_curriculum_dive",
+]
