@@ -1,0 +1,35 @@
+# defs/1_ingestion/commonwealth/can/nt/government/defs.yaml
+#
+# L1 CelticIngestionComponent for the Northwest Territories government DLT source.
+#
+# Per the cross-region path contract this source lives at
+# `dlt/commonwealth/can/nt/government/gov_portal.py` with
+# `source_id="commonwealth.can.nt.government.gov_portal"`.
+#
+# Reference: openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: commonwealth_can_nt_government
+  module: cianfhoghlaim.dlt.commonwealth.can.nt.government.gov_portal
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - province:
+        values: ["nt"]
+    - domain:
+        values: ["government"]
+    - language:
+        values: ["en"]
+  use_local_scrapes: true
+  asset_check: commonwealth_can_nt_government_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - commonwealth
+    - canada
+    - nt
+    - government
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-12-canada-provinces-quebec-montreal-pipeline-v1
+    spec: commonwealth-pipeline
