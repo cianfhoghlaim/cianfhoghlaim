@@ -70,9 +70,10 @@
 
 ## Step 6: Commit + push (5 min)
 
-- [x] `git add -A` (the 3 source files + the openspec change)
+- [x] `git add <my-files>` (only my files, not other agents' dirty state)
 - [x] Commit with the canonical 3-blocker message
 - [x] `git push --set-upstream origin pick-4-biep-v1` (NOT `main`)
+      → commit `f476596ae` pushed to `origin/pick-4-biep-v1`
 
 ## Acceptance gates
 
@@ -81,4 +82,4 @@
 - [x] `select_optimal_for_m4_max()` exists (with `get_default_for_m4_max`
       as back-compat alias that emits `DeprecationWarning`)
 - [x] 2 MODIFIED spec deltas are well-formed
-- [ ] Pushed to `origin/pick-4-biep-v1` (NOT `main`) — final step
+- [x] Pushed to `origin/pick-4-biep-v1` (NOT `main`)
