@@ -26,6 +26,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { pocketIdLogin } from "../auth-pocketid.ts";
+import { ensureBonsIacClient } from "./bootstrap-pocketid-admin.ts";
 import { CONFIG } from "../config.ts";
 
 interface RotationRecord {
@@ -81,6 +82,18 @@ export async function rotateAuth() {
       reason: "POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET not in env; see PANGOLIN-SETUP.md Manual Step 1 to mint them",
     };
     logWarn("Pangolin: skipped (no Pocket ID client configured)");
+  }
+
+  // -----------------------------------------------------------------------
+  // 1b. Ensure the bons-iac OIDC client exists in Pocket ID (idempotent)
+  // -----------------------------------------------------------------------
+  if (process.env.POCKETID_ADMIN_PASSWORD) {
+    try {
+      await ensureBonsIacClient(process.env.POCKETID_ADMIN_PASSWORD);
+      record.results.pangolin = { ...record.results.pangolin, status: "ok" };
+    } catch (e) {
+      logWarn(`ensureBonsIacClient failed: ${(e as Error).message}`);
+    }
   }
 
   // -----------------------------------------------------------------------
