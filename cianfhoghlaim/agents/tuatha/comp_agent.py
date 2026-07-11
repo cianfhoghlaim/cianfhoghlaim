@@ -26,6 +26,13 @@ from .wiring import (
     wire_subject_agent,
 )
 
+# BIEP v1 (2026-07-16): per-subject workflow handlers.
+from ._workflow_handlers import (
+    StudyPlanContext,
+    attach_subject_workflow_handlers,
+    build_subject_workflow_handlers,
+)
+
 _COMP_WIRING = get_wiring("computer_science")
 
 
@@ -128,4 +135,42 @@ comp_agent_baml_formative_item_fn = resolve_baml_function(
 )
 
 
-comp_agent_wire = wire_subject_agent(_COMP_WIRING)
+# ---------------------------------------------------------------------------
+# BIEP v1 (2026-07-16): per-subject workflow handlers.
+# ---------------------------------------------------------------------------
+
+comp_agent_workflow_handlers = build_subject_workflow_handlers(
+    wiring=_COMP_WIRING,
+    syllabus_lookup_fn=comp_syllabus_lookup_tool,
+    past_paper_lookup_fn=comp_past_paper_lookup_tool,
+    marking_scheme_lookup_fn=comp_marking_scheme_lookup_tool,
+    formative_item_fn=comp_formative_item_generate_tool,
+    response_score_fn=comp_response_score_tool,
+)
+
+
+async def make_study_plan_handler(
+    ctx: StudyPlanContext | None = None,
+) -> dict[str, object]:
+    """BIEP v1 per-subject study-plan handler (NCCA Computer Science)."""
+    return await comp_agent_workflow_handlers.study_plan(
+        ctx if ctx is not None else StudyPlanContext()
+    )
+
+
+async def discuss_exam_paper_handler(exam_paper_id: str) -> dict[str, object]:
+    """BIEP v1 per-subject exam-paper-discussion handler (NCCA Computer Science)."""
+    return await comp_agent_workflow_handlers.exam_paper(exam_paper_id)
+
+
+async def explain_marking_scheme_handler(
+    marking_scheme_id: str,
+) -> dict[str, object]:
+    """BIEP v1 per-subject marking-scheme-explanation handler (NCCA Computer Science)."""
+    return await comp_agent_workflow_handlers.marking_scheme(marking_scheme_id)
+
+
+comp_agent_wire = attach_subject_workflow_handlers(
+    wire_subject_agent(_COMP_WIRING),
+    comp_agent_workflow_handlers,
+)

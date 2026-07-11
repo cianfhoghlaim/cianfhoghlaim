@@ -27,6 +27,15 @@ from .wiring import (
     wire_subject_agent,
 )
 
+# BIEP v1 (2026-07-16): the 3 per-subject workflow handlers
+# (study plan + exam paper discussion + marking scheme explanation)
+# for the NCCA Chemistry agent.
+from ._workflow_handlers import (
+    StudyPlanContext,
+    attach_subject_workflow_handlers,
+    build_subject_workflow_handlers,
+)
+
 _CHEM_WIRING = get_wiring("chemistry")
 
 
@@ -163,4 +172,46 @@ chem_agent_baml_formative_item_fn = resolve_baml_function(
 )
 
 
-chem_agent_wire = wire_subject_agent(_CHEM_WIRING)
+# ---------------------------------------------------------------------------
+# BIEP v1 (2026-07-16): per-subject workflow handlers — bind the 3
+# handlers (study plan + exam paper + marking scheme) to the per-
+# subject wiring + tool callables, then attach them to the WireSubjectAgent
+# via ``attach_subject_workflow_handlers``.  Module-level handles
+# are exposed for the lifecycle tests.
+# ---------------------------------------------------------------------------
+
+chem_agent_workflow_handlers = build_subject_workflow_handlers(
+    wiring=_CHEM_WIRING,
+    syllabus_lookup_fn=chem_syllabus_lookup_tool,
+    past_paper_lookup_fn=chem_past_paper_lookup_tool,
+    marking_scheme_lookup_fn=chem_marking_scheme_lookup_tool,
+    formative_item_fn=chem_formative_item_generate_tool,
+    response_score_fn=chem_response_score_tool,
+)
+
+
+async def make_study_plan_handler(
+    ctx: StudyPlanContext | None = None,
+) -> dict[str, object]:
+    """BIEP v1 per-subject study-plan handler (NCCA Chemistry)."""
+    return await chem_agent_workflow_handlers.study_plan(
+        ctx if ctx is not None else StudyPlanContext()
+    )
+
+
+async def discuss_exam_paper_handler(exam_paper_id: str) -> dict[str, object]:
+    """BIEP v1 per-subject exam-paper-discussion handler (NCCA Chemistry)."""
+    return await chem_agent_workflow_handlers.exam_paper(exam_paper_id)
+
+
+async def explain_marking_scheme_handler(
+    marking_scheme_id: str,
+) -> dict[str, object]:
+    """BIEP v1 per-subject marking-scheme-explanation handler (NCCA Chemistry)."""
+    return await chem_agent_workflow_handlers.marking_scheme(marking_scheme_id)
+
+
+chem_agent_wire = attach_subject_workflow_handlers(
+    wire_subject_agent(_CHEM_WIRING),
+    chem_agent_workflow_handlers,
+)

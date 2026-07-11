@@ -26,6 +26,13 @@ from .wiring import (
     wire_subject_agent,
 )
 
+# BIEP v1 (2026-07-16): per-subject workflow handlers.
+from ._workflow_handlers import (
+    StudyPlanContext,
+    attach_subject_workflow_handlers,
+    build_subject_workflow_handlers,
+)
+
 _ENGL_WIRING = get_wiring("english")
 
 
@@ -127,4 +134,42 @@ engl_agent_baml_formative_item_fn = resolve_baml_function(
 )
 
 
-engl_agent_wire = wire_subject_agent(_ENGL_WIRING)
+# ---------------------------------------------------------------------------
+# BIEP v1 (2026-07-16): per-subject workflow handlers.
+# ---------------------------------------------------------------------------
+
+engl_agent_workflow_handlers = build_subject_workflow_handlers(
+    wiring=_ENGL_WIRING,
+    syllabus_lookup_fn=engl_syllabus_lookup_tool,
+    past_paper_lookup_fn=engl_past_paper_lookup_tool,
+    marking_scheme_lookup_fn=engl_marking_scheme_lookup_tool,
+    formative_item_fn=engl_formative_item_generate_tool,
+    response_score_fn=engl_response_score_tool,
+)
+
+
+async def make_study_plan_handler(
+    ctx: StudyPlanContext | None = None,
+) -> dict[str, object]:
+    """BIEP v1 per-subject study-plan handler (NCCA English)."""
+    return await engl_agent_workflow_handlers.study_plan(
+        ctx if ctx is not None else StudyPlanContext()
+    )
+
+
+async def discuss_exam_paper_handler(exam_paper_id: str) -> dict[str, object]:
+    """BIEP v1 per-subject exam-paper-discussion handler (NCCA English)."""
+    return await engl_agent_workflow_handlers.exam_paper(exam_paper_id)
+
+
+async def explain_marking_scheme_handler(
+    marking_scheme_id: str,
+) -> dict[str, object]:
+    """BIEP v1 per-subject marking-scheme-explanation handler (NCCA English)."""
+    return await engl_agent_workflow_handlers.marking_scheme(marking_scheme_id)
+
+
+engl_agent_wire = attach_subject_workflow_handlers(
+    wire_subject_agent(_ENGL_WIRING),
+    engl_agent_workflow_handlers,
+)
