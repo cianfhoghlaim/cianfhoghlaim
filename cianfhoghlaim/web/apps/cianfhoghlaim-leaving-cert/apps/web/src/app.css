@@ -1,51 +1,14 @@
 /* cianfhoghlaim v3 — official design tokens
    The 8 NCCA subjects × 6 British Isles subnations
    Self-hostable consolidation of education system resources
-   Reduce barriers to education */
+   Reduce barriers to education
+   ────────────────────────────────────────────────────────────
+   Design tokens are imported from styles/tokens.css (the single
+   source of truth, per openspec/changes/2026-07-18-british-isles-portal-activation-v3/
+   R21 + R22). Run `bun run tokens:validate` to confirm drift-free.
+*/
 
-:root {
-  /* ── 8 NCCA subject colours (the platform's primary palette) ── */
-  --ci-subject-mathematics:         #2563eb;
-  --ci-subject-applied_mathematics: #7c3aed;
-  --ci-subject-chemistry:           #16a34a;
-  --ci-subject-geography:           #ca8a04;
-  --ci-subject-history:             #b91c1c;
-  --ci-subject-english:             #ea580c;
-  --ci-subject-gaeilge:             #059669;
-  --ci-subject-computer_science:    #475569;
-
-  /* ── 6 British Isles subnations (the accurate map) ── */
-  --ci-subnation-eire:            #059669;
-  --ci-subnation-northern-ireland: #2563eb;
-  --ci-subnation-scotland:        #0ea5e9;
-  --ci-subnation-england:         #dc2626;
-  --ci-subnation-wales:           #b91c1c;
-  --ci-subnation-isle-of-man:     #475569;
-
-  /* ── 5 NCCA Key Competencies (the cross-subject mastery) ── */
-  --ci-key-competency-communicating:       #059669;
-  --ci-key-competency-information:         #2563eb;
-  --ci-key-competency-creative-thinking:   #ca8a04;
-  --ci-key-competency-personal-effective:  #92400e;
-  --ci-key-competency-working-with-others: #b91c1c;
-
-  /* ── Surfaces (dark-mode-first) ── */
-  --ci-bg-primary:   #0f172a;
-  --ci-bg-secondary: #1e293b;
-  --ci-bg-tertiary:  #334155;
-  --ci-glass:        rgba(30, 41, 59, 0.9);
-
-  /* ── Status ── */
-  --ci-success: #10b981;
-  --ci-warning: #f59e0b;
-  --ci-error:   #f43f5e;
-  --ci-info:    #0ea5e9;
-
-  /* ── Typography ── */
-  --ci-font-display: "Cinzel", serif;
-  --ci-font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --ci-font-mono: "JetBrains Mono", monospace;
-}
+@import "../styles/tokens.css";
 
 html,
 body {
