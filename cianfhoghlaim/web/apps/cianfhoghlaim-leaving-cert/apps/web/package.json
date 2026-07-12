@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit",
     "tokens:validate": "bun src/styles/validate-tokens.ts",
     "tokens:sync": "echo 'tokens.css is the single source of truth; edit it then re-run tokens:validate. Regeneration of tokens.ts + tokens.schema.json + design_tokens.baml is not yet implemented (manual sync).'",
-    "tokens:validate:fix": "bun src/styles/validate-tokens.ts --fix"
+    "tokens:validate:fix": "bun src/styles/validate-tokens.ts --fix",
+    "storybook": "echo 'Storybook 8 + Vite-plugin config is in place. To activate, run: bun add -D @storybook/react @storybook/react-vite @storybook/addon-essentials @storybook/addon-a11y && storybook dev -p 6006' && storybook dev -p 6006",
+    "build-storybook": "storybook build -o .storybook-static"
   },
   "dependencies": {
     "@copilotkit/a2ui-renderer": "^1.62.2",
