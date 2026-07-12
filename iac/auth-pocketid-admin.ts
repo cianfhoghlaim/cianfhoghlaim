@@ -1,15 +1,12 @@
 // bonneagar/iac/auth-pocketid-admin.ts — Pocket ID admin API client
 //
-// The admin API requires session-cookie auth (NOT a bearer token).
-// Login is done via POST /api/v1/oidc/users/me/login with username + password
-// (yes, Pocket ID still supports password-based admin login in v2.9.0,
-// even though the user-facing flow is passkey-only).
+// Pocket ID v2.9.0 admin API:
+//   - Base path: /api/  (NOT /api/v1/oidc/ — that was wrong in v1 of this IaC)
+//   - Auth: API key (Bearer token) preferred; session cookie (legacy password login) also works
 //
-// After login, the session cookie is sent with every admin request.
 // Used by `bootstrap-pocketid-admin` to:
-//   - Set signupEnabled (enables the /signup/* endpoints)
+//   - Set allowUserSignups (enables the /signup/* endpoints; was signupEnabled in old versions)
 //   - Create signup tokens
-//   - Create the first user (via signup token redemption)
 //   - Create OIDC clients (e.g. bons-iac)
 //   - Disable signup after bootstrap is complete
 //   - Rotate signing keys
@@ -74,9 +71,11 @@ export interface PocketIdHealth {
 
 /**
  * Login to Pocket ID as a user (username + password). Returns the
- * session cookie that admin endpoints require. Pocket ID v2.9.0 supports
- * password login for users who have a password set, even though the
- * user-facing flow is passkey-only.
+ * session cookie that admin endpoints require.
+ *
+ * v2.9.0 NOTE: Pocket ID is passkey-only by default. Password login
+ * only works if an admin has set a password on their account via the
+ * admin UI. Most admins will use an API key instead.
  *
  * Throws if the user doesn't exist or has no password.
  */
@@ -84,7 +83,7 @@ export async function pocketIdAdminLogin(
   username: string,
   password: string,
 ): Promise<SessionCookie> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/oidc/users/me/login`, {
+  const r = await fetch(`${POCKETID_ISSUER}/api/users/me/login`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({ username, password }).toString(),
@@ -103,6 +102,28 @@ export async function pocketIdAdminLogin(
     throw new Error(`pocketid admin login: Set-Cookie has no session token`);
   }
   return { cookie: `session=${sessionMatch[1]}`, expiresAt: Date.now() / 1000 + 3600 * 24 };
+}
+
+// ---------------------------------------------------------------------------
+// Auth header builder (v2.9.0+: use X-API-Key for API key auth)
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns the correct Authorization/Cookie header value for admin API calls.
+ * - If `apiKey` is provided → `X-API-Key: <key>` (Pocket ID v2.9.0+ preferred)
+ * - Otherwise → `Cookie: session=<cookie>` (legacy session login)
+ */
+export function pocketIdAuthHeader(
+  apiKey: string,
+  sessionCookie?: string,
+): Record<string, string> {
+  if (apiKey) {
+    return { "X-API-Key": apiKey };
+  }
+  if (sessionCookie) {
+    return { Cookie: sessionCookie };
+  }
+  throw new Error("pocketid auth required: provide either apiKey or sessionCookie");
 }
 
 // ---------------------------------------------------------------------------
@@ -190,38 +211,45 @@ export async function pocketIdHealth(): Promise<PocketIdHealth> {
 // ---------------------------------------------------------------------------
 
 /**
- * Toggle signupEnabled in Pocket ID's app_config_variables. Requires
- * admin session cookie.
+ * Toggle allowUserSignups in Pocket ID's app_config_variables.
+ * v2.9.0 renamed `signupEnabled` → `allowUserSignups` (with values: `disabled`, `withToken`, `open`).
  *
- * NOTE: Pocket ID's admin UI uses a generic config-update endpoint.
- * The actual endpoint path is `/api/v1/admin/application-configuration`
- * (per the v2.9.0 source at /settings/admin/application-configuration).
+ * Requires admin session cookie OR X-API-Key header (POCKETID_API_KEY).
  */
 export async function pocketIdSetSignupEnabled(
   adminCookie: string,
   enabled: boolean,
+  apiKey: string = "",
 ): Promise<void> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/admin/application-configuration/signup-enabled`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: adminCookie,
-    },
-    body: JSON.stringify({ value: enabled }),
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey }
+    : { Cookie: adminCookie };
+  // v2.9.0 stores the full config as a single JSON list; PUT replaces the whole list.
+  // We need to GET the current config, toggle allowUserSignups, then PUT it back.
+  // The single-key endpoint was removed in v2.9.0.
+  const getR = await fetch(`${POCKETID_ISSUER}/api/application-configuration`, {
+    headers: authHeaders,
   });
-  if (!r.ok && r.status !== 404) {
-    throw new Error(`pocketid set signup-enabled failed: ${r.status} ${await r.text()}`);
+  if (!getR.ok) {
+    throw new Error(`pocketid get app-config failed: ${getR.status} ${await getR.text()}`);
   }
-  // If 404, fall back to the generic update endpoint
-  if (r.status === 404) {
-    const r2 = await fetch(`${POCKETID_ISSUER}/api/v1/admin/application-configuration`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", Cookie: adminCookie },
-      body: JSON.stringify({ signupEnabled: { value: enabled } }),
-    });
-    if (!r2.ok) {
-      throw new Error(`pocketid set signup-enabled (fallback) failed: ${r2.status} ${await r2.text()}`);
-    }
+  const current = (await getR.json()) as Array<{ key: string; value: string }>;
+  const updated = current.map((c) =>
+    c.key === "allowUserSignups"
+      ? { ...c, value: enabled ? "open" : "disabled" }
+      : c
+  );
+  // If the key doesn't exist yet, add it
+  if (!current.find((c) => c.key === "allowUserSignups")) {
+    updated.push({ key: "allowUserSignups", value: enabled ? "open" : "disabled", type: "" });
+  }
+  const putR = await fetch(`${POCKETID_ISSUER}/api/application-configuration`, {
+    method: "PUT",
+    headers: { ...authHeaders, "Content-Type": "application/json" },
+    body: JSON.stringify(updated),
+  });
+  if (!putR.ok) {
+    throw new Error(`pocketid set allowUserSignups failed: ${putR.status} ${await putR.text()}`);
   }
 }
 
@@ -238,12 +266,16 @@ export async function pocketIdSetSignupEnabled(
 export async function pocketIdCreateSignupToken(
   adminCookie: string,
   opts: { username: string; email: string; expiresIn?: number } = {
-    username: "ciansedai", email: "ciansedai@cianfhoghlaim.ie",
+    username: "cianfhoghlaim", email: "cianfhoghlaim@cianfhoghlaim.ie",
   },
+  apiKey: string = "",
 ): Promise<{ token: string; expiresAt: string; url: string }> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/admin/signup-tokens`, {
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey, "Content-Type": "application/json" }
+    : { Cookie: adminCookie, "Content-Type": "application/json" };
+  const r = await fetch(`${POCKETID_ISSUER}/api/signup-tokens`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Cookie: adminCookie },
+    headers: authHeaders,
     body: JSON.stringify({
       username: opts.username,
       email: opts.email,
@@ -257,6 +289,8 @@ export async function pocketIdCreateSignupToken(
   return { token: data.token, expiresAt: data.expiresAt, url: `${POCKETID_ISSUER}/st/${data.token}` };
 }
 
+/* duplicate-removed legacy block — kept for diff visibility, intentionally blank */
+
 // ---------------------------------------------------------------------------
 // OIDC clients (for the bons-iac client + Pangolin admin SSO client)
 // ---------------------------------------------------------------------------
@@ -266,9 +300,13 @@ export async function pocketIdCreateSignupToken(
  */
 export async function pocketIdListOidcClients(
   adminCookie: string,
+  apiKey: string = "",
 ): Promise<OidcClientSummary[]> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/oidc/clients`, {
-    headers: { Cookie: adminCookie },
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey }
+    : { Cookie: adminCookie };
+  const r = await fetch(`${POCKETID_ISSUER}/api/oidc/clients`, {
+    headers: authHeaders,
   });
   if (!r.ok) {
     throw new Error(`pocketid list oidc-clients failed: ${r.status} ${await r.text()}`);
@@ -279,23 +317,59 @@ export async function pocketIdListOidcClients(
 }
 
 /**
- * Create a new OIDC client. Returns the client_id + client_secret
- * (the client_secret is only available on create, not on subsequent
- * reads — so the caller MUST persist it to Infisical immediately).
+ * Fetch the client_secret for an OIDC client. Pocket ID v2.9.0 returns
+ * the secret via a separate POST /api/oidc/clients/:id/secret endpoint
+ * (the create response only returns the id, not the secret).
+ *
+ * Requires admin session cookie OR Bearer token (POCKETID_API_KEY).
+ */
+export async function pocketIdGetOidcClientSecret(
+  adminCookie: string,
+  clientId: string,
+  apiKey: string = "",
+): Promise<string> {
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey }
+    : { Cookie: adminCookie };
+  const r = await fetch(`${POCKETID_ISSUER}/api/oidc/clients/${clientId}/secret`, {
+    method: "POST",
+    headers: authHeaders,
+  });
+  if (!r.ok) {
+    throw new Error(`pocketid get oidc-client secret failed: ${r.status} ${await r.text()}`);
+  }
+  const data = await r.json() as { secret?: string };
+  if (!data.secret) {
+    throw new Error(`pocketid get oidc-client secret: response missing secret`);
+  }
+  return data.secret;
+}
+
+/**
+ * Create a new OIDC client. Returns the client_id + client_secret.
+ *
+ * v2.9.0 behavior: the POST /api/oidc/clients response only includes the id
+ * (not the secret). To get the secret, we MUST call POST /api/oidc/clients/{id}/secret.
+ * The secret is only available once — re-calling /secret generates a new one.
  */
 export async function pocketIdCreateOidcClient(
   adminCookie: string,
   input: CreateOidcClientInput,
+  apiKey: string = "",
 ): Promise<CreateOidcClientResult> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/oidc/clients`, {
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey, "Content-Type": "application/json" }
+    : { Cookie: adminCookie, "Content-Type": "application/json" };
+  const r = await fetch(`${POCKETID_ISSUER}/api/oidc/clients`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Cookie: adminCookie },
+    headers: authHeaders,
     body: JSON.stringify({
       name: input.name,
-      redirectUris: input.redirectUris,
+      callbackURLs: input.redirectUris,  // v2.9.0 renamed redirectUris → callbackURLs
       grantTypes: input.grantTypes,
       scopes: input.scopes ?? ["openid", "profile", "email"],
       isPublic: input.isPublic ?? false,
+      pkceEnabled: input.grantTypes.includes("authorization_code"),  // PKCE for auth code flow
     }),
   });
   if (!r.ok) {
@@ -303,10 +377,17 @@ export async function pocketIdCreateOidcClient(
   }
   const data = await r.json() as { data: CreateOidcClientResult } | CreateOidcClientResult;
   const result = "data" in data ? data.data : data;
-  if (!result.clientId || !result.clientSecret) {
-    throw new Error(`pocketid create oidc-client: response missing clientId/clientSecret`);
+  if (!result.id) {
+    throw new Error(`pocketid create oidc-client: response missing id`);
   }
-  return result;
+  // Fetch the secret via the separate endpoint (v2.9.0)
+  const secret = await pocketIdGetOidcClientSecret(adminCookie, result.id, apiKey);
+  return {
+    id: result.id,
+    clientId: result.id,  // v2.9.0 uses the id as the public client_id
+    clientSecret: secret,
+    name: result.name ?? input.name,
+  };
 }
 
 /**
@@ -315,9 +396,13 @@ export async function pocketIdCreateOidcClient(
 export async function pocketIdGetOidcClient(
   adminCookie: string,
   id: string,
+  apiKey: string = "",
 ): Promise<OidcClientSummary | null> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/oidc/clients/${id}`, {
-    headers: { Cookie: adminCookie },
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey }
+    : { Cookie: adminCookie };
+  const r = await fetch(`${POCKETID_ISSUER}/api/oidc/clients/${id}`, {
+    headers: authHeaders,
   });
   if (r.status === 404) return null;
   if (!r.ok) {
@@ -335,9 +420,13 @@ export async function pocketIdGetOidcClient(
  */
 export async function pocketIdListUsers(
   adminCookie: string,
+  apiKey: string = "",
 ): Promise<UserSummary[]> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/users`, {
-    headers: { Cookie: adminCookie },
+  const authHeaders: Record<string, string> = apiKey
+    ? { "X-API-Key": apiKey }
+    : { Cookie: adminCookie };
+  const r = await fetch(`${POCKETID_ISSUER}/api/users`, {
+    headers: authHeaders,
   });
   if (!r.ok) {
     throw new Error(`pocketid list users failed: ${r.status} ${await r.text()}`);
@@ -350,14 +439,14 @@ export async function pocketIdListUsers(
  * Disable signup (post-bootstrap).
  * (Reuses pocketIdSetSignupEnabled for the actual work.)
  */
-export const pocketIdDisableSignup = (adminCookie: string) =>
-  pocketIdSetSignupEnabled(adminCookie, false);
+export const pocketIdDisableSignup = (adminCookie: string, apiKey: string = "") =>
+  pocketIdSetSignupEnabled(adminCookie, false, apiKey);
 
 /**
  * Enable signup (for the bootstrap workflow).
  */
-export const pocketIdEnableSignup = (adminCookie: string) =>
-  pocketIdSetSignupEnabled(adminCookie, true);
+export const pocketIdEnableSignup = (adminCookie: string, apiKey: string = "") =>
+  pocketIdSetSignupEnabled(adminCookie, true, apiKey);
 
 // ---------------------------------------------------------------------------
 // Key rotation (for periodic security hygiene)
@@ -370,7 +459,7 @@ export const pocketIdEnableSignup = (adminCookie: string) =>
 export async function pocketIdRotateSigningKey(
   adminCookie: string,
 ): Promise<{ newKeyId: string }> {
-  const r = await fetch(`${POCKETID_ISSUER}/api/v1/admin/jwt/rotate`, {
+  const r = await fetch(`${POCKETID_ISSUER}/api/admin/jwt/rotate`, {
     method: "POST",
     headers: { Cookie: adminCookie },
   });
