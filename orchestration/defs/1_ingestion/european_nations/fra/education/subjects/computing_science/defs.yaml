@@ -1,0 +1,34 @@
+# defs/1_ingestion/european_nations/fra/education/subjects/computing_science/defs.yaml
+#
+# L1 CelticIngestionComponent for the France Computing Science
+# per-subject DLT source (BIEP parity pattern).
+#
+# Reference: openspec/changes/2026-07-15-eu-pilot-upgrade-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_fra_computing_science
+  module: cianfhoghlaim.dlt.european_nations.fra.education.subjects.computing_science.computing_science
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - jurisdiction:
+        values: ["fra"]
+    - subject:
+        values: ["computing_science"]
+    - language:
+        values: ["fr", "en"]
+  use_local_scrapes: true
+  asset_check: european_nations_fra_computing_science_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - fra
+    - computing_science
+    - education
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-15-eu-pilot-upgrade-v1
+    spec: european-nations-ukraine-pipeline
+    country_name: "France"
+    official_languages: ["fr", "en"]
