@@ -36,7 +36,7 @@ export async function ensurePangolinAuth(): Promise<PangolinClient> {
   }
 
   // 2. If Pocket ID OIDC client_credentials are configured, mint a fresh API key
-  if (process.env.POCKETID_CLIENT_ID && process.env.POCKETID_CLIENT_SECRET) {
+  if (process.env.POCKETID_PANGOLIN_CLIENT_ID && process.env.POCKETID_PANGOLIN_CLIENT_SECRET) {
     try {
       const newApiKey = await pocketIdLogin();
       // Write the new key to .env for next time
@@ -60,7 +60,7 @@ export async function ensurePangolinAuth(): Promise<PangolinClient> {
   // 3. Give up with a clear error message
   throw new Error(
     "PANGOLIN_API_KEY required and no Pocket ID OIDC client configured.\n" +
-      "  Fix option A: run `bun run iac:rotate-auth` to mint a fresh key (requires POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET in env).\n" +
+      "  Fix option A: run `bun run iac:rotate-auth` to mint a fresh key (requires POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET in env).\n" +
       "  Fix option B: manually mint an API key via the Pangolin dashboard and write it to .env as PANGOLIN_API_KEY=...\n" +
       "  Fix option C: configure Pocket ID OIDC client per PANGOLIN-SETUP.md Manual Step 1, then re-run `bun run iac:rotate-auth`.",
   );

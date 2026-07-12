@@ -238,12 +238,12 @@ export async function ensureBonsIacClient(
       });
   logOk(`bons-iac OIDC client created (id=${created.id})`);
 
-  // Write the credentials to .env
+  // Write the credentials to .env (v2.9.0: write to bons-iac-specific var names)
   if (existsSync(ENV_PATH)) {
     const original = readFileSync(ENV_PATH, "utf8");
-    const updated = upsertEnvVar(original, "POCKETID_CLIENT_ID", created.clientId);
-    writeFileSync(ENV_PATH, upsertEnvVar(updated, "POCKETID_CLIENT_SECRET", created.clientSecret));
-    logOk("wrote POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET to .env");
+    const updated = upsertEnvVar(original, "POCKETID_BONS_IAC_CLIENT_ID", created.clientId);
+    writeFileSync(ENV_PATH, upsertEnvVar(updated, "POCKETID_BONS_IAC_CLIENT_SECRET", created.clientSecret));
+    logOk("wrote POCKETID_BONS_IAC_CLIENT_ID + POCKETID_BONS_IAC_CLIENT_SECRET to .env");
   }
 
   // Audit record

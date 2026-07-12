@@ -73,16 +73,16 @@ export async function bootstrap() {
   // Phase 4: Cross-system auth wiring (Pocket ID ↔ Pangolin ↔ Komodo ↔ Infisical)
   // =======================================================================
   logStep("Phase 4: Auth wiring (Pocket ID → Pangolin → Komodo → Infisical)");
-  if (process.env.POCKETID_ADMIN_PASSWORD && pocketId.dbUsers > 0) {
+  if (process.env.POCKETID_API_KEY && pocketId.dbUsers > 0) {
     // 4a. Ensure the bons-iac OIDC client exists in Pocket ID (idempotent)
     try {
-      await ensureBonsIacClient(process.env.POCKETID_ADMIN_PASSWORD);
+      await ensureBonsIacClient(process.env.POCKETID_API_KEY);
       logOk("Pocket ID: bons-iac OIDC client ensured");
     } catch (e) {
       logError("Failed to ensure bons-iac OIDC client", e);
     }
   } else {
-    logWarn("Pocket ID auth wiring: skipped (no POCKETID_ADMIN_PASSWORD or empty DB)");
+    logWarn("Pocket ID auth wiring: skipped (no POCKETID_API_KEY or empty DB)");
   }
 
   // 4b. Run the 3-way credential rotation (Pangolin + Komodo + Infisical)

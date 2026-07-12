@@ -6,8 +6,8 @@
 //   Step 1: Mint a Pocket ID access_token via client_credentials grant
 //           POST https://auth.cianfhoghlaim.ie/api/oidc/token
 //           grant_type=client_credentials
-//           client_id=POCKETID_CLIENT_ID
-//           client_secret=POCKETID_CLIENT_SECRET
+//           client_id=POCKETID_PANGOLIN_CLIENT_ID
+//           client_secret=POCKETID_PANGOLIN_CLIENT_SECRET
 //           → { access_token, token_type, expires_in }
 //
 //   Step 2: Exchange the Pocket ID JWT for a Pangolin session cookie
@@ -20,10 +20,10 @@
 //           Cookie: session=...
 //           → { apiKey, apiKeyId, lastChars, name, createdAt }
 //
-// The 3 env vars required (POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET
-// + PANGOLIN_ORG_ID) are loaded from process.env. The POCKETID_*
-// credentials come from Infisical at /pangolin/ (see PANGOLIN-SETUP.md
-// Manual Step 1).
+// The 3 env vars required (POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET
+// + PANGOLIN_ORG_ID) are loaded from process.env. The POCKETID_PANGOLIN_*
+// credentials come from the .env at /Users/cianmacandeisigh/dev/kings_college_galway/.env
+// (created by `bun run iac:bootstrap-pocketid-admin`).
 //
 // Spec: openspec/changes/2026-07-14-repair-bonneagar-iac-3-way-auth-v1
 // =============================================================================
@@ -31,8 +31,10 @@
 const POCKETID_ISSUER = process.env.POCKETID_URL ?? "https://auth.cianfhoghlaim.ie";
 const PANGOLIN_URL = process.env.PANGOLIN_URL ?? "https://pangolin.cianfhoghlaim.ie";
 const PANGOLIN_ORG_ID = process.env.PANGOLIN_ORG_ID ?? "cianfhoghlaim";
-const POCKETID_CLIENT_ID = process.env.POCKETID_CLIENT_ID;
-const POCKETID_CLIENT_SECRET = process.env.POCKETID_CLIENT_SECRET;
+// v2.9.0+: the Pangolin OIDC client in Pocket ID is named "pangolin"
+// (not the generic "bons-iac" or unprefixed POCKETID_PANGOLIN_CLIENT_ID).
+const POCKETID_PANGOLIN_CLIENT_ID = process.env.POCKETID_PANGOLIN_CLIENT_ID;
+const POCKETID_PANGOLIN_CLIENT_SECRET = process.env.POCKETID_PANGOLIN_CLIENT_SECRET;
 
 interface PocketIdTokenResponse {
   access_token: string;
@@ -81,18 +83,18 @@ export async function discoverPocketId(): Promise<PocketIdDiscovery> {
  * Mints a Pocket ID access_token via the client_credentials grant.
  * Returns the access_token + expires_in seconds.
  *
- * Requires POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET in env (or in the
+ * Requires POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET in env (or in the
  * caller-supplied `creds` arg for testability).
  */
 export async function pocketIdClientCredentials(
   creds: { clientId: string; clientSecret: string } = {
-    clientId: POCKETID_CLIENT_ID ?? "",
-    clientSecret: POCKETID_CLIENT_SECRET ?? "",
+    clientId: POCKETID_PANGOLIN_CLIENT_ID ?? "",
+    clientSecret: POCKETID_PANGOLIN_CLIENT_SECRET ?? "",
   },
 ): Promise<PocketIdLoginResult> {
   if (!creds.clientId || !creds.clientSecret) {
     throw new Error(
-      "POCKETID_CLIENT_ID and POCKETID_CLIENT_SECRET must be set in env. " +
+      "POCKETID_PANGOLIN_CLIENT_ID and POCKETID_PANGOLIN_CLIENT_SECRET must be set in env. " +
         "See PANGOLIN-SETUP.md Manual Step 1 to mint them via " +
         "https://auth.cianfhoghlaim.ie → Settings → OIDC Clients → Create.",
     );

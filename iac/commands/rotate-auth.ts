@@ -2,7 +2,7 @@
 //
 // What this does:
 //   1. (Optional) Mint a fresh Pangolin API key via Pocket ID OIDC client_credentials
-//      (requires POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET in env, which the
+//      (requires POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET in env, which the
 //      operator mints once via https://auth.cianfhoghlaim.ie → Settings → OIDC)
 //   2. Read KOMODO_PASSWORD from Infisical → write to ~/.env
 //   3. Read INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET from Infisical → write to ~/.env
@@ -65,7 +65,7 @@ export async function rotateAuth() {
   // -----------------------------------------------------------------------
   // 1. Pangolin API key (via Pocket ID OIDC, if configured)
   // -----------------------------------------------------------------------
-  if (process.env.POCKETID_CLIENT_ID && process.env.POCKETID_CLIENT_SECRET) {
+  if (process.env.POCKETID_PANGOLIN_CLIENT_ID && process.env.POCKETID_PANGOLIN_CLIENT_SECRET) {
     try {
       const newApiKey = await pocketIdLogin();
       envUpdated = upsertEnvVar(envUpdated, "PANGOLIN_API_KEY", newApiKey);
@@ -79,17 +79,21 @@ export async function rotateAuth() {
   } else {
     record.results.pangolin = {
       status: "skipped",
-      reason: "POCKETID_CLIENT_ID + POCKETID_CLIENT_SECRET not in env; see PANGOLIN-SETUP.md Manual Step 1 to mint them",
+      reason: "POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET not in env; see PANGOLIN-SETUP.md Manual Step 1 to mint them",
     };
     logWarn("Pangolin: skipped (no Pocket ID client configured)");
   }
 
   // -----------------------------------------------------------------------
-  // 1b. Ensure the bons-iac OIDC client exists in Pocket ID (idempotent)
+  // 1b. Ensure the bons-iac OIDC client exists in Pocket ID (idempotent, v2.9.0+)
   // -----------------------------------------------------------------------
-  if (process.env.POCKETID_ADMIN_PASSWORD) {
+  // v2.9.0 prefers POCKETID_API_KEY; legacy POCKETID_ADMIN_PASSWORD still works.
+  if (process.env.POCKETID_API_KEY || process.env.POCKETID_ADMIN_PASSWORD) {
     try {
-      await ensureBonsIacClient(process.env.POCKETID_ADMIN_PASSWORD);
+      await ensureBonsIacClient(
+        process.env.POCKETID_ADMIN_PASSWORD ?? "",
+        process.env.POCKETID_API_KEY ?? "",
+      );
       record.results.pangolin = { ...record.results.pangolin, status: "ok" };
     } catch (e) {
       logWarn(`ensureBonsIacClient failed: ${(e as Error).message}`);
