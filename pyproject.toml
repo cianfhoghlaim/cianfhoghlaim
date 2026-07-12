@@ -1,7 +1,7 @@
 [project]
 name = "cianfhoghlaim-monorepo"
 version = "0.4.0"
-description = "Cianfhoghlaim application monorepo — Celtic education platform, AI research laboratory, and multi-persona portfolio. Companion to cianfhoghlaim/leabharlann (digital library) and cianfhoghlaim/bonneagar (GitOps infrastructure), both consumed as git subtrees."
+description = "Cianfhoghlaim application monorepo — Celtic education platform, AI research laboratory, multi-persona portfolio, AND the GitOps infrastructure fleet (the bonneagar/ subdirectory holds 88 Docker Compose stacks + Komodo resource-syncs + the unified IaC). Companion to cianfhoghlaim/leabharlann (digital library), which is the only remaining separately-managed repo."
 readme = "README.md"
 requires-python = ">=3.13"
 license = { text = "BUSL-1.1" }
