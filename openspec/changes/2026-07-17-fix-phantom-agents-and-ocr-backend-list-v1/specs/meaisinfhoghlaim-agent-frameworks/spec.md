@@ -22,7 +22,7 @@ which does not exist on disk.
 
 The canonical M4-Max dispatch helper SHALL be
 `select_optimal_for_m4_max()` from
-`cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry`. The legacy
+`cianfhoghlaim.meaisinfhoghlaim.models.registry`. The legacy
 name `get_default_for_m4_max()` is preserved as a deprecated
 back-compat alias that emits `DeprecationWarning` and delegates to
 `select_optimal_for_m4_max()`.
@@ -45,13 +45,13 @@ back-compat alias that emits `DeprecationWarning` and delegates to
 
 #### Scenario: select_optimal_for_m4_max is the canonical M4-Max helper
 
-- **WHEN** `from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import select_optimal_for_m4_max`
+- **WHEN** `from cianfhoghlaim.meaisinfhoghlaim.models.registry import select_optimal_for_m4_max`
 - **THEN** the import succeeds
 - **AND** `select_optimal_for_m4_max()` returns `"gemma-4-26B-A4B"`
 
 #### Scenario: get_default_for_m4_max back-compat alias emits DeprecationWarning
 
-- **WHEN** `from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import get_default_for_m4_max`
+- **WHEN** `from cianfhoghlaim.meaisinfhoghlaim.models.registry import get_default_for_m4_max`
 - **AND** `get_default_for_m4_max()` is called with
   `warnings.simplefilter('error', DeprecationWarning)` active
 - **THEN** a `DeprecationWarning` is raised

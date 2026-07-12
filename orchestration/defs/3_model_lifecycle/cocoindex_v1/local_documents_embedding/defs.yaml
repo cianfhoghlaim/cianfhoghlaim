@@ -1,0 +1,25 @@
+# Dagster L3 — Local documents CocoIndex mount
+# Reference: openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/
+
+type: dagster.schedule
+schedule: "@daily"
+execution_timezone: "UTC"
+description: >
+  Daily Local documents CocoIndex v1 mount — runs the LocalDocumentsEmbeddingApp
+  and mounts the LanceDB table at `oideachais.language.local_documents_chunks`.
+
+assets:
+  - name: local_documents_cocoindex_mount
+    group_name: language_local_documents_embedding
+    compute_kind: local
+    deps:
+      - local_documents_ingestion
+    metadata:
+      layer: 3_model_lifecycle
+      stage: language
+      source_group: local_documents
+      subjects: [comp_science, gaeilge, mata, oideachas]
+      lance_table: oideachais.language.local_documents_chunks
+      embedder: BAAI/bge-m3
+      embed_dim: 1024
+      openspec_change: 2026-07-17-gaois-celtic-language-pipeline-v1

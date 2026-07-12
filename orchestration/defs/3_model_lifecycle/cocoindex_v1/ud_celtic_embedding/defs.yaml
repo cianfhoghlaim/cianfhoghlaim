@@ -1,0 +1,25 @@
+# Dagster L3 — UD Celtic CocoIndex mount
+# Reference: openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/
+
+type: dagster.schedule
+schedule: "@quarterly"
+execution_timezone: "UTC"
+description: >
+  Quarterly UD Celtic CocoIndex v1 mount — runs the UDCelticEmbeddingApp
+  and mounts the LanceDB table at `oideachais.language.ud_celtic_chunks`.
+
+assets:
+  - name: ud_celtic_cocoindex_mount
+    group_name: language_ud_celtic_embedding
+    compute_kind: local
+    deps:
+      - ud_celtic_ingestion
+    metadata:
+      layer: 3_model_lifecycle
+      stage: language
+      source_group: ud_celtic
+      n_treebanks: 13
+      lance_table: oideachais.language.ud_celtic_chunks
+      embedder: BAAI/bge-m3
+      embed_dim: 1024
+      openspec_change: 2026-07-17-gaois-celtic-language-pipeline-v1

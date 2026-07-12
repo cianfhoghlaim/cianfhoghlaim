@@ -4,7 +4,7 @@
 
 `oideachais-semantic-search` is a capability of the Cianfhoghlaim platform. The
 corresponding source code lives at `cianfhoghlaim/cocoindex_flows/` (8 v0 flows +
-the new v1 leabharlann flows) and `cianfhoghlaim/api/routes/search.py`. See
+the new v1 leabharlann flows) and `cianfhoghlaim/web/hono-api/src/routes/search.py`. See
 `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the
 project identity.
 

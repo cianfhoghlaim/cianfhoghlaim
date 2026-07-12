@@ -1,0 +1,46 @@
+# Dagster L1 — Heritage ingestion cron (weekly)
+#
+# Weekly cron. Partitions: heritage_kind × county.
+# Reference: openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/
+
+type: dagster.cron
+schedule: "0 4 * * 0"  # weekly on Sunday
+execution_timezone: "UTC"
+description: >
+  Weekly heritage ingestion (heritage sites + hidden heritages) — fans out to
+  the 2 heritage DLT sources and writes the canonical DuckLake tables in
+  `oideachais.celtic.heritage.*`.
+
+partitions:
+  - name: heritage_kind
+    type: static
+    partition_keys:
+      - main
+      - hidden
+  - name: county
+    type: static
+    partition_keys:
+      - all
+      - cork
+      - dublin
+      - galway
+      - kerry
+
+assets:
+  - name: heritage_ingestion
+    group_name: language_heritage
+    compute_kind: local
+    deps: []
+    config:
+      heritage_kind: "{{ partition['heritage_kind'] }}"
+      county: "{{ partition['county'] }}"
+    config_schema:
+      heritage_kind:
+        type: string
+      county:
+        type: string
+    metadata:
+      layer: 1_ingestion
+      stage: language
+      source_group: heritage
+      openspec_change: 2026-07-17-gaois-celtic-language-pipeline-v1

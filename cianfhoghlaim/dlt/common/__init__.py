@@ -1,82 +1,21 @@
-"""Common utilities and constants for DLT sources.
+"""endpoint_recovery package — exposes the canonical 3-strategy helper."""
 
-Also installs a `sys.modules` alias for the missing `shared` package
-so that every `from shared.http import …` line in the legacy DLT
-sources keeps working. The alias is a *re-export* of the in-tree
-`oideachais.cianfhoghlaim.dlt.common._http_factories` module — see that
-file for the contract.
-"""
-
-# Install the `shared` alias *before* importing the other sub-modules
-# so any DLT source that does `from shared.http import …` resolves.
-import sys as _sys
-import types as _types
-
-from cianfhoghlaim.dlt.common import _http_factories as _http_factories
-from cianfhoghlaim.dlt.common import _shared_utils_stub as _shared_utils_stub
-
-# shared package root
-if "shared" not in _sys.modules:
-    _pkg = _types.ModuleType("shared")
-    _pkg.__path__ = []  # type: ignore[attr-defined]
-    _sys.modules["shared"] = _pkg
-
-# shared.http — re-export of _http_factories
-_sys.modules.setdefault("shared.http", _http_factories)
-_sys.modules.setdefault("shared.utils", _shared_utils_stub)
-
-# NEW 2026-07-06 (2026-07-06-wire-dlthub-platform-toolkits-and-deployment):
-# alias the bare `common` module name to the in-tree
-# `cianfhoghlaim.dlt.common` so legacy DLT sources that do
-# `from common.firecrawl_source import crawl_website` keep resolving.
-# The historical `shared` alias above exists for the same reason — see
-# docs/agents/dlthub-run-vs-serve.md for the full diagnostic tree.
-# NB: this must be a fresh top-level ModuleType, not a self-reference to
-# `cianfhoghlaim.dlt.common`, because the package's `__name__` is the
-# fully-qualified path.
-if "common" not in _sys.modules:
-    _common_pkg = _types.ModuleType("common")
-    _common_pkg.__path__ = []  # type: ignore[attr-defined]
-    _sys.modules["common"] = _common_pkg
-# Re-export the in-tree sub-modules under `common.<name>` so legacy imports
-# of the form `from common.firecrawl_source import …` resolve.
-from cianfhoghlaim.dlt.common import firecrawl_source as _firecrawl_source  # noqa: F401
-from cianfhoghlaim.dlt.common import incremental as _incremental  # noqa: F401
-_sys.modules.setdefault("common.firecrawl_source", _firecrawl_source)
-_sys.modules.setdefault("common.incremental", _incremental)
-
-from .firecrawl_source import (  # noqa: E402
-    crawl_website,
-    create_firecrawl_source,
-    get_firecrawl_client,
-    map_urls,
-    scrape_page,
-)
-from .incremental import (
-    LEVEL_EQUIVALENCES,
-    IncrementalCrawlState,
-    add_curriculum_metadata,
-    compute_content_hash,
-    create_incremental_resource,
-    get_equivalent_levels,
-    make_deduplication_key,
-    with_change_detection,
+from cianfhoghlaim.dlt.common.endpoint_recovery import (
+    BackendUsed,
+    EndpointRecoveryStrategy,
+    PROBE_LIST,
+    RecoveredPage,
+    declare_asset_check,
+    fetch,
+    probe_all_39,
 )
 
 __all__ = [
-    "LEVEL_EQUIVALENCES",
-    "IncrementalCrawlState",
-    "add_curriculum_metadata",
-    # Incremental loading utilities
-    "compute_content_hash",
-    "crawl_website",
-    # Firecrawl utilities
-    "create_firecrawl_source",
-    "create_incremental_resource",
-    "get_equivalent_levels",
-    "get_firecrawl_client",
-    "make_deduplication_key",
-    "map_urls",
-    "scrape_page",
-    "with_change_detection",
+    "BackendUsed",
+    "EndpointRecoveryStrategy",
+    "PROBE_LIST",
+    "RecoveredPage",
+    "declare_asset_check",
+    "fetch",
+    "probe_all_39",
 ]

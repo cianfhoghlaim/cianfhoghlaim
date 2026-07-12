@@ -406,3 +406,183 @@ function LinkStoryToPlaces(
     Return a list of Logainm IDs.
   "#
 }
+
+// ============================================================================
+// MANUSCRIPT RECORD + BOUNDING BOX ALIGNMENT (added 2026-07-17)
+// ============================================================================
+
+// Unified manuscript record across all 4 Dúchas collections (cbe/cbes/cbeg/cbef)
+class DuchasManuscriptRecord {
+  page_id string @description("Canonical page ID (e.g., cbes/0460/6492)")
+  collection DuchasCollection @description("Which collection this page belongs to")
+  volume_id int @description("Volume ID")
+  page_number int @description("Page number within volume")
+  image_url string @description("URL to the digitised manuscript page image")
+  image_width_px int @description("Image width in pixels")
+  image_height_px int @description("Image height in pixels")
+  school DuchasSchool? @description("For CBES: school that created the manuscript")
+  primary_language string @description("Primary language of the manuscript (ga or en)")
+  ga_text string? @description("Manuscript text in Irish (if any)")
+  en_translation string? @description("English translation (if available)")
+  topic_codes HandbookTopicCode[] @description("Handbook of Irish Folklore topic classifications")
+  collector DuchasPersonName? @description("Student collector (CBES only)")
+  informant DuchasPersonName? @description("Story informant (if specified)")
+  teacher DuchasPersonName? @description("Supervising teacher (CBES only)")
+  transcription_confidence float? @description("OCR confidence 0-1")
+  human_verified bool @description("Whether the transcription was human-verified")
+}
+
+// A single bounding box at one of the 5 layout levels
+class DuchasBoundingBox {
+  page_id string @description("Canonical page ID (links to DuchasManuscriptRecord.page_id)")
+  level string @description("One of: page, region, sentence, word, letter")
+  parent_bbox_id string? @description("Bounding box ID of the parent (region > sentence > word > letter)")
+  bbox_id string @description("Unique bounding box ID")
+  x1 int @description("Left edge (px)")
+  y1 int @description("Top edge (px)")
+  x2 int @description("Right edge (px)")
+  y2 int @description("Bottom edge (px)")
+  text string? @description("Text content within this bbox (NULL if region/letter level)")
+  ga_text string? @description("Irish text within this bbox (NULL if EN-only or pre-letter)")
+  en_translation string? @description("English translation within this bbox (NULL if GA-only)")
+  confidence float? @description("OCR confidence 0-1 (NULL if not measured)")
+  handwritten bool @description("True if handwritten (vs typeset)")
+}
+
+// A transcribed line (the LLM/vision model output before bbox alignment)
+class DuchasTranscriptionLine {
+  page_id string @description("Canonical page ID")
+  line_number int @description("Line number within page (1-indexed)")
+  ga_text string @description("Irish text of this line")
+  en_translation string? @description("English translation of this line (NULL if GA-only)")
+  confidence float @description("OCR confidence 0-1")
+  handwritten bool @description("True if handwritten")
+  // Approximate bbox (the vision model gives a rough position; bbox alignment refines this)
+  approx_x1 int? @description("Approximate left edge (px)")
+  approx_y1 int? @description("Approximate top edge (px)")
+  approx_x2 int? @description("Approximate right edge (px)")
+  approx_y2 int? @description("Approximate bottom edge (px)")
+}
+
+// ============================================================================
+// NEW EXTRACTION FUNCTIONS (added 2026-07-17 for the gaois-celtic-language-pipeline-v1 change)
+// ============================================================================
+
+// Parse a Dúchas manuscript page (image + transcript) into a unified record
+// Uses `molmo2-8b` (diagram pointing) + `dots-ocr` (layout) via LlamaSwap routing.
+function ExtractDuchasManuscript(
+  xml_record: string,
+  image_path: string?
+) -> DuchasManuscriptRecord {
+  client LlamaSwapReasoningClient
+  prompt #"
+    Parse this Dúchas (National Folklore Collection) manuscript record.
+
+    {{ ctx.output_format }}
+
+    XML metadata:
+    {{ xml_record }}
+
+    {% if image_path %}
+    Manuscript page image: {{ image_path }}
+
+    Inspect the image to:
+    - Determine the manuscript page dimensions (width × height in pixels)
+    - Identify the primary language (ga or en)
+    - Transcribe any visible handwritten text (preserve fadas: á é í ó ú)
+    - Provide an English translation if requested
+    - Classify per the Handbook of Irish Folklore topic codes (A-N)
+    - Estimate OCR confidence 0-1
+    {% endif %}
+
+    Important:
+    - Preserve Irish text with fadas
+    - Link place IDs to Logainm
+    - If transcription is human-verified, set human_verified=true
+    - If no image is available, work from XML metadata only
+  "#
+}
+
+// Extract 5-level bounding box alignment from a handwritten manuscript page
+// Uses `dots-ocr` (layout specialist) via LlamaSwap routing. Returns the
+// hierarchical bbox tree (page → region → sentence → word → letter).
+function ExtractDuchasImageBoundingBox(
+  image_path: string,
+  transcript: string,
+  collection: DuchasCollection
+) -> DuchasBoundingBox[] {
+  client LlamaSwapReasoningClient
+  prompt #"
+    Extract the 5-level bounding box layout from this handwritten manuscript page.
+
+    {{ ctx.output_format }}
+
+    Manuscript page image: {{ image_path }}
+    Collection: {{ collection }}
+
+    Existing transcript (for alignment):
+    {{ transcript }}
+
+    Return the bounding boxes at ALL 5 levels where available:
+    1. **page** (1 box, full page extent)
+    2. **region** (paragraph-level, multiple per page)
+    3. **sentence** (1+ per region)
+    4. **word** (1+ per sentence)
+    5. **letter** (1+ per word, only if legible; NULL otherwise)
+
+    Each bbox MUST carry:
+    - `bbox_id` (e.g., "page:cbes:0460:6492:page", "region:cbes:0460:6492:r1", "sentence:cbes:0460:6492:r1:s1", "word:cbes:0460:6492:r1:s1:w3", "letter:cbes:0460:6492:r1:s1:w3:l2")
+    - `parent_bbox_id` linking to the parent level
+    - `bbox` coordinates in pixels (x1, y1, x2, y2)
+    - `text` for sentence/word level (NULL for region/letter)
+    - `ga_text` + `en_translation` for sentence/word level
+    - `confidence` 0-1
+    - `handwritten=true` for handwritten pages
+
+    Important:
+    - For the `dots-ocr` layout specialist, prefer region-level bbox when
+      letter-level is unavailable
+    - Use `LlamaSwap client=LlamaSwapReasoningClient` to dispatch through
+      the canonical OCR/VLM registry
+    - Empty `letter_bbox` rows when the manuscript is too low-quality for
+      letter-level alignment (NULL fallback)
+  "#
+}
+
+// Extract a transcription line-by-line from a handwritten manuscript page
+// Uses `qwen3-vl-8b` (workhorse VLM) via LlamaSwap routing.
+function ExtractDuchasTranscription(
+  handwritten_image: string,
+  collection: DuchasCollection,
+  language_hint: string?
+) -> DuchasTranscriptionLine[] {
+  client LlamaSwapReasoningClient
+  prompt #"
+    Transcribe this handwritten manuscript page line-by-line.
+
+    {{ ctx.output_format }}
+
+    Manuscript page image: {{ handwritten_image }}
+    Collection: {{ collection }}
+    {% if language_hint %}
+    Language hint: {{ language_hint }} (either "ga" for Irish or "en" for English)
+    {% endif %}
+
+    For each line of text on the page, return:
+    - `line_number` (1-indexed)
+    - `ga_text` (preserve fadas: á é í ó ú)
+    - `en_translation` (if requested and the line is in Irish)
+    - `confidence` 0-1
+    - `handwritten=true` (always true for Dúchas manuscripts)
+    - Approximate bbox (the rough position the vision model gives;
+      the ExtractDuchasImageBoundingBox step refines this)
+
+    Important:
+    - Lines with only Irish should have NULL `en_translation`
+    - Lines with only English should have NULL `ga_text`
+    - Skip empty lines (whitespace-only)
+    - Preserve page-number annotations (e.g., "— 42 —") as separate lines
+    - Use the `LlamaSwap` client + `LlamaSwapReasoningClient` for the
+      canonical OCR/VLM registry routing
+  "#
+}

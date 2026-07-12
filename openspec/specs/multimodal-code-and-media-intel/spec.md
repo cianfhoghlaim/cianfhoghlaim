@@ -84,7 +84,7 @@ The 5 Apps are:
 ### Requirement: All 5 Apps MUST dispatch through the canonical OCR/VLM registry
 
 All model calls SHALL route through the
-`ocianfhoghlaim.meaisinfhoghlaim.ocr.models.registry.VISION_MODELS`
+`ocianfhoghlaim.meaisinfhoghlaim.models.registry.VISION_MODELS`
 24-entry registry (Unsloth-first fallback chain: `unsloth_id` → `mlx_id`
 → `upstream_id`). No App SHALL introduce a new HuggingFace dependency
 or a new ML client. No App SHALL call a cloud API directly (the v4

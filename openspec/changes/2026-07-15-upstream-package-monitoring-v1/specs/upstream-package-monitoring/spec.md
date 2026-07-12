@@ -23,7 +23,7 @@ CocoIndex upstream surface.
   `cianfhoghlaim/scripts/upstream/lancedb_monitor.py`, and
   `cianfhoghlaim/scripts/upstream/cocoindex_monitor.py`
 - **AND** the FastAPI n8n webhook bridge SHALL exist at
-  `cianfhoghlaim/api/routes/upstream_webhook.py`
+  `cianfhoghlaim/web/hono-api/src/routes/upstream_webhook.py`
 - **AND** the Dagster breaking-change sensor SHALL exist at
   `cianfhoghlaim/orchestration/sensors/upstream_breaking_change_sensor.py`
 - **AND** all listed Python files SHALL AST-parse cleanly.

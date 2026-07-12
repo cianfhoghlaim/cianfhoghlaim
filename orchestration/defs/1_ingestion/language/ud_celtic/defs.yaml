@@ -1,0 +1,51 @@
+# Dagster L1 — UD Celtic ingestion cron (quarterly)
+# Reference: openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/
+
+type: dagster.cron
+schedule: "0 6 1 1,4,7,10 *"  # quarterly (Jan/Apr/Jul/Oct)
+execution_timezone: "UTC"
+description: >
+  Quarterly Universal Dependencies Celtic treebanks ingestion — fans out
+  to the 13 UD Celtic treebanks (UD_Irish-IDT/Cadhan/TwittIrish + 10 more).
+
+partitions:
+  - name: treebank
+    type: static
+    partition_keys:
+      - UD_Irish-IDT
+      - UD_Irish-Cadhan
+      - UD_Irish-TwittIrish
+      - UD_Scottish_Gaelic-ARCOSG
+      - UD_Welsh-CCG
+      - UD_Breton-KEB
+      - UD_Manx-Cadhan
+      - UD_Old_Irish-DipSGG
+      - UD_Old_Irish-DipWBG
+      - UD_Middle_Irish-CritMITB
+      - UD_Middle_Irish-DipMITB
+      - UD_Archaic_Irish-OGAM
+  - name: split
+    type: static
+    partition_keys:
+      - train
+      - dev
+      - test
+
+assets:
+  - name: ud_celtic_ingestion
+    group_name: language_ud_celtic
+    compute_kind: local
+    deps: []
+    config:
+      treebank: "{{ partition['treebank'] }}"
+      split: "{{ partition['split'] }}"
+    config_schema:
+      treebank:
+        type: string
+      split:
+        type: string
+    metadata:
+      layer: 1_ingestion
+      stage: language
+      source_group: ud_celtic
+      openspec_change: 2026-07-17-gaois-celtic-language-pipeline-v1
