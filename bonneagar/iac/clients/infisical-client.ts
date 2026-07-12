@@ -1,172 +1,128 @@
-// bonnegar/iac/clients/infisical-client.ts — Infisical client (uses @infisical/sdk)
-// The 10 methods for managing secrets, environments, folders, projects, and machine identities.
+// bonneagar/iac/clients/infisical-client.ts — High-level Infisical client (uses infisical-rest.ts)
+//
+// Bypasses the buggy @infisical/sdk v5.0.2. Promotes the working direct-REST
+// pattern from the legacy `fetchInfisicalSecret` function in
+// `iac/commands/rotate-auth.ts` into a proper client.
+//
+// Backwards-compat shim: this file keeps the original class-based API
+// (`InfisicalClient`) but delegates everything to the new REST helpers.
 
-import { InfisicalSDK as SdkInfisicalClient } from "@infisical/sdk";
-import { CONFIG, requireInfisicalAuth } from "../config.ts";
+import {
+  infisicalLogin,
+  infisicalListProjects,
+  infisicalGetProject,
+  infisicalListSecrets,
+  infisicalGetSecret,
+  infisicalCreateSecret,
+  infisicalUpdateSecret,
+  infisicalDeleteSecret,
+  infisicalListMachineIdentities,
+  infisicalCreateMachineIdentity,
+  infisicalCreateMachineIdentitySecret,
+  infisicalHealth,
+  infisicalGetUserCount,
+  discoverInfisicalUrl,
+} from "./infisical-rest.ts";
+
 import type {
   InfisicalProject,
-  InfisicalEnvironment,
-  InfisicalFolder,
   InfisicalSecret,
   InfisicalMachineIdentity,
-} from "../models/infisical.ts";
+  InfisicalAuth,
+} from "./infisical-rest.ts";
+
+// Re-export for backwards compat with anything that imported these types
+// from this file (vs the new infisical-rest.ts).
+export type { InfisicalProject, InfisicalSecret, InfisicalMachineIdentity, InfisicalAuth };
+
+// ---------------------------------------------------------------------------
+// Class wrapper (legacy API — kept for backwards compat)
+// ---------------------------------------------------------------------------
 
 export class InfisicalClient {
-  private sdk: SdkInfisicalClient;
+  private baseUrl: string;
+  private auth: InfisicalAuth;
 
-  constructor() {
-    const auth = requireInfisicalAuth();
-    this.sdk = new SdkInfisicalClient({
-      siteUrl: CONFIG.infisicalUrl,
-      // The SDK accepts either a static token OR client_id + client_secret
-      ...(auth && "token" in auth
-        ? { token: auth.token }
-        : { clientId: (auth as { clientId: string }).clientId, clientSecret: (auth as { clientSecret: string }).clientSecret }),
-    });
+  constructor(opts?: { baseUrl?: string; auth?: InfisicalAuth }) {
+    this.baseUrl = opts?.baseUrl ?? discoverInfisicalUrl();
+    this.auth = opts?.auth ?? {
+      clientId: process.env.INFISICAL_UNIVERSAL_AUTH_CLIENT_ID ?? "",
+      clientSecret: process.env.INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET ?? "",
+    };
   }
 
-  // -----------------------------------------------------------------------
-  // Projects
-  // -----------------------------------------------------------------------
-  async listProjects(): Promise<InfisicalProject[]> {
-    const { projects } = await this.sdk.listProjects();
-    return projects.map((p) => ({ id: p.id, name: p.name, slug: p.slug, description: p.description }));
-  }
-  async getProject(slug: string): Promise<InfisicalProject> {
-    const p = await this.sdk.getProject({ projectId: slug });
-    return { id: p.project.id, name: p.project.name, slug: p.project.slug, description: p.project.description };
+  async login(): Promise<string> {
+    const t = await infisicalLogin(this.baseUrl, this.auth);
+    return t.accessToken;
   }
 
-  // -----------------------------------------------------------------------
-  // Environments
-  // -----------------------------------------------------------------------
-  async listEnvironments(projectId: string): Promise<InfisicalEnvironment[]> {
-    const { environments } = await this.sdk.listEnvironments({ projectId });
-    return environments.map((e) => ({ id: e.id, name: e.name, slug: e.slug, projectId }));
-  }
-  async createEnvironment(projectId: string, name: string, slug: string): Promise<InfisicalEnvironment> {
-    const e = await this.sdk.createEnvironment({ projectId, name, slug });
-    return { id: e.environment.id, name: e.environment.name, slug: e.environment.slug, projectId };
-  }
+  listProjects = infisicalListProjects;
+  getProject = infisicalGetProject;
+  listSecrets = infisicalListSecrets;
+  getSecret = infisicalGetSecret;
+  createSecret = infisicalCreateSecret;
+  updateSecret = infisicalUpdateSecret;
+  deleteSecret = infisicalDeleteSecret;
+  listMachineIdentities = infisicalListMachineIdentities;
+  createMachineIdentity = infisicalCreateMachineIdentity;
+  createMachineIdentitySecret = infisicalCreateMachineIdentitySecret;
+  health = infisicalHealth;
+  getUserCount = infisicalGetUserCount;
+}
 
-  // -----------------------------------------------------------------------
-  // Folders
-  // -----------------------------------------------------------------------
-  async listFolders(projectId: string, environment: string): Promise<InfisicalFolder[]> {
-    const { folders } = await this.sdk.listFolders({ projectId, environment });
-    return folders.map((f) => ({ id: f.id, name: f.name, path: f.path, environmentId: f.environment, projectId }));
-  }
-  async createFolder(projectId: string, environment: string, name: string, path: string = "/"): Promise<InfisicalFolder> {
-    const f = await this.sdk.createFolder({ projectId, environment, name, path });
-    return { id: f.folder.id, name: f.folder.name, path: f.folder.path, environmentId: f.folder.environment, projectId };
-  }
+// ---------------------------------------------------------------------------
+// Auth check helper (used by iac:health + iac:bootstrap)
+// ---------------------------------------------------------------------------
 
-  // -----------------------------------------------------------------------
-  // Secrets
-  // -----------------------------------------------------------------------
-  async listSecrets(projectId: string, environment: string, path: string = "/"): Promise<InfisicalSecret[]> {
-    const { secrets } = await this.sdk.listSecrets({ projectId, environment, secretPath: path });
-    return secrets.map((s) => ({
-      id: s.id,
-      key: s.secretKey,
-      value: s.secretValue,
-      path: s.secretPath,
-      environment,
-      projectId,
-      type: s.type === 2 ? "personal" : "shared",
+/**
+ * Verify the current Infisical auth works AND report which machine identities
+ * are seeded. Returns a report structure for the iac:health 7-way check.
+ */
+export async function infisicalAuthReport(baseUrl: string = discoverInfisicalUrl()): Promise<{
+  healthy: boolean;
+  detail: string;
+  identities: { name: string; present: boolean; id?: string }[];
+  url: string;
+}> {
+  const requiredIdentities = [
+    "bons-iac",
+    "pocket-id",
+    "komodo",
+    "pangolin",
+    "tinyauth",
+    "openclaw",
+    "openchamber",
+    "hermes",
+  ];
+
+  try {
+    const health = await infisicalHealth(baseUrl);
+    if (!health.healthy) {
+      return { healthy: false, detail: health.detail, identities: [], url: baseUrl };
+    }
+    const projectId = process.env.INFISICAL_PROJECT_ID ?? "f3cff583-b74b-4804-b9d3-db8b68885236";
+    const present = await infisicalListMachineIdentities(projectId, baseUrl);
+    const presentNames = new Set(present.map((i) => i.name));
+    const identities = requiredIdentities.map((name) => ({
+      name,
+      present: presentNames.has(name),
+      id: present.find((i) => i.name === name)?.id,
     }));
-  }
-  async getSecret(projectId: string, environment: string, key: string, path: string = "/"): Promise<InfisicalSecret | null> {
-    try {
-      const s = await this.sdk.getSecret({ secretName: key, projectId, environment, secretPath: path });
-      return {
-        id: s.id,
-        key: s.secretKey,
-        value: s.secretValue,
-        path: s.secretPath,
-        environment,
-        projectId,
-      };
-    } catch (e) {
-      if ((e as Error).message.includes("404")) return null;
-      throw e;
-    }
-  }
-  async createSecret(opts: InfisicalSecret): Promise<InfisicalSecret> {
-    const s = await this.sdk.createSecret({
-      projectId: opts.projectId,
-      environment: opts.environment,
-      secretName: opts.key,
-      secretValue: opts.value,
-      secretPath: opts.path,
-      type: opts.type === "personal" ? "personal" : "shared",
-    });
-    return { ...opts, id: s.id };
-  }
-  async updateSecret(opts: InfisicalSecret): Promise<InfisicalSecret> {
-    const s = await this.sdk.updateSecret(opts.key, {
-      projectId: opts.projectId,
-      environment: opts.environment,
-      secretValue: opts.value,
-      secretPath: opts.path,
-    });
-    return { ...opts, id: s.id };
-  }
-  async deleteSecret(projectId: string, environment: string, key: string, path: string = "/"): Promise<void> {
-    await this.sdk.deleteSecret({ secretName: key, projectId, environment, secretPath: path });
-  }
-
-  // -----------------------------------------------------------------------
-  // Machine identities
-  // -----------------------------------------------------------------------
-  async listMachineIdentities(projectId: string): Promise<InfisicalMachineIdentity[]> {
-    // The SDK doesn't yet have a high-level list method; use the raw API
-    const auth = requireInfisicalAuth();
-    const token = "token" in auth ? auth.token : await this.login();
-    const r = await fetch(`${CONFIG.infisicalUrl}/api/v1/auth/machine-identities?projectId=${projectId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!r.ok) throw new Error(`infisical list identities failed: ${r.status} ${await r.text()}`);
-    const data = (await r.json()) as { identities: Array<{ id: string; name: string }> };
-    return data.identities.map((i) => ({ id: i.id, name: i.name, projectId }));
-  }
-  async createMachineIdentity(opts: { name: string; projectId: string; permissions?: string[] }): Promise<InfisicalMachineIdentity> {
-    // The SDK doesn't yet have a high-level create method; use the raw API
-    const auth = requireInfisicalAuth();
-    const token = "token" in auth ? auth.token : await this.login();
-    const r = await fetch(`${CONFIG.infisicalUrl}/api/v1/auth/machine-identities`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ name: opts.name, projectId: opts.projectId }),
-    });
-    if (!r.ok) throw new Error(`infisical create identity failed: ${r.status} ${await r.text()}`);
-    const data = (await r.json()) as { identity: { id: string; name: string; clientId: string; clientSecret: string } };
-    return { id: data.identity.id, name: data.identity.name, projectId: opts.projectId, clientId: data.identity.clientId, clientSecret: data.identity.clientSecret };
-  }
-
-  // -----------------------------------------------------------------------
-  // Internal
-  // -----------------------------------------------------------------------
-  private async login(): Promise<string> {
-    // Use Universal Auth (clientId + clientSecret → JWT)
-    const auth = requireInfisicalAuth();
-    if ("token" in auth) return auth.token;
-    const r = await fetch(`${CONFIG.infisicalUrl}/api/v1/auth/universal-auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clientId: auth.clientId, clientSecret: auth.clientSecret }),
-    });
-    if (!r.ok) throw new Error(`infisical login failed: ${r.status} ${await r.text()}`);
-    const data = (await r.json()) as { accessToken: string };
-    return data.accessToken;
-  }
-
-  async health(): Promise<{ healthy: boolean; detail: string }> {
-    try {
-      const r = await fetch(`${CONFIG.infisicalUrl}/api/status`);
-      return { healthy: r.ok, detail: `infisical status: ${r.status}` };
-    } catch (e) {
-      return { healthy: false, detail: (e as Error).message };
-    }
+    const missing = identities.filter((i) => !i.present).map((i) => i.name);
+    return {
+      healthy: missing.length === 0,
+      detail: missing.length === 0
+        ? `infisical: ${present.length} machine identities seeded (${requiredIdentities.length} required)`
+        : `infisical: missing machine identities: ${missing.join(", ")} (run: bun run iac:bootstrap-infisical)`,
+      identities,
+      url: baseUrl,
+    };
+  } catch (e) {
+    return {
+      healthy: false,
+      detail: `infisical auth check failed: ${(e as Error).message}`,
+      identities: [],
+      url: baseUrl,
+    };
   }
 }

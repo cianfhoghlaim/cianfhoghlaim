@@ -48,12 +48,16 @@ export async function health() {
     allOk = false;
   }
 
-  // 3. Infisical
+  // 3. Infisical (HTTP-only check + machine-identity report)
   try {
-    const infisical = await ensureInfisicalAuth();
-    const h = await infisical.health();
-    if (h.healthy) logOk(`infisical: ${h.detail}`);
-    else { logError("infisical", h.detail); allOk = false; }
+    const { infisicalAuthReport } = await import("../clients/infisical-client.ts");
+    const r = await infisicalAuthReport();
+    if (r.healthy) {
+      logOk(r.detail);
+    } else {
+      logError(r.detail);
+      allOk = false;
+    }
   } catch (e) {
     logError("infisical", e);
     allOk = false;

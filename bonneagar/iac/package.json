@@ -10,9 +10,12 @@
   },
   "scripts": {
     "bootstrap": "bun run cli.ts bootstrap",
+    "bootstrap-pocketid-admin": "bun run cli.ts bootstrap-pocketid-admin",
+    "bootstrap-infisical": "bun run cli.ts bootstrap-infisical",
     "plan": "bun run cli.ts plan",
     "deploy": "bun run cli.ts deploy",
     "health": "bun run cli.ts health",
+    "rotate-auth": "bun run cli.ts rotate-auth",
     "teardown": "bun run cli.ts teardown --force",
     "sync:secrets": "bun run cli.ts sync:secrets",
     "sync:resources": "bun run cli.ts sync:resources",
