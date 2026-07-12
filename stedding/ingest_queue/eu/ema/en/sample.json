@@ -1,0 +1,20 @@
+{
+  "medicine_id": "EMEA/H/C/000001",
+  "language": "en",
+  "medicine_name": "Sample Medicine X",
+  "active_substance": "sample-substance",
+  "atc_code": "L01XX01",
+  "authorisation_status": "authorised",
+  "title": "EPAR — Sample Medicine X",
+  "source_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/sample-medicine-x",
+  "content_hash": "sha256:0000000000000003",
+  "document_type": "epar",
+  "institution": "ema",
+  "region": "european_union",
+  "official_status": "in_force",
+  "metadata": {
+    "sourceURL": "https://www.ema.europa.eu/en/medicines/human/EPAR/sample-medicine-x",
+    "title": "EPAR — Sample Medicine X",
+    "medicine_id": "EMEA/H/C/000001"
+  }
+}

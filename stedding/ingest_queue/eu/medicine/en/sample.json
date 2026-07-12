@@ -1,0 +1,15 @@
+{
+  "document_id": "EU-MEDICINE-EN-2024-001",
+  "language": "en",
+  "title": "Sample ECDC Surveillance document (en) for bilingual alignment",
+  "publication_date": "2024-09-01",
+  "source_url": "https://example.eu/medicine/en-sample",
+  "content_hash": "sha256:000000000000medicien",
+  "metadata": {
+    "sourceURL": "https://example.eu/medicine/en-sample",
+    "title": "Sample ECDC Surveillance document (en)",
+    "publication_date": "2024-09-01",
+    "document_id": "EU-MEDICINE-EN-2024-001",
+    "language_coverage": "full"
+  }
+}

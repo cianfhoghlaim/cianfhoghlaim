@@ -1,0 +1,34 @@
+# defs/1_ingestion/european_nations/fra/education/subjects/chemistry/defs.yaml
+#
+# L1 CelticIngestionComponent for the France Chemistry
+# per-subject DLT source (BIEP parity pattern).
+#
+# Reference: openspec/changes/2026-07-15-eu-pilot-upgrade-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_fra_chemistry
+  module: cianfhoghlaim.dlt.european_nations.fra.education.subjects.chemistry.chemistry
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - jurisdiction:
+        values: ["fra"]
+    - subject:
+        values: ["chemistry"]
+    - language:
+        values: ["fr", "en"]
+  use_local_scrapes: true
+  asset_check: european_nations_fra_chemistry_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - fra
+    - chemistry
+    - education
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-15-eu-pilot-upgrade-v1
+    spec: european-nations-ukraine-pipeline
+    country_name: "France"
+    official_languages: ["fr", "en"]
