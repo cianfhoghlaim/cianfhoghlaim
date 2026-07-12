@@ -2,15 +2,17 @@
 # Single consolidated code-location — see
 # openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4
 # All 5 former code-locations (oideachais, meaisinfhoghlaim, tuatha, croilar,
-# crypteolas + browser) are now assets in cianfhoghlaim/assets/ and registered
-# via cianfhoghlaim/assets/definitions.py.
+# crypteolas + browser) are now assets in assets/ and registered
+# via assets/definitions.py. Post-v7 (2026-07-17), the package is the
+# repo itself, so the location is at the repo root.
 
 directory_type = "workspace"
 
 [workspace]
 
 # Single consolidated code-location: the entire cianfhoghlaim package.
-# Module: cianfhoghlaim.dagster.definitions exposes (post-Phase-1 fix 2026-06-30):
+# Module: assets.definitions exposes (post-Phase-1 fix 2026-06-30, post-v7
+# flatten 2026-07-17):
 #   - 199 assets across Ireland education (5 cycles × EN/GA), leabharlann,
 #     OCR/HTR, geospatial, model conversion, ML training, mythology
 #   - 31 jobs, 6 schedules, 16 sensors, 22 asset checks
@@ -18,9 +20,10 @@ directory_type = "workspace"
 #   - DLT source wrappers, dbt-duckdb project, CocoIndex v1 Apps
 # Note: prior versions referenced `cianfhoghlaim.assets.definitions` which
 # never existed on disk — that path was a v4-consolidation wiring bug.
+# Post-v7, the module_name is just `assets.definitions` (no prefix).
 # See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
-# (Phase 1, T1.7).
+# (Phase 1, T1.7) and openspec/changes/2026-07-17-v7-flatten-.../.
 [[workspace.locations]]
-path = "cianfhoghlaim"
+path = "."
 code_location_name = "cianfhoghlaim"
-module_name = "cianfhoghlaim.dagster.definitions"
+module_name = "assets.definitions"
