@@ -135,7 +135,7 @@ The Cianfhoghlaim platform has **48 capability specs** organised into
 | `agentic-frontend-frameworks` | shared | TanStack Start + CopilotKit + AG-UI + Hono + Convex |
 | `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | `infrastructure-stacks` | shared | 94 Docker Compose stacks at `bonneagar/stacks/` + stack-doctor.sh + Pangolin + Infisical + Locket |
-| `data-engineering-pipeline-documentation` | shared | cianfhoghlaim/STATUS.md + cianfhoghlaim/REFACTORING.md + per-area READMEs |
+| `data-engineering-pipeline-documentation` | shared | STATUS.md + REFACTORING.md + per-area READMEs |
 | `british-isles-education-pipeline` | cianfhoghlaim | 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + gov.ie DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
 | `agent-platform-cluster` | shared | 8-stack cluster (lakehouse + litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb) + 3 agent surfaces (openclaw + openchamber + hermes); LiteLLM is the M3 chokepoint |
 | `apple-photos-ingestion` | cianfhoghlaim | 5th leabharlann corpus via osxphotos → 3 v1 CocoIndex Apps (metadata + chunks + geospatial) + 5 Dagster assets + 2 routing + 1 cross-frame velocity; privacy gate `LEABHARLANN_PHOTOS_INCLUDE_GPS` (default false) |
@@ -148,20 +148,22 @@ The Cianfhoghlaim platform has **48 capability specs** organised into
 | `documentation` | tooling | Canonical docs/ structure (8 numbered domains), frontmatter schema |
 | `dev-env-demo-tools` | shared | 8 `FunctionTool`-wrapped dev-env capabilities (`ccc_search`, `ccc_index`, `drift_detect`, `firecrawl_refactor_discover`, `hf_best_model`, `openspec_list_specs`, `openspec_validate`, `mise_lint_skills`) + `dev_env_demo_agent` + 6 marimo notebooks + recorded transcript at `docs/agents/dev-env-demo-transcript.md` |
 
-### Quadrant map (1 consolidated package — v4)
+### Quadrant map (post-v7 — single flattened package)
 
-> **NOTE:** As of 2026-06-28 (the `2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4` change),
-> the 4 quadrants (oideachais, meaisinfhoghlaim, tuatha, croilar) + browser + crypteolas
-> have been consolidated into a single `cianfhoghlaim/` package. The 4 former quadrant
-> AGENTS.md files are preserved at their new in-package locations for backward navigation.
+> **NOTE:** As of 2026-07-17 (the
+> `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`
+> change), the post-v4 `cianfhoghlaim/` nesting is removed — the
+> Python package is the repo itself. The 4 former quadrant
+> AGENTS.md files live directly under their respective sub-packages.
 
 | Package | Path | Wheel name | README | AGENTS.md |
 |:--|:--|:--|:--|:--|
-| **Cianfhoghlaim** (consolidated) | `cianfhoghlaim/` | `cianfhoghlaim` (uv) + `codeolas` (uv sub-package) | `cianfhoghlaim/README.md` | `cianfhoghlaim/AGENTS.md` |
-| **Oideachais sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/web/apps/oideachais-web/` + `core/baml/_oideachais_src/` + `assets/_oideachais_dagster_defs/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/web/apps/_oideachais_apps/README.md` | `cianfhoghlaim/web/apps/_oideachais_apps/AGENTS.md` |
-| **Meaisínfhoghlaim sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/agents/meaisinfhoghlaim/` + `ocr/_meaisinfhoghlaim_src/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/agents/meaisinfhoghlaim/README.md` | `cianfhoghlaim/agents/meaisinfhoghlaim/AGENTS.md` |
-| **Tuatha sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/agents/tuatha/` + `web/apps/tuatha-ui/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/agents/tuatha/README.md` | `cianfhoghlaim/agents/tuatha/AGENTS.md` |
-| **Croílár sub-tree** (in cianfhoghlaim) | `cianfhoghlaim/web/apps/croilar-web/` + `assets/_croilar_dagster/` | (part of `cianfhoghlaim`) | `cianfhoghlaim/web/apps/_croilar_apps/README.md` | `cianfhoghlaim/web/apps/_croilar_apps/AGENTS.md` |
+| **Cianfhoghlaim** (post-v7 flat) | `.` (repo root) | `cianfhoghlaim` (uv) | `README.md` | `AGENTS.md` |
+| **Oideachais sub-tree** (in this repo) | `web/apps/oideachais-web/` + `baml/education/` + `orchestration/` | (part of `cianfhoghlaim`) | `web/apps/_oideachais_apps/README.md` | `web/apps/_oideachais_apps/AGENTS.md` |
+| **Meaisínfhoghlaim sub-tree** (in this repo) | `agents/meaisinfhoghlaim/` + `meaisinfhoghlaim/ocr/` | (part of `cianfhoghlaim`) | `agents/meaisinfhoghlaim/README.md` | `agents/meaisinfhoghlaim/AGENTS.md` |
+| **Tuatha sub-tree** (in this repo) | `agents/tuatha/` + `web/apps/tuatha-ui/` | (part of `cianfhoghlaim`) | `agents/tuatha/README.md` | `agents/tuatha/AGENTS.md` |
+| **Croílár sub-tree** (in this repo) | `web/apps/croilar-web/` + `croilar/` | (part of `cianfhoghlaim`) | `web/apps/_croilar_apps/README.md` | `web/apps/_croilar_apps/AGENTS.md` |
+| **Bonneagar** (IaC sub-dir, in this repo) | `bonneagar/` (subdirectory) | (none — TypeScript IaC) | `bonneagar/README.md` | `bonneagar/AGENTS.md` |
 
 ## Adding a New Capability
 
@@ -197,10 +199,10 @@ When a change introduces a new capability (not a MODIFIED of an existing one), f
 - [`../.agents/skills/stack-ops/SKILL.md`](../.agents/skills/stack-ops/SKILL.md) — operational skill for adding/fixing stacks
 - [`../.agents/skills/chunkhound/SKILL.md`](../.agents/skills/chunkhound/SKILL.md) — semantic code search
 - [`../AGENTS.md`](../AGENTS.md) — root agent instructions
-- [`../cianfhoghlaim/web/apps/_oideachais_apps/AGENTS.md`](../cianfhoghlaim/web/apps/_oideachais_apps/AGENTS.md) — oideachais quadrant
-- [`../cianfhoghlaim/agents/meaisinfhoghlaim/AGENTS.md`](../cianfhoghlaim/agents/meaisinfhoghlaim/AGENTS.md) — meaisinfhoghlaim quadrant *(if missing, see Cianfhoghlaim root AGENTS.md)*
-- [`../cianfhoghlaim/agents/tuatha/AGENTS.md`](../cianfhoghlaim/agents/tuatha/AGENTS.md) — tuatha quadrant
-- [`../cianfhoghlaim/web/apps/_croilar_apps/AGENTS.md`](../cianfhoghlaim/web/apps/_croilar_apps/AGENTS.md) — croilar quadrant
+- [`../web/apps/_oideachais_apps/AGENTS.md`](../web/apps/_oideachais_apps/AGENTS.md) — oideachais quadrant
+- [`../agents/meaisinfhoghlaim/AGENTS.md`](../agents/meaisinfhoghlaim/AGENTS.md) — meaisinfhoghlaim quadrant *(if missing, see Cianfhoghlaim root AGENTS.md)*
+- [`../agents/tuatha/AGENTS.md`](../agents/tuatha/AGENTS.md) — tuatha quadrant
+- [`../web/apps/_croilar_apps/AGENTS.md`](../web/apps/_croilar_apps/AGENTS.md) — croilar quadrant
 
 ## Cross-repo sync convention
 
@@ -238,4 +240,4 @@ The change CANNOT archive until the blocker archives. The
 for sequencing but does not enforce archiving.
 
 If the change has no dependencies, declare `Blocked by: none`.
-- [`../cianfhoghlaim/AGENTS.md`](../cianfhoghlaim/AGENTS.md) — the consolidated cianfhoghlaim AGENTS.md (post-v4)
+- [`../AGENTS.md`](../AGENTS.md) — the consolidated cianfhoghlaim AGENTS.md (post-v4)

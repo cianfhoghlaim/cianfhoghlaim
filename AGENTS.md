@@ -62,9 +62,13 @@ The full inventory of 88 stacks is at
 repo owns the stack catalogue; see the `## IaC Repo Boundary`
 section below for the ownership table).
 
-## Monorepo Topology (v2 — Polyglot)
+## Monorepo Topology (v7 — Flattened Polyglot)
 
-Cianfhoghlaim is a **bun + uv + turbo polyglot monorepo**. Two language graphs live side by side, orchestrated by `turbo.json` and a single `mise.toml` toolchain.
+Cianfhoghlaim is a **bun + uv + turbo polyglot monorepo**. Two
+language graphs live side by side, orchestrated by `turbo.json`
+and a single `mise.toml` toolchain. Post-v7 (2026-07-17), the
+Python package IS the repo root — no more `cianfhoghlaim/`
+nesting.
 
 ### TypeScript graph (bun workspaces)
 
@@ -72,16 +76,18 @@ The root `package.json` declares these `workspaces` and is the only manifest bun
 
 | Workspace | Path | Purpose |
 |:--|:--|:--|
-| `oideachais-web` | `cianfhoghlaim/web/apps/oideachais-web/` | TanStack Start + React front-end (the public web app) |
-| `tuatha-ui` | `cianfhoghlaim/web/apps/tuatha-ui/` | Túatha educational MMO front-end |
-| `croilar-web` | `cianfhoghlaim/web/apps/croilar-web/` | Croílár multi-persona portfolio |
-| `croilar-portal` | `cianfhoghlaim/web/apps/croilar-portal/` | Croílár portfolio dashboard |
-| `tuatha-demo` | `cianfhoghlaim/web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
-| `game_showcase` | `cianfhoghlaim/web/apps/game_showcase/` | Web game showcase |
-| `oideachais-mcp-filesystem` | `cianfhoghlaim/web/apps/oideachais-mcp-filesystem/` | Filesystem MCP server for the data platform |
-| `hono-api` | `cianfhoghlaim/web/hono-api/` | Hono API gateway |
+| `oideachais-web` | `web/apps/oideachais-web/` | TanStack Start + React front-end (the public web app) |
+| `tuatha-ui` | `web/apps/tuatha-ui/` | Túatha educational MMO front-end |
+| `croilar-web` | `web/apps/croilar-web/` | Croílár multi-persona portfolio |
+| `croilar-portal` | `web/apps/croilar-portal/` | Croílár portfolio dashboard |
+| `tuatha-demo` | `web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
+| `game_showcase` | `web/apps/game_showcase/` | Web game showcase |
+| `oideachais-mcp-filesystem` | `web/apps/oideachais-mcp-filesystem/` | Filesystem MCP server for the data platform |
+| `hono-api` | `web/hono-api/` | Hono API gateway |
 
-There is **no** runtime business logic at the root. The root `package.json` only orchestrates: setup, turbo passthroughs, secret management, dagster, komodo/pangolin/locket glue, ccc indexing, and OpenSpec.
+The IaC (`iac:bootstrap`, `iac:health`, etc.) lives in the
+`bonneagar/` subdirectory and is reached via
+`bun run --cwd bonneagar ...`.
 
 ## CCC + Cognee dual-search diagram
 
@@ -102,14 +108,20 @@ explanation from cognee, then merges.
             Agent (merged)
 ```
 
-### Python graph (uv workspaces)
+### Python graph (uv workspace)
 
-The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no console scripts). Members:
+Post-v7, the root `pyproject.toml` IS the package — no workspace
+shell. The single Python package is `cianfhoghlaim` (uv-built from
+the repo root). Sub-packages:
 
-| Member | Path | Purpose |
+| Sub-package | Path | Purpose |
 |:--|:--|:--|
-| `cianfhoghlaim` | `cianfhoghlaim/` | Consolidated Celtic education + multi-nation + multi-language data platform |
-| `codeolas` | `cianfhoghlaim/libraries/codeolas/` | Code intelligence library (publishable sub-package) |
+| `agents` | `agents/` | The 12-agent meaisínfhoghlaim fleet + ADK shims |
+| `baml` | `baml/` | The BAML extraction schemas (LC + Celtic + multi-nation) |
+| `cocoindex` | `cocoindex/` | The CocoIndex v1 Apps (42+ flows) |
+| `dlt` | `dlt/` | DLT sources + destinations |
+| `orchestration` | `orchestration/` | Dagster assets + jobs + schedules + sensors |
+| `codeolas` | `libraries/codeolas/` | Code intelligence library (publishable sub-package) |
 
 **v4 consolidation (2026-06-28):** All 5 former quadrants
 (`sruth/oideachais`, `sruth/meaisinfhoghlaim`, `sruth/tuatha`,
@@ -118,8 +130,8 @@ The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no conso
 (see `openspec/changes/archive/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
 The 4 former quadrant `sruth/<quadrant>/AGENTS.md` files were
 retired; the consolidated cianfhoghlaim sub-tree docs are at
-`cianfhoghlaim/AGENTS.md` + the per-area sub-package AGENTS.md
-files inside `cianfhoghlaim/`.
+`AGENTS.md` + the per-area sub-package AGENTS.md
+files inside the repo.
 Plan 1 (active): Ireland (5 education stages × EN + GA) + leabharlann
 corpus (6 subdirs × 216 docs).
 
@@ -202,7 +214,7 @@ Full workflow in [`openspec/AGENTS.md`](openspec/AGENTS.md).
 
 > **Post-v4 (2026-06-28):** the 4 quadrant AGENTS.md files are
 > gone. All quadrant routing happens inside the consolidated
-> `cianfhoghlaim/AGENTS.md` (which itself links to the per-area
+> `AGENTS.md` (which itself links to the per-area
 > sub-package `AGENTS.md` files). Use the
 > `## Repo Boundary` section below for the canonical 3-repo split.
 
@@ -224,29 +236,34 @@ When the user asks "where do I add X?", route using the
 
 ## Repo Boundary
 
-The 3-repo split (post-v4 consolidation) is enforced by this
-section. When a task touches infrastructure, secrets, or the
-core agent-runtime, route to the correct repo BEFORE writing
-any code.
+The 2-repo split (post-v7 flattening) is enforced by this section.
+The `bonneagar/` IaC is now a SUBDIRECTORY of cianfhoghlaim, not a
+separate repo. The only remaining separately-managed repo is
+`leabharlann` (the 3.4 GB corpus).
 
-| Domain | Repo | Path (in cianfhoghlaim worktree) |
-|:--|:--|:--|
-| Data platform (DLT + Dagster + BAML + CocoIndex + marimo) | `cianfhoghlaim` | `cianfhoghlaim/{dlt,orchestration,baml,cocoindex,notebooks}/` |
-| Agent fleet (12 agents + OCR + BAML + LLM routing) | `cianfhoghlaim` | `cianfhoghlaim/agents/meaisinfhoghlaim/` |
-| Frontend apps (TanStack Start + Convex + Hono + CopilotKit) | `cianfhoghlaim` | `cianfhoghlaim/web/apps/*/` |
-| OpenSpec changes + specs | `cianfhoghlaim` | `openspec/` (THIS REPO) |
-| MotherDuck Dives/Flights metadata | `cianfhoghlaim` | `infrastructure/stacks/motherduck/` (sidecar only) |
-| IaC (Komodo + Pangolin + Infisical clients) | `bonneagar` | `bonneagar/iac/` (SEPARATE WORKTREE) |
-| 88 Docker Compose stacks | `bonneagar` | `bonneagar/stacks/<name>/` |
-| Komodo resource-syncs + procedures | `bonneagar` | `bonneagar/komodo/` |
-| Pangolin config | `bonneagar` | `bonneagar/pangolin/` |
-| Deploy runbooks | `bonneagar` | `bonneagar/deploy-runbooks/` |
-| Leabharlann corpus (216 docs × 6 subdirs) | `leabharlann` | `leabharlann/` (SEPARATE WORKTREE) |
+When a task touches infrastructure, secrets, or the core
+agent-runtime, route to the correct location BEFORE writing any
+code.
 
-> **Hard rule**: An agent MUST NOT write into a directory
-> owned by a different repo. If a task seems to require it,
-> create an openspec change with a `cross-repo-sync.md` file
-> that lists the commit plan for each repo.
+| Domain | Location |
+|:--|:--|
+| Data platform (DLT + Dagster + BAML + CocoIndex + marimo) | `{dlt,orchestration,baml,cocoindex,notebooks}/` |
+| Agent fleet (12 agents + OCR + BAML + LLM routing) | `agents/meaisinfhoghlaim/` |
+| Frontend apps (TanStack Start + Convex + Hono + CopilotKit) | `web/apps/*/` |
+| OpenSpec changes + specs | `openspec/` |
+| MotherDuck Dives/Flights metadata | `motherduck/` |
+| IaC (Komodo + Pangolin + Infisical clients) | `bonneagar/iac/` (IN THIS REPO) |
+| 88 Docker Compose stacks | `bonneagar/stacks/<name>/` |
+| Komodo resource-syncs + procedures | `bonneagar/komodo/` |
+| Pangolin config | `bonneagar/pangolin/` |
+| Deploy runbooks | `bonneagar/deploy-runbooks/` |
+| Leabharlann corpus (216 docs × 6 subdirs) | `leabharlann/` (SEPARATE REPO at `github.com/cianfhoghlaim/leabharlann`) |
+
+> **Hard rule**: An agent MUST NOT write into the `leabharlann/`
+> worktree from this repo (it's a separate repo with its own git
+> history). For cross-repo changes, create an openspec change with
+> a `cross-repo-sync.md` file that lists the commit plan for each
+> repo.
 
 ## OpenSpec Change Management
 
@@ -344,7 +361,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
 
-### Core Data Platform (`cianfhoghlaim/dlt/` + `cianfhoghlaim/orchestration/`)
+### Core Data Platform (`dlt/` + `orchestration/`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.
 - **Extraction**: Load [`dlt`](.agents/skills/dlt/SKILL.md). This skill router will point you to `create-filesystem-pipeline` (crucial for our `USE_LOCAL_SCRAPES` strategy) or `create-rest-api-pipeline`.
 - **Storage & Lakehouse**: Load [`motherduck`](.agents/skills/motherduck/SKILL.md). This serves as the master router to help you pick between `motherduck-ducklake` (our Garage S3 architecture), `motherduck-duckdb-sql`, or `motherduck-connect`.
@@ -355,7 +372,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Scheduling**: cal-diy (cal.com community build) at `calcom.cianfhoghlaim.ie`. Team booking page at `/team`, per-member pages at `/<member-slug>`. Outbound webhooks → n8n.
 - **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
 
-### Analytics & Notebooks (`cianfhoghlaim/notebooks/`)
+### Analytics & Notebooks (`notebooks/`)
 - **Data Exploration**: Load [`explore-data`](.agents/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
 - **Notebook Assembly**: Load [`build-notebook`](.agents/skills/build-notebook/SKILL.md) to translate the `analysis_plan.md` into a fully functional, highly reactive `marimo` Python notebook.
 
