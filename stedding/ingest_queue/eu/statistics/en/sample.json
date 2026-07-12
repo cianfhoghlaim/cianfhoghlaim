@@ -1,0 +1,15 @@
+{
+  "document_id": "EU-STATISTICS-EN-2024-001",
+  "language": "en",
+  "title": "Sample Eurostat document (en) for bilingual alignment",
+  "publication_date": "2024-09-01",
+  "source_url": "https://example.eu/statistics/en-sample",
+  "content_hash": "sha256:000000000000statisen",
+  "metadata": {
+    "sourceURL": "https://example.eu/statistics/en-sample",
+    "title": "Sample Eurostat document (en)",
+    "publication_date": "2024-09-01",
+    "document_id": "EU-STATISTICS-EN-2024-001",
+    "language_coverage": "full"
+  }
+}

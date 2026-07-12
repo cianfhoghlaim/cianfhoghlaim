@@ -1,0 +1,15 @@
+{
+  "document_id": "EU-STATISTICS-GA-2024-001",
+  "language": "ga",
+  "title": "Sample Eurostat document (ga) for bilingual alignment",
+  "publication_date": "2024-09-01",
+  "source_url": "https://example.eu/statistics/ga-sample",
+  "content_hash": "sha256:000000000000statisga",
+  "metadata": {
+    "sourceURL": "https://example.eu/statistics/ga-sample",
+    "title": "Sample Eurostat document (ga)",
+    "publication_date": "2024-09-01",
+    "document_id": "EU-STATISTICS-GA-2024-001",
+    "language_coverage": "full"
+  }
+}

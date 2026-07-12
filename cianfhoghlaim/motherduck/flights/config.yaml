@@ -96,3 +96,17 @@ flights:
       - nigeria
       - nga
       - daily_sync
+  - name: eu_multilingual_daily_sync_flight
+    module: cianfhoghlaim.motherduck.flights.eu_multilingual_daily_sync_flight
+    callable: build_eu_multilingual_daily_sync_flight
+    cron: "0 5 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill for the EU multilingual (en + ga) alignment pipeline"
+    tags:
+      - european_union
+      - multilingual
+      - alignment
+      - en
+      - ga
+      - irish
+      - daily_sync
