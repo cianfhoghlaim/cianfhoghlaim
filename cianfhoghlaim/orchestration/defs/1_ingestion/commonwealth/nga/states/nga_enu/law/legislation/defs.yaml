@@ -1,4 +1,4 @@
-# defs/1_ingestion/commonwealth/nga/states/nga_enu/law/legislation/defs.yaml
+# defs/1_ingestion/commonwealth/nga/states/Enugu State/law/legislation/defs.yaml
 #
 # L1 CelticIngestionComponent for the Enugu law DLT source.
 #
@@ -6,7 +6,7 @@
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_enu_legislation
-  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_enu.law.legislation
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Enugu State.law.legislation
   schedule:
     cron: "0 5 * * *"
     timezone: UTC
@@ -14,7 +14,7 @@ attributes:
     - country:
         values: ["nga"]
     - state_code:
-        values: ["nga_enu"]
+        values: ["Enugu State"]
     - domain:
         values: ["law"]
     - language:
@@ -26,9 +26,12 @@ attributes:
     - commonwealth
     - nigeria
     - nga
-    - nga_enu
+    - Enugu State
     - law
     - ingestion
   metadata:
     openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
     spec: commonwealth-pipeline
+
+    country_name: "Enugu State"
+    official_languages: ['en', 'ig']

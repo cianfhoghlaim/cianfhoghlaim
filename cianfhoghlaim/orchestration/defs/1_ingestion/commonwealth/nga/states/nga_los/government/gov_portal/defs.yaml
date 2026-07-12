@@ -1,4 +1,4 @@
-# defs/1_ingestion/commonwealth/nga/states/nga_los/government/gov_portal/defs.yaml
+# defs/1_ingestion/commonwealth/nga/states/Lagos State/government/gov_portal/defs.yaml
 #
 # L1 CelticIngestionComponent for the Lagos government DLT source.
 #
@@ -6,7 +6,7 @@
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_los_gov_portal
-  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_los.government.gov_portal
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Lagos State.government.gov_portal
   schedule:
     cron: "0 5 * * *"
     timezone: UTC
@@ -14,7 +14,7 @@ attributes:
     - country:
         values: ["nga"]
     - state_code:
-        values: ["nga_los"]
+        values: ["Lagos State"]
     - domain:
         values: ["government"]
     - language:
@@ -26,9 +26,12 @@ attributes:
     - commonwealth
     - nigeria
     - nga
-    - nga_los
+    - Lagos State
     - government
     - ingestion
   metadata:
     openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
     spec: commonwealth-pipeline
+
+    country_name: "Lagos State"
+    official_languages: ['en', 'yo']

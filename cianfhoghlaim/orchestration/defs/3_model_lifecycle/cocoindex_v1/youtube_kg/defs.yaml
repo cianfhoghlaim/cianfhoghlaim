@@ -1,0 +1,34 @@
+# defs/3_model_lifecycle/cocoindex_v1/youtube_kg/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the YoutubeKgEmbedding v1 App.
+# Per the oideachais-cocoindex-v1 skill, the R1–R4 conformance contract
+# is enforced at build_defs time by the Component. is_virtual=True so
+# the 3 LanceDB tables (video_segments, video_frame_captions,
+# video_triples) mirror their L1 upstream automatically.
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: YoutubeKgEmbedding
+  module: cianfhoghlaim.cocoindex.youtube_kg_embedding
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true
+  # The 3 LanceDB tables mounted by the App:
+  lance_tables:
+    - video_segments
+    - video_frame_captions
+    - video_triples
+  # The DuckLake source table read by the App:
+  ducklake_source: oideachais.youtube.youtube_videos
+  # Refreshing once a day is enough; YouTube curators don't churn
+  # videos every minute.
+  refresh_interval_secs: 86400
+  # 1 frame per 10 seconds is the canonical Qwen3-VL-8B sweet spot.
+  frame_sample_fps: 0.1
+  # Backs the App with the canonical registry models — no App-level
+  # HuggingFace IDs.
+  backbones:
+    caption: qwen3-vl-8b
+    diagram_pointing: molmo2-8b
+    text_leg: qwen3.6-27b-mtp
+  # Audio transcription routes through the existing WhisperX aligner.
+  audio_leg: cianfhoghlaim.meaisinfhoghlaim.process.transcript_aligner.WhisperXAligner

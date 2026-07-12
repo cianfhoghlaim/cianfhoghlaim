@@ -1,4 +1,4 @@
-# defs/1_ingestion/commonwealth/nga/states/nga_plt/medicine/health_authority/defs.yaml
+# defs/1_ingestion/commonwealth/nga/states/Plateau State/medicine/health_authority/defs.yaml
 #
 # L1 CelticIngestionComponent for the Plateau medicine DLT source.
 #
@@ -6,7 +6,7 @@
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_plt_health_authority
-  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_plt.medicine.health_authority
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Plateau State.medicine.health_authority
   schedule:
     cron: "0 5 * * *"
     timezone: UTC
@@ -14,7 +14,7 @@ attributes:
     - country:
         values: ["nga"]
     - state_code:
-        values: ["nga_plt"]
+        values: ["Plateau State"]
     - domain:
         values: ["medicine"]
     - language:
@@ -26,9 +26,12 @@ attributes:
     - commonwealth
     - nigeria
     - nga
-    - nga_plt
+    - Plateau State
     - medicine
     - ingestion
   metadata:
     openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
     spec: commonwealth-pipeline
+
+    country_name: "Plateau State"
+    official_languages: ['en', 'pcm']
