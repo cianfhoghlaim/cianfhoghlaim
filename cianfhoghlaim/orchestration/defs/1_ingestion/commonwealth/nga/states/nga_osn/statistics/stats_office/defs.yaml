@@ -1,4 +1,4 @@
-# defs/1_ingestion/commonwealth/nga/states/nga_osn/statistics/stats_office/defs.yaml
+# defs/1_ingestion/commonwealth/nga/states/Osun State/statistics/stats_office/defs.yaml
 #
 # L1 CelticIngestionComponent for the Osun statistics DLT source.
 #
@@ -6,7 +6,7 @@
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_osn_stats_office
-  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_osn.statistics.stats_office
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Osun State.statistics.stats_office
   schedule:
     cron: "0 5 * * *"
     timezone: UTC
@@ -14,7 +14,7 @@ attributes:
     - country:
         values: ["nga"]
     - state_code:
-        values: ["nga_osn"]
+        values: ["Osun State"]
     - domain:
         values: ["statistics"]
     - language:
@@ -26,9 +26,12 @@ attributes:
     - commonwealth
     - nigeria
     - nga
-    - nga_osn
+    - Osun State
     - statistics
     - ingestion
   metadata:
     openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
     spec: commonwealth-pipeline
+
+    country_name: "Osun State"
+    official_languages: ['en', 'yo']

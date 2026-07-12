@@ -1,4 +1,4 @@
-# defs/1_ingestion/commonwealth/nga/states/nga_ada/medicine/health_authority/defs.yaml
+# defs/1_ingestion/commonwealth/nga/states/Adamawa State/medicine/health_authority/defs.yaml
 #
 # L1 CelticIngestionComponent for the Adamawa medicine DLT source.
 #
@@ -6,7 +6,7 @@
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_ada_health_authority
-  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_ada.medicine.health_authority
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Adamawa State.medicine.health_authority
   schedule:
     cron: "0 5 * * *"
     timezone: UTC
@@ -14,7 +14,7 @@ attributes:
     - country:
         values: ["nga"]
     - state_code:
-        values: ["nga_ada"]
+        values: ["Adamawa State"]
     - domain:
         values: ["medicine"]
     - language:
@@ -26,9 +26,12 @@ attributes:
     - commonwealth
     - nigeria
     - nga
-    - nga_ada
+    - Adamawa State
     - medicine
     - ingestion
   metadata:
     openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
     spec: commonwealth-pipeline
+
+    country_name: "Adamawa State"
+    official_languages: ['en', 'pcm']

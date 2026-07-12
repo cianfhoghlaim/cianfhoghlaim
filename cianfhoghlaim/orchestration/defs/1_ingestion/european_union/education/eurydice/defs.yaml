@@ -1,0 +1,55 @@
+# defs/1_ingestion/european_union/education/eurydice/defs.yaml
+#
+# L1 ingestion for the Eurydice national education structures. 24 EU
+# official language partition.
+#
+# Reference: openspec/changes/2026-07-11-european-union-official-language-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_union_eurydice
+  module: cianfhoghlaim.dlt.european_union.education.eurydice
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["european_union"]
+    - institution:
+        values: ["eurydice"]
+    - language:
+        values:
+          - bg
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - et
+          - fi
+          - fr
+          - de
+          - el
+          - hu
+          - ga
+          - it
+          - lv
+          - lt
+          - mt
+          - pl
+          - pt
+          - ro
+          - sk
+          - sl
+          - es
+          - sv
+  use_local_scrapes: true
+  asset_check: eurydice_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_union
+    - education
+    - eurydice
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-11-european-union-official-language-pipeline-v1
+    spec: european-union-official-language-pipeline

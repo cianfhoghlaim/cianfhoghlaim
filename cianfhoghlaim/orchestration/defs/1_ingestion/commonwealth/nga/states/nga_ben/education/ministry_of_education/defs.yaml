@@ -1,4 +1,4 @@
-# defs/1_ingestion/commonwealth/nga/states/nga_ben/education/ministry_of_education/defs.yaml
+# defs/1_ingestion/commonwealth/nga/states/Benue State/education/ministry_of_education/defs.yaml
 #
 # L1 CelticIngestionComponent for the Benue education DLT source.
 #
@@ -6,7 +6,7 @@
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_ben_ministry_of_education
-  module: cianfhoghlaim.dlt.commonwealth.nga.states.nga_ben.education.ministry_of_education
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Benue State.education.ministry_of_education
   schedule:
     cron: "0 5 * * *"
     timezone: UTC
@@ -14,7 +14,7 @@ attributes:
     - country:
         values: ["nga"]
     - state_code:
-        values: ["nga_ben"]
+        values: ["Benue State"]
     - domain:
         values: ["education"]
     - language:
@@ -26,9 +26,12 @@ attributes:
     - commonwealth
     - nigeria
     - nga
-    - nga_ben
+    - Benue State
     - education
     - ingestion
   metadata:
     openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
     spec: commonwealth-pipeline
+
+    country_name: "Benue State"
+    official_languages: ['en', 'pcm']

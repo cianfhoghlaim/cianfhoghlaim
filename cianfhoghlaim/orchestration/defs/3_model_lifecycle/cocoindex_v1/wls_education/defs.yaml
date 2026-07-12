@@ -1,0 +1,30 @@
+# defs/3_model_lifecycle/cocoindex_v1/wls_education/defs.yaml
+#
+# L3 CocoIndex v1 App for the Wales education pipeline.
+# Embeds every Wales per-subject education row into
+# the shared `oideachais.lc.wls.education_chunks` LanceDB table.
+#
+# Reference: openspec/changes/2026-07-12-british-isles-parity-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_group: wls_education
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: WalesEducationEmbedding
+      module: cianfhoghlaim.cocoindex.biep_parity.wls_education_embedding
+      source: british_isles
+      lance_table: oideachais.lc.wls.education_chunks
+  schedule:
+    cron: "0 5 * * *"
+    timezone: UTC
+  tags:
+    - biep
+    - parity
+    - wls
+    - cocoindex-v1
+    - embedding
+  metadata:
+    openspec_change: 2026-07-12-british-isles-parity-pipeline-v1
+    spec: british-isles-education-pipeline
