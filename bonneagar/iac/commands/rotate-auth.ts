@@ -210,7 +210,8 @@ export async function rotateAuth() {
 }
 
 // ---------------------------------------------------------------------------
-// Direct REST call to Infisical (bypasses the buggy @infisical/sdk v5 wrapper)
+// Direct REST call to Infisical (now delegates to iac/clients/infisical-rest.ts
+// — bypasses the buggy @infisical/sdk v5 wrapper entirely)
 // ---------------------------------------------------------------------------
 async function fetchInfisicalSecret(
   baseUrl: string,
@@ -221,28 +222,17 @@ async function fetchInfisicalSecret(
   folder: string,
   key: string,
 ): Promise<string | null> {
-  // Login
-  const loginR = await fetch(`${baseUrl}/api/v1/auth/universal-auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ clientId, clientSecret }).toString(),
-  });
-  if (!loginR.ok) {
-    throw new Error(`infisical login failed: ${loginR.status} ${await loginR.text()}`);
-  }
-  const { accessToken } = (await loginR.json()) as { accessToken: string };
-
-  // Fetch the secret
-  const secretR = await fetch(
-    `${baseUrl}/api/v3/secrets/raw/${key}?workspaceId=${projectId}&environment=${environment}&secretPath=/${folder}/`,
-    { headers: { Authorization: `Bearer ${accessToken}` } },
+  const { infisicalGetSecret } = await import("../clients/infisical-rest.ts");
+  const secret = await infisicalGetSecret(
+    {
+      secretName: key,
+      projectId,
+      environment,
+      secretPath: folder === "" ? "/" : `/${folder}/`,
+    },
+    baseUrl,
   );
-  if (secretR.status === 404) return null;
-  if (!secretR.ok) {
-    throw new Error(`infisical secret fetch failed: ${secretR.status} ${await secretR.text()}`);
-  }
-  const { secret } = (await secretR.json()) as { secret: { secretValue: string } };
-  return secret.secretValue;
+  return secret?.value ?? null;
 }
 
 function upsertEnvVar(content: string, key: string, value: string): string {

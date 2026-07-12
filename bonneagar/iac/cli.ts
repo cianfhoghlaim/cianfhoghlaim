@@ -58,6 +58,9 @@ export async function dispatch(command: string) {
     case "sync:sites": return (await import("./commands/sync-sites.ts")).syncSites();
     case "sync:procedures": return (await import("./commands/sync-procedures.ts")).syncProcedures();
     case "sync:resource-syncs": return (await import("./commands/sync-resource-syncs.ts")).syncResourceSyncs();
+    case "bootstrap-infisical": return (await import("./commands/bootstrap-infisical.ts")).bootstrapInfisical();
+    case "bootstrap-pocketid-admin": return (await import("./commands/bootstrap-pocketid-admin.ts")).bootstrapPocketIdAdmin();
+    case "rotate-auth": return (await import("./commands/rotate-auth.ts")).rotateAuth();
     case "sync:monitors": return (await import("./commands/sync-monitors.ts")).syncMonitors();
     case "sync:alerts": return (await import("./commands/sync-alerts.ts")).syncAlerts();
     case "sync:variables": return (await import("./commands/sync-variables.ts")).syncVariables();
