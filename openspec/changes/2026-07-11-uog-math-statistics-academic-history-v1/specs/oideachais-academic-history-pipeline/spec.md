@@ -104,7 +104,7 @@ deterministic checks (no LLM-as-judge). Findings SHALL be persisted to
 ### Requirement: Academic-history notebooks
 
 The system SHALL provide a new marimo notebook group at
-`cianfhoghlaim/notebooks/14_academic_history/` with 8 notebooks:
+`notebooks/14_academic_history/` with 8 notebooks:
 
 1. `01_uog_maths_corpus_overview.py` — corpus manifest + ingestion status
 2. `02_module_syllabus_assessment_map.py` — joins personal notes + official

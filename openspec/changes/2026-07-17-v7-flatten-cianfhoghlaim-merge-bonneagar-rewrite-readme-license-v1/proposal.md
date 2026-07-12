@@ -59,7 +59,7 @@ cianfhoghlaim/{agents,baml,baml_client,baml_src,cocoindex,dlt,
 `cianfhoghlaim/pyproject.toml` → `bonneagar/pyproject.toml` (the IaC's
 own pyproject).
 
-`cianfhoghlaim/scripts/*` merge into root `scripts/`, with
+`scripts/*` merge into root `scripts/`, with
 `scripts/legacy/*.pkg` for the few that already exist at root.
 
 ### 2. Re-integrate `bonneagar/` into the main repo (as a subdirectory)

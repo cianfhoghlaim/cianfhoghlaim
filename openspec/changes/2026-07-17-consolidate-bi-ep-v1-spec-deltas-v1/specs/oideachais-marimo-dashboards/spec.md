@@ -10,7 +10,7 @@
 >    + the v3 study tools) reference "5", "11", "25", and "50"
 >    counts respectively, all of which are inconsistent with the
 >    on-disk reality. The canonical on-disk count via
->    `ls cianfhoghlaim/notebooks/**/*.py | wc -l` is the source of
+>    `ls notebooks/**/*.py | wc -l` is the source of
 >    truth.
 >
 > 2. A new requirement "On-disk marimo notebook count is the
@@ -23,8 +23,8 @@
 ### Requirement: On-disk marimo notebook count is the canonical source of truth
 
 The system SHALL consider the on-disk count of `.py` files at
-`cianfhoghlaim/notebooks/**/*.py` (verified via
-`ls cianfhoghlaim/notebooks/**/*.py | wc -l`) as the canonical
+`notebooks/**/*.py` (verified via
+`ls notebooks/**/*.py | wc -l`) as the canonical
 source of truth for all marimo notebook count claims in any
 openspec change proposal or spec delta.
 
@@ -76,7 +76,7 @@ non-archived changes that have already shipped):
 #### Scenario: `ls` returns the canonical on-disk count
 
 - **WHEN** a developer runs
-      `ls cianfhoghlaim/notebooks/**/*.py | wc -l`
+      `ls notebooks/**/*.py | wc -l`
 - **THEN** the output SHALL be the canonical count (134 clean; 160
       raw)
 - **AND** the on-disk breakdown per the table above SHALL be
@@ -100,8 +100,8 @@ non-archived changes that have already shipped):
 
 ## Cross-references *(updated line 250)*
 
-- [`cianfhoghlaim/notebooks/`](../../cianfhoghlaim/notebooks/) (the on-disk count of Marimo notebooks — see the new "On-disk marimo notebook count is the canonical source of truth" requirement above; verified via `ls cianfhoghlaim/notebooks/**/*.py | wc -l` = 134 clean / 160 raw)
-- [`cianfhoghlaim/notebooks/dashboards/`](../../cianfhoghlaim/notebooks/dashboards/) (the dashboard subdir)
+- [`notebooks/`](../../notebooks/) (the on-disk count of Marimo notebooks — see the new "On-disk marimo notebook count is the canonical source of truth" requirement above; verified via `ls notebooks/**/*.py | wc -l` = 134 clean / 160 raw)
+- [`notebooks/dashboards/`](../../notebooks/dashboards/) (the dashboard subdir)
 - [`.agents/skills/marimo/SKILL.md`](../../.agents/skills/marimo/SKILL.md)
 - [`.agents/skills/build-notebook/SKILL.md`](../../.agents/skills/build-notebook/SKILL.md)
 - [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream pipeline — the source of truth for the 6 sub-corpora + 225 documents)

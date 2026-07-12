@@ -46,7 +46,7 @@ exists to:
 | `openspec/changes/2026-07-13-biep-v1-phase-1-1-english-wiring-v1/tasks.md` | NEW | ~80 lines |
 | `openspec/changes/2026-07-13-biep-v1-phase-1-1-english-wiring-v1/specs/british-isles-education-pipeline/spec.md` | NEW (1 ADDED Requirement) | ~40 lines |
 
-No source code in `cianfhoghlaim/dlt/` or `cianfhoghlaim/orchestration/`
+No source code in `dlt/` or `orchestration/`
 is modified by this change — all Phase 1.1 code work was already
 shipped by `2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1`.
 
@@ -55,7 +55,7 @@ shipped by `2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1`.
 ### Gate 1 — `LC6_SUBJECTS` includes `english` (6 subjects total)
 
 ```bash
-$ grep -A 7 "^LC6_SUBJECTS" cianfhoghlaim/dlt/filesystem/leaving_cert_source.py | head -10
+$ grep -A 7 "^LC6_SUBJECTS" dlt/filesystem/leaving_cert_source.py | head -10
 LC6_SUBJECTS: tuple[str, ...] = (
     "chemistry",
     "computer_science",
@@ -69,7 +69,7 @@ LC6_SUBJECTS: tuple[str, ...] = (
 ### Gate 2 — `LC_PDF_KIND_REGISTRY` has 2 English regex patterns
 
 ```bash
-$ grep -n "LC002ALP\|SC-English-Spec-ENG-INT" cianfhoghlaim/dlt/filesystem/leaving_cert_source.py
+$ grep -n "LC002ALP\|SC-English-Spec-ENG-INT" dlt/filesystem/leaving_cert_source.py
 67:    r"^LC002ALP\d{3}[EI]V\.pdf$": "qwen3-vl-8b",
 73:    r"^SC-English-Spec-ENG-INT.*\.pdf$": "gemma-4-26B-A4B",
 ```
@@ -95,7 +95,7 @@ Total: **6 `lc5_english_*` assets** (the Phase 1.1 contract).
 ### Gate 4 — `english.yaml` cron asset exists
 
 ```bash
-$ ls -la cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc5/english.yaml
+$ ls -la orchestration/defs/1_ingestion/curriculum/lc5/english.yaml
 -rw-r--r-- 1 cian staff 1492 Jul 10 06:23 english.yaml
 ```
 

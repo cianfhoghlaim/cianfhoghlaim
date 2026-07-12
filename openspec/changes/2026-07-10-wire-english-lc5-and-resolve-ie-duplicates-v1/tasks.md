@@ -57,23 +57,23 @@
 
 ### B.2 Delete the duplicates
 
-- [x] **B.2.1** `git rm cianfhoghlaim/dlt/british_isles/ireland/education/curriculum_source.py`
-- [x] **B.2.2** `git rm cianfhoghlaim/dlt/british_isles/ireland/education/exam_source_update.py`
+- [x] **B.2.1** `git rm dlt/british_isles/ireland/education/curriculum_source.py`
+- [x] **B.2.2** `git rm dlt/british_isles/ireland/education/exam_source_update.py`
 
 ### B.3 Rewrite importers (11 files)
 
-- [x] **B.3.1** `cianfhoghlaim/dlt/british_isles/ireland/law/citizensinformation.py`
-- [x] **B.3.2** `cianfhoghlaim/dlt/british_isles/ireland/law/courts_ie.py`
-- [x] **B.3.3** `cianfhoghlaim/dlt/british_isles/ireland/law/gov_ie_law.py`
-- [x] **B.3.4** `cianfhoghlaim/dlt/british_isles/ireland/law/injuries_ie.py`
-- [x] **B.3.5** `cianfhoghlaim/dlt/british_isles/ireland/law/workplace_relations.py`
-- [x] **B.3.6** `cianfhoghlaim/dlt/british_isles/ireland/education/law/court_rules.py`
-- [x] **B.3.7** `cianfhoghlaim/dlt/british_isles/ireland/education/law/courts.py`
-- [x] **B.3.8** `cianfhoghlaim/dlt/british_isles/ireland/education/law/judgements.py`
-- [x] **B.3.9** `cianfhoghlaim/dlt/british_isles/ireland/education/law/legal_aid.py`
-- [x] **B.3.10** `cianfhoghlaim/dlt/british_isles/ireland/education/law/piab.py`
-- [x] **B.3.11** `cianfhoghlaim/dlt/british_isles/ireland/education/curriculum.py` (the self-reference fix in the docstring)
-- [x] **B.3.12** `cianfhoghlaim/tests/_oideachais/dlt_sources/ie/education/test_curriculum_source_local_cache.py` (2 import occurrences)
+- [x] **B.3.1** `dlt/british_isles/ireland/law/citizensinformation.py`
+- [x] **B.3.2** `dlt/british_isles/ireland/law/courts_ie.py`
+- [x] **B.3.3** `dlt/british_isles/ireland/law/gov_ie_law.py`
+- [x] **B.3.4** `dlt/british_isles/ireland/law/injuries_ie.py`
+- [x] **B.3.5** `dlt/british_isles/ireland/law/workplace_relations.py`
+- [x] **B.3.6** `dlt/british_isles/ireland/education/law/court_rules.py`
+- [x] **B.3.7** `dlt/british_isles/ireland/education/law/courts.py`
+- [x] **B.3.8** `dlt/british_isles/ireland/education/law/judgements.py`
+- [x] **B.3.9** `dlt/british_isles/ireland/education/law/legal_aid.py`
+- [x] **B.3.10** `dlt/british_isles/ireland/education/law/piab.py`
+- [x] **B.3.11** `dlt/british_isles/ireland/education/curriculum.py` (the self-reference fix in the docstring)
+- [x] **B.3.12** `tests/_oideachais/dlt_sources/ie/education/test_curriculum_source_local_cache.py` (2 import occurrences)
 
 For each: rewrite
 `from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (...)` →
@@ -97,8 +97,8 @@ For each: rewrite
       returns 80 documents across 6 subjects with english=8 en rows
 - [x] **D.3** Import check: the rewritten law/* and education/law/* modules
       can `from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source` (the kept file has the symbol)
-- [x] **D.4** Confirm `ls cianfhoghlaim/dlt/british_isles/ireland/education/ | grep curriculum_source` returns 0
-- [x] **D.5** Confirm `ls cianfhoghlaim/dlt/british_isles/ireland/education/ | grep exam_source_update` returns 0
+- [x] **D.4** Confirm `ls dlt/british_isles/ireland/education/ | grep curriculum_source` returns 0
+- [x] **D.5** Confirm `ls dlt/british_isles/ireland/education/ | grep exam_source_update` returns 0
 - [x] **D.6** `git add -A` (13 modified files + 1 new yaml + 2 deleted dups + 1 openspec change directory)
 - [x] **D.7** `git -c user.email="build-agent@cianfhoghlaim" -c user.name="Build Agent" commit -m "feat(biep): wire English into lc5 + resolve 972-LOC curriculum duplicate"`
 - [x] **D.8** `git push --set-upstream origin pick-4-biep-v1` (NOT `main`)
@@ -107,7 +107,7 @@ For each: rewrite
 
 1. **Dagster group_name regex bug** (all `1_ingestion/...` style group names
    are invalid in Dagster 1.13.1). Needs a single sed across all
-   `cianfhoghlaim/orchestration/defs/**/*.py` files. **OpenSpec candidate:**
+   `orchestration/defs/**/*.py` files. **OpenSpec candidate:**
    `2026-07-11-fix-dagster-asset-group-name-regex-v1`.
 2. **The 4 BIEP v1 `lc_extraction/*.baml` files** — owned by the upstream
    `2026-07-06-british-isles-education-pipeline-v1` change.

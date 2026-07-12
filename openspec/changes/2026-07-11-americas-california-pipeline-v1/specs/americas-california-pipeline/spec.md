@@ -68,7 +68,7 @@ totalling 15 national sources.
 
 The system MUST provide a BAML extraction function
 `ExtractAmericasCurriculumSpec(jurisdiction, language, text) -> AmericasCurriculumSpec`
-at `cianfhoghlaim/baml/americas/<jurisdiction>/education.baml` that
+at `baml/americas/<jurisdiction>/education.baml` that
 extracts the canonical Americas per-jurisdiction curriculum
 specification.
 

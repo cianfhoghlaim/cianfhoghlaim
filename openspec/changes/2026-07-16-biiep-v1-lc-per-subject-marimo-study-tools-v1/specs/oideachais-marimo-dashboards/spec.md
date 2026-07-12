@@ -7,7 +7,7 @@
 ### Requirement: Phase 3 complete — per-subject interactive marimo study tools for the 6 BIEP v1 LC subjects
 
 The system SHALL provide **6 per-subject interactive marimo study tools**
-at `cianfhoghlaim/notebooks/12_subject_study_tools/<subject>.py` for
+at `notebooks/12_subject_study_tools/<subject>.py` for
 the 6 BIEP v1 LC subjects (Mathematics, Chemistry, Geography, Gaeilge,
 English, Computer Science). These extend the 20 operator-facing
 dashboards shipped by the Phase-1 + Phase-2 changes
@@ -91,7 +91,7 @@ The 5 study-tool cells in each Phase-3 notebook are:
 #### Scenario: CLI discovers all 6 Phase-3 study tools
 
 - **GIVEN** the `GROUPS` tuple in
-  `cianfhoghlaim/notebooks/cli.py` includes
+  `notebooks/cli.py` includes
   `"12_subject_study_tools"`
 - **WHEN** the user runs
   `uv run cianfhoghlaim-marimo list 12_subject_study_tools`

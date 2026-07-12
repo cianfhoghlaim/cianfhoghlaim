@@ -94,7 +94,7 @@ baml/americas/
 
 ### 4. New CocoIndex v1 App
 
-`cianfhoghlaim/cocoindex/americas_california_education_embedding.py`
+`cocoindex/americas_california_education_embedding.py`
 embeds every Americas education row into the shared LanceDB table
 `oideachais.americas.education_chunks`.
 

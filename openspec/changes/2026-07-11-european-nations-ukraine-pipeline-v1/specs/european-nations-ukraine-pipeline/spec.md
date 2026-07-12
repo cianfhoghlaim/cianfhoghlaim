@@ -46,7 +46,7 @@ of the 6 pilot countries, totalling 30 DLT sources.
 
 The system MUST provide a BAML extraction function
 `ExtractNationCurriculumSpec(country_code, language, text) -> NationCurriculumSpec`
-at `cianfhoghlaim/baml/european_nations/<iso3>/education.baml` that
+at `baml/european_nations/<iso3>/education.baml` that
 extracts the canonical per-nation curriculum specification from any
 national education document.
 
@@ -65,7 +65,7 @@ national education document.
 
 The system MUST provide a BAML extraction function
 `ExtractNationStatute(country_code, language, text) -> NationStatute`
-at `cianfhoghlaim/baml/european_nations/<iso3>/law.baml` that extracts
+at `baml/european_nations/<iso3>/law.baml` that extracts
 the canonical per-nation statute record.
 
 #### Scenario: A French statute is extracted
@@ -82,7 +82,7 @@ the canonical per-nation statute record.
 
 The system MUST provide a BAML extraction function
 `ExtractNationHealthGuidance(country_code, language, text) -> NationHealthGuidance`
-at `cianfhoghlaim/baml/european_nations/<iso3>/medicine.baml` that
+at `baml/european_nations/<iso3>/medicine.baml` that
 extracts the canonical per-nation public-health guidance.
 
 #### Scenario: A German RKI guidance is extracted
@@ -194,7 +194,7 @@ of the 6 pilot countries, totalling 30 DLT sources.
 
 The system MUST provide a BAML extraction function
 `ExtractNationCurriculumSpec(country_code, language, text) -> NationCurriculumSpec`
-at `cianfhoghlaim/baml/european_nations/<iso3>/education.baml` that
+at `baml/european_nations/<iso3>/education.baml` that
 extracts the canonical per-nation curriculum specification from any
 national education document.
 
@@ -213,7 +213,7 @@ national education document.
 
 The system MUST provide a BAML extraction function
 `ExtractNationStatute(country_code, language, text) -> NationStatute`
-at `cianfhoghlaim/baml/european_nations/<iso3>/law.baml` that extracts
+at `baml/european_nations/<iso3>/law.baml` that extracts
 the canonical per-nation statute record.
 
 #### Scenario: A French statute is extracted
@@ -230,7 +230,7 @@ the canonical per-nation statute record.
 
 The system MUST provide a BAML extraction function
 `ExtractNationHealthGuidance(country_code, language, text) -> NationHealthGuidance`
-at `cianfhoghlaim/baml/european_nations/<iso3>/medicine.baml` that
+at `baml/european_nations/<iso3>/medicine.baml` that
 extracts the canonical per-nation public-health guidance.
 
 #### Scenario: A German RKI guidance is extracted

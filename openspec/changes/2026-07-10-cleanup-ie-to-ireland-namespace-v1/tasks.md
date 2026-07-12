@@ -2,10 +2,10 @@
 
 ## 1. Move the 2 subtrees + rmdir the empty parents
 
-- [x] 1.1 `mv cianfhoghlaim/baml/ie/law cianfhoghlaim/baml/education/law/`
-- [x] 1.2 `rm cianfhoghlaim/baml/ie/__init__.py` + `rmdir cianfhoghlaim/baml/ie`
-- [x] 1.3 `mv cianfhoghlaim/dlt/british_isles/ie/law cianfhoghlaim/dlt/british_isles/ireland/education/law/`
-- [x] 1.4 `rm cianfhoghlaim/dlt/british_isles/ie/__init__.py` + `rmdir cianfhoghlaim/dlt/british_isles/ie`
+- [x] 1.1 `mv baml/ie/law baml/education/law/`
+- [x] 1.2 `rm baml/ie/__init__.py` + `rmdir baml/ie`
+- [x] 1.3 `mv dlt/british_isles/ie/law dlt/british_isles/ireland/education/law/`
+- [x] 1.4 `rm dlt/british_isles/ie/__init__.py` + `rmdir dlt/british_isles/ie`
 
 ## 2. Sed-rewrite the Python + BAML imports (17 refs)
 
@@ -30,10 +30,10 @@
 ## 5. Verify
 
 - [x] 5.1 `grep -rn 'british_isles.ie\|dlt/british_isles/ie\|baml.ie' --include='*.{py,baml,md}' cianfhoghlaim/ openspec/specs/` → 0
-- [x] 5.2 `ls cianfhoghlaim/dlt/british_isles/ | grep -c '^ie$'` → 0
-- [x] 5.3 `ls cianfhoghlaim/baml/ | grep -c '^ie$'` → 0
-- [x] 5.4 `ls cianfhoghlaim/dlt/british_isles/ireland/education/law/` → 5 .py files
-- [x] 5.5 `ls cianfhoghlaim/baml/education/law/` → 6 .baml files + `__init__.py`
+- [x] 5.2 `ls dlt/british_isles/ | grep -c '^ie$'` → 0
+- [x] 5.3 `ls baml/ | grep -c '^ie$'` → 0
+- [x] 5.4 `ls dlt/british_isles/ireland/education/law/` → 5 .py files
+- [x] 5.5 `ls baml/education/law/` → 6 .baml files + `__init__.py`
 
 ## 6. Openspec change authoring
 

@@ -4,7 +4,7 @@
 
 - [x] 1.1 Run the cocoindex conformance audit and capture the baseline:
       ```bash
-      uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
+      uv run python dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
         | tee /tmp/conformance-baseline.txt
       ```
       Actual: `48/54 flows pass  (6 FAIL)` — the audit tool's display
@@ -30,7 +30,7 @@
 
 ## Step 3: Implement `dlt/common/site_crawler.py` (~2 h)
 
-- [x] 3.1 Create `cianfhoghlaim/dlt/common/site_crawler.py` (807 lines)
+- [x] 3.1 Create `dlt/common/site_crawler.py` (807 lines)
       with:
       - `scrape_url(url, formats=None) -> CrawledPage` — single-page scrape
       - `crawl_site(base_url, include_paths=None, exclude_paths=None,
@@ -81,7 +81,7 @@
 
 - [x] 4.3 Verify:
       ```bash
-      uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only | grep FAIL
+      uv run python dlt/common/cocoindex_v1_migrate.py --check-only | grep FAIL
       ```
       ✓ Actual result: `54/54 flows pass` (0 FAILs).
 
@@ -118,10 +118,10 @@
 
 - [x] 5.5 Verified:
       ```bash
-      git grep -n "from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source" cianfhoghlaim/dlt/
-      git grep -n "from cianfhoghlaim.dlt.common.incremental import crawl_source" cianfhoghlaim/dlt/
+      git grep -n "from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source" dlt/
+      git grep -n "from cianfhoghlaim.dlt.common.incremental import crawl_source" dlt/
       ```
-      ✓ Both return 0 matches in `cianfhoghlaim/dlt/**`.
+      ✓ Both return 0 matches in `dlt/**`.
 
 ## Step 6: Update the CI workflow (15 min)
 
@@ -154,13 +154,13 @@
 - [x] 8.1 `openspec validate 2026-07-15-pipeline-architecture-clarity-v1 --strict`
       → green ✓
 
-- [x] 8.2 `uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
+- [x] 8.2 `uv run python dlt/common/cocoindex_v1_migrate.py --check-only`
       → `54/54 flows pass` ✓ (was `48/54 (6 FAIL)`)
 
-- [x] 8.3 `git grep "from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source" cianfhoghlaim/dlt/`
+- [x] 8.3 `git grep "from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source" dlt/`
       → 0 matches ✓
 
-- [x] 8.4 `git grep "from cianfhoghlaim.dlt.common.incremental import crawl_source" cianfhoghlaim/dlt/`
+- [x] 8.4 `git grep "from cianfhoghlaim.dlt.common.incremental import crawl_source" dlt/`
       → 0 matches ✓
 
 - [x] 8.5 `uv run python -c "from cianfhoghlaim.dlt.common.site_crawler import scrape_url, crawl_site, map_urls, CrawledPage; print('OK')"`

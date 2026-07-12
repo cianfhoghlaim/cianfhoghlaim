@@ -3,7 +3,7 @@
 ## Why
 
 `mise run baml:generate` is failing with **~4,479 validation errors** because
-17 `.baml` files in `cianfhoghlaim/baml/processing/` still use the legacy
+17 `.baml` files in `baml/processing/` still use the legacy
 **Pydantic-style** attribute syntax (`field_name: type`) that BAML
 **v0.212+ deprecated** in favour of the canonical
 `field_name type` (whitespace-separated) syntax.
@@ -15,7 +15,7 @@ error: Error validating: This line is not a valid field or attribute definition.
 A valid class property looks like: 'myProperty string[] @description("This is a description")'
 ```
 
-The processing cluster (`cianfhoghlaim/baml/processing/`) is the worst-affected
+The processing cluster (`baml/processing/`) is the worst-affected
 zone. It contains 27 `.baml` files (the 17 legacy ones plus 10 that were
 already-canonical). The 17 broken files account for **~354 broken lines**
 that BAML rejects before it can produce any code. The cascade prevents:
@@ -27,7 +27,7 @@ that BAML rejects before it can produce any code. The cascade prevents:
 
 ## What changes
 
-Migrate the 17 affected `.baml` files in `cianfhoghlaim/baml/processing/`
+Migrate the 17 affected `.baml` files in `baml/processing/`
 from Pydantic-style `field: type` to BAML's canonical `field type`
 (whitespace-separated) using a single regex-based migration script.
 
@@ -121,7 +121,7 @@ the 17-file scope).
 
 ```
 $ grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' \
-    cianfhoghlaim/baml/processing/{topic_profile,player_assessment,game_content,author_archive,ireland_legal_extraction,legal_case_profile,email,audio_extraction,image_generation,style_transfer,culture_extraction,circular_extraction,ocr_extraction,ocr_validation,official_media,portfolio_extraction,ui_components}.baml \
+    baml/processing/{topic_profile,player_assessment,game_content,author_archive,ireland_legal_extraction,legal_case_profile,email,audio_extraction,image_generation,style_transfer,culture_extraction,circular_extraction,ocr_extraction,ocr_validation,official_media,portfolio_extraction,ui_components}.baml \
     | wc -l
 0
 ```
@@ -157,7 +157,7 @@ monorepo. No `bonneagar/` or `leabharlann/` cross-repo sync needed.
 ## Acceptance gates
 
 - [x] `openspec validate 2026-07-10-fix-baml-codegen-v4-syntax-v1 --strict` passes
-- [x] `grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' cianfhoghlaim/baml/processing/{17 files}.baml | wc -l` returns 0
+- [x] `grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' baml/processing/{17 files}.baml | wc -l` returns 0
 - [ ] `mise run baml:generate` exits 0 — **NOT ACHIEVED** (blocked by out-of-scope lc_extraction + qpack + celtic + _shared clusters, owned by separate openspec changes)
 - [x] The 7 BIEP v1 `lc_extraction/*.baml` files are still untouched (Pydantic-line counts unchanged: 28, 12, 18, 27, 15, 23, 15)
 - [x] The 2 stale `.bak` files (`clients.baml.bak`, `clients_llama_swap.baml.bak`) deleted

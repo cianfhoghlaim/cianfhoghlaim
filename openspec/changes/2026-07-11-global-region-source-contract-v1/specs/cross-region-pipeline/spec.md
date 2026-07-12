@@ -141,7 +141,7 @@ ground-truth examples of this contract.
 ### Requirement: Cross-nation BAML classifier (carried forward)
 
 The system SHALL reuse the existing
-[`ExtractCrossNationSpec`](../../../../../cianfhoghlaim/baml/education/cross_nation/multi_nation_curriculum.baml)
+[`ExtractCrossNationSpec`](../../../../../baml/education/cross_nation/multi_nation_curriculum.baml)
 + `AlignOutcomes` + `CompareCurricula` +
 `TranslateEducationalContent` + `IdentifyResourceSharing` BAML
 functions across the 6 regions. The new global-expansion regions MUST
@@ -149,7 +149,7 @@ extend the existing `Nation` enum + `NationEducationLevel` enum +
 `QualificationBoard` enum + `CurriculumFramework` enum (or, if the
 change touches too many enums, define a parallel `GlobalJurisdiction`
 + `GlobalEducationLevel` enum in
-`cianfhoghlaim/baml/global/_shared/jurisdiction.baml`).
+`baml/global/_shared/jurisdiction.baml`).
 
 #### Scenario: A new global jurisdiction is classified by the BAML cross-nation function
 

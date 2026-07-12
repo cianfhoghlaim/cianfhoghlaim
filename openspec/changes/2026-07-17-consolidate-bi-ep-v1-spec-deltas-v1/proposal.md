@@ -49,7 +49,7 @@ v1 stack can be archived as a coherent unit:
    - `2026-07-15-oideachais-marimo-dashboards-extension-v1` claims
      "Existing 15+10=25 notebooks" — but the on-disk count of all
      marimo notebooks at the time was the current
-     `ls cianfhoghlaim/notebooks/**/*.py | wc -l` count (134 clean
+     `ls notebooks/**/*.py | wc -l` count (134 clean
      notebooks on disk today).
    - `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1` claims
      "Existing 30+10+10=50 notebooks" — same: should be aligned to
@@ -62,7 +62,7 @@ v1 stack can be archived as a coherent unit:
    The canonical spec at
    `openspec/specs/oideachais-marimo-dashboards/spec.md` should
    document that **the on-disk count from
-   `ls cianfhoghlaim/notebooks/**/*.py | wc -l` is the source of
+   `ls notebooks/**/*.py | wc -l` is the source of
    truth** for all marimo notebook count claims, and the canonical
    cross-reference at line 250 ("the 11 Marimo notebooks") should be
    updated to reflect the current on-disk count.
@@ -71,9 +71,9 @@ v1 stack can be archived as a coherent unit:
    the same `(:LeabharlannAuthor)-[:COREFERS_WITH]->(:CultureHeritagePerson)`
    + `(:LeabharlannDoc)-[:ABOUT]->(:CultureHeritagePlace)` edges are
    shipped by **two files**:
-   - `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`
+   - `storage/cognify/rules/cross_archive_biep_edges.py`
      (the BIEP cross-archive file, owned by the cognify change)
-   - `cianfhoghlaim/storage/cognify/rules/leabharlann_culture_heritage.py`
+   - `storage/cognify/rules/leabharlann_culture_heritage.py`
      (the leabharlann orchestrator, owned by the leabharlann change)
 
    The leabharlann change owns the 4 leabharlann-X rules
@@ -100,7 +100,7 @@ deltas against the canonical specs, no code changes:
 | `openspec/specs/british-isles-education-pipeline/spec.md` | MODIFIED (via delta) | Re-namespace the 9 ADDED Requirements from 7 changes into R0–R7 sequential R-group history |
 | `openspec/specs/oideachais-baml-schemas/spec.md` | MODIFIED (via delta) | Re-namespace the 6 ADDED Requirements from 5 changes into 4 logical change groups |
 | `openspec/specs/oideachais-cognify-knowledge-graph/spec.md` | MODIFIED (via delta) | Update the "3 leabharlann corpora" claim to "6 sub-corpora" |
-| `openspec/specs/oideachais-marimo-dashboards/spec.md` | MODIFIED (via delta) | Declare the on-disk count (`ls cianfhoghlaim/notebooks/**/*.py \| wc -l`) as the canonical source of truth; align the cross-reference |
+| `openspec/specs/oideachais-marimo-dashboards/spec.md` | MODIFIED (via delta) | Declare the on-disk count (`ls notebooks/**/*.py \| wc -l`) as the canonical source of truth; align the cross-reference |
 
 The spec deltas live at:
 - `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/british-isles-education-pipeline/spec.md`
@@ -112,7 +112,7 @@ The spec deltas live at:
 
 - The 50+ archived openspec changes under `openspec/changes/archive/*`
   are NOT touched (hard rule).
-- The 7 `cianfhoghlaim/baml/education/lc_extraction/*.baml` files
+- The 7 `baml/education/lc_extraction/*.baml` files
   (owned by the BIEP v1 change) are NOT modified (hard rule).
 - The `cross_archive_biep_edges.py` source code is NOT modified
   (hard rule — the duplicate leabharlann → culture-heritage edges
@@ -195,9 +195,9 @@ Affected repos: cianfhoghlaim (single-repo change)
   `(:LeabharlannAuthor)-[:COREFERS_WITH]->(:CultureHeritagePerson)` +
   `(:LeabharlannDoc)-[:ABOUT]->(:CultureHeritagePlace)` edges are
   implemented in BOTH
-  `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`
+  `storage/cognify/rules/cross_archive_biep_edges.py`
   (owned by the cognify change) AND
-  `cianfhoghlaim/storage/cognify/rules/leabharlann_culture_heritage.py`
+  `storage/cognify/rules/leabharlann_culture_heritage.py`
   (owned by the leabharlann change). Per the "Do NOT modify the
   existing cross-archive code" hard rule in this change's brief, the
   duplicate code is left in place. The spec delta declares the

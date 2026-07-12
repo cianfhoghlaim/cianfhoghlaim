@@ -11,7 +11,7 @@ Flight) of the BIEP v1 delivery — both have been delivered in
 ### Requirement: BIEP v1 Phase 6 — 6 per-subject marimo notebooks
 
 The British-Isles Education Pipeline SHALL provide 6 per-subject marimo
-notebooks at `cianfhoghlaim/notebooks/leaving_cert/`:
+notebooks at `notebooks/leaving_cert/`:
 
 1. `chemistry.py` — 5 visualisations of `oideachais.leaving_cert.chemistry_*`
 2. `computer_science.py` — 5 visualisations of `oideachais.leaving_cert.computer_science_*`
@@ -39,7 +39,7 @@ Each notebook SHALL:
 - Be ~300–400 LOC each (the already-existing thin stubs at
   `notebooks/leaving_cert/` are enhanced up to that size)
 - Preserve bilingual EN + GA UI strings (via the i18n helper at
-  `cianfhoghlaim/web/packages/i18n/src/` or inline `mo.md(...)`
+  `web/packages/i18n/src/` or inline `mo.md(...)`
   strings in both English and Irish)
 
 #### Scenario: Teacher opens the chemistry BIEP notebook
@@ -48,7 +48,7 @@ Each notebook SHALL:
   chemistry BAML extraction has produced rows in
   `oideachais.leaving_cert.chemistry_topics`
 - **WHEN** a teacher runs
-  `marimo edit cianfhoghlaim/notebooks/leaving_cert/chemistry.py`
+  `marimo edit notebooks/leaving_cert/chemistry.py`
 - **THEN** the notebook renders 5 altair visualisations (topic
   frequency line chart, exam paper difficulty bar chart, marking
   scheme complexity heatmap, experiment ↔ learning outcome
@@ -71,7 +71,7 @@ Each notebook SHALL:
 
 - **GIVEN** the bilingual EN + GA subject assets are loaded
 - **WHEN** a teacher opens
-  `cianfhoghlaim/notebooks/leaving_cert/06_en_vs_ga_comparison.py`
+  `notebooks/leaving_cert/06_en_vs_ga_comparison.py`
 - **THEN** the notebook shows the EN ↔ GA topic coverage matrix
   for the 5 EN/GA subjects (Chemistry, Computer Science, Geography,
   Mathematics, English)
@@ -82,7 +82,7 @@ Each notebook SHALL:
 
 The British-Isles Education Pipeline SHALL schedule a daily MotherDuck
 Flight `lc_pdf_sync_flight` at
-`cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
+`motherduck/flights/lc_pdf_sync_flight.py`
 that:
 
 1. Runs `uv run cocoindex update lc_subjects` to re-ingest the
@@ -98,7 +98,7 @@ that:
    subprocess exit codes + the full log
 
 The Flight SHALL be registered in
-`cianfhoghlaim/motherduck/flights/config.yaml` with
+`motherduck/flights/config.yaml` with
 `schedule: "0 4 * * *"` (daily at 04:00 UTC). The IaC orchestration
 (Docker Compose stack + cron binding) lives in the separate
 `bonneagar` repo at `bonneagar/stacks/motherduck/`.

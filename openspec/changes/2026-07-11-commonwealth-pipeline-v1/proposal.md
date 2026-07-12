@@ -93,7 +93,7 @@ baml/commonwealth/
 
 ### 4. New CocoIndex v1 App
 
-`cianfhoghlaim/cocoindex/commonwealth_education_embedding.py` —
+`cocoindex/commonwealth_education_embedding.py` —
 embeds the 5 pilot countries' education rows into the shared LanceDB
 table `oideachais.commonwealth.education_chunks`.
 

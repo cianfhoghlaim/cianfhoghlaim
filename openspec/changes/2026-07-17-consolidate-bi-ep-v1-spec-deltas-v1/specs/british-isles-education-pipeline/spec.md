@@ -13,7 +13,7 @@
 ### Requirement: R1 — Phase 1.1 English lc5 filesystem wiring + duplicate cleanup
 
 The system SHALL ingest every PDF (and JPG for the scanned geography
-exam page) in `cianfhoghlaim/leaving_certificate/{chemistry,computer_science,english,gaeilge,geography,mathematics}/`
+exam page) in `leaving_certificate/{chemistry,computer_science,english,gaeilge,geography,mathematics}/`
 through a single filesystem DLT resource
 (`cianfhoghlaim.dlt.filesystem.leaving_cert_source.lc5_documents` with
 `LC6_SUBJECTS = ("chemistry", "computer_science", "english", "gaeilge",
@@ -25,9 +25,9 @@ regex patterns for both the English exam-paper kind
 (`SC-English-Spec-ENG-INT.*\.pdf`).
 
 Additionally, the canonical Irish curriculum DLT source SHALL live
-exclusively at `cianfhoghlaim/dlt/british_isles/ireland/education/curriculum.py`.
+exclusively at `dlt/british_isles/ireland/education/curriculum.py`.
 The legacy 972-LOC byte-identical duplicate
-`cianfhoghlaim/dlt/british_isles/ireland/education/curriculum_source.py`
+`dlt/british_isles/ireland/education/curriculum_source.py`
 and the 0-byte stub `exam_source_update.py` SHALL NOT exist. All 11
 importers (5 in `dlt/british_isles/ireland/law/` + 5 in
 `dlt/british_isles/ireland/education/law/` + the canonical
@@ -41,7 +41,7 @@ importers (5 in `dlt/british_isles/ireland/law/` + 5 in
 
 #### Scenario: English contributes 8 PDFs to the filesystem resource
 
-- **GIVEN** the 8 PDFs in `cianfhoghlaim/leaving_certificate/english/`
+- **GIVEN** the 8 PDFs in `leaving_certificate/english/`
       (`LC002ALP100EV.pdf`, `LC002ALP200EV.pdf`, `LC002GLP100EV.pdf`,
       `LC002GLP200EV.pdf`, `SCSEC14_English_Syllabus.pdf`,
       `SCSEC14_English_Syllabus_2026-06-30.pdf`,
@@ -78,14 +78,14 @@ importers (5 in `dlt/british_isles/ireland/law/` + 5 in
 
 #### Scenario: The duplicate pair is gone
 
-- **WHEN** a developer runs `ls cianfhoghlaim/dlt/british_isles/ireland/education/ | grep -E "curriculum_source|exam_source_update"`
+- **WHEN** a developer runs `ls dlt/british_isles/ireland/education/ | grep -E "curriculum_source|exam_source_update"`
 - **THEN** zero matches SHALL be returned
 - **AND** `curriculum.py` (972 LOC) remains the sole canonical surface
 
 #### Scenario: The 11 importers resolve against the kept file
 
 - **GIVEN** `curriculum.py` defines `_crawl_source` at line 57
-      (verified via `grep -n "^def _crawl_source" cianfhoghlaim/dlt/british_isles/ireland/education/curriculum.py`)
+      (verified via `grep -n "^def _crawl_source" dlt/british_isles/ireland/education/curriculum.py`)
 - **WHEN** any of the 11 importer modules is loaded
 - **THEN** the import `from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source` SHALL succeed
 - **AND** zero matches SHALL be returned by
@@ -115,8 +115,8 @@ with `CelticIngestionComponent` + `automation_cron: "0 5 * * *"` +
 #### Scenario: Gate 1 — `LC6_SUBJECTS` includes `english` as the 3rd element
 
 - **GIVEN** the file
-      `cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
-- **WHEN** an agent runs `grep -A 7 "^LC6_SUBJECTS" cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
+      `dlt/filesystem/leaving_cert_source.py`
+- **WHEN** an agent runs `grep -A 7 "^LC6_SUBJECTS" dlt/filesystem/leaving_cert_source.py`
 - **THEN** the output SHALL be exactly:
       ```python
       LC6_SUBJECTS: tuple[str, ...] = (
@@ -135,7 +135,7 @@ with `CelticIngestionComponent` + `automation_cron: "0 5 * * *"` +
 #### Scenario: Gate 2 — `LC_PDF_KIND_REGISTRY` has 2 English regex patterns
 
 - **GIVEN** the `LC_PDF_KIND_REGISTRY` dict in
-      `cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
+      `dlt/filesystem/leaving_cert_source.py`
 - **THEN** the dict SHALL contain both of these patterns:
       - `r"^LC002ALP\d{3}[EI]V\.pdf$"` mapped to `qwen3-vl-8b`
         (the LC English ALP/GLP exam-paper kind)
@@ -150,7 +150,7 @@ with `CelticIngestionComponent` + `automation_cron: "0 5 * * *"` +
 #### Scenario: Gate 3 — 6 `lc5_english_*` assets exist in `lc5_assets.py`
 
 - **GIVEN** the file
-      `cianfhoghlaim/orchestration/defs/2_materials/lc_extraction/lc5_assets.py`
+      `orchestration/defs/2_materials/lc_extraction/lc5_assets.py`
 - **THEN** the asset registry SHALL contain exactly these 6 names:
       - `lc5_english_ingested` (explicit `@asset` decorator, Layer 1)
       - `lc5_english_syllabus_extracted`
@@ -164,7 +164,7 @@ with `CelticIngestionComponent` + `automation_cron: "0 5 * * *"` +
 #### Scenario: Gate 4 — `english.yaml` cron asset exists
 
 - **GIVEN** the path
-      `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
+      `orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
 - **THEN** the file SHALL exist (≥ 1 KB)
 - **AND** its top-level `type` SHALL be
       `cianfhoghlaim.orchestration.components.CelticIngestionComponent`
@@ -209,7 +209,7 @@ return shape.
 - **WHEN** the operator checks the per-subject surface
 - **THEN** 13 files SHALL exist (6 DLT + 6 qpack BAMLs + 1 unified
       extractor) AND 6 L1 defs YAMLs SHALL exist at
-      `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6/`
+      `orchestration/defs/1_ingestion/curriculum/lc6/`
 
 #### Scenario: Per-subject DLT sources honour the canonical BIEP v1 dlt pattern
 
@@ -244,14 +244,14 @@ return shape.
 
 The system SHALL avoid duplicate BAML class names for marking-scheme
 point records AND enforce that every `.baml` file under
-`cianfhoghlaim/baml/education/lc_extraction/` uses the BAML v0.212+
+`baml/education/lc_extraction/` uses the BAML v0.212+
 canonical `field Type` (whitespace-separated) syntax — not the legacy
 Pydantic-style `field: type` colon-separated syntax.
 
 Specifically: the cross-stage shared marking point class in
-`cianfhoghlaim/baml/education/_shared/strand_outcome.baml` SHALL be
+`baml/education/_shared/strand_outcome.baml` SHALL be
 named `MarkingPointStrand`; the SEC marking-scheme PDF extraction
-class in `cianfhoghlaim/baml/education/pdfs/leaving_cert_marking_scheme.baml`
+class in `baml/education/pdfs/leaving_cert_marking_scheme.baml`
 SHALL be named `MarkingPointSec`. The 7 lc_extraction files
 (`circular_extraction.baml`, `cross_linguistic.baml`,
 `curriculum_syllabus.baml`, `exam_paper_layout.baml`,
@@ -282,7 +282,7 @@ SHALL be named `MarkingPointSec`. The 7 lc_extraction files
 #### Scenario: all 7 lc_extraction/*.baml files use canonical syntax
 
 - **GIVEN** the 2026-07-13-fix-baml-50-out-of-scope-errors-v1 change has landed
-- **WHEN** `grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' cianfhoghlaim/baml/education/lc_extraction/` is run
+- **WHEN** `grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' baml/education/lc_extraction/` is run
 - **THEN** the count of Pydantic-style lines is 0 across all 7 files
 - **AND** `mise run baml:generate` exits 0 against the BIEP v1
       contract types
@@ -321,7 +321,7 @@ SHALL be named `MarkingPointSec`. The 7 lc_extraction files
 ### Requirement: R5 — Phase 6 (6 per-subject marimo notebooks)
 
 The system SHALL provide 6 per-subject marimo notebooks at
-`cianfhoghlaim/notebooks/leaving_cert/`: 1 each for `chemistry.py`,
+`notebooks/leaving_cert/`: 1 each for `chemistry.py`,
 `computer_science.py`, `gaeilge.py` (Irish-only; includes the
 `irish_fada` asset_check badge), `geography.py`, `mathematics.py`,
 plus the 7th `06_en_vs_ga_comparison.py` cross-subject EN ↔ GA
@@ -348,7 +348,7 @@ BAML extractors (`ExtractCurriculumSyllabus` + `ExtractExamPaperLayout` +
       chemistry BAML extraction has produced rows in
       `oideachais.leaving_cert.chemistry_topics`
 - **WHEN** a teacher runs
-      `marimo edit cianfhoghlaim/notebooks/leaving_cert/chemistry.py`
+      `marimo edit notebooks/leaving_cert/chemistry.py`
 - **THEN** the notebook renders 5 altair visualisations (topic
       frequency line chart, exam paper difficulty bar chart, marking
       scheme complexity heatmap, experiment ↔ learning outcome
@@ -372,7 +372,7 @@ BAML extractors (`ExtractCurriculumSyllabus` + `ExtractExamPaperLayout` +
 
 - **GIVEN** the bilingual EN + GA subject assets are loaded
 - **WHEN** a teacher opens
-      `cianfhoghlaim/notebooks/leaving_cert/06_en_vs_ga_comparison.py`
+      `notebooks/leaving_cert/06_en_vs_ga_comparison.py`
 - **THEN** the notebook shows the EN ↔ GA topic coverage matrix
       for the 5 EN/GA subjects (Chemistry, Computer Science, Geography,
       Mathematics, English)
@@ -383,7 +383,7 @@ BAML extractors (`ExtractCurriculumSyllabus` + `ExtractExamPaperLayout` +
 
 The system SHALL schedule a daily MotherDuck Flight
 `lc_pdf_sync_flight` at
-`cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py` that:
+`motherduck/flights/lc_pdf_sync_flight.py` that:
 
 1. Runs `uv run cocoindex update lc_subjects` to re-ingest the 6 LC
    subjects' PDF corpus (any new PDFs landed in
@@ -398,7 +398,7 @@ The system SHALL schedule a daily MotherDuck Flight
    exit codes + the full log
 
 The Flight SHALL be registered in
-`cianfhoghlaim/motherduck/flights/config.yaml` with
+`motherduck/flights/config.yaml` with
 `schedule: "0 4 * * *"` (daily at 04:00 UTC). The IaC orchestration
 (Docker Compose stack + cron binding) lives in the separate
 `bonneagar` repo at `bonneagar/stacks/motherduck/`.
@@ -449,13 +449,13 @@ classes) and by adding per-subject grading functions
 call.
 
 The per-subject deliverable surface: 6 per-subject marking scheme
-BAML files at `cianfhoghlaim/baml/education/marking/<subject>_marking.baml`
+BAML files at `baml/education/marking/<subject>_marking.baml`
 + 6 per-subject grading BAML files at
-`cianfhoghlaim/baml/education/grading/<subject>_grading.baml` + 6 L1
+`baml/education/grading/<subject>_grading.baml` + 6 L1
 ingestion defs YAMLs at
-`cianfhoghlaim/orchestration/defs/1_ingestion/marking/<subject>.yaml`
+`orchestration/defs/1_ingestion/marking/<subject>.yaml`
 + 6 L2 materials defs YAMLs at
-`cianfhoghlaim/orchestration/defs/2_materials/grading/<subject>.yaml`.
+`orchestration/defs/2_materials/grading/<subject>.yaml`.
 
 *(Consolidates the 1 ADDED Requirement from
 `2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1`.)*
@@ -465,8 +465,8 @@ ingestion defs YAMLs at
 - **GIVEN** the BIEP v1 capspec covers the 6 priority Irish LC
       subjects
 - **WHEN** the operator checks the per-subject BAML surface under
-      `cianfhoghlaim/baml/education/marking/` +
-      `cianfhoghlaim/baml/education/grading/`
+      `baml/education/marking/` +
+      `baml/education/grading/`
 - **THEN** 12 files SHALL exist (6 marking + 6 grading, one per
       subject per surface)
 

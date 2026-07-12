@@ -20,7 +20,7 @@ The `indexing-and-cognition` capability spec SHALL use the v4 namespace conventi
 
 #### Scenario: The cocoindex CLI invocation uses the v4 path
 
-- **GIVEN** the v4 CocoIndex flow at `cianfhoghlaim/cocoindex/codebase_indexing.py` exposing `CodebaseIndex`
+- **GIVEN** the v4 CocoIndex flow at `cocoindex/codebase_indexing.py` exposing `CodebaseIndex`
 - **WHEN** the `bun run ccc:index` task runs
 - **THEN** it SHALL invoke `uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex`
 - **AND** it SHALL write the `codebase_chunks` LanceDB table to the `codebase` asset group
@@ -28,7 +28,7 @@ The `indexing-and-cognition` capability spec SHALL use the v4 namespace conventi
 
 #### Scenario: The agent inventory is importable from the v4 path
 
-- **GIVEN** the 13 `.py` modules under `cianfhoghlaim/agents/*.py` (root_agent + 12 specialists)
+- **GIVEN** the 13 `.py` modules under `agents/*.py` (root_agent + 12 specialists)
 - **WHEN** a consumer does `import meaisinfhoghlaim.agents`
 - **THEN** the import succeeds
 - **AND** the `MODEL_LAYER_AGENTS` tuple lists exactly the 13 module basenames: `root_agent`, `curriculum_agent`, `translation_agent`, `corpus_agent`, `research_agent`, `education_research_agent`, `bunchloch_research_agent`, `geospatial_agent`, `statistics_agent`, `curriculum_comparison_agent`, `agui_curriculum_agent`, `mcp_curriculum_agent`, `voice_agent`

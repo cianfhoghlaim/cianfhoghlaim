@@ -1,8 +1,8 @@
-# Restore the canonical `cianfhoghlaim/ocr/` Python package (v1)
+# Restore the canonical `ocr/` Python package (v1)
 
 > **Why:** This is the **#1 critical fix** from the recent audit.
 > The canonical OCR/VLM model registry package
-> `cianfhoghlaim/ocr/` is documented as the v4 home in
+> `ocr/` is documented as the v4 home in
 > `openspec/specs/meaisinfhoghlaim-platform/spec.md` line 685 and
 > in the historical commit `0fceb8654` (`fix(ocr): promote registry
 > to canonical ocr/models + add 7th pdf-processing spec`).
@@ -36,17 +36,17 @@ the canonical implementation is missing on disk.
 ### Root cause
 
 The three files
-`cianfhoghlaim/ocr/__init__.py`,
-`cianfhoghlaim/ocr/models/__init__.py`, and
-`cianfhoghlaim/ocr/models/registry.py` (1081 lines total) are
+`ocr/__init__.py`,
+`ocr/models/__init__.py`, and
+`ocr/models/registry.py` (1081 lines total) are
 present in `HEAD` (commit `0fceb8654`) but are staged for deletion
-in the working tree (`D cianfhoghlaim/ocr/...`). No commit on the
+in the working tree (`D ocr/...`). No commit on the
 `pick-4-biep-v1` branch has yet removed them from the index, so
 they exist in git history but not on the filesystem.
 
 A parallel agent created two back-compat shim packages at
-`cianfhoghlaim/meaisinfhoghlaim/ocr/` and
-`cianfhoghlaim/meaisinfhoghlaim/models/`. Both shims
+`meaisinfhoghlaim/ocr/` and
+`meaisinfhoghlaim/models/`. Both shims
 re-export the canonical symbols via
 `from cianfhoghlaim.ocr.models.registry import ...`. Because the
 canonical package is missing, **every shim import also fails**,
@@ -58,17 +58,17 @@ emitting a `DeprecationWarning` before crashing.
 
 | Sub-tree | Files |
 |:--|:--|
-| `cianfhoghlaim/cocoindex/` | `ocr_aware_flow.py` |
-| `cianfhoghlaim/observability/` | `ocr.py` |
-| `cianfhoghlaim/orchestration/` | `resources.py` |
-| `cianfhoghlaim/tests/` | `_meaisinfhoghlaim/test_ocr_vlm_registry.py` |
-| `cianfhoghlaim/meaisinfhoghlaim/backends/` | `gaelic_metrics.py`, `author_archive_ocr.py` |
-| `cianfhoghlaim/meaisinfhoghlaim/ci/` | `hf_watchdog.py` |
-| `cianfhoghlaim/meaisinfhoghlaim/datasets/` | `line_segmentation.py`, `irish_htr_dataset.py` |
-| `cianfhoghlaim/meaisinfhoghlaim/evaluation/` | `compare.py` |
-| `cianfhoghlaim/meaisinfhoghlaim/process/` | `irish_document_scanner.py` |
-| `cianfhoghlaim/meaisinfhoghlaim/ocr/` | `__init__.py`, `models/__init__.py`, `models/registry.py` (shim) |
-| `cianfhoghlaim/meaisinfhoghlaim/models/` | `__init__.py`, `registry.py` (back-compat shim) |
+| `cocoindex/` | `ocr_aware_flow.py` |
+| `observability/` | `ocr.py` |
+| `orchestration/` | `resources.py` |
+| `tests/` | `_meaisinfhoghlaim/test_ocr_vlm_registry.py` |
+| `meaisinfhoghlaim/backends/` | `gaelic_metrics.py`, `author_archive_ocr.py` |
+| `meaisinfhoghlaim/ci/` | `hf_watchdog.py` |
+| `meaisinfhoghlaim/datasets/` | `line_segmentation.py`, `irish_htr_dataset.py` |
+| `meaisinfhoghlaim/evaluation/` | `compare.py` |
+| `meaisinfhoghlaim/process/` | `irish_document_scanner.py` |
+| `meaisinfhoghlaim/ocr/` | `__init__.py`, `models/__init__.py`, `models/registry.py` (shim) |
+| `meaisinfhoghlaim/models/` | `__init__.py`, `registry.py` (back-compat shim) |
 
 Of these, 8 contain **hard imports** of the canonical symbols
 (`from cianfhoghlaim.ocr.models.registry import ...`) and 6 more
@@ -95,7 +95,7 @@ then resolve correctly and emit only their intended
 
 ## Scope
 
-This change is **bounded** to the canonical `cianfhoghlaim/ocr/`
+This change is **bounded** to the canonical `ocr/`
 package and the `oideachais-marimo-dashboards` capability spec.
 It does **NOT**:
 
@@ -105,7 +105,7 @@ It does **NOT**:
   `272`, `308-315`, `316-323` but the file is only 163 lines;
   no such claims exist in the current repo — see `## Out-of-scope
   audit claims` below)
-- Touch any of the 24 `M cianfhoghlaim/dlt/british_isles/*` files
+- Touch any of the 24 `M dlt/british_isles/*` files
   (parallel agents)
 - Touch the 26 `D openspec/changes/2026-07-1*/` archives (parallel
   agents)
@@ -117,7 +117,7 @@ following claims, which I verified are **stale / hallucinated**:
 
 | Claim (audit) | Reality |
 |:--|:--|
-| `pyproject.toml:316-323` documents `cianfhoghlaim/ocr/` | `pyproject.toml` is **163 lines total**; lines 316-323 do not exist |
+| `pyproject.toml:316-323` documents `ocr/` | `pyproject.toml` is **163 lines total**; lines 316-323 do not exist |
 | `pyproject.toml:272` declares the `cianfhoghlaim-ocr` console script entry | No `[project.scripts]` section in the current `pyproject.toml` (workspace shell only — see lines 35-37 of `pyproject.toml`) |
 | `pyproject.toml:308-315` has a "Phase 3 (meaisinfoghglaim redistribution) phantom claim" | No such lines exist; the only `pyproject.toml` modification on this branch is `+    "pytest-asyncio>=1.4.0",` (added by a parallel agent) |
 
@@ -134,23 +134,23 @@ leabharlann touchpoints)
 
 ## Changes
 
-### 1. Restore `cianfhoghlaim/ocr/` from HEAD
+### 1. Restore `ocr/` from HEAD
 
 Three files restored from `HEAD` (commit `0fceb8654`):
 
 | Path | Lines | Status |
 |:--|--:|:--|
-| `cianfhoghlaim/ocr/__init__.py` | 81 | Restored from HEAD |
-| `cianfhoghlaim/ocr/models/__init__.py` | 71 | Restored from HEAD |
-| `cianfhoghlaim/ocr/models/registry.py` | 929 | Restored from HEAD |
+| `ocr/__init__.py` | 81 | Restored from HEAD |
+| `ocr/models/__init__.py` | 71 | Restored from HEAD |
+| `ocr/models/registry.py` | 929 | Restored from HEAD |
 
-Mechanism: `git checkout HEAD -- cianfhoghlaim/ocr/`.
+Mechanism: `git checkout HEAD -- ocr/`.
 
 ### 2. Spec delta — `oideachais-marimo-dashboards`
 
 `## Requirements` ADDED 1 requirement:
 
-> **The canonical `cianfhoghlaim/ocr/` Python package is
+> **The canonical `ocr/` Python package is
 > restored to its v4 home** (per
 > `openspec/specs/meaisinfhoghlaim-platform/spec.md` line 685 and
 > commit `0fceb8654`). The 19 downstream consumers across
@@ -158,8 +158,8 @@ Mechanism: `git checkout HEAD -- cianfhoghlaim/ocr/`.
 > `tests/`, and the `meaisinfhoghlaim/` sub-package resolve the
 > `cianfhoghlaim.ocr.*` symbols at import time. The two
 > back-compat shims at
-> `cianfhoghlaim/meaisinfhoghlaim/ocr/__init__.py` and
-> `cianfhoghlaim/meaisinfhoghlaim/models/{__init__,registry}.py`
+> `meaisinfhoghlaim/ocr/__init__.py` and
+> `meaisinfhoghlaim/models/{__init__,registry}.py`
 > continue to function (emit a `DeprecationWarning`, then re-export
 > the canonical symbols).
 

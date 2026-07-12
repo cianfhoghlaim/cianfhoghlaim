@@ -37,7 +37,7 @@ Plus:
 ## 4. CocoIndex v1 App
 
 - [ ] 4.1 Create
-  `cianfhoghlaim/cocoindex/americas_california_education_embedding.py`
+  `cocoindex/americas_california_education_embedding.py`
 - [ ] 4.2 Imports `from ._lifespan import shared_lifespan`
 - [ ] 4.3 Embeds with `BAAI/bge-m3`
 - [ ] 4.4 Create the corresponding Dagster L3 defs.yaml
@@ -45,9 +45,9 @@ Plus:
 ## 5. MotherDuck Dive + Flight
 
 - [ ] 5.1 Create
-  `cianfhoghlaim/motherduck/dives/americas_state_standards_crosswalk.py`
+  `motherduck/dives/americas_state_standards_crosswalk.py`
 - [ ] 5.2 Create
-  `cianfhoghlaim/motherduck/flights/americas_daily_sync_flight.py`
+  `motherduck/flights/americas_daily_sync_flight.py`
 - [ ] 5.3 Append the flight to `config.yaml`
 
 ## 6. Spec deltas

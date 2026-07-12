@@ -11,7 +11,7 @@
       R8 DLT → Cognee → Memgraph multi-destination fan-out, R9 runtime
       evals + auto-retry loop.
 - [x] **1.2** Audited the existing cognify infrastructure at
-      `cianfhoghlaim/storage/cognify/`: 7 cognify adapters in
+      `storage/cognify/`: 7 cognify adapters in
       `cognee_integration/` (cross_stage, site_analysis, leabharlann,
       author_archive, official_media, culture, leabharlann_inbox) +
       4 cross-archive rules in `rules/` (leabharlann_cross_archive,
@@ -27,28 +27,28 @@
 ## 2. Implement the 5-stage cross-stage cognify (2-3 hours)
 
 - [x] **2.1** Created
-      `cianfhoghlaim/storage/cognify/cognee_integration/aistear_cognify.py`
+      `storage/cognify/cognee_integration/aistear_cognify.py`
       (~150 lines; Stage 1: 0-6, 4 themes, 4 edge types,
       cognify_aistear_rows() + aistear_theme_labels/GA helpers).
 - [x] **2.2** Created
-      `cianfhoghlaim/storage/cognify/cognee_integration/primary_cognify.py`
+      `storage/cognify/cognee_integration/primary_cognify.py`
       (~166 lines; Stage 2: 5-12, 6 curricular areas, 8 class
       stages, 5 edge types, cognify_primary_rows() +
       primary_curricular_areas/GA helpers).
 - [x] **2.3** Created
-      `cianfhoghlaim/storage/cognify/cognee_integration/junior_cycle_cognify.py`
+      `storage/cognify/cognee_integration/junior_cycle_cognify.py`
       (~160 lines; Stage 3: 12-15, 21 JC subjects, 3 year groups,
       6 edge types including PREPARES_FOR→SC bridge,
       cognify_junior_cycle_rows() + junior_cycle_priority_subjects
       helpers (returns the 6 BIEP priority subjects)).
 - [x] **2.4** Created
-      `cianfhoghlaim/storage/cognify/cognee_integration/senior_cycle_cognify.py`
+      `storage/cognify/cognee_integration/senior_cycle_cognify.py`
       (~162 lines; Stage 4: 15-18, 42 LC subjects, 3 year groups,
       3 LC levels (Higher/Ordinary/Foundation), 7 edge types,
       cognify_senior_cycle_rows() + senior_cycle_priority_subjects
       helpers (returns the 6 BIEP LC priority subjects)).
 - [x] **2.5** Created
-      `cianfhoghlaim/storage/cognify/cognee_integration/university_cognify.py`
+      `storage/cognify/cognee_integration/university_cognify.py`
       (~176 lines; Stage 5: 18+, 8 Irish universities + 5 TUs +
       QQI Level 6-10 + CAO + SOLAS apprenticeships, 8 edge types,
       cognify_university_rows() + irish_universities +
@@ -66,19 +66,19 @@
 ## 3. Implement the 3 leabharlann cognify (1-2 hours)
 
 - [x] **3.1** Created
-      `cianfhoghlaim/storage/cognify/rules/leabharlann_official_media.py`
+      `storage/cognify/rules/leabharlann_official_media.py`
       (~171 lines; wraps `official_media_cognify.py`, adds 2
       leabharlann-aware edge types — `OfficialMediaSource-ANNOTATES-LeabharlannDoc`
       + `OfficialMediaSource-REFERENCED_IN-CurriculumStage` — and
       validates the 5 VALID_STAGE_IDS).
 - [x] **3.2** Created
-      `cianfhoghlaim/storage/cognify/rules/leabharlann_authors_archive.py`
+      `storage/cognify/rules/leabharlann_authors_archive.py`
       (~163 lines; wraps `author_archive_cognify.py`, dispatches
       across the 6 VALID_CORPORA (official_media, uog_coursework,
       personal_records, gemini_deep_research, zotero, google_takeout),
       adds 2 leabharlann-aware edge types).
 - [x] **3.3** Created
-      `cianfhoghlaim/storage/cognify/rules/leabharlann_culture_heritage.py`
+      `storage/cognify/rules/leabharlann_culture_heritage.py`
       (~168 lines; wraps `culture_cognify.py`, adds
       `_place_key` + `_person_key` slug normalisation + crude
       stage correlation by historical era keywords (1800/1916/1922/viking),
@@ -87,7 +87,7 @@
 ## 4. Implement the 3 cross-archive FalkorDB edges (1-2 hours)
 
 - [x] **4.1** Created
-      `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`
+      `storage/cognify/rules/cross_archive_biep_edges.py`
       (~496 lines; 3 BIEP cross-archive edge types in 1 file):
       - `build_biep_references_leabharlann_query()` — Edge 1:
         `SCLearningOutcome-REFERENCED_IN-LeabharlannDoc` via 60%
@@ -108,7 +108,7 @@
 ## 5. Add 1 marimo notebook for the cognify visualization (1-2 hours)
 
 - [x] **5.1** Created
-      `cianfhoghlaim/notebooks/10_cognify/01_knowledge_graph.py`
+      `notebooks/10_cognify/01_knowledge_graph.py`
       (~429 lines; 9-panel marimo notebook).
 - [x] **5.2** Panels:
       - Header markdown (cites all 9 requirements)
@@ -126,7 +126,7 @@
       - Search-results table
       - Cognify spec coverage summary (9 requirements with ✅)
 - [x] **5.3** Added `10_cognify` to the GROUPS tuple in
-      `cianfhoghlaim/notebooks/cli.py` so
+      `notebooks/cli.py` so
       `uv run cianfhoghlaim-marimo list 10_cognify` discovers the
       new notebook.
 - [x] **5.4** Verified CLI discovery:
@@ -148,7 +148,7 @@
       On the dirty current state, baml:generate fails with
       `No type specified for field 'VisualSequence'` on the
       parallel-agent untracked file
-      `cianfhoghlaim/baml/processing/_shared/video_kg.baml` —
+      `baml/processing/_shared/video_kg.baml` —
       this is dirty state from a parallel agent and is NOT caused
       by this change.
 - [x] **6.7** `uv run cianfhoghlaim-marimo list 10_cognify` discovers

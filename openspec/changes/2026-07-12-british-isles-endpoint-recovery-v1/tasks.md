@@ -2,7 +2,7 @@
 
 ## 1. Create the shared helper
 
-- [ ] 1.1 Create `cianfhoghlaim/dlt/common/endpoint_recovery.py` with:
+- [ ] 1.1 Create `dlt/common/endpoint_recovery.py` with:
   - `RecoveredPage` dataclass (`status`, `backend_used`,
     `content_hash`, `content`, `language`, `wayback_snapshot_url`,
     `firecrawl_metadata`)

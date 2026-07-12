@@ -6,7 +6,7 @@ This delta adds one new requirement to the existing `british-isles-education-pip
 
 ### Requirement: MarkingPoint classes are uniquely named per BAML file
 
-The British-Isles Education Pipeline SHALL avoid duplicate BAML class names for marking-scheme point records. The cross-stage shared marking point class in `cianfhoghlaim/baml/education/_shared/strand_outcome.baml` SHALL be named `MarkingPointStrand`, and the SEC marking-scheme PDF extraction class in `cianfhoghlaim/baml/education/pdfs/leaving_cert_marking_scheme.baml` SHALL be named `MarkingPointSec`.
+The British-Isles Education Pipeline SHALL avoid duplicate BAML class names for marking-scheme point records. The cross-stage shared marking point class in `baml/education/_shared/strand_outcome.baml` SHALL be named `MarkingPointStrand`, and the SEC marking-scheme PDF extraction class in `baml/education/pdfs/leaving_cert_marking_scheme.baml` SHALL be named `MarkingPointSec`.
 
 #### Scenario: no bare MarkingPoint class remains
 

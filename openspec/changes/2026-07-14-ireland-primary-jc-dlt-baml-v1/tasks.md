@@ -5,11 +5,11 @@
 - [x] Read `openspec/specs/ireland-primary-jc-dlt-baml/spec.md` (3 requirements:
       Primary stage DLT sources / Junior Cycle DLT sources (24 subjects) /
       Stage-specific BAML schemas).
-- [x] Audited the existing `cianfhoghlaim/dlt/british_isles/ireland/education/`
+- [x] Audited the existing `dlt/british_isles/ireland/education/`
       tree: `primary.py` + `junior_cycle.py` already exist (committed at
       `24f671f43`); `ncca.py` + `examinations.py` + `gov_ie_circulars.py` are
       the BIEP v1 sources (do not touch).
-- [x] Audited the existing `cianfhoghlaim/baml/education/stages/` tree:
+- [x] Audited the existing `baml/education/stages/` tree:
       `primary.baml` + `junior_cycle.baml` already exist (committed at
       `54c21dd52`); they use the legacy class names. The new stage-specific
       schemas will use the `Stage` suffix to avoid class-name collisions.

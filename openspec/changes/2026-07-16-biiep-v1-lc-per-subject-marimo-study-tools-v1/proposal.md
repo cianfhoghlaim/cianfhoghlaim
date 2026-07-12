@@ -18,7 +18,7 @@ operator-facing dashboards waves:
 
 Both waves are operator-facing. There is **no student-facing study
 tool surface** that consumes the per-subject `qpack_*.baml` functions
-in `cianfhoghlaim/baml/education/subjects/`. The 6 BIEP v1 LC
+in `baml/education/subjects/`. The 6 BIEP v1 LC
 subjects (Mathematics, Chemistry, Geography, Gaeilge, English,
 Computer Science) each have:
 - A per-subject NCCA syllabus (BIEP lakehouse tables under
@@ -31,7 +31,7 @@ Computer Science) each have:
 
 This change ships **6 per-subject interactive marimo study tools**
 (one per BIEP v1 LC subject) at
-`cianfhoghlaim/notebooks/12_subject_study_tools/`. Each notebook is
+`notebooks/12_subject_study_tools/`. Each notebook is
 student-facing and ships 5 study-tool cells:
 
 1. **Flashcards** — generated from the per-subject NCCA learning
@@ -53,7 +53,7 @@ fallback via `connect_biep_lakehouse()`.
 
 ## What changes
 
-- New subdir `cianfhoghlaim/notebooks/12_subject_study_tools/` with
+- New subdir `notebooks/12_subject_study_tools/` with
   **6 per-subject marimo study tools** (one per BIEP v1 LC subject):
   - `mathematics.py` — Math: Algebra / Calculus / Statistics /
     Geometry flashcards + practice questions + mock exam + study
@@ -73,7 +73,7 @@ fallback via `connect_biep_lakehouse()`.
   - `computer_science.py` — Comp: Algorithms / Programming / Data
     Structures / Databases flashcards + practice + mock + study plan +
     `qpack_computer_science.baml::GenerateCompFormativeItem`
-- `cianfhoghlaim/notebooks/cli.py` — added `12_subject_study_tools`
+- `notebooks/cli.py` — added `12_subject_study_tools`
   to the `GROUPS` tuple (so `cianfhoghlaim-marimo list
   12_subject_study_tools` discovers the new entries)
 - 1 MODIFIED spec delta on `oideachais-marimo-dashboards/spec.md` —
@@ -131,7 +131,7 @@ remote `pick-4-biep-v1` branch.
   working languages, and the 9-year window)
 - `openspec/specs/british-isles-education-pipeline/spec.md` (the
   upstream BIEP v1 spec)
-- `cianfhoghlaim/baml/education/subjects/qpack_<subject>.baml` (the
+- `baml/education/subjects/qpack_<subject>.baml` (the
   per-subject qpack BAML functions consumed by each study tool)
-- `cianfhoghlaim/notebooks/nb_utils.py::connect_biep_lakehouse()` (the
+- `notebooks/nb_utils.py::connect_biep_lakehouse()` (the
   canonical MotherDuck + DuckLake connect helper)

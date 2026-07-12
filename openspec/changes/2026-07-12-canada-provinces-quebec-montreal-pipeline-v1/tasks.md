@@ -36,7 +36,7 @@ For each of `on`, `qc`, `bc`, `ab`, `sk`, `mb`, `ns`, `nb`, `pe`,
 ## 4. CocoIndex v1 App
 
 - [ ] 4.1 Create
-  `cianfhoghlaim/cocoindex/quebec_montreal_education_embedding.py`
+  `cocoindex/quebec_montreal_education_embedding.py`
   (1 App for the 5 Quebec education sources + 4 Montreal
   universities)
 - [ ] 4.2 Imports `from ._lifespan import shared_lifespan`
@@ -48,12 +48,12 @@ For each of `on`, `qc`, `bc`, `ab`, `sk`, `mb`, `ns`, `nb`, `pe`,
 ## 5. MotherDuck Dive + Flight
 
 - [ ] 5.1 Create
-  `cianfhoghlaim/motherduck/dives/quebec_montreal_curriculum_matrix.py`
+  `motherduck/dives/quebec_montreal_curriculum_matrix.py`
   (bilingual cross-language matrix)
 - [ ] 5.2 Create
-  `cianfhoghlaim/motherduck/flights/canada_daily_sync_flight.py`
+  `motherduck/flights/canada_daily_sync_flight.py`
 - [ ] 5.3 Append `canada_daily_sync_flight` to
-  `cianfhoghlaim/motherduck/flights/config.yaml` (cron `0 6 * * *`)
+  `motherduck/flights/config.yaml` (cron `0 6 * * *`)
 
 ## 6. Spec deltas
 

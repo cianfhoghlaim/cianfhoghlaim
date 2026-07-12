@@ -3,7 +3,7 @@
 ## 1. Audit existing 10 dashboards + spec
 
 - [x] Read `openspec/specs/oideachais-marimo-dashboards/spec.md`
-- [x] List `cianfhoghlaim/notebooks/10_marimo_dashboards/` (10 dashboards
+- [x] List `notebooks/10_marimo_dashboards/` (10 dashboards
   from commit `44cabc151`)
 - [x] Understand the existing pattern (PEP 723 inline deps, md:oideachais
   with fallback, altair charts, health banner)
@@ -39,7 +39,7 @@
 ## 3. Register the new subdir in `cli.py`
 
 - [x] Add `"11_marimo_dashboards_v2"` to the `GROUPS` tuple in
-  `cianfhoghlaim/notebooks/cli.py`
+  `notebooks/cli.py`
 
 ## 4. Verify
 

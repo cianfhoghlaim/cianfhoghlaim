@@ -28,15 +28,15 @@ For each of the 5 pilot countries:
 
 ## 4. CocoIndex v1 App
 
-- [ ] 4.1 Create `cianfhoghlaim/cocoindex/commonwealth_education_embedding.py`
+- [ ] 4.1 Create `cocoindex/commonwealth_education_embedding.py`
 - [ ] 4.2 Imports `from ._lifespan import shared_lifespan`
 - [ ] 4.3 Embeds with `BAAI/bge-m3`
 - [ ] 4.4 Create the corresponding Dagster L3 defs.yaml
 
 ## 5. MotherDuck Dive + Flight
 
-- [ ] 5.1 Create `cianfhoghlaim/motherduck/dives/commonwealth_curriculum_matrix.py`
-- [ ] 5.2 Create `cianfhoghlaim/motherduck/flights/commonwealth_daily_sync_flight.py`
+- [ ] 5.1 Create `motherduck/dives/commonwealth_curriculum_matrix.py`
+- [ ] 5.2 Create `motherduck/flights/commonwealth_daily_sync_flight.py`
 - [ ] 5.3 Append the flight to `config.yaml`
 
 ## 6. Spec deltas

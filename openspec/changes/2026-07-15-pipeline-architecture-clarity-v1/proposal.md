@@ -88,7 +88,7 @@ Refactor the imports in:
 A pre-commit + PR-check workflow that runs:
 
 ```yaml
-- run: uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only
+- run: uv run python dlt/common/cocoindex_v1_migrate.py --check-only
 - run: openspec validate --strict
 ```
 
@@ -121,7 +121,7 @@ Backward compat — the old import paths continue to work. A
 
 ## Impact
 
-- **`cianfhoghlaim/dlt/`**: 1 new file (`common/site_crawler.py`) +
+- **`dlt/`**: 1 new file (`common/site_crawler.py`) +
   3 utility-file relocations + 8 import-path updates
 - **`openspec/specs/`**: 1 new spec (`site-crawler`)
 - **`.github/workflows/`**: 1 new workflow file
@@ -155,7 +155,7 @@ Affected repos: **cianfhoghlaim only**.
 ## Quality gates
 
 - `openspec validate --strict` MUST pass before commit
-- `uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
+- `uv run python dlt/common/cocoindex_v1_migrate.py --check-only`
   MUST report at least 50/53 flows pass (was 48/53 before; the 3 utility
   files + 2 test files are now R4-exempt)
 - `git grep "from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source"`

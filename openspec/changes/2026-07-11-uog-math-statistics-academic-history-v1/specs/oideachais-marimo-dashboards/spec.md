@@ -5,7 +5,7 @@
 ### Requirement: Academic-history notebook group (8 notebooks)
 
 The system SHALL provide 8 new marimo notebooks at
-`cianfhoghlaim/notebooks/14_academic_history/`:
+`notebooks/14_academic_history/`:
 
 1. `01_uog_maths_corpus_overview.py` — corpus manifest + ingestion status
 2. `02_module_syllabus_assessment_map.py` — personal notes + official
@@ -34,7 +34,7 @@ All 8 notebooks SHALL follow the canonical KCG conventions:
 #### Scenario: All 8 notebooks parse
 
 - **WHEN** the operator runs
-  `uv run marimo run --headless cianfhoghlaim/notebooks/14_academic_history/01_uog_maths_corpus_overview.py`
+  `uv run marimo run --headless notebooks/14_academic_history/01_uog_maths_corpus_overview.py`
   (and the other 7)
 - **THEN** each notebook SHALL render with 0 "Pending" cells after 5
   seconds

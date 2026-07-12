@@ -28,7 +28,7 @@ requirements of the parent spec SHALL be functional:
 The Phase 1 deliverables are:
 
   **5 stage-specific cognify adapters** at
-  `cianfhoghlaim/storage/cognify/cognee_integration/`:
+  `storage/cognify/cognee_integration/`:
   - `aistear_cognify.py` (Stage 1: Early Childhood 0-6; 4 themes;
     4 edge types)
   - `primary_cognify.py` (Stage 2: Primary 5-12; 6 curricular
@@ -42,7 +42,7 @@ The Phase 1 deliverables are:
     types)
 
   **3 leabharlann-aware cognify orchestrators** at
-  `cianfhoghlaim/storage/cognify/rules/`:
+  `storage/cognify/rules/`:
   - `leabharlann_official_media.py` (wraps `official_media_cognify`
     + adds 2 leabharlann-aware edge types)
   - `leabharlann_authors_archive.py` (wraps `author_archive_cognify`
@@ -53,7 +53,7 @@ The Phase 1 deliverables are:
     2 leabharlann-aware edge types)
 
   **3 BIEP cross-archive FalkorDB edge rules** in
-  `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`:
+  `storage/cognify/rules/cross_archive_biep_edges.py`:
   - Edge 1: `(:SCLearningOutcome) -[:REFERENCED_IN]-> (:LeabharlannDoc)`
     (BIEP → leabharlann, 60% token-overlap heuristic)
   - Edge 2: `(:LCSubject) -[:ANNOUNCED_BY]-> (:OfficialMediaSource)`
@@ -63,27 +63,27 @@ The Phase 1 deliverables are:
     (leabharlann → culture-heritage, slug-match heuristic)
 
   **1 marimo notebook for the cognify visualisation** at
-  `cianfhoghlaim/notebooks/10_cognify/01_knowledge_graph.py`
+  `notebooks/10_cognify/01_knowledge_graph.py`
   (~429 LOC; 9-panel dashboard with 60-node synthetic KG fallback).
 
 #### Scenario: All 5 stage cognify adapters AST-parse
 
 - **GIVEN** the 5 stage cognify adapters exist at
-  `cianfhoghlaim/storage/cognify/cognee_integration/{aistear,primary,junior_cycle,senior_cycle,university}_cognify.py`
+  `storage/cognify/cognee_integration/{aistear,primary,junior_cycle,senior_cycle,university}_cognify.py`
 - **WHEN** the user runs `ast.parse(open(f).read())` for each
 - **THEN** all 5 files parse without SyntaxError
 
 #### Scenario: All 3 leabharlann cognify rules AST-parse
 
 - **GIVEN** the 3 leabharlann cognify orchestrators exist at
-  `cianfhoghlaim/storage/cognify/rules/leabharlann_{official_media,authors_archive,culture_heritage}.py`
+  `storage/cognify/rules/leabharlann_{official_media,authors_archive,culture_heritage}.py`
 - **WHEN** the user runs `ast.parse(open(f).read())` for each
 - **THEN** all 3 files parse without SyntaxError
 
 #### Scenario: The cross-archive FalkorDB rules file AST-parses
 
 - **GIVEN** the cross-archive rules file exists at
-  `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`
+  `storage/cognify/rules/cross_archive_biep_edges.py`
 - **WHEN** the user runs `ast.parse(open(f).read())`
 - **THEN** the file parses without SyntaxError
 - **AND** the file exposes the 3 public entry-point functions
@@ -95,14 +95,14 @@ The Phase 1 deliverables are:
 #### Scenario: The marimo notebook AST-parses
 
 - **GIVEN** the marimo notebook exists at
-  `cianfhoghlaim/notebooks/10_cognify/01_knowledge_graph.py`
+  `notebooks/10_cognify/01_knowledge_graph.py`
 - **WHEN** the user runs `ast.parse(open(f).read())`
 - **THEN** the file parses without SyntaxError
 
 #### Scenario: CLI discovery finds the new notebook
 
 - **GIVEN** the marimo notebook exists and
-  `cianfhoghlaim/notebooks/cli.py` has been updated to include
+  `notebooks/cli.py` has been updated to include
   `10_cognify` in its `GROUPS` tuple
 - **WHEN** the user runs
   `uv run cianfhoghlaim-marimo list 10_cognify`
@@ -112,7 +112,7 @@ The Phase 1 deliverables are:
 #### Scenario: Existing 15 notebooks still AST-parse
 
 - **GIVEN** the 15 pre-existing notebooks at
-  `cianfhoghlaim/notebooks/{03_leaving_cert,06_observability,07_educational_stages,09_official_media,13_baml_cocoindex_tutorial}/`
+  `notebooks/{03_leaving_cert,06_observability,07_educational_stages,09_official_media,13_baml_cocoindex_tutorial}/`
 - **WHEN** the user runs `ast.parse(open(f).read())` for each
 - **THEN** all 15 files still parse without SyntaxError
   (no regression introduced by this change)

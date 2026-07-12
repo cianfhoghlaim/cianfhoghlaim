@@ -4,7 +4,7 @@
 
 - [x] Show the current state of `AgentDomain.<X>:` references in `root_agent.py`
 - [x] Confirm the 8 actual per-subject agent files exist on disk under
-      `cianfhoghlaim/agents/tuatha/`
+      `agents/tuatha/`
       (`math_agent.py`, `appm_agent.py`, `chem_agent.py`, `geog_agent.py`,
       `hist_agent.py`, `engl_agent.py`, `gael_agent.py`, `comp_agent.py`)
 - [x] Update `AGENT_MODULES` to use `cianfhoghlaim.agents.tuatha.<slug>_agent`

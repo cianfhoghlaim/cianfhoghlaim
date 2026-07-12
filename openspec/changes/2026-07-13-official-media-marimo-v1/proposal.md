@@ -26,18 +26,18 @@ marimo dashboards**:
   concern, but the demonstration dashboard is missing.
 
 This change ships **5 follow-up marimo dashboards** at
-`cianfhoghlaim/notebooks/09_official_media/{03..07}_*.py`, plus the
+`notebooks/09_official_media/{03..07}_*.py`, plus the
 openspec change artifacts (proposal + tasks + 1 MODIFIED spec delta).
 
 ## What changes
 
 | File | Action | LOC delta |
 |:--|:--|--:|
-| `cianfhoghlaim/notebooks/09_official_media/03_post_trends.py` | NEW (R1 timeline — 3 panels: posts per day, per platform, engagement heatmap) | +~360 |
-| `cianfhoghlaim/notebooks/09_official_media/04_mention_network.py` | NEW (R2 TanStack route preview — 3 panels: source platform, mention overlap matrix, top-15 mention pairs) | +~345 |
-| `cianfhoghlaim/notebooks/09_official_media/05_fediverse_coverage.py` | NEW (R3 Cognee dataset edges — 3 panels: 4 edge-type counts, fediverse instance distribution, edge direction) | +~390 |
-| `cianfhoghlaim/notebooks/09_official_media/06_cross_archive.py` | NEW (R4 cross-archive + deployment — 3 panels: link strength by category, NCCA subject coverage, R4 Cloudflare deployment status) | +~425 |
-| `cianfhoghlaim/notebooks/09_official_media/07_moderation_sentiment.py` | NEW (R5 multi-column tabs — 4 tabs: sentiment over time, moderation flags, sentiment by category, BAML extractor) | +~390 |
+| `notebooks/09_official_media/03_post_trends.py` | NEW (R1 timeline — 3 panels: posts per day, per platform, engagement heatmap) | +~360 |
+| `notebooks/09_official_media/04_mention_network.py` | NEW (R2 TanStack route preview — 3 panels: source platform, mention overlap matrix, top-15 mention pairs) | +~345 |
+| `notebooks/09_official_media/05_fediverse_coverage.py` | NEW (R3 Cognee dataset edges — 3 panels: 4 edge-type counts, fediverse instance distribution, edge direction) | +~390 |
+| `notebooks/09_official_media/06_cross_archive.py` | NEW (R4 cross-archive + deployment — 3 panels: link strength by category, NCCA subject coverage, R4 Cloudflare deployment status) | +~425 |
+| `notebooks/09_official_media/07_moderation_sentiment.py` | NEW (R5 multi-column tabs — 4 tabs: sentiment over time, moderation flags, sentiment by category, BAML extractor) | +~390 |
 | `openspec/changes/2026-07-13-official-media-marimo-v1/proposal.md` | NEW (this file) | +~120 |
 | `openspec/changes/2026-07-13-official-media-marimo-v1/tasks.md` | NEW (6 task groups) | +~120 |
 | `openspec/changes/2026-07-13-official-media-marimo-v1/specs/official-media-marimo/spec.md` | NEW (1 ADDED requirement) | +~40 |
@@ -58,7 +58,7 @@ Total: 5 dashboards (~1,900 LOC) + 3 change artifacts (~280 LOC).
 ## Cross-archive impact
 
 This change ONLY touches:
-- `cianfhoghlaim/notebooks/09_official_media/03..07_*.py` (5 NEW files)
+- `notebooks/09_official_media/03..07_*.py` (5 NEW files)
 - `openspec/changes/2026-07-13-official-media-marimo-v1/` (3 NEW files)
 
 No cross-repo sync required (this is a single-repo change scoped to

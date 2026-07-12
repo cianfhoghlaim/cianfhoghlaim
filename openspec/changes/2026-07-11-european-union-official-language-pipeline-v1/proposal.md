@@ -105,7 +105,7 @@ mirroring `b.ExtractCurriculumSyllabus` from the BIEP v1 stack.
 
 ### 4. New CocoIndex v1 App
 
-`cianfhoghlaim/cocoindex/european_union_official_embedding.py` —
+`cocoindex/european_union_official_embedding.py` —
 embeds every EU document into a single shared LanceDB table
 `oideachais.eu.official_chunks` using `BAAI/bge-m3` (the canonical 1024-d
 multilingual embedder).

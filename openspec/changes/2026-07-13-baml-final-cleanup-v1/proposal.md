@@ -9,11 +9,11 @@ The user clarified the production model constraint in the prior session: only **
 ## What changes
 
 1. **Minimax-M3 single text generator**
-   - Refactor `cianfhoghlaim/baml/clients.baml` to make `generator default` the only active text-extraction generator.
+   - Refactor `baml/clients.baml` to make `generator default` the only active text-extraction generator.
    - Point `default` at `minimax-m3` via `MINIMAX_BASE_URL` + `MINIMAX_API_KEY` using the OpenAI-compatible `openai-generic` provider.
    - Preserve the historical 8-generator layout as line comments for future provider reactivation.
    - Keep the two local vision generators active: `local_vision_gemma4` and `local_vision_qwen3vl`.
-   - Update `cianfhoghlaim/baml/baml.toml` output directories to `baml_client` and `baml_client_ts`.
+   - Update `baml/baml.toml` output directories to `baml_client` and `baml_client_ts`.
 
 2. **MarkingPoint duplicate fix**
    - Rename the cross-stage shared copy to `MarkingPointStrand`.
@@ -38,7 +38,7 @@ The user clarified the production model constraint in the prior session: only **
 
 ## Out of scope
 
-- Do not modify the 7 `cianfhoghlaim/baml/education/lc_extraction/*.baml` files.
+- Do not modify the 7 `baml/education/lc_extraction/*.baml` files.
 - Do not fix the remaining parser diagnostics in BAML subject packs, processing files, Celtic files, or archived files.
 - Do not touch archived OpenSpec changes.
 - Do not push to `main`.

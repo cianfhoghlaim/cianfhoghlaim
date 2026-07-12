@@ -2,7 +2,7 @@
 
 ## Step 1 — Refactor `clients.baml` to minimax-m3 default
 
-- [x] Preserve the historical 8-generator setup as a comment block in `cianfhoghlaim/baml/clients.baml`.
+- [x] Preserve the historical 8-generator setup as a comment block in `baml/clients.baml`.
 - [x] Make `generator default` the only active text-extraction generator.
 - [x] Point `default` at `minimax-m3` via `MINIMAX_BASE_URL` + `MINIMAX_API_KEY`.
 - [x] Keep `local_vision_gemma4` active.

@@ -6,15 +6,15 @@ The `oideachais-leabharlann` capability (21 requirements under
 `openspec/specs/oideachais-leabharlann/spec.md`) defines the
 end-to-end personal + academic archive pipeline:
 
-- **4 DLT sources** at `cianfhoghlaim/dlt/filesystem/` —
+- **4 DLT sources** at `dlt/filesystem/` —
   `leabharlann_books.py` (books), `zotero.py` (with arxiv_id
   detection), `google_takeout.py` + `takeout_v1.py` (Phase 1
   filesystem), and `university_of_galway.py` (UoG artefacts).
 - **1 Gemini deep research source** at
-  `cianfhoghlaim/dlt/filesystem/gemini_deep_research.py` with
+  `dlt/filesystem/gemini_deep_research.py` with
   inline citation extraction (via the shared `_citation_extractor`).
 - **3 v1 CocoIndex Apps** at
-  `cianfhoghlaim/cocoindex/leabharlann_embedding.py` +
+  `cocoindex/leabharlann_embedding.py` +
   `leabharlann_flow.py` — using the canonical v1 patterns
   (`@coco.fn(memo=True)`, `ContextKey`/`@coco.lifespan`,
   `lancedb.mount_table_target`, `mount_each`, `IdGenerator`,
@@ -23,9 +23,9 @@ end-to-end personal + academic archive pipeline:
 - **1 Dagster asset group** with 7 assets (3 raw ingest + 1 BAML
   metadata extraction + 3 CocoIndex v1 embedding updates) via
   6 `defs.yaml` components under
-  `cianfhoghlaim/orchestration/defs/{1_ingestion/filesystem,3_model_lifecycle/cocoindex_v1}/leabharlann_*/`.
+  `orchestration/defs/{1_ingestion/filesystem,3_model_lifecycle/cocoindex_v1}/leabharlann_*/`.
 - **1 full-stack demo asset** at
-  `cianfhoghlaim/notebooks/04_biep_motherduck/08_leabharlann_full_stack_demo.py`
+  `notebooks/04_biep_motherduck/08_leabharlann_full_stack_demo.py`
   exercising the entire stack on 2 sample PDFs (1 UoG + 1 Zotero).
 - **1 directory-watch sensor** — provided by the L1
   `CelticIngestionComponent` `automation: on_dlt_freshness` cron
@@ -33,7 +33,7 @@ end-to-end personal + academic archive pipeline:
   2026-06-30 dagster-ground-up-rewrite; the L1 component is the
   canonical replacement).
 - **4 cross-archive edge rules** at
-  `cianfhoghlaim/storage/cognify/rules/leabharlann_*.py` —
+  `storage/cognify/rules/leabharlann_*.py` —
   `leabharlann_cross_archive.py` (BIEP ↔ leabharlann, the
   `GeminiReport-CITES-ZoteroPaper` + `UoGArtifact-TEACHES-ZoteroPaper`
   edges), `leabharlann_official_media.py`
@@ -125,7 +125,7 @@ completion.
   state before merging.
 - The `bianfhoghlaim/baml_src/` path is a symlink to
   `bianfhoghlaim/baml/`. The `baml:generate` mise task runs
-  `uv run baml-cli generate --from cianfhoghlaim/baml_src`, which
+  `uv run baml-cli generate --from baml_src`, which
   transparently resolves through the symlink.
 - The pre-flight `git pull --rebase` was NOT run (per the prompt's
   guidance when dirty state is present) — the working tree has 30+

@@ -11,7 +11,7 @@ cd cianfhoghlaim
 mise run baml:test
 ```
 
-`baml:test` runs `uv run baml-cli test`, so the gate exercises every `test` block discovered by BAML under `cianfhoghlaim/baml/` (via the existing `baml_src -> baml/` project layout). The seeded tests include the 3 existing route tests in `cianfhoghlaim/baml/clients.baml` and the new `ExtractDocSkillTagSmokeTest` block in `cianfhoghlaim/baml/processing/docs_skills_extraction.baml` from commit `409898008`.
+`baml:test` runs `uv run baml-cli test`, so the gate exercises every `test` block discovered by BAML under `baml/` (via the existing `baml_src -> baml/` project layout). The seeded tests include the 3 existing route tests in `baml/clients.baml` and the new `ExtractDocSkillTagSmokeTest` block in `baml/processing/docs_skills_extraction.baml` from commit `409898008`.
 
 ## Dependencies
 
@@ -25,23 +25,23 @@ The current branch contains 37 BAML `test` blocks:
 
 | File | Test blocks |
 |:--|--:|
-| `cianfhoghlaim/baml/clients.baml` | 3 |
-| `cianfhoghlaim/baml/education/cross_nation/isles_education.baml` | 2 |
-| `cianfhoghlaim/baml/education/cross_nation/multi_nation_curriculum.baml` | 2 |
-| `cianfhoghlaim/baml/education/stages/junior_cycle.baml` | 1 |
-| `cianfhoghlaim/baml/education/stages/primary.baml` | 1 |
-| `cianfhoghlaim/baml/education/statistics/education_statistics.baml` | 3 |
-| `cianfhoghlaim/baml/education/university/university_extraction.baml` | 4 |
-| `cianfhoghlaim/baml/processing/artwork_analysis.baml` | 2 |
-| `cianfhoghlaim/baml/processing/author_archive.baml` | 10 |
-| `cianfhoghlaim/baml/processing/docs_skills_extraction.baml` | 1 |
-| `cianfhoghlaim/baml/processing/email.baml` | 4 |
-| `cianfhoghlaim/baml/processing/portfolio_extraction.baml` | 2 |
-| `cianfhoghlaim/baml/processing/style_transfer.baml` | 2 |
+| `baml/clients.baml` | 3 |
+| `baml/education/cross_nation/isles_education.baml` | 2 |
+| `baml/education/cross_nation/multi_nation_curriculum.baml` | 2 |
+| `baml/education/stages/junior_cycle.baml` | 1 |
+| `baml/education/stages/primary.baml` | 1 |
+| `baml/education/statistics/education_statistics.baml` | 3 |
+| `baml/education/university/university_extraction.baml` | 4 |
+| `baml/processing/artwork_analysis.baml` | 2 |
+| `baml/processing/author_archive.baml` | 10 |
+| `baml/processing/docs_skills_extraction.baml` | 1 |
+| `baml/processing/email.baml` | 4 |
+| `baml/processing/portfolio_extraction.baml` | 2 |
+| `baml/processing/style_transfer.baml` | 2 |
 
 ## Local verification note
 
-`baml-cli test` is available in the uv environment, and this change adds the missing `mise run baml:test` task. The task is self-contained: it recreates the ignored `cianfhoghlaim/baml_src -> baml` symlink in fresh checkouts before invoking `baml-cli test --from cianfhoghlaim/baml_src`.
+`baml-cli test` is available in the uv environment, and this change adds the missing `mise run baml:test` task. The task is self-contained: it recreates the ignored `baml_src -> baml` symlink in fresh checkouts before invoking `baml-cli test --from baml_src`.
 
 The local command currently reaches BAML validation and fails before executing tests because the branch still contains pre-existing non-v0.223 BAML syntax in several schema files (for example colon-style fields in `baml_src/education/lc_extraction/cross_linguistic.baml`, `baml_src/education/lc_extraction/syllabus_diagram.baml`, `baml_src/education/_shared/content_types.baml`, `baml_src/education/subjects/qpack_gaeilge.baml`, `baml_src/education/subjects/qpack_mathematics.baml`, and `baml_src/celtic/curriculum/celtic_curriculum.baml`, plus legacy function signatures in `baml_src/processing/portfolio_extraction.baml`, `baml_src/processing/named_entities.baml`, `baml_src/processing/game_content.baml`, `baml_src/processing/image_generation.baml`, `baml_src/processing/culture_extraction.baml`, and `baml_src/processing/ui_components.baml`). This change intentionally does not modify those schemas because the BIEP v1 extraction files are out of scope for this 2-3 hour CI-gate follow-up.
 
@@ -58,7 +58,7 @@ The CI gate is still wired as a hard gate: once those pre-existing BAML parse fa
 
 ## Out of scope
 
-- No changes to the 7 `cianfhoghlaim/baml/education/lc_extraction/*.baml` files.
+- No changes to the 7 `baml/education/lc_extraction/*.baml` files.
 - No BAML duplicate renames.
 - No streaming attribute work.
 - No TypeBuilder/dynamic-schema implementation.

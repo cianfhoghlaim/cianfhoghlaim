@@ -11,7 +11,7 @@
 
 ### 2.1 Inspect existing patterns
 
-- [x] Read existing stub notebooks at `cianfhoghlaim/notebooks/leaving_cert/`
+- [x] Read existing stub notebooks at `notebooks/leaving_cert/`
 - [x] Read canonical 07_subject_full_pipeline.py parameterised pattern
 - [x] Read qpack_<subject>.baml files for BAML extractor functions
 - [x] Read nb_utils.py for `connect_biep_lakehouse` helper
@@ -34,9 +34,9 @@
 
 ## 3. Phase 7 — MotherDuck lc_pdf_sync_flight
 
-- [ ] Create `cianfhoghlaim/motherduck/flights/lc_pdf_sync_flight.py`
+- [ ] Create `motherduck/flights/lc_pdf_sync_flight.py`
       (daily Python job: cocoindex update + dagster materialize + status row)
-- [ ] Create `cianfhoghlaim/motherduck/flights/config.yaml`
+- [ ] Create `motherduck/flights/config.yaml`
       (cron `0 4 * * *`)
 
 ## 4. Spec deltas

@@ -54,7 +54,7 @@ This change adds the following code-level artifacts:
    `12_semantic_search` group via a 1-line GROUPS update in
    `notebooks/cli.py`.
 
-4. **`cianfhoghlaim/web/hono-api/src/routes/search.py`** (NEW) — the FastAPI route at
+4. **`web/hono-api/src/routes/search.py`** (NEW) — the FastAPI route at
    `/search/semantic` exposing the same `SemanticSearch` function
    over HTTP. Backs onto the same `cognify/rules/semantic_search.py`
    rules (no duplicate logic).

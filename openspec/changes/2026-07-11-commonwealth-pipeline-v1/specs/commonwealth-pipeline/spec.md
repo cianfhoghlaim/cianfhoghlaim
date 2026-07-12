@@ -47,7 +47,7 @@ of the 5 pilot Commonwealth nations, totalling 25 DLT sources.
 
 The system MUST provide a BAML extraction function
 `ExtractCommonwealthCurriculumSpec(country_code, language, text) -> CommonwealthCurriculumSpec`
-at `cianfhoghlaim/baml/commonwealth/<iso3>/education.baml` that
+at `baml/commonwealth/<iso3>/education.baml` that
 extracts the canonical Commonwealth per-nation curriculum
 specification.
 

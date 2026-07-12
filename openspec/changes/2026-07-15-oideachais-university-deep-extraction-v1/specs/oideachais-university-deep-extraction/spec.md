@@ -11,7 +11,7 @@ The `oideachais-university-deep-extraction` capability SHALL be considered Phase
 #### Scenario: 5 Tertiary 18+ DLT sources ship at the canonical paths
 
 - **GIVEN** the 2026-07-15-oideachais-university-deep-extraction-v1 change has landed
-- **WHEN** `ls cianfhoghlaim/dlt/british_isles/ireland/university/{universities,tus,qqi_awards,cao,solas}.py` is run
+- **WHEN** `ls dlt/british_isles/ireland/university/{universities,tus,qqi_awards,cao,solas}.py` is run
 - **THEN** all 5 files exist
 - **AND** each AST-parses cleanly under `uv run python3 -c "import ast; ast.parse(open('<file>').read())"`
 - **AND** each follows the canonical BIEP v1 dlt pattern: `@dlt.resource(name="tertiary_<area>", write_disposition="merge", primary_key=["<id>"])`, structlog observability, honors `USE_LOCAL_SCRAPES=true` (default) to read from `/stedding/ingest_queue/university/<area>/`
@@ -20,7 +20,7 @@ The `oideachais-university-deep-extraction` capability SHALL be considered Phase
 #### Scenario: 5+ Pydantic classes + 4+ enums + 5+ BAML functions ship in the extended university_extraction.baml
 
 - **GIVEN** the change has landed
-- **WHEN** `cianfhoghlaim/baml/education/university/university_extraction.baml` is read
+- **WHEN** `baml/education/university/university_extraction.baml` is read
 - **THEN** it defines **at least 5 new Pydantic classes**: `University` (the 8 universities) + `TU` (the 5 TUs) + `QQIAward` (the 10 QQI awards) + `CAOChoice` (a CAO course choice) + `SOLASCourse` (a SOLAS PLC / apprenticeship)
 - **AND** it defines **at least 4 new enums**: `UniversityType` (TRADITIONAL / SPECIALIST / TECHNOLOGICAL / PRIVATE) + `QQILevel` (NFQ_6 / NFQ_7 / NFQ_8 / NFQ_9 / NFQ_10) + `CAOField` (ARTS_HUMANITIES / BUSINESS_LAW / SCIENCE / COMPUTING_ENGINEERING / MEDICINE_HEALTH / EDUCATION / MUSIC_PERFORMING / AGRICULTURE_VET) + `SOLASPath` (PLC / APPRENTICESHIP / YOUTHREACH / ADULT_LITERACY / VTOS / COMMUNITY_TRAINING)
 - **AND** it defines **at least 5 new BAML functions** (`ExtractUniversityInfo` + `ExtractTuInfo` + `ExtractQQIAward` + `ExtractCAOChoice` + `ExtractSOLASCourse`) that each returns one of the 5 new Pydantic classes
@@ -30,7 +30,7 @@ The `oideachais-university-deep-extraction` capability SHALL be considered Phase
 #### Scenario: 1 Layer 1 Ingestion cron asset ships at the canonical path
 
 - **GIVEN** the change has landed
-- **WHEN** `ls cianfhoghlaim/orchestration/defs/1_ingestion/university/defs.yaml` is run
+- **WHEN** `ls orchestration/defs/1_ingestion/university/defs.yaml` is run
 - **THEN** the file exists
 - **AND** it is valid YAML under `uv run python3 -c "import yaml; yaml.safe_load(open('<file>').read())"`
 - **AND** it contains **exactly 5** `CelticIngestionComponent` entries (one per DLT source: `ireland_tertiary_universities` + `ireland_tertiary_tus` + `ireland_tertiary_qqi` + `ireland_tertiary_cao` + `ireland_tertiary_solas`)

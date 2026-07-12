@@ -48,7 +48,7 @@
 ## Step 4: Reconcile the 4 marimo count claims (30 min)
 
 - [ ] Confirm the actual on-disk count via
-  `ls cianfhoghlaim/notebooks/**/*.py | wc -l` (clean: 134 files;
+  `ls notebooks/**/*.py | wc -l` (clean: 134 files;
   raw: 160 files including __init__.py + __pycache__)
 - [ ] Write the MODIFIED spec delta at
   `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/oideachais-marimo-dashboards/spec.md`
@@ -56,7 +56,7 @@
   source of truth + 1 MODIFIED requirement updating the
   cross-reference at line 250 from "the 11 Marimo notebooks" to
   "the on-disk count of Marimo notebooks (per
-  `ls cianfhoghlaim/notebooks/**/*.py | wc -l`)"
+  `ls notebooks/**/*.py | wc -l`)"
 
 ## Step 5: Consolidate the leabharlann → culture-heritage edge ownership (30 min)
 

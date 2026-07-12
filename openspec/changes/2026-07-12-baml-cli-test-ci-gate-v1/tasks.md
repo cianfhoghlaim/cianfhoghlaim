@@ -2,9 +2,9 @@
 
 ## 1. Inspect existing BAML test blocks
 
-- [x] 1.1 Inspect `cianfhoghlaim/baml/clients.baml` route tests.
-- [x] 1.2 Inspect `cianfhoghlaim/baml/processing/docs_skills_extraction.baml` smoke test.
-- [x] 1.3 Count all `test` blocks under `cianfhoghlaim/baml/**/*.baml`.
+- [x] 1.1 Inspect `baml/clients.baml` route tests.
+- [x] 1.2 Inspect `baml/processing/docs_skills_extraction.baml` smoke test.
+- [x] 1.3 Count all `test` blocks under `baml/**/*.baml`.
   - Result: 37 total test blocks across 13 `.baml` files.
 
 ## 2. Verify local `baml:test` entrypoint

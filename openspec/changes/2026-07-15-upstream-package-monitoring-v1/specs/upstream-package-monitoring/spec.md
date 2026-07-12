@@ -14,18 +14,18 @@ CocoIndex upstream surface.
   `pick-4-biep-v1` branch
 - **WHEN** it inspects the upstream-package-monitoring implementation
 - **THEN** the three CocoIndex v1 Apps SHALL exist at
-  `cianfhoghlaim/cocoindex/upstream_blog_monitor.py`,
-  `cianfhoghlaim/cocoindex/upstream_api_surface.py`, and
-  `cianfhoghlaim/cocoindex/cocoindex_v1_conformance.py`
+  `cocoindex/upstream_blog_monitor.py`,
+  `cocoindex/upstream_api_surface.py`, and
+  `cocoindex/cocoindex_v1_conformance.py`
 - **AND** the four Firecrawl monitor entrypoints SHALL exist at
-  `cianfhoghlaim/scripts/upstream/motherduck_monitor.py`,
-  `cianfhoghlaim/scripts/upstream/dlthub_monitor.py`,
-  `cianfhoghlaim/scripts/upstream/lancedb_monitor.py`, and
-  `cianfhoghlaim/scripts/upstream/cocoindex_monitor.py`
+  `scripts/upstream/motherduck_monitor.py`,
+  `scripts/upstream/dlthub_monitor.py`,
+  `scripts/upstream/lancedb_monitor.py`, and
+  `scripts/upstream/cocoindex_monitor.py`
 - **AND** the FastAPI n8n webhook bridge SHALL exist at
-  `cianfhoghlaim/web/hono-api/src/routes/upstream_webhook.py`
+  `web/hono-api/src/routes/upstream_webhook.py`
 - **AND** the Dagster breaking-change sensor SHALL exist at
-  `cianfhoghlaim/orchestration/sensors/upstream_breaking_change_sensor.py`
+  `orchestration/sensors/upstream_breaking_change_sensor.py`
 - **AND** all listed Python files SHALL AST-parse cleanly.
 
 #### Scenario: Firecrawl monitor data path is wired
