@@ -3,7 +3,7 @@
 ### Requirement: 8 NCCA ADK specialists as A2UI surface emitters
 
 The system SHALL register the 8 NCCA ADK specialists at
-`cianfhoghlaim/agents/tuatha/{math,chem,geog,gael,engl,comp,appm,hist}_agent.py`
+`agents/tuatha/{math,chem,geog,gael,engl,comp,appm,hist}_agent.py`
 as CopilotKit dispatch targets that emit A2UI operations
 (`createSurface` / `updateComponents` / `updateDataModel`) when
 responding to user queries. The 18 per-subject workflow handlers

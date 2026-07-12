@@ -5,7 +5,7 @@
 ### Requirement: All 6 LC subjects have working filesystem DLT source
 
 The system SHALL ingest every PDF (and JPG for the scanned geography exam
-page) in `cianfhoghlaim/leaving_certificate/{chemistry,computer_science,english,gaeilge,geography,mathematics}/`
+page) in `leaving_certificate/{chemistry,computer_science,english,gaeilge,geography,mathematics}/`
 through a single filesystem DLT resource
 (`cianfhoghlaim.dlt.filesystem.leaving_cert_source.lc5_documents` with
 `LC6_SUBJECTS = ("chemistry", "computer_science", "english", "gaeilge",
@@ -17,7 +17,7 @@ spec-constitution kind (`SC-English-Spec-ENG-INT.*\.pdf`).
 
 #### Scenario: English contributes 8 PDFs to the filesystem resource
 
-- **GIVEN** the 8 PDFs in `cianfhoghlaim/leaving_certificate/english/`
+- **GIVEN** the 8 PDFs in `leaving_certificate/english/`
       (`LC002ALP100EV.pdf`, `LC002ALP200EV.pdf`, `LC002GLP100EV.pdf`,
       `LC002GLP200EV.pdf`, `SCSEC14_English_Syllabus.pdf`,
       `SCSEC14_English_Syllabus_2026-06-30.pdf`,
@@ -56,9 +56,9 @@ spec-constitution kind (`SC-English-Spec-ENG-INT.*\.pdf`).
 ### Requirement: No duplicate DLT source files (curriculum_source.py deleted)
 
 The canonical Irish curriculum DLT source SHALL live exclusively at
-`cianfhoghlaim/dlt/british_isles/ireland/education/curriculum.py`.
+`dlt/british_isles/ireland/education/curriculum.py`.
 The legacy 972-LOC byte-identical duplicate
-`cianfhoghlaim/dlt/british_isles/ireland/education/curriculum_source.py`
+`dlt/british_isles/ireland/education/curriculum_source.py`
 and the 0-byte stub `exam_source_update.py` SHALL NOT exist. All 11
 importers (5 in `dlt/british_isles/ireland/law/` + 5 in
 `dlt/british_isles/ireland/education/law/` + the canonical
@@ -68,14 +68,14 @@ test) SHALL import `_crawl_source` from `...education.curriculum` (not
 
 #### Scenario: The duplicate pair is gone
 
-- **WHEN** a developer runs `ls cianfhoghlaim/dlt/british_isles/ireland/education/ | grep -E "curriculum_source|exam_source_update"`
+- **WHEN** a developer runs `ls dlt/british_isles/ireland/education/ | grep -E "curriculum_source|exam_source_update"`
 - **THEN** zero matches SHALL be returned
 - **AND** `curriculum.py` (972 LOC) remains the sole canonical surface
 
 #### Scenario: The 11 importers resolve against the kept file
 
 - **GIVEN** `curriculum.py` defines `_crawl_source` at line 57
-      (verified via `grep -n "^def _crawl_source" cianfhoghlaim/dlt/british_isles/ireland/education/curriculum.py`)
+      (verified via `grep -n "^def _crawl_source" dlt/british_isles/ireland/education/curriculum.py`)
 - **WHEN** any of the 11 importer modules is loaded
 - **THEN** the import `from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source` SHALL succeed
 - **AND** zero matches SHALL be returned by

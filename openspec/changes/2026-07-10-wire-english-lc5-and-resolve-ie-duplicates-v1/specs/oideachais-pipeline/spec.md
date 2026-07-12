@@ -4,9 +4,9 @@
 
 ### Requirement: Legacy `dlt/british_isles/ie/` namespace
 
-**Reason**: The `cianfhoghlaim/dlt/british_isles/ie/` namespace
+**Reason**: The `dlt/british_isles/ie/` namespace
 (the deprecated `ie`-coded sub-tree under
-`cianfhoghlaim/dlt/british_isles/ie/education/`, `ie/law/`, `ie/medicine/`)
+`dlt/british_isles/ie/education/`, `ie/law/`, `ie/medicine/`)
 was created during the pre-Wave-1 (pre-`f554711a6`) dlt layout and is now
 fully retired.
 
@@ -17,7 +17,7 @@ imports from `dlt_sources.ie.*` to `dlt_sources.ireland.*`, removed the
 references. The directory has not existed on disk since that commit landed.
 
 The current canonical layout is
-`cianfhoghlaim/dlt/british_isles/{england,guernsey,ireland,isle_of_man,jersey,northern_ireland,scotland,wales}/`,
+`dlt/british_isles/{england,guernsey,ireland,isle_of_man,jersey,northern_ireland,scotland,wales}/`,
 where the *nation code* (e.g. `ie`, `england`, `sct`) is the first
 path segment.
 
@@ -33,7 +33,7 @@ Requirement.
 
 ### Requirement: No legacy 972-LOC ie-namespace duplicate pairs remain in `dlt/british_isles/ireland/education/`
 
-The `cianfhoghlaim/dlt/british_isles/ireland/education/` package SHALL NOT
+The `dlt/british_isles/ireland/education/` package SHALL NOT
 contain byte-identical or near-identical duplicate files. Specifically
 the legacy duplicate pair:
 
@@ -46,7 +46,7 @@ files are rewritten to point at `curriculum.py` (the kept surface).
 
 #### Scenario: Filesystem directory contains no legacy duplicates
 
-- **WHEN** a developer runs `ls cianfhoghlaim/dlt/british_isles/ireland/education/`
+- **WHEN** a developer runs `ls dlt/british_isles/ireland/education/`
 - **THEN** zero entries SHALL match `*curriculum_source*`
 - **AND** zero entries SHALL match `*exam_source_update*`
 - **AND** the directory listing SHALL contain exactly one `curriculum.py`

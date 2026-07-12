@@ -7,7 +7,7 @@ hse.ie, nice.org.uk, etc.). It supersedes the three overlapping pre-existing
 primitives (`dlt/common/firecrawl_source.py`, `dlt/common/incremental.py:crawl_source`,
 `dlt/british_isles/ireland/education/curriculum.py:_crawl_source`).
 
-The corresponding source code lives at `cianfhoghlaim/dlt/common/site_crawler.py`.
+The corresponding source code lives at `dlt/common/site_crawler.py`.
 
 ## ADDED Requirements
 
@@ -105,13 +105,13 @@ crawl_site`.
 #### Scenario: No cross-package private-helper imports
 
 - **WHEN** `git grep "from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import _crawl_source"`
-  is run scoped to `cianfhoghlaim/dlt/**/*.py`
+  is run scoped to `dlt/**/*.py`
 - **THEN** no DLT source module (under `dlt/british_isles/`,
   `dlt/filesystem/`, `dlt/api_sources/`, `dlt/official_media/`,
   `dlt/language/`, `dlt/apple_photos/`, or `dlt/portfolio/`) imports the
   private helper
 - **AND** the only matches in the working tree are inside test files
-  under `cianfhoghlaim/tests/` (which legitimately test curriculum.py's
+  under `tests/` (which legitimately test curriculum.py's
   own legacy implementation as a unit test target) + openspec markdown
   documentation files (which describe the historical requirement)
 
@@ -121,7 +121,7 @@ The system SHALL provide a new GitHub Actions workflow at
 `.github/workflows/cocoindex-conformance.yaml` that runs on every push to
 main + every PR open/synchronize, and SHALL execute:
 
-1. `uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
+1. `uv run python dlt/common/cocoindex_v1_migrate.py --check-only`
    with `continue-on-error: false` (the hard R1+R2+R3+R4 gate)
 2. `openspec validate --strict --changes` with `continue-on-error: true`
    (informational — the v4-drift remediation may need to land first)
@@ -130,7 +130,7 @@ main + every PR open/synchronize, and SHALL execute:
 `.github/workflows/cocoindex-conformance.yaml` MUST run on every push to
 main + every PR open/synchronize. The workflow MUST execute:
 
-1. `uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
+1. `uv run python dlt/common/cocoindex_v1_migrate.py --check-only`
    with `continue-on-error: false` (the hard R1+R2+R3+R4 gate)
 2. `openspec validate --strict --changes` with `continue-on-error: true`
    (informational — the v4-drift remediation may need to land first)

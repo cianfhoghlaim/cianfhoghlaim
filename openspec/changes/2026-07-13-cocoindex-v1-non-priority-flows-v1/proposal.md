@@ -2,10 +2,10 @@
 
 ## Summary
 
-Migrates the 25 non-priority CocoIndex flows at `cianfhoghlaim/cocoindex/` to
+Migrates the 25 non-priority CocoIndex flows at `cocoindex/` to
 the v1 conformance contract (R1+R2+R3+R4). After this change, all 47 flows
-under `cianfhoghlaim/cocoindex/` pass the conformance audit
-(`uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
+under `cocoindex/` pass the conformance audit
+(`uv run python dlt/common/cocoindex_v1_migrate.py --check-only`
 exits 0) and `mise run cocoindex:conformance` exits 0.
 
 ## Motivation
@@ -16,7 +16,7 @@ v1 conformance contract. The remaining 25 flows still failed the audit at
 the start of this change (per the pre-migration baseline at commit `c12c4f4cb`):
 
 ```
-$ uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only | grep FAIL | wc -l
+$ uv run python dlt/common/cocoindex_v1_migrate.py --check-only | grep FAIL | wc -l
 25
 ```
 
@@ -35,7 +35,7 @@ These 25 flows include a mix of:
 - **7 utility / non-flow files** (`languages.py`, `cli.py`, `caighdean_standardize.py`,
   `celtic_multilingual.py`, `file_graph.py`, `terminology_linking.py`, and
   `apple_photos_geospatial.py`) that the audit incorrectly counts as v1 flows
-  because they live under `cianfhoghlaim/cocoindex/`. For these files, the
+  because they live under `cocoindex/`. For these files, the
   v1 conformance scaffolding satisfies the audit without modifying the
   existing utility logic.
 
@@ -186,7 +186,7 @@ contract) while satisfying the 4-rule audit.
 
 ```bash
 # 1. The audit exits 0.
-$ uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only | tail -1
+$ uv run python dlt/common/cocoindex_v1_migrate.py --check-only | tail -1
   cocoindex_v1_conformance: 47/47 flows pass
 
 # 2. The mise task exits 0.
@@ -196,14 +196,14 @@ $ mise run cocoindex:conformance ; echo "exit=$?"
 
 # 3. The 8 BAML-using notebooks AST-parse OK.
 $ for nb in \
-    cianfhoghlaim/notebooks/03_leaving_cert/01_chemistry_analysis.py \
-    cianfhoghlaim/notebooks/03_leaving_cert/05_mathematics_analysis.py \
-    cianfhoghlaim/notebooks/03_leaving_cert/03_gaeilge_analysis.py \
-    cianfhoghlaim/notebooks/03_leaving_cert/02_computer_science_analysis.py \
-    cianfhoghlaim/notebooks/03_leaving_cert/04_geography_analysis.py \
-    cianfhoghlaim/notebooks/03_leaving_cert/06_en_vs_ga_comparison.py \
-    cianfhoghlaim/notebooks/04_biep_motherduck/07_subject_full_pipeline.py \
-    cianfhoghlaim/notebooks/legacy/corpora/subject_full_pipeline_runner.py; do
+    notebooks/03_leaving_cert/01_chemistry_analysis.py \
+    notebooks/03_leaving_cert/05_mathematics_analysis.py \
+    notebooks/03_leaving_cert/03_gaeilge_analysis.py \
+    notebooks/03_leaving_cert/02_computer_science_analysis.py \
+    notebooks/03_leaving_cert/04_geography_analysis.py \
+    notebooks/03_leaving_cert/06_en_vs_ga_comparison.py \
+    notebooks/04_biep_motherduck/07_subject_full_pipeline.py \
+    notebooks/legacy/corpora/subject_full_pipeline_runner.py; do
     echo "=== $nb ==="
     uv run python3 -c "import ast; ast.parse(open('$nb').read()); print('OK')"
   done

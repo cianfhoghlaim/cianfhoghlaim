@@ -7,11 +7,11 @@ that block the British-Isles Education Pipeline (BIEP) per-subject
 agent workflows from running end-to-end:
 
 ### Blocker A — Phantom agent paths (per the 2nd audit, B4)
-`cianfhoghlaim/agents/adk/root_agent.py:396-403` referenced 8
+`agents/adk/root_agent.py:396-403` referenced 8
 per-subject agent paths under
 `cianfhoghlaim.agents.meaisinfhoghlaim.educational.<slug>_agent` —
 but that directory does not exist on disk. The actual canonical
-modules live at `cianfhoghlaim/agents/tuatha/<slug>_agent.py`
+modules live at `agents/tuatha/<slug>_agent.py`
 (`math_agent`, `appm_agent`, `chem_agent`, `geog_agent`,
 `hist_agent`, `engl_agent`, `gael_agent`, `comp_agent`). Every
 `_SubjectAgentWrapper._ensure_loaded()` call therefore silently
@@ -42,7 +42,7 @@ documented in the 1st audit (F4) and never reconciled.
 
 ### 1. Fix the 8 phantom agent paths (1 file, 8 lines)
 
-In `cianfhoghlaim/agents/adk/root_agent.py`:
+In `agents/adk/root_agent.py`:
 
 - `AGENT_MODULES` (lines 396-403): replace each
   `cianfhoghlaim.agents.meaisinfhoghlaim.educational.<slug>_agent`
@@ -86,7 +86,7 @@ In `cianfhoghlaim.meaisinfhoghlaim.models.registry.py`:
 For compliance with the task spec: run the canonical sed rename
 `get_default_for_m4_max` → `select_optimal_for_m4_max` across the
 6 per-subject agent files at
-`cianfhoghlaim/agents/tuatha/{math,chem,comp,engl,gael,geog}_agent.py`.
+`agents/tuatha/{math,chem,comp,engl,gael,geog}_agent.py`.
 No matches found in those files (the per-subject agents do not
 reference this helper directly — they wire through `wiring.py`),
 so the sed is a no-op for now and the canonical function is only
@@ -107,8 +107,8 @@ per-subject agent files are touched, and only for the sed sweep).
 
 ## Cross-repo-sync
 
-N/A — all changes are inside `cianfhoghlaim/agents/` and
-`cianfhoghlaim/meaisinfhoghlaim/ocr/` (single-repo change).
+N/A — all changes are inside `agents/` and
+`meaisinfhoghlaim/ocr/` (single-repo change).
 
 ## Acceptance gates
 
@@ -132,7 +132,7 @@ N/A — all changes are inside `cianfhoghlaim/agents/` and
   blocker (call it "B6 — attribute name mismatch") and is OUT OF
   SCOPE for this change. A follow-up change should add a short-slug
   map (or rewrite the load logic to enumerate known attribute names).
-- The legacy `cianfhoghlaim/ocr/models/registry.py` file still
+- The legacy `ocr/models/registry.py` file still
   exists on disk (despite being deleted in git per the v4
   consolidation). It still exposes `get_default_for_m4_max()` and
   the legacy 6 OCR backends. A follow-up cleanup change should

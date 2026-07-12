@@ -13,7 +13,7 @@ knowledge graph that closes the 4 surviving gaps from the archived
 
 The system SHALL provide 5 new CocoIndex v1 Apps, each R1+R2+R3+R4
 conformant, mounted as `CelticModelLifecycleComponent` L3 defs under
-`cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/`. Each
+`orchestration/defs/3_model_lifecycle/cocoindex_v1/`. Each
 App SHALL fan into the shared `multihop_search` `@coco.fn(memo=True)`
 primitive so that one MCP-level `multihop_search(question, limit=10)`
 call can synthesize answers across all 5 Apps + the existing
@@ -122,7 +122,7 @@ transcription, and SHALL NOT introduce a new ASR backend.
 
 The system SHALL register 5 new cognify datasets — `multimedia_kg`,
 `package_changelog`, `codebase_git_history`, `media_local`,
-`repo_arch_docs` — under `cianfhoghlaim/cognify/datasets/` following
+`repo_arch_docs` — under `cognify/datasets/` following
 the existing `oideachais_cognify_*` pattern. Each dataset SHALL be
 cognified on the same daily schedule as the existing 7 cognify clusters
 (per the `oideachais-cognify-knowledge-graph` spec).

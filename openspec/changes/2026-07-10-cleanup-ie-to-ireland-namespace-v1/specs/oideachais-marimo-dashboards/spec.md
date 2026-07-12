@@ -15,13 +15,13 @@ the notebook source.
 
 #### Scenario: The `ie_law_explorer` notebook points at canonical paths
 
-- **GIVEN** the `cianfhoghlaim/notebooks/ie_law_explorer.py` marimo
+- **GIVEN** the `notebooks/ie_law_explorer.py` marimo
   notebook
 - **WHEN** the notebook reads the Ireland/law BAML extraction rows
 - **THEN** the notebook code SHALL reference
-  `cianfhoghlaim/baml/education/law/*.baml` (canonical)
+  `baml/education/law/*.baml` (canonical)
 - **AND** SHALL NOT reference the legacy
-  `cianfhoghlaim/baml/ie/law/*.baml` path
+  `baml/ie/law/*.baml` path
 
 #### Scenario: A marimo rerun after migration hits the canonical lakehouse tables
 
@@ -35,5 +35,5 @@ the notebook source.
 #### Scenario: No legacy `baml.ie` references in any marimo notebook
 
 - **WHEN** a developer runs
-  `grep -rn 'baml.ie\.\|baml/ie/' --include='*.py' cianfhoghlaim/notebooks/`
+  `grep -rn 'baml.ie\.\|baml/ie/' --include='*.py' notebooks/`
 - **THEN** zero matches SHALL be returned

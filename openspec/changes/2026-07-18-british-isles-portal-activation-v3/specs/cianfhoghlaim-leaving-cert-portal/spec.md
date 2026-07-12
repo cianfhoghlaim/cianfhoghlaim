@@ -116,7 +116,7 @@ This pattern follows `openspec/specs/official-media-marimo/spec.md` R4
 ### Requirement: Storybook design system (R16)
 
 The system SHALL provide a Storybook 8 + Vite-plugin instance at
-`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/.storybook/`
+`web/apps/cianfhoghlaim-leaving-cert/apps/web/.storybook/`
 with ≥ 18 stories + the `<Ci*>` component family + the bilingual EN+GA
 labels + dark/light themes.
 
@@ -154,7 +154,7 @@ BAML extraction files via the `ExtractAistearFramework` /
 
 For v2 (deferred), the `Aistear` and `Tertiary` CocoIndex apps
 (`aistear_embedding.py`, `tertiary_embedding.py`) will be added to
-`cianfhoghlaim/cocoindex/` as CocoIndex v1 Apps (R1–R4 conformant)
+`cocoindex/` as CocoIndex v1 Apps (R1–R4 conformant)
 following the pattern of the existing `primary_embedding.py` +
 `junior_cycle_embedding.py` apps.
 
@@ -203,7 +203,7 @@ following the pattern of the existing `primary_embedding.py` +
 The system SHALL enable CopilotKit v2 A2UI (`runtime.a2ui: {}`) on the
 server + `<CopilotKit a2ui={{ theme, catalog }}>` on the client. The
 A2UI catalog at
-`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/ui/a2ui-catalog.tsx`
+`web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/ui/a2ui-catalog.tsx`
 SHALL map each of the 6 per-subject BAML `<subject>_web.baml` output
 classes to an A2UI component definition + renderer:
 
@@ -222,7 +222,7 @@ classes to an A2UI component definition + renderer:
 | (existing) | `TranslationToggle` | `<CiTranslationToggle>` |
 
 The 8 NCCA ADK specialists
-(`cianfhoghlaim/agents/tuatha/{math,chem,geog,gael,engl,comp,appm,hist}_agent.py`)
+(`agents/tuatha/{math,chem,geog,gael,engl,comp,appm,hist}_agent.py`)
 SHALL be registered as CopilotKit dispatch targets and SHALL emit A2UI
 operations (`createSurface` / `updateComponents` / `updateDataModel`)
 when responding to user queries.
@@ -335,7 +335,7 @@ autonomously generate, test, and self-heal UI surfaces WITHOUT
 violating the design system or generating unusable code.
 
 The MCP server SHALL live at
-`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/mcp/design-system-server.py`
+`web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/mcp/design-system-server.py`
 and SHALL expose 4 tools:
 
 | Tool | Purpose |

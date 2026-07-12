@@ -27,15 +27,15 @@ the full K-12 → university pipeline:
 
 ### 1. 3 new DLT sources
 
-- **`cianfhoghlaim/dlt/british_isles/ireland/education/primary.py`**
+- **`dlt/british_isles/ireland/education/primary.py`**
   (already shipped by the v4 dlt consolidation in commit `24f671f43`)
   — 12 NCCA Primary curriculum areas × EN + GA, with
   `use_local_scrapes=true` reading from `/stedding/ingest_queue/primary/`.
-- **`cianfhoghlaim/dlt/british_isles/ireland/education/junior_cycle.py`**
+- **`dlt/british_isles/ireland/education/junior_cycle.py`**
   (already shipped in commit `24f671f43`) — 18 NCCA Junior Cycle
   subjects + 16 short courses + CBAs, with `use_local_scrapes=true`
   reading from `/stedding/ingest_queue/junior_cycle/`.
-- **`cianfhoghlaim/dlt/british_isles/ireland/education/primary_jc_combined.py`**
+- **`dlt/british_isles/ireland/education/primary_jc_combined.py`**
   (**new**) — the canonical cross-stage DLT source for the combined
   Primary + JC ingestion loop. Walks `/stedding/ingest_queue/{primary,
   junior_cycle}/` and emits one row per (stage, subject, language)
@@ -52,7 +52,7 @@ Each source follows the existing BIEP v1 pattern (per
 
 ### 2. 2 new stage-specific BAML schemas
 
-- **`cianfhoghlaim/baml/education/primary/primary_extraction.baml`**
+- **`baml/education/primary/primary_extraction.baml`**
   (**new**) — the canonical Primary schema with:
   - `PrimaryYearLevel` enum (the 8 NCCA Primary year levels)
   - `PrimaryArea` enum (the 4 spec-mandated areas: ENGLISH / GAEILGE
@@ -62,7 +62,7 @@ Each source follows the existing BIEP v1 pattern (per
     `PrimaryAreaSpecStage` Pydantic classes
   - `ExtractPrimaryArea` BAML function (uses the canonical `ExtractEn`
     client → `minimax-m3`)
-- **`cianfhoghlaim/baml/education/junior_cycle/junior_cycle_extraction.baml`**
+- **`baml/education/junior_cycle/junior_cycle_extraction.baml`**
   (**new**) — the canonical Junior Cycle schema with:
   - `JCYearLevel` enum (YEAR_1 / YEAR_2 / YEAR_3, no TY in v1)
   - `JCSubject` enum (the 24 NCCA JC subjects)
@@ -86,11 +86,11 @@ with the legacy classes.
 Per the BIEP v1 `CelticIngestionComponent` pattern (per the English
 wiring from commit `ccd1a7e18`):
 
-- **`cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/primary/defs.yaml`**
+- **`orchestration/defs/1_ingestion/curriculum/primary/defs.yaml`**
   — daily 04:00 UTC cron, partitions: 4 areas × EN+GA (8 partitions)
-- **`cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/junior_cycle/defs.yaml`**
+- **`orchestration/defs/1_ingestion/curriculum/junior_cycle/defs.yaml`**
   — Monday-only 04:00 UTC cron, partitions: 24 subjects × EN+GA (48 partitions)
-- **`cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/primary_jc_combined/defs.yaml`**
+- **`orchestration/defs/1_ingestion/curriculum/primary_jc_combined/defs.yaml`**
   — daily 05:00 UTC cron, partitions: 2 stages × EN+GA (4 partitions)
 
 All 3 use `use_local_scrapes=true` and include an `asset_check_*` for

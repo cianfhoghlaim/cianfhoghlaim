@@ -23,7 +23,7 @@ in the active codebase.
 
 - **GIVEN** the 5 Ireland/law DLT source files (piab, courts,
   judgements, court_rules, legal_aid) at
-  `cianfhoghlaim/dlt/british_isles/ireland/education/law/`
+  `dlt/british_isles/ireland/education/law/`
 - **WHEN** a Dagster asset does
   `from cianfhoghlaim.dlt.british_isles.ireland.education.law import piab_source`
 - **THEN** the import SHALL succeed (the canonical namespace is wired)
@@ -33,7 +33,7 @@ in the active codebase.
 
 - **GIVEN** the 6 Ireland/law BAML schema files (piab, courts,
   judgements, court_rules, legal_aid, shared_legal_enums) at
-  `cianfhoghlaim/baml/education/law/`
+  `baml/education/law/`
 - **WHEN** a Dagster asset does
   `from cianfhoghlaim.baml.education.law import shared_legal_enums`
 - **THEN** the import SHALL succeed
@@ -43,10 +43,10 @@ in the active codebase.
 
 - **GIVEN** this openspec change is archived
 - **WHEN** a developer runs
-  `ls cianfhoghlaim/dlt/british_isles/ | grep -c '^ie$'`
+  `ls dlt/british_isles/ | grep -c '^ie$'`
 - **THEN** the output SHALL be `0`
-- **AND** `ls cianfhoghlaim/baml/ | grep -c '^ie$'` SHALL also be `0`
-- **AND** `ls cianfhoghlaim/dlt/british_isles/ireland/education/law/`
+- **AND** `ls baml/ | grep -c '^ie$'` SHALL also be `0`
+- **AND** `ls dlt/british_isles/ireland/education/law/`
   SHALL list the 5 migrated `.py` files
-- **AND** `ls cianfhoghlaim/baml/education/law/`
+- **AND** `ls baml/education/law/`
   SHALL list the 6 migrated `.baml` files + `__init__.py`

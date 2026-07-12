@@ -155,7 +155,7 @@ Affected repos: cianfhoghlaim (single-repo change)
 - All MotherDuck Dive descriptions use full country names
 - All CocoIndex v1 App descriptions use full country names
 - **No file paths, module names, source_id strings, partition values, table names, cache directory names, BAML parameter names were renamed**
-- `git grep "DE " cianfhoghlaim/dlt/european_nations/` returns 0 short-code-in-comment hits (every short ID must be wrapped in display strings only)
+- `git grep "DE " dlt/european_nations/` returns 0 short-code-in-comment hits (every short ID must be wrapped in display strings only)
 - `git grep "nga_los" cianfhoghlaim/` still returns the existing matches (file paths preserved)
 - All existing 5 commits still build + validate
 - `dg check yaml` passes

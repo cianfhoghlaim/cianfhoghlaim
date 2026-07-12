@@ -20,7 +20,7 @@ interactive grading for the 6 BIEP v1 LC subjects (Mathematics,
 Chemistry, Geography, Gaeilge, English, Computer Science):
 
 - **6 per-subject marking scheme BAMLs** at
-  `cianfhoghlaim/baml/education/marking/<subject>_marking.baml`
+  `baml/education/marking/<subject>_marking.baml`
   Each adds a subject-specific discriminator (enums + class) on top
   of the canonical `MarkingScheme` type. Example: `MathMarkingBand`
   (Hl1..H7 / Ol1..Ol7), `MathQuestionType`, `MathCommonMistake` for
@@ -28,7 +28,7 @@ Chemistry, Geography, Gaeilge, English, Computer Science):
   Function: `Extract<Subject>MarkingScheme(pdf_text, year, level)`.
 
 - **6 per-subject grading BAMLs** at
-  `cianfhoghlaim/baml/education/grading/<subject>_grading.baml`
+  `baml/education/grading/<subject>_grading.baml`
   Each exposes TWO functions:
   - `Grade<Subject>Response(student_answer, question, marking_scheme, is_higher_level)`
     → `<Subject>Grade` (per-step marks + per-subject detected mistakes
@@ -38,13 +38,13 @@ Chemistry, Geography, Gaeilge, English, Computer Science):
     dominant mistake patterns).
 
 - **6 L1 ingestion defs YAMLs** at
-  `cianfhoghlaim/orchestration/defs/1_ingestion/marking/<subject>.yaml`
+  `orchestration/defs/1_ingestion/marking/<subject>.yaml`
   Each wraps a `CelticIngestionComponent` with `source_id =
   filesystem.marking.<subject>`, weekly cron (marking schemes update
   rarely), per-subject partitions (year + paper + level + language).
 
 - **6 L2 materials defs YAMLs** at
-  `cianfhoghlaim/orchestration/defs/2_materials/grading/<subject>.yaml`
+  `orchestration/defs/2_materials/grading/<subject>.yaml`
   Each wraps a `CelticMaterialsComponent` with the `b.Grade<Subject>Response`
   function as the per-subject BAML extraction step and the
   `b.Explain<Subject>MarkingScheme` function as the per-subject

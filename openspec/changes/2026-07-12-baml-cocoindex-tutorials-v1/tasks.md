@@ -18,25 +18,25 @@
 ## 2. Create the 5 marimo tutorial notebooks
 
 - [x] **2.1** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax.py`
+      `notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax.py`
       (~600 lines; covers `generator` + `field Type` + `@@stream.*` +
       `image` + `?` optionality + `enum` + `function`)
 - [x] **2.2** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough.py`
+      `notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough.py`
       (~500 lines; covers the 8 `qpack_<subject>.baml` files + the
       `paragraph → LO[] → FormativeItem → Score → Validate` pattern)
 - [x] **2.3** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline.py`
+      `notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline.py`
       (~500 lines; covers the 4 vision extraction functions + the
       side-by-side `gemma-4-26B-A4B` vs `qwen3-vl-8b` comparison
       cell + the `match_confidence` Jaccard similarity)
 - [x] **2.4** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration.py`
+      `notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration.py`
       (~400 lines; covers the 3 real CocoIndex+BAML integration
       patterns + the lazy-import + `ContextKey` + `use_context` +
       fallback-stub patterns)
 - [x] **2.5** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration.py`
+      `notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration.py`
       (~500 lines; covers the 42-renames commit audit + the 3
       unavoidable dups + the 1 missed dup + the 50 residual errors)
 - [x] **2.6** Confirm all 5 notebooks AST-parse under
@@ -45,7 +45,7 @@
 ## 3. Add the Step 0.5 pointer in `01_overview_setup.py`
 
 - [x] **3.1** Create
-      `cianfhoghlaim/notebooks/01_overview_setup.py` (a new
+      `notebooks/01_overview_setup.py` (a new
       welcome + architecture diagram + Step 0.5 BAML+CocoIndex
       tutorial pointer + Steps 1-4 + nb_utils tour; ~250 lines)
 - [x] **3.2** Add the "Step 0.5: the BAML+CocoIndex tutorial track"
@@ -56,7 +56,7 @@
 ## 4. Update the `README.md` placeholder in the tutorial dir
 
 - [x] **4.1** Replace the placeholder README at
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/README.md`
+      `notebooks/13_baml_cocoindex_tutorial/README.md`
       with the canonical 5-notebook README (per the snippet in the
       parent change proposal)
 - [x] **4.2** Add cross-references to the openspec spec + the parent
@@ -66,7 +66,7 @@
 ## 5. Update the `cli.py` to discover the new group
 
 - [x] **5.1** Add `13_baml_cocoindex_tutorial` to the `GROUPS` tuple
-      in `cianfhoghlaim/notebooks/cli.py`
+      in `notebooks/cli.py`
 - [x] **5.2** Confirm `uv run cianfhoghlaim-marimo list
       13_baml_cocoindex_tutorial` discovers the 5 entries
 - [x] **5.3** Confirm `uv run cianfhoghlaim-marimo list` shows the

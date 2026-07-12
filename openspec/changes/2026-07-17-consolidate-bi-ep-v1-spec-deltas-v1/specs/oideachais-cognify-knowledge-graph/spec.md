@@ -8,7 +8,7 @@
 >    "3 leabharlann corpora" — this is stale. The canonical leabharlann
 >    spec (`openspec/specs/oideachais-leabharlann/spec.md` line 360)
 >    exposes the corpus at
->    `cianfhoghlaim/leabharlann/{aigne,gaeilge,gemini_deep_research,mata,ollscoil_na_gaillimhe,zotero}/`
+>    `leabharlann/{aigne,gaeilge,gemini_deep_research,mata,ollscoil_na_gaillimhe,zotero}/`
 >    — that's **6 sub-corpora × 225 documents on disk** (31 + 57 + 54
 >    + 47 + 24 + 12).
 >
@@ -98,7 +98,7 @@ the BIEP cross-archive edges.
 - The **leabharlann change**
   (`openspec/changes/2026-07-15-oideachais-leabharlann-v1/`) owns
   the 4 leabharlann-X cross-archive rules at
-  `cianfhoghlaim/storage/cognify/rules/`:
+  `storage/cognify/rules/`:
   - `leabharlann_cross_archive.py` (the 3 leabharlann-internal edges:
     CITES-arxiv + TEACHES-title + CITES-URL)
   - `leabharlann_official_media.py` (TakeoutDoc-CITES-GeminiReport)
@@ -157,7 +157,7 @@ the BIEP cross-archive edges.
       matching a culture-heritage claim's `_person_key` slug
 - **WHEN** the `cognify_leabharlann_culture_heritage_rows` function
       runs (owned by the leabharlann change at
-      `cianfhoghlaim/storage/cognify/rules/leabharlann_culture_heritage.py`)
+      `storage/cognify/rules/leabharlann_culture_heritage.py`)
 - **THEN** a `(:LeabharlannAuthor)-[:COREFERS_WITH {match_kind: "surname_forename_slug"}]->(:CultureHeritagePerson)`
       edge is created in FalkorDB
 - **AND** a `(:LeabharlannDoc)-[:ABOUT {match_kind: "place_key"}]->(:CultureHeritagePlace)`
@@ -171,7 +171,7 @@ the BIEP cross-archive edges.
       `LeabharlannDoc`'s `title` / `key_phrases` by 60%+
 - **WHEN** the `build_biep_references_leabharlann_query` function
       runs (owned by the cognify change at
-      `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`)
+      `storage/cognify/rules/cross_archive_biep_edges.py`)
 - **THEN** a `(:SCLearningOutcome)-[:REFERENCED_IN]->(:LeabharlannDoc)`
       edge is created in FalkorDB
 
@@ -189,7 +189,7 @@ the BIEP cross-archive edges.
 - [`cianfhoghlaim/cognee_integration/`](../../cianfhoghlaim/cognee_integration/) (the 3 cognify adapters)
 - [`cianfhoghlaim/cognify_rules/`](../../cianfhoghlaim/cognify_rules/) (the cross-archive rules)
 - [`cianfhoghlaim/graph/`](../../cianfhoghlaim/graph/) (FalkorDB + Memgraph clients)
-- [`cianfhoghlaim/web/hono-api/src/routes/cross_archive_graph.py`](../../cianfhoghlaim/web/hono-api/src/routes/cross_archive_graph.py) (the API route)
+- [`web/hono-api/src/routes/cross_archive_graph.py`](../../web/hono-api/src/routes/cross_archive_graph.py) (the API route)
 - [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)
 - [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
 - [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream leabharlann pipeline — the source of truth for the 6 sub-corpora + 225 documents)

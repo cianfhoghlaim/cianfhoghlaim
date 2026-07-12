@@ -21,8 +21,8 @@ underlying code state SHALL satisfy the four gates below.
 #### Scenario: Gate 1 — `LC6_SUBJECTS` includes `english` as the 3rd element
 
 - **GIVEN** the file
-      `cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
-- **WHEN** an agent runs `grep -A 7 "^LC6_SUBJECTS" cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
+      `dlt/filesystem/leaving_cert_source.py`
+- **WHEN** an agent runs `grep -A 7 "^LC6_SUBJECTS" dlt/filesystem/leaving_cert_source.py`
 - **THEN** the output SHALL be exactly:
       ```python
       LC6_SUBJECTS: tuple[str, ...] = (
@@ -41,7 +41,7 @@ underlying code state SHALL satisfy the four gates below.
 #### Scenario: Gate 2 — `LC_PDF_KIND_REGISTRY` has 2 English regex patterns
 
 - **GIVEN** the `LC_PDF_KIND_REGISTRY` dict in
-      `cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
+      `dlt/filesystem/leaving_cert_source.py`
 - **THEN** the dict SHALL contain both of these patterns:
       - `r"^LC002ALP\d{3}[EI]V\.pdf$"` mapped to `qwen3-vl-8b`
         (the LC English ALP/GLP exam-paper kind)
@@ -56,7 +56,7 @@ underlying code state SHALL satisfy the four gates below.
 #### Scenario: Gate 3 — 6 `lc5_english_*` assets exist in `lc5_assets.py`
 
 - **GIVEN** the file
-      `cianfhoghlaim/orchestration/defs/2_materials/lc_extraction/lc5_assets.py`
+      `orchestration/defs/2_materials/lc_extraction/lc5_assets.py`
 - **THEN** the asset registry SHALL contain exactly these 6 names:
       - `lc5_english_ingested` (explicit `@asset` decorator, Layer 1)
       - `lc5_english_syllabus_extracted`
@@ -74,7 +74,7 @@ underlying code state SHALL satisfy the four gates below.
 #### Scenario: Gate 4 — `english.yaml` cron asset exists
 
 - **GIVEN** the path
-      `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
+      `orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
 - **THEN** the file SHALL exist (≥ 1 KB)
 - **AND** its top-level `type` SHALL be
       `cianfhoghlaim.orchestration.components.CelticIngestionComponent`

@@ -3,7 +3,7 @@
 ## Why
 
 The English-language BAML+CocoIndex tutorial track (5 marimo notebooks at
-`cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/`) shipped at
+`notebooks/13_baml_cocoindex_tutorial/`) shipped at
 commit `78f2938ac` via the openspec change
 `2026-07-12-baml-cocoindex-tutorials-v1`. The English tutorial track is
 explicitly acknowledged as the "English-language counterpart" in its own
@@ -25,19 +25,19 @@ is the natural next step.
 
 | File | Action | LOC delta |
 |:--|:--|--:|
-| `cianfhoghlaim/baml/education/_shared/content_types.baml` | MODIFY (add `enum GaeilgeLanguage` + 2 functions: `ExtractBilingualText`, `ExtractStrandGaStatement`) | +~30 |
-| `cianfhoghlaim/baml/education/subjects/qpack_gaeilge.baml` | MODIFY (add `ExtractGaelGaStatement`) | +~25 |
-| `cianfhoghlaim/baml/education/subjects/qpack_mathematics.baml` | MODIFY (add `ExtractMathGaStatement`) | +~20 |
-| `cianfhoghlaim/baml/education/subjects/qpack_history.baml` | MODIFY (add `ExtractHistGaStatement`) | +~20 |
-| `cianfhoghlaim/baml/education/subjects/qpack_geography.baml` | MODIFY (add `ExtractGeogGaStatement`) | +~20 |
-| `cianfhoghlaim/baml/education/subjects/qpack_chemistry.baml` | MODIFY (add `ExtractChemGaStatement`) | +~20 |
-| `cianfhoghlaim/baml/education/subjects/qpack_applied_mathematics.baml` | MODIFY (add `ExtractAppmGaStatement`) | +~20 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax_ga.py` | NEW | +~316 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough_ga.py` | NEW | +~382 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline_ga.py` | NEW | +~318 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration_ga.py` | NEW | +~294 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration_ga.py` | NEW | +~289 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/README.md` | MODIFY (add 5 _ga companion entries) | +~30 |
+| `baml/education/_shared/content_types.baml` | MODIFY (add `enum GaeilgeLanguage` + 2 functions: `ExtractBilingualText`, `ExtractStrandGaStatement`) | +~30 |
+| `baml/education/subjects/qpack_gaeilge.baml` | MODIFY (add `ExtractGaelGaStatement`) | +~25 |
+| `baml/education/subjects/qpack_mathematics.baml` | MODIFY (add `ExtractMathGaStatement`) | +~20 |
+| `baml/education/subjects/qpack_history.baml` | MODIFY (add `ExtractHistGaStatement`) | +~20 |
+| `baml/education/subjects/qpack_geography.baml` | MODIFY (add `ExtractGeogGaStatement`) | +~20 |
+| `baml/education/subjects/qpack_chemistry.baml` | MODIFY (add `ExtractChemGaStatement`) | +~20 |
+| `baml/education/subjects/qpack_applied_mathematics.baml` | MODIFY (add `ExtractAppmGaStatement`) | +~20 |
+| `notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax_ga.py` | NEW | +~316 |
+| `notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough_ga.py` | NEW | +~382 |
+| `notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline_ga.py` | NEW | +~318 |
+| `notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration_ga.py` | NEW | +~294 |
+| `notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration_ga.py` | NEW | +~289 |
+| `notebooks/13_baml_cocoindex_tutorial/README.md` | MODIFY (add 5 _ga companion entries) | +~30 |
 | `openspec/changes/2026-07-13-baml-cocoindex-tutorials-ga-v1/` | NEW (proposal.md + tasks.md + 1 spec delta) | +~250 |
 | `openspec/changes/2026-07-13-baml-cocoindex-tutorials-ga-v1/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md` | NEW (1 MODIFIED delta adding 1 ADDED requirement) | +~30 |
 
@@ -105,14 +105,14 @@ check.
 
 1. Add `enum GaeilgeLanguage` + `function ExtractBilingualText` +
    `function ExtractStrandGaStatement` to
-   `cianfhoghlaim/baml/education/_shared/content_types.baml`.
+   `baml/education/_shared/content_types.baml`.
 2. Add `Extract<Subject>GaStatement(paragraph) -> string[]` to each of
    the 6 GA-LC-subject qpack files
    (`qpack_gaeilge.baml`, `qpack_mathematics.baml`, `qpack_history.baml`,
    `qpack_geography.baml`, `qpack_chemistry.baml`,
    `qpack_applied_mathematics.baml`).
 3. Create the 5 _ga companion tutorials at
-   `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/*_ga.py`. Each
+   `notebooks/13_baml_cocoindex_tutorial/*_ga.py`. Each
    is ~50-70% the size of its English counterpart (~150-380 LOC).
 4. Update the `README.md` in the tutorial directory to add the 5 _ga
    companion entries + the bilingual EN+GA mandate explanation.

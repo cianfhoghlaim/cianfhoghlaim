@@ -7,7 +7,7 @@
 ### Requirement: Phase 2 — 10 additional marimo dashboards (leabharlann corpus + university extraction + cross-archive edges + K-12 → university pipeline coverage)
 
 The system SHALL provide **10 additional marimo dashboards** at
-`cianfhoghlaim/notebooks/11_marimo_dashboards_v2/0[1-9]_*.py` +
+`notebooks/11_marimo_dashboards_v2/0[1-9]_*.py` +
 `10_*.py`. These extend the 10 dashboards shipped by
 `2026-07-14-oideachais-marimo-dashboards-v1` (commit `44cabc151`).
 Each Phase-2 dashboard:
@@ -23,7 +23,7 @@ Each Phase-2 dashboard:
   line, area) plus a health banner
 - Is discoverable via `uv run cianfhoghlaim-marimo list
   11_marimo_dashboards_v2` (the `GROUPS` tuple in
-  `cianfhoghlaim/notebooks/cli.py` MUST include
+  `notebooks/cli.py` MUST include
   `"11_marimo_dashboards_v2"`)
 
 The 10 Phase-2 dashboards are:
@@ -43,7 +43,7 @@ The 10 Phase-2 dashboards are:
 
 #### Scenario: Leabharlann corpus overview renders
 
-- **GIVEN** the `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/01_leabharlann_corpus_overview.py` notebook
+- **GIVEN** the `notebooks/11_marimo_dashboards_v2/01_leabharlann_corpus_overview.py` notebook
 - **WHEN** the user runs `marimo edit 01_leabharlann_corpus_overview.py`
 - **THEN** the notebook SHALL render with 5 panels (per-subdir doc
   count, language pie, file-size violin, per-year trend, health
@@ -54,7 +54,7 @@ The 10 Phase-2 dashboards are:
 
 #### Scenario: University institution matrix renders
 
-- **GIVEN** the `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/04_university_institution_matrix.py` notebook
+- **GIVEN** the `notebooks/11_marimo_dashboards_v2/04_university_institution_matrix.py` notebook
 - **WHEN** the user runs `marimo edit 04_university_institution_matrix.py`
 - **THEN** the notebook SHALL render with 5 panels (institution-type
   distribution pie, institution × NFQ-max heatmap, CAO coverage bar,
@@ -65,7 +65,7 @@ The 10 Phase-2 dashboards are:
 
 #### Scenario: QQI NFQ ladder renders
 
-- **GIVEN** the `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/05_qqi_nfq_ladder.py` notebook
+- **GIVEN** the `notebooks/11_marimo_dashboards_v2/05_qqi_nfq_ladder.py` notebook
 - **WHEN** the user runs `marimo edit 05_qqi_nfq_ladder.py`
 - **THEN** the notebook SHALL render with 5 panels (QQI × HEI ladder
   matrix heatmap, NFQ distribution, ladder density by NFQ, per-HEI
@@ -106,7 +106,7 @@ The 10 Phase-2 dashboards are:
 #### Scenario: CLI discovers all 10 Phase-2 dashboards
 
 - **GIVEN** the `GROUPS` tuple in
-  `cianfhoghlaim/notebooks/cli.py` includes
+  `notebooks/cli.py` includes
   `"11_marimo_dashboards_v2"`
 - **WHEN** the user runs `uv run cianfhoghlaim-marimo list
   11_marimo_dashboards_v2`

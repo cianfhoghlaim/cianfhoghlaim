@@ -4,7 +4,7 @@
 
 The system SHALL support BAML multimodal (vision) extraction across
 all 3 BAML functions in
-`cianfhoghlaim/baml/processing/_shared/video_kg.baml`. Every vision
+`baml/processing/_shared/video_kg.baml`. Every vision
 function SHALL route through the canonical `client<llm>` aliases
 declared in `clients_llama_swap.baml` (not via the v0.212
 quoted-string model identifier syntax). The 5-value tagged-union
@@ -16,7 +16,7 @@ array-typed fields MUST use the `type[]` suffix syntax (e.g.
 FORBIDDEN in field-type positions in class declarations.
 
 (As of the 2026-07-16 pre-pick-4 audit, the untracked file
-`cianfhoghlaim/baml/processing/_shared/video_kg.baml` used `class
+`baml/processing/_shared/video_kg.baml` used `class
 KnowledgeTripleKind { Concept Definition Example Formula
 VisualSequence }` and the 3 v0.212 client references
 `client "litellm/qwen3-vl-8b"` / `client "litellm/qwen3.6-27b-mtp"`,
@@ -41,8 +41,8 @@ in the generated `baml_client/types.py` after `baml-cli generate`.
 
 - **WHEN** `cd cianfhoghlaim && baml-cli check 2>&1 | grep video_kg` runs
 - **THEN** the output is empty (0 references to `video_kg.baml` in any error context)
-- **AND** `grep -nE "^(class|enum) KnowledgeTripleKind" cianfhoghlaim/baml/processing/_shared/video_kg.baml` reports `enum KnowledgeTripleKind {`
-- **AND** `grep -nE "^  client " cianfhoghlaim/baml/processing/_shared/video_kg.baml` reports the 3 canonical named-client references (no quoted strings, no `list<type>`)
+- **AND** `grep -nE "^(class|enum) KnowledgeTripleKind" baml/processing/_shared/video_kg.baml` reports `enum KnowledgeTripleKind {`
+- **AND** `grep -nE "^  client " baml/processing/_shared/video_kg.baml` reports the 3 canonical named-client references (no quoted strings, no `list<type>`)
 
 #### Scenario: `baml-cli generate` produces the expected client types
 

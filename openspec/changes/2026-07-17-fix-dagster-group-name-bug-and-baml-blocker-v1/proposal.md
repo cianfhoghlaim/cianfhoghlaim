@@ -34,7 +34,7 @@ consequence:
 
 ### Blocker B2 — BAML `video_kg.baml` class→enum blocker
 
-`cianfhoghlaim/baml/processing/_shared/video_kg.baml` is the only
+`baml/processing/_shared/video_kg.baml` is the only
 untracked BAML file (per `git status -sb`). It is owned by the parallel
 `2026-07-14-multimodal-code-and-media-intel-v1` agent. The file
 declared `class KnowledgeTripleKind { Concept, Definition, Example,
@@ -108,7 +108,7 @@ canonical `client<llm>` blocks declared in `clients_llama_swap.baml`:
 ### 4. `list<string>` → `string[]` syntax migration (1 site)
 
 `video_kg.baml:68` — single-line fix. The rest of the
-`cianfhoghlaim/baml/` tree uses the canonical
+`baml/` tree uses the canonical
 `type[]` array-suffix syntax (~2,400 sites); `video_kg.baml` was the
 only file that used the v0.223 Python-like `list<type>` syntax. The
 uniqueness of this file's syntax was its sole cause for triggering
@@ -128,7 +128,7 @@ single-typo error to the next field).
 ## Cross-change coordination
 
 This change touches the parallel-agent-owned
-`cianfhoghlaim/baml/processing/_shared/video_kg.baml` file (untracked
+`baml/processing/_shared/video_kg.baml` file (untracked
 in git, owned by the `2026-07-14-multimodal-code-and-media-intel-v1`
 change's author). The parallel change has not yet archived (still in
 the `openspec/changes/` directory).

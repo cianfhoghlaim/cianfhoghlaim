@@ -6,13 +6,13 @@ This change scopes the legacy `british_isles/ie/` and `baml/ie/`
 subtrees into their canonical post-v4 homes and fixes one broken
 import chain in `_oide_helpers.py`:
 
-1. **Removes** `cianfhoghlaim/dlt/british_isles/ie/` (7 files: 5 law
+1. **Removes** `dlt/british_isles/ie/` (7 files: 5 law
    `.py` + `__init__.py` + the empty `ie/__init__.py` shim).
-2. **Removes** `cianfhoghlaim/baml/ie/` (8 files: 6 law `.baml` +
+2. **Removes** `baml/ie/` (8 files: 6 law `.baml` +
    `__init__.py` + the empty `ie/__init__.py` shim).
-3. **Adds** `cianfhoghlaim/dlt/british_isles/ireland/education/law/`
+3. **Adds** `dlt/british_isles/ireland/education/law/`
    (the 5 migrated law `.py` files).
-4. **Adds** `cianfhoghlaim/baml/education/law/` (the 6 migrated law
+4. **Adds** `baml/education/law/` (the 6 migrated law
    `.baml` files + `__init__.py`).
 5. **Rewrites** 17 Python + BAML imports + 31 active openspec `*.md`
    refs to the canonical namespaces.
@@ -49,10 +49,10 @@ canonical `dlt.common` shim.
 
 | Source (removed) | Destination (canonical) |
 |:--|:--|
-| `cianfhoghlaim/dlt/british_isles/ie/law/` | `cianfhoghlaim/dlt/british_isles/ireland/education/law/` |
-| `cianfhoghlaim/dlt/british_isles/ie/__init__.py` | (removed — empty shim) |
-| `cianfhoghlaim/baml/ie/law/` | `cianfhoghlaim/baml/education/law/` |
-| `cianfhoghlaim/baml/ie/__init__.py` | (removed — empty shim) |
+| `dlt/british_isles/ie/law/` | `dlt/british_isles/ireland/education/law/` |
+| `dlt/british_isles/ie/__init__.py` | (removed — empty shim) |
+| `baml/ie/law/` | `baml/education/law/` |
+| `baml/ie/__init__.py` | (removed — empty shim) |
 
 Files migrated:
 - **DLT** (`dlt/british_isles/ireland/education/law/`): `piab.py`, `courts.py`,
@@ -79,13 +79,13 @@ Files migrated:
 
 ### 3. `_oide_helpers.py` import-chain fix
 
-`cianfhoghlaim/dlt/british_isles/ireland/education/_oide_helpers.py:11` had:
+`dlt/british_isles/ireland/education/_oide_helpers.py:11` had:
 
 ```python
 from common.firecrawl_source import crawl_website, scrape_page
 ```
 
-The bare `common` alias is installed by `cianfhoghlaim/dlt/common/__init__.py`
+The bare `common` alias is installed by `dlt/common/__init__.py`
 via `sys.modules` at import time, but Dagster user-code import ordering can
 race against the shim install and fail with `ModuleNotFoundError: No module
 named 'common'`. Replaced with the canonical `dlt.common` path:
@@ -115,10 +115,10 @@ preserved as-is.
 grep -rn "british_isles.ie\|dlt/british_isles/ie\|baml.ie" \
   --include='*.{py,baml,md}' cianfhoghlaim/ openspec/specs/
 # → 0 matches
-ls cianfhoghlaim/dlt/british_isles/ | grep -c '^ie$'   # → 0
-ls cianfhoghlaim/baml/              | grep -c '^ie$'   # → 0
-ls cianfhoghlaim/dlt/british_isles/ireland/education/law/   # 5 .py files
-ls cianfhoghlaim/baml/education/law/                        # 6 .baml + __init__.py
+ls dlt/british_isles/ | grep -c '^ie$'   # → 0
+ls baml/              | grep -c '^ie$'   # → 0
+ls dlt/british_isles/ireland/education/law/   # 5 .py files
+ls baml/education/law/                        # 6 .baml + __init__.py
 ```
 
 ## Out of scope (separate changes)

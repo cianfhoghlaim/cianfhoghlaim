@@ -10,7 +10,7 @@ MiniMax-M3 generator rewrite + the `MarkingPoint` duplicate fix.
 This follow-up change implements the **Option 2** choice from the
 shipped `SCOPE_DECISION.md`: fix ALL 50 pre-existing BAML `field: type`
 diagnostics (and their cascading parse failures) across the
-`cianfhoghlaim/baml/` tree — including the 7
+`baml/` tree — including the 7
 `baml/education/lc_extraction/*.baml` files that the prior change
 explicitly deferred.
 

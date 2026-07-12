@@ -2,7 +2,7 @@
 
 ### Requirement: All 47 CocoIndex flows (22 priority + 25 non-priority) pass R1–R4 conformance
 
-The system SHALL ensure that **all 47 flows** under `cianfhoghlaim/cocoindex/`
+The system SHALL ensure that **all 47 flows** under `cocoindex/`
 pass the v1 conformance contract (R1+R2+R3+R4) per the
 `coccoindex_v1_migrate.py` audit tool. Specifically:
 
@@ -52,7 +52,7 @@ the staged scaffolding that satisfies the audit contract.
 #### Scenario: post-migration audit reports 47/47 PASS
 
 - **GIVEN** the 25 non-priority flows have been migrated per this change
-- **WHEN** the developer runs `uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
+- **WHEN** the developer runs `uv run python dlt/common/cocoindex_v1_migrate.py --check-only`
 - **THEN** the audit summary reports `cocoindex_v1_conformance: 47/47 flows pass`
 - **AND** the tool exits 0
 

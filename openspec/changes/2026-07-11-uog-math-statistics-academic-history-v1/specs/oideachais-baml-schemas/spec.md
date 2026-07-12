@@ -5,7 +5,7 @@
 ### Requirement: Math/statistics extraction functions
 
 The system SHALL provide 12 BAML functions in
-`cianfhoghlaim/baml/education/university/mathematics_statistics_extraction.baml`:
+`baml/education/university/mathematics_statistics_extraction.baml`:
 
 1. `ExtractAcademicModuleSyllabus(pdf_text, module_code) -> AcademicModuleDescriptor`
 2. `ExtractCourseworkArtifact(pdf_text, file_name, document_kind) -> CourseworkArtifactExtraction`

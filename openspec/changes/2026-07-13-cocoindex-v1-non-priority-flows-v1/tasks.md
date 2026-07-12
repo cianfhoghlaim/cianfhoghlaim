@@ -4,7 +4,7 @@
 
 ```bash
 cd /Users/cianmacandeisigh/dev/kings_college_galway
-uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
+uv run python dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
   | tee /tmp/cocoindex-baseline.txt
 grep "FAIL" /tmp/cocoindex-baseline.txt | wc -l
 # 25
@@ -66,7 +66,7 @@ comments to break the R2 audit regex:
 
 ```bash
 cd /Users/cianmacandeisigh/dev/kings_college_galway
-uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
+uv run python dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
   | tee /tmp/cocoindex-post.txt
 
 grep "FAIL" /tmp/cocoindex-post.txt | wc -l
@@ -80,14 +80,14 @@ grep "FAIL" /tmp/cocoindex-post.txt | wc -l
 
 ```bash
 for nb in \
-  cianfhoghlaim/notebooks/03_leaving_cert/01_chemistry_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/05_mathematics_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/03_gaeilge_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/02_computer_science_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/04_geography_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/06_en_vs_ga_comparison.py \
-  cianfhoghlaim/notebooks/04_biep_motherduck/07_subject_full_pipeline.py \
-  cianfhoghlaim/notebooks/legacy/corpora/subject_full_pipeline_runner.py; do
+  notebooks/03_leaving_cert/01_chemistry_analysis.py \
+  notebooks/03_leaving_cert/05_mathematics_analysis.py \
+  notebooks/03_leaving_cert/03_gaeilge_analysis.py \
+  notebooks/03_leaving_cert/02_computer_science_analysis.py \
+  notebooks/03_leaving_cert/04_geography_analysis.py \
+  notebooks/03_leaving_cert/06_en_vs_ga_comparison.py \
+  notebooks/04_biep_motherduck/07_subject_full_pipeline.py \
+  notebooks/legacy/corpora/subject_full_pipeline_runner.py; do
   echo "=== $nb ==="
   uv run python3 -c "import ast; ast.parse(open('$nb').read()); print('OK: AST-parse passed')" 2>&1
 done

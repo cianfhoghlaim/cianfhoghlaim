@@ -27,7 +27,7 @@ The system SHALL fail CI if any code or doc references the v3 `sruth.oideachais.
 
 #### Scenario: All 5 canonical sensor groups aggregate via `oideachais.orchestration.defs.sensors.all_sensors`
 
-- **GIVEN** the v4 Dagster orchestration tree at `cianfhoghlaim/orchestration/`
+- **GIVEN** the v4 Dagster orchestration tree at `orchestration/`
 - **WHEN** a consumer does `from oideachais.orchestration.defs.sensors import all_sensors`
 - **THEN** `all_sensors` MUST contain at least 5 sensors across the 5 canonical groups: `domain_sensors`, `curriculum_freshness_sensors`, `author_archive_sensors`, `leabharlann_sensors`, `cognee_cron_sensor`
 - **AND** `defs.sensors` MUST contain all 5 canonical sensor groups (verified via `from oideachais.orchestration.defs.sensors import all_sensors; assert len(all_sensors) >= 5`)
@@ -40,12 +40,12 @@ The system SHALL fail CI if any code or doc references the v3 `sruth.oideachais.
 #### Scenario: Storage re-exports use the v4 `orchestration/core/storage` namespace
 
 - **WHEN** a consumer does `from oideachais.orchestration.core.storage import (CogneeConfig, DuckLakeConfig, StorageManager, DuckLakeClient, LanceDBCloudClient, CurriculumVectorSearch)`
-- **THEN** all 6 symbols MUST be importable from `cianfhoghlaim/orchestration/core/storage/__init__.py`
+- **THEN** all 6 symbols MUST be importable from `orchestration/core/storage/__init__.py`
 - **AND** the legacy `sruth.oideachais.storage.*` paths MUST raise `ModuleNotFoundError`
 
 ### Requirement: DLT sources use the v4 `dlt/` namespace
 
-The system SHALL organise all DLT sources under the v4 `oideachais.dlt` namespace (formerly `oideachais.dlt_sources` pre-v4). The 6 DLT subdirs — `british_isles/`, `language/`, `filesystem/`, `api_sources/`, `apple_photos/`, `official_media/`, `portfolio/`, `common/` — SHALL live under `cianfhoghlaim/dlt/`.
+The system SHALL organise all DLT sources under the v4 `oideachais.dlt` namespace (formerly `oideachais.dlt_sources` pre-v4). The 6 DLT subdirs — `british_isles/`, `language/`, `filesystem/`, `api_sources/`, `apple_photos/`, `official_media/`, `portfolio/`, `common/` — SHALL live under `dlt/`.
 
 Consumers MUST import from the v4 path:
 
@@ -55,9 +55,9 @@ The system SHALL fail CI if any code or doc references the v3 `sruth.oideachais.
 
 #### Scenario: All Ireland examinations DLT sources live under the v4 `dlt/` namespace
 
-- **GIVEN** the v4 DLT tree at `cianfhoghlaim/dlt/` containing `british_isles/`, `language/`, `filesystem/`, `api_sources/`, `apple_photos/`, `official_media/`, `portfolio/`, `common/`
+- **GIVEN** the v4 DLT tree at `dlt/` containing `british_isles/`, `language/`, `filesystem/`, `api_sources/`, `apple_photos/`, `official_media/`, `portfolio/`, `common/`
 - **WHEN** a consumer does `from oideachais.dlt.ireland.examinations import examinations_source`
-- **THEN** the import succeeds from `cianfhoghlaim/dlt/british_isles/ireland/examinations.py`
+- **THEN** the import succeeds from `dlt/british_isles/ireland/examinations.py`
 - **AND** the legacy `from sruth.oideachais.dlt_sources.ireland.examinations import examinations_source` path raises `ModuleNotFoundError`
 
 ## ADDED Requirements

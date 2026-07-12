@@ -14,13 +14,13 @@ per-subject grading functions (`Grade<Subject>Response` +
 The per-subject deliverable surface:
 
 - 6 per-subject marking scheme BAML files at
-  `cianfhoghlaim/baml/education/marking/<subject>_marking.baml`
+  `baml/education/marking/<subject>_marking.baml`
 - 6 per-subject grading BAML files at
-  `cianfhoghlaim/baml/education/grading/<subject>_grading.baml`
+  `baml/education/grading/<subject>_grading.baml`
 - 6 L1 ingestion defs YAMLs at
-  `cianfhoghlaim/orchestration/defs/1_ingestion/marking/<subject>.yaml`
+  `orchestration/defs/1_ingestion/marking/<subject>.yaml`
 - 6 L2 materials defs YAMLs at
-  `cianfhoghlaim/orchestration/defs/2_materials/grading/<subject>.yaml`
+  `orchestration/defs/2_materials/grading/<subject>.yaml`
 
 Each per-subject marking BAML has the `<Subject>MarkingScheme` Pydantic
 class (with `<Subject>SubjectDiscriminator`) and an
@@ -45,7 +45,7 @@ fidelity guard); the other 5 subjects use `baml_fidelity`.
 - **GIVEN** the BIEP v1 capspec covers the 6 priority Irish LC subjects
 - Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science
 - **WHEN** the operator checks the per-subject BAML surface under
-  `cianfhoghlaim/baml/education/marking/` + `cianfhoghlaim/baml/education/grading/`
+  `baml/education/marking/` + `baml/education/grading/`
 - **THEN** 12 files SHALL exist:
   - `mathematics_marking.baml`, `mathematics_grading.baml`
   - `chemistry_marking.baml`, `chemistry_grading.baml`

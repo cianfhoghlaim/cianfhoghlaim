@@ -42,9 +42,9 @@ For each of Scotland, Wales, England, Northern Ireland, IoM, Jersey,
 Guernsey:
 
 - [ ] 4.x Create
-  `cianfhoghlaim/motherduck/dives/<nation>_curriculum_dive.py`
+  `motherduck/dives/<nation>_curriculum_dive.py`
   + register in
-  `cianfhoghlaim/motherduck/flights/config.yaml` (the per-nation daily
+  `motherduck/flights/config.yaml` (the per-nation daily
   Flight).
 
 ## 5. Dagster L1 defs (per-subject partitions)

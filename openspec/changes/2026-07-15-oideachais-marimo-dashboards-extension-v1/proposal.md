@@ -17,7 +17,7 @@ facing dashboards. The Phase-1 dashboards left these surfaces visible only
 through SQL queries or the cognify KG.
 
 This change ships **10 additional marimo dashboards** (Phase 2) at
-`cianfhoghlaim/notebooks/11_marimo_dashboards_v2/`. Each follows the same
+`notebooks/11_marimo_dashboards_v2/`. Each follows the same
 300-400 LOC pattern from the prior commit `44cabc151` (PEP 723 inline deps,
 `duckdb.connect("md:oideachais")` with graceful local-DuckDB fallback,
 synthetic-data fallback for offline development, altair charts, mo.ui.altair_chart
@@ -25,7 +25,7 @@ panels, and a health banner).
 
 ## What changes
 
-- New subdir `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/` with **10
+- New subdir `notebooks/11_marimo_dashboards_v2/` with **10
   dashboards** (01..10):
   - 01-03 — **leabharlann corpus dashboards** (corpus overview, 6-subdir
     matrix, BGE-M3 embedding coverage)
@@ -35,7 +35,7 @@ panels, and a health banner).
     official-media, leabharlann ↔ culture-heritage)
   - 09-10 — **K-12 → university pipeline coverage** (per-stage matrix +
     year-level coverage)
-- `cianfhoghlaim/notebooks/cli.py` — added `11_marimo_dashboards_v2` to
+- `notebooks/cli.py` — added `11_marimo_dashboards_v2` to
   the `GROUPS` tuple (so `cianfhoghlaim-marimo list 11_marimo_dashboards_v2`
   discovers the new entries)
 - 1 MODIFIED spec delta on `oideachais-marimo-dashboards/spec.md` —

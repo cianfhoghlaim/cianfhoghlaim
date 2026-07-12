@@ -40,7 +40,7 @@ This change adds a typed, math-aware **Academic History Pipeline**:
 
 ## What changes
 
-### 1. BAML (`cianfhoghlaim/baml/education/university/mathematics_statistics_extraction.baml`, NEW)
+### 1. BAML (`baml/education/university/mathematics_statistics_extraction.baml`, NEW)
 
 - `TertiaryMathTopic` (40+ values for ST3xx / MA3xx / AP3xx)
 - `DistributionFamily` (22 distributions)
@@ -81,7 +81,7 @@ This change adds a typed, math-aware **Academic History Pipeline**:
   probability sums, regression diagnostics, residual/convergence
   checks, mark totals).
 
-### 4. CocoIndex v1 (`cianfhoghlaim/cocoindex/academic_history_flow.py`, NEW)
+### 4. CocoIndex v1 (`cocoindex/academic_history_flow.py`, NEW)
 
 - `AcademicHistoryApp` — embeds chunks + formulas into the
   `oideachais_academic_history` LanceDB table using
@@ -100,7 +100,7 @@ This change adds a typed, math-aware **Academic History Pipeline**:
 - `(:AcademicModule)-[:BUILDS_ON]->(:LeavingCertTopic)`
 - `(:UoGArtifact)-[:MATCHES]->(:ModuleDescriptor)` (existing)
 
-### 6. Marimo notebooks (`cianfhoghlaim/notebooks/14_academic_history/`)
+### 6. Marimo notebooks (`notebooks/14_academic_history/`)
 
 1. `01_uog_maths_corpus_overview.py`
 2. `02_module_syllabus_assessment_map.py`
@@ -118,9 +118,9 @@ health banner, openspec cross-reference footer, and CLI dual-mode.
 ### 7. Academic-history agent (memory + chat)
 
 - New 13th routing bucket in
-  `cianfhoghlaim/agents/routing_keywords.py`
+  `agents/routing_keywords.py`
 - New module
-  `cianfhoghlaim/agents/meaisinfhoghlaim/educational/academic_history_agent.py`
+  `agents/meaisinfhoghlaim/educational/academic_history_agent.py`
   implementing 10 tools (`list_my_modules`, `list_my_artifacts`,
   `get_my_notes`, `get_my_assignments`, `get_my_exam_history`,
   `get_my_answer_scripts`, `summarise_my_progress`,

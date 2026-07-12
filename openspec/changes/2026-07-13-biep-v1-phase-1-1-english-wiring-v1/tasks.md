@@ -7,11 +7,11 @@
 - [x] **P.3** Acknowledge 3 pre-existing dirty paths in working tree
       (NOT in my scope; flagged for the parallel agents who own them):
       - `M .gitignore`
-      - `D cianfhoghlaim/ocr/__init__.py`
-      - `D cianfhoghlaim/ocr/models/__init__.py`
-      - `D cianfhoghlaim/ocr/models/registry.py`
+      - `D ocr/__init__.py`
+      - `D ocr/models/__init__.py`
+      - `D ocr/models/registry.py`
       - `M spaces/data-engineering`
-      - `?? cianfhoghlaim/meaisinfhoghlaim/ocr/`
+      - `?? meaisinfhoghlaim/ocr/`
 
 ## Step 1 — Inspect current state (Step 1 of the build prompt)
 
@@ -28,7 +28,7 @@
 - [x] **1.5** Inspect `lc5_assets.py` — explicit `lc5_english_ingested`
       at line 121 + explicit `lc5_english_cognified` at line 226
 - [x] **1.6** Confirm `english.yaml` exists at
-      `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
+      `orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
       (1492 bytes, dated 2026-07-10)
 
 ## Step 2 — Code work already done by prior change
@@ -67,7 +67,7 @@
 
 ## Step 3 — Verification gates
 
-- [x] **3.1** `grep -A 7 "^LC6_SUBJECTS" cianfhoghlaim/dlt/filesystem/leaving_cert_source.py`
+- [x] **3.1** `grep -A 7 "^LC6_SUBJECTS" dlt/filesystem/leaving_cert_source.py`
       returns the 6-element tuple (chemistry, computer_science,
       **english**, gaeilge, geography, mathematics)
 - [x] **3.2** AST scan of `lc5_assets.py` confirms 2 explicit
@@ -75,7 +75,7 @@
       `globals()[f'lc5_{_subject}_{_kind}_extracted']` iterates over
       `LC6_SUBJECTS` × 4 kinds = 24 extraction assets including the
       4 English ones
-- [x] **3.3** `ls -la cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
+- [x] **3.3** `ls -la orchestration/defs/1_ingestion/curriculum/lc5/english.yaml`
       confirms 1492-byte file exists
 - [x] **3.4** `cat english.yaml` shows `automation_cron: "0 5 * * *"`
       + `source_id: cianfhoghlaim.filesystem.leaving_cert.english`
@@ -84,7 +84,7 @@
 
 - [x] **4.1** `cd cianfhoghlaim && mise run baml:generate`
       exits 0 with `[BAML INFO] Wrote 14 files to
-      cianfhoghlaim/baml_client/baml_client` (verified 2026-07-10 14:03)
+      baml/baml_client` (verified 2026-07-10 14:03)
 - [x] **4.2** The 50 `field: type` errors fixed by commit `54c21dd52`
       remain resolved (no regression from this change — no BAML files
       touched)

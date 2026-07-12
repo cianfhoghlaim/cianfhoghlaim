@@ -36,7 +36,7 @@ function.
     `SemanticSearch` function
   - `notebooks/12_semantic_search/01_search.py` — the marimo
     notebook exposing the canonical search UI
-  - `cianfhoghlaim/web/hono-api/src/routes/search.py` — the FastAPI route at
+  - `web/hono-api/src/routes/search.py` — the FastAPI route at
     `/search/semantic`
 - **AND** `openspec validate --strict` passes for the change
 - **AND** `mise run baml:generate` exits 0

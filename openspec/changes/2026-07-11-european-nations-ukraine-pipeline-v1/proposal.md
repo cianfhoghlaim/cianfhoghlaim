@@ -105,9 +105,9 @@ The canonical extraction function is
 ### 4. New CocoIndex v1 Apps
 
 ```text
-cianfhoghlaim/cocoindex/european_nations_education_embedding.py
-cianfhoghlaim/cocoindex/european_nations_law_embedding.py
-cianfhoghlaim/cocoindex/european_nations_medicine_embedding.py
+cocoindex/european_nations_education_embedding.py
+cocoindex/european_nations_law_embedding.py
+cocoindex/european_nations_medicine_embedding.py
 ```
 
 Each App embeds its domain's rows for the 6 pilot countries into a

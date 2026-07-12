@@ -116,7 +116,7 @@ press / document release streams.
 
 The system MUST provide a BAML extraction function
 `ExtractEUDocument(language: EULanguage, text: string) -> EUDocument`
-at `cianfhoghlaim/baml/european_union/_shared/eu_document.baml` that
+at `baml/european_union/_shared/eu_document.baml` that
 extracts the canonical multilingual-document class from any EU
 institutional source.
 

@@ -4,7 +4,7 @@
 
 The NCCA strand / outcome / curriculum-spec / assessment-component tree
 changes yearly. Today, every NCCA refresh requires regenerating the
-BAML `.baml` files in `cianfhoghlaim/baml/education/_shared/`
+BAML `.baml` files in `baml/education/_shared/`
 (`strand_outcome.baml` + the 4 NCCA-related class definitions
 `LearningOutcome`, `CurriculumStrand`, `CurriculumSpecStrand`,
 `AssessmentComponentStrand`), which means redeploying the BAML

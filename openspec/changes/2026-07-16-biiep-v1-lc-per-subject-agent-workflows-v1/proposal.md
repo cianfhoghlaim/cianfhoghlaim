@@ -36,7 +36,7 @@ The 3 handlers are parameterised by the existing
 `*_past_paper_lookup_tool` + `*_marking_scheme_lookup_tool` +
 `*_formative_item_generate_tool` + `*_response_score_tool`). They live
 in a small shared module
-`cianfhoghlaim/agents/tuatha/_workflow_handlers.py` to avoid
+`agents/tuatha/_workflow_handlers.py` to avoid
 duplicating the 3 dispatcher functions across the 6 per-subject
 files (which would have been ~720 LOC of near-identical code).
 
@@ -47,14 +47,14 @@ files (which would have been ~720 LOC of near-identical code).
 | `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-agent-workflows-v1/proposal.md` | NEW | this file |
 | `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-agent-workflows-v1/tasks.md` | NEW | step-by-step recap |
 | `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-agent-workflows-v1/specs/meaisinfhoghlaim-agent-frameworks/spec.md` | NEW (1 ADDED Requirement) | the per-subject workflow handlers contract |
-| `cianfhoghlaim/agents/tuatha/_workflow_handlers.py` | NEW | the 3 shared async dispatcher functions + the dataclass attacher |
-| `cianfhoghlaim/agents/tuatha/wiring.py` | MODIFIED | +3 Callable fields on `WireSubjectAgent` |
-| `cianfhoghlaim/agents/tuatha/math_agent.py` | MODIFIED | +3 math handlers + dataclass attachment |
-| `cianfhoghlaim/agents/tuatha/chem_agent.py` | MODIFIED | +3 chem handlers + dataclass attachment |
-| `cianfhoghlaim/agents/tuatha/geog_agent.py` | MODIFIED | +3 geog handlers + dataclass attachment |
-| `cianfhoghlaim/agents/tuatha/gael_agent.py` | MODIFIED | +3 gaeilge handlers + dataclass attachment |
-| `cianfhoghlaim/agents/tuatha/engl_agent.py` | MODIFIED | +3 english handlers + dataclass attachment |
-| `cianfhoghlaim/agents/tuatha/comp_agent.py` | MODIFIED | +3 computer-science handlers + dataclass attachment |
+| `agents/tuatha/_workflow_handlers.py` | NEW | the 3 shared async dispatcher functions + the dataclass attacher |
+| `agents/tuatha/wiring.py` | MODIFIED | +3 Callable fields on `WireSubjectAgent` |
+| `agents/tuatha/math_agent.py` | MODIFIED | +3 math handlers + dataclass attachment |
+| `agents/tuatha/chem_agent.py` | MODIFIED | +3 chem handlers + dataclass attachment |
+| `agents/tuatha/geog_agent.py` | MODIFIED | +3 geog handlers + dataclass attachment |
+| `agents/tuatha/gael_agent.py` | MODIFIED | +3 gaeilge handlers + dataclass attachment |
+| `agents/tuatha/engl_agent.py` | MODIFIED | +3 english handlers + dataclass attachment |
+| `agents/tuatha/comp_agent.py` | MODIFIED | +3 computer-science handlers + dataclass attachment |
 
 18 handlers shipped (3 per subject × 6 in-scope subjects). 2 out-of-
 scope subjects (Applied Mathematics + History) are deliberately
@@ -65,7 +65,7 @@ excluded per the user's locked plan.
 ### Step 1 — Audit the existing 8 NCCA subject agents
 
 The 8 in-scope NCCA subject ADK agents live at
-`cianfhoghlaim/agents/tuatha/`:
+`agents/tuatha/`:
 
 | Subject | Module | Lines |
 |:--|:--|--:|
@@ -178,7 +178,7 @@ The 4 verification gates:
    out of scope per the user's locked plan (the BIEP flagship is
    the 6-subject pipeline, not the 8-subject NCCA surface).
 4. **The marimo notebook surface** — the per-subject BIEP notebooks
-   at `cianfhoghlaim/notebooks/` are owned by
+   at `notebooks/` are owned by
    `oideachais-marimo-dashboards`. They consume the 3 workflow
    handlers via the new fields on `WireSubjectAgent` once they
    load the agent module — no notebook edits in this change.

@@ -44,9 +44,9 @@ Plus:
 
 ## 4. CocoIndex v1 Apps
 
-- [ ] 4.1 Create `cianfhoghlaim/cocoindex/european_nations_education_embedding.py`
-- [ ] 4.2 Create `cianfhoghlaim/cocoindex/european_nations_law_embedding.py`
-- [ ] 4.3 Create `cianfhoghlaim/cocoindex/european_nations_medicine_embedding.py`
+- [ ] 4.1 Create `cocoindex/european_nations_education_embedding.py`
+- [ ] 4.2 Create `cocoindex/european_nations_law_embedding.py`
+- [ ] 4.3 Create `cocoindex/european_nations_medicine_embedding.py`
 - [ ] 4.4 Each App imports `from ._lifespan import shared_lifespan`
 - [ ] 4.5 Each App uses `BAAI/bge-m3`
 
@@ -63,10 +63,10 @@ Plus:
 
 ## 6. MotherDuck Dive + Flight
 
-- [ ] 6.1 Create `cianfhoghlaim/motherduck/dives/eu_nation_curriculum_matrix.py`
-- [ ] 6.2 Create `cianfhoghlaim/motherduck/flights/eu_nation_daily_sync_flight.py`
+- [ ] 6.1 Create `motherduck/dives/eu_nation_curriculum_matrix.py`
+- [ ] 6.2 Create `motherduck/flights/eu_nation_daily_sync_flight.py`
 - [ ] 6.3 Append `eu_nation_daily_sync_flight` to
-  `cianfhoghlaim/motherduck/flights/config.yaml` with cron `0 6 * * *`
+  `motherduck/flights/config.yaml` with cron `0 6 * * *`
 
 ## 7. Cache + fixtures
 

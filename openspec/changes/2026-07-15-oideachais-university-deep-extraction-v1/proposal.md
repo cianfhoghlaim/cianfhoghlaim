@@ -29,7 +29,7 @@ the 4 specs collectively cover the full **K-12 → university** pipeline
 
 ## What changes
 
-### 1. 5 new DLT sources at `cianfhoghlaim/dlt/british_isles/ireland/university/`
+### 1. 5 new DLT sources at `dlt/british_isles/ireland/university/`
 
 - **`universities.py`** — the **8 Republic of Ireland universities**
   (TCD, UCD, UCC, UoG, UL, DCU, Maynooth, RCSI) per the Universities

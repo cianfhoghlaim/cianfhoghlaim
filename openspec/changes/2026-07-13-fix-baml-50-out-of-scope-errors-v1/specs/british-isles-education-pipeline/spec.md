@@ -6,12 +6,12 @@ This delta adds one new requirement to the existing `british-isles-education-pip
 
 ### Requirement: All 7 lc_extraction/*.baml files use v0.212+ canonical `field Type` whitespace syntax
 
-The British-Isles Education Pipeline SHALL enforce that every `.baml` file under `cianfhoghlaim/baml/education/lc_extraction/` uses the BAML v0.212+ canonical `field Type` (whitespace-separated) syntax — not the legacy Pydantic-style `field: type` colon-separated syntax. The 7 lc_extraction files (`circular_extraction.baml`, `cross_linguistic.baml`, `curriculum_syllabus.baml`, `exam_paper_layout.baml`, `lc_topic_extraction.baml`, `marking_scheme.baml`, `syllabus_diagram.baml`) define the canonical BIEP v1 contract types (`MarkingScheme`, `BilingualText`, `NCCAKeyCompetency`, `CrossNationLearningOutcome`, `PastPaper`, `SyllabusDocument`, `MarkAllocation`, `GradeDescriptor`, `DiagramPayload`, etc.) and the 7 canonical extraction functions (`ExtractCurriculumSyllabus`, `ExtractExamPaperLayout`, `ExtractMarkingSchemeGuideline`, `ExtractStrandFromCatalog`, `ExtractMarkingSchemeStrand`, `ExtractCelticCurriculumComparison`, `ExtractSyllabusDiagram`).
+The British-Isles Education Pipeline SHALL enforce that every `.baml` file under `baml/education/lc_extraction/` uses the BAML v0.212+ canonical `field Type` (whitespace-separated) syntax — not the legacy Pydantic-style `field: type` colon-separated syntax. The 7 lc_extraction files (`circular_extraction.baml`, `cross_linguistic.baml`, `curriculum_syllabus.baml`, `exam_paper_layout.baml`, `lc_topic_extraction.baml`, `marking_scheme.baml`, `syllabus_diagram.baml`) define the canonical BIEP v1 contract types (`MarkingScheme`, `BilingualText`, `NCCAKeyCompetency`, `CrossNationLearningOutcome`, `PastPaper`, `SyllabusDocument`, `MarkAllocation`, `GradeDescriptor`, `DiagramPayload`, etc.) and the 7 canonical extraction functions (`ExtractCurriculumSyllabus`, `ExtractExamPaperLayout`, `ExtractMarkingSchemeGuideline`, `ExtractStrandFromCatalog`, `ExtractMarkingSchemeStrand`, `ExtractCelticCurriculumComparison`, `ExtractSyllabusDiagram`).
 
 #### Scenario: all 7 lc_extraction/*.baml files use canonical syntax
 
 - **GIVEN** the 2026-07-13-fix-baml-50-out-of-scope-errors-v1 change has landed
-- **WHEN** `grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' cianfhoghlaim/baml/education/lc_extraction/` is run
+- **WHEN** `grep -rE '^\s+[a-z_][a-zA-Z0-9_]*:\s+(string|int|float|bool|list|map|class|enum|optional)\b' baml/education/lc_extraction/` is run
 - **THEN** the count of Pydantic-style lines is 0 across all 7 files
 - **AND** `mise run baml:generate` exits 0 against the BIEP v1 contract types
 

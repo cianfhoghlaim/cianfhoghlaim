@@ -5,7 +5,7 @@
 Revive the 4 archived codeolas subsystems as CocoIndex v1 native
 primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
-- [x] 0.1 Create `cianfhoghlaim/cocoindex/multihop_search.py` — port
+- [x] 0.1 Create `cocoindex/multihop_search.py` — port
       `stedding/dev/cianfhoghlaim copy/sruth/códeolas/search/multihop.py`
       as `@coco.fn(memo=True, as_async) async def multihop_search(question,
       limit=10, max_iterations=3, convergence_threshold=0.05)`. Accept a
@@ -13,13 +13,13 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
       Langfuse v3 span `multihop.iteration.<n>` with the candidate-set size
       + convergence score on every iteration.
 
-- [x] 0.2 Create `cianfhoghlaim/cocoindex/reranker.py` — `RERANKER`
+- [x] 0.2 Create `cocoindex/reranker.py` — `RERANKER`
       `ContextKey` wrapping Jina (default) / Cohere / Aliyun via
       LiteLLM; expose `@coco.fn(memo=True) async def query_reranker(query,
       results, top_n)` matching the archived
       `search/reranker.py:rerank_results` signature.
 
-- [x] 0.3 Create `cianfhoghlaim/cocoindex/repo_type_detector.py` — port
+- [x] 0.3 Create `cocoindex/repo_type_detector.py` — port
       `stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/detector.py:RepoTypeDetector`
       as `@coco.fn(memo=True) async def detect_repo_type(repo_path)`. Same
       enum (`FRONTEND | BACKEND | LIBRARY | DATA_PIPELINE | MONOREPO`)
@@ -27,7 +27,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
       dir → DATA_PIPELINE; `pyproject.toml` + `src/<pkg>/` → LIBRARY;
       monorepo markers → MONOREPO; else BACKEND).
 
-- [x] 0.4 Create `cianfhoghlaim/cocoindex/arch_doc_cache.py` — port
+- [x] 0.4 Create `cocoindex/arch_doc_cache.py` — port
       `stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/cache.py:ArchDocCache`
       as a `ContextKey` wrapping a DuckDB instance keyed by
       `(repo_path, git_sha, repo_type)`. Use the existing
@@ -40,14 +40,14 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 ## Phase 1 — Stream 1: `youtube_kg_embedding.py` (~6 h)
 
-- [x] 1.1 Create `cianfhoghlaim/dlt/api_sources/youtube_videos.py` — DLT
+- [x] 1.1 Create `dlt/api_sources/youtube_videos.py` — DLT
       source that reads `stedding/youtube_curated.yaml` (a list of
       `{channel_id, playlist_id?, max_videos?}` tuples) and emits 1 row per
       video via yt-dlp. Mirror the `soundcloud_downloader.py` pattern:
       `yt-dlp --dump-json` for metadata + `yt-dlp -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/best`
       for the MP4 to `stedding/ingest_queue/youtube/<video_id>.mp4`.
 
-- [x] 1.2 Create `cianfhoghlaim/baml_src/processing/_shared/video_kg.baml`
+- [x] 1.2 Create `baml/processing/_shared/video_kg.baml`
       — 3 classes (`KnowledgeTriple`, `ConceptChain`, `VisualSequence`)
       + 3 BAML functions (`ExtractVideoKnowledgeTriple`,
       `ExtractConceptChain`, `ExtractFrameSequence`). Routes through the
@@ -56,17 +56,17 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 - [x] 1.3 Generate the BAML client: `mise run baml:generate`.
 
-- [x] 1.4 Create `cianfhoghlaim/cocoindex/youtube_kg_embedding.py` — the
+- [x] 1.4 Create `cocoindex/youtube_kg_embedding.py` — the
       v1 App `YoutubeKgEmbedding`. Reads `youtube_videos` DuckLake table;
       for each video, runs WhisperX via `transcript_aligner.py` +
       `ffmpeg -vf fps=1/10` frame sampling + `qwen3-vl-8b` caption +
       `molmo2-8b` for slide diagrams + the 3 BAML fns. Mounts 3 LanceDB
       tables: `video_segments`, `video_frame_captions`, `video_triples`.
 
-- [x] 1.5 Create `cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/youtube_kg/defs.yaml`
+- [x] 1.5 Create `orchestration/defs/3_model_lifecycle/cocoindex_v1/youtube_kg/defs.yaml`
       — L3 `CelticModelLifecycleComponent` mount.
 
-- [ ] 1.6 Create `cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/youtube_kg/_assets.py`
+- [ ] 1.6 Create `orchestration/defs/3_model_lifecycle/cocoindex_v1/youtube_kg/_assets.py`
       — 3 Dagster assets (all `is_virtual=True`).
 
 - [ ] 1.7 Quality gate: `mise run cocoindex:conformance` exits 0 on the
@@ -75,21 +75,21 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 ## Phase 2 — Stream 3: `package_changelog_embedding.py` (~5 h)
 
-- [ ] 2.1 Create `cianfhoghlaim/dlt/api_sources/package_docs.py` — DLT
+- [ ] 2.1 Create `dlt/api_sources/package_docs.py` — DLT
       source reading `stedding/package_watchlist.yaml` (list of
       `{ecosystem: pypi|npm|cran, name, homepage, docs_url}` tuples). Uses
       dlt `rest_api` for PyPI JSON + `requests` + the Firecrawl MCP
       client (per the `upstream_blog_monitor.py` pattern) for docs
       scraping.
 
-- [ ] 2.2 Create `cianfhoghlaim/baml_src/processing/_shared/package_changelog.baml`
+- [ ] 2.2 Create `baml/processing/_shared/package_changelog.baml`
       — 2 classes (`ChangelogEntry`, `APIDiff`) + 2 BAML fns
       (`ExtractChangelogEntry`, `ExtractAPIDiff`) routed through
       `qwen3.6-27b-mtp`.
 
 - [ ] 2.3 Generate the BAML client.
 
-- [ ] 2.4 Create `cianfhoghlaim/cocoindex/package_changelog_embedding.py`
+- [ ] 2.4 Create `cocoindex/package_changelog_embedding.py`
       — v1 App `PackageChangelogEmbedding` mounting 2 LanceDB tables:
       `package_changelog_chunks` + `package_changelog_diffs`.
 
@@ -100,7 +100,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 ## Phase 3 — Stream 4: `codebase_git_history.py` (~6 h)
 
-- [ ] 3.1 Create `cianfhoghlaim/cocoindex/codebase_git_history.py` —
+- [ ] 3.1 Create `cocoindex/codebase_git_history.py` —
       v1 App `CodebaseGitHistory`. Custom `@coco.fn` local-git source
       connector that shells `git log --pretty=format:'%H|%ae|%at|%s'`,
       `git blame --line-porcelain`, `git diff --stat` for diff stats.
@@ -110,7 +110,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
       new edges**: `AUTHORED_BY` + `TOUCHED_IN`. Mounts 2 LanceDB tables:
       `codebase_git_commits` + `codebase_git_blame_regions`.
 
-- [ ] 3.2 Create `cianfhoghlaim/baml_src/processing/_shared/git_intent.baml`
+- [ ] 3.2 Create `baml/processing/_shared/git_intent.baml`
       — 1 class (`CommitIntent`) + 1 BAML fn (`ExtractCommitIntent`).
 
 - [ ] 3.3 Generate the BAML client.
@@ -118,7 +118,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 - [ ] 3.4 Create the L3 Component `defs.yaml` + `_assets.py` (2 Dagster
       assets: `codebase_git_history_chunks` + `codebase_git_blame_regions`).
 
-- [ ] 3.5 Update `cianfhoghlaim/cocoindex/codebase_graph.py` to declare
+- [ ] 3.5 Update `cocoindex/codebase_graph.py` to declare
       the 2 new edge types in the row dataclass (no breaking change to
       existing 7 edges).
 
@@ -128,7 +128,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 **This is the surviving gem from the archive.**
 
-- [ ] 4.1 Create `cianfhoghlaim/baml_src/processing/_shared/repo_arch_summary.baml`
+- [ ] 4.1 Create `baml/processing/_shared/repo_arch_summary.baml`
       — 4 BAML fns (`ExtractOverview`, `ExtractComponents`,
       `ExtractDataLayer`, `ExtractDependencies`). Prompts ported verbatim
       from
@@ -139,7 +139,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 - [ ] 4.2 Generate the BAML client.
 
-- [ ] 4.3 Create `cianfhoghlaim/cocoindex/repo_arch_docs.py` — v1 App
+- [ ] 4.3 Create `cocoindex/repo_arch_docs.py` — v1 App
       `RepoArchDocs`. Reads `codebase_index` + `codebase_graph` +
       `codebase_git_history` tables; calls Phase 0's `detect_repo_type()`
       + `arch_doc_cache.get(repo_path, git_sha)`; on cache miss, runs the
@@ -163,13 +163,13 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 ## Phase 5 — Stream 2: `media_local_embedding.py` (~6 h)
 
-- [ ] 5.1 Create `cianfhoghlaim/dlt/api_sources/local_media_files.py` —
+- [ ] 5.1 Create `dlt/api_sources/local_media_files.py` —
       DLT source walking `stedding/ingest_queue/media/**/*.{mp4,mkv,webm,mp3,wav,m4a,ogg}`.
       `ffprobe` for codec + duration + per-stream metadata; `python-magic`
       mime sniffing. Emits 1 row per file with `(file_path, media_kind:
       video|audio, duration_s, codec, sha256)`.
 
-- [ ] 5.2 Create `cianfhoghlaim/baml_src/processing/_shared/gameplay_sequence.baml`
+- [ ] 5.2 Create `baml/processing/_shared/gameplay_sequence.baml`
       — 2 classes (`GameplaySegment`, `PlayerCommentary`) + 2 BAML fns
       (`ExtractGameplaySequence`, `ExtractPlayerCommentary`). Reuses the
       `scene_type` enum from `openspec/specs/retro-game-design-catalogue/spec.md`
@@ -178,7 +178,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 
 - [ ] 5.3 Generate the BAML client.
 
-- [ ] 5.4 Create `cianfhoghlaim/cocoindex/media_local_embedding.py` —
+- [ ] 5.4 Create `cocoindex/media_local_embedding.py` —
       v1 App `MediaLocalEmbedding`. Reads `local_media_files` DuckLake
       table; for each video runs `ffmpeg -vf fps=1/10` + WhisperX +
       `qwen3-vl-8b` + `molmo2-8b` + the 2 BAML fns; for each audio-only
@@ -209,10 +209,10 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 - [ ] 6.4 Register the 5 new cognify datasets:
       `multimedia_kg`, `package_changelog`, `codebase_git_history`,
       `media_local`, `repo_arch_docs`. One file per dataset under
-      `cianfhoghlaim/cognify/datasets/`, following the existing
+      `cognify/datasets/`, following the existing
       `oideachais_cognify_*` pattern.
 
-- [ ] 6.5 Create `cianfhoghlaim/notebooks/multimodal_code_and_media_intel.py`
+- [ ] 6.5 Create `notebooks/multimodal_code_and_media_intel.py`
       — marimo mission-control dashboard over the 5 new LanceDB tables +
       the `multihop_search` answer panel.
 

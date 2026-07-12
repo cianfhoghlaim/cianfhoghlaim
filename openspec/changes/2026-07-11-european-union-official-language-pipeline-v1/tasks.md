@@ -58,7 +58,7 @@
 
 ## 4. CocoIndex v1 App
 
-- [ ] 4.1 Create `cianfhoghlaim/cocoindex/european_union_official_embedding.py`
+- [ ] 4.1 Create `cocoindex/european_union_official_embedding.py`
 - [ ] 4.2 Imports `from ._lifespan import shared_lifespan` (R1–R4 conformance)
 - [ ] 4.3 Reads from `dlt/european_union/` DuckLake tables
 - [ ] 4.4 Embeds with `BAAI/bge-m3` (1024-d)
@@ -81,11 +81,11 @@
 ## 6. MotherDuck Dive + daily Flight
 
 - [ ] 6.1 Create
-  `cianfhoghlaim/motherduck/dives/eu_official_language_coverage.py`
+  `motherduck/dives/eu_official_language_coverage.py`
 - [ ] 6.2 Create
-  `cianfhoghlaim/motherduck/flights/eu_official_daily_sync_flight.py`
+  `motherduck/flights/eu_official_daily_sync_flight.py`
 - [ ] 6.3 Create
-  `cianfhoghlaim/motherduck/flights/config.yaml` entry for
+  `motherduck/flights/config.yaml` entry for
   `eu_official_daily_sync_flight` with cron `0 5 * * *`
 
 ## 7. Cache + fixtures

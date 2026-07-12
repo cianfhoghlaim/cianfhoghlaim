@@ -11,7 +11,7 @@ The system SHALL ingest from the oideachais DuckLake catalog via the
 
 #### Scenario: Lakehouse-to-meaisinfhoghlaim ingest routes through `oideachais.orchestration`
 
-- **GIVEN** the v4 Dagster orchestration tree at `cianfhoghlaim/orchestration/` containing `defs/`, `definitions.py`, `components/`, `defs.yaml`
+- **GIVEN** the v4 Dagster orchestration tree at `orchestration/` containing `defs/`, `definitions.py`, `components/`, `defs.yaml`
 - **WHEN** a meaisinfhoghlaim consumer wants to ingest from the oideachais DuckLake catalog
 - **THEN** the consumer MUST import via `from oideachais.orchestration.definitions import defs` (the v4 path)
 - **AND** the legacy `from oideachais.dagster_defs.definitions import defs` path MUST raise `ModuleNotFoundError`
