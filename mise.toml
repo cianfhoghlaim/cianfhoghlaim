@@ -41,10 +41,11 @@ _.file = '.env'
 MISE_ENV_FILE = ".env"
 PYTHONPATH = "."
 UV_PROJECT_ENVIRONMENT = ".venv"
-# Post-Phase-1 (2026-06-30): the consolidated pyproject.toml lives at
-# cianfhoghlaim/pyproject.toml. This stamp lets `mise run cic:version` print
-# "cianfhoghlaim 0.5.0 (manifest generated YYYY-MM-DDTHH:MM:SSZ)".
-CIANFHOGHLAIM_PYPROJECT_GENERATED_AT = "2026-06-30T00:00:00Z"
+# Post-Phase-1 (2026-06-30): the consolidated pyproject.toml lived at
+# cianfhoghlaim/pyproject.toml. Post-v7 (2026-07-17): the package is the
+# repo itself, so pyproject.toml is at the root. The stamp is bumped to
+# the v7 release date so `mise run cic:version` reflects the new shape.
+CIANFHOGHLAIM_PYPROJECT_GENERATED_AT = "2026-07-17T00:00:00Z"
 # LOCKET_TOKEN, KOMODO_URL, PANGOLIN_URL are set per-environment (not required here)
 # They are provided by the Locket sidecar in production or by the user's shell in dev.
 
@@ -156,15 +157,15 @@ run = "uv sync --all-extras"
 
 [tasks."cic:lint"]
 description = "Lint cianfhoghlaim Python code with ruff"
-run = "uv run ruff check cianfhoghlaim/"
+run = "uv run ruff check ."
 
 [tasks."cic:test"]
 description = "Run pytest on the consolidated cianfhoghlaim package"
-run = "uv run pytest cianfhoghlaim/tests/"
+run = "uv run pytest tests/"
 
 [tasks."cic:typecheck"]
 description = "Type-check cianfhoghlaim Python code with mypy"
-run = "uv run mypy cianfhoghlaim/"
+run = "uv run mypy ."
 
 [tasks."cic:build"]
 description = "Build the consolidated cianfhoghlaim wheel"
@@ -172,7 +173,7 @@ run = "uv build --package cianfhoghlaim"
 
 [tasks."cic:ocr:test"]
 description = "Run pytest on the OCR evaluation harness"
-run = "uv run pytest cianfhoghlaim/tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py"
+run = "uv run pytest tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py"
 
 [tasks."cic:ocr:eval"]
 description = "Run the Celtic OCR evaluation harness (multi-backend comparison)"
@@ -192,7 +193,7 @@ run = "mise run baml:test"
 
 [tasks."cic:baml:lint"]
 description = "Lint all 56+ .baml schema files for consistency"
-run = "uv run python -c 'import pathlib; [print(p) for p in pathlib.Path(\"cianfhoghlaim/baml\").glob(\"*.baml\")]' | wc -l"
+run = "uv run python -c 'import pathlib; [print(p) for p in pathlib.Path(\"baml\").glob(\"*.baml\")]' | wc -l"
 
 [tasks."cic:cocoindex:index"]
 description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (alias of ccc:v1:index)"
@@ -204,7 +205,7 @@ run = "uv run python -c 'import asyncio; from cianfhoghlaim.cocoindex.cocoindex_
 
 [tasks."cocoindex:conformance"]
 description = "Run the cocoindex_v1_migrate.py audit (R1-R4). Exits 1 on any violation. This is the CI gate (faster than the v1 App itself)."
-run = "uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only"
+run = "uv run python dlt/common/cocoindex_v1_migrate.py --check-only"
 
 [tasks."cic:cocoindex:leabharlann-books"]
 description = "Index the leabharlann books corpus via the v1 leabharlann_books_embedding App"
@@ -273,11 +274,11 @@ run = "uv run python -m cianfhoghlaim.stacks.cli check oideachais"
 # Per-package test runners
 [tasks."test:codeolas"]
 description = "Run pytest on the códeolas library"
-run = "uv run pytest cianfhoghlaim/libraries/codeolas/tests/"
+run = "uv run pytest libraries/codeolas/tests/"
 
 [tasks."test:ocr"]
 description = "Run pytest on the OCR evaluation harness (11 vision × 4 classical)"
-run = "uv run pytest cianfhoghlaim/ocr/evaluation/"
+run = "uv run pytest ocr/evaluation/"
 
 # =============================================================================
 # llama-swap Tasks (v4 OCR/VLM registry)
@@ -336,7 +337,7 @@ run = "(cd bonneagar && docker compose -f stacks/ci/hf-watchdog/compose.yaml dow
 
 [tasks."litellm:regenerate"]
 description = "Regenerate the litellm/config/config.yaml from the v4 VISION_MODELS registry (Phase 2 of the deployment plan)"
-run = "PYTHONPATH=cianfhoghlaim:. python scripts/generate_litellm_config.py > cianfhoghlaim/stacks/litellm/config/config.yaml"
+run = "PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml"
 
 [tasks."litellm:validate"]
 description = "Validate the litellm/config/config.yaml structure (count models, check aliases)"
@@ -552,22 +553,22 @@ run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface
 description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
 run = """
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-if [ ! -e "$ROOT_DIR/cianfhoghlaim/baml_src" ]; then
-  ln -s baml "$ROOT_DIR/cianfhoghlaim/baml_src"
+if [ ! -e "$ROOT_DIR/baml_src" ]; then
+  ln -s baml "$ROOT_DIR/baml_src"
 fi
 cd "$ROOT_DIR"
-uv run baml-cli generate --from cianfhoghlaim/baml_src
+uv run baml-cli generate --from baml_src
 """
 
 [tasks."baml:test"]
 description = "Run BAML test blocks with baml-cli (hard CI gate)"
 run = """
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-if [ ! -e "$ROOT_DIR/cianfhoghlaim/baml_src" ]; then
-  ln -s baml "$ROOT_DIR/cianfhoghlaim/baml_src"
+if [ ! -e "$ROOT_DIR/baml_src" ]; then
+  ln -s baml "$ROOT_DIR/baml_src"
 fi
 cd "$ROOT_DIR"
-uv run baml-cli test --from cianfhoghlaim/baml_src
+uv run baml-cli test --from baml_src
 """
 
 [tasks."docs:cognee"]
@@ -691,16 +692,16 @@ run = "(cd bonneagar && bash scripts/deploy-cf.sh --all --preview) || true"
 
 [tasks."author-archive:dev"]
 description = "Author-archive v1 pipeline against the local dev target (DuckDB)"
-run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh dev ${@}"
+run = "bash scripts/oideachais/make_target.sh dev ${@}"
 
 [tasks."author-archive:staging"]
 description = "Author-archive v1 pipeline against the MotherDuck staging target"
-run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh staging ${@}"
+run = "bash scripts/oideachais/make_target.sh staging ${@}"
 
 [tasks."author-archive:prod"]
 description = "Author-archive v1 pipeline against the Garage S3 + Lakekeeper prod target"
-run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh prod ${@}"
+run = "bash scripts/oideachais/make_target.sh prod ${@}"
 
 [tasks."author-archive:cps:hero"]
 description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
-run = "bash cianfhoghlaim/scripts/oideachais/make_target.sh dev python cianfhoghlaim/scripts/oideachais/pre_research_cps_gov_uk.py"
+run = "bash scripts/oideachais/make_target.sh dev python scripts/oideachais/pre_research_cps_gov_uk.py"
