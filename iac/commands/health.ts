@@ -19,8 +19,8 @@ import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 
-const TINYAUTH_URL = process.env.TINYAUTH_URL ?? "http://tinyauth.cianfhoghlaim.ie";
-const TINYAUTH_HEALTH_PATH = process.env.TINYAUTH_HEALTH_PATH ?? "/api/health";
+const TINYAUTH_URL = process.env.TINYAUTH_URL ?? "http://localhost:10000";
+const TINYAUTH_HEALTH_PATH = process.env.TINYAUTH_HEALTH_PATH ?? "/api/healthz";
 
 export async function health() {
   logStep("Health check (5-way: komodo + pangolin + infisical + newt + pocket-id + tinyauth)");
@@ -108,11 +108,28 @@ export async function health() {
   // 5. Pocket ID (NEW)
   try {
     const pid = await pocketIdHealth();
-    if (pid.healthy && pid.dbUsers > 0) {
-      logOk(`pocket-id: v${pid.version}, ${pid.dbUsers} users, ${pid.dbOidcClients} OIDC clients, signup=${pid.signupEnabled ? "on" : "off"}`);
-    } else if (pid.healthy && pid.dbUsers === 0) {
-      logError(`pocket-id: v${pid.version} but DB is empty (run: bun run iac:bootstrap-pocketid-admin)`);
-      allOk = false;
+    if (pid.healthy) {
+      // v2.9.0 architecture: the local SQLite may be empty (it's a dev instance);
+      // the production instance is on arm1-oci (DNS-routed). So we report the
+      // version + connectivity, and use the admin API (with API key) to count users.
+      let userCount = pid.dbUsers;
+      let oidcClientCount = pid.dbOidcClients;
+      if (process.env.POCKETID_API_KEY) {
+        try {
+          const { pocketIdListUsers, pocketIdListOidcClients } = await import("../auth-pocketid-admin.ts");
+          const users = await pocketIdListUsers("", process.env.POCKETID_API_KEY);
+          const clients = await pocketIdListOidcClients("", process.env.POCKETID_API_KEY);
+          userCount = users.length;
+          oidcClientCount = clients.length;
+        } catch (e) {
+          // API key may be missing or invalid; fall back to local DB counts
+        }
+      }
+      if (userCount > 0) {
+        logOk(`pocket-id: v${pid.version}, ${userCount} users, ${oidcClientCount} OIDC clients`);
+      } else if (pid.dbUsers === 0) {
+        logWarn(`pocket-id: v${pid.version} but local DB has 0 users (production instance on arm1-oci may have users — set POCKETID_API_KEY to query via API)`);
+      }
     } else {
       logError(`pocket-id: ${pid.healthyDetail}`);
       allOk = false;
