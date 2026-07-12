@@ -266,3 +266,59 @@ function CompareCelticNations(
         mapping (note any equivalences or divergences)
   "#
 }
+
+// ============================================================================
+// EXTRACTION FUNCTION (added 2026-07-17 for the gaois-celtic-language-pipeline-v1 change)
+// ============================================================================
+
+// Per-nation curriculum specification for any of the 6 Celtic languages
+// (Irish, Scottish Gaelic, Welsh, Manx, Cornish, Breton)
+class CelticCurriculumSpec {
+  language CelticLanguageCurriculum @description("Which Celtic language")
+  nation_code string @description("ISO 3166-1 alpha-3 (e.g., IRL, GBR, FRA)")
+  education_level EducationLevelCeltic @description("Primary / Secondary / Higher")
+  year_levels string[] @description("Year levels covered (e.g., ['Junior Infants', 'Senior Infants', '1st', '2nd'])")
+  curriculum_body string @description("Authoritative body (NCCA, SQA, WJEC, etc.)")
+  framework_name string @description("Official framework name")
+  framework_name_native string? @description("Framework name in the native Celtic language")
+  learning_outcomes CelticLearningOutcome[] @description("Per-level learning outcomes")
+  assessment_methods string[] @description("Assessment methods used")
+  cultural_context string? @description("Cultural background for the curriculum")
+}
+
+// Extract a structured Celtic-language curriculum specification from any
+// Celtic-language curriculum document. Uses `uccix-mistral-24b` (Irish) or
+// `gemma-4-26B-A4B` (Welsh/Scottish/Breton) via LlamaSwap routing.
+function ExtractCelticCurriculum(
+  text: string,
+  language: CelticLanguageCurriculum
+) -> CelticCurriculumSpec {
+  client LlamaSwapReasoningClient
+  prompt #"
+    Extract a structured curriculum specification for the {{ language }} curriculum
+    described in the following text.
+
+    {{ ctx.output_format }}
+
+    Text:
+    {{ text }}
+
+    Extract:
+    - The Celtic language (IRISH / SCOTTISH_GAELIC / WELSH / MANX / CORNISH / BRETON)
+    - The nation code (ISO 3166-1 alpha-3)
+    - The education level (PRIMARY / SECONDARY / HIGHER)
+    - All year levels covered
+    - The authoritative curriculum body (NCCA for Ireland, SQA for Scotland,
+      WJEC for Wales, etc.)
+    - The framework name (in both English and the native Celtic language)
+    - Per-level learning outcomes (id, description, skill domains, prerequisites)
+    - Assessment methods used
+    - Cultural context (optional)
+
+    Important:
+    - Preserve Celtic-language text with fadas / circumflexes (á é í ó ú)
+    - Link to the canonical `CelticLearningOutcome` class for outcomes
+    - For Irish (IRISH), dispatch via `uccix-mistral-24b`
+    - For Welsh/Scottish/Breton/Manx/Cornish, dispatch via `gemma-4-26B-A4B`
+  "#
+}

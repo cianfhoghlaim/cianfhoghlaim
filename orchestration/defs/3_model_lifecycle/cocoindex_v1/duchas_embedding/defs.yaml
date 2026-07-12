@@ -1,0 +1,33 @@
+# Dagster L3 — Dúchas CocoIndex mount (the v1 App with 2 LanceDB tables)
+#
+# Mounts the DuchasEmbeddingApp on top of the L2 BAML-extracted rows.
+# The App reads the L2 outputs, chunks each row, embeds with BGE-M3,
+# and mounts BOTH `oideachais.language.duchas_chunks` AND
+# `oideachais.language.duchas_bboxes` in LanceDB.
+#
+# Reference: openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/
+
+type: dagster.schedule
+schedule: "@daily"
+execution_timezone: "UTC"
+description: >
+  Daily Dúchas CocoIndex v1 mount — runs the DuchasEmbeddingApp and mounts
+  the 2 LanceDB tables (`duchas_chunks` + `duchas_bboxes`).
+
+assets:
+  - name: duchas_cocoindex_mount
+    group_name: language_duchas_embedding
+    compute_kind: local
+    deps:
+      - duchas_ingestion
+    metadata:
+      layer: 3_model_lifecycle
+      stage: language
+      source_group: duchas
+      lance_tables:
+        - oideachais.language.duchas_chunks
+        - oideachais.language.duchas_bboxes
+      bbox_levels: [page, region, sentence, word, letter]
+      embedder: BAAI/bge-m3
+      embed_dim: 1024
+      openspec_change: 2026-07-17-gaois-celtic-language-pipeline-v1

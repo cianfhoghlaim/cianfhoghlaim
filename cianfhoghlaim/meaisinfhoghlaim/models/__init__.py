@@ -72,3 +72,13 @@ __all__ = [
     "get_optimal_for_m4_id",
     "select_ocr_backend",
 ]
+
+# Shared LlamaSwap routing table (added 2026-07-17)
+from cianfhoghlaim.meaisinfhoghlaim.models.routing import (
+    ROUTING_TABLE,
+    RoutingConfig,
+    route_language,
+    get_baml_client,
+    get_model_name,
+    list_supported_routes,
+)
