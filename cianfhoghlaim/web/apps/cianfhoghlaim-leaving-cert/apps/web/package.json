@@ -6,7 +6,10 @@
     "dev": "vite dev --port=3082",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "tokens:validate": "bun src/styles/validate-tokens.ts",
+    "tokens:sync": "echo 'tokens.css is the single source of truth; edit it then re-run tokens:validate. Regeneration of tokens.ts + tokens.schema.json + design_tokens.baml is not yet implemented (manual sync).'",
+    "tokens:validate:fix": "bun src/styles/validate-tokens.ts --fix"
   },
   "dependencies": {
     "@copilotkit/a2ui-renderer": "^1.62.2",
