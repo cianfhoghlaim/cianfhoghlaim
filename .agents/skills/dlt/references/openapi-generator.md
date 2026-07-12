@@ -61,11 +61,11 @@ load_info = dlt.pipeline(
 
 ## KCG usage
 
-- `cianfhoghlaim/dlt/british_isles/ireland/` (NCCA, SEC, DES) — most
+- `dlt/british_isles/ireland/` (NCCA, SEC, DES) — most
   Irish sources are hand-written (no OpenAPI spec)
-- `cianfhoghlaim/dlt/british_isles/northern_ireland/ccea_curriculum.py` —
+- `dlt/british_isles/northern_ireland/ccea_curriculum.py` —
   CCEA pages, hand-written
-- `cianfhoghlaim/dlt/british_isles/medicine/ie/hse.py` — HSE OpenData
+- `dlt/british_isles/medicine/ie/hse.py` — HSE OpenData
   portal (some endpoints have OpenAPI specs; could be migrated to
   `dlt-init-openapi` for auto-generation)
 

@@ -310,11 +310,11 @@ critical places:
    `DPOTrainer` (see `.agents/skills/trl/SKILL.md`).
 
 RAGAS scores are wired into MLflow and Langfuse via the
-Dagster asset `cianfhoghlaim/orchestration/defs/meaisinfhoghlaim/ragas_eval.py`,
+Dagster asset `orchestration/defs/meaisinfhoghlaim/ragas_eval.py`,
 which runs daily on a 100-sample held-out test set.
 
 The canonical RAGAS eval set lives in
-`cianfhoghlaim/meaisinfhoghlaim/evaluation/canonical_eval_set.json`
+`agents/meaisinfhoghlaim/evaluation/canonical_eval_set.json`
 (100 samples × 4 metrics = 400 scores per run).
 
 ## RAGAS-as-DPO preference-signal example

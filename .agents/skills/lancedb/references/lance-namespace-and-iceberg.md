@@ -99,7 +99,7 @@ The KCG stack uses **Lakekeeper** as the Iceberg REST catalog
 (deployed in `infrastructure/stacks/`), and the `oideachais` DuckLake
 sink is a sibling of the Iceberg tables. The companion-table pattern
 is documented in the
-`cianfhoghlaim/orchestration/defs/` Iceberg asset group (see
+`orchestration/defs/` Iceberg asset group (see
 the `dagster` skill's `references/integrations/dagster-iceberg/INDEX.md`).
 
 ## Reference

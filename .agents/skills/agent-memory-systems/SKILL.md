@@ -71,11 +71,11 @@ For KCG agents, the canonical pattern is:
    provider directly. This is for cost tracking + Langfuse
    observability.
 2. **All Cognee + Graphiti calls are wrapped in the
-   `cianfhoghlaim/agents/` shim**. The actual model-layer lives
-   in `cianfhoghlaim/meaisinfhoghlaim/memory/`.
+   `agents/` shim**. The actual model-layer lives
+   in `agents/meaisinfhoghlaim/memory/`.
 3. **All FalkorDB + Memgraph calls go through
-   `cianfhoghlaim/storage/graph/`** (the application-layer client).
-4. **LanceDB schemas** follow the `cianfhoghlaim/cocoindex/`
+   `storage/graph/`** (the application-layer client).
+4. **LanceDB schemas** follow the `cocoindex/`
    v1 App pattern. Do NOT create ad-hoc LanceDB tables.
 
 ## Pair this skill with

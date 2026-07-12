@@ -1,19 +1,19 @@
 ---
 name: ccc
-description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code search, file/directory summary lookup, or concept-guide lookup is needed, when indexing the codebase after changes, or when the user asks about ccc, cocoindex-code, or the codebase index. RETAINED by user direction past the 2026-07-15 retirement; canonical replacement is the v1 App `codebase_indexing` at cianfhoghlaim/cocoindex/codebase_indexing.py."
+description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code search, file/directory summary lookup, or concept-guide lookup is needed, when indexing the codebase after changes, or when the user asks about ccc, cocoindex-code, or the codebase index. RETAINED by user direction past the 2026-07-15 retirement; canonical replacement is the v1 App `codebase_indexing` at cocoindex/codebase_indexing.py."
 ---
 
 > **DEPRECATION NOTICE (2026-07-06):** This skill was scheduled to retire
 > 2026-07-15 but is retained by user direction. The replacement (CocoIndex
 > v1 App `codebase_indexing`) lives at
-> `cianfhoghlaim/cocoindex/codebase_indexing.py`. Use the v1 App for new
+> `cocoindex/codebase_indexing.py`. Use the v1 App for new
 > work; this skill is retained for the `bun run ccc:init`,
 > `bun run ccc:index`, and `bun run ccc:search` developer shortcuts.
 
 # ccc - Semantic Code Search & Indexing
 
 > **Deprecation banner (2026-06-16, retires 2026-07-15):** The v1-native
-> replacement is `cianfhoghlaim/cocoindex/codebase_indexing.py` (a
+> replacement is `cocoindex/codebase_indexing.py` (a
 > CocoIndex v1 App + Dagster asset group). It uses the same embedding
 > model (`BAAI/bge-m3`) and the same LanceDB HNSW index that the rest of
 > the data lakehouse uses, and it is registered in the Dagster UI under
@@ -29,14 +29,14 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 > `Module`, `Interface`, `Variable`) + 7 edge types (`CONTAINS`,
 > `IMPORTS`, `CALLS`, `EXTENDS`, `IMPLEMENTS`, `USES`, `DEFINES`).
 > 29+ language detection via
-> `cianfhoghlaim/cocoindex/chunking/languages.py` (ported from
-> `cianfhoghlaim/libraries/codeolas/chunking/languages.py`). Use the v1 Python API
+> `cocoindex/chunking/languages.py` (ported from
+> `libraries/codeolas/chunking/languages.py`). Use the v1 Python API
 > `search_code_graph(file_path=..., node_type=...)` to query the
 > graph table.
 >
 > **Round 7 phase 2 (2026-06-24):** Four v1 companions for the
 > *infrastructure* surface, all in
-> `cianfhoghlaim/orchestration/defs/infrastructure_assets.py`:
+> `orchestration/defs/infrastructure_assets.py`:
 >
 > - `api_endpoints` — FastAPI / Hono / TanStack Start / Convex HTTP
 >   routes → `api_endpoints` LanceDB. Query helper:
@@ -54,11 +54,11 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 >   `search_config(query, kind=None, limit=15)`.
 >
 > **Round 7 phase 3 (2026-06-24):** Two v1 embedding Apps in
-> `cianfhoghlaim/orchestration/defs/unified_embedding_assets.py`
+> `orchestration/defs/unified_embedding_assets.py`
 > (group `embedding`):
 >
 > - `unified_embeddings` — v1 port of
->   `cianfhoghlaim/agents/tuatha/crypteolas/cocoindex_flows/unified_embedding.py:unified_embedding_flow`.
+>   `agents/tuatha/crypteolas/cocoindex_flows/unified_embedding.py:unified_embedding_flow`.
 >   Reads any DuckDB connection (default:
 >   `crypteolas_catalog.docs.scraped_documents`), chunks with
 >   RecursiveSplitter (markdown) or paragraph+char fallback, embeds
@@ -66,7 +66,7 @@ description: "Semantic code search via CocoIndex Code (ccc CLI). Use when code s
 >   Query helper: `unified_search(query, source_types=None, protocol=None)`.
 > - `code_embeddings` — v1 port of the v0 `code_embedding_flow`.
 >   Walks `UNIFIED_CODE_ROOT` (default:
->   `cianfhoghlaim/agents/tuatha/crypteolas/storage/data/code/`) for `*.py`/`*.ts`/`*.tsx`/
+>   `agents/tuatha/crypteolas/storage/data/code/`) for `*.py`/`*.ts`/`*.tsx`/
 >   `*.js`/`*.jsx`/`*.rs`/`*.go`/`*.sol`, chunks with
 >   `RecursiveSplitter(detect_code_language)`, embeds with BGE-M3,
 >   writes to the `code_embeddings` LanceDB table. Query helper:
@@ -302,7 +302,7 @@ docs-exclusive content is searchable, index freshness;
 gap on YAML frontmatter (0 of 7 sampled files) and
 duplicate content (4+ copies of same content across
 `docs/`, `docs/old/`, `docs/bonneagar/`, `docs/legacy/tuatha/`,
-`docs/legacy/tuatha/cianfhoghlaim/agents/tuatha/`).
+`docs/legacy/tuatha/agents/tuatha/`).
 
 **The "ccc-clean" frontmatter convention** (the round-1
 recommendation that became the `agent-docs-patterns`
@@ -325,7 +325,7 @@ duplicate content (Gap — 4+ copies), index size
 **5 audit recommendations**: (1) no index refresh needed,
 (2) add frontmatter starting with `ccc_query_hints` for
 highest ROI, (3) deduplicate before consolidating (remove
-`docs/old/` + nested `docs/legacy/tuatha/cianfhoghlaim/agents/tuatha/` first), (4) create
+`docs/old/` + nested `docs/legacy/tuatha/agents/tuatha/` first), (4) create
 a `guides.yml` for cross-cutting concept guides
 ("BAML extraction end-to-end", "Tuath MMO x402 payment
 flow"), (5) standardize on `--path docs/` for agent

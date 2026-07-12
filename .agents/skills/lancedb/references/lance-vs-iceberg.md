@@ -58,9 +58,9 @@ See [`references/lance-namespace-and-iceberg.md`](references/lance-namespace-and
 ## KCG usage
 
 - **Lance** is the primary sink for the leabharlann + curriculum
-  semantic-search indexes (`cianfhoghlaim/cocoindex/leabharlann_embedding.py`)
+  semantic-search indexes (`cocoindex/leabharlann_embedding.py`)
 - **Iceberg** is the catalog layer for the DuckLake sink
-  (`cianfhoghlaim/storage/ducklake_client.py` — DuckLake uses Iceberg
+  (`storage/ducklake_client.py` — DuckLake uses Iceberg
   metadata internally)
 - The two are **complementary**, not competing. The KCG pattern is
   **Lance for the vector search hot path** + **DuckLake (which is

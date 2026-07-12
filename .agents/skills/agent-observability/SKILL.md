@@ -220,12 +220,12 @@ For every new agent in the KCG stack, ensure:
 
 ## KCG integration
 
-- `cianfhoghlaim/observability/` — the integration module
+- `observability/` — the integration module
   (Logfire + MLflow + Langfuse + Ragas)
-- `cianfhoghlaim/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
-- `cianfhoghlaim/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
+- `agents/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
+- `agents/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
   100 samples × 4 metrics
-- Dagster assets: `cianfhoghlaim/orchestration/defs/quality_assets.py`
+- Dagster assets: `orchestration/defs/quality_assets.py`
   (the Ragas asset_check group)
 
 ## Related skills
@@ -609,7 +609,7 @@ MLflow added a GenAI evaluation mode in 2026 that complements Langfuse:
 - Tracks quality metrics (faithfulness, answer relevance, context precision) per model
 - Integrates with the MLflow model registry: a model can only be promoted to "Production" if it passes the eval gate
 
-The KCG pattern: nightly batch eval of the `cianfhoghlaim/agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `cianfhoghlaim/meaisinfhoghlaim/dagster_defs/`) is the entry point.
+The KCG pattern: nightly batch eval of the `agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `agents/meaisinfhoghlaim/dagster_defs/`) is the entry point.
 
 ### RAGAS trace-based metrics
 
@@ -620,7 +620,7 @@ RAGAS now ships trace-based metrics that work on the Langfuse trace (not just th
 - **Context precision** — is the retrieved context actually relevant?
 - **Context recall** — is the retrieved context complete?
 
-The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `cianfhoghlaim/orchestration/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
+The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `orchestration/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
 
 ### Logfire MCP (2026-06)
 

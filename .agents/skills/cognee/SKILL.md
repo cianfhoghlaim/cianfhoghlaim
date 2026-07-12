@@ -684,7 +684,7 @@ results = await cognee.recall(
 
 The available search types (per `SearchType` enum) are: `GRAPH_COMPLETION`, `GRAPH_COMPLETION_COT`, `RAG_COMPLETION`, `CHUNKS`, `SUMMARIES`, `TEMPORAL`, `FEELING_LUCKY`. Override with `search_type=...`.
 
-For the KCG curriculum pipeline specifically, the `cianfhoghlaim/cocoindex/cognee_integration/cross_stage_cognify.py` uses these features to:
+For the KCG curriculum pipeline specifically, the `cocoindex/cognee_integration/cross_stage_cognify.py` uses these features to:
 
 - Store 5-stage cognify (Aistear → Primary → JC → SC → Tertiary)
 - Run `improve()` after each agent session

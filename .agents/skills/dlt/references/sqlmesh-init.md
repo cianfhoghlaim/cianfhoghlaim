@@ -35,8 +35,8 @@ virtual data warehouse) are covered by the **`sqlmesh` skill**.
 ## KCG usage
 
 - The `celtic-data-engineering-pipeline` spec — the dbt-duckdb
-  project at `cianfhoghlaim/orchestration/sqlmesh/` + `CelticDagsterDbtTranslator`
-  + 2 marimo notebooks under `cianfhoghlaim/notebooks/`
+  project at `orchestration/sqlmesh/` + `CelticDagsterDbtTranslator`
+  + 2 marimo notebooks under `notebooks/`
 - The `celtic-data-engineering-patterns` change (in openspec) for
   the full setup
 

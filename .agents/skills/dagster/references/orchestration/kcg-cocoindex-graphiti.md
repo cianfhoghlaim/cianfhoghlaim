@@ -19,7 +19,7 @@ the older one is deprecated.
 ## Asset graph (canonical)
 
 ```python
-# cianfhoghlaim/orchestration/defs/curriculum_assets.py
+# orchestration/defs/curriculum_assets.py
 from dagster import asset, AssetExecutionContext
 from dagster_cocoindex import CocoIndexResource
 
@@ -130,11 +130,11 @@ def vector_embeddings_check(context: AssetCheckEvaluationContext, vector_embeddi
 ## KCG production usage
 
 - The `oideachais-pipeline` spec — the canonical asset graph
-- The `cianfhoghlaim/orchestration/defs/curriculum_assets.py` — the
+- The `orchestration/defs/curriculum_assets.py` — the
   33+ Ireland curriculum assets
-- The `cianfhoghlaim/orchestration/sensors/leabharlann_sensors.py` —
+- The `orchestration/sensors/leabharlann_sensors.py` —
   the directory-watch sensors that fire the affected partitions
-- The `cianfhoghlaim/cocoindex/learning_outcome_graph.py` —
+- The `cocoindex/learning_outcome_graph.py` —
   the Graphiti ingestion flow
 
 ## Reference

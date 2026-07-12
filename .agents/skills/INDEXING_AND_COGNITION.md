@@ -77,7 +77,7 @@ bun run ccc:search --lang python --path 'cianfhoghlaim/*' "BAML extraction funct
 bun run ccc:search --offset 5 --limit 5 "BAML extraction function"
 
 # Summarise a file or directory (uses project's summary feature)
-ccc describe cianfhoghlaim/cocoindex/_lifespan.py
+ccc describe cocoindex/_lifespan.py
 
 # List + read concept guides (loaded from .cocoindex_code/guides.yml)
 ccc describe .                       # project overview
@@ -88,7 +88,7 @@ ccc describe .                       # project overview
 
 Per the `docs-skills-consolidation-pipeline` change (2026-06-16),
 the v1-native replacement for the standalone `ccc search` CLI is
-the **`cianfhoghlaim/cocoindex/codebase_indexing.py`**
+the **`cocoindex/codebase_indexing.py`**
 CocoIndex v1 App, registered in Dagster under the `codebase`
 asset group. It uses the **same embedding model** (`BAAI/bge-m3`)
 and the **same LanceDB HNSW index** as the rest of the data
@@ -424,15 +424,15 @@ top-level registries wired into OpenCode. It was added in the
   `explore` subagent types are reserved for OpenCode's own
   background work.
 
-### 8.2 The 13-agent model-layer registry (`cianfhoghlaim/agents/meaisinfhoghlaim/`)
+### 8.2 The 13-agent model-layer registry (`agents/meaisinfhoghlaim/`)
 
 The Python-side agent inventory lives in
-`cianfhoghlaim/agents/meaisinfhoghlaim/agents/__init__.py` as a tuple
+`agents/meaisinfhoghlaim/agents/__init__.py` as a tuple
 constant. The 4 functional subagents in `opencode.json` dispatch
 to these modules via their prompts.
 
 ```python
-# From cianfhoghlaim/agents/meaisinfhoghlaim/agents/__init__.py
+# From agents/meaisinfhoghlaim/agents/__init__.py
 MODEL_LAYER_AGENTS: tuple[str, ...] = (
     "root_agent",                  # 1 root
     "curriculum_agent",            # 12 specialists
@@ -496,7 +496,7 @@ print({k: len(v.get('skill_filter', [])) \
 # 13 model-layer agents
 python3 -c "
 import ast
-with open('cianfhoghlaim/agents/meaisinfhoghlaim/agents/__init__.py') as f:
+with open('agents/meaisinfhoghlaim/agents/__init__.py') as f:
     tree = ast.parse(f.read())
 for node in ast.walk(tree):
     if isinstance(node, ast.AnnAssign) \
@@ -532,18 +532,18 @@ subagents were rewritten to align with the new tree.
 | Former surface (pre-2026-06-28) | Current path (v4) |
 |:--|:--|
 | Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | `cianfhoghlaim/` root with `dlt/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
-| Oideachais official-media DLT source | `cianfhoghlaim/dlt/official_media/` |
-| Oideachais BAML schemas | `cianfhoghlaim/baml_src/` |
-| Oideachais notebooks | `cianfhoghlaim/notebooks/` |
-| Oideachais TanStack Start app | `cianfhoghlaim/web/apps/oideachais-web/` |
-| Meaisínfhoghlaim agents, OCR, and LLM stack | `cianfhoghlaim/agents/` + `cianfhoghlaim/meaisinfhoghlaim/` |
-| Meaisínfhoghlaim agent registry | `cianfhoghlaim/agents/` |
-| Meaisínfhoghlaim OCR registry | `cianfhoghlaim/meaisinfhoghlaim/ocr/` |
-| Meaisínfhoghlaim language data | `cianfhoghlaim/dlt/language/` |
-| Tuatha Babylon.js MMO + Crypteolas | `cianfhoghlaim/agents/tuatha/` + `cianfhoghlaim/web/apps/tuatha-ui/` |
-| Tuatha UI | `cianfhoghlaim/web/apps/tuatha-ui/` |
-| Croílár portfolio + portal | `cianfhoghlaim/web/apps/croilar-web/` + `cianfhoghlaim/web/apps/croilar-portal/` |
-| Codeolas code intelligence library | `cianfhoghlaim/libraries/codeolas/` |
+| Oideachais official-media DLT source | `dlt/official_media/` |
+| Oideachais BAML schemas | `baml/` |
+| Oideachais notebooks | `notebooks/` |
+| Oideachais TanStack Start app | `web/apps/oideachais-web/` |
+| Meaisínfhoghlaim agents, OCR, and LLM stack | `agents/` + `agents/meaisinfhoghlaim/` |
+| Meaisínfhoghlaim agent registry | `agents/` |
+| Meaisínfhoghlaim OCR registry | `agents/meaisinfhoghlaim/ocr/` |
+| Meaisínfhoghlaim language data | `dlt/language/` |
+| Tuatha Babylon.js MMO + Crypteolas | `agents/tuatha/` + `web/apps/tuatha-ui/` |
+| Tuatha UI | `web/apps/tuatha-ui/` |
+| Croílár portfolio + portal | `web/apps/croilar-web/` + `web/apps/croilar-portal/` |
+| Codeolas code intelligence library | `libraries/codeolas/` |
 | Cognee stack | `bonneagar/stacks/cognee/` |
 | Graphiti stack | `bonneagar/stacks/graphiti/` |
 | Infisical stack | `bonneagar/stacks/infisical/` |
@@ -557,10 +557,10 @@ subagents + 1 research subagent** in `opencode.json`:
 
 | Old subagent (pre-2026-06-28) | New subagent | Skill count | Routes to |
 |:--|:--|--:|:--|
-| `oideachais` | `data-platform` | 15 | `cianfhoghlaim/dlt/`, `orchestration/`, `baml_src/`, `notebooks/` |
+| `oideachais` | `data-platform` | 15 | `dlt/`, `orchestration/`, `baml_src/`, `notebooks/` |
 | `infrastructure` | `infrastructure` | 15 | `bonneagar/stacks/*/`, komodo, pangolin, locket |
-| `meaisinfhoghlaim` | `agent-platform` | 23 | `cianfhoghlaim/agents/`, `cianfhoghlaim/meaisinfhoghlaim/`, BAML, OCR, LLM routing, Langfuse, MLflow, RAGAS |
-| `croilar` + `tuatha` | `frontend-apps` | 20 | `cianfhoghlaim/web/`, Convex, Babylon.js, Hono |
+| `meaisinfhoghlaim` | `agent-platform` | 23 | `agents/`, `agents/meaisinfhoghlaim/`, BAML, OCR, LLM routing, Langfuse, MLflow, RAGAS |
+| `croilar` + `tuatha` | `frontend-apps` | 20 | `web/`, Convex, Babylon.js, Hono |
 | (new) | `research` | 11 | BrowserBase, Firecrawl, CCC, Cognee, change-detection |
 
 **Skill name migration notes (2026-06-29, `skill_filter` audit pass):**
@@ -585,11 +585,11 @@ The five pre-v4 quadrant subagent types are gone.
 ### 9.3 MCP migration
 
 The `croilar-devtools` MCP server (which pointed at
-`cianfhoghlaim/web/apps/croilar-web/mcp/devtools/index.ts`) was **removed** because
-the `cianfhoghlaim/web/apps/croilar-web/` directory no longer exists. The croilar
+`web/apps/croilar-web/mcp/devtools/index.ts`) was **removed** because
+the `web/apps/croilar-web/` directory no longer exists. The croilar
 dev-tools surface is temporarily un-implementable; a follow-up
 GitHub issue tracks the migration of the MCP server code to
-`cianfhoghlaim/agents/api/_croilar_convex/devtools.ts`.
+`agents/api/_croilar_convex/devtools.ts`.
 
 Total MCP count: **9** (was 10 before the consolidation).
 

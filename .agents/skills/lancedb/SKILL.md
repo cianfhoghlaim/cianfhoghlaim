@@ -680,7 +680,7 @@ use the rclone-sidecar Compose pattern (see
   blobs are <1 MB) and **Dedicated** for upstream blog payloads
   (where blobs can be >10 MB).
 - **LanceDB embedder model note** — the value actually exported by
-  `cianfhoghlaim/cocoindex/_lifespan.py:70` is
+  `cocoindex/_lifespan.py:70` is
   `BAAI/bge-large-en-v1.5` (English-only, 1024-dim), NOT `BAAI/bge-m3`
   as some CocoIndex v1 App docstrings claim. Both are 1024-dim so the
   discrepancy is latent. Apps whose docstrings claim `bge-m3` will be

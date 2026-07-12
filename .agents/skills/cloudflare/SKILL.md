@@ -341,7 +341,7 @@ return new Response(object.body, { headers })
 
 ## Alchemy IaC (round-9 deep dive)
 
-The KCG primary deploy for `cianfhoghlaim/web/apps/oideachais-web` and
+The KCG primary deploy for `web/apps/oideachais-web` and
 `tuath/ui/` uses **[Alchemy](https://alchemy.run/)** (an
 embeddable, pure-TypeScript IaC library) rather than
 Pulumi / Terraform / wrangler.toml. The key property:
@@ -390,7 +390,7 @@ await app.finalize();   // triggers deletion of orphaned resources
   using an LLM to create / copy / fork / modify resources
   when the library doesn't ship a provider
 
-**KCG use:** `cianfhoghlaim/web/apps/oideachais-web/alchemy.run.ts` declares the
+**KCG use:** `web/apps/oideachais-web/alchemy.run.ts` declares the
 Worker + D1 + R2 + Hyperdrive + Queues. Run with
 `bun run alchemy/deploy`. The state file
 `.alchemy/state.json` is gitignored. The secret
@@ -411,7 +411,7 @@ hydration layer is `.infisical.env` (see
 The 236 releases and Apache-2.0 licence put Alchemy in
 the **production-ready** tier for the KCG stack. The
 canonical KCG surface is the
-`infrastructure/stacks/cianfhoghlaim/web/apps/oideachais-web/` Alchemy run file.
+`infrastructure/stacks/web/apps/oideachais-web/` Alchemy run file.
 
 See `references/alchemy-iac.md` for the upstream README
 in full.

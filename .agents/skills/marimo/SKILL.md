@@ -1,6 +1,6 @@
 ---
 name: marimo
-description: Expert assistant for marimo reactive Python notebooks. Use when building reactive dashboards with multi-column layout, PEP 723 inline dependency blocks, `@app.setup` + `@app.function` lifecycle modes, `mo.sql(engine=)` for federated SQL against DuckLake/MotherDuck, DLT + LanceDB + RRF hybrid search patterns, or marimo-on-Cloudflare Workers + Container deployment. Powers the 6 per-subject BIEP notebooks (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) at `cianfhoghlaim/notebooks/`.
+description: Expert assistant for marimo reactive Python notebooks. Use when building reactive dashboards with multi-column layout, PEP 723 inline dependency blocks, `@app.setup` + `@app.function` lifecycle modes, `mo.sql(engine=)` for federated SQL against DuckLake/MotherDuck, DLT + LanceDB + RRF hybrid search patterns, or marimo-on-Cloudflare Workers + Container deployment. Powers the 6 per-subject BIEP notebooks (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) at `notebooks/`.
 ---
 
 # Marimo Notebook Assistant
@@ -64,7 +64,7 @@ without a `pyproject.toml` in the working directory:
 ```
 
 The `# /// script` block is **mandatory** for any notebook
-that is checked into `cianfhoghlaim/notebooks/` (or any
+that is checked into `notebooks/` (or any
 subdirectory). `uv` resolves the declared dependencies into
 an isolated cache.
 
@@ -338,11 +338,11 @@ requests to a marimo Container via a Durable Object. See
 
 ## KCG conventions
 
-- Every shareable notebook in `cianfhoghlaim/notebooks/` MUST
+- Every shareable notebook in `notebooks/` MUST
   have a PEP 723 `# /// script` header
 - The FastAPI app serves notebooks at `/dashboards/<name>`
 - Each dashboard has an asset check in
-  `cianfhoghlaim/orchestration/defs/4_asset_generation/marimo_dashboards.py` that
+  `orchestration/defs/4_asset_generation/marimo_dashboards.py` that
   verifies the notebook renders without errors
 - Live mode (`marimo edit --watch`) is supported via the
   `marimo-watch` Dagster sensor
@@ -373,9 +373,9 @@ once the analysis is stable.
 
 - Marimo docs: <https://docs.marimo.io/>
 - PEP 723: <https://peps.python.org/pep-0723/>
-- KCG notebooks: `cianfhoghlaim/notebooks/`
+- KCG notebooks: `notebooks/`
 - KCG dashboard assets:
-  `cianfhoghlaim/orchestration/defs/4_asset_generation/marimo_dashboards.py`
+  `orchestration/defs/4_asset_generation/marimo_dashboards.py`
 - Reference files in this skill:
   - `references/deployment-cloudflare.md` — Cloudflare Workers
     + Container deployment
@@ -396,7 +396,7 @@ once the analysis is stable.
 The post-v4 BIEP (`openspec/changes/lc6-biep/`) ships **6
 per-subject marimo notebooks** (Mathematics, Chemistry, Geography,
 Gaeilge, English, Computer Science) at
-`cianfhoghlaim/notebooks/lc_<subject>_dashboard.py`. Each
+`notebooks/lc_<subject>_dashboard.py`. Each
 notebook is a federated SQL front-end over the DuckLake +
 LanceDB combination, reading via `mo.sql(engine=md:oideachais)`:
 
@@ -443,7 +443,7 @@ def _(result):
   `lc_chemistry_dashboard.py`, `lc_geography_dashboard.py`,
   `lc_gaeilge_dashboard.py`, `lc_english_dashboard.py`,
   `lc_computer_science_dashboard.py` at
-  `cianfhoghlaim/notebooks/`.
+  `notebooks/`.
 - **Federated SQL** — `duckdb.connect("md:oideachais")` reads
   DuckLake tables AND LanceDB tables via `lance_scan()` in the
   same SQL query (so a single notebook joins BAML-extracted
@@ -458,7 +458,7 @@ def _(result):
   the `government_circulars` partition.
 - **Asset checks** — each notebook has a Dagster asset
   check in
-  `cianfhoghlaim/orchestration/defs/4_asset_generation/marimo_dashboards.py`
+  `orchestration/defs/4_asset_generation/marimo_dashboards.py`
   that re-runs the notebook with `--headless` and asserts no
   cell errors.
 

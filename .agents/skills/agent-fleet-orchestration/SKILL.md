@@ -1,13 +1,13 @@
 ---
 name: agent-fleet-orchestration
-description: "The KCG 12-agent fleet orchestration pattern in `cianfhoghlaim/agents/meaisinfhoghlaim/`. Covers 5 frameworks (Custom/ADK/Agno/Pipecat/CopilotKit), the 12 specialist agents (root, curriculum, translation, corpus, research, education_research, bunchloch_research, geospatial, statistics, curriculum_comparison, agui_curriculum, mcp_curriculum), the LiteLLM routing keyword map, the Letta memory layer, the RisingWave event streaming layer, the Langfuse + MLflow observability stack, the OpenClaw channel-fanout gateway (WebChat + Telegram + Slack + Discord + WhatsApp + Teams), and the British-Isles Education pipeline use case. Use when adding a new agent, debugging routing, wiring Langfuse traces, integrating Letta, or asking 'how do I orchestrate the 12-agent fleet for the LC subjects?'"
+description: "The KCG 12-agent fleet orchestration pattern in `agents/meaisinfhoghlaim/`. Covers 5 frameworks (Custom/ADK/Agno/Pipecat/CopilotKit), the 12 specialist agents (root, curriculum, translation, corpus, research, education_research, bunchloch_research, geospatial, statistics, curriculum_comparison, agui_curriculum, mcp_curriculum), the LiteLLM routing keyword map, the Letta memory layer, the RisingWave event streaming layer, the Langfuse + MLflow observability stack, the OpenClaw channel-fanout gateway (WebChat + Telegram + Slack + Discord + WhatsApp + Teams), and the British-Isles Education pipeline use case. Use when adding a new agent, debugging routing, wiring Langfuse traces, integrating Letta, or asking 'how do I orchestrate the 12-agent fleet for the LC subjects?'"
 ---
 
 # Agent Fleet Orchestration
 
 ## Purpose
 
-The `cianfhoghlaim/agents/` directory houses a **12-agent
+The `agents/` directory houses a **12-agent
 fleet** that spans 5 frameworks. This is genuinely novel — there
 is no other skill that documents the 12-agent × 5-framework
 pattern, the LiteLLM routing keyword map, the Letta memory
@@ -45,18 +45,18 @@ Use when you need to:
 | `agui_curriculum_agent` | Agno | The AG-UI streaming curriculum agent (CopilotKit consumer) | `agent.agui_curriculum` |
 | `mcp_curriculum_agent` | ADK | The MCP-server-bridged curriculum agent (for external clients) | `agent.mcp_curriculum` |
 
-The 12 agents are registered in `cianfhoghlaim/agents/__init__.py`
+The 12 agents are registered in `agents/__init__.py`
 (the canonical home for the agent registry).
 
 ## The 5 frameworks (the runtime)
 
 | Framework | Implementation | Used by |
 |:--|:--|:--|
-| Custom | `cianfhoghlaim/agents/root_agent.py` (the query router + LiteLLM) | `root_agent` |
+| Custom | `agents/root_agent.py` (the query router + LiteLLM) | `root_agent` |
 | ADK | `google.adk.agents.LlmAgent` (via `oideachais.agents.adk.*`) | `curriculum_agent`, `translation_agent`, `corpus_agent`, `research_agent`, `geospatial_agent`, `statistics_agent`, `curriculum_comparison_agent`, `mcp_curriculum_agent` |
-| Agno | `cianfhoghlaim/agents/agno/team.py` (the EducationTeam) | `education_research_agent`, `bunchloch_research_agent`, `agui_curriculum_agent` |
-| Pipecat | `cianfhoghlaim/agents/voice_agent.py` (the real-time audio transport) | (the voice agent is not in the 12 above; it's a separate voice channel) |
-| CopilotKit | `cianfhoghlaim/agents/adk/agui_curriculum_agent.py` (the AG-UI consumer) | (the CopilotKit consumer is the front-end; it's not an agent) |
+| Agno | `agents/agno/team.py` (the EducationTeam) | `education_research_agent`, `bunchloch_research_agent`, `agui_curriculum_agent` |
+| Pipecat | `agents/voice_agent.py` (the real-time audio transport) | (the voice agent is not in the 12 above; it's a separate voice channel) |
+| CopilotKit | `agents/adk/agui_curriculum_agent.py` (the AG-UI consumer) | (the CopilotKit consumer is the front-end; it's not an agent) |
 
 The 5 frameworks share the LiteLLM gateway at
 `litellm.cianfhoghlaim.ie:4000` as the single LLM proxy.
@@ -81,7 +81,7 @@ user query and routes to one of the 12 agents. The keyword map:
 | `mcp_curriculum_agent` | "mcp", "model context protocol", "tool" |
 | `default` | (no keyword match) → `root_agent` itself |
 
-The 12-bucket map is in `cianfhoghlaim/agents/root_agent.py:ROUTING_KEYWORDS`.
+The 12-bucket map is in `agents/root_agent.py:ROUTING_KEYWORDS`.
 
 ## The OpenClaw channel-fanout gateway (the inbound surface)
 
@@ -147,7 +147,7 @@ memory). The contract:
   achievements
 
 The 3 memory types are documented in
-`cianfhoghlaim/agents/letta_client.py:MemoryType`.
+`agents/letta_client.py:MemoryType`.
 
 ## The RisingWave event stream (the cross-agent events)
 
@@ -162,7 +162,7 @@ event bus). The contract:
   `memory.written`, `citation.found`
 
 The RisingWave connector is in
-`cianfhoghlaim/agents/risingwave_publisher.py:RisingWavePublisher`.
+`agents/risingwave_publisher.py:RisingWavePublisher`.
 
 ## The Langfuse + MLflow observability stack (the 2 traces)
 
@@ -173,7 +173,7 @@ Every agent in the fleet is wrapped in **2 traces**:
 2. **MLflow** (`mlflow.cianfhoghlaim.ie:5000`) — the per-experiment
    prompt comparison + hyperparameter sweep
 
-The 2 traces are emitted from `cianfhoghlaim/agents/_shared/observability/tracing.py`
+The 2 traces are emitted from `agents/_shared/observability/tracing.py`
 via the `langfuse_trace` + `mlflow_log` decorators.
 
 ## The cross-quadrant observability contract
@@ -182,14 +182,14 @@ The agent fleet integrates with the broader KCG observability
 stack:
 
 - **Oideachais** reads the agent traces via the FastAPI middleware
-  at `cianfhoghlaim/web/apps/oideachais-web/src/middleware/agui/streaming.py`
+  at `web/apps/oideachais-web/src/middleware/agui/streaming.py`
 - **Tuatha** consumes the agent output via the TanStack Start
   CopilotKit component
 - **Croílár** mirrors the agent state via the Convex subscriptions
 - **Spaces** expose a subset of agents via the HF Space demos
 
 The contract is documented in
-`cianfhoghlaim/agents/_shared/observability/cross_quadrant.py`.
+`agents/_shared/observability/cross_quadrant.py`.
 
 ## Worked example: add the 13th agent (the 4-Framework Hybrid)
 
@@ -200,12 +200,12 @@ The contract is documented in
    __all__ += ["hybrid_curriculum_agent"]
    ```
 
-2. Create `cianfhoghlaim/agents/hybrid_curriculum_agent.py`
+2. Create `agents/hybrid_curriculum_agent.py`
    that wraps both the ADK `curriculum_agent` and the Agno
    `education_research_agent` (the "4-Framework Hybrid").
 
 3. Add the routing keyword to
-   `cianfhoghlaim/agents/root_agent.py:ROUTING_KEYWORDS`:
+   `agents/root_agent.py:ROUTING_KEYWORDS`:
 
    ```python
    "hybrid_curriculum_agent": ["hybrid", "4-framework", "all frameworks"],
@@ -218,7 +218,7 @@ The contract is documented in
 
 6. Add the RisingWave event type (`agent.hybrid.completed`).
 
-7. Add a test in `cianfhoghlaim/meaisinfhoghlaim/tests/test_agents.py` that
+7. Add a test in `agents/meaisinfhoghlaim/tests/test_agents.py` that
    exercises the routing + the Letta memory + the RisingWave event.
 
 ## Common failure modes
@@ -241,11 +241,11 @@ The contract is documented in
 - `.agents/skills/agent-memory-systems/SKILL.md` — the Letta + Graphiti + Cognee + LanceDB + FalkorDB memory stack
 - `.agents/skills/infrastructure-stacks/SKILL.md` — the openclaw stack (6-file GOLD_STANDARD + arm1-oci deploy)
 - `.agents/skills/INDEXING_AND_COGNITION.md` §8 — the OpenCode agent + skill + MCP registry (7 agents, 10 MCPs, 13 model-layer agents; canonical home for `opencode.json` structure)
-- `cianfhoghlaim/agents/__init__.py` — the 12-agent registry
-- `cianfhoghlaim/agents/root_agent.py` — the query router + LiteLLM
-- `cianfhoghlaim/agents/letta_client.py` — the Letta memory layer
-- `cianfhoghlaim/agents/risingwave_publisher.py` — the RisingWave event stream
-- `cianfhoghlaim/agents/_shared/observability/tracing.py` — the Langfuse + MLflow traces
+- `agents/__init__.py` — the 12-agent registry
+- `agents/root_agent.py` — the query router + LiteLLM
+- `agents/letta_client.py` — the Letta memory layer
+- `agents/risingwave_publisher.py` — the RisingWave event stream
+- `agents/_shared/observability/tracing.py` — the Langfuse + MLflow traces
 - `infrastructure/stacks/openclaw/config/openclaw.json` — the channel + routing config
 - `infrastructure/komodo/procedures/deploy-openclaw-arm1-oci.toml` — the 5-stage arm1-oci deploy
 
@@ -299,4 +299,4 @@ used in v1. The 3 vertices coexist.
 
 ## Migrated from (2026-07-06 spec-and-plans-consolidation)
 
-- `openspec/specs/author-archive-ui-grounding/spec.md` (the BAML `UiType` enum with 10 values: SEARCH_BOX / FORM / DASHBOARD / MAP / LOGIN_WALL / FILE_DOWNLOAD / CAROUSEL / TIMELINE / OTHER / NONE) was deleted on 2026-07-06 by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The UiType enum now lives at `cianfhoghlaim/baml/agent_fleet/ui_types.baml` (canonical); UI grounding hints are surfaced by the browser-agent tool calls.
+- `openspec/specs/author-archive-ui-grounding/spec.md` (the BAML `UiType` enum with 10 values: SEARCH_BOX / FORM / DASHBOARD / MAP / LOGIN_WALL / FILE_DOWNLOAD / CAROUSEL / TIMELINE / OTHER / NONE) was deleted on 2026-07-06 by the `2026-07-06-drift-cleanup-and-v4-alignment` change. The UiType enum now lives at `baml/agent_fleet/ui_types.baml` (canonical); UI grounding hints are surfaced by the browser-agent tool calls.

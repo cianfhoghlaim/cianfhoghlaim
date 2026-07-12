@@ -172,17 +172,17 @@ data-sharing semantics.
     catalog.
   - **Data clustering** — 10× faster reads on clustered tables via
     the new `set_sorted_by` helper in
-    `cianfhoghlaim/dlt/dlt_utils/ducklake_options.py`.
+    `dlt/dlt_utils/ducklake_options.py`.
   - **Bucket partitioning** — new `set_bucket_partition` helper for
     multi-tenant workloads where row counts vary by 10× across
     partitions.
   - **Geometry + variant types** — DuckLake 1.0 adds first-class
     support for the `GEOMETRY` and `VARIANT` types, useful for the
     geospatial assets in
-    `cianfhoghlaim/orchestration/defs/2_materials/geospatial_assets.py`.
+    `orchestration/defs/2_materials/geospatial_assets.py`.
 - **3 hosting options** — fully managed (MotherDuck SaaS, default
   for KCG dev), BYOB (your own Garage S3 bucket, default for KCG
-  production per `cianfhoghlaim/dlt/dlt_utils/motherduck_options.py:byob_destination`),
+  production per `dlt/dlt_utils/motherduck_options.py:byob_destination`),
   and BYOC (your own compute + your own bucket — for regulated
   workloads).
 - **MotherDuck upstream monitor** — `motherduck_blog.yml` in
