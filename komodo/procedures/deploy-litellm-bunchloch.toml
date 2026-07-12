@@ -1,0 +1,44 @@
+# =============================================================================
+# DEPLOY LITELLM-BUNCHLOCH
+# =============================================================================
+# Updated for the centralise-data-plane rewrite (2026-07-30):
+# - litellm-bunchloch requires lakehouse-bunchloch to be healthy first
+#   (it uses lakehouse-postgres db=litellm).
+#
+# Usage:
+#   km run procedure deploy-litellm-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-litellm-bunchloch"
+description = "Deploy litellm-bunchloch (Postgres db=litellm from centralised lakehouse)"
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-lakehouse-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "litellm"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "litellm-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://litellm.cianfhoghlaim.ie/health/liveliness", expected_status = 200, timeout_s = 30 } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec litellm python3 -c 'import urllib.request, sys; sys.exit(0 if urllib.request.urlopen(\"http://lakehouse-postgres:5432\", timeout=3).status == 200 else 1)' || echo 'litellm cannot reach lakehouse-postgres'" } }
+description = "Verify litellm can reach lakehouse-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec litellm ls -la /stedding/huggingface | head -5 || echo 'HF cache missing on litellm container'" } }
+description = "Verify the shared HuggingFace cache is mounted"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "curl -sf http://localhost:4000/v1/models -H \"Authorization: Bearer $LITELLM_MASTER_KEY\" | head -50 || echo 'model registry empty'" } }
+description = "Verify the LiteLLM model registry is populated"

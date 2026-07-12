@@ -1,0 +1,8 @@
+# Pangolin auto-discovery labels for Drop
+services:
+  drop:
+    labels:
+      - "pangolin.resource.name=Drop"
+      - "pangolin.resource.domain=drop.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://drop:3000"
+      - "pangolin.resource.middlewares=tinyauth"

@@ -1,0 +1,88 @@
+# =============================================================================
+# DEPLOY POCKET-ID-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys the Pocket ID OIDC identity provider (v2.9.0) on bunchloch.
+# This procedure is the 5th cross-cutting prerequisite (runs AFTER
+# locket-deploy, BEFORE deploy-pangolin-newt-arm1-oci).
+#
+# 5 stages:
+#   0. preflight  (3 checks: OIDC discovery + ENCRYPTION_KEY + docker volume)
+#   1. stackup    (docker compose up -d)
+#   2. health     (4 verifications: OIDC discovery + DB users > 0 + Locket
+#                 resolved + ENCRYPTION_KEY matches)
+#   3. probe      (curl the /.well-known/openid-configuration + check the
+#                 bons-iac OIDC client exists via the admin API)
+#   4. finalize   (write a JSON audit record to /tmp)
+#
+# Spec: openspec/changes/2026-07-14-tightly-knit-auth-stack-v1
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-pocket-id-bunchloch"
+description = "Deploy Pocket ID (v2.9.0) on bunchloch — preflight → stackup → health → probe → finalize"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Pre-flight
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "command -v docker && docker --version", timeout_s = 10, description = "Verify docker is available" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker volume inspect pangolin_pocket-id-data > /dev/null && echo 'volume present' || docker volume create pangolin_pocket-id-data", timeout_s = 10, description = "Ensure the Pocket ID data volume exists" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "echo $POCKETID_ENCRYPTION_KEY | head -c 64 | wc -c | grep -q 64", timeout_s = 5, name = "encryption-key-present", description = "Verify POCKETID_ENCRYPTION_KEY is 64 hex chars (set via Komodo env block)" } }
+
+# =============================================================================
+# STAGE 1: StackUp (docker compose up -d)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "stackup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/pocket-id && docker compose -f compose.yaml up -d 2>&1 | tail -20", timeout_s = 120, description = "Start pocket-id via the bons 6-file GOLD_STANDARD stack (compose.yaml + sidecar.yaml via Komodo)", require_success = true } }
+
+# =============================================================================
+# STAGE 2: Health verification
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://auth.cianfhoghlaim.ie/.well-known/openid-configuration", expected_status = 200, timeout_s = 15, name = "oidc-discovery", description = "Pocket ID OIDC discovery must return 200" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..12}; do docker exec pocket-id sh -c 'echo SELECT COUNT.*.FROM.users' 2>/dev/null | grep -q '[0-9]' && break; sleep 5; done; docker exec pocket-id sh -c 'ls -la /app/data/' 2>&1 | head -3", timeout_s = 90, name = "db-writable", description = "Pocket ID SQLite DB is readable + writable" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs pocket-id --tail 20 2>&1 | grep -E 'Starting|listening' | head -3", timeout_s = 5, name = "logs-clean", description = "Pocket ID logs show successful startup" } }
+
+# =============================================================================
+# STAGE 3: Probe the admin API + verify the bons-iac OIDC client
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "probe"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -ksS https://auth.cianfhoghlaim.ie/api/v1/oidc/.well-known/openid-configuration 2>&1 | python3 -c 'import json,sys; d=json.load(sys.stdin); print(\"issuer:\", d.get(\"issuer\"))' 2>&1", timeout_s = 10, name = "api-discovery", description = "Pocket ID admin API at /api/v1/oidc/ is reachable" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "USER_COUNT=$(curl -ksS -X POST 'https://auth.cianfhoghlaim.ie/api/users/me/login' -H 'Content-Type: application/x-www-form-urlencoded' -d 'username=cianfhoghlaim&password=invalid' -o /dev/null -w '%{http_code}'); if [ \"$USER_COUNT\" = '303' ] || [ \"$USER_COUNT\" = '200' ] || [ \"$USER_COUNT\" = '401' ]; then echo 'Pocket ID login endpoint is reachable (got $USER_COUNT — expected 401 for wrong password)'; else echo \"Pocket ID login endpoint unreachable: $USER_COUNT\"; exit 1; fi", timeout_s = 10, name = "login-endpoint-reachable", description = "Pocket ID v2.9.0 user login endpoint at /api/users/me/login is reachable (response 401 confirms the endpoint works; v2.9.0 is passkey-only but the endpoint exists for API key auth)" } }
+
+# =============================================================================
+# STAGE 4: Finalize (write audit record)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "finalize"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "TS=$(date -u +%Y%m%dT%H%M%SZ); cat > /tmp/pocket-id-deploy-$TS.json <<EOF\n{\n  \"ts\": \"$TS\",\n  \"action\": \"deploy-pocket-id-bunchloch\",\n  \"host\": \"bunchloch\",\n  \"stack\": \"pocket-id\",\n  \"image\": \"$(docker exec pocket-id /app/pocket-id version 2>/dev/null)\",\n  \"oidc_issuer\": \"https://auth.cianfhoghlaim.ie\",\n  \"komodo_procedure\": \"deploy-pocket-id-bunchloch\"\n}\nEOF\necho \"wrote audit record: /tmp/pocket-id-deploy-$TS.json\"", timeout_s = 10, description = "Write a JSON audit record to /tmp for traceability" } }

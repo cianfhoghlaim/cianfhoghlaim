@@ -1,0 +1,56 @@
+name: mlx-omni
+
+services:
+  # ---------------------------------------------------------------------------
+  # MLX-OMNI — Apple Silicon OpenAI-compatible server
+  # ---------------------------------------------------------------------------
+  # Per the docs in .agents/skills/litellm and docs/meaisínfhoghlaim/
+  # Setting Up Local LLM Services on Mac.md:
+  #   - Bridges MLX-format models to OpenAI-compatible API
+  #   - Used for: Granite-Docling-MLX, olmOCR-MLX, FIBO-MLX
+  #   - madroidmaq/mlx-omni-server on GitHub
+  # ---------------------------------------------------------------------------
+  mlx-omni:
+    # Build from source for the local architecture (Apple Silicon)
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mlx-omni:latest
+    container_name: mlx-omni
+    restart: unless-stopped
+    ports:
+      - "10240:10240"   # mlx-omni OpenAI-compatible API
+    volumes:
+      - ../../stedding/huggingface/mlx:/models:ro
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+    environment:
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+      - HF_HUB_DOWNLOAD_TIMEOUT=600
+      - MLX_OMNI_API_KEY=${MLX_OMNI_API_KEY:-not-needed}
+      - MLX_OMNI_HOST=0.0.0.0
+      - MLX_OMNI_PORT=10240
+      # Auto-load these MLX models at startup
+      - MLX_OMNI_DEFAULT_MODEL=mlx-community/granite-docling-258M-MLX
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:10240/v1/models || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          # Apple Silicon unified memory. MLX models are loaded on demand
+          # but the OS needs headroom for page cache.
+          memory: 36G
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

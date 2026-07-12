@@ -1,0 +1,124 @@
+# =============================================================================
+# DEPLOY OPENCLAW-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim openclaw channel-fanout gateway to bunchloch
+# (MacBook M4) — the canonical workload-host target for the
+# `agent-platform-cluster` spec (per the v5 host-convergence model).
+#
+# The arm1-oci variant of this procedure (deploy-openclaw-arm1-oci.toml)
+# remains the GitOps deploy target for arm1-oci; this bunchloch variant
+# is the development + cluster-bring-up target.
+#
+# Architecture:
+#   bunchloch (MacBook M4) — openclaw (:18789 host → :18789 container,
+#                            WebSocket RPC + WebChat)
+#                            openclaw-locket (Infisical secret injection)
+#   litellm (:4000, bunchloch) — M3 LLM chokepoint (provider.model=minimax-m3)
+#   langfuse (:3000, bunchloch) — LLM observability (OTLP/HTTP trace export)
+#   Routed through Pangolin on arm1-oci:
+#     openclaw.cianfhoghlaim.ie → bunchloch:openclaw:18789 (Pocket ID SSO)
+#
+# Provider config (canonical — matches the agent-platform-cluster spec
+# §"LiteLLM is the M3 chokepoint"):
+#   provider.name:        litellm
+#   provider.base_url:    http://litellm:4000/v1
+#   provider.model:       minimax-m3      (resolves to minimax-m2.5
+#                                          per litellm/config/config.yaml)
+#   provider.api_key_env: OPENAI_API_KEY  (LITELLM_MASTER_KEY, injected
+#                                          by Locket from Infisical
+#                                          secret dev-baile/openclaw/
+#                                          openai_api_key)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile). 11 total
+# Infisical items (gateway_token + openai_api_key + 8 channel tokens +
+# otel_exporter_otlp_endpoint).
+#
+# Usage:
+#   km run procedure deploy-openclaw-bunchloch
+#   km run procedure deploy-openclaw-bunchloch -- --skip=dependency-services
+# =============================================================================
+
+[[procedure]]
+name = "deploy-openclaw-bunchloch"
+server_id = "bunchloch"
+description = "Deploy OpenClaw channel-fanout gateway to bunchloch — prereqs → litellm + langfuse → openclaw → pangolin routes → health checks"
+
+# =============================================================================
+# STAGE 0: Prerequisite docker resources
+# =============================================================================
+# The openclaw locket sidecar requires the openclaw_stack-secrets external
+# tmpfs volume. Created idempotently by the locket sidecar on first boot.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: Dependency Services (bunchloch)
+# =============================================================================
+# OpenClaw depends on:
+#   - litellm (LLM gateway, port 4000) — the M3 chokepoint; every LLM call
+#     from openclaw is routed through it via the `minimax-m3` model alias
+#   - langfuse (LLM observability, port 3000) — openclaw's OTel exporter
+#     targets langfuse's OTLP/HTTP endpoint (env: OTEL_EXPORTER_OTLP_ENDPOINT)
+#   - pangolin (Traefik routing) — needed for `apply-openclaw-routes` below
+#     (the blueprint is applied to arm1-oci, but the route reaches
+#     bunchloch:openclaw:18789 via the Pangolin mesh)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-litellm-bunchloch" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-langfuse-bunchloch" } }
+
+# =============================================================================
+# STAGE 2: OpenClaw (bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "openclaw-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "openclaw-bunchloch" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the openclaw routing blueprint via Pangolin Integration API.
+# Registers:
+#   - openclaw.cianfhoghlaim.ie → bunchloch:openclaw:18789 (Pocket ID SSO)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-openclaw-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification (bunchloch)
+# =============================================================================
+# Verify openclaw is healthy and responding to /api/health.
+# Also verify the gateway's pairing queue is empty (or low).
+# Verify the LiteLLM chokepoint: a test LLM call routes through
+# `http://litellm:4000/v1` and the trace lands in langfuse.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-health-check" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-pairing-queue-check" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-litellm-chokepoint-check" } }

@@ -1,0 +1,146 @@
+# =============================================================================
+# AGENT-PLATFORM-CLUSTER-ARM1-OCI-BOOTSTRAP PROCEDURE (ONE-SHOT)
+# =============================================================================
+# The one-shot bootstrap for the arm1-oci agent-platform cluster.
+# Single Komodo invocation that composes:
+#
+#   Stage 1: pre-reqs (9 env vars + resource ceiling)
+#   Stage 2: 3 parallel code-owned image builds (openchamber + openclaw + hermes)
+#   Stage 3: iac:bootstrap (the 10-step imperative that deploys the
+#            6-stack agent subset via Komodo + Pangolin + Infisical)
+#   Stage 4: Run the preflight-gated omnibus (deploy-agent-platform-cluster-arm1-oci)
+#   Stage 5: 3 health checks (hermes + openclaw + openchamber endpoints return 200)
+#   Stage 6: emit config artifact (JSON with resolved URLs + image digests)
+#   Stage 7: validate (stack-doctor)
+#
+# Replaces the 5+ manual `km run procedure` invocations that used to be
+# required to bring up the agent platform on arm1-oci.
+#
+# Spec: openspec/changes/2026-07-13-agent-platform-cluster-arm1-oci-bootstrap-procedure-v1
+#
+# Usage:
+#   km run procedure agent-platform-cluster-arm1-oci-bootstrap
+#   km run procedure agent-platform-cluster-arm1-oci-bootstrap -- --skip=bootstrap
+# =============================================================================
+
+[[procedure.config]]
+name = "agent-platform-cluster-arm1-oci-bootstrap"
+description = "One-shot bootstrap for arm1-oci: pre-reqs → 3 parallel builds → iac:bootstrap → preflight-gated omnibus → 3 health checks → JSON config artifact → stack-doctor validation"
+server_id = "arm1-oci"
+
+# =============================================================================
+# STAGE 1: Pre-reqs (env vars + resource ceiling)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "pre-reqs"
+
+[[procedure.config.stages.executions]]
+execution = { type = "CheckEnvVar", params = { vars = [
+  "INFISICAL_CLIENT_ID",
+  "INFISICAL_CLIENT_SECRET",
+  "INFISICAL_PROJECT_ID",
+  "DOCKER_REGISTRY_TOKEN",
+  "OPENCODE_AUTH_TOKEN",
+  "MCP_CURATOR_AUTH_TOKEN",
+  "LANE_POOL_STORAGE_S3_BUCKET",
+  "LANE_POOL_STORAGE_S3_ACCESS_KEY",
+  "LANE_POOL_STORAGE_S3_SECRET_KEY",
+], description = "9 env vars must be present in the Infisical dev-baile vault" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "CheckResourceCeiling", params = { server_id = "arm1-oci", max_cpu_pct = 85, max_mem_pct = 90, description = "ARM1-OCI resource ceiling; refuses to start if already under load" } }
+
+# =============================================================================
+# STAGE 2: 3 parallel code-owned image builds
+# =============================================================================
+# These 3 builds run concurrently via Komodo's parallel=true.
+# Output tags:
+#   - openchamber-arm1-oci → ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1
+#   - openclaw-arm1-oci    → ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1
+#   - hermes-arm1-oci      → ghcr.io/cianfhoghlaim/hermes:2026.7.1-arm1 (no-op; uses public base)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "parallel-image-builds"
+parallel = true
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openchamber-arm1-oci", timeout_s = 600, description = "Build openchamber image (Node 22 + multi-stage)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openclaw-arm1-oci", timeout_s = 600, description = "Build openclaw image (Node 24-bookworm + Bun 1.3.13)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "hermes-arm1-oci", timeout_s = 300, description = "Hermes is a no-op build (uses public nousresearch/hermes-agent:v2026.7.1)" } }
+
+# =============================================================================
+# STAGE 3: iac:bootstrap (the 10-step imperative)
+# =============================================================================
+# This runs the Komodo-side deploy of the 6-stack agent subset:
+#   pangolin + langfuse + observability + openclaw + openchamber + hermes
+# iac:bootstrap handles:
+#   - upsert Komodo stacks
+#   - upsert Pangolin private resources
+#   - read state, validate
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "iac-bootstrap"
+executions = [
+  { execution = { type = "RunShellCommand", params = { command = "pnpm tsx bonneagar/iac/commands/bootstrap.ts arm1-oci", timeout_s = 900, description = "Run iac:bootstrap for arm1-oci", require_success = true } } }
+]
+
+# =============================================================================
+# STAGE 4: Pre-flight-gated omnibus
+# =============================================================================
+# The omnibus includes Stage 0 preflight (hard-gated by Improvement 3).
+# If preflight fails, the omnibus aborts at Stage 0 — this stage also aborts.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "omnibus-deploy"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-agent-platform-cluster-arm1-oci", description = "Run the preflight-gated omnibus (6 stages)" } }
+
+# =============================================================================
+# STAGE 5: 3 health checks
+# =============================================================================
+# Each MUST return 200. If any returns non-200, this stage aborts.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -ksSf -o /dev/null -w 'hermes: %{http_code}\\n' https://hermes.cianfhoghlaim.ie/api/health", timeout_s = 30, description = "Probe hermes /api/health", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -ksSf -o /dev/null -w 'openclaw: %{http_code}\\n' https://openclaw.cianfhoghlaim.ie/api/health", timeout_s = 30, description = "Probe openclaw /api/health", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -ksSf -o /dev/null -w 'openchamber: %{http_code}\\n' https://openchamber.cianfhoghlaim.ie/api/health", timeout_s = 30, description = "Probe openchamber /api/health", require_success = true } }
+
+# =============================================================================
+# STAGE 6: Emit config artifact
+# =============================================================================
+# Writes a JSON file capturing the resolved URLs + image digests so
+# downstream agents / CI can ingest the cluster fingerprint.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "emit-artifact"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /tmp/agent-platform-cluster && jq -n --arg ts \"$(date -u +%Y%m%dT%H%M%SZ)\" --arg hermes 'https://hermes.cianfhoghlaim.ie' --arg openclaw 'https://openclaw.cianfhoghlaim.ie' --arg openchamber 'https://openchamber.cianfhoghlaim.ie' --arg openchamber_img 'ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1' --arg openclaw_img 'ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1' --arg hermes_img 'nousresearch/hermes-agent:v2026.7.1' '{ts: $ts, cluster: \"agent-platform-cluster-arm1-oci\", services: {hermes: $hermes, openclaw: $openclaw, openchamber: $openchamber}, images: {openchamber: $openchamber_img, openclaw: $openclaw_img, hermes: $hermes_img}}' > /tmp/agent-platform-cluster/arm-oci-${ts:-$(date -u +%Y%m%dT%H%M%SZ)}.json; echo \"wrote $(ls -1 /tmp/agent-platform-cluster/*.json | tail -1)\"", timeout_s = 30, description = "Emit JSON config artifact" } }
+
+# =============================================================================
+# STAGE 7: Validate (stack-doctor)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "validate"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run validate-stacks 2>&1 | tail -10", timeout_s = 60, description = "Run stack-doctor against the new state" } }

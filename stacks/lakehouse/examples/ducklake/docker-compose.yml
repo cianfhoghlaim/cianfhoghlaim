@@ -1,0 +1,109 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: ducklake-postgres
+    environment:
+      POSTGRES_DB: ducklake_catalog
+      POSTGRES_USER: ducklake_user
+      POSTGRES_PASSWORD: ducklake_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ducklake_user -d ducklake_catalog"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ducklake-network
+
+  python-duckdb-local-app:
+    image: python:3.11-slim
+    container_name: ducklake-duckdb-local-python
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+    command: >
+      sh -c "
+        pip install uv &&
+        uv add duckdb &&
+        uv run python ducklake_duckdb_local.py &&
+        echo 'DuckDB metastore script completed successfully' &&
+        exit 0
+      "
+    restart: "no"
+    networks:
+      - ducklake-network
+
+  python-postgres-local-app:
+    image: python:3.11-slim
+    container_name: ducklake-postgres-local-python
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+      - LOCAL_HOST=postgres
+      - LOCAL_PORT=5432
+      - LOCAL_USER=ducklake_user
+      - LOCAL_PASSWORD=ducklake_password
+      - LOCAL_DBNAME=ducklake_catalog
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+        pip install uv &&
+        uv add duckdb python-dotenv &&
+        uv run python ducklake_postgres_local.py &&
+        echo 'PostgreSQL metastore script completed successfully' &&
+        exit 0
+      "
+    restart: "no"
+    networks:
+      - ducklake-network
+
+  python-r2-neon-app:
+    image: python:3.11-slim
+    container_name: ducklake-r2-neon-python
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+      # PostgreSQL connection (can be local or remote)
+      - HOST=${HOST:-postgres}
+      - PORT=${PORT:-5432}
+      - USER=${USER:-ducklake_user}
+      - PASSWORD=${PASSWORD:-ducklake_password}
+      - DBNAME=${DBNAME:-ducklake_catalog}
+      # R2 credentials
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+        pip install uv &&
+        uv add duckdb python-dotenv &&
+        uv run python ducklake_r2_neon.py &&
+        echo 'R2 cloud storage script completed successfully' &&
+        exit 0
+      "
+    restart: "no"
+    networks:
+      - ducklake-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ducklake-network:
+    driver: bridge 

@@ -1,0 +1,28 @@
+# =============================================================================
+# TEAM STACK — HEALTH
+# =============================================================================
+# Hits each service's health endpoint and reports status via Komodo UI.
+# Run from the arm1-oci server (tunnel is local; the containers are exposed
+# on the cianfhoghlaim Docker network).
+# =============================================================================
+
+[[action]]
+name = "n8n-health"
+type = "command"
+description = "GET n8n /healthz (port 5678)"
+command = "curl -fsS http://n8n:5678/healthz || echo 'n8n UNREACHABLE'"
+timeout = 10
+
+[[action]]
+name = "vikunja-health"
+type = "command"
+description = "GET Vikunja /api/v1/info (port 3456)"
+command = "curl -fsS http://vikunja:3456/api/v1/info || echo 'vikunja UNREACHABLE'"
+timeout = 10
+
+[[action]]
+name = "calcom-health"
+type = "command"
+description = "GET cal-diy /api/v2/ping (port 3000)"
+command = "curl -fsS http://calcom-web:3000/api/v2/ping || echo 'cal-diy UNREACHABLE'"
+timeout = 15

@@ -1,0 +1,13 @@
+# LanceDB — Pangolin private-resource route
+# Routes lancedb.cianfhoghlaim.ie → lancedb container at port 8080.
+# TinyAuth Member role required (operator + admins only — vector DB read/write
+# is a privileged surface for KCG CocoIndex Apps).
+pangolin:
+  private-resources:
+    lancedb:
+      name: lancedb
+      mode: http
+      full-domain: lancedb.cianfhoghlaim.ie
+      destination-port: 8080
+      protocol: http
+      roles[0]: tinyauth@file

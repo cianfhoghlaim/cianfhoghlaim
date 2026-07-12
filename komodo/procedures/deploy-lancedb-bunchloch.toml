@@ -1,0 +1,80 @@
+# =============================================================================
+# DEPLOY LANCEDB-BUNCHLOCH
+# =============================================================================
+# Deploys the LanceDB vector database viewer to bunchloch.
+#
+# Architecture:
+#   bunchloch (MacBook M4) — lancedb (Lance viewer on :8080)
+#     - Optional: lancedb-s3-mounter (rclone FUSE for cloud storage,
+#       activated by the `s3` profile)
+#
+# LanceDB backs the 15 v1 CocoIndex Apps (BGE-m3 1024-dim embeddings)
+# and the cognee LANCEDB_URI vector store.
+#
+# Usage:
+#   km run procedure deploy-lancedb-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-lancedb-bunchloch"
+description = "Deploy LanceDB vector viewer to bunchloch — prereqs → lancedb → health checks"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Prerequisites
+# =============================================================================
+# The lancedb sidecar requires the cianchoghlaim_locket_secrets external tmpfs
+# volume. Created idempotently by a build (defined in the locket sidecar).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "lancedb-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: LanceDB Viewer (bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "lancedb-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lancedb-bunchloch" } }
+
+# =============================================================================
+# STAGE 2: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the lancedb routing blueprint via Pangolin Integration API.
+# Registers:
+#   - lancedb.cianfhoghlaim.ie → bunchloch:8081 (TinyAuth SSO)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-lancedb-routes" } }
+
+# =============================================================================
+# STAGE 3: Health Verification (bunchloch)
+# =============================================================================
+# Verify the LanceDB viewer is healthy and responding.
+# Also verify the lance volume is writable for the CocoIndex writes.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8081/", expected_status = 200, timeout_s = 10 } }
+description = "Verify the LanceDB viewer UI is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec lancedb sh -c 'ls -la /data && touch /data/.write-test && rm /data/.write-test && echo \"lance volume writable\"' || echo 'lance volume not writable'" } }
+description = "Verify the lance-data volume is writable (CocoIndex writes require this)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "curl -sf https://lancedb.cianfhoghlaim.ie/ -o /dev/null && echo 'Pangolin route to lancedb healthy' || echo 'Pangolin route to lancedb broken'" } }
+description = "Verify the Pangolin route to lancedb is reachable"

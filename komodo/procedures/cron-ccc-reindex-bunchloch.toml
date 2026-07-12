@@ -1,0 +1,31 @@
+# Komodo cron procedure: ccc-reindex (bunchloch)
+# Daily 03:00 UTC. Runs `bun run ccc:index` + quality gates.
+
+[[stage.action]]
+type = "RunShellCommand"
+name = "ccc-reindex"
+server_id = "bunchloch"
+command = "bun run ccc:index"
+timeout_s = 900
+description = "Rebuild the v1 CocoIndex index in < 15 min"
+
+[[stage.action]]
+type = "RunShellCommand"
+name = "ccc-reindex-quality-gate-py-typecheck"
+server_id = "bunchloch"
+command = "mise run py:typecheck"
+description = "Python typecheck"
+
+[[stage.action]]
+type = "RunShellCommand"
+name = "ccc-reindex-quality-gate-turbo-typecheck"
+server_id = "bunchloch"
+command = "mise run turbo typecheck"
+description = "Turbo typecheck"
+
+[[stage.action]]
+type = "RunShellCommand"
+name = "ccc-reindex-post-slack"
+server_id = "bunchloch"
+command = "curl -X POST https://langfuse.cianfhoghlaim.ie/api/public/webhook/ccc-reindex -d '{\"status\":\"$STATUS\"}'"
+description = "Post the result to the #kcg-indexing Slack channel via the Langfuse webhook"

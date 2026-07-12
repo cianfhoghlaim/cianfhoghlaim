@@ -1,0 +1,86 @@
+# =============================================================================
+# MAILCOW-DOCKERIZED-BUNCHLOCH — Self-Hosted Email Server on MacBook M4
+# =============================================================================
+# v4 consolidation: stack files live at
+#   cianfhoghlaim/stacks/mailcow-dockerized/  (compose.yaml + sidecar.yaml +
+#   pangolin.yaml + blueprint.yaml + secrets.env + .env.example)
+# (moved from bonneagar/stacks/mailcow-dockerized/ on 2026-06-29
+#  per the leabharlann-email-inbox-pipeline change).
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) hosts the 15 mailcow containers:
+#     unbound + mysql + redis + clamd + rspamd + phpfpm + sogo +
+#     dovecot + postfix + memcached + nginx + acme + netfilter +
+#     watchdog + dockerapi + ofelia + ipv6nat
+#   + 1 companion container (mailcow-export) added 2026-06-29 that
+#     runs doveadm expunge + doveadm export every 6h via ofelia
+#     and writes mailbox-<date>.mbox files to /srv/mailcow-exports/.
+#   Networks:
+#     mailcow-network — internal bridge (172.22.1.0/24 + IPv6)
+#   Secrets: Locket sidecar reads ./secrets.env (Infisical URI refs)
+#     and writes resolved values to the shared tmpfs volume.
+#   Routing: Pangolin private-resources on arm1-oci:
+#     mail.cianfhoghlaim.ie  → 443  (TinyAuth + Member)
+#     imap.cianfhoghlaim.ie → 993  (TinyAuth + SDP-MFA, 127.0.0.1)
+#     smtp.cianfhoghlaim.ie → 587  (TinyAuth + SDP-MFA, 127.0.0.1)
+#
+# v1 is RECEIVE-ONLY: the imapsync_runner ofelia job polls 4
+# external IMAP accounts (dkit_ie, gmail_personal, gmail_academic,
+# hotmail_legacy) and syncs them into Mailcow mailboxes. No outbound
+# email (no MX / SPF / DKIM records). The mailcow-exports/ volume
+# feeds the leabharlann_inbox_raw Dagster asset.
+#
+# Procedure: deploy-mailcow-dockerized-bunchloch (5 stages)
+# =============================================================================
+
+[[stack]]
+name = "mailcow-dockerized-bunchloch"
+description = "Cianfhoghlaim Mailcow self-hosted email server — Postfix + Dovecot + SOGo + Rspamd + ClamAV + dovecot_imapsync_runner + mailcow-export companion. v4 canonical stack at cianfhoghlaim/stacks/mailcow-dockerized/."
+tags = [
+  "host:bunchloch",
+  "tier:data-plane",
+  "type:email",
+  "stack:mailcow-dockerized",
+  "v4:consolidated",
+  "leabharlann:email-inbox",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/mailcow-dockerized"
+file_paths = [
+  "cianfhoghlaim/stacks/mailcow-dockerized/compose.yaml",
+  "cianfhoghlaim/stacks/mailcow-dockerized/sidecar.yaml",
+]
+environment = """
+HTTPS_PORT=443
+SMTPS_PORT=465
+SUBMISSION_PORT=587
+IMAP_PORT=143
+IMAPS_PORT=993
+DOVEADM_PORT=127.0.0.1:19991
+MAILCOW_TZ=Europe/Dublin
+MAILCOW_HOSTNAME=mail.cianfhoghlaim.ie
+SKIP_OLEFY=y
+SKIP_CLAMD=y
+HTTP_REDIRECT=n
+ACME_CONTACT=admin@cianfhoghlaim.ie
+IPV4_NETWORK=172.22.1
+COMPOSE_PROJECT_NAME=mailcow-dockerized
+INFISICAL_PROJECT_ID=dev-baile
+LOCKET_MODE=watch
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# Resource limits (MacBook M4 Max — share with other stacks)
+# -----------------------------------------------------------------------------
+# Mailcow is heavy (15 containers, ~3 GB RAM total). bunchloch has
+# 64 GB RAM so this is fine; the pre-flight check rejects the deploy
+# on arm1-oci if utilization exceeds 80%.
+# -----------------------------------------------------------------------------

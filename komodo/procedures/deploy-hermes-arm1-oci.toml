@@ -1,0 +1,93 @@
+# =============================================================================
+# DEPLOY HERMES-ARM1-OCI PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim hermes autonomous agent runtime to arm1-oci.
+#
+# Architecture:
+#   arm1-oci — hermes (:9119 host → :9119 container, s6-overlay CLI agent)
+#              hermes-locket (Infisical secret injection)
+#   Routed through Pangolin:
+#     hermes.cianfhoghlaim.ie → arm1-oci:hermes:9119 (Pocket ID SSO)
+#
+# Dependencies:
+#   - langfuse (LLM observability) → arm1-oci
+#   - pangolin (Traefik routing + Pocket ID OIDC) → arm1-oci
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-hermes-arm1-oci
+#   km run procedure deploy-hermes-arm1-oci -- --skip=dependency-services
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-hermes-arm1-oci"
+description = "Deploy Hermes (NousResearch hermes-agent v2026.7.1) to arm1-oci — preflight → langfuse → DeployStack hermes → ApplyBlueprint + init-allowlist → health"
+server_id = "arm1-oci"
+
+# =============================================================================
+# STAGE 0: Pre-flight (Pangolin + Komodo + Infisical + namespace check)
+# =============================================================================
+# Hard preflight per the v6-drift change. All 4 checks must pass before
+# we touch the arm1-oci host. Operator must explicitly pass --skip-namespace
+# to override in dev mode (NOT for prod deploys).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run preflight:arm-oci --strict", timeout_s = 60, description = "Pangolin + Komodo + Infisical + namespace isolation check" } }
+
+# =============================================================================
+# STAGE 1: Dependency services
+# =============================================================================
+# Hermes needs langfuse for the `langfuse` MCP server operators use.
+# (pangolin-core-arm1 is assumed already up — it's a cross-cutting prereq.)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-langfuse-arm1-oci" } }
+
+# =============================================================================
+# STAGE 2: Hermes stack (arm1-oci)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "hermes-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "hermes" } }
+
+# =============================================================================
+# STAGE 3: Pangolin routes + 1-shot allowlist init
+# =============================================================================
+# Apply the hermes routing blueprint via Pangolin Integration API, then
+# run the init-allowlist.sh one-shot container to populate users.allowlist
+# from day one with the operator's Pocket ID subject.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "ApplyBlueprint", params = { blueprint = "hermes/blueprint.yaml" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunOneShotContainer", params = { image = "ghcr.io/cianfhoghlaim/hermes-init-allowlist:0.17.0", env = ["HERMES_OPERATOR_POCKET_ID_SUBJECT", "HERMES_API_SERVER_KEY", "HERMES_DASHBOARD_URL=https://hermes.cianfhoghlaim.ie"], script = "init-allowlist.sh" } }
+
+# =============================================================================
+# STAGE 4: Health verification
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://hermes.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "health-check-dashboard" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://hermes.cianfhoghlaim.ie/api/users/allowlist/test", method = "POST", headers = { Authorization = "Bearer ${HERMES_API_SERVER_KEY}" }, body = "{\"subject\": \"${HERMES_OPERATOR_POCKET_ID_SUBJECT}\"}", expected_body_contains = "\"allowed\":true", timeout_s = 30, name = "health-check-allowlist-test" } }

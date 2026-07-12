@@ -1,0 +1,79 @@
+# =============================================================================
+# MEALIE - Recipe Manager (bunchloch)
+# =============================================================================
+# Self-hosted recipe manager + meal planner. Mealie provides a
+# web UI for organising recipes, planning meals, and generating
+# shopping lists.
+#
+# Architecture:
+#   bunchloch (MacBook M4) — mealie (ghcr.io/mealie-recipes/mealie:v1.10.0)
+#     - 9925 — Web UI
+#
+# The Mealie image is multi-arch (linux/amd64,linux/arm64) on
+# GitHub Container Registry.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml \
+#                                -f sidecar.yaml up -d
+# =============================================================================
+
+name: mealie
+
+services:
+  mealie:
+    # Pinned 2026-07-08 (ghcr.io/mealie-recipes/mealie:v1.10.0 on GHCR —
+    # public upstream image, no org-private image used). Multi-arch
+    # supported.
+    image: ghcr.io/mealie-recipes/mealie:v1.10.0
+    container_name: mealie
+    restart: unless-stopped
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    ports:
+      - "${MEALIE_PORT:-9925}:9000"
+    environment:
+      DB_ENGINE: postgres
+      POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_SERVER: lakehouse-postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: mealie
+      ALLOW_SIGNUP: "false"
+      TZ: ${TZ:-Europe/Dublin}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-http://litellm:4000/v1}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-1234}
+      OIDC_AUTH_ENABLED: "false"
+    volumes:
+      - mealie-data:/app/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "python3 -c 'import urllib.request, sys; sys.exit(0 if urllib.request.urlopen(\"http://localhost:9000/api/app/about\", timeout=3).status == 200 else 1)'"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+volumes:
+  mealie-data:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianchoghlaim
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

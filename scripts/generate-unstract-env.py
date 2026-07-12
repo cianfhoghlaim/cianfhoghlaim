@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Generate unstract .env.dev from Infisical vault (the 17 unstract paths)."""
+import json
+import os
+import secrets
+import subprocess
+import sys
+import urllib.parse
+import urllib.request
+
+
+def get_ua_token():
+    result = subprocess.run(
+        [
+            "curl", "-s", "-X", "POST",
+            "http://localhost:8081/api/v1/auth/universal-auth/login",
+            "-H", "Content-Type: application/json",
+            "-d", '{"clientId":"036d848b-b406-4756-83e3-e16e469533d4","clientSecret":"4e5f8681f1f195748a5e4770e4c1b9bac0843869df13155fbc4f446b40f5587a"}',
+        ],
+        capture_output=True, text=True,
+    )
+    return json.loads(result.stdout)["accessToken"]
+
+
+def get_secret(token, project_id, path, key):
+    url = f"http://localhost:8081/api/v3/secrets/raw/{urllib.parse.quote(key)}?workspaceId={project_id}&environment=dev&secretPath=/{path}"
+    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+    try:
+        with urllib.request.urlopen(req) as resp:
+            return json.loads(resp.read())["secret"]["secretValue"]
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
+def ensure_folder(token, project_id, path):
+    """Create the folder if it doesn't exist (required before POSTing secrets)."""
+    if path in ("", "/"):
+        return
+    url = "http://localhost:8081/api/v1/folders"
+    body = json.dumps({
+        "workspaceId": project_id,
+        "environment": "dev",
+        "name": path,
+        "path": f"/{path}",
+    }).encode()
+    req = urllib.request.Request(url, data=body, method="POST", headers={
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    })
+    try:
+        urllib.request.urlopen(req, timeout=10).read()
+        print(f"  [folder] /{path} (created)")
+    except urllib.error.HTTPError as e:
+        if e.code in (400, 409):
+            pass  # already exists
+        else:
+            print(f"  [folder] /{path} -> HTTP {e.code} (continuing)")
+
+
+def upsert(token, project_id, path, key, value):
+    """PATCH-then-POST upsert."""
+    url = f"http://localhost:8081/api/v3/secrets/raw/{key}"
+    body = json.dumps({
+        "environment": "dev",
+        "workspaceId": project_id,
+        "secretPath": f"/{path}",
+        "secretValue": value,
+        "type": "shared",
+    }).encode()
+    for method in ("PATCH", "POST"):
+        req = urllib.request.Request(url, data=body, method=method, headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        })
+        try:
+            with urllib.request.urlopen(req) as resp:
+                d = json.loads(resp.read())
+                if d.get("secret") or d.get("message"):
+                    return True
+        except urllib.error.HTTPError:
+            continue
+    return False
+
+
+# Generate fresh secret values
+def gen(n):
+    return secrets.token_hex(n)
+
+
+# Define the unstract secret paths (mirrors secrets.env).
+# NOTE: POSTGRES_USER must match the upstream's essentials.env default
+# (`unstract_dev`) because the pgvector container is bootstrapped with
+# that value via the upstream db_setup.sh init script. Using a random
+# username would require a re-init of the pgvector volume.
+PATHS = {
+    "postgres_user": "unstract_dev",
+    "postgres_password": "unstract_pass",
+    "postgres_db": "unstract_db",
+    "postgres_schema": "unstract",
+    "minio_root_user": "minio_root",
+    "minio_root_password": gen(24),
+    "minio_access_key": "minio_kc_" + gen(16),
+    "minio_secret_key": gen(32),
+    "qdrant_user": "qdrant_user",
+    "qdrant_pass": gen(24),
+    "qdrant_db": "unstract_vector",
+    "rabbitmq_user": "admin",
+    "rabbitmq_pass": gen(24),
+    "django_secret_key": gen(48),
+    "celery_broker_url": "amqp://admin:placeholder@rabbitmq:5672//",
+    "celery_result_backend": "redis://redis:6379/0",
+    "google_client_id": "",  # optional, empty in dev
+    "google_client_secret": "",
+    "openai_api_key": "",
+    "anthropic_api_key": "",
+    "gemini_api_key": "",
+}
+
+
+def main():
+    token = get_ua_token()
+    project_id = "82b626c6-1507-4c0f-9d9f-aae3dc827ff8"
+
+    # Pre-create the unstract folder
+    print("--- Pre-creating folders ---")
+    ensure_folder(token, project_id, "unstract")
+
+    print(f"--- Seeding {len(PATHS)} unstract secrets into Infisical ---")
+    seeded = 0
+    for key, value in PATHS.items():
+        if upsert(token, project_id, "unstract", key, value):
+            print(f"  [ok] unstract/{key}")
+            seeded += 1
+        else:
+            print(f"  [FAIL] unstract/{key}")
+    print(f"\n[done] {seeded}/{len(PATHS)} secrets seeded")
+
+    # Generate the .env.dev for the unstract stack
+    env_dev_path = "/Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/unstract/.env.dev"
+    with open(env_dev_path, "w") as f:
+        f.write("# Generated by generate-unstract-env.py from dev-baile/dev (Infisical)\n")
+        f.write("# All secrets pulled via Universal Auth (bunchloch-locket-machine identity)\n\n")
+        for key, value in PATHS.items():
+            env_key = key.upper()
+            f.write(f"{env_key}={value}\n")
+        # Add aliases that the upstream Python code expects
+        # (x2text-service reads DB_USERNAME/DB_HOST/etc., not POSTGRES_USER/...)
+        f.write("\n# x2text-service / backend / platform-service aliases (from upstream sample.env)\n")
+        f.write(f"DB_HOST=unstract-db\n")
+        f.write(f"DB_PORT=5432\n")
+        f.write(f"DB_USERNAME={PATHS['postgres_user']}\n")
+        f.write(f"DB_PASSWORD={PATHS['postgres_password']}\n")
+        f.write(f"DB_NAME={PATHS['postgres_db']}\n")
+        f.write(f'DB_SCHEMA="{PATHS["postgres_schema"]}"\n')
+        f.write(f"FLASK_ENV=production\n")
+        f.write(f"FLASK_RUN_HOST=0.0.0.0\n")
+        f.write(f"FLASK_RUN_PORT=3004\n")
+        f.write(f"API_URL_PREFIX=/api/v1\n")
+        f.write(f"AMQP_DEFAULT_USER={PATHS['rabbitmq_user']}\n")
+        f.write(f"AMQP_DEFAULT_PASS={PATHS['rabbitmq_pass']}\n")
+        # platform-service requires
+        f.write(f"REDIS_HOST=unstract-redis\n")
+        f.write(f"REDIS_PORT=6379\n")
+        f.write(f"REDIS_USERNAME=default\n")
+        f.write(f"REDIS_PASSWORD=\n")
+        # 32-byte URL-safe base64 — generate a real one
+        f.write(f'ENCRYPTION_KEY="{secrets.token_urlsafe(32)}"\n')
+        f.write(f"REDIS_SENTINEL_MODE=False\n")
+        f.write(f"EVALUATION_SERVER_IP=unstract-flipt\n")
+        # Worker concurrency (per upstream sample.env defaults)
+        f.write(f"WORKER_METRICS_AUTOSCALE=4,1\n")
+        f.write(f"WORKER_API_DEPLOYMENT_AUTOSCALE=4,1\n")
+        f.write(f"WORKER_CALLBACK_AUTOSCALE=4,1\n")
+        f.write(f"WORKER_GENERAL_AUTOSCALE=6,2\n")
+        f.write(f"WORKER_FILE_PROCESSING_AUTOSCALE=8,2\n")
+        f.write(f"WORKER_NOTIFICATION_AUTOSCALE=4,1\n")
+        f.write(f"WORKER_LOG_CONSUMER_AUTOSCALE=2,1\n")
+        f.write(f"WORKER_SCHEDULER_AUTOSCALE=2,1\n")
+        f.write(f"DJANGO_SECRET_KEY={PATHS['django_secret_key']}\n")
+        f.write(f"CELERY_BROKER_URL=amqp://{PATHS['rabbitmq_user']}:{PATHS['rabbitmq_pass']}@unstract-rabbitmq:5672//\n")
+        f.write(f"CELERY_RESULT_BACKEND=redis://unstract-redis:6379/0\n")
+        f.write(f"AMQP_HOST=unstract-rabbitmq\n")
+        f.write(f"AMQP_PORT=5672\n")
+        f.write(f"AMQP_USER={PATHS['rabbitmq_user']}\n")
+        f.write(f"AMQP_PASS={PATHS['rabbitmq_pass']}\n")
+        f.write(f"VECTOR_DB=qdrant\n")
+        f.write(f"VECTOR_DB_HOST=unstract-vector-db\n")
+        f.write(f"VECTOR_DB_PORT=6333\n")
+        f.write(f"QDRANT_HOST=unstract-vector-db\n")
+        f.write(f"QDRANT_PORT=6333\n")
+        f.write(f"QDRANT_USER={PATHS['qdrant_user']}\n")
+        f.write(f"QDRANT_PASSWORD={PATHS['qdrant_pass']}\n")
+        f.write(f"S3_HOST=unstract-minio\n")
+        f.write(f"S3_PORT=9000\n")
+        f.write(f"S3_ACCESS_KEY={PATHS['minio_access_key']}\n")
+        f.write(f"S3_SECRET_KEY={PATHS['minio_secret_key']}\n")
+        f.write(f"S3_REGION=us-east-1\n")
+        f.write(f"APP_HOST=unstract-backend\n")
+        f.write(f"APP_PORT=8000\n")
+        # Backend-required INDEXING_FLAG_TTL
+        f.write(f"INDEXING_FLAG_TTL=1800\n")
+        # CELERY broker user/pass (separate from rabbitmq creds for app use)
+        f.write(f"CELERY_BROKER_USER={PATHS['rabbitmq_user']}\n")
+        f.write(f"CELERY_BROKER_PASS={PATHS['rabbitmq_pass']}\n")
+        # STRUCTURE_TOOL defaults (upstream docker/scripts/merge_env.py)
+        f.write(f"STRUCTURE_TOOL_IMAGE_URL=unstract/structure-tool:0.0.1\n")
+        f.write(f"STRUCTURE_TOOL_IMAGE_NAME=unstract/structure-tool\n")
+        f.write(f"STRUCTURE_TOOL_IMAGE_TAG=0.0.1\n")
+        # SYSTEM_ADMIN defaults (admin / admin in dev)
+        f.write(f"SYSTEM_ADMIN_USERNAME=admin\n")
+        f.write(f"SYSTEM_ADMIN_PASSWORD=admin\n")
+        f.write(f"SYSTEM_ADMIN_EMAIL=admin@local.dev\n")
+        # DEFAULT_AUTH (unstract / unstract in dev)
+        f.write(f"DEFAULT_AUTH_USERNAME=unstract\n")
+        f.write(f"DEFAULT_AUTH_PASSWORD=unstract\n")
+        f.write(f"ENABLE_LOG_HISTORY=True\n")
+        # Workers require INTERNAL_API_BASE_URL + CELERY_BROKER_BASE_URL
+        f.write(f"INTERNAL_API_BASE_URL=http://unstract-backend:8000/internal\n")
+        f.write(f"CELERY_BROKER_BASE_URL=amqp://{PATHS['rabbitmq_user']}:{PATHS['rabbitmq_pass']}@unstract-rabbitmq:5672//\n")
+        f.write(f"TOOL_REGISTRY_CONFIG_PATH=../unstract/tool-registry/tool_registry_config\n")
+        f.write(f"TOOL_REGISTRY_STORAGE_CREDENTIALS='{{\"provider\":\"local\"}}'\n")
+    os.chmod(env_dev_path, 0o600)
+    print(f"\n[ok] wrote {env_dev_path}")
+
+
+if __name__ == "__main__":
+    main()

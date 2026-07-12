@@ -1,0 +1,12 @@
+# LiteLLM — Pangolin private-resource route
+# Routes litellm.cianfhoghlaim.ie → litellm container at port 4000.
+# TinyAuth Member role required (operator-only).
+pangolin:
+  private-resources:
+    litellm:
+      name: litellm
+      mode: http
+      full-domain: litellm.cianfhoghlaim.ie
+      destination-port: 4000
+      protocol: http
+      roles[0]: secure-headers@file

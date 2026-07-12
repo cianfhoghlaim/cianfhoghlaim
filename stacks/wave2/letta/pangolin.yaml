@@ -1,0 +1,12 @@
+# Letta — Pangolin private-resource route
+# Routes letta.cianfhoghlaim.ie → letta container at port 8283.
+# TinyAuth Member role required (operator-only).
+pangolin:
+  private-resources:
+    letta:
+      name: letta
+      mode: http
+      full-domain: letta.cianfhoghlaim.ie
+      destination-port: 8283
+      protocol: http
+      roles[0]: secure-headers@file

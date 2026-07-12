@@ -1,0 +1,42 @@
+# =============================================================================
+# OPENCHAMBER — Komodo-Orchestrated Stack (arm1-oci, private Pangolin)
+# =============================================================================
+# Single-service stack running the CODE-OWNED openchamber:1.14.1-arm1 image
+# (built from `bonneagar/stacks/openchamber/Dockerfile.openchamber-web`).
+# The upstream `ghcr.io/openchamber/openchamber:1.0.0` image is private
+# (401 on GHCR HEAD), so we build from the repo's Dockerfile.
+#
+# Architecture:
+#   arm1-oci — openchamber (:3000 host → :3000 container, UI + WebSocket terminal)
+#              openchamber-locket (Locket sidecar, Infisical injection)
+#   Routed through Pangolin:
+#     openchamber.cianfhoghlaim.ie → arm1-oci:openchamber:3000 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run build openchamber-arm1-oci
+#   km deploy stack openchamber
+# =============================================================================
+
+[[stack]]
+name = "openchamber"
+description = "OpenChamber — code-owned openchamber:1.14.1-arm1 (arm1-oci, port 3000, openchamber.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci","tier:control-plane","type:agent-ui","domain:openchamber.cianfhoghlaim.ie"]
+[stack.config]
+server_id = "arm1-oci"
+# The image is built from `komodo/builds/openchamber-arm1-oci.toml` and pushed
+# to `ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1`. The arm1-oci stack
+# references the LOCAL image, not the private upstream.
+image = "ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1"
+run_directory = "/etc/komodo/sruth/infrastructure/stacks/openchamber"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+LOCKET_MODE=watch
+INFISICAL_CLIENT_ID=infisical-machine-identity-openchamber
+INFISICAL_SECRET_FILE=/etc/komodo/secrets/infisical_secret
+OPENCHAMBER_PORT=3000
+OPENCHAMBER_THEME=cianchoghlaim-dark
+OPENCHAMBER_LOG_LEVEL=info
+PANGOLIN_DOMAIN=openchamber.cianfhoghlaim.ie
+"""

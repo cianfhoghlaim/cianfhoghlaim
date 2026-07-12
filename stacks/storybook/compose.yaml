@@ -1,0 +1,72 @@
+# =============================================================================
+# Storybook - UI Component Library (storybookjs/storybook static export)
+# =============================================================================
+# Serves the upstream `storybookjs/storybook` static export (built
+# via `npm run build-storybook` → `storybook-static/` directory).
+#
+# Build pipeline:
+#   1. CI runs `bun run build-storybook` in `packages/game-assets-storybook/`
+#      (the workspace introduced by the
+#      `retro-educational-game-asset-pipeline-v1` change) — produces
+#      `./storybook-static/`.
+#   2. The static export is copied into the named volume mounted by
+#      the nginx container below.
+#   3. Nginx (alpine) serves it on port 6006.
+#
+# This replaces the previous nginx placeholder (which served a
+# hand-committed `storybook-static/`). The CI rebuild path is the
+# canonical source of truth.
+#
+# Upstream: https://github.com/storybookjs/storybook
+# =============================================================================
+
+name: storybook
+
+services:
+  storybook:
+    image: nginx:alpine
+    container_name: storybook
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "${STORYBOOK_PORT:-6006}:80"
+
+    volumes:
+      - storybook-static:/usr/share/nginx/html:ro
+
+    environment:
+      - TZ=${TZ:-UTC}
+
+    # Rebuild note: an init container (or CI job) rebuilds the
+    # `storybook-static/` named volume by running `bun run build-storybook`
+    # in `packages/game-assets-storybook/` then copying the resulting
+    # `./storybook-static/` into the named volume.
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - tools
+
+volumes:
+  storybook-static:
+    # Populated by CI (or by the operator via
+    # `bun run build-storybook && docker compose cp ./storybook-static
+    # storybook:/usr/share/nginx/html`).
+
+networks:
+  tools:
+    external: true

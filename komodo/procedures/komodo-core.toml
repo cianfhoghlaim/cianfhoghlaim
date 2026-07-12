@@ -1,0 +1,33 @@
+# =============================================================================
+# KOMODO-CORE PROCEDURE
+# =============================================================================
+# Cross-cutting prerequisite: verify the Komodo Core pod is alive, the
+# REST API is reachable, and the periphery registration endpoint is
+# ready to accept new agents.
+#
+# Usage:
+#   km run procedure komodo-core
+# =============================================================================
+
+[[procedure.config]]
+name = "komodo-core"
+description = "Cross-cutting prerequisite: verify Komodo Core pod is alive + REST API is reachable + periphery endpoint is ready"
+server_id = "arm1-oci"
+
+[[procedure.config.stages]]
+name = "komodo-core-health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://komodo.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "komodo-core-api" } }
+
+[[procedure.config.stages]]
+name = "komodo-periphery-endpoint"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://komodo.cianfhoghlaim.ie/api/periphery", expected_status = 200, timeout_s = 30, name = "komodo-periphery-endpoint-reachable" } }
+
+[[procedure.config.stages]]
+name = "stack-sync-state"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "ssh arm1-oci 'docker exec komodo-core komodo-cli --version 2>/dev/null || echo \"komodo-cli not available; skipping version check\"'", timeout_s = 15, name = "komodo-cli-version", description = "Check the komodo CLI version (informational; not a hard fail)" } }

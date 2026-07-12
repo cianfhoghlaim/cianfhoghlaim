@@ -1,0 +1,18 @@
+# =============================================================================
+# Drop - Pangolin Blueprint
+# =============================================================================
+
+public-resources:
+  drop:
+    name: "Drop Gaming DB"
+    full-domain: "drop.aleyum.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "bunchloch"
+        hostname: "drop"
+        method: "http"
+        port: 3000

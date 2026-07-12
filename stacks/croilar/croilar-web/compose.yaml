@@ -1,0 +1,29 @@
+services:
+  croilar-web:
+    image: ghcr.io/cianfhoghlaim/croilar-web:0.1.0
+    container_name: croilar-web
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_WEB_PORT:-3003}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: "3000"
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SOUNDCLOUD_CLIENT_ID: ${SOUNDCLOUD_CLIENT_ID:-}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+      CROILAR_HMAC_SECRET: ${CROILAR_HMAC_SECRET:-}
+      CROILAR_ENCRYPTION_KEY: ${CROILAR_ENCRYPTION_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+
+networks:
+  cianfhoghlaim:
+    external: true

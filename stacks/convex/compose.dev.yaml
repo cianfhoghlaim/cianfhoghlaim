@@ -1,0 +1,45 @@
+# Convex — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors oideachais/litellm/lancedb/langfuse dev pattern: no-op locket sidecar
+# so the apps start without waiting on real Infisical-injection. Secrets come
+# from the mise-hydrated local .env via env_file.
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: convex-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    networks:
+      - convex
+
+  backend:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      CONVEX_INSTANCE_SECRET: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      # The backend reads INSTANCE_SECRET (Rust env convention), not
+      # CONVEX_INSTANCE_SECRET. Set both so either lookup path works.
+      INSTANCE_SECRET: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      CONVEX_CLOUD_ORIGIN: "http://127.0.0.1:3210"
+      CONVEX_SITE_ORIGIN: "http://127.0.0.1:3211"
+      # The Convex backend image expects --disable-beacon as a bool flag,
+      # not a string. Default to "true" in dev to suppress telemetry.
+      DISABLE_BEACON: "true"
+      # Default to local storage; the .env file may override with R2.
+      S3_STORAGE_FILES_BUCKET: ${S3_STORAGE_FILES_BUCKET:-convex-files}
+      S3_STORAGE_MODULES_BUCKET: ${S3_STORAGE_MODULES_BUCKET:-convex-modules}
+      S3_STORAGE_SEARCH_BUCKET: ${S3_STORAGE_SEARCH_BUCKET:-convex-search}
+      S3_STORAGE_EXPORTS_BUCKET: ${S3_STORAGE_EXPORTS_BUCKET:-convex-exports}
+      S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET: ${S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET:-convex-snapshots}
+
+  dashboard:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
