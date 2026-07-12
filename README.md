@@ -1,638 +1,289 @@
 # Cianfhoghlaim — Coláiste na Déisigh
 
-> **Cianfhoghlaim** — *long-distance, enduring learning*. aims to be a central repository for all official British Isles syllabus and resources pertaining to the education system and Goidelic and Brythonnic languages alongside agentic AI, devops, educational formative assessment, selfhosted stacks and minority language machine learning research by **Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons)**.
+> **Cianfhoghlaim** — *long-distance, enduring learning*. A research-and-deployment platform for the **British Isles education corpus** (8 nations × 5 stages × bilingual Goidelic + Brythonnic), agentic AI, self-hosted infrastructure, and minority-language machine learning. Maintained by **Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons)**.
 
 [![Leabharlann](https://img.shields.io/badge/leabharlann-2.4k_files_/_3.4_GB-blueviolet)](https://github.com/cianfhoghlaim/leabharlann)
-[![Bonneagar](https://img.shields.io/badge/bonneagar-90_compose_stacks-informational)](https://github.com/cianfhoghlaim/bonneagar)
+[![Bonneagar](https://img.shields.io/badge/bonneagar-IN_THIS_REPO_(%2Fbonneagar%2F)-green)](./bonneagar/)
 [![License](https://img.shields.io/badge/license-BUSL_1.1-green)](LICENSE.md)
+[![v7 flat](https://img.shields.io/badge/v7-flattened_2026--07--17-informational)](openspec/changes/2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/)
 
 ---
 
-> ## ⚠️ Important Disclaimer — Data Pipelines vs Web UI
+> ## ⚠️ Important Disclaimer
 >
-> The **data engineering pipelines** in this repository — DLT
-> ingestion, BAML extraction
-> (`ExtractLeavingCertSyllabus`, `ExtractLeavingCertMarkingScheme`,
-> `ExtractLeavingCertPastPaper`), CocoIndex v1 embeddings, Cognee
-> cognify passes, and the 11 NCCA Leaving Certificate subject
-> asset groups — **do work against the official Government
-> syllabus exam papers and marking schemes** of the Republic of
-> Ireland (NCCA Leaving Certificate, Junior Cycle, Primary,
-> Aistear) and the wider British Isles education system.
+> The **data engineering pipelines** in this repository — DLT ingestion,
+> BAML extraction, CocoIndex v1 embeddings, Cognee cognify passes, the
+> 11 NCCA Leaving Certificate subject asset groups — process official
+> Government syllabus exam papers + marking schemes of the Republic of
+> Ireland (NCCA Leaving Certificate, Junior Cycle, Primary) and the
+> wider British Isles education system. They are **grounded in the 8
+> British Isles nations** (Ireland, England, Scotland, Wales,
+> Northern Ireland, Isle of Man, Jersey, Guernsey) and bilingualised
+> in EN + GA (Gaeilge).
 >
-> However, **the web UI has not yet been informed by those
-> extracted assets.** The current web applications —
-> `oideachais-web`, `tuatha-ui`, `croilar-web`, `croilar-portal`,
-> `game_showcase`, `tuatha-demo`, plus the Hono API gateway —
-> have been generated **primarily to focus on the combination
-> of packages** (TanStack Start + CopilotKit + AG-UI + Hono +
-> oRPC + Convex + Babylon.js + BAML / Pydantic AI / Agno /
-> Google ADK), *not* on the UI design yet.
->
-> The eventual UI design **will be provably informed by
-> official documents** of the Republic of Ireland and the
-> British Isles education system — the same NCCA syllabi,
-> exam papers, and marking schemes that the data pipelines
-> already process. Until that grounding work is complete, the
-> UI is best understood as a packaging / wiring demonstration
-> rather than a polished pedagogical surface.
+> The **web UIs** (`oideachais-web`, `tuatha-ui`, `croilar-web`,
+> `croilar-portal`, `game_showcase`, `tuatha-demo`, the Hono API
+> gateway) are packaged demos that prove the agentic-web wiring works.
+> They are **not yet** the final pedagogical surface — the UI work is
+> deferred until the data pipeline has produced the canonical
+> syllabus-accurate assets.
 
 ---
 
 ## TL;DR — What this is, today
 
-`cianfhoghlaim` is a polyglot (`bun + uv`) that ingests
-the curriculums, exam papers, marking schemes, and syllabi of the
-**eight British Isles nations** (Ireland, England, Scotland, Wales,
-Northern Ireland, Isle of Man, Jersey, Guernsey), makes them interactive
-and bilingual through self-hosted AI, and serves as the personal
-research-and-deployment platform of **Cian Mac an Déisigh Uí Liatháin
-(Deacy-Lyons)** — a Mathematics & Education teacher / Dioplóma C1 in
-Irish / agentic-AI engineer based in Galway and East Belfast and registered member of [Teaching Council](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/teaching/teaching_registration.pdf), 
-[Fine Gael](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/politics/fine_gael_member_latest.pdf), 
-[Alliance Party](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/politics/alliance_membership.pdf), 
-[Liberal Democrats](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/politics/libdems_membership.png),
-[The Deacy Tribe of the Morris-Conroy tribes of Galway](https://github.com/cianfhoghlaim/cianfhoghlaim/tree/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage),
-[Royal Book Club](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/achievement/buckingham_letter.pdf),
-[The United Kingdom of Great Britain and Northern Ireland](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf),
-[University of Galway](https://github.com/cianfhoghlaim/cianfhoghlaim/blob/main/cian_mac_an_d%C3%A9isigh_u%C3%AD_liath%C3%A1in/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf).
+`cianfhoghlaim` is a **polyglot monorepo** (`bun + uv + turbo`) that:
+1. **Ingests** the curriculums, exam papers, marking schemes, and
+   syllabi of the **8 British Isles nations** (with bilingual EN + GA
+   extraction for the Irish strand).
+2. **Extracts** structured data via 30+ BAML schemas (NCCA, SEC, CCEA,
+   SQA, WJEC, Edexcel + the European Union EUR-Lex / ECDC / EMA /
+   Eurostat / Eurydice + the multi-nation Commonwealth + Americas
+   expansions).
+3. **Embeds** in vector + graph form via 42+ CocoIndex v1 Apps +
+   Cognee cognify layers + the Graphiti temporal knowledge graph.
+4. **Surfaces** through marimo reactive notebooks, MotherDuck Dives,
+   TanStack Start web apps, and a 12-agent meaisínfhoghlaim fleet
+   (LiteLLM-routed via OpenCode Go API).
+5. **Hosts itself** on the `bunchloch` MacBook M4 Max (data plane) +
+   `arm1-oci` Oracle Cloud free-tier (control plane) + Garage S3
+   storage + 88 Docker Compose stacks + the Komodo / Pangolin /
+   Infisical / Locket / Pocket ID / TinyAuth / Traefik mesh.
 
-## The 5-stage pipeline (the architecture)
+The author is a Mathematics & Education teacher / Dioplóma C1 in
+Irish / agentic-AI engineer based in Galway and East Belfast — a
+[registered member of the Teaching
+Council](cian_mac_an_déisigh_uí_liatháin/teaching/teaching_registration.pdf),
+with verified memberships in [Fine
+Gael](cian_mac_an_déisigh_uí_liatháin/identity/politics/fine_gael_member_latest.pdf)
+and the [Alliance
+Party](cian_mac_an_déisigh_uí_liatháin/identity/politics/alliance_membership.pdf)
+of Northern Ireland, and the
+[Deacy Tribe of the Morris-Conroy tribes of
+Galway](cian_mac_an_déisigh_uí_liatháin/identity/lineage).
 
-The cianfhoghlaim pipeline takes a corpus (PDFs, DOCX, EPUBs, Zotero
-exports, Google Takeout, UoG coursework, exam papers, marking schemes,
-syllabi) from raw disk all the way through to a queryable,
-agent-consumable, semantically-indexed artifact. The pipeline is
-organised as 5 sequential stages, each with a `defs/<stage>/` home
-under the single Dagster code-location.
+## Monorepo Topology (v7 — Flattened Polyglot)
 
-### Stage 1 — Ingestion (`dagster/defs/1_ingestion/`)
+Two language graphs live side by side, orchestrated by `turbo.json`
+and a single `mise.toml` toolchain. Post-v7 (2026-07-17), the
+Python package IS the repo root — no more `cianfhoghlaim/`
+nesting.
 
-The 8-nation DLT lateralise: every British Isles nation has a per-domain
-Dagster Component (the `CelticIngestionComponent`) under
-`dagster/defs/1_ingestion/{nation}/{domain}/{source}/defs.yaml`.
-The 8 nations × 4 canonical domains = 32 sources; the 3 special
-sources (filesystem, api, language) add 24 more.
-
-| Domain | Ingestion home | What it ingests |
+### TypeScript graph (bun workspaces)
+| Workspace | Path | Purpose |
 |:--|:--|:--|
-| `british_isles/{nation}/{domain}/` | dlt sources per nation × domain | The 8 nations × 4 domains = 32 DLT sources |
-| `filesystem/` | 8 filesystem dlt sources | Personal corpus (books, zotero, takeout, CV) |
-| `api_sources/` | 3 API dlt sources | GitHub, LinkedIn, ResearchGate REST APIs |
-| `language/` | 25 Celtic/Irish sources | Canúint, Dúchas, Tearma, Logainm, AINM, etc. |
-| `official_media/` | 9 Instagram sources | Instagram-export → British-Isles gov source resolver |
-| `portfolio/` | 7 filesystem sources | Artwork, CV, labels, teaching |
+| `oideachais-web` | `web/apps/oideachais-web/` | TanStack Start + React front-end (the public web app) |
+| `tuatha-ui` | `web/apps/tuatha-ui/` | Túatha educational MMO front-end |
+| `croilar-web` | `web/apps/croilar-web/` | Croílár multi-persona portfolio |
+| `croilar-portal` | `web/apps/croilar-portal/` | Croílár portfolio dashboard |
+| `tuatha-demo` | `web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
+| `game_showcase` | `web/apps/game_showcase/` | Web game showcase |
+| `oideachais-mcp-filesystem` | `web/apps/oideachais-mcp-filesystem/` | Filesystem MCP server for the data platform |
+| `hono-api` | `web/hono-api/` | Hono API gateway |
 
-The 8 nations (with full country names per the v3 plan):
-**england** (London), **ireland** (Dublin + Galway), **scotland**
-(Edinburgh), **wales** (Cardiff), **northern_ireland** (Belfast),
-**isle_of_man** (Douglas), **jersey** (St Helier), **guernsey** (St Peter
-Port).
+### Python sub-packages (uv at root)
+| Sub-package | Path | Purpose |
+|:--|:--|:--|
+| `agents` | `agents/` | The 12-agent meaisínfhoghlaim fleet + ADK shims |
+| `baml` | `baml/` | The BAML extraction schemas (LC + Celtic + multi-nation) |
+| `cocoindex` | `cocoindex/` | 42+ CocoIndex v1 Apps |
+| `dlt` | `dlt/` | DLT sources + destinations |
+| `orchestration` | `orchestration/` | Dagster assets + jobs + schedules + sensors |
+| `codeolas` | `libraries/codeolas/` | Publishable code intelligence sub-package |
 
-The `british_isles/{nation}/{domain}/` shape is the canonical home.
-The top-level `filesystem/`, `api_sources/`, `language/`, `official_media/`,
-`portfolio/` are purpose-grouped cross-cutting sources.
+### IaC subdirectory
+The GitOps infrastructure lives in the `bonneagar/` subdirectory and
+is reached via `bun run --cwd bonneagar iac:<command>` from the
+root `package.json`. The IaC is no longer a separate GitHub repo —
+the `archive-bonneagar` remote is a frozen read-only archive.
 
-### Stage 2 — Extraction (`dagster/defs/2_materials/`)
+| IaC area | Path |
+|:--|:--|
+| IaC source (TypeScript) | `bonneagar/iac/` |
+| 88 Docker Compose stacks | `bonneagar/stacks/<name>/` |
+| Komodo resource-syncs | `bonneagar/komodo/` |
+| Pangolin config | `bonneagar/pangolin/` |
+| Deploy runbooks | `bonneagar/deploy-runbooks/` |
+| Audit scripts | `bonneagar/audit/scripts/` |
 
-The BAML extraction layer: the 3-cluster BAML taxonomy (60+ BAML
-files in `baml/{education,celtic,processing}/`) is consumed by
-per-source BAML extraction functions. The 11 NCCA Leaving Cert
-subjects each have a `qpack_*.baml` file (BAML function:
-`Generate{Subject}QuestPack`) for formative assessment generation.
-The 5 NCCA education stages each have a stage-specific BAML file
-(`aistear.baml`, `primary.baml`, `junior_cycle.baml`, `senior_cycle.baml`,
-`tertiary.baml`).
+## What changed in v7 (2026-07-17)
 
-The 3 PDF extraction BAML files at `baml/education/pdfs/`:
-- `leaving_cert_syllabus.baml` — `ExtractLeavingCertSyllabus`
-- `leaving_cert_past_paper.baml` — `ExtractLeavingCertPastPaper`
-- `leaving_cert_marking_scheme.baml` — `ExtractLeavingCertMarkingScheme`
+- **Flattened `cianfhoghlaim/`.** The Python package is the repo
+  itself; the redundant nesting from the v4 consolidation is gone.
+- **Re-merged `bonneagar/`.** The IaC is now a subdirectory of this
+  repo (not a separate GitHub repo). It's still wrapped with the
+  same `--cwd bonneagar` shim so the iac:* scripts work the same.
+- **Updated LICENSE.md.** The "companion repository cianfhoghlaim/bonneagar"
+  sentence is removed; the leabharlann companion sentence stays.
+- **Pruned remote branches.** The 23 shipped `feat/*` + `pick-*` +
+  `q3-2026-*` branches are deleted from `origin` (local branches
+  preserved per the user's instruction).
 
-The 5 shared files at `baml/education/_shared/`:
-- `education_level.baml` — the canonical `LeavingCertSubject` (50+ values)
-  + `EducationLevel` + `ExamLevel` + 7 more enums
-- `strand_outcome.baml` — 17 cross-stage classes
-- `curriculum_relationships.baml` — 4 relationship functions
-- `subject_rubric.baml` — 4 rubric functions + 5 classes
-- `document_metadata.baml` — 2 document metadata functions
+See [`openspec/changes/2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`](openspec/changes/2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/)
+for the full change record (proposal + tasks + cross-repo-sync +
+5 spec deltas + migration-audit).
 
-### Stage 3 — Model Lifecycle (`dagster/defs/3_model_lifecycle/`)
+## The 5-stage architecture
 
-The meaisinfhoghlaim OCR + embedding + cognify layer: the
-`meaisinfhoghlaim/registry.py` exposes **24 OCR/vision models**
-(9 vision + 4 classical + 3 image-gen + 8 alignment). The
-`meaisinfhoghlaim/document_factory/converters/` provides **5 PDF
-converters** (deepseekocr, docling, marker, pymupdf4llm, unstructured).
-The 14+ CocoIndex v1 Apps embed the extracted text into LanceDB
-(BGE-M3, 1024-dim) via the `mount_table_target` pattern.
-The cognify stage populates the Cognee knowledge graph over 6 typed
-datasets (`aistear`, `primary`, `junior_cycle`, `senior_cycle`,
-`tertiary`, `cross_stage`) plus the 3 leabharlann cognify passes
-(books, zotero, takeout) plus the 3 cross-archive edge rules.
+The pipeline walks a corpus from raw disk to an agent-consumable,
+semantically-indexed artifact. Five sequential stages live under
+`orchestration/defs/<stage>/`:
 
-### Stage 4 — Asset Generation (`dagster/defs/4_asset_generation/`)
+| Stage | Home | What it does |
+|:--|:--|:--|
+| 1. Ingestion | `orchestration/defs/1_ingestion/` | DLT sources for 8 nations × 4 domains + filesystem + api + language special sources. Auto-discover via the global-region-source-contract. |
+| 2. Materials | `orchestration/defs/2_materials/` | BAML extraction (the 30+ baml/ schemas) + pdf processing + asset pre-processing |
+| 3. Model Lifecycle | `orchestration/defs/3_model_lifecycle/` | CocoIndex v1 embedding Apps (42 flows) + LanceDB / DuckLake materialisation + RAGAS eval |
+| 4. Asset Generation | `orchestration/defs/4_asset_generation/` | Subject-specific asset packs (8 NCCA LC subjects × per-subject quest packs + the 8-ADK agent fleet) |
+| 5. Agent Operations | `orchestration/defs/5_agent_ops/` | The 12-agent meaisínfhoghlaim fleet + OpenChamber/OpenClaw/Hermes/Croílár surfaces + RisingWave event stream |
 
-The `marimo_dashboards/`, `orpc_routes/`, `tanstack_pages/` dirs
-generate the 5 web apps, the Hono API gateway, and the marimo
-notebooks from the 4 layers above. This is the read-side layer.
+## British Isles Education Pipeline (BIEP) — the flagship
 
-### Stage 5 — Agent Ops (`dagster/defs/5_agent_ops/`)
+The 6 Irish LC priority subjects — **Mathematics, Chemistry,
+Geography, Gaeilge, English, Computer Science** — get the deep
+treatment: NCCA syllabus + SEC exam papers + marking schemes + 7
+v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4
+MotherDuck Dives + a daily MotherDuck Flight.
 
-The 12-agent fleet at `agents/meaisinfhoghlaim/agents/`: curriculum,
-translation, corpus, research, geospatial, voice, statistics,
-education-research, bunchloch-research, AG-UI curriculum, MCP
-curriculum, enhanced orchestrator, root. Each agent is a
-`LlmAgent` (Google ADK) or `Agent` (Agno) wired to the BAML client.
+The BAML extraction schemas (`baml/education/lc_extraction/*.baml`)
+produce structured `LeavingCertSyllabus`, `LeavingCertPastPaper`,
+`LeavingCertMarkingScheme` objects — rubric-anchored to NCCA PDF
+page references. Web search by the 12-agent fleet always lands on
+an in-pipeline asset, never on a stale URL.
 
----
+## The 12-agent meaisínfhoghlaim fleet
 
-## The 11 NCCA Leaving Cert subject asset groups
+Located at `agents/`. One root agent orchestrates 11 specialists,
+all routed through the canonical LiteLLM alias `minimax` (with a
+7-tier model fallback):
 
-For each of the 11 NCCA LC subjects (mathematics, english, gaeilge,
-applied_mathematics, chemistry, computer_science, biology, business,
-french, geography, history), the dagster asset group follows a
-**canonical 6-asset pattern** (the `mathematics_assets.py` template):
+| Agent | Domain |
+|:--|:--|
+| `root_agent.py` | The orchestrator — routes questions to the right specialist |
+| `curriculum_agent.py` | NCCA LC subject routing |
+| `curriculum_comparison_agent.py` | Cross-nation curriculum diff |
+| `corpus_agent.py` | Leabharlann corpus queries |
+| `research_agent.py` + `research_assistant_agent.py` | British Isles education research |
+| `education_research_agent.py` | Pedagogy literature + annotation |
+| `bunchloch_research_agent.py` | Local MacBook M4 Max inference routing |
+| `geospatial_agent.py` | OS Maps + GIS queries |
+| `statistics_agent.py` | CSO + Eurostat + UK ONS data |
+| `translation_agent.py` | EN ↔ GA ↔ GBC ↔ Cyr ↔ BrK ↔ BrL bilingual |
+| `mythology_narrator_agent.py` | Tuatha Dé Danann + Celtic lore retrieval |
+| `agui_curriculum_agent.py` | AG-UI protocol surface for the leaving cert portal |
 
-1. **`{subject}_syllabus_raw`** — DLT ingestion of NCCA syllabus PDFs
-   into DuckLake (per level × language partition)
-2. **`{subject}_syllabus_structured`** — BAML
-   `ExtractLeavingCertSyllabus` per PDF row
-3. **`{subject}_quest_pack`** — BAML `Generate{Subject}QuestPack`
-   per level (FL/OL/HL)
-4. **`{subject}_embedding`** — CocoIndex v1 embedding into LanceDB
-5. **`{subject}_cognify`** — Cognee cognify pass (subject knowledge graph)
-6. **`{subject}_dashboard`** — marimo notebook execution
+Each agent has its own Langfuse trace + MLflow experiment +
+RAGAS asset_check. Full observability via the unified stack at
+`observability/`.
 
-The 11 subject files (in `dagster/assets/`):
-- `mathematics_assets.py` (the template, ~330 LOC)
-- `english_assets.py`, `gaeilge_assets.py`, `applied_mathematics_assets.py`
-- `chemistry_assets.py`, `computer_science_assets.py`
-- `biology_assets.py`, `business_assets.py`, `french_assets.py`
-- `geography_assets.py`, `history_assets.py`
+## Personal credential corpus (verified references)
 
-All 11 use canonical `cianfhoghlaim.dlt.british_isles.ireland.education.subjects.{subject}`
-imports (no legacy `dlt_sources.*` paths).
+These are the records that ground the project's claims. They live
+in `cian_mac_an_déisigh_uí_liatháin/` at the repo root:
 
----
+| Credential | Verified PDF |
+|:--|:--|
+| Teaching Council of Ireland registration | `cian_mac_an_déisigh_uí_liatháin/teaching/teaching_registration.pdf` |
+| MSc AI admission (2026-2027, University of Galway) | `cian_mac_an_déisigh_uí_liatháin/achievement/2026_2027_msc_in_ai_university_gaillimhe.pdf` |
+| BSc Maths & Education (First Class Honours, 78.84%) | `cian_mac_an_déisigh_uí_liatháin/achievement/ba_and_hdip_transcript.pdf` + `bachelors_degree_parchment.jpeg` |
+| Higher Diploma in Software Design (First Class Honours) | `cian_mac_an_déisigh_uí_liatháin/achievement/higher_diploma_parchment.jpeg` |
+| PGCE (BCS Computing scholarship) | `cian_mac_an_déisigh_uí_liatháin/teaching/bcs_pgce_computing_scholarship.png` |
+| Torthaí Gaeilge (Irish-language exam results) | `cian_mac_an_déisigh_uí_liatháin/achievement/torthai_ghaeilge.pdf` |
+| Apple Award (2013) | `cian_mac_an_déisigh_uí_liatháin/achievement/apple_award.pdf` |
+| Royal Book Club (Buckingham letter) | `cian_mac_an_déisigh_uí_liatháin/achievement/buckingham_letter.pdf` |
+| Deacy lineage (1986 Galway Advertiser article) | `cian_mac_an_déisigh_uí_liatháin/identity/lineage/neil_deacy_cookes_corner-galway_advertiser.pdf` |
+| Late uncle's memorial (Éamonn "Chick" Deacy) | `cian_mac_an_déisigh_uí_liatháin/identity/lineage/uncle_eamonn_memorial_combined.pdf` |
+| Dual citizenship (ROI + UK) | `cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf` |
+| Fine Gael membership | `cian_mac_an_déisigh_uí_liatháin/identity/politics/fine_gael_member_latest.pdf` |
+| Alliance Party membership | `cian_mac_an_déisigh_uí_liatháin/identity/politics/alliance_membership.pdf` |
 
-## The PDF processing pipeline (`dagster/assets/by_domain/pdf_processing.py`)
+The full family history (the Triple Crown of the Corrib, the 4
+kindreds, the dual-monarchy synthesis) lives in the section
+preserved at the bottom of this README.
 
-The unified PDF processing pipeline processes the **133 PDFs in
-`leaving_certificate/{11 subjects}/{en,ga}/`** through an **8-asset pattern**:
+## Verified academic archive (in leabharlann/)
 
-1. **`pdf_discover`** — scan `leaving_certificate/` for all 133 PDFs
-2. **`pdf_convert`** — convert via the 5 PDF converters
-   (deepseekocr, docling, marker, pymupdf4llm, unstructured)
-3. **`pdf_ocr_compare`** — run the 24 OCR models + 3 backends, compare
-   extraction quality + fada preservation
-4. **`pdf_extract_baml`** — BAML `ExtractLeavingCertSyllabus` +
-   `ExtractLeavingCertMarkingScheme` + `ExtractLeavingCertPastPaper`
-5. **`pdf_embed_cocoindex`** — embed into LanceDB via CocoIndex v1
-6. **`pdf_cognify`** — Cognee cognify pass
-7. **`pdf_evaluate`** — RAGAS evaluation across all 11 subjects
-8. **`pdf_quality_check`** — Irish content validation
-   (fada preservation + dialect detection)
+The course material + examination scripts + the personal academic
+corpus live at `github.com/cianfhoghlaim/leabharlann` (a separate
+3.4 GB repo, the only remaining separately-managed repo):
 
-A separate `meaisinfhoghlaim_ocr` asset group (`by_domain/meaisinfhoghlaim_ocr.py`)
-wraps the 24 OCR models + 5 PDF converters + 8 alignment models as a
-unified asset group (3 assets: `meaisinfhoghlaim_ocr_models`,
-`meaisinfhoghlaim_pdf_converters`, `meaisinfhoghlaim_alignment`).
+- `ollscoil_na_gaillimhe/` — BSc Mathematics & Education +
+  Higher Diploma in Software Design (9 Mathematics modules × 7
+  Software Design modules)
+- `mae/` — Marimo notebook library
+- `gemini_deep_research/` — 7 culture-PDF warrants grounding the
+  family history narrative
+- `gaeilge/`, `aigne/`, `zotero/` — Irish-language + AI research
+  corpora
 
----
+## Repository constellation (post-v7)
 
-
-## Notebooks and demos (29+ marimo notebooks)
-
-The `cianfhoghlaim/notebooks/` directory demonstrates the pipelines.
-**29+ marimo notebooks** are organised under `dashboards/`:
-
-- `dashboards/education/` (12+ per-subject pipelines) — one
-  `{subject}_full_pipeline.py` per LC subject showing the 6-asset
-  DLT→BAML→CocoIndex→Cognee→marimo workflow end-to-end
-- `dashboards/pdf_processing/` (3) — `pdf_ocr_model_comparison.py`
-  (5 OCR models on 133 PDFs), `pdf_extraction_quality.py` (RAGAS
-  eval), `pdf_processing_benchmark.py` (performance)
-- `dashboards/observability/` (2) — `irish_extraction_quality.py`
-  (fada + dialect), `baml_drift_audit.py` (250+ BAML functions vs
-  actual usage)
-- `dashboards/duckdb/` (2) — `dlt_pipeline_overview.py` (8
-  nations × 4 domains), `cocoindex_embedding_coverage.py` (14+ v1
-  Apps + their LanceDB tables)
-- `dashboards/mmo/` (1) — `cianfhoghlaim_mmo_progress.py` (8 NCCA
-  subject agent dashboards)
-- `dashboards/{aistear,primary,junior_cycle,senior_cycle,tertiary,
-  cross_domain,email_inbox_triage,leabharlann_full_stack_demo}.py`
-  (the existing v4 dashboards)
-
----
-
-## OpenSpec catalogue (46 specs, 8 groups)
-
-The 46 capability specs across 8 groups document the cianfhoghlaim
-project's contract surface:
-
-- **oideachais** (10) — the curriculum pipeline
-- **meaisinfhoghlaim** (6) — the OCR + model lifecycle
-- **tuatha** (3) — the educational MMO + crypto platform
-- **croilar** (3) — the multi-persona portfolio
-- **infrastructure** (3) — stacks + secrets + monitoring
-- **data-platform** (8) — DLT, Dagster, DuckLake, LanceDB, etc.
-- **frontend** (5) — TanStack Start, AG-UI, Hono API
-- **shared** (8) — the cross-cutting specs (agent-registry, BAML,
-  CocoIndex, indexing-and-cognition)
-
-`openspec list --specs` / `openspec validate <change-id> --strict` /
-`openspec archive <change-id> --yes` is the canonical workflow.
-
----
-
-## Repository constellation
-
-This repository (`cianfhoghlaim/cianfhoghlaim`) is the **application
-monorepo**. Two companion repositories live as their own GitHub repos
-and are exposed here as **standalone git worktrees at the root of the
-workspace**, so each domain has its own independent release cadence,
-secrets boundary, and review surface — and so the monorepo push stays
-small.
-
-| Repo | Domain | Sibling repo | Worktree at the root |
+| Repo | Path | URL | Purpose |
 |:--|:--|:--|:--|
-| [**cianfhoghlaim/cianfhoghlaim**](https://github.com/cianfhoghlaim/cianfhoghlaim) (you are here) | Application monorepo: Python package, agents, web apps, Dagster pipelines, CocoIndex flows, OCR registry | n/a | this repo |
-| [**cianfhoghlaim/bonneagar**](https://github.com/cianfhoghlaim/bonneagar) | GitOps foundation: Pulumi, Ansible, Komodo, Pangolin, Dagger, 90 compose stacks, secrets templates | [`bonneagar`](https://github.com/cianfhoghlaim/bonneagar) | `./bonneagar/` (branch `bonneagar-main` → `bonneagar/main`) |
-| [**cianfhoghlaim/leabharlann**](https://github.com/cianfhoghlaim/leabharlann) | Digital library: Gaeilge, mata, aigne, ollscoil, Zotero papers, Gemini deep-research reports (2,400 files, 3.4 GB) | [`leabharlann`](https://github.com/cianfhoghlaim/leabharlann) | `./leabharlann/` (branch `leabharlann-main` → `leabharlann/main`) |
+| cianfhoghlaim (this) | `.` (root) | `github.com/cianfhoghlaim/cianfhoghlaim` | The Python package IS the repo |
+| bonneagar (in-tree) | `bonneagar/` | (was `github.com/cianfhoghlaim/bonneagar`; now archived) | The 88-stack GitOps fleet + Komodo + Pangolin + Infisical |
+| leabharlann (separate) | `leabharlann/` | `github.com/cianfhoghlaim/leabharlann` | 3.4 GB digital library corpus |
 
-All three repositories are licensed under the **Business Source License
-1.1** (BUSL-1.1) by the same Licensor. See [`LICENSE.md`](./LICENSE.md).
+The `archive-bonneagar` remote at
+`github.com/cianfhoghlaim/bonneagar.git` is frozen — no further
+commits will be pushed; its history is preserved in-tree.
 
-> *Bonneagar* — Scottish Gaelic for *infrastructure*.
-> *Leabharlann* — Irish for *library*.
+## Cross-cutting concerns
 
-- `./bonneagar/stacks/litellm/compose.yaml` — referenced in
-  `infrastructure/AGENTS.md` (the bonneagar worktree's own quick-ref)
-  and in [`docs/PHASE_0.3_DEPLOY_RUNBOOK.md`](docs/PHASE_0.3_DEPLOY_RUNBOOK.md)
-- `./leabharlann/gaeilge/` — referenced in the Cognee dataset
-  `oideachais_culture_heritage`
-- `./leabharlann/zotero/` — referenced in the CocoIndex v1 App
-  `leabharlann_zotero`
-
-To pull the latest from the sibling repos:
+### OpenSpec workflow (canonical change management)
+`openspec/` is the single source of truth for capability specs.
+The workflow: `list → write proposal/tasks/spec deltas →
+validate --strict → implement → archive`. The current pending
+changes (~45) are inventoried under `openspec/changes/`.
 
 ```bash
-git fetch bonneagar main
-git fetch leabharlann main
-cd bonneagar   && git merge --ff-only bonneagar/main   && cd ..
-cd leabharlann && git merge --ff-only leabharlann/main && cd ..
+openspec list                          # 8 pending changes
+openspec list --specs                  # all capability specs
+openspec validate <id> --strict        # must pass before commit
+openspec archive <id> --yes            # after deploy
 ```
+
+### Secrets management
+The 3-way contract: `dev-baile` Infisical vault (source of truth)
+→ `.infisical.env` template (committed) → `.env` (gitignored,
+hydrated by mise + Locket). The IaC binds stack `secrets.env`
+to Infisical via the typed `InfisicalClient` in `bonneagar/iac/clients/`.
+
+### Ccc + Cognee dual-search
+`bun run ccc:search "<query>"` for semantic code (CocoIndex BGE-M3
+embeddings at `.cocoindex_code/target_sqlite.db`). `cognee cognify`
+for the knowledge graph at `agents/meaisinfhoghlaim/memory/`.
+
+### How this project is developed
+Agentically. The canonical configuration is at `opencode.json`.
+One provider + one model class carry the workload, for now.
+
+## Licensing
+
+Business Source License 1.1 — see [LICENSE.md](LICENSE.md). Granted
+for non-commercial, non-profit, cultural preservation, and academic
+research use within the legal jurisdictions of Ireland, Northern
+Ireland, the United Kingdom, the European Union, the British Isles,
+the Commonwealth, the Crown, the United States of America, Mexico,
+Brazil, Taiwan, Tibet, Nepal, South Korea, Japan, and China.
+
+Excludes: sanctioned organisations, paramilitary groups, entities
+in violation of international human rights conventions. Change
+Date: 4 years from publication. Change License: AGPL v3.0.
 
 ---
 
-## Fluctuating Architecture Diagram
+# Family history (preserved verbatim from the pre-v7 README)
 
-```
-                            ┌──────────────────────────────────────────────────────────┐
-                            │  THE 5 DISPATCHABLE SUBAGENTS  (opencode.json)            │
-                            │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───┴───┐
-                            │  │   data-  │ │  infra-  │ │  agent-  │ │ frontend │ │research│
-                            │  │ platform │ │ structure│ │ platform │ │  -apps   │ │       │
-                            │  │   (15)   │ │   (16)   │ │   (23)   │ │   (20)   │ │  (11) │
-                            │  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └───┬───┘
-                            └───────┼────────────┼────────────┼────────────┼───────────┼─────┘
-                                    │            │            │            │           │
-            ┌───────────────────────┼────────────┼────────────┼────────────┼───────────┼────────────┐
-            │  APPLICATION MONOREPO │            │            │            │           │            │
-            │  (cianfhoghlaim/)     │            │            │            │           │            │
-            │  ┌────────────────────▼────────────▼────────────▼────────────▼───────────▼──────────┐ │
-            │  │                        cianfhoghlaim/ Python package                              │ │
-            │  │                                                                                    │ │
-            │  │  core/  (16 first-class stack pkgs)   sources/nations/  agents/                  │ │
-            │  │  pipelines/  (5-stage: ingest→expose)  assets/  (Dagster code-location)           │ │
-            │  │  ocr/  stacks/  web/  libraries/codeolas/  notebooks/  cognify/  embeddings/    │ │
-            │  │                                                                                    │ │
-            │  │  BAML  •  DLT  •  Dagster  •  CocoIndex v1  •  DuckLake  •  LanceDB  •  Cognee   │ │
-            │  │  Langfuse  •  MLflow  •  RAGAS  •  12-agent fleet  •  marimo  •  TanStack Start │ │
-            │  └────────────────────────────────────────────────────────────────────────────────────┘ │
-            │                                                                                        │
-            │   ┌────────────────────────────────────────────────────────────────────────────────┐   │
-            │   │  GIT WORKTREES at the root of the workspace  (NOT subtrees — no 3 GB push)   │   │
-            │   │  ┌────────────────────────────┐    ┌────────────────────────────┐            │   │
-            │   │  │  ./bonneagar/              │    │  ./leabharlann/            │            │   │
-            │   │  │  branch: bonneagar-main    │    │  branch: leabharlann-main  │            │   │
-            │   │  │  tracking: bonneagar/main  │    │  tracking: leabharlann/main│            │   │
-            │   │  │                            │    │                            │            │   │
-            │   │  │  90 compose stacks         │    │  2,400 files, 3.4 GB       │            │   │
-            │   │  │  Pulumi, Komodo, Pangolin  │    │  Gaeilge, mata, aigne      │            │   │
-            │   │  │  Dagger, Ansible, secrets  │    │  Zotero, gemini_research    │            │   │
-            │   │  │  6.9 MB total              │    │  (NOT in this monorepo)    │            │   │
-            │   │  └────────────────────────────┘    └────────────────────────────┘            │   │
-            │   └────────────────────────────────────────────────────────────────────────────────┘   │
-            │                                                                                        │
-            │       web/  apps/{oideachais-web, tuatha-ui, croilar-web, croilar-portal, …}/         │
-            │             + hono-api/                                                               │
-            └────────────────────────────────────────────────────────────────────────────────────────┘
-                                                                                                        ┌────────────────────────────────────────────────────────────────────────────────────────┐
-            ┌────────────────────────────────────────────────────────────────────────────────────────┐   │
-            │  LLM GATEWAY  (LiteLLM, http://litellm:4000/v1)                                       │   │
-            │  default_model = "minimax" alias  →  7-tier fallback                                    │   │
-            │  MiniMax-M3 (3 slots) → qwen3.7-max → kimi-k2.6 → glm-4.6 → local/math                │   │
-            └────────────────────────────────────────────────────────────────────────────────────────┘   │
-                                                                                                        │
-            ┌────────────────────────────────────────────────────────────────────────────────────────┐   │
-            │  3-TIER HOST TOPOLOGY                                                                 │   │
-            │                                                                                        │   │
-            │  arm1-oci     Oracle Ampere A1, 4 OCPU, 24 GB   →  Pangolin + Komodo + Garage S3      │   │
-            │  cax41-hetzner Hetzner CAX41 ARM, 16 vCPU, 32 GB  →  Memgraph + FalkorDB + MLflow   │   │
-            │  bunchloch    MacBook M4 Max, 14c, 48 GB         →  llama-swap + mlx-omni + Bria FIBO │   │
-            └────────────────────────────────────────────────────────────────────────────────────────┘   │
-                                                                                                        │
-            ┌────────────────────────────────────────────────────────────────────────────────────────┐   │
-            │  LAKEHOUSE DATA PLANE                                                                 │   │
-            │  DLT  →  DuckLake (Parquet on Garage S3 + Postgres catalog)                           │   │
-            │              ↓                                                                       │   │
-            │  BAML  →  CocoIndex v1  →  LanceDB (BGE-M3, HNSW)                                    │   │
-            │              ↓                                                                       │   │
-            │  Cognee  →  FalkorDB (GraphRAG) + Graphiti (bi-temporal episodes)                     │   │
-            │              ↓                                                                       │   │
-            │  MotherDuck (md:oideachais)  →  marimo dashboards  +  AG-UI agents                    │   │
-            └────────────────────────────────────────────────────────────────────────────────────────┘
-```
+The following section is preserved verbatim from the pre-v7
+`README.md` per the user's instruction: "keep the validated
+references to my credentials and family history relevant to the
+name and location of the project."
 
-
-### `cianfhoghlaim/baml/` — 60+ BAML files in 3-cluster taxonomy
-
-The 3-cluster BAML taxonomy (per the `baml-reorganize-by-cluster`
-change) is the canonical shape:
-
-```
-baml/
-├── clients.baml                      # canonical LLM clients
-├── clients_llama_swap.baml           # specialty VL clients
-├── shared/                            # generated client output (baml_client/, baml_client_ts/)
-├── education/                         # CLUSTER 1 — NCCA education
-│   ├── _shared/                       #   education_level, strand_outcome,
-│   │                                  #   curriculum_relationships, subject_rubric,
-│   │                                  #   document_metadata
-│   ├── stages/                        #   5 NCCA stages (aistear, primary,
-│   │                                  #   junior_cycle, senior_cycle, tertiary)
-│   ├── pdfs/                          #   3 leaving_cert_*_extraction.baml
-│   ├── subjects/                      #   8 qpack_*.baml (per-NCCA-subject)
-│   ├── cross_nation/                  #   isles_education + multi_nation_curriculum
-│   ├── statistics/                    #   education_statistics
-│   └── university/                    #   university_extraction
-├── celtic/                            # CLUSTER 2 — Celtic / Irish language
-└── processing/                        # CLUSTER 3 — Generic file processing
-```
-
-### `cianfhoghlaim/dlt/` — 200+ sources in 8 top-level dirs
-
-The 8 top-level dirs (per the recent reorg):
-
-```
-dlt/
-├── api_sources/                       # REST API (github, linkedin, researchgate, soundcloud, spotify)
-├── british_isles/                     # 8 nations × 4 domains (32 sources)
-│   ├── england/  ireland/  scotland/  wales/  northern_ireland/  isle_of_man/  jersey/  guernsey/
-├── common/                            # helpers (batching, firecrawl_source, destinations, ...)
-├── filesystem/                        # personal corpus (books, zotero, takeout, CV)
-├── language/                          # Celtic/Irish sources (canuint, duchas, tearma, gaeilge)
-├── official_media/                    # Instagram → British-Isles gov source resolver
-└── portfolio/                         # artwork, CV, labels, teaching
-```
-
-### `cianfhoghlaim/cocoindex/` — 14+ v1 Apps
-
-The 14+ v1 CocoIndex Apps (per the `oideachais-cocoindex-v1` skill):
-
-- 4 v1 Apps: `codebase_indexing`, `api_indexing`, `filesystem_indexing`,
-  `config_indexing`, `storage_indexing`
-- 8 per-subject embeddings: `gaeilge_embedding`, `english_embedding`,
-  `mathematics_embedding`, `applied_mathematics_embedding`,
-  `chemistry_embedding`, `computer_science_embedding`,
-  `geography_embedding`, `history_embedding`
-- 2 leabharlann: `leabharlann_embedding`, `leabharlann_flow`
-- 3 content: `culture_heritage_embedding`, `unified_embedding`,
-  `docs_skills_consolidation`
-- 2 utilities: `file_graph`, `languages`
-
-All follow the canonical v1 pattern: `@coco.fn` + `@coco.lifespan`
-+ `lancedb.mount_table_target` + `Annotated[NDArray, EMBEDDER]`. The
-shared `LANCE_DB` + `EMBEDDER` + `RESOLVED_FILE_REGISTRY` live in
-`_lifespan.py` per the 4-rule v1 conformance contract (R1-R4).
-
-### `cianfhoghlaim/dagster/` — single code-location, 228+ assets
-
-The 5 layered stages:
-
-```
-dagster/
-├── definitions.py                  # entry point
-├── defs/
-│   ├── 1_ingestion/                # 6 domains: curriculum, filesystem, law,
-│   │                              #   medicine, site_analysis
-│   ├── 2_materials/                # baml_extraction, dbt, embedding_pivot,
-│   │                              #   ocr_comparison, pdf_processing
-│   ├── 3_model_lifecycle/          # cocoindex_v1, cognify, cross_archive
-│   ├── 4_asset_generation/         # marimo_dashboards, orpc_routes, tanstack_pages
-│   └── 5_agent_ops/                # adk, agno, custom
-├── components/                     # 3 layer files (CelticIngestionComponent, etc.)
-├── defs.yaml                       # workspace config
-├── partitions_v2.py                # 9+ partition types
-├── resources.py                    # 8+ Dagster resources
-└── sensors/                        # 16+ dagster sensors
-```
-
-Plus `dagster/assets/` for the 11 per-subject asset groups
-(mathematics, english, gaeilge, applied_mathematics, chemistry,
-computer_science, biology, business, french, geography, history) +
-the 8-asset PDF processing pipeline in `dagster/assets/by_domain/`.
-
-### `cianfhoghlaim/meaisinfhoghlaim/` — 15+ subdirs, 24 OCR models
-
-The OCR + model lifecycle home:
-
-```
-meaisinfhoghlaim/
-├── models/                  # 24 OCR models (9 vision + 4 classical + 3 image-gen + 8 alignment)
-├── backends/                # adapters, author_archive_ocr, gaelic_metrics
-├── alignment/               # sentence-level Irish↔English aligner, ColPali visual aligner
-├── document_factory/        # exam paper → structured document (5 converters)
-│   └── converters/           #   deepseekocr, docling, marker, pymupdf4llm, unstructured
-├── evaluation/              # OCR + RAGAS evaluation harness
-├── quality/                 # OCR quality scoring (canuint_validator, content_quality)
-├── training/                # OCR model training pipelines (modal_finetune)
-├── datasets/                # irish_htr_dataset, line_segmentation
-├── process/                 # 7 meaisinfhoghlaim pipelines (canuint_audio_slicer, dialect_classifier, etc.)
-├── config/                  # BaseSettings + YAML configs
-├── ci/                      # HF watchdog
-├── cli.py                   # meaisinfhoghlaim CLI entrypoint
-└── federated/               # (empty for now)
-```
-
-### `cianfhoghlaim/agents/` — 12-agent fleet
-
-The 12-agent fleet is flattened from the v3 `_underscore` legacy
-dirs. The sub-packages:
-
-```
-agents/
-├── adk/                  # Google ADK integration (the original 12-agent fleet home)
-├── agno/                 # Agno framework integration (recently added)
-├── api/                  # FastAPI/Hono API surface
-├── tuatha/               # Babylon.js + SpacetimeDB + crypteolas crypto platform
-├── mcp_server/           # MCP server glue
-├── root.py               # Orchestrator
-├── ocr/                  # Image generation and processing
-├── language/             # Language-specific agent adapters
-├── shared/               # Shared agent utilities
-├── image_pipeline/       # (legacy)
-└── amam_tuatha.py        # Tuatha MMO teaser agent
-```
-
-The 12 agents (per `agents/adk/root_agent.py`): `root_agent` (the
-orchestrator), `curriculum_agent`, `translation_agent`, `corpus_agent`,
-`research_agent`, `geospatial_agent`, `voice_agent`, `statistics_agent`,
-`education_research_agent`, `bunchloch_research_agent`, `agui_curriculum_agent`,
-`mcp_curriculum_agent`, plus `enhanced_orchestrator`.
-
-### `cianfhoghlaim/storage/` — 4-layer multi-graph architecture
-
-```
-storage/
-├── _shared/                          # generic multi-graph abstraction
-│   ├── falkordb.py                   #   generic GraphClient interface
-│   ├── memgraph.py                   #   Memgraph implementation
-│   ├── neo4j.py                      #   Neo4j implementation
-│   └── interface.py                  #   GraphClient ABC
-├── cache.py                          # unified hot-path cache (uses falkordb)
-├── graphiti_client.py                # graphiti_core wrapper (bi-temporal)
-├── falkordb_client.py                # FalkorDB cache wrapper (used by cache.py)
-├── memgraph_client.py                # Memgraph curriculum graph (used by dagster/resources.py)
-├── temporal_client.py                # graphiti_core wrapper
-├── lancedb.py                        # vector DB + HNSW indexing
-├── cognify/                          # the Cognee cognify layer
-│   ├── cognee_integration/            #   7 cognify asset wrappers
-│   └── rules/                        #   4 cross-corpus edge rules
-├── letta_memory.py                   # agent memory
-├── lightrag_curriculum.py            # LightRAG + Cognee hybrid
-├── cognee_config.py
-├── cognee_service.py
-└── research.py
-```
-
-The top-level `falkordb_client.py` and `memgraph_client.py` are
-**complementary** to the `_shared/` layer (not duplicates). They serve
-the cache + Dagster-resource layers respectively. The `temporal.py`
-file (hand-rolled Graphiti-in-Python) is superseded by `temporal_client.py`
-(graphiti_core wrapper).
-
-### `cianfhoghlaim/web/` — 7 web apps + 1 Hono API
-
-> **See the top-of-README disclaimer above** — the UI in these
-> apps is currently a packaging / wiring demonstration and has
-> **not** yet been informed by the extracted NCCA syllabi, exam
-> papers, or marking schemes. The eventual UI design will be
-> provably grounded in those official documents.
-
-| App | Stack | What it is |
-|:--|:--|:--|
-| `apps/oideachais-web/` | TanStack Start | The public Celtic education data platform (the largest) |
-| `apps/tuatha-ui/` | Babylon.js | The Tuatha educational MMO front-end |
-| `apps/croilar-web/` | TanStack Start | The Croílár multi-persona portfolio (public site) |
-| `apps/croilar-portal/` | TanStack Start | The Croílár portfolio dashboard (admin) |
-| `apps/game_showcase/` | React | Web game showcase |
-| `apps/tuatha-demo/` | Babylon.js | Tuatha Babylon.js demo |
-| `hono-api/` | Hono | The Hono API gateway (backend) |
-
-The 5-web-app → 1-`cio-web` consolidation plan is in
-[`docs/audit/web-app-consolidation-plan.md`](docs/audit/web-app-consolidation-plan.md).
-
-### `cianfhoghlaim/libraries/codeolas/` — publishable sub-package
-
-A C++ + WASM + MCP code-analysis library: semantic search, AST
-knowledge graph, MCP server. The publishable wheel name is **`codeolas`**.
-
-### `./bonneagar/` (worktree) — 90 compose stacks
-
-The canonical 90-stack catalogue lives in
-[`./bonneagar/stacks/`](./bonneagar/stacks/). The 4 priority stacks
-are `oideachais`, `litellm`, `langfuse`, and `lakehouse`; see
-[`./bonneagar/AGENTS.md`](./bonneagar/AGENTS.md) for the full
-inventory. 90 stacks × ~10 KB each = 6.9 MB total, all in the
-sibling repo (not in this monorepo).
-
-#### The bonneagar directory tree (canonical 10-subdir layout)
-
-```
-bonneagar/
-├── AGENTS.md                   # bonneagar quick reference
-├── GOLD_STANDARD.md            # the 6-file stack pattern (compose + sidecar + secrets + pangolin + blueprint + .env.example)
-├── DEPLOYMENT-STRATEGY.md      # 3-tier host topology + roll-out sequence
-├── PANGOLIN-SETUP.md           # Pangolin private-resources setup (the 6-label pattern)
-├── package.json                # bun workspace + scripts
-├── bun.lock
-├── ansible/                    # legacy IaC + playbooks
-├── ci/                         # CI scripts
-├── dagger/                     # 8-step GitOps pipeline (the `infrastructure/dagger/` README)
-├── deploy-runbooks/            # per-stack deploy runbooks
-├── docs/                       # bonneagar internal docs
-├── firecrawl/                  # self-hosted Firecrawl instance configs
-├── iac/                        # Pulumi IaC (3-tier host topology: arm1-oci / cax41-hetzner / bunchloch)
-├── infisical_secret/           # the 3-way secrets contract (source-of-truth → template → hydrated runtime)
-├── komodo/                     # deploy procedures for every stack (one .toml per stack)
-├── legacy/                     # retired IaC artefacts
-├── observability/              # shared Grafana / Loki / Prom / OTel configs
-├── pangolin/                   # Pangolin private-resources + 6-label pattern
-└── audit/                      # security + compliance + drift audits
-```
-
-The 6-file GOLD_STANDARD pattern is the contract every new stack must
-follow. See `./bonneagar/GOLD_STANDARD.md` for the full spec; in short,
-a new stack `infrastructure/stacks/<name>/` must contain:
-
-1. `compose.yaml` — the Docker Compose service definition
-2. `sidecar.yaml` — the Locket / Infisical sidecar that injects secrets at runtime
-3. `secrets.env` — the secret *names* (never the values)
-4. `pangolin.yaml` — the 6-label private-resources shape
-   (`pangolin.private-resources.<name>.*`)
-5. `blueprint.yaml` — the Komodo procedure that deploys the stack
-6. `.env.example` — the developer-onboarding template
-
-Adding a new stack is then a 4-step `bun run` sequence; the
-`stack-doctor.sh` validation script enforces the pattern.
-
-### `./leabharlann/` (worktree) — 2,400 files, 3.4 GB
-
-```
-leabharlann/
-├── gaeilge/                    # 38+ Irish-language PDFs
-├── mata/                       # 27+ mathematics textbooks
-├── aigne/                      # 72+ cognitive science / mind books
-├── ollscoil_na_gaillimhe/      # 21+ University of Galway coursework archives
-├── zotero/                     # 34+ research papers (Zotero export)
-└── gemini_deep_research/       # 24+ long-form Gemini deep research reports
-                              # (culture/ medical/ politics/ — the corpus cited in the
-                              #  cianfhoghlaim plan throughout the British Isles)
-```
-
-The 2,400 files / 3.4 GB corpus lives entirely in the sibling
-`leabharlann` repo and is exposed here as a worktree. To use the
-corpus from the monorepo, reference it through the relative path
-`./leabharlann/...` (or symlink it into a working location).
-
-#### The leabharlann directory tree (canonical 6-subdir layout)
-
-| Subdir | Contents | Used by |
-|:--|:--|:--|
-| `gaeilge/` | 38+ Irish-language PDFs (curriculum, dictionaries, grammar) | the `oideachais_gaeilge` CocoIndex v1 App; the `ExtractEn` BAML function; the marimo notebook at `cianfhoghlaim/notebooks/dashboards/gaeilge.py` |
-| `mata/` | 27+ mathematics textbooks (algebra, calculus, statistics, applied maths) | the `oideachais_mata` CocoIndex v1 App; the `ExtractEn` BAML function; the marimo notebook at `cianfhoghlaim/notebooks/dashboards/mata.py` |
-| `aigne/` | 72+ cognitive science / mind books (neuroscience, psychology, linguistics) | the `oideachais_aigne` CocoIndex v1 App; the `meaisinfhoghlaim_aigne` cognify pass |
-| `ollscoil_na_gaillimhe/` | 21+ University of Galway coursework archives (transcripts, parchments, teaching portfolio, Irish-language exam results, the 5 mat / 5 education / 5 software-dev / 3 irish / 3 past evidence folders) | the README's "On the verified qualifications" section; the `leabharlann_full_stack_demo` Dagster asset group |
-| `zotero/` | 34+ research papers (Zotero export with full text + metadata) | the `leabharlann_zotero` CocoIndex v1 App; the `leabharlann_zotero_embedding` LanceDB index |
-| `gemini_deep_research/` | 24+ long-form Gemini deep research reports across `culture/`, `medical/`, `politics/` — the corpus that grounds the cianfhoghlaim plan throughout the British Isles | the `culture_extraction.baml:ExtractCultureClaims` BAML function; the `culture_heritage` Cognee dataset; the §20 and §21d/f of the README |
-
----
-
-
+The section documents the triple-crown lineage (Deacy / Lyons /
+Morris / Conroy), the verified qualifications that ground the
+project's claims, and the synthesised narrative that informs the
+Tuatha educational MMO (the Ard-Rí na hÉireann framing).
 
 ### On the family — *Mac an Déisigh Uí Liatháin (Deacy-Lyons)*
 
@@ -1235,230 +886,3 @@ New Zealand (the Māori King Movement)
 p. 6).
 
 
-
----
-
-## How this project is developed — MiniMax-M3 (for now)
-
-The whole monorepo — agents, BAML extraction, Dagster assets,
-CocoIndex flows, marimo dashboards, web apps — is built
-agentically. The current canonical configuration lives at
-[`opencode.json`](./opencode.json). One provider + one model
-class carry the workload, for now:
-
-| Provider | Model | API shape | Used by |
-|:--|:--|:--|:--|
-| `minimax` | `MiniMax-M3` | Anthropic-compatible (`https://api.minimax.io/anthropic/v1`) | all 7 agents (build + plan + 5 subagents) |
-
-The model class is **MiniMax-M3**, served directly from the
-**MiniMax Coding Plan** Anthropic-compatible endpoint. Long-term
-the plan is to fold every agent call through the canonical
-LiteLLM `minimax` 7-tier alias at
-`litellm.cianfhoghlaim.ie:4000` (per the
-[`litellm-minimax-vendor-derisking`](./openspec/changes/litellm-minimax-vendor-derisking/)
-openspec change), but for now every agent hits the MiniMax
-endpoint directly — hence the "for now" qualifier.
-
-### The 2 primary agents + the 5 dispatchable subagents
-
-All 7 agents share the same `minimax/MiniMax-M3` model:
-
-```jsonc
-// opencode.json (excerpt — see ./opencode.json for the full 384-line file)
-"default_agent": "build",
-"agent": {
-  "build":          { "model": "minimax/MiniMax-M3", "mode": "primary",  ... },  // full read/write/exec
-  "plan":           { "model": "minimax/MiniMax-M3", "mode": "primary",  ... },  // read-only, no edits
-  "data-platform":  { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
-  "infrastructure": { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
-  "agent-platform": { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
-  "frontend-apps":  { "model": "minimax/MiniMax-M3", "mode": "subagent", ... },
-  "research":       { "model": "minimax/MiniMax-M3", "mode": "subagent", ... }
-}
-```
-
-| Agent | Mode | Routes to |
-|:--|:--|:--|
-| `build` | primary | everything — full read/write/exec + all 53 top-level skills |
-| `plan` | primary | openspec changes, proposals, ADRs (read-only, no edits) |
-| `data-platform` | subagent | `cianfhoghlaim/dlt_sources/`, `dagster_defs/`, `baml_src/`, `notebooks/` |
-| `infrastructure` | subagent | `cianfhoghlaim/stacks/`, Komodo/Pangolin/Locket/Infisical mesh |
-| `agent-platform` | subagent | `cianfhoghlaim/agents/meaisinfhoghlaim/`, OCR fleet, LLM routing, BAML extraction |
-| `frontend-apps` | subagent | `cianfhoghlaim/web/apps/*/`, the Hono API, marimo notebooks |
-| `research` | subagent | browser-driven autonomous investigation (browserbase + firecrawl) |
-
-The `build` agent decomposes every task into work-streams
-and dispatches the 5 subagents in parallel via the `task`
-tool (`subagent_type: data-platform | infrastructure |
-agent-platform | frontend-apps | research`). Each subagent
-returns a structured report; the build agent reconciles and
-writes the final diff. Quality gates run after every change:
-`mise run lint && mise run py:typecheck && mise run turbo
-typecheck`.
-
-### The 14 MCP servers attached to every agent
-
-| MCP | Type | Purpose |
-|:--|:--|:--|
-| `browserbase` | remote | Cloud browser automation (currently disabled pending budget) |
-| `firecrawl` | local | Cloud scraper — every site in the 8-nation × 4-domain matrix |
-| `infisical` | local | The `dev-baile` vault — every secret comes from here |
-| `motherduck` | local | Federated SQL over DuckLake + MotherDuck |
-| `chrome` | local | chrome-devtools-mcp for live browser inspection |
-| `cocoindex-code` (ccc) | local | Semantic code search over the codebase |
-| `cognee` | local | Knowledge-graph memory (`cognee-mcp` against `localhost:8100`) |
-| `graphiti` | local | Bi-temporal episodic memory |
-| `langfuse` | local | LLM observability — every agent trace lands here |
-| `hermes` | local | The Hermes autonomous-agent runtime (3rd vertex) |
-| `agent-registry` | local | The 12-agent fleet registry |
-| `agents-md` | local | The live AGENTS.md indexer |
-| `apple-photos` | local | Photos-library ingestion into the leabharlann corpus |
-| `huggingface` | remote | HF Hub — model + dataset + Space registry |
-
-The next milestone (per the
-[`agent-platform-cluster-hermes-cocoindex`](./openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/)
-openspec change) routes every agent's `minimax` call through
-the canonical LiteLLM gateway — MiniMax-M3 still the primary
-model, but with 7 tiers of fallback below it. The "for now"
-qualifier in the section title is exactly this: the
-LiteLLM-mediated path is specced and being staged; the
-direct MiniMax endpoint is what currently runs.
-
-
----
-
-## Planned deployed stacks (summary)
-
-The runtime target is **86 Docker Compose stacks** (per
-`bun run validate-stacks`; the v5 prune on 2026-07-01
-removed 2 obsolete stacks — `lakehouse-oci`, `r2` — and 7
-reference-only dirs) wired through **Pangolin + Pocket ID +
-TinyAuth** at `*.cianfhoghlaim.ie`, orchestrated by
-**Komodo Core + Periphery**, secret-managed by **Infisical +
-Locket + mise**, IaC-managed by **Pulumi + Dagger**. The
-full per-stack inventory is at
-[`./bonneagar/stacks/`](./bonneagar/stacks/) and the
-per-stack docs are at [`./docs/stacks/`](./docs/stacks/).
-The header below summarises what's *planned* to land where.
-
-### 3-tier host topology
-
-| Host | Provider | Role | Spec | Planned state |
-|:--|:--|:--|:--|:--|
-| `arm1-oci` | Oracle Cloud (Ampere A1) | Control plane | 4 OCPU, 24 GB RAM, 200 GB | **Planned** — Pangolin, Pocket ID, TinyAuth, Traefik, Infisical, Locket, Komodo Core + Periphery, Backrest, Beszel, Dozzle |
-| `bunchloch` | MacBook M4 Max (48 GB RAM, 2 TB SSD) | Workloads | 14 cores, 48 GB RAM | **Active** — the 35 local containers (lakehouse, LiteLLM, Langfuse, llama-swap, Convex, browser stack, oideachais frontend + API + Dagster, komodo, Cognee, LanceDB) |
-| `cax41-hetzner` | Hetzner Cloud CAX41 ARM | Storage + DR | 16 vCPU, 32 GB RAM | **Planned** — Memgraph, FalkorDB, MLflow (the data plane that today runs in `lakehouse-bunchloch` will mirror here for offsite DR) |
-| `arm2-hetzner` | Hetzner Cloud CAX21 | Disaster-recovery mirror of `arm1-oci` | — | **Future** — currently unprovisioned |
-
-### The 5-group model — 86 stacks in 5 groups + ci + personal-utility
-
-| Group | Count | Primary host | Examples |
-|:--|--:|:--|:--|
-| **infrastructure** | 9 | `arm1-oci` | Pangolin, Pocket ID, TinyAuth, Traefik, Infisical, Locket, Komodo Core + Periphery, Backrest |
-| **data-engineering** | 12 | `bunchloch` | Dagster, Lakehouse, Marimo, CocoIndex, Cognify, LiteLLM, Langfuse, Llama-swap, Cognee, FalkorDB, Graphiti, Marimo |
-| **agent-platform** | 7 | `bunchloch` | Agno AgentOS, Google ADK, OpenClaw, OpenChamber, Cognee, Graphiti, Letta, Hermes, Memgraph, MLX-Omni, LMNR |
-| **language-model** | 6 | `bunchloch` | LiteLLM, llama-swap, MLX-Omni, Logfire, Langfuse, mlflow, MotherDuck, Nimtable |
-| **user-facing-web** | 6 | `bunchloch` | oideachais-web, oideachais-api, oideachais-dagster, oideachais-agent-os, oideachais-adk-agents, openclaw |
-| **ci** | 1 | `bunchloch` | hf-watchdog |
-| **personal-utility** | ~47 | mixed | audiobookshelf, beszel, bytebase, cal-diy, changedetection, coder, convex, crawl4ai, dozzle, enclosed, forgejo, forgejo-runner, frontend, glance, gluetun, headplane, headscale, it-tools, Kapowarr, karakeep, lakefs, linkwarden, lmnr, mailcow-dockerized, n8n, olake, olmocr, paddleocr, paperless-ngx, pastemax, pinchflat, pipecat, pocket-id, pulumi, qdrant, risingwave, romm, rybbit, searxng, skyvern, stirling-pdf, technitium, unstract, vaultwarden, vikunja, windmill, … |
-
-The 4 priority stacks (per the AGENTS.md quick-reference)
-are `oideachais` (5 ports, the Celtic Education Lakehouse),
-`litellm` (port 4000, the LLM gateway), `langfuse` (port
-3000, LLM observability), and `lakehouse` (ports 3900–3904,
-5433, 8181–8182 — Garage S3 + Postgres + Lakekeeper). The
-5th priority stack added in 2026-06 is `hermes` (the
-autonomous agent runtime at `hermes.cianfhoghlaim.ie`).
-
-### Phase 0.3 deploy sequence — Tier 1 (data plane) + Tier 2 (memory plane)
-
-The current staging sequence (per
-[`docs/PHASE_0.3_DEPLOY_RUNBOOK.md`](./docs/PHASE_0.3_DEPLOY_RUNBOOK.md))
-is to land the data plane on `bunchloch` first, then the
-memory plane, then the 43-prompt BrowserBase research
-program against the live mesh.
-
-**Tier 1 — data plane** (deploy first)
-
-| Stack | Service count | Health check |
-|:--|--:|:--|
-| `lakehouse` | 13 services | `docker ps --format` shows 13 lakehouse containers (Garage + Postgres + Lakekeeper + Lance NS + ClickHouse + Redis + 7 langfuse/litellm/mlflow shared buckets) |
-| `litellm` | 2 services | `curl http://localhost:4000/v1/models` returns `minimax (alias), qwen3.7-max, kimi-k2.6, glm-4.6, local/math, …` |
-| `cognee` | 2 services | `curl http://localhost:8100/health` returns `{"status":"ok"}` |
-
-**Tier 2 — agent memory plane** (deploy after Tier 1)
-
-| Stack | Purpose |
-|:--|:--|
-| `graphiti` | Bi-temporal knowledge graph (Neo4j) |
-| `falkordb` | Vector + graph hybrid (Redis-compatible) for GraphRAG |
-| `dragonfly` | In-memory cache (modern Redis fork) |
-| `risingwave` | Streaming SQL for change-data-capture |
-
-After both tiers pass, the opencode client is restarted and
-all 14 MCP servers reconnect — the 43-prompt BrowserBase
-research program then dispatches against the live mesh.
-
-### The 5 deploy surfaces (per the bonneagar golden path)
-
-| Surface | Where | What it does |
-|:--|:--|:--|
-| **Komodo Core** | `bunchloch` | Orchestrates the fleet via web UI + REST API at `komodo.cianfhoghlaim.ie:9120` |
-| **Komodo Periphery** | `arm1-oci` + `bunchloch` (2 agents) | Each runs as a `komodo-periphery-{arm1-oci,bunchloch}` container; connects outbound to Core |
-| **Infisical Vault** | `arm1-oci` | Self-hosted; the `dev-baile` environment is the source of truth (no plaintext secrets anywhere in the repo) |
-| **Pangolin** | `arm1-oci` | Traefik + Gerbil + Pocket ID — reverse-proxy + identity + SSO; routes `*.cianfhoghlaim.ie` to internal containers |
-| **The 6 GOLD_STANDARD files per stack** | `bonneagar/stacks/<name>/` | `compose.yaml` + `sidecar.yaml` + `secrets.env` + `blueprint.yaml` + `.env.example` (+ optional `README.md`) — the contract `bun run validate-stacks` enforces |
-
-The 6-step golden path for adding a new stack is in
-[`./bonneagar/DEPLOYMENT-STRATEGY.md`](./bonneagar/DEPLOYMENT-STRATEGY.md)
-§3 (write the 6 files → `bun run validate-stacks` → `bun
-run secrets:init` → add a `[[stack]]` block to the Komodo
-TOML → sync to Komodo → verify via `docker ps` + `curl
-/health` + `probe-public-urls.sh`).
-
-### Known blockers (from HEALTH_REPORT.md Session 3)
-
-Until these are cleared, the first `bun run stack.sh <name>
-up -d` will hit one of:
-
-1. Newt 1.12.5 + Pangolin server 1.18.4 are incompatible
-   (`CLIENTS WILL NOT WORK ON THIS VERSION OF NEWT WITH THIS
-   PANGOLIN SERVER`) — update Pangolin to ≥1.13.0 or
-   downgrade newt to 1.11.x
-2. 3 manually-created private resources (`komodo`,
-   `cal-diy`, `infisical`) override the blueprints — delete
-   them in the Pangolin UI; the blueprint reapplies on the
-   next newt cycle
-3. Both `PANGOLIN_API_KEY` and `PANGOLIN_API_KEY_0` in
-   `.env` return 401 — mint a fresh machine-identity token
-   in the Pangolin UI and save it as `PANGOLIN_API_KEY`
-4. `komodo-locket` sidecar fails on the
-   `$${INFISICAL_CLIENT_ID}` YAML escape — switch to
-   single-dollar Compose substitution and provision a
-   machine identity with `/komodo` access
-
-
----
-
-## Licensing
-
-Business Source License 1.1 — non-commercial, cultural preservation,
-and academic research use permitted within Ireland, UK, EU,
-Commonwealth, and aligned jurisdictions. Subsets may transition to
-AGPL v3.0 after 4 years. See [`LICENSE.md`](LICENSE.md).
-
-All three repositories in the constellation
-([cianfhoghlaim](https://github.com/cianfhoghlaim/cianfhoghlaim),
-[bonneagar](https://github.com/cianfhoghlaim/bonneagar),
-[leabharlann](https://github.com/cianfhoghlaim/leabharlann)) are
-licensed under BUSL-1.1 by the same Licensor.
-
----
-
-<!-- AGENT_TELEMETRY_START -->
-> **Agent Telemetry (Last Updated: 2026-07-11 14:13:06 UTC)**
-> - **Total Cached Structural Documents:** 0
-> - **Examinations.ie Cache:**        0 files
-> - **NCCA.ie Cache:**        0 files
-> - **CurriculumOnline Cache:**        0 files
-<!-- AGENT_TELEMETRY_END -->
