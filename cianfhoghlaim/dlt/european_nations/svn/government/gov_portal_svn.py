@@ -1,4 +1,4 @@
-"""DLT source for the Government of Slovenia (government, SVN).
+"""DLT source for the Government of Slovenia (government, Slovenia).
 
 Crawls ``https://www.gov.si`` and emits one row per ``(gov_portal_svn_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVNGovernmentSource(NationSource):
+class SloveniaGovernmentSource(NationSource):
     """Government of Slovenia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVNGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVNGovernmentSource()
+_NATION_SOURCE = SloveniaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_svn_source(language: str | None = None):
 
 
 __all__ = [
-    "SVNGovernmentSource",
+    "SloveniaGovernmentSource",
     "gov_portal_svn",
     "gov_portal_svn_source",
 ]

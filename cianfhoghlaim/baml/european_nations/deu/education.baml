@@ -1,4 +1,4 @@
-// DEU education extraction BAML schema.
+// Germany education extraction BAML schema.
 
 class DEUEducationDocument {
   kmk_id string @description("The canonical per-education document id")

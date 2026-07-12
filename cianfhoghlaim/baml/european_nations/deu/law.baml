@@ -1,4 +1,4 @@
-// DEU law extraction BAML schema.
+// Germany law extraction BAML schema.
 
 class DEULawDocument {
   gesetze_im_internet_id string @description("The canonical per-law document id")

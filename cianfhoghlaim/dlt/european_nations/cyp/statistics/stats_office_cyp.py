@@ -1,4 +1,4 @@
-"""DLT source for the Statistical Service of Cyprus (statistics, CYP).
+"""DLT source for the Statistical Service of Cyprus (statistics, Cyprus).
 
 Crawls ``https://www.cystat.gov.cy`` and emits one row per ``(stats_office_cyp_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CYPStatisticsSource(NationSource):
+class CyprusStatisticsSource(NationSource):
     """Statistical Service of Cyprus DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CYPStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = CYPStatisticsSource()
+_NATION_SOURCE = CyprusStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_cyp_source(language: str | None = None):
 
 
 __all__ = [
-    "CYPStatisticsSource",
+    "CyprusStatisticsSource",
     "stats_office_cyp",
     "stats_office_cyp_source",
 ]

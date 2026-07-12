@@ -21,7 +21,7 @@ enum TertiaryMathTopic {
   EXPECTATION_VARIANCE            @description("E[X], Var(X), moments, mgf")
   JOINT_DISTRIBUTIONS             @description("Joint, marginal, conditional distributions")
   LIMIT_THEOREMS                 @description("LLN, CLT, convergence in probability/distribution")
-  DISTRIBUTIONS_DISCRETE          @description("Bernoulli, Binomial, Poisson, Geometric, NB")
+  DISTRIBUTIONS_DISCRETE          @description("Bernoulli, Binomial, Poisson, Geometric, New Brunswick")
   DISTRIBUTIONS_CONTINUOUS        @description("Normal, Exponential, Gamma, Beta, t, chi2, F, Weibull")
   ESTIMATION_POINT               @description("MLE, MoM, UMVUE, method of moments")
   ESTIMATION_INTERVAL            @description("Confidence intervals, bootstrap CIs")

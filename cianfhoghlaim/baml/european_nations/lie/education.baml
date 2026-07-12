@@ -1,6 +1,6 @@
-// LIE education extraction BAML schema.
+// Liechtenstein education extraction BAML schema.
 
-class LIESubjectCurriculum {
+class LiechtensteinSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (de)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class LIESubjectCurriculum {
   content_hash string?
 }
 
-function ExtractLIESubjectCurriculum(
+function ExtractLiechtensteinSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

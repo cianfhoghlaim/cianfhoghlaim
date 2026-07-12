@@ -1,4 +1,4 @@
-"""DLT source for the Central Statistical Bureau of Latvia (statistics, LVA).
+"""DLT source for the Central Statistical Bureau of Latvia (statistics, Latvia).
 
 Crawls ``https://stat.gov.lv`` and emits one row per ``(stats_office_lva_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LVAStatisticsSource(NationSource):
+class LatviaStatisticsSource(NationSource):
     """Central Statistical Bureau of Latvia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LVAStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = LVAStatisticsSource()
+_NATION_SOURCE = LatviaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_lva_source(language: str | None = None):
 
 
 __all__ = [
-    "LVAStatisticsSource",
+    "LatviaStatisticsSource",
     "stats_office_lva",
     "stats_office_lva_source",
 ]

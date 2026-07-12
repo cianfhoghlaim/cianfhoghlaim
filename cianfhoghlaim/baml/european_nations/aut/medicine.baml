@@ -1,6 +1,6 @@
-// AUT medicine extraction BAML schema.
+// Austria medicine extraction BAML schema.
 
-class AUTHealthGuidance {
+class AustriaHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class AUTHealthGuidance {
   content_hash string?
 }
 
-function ExtractAUTHealthGuidance(
+function ExtractAustriaHealthGuidance(
   nation: string,
   language: string,
   text: string

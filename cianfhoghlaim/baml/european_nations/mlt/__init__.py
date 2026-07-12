@@ -1,4 +1,4 @@
-"""Malta (MLT) BAML schemas (EU nations full-depth expansion)."""
+"""Malta (Malta) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.mlt import (
     education,
     law,

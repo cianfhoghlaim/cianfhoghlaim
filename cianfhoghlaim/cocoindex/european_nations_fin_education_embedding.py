@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Finland (FIN) education pipeline.
+"""CocoIndex v1 App for the Finland (Finland) education pipeline.
 
 Embeds every Finland per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.fin.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class FINEducationChunk:
+class FinlandEducationChunk:
     chunk_id: str
     nation: str
     subject: str

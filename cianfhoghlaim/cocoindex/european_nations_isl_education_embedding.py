@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Iceland (ISL) education pipeline.
+"""CocoIndex v1 App for the Iceland (Iceland) education pipeline.
 
 Embeds every Iceland per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.isl.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class ISLEducationChunk:
+class IcelandEducationChunk:
     chunk_id: str
     nation: str
     subject: str

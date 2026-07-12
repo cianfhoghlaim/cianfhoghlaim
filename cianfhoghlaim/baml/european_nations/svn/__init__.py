@@ -1,4 +1,4 @@
-"""Slovenia (SVN) BAML schemas (EU nations full-depth expansion)."""
+"""Slovenia (Slovenia) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.svn import (
     education,
     law,

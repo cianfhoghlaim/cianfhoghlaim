@@ -1,6 +1,6 @@
-// ROU law extraction BAML schema (EU nations full-depth).
+// Romania law extraction BAML schema (EU nations full-depth).
 
-class ROUStatute {
+class RomaniaStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Romania)")
@@ -11,7 +11,7 @@ class ROUStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractROUStatute(
+function ExtractRomaniaStatute(
   nation: string,
   language: string,
   text: string

@@ -1,6 +1,6 @@
-// MLT education extraction BAML schema (EU nations full-depth).
+// Malta education extraction BAML schema (EU nations full-depth).
 
-class MLTSubjectCurriculum {
+class MaltaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class MLTSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractMLTSubjectCurriculum(
+function ExtractMaltaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

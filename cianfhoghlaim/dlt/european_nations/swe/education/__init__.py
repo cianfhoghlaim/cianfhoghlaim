@@ -1,4 +1,4 @@
-"""Sweden (SWE) education per-subject DLT sub-tree."""
+"""Sweden (Sweden) education per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.swe.education.subjects import (
     mathematics, chemistry, biology, physics, language, computing_science,
 )

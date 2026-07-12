@@ -1,6 +1,6 @@
-// CYP law extraction BAML schema (EU nations full-depth).
+// Cyprus law extraction BAML schema (EU nations full-depth).
 
-class CYPStatute {
+class CyprusStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Cyprus)")
@@ -11,7 +11,7 @@ class CYPStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractCYPStatute(
+function ExtractCyprusStatute(
   nation: string,
   language: string,
   text: string

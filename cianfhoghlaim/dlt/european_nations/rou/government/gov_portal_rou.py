@@ -1,4 +1,4 @@
-"""DLT source for the Government of Romania (government, ROU).
+"""DLT source for the Government of Romania (government, Romania).
 
 Crawls ``https://www.gov.ro`` and emits one row per ``(gov_portal_rou_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ROUGovernmentSource(NationSource):
+class RomaniaGovernmentSource(NationSource):
     """Government of Romania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ROUGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = ROUGovernmentSource()
+_NATION_SOURCE = RomaniaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_rou_source(language: str | None = None):
 
 
 __all__ = [
-    "ROUGovernmentSource",
+    "RomaniaGovernmentSource",
     "gov_portal_rou",
     "gov_portal_rou_source",
 ]

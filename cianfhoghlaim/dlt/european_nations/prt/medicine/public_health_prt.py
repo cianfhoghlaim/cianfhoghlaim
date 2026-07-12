@@ -1,4 +1,4 @@
-"""DLT source for the Directorate-General of Health (Portugal) (medicine, PRT).
+"""DLT source for the Directorate-General of Health (Portugal) (medicine, Portugal).
 
 Crawls ``https://www.dgs.pt`` and emits one row per ``(public_health_prt_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class PRTMedicineSource(NationSource):
+class PortugalMedicineSource(NationSource):
     """Directorate-General of Health (Portugal) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class PRTMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = PRTMedicineSource()
+_NATION_SOURCE = PortugalMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_prt_source(language: str | None = None):
 
 
 __all__ = [
-    "PRTMedicineSource",
+    "PortugalMedicineSource",
     "public_health_prt",
     "public_health_prt_source",
 ]

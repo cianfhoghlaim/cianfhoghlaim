@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class DEULawSource(NationSource):
+class GermanyLawSource(NationSource):
     """Bundesministerium der Justiz — Gesetze im Internet DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class DEULawSource(NationSource):
         )
 
 
-_NATION_SOURCE = DEULawSource()
+_NATION_SOURCE = GermanyLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gesetze_im_internet_source(language: str | None = None):
 
 
 __all__ = [
-    "DEULawSource",
+    "GermanyLawSource",
     "gesetze_im_internet",
     "gesetze_im_internet_source",
 ]

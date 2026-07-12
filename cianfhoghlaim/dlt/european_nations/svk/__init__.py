@@ -1,4 +1,4 @@
-"""Slovakia (SVK) national pipeline — re-exports the per-domain sub-trees."""
+"""Slovakia (Slovakia) national pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.european_nations.svk import (
     education,
     government,

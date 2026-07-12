@@ -1,4 +1,4 @@
-// ITA law extraction BAML schema.
+// Italy law extraction BAML schema.
 
 class ITALawDocument {
   gazzetta_ufficiale_id string @description("The canonical per-law document id")

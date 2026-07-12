@@ -1,6 +1,6 @@
-// HRV education extraction BAML schema (EU nations full-depth).
+// Croatia education extraction BAML schema (EU nations full-depth).
 
-class HRVSubjectCurriculum {
+class CroatiaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class HRVSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractHRVSubjectCurriculum(
+function ExtractCroatiaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

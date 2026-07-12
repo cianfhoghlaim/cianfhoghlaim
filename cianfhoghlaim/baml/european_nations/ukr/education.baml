@@ -1,4 +1,4 @@
-// UKR education extraction BAML schema.
+// Ukraine education extraction BAML schema.
 
 class UKREducationDocument {
   ministry_education_science_id string @description("The canonical per-education document id")

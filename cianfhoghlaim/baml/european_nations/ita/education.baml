@@ -1,4 +1,4 @@
-// ITA education extraction BAML schema.
+// Italy education extraction BAML schema.
 
 class ITAEducationDocument {
   miur_id string @description("The canonical per-education document id")

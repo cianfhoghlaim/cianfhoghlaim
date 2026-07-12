@@ -1,4 +1,4 @@
-"""Latvia (LVA) BAML schemas (EU nations full-depth expansion)."""
+"""Latvia (Latvia) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.lva import (
     education,
     law,

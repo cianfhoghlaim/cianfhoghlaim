@@ -1,4 +1,4 @@
-"""DLT source for the Diário da República (Portugal) (law, PRT).
+"""DLT source for the Diário da República (Portugal) (law, Portugal).
 
 Crawls ``https://diariodarepublica.pt`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class PRTLawSource(NationSource):
+class PortugalLawSource(NationSource):
     """Diário da República (Portugal) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class PRTLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = PRTLawSource()
+_NATION_SOURCE = PortugalLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "PRTLawSource",
+    "PortugalLawSource",
     "statute_book",
     "statute_book_source",
 ]

@@ -35,7 +35,7 @@ class EvidenceLink {
 // ============================================================================
 
 class NCCAKeyCompetencyRootPdf {
-  code string @description("Canonical NCCA competency code, e.g., 'KC-IP', 'KC-CO', 'KC-WO', 'KC-PE', 'KC-CT'")
+  code string @description("Canonical NCCA competency code, e.g., 'KC-IP', 'KC-CO', 'KC-WO', 'KC-Prince Edward Island', 'KC-CT'")
   name BilingualTextRootPdf @description("The full competency name (EN + GA)")
   definition BilingualTextRootPdf @description("The full competency definition statement")
   evidence EvidenceLink
@@ -52,7 +52,7 @@ The 5 NCCA Key Competencies are:
 1. Information Processing (KC-IP)
 2. Communicating (KC-CO)
 3. Working with Others (KC-WO)
-4. Personal Effectiveness (KC-PE)
+4. Personal Effectiveness (KC-Prince Edward Island)
 5. Critical & Creative Thinking (KC-CT)
 
 For each competency, extract:

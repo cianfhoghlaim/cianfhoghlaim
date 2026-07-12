@@ -1,4 +1,4 @@
-"""DLT source for the Government of Croatia (government, HRV).
+"""DLT source for the Government of Croatia (government, Croatia).
 
 Crawls ``https://www.vlada.gov.hr`` and emits one row per ``(gov_portal_hrv_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HRVGovernmentSource(NationSource):
+class CroatiaGovernmentSource(NationSource):
     """Government of Croatia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HRVGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = HRVGovernmentSource()
+_NATION_SOURCE = CroatiaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_hrv_source(language: str | None = None):
 
 
 __all__ = [
-    "HRVGovernmentSource",
+    "CroatiaGovernmentSource",
     "gov_portal_hrv",
     "gov_portal_hrv_source",
 ]

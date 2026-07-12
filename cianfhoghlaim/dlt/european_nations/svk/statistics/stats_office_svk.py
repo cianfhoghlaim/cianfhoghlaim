@@ -1,4 +1,4 @@
-"""DLT source for the Statistical Office of the Slovak Republic (statistics, SVK).
+"""DLT source for the Statistical Office of the Slovak Republic (statistics, Slovakia).
 
 Crawls ``https://www.statistics.sk`` and emits one row per ``(stats_office_svk_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVKStatisticsSource(NationSource):
+class SlovakiaStatisticsSource(NationSource):
     """Statistical Office of the Slovak Republic DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVKStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVKStatisticsSource()
+_NATION_SOURCE = SlovakiaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_svk_source(language: str | None = None):
 
 
 __all__ = [
-    "SVKStatisticsSource",
+    "SlovakiaStatisticsSource",
     "stats_office_svk",
     "stats_office_svk_source",
 ]

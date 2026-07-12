@@ -1,4 +1,4 @@
-"""DLT source for the Health Board of Estonia (medicine, EST).
+"""DLT source for the Health Board of Estonia (medicine, Estonia).
 
 Crawls ``https://www.terviseamet.ee`` and emits one row per ``(public_health_est_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ESTMedicineSource(NationSource):
+class EstoniaMedicineSource(NationSource):
     """Health Board of Estonia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ESTMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = ESTMedicineSource()
+_NATION_SOURCE = EstoniaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_est_source(language: str | None = None):
 
 
 __all__ = [
-    "ESTMedicineSource",
+    "EstoniaMedicineSource",
     "public_health_est",
     "public_health_est_source",
 ]

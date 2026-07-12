@@ -1,4 +1,4 @@
-"""Slovakia (SVK) BAML schemas (EU nations full-depth expansion)."""
+"""Slovakia (Slovakia) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.svk import (
     education,
     law,

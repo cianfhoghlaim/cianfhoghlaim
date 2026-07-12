@@ -1,4 +1,4 @@
-"""Croatia (HRV) per-subject DLT sub-tree."""
+"""Croatia (Croatia) per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.hrv.education.subjects import (
     mathematics,
     chemistry,

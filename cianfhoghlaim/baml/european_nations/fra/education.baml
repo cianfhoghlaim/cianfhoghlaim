@@ -1,4 +1,4 @@
-// FRA education extraction BAML schema.
+// France education extraction BAML schema.
 
 class FRAEducationDocument {
   ministere_education_nationale_id string @description("The canonical per-education document id")

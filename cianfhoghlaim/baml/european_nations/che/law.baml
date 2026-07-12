@@ -1,6 +1,6 @@
-// CHE law extraction BAML schema.
+// Switzerland law extraction BAML schema.
 
-class CHEStatute {
+class SwitzerlandStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (de,fr,it,rm)")
@@ -12,7 +12,7 @@ class CHEStatute {
   content_hash string?
 }
 
-function ExtractCHEStatute(
+function ExtractSwitzerlandStatute(
   nation: string,
   language: string,
   text: string

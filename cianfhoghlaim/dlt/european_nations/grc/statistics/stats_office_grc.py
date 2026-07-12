@@ -1,4 +1,4 @@
-"""DLT source for the Hellenic Statistical Authority (ELSTAT) (statistics, GRC).
+"""DLT source for the Hellenic Statistical Authority (ELSTAT) (statistics, Greece).
 
 Crawls ``https://www.statistics.gr`` and emits one row per ``(stats_office_grc_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class GRCStatisticsSource(NationSource):
+class GreeceStatisticsSource(NationSource):
     """Hellenic Statistical Authority (ELSTAT) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class GRCStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = GRCStatisticsSource()
+_NATION_SOURCE = GreeceStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_grc_source(language: str | None = None):
 
 
 __all__ = [
-    "GRCStatisticsSource",
+    "GreeceStatisticsSource",
     "stats_office_grc",
     "stats_office_grc_source",
 ]

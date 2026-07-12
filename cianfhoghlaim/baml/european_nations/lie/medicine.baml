@@ -1,6 +1,6 @@
-// LIE medicine extraction BAML schema.
+// Liechtenstein medicine extraction BAML schema.
 
-class LIEHealthGuidance {
+class LiechtensteinHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class LIEHealthGuidance {
   content_hash string?
 }
 
-function ExtractLIEHealthGuidance(
+function ExtractLiechtensteinHealthGuidance(
   nation: string,
   language: string,
   text: string

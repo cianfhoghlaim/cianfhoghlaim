@@ -1,4 +1,4 @@
-// ESP medicine extraction BAML schema.
+// Spain medicine extraction BAML schema.
 
 class ESPMedicineDocument {
   mscbs_id string @description("The canonical per-medicine document id")

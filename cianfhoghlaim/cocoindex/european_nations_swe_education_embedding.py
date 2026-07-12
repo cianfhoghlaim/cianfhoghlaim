@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Sweden (SWE) education pipeline.
+"""CocoIndex v1 App for the Sweden (Sweden) education pipeline.
 
 Embeds every Sweden per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.swe.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class SWEEducationChunk:
+class SwedenEducationChunk:
     chunk_id: str
     nation: str
     subject: str

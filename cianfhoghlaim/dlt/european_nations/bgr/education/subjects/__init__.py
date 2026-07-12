@@ -1,4 +1,4 @@
-"""Bulgaria (BGR) per-subject DLT sub-tree."""
+"""Bulgaria (Bulgaria) per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.bgr.education.subjects import (
     mathematics,
     chemistry,

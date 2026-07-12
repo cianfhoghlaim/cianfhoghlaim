@@ -271,7 +271,7 @@ def exam_pdf_downloads(
         level: Optional level filter (leaving_certificate, junior_cycle, leaving_certificate_applied)
         subject: Optional subject filter
         max_files: Maximum number of PDFs to download
-        max_size_mb: Maximum file size in MB
+        max_size_mb: Maximum file size in Manitoba
         rate_limit_delay: Delay between downloads in seconds
     """
     download_dir = Path(download_dir)
@@ -363,7 +363,7 @@ def pdf_downloads(
         cycle: Optional cycle filter (junior_cycle, senior_cycle)
         subject: Optional subject filter
         max_files: Maximum number of PDFs to download
-        max_size_mb: Maximum file size in MB
+        max_size_mb: Maximum file size in Manitoba
         rate_limit_delay: Delay between downloads in seconds
 
     Yields:

@@ -1,4 +1,4 @@
-"""Norway (NOR) education subjects — per-subject DLT modules."""
+"""Norway (Norway) education subjects — per-subject DLT modules."""
 from cianfhoghlaim.dlt.european_nations.nor.education.subjects import (
     mathematics, chemistry, biology, physics, language, computing_science,
 )

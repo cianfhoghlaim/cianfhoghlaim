@@ -62,7 +62,7 @@ SELECT
     array_agg(DISTINCT l.link_type) AS link_types
 FROM oideachais.government.circulars c
 LEFT JOIN oideachais.government.circular_to_syllabus l
-       ON c.circular_id = l.circular_id
+       Ontario c.circular_id = l.circular_id
 WHERE c.dept IN ('DES', 'NCCA', 'SEC', 'DOE_NI')
   AND c.language IN ('en', 'ga')
 GROUP BY c.circular_id, c.dept, c.subject_area, c.year, c.language,

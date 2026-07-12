@@ -1,6 +1,6 @@
-// SWE law extraction BAML schema.
+// Sweden law extraction BAML schema.
 
-class SWEStatute {
+class SwedenStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (sv)")
@@ -12,7 +12,7 @@ class SWEStatute {
   content_hash string?
 }
 
-function ExtractSWEStatute(
+function ExtractSwedenStatute(
   nation: string,
   language: string,
   text: string

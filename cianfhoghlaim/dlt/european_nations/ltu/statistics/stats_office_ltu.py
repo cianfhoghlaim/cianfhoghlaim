@@ -1,4 +1,4 @@
-"""DLT source for the Statistics Lithuania (statistics, LTU).
+"""DLT source for the Statistics Lithuania (statistics, Lithuania).
 
 Crawls ``https://www.stat.gov.lt`` and emits one row per ``(stats_office_ltu_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LTUStatisticsSource(NationSource):
+class LithuaniaStatisticsSource(NationSource):
     """Statistics Lithuania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LTUStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = LTUStatisticsSource()
+_NATION_SOURCE = LithuaniaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_ltu_source(language: str | None = None):
 
 
 __all__ = [
-    "LTUStatisticsSource",
+    "LithuaniaStatisticsSource",
     "stats_office_ltu",
     "stats_office_ltu_source",
 ]

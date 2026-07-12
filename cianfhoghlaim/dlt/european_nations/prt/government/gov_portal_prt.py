@@ -1,4 +1,4 @@
-"""DLT source for the Government of Portugal (government, PRT).
+"""DLT source for the Government of Portugal (government, Portugal).
 
 Crawls ``https://www.portugal.gov.pt`` and emits one row per ``(gov_portal_prt_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class PRTGovernmentSource(NationSource):
+class PortugalGovernmentSource(NationSource):
     """Government of Portugal DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class PRTGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = PRTGovernmentSource()
+_NATION_SOURCE = PortugalGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_prt_source(language: str | None = None):
 
 
 __all__ = [
-    "PRTGovernmentSource",
+    "PortugalGovernmentSource",
     "gov_portal_prt",
     "gov_portal_prt_source",
 ]

@@ -1,4 +1,4 @@
-// ESP education extraction BAML schema.
+// Spain education extraction BAML schema.
 
 class ESPEducationDocument {
   mecd_id string @description("The canonical per-education document id")

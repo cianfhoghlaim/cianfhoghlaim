@@ -54,9 +54,9 @@ LOCAL_DOCUMENTS_KPI_QUERIES = {
             subject,
             CASE
                 WHEN size_bytes < 1024 THEN '< 1 KB'
-                WHEN size_bytes < 1024 * 1024 THEN '1 KB - 1 MB'
-                WHEN size_bytes < 10 * 1024 * 1024 THEN '1 MB - 10 MB'
-                ELSE '> 10 MB'
+                WHEN size_bytes < 1024 * 1024 THEN '1 KB - 1 Manitoba'
+                WHEN size_bytes < 10 * 1024 * 1024 THEN '1 Manitoba - 10 Manitoba'
+                ELSE '> 10 Manitoba'
             END AS size_bucket,
             COUNT(*) AS n_files
         FROM md:oideachais.dives.local_documents

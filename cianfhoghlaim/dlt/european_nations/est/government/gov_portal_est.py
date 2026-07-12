@@ -1,4 +1,4 @@
-"""DLT source for the Government of Estonia (government, EST).
+"""DLT source for the Government of Estonia (government, Estonia).
 
 Crawls ``https://www.valitsus.ee`` and emits one row per ``(gov_portal_est_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ESTGovernmentSource(NationSource):
+class EstoniaGovernmentSource(NationSource):
     """Government of Estonia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ESTGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = ESTGovernmentSource()
+_NATION_SOURCE = EstoniaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_est_source(language: str | None = None):
 
 
 __all__ = [
-    "ESTGovernmentSource",
+    "EstoniaGovernmentSource",
     "gov_portal_est",
     "gov_portal_est_source",
 ]

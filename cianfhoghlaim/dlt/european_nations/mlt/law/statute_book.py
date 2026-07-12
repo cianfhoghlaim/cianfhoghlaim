@@ -1,4 +1,4 @@
-"""DLT source for the Laws of Malta (laws.mt) (law, MLT).
+"""DLT source for the Laws of Malta (laws.mt) (law, Malta).
 
 Crawls ``https://laws.mt`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class MLTLawSource(NationSource):
+class MaltaLawSource(NationSource):
     """Laws of Malta (laws.mt) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class MLTLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = MLTLawSource()
+_NATION_SOURCE = MaltaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "MLTLawSource",
+    "MaltaLawSource",
     "statute_book",
     "statute_book_source",
 ]

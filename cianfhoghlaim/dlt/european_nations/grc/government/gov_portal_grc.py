@@ -1,4 +1,4 @@
-"""DLT source for the Hellenic Republic Government (government, GRC).
+"""DLT source for the Hellenic Republic Government (government, Greece).
 
 Crawls ``https://www.primeminister.gr`` and emits one row per ``(gov_portal_grc_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class GRCGovernmentSource(NationSource):
+class GreeceGovernmentSource(NationSource):
     """Hellenic Republic Government DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class GRCGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = GRCGovernmentSource()
+_NATION_SOURCE = GreeceGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_grc_source(language: str | None = None):
 
 
 __all__ = [
-    "GRCGovernmentSource",
+    "GreeceGovernmentSource",
     "gov_portal_grc",
     "gov_portal_grc_source",
 ]

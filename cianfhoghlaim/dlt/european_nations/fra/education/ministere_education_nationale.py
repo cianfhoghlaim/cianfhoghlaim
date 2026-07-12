@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class FRAEducationSource(NationSource):
+class FranceEducationSource(NationSource):
     """Ministère de l'Éducation nationale DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class FRAEducationSource(NationSource):
         )
 
 
-_NATION_SOURCE = FRAEducationSource()
+_NATION_SOURCE = FranceEducationSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def ministere_education_nationale_source(language: str | None = None):
 
 
 __all__ = [
-    "FRAEducationSource",
+    "FranceEducationSource",
     "ministere_education_nationale",
     "ministere_education_nationale_source",
 ]

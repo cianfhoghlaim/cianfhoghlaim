@@ -1,4 +1,4 @@
-"""DLT source for the Hungarian Official Gazette / Nemzeti Jogszabálytár (law, HUN).
+"""DLT source for the Hungarian Official Gazette / Nemzeti Jogszabálytár (law, Hungary).
 
 Crawls ``https://njt.hu`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HUNLawSource(NationSource):
+class HungaryLawSource(NationSource):
     """Hungarian Official Gazette / Nemzeti Jogszabálytár DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HUNLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = HUNLawSource()
+_NATION_SOURCE = HungaryLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "HUNLawSource",
+    "HungaryLawSource",
     "statute_book",
     "statute_book_source",
 ]

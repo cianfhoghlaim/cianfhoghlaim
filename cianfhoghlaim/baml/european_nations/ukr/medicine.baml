@@ -1,4 +1,4 @@
-// UKR medicine extraction BAML schema.
+// Ukraine medicine extraction BAML schema.
 
 class UKRMedicineDocument {
   ministry_health_id string @description("The canonical per-medicine document id")

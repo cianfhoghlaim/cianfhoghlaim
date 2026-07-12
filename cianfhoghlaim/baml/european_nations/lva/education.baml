@@ -1,6 +1,6 @@
-// LVA education extraction BAML schema (EU nations full-depth).
+// Latvia education extraction BAML schema (EU nations full-depth).
 
-class LVASubjectCurriculum {
+class LatviaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class LVASubjectCurriculum {
   content_hash string?
 }
 
-function ExtractLVASubjectCurriculum(
+function ExtractLatviaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

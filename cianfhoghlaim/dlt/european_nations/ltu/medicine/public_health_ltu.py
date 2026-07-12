@@ -1,4 +1,4 @@
-"""DLT source for the Ministry of Health of Lithuania (medicine, LTU).
+"""DLT source for the Ministry of Health of Lithuania (medicine, Lithuania).
 
 Crawls ``https://www.sam.lrv.lt`` and emits one row per ``(public_health_ltu_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LTUMedicineSource(NationSource):
+class LithuaniaMedicineSource(NationSource):
     """Ministry of Health of Lithuania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LTUMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = LTUMedicineSource()
+_NATION_SOURCE = LithuaniaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_ltu_source(language: str | None = None):
 
 
 __all__ = [
-    "LTUMedicineSource",
+    "LithuaniaMedicineSource",
     "public_health_ltu",
     "public_health_ltu_source",
 ]

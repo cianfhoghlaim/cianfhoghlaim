@@ -1,6 +1,6 @@
-// ROU medicine extraction BAML schema (EU nations full-depth).
+// Romania medicine extraction BAML schema (EU nations full-depth).
 
-class ROUHealthGuidance {
+class RomaniaHealthGuidance {
   agency string @description("The publishing agency (e.g. NIPH, EODY, NIJZ)")
   advisory_id string @description("The canonical advisory id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class ROUHealthGuidance {
   content_hash string?
 }
 
-function ExtractROUHealthGuidance(
+function ExtractRomaniaHealthGuidance(
   nation: string,
   language: string,
   text: string

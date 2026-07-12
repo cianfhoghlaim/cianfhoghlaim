@@ -1,4 +1,4 @@
-"""Greece (GRC) national pipeline — re-exports the per-domain sub-trees."""
+"""Greece (Greece) national pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.european_nations.grc import (
     education,
     government,

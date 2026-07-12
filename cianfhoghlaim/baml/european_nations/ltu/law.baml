@@ -1,6 +1,6 @@
-// LTU law extraction BAML schema (EU nations full-depth).
+// Lithuania law extraction BAML schema (EU nations full-depth).
 
-class LTUStatute {
+class LithuaniaStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Lithuania)")
@@ -11,7 +11,7 @@ class LTUStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractLTUStatute(
+function ExtractLithuaniaStatute(
   nation: string,
   language: string,
   text: string

@@ -1,4 +1,4 @@
-"""DLT source for the Hungarian Government (government, HUN).
+"""DLT source for the Hungarian Government (government, Hungary).
 
 Crawls ``https://www.kormany.hu`` and emits one row per ``(gov_portal_hun_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HUNGovernmentSource(NationSource):
+class HungaryGovernmentSource(NationSource):
     """Hungarian Government DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HUNGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = HUNGovernmentSource()
+_NATION_SOURCE = HungaryGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_hun_source(language: str | None = None):
 
 
 __all__ = [
-    "HUNGovernmentSource",
+    "HungaryGovernmentSource",
     "gov_portal_hun",
     "gov_portal_hun_source",
 ]
