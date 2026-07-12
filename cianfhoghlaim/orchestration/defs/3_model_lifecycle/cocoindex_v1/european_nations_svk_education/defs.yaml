@@ -1,0 +1,30 @@
+# defs/3_model_lifecycle/cocoindex_v1/european_nations_svk_education/defs.yaml
+#
+# L3 CocoIndex v1 App for the Slovakia education pipeline.
+# Embeds every Slovakia per-subject education row into
+# the shared `oideachais.lc.european_nations.svk.education_chunks` LanceDB table.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_group: european_nations_svk_education
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: SVKEducationEmbedding
+      module: cianfhoghlaim.cocoindex.european_nations_svk_education_embedding
+      source: european_nations
+      lance_table: oideachais.lc.european_nations.svk.education_chunks
+  schedule:
+    cron: "0 5 * * *"
+    timezone: UTC
+  tags:
+    - european_nations
+    - svk
+    - education
+    - cocoindex-v1
+    - embedding
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline
