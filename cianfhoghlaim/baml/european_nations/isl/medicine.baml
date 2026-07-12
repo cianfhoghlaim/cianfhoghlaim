@@ -1,6 +1,6 @@
-// ISL medicine extraction BAML schema.
+// Iceland medicine extraction BAML schema.
 
-class ISLHealthGuidance {
+class IcelandHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class ISLHealthGuidance {
   content_hash string?
 }
 
-function ExtractISLHealthGuidance(
+function ExtractIcelandHealthGuidance(
   nation: string,
   language: string,
   text: string

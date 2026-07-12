@@ -1,6 +1,6 @@
-// SVN education extraction BAML schema (EU nations full-depth).
+// Slovenia education extraction BAML schema (EU nations full-depth).
 
-class SVNSubjectCurriculum {
+class SloveniaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class SVNSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractSVNSubjectCurriculum(
+function ExtractSloveniaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

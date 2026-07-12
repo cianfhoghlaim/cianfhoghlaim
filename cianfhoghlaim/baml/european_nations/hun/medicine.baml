@@ -1,6 +1,6 @@
-// HUN medicine extraction BAML schema (EU nations full-depth).
+// Hungary medicine extraction BAML schema (EU nations full-depth).
 
-class HUNHealthGuidance {
+class HungaryHealthGuidance {
   agency string @description("The publishing agency (e.g. NIPH, EODY, NIJZ)")
   advisory_id string @description("The canonical advisory id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class HUNHealthGuidance {
   content_hash string?
 }
 
-function ExtractHUNHealthGuidance(
+function ExtractHungaryHealthGuidance(
   nation: string,
   language: string,
   text: string

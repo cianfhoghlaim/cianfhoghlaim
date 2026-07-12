@@ -1,6 +1,6 @@
-// BGR medicine extraction BAML schema (EU nations full-depth).
+// Bulgaria medicine extraction BAML schema (EU nations full-depth).
 
-class BGRHealthGuidance {
+class BulgariaHealthGuidance {
   agency string @description("The publishing agency (e.g. NIPH, EODY, NIJZ)")
   advisory_id string @description("The canonical advisory id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class BGRHealthGuidance {
   content_hash string?
 }
 
-function ExtractBGRHealthGuidance(
+function ExtractBulgariaHealthGuidance(
   nation: string,
   language: string,
   text: string

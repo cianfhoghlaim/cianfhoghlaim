@@ -1,4 +1,4 @@
-"""DLT source for the National Public Health Center (Hungary) (medicine, HUN).
+"""DLT source for the National Public Health Center (Hungary) (medicine, Hungary).
 
 Crawls ``https://www.nnk.gov.hu`` and emits one row per ``(public_health_hun_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HUNMedicineSource(NationSource):
+class HungaryMedicineSource(NationSource):
     """National Public Health Center (Hungary) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HUNMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = HUNMedicineSource()
+_NATION_SOURCE = HungaryMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_hun_source(language: str | None = None):
 
 
 __all__ = [
-    "HUNMedicineSource",
+    "HungaryMedicineSource",
     "public_health_hun",
     "public_health_hun_source",
 ]

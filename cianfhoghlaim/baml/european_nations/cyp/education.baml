@@ -1,6 +1,6 @@
-// CYP education extraction BAML schema (EU nations full-depth).
+// Cyprus education extraction BAML schema (EU nations full-depth).
 
-class CYPSubjectCurriculum {
+class CyprusSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class CYPSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractCYPSubjectCurriculum(
+function ExtractCyprusSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

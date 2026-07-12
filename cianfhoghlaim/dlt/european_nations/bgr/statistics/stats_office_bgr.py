@@ -1,4 +1,4 @@
-"""DLT source for the National Statistical Institute of Bulgaria (statistics, BGR).
+"""DLT source for the National Statistical Institute of Bulgaria (statistics, Bulgaria).
 
 Crawls ``https://www.nsi.bg`` and emits one row per ``(stats_office_bgr_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class BGRStatisticsSource(NationSource):
+class BulgariaStatisticsSource(NationSource):
     """National Statistical Institute of Bulgaria DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class BGRStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = BGRStatisticsSource()
+_NATION_SOURCE = BulgariaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_bgr_source(language: str | None = None):
 
 
 __all__ = [
-    "BGRStatisticsSource",
+    "BulgariaStatisticsSource",
     "stats_office_bgr",
     "stats_office_bgr_source",
 ]

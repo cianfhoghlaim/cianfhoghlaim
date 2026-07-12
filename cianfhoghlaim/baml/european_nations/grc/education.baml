@@ -1,6 +1,6 @@
-// GRC education extraction BAML schema (EU nations full-depth).
+// Greece education extraction BAML schema (EU nations full-depth).
 
-class GRCSubjectCurriculum {
+class GreeceSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class GRCSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractGRCSubjectCurriculum(
+function ExtractGreeceSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

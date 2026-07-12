@@ -1,4 +1,4 @@
-"""Romania (ROU) education sub-tree — per-subject + root."""
+"""Romania (Romania) education sub-tree — per-subject + root."""
 from cianfhoghlaim.dlt.european_nations.rou.education import subjects  # noqa: F401
 
 __all__ = ["subjects"]

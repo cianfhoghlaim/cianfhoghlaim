@@ -45,5 +45,23 @@ export { CiSubnationRegion } from "./map/subnation-region";
 export { CiLandmark } from "./map/landmark";
 export { CiSubnationFlag } from "./map/subnation-flag";
 
+// Central portal components (per openspec/changes/2026-07-18-british-isles-portal-activation-v3/)
+// R17 (4-stage pipeline → UI loop) + R19 (central portal entry)
+export {
+  CiStageBreadcrumbs,
+  STAGES,
+  type EducationalStage,
+  type StageDef,
+  type CiStageBreadcrumbsProps,
+} from "./stage-breadcrumbs";
+
+export {
+  CiLCSubjectGrid,
+  LC_SUBJECTS,
+  type LCSubjectSlug,
+  type LCSubjectDef,
+  type CiLCSubjectGridProps,
+} from "./lc-subject-grid";
+
 // Re-export the utility helpers
 export { cn } from "./utils";

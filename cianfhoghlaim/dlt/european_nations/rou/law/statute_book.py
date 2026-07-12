@@ -1,4 +1,4 @@
-"""DLT source for the Romanian Legislative Portal (legislatie.just.ro) (law, ROU).
+"""DLT source for the Romanian Legislative Portal (legislatie.just.ro) (law, Romania).
 
 Crawls ``https://legislatie.just.ro`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ROULawSource(NationSource):
+class RomaniaLawSource(NationSource):
     """Romanian Legislative Portal (legislatie.just.ro) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ROULawSource(NationSource):
         )
 
 
-_NATION_SOURCE = ROULawSource()
+_NATION_SOURCE = RomaniaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "ROULawSource",
+    "RomaniaLawSource",
     "statute_book",
     "statute_book_source",
 ]

@@ -1,6 +1,6 @@
-// CHE medicine extraction BAML schema.
+// Switzerland medicine extraction BAML schema.
 
-class CHEHealthGuidance {
+class SwitzerlandHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class CHEHealthGuidance {
   content_hash string?
 }
 
-function ExtractCHEHealthGuidance(
+function ExtractSwitzerlandHealthGuidance(
   nation: string,
   language: string,
   text: string

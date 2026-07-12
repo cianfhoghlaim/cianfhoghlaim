@@ -1,4 +1,4 @@
-// FRA medicine extraction BAML schema.
+// France medicine extraction BAML schema.
 
 class FRAMedicineDocument {
   has_sante_id string @description("The canonical per-medicine document id")

@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class FRALawSource(NationSource):
+class FranceLawSource(NationSource):
     """Légifrance — French statute book DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class FRALawSource(NationSource):
         )
 
 
-_NATION_SOURCE = FRALawSource()
+_NATION_SOURCE = FranceLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def legifrance_source(language: str | None = None):
 
 
 __all__ = [
-    "FRALawSource",
+    "FranceLawSource",
     "legifrance",
     "legifrance_source",
 ]

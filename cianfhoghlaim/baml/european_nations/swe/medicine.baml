@@ -1,6 +1,6 @@
-// SWE medicine extraction BAML schema.
+// Sweden medicine extraction BAML schema.
 
-class SWEHealthGuidance {
+class SwedenHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class SWEHealthGuidance {
   content_hash string?
 }
 
-function ExtractSWEHealthGuidance(
+function ExtractSwedenHealthGuidance(
   nation: string,
   language: string,
   text: string

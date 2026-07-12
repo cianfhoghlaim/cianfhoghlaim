@@ -1,6 +1,6 @@
-// NOR law extraction BAML schema.
+// Norway law extraction BAML schema.
 
-class NORStatute {
+class NorwayStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (nb,nn,se)")
@@ -12,7 +12,7 @@ class NORStatute {
   content_hash string?
 }
 
-function ExtractNORStatute(
+function ExtractNorwayStatute(
   nation: string,
   language: string,
   text: string

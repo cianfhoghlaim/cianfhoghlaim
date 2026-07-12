@@ -1,4 +1,4 @@
-"""DLT source for the Ministry of Health of the Czech Republic (medicine, CZE).
+"""DLT source for the Ministry of Health of the Czech Republic (medicine, Czechia).
 
 Crawls ``https://www.mzcr.cz`` and emits one row per ``(public_health_cze_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CZEMedicineSource(NationSource):
+class CzechiaMedicineSource(NationSource):
     """Ministry of Health of the Czech Republic DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CZEMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = CZEMedicineSource()
+_NATION_SOURCE = CzechiaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_cze_source(language: str | None = None):
 
 
 __all__ = [
-    "CZEMedicineSource",
+    "CzechiaMedicineSource",
     "public_health_cze",
     "public_health_cze_source",
 ]

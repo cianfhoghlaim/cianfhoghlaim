@@ -1,4 +1,4 @@
-"""Estonia (EST) BAML schemas (EU nations full-depth expansion)."""
+"""Estonia (Estonia) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.est import (
     education,
     law,

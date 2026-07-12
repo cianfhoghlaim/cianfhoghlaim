@@ -1,6 +1,6 @@
-// CZE medicine extraction BAML schema (EU nations full-depth).
+// Czechia medicine extraction BAML schema (EU nations full-depth).
 
-class CZEHealthGuidance {
+class CzechiaHealthGuidance {
   agency string @description("The publishing agency (e.g. NIPH, EODY, NIJZ)")
   advisory_id string @description("The canonical advisory id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class CZEHealthGuidance {
   content_hash string?
 }
 
-function ExtractCZEHealthGuidance(
+function ExtractCzechiaHealthGuidance(
   nation: string,
   language: string,
   text: string

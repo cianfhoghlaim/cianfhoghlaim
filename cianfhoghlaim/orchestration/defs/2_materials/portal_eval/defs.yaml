@@ -1,0 +1,45 @@
+"""
+defs.yaml — Portal study plan eval (R13 + R16).
+
+Dagster asset graph for the central portal study-plan pipeline. Runs
+the BAML extract backfill + a RAGAS eval as a Dagster `asset_check`.
+
+Per openspec/changes/2026-07-18-british-isles-portal-activation-v3/
+R13 (MotherDuck Dive + daily Flight) + R16 (Storybook + Langfuse +
+MLflow + RAGAS).
+
+Layers (per dagster-5-layer-component-architecture):
+
+  1_ingestion/    — no new sources (the leaving-cert pipelines own them)
+  2_materials/    — baml_extract.py + cocoindex_update.py
+  3_model_life/   — (none for the portal — a thin wrapper)
+  4_asset_gen/    — lc_study_plan_dive.py + lc_study_plan_flight.py
+  5_agent_ops/    — (none for now)
+
+This file is a placeholder for the future `5_agent_ops/portal_chat_eval/`
+layer. The asset_check below blocks Phase 5 (`iac:deploy`) if the
+RAGAS scores drop below the 0.85 faithfulness baseline.
+"""
+
+version: 1
+
+flags:
+  pydantic: 2
+
+groups:
+  - group_name: portal_eval
+    assets:
+      - id: lc_study_plan_extracted
+        executable: notebooks.mlflow_register.log_run
+        config:
+          required: true
+          group_name: portal_eval
+          deps: [b.ExtractStudyPlan]
+
+checks:
+  - id: ragas_faithfulness_min_0_85
+    asset: lc_study_plan_extracted
+    executable: scripts.ragas_asset_check
+    config:
+      threshold: 0.85
+      metric: faithfulness

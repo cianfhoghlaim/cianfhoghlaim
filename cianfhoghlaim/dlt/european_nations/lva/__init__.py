@@ -1,4 +1,4 @@
-"""Latvia (LVA) national pipeline — re-exports the per-domain sub-trees."""
+"""Latvia (Latvia) national pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.european_nations.lva import (
     education,
     government,

@@ -1,4 +1,4 @@
-// DEU medicine extraction BAML schema.
+// Germany medicine extraction BAML schema.
 
 class DEUMedicineDocument {
   rki_id string @description("The canonical per-medicine document id")

@@ -1,6 +1,6 @@
-// DNK law extraction BAML schema.
+// Denmark law extraction BAML schema.
 
-class DNKStatute {
+class DenmarkStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (da)")
@@ -12,7 +12,7 @@ class DNKStatute {
   content_hash string?
 }
 
-function ExtractDNKStatute(
+function ExtractDenmarkStatute(
   nation: string,
   language: string,
   text: string

@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Liechtenstein (LIE) education pipeline.
+"""CocoIndex v1 App for the Liechtenstein (Liechtenstein) education pipeline.
 
 Embeds every Liechtenstein per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.lie.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class LIEEducationChunk:
+class LiechtensteinEducationChunk:
     chunk_id: str
     nation: str
     subject: str

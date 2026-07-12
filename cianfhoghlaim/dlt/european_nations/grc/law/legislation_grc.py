@@ -1,4 +1,4 @@
-"""DLT source for the National Printing House of Greece (et.gr) (law, GRC).
+"""DLT source for the National Printing House of Greece (et.gr) (law, Greece).
 
 Crawls ``https://www.et.gr`` and emits one row per ``(legislation_grc_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class GRCLawSource(NationSource):
+class GreeceLawSource(NationSource):
     """National Printing House of Greece (et.gr) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class GRCLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = GRCLawSource()
+_NATION_SOURCE = GreeceLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def legislation_grc_source(language: str | None = None):
 
 
 __all__ = [
-    "GRCLawSource",
+    "GreeceLawSource",
     "legislation_grc",
     "legislation_grc_source",
 ]

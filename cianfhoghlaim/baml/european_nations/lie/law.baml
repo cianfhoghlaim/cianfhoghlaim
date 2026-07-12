@@ -1,6 +1,6 @@
-// LIE law extraction BAML schema.
+// Liechtenstein law extraction BAML schema.
 
-class LIEStatute {
+class LiechtensteinStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (de)")
@@ -12,7 +12,7 @@ class LIEStatute {
   content_hash string?
 }
 
-function ExtractLIEStatute(
+function ExtractLiechtensteinStatute(
   nation: string,
   language: string,
   text: string

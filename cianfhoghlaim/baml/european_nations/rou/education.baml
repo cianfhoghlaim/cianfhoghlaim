@@ -1,6 +1,6 @@
-// ROU education extraction BAML schema (EU nations full-depth).
+// Romania education extraction BAML schema (EU nations full-depth).
 
-class ROUSubjectCurriculum {
+class RomaniaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class ROUSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractROUSubjectCurriculum(
+function ExtractRomaniaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

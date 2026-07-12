@@ -1,4 +1,4 @@
-"""DLT source for the Cyprus Legislation (cyprus.gov.cy) (law, CYP).
+"""DLT source for the Cyprus Legislation (cyprus.gov.cy) (law, Cyprus).
 
 Crawls ``https://www.cyprus.gov.cy`` and emits one row per ``(legislation_cyp_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CYPLawSource(NationSource):
+class CyprusLawSource(NationSource):
     """Cyprus Legislation (cyprus.gov.cy) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CYPLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = CYPLawSource()
+_NATION_SOURCE = CyprusLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def legislation_cyp_source(language: str | None = None):
 
 
 __all__ = [
-    "CYPLawSource",
+    "CyprusLawSource",
     "legislation_cyp",
     "legislation_cyp_source",
 ]

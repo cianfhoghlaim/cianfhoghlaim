@@ -1,6 +1,6 @@
-// BEL education extraction BAML schema.
+// Belgium education extraction BAML schema.
 
-class BELSubjectCurriculum {
+class BelgiumSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (nl,fr,de)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class BELSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractBELSubjectCurriculum(
+function ExtractBelgiumSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

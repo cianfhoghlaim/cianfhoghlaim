@@ -1,4 +1,4 @@
-// UKR law extraction BAML schema.
+// Ukraine law extraction BAML schema.
 
 class UKRLawDocument {
   zakon_rada_id string @description("The canonical per-law document id")

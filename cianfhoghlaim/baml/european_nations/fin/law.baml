@@ -1,6 +1,6 @@
-// FIN law extraction BAML schema.
+// Finland law extraction BAML schema.
 
-class FINStatute {
+class FinlandStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (fi,sv)")
@@ -12,7 +12,7 @@ class FINStatute {
   content_hash string?
 }
 
-function ExtractFINStatute(
+function ExtractFinlandStatute(
   nation: string,
   language: string,
   text: string

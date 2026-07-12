@@ -1,6 +1,6 @@
-// LUX education extraction BAML schema.
+// Luxembourg education extraction BAML schema.
 
-class LUXSubjectCurriculum {
+class LuxembourgSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (lb,fr,de)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class LUXSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractLUXSubjectCurriculum(
+function ExtractLuxembourgSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

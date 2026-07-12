@@ -1,6 +1,6 @@
-// DNK medicine extraction BAML schema.
+// Denmark medicine extraction BAML schema.
 
-class DNKHealthGuidance {
+class DenmarkHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class DNKHealthGuidance {
   content_hash string?
 }
 
-function ExtractDNKHealthGuidance(
+function ExtractDenmarkHealthGuidance(
   nation: string,
   language: string,
   text: string

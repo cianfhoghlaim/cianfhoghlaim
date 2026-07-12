@@ -1,4 +1,4 @@
-"""DLT source for the Ministry of Health of Romania (medicine, ROU).
+"""DLT source for the Ministry of Health of Romania (medicine, Romania).
 
 Crawls ``https://www.ms.ro`` and emits one row per ``(public_health_rou_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ROUMedicineSource(NationSource):
+class RomaniaMedicineSource(NationSource):
     """Ministry of Health of Romania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ROUMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = ROUMedicineSource()
+_NATION_SOURCE = RomaniaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_rou_source(language: str | None = None):
 
 
 __all__ = [
-    "ROUMedicineSource",
+    "RomaniaMedicineSource",
     "public_health_rou",
     "public_health_rou_source",
 ]

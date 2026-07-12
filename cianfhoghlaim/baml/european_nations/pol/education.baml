@@ -1,4 +1,4 @@
-// POL education extraction BAML schema.
+// Poland education extraction BAML schema.
 
 class POLEducationDocument {
   men_id string @description("The canonical per-education document id")

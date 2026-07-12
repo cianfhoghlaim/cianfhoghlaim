@@ -1,4 +1,4 @@
-"""Ebonyi (nga_ebi) state pipeline — re-exports the per-domain sub-trees."""
+"""Ebonyi (Ebonyi State) state pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.commonwealth.nga.states.nga_ebi import education, government, law, medicine, statistics
 
 __all__ = ["education", "government", "law", "medicine", "statistics"]

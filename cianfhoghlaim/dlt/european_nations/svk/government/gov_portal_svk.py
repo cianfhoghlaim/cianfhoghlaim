@@ -1,4 +1,4 @@
-"""DLT source for the Government of the Slovak Republic (government, SVK).
+"""DLT source for the Government of the Slovak Republic (government, Slovakia).
 
 Crawls ``https://www.vlada.gov.sk`` and emits one row per ``(gov_portal_svk_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVKGovernmentSource(NationSource):
+class SlovakiaGovernmentSource(NationSource):
     """Government of the Slovak Republic DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVKGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVKGovernmentSource()
+_NATION_SOURCE = SlovakiaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_svk_source(language: str | None = None):
 
 
 __all__ = [
-    "SVKGovernmentSource",
+    "SlovakiaGovernmentSource",
     "gov_portal_svk",
     "gov_portal_svk_source",
 ]

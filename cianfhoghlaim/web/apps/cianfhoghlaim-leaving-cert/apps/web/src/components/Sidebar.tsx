@@ -8,11 +8,12 @@ import * as React from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 const NAV: Array<{ to: string; label: string; ga: string; icon: string }> = [
+  { to: "/en/portal", label: "Portal (British Isles)", ga: "Tairseach (Breatain Mhór)", icon: "🌍" },
   { to: "/", label: "Curriculum", ga: "Curaclam", icon: "📚" },
   { to: "/en/map", label: "Map", ga: "Léarscáil", icon: "🗺️" },
   { to: "/en/key-competencies", label: "Key Competencies", ga: "Príochomhardaigh", icon: "🎯" },
-  { to: "/ga/leaving-cert/gaeilge", label: "Gaeilge (v1)", ga: "Gaeilge", icon: "🇮🇪" },
-  { to: "/en/leaving-cert/mathematics", label: "Mathematics (v1)", ga: "Mata", icon: "🧮" },
+  { to: "/ga/portal", label: "Gaeilge Portal", ga: "Gaeilge", icon: "🇮🇪" },
+  { to: "/en/subjects/mathematics", label: "Mathematics (v1)", ga: "Mata", icon: "🧮" },
   { to: "/en/assets/mathematics", label: "Assets Gallery", ga: "Sócmhainní", icon: "🎨" },
 ];
 

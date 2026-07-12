@@ -1,6 +1,6 @@
-// LVA medicine extraction BAML schema (EU nations full-depth).
+// Latvia medicine extraction BAML schema (EU nations full-depth).
 
-class LVAHealthGuidance {
+class LatviaHealthGuidance {
   agency string @description("The publishing agency (e.g. NIPH, EODY, NIJZ)")
   advisory_id string @description("The canonical advisory id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class LVAHealthGuidance {
   content_hash string?
 }
 
-function ExtractLVAHealthGuidance(
+function ExtractLatviaHealthGuidance(
   nation: string,
   language: string,
   text: string

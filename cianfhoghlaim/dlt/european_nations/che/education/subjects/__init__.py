@@ -1,4 +1,4 @@
-"""Switzerland (CHE) education subjects — per-subject DLT modules."""
+"""Switzerland (Switzerland) education subjects — per-subject DLT modules."""
 from cianfhoghlaim.dlt.european_nations.che.education.subjects import (
     mathematics, chemistry, biology, physics, language, computing_science,
 )

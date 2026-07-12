@@ -6,7 +6,7 @@ total). Per the
 change.
 
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
-``stedding/ingest_queue/commonwealth/nga/states/nga_edo/education/ministry_of_education/<lang>/``.
+``stedding/ingest_queue/commonwealth/nga/states/Edo State/education/ministry_of_education/<lang>/``.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from cianfhoghlaim.dlt.common.endpoint_recovery import (
 logger = structlog.get_logger(__name__)
 
 
-STATE_CODE = "nga_edo"
+STATE_CODE = "Edo State"
 STATE_NAME = "Edo"
 DOMAIN = "education"
 SLUG = "ministry_of_education"
@@ -52,7 +52,7 @@ DEFAULT_LANGUAGE = "en"
 )
 def nga_edo_ministry_of_education(language=None):
     """Yield state rows from the canonical cache."""
-    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/nga_edo/education/ministry_of_education")
+    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/Edo State/education/ministry_of_education")
     languages = (language,) if language else ("en", "ig")
     for lang in languages:
         lang_dir = cache_dir / lang

@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Belgium (BEL) education pipeline.
+"""CocoIndex v1 App for the Belgium (Belgium) education pipeline.
 
 Embeds every Belgium per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.bel.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class BELEducationChunk:
+class BelgiumEducationChunk:
     chunk_id: str
     nation: str
     subject: str

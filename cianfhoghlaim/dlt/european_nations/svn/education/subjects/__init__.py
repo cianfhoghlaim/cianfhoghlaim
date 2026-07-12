@@ -1,4 +1,4 @@
-"""Slovenia (SVN) per-subject DLT sub-tree."""
+"""Slovenia (Slovenia) per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.svn.education.subjects import (
     mathematics,
     chemistry,

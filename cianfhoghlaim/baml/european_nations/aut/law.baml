@@ -1,6 +1,6 @@
-// AUT law extraction BAML schema.
+// Austria law extraction BAML schema.
 
-class AUTStatute {
+class AustriaStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (de)")
@@ -12,7 +12,7 @@ class AUTStatute {
   content_hash string?
 }
 
-function ExtractAUTStatute(
+function ExtractAustriaStatute(
   nation: string,
   language: string,
   text: string

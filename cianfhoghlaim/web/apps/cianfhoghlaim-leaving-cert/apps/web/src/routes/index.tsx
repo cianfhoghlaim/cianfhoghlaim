@@ -64,18 +64,24 @@ function HomePage() {
         <p className="text-base text-slate-400 max-w-3xl mx-auto mt-3">
           8 NCCA subjects + 5 root-level PDFs + 6 content types + 9 ADK agents. Built on the open-source agentic stack.
         </p>
-        <div className="mt-6 flex items-center justify-center gap-3">
+        <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
           <Link
-            to="/en/self-host"
+            to="/en/portal"
             className="px-5 py-2.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 transition-colors"
           >
-            Self-host in 5 minutes →
+            Open the British Isles Portal →
           </Link>
           <Link
-            to="/en/subjects/mathematics"
+            to="/ga/portal"
             className="px-5 py-2.5 rounded-lg bg-slate-800 text-slate-100 border border-slate-700 hover:border-emerald-700 transition-colors"
           >
-            Explore a subject
+            Tairseach na Breataine Móire (GA)
+          </Link>
+          <Link
+            to="/en/self-host"
+            className="px-5 py-2.5 rounded-lg bg-slate-800 text-slate-100 border border-slate-700 hover:border-emerald-700 transition-colors"
+          >
+            Self-host in 5 minutes →
           </Link>
         </div>
         <p className="text-xs text-slate-500 mt-3 font-mono italic">

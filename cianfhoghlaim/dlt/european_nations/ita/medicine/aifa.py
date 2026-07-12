@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ITAMedicineSource(NationSource):
+class ItalyMedicineSource(NationSource):
     """Agenzia Italiana del Farmaco DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ITAMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = ITAMedicineSource()
+_NATION_SOURCE = ItalyMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def aifa_source(language: str | None = None):
 
 
 __all__ = [
-    "ITAMedicineSource",
+    "ItalyMedicineSource",
     "aifa",
     "aifa_source",
 ]

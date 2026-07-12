@@ -1,4 +1,4 @@
-// ESP law extraction BAML schema.
+// Spain law extraction BAML schema.
 
 class ESPLawDocument {
   boe_id string @description("The canonical per-law document id")

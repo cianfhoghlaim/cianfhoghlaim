@@ -6,7 +6,7 @@ change. Reads from the 3 Gaois DuckLake tables via the local DuckDB
 destination and emits 4 KPI breakdowns:
 
 1. Per-language term coverage (ga vs en vs both)
-2. Per-domain breakdown (LAW, MED, IT, EDU, ENV, FIN, SCI, etc.)
+2. Per-domain breakdown (LAW, MED, IT, EDU, ENV, Finland, SCI, etc.)
 3. Top 50 most-used terms across the 3 sources
 4. A summary stat table
 

@@ -1,6 +1,6 @@
-// PRT education extraction BAML schema (EU nations full-depth).
+// Portugal education extraction BAML schema (EU nations full-depth).
 
-class PRTSubjectCurriculum {
+class PortugalSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class PRTSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractPRTSubjectCurriculum(
+function ExtractPortugalSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

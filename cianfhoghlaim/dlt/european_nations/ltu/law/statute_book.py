@@ -1,4 +1,4 @@
-"""DLT source for the Seimas of the Republic of Lithuania (law, LTU).
+"""DLT source for the Seimas of the Republic of Lithuania (law, Lithuania).
 
 Crawls ``https://www.e-seimas.lrs.lt`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LTULawSource(NationSource):
+class LithuaniaLawSource(NationSource):
     """Seimas of the Republic of Lithuania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LTULawSource(NationSource):
         )
 
 
-_NATION_SOURCE = LTULawSource()
+_NATION_SOURCE = LithuaniaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "LTULawSource",
+    "LithuaniaLawSource",
     "statute_book",
     "statute_book_source",
 ]

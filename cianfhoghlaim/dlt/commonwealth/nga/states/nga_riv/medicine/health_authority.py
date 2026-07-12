@@ -6,7 +6,7 @@ total). Per the
 change.
 
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
-``stedding/ingest_queue/commonwealth/nga/states/nga_riv/medicine/health_authority/<lang>/``.
+``stedding/ingest_queue/commonwealth/nga/states/Rivers State/medicine/health_authority/<lang>/``.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from cianfhoghlaim.dlt.common.endpoint_recovery import (
 logger = structlog.get_logger(__name__)
 
 
-STATE_CODE = "nga_riv"
+STATE_CODE = "Rivers State"
 STATE_NAME = "Rivers"
 DOMAIN = "medicine"
 SLUG = "health_authority"
@@ -52,7 +52,7 @@ DEFAULT_LANGUAGE = "en"
 )
 def nga_riv_health_authority(language=None):
     """Yield state rows from the canonical cache."""
-    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/nga_riv/medicine/health_authority")
+    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/Rivers State/medicine/health_authority")
     languages = (language,) if language else ("en", "pcm")
     for lang in languages:
         lang_dir = cache_dir / lang

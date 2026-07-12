@@ -1,4 +1,4 @@
-"""DLT source for the Government of Bulgaria (government, BGR).
+"""DLT source for the Government of Bulgaria (government, Bulgaria).
 
 Crawls ``https://government.bg`` and emits one row per ``(gov_portal_bgr_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class BGRGovernmentSource(NationSource):
+class BulgariaGovernmentSource(NationSource):
     """Government of Bulgaria DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class BGRGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = BGRGovernmentSource()
+_NATION_SOURCE = BulgariaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_bgr_source(language: str | None = None):
 
 
 __all__ = [
-    "BGRGovernmentSource",
+    "BulgariaGovernmentSource",
     "gov_portal_bgr",
     "gov_portal_bgr_source",
 ]

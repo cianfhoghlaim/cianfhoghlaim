@@ -1,6 +1,6 @@
-// BGR law extraction BAML schema (EU nations full-depth).
+// Bulgaria law extraction BAML schema (EU nations full-depth).
 
-class BGRStatute {
+class BulgariaStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Bulgaria)")
@@ -11,7 +11,7 @@ class BGRStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractBGRStatute(
+function ExtractBulgariaStatute(
   nation: string,
   language: string,
   text: string

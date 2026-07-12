@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class DEUMedicineSource(NationSource):
+class GermanyMedicineSource(NationSource):
     """Robert Koch Institute DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class DEUMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = DEUMedicineSource()
+_NATION_SOURCE = GermanyMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def rki_source(language: str | None = None):
 
 
 __all__ = [
-    "DEUMedicineSource",
+    "GermanyMedicineSource",
     "rki",
     "rki_source",
 ]

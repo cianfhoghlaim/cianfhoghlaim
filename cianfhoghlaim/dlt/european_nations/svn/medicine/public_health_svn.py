@@ -1,4 +1,4 @@
-"""DLT source for the National Institute of Public Health (Slovenia) (medicine, SVN).
+"""DLT source for the National Institute of Public Health (Slovenia) (medicine, Slovenia).
 
 Crawls ``https://www.nijz.si`` and emits one row per ``(public_health_svn_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVNMedicineSource(NationSource):
+class SloveniaMedicineSource(NationSource):
     """National Institute of Public Health (Slovenia) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVNMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVNMedicineSource()
+_NATION_SOURCE = SloveniaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_svn_source(language: str | None = None):
 
 
 __all__ = [
-    "SVNMedicineSource",
+    "SloveniaMedicineSource",
     "public_health_svn",
     "public_health_svn_source",
 ]

@@ -1,4 +1,4 @@
-"""DLT source for the Latvian Statute Book (likumi.lv) (law, LVA).
+"""DLT source for the Latvian Statute Book (likumi.lv) (law, Latvia).
 
 Crawls ``https://likumi.lv`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LVALawSource(NationSource):
+class LatviaLawSource(NationSource):
     """Latvian Statute Book (likumi.lv) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LVALawSource(NationSource):
         )
 
 
-_NATION_SOURCE = LVALawSource()
+_NATION_SOURCE = LatviaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "LVALawSource",
+    "LatviaLawSource",
     "statute_book",
     "statute_book_source",
 ]

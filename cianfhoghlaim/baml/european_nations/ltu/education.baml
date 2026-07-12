@@ -1,6 +1,6 @@
-// LTU education extraction BAML schema (EU nations full-depth).
+// Lithuania education extraction BAML schema (EU nations full-depth).
 
-class LTUSubjectCurriculum {
+class LithuaniaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class LTUSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractLTUSubjectCurriculum(
+function ExtractLithuaniaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

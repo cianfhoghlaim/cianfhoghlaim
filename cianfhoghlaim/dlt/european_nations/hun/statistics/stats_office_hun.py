@@ -1,4 +1,4 @@
-"""DLT source for the Hungarian Central Statistical Office (KSH) (statistics, HUN).
+"""DLT source for the Hungarian Central Statistical Office (KSH) (statistics, Hungary).
 
 Crawls ``https://www.ksh.hu`` and emits one row per ``(stats_office_hun_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HUNStatisticsSource(NationSource):
+class HungaryStatisticsSource(NationSource):
     """Hungarian Central Statistical Office (KSH) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HUNStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = HUNStatisticsSource()
+_NATION_SOURCE = HungaryStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_hun_source(language: str | None = None):
 
 
 __all__ = [
-    "HUNStatisticsSource",
+    "HungaryStatisticsSource",
     "stats_office_hun",
     "stats_office_hun_source",
 ]

@@ -1,4 +1,4 @@
-"""Estonia (EST) per-subject DLT sub-tree."""
+"""Estonia (Estonia) per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.est.education.subjects import (
     mathematics,
     chemistry,

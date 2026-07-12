@@ -1,4 +1,4 @@
-"""DLT source for the National Center of Infectious and Parasitic Diseases (Bulgaria) (medicine, BGR).
+"""DLT source for the National Center of Infectious and Parasitic Diseases (Bulgaria) (medicine, Bulgaria).
 
 Crawls ``https://ncipd.org`` and emits one row per ``(public_health_bgr_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class BGRMedicineSource(NationSource):
+class BulgariaMedicineSource(NationSource):
     """National Center of Infectious and Parasitic Diseases (Bulgaria) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class BGRMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = BGRMedicineSource()
+_NATION_SOURCE = BulgariaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_bgr_source(language: str | None = None):
 
 
 __all__ = [
-    "BGRMedicineSource",
+    "BulgariaMedicineSource",
     "public_health_bgr",
     "public_health_bgr_source",
 ]

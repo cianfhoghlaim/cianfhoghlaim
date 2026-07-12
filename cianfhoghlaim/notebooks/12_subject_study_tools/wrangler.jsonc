@@ -1,0 +1,70 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portal-marimo",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-12",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Per-subject Workers + Container deployment (1 worker per subject).
+  // The wrangler deploy context picks the right entry via the
+  // `SUBJECT` env var exposed to the portal-deploy script.
+  //
+  // Per openspec/changes/2026-07-18-british-isles-portal-activation-v3/
+  // R15. Free tier: 100k req/day per Worker; Container is $5/mo paid tier
+  // so this lives behind the `portal_rollout` feature flag.
+
+  "vars": {
+    "ENVIRONMENT": "production",
+    "PARENT_CHANGE": "2026-07-18-british-isles-portal-activation-v3"
+  },
+
+  // 1 Worker per subject (6 Workers total). The container-binding image
+  // is the same notebook image; only the SUBJECT env var differs.
+  //
+  // Use the Cloudflare dashboard or the Workers CLI to deploy each one
+  // by changing `name` + the SUBJECT var.
+  //
+  // In production at:
+  //   portal-marimo.cianfhoghlaim.ie/mathematics
+  //   portal-marimo.cianfhoghlaim.ie/chemistry
+  //   portal-marimo.cianfhoghlaim.ie/geography
+  //   portal-marimo.cianfhoghlaim.ie/gaeilge
+  //   portal-marimo.cianfhoghlaim.ie/english
+  //   portal-marimo.cianfhoghlaim.ie/computer-science
+
+  "containers": [
+    {
+      "class_name": "PortalMarimoSubjectContainer",
+      "image": "../Dockerfile",
+      "max_instances": 3,
+      "env": {
+        "SUBJECT": "mathematics",
+        "NOTEBOOK_PATH": "notebooks/12_subject_study_tools/mathematics.py"
+      },
+      "constraints": {
+        "tier": "basic"
+      }
+    }
+  ],
+
+  // Durable Object binding for session stickiness
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MARIMO_SESSION",
+        "class_name": "PortalMarimoSession"
+      }
+    ]
+  },
+
+  "routes": [
+    {
+      "pattern": "portal-marimo.cianfhoghlaim.ie/*",
+      "zone_name": "cianfhoghlaim"
+    }
+  ],
+
+  "observability": {
+    "enabled": true
+  }
+}

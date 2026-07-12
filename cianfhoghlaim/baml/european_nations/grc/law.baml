@@ -1,6 +1,6 @@
-// GRC law extraction BAML schema (EU nations full-depth).
+// Greece law extraction BAML schema (EU nations full-depth).
 
-class GRCStatute {
+class GreeceStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Greece)")
@@ -11,7 +11,7 @@ class GRCStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractGRCStatute(
+function ExtractGreeceStatute(
   nation: string,
   language: string,
   text: string
