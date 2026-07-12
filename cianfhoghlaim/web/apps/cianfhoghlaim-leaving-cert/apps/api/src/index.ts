@@ -18,6 +18,7 @@ import { copilotkit } from "./copilotkit/runtime";
 import { subjects } from "./routers/subjects";
 import { contentTypes } from "./routers/content-types";
 import biEpSubjects from "./routers/bi-ep-subjects";
+import { r2Sign } from "./routers/r2-sign";
 import { serve } from "@hono/node-server";
 
 const app = new Hono();
@@ -81,12 +82,17 @@ app.route("/api/subjects", subjects);
 // BIEP v1 6-priority-subjects manifest + per-subject routes (T6)
 app.route("/api/bi-ep-subjects", biEpSubjects);
 
+// R2 signed-URL endpoint (per R14 of the portal-activation change)
+// Hono-issued signed URLs (15-min TTL); no Workers Paid required.
+app.route("/api/r2", r2Sign);
+
 const port = Number(process.env.PORT) || 8787;
 console.log(`cianfhoghlaim API server listening on http://localhost:${port}`);
 console.log(`  Health:          http://localhost:${port}/`);
 console.log(`  ContentTypes:    http://localhost:${port}/api/content-types`);
 console.log(`  Subjects:        http://localhost:${port}/api/subjects`);
 console.log(`  BIEP Subjects:   http://localhost:${port}/api/bi-ep-subjects/manifest`);
+console.log(`  R2 sign:         http://localhost:${port}/api/r2/sign?key=<r2-key>`);
 console.log(`  CopilotKit:      http://localhost:${port}/api/copilotkit`);
 console.log(`  RPC:             http://localhost:${port}/rpc`);
 console.log(`  API docs:        http://localhost:${port}/api-reference`);

@@ -28,6 +28,11 @@ import {
   CiSubnationFlag,
   type EducationalStage,
 } from "@cianfhoghlaim/ui";
+import {
+  CiPdfLibraryPanel,
+  DEFAULT_MATHEMATICS_ASSETS,
+} from "../../components/CiPdfLibraryPanel";
+import { PORTAL_MARIMO_BASE } from "../../lib/portal-marimo";
 
 export const Route = createFileRoute("/en/portal/")({
   component: CentralPortalEn,
@@ -125,6 +130,49 @@ function CentralPortalEn() {
         material="gold-leaf"
       >
         <CiLCSubjectGrid language="en" />
+      </CiTextbookPanel>
+
+      {/* Marimo + PDF library (R14 + R15) */}
+      <CiTextbookPanel
+        title="Phase 2 — Marimo notebooks + R2 PDF library (Mathematics preview)"
+        material="parchment"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Marimo embed */}
+          <section className="rounded-xl border border-slate-700 bg-slate-900 p-4">
+            <header className="mb-3 flex items-center justify-between">
+              <h3 className="font-bold text-slate-100">
+                Marimo study tool — Mathematics
+              </h3>
+              <a
+                href={`${PORTAL_MARIMO_BASE}/mathematics`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-amber-400 hover:text-amber-300"
+              >
+                Open fullscreen ↗
+              </a>
+            </header>
+            <div className="aspect-[4/3] w-full overflow-hidden rounded-lg border border-slate-700 bg-slate-950">
+              <iframe
+                src={`${PORTAL_MARIMO_BASE}/mathematics?embed=true`}
+                title="Marimo Mathematics notebook"
+                className="h-full w-full"
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin allow-popups"
+              />
+            </div>
+            <p className="mt-2 text-[10px] text-slate-500 font-mono">
+              Deployed via Cloudflare Workers + Container at {PORTAL_MARIMO_BASE}/mathematics
+            </p>
+          </section>
+
+          {/* PDF library */}
+          <CiPdfLibraryPanel
+            assets={DEFAULT_MATHEMATICS_ASSETS}
+            language="en"
+          />
+        </div>
       </CiTextbookPanel>
 
       {/* Footer */}
