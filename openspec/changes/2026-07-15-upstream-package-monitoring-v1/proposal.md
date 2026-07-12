@@ -20,7 +20,7 @@ runtime surfaces:
   `cianfhoghlaim/scripts/upstream/` for `motherduck`, `dlthub`,
   `lancedb`, and `cocoindex`.
 - Adds a FastAPI n8n bridge at
-  `cianfhoghlaim/api/routes/upstream_webhook.py`.
+  `cianfhoghlaim/web/hono-api/src/routes/upstream_webhook.py`.
 - Adds a Dagster polling sensor at
   `cianfhoghlaim/orchestration/sensors/upstream_breaking_change_sensor.py`.
 - Adds the Phase 1 completion requirement to the

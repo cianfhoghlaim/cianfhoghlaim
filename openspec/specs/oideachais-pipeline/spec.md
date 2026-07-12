@@ -817,7 +817,7 @@ The canonical surfaces that retain all functionality:
 
 | Pair | Duplicate (removed) | Canonical (kept) | LOC removed |
 |:--|:--|:--|--:|
-| 1 | `cianfhoghlaim/routes/` | `cianfhoghlaim/api/routes/` | 2,836 |
+| 1 | `cianfhoghlaim/routes/` | `cianfhoghlaim/web/hono-api/src/routes/` | 2,836 |
 | 2 | `cianfhoghlaim/sensors/` | `cianfhoghlaim/dagster_defs/sensors/` | 994 |
 | 3 | `cianfhoghlaim/middleware/` | `cianfhoghlaim/api/middleware/` | 1,668 |
 | 4 | `cianfhoghlaim/storage/serial_executor.py` (deprecated) | `cianfhoghlaim/core/storage/serial_executor.py` | 29 |

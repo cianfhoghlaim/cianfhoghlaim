@@ -12,7 +12,7 @@
   - [x] `lancedb_monitor.py`
   - [x] `cocoindex_monitor.py`
 - [x] 4. Add the FastAPI n8n webhook bridge at
-  `cianfhoghlaim/api/routes/upstream_webhook.py`.
+  `cianfhoghlaim/web/hono-api/src/routes/upstream_webhook.py`.
 - [x] 5. Add the Dagster breaking-change sensor at
   `cianfhoghlaim/orchestration/sensors/upstream_breaking_change_sensor.py`.
 - [x] 6. Verify all changed upstream-monitoring Python files AST-parse

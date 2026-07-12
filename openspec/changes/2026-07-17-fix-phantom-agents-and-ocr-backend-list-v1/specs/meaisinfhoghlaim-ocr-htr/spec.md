@@ -9,7 +9,7 @@ preserved unchanged.
 ### Requirement: Canonical 6 OCR backends registered in `CLASSICAL_OCR`
 
 The system SHALL register the canonical 6 OCR backends in
-`cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry:CLASSICAL_OCR`
+`cianfhoghlaim.meaisinfhoghlaim.models.registry:CLASSICAL_OCR`
 (the v4 platform-spec source of truth for classical OCR Docker
 stacks).
 
@@ -43,7 +43,7 @@ canonical 4-key schema (`stack`, `image`, `port`, `notes`).
 
 #### Scenario: CLASSICAL_OCR contains exactly the 6 canonical backends
 
-- **WHEN** `from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import CLASSICAL_OCR`
+- **WHEN** `from cianfhoghlaim.meaisinfhoghlaim.models.registry import CLASSICAL_OCR`
 - **THEN** `len(CLASSICAL_OCR) == 6`
 - **AND** `set(CLASSICAL_OCR.keys()) == {"docling-serve", "paddleocr", "dots-ocr", "unstract", "tesseract", "tesseract-shadow"}`
 

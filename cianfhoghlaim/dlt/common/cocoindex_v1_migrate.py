@@ -65,6 +65,14 @@ _R4_PATTERN = re.compile(r"declare_vector_index")
 # table with an `embedding` column (e.g. GeoParquet-only outputs).
 _R4_EXEMPT_PATTERN = re.compile(r"^\s*#\s*R4-exempt\s*:", re.MULTILINE)
 
+# not-a-flow marker — `# not-a-flow: <reason>` on a standalone line.
+# Respected by the audit tool for files that live under `cocoindex/` but
+# are NOT flows (e.g. Phase 0 primitives that expose `@coco.fn` + `ContextKey`
+# but never write to a LanceDB table; colocated test files like
+# `test_*.py`). The marker exempts the file from ALL 4 rules (R1+R2+R3+R4).
+# Added in the `2026-07-15-pipeline-architecture-clarity-v1` change.
+_NOT_A_FLOW_PATTERN = re.compile(r"^\s*#\s*not-a-flow\s*:", re.MULTILINE)
+
 # The 22 priority flows for v1 conformance (per the openspec change).
 PRIORITY_FLOWS: tuple[str, ...] = (
     "mathematics_embedding.py",
@@ -104,9 +112,17 @@ class FlowAudit:
     r4_uses_vector_index: bool
     r4_exempt: bool = False
     r4_exempt_reason: str = ""
+    not_a_flow: bool = False
+    not_a_flow_reason: str = ""
 
     @property
     def violations(self) -> tuple[str, ...]:
+        if self.not_a_flow:
+            # not-a-flow files bypass ALL 4 rules (Phase 0 primitives,
+            # colocated test files, etc.). They live under `cocoindex/`
+            # for organizational convenience but never declare a
+            # `coco.App` or write to a LanceDB table.
+            return ()
         v = []
         if not self.r1_uses_lifespan:
             v.append("R1: missing shared lifespan (use `from . import coco_lifespan`)")
@@ -125,7 +141,9 @@ class FlowAudit:
         return not self.violations
 
     def render(self) -> str:
-        if self.r4_exempt and not self.r4_uses_vector_index:
+        if self.not_a_flow:
+            status = "PASS (not-a-flow)"
+        elif self.r4_exempt and not self.r4_uses_vector_index:
             status = "PASS (R4-exempt)"
         elif self.passes:
             status = "PASS"
@@ -137,12 +155,22 @@ class FlowAudit:
 def audit_flow(path: Path) -> FlowAudit:
     """Audit a single `.py` flow file."""
     src = path.read_text(encoding="utf-8")
+
+    # not-a-flow marker takes precedence over R4-exempt (a not-a-flow
+    # file never declares R4 anyway). Both bypass the 4-rule audit.
+    not_a_flow_match = _NOT_A_FLOW_PATTERN.search(src)
+    not_a_flow = not_a_flow_match is not None
+    not_a_flow_reason = ""
+    if not_a_flow and not_a_flow_match is not None:
+        not_a_flow_reason = src[not_a_flow_match.end():].split("\n", 1)[0].strip()
+
     r4_exempt_match = _R4_EXEMPT_PATTERN.search(src)
     r4_exempt = r4_exempt_match is not None
     r4_exempt_reason = ""
     if r4_exempt and r4_exempt_match is not None:
         # Capture the reason text after the `# R4-exempt:` marker.
         r4_exempt_reason = src[r4_exempt_match.end():].split("\n", 1)[0].strip()
+
     return FlowAudit(
         path=path,
         r1_uses_lifespan=bool(_R1_PATTERN.search(src)),
@@ -152,6 +180,8 @@ def audit_flow(path: Path) -> FlowAudit:
         r4_uses_vector_index=bool(_R4_PATTERN.search(src)),
         r4_exempt=r4_exempt,
         r4_exempt_reason=r4_exempt_reason,
+        not_a_flow=not_a_flow,
+        not_a_flow_reason=not_a_flow_reason,
     )
 
 

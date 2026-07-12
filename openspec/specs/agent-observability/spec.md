@@ -45,7 +45,7 @@ The system SHALL evaluate RAG pipelines using RAGAS metrics
 
 #### Scenario: RAGAS evaluation
 
-- **GIVEN** a RAG pipeline (e.g. `cianfhoghlaim/api/routes/search.py`)
+- **GIVEN** a RAG pipeline (e.g. `cianfhoghlaim/web/hono-api/src/routes/search.py`)
 - **WHEN** the pipeline produces a result for a query
 - **THEN** the RAGAS evaluator computes the 4 metrics and stores the
   scores in MLflow
