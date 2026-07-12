@@ -20,7 +20,7 @@ fails to import its subject specialist.
 ### Blocker B — OCR backends list mismatch (per the 2nd audit, B5)
 The user-cited canonical 6 OCR backends are
 **{PaddleOCR, Docling, Dots-OCR, Unstract, Tesseract, Tesseract-shadow}**.
-But `cianfhoghlaim/meaisinfhoghlaim/ocr/models/registry.py:CLASSICAL_OCR`
+But `cianfhoghlaim.meaisinfhoghlaim.models.registry.py:CLASSICAL_OCR`
 contained the legacy 6
 **{docling-serve, paddleocr, olmocr, tesseract, pylaia, dots-ocr}** —
 which **includes olmocr + pylaia, EXCLUDES Unstract + Tesseract-shadow**.
@@ -34,7 +34,7 @@ in the canonical `CLASSICAL_OCR` registry.
 ### Blocker C — `select_optimal_for_m4_max()` did not exist (per the 2nd audit, B3 / 1st audit F4)
 The caller-side expectation was `select_optimal_for_m4_max()`
 (canonical M4-Max dispatch helper), but the actual function name in
-`meaisinfhoghlaim/ocr/models/registry.py:808` was
+`meaisinfhoghlaim/models/registry.py:808` was
 `get_default_for_m4_max()`. The caller-vs-actual API mismatch was
 documented in the 1st audit (F4) and never reconciled.
 
@@ -56,7 +56,7 @@ ADK root orchestrator.
 
 ### 2. Replace `CLASSICAL_OCR` with the canonical 6 (1 file)
 
-In `cianfhoghlaim/meaisinfhoghlaim/ocr/models/registry.py`:
+In `cianfhoghlaim.meaisinfhoghlaim.models.registry.py`:
 
 - Remove `olmocr` and `pylaia` (legacy entries).
 - Add `unstract` (Unstract — no-code LLM-powered extraction,
@@ -71,7 +71,7 @@ tesseract-shadow}`.
 
 ### 3. Rename `get_default_for_m4_max` → `select_optimal_for_m4_max` with back-compat alias
 
-In `cianfhoghlaim/meaisinfhoghlaim/ocr/models/registry.py`:
+In `cianfhoghlaim.meaisinfhoghlaim.models.registry.py`:
 
 - Rename the function definition from `get_default_for_m4_max()`
   to `select_optimal_for_m4_max()` (the canonical M4-Max dispatch

@@ -1,18 +1,17 @@
-"""Back-compat re-export shim for the v4 OCR/VLM model registry.
+"""Back-compat re-export shim for the v4 OCR/VLM model registry (nested `ocr.models` package).
 
-The canonical implementation lives at
-`cianfhoghlaim.meaisinfhoghlaim.models.registry` (per the v4 platform
-convention: the outer `models/` package is canonical, not the nested
-`ocr/models/` sub-package).
+The canonical implementation lives at the OUTER
+`cianfhoghlaim.meaisinfhoghlaim.models` package (per the v4 platform
+convention). This nested `ocr.models` package is kept as a back-compat
+shim so legacy code that does
+`from cianfhoghlaim.meaisinfhoghlaim.ocr.models import VISION_MODELS`
+keeps working until v5. A `DeprecationWarning` is emitted on import.
 
-This shim re-exports the same symbols so legacy code that does
-`from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import VISION_MODELS`
-keeps working until v5. A `DeprecationWarning` is emitted on import;
-callers should migrate to:
-
-    from cianfhoghlaim.meaisinfhoghlaim.models.registry import VISION_MODELS
-
-The shim will be removed in v5 of the registry.
+Migration:
+    # before
+    from cianfhoghlaim.meaisinfhoghlaim.ocr.models import VISION_MODELS
+    # after
+    from cianfhoghlaim.meaisinfhoghlaim.models import VISION_MODELS
 """
 
 from __future__ import annotations
@@ -20,17 +19,17 @@ from __future__ import annotations
 import warnings as _warnings
 
 _warnings.warn(
-    "Importing from `cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry` is a "
+    "Importing from `cianfhoghlaim.meaisinfhoghlaim.ocr.models` is a "
     "deprecated v4 back-compat shim. The canonical home is "
-    "`cianfhoghlaim.meaisinfhoghlaim.models.registry` (per the v4 platform "
-    "convention: the outer `models/` package is canonical). This shim will be "
-    "removed in v5.",
+    "`cianfhoghlaim.meaisinfhoghlaim.models` (per the v4 platform "
+    "convention: the outer `models/` package is canonical). This shim "
+    "will be removed in v5.",
     DeprecationWarning,
     stacklevel=2,
 )
 
 # Re-export everything from the canonical v4 home.
-from cianfhoghlaim.meaisinfhoghlaim.models.registry import (  # noqa: E402
+from cianfhoghlaim.meaisinfhoghlaim.models import (  # noqa: E402
     CLASSICAL_OCR,
     MODEL_BACKEND,
     MODEL_CAPABILITY,

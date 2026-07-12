@@ -189,7 +189,7 @@ the BIEP cross-archive edges.
 - [`cianfhoghlaim/cognee_integration/`](../../cianfhoghlaim/cognee_integration/) (the 3 cognify adapters)
 - [`cianfhoghlaim/cognify_rules/`](../../cianfhoghlaim/cognify_rules/) (the cross-archive rules)
 - [`cianfhoghlaim/graph/`](../../cianfhoghlaim/graph/) (FalkorDB + Memgraph clients)
-- [`cianfhoghlaim/api/routes/cross_archive_graph.py`](../../cianfhoghlaim/api/routes/cross_archive_graph.py) (the API route)
+- [`cianfhoghlaim/web/hono-api/src/routes/cross_archive_graph.py`](../../cianfhoghlaim/web/hono-api/src/routes/cross_archive_graph.py) (the API route)
 - [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)
 - [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
 - [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream leabharlann pipeline — the source of truth for the 6 sub-corpora + 225 documents)

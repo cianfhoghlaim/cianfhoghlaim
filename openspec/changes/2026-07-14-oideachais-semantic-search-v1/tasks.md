@@ -13,7 +13,7 @@
       yet exist — to be created in step 2)
 - [x] Confirm `notebooks/12_semantic_search/01_search.py` is NEW
       (does not yet exist — to be created in step 4)
-- [x] Confirm `api/routes/search.py` is NEW (does not yet exist —
+- [x] Confirm `cianfhoghlaim/web/hono-api/src/routes/search.py` is NEW (does not yet exist —
       to be created in step 7)
 
 ## 2. Verify the existing BGE-M3 + BGE-large-en-v1.5 embeddings (1 hr)
@@ -71,7 +71,7 @@
 
 - [x] Add `"12_semantic_search"` to the `GROUPS` tuple
 
-## 7. Create `api/routes/search.py` (30 min)
+## 7. Create `cianfhoghlaim/web/hono-api/src/routes/search.py` (30 min)
 
 - [x] FastAPI route `/search/semantic` (GET) — calls into the
       canonical `semantic_search(...)` rules

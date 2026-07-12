@@ -185,6 +185,9 @@ baml_client_tests/
 .env.lock
 .env.lock.pid
 
+# Operator audit handoff file (auto-regenerated; never committed)
+.audit.local.md
+
 # Ansible vault passwords
 .vaultpass
 **/ansible/.env
@@ -330,3 +333,6 @@ leabharlann/
 # (No bonnie files should ever be tracked by cianfhoghlaim again.)
 # Drop this rule only if you intend to mass-import bonneagar contents.
 /bonneagar/
+bonneagar/cianfhoghlaim
+bonneagar/bonneagar
+cianfhoghlaim/data

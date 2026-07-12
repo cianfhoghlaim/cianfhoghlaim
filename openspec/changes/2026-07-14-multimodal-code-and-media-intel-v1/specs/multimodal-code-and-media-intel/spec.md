@@ -1,23 +1,13 @@
-# `multimodal-code-and-media-intel` Specification
+# `multimodal-code-and-media-intel` capability spec (NEW)
 
-## Purpose
+The `multimodal-code-and-media-intel` capability fuses 5 new CocoIndex v1
+Apps — YouTube tutorial ingest, package changelog scraping, git history
+alongside repo code, RepoSwarm-style `.arch.md` generation, and local
+media (game captures + downloaded audio) — behind one multi-hop-searchable
+knowledge graph that closes the 4 surviving gaps from the archived
+`códeolas` project (last commit 2026-06-26).
 
-`multimodal-code-and-media-intel` is a capability of the Cianfhoghlaim
-platform. It fuses 5 new CocoIndex v1 Apps — YouTube tutorial ingest,
-package changelog scraping, git history alongside repo code,
-RepoSwarm-style `.arch.md` generation, and local media (game captures +
-downloaded audio) — behind one multi-hop-searchable knowledge graph that
-closes the 4 surviving gaps from the archived `códeolas` project (last
-commit 2026-06-26).
-
-The corresponding source code lives at `cianfhoghlaim/cocoindex/` (5
-new v1 Apps + 4 Phase 0 primitives) + `cianfhoghlaim/dlt/api_sources/`
-(4 new DLT sources) + `cianfhoghlaim/baml_src/processing/_shared/` (4
-new BAML files) + `cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/`
-(5 new L3 Component defs) + the `cocoindex-code` MCP server (3 new
-tools).
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: The system SHALL provide 5 v1 CocoIndex Apps that fan into a shared multi-hop search layer
 
@@ -90,6 +80,12 @@ All model calls SHALL route through the
 or a new ML client. No App SHALL call a cloud API directly (the v4
 spec explicitly dropped `OPENAI` and `ANTHROPIC` from the canonical
 backend list).
+`ocianfhoghlaim.meaisinfhoghlaim.models.registry.VISION_MODELS`
+24-entry registry (Unsloth-first fallback chain: `unsloth_id` → `mlx_id`
+→ `upstream_id`). No App SHALL introduce a new HuggingFace dependency
+or a new ML client. No App SHALL call a cloud API directly (the v4
+spec explicitly dropped `OPENAI` and `ANTHROPIC` from the canonical
+backend list).
 
 #### Scenario: An M4 Max 48 GB deployment uses Unsloth GGUF
 
@@ -141,25 +137,3 @@ cognified on the same daily schedule as the existing 7 cognify clusters
   knowledge graph alongside the existing `oideachais_cognify_*` clusters
 - **AND** a Graphiti episode is appended with the `source_kind =
   "youtube_kg"` marker for bi-temporal tracking
-
-## Cross-references
-
-- `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` — the R1+R2+R3+R4
-  conformance contract that all 5 new Apps satisfy
-- `openspec/specs/celtic-asset-generation/spec.md` — the 5-stage Celtic-asset
-  pipeline that Stream 5 (`media_local_embedding.py`) + Stream 1
-  (`youtube_kg_embedding.py`) feed into as asset-generation consumers
-- `openspec/specs/indexing-and-cognition/spec.md` — the existing
-  `cocoindex-code` MCP server (the surface for the 3 new MCP tools)
-- `openspec/specs/oideachais-pipeline/spec.md` — DLT orchestration registration
-- `openspec/specs/oideachais-baml-schemas/spec.md` — BAML schema registration
-- `openspec/specs/oideachais-cognify-knowledge-graph/spec.md` — cognify
-  dataset pattern (the existing `oideachais_cognify_*` siblings)
-- `openspec/specs/retro-game-design-catalogue/spec.md` — the canonical
-  game-capture spec; Stream 5 is the player-content sibling
-- `.agents/skills/cocoindex/SKILL.md` — R1+R2+R3+R4 + `_lifespan.py`
-- `.agents/skills/baml/references/multimodal-vision.md` — BAML multimodal
-  primitives
-- `stedding/dev/cianfhoghlaim copy/sruth/códeolas/` — the archived source of
-  truth for Phase 0 primitives (`multihop_search`, `reranker`,
-  `RepoTypeDetector`, `ArchDocCache`)
