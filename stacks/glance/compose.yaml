@@ -1,0 +1,38 @@
+name: glance
+
+services:
+  # ---------------------------------------------------------------------------
+  # glance — single-pane dashboard aggregator (RSS, weather, Docker, etc.)
+  # ---------------------------------------------------------------------------
+  # Lightweight home-page-style dashboard that surfaces the most important
+  # status from across all 50+ stacks. Mounts the Docker socket for
+  # container-level health, talks to Prometheus for metrics.
+  # ---------------------------------------------------------------------------
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - GLANCE_CONFIG=/app/config/glance.yml
+    volumes:
+      - ./config/glance.yml:/app/config/glance.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+    networks:
+      - cianfhoghlaim
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

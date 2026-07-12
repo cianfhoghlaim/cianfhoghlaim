@@ -1,0 +1,52 @@
+# dlthub blog monitor — Firecrawl v2 monitor config.
+#
+# Phase 1 of the `upstream-package-monitoring` openspec change.
+# Mirrors `motherduck_blog.yml` (the dltHub Pro launch on 2026-04-14
+# added 9,700+ source contexts, so this monitor is critical for
+# detecting new source-context additions before they're announced
+# elsewhere).
+#
+# Goal: focus on product/architecture changes (source-context
+# additions, ADE-Bench results, Cortex Code integration updates,
+# dlt+ Projects improvements, rest_api connector changes) — ignore
+# generic marketing content.
+
+name: "dlthub_blog"
+schedule:
+  text: "every 30 minutes"
+  timezone: "UTC"
+
+targets:
+  - type: scrape
+    urls:
+      - "https://dlthub.com/blog"
+      - "https://dlthub.com/docs"
+      - "https://dlthub.com/docs/changelog"
+      - "https://dlthub.com/blog/category/engineering"
+
+goal: |
+  Alert on dltHub product, architecture, or capability changes — new
+  verified source contexts, ADE-Bench benchmark results, Cortex Code
+  AI-assistant updates, dlt+ Projects or Cache improvements, rest_api
+  or filesystem connector changes, and breaking changes to the dlt
+  Python API. Ignore customer testimonials, generic event
+  announcements, marketing-copy-only edits, and partner-relationship
+  announcements that do not change the dlt product surface.
+
+judgeEnabled: true
+notification:
+  webhook:
+    url: "https://n8n.cianfhoghlaim.ie/webhook/upstream-blog"
+    headers:
+      X-Package: "dlthub"
+      X-Upstream-Monitor: "true"
+    payload:
+      package: "dlthub"
+      blog_post_type: "release_notes"
+
+retentionDays: 90
+
+tags:
+  - "kcg-upstream-monitor"
+  - "package:dlthub"
+  - "kcg-priority-skill:dlt"

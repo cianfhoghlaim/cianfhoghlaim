@@ -1,0 +1,50 @@
+# =============================================================================
+# TEAM BACKUP — DAILY pg_dump -> Garage S3
+# =============================================================================
+# Dumps each Postgres database to a Garage S3 bucket (`team-backups`).
+# Bucket is auto-created on first run if missing.
+# Retention: 14 days, managed by S3 lifecycle (configured separately).
+# =============================================================================
+
+[[action]]
+name = "create-bucket"
+type = "command"
+description = "Create the team-backups bucket in Garage (idempotent)"
+command = """
+garage bucket info team-backups 2>/dev/null || \
+  garage bucket create team-backups
+"""
+timeout = 30
+
+[[action]]
+name = "backup-n8n"
+type = "command"
+description = "pg_dump n8n DB to Garage S3"
+command = """
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+docker exec n8n-postgres pg_dump -U n8n -d n8n | \
+  aws --endpoint-url https://garage.cianfhoghlaim.ie s3 cp - "s3://team-backups/n8n/n8n-${TS}.sql.gz" --content-type application/gzip
+"""
+timeout = 120
+
+[[action]]
+name = "backup-vikunja"
+type = "command"
+description = "pg_dump vikunja DB to Garage S3"
+command = """
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+docker exec vikunja-db pg_dump -U vikunja -d vikunja | \
+  aws --endpoint-url https://garage.cianfhoghlaim.ie s3 cp - "s3://team-backups/vikunja/vikunja-${TS}.sql.gz" --content-type application/gzip
+"""
+timeout = 120
+
+[[action]]
+name = "backup-calcom"
+type = "command"
+description = "pg_dump calcom DB to Garage S3"
+command = """
+TS=$(date -u +%Y%m%dT%H%M%SZ)
+docker exec calcom-db pg_dump -U calcom -d calcom | \
+  aws --endpoint-url https://garage.cianfhoghlaim.ie s3 cp - "s3://team-backups/calcom/calcom-${TS}.sql.gz" --content-type application/gzip
+"""
+timeout = 180

@@ -1,0 +1,81 @@
+# =============================================================================
+# ARM1-OCI RESOURCE SYNC
+# =============================================================================
+# GitOps configuration for ALL control-plane resources on the
+# arm1-oci host (Oracle Cloud Free Tier, Frankfurt — the mesh
+# backbone). Komodo auto-pulls this file every 60s and reconciles
+# Komodo state with the TOMLs declared in resource_path.
+#
+# Scope (control plane):
+#   - pangolin (mesh)
+#   - komodo (orchestration core + periphery)
+#   - infisical (secrets vault)
+#   - backrest (restic backup server)
+#   - hermes + openclaw + openchamber (3 agent surfaces — see
+#     `komodo/stacks/hermes-arm1-oci.toml` + the existing
+#     `openchamber-arm1-oci.toml` + `openclaw-arm1-oci.toml`)
+#   - observability / logfire / dozzle / beszel
+#
+# Per the bonneagar-v5 drift refactor:
+#   - 60s interval (sub-minute convergence)
+#   - on_pull=true (Komodo proactively pulls on the schedule)
+#   - delete=false (safety — a typo in TOML never deletes live resources)
+#   - managed=true (Komodo owns the resource state, not the IaC scripts)
+#
+# server_id convention:
+#   This sync pulls every procedure under `komodo/procedures/*.toml`,
+#   but Komodo Core filters the per-host UI + REST API to procedures
+#   whose `server_id` field matches that host. Procedures without
+#   a `server_id` field appear in BOTH hosts (back-compat). The
+#   convention is documented in `komodo/procedures/server_id_legend.md`.
+# =============================================================================
+
+[[resource_sync]]
+name = "arm1-oci"
+description = "Control-plane stack + procedure declarations for arm1-oci (mesh backbone)"
+
+[resource_sync.config]
+# Repository configuration - Forgejo at git.cianfhoghlaim.ie
+# Same repo + branch as the storage-infrastructure sync (GitOps is mono-repo).
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+# Resource paths under <repo-root>/<branch>/ :
+#   - stacks:        per-stack registrations (each TOML = one [[stack]])
+#   - procedures:    per-procedure TOMLs (deploy / backup / health)
+#   - builds:        per-build registrations (code-owned Docker images)
+#   - servers:       Periphery server registrations
+resource_path = [
+  "bonneagar/komodo/stacks/arm1-oci-control-plane.toml",
+  "bonneagar/komodo/stacks/arm1-oci-devtools.toml",
+  "bonneagar/komodo/stacks/infisical-arm1-oci.toml",
+  "bonneagar/komodo/stacks/openclaw-arm1-oci.toml",
+  "bonneagar/komodo/stacks/openchamber-arm1-oci.toml",
+  "bonneagar/komodo/stacks/hermes-arm1-oci.toml",
+  "bonneagar/komodo/builds/openchamber-arm1-oci.toml",
+  "bonneagar/komodo/builds/openclaw-arm1-oci.toml",
+  "bonneagar/komodo/builds/hermes-arm1-oci.toml",
+  "bonneagar/komodo/procedures/*.toml",
+  "bonneagar/komodo/servers/*.toml",
+]
+
+# 60s poll interval — Komodo pulls the repo on this cadence.
+# Tight enough to surface drift in <1 min; loose enough that a transient
+# GitHub / Forgejo outage doesn't hammer the upstream.
+interval = "60s"
+
+# Managed mode - Komodo owns these resources.
+# Edit the TOML → commit → resource-sync auto-applies.
+managed = true
+
+# Safety: don't delete resources that aren't in this list of files.
+# A typo in resource_path never wipes live infrastructure.
+delete = false
+
+# Git provider for webhook + clone semantics.
+git_provider = "git.cianfhoghlaim.ie"
+
+# Sync triggers
+on_sync = true
+on_pull = true

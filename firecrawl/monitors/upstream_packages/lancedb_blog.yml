@@ -1,0 +1,50 @@
+# LanceDB blog monitor — Firecrawl v2 monitor config.
+#
+# Phase 1 of the `upstream-package-monitoring` openspec change.
+# Watches for Lance Format / Lance Blob / multimodal / Lance Namespace
+# releases that directly affect our `oideachais/cocoindex_flows/`
+# 14 v1 Apps (every LanceDB App depends on the format surface).
+#
+# Goal: Lance Format v2.x releases, Lance Blob V2 storage-mode
+# additions, multimodal / image embedding additions, Lance Namespace
+# feature releases, and breaking changes to the LanceDB Python API.
+
+name: "lancedb_blog"
+schedule:
+  text: "every 30 minutes"
+  timezone: "UTC"
+
+targets:
+  - type: scrape
+    urls:
+      - "https://www.lancedb.com/blog/"
+      - "https://lancedb.github.io/lance/"
+      - "https://www.lancedb.com/changelog/"
+      - "https://github.com/lancedb/lancedb/releases"
+
+goal: |
+  Alert on LanceDB / Lance Format / Lance Blob / Lance Namespace
+  product, architecture, or capability changes — Lance Format v2.x
+  releases, Lance Blob V2 storage-mode additions, multimodal or image
+  embedding additions, Lance Namespace feature releases, HNSW or IVF
+  index performance changes, and breaking changes to the LanceDB
+  Python API. Ignore generic customer stories, partner-relationship
+  announcements, and marketing-copy-only edits.
+
+judgeEnabled: true
+notification:
+  webhook:
+    url: "https://n8n.cianfhoghlaim.ie/webhook/upstream-blog"
+    headers:
+      X-Package: "lancedb"
+      X-Upstream-Monitor: "true"
+    payload:
+      package: "lancedb"
+      blog_post_type: "release_notes"
+
+retentionDays: 90
+
+tags:
+  - "kcg-upstream-monitor"
+  - "package:lancedb"
+  - "kcg-priority-skill:lancedb"

@@ -1,0 +1,33 @@
+# =============================================================================
+# LOCKET-DEPLOY PROCEDURE
+# =============================================================================
+# Cross-cutting prerequisite: verify the locket binary is present, the
+# infisical_secret file is mounted, and secrets are being resolved.
+# Locket is the sidecar pattern used by every agent surface stack.
+#
+# Usage:
+#   km run procedure locket-deploy
+# =============================================================================
+
+[[procedure.config]]
+name = "locket-deploy"
+description = "Cross-cutting prerequisite: verify locket binary + infisical_secret mount + secrets are resolved"
+server_id = "arm1-oci"
+
+[[procedure.config.stages]]
+name = "locket-binary"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "ls -la /usr/local/bin/locket 2>&1 | head -3", timeout_s = 10, name = "locket-binary-present", description = "Verify the locket binary is installed at /usr/local/bin/locket" } }
+
+[[procedure.config.stages]]
+name = "locket-image-pullable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker manifest inspect ghcr.io/bpbradley/locket:infisical 2>&1 | head -3", timeout_s = 30, name = "locket-image-pullable", description = "Verify the locket image is pullable from GHCR" } }
+
+[[procedure.config.stages]]
+name = "secret-mount-template"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "ls /etc/komodo/secrets/infisical_secret 2>&1 | head -3", timeout_s = 10, name = "infisical-secret-mounted", description = "Verify the infisical_secret file is mounted on arm1-oci" } }

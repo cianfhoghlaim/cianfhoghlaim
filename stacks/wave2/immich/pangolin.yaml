@@ -1,0 +1,12 @@
+# Immich — Pangolin private-resource route
+# Routes immich.cianfhoghlaim.ie → immich-server container at port 2283.
+# TinyAuth Member role required.
+pangolin:
+  private-resources:
+    immich:
+      name: immich
+      mode: http
+      full-domain: immich.cianfhoghlaim.ie
+      destination-port: 2283
+      protocol: http
+      roles[0]: secure-headers@file

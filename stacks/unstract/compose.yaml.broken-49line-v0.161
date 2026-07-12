@@ -1,0 +1,49 @@
+name: unstract
+services:
+  unstract:
+    image: unstract/unstract:latest
+    container_name: unstract
+    restart: unless-stopped
+    ports: ["8002:8002"]
+    environment:
+      - UNSTRACT_API_KEY=${UNSTRACT_API_KEY:-not-needed}
+      - UNSTRACT_DB_HOST=unstract-pg
+      - UNSTRACT_DB_PORT=5432
+      - UNSTRACT_DB_USER=${UNSTRACT_DB_USER:-unstract}
+      - UNSTRACT_DB_PASSWORD=${UNSTRACT_DB_PASSWORD}
+      - UNSTRACT_DB_NAME=${UNSTRACT_DB_NAME:-unstract}
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+    volumes:
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+      - unstract_data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8002/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits: {memory: 16G, cpus: '8'}
+    networks: [cianfhoghlaim, lakehouse]
+  unstract-pg:
+    image: postgres:16
+    container_name: unstract-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${UNSTRACT_DB_NAME:-unstract}
+      POSTGRES_USER: ${UNSTRACT_DB_USER:-unstract}
+      POSTGRES_PASSWORD: ${UNSTRACT_DB_PASSWORD}
+    volumes:
+      - unstract_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${UNSTRACT_DB_NAME:-unstract} -U ${UNSTRACT_DB_USER:-unstract}"]
+      interval: 10s; timeout: 5s; retries: 5
+    networks: [cianfhoghlaim]
+volumes:
+  unstract_data: {driver: local}
+  unstract_pg_data: {driver: local}
+networks:
+  cianfhoghlaim: {driver: bridge}
+  lakehouse: {name: lakehouse_lakehouse, external: true}

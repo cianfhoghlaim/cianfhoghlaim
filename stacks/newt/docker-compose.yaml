@@ -1,0 +1,162 @@
+# =============================================================================
+# BUNCHLOCH - Site Infrastructure (newt + locket + komodo-periphery + beszel)
+# =============================================================================
+# Bridges this MacBook into the Pangolin mesh on arm1-oci, so services
+# running on arm1-oci (hermes + openclaw + openchamber) are reachable
+# from a browser on this Mac via `https://*.cianfhoghlaim.ie` and
+# so the Mac can reach Pangolin-routed services (e.g.
+# `infisical.cianfhoghlaim.ie`) without an SSH tunnel.
+#
+# Originally deployed manually via `docker compose -f .local/newt/docker-compose.yaml up -d`
+# Now managed by Komodo as the `newt-bunchloch` stack (labels:
+# `komodo.skip=true` so Komodo doesn't try to manage the newt container
+# itself — it's a pre-existing operator-laptop service).
+#
+# KCG STACK-DOCTOR EXCEPTION — control-plane allowlist (per
+# 2026-06-28-pangolin-newt-infisical-upgrade):
+# The Newt image below is intentionally unpinned (`:latest`).
+# Fossorial's `:latest` tag points at signed stable releases. The
+# `fosrl/newt` is on the documented control-plane allowlist. `bun run
+# stack-doctor` WARNS on this but does NOT FAIL.
+# =============================================================================
+
+name: bunchloch-site
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets Management Sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: bunchloch-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    secrets:
+      - infisical_secret
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=c56cbe28-88a4-4793-95a1-835d5164d8ad"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-environment=dev"
+      - "--infisical-url=http://host.docker.internal:8081"
+      - "--infisical-default-project-id=d18560c0-75d5-436f-a411-0bb758567196"
+      - "--mode=watch"
+      - "--map=/templates:/run/secrets/locket"
+    volumes:
+      - ./secrets/templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+    networks:
+      - infrastructure
+      - pangolin
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # ---------------------------------------------------------------------------
+  # NEWT - Pangolin Tunnel Agent
+  # ---------------------------------------------------------------------------
+  # Pinned to v1.14.0 + SHA digest (supply-chain integrity). The IMAGE file
+  # at this directory is the canonical source of truth — bump both together.
+  # See stacks/newt/IMAGE for the version + SHA.
+  newt:
+    image: ghcr.io/fosrl/newt@sha256:60c78391e3b5cb8a260490fb26b8b7329ed5448077629da89a564af80d3a9fad    # NEWT_VERSION=1.14.0
+    container_name: bunchloch-newt
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      PANGOLIN_ENDPOINT: https://pangolin.cianfhoghlaim.ie
+      LOG_LEVEL: INFO
+      DOCKER_SOCKET: /var/run/docker.sock
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export NEWT_ID=$$(cat /run/secrets/locket/newt_id | tr -d '\n' | tr -d '\r')
+        export NEWT_SECRET=$$(cat /run/secrets/locket/newt_secret | tr -d '\n' | tr -d '\r')
+        exec /entrypoint.sh newt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - secrets-store:/run/secrets/locket:ro
+    networks:
+      - pangolin
+    labels:
+      - "komodo.skip=true"
+
+  # ---------------------------------------------------------------------------
+  # PERIPHERY - Komodo Agent
+  # ---------------------------------------------------------------------------
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:2
+    container_name: bunchloch-periphery
+    init: true
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      PERIPHERY_CORE_ADDRESS: wss://komodo.cianfhoghlaim.ie
+      PERIPHERY_CONNECT_AS: bunchloch
+      PERIPHERY_ROOT_DIRECTORY: /etc/komodo
+      PERIPHERY_DISABLE_TERMINALS: "false"
+      PERIPHERY_DISABLE_CONTAINER_EXEC: "false"
+      PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export PERIPHERY_PASSKEYS=$$(cat /run/secrets/locket/onboarding_key | tr -d '\n' | tr -d '\r')
+        exec entrypoint.sh periphery
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - /Users/cianmacandeisigh/.local/komodo-periphery:/etc/komodo
+      - secrets-store:/run/secrets/locket:ro
+    networks:
+      - pangolin
+    labels:
+      - "komodo.skip=true"
+
+  # ---------------------------------------------------------------------------
+  # BESZEL AGENT - Monitoring
+  # ---------------------------------------------------------------------------
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: bunchloch-beszel-agent
+    restart: unless-stopped
+    environment:
+      KEY:
+      PORT: "45876"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    network_mode: host
+    labels:
+      - "komodo.skip=true"
+
+# =============================================================================
+# SECRETS
+# =============================================================================
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-./secrets/infisical_secret}
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  secrets-store:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  infrastructure:
+    driver: bridge
+  pangolin:
+    driver: bridge

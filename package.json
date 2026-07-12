@@ -3,19 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Cianfhoghlaim — Celtic language AI learning platform. Polyglot monorepo orchestrator (bun + uv + turbo).",
+  "description": "Cianfhoghlaim — Celtic language AI learning platform. Polyglot monorepo orchestrator (bun + uv + turbo). Now includes the bonneagar v5 IaC (88 Docker Compose stacks + Komodo resource-syncs + Pangolin blueprint imports + Infisical/Locket/Pangolin/Traefik orchestration) at the repo root post v7-flatten.",
   "packageManager": "bun@1.3.0",
   "engines": {
     "bun": ">=1.3.0",
     "node": ">=20"
   },
   "workspaces": [
-    "cianfhoghlaim/web/apps/oideachais-web",
-    "cianfhoghlaim/web/apps/tuatha-ui",
-    "cianfhoghlaim/web/apps/croilar-web",
-    "cianfhoghlaim/web/apps/croilar-portal",
-    "cianfhoghlaim/web/hono-api",
-    "cianfhoghlaim/web/packages/*"
+    "web/apps/*",
+    "web/packages/*",
+    "web/hono-api"
   ],
   "scripts": {
     "postinstall": "turbo run postinstall --filter=./scripts/* || true",
@@ -38,35 +35,49 @@
     "secrets:init": "bun run scripts/init-vault.ts",
     "secrets:sync": "bun run scripts/init-vault.ts",
 
-    "dagster:oideachais": "uv run dagster dev -m cianfhoghlaim.assets.definitions",
-    "dagster:tuatha": "uv run dagster dev -m cianfhoghlaim.assets.definitions",
+    "dagster:oideachais": "uv run dagster dev -m assets.definitions",
+    "dagster:tuatha": "uv run dagster dev -m assets.definitions",
 
     "komodo:sync": "mise run komodo:sync",
     "pangolin:check": "mise run pangolin:check",
     "locket:exec": "mise run locket:exec",
 
-    "iac:bootstrap": "bun run --cwd bonneagar iac:bootstrap",
-    "iac:plan": "bun run --cwd bonneagar iac:plan",
-    "iac:deploy": "bun run --cwd bonneagar iac:deploy",
-    "iac:health": "bun run --cwd bonneagar iac:health",
-    "iac:teardown": "bun run --cwd bonneagar iac:teardown",
+    "iac": "bun run iac/cli.ts",
+    "iac:plan": "bun run iac/cli.ts plan",
+    "iac:deploy": "bun run iac/cli.ts deploy",
+    "iac:bootstrap": "bun run iac/cli.ts bootstrap",
+    "iac:teardown": "bun run iac/cli.ts teardown --force",
+    "iac:health": "bun run iac/cli.ts health",
+    "iac:sync:secrets": "bun run iac/cli.ts sync:secrets",
+    "iac:sync:resources": "bun run iac/cli.ts sync:resources",
+    "iac:sync:sites": "bun run iac/cli.ts sync:sites",
+    "iac:sync:procedures": "bun run iac/cli.ts sync:procedures",
+    "iac:sync:resource-syncs": "bun run iac/cli.ts sync:resource-syncs",
+    "iac:sync:monitors": "bun run iac/cli.ts sync:monitors",
+    "iac:sync:alerts": "bun run iac/cli.ts sync:alerts",
+    "iac:sync:variables": "bun run iac/cli.ts sync:variables",
+    "iac:sync:schedules": "bun run iac/cli.ts sync:schedules",
+    "iac:sync:action-recipients": "bun run iac/cli.ts sync:action-recipients",
+    "iac:sync:olm": "bun run iac/cli.ts sync:olm",
+    "iac:rotate-auth": "bun run iac/cli.ts rotate-auth",
+    "iac:bootstrap-pocketid-admin": "bun run iac/cli.ts bootstrap-pocketid-admin",
 
     "preflight:arm-oci": "bun run scripts/preflight-arm-oci.ts",
     "preflight:arm-oci:strict": "bun run scripts/preflight-arm-oci.ts --strict",
     "preflight:arm-oci:report": "bun run scripts/preflight-arm-oci.ts --strict --emit-md",
 
     "ccc:init": "ccc init",
-    "ccc:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
+    "ccc:index": "uv run cocoindex update core.cocoindex.codebase_indexing:CodebaseIndex",
     "ccc:search": "bun run scripts/_ccc-deprecation-banner.ts && ccc search",
-    "ccc:v1:index": "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:CodebaseIndex",
+    "ccc:v1:index": "uv run cocoindex update core.cocoindex.codebase_indexing:CodebaseIndex",
     "ccc:v1:search": "uv run python scripts/ccc_v1_search.py",
-    "docs:consolidate": "uv run cocoindex update cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
-    "docs:consolidate:live": "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
+    "docs:consolidate": "uv run cocoindex update core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
+    "docs:consolidate:live": "uv run cocoindex update -L core.cocoindex.docs_skills_consolidation:DocsSkillsConsolidation",
 
-    "upstream:blog": "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor",
-    "upstream:blog:live": "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor",
-    "upstream:conformance": "uv run python -c 'import asyncio; from cianfhoghlaim.core.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'",
-    "upstream:api-surface": "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface:UpstreamApiSurface",
+    "upstream:blog": "uv run cocoindex update core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor",
+    "upstream:blog:live": "uv run cocoindex update -L core.cocoindex.upstream_blog_monitor:UpstreamBlogMonitor",
+    "upstream:conformance": "uv run python -c 'import asyncio; from core.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'",
+    "upstream:api-surface": "uv run cocoindex update core.cocoindex.upstream_api_surface:UpstreamApiSurface",
     "baml:generate": "uv run baml-cli generate",
 
     "spec:list": "openspec list",
@@ -84,13 +95,13 @@
     "validate-openspec-stale": "bun run scripts/validate-openspec-stale.ts",
     "validate-frontmatter": "bun run scripts/validate-frontmatter.ts",
 
-    "smoke": "bash cianfhoghlaim/stacks/frontend/scripts/smoke.sh",
+    "smoke": "bash stacks/frontend/scripts/smoke.sh",
 
-    "croilar:analyze": "bun run cianfhoghlaim/scripts/croilar/analyze-web-stack.ts",
-    "croilar:glance:regen": "bun run cianfhoghlaim/scripts/croilar/regenerate-glance-config.ts",
-    "croilar:export:wasm": "bun run cianfhoghlaim/scripts/croilar/export-marimo-wasm.ts",
-    "croilar:devtools:refresh": "bun run cianfhoghlaim/scripts/croilar/analyze-web-stack.ts --out cianfhoghlaim/.cache/webstack-snapshot.json",
-    "croilar:devtools:hub": "bun run cianfhoghlaim/scripts/croilar/regenerate-glance-config.ts && bun run cianfhoghlaim/scripts/croilar/export-marimo-wasm.ts"
+    "croilar:analyze": "bun run scripts/croilar/analyze-web-stack.ts",
+    "croilar:glance:regen": "bun run scripts/croilar/regenerate-glance-config.ts",
+    "croilar:export:wasm": "bun run scripts/croilar/export-marimo-wasm.ts",
+    "croilar:devtools:refresh": "bun run scripts/croilar/analyze-web-stack.ts --out .cache/webstack-snapshot.json",
+    "croilar:devtools:hub": "bun run scripts/croilar/regenerate-glance-config.ts && bun run scripts/croilar/export-marimo-wasm.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.3.0",
@@ -100,6 +111,7 @@
   },
   "dependencies": {
     "@infisical/sdk": "^5.0.2",
-    "dotenv": "^17.2.0"
+    "dotenv": "^17.2.0",
+    "komodo_client": "^2.1.1"
   }
 }

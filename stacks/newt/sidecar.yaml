@@ -1,0 +1,60 @@
+# =============================================================================
+# NEWT - Canonical Locket sidecar (matches the openclaw + openchamber shape)
+# =============================================================================
+# Locket sidecar for the bunchloch-site (newt + periphery + beszel-agent)
+# stack. Watches Infisical for 3 secrets and materializes them as files
+# in the `secrets-store` tmpfs:
+#   /run/secrets/locket/newt_id
+#   /run/secrets/locket/newt_secret
+#   /run/secrets/locket/onboarding_key
+#
+# The newt + periphery services read these files at startup via the
+# `cat /run/secrets/locket/...` lines in their entrypoint.
+# =============================================================================
+
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: newt-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    secrets:
+      - infisical_secret
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=c56cbe28-88a4-4793-95a1-835d5164d8ad"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-environment=dev"
+      - "--infisical-url=http://host.docker.internal:8081"
+      - "--infisical-default-project-id=d18560c0-75d5-436f-a411-0bb758567196"
+      - "--mode=watch"
+      - "--map=/templates:/run/secrets/locket"
+    volumes:
+      - ./secrets/templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - infrastructure
+
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-./secrets/infisical_secret}
+
+volumes:
+  secrets-store:
+
+networks:
+  infrastructure:
+    driver: bridge

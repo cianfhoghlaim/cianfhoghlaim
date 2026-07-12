@@ -1,0 +1,44 @@
+# LiteLLM — dev config with working M3 chokepoint (replace config.yaml in dev mode)
+# ----------------------------------------------------------------------------
+# The production config.yaml has 24+ VISION_MODELS + 6 OCR + 4 TEXT_MODELS, but
+# the fallback_chain format fails litellm 1.x's validation. For the agent-platform
+# cluster bring-up on bunchloch, we need at minimum:
+#   - `minimax-m3` — the canonical LLM for hermes + openclaw + openchamber
+#   - `local/vision/gemma-4-E4B` — the local llama-swap model (when running)
+#   - `stub` — fallback when no upstream key works
+#
+# When llama-swap is not running (no local model loaded), the `local/*` entries
+# just route to a 502 — that's expected and non-fatal; the agent-platform
+# clusters will use minimax-m3 as the primary model.
+# ----------------------------------------------------------------------------
+
+model_list:
+  # The canonical chokepoint model — minimax M3 plan via OpenCode Go
+  - model_name: minimax-m3
+    litellm_params:
+      model: openai/minimax-m3
+      api_base: https://opencode.ai/zen/go/v1/
+      api_key: os.environ/OPENCODE_GO_API_KEY
+    model_info:
+      description: "Canonical M3 plan via OpenCode Go gateway (3 keys, slot-rotation)"
+      tier: paid
+
+  # Local vision fallback (only works if llama-swap is up + has a model loaded)
+  - model_name: local/vision/gemma-4-E4B
+    litellm_params:
+      model: openai/gemma-4-E4B-it-GGUF
+      api_base: http://llama-swap:8080/v1
+      api_key: not-needed
+    model_info:
+      description: "Local GGUF Q4_K_M via llama-swap (may 502 if no model loaded)"
+      tier: free
+
+  # Stub fallback for when everything else is down
+  - model_name: stub
+    litellm_params:
+      model: openai/stub
+      api_base: http://localhost:9999/v1
+      api_key: not-needed
+    model_info:
+      description: "Dev-only stub model; not for production use"
+      tier: free

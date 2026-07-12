@@ -1,0 +1,16 @@
+# =============================================================================
+# NEWT - Pangolin route (optional — the newt client itself doesn't need
+# to be a Pangolin private resource, but we declare it for symmetry
+# with the openclaw/openchamber/hermes stacks)
+# =============================================================================
+# This file is intentionally a no-op. The newt client connects OUTBOUND
+# to Pangolin on arm1-oci (not the other way around), so there is no
+# inbound route to publish. The Pangolin mesh sees the newt as a
+# registered resource via the newt ID + secret handshake.
+#
+# If you ever expose a service on this Mac via newt (e.g. a local
+# dev server reachable via *.cianfhoghlaim.ie), declare that route
+# here as a [[route]] block + an entry in `pangolin.yaml`'s `routes: []`.
+# =============================================================================
+
+# No routes — newt is an outbound-only client.

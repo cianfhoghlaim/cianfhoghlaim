@@ -1,0 +1,205 @@
+# Komodo procedure: deploy agent-platform-cluster (bunchloch)
+# The omnibus procedure for the agent-platform cluster.
+#
+# Single command brings up the 12-service agent-platform cluster in
+# dependency order:
+#
+#   Stage 1: foundation    → lakehouse (data plane: Garage + Postgres + ClickHouse + Redis)
+#   Stage 2: observability → litellm + langfuse + mlflow + logfire + cognee + graphiti
+#   Stage 3: surfaces      → openclaw + openchamber + hermes
+#
+# Updated for the `centralise-data-plane` rewrite (2026-07-30):
+# - The langfuse + mlflow stacks now DEPEND on the lakehouse stack
+#   (they use the centralised postgres + garage + clickhouse + redis).
+# - The falkordb stack is a Stage 1 prerequisite for graphiti (graphiti
+#   uses the same falkordb stack instance).
+# - Stage 0/1/2/3 names map onto --skip flags for partial re-deploys.
+#
+# Usage:
+#   km run procedure deploy-agent-platform-cluster-bunchloch
+#   km run procedure deploy-agent-platform-cluster-bunchloch -- --skip=foundation,observability
+# ============================================================================
+
+# Stage 0: pre-reqs (env vars + resource ceiling)
+[[stage.action]]
+type = "CheckEnvVar"
+name = "check-prereqs"
+vars = [
+  "INFISICAL_CLIENT_ID",
+  "INFISICAL_SECRET_FILE",
+  "LITELLM_MASTER_KEY",
+  "HERMES_OPERATOR_POCKET_ID_SUBJECT",
+  "POSTGRES_PASSWORD",           # NEW: required for centralised lakehouse-postgres
+  "GARAGE_RPC_SECRET",           # NEW: required for Garage
+  "GARAGE_ADMIN_TOKEN",          # NEW: required for Garage Admin API
+  "GARAGE_ACCESS_KEY_ID",        # NEW: required for downstream S3 consumers
+  "GARAGE_SECRET_ACCESS_KEY",    # NEW: required for downstream S3 consumers
+  "LAKEKEEPER_ENCRYPTION_KEY",   # NEW: required for Lakekeeper
+  "CLICKHOUSE_PASSWORD",         # NEW: required for centralised ClickHouse
+  "REDIS_PASSWORD",              # NEW: required for centralised Redis
+  "SALT",                        # NEW: required for langfuse
+  "ENCRYPTION_KEY",              # NEW: required for langfuse
+  "NEXTAUTH_SECRET",             # NEW: required for langfuse
+  "POSTGRES_PASSWORD",           # NEW: required for mlflow (inherited)
+]
+
+[[stage.action]]
+type = "CheckResourceCeiling"
+name = "check-bunchloch-utilization"
+server_id = "bunchloch"
+max_cpu_pct = 80
+max_memory_pct = 80
+
+# Stage 1: foundation (lakehouse — must exist BEFORE langfuse/litellm/mlflow)
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-lakehouse-bunchloch"
+procedure = "deploy-lakehouse-bunchloch"
+skip_if_flag = "foundation"
+description = "Centralised data plane (Garage S3 + Postgres + ClickHouse + Redis + Lakekeeper)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-falkordb-bunchloch"
+procedure = "deploy-falkordb-bunchloch"
+skip_if_flag = "foundation"
+description = "FalkorDB (graphiti's backend; must come up before graphiti)"
+
+# Stage 2: observability (litellm + langfuse + mlflow + logfire)
+# Each stack requires the centralised lakehouse data plane from Stage 1.
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-litellm-bunchloch"
+procedure = "deploy-litellm-bunchloch"
+skip_if_flag = "observability"
+description = "M3 LLM gateway chokepoint (uses centralised lakehouse-postgres db=litellm)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-langfuse-bunchloch"
+procedure = "deploy-langfuse-bunchloch"
+skip_if_flag = "observability"
+description = "LLM observability (uses lakehouse-postgres db=langfuse + lakehouse-clickhouse + lakehouse-redis)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-mlflow-bunchloch"
+procedure = "deploy-mlflow-bunchloch"
+skip_if_flag = "observability"
+description = "ML experiment tracking (uses lakehouse-postgres db=mlflow + lakehouse-garage bucket=mlflow-artifacts)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-logfire-bunchloch"
+procedure = "deploy-logfire-bunchloch"
+skip_if_flag = "observability"
+description = "Python-level structured tracing"
+
+# Stage 3: memory (cognee + graphiti + lancedb)
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-cognee-bunchloch"
+procedure = "deploy-cognee-bunchloch"
+skip_if_flag = "memory"
+description = "Knowledge graph memory"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-graphiti-bunchloch"
+procedure = "deploy-graphiti-bunchloch"
+skip_if_flag = "memory"
+description = "Temporal knowledge graph (uses falkordb backend from Stage 1)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-lancedb-bunchloch"
+procedure = "deploy-lancedb-bunchloch"
+skip_if_flag = "memory"
+description = "Vector storage for the 15 v1 CocoIndex Apps"
+
+# Stage 4: surfaces (openclaw + openchamber + hermes)
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-openclaw-bunchloch"
+procedure = "deploy-openclaw-bunchloch"
+skip_if_flag = "surfaces"
+description = "Channel-fanout gateway (8 channels)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-openchamber-bunchloch"
+procedure = "deploy-openchamber-bunchloch"
+skip_if_flag = "surfaces"
+description = "Browser IDE (OpenCode UI)"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-hermes-bunchloch"
+procedure = "deploy-hermes-bunchloch"
+skip_if_flag = "surfaces"
+description = "Autonomous agent runtime (3rd vertex)"
+
+# Stage 5: health checks (8 endpoints)
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-lakekeeper"
+url = "https://lakekeeper.cianfhoghlaim.ie/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-litellm"
+url = "https://litellm.cianfhoghlaim.ie/health/liveliness"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-langfuse"
+url = "https://langfuse.cianfhoghlaim.ie/api/public/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-mlflow"
+url = "https://mlflow.cianfhoghlaim.ie/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-falkordb"
+url = "https://falkordb.cianfhoghlaim.ie/api/v1/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-openclaw"
+url = "https://openclaw.cianfhoghlaim.ie/api/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-openchamber"
+url = "https://openchamber.cianfhoghlaim.ie/api/health"
+expected_status = 200
+timeout_s = 30
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-hermes"
+url = "https://hermes.cianfhoghlaim.ie/api/health"
+expected_status = 200
+timeout_s = 30
+
+# Stage 6: validate (the 4 stack-doctor gates)
+[[stage.action]]
+type = "RunShellCommand"
+name = "validate-stacks"
+server_id = "bunchloch"
+command = "bun run validate-stacks"
+description = "Run the 4 stack-doctor gates against the 89 stacks (88 + hermes)"

@@ -1,0 +1,40 @@
+# Locket sidecar snippet (per `infrastructure/stacks/GOLD_STANDARD.md`).
+#
+# Drop this into any stack that needs the dagger-rendered `secrets.env`.
+# The sidecar authenticates to the Infisical vault via the
+# `INFISICAL_SERVICE_TOKEN` (mounted at `infisical_secret` — populated
+# by the mise directory hook in dev and by Locket itself in production)
+# and substitutes the `{{ infisical://... }}` placeholders in the
+# `secrets.env` mounted at `/run/secrets/locket/secrets.env`.
+
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical@sha256:1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2
+    container_name: ${SERVICE_NAME}-locket
+    command:
+      - --map=/templates:/run/secrets/locket
+      - --rm
+    volumes:
+      - ${SERVICE_NAME}-secrets:/run/secrets/locket:rw
+      - ./secrets.env:/templates/secrets.env:ro
+    environment:
+      - INFISICAL_TOKEN_FILE=/run/secrets/locket/infisical_token
+    secrets:
+      - infisical_token
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /run/secrets/locket/secrets.env"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - cianfhoghlaim
+
+# The Locket sidecar mounts the resolved secrets at /run/secrets/locket/secrets.env
+# which the main app container reads via:
+#   env_file: /run/secrets/locket/secrets.env
+# The `secrets:` block at the bottom of the parent service uses the Docker
+# Swarm `infisical_token` secret, which the mise hook populates in dev.
+
+secrets:
+  infisical_token:
+    file: ../../infisical_secret

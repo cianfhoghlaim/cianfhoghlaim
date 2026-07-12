@@ -1,0 +1,151 @@
+# =============================================================================
+# DEPLOY WAVE2-BUNCHLOCH
+# =============================================================================
+# Omnibus procedure for the 7-stack Wave 2 deploy on bunchloch:
+#
+#   - letta   (agent memory layer; backs OpenClaw + OpenChamber + Hermes)
+#   - kavita  (ebook + manga reader)
+#   - mealie  (recipe manager)
+#   - immich  (photo management; downstream of apple-photos-ingest skill)
+#   - siyuan  (block-based notes)
+#   - outline (team wiki)
+#   - khoj    (personal AI)
+#
+# All 7 stacks are NEW in 2026-07-08 (pick-3-image-replacement change)
+# and follow the 6-file GOLD_STANDARD pattern.
+#
+# Each stack requires the centralised data plane (lakehouse-postgres
+# + lakehouse-redis) — make sure deploy-lakehouse-bunchloch has run
+# before this procedure.
+#
+# Stage 0: prereqs (lakehouse data plane)
+# Stage 1: agent memory (letta — must run before any agent surface
+#          that wants persistent user-level memory)
+# Stage 2: personal (kavita + mealie + siyuan + outline + khoj +
+#          immich — independent of each other; parallel-safe)
+# Stage 3: health checks (7 endpoints)
+# Stage 4: validate (the 7 stack-doctor gates)
+#
+# Usage:
+#   km run procedure deploy-wave2-bunchloch
+#   km run procedure deploy-wave2-bunchloch -- --skip=personal
+#   km run procedure deploy-wave2-bunchloch -- --skip=memory
+# =============================================================================
+
+[[procedure]]
+name = "deploy-wave2-bunchloch"
+description = "Deploy 7 new Wave 2 stacks to bunchloch (letta + kavita + mealie + immich + siyuan + outline + khoj) — prereqs → memory → personal → health → validate"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Prerequisites (centralised lakehouse data plane)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-lakehouse-bunchloch" } }
+description = "Centralised data plane (Garage S3 + Postgres + ClickHouse + Redis + Lakekeeper)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "ensure-wave2-databases" } }
+description = "Create the 7 wave2 databases (letta, kavita_meta, mealie, immich, siyuan, outline, khoj) on lakehouse-postgres"
+
+# =============================================================================
+# STAGE 1: Agent memory (letta)
+# =============================================================================
+# Letta backs user-level memory for the 3 agent surfaces
+# (OpenClaw + OpenChamber + Hermes). Must run before any agent
+# surface that wants persistent memory.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "memory"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-letta-bunchloch" } }
+description = "Letta agent memory layer (db=letta)"
+
+# =============================================================================
+# STAGE 2: Personal + utility (kavita + mealie + siyuan + outline + khoj + immich)
+# =============================================================================
+# All 6 are independent of each other; safe to parallelise.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "personal"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-kavita-bunchloch" } }
+description = "Kavita ebook + manga reader (no DB)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-mealie-bunchloch" } }
+description = "Mealie recipe manager (db=mealie)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-immich-bunchloch" } }
+description = "Immich photo management (db=immich + lakehouse-redis)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-siyuan-bunchloch" } }
+description = "SiYuan block-based notes (no DB)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-outline-bunchloch" } }
+description = "Outline team wiki (db=outline + lakehouse-redis)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-khoj-bunchloch" } }
+description = "Khoj personal AI (db=khoj)"
+
+# =============================================================================
+# STAGE 3: Health Verification (7 endpoints)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8283/v1/health", expected_status = 200, timeout_s = 30 } }
+description = "Verify letta is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:5000/api/Health", expected_status = 200, timeout_s = 30 } }
+description = "Verify kavita is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:9925/api/app/about", expected_status = 200, timeout_s = 30 } }
+description = "Verify mealie is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:2283/api/server/ping", expected_status = 200, timeout_s = 30 } }
+description = "Verify immich is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:6806/", expected_status = 200, timeout_s = 30 } }
+description = "Verify siyuan is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:3000/_health", expected_status = 200, timeout_s = 30 } }
+description = "Verify outline is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:42110/api/health", expected_status = 200, timeout_s = 30 } }
+description = "Verify khoj is reachable"
+
+# =============================================================================
+# STAGE 4: Validate (the 7 stack-doctor gates)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "validate"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "bun run validate-stacks" } }
+description = "Run the 7 stack-doctor gates against all 86+7 = 93 stacks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "ls -la bonneagar/stacks/wave2/ | head -10 && echo '---' && for s in bonneagar/stacks/wave2/*/; do printf '%-12s ' \"\$(basename \"\$s\")\"; for f in compose.yaml sidecar.yaml secrets.env pangolin.yaml blueprint.yaml .env.example; do test -f \"\$s\$f\" && printf '.' || printf 'X'; done; echo; done" } }
+description = "Verify all 7 wave2 stacks have the 6 GOLD_STANDARD files"

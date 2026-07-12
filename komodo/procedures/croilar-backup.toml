@@ -1,0 +1,38 @@
+# =============================================================================
+# CROILAR-BACKUP PROCEDURE
+# =============================================================================
+# Backs up the croilar data plane to Garage S3 (encrypted):
+#   - croilar-postgres (pg_dump to encrypted archive)
+#   - DuckDB file (data/croilar.duckdb)
+#   - BAML extraction cache
+#   - SOPS-encrypted credentials archive
+#
+# Runs daily at 03:00 Dublin time (set in komodo resource-sync schedule).
+#
+# Usage:
+#   km run procedure croilar-backup
+# =============================================================================
+
+[[procedure]]
+name = "croilar-backup"
+description = "Backup croilar Postgres + DuckDB + BAML cache to Garage S3 (encrypted)"
+
+[[procedure.config.stages]]
+name = "backup-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunSync", params = { sync = "croilar-postgres-backup" } }
+
+
+[[procedure.config.stages]]
+name = "backup-duckdb"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunSync", params = { sync = "croilar-duckdb-backup" } }
+
+
+[[procedure.config.stages]]
+name = "backup-credentials"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunSync", params = { sync = "croilar-sops-archive" } }

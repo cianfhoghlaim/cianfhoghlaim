@@ -1,0 +1,44 @@
+# Outline — local dev override
+# ----------------------------------------------------------------------------
+# No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+# resolves without booting the real Infisical-injection sidecar.
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: outline-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op outline locket'; sleep infinity"]
+    environment:
+      INFISICAL_CLIENT_ID: ${INFISICAL_LOCKET_CLIENT_ID:-placeholder}
+      INFISICAL_CLIENT_SECRET: ${INFISICAL_LOCKET_CLIENT_SECRET:-placeholder}
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-placeholder}
+      LOCKET_MODE: watch
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+  outline:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - .env.dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?must be set}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-devpassword}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/outline
+      REDIS_URL: redis://:${REDIS_PASSWORD:-devpassword}@lakehouse-redis:6379
+      OUTLINE_SECRET_KEY: ${OUTLINE_SECRET_KEY:-dev-secret-key-32-chars-min}
+      OUTLINE_UTILS_SECRET: ${OUTLINE_UTILS_SECRET:-dev-utils-secret-32-chars-min}
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+secrets:
+  infisical_secret:
+    file: /dev/null
+  outline_infisical_secret:
+    file: /dev/null

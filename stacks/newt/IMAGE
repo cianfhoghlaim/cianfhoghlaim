@@ -1,0 +1,25 @@
+# =============================================================================
+# NEWT — Canonical image pin (fossorial Pangolin client)
+# =============================================================================
+# Single source of truth for the newt image digest. Both `stacks/newt/`
+# (bunchloch operator-laptop site) and `stacks/pangolin/newt.yaml`
+# (arm1-oci server-side newt) reference the constants below.
+#
+# To upgrade:
+#   1. Bump NEWT_VERSION
+#   2. Get the new SHA256 from
+#      curl -ksS https://api.github.com/repos/fosrl/newt/releases/latest | jq -r '.body'
+#      (the release notes include the GHCR + Docker Hub SHA)
+#   3. Update NEWT_SHA
+#   4. Run `openspec validate <bump-newt-change> --strict`
+#   5. Commit + push + archive
+#
+# Latest: v1.14.0 (released 2026-07-02T21:54:12Z by @fosrl)
+#   - Adds server-side sync message to detect lost command control websocket
+#   - Adds `--native-main` mode to create a native WireGuard interface on
+#     the host instead of netstack (better for Mac laptops)
+#   - Adds using upstream remote subnets with remote WireGuard
+# =============================================================================
+NEWT_VERSION=1.14.0
+NEWT_IMAGE=ghcr.io/fosrl/newt
+NEWT_SHA=60c78391e3b5cb8a260490fb26b8b7329ed5448077629da89a564af80d3a9fad

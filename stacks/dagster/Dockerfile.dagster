@@ -1,0 +1,179 @@
+# =============================================================================
+# DAGSTER - Local Build Dockerfile (cianfhoghlaim lakehouse integration)
+# =============================================================================
+# Local-built image for the dagster stack. Replaces the previous
+# `ghcr.io/cianfhoghlaim/dagster:latest` (org-private) per the 2026-07-02
+# user directive ("use typical public images"). No public dagster
+# webserver image exists; this Dockerfile is the only path to a
+# working dagster in dev mode.
+#
+# Modeled on:
+#   https://github.com/dagster-io/dagster/tree/master/examples/deploy_docker
+#
+# Multi-arch support (NEW 2026-07-08 pick-3-image-replacement):
+#   The base `python:3.13-slim` and the runtime deps are all
+#   multi-arch. Build with:
+#     docker buildx build --platform=linux/amd64,linux/arm64 \
+#       -t dagster-local:latest -f Dockerfile.dagster .
+#   so the same image runs on bunchloch (arm64) and any future
+#   x86_64 host.
+#
+# Build:
+#   docker build -t dagster-local:latest -f Dockerfile.dagster .
+#
+# The image is built locally and used by stacks/dagster/compose.yaml
+# (which references `image: dagster-local:latest` with
+# `build: { context: ., dockerfile: Dockerfile.dagster }` so docker
+# compose auto-builds on `up -d` if the image is missing).
+# =============================================================================
+
+FROM --platform=$BUILDPLATFORM python:3.13-slim AS builder
+
+ENV PIP_NO_CACHE_DIR=1 PYTHONUNBUFFERED=1 \
+    DAGSTER_HOME=/opt/dagster/home
+
+# System deps for dagster-aws (libpq for Postgres, libssl for S3,
+# build-essential for any C-extension that needs compiling).
+# NEW in 2026-07-03: added tesseract-ocr + libtesseract-dev for pytesseract,
+# poppler-utils for marker-pdf + mineru, libgl1 for opencv (easyocr),
+# tesseract-osd for orientation detection.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    ca-certificates \
+    libpq-dev \
+    libssl-dev \
+    tesseract-ocr \
+    libtesseract-dev \
+    poppler-utils \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip + install uv (used for fast, layered installs)
+RUN pip install --upgrade pip uv
+
+# Layer 1: Dagster stack pin (the current public upstream release
+# is 1.13.x). Use the explicitly-versioned packages to match the
+# canonical `dagster` patterns from `examples/deploy_docker`.
+ARG DAGSTER_VERSION=1.13.11
+# Note: `dagster-postgres` is NOT installed in the dev image — it
+# uses independent semver from `dagster` (0.27.x for dagster 1.11.x;
+# 0.28+ for dagster 1.12+). For dev mode, dagster's own run/event/schedule
+# storage falls back to SQLite (the default in `DAGSTER_HOME=./dagster_home`),
+# which is sufficient for the 5 KCG Components. Production deployments
+# would install `dagster-postgres` and use lakehouse-postgres for
+# run storage (handled in a separate ops change).
+RUN uv pip install --system \
+    "dagster==${DAGSTER_VERSION}" \
+    "dagster-webserver==${DAGSTER_VERSION}" \
+    "dagster-duckdb" \
+    "dagster-k8s" \
+    "dagster-aws" \
+    "dagster-dlt" \
+    "dagster-dbt" \
+    # Pin grpcio + protobuf to keep the gencode/runtime compatible
+    # (NEW 2026-07-04 in Session 10; without these pins, uv pulls
+    # grpcio 1.81.x which has protobuf 6.33.5 gencode but the runtime
+    # stays at 5.29.6 → `dagster definitions validate` fails with
+    # `Detected incompatible Protobuf Gencode/Runtime versions`).
+    "grpcio<1.70,>=1.66.2" \
+    "grpcio-health-checking<1.70,>=1.66.2" \
+    "grpcio-tools<1.70,>=1.66.2" \
+    "protobuf<6,>=5.26"
+
+# Layer 2: Cianfhoghlaim deps (BAML + DuckDB + LanceDB + pyarrow +
+# LLM SDKs). These are the app-side deps that the dagster instance
+# needs to spin up the 5 KCG Components from
+# `cianfhoghlaim.dagster.definitions` and execute the 260+ assets.
+# NEW in 2026-07-03 (infrastructure-foundation change A): added 11
+# OCR/VLM/memory Python packages for the LC5 + Gemini 6-corpus pipelines.
+ARG CIANFHOGHLAIM_VERSION=0.5.0
+RUN uv pip install --system \
+    "baml-py>=0.222.0" \
+    "duckdb>=1.0.0" \
+    "lancedb>=0.24.0" \
+    "pyarrow>=15.0.0" \
+    "psycopg2-binary" \
+    "boto3" \
+    "structlog" \
+    "pydantic>=2.0.0" \
+    "pydantic-settings>=2.0.0" \
+    "python-dotenv>=1.0.0" \
+    "click>=8.0.0" \
+    "httpx>=0.27.0" \
+    "alembic" \
+    # ─── NEW 2026-07-03: OCR/VLM Python packages ────────────────────────────
+    # These support the inline-Python backends for models in the v4 registry
+    # (cianfhoghlaim/meaisinfhoghlaim/models/registry.py). The Unsloth GGUF
+    # models are served by llama-swap on :8080; these are for the 6
+    # TRANSFORMERS-backend models + in-process GGUF use cases.
+    "rapidocr>=3.9.0" \
+    "pytesseract>=0.3.10" \
+    "easyocr>=1.7.2" \
+    "docling>=2.0.0" \
+    "paddleocr>=3.0.0" \
+    "mineru>=3.4" \
+    "llama-cpp-python>=0.3.0" \
+    # ─── NEW 2026-07-03: Agent memory Python packages ────────────────────────
+    # graphiti-core replaces the graphiti/ Docker Compose stack (deleted in
+    # this change). cognee-sdk complements the cognee/ stack. letta is the
+    # 3rd memory backend per the agent-fleet-orchestration skill.
+    "graphiti-core[falkordb]>=0.29.2" \
+    "cognee>=1.0.0" \
+    "letta>=0.5" \
+    # HF CLI for model downloads (used by download_unsloth_models.py)
+    "huggingface-hub>=0.27.0"
+
+# Runtime stage
+FROM --platform=$BUILDPLATFORM python:3.13-slim
+ENV DAGSTER_HOME=/opt/dagster/home PYTHONUNBUFFERED=1 \
+    DAGSTER_VERSION=1.13.11
+
+# Runtime system deps (matching the builder stage where new)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    libssl3 \
+    curl \
+    ca-certificates \
+    tesseract-ocr \
+    poppler-utils \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --shell /bin/bash dagster
+
+# Copy Python env from builder
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# NEW 2026-07-03: install cianfhoghlaim as an editable package so the
+# 5 KCG Components + the LC5 + Gemini 6-corpus assets are importable
+# from the dagster container.
+#
+# CRITICAL: We do NOT use `uv pip install -e` for cianfhoghlaim because
+# the package contains its own `dagster/` subdir. When Python adds
+# /opt/workspace/cianfhoghlaim to sys.path (which is what `pip install -e`
+# does), `import dagster` resolves to cianfhoghlaim/dagster instead of
+# the real `dagster` Python package, breaking everything.
+#
+# Instead, we manually create a .pth file pointing to the PARENT dir
+# (/opt/workspace) so Python can find `import cianfhoghlaim` correctly.
+COPY ./cianfhoghlaim /opt/workspace/cianfhoghlaim
+# Clean stale __pycache__ from previous builds
+RUN find /opt/workspace/cianfhoghlaim -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true && \
+    find /opt/workspace/cianfhoghlaim -name '*.pyc' -delete 2>/dev/null || true
+# Manual .pth for cianfhoghlaim (avoids the dagster/ subdir shadowing)
+RUN echo '/opt/workspace' > /usr/local/lib/python3.13/site-packages/cianfhoghlaim.pth && \
+    chown -R dagster:dagster /opt/workspace/cianfhoghlaim
+
+USER dagster
+WORKDIR /opt/dagster
+
+EXPOSE 3000 9090
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -sf http://localhost:3000/server_info || exit 1
+
+# Default entrypoint: dagster webserver on port 3000. The dagster-daemon
+# service in compose.yaml overrides the command with `dagster-daemon run`.
+ENTRYPOINT ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000"]

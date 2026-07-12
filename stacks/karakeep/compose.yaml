@@ -1,0 +1,45 @@
+name: karakeep
+services:
+  karakeep:
+    image: ghcr.io/greentechinnovate/karakeep:latest
+    container_name: karakeep
+    restart: unless-stopped
+    ports: ["3000:3000"]
+    environment:
+      - DATABASE_URL=postgresql://karakeep:${KARAKEEP_DB_PASSWORD}@karakeep-pg/karakeep
+      - MEILISEARCH_URL=http://karakeep-meilisearch:7700
+      - MEILISEARCH_API_KEY=${KARAKEEP_MEILISEARCH_KEY}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 20s
+    deploy:
+      resources:
+        limits: {memory: 2G, cpus: '2'}
+    networks: [cianfhoghlaim]
+  karakeep-pg:
+    image: postgres:16
+    container_name: karakeep-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: karakeep
+      POSTGRES_USER: karakeep
+      POSTGRES_PASSWORD: ${KARAKEEP_DB_PASSWORD}
+    volumes: [karakeep_pg_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d karakeep -U karakeep"]
+      interval: 10s; timeout: 5s; retries: 5
+    networks: [cianfhoghlaim]
+  karakeep-meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: karakeep-meilisearch
+    restart: unless-stopped
+    environment:
+      - MEILI_MASTER_KEY=${KARAKEEP_MEILISEARCH_KEY}
+      - MEILI_NO_ANALYTICS=true
+    volumes: [karakeep_meili_data:/meili_data]
+    networks: [cianfhoghlaim]
+volumes:
+  karakeep_pg_data: {driver: local}
+  karakeep_meili_data: {driver: local}
+networks:
+  cianfhoghlaim: {driver: bridge}

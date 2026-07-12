@@ -1,0 +1,56 @@
+# =============================================================================
+# CROILAR-GITOPS-FULLSTACK PROCEDURE
+# =============================================================================
+# Full GitOps chain — runs the entire release pipeline:
+#   1. Lint + typecheck + pytest (ci.yaml)
+#   2. Build + push croilar images (images.yaml)
+#   3. Backup before deploy (croilar-backup)
+#   4. Bring down old stacks (croilar-stack-down)
+#   5. Bring up new stacks (croilar-stack-up)
+#   6. Refresh Pangolin routes
+#   7. Post-deploy health check
+#
+# Usage:
+#   km run procedure croilar-gitops-fullstack
+# =============================================================================
+
+[[procedure]]
+name = "croilar-gitops-fullstack"
+description = "Full chain: lint → build → backup → down → up → pangolin → health"
+
+[[procedure.config.stages]]
+name = "pre-flight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "ci-croilar" } }
+
+
+[[procedure.config.stages]]
+name = "build-and-push"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "croilar-image-rebuild" } }
+
+
+[[procedure.config.stages]]
+name = "backup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "croilar-backup" } }
+
+
+[[procedure.config.stages]]
+name = "restart-stacks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "croilar-stack-down" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "croilar-stack-up" } }
+
+
+[[procedure.config.stages]]
+name = "post-deploy-health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "croilar-stack-health" } }

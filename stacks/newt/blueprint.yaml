@@ -1,0 +1,12 @@
+# =============================================================================
+# NEWT - Pangolin private-resource blueprint
+# =============================================================================
+# The newt client on this Mac is a registered Pangolin resource (the
+# `bunchloch` org) that connects outbound to Pangolin on arm1-oci. There
+# is no inbound route to publish (newt is an outbound-only client), so
+# this blueprint is intentionally empty.
+#
+# Reference: https://docs.pangolin.net/manage/blueprints
+# =============================================================================
+
+private-resources: {}
