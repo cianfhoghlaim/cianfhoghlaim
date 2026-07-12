@@ -1,0 +1,40 @@
+# Dagster L1 — Canuint ingestion cron (monthly)
+# Reference: openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/
+
+type: dagster.cron
+schedule: "0 5 1 * *"  # monthly on the 1st
+execution_timezone: "UTC"
+description: >
+  Monthly Canuint Irish Pronunciation ingestion — fans out to the
+  canuint_source DLT (with word-level forced alignment).
+
+partitions:
+  - name: language
+    type: static
+    partition_keys:
+      - ga
+      - en
+  - name: max_locations
+    type: static
+    partition_keys:
+      - "50"
+      - "200"
+
+assets:
+  - name: canuint_ingestion
+    group_name: language_canuint
+    compute_kind: local
+    deps: []
+    config:
+      language: "{{ partition['language'] }}"
+      max_locations: "{{ partition['max_locations'] }}"
+    config_schema:
+      language:
+        type: string
+      max_locations:
+        type: string
+    metadata:
+      layer: 1_ingestion
+      stage: language
+      source_group: canuint
+      openspec_change: 2026-07-17-gaois-celtic-language-pipeline-v1

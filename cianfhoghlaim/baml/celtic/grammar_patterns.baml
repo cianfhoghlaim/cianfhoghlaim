@@ -1,21 +1,3 @@
-// === ARCHIVED 2026-06-24 ===
-// The 6 functions in this file (ExtractGrammarPatterns,
-// ExtractIrishCopula, AnalyzeVSOOrder, ExtractPossession,
-// GeneratePrepositionalPronouns, DocumentMutationTriggers) have
-// no current Python consumer in the oideachais quadrant. They
-// are intended for the meaisinfhoghlaim/ Celtic-linguistic
-// agents, which are not yet built.
-//
-// To re-activate:
-// 1. Implement the consumer (e.g.
-//    meaisinfhoghlaim/agents/celtic_grammar.py)
-// 2. Move this file back to baml_src/ (git mv)
-// 3. Remove the ARCHIVED header from the top
-// 4. Update STATUS.md to mark the functions as wired
-// 5. Update REFACTORING.md to remove the archive entry
-//
-// Reference: openspec/changes/archive-celtic-baml-orphans/
-// =====================================================================
 
 // Grammar Patterns - Celtic Syntactic Structures
 // Extract and analyze Celtic-specific grammatical patterns
@@ -305,5 +287,57 @@ function DocumentMutationTriggers(
     - Any exceptions
 
     {{ ctx.output_format }}
+  "#
+}
+
+// ============================================================================
+// CANONICAL EXTRACTION FUNCTION (added 2026-07-17 for the gaois-celtic-language-pipeline-v1 change)
+// Re-activates the 6 archived grammar functions by providing a canonical
+// per-language grammar pattern extraction entrypoint.
+// ============================================================================
+
+// A single Celtic grammar pattern extracted from text
+class CelticGrammarPattern {
+  language CelticLanguageCurriculum @description("Which Celtic language")
+  pattern_type GrammarPatternType @description("Type of grammar pattern (VSO, COPULA, etc.)")
+  text string @description("The text example in the source language")
+  english_translation string @description("English translation")
+  grammar_explanation string @description("Detailed grammar explanation")
+  example_breakdown string? @description("Word-by-word grammatical analysis")
+  difficulty int @description("1-5 difficulty scale")
+  common_errors string[] @description("Common learner errors")
+}
+
+// Extract grammar patterns from a Celtic-language text. Per-language
+// routing via LlamaSwap (Irish → uccix-mistral-24b, others → gemma-4-26B-A4B).
+function ExtractCelticGrammar(
+  text: string,
+  language: CelticLanguageCurriculum,
+  max_patterns: int?
+) -> CelticGrammarPattern[] {
+  client LlamaSwapReasoningClient
+  prompt #"
+    Extract grammar patterns from this {{ language }} text.
+
+    {{ ctx.output_format }}
+
+    Text:
+    {{ text }}
+
+    For each pattern, identify:
+    - The pattern type (VSO, COPULA, PREPOSITIONAL_PRONOUN, MUTATION_TRIGGER,
+      GENITIVE_PHRASE, VERBAL_NOUN, CLEFT, RELATIVE, POSSESSION, PROGRESSIVE)
+    - The source text example
+    - The English translation
+    - A detailed grammar explanation
+    - A word-by-word grammatical breakdown (optional)
+    - Difficulty 1-5
+    - Common learner errors
+
+    Important:
+    - Preserve Celtic-language text with fadas / circumflexes
+    - For Irish (IRISH), dispatch via `uccix-mistral-24b` (UCCIX)
+    - For Welsh/Scottish/Breton/Manx/Cornish, dispatch via `gemma-4-26B-A4B`
+    - Return at most {{ max_patterns or 10 }} patterns, ranked by frequency
   "#
 }

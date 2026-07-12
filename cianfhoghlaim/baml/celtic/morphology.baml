@@ -1,21 +1,3 @@
-// === ARCHIVED 2026-06-24 ===
-// The 4 functions in this file (ExtractVerbConjugation,
-// ExtractNounDeclension, IdentifyMorphologicalClass,
-// CompareAdjective) have no current Python consumer in the
-// oideachais quadrant. They are intended for the meaisinfhoghlaim/
-// Celtic-linguistic agents, which are not yet built.
-//
-// To re-activate:
-// 1. Implement the consumer (e.g.
-//    meaisinfhoghlaim/agents/celtic_morphology.py)
-// 2. Move this file back to baml_src/ (git mv)
-// 3. Remove the ARCHIVED header from the top
-// 4. Update STATUS.md to mark the functions as wired
-// 5. Update REFACTORING.md to remove the archive entry
-//
-// Reference: openspec/changes/archive-celtic-baml-orphans/
-// =====================================================================
-
 // Morphological Extraction - Verb and Noun Paradigms
 // Full conjugation and declension extraction for Celtic languages
 // December 2024
@@ -255,5 +237,70 @@ function CompareAdjective(
     - maith -> níos fearr -> is fearr
 
     {{ ctx.output_format }}
+  "#
+}
+
+// ============================================================================
+// CANONICAL EXTRACTION FUNCTION (added 2026-07-17 for the gaois-celtic-language-pipeline-v1 change)
+// Re-activates the 4 archived morphology functions by providing a canonical
+// per-language morphology extraction entrypoint.
+// ============================================================================
+
+// Morphological specification for a Celtic-language word
+class CelticMorphologySpec {
+  language CelticLanguageCurriculum @description("Which Celtic language")
+  word string @description("The word being analysed")
+  word_class string @description("Part of speech: noun, verb, adjective, etc.")
+  inflection_class string @description("Conjugation/declension class")
+  paradigm CelticForm[] @description("Full paradigm (all forms)")
+  morphology_notes string @description("Detailed morphology notes")
+  related_words string[] @description("Cognates or related forms in other Celtic languages")
+  difficulty int @description("1-5 difficulty scale")
+}
+
+// A single inflected form within a paradigm
+class CelticForm {
+  form string @description("The inflected form")
+  features string[] @description("Morphological features: case, number, person, tense, etc.")
+  ipa_pronunciation string? @description("IPA pronunciation guide")
+  mutation MutationType? @description("Initial mutation if any")
+  notes string? @description("Notes about this specific form")
+}
+
+// Extract morphology from a Celtic-language word or text. Per-language
+// routing via LlamaSwap (Irish → uccix-mistral-24b, others → gemma-4-26B-A4B).
+function ExtractCelticMorphology(
+  text: string,
+  language: CelticLanguageCurriculum,
+  word_class_hint: string?
+) -> CelticMorphologySpec[] {
+  client LlamaSwapReasoningClient
+  prompt #"
+    Extract morphology from this {{ language }} text.
+
+    {{ ctx.output_format }}
+
+    Text:
+    {{ text }}
+
+    {% if word_class_hint %}
+    Focus on: {{ word_class_hint }} words
+    {% endif %}
+
+    For each significant word (nouns, verbs, adjectives), identify:
+    - The word being analysed
+    - The word class (noun, verb, adjective, etc.)
+    - The inflection class (1st/2nd conjugation for verbs; 1st/2nd/3rd/5th declension for nouns)
+    - The full paradigm (all inflected forms with features)
+    - IPA pronunciation for each form
+    - Initial mutations (if any)
+    - Morphology notes
+    - Cognates in other Celtic languages
+    - Difficulty 1-5
+
+    Important:
+    - Preserve Celtic-language text with fadas / circumflexes
+    - For Irish (IRISH), dispatch via `uccix-mistral-24b` (UCCIX)
+    - For Welsh/Scottish/Breton/Manx/Cornish, dispatch via `gemma-4-26B-A4B`
   "#
 }
