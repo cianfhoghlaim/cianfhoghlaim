@@ -3,7 +3,7 @@
 class NigerianStateCurriculumSpec {
   url string
   country string @description("Country code (nga)")
-  state_code string @description("ISO-style state slug (nga_kan, nga_los, ...)")
+  state_code string @description("ISO-style state slug (Kano State, Lagos State, ...)")
   state_name string? @description("The English-language state name")
   domain string @description("education | law | medicine | statistics | government")
   language string @description("en | ha | yo | ig | pcm")

@@ -1,6 +1,6 @@
-// SVK education extraction BAML schema (EU nations full-depth).
+// Slovakia education extraction BAML schema (EU nations full-depth).
 
-class SVKSubjectCurriculum {
+class SlovakiaSubjectCurriculum {
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of the curriculum row")
   nation string @description("Country name")
@@ -13,7 +13,7 @@ class SVKSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractSVKSubjectCurriculum(
+function ExtractSlovakiaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

@@ -1,4 +1,4 @@
-"""Malta (MLT) per-subject DLT sub-tree."""
+"""Malta (Malta) per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.mlt.education.subjects import (
     mathematics,
     chemistry,

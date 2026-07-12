@@ -1,6 +1,6 @@
-// ISL education extraction BAML schema.
+// Iceland education extraction BAML schema.
 
-class ISLSubjectCurriculum {
+class IcelandSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (is)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class ISLSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractISLSubjectCurriculum(
+function ExtractIcelandSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Netherlands (NLD) education pipeline.
+"""CocoIndex v1 App for the Netherlands (Netherlands) education pipeline.
 
 Embeds every Netherlands per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.nld.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class NLDEducationChunk:
+class NetherlandsEducationChunk:
     chunk_id: str
     nation: str
     subject: str

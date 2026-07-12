@@ -1,6 +1,6 @@
-// GRC medicine extraction BAML schema (EU nations full-depth).
+// Greece medicine extraction BAML schema (EU nations full-depth).
 
-class GRCHealthGuidance {
+class GreeceHealthGuidance {
   agency string @description("The publishing agency (e.g. NIPH, EODY, NIJZ)")
   advisory_id string @description("The canonical advisory id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class GRCHealthGuidance {
   content_hash string?
 }
 
-function ExtractGRCHealthGuidance(
+function ExtractGreeceHealthGuidance(
   nation: string,
   language: string,
   text: string

@@ -1,4 +1,4 @@
-// FRA law extraction BAML schema.
+// France law extraction BAML schema.
 
 class FRALawDocument {
   legifrance_id string @description("The canonical per-law document id")

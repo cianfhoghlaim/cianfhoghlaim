@@ -1,6 +1,6 @@
-// DNK education extraction BAML schema.
+// Denmark education extraction BAML schema.
 
-class DNKSubjectCurriculum {
+class DenmarkSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (da)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class DNKSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractDNKSubjectCurriculum(
+function ExtractDenmarkSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

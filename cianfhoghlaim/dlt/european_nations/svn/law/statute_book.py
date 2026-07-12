@@ -1,4 +1,4 @@
-"""DLT source for the Uradni list (Official Gazette of Slovenia) (law, SVN).
+"""DLT source for the Uradni list (Official Gazette of Slovenia) (law, Slovenia).
 
 Crawls ``https://www.uradni-list.si`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVNLawSource(NationSource):
+class SloveniaLawSource(NationSource):
     """Uradni list (Official Gazette of Slovenia) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVNLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVNLawSource()
+_NATION_SOURCE = SloveniaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "SVNLawSource",
+    "SloveniaLawSource",
     "statute_book",
     "statute_book_source",
 ]

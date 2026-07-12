@@ -1,4 +1,4 @@
-"""DLT source for the Czech Statistical Office (CZSO) (statistics, CZE).
+"""DLT source for the Czech Statistical Office (CZSO) (statistics, Czechia).
 
 Crawls ``https://www.czso.cz`` and emits one row per ``(stats_office_cze_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CZEStatisticsSource(NationSource):
+class CzechiaStatisticsSource(NationSource):
     """Czech Statistical Office (CZSO) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CZEStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = CZEStatisticsSource()
+_NATION_SOURCE = CzechiaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_cze_source(language: str | None = None):
 
 
 __all__ = [
-    "CZEStatisticsSource",
+    "CzechiaStatisticsSource",
     "stats_office_cze",
     "stats_office_cze_source",
 ]

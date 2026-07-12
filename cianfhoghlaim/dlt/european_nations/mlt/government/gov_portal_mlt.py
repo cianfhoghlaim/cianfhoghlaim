@@ -1,4 +1,4 @@
-"""DLT source for the Government of Malta (government, MLT).
+"""DLT source for the Government of Malta (government, Malta).
 
 Crawls ``https://www.gov.mt`` and emits one row per ``(gov_portal_mlt_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class MLTGovernmentSource(NationSource):
+class MaltaGovernmentSource(NationSource):
     """Government of Malta DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class MLTGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = MLTGovernmentSource()
+_NATION_SOURCE = MaltaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_mlt_source(language: str | None = None):
 
 
 __all__ = [
-    "MLTGovernmentSource",
+    "MaltaGovernmentSource",
     "gov_portal_mlt",
     "gov_portal_mlt_source",
 ]

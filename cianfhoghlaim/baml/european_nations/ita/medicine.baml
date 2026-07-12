@@ -1,4 +1,4 @@
-// ITA medicine extraction BAML schema.
+// Italy medicine extraction BAML schema.
 
 class ITAMedicineDocument {
   aifa_id string @description("The canonical per-medicine document id")

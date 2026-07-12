@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Luxembourg (LUX) education pipeline.
+"""CocoIndex v1 App for the Luxembourg (Luxembourg) education pipeline.
 
 Embeds every Luxembourg per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.lux.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class LUXEducationChunk:
+class LuxembourgEducationChunk:
     chunk_id: str
     nation: str
     subject: str

@@ -1,6 +1,6 @@
-// CHE education extraction BAML schema.
+// Switzerland education extraction BAML schema.
 
-class CHESubjectCurriculum {
+class SwitzerlandSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (de,fr,it,rm)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class CHESubjectCurriculum {
   content_hash string?
 }
 
-function ExtractCHESubjectCurriculum(
+function ExtractSwitzerlandSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

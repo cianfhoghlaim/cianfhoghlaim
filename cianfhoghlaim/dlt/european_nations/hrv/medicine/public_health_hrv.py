@@ -1,4 +1,4 @@
-"""DLT source for the Croatian Institute of Public Health (medicine, HRV).
+"""DLT source for the Croatian Institute of Public Health (medicine, Croatia).
 
 Crawls ``https://www.hzjz.hr`` and emits one row per ``(public_health_hrv_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HRVMedicineSource(NationSource):
+class CroatiaMedicineSource(NationSource):
     """Croatian Institute of Public Health DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HRVMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = HRVMedicineSource()
+_NATION_SOURCE = CroatiaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_hrv_source(language: str | None = None):
 
 
 __all__ = [
-    "HRVMedicineSource",
+    "CroatiaMedicineSource",
     "public_health_hrv",
     "public_health_hrv_source",
 ]

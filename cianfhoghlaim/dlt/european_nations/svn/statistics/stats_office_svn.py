@@ -1,4 +1,4 @@
-"""DLT source for the Statistical Office of the Republic of Slovenia (statistics, SVN).
+"""DLT source for the Statistical Office of the Republic of Slovenia (statistics, Slovenia).
 
 Crawls ``https://www.stat.si`` and emits one row per ``(stats_office_svn_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVNStatisticsSource(NationSource):
+class SloveniaStatisticsSource(NationSource):
     """Statistical Office of the Republic of Slovenia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVNStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVNStatisticsSource()
+_NATION_SOURCE = SloveniaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_svn_source(language: str | None = None):
 
 
 __all__ = [
-    "SVNStatisticsSource",
+    "SloveniaStatisticsSource",
     "stats_office_svn",
     "stats_office_svn_source",
 ]

@@ -1,4 +1,4 @@
-"""DLT source for the National Public Health Organization (EODY) (medicine, GRC).
+"""DLT source for the National Public Health Organization (EODY) (medicine, Greece).
 
 Crawls ``https://eody.gov.gr`` and emits one row per ``(public_health_grc_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class GRCMedicineSource(NationSource):
+class GreeceMedicineSource(NationSource):
     """National Public Health Organization (EODY) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class GRCMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = GRCMedicineSource()
+_NATION_SOURCE = GreeceMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_grc_source(language: str | None = None):
 
 
 __all__ = [
-    "GRCMedicineSource",
+    "GreeceMedicineSource",
     "public_health_grc",
     "public_health_grc_source",
 ]

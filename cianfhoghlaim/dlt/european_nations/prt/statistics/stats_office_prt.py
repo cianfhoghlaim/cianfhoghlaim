@@ -1,4 +1,4 @@
-"""DLT source for the Instituto Nacional de Estatística (Portugal) (statistics, PRT).
+"""DLT source for the Instituto Nacional de Estatística (Portugal) (statistics, Portugal).
 
 Crawls ``https://www.ine.pt`` and emits one row per ``(stats_office_prt_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class PRTStatisticsSource(NationSource):
+class PortugalStatisticsSource(NationSource):
     """Instituto Nacional de Estatística (Portugal) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class PRTStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = PRTStatisticsSource()
+_NATION_SOURCE = PortugalStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_prt_source(language: str | None = None):
 
 
 __all__ = [
-    "PRTStatisticsSource",
+    "PortugalStatisticsSource",
     "stats_office_prt",
     "stats_office_prt_source",
 ]

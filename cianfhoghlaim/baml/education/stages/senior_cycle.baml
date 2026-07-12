@@ -25,7 +25,7 @@ function ExtractSeniorCycleSpecFromUrl(
       - Business (Business, Accounting, Economics, LCVP)
       - Humanities (History, Geography, Philosophy, Politics & Society, Religious
         Education, Art, Music)
-      - Practical (Construction, Engineering, Technology, DCG, PE)
+      - Practical (Construction, Engineering, Technology, DCG, Prince Edward Island)
       - LCA (Leaving Certificate Applied — 27 modules)
 
     The 10 RubricStyle values are:

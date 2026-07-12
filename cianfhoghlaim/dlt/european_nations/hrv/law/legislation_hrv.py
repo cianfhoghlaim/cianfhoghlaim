@@ -1,4 +1,4 @@
-"""DLT source for the Narodne novine (Official Gazette of Croatia) (law, HRV).
+"""DLT source for the Narodne novine (Official Gazette of Croatia) (law, Croatia).
 
 Crawls ``https://www.nn.hr`` and emits one row per ``(legislation_hrv_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HRVLawSource(NationSource):
+class CroatiaLawSource(NationSource):
     """Narodne novine (Official Gazette of Croatia) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HRVLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = HRVLawSource()
+_NATION_SOURCE = CroatiaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def legislation_hrv_source(language: str | None = None):
 
 
 __all__ = [
-    "HRVLawSource",
+    "CroatiaLawSource",
     "legislation_hrv",
     "legislation_hrv_source",
 ]

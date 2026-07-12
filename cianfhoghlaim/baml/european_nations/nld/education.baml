@@ -1,6 +1,6 @@
-// NLD education extraction BAML schema.
+// Netherlands education extraction BAML schema.
 
-class NLDSubjectCurriculum {
+class NetherlandsSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (nl)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class NLDSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractNLDSubjectCurriculum(
+function ExtractNetherlandsSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

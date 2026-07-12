@@ -1,4 +1,4 @@
-"""DLT source for the National Institute of Statistics of Romania (statistics, ROU).
+"""DLT source for the National Institute of Statistics of Romania (statistics, Romania).
 
 Crawls ``https://www.insse.ro`` and emits one row per ``(stats_office_rou_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ROUStatisticsSource(NationSource):
+class RomaniaStatisticsSource(NationSource):
     """National Institute of Statistics of Romania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ROUStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = ROUStatisticsSource()
+_NATION_SOURCE = RomaniaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_rou_source(language: str | None = None):
 
 
 __all__ = [
-    "ROUStatisticsSource",
+    "RomaniaStatisticsSource",
     "stats_office_rou",
     "stats_office_rou_source",
 ]

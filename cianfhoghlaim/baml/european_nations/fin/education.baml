@@ -1,6 +1,6 @@
-// FIN education extraction BAML schema.
+// Finland education extraction BAML schema.
 
-class FINSubjectCurriculum {
+class FinlandSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (fi,sv)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class FINSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractFINSubjectCurriculum(
+function ExtractFinlandSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

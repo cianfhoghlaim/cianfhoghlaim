@@ -39,7 +39,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class LVAEducationChunk:
+class LatviaEducationChunk:
     chunk_id: str
     country_code: str
     subject: str

@@ -1,4 +1,4 @@
-"""DLT source for the National Statistics Office (Malta) (statistics, MLT).
+"""DLT source for the National Statistics Office (Malta) (statistics, Malta).
 
 Crawls ``https://nso.gov.mt`` and emits one row per ``(stats_office_mlt_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class MLTStatisticsSource(NationSource):
+class MaltaStatisticsSource(NationSource):
     """National Statistics Office (Malta) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class MLTStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = MLTStatisticsSource()
+_NATION_SOURCE = MaltaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_mlt_source(language: str | None = None):
 
 
 __all__ = [
-    "MLTStatisticsSource",
+    "MaltaStatisticsSource",
     "stats_office_mlt",
     "stats_office_mlt_source",
 ]

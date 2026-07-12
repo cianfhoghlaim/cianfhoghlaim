@@ -1,4 +1,4 @@
-"""DLT source for the Centre for Disease Prevention and Control (Latvia) (medicine, LVA).
+"""DLT source for the Centre for Disease Prevention and Control (Latvia) (medicine, Latvia).
 
 Crawls ``https://www.spkc.gov.lv`` and emits one row per ``(public_health_lva_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LVAMedicineSource(NationSource):
+class LatviaMedicineSource(NationSource):
     """Centre for Disease Prevention and Control (Latvia) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LVAMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = LVAMedicineSource()
+_NATION_SOURCE = LatviaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_lva_source(language: str | None = None):
 
 
 __all__ = [
-    "LVAMedicineSource",
+    "LatviaMedicineSource",
     "public_health_lva",
     "public_health_lva_source",
 ]

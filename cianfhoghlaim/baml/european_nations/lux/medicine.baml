@@ -1,6 +1,6 @@
-// LUX medicine extraction BAML schema.
+// Luxembourg medicine extraction BAML schema.
 
-class LUXHealthGuidance {
+class LuxembourgHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class LUXHealthGuidance {
   content_hash string?
 }
 
-function ExtractLUXHealthGuidance(
+function ExtractLuxembourgHealthGuidance(
   nation: string,
   language: string,
   text: string

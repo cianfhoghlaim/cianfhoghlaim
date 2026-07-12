@@ -1,4 +1,4 @@
-"""DLT source for the Slov-Lex (Slovak Statute Book) (law, SVK).
+"""DLT source for the Slov-Lex (Slovak Statute Book) (law, Slovakia).
 
 Crawls ``https://www.slov-lex.sk`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVKLawSource(NationSource):
+class SlovakiaLawSource(NationSource):
     """Slov-Lex (Slovak Statute Book) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVKLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVKLawSource()
+_NATION_SOURCE = SlovakiaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "SVKLawSource",
+    "SlovakiaLawSource",
     "statute_book",
     "statute_book_source",
 ]

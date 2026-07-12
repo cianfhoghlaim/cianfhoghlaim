@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Switzerland (CHE) education pipeline.
+"""CocoIndex v1 App for the Switzerland (Switzerland) education pipeline.
 
 Embeds every Switzerland per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.che.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class CHEEducationChunk:
+class SwitzerlandEducationChunk:
     chunk_id: str
     nation: str
     subject: str

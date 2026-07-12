@@ -1,4 +1,4 @@
-// POL medicine extraction BAML schema.
+// Poland medicine extraction BAML schema.
 
 class POLMedicineDocument {
   nfz_id string @description("The canonical per-medicine document id")

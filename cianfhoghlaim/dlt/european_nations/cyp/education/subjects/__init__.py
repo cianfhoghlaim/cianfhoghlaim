@@ -1,4 +1,4 @@
-"""Cyprus (CYP) per-subject DLT sub-tree."""
+"""Cyprus (Cyprus) per-subject DLT sub-tree."""
 from cianfhoghlaim.dlt.european_nations.cyp.education.subjects import (
     mathematics,
     chemistry,

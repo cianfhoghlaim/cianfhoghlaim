@@ -6,7 +6,7 @@ total). Per the
 change.
 
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
-``stedding/ingest_queue/commonwealth/nga/states/nga_zam/law/legislation/<lang>/``.
+``stedding/ingest_queue/commonwealth/nga/states/Zamfara State/law/legislation/<lang>/``.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from cianfhoghlaim.dlt.common.endpoint_recovery import (
 logger = structlog.get_logger(__name__)
 
 
-STATE_CODE = "nga_zam"
+STATE_CODE = "Zamfara State"
 STATE_NAME = "Zamfara"
 DOMAIN = "law"
 SLUG = "legislation"
@@ -52,7 +52,7 @@ DEFAULT_LANGUAGE = "en"
 )
 def nga_zam_legislation(language=None):
     """Yield state rows from the canonical cache."""
-    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/nga_zam/law/legislation")
+    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/Zamfara State/law/legislation")
     languages = (language,) if language else ("en", "ha")
     for lang in languages:
         lang_dir = cache_dir / lang

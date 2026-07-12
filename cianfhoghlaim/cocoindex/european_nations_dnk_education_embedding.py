@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Denmark (DNK) education pipeline.
+"""CocoIndex v1 App for the Denmark (Denmark) education pipeline.
 
 Embeds every Denmark per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.dnk.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class DNKEducationChunk:
+class DenmarkEducationChunk:
     chunk_id: str
     nation: str
     subject: str

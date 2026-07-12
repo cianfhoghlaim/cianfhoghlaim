@@ -1,6 +1,6 @@
-// ISL law extraction BAML schema.
+// Iceland law extraction BAML schema.
 
-class ISLStatute {
+class IcelandStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (is)")
@@ -12,7 +12,7 @@ class ISLStatute {
   content_hash string?
 }
 
-function ExtractISLStatute(
+function ExtractIcelandStatute(
   nation: string,
   language: string,
   text: string

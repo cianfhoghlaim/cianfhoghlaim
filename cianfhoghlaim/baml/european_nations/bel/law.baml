@@ -1,6 +1,6 @@
-// BEL law extraction BAML schema.
+// Belgium law extraction BAML schema.
 
-class BELStatute {
+class BelgiumStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (nl,fr,de)")
@@ -12,7 +12,7 @@ class BELStatute {
   content_hash string?
 }
 
-function ExtractBELStatute(
+function ExtractBelgiumStatute(
   nation: string,
   language: string,
   text: string

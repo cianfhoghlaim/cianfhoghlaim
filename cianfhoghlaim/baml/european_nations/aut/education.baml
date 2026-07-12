@@ -1,6 +1,6 @@
-// AUT education extraction BAML schema.
+// Austria education extraction BAML schema.
 
-class AUTSubjectCurriculum {
+class AustriaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (de)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class AUTSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractAUTSubjectCurriculum(
+function ExtractAustriaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

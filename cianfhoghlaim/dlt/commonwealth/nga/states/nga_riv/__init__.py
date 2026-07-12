@@ -1,4 +1,4 @@
-"""Rivers (nga_riv) state pipeline — re-exports the per-domain sub-trees."""
+"""Rivers (Rivers State) state pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.commonwealth.nga.states.nga_riv import education, government, law, medicine, statistics
 
 __all__ = ["education", "government", "law", "medicine", "statistics"]

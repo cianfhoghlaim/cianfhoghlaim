@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Norway (NOR) education pipeline.
+"""CocoIndex v1 App for the Norway (Norway) education pipeline.
 
 Embeds every Norway per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.nor.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class NOREducationChunk:
+class NorwayEducationChunk:
     chunk_id: str
     nation: str
     subject: str

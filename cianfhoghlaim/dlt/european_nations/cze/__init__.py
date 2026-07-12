@@ -1,4 +1,4 @@
-"""Czechia (CZE) national pipeline — re-exports the per-domain sub-trees."""
+"""Czechia (Czechia) national pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.european_nations.cze import (
     education,
     government,

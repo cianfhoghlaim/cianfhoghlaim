@@ -1,6 +1,6 @@
-// SWE education extraction BAML schema.
+// Sweden education extraction BAML schema.
 
-class SWESubjectCurriculum {
+class SwedenSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (sv)")
   subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
@@ -12,7 +12,7 @@ class SWESubjectCurriculum {
   content_hash string?
 }
 
-function ExtractSWESubjectCurriculum(
+function ExtractSwedenSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,

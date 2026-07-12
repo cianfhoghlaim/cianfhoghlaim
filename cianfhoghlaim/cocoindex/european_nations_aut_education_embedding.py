@@ -1,4 +1,4 @@
-"""CocoIndex v1 App for the Austria (AUT) education pipeline.
+"""CocoIndex v1 App for the Austria (Austria) education pipeline.
 
 Embeds every Austria per-subject education row into the
 shared LanceDB table ``oideachais.lc.european_nations.aut.education_chunks`` using the canonical
@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class AUTEducationChunk:
+class AustriaEducationChunk:
     chunk_id: str
     nation: str
     subject: str

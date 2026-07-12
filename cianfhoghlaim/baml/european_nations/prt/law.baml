@@ -1,6 +1,6 @@
-// PRT law extraction BAML schema (EU nations full-depth).
+// Portugal law extraction BAML schema (EU nations full-depth).
 
-class PRTStatute {
+class PortugalStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Portugal)")
@@ -11,7 +11,7 @@ class PRTStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractPRTStatute(
+function ExtractPortugalStatute(
   nation: string,
   language: string,
   text: string

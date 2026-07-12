@@ -1,4 +1,4 @@
-"""Lithuania (LTU) BAML schemas (EU nations full-depth expansion)."""
+"""Lithuania (Lithuania) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.ltu import (
     education,
     law,

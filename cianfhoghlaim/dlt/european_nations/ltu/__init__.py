@@ -1,4 +1,4 @@
-"""Lithuania (LTU) national pipeline — re-exports the per-domain sub-trees."""
+"""Lithuania (Lithuania) national pipeline — re-exports the per-domain sub-trees."""
 from cianfhoghlaim.dlt.european_nations.ltu import (
     education,
     government,

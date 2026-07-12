@@ -1,4 +1,4 @@
-"""DLT source for the Bulgarian State Gazette / Lex.bg (law, BGR).
+"""DLT source for the Bulgarian State Gazette / Lex.bg (law, Bulgaria).
 
 Crawls ``https://lex.bg`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class BGRLawSource(NationSource):
+class BulgariaLawSource(NationSource):
     """Bulgarian State Gazette / Lex.bg DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class BGRLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = BGRLawSource()
+_NATION_SOURCE = BulgariaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "BGRLawSource",
+    "BulgariaLawSource",
     "statute_book",
     "statute_book_source",
 ]

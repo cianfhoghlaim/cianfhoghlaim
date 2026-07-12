@@ -1,4 +1,4 @@
-"""DLT source for the Ministry of Health of Cyprus (medicine, CYP).
+"""DLT source for the Ministry of Health of Cyprus (medicine, Cyprus).
 
 Crawls ``https://www.moh.gov.cy`` and emits one row per ``(public_health_cyp_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CYPMedicineSource(NationSource):
+class CyprusMedicineSource(NationSource):
     """Ministry of Health of Cyprus DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CYPMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = CYPMedicineSource()
+_NATION_SOURCE = CyprusMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_cyp_source(language: str | None = None):
 
 
 __all__ = [
-    "CYPMedicineSource",
+    "CyprusMedicineSource",
     "public_health_cyp",
     "public_health_cyp_source",
 ]

@@ -1,4 +1,4 @@
-"""DLT source for the Statistics Estonia (statistics, EST).
+"""DLT source for the Statistics Estonia (statistics, Estonia).
 
 Crawls ``https://www.stat.ee`` and emits one row per ``(stats_office_est_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ESTStatisticsSource(NationSource):
+class EstoniaStatisticsSource(NationSource):
     """Statistics Estonia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ESTStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = ESTStatisticsSource()
+_NATION_SOURCE = EstoniaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_est_source(language: str | None = None):
 
 
 __all__ = [
-    "ESTStatisticsSource",
+    "EstoniaStatisticsSource",
     "stats_office_est",
     "stats_office_est_source",
 ]

@@ -1,4 +1,4 @@
-"""Romania (ROU) BAML schemas (EU nations full-depth expansion)."""
+"""Romania (Romania) BAML schemas (EU nations full-depth expansion)."""
 from cianfhoghlaim.baml.european_nations.rou import (
     education,
     law,

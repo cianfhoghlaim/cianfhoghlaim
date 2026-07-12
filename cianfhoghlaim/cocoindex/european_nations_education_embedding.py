@@ -33,8 +33,8 @@ from cianfhoghlaim.cocoindex._lifespan import (
 TABLE_NAME = "oideachais.eu_nations.education_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every EU nations "
-    "+ Ukraine per-nation {domain} row (UKR / FRA / DEU / POL / "
-    "ESP / ITA + the 21 remaining EU member states + EEA/EFTA)."
+    "+ Ukraine per-nation {domain} row (Ukraine / France / Germany / Poland / "
+    "Spain / Italy + the 21 remaining EU member states + EEA/EFTA)."
 )
 SOURCE_DIR = pathlib.Path("dlt/european_nations")
 

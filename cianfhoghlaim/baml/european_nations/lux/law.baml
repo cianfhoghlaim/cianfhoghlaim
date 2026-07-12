@@ -1,6 +1,6 @@
-// LUX law extraction BAML schema.
+// Luxembourg law extraction BAML schema.
 
-class LUXStatute {
+class LuxembourgStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (lb,fr,de)")
@@ -12,7 +12,7 @@ class LUXStatute {
   content_hash string?
 }
 
-function ExtractLUXStatute(
+function ExtractLuxembourgStatute(
   nation: string,
   language: string,
   text: string

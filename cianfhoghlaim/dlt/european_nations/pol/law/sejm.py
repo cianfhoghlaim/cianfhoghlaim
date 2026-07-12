@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class POLLawSource(NationSource):
+class PolandLawSource(NationSource):
     """Sejm + Senat — Polish parliament DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class POLLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = POLLawSource()
+_NATION_SOURCE = PolandLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def sejm_source(language: str | None = None):
 
 
 __all__ = [
-    "POLLawSource",
+    "PolandLawSource",
     "sejm",
     "sejm_source",
 ]

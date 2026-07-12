@@ -6,7 +6,7 @@ total). Per the
 change.
 
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
-``stedding/ingest_queue/commonwealth/nga/states/nga_yob/statistics/stats_office/<lang>/``.
+``stedding/ingest_queue/commonwealth/nga/states/Yobe State/statistics/stats_office/<lang>/``.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from cianfhoghlaim.dlt.common.endpoint_recovery import (
 logger = structlog.get_logger(__name__)
 
 
-STATE_CODE = "nga_yob"
+STATE_CODE = "Yobe State"
 STATE_NAME = "Yobe"
 DOMAIN = "statistics"
 SLUG = "stats_office"
@@ -52,7 +52,7 @@ DEFAULT_LANGUAGE = "en"
 )
 def nga_yob_stats_office(language=None):
     """Yield state rows from the canonical cache."""
-    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/nga_yob/statistics/stats_office")
+    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/Yobe State/statistics/stats_office")
     languages = (language,) if language else ("en", "ha")
     for lang in languages:
         lang_dir = cache_dir / lang

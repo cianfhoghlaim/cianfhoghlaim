@@ -1,6 +1,6 @@
-// NLD medicine extraction BAML schema.
+// Netherlands medicine extraction BAML schema.
 
-class NLDHealthGuidance {
+class NetherlandsHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class NLDHealthGuidance {
   content_hash string?
 }
 
-function ExtractNLDHealthGuidance(
+function ExtractNetherlandsHealthGuidance(
   nation: string,
   language: string,
   text: string

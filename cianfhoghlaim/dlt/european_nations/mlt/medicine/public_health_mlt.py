@@ -1,4 +1,4 @@
-"""DLT source for the Ministry for Health (Malta) (medicine, MLT).
+"""DLT source for the Ministry for Health (Malta) (medicine, Malta).
 
 Crawls ``https://deputyprimeminister.gov.mt`` and emits one row per ``(public_health_mlt_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class MLTMedicineSource(NationSource):
+class MaltaMedicineSource(NationSource):
     """Ministry for Health (Malta) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class MLTMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = MLTMedicineSource()
+_NATION_SOURCE = MaltaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_mlt_source(language: str | None = None):
 
 
 __all__ = [
-    "MLTMedicineSource",
+    "MaltaMedicineSource",
     "public_health_mlt",
     "public_health_mlt_source",
 ]

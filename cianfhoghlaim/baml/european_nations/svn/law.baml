@@ -1,6 +1,6 @@
-// SVN law extraction BAML schema (EU nations full-depth).
+// Slovenia law extraction BAML schema (EU nations full-depth).
 
-class SVNStatute {
+class SloveniaStatute {
   statute_id string @description("The canonical per-statute id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   jurisdiction string @description("The jurisdiction name (e.g. Slovenia)")
@@ -11,7 +11,7 @@ class SVNStatute {
   language string @description("Official language the statute was published in")
 }
 
-function ExtractSVNStatute(
+function ExtractSloveniaStatute(
   nation: string,
   language: string,
   text: string

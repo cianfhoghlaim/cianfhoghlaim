@@ -1,4 +1,4 @@
-"""DLT source for the Riigi Teataja (State Gazette of Estonia) (law, EST).
+"""DLT source for the Riigi Teataja (State Gazette of Estonia) (law, Estonia).
 
 Crawls ``https://www.riigiteataja.ee`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class ESTLawSource(NationSource):
+class EstoniaLawSource(NationSource):
     """Riigi Teataja (State Gazette of Estonia) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class ESTLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = ESTLawSource()
+_NATION_SOURCE = EstoniaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "ESTLawSource",
+    "EstoniaLawSource",
     "statute_book",
     "statute_book_source",
 ]

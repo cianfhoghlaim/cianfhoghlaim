@@ -1,4 +1,4 @@
-"""DLT source for the Government of the Republic of Lithuania (government, LTU).
+"""DLT source for the Government of the Republic of Lithuania (government, Lithuania).
 
 Crawls ``https://lrv.lt`` and emits one row per ``(gov_portal_ltu_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class LTUGovernmentSource(NationSource):
+class LithuaniaGovernmentSource(NationSource):
     """Government of the Republic of Lithuania DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class LTUGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = LTUGovernmentSource()
+_NATION_SOURCE = LithuaniaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_ltu_source(language: str | None = None):
 
 
 __all__ = [
-    "LTUGovernmentSource",
+    "LithuaniaGovernmentSource",
     "gov_portal_ltu",
     "gov_portal_ltu_source",
 ]

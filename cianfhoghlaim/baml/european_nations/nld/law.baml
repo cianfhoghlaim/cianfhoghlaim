@@ -1,6 +1,6 @@
-// NLD law extraction BAML schema.
+// Netherlands law extraction BAML schema.
 
-class NLDStatute {
+class NetherlandsStatute {
   statute_id string @description("The canonical per-statute document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("Official language of the row (nl)")
@@ -12,7 +12,7 @@ class NLDStatute {
   content_hash string?
 }
 
-function ExtractNLDStatute(
+function ExtractNetherlandsStatute(
   nation: string,
   language: string,
   text: string

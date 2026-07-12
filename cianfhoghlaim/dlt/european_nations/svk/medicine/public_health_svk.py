@@ -1,4 +1,4 @@
-"""DLT source for the Public Health Authority of Slovakia (medicine, SVK).
+"""DLT source for the Public Health Authority of Slovakia (medicine, Slovakia).
 
 Crawls ``https://www.uvzsr.sk`` and emits one row per ``(public_health_svk_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class SVKMedicineSource(NationSource):
+class SlovakiaMedicineSource(NationSource):
     """Public Health Authority of Slovakia DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class SVKMedicineSource(NationSource):
         )
 
 
-_NATION_SOURCE = SVKMedicineSource()
+_NATION_SOURCE = SlovakiaMedicineSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def public_health_svk_source(language: str | None = None):
 
 
 __all__ = [
-    "SVKMedicineSource",
+    "SlovakiaMedicineSource",
     "public_health_svk",
     "public_health_svk_source",
 ]

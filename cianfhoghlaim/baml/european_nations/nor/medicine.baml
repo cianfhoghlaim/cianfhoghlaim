@@ -1,6 +1,6 @@
-// NOR medicine extraction BAML schema.
+// Norway medicine extraction BAML schema.
 
-class NORHealthGuidance {
+class NorwayHealthGuidance {
   agency string @description("The public-health agency issuing the guidance")
   advisory_id string @description("The canonical per-advisory document id")
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,7 +12,7 @@ class NORHealthGuidance {
   content_hash string?
 }
 
-function ExtractNORHealthGuidance(
+function ExtractNorwayHealthGuidance(
   nation: string,
   language: string,
   text: string

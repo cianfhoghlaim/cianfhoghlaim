@@ -1,4 +1,4 @@
-// POL law extraction BAML schema.
+// Poland law extraction BAML schema.
 
 class POLLawDocument {
   sejm_id string @description("The canonical per-law document id")

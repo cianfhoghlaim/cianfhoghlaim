@@ -1,4 +1,4 @@
-"""DLT source for the Government of the Czech Republic (government, CZE).
+"""DLT source for the Government of the Czech Republic (government, Czechia).
 
 Crawls ``https://www.vlada.cz`` and emits one row per ``(gov_portal_cze_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CZEGovernmentSource(NationSource):
+class CzechiaGovernmentSource(NationSource):
     """Government of the Czech Republic DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CZEGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = CZEGovernmentSource()
+_NATION_SOURCE = CzechiaGovernmentSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def gov_portal_cze_source(language: str | None = None):
 
 
 __all__ = [
-    "CZEGovernmentSource",
+    "CzechiaGovernmentSource",
     "gov_portal_cze",
     "gov_portal_cze_source",
 ]

@@ -1,4 +1,4 @@
-"""DLT source for the Czech Statute Book (zakonyprolidi.cz) (law, CZE).
+"""DLT source for the Czech Statute Book (zakonyprolidi.cz) (law, Czechia).
 
 Crawls ``https://www.zakonyprolidi.cz`` and emits one row per ``(statute_book_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class CZELawSource(NationSource):
+class CzechiaLawSource(NationSource):
     """Czech Statute Book (zakonyprolidi.cz) DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class CZELawSource(NationSource):
         )
 
 
-_NATION_SOURCE = CZELawSource()
+_NATION_SOURCE = CzechiaLawSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def statute_book_source(language: str | None = None):
 
 
 __all__ = [
-    "CZELawSource",
+    "CzechiaLawSource",
     "statute_book",
     "statute_book_source",
 ]

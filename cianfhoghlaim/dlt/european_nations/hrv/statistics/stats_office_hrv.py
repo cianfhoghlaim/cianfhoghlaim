@@ -1,4 +1,4 @@
-"""DLT source for the Croatian Bureau of Statistics (statistics, HRV).
+"""DLT source for the Croatian Bureau of Statistics (statistics, Croatia).
 
 Crawls ``https://dzs.gov.hr`` and emits one row per ``(stats_office_hrv_id, language)`` for
 every document available in at least one of the official languages of
@@ -33,7 +33,7 @@ from cianfhoghlaim.dlt.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class HRVStatisticsSource(NationSource):
+class CroatiaStatisticsSource(NationSource):
     """Croatian Bureau of Statistics DLT source."""
 
     def __init__(self) -> None:
@@ -50,7 +50,7 @@ class HRVStatisticsSource(NationSource):
         )
 
 
-_NATION_SOURCE = HRVStatisticsSource()
+_NATION_SOURCE = CroatiaStatisticsSource()
 
 
 @dlt.resource(
@@ -105,7 +105,7 @@ def stats_office_hrv_source(language: str | None = None):
 
 
 __all__ = [
-    "HRVStatisticsSource",
+    "CroatiaStatisticsSource",
     "stats_office_hrv",
     "stats_office_hrv_source",
 ]
