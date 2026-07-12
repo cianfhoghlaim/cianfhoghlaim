@@ -41,7 +41,7 @@ Activate when users need:
 | `taighde/meaisinfhoghlaim/` | Training guides, LoRA configs |
 | `taighde_teanga/` | Irish NLP datasets |
 
-### ML Model Dependencies (cianfhoghlaim/meaisinfhoghlaim/)
+### ML Model Dependencies (agents/meaisinfhoghlaim/)
 
 | Model | Usage |
 |-------|-------|

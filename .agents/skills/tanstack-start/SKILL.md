@@ -1,6 +1,6 @@
 ---
 name: tanstack-start
-description: Comprehensive toolkit for TanStack Start — file-based routing, server functions, Query integration, multi-environment SSR, multi-tenant app scaffolding. Use when building production cianfhoghlaim/web/apps/oideachais-web or cianfhoghlaim/web/apps/tuatha-ui surfaces, defining API routes, or wiring TanStack Query against DuckLake.
+description: Comprehensive toolkit for TanStack Start — file-based routing, server functions, Query integration, multi-environment SSR, multi-tenant app scaffolding. Use when building production web/apps/oideachais-web or web/apps/tuatha-ui surfaces, defining API routes, or wiring TanStack Query against DuckLake.
 ---
 
 # TanStack Start
@@ -11,34 +11,34 @@ description: Comprehensive toolkit for TanStack Start — file-based routing, se
 - Use `@tanstack/react-router` for SSR routing and `@tanstack/db`
   for offline differential data syncs from DuckLake.
 - **Authentication is per-surface, not global:**
-  - `cianfhoghlaim/web/apps/oideachais-web` — **no auth** (the public lakehouse)
-  - `cianfhoghlaim/web/apps/tuatha-ui` — **no auth** (the public MMO)
-  - `cianfhoghlaim/web/apps/croilar-portal` — uses `better-auth` + Pocket ID SSO + SIWE
+  - `web/apps/oideachais-web` — **no auth** (the public lakehouse)
+  - `web/apps/tuatha-ui` — **no auth** (the public MMO)
+  - `web/apps/croilar-portal` — uses `better-auth` + Pocket ID SSO + SIWE
 - Bun workspaces:
-  - `oideachais-web` at `cianfhoghlaim/web/apps/oideachais-web/`
-  - `tuatha-ui` at `cianfhoghlaim/web/apps/tuatha-ui/`
-  - `croilar-portal` at `cianfhoghlaim/web/apps/croilar-portal/`
+  - `oideachais-web` at `web/apps/oideachais-web/`
+  - `tuatha-ui` at `web/apps/tuatha-ui/`
+  - `croilar-portal` at `web/apps/croilar-portal/`
 - The route tree is generated at
-  `cianfhoghlaim/web/apps/oideachais-web/src/routeTree.gen.ts` — never edit by hand
+  `web/apps/oideachais-web/src/routeTree.gen.ts` — never edit by hand
 
 ## When to use this skill
 
 Use when you need to:
 
-- "Add a new route to `cianfhoghlaim/web/apps/oideachais-web`"
+- "Add a new route to `web/apps/oideachais-web`"
 - "Define a server function that calls a Dagster asset"
 - "Wire a TanStack Query endpoint to a FastAPI / Hono route"
 - "Create an API route that streams SSE for an agent"
-- "Add a protected route in `cianfhoghlaim/web/apps/croilar-portal`"
+- "Add a protected route in `web/apps/croilar-portal`"
 - "Configure SSR mode for a specific page"
 - "Build a multi-tenant layout with `RootDocument`"
 
 ## Project structure
 
-The canonical layout for `cianfhoghlaim/web/apps/oideachais-web/`:
+The canonical layout for `web/apps/oideachais-web/`:
 
 ```
-cianfhoghlaim/web/apps/oideachais-web/
+web/apps/oideachais-web/
 ├── src/
 │   ├── routes/                    # file-based routes
 │   │   ├── __root.tsx             # RootDocument (HTML shell)
@@ -267,7 +267,7 @@ export const Route = createFileRoute("/api/agent/chat")({
 });
 ```
 
-## Protected routes (only in `cianfhoghlaim/web/apps/croilar-portal`)
+## Protected routes (only in `web/apps/croilar-portal`)
 
 ```typescript
 import { redirect } from "@tanstack/react-router";
@@ -312,7 +312,7 @@ export default defineConfig({
 
 ## Multi-tenant app scaffolding
 
-`cianfhoghlaim/web/apps/oideachais-web` is multi-tenant by design: a single deploy
+`web/apps/oideachais-web` is multi-tenant by design: a single deploy
 serves all Irish / UK / Scottish / Welsh curricula. The
 `tenant` is implicit in the route:
 
@@ -442,7 +442,7 @@ mirrors the BAML Pydantic model — see
 5. **Use `ssr: "data-only"` for dashboards** — full SSR is
    overkill for data-heavy pages
 6. **Use `beforeLoad` + `redirect` for auth** — but only in
-   `cianfhoghlaim/web/apps/croilar-portal` (other surfaces are public)
+   `web/apps/croilar-portal` (other surfaces are public)
 
 ## Troubleshooting
 
@@ -543,7 +543,7 @@ the queried columns download.
 
 ### 4. Better-T-Stack monorepo (the Cianfhoghlaim base)
 
-Every `cianfhoghlaim/` frontend (`cianfhoghlaim/web/apps/oideachais-web`, `tuath/ui`,
+Every `cianfhoghlaim/` frontend (`web/apps/oideachais-web`, `tuath/ui`,
 `aleyum`, `crypteolas`) is scaffolded from
 `cianfhoghlaim-base`, which is the **Better-T-Stack CLI**
 output with the KCG agent-instructions overlay

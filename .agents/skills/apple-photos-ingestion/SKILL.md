@@ -27,7 +27,7 @@ library.
 
 ### 1. DLT source
 
-`cianfhoghlaim/dlt/apple_photos/__init__.py` —
+`dlt/apple_photos/__init__.py` —
 `apple_photos_source()`. Scans `leabharlann/photos/` and yields
 one row per photo with 12 columns (photo_id, capture_date,
 latitude, longitude, camera_model, width, height, file_path,

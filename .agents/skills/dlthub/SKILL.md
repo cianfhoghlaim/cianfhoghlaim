@@ -21,7 +21,7 @@ The 4 workbench skills below are installed into `.claude/skills/` by
 | "`dlthub ai status` warns about fastmcp" | Yes |
 | "How do I deploy a pipeline to dltHub?" | Yes → delegate to `setup-runtime` then `deploy-workspace` |
 | "How do I serve the workspace dashboard?" | Yes → `dlthub serve jobs.workspace.dashboard` |
-| "Where does the deployment manifest live?" | Yes → `cianfhoghlaim/__deployment__.py` |
+| "Where does the deployment manifest live?" | Yes → `__deployment__.py` |
 | "What toolkits should I install?" | Yes → §"Toolkit set" below |
 
 ## Decision tree → sub-skill or reference
@@ -78,10 +78,10 @@ inside the workspace root).
 - `openspec/specs/dlthub-platform-integration/spec.md` — the contract
 - `openspec/changes/2026-07-06-wire-dlthub-platform-toolkits-and-deployment/`
   — the change record
-- `cianfhoghlaim/dlthub-ai-workbench/.claude-plugin/marketplace.json` —
+- `dlthub-ai-workbench/.claude-plugin/marketplace.json` —
   the vendored workbench marketplace
-- `cianfhoghlaim/__deployment__.py` — the deployment manifest
-- `cianfhoghlaim/dlt/jobs/government_circulars_job.py` — the first
+- `__deployment__.py` — the deployment manifest
+- `dlt/jobs/government_circulars_job.py` — the first
   `@run.pipeline("government_circulars_ingest")` job
 
 ## Workbench skills (post-install)

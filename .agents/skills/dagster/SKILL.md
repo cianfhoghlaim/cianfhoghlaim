@@ -4,7 +4,7 @@ description:
   Expert guidance for working with Dagster and the dg CLI. ALWAYS use before doing any task that requires
   knowledge specific to Dagster, or that references assets, materialization, components, data tools or data pipelines.
   Common tasks may include creating a new project, adding new definitions, understanding the current project structure, answering general questions about the codebase (finding asset, schedule, sensor, component or job definitions), debugging issues, or providing deep information about a specific Dagster concept.
-  Drives the British-Isles Education pipeline (42 lc5/lc6 assets = 7 subjects × 6 BAML stages) via `cianfhoghlaim/orchestration/defs/2_materials/`.
+  Drives the British-Isles Education pipeline (42 lc5/lc6 assets = 7 subjects × 6 BAML stages) via `orchestration/defs/2_materials/`.
 ---
 
 ## Core Dagster Concepts
@@ -151,7 +151,7 @@ schedule and ownership.
 │  Layer 4: Asset Generation (Dagster re-materialization) │
 │  → marimo dashboards (5 educational stages)             │
 │  → FastAPI routes (`/dashboards/*`, `/api/*`)          │
-│  → TanStack Start front-end (`cianfhoghlaim/web/apps/oideachais-web/`)         │
+│  → TanStack Start front-end (`web/apps/oideachais-web/`)         │
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -220,9 +220,9 @@ uv run dagster dev -m cianfhoghlaim.orchestration.definitions
 
 The KCG Dagster integration lives at:
 
-- `cianfhoghlaim/orchestration/defs/` — the Dagster
+- `orchestration/defs/` — the Dagster
   definitions module (assets, jobs, schedules, sensors, resources)
-- `cianfhoghlaim/orchestration/definitions.py` —
+- `orchestration/definitions.py` —
   the entry point
 - `dg.toml` — the Dagster workspace config (registers
   oideachais, tuatha, meaisínfhoghlaim, croilar as code-locations)
@@ -306,7 +306,7 @@ attributes:
 
 ### Multi-tenant DLT asset factory (legacy `@dlt_assets`)
 
-The KCG `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum_dlt_assets.py`
+The KCG `orchestration/defs/1_ingestion/curriculum_dlt_assets.py`
 defines a factory pattern for the 33+ Ireland curriculum
 assets, each with the canonical
 `MultiPartitionsDefinition(language, subject)` partition:
@@ -331,7 +331,7 @@ def ireland_curriculum_assets(context, dlt_run_resource):
 
 ## KCG: 21-asset-module / 7-group inventory (canonical)
 
-Per `cianfhoghlaim/orchestration/definitions.py` and the
+Per `orchestration/definitions.py` and the
 leabharlann stack overview, the KCG Dagster workspace has
 **21 asset modules** across **7 groups**:
 
@@ -364,7 +364,7 @@ is wired as 7 specific Dagster assets that fire in order:
 7. `cognee_cross_archive_edges` (Stage 5: edges, **queued**)
 
 The **first 5 are wired**; the last 2 are queued in
-`cianfhoghlaim/REFACTORING.md` Feature 2.
+`REFACTORING.md` Feature 2.
 
 ```
 
@@ -429,11 +429,11 @@ The Cianfhoghlaim platform runs 5 code-locations from a single Dagster UI:
 
 | Code-location | Path | Workspace member |
 |:--|:--|:--|
-| `oideachais` | `cianfhoghlaim/orchestration/defs/` | The lakehouse (280+ assets) |
-| `tuath` | `cianfhoghlaim/agents/tuatha/dagster_assets/` | The Celtic MMO |
-| `crypteolas` | `cianfhoghlaim/agents/crypteolas/dagster_assets/` | The crypto data platform |
-| `croilar` | `cianfhoghlaim/web/apps/croilar-portal/definitions.py` | The multi-persona portfolio |
-| `meaisin_heartbeat` | `cianfhoghlaim/agents/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
+| `oideachais` | `orchestration/defs/` | The lakehouse (280+ assets) |
+| `tuath` | `agents/tuatha/dagster_assets/` | The Celtic MMO |
+| `crypteolas` | `agents/crypteolas/dagster_assets/` | The crypto data platform |
+| `croilar` | `web/apps/croilar-portal/definitions.py` | The multi-persona portfolio |
+| `meaisin_heartbeat` | `agents/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
 
 All 5 are registered in the root `dg.toml` workspace file:
 
@@ -481,7 +481,7 @@ The same wrapper pattern is repeated for the other 5 LC subjects
 (`lc6_chemistry_assets`, `lc6_geography_assets`,
 `lc6_gaeilge_assets`, `lc6_english_assets`,
 `lc6_computer_science_assets`) plus `lc6_government_circulars_assets`
-— each in `cianfhoghlaim/orchestration/defs/2_materials/` with
+— each in `orchestration/defs/2_materials/` with
 `MultiPartitionsDefinition(language=StaticPartitionsDefinition(["en", "ga"]),
 subject=StaticPartitionsDefinition(["mathematics", "chemistry", ...]))`.
 
@@ -491,7 +491,7 @@ subject=StaticPartitionsDefinition(["mathematics", "chemistry", ...]))`.
   `government_circulars`) × 6 BAML stages (curriculum syllabus /
   exam paper layout / marking scheme / cross-linguistic /
   syllabus diagram / question corpus) in
-  `cianfhoghlaim/orchestration/defs/2_materials/`.
+  `orchestration/defs/2_materials/`.
 - **`MultiPartitionsDefinition`** — `language` (`en` / `ga`) ×
   `subject` (6 LC subjects) × `level` (`higher` / `ordinary`) so
   the Gaeilge Higher Mathematics syllabus runs in parallel with

@@ -3,7 +3,7 @@
 The `dagster-ducklake` integration is the canonical way to wire
 DuckLake (Postgres metadata catalog + S3-compatible object store)
 into a Dagster asset. KCG uses DuckLake as the production lakehouse
-sink (the `cianfhoghlaim/storage/ducklake_client.py` module is the
+sink (the `storage/ducklake_client.py` module is the
 canonical client).
 
 ## Resource configuration
@@ -63,11 +63,11 @@ load_info = pipeline.run(site_analysis_source(), dataset_name="oideachais.site_a
 
 ## KCG usage
 
-- `cianfhoghlaim/storage/ducklake_client.py` — the canonical DuckLake
+- `storage/ducklake_client.py` — the canonical DuckLake
   client (Postgres catalog + Garage S3 object store)
 - `oideachais-pipeline` spec — the single `md:oideachais` (MotherDuck)
   database + single `ducklake:oideachais` (Garage S3) catalog
-- `cianfhoghlaim/orchestration/defs/` — the 21+ asset modules that
+- `orchestration/defs/` — the 21+ asset modules that
   write to DuckLake via the resource above
 
 ## Reference

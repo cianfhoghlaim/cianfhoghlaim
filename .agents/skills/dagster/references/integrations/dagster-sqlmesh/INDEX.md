@@ -50,10 +50,10 @@ class CurriculumSQLMeshTranslator(SQLMeshDagsterTranslator):
 ## KCG usage
 
 - The `celtic-data-engineering-patterns` openspec change
-- `cianfhoghlaim/orchestration/sqlmesh/` (or its SQLMesh equivalent) — the
+- `orchestration/sqlmesh/` (or its SQLMesh equivalent) — the
   analytical models
 - The `CelticDagsterDbtTranslator` (the dbt-flavored variant) at
-  `cianfhoghlaim/orchestration/defs/celtic_dbt_assets.py`
+  `orchestration/defs/celtic_dbt_assets.py`
 
 ## Reference
 

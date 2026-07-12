@@ -204,7 +204,7 @@ Every file is **A-grade**: well-structured, entity-dense, explicit relationships
 | `meaisínfhoghlaim/` | 104 | **B+** | Strong core references | Redirect stubs dilute the pool |
 | `teanga/` | 295 | **B** | Richest entity diversity (dataset names, APIs, orgs) | Prose-heavy gaois docs, bilingual duplication |
 | `web/` | 68 | **A** | Best structured overall | Some very long files (2000+ lines) |
-| `cianfhoghlaim/agents/tuatha/` | 117 | **A** | Strong technical specs, explicit pipelines | — |
+| `agents/tuatha/` | 117 | **A** | Strong technical specs, explicit pipelines | — |
 | `cognee/` | 9 | **A** | Reference standard for cognify-clean docs | — |
 | `context/` | 66 | **B+** | Consolidated NotebookLM content | Mixed quality, some raw excerpts |
 

@@ -42,9 +42,9 @@ When assuming the `data-engineer` persona, use these rules:
   local dev. Set `USE_DUCKLAKE=true` to switch to MotherDuck.
 - **Tests**: disable plugins during testing by setting
   `DLT_DISABLE_PLUGINS=true`.
-- **Source location**: `dlt_sources` lives at `cianfhoghlaim/dlt/`
-  (NOT `cianfhoghlaim/data_platform/dlt_sources/`, which is a deprecated
-  path mentioned in the old skill; NOT `cianfhoghlaim/dlt/`,
+- **Source location**: `dlt_sources` lives at `dlt/`
+  (NOT `data_platform/dlt_sources/`, which is a deprecated
+  path mentioned in the old skill; NOT `dlt/`,
   which was the pre-v4 path).
 - **Imports**: All `oideachais.data_platform...` absolute imports have
   been removed; use relative or local `dlt_sources` imports
@@ -64,7 +64,7 @@ When assuming the `data-engineer` persona, use these rules:
 When tasked with dlt operations or data exploration, use this
 guide to invoke the most appropriate resource:
 
-### Data exploration & notebooks (cianfhoghlaim/notebooks/)
+### Data exploration & notebooks (notebooks/)
 
 - **`explore-data`**: Use to analyze datasets and create an
   `analysis_plan.md` artifact
@@ -237,7 +237,7 @@ The same pattern is repeated for the other 5 LC subjects
 `english_syllabus`, `computer_science_syllabus`) plus a
 `government_circulars` resource for `gov.ie` education circulars.
 Each resource is wrapped in `@dlt_assets` in
-`cianfhoghlaim/orchestration/defs/2_materials/` and contributes
+`orchestration/defs/2_materials/` and contributes
 to the 7 v1 CocoIndex Apps (6 LC + `government_circulars`) and
 the 4 MotherDuck Dives (`lc_syllabus_topics`,
 `lc_exam_difficulty`, `lc_marking_complexity`,
@@ -314,13 +314,13 @@ multiprocess_executor, parallel assets, and incremental loading.
 - Use `write_disposition="merge"` without a `primary_key` (silently
   appends duplicates)
 - Import `oideachais.data_platform.dlt_sources` from within
-  `cianfhoghlaim/` (use relative imports via `from cianfhoghlaim.dlt...`)
+  `cianfhoghlaim/` (use relative imports (`from .dlt...`)
 - Hand-write DDL for the destination (let dlt infer the schema from
   the resource yield)
 - Run live web scraping without `USE_LOCAL_SCRAPES=true` first
   (drains API credits and risks rate limits)
 - Add a BAML client inline in a function (use a named client in
-  `cianfhoghlaim/baml/clients.baml`)
+  `baml/clients.baml`)
 - Pin `dlt==1.27.0` or `dlt==1.27.1` — both YANKED from PyPI for a
   data-loss bug; the fix is 1.27.2 (or upgrade to ≥ 1.28.1).
 - Use `write_disposition="replace"` (deprecated in 1.28.0) — use the
@@ -386,7 +386,7 @@ Education pipeline (`openspec/changes/lc6-biep/`). It drives:
   layout / marking scheme / cross-linguistic / syllabus diagram)
   across the 6 LC subjects (Mathematics, Chemistry, Geography,
   Gaeilge, English, Computer Science) — **42 lc5/lc6 Dagster assets
-  total** in `cianfhoghlaim/orchestration/defs/2_materials/`.
+  total** in `orchestration/defs/2_materials/`.
 - **`gov.ie` circulars** — the `government_circulars` resource
   mirrors the 7th v1 CocoIndex App (`government_circulars`),
   landing pages from `gov.ie/.../circulars/...` into

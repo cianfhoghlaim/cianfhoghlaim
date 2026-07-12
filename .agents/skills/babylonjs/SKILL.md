@@ -1,6 +1,6 @@
 ---
 name: babylonjs
-description: Babylon.js 3D rendering engine for WebGL + WebGPU. Use for the cianfhoghlaim/agents/tuatha/game/ MMO client (interactive 3D learning environments, mathematical visualisations, Celtic language family tree, gamified study areas), physics simulations, particle VFX, and VR/AR experiences.
+description: Babylon.js 3D rendering engine for WebGL + WebGPU. Use for the agents/tuatha/game/ MMO client (interactive 3D learning environments, mathematical visualisations, Celtic language family tree, gamified study areas), physics simulations, particle VFX, and VR/AR experiences.
 ---
 
 # Babylon.js — 3D Web Rendering Engine
@@ -50,7 +50,7 @@ experiences in the browser:
 
 ## KCG integration
 
-The `cianfhoghlaim/agents/tuatha/game/` MMO client uses Babylon.js to render
+The `agents/tuatha/game/` MMO client uses Babylon.js to render
 interactive 3D learning environments:
 
 - **Virtual classroom** — students explore mathematical concepts
@@ -217,7 +217,7 @@ For loading 3D models into the Tuatha game:
    smaller payloads
 3. **Optimization** — Draco mesh compression (built into
    GLTF 2.0)
-4. **Storage** — `cianfhoghlaim/agents/tuatha/game/assets/models/` (committed) or
+4. **Storage** — `agents/tuatha/game/assets/models/` (committed) or
    S3 (for large assets)
 5. **Loading** — `SceneLoader.ImportMeshAsync` in the client
 6. **Metadata** — BAML extraction of pedagogical content
@@ -235,10 +235,10 @@ For loading 3D models into the Tuatha game:
 - **glTF Viewer** — <https://gltf-viewer.donmccurdy.com/> (test
   your GLTF assets in isolation)
 
-## Project structure (KCG `cianfhoghlaim/agents/tuatha/game/`)
+## Project structure (KCG `agents/tuatha/game/`)
 
 ```
-cianfhoghlaim/agents/tuatha/game/
+agents/tuatha/game/
 ├── src/
 │   ├── main.ts              # entry point; bootstraps the Engine
 │   ├── scenes/              # one file per scene (classroom, etc.)
@@ -311,4 +311,4 @@ cianfhoghlaim/agents/tuatha/game/
 - Babylon.js Playground: <https://playground.babylonjs.com/>
 - GLTF spec: <https://github.com/KhronosGroup/glTF>
 - Havok: <https://www.havok.com/>
-- KCG `cianfhoghlaim/agents/tuatha/game/`: the canonical Babylon.js client
+- KCG `agents/tuatha/game/`: the canonical Babylon.js client
