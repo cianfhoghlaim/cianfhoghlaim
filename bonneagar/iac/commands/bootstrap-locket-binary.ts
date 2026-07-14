@@ -19,7 +19,7 @@ import { join } from "node:path";
 import { execSync } from "node:child_process";
 import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 
-const LOCKET_VERSION = "0.4.0";
+const LOCKET_VERSION = "0.17.3";
 const LOCKET_REPO = "bpbradley/locket";
 const LOCKET_BIN = join(process.env.HOME ?? "/root", ".local", "bin", "locket");
 
@@ -44,9 +44,10 @@ export async function bootstrapLocketBinary(opts?: { force?: boolean }): Promise
   }
 
   // 2. Download from GitHub releases
+  // Asset naming: locket-{arch}-{platform}.tar.xz (e.g. locket-aarch64-apple-darwin.tar.xz)
   const arch = process.arch === "arm64" ? "aarch64" : "x86_64";
   const platform = process.platform === "darwin" ? "apple-darwin" : "unknown-linux-gnu";
-  const assetName = `locket-${platform}-${arch}.tar.xz`;
+  const assetName = `locket-${arch}-${platform}.tar.xz`;
   const downloadUrl = `https://github.com/${LOCKET_REPO}/releases/download/v${LOCKET_VERSION}/${assetName}`;
 
   log(`  downloading ${assetName}...`);
@@ -54,10 +55,20 @@ export async function bootstrapLocketBinary(opts?: { force?: boolean }): Promise
 
   try {
     const tmpTar = `/tmp/locket-${LOCKET_VERSION}.tar.xz`;
+    const tmpExtract = `/tmp/locket-${LOCKET_VERSION}-extract`;
     execSync(`curl -fsSL -o ${tmpTar} ${downloadUrl}`, { stdio: "inherit" });
-    execSync(`tar -xJf ${tmpTar} -C /tmp locket`, { stdio: "inherit" });
-    execSync(`mv /tmp/locket ${LOCKET_BIN}`, { stdio: "inherit" });
-    execSync(`rm ${tmpTar}`, { stdio: "pipe" });
+    // The tar contains a single subdirectory like `locket-aarch64-apple-darwin/locket`.
+    // Extract and find the binary inside.
+    execSync(`rm -rf ${tmpExtract} && mkdir -p ${tmpExtract}`, { stdio: "pipe" });
+    execSync(`tar -xJf ${tmpTar} -C ${tmpExtract}`, { stdio: "inherit" });
+    // Find the locket binary (typically in a single subdirectory)
+    // Use -perm +111 (cross-platform; macOS find doesn't support -executable)
+    const findResult = execSync(`find ${tmpExtract} -type f -name 'locket' -perm +111 | head -1`, { encoding: "utf-8" }).trim();
+    if (!findResult) {
+      throw new Error(`Could not find 'locket' binary inside the tar archive`);
+    }
+    execSync(`mv ${findResult} ${LOCKET_BIN}`, { stdio: "inherit" });
+    execSync(`rm -rf ${tmpTar} ${tmpExtract}`, { stdio: "pipe" });
     chmodSync(LOCKET_BIN, 0o755);
   } catch (e) {
     logError(`Failed to download locket from ${downloadUrl}: ${(e as Error).message}`);
