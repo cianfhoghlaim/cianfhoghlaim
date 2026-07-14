@@ -90,15 +90,22 @@ class ModelBackend(str, Enum):
     """Supported model backends.
 
     Note: the v4 registry has DROPPED `OPENAI` and `ANTHROPIC` from
-    the canonical backend list. All 24 entries have at least one
-    local inference path (Unsloth GGUF, mlx-community, or upstream
-    safetensors on M4 Max 48 GB / arm1-oci).
+    the canonical backend list. The v5 (BIEP v2) registry extends the
+    backend list from 4 to **6** by adding `DOCLING` (the IBM Docling
+    HTTP REST API at :5001) and `UNSTRACT` (the Unstract REST API at
+    :8000). All 26 entries have at least one local-or-rest inference
+    path (Unsloth GGUF, mlx-community, IBM Docling, Unstract workflow,
+    or upstream safetensors on M4 Max 48 GB / arm1-oci).
+
+    Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
     """
 
     LITELLM = "litellm"
     MLX = "mlx"
     TRANSFORMERS = "transformers"
     LLAMASWAP = "llama-swap"  # NEW in v4 — Unsloth GGUFs served via llama-swap
+    DOCLING = "docling"        # NEW in v5 (BIEP v2) — IBM Docling HTTP REST API
+    UNSTRACT = "unstract"      # NEW in v5 (BIEP v2) — Unstract Prompt Studio workflow
 
 
 class ModelCapability(str, Enum):
@@ -106,6 +113,11 @@ class ModelCapability(str, Enum):
 
     `DIAGRAM` is NEW in v4 (added 2026-06-29) for the 6-stage PDF
     processing pipeline's figure detection / captioning tasks.
+
+    `UNISTRUCT_WORKFLOW` + `DOCLING_LAYOUT` are NEW in v5 (BIEP v2)
+    for the per-path OCR/VLM ensemble (Change 3).
+
+    Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
     """
 
     DENSE_OCR = "dense_ocr"
@@ -117,6 +129,8 @@ class ModelCapability(str, Enum):
     MULTILINGUAL = "multilingual"
     GAELIC = "gaelic"
     DIAGRAM = "diagram"  # NEW in v4
+    DOCLING_LAYOUT = "docling_layout"     # NEW in v5 — IBM Docling DocTags XML
+    UNISTRUCT_WORKFLOW = "unstract_workflow"  # NEW in v5 — Unstract Prompt Studio workflow
 
 
 # Back-compat aliases for legacy code
@@ -680,8 +694,66 @@ VISION_MODELS: dict[str, OCRModel] = {
         max_resolution=(1280, 1280),
         notes="4B. 6 Celtic languages. Legacy — prefer Gemma 4 E4B.",
     ),
+
+    # ─── v5 (BIEP v2) — Unstract API + Docling HTTP API (added 2026-07-22) ───
+    "unstract-api": OCRModel(
+        key="unstract-api",
+        name="Unstract REST API (Prompt Studio workflow)",
+        unsloth_id=None,
+        mlx_id=None,
+        upstream_id="unstract/api:v0.177.7",   # The Unstract backend HTTP API
+        backend=ModelBackend.UNSTRACT,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.TABLES,
+            ModelCapability.MULTILINGUAL,
+            ModelCapability.UNISTRUCT_WORKFLOW,
+        ],
+        unsloth_features=[],
+        role="specialist",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(2048, 2048),
+        notes=(
+            "v5 NEW: Unstract Prompt Studio workflow via the Unstract HTTP API "
+            "at :8000. Path 2 of the BIEP v2 4-path ensemble. Non-engineers author "
+            "extraction prompts in Prompt Studio; the BAML `Unstract` client "
+            "calls this endpoint per the `ensembled_extraction.baml` input contract."
+        ),
+    ),
+    "docling-serve": OCRModel(
+        key="docling-serve",
+        name="IBM Docling HTTP REST API (DocTags XML)",
+        unsloth_id=None,
+        mlx_id=None,
+        upstream_id="ghcr.io/ds4sd/docling-serve:v0.4.0",  # The Docling HTTP API image
+        backend=ModelBackend.DOCLING,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.TABLES,
+            ModelCapability.LATEX,
+            ModelCapability.DIAGRAM,
+            ModelCapability.DOCLING_LAYOUT,
+        ],
+        unsloth_features=[],
+        role="specialist",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(2048, 2048),
+        notes=(
+            "v5 NEW: IBM Docling 258M DocTags XML layout specialist via the "
+            "docling-serve HTTP REST API at :5001. The 'safety net' first "
+            "stage of the BIEP v2 4-path ensemble. Returns structured "
+            "DocTags XML preserving tables / figures / equations."
+        ),
+    ),
 }
-# Total: 24 entries (verified live on HF Hub 2026-06-29, Unsloth-only)
+# Total: 26 entries (24 v4 + 2 v5 BIEP v2 entrants)
+# Verified live on HF Hub 2026-06-29 for the original 24; the 2 v5
+# entries (unstract-api, docling-serve) are the Unstract + Docling HTTP
+# APIs from the bonneagar stacks (no HF model ID).
 
 
 # ─── Classical OCR (Docker compose stacks) ──────────────────────────────────

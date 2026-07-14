@@ -1,0 +1,64 @@
+# ChangeDetection.io monitor: AQA qualification specs
+#
+# Per the 2026-07-24-biep-v2-gov-uk-change-detection-v1 change.
+#
+# Watches every AQA GCSE + A-Level specification page for content changes
+# (spec version bump, PDF replacement, assessment objective changes).
+# Fires a webhook to the Dagster sensor at
+# http://dagster-webhook:8080/webhooks/england_change_detection.
+
+name: aqa_monitor
+url: https://www.aqa.org.uk/subjects
+css_selector: 'a[href*="/specifications"]'
+xpath: null
+timeout: 60
+interval: 21600  # 6 hours
+fetch_backend: web_scraping
+webhook_url: http://dagster-webhook:8080/webhooks/england_change_detection
+notification_format: json
+# The watched pages
+watched_pages:
+  - url: https://www.aqa.org.uk/subjects/mathematics/gcse/mathematics-8035
+    subject: mathematics
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/mathematics/as-and-a-level/mathematics-7357
+    subject: mathematics
+    qualification_level: a_level
+  - url: https://www.aqa.org.uk/subjects/english/gcse/english-language-8700
+    subject: english_language
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/english/gcse/english-literature-8702
+    subject: english_literature
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/chemistry/gcse/chemistry-8462
+    subject: chemistry
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/biology/gcse/biology-8461
+    subject: biology
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/physics/gcse/physics-8463
+    subject: physics
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/computer-science/gcse/computer-science-8525
+    subject: computer_science
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/history/gcse/history-8145
+    subject: history
+    qualification_level: gcse
+  - url: https://www.aqa.org.uk/subjects/geography/gcse/geography-8035
+    subject: geography
+    qualification_level: gcse
+alert:
+  kind: webhook
+  webhook_url: http://dagster-webhook:8080/webhooks/england_change_detection
+  include_filters:
+    - "subject:mathematics"
+    - "subject:english_language"
+    - "subject:english_literature"
+    - "subject:chemistry"
+    - "subject:biology"
+    - "subject:physics"
+    - "subject:computer_science"
+    - "subject:history"
+    - "subject:geography"
+  exclude_filters: []
