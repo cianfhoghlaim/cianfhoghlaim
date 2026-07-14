@@ -60,6 +60,11 @@ export async function dispatch(command: string) {
     case "sync:resource-syncs": return (await import("./commands/sync-resource-syncs.ts")).syncResourceSyncs();
     case "bootstrap-infisical": return (await import("./commands/bootstrap-infisical.ts")).bootstrapInfisical();
     case "bootstrap-pocketid-admin": return (await import("./commands/bootstrap-pocketid-admin.ts")).bootstrapPocketIdAdmin();
+    case "bootstrap-locket-binary": return (await import("./commands/bootstrap-locket-binary.ts")).bootstrapLocketBinary();
+    case "bootstrap-control-plane": return (await import("./commands/bootstrap-control-plane.ts")).bootstrapControlPlane();
+    case "wire-pocketid-as-oidc": return (await import("./commands/wire-pocketid-as-oidc.ts")).wirePocketIdAsOidc();
+    case "deploy-periphery": return (await import("./commands/deploy-periphery.ts")).deployPeriphery();
+    case "deploy-newt": return (await import("./commands/deploy-newt.ts")).deployNewt();
     case "rotate-auth": return (await import("./commands/rotate-auth.ts")).rotateAuth();
     case "sync:monitors": return (await import("./commands/sync-monitors.ts")).syncMonitors();
     case "sync:alerts": return (await import("./commands/sync-alerts.ts")).syncAlerts();

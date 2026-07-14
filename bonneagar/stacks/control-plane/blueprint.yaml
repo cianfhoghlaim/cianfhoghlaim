@@ -1,0 +1,43 @@
+# =============================================================================
+# CONTROL-PLANE STACK — Komodo Resource Sync blueprint
+# =============================================================================
+# This stack is GitOps-managed by Komodo. The bons IaC's `iac:sync:resource-syncs`
+# applies this file to Komodo, which auto-pulls every 60s and reconciles.
+# =============================================================================
+
+[[resource_sync]]
+name = "control-plane"
+description = "5-control-plane bundled stack (Komodo + Infisical + Pangolin + Pocket ID + Tinyauth + Locket) — GitOps-managed by bons IaC"
+
+[resource_sync.config]
+# Repository configuration - same repo as the arm1-oci sync
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "pick-5b-bonneagar-v5-continuation"
+
+# Resource paths under <repo-root>/<branch>/ :
+resource_path = [
+  "bonneagar/stacks/control-plane/compose.yaml",
+  "bonneagar/stacks/control-plane/sidecar.yaml",
+  "bonneagar/stacks/control-plane/secrets.env",
+  "bonneagar/stacks/control-plane/pangolin.yaml",
+  "bonneagar/stacks/control-plane/blueprint.yaml",
+  "bonneagar/stacks/control-plane/.env.example",
+  "bonneagar/stacks/control-plane/README.md",
+]
+
+# 60s poll interval
+interval = "60s"
+
+# Managed mode - Komodo owns these resources
+managed = true
+
+# Safety: don't delete resources not in this list
+delete = false
+
+# Git provider for webhook + clone semantics
+git_provider = "git.cianfhoghlaim.ie"
+
+# Sync triggers
+on_sync = true
+on_pull = true
