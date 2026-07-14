@@ -19,6 +19,14 @@
 #   9. deploy-pangolin-newt-arm1-oci   — arm1-oci newt client (the control-plane side)
 #  10. deploy-newt-bunchloch-v2        — bunchloch newt client (the operator-laptop side)
 #
+# The bundled 5-control-plane stack itself (Komodo + Infisical + Pangolin +
+# Pocket ID + Tinyauth + Locket) is declared in `stacks/control-plane/`
+# (6-file GOLD_STANDARD contract) and managed by the bons IaC's
+# `iac:bootstrap-control-plane` command. The resource sync at
+# `komodo/resource-syncs/control-plane-arm1-oci.toml` would track it
+# post-archive (the bundled stack is deployed by Komodo, not by a
+# procedure that lives in cross-cutting).
+#
 # Per the bonneagar-v5 drift refactor:
 #   - 60s interval (sub-minute convergence)
 #   - on_pull=true (Komodo proactively pulls on the schedule)
@@ -34,7 +42,7 @@
 
 [[resource_sync]]
 name = "cross-cutting"
-description = "10 cross-host prerequisite procedures (pangolin-first + komodo-core + infisical-first + locket-deploy + deploy-infisical-arm1-oci + 5 deploy procedures) — must run before the per-host syncs"
+description = "10 cross-host prerequisite procedures (pangolin-first + komodo-core + infisical-first + locket-deploy + deploy-infisical-arm1-oci + 5 deploy procedures) — must run before the per-host syncs. The bundled 5-control-plane stack is managed by the bons IaC's iac:bootstrap-control-plane command (see stacks/control-plane/)."
 
 [resource_sync.config]
 # Repository configuration - Forgejo at git.cianfhoghlaim.ie

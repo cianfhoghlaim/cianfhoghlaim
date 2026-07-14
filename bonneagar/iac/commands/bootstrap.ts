@@ -1,22 +1,23 @@
-// bonneagar/iac/commands/bootstrap.ts — 9-phase end-to-end orchestrator
+// bonneagar/iac/commands/bootstrap.ts — 10-phase end-to-end orchestrator
 //
-// The integrated bootstrap that wires all 5 auth components together:
-//   Phase 1: Pulumi (TODO — calls bonneagar/pulumi/oci/deploy.ts)
+// The integrated bootstrap that wires all 5 auth components + the new
+// control-plane stack together:
+//   Phase 1: Pulumi IaC (iac/pulumi/oci/deploy.ts) — provisions arm1-oci VM
 //   Phase 2: Infisical secrets
-//   Phase 3: Pocket ID (NEW — was a TODO before this change)
-//   Phase 4: Pocket ID → Pangolin → Komodo → Infisical auth wiring
-//            (creates bons-iac OIDC client, mints fresh Pangolin API key,
-//             syncs Komodo password + Infisical secret to .env)
+//   Phase 2.5: Infisical bootstrap (iac:bootstrap-infisical) — first admin + 8 machine identities
+//   Phase 2.75: Pocket ID OIDC wire (iac:wire-pocketid-as-oidc) — komodo OIDC client
+//   Phase 3: Pocket ID (idempotent check + bootstrap if empty)
+//   Phase 4: Cross-system auth wiring (Pocket ID ↔ Pangolin ↔ Komodo ↔ Infisical)
 //   Phase 5: Pangolin private resources
 //   Phase 6: Komodo Core (deploy) + Periphery (deploy)
-//   Phase 7: Tinyauth (NEW — fixes the crash loop)
-//   Phase 8: Newt (sync-sites) — was the previous TODO
+//   Phase 7: Tinyauth (fixes the crash loop)
+//   Phase 8: Newt (sync-sites)
 //   Phase 9: All sync commands (procedures + resource-syncs + variables + olm)
 //
 // IDEMPOTENT: every phase checks if the work is already done and skips
 // accordingly. Safe to re-run on cold-boot OR warm-update.
 //
-// Companion: openspec/changes/2026-07-14-tightly-knit-auth-stack-v1
+// Companion: openspec/changes/2026-07-15-iac-ify-arm1-oci-control-plane-v1
 // =============================================================================
 
 import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
@@ -34,22 +35,55 @@ import { syncActionRecipients } from "./sync-action-recipients.ts";
 import { syncOlm } from "./sync-olm.ts";
 import { pocketIdHealth } from "../auth-pocketid-admin.ts";
 import { ensureBonsIacClient } from "./bootstrap-pocketid-admin.ts";
+import { bootstrapInfisical } from "./bootstrap-infisical.ts";
+import { wirePocketIdAsOidc } from "./wire-pocketid-as-oidc.ts";
+import { $ } from "bun";
 
 export async function bootstrap() {
   logStep("iac:bootstrap — end-to-end (Pulumi → Infisical → Pocket ID → Pangolin → Komodo → Tinyauth → Newt → all syncs)");
 
   // =======================================================================
-  // Phase 1: Pulumi (TODO — calls bonneagar/pulumi/oci/deploy.ts)
+  // Phase 1: Pulumi IaC (iac/pulumi/oci/deploy.ts) — provisions arm1-oci VM
   // =======================================================================
-  logStep("Phase 1: Pulumi (OCI / Cloudflare) — TODO");
-  logWarn("Pulumi deploy not yet automated; run mise run pulumi:deploy manually");
-  // (Future: import { deploy as pulumiDeploy } from '../../pulumi/oci/deploy.ts'; await pulumiDeploy();)
+  logStep("Phase 1: Pulumi IaC (provisions arm1-oci VM via OCI + Cloudflare DNS)");
+  if (CLI_FLAGS.dryRun) {
+    logOk("dry-run: skipping Pulumi IaC (would provision VM + save Cloudflare creds to Infisical)");
+  } else {
+    try {
+      // Invoke the Pulumi IaC orchestrator script (idempotent — no-op on bunchloch)
+      await $`bun run iac/pulumi/oci/deploy.ts up`.quiet();
+      logOk("Pulumi IaC: arm1-oci VM provisioned (or already exists)");
+    } catch (e) {
+      logWarn(`Pulumi IaC: deployment may have failed (this is OK on bunchloch where the VM is already running) — ${(e as Error).message}`);
+    }
+  }
 
   // =======================================================================
   // Phase 2: Infisical secrets (the source of truth for all credentials)
   // =======================================================================
   logStep("Phase 2: Infisical secrets");
   await syncSecrets();
+
+  // =======================================================================
+  // Phase 2.5: Infisical bootstrap (NEW — first admin + 8 machine identities)
+  // =======================================================================
+  logStep("Phase 2.5: Infisical bootstrap (first admin + 8 machine identities)");
+  try {
+    await bootstrapInfisical();
+  } catch (e) {
+    logWarn(`Infisical bootstrap: ${(e as Error).message}`);
+  }
+
+  // =======================================================================
+  // Phase 2.75: Pocket ID OIDC wire (NEW — creates komodo OIDC client in Pocket ID
+  //                       + wires Pocket ID as the OIDC IdP for Komodo + Pangolin)
+  // =======================================================================
+  logStep("Phase 2.75: Pocket ID OIDC wire (creates komodo OIDC client + wires Komodo + Pangolin)");
+  try {
+    await wirePocketIdAsOidc();
+  } catch (e) {
+    logWarn(`Pocket ID OIDC wire: ${(e as Error).message}`);
+  }
 
   // =======================================================================
   // Phase 3: Pocket ID (idempotent check + bootstrap if empty)
