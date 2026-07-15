@@ -1,19 +1,33 @@
 # =============================================================================
-# CONVEX - Self-Hosted Backend Platform
+# CONVEX - Self-Hosted Backend Platform (PlanetScale PG migration)
 # =============================================================================
-# Reactive backend-as-a-service with real-time sync and serverless functions.
+# Per openspec/changes/2026-07-19-planetscale-postgres-migration-phase-b0-v1/
 #
-# USAGE:
+# Phase B.0 ships Convex self-host as a HARD SWITCH to PlanetScale PG.
+#
+# Pre-requisites (operator, before this PR merges):
+#   1. Create the PlanetScale PG branch (e.g. bunchloch-prod)
+#   2. Create the `convex_production` database on that branch
+#   3. Create 2 Infisical secrets in `dev-baile/`:
+#      - convex/database_url   → "postgresql://<user>:<pwd>@<host>.pg.psdb.cloud/convex_production?sslmode=verify-full"
+#      - convex/instance_secret → a random string used by Convex for instance isolation
+#
+# NOTE: This is a clean-start migration. Per the operator's confirmation,
+# the self-hosted Convex deployments are dev-only with NO production data.
+# Future production Convex deployments MUST follow the SQLite → Postgres
+# export-import procedure documented in the Convex docs.
+#
+# Usage:
 #   Development:  docker compose --env-file ../../.env.local up -d
 #   Production:   locket exec --env-file secrets.env -- docker compose up -d
-#   Standalone:   docker compose up -d  (uses defaults)
+#   Standalone:   docker compose up -d  (uses defaults — needs the Infisical secrets)
 # =============================================================================
 
 name: convex
 
 services:
   # ---------------------------------------------------------------------------
-  # CONVEX BACKEND - Core Server
+  # CONVEX BACKEND - Core Server (PlanetScale PG-backed)
   # ---------------------------------------------------------------------------
   backend:
     image: ghcr.io/get-convex/convex-backend:latest
@@ -29,10 +43,10 @@ services:
       CONVEX_CLOUD_ORIGIN: ${CONVEX_CLOUD_ORIGIN:-http://127.0.0.1:3210}
       CONVEX_SITE_ORIGIN: ${CONVEX_SITE_ORIGIN:-http://127.0.0.1:3211}
       INSTANCE_NAME: ${CONVEX_INSTANCE_NAME:-convex}
-      INSTANCE_SECRET: ${CONVEX_INSTANCE_SECRET:-dev-secret-change-in-production}
-      # Database configuration (optional)
-      DATABASE_URL: ${CONVEX_DATABASE_URL:-}
-      POSTGRES_URL: ${CONVEX_POSTGRES_URL:-}
+      INSTANCE_SECRET: infisical://dev-baile/convex/instance_secret
+      # Database configuration — PlanetScale PG via Locket (per Phase B.0)
+      DATABASE_URL: infisical://dev-baile/convex/database_url
+      POSTGRES_URL: infisical://dev-baile/convex/database_url
       MYSQL_URL: ${CONVEX_MYSQL_URL:-}
       # S3 storage configuration (optional)
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
@@ -50,8 +64,8 @@ services:
       ACTIONS_USER_TIMEOUT_SECS: ${ACTIONS_USER_TIMEOUT_SECS:-}
       RUST_LOG: ${RUST_LOG:-info}
       DISABLE_BEACON: ${DISABLE_BEACON:-}
-    volumes:
-      - convex-data:/convex/data
+    # The `convex-data` SQLite volume has been REMOVED in Phase B.0
+    # Convex now writes to PlanetScale PG exclusively
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3210/version"]
       interval: 5s
@@ -60,29 +74,3 @@ services:
       start_period: 10s
     networks:
       - convex
-
-  # ---------------------------------------------------------------------------
-  # CONVEX DASHBOARD - Web UI
-  # ---------------------------------------------------------------------------
-  dashboard:
-    image: ghcr.io/get-convex/convex-dashboard:latest
-    container_name: convex-dashboard
-    restart: unless-stopped
-    stop_grace_period: 10s
-    stop_signal: SIGINT
-    ports:
-      - "${CONVEX_DASHBOARD_PORT:-6791}:6791"
-    environment:
-      NEXT_PUBLIC_DEPLOYMENT_URL: ${NEXT_PUBLIC_DEPLOYMENT_URL:-http://127.0.0.1:3210}
-    depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - convex
-
-volumes:
-  convex-data:
-
-networks:
-  convex:
-    driver: bridge

@@ -1,0 +1,59 @@
+# ChangeDetection.io monitor: OCR qualification specs
+#
+# Per the 2026-07-24-biep-v2-gov-uk-change-detection-v1 change.
+
+name: ocr_monitor
+url: https://www.ocr.org.uk/qualifications
+css_selector: 'a[href*="/qualifications/"]'
+xpath: null
+timeout: 60
+interval: 21600  # 6 hours
+fetch_backend: web_scraping
+webhook_url: http://dagster-webhook:8080/webhooks/england_change_detection
+notification_format: json
+# The watched pages
+watched_pages:
+  - url: https://www.ocr.org.uk/qualifications/gcse/mathematics-j560-from-2015
+    subject: mathematics
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/as-and-a-level/mathematics-a-h240-from-2017
+    subject: mathematics
+    qualification_level: a_level
+  - url: https://www.ocr.org.uk/qualifications/gcse/english-language-j351-from-2015
+    subject: english_language
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/english-literature-j352-from-2015
+    subject: english_literature
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/chemistry-a-j248-from-2016
+    subject: chemistry
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/biology-a-j243-from-2016
+    subject: biology
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/physics-a-j245-from-2016
+    subject: physics
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/computer-science-j277-from-2016
+    subject: computer_science
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/history-a-j410-from-2016
+    subject: history
+    qualification_level: gcse
+  - url: https://www.ocr.org.uk/qualifications/gcse/geography-a-j383-from-2016
+    subject: geography
+    qualification_level: gcse
+alert:
+  kind: webhook
+  webhook_url: http://dagster-webhook:8080/webhooks/england_change_detection
+  include_filters:
+    - "subject:mathematics"
+    - "subject:english_language"
+    - "subject:english_literature"
+    - "subject:chemistry"
+    - "subject:biology"
+    - "subject:physics"
+    - "subject:computer_science"
+    - "subject:history"
+    - "subject:geography"
+  exclude_filters: []

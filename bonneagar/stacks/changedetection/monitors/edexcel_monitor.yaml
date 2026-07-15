@@ -1,0 +1,59 @@
+# ChangeDetection.io monitor: Edexcel (Pearson) qualification specs
+#
+# Per the 2026-07-24-biep-v2-gov-uk-change-detection-v1 change.
+
+name: edexcel_monitor
+url: https://qualifications.pearson.com
+css_selector: 'a[href*="/qualifications/edexcel-"]'
+xpath: null
+timeout: 60
+interval: 21600  # 6 hours
+fetch_backend: web_scraping
+webhook_url: http://dagster-webhook:8080/webhooks/england_change_detection
+notification_format: json
+# The watched pages
+watched_pages:
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/mathematics-2015.coursematerials.html
+    subject: mathematics
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-a-levels/mathematics-2017.coursematerials.html
+    subject: mathematics
+    qualification_level: a_level
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/english-language-a-2015.coursematerials.html
+    subject: english_language
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/english-literature-2015.coursematerials.html
+    subject: english_literature
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/chemistry-2016.coursematerials.html
+    subject: chemistry
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/biology-2016.coursematerials.html
+    subject: biology
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/physics-2016.coursematerials.html
+    subject: physics
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/computer-science-2020.coursematerials.html
+    subject: computer_science
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/history-2016.coursematerials.html
+    subject: history
+    qualification_level: gcse
+  - url: https://qualifications.pearson.com/en/qualifications/edexcel-gcses/geography-2016.coursematerials.html
+    subject: geography
+    qualification_level: gcse
+alert:
+  kind: webhook
+  webhook_url: http://dagster-webhook:8080/webhooks/england_change_detection
+  include_filters:
+    - "subject:mathematics"
+    - "subject:english_language"
+    - "subject:english_literature"
+    - "subject:chemistry"
+    - "subject:biology"
+    - "subject:physics"
+    - "subject:computer_science"
+    - "subject:history"
+    - "subject:geography"
+  exclude_filters: []
