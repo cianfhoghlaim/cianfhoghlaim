@@ -1,65 +1,38 @@
-# Lakekeeper — Apache Iceberg REST Catalog
+# LAKEKEEPER — PlanetScale PG migration (Phase B.0)
 
-## Overview
+Per `openspec/changes/2026-07-19-planetscale-postgres-migration-phase-b0-v1/`,
+this stack was migrated to **PlanetScale PostgreSQL** as a **hard switch**.
 
-Lakekeeper is an open-source Apache Iceberg REST Catalog implementation written in Rust. It provides the catalog layer that enables ACID transactions, time travel, schema evolution, and partition management on object storage. Think of it as the "metadata database" that tells query engines which Parquet files belong to which table snapshot.
+## What changed
 
-## Why This Matters for Kings' College Galway
+- The local `lakekeeper-postgres` container is **removed**
+- The `lakekeeper-migrate` companion container is **removed** (migrations become idempotent on first start)
+- The `lakekeeper` service now uses `infisical://dev-baile/lakekeeper/database_url` for both `LAKEKEEPER__PG_DATABASE_URL_READ` and `_WRITE`
+- The encryption key now uses `infisical://dev-baile/lakekeeper/encryption_key`
 
-Every data pipeline in this project — DLT ingestion, Dagster transformations, DuckDB analytics, marimo notebooks — reads and writes through the Iceberg catalog. Lakekeeper makes it possible to run `SELECT * FROM curriculum.leaving_cert_mathematics FOR VERSION AS OF <timestamp>` to see the syllabus as it existed at any point in time. This is essential for curriculum research where exam specifications change year-over-year and we need to track those changes at the data level, not in application code.
+## Pre-requisites (the operator creates these BEFORE the PR merges)
 
-## Key Features
+1. Create the PlanetScale PG branch (e.g. `bunchloch-prod`) via the PlanetScale dashboard
+2. Create the `lakekeeper` database on that branch
+3. Create 2 Infisical secrets in `dev-baile/`:
+   - `lakekeeper/database_url` → `postgresql://<user>:<pwd>@<host>.pg.psdb.cloud/lakekeeper?sslmode=verify-full`
+   - `lakekeeper/encryption_key` → a 64-char hex key (Lakekeeper catalog encryption)
 
-- **Apache Iceberg REST spec** — Fully compatible with Spark, Trino, DuckDB, PyIceberg
-- **Rust-native performance** — Low-latency catalog operations, sub-millisecond metadata lookups
-- **Schema evolution** — Add, rename, drop, or reorder columns without rewriting data
-- **Partition evolution** — Change partition schemes without table rewrites
-- **Snapshot isolation** — Readers see a consistent snapshot even during concurrent writes
+## First-deploy notes
 
-## Deployment
+When Lakekeeper starts against the empty PlanetScale PG database, it runs its migrations **idempotently on first start**. No `lakekeeper-migrate` companion is needed.
 
-### Docker Compose (Local)
+## Rollback
 
-```bash
-cd infrastructure/stacks/lakekeeper
-docker compose up -d
-```
+This is a **hard switch** (no local fallback). To rollback:
 
-### Docker Compose (Production with Locket)
+1. `git revert --no-ff <phase-b.0-commit-sha>` and push
+2. The reverted `compose.yaml` re-introduces the local `lakekeeper-postgres` container
+3. The reverted `secrets.env` re-introduces `LAKEKEEPER_DB_PASSWORD`
+4. Restart Lakekeeper via Komodo
+5. **Restore data from PlanetScale PITR** (the PlanetScale branch retains 7 days of PITR)
 
-```bash
-docker compose -f compose.yaml -f sidecar.yaml -f pangolin.yaml up -d
-```
+## See also
 
-### Komodo (GitOps)
-
-Deployed via Komodo on arm1-oci. Locket resolves `LAKEKEEPER_DB_PASSWORD` and `LAKEKEEPER_ENCRYPTION_KEY` from Infisical. The catalog connects to a co-located PostgreSQL 16 Alpine instance for metadata storage.
-
-## Environment Variables
-
-| Variable | Required | Description | Default |
-|:--|:--|:--|:--|
-| `LAKEKEEPER_DB_USERNAME` | No | PostgreSQL user | `lakekeeper` |
-| `LAKEKEEPER_DB_PASSWORD` | Yes | PostgreSQL password | — |
-| `LAKEKEEPER_ENCRYPTION_KEY` | Yes | Encryption key for catalog metadata (64-char hex) | — |
-| `LAKEKEEPER_PORT` | No | REST API port | `8181` |
-| `MINIO_ROOT_USER` | No | MinIO access key (dev only) | `minio` |
-| `MINIO_ROOT_PASSWORD` | No | MinIO secret key (dev only) | `devpassword` |
-| `MINIO_API_PORT` | No | MinIO S3 API port | `9000` |
-| `MINIO_CONSOLE_PORT` | No | MinIO web console port | `9001` |
-
-## Access
-
-- **REST API**: `http://localhost:8181`
-- **MinIO Console**: `http://localhost:9001`
-- **Auth**: Internal-only; REST API used by Dagster, DuckDB, and PyIceberg clients
-
-## Upstream
-
-- **Repository**: <https://github.com/lakekeeper/lakekeeper>
-- **Documentation**: <https://docs.lakekeeper.dev>
-- **Latest**: Active development; Rust rewrite of the Java Iceberg catalog with focus on performance and small footprint
-
-## Screenshot
-
-Headless REST API. The MinIO console at port 9001 provides a web UI for browsing S3 buckets and objects. The Lakekeeper REST catalog at port 8181 is a JSON API with no built-in UI — query it via `curl` or the Iceberg client libraries.
+- `openspec/changes/2026-07-19-planetscale-postgres-migration-phase-b0-v1/specs/infrastructure-stacks/spec.md`
+- `openspec/architecture-decisions/0005-planetscale-postgres-centralisation.md`

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://unstract.com/schemas/workflow/v1.json",
+  "name": "ncca_jc_cba",
+  "version": "1.0.0",
+  "description": "NCCA Junior Cycle CBA descriptor extraction workflow (BIEP v2 / Change 1+3 — Path 2 of the 4-path ensemble).",
+  "trigger": {
+    "type": "manual_upload",
+    "file_patterns": ["cba_*.pdf"],
+    "expected_mime_types": ["application/pdf"]
+  },
+  "prompt_template": {
+    "system": "You are a NCCA Junior Cycle CBA (Classroom-Based Assessment) descriptor extractor. Given the text of a NCCA CBA descriptor PDF, extract the structured CBA descriptor.",
+    "user": [
+      "Subject: {{ subject }}",
+      "CBA ID: {{ cba_id }}",
+      "",
+      "Text:",
+      "{{ pdf_text }}"
+    ]
+  },
+  "json_schema": {
+    "title": "CBATask",
+    "type": "object",
+    "properties": {
+      "subject": { "type": "string" },
+      "cba_id": { "type": "string" },
+      "subject_code": { "type": ["string", "null"] },
+      "title_en": { "type": "string" },
+      "title_ga": { "type": ["string", "null"] },
+      "descriptor_en": { "type": "string" },
+      "descriptor_ga": { "type": ["string", "null"] },
+      "year": { "type": "string", "enum": ["YEAR_1", "YEAR_2", "YEAR_3", "TY"] },
+      "weighting": { "type": "integer" },
+      "evidence_of_learning": { "type": "array", "items": { "type": "string" } },
+      "success_criteria": { "type": "array", "items": { "type": "string" } },
+      "exemplar_responses": { "type": "array", "items": { "type": "string" } },
+      "duration_minutes": { "type": ["integer", "null"] }
+    },
+    "required": ["subject", "cba_id", "title_en", "year", "weighting"]
+  },
+  "output_settings": {
+    "format": "json",
+    "destination": "duckdb",
+    "ducklake_namespace": "oideachais.education.british_isles.ireland.junior_cycle.cbas.{subject}.{cba_id}.unstract_json"
+  }
+}

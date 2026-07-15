@@ -1,58 +1,33 @@
 # =============================================================================
-# LAKEKEEPER - Apache Iceberg REST Catalog
+# LAKEKEEPER - Apache Iceberg REST Catalog (PlanetScale PG migration)
 # =============================================================================
-# Data lakehouse stack with Iceberg catalog, MinIO storage, and Jupyter.
+# Per openspec/changes/2026-07-19-planetscale-postgres-migration-phase-b0-v1/
 #
-# USAGE:
+# Phase B.0 ships Lakekeeper's Postgres migration as a HARD SWITCH:
+#   - The local `lakekeeper-postgres` container is removed
+#   - The `lakekeeper-migrate` companion container is removed
+#     (migrations become idempotent on first start)
+#   - The `lakekeeper` service uses `infisical://dev-baile/lakekeeper/database_url`
+#
+# Pre-requisites (operator, before this PR merges):
+#   1. Create the PlanetScale PG branch (e.g. bunchloch-prod)
+#   2. Create the `lakekeeper` database on that branch
+#   3. Create the Infisical secret `dev-baile/lakekeeper/database_url`
+#      (postgresql://<user>:<pwd>@<host>.pg.psdb.cloud/lakekeeper?sslmode=verify-full)
+#   4. Create the Infisical secret `dev-baile/lakekeeper/encryption_key`
+#      (a 64-char hex key — see lakekeeper docs)
+#
+# Usage:
 #   Development:  docker compose --env-file ../../.env.local up -d
 #   Production:   locket exec --env-file secrets.env -- docker compose up -d
-#   Standalone:   docker compose up -d  (uses defaults)
+#   Standalone:   docker compose up -d  (uses defaults — needs the Infisical secrets)
 # =============================================================================
 
 name: lakekeeper
 
 services:
   # ---------------------------------------------------------------------------
-  # POSTGRESQL - Catalog Backend
-  # ---------------------------------------------------------------------------
-  postgres:
-    image: postgres:16-alpine
-    container_name: lakekeeper-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${LAKEKEEPER_DB_USERNAME:-lakekeeper}
-      POSTGRES_PASSWORD: ${LAKEKEEPER_DB_PASSWORD:-devpassword}
-      POSTGRES_DB: lakekeeper
-    volumes:
-      - lakekeeper-postgres:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${LAKEKEEPER_DB_USERNAME:-lakekeeper} -d lakekeeper"]
-      interval: 2s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-    networks:
-      - lakekeeper
-
-  # ---------------------------------------------------------------------------
-  # LAKEKEEPER MIGRATE - Database Migrations
-  # ---------------------------------------------------------------------------
-  lakekeeper-migrate:
-    image: quay.io/lakekeeper/catalog:latest
-    container_name: lakekeeper-migrate
-    command: migrate
-    environment:
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://${LAKEKEEPER_DB_USERNAME:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:-devpassword}@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:-0000000000000000000000000000000000000000000000000000000000000000}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
-    networks:
-      - lakekeeper
-
-  # ---------------------------------------------------------------------------
-  # LAKEKEEPER - Iceberg REST Catalog
+  # LAKEKEEPER - Iceberg REST Catalog (PlanetScale PG-backed)
   # ---------------------------------------------------------------------------
   lakekeeper:
     image: quay.io/lakekeeper/catalog:latest
@@ -62,17 +37,13 @@ services:
       - "${LAKEKEEPER_PORT:-8181}:8181"
       - "${LAKEKEEPER_METRICS_PORT:-9100}:9000"
     environment:
-      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://${LAKEKEEPER_DB_USERNAME:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:-devpassword}@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://${LAKEKEEPER_DB_USERNAME:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD:-devpassword}@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:-0000000000000000000000000000000000000000000000000000000000000000}
+      # PlanetScale PG via Locket-injected Infisical secret
+      LAKEKEEPER__PG_DATABASE_URL_READ: infisical://dev-baile/lakekeeper/database_url
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: infisical://dev-baile/lakekeeper/database_url
+      LAKEKEEPER__PG_ENCRYPTION_KEY: infisical://dev-baile/lakekeeper/encryption_key
       LAKEKEEPER__LISTEN_PORT: "8181"
       LAKEKEEPER__BASE_URI: ${LAKEKEEPER_BASE_URI:-http://localhost:8181}
       RUST_LOG: ${RUST_LOG:-info}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      # Note: Removed lakekeeper-migrate dependency as service_completed_successfully
-      # condition has issues with remote deployments. Migrations run on postgres healthy.
     healthcheck:
       test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
       interval: 5s
@@ -83,7 +54,7 @@ services:
       - lakekeeper
 
   # ---------------------------------------------------------------------------
-  # MINIO - S3-Compatible Storage
+  # MINIO - S3-Compatible Storage (UNCHANGED)
   # ---------------------------------------------------------------------------
   minio:
     image: quay.io/minio/minio:latest
@@ -107,7 +78,7 @@ services:
       - lakekeeper
 
   # ---------------------------------------------------------------------------
-  # MINIO INIT - Create Buckets
+  # MINIO INIT - Create Buckets (UNCHANGED)
   # ---------------------------------------------------------------------------
   minio-init:
     image: quay.io/minio/mc:latest
@@ -127,7 +98,7 @@ services:
       - lakekeeper
 
   # ---------------------------------------------------------------------------
-  # JUPYTER - Interactive Data Analysis (Optional)
+  # JUPYTER - Interactive Data Analysis (UNCHANGED, OPTIONAL)
   # ---------------------------------------------------------------------------
   jupyter:
     image: quay.io/jupyter/pyspark-notebook:latest
@@ -148,7 +119,6 @@ services:
       - lakekeeper
 
 volumes:
-  lakekeeper-postgres:
   lakekeeper-minio:
   lakekeeper-jupyter:
 
