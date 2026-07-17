@@ -9,7 +9,7 @@ the years it appeared.
 
 Dive name: ``lc_marking_complexity``
 DuckLake tables read:
-  - ``md:oideachais.leaving_cert.<subject>_marking``
+  - ``md:cianfhoghlaim.leaving_cert.<subject>_marking``
 
 Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 openspec/specs/british-isles-education-pipeline/spec.md
@@ -44,27 +44,27 @@ DIVE_SQL = """
 WITH marking_union AS (
     SELECT subject, year, level, language, topic, band,
            cardinality(descriptor_text_en) AS descriptor_word_count
-    FROM oideachais.leaving_cert.mathematics_marking
+    FROM cianfhoghlaim.leaving_cert.mathematics_marking
     UNION ALL BY NAME
     SELECT subject, year, level, language, topic, band,
            cardinality(descriptor_text_en)
-    FROM oideachais.leaving_cert.chemistry_marking
+    FROM cianfhoghlaim.leaving_cert.chemistry_marking
     UNION ALL BY NAME
     SELECT subject, year, level, language, topic, band,
            cardinality(descriptor_text_en)
-    FROM oideachais.leaving_cert.geography_marking
+    FROM cianfhoghlaim.leaving_cert.geography_marking
     UNION ALL BY NAME
     SELECT subject, year, level, language, topic, band,
            cardinality(descriptor_text_en)
-    FROM oideachais.leaving_cert.english_marking
+    FROM cianfhoghlaim.leaving_cert.english_marking
     UNION ALL BY NAME
     SELECT subject, year, level, language, topic, band,
            cardinality(descriptor_text_en)
-    FROM oideachais.leaving_cert.gaeilge_marking
+    FROM cianfhoghlaim.leaving_cert.gaeilge_marking
     UNION ALL BY NAME
     SELECT subject, year, level, language, topic, band,
            cardinality(descriptor_text_en)
-    FROM oideachais.leaving_cert.computer_science_marking
+    FROM cianfhoghlaim.leaving_cert.computer_science_marking
 )
 SELECT
     subject,

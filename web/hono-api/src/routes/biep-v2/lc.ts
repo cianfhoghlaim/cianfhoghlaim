@@ -3,7 +3,7 @@
  *
  * Returns paginated Leaving Certificate LanceDB rows from the BIEP v2
  * per-subject per-level per-language LanceDB namespace
- * (`oideachais.lc.<subject>.<level>_<lang>`).
+ * (`cianfhoghlaim.lc.<subject>.<level>_<lang>`).
  *
  * Per the 2026-07-23-biep-v2-marimo-portal-v1 change.
  *
@@ -30,8 +30,8 @@ app.get("/api/v1/biep-v2/lc", async (c) => {
   const perPage = Math.min(parseInt(c.req.query("per_page") ?? "10", 10), 100);
 
   // Canonical LanceDB table name per the BIEP v1 spec:
-  //   oideachais.lc.<subject>.<level>_<lang>
-  const tableName = `oideachais.lc.${subject}.${level}_${lang}`;
+  //   cianfhoghlaim.lc.<subject>.<level>_<lang>
+  const tableName = `cianfhoghlaim.lc.${subject}.${level}_${lang}`;
 
   // Real impl: ibis.duckdb.connect() + ibis.lancedb.connect() + sql query.
   // For the TanStack Start build, this returns a stub that's used by
@@ -46,7 +46,7 @@ app.get("/api/v1/biep-v2/lc", async (c) => {
     subject,
     level,
     lang,
-    namespace: `oideachais.lc.${subject}.${level}_${lang}`,
+    namespace: `cianfhoghlaim.lc.${subject}.${level}_${lang}`,
   });
 });
 

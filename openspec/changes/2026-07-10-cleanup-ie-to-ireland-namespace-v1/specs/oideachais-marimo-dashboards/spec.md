@@ -7,7 +7,7 @@ Ireland/law data referenced in marimo dashboards.
 
 The marimo dashboards SHALL reference the canonical post-v4 namespaces
 when ingesting Ireland/law data, with NO references to the legacy
-`oideachais.baml.ie.*` or `oideachais.dlt.british_isles.ie.*` paths in
+`cianfhoghlaim.baml.ie.*` or `cianfhoghlaim.dlt.british_isles.ie.*` paths in
 the notebook source.
 
 - **BAML** — `cianfhoghlaim.baml.education.law.<schema>`
@@ -27,7 +27,7 @@ the notebook source.
 
 - **GIVEN** the DLT→BAML→CocoIndex→LanceDB→MotherDuck pipeline has
   materialised the Ireland/law rows under the canonical
-  `oideachais.law.ireland.*` schema
+  `cianfhoghlaim.law.ireland.*` schema
 - **WHEN** the user reopens the `ie_law_explorer` marimo notebook
 - **THEN** the notebook SHALL load the Ireland/law rows from the
   canonical schema (no broken references to the legacy namespaces)

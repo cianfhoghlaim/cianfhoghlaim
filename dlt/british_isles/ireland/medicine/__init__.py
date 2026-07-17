@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.ireland.medicine — Ireland medicine DLT sources.
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.medicine — Ireland medicine DLT sources.
 
 Each sub-module is a small `@dlt.resource` over a public endpoint.
 """

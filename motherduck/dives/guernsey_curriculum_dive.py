@@ -21,7 +21,7 @@ def build_guernsey_curriculum_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT subject, language, COUNT(*) AS row_count
-            FROM oideachais.education.british_isles.guernsey
+            FROM cianfhoghlaim.education.british_isles.guernsey
             GROUP BY subject, language
         """,
     )

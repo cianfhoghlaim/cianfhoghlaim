@@ -1,8 +1,8 @@
-# Tasks — Extend `oideachais-marimo-dashboards` (Phase 2)
+# Tasks — Extend `cianfhoghlaim-marimo-dashboards` (Phase 2)
 
 ## 1. Audit existing 10 dashboards + spec
 
-- [x] Read `openspec/specs/oideachais-marimo-dashboards/spec.md`
+- [x] Read `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md`
 - [x] List `notebooks/10_marimo_dashboards/` (10 dashboards
   from commit `44cabc151`)
 - [x] Understand the existing pattern (PEP 723 inline deps, md:oideachais
@@ -54,10 +54,10 @@
 
 ## 5. Write the openspec change
 
-- [x] Create `openspec/changes/2026-07-15-oideachais-marimo-dashboards-extension-v1/`
+- [x] Create `openspec/changes/2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1/`
 - [x] `proposal.md` — explain the 10 new dashboards
 - [x] `tasks.md` — the 5 steps above
-- [x] `specs/oideachais-marimo-dashboards/spec.md` — MODIFIED: add
+- [x] `specs/cianfhoghlaim-marimo-dashboards/spec.md` — MODIFIED: add
   1 ADDED requirement "Phase 2 complete: 10 additional marimo
   dashboards at `notebooks/11_marimo_dashboards_v2/0[1-9]_*.py` +
   `10_*.py` ship the leabharlann corpus + university extraction +

@@ -1,7 +1,7 @@
 """CocoIndex v1 App for the North Macedonia education pipeline.
 
 Embeds every North Macedonia per-subject education row into the shared
-LanceDB table ``oideachais.lc.european_nations.mkd.education_chunks`` using the canonical
+LanceDB table ``cianfhoghlaim.lc.european_nations.mkd.education_chunks`` using the canonical
 ``BAAI/bge-m3`` 1024-d multilingual embedder.
 
 Conforms to the R1–R4 conformance contract (imports
@@ -29,7 +29,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.lc.european_nations.mkd.education_chunks"
+TABLE_NAME = "cianfhoghlaim.lc.european_nations.mkd.education_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every North Macedonia per-subject "
     "education row (EU candidate/neighbour full-depth expansion)."

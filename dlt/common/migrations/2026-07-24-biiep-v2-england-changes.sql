@@ -6,7 +6,7 @@
 -- England awarding-body specs (AQA / OCR / Edexcel) since the BIEP v2
 -- pipeline landed.
 
-CREATE TABLE IF NOT EXISTS oideachais.education.british_isles.england.changes (
+CREATE TABLE IF NOT EXISTS cianfhoghlaim.education.british_isles.england.changes (
     -- Primary identifier
     change_id                VARCHAR PRIMARY KEY
         DEFAULT gen_random_uuid()::text,
@@ -52,13 +52,13 @@ CREATE TABLE IF NOT EXISTS oideachais.education.british_isles.england.changes (
 
 -- Indexes for the canonical access patterns.
 CREATE INDEX IF NOT EXISTS idx_changes_board
-    ON oideachais.education.british_isles.england.changes (board);
+    ON cianfhoghlaim.education.british_isles.england.changes (board);
 
 CREATE INDEX IF NOT EXISTS idx_changes_subject_qualification_level
-    ON oideachais.education.british_isles.england.changes (subject, qualification_level);
+    ON cianfhoghlaim.education.british_isles.england.changes (subject, qualification_level);
 
 CREATE INDEX IF NOT EXISTS idx_changes_detected_at
-    ON oideachais.education.british_isles.england.changes (detected_at DESC);
+    ON cianfhoghlaim.education.british_isles.england.changes (detected_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_changes_extraction_status
-    ON oideachais.education.british_isles.england.changes (extraction_status);
+    ON cianfhoghlaim.education.british_isles.england.changes (extraction_status);

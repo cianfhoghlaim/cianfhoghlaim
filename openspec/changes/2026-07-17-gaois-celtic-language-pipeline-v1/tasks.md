@@ -5,7 +5,7 @@
 - [x] `openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/proposal.md` (this file)
 - [x] `tasks.md`
 - [x] `specs/celtic-language-pipeline/spec.md` (new umbrella spec — 7 Requirements + 7 Scenarios)
-- [x] MODIFIED delta on `oideachais-pipeline/spec.md` (cross-reference)
+- [x] MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` (cross-reference)
 - [x] MODIFIED delta on `british-isles-education-pipeline/spec.md` (cross-reference)
 
 ## 2. Phase 2 — Fill the 6 BAML extraction gaps (3-5 hours)

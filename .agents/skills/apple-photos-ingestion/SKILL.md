@@ -114,8 +114,8 @@ surface a `WARN:` log line.
 
 ## Reference
 
-- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/oideachais-leabharlann/spec.md`
-- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/oideachais-cocoindex-v1-migration/spec.md`
+- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/cianfhoghlaim-leabharlann/spec.md`
+- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md`
 - `osxphotos` library: https://github.com/RhetTbull/osxphotos (MIT)
 - HMG-precedent cross-frame inference (out of scope; this
   skill mirrors the pattern from the user's prior

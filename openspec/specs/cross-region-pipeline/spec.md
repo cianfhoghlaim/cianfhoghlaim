@@ -40,7 +40,7 @@ British Isles files remain where they are; only new files in the other
   `dlt/european_nations/fra/law/legifrance.py`
 - **AND** the source SHALL emit rows tagged with
   `country_code="fra"`, `language` in `{fr, en}`, and the canonical
-  DuckLake namespace `oideachais.law.fra`
+  DuckLake namespace `cianfhoghlaim.law.fra`
 
 #### Scenario: A new EU institutional source obeys the contract
 
@@ -50,7 +50,7 @@ British Isles files remain where they are; only new files in the other
 - **AND** the source SHALL emit rows tagged with
   `region="european_union"`, `institution="eur_lex"`, `language`
   in the 24 EU official language codes, and the canonical DuckLake
-  namespace `oideachais.law.eu.eur_lex`
+  namespace `cianfhoghlaim.law.eu.eur_lex`
 
 ### Requirement: Canonical source_id shape
 
@@ -121,22 +121,22 @@ The system SHALL land every new regional source into the canonical
 DuckLake namespace:
 
 ```text
-oideachais.<domain>.<region>.<jurisdiction>
+cianfhoghlaim.<domain>.<region>.<jurisdiction>
 ```
 
-(or `oideachais.<domain>.<region>.<institution>` for institutional
+(or `cianfhoghlaim.<domain>.<region>.<institution>` for institutional
 sources). The `region` token in the namespace MUST be one of the 6
 canonical regions. Existing British Isles namespaces
-(`oideachais.education.ie`, `oideachais.leaving_cert`,
-`oideachais.law.ie`, `oideachais.medicine.<nation>`) are the
+(`cianfhoghlaim.education.ie`, `cianfhoghlaim.leaving_cert`,
+`cianfhoghlaim.law.ie`, `cianfhoghlaim.medicine.<nation>`) are the
 ground-truth examples of this contract.
 
 #### Scenario: A new EU nations source writes to the canonical namespace
 
 - **WHEN** the `european_nations.fra.law.legifrance` DLT source runs
-- **THEN** it SHALL write to `oideachais.law.european_nations.fra`
+- **THEN** it SHALL write to `cianfhoghlaim.law.european_nations.fra`
 - **AND** the dataset_name SHALL be
-  `oideachais_law_european_nations_fra`
+  `cianfhoghlaim_law_european_nations_fra`
 
 ### Requirement: Cross-nation BAML classifier (carried forward)
 
@@ -163,7 +163,7 @@ change touches too many enums, define a parallel `GlobalJurisdiction`
 
 ## Cross-references
 
-- `oideachais-pipeline` — the parent pipeline; this umbrella spec
+- `cianfhoghlaim-pipeline` — the parent pipeline; this umbrella spec
   extends its scope
 - `british-isles-education-pipeline` — the British Isles v1 instance
   of this contract

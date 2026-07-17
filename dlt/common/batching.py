@@ -38,17 +38,17 @@ T = TypeVar("T")
 MINIMUM_BATCH_SIZE = 100
 
 # Alias for the historical `MIN_EMBEDDING_BATCH_SIZE` constant that
-# was defined in the oideachais.oideachais.core migration shim and
+# was defined in the cianfhoghlaim.cianfhoghlaim.core migration shim and
 # in cocoindex_flows/* and modal_finetune/embed_batch.py. The
 # canonical constant is now MINIMUM_BATCH_SIZE; this alias is
 # preserved for one release for any in-flight imports.
 MIN_EMBEDDING_BATCH_SIZE = MINIMUM_BATCH_SIZE
 
 # HNSW index drop threshold (see embedding-pipeline SKILL.md for the
-# bulk-insert performance rationale). The oideachais.oideachais.core
+# bulk-insert performance rationale). The cianfhoghlaim.cianfhoghlaim.core
 # shim previously provided this; it is now defined here as the
 # canonical implementation. A backward-compat re-export is preserved
-# in oideachais.oideachais.core for one release.
+# in cianfhoghlaim.cianfhoghlaim.core for one release.
 HNSW_DROP_THRESHOLD = 50
 
 

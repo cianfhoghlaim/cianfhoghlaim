@@ -19,7 +19,7 @@ where `jurisdiction` is either:
 `domain` is one of `education | law | medicine | statistics |
 government`. Every source MUST declare its `source_id` as
 `americas.<jurisdiction>.<domain>.<source_slug>` and land in the
-canonical DuckLake namespace `oideachais.<domain>.americas.<jurisdiction>`.
+canonical DuckLake namespace `cianfhoghlaim.<domain>.americas.<jurisdiction>`.
 
 #### Scenario: A new California education source obeys the contract
 
@@ -29,7 +29,7 @@ canonical DuckLake namespace `oideachais.<domain>.americas.<jurisdiction>`.
   `dlt/americas/us/us_ca/education/cde.py`
 - **AND** its `source_id` MUST be `americas.us.us_ca.education.cde`
 - **AND** the DuckLake table MUST be
-  `oideachais.education.americas.us_us_ca`
+  `cianfhoghlaim.education.americas.us_us_ca`
 - **AND** the file MUST NOT be created at any legacy path
   (`dlt/california/cde.py`, `dlt/us/cde.py`, etc.)
 
@@ -130,6 +130,6 @@ The system MUST provide:
   the Commonwealth counterpart
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the seed instance
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions

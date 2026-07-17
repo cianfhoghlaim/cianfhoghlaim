@@ -13,7 +13,7 @@ Follows the canonical v1 pattern (R1–R4 conformance contract):
 - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim) per the BIEP v1 spec.
-LanceDB table: `oideachais.england.aqa.<subject>.<level>` (one per
+LanceDB table: `cianfhoghlaim.england.aqa.<subject>.<level>` (one per
 AQA subject × qualification level = 18 tables).
 
 Driven by Dagster assets in
@@ -110,7 +110,7 @@ else:
 
 
 def _table_name(subject: str, level: str) -> str:
-    return f"oideachais.england.aqa.{subject}.{level}"
+    return f"cianfhoghlaim.england.aqa.{subject}.{level}"
 
 
 if COCOINDEX_AVAILABLE:

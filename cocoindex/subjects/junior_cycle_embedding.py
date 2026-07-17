@@ -13,7 +13,7 @@ Follows the canonical v1 pattern (R1–R4 conformance contract):
 - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim) per the BIEP v1 spec.
-LanceDB tables: `oideachais.jc.<subject>.<year>_<lang>` for each of the
+LanceDB tables: `cianfhoghlaim.jc.<subject>.<year>_<lang>` for each of the
 18 NCCA JC subjects × 3 years × 2 languages = 108 tables.
 
 Driven by Dagster assets in
@@ -130,7 +130,7 @@ else:
 
 def _table_name(subject: str, year: str, language: str) -> str:
     """Return the canonical LanceDB table name for one (subject, year, language) tuple."""
-    return f"oideachais.jc.{subject}.{year}_{language}"
+    return f"cianfhoghlaim.jc.{subject}.{year}_{language}"
 
 
 def _lc_table_count() -> int:

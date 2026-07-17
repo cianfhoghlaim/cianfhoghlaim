@@ -112,7 +112,7 @@ grep -nE "client (LlamaSwap|Litellm)" baml/processing/_shared/video_kg.baml
 - `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/proposal.md`
 - `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/tasks.md`
 - `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/specs/dagster-5-layer-component-architecture/spec.md` — 1 MODIFIED requirement
-- `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/specs/oideachais-baml-schemas/spec.md` — 1 MODIFIED requirement
+- `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/specs/cianfhoghlaim-baml-schemas/spec.md` — 1 MODIFIED requirement
 
 ## Step 5 — Commit + push (5 min)
 
@@ -123,7 +123,7 @@ git -c user.email="build-agent@cianfhoghlaim" -c user.name="Build Agent" commit 
 
 Implements openspec change 2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1
 (2 MODIFIED spec deltas on dagster-5-layer-component-architecture
-+ oideachais-baml-schemas).
++ cianfhoghlaim-baml-schemas).
 
 Fixes 2 related blockers:
 

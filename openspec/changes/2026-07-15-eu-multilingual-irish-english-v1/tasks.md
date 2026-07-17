@@ -69,7 +69,7 @@ fixtures under `stedding/ingest_queue/eu/<institution>/<lang>/sample.json`
 - [ ] 8.1 MODIFIED delta on `european-union-official-language-pipeline/spec.md`
   declaring the BilingualTextEnGa extraction + language_availability metadata
 - [ ] 8.2 MODIFIED delta on `cross-region-pipeline/spec.md` cross-referencing
-- [ ] 8.3 MODIFIED delta on `oideachais-pipeline/spec.md` cross-referencing
+- [ ] 8.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` cross-referencing
 
 ## 9. Validate
 

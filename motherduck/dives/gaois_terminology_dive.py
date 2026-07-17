@@ -28,7 +28,7 @@ def build_gaois_terminology_dive() -> str:
     exposes a unified Gaois terminology fact table.
     """
     return """
-    CREATE OR REPLACE VIEW md:oideachais.dives.gaois_terminology AS
+    CREATE OR REPLACE VIEW md:cianfhoghlaim.dives.gaois_terminology AS
     SELECT
         'tearma' AS source_kind,
         term_en,
@@ -45,7 +45,7 @@ def build_gaois_terminology_dive() -> str:
         NULL AS death_year,
         NULL AS latitude,
         NULL AS longitude
-    FROM md:oideachais.celtic.gaois.tearma_terms
+    FROM md:cianfhoghlaim.celtic.gaois.tearma_terms
     UNION ALL
     SELECT
         'logainm' AS source_kind,
@@ -63,7 +63,7 @@ def build_gaois_terminology_dive() -> str:
         NULL AS death_year,
         latitude,
         longitude
-    FROM md:oideachais.celtic.gaois.logainm_places
+    FROM md:cianfhoghlaim.celtic.gaois.logainm_places
     UNION ALL
     SELECT
         'ainm' AS source_kind,
@@ -81,7 +81,7 @@ def build_gaois_terminology_dive() -> str:
         death_year,
         NULL AS latitude,
         NULL AS longitude
-    FROM md:oideachais.celtic.gaois.ainm_biographies;
+    FROM md:cianfhoghlaim.celtic.gaois.ainm_biographies;
     """
 
 
@@ -94,7 +94,7 @@ GAOIS_KPI_QUERIES = {
             language,
             source_kind,
             COUNT(*) AS n_terms
-        FROM md:oideachais.dives.gaois_terminology
+        FROM md:cianfhoghlaim.dives.gaois_terminology
         GROUP BY language, source_kind
         ORDER BY n_terms DESC;
     """,
@@ -103,7 +103,7 @@ GAOIS_KPI_QUERIES = {
             domain,
             COUNT(*) AS n_terms,
             COUNT(DISTINCT language) AS n_languages
-        FROM md:oideachais.dives.gaois_terminology
+        FROM md:cianfhoghlaim.dives.gaois_terminology
         WHERE domain IS NOT NULL
         GROUP BY domain
         ORDER BY n_terms DESC
@@ -116,7 +116,7 @@ GAOIS_KPI_QUERIES = {
             term_ga,
             domain,
             language
-        FROM md:oideachais.dives.gaois_terminology
+        FROM md:cianfhoghlaim.dives.gaois_terminology
         WHERE term_ga IS NOT NULL OR term_en IS NOT NULL
         LIMIT 50;
     """,
@@ -128,7 +128,7 @@ GAOIS_KPI_QUERIES = {
             COUNT(DISTINCT language) AS n_languages,
             MIN(created_at) AS earliest,
             MAX(modified_at) AS latest
-        FROM md:oideachais.dives.gaois_terminology
+        FROM md:cianfhoghlaim.dives.gaois_terminology
         GROUP BY source_kind
         ORDER BY n_terms DESC;
     """,

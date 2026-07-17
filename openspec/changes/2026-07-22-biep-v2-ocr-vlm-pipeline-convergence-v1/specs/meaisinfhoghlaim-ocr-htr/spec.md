@@ -47,7 +47,7 @@ via the RAGAS `biiep_extraction_consensus` metric:
 - **Path 4** (gemma-4-26B-A4B): page-level image → gemma-4-26B-A4B raw response
 
 Each path output lands in
-`oideachais.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`:
+`cianfhoghlaim.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`:
 
 - `.baml_canonical` (Path 1)
 - `.unstract_json` (Path 2)
@@ -60,13 +60,13 @@ in `<...>.voted_canonical`.
 #### Scenario: 4-path ensemble on a JC English PDF
 
 - **GIVEN** a new NCCA JC English PDF lands in
-  `s3://garage/oideachais/junior_cycle/english/en/2026/Q1.pdf`
+  `s3://garage/cianfhoghlaim/junior_cycle/english/en/2026/Q1.pdf`
 - **WHEN** the `biiep_ocr_ensemble` Dagster asset materialises
 - **THEN** Path 1 (BAML) runs `b.ExtractJCCurriculum(subject="english", language="en", year=1, text=...)`
 - **AND** Path 2 (Unstract) runs the `ncca_jc_cba` workflow
 - **AND** Path 3 (qwen3-vl-8b) renders page 1 + runs OCR
 - **AND** Path 4 (gemma-4-26B-A4B) renders page 1 + runs OCR
-- **AND** all 4 outputs land in `oideachais.education.british_isles.ireland.junior_cycle.english.en.{baml_canonical,unstract_json,qwen3_vl,gemma4}`
+- **AND** all 4 outputs land in `cianfhoghlaim.education.british_isles.ireland.junior_cycle.english.en.{baml_canonical,unstract_json,qwen3_vl,gemma4}`
 - **AND** the RAGAS `biiep_extraction_consensus` metric ranks the 4 outputs
 - **AND** the highest-scoring output lands in `...voted_canonical`
 - **AND** the asset check `ragas_score >= 0.70` passes

@@ -21,7 +21,7 @@ The corresponding source code lives at:
 ## Background
 
 The platform has been ingesting education content from NCCA and SEC
-since 2026-03 (the pre-v4 `oideachais-pipeline`). v1 brings the
+since 2026-03 (the pre-v4 `cianfhoghlaim-pipeline`). v1 brings the
 6 priority subjects to fully-runnable end-to-end pipelines and adds
 `gov.ie` education circulars as the cross-cutting ingestion stream.
 Cross-nation extension (Scotland / Wales / England / NI / Isle of Man
@@ -43,7 +43,7 @@ Gaeilge, English, Computer Science.
 - **WHEN** a teacher clicks "Materialize all" in the Dagster UI for the 6-subject pipeline
 - **THEN** the 42+ lc5/lc6 assets materialise within minutes
 - **AND** the 6 marimo notebooks show real data via `mo.sql(engine=md:oideachais)`
-- **AND** the per-subject LanceDB `oideachais.lc.<subject>.<level>_<lang>` tables are populated
+- **AND** the per-subject LanceDB `cianfhoghlaim.lc.<subject>.<level>_<lang>` tables are populated
 
 #### Scenario: gaeilge-only syllabuses (no English sibling)
 
@@ -63,20 +63,20 @@ BAML `circular_extraction.baml`, embed via the 7th v1 CocoIndex App
 
 - **WHEN** the gov.ie RSS monitor detects a new circular
 - **THEN** the BAML `ClassifyCircular` function is invoked
-- **AND** the extracted record lands in `md:oideachais.education.ie.circulars`
+- **AND** the extracted record lands in `md:cianfhoghlaim.education.ie.circulars`
 - **AND** the `governance_circulars` CocoIndex App fires within the 60-second live-update window
 
 ### Requirement: Daily MotherDuck Flight for BAML backfill
 
 The system SHALL schedule a daily MotherDuck Flight `lc_pdf_sync_flight`
 that re-runs BAML extraction on any new PDFs landed in
-`s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/<file>.pdf`.
+`s3://garage/cianfhoghlaim/leaving_cert/<subject>/<lang>/<year>/<file>.pdf`.
 
 #### Scenario: PDF lands in Garage S3
 
-- **WHEN** a new PDF is written to `s3://garage/oideachais/leaving_cert/mathematics/en/2026/Q1.pdf`
+- **WHEN** a new PDF is written to `s3://garage/cianfhoghlaim/leaving_cert/mathematics/en/2026/Q1.pdf`
 - **THEN** the daily Flight picks it up within 24h
-- **AND** the corresponding lc5/lc6 rows appear in `md:oideachais.leaving_cert.mathematics`
+- **AND** the corresponding lc5/lc6 rows appear in `md:cianfhoghlaim.leaving_cert.mathematics`
 
 ### Requirement: Cross-nation extension deferred to v2
 
@@ -115,7 +115,7 @@ local `bunchloch-infra` lakehouse via the `ibis.duckdb.connect()` +
 `ibis.lancedb.connect()` entrypoints, with the per-subject
 `ducklake_<subject>` database name. The system SHALL reject any raw
 `duckdb.connect()` call in these notebooks per the ibis-first
-contract from the `oideachais-marimo-dashboards` spec.
+contract from the `cianfhoghlaim-marimo-dashboards` spec.
 
 #### Scenario: Math notebook reads from local Lakekeeper via ibis
 

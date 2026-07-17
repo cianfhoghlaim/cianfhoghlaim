@@ -1,10 +1,10 @@
-# oideachais-leabharlann
+# cianfhoghlaim-leabharlann
 
 ## ADDED Requirements
 
 ### Requirement: Phase 1 complete — 21 requirements all functional end-to-end
 
-The `oideachais-leabharlann` capability SHALL be considered Phase 1
+The `cianfhoghlaim-leabharlann` capability SHALL be considered Phase 1
 complete when ALL of the following are simultaneously true (the
 21 pre-existing requirements + the new Phase-1 wrap-up check):
 

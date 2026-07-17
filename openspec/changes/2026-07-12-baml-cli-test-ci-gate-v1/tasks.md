@@ -32,5 +32,5 @@
 ## 5. Validate
 
 - [x] 5.1 Validate `.github/workflows/baml-test.yaml` as YAML.
-- [x] 5.2 Add OpenSpec spec delta for `oideachais-baml-schemas`.
+- [x] 5.2 Add OpenSpec spec delta for `cianfhoghlaim-baml-schemas`.
 - [x] 5.3 Run `openspec validate 2026-07-12-baml-cli-test-ci-gate-v1 --strict`.

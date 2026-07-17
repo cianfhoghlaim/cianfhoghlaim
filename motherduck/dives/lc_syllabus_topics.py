@@ -10,8 +10,8 @@ the years it appeared in exams.
 
 Dive name: ``lc_syllabus_topics``
 DuckLake tables read:
-  - ``md:oideachais.leaving_cert.<subject>_topics``
-  - ``md:oideachais.leaving_cert.<subject>_syllabus``
+  - ``md:cianfhoghlaim.leaving_cert.<subject>_topics``
+  - ``md:cianfhoghlaim.leaving_cert.<subject>_syllabus``
 
 Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 openspec/specs/british-isles-education-pipeline/spec.md
@@ -63,22 +63,22 @@ DIVE_SQL = """
 WITH syllabus_topics AS (
     SELECT
         'mathematics'    AS subject, year, level, language, topic, topic_label_en, topic_label_ga
-    FROM oideachais.leaving_cert.mathematics_topics
+    FROM cianfhoghlaim.leaving_cert.mathematics_topics
     UNION ALL BY NAME
     SELECT 'chemistry',    year, level, language, topic, topic_label_en, topic_label_ga
-    FROM oideachais.leaving_cert.chemistry_topics
+    FROM cianfhoghlaim.leaving_cert.chemistry_topics
     UNION ALL BY NAME
     SELECT 'geography',    year, level, language, topic, topic_label_en, topic_label_ga
-    FROM oideachais.leaving_cert.geography_topics
+    FROM cianfhoghlaim.leaving_cert.geography_topics
     UNION ALL BY NAME
     SELECT 'gaeilge',      year, level, language, topic, topic_label_en, topic_label_ga
-    FROM oideachais.leaving_cert.gaeilge_topics
+    FROM cianfhoghlaim.leaving_cert.gaeilge_topics
     UNION ALL BY NAME
     SELECT 'english',      year, level, language, topic, topic_label_en, topic_label_ga
-    FROM oideachais.leaving_cert.english_topics
+    FROM cianfhoghlaim.leaving_cert.english_topics
     UNION ALL BY NAME
     SELECT 'computer_science', year, level, language, topic, topic_label_en, topic_label_ga
-    FROM oideachais.leaving_cert.computer_science_topics
+    FROM cianfhoghlaim.leaving_cert.computer_science_topics
 )
 SELECT
     subject,

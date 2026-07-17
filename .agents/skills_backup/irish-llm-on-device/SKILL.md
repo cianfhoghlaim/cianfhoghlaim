@@ -178,10 +178,10 @@ unifies the 3 backends behind a single Swift API.
 
 ## KCG integration
 
-- `sruth/oideachais/baml_src/celtic_linguistics.baml` — the
+- `sruth/cianfhoghlaim/baml_src/celtic_linguistics.baml` — the
   BAML schema for Irish grammar extraction (the target of
   the fine-tuned model).
-- `sruth/oideachais/baml_src/celtic_sources.baml` — the
+- `sruth/cianfhoghlaim/baml_src/celtic_sources.baml` — the
   BAML schema for source attribution.
 - `sruth/meaisinfhoghlaim/language/gaeilge/` — the Irish-language
   subdir (corpus, lexicons, cognates).

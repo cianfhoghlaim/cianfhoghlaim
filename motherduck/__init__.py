@@ -17,7 +17,7 @@ Lifecycle:
   - The daily `lc_pdf_sync_flight` runs `cocoindex update lc_subjects`
     (the 6 LC subject CocoIndex v1 Apps) + `dagster asset materialize
     --select '*lc*'` (the 42 lc5/lc6 Dagster assets) + writes a status
-    row to `md:oideachais.lc_ops.daily_sync_status`.
+    row to `md:cianfhoghlaim.lc_ops.daily_sync_status`.
 
 Reference:
   - openspec/changes/2026-07-06-british-isles-education-pipeline-v1/

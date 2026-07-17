@@ -1,6 +1,6 @@
 ---
 name: tanstack-start
-description: Comprehensive toolkit for TanStack Start — file-based routing, server functions, Query integration, multi-environment SSR, multi-tenant app scaffolding. Use when building production web/apps/oideachais-web or web/apps/tuatha-ui surfaces, defining API routes, or wiring TanStack Query against DuckLake.
+description: Comprehensive toolkit for TanStack Start — file-based routing, server functions, Query integration, multi-environment SSR, multi-tenant app scaffolding. Use when building production web/apps/cianfhoghlaim-web or web/apps/tuatha-ui surfaces, defining API routes, or wiring TanStack Query against DuckLake.
 ---
 
 # TanStack Start
@@ -11,21 +11,21 @@ description: Comprehensive toolkit for TanStack Start — file-based routing, se
 - Use `@tanstack/react-router` for SSR routing and `@tanstack/db`
   for offline differential data syncs from DuckLake.
 - **Authentication is per-surface, not global:**
-  - `web/apps/oideachais-web` — **no auth** (the public lakehouse)
+  - `web/apps/cianfhoghlaim-web` — **no auth** (the public lakehouse)
   - `web/apps/tuatha-ui` — **no auth** (the public MMO)
   - `web/apps/croilar-portal` — uses `better-auth` + Pocket ID SSO + SIWE
 - Bun workspaces:
-  - `oideachais-web` at `web/apps/oideachais-web/`
+  - `cianfhoghlaim-web` at `web/apps/cianfhoghlaim-web/`
   - `tuatha-ui` at `web/apps/tuatha-ui/`
   - `croilar-portal` at `web/apps/croilar-portal/`
 - The route tree is generated at
-  `web/apps/oideachais-web/src/routeTree.gen.ts` — never edit by hand
+  `web/apps/cianfhoghlaim-web/src/routeTree.gen.ts` — never edit by hand
 
 ## When to use this skill
 
 Use when you need to:
 
-- "Add a new route to `web/apps/oideachais-web`"
+- "Add a new route to `web/apps/cianfhoghlaim-web`"
 - "Define a server function that calls a Dagster asset"
 - "Wire a TanStack Query endpoint to a FastAPI / Hono route"
 - "Create an API route that streams SSE for an agent"
@@ -35,10 +35,10 @@ Use when you need to:
 
 ## Project structure
 
-The canonical layout for `web/apps/oideachais-web/`:
+The canonical layout for `web/apps/cianfhoghlaim-web/`:
 
 ```
-web/apps/oideachais-web/
+web/apps/cianfhoghlaim-web/
 ├── src/
 │   ├── routes/                    # file-based routes
 │   │   ├── __root.tsx             # RootDocument (HTML shell)
@@ -312,7 +312,7 @@ export default defineConfig({
 
 ## Multi-tenant app scaffolding
 
-`web/apps/oideachais-web` is multi-tenant by design: a single deploy
+`web/apps/cianfhoghlaim-web` is multi-tenant by design: a single deploy
 serves all Irish / UK / Scottish / Welsh curricula. The
 `tenant` is implicit in the route:
 
@@ -323,7 +323,7 @@ serves all Irish / UK / Scottish / Welsh curricula. The
 ```
 
 The root layout reads the tenant from the URL and configures
-the data fetchers (DuckLake `oideachais.education.<tenant>`
+the data fetchers (DuckLake `cianfhoghlaim.education.<tenant>`
 schema).
 
 ## Naming conventions
@@ -543,7 +543,7 @@ the queried columns download.
 
 ### 4. Better-T-Stack monorepo (the Cianfhoghlaim base)
 
-Every `cianfhoghlaim/` frontend (`web/apps/oideachais-web`, `tuath/ui`,
+Every `cianfhoghlaim/` frontend (`web/apps/cianfhoghlaim-web`, `tuath/ui`,
 `aleyum`, `crypteolas`) is scaffolded from
 `cianfhoghlaim-base`, which is the **Better-T-Stack CLI**
 output with the KCG agent-instructions overlay

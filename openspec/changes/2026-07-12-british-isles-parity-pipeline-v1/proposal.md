@@ -112,11 +112,11 @@ Affected repos: cianfhoghlaim (single-repo change)
   the umbrella contract
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the flagship BIEP spec
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) —
   the BAML cluster taxonomy
-- [`oideachais-marimo-dashboards`](../oideachais-marimo-dashboards/spec.md) —
+- [`cianfhoghlaim-marimo-dashboards`](../cianfhoghlaim-marimo-dashboards/spec.md) —
   the downstream marimo surface
 - `docs/agents/british_isles_endpoint_health_audit.md` —
   the Phase 1 endpoint snapshot

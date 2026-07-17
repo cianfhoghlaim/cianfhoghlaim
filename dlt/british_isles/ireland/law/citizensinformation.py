@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.citizensinformation
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law.citizensinformation
 — Citizens Information Board (CIB) of Ireland.
 
 Source: `https://www.citizensinformation.ie/en/` — the plain-English

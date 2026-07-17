@@ -35,7 +35,7 @@
   - Class `EnsembledExtractor` with the `extract()` API
   - Async run of the 4 paths via `asyncio.gather()` (or `anyio`)
   - Per-path DuckLake landing in
-    `oideachais.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`
+    `cianfhoghlaim.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`
   - RAGAS voting via `ragas.metrics.faithfulness` + `answer_relevance` + `context_precision`
 - [ ] Create the `EnsembleResult` Pydantic model
 - [ ] Unit test: `mise run py:test meaisinfhoghlaim/ocr/ensemble/`

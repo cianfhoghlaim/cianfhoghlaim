@@ -46,7 +46,7 @@ class CelticAssetGenerationComponent(Component):
             - "hono_route": A Hono route at `dashboard_path`
         dashboard_path: The path to the dashboard (e.g.
             "notebooks/dashboards/education/mathematics.py" for a
-            marimo notebook, or "web/apps/oideachais-web/src/routes/
+            marimo notebook, or "web/apps/cianfhoghlaim-web/src/routes/
             curriculum.tsx" for a TanStack Start page).
         upstream_assets: List of upstream asset keys that this
             dashboard depends on. Drives the deps.

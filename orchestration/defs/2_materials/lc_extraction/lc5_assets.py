@@ -208,10 +208,10 @@ for _subject in LC6_SUBJECTS:
 
 @asset(group_name="3_model_lifecycle_lc_cognify_lc5_chemistry", description="Cognee cognify for chemistry LC")
 def lc5_chemistry_cognified(context) -> dict[str, Any]:
-    """Per-subject Cognee cognify (oideachais_chemistry dataset)."""
+    """Per-subject Cognee cognify (cianfhoghlaim_chemistry dataset)."""
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "chemistry"}
-    # Real call would be: await cognee.cognify(dataset_name=f"oideachais_{subject}")
+    # Real call would be: await cognee.cognify(dataset_name=f"cianfhoghlaim_{subject}")
     return {"entities": 0, "subject": "chemistry"}
 
 
@@ -224,10 +224,10 @@ def lc5_computer_science_cognified(context) -> dict[str, Any]:
 
 @asset(group_name="3_model_lifecycle_lc_cognify_lc5_english", description="Cognee cognify for english LC (text-heavy, monolingual dataset)")
 def lc5_english_cognified(context) -> dict[str, Any]:
-    """Per-subject Cognee cognify (oideachais_english dataset)."""
+    """Per-subject Cognee cognify (cianfhoghlaim_english dataset)."""
     if not COGNEE_AVAILABLE:
         return {"entities": 0, "subject": "english"}
-    # Real call would be: await cognee.cognify(dataset_name="oideachais_english")
+    # Real call would be: await cognee.cognify(dataset_name="cianfhoghlaim_english")
     return {"entities": 0, "subject": "english"}
 
 

@@ -5,7 +5,7 @@ Component (rewrite of CelticCocoindexV1Component + CelticLancedbHnswComponent).
 Wraps one CocoIndex v1 App and registers it as a `is_virtual=True`
 Dagster asset so the LanceDB table mirrors its upstream (the L1
 filesystem scan) automatically. The R1-R4 conformance contract
-(oideachais-cocoindex-v1 skill) is enforced at scaffold time.
+(cianfhoghlaim-cocoindex-v1 skill) is enforced at scaffold time.
 
     Usage (from a YAML defs file):
 
@@ -188,7 +188,7 @@ class CelticModelLifecycleComponent(Component):
             raise ConformanceError(
                 rule="R1",
                 message="no `from ._lifespan import` line",
-                fix="Add `from ._lifespan import shared_lifespan` (or another canonical ContextKey) to delegate to the canonical lifespan (see oideachais-cocoindex-v1 skill)",
+                fix="Add `from ._lifespan import shared_lifespan` (or another canonical ContextKey) to delegate to the canonical lifespan (see cianfhoghlaim-cocoindex-v1 skill)",
             )
 
         # R2: canonical ContextKeys (handles both single-line and multi-line

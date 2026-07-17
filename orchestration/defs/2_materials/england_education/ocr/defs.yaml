@@ -10,8 +10,8 @@ attributes:
   source_asset: 1_ingestion_curriculum_eng/ocr/subjects
   partition_strategy: by_board_subject
   asset_check_kind: row_count
-  namespace_pattern: "oideachais.education.british_isles.england.ocr.{subject}.{qualification_level}"
+  namespace_pattern: "cianfhoghlaim.education.british_isles.england.ocr.{subject}.{qualification_level}"
   cocoindex_app: england_ocr_education_embedding
-  cognify_dataset: oideachais_england_ocr
+  cognify_dataset: cianfhoghlaim_england_ocr
   automation_cron: "0 6 * * *"
   dagster_group_name_prefix: "2_materials_curriculum_eng_ocr"

@@ -62,7 +62,7 @@
 - [ ] 4.2 Imports `from ._lifespan import shared_lifespan` (R1–R4 conformance)
 - [ ] 4.3 Reads from `dlt/european_union/` DuckLake tables
 - [ ] 4.4 Embeds with `BAAI/bge-m3` (1024-d)
-- [ ] 4.5 Writes to `oideachais.eu.official_chunks` LanceDB table
+- [ ] 4.5 Writes to `cianfhoghlaim.eu.official_chunks` LanceDB table
 
 ## 5. Dagster L1 + L2 + L3 assets
 
@@ -100,7 +100,7 @@
   `european-union-official-language-pipeline/spec.md` (7 Requirements)
 - [ ] 8.2 MODIFIED delta on `cross-region-pipeline/spec.md` adding a
   cross-reference to the new EU institutional instance
-- [ ] 8.3 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 8.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference to the EU institutional pipeline
 
 ## 9. Validate

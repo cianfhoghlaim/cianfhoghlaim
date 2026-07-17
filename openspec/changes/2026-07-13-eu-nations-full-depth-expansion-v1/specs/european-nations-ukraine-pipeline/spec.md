@@ -31,7 +31,7 @@ Per-country depth requires:
   (German + English)
 - **AND** the `european_nations_deu_education_embedding` CocoIndex v1
   App MUST embed every per-subject row into the shared LanceDB
-  table `oideachais.lc.european_nations.deu.education_chunks`
+  table `cianfhoghlaim.lc.european_nations.deu.education_chunks`
 - **AND** the 3 BAML files at
   `baml/european_nations/deu/{education,law,medicine}.baml` MUST
   define `ExtractDEU<Domain>Document(germany, language, text)`
@@ -61,7 +61,7 @@ appearing first.
   the existing EU nations scaffold
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the Ireland-level template
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

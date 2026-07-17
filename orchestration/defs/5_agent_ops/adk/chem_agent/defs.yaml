@@ -18,7 +18,7 @@ attributes:
   langfuse_trace_tag: agent.chem
   langfuse_drop_smoke_spans: true
   cognify:
-    dataset: oideachais_lc_chemistry
+    dataset: cianfhoghlaim_lc_chemistry
     top_k: 5
     emit_on:
       - response_generated

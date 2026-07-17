@@ -157,7 +157,7 @@ under the 5-layer KCG Components pattern.
 Per the Feat C addendum (2026-07-10), each mount SHALL also
 expose two additional top-level attribute blocks in addition to
 the 5 Dagster assets: a `cognify` block configuring the per-
-subject Cognee dataset (`oideachais_lc_<subject>`) and a
+subject Cognee dataset (`cianfhoghlaim_lc_<subject>`) and a
 `langfuse_callbacks` block configuring the canonical trace name
 (`agent.<module_slug>.<verb>`). Both blocks are populated by the
 L5 Component at scaffold time — operator-managed defs.yaml files
@@ -181,7 +181,7 @@ time.
 - **AND** `ROUTING_KEYWORDS["math_agent"]` contains
   `"mathematics"`
 - **AND** `defs.yaml.attributes.cognify.dataset` equals
-  `"oideachais_lc_mathematics"`
+  `"cianfhoghlaim_lc_mathematics"`
 - **AND** `defs.yaml.attributes.langfuse_callbacks.trace_name`
   equals `"agent.math.explain"`
 
@@ -288,7 +288,7 @@ The wire-up MUST NOT pull in `google.genai`, `litellm`, or
 - **GIVEN** `python3 -c "from cianfhoghlaim.agents.tuatha import math_agent"`
 - **WHEN** the import resolves
 - **THEN** `math_agent.math_agent_wire.baml_prefix == "Math"`
-- **AND** `math_agent.math_agent_wire.subject.cognee_dataset == "oideachais_lc_mathematics"`
+- **AND** `math_agent.math_agent_wire.subject.cognee_dataset == "cianfhoghlaim_lc_mathematics"`
 - **AND** no `ImportError` is raised during construction
 
 ### Requirement: Langfuse callbacks wired at agent construction time
@@ -314,11 +314,11 @@ raise.
 - **AND** when Langfuse is unavailable the context exits cleanly
   and yields `None`
 
-### Requirement: Cognify emit step pushes to oideachais_lc_<subject>
+### Requirement: Cognify emit step pushes to cianfhoghlaim_lc_<subject>
 
 The system SHALL push every LLM response of the 8 NCCA subject
 agents into the canonical Cognee dataset
-``oideachais_lc_<subject>``, where ``<subject>`` is the
+``cianfhoghlaim_lc_<subject>``, where ``<subject>`` is the
 canonical NCCA subject slug (not the file-name slug). The emit
 hook is exposed as the module-level
 ``<slug>_agent_emit_to_cognee(response, query)`` async function
@@ -329,15 +329,15 @@ When the ``cognee`` package is not installed the function MUST
 return ``[]`` without raising.
 
 The 5 subjects whose Cognee datasets differ from the
-historical `oideachais_<subject>` naming convention are
+historical `cianfhoghlaim_<subject>` naming convention are
 now consistent with `agent-memory-systems`.
 
-#### Scenario: chem_agent emits to oideachais_lc_chemistry
+#### Scenario: chem_agent emits to cianfhoghlaim_lc_chemistry
 
 - **GIVEN** `chem_agent.chem_agent_open_trace` has been called for a query
 - **WHEN** `chem_agent.chem_agent_emit_to_cognee(<response>, <query>)` runs
 - **AND** the `cognee` package is installed
-- **THEN** the response is added to the `oideachais_lc_chemistry` dataset
+- **THEN** the response is added to the `cianfhoghlaim_lc_chemistry` dataset
 - **AND** the returned hits come from the same dataset with
   `top_k = 5`
 
@@ -352,8 +352,8 @@ now consistent with `agent-memory-systems`.
 
 The system SHALL enforce the `MemoryBackend` Protocol contract on
 the 8 NCCA subject agents: no subject agent module MAY import
-`oideachais.storage.graphiti_client` or
-`oideachais.storage.falkordb_client` directly. Every subject
+`cianfhoghlaim.storage.graphiti_client` or
+`cianfhoghlaim.storage.falkordb_client` directly. Every subject
 agent MUST depend on the abstraction via
 `from cianfhoghlaim.storage.memf import get_default_backend`.
 

@@ -101,7 +101,7 @@ class RerankConfig:
 
 
 if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
-    RERANKER = coco.ContextKey[RerankConfig]("oideachais_reranker")  # type: ignore[index]
+    RERANKER = coco.ContextKey[RerankConfig]("cianfhoghlaim_reranker")  # type: ignore[index]
 else:
     RERANKER = None  # type: ignore[assignment]
 

@@ -151,23 +151,23 @@ schedule and ownership.
 │  Layer 4: Asset Generation (Dagster re-materialization) │
 │  → marimo dashboards (5 educational stages)             │
 │  → FastAPI routes (`/dashboards/*`, `/api/*`)          │
-│  → TanStack Start front-end (`web/apps/oideachais-web/`)         │
+│  → TanStack Start front-end (`web/apps/cianfhoghlaim-web/`)         │
 └────────────────────────────────────────────────────────┘
 ```
 
 **Asset groups:**
 
-- `oideachais-pipeline` — Layer 1 (DLT ingestion, 33+ sources
+- `cianfhoghlaim-pipeline` — Layer 1 (DLT ingestion, 33+ sources
   for Ireland, UK, Celtic, geospatial)
-- `oideachais-cognify-knowledge-graph` — Layer 2 + 3
+- `cianfhoghlaim-cognify-knowledge-graph` — Layer 2 + 3
   (cognify, 3 leabharlann cognify, 3 cross-archive edges)
-- `oideachais-leabharlann` — Layer 2 (3 v1 CocoIndex Apps
+- `cianfhoghlaim-leabharlann` — Layer 2 (3 v1 CocoIndex Apps
   for the leabharlann corpus)
-- `oideachais-semantic-search` — Layer 3 (cross-corpus
+- `cianfhoghlaim-semantic-search` — Layer 3 (cross-corpus
   LanceDB HNSW search)
-- `oideachais-marimo-dashboards` — Layer 4 (11 marimo
+- `cianfhoghlaim-marimo-dashboards` — Layer 4 (11 marimo
   notebooks for the 5 educational stages)
-- `oideachais-baml-schemas` — Layer 2 (BAML extraction
+- `cianfhoghlaim-baml-schemas` — Layer 2 (BAML extraction
 
   schemas, 23+ files)
 - `docs-skills-consolidation` — Layer 4 (the
@@ -317,7 +317,7 @@ assets, each with the canonical
     dlt_pipeline=dlt.pipeline(
         pipeline_name="ireland_curriculum",
         destination="ducklake",
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     ),
     partitions_def=MultiPartitionsDefinition({
         "language": StaticPartitionsDefinition(["en", "ga"]),
@@ -346,7 +346,7 @@ leabharlann stack overview, the KCG Dagster workspace has
 | `leabharlann` | 0 (orchestrator) | The cross-stage orchestrator |
 
 **Total**: 56+ asset instances, all sharing the
-`oideachais.{domain}.{nation}.{entity}` asset-key contract
+`cianfhoghlaim.{domain}.{nation}.{entity}` asset-key contract
 (see `.agents/skills/agent-memory-systems/SKILL.md`).
 
 ### The 5-stage leabharlann asset materialisation order
@@ -443,7 +443,7 @@ All 5 are registered in the root `dg.toml` workspace file:
 name = "cianfhoghlaim"
 
 [[workspace.locations]]
-location = "oideachais"
+location = "cianfhoghlaim"
 
 [[workspace.locations]]
 location = "tuath"
@@ -470,7 +470,7 @@ from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.mathematics impo
     dlt_pipeline=dlt.pipeline(
         pipeline_name="lc6_mathematics",
         destination="ducklake",
-        dataset_name="oideachais.leaving_cert",
+        dataset_name="cianfhoghlaim.leaving_cert",
     ),
 )
 def lc6_mathematics_assets(context, dlt_run_resource: DagsterDltResource):
@@ -498,7 +498,7 @@ subject=StaticPartitionsDefinition(["mathematics", "chemistry", ...]))`.
   English Ordinary Mathematics.
 - **Lakehouse sink** — every `@dlt_assets` writes to
   `ducklake` (MotherDuck-managed) under
-  `oideachais.leaving_cert.<subject>.<level>_<lang>`.
+  `cianfhoghlaim.leaving_cert.<subject>.<level>_<lang>`.
 - **Downstream surface** — the 7 v1 CocoIndex Apps consume the
   DuckLake tables; the 4 MotherDuck Dives + 6 per-subject marimo
   notebooks consume the CocoIndex output.

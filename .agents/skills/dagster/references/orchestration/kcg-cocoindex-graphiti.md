@@ -129,7 +129,7 @@ def vector_embeddings_check(context: AssetCheckEvaluationContext, vector_embeddi
 
 ## KCG production usage
 
-- The `oideachais-pipeline` spec — the canonical asset graph
+- The `cianfhoghlaim-pipeline` spec — the canonical asset graph
 - The `orchestration/defs/curriculum_assets.py` — the
   33+ Ireland curriculum assets
 - The `orchestration/sensors/leabharlann_sensors.py` —
@@ -143,7 +143,7 @@ def vector_embeddings_check(context: AssetCheckEvaluationContext, vector_embeddi
   the older `Dagster Orchestration for Cocoindex, Graphiti.md` (399
   lines) were in `docs/dagster/` (deleted with the
   `sync-skills-from-docs` change)
-- The `oideachais-pipeline` openspec spec for the partition scheme
+- The `cianfhoghlaim-pipeline` openspec spec for the partition scheme
   + asset graph
 - The `cocoindex` skill for the v0 → v1 migration
 - The `graphiti` skill for the bi-temporal model

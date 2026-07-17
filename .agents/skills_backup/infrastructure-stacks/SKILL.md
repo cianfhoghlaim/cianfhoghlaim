@@ -119,7 +119,7 @@ The 4 per-account IMAP credentials are stored as
 `infisical://dev-baile/mailcow/imap_credentials/<account>` and
 injected via the Locket sidecar. The full mailcow wiring (5 Komodo
 stages + 8 Dagster inbox assets + 12 vault refs) is documented in
-[`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
+[`.agents/skills/cianfhoghlaim-email-triage/SKILL.md`](../cianfhoghlaim-email-triage/SKILL.md).
 
 > **Note:** the mailcow-dockerized stack row itself is the
 > infrastructure sub-agent's scope. This entry is a cross-reference

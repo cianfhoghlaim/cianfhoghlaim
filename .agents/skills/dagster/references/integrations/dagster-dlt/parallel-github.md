@@ -90,7 +90,7 @@ def github_daily(context: ScheduleEvaluationContext):
 - The `orchestration/defs/ireland/curriculum_dlt_assets.py`
   module defines the `MultiPartitionsDefinition` by
   `language + subject`
-- The `oideachais-pipeline` spec mandates this MultiPartitions
+- The `cianfhoghlaim-pipeline` spec mandates this MultiPartitions
   scheme
 
 ## Reference
@@ -101,4 +101,4 @@ def github_daily(context: ScheduleEvaluationContext):
   `sync-skills-from-docs` change)
 - The `dlt` skill's `references/dagster-dlt-assets.md` for the
   full `@dlt_assets` pattern
-- The `oideachais-pipeline` openspec spec for the partition scheme
+- The `cianfhoghlaim-pipeline` openspec spec for the partition scheme

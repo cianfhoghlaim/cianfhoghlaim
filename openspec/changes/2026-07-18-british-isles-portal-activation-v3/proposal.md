@@ -52,8 +52,8 @@ already in the repo. Each PDF claim links to its existing spec:
 |---|---|
 | 5-stage Dagster pipeline | `dagster-5-layer-component-architecture/spec.md` |
 | `[tool.dg].registry_modules` | `pyproject.toml` |
-| DLT → DuckLake (Parquet + Garage S3 + Postgres catalog) | `oideachais-pipeline/spec.md` R-DuckLake |
-| BAML → CocoIndex v1 → LanceDB HNSW | `oideachais-cocoindex-v1-migration/spec.md` |
+| DLT → DuckLake (Parquet + Garage S3 + Postgres catalog) | `cianfhoghlaim-pipeline/spec.md` R-DuckLake |
+| BAML → CocoIndex v1 → LanceDB HNSW | `cianfhoghlaim-cocoindex-v1-migration/spec.md` |
 | Cognee knowledge graph | `agent-memory-systems/spec.md` R-Cognee |
 | OCR registry: 9 vision + 4 classical + 3 image-generation | `meaisinfhoghlaim-ocr-htr/spec.md` |
 | 12-agent fleet | `meaisinfhoghlaim-platform/spec.md` + `agent-registry/spec.md` |
@@ -70,7 +70,7 @@ already in the repo. Each PDF claim links to its existing spec:
 | R11 | `study_plan.baml` BAML schema (ExtractStudyPlan) | v2 |
 | R12 | CocoIndex v1 App `portal_study_plan_embedding` | v2 |
 | R13 | MotherDuck Dive `lc_study_plan_dive` + daily Flight | v2 |
-| R14 | Cloudflare R2 bucket `oideachais-pdfs` + Worker | v2 |
+| R14 | Cloudflare R2 bucket `cianfhoghlaim-pdfs` + Worker | v2 |
 | R15 | marimo notebook deployed to `*.workers.dev` | v2 |
 | R16 | Storybook design system (≥ 18 stories + `<Ci*>`) | v2 |
 | R17 | 4-stage pipeline → UI loop (Aistear → Primary → JC → LC + Tertiary) | v2 |
@@ -89,7 +89,7 @@ already in the repo. Each PDF claim links to its existing spec:
 |---|---|
 | `cianfhoghlaim-leaving-cert-portal/spec.md` | MODIFIED +R11–R25 |
 | `agentic-frontend-frameworks/spec.md` | MODIFIED + 5th-surface lock |
-| `oideachais-baml-schemas/spec.md` | MODIFIED + cross-ref to per-subject web schemas |
+| `cianfhoghlaim-baml-schemas/spec.md` | MODIFIED + cross-ref to per-subject web schemas |
 | `british-isles-education-pipeline/spec.md` | MODIFIED + central portal as entry point |
 | `ireland-primary-jc-dlt-baml/spec.md` | MODIFIED + Primary + JC tabs |
 | `official-media-marimo/spec.md` | MODIFIED + cross-ref |
@@ -128,8 +128,8 @@ already in the repo. Each PDF claim links to its existing spec:
 - [`openspec/specs/agentic-frontend-frameworks/spec.md`](../specs/agentic-frontend-frameworks/spec.md)
 - [`openspec/specs/british-isles-education-pipeline/spec.md`](../specs/british-isles-education-pipeline/spec.md)
 - [`openspec/specs/ireland-primary-jc-dlt-baml/spec.md`](../specs/ireland-primary-jc-dlt-baml/spec.md)
-- [`openspec/specs/oideachais-baml-schemas/spec.md`](../specs/oideachais-baml-schemas/spec.md)
-- [`openspec/specs/oideachais-marimo-dashboards/spec.md`](../specs/oideachais-marimo-dashboards/spec.md)
+- [`openspec/specs/cianfhoghlaim-baml-schemas/spec.md`](../specs/cianfhoghlaim-baml-schemas/spec.md)
+- [`openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md`](../specs/cianfhoghlaim-marimo-dashboards/spec.md)
 - [`openspec/specs/official-media-marimo/spec.md`](../specs/official-media-marimo/spec.md)
 - [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](../specs/meaisinfhoghlaim-agent-frameworks/spec.md)
 - [`openspec/specs/infrastructure-stacks/spec.md`](../specs/infrastructure-stacks/spec.md)
@@ -149,7 +149,7 @@ Soft dependencies (already shipped):
 - `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1` (6 marimo study tools)
 - `2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1`
 - `2026-07-14-ireland-primary-jc-dlt-baml-v1`
-- `2026-07-15-oideachais-university-deep-extraction-v1`
+- `2026-07-15-cianfhoghlaim-university-deep-extraction-v1`
 
 ## Risks
 

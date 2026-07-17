@@ -5,8 +5,8 @@ Embeds the Dúchas manuscript pages (cbe/cbes/cbeg/cbef collections) into
 LanceDB via BGE-M3 (multilingual 1024-d, supports Irish handwriting OCR).
 
 Mounts **TWO** LanceDB tables:
-1. ``oideachais.language.duchas_chunks`` — page-level summaries
-2. ``oideachais.language.duchas_bboxes`` — 5-level bbox child table
+1. ``cianfhoghlaim.language.duchas_chunks`` — page-level summaries
+2. ``cianfhoghlaim.language.duchas_bboxes`` — 5-level bbox child table
    (page → region → sentence → word → letter)
 
 R1–R4 v1 conformance contract:
@@ -19,9 +19,9 @@ LlamaSwap routing (per the shared routing table):
 - Dúchas → ``molmo2-8b`` (diagram pointing specialist) + ``dots-ocr`` (layout)
 
 Reads from the canonical DuckLake tables:
-- ``oideachais.celtic.duchas.manuscripts`` (page-level records)
-- ``oideachais.celtic.duchas.bboxes`` (5-level bbox child table)
-- ``oideachais.celtic.duchas.transcriptions`` (line-by-line OCR)
+- ``cianfhoghlaim.celtic.duchas.manuscripts`` (page-level records)
+- ``cianfhoghlaim.celtic.duchas.bboxes`` (5-level bbox child table)
+- ``cianfhoghlaim.celtic.duchas.transcriptions`` (line-by-line OCR)
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -64,9 +64,9 @@ from ._lifespan import (  # noqa: E402
 # =============================================================================
 
 DUCHAS_DUCKLAKE_TABLES = {
-    "manuscripts": "oideachais.celtic.duchas.manuscripts",
-    "bboxes": "oideachais.celtic.duchas.bboxes",
-    "transcriptions": "oideachais.celtic.duchas.transcriptions",
+    "manuscripts": "cianfhoghlaim.celtic.duchas.manuscripts",
+    "bboxes": "cianfhoghlaim.celtic.duchas.bboxes",
+    "transcriptions": "cianfhoghlaim.celtic.duchas.transcriptions",
 }
 
 
@@ -78,7 +78,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         logger.warning("duckdb_not_available_for_duchas_embedding")
         return []
 
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -235,10 +235,10 @@ def mount_duchas_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.duchas_chunks",
+            table_name="cianfhoghlaim.language.duchas_chunks",
             embedding_dim=EMBED_DIM,
         )
-        logger.info("duchas_chunks_mounted", table="oideachais.language.duchas_chunks", dim=EMBED_DIM)
+        logger.info("duchas_chunks_mounted", table="cianfhoghlaim.language.duchas_chunks", dim=EMBED_DIM)
     except Exception as exc:  # noqa: BLE001 - defensive
         logger.warning("duchas_chunks_mount_failed: %s", exc)
 
@@ -251,10 +251,10 @@ def mount_duchas_bboxes_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.duchas_bboxes",
+            table_name="cianfhoghlaim.language.duchas_bboxes",
             embedding_dim=EMBED_DIM,
         )
-        logger.info("duchas_bboxes_mounted", table="oideachais.language.duchas_bboxes", dim=EMBED_DIM)
+        logger.info("duchas_bboxes_mounted", table="cianfhoghlaim.language.duchas_bboxes", dim=EMBED_DIM)
     except Exception as exc:  # noqa: BLE001 - defensive
         logger.warning("duchas_bboxes_mount_failed: %s", exc)
 

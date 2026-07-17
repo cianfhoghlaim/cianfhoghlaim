@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.wales.law.legislation — Welsh legislation.
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.wales.law.legislation — Welsh legislation.
 Phase 7 of the openspec change.
 """
 from __future__ import annotations

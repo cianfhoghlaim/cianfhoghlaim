@@ -1,7 +1,7 @@
 # MODIFIED Requirements — restore the canonical `ocr/` package
 
 > **Why this delta:** The BIEP notebooks documented under the
-> `oideachais-marimo-dashboards` capability depend on
+> `cianfhoghlaim-marimo-dashboards` capability depend on
 > `cianfhoghlaim.ocr.models.registry.VISION_MODELS` and
 > `CLASSICAL_OCR` (via the dlt / cocoindex / orchestration
 > sub-trees). When the canonical package is missing, every PDF

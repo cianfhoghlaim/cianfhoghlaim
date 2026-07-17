@@ -1,7 +1,7 @@
 # defs/3_model_lifecycle/cocoindex_v1/youtube_kg/defs.yaml
 #
 # L3 CelticModelLifecycleComponent for the YoutubeKgEmbedding v1 App.
-# Per the oideachais-cocoindex-v1 skill, the R1–R4 conformance contract
+# Per the cianfhoghlaim-cocoindex-v1 skill, the R1–R4 conformance contract
 # is enforced at build_defs time by the Component. is_virtual=True so
 # the 3 LanceDB tables (video_segments, video_frame_captions,
 # video_triples) mirror their L1 upstream automatically.
@@ -18,7 +18,7 @@ attributes:
     - video_frame_captions
     - video_triples
   # The DuckLake source table read by the App:
-  ducklake_source: oideachais.youtube.youtube_videos
+  ducklake_source: cianfhoghlaim.youtube.youtube_videos
   # Refreshing once a day is enough; YouTube curators don't churn
   # videos every minute.
   refresh_interval_secs: 86400

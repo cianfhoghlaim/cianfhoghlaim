@@ -4,10 +4,10 @@ Culture Heritage v1 CocoIndex embedding App.
 CocoIndex v1 App that embeds BAML-extracted `CultureHeritageClaim` chunks
 from the 6 personal-heritage Gemini Deep Research PDFs at
 `leabharlann/gemini_deep_research/culture/` into LanceDB table
-`oideachais.culture_heritage_chunks`.
+`cianfhoghlaim.culture_heritage_chunks`.
 
 The 12th v1 CocoIndex App in the platform (alongside the 11 existing Apps
-documented in `.agents/skills/oideachais-cocoindex-v1/SKILL.md`).
+documented in `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md`).
 
 Canonical v1 patterns enforced (REFACTORING.md item 12):
 
@@ -18,7 +18,7 @@ Canonical v1 patterns enforced (REFACTORING.md item 12):
 - `@coco.fn(memo=True)` for processing functions.
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
   via delegation to `shared_lifespan` (from
-  `oideachais/cocoindex_flows/_lifespan.py`).
+  `cianfhoghlaim/cocoindex_flows/_lifespan.py`).
 - `localfs.walk_dir(sourcedir, recursive=True, live=True,
   filename_pattern=...)` for the JSONL input.
 - `lancedb.mount_table_target(...)` for the output target.
@@ -266,7 +266,7 @@ culture_heritage_embedding_app = _make_app()
 
 
 # ============================================================================
-# CLI entry point — `python -m oideachais.cocoindex_flows.culture_heritage_embedding update`
+# CLI entry point — `python -m cianfhoghlaim.cocoindex_flows.culture_heritage_embedding update`
 # ============================================================================
 
 

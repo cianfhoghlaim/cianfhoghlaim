@@ -10,7 +10,7 @@
 # - `routing_keywords` are appended to the global `ROUTING_KEYWORDS` dict
 #   via `_append_routing_keywords` at scaffold time
 # - `tools` are the 10 academic_history_agent tools
-# - `cognee_dataset` is `oideachais_history` (per the wire-up)
+# - `cognee_dataset` is `cianfhoghlaim_history` (per the wire-up)
 type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: academic_history_agent
@@ -49,6 +49,6 @@ attributes:
     - recommend_next_revision
     - compare_my_answer_to_solution
     - search_my_formulas
-  cognee_dataset: oideachais_history
+  cognee_dataset: cianfhoghlaim_history
   privacy_gate: "INCLUDE_IDENTITY_RECORDS=false"
   pseudonymous_user: true

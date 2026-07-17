@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.medicine.doh — Department of Health (Ireland).
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.medicine.doh — Department of Health (Ireland).
 
 Source: `https://www.gov.ie/en/organisation/department-of-health/`
 public service pages. Firecrawl crawl over the gov.ie sub-tree.

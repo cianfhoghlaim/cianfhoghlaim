@@ -256,7 +256,7 @@ export const auth = betterAuth({
   adapter; users sign in with SIWE (crypto) or Google OAuth
 - **web/apps/croilar-portal** (`web/apps/croilar-portal/`): BetterAuth +
   Drizzle adapter; users sign in with email + 2FA
-- **web/apps/oideachais-web**: NO auth (public lakehouse)
+- **web/apps/cianfhoghlaim-web**: NO auth (public lakehouse)
 - **PocketID** (`pocketid.cianfhoghlaim.ie`): admin OIDC
   provider for the engineering team
 - **TinyAuth / Pangolin**: zero-trust proxy for
@@ -334,7 +334,7 @@ The critical insight: **Convex and Hono do not manage
 passwords or sessions** — they defer to BetterAuth for all
 identity. The OIDC JWKS is the single source of truth for
 token verification. This means a single sign-on across
-`web/apps/oideachais-web` (no auth), `web/apps/croilar-portal` (BetterAuth),
+`web/apps/cianfhoghlaim-web` (no auth), `web/apps/croilar-portal` (BetterAuth),
 and any Convex-powered surface.
 
 ## KCG multi-layer auth (round-9 deep dive)

@@ -3,7 +3,7 @@
 // Bilingual EN/GA extraction of CAO courses, NUI/HEI matriculation, QQI FET awards,
 // and Apprenticeship pathways. Merged from:
 //   - baml/tertiary.baml (332 LOC) — the canonical tertiary schema
-//   - baml/oideachais_other/tertiary.baml (79 LOC) — the URL-extraction variant
+//   - baml/cianfhoghlaim_other/tertiary.baml (79 LOC) — the URL-extraction variant
 // See:
 //   docs/tuatha/Learn-to-Earn Blockchain and AI.md:25 (H6+25 bonus)
 //   docs/bonneagar/cognee-entity-resolution.md:144 (CAO points)
@@ -338,7 +338,7 @@ This audit is the critical decision-support feature for the MatriculationCheck a
 
 
 // =============================================================================
-// From-URL extraction functions (merged from oideachais_other/tertiary.baml)
+// From-URL extraction functions (merged from cianfhoghlaim_other/tertiary.baml)
 // =============================================================================
 
 function ExtractCAOCourseListFromUrl(page_url: string, year: int) -> CAOCourse[] {

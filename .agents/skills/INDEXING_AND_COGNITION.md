@@ -535,7 +535,7 @@ subagents were rewritten to align with the new tree.
 | Oideachais official-media DLT source | `dlt/official_media/` |
 | Oideachais BAML schemas | `baml/` |
 | Oideachais notebooks | `notebooks/` |
-| Oideachais TanStack Start app | `web/apps/oideachais-web/` |
+| Oideachais TanStack Start app | `web/apps/cianfhoghlaim-web/` |
 | Meaisínfhoghlaim agents, OCR, and LLM stack | `agents/` + `agents/meaisinfhoghlaim/` |
 | Meaisínfhoghlaim agent registry | `agents/` |
 | Meaisínfhoghlaim OCR registry | `agents/meaisinfhoghlaim/ocr/` |
@@ -567,7 +567,7 @@ subagents + 1 research subagent** in `opencode.json`:
 
 The pre-v4 subagent `skill_filter` arrays referenced ~35 legacy
 skill names that no longer exist as top-level skills (e.g.
-`oideachais-pipeline`, `kcg-pangolin-stack`, `agent-fleet-orchestration`,
+`cianfhoghlaim-pipeline`, `kcg-pangolin-stack`, `agent-fleet-orchestration`,
 `document-intelligence`, `tuatha-mmo`, `pent-elemental-cosmology`,
 `croilar-stream-registry`, etc.). These have all been replaced with
 top-level skills that resolve to existing directories under

@@ -14,7 +14,7 @@ SELECT
     MAX(marks) AS max_marks_per_question,
     COUNT(*) AS question_count,
     PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY marks) AS median_marks
-FROM oideachais.education.british_isles.england.exam_papers
+FROM cianfhoghlaim.education.british_isles.england.exam_papers
 WHERE qualification_level = 'a_level'
 GROUP BY subject, board
 ORDER BY subject, board;

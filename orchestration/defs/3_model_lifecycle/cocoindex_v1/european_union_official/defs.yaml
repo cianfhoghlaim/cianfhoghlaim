@@ -2,7 +2,7 @@
 #
 # L3 CocoIndex v1 App for the EU institutional pipeline. Embeds every
 # EU institutional document into the shared
-# `oideachais.eu.official_chunks` LanceDB table using the canonical
+# `cianfhoghlaim.eu.official_chunks` LanceDB table using the canonical
 # BGE-M3 1024-d multilingual embedder.
 #
 # Reference: openspec/changes/2026-07-11-european-union-official-language-pipeline-v1/
@@ -16,7 +16,7 @@ attributes:
     - app_name: EuropeanUnionOfficialEmbedding
       module: cianfhoghlaim.cocoindex.european_union_official_embedding
       source: european_union
-      lance_table: oideachais.eu.official_chunks
+      lance_table: cianfhoghlaim.eu.official_chunks
   schedule:
     cron: "0 5 * * *"
     timezone: UTC

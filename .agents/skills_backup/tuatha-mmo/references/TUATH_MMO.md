@@ -52,10 +52,10 @@ for the full topology.
 ## Data plane
 
 - **In-game state**: SpacetimeDB (real-time, low-latency).
-- **Premium content**: served from `sruth/oideachais/` (DuckLake) — paid
+- **Premium content**: served from `sruth/cianfhoghlaim/` (DuckLake) — paid
   via x402 micro-transactions in Crypteolas token.
 - **Dagster assets**: `sruth/tuatha/dagster_assets/` for the MMO's
-  curriculum-in-game asset graph (separate from `sruth/oideachais/dagster_defs/`).
+  curriculum-in-game asset graph (separate from `sruth/cianfhoghlaim/dagster_defs/`).
 
 ## Where the canonical docs live
 

@@ -73,7 +73,7 @@
 - [x] **B.3.9** `dlt/british_isles/ireland/education/law/legal_aid.py`
 - [x] **B.3.10** `dlt/british_isles/ireland/education/law/piab.py`
 - [x] **B.3.11** `dlt/british_isles/ireland/education/curriculum.py` (the self-reference fix in the docstring)
-- [x] **B.3.12** `tests/_oideachais/dlt_sources/ie/education/test_curriculum_source_local_cache.py` (2 import occurrences)
+- [x] **B.3.12** `tests/_cianfhoghlaim/dlt_sources/ie/education/test_curriculum_source_local_cache.py` (2 import occurrences)
 
 For each: rewrite
 `from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum_source import (...)` →
@@ -85,7 +85,7 @@ For each: rewrite
 - [x] **C.2** Create `openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/tasks.md` (this file)
 - [x] **C.3** Create `openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/specs/british-isles-education-pipeline/spec.md`
       delta — 2 ADDED Requirements (LC6 filesystem source + duplicate removal)
-- [x] **C.4** Create `openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/specs/oideachais-pipeline/spec.md`
+- [x] **C.4** Create `openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/specs/cianfhoghlaim-pipeline/spec.md`
       delta — 1 ADDED + 1 REMOVED Requirement (acknowledging the W1 ie→ireland cleanup that already removed the legacy `dlt/british_isles/ie/` directory)
 - [x] **C.5** Run `openspec validate 2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1 --strict` — must pass before commit
 

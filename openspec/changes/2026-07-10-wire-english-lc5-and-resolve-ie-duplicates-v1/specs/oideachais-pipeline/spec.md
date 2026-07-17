@@ -1,4 +1,4 @@
-# `oideachais-pipeline` MODIFIED — declare 972-LOC ie→ireland duplicate cleanup + acknowledge Wave 1 cleanup
+# `cianfhoghlaim-pipeline` MODIFIED — declare 972-LOC ie→ireland duplicate cleanup + acknowledge Wave 1 cleanup
 
 ## REMOVED Requirements
 

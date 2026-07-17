@@ -60,7 +60,7 @@ sites keep working during the deprecation window.
 
 ### 2. R4-exempt markers + relocation of 3 utility files
 
-- Add `# R4-exempt: this file is a utility, not a LanceDB flow — see oideachais-cocoindex-v1-migration.md`
+- Add `# R4-exempt: this file is a utility, not a LanceDB flow — see cianfhoghlaim-cocoindex-v1-migration.md`
   at the top of `_citation_extractor.py`, `_takeout_paths.py`,
   `_epub_extractor.py` (or relocate them to `dlt/common/utilities/` which
   the audit tool does not scan).
@@ -115,7 +115,7 @@ Backward compat — the old import paths continue to work. A
   explicit). The 9→12 MCP-tool count from the multimodal-code change
   already bumps this; the workflow addition is the second change to
   this spec.
-- `oideachais-pipeline`: register `site_crawler.py` as the canonical
+- `cianfhoghlaim-pipeline`: register `site_crawler.py` as the canonical
   web-scraper entry point. Existing firecrawl/incremental/curriculum
   helpers become deprecation-warned thin re-exports.
 
@@ -169,7 +169,7 @@ Affected repos: **cianfhoghlaim only**.
   (the CI workflow was originally proposed here)
 - `openspec/specs/indexing-and-cognition/spec.md` (the spec that owns the
   cocoindex-code MCP server + the conformance audit)
-- `openspec/specs/oideachais-pipeline/spec.md` (the spec that owns the DLT
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` (the spec that owns the DLT
   layer + web scrapers)
 - `.agents/skills/dlt/SKILL.md` (DLT conventions)
 - `.agents/skills/cocoindex/SKILL.md` (R1+R2+R3+R4 contract)

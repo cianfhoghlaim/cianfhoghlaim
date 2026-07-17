@@ -11,7 +11,7 @@ Each short-course DLT source is generated at import time via the
 `build_jc_short_course_source` factory.
 
 The destination DuckLake namespace is:
-    oideachais.education.british_isles.ireland.junior_cycle.short_courses.<course_slug>
+    cianfhoghlaim.education.british_isles.ireland.junior_cycle.short_courses.<course_slug>
 
 Reference: openspec/changes/2026-07-20-biep-v2-junior-cycle-extraction-v1/
 """
@@ -128,7 +128,7 @@ def build_jc_short_course_source(course_slug: str, cache_dir: Path | None = None
                 "jurisdiction": "ireland",
                 "education_stage": "junior_cycle_short_course",
                 "namespace": (
-                    "oideachais.education.british_isles.ireland.junior_cycle."
+                    "cianfhoghlaim.education.british_isles.ireland.junior_cycle."
                     f"short_courses.{course_slug}"
                 ),
             }
@@ -147,7 +147,7 @@ def build_jc_short_course_source(course_slug: str, cache_dir: Path | None = None
             "jurisdiction": "ireland",
             "education_stage": "junior_cycle_short_course",
             "namespace": (
-                "oideachais.education.british_isles.ireland.junior_cycle."
+                "cianfhoghlaim.education.british_isles.ireland.junior_cycle."
                 f"short_courses.{course_slug}"
             ),
             "uses_local_scrapes": os.getenv("USE_LOCAL_SCRAPES", "true").lower() == "true",

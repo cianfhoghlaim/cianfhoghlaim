@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.jersey.law.legislation — Jersey Law (Jersey Legal Information Board).
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.jersey.law.legislation — Jersey Law (Jersey Legal Information Board).
 
 Source: `https://www.jerseylaw.je` (Jersey Legal Information Board).
 

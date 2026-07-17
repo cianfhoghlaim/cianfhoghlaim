@@ -1,7 +1,7 @@
 """CocoIndex v1 App for the Government of Jersey education pipeline.
 
 Embeds every per-island education row into the shared LanceDB table
-``oideachais.biep.crown.jersey.education_chunks`` using the canonical
+``cianfhoghlaim.biep.crown.jersey.education_chunks`` using the canonical
 ``BAAI/bge-m3`` 1024-d multilingual embedder.
 """
 from __future__ import annotations
@@ -24,7 +24,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.biep.crown.jersey.education_chunks"
+TABLE_NAME = "cianfhoghlaim.biep.crown.jersey.education_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every Government of Jersey "
     "education row."

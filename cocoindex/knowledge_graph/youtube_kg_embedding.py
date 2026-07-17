@@ -77,7 +77,7 @@ FRAME_SAMPLE_FPS = float(os.getenv("YOUTUBE_KG_FRAME_FPS", "0.1"))  # 1 frame / 
 # The DuckLake table populated by the `dlt.api_sources.youtube_videos`
 # DLT source. CocoIndex reads it via the shared `coco.duckdb_source`
 # connector (same pattern as `apple_photos_chunks.py`).
-YOUTUBE_VIDEOS_DUCKLAKE_TABLE = "oideachais.youtube.youtube_videos"
+YOUTUBE_VIDEOS_DUCKLAKE_TABLE = "cianfhoghlaim.youtube.youtube_videos"
 
 
 # ---------------------------------------------------------------------------

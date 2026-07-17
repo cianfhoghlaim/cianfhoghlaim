@@ -20,15 +20,15 @@ All four Apps follow the canonical v1 patterns from
 
 - `@coco.fn` for processing functions
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
-  (now imported from `oideachais/cocoindex_flows/_lifespan.py` — the
+  (now imported from `cianfhoghlaim/cocoindex_flows/_lifespan.py` — the
   shared lifespan module, REFACTORING.md item 12).
 - `localfs.walk_dir(sourcedir, recursive=True, path_matcher=..., live=True)`
 - `lancedb.mount_table_target(...)` for output
 - `IdGenerator()` for stable IDs
 - `query_once` / `query` helpers for ad-hoc semantic search
-- `oideachais.lancedb.indexing.build_hnsw_index` for vector indexing
+- `cianfhoghlaim.lancedb.indexing.build_hnsw_index` for vector indexing
   (added 2026-06 per the LanceDB 0.15+ upgrade; REFACTORING.md item
-  from `oideachais-semantic-search`).
+  from `cianfhoghlaim-semantic-search`).
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/proposal.md
             + openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
@@ -646,7 +646,7 @@ if COCOINDEX_AVAILABLE:
 # recurses into each MBOX via the `mailbox` stdlib, yields one
 # chunk per message (`from + subject + first 2000 chars of body`).
 # Embeds with BAAI/bge-large-en-v1.5 (1024-d) via the shared
-# `EMBEDDER` ContextKey. Mounts the `oideachais_inbox_messages`
+# `EMBEDDER` ContextKey. Mounts the `cianfhoghlaim_inbox_messages`
 # LanceDB table with columns `(id, account, year, date_iso, subject,
 # sender, recipients, body_excerpt, embedding, baml_class,
 # baml_urgency, thread_id)`. Declares a cosine vector index on
@@ -844,7 +844,7 @@ if COCOINDEX_AVAILABLE:
     async def leabharlann_inbox_app_main(sourcedir: pathlib.Path) -> None:
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name="oideachais_inbox_messages",
+            table_name="cianfhoghlaim_inbox_messages",
             table_schema=await lancedb.TableSchema.from_class(
                 LeabharlannInboxMessage,
                 primary_key=["id"],
@@ -912,7 +912,7 @@ async def _query_table(
 
     Per the 2026-06 LanceDB 0.15+ upgrade, the leabharlann tables
     all have HNSW indexes built on the `embedding` column (the
-    `oideachais/lancedb/indexing.py:build_hnsw_index` function is
+    `cianfhoghlaim/lancedb/indexing.py:build_hnsw_index` function is
     called at materialisation time). The HNSW index gives 10-100x
     speedup at the cost of ~10% recall loss (per the LanceDB
     10B-scale blog).
@@ -951,7 +951,7 @@ async def build_hnsw_indexes_for_leabharlann() -> dict[str, bool]:
         "leabharlann_books",
         "leabharlann_zotero",
         "leabharlann_takeout",
-        "oideachais_inbox_messages",
+        "cianfhoghlaim_inbox_messages",
     ):
         try:
             table = await conn.open_table(table_name)
@@ -1042,7 +1042,7 @@ async def search_inbox(
         conditions.append(f"baml_urgency >= {float(urgency_min)}")
     where = " AND ".join(conditions) if conditions else None
     rows = await _query_table(
-        "oideachais_inbox_messages", query, limit=limit, where=where
+        "cianfhoghlaim_inbox_messages", query, limit=limit, where=where
     )
     for r in rows:
         r["score"] = 1.0 - r.get("_distance", 0.0)

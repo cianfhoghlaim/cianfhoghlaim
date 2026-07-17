@@ -22,10 +22,10 @@ def build_eu_multilingual_coverage_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT institution, language, coverage_level
-            FROM oideachais.multilingual.eu_english_coverage
+            FROM cianfhoghlaim.multilingual.eu_english_coverage
             UNION ALL
             SELECT institution, language, coverage_level
-            FROM oideachais.multilingual.eu_irish_coverage
+            FROM cianfhoghlaim.multilingual.eu_irish_coverage
         """,
     )
 

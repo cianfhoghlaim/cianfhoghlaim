@@ -208,7 +208,7 @@ All 41 local branches stay. The user explicitly said not to lose local work.
 | `origin/pick-7-align-env` | Shipped |
 | `origin/pick-8-ireland-legal` | Shipped |
 | `origin/pick-9-notebooks-flatten` | Shipped |
-| `origin/q3-2026-oideachais-consolidation` | Rolled into main |
+| `origin/q3-2026-cianfhoghlaim-consolidation` | Rolled into main |
 
 ### Remote branches to KEEP on `origin`
 

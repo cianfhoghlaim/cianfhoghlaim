@@ -12,7 +12,7 @@
 - [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/cross-repo-sync.md`
 - [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/cianfhoghlaim-leaving-cert-portal/spec.md` (MODIFIED +R11–R25)
 - [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/agentic-frontend-frameworks/spec.md` (MODIFIED + 5th-surface lock)
-- [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/oideachais-baml-schemas/spec.md` (MODIFIED + cross-ref)
+- [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/cianfhoghlaim-baml-schemas/spec.md` (MODIFIED + cross-ref)
 - [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/british-isles-education-pipeline/spec.md` (MODIFIED + central portal entry)
 - [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/ireland-primary-jc-dlt-baml/spec.md` (MODIFIED + Primary + JC tabs)
 - [ ] `openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/official-media-marimo/spec.md` (MODIFIED + cross-ref)

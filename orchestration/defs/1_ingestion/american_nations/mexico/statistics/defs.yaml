@@ -5,7 +5,7 @@
 # Per the canonical cross-region path contract this source lives at
 # ``dlt/americas/Mexico/statistics/inegi.py`` with
 # ``source_id="americas.Mexico.statistics.inegi"`` and lands in the
-# DuckLake table ``oideachais.statistics.americas.Mexico``.
+# DuckLake table ``cianfhoghlaim.statistics.americas.Mexico``.
 #
 # Reference: openspec/changes/2026-07-11-americas-california-pipeline-v1/
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent

@@ -52,7 +52,7 @@ PRIMARY_JC_CACHE_DIR = Path(
 
 # Stage identifiers used by the unified loop. The 5-stage taxonomy
 # (early_years, primary, junior_cycle, senior_cycle, tertiary) is from
-# `oideachais-pipeline` spec; this source only covers the 2 non-LC stages.
+# `cianfhoghlaim-pipeline` spec; this source only covers the 2 non-LC stages.
 PRIMARY_JC_STAGES: tuple[str, ...] = ("primary", "junior_cycle")
 
 PRIMARY_JC_SOURCE_URLS = [

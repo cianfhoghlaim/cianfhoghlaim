@@ -4,7 +4,7 @@ Heritage + Hidden Heritages — CocoIndex v1 App.
 Embeds the heritage sites + hidden heritages records into LanceDB via
 BGE-M3 (multilingual 1024-d, supports Irish place names).
 
-LanceDB table: ``oideachais.language.heritage_chunks``.
+LanceDB table: ``cianfhoghlaim.language.heritage_chunks``.
 
 R1–R4 v1 conformance contract.
 
@@ -12,8 +12,8 @@ LlamaSwap routing per the shared routing table:
 - Heritage → ``gemma-4-26B-A4B`` (multilingual MoE)
 
 Reads from the canonical DuckLake tables:
-- ``oideachais.celtic.heritage.sites``
-- ``oideachais.celtic.heritage.hidden_sites``
+- ``cianfhoghlaim.celtic.heritage.sites``
+- ``cianfhoghlaim.celtic.heritage.hidden_sites``
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -52,8 +52,8 @@ from ._lifespan import (  # noqa: E402
 
 
 HERITAGE_DUCKLAKE_TABLES = {
-    "sites": "oideachais.celtic.heritage.sites",
-    "hidden_sites": "oideachais.celtic.heritage.hidden_sites",
+    "sites": "cianfhoghlaim.celtic.heritage.sites",
+    "hidden_sites": "cianfhoghlaim.celtic.heritage.hidden_sites",
 }
 
 
@@ -62,7 +62,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb  # type: ignore[import-not-found]
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -150,10 +150,10 @@ def mount_heritage_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.heritage_chunks",
+            table_name="cianfhoghlaim.language.heritage_chunks",
             embedding_dim=EMBED_DIM,
         )
-        logger.info("heritage_chunks_mounted", table="oideachais.language.heritage_chunks", dim=EMBED_DIM)
+        logger.info("heritage_chunks_mounted", table="cianfhoghlaim.language.heritage_chunks", dim=EMBED_DIM)
     except Exception as exc:
         logger.warning("heritage_chunks_mount_failed: %s", exc)
 

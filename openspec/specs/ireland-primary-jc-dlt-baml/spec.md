@@ -3,7 +3,7 @@
 ## Purpose
 
 `ireland-primary-jc-dlt-baml` is a capability of the Cianfhoghlaim
-platform. It complements `oideachais-pipeline` (which covers all 5
+platform. It complements `cianfhoghlaim-pipeline` (which covers all 5
 educational stages with a generic per-stage BAML extraction) by focusing
 on the **Primary + Junior Cycle** stages specifically — the 2
 non-Leaving-Cert stages — with stage-specific DLT sources and BAML
@@ -23,7 +23,7 @@ The corresponding source code lives at:
 
 ## Background
 
-The pre-v4 `oideachais-pipeline` had a single BAML schema covering all
+The pre-v4 `cianfhoghlaim-pipeline` had a single BAML schema covering all
 5 stages and a per-subject loop. The Primary + Junior Cycle stages have
 different shape from Senior Cycle / Leaving Cert: Primary uses
 4 "areas" not subjects, and Junior Cycle has its own short-cycle
@@ -108,8 +108,8 @@ array, no exam paper layout, no marking scheme).
 
 ## Cross-references
 
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) — the parent capability (5 stages; Senior Cycle + Leaving Cert covered there)
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) — the BAML extraction library
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) — the parent capability (5 stages; Senior Cycle + Leaving Cert covered there)
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) — the BAML extraction library
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) — the flagship BIEP v1 (covers the 6 LC subjects, not Primary/JC)
 
 ## Migrated from: *(none)*

@@ -5,7 +5,7 @@ REFACTORING.md item 12.
 The 15th CocoIndex v1 App (and arguably the most important for
 maintaining consistency across the other 14). Implements a static
 linter that walks every v1 CocoIndex App under
-`oideachais/cocoindex_flows/` and applies 4 conformance rules:
+`cianfhoghlaim/cocoindex_flows/` and applies 4 conformance rules:
 
 - **R1** — `from ._lifespan import shared_lifespan` (delegates to
   the shared lifespan; REFACTORING.md item 12)
@@ -241,7 +241,7 @@ def check_app_file(path: pathlib.Path) -> ConformanceReport:
 
 
 def run_conformance_check(
-    repo_root: pathlib.Path = pathlib.Path("sruth/oideachais/cocoindex_flows"),
+    repo_root: pathlib.Path = pathlib.Path("sruth/cianfhoghlaim/cocoindex_flows"),
 ) -> list[ConformanceReport]:
     """Walk every v1 App file and return a list of ConformanceReports.
 

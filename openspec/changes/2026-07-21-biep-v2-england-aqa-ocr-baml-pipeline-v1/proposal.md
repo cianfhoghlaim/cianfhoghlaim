@@ -85,7 +85,7 @@ extraction; the `ensembled_extraction` function uses the `Unstract` +
 
 Each source MUST:
 - Use `from cianfhoghlaim.dlt.common.destinations_oideachais import with_namespace`
-  and call `with_namespace("oideachais")` (per the v6 destination contract)
+  and call `with_namespace("cianfhoghlaim")` (per the v6 destination contract)
 - Honour `USE_LOCAL_SCRAPES=true` (default) — the AQA/OCR/Edexcel PDFs are
   cached locally in `/stedding/ingest_queue/england/{aqa,ocr,edexcel}/<subject>/`
 - Yield `dlt.resource` records keyed by `source_id` of the form
@@ -93,7 +93,7 @@ Each source MUST:
   `cross-region-pipeline/spec.md` Requirement "Canonical source_id shape")
 - Tag every row with `country_code="england"`, `jurisdiction="england"`,
   `exam_board ∈ {aqa,ocr,edexcel}`, `qualification_level ∈ {gcse,a_level}`
-- Write to `ducklake_oideachais.education.british_isles.england.<board>.<subject>.<qualification_level>`
+- Write to `ducklake_cianfhoghlaim.education.british_isles.england.<board>.<subject>.<qualification_level>`
 
 ### 3. New CocoIndex v1 Apps
 
@@ -106,7 +106,7 @@ each conforming to R1–R4:
 - **R3** — `app = coco.App(coco.AppConfig(name=...))` at module scope
 - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
-LanceDB table names: `oideachais.england.<board>.<subject>.<level>` (27 tables per board — but a subject×level×board PK triple gives the same 27 unique tables).
+LanceDB table names: `cianfhoghlaim.england.<board>.<subject>.<level>` (27 tables per board — but a subject×level×board PK triple gives the same 27 unique tables).
 
 ### 4. New Dagster L2 assets
 
@@ -130,7 +130,7 @@ All asset `group_name`s MUST follow the 5-layer convention `<N>_<layer>/<domain>
   - `eng_a_level_complexity_dive` — mark-allocation patterns per A-Level question
 - **1 daily MotherDuck Flight** `eng_daily_sync_flight` — re-runs BAML extraction on
   any new PDFs landed in
-  `s3://garage/oideachais/england/<board>/<subject>/<level>/<year>/<file>.pdf`
+  `s3://garage/cianfhoghlaim/england/<board>/<subject>/<level>/<year>/<file>.pdf`
 
 ### 6. Spec deltas
 
@@ -176,9 +176,9 @@ Affected repos: cianfhoghlaim (single-repo change)
   the earlier parity-v1 scaffold this change completes
 - [`cross-region-pipeline`](../../specs/cross-region-pipeline/spec.md) —
   the umbrella contract (DuckLake namespace, DLT path contract, partition contract)
-- [`oideachais-baml-schemas`](../../specs/oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../../specs/cianfhoghlaim-baml-schemas/spec.md) —
   the BAML extraction library this change writes 5 new files into
-- [`oideachais-cocoindex-v1-migration`](../../specs/oideachais-cocoindex-v1-migration/spec.md) —
+- [`cianfhoghlaim-cocoindex-v1-migration`](../../specs/cianfhoghlaim-cocoindex-v1-migration/spec.md) —
   the R1–R4 v1 conformance contract the 3 new CocoIndex Apps must obey
 - `docs/research/aqa_ocr_edexcel_endpoints.md` *(authoritative endpoint inventory)*
 - `.agents/skills/dlt/SKILL.md` — DLT conventions

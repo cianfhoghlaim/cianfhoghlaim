@@ -1,4 +1,4 @@
-# Spec Delta — oideachais-baml-schemas
+# Spec Delta — cianfhoghlaim-baml-schemas
 
 This delta adds 2 new Requirements to the existing 16 (16 → 18).
 The MODIFIED section is the new requirements only; the existing

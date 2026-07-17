@@ -737,7 +737,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
     body).
   - **R4** — At least one `@coco.fn(` decorator.
   Run via `mise run upstream:conformance`. See the
-  `oideachais-cocoindex-v1` skill for the full 14-App registry.
+  `cianfhoghlaim-cocoindex-v1` skill for the full 14-App registry.
 - **`upstream_api_surface` App** — the 15th v1 App
   (`cocoindex/upstream_api_surface.py`). Watches
   the 5 canonical cocoindex docs URLs + `llms-full.txt` and BAML-extracts
@@ -746,7 +746,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 - **`upstream_blog_monitor` App** — the 16th v1 App
   (`cocoindex/upstream_blog_monitor.py`).
   Reads Firecrawl-monitor payloads from
-  `s3://oideachais-upstream-webhooks/<package>/...`, BAML-extracts
+  `s3://cianfhoghlaim-upstream-webhooks/<package>/...`, BAML-extracts
   `BlogPostMetadata` via `ExtractBlogPostMetadata`, embeds chunks, and
   writes `BlogPostNode` + `PackageNode` + `PUBLISHED_BY` edges to the
   `upstream_packages_graph` FalkorDB graph.
@@ -816,7 +816,7 @@ async def process_mathematics_pdf(
 async def app_main() -> None:
     table = await lancedb.mount_table_target(
         LANCE_DB,
-        table_name="oideachais.lc.mathematics.higher_en",
+        table_name="cianfhoghlaim.lc.mathematics.higher_en",
         table_schema=await lancedb.TableSchema.from_class(
             MathChunk, primary_key=["chunk_id"]
         ),
@@ -839,12 +839,12 @@ mathematics_embedding = coco.App(
 The 7 BIEP v1 Apps follow this template — swap `MathChunk` for
 `ChemChunk` / `GeogChunk` / `GaeilgeChunk` / `EnglishChunk` /
 `CompSciChunk` / `GovCircularChunk`, swap the table name
-(`oideachais.lc.<subject>.<level>_<lang>` /
-`oideachais.education.ie.gov_circulars`), and update the source
+(`cianfhoghlaim.lc.<subject>.<level>_<lang>` /
+`cianfhoghlaim.education.ie.gov_circulars`), and update the source
 directory. All 7 import `shared_lifespan` from
 `cocoindex/_lifespan.py` to satisfy the v1
 conformance contract (`R1`–`R4` from
-`oideachais-cocoindex-v1/SKILL.md`).
+`cianfhoghlaim-cocoindex-v1/SKILL.md`).
 
 **British-Isles Education pipeline use case:**
 
@@ -856,7 +856,7 @@ conformance contract (`R1`–`R4` from
 - **`gov.ie` circulars** — the `government_circulars` v1 App
   walks `leaving_certificate/government_circulars/` (PDFs from
   `gov.ie/.../circulars/...`) and writes to
-  `oideachais.education.ie.gov_circulars_archive`.
+  `cianfhoghlaim.education.ie.gov_circulars_archive`.
 - **`BAAI/bge-m3` 1024-d embedder** — shared via
   `_lifespan.py`; supports Gaeilge + English + 100+ languages
   in one vector space.

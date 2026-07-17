@@ -4,7 +4,7 @@ Gaois + Celtic Language Pipeline — Gaois APIs CocoIndex v1 App.
 Embeds the 3 Gaois linguistic API sources (Téarma + Logainm + Ainm) into
 LanceDB via BGE-M3 (multilingual 1024-d, supports Irish).
 
-LanceDB table: ``oideachais.language.gaois_chunks``.
+LanceDB table: ``cianfhoghlaim.language.gaois_chunks``.
 
 R1–R4 v1 conformance contract per ``_lifespan.py``:
 - R1 — ``from ._lifespan import shared_lifespan``
@@ -19,9 +19,9 @@ LlamaSwap routing (per the shared routing table at
 - Default → ``gemma-4-26B-A4B``
 
 Reads from the canonical DuckLake tables:
-- ``oideachais.celtic.gaois.tearma_terms`` (Téarma)
-- ``oideachais.celtic.gaois.logainm_places`` (Logainm)
-- ``oideachais.celtic.gaois.ainm_biographies`` (Ainm)
+- ``cianfhoghlaim.celtic.gaois.tearma_terms`` (Téarma)
+- ``cianfhoghlaim.celtic.gaois.logainm_places`` (Logainm)
+- ``cianfhoghlaim.celtic.gaois.ainm_biographies`` (Ainm)
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -66,10 +66,10 @@ from ._lifespan import (  # noqa: E402
 # =============================================================================
 
 GAOIS_DUCKLAKE_TABLES = {
-    "tearma_terms": "oideachais.celtic.gaois.tearma_terms",
-    "tearma_education": "oideachais.celtic.gaois.tearma_education",
-    "logainm_places": "oideachais.celtic.gaois.logainm_places",
-    "ainm_biographies": "oideachais.celtic.gaois.ainm_biographies",
+    "tearma_terms": "cianfhoghlaim.celtic.gaois.tearma_terms",
+    "tearma_education": "cianfhoghlaim.celtic.gaois.tearma_education",
+    "logainm_places": "cianfhoghlaim.celtic.gaois.logainm_places",
+    "ainm_biographies": "cianfhoghlaim.celtic.gaois.ainm_biographies",
 }
 
 
@@ -81,7 +81,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         logger.warning("duckdb_not_available_for_gaois_embedding")
         return []
 
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -158,7 +158,7 @@ if COCOINDEX_AVAILABLE:
 
         Reads from the 3 Gaois DuckLake tables (Téarma terms + Logainm
         places + Ainm biographies), chunks each row, embeds with BGE-M3,
-        and mounts the chunks into ``oideachais.language.gaois_chunks``.
+        and mounts the chunks into ``cianfhoghlaim.language.gaois_chunks``.
         """
 
         @coco.lifespan
@@ -199,10 +199,10 @@ def mount_gaois_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.gaois_chunks",
+            table_name="cianfhoghlaim.language.gaois_chunks",
             embedding_dim=EMBED_DIM,
         )
-        logger.info("gaois_chunks_mounted", table="oideachais.language.gaois_chunks", dim=EMBED_DIM)
+        logger.info("gaois_chunks_mounted", table="cianfhoghlaim.language.gaois_chunks", dim=EMBED_DIM)
     except Exception as exc:  # noqa: BLE001 - defensive
         logger.warning("gaois_chunks_mount_failed: %s", exc)
 

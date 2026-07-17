@@ -96,21 +96,21 @@ data it queries.
 ```python
 # 1. Create a service account in MotherDuck (one-time, via UI)
 #    Org → Settings → Service Accounts → "Create"
-#    Name: "kcg-oideachais-readonly"
+#    Name: "kcg-cianfhoghlaim-readonly"
 #    Role: "Read-only" (never "Admin" for an agent)
 
 # 2. Mint a token (one-time, via UI)
 #    Service Account → Tokens → "Generate"
-#    Scope: read-only on database "oideachais"
+#    Scope: read-only on database "cianfhoghlaim"
 #    Expiry: 90 days (rotate quarterly)
 
 # 3. Store the token in Infisical
-#    Path: dev-baile/motherduck/oideachais_readonly_token
-#    Reference: "infisical://dev-baile/motherduck/oideachais_readonly_token"
+#    Path: dev-baile/motherduck/cianfhoghlaim_readonly_token
+#    Reference: "infisical://dev-baile/motherduck/cianfhoghlaim_readonly_token"
 
 # 4. Reference from code
 #    .env (auto-hydrated by mise):
-MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/oideachais_readonly_token
+MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/cianfhoghlaim_readonly_token
 ```
 
 **Token rotation policy** (the KCG standard):

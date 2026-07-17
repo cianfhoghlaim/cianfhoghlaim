@@ -49,7 +49,7 @@ until 2026-07-15 (per the `cocoindex-v1-migration` spec).
 
 - **GIVEN** the `bun run ccc:index` task in `package.json` + `mise.toml`
 - **WHEN** the task runs
-- **THEN** it invokes `uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex`
+- **THEN** it invokes `uv run cocoindex update cianfhoghlaim.cocoindex_flows.codebase_indexing:CodebaseIndex`
 - **AND** writes the `codebase_chunks` LanceDB table to the `codebase` asset group
 
 #### Scenario: Agent code search uses the v1 App
@@ -128,9 +128,9 @@ croilar, tuatha). Each agent SHALL have a `description`, `model`,
 
 #### Scenario: Sruth-subagent prompt names the sruth
 
-- **GIVEN** the `agent.oideachais.prompt` field
+- **GIVEN** the `agent.cianfhoghlaim.prompt` field
 - **WHEN** the prompt is read
-- **THEN** its first line SHALL name `oideachais/` (the sruth it serves) and reference the 4-agent `mise run py:typecheck && mise run turbo typecheck` quality gate
+- **THEN** its first line SHALL name `cianfhoghlaim/` (the sruth it serves) and reference the 4-agent `mise run py:typecheck && mise run turbo typecheck` quality gate
 
 ### Requirement: OpenCode MCP server registry has 10 servers
 
@@ -229,7 +229,7 @@ are the escape hatch and need the full 123-skill surface).
 #### Scenario: Sruth agent can opt in to a subset
 
 - **GIVEN** the `agent.oideachais` block in `opencode.json`
-- **AND** the block declares `skill_filter: ["dlt", "dagster", "baml", "cognee", "ccc", "oideachais-pipeline", "oideachais-storage", "oideachais-cocoindex-v1", "motherduck"]`
+- **AND** the block declares `skill_filter: ["dlt", "dagster", "baml", "cognee", "ccc", "cianfhoghlaim-pipeline", "cianfhoghlaim-storage", "cianfhoghlaim-cocoindex-v1", "motherduck"]`
 - **WHEN** the oideachais sruth-subagent starts
 - **THEN** the skill loader SHALL load only those 9 skills
 - **AND** the other 114 skills SHALL NOT appear in the agent's context
@@ -257,10 +257,10 @@ reference the corresponding `sruth/<name>/AGENTS.md` and the
 
 #### Scenario: Sruth prompt references the per-sruth AGENTS.md
 
-- **GIVEN** the `agent.oideachais.prompt` field
+- **GIVEN** the `agent.cianfhoghlaim.prompt` field
 - **WHEN** the prompt is read
-- **THEN** it SHALL reference `oideachais/AGENTS.md` + the `agent-fleet-orchestration` skill
-- **AND** it SHALL NOT duplicate the content of `oideachais/AGENTS.md` (the prompt is a thin dispatch contract, not a doc)
+- **THEN** it SHALL reference `cianfhoghlaim/AGENTS.md` + the `agent-fleet-orchestration` skill
+- **AND** it SHALL NOT duplicate the content of `cianfhoghlaim/AGENTS.md` (the prompt is a thin dispatch contract, not a doc)
 
 ### Requirement: No superseded `infrastructure/legacy/{ANALYSIS,LOCKET-MODES}.md`
 

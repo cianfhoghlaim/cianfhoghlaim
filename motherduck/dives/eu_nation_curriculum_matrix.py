@@ -3,7 +3,7 @@
 A read-only MotherDuck dashboard that surfaces the cross-nation
 curriculum coverage matrix for the 6 EU nations + Ukraine pilot
 countries. Backed by
-``oideachais.<domain>.european_nations.<iso3>`` DuckLake tables.
+``cianfhoghlaim.<domain>.european_nations.<iso3>`` DuckLake tables.
 """
 from __future__ import annotations
 
@@ -24,42 +24,42 @@ def build_eu_nation_curriculum_matrix_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.education.european_nations.ukr
+            FROM cianfhoghlaim.education.european_nations.ukr
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.law.european_nations.ukr
+            FROM cianfhoghlaim.law.european_nations.ukr
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.education.european_nations.fra
+            FROM cianfhoghlaim.education.european_nations.fra
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.law.european_nations.fra
+            FROM cianfhoghlaim.law.european_nations.fra
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.education.european_nations.deu
+            FROM cianfhoghlaim.education.european_nations.deu
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.education.european_nations.pol
+            FROM cianfhoghlaim.education.european_nations.pol
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.education.european_nations.esp
+            FROM cianfhoghlaim.education.european_nations.esp
             GROUP BY country_code, domain, language
 
             UNION ALL
             SELECT country_code, domain, language, COUNT(*) AS row_count
-            FROM oideachais.education.european_nations.ita
+            FROM cianfhoghlaim.education.european_nations.ita
             GROUP BY country_code, domain, language
         """,
     )

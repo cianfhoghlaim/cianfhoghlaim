@@ -10,14 +10,14 @@ read_when:
 supersedes: []
 superseded_by: []
 related_specs:
-  - oideachais-pipeline
+  - cianfhoghlaim-pipeline
   - curriculum-ingestion
   - knowledge-graph
 related_apps:
-  - sruth/oideachais/dagster_defs
-  - sruth/oideachais/baml_src
+  - sruth/cianfhoghlaim/dagster_defs
+  - sruth/cianfhoghlaim/baml_src
   - sruth/meaisinfhoghlaim/agents/content_synth
-  - sruth/oideachais/notebooks
+  - sruth/cianfhoghlaim/notebooks
 related_llm_stack:
   - 'BAML (curriculum concept extraction)'
   - 'litellm (multi-modal: text + image + code)'
@@ -48,7 +48,7 @@ outcomes the learner is enrolled in.
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `sruth/oideachais/` | Dagster orchestration, BAML extraction, DLT sources |
+| Quadrant | `sruth/cianfhoghlaim/` | Dagster orchestration, BAML extraction, DLT sources |
 | Quadrant | `sruth/meaisinfhoghlaim/` | LLM stack, OCR, content synth agents |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA patterns, partitions, sensors |
 | Skill | `.agents/skills/baml/SKILL.md` | Concept extraction |
@@ -64,9 +64,9 @@ This plan **consumes** the output of Deploy Plan 01
 graph). Specifically:
 
 ```
-oideachais_equivalence.equivalence_assertion  -- from Deploy Plan 01
-oideachais_curriculum.learning_outcome        -- from Deploy Plan 02
-oideachais_terminology.bilingual_term         -- from Deploy Plan 02
+cianfhoghlaim_equivalence.equivalence_assertion  -- from Deploy Plan 01
+cianfhoghlaim_curriculum.learning_outcome        -- from Deploy Plan 02
+cianfhoghlaim_terminology.bilingual_term         -- from Deploy Plan 02
         │
         ▼
 cross_border_concept_node                      -- NEW (this plan)
@@ -116,7 +116,7 @@ class GapAssetSpec {
 ```
 
 The BAML extractor lives at
-`sruth/oideachais/baml_src/cross_border_concept.baml` and runs as a Dagster
+`sruth/cianfhoghlaim/baml_src/cross_border_concept.baml` and runs as a Dagster
 asset: `cross_border_concepts.extracted`.
 
 ## 4. Dagster asset lineage
@@ -146,7 +146,7 @@ cross_border_concept_node            (this plan — NEW asset)
 ```
 
 The full SDA definitions live in
-`sruth/oideachais/dagster_defs/assets/content_generation_assets.py` (new file).
+`sruth/cianfhoghlaim/dagster_defs/assets/content_generation_assets.py` (new file).
 
 ## 5. Flashcard generator (BAML + litellm)
 
@@ -168,9 +168,9 @@ Per `GapAssetSpec { asset_kind: "flashcard" }`:
    - Fallback: BAML text-only description + Marimo `matplotlib` diagram
 3. **Assembly**:
    - Output formats: Anki `.apkg`, JSON (for the web wallet from Deploy Plan 01)
-   - Stored in `motherduck.oideachais_content.flashcard_pack`
+   - Stored in `motherduck.cianfhoghlaim_content.flashcard_pack`
 
-The Marimo notebook `sruth/oideachais/notebooks/flashcard_factory.py`
+The Marimo notebook `sruth/cianfhoghlaim/notebooks/flashcard_factory.py`
 provides a teacher-facing UI to review and approve packs.
 
 ## 6. Marimo notebook generator (BAML + litellm)
@@ -193,7 +193,7 @@ Per `GapAssetSpec { asset_kind: "marimo" }`:
 4. **Validation**:
    - Each generated notebook is **executed** in a sandboxed subprocess
    - Failure → regenerates with the error log appended to the prompt
-5. **Storage**: `motherduck.oideachais_content.marimo_notebook`
+5. **Storage**: `motherduck.cianfhoghlaim_content.marimo_notebook`
 
 ## 7. Multi-modal asset types (v1 + v2)
 
@@ -209,7 +209,7 @@ Per `GapAssetSpec { asset_kind: "marimo" }`:
 
 ## 8. Front-end delivery
 
-The web app at `sruth/oideachais/web/routes/curriculum.$conceptId.tsx`
+The web app at `sruth/cianfhoghlaim/web/routes/curriculum.$conceptId.tsx`
 renders:
 
 - Flashcard deck (Anki-compatible)
@@ -253,7 +253,7 @@ per `docs/05-web/frontend-topology.md` §5.
 - `docs/02-data-platform/STORAGE.md` — DuckLake writes
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML + litellm ordering
 - `docs/05-web/frontend-topology.md` — Marimo Dive delivery
-- `openspec/specs/oideachais-pipeline/spec.md`
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md`
 - `openspec/specs/curriculum-ingestion/spec.md`
 - `openspec/specs/knowledge-graph/spec.md`
 - `.agents/skills/dagster/SKILL.md`

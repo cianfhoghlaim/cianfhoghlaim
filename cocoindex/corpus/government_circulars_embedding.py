@@ -17,7 +17,7 @@ R1–R4 v1 conformance contract per `_lifespan.py`:
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim, supports Irish + English).
-LanceDB table: `oideachais.government.circulars.<dept>_<year>_<language>`.
+LanceDB table: `cianfhoghlaim.government.circulars.<dept>_<year>_<language>`.
 
 Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 openspec/specs/british-isles-education-pipeline/spec.md
@@ -162,7 +162,7 @@ if COCOINDEX_AVAILABLE:
     ) -> None:
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name=f"oideachais.government.circulars.{dept.lower()}_{year}_{language}",
+            table_name=f"cianfhoghlaim.government.circulars.{dept.lower()}_{year}_{language}",
             table_schema=await lancedb.TableSchema.from_class(
                 GovCircularChunk, primary_key=["chunk_id"]
             ),
@@ -228,7 +228,7 @@ async def query_government_circulars(
     from cianfhoghlaim.lancedb.search import semantic_search
 
     return await semantic_search(
-        table=f"oideachais.government.circulars.{dept.lower()}_{year}_{language}",
+        table=f"cianfhoghlaim.government.circulars.{dept.lower()}_{year}_{language}",
         query=query,
         top_k=top_k,
     )

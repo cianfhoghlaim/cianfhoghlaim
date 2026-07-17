@@ -7,7 +7,7 @@ Daily Python job that:
 2. Runs `dagster asset materialize --select '*lc*'` to refresh the
    42 lc5/lc6 Dagster assets.
 3. Writes a status row to
-   `md:oideachais.lc_ops.daily_sync_status`.
+   `md:cianfhoghlaim.lc_ops.daily_sync_status`.
 
 Scheduled via `flights/config.yaml` (cron `0 4 * * *` = 04:00 UTC).
 
@@ -111,7 +111,7 @@ def write_status_row(
     con: duckdb.DuckDBPyConnection | None = None,
 ) -> bool:
     """Write the daily sync status row to
-    ``md:oideachais.lc_ops.daily_sync_status``.
+    ``md:cianfhoghlaim.lc_ops.daily_sync_status``.
 
     Creates the table + schema if missing.
     """
@@ -123,11 +123,11 @@ def write_status_row(
 
     try:
         con.execute(
-            "CREATE SCHEMA IF NOT EXISTS oideachais.lc_ops"
+            "CREATE SCHEMA IF NOT EXISTS cianfhoghlaim.lc_ops"
         )
         con.execute(
             """
-            CREATE TABLE IF NOT EXISTS oideachais.lc_ops.daily_sync_status (
+            CREATE TABLE IF NOT EXISTS cianfhoghlaim.lc_ops.daily_sync_status (
                 id BIGINT,
                 flight_name VARCHAR,
                 started_at TIMESTAMP,
@@ -151,7 +151,7 @@ def write_status_row(
         import json
         con.execute(
             """
-            INSERT INTO oideachais.lc_ops.daily_sync_status
+            INSERT INTO cianfhoghlaim.lc_ops.daily_sync_status
                 (id, flight_name, started_at, finished_at, status,
                  cocoindex_ok, cocoindex_payload, dagster_ok, dagster_payload)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)

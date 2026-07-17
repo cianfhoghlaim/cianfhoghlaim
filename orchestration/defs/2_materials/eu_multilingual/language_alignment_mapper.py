@@ -73,7 +73,7 @@ def language_alignment_mapper(context: AssetExecutionContext) -> dict[str, int]:
     pipeline = dlt.pipeline(
         pipeline_name="language_alignment_mapper",
         destination="duckdb",
-        dataset_name="oideachais_multilingual",
+        dataset_name="cianfhoghlaim_multilingual",
     )
     load_info = pipeline.run(eu_bi_alignment())
     context.log.info(

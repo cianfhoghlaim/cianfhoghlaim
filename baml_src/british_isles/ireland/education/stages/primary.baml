@@ -3,7 +3,7 @@
 // Bilingual EN/GA extraction of the NCCA Primary Curriculum Framework.
 // Merged from:
 //   - baml/primary.baml (171 LOC) — the canonical primary curriculum
-//   - baml/oideachais_other/primary.baml (45 LOC) — the URL-extraction variant
+//   - baml/cianfhoghlaim_other/primary.baml (45 LOC) — the URL-extraction variant
 // Moved (and extended) from docs/agents/BAML_COMPREHENSIVE_GUIDE.md:683-728.
 // =============================================================================
 

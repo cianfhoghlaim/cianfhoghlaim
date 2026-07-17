@@ -162,7 +162,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the institutional counterpart
 - [`british-isles-education-pipeline`](../../specs/british-isles-education-pipeline/spec.md) —
   the seed instance (per-nation pattern template)
-- [`oideachais-pipeline`](../../specs/oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../../specs/cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

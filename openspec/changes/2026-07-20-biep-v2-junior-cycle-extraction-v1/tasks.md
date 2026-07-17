@@ -21,11 +21,11 @@
 
 - [ ] Create `dlt/british_isles/ireland/education/junior_cycle_subjects/__init__.py`
 - [ ] Create the 18 × 2 = 36 per-subject DLT sources, following the `ncca_<subject>.py` pattern. Each file MUST:
-  - Use `from cianfhoghlaim.dlt.common.destinations_oideachais import with_namespace` and call `with_namespace("oideachais")` (per the v6 destination contract)
+  - Use `from cianfhoghlaim.dlt.common.destinations_oideachais import with_namespace` and call `with_namespace("cianfhoghlaim")` (per the v6 destination contract)
   - Honour `USE_LOCAL_SCRAPES=true` (default)
   - Read from `/stedding/ingest_queue/junior_cycle/<subject>/<lang>/`
   - Yield `dlt.resource` records keyed by `source_id` of the form `british_isles.ireland.education.jc_<subject>_<lang>` (per `cross-region-pipeline/spec.md` Requirement "Canonical source_id shape")
-  - Write to `ducklake_oideachais.education.british_isles.ireland.junior_cycle.<subject>.<lang>`
+  - Write to `ducklake_cianfhoghlaim.education.british_isles.ireland.junior_cycle.<subject>.<lang>`
   - Be tagged with `country_code="ireland"` and `jurisdiction="ireland"`
 - [ ] Create `dlt/british_isles/ireland/education/junior_cycle_short_courses/__init__.py`
 - [ ] Create the 16 short-course DLT sources following the same pattern
@@ -39,9 +39,9 @@
   - **R2** — Imports `LANCE_DB` + `EMBEDDER` from `_lifespan`
   - **R3** — `app = coco.App(coco.AppConfig(name="junior_cycle_embedding"))` at module scope
   - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
-- [ ] Verify the LanceDB table names: `oideachais.jc.<subject>.<year>_<lang>` for each of 18 subjects × 3 years × 2 languages = 108 tables
+- [ ] Verify the LanceDB table names: `cianfhoghlaim.jc.<subject>.<year>_<lang>` for each of 18 subjects × 3 years × 2 languages = 108 tables
 - [ ] Run `mise run cocoindex:v1-conformance` to validate the App against the conformance contract
-- [ ] Run the canonical `oideachais-cocoindex-v1-migration` test fixture for the new App
+- [ ] Run the canonical `cianfhoghlaim-cocoindex-v1-migration` test fixture for the new App
 
 ## Stage 4 — Dagster L2 assets
 

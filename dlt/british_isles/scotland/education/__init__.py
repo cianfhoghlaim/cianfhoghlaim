@@ -14,15 +14,15 @@ def _maybe(name: str, mod: str) -> Any:
 
 curriculum_for_excellence = _maybe(
     "curriculum_for_excellence",
-    "oideachais.cianfhoghlaim.dlt.british_isles.scotland.education._curriculum_for_excellence_helpers",
+    "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.education._curriculum_for_excellence_helpers",
 )
 gov_scot_statistics = _maybe(
-    "gov_scot_statistics", "oideachais.cianfhoghlaim.dlt.british_isles.scotland.statistics.gov_scot_statistics"
+    "gov_scot_statistics", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.statistics.gov_scot_statistics"
 )
 insight_benchmarking = _maybe(
-    "insight_benchmarking", "oideachais.cianfhoghlaim.dlt.british_isles.scotland.education.insight_benchmarking"
+    "insight_benchmarking", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.education.insight_benchmarking"
 )
-simd = _maybe("simd", "oideachais.cianfhoghlaim.dlt.british_isles.scotland.statistics.simd")
+simd = _maybe("simd", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.statistics.simd")
 
 # Phase 3D per-source re-exports.
 from cianfhoghlaim.dlt.british_isles.scotland.education.curriculum_for_excellence import (

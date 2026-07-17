@@ -80,7 +80,7 @@ DEFAULT_REPO_ROOT = pathlib.Path(
 )
 
 # The 6 canonical AGENTS.md files (root + 5 per-area)
-CANONICAL_AREAS = ["oideachais", "meaisinfhoghlaim", "tuatha", "croilar", "bonneagar"]
+CANONICAL_AREAS = ["cianfhoghlaim", "meaisinfhoghlaim", "tuatha", "croilar", "bonneagar"]
 
 
 # =============================================================================
@@ -93,7 +93,7 @@ class AgentsMdRecord:
     """One row per 2048-token chunk of an AGENTS.md file."""
 
     id: str
-    area: str  # "oideachais" | "meaisinfhoghlaim" | "tuatha" | "croilar" | "bonneagar" | "root"
+    area: str  # "cianfhoghlaim" | "meaisinfhoghlaim" | "tuatha" | "croilar" | "bonneagar" | "root"
     file_path: str
     chunk_index: int
     text: str
@@ -121,7 +121,7 @@ if COCOINDEX_AVAILABLE:
                 path_matcher=PatternFilePathMatcher(  # type: ignore[union-attr]
                     included_patterns=[
                         "AGENTS.md",
-                        "**/oideachais/AGENTS.md",
+                        "**/cianfhoghlaim/AGENTS.md",
                         "**/meaisinfhoghlaim/AGENTS.md",
                         "**/tuatha/AGENTS.md",
                         "**/croilar/AGENTS.md",
@@ -243,7 +243,7 @@ async def search_agents_md(
         Docker Compose stack").
     area : str | None
         Filter to one of the 6 canonical areas
-        ("oideachais" | "meaisinfhoghlaim" | "tuatha" | "croilar"
+        ("cianfhoghlaim" | "meaisinfhoghlaim" | "tuatha" | "croilar"
         | "bonneagar" | "root"); default None = no filter.
     limit : int
         Number of results to return (default: 10).

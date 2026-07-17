@@ -3,7 +3,7 @@
 # L3 CelticModelLifecycleComponent for the HistoryEmbedding v1 App.
 # Per the british-isles-education-pipeline spec — `Leaving Certificate
 # History syllabuses + exam papers + marking schemes` Requirement.
-# LanceDB table: `oideachais.lc.history.<level>_<language>`.
+# LanceDB table: `cianfhoghlaim.lc.history.<level>_<language>`.
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: HistoryEmbedding
@@ -11,6 +11,6 @@ attributes:
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true
-  table_name_pattern: oideachais.lc.history.<level>_<language>
+  table_name_pattern: cianfhoghlaim.lc.history.<level>_<language>
   subjects:
     - history

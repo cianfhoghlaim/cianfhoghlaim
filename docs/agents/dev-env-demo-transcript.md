@@ -240,12 +240,12 @@ await hf_best_model(
 
 ### Agent reasoning trace
 
-> Use the `openspec_list_specs` tool with `quadrant="oideachais"`.
+> Use the `openspec_list_specs` tool with `quadrant="cianfhoghlaim"`.
 
 ### Tool call
 
 ```python
-await openspec_list_specs(quadrant="oideachais")
+await openspec_list_specs(quadrant="cianfhoghlaim")
 ```
 
 ### Tool result
@@ -253,12 +253,12 @@ await openspec_list_specs(quadrant="oideachais")
 ```json
 {
   "specs": [
-    {"id": "oideachais-pipeline", "one_liner": "Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML)"},
-    {"id": "oideachais-leabharlann", "one_liner": "4 dlt sources + 3 v1 CocoIndex Apps for the leabharlann/ corpus"},
-    {"id": "oideachais-baml-schemas", "one_liner": "9 BAML files + 3 extraction clients"},
-    {"id": "oideachais-cognify-knowledge-graph", "one_liner": "5-stage cross-stage cognify + 3 leabharlann cognify"},
-    {"id": "oideachais-semantic-search", "one_liner": "Cross-corpus LanceDB HNSW search (BGE-M3 + BGE-large-en-v1.5)"},
-    {"id": "oideachais-marimo-dashboards", "one_liner": "11 Marimo notebooks for the 5 educational stages"},
+    {"id": "cianfhoghlaim-pipeline", "one_liner": "Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML)"},
+    {"id": "cianfhoghlaim-leabharlann", "one_liner": "4 dlt sources + 3 v1 CocoIndex Apps for the leabharlann/ corpus"},
+    {"id": "cianfhoghlaim-baml-schemas", "one_liner": "9 BAML files + 3 extraction clients"},
+    {"id": "cianfhoghlaim-cognify-knowledge-graph", "one_liner": "5-stage cross-stage cognify + 3 leabharlann cognify"},
+    {"id": "cianfhoghlaim-semantic-search", "one_liner": "Cross-corpus LanceDB HNSW search (BGE-M3 + BGE-large-en-v1.5)"},
+    {"id": "cianfhoghlaim-marimo-dashboards", "one_liner": "11 Marimo notebooks for the 5 educational stages"},
     {"id": "upstream-package-monitoring", "one_liner": "3 CocoIndex v1 Apps + 4 Firecrawl monitors + 1 n8n bridge"},
     {"id": "ireland-primary-jc-dlt-baml", "one_liner": "Ireland Primary + Junior Cycle dlt + BAML loop"},
     {"id": "official-media-pipeline", "one_liner": "Instagram-export → British-Isles government source enrichment"},
@@ -397,9 +397,9 @@ embedder = await hf_best_model(
 )
 
 # 5. Find the relevant spec
-specs = await openspec_list_specs(quadrant="oideachais")
+specs = await openspec_list_specs(quadrant="cianfhoghlaim")
 relevant = [s for s in specs["specs"] if "lancedb" in s["one_liner"].lower()]
-# → ["oideachais-pipeline", "oideachais-leabharlann", "oideachais-semantic-search"]
+# → ["cianfhoghlaim-pipeline", "cianfhoghlaim-leabharlann", "cianfhoghlaim-semantic-search"]
 
 # 6. Validate the draft change
 ok = await openspec_validate(
@@ -435,9 +435,9 @@ lint = await mise_lint_skills()
     "migration_step": "Pass mode='create_or_overwrite' explicitly"
   },
   "relevant_specs": [
-    "oideachais-pipeline",
-    "oideachais-leabharlann",
-    "oideachais-semantic-search"
+    "cianfhoghlaim-pipeline",
+    "cianfhoghlaim-leabharlann",
+    "cianfhoghlaim-semantic-search"
   ],
   "validate": {"valid": true, "errors": [], "warnings": []},
   "lint": {"passed": 52, "failed": 0}
@@ -451,7 +451,7 @@ lint = await mise_lint_skills()
 
 ## Summary
 3 call sites need a `mode=` kwarg. The migration is well-documented.
-Add an `ADDED Requirements` delta to `oideachais-pipeline` covering
+Add an `ADDED Requirements` delta to `cianfhoghlaim-pipeline` covering
 the v1 CocoIndex R4 conformance rule for the new `mode` argument.
 
 ## Per-tool output
@@ -468,7 +468,7 @@ File a change at `openspec/changes/2026-07-08-lancedb-mount-table-target-mode-mi
 with:
 - `proposal.md` — Why (lancedb 0.36 new `mode` arg), What (3 file edits)
 - `tasks.md` — 3 edits + 1 spec delta + 1 pyproject.toml bump
-- `specs/oideachais-pipeline/spec.md` — ADDED Requirement covering R4 conformance
+- `specs/cianfhoghlaim-pipeline/spec.md` — ADDED Requirement covering R4 conformance
 
 ### Proposed patch (for the build agent)
 ```diff

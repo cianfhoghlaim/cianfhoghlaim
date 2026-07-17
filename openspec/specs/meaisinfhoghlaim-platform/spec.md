@@ -65,9 +65,9 @@ unblock the following:
 - The `ocr/config/base.py` (entire file is a sruth copy)
 
 Every affected file SHALL be migrated to import from the
-canonical home in `oideachais.*` or `meaisinfhoghlaim.*`. The
+canonical home in `cianfhoghlaim.*` or `meaisinfhoghlaim.*`. The
 canonical observability logger is at
-`oideachais.observability.logging.get_logger`.
+`cianfhoghlaim.observability.logging.get_logger`.
 
 #### Scenario: A developer runs the test suite
 
@@ -108,7 +108,7 @@ the root `dg.toml`.
 ### Requirement: Cross-quadrant ingestion from oideachais DuckLake
 
 The system SHALL ingest from the oideachais DuckLake catalog via the
-`oideachais.orchestration` package (formerly `oideachais.dagster_defs`).
+`cianfhoghlaim.orchestration` package (formerly `cianfhoghlaim.dagster_defs`).
 
 #### Scenario: Lakehouse to meaisinfhoghlaim ingest
 
@@ -221,7 +221,7 @@ for the base model.
 
 ### Requirement: Agent + OCR thin-shim canonicalisation
 
-The system SHALL use `from cianfhoghlaim...` for actual Python import examples in active OpenSpec specs. The older `from oideachais...` examples are logical quadrant shorthand only and MUST NOT be used as real code-import examples.
+The system SHALL use `from cianfhoghlaim...` for actual Python import examples in active OpenSpec specs. The older `from cianfhoghlaim...` examples are logical quadrant shorthand only and MUST NOT be used as real code-import examples.
 
 #### Scenario: A consumer imports the same agent via both paths
 
@@ -250,7 +250,7 @@ inline comments.
 - **THEN** `grep -rn "sruth\.oideachas" cianfhoghlaim/`
   returns 0 hits
 - **AND** the docstring's Usage example uses the canonical
-  `oideachais.X` path
+  `cianfhoghlaim.X` path
 
 #### Scenario: A README or AGENTS.md example references the non-existent path
 
@@ -329,12 +329,12 @@ DLT source already living at the canonical home
 `cianfhoghlaim/dlt_sources/{nation}/{domain}/<entity>.py`.
 Canonical homes are determined by the Round 11 audit:
 
-- `oideachais/data_platform/` umbrella was deleted in commit
+- `cianfhoghlaim/data_platform/` umbrella was deleted in commit
   `8484a6353` (the predecessor `bonneagar` project package
   removal)
-- `oideachais/dlt_sources/celtic/` umbrella was deleted in
-  Phase 3B (`oideachais-audit-phase-3b-drop-domains-wrapper`)
-- `oideachais/dlt_sources/<flat>.py` flat files were migrated to
+- `cianfhoghlaim/dlt_sources/celtic/` umbrella was deleted in
+  Phase 3B (`cianfhoghlaim-audit-phase-3b-drop-domains-wrapper`)
+- `cianfhoghlaim/dlt_sources/<flat>.py` flat files were migrated to
   the country-first layout in Phases 3C, 3D, 4
 - The canonical layout is
   `dlt_sources/{nation}/{domain}/{entity}.py` (one file per
@@ -362,7 +362,7 @@ NOT re-implement the source at a meaisínfhoghlaim-local path.
 - **AND** the meaisínfhoghlaim duplicate MUST be deleted (zero
   importers; the canonical home is the single source of truth)
 
-#### Scenario: A meaisínfhoghlaim `language/gaeilge/` file has stale `oideachais.dlt.celtic` import
+#### Scenario: A meaisínfhoghlaim `language/gaeilge/` file has stale `cianfhoghlaim.dlt.celtic` import
 
 - **GIVEN** a file under `cianfhoghlaim/language/gaeilge/`
   contains `from cianfhoghlaim.dlt.celtic.X import Y`
@@ -457,7 +457,7 @@ NOT a phantom meaisínfhoghlaim-local path
 - **AND** the contributor MUST first verify the target imports
   cleanly via `PYTHONPATH=./sruth python3 -c "from <canonical.path> import <symbol>"`
 - **AND** the import line MUST use the canonical
-  `<quadrant>.<package>.<module>` form (e.g. `oideachais.core.utils`),
+  `<quadrant>.<package>.<module>` form (e.g. `cianfhoghlaim.core.utils`),
   NOT a phantom `<quadrant>.core.utils` form (unless
   `sruth/<quadrant>/core/utils/` actually exists)
 
@@ -612,7 +612,7 @@ source functions already exist as separate canonical files in
 `cianfhoghlaim/dlt_sources/ie/{culture,education,...}/`.
 
 If a DLT source function exists at the canonical split location
-(e.g. `oideachais.dlt.ie.culture.canuint.canuint_source`),
+(e.g. `cianfhoghlaim.dlt.ie.culture.canuint.canuint_source`),
 meaisínfhoghlaim MUST NOT retain a duplicate copy in a pre-split
 multi-source file (e.g. `meaisinfhoghlaim.language.gaeilge.canuint`).
 
@@ -674,7 +674,7 @@ The system SHALL expose an OCR evaluation harness at `cianfhoghlaim/ocr/evaluati
 
 - **WHEN** a developer runs `python -m cianfhoghlaim.ocr.evaluation.compare --corpus ireland_syllabus --backends vision,classical`
 - **THEN** the harness reports CER, WER, fada-consistency, tironian-detection, and punctum-delens metrics per model/backend pair
-- **AND** writes the report to `motherduck://oideachais.ocr.evaluation.results`
+- **AND** writes the report to `motherduck://cianfhoghlaim.ocr.evaluation.results`
 
 ### Requirement: 12 Agents × 5 Dagster Assets per Agent (L5 Agent Operations)
 

@@ -1,6 +1,6 @@
 ---
 name: secrets-management
-description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists. Powers the BIEP secret contract: `infisical://dev-baile/oideachais/...` (no `cianfhoghlaim/` prefix).
+description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06; current upstream CLI release is v0.161.9 from 2026-06-26 — verified live 2026-06-29; **docs site no longer publishes conceptual guides — all reference material lives at https://infisical.com/docs/api-reference/endpoints/{provider}/{op}.md discovered via https://infisical.com/docs/llms.txt**). Note: the `Link: …/mcp/server-card.json` header is **stale** as of 2026-06-29 — the referenced JSON endpoint returns 404; do not assume a first-party Infisical MCP server exists. Powers the BIEP secret contract: `infisical://dev-baile/cianfhoghlaim/...` (no `cianfhoghlaim/` prefix).
 ---
 
 # Secrets Management — Infisical + Locket + mise
@@ -30,7 +30,7 @@ The KCG secrets stack has **3 layers**:
 ┌─────────────────────────────────────────────────────────────┐
 │  Layer 2: Template (committed to git)                        │
 │  → .infisical.env (URI refs only, e.g.                        │
-│    infisical://dev-baile/oideachais/OPENAI_API_KEY)          │
+│    infisical://dev-baile/cianfhoghlaim/OPENAI_API_KEY)          │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -197,7 +197,7 @@ read all secrets (no Infisical RBAC by default).
 infisical secrets set OPENAI_API_KEY=sk-...
 
 # 2. Add the URI ref to .infisical.env
-echo 'OPENAI_API_KEY=infisical://dev-baile/oideachais/OPENAI_API_KEY' \
+echo 'OPENAI_API_KEY=infisical://dev-baile/cianfhoghlaim/OPENAI_API_KEY' \
   >> .infisical.env
 
 # 3. Re-hydrate locally
@@ -294,9 +294,9 @@ The previous `opencode-go` + `minimax-coding-plan` fallback chain is removed fro
 ## British-Isles Education pipeline (post-v4 secret contract)
 
 The BIEP (`openspec/changes/lc6-biep/`) consumes 12 secrets
-under the canonical `infisical://dev-baile/oideachais/<key>`
+under the canonical `infisical://dev-baile/cianfhoghlaim/<key>`
 prefix (no `cianfhoghlaim/` segment — the v4 consolidation moved the
-project path to `oideachais/`):
+project path to `cianfhoghlaim/`):
 
 | Secret | Purpose |
 |:--|:--|
@@ -316,9 +316,9 @@ project path to `oideachais/`):
 **Canonical URI form (post-v4):**
 
 ```bash
-infisical://dev-baile/oideachais/MOTHERDUCK_TOKEN
-infisical://dev-baile/oideachais/BAML_LLM_API_KEY
-infisical://dev-baile/oideachais/LANCEDB_GARAGE_KEY_ID
+infisical://dev-baile/cianfhoghlaim/MOTHERDUCK_TOKEN
+infisical://dev-baile/cianfhoghlaim/BAML_LLM_API_KEY
+infisical://dev-baile/cianfhoghlaim/LANCEDB_GARAGE_KEY_ID
 # etc.
 ```
 
@@ -348,7 +348,7 @@ after the rename to migrate the URI references.
 
 Cross-references:
 - Root `AGENTS.md` — the canonical
-  `infisical://dev-baile/oideachais/...` contract
+  `infisical://dev-baile/cianfhoghlaim/...` contract
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
   pipelines that consume `NCCA_SCRAPER_TOKEN` and
   `SEC_PAST_PAPER_TOKEN`

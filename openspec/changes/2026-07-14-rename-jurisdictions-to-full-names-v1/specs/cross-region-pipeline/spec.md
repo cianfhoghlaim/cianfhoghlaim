@@ -72,7 +72,7 @@ The system MUST follow the sub-state BAML class naming convention:
   the umbrella contract
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the BIEP spec
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

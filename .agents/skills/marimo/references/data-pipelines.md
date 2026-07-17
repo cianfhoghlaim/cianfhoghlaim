@@ -97,7 +97,7 @@ catalog = load_catalog(
     token=os.environ["LAKEKEEPER_TOKEN"],
 )
 
-table = catalog.load_table("oideachais.education.ie.curriculum")
+table = catalog.load_table("cianfhoghlaim.education.ie.curriculum")
 df = table.scan().to_pandas()
 mo.ui.table(df.head(100))
 ```
@@ -128,7 +128,7 @@ con.execute("""
 @app.cell
 def _():
     df = mo.sql(
-        "SELECT * FROM oideachais.education.ie.curriculum",
+        "SELECT * FROM cianfhoghlaim.education.ie.curriculum",
         engine=con,
         output=False,
     )

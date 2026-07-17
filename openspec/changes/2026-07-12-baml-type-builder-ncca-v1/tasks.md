@@ -99,7 +99,7 @@
 - [x] **7.1** Create `openspec/changes/2026-07-12-baml-type-builder-ncca-v1/`
 - [x] **7.2** Write `proposal.md` (this change)
 - [x] **7.3** Write `tasks.md` (this file)
-- [x] **7.4** Write `specs/oideachais-baml-schemas/spec.md` delta
+- [x] **7.4** Write `specs/cianfhoghlaim-baml-schemas/spec.md` delta
       (1 ADDED Requirement)
 
 ## 8. Commit + push

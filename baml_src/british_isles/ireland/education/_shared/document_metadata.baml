@@ -1,7 +1,7 @@
 // =============================================================================
 // Document Metadata Functions (split from curriculum_extraction.baml)
 // PDF metadata + curriculum syllabus extraction functions for the
-// 6-stage PDF processing pipeline (per oideachais-pdf-processing spec).
+// 6-stage PDF processing pipeline (per cianfhoghlaim-pdf-processing spec).
 // =============================================================================
 
 class DocumentMetadata {

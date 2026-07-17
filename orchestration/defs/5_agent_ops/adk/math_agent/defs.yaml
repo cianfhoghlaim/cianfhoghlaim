@@ -4,7 +4,7 @@
 # 8 NCCA subject agents for the British Isles Educational MMO.
 #
 # Feat C (2026-07-10) added the `cognify` + `langfuse_callbacks`
-# blocks so the math_agent emits to `oideachais_lc_mathematics`
+# blocks so the math_agent emits to `cianfhoghlaim_lc_mathematics`
 # and opens a per-subject Langfuse trace at `agent.math.<verb>`.
 type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
 attributes:
@@ -22,7 +22,7 @@ attributes:
   langfuse_trace_tag: agent.math
   langfuse_drop_smoke_spans: true
   cognify:
-    dataset: oideachais_lc_mathematics
+    dataset: cianfhoghlaim_lc_mathematics
     top_k: 5
     emit_on:
       - response_generated

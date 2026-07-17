@@ -13,9 +13,9 @@ related_specs:
   - bilingual-content
   - knowledge-graph
 related_apps:
-  - sruth/oideachais/web
-  - sruth/oideachais/dlt_sources/ireland
-  - sruth/oideachais/dlt_sources/uk
+  - sruth/cianfhoghlaim/web
+  - sruth/cianfhoghlaim/dlt_sources/ireland
+  - sruth/cianfhoghlaim/dlt_sources/uk
 related_llm_stack:
   - 'BAML (structured extraction of marking schemes)'
   - 'litellm (BAML→Ollama/openai/anthropic routing)'
@@ -43,7 +43,7 @@ the existing infrastructure.
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `sruth/oideachais/` | Data platform (DLT, Dagster, BAML, knowledge graph) |
+| Quadrant | `sruth/cianfhoghlaim/` | Data platform (DLT, Dagster, BAML, knowledge graph) |
 | Quadrant | `sruth/tuatha/` | Crypto layer (Solana, x402 micropayments) — *deferred for v1* |
 | Quadrant | `infrastructure/` | Pocket ID (OIDC), Pangolin (routing), Komodo (deploy) |
 | Skill | `.agents/skills/baml/SKILL.md` | BAML extraction patterns |
@@ -62,7 +62,7 @@ any other DLT source.
 
 ### 2.1. DLT sources to ingest
 
-The 8 source registries already declared in `sruth/oideachais/sources.yaml`:
+The 8 source registries already declared in `sruth/cianfhoghlaim/sources.yaml`:
 
 - `ncca_junior_cycle_specs`     — ROI Junior Cycle
 - `ncca_leaving_cert_specs`     — ROI Leaving Certificate
@@ -105,11 +105,11 @@ hardcode political preferences.
 
 ### 2.3. Storage
 
-Writes go to **DuckLake** (`sruth/oideachais/dlt_utils/destinations.py:create_ducklake_destination`).
+Writes go to **DuckLake** (`sruth/cianfhoghlaim/dlt_utils/destinations.py:create_ducklake_destination`).
 Reads go to **MotherDuck** (managed DuckDB). The reasoning is in
 `docs/02-data-platform/storage-mental-model.md`.
 
-The equivalence matrix lives in `motherduck.oideachais_equivalence.equivalence_assertion`.
+The equivalence matrix lives in `motherduck.cianfhoghlaim_equivalence.equivalence_assertion`.
 
 ## 3. Granular skill extraction
 
@@ -141,7 +141,7 @@ provides **OIDC** for the platform. We extend it with a **DID layer**:
 | Layer | Purpose | Implementation |
 |:--|:--|:--|
 | OIDC | Web login | Pocket ID + PocketBase |
-| DID | Verifiable credential subject | `did:key` for v1, `did:web` for v2 (anchored to `oideachais.ie`) |
+| DID | Verifiable credential subject | `did:key` for v1, `did:web` for v2 (anchored to `cianfhoghlaim.ie`) |
 | VC issuance | Sign credentials | BAML-typed JWT over ES256K (`sruth/tuatha/sruth/crypteolas/` provides the signer) |
 
 For v1 we use **`did:key`** (no ledger) because adding a blockchain
@@ -175,17 +175,17 @@ class MicroCredentialSubject {
 ```
 
 The credential is signed with a service key held in Infisical
-(`/sruth/oideachais/credentials/issuer-key`) and validated client-side
+(`/sruth/cianfhoghlaim/credentials/issuer-key`) and validated client-side
 via the `sruth/tuatha/sruth/crypteolas/` ES256K verifier.
 
 ## 6. The student wallet
 
-A **TanStack Start** route at `sruth/oideachais/web/routes/wallet.$studentId.tsx`
+A **TanStack Start** route at `sruth/cianfhoghlaim/web/routes/wallet.$studentId.tsx`
 renders the wallet. It:
 
 1. Authenticates via Pocket ID (OIDC).
 2. Resolves the student's DID from the OIDC `sub` claim.
-3. Fetches all VCs from MotherDuck (`oideachais_credentials.micro_credential`).
+3. Fetches all VCs from MotherDuck (`cianfhoghlaim_credentials.micro_credential`).
 4. Allows sharing via:
    - **QR code** (one-time, expiring, scan-to-verify)
    - **Direct link** with short-lived token
@@ -206,13 +206,13 @@ directly.
 
 | Phase | Scope | Exit criteria | Where it lives |
 |:--|:--|:--|:--|
-| 0 | Source registry in `sruth/oideachais/sources.yaml` complete (8 nations, 7 kinds) | `openspec validate oideachais-pipeline` passes | `sruth/oideachais/sources.yaml` |
-| 1 | DLT pipelines for NCCA + DfE + CCEA + SQA + Welsh Gov | All 5 sources materialise in DuckLake | `sruth/oideachais/dlt_sources/{ireland,uk}/` |
-| 2 | BAML `EquivalenceAssertion` extractor | 90% precision on a 50-paper gold set | `sruth/oideachais/baml_src/equivalence.baml` |
-| 3 | BAML `SkillAssertion` extractor over SEC papers | 10,000 skill assertions extracted | `sruth/oideachais/baml_src/skills.baml` |
-| 4 | Knowledge graph (cognee) of learning outcomes | Graph queryable via `cognee.search()` | `sruth/oideachais/cognee_integration/` |
+| 0 | Source registry in `sruth/cianfhoghlaim/sources.yaml` complete (8 nations, 7 kinds) | `openspec validate cianfhoghlaim-pipeline` passes | `sruth/cianfhoghlaim/sources.yaml` |
+| 1 | DLT pipelines for NCCA + DfE + CCEA + SQA + Welsh Gov | All 5 sources materialise in DuckLake | `sruth/cianfhoghlaim/dlt_sources/{ireland,uk}/` |
+| 2 | BAML `EquivalenceAssertion` extractor | 90% precision on a 50-paper gold set | `sruth/cianfhoghlaim/baml_src/equivalence.baml` |
+| 3 | BAML `SkillAssertion` extractor over SEC papers | 10,000 skill assertions extracted | `sruth/cianfhoghlaim/baml_src/skills.baml` |
+| 4 | Knowledge graph (cognee) of learning outcomes | Graph queryable via `cognee.search()` | `sruth/cianfhoghlaim/cognee_integration/` |
 | 5 | Pocket ID + DID layer | OIDC login works, `did:key` resolves | `infrastructure/stacks/identity/` |
-| 6 | VC issuance + wallet UI | Student can issue + share a VC | `sruth/oideachais/web/routes/wallet.*` |
+| 6 | VC issuance + wallet UI | Student can issue + share a VC | `sruth/cianfhoghlaim/web/routes/wallet.*` |
 | 7 | Pilot with 5 schools (3 ROI, 2 NI) | 50 students, 200 VCs issued | `infra/komodo/procedures/pilot-credentials.toml` |
 
 ## 9. Risks and mitigations
@@ -235,7 +235,7 @@ directly.
 - `docs/00-core/CLAUDE.md` — 5-quadrant topology
 - `docs/02-data-platform/STORAGE.md` — DuckLake writes / MotherDuck reads
 - `docs/02-data-platform/storage-mental-model.md` — storage mental model
-- `docs/02-data-platform/cross-domain-registry.md` — `sruth/oideachais/sources.yaml`
+- `docs/02-data-platform/cross-domain-registry.md` — `sruth/cianfhoghlaim/sources.yaml`
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML → litellm → Cognee ordering
 - `docs/05-web/frontend-topology.md` — TanStack Start routes
 - `openspec/specs/curriculum-ingestion/spec.md` — DLT patterns

@@ -58,7 +58,7 @@
 - [ ] 5.1 ADDED Requirement on
   `british-isles-education-pipeline/spec.md` for the
   `endpoint_health_sink` + `endpoint_health_alerts` assets
-- [ ] 5.2 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 5.2 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference to the new `endpoint_recovery` helper
 
 ## 6. Validate

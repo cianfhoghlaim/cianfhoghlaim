@@ -67,7 +67,7 @@ subdirs that round 1 did not touch.
 | 8 | `07-standards/` | Project conventions, observability patterns | `dignified-python`, `agent-observability` |
 
 The 8 domains cover the 4 quadrants of the Cianfhoghlaim
-monorepo (`sruth/oideachais/` data, `meaisínfhoghlaim/` AI/ML,
+monorepo (`sruth/cianfhoghlaim/` data, `meaisínfhoghlaim/` AI/ML,
 `sruth/tuatha/` MMO, `sruth/croilar/` portfolio) + the shared
 `infrastructure/` runtime. The `00-core/` domain holds
 the project identity doc that the rest of the tree
@@ -158,7 +158,7 @@ for any future docs round.
 
 - `agent-docs-patterns/SKILL.md` — the frontmatter schema
   the round produced
-- `sruth/oideachais/AGENTS.md` + `sruth/meaisinfhoghlaim/AGENTS.md` +
+- `sruth/cianfhoghlaim/AGENTS.md` + `sruth/meaisinfhoghlaim/AGENTS.md` +
   `sruth/tuatha/AGENTS.md` + `sruth/croilar/AGENTS.md` — the
   per-quadrant routing (the 4 quadrants the 7-domain
   taxonomy covers)
@@ -169,6 +169,6 @@ for any future docs round.
   round-1 schema is synthesised from)
 - `docs/00_index.md` — the master routing index (the
   round-1 output)
-- `sruth/oideachais/STATUS.md`, `sruth/oideachais/REFACTORING.md` —
+- `sruth/cianfhoghlaim/STATUS.md`, `sruth/cianfhoghlaim/REFACTORING.md` —
   the data platform state files (the 7-domain
   taxonomy's day-to-day consumers)

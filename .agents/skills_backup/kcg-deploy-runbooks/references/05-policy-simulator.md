@@ -10,13 +10,13 @@ read_when:
 supersedes: []
 superseded_by: []
 related_specs:
-  - oideachais-pipeline
+  - cianfhoghlaim-pipeline
   - knowledge-graph
   - workflow-automation
 related_apps:
-  - sruth/oideachais/dagster_defs
+  - sruth/cianfhoghlaim/dagster_defs
   - sruth/meaisinfhoghlaim/agents/simulator
-  - sruth/oideachais/notebooks
+  - sruth/cianfhoghlaim/notebooks
 related_llm_stack:
   - 'BAML (diff extraction + ripple annotation)'
   - 'litellm (BAML→model routing)'
@@ -52,7 +52,7 @@ endorsement.
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `sruth/oideachais/` | DLT sources, Dagster pipeline, DuckLake versioning |
+| Quadrant | `sruth/cianfhoghlaim/` | DLT sources, Dagster pipeline, DuckLake versioning |
 | Quadrant | `sruth/meaisinfhoghlaim/` | LLM stack, simulator agent |
 | Skill | `.agents/skills/dlt/SKILL.md` | Incremental loading, cursor-based |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA + partitions + sensors |
@@ -90,7 +90,7 @@ enum ChangeKind {
 
 Every DLT source appends a new row on update; nothing is mutated in
 place. The DuckLake table
-`motherduck.oideachais_equivalence.cross_nation_curriculum_spec` is
+`motherduck.cianfhoghlaim_equivalence.cross_nation_curriculum_spec` is
 **append-only** with `(spec_version, valid_from)` as the temporal
 primary key.
 
@@ -139,7 +139,7 @@ class BilingualTermDiff {
 The diff extractor runs as a Dagster sensor: when a new
 `CrossNationCurriculumSpec` lands, the sensor computes the diff vs
 the prior version and emits a `SpecDiff` row to
-`motherduck.oideachais_equivalence.spec_diff`.
+`motherduck.cianfhoghlaim_equivalence.spec_diff`.
 
 ## 4. Ripple-effect simulation (Cognee)
 
@@ -160,11 +160,11 @@ For each `SpecDiff`, the simulator:
    "consequence description" in plain English.
 
 The result is a `RippleSimulation` row in
-`motherduck.oideachais_equivalence.ripple_simulation`.
+`motherduck.cianfhoghlaim_equivalence.ripple_simulation`.
 
 ## 5. What-if playground (Marimo dashboard)
 
-The dashboard at `sruth/oideachais/notebooks/policy_simulator.py` exposes:
+The dashboard at `sruth/cianfhoghlaim/notebooks/policy_simulator.py` exposes:
 
 | Section | Controls | Output |
 |:--|:--|:--|
@@ -176,7 +176,7 @@ The dashboard at `sruth/oideachais/notebooks/policy_simulator.py` exposes:
 
 The dashboard is published as a MotherDuck Dive per
 `docs/05-web/frontend-topology.md` §5 and embedded in the policy team
-workspace at `sruth/oideachais/web/routes/policy/index.tsx`.
+workspace at `sruth/cianfhoghlaim/web/routes/policy/index.tsx`.
 
 ## 6. Sensor + schedule wiring (Dagster)
 
@@ -184,7 +184,7 @@ workspace at `sruth/oideachais/web/routes/policy/index.tsx`.
 @sensor(job=policy_diff_job, minimum_interval_seconds=86400)
 def spec_version_published_sensor(context):
     """Trigger a diff + ripple when a new spec lands in DuckLake."""
-    new_specs = ducklake.scan("oideachais_equivalence.cross_nation_curriculum_spec") \
+    new_specs = ducklake.scan("cianfhoghlaim_equivalence.cross_nation_curriculum_spec") \
         .filter(pl.col("valid_from") > pl.col("max_seen_valid_from")) \
         .collect()
     for spec in new_specs.iter_rows(named=True):
@@ -200,7 +200,7 @@ def monthly_volatility_schedule():
 ```
 
 The sensor is registered in
-`sruth/oideachais/dagster_defs/sensors/policy_diff_sensor.py` (new file).
+`sruth/cianfhoghlaim/dagster_defs/sensors/policy_diff_sensor.py` (new file).
 
 ## 7. Phased action plan
 
@@ -232,11 +232,11 @@ The sensor is registered in
 
 - `docs/00-core/CLAUDE.md` — 5-quadrant topology
 - `docs/02-data-platform/storage-mental-model.md` — DuckLake + Iceberg
-- `docs/02-data-platform/cross-domain-registry.md` — `sruth/oideachais/sources.yaml`
+- `docs/02-data-platform/cross-domain-registry.md` — `sruth/cianfhoghlaim/sources.yaml`
 - `docs/03-agents/change-detection.md` — DLT incremental + ChangeDetection.io
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML + litellm + Cognee
 - `docs/05-web/frontend-topology.md` — Marimo Dive delivery
-- `openspec/specs/oideachais-pipeline/spec.md`
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md`
 - `openspec/specs/knowledge-graph/spec.md`
 - `openspec/specs/workflow-automation/spec.md` — Vikunja + n8n
 - `.agents/skills/dlt/SKILL.md`

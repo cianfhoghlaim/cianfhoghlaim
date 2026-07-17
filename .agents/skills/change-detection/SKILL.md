@@ -83,7 +83,7 @@ The 4 active monitors (canonical YAML in
 Each monitor's webhook → n8n workflow
 `bonneagar/stacks/n8n/workflows/upstream-blog-monitor.json`
 (which validates the payload + writes to
-`s3://oideachais-upstream-webhooks/<package>/<YYYY-MM-DD>/...jsonl`)
+`s3://cianfhoghlaim-upstream-webhooks/<package>/<YYYY-MM-DD>/...jsonl`)
 → DLT incremental source `cianfhoghlaim.dlt.domains.cross.upstream.blog_post`
 → CocoIndex v1 App `upstream_blog_monitor` (BAML `ExtractBlogPostMetadata` +
 FalkorDB `BlogPostNode` + `PackageNode` + `PUBLISHED_BY` edges) →
@@ -99,7 +99,7 @@ writes `ApiChangeNode` + `AFFECTS_APP` edges to the
 `is_breaking=true` change goes unacknowledged.
 
 **Pair this skill with**: the `firecrawl-cli` skill (for the `firecrawl
-monitor` CLI recipe) and the `oideachais-cocoindex-v1` skill (for the
+monitor` CLI recipe) and the `cianfhoghlaim-cocoindex-v1` skill (for the
 3 v1 Apps that consume the payloads).
 
 ## Layer 1 — DLT `incremental` cursor
@@ -297,7 +297,7 @@ sensors live in `orchestration/defs/sensors/`:
 | `ncca_sitemap_sensor.py` | 2 | SHA-256 of `ncca.ie/sitemap.xml` | `lc6_curriculum_syllabus` (6 subjects × 2 langs) |
 | `sec_past_paper_sensor.py` | 2 | SHA-256 of `examinations.ie/sitemap.xml` | `lc6_exam_paper_layout` + `lc6_marking_scheme` |
 | `gov_ie_circular_sensor.py` | 3 | ChangeDetection.io on `gov.ie/.../circulars/...` | `lc6_government_circulars` (the 7th subject) |
-| `oideachais_lc6_daily_schedule.py` | 1 + 4 | cron + Dagster schedule at 02:00 UTC | All 42 lc5/lc6 assets |
+| `cianfhoghlaim_lc6_daily_schedule.py` | 1 + 4 | cron + Dagster schedule at 02:00 UTC | All 42 lc5/lc6 assets |
 | `bge_m3_index_rebuild_sensor.py` | 4 | Firecrawl monitor on `huggingface.co/BAAI/bge-m3` | The 24+1 LanceDB tables |
 
 **British-Isles Education pipeline use case:**
@@ -333,5 +333,5 @@ Cross-references:
 - [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
   the 4 Dives
 - [`.agents/skills/secrets-management/SKILL.md`](../secrets-management/SKILL.md) —
-  the `infisical://dev-baile/oideachais/FIRECRAWL_API_KEY` +
+  the `infisical://dev-baile/cianfhoghlaim/FIRECRAWL_API_KEY` +
   `GOV_IE_SCRAPER_TOKEN` secret contract

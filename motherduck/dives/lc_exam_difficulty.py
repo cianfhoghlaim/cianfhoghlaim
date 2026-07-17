@@ -9,8 +9,8 @@ marking scheme descriptors.
 
 Dive name: ``lc_exam_difficulty``
 DuckLake tables read:
-  - ``md:oideachais.leaving_cert.<subject>_papers``
-  - ``md:oideachais.leaving_cert.<subject>_marking``
+  - ``md:cianfhoghlaim.leaving_cert.<subject>_papers``
+  - ``md:cianfhoghlaim.leaving_cert.<subject>_marking``
 
 Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 openspec/specs/british-isles-education-pipeline/spec.md
@@ -55,42 +55,42 @@ WITH paper_difficulty AS (
         has_formula_sheet,
         has_data_booklet,
         duration_minutes
-    FROM oideachais.leaving_cert.mathematics_papers
+    FROM cianfhoghlaim.leaving_cert.mathematics_papers
     UNION ALL BY NAME
     SELECT subject, year, paper_code, level, language,
            total_marks, total_questions,
            CASE WHEN total_questions = 0 THEN 0
                 ELSE ROUND(total_marks * 1.0 / total_questions, 2) END,
            has_formula_sheet, has_data_booklet, duration_minutes
-    FROM oideachais.leaving_cert.chemistry_papers
+    FROM cianfhoghlaim.leaving_cert.chemistry_papers
     UNION ALL BY NAME
     SELECT subject, year, paper_code, level, language,
            total_marks, total_questions,
            CASE WHEN total_questions = 0 THEN 0
                 ELSE ROUND(total_marks * 1.0 / total_questions, 2) END,
            has_formula_sheet, has_data_booklet, duration_minutes
-    FROM oideachais.leaving_cert.geography_papers
+    FROM cianfhoghlaim.leaving_cert.geography_papers
     UNION ALL BY NAME
     SELECT subject, year, paper_code, level, language,
            total_marks, total_questions,
            CASE WHEN total_questions = 0 THEN 0
                 ELSE ROUND(total_marks * 1.0 / total_questions, 2) END,
            has_formula_sheet, has_data_booklet, duration_minutes
-    FROM oideachais.leaving_cert.english_papers
+    FROM cianfhoghlaim.leaving_cert.english_papers
     UNION ALL BY NAME
     SELECT subject, year, paper_code, level, language,
            total_marks, total_questions,
            CASE WHEN total_questions = 0 THEN 0
                 ELSE ROUND(total_marks * 1.0 / total_questions, 2) END,
            has_formula_sheet, has_data_booklet, duration_minutes
-    FROM oideachais.leaving_cert.gaeilge_papers
+    FROM cianfhoghlaim.leaving_cert.gaeilge_papers
     UNION ALL BY NAME
     SELECT subject, year, paper_code, level, language,
            total_marks, total_questions,
            CASE WHEN total_questions = 0 THEN 0
                 ELSE ROUND(total_marks * 1.0 / total_questions, 2) END,
            has_formula_sheet, has_data_booklet, duration_minutes
-    FROM oideachais.leaving_cert.computer_science_papers
+    FROM cianfhoghlaim.leaving_cert.computer_science_papers
 )
 SELECT
     subject,

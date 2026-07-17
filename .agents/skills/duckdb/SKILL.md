@@ -375,7 +375,7 @@ on port 9000):
 
 ```sql
 -- 1. Federated SQL over the lc_mathematics LanceDB chunk table
-SELECT * FROM lance_scan('s3://garage/lance/oideachais.lc.mathematics.higher_en/*.lance');
+SELECT * FROM lance_scan('s3://garage/lance/cianfhoghlaim.lc.mathematics.higher_en/*.lance');
 
 -- 2. Federated SQL joining DuckLake + LanceDB in one query
 SELECT
@@ -384,9 +384,9 @@ SELECT
     d.title,
     count(c.chunk_id) AS n_chunks,
     avg(c.similarity) AS avg_sim
-FROM oideachais.leaving_cert.curriculum_syllabus d
+FROM cianfhoghlaim.leaving_cert.curriculum_syllabus d
 JOIN lance_scan(
-    's3://garage/lance/oideachais.lc.mathematics.higher_en/*.lance'
+    's3://garage/lance/cianfhoghlaim.lc.mathematics.higher_en/*.lance'
 ) c
   ON d.subject = c.subject
 WHERE d.level = 'higher'
@@ -410,9 +410,9 @@ df = con.execute("""
         d.module_id,
         d.title,
         count(c.chunk_id) AS n_chunks
-    FROM oideachais.leaving_cert.curriculum_syllabus d
+    FROM cianfhoghlaim.leaving_cert.curriculum_syllabus d
     LEFT JOIN lance_scan(
-        's3://garage/lance/oideachais.lc.mathematics.higher_en/*.lance'
+        's3://garage/lance/cianfhoghlaim.lc.mathematics.higher_en/*.lance'
     ) c ON d.subject = c.subject
     WHERE d.subject IN (
         'mathematics', 'chemistry', 'geography',
@@ -428,10 +428,10 @@ df = con.execute("""
 - **6 LC subjects × 2 languages × 2 levels** — Mathematics,
   Chemistry, Geography, Gaeilge, English, Computer Science,
   each with `en`/`ga` × `higher`/`ordinary` partitions under
-  `oideachais.leaving_cert.<subject>_<lang>_<level>`.
+  `cianfhoghlaim.leaving_cert.<subject>_<lang>_<level>`.
 - **`gov.ie` circulars** — the 7th subject (`government_circulars`)
-  populates `oideachais.education.ie.gov_circulars_archive`
-  in DuckLake + `oideachais.education.ie.gov_circulars` in LanceDB.
+  populates `cianfhoghlaim.education.ie.gov_circulars_archive`
+  in DuckLake + `cianfhoghlaim.education.ie.gov_circulars` in LanceDB.
 - **Federated SQL** — the marimo notebooks use
   `duckdb.connect("md:oideachais")` to combine BAML-extracted
   DuckLake rows with vector-search LanceDB results in a single

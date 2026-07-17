@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.jersey.education._channel_islands_helpers — shared helpers
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.jersey.education._channel_islands_helpers — shared helpers
 for Jersey + Guernsey education sources.
 
 Split from `dlt_sources/crown_dependencies/channel_islands.py` in Phase 3E.

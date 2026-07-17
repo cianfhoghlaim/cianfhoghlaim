@@ -52,7 +52,7 @@ documented in `.agents/skills/kcg-pangolin-stack/SKILL.md`.
 
 #### Scenario: A Locket sidecar uses the canonical security baseline
 
-- **GIVEN** `bonneagar/stacks/oideachais-dagster/sidecar.yaml`
+- **GIVEN** `bonneagar/stacks/cianfhoghlaim-dagster/sidecar.yaml`
 - **WHEN** the stack is deployed
 - **THEN** the Locket container SHALL have `user: 65532:65532` +
   `no-new-privileges: true` + `cap_drop: [ALL]` + `read_only: true`
@@ -424,7 +424,7 @@ Every skill under `.agents/skills/` MUST have: (1) a YAML frontmatter block with
 
 ### Requirement: Skill consolidation conventions
 
-KCG skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-tools / ccc / kcg-* / oideachais-* / tuatha-* / croilar-* / meaisinfhoghlaim-*), (6) no vendoring of upstream Anthropic / vendor skills, (7) no skills that duplicate the root `AGENTS.md` "Critical Agent Protocols" content, (8) no embedded git sub-repositories.
+KCG skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-tools / ccc / kcg-* / cianfhoghlaim-* / tuatha-* / croilar-* / meaisinfhoghlaim-*), (6) no vendoring of upstream Anthropic / vendor skills, (7) no skills that duplicate the root `AGENTS.md` "Critical Agent Protocols" content, (8) no embedded git sub-repositories.
 
 #### Scenario: New skill follows the prefixes
 
@@ -471,10 +471,10 @@ The Cianfhoghlaim platform MUST maintain a formal feedback loop between projects
 
 Each quadrant's `AGENTS.md` "Related skills" section MUST list only the skills used by that quadrant (no shared "default" list across quadrants). The 4 quadrants are `oideachais`, `meaisinfhoghlaim`, `tuatha`, `croilar`, plus the cross-cutting `infrastructure` layer.
 
-#### Scenario: cianfhoghlaim/AGENTS.md lists 12 oideachais-specific skills
+#### Scenario: cianfhoghlaim/AGENTS.md lists 12 cianfhoghlaim-specific skills
 
 - **WHEN** `cianfhoghlaim/AGENTS.md` is read
-- **THEN** the "Related skills" section lists 12+ skills (dagster, dlt, baml, cocoindex, cognee, lancedb, falkordb, duckdb, motherduck, dignified-python, marimo, ccc, oideachais-storage, oideachais-pipeline, oideachais-leabharlann, oideachais-baml-schemas, oideachais-cognify-knowledge-graph)
+- **THEN** the "Related skills" section lists 12+ skills (dagster, dlt, baml, cocoindex, cognee, lancedb, falkordb, duckdb, motherduck, dignified-python, marimo, ccc, cianfhoghlaim-storage, cianfhoghlaim-pipeline, cianfhoghlaim-leabharlann, cianfhoghlaim-baml-schemas, cianfhoghlaim-cognify-knowledge-graph)
 - **AND** does NOT list skills specific to other quadrants (e.g. babylonjs for tuatha, hono for croilar)
 
 #### Scenario: Each archived change points at the canonical skill
@@ -508,7 +508,7 @@ Every AGENTS.md file under the Cianfhoghlaim monorepo (`/AGENTS.md`, the 4 quadr
 
 - **WHEN** an agent reads `/openspec/AGENTS.md`
 - **THEN** the first section after the title is "Priority quick reference"
-- **AND** it contains the 4 priority specs (oideachais-pipeline, infrastructure-stacks, agent-memory-systems, dagger-pipelines) + the ccc command + the lint:skills task
+- **AND** it contains the 4 priority specs (cianfhoghlaim-pipeline, infrastructure-stacks, agent-memory-systems, dagger-pipelines) + the ccc command + the lint:skills task
 
 ### Requirement: Stack-Doctor CI Gate
 
@@ -572,12 +572,12 @@ stacks can be migrated incrementally.
 #### Scenario: A PR introduces an unpinned image
 
 - **GIVEN** a developer adds
-  `image: ghcr.io/cianfhoghlaim/oideachais-dagster:latest` to
+  `image: ghcr.io/cianfhoghlaim/cianfhoghlaim-dagster:latest` to
   a compose file
 - **WHEN** the Image Pinning Policy gate runs
 - **THEN** the gate SHALL report a WARNING
 - **AND** the developer SHOULD pin to a semver tag like
-  `ghcr.io/cianfhoghlaim/oideachais-dagster:1.2.3`
+  `ghcr.io/cianfhoghlaim/cianfhoghlaim-dagster:1.2.3`
 
 ### Requirement: Locket Sidecar Contract
 
@@ -866,7 +866,7 @@ per the upstream `4Gi × num_workers` formula documented at
 
 The `bonneagar/stacks/mlflow/` stack SHALL declare the v3-mandatory
 `--allowed-hosts="localhost,mlflow.cianfhoghlaim.ie"` and
-`--cors-allowed-origins="https://oideachais.cianfhoghlaim.ie"` flags on
+`--cors-allowed-origins="https://cianfhoghlaim.cianfhoghlaim.ie"` flags on
 the `mlflow server` command, per the upstream v3.5.0+ security
 middleware requirement documented at
 <https://mlflow.org/docs/latest/self-hosting/architecture/tracking-server/>.
@@ -978,7 +978,7 @@ For application code examples, skill documentation SHALL use import paths rooted
 
 - **GIVEN** a skill documents an oideachais DLT source
 - **WHEN** it references the source's filesystem location
-- **THEN** it uses `cianfhoghlaim/dlt/...` rather than `sruth/oideachais/dlt_sources/...`
+- **THEN** it uses `cianfhoghlaim/dlt/...` rather than `sruth/cianfhoghlaim/dlt_sources/...`
 - **AND** if it shows a Python import example, the example uses `from cianfhoghlaim...` for actual code imports
 
 #### Scenario: Bonneagar infra drift remains out of repo scope

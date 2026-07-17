@@ -23,7 +23,7 @@ It ships:
 - **1 Dagster sensor** at
   `orchestration/defs/sensors/england_change_detection_sensor.py` that
   re-runs the BAML extraction on any changed PDF
-- **1 DuckLake audit table** `oideachais.education.british_isles.england.changes`
+- **1 DuckLake audit table** `cianfhoghlaim.education.british_isles.england.changes`
   (the audit log of every change detected since the pipeline landed)
 - **Per-board Slack/email webhook alerts** via Langfuse (extension to the
   existing `agent-observability` spec)
@@ -77,11 +77,11 @@ The sensor:
 
 ### 3. One DuckLake audit table
 
-`oideachais.education.british_isles.england.changes` — every detected change
+`cianfhoghlaim.education.british_isles.england.changes` — every detected change
 since the pipeline landed:
 
 ```sql
-CREATE TABLE oideachais.education.british_isles.england.changes (
+CREATE TABLE cianfhoghlaim.education.british_isles.england.changes (
     change_id        STRING PRIMARY KEY,
     board            STRING,         -- 'aqa' | 'ocr' | 'edexcel'
     subject          STRING,

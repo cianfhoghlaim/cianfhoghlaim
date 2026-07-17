@@ -205,7 +205,7 @@ __all__ = [
 
 def create_ncca_chemistry_pipeline(
     pipeline_name: str = "ncca_chemistry_lc6",
-    dataset_name: str = "oideachais.leaving_cert.chemistry",
+    dataset_name: str = "cianfhoghlaim.leaving_cert.chemistry",
 ) -> Any:
     """Return a configured dlt pipeline for the BIEP v1 chemistry NCCA crawl.
 

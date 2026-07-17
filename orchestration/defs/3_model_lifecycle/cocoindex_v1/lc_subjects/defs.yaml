@@ -37,7 +37,7 @@ attributes:
     daily_lc_subject_reindex:
       cron: "0 3 * * *"
       timezone: UTC
-  table_name_pattern: oideachais.lc.<subject>.<level>_<language>
+  table_name_pattern: cianfhoghlaim.lc.<subject>.<level>_<language>
   lance_table_format: hnsw_pq
   tags:
     - biep

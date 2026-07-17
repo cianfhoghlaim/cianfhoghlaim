@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.law.legislation — Northern Ireland legislation.
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.northern_ireland.law.legislation — Northern Ireland legislation.
 
 Source: `https://www.legislation.gov.uk/nisi` and `/nid`.
 Phase 7 of the openspec change.

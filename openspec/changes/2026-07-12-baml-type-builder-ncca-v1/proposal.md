@@ -190,5 +190,5 @@ all live in the `cianfhoghlaim` monorepo. No `bonneagar/` or
 - [x] `mise run baml:test` adds 0 new validation errors beyond
       the 50 pre-existing out-of-scope errors (verified: 1754
       errors before, 1754 errors after — same count)
-- [x] 1 ADDED Requirement on the `oideachais-baml-schemas` spec
+- [x] 1 ADDED Requirement on the `cianfhoghlaim-baml-schemas` spec
 - [ ] Pushed to `origin/pick-4-biep-v1` (NOT `main`)

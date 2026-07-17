@@ -63,7 +63,7 @@ Activate when users need:
   **Memgraph** for Cypher
 - The KCG agent chain: **OCR → BAML → embedding → Graphiti
   → RAGAS** (5 SequentialAgents in a Dagster asset)
-- Dagster wiring: `oideachais-curriculum-extraction` runs the
+- Dagster wiring: `cianfhoghlaim-curriculum-extraction` runs the
   agent chain against NCCA PDFs
 - DLT wiring: `@dlt.destination` writes the BAML output to
   DuckLake

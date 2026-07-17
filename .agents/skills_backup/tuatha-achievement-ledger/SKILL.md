@@ -223,7 +223,7 @@ retrieval.
    ```
 
 3. Wire the `quest_guide_agent` → crypteolas handoff in
-   `sruth/oideachais/agents/adk/quest_guide_agent.py`:
+   `sruth/cianfhoghlaim/agents/adk/quest_guide_agent.py`:
 
    ```python
    async def issue_badge_tool(player_id: str, evidence: str):
@@ -265,6 +265,6 @@ retrieval.
 - `sruth/tuatha/sruth/crypteolas/achievements/storage.py` — the LanceDB storage
 - `sruth/tuatha/sruth/crypteolas/achievements/cli.py` — the 4 CLI commands
 - `sruth/tuatha/knowledge_graph/hybrid_search.py` — the cross-quest retrieval
-- `sruth/oideachais/agents/adk/quest_guide_agent.py` — the badge-issuing agent
-- `sruth/oideachais/baml_src/achievement_extraction.baml` — the BAML extraction
+- `sruth/cianfhoghlaim/agents/adk/quest_guide_agent.py` — the badge-issuing agent
+- `sruth/cianfhoghlaim/baml_src/achievement_extraction.baml` — the BAML extraction
 - `openspec/specs/tuatha-platform/spec.md` — the canonical spec (the "Crypteolas educational-achievement ledger" MODIFIED Requirement)

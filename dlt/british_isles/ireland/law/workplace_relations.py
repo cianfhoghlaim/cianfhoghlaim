@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.workplace_relations —
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law.workplace_relations —
 Workplace Relations Commission (WRC) of Ireland.
 
 Source: `https://workplacerelations.ie/en/` — the ~6,000 published

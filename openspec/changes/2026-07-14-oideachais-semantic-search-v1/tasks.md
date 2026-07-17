@@ -1,8 +1,8 @@
-# Tasks — `2026-07-14-oideachais-semantic-search-v1`
+# Tasks — `2026-07-14-cianfhoghlaim-semantic-search-v1`
 
 ## 1. Read spec + audit existing infrastructure (30 min)
 
-- [x] Read `openspec/specs/oideachais-semantic-search/spec.md`
+- [x] Read `openspec/specs/cianfhoghlaim-semantic-search/spec.md`
 - [x] Audit `storage/lancedb.py` (canonical LanceDB module — already
       in place)
 - [x] Audit `cocoindex/_lifespan.py` (canonical embedder BGE-M3 +
@@ -80,7 +80,7 @@
 
 ## 8. Verify (1 hr)
 
-- [x] `openspec validate 2026-07-14-oideachais-semantic-search-v1 --strict`
+- [x] `openspec validate 2026-07-14-cianfhoghlaim-semantic-search-v1 --strict`
       passes
 - [x] The new marimo notebook AST-parses cleanly
 - [x] `mise run baml:generate` exits 0 (per the F2 commit)
@@ -93,7 +93,7 @@
 ## 9. Commit + push (5 min)
 
 - [ ] `git add -A`
-- [ ] `git commit -m "feat(search): ship oideachais-semantic-search (13 reqs)"`
+- [ ] `git commit -m "feat(search): ship cianfhoghlaim-semantic-search (13 reqs)"`
 - [ ] `git push --set-upstream origin pick-4-biep-v1`
 
 ## Total estimated effort

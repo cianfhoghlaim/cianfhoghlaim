@@ -4,14 +4,14 @@ Local documents by subject — CocoIndex v1 App.
 Embeds the local PDF documents (per subject: comp_science, gaeilge,
 mata, oideachas) from bunchloch into LanceDB.
 
-LanceDB table: ``oideachais.language.local_documents_chunks``.
+LanceDB table: ``cianfhoghlaim.language.local_documents_chunks``.
 
 R1–R4 v1 conformance.
 
 LlamaSwap routing per the shared table:
 - local_documents * → ``qwen3-vl-8b`` (OCR workhorse)
 
-Reads from: ``oideachais.celtic.local_documents.{subject}_documents``
+Reads from: ``cianfhoghlaim.celtic.local_documents.{subject}_documents``
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -49,10 +49,10 @@ from ._lifespan import (  # noqa: E402
 
 
 LOCAL_DOCUMENTS_DUCKLAKE_TABLES = {
-    "comp_science": "oideachais.celtic.local_documents.comp_science_documents",
-    "gaeilge": "oideachais.celtic.local_documents.gaeilge_documents",
-    "mata": "oideachais.celtic.local_documents.mata_documents",
-    "oideachas": "oideachais.celtic.local_documents.oideachas_documents",
+    "comp_science": "cianfhoghlaim.celtic.local_documents.comp_science_documents",
+    "gaeilge": "cianfhoghlaim.celtic.local_documents.gaeilge_documents",
+    "mata": "cianfhoghlaim.celtic.local_documents.mata_documents",
+    "oideachas": "cianfhoghlaim.celtic.local_documents.oideachas_documents",
 }
 
 
@@ -61,7 +61,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -137,12 +137,12 @@ def mount_local_documents_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.local_documents_chunks",
+            table_name="cianfhoghlaim.language.local_documents_chunks",
             embedding_dim=EMBED_DIM,
         )
         logger.info(
             "local_documents_chunks_mounted",
-            table="oideachais.language.local_documents_chunks",
+            table="cianfhoghlaim.language.local_documents_chunks",
             dim=EMBED_DIM,
         )
     except Exception as exc:

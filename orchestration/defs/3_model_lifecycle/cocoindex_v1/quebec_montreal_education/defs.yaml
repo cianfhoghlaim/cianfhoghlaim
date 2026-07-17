@@ -2,7 +2,7 @@
 #
 # L3 CocoIndex v1 App for the Quebec + Montreal education pipeline.
 # Embeds every Quebec + Montreal education row into the shared
-# `oideachais.commonwealth.can.qc.education_chunks` LanceDB table.
+# `cianfhoghlaim.commonwealth.can.qc.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
@@ -15,7 +15,7 @@ attributes:
     - app_name: QuebecMontrealEducationEmbedding
       module: cianfhoghlaim.cocoindex.quebec_montreal_education_embedding
       source: commonwealth
-      lance_table: oideachais.commonwealth.can.qc.education_chunks
+      lance_table: cianfhoghlaim.commonwealth.can.qc.education_chunks
   schedule:
     cron: "0 5 * * *"
     timezone: UTC

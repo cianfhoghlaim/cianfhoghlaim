@@ -1,7 +1,7 @@
 """
-oideachais.cocoindex_flows._lifespan — Shared CocoIndex v1 lifespan.
+cianfhoghlaim.cocoindex_flows._lifespan — Shared CocoIndex v1 lifespan.
 
-The 12 CocoIndex v1 Apps in `oideachais/cocoindex_flows/` previously
+The 12 CocoIndex v1 Apps in `cianfhoghlaim/cocoindex_flows/` previously
 re-declared the same `@coco.lifespan` and 3 ContextKeys
 (LANCE_DB, EMBEDDER, RESOLVED_FILE_REGISTRY) in every file
 (REFACTORING.md item 12).
@@ -33,7 +33,7 @@ in that change. App 6 migrated from the v0-style hybrid
 `@coco.flow` + `coco.index_flow` wrapper to the canonical pattern.)
 
 Reference: the v1 pattern from
-`oideachais/cocoindex_flows/leabharlann_embedding.py:236-249` is
+`cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py:236-249` is
 the original canonical lifespan; this module is its generalised form.
 """
 from __future__ import annotations
@@ -81,14 +81,14 @@ except ImportError as e:
 #              3 v1 Apps that walk the filesystem).
 if COCOINDEX_AVAILABLE:
     LANCE_DB = coco.ContextKey[coco_lancedb.LanceAsyncConnection](  # type: ignore[index]
-        "oideachais_lance_db"
+        "cianfhoghlaim_lance_db"
     )
     EMBEDDER = coco.ContextKey[SentenceTransformerEmbedder](  # type: ignore[index]
-        "oideachais_embedder",
+        "cianfhoghlaim_embedder",
         detect_change=True,
     )
     RESOLVED_FILE_REGISTRY = coco.ContextKey[dict](  # type: ignore[index]
-        "oideachais_resolved_file_registry"
+        "cianfhoghlaim_resolved_file_registry"
     )
 else:
     LANCE_DB = None  # type: ignore[assignment]
@@ -115,7 +115,7 @@ if COCOINDEX_AVAILABLE:
         """Shared lifespan for all 9 oideachais v1 CocoIndex Apps.
 
         The original leabharlann lifespan is
-        `oideachais/cocoindex_flows/leabharlann_embedding.py:236-249`.
+        `cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py:236-249`.
         This generalised form is the canonical home and is imported
         by all 9 v1 Apps.
         """

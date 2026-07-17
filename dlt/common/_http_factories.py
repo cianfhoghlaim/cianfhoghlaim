@@ -1,15 +1,15 @@
 """
-oideachais.cianfhoghlaim.dlt.common._http_factories — in-tree replacement
+cianfhoghlaim.cianfhoghlaim.dlt.common._http_factories — in-tree replacement
 for the missing `shared.http` module.
 
 Background
 ----------
-The DLT source modules under `oideachais/dlt_sources/{uk,celtic,geospatial,ireland,tearma}/`
+The DLT source modules under `cianfhoghlaim/dlt_sources/{uk,celtic,geospatial,ireland,tearma}/`
 import HTTP client factories from `shared.http` (e.g.
 `from shared.http import dfe_explore_client`). The `shared` package is
 not present in this monorepo (it was a planned sibling project that
 was never implemented), so the imports fail at module load and
-break the `oideachais.dlt_sources.uk.__init__` chain (which eagerly
+break the `cianfhoghlaim.dlt_sources.uk.__init__` chain (which eagerly
 imports every UK sub-module).
 
 This module re-implements the 13 `*_client()` factories as a tiny
@@ -96,21 +96,21 @@ def _factory(
 def tearma_client() -> HttpClientFactory:
     return _factory(
         "https://www.tearma.ie",
-        headers={"User-Agent": "oideachais-dlt/1.0", "Accept": "application/json"},
+        headers={"User-Agent": "cianfhoghlaim-dlt/1.0", "Accept": "application/json"},
     )
 
 
 def logainm_client() -> HttpClientFactory:
     return _factory(
         "https://www.logainm.ie",
-        headers={"User-Agent": "oideachais-dlt/1.0", "Accept": "application/json"},
+        headers={"User-Agent": "cianfhoghlaim-dlt/1.0", "Accept": "application/json"},
     )
 
 
 def ainm_client() -> HttpClientFactory:
     return _factory(
         "https://www.ainm.ie",
-        headers={"User-Agent": "oideachais-dlt/1.0", "Accept": "application/json"},
+        headers={"User-Agent": "cianfhoghlaim-dlt/1.0", "Accept": "application/json"},
     )
 
 

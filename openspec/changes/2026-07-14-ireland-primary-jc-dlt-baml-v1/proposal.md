@@ -6,7 +6,7 @@ The `ireland-primary-jc-dlt-baml` capability covers the 2
 non-Leaving-Cert educational stages — Primary (ages 4-12, 5-6 year-old
 students in Junior/Senior Infants) and Junior Cycle (ages 12-15) — with
 stage-specific DLT sources and BAML extraction schemas. The pre-v4
-`oideachais-pipeline` used a generic per-stage BAML schema that
+`cianfhoghlaim-pipeline` used a generic per-stage BAML schema that
 mis-extracted Primary (which has 4 "areas", not subjects, and 8 year
 levels) and Junior Cycle (which has its own short-cycle syllabus
 structure distinct from Senior Cycle / Leaving Cert).
@@ -129,7 +129,7 @@ spec documenting Phase 1 completeness.
   — the flagship BIEP v1 (covers the 6 LC subjects, Senior Cycle only)
 - [`ireland-primary-jc-dlt-baml` spec](../specs/ireland-primary-jc-dlt-baml/spec.md)
   — the capability spec this change implements
-- [`oideachais-pipeline` spec](../specs/oideachais-pipeline/spec.md)
+- [`cianfhoghlaim-pipeline` spec](../specs/cianfhoghlaim-pipeline/spec.md)
   — the parent 5-stage capability (5 stages × EN + GA)
 - Commit `24f671f43` — `refactor(dlt): rename british_isles/en/ → england/`
   (shipped the existing primary.py + junior_cycle.py)

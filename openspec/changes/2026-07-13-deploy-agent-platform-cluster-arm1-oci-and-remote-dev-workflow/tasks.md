@@ -45,7 +45,7 @@ Add `server_id = "bunchloch"` at the top of each of the 14 existing bunchloch pr
 - [ ] 3.13 `deploy-logfire-bunchloch.toml`
 - [ ] 3.14 `deploy-mailcow-dockerized-bunchloch.toml`
 - [ ] 3.15 `deploy-mlflow-bunchloch.toml`
-- [ ] 3.16 `deploy-oideachais-bunchloch.toml`
+- [ ] 3.16 `deploy-cianfhoghlaim-bunchloch.toml`
 - [ ] 3.17 `deploy-openchamber-bunchloch.toml`
 - [ ] 3.18 `deploy-openclaw-bunchloch.toml`
 

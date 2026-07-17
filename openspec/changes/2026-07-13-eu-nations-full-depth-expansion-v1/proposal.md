@@ -136,7 +136,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the existing EU nations scaffold (Phase 2)
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the Ireland-level template (Phase 2 BIEP parity)
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

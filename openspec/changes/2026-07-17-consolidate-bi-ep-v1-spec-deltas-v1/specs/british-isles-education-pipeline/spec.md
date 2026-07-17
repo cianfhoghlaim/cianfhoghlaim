@@ -346,7 +346,7 @@ BAML extractors (`ExtractCurriculumSyllabus` + `ExtractExamPaperLayout` +
 
 - **GIVEN** the `md:oideachais` MotherDuck lakehouse is up and the
       chemistry BAML extraction has produced rows in
-      `oideachais.leaving_cert.chemistry_topics`
+      `cianfhoghlaim.leaving_cert.chemistry_topics`
 - **WHEN** a teacher runs
       `marimo edit notebooks/leaving_cert/chemistry.py`
 - **THEN** the notebook renders 5 altair visualisations (topic
@@ -362,7 +362,7 @@ BAML extractors (`ExtractCurriculumSyllabus` + `ExtractExamPaperLayout` +
 - **GIVEN** the gaeilge notebook renders
 - **WHEN** the `irish_fada` asset_check fires on the loaded topic strings
 - **THEN** every Irish-language string in
-      `oideachais.leaving_cert.gaeilge_topics.topic_label_ga`
+      `cianfhoghlaim.leaving_cert.gaeilge_topics.topic_label_ga`
       preserves the fada diacritic (e.g. `Máirt`, `Gaeilge`,
       `scríbhneoir`, `Cian`, `Áireamhán`)
 - **AND** the `gaeilge` notebook's "Cross-linguistic mapping" viz
@@ -387,13 +387,13 @@ The system SHALL schedule a daily MotherDuck Flight
 
 1. Runs `uv run cocoindex update lc_subjects` to re-ingest the 6 LC
    subjects' PDF corpus (any new PDFs landed in
-   `s3://garage/oideachais/leaving_cert/<subject>/<lang>/<year>/<file>.pdf`
+   `s3://garage/cianfhoghlaim/leaving_cert/<subject>/<lang>/<year>/<file>.pdf`
    in the last 24h)
 2. Runs `uv run dagster asset materialize --select '*lc*'` to
    re-materialise the 6×6+2 = 38 LC assets (6 subjects × 6 stages +
    gov.ie circulars)
 3. Writes a status row to
-   `md:oideachais.lc_ops.daily_sync_status(flight_name,
+   `md:cianfhoghlaim.lc_ops.daily_sync_status(flight_name,
    started_at, completed_at, status, log)` capturing the subprocess
    exit codes + the full log
 
@@ -410,7 +410,7 @@ The Flight SHALL be registered in
 
 - **GIVEN** a teacher (or upstream agent) has uploaded a new
       mathematics syllabus PDF to
-      `s3://garage/oideachais/leaving_cert/mathematics/en/2026/Q1.pdf`
+      `s3://garage/cianfhoghlaim/leaving_cert/mathematics/en/2026/Q1.pdf`
 - **WHEN** 24 hours elapse and the daily `lc_pdf_sync_flight`
       fires at 04:00 UTC
 - **THEN** the Flight's `cocoindex update lc_subjects` step
@@ -419,9 +419,9 @@ The Flight SHALL be registered in
       step materialises the corresponding `lc5_mathematics_extract`
       asset
 - **AND** the resulting typed rows appear in
-      `md:oideachais.leaving_cert.mathematics` within minutes
+      `md:cianfhoghlaim.leaving_cert.mathematics` within minutes
 - **AND** a status row with `status='ok'` lands in
-      `md:oideachais.lc_ops.daily_sync_status`
+      `md:cianfhoghlaim.lc_ops.daily_sync_status`
 
 #### Scenario: Daily flight failure is recorded
 
@@ -429,7 +429,7 @@ The Flight SHALL be registered in
 - **WHEN** either the `cocoindex update` step OR the
       `dagster asset materialize` step exits non-zero
 - **THEN** the Flight's status row in
-      `md:oideachais.lc_ops.daily_sync_status` has `status='failed'`
+      `md:cianfhoghlaim.lc_ops.daily_sync_status` has `status='failed'`
 - **AND** the `log` column contains the captured stderr from
       the failed subprocess
 - **AND** the daily BIEP dive
@@ -507,9 +507,9 @@ ingestion defs YAMLs at
 
 ## Cross-references *(unchanged — pre-existing)*
 
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) — the parent capability (5 education stages + leabharlann corpus)
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) — the parent capability (5 education stages + leabharlann corpus)
 - [`agent-platform-cluster`](../agent-platform-cluster/spec.md) — the 8-stack substrate (MotherDuck + Dagster + LiteLLM + Langfuse)
-- [`ncca-leaving-cert-root-pdfs`](../ncca-leaving-cert-root-pdfs/spec.md) *(merged into oideachais-pipeline)* — the 5 NCCA root-level programme PDFs
+- [`ncca-leaving-cert-root-pdfs`](../ncca-leaving-cert-root-pdfs/spec.md) *(merged into cianfhoghlaim-pipeline)* — the 5 NCCA root-level programme PDFs
 - [`apple-photos-ingestion`](../apple-photos-ingestion/spec.md) — the 5th leabharlann corpus, sharing the same CocoIndex v1 pattern
 - [`motherduck-dives`](../../.agents/skills/motherduck-create-dive/SKILL.md) — the 4 Dive authoring model
 

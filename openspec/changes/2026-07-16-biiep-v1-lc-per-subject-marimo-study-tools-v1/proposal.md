@@ -2,15 +2,15 @@
 
 ## Why
 
-The `oideachais-marimo-dashboards` capability has shipped two
+The `cianfhoghlaim-marimo-dashboards` capability has shipped two
 operator-facing dashboards waves:
-- **Phase 1** — `2026-07-14-oideachais-marimo-dashboards-v1` (commit
+- **Phase 1** — `2026-07-14-cianfhoghlaim-marimo-dashboards-v1` (commit
   `44cabc151`) — the 10 cross-cutting dashboards at
   `notebooks/10_marimo_dashboards/` (corpus overview, cognify KG,
   cross-archive, lakehouse table browser, BAML extraction log viewer,
   per-subject analytics, Gaeilge language coverage, CocoIndex v1
   conformance, agent memory, Dagster asset lineage).
-- **Phase 2** — `2026-07-15-oideachais-marimo-dashboards-extension-v1`
+- **Phase 2** — `2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1`
   (commit `c536f7f79`) — the 10 follow-up dashboards at
   `notebooks/11_marimo_dashboards_v2/` (leabharlann corpus +
   university extraction + cross-archive edges + K-12 → university
@@ -22,7 +22,7 @@ in `baml/education/subjects/`. The 6 BIEP v1 LC
 subjects (Mathematics, Chemistry, Geography, Gaeilge, English,
 Computer Science) each have:
 - A per-subject NCCA syllabus (BIEP lakehouse tables under
-  `oideachais.leaving_cert.<subject>_topics` + `<subject>_papers` +
+  `cianfhoghlaim.leaving_cert.<subject>_topics` + `<subject>_papers` +
   `<subject>_marking`)
 - A per-subject `qpack_<subject>.baml` file with 5-6 functions
   (`Generate<Subj>QuestPack`, `Generate<Subj>FormativeItem`,
@@ -39,7 +39,7 @@ student-facing and ships 5 study-tool cells:
 2. **Practice questions** — three difficulty levels (1=easy, 3=medium,
    5=hard) via the same per-subject BAML function
 3. **Mock exam** — queries the per-subject past exam paper ingestion
-   (`oideachais.leaving_cert.<subject>_papers`)
+   (`cianfhoghlaim.leaving_cert.<subject>_papers`)
 4. **Study plan** — per-subject lectionary + per-student progress
    (synthesised from the per-subject topic frequency table)
 5. **Per-subject BAML function** — invokes the per-subject
@@ -76,7 +76,7 @@ fallback via `connect_biep_lakehouse()`.
 - `notebooks/cli.py` — added `12_subject_study_tools`
   to the `GROUPS` tuple (so `cianfhoghlaim-marimo list
   12_subject_study_tools` discovers the new entries)
-- 1 MODIFIED spec delta on `oideachais-marimo-dashboards/spec.md` —
+- 1 MODIFIED spec delta on `cianfhoghlaim-marimo-dashboards/spec.md` —
   adds requirement R-Phase-3 (Phase 3 complete: per-subject marimo
   study tools at `notebooks/12_subject_study_tools/<subject>.py`
   ship flashcards + practice questions + mock exams + study plans
@@ -111,22 +111,22 @@ fallback via `connect_biep_lakehouse()`.
 
 ## Dependencies
 
-Blocked by: `2026-07-15-oideachais-marimo-dashboards-extension-v1`
+Blocked by: `2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1`
 (the Phase-2 commit `c536f7f79` that shipped the 10 v2 dashboards).
 This change can archive only after the Phase-2 commit lands on the
 remote `pick-4-biep-v1` branch.
 
 ## Reference
 
-- `openspec/specs/oideachais-marimo-dashboards/spec.md` (the
+- `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md` (the
   capability spec this delta modifies — the 11 prior requirements
   ship the 10 Phase-1 + 10 Phase-2 dashboards from commits
   `44cabc151` and `c536f7f79`)
-- `openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/`
+- `openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/`
   (the Phase-1 change that shipped the 10 prior dashboards)
-- `openspec/changes/2026-07-15-oideachais-marimo-dashboards-extension-v1/`
+- `openspec/changes/2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1/`
   (the Phase-2 change that shipped the 10 follow-up dashboards)
-- `openspec/specs/oideachais-pipeline/spec.md` (the BIEP v1 flagship
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` (the BIEP v1 flagship
   spec — defines the 6 BIEP v1 LC subjects, the 3 levels, the 2
   working languages, and the 9-year window)
 - `openspec/specs/british-isles-education-pipeline/spec.md` (the

@@ -53,7 +53,7 @@ The 12 agents are registered in `agents/__init__.py`
 | Framework | Implementation | Used by |
 |:--|:--|:--|
 | Custom | `agents/root_agent.py` (the query router + LiteLLM) | `root_agent` |
-| ADK | `google.adk.agents.LlmAgent` (via `oideachais.agents.adk.*`) | `curriculum_agent`, `translation_agent`, `corpus_agent`, `research_agent`, `geospatial_agent`, `statistics_agent`, `curriculum_comparison_agent`, `mcp_curriculum_agent` |
+| ADK | `google.adk.agents.LlmAgent` (via `cianfhoghlaim.agents.adk.*`) | `curriculum_agent`, `translation_agent`, `corpus_agent`, `research_agent`, `geospatial_agent`, `statistics_agent`, `curriculum_comparison_agent`, `mcp_curriculum_agent` |
 | Agno | `agents/agno/team.py` (the EducationTeam) | `education_research_agent`, `bunchloch_research_agent`, `agui_curriculum_agent` |
 | Pipecat | `agents/voice_agent.py` (the real-time audio transport) | (the voice agent is not in the 12 above; it's a separate voice channel) |
 | CopilotKit | `agents/adk/agui_curriculum_agent.py` (the AG-UI consumer) | (the CopilotKit consumer is the front-end; it's not an agent) |
@@ -182,7 +182,7 @@ The agent fleet integrates with the broader KCG observability
 stack:
 
 - **Oideachais** reads the agent traces via the FastAPI middleware
-  at `web/apps/oideachais-web/src/middleware/agui/streaming.py`
+  at `web/apps/cianfhoghlaim-web/src/middleware/agui/streaming.py`
 - **Tuatha** consumes the agent output via the TanStack Start
   CopilotKit component
 - **Croílár** mirrors the agent state via the Convex subscriptions
@@ -254,7 +254,7 @@ The contract is documented in
 The new `email_triage` ADK agent (on the oideachais stack, port 7778)
 extends the agent fleet with 4 read-only tools that operate against
 the new `leabharlann_inbox_*` Dagster assets + the
-`oideachais_inbox_messages` LanceDB table:
+`cianfhoghlaim_inbox_messages` LanceDB table:
 
 - `classify_email_thread(thread_id: str) -> EmailClassificationResult`
   — wraps the BAML `ClassifyEmail` function
@@ -271,7 +271,7 @@ The agent is **not** registered in this skill's "12-agent registry"
 (it is an oideachais ADK agent, not a meaisínfhoghlaim agent). The
 full pipeline (BAML + Dagster + marimo + cognify + openclaw) is
 documented in
-[`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
+[`.agents/skills/cianfhoghlaim-email-triage/SKILL.md`](../cianfhoghlaim-email-triage/SKILL.md).
 
 
 ---

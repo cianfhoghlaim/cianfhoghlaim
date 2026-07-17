@@ -2,7 +2,7 @@
 
 ### Requirement: Canonical cross-region path contract for the oideachais pipeline
 
-The oideachais-pipeline capability MUST route every new DLT source
+The cianfhoghlaim-pipeline capability MUST route every new DLT source
 through the canonical cross-region path contract declared by the
 [`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
 umbrella spec.

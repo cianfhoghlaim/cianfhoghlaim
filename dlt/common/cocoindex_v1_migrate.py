@@ -244,7 +244,7 @@ def main(argv: list[str] | None = None) -> int:
         # The remediation logic is intentionally OUT OF SCOPE for this
         # change — this is an audit-only tool. The actual rewrite happens
         # in the BIEP-v1 follow-up change (per the openspec MODIFIED note
-        # on oideachais-cocoindex-v1-migration).
+        # on cianfhoghlaim-cocoindex-v1-migration).
         print(
             "\n  --apply: no-op (remediation logic deferred to BIEP-v1 follow-up change)",
             file=sys.stderr,

@@ -154,7 +154,7 @@ subjects). The extraction MUST populate both `text_en` and `text_ga`
 when the source game has a GA equivalent. The function SHALL write the
 typed result to the `retro_design_patterns` DLT resource. A CocoIndex
 v1 App SHALL embed the patterns (BGE-large-en-v1.5, 1024-dim) into
-the `oideachais.retro.design_patterns` LanceDB table.
+the `cianfhoghlaim.retro.design_patterns` LanceDB table.
 
 #### Scenario: Carmen Sandiego yields NCCA-relevant patterns
 
@@ -168,7 +168,7 @@ the `oideachais.retro.design_patterns` LanceDB table.
   `"english"` AND `"gaeilge"` (because the puzzle format maps to
   multiple NCCA subjects)
 - **AND** the row is embedded in
-  `oideachais.retro.design_patterns` LanceDB table with a
+  `cianfhoghlaim.retro.design_patterns` LanceDB table with a
   BGE-large-en-v1.5 1024-dim vector
 
 #### Scenario: Gaeilge source game populates bilingual fields
@@ -253,7 +253,7 @@ The system SHALL expose the design-pattern catalogue through:
 The Storybook workspace, the marimo dashboard, and the MMO teacher
 view (per
 `openspec/specs/cianfhoghlaim-educational-mmo/spec.md`) SHALL all
-reference the same `oideachais.retro.design_patterns` LanceDB table.
+reference the same `cianfhoghlaim.retro.design_patterns` LanceDB table.
 
 #### Scenario: The marimo dashboard renders the catalogue
 

@@ -1,10 +1,10 @@
-# Spec Delta: oideachais-pipeline
+# Spec Delta: cianfhoghlaim-pipeline
 
 ## ADDED Requirements
 
-### Requirement: PlanetScale Postgres Centralisation (oideachais-pipeline)
+### Requirement: PlanetScale Postgres Centralisation (cianfhoghlaim-pipeline)
 
-The system SHALL migrate the main 50-requirement oideachais-pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) such that its DuckLake metadata backend moves from PlanetScale MySQL to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (row 4: DuckLake tables).
+The system SHALL migrate the main 50-requirement cianfhoghlaim-pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) such that its DuckLake metadata backend moves from PlanetScale MySQL to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (row 4: DuckLake tables).
 
 #### Scenario: DuckLake metadata backend moves from MySQL → PG
 

@@ -45,8 +45,8 @@ missing the lc5 wiring. The bulk of remaining work is:
   (NOT deleted; user can restore any):
   `cianfhoghlaim-mmo`, `dagger-pipelines`, `dagger`, `effect-ts`, `feast`,
   `infrastructure-stacks-documentation`, `infrastructure-stacks`,
-  `ncca-formative-assessment`, `oideachais-cocoindex-v1`, `oideachais-email-triage`,
-  `oideachais-leabharlann`, `olake`, `orpc`, `pulumi`
+  `ncca-formative-assessment`, `cianfhoghlaim-cocoindex-v1`, `cianfhoghlaim-email-triage`,
+  `cianfhoghlaim-leabharlann`, `olake`, `orpc`, `pulumi`
 - **User also deleted** the `agents/tuatha/agents/adk/` cluster (5 files
   incl. `root_agent.py`, `celtic_tutor.py`, `mythology_narrator.py`,
   `quest_guide.py`, `research_assistant.py`)
@@ -70,13 +70,13 @@ setup-secrets, tanstack-start, unsloth
 
 | Skill | Drift | Action |
 |---|---|---|
-| `dlt` | References `sruth/oideachais/dlt_sources/` (line 45, 66) and `oideachais.data_platform` (lines 48-50) — pre-v4 paths | **REWRITE** to `cianfhoghlaim/dlt/` |
-| `cocoindex` | References `sruth/oideachais/cocoindex_flows/` (14+ sites: L51, L56, L64-68, L80-82, L100-102, L618, L629) and `sruth/crypteolas/cocoindex_flows/` (L86) | **REWRITE** to `cianfhoghlaim/cocoindex/` |
-| `dagster` | `oideachais.data_platform.dagster_defs.definitions` (top-level) | **REWRITE** to `cianfhoghlaim.orchestration.definitions` |
-| `baml` | References `sruth/oideachais/baml_src/`, `sruth/oideachais/dlt_sources/ireland/` | **REWRITE** to `cianfhoghlaim/baml/`, `cianfhoghlaim/dlt/british_isles/ireland/` |
-| `secrets-management` | `infisical://dev-baile/sruth/oideachais/OPENAI_API_KEY` (L33, L200) | **FIX URI** to `infisical://dev-baile/oideachais/OPENAI_API_KEY` |
+| `dlt` | References `sruth/cianfhoghlaim/dlt_sources/` (line 45, 66) and `cianfhoghlaim.data_platform` (lines 48-50) — pre-v4 paths | **REWRITE** to `cianfhoghlaim/dlt/` |
+| `cocoindex` | References `sruth/cianfhoghlaim/cocoindex_flows/` (14+ sites: L51, L56, L64-68, L80-82, L100-102, L618, L629) and `sruth/crypteolas/cocoindex_flows/` (L86) | **REWRITE** to `cianfhoghlaim/cocoindex/` |
+| `dagster` | `cianfhoghlaim.data_platform.dagster_defs.definitions` (top-level) | **REWRITE** to `cianfhoghlaim.orchestration.definitions` |
+| `baml` | References `sruth/cianfhoghlaim/baml_src/`, `sruth/cianfhoghlaim/dlt_sources/ireland/` | **REWRITE** to `cianfhoghlaim/baml/`, `cianfhoghlaim/dlt/british_isles/ireland/` |
+| `secrets-management` | `infisical://dev-baile/sruth/cianfhoghlaim/OPENAI_API_KEY` (L33, L200) | **FIX URI** to `infisical://dev-baile/cianfhoghlaim/OPENAI_API_KEY` |
 | `agent-fleet-orchestration` | References deleted `agents/tuatha/agents/adk/*.py` cluster | **REWRITE** to reflect tuatha adk cluster removed |
-| `change-detection` | `sruth/oideachais/sources.yaml` | **REWRITE** to `cianfhoghlaim/dlt/sources.yaml` |
+| `change-detection` | `sruth/cianfhoghlaim/sources.yaml` | **REWRITE** to `cianfhoghlaim/dlt/sources.yaml` |
 | `agent-memory-systems`, `agent-observability`, `agentic-frontend-frameworks` | Various `sruth/<quadrant>/...` refs | **REWRITE** to `cianfhoghlaim/<area>/...` |
 | `garage`, `iceberg-lakekeeper`, `apple-photos-ingestion`, `komodo`, `pangolin` | KCG-specific, mostly accurate; minor `bonneagar/` references in docs | **MINOR FIX** |
 | `dlthub`, `dlthub-router`, `setup-secrets` | Wrong paradigm (dltHub Platform, `.dlt/secrets.toml`) | **USER KEPT** — keep but add deprecation banner |
@@ -129,13 +129,13 @@ never landed the canonical specs.
 
 | Spec | LOC | `sruth/` refs |
 |---|--:|--:|
-| `oideachais-pipeline/spec.md` | 1,598 | **107** |
+| `cianfhoghlaim-pipeline/spec.md` | 1,598 | **107** |
 | `meaisinfhoghlaim-platform/spec.md` | 872 | **92** |
 | `tuatha-platform/spec.md` | — | **61** (already deprecated alias per AGENTS.md:23) |
 | `croilar-data-engineering/spec.md` | 328 | **35** |
 | `agentic-frontend-frameworks/spec.md` | — | **17** |
 | `infrastructure-stacks/spec.md` | 910 | 31 (path-only: `infrastructure/stacks/` → `bonneagar/stacks/`) |
-| `oideachais-leabharlann/spec.md` | — | 9 |
+| `cianfhoghlaim-leabharlann/spec.md` | — | 9 |
 
 ### Ready to ARCHIVE (~30 changes)
 
@@ -153,8 +153,8 @@ never landed the canonical specs.
 `ireland-primary-jc-dlt-baml-and-full-stack-demo`,
 `consolidate-embedding-batcher`, `fix-broken-imports-and-baml`,
 `stale-pipelines-cleanup`, `datasets-cleanup`,
-`archive-celtic-baml-orphans`, `oideachais-stack-polish`,
-`oideachais-agent-services`, `complete-cognee-knowledge-graph`,
+`archive-celtic-baml-orphans`, `cianfhoghlaim-stack-polish`,
+`cianfhoghlaim-agent-services`, `complete-cognee-knowledge-graph`,
 `four-directory-indexing-and-standards`,
 `docs-skills-consolidation-pipeline`, `celtic-data-engineering-patterns`,
 `refactor-dlt-cocoindex-baml-dagster-with-pdf-pipeline`,
@@ -218,8 +218,8 @@ For every remaining notebook:
    (`CIANFHOGHLAIM_LEAVING_CERT_ROOT`,
    `CIANFHOGHLAIM_LAKEHOUSE_DUCKDB`, `MOTHERDUCK_TOKEN`)
 5. **Remove hardcoded secrets** (Garage keys, PG `devpassword`) — use Infisical
-6. **Wire to live lakehouse tables** (`md:oideachais.leaving_cert.<subject>.*`,
-   `md:oideachais.lc.<subject>.<level>_<lang>`) where the source data exists
+6. **Wire to live lakehouse tables** (`md:cianfhoghlaim.leaving_cert.<subject>.*`,
+   `md:cianfhoghlaim.lc.<subject>.<level>_<lang>`) where the source data exists
 7. **Update docstrings + references** to reflect British-Isles Education
    pipeline goals
 

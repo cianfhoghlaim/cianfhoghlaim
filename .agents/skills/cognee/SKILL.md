@@ -645,7 +645,7 @@ import cognee
 
 await cognee.cognify(
     time_range=("2024-01-01", "2024-12-31"),
-    dataset="oideachais_2024",
+    dataset="cianfhoghlaim_2024",
 )
 ```
 

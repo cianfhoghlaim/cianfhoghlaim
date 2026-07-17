@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.england.medicine — England medicine sub-package.
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.medicine — England medicine sub-package.
 
 Phase 7 of the openspec change.
 """

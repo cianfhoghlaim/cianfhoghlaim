@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.medicine — Northern Ireland medicine.
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.northern_ireland.medicine — Northern Ireland medicine.
 
 Phase 7 of the openspec change. nidirect Health & Social Care pages.
 """

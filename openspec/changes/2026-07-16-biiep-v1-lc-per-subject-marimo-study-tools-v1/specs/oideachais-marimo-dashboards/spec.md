@@ -1,4 +1,4 @@
-# Spec Delta: oideachais-marimo-dashboards
+# Spec Delta: cianfhoghlaim-marimo-dashboards
 
 > Parent change: [../proposal.md](../../proposal.md)
 
@@ -11,8 +11,8 @@ at `notebooks/12_subject_study_tools/<subject>.py` for
 the 6 BIEP v1 LC subjects (Mathematics, Chemistry, Geography, Gaeilge,
 English, Computer Science). These extend the 20 operator-facing
 dashboards shipped by the Phase-1 + Phase-2 changes
-(`2026-07-14-oideachais-marimo-dashboards-v1` commit `44cabc151` and
-`2026-07-15-oideachais-marimo-dashboards-extension-v1` commit
+(`2026-07-14-cianfhoghlaim-marimo-dashboards-v1` commit `44cabc151` and
+`2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1` commit
 `c536f7f79`) by adding a student-facing study tool surface.
 
 Each Phase-3 study tool:
@@ -45,17 +45,17 @@ The 5 study-tool cells in each Phase-3 notebook are:
 
 1. **Flashcards** — renders 10 flashcards generated from the
    per-subject NCCA learning outcomes
-   (`oideachais.leaving_cert.<subject>_topics`) with bilingual EN+GA
+   (`cianfhoghlaim.leaving_cert.<subject>_topics`) with bilingual EN+GA
    front/back (Gaeilge: GA-front + GA-back).
 2. **Practice questions** — three per-subject difficulty levels
    (1=easy, 3=medium, 5=hard) via the same per-subject BAML function
    `Generate<Subj>FormativeItem`.
 3. **Mock exam** — queries the per-subject past exam paper ingestion
-   (`oideachais.leaving_cert.<subject>_papers`) and renders the
+   (`cianfhoghlaim.leaving_cert.<subject>_papers`) and renders the
    per-year × per-level question count + avg-difficulty table.
 4. **Study plan** — per-subject lectionary + per-student progress,
    synthesised from the per-subject topic frequency table
-   (`oideachais.leaving_cert.<subject>_topics`) with a `mastery_pct`
+   (`cianfhoghlaim.leaving_cert.<subject>_topics`) with a `mastery_pct`
    column and `next_revision_days` column.
 5. **Per-subject BAML function** — invokes the per-subject
    `Generate<Subj>QuestPack` directly from
@@ -73,7 +73,7 @@ The 5 study-tool cells in each Phase-3 notebook are:
 - **THEN** the notebook SHALL render with 5 study-tool cells
   (flashcards, practice questions, mock exam, study plan, BAML call)
 - **AND** the flashcards SHALL be generated from
-  `oideachais.leaving_cert.mathematics_topics` with 10 NCCA-coded
+  `cianfhoghlaim.leaving_cert.mathematics_topics` with 10 NCCA-coded
   cards (LC-MATHS-LO-*)
 - **AND** the BAML cell SHALL invoke
   `qpack_mathematics.baml::GenerateMathFormativeItem` wrapped in
@@ -119,13 +119,13 @@ The 5 study-tool cells in each Phase-3 notebook are:
 
 ## Cross-references
 
-- [`openspec/specs/oideachais-marimo-dashboards/spec.md`](../../specs/oideachais-marimo-dashboards/spec.md)
+- [`openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md`](../../specs/cianfhoghlaim-marimo-dashboards/spec.md)
   (the capability spec this delta modifies — the 11 prior
   requirements ship the 10 Phase-1 + 10 Phase-2 dashboards from
   commits `44cabc151` and `c536f7f79`)
-- [`openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/`](../../2026-07-14-oideachais-marimo-dashboards-v1/)
+- [`openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/`](../../2026-07-14-cianfhoghlaim-marimo-dashboards-v1/)
   (the Phase-1 change that shipped the 10 prior dashboards)
-- [`openspec/changes/2026-07-15-oideachais-marimo-dashboards-extension-v1/`](../../2026-07-15-oideachais-marimo-dashboards-extension-v1/)
+- [`openspec/changes/2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1/`](../../2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1/)
   (the Phase-2 change that shipped the 10 follow-up dashboards)
 - [`.agents/skills/marimo/SKILL.md`](../../../.agents/skills/marimo/SKILL.md)
   (the canonical marimo skill — PEP 723 inline deps,
@@ -135,11 +135,11 @@ The 5 study-tool cells in each Phase-3 notebook are:
 - [`.agents/skills/baml/SKILL.md`](../../../.agents/skills/baml/SKILL.md)
   (the BAML extraction framework — covers `qpack_<subject>.baml`
   schema + `@function` patterns)
-- [`openspec/specs/oideachais-pipeline/spec.md`](../../specs/oideachais-pipeline/spec.md)
+- [`openspec/specs/cianfhoghlaim-pipeline/spec.md`](../../specs/cianfhoghlaim-pipeline/spec.md)
   (the BIEP v1 flagship spec — defines the 6 BIEP v1 LC subjects,
   the 3 levels, the 2 working languages, and the 9-year window)
 - [`openspec/specs/british-isles-education-pipeline/spec.md`](../../specs/british-isles-education-pipeline/spec.md)
   (the upstream BIEP v1 spec)
-- [`openspec/specs/oideachais-baml-schemas/spec.md`](../../specs/oideachais-baml-schemas/spec.md)
+- [`openspec/specs/cianfhoghlaim-baml-schemas/spec.md`](../../specs/cianfhoghlaim-baml-schemas/spec.md)
   (the per-subject `qpack_<subject>.baml` schemas consumed by each
   study tool)

@@ -1,6 +1,6 @@
-# `oideachais-semantic-search` — Phase 1 MODIFIED delta
+# `cianfhoghlaim-semantic-search` — Phase 1 MODIFIED delta
 
-This delta MODIFIES the `oideachais-semantic-search` spec to add
+This delta MODIFIES the `cianfhoghlaim-semantic-search` spec to add
 **1 new requirement** that tracks Phase 1 implementation status
 ("13 requirements all functional + marimo UI"). The original 13
 requirements are unchanged.
@@ -8,7 +8,7 @@ requirements are unchanged.
 > **Note:** This is a MODIFIED delta (not ADDED Requirements)
 > because it modifies the existing capability spec to add a new
 > requirement for Phase 1 implementation status. The 13 original
-> requirements remain in `openspec/specs/oideachais-semantic-search/spec.md`.
+> requirements remain in `openspec/specs/cianfhoghlaim-semantic-search/spec.md`.
 
 ## MODIFIED Requirements
 
@@ -22,9 +22,9 @@ function.
 
 #### Scenario: Phase 1 complete
 
-- **GIVEN** the 13 requirements of `oideachais-semantic-search`
+- **GIVEN** the 13 requirements of `cianfhoghlaim-semantic-search`
 - **WHEN** the implementation change
-  `2026-07-14-oideachais-semantic-search-v1` lands
+  `2026-07-14-cianfhoghlaim-semantic-search-v1` lands
 - **THEN** the following code-level artifacts exist:
   - `storage/cognify/rules/semantic_search.py` — the cognify
     rules module exposing `embed_query`,

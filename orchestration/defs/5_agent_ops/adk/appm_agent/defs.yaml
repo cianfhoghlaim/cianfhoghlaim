@@ -19,7 +19,7 @@ attributes:
   langfuse_trace_tag: agent.appm
   langfuse_drop_smoke_spans: true
   cognify:
-    dataset: oideachais_lc_applied_mathematics
+    dataset: cianfhoghlaim_lc_applied_mathematics
     top_k: 5
     emit_on:
       - response_generated

@@ -1,6 +1,6 @@
 ---
 name: frontend-topology
-description: Cross-cutting surface map for the Cianfhoghlaim monorepo. Use when "adding a new front-end surface", "choosing between TanStack, Convex, marimo, Babylon.js", or "debugging auth or data-plane routing". Covers 5 surfaces (sruth/oideachais/web, sruth/croilar/apps/web, sruth/croilar/apps/portal, sruth/tuatha/ui, marimo), 5 stacks, 5 auth models, 5 data planes.
+description: Cross-cutting surface map for the Cianfhoghlaim monorepo. Use when "adding a new front-end surface", "choosing between TanStack, Convex, marimo, Babylon.js", or "debugging auth or data-plane routing". Covers 5 surfaces (sruth/cianfhoghlaim/web, sruth/croilar/apps/web, sruth/croilar/apps/portal, sruth/tuatha/ui, marimo), 5 stacks, 5 auth models, 5 data planes.
 ---
 
 # Front-end Topology
@@ -13,7 +13,7 @@ Use when you need to:
 - "Choose between TanStack, Convex, marimo, or Babylon.js for
   a new app"
 - "Debug auth or data-plane routing across surfaces"
-- "Understand 'where does sruth/oideachais/web end and sruth/croilar/apps/
+- "Understand 'where does sruth/cianfhoghlaim/web end and sruth/croilar/apps/
   portal begin?'"
 - "Onboard a new dev to the monorepo's front-end shape"
 
@@ -21,7 +21,7 @@ Use when you need to:
 
 | Surface | Stack | Auth | Data plane | User |
 |:--|:--|:--|:--|:--|
-| `sruth/oideachais/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (DuckDB / MotherDuck) | Irish educators + students |
+| `sruth/cianfhoghlaim/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `cianfhoghlaim.education.ie.*` (DuckDB / MotherDuck) | Irish educators + students |
 | `sruth/croilar/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
 | `sruth/croilar/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
 | `sruth/tuatha/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (real-time) + SpacetimeDB | Tuatha game players |
@@ -29,15 +29,15 @@ Use when you need to:
 
 ## Per-surface detail
 
-### sruth/oideachais/web — Lakehouse front-end
+### sruth/cianfhoghlaim/web — Lakehouse front-end
 
-- **Path**: `sruth/oideachais/web/`
+- **Path**: `sruth/cianfhoghlaim/web/`
 - **Stack**: TanStack Start + Hono (just expanded in
   `.agents/skills/tanstack-start/SKILL.md`)
-- **Bun workspace**: `oideachais-web`
+- **Bun workspace**: `cianfhoghlaim-web`
 - **Auth**: **None** (per the root AGENTS.md rule; public
   lakehouse)
-- **Data plane**: reads `oideachais.education.ie.*` from
+- **Data plane**: reads `cianfhoghlaim.education.ie.*` from
   MotherDuck (`md:oideachais`)
 - **Why this stack here but not in oideachais**: TanStack
   Start for the SPA experience; DuckLake as the source-of-
@@ -68,7 +68,7 @@ Use when you need to:
 
 ### marimo — Analyst notebook surface
 
-- **Path**: `sruth/oideachais/notebooks/`
+- **Path**: `sruth/cianfhoghlaim/notebooks/`
 - **Stack**: marimo + DuckDB / MotherDuck
 - **Auth**: **None** (analyst-only; bound to the 4 dev machines
   via Pangolin)
@@ -81,7 +81,7 @@ Use when you need to:
 
 ## Why this stack here but not in oideachais
 
-- `sruth/oideachais/web` is a read-only viewer over the lakehouse
+- `sruth/cianfhoghlaim/web` is a read-only viewer over the lakehouse
   (TanStack Start is the right choice)
 - `sruth/croilar/apps/web` is a public portfolio (no auth, public
   read-only)
@@ -103,7 +103,7 @@ New front-end surface?
 │
 ├── Read-only public (no auth)
 │   └── TanStack Start + Hono + MotherDuck
-│       Example: sruth/oideachais/web
+│       Example: sruth/cianfhoghlaim/web
 │
 ├── Read-write persona (auth required)
 │   └── TanStack Start + Hono + BetterAuth + Convex
@@ -115,7 +115,7 @@ New front-end surface?
 │
 └── Analyst notebook
     └── marimo + DuckDB / MotherDuck
-        Example: sruth/oideachais/notebooks
+        Example: sruth/cianfhoghlaim/notebooks
 ```
 
 ## Cross-references
@@ -128,7 +128,7 @@ New front-end surface?
 - `.agents/skills/better-auth/SKILL.md` — BetterAuth + SIWE +
   Pocket ID
 - `.agents/skills/convex/SKILL.md` — Convex real-time backend
-- `.agents/skills/oideachais-storage/SKILL.md` — the
+- `.agents/skills/cianfhoghlaim-storage/SKILL.md` — the
   oideachais storage mental model
 - `docs/00-deploy-plans/0[1-5]*.md` — the 5 deploy plans
   that cite this topology

@@ -18,7 +18,7 @@ For each (subject, language) tuple, a top-level function is generated:
 Each function returns a DLT source ready to be passed to `pipeline.run(...)`.
 
 The destination DuckLake namespace is:
-    oideachais.education.british_isles.ireland.junior_cycle.<subject>.<lang>
+    cianfhoghlaim.education.british_isles.ireland.junior_cycle.<subject>.<lang>
 
 per the cross-region-pipeline spec (canonical DuckLake namespace shape).
 
@@ -166,7 +166,7 @@ def build_jc_subject_source(
                 "education_stage": "junior_cycle",
                 "stage_year": "jc",
                 "namespace": (
-                    f"oideachais.education.british_isles.ireland."
+                    f"cianfhoghlaim.education.british_isles.ireland."
                     f"junior_cycle.{subject}.{language}"
                 ),
             }
@@ -186,7 +186,7 @@ def build_jc_subject_source(
             "jurisdiction": "ireland",
             "education_stage": "junior_cycle",
             "namespace": (
-                f"oideachais.education.british_isles.ireland."
+                f"cianfhoghlaim.education.british_isles.ireland."
                 f"junior_cycle.{subject}.{language}"
             ),
             "uses_local_scrapes": os.getenv("USE_LOCAL_SCRAPES", "true").lower() == "true",

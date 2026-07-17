@@ -129,7 +129,7 @@ feature set:
 The `CelticModelLifecycleComponent` SHALL call
 `cocoindex_v1_conformance.check_module(module)` BEFORE emitting
 the asset. The check enforces the 4-rule R1–R4 contract
-(`oideachais-cocoindex-v1` skill):
+(`cianfhoghlaim-cocoindex-v1` skill):
 
 - **R1** — Module imports `from ._lifespan import shared_lifespan`
 - **R2** — Module imports the canonical ContextKeys (`LANCE_DB`, `EMBEDDER`, `RESOLVED_FILE_REGISTRY`) OR declares an additional one with `# R2-exempt: <reason>`
@@ -167,7 +167,7 @@ On R1–R4 fail, `dg.Failure` is raised with the exact rule + a
 The Cianfhoghlaim Dagster definitions SHALL be organised into
 exactly 5 `defs/<layer>/` folders (one per layer), each with a
 `defs.yaml` root mount + per-domain sub-folders. The previous
-6-sub-folder shape (`oideachais_pipeline`, `celtic_asset_generation`,
+6-sub-folder shape (`cianfhoghlaim_pipeline`, `celtic_asset_generation`,
 `cognify`, `croilar`, `meaisinfhoghlaim_platform`, `tuatha`) SHALL
 be retired and replaced by the 5-layer shape.
 
@@ -175,7 +175,7 @@ be retired and replaced by the 5-layer shape.
 
 - **WHEN** `ls cianfhoghlaim/dagster/defs/` runs
 - **THEN** the output includes exactly: `1_ingestion/`, `2_materials/`, `3_model_lifecycle/`, `4_asset_generation/`, `5_agent_ops/`
-- **AND** the previous 6 sub-folders (`oideachais_pipeline/`, `celtic_asset_generation/`, `cognify/`, `croilar/`, `meaisinfhoghlaim_platform/`, `tuatha/`) do NOT exist
+- **AND** the previous 6 sub-folders (`cianfhoghlaim_pipeline/`, `celtic_asset_generation/`, `cognify/`, `croilar/`, `meaisinfhoghlaim_platform/`, `tuatha/`) do NOT exist
 
 #### Scenario: Each layer has at least 1 sub-folder
 

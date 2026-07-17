@@ -523,7 +523,7 @@ test ExtractReadingListTest {
 // Tertiary 18+ stage — 8 universities + 5 TUs + QQI + CAO + SOLAS
 // =============================================================================
 //
-// Added in the `2026-07-15-oideachais-university-deep-extraction-v1`
+// Added in the `2026-07-15-cianfhoghlaim-university-deep-extraction-v1`
 // change. The 5+ classes + 4+ enums + 1+ function below cover the
 // **Tertiary 18+ stage** of the K-12 → university pipeline:
 //

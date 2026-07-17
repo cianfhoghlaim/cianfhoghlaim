@@ -5,7 +5,7 @@
 # Per the canonical cross-region path contract this source lives at
 # ``dlt/americas/us/us_ca/statistics/data_ca_gov.py`` with
 # ``source_id="americas.California.statistics.data_ca_gov"`` and lands in the
-# DuckLake table ``oideachais.statistics.americas.California``.
+# DuckLake table ``cianfhoghlaim.statistics.americas.California``.
 #
 # Reference: openspec/changes/2026-07-11-americas-california-pipeline-v1/
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent

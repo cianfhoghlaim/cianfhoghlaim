@@ -52,7 +52,7 @@ DESTINATIONS: dict[str, dict[str, Any]] = {
     # is the MotherDuck `oideachais` database (md:oideachais); when
     # `USE_LOCAL_SCRAPES=true` or `MOTHERDUCK_TOKEN` is unset we
     # transparently fall back to a local DuckDB at
-    # `oideachais.warehouse.duckdb`.
+    # `cianfhoghlaim.warehouse.duckdb`.
     "warehouse": {
         "callable": "_warehouse_destination",
         "env_marker": "MOTHERDUCK_TOKEN",
@@ -86,7 +86,7 @@ def _warehouse_destination() -> Any:
     if use_local or not motherduck_token:
         return dlt.destinations.duckdb(
             credentials=":local:",
-            dataset_name="oideachais.leaving_cert",
+            dataset_name="cianfhoghlaim.leaving_cert",
         )
     return dlt.destinations.motherduck(
         credentials=f"md:oideachais?motherduck_token={motherduck_token}",
@@ -100,11 +100,11 @@ def _lakehouse_destination() -> Any:
     if not catalog_url:
         return dlt.destinations.duckdb(
             credentials=":local:",
-            dataset_name="oideachais.lakehouse",
+            dataset_name="cianfhoghlaim.lakehouse",
         )
     return dlt.destinations.ducklake(
         credentials=catalog_url,
-        dataset_name="oideachais",
+        dataset_name="cianfhoghlaim",
     )
 
 
@@ -112,7 +112,7 @@ def _local_duckdb_destination() -> Any:
     """Return a local-only DuckDB (always local)."""
     return dlt.destinations.duckdb(
         credentials=":local:",
-        dataset_name="oideachais.dev",
+        dataset_name="cianfhoghlaim.dev",
     )
 
 

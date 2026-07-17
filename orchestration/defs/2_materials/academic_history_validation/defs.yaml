@@ -21,4 +21,4 @@ attributes:
     - validate_numerical_method_record
     - validate_worked_solution
     - validate_student_answer_script
-  output_table: oideachais_academic_history.validation_findings
+  output_table: cianfhoghlaim_academic_history.validation_findings

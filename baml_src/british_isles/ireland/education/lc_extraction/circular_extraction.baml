@@ -7,7 +7,7 @@
 // scraped from gov.ie/en/circulars and gov.ie/ga/ciorcláin.
 //
 // Per the BIEP v1 spec (openspec/specs/british-isles-education-pipeline/spec.md)
-// and the canonical `oideachais-baml-schemas` spec. Uses the canonical
+// and the canonical `cianfhoghlaim-baml-schemas` spec. Uses the canonical
 // `ExtractEn` (default) + `ExtractEnStrong` (cross-archive link) + `LocalVision`
 // (multimodal PDF) clients.
 //

@@ -56,12 +56,12 @@
 
 ## Stage 4 — TanStack Start public page
 
-- [ ] Create `web/apps/oideachais-web/src/routes/biep-v2/index.tsx`:
+- [ ] Create `web/apps/cianfhoghlaim-web/src/routes/biep-v2/index.tsx`:
   - 4 marimo notebook iframes (marimo `embed` mode)
   - 4 BIEP MotherDuck Dive iframes
   - The Hono API endpoints for direct JSON fetching
   - Server-rendered with TanStack Start (RSC + edge runtime)
-  - Follows the existing `oideachais-web` shell + nav + theming
+  - Follows the existing `cianfhoghlaim-web` shell + nav + theming
 - [ ] Run `bun run tanstack-build` — must pass
 - [ ] Run `bun run tanstack-test` — must pass
 
@@ -78,5 +78,5 @@
 
 - [ ] File any remaining bugs as GitHub issues
 - [ ] Update `docs/research/biep_v2_portal_status.md` with the now-green status
-- [ ] Verify the public page renders at `oideachais.cianfhoghlaim.ie/biep-v2`
+- [ ] Verify the public page renders at `cianfhoghlaim.cianfhoghlaim.ie/biep-v2`
 - [ ] Run `./scripts/sync_agent_docs.sh` per the global agent protocol

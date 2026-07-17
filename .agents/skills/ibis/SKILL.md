@@ -395,7 +395,7 @@ SUBJECTS = [
 ]
 
 # Read the BAML-extracted curriculum_syllabus table
-syllabus = con.table("oideachais.leaving_cert.curriculum_syllabus")
+syllabus = con.table("cianfhoghlaim.leaving_cert.curriculum_syllabus")
 
 # Cross-subject topic-coverage query
 topic_coverage = (
@@ -418,11 +418,11 @@ print(df.head(10))
 **British-Isles Education pipeline use case:**
 
 - **6 LC subjects × 2 languages × 2 levels** — the BIEP
-  schema is `oideachais.leaving_cert.curriculum_syllabus`
+  schema is `cianfhoghlaim.leaving_cert.curriculum_syllabus`
   partitioned by `(subject, level, language)`. The same Ibis
   expression runs against all 24 partitions.
 - **`gov.ie` circulars** — join the curriculum tables against
-  `oideachais.education.ie.gov_circulars_archive` to cross-
+  `cianfhoghlaim.education.ie.gov_circulars_archive` to cross-
   reference syllabus changes with Department-of-Education
   policy updates.
 - **Cross-linguistic join** — pair the `en` and `ga` partitions

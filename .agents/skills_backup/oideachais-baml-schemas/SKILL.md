@@ -1,18 +1,18 @@
 ---
-name: oideachais-baml-schemas
-description: The KCG oideachais BAML extraction schemas in `sruth/oideachais/baml_src/`. Covers the 9 BAML files (clients.baml, curriculum_extraction.baml, early_childhood.baml, isles_education.baml, leaving_cert_syllabus_extraction.baml, leaving_cert_past_paper_extraction.baml, leaving_cert_marking_scheme_extraction.baml, official_media.baml, ocr_validation.baml), the 4 gaois BAML files (duchas.baml, folklore_extraction.baml, logainm.baml, tearma.baml), the 6 archived BAML files in `_archive/`, the 3 extraction clients (ExtractEn, ExtractEnStrong, LocalVision), the LitellmClient routing, and the canonical add-a-new-BAML-function workflow. Use when adding a new BAML function, wiring an extraction to a dlt source, designing a new schema for a British Isles curriculum framework, or adding a new Aistear theme.
+name: cianfhoghlaim-baml-schemas
+description: The KCG oideachais BAML extraction schemas in `sruth/cianfhoghlaim/baml_src/`. Covers the 9 BAML files (clients.baml, curriculum_extraction.baml, early_childhood.baml, isles_education.baml, leaving_cert_syllabus_extraction.baml, leaving_cert_past_paper_extraction.baml, leaving_cert_marking_scheme_extraction.baml, official_media.baml, ocr_validation.baml), the 4 gaois BAML files (duchas.baml, folklore_extraction.baml, logainm.baml, tearma.baml), the 6 archived BAML files in `_archive/`, the 3 extraction clients (ExtractEn, ExtractEnStrong, LocalVision), the LitellmClient routing, and the canonical add-a-new-BAML-function workflow. Use when adding a new BAML function, wiring an extraction to a dlt source, designing a new schema for a British Isles curriculum framework, or adding a new Aistear theme.
 ---
 
 # Oideachais BAML Schemas
 
 ## Purpose
 
-The `sruth/oideachais/baml_src/` directory houses **9 active + 4 gaois +
+The `sruth/cianfhoghlaim/baml_src/` directory houses **9 active + 4 gaois +
 6 archived = 19 BAML files** that extract structured data from
 the British Isles curriculum sources. This skill captures the
 canonical schema patterns, the client registry, the 4 Aistear
 themes, the 7-nation enums, and the add-a-new-BAML-function
-workflow. The `baml/` skill is generic; this one is oideachais-
+workflow. The `baml/` skill is generic; this one is cianfhoghlaim-
 specific.
 
 ## When to use this skill
@@ -40,7 +40,7 @@ Use when you need to:
 | `official_media.baml` | The official-media extraction (government + educational sources) | `ExtractOfficialMedia` |
 | `ocr_validation.baml` | The OCR validation extraction (5 Celtic metrics) | `ValidateOcr` |
 
-The 9 active files are compiled to `sruth/oideachais/baml_client/` (the
+The 9 active files are compiled to `sruth/cianfhoghlaim/baml_client/` (the
 canonical Python client home).
 
 ## The 4 gaois BAML files
@@ -62,9 +62,9 @@ The 6 files in `_archive/` were Q3-2026 archived per the
 `archive-celtic-baml-orphans` openspec change. They define 29
 functions total and have a re-activation procedure:
 
-1. Move the file back to `sruth/oideachais/baml_src/` (the canonical home)
+1. Move the file back to `sruth/cianfhoghlaim/baml_src/` (the canonical home)
 2. Update the `clients.baml` registry to include the new function
-3. Add a Dagster asset at `sruth/oideachais/dagster_defs/assets/`
+3. Add a Dagster asset at `sruth/cianfhoghlaim/dagster_defs/assets/`
 4. Update the BAML extraction wire-up in the dlt source
 
 The 6 archived files are:
@@ -75,7 +75,7 @@ The 6 archived files are:
 ## The 3 extraction clients (the registry)
 
 ```baml
-// sruth/oideachais/baml_src/clients.baml
+// sruth/cianfhoghlaim/baml_src/clients.baml
 client<llm> ExtractEn {
   provider "openai"
   api_key env.OPENAI_API_KEY
@@ -106,7 +106,7 @@ hit.
 ## The 4 Aistear themes (the early-childhood framework)
 
 ```baml
-// sruth/oideachais/baml_src/early_childhood.baml
+// sruth/cianfhoghlaim/baml_src/early_childhood.baml
 enum AistearTheme {
     WELL_BEING
     IDENTITY_AND_BELONGING
@@ -130,7 +130,7 @@ per (theme, age_range) combination.
 ## The 7 British Isles nations (the canonical enum)
 
 ```baml
-// sruth/oideachais/baml_src/isles_education.baml
+// sruth/cianfhoghlaim/baml_src/isles_education.baml
 enum BritishIslesNation {
     IE  // Ireland
     SCT // Scotland
@@ -191,9 +191,9 @@ The 6 Celtic languages are the 6 active in the
 4. Compile the BAML files: `uv run baml-cli generate`.
 
 5. Add a Dagster asset at
-   `sruth/oideachais/dagster_defs/assets/early_childhood_assets.py:ExtractAistearTheme_5_NEW_THEME_asset`.
+   `sruth/cianfhoghlaim/dagster_defs/assets/early_childhood_assets.py:ExtractAistearTheme_5_NEW_THEME_asset`.
 
-6. Wire the asset to a dlt source (e.g. `sruth/oideachais/dlt_sources/domains/education/ie/aistear.py:ExtractAistearTheme_5_NEW_THEME`).
+6. Wire the asset to a dlt source (e.g. `sruth/cianfhoghlaim/dlt_sources/domains/education/ie/aistear.py:ExtractAistearTheme_5_NEW_THEME`).
 
 ## Common failure modes
 
@@ -210,9 +210,9 @@ The 6 Celtic languages are the 6 active in the
 - `.agents/skills/baml/SKILL.md` — the generic BAML patterns
 - `.agents/skills/celtic-language-ai/SKILL.md` — the 6 Celtic languages + 8 ISO codes
 - `.agents/skills/cross-domain-registry/SKILL.md` — the `{nation}.{domain}.{entity}` contract
-- `.agents/skills/oideachais-leabharlann/SKILL.md` — the leabharlann pipeline (the primary consumer of these BAML functions)
-- `.agents/skills/oideachais-cocoindex-v1/SKILL.md` — the v1 CocoIndex Apps that consume the BAML output
-- `sruth/oideachais/baml_src/clients.baml` — the canonical 3-client registry
-- `sruth/oideachais/baml_client/` — the compiled Python client
-- `sruth/oideachais/STATUS.md` §1 — the BAML × dlt × Dagster × CocoIndex matrix
-- `openspec/specs/oideachais-baml-schemas/spec.md` — the canonical spec
+- `.agents/skills/cianfhoghlaim-leabharlann/SKILL.md` — the leabharlann pipeline (the primary consumer of these BAML functions)
+- `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md` — the v1 CocoIndex Apps that consume the BAML output
+- `sruth/cianfhoghlaim/baml_src/clients.baml` — the canonical 3-client registry
+- `sruth/cianfhoghlaim/baml_client/` — the compiled Python client
+- `sruth/cianfhoghlaim/STATUS.md` §1 — the BAML × dlt × Dagster × CocoIndex matrix
+- `openspec/specs/cianfhoghlaim-baml-schemas/spec.md` — the canonical spec

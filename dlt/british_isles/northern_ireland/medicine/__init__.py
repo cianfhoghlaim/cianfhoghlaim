@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.northern_ireland.medicine — NI medicine sub-package.
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.northern_ireland.medicine — NI medicine sub-package.
 
 Phase 7 of the openspec change.
 """

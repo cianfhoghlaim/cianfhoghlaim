@@ -59,7 +59,7 @@ This change ships 5 new CocoIndex v1 Apps + 4 Phase 0 primitives:
   behind a unified MCP-level `multihop_search` tool
 
 ### Modified Capabilities
-- `oideachais-cocoindex-v1-migration`: the R1+R2+R3+R4 conformance
+- `cianfhoghlaim-cocoindex-v1-migration`: the R1+R2+R3+R4 conformance
   registry gets 5 new v1 Apps + 4 new Phase 0 primitives added
 - `celtic-asset-generation`: Stream 5 (`media_local_embedding.py`) +
   Stream 1 (`youtube_kg_embedding.py`) become asset-generation
@@ -67,9 +67,9 @@ This change ships 5 new CocoIndex v1 Apps + 4 Phase 0 primitives:
 - `indexing-and-cognition`: the `cocoindex-code` MCP server gets 3 new
   tools (`multihop_search`, `rerank_query`, `arch_doc_for_repo`) — total
   rises from 9 to 12 tools
-- `oideachais-pipeline`: register the 4 new DLT sources + 5 new BAML
+- `cianfhoghlaim-pipeline`: register the 4 new DLT sources + 5 new BAML
   schemas
-- `oideachais-baml-schemas`: register the 5 new BAML files
+- `cianfhoghlaim-baml-schemas`: register the 5 new BAML files
 
 ## Impact
 
@@ -182,7 +182,7 @@ primitives** (no `@cocoindex.flow_def`, no `LanceCatalog`, no
 | File | Purpose |
 |:--|:--|
 | `baml/processing/_shared/repo_arch_summary.baml` | 4 BAML fns (via `qwen3.6-27b-mtp` primary, `gemma-4-26B-A4B` fallback): `ExtractOverview(repo_path, repo_type, repo_structure, languages, deps) -> Markdown`; `ExtractComponents(repo_path, repo_type, repo_structure) -> Markdown`; `ExtractDataLayer(repo_path, repo_structure) -> Markdown`; `ExtractDependencies(repo_path, repo_structure, detected_deps) -> Markdown`. Each returns a `## <section>` markdown string. Ported verbatim from `stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/generator.py:_generate_*_section` |
-| `cocoindex/repo_arch_docs.py` | CocoIndex v1 App `RepoArchDocs` — reads existing `codebase_index` + `codebase_graph` + `codebase_git_history` LanceDB tables + `git rev-parse HEAD`; calls `detect_repo_type()` (Phase 0 primitive); checks `arch_doc_cache.get(repo_path, git_sha)`; if cache miss, runs the 4 BAML fns in parallel via `asyncio.gather` + generates a Mermaid `graph TD` from the tree (port of `_generate_mermaid_diagram`); writes `repo_arch_docs` LanceDB table (1 row per `(repo_path, git_sha, repo_type)`); emits `.arch.md` file at `oideachais/repo_arch_docs/<repo_path_safe>_<git_sha>.md` |
+| `cocoindex/repo_arch_docs.py` | CocoIndex v1 App `RepoArchDocs` — reads existing `codebase_index` + `codebase_graph` + `codebase_git_history` LanceDB tables + `git rev-parse HEAD`; calls `detect_repo_type()` (Phase 0 primitive); checks `arch_doc_cache.get(repo_path, git_sha)`; if cache miss, runs the 4 BAML fns in parallel via `asyncio.gather` + generates a Mermaid `graph TD` from the tree (port of `_generate_mermaid_diagram`); writes `repo_arch_docs` LanceDB table (1 row per `(repo_path, git_sha, repo_type)`); emits `.arch.md` file at `cianfhoghlaim/repo_arch_docs/<repo_path_safe>_<git_sha>.md` |
 | `.../cocoindex_v1/repo_arch_docs/defs.yaml` | L3 Component mount, `hnsw_index=true` |
 | `.../cocoindex_v1/repo_arch_docs/_assets.py` | 1 Dagster asset: `codebase_architecture_docs` (the stub-named one already referenced in `openspec/specs/indexing-and-cognition/spec.md`) |
 
@@ -206,7 +206,7 @@ primitives** (no `@cocoindex.flow_def`, no `LanceCatalog`, no
 | `mcp/cocoindex-code/src/tools/multihop_search.ts` (or `.py`) | New MCP tool: `multihop_search(question: string, limit?: number = 10, max_iterations?: number = 3, convergence_threshold?: number = 0.05) -> { answer: string; sources: { table, row_id, citation }[] }`. Fans out to all 5 new LanceDB tables + the existing `codebase_chunks` + `leabharlann_chunks` |
 | `mcp/cocoindex-code/src/tools/rerank_query.ts` (or `.py`) | New MCP tool: `rerank_query(query: string, results: SearchResult[], top_n?: number = 10) -> SearchResult[]`. Wraps the `RERANKER` ContextKey |
 | `mcp/cocoindex-code/src/tools/arch_doc_for_repo.ts` (or `.py`) | New MCP tool: `arch_doc_for_repo(repo_path: string, git_sha?: string) -> { doc_markdown: string; mermaid: string; cached: bool }`. Calls `repo_arch_docs` + `arch_doc_cache` |
-| `cognify/datasets/multimedia_kg.py` (new) + 4 sibling files (`package_changelog.py`, `codebase_git_history.py`, `media_local.py`, `repo_arch_docs.py`) | Cognify dataset registration per `oideachais-cognify-knowledge-graph` spec (the existing `oideachais_cognify_*` pattern) |
+| `cognify/datasets/multimedia_kg.py` (new) + 4 sibling files (`package_changelog.py`, `codebase_git_history.py`, `media_local.py`, `repo_arch_docs.py`) | Cognify dataset registration per `cianfhoghlaim-cognify-knowledge-graph` spec (the existing `cianfhoghlaim_cognify_*` pattern) |
 | `notebooks/multimodal_code_and_media_intel.py` (new) | marimo mission-control dashboard over the 5 new LanceDB tables + the `multihop_search` answer panel |
 | `openspec/specs/multimodal-code-and-media-intel/spec.md` (canonical) | New spec (see spec delta below) |
 
@@ -224,16 +224,16 @@ file for the full text.
 
 ### MODIFIED Requirements (5 cross-referenced specs)
 
-- `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` — add the 5
+- `openspec/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md` — add the 5
   new v1 Apps to the conformance registry (per the R1+R2+R3+R4 contract)
 - `openspec/specs/celtic-asset-generation/spec.md` — reference Stream 5
   (`media_local_embedding.py`) + Stream 1 (`youtube_kg_embedding.py`) as
   asset-generation consumers
 - `openspec/specs/indexing-and-cognition/spec.md` — add 3 new MCP tools
   to the `cocoindex-code` server (brings it from 9 → 12 tools)
-- `openspec/specs/oideachais-pipeline/spec.md` — register the 4 new DLT
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — register the 4 new DLT
   sources + 4 new BAML schemas
-- `openspec/specs/oideachais-baml-schemas/spec.md` — register the 4 new
+- `openspec/specs/cianfhoghlaim-baml-schemas/spec.md` — register the 4 new
   BAML files (`video_kg.baml`, `package_changelog.baml`,
   `git_intent.baml`, `repo_arch_summary.baml`, `gameplay_sequence.baml`)
 
@@ -245,7 +245,7 @@ required primitives exist (the OCR/VLM `VISION_MODELS` registry,
 defs, `retro-game-design-catalogue` scene_type enum, `transcript_aligner.py`
 WhisperX, `apple_photos_chunks.py` v1 App template,
 `soundcloud_downloader.py` yt-dlp wrapper, `croilar-data-engineering`
-stream-registry pattern, `oideachais-cognify-knowledge-graph` dataset
+stream-registry pattern, `cianfhoghlaim-cognify-knowledge-graph` dataset
 pattern).
 
 Affected repos: **cianfhoghlaim only**. No `bonneagar` (IaC) or
@@ -293,13 +293,13 @@ Affected repos: **cianfhoghlaim only**. No `bonneagar` (IaC) or
   `cocoindex-code` MCP server + `codebase_architecture_docs` stub asset)
 - `openspec/specs/retro-game-design-catalogue/spec.md` (the canonical
   game-capture spec; Stream 2 is the player-content sibling)
-- `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` (the R1+R2+R3+R4
+- `openspec/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md` (the R1+R2+R3+R4
   conformance contract)
 - `openspec/specs/celtic-asset-generation/spec.md` (the 5-stage
   Celtic-asset pipeline that consumers feed into)
-- `openspec/specs/oideachais-baml-schemas/spec.md` (BAML registration spec)
-- `openspec/specs/oideachais-pipeline/spec.md` (DLT orchestration)
-- `openspec/specs/oideachais-cognify-knowledge-graph/spec.md` (cognify
+- `openspec/specs/cianfhoghlaim-baml-schemas/spec.md` (BAML registration spec)
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` (DLT orchestration)
+- `openspec/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md` (cognify
   dataset pattern)
 - `.agents/skills/cocoindex/SKILL.md` (R1+R2+R3+R4 + `_lifespan.py`)
 - `.agents/skills/baml/references/multimodal-vision.md` (BAML multimodal primitives)

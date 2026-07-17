@@ -37,7 +37,7 @@ Phase 7 (MotherDuck Flight)**:
    + the flight `config.yaml` (cron `0 4 * * *` = 04:00 UTC daily)
    that runs `cocoindex update lc_subjects` + `dagster asset materialize
    --select '*lc*'` and writes a status row to
-   `md:oideachais.lc_ops.daily_sync_status`.
+   `md:cianfhoghlaim.lc_ops.daily_sync_status`.
 
 This change is the canonical "Phase 6 + 7 unblock" tracker: it
 augments the existing 5 stub notebooks, adds the 6th cross-subject
@@ -48,7 +48,7 @@ spec to confirm the Phase 6 / Phase 7 deliverables are live.
 
 1. **Phase 6 — 6 per-subject marimo notebooks (~6h, ~300-400 LOC each)**
    - Enhance `notebooks/leaving_cert/chemistry.py`:
-     5 altair visualisations over `oideachais.leaving_cert.chemistry_*`
+     5 altair visualisations over `cianfhoghlaim.leaving_cert.chemistry_*`
      + BAML `ExtractCurriculumSyllabus` + `ExtractExamPaperLayout` +
      `ExtractMarkingSchemeGuideline` + `ExtractSyllabusDiagram` calls.
    - Enhance `computer_science.py`, `gaeilge.py`, `geography.py`,
@@ -62,7 +62,7 @@ spec to confirm the Phase 6 / Phase 7 deliverables are live.
    - Create `motherduck/flights/lc_pdf_sync_flight.py`:
      daily Python job that runs `cocoindex update lc_subjects` +
      `dagster asset materialize --select '*lc*'` and writes a status
-     row to `md:oideachais.lc_ops.daily_sync_status`.
+     row to `md:cianfhoghlaim.lc_ops.daily_sync_status`.
    - Create `motherduck/flights/config.yaml`:
      registers `lc_pdf_sync_flight` with cron `0 4 * * *` (04:00 UTC).
 
@@ -75,7 +75,7 @@ spec to confirm the Phase 6 / Phase 7 deliverables are live.
      confirming the daily Flight at
      `motherduck/flights/lc_pdf_sync_flight.py`
      + cron `0 4 * * *` writes a status row to
-     `md:oideachais.lc_ops.daily_sync_status`.
+     `md:cianfhoghlaim.lc_ops.daily_sync_status`.
 
 ## Dependencies
 

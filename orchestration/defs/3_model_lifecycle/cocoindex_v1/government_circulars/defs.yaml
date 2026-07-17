@@ -5,7 +5,7 @@
 #
 # Per the british-isles-education-pipeline spec — `CocoIndex v1
 # embeddings (BGE-M3) into LanceDB` Requirement.
-# Table: oideachais.government.circulars.<dept>_<year>_<language>.
+# Table: cianfhoghlaim.government.circulars.<dept>_<year>_<language>.
 #
 # Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
@@ -24,7 +24,7 @@ attributes:
   languages:
     - en
     - ga
-  table_name_pattern: oideachais.government.circulars.<dept>_<year>_<language>
+  table_name_pattern: cianfhoghlaim.government.circulars.<dept>_<year>_<language>
   schedule:
     cron: "0 4 * * *"
     timezone: UTC

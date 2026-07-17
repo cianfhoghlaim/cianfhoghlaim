@@ -44,7 +44,7 @@ implements all 5 via the same quest + agent + achievement pattern.
 - **Senior Cycle (Leaving Certificate)** — Established + LCVP
   + LCA. The MMO covers the formative phase; the summative
   exam is out of scope.
-- **Source**: `sruth/oideachais/dlt_sources/domains/education/ie/`
+- **Source**: `sruth/cianfhoghlaim/dlt_sources/domains/education/ie/`
   + `baml_src/curriculum_*.baml`
 
 ### 2. Scotland (CfE Early → Senior Phase)
@@ -55,7 +55,7 @@ implements all 5 via the same quest + agent + achievement pattern.
 - **Experiences and Outcomes (EsOs)** — each CfE subject has
   EsOs at each level. The MMO quest system maps EsOs to
   formative quests.
-- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/scotland/`
+- **Source**: `sruth/cianfhoghlaim/dlt_sources/domains/education/uk/scotland/`
 
 ### 3. Wales (Curriculum for Wales Foundation → KS5)
 
@@ -66,24 +66,24 @@ implements all 5 via the same quest + agent + achievement pattern.
   citizens; healthy, confident individuals.
 - **Progression Steps** — each Area maps to Progression Steps
   at the 4 phases.
-- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/wales/`
+- **Source**: `sruth/cianfhoghlaim/dlt_sources/domains/education/uk/wales/`
 
 ### 4. Northern Ireland (CCEA Foundation → KS5)
 
 - **CCEA Foundation Stage** (P1-P3)
 - **CCEA Key Stage 1-4** (P4-Y12)
 - **CCEA Post-16** (A-Levels, BTEC, Occupational Studies)
-- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/northern_ireland/`
+- **Source**: `sruth/cianfhoghlaim/dlt_sources/domains/education/uk/northern_ireland/`
 
 ### 5. SQA (National 3 → Advanced Higher)
 
 - **National 3, 4, 5** (broad general education)
 - **Higher + Advanced Higher** (post-16)
-- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/scotland/gov_scot_statistics.py`
+- **Source**: `sruth/cianfhoghlaim/dlt_sources/domains/education/uk/scotland/gov_scot_statistics.py`
 
 ## The 4 formative feedback channels
 
-The 4 tuatha ADK agents (now at `sruth/oideachais/agents/adk/`)
+The 4 tuatha ADK agents (now at `sruth/cianfhoghlaim/agents/adk/`)
 each deliver one channel of formative feedback:
 
 | Agent | Formative role | When it fires |
@@ -103,7 +103,7 @@ each deliver one channel of formative feedback:
 
 ## The 4 graduated hint levels
 
-Per `sruth/oideachais/agents/adk/quest_guide_agent:quest_guide_agent`:
+Per `sruth/cianfhoghlaim/agents/adk/quest_guide_agent:quest_guide_agent`:
 
 - **Level 1**: Subtle nudge in the right direction
 - **Level 2**: More specific guidance
@@ -149,7 +149,7 @@ The badge metadata includes:
   `{nation}.{domain}.{entity}` asset-key contract
 - `.agents/skills/irish-edtech/SKILL.md` — Irish-language
   AI patterns (UCCIX, GaBERT, BGE-M3)
-- `sruth/oideachais/agents/adk/{celtic_tutor_agent,mythology_narrator_agent,quest_guide_agent,research_assistant_agent,tuatha_root_agent}.py`
+- `sruth/cianfhoghlaim/agents/adk/{celtic_tutor_agent,mythology_narrator_agent,quest_guide_agent,research_assistant_agent,tuatha_root_agent}.py`
   — the 4 agents + the root orchestrator
 - `openspec/specs/tuatha-platform/spec.md` — the canonical
   spec

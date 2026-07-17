@@ -1,11 +1,11 @@
 # Per-Domain Web App Consolidation Plan
 
-> **Per user request ("4 per domain")** — consolidate 5 web apps (oideachais-web, tuatha-ui, croilar-web, croilar-portal, hono-api) per domain, not all at once.
+> **Per user request ("4 per domain")** — consolidate 5 web apps (cianfhoghlaim-web, tuatha-ui, croilar-web, croilar-portal, hono-api) per domain, not all at once.
 > **Related:** Plan v6 Phase F8 (merge web), this is the per-domain subplan.
 
 ## 1. Current web apps
 
-1. **oideachais-web** (`cianfhoghlaim/web/apps/oideachais-web/`) - TanStack Start + React public web app (the LARGEST)
+1. **cianfhoghlaim-web** (`cianfhoghlaim/web/apps/cianfhoghlaim-web/`) - TanStack Start + React public web app (the LARGEST)
 2. **tuatha-ui** (`cianfhoghlaim/web/apps/tuatha-ui/`) - Tuatha educational MMO front-end
 3. **croilar-web** (`cianfhoghlaim/web/apps/croilar-web/`) - Croílár multi-persona portfolio (public site)
 4. **croilar-portal** (`cianfhoghlaim/web/apps/croilar-portal/`) - Croílár portfolio dashboard (admin)
@@ -14,7 +14,7 @@
 ## 2. Consolidated target
 
 **Single web app:** `cianfhoghlaim/web/cio-web/` (a unified web app)
-- TanStack Start + React (the oideachais-web stack)
+- TanStack Start + React (the cianfhoghlaim-web stack)
 - Hono API gateway embedded
 - Multi-route:
   - `/` (oideachais public)
@@ -34,7 +34,7 @@ The user said "4 per domain" which I interpret as: do one domain at a time, in o
 - Migration:
   1. Copy hono-api into `web/cio-web/api/`
   2. Wire hono-api routes into the TanStack Start server
-  3. Test that all consumers (oideachais-web, tuatha-ui, croilar-web) can switch endpoints
+  3. Test that all consumers (cianfhoghlaim-web, tuatha-ui, croilar-web) can switch endpoints
   4. Cutover: delete old hono-api directory
 - Risk: LOW (backend-only, mostly hidden from users)
 
@@ -71,15 +71,15 @@ The user said "4 per domain" which I interpret as: do one domain at a time, in o
   4. Cutover
 - Risk: MED (Babylon.js + game state)
 
-### Domain 5: oideachais-web (largest, most critical)
+### Domain 5: cianfhoghlaim-web (largest, most critical)
 - Reason: Last because it has the most surface + critical features
 - Effort: L (3-4 weeks)
-- Files: `cianfhoghlaim/web/apps/oideachais-web/**`
+- Files: `cianfhoghlaim/web/apps/cianfhoghlaim-web/**`
 - Migration:
-  1. The existing oideachais-web BECOMES the core of `web/cio-web/`
+  1. The existing cianfhoghlaim-web BECOMES the core of `web/cio-web/`
   2. Update routes: existing routes stay at `/`, add multi-app routing
   3. Migrate remaining content
-  4. Cutover: oideachais-web directory becomes legacy
+  4. Cutover: cianfhoghlaim-web directory becomes legacy
 - Risk: HIGH (largest public surface)
 
 ## 4. Total timeline
@@ -107,7 +107,7 @@ For each domain cutover:
 
 ## 7. Decisions needed before execution
 
-1. **Reverse domain order** (start with largest, oideachais-web)? I recommend NO - my order (hono-api → croilar-web → croilar-portal → tuatha-ui → oideachais-web) is safest.
+1. **Reverse domain order** (start with largest, cianfhoghlaim-web)? I recommend NO - my order (hono-api → croilar-web → croilar-portal → tuatha-ui → cianfhoghlaim-web) is safest.
 2. **Hono API gateway embedded or separate** in the unified app? I recommend embedded (single deploy).
 3. **Cross-app navigation** - share a layout or each app has its own? I recommend shared layout with per-app routes.
 4. **Auth** - single sign-on or per-app? I recommend SSO via Pocket ID (already deployed).

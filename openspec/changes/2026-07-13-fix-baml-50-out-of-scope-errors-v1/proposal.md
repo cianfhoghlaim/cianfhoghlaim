@@ -247,7 +247,7 @@ is documented in the proposal and commit message.
   harness correctly compiles + invokes each test block)
 - [x] The 9 BAML-using notebooks AST-parse OK
 - [x] The 2 MODIFIED spec deltas (`british-isles-education-pipeline` +
-  `oideachais-baml-schemas`) are well-formed
+  `cianfhoghlaim-baml-schemas`) are well-formed
 - [x] The 7 `lc_extraction/*.baml` files still compile + the canonical
   types `MarkingScheme`, `BilingualText`, etc. are still present in
   the generated `baml_client/types.py`

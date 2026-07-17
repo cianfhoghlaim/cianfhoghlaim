@@ -2,7 +2,7 @@
 #
 # L3 CocoIndex v1 App for the Government of Guernsey education pipeline.
 # Embeds every Government of Guernsey per-subject education row into
-# the shared `oideachais.lc.guernsey.education_chunks` LanceDB table.
+# the shared `cianfhoghlaim.lc.guernsey.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-12-british-isles-parity-pipeline-v1/
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
@@ -15,7 +15,7 @@ attributes:
     - app_name: GovernmentofGuernseyEducationEmbedding
       module: cianfhoghlaim.cocoindex.biep_parity.guernsey_education_embedding
       source: british_isles
-      lance_table: oideachais.lc.guernsey.education_chunks
+      lance_table: cianfhoghlaim.lc.guernsey.education_chunks
   schedule:
     cron: "0 5 * * *"
     timezone: UTC

@@ -1,11 +1,11 @@
-# Tasks for 2026-07-15-oideachais-leabharlann-v1
+# Tasks for 2026-07-15-cianfhoghlaim-leabharlann-v1
 
 ## Phase 0 — baseline capture (Step 1, 30 min)
 
 - [x] Capture the baseline state via `ls cianfhoghlaim/dlt_sources/leabharlann/`
       (resolved to actual path `bianfhoghlaim/dlt/filesystem/`)
       + `ls leabharlann/` (6 subdirs at repo root)
-      + `grep -cE "^### Requirement:" openspec/specs/oideachais-leabharlann/spec.md`
+      + `grep -cE "^### Requirement:" openspec/specs/cianfhoghlaim-leabharlann/spec.md`
       (returned 21).
 - [x] Document that the spec's `dlt_sources/leabharlann/` and
       `cocoindex_flows/` references are pre-v4 paths; the v4
@@ -159,11 +159,11 @@
 
 ## Phase 10 — write the openspec change (Step 9, 30 min)
 
-- [x] Create `openspec/changes/2026-07-15-oideachais-leabharlann-v1/proposal.md`.
+- [x] Create `openspec/changes/2026-07-15-cianfhoghlaim-leabharlann-v1/proposal.md`.
 - [x] Create this `tasks.md`.
-- [x] Create `openspec/changes/2026-07-15-oideachais-leabharlann-v1/specs/oideachais-leabharlann/spec.md`
+- [x] Create `openspec/changes/2026-07-15-cianfhoghlaim-leabharlann-v1/specs/cianfhoghlaim-leabharlann/spec.md`
       with 1 ADDED requirement.
-- [x] Run `openspec validate 2026-07-15-oideachais-leabharlann-v1 --strict`.
+- [x] Run `openspec validate 2026-07-15-cianfhoghlaim-leabharlann-v1 --strict`.
 
 ## Phase 11 — commit + push (Step 10, 5 min)
 

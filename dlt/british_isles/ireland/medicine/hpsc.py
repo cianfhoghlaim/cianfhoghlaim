@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.medicine.hpsc — Health Protection Surveillance Centre.
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.medicine.hpsc — Health Protection Surveillance Centre.
 
 Source: `https://www.hpsc.ie` (public service). Yields the
 surveillance pages (notifiable diseases, outbreaks, etc.).

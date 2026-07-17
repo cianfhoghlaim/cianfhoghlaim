@@ -56,7 +56,7 @@ The 88 stacks are organised into 5 logical groups
 | **data-engineering** | 12 | bunchloch | Dagster, Lakehouse, Marimo, CocoIndex, Cognify, Litellm, Langfuse, Llama-swap |
 | **agent-platform** | 7 | bunchloch | Agno AgentOS, Google ADK, OpenClaw, OpenChamber, Cognee, Graphiti, Letta |
 | **language-model** | 6 | bunchloch | LiteLLM, llama-swap, MLX-Omni, Logfire, Langfuse, mlflow |
-| **user-facing-web** | 6 | bunchloch | oideachais-web, oideachais-api, oideachais-dagster, oideachais-agent-os, oideachais-adk-agents, openclaw |
+| **user-facing-web** | 6 | bunchloch | cianfhoghlaim-web, cianfhoghlaim-api, cianfhoghlaim-dagster, cianfhoghlaim-agent-os, cianfhoghlaim-adk-agents, openclaw |
 | **ci** | 1 | bunchloch | hf-watchdog |
 
 ## The 4-Section Template

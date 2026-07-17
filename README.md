@@ -21,7 +21,7 @@
 > Northern Ireland, Isle of Man, Jersey, Guernsey) and bilingualised
 > in EN + GA (Gaeilge).
 >
-> The **web UIs** (`oideachais-web`, `tuatha-ui`, `croilar-web`,
+> The **web UIs** (`cianfhoghlaim-web`, `tuatha-ui`, `croilar-web`,
 > `croilar-portal`, `game_showcase`, `tuatha-demo`, the Hono API
 > gateway) are packaged demos that prove the agentic-web wiring works.
 > They are **not yet** the final pedagogical surface — the UI work is
@@ -72,13 +72,13 @@ nesting.
 ### TypeScript graph (bun workspaces)
 | Workspace | Path | Purpose |
 |:--|:--|:--|
-| `oideachais-web` | `web/apps/oideachais-web/` | TanStack Start + React front-end (the public web app) |
+| `cianfhoghlaim-web` | `web/apps/cianfhoghlaim-web/` | TanStack Start + React front-end (the public web app) |
 | `tuatha-ui` | `web/apps/tuatha-ui/` | Túatha educational MMO front-end |
 | `croilar-web` | `web/apps/croilar-web/` | Croílár multi-persona portfolio |
 | `croilar-portal` | `web/apps/croilar-portal/` | Croílár portfolio dashboard |
 | `tuatha-demo` | `web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
 | `game_showcase` | `web/apps/game_showcase/` | Web game showcase |
-| `oideachais-mcp-filesystem` | `web/apps/oideachais-mcp-filesystem/` | Filesystem MCP server for the data platform |
+| `cianfhoghlaim-mcp-filesystem` | `web/apps/cianfhoghlaim-mcp-filesystem/` | Filesystem MCP server for the data platform |
 | `hono-api` | `web/hono-api/` | Hono API gateway |
 
 ### Python sub-packages (uv at root)

@@ -78,7 +78,7 @@ uvx mcp-server-motherduck --help
 
 # Local DuckDB file (read-only)
 uvx mcp-server-motherduck \
-  --db-path /Users/cianmacandeisigh/dev/kings_college_galway/stedding/oideachais.duckdb \
+  --db-path /Users/cianmacandeisigh/dev/kings_college_galway/stedding/cianfhoghlaim.duckdb \
   --read-only
 
 # MotherDuck cloud (KCG read-only consumer)
@@ -208,7 +208,7 @@ Source: `/docs/key-tasks/ai-and-motherduck/dives/` and `/sql-reference/mcp/`.
 
 ## MotherDuck token — Business-tier required (carry forward)
 
-KCG notebooks use 4 shared databases (`oideachais_public`, `oideachais_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
+KCG notebooks use 4 shared databases (`cianfhoghlaim_public`, `cianfhoghlaim_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
 
 ## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
 
@@ -217,7 +217,7 @@ the BAML-extracted DuckLake tables via **4 MotherDuck Dives**
 (the read-only consumer surface) and **6 MotherDuck Flights**
 (the scheduled backfill surface). All 10 are wired into the
 `oideachais` MotherDuck database under the
-`oideachais.leaving_cert.*` and `oideachais.education.ie.*`
+`cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*`
 schemas.
 
 **The 4 Dives (read-only dashboards):**
@@ -245,7 +245,7 @@ save_dive(
             title,
             hours,
             cardinality(learning_outcomes) AS n_outcomes
-        FROM oideachais.leaving_cert.curriculum_syllabus
+        FROM cianfhoghlaim.leaving_cert.curriculum_syllabus
         WHERE subject IN (
             'mathematics', 'chemistry', 'geography',
             'gaeilge', 'english', 'computer_science'
@@ -257,7 +257,7 @@ save_dive(
 **The 6 Flights (scheduled backfills):**
 
 - `flight_lc_mathematics_backfill` — re-extracts the BAML
-  rows for Mathematics from `oideachais.leaving_cert.mathematics_*`
+  rows for Mathematics from `cianfhoghlaim.leaving_cert.mathematics_*`
   on the 1st of every month
 - `flight_lc_chemistry_backfill`, `flight_lc_geography_backfill`,
   `flight_lc_gaeilge_backfill`, `flight_lc_english_backfill`,

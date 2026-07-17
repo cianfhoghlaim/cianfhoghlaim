@@ -12,14 +12,14 @@ The marimo mission control provides:
 - A strong-stance footer card with the government organisation's
   policy positions, verified via the BAML `ClassifyOfficialMedia`
   extraction
-- A Cognee dataset `oideachais_official_media` with 4 edge types joining
+- A Cognee dataset `cianfhoghlaim_official_media` with 4 edge types joining
   the records to other leabharlann corpora
 
 The corresponding source code lives at:
 
 - `cianfhoghlaim/notebooks/dashboards/official_media/official_media.py`
-- `cianfhoghlaim/web/apps/oideachais-web/src/routes/official-media/`
-- `cianfhoghlaim/cognify/datasets/oideachais_official_media.py`
+- `cianfhoghlaim/web/apps/cianfhoghlaim-web/src/routes/official-media/`
+- `cianfhoghlaim/cognify/datasets/cianfhoghlaim_official_media.py`
 ## Requirements
 ### Requirement: OfficialMediaMissionControl
 
@@ -29,7 +29,7 @@ resolved official-media records as a single-page mission control.
 
 #### Scenario: Dashboard renders
 
-- **GIVEN** `oideachais.official_media.candidates` has at least 1 row
+- **GIVEN** `cianfhoghlaim.official_media.candidates` has at least 1 row
 - **WHEN** `marimo edit cianfhoghlaim/notebooks/dashboards/official_media.py`
   is run
 - **THEN** the notebook SHALL render with:
@@ -46,7 +46,7 @@ resolved official-media records as a single-page mission control.
 
 #### Scenario: Empty state handled
 
-- **GIVEN** `oideachais.official_media.candidates` is empty
+- **GIVEN** `cianfhoghlaim.official_media.candidates` is empty
 - **WHEN** the notebook is opened
 - **THEN** it SHALL render an empty-state message: *"No official-media
   candidates yet. Run `dagster materialise -a official_media_extract`
@@ -83,7 +83,7 @@ same data with a card-grid layout grouped by `category`.
 ### Requirement: OfficialMediaCogneeDataset
 
 The system SHALL register a Cognee dataset named
-`oideachais_official_media` with the following edge types:
+`cianfhoghlaim_official_media` with the following edge types:
 
 - `ig_profile → official_website`
 - `ig_profile → fediverse_account`
@@ -96,7 +96,7 @@ The system SHALL register a Cognee dataset named
   materialised
 - **WHEN** the Cognee web UI is opened at
   `https://cognee.cianfhoghlaim.ie`
-- **THEN** the dataset `oideachais_official_media` SHALL appear in the
+- **THEN** the dataset `cianfhoghlaim_official_media` SHALL appear in the
   dataset list
 - **AND** querying `MATCH (p:ig_profile)-[:has_official_website]->(w:url)
   RETURN p.ig_username, w.url LIMIT 10` SHALL return at least 1 row

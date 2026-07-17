@@ -131,8 +131,8 @@ Run these via the `research` subagent:
 ```bash
 # Dispatch from opencode (after restart):
 # - subagent_type: research
-# - prompt: "Run the Phase 0.8 dry-run for P1A-01 per openspec/changes/2026-06-28-browserbase-phase-1a-decisions/specs/oideachais-pipeline/spec.md"
-# - then: "Run the Phase 0.8 dry-run for P3-S02 per openspec/changes/2026-06-28-browserbase-phase-3-decisions/specs/oideachais-pipeline/spec.md"
+# - prompt: "Run the Phase 0.8 dry-run for P1A-01 per openspec/changes/2026-06-28-browserbase-phase-1a-decisions/specs/cianfhoghlaim-pipeline/spec.md"
+# - then: "Run the Phase 0.8 dry-run for P3-S02 per openspec/changes/2026-06-28-browserbase-phase-3-decisions/specs/cianfhoghlaim-pipeline/spec.md"
 ```
 
 Each dry-run outputs to:

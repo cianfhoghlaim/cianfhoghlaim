@@ -19,7 +19,7 @@
 
 ## 2. Spec deltas
 
-- [ ] 2.1 Add a MODIFIED delta on `oideachais-pipeline/spec.md`
+- [ ] 2.1 Add a MODIFIED delta on `cianfhoghlaim-pipeline/spec.md`
   introducing the cross-region path contract (an ADDED Requirement)
 - [ ] 2.2 Add a MODIFIED delta on
   `british-isles-education-pipeline/spec.md` introducing the

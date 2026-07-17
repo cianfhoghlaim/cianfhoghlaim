@@ -215,7 +215,7 @@ __all__ = [
 
 def create_ncca_gaeilge_pipeline(
     pipeline_name: str = "ncca_gaeilge_lc6",
-    dataset_name: str = "oideachais.leaving_cert.gaeilge",
+    dataset_name: str = "cianfhoghlaim.leaving_cert.gaeilge",
 ) -> Any:
     """Return a configured dlt pipeline for the BIEP v1 gaeilge NCCA crawl.
 

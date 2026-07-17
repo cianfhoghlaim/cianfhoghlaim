@@ -17,7 +17,7 @@ wrapper around this factory.
 
 The factory does NOT call the BAML extraction itself; that's the
 `uog_extract_courses` / `uog_extract_modules` / `uog_extract_programmes`
-Dagster assets' job (per the `oideachais-university-deep-extraction`
+Dagster assets' job (per the `cianfhoghlaim-university-deep-extraction`
 spec). The DLT source just yields `(url, markdown, content_hash)` rows
 that the assets materialise through the canonical
 `BackendRouter.bulk_scrape` 3-stage pipeline (Crawl4AI primary, Firecrawl

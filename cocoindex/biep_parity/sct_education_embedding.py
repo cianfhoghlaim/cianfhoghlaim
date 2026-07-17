@@ -1,7 +1,7 @@
 """CocoIndex v1 App for the Scotland education pipeline.
 
 Embeds every Scotland per-subject education row into the shared
-LanceDB table ``oideachais.lc.sct.<subject>.<level>_<language>``
+LanceDB table ``cianfhoghlaim.lc.sct.<subject>.<level>_<language>``
 using the canonical ``BAAI/bge-m3`` 1024-d multilingual embedder.
 
 Conforms to the R1–R4 conformance contract (imports
@@ -29,7 +29,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.lc.sct.education_chunks"
+TABLE_NAME = "cianfhoghlaim.lc.sct.education_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every Scotland per-subject "
     "education row (BIEP parity change)."

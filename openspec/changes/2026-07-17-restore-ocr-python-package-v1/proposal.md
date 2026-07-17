@@ -96,7 +96,7 @@ then resolve correctly and emit only their intended
 ## Scope
 
 This change is **bounded** to the canonical `ocr/`
-package and the `oideachais-marimo-dashboards` capability spec.
+package and the `cianfhoghlaim-marimo-dashboards` capability spec.
 It does **NOT**:
 
 - Touch the `meaisinfhoghlaim/{ocr,models}/` shims (out of scope;
@@ -146,7 +146,7 @@ Three files restored from `HEAD` (commit `0fceb8654`):
 
 Mechanism: `git checkout HEAD -- ocr/`.
 
-### 2. Spec delta — `oideachais-marimo-dashboards`
+### 2. Spec delta — `cianfhoghlaim-marimo-dashboards`
 
 `## Requirements` ADDED 1 requirement:
 

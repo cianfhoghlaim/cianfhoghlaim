@@ -12,7 +12,7 @@ notebooks + MotherDuck Dives.
 The 8 NCCA subject ADK agents were already wired in T4 (the
 `2026-07-10-wire-8-subject-agents-cognify-langfuse-v1` change, Feat C)
 — they have the canonical
-`oideachais_lc_<subject>` Cognee dataset, the
+`cianfhoghlaim_lc_<subject>` Cognee dataset, the
 `agent.<module_slug>.<verb>` Langfuse trace name, the BAML
 `Generate<Subject>FormativeItem` function lookup, and the `<slug>_agent_wire`
 Pydantic-bypass handle.
@@ -179,7 +179,7 @@ The 4 verification gates:
    the 6-subject pipeline, not the 8-subject NCCA surface).
 4. **The marimo notebook surface** — the per-subject BIEP notebooks
    at `notebooks/` are owned by
-   `oideachais-marimo-dashboards`. They consume the 3 workflow
+   `cianfhoghlaim-marimo-dashboards`. They consume the 3 workflow
    handlers via the new fields on `WireSubjectAgent` once they
    load the agent module — no notebook edits in this change.
 5. **CopilotKit + AG-UI wiring of the 3 handlers to the front-end** —

@@ -7,7 +7,7 @@
 -- Each cohort is the topic-coverage metric for that (subject, year, language) triple.
 --
 -- Backed by the per-subject per-year per-language LanceDB tables at
--- `oideachais.jc.<subject>.<year>_<lang>` (populated by the
+-- `cianfhoghlaim.jc.<subject>.<year>_<lang>` (populated by the
 -- `junior_cycle_embedding` CocoIndex App from
 -- `cocoindex/subjects/junior_cycle_embedding.py`).
 
@@ -21,6 +21,6 @@ SELECT
     COUNT(DISTINCT strand) AS strand_count,
     COUNT(DISTINCT topic) AS topic_count,
     MAX(ingested_at) AS last_ingested_at
-FROM oideachais.education.british_isles.ireland.junior_cycle._all_subjects
+FROM cianfhoghlaim.education.british_isles.ireland.junior_cycle._all_subjects
 GROUP BY subject, year, language
 ORDER BY subject, year, language;

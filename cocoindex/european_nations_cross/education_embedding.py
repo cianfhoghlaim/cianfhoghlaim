@@ -1,7 +1,7 @@
 """CocoIndex v1 App for the EU nations + Ukraine education pipeline.
 
 Embeds every per-nation education row into the shared
-``oideachais.eu_nations.education_chunks`` LanceDB table using the
+``cianfhoghlaim.eu_nations.education_chunks`` LanceDB table using the
 canonical ``BAAI/bge-m3`` 1024-d multilingual embedder.
 
 Conforms to the R1–R4 conformance contract (imports
@@ -30,7 +30,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.eu_nations.education_chunks"
+TABLE_NAME = "cianfhoghlaim.eu_nations.education_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every EU nations "
     "+ Ukraine per-nation {domain} row (Ukraine / France / Germany / Poland / "

@@ -160,7 +160,7 @@ same `_workflow_handlers` factory.
 ADDED Requirement that extends the existing "8 NCCA subject
 agent definitions wired to Layer 5" contract with the user-facing
 workflow surface; the `Langfuse callbacks wired at agent
-construction time`, `Cognify emit step pushes to oideachais_lc_<subject>`,
+construction time`, `Cognify emit step pushes to cianfhoghlaim_lc_<subject>`,
 `StorageBackend Protocol enforced on subject agents`, and
 `MemoryBackend Protocol contract` requirements remain unchanged.)*
 

@@ -91,7 +91,7 @@ The Dagster L2 asset `endpoint_health_sink` runs every 6 hours:
 python3 -c "import asyncio, json; from cianfhoghlaim.dlt.common.endpoint_recovery import probe_all_39; print(json.dumps(asyncio.run(probe_all_39()), indent=2))"
 ```
 
-The asset emits one row per probe to the `oideachais.endpoint_health`
+The asset emits one row per probe to the `cianfhoghlaim.endpoint_health`
 DuckLake table. The companion L2 asset `endpoint_health_alerts`
 posts a Slack message to `#upstream-endpoints` whenever a source falls
 below 200 for 2 consecutive probes.

@@ -3,7 +3,7 @@
  *
  * Returns paginated England AQA + OCR + Edexcel LanceDB rows from
  * the BIEP v2 per-board per-subject per-level LanceDB namespace
- * (`oideachais.england.<board>.<subject>.<qualification_level>`).
+ * (`cianfhoghlaim.england.<board>.<subject>.<qualification_level>`).
  *
  * Per the 2026-07-23-biep-v2-marimo-portal-v1 change.
  *
@@ -29,8 +29,8 @@ app.get("/api/v1/biep-v2/england", async (c) => {
   const perPage = Math.min(parseInt(c.req.query("per_page") ?? "10", 10), 100);
 
   // Canonical LanceDB table name per the 2026-07-21 England spec:
-  //   oideachais.england.<board>.<subject>.<qualification_level>
-  const tableName = `oideachais.england.${board}.${subject}.${qualificationLevel}`;
+  //   cianfhoghlaim.england.<board>.<subject>.<qualification_level>
+  const tableName = `cianfhoghlaim.england.${board}.${subject}.${qualificationLevel}`;
 
   return c.json({
     rows: [],
@@ -42,7 +42,7 @@ app.get("/api/v1/biep-v2/england", async (c) => {
     board,
     subject,
     qualification_level: qualificationLevel,
-    namespace: `oideachais.england.${board}.${subject}.${qualificationLevel}`,
+    namespace: `cianfhoghlaim.england.${board}.${subject}.${qualificationLevel}`,
   });
 });
 

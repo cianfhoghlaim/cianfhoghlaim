@@ -4,7 +4,7 @@
 // 18 core subjects + 16 short courses + Level 1/2 Learning Programmes.
 // Merged from:
 //   - baml/junior_cycle.baml (229 LOC) — the canonical JC schema
-//   - baml/oideachais_other/junior_cycle.baml (39 LOC) — the URL-extraction variant
+//   - baml/cianfhoghlaim_other/junior_cycle.baml (39 LOC) — the URL-extraction variant
 // See: docs/bonneagar/education-subject-inventory.md:58-105
 // =============================================================================
 

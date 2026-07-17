@@ -13,7 +13,7 @@ change, the sensor:
      DuckLake landing + the RAGAS-voted canonical (the full Change 3
      ensemble)
   3. Writes an audit row to
-     `oideachais.education.british_isles.england.changes` per the
+     `cianfhoghlaim.education.british_isles.england.changes` per the
      Change 5 DuckLake audit table migration
   4. Fires Slack + email alerts (per the observability extension)
 
@@ -72,7 +72,7 @@ BOARD_ASSET_KEY_TEMPLATES: dict[str, str] = {
 
 # The DuckLake audit table destination (per Change 5 migration).
 DUCKLAKE_AUDIT_NAMESPACE = (
-    "oideachais.education.british_isles.england.changes"
+    "cianfhoghlaim.education.british_isles.england.changes"
 )
 
 
@@ -165,7 +165,7 @@ def _emit_langfuse_event(change: dict[str, Any]) -> None:  # pragma: no cover - 
 
 
 def _write_ducklake_audit_row(change: dict[str, Any]) -> None:
-    """Write an audit row to `oideachais.education.british_isles.england.changes`."""
+    """Write an audit row to `cianfhoghlaim.education.british_isles.england.changes`."""
     # Real impl: dlt pipeline to the DuckLake destination.
     try:
         # Placeholder: emit a structlog event for observability.

@@ -15,7 +15,7 @@ attributes:
     - 2_materials_curriculum_eng_edexcel
   partition_strategy: by_subject
   asset_check_kind: row_count
-  namespace_pattern: "oideachais.education.british_isles.england.cross_board.{subject}.{qualification_level}"
+  namespace_pattern: "cianfhoghlaim.education.british_isles.england.cross_board.{subject}.{qualification_level}"
   dagster_group_name_prefix: "2_materials_curriculum_eng_comparators"
   join_strategy: left_outer_join_on_subject_and_level
   diff_strategy: spec_version_diff

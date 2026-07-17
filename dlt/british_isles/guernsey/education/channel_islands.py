@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.guernsey.education.channel_islands — Guernsey education DLT source.
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.guernsey.education.channel_islands — Guernsey education DLT source.
 
 Split from `dlt_sources/crown_dependencies/channel_islands.py` in
 Phase 3E (Round 11 oideachais audit). The Guernsey source (`guernsey_source`)

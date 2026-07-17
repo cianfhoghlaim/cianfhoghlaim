@@ -64,7 +64,7 @@ class ClientConfig:
     max_requests_per_second: float = 10.0
     circuit_failure_threshold: int = 3
     circuit_recovery_time: float = 60.0
-    user_agent: str = "oideachais-dlt/1.0"
+    user_agent: str = "cianfhoghlaim-dlt/1.0"
     follow_redirects: bool = True
 
 

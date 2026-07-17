@@ -16,7 +16,7 @@ The sensor MUST:
 - Trigger the dagster job `england_england_re_extraction_job`
 - Emit a Langfuse trace event with the change metadata
 - Write an audit row to
-  `oideachais.education.british_isles.england.changes`
+  `cianfhoghlaim.education.british_isles.england.changes`
 
 #### Scenario: England AQA GCSE math change triggers re-extraction
 
@@ -28,5 +28,5 @@ The sensor MUST:
 - **AND** the dagster job `england_england_re_extraction_job` materialises
 - **AND** the re-extraction produces the 4-path ensemble output + the
   voted canonical row
-- **AND** the audit table `oideachais.education.british_isles.england.changes`
+- **AND** the audit table `cianfhoghlaim.education.british_isles.england.changes`
   records the change with `ragas_score` and `extraction_status='success'`

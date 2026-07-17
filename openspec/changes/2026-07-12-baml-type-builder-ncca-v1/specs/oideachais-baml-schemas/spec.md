@@ -1,4 +1,4 @@
-# Spec Delta — oideachais-baml-schemas
+# Spec Delta — cianfhoghlaim-baml-schemas
 
 This delta adds 1 new Requirement to the existing 18 (18 → 19).
 The MODIFIED section is the new requirements only; the existing
@@ -8,7 +8,7 @@ The MODIFIED section is the new requirements only; the existing
 
 ### Requirement: NCCA strand/outcome catalog supports runtime TypeBuilder mutation
 
-The `oideachais-baml-schemas` capability SHALL support runtime
+The `cianfhoghlaim-baml-schemas` capability SHALL support runtime
 injection of per-strand, per-outcome, per-curriculum-spec, and
 per-assessment-component properties into the 4 canonical NCCA-related
 BAML classes — `LearningOutcome`, `CurriculumStrand`,

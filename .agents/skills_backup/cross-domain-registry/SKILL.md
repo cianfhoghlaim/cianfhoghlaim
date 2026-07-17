@@ -1,6 +1,6 @@
 ---
 name: cross-domain-registry
-description: KCG's `{nation}.{domain}.{entity}` asset-key contract for every DLT source and Dagster asset. 8 nations (ie/ni/en/sct/wls/iom/jey/ggy) × 5 domains (education/medicine/law/statistics/site_analysis) × 7 kinds. Sole truth: `sruth/oideachais/sources.yaml`. Use when adding a new DLT source, registering a new Dagster asset, migrating from legacy asset keys, or resolving a name collision between nations.
+description: KCG's `{nation}.{domain}.{entity}` asset-key contract for every DLT source and Dagster asset. 8 nations (ie/ni/en/sct/wls/iom/jey/ggy) × 5 domains (education/medicine/law/statistics/site_analysis) × 7 kinds. Sole truth: `sruth/cianfhoghlaim/sources.yaml`. Use when adding a new DLT source, registering a new Dagster asset, migrating from legacy asset keys, or resolving a name collision between nations.
 ---
 
 # Cross-Domain Asset-Key Registry
@@ -11,7 +11,7 @@ Use when you need to:
 
 - "Add a new DLT source for a new corpus"
 - "Register a new Dagster asset"
-- "Migrate from legacy asset keys (e.g. `oideachais.curriculum_pages` → `oideachais.education.ie.curriculum.pages`)"
+- "Migrate from legacy asset keys (e.g. `cianfhoghlaim.curriculum_pages` → `cianfhoghlaim.education.ie.curriculum.pages`)"
 - "Resolve a name collision between nations"
 - "Generate the contract validation report for the
   monorepo"
@@ -27,7 +27,7 @@ asset-key of the form `{nation}.{domain}.{entity}`:
 | `domain` | `education` / `medicine` / `law` / `statistics` / `site_analysis` | Knowledge domain |
 | `entity` | kebab-case slug (e.g. `primary-curriculum`, `ccea-english`, `irish-statute-book`) | The specific corpus or asset |
 
-The canonical registry is `sruth/oideachais/sources.yaml`. Every
+The canonical registry is `sruth/cianfhoghlaim/sources.yaml`. Every
 DLT source registers there with metadata (URL, schedule,
 auth, etc.).
 
@@ -70,17 +70,17 @@ auth, etc.).
 
 | Layer | Convention | Example |
 |:--|:--|:--|
-| **DuckLake dataset** | `oideachais_{domain}_{nation}_{entity}` | `oideachais_education_ie_primary_curriculum` |
-| **DuckLake schema** | `oideachais.{domain}.{nation}` | `oideachais.education.ie` |
-| **LanceDB table** | `oideachais.{domain}.{nation}.{entity}` | `oideachais.education.ie.primary_curriculum` |
-| **Cognee dataset** | `oideachais_{domain}_{nation}` | `oideachais_education_ie` |
+| **DuckLake dataset** | `cianfhoghlaim_{domain}_{nation}_{entity}` | `cianfhoghlaim_education_ie_primary_curriculum` |
+| **DuckLake schema** | `cianfhoghlaim.{domain}.{nation}` | `cianfhoghlaim.education.ie` |
+| **LanceDB table** | `cianfhoghlaim.{domain}.{nation}.{entity}` | `cianfhoghlaim.education.ie.primary_curriculum` |
+| **Cognee dataset** | `cianfhoghlaim_{domain}_{nation}` | `cianfhoghlaim_education_ie` |
 | **Dagster asset key** | `["{nation}", "{domain}", "{entity_slug}"]` | `["ie", "education", "primary_curriculum"]` |
 | **Dagster group** | `{domain}_{nation}` | `education_ie` |
 
 ## SourceFactory pydantic validator
 
 The contract is enforced at code-load time by
-`sruth/oideachais/dlt_utils/source_factory.py:SourceFactory`:
+`sruth/cianfhoghlaim/dlt_utils/source_factory.py:SourceFactory`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -107,7 +107,7 @@ class Domain(str, Enum):
 
 
 class SourceSpec(BaseModel):
-    """One DLT source, registered in sruth/oideachais/sources.yaml."""
+    """One DLT source, registered in sruth/cianfhoghlaim/sources.yaml."""
 
     nation: Nation
     domain: Domain
@@ -124,9 +124,9 @@ the system.
 ## Coverage report
 
 ```bash
-uv run --package oideachais python -m oideachais.sources.sources_validation
+uv run --package oideachais python -m cianfhoghlaim.sources.sources_validation
 # OR with --strict to fail on missing nations:
-uv run --package oideachais python -m oideachais.sources.sources_validation --strict
+uv run --package oideachais python -m cianfhoghlaim.sources.sources_validation --strict
 ```
 
 The report shows:
@@ -137,22 +137,22 @@ The report shows:
 
 ## Backwards-compat aliases
 
-The legacy asset keys (e.g. `oideachais.curriculum_pages`)
-are resolved via `sruth/oideachais/dagster_defs/definitions.py:BACKWARDS_COMPAT_ASSET_ALIASES`.
+The legacy asset keys (e.g. `cianfhoghlaim.curriculum_pages`)
+are resolved via `sruth/cianfhoghlaim/dagster_defs/definitions.py:BACKWARDS_COMPAT_ASSET_ALIASES`.
 The alias table is removed in a follow-on `drop-asset-key-aliases`
 change.
 
 | Legacy key | New key |
 |:--|:--|
-| `oideachais.curriculum_pages` | `oideachais.education.ie.curriculum.pages` |
-| `uk.education.northern_ireland.ccea_pages` | `oideachais.education.ni.ccea.pages` |
-| `oideachais.site_analysis` | `oideachais.site_analysis.ie.site_analysis` |
+| `cianfhoghlaim.curriculum_pages` | `cianfhoghlaim.education.ie.curriculum.pages` |
+| `uk.education.northern_ireland.ccea_pages` | `cianfhoghlaim.education.ni.ccea.pages` |
+| `cianfhoghlaim.site_analysis` | `cianfhoghlaim.site_analysis.ie.site_analysis` |
 
 ## Adding a new source (5-step workflow)
 
 ```bash
-# 1. Add the source to sruth/oideachais/sources.yaml
-cat >> sruth/oideachais/sources.yaml <<'EOF'
+# 1. Add the source to sruth/cianfhoghlaim/sources.yaml
+cat >> sruth/cianfhoghlaim/sources.yaml <<'EOF'
 - name: "IoM Government - Education"
   nation: iom
   domain: education
@@ -163,21 +163,21 @@ cat >> sruth/oideachais/sources.yaml <<'EOF'
 EOF
 
 # 2. Run the contract validator
-uv run --package oideachais python -m oideachais.sources.sources_validation
+uv run --package oideachais python -m cianfhoghlaim.sources.sources_validation
 
-# 3. Implement the DLT source (under sruth/oideachais/dlt_sources/)
-# File: sruth/oideachais/dlt_sources/iom/education.py
+# 3. Implement the DLT source (under sruth/cianfhoghlaim/dlt_sources/)
+# File: sruth/cianfhoghlaim/dlt_sources/iom/education.py
 
-# 4. Register the Dagster asset (under sruth/oideachais/dagster_defs/assets/)
-# File: sruth/oideachais/dagster_defs/assets/iom/education.py
+# 4. Register the Dagster asset (under sruth/cianfhoghlaim/dagster_defs/assets/)
+# File: sruth/cianfhoghlaim/dagster_defs/assets/iom/education.py
 
 # 5. Re-run validation --strict
-uv run --package oideachais python -m oideachais.sources.sources_validation --strict
+uv run --package oideachais python -m cianfhoghlaim.sources.sources_validation --strict
 ```
 
 ## Cross-references
 
-- `sruth/oideachais/sources.yaml` — the canonical registry
+- `sruth/cianfhoghlaim/sources.yaml` — the canonical registry
 - `.agents/skills/oideachas-pipeline/SKILL.md` — the
   oideachais pipeline (the source of the contract)
 - `.agents/skills/change-detection/SKILL.md` — sitemap
@@ -185,7 +185,7 @@ uv run --package oideachais python -m oideachais.sources.sources_validation --st
 - `.agents/skills/dlt/SKILL.md` — DLT pipeline patterns
 - `.agents/skills/dagster/SKILL.md` — Dagster asset
   patterns
-- `.agents/skills/oideachais-storage/SKILL.md` — storage
+- `.agents/skills/cianfhoghlaim-storage/SKILL.md` — storage
   mental model
 
 ## 2024-25 census + fiscal context for the 8 nations

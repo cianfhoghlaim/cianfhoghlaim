@@ -55,7 +55,7 @@ Plus:
 - [ ] 6.1 ADDED Requirements on `americas-california-pipeline/spec.md`
 - [ ] 6.2 MODIFIED delta on `cross-region-pipeline/spec.md` adding a
   cross-reference
-- [ ] 6.3 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 6.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference
 
 ## 7. Validate

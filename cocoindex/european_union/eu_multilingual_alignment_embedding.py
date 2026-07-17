@@ -27,7 +27,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.eu.multilingual_alignment_chunks"
+TABLE_NAME = "cianfhoghlaim.eu.multilingual_alignment_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every EU institutional "
     "document (en + ga) for cross-jurisdiction alignment with the "

@@ -3,7 +3,7 @@
 Embeds every EU institutional document (EUR-Lex, EMA, ECDC, Eurydice,
 Eurostat, Publications Office, Commission press, Parliament documents,
 Council documents, `europa.eu` portal) into the shared LanceDB table
-``oideachais.eu.official_chunks`` using the canonical
+``cianfhoghlaim.eu.official_chunks`` using the canonical
 ``BAAI/bge-m3`` 1024-d multilingual embedder.
 
 Conforms to the R1–R4 conformance contract (imports
@@ -32,7 +32,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.eu.official_chunks"
+TABLE_NAME = "cianfhoghlaim.eu.official_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every EU institutional "
     "document (EUR-Lex, EMA, ECDC, Eurydice, Eurostat, Publications "

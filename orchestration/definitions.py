@@ -11,7 +11,7 @@ that delegates to `load_defs()` for the new 5-layer defs/ tree:
     defs/4_asset_generation/  CelticAssetGenerationComponent
     defs/5_agent_ops/         CelticAgentOpsComponent (12 agents × 5 assets)
 
-Legacy 6-sub-folder shape (defs/{oideachais_pipeline, celtic_asset_generation,
+Legacy 6-sub-folder shape (defs/{cianfhoghlaim_pipeline, celtic_asset_generation,
 cognify, croilar, meaisinfhoghlaim_platform, tuatha}) is preserved
 through the `dg.load_from_defs_folder()` legacy merge for backwards
 compatibility, but is scheduled for removal in Phase 4 of the same
@@ -68,7 +68,7 @@ except Exception as _exc:  # pragma: no cover
 # ============================================================================
 # Legacy 6-sub-folder shape (preserved for backwards compatibility)
 # ============================================================================
-# The 6 legacy sub-folders (oideachais_pipeline, celtic_asset_generation,
+# The 6 legacy sub-folders (cianfhoghlaim_pipeline, celtic_asset_generation,
 # cognify, croilar, meaisinfhoghlaim_platform, tuatha) are merged into
 # the new defs to keep the 200+ legacy assets visible in the UI.
 # Phase 4 of the same openspec change retires them.

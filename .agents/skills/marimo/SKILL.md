@@ -285,7 +285,7 @@ def setup_dotenv():
 @app.setup
 def register_mcp_tool():
     from mcp.server.fastmcp import FastMCP
-    mcp = FastMCP("oideachais-curriculum")
+    mcp = FastMCP("cianfhoghlaim-curriculum")
     # Register the tool globally so all cells can use it
     return (mcp,)
 ```
@@ -421,7 +421,7 @@ def _(con):
     # Federated SQL: DuckLake + LanceDB via lance_scan()
     result = con.sql("""
         SELECT s.subject, s.year, s.topic, count(*) AS n
-        FROM oideachais.leaving_cert.mathematics_topics s
+        FROM cianfhoghlaim.leaving_cert.mathematics_topics s
         GROUP BY s.subject, s.year, s.topic
         ORDER BY s.year, n DESC
     """).df()
@@ -464,7 +464,7 @@ def _(result):
 
 Cross-references:
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the
-  `oideachais.leaving_cert.<subject>_<lang>` tables
+  `cianfhoghlaim.leaving_cert.<subject>_<lang>` tables
 - [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
   the LanceDB tables joined via `lance_scan()`
 - [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —

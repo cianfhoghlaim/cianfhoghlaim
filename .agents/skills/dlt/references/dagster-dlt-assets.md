@@ -24,7 +24,7 @@ def ireland_curriculum_source():
     dlt_pipeline=dlt.pipeline(
         pipeline_name="ireland_curriculum",
         destination="ducklake",
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     ),
 )
 def ireland_curriculum_assets(context, dlt_run_resource: DagsterDltResource):

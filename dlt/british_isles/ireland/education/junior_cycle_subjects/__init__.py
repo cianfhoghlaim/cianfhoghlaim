@@ -22,7 +22,7 @@ generates the per-subject sources at import time so all 36 share the same
 tested code path.
 
 The destination is the canonical DuckLake namespace:
-    oideachais.education.british_isles.ireland.junior_cycle.<subject>.<lang>
+    cianfhoghlaim.education.british_isles.ireland.junior_cycle.<subject>.<lang>
 
 Reference: openspec/changes/2026-07-20-biep-v2-junior-cycle-extraction-v1/
 """

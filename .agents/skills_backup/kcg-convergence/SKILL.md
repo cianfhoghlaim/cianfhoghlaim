@@ -140,7 +140,7 @@ something else):
 
 | Range | Category | Examples |
 |:--|:--|:--|
-| **3000-3499** | User apps | TanStack Start (sruth/oideachais/web) :3000, Forgejo :3000, Browse :3001 |
+| **3000-3499** | User apps | TanStack Start (sruth/cianfhoghlaim/web) :3000, Forgejo :3000, Browse :3001 |
 | **3500-3999** | APIs | FastAPI :3500-3599, AG-UI :3600, oRPC :3700 |
 | **4000-4499** | Dagster | Dagster webserver :3335, LiteLLM :4000 |
 | **5000-5499** | Data | Lakehouse Postgres :5433, MLflow :5000 |
@@ -197,7 +197,7 @@ built for multi-arch (`linux/amd64,linux/arm64`).
   host convergence (where the stacks run)
 - `.agents/skills/stack-ops/SKILL.md` — the 6-file
   GOLD_STANDARD pattern (how each stack is structured)
-- `.agents/skills/oideachais-storage/SKILL.md` — the
+- `.agents/skills/cianfhoghlaim-storage/SKILL.md` — the
   storage layer detail
 - `.agents/skills/kcg-leabharlann-pipeline/SKILL.md` — the
   5-stage pipeline that touches many functional groups

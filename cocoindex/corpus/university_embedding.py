@@ -12,8 +12,8 @@ into LanceDB (BGE-M3 1024-dim):
      Embeds `module_title + module_description + learning_outcomes`.
 
 Both Apps follow the canonical v1 pattern documented in
-`.agents/skills/oideachais-cocoindex-v1/SKILL.md` and the
-`oideachais-cocoindex-v1-migration` spec:
+`.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md` and the
+`cianfhoghlaim-cocoindex-v1-migration` spec:
 
   - `@coco.lifespan` + `@coco.fn` + `lancedb.mount_table_target`
   - `SentenceTransformerEmbedder("BAAI/bge-m3")`
@@ -21,14 +21,14 @@ Both Apps follow the canonical v1 pattern documented in
   - The shared `_lifespan.py` (REFACTORING.md item 12)
 
 The source for both Apps is the DuckLake table
-`oideachais.education.ie.university_courses` (resp.
+`cianfhoghlaim.education.ie.university_courses` (resp.
 `university_modules`) populated by the `uog_extract_courses`
 (resp. `uog_extract_modules`) Dagster asset. The DuckLake source is
 read via a thin `duckdb` query (the canonical DuckLake pattern from
 `unified_embedding.py`).
 
 This brings the v1 App count from 12 to 14 (per the MODIFIED
-`oideachais-cocoindex-v1-migration` spec).
+`cianfhoghlaim-cocoindex-v1-migration` spec).
 
 Reference: openspec/changes/university-of-galway-deep-extraction/
 """
@@ -80,9 +80,9 @@ from ._lifespan import (  # noqa: E402
 # =============================================================================
 
 UNIVERSITY_DUCKLAKE_TABLES = {
-    "courses": "oideachais.education.ie.university_courses",
-    "modules": "oideachais.education.ie.university_modules",
-    "programmes": "oideachais.education.ie.university_programmes",
+    "courses": "cianfhoghlaim.education.ie.university_courses",
+    "modules": "cianfhoghlaim.education.ie.university_modules",
+    "programmes": "cianfhoghlaim.education.ie.university_programmes",
 }
 
 
@@ -99,7 +99,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         logger.warning("duckdb_not_available_for_university_embedding")
         return []
 
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:

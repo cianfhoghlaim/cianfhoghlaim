@@ -2,7 +2,7 @@
 
 ## 1. Read the spec + audit the existing infrastructure (30 min)
 
-- [x] Read `openspec/specs/oideachais-university-deep-extraction/spec.md`
+- [x] Read `openspec/specs/cianfhoghlaim-university-deep-extraction/spec.md`
       (8 requirements: per-university config schema / two URL surfaces
       per university / BAML course+module+programme+reading-list
       extraction / 3-stage pre-research→bulk-scrape→condense pipeline /
@@ -67,7 +67,7 @@
 - [x] Added **5 new BAML functions** (`ExtractUniversityInfo` +
       `ExtractTuInfo` + `ExtractQQIAward` + `ExtractCAOChoice` +
       `ExtractSOLASCourse`); all route through the canonical `ExtractEn`
-      LiteLLM client (per the `oideachais-baml-schemas` spec → the
+      LiteLLM client (per the `cianfhoghlaim-baml-schemas` spec → the
       `minimax-m3` single text generator from commit `667635dfd`).
 - [x] Added **3 new tests** (`ExtractUniversityInfoTest` +
       `ExtractQQIAwardTest` + `ExtractCAOChoiceTest`).
@@ -100,13 +100,13 @@
 
 ## 6. Write the openspec change (15 min)
 
-- [x] `openspec/changes/2026-07-15-oideachais-university-deep-extraction-v1/proposal.md`
+- [x] `openspec/changes/2026-07-15-cianfhoghlaim-university-deep-extraction-v1/proposal.md`
       — explains the 8 requirements + the 5 DLT sources + the
       BAML extension + the 1 defs.yaml.
-- [x] `openspec/changes/2026-07-15-oideachais-university-deep-extraction-v1/tasks.md`
+- [x] `openspec/changes/2026-07-15-cianfhoghlaim-university-deep-extraction-v1/tasks.md`
       — this file.
-- [x] `openspec/changes/2026-07-15-oideachais-university-deep-extraction-v1/specs/
-      oideachais-university-deep-extraction/spec.md` — MODIFIED delta
+- [x] `openspec/changes/2026-07-15-cianfhoghlaim-university-deep-extraction-v1/specs/
+      cianfhoghlaim-university-deep-extraction/spec.md` — MODIFIED delta
       with 1 ADDED Requirement "Phase 1 complete".
 
 ## 7. Commit + push (5 min)

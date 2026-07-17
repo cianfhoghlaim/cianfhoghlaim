@@ -1,7 +1,7 @@
 """CocoIndex v1 App for the Poland education pipeline.
 
 Embeds every Poland per-subject education row into the shared
-LanceDB table ``oideachais.european_nations.pol.education_chunks`` using the
+LanceDB table ``cianfhoghlaim.european_nations.pol.education_chunks`` using the
 canonical ``BAAI/bge-m3`` 1024-d multilingual embedder.
 
 Conforms to the R1–R4 conformance contract (imports ``shared_lifespan`` +
@@ -27,7 +27,7 @@ from cianfhoghlaim.cocoindex._lifespan import (
     shared_lifespan,
 )
 
-TABLE_NAME = "oideachais.european_nations.pol.education_chunks"
+TABLE_NAME = "cianfhoghlaim.european_nations.pol.education_chunks"
 TABLE_DESCRIPTION = (
     "Multilingual 1024-d BGE-M3 embeddings of every Poland per-subject "
     "education row."

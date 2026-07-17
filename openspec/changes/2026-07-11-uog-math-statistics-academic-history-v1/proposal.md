@@ -24,7 +24,7 @@ This change adds a typed, math-aware **Academic History Pipeline**:
    worked solutions, validation findings).
 2. Dagster assets wrapping the existing UoG filesystem scanner for the
    `mata` and `past` subdirs.
-3. A new `oideachais_academic_history` LanceDB table (via a v1
+3. A new `cianfhoghlaim_academic_history` LanceDB table (via a v1
    CocoIndex App) for semantic search across chunks + formulas.
 4. 8 new marimo notebooks under `notebooks/14_academic_history/`
    covering corpus overview, syllabus/assessment map, statistics
@@ -84,7 +84,7 @@ This change adds a typed, math-aware **Academic History Pipeline**:
 ### 4. CocoIndex v1 (`cocoindex/academic_history_flow.py`, NEW)
 
 - `AcademicHistoryApp` — embeds chunks + formulas into the
-  `oideachais_academic_history` LanceDB table using
+  `cianfhoghlaim_academic_history` LanceDB table using
   `BAAI/bge-m3` (1024-d) to match the existing leabharlann embedding
   model.
 - R1–R4 conforming (`from ._lifespan import shared_lifespan`,
@@ -128,7 +128,7 @@ health banner, openspec cross-reference footer, and CLI dual-mode.
   `search_my_formulas`).
 - Wires through the canonical `MemoryBackend` Protocol via
   `get_default_backend()`.
-- Per-user Cognee dataset `oideachais_student_<id>_history`.
+- Per-user Cognee dataset `cianfhoghlaim_student_<id>_history`.
 
 ### 8. Generic bring-your-own-academic-history template
 
@@ -143,8 +143,8 @@ health banner, openspec cross-reference footer, and CLI dual-mode.
 ## Dependencies
 
 `Blocked by: none`
-`Blocked by (soft): 2026-07-15-oideachais-leabharlann-v1`
-`Blocked by (soft): 2026-07-15-oideachais-university-deep-extraction-v1`
+`Blocked by (soft): 2026-07-15-cianfhoghlaim-leabharlann-v1`
+`Blocked by (soft): 2026-07-15-cianfhoghlaim-university-deep-extraction-v1`
 `Blocked by (soft): 2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1`
 `Affected repos: cianfhoghlaim, leabharlann`
 ```
@@ -173,7 +173,7 @@ sibling `leabharlann` repo. No commits are made to `leabharlann`. A
 - All BAML functions compile (`baml-cli check` exit 0)
 - New Dagster defs YAML files parse (`dg check yaml` exit 0)
 - 8 new marimo notebooks render without errors in headless mode
-- Test suite (`tests/_oideachais/test_academic_history_pipeline.py`)
+- Test suite (`tests/_cianfhoghlaim/test_academic_history_pipeline.py`)
   passes (10+ test cases covering BAML extraction, validation,
   asset registration, notebook parse)
 - Privacy gate (`INCLUDE_IDENTITY_RECORDS`) verified to default-off

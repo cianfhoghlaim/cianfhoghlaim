@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.guernsey.medicine.health_social_care — States of Guernsey Health & Social Care.
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.guernsey.medicine.health_social_care — States of Guernsey Health & Social Care.
 
 Source: `https://www.gov.gg/health-social-care` (States of Guernsey).
 Per

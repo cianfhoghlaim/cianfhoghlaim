@@ -61,9 +61,9 @@ in KCG) and the data in Parquet files in object storage.
 MotherDuck reads the catalog + files as one logical database.
 
 ```sql
-ATTACH 'ducklake:postgres://lakehouse-postgres:5432/oideachais_catalog
-        ?data_path=s3://ducklake/cianfhoghlaim/' AS oideachais_ducklake;
-USE oideachais_ducklake;
+ATTACH 'ducklake:postgres://lakehouse-postgres:5432/cianfhoghlaim_catalog
+        ?data_path=s3://ducklake/cianfhoghlaim/' AS cianfhoghlaim_ducklake;
+USE cianfhoghlaim_ducklake;
 ```
 
 Pros: ACID transactions, schema evolution, time-travel queries,
@@ -137,7 +137,7 @@ content is captured in this section.
 
 The `motherduck-build-data-pipeline` skill's content is captured
 here. For DLT-specific ingestion patterns, see
-`dlt/SKILL.md` and `oideachais-storage/SKILL.md`.
+`dlt/SKILL.md` and `cianfhoghlaim-storage/SKILL.md`.
 
 ## Partner / multi-tenant delivery
 
@@ -163,7 +163,7 @@ multiple clients:
 - `motherduck-data-modeling/SKILL.md` — schema + ingestion
 - `motherduck-analytics/SKILL.md` — SQL + Dives + dashboards
 - `motherduck-connections/SKILL.md` — wiring (Postgres endpoint, MCP)
-- `oideachais-storage/SKILL.md` — the KCG DuckLake-on-MotherDuck
+- `cianfhoghlaim-storage/SKILL.md` — the KCG DuckLake-on-MotherDuck
   storage mental model
 
 ## Cross-references

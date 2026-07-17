@@ -64,7 +64,7 @@
 
 - [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/proposal.md`
 - [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/tasks.md`
-- [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/specs/oideachais-marimo-dashboards/spec.md`
+- [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md`
       (MODIFIED delta — adds R-Phase-3 requirement)
 
 ## 8. Commit + push

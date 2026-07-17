@@ -147,7 +147,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
       diagram (port of `_generate_mermaid_diagram`); writes 1 row to
       `repo_arch_docs` LanceDB table per `(repo_path, git_sha, repo_type)`
       and emits a `.arch.md` file at
-      `oideachais/repo_arch_docs/<repo_path_safe>_<git_sha>.md`.
+      `cianfhoghlaim/repo_arch_docs/<repo_path_safe>_<git_sha>.md`.
 
 - [ ] 4.4 Create the L3 Component `defs.yaml` + `_assets.py` (1 Dagster
       asset: `codebase_architecture_docs` — the stub-named one already
@@ -156,7 +156,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
 - [ ] 4.5 End-to-end smoke test: run the App on the cianfhoghlaim repo
       with the current `HEAD` SHA; assert a row is written to
       `repo_arch_docs` + a `.arch.md` file is emitted at
-      `oideachais/repo_arch_docs/cianfhoghlaim_<sha>.md`. Inspect the
+      `cianfhoghlaim/repo_arch_docs/cianfhoghlaim_<sha>.md`. Inspect the
       `.arch.md` for the 4 sections + the Mermaid diagram.
 
 - [ ] 4.6 Quality gate: same as Phase 1.
@@ -210,7 +210,7 @@ primitives (`@coco.fn(memo=True)` + `ContextKey`).
       `multimedia_kg`, `package_changelog`, `codebase_git_history`,
       `media_local`, `repo_arch_docs`. One file per dataset under
       `cognify/datasets/`, following the existing
-      `oideachais_cognify_*` pattern.
+      `cianfhoghlaim_cognify_*` pattern.
 
 - [ ] 6.5 Create `notebooks/multimodal_code_and_media_intel.py`
       — marimo mission-control dashboard over the 5 new LanceDB tables +

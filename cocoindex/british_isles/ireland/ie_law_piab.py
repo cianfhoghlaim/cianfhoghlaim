@@ -6,7 +6,7 @@ LanceDB. This is the PIAB-specific app — one v1-conformant App per
 source (vs the absorbed `ireland_legal_embedding.py` which unifies all
 5 into one table).
 
-R1-R4 v1 conformance contract (per the `oideachais-cocoindex-v1` skill):
+R1-R4 v1 conformance contract (per the `cianfhoghlaim-cocoindex-v1` skill):
 
 - R1 — `from ._lifespan import shared_lifespan` (this module)
 - R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
@@ -15,9 +15,9 @@ R1-R4 v1 conformance contract (per the `oideachais-cocoindex-v1` skill):
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim) per the BIEP v1 spec.
-LanceDB table: `oideachais.law.ie.piab_chunks`.
+LanceDB table: `cianfhoghlaim.law.ie.piab_chunks`.
 
-Source: `oideachais.law.ie.piab_pages` + `oideachais.law.ie.piab_forms`
+Source: `cianfhoghlaim.law.ie.piab_pages` + `cianfhoghlaim.law.ie.piab_forms`
 DuckLake tables (read via the canonical `duckdb.connect(...)` pattern).
 
 Reference: openspec/changes/archive/2026-07-07-finalize-v4-landing/
@@ -61,8 +61,8 @@ from ._lifespan import (  # noqa: E402, F401
 
 # Source DuckLake tables (the 2 PIAB-mirrored extraction tables)
 PIAB_DUCKLAKE_TABLES: dict[str, str] = {
-    "piab_pages": "oideachais.law.ie.piab_pages",
-    "piab_forms": "oideachais.law.ie.piab_forms",
+    "piab_pages": "cianfhoghlaim.law.ie.piab_pages",
+    "piab_forms": "cianfhoghlaim.law.ie.piab_forms",
 }
 
 
@@ -78,7 +78,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         logger.warning("duckdb_not_available_for_piab_embedding")
         return []
 
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -196,7 +196,7 @@ if COCOINDEX_AVAILABLE:
         """App entry point — called by `cocoindex update`."""
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name="oideachais.law.ie.piab_chunks",
+            table_name="cianfhoghlaim.law.ie.piab_chunks",
             table_schema=await lancedb.TableSchema.from_class(
                 PIABChunk,
                 primary_key=["chunk_id"],
@@ -240,7 +240,7 @@ async def search_piab(
         from cianfhoghlaim.lancedb.search import semantic_search
 
         result = await semantic_search(
-            table="oideachais.law.ie.piab_chunks",
+            table="cianfhoghlaim.law.ie.piab_chunks",
             query=query,
             top_k=limit,
         )
