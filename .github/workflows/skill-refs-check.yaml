@@ -1,0 +1,28 @@
+name: skill-refs-check
+on: [pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: fail on sruth/ PATH references
+        run: |
+          if grep -rE "sruth/(cianchoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" .agents/skills/ docs/ 2>/dev/null; then
+            echo "ERROR: Found legacy sruth/ PATH references — run the P3 sed migration"
+            exit 1
+          fi
+          echo "OK: no legacy sruth/ PATH references in skills/docs"
+
+      - name: croilar-devtools lives at canonical path
+        run: |
+          if [ ! -f "agents/api/_croilar_convex/devtools.ts" ]; then
+            echo "ERROR: croilar-devtools not at canonical path"
+            exit 1
+          fi
+          if [ -d "agents/_croilar" ]; then
+            echo "ERROR: agents/_croilar/ should be deleted"
+            exit 1
+          fi
+          echo "OK: croilar-devtools at canonical path"
