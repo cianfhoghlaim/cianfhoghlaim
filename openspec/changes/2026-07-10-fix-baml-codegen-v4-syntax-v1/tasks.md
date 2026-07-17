@@ -53,7 +53,7 @@
 - [x] **6.1** Create `openspec/changes/2026-07-10-fix-baml-codegen-v4-syntax-v1/`
 - [x] **6.2** Write `proposal.md` (the 17 files + regex + scope)
 - [x] **6.3** Write `tasks.md` (this file)
-- [x] **6.4** Write `specs/oideachais-baml-schemas/spec.md` delta
+- [x] **6.4** Write `specs/cianfhoghlaim-baml-schemas/spec.md` delta
       (ADDED 2 Requirements, 16 → 18 total)
 - [x] **6.5** Run `openspec validate 2026-07-10-fix-baml-codegen-v4-syntax-v1 --strict`
       — must pass before commit

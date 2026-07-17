@@ -1,9 +1,9 @@
-# 2026-07-15-oideachais-leabharlann-v1
+# 2026-07-15-cianfhoghlaim-leabharlann-v1
 
 ## Why
 
-The `oideachais-leabharlann` capability (21 requirements under
-`openspec/specs/oideachais-leabharlann/spec.md`) defines the
+The `cianfhoghlaim-leabharlann` capability (21 requirements under
+`openspec/specs/cianfhoghlaim-leabharlann/spec.md`) defines the
 end-to-end personal + academic archive pipeline:
 
 - **4 DLT sources** at `dlt/filesystem/` —
@@ -59,7 +59,7 @@ end-to-end personal + academic archive pipeline:
   routing via the `Default` client (minimax-m3 on the coding plan
   API per commit `667635dfd`).
 
-This change ships Pair 2 of the oideachais-pipeline picks
+This change ships Pair 2 of the cianfhoghlaim-pipeline picks
 (ingestion + consumption lifecycle) and lands the 21 requirements
 end-to-end with 1 new ADDED requirement summarising Phase 1
 completion.
@@ -72,7 +72,7 @@ completion.
    sub-corpora) + `ExtractLeabharlannDoc(text, file_name, subcorpus)`
    using the `Default` BAML client.
 
-2. **1 ADDED requirement** on the `oideachais-leabharlann` spec —
+2. **1 ADDED requirement** on the `cianfhoghlaim-leabharlann` spec —
    "Phase 1 complete: 21 requirements all functional end-to-end;
    all 4 DLT sources + 1 Gemini source + 3 v1 CocoIndex Apps +
    Dagster asset group + full-stack demo + directory-watch sensor
@@ -93,7 +93,7 @@ completion.
 
 `Blocked by: none`
 `Blocked by (soft): 2026-07-13-v6-drift-remediation-final-v1
-                   (lands the oideachais-pipeline spec; the spec
+                   (lands the cianfhoghlaim-pipeline spec; the spec
                    delta format and dagster fixture patterns are
                    inherited from that change)`
 `Affected repos: cianfhoghlaim` (single-repo change)

@@ -23,7 +23,7 @@ Located at `infrastructure/dagger/`. Two submodules:
 | Pipeline | What it does | When to use |
 |:--|:--|:--|
 | **`build-image`** | Build a single OCI image from a `Dockerfile` | `dagger call build-image --source ./path` |
-| **`build-monorepo`** | Build all workspace images (oideachais, tuatha, meaisínfhoghlaim, croilar, oideachais-web) | `dagger call build-monorepo` |
+| **`build-monorepo`** | Build all workspace images (oideachais, tuatha, meaisínfhoghlaim, croilar, cianfhoghlaim-web) | `dagger call build-monorepo` |
 | **`deploy-stack`** | Deploy a single Docker Compose stack to a target host via Komodo | `dagger call deploy-stack --stack oideachais --host bunchloch` |
 | **`validate-infra`** | Run `stack-doctor` + `komodo-validate` + `pulumi-preview` against the current infra | `dagger call validate-infra` |
 

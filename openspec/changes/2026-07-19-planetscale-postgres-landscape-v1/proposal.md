@@ -51,11 +51,11 @@ openspec/changes/2026-07-19-planetscale-postgres-landscape-v1/
     ├── dagster-5-layer-component-architecture/spec.md            # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── croilar-data-engineering/spec.md                          # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── indexing-and-cognition/spec.md                            # MODIFIED +R-PlanetScalePostgresCentralisation
-    ├── oideachais-cognify-knowledge-graph/spec.md                # MODIFIED +R-PlanetScalePostgresCentralisation
+    ├── cianfhoghlaim-cognify-knowledge-graph/spec.md                # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── meaisinfhoghlaim-platform/spec.md                         # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── agent-registry/spec.md                                    # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── agentic-frontend-frameworks/spec.md                       # MODIFIED +R-PlanetScalePostgresCentralisation
-    ├── oideachais-pipeline/spec.md                               # MODIFIED +R-PlanetScalePostgresCentralisation
+    ├── cianfhoghlaim-pipeline/spec.md                               # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── croilar-portfolio/spec.md                                 # MODIFIED +R-PlanetScalePostgresCentralisation
     ├── documentation/spec.md                                     # MODIFIED +R-PlanetScalePostgresCentralisation
     └── dagger-pipelines/spec.md                                  # MODIFIED +R-PlanetScalePostgresCentralisation
@@ -110,7 +110,7 @@ This is the canonical output of the landscape analysis. Komodo is entirely defer
 - `openspec/specs/planetscale-postgres-data-strategy/spec.md` — NEW umbrella spec (canonical DB strategy)
 - `openspec/specs/infrastructure-stacks/spec.md` — the 94-stack catalogue (cross-referenced)
 - `openspec/architecture-decisions/0005-planetscale-postgres-centralisation.md` — NEW ADR (canonical record)
-- `openspec/specs/oideachais-pipeline/spec.md` — the main 50-req spec (50reqs ship boundary)
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — the main 50-req spec (50reqs ship boundary)
 
 ## Dependencies
 

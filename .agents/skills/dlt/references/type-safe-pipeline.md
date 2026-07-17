@@ -85,7 +85,7 @@ def primary_outcomes(pdf_path: str):
 pipeline = dlt.pipeline(
     pipeline_name="ireland_primary",
     destination="ducklake",
-    dataset_name="oideachais.education.ie",
+    dataset_name="cianfhoghlaim.education.ie",
 )
 load_info = pipeline.run(primary_outcomes("ncca_primary.pdf"))
 ```
@@ -93,7 +93,7 @@ load_info = pipeline.run(primary_outcomes("ncca_primary.pdf"))
 ## Layer 4: oRPC contract
 
 ```typescript
-// web/apps/oideachais-web/src/server/contracts/curriculum.ts
+// web/apps/cianfhoghlaim-web/src/server/contracts/curriculum.ts
 import { oc } from "@orpc/contract";
 import { z } from "zod";
 
@@ -107,7 +107,7 @@ export const listPrimaryOutcomes = oc
 ```
 
 ```python
-# web/apps/oideachais-web/src/server/router.py
+# web/apps/cianfhoghlaim-web/src/server/router.py
 from cianfhoghlaim.web.src.server.contracts.curriculum import listPrimaryOutcomes
 
 @router.handle(listPrimaryOutcomes)
@@ -119,10 +119,10 @@ async def handle_list_primary_outcomes(input: dict) -> list[dict]:
 ## Layer 5: MCP tool
 
 ```python
-# web/apps/oideachais-mcp-filesystem/curriculum.py
+# web/apps/cianfhoghlaim-mcp-filesystem/curriculum.py
 from fastmcp import FastMCP
 
-mcp = FastMCP("oideachais-curriculum")
+mcp = FastMCP("cianfhoghlaim-curriculum")
 
 @mcp.tool
 def list_primary_outcomes(stage: str) -> list[dict]:
@@ -132,11 +132,11 @@ def list_primary_outcomes(stage: str) -> list[dict]:
 
 ## KCG usage
 
-- `oideachais-leabharlann` spec — the leabharlann books + zotero +
+- `cianfhoghlaim-leabharlann` spec — the leabharlann books + zotero +
   takeout corpora all flow through this pattern
-- `oideachais-baml-schemas` spec — the 23+ BAML files are the
+- `cianfhoghlaim-baml-schemas` spec — the 23+ BAML files are the
   schema layer
-- `oideachais-semantic-search` spec — the FastAPI route at
+- `cianfhoghlaim-semantic-search` spec — the FastAPI route at
   `/search/semantic` is the oRPC layer
 
 ## Reference
@@ -147,5 +147,5 @@ def list_primary_outcomes(stage: str) -> list[dict]:
   dltHub docs at <https://dlthub.com/blog/dlt-baml-orpc-mcp>
 - The `baml` skill for the BAML layer
 - The `orpc` skill for the oRPC layer
-- The `mcp` skill (or `oideachais-mcp-filesystem` workspace) for
+- The `mcp` skill (or `cianfhoghlaim-mcp-filesystem` workspace) for
   the MCP tool layer

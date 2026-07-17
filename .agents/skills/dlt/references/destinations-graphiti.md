@@ -82,7 +82,7 @@ all_facts = await graphiti.get_all_facts()
 
 - `cocoindex/learning_outcome_graph.py` —
   the CocoIndex v1 App that feeds Graphiti
-- `oideachais-cognify-knowledge-graph` spec — the cross-archive
+- `cianfhoghlaim-cognify-knowledge-graph` spec — the cross-archive
   knowledge graph that uses Graphiti's bi-temporal model for
   curriculum changes
 

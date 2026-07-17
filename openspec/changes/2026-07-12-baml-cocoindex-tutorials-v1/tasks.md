@@ -93,7 +93,7 @@
       `specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md` (1
       MODIFIED delta adding 2 ADDED requirements)
 - [x] **7.5** Write
-      `specs/oideachais-marimo-dashboards/spec.md` (1 ADDED
+      `specs/cianfhoghlaim-marimo-dashboards/spec.md` (1 ADDED
       requirement for the 5 tutorial notebooks)
 
 ## 8. Validate

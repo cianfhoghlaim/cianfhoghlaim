@@ -12,7 +12,7 @@ change. Sensors are now emitted by:
   sensor when the health check returns healthy=False)
 - Upstream package monitoring (the breaking-change sensor in
   ``upstream_breaking_change_sensor.py``), which polls
-  ``md:oideachais_upstream.upstream_monitoring`` for package-level
+  ``md:cianfhoghlaim_upstream.upstream_monitoring`` for package-level
   breaking changes.
 
 New sensors should normally be added as L5 CelticAgentOpsComponent

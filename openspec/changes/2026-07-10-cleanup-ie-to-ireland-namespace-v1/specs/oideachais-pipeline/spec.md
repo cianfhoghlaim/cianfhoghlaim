@@ -12,11 +12,11 @@ quadrant MUST use the canonical post-v4 namespaces:
   (replacing the legacy `cianfhoghlaim.dlt.british_isles.ie.law.<source>`)
 - **BAML** — `cianfhoghlaim.baml.education.law.<schema>`
   (replacing the legacy `cianfhoghlaim.baml.ie.law.<schema>`)
-- **Skills** — the `oideachais-ireland-education-law` skill (when added)
+- **Skills** — the `cianfhoghlaim-ireland-education-law` skill (when added)
   references the canonical namespaces above
 
 The legacy `dlt/british_isles/ie/` + `baml/ie/` trees SHALL NOT exist
-on disk. There is no `oideachais.dlt.british_isles.ie.*` import path
+on disk. There is no `cianfhoghlaim.dlt.british_isles.ie.*` import path
 in the active codebase.
 
 #### Scenario: A consumer imports the canonical Ireland/law DLT sources

@@ -26,7 +26,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 **Current State**: Dark Celtic theme (emerald/slate), 3D game client, AG-UI streaming components
 **Needs**: Enhanced HUD design, quest tracking, skill trees, immersive menu systems
 
-### 2. oideachais/ - Irish Education Platform
+### 2. cianfhoghlaim/ - Irish Education Platform
 
 **Stack**: TanStack Start + Vite + Convex + CopilotKit
 **Current State**: Three apps (UI, Web Portal, Dashboard), Generative UI pattern, Irish TTS
@@ -68,7 +68,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 
 - `crypteolas/` - TVL charts, protocol analytics
 - `aleyum/` - Portal monitoring dashboards
-- `oideachais/` - Curriculum data exploration
+- `cianfhoghlaim/` - Curriculum data exploration
 
 **Design Tokens**:
 
@@ -91,7 +91,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 
 **Apply to**:
 
-- `oideachais/` - Student progress dashboards
+- `cianfhoghlaim/` - Student progress dashboards
 - `aleyum/` - Infrastructure monitoring
 - All projects - Button depth styling (`border-b-4` active states)
 
@@ -118,7 +118,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 **Apply to**:
 
 - `tuath/` - XP system, quest progression, Celtic mascot (Púca?)
-- `oideachais/` - Irish learning path, streak mechanics
+- `cianfhoghlaim/` - Irish learning path, streak mechanics
 - All educational - Bite-sized lessons, immediate feedback
 
 **Design Tokens**:
@@ -143,7 +143,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 
 **Apply to**:
 
-- `oideachais/` - Curriculum progression, mastery tracking
+- `cianfhoghlaim/` - Curriculum progression, mastery tracking
 - `tuath/` - Skill unlock visualization
 - All educational - Content cards, progress visualization
 
@@ -266,7 +266,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 | XP/Progression  | Duolingo (streaks, XP)       | Khan (mastery levels)          |
 | Menu Aesthetics | Clair Obscur (material lib)  | Hades (diegetic)               |
 
-### oideachais/ (Education Platform)
+### cianfhoghlaim/ (Education Platform)
 
 | Feature       | Primary Inspiration        | Secondary            |
 | ------------- | -------------------------- | -------------------- |

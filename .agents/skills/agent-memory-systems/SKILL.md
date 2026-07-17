@@ -80,7 +80,7 @@ For KCG agents, the canonical pattern is:
 
 ## Pair this skill with
 
-- `oideachais-storage/SKILL.md` — the KCG storage mental model
+- `cianfhoghlaim-storage/SKILL.md` — the KCG storage mental model
   (which backends store what)
 - `cognee/SKILL.md` — the Cognee detail
 - `graphiti/SKILL.md` — the Graphiti detail
@@ -94,4 +94,4 @@ For KCG agents, the canonical pattern is:
 - [LanceDB docs](https://lancedb.github.io/lancedb)
 - [FalkorDB docs](https://docs.falkordb.com)
 - [Memgraph docs](https://memgraph.com/docs)
-- [oideachais-cognify-knowledge-graph spec](.agents/skills/oideachais-storage/SKILL.md)
+- [cianfhoghlaim-cognify-knowledge-graph spec](.agents/skills/cianfhoghlaim-storage/SKILL.md)

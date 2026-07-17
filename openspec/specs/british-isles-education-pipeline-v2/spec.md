@@ -101,7 +101,7 @@ RAGAS `biiep_extraction_consensus` metric:
 - **Path 4** (gemma-4-26B-A4B) — page-level image → gemma-4-26B-A4B raw response
 
 Per-path DuckLake tables follow the convention
-`oideachais.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`:
+`cianfhoghlaim.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`:
 
 - `.baml_canonical` (Path 1)
 - `.unstract_json` (Path 2)
@@ -142,7 +142,7 @@ All 4 notebooks SHALL:
 The system SHALL also provide:
 
 - **3 Hono API endpoints** at `web/hono-api/src/routes/biep-v2/{lc,jc,england}.ts`
-- **1 TanStack Start public page** at `web/apps/oideachais-web/src/routes/biep-v2/index.tsx`
+- **1 TanStack Start public page** at `web/apps/cianfhoghlaim-web/src/routes/biep-v2/index.tsx`
 
 #### Scenario: Full audit trail in 03_ocr_ensemble_audit.py
 
@@ -170,7 +170,7 @@ The sensor MUST:
 - Resolve to the per-board DAG asset key
 - Trigger the `england_england_re_extraction_job`
 - Emit a Langfuse trace event
-- Write an audit row to `oideachais.education.british_isles.england.changes`
+- Write an audit row to `cianfhoghlaim.education.british_isles.england.changes`
 - Fire Slack + email alerts
 
 #### Scenario: AQA GCSE mathematics spec change re-runs the ensemble
@@ -193,12 +193,12 @@ The sensor MUST:
 - [`meaisinfhoghlaim-ocr-htr`](../meaisinfhoghlaim-ocr-htr/spec.md) —
   the 26-model 6-backend OCR/VLM registry that v2 extends (adds Docling +
   Unstract backends + ensemble consensus requirement)
-- [`oideachais-marimo-dashboards`](../oideachais-marimo-dashboards/spec.md) —
+- [`cianfhoghlaim-marimo-dashboards`](../cianfhoghlaim-marimo-dashboards/spec.md) —
   the marimo dashboard capability that v2 extends (adds 4 BIEP v2 notebooks)
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) —
   the BAML extraction library that v2 extends with 9 new BAML files
   (4 JC + 5 England)
-- [`oideachais-cocoindex-v1-migration`](../oideachais-cocoindex-v1-migration/spec.md) —
+- [`cianfhoghlaim-cocoindex-v1-migration`](../cianfhoghlaim-cocoindex-v1-migration/spec.md) —
   the R1–R4 v1 conformance contract the 4 new CocoIndex Apps obey
 - [`dagster-5-layer-component-architecture`](../dagster-5-layer-component-architecture/spec.md) —
   the 5-layer Dagster component architecture that all 154 BIEP v2 assets obey

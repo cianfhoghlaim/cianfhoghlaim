@@ -18,7 +18,7 @@ R1–R4 v1 conformance contract:
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim) per the BIEP v1 spec.
-LanceDB table: `oideachais.lc.<subject>.<level>_<language>` — preserves
+LanceDB table: `cianfhoghlaim.lc.<subject>.<level>_<language>` — preserves
 the exact asset key shape from the deprecated per-subject files.
 
 The 6 LC subjects (per `lc_subject_config.yaml`):
@@ -204,7 +204,7 @@ if COCOINDEX_AVAILABLE:
         """Embed one LC subject's corpus into the per-subject LanceDB table."""
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name=f"oideachais.lc.{subject}.{level}_{language}",
+            table_name=f"cianfhoghlaim.lc.{subject}.{level}_{language}",
             table_schema=await lancedb.TableSchema.from_class(
                 SubjectChunk, primary_key=["chunk_id"]
             ),
@@ -274,7 +274,7 @@ async def query_lc_subject(
     from cianfhoghlaim.lancedb.search import semantic_search
 
     return await semantic_search(
-        table=f"oideachais.lc.{subject}.{level}_{language}",
+        table=f"cianfhoghlaim.lc.{subject}.{level}_{language}",
         query=query,
         top_k=top_k,
     )

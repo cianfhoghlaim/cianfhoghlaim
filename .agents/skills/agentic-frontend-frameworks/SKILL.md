@@ -1,6 +1,6 @@
 ---
 name: agentic-frontend-frameworks
-description: The umbrella skill for building **agentic web frontends** in the Cianfhoghlaim stack — stitches TanStack Start + CopilotKit + AG-UI + Convex + Hono + oRPC + Cloudflare + BAML / Pydantic AI / Agno / Google ADK into a coherent agent-driven web app. Use when designing a new agentic web surface (a tutor, a research UI, a knowledge-graph explorer, a portfolio analyser), wiring the AG-UI protocol between an agent runtime and a CopilotKit React UI, picking the right backend (BAML for typed structured outputs, Pydantic AI for Pydantic-native agent graphs, Agno for multi-agent orchestration, Google ADK for Google-AI-native workflows), or asking "how do I add an agent to a cianfhoghlaim/ app?", "which CopilotKit component streams AG-UI events?", "what is the canonical 4-surface layout?". The 4 canonical surfaces are `web/apps/oideachais-web/`, `web/apps/croilar-web/`, `web/apps/croilar-portal/`, and `web/apps/tuatha-ui/` — the same architecture diagram maps onto each. Plus a 5th cross-cutting **agent-IDE** surface: OpenChamber (`infrastructure/stacks/openchamber/`, OpenCode web/desktop UI with bundled `opencode-ai`, port 3000, deployed to `openchamber.cianfhoghlaim.ie` on `arm1-oci`).
+description: The umbrella skill for building **agentic web frontends** in the Cianfhoghlaim stack — stitches TanStack Start + CopilotKit + AG-UI + Convex + Hono + oRPC + Cloudflare + BAML / Pydantic AI / Agno / Google ADK into a coherent agent-driven web app. Use when designing a new agentic web surface (a tutor, a research UI, a knowledge-graph explorer, a portfolio analyser), wiring the AG-UI protocol between an agent runtime and a CopilotKit React UI, picking the right backend (BAML for typed structured outputs, Pydantic AI for Pydantic-native agent graphs, Agno for multi-agent orchestration, Google ADK for Google-AI-native workflows), or asking "how do I add an agent to a cianfhoghlaim/ app?", "which CopilotKit component streams AG-UI events?", "what is the canonical 4-surface layout?". The 4 canonical surfaces are `web/apps/cianfhoghlaim-web/`, `web/apps/croilar-web/`, `web/apps/croilar-portal/`, and `web/apps/tuatha-ui/` — the same architecture diagram maps onto each. Plus a 5th cross-cutting **agent-IDE** surface: OpenChamber (`infrastructure/stacks/openchamber/`, OpenCode web/desktop UI with bundled `opencode-ai`, port 3000, deployed to `openchamber.cianfhoghlaim.ie` on `arm1-oci`).
 ---
 
 # Agentic Frontend Frameworks (umbrella skill)
@@ -20,7 +20,7 @@ Use when you need to:
   human-in-the-loop) to a TanStack Start app"
 - "Add a new agent to the 4-agent Celtic Tutor system"
 - "Add MCP / A2UI / MCP-UI to an existing web surface"
-- "Understand the relationship between `web/apps/oideachais-web/`,
+- "Understand the relationship between `web/apps/cianfhoghlaim-web/`,
   `web/apps/croilar-web/`, `web/apps/croilar-portal/`, `web/apps/tuatha-ui/`"
 - "Explain the KCG agentic-web pattern to a new contributor"
 
@@ -45,7 +45,7 @@ monorepo:
 
 | # | Surface | Path | Quadrant | Primary agent |
 |:--|:--|:--|:--|:--|
-| 1 | **Oideachais Web** | `web/apps/oideachais-web/` | `oideachais` | Celtic Tutor (BAML) |
+| 1 | **Oideachais Web** | `web/apps/cianfhoghlaim-web/` | `oideachais` | Celtic Tutor (BAML) |
 | 2 | **Croílár Web** | `web/apps/croilar-web/` | `croilar` | Portfolio Research Assistant (Pydantic AI) |
 | 3 | **Croílár Portal** | `web/apps/croilar-portal/` | `croilar` | Admin / Curatorial Agent (Agno) |
 | 4 | **Tuatha UI** | `web/apps/tuatha-ui/` | `tuatha` | Quest Guide / Mythology Narrator (Google ADK) |
@@ -154,7 +154,7 @@ re-renders the right component.
 
 ## The 4 canonical surfaces
 
-### 1. Oideachais Web (`web/apps/oideachais-web/`)
+### 1. Oideachais Web (`web/apps/cianfhoghlaim-web/`)
 
 - **Stack:** TanStack Start + CopilotKit + AG-UI +
   Cloudflare Workers
@@ -315,7 +315,7 @@ The full contract is in
   Langfuse / MLflow / RAGAS observability stack.
 - `openspec/specs/agentic-frontend-frameworks/spec.md` —
   the round-6 capability spec (this skill is the body).
-- `web/apps/oideachais-web/`, `web/apps/croilar-web/`,
+- `web/apps/cianfhoghlaim-web/`, `web/apps/croilar-web/`,
   `web/apps/croilar-portal/`, `web/apps/tuatha-ui/` — the 4 canonical
   surfaces.
 - `infrastructure/stacks/openchamber/` — the 5th

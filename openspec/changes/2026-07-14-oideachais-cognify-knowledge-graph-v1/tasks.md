@@ -3,7 +3,7 @@
 ## 1. Read the spec + audit the existing infrastructure
 
 - [x] **1.1** Read
-      `openspec/specs/oideachais-cognify-knowledge-graph/spec.md`
+      `openspec/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md`
       and identified the 9 requirements: R1 5-stage cross-stage KG,
       R2 site-analysis cognify, R3 leabharlann cognify (3 corpora),
       R4 cross-archive FalkorDB edges, R5 cross-archive graph query
@@ -157,13 +157,13 @@
 ## 7. Write the openspec change (45 min)
 
 - [x] **7.1** Created
-      `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/proposal.md`
+      `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/proposal.md`
       (this file's parent directory).
 - [x] **7.2** Created
-      `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/tasks.md`
+      `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/tasks.md`
       (this file).
 - [x] **7.3** Created
-      `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/specs/oideachais-cognify-knowledge-graph/spec.md`
+      `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md`
       (1 ADDED requirement: 9 requirements all functional; 5 cognify
       stages + 3 leabharlann cognify + 3 FalkorDB edges + 1 marimo
       notebook all working end-to-end).
@@ -171,7 +171,7 @@
 ## 8. Validate + commit + push (5 min)
 
 - [x] **8.1** Validate the openspec change with
-      `openspec validate 2026-07-14-oideachais-cognify-knowledge-graph-v1 --strict`.
+      `openspec validate 2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1 --strict`.
 - [x] **8.2** Commit the 14 new files + 1 modified file (cli.py)
       with the canonical message and push to
       `origin/pick-4-biep-v1` (NOT `main`).

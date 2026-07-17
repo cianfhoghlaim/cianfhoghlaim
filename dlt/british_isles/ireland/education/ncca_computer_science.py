@@ -210,7 +210,7 @@ __all__ = [
 
 def create_ncca_computer_science_pipeline(
     pipeline_name: str = "ncca_computer_science_lc6",
-    dataset_name: str = "oideachais.leaving_cert.computer_science",
+    dataset_name: str = "cianfhoghlaim.leaving_cert.computer_science",
 ) -> Any:
     """Return a configured dlt pipeline for the BIEP v1 computer_science NCCA crawl.
 

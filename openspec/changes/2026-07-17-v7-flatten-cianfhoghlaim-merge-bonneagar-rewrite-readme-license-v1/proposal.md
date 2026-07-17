@@ -105,7 +105,7 @@ openspec changes get a scripted rewrite to reflect the flat layout.
 Delete from `origin`:
 - `origin/feat/*` (12 branches — all shipped)
 - `origin/pick-{1,2,3,6,7,8,9,10}-*` (8 branches — shipped)
-- `origin/q3-2026-oideachais-consolidation` (rolled into main)
+- `origin/q3-2026-cianfhoghlaim-consolidation` (rolled into main)
 
 Keep on `origin`:
 - `origin/main`, `origin/pick-4-biep-v1`, `origin/pick-5b-bonneagar-v5-continuation`

@@ -3,8 +3,8 @@
 # L3 CelticModelLifecycleComponent for the LC5 cognify + Graphiti
 # temporal episode streams + FalkorDB cross-subject graph.
 #
-# The 5 datasets created: oideachais_chemistry / oideachais_computer_science
-# / oideachais_gaeilge / oideachais_geography / oideachais_mathematics.
+# The 5 datasets created: cianfhoghlaim_chemistry / cianfhoghlaim_computer_science
+# / cianfhoghlaim_gaeilge / cianfhoghlaim_geography / cianfhoghlaim_mathematics.
 #
 # Per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent

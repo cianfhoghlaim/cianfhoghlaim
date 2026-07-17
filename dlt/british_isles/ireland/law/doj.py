@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.doj — Department of Justice (Ireland).
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law.doj — Department of Justice (Ireland).
 
 Source: `https://www.gov.ie/en/organisation/department-of-justice/`
 public service pages.

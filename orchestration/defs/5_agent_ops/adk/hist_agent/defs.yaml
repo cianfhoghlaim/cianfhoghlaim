@@ -18,7 +18,7 @@ attributes:
   langfuse_trace_tag: agent.hist
   langfuse_drop_smoke_spans: true
   cognify:
-    dataset: oideachais_lc_history
+    dataset: cianfhoghlaim_lc_history
     top_k: 5
     emit_on:
       - response_generated

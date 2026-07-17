@@ -104,7 +104,7 @@ app = marimo.App()
 
 @app.setup
 def setup_mcp():
-    mcp = FastMCP("oideachais-curriculum")
+    mcp = FastMCP("cianfhoghlaim-curriculum")
     return (mcp,)
 
 

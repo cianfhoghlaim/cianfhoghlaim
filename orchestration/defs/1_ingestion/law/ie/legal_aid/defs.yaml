@@ -8,7 +8,7 @@ attributes:
   automation_cron: "0 5 * * *"
   dlt_source: cianfhoghlaim.dlt.british_isles.ie.law.legal_aid.legal_aid_source
   destination_tables:
-    - oideachais.law.ie.legal_aid_pages
-    - oideachais.law.ie.legal_aid_forms
+    - cianfhoghlaim.law.ie.legal_aid_pages
+    - cianfhoghlaim.law.ie.legal_aid_forms
   fallback_resources:
     - stedding/ingest_queue/legalaidboard.ie/

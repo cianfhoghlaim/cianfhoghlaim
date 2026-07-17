@@ -2,7 +2,7 @@
 #
 # L1 ingestion cron asset for the **Ireland Tertiary 18+** DLT sources.
 #
-# Per the `oideachais-university-deep-extraction` spec — this is the
+# Per the `cianfhoghlaim-university-deep-extraction` spec — this is the
 # canonical Dagster cron asset for the 5 Tertiary DLT sources that
 # complete the K-12 → university pipeline:
 #
@@ -22,7 +22,7 @@
 # Walks the local `/stedding/ingest_queue/university/<area>/` cache
 # for each of the 5 sources. Honors `USE_LOCAL_SCRAPES=true`.
 #
-# Per openspec/changes/2026-07-15-oideachais-university-deep-extraction-v1/
+# Per openspec/changes/2026-07-15-cianfhoghlaim-university-deep-extraction-v1/
 
 # -----------------------------------------------------------------------------
 # Source 1: the 8 universities (TCD, UCD, UCC, UoG, UL, DCU, MU, RCSI)
@@ -48,8 +48,8 @@
       - ireland_university
       - institutions
     metadata:
-      openspec_change: 2026-07-15-oideachais-university-deep-extraction-v1
-      spec: oideachais-university-deep-extraction
+      openspec_change: 2026-07-15-cianfhoghlaim-university-deep-extraction-v1
+      spec: cianfhoghlaim-university-deep-extraction
       institutions:
         - ie-university-trinity
         - ie-university-ucd
@@ -85,8 +85,8 @@
       - ie_tu
       - technological_universities
     metadata:
-      openspec_change: 2026-07-15-oideachais-university-deep-extraction-v1
-      spec: oideachais-university-deep-extraction
+      openspec_change: 2026-07-15-cianfhoghlaim-university-deep-extraction-v1
+      spec: cianfhoghlaim-university-deep-extraction
       institutions:
         - ie-tu-dublin
         - ie-tu-munster
@@ -121,8 +121,8 @@
       - qqi
       - awards
     metadata:
-      openspec_change: 2026-07-15-oideachais-university-deep-extraction-v1
-      spec: oideachais-university-deep-extraction
+      openspec_change: 2026-07-15-cianfhoghlaim-university-deep-extraction-v1
+      spec: cianfhoghlaim-university-deep-extraction
       nfq_levels:
         - NFQ_6
         - NFQ_7
@@ -155,8 +155,8 @@
       - cao
       - applications
     metadata:
-      openspec_change: 2026-07-15-oideachais-university-deep-extraction-v1
-      spec: oideachais-university-deep-extraction
+      openspec_change: 2026-07-15-cianfhoghlaim-university-deep-extraction-v1
+      spec: cianfhoghlaim-university-deep-extraction
       cao_rounds:
         - R1
         - R2
@@ -197,7 +197,7 @@
       - further_education
       - apprenticeships
     metadata:
-      openspec_change: 2026-07-15-oideachais-university-deep-extraction-v1
-      spec: oideachais-university-deep-extraction
+      openspec_change: 2026-07-15-cianfhoghlaim-university-deep-extraction-v1
+      spec: cianfhoghlaim-university-deep-extraction
       etb_count: 16
       notes: "Ireland Tertiary (SOLAS Further Education) DLT source — covers the 16 Education and Training Boards (ETBs) + the SOLAS pathways (PLC / Apprenticeship / Youthreach / VTOS / Adult Literacy). Complements the 8 universities + 5 TUs by covering the vocational / PLC pathway."

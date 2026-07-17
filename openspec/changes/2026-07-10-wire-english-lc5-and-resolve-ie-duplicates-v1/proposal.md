@@ -49,7 +49,7 @@ Affected files:
 1. `dlt/british_isles/ireland/law/{citizensinformation,courts_ie,gov_ie_law,injuries_ie,workplace_relations}.py`
 2. `dlt/british_isles/ireland/education/law/{court_rules,courts,judgements,legal_aid,piab}.py`
 3. `dlt/british_isles/ireland/education/curriculum.py` (self-reference fix)
-4. `tests/_oideachais/dlt_sources/ie/education/test_curriculum_source_local_cache.py`
+4. `tests/_cianfhoghlaim/dlt_sources/ie/education/test_curriculum_source_local_cache.py`
 
 ## How
 
@@ -74,7 +74,7 @@ Single coordinated commit that:
 5. **Rewrite 11 importers** to point to `curriculum.py`.
 6. **OpenSpec artefacts** — `proposal.md` + `tasks.md` + 2 MODIFIED spec deltas
    on `british-isles-education-pipeline` (2 ADDED Requirements) and
-   `oideachais-pipeline` (1 ADDED + 1 REMOVED Requirement acknowledging the
+   `cianfhoghlaim-pipeline` (1 ADDED + 1 REMOVED Requirement acknowledging the
    `dlt/british_isles/ie/` cleanup done by Wave 1 commit `f554711a6`).
 
 ### EN handling: en-only at root, mirrors gaeilge
@@ -189,7 +189,7 @@ The single cross_subject_graphiti_stream asset completes the Graphiti fan-out.
 ## Cross-references
 
 - [`british-isles-education-pipeline`](../specs/british-isles-education-pipeline/spec.md) — the BIEP v1 flagship spec (already mentions English)
-- [`oideachais-pipeline`](../specs/oideachais-pipeline/spec.md) — the parent capability (gets a 1-REMOVED + 1-ADDED delta)
+- [`cianfhoghlaim-pipeline`](../specs/cianfhoghlaim-pipeline/spec.md) — the parent capability (gets a 1-REMOVED + 1-ADDED delta)
 - [`2026-07-10-fix-baml-codegen-v4-syntax-v1`](../2026-07-10-fix-baml-codegen-v4-syntax-v1/proposal.md) — sibling change that unlocked the baml_client codegen
 - [W1 ie→ireland cleanup commit `f554711a6`](../../../../../.git) — already removed the `dlt/british_isles/ie/` directory (this change's spec delta acknowledges the cleanup)
 - [T2 Phase 3+4 commit `9e97ba0ca`](../../../../../.git) — already wired NCCA/SEC/gov.ie/PDF download for the 6 subjects including English

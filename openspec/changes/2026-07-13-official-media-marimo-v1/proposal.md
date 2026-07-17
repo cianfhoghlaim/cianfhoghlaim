@@ -17,7 +17,7 @@ marimo dashboards**:
 
 - **R2** (TanStack Start `/official-media` route) is a TanStack concern,
   but the marimo view of the same data is missing.
-- **R3** (Cognee `oideachais_official_media` dataset) is a Cognify
+- **R3** (Cognee `cianfhoghlaim_official_media` dataset) is a Cognify
   concern, but the marimo view of the 4 edge types is missing.
 - **R4** (Cloudflare Workers + Container deployment) is a deployment
   concern, but the marimo cross-archive join (official-media × BLPIPA /

@@ -13,7 +13,7 @@ capability. The 5 dashboards SHALL:
 4. Render via `uv run marimo run --headless <file>` without runtime
    failure (the headless server should bind to a port and serve the
    notebook).
-5. Read data from `md:oideachais_official_media` (MotherDuck + DuckLake
+5. Read data from `md:cianfhoghlaim_official_media` (MotherDuck + DuckLake
    lakehouse) and fall back gracefully to a synthetic allowlist-derived
    dataset when the lakehouse is unreachable.
 6. Each dashboard SHALL render 3–5 altair visualisations

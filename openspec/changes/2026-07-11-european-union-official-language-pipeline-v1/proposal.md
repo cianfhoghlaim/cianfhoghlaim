@@ -82,7 +82,7 @@ Every DLT source honours `USE_LOCAL_SCRAPES=true` by reading from
 `region="european_union"`, `institution=<institution>`,
 `language ∈ {bg, hr, cs, da, nl, en, et, fi, fr, de, el, hu, ga, it,
 lv, lt, mt, pl, pt, ro, sk, sl, es, sv}`, and the canonical DuckLake
-namespace `oideachais.<domain>.european_union.<institution>`.
+namespace `cianfhoghlaim.<domain>.european_union.<institution>`.
 
 ### 3. New BAML schemas under `baml/european_union/`
 
@@ -107,7 +107,7 @@ mirroring `b.ExtractCurriculumSyllabus` from the BIEP v1 stack.
 
 `cocoindex/european_union_official_embedding.py` —
 embeds every EU document into a single shared LanceDB table
-`oideachais.eu.official_chunks` using `BAAI/bge-m3` (the canonical 1024-d
+`cianfhoghlaim.eu.official_chunks` using `BAAI/bge-m3` (the canonical 1024-d
 multilingual embedder).
 
 ### 5. New Dagster L1 assets
@@ -139,9 +139,9 @@ orchestration/defs/1_ingestion/european_union/
 
 - The existing British Isles files are NOT renamed (per the Phase 0
   contract — the new contract is forward-only).
-- The legacy `oideachais.*` namespace pattern is preserved for the EU
+- The legacy `cianfhoghlaim.*` namespace pattern is preserved for the EU
   institutional namespace
-  (`oideachais.<domain>.european_union.<institution>`).
+  (`cianfhoghlaim.<domain>.european_union.<institution>`).
 - The 24-language registry does NOT modify the existing
   `language_partitions` in `orchestration/partitions.py` (which lists
   the 6 Celtic languages). A parallel `eu_language_partitions`
@@ -173,11 +173,11 @@ Affected repos: cianfhoghlaim (single-repo change)
   the umbrella contract that this change obeys
 - [`british-isles-education-pipeline`](../../specs/british-isles-education-pipeline/spec.md) —
   the seed instance of the contract
-- [`oideachais-pipeline`](../../specs/oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../../specs/cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
-- [`oideachais-baml-schemas`](../../specs/oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../../specs/cianfhoghlaim-baml-schemas/spec.md) —
   the BAML cluster taxonomy
-- [`oideachais-marimo-dashboards`](../../specs/oideachais-marimo-dashboards/spec.md) —
+- [`cianfhoghlaim-marimo-dashboards`](../../specs/cianfhoghlaim-marimo-dashboards/spec.md) —
   the downstream marimo surface
 - [`motherduck`](../..) — the MotherDuck Dives + Flights surface
 - `.agents/skills/dlt/SKILL.md` — DLT conventions

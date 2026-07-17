@@ -5,9 +5,9 @@ Pick-8 Ireland/law — Dagster L2 (Materials) assets.
 operational-law sources) + 1 cross-source statute linkage asset.
 
 Pipeline:
-  L1 (DLT)  → oideachais.law.ie.<source>_*  (raw crawled pages)
-  L2 (BAML) → oideachais.law.ie.<source>_*  (extracted structured rows)
-  L3 (CocoIndex v1) → oideachais.law.ie.ie_law_<source>_chunks (LanceDB)
+  L1 (DLT)  → cianfhoghlaim.law.ie.<source>_*  (raw crawled pages)
+  L2 (BAML) → cianfhoghlaim.law.ie.<source>_*  (extracted structured rows)
+  L3 (CocoIndex v1) → cianfhoghlaim.law.ie.ie_law_<source>_chunks (LanceDB)
 
 Sources (Pick-8 scope):
   - piab         — Personal Injuries Assessment Board (PIABPage)
@@ -48,7 +48,7 @@ except ImportError:
     description="BAML ExtractPIABPage extraction (Pick-8 IE/law).",
 )
 def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractPIABPage → oideachais.law.ie.piab_pages.
+    """BAML ExtractPIABPage → cianfhoghlaim.law.ie.piab_pages.
 
     Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.piab`.
     """
@@ -61,7 +61,7 @@ def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
         return {"rows": 0, "baml_fn": "ExtractPIABPage"}
     context.log.info("running ExtractPIABPage extraction")
     # Real implementation would read from the L1 DuckLake table
-    # `oideachais.law.ie.piab_pages` and call b.ExtractPIABPage for
+    # `cianfhoghlaim.law.ie.piab_pages` and call b.ExtractPIABPage for
     # each row, writing the extracted Pydantic-typed rows to the L2
     # DuckLake table. Stubbed here to keep the asset import-safe.
     return {"rows": 0, "baml_fn": "ExtractPIABPage"}
@@ -72,7 +72,7 @@ def piab_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     description="BAML ExtractCourtForm extraction (Pick-8 IE/law).",
 )
 def courts_forms_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractCourtForm → oideachais.law.ie.courts_forms.
+    """BAML ExtractCourtForm → cianfhoghlaim.law.ie.courts_forms.
 
     Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.courts`.
     """
@@ -87,7 +87,7 @@ def courts_forms_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     description="BAML ExtractCourtFee extraction (Pick-8 IE/law).",
 )
 def court_fees_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractCourtFee → oideachais.law.ie.court_fees.
+    """BAML ExtractCourtFee → cianfhoghlaim.law.ie.court_fees.
 
     Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.courts`.
     """
@@ -102,7 +102,7 @@ def court_fees_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     description="BAML ExtractJudgement extraction (Pick-8 IE/law).",
 )
 def judgements_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractJudgement → oideachais.law.ie.judgements.
+    """BAML ExtractJudgement → cianfhoghlaim.law.ie.judgements.
 
     Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.judgements`.
     """
@@ -117,7 +117,7 @@ def judgements_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     description="BAML ExtractCourtRule extraction (Pick-8 IE/law).",
 )
 def court_rules_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractCourtRule → oideachais.law.ie.court_rules.
+    """BAML ExtractCourtRule → cianfhoghlaim.law.ie.court_rules.
 
     Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.court_rules`.
     """
@@ -132,7 +132,7 @@ def court_rules_extracted(context: AssetExecutionContext) -> dict[str, Any]:
     description="BAML ExtractLegalAidPage extraction (Pick-8 IE/law).",
 )
 def legal_aid_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractLegalAidPage → oideachais.law.ie.legal_aid_pages.
+    """BAML ExtractLegalAidPage → cianfhoghlaim.law.ie.legal_aid_pages.
 
     Source DLT: `cianfhoghlaim.dlt.british_isles.ireland.law.legal_aid`.
     """
@@ -148,7 +148,7 @@ def legal_aid_pages_extracted(context: AssetExecutionContext) -> dict[str, Any]:
         "Cross-source statute linkage asset (Pick-8 IE/law). "
         "Joins the BAML-extracted statutes_cited arrays from the 5 "
         "Pick-8 IE/law sources to the existing "
-        "oideachais.education.ie.irish_statute_book.acts table — this "
+        "cianfhoghlaim.education.ie.irish_statute_book.acts table — this "
         "is the canonical join key that powers the 'find the most "
         "relevant information' use case."
     ),
@@ -162,17 +162,17 @@ def ie_law_statute_linkage(
     court_rules_extracted: dict[str, Any],
     legal_aid_pages_extracted: dict[str, Any],
 ) -> dict[str, Any]:
-    """Cross-source statute linkage → oideachais.law.ie.ie_law_statute_links.
+    """Cross-source statute linkage → cianfhoghlaim.law.ie.ie_law_statute_links.
 
     Reads the 5 BAML extraction assets' `statutes_cited` /
     `related_statutes` / `statutory_basis` arrays and joins them to
-    the canonical `oideachais.education.ie.irish_statute_book.acts`
+    the canonical `cianfhoghlaim.education.ie.irish_statute_book.acts`
     table.
     """
     context.log.info("running ie_law_statute_linkage cross-source join")
     return {
         "rows": 0,
-        "join_target": "oideachais.education.ie.irish_statute_book.acts",
+        "join_target": "cianfhoghlaim.education.ie.irish_statute_book.acts",
         "join_source_count": 6,
     }
 

@@ -53,10 +53,10 @@ The 12 agents are registered in `sruth/meaisinfhoghlaim/agents/__init__.py`
 | Framework | Implementation | Used by |
 |:--|:--|:--|
 | Custom | `sruth/meaisinfhoghlaim/agents/root_agent.py` (the query router + LiteLLM) | `root_agent` |
-| ADK | `google.adk.agents.LlmAgent` (via `oideachais.agents.adk.*`) | `curriculum_agent`, `translation_agent`, `corpus_agent`, `research_agent`, `geospatial_agent`, `statistics_agent`, `curriculum_comparison_agent`, `mcp_curriculum_agent` |
+| ADK | `google.adk.agents.LlmAgent` (via `cianfhoghlaim.agents.adk.*`) | `curriculum_agent`, `translation_agent`, `corpus_agent`, `research_agent`, `geospatial_agent`, `statistics_agent`, `curriculum_comparison_agent`, `mcp_curriculum_agent` |
 | Agno | `sruth/meaisinfhoghlaim/agents/agno/team.py` (the EducationTeam) | `education_research_agent`, `bunchloch_research_agent`, `agui_curriculum_agent` |
 | Pipecat | `sruth/meaisinfhoghlaim/agents/voice_agent.py` (the real-time audio transport) | (the voice agent is not in the 12 above; it's a separate voice channel) |
-| CopilotKit | `sruth/oideachais/agents/adk/agui_curriculum_agent.py` (the AG-UI consumer) | (the CopilotKit consumer is the front-end; it's not an agent) |
+| CopilotKit | `sruth/cianfhoghlaim/agents/adk/agui_curriculum_agent.py` (the AG-UI consumer) | (the CopilotKit consumer is the front-end; it's not an agent) |
 
 The 5 frameworks share the LiteLLM gateway at
 `litellm.cianfhoghlaim.ie:4000` as the single LLM proxy.
@@ -182,7 +182,7 @@ The agent fleet integrates with the broader KCG observability
 stack:
 
 - **Oideachais** reads the agent traces via the FastAPI middleware
-  at `sruth/oideachais/middleware/agui/streaming.py`
+  at `sruth/cianfhoghlaim/middleware/agui/streaming.py`
 - **Tuatha** consumes the agent output via the TanStack Start
   CopilotKit component
 - **Croílár** mirrors the agent state via the Convex subscriptions

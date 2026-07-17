@@ -26,12 +26,12 @@
 - [ ] Create 9 OCR per-subject sources at `dlt/.../subjects/ocr_{subject}.py`
 - [ ] Create 9 Edexcel per-subject sources at `dlt/.../subjects/edexcel_{subject}.py`
 - [ ] Each file MUST:
-  - Use `from cianfhoghlaim.dlt.common.destinations_oideachais import with_namespace` and call `with_namespace("oideachais")`
+  - Use `from cianfhoghlaim.dlt.common.destinations_oideachais import with_namespace` and call `with_namespace("cianfhoghlaim")`
   - Honour `USE_LOCAL_SCRAPES=true`
   - Read from `/stedding/ingest_queue/england/<board>/<subject>/`
   - Tag every row with `country_code="england"`, `jurisdiction="england"`, `exam_board="<board>"`, `qualification_level="gcse"` or `qualification_level="a_level"`
   - Yield records keyed by `source_id = "british_isles.england.education.{board}_{subject}"`
-  - Write to `ducklake_oideachais.education.british_isles.england.<board>.<subject>.<qualification_level>`
+  - Write to `ducklake_cianfhoghlaim.education.british_isles.england.<board>.<subject>.<qualification_level>`
 - [ ] Test a sample DLT load: `python -m dlt.pipeline ci_run_eng_aqa_mathematics`
 
 ## Stage 3 — CocoIndex v1 Apps
@@ -45,7 +45,7 @@
   - Import `LANCE_DB` + `EMBEDDER` from `_lifespan`
   - Declare `app = coco.App(coco.AppConfig(name="england_<board>_education_embedding"))` at module scope
   - Use `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
-- [ ] Verify the 27 LanceDB table names: `oideachais.england.<board>.<subject>.<level>`
+- [ ] Verify the 27 LanceDB table names: `cianfhoghlaim.england.<board>.<subject>.<level>`
 - [ ] Run `mise run cocoindex:v1-conformance` to validate all 3 Apps
 
 ## Stage 4 — Dagster L2 assets

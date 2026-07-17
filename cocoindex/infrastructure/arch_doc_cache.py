@@ -166,7 +166,7 @@ class ArchDoc:
 
 
 if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
-    ARCH_DOC_CACHE = coco.ContextKey[CacheConfig]("oideachais_arch_doc_cache")  # type: ignore[index]
+    ARCH_DOC_CACHE = coco.ContextKey[CacheConfig]("cianfhoghlaim_arch_doc_cache")  # type: ignore[index]
 else:
     ARCH_DOC_CACHE = None  # type: ignore[assignment]
 

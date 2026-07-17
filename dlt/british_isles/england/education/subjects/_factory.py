@@ -14,7 +14,7 @@ Each source emits rows tagged with:
 - `source_id = "british_isles.england.education.{board}_{subject}"`
 
 The destination DuckLake namespace is:
-    oideachais.education.british_isles.england.<board>.<subject>.<qualification_level>
+    cianfhoghlaim.education.british_isles.england.<board>.<subject>.<qualification_level>
 """
 from __future__ import annotations
 
@@ -155,7 +155,7 @@ def build_england_subject_source(
                 "jurisdiction": "england",
                 "education_stage": qualification_level,
                 "namespace": (
-                    "oideachais.education.british_isles.england."
+                    "cianfhoghlaim.education.british_isles.england."
                     f"{exam_board}.{subject}.{qualification_level}"
                 ),
             }
@@ -174,7 +174,7 @@ def build_england_subject_source(
             "country_code": "england",
             "jurisdiction": "england",
             "namespace": (
-                "oideachais.education.british_isles.england."
+                "cianfhoghlaim.education.british_isles.england."
                 f"{exam_board}.{subject}.{qualification_level}"
             ),
             "uses_local_scrapes": os.getenv("USE_LOCAL_SCRAPES", "true").lower() == "true",

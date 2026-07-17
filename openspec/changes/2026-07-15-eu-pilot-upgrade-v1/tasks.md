@@ -52,7 +52,7 @@ For each of WLS / EN / NI:
 - [ ] 5.2 MODIFIED delta on `british-isles-education-pipeline/spec.md`
   declaring the per-subject completeness contract (physics +
   biology required for WLS/EN/NI)
-- [ ] 5.3 MODIFIED delta on `oideachais-pipeline/spec.md`
+- [ ] 5.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md`
   cross-referencing the change
 
 ## 6. Validate

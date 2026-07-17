@@ -4,7 +4,7 @@ Celtic curriculum + mythology + grammar + morphology — CocoIndex v1 App.
 Embeds the 6 Celtic-language curricula (Irish, Scottish Gaelic, Welsh,
 Manx, Cornish, Breton) into LanceDB.
 
-LanceDB table: ``oideachais.celtic.curriculum_chunks``.
+LanceDB table: ``cianfhoghlaim.celtic.curriculum_chunks``.
 
 R1–R4 v1 conformance.
 
@@ -13,7 +13,7 @@ LlamaSwap routing per the shared table:
 - celtic_curriculum cy/gd/br/gv/kw → ``gemma-4-26B-A4B``
 
 Reads from:
-- ``oideachais.celtic.curriculum.{irish,scottish_gaelic,welsh,breton,manx,cornish}``
+- ``cianfhoghlaim.celtic.curriculum.{irish,scottish_gaelic,welsh,breton,manx,cornish}``
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -51,12 +51,12 @@ from ._lifespan import (  # noqa: E402
 
 
 CELTIC_CURRICULUM_DUCKLAKE_TABLES = {
-    "irish": "oideachais.celtic.curriculum.irish",
-    "scottish_gaelic": "oideachais.celtic.curriculum.scottish_gaelic",
-    "welsh": "oideachais.celtic.curriculum.welsh",
-    "breton": "oideachais.celtic.curriculum.breton",
-    "manx": "oideachais.celtic.curriculum.manx",
-    "cornish": "oideachais.celtic.curriculum.cornish",
+    "irish": "cianfhoghlaim.celtic.curriculum.irish",
+    "scottish_gaelic": "cianfhoghlaim.celtic.curriculum.scottish_gaelic",
+    "welsh": "cianfhoghlaim.celtic.curriculum.welsh",
+    "breton": "cianfhoghlaim.celtic.curriculum.breton",
+    "manx": "cianfhoghlaim.celtic.curriculum.manx",
+    "cornish": "cianfhoghlaim.celtic.curriculum.cornish",
 }
 
 
@@ -65,7 +65,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -144,12 +144,12 @@ def mount_celtic_curriculum_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.celtic.curriculum_chunks",
+            table_name="cianfhoghlaim.celtic.curriculum_chunks",
             embedding_dim=EMBED_DIM,
         )
         logger.info(
             "celtic_curriculum_chunks_mounted",
-            table="oideachais.celtic.curriculum_chunks",
+            table="cianfhoghlaim.celtic.curriculum_chunks",
             dim=EMBED_DIM,
         )
     except Exception as exc:

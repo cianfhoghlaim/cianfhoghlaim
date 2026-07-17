@@ -28,7 +28,7 @@ The system SHALL also provide:
 
 - **3 Hono API endpoints** at `web/hono-api/src/routes/biep-v2/{lc,jc,england}.ts`
   that back the marimo notebooks with paginated JSON
-- **1 TanStack Start public page** at `web/apps/oideachais-web/src/routes/biep-v2/index.tsx`
+- **1 TanStack Start public page** at `web/apps/cianfhoghlaim-web/src/routes/biep-v2/index.tsx`
   that embeds all 4 notebooks + 4 BIEP MotherDuck Dives as iframes
 
 #### Scenario: 4 notebooks render against the live lakehouse
@@ -49,7 +49,7 @@ The system SHALL also provide:
   a row with `record_id = "ireland.junior_cycle.english.en.2026.Q1.q1"`
 - **WHEN** the operator opens `03_ocr_ensemble_audit.py` and selects that record
 - **THEN** all 8 panels render:
-  1. Source PDF page (from `s3://garage/oideachais/junior_cycle/english/en/2026/Q1.pdf#page=1`)
+  1. Source PDF page (from `s3://garage/cianfhoghlaim/junior_cycle/english/en/2026/Q1.pdf#page=1`)
   2. Docling DocTags XML (from `.docling_doctags`)
   3. Unstract JSON (from `.unstract_json`)
   4. qwen3-vl-8b raw response (from `.qwen3_vl`)

@@ -8,7 +8,7 @@
 # are now wired into `defs/5_agent_ops/adk/` as L5 Component mounts.
 #
 # Feat C (2026-07-10) added the `cognify` + `langfuse_callbacks`
-# blocks so each agent emits to `oideachais_lc_gaeilge` + opens a
+# blocks so each agent emits to `cianfhoghlaim_lc_gaeilge` + opens a
 # per-subject Langfuse trace at the canonical name
 # `agent.gael.<verb>`.
 #
@@ -35,10 +35,10 @@ attributes:
   langfuse_trace_tag: agent.gael
   langfuse_drop_smoke_spans: true
   # Feat C: cognify step pushes LLM responses to the per-subject
-  # Cognee dataset `oideachais_lc_gaeilge` and reads the 5 closest
+  # Cognee dataset `cianfhoghlaim_lc_gaeilge` and reads the 5 closest
   # historical responses for the same query as supporting context.
   cognify:
-    dataset: oideachais_lc_gaeilge
+    dataset: cianfhoghlaim_lc_gaeilge
     top_k: 5
     emit_on:
       - response_generated

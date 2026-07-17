@@ -1,8 +1,8 @@
 """
-oideachais.cianfhoghlaim.dlt.common._shared_utils_stub — in-tree replacement
+cianfhoghlaim.cianfhoghlaim.dlt.common._shared_utils_stub — in-tree replacement
 for `shared.utils`.
 
-The `oideachais.dlt_sources.http_client` module does
+The `cianfhoghlaim.dlt_sources.http_client` module does
 `from shared.utils import (CircuitBreaker, CircuitBreakerOpen,
 RateLimiter, RateLimitError, RetryableError)`. The `shared` package
 is not in this monorepo, so the import fails. This stub provides

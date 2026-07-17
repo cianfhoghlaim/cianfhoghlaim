@@ -6,7 +6,7 @@ UD_Scottish_Gaelic-ARCOSG, UD_Welsh-CCG, UD_Breton-KEB, UD_Manx-Cadhan,
 UD_Old_Irish-DipSGG/DipWBG, UD_Middle_Irish-CritMITB/DipMITB,
 UD_Archaic_Irish-OGAM) into LanceDB.
 
-LanceDB table: ``oideachais.language.ud_celtic_chunks``.
+LanceDB table: ``cianfhoghlaim.language.ud_celtic_chunks``.
 
 R1–R4 v1 conformance.
 
@@ -15,8 +15,8 @@ LlamaSwap routing per the shared table:
 - ud_celtic * → ``gemma-4-26B-A4B`` (other Celtic treebanks)
 
 Reads from:
-- ``oideachais.celtic.ud_celtic.sentences``
-- ``oideachais.celtic.ud_celtic.tokens``
+- ``cianfhoghlaim.celtic.ud_celtic.sentences``
+- ``cianfhoghlaim.celtic.ud_celtic.tokens``
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -78,8 +78,8 @@ UD_CELTIC_TREEBANKS = {
 
 
 UD_CELTIC_DUCKLAKE_TABLES = {
-    "sentences": "oideachais.celtic.ud_celtic.sentences",
-    "tokens": "oideachais.celtic.ud_celtic.tokens",
+    "sentences": "cianfhoghlaim.celtic.ud_celtic.sentences",
+    "tokens": "cianfhoghlaim.celtic.ud_celtic.tokens",
 }
 
 
@@ -88,7 +88,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -159,10 +159,10 @@ def mount_ud_celtic_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.ud_celtic_chunks",
+            table_name="cianfhoghlaim.language.ud_celtic_chunks",
             embedding_dim=EMBED_DIM,
         )
-        logger.info("ud_celtic_chunks_mounted", table="oideachais.language.ud_celtic_chunks", dim=EMBED_DIM)
+        logger.info("ud_celtic_chunks_mounted", table="cianfhoghlaim.language.ud_celtic_chunks", dim=EMBED_DIM)
     except Exception as exc:
         logger.warning("ud_celtic_chunks_mount_failed: %s", exc)
 

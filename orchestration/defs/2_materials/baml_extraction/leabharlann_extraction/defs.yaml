@@ -8,8 +8,8 @@
 # expected language (gaeilge → ga; gemini_deep_research/mata/uog/zotero
 # → en; aigne → en).
 #
-# Per openspec/changes/2026-07-15-oideachais-leabharlann-v1/specs/
-# oideachais-leabharlann/spec.md — the Phase 1 wrap-up requirement.
+# Per openspec/changes/2026-07-15-cianfhoghlaim-leabharlann-v1/specs/
+# cianfhoghlaim-leabharlann/spec.md — the Phase 1 wrap-up requirement.
 type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractLeabharlannDoc

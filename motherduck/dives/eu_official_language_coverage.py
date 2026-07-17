@@ -2,7 +2,7 @@
 
 A read-only MotherDuck dashboard that surfaces the cross-language
 coverage of every EU institutional source. Backed by
-``oideachais.<domain>.europeanunion.<institution>`` DuckLake tables.
+``cianfhoghlaim.<domain>.europeanunion.<institution>`` DuckLake tables.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.law.europeanunion.eur_lex
+            FROM cianfhoghlaim.law.europeanunion.eur_lex
             GROUP BY institution, language
 
             UNION ALL
@@ -36,7 +36,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.medicine.europeanunion.ema
+            FROM cianfhoghlaim.medicine.europeanunion.ema
             GROUP BY institution, language
 
             UNION ALL
@@ -45,7 +45,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.medicine.europeanunion.ecdc
+            FROM cianfhoghlaim.medicine.europeanunion.ecdc
             GROUP BY institution, language
 
             UNION ALL
@@ -54,7 +54,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.statistics.europeanunion.eurostat
+            FROM cianfhoghlaim.statistics.europeanunion.eurostat
             GROUP BY institution, language
 
             UNION ALL
@@ -63,7 +63,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.education.europeanunion.eurydice
+            FROM cianfhoghlaim.education.europeanunion.eurydice
             GROUP BY institution, language
 
             UNION ALL
@@ -72,7 +72,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.government.europeanunion.commission
+            FROM cianfhoghlaim.government.europeanunion.commission
             GROUP BY institution, language
 
             UNION ALL
@@ -81,7 +81,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.government.europeanunion.parliament
+            FROM cianfhoghlaim.government.europeanunion.parliament
             GROUP BY institution, language
 
             UNION ALL
@@ -90,7 +90,7 @@ def build_eu_official_language_coverage_dive() -> None:
                 institution,
                 language,
                 COUNT(*) AS row_count
-            FROM oideachais.government.europeanunion.council
+            FROM cianfhoghlaim.government.europeanunion.council
             GROUP BY institution, language
         """,
     )

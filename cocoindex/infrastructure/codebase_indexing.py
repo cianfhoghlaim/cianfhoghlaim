@@ -17,7 +17,7 @@ Code graph extraction (round 8 + phase 1):
 - 7 node types (FILE, FUNCTION, CLASS, METHOD, MODULE, INTERFACE, VARIABLE)
 - 7 edge types (CONTAINS, IMPORTS, CALLS, EXTENDS, IMPLEMENTS, USES, DEFINES)
 - Tree-sitter AST extraction per file
-- 29+ language detection via `oideachais.cocoindex_flows.chunking.languages`
+- 29+ language detection via `cianfhoghlaim.cocoindex_flows.chunking.languages`
 
 Reference pattern: `docs/cocoindex/code_embedding/main.py` (v0 reference) +
 `docs/cocoindex/pdf_embedding/main.py` (v1 chunking/embedding conventions).
@@ -98,7 +98,7 @@ LANCEDB_GRAPH_TABLE = "codebase_graph"
 TOP_K = 10
 
 # Default source root: the monorepo root (parents[5] = repo root from
-# oideachais/cocoindex_flows/codebase_indexing.py).
+# cianfhoghlaim/cocoindex_flows/codebase_indexing.py).
 DEFAULT_REPO_ROOT = pathlib.Path(
     os.getenv(
         "CODEBASE_REPO_ROOT",
@@ -212,7 +212,7 @@ def detect_language_for_path(file_path: str) -> str | None:
     """Detect programming language for a file path.
 
     Uses the canonical 29+ language table at
-    `oideachais/cocoindex_flows/chunking/languages.py` (ported from
+    `cianfhoghlaim/cocoindex_flows/chunking/languages.py` (ported from
     `codeolas/chunking/languages.py`).
     """
     return EXTENSION_TO_LANGUAGE.get(pathlib.Path(file_path).suffix.lower())
@@ -220,7 +220,7 @@ def detect_language_for_path(file_path: str) -> str | None:
 
 # =============================================================================
 # Context keys — imported from the canonical shared lifespan
-# (`oideachais/cocoindex_flows/_lifespan.py`). Per REFACTORING.md
+# (`cianfhoghlaim/cocoindex_flows/_lifespan.py`). Per REFACTORING.md
 # item 12, every v1 App delegates to `shared_lifespan` rather than
 # re-declaring `LANCE_DB` / `EMBEDDER` / `RESOLVED_FILE_REGISTRY`.
 # The previous `codebase_lance_db` + `codebase_embedder` ContextKeys

@@ -1,13 +1,13 @@
 ---
-name: oideachais-cocoindex-v1
-description: The canonical CocoIndex v1 App pattern in `sruth/oideachais/cocoindex_flows/`. Covers the 14 v1 Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding, codebase_indexing, api_indexing, filesystem_indexing, storage_indexing, config_indexing, unified_embedding, code_embeddings, docs_skills_consolidation, culture_heritage_embedding, upstream_blog_monitor, upstream_api_surface, cocoindex_v1_conformance), the `@coco.fn` + `@coco.lifespan` + `lancedb.mount_table_target` pattern, the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule, the `IdGenerator()` stable-id pattern, the `Annotated[NDArray, EMBEDDER]` typing, the 4-rule v1 conformance contract (R1-R4) enforced by `cocoindex_v1_conformance`, the shared `_lifespan.py` (the canonical home for `LANCE_DB` + `EMBEDDER` + `RESOLVED_FILE_REGISTRY` per REFACTORING.md item 12), and the canonical add-a-new-v1-App workflow. Use when adding a new v1 CocoIndex App, debugging a v0→v1 migration, or running the conformance linter.
+name: cianfhoghlaim-cocoindex-v1
+description: The canonical CocoIndex v1 App pattern in `sruth/cianfhoghlaim/cocoindex_flows/`. Covers the 14 v1 Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding, codebase_indexing, api_indexing, filesystem_indexing, storage_indexing, config_indexing, unified_embedding, code_embeddings, docs_skills_consolidation, culture_heritage_embedding, upstream_blog_monitor, upstream_api_surface, cocoindex_v1_conformance), the `@coco.fn` + `@coco.lifespan` + `lancedb.mount_table_target` pattern, the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule, the `IdGenerator()` stable-id pattern, the `Annotated[NDArray, EMBEDDER]` typing, the 4-rule v1 conformance contract (R1-R4) enforced by `cocoindex_v1_conformance`, the shared `_lifespan.py` (the canonical home for `LANCE_DB` + `EMBEDDER` + `RESOLVED_FILE_REGISTRY` per REFACTORING.md item 12), and the canonical add-a-new-v1-App workflow. Use when adding a new v1 CocoIndex App, debugging a v0→v1 migration, or running the conformance linter.
 ---
 
 # Oideachais CocoIndex v1
 
 ## Purpose
 
-The `sruth/oideachais/cocoindex_flows/` directory houses **14 v1
+The `sruth/cianfhoghlaim/cocoindex_flows/` directory houses **14 v1
 CocoIndex Apps** + 10 v0 broken modules (slated for v0-to-v1
 migration in this round). This skill captures the canonical v1
 pattern (`@coco.fn` + `@coco.lifespan` +
@@ -17,7 +17,7 @@ pattern, the `Annotated[NDArray, EMBEDDER]` typing, the 4-rule
 conformance contract enforced by `cocoindex_v1_conformance`, the
 shared `_lifespan.py` canonical home (REFACTORING.md item 12), and
 the add-a-new-v1-App workflow. The `cocoindex/` skill is generic;
-this one is oideachais-specific.
+this one is cianfhoghlaim-specific.
 
 ## When to use this skill
 
@@ -39,7 +39,7 @@ Use when you need to:
 | 1 | `leabharlann_books_embedding` | `leabharlann_embedding.py` | `leabharlann_books` | `BAAI/bge-large-en-v1.5` |
 | 2 | `leabharlann_zotero_embedding` | `leabharlann_embedding.py` | `leabharlann_zotero` | `BAAI/bge-large-en-v1.5` |
 | 3 | `leabharlann_takeout_embedding` | `leabharlann_embedding.py` | `leabharlann_takeout` | `BAAI/bge-large-en-v1.5` |
-| 3a | `leabharlann_inbox_embedding` | `leabharlann_embedding.py` | `oideachais_inbox_messages` (NEW 2026-06-29; the 4th leabharlann App — see [`oideachais-email-triage`](../oideachais-email-triage/SKILL.md)) | `BAAI/bge-large-en-v1.5` |
+| 3a | `leabharlann_inbox_embedding` | `leabharlann_embedding.py` | `cianfhoghlaim_inbox_messages` (NEW 2026-06-29; the 4th leabharlann App — see [`cianfhoghlaim-email-triage`](../cianfhoghlaim-email-triage/SKILL.md)) | `BAAI/bge-large-en-v1.5` |
 | 4 | `codebase_indexing` | `codebase_indexing.py` | `codebase_chunks` (the 7-node/7-edge code graph) | `BAAI/bge-large-en-v1.5` |
 | 5 | `api_indexing` | `api_indexing.py` | `api_endpoints` (the 4-framework HTTP route surface) | `BAAI/bge-large-en-v1.5` |
 | 6 | `filesystem_indexing` | `filesystem_indexing.py` | `filesystem_layout` (depth 1-4 dirs) | `BAAI/bge-large-en-v1.5` |
@@ -57,7 +57,7 @@ The 14 Apps are all `coco.App` instances with `@coco.lifespan` +
 `@coco.fn` decorators (per the canonical v1 pattern).
 
 **Embedder model note**: as of 2026-06, the value actually exported by
-`sruth/oideachais/cocoindex_flows/_lifespan.py:70` is
+`sruth/cianfhoghlaim/cocoindex_flows/_lifespan.py:70` is
 `BAAI/bge-large-en-v1.5` (English-only, 1024-dim). Several docstrings
 claim `BAAI/bge-m3` (multilingual, 1024-dim). Both are 1024-dim so the
 discrepancy is latent, but `BAAI/bge-large-en-v1.5` is the canonical
@@ -67,7 +67,7 @@ follow-up openspec change.
 ## The canonical v1 pattern (the 6-field shape)
 
 ```python
-# Canonical sruth/oideachais/cocoindex_flows/leabharlann_embedding.py
+# Canonical sruth/cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py
 @coco.lifespan
 async def leabharlann_lifespan(builder):
     from cocoindex.connectors.lancedb import LanceAsyncConnection
@@ -137,7 +137,7 @@ The 6-field shape is:
 
 ## The 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule
 
-Per `sruth/oideachais/AGENTS.md` + the embedding-pipeline skill:
+Per `sruth/cianfhoghlaim/AGENTS.md` + the embedding-pipeline skill:
 
 - **Embeddings batched at minimum 100 per call** (100× performance difference vs unbatched)
 - **HNSW indexes dropped before bulk inserts > 50 rows and recreated after** (the 20× speedup rule)
@@ -183,7 +183,7 @@ embedding is auto-filled by the v1 runtime (no manual
 
 ## The 29-language Tree-sitter chunking
 
-`sruth/oideachais/cocoindex_flows/chunking/languages.py` defines the
+`sruth/cianfhoghlaim/cocoindex_flows/chunking/languages.py` defines the
 29-language detection table. The 29 languages are:
 python, typescript, javascript, tsx, jsx, rust, go, java, kotlin,
 ruby, swift, c, cpp, csharp, php, scala, haskell, ocaml, lua,
@@ -203,7 +203,7 @@ The chunking uses `RecursiveSplitter` with
 | `data_scope["x"] = ...` | `builder.provide(KEY, value)` (via `@coco.lifespan`) |
 | `embeddings_collector.collect(id=GeneratedField.UUID, ...)` | `table.declare_row(row=Dataclass(...))` (no `collector` in v1) |
 
-The 4 patterns are documented in the `oideachais-v0-to-v1-migration`
+The 4 patterns are documented in the `cianfhoghlaim-v0-to-v1-migration`
 openspec change (round 9 of the multi-quadrant refactor plan).
 
 ## The 10 v0 broken modules (the migration backlog)
@@ -224,11 +224,11 @@ openspec change (round 9 of the multi-quadrant refactor plan).
 The 10 v0 modules live at their original paths for back-compat
 but are NOT re-exported via `__init__.py` (the v1 module
 hierarchy takes precedence). Migration is a 6-week project per
-the oideachais-STATUS.md.
+the cianfhoghlaim-STATUS.md.
 
 ## Worked example: add a new v1 App
 
-1. Create the new file at `sruth/oideachais/cocoindex_flows/xxx_embedding.py`:
+1. Create the new file at `sruth/cianfhoghlaim/cocoindex_flows/xxx_embedding.py`:
 
 2. Define the dataclass:
 
@@ -280,7 +280,7 @@ the oideachais-STATUS.md.
    )
    ```
 
-4. Add the App to `sruth/oideachais/cocoindex_flows/__init__.py`:
+4. Add the App to `sruth/cianfhoghlaim/cocoindex_flows/__init__.py`:
 
    ```python
    try:
@@ -290,9 +290,9 @@ the oideachais-STATUS.md.
        pass  # CocoIndex not available
    ```
 
-5. Add a Dagster asset at `sruth/oideachais/dagster_defs/assets/xxx_assets.py:xxx_chunks`.
+5. Add a Dagster asset at `sruth/cianfhoghlaim/dagster_defs/assets/xxx_assets.py:xxx_chunks`.
 
-6. Update `openspec/specs/oideachais-pipeline/spec.md` to add the
+6. Update `openspec/specs/cianfhoghlaim-pipeline/spec.md` to add the
    new V1 App requirement.
 
 ## Common failure modes
@@ -331,11 +331,11 @@ Run it via:
 ```bash
 mise run upstream:conformance
 # or equivalently:
-uv run python -c 'import asyncio; from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'
+uv run python -c 'import asyncio; from sruth.cianfhoghlaim.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'
 ```
 
 The Dagster asset `cocoindex_v1_conformance_check`
-(`sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py`)
+(`sruth/cianfhoghlaim/dagster_defs/assets/upstream_monitoring_assets.py`)
 runs this on every materialisation and writes a
 `conformance_check_history` row to LanceDB so we can detect regressions
 in CI.
@@ -343,7 +343,7 @@ in CI.
 ## The shared lifespan (REFACTORING.md item 12)
 
 Every v1 App MUST import `shared_lifespan` from
-`sruth/oideachais/cocoindex_flows/_lifespan.py` and delegate to it
+`sruth/cianfhoghlaim/cocoindex_flows/_lifespan.py` and delegate to it
 inside its own `@coco.lifespan` function:
 
 ```python
@@ -391,15 +391,15 @@ ContextKeys are flagged as `# R2-exempt` (R2).
 - `.agents/skills/cocoindex/SKILL.md` — the generic v1 patterns
 - `.agents/skills/dagster/SKILL.md` — the Dagster asset + sensor patterns
 - `.agents/skills/lancedb/SKILL.md` — the vector search + HNSW indexing
-- `.agents/skills/oideachais-leabharlann/SKILL.md` — the 3 v1 Apps for the leabharlann pipeline
-- `.agents/skills/oideachais-baml-schemas/SKILL.md` — the 9 + 4 + 6 BAML files
+- `.agents/skills/cianfhoghlaim-leabharlann/SKILL.md` — the 3 v1 Apps for the leabharlann pipeline
+- `.agents/skills/cianfhoghlaim-baml-schemas/SKILL.md` — the 9 + 4 + 6 BAML files
 - `.agents/skills/embedding-pipeline/SKILL.md` — the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule
-- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical v1 home (the 4 leabharlann Apps)
-- `sruth/oideachais/cocoindex_flows/codebase_indexing.py` — the canonical v1 home (the codebase 7-node/7-edge graph)
-- `sruth/oideachais/cocoindex_flows/__init__.py` — the v0-vs-v1 guard
-- `sruth/oideachais/cocoindex_flows/README.md` — the v0 vs v1 status table
-- `sruth/oideachais/cocoindex_flows/chunking/languages.py` — the 29-language detection table
-- `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` — the canonical spec
+- `sruth/cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py` — the canonical v1 home (the 4 leabharlann Apps)
+- `sruth/cianfhoghlaim/cocoindex_flows/codebase_indexing.py` — the canonical v1 home (the codebase 7-node/7-edge graph)
+- `sruth/cianfhoghlaim/cocoindex_flows/__init__.py` — the v0-vs-v1 guard
+- `sruth/cianfhoghlaim/cocoindex_flows/README.md` — the v0 vs v1 status table
+- `sruth/cianfhoghlaim/cocoindex_flows/chunking/languages.py` — the 29-language detection table
+- `openspec/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md` — the canonical spec
 
 ## Leabharlann inbox App (App 3a — 2026-06-29)
 
@@ -411,7 +411,7 @@ same `EMBEDDER` + `LANCE_DB` ContextKeys. It reads MBOX files from
 `dovecot_imapsync_runner` + the `mailcow-export` companion
 container), recurses into each MBOX via the `mailbox` stdlib,
 yields one chunk per message (`from + subject + first 2000 chars
-of body`), and writes to the `oideachais_inbox_messages` LanceDB
+of body`), and writes to the `cianfhoghlaim_inbox_messages` LanceDB
 table with the columns `(id, account, year, date_iso, subject,
 sender, recipients, body_excerpt, embedding, baml_class,
 baml_urgency, thread_id)`. A cosine vector index on `embedding` +
@@ -421,7 +421,7 @@ urgency_min=None, limit=20)` hybrid search handler.
 
 The full pipeline (DLT + BAML + Dagster + marimo + cognify) is
 documented in
-[`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
+[`.agents/skills/cianfhoghlaim-email-triage/SKILL.md`](../cianfhoghlaim-email-triage/SKILL.md).
 
 
 ---

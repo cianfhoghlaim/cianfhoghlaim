@@ -11,7 +11,7 @@
 | `_croilar_baml/` | `core/baml/_croilar_baml/` | Croilar-specific |
 | `_croilar_src/` | `core/baml/_croilar_src/` | Croilar implementation |
 | `_meaisinfhoghlaim_src/` | `core/baml/_meaisinfhoghlaim_src/` | Meaisínfhoghlaim |
-| `_oideachais_src/` | `core/baml/_oideachais_src/` | Oideachais (largest) |
+| `_cianfhoghlaim_src/` | `core/baml/_cianfhoghlaim_src/` | Oideachais (largest) |
 | `_tuatha_src/` | `core/baml/_tuatha_src/` | Tuatha |
 
 ## 2. Per-domain merger plan
@@ -21,8 +21,8 @@
 - Move all `core/baml/_*/shared/` files → `core/baml/shared/`
 - This is the FIRST step (lowest risk, foundation)
 
-### Domain 2: _oideachais_src/ → oideachais/ (the largest)
-- Move all `.baml` files from `core/baml/_oideachais_src/` to `core/baml/oideachais/`
+### Domain 2: _cianfhoghlaim_src/ → cianfhoghlaim/ (the largest)
+- Move all `.baml` files from `core/baml/_cianfhoghlaim_src/` to `core/baml/cianfhoghlaim/`
 - Update all `import` statements
 - This is the SECOND step (per-domain, the largest)
 
@@ -69,7 +69,7 @@ For each domain:
 | Domain | Risk | Reason |
 |---|---|---|
 | shared/ | LOW | No business logic, just utilities |
-| oideachais/ | HIGH | Largest tree, most usage |
+| cianfhoghlaim/ | HIGH | Largest tree, most usage |
 | meaisinfhoghlaim/ | MED | Has agent fleet integration |
 | tuatha/ | LOW | Smaller surface |
 | croilar/ | LOW | Smaller surface |

@@ -49,7 +49,7 @@
                                     │                          │
                                     │  [Stacks managed by Komodo]
                                     │  ┌────────────────────┐  │
-                                    │  │ oideachais-*       │  │
+                                    │  │ cianfhoghlaim-*       │  │
                                     │  │ litellm / dagster  │  │
                                     │  │ cognee / lancedb   │  │
                                     │  │ ...                │  │

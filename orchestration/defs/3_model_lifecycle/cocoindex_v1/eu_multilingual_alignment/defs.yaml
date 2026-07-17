@@ -13,7 +13,7 @@ attributes:
     - app_name: EUMultilingualAlignmentEmbedding
       module: cianfhoghlaim.cocoindex.eu_multilingual_alignment_embedding
       source: european_union
-      lance_table: oideachais.eu.multilingual_alignment_chunks
+      lance_table: cianfhoghlaim.eu.multilingual_alignment_chunks
   schedule:
     cron: "0 5 * * *"
     timezone: UTC

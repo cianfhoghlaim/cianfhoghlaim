@@ -45,7 +45,7 @@
   (19 files), scope (3 restored files only), and the **stale
   audit claims** about `pyproject.toml` line numbers
 - [x] `tasks.md` — this file
-- [x] `specs/oideachais-marimo-dashboards/spec.md` — MODIFIED:
+- [x] `specs/cianfhoghlaim-marimo-dashboards/spec.md` — MODIFIED:
   ADDED 1 requirement
 
 ## 5. Validate the openspec change

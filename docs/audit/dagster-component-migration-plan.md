@@ -6,7 +6,7 @@
 ## 1. Domains (in dependency order)
 
 1. **celtic-asset-generation** (5-stage PDF pipeline + BAML)
-2. **oideachais-pipeline** (the 28 dlt sources)
+2. **cianfhoghlaim-pipeline** (the 28 dlt sources)
 3. **meaisinfhoghlaim-platform** (agent memory: Cognee + Graphiti)
 4. **cognify** (cross-stage cognify: per Wave 7+ finding #5)
 5. **tuatha** (crypteolas MMO + game content)
@@ -25,27 +25,27 @@ For each domain:
 ## 3. celtic-asset-generation (5-stage PDF + BAML) — DOMAIN 1
 
 ### Sources to migrate
-- `oideachais/pipelines/ingest/_oideachais_dlt_sources/official_media/`
-- `oideachais/pipelines/ingest/_oideachais_dlt_sources/curriculumonline/`
-- `oideachais/pipelines/ingest/_oideachais_dlt_sources/examinations/`
-- `oideachais/pipelines/ingest/_oideachais_dlt_sources/ncca/`
-- `oideachais/pipelines/ingest/_oideachais_dlt_sources/duchas/`
+- `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/official_media/`
+- `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/curriculumonline/`
+- `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/examinations/`
+- `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/ncca/`
+- `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/duchas/`
 - (likely 5-7 more in the 5-stage pipeline)
 
 ### Migration approach
-- DltLoadCollectionComponent YAML in `oideachais/assets/definitions/components/celtic_pipeline.yaml`
+- DltLoadCollectionComponent YAML in `cianfhoghlaim/assets/definitions/components/celtic_pipeline.yaml`
 - Each source = 1 `DltLoadCollectionComponent` def
 - Same 7-day shadow run pattern
 - Per-source tests (validate BAML extraction output unchanged)
 
-## 4. oideachais-pipeline (28 dlt sources) — DOMAIN 2
+## 4. cianfhoghlaim-pipeline (28 dlt sources) — DOMAIN 2
 
 ### Sources to migrate
-- All 28 dlt sources in `oideachais/pipelines/ingest/_oideachais_dlt_sources/`
-- Catalog: `oideachais/pipelines/ingest/_oideachais_dlt_sources/SOURCES.md` (NEW)
+- All 28 dlt sources in `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/`
+- Catalog: `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/SOURCES.md` (NEW)
 
 ### Migration approach
-- DltLoadCollectionComponent YAML in `oideachais/assets/definitions/components/dlt_sources.yaml`
+- DltLoadCollectionComponent YAML in `cianfhoghlaim/assets/definitions/components/dlt_sources.yaml`
 - 28 sources × ~1 line each = 28-line YAML
 - Use `@multi_asset_check` (per Wave 1 Agent 84 R3) to consolidate the 7+ health checks
 - Same shadow + cutover pattern
@@ -64,7 +64,7 @@ For each domain:
 ## 6. cognify (cross-stage cognify) — DOMAIN 4
 
 ### Sources to migrate
-- The 6 cross-stage cognify assets in `oideachais/cognify/`
+- The 6 cross-stage cognify assets in `cianfhoghlaim/cognify/`
 
 ### Migration approach
 - Single DltLoadCollectionComponent for the cognify schedule
@@ -95,7 +95,7 @@ For each domain:
 | Domain | Risk | Reason |
 |---|---|---|
 | celtic-asset-generation | HIGH | BAML extraction is fragile; 5-stage pipeline is fragile |
-| oideachais-pipeline | MED | 28 sources × 1-week shadow = 28 weeks of testing |
+| cianfhoghlaim-pipeline | MED | 28 sources × 1-week shadow = 28 weeks of testing |
 | meaisinfhoghlaim-platform | LOW | Consolidates 7 functions into 1 (low surface change) |
 | cognify | LOW | Already works |
 | tuatha | LOW | Smallest data flow |
@@ -109,10 +109,10 @@ For each domain:
 
 ## 11. Next steps
 
-1. Domain 1 (celtic-asset-generation) inventory: list all 5-7 dlt sources in `oideachais/pipelines/ingest/_oideachais_dlt_sources/`
+1. Domain 1 (celtic-asset-generation) inventory: list all 5-7 dlt sources in `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/`
 2. Create the YAML config file with 1 DltLoadCollectionComponent per source
-3. Add to `oideachais/assets/definitions/components/`
-4. Wire into `oideachais/assets/definitions.py` (the single unified definitions.py from Plan v6 F4)
+3. Add to `cianfhoghlaim/assets/definitions/components/`
+4. Wire into `cianfhoghlaim/assets/definitions.py` (the single unified definitions.py from Plan v6 F4)
 5. Shadow run for 1 week
 6. Cutover + remove the 5-7 old `assets/definitions.py` Python-decorator versions
 

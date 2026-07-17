@@ -2,7 +2,7 @@
 #
 # L3 CelticModelLifecycleComponent for the IrelandLegalEmbedding v1 App.
 #
-# Per the oideachais-cocoindex-v1 skill, the R1–R4 conformance contract
+# Per the cianfhoghlaim-cocoindex-v1 skill, the R1–R4 conformance contract
 # is enforced at build_defs time by the Component. is_virtual=True so
 # the LanceDB table mirrors its L1 + L2 upstream automatically.
 #

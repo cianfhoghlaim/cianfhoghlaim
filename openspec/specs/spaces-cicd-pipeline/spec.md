@@ -111,7 +111,7 @@ The 4 new demo Spaces (the 2026-06-24 batch):
 
 5. `croilar_portfolio_demo/` — gradio 5.x, croilar, demo
    of the 3-persona portfolio site
-6. `oideachais_mission_control/` — gradio 5.x, oideachais,
+6. `cianfhoghlaim_mission_control/` — gradio 5.x, oideachais,
    mission-control dashboard for the lakehouse
 7. `crypteolas_defi_monitor/` — gradio 5.x, crypteolas,
    DeFi monitor

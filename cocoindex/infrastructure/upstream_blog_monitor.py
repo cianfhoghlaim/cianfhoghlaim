@@ -1,7 +1,7 @@
 """
 Upstream Blog Monitor v1 CocoIndex App.
 
-The 13th CocoIndex v1 App in `oideachais/cocoindex_flows/`. Consumes
+The 13th CocoIndex v1 App in `cianfhoghlaim/cocoindex_flows/`. Consumes
 Firecrawl `monitor.page` webhook payloads (dropped by the n8n
 workflow at `engineering/n8n/workflows/upstream-blog-monitor.json`
 into a local mirror at `${OIDEACHAIS_UPSTREAM_PAYLOADS_ROOT:-stedding/upstream_blog_payloads/}`),
@@ -10,10 +10,10 @@ runs BAML `ExtractBlogPostMetadata`, declares LanceDB rows in
 FalkorDB nodes + edges in the `upstream_packages_graph` graph.
 
 Canonical v1 patterns enforced (per
-`.agents/skills/oideachais-cocoindex-v1/SKILL.md`):
+`.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md`):
 
 - imports `shared_lifespan` + the 3 shared ContextKeys from
-  `oideachais.cocoindex_flows._lifespan` (R1)
+  `cianfhoghlaim.cocoindex_flows._lifespan` (R1)
 - declares no new ContextKey without an exemption (R2);
   `KG_DB_UPSTREAM` is the only additional key, declared with a
   sibling `# R2-exempt: ...` comment
@@ -140,7 +140,7 @@ if COCOINDEX_AVAILABLE:
     # RESOLVED_FILE_REGISTRY; this App adds a graph-specific
     # connection only.
     KG_DB_UPSTREAM = coco.ContextKey[Any](  # type: ignore[index]
-        "oideachais_upstream_kg_db"
+        "cianfhoghlaim_upstream_kg_db"
     )
 
     @coco.lifespan

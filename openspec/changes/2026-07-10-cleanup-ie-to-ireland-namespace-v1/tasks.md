@@ -37,11 +37,11 @@
 
 ## 6. Openspec change authoring
 
-- [x] 6.1 `mkdir -p openspec/changes/2026-07-10-cleanup-ie-to-ireland-namespace-v1/specs/{oideachais-pipeline,oideachais-marimo-dashboards}`
+- [x] 6.1 `mkdir -p openspec/changes/2026-07-10-cleanup-ie-to-ireland-namespace-v1/specs/{cianfhoghlaim-pipeline,cianfhoghlaim-marimo-dashboards}`
 - [x] 6.2 `proposal.md` (this change narrative)
 - [x] 6.3 `tasks.md` (this file)
-- [x] 6.4 `specs/oideachais-pipeline/spec.md` (MODIFIED Requirement)
-- [x] 6.5 `specs/oideachais-marimo-dashboards/spec.md` (MODIFIED Requirement)
+- [x] 6.4 `specs/cianfhoghlaim-pipeline/spec.md` (MODIFIED Requirement)
+- [x] 6.5 `specs/cianfhoghlaim-marimo-dashboards/spec.md` (MODIFIED Requirement)
 - [x] 6.6 `openspec validate 2026-07-10-cleanup-ie-to-ireland-namespace-v1 --strict`
 
 ## 7. Commit + push

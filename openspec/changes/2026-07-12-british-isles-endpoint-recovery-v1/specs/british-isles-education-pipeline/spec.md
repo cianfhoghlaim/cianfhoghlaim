@@ -61,7 +61,7 @@ The system MUST recover the following 11 broken endpoints:
 
 The system MUST persist a row per `endpoint_recovery.fetch()` call to
 the canonical DuckLake table
-`oideachais.endpoint_health`. The Dagster L2 asset
+`cianfhoghlaim.endpoint_health`. The Dagster L2 asset
 `endpoint_health_sink` MUST fire every 6 hours and populate the
 table from `endpoint_recovery.probe_all_39()`.
 
@@ -78,7 +78,7 @@ table from `endpoint_recovery.probe_all_39()`.
   the umbrella path + source_id contract
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the flagship BIEP spec
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - [`site-crawler`](../site-crawler/spec.md) —
   the canonical site-scraper primitive

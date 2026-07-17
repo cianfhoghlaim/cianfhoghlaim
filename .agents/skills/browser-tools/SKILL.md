@@ -146,9 +146,9 @@ are registered (per the `defs/browser/auth_assets.py` pattern).
   openspec/changes/2026-06-29-browser-stack-crawl4ai-refactor)
 - The browser stack YAML files: `bonneagar/stacks/browser/`
   (v4 worktree split; bug fixes need 2 PRs)
-- The new Dagster Component: `cianfhoghlaim/assets/_oideachais_dagster_defs/defs/browser/`
+- The new Dagster Component: `cianfhoghlaim/assets/_cianfhoghlaim_dagster_defs/defs/browser/`
   (DltLoadCollectionComponent + crawl4ai_defs + firecrawl_defs + auth_defs)
-- The BAML extraction: `cianfhoghlaim/core/baml/_oideachais_src/author_archive.baml`
+- The BAML extraction: `cianfhoghlaim/core/baml/_cianfhoghlaim_src/author_archive.baml`
   (calls ScrapeStrategist for site map + bulk scrape)
 - The DAG asset groups that use this: `author_archive_assets.py`,
   `leabharlann_inbox_assets.py`, `croilar_cv_extraction.py`,

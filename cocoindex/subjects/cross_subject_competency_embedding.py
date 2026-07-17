@@ -2,7 +2,7 @@
 
 Embeds the 5 NCCA Key Competencies × 8 NCCA subjects × 4 levels × 2 languages
 = 320 cross-subject mastery vectors into LanceDB. The table is
-`oideachais.lc.cross_subject.competencies`.
+`cianfhoghlaim.lc.cross_subject.competencies`.
 
 The 5 NCCA Key Competencies are the foundation of the cross-subject
 mastery narrative: Communicating, Personal Effectiveness,
@@ -90,7 +90,7 @@ TOTAL_COMPETENCY_VECTORS = (
     * len(NCCA_LEVELS) * len(LANGUAGES)
 )
 
-LANCEDB_TABLE = "oideachais.lc.cross_subject.competencies"
+LANCEDB_TABLE = "cianfhoghlaim.lc.cross_subject.competencies"
 
 
 # ============================================================================
@@ -166,7 +166,7 @@ if COCOINDEX_AVAILABLE:
         Walks the 8 subjects × 5 competencies × 4 levels × 2 languages
         = 320 cross-subject mastery vectors, embeds each via the
         shared BGE-M3 embedder, and writes to
-        `oideachais.lc.cross_subject.competencies`.
+        `cianfhoghlaim.lc.cross_subject.competencies`.
         """
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]

@@ -3,7 +3,7 @@ Apple Photos Geospatial CocoIndex v1 App — emits 2 GeoParquet files
 for QGIS / marimo visualisation.
 
 NOT a LanceDB App — this is the 18th v1 App in the
-`oideachais-cocoindex-v1-migration` spec's `GEOSPATIAL_APP_REGISTRY`
+`cianfhoghlaim-cocoindex-v1-migration` spec's `GEOSPATIAL_APP_REGISTRY`
 (separate from the 17 LanceDB-output Apps).
 
 Outputs:

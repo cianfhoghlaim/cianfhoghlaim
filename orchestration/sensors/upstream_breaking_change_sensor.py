@@ -1,6 +1,6 @@
 """Dagster sensor for upstream package breaking changes.
 
-Polls ``md:oideachais_upstream.upstream_monitoring`` every five minutes
+Polls ``md:cianfhoghlaim_upstream.upstream_monitoring`` every five minutes
 for newly detected breaking-change rows written by the four Firecrawl
 monitors. Each new row emits a ``RunRequest`` targeting the downstream
 upstream-monitoring materialisation surface.
@@ -41,7 +41,7 @@ except ImportError:  # pragma: no cover - Dagster is optional in AST-only CI
 
 MOTHERDUCK_CONNECTION = os.getenv(
     "UPSTREAM_MONITORING_MOTHERDUCK_CONNECTION",
-    "md:oideachais_upstream",
+    "md:cianfhoghlaim_upstream",
 )
 UPSTREAM_TABLE = os.getenv(
     "UPSTREAM_MONITORING_TABLE",
@@ -174,7 +174,7 @@ if DAGSTER_AVAILABLE:
         minimum_interval_seconds=300,
         default_status=DefaultSensorStatus.RUNNING,
         description=(
-            "Poll md:oideachais_upstream.upstream_monitoring for new "
+            "Poll md:cianfhoghlaim_upstream.upstream_monitoring for new "
             "breaking changes from motherduck, dlthub, lancedb, and cocoindex."
         ),
     )

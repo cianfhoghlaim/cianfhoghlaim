@@ -2,11 +2,11 @@
 
 Embeds the extracted content from the 5 NCCA root-level programme PDFs
 into LanceDB. The 5 tables are:
-  - oideachais.lc.root.key_competencies.<lang>
-  - oideachais.lc.root.online_learning.<lang>
-  - oideachais.lc.root.certification.<lang>
-  - oideachais.lc.root.scr_advisory.<lang>
-  - oideachais.lc.root.programme_statement.<lang>
+  - cianfhoghlaim.lc.root.key_competencies.<lang>
+  - cianfhoghlaim.lc.root.online_learning.<lang>
+  - cianfhoghlaim.lc.root.certification.<lang>
+  - cianfhoghlaim.lc.root.scr_advisory.<lang>
+  - cianfhoghlaim.lc.root.programme_statement.<lang>
 
 Follows the canonical v1 pattern from `leabharlann_embedding.py` and
 `_lifespan.py`:
@@ -101,7 +101,7 @@ if COCOINDEX_AVAILABLE:
             }
 
         @app.target(
-            name=f"oideachais.lc.root.{table_slug}",
+            name=f"cianfhoghlaim.lc.root.{table_slug}",
             fields={
                 "id": str,
                 "content": str,
@@ -114,7 +114,7 @@ if COCOINDEX_AVAILABLE:
         ) -> lancedb.TableTarget:
             target_table = lancedb.TableTarget(
                 db=lance_db,
-                table_name=f"oideachais.lc.root.{table_slug}",
+                table_name=f"cianfhoghlaim.lc.root.{table_slug}",
                 embedding=embedder.embedding(),
             )
             target_table.declare_vector_index(column="embedding")  # R4

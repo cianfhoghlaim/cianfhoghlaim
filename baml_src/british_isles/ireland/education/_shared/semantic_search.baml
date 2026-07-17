@@ -1,11 +1,11 @@
 // =============================================================================
-// Semantic Search BAML Function (per oideachais-semantic-search v1)
+// Semantic Search BAML Function (per cianfhoghlaim-semantic-search v1)
 //
 // The agent-callable entrypoint for cross-corpus semantic search.
-// Backs onto `oideachais.cognify_rules.semantic_search` (Python).
+// Backs onto `cianfhoghlaim.cognify_rules.semantic_search` (Python).
 //
-// Reference: openspec/changes/2026-07-14-oideachais-semantic-search-v1/
-//             + openspec/specs/oideachais-semantic-search/spec.md
+// Reference: openspec/changes/2026-07-14-cianfhoghlaim-semantic-search-v1/
+//             + openspec/specs/cianfhoghlaim-semantic-search/spec.md
 // =============================================================================
 
 

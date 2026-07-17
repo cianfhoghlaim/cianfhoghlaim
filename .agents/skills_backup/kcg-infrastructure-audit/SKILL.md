@@ -215,7 +215,7 @@ DOCTOR_EXIT=$?
 if [[ $((DIFF_EXIT | PROBE_EXIT | DOCTOR_EXIT)) -ne 0 ]]; then
   mise run locket:exec -- \
     python -c "
-      from sruth.oideachais.cognee_integration.cross_stage_cognify import emit_alert
+      from sruth.cianfhoghlaim.cognee_integration.cross_stage_cognify import emit_alert
       emit_alert('infra-audit', $((DIFF_EXIT | PROBE_EXIT | DOCTOR_EXIT)))
     "
 fi

@@ -1,5 +1,5 @@
 ---
-name: oideachais-pipeline
+name: cianfhoghlaim-pipeline
 description: Celtic education curriculum pipeline for Irish, UK, and pan-Celtic content processing with DLT ingestion, CocoIndex embeddings, and Dagster orchestration.
 ---
 
@@ -34,11 +34,11 @@ Activate when users need:
 
 | Component | Path |
 |-----------|------|
-| Main Pipeline | `sruth/oideachais/` |
-| DLT Sources | `sruth/oideachais/dlt_sources/` |
-| CocoIndex Flows | `sruth/oideachais/cocoindex_flows/` |
-| Dagster Definitions | `sruth/oideachais/dagster/` |
-| ADK Agents | `sruth/oideachais/agents/` |
+| Main Pipeline | `sruth/cianfhoghlaim/` |
+| DLT Sources | `sruth/cianfhoghlaim/dlt_sources/` |
+| CocoIndex Flows | `sruth/cianfhoghlaim/cocoindex_flows/` |
+| Dagster Definitions | `sruth/cianfhoghlaim/dagster/` |
+| ADK Agents | `sruth/cianfhoghlaim/agents/` |
 
 ### Research References (taighde/)
 
@@ -123,7 +123,7 @@ sources** with distinct ownership and change cadence:
 | **DES Circulars** | Temporal governance | Monthly | Policy, amendments, repeals | `des_circulars` |
 
 All three ingest into the lakehouse via the
-`sruth/oideachais/sources.yaml` registry; every Dagster asset
+`sruth/cianfhoghlaim/sources.yaml` registry; every Dagster asset
 follows the `{nation}.{domain}.{entity}` contract from
 `.agents/skills/cross-domain-registry/SKILL.md`.
 
@@ -131,7 +131,7 @@ follows the `{nation}.{domain}.{entity}` contract from
 
 The oideachais pipeline uses BAML to convert raw
 extracted text (PDF, HTML) into typed records. The
-canonical schemas live at `sruth/oideachais/baml_src/`:
+canonical schemas live at `sruth/cianfhoghlaim/baml_src/`:
 
 | BAML class | Purpose | Source doc |
 |:--|:--|:--|
@@ -193,7 +193,7 @@ db.execute("CREATE INDEX embedding_idx ON curriculum USING HNSW(embedding)")
 
 ## Resources
 
-- **OpenSpec:** `openspec/specs/oideachais-pipeline/spec.md`
+- **OpenSpec:** `openspec/specs/cianfhoghlaim-pipeline/spec.md`
 - **Dagster Docs:** https://docs.dagster.io
 - **CocoIndex Docs:** https://cocoindex.io/docs
 - **Related Skills:** dagster, cocoindex, dlt, lancedb, baml

@@ -1,6 +1,6 @@
 """cianfhoghlaim.cocoindex — CocoIndex v1 App canonical home (post-v4 + post-Phase-1 2026-06-30).
 
-This package hosts the 14 CocoIndex v1 Apps (per `oideachais-cocoindex-v1` skill):
+This package hosts the 14 CocoIndex v1 Apps (per `cianfhoghlaim-cocoindex-v1` skill):
 - 3 leabharlann_*: leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding
 - 4 codebase / storage / config / api indexing
 - 3 domain embeddings: unified_embedding, code_embeddings, culture_heritage_embedding
@@ -8,7 +8,7 @@ This package hosts the 14 CocoIndex v1 Apps (per `oideachais-cocoindex-v1` skill
 - 1 docs_skills_consolidation
 - 1 cocoindex_v1_conformance (the 4-rule R1-R4 linter)
 
-Per `oideachais-cocoindex-v1` skill REFACTORING.md item 12:
+Per `cianfhoghlaim-cocoindex-v1` skill REFACTORING.md item 12:
 - `cocoindex/_lifespan.py` is the canonical home for the shared
   `@coco.lifespan` + 3 ContextKeys (LANCE_DB, EMBEDDER, RESOLVED_FILE_REGISTRY).
 - Every v1 App imports from `_lifespan` instead of re-declaring.

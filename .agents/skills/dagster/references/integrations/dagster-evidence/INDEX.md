@@ -22,4 +22,4 @@ BI tool (think "dbt + Observable HQ" for SQL-driven analytics).
   package
 - The Evidence.dev docs: <https://docs.evidence.dev/>
 - The KCG stack currently uses **marimo notebooks** (not Evidence)
-  for BI; see the `oideachais-marimo-dashboards` openspec spec
+  for BI; see the `cianfhoghlaim-marimo-dashboards` openspec spec

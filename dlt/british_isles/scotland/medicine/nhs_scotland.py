@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.scotland.medicine — Scotland medicine (NHS Scotland).
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.medicine — Scotland medicine (NHS Scotland).
 Phase 7 of the openspec change.
 """
 from __future__ import annotations

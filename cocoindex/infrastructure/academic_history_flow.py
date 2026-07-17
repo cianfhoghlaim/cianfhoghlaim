@@ -6,10 +6,10 @@ Companion to
 
 Reads 7 DuckLake tables populated by the L2 BAML + L2 validation
 assets and writes the embedded rows into a single LanceDB table
-`oideachais_academic_history` (BAAI/bge-m3, 1024-d).
+`cianfhoghlaim_academic_history` (BAAI/bge-m3, 1024-d).
 
 The App follows the canonical v1 pattern documented in
-`.agents/skills/oideachais-cocoindex-v1/SKILL.md`:
+`.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md`:
 
 - R1 — `from ._lifespan import shared_lifespan`
 - R2 — uses the canonical ContextKeys (`LANCE_DB`, `EMBEDDER`)
@@ -108,13 +108,13 @@ shared_lifespan = _LIFESPAN_SHARED_LIFESPAN
 # ---------------------------------------------------------------------------
 
 ACADEMIC_HISTORY_DUCKLAKE_TABLES: dict[str, str] = {
-    "coursework": "oideachais.education.ie.uog_math_coursework",
-    "formulas": "oideachais.education.ie.uog_formula_records",
-    "theorems": "oideachais.education.ie.uog_theorem_records",
-    "stats": "oideachais.education.ie.uog_statistical_procedure_records",
-    "numerical": "oideachais.education.ie.uog_numerical_method_records",
-    "nonlinear": "oideachais.education.ie.uog_nonlinear_system_records",
-    "findings": "oideachais_academic_history.validation_findings",
+    "coursework": "cianfhoghlaim.education.ie.uog_math_coursework",
+    "formulas": "cianfhoghlaim.education.ie.uog_formula_records",
+    "theorems": "cianfhoghlaim.education.ie.uog_theorem_records",
+    "stats": "cianfhoghlaim.education.ie.uog_statistical_procedure_records",
+    "numerical": "cianfhoghlaim.education.ie.uog_numerical_method_records",
+    "nonlinear": "cianfhoghlaim.education.ie.uog_nonlinear_system_records",
+    "findings": "cianfhoghlaim_academic_history.validation_findings",
 }
 
 
@@ -130,7 +130,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         logger.warning("duckdb_not_available_for_academic_history_embedding")
         return []
 
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -150,7 +150,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
 
 @dataclass
 class AcademicHistoryChunk:
-    """One embedded row in the `oideachais_academic_history` LanceDB table."""
+    """One embedded row in the `cianfhoghlaim_academic_history` LanceDB table."""
 
     id: str
     source_table: str  # one of ACADEMIC_HISTORY_DUCKLAKE_TABLES
@@ -274,7 +274,7 @@ if COCOINDEX_AVAILABLE:
         """App entry point — called by `cocoindex update`."""
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name="oideachais_academic_history",
+            table_name="cianfhoghlaim_academic_history",
             table_schema=await lancedb.TableSchema.from_class(
                 AcademicHistoryChunk,
                 primary_key=["id"],

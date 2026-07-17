@@ -17,7 +17,7 @@ institutional source.
 - **AND** the `language` column MUST be one of the 24 EU official
   language codes
 - **AND** the DuckLake table MUST be
-  `oideachais.law.european_union.eur_lex`
+  `cianfhoghlaim.law.european_union.eur_lex`
 
 ### Requirement: EUR-Lex multilingual ingestion
 
@@ -136,9 +136,9 @@ institutional source.
   the umbrella contract
 - [`european-nations-ukraine-pipeline`](../european-nations-ukraine-pipeline/spec.md) —
   the national counterpart
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) —
   the BAML cluster taxonomy
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the seed instance of the contract

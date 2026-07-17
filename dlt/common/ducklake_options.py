@@ -56,7 +56,7 @@ BUCKET_PARTITIONED_TABLES: Final[frozenset[str]] = frozenset(
     {
         "leabharlann_zotero.leabharlann_zotero",
         "leabharlann_takeout.leabharlann_takeout",
-        "oideachais_unified.unified_embeddings",
+        "cianfhoghlaim_unified.unified_embeddings",
     }
 )
 
@@ -128,7 +128,7 @@ def apply_ducklake_1_0_optimisations(
 
     This is the canonical helper called by
     ``get_dlt_destination().post_create_hook(table)`` (and the
-    ``oideachais_dbt_assets`` post-hook) when a new table is
+    ``cianfhoghlaim_dbt_assets`` post-hook) when a new table is
     materialised.
 
     Args:

@@ -1,4 +1,4 @@
-# `oideachais-baml-schemas` MODIFIED — Consolidate 6 ADDED Requirements from 5 changes into 4 logical change groups
+# `cianfhoghlaim-baml-schemas` MODIFIED — Consolidate 6 ADDED Requirements from 5 changes into 4 logical change groups
 
 > Consolidates the 6 ADDED Requirements shipped across the 5 source
 > changes (2 + 1 + 1 + 1 + 1) into 4 logical change groups (v0.212+
@@ -118,7 +118,7 @@ output SHALL be uploaded under the `baml-test-results` artifact with
 
 ### Requirement: BAML v0.223 NCCA strand/outcome TypeBuilder — runtime mutation
 
-The `oideachais-baml-schemas` capability SHALL support runtime
+The `cianfhoghlaim-baml-schemas` capability SHALL support runtime
 injection of per-strand, per-outcome, per-curriculum-spec, and
 per-assessment-component properties into the 4 canonical
 NCCA-related BAML classes — `LearningOutcome`, `CurriculumStrand`,
@@ -194,7 +194,7 @@ runtime helper SHALL be `build_ncca_strand_type_builder()` in
 
 ### Requirement: BAML Option-2 fix — 50 pre-existing `field: type` errors resolved
 
-The `oideachais-baml-schemas` capability SHALL have all 50
+The `cianfhoghlaim-baml-schemas` capability SHALL have all 50
 pre-existing BAML `field: type` parse diagnostics (captured in the
 baseline at `openspec/changes/2026-07-13-baml-final-cleanup-v1/SCOPE_DECISION.md`)
 resolved across the full `baml/` tree. `mise run
@@ -275,7 +275,7 @@ generators active; the historical 8-generator layout preserved as a
 comment block) — it lives in the `clients.baml` file and is
 **not** part of this consolidation (it doesn't touch the BAML schema
 grammar or the `baml_cli test` flow; it's a generator wiring
-change). See `openspec/changes/2026-07-13-baml-final-cleanup-v1/specs/oideachais-baml-schemas/spec.md`
+change). See `openspec/changes/2026-07-13-baml-final-cleanup-v1/specs/cianfhoghlaim-baml-schemas/spec.md`
 for the standalone delta.
 
 **Summary**: 6 ADDED Requirements from 5 source changes consolidated

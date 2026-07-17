@@ -97,7 +97,7 @@ curl -fsSL https://<sub>.cianfhoghlaim.ie/health
 
 ## Worked example: add a new Dagster code-location
 
-1. Add `infrastructure/stacks/oideachais-dagster/pangolin.yaml`:
+1. Add `infrastructure/stacks/cianfhoghlaim-dagster/pangolin.yaml`:
 
    ```yaml
    pangolin:
@@ -112,20 +112,20 @@ curl -fsSL https://<sub>.cianfhoghlaim.ie/health
    ```
 
 2. Add the Komodo stack definition at
-   `infrastructure/komodo/stacks/oideachais-dagster.toml`:
+   `infrastructure/komodo/stacks/cianfhoghlaim-dagster.toml`:
 
    ```toml
    tags = ["host:bunchloch", "stack:dagster"]
    [services.dagster]
-   image = "ghcr.io/cianfhoghlaim/oideachais-dagster:latest"
+   image = "ghcr.io/cianfhoghlaim/cianfhoghlaim-dagster:latest"
    ports = ["3335:3335"]
    ```
 
 3. Apply:
 
    ```bash
-   pangolin validate --file infrastructure/stacks/oideachais-dagster/pangolin.yaml
-   pangolin apply blueprint --file infrastructure/stacks/oideachais-dagster/pangolin.yaml
+   pangolin validate --file infrastructure/stacks/cianfhoghlaim-dagster/pangolin.yaml
+   pangolin apply blueprint --file infrastructure/stacks/cianfhoghlaim-dagster/pangolin.yaml
    docker compose -f infrastructure/komodo/compose.yaml up -d
    ```
 

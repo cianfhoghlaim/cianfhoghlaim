@@ -34,7 +34,7 @@ The system SHALL enforce:
   (alias `get_default_for_m4_max`) SHALL be exposed for M4-Max
   hardware dispatch. It returns the canonical low-VRAM model selection
   using the same `"select_ocr_backend"` pattern from
-  `oideachais-cocoindex-v1/SKILL.md`.
+  `cianfhoghlaim-cocoindex-v1/SKILL.md`.
 
 #### Scenario: No legacy `@schedule` exists
 

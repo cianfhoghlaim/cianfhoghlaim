@@ -36,36 +36,36 @@ def ireland_primary_curriculum(
     pipeline = dlt.pipeline(
         pipeline_name="ireland_primary",
         destination=ducklake.get_dlt_destination(),
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     )
     load_info = pipeline.run(primary_outcomes_source())
     context.add_output_metadata({
         "rows_loaded": load_info.loads_ids[0] if load_info.loads_ids else 0,
-        "dataset_name": "oideachais.education.ie",
+        "dataset_name": "cianfhoghlaim.education.ie",
     })
 ```
 
 ## Multi-domain schema
 
-DuckLake creates schemas of the form `oideachais.{domain}.{nation}`.
-The `oideachais-pipeline` spec mandates this convention:
+DuckLake creates schemas of the form `cianfhoghlaim.{domain}.{nation}`.
+The `cianfhoghlaim-pipeline` spec mandates this convention:
 
 ```python
 # Ireland education
-load_info = pipeline.run(curriculum_source(), dataset_name="oideachais.education.ie")
+load_info = pipeline.run(curriculum_source(), dataset_name="cianfhoghlaim.education.ie")
 
 # Northern Ireland medicine
-load_info = pipeline.run(hse_source(), dataset_name="oideachais.medicine.ni")
+load_info = pipeline.run(hse_source(), dataset_name="cianfhoghlaim.medicine.ni")
 
 # Scotland site analysis
-load_info = pipeline.run(site_analysis_source(), dataset_name="oideachais.site_analysis.sct")
+load_info = pipeline.run(site_analysis_source(), dataset_name="cianfhoghlaim.site_analysis.sct")
 ```
 
 ## KCG usage
 
 - `storage/ducklake_client.py` — the canonical DuckLake
   client (Postgres catalog + Garage S3 object store)
-- `oideachais-pipeline` spec — the single `md:oideachais` (MotherDuck)
+- `cianfhoghlaim-pipeline` spec — the single `md:oideachais` (MotherDuck)
   database + single `ducklake:oideachais` (Garage S3) catalog
 - `orchestration/defs/` — the 21+ asset modules that
   write to DuckLake via the resource above
@@ -79,5 +79,5 @@ load_info = pipeline.run(site_analysis_source(), dataset_name="oideachais.site_a
   the upstream [dagster-ducklake](https://github.com/dagster-io/dagster/tree/master/python_modules/libraries/dagster-ducklake)
   package
 - The `ducklake` skill for upstream DuckLake patterns
-- The `oideachais-pipeline` openspec spec for the multi-domain
+- The `cianfhoghlaim-pipeline` openspec spec for the multi-domain
   schema convention

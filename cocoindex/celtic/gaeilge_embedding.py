@@ -14,7 +14,7 @@ R1–R4 v1 conformance contract per `_lifespan.py`:
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim, supports Irish).
-LanceDB table: `oideachais.lc.gaeilge.<level>_ga`.
+LanceDB table: `cianfhoghlaim.lc.gaeilge.<level>_ga`.
 
 Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 """
@@ -127,7 +127,7 @@ if COCOINDEX_AVAILABLE:
     ) -> None:
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name=f"oideachais.lc.gaeilge.{level}_{GAEILGE_LANGUAGE}",
+            table_name=f"cianfhoghlaim.lc.gaeilge.{level}_{GAEILGE_LANGUAGE}",
             table_schema=await lancedb.TableSchema.from_class(
                 GaelChunk, primary_key=["chunk_id"]
             ),
@@ -178,7 +178,7 @@ async def query_gaeilge(
     from cianfhoghlaim.lancedb.search import semantic_search
 
     return await semantic_search(
-        table=f"oideachais.lc.gaeilge.{level}_{GAEILGE_LANGUAGE}",
+        table=f"cianfhoghlaim.lc.gaeilge.{level}_{GAEILGE_LANGUAGE}",
         query=query,
         top_k=top_k,
     )

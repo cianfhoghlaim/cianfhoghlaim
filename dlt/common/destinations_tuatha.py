@@ -1,4 +1,4 @@
-"""educational/dlt_utils/destinations.py — shim around oideachais.
+"""educational/dlt_utils/destinations.py — shim around cianfhoghlaim.
 
 Phase 2.3 of the lateralise change: the educational (formerly tuatha)
 quadrant no longer carries its own DuckLake destination implementation.

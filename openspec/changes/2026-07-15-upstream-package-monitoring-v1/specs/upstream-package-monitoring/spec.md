@@ -37,14 +37,14 @@ CocoIndex upstream surface.
 - **THEN** it SHALL call BAML `ExtractPackageRelease` to extract
   structured release metadata
 - **AND** it SHALL write the extracted row to
-  `md:oideachais_upstream.upstream_monitoring`
+  `md:cianfhoghlaim_upstream.upstream_monitoring`
 - **AND** it SHALL trigger the n8n webhook bridge at
   `https://n8n.cianfhoghlaim.ie/webhook/upstream-breaking-change`
   whenever the release includes at least one breaking change.
 
 #### Scenario: Breaking-change sensor routes new MotherDuck rows
 
-- **GIVEN** `md:oideachais_upstream.upstream_monitoring` contains a new
+- **GIVEN** `md:cianfhoghlaim_upstream.upstream_monitoring` contains a new
   row with `is_breaking = TRUE`
 - **WHEN** `upstream_breaking_change_sensor` evaluates
 - **THEN** it SHALL emit a downstream materialisation request tagged with

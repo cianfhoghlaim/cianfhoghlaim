@@ -7,9 +7,9 @@ ireland/law DLT sources and writes the BAML-extracted rows to the L2
 DuckLake tables.
 
 Pipeline:
-  L1 (DLT)  → oideachais.law.ie.<source>_*  (raw crawled pages)
-  L2 (BAML) → oideachais.law.ie.<source>_*  (extracted structured rows)
-  L3 (CocoIndex v1) → oideachais.law.ie.ireland_legal_chunks (LanceDB)
+  L1 (DLT)  → cianfhoghlaim.law.ie.<source>_*  (raw crawled pages)
+  L2 (BAML) → cianfhoghlaim.law.ie.<source>_*  (extracted structured rows)
+  L3 (CocoIndex v1) → cianfhoghlaim.law.ie.ireland_legal_chunks (LanceDB)
 
 Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
 """
@@ -40,7 +40,7 @@ except ImportError:
     description="BAML ExtractPIABPage extraction (Ireland Legal Pipeline).",
 )
 def ireland_legal_piab_extracted(context: AssetExecutionContext) -> dict[str, Any]:
-    """BAML ExtractPIABPage → oideachais.law.ie.piab_pages."""
+    """BAML ExtractPIABPage → cianfhoghlaim.law.ie.piab_pages."""
     if not BAML_AVAILABLE:
         context.log.warning(
             "baml_client_not_available",
@@ -59,7 +59,7 @@ def ireland_legal_piab_extracted(context: AssetExecutionContext) -> dict[str, An
 def ireland_legal_courts_forms_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractCourtForm → oideachais.law.ie.courts_forms."""
+    """BAML ExtractCourtForm → cianfhoghlaim.law.ie.courts_forms."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCourtForm"}
     context.log.info("running ExtractCourtForm extraction")
@@ -73,7 +73,7 @@ def ireland_legal_courts_forms_extracted(
 def ireland_legal_judgements_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractJudgement → oideachais.law.ie.judgements."""
+    """BAML ExtractJudgement → cianfhoghlaim.law.ie.judgements."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractJudgement"}
     context.log.info("running ExtractJudgement extraction")
@@ -87,7 +87,7 @@ def ireland_legal_judgements_extracted(
 def ireland_legal_court_fees_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractCourtFee → oideachais.law.ie.court_fees."""
+    """BAML ExtractCourtFee → cianfhoghlaim.law.ie.court_fees."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCourtFee"}
     context.log.info("running ExtractCourtFee extraction")
@@ -101,7 +101,7 @@ def ireland_legal_court_fees_extracted(
 def ireland_legal_court_rules_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractCourtRule → oideachais.law.ie.court_rules."""
+    """BAML ExtractCourtRule → cianfhoghlaim.law.ie.court_rules."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCourtRule"}
     context.log.info("running ExtractCourtRule extraction")
@@ -115,7 +115,7 @@ def ireland_legal_court_rules_extracted(
 def ireland_legal_wrc_decisions_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractWRCDecision → oideachais.law.ie.wrc_decisions."""
+    """BAML ExtractWRCDecision → cianfhoghlaim.law.ie.wrc_decisions."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractWRCDecision"}
     context.log.info("running ExtractWRCDecision extraction")
@@ -129,7 +129,7 @@ def ireland_legal_wrc_decisions_extracted(
 def ireland_legal_wrc_pages_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractWRCProcedure → oideachais.law.ie.wrc_pages."""
+    """BAML ExtractWRCProcedure → cianfhoghlaim.law.ie.wrc_pages."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractWRCProcedure"}
     context.log.info("running ExtractWRCProcedure extraction")
@@ -143,7 +143,7 @@ def ireland_legal_wrc_pages_extracted(
 def ireland_legal_citizensinfo_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractCitizensInfoArticle → oideachais.law.ie.citizensinfo_articles."""
+    """BAML ExtractCitizensInfoArticle → cianfhoghlaim.law.ie.citizensinfo_articles."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractCitizensInfoArticle"}
     context.log.info("running ExtractCitizensInfoArticle extraction")
@@ -157,7 +157,7 @@ def ireland_legal_citizensinfo_extracted(
 def ireland_legal_gov_ie_extracted(
     context: AssetExecutionContext,
 ) -> dict[str, Any]:
-    """BAML ExtractGovIEPressRelease → oideachais.law.ie.gov_ie_pages."""
+    """BAML ExtractGovIEPressRelease → cianfhoghlaim.law.ie.gov_ie_pages."""
     if not BAML_AVAILABLE:
         return {"rows": 0, "baml_fn": "ExtractGovIEPressRelease"}
     context.log.info("running ExtractGovIEPressRelease extraction")
@@ -166,7 +166,7 @@ def ireland_legal_gov_ie_extracted(
 
 # The cross-source statute linkage asset — joins BAML-extracted
 # `statutes_cited` arrays against the existing
-# `oideachais.education.ie.irish_statute_book.acts` table.
+# `cianfhoghlaim.education.ie.irish_statute_book.acts` table.
 @asset(
     group_name="2_materials_legal_research_ireland_legal_statute_links",
     description=(

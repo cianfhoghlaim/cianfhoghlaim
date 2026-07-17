@@ -13,10 +13,10 @@ def _maybe(name: str, mod: str) -> Any:
 
 
 curriculum_for_wales = _maybe(
-    "curriculum_for_wales", "oideachais.cianfhoghlaim.dlt.british_isles.wales.education._curriculum_for_wales_helpers"
+    "curriculum_for_wales", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.wales.education._curriculum_for_wales_helpers"
 )
-estyn = _maybe("estyn", "oideachais.cianfhoghlaim.dlt.british_isles.wales.education.estyn")
-statswales = _maybe("statswales", "oideachais.cianfhoghlaim.dlt.british_isles.wales.statistics.statswales")
+estyn = _maybe("estyn", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.wales.education.estyn")
+statswales = _maybe("statswales", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.wales.statistics.statswales")
 
 # Phase 3D per-source re-exports.
 from cianfhoghlaim.dlt.british_isles.wales.education.curriculum_for_wales import curriculum_for_wales_source

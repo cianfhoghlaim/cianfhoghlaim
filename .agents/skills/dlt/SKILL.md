@@ -46,14 +46,14 @@ When assuming the `data-engineer` persona, use these rules:
   (NOT `data_platform/dlt_sources/`, which is a deprecated
   path mentioned in the old skill; NOT `dlt/`,
   which was the pre-v4 path).
-- **Imports**: All `oideachais.data_platform...` absolute imports have
+- **Imports**: All `cianfhoghlaim.data_platform...` absolute imports have
   been removed; use relative or local `dlt_sources` imports
   (e.g. `from cianfhoghlaim.dlt.british_isles.ireland.education.ncca...`).
 - **Offline fallback**: `USE_LOCAL_SCRAPES=true` routes extraction
   to `stedding/ingest_queue/` (the curated local cache) instead of
   live web scraping (avoids API rate limits and credit drain).
 - **Absolute namespaces** (per project AGENTS.md): NEVER import
-  `oideachais.data_platform...` from within the data platform — use
+  `cianfhoghlaim.data_platform...` from within the data platform — use
   relative imports.
 - **Ingestion cache** (per project AGENTS.md): Test with
   `USE_LOCAL_SCRAPES=true` before live web scraping to avoid API
@@ -176,7 +176,7 @@ def primary_outcomes(pdf_path: str) -> list[PrimaryOutcomeRow]:
 pipeline = dlt.pipeline(
     pipeline_name="ireland_primary_curriculum",
     destination="ducklake",
-    dataset_name="oideachais.education.ie",
+    dataset_name="cianfhoghlaim.education.ie",
 )
 load_info = pipeline.run(primary_outcomes("ncca_primary.pdf"))
 print(load_info)
@@ -224,7 +224,7 @@ def mathematics_syllabus(pdf_path: str):
 pipeline = dlt.pipeline(
     pipeline_name="lc6_ncca",
     destination="ducklake",
-    dataset_name="oideachais.leaving_cert",
+    dataset_name="cianfhoghlaim.leaving_cert",
 )
 load_info = pipeline.run(
     mathematics_syllabus("leaving_certificate/mathematics/en/...syllabus.pdf")
@@ -280,7 +280,7 @@ import dlt
     dlt_pipeline=dlt.pipeline(
         pipeline_name="ireland_curriculum",
         destination="ducklake",
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     ),
 )
 def ireland_curriculum_assets(context, dlt_run_resource: DagsterDltResource):
@@ -313,7 +313,7 @@ multiprocess_executor, parallel assets, and incremental loading.
 - Fetch all data in a single `fetch_all()` call (OOM risk for > 1M rows)
 - Use `write_disposition="merge"` without a `primary_key` (silently
   appends duplicates)
-- Import `oideachais.data_platform.dlt_sources` from within
+- Import `cianfhoghlaim.data_platform.dlt_sources` from within
   `cianfhoghlaim/` (use relative imports (`from .dlt...`)
 - Hand-write DDL for the destination (let dlt infer the schema from
   the resource yield)
@@ -390,7 +390,7 @@ Education pipeline (`openspec/changes/lc6-biep/`). It drives:
 - **`gov.ie` circulars** — the `government_circulars` resource
   mirrors the 7th v1 CocoIndex App (`government_circulars`),
   landing pages from `gov.ie/.../circulars/...` into
-  `oideachais.education.ie.gov_circulars_archive` (one of the 4
+  `cianfhoghlaim.education.ie.gov_circulars_archive` (one of the 4
   canonical MotherDuck Dives).
 - **Dual-language fan-out** — every resource is partitioned by
   `language` (`en` / `ga`) so the Gaeilge syllabus runs in parallel
@@ -434,7 +434,7 @@ Cross-references:
   LLM-judge `--goal` filter. The n8n workflow
   `bonneagar/stacks/n8n/workflows/upstream-blog-monitor.json`
   writes the payload to
-  `s3://oideachais-upstream-webhooks/dlthub/...jsonl` and triggers
+  `s3://cianfhoghlaim-upstream-webhooks/dlthub/...jsonl` and triggers
   the Dagster asset `upstream_blog_monitor_ingest`.
 notebooks:
 

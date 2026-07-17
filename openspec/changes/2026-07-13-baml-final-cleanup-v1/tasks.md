@@ -41,7 +41,7 @@
 
 ## Step 7 — Write OpenSpec deltas
 
-- [x] Add `specs/oideachais-baml-schemas/spec.md` with one ADDED requirement for the active single `minimax-m3` text generator.
+- [x] Add `specs/cianfhoghlaim-baml-schemas/spec.md` with one ADDED requirement for the active single `minimax-m3` text generator.
 - [x] Add `specs/british-isles-education-pipeline/spec.md` with one ADDED requirement for unique `MarkingPoint*` names.
 
 ## Validation

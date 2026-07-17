@@ -4,7 +4,7 @@ The 18 NCCA JC subjects each have 2 CBAs (one for Year 2, one for Year 3)
 = 36 CBAs total. Each CBA has its own DLT source keyed by `cba_id`.
 
 The destination DuckLake namespace is:
-    oideachais.education.british_isles.ireland.junior_cycle.cbas.<subject>.<cba_id>
+    cianfhoghlaim.education.british_isles.ireland.junior_cycle.cbas.<subject>.<cba_id>
 
 Reference: openspec/changes/2026-07-20-biep-v2-junior-cycle-extraction-v1/
 """
@@ -144,7 +144,7 @@ def build_jc_cba_source(cba_id: str, cache_dir: Path | None = None):
                 "education_stage": "junior_cycle_cba",
                 "year_band": "YEAR_2" if cba_idx == 1 else "YEAR_3",
                 "namespace": (
-                    "oideachais.education.british_isles.ireland.junior_cycle."
+                    "cianfhoghlaim.education.british_isles.ireland.junior_cycle."
                     f"cbas.{subject}.{cba_id}"
                 ),
             }

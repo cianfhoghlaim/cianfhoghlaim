@@ -1,13 +1,13 @@
 """
-oideachais.api.routes.search — FastAPI route for semantic search.
+cianfhoghlaim.api.routes.search — FastAPI route for semantic search.
 
 Exposes the cross-corpus semantic search as an HTTP endpoint at
 `/search/semantic`. Backs onto the canonical cognify rules in
 `storage.cognify.rules.semantic_search`, so there is NO duplicate
 search logic — the API is a thin HTTP wrapper.
 
-Reference: openspec/changes/2026-07-14-oideachais-semantic-search-v1/
-            + openspec/specs/oideachais-semantic-search/spec.md
+Reference: openspec/changes/2026-07-14-cianfhoghlaim-semantic-search-v1/
+            + openspec/specs/cianfhoghlaim-semantic-search/spec.md
             Requirement: Search API (`GET /search/semantic` returns
             200 with `{"results": [...], "total": N}`)
 """

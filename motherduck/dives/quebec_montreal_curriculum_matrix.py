@@ -22,7 +22,7 @@ def build_quebec_montreal_curriculum_matrix_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT school_board, language, COUNT(*) AS row_count
-            FROM oideachais.education.commonwealth.can.qc
+            FROM cianfhoghlaim.education.commonwealth.can.qc
             GROUP BY school_board, language
         """,
     )

@@ -51,7 +51,7 @@ def irish_coverage_monitor(context: AssetExecutionContext) -> dict[str, int]:
     pipeline = dlt.pipeline(
         pipeline_name="eu_irish_coverage_monitor",
         destination="duckdb",
-        dataset_name="oideachais_multilingual",
+        dataset_name="cianfhoghlaim_multilingual",
     )
     load_info = pipeline.run(eu_irish_coverage())
     context.log.info(

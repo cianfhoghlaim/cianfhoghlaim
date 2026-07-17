@@ -2,14 +2,14 @@
 Canuint Irish Pronunciation — CocoIndex v1 App.
 
 Embeds the Canuint word alignments (with timestamps) into LanceDB
-via BGE-M3. LanceDB table: ``oideachais.language.canuint_chunks``.
+via BGE-M3. LanceDB table: ``cianfhoghlaim.language.canuint_chunks``.
 
 R1–R4 v1 conformance contract.
 
 LlamaSwap routing per the shared table:
 - Canuint → ``qwen3-vl-8b`` (audio + text multimodal)
 
-Reads from: ``oideachais.celtic.canuint.word_alignments``
+Reads from: ``cianfhoghlaim.celtic.canuint.word_alignments``
 
 Reference: ``openspec/changes/2026-07-17-gaois-celtic-language-pipeline-v1/``
 """
@@ -47,9 +47,9 @@ from ._lifespan import (  # noqa: E402
 
 
 CANUINT_DUCKLAKE_TABLES = {
-    "word_alignments": "oideachais.celtic.canuint.word_alignments",
-    "recordings": "oideachais.celtic.canuint.recordings",
-    "locations": "oideachais.celtic.canuint.locations",
+    "word_alignments": "cianfhoghlaim.celtic.canuint.word_alignments",
+    "recordings": "cianfhoghlaim.celtic.canuint.recordings",
+    "locations": "cianfhoghlaim.celtic.canuint.locations",
 }
 
 
@@ -58,7 +58,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb  # type: ignore[import-not-found]
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -136,10 +136,10 @@ def mount_canuint_chunks_table() -> None:
     try:
         lancedb.mount_table_target(
             LANCE_DB,
-            table_name="oideachais.language.canuint_chunks",
+            table_name="cianfhoghlaim.language.canuint_chunks",
             embedding_dim=EMBED_DIM,
         )
-        logger.info("canuint_chunks_mounted", table="oideachais.language.canuint_chunks", dim=EMBED_DIM)
+        logger.info("canuint_chunks_mounted", table="cianfhoghlaim.language.canuint_chunks", dim=EMBED_DIM)
     except Exception as exc:
         logger.warning("canuint_chunks_mount_failed: %s", exc)
 

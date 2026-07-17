@@ -23,7 +23,7 @@ by:
 3. Extracting typed patterns via the canonical **Bolmo / Molmo2 /
    Qwen3-VL** VLM backbone + a BAML function
    `ExtractGameDesignPattern(image, game_ctx) -> GameDesignPattern`.
-4. Embedding the patterns into the `oideachais.retro.design_patterns`
+4. Embedding the patterns into the `cianfhoghlaim.retro.design_patterns`
    LanceDB table (BGE-large-en-v1.5, 1024-dim) via a v1 CocoIndex
    App that reuses the shared `_lifespan.py`.
 5. Generating subject-conditioned **2D + 3D educational assets**

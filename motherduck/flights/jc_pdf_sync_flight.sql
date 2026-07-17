@@ -2,7 +2,7 @@
 --
 -- Daily BIEP v2 sync of any new Junior Cycle PDFs landed in the
 -- canonical S3 path:
---   s3://garage/oideachais/junior_cycle/<subject>/<lang>/<year>/<file>.pdf
+--   s3://garage/cianfhoghlaim/junior_cycle/<subject>/<lang>/<year>/<file>.pdf
 --
 -- Per the 2026-07-20-biep-v2-junior-cycle-extraction-v1 change.
 --
@@ -27,8 +27,8 @@ WITH new_pdfs AS (
         filename,
         s3_uri,
         content_hash
-    FROM oideachais._aws.s3_discover(
-        bucket_url := 's3://garage/oideachais/junior_cycle/',
+    FROM cianfhoghlaim._aws.s3_discover(
+        bucket_url := 's3://garage/cianfhoghlaim/junior_cycle/',
         pattern := '*.pdf',
         since := NOW() - INTERVAL '24 hours'
     )
@@ -56,6 +56,6 @@ voted AS (
 )
 
 -- 4. Land the voted canonical in the per-subject LanceDB tables.
-INSERT INTO oideachais.education.british_isles.ireland.junior_cycle.{subject}.{language}
+INSERT INTO cianfhoghlaim.education.british_isles.ireland.junior_cycle.{subject}.{language}
     SELECT * FROM voted
     WHERE ragas_score >= 0.70;

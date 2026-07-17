@@ -37,7 +37,7 @@ Single-repo change. The change can be archived after:
 The academic-history pipeline SHALL:
 
 - Read files only via `scan_directory` / `localfs.walk_dir`
-- Write only to `oideachais.education.ie.uog_math_coursework` (DuckLake)
-  and the `oideachais_academic_history` LanceDB table
+- Write only to `cianfhoghlaim.education.ie.uog_math_coursework` (DuckLake)
+  and the `cianfhoghlaim_academic_history` LanceDB table
 - Never modify, append, or delete anything under `leabharlann/`
 - Never commit personal archive content to `cianfhoghlaim`

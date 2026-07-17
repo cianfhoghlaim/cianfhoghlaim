@@ -1,4 +1,4 @@
-# oideachais-baml-schemas — academic-history delta
+# cianfhoghlaim-baml-schemas — academic-history delta
 
 ## ADDED Requirements
 
@@ -21,7 +21,7 @@ The system SHALL provide 12 BAML functions in
 12. `ExtractAcademicHistorySnapshot(history_json) -> AcademicHistorySnapshot`
 
 All 12 functions SHALL route through the canonical `ExtractEn`
-LiteLLM client (per the `oideachais-baml-schemas` spec).
+LiteLLM client (per the `cianfhoghlaim-baml-schemas` spec).
 
 The functions SHALL use these enums:
 `TertiaryMathTopic` (40+), `DistributionFamily` (22),

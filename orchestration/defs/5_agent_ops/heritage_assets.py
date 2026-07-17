@@ -2,7 +2,7 @@
 
 Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/tasks.md T8.6.
 Heritage tests verify that the new `conic-leaving-cert` deployment is
-byte-for-byte identical to the legacy `oideachais-web/convex/schema.ts`
+byte-for-byte identical to the legacy `cianfhoghlaim-web/convex/schema.ts`
 for the 5 carried-over tables.
 """
 
@@ -14,7 +14,7 @@ from dagster import (
 )
 
 
-# The 5 carried-over tables (from oideachais-web/convex/schema.ts)
+# The 5 carried-over tables (from cianfhoghlaim-web/convex/schema.ts)
 CARRIED_OVER_TABLES = (
     "subject_sessions",
     "practice_attempts",

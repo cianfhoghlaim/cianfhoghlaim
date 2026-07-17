@@ -1,8 +1,8 @@
-# `oideachais-semantic-search-v1` — Cross-corpus LanceDB HNSW search
+# `cianfhoghlaim-semantic-search-v1` — Cross-corpus LanceDB HNSW search
 
 ## Why
 
-The `oideachais-semantic-search` capability spec defines 13
+The `cianfhoghlaim-semantic-search` capability spec defines 13
 requirements for cross-corpus semantic search across the BIEP v1
 Leaving Cert corpora + the leabharlann corpus, using LanceDB HNSW
 with two embedding models (BGE-M3 multilingual + BGE-large-en-v1.5
@@ -92,7 +92,7 @@ This change adds the following code-level artifacts:
 
 ## Verification
 
-- `openspec validate 2026-07-14-oideachais-semantic-search-v1 --strict`
+- `openspec validate 2026-07-14-cianfhoghlaim-semantic-search-v1 --strict`
   passes
 - `mise run baml:generate` exits 0 (per the F2 commit `54c21dd52`)
 - The new marimo notebook `01_search.py` AST-parses cleanly
@@ -106,7 +106,7 @@ This change adds the following code-level artifacts:
 ## Acceptance
 
 This change archives when:
-- The 13 requirements of `oideachais-semantic-search` are all
+- The 13 requirements of `cianfhoghlaim-semantic-search` are all
   functional
 - `openspec validate --strict` passes
 - The marimo notebook is discoverable + AST-parses

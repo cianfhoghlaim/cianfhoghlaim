@@ -1,6 +1,6 @@
 ---
 name: hf-spaces-deploy
-description: The KCG HuggingFace Spaces deploy pipeline — the 4 active Spaces (an_scrudu, meaisin_cliste, cianfhoghlaim, anam_tuatha) + the 4 new demo Spaces (croilar_portfolio_demo, oideachais_mission_control, crypteolas_defi_monitor, tuatha_mmo_demo) + the 1 archived Space (anti-phish) + the canonical reusable workflow at `.github/workflows/spaces-sync.yml` (used by 4 per-Space sync.yml wrappers) + the 5-element palette + the i18n (EN/GA) toggle + the LiteLLM gateway pattern. Use when adding a new Space, debugging a CI sync failure, understanding the 4-file Space structure (app.py + requirements.txt + README.md + AGENTS.md), or asking "how does a Space deploy to HF?".
+description: The KCG HuggingFace Spaces deploy pipeline — the 4 active Spaces (an_scrudu, meaisin_cliste, cianfhoghlaim, anam_tuatha) + the 4 new demo Spaces (croilar_portfolio_demo, cianfhoghlaim_mission_control, crypteolas_defi_monitor, tuatha_mmo_demo) + the 1 archived Space (anti-phish) + the canonical reusable workflow at `.github/workflows/spaces-sync.yml` (used by 4 per-Space sync.yml wrappers) + the 5-element palette + the i18n (EN/GA) toggle + the LiteLLM gateway pattern. Use when adding a new Space, debugging a CI sync failure, understanding the 4-file Space structure (app.py + requirements.txt + README.md + AGENTS.md), or asking "how does a Space deploy to HF?".
 ---
 
 # HuggingFace Spaces Deploy
@@ -37,7 +37,7 @@ Use when you need to:
 | Space | SDK | Maps to | Purpose |
 |:--|:--|:--|:--|
 | `croilar_portfolio_demo/` | gradio 5.x | croilar | A demo of the 3-persona portfolio site |
-| `oideachais_mission_control/` | gradio 5.x | oideachais | A mission-control dashboard for the lakehouse |
+| `cianfhoghlaim_mission_control/` | gradio 5.x | oideachais | A mission-control dashboard for the lakehouse |
 | `crypteolas_defi_monitor/` | gradio 5.x | crypteolas | A DeFi monitor for the crypteolas platform |
 | `tuatha_mmo_demo/` | gradio 5.x | tuatha | A demo of the British Isles formative assessment MMO |
 
@@ -55,8 +55,8 @@ Use when you need to:
 
 The `data-engineering/` Space is the only non-gradio Space.
 It lives in `spaces/` for historical reasons but is the
-canonical exception (it consumes `sruth/oideachais/agents/adk/`
-+ `sruth/oideachais/baml_src/` directly, not the LiteLLM gateway).
+canonical exception (it consumes `sruth/cianfhoghlaim/agents/adk/`
++ `sruth/cianfhoghlaim/baml_src/` directly, not the LiteLLM gateway).
 
 ## The 4-file Space structure (the canonical layout)
 

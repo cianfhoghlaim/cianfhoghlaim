@@ -2,7 +2,7 @@
 
 ### Requirement: Canonical endpoint_recovery helper
 
-The oideachais-pipeline capability MUST expose the
+The cianfhoghlaim-pipeline capability MUST expose the
 `dlt/common/endpoint_recovery` helper as the canonical entry point
 for every DLT source's outbound network call. The helper MUST be
 importable from `cianfhoghlaim.dlt.common.endpoint_recovery` and

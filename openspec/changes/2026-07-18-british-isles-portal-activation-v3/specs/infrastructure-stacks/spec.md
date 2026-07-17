@@ -7,7 +7,7 @@ following the 6-file GOLD_STANDARD pattern (compose.yaml + wrangler.jsonc +
 Dockerfile + README.md + docs/STACK.md + Pangolin route).
 
 The stack SHALL host:
-- 1 Cloudflare R2 bucket (`oideachais-pdfs`)
+- 1 Cloudflare R2 bucket (`cianfhoghlaim-pdfs`)
 - 1 Cloudflare Pages project (`portal`)
 - 1 Pangolin resource binding (`portal.cianfhoghlaim.ie` → Cloudflare tunnel)
 - 1 Locket sidecar (secret injection from Infisical `dev-baile`)

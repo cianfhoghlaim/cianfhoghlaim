@@ -13,5 +13,5 @@ Each short-course DLT source is a thin per-course re-export of the
     dlt/british_isles/ireland/education/junior_cycle_short_courses/_factory.py
 
 The destination DuckLake namespace is:
-    oideachais.education.british_isles.ireland.junior_cycle.short_courses.<course_slug>
+    cianfhoghlaim.education.british_isles.ireland.junior_cycle.short_courses.<course_slug>
 """

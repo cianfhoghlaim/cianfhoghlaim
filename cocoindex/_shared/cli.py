@@ -12,7 +12,7 @@ import argparse
 import sys
 
 
-# The 14 v1 CocoIndex Apps per `oideachais-cocoindex-v1` skill.
+# The 14 v1 CocoIndex Apps per `cianfhoghlaim-cocoindex-v1` skill.
 V1_APPS = (
     "leabharlann_books_embedding",
     "leabharlann_zotero_embedding",

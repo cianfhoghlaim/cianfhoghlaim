@@ -147,9 +147,9 @@ def validate_source_kwargs(source: Any, **kwargs: Any) -> list[str]:
 def get_executor(name: str = "duckdb") -> ThreadPoolExecutor:
     """Canonical single-thread DuckDB executor.
 
-    The oideachais.oideachais.core shim previously provided this; it
+    The cianfhoghlaim.cianfhoghlaim.core shim previously provided this; it
     is now defined here as the canonical implementation. A backward-
-    compat re-export is preserved in oideachais.oideachais.core for
+    compat re-export is preserved in cianfhoghlaim.cianfhoghlaim.core for
     one release.
 
     Args:

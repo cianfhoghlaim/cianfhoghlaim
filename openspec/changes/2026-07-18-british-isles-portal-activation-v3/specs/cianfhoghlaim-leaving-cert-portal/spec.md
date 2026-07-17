@@ -33,10 +33,10 @@ marks ÷ study-hours), `total_hours` (int), `assets` (AssetDescriptor[]),
 
 The system SHALL provide a CocoIndex v1 App at
 `cocoindex/portal_study_plan_embedding.py` that conforms to the R1-R4
-contract documented in `openspec/specs/oideachais-cocoindex-v1-migration/spec.md`.
+contract documented in `openspec/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md`.
 
 The App SHALL mount its target on the canonical LanceDB table
-`oideachais.portal.study_plan_chunks` using `BAAI/bge-m3` (1024-d)
+`cianfhoghlaim.portal.study_plan_chunks` using `BAAI/bge-m3` (1024-d)
 as the shared embedder via the canonical `_lifespan.py` shared home.
 
 #### Scenario: A developer reads the App skeleton
@@ -49,7 +49,7 @@ as the shared embedder via the canonical `_lifespan.py` shared home.
 
 The system SHALL provide a MotherDuck Dive named `lc_study_plan_dive`
 that renders a KPI strip + a filterable table + a trend chart over the
-`oideachais.portal.study_plan_chunks` LanceDB companion.
+`cianfhoghlaim.portal.study_plan_chunks` LanceDB companion.
 
 The system SHALL also provide a daily MotherDuck Flight named
 `lc_study_plan_flight` that runs `dagster materialise -a study_plan_extract`
@@ -57,7 +57,7 @@ once per day.
 
 #### Scenario: A user opens the Dive
 
-- **GIVEN** `oideachais.portal.study_plan_chunks` has at least 1 row
+- **GIVEN** `cianfhoghlaim.portal.study_plan_chunks` has at least 1 row
 - **WHEN** the user opens the Dive URL
 - **THEN** the KPI strip renders with ≥ 3 metrics (study plans / week, subnation coverage %, asset fan-out histogram)
 - **AND** the filterable table renders all rows
@@ -71,7 +71,7 @@ once per day.
 
 ### Requirement: Cloudflare R2 + Hono-issued signed URLs (R14)
 
-The system SHALL provide a Cloudflare R2 bucket named `oideachais-pdfs`
+The system SHALL provide a Cloudflare R2 bucket named `cianfhoghlaim-pdfs`
 plus a Hono route on the `hono-api` service that issues **signed GET
 URLs** valid for 15 minutes. (No Cloudflare Worker is required — the
 Hono service already has S3 credentials via the Garage S3 backend, so

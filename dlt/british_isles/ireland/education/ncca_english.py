@@ -205,7 +205,7 @@ __all__ = [
 
 def create_ncca_english_pipeline(
     pipeline_name: str = "ncca_english_lc6",
-    dataset_name: str = "oideachais.leaving_cert.english",
+    dataset_name: str = "cianfhoghlaim.leaving_cert.english",
 ) -> Any:
     """Return a configured dlt pipeline for the BIEP v1 english NCCA crawl.
 

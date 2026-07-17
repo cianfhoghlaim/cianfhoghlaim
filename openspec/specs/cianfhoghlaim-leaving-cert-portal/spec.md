@@ -11,7 +11,7 @@ front-end + Hono oRPC API + Convex `conic-leaving-cert` deployment) +
 subjects + the 5 NCCA root-level programme PDFs).
 
 This is the canonical openspec spec for the Leaving Cert portal. It
-**supersedes** the deprecated `oideachais-web` app (which is retired
+**supersedes** the deprecated `cianfhoghlaim-web` app (which is retired
 as a prototype) and integrates with the `cianfhoghlaim-educational-mmo`
 spec for the 8 NCCA ADK specialists + the `retro-game-asset-pipeline`
 spec for the Diagram Generator + 3D Asset Gallery + the

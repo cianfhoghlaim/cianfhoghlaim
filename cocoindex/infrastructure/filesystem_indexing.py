@@ -5,7 +5,7 @@ Indexes the directory structure of the Cianfhoghlaim monorepo. Each
 row in the `filesystem_layout` LanceDB table is one directory
 (depth-1 to depth-4). Embeddings enable semantic search: e.g.
 "where do I find the dagster assets" returns the
-`oideachais/dagster_defs/` directory.
+`cianfhoghlaim/dagster_defs/` directory.
 
 Per-directory fields:
 - `dir_path` (relative to repo root)

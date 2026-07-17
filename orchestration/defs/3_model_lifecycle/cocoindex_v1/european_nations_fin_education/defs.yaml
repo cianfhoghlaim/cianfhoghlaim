@@ -2,7 +2,7 @@
 #
 # L3 CocoIndex v1 App for the Finland (Finland) education
 # pipeline. Embeds every Finland per-subject education row into
-# the shared `oideachais.lc.european_nations.fin.education_chunks` LanceDB table.
+# the shared `cianfhoghlaim.lc.european_nations.fin.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
@@ -15,7 +15,7 @@ attributes:
     - app_name: FINEducationEmbedding
       module: cianfhoghlaim.cocoindex.european_nations_fin_education_embedding
       source: european_nations
-      lance_table: oideachais.lc.european_nations.fin.education_chunks
+      lance_table: cianfhoghlaim.lc.european_nations.fin.education_chunks
   schedule:
     cron: "0 5 * * *"
     timezone: UTC

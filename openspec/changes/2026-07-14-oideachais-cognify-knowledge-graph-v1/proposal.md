@@ -2,7 +2,7 @@
 
 ## Why
 
-The `oideachais-cognify-knowledge-graph` capability spec (9
+The `cianfhoghlaim-cognify-knowledge-graph` capability spec (9
 requirements: R1 5-stage cross-stage KG, R2 site-analysis cognify,
 R3 leabharlann cognify, R4 cross-archive edges, R5 graph query
 API, R6 daily cron, R7 BAML TypeBuilder dynamic schema, R8 DLT
@@ -29,7 +29,7 @@ The infrastructure is largely in place per the 5-tangent change
   `leabharlann_inbox_cross_archive.py`,
   `author_archive_cross_corpus.py`.
 - The cross-archive graph query API route lives at
-  `agents/api/_oideachais_api/routes/cross_archive_graph.py`.
+  `agents/api/_cianfhoghlaim_api/routes/cross_archive_graph.py`.
 
 But the **5 per-stage cognify adapters** (Aistear, Primary, JC,
 SC, University) and the **3 BIEP cross-archive edges**
@@ -92,9 +92,9 @@ This change ships the 9 deliverables end-to-end:
 | `storage/cognify/rules/cross_archive_biep_edges.py` | NEW (3 BIEP cross-archive edges) | +~496 |
 | `notebooks/10_cognify/01_knowledge_graph.py` | NEW (cognify visualisation) | +~429 |
 | `notebooks/cli.py` | MODIFIED (add `10_cognify` to GROUPS) | +~7 |
-| `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/proposal.md` | NEW (this file) | +~110 |
-| `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/tasks.md` | NEW | +~90 |
-| `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/specs/oideachais-cognify-knowledge-graph/spec.md` | NEW (1 ADDED requirement) | +~50 |
+| `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/proposal.md` | NEW (this file) | +~110 |
+| `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/tasks.md` | NEW | +~90 |
+| `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md` | NEW (1 ADDED requirement) | +~50 |
 
 Total: 10 NEW Python files (~2,100 LOC) + 1 MODIFIED file (cli.py, +7 LOC)
 + 3 NEW openspec change artifacts (~250 LOC).
@@ -139,14 +139,14 @@ This change ONLY touches:
 - `storage/cognify/rules/cross_archive_biep_edges.py` (1 NEW file)
 - `notebooks/10_cognify/01_knowledge_graph.py` (1 NEW file)
 - `notebooks/cli.py` (MODIFIED, +7 LOC)
-- `openspec/changes/2026-07-14-oideachais-cognify-knowledge-graph-v1/` (3 NEW files)
+- `openspec/changes/2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1/` (3 NEW files)
 
 No cross-repo sync required.
 
 ## Acceptance gates
 
-- `openspec validate 2026-07-14-oideachais-cognify-knowledge-graph-v1 --strict` passes
-- 9 requirements of `oideachais-cognify-knowledge-graph` all functional
+- `openspec validate 2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1 --strict` passes
+- 9 requirements of `cianfhoghlaim-cognify-knowledge-graph` all functional
 - 5 cognify stages (aistear + primary + junior_cycle + senior_cycle + university) all exist at `cognify/cognee_integration/`
 - 3 leabharlann cognify all exist at `cognify/rules/`
 - 3 FalkorDB edges all exist in `cognify/rules/cross_archive_biep_edges.py`

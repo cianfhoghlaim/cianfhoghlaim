@@ -609,7 +609,7 @@ MLflow added a GenAI evaluation mode in 2026 that complements Langfuse:
 - Tracks quality metrics (faithfulness, answer relevance, context precision) per model
 - Integrates with the MLflow model registry: a model can only be promoted to "Production" if it passes the eval gate
 
-The KCG pattern: nightly batch eval of the `agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `agents/meaisinfhoghlaim/dagster_defs/`) is the entry point.
+The KCG pattern: nightly batch eval of the `agents/curriculum_agent` against the `cianfhoghlaim_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `agents/meaisinfhoghlaim/dagster_defs/`) is the entry point.
 
 ### RAGAS trace-based metrics
 

@@ -1,11 +1,11 @@
-# oideachais-university-deep-extraction — academic-history delta
+# cianfhoghlaim-university-deep-extraction — academic-history delta
 
 ## ADDED Requirements
 
 ### Requirement: Academic-module descriptor extraction
 
 The system SHALL provide `b.ExtractAcademicModuleSyllabus` (per the
-`oideachais-baml-schemas` academic-history delta) that takes an
+`cianfhoghlaim-baml-schemas` academic-history delta) that takes an
 official UoG module page (already scraped by
 `uog_bulk_scrape` + `uog_extract_modules`) and produces a typed
 `AcademicModuleDescriptor` record.
@@ -13,7 +13,7 @@ official UoG module page (already scraped by
 #### Scenario: ST311 module descriptor extracted
 
 - **GIVEN** a module page for ST311 from
-  `oideachais.education.ie.university_modules`
+  `cianfhoghlaim.education.ie.university_modules`
 - **WHEN** `b.ExtractAcademicModuleSyllabus(markdown, "ST311")` runs
 - **THEN** the returned `AcademicModuleDescriptor` SHALL include
   `module_code = "ST311"`, `module_title` (extracted),
@@ -29,7 +29,7 @@ The system SHALL provide notebook
 extracted `CourseworkArtifact` rows to the official
 `AcademicModuleDescriptor` rows via the
 `CourseworkArtifact-PART_OF-AcademicModule` cross-archive edge
-(per the `oideachais-leabharlann` academic-history delta).
+(per the `cianfhoghlaim-leabharlann` academic-history delta).
 
 #### Scenario: ST311 row joins module + LOs
 

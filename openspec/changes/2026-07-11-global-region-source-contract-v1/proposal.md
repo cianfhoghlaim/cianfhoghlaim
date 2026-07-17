@@ -67,7 +67,7 @@ spec for the global expansion. It declares:
 - the canonical DuckLake namespace shape.
 
 The new spec is referenced from the existing
-[`oideachais-pipeline`](../../specs/oideachais-pipeline/spec.md) +
+[`cianfhoghlaim-pipeline`](../../specs/cianfhoghlaim-pipeline/spec.md) +
 [`british-isles-education-pipeline`](../../specs/british-isles-education-pipeline/spec.md)
 specs (see §2 below).
 
@@ -75,7 +75,7 @@ specs (see §2 below).
 
 | File | Action | Why |
 |:--|:--|:--|
-| `openspec/specs/oideachais-pipeline/spec.md` | MODIFIED | Add the cross-region path contract as a new ADDED Requirement and reference the new umbrella spec |
+| `openspec/specs/cianfhoghlaim-pipeline/spec.md` | MODIFIED | Add the cross-region path contract as a new ADDED Requirement and reference the new umbrella spec |
 | `openspec/specs/british-isles-education-pipeline/spec.md` | MODIFIED | Add a cross-reference that the British Isles path contract is one instance of the new global contract |
 | `openspec/specs/cross-region-pipeline/spec.md` | NEW | The umbrella spec for the global expansion |
 
@@ -98,7 +98,7 @@ specs (see §2 below).
   CocoIndex v1 Apps land in this change. Those land in Phase 1 +
   Phase 2 + Phase 4 + Phase 5 (the follow-on openspec changes).
 - The legacy `sruth/<quadrant>/` paths referenced in the older
-  `oideachais-pipeline/spec.md` scenarios are NOT modified in this
+  `cianfhoghlaim-pipeline/spec.md` scenarios are NOT modified in this
   change.
 
 ## Out of scope (deferred to follow-on changes)
@@ -133,7 +133,7 @@ Affected repos: cianfhoghlaim (single-repo change)
 - `openspec validate 2026-07-11-global-region-source-contract-v1 --strict` passes
 - `openspec/specs/cross-region-pipeline/spec.md` exists with at least 3
   Requirements + 3 Scenarios
-- `openspec/specs/oideachais-pipeline/spec.md` carries the new
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` carries the new
   `cross-region-pipeline` Requirement
 - `openspec/specs/british-isles-education-pipeline/spec.md` carries
   the new cross-reference Requirement
@@ -145,11 +145,11 @@ Affected repos: cianfhoghlaim (single-repo change)
 
 - `openspec/specs/british-isles-education-pipeline/spec.md` — the
   British Isles v1 capspec (one instance of the new global contract)
-- `openspec/specs/oideachais-pipeline/spec.md` — the parent Celtic
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — the parent Celtic
   education pipeline
 - `openspec/specs/official-media-pipeline/spec.md` — the official-media
   capspec (sibling region, not yet under the new contract)
-- `openspec/specs/oideachais-university-deep-extraction/spec.md` — the
+- `openspec/specs/cianfhoghlaim-university-deep-extraction/spec.md` — the
   per-university deep-extraction spec (will reference the new contract)
 - `docs/agents/cross-nation-content-audit.md` — the BIEP v2 audit
   template

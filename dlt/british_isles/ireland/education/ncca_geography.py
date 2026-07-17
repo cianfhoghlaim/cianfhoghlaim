@@ -205,7 +205,7 @@ __all__ = [
 
 def create_ncca_geography_pipeline(
     pipeline_name: str = "ncca_geography_lc6",
-    dataset_name: str = "oideachais.leaving_cert.geography",
+    dataset_name: str = "cianfhoghlaim.leaving_cert.geography",
 ) -> Any:
     """Return a configured dlt pipeline for the BIEP v1 geography NCCA crawl.
 

@@ -194,7 +194,7 @@ BAML classes: `AustraliaSubjectCurriculum`,
   declaring the rename convention
 - [ ] 3.2 MODIFIED delta on `british-isles-education-pipeline/spec.md`
   declaring the BIEP light-touch pass
-- [ ] 3.3 MODIFIED delta on `oideachais-pipeline/spec.md` declaring
+- [ ] 3.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` declaring
   the global rename convention
 
 ## 4. Validate

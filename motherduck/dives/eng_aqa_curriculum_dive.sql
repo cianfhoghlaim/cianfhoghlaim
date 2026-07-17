@@ -16,6 +16,6 @@ SELECT
     COUNT(DISTINCT topic) AS topic_count,
     COUNT(DISTINCT assessment_objective_id) AS ao_count,
     MAX(ingested_at) AS last_ingested_at
-FROM oideachais.education.british_isles.england.aqa._all_qualifications
+FROM cianfhoghlaim.education.british_isles.england.aqa._all_qualifications
 GROUP BY board, subject, qualification_level
 ORDER BY qualification_level, subject;

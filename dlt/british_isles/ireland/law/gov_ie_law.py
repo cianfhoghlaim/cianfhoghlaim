@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.gov_ie_law — Irish
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law.gov_ie_law — Irish
 Government (gov.ie) across ALL ministerial sub-departments.
 
 Source: `https://www.gov.ie/en/` — the umbrella surface covering all

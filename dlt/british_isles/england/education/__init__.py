@@ -14,12 +14,12 @@ def _maybe(name: str, mod: str) -> Any:
 
 # Phase 3D per-source re-exports.
 national_curriculum = _maybe(
-    "national_curriculum", "oideachais.cianfhoghlaim.dlt.british_isles.england.education._national_curriculum_helpers"
+    "national_curriculum", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.education._national_curriculum_helpers"
 )
-ofsted = _maybe("ofsted", "oideachais.cianfhoghlaim.dlt.british_isles.england.education.ofsted")
-school_info = _maybe("school_info", "oideachais.cianfhoghlaim.dlt.british_isles.england.education.school_info")
+ofsted = _maybe("ofsted", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.education.ofsted")
+school_info = _maybe("school_info", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.education.school_info")
 dfe_explore_statistics = _maybe(
-    "dfe_explore_statistics", "oideachais.cianfhoghlaim.dlt.british_isles.england.statistics.dfe_explore_statistics"
+    "dfe_explore_statistics", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.statistics.dfe_explore_statistics"
 )
 
 # Per-source functions (Phase 3D: one function per file).

@@ -4,7 +4,7 @@ Court Rules v1 CocoIndex Embedding App (Pick-8 Ireland/law quadrant).
 Embeds the BAML-extracted CourtRule content from the Court Rules
 library (courts.ie/rules) into LanceDB.
 
-R1-R4 v1 conformance contract (per the `oideachais-cocoindex-v1` skill):
+R1-R4 v1 conformance contract (per the `cianfhoghlaim-cocoindex-v1` skill):
 
 - R1 — `from ._lifespan import shared_lifespan` (this module)
 - R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
@@ -13,9 +13,9 @@ R1-R4 v1 conformance contract (per the `oideachais-cocoindex-v1` skill):
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim).
-LanceDB table: `oideachais.law.ie.court_rules_chunks`.
+LanceDB table: `cianfhoghlaim.law.ie.court_rules_chunks`.
 
-Source: `oideachais.law.ie.court_rules` DuckLake table.
+Source: `cianfhoghlaim.law.ie.court_rules` DuckLake table.
 
 Reference: openspec/changes/archive/2026-07-07-finalize-v4-landing/
            absorbed/2026-07-06-ireland-legal-pipeline/proposal.md
@@ -53,7 +53,7 @@ from ._lifespan import (  # noqa: E402, F401
 )
 
 COURT_RULES_DUCKLAKE_TABLES: dict[str, str] = {
-    "court_rules": "oideachais.law.ie.court_rules",
+    "court_rules": "cianfhoghlaim.law.ie.court_rules",
 }
 
 
@@ -62,7 +62,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb  # type: ignore[import-not-found]
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -165,7 +165,7 @@ if COCOINDEX_AVAILABLE:
     async def court_rules_app_main() -> None:
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name="oideachais.law.ie.court_rules_chunks",
+            table_name="cianfhoghlaim.law.ie.court_rules_chunks",
             table_schema=await lancedb.TableSchema.from_class(
                 CourtRulesChunk,
                 primary_key=["chunk_id"],
@@ -206,7 +206,7 @@ async def search_court_rules(
         from cianfhoghlaim.lancedb.search import semantic_search
 
         result = await semantic_search(
-            table="oideachais.law.ie.court_rules_chunks",
+            table="cianfhoghlaim.law.ie.court_rules_chunks",
             query=query,
             top_k=limit,
         )

@@ -55,7 +55,7 @@ manager) via the Dagger Komodo module.
 #### Scenario: Komodo deploy procedure
 
 - **GIVEN** a merge to main
-- **WHEN** the Dagger Komodo module runs the `deploy-oideachais-bunchloch`
+- **WHEN** the Dagger Komodo module runs the `deploy-cianfhoghlaim-bunchloch`
   procedure
 - **THEN** the module triggers the Komodo procedure and waits for
   completion

@@ -4,7 +4,7 @@ Courts v1 CocoIndex Embedding App (Pick-8 Ireland/law quadrant).
 Embeds the BAML-extracted CourtForm + CourtFee content from the
 Courts Service of Ireland into LanceDB.
 
-R1-R4 v1 conformance contract (per the `oideachais-cocoindex-v1` skill):
+R1-R4 v1 conformance contract (per the `cianfhoghlaim-cocoindex-v1` skill):
 
 - R1 — `from ._lifespan import shared_lifespan` (this module)
 - R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
@@ -13,9 +13,9 @@ R1-R4 v1 conformance contract (per the `oideachais-cocoindex-v1` skill):
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim).
-LanceDB table: `oideachais.law.ie.courts_chunks`.
+LanceDB table: `cianfhoghlaim.law.ie.courts_chunks`.
 
-Source: `oideachais.law.ie.courts_forms` + `oideachais.law.ie.court_fees`
+Source: `cianfhoghlaim.law.ie.courts_forms` + `cianfhoghlaim.law.ie.court_fees`
 DuckLake tables.
 
 Reference: openspec/changes/archive/2026-07-07-finalize-v4-landing/
@@ -54,8 +54,8 @@ from ._lifespan import (  # noqa: E402, F401
 )
 
 COURTS_DUCKLAKE_TABLES: dict[str, str] = {
-    "courts_forms": "oideachais.law.ie.courts_forms",
-    "court_fees": "oideachais.law.ie.court_fees",
+    "courts_forms": "cianfhoghlaim.law.ie.courts_forms",
+    "court_fees": "cianfhoghlaim.law.ie.court_fees",
 }
 
 
@@ -64,7 +64,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         import duckdb  # type: ignore[import-not-found]
     except ImportError:
         return []
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:
@@ -181,7 +181,7 @@ if COCOINDEX_AVAILABLE:
     async def courts_app_main() -> None:
         target_table = await lancedb.mount_table_target(
             LANCE_DB,  # type: ignore[arg-type]
-            table_name="oideachais.law.ie.courts_chunks",
+            table_name="cianfhoghlaim.law.ie.courts_chunks",
             table_schema=await lancedb.TableSchema.from_class(
                 CourtsChunk,
                 primary_key=["chunk_id"],
@@ -222,7 +222,7 @@ async def search_courts(
         from cianfhoghlaim.lancedb.search import semantic_search
 
         result = await semantic_search(
-            table="oideachais.law.ie.courts_chunks",
+            table="cianfhoghlaim.law.ie.courts_chunks",
             query=query,
             top_k=limit,
         )

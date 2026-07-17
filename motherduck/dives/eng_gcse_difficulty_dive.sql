@@ -12,7 +12,7 @@ SELECT
     board,
     blooms_taxonomy_level,
     COUNT(*) AS question_count
-FROM oideachais.education.british_isles.england.exam_papers
+FROM cianfhoghlaim.education.british_isles.england.exam_papers
 WHERE qualification_level = 'gcse'
 GROUP BY subject, board, blooms_taxonomy_level
 ORDER BY subject, board, blooms_taxonomy_level;

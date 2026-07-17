@@ -107,7 +107,7 @@ A good Dive is 3 surfaces max, each with a 1-line title and a
 ```sql
 -- Example: revenue KPI
 SELECT SUM(amount) AS revenue_today
-FROM oideachais.curriculum_dlt.ie_education_revenue
+FROM cianfhoghlaim.curriculum_dlt.ie_education_revenue
 WHERE date = CURRENT_DATE;
 ```
 
@@ -147,11 +147,11 @@ ORDER BY schema_name;
 -- List all tables in a schema
 SELECT table_name, table_type
 FROM information_schema.tables
-WHERE table_schema = 'oideachais_curriculum'
+WHERE table_schema = 'cianfhoghlaim_curriculum'
 ORDER BY table_name;
 
 -- Sample a table
-SELECT * FROM oideachais_curriculum.ie_education_primary
+SELECT * FROM cianfhoghlaim_curriculum.ie_education_primary
 USING SAMPLE 10 ROWS;
 ```
 
@@ -165,14 +165,14 @@ flow:
 
 ```sql
 -- Owner side: create the share
-CREATE SHARE oideachais_curriculum_share
-FROM DATABASE oideachais_curriculum;
+CREATE SHARE cianfhoghlaim_curriculum_share
+FROM DATABASE cianfhoghlaim_curriculum;
 
 -- Recipient side: list available shares
 SELECT * FROM information_schema.shares;
 
 -- Recipient side: attach the share
-ATTACH 'md:oideachais_curriculum_share' AS shared_curriculum
+ATTACH 'md:cianfhoghlaim_curriculum_share' AS shared_curriculum
     (READ_ONLY);
 ```
 

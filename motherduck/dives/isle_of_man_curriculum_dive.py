@@ -21,7 +21,7 @@ def build_isle_of_man_curriculum_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT subject, language, COUNT(*) AS row_count
-            FROM oideachais.education.british_isles.isle_of_man
+            FROM cianfhoghlaim.education.british_isles.isle_of_man
             GROUP BY subject, language
         """,
     )

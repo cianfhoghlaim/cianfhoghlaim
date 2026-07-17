@@ -116,7 +116,7 @@ def _edcolearning_client() -> HttpClientFactory:
     return HttpClientFactory(
         base_url=EDCOLEARNING_BASE,
         rate_limit=2.0,  # Conservative for authenticated scraping
-        user_agent="oideachais-dlt/1.0",
+        user_agent="cianfhoghlaim-dlt/1.0",
         timeout=60.0,
     )
 

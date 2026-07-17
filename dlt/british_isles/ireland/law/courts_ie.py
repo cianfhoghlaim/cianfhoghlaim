@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.courts_ie — Courts
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law.courts_ie — Courts
 Service of Ireland.
 
 Source: `https://www.courts.ie/` — the catalogue of court forms, the

@@ -13,10 +13,10 @@ from the 5 Irish legal / government DLT sources into LanceDB:
 All 5 source tables are read from DuckLake via the canonical
 `duckdb.connect(...)` pattern (matches `university_embedding.py:89-100`)
 and embedded into 1 LanceDB table `ireland_legal_chunks` (the
-canonical namespace `oideachais.law.ie` is virtual — the actual table
+canonical namespace `cianfhoghlaim.law.ie` is virtual — the actual table
 is `ireland_legal_chunks` in LanceDB).
 
-The R1-R4 conformance contract (per the `oideachais-cocoindex-v1` skill):
+The R1-R4 conformance contract (per the `cianfhoghlaim-cocoindex-v1` skill):
 
 - R1: `from ._lifespan import shared_lifespan` (this module)
 - R2: imports the canonical `ContextKey`s (LANCE_DB, EMBEDDER) from `._lifespan`
@@ -71,17 +71,17 @@ from ._lifespan import (  # noqa: E402
 # =============================================================================
 
 IRELAND_LEGAL_DUCKLAKE_TABLES: dict[str, str] = {
-    "piab_pages":     "oideachais.law.ie.piab_pages",
-    "piab_forms":     "oideachais.law.ie.piab_forms",
-    "courts_forms":   "oideachais.law.ie.courts_forms",
-    "judgements":     "oideachais.law.ie.judgements",
-    "court_fees":     "oideachais.law.ie.court_fees",
-    "court_rules":    "oideachais.law.ie.court_rules",
-    "wrc_pages":      "oideachais.law.ie.wrc_pages",
-    "wrc_decisions":  "oideachais.law.ie.wrc_decisions",
-    "citizensinfo":   "oideachais.law.ie.citizensinfo_articles",
-    "gov_ie":         "oideachais.law.ie.gov_ie_pages",
-    "statute_links":  "oideachais.law.ie.statute_links",
+    "piab_pages":     "cianfhoghlaim.law.ie.piab_pages",
+    "piab_forms":     "cianfhoghlaim.law.ie.piab_forms",
+    "courts_forms":   "cianfhoghlaim.law.ie.courts_forms",
+    "judgements":     "cianfhoghlaim.law.ie.judgements",
+    "court_fees":     "cianfhoghlaim.law.ie.court_fees",
+    "court_rules":    "cianfhoghlaim.law.ie.court_rules",
+    "wrc_pages":      "cianfhoghlaim.law.ie.wrc_pages",
+    "wrc_decisions":  "cianfhoghlaim.law.ie.wrc_decisions",
+    "citizensinfo":   "cianfhoghlaim.law.ie.citizensinfo_articles",
+    "gov_ie":         "cianfhoghlaim.law.ie.gov_ie_pages",
+    "statute_links":  "cianfhoghlaim.law.ie.statute_links",
 }
 
 
@@ -98,7 +98,7 @@ def _read_ducklake_table(table: str) -> list[dict[str, Any]]:
         logger.warning("duckdb_not_available_for_ireland_legal_embedding")
         return []
 
-    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
     if not os.path.exists(db_path):
         return []
     try:

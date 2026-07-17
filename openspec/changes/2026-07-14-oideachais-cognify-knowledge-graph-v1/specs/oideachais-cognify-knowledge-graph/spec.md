@@ -3,13 +3,13 @@
 ### Requirement: Phase 1 complete — 9 requirements all functional end-to-end
 
 The system SHALL provide the 9 explicit deliverables for the
-`oideachais-cognify-knowledge-graph` Phase 1 v1. All 9
+`cianfhoghlaim-cognify-knowledge-graph` Phase 1 v1. All 9
 requirements of the parent spec SHALL be functional:
 
 1. **R1 — 5-stage cross-stage knowledge graph** (the canonical
    K-12 → university curriculum pipeline).
 2. **R2 — Site-analysis cognify** (the
-   `oideachais_site_analysis` Cognee dataset).
+   `cianfhoghlaim_site_analysis` Cognee dataset).
 3. **R3 — Leabharlann cognify** (3 corpora: books + zotero +
    takeout).
 4. **R4 — Cross-archive FalkorDB edges** (the

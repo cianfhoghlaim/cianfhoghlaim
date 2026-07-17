@@ -23,7 +23,7 @@ Operational contract (see `openspec/changes/docs-skills-consolidation-pipeline/`
 Reference patterns:
 - `docs/cocoindex/meeting_notes_graph_falkordb/main.py` (entity resolution + FalkorDB)
 - `docs/cocoindex/docs_to_knowledge_graph/main.py` (two-phase graph build)
-- `oideachais/cocoindex_flows/leabharlann_embedding.py` (v1 App conventions)
+- `cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py` (v1 App conventions)
 """
 
 from __future__ import annotations
@@ -103,7 +103,7 @@ DEFAULT_SKILLS_ROOT = pathlib.Path(
 
 # =============================================================================
 # Context keys — imported from the canonical shared lifespan
-# (`oideachais/cocoindex_flows/_lifespan.py`). Per REFACTORING.md
+# (`cianfhoghlaim/cocoindex_flows/_lifespan.py`). Per REFACTORING.md
 # item 12, every v1 App delegates to `shared_lifespan` rather than
 # re-declaring `LANCE_DB` / `EMBEDDER` / `RESOLVED_FILE_REGISTRY`.
 # The previous `docs_skills_lance_db` + `docs_skills_embedder`

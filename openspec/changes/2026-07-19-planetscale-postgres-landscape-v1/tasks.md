@@ -18,11 +18,11 @@
 - [ ] `specs/dagster-5-layer-component-architecture/spec.md` (MODIFIED)
 - [ ] `specs/croilar-data-engineering/spec.md` (MODIFIED)
 - [ ] `specs/indexing-and-cognition/spec.md` (MODIFIED)
-- [ ] `specs/oideachais-cognify-knowledge-graph/spec.md` (MODIFIED)
+- [ ] `specs/cianfhoghlaim-cognify-knowledge-graph/spec.md` (MODIFIED)
 - [ ] `specs/meaisinfhoghlaim-platform/spec.md` (MODIFIED)
 - [ ] `specs/agent-registry/spec.md` (MODIFIED)
 - [ ] `specs/agentic-frontend-frameworks/spec.md` (MODIFIED)
-- [ ] `specs/oideachais-pipeline/spec.md` (MODIFIED)
+- [ ] `specs/cianfhoghlaim-pipeline/spec.md` (MODIFIED)
 - [ ] `specs/croilar-portfolio/spec.md` (MODIFIED)
 - [ ] `specs/documentation/spec.md` (MODIFIED)
 - [ ] `specs/dagger-pipelines/spec.md` (MODIFIED)
@@ -75,11 +75,11 @@ the canonical decision matrix in `openspec/specs/planetscale-postgres-data-strat
 - **dagster-5-layer-component-architecture**: cross-ref for `DUCKLAKE_POSTGRES_HOST` PlanetScale swap
 - **croilar-data-engineering**: cross-ref for the croilar Postgres substrate
 - **indexing-and-cognition**: cross-ref for CCC/Cognee (pgvector)
-- **oideachais-cognify-knowledge-graph**: cross-ref for the cognify PostgreSQL backend
+- **cianfhoghlaim-cognify-knowledge-graph**: cross-ref for the cognify PostgreSQL backend
 - **meaisinfhoghlaim-platform**: cross-ref for the 10 sub-packages (Cognee + Logfire + etc.)
 - **agent-registry**: cross-ref for observability substrate (logfire + langfuse)
 - **agentic-frontend-frameworks**: cross-ref for Convex (`POSTGRES_URL`) + the Hono oRPC env-vars
-- **oideachais-pipeline**: the main 50-req spec — umbrella-level cross-ref for the lakehouse + dagster + dagster orchestration database
+- **cianfhoghlaim-pipeline**: the main 50-req spec — umbrella-level cross-ref for the lakehouse + dagster + dagster orchestration database
 - **croilar-portfolio**: cross-ref for the croilar-portfolio + croilar-hono-api stacks
 - **documentation**: cross-ref from the frontmatter schema in `docs/`
 - **dagger-pipelines**: cross-ref for the 8 callable Dagger functions that depend on stack DBs

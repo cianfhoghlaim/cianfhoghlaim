@@ -60,7 +60,7 @@ For each of `on`, `qc`, `bc`, `ab`, `sk`, `mb`, `ns`, `nb`, `pe`,
 - [ ] 6.1 ADDED Requirements on `commonwealth-pipeline/spec.md` for
   the 13 provinces + the Quebec deep cluster
 - [ ] 6.2 MODIFIED delta on `cross-region-pipeline/spec.md`
-- [ ] 6.3 MODIFIED delta on `oideachais-pipeline/spec.md`
+- [ ] 6.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md`
 
 ## 7. Validate
 

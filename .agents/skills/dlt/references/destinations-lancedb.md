@@ -99,11 +99,11 @@ results = table.search("handwriting recognition for Irish").limit(10).to_pandas(
 
 ## KCG usage
 
-- `oideachais-semantic-search` spec (cross-corpus LanceDB HNSW)
-- `oideachais-leabharlann` (the books + zotero + takeout corpora
+- `cianfhoghlaim-semantic-search` spec (cross-corpus LanceDB HNSW)
+- `cianfhoghlaim-leabharlann` (the books + zotero + takeout corpora
   are indexed in LanceDB via CocoIndex v1 Apps, not directly via
   dlt, but the `lancedb_adapter` is the canonical dlt-side pattern)
-- The `oideachais-semantic-search` Dagster asset group uses
+- The `cianfhoghlaim-semantic-search` Dagster asset group uses
   `lancedb_adapter` to backfill vectors
 
 ## Reference

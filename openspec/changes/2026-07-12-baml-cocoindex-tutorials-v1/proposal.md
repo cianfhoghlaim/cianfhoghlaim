@@ -29,7 +29,7 @@ This follow-up ships **both** deliverables:
 | `openspec/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md` | NEW (created from scratch; 8 requirements) | +~150 |
 | `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/` | NEW (proposal.md + tasks.md + 2 spec deltas) | +~250 |
 | `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md` | NEW (1 MODIFIED delta to add 2 ADDED requirements) | +~80 |
-| `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/specs/oideachais-marimo-dashboards/spec.md` | NEW (1 ADDED requirement for the 5 tutorial notebooks) | +~40 |
+| `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md` | NEW (1 ADDED requirement for the 5 tutorial notebooks) | +~40 |
 | `notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax.py` | NEW (BAML post-v4 syntax walkthrough) | +~600 |
 | `notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough.py` | NEW (8 qpack files walkthrough) | +~500 |
 | `notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline.py` | NEW (vision+PDF pipeline + side-by-side gemma-4 vs qwen3-vl) | +~500 |
@@ -84,7 +84,7 @@ check.
    CLI discovery returns 5 entries.
 7. Write the 2 openspec spec deltas (1 MODIFIED on
    `end-to-end-llm-zoomcamp-style-tutorial` adding 2 ADDED
-   requirements; 1 ADDED on `oideachais-marimo-dashboards`).
+   requirements; 1 ADDED on `cianfhoghlaim-marimo-dashboards`).
 8. `openspec validate 2026-07-12-baml-cocoindex-tutorials-v1 --strict`
    must pass before commit.
 9. Single commit + push to `origin/pick-4-biep-v1`.
@@ -144,7 +144,7 @@ reference for Tutorial 1 §7 + Tutorial 2 §7).
 - [x] `end-to-end-llm-zoomcamp-style-tutorial` spec exists with 8
       requirements (6 original + 2 ADDED for the 5-notebook tutorial
       track)
-- [x] `oideachais-marimo-dashboards` spec delta is well-formed
+- [x] `cianfhoghlaim-marimo-dashboards` spec delta is well-formed
       (1 ADDED requirement for the 5 tutorial notebooks)
 - [x] `notebooks/13_baml_cocoindex_tutorial/` contains 5 files
       (`01..05`)

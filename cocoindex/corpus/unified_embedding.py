@@ -10,8 +10,8 @@ The v0 file used the removed v0 DSL (`flow_def`, `FlowBuilder`,
 CocoIndex v1.
 
 The v1 port uses the canonical v1 primitives from
-`oideachais/cocoindex_flows/codebase_indexing.py` and
-`oideachais/cocoindex_flows/leabharlann_embedding.py`:
+`cianfhoghlaim/cocoindex_flows/codebase_indexing.py` and
+`cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py`:
 
 - `@coco.fn` + `@coco.fn(memo=True)` for processing functions
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
@@ -35,7 +35,7 @@ Reference:
 - v0 chunker: `crypteolas/cocoindex_flows/transforms/code_chunking.py:chunk_code`
   (5 language-specific chunkers; v1 falls back to RecursiveSplitter
   with detect_code_language for the 24+ others)
-- v1 platform: `oideachais/cocoindex_flows/chunking/languages.py`
+- v1 platform: `cianfhoghlaim/cocoindex_flows/chunking/languages.py`
   (29+ language detection table)
 
 Operational contract:

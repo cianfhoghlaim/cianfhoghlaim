@@ -133,7 +133,7 @@ because it's the simplest, most portable, and works for 3 of the
   and in the local `.env` (file mode `0600`, gitignored).
 - No email content is written to the repo. Only MBOX exports
   (under `/srv/mailcow-exports/`) and DuckLake rows (under
-  `ducklake_oideachais.inbox_*`) are persisted; both are
+  `ducklake_cianfhoghlaim.inbox_*`) are persisted; both are
   Pangolin-private.
 - The `gpg_encrypt_paths` knob in `author_archive_accounts.yaml`
   encrypts emails matching the `legal/`, `medical/`, `hsc/`, or

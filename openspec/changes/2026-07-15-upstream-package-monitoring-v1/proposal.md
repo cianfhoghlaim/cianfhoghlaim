@@ -33,7 +33,7 @@ release changes:
 
 1. Firecrawl fetches canonical changelog / blog / GitHub release pages.
 2. BAML `ExtractPackageRelease` extracts typed release metadata.
-3. Rows land in `md:oideachais_upstream.upstream_monitoring`.
+3. Rows land in `md:cianfhoghlaim_upstream.upstream_monitoring`.
 4. Breaking changes are posted to the n8n bridge.
 5. The Dagster sensor polls the MotherDuck table and emits downstream
    materialisation requests.

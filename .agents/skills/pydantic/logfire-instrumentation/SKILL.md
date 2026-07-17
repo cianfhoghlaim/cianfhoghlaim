@@ -248,14 +248,14 @@ Detailed patterns and integration tables, organized by language:
 - **0 Pydantic auto-instrumentation** — `logfire_config.py:341-347` has an `instrument_pydantic()` function but no production caller
 - **0 FastAPI instrumented** — same story for `instrument_fastapi()`
 
-**Recommended 1-PR cutover** (12 files, +180/-40 lines): (a) replace no-op `LogfireBackend.start_span` with `logfire.span(name, **attrs)` context-managers, (b) call `logfire.instrument_pydantic()` at agent boot in `meaisínfhoghlaim/root_agent.py`, (c) call `logfire.instrument_fastapi(app)` in the browser server + FastAPI agent surface — gated on `settings.logfire_enabled` (already a Pydantic field on `croilar_shared/config/settings.py:62` and `_oideachais_config/base.py:159,321`).
+**Recommended 1-PR cutover** (12 files, +180/-40 lines): (a) replace no-op `LogfireBackend.start_span` with `logfire.span(name, **attrs)` context-managers, (b) call `logfire.instrument_pydantic()` at agent boot in `meaisínfhoghlaim/root_agent.py`, (c) call `logfire.instrument_fastapi(app)` in the browser server + FastAPI agent surface — gated on `settings.logfire_enabled` (already a Pydantic field on `croilar_shared/config/settings.py:62` and `_cianfhoghlaim_config/base.py:159,321`).
 
 **Settings:**
 
 | File | Line | Field |
 |:--|:-:|:--|
 | `cianfhoghlaim/core/config/_croilar_shared/config/settings.py` | 62-63 | `logfire_enabled: bool = False` · `logfire_token: str \| None = None` |
-| `cianfhoghlaim/core/config/_oideachais_config/base.py` | 159, 321 | `logfire_enabled: bool = Field(default_factory=...)` |
+| `cianfhoghlaim/core/config/_cianfhoghlaim_config/base.py` | 159, 321 | `logfire_enabled: bool = Field(default_factory=...)` |
 
 **Rule of thumb (from `agent-observability` spec §224-245):**
 - LLM call (any model, any provider) → **Langfuse** (`@observe(as_type="generation")`)

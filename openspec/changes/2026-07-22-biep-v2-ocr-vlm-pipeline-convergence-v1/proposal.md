@@ -115,7 +115,7 @@ class EnsembledExtractor:
         """Run all 4 paths in parallel, return EnsembleResult.
 
         Each path's output lands in the per-jurisdiction DuckLake
-        `oideachais.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`
+        `cianfhoghlaim.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`
         table (per the per-path DuckLake landing convention from the
         user's chosen strategy).
 

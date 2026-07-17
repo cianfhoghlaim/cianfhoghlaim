@@ -45,7 +45,7 @@ Use the `serve` command instead.
 ## Non-goals
 
 - This spec does NOT add new Docker Compose stacks (the 94-stack fleet at `bonneagar/stacks/` is owned by the `infrastructure-stacks` spec).
-- This spec does NOT introduce new BAML extraction schemas (owned by `oideachais-baml-schemas`).
+- This spec does NOT introduce new BAML extraction schemas (owned by `cianfhoghlaim-baml-schemas`).
 - This spec does NOT replace the local Dagster UI (`mise run dagster:oideachais`) — it sits *alongside* it for the deployment half of the workflow.
 - This spec does NOT mutate the Infisical + Locket + mise secrets contract (owned by the `secrets-management` skill).
 

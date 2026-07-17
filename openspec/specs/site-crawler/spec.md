@@ -131,7 +131,7 @@ main + every PR open/synchronize. The workflow MUST execute:
 
 ## Cross-references
 
-- `openspec/specs/oideachais-pipeline/spec.md` — the parent DLT spec that
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — the parent DLT spec that
   the `site-crawler` primitive underpins
 - `openspec/specs/indexing-and-cognition/spec.md` — the cocoindex-conformance
   CI workflow lives alongside the existing cocoindex-code MCP server + the

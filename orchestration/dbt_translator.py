@@ -12,7 +12,7 @@ Why this exists:
   `AssetKey(["<project_name>", "<model_name>"])`, which leaks the project
   name into every asset key. We want flat keys
   (`AssetKey(["weekly_downloads"])`) so the dbt assets match the
-  convention used by the rest of `oideachais/dagster_defs/`.
+  convention used by the rest of `cianfhoghlaim/dagster_defs/`.
 - We also want every dbt model to land in the `prepared` group so the
   asset lineage in the Dagster UI shows the canonical "raw → prepared →
   reporting" flow.
@@ -32,10 +32,10 @@ Usage:
     manifest = dbt.cli(["parse"], manifest={}).wait().target_path / "manifest.json"
 
     @dbt_assets(manifest=manifest, dagster_dbt_translator=CelticDagsterDbtTranslator())
-    def oideachais_dbt_assets(context, dbt): ...
+    def cianfhoghlaim_dbt_assets(context, dbt): ...
 
 See also:
-- `oideachais/dbt_project/` (the 3 models + 3 seeds + 3 sources)
+- `cianfhoghlaim/dbt_project/` (the 3 models + 3 seeds + 3 sources)
 - `openspec/changes/celtic-data-engineering-patterns/specs/celtic-data-engineering-pipeline/spec.md`
 """
 

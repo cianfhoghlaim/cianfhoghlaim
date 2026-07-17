@@ -18,7 +18,7 @@ Physics, Computer Science, History, Geography) × 2 qualification levels
   `jurisdiction="england"`, `exam_board ∈ {aqa,ocr,edexcel}`,
   `qualification_level ∈ {gcse,a_level}`
 - **3 CocoIndex v1 Apps** at `cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
-  producing 27 LanceDB tables `oideachais.england.<board>.<subject>.<level>`
+  producing 27 LanceDB tables `cianfhoghlaim.england.<board>.<subject>.<level>`
 - **81+ Dagster assets** at
   `orchestration/defs/2_materials/england_education/{aqa,ocr,edexcel}/`
   (27 × 3 layers: ingest → BAML extract → embed + 3 cross-board comparator assets)
@@ -29,10 +29,10 @@ Physics, Computer Science, History, Geography) × 2 qualification levels
 
 - **WHEN** a researcher clicks "Materialize all" in the Dagster UI for the England pipeline
 - **THEN** the 81 England assets materialise within minutes
-- **AND** the 27 LanceDB tables `oideachais.england.<board>.<subject>.<level>` are populated
+- **AND** the 27 LanceDB tables `cianfhoghlaim.england.<board>.<subject>.<level>` are populated
 - **AND** the `eng_aqa_curriculum_dive` MotherDuck Dive shows topic coverage per AQA subject
 - **AND** the daily `eng_daily_sync_flight` re-runs BAML extraction on any new PDFs
-  landed in `s3://garage/oideachais/england/<board>/<subject>/<level>/`
+  landed in `s3://garage/cianfhoghlaim/england/<board>/<subject>/<level>/`
 
 #### Scenario: AQA vs OCR vs Edexcel spec diff
 

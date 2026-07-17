@@ -22,8 +22,8 @@ attributes:
   source_asset: 1_ingestion_curriculum_jc/ireland/education/junior_cycle_subjects
   partition_strategy: by_subject
   asset_check_kind: row_count
-  namespace_pattern: "oideachais.education.british_isles.ireland.junior_cycle.{subject}.{lang}"
+  namespace_pattern: "cianfhoghlaim.education.british_isles.ireland.junior_cycle.{subject}.{lang}"
   cocoindex_app: junior_cycle_embedding
-  cognify_dataset: oideachais_ireland_junior_cycle
+  cognify_dataset: cianfhoghlaim_ireland_junior_cycle
   cross_subject_graphiti: ireland.junior_cycle.cross_subject_graphiti_stream
   automation_cron: "0 6 * * *"

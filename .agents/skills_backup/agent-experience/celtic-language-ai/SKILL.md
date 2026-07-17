@@ -31,7 +31,7 @@ Use when you need to:
 ## BAML extraction (the canonical pattern)
 
 ```baml
-// sruth/oideachais/baml_src/celtic_linguistics.baml
+// sruth/cianfhoghlaim/baml_src/celtic_linguistics.baml
 class IrishGrammarConcept {
   ga_term string
   en_translation string
@@ -181,9 +181,9 @@ embedder = get_registry().get("huggingface").create(
 
 ## KCG integration
 
-- `sruth/oideachais/baml_src/celtic_linguistics.baml` — the
+- `sruth/cianfhoghlaim/baml_src/celtic_linguistics.baml` — the
   canonical BAML schema for Irish grammar extraction
-- `sruth/oideachais/baml_src/celtic_sources.baml` — the canonical
+- `sruth/cianfhoghlaim/baml_src/celtic_sources.baml` — the canonical
   BAML schema for source attribution
 - `sruth/meaisinfhoghlaim/language/` — the 6 Celtic-language
   subdirs (`brezhoneg/`, `cymraeg/`, `gaeilge/`, `gaelg/`,

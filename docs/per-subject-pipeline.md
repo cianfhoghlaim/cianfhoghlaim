@@ -85,7 +85,7 @@ Each `cocoindex/<subject>_embedding.py` file:
    `cianfhoghlaim/leaving_certificate/<subject>/<lang>/`
 2. Chunks text with sliding window (512 tokens, 64 overlap)
 3. Embeds with BGE-M3 multilingual (1024-dim)
-4. Mounts the LanceDB table at `oideachais.lc.<subject>.<level>_<language>`
+4. Mounts the LanceDB table at `cianfhoghlaim.lc.<subject>.<level>_<language>`
 
 ## Per-subject ADK LlmAgent
 

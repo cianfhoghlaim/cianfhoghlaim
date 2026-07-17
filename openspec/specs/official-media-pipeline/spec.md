@@ -149,29 +149,29 @@ The 4 lookups SHALL be invoked **in parallel** via `asyncio.gather`
 ### Requirement: OfficialMediaLakehouseTables
 
 The system SHALL write the enriched records to the lakehouse under the
-`oideachais.official_media.*` namespace (DuckLake), with at minimum:
+`cianfhoghlaim.official_media.*` namespace (DuckLake), with at minimum:
 
-- `oideachais.official_media.candidates` — one row per surviving
+- `cianfhoghlaim.official_media.candidates` — one row per surviving
   Instagram profile (after Stage-1 + Stage-2 filter)
-- `oideachais.official_media.resolved_sources` — one row per resolved
+- `cianfhoghlaim.official_media.resolved_sources` — one row per resolved
   source (after the 4-lookup fan-out)
-- `oideachais.official_media.descriptions` — LanceDB table of BGE-M3
+- `cianfhoghlaim.official_media.descriptions` — LanceDB table of BGE-M3
   embeddings of the resolved source summaries
 
 #### Scenario: DLT write disposition
 
 - **GIVEN** the `candidates` resource yields N rows
 - **WHEN** the Dagster asset `official_media_extract` materialises
-- **THEN** `oideachais.official_media.candidates` SHALL contain exactly
+- **THEN** `cianfhoghlaim.official_media.candidates` SHALL contain exactly
   N rows (write_disposition=`merge`)
 - **AND** the primary key SHALL be `(ig_export_id, ig_username)`
 - **AND** the asset SHALL be tagged `group_name="official_media"`
 
 #### Scenario: Embedding table seeded
 
-- **GIVEN** `oideachais.official_media.resolved_sources` has 10 rows
+- **GIVEN** `cianfhoghlaim.official_media.resolved_sources` has 10 rows
 - **WHEN** the `official_media_embed` asset materialises
-- **THEN** `oideachais.official_media.descriptions` SHALL contain 10
+- **THEN** `cianfhoghlaim.official_media.descriptions` SHALL contain 10
   rows of 1024-dim float vectors (BGE-M3)
 - **AND** the metadata SHALL record `{"model": "BAAI/bge-m3",
   "vector_dim": 1024, "rows_embedded": 10}`

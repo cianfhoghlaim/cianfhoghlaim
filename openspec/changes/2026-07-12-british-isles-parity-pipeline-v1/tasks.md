@@ -72,7 +72,7 @@ For each of Scotland, Wales, England, Northern Ireland × 6 subjects:
   for the per-nation parity layer
 - [ ] 7.2 MODIFIED delta on `cross-region-pipeline/spec.md` adding a
   cross-reference to the new per-nation instances
-- [ ] 7.3 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 7.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference
 
 ## 8. Validate

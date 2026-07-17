@@ -2,7 +2,7 @@
 #
 # L3 CocoIndex v1 App for the Poland education pipeline. Embeds
 # every per-subject education row into the shared
-# `oideachais.european_nations.pol.education_chunks` LanceDB table.
+# `cianfhoghlaim.european_nations.pol.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-15-eu-pilot-upgrade-v1/
 type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
@@ -15,7 +15,7 @@ attributes:
     - app_name: pol_UPPER_EDUCATION_EMBEDDING
       module: cianfhoghlaim.cocoindex.european_nations_pol_education_embedding
       source: european_nations
-      lance_table: oideachais.european_nations.pol.education_chunks
+      lance_table: cianfhoghlaim.european_nations.pol.education_chunks
   schedule:
     cron: "0 5 * * *"
     timezone: UTC

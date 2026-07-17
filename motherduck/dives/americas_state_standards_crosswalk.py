@@ -23,22 +23,22 @@ def build_americas_state_standards_crosswalk_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT jurisdiction, language, COUNT(*) AS row_count
-            FROM oideachais.education.americas.California
+            FROM cianfhoghlaim.education.americas.California
             GROUP BY jurisdiction, language
 
             UNION ALL
             SELECT jurisdiction, language, COUNT(*) AS row_count
-            FROM oideachais.education.americas.Brazil
+            FROM cianfhoghlaim.education.americas.Brazil
             GROUP BY jurisdiction, language
 
             UNION ALL
             SELECT jurisdiction, language, COUNT(*) AS row_count
-            FROM oideachais.education.americas.Mexico
+            FROM cianfhoghlaim.education.americas.Mexico
             GROUP BY jurisdiction, language
 
             UNION ALL
             SELECT jurisdiction, language, COUNT(*) AS row_count
-            FROM oideachais.education.americas.Venezuela
+            FROM cianfhoghlaim.education.americas.Venezuela
             GROUP BY jurisdiction, language
         """,
     )

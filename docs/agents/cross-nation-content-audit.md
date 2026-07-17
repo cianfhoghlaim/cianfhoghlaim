@@ -212,7 +212,7 @@ Gaeltacht-school syllabuses and the topics are near-identical.
 **Partition pattern.**
 `MultiPartitionsDefinition(cycle=["gcse", "a_level"], subject, language=["en", "ga"])`.
 The `language` axis shares the `ga` code with the Republic of Ireland
-— v2's cross-archive joins between `oideachais.leaving_cert.gaeilge`
+— v2's cross-archive joins between `cianfhoghlaim.leaving_cert.gaeilge`
 (Republic) and `ccea.gaeilge` (NI) are direct joins on
 `(subject="gaeilge", language="ga")` with the `nation` dimension
 distinguishing the source.

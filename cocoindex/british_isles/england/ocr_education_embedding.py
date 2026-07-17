@@ -46,7 +46,7 @@ if COCOINDEX_AVAILABLE:
         ao_id: str = "",
         content_hash: str = "",
     ):
-        table_name = f"oideachais.england.ocr.{subject}.{qualification_level}"
+        table_name = f"cianfhoghlaim.england.ocr.{subject}.{qualification_level}"
         target = lancedb.mount_table_target(  # type: ignore[union-attr]
             LANCE_DB, table_name, schema=OCRChunk,
         )

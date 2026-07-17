@@ -15,11 +15,11 @@
 - [x] `openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/proposal.md`
 - [x] `tasks.md` (this file)
 - [x] Spec deltas:
-  - `specs/oideachais-academic-history-pipeline/spec.md` (new capability)
-  - `specs/oideachais-leabharlann/spec.md` (MODIFIED)
-  - `specs/oideachais-baml-schemas/spec.md` (MODIFIED)
-  - `specs/oideachais-marimo-dashboards/spec.md` (MODIFIED)
-  - `specs/oideachais-university-deep-extraction/spec.md` (MODIFIED)
+  - `specs/cianfhoghlaim-academic-history-pipeline/spec.md` (new capability)
+  - `specs/cianfhoghlaim-leabharlann/spec.md` (MODIFIED)
+  - `specs/cianfhoghlaim-baml-schemas/spec.md` (MODIFIED)
+  - `specs/cianfhoghlaim-marimo-dashboards/spec.md` (MODIFIED)
+  - `specs/cianfhoghlaim-university-deep-extraction/spec.md` (MODIFIED)
   - `specs/agent-memory-systems/spec.md` (MODIFIED)
 
 ### 2.2 BAML schemas
@@ -82,7 +82,7 @@
 
 ### 3.4 Tests
 
-- [ ] `tests/_oideachais/test_academic_history_pipeline.py`
+- [ ] `tests/_cianfhoghlaim/test_academic_history_pipeline.py`
   - BAML function shape tests
   - Validation helper tests
   - Asset registration tests
@@ -96,5 +96,5 @@
 - [ ] `baml-cli check`
 - [ ] `baml-cli test` (golden samples for each new function)
 - [ ] `mise run turbo dev` (Dagster UI shows new assets)
-- [ ] `uv run pytest tests/_oideachais/test_academic_history_pipeline.py`
+- [ ] `uv run pytest tests/_cianfhoghlaim/test_academic_history_pipeline.py`
 - [ ] `mise run lint` + `mise run py:typecheck` + `mise run turbo typecheck`

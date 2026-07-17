@@ -244,7 +244,7 @@ i18n: Bilingual EN + GA UI strings + bilingual quest content.
 - `.agents/skills/ncca-formative-assessment/SKILL.md` — the new
   canonical formative assessment pedagogy (replaces
   british-isles-formative-assessment)
-- `.agents/skills/oideachais-cocoindex-v1/SKILL.md` — the v1
+- `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md` — the v1
   CocoIndex App pattern (used for per-subject embedding flows)
 
 ## Migration from historic skills

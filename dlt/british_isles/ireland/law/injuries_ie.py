@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.law.injuries_ie — Personal
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law.injuries_ie — Personal
 Injuries Assessment Board (PIAB) of Ireland.
 
 Source: `https://www.injuries.ie/eng/` — the front-door for every personal

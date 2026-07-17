@@ -10,7 +10,7 @@ The BAML education cluster (post-v4 consolidation):
                           (per ``openspec/changes/2026-07-12-baml-type-builder-ncca-v1``)
   - ``stages/``         — 5 NCCA stage files (primary, junior_cycle,
                           senior_cycle, tertiary, plus aistear) — covered by the
-                          ``oideachais-pipeline`` spec
+                          ``cianfhoghlaim-pipeline`` spec
   - ``pdfs/``           — 3 Leaving-Cert PDF extraction files (exam_papers,
                           marking_schemes, examiner_reports)
   - ``subjects/``       — 8 ``qpack_<subject>.baml`` per-subject NCCA extraction

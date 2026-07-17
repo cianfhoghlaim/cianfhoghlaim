@@ -35,8 +35,8 @@ Wales, England are out of scope (covered by the sister
 `dlt/british_isles/<nation>/` packages).
 
 Cross-references:
-  - `openspec/specs/oideachais-university-deep-extraction/spec.md`
-  - `openspec/changes/2026-07-15-oideachais-university-deep-extraction-v1/`
+  - `openspec/specs/cianfhoghlaim-university-deep-extraction/spec.md`
+  - `openspec/changes/2026-07-15-cianfhoghlaim-university-deep-extraction-v1/`
   - `cianfhoghlaim/baml/education/university/university_extraction.baml`
     (the 5+ Pydantic classes + 4+ enums + 1+ function for Tertiary)
   - `cianfhoghlaim/orchestration/defs/1_ingestion/university/defs.yaml`

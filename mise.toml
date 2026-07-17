@@ -696,16 +696,16 @@ run = "(cd bonneagar && bash scripts/deploy-cf.sh --all --preview) || true"
 
 [tasks."author-archive:dev"]
 description = "Author-archive v1 pipeline against the local dev target (DuckDB)"
-run = "bash scripts/oideachais/make_target.sh dev ${@}"
+run = "bash scripts/cianfhoghlaim/make_target.sh dev ${@}"
 
 [tasks."author-archive:staging"]
 description = "Author-archive v1 pipeline against the MotherDuck staging target"
-run = "bash scripts/oideachais/make_target.sh staging ${@}"
+run = "bash scripts/cianfhoghlaim/make_target.sh staging ${@}"
 
 [tasks."author-archive:prod"]
 description = "Author-archive v1 pipeline against the Garage S3 + Lakekeeper prod target"
-run = "bash scripts/oideachais/make_target.sh prod ${@}"
+run = "bash scripts/cianfhoghlaim/make_target.sh prod ${@}"
 
 [tasks."author-archive:cps:hero"]
 description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
-run = "bash scripts/oideachais/make_target.sh dev python scripts/oideachais/pre_research_cps_gov_uk.py"
+run = "bash scripts/cianfhoghlaim/make_target.sh dev python scripts/cianfhoghlaim/pre_research_cps_gov_uk.py"

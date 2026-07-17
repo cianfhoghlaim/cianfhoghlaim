@@ -73,7 +73,7 @@ Each subject SHALL have a `qpack_<subject>.baml` file,
 - **THEN** the `math_syllabus_raw` asset produces ≥1 `MathSyllabusTopic` per topic
 - **AND** the `math_quest_pack` asset produces ≥1 `FormativeItem` per learning outcome
 - **AND** the `math_embedding` asset populates the LanceDB table
-  `oideachais.lc.mathematics.embeddings` with ≥1 BGE-M3 1024-dim
+  `cianfhoghlaim.lc.mathematics.embeddings` with ≥1 BGE-M3 1024-dim
   vector per quest item
 - **AND** the marimo notebook at
   `cianfhoghlaim/notebooks/leaving_cert/mathematics.py` renders
@@ -269,7 +269,7 @@ a teacher view with quest designer controls.
 - **THEN** the notebook displays all Mathematics NCCA learning outcomes
   in a searchable table (bilingual EN + GA)
 - **AND** the notebook has a semantic search box that queries the
-  `oideachais.lc.mathematics.embeddings` LanceDB table
+  `cianfhoghlaim.lc.mathematics.embeddings` LanceDB table
 - **AND** the notebook has a "design quest" panel that lets a teacher
   generate a custom `MathFormativeItem` via the BAML client
 
@@ -324,7 +324,7 @@ the `2026-07-09-remove-brown-ajah-theming-v1` change).
 
 #### Scenario: Public surface never displays personal lineage
 
-- **GIVEN** the user opens any page on `oideachais.cianfhoghlaim.ie`
+- **GIVEN** the user opens any page on `cianfhoghlaim.cianfhoghlaim.ie`
 - **WHEN** the page renders
 - **THEN** no text matches the regex `Ci[ae]n M[ae]c a[nm] D[ée]isi[gh]`
 - **AND** no text matches the family surnames Deacy, Lyons, Morris, Conroy
@@ -346,7 +346,7 @@ the `2026-07-09-remove-brown-ajah-theming-v1` change).
   this change builds on
 - `openspec/specs/tuatha-platform/spec.md` — deprecated alias,
   removed in 1 release
-- `openspec/specs/oideachais-pipeline/spec.md` — the underlying
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — the underlying
   pipeline capability
 - `openspec/specs/agentic-frontend-frameworks/spec.md` — the
   TanStack Start + CopilotKit + Hono + Convex pattern

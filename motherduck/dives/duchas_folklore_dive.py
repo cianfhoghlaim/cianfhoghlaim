@@ -12,7 +12,7 @@ destination and emits 4 KPI breakdowns:
 
 **Important**: page-level summaries only. NOT 74M row word-level data
 (the 5-level bbox child table lives separately at
-`oideachais.language.duchas_bboxes` for the marimo bbox notebook).
+`cianfhoghlaim.language.duchas_bboxes` for the marimo bbox notebook).
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ def build_duchas_folklore_dive() -> str:
     The Dive aggregates to the page level (NOT word level).
     """
     return """
-    CREATE OR REPLACE VIEW md:oideachais.dives.duchas_folklore AS
+    CREATE OR REPLACE VIEW md:cianfhoghlaim.dives.duchas_folklore AS
     SELECT
         page_id,
         collection,
@@ -44,7 +44,7 @@ def build_duchas_folklore_dive() -> str:
         teacher,
         created_at,
         modified_at
-    FROM md:oideachais.celtic.duchas.manuscripts
+    FROM md:cianfhoghlaim.celtic.duchas.manuscripts
     WHERE page_id IS NOT NULL;
     """
 
@@ -60,7 +60,7 @@ DUCHAS_KPI_QUERIES = {
             COUNT(DISTINCT volume_id) AS n_volumes,
             COUNT(DISTINCT county) AS n_counties,
             AVG(transcription_confidence) AS avg_confidence
-        FROM md:oideachais.dives.duchas_folklore
+        FROM md:cianfhoghlaim.dives.duchas_folklore
         GROUP BY collection
         ORDER BY n_pages DESC;
     """,
@@ -69,7 +69,7 @@ DUCHAS_KPI_QUERIES = {
             county,
             COUNT(*) AS n_pages,
             COUNT(DISTINCT collection) AS n_collections
-        FROM md:oideachais.dives.duchas_folklore
+        FROM md:cianfhoghlaim.dives.duchas_folklore
         WHERE county IS NOT NULL
         GROUP BY county
         ORDER BY n_pages DESC
@@ -80,7 +80,7 @@ DUCHAS_KPI_QUERIES = {
             SUBSTR(CAST(created_at AS VARCHAR), 1, 4) AS decade,
             collection,
             COUNT(*) AS n_pages
-        FROM md:oideachais.dives.duchas_folklore
+        FROM md:cianfhoghlaim.dives.duchas_folklore
         WHERE created_at IS NOT NULL
         GROUP BY decade, collection
         ORDER BY decade DESC, n_pages DESC;
@@ -91,7 +91,7 @@ DUCHAS_KPI_QUERIES = {
             COUNT(*) AS n_pages
         FROM (
             SELECT UNNEST(STRING_SPLIT(topic_codes, ',')) AS topic_code
-            FROM md:oideachais.dives.duchas_folklore
+            FROM md:cianfhoghlaim.dives.duchas_folklore
             WHERE topic_codes IS NOT NULL
         )
         WHERE topic_code != ''
@@ -106,7 +106,7 @@ DUCHAS_KPI_QUERIES = {
             primary_language,
             transcription_confidence,
             topic_codes
-        FROM md:oideachais.dives.duchas_folklore
+        FROM md:cianfhoghlaim.dives.duchas_folklore
         ORDER BY transcription_confidence DESC
         LIMIT 200;
     """,

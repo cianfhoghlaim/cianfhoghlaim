@@ -2,7 +2,7 @@
 --
 -- Daily BIEP v2 sync of any new England awarding-body PDFs landed in the
 -- canonical S3 path:
---   s3://garage/oideachais/england/<board>/<subject>/<level>/<year>/<file>.pdf
+--   s3://garage/cianfhoghlaim/england/<board>/<subject>/<level>/<year>/<file>.pdf
 --
 -- Per the 2026-07-21-biep-v2-england-aqa-ocr-baml-pipeline-v1 change.
 
@@ -18,8 +18,8 @@ WITH new_pdfs AS (
         qualification_level,
         s3_uri,
         content_hash
-    FROM oideachais._aws.s3_discover(
-        bucket_url := 's3://garage/oideachais/england/',
+    FROM cianfhoghlaim._aws.s3_discover(
+        bucket_url := 's3://garage/cianfhoghlaim/england/',
         pattern := '*.pdf',
         since := NOW() - INTERVAL '24 hours'
     )
@@ -44,6 +44,6 @@ voted AS (
     )
 )
 
-INSERT INTO oideachais.education.british_isles.england.{exam_board}.{subject}.{qualification_level}
+INSERT INTO cianfhoghlaim.education.british_isles.england.{exam_board}.{subject}.{qualification_level}
     SELECT * FROM voted
     WHERE ragas_score >= 0.70;

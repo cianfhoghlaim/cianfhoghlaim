@@ -1,12 +1,12 @@
-# Spec Delta — oideachais-baml-schemas
+# Spec Delta — cianfhoghlaim-baml-schemas
 
-This delta adds one new requirement to the existing `oideachais-baml-schemas` capability. Existing requirements are preserved unchanged.
+This delta adds one new requirement to the existing `cianfhoghlaim-baml-schemas` capability. Existing requirements are preserved unchanged.
 
 ## ADDED Requirements
 
 ### Requirement: All 50 pre-existing BAML `field: type` errors resolved
 
-The `oideachais-baml-schemas` capability SHALL have all 50 pre-existing BAML `field: type` parse diagnostics (captured in the baseline at `openspec/changes/2026-07-13-baml-final-cleanup-v1/SCOPE_DECISION.md`) resolved across the full `baml/` tree. `mise run baml:generate` SHALL exit 0 against the current tree.
+The `cianfhoghlaim-baml-schemas` capability SHALL have all 50 pre-existing BAML `field: type` parse diagnostics (captured in the baseline at `openspec/changes/2026-07-13-baml-final-cleanup-v1/SCOPE_DECISION.md`) resolved across the full `baml/` tree. `mise run baml:generate` SHALL exit 0 against the current tree.
 
 #### Scenario: baml:generate exits 0 against the full tree
 

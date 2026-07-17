@@ -1,4 +1,4 @@
-# oideachais/dagster_defs/defs.yaml — the new (2026-06) `defs/` mount point.
+# cianfhoghlaim/dagster_defs/defs.yaml — the new (2026-06) `defs/` mount point.
 #
 # Per the Dagster 1.10 Components preview
 # (`docs.dagster.io/api/dagster/components`), the canonical way to
@@ -14,7 +14,7 @@
 #
 # The `dg list components` command discovers the 3 KCG components
 # automatically (per the `[tool.dg] registry_modules` setting in
-# `oideachais/pyproject.toml`).
+# `cianfhoghlaim/pyproject.toml`).
 ---
 type: dagster.DefsFolderComponent
 attributes: {}

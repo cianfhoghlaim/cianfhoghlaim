@@ -21,7 +21,7 @@ Each monitor MUST:
   REST API
 
 The system SHALL also provide 1 DuckLake audit table
-`oideachais.education.british_isles.england.changes` with the 11 columns
+`cianfhoghlaim.education.british_isles.england.changes` with the 11 columns
 declared in the proposal.
 
 #### Scenario: AQA maths GCSE spec change detected
@@ -34,7 +34,7 @@ declared in the proposal.
 - **AND** the sensor triggers the `england_england_re_extraction_job`
   for `(board=aqa, subject=mathematics, qualification_level=gcse)`
 - **AND** a new row lands in
-  `oideachais.education.british_isles.england.changes` with
+  `cianfhoghlaim.education.british_isles.england.changes` with
   `board='aqa'`, `subject='mathematics'`, `qualification_level='gcse'`
 - **AND** a Slack alert posts to `#kcg-biep-v2`
 - **AND** an email alert posts to `kcg-curriculum@cianfhoghlaim.ie`

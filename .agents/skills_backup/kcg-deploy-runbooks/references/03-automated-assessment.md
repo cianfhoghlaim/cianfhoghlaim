@@ -11,12 +11,12 @@ supersedes: []
 superseded_by: []
 related_specs:
   - assessment-extraction
-  - oideachais-pipeline
+  - cianfhoghlaim-pipeline
 related_apps:
   - sruth/meaisinfhoghlaim/ocr
   - sruth/meaisinfhoghlaim/agents/assessor
-  - sruth/oideachais/dlt_sources/ireland/sec.py
-  - sruth/oideachais/dagster_defs
+  - sruth/cianfhoghlaim/dlt_sources/ireland/sec.py
+  - sruth/cianfhoghlaim/dagster_defs
 related_llm_stack:
   - 'BAML (typed rubric alignment)'
   - 'litellm (model routing for vision OCR fallback)'
@@ -44,7 +44,7 @@ and the **BAML extraction** discipline. The goal is an oracle that:
 | Asset | Path | Use |
 |:--|:--|:--|
 | Quadrant | `sruth/meaisinfhoghlaim/ocr/` | OCR/HTR models, Irish metrics, dataset generators |
-| Quadrant | `sruth/oideachais/` | DLT historical data, BAML extraction, Dagster orchestration |
+| Quadrant | `sruth/cianfhoghlaim/` | DLT historical data, BAML extraction, Dagster orchestration |
 | Skill | `.agents/skills/document-intelligence/SKILL.md` | OCR + layout analysis |
 | Skill | `.agents/skills/baml/SKILL.md` | Typed rubric extraction |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA patterns for the assessment pipeline |
@@ -114,7 +114,7 @@ class GradeBoundary {
 ```
 
 The extraction prompt is in
-`sruth/oideachais/baml_src/marking_scheme.baml` and runs as a Dagster
+`sruth/cianfhoghlaim/baml_src/marking_scheme.baml` and runs as a Dagster
 asset: `marking_schemes.rubric_extracted`.
 
 ## 4. Assessment engine
@@ -152,8 +152,8 @@ Forecast = function of:
 - Historical cohort performance: students with similar attempt profiles
   → final grade distribution.
 
-The data lives in MotherDuck (`oideachais_grades.historical_attempts`
-and `oideachais_grades.historical_boundaries`). The forecasting model
+The data lives in MotherDuck (`cianfhoghlaim_grades.historical_attempts`
+and `cianfhoghlaim_grades.historical_boundaries`). The forecasting model
 is **DuckDB SQL**, not Python ML — for v1, we use:
 
 ```sql
@@ -162,8 +162,8 @@ WITH cohort AS (
     a.student_id,
     a.mark_pct,
     b.final_grade
-  FROM oideachais_grades.historical_attempts a
-  JOIN oideachais_grades.historical_final_grades b
+  FROM cianfhoghlaim_grades.historical_attempts a
+  JOIN cianfhoghlaim_grades.historical_final_grades b
     ON a.student_id = b.student_id
   WHERE a.qualification = $1
     AND a.subject = $2
@@ -189,7 +189,7 @@ is logged to **mlflow** for traceability.
 
 ## 6. Student/teacher dashboard
 
-A Marimo notebook at `sruth/oideachais/notebooks/assessor_dashboard.py`
+A Marimo notebook at `sruth/cianfhoghlaim/notebooks/assessor_dashboard.py`
 renders:
 
 - Upload form (image / PDF)
@@ -231,10 +231,10 @@ The notebook is published to MotherDuck as a Dive (per
 
 - `docs/00-core/CLAUDE.md` — 5-quadrant topology
 - `docs/02-data-platform/storage-mental-model.md` — storage layering
-- `docs/02-data-platform/cross-domain-registry.md` — `sruth/oideachais/sources.yaml`
+- `docs/02-data-platform/cross-domain-registry.md` — `sruth/cianfhoghlaim/sources.yaml`
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML + litellm ordering
 - `openspec/specs/assessment-extraction/spec.md` — exam-paper ingestion
-- `openspec/specs/oideachais-pipeline/spec.md` — end-to-end pipeline
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — end-to-end pipeline
 - `.agents/skills/document-intelligence/SKILL.md` — OCR + layout
 - `.agents/skills/baml/SKILL.md` — BAML extraction
 - `.agents/skills/dagster/SKILL.md` — SDA patterns

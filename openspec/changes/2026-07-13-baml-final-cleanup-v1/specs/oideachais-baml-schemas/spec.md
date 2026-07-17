@@ -1,12 +1,12 @@
-# Spec Delta — oideachais-baml-schemas
+# Spec Delta — cianfhoghlaim-baml-schemas
 
-This delta adds one new requirement to the existing `oideachais-baml-schemas` capability. Existing requirements are preserved unchanged.
+This delta adds one new requirement to the existing `cianfhoghlaim-baml-schemas` capability. Existing requirements are preserved unchanged.
 
 ## ADDED Requirements
 
 ### Requirement: Active single minimax-m3 text generator
 
-The `oideachais-baml-schemas` capability SHALL define a single active text-extraction generator in `baml/clients.baml`: `generator default`, routed to the `minimax-m3` model through the OpenAI-compatible coding-plan API using `MINIMAX_BASE_URL` and `MINIMAX_API_KEY`.
+The `cianfhoghlaim-baml-schemas` capability SHALL define a single active text-extraction generator in `baml/clients.baml`: `generator default`, routed to the `minimax-m3` model through the OpenAI-compatible coding-plan API using `MINIMAX_BASE_URL` and `MINIMAX_API_KEY`.
 
 The historical 8-generator layout (`default`, `local_vision_qwen`, `local_vision_glm`, `local_vision_moondream`, `gemini_2_flash`, `gemini_1_5_pro`, `gemini_pro`, `gemini_2_5_flash`) SHALL be preserved as a comment block for future reactivation when provider credentials become available. The two local vision generators `local_vision_gemma4` and `local_vision_qwen3vl` SHALL remain active.
 

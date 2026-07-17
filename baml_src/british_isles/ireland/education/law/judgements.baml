@@ -24,7 +24,7 @@ class Judgement {
   court_level            CourtLevel
   catchwords             string[]                        @description("Catchword phrases (typically 5-15 keywords for the subject matter)")
   holding                string                          @description("1-3 sentence summary of the decision's holding")
-  statutes_cited         StatuteReference[]              @description("Canonical join key against oideachais.education.ie.irish_statute_book.acts")
+  statutes_cited         StatuteReference[]              @description("Canonical join key against cianfhoghlaim.education.ie.irish_statute_book.acts")
   cases_cited            string[]                        @description("Other case citations referenced")
   extraction_confidence  float                           @description("0.0-1.0")
   @@stream.done
@@ -62,7 +62,7 @@ function ExtractJudgement(
       catchwords         — the catchword phrases (5-15 subject keywords)
       holding            — 1-3 sentence summary of the holding
       statutes_cited     — StatuteReference[] (CRITICAL — the join key
-                          against oideachais.education.ie.irish_statute_book.acts)
+                          against cianfhoghlaim.education.ie.irish_statute_book.acts)
       cases_cited        — other case citations referenced
       extraction_confidence — 0.0-1.0
 

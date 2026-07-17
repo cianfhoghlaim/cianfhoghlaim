@@ -21,7 +21,7 @@ Environment variables (read by `get_dlt_destination`):
   Default ``"byob"``.
 - ``MOTHERDUCK_TOKEN`` — the MotherDuck personal access token.
   Set via the Infisical `dev-baile` vault.
-- ``MOTHERDUCK_DATABASE`` — the database name. Default ``"oideachais"``.
+- ``MOTHERDUCK_DATABASE`` — the database name. Default ``"cianfhoghlaim"``.
 - ``MOTHERDUCK_S3_BUCKET`` — the S3 bucket for the BYOB option.
   Default ``"ducklake"``.
 - ``MOTHERDUCK_S3_ENDPOINT`` — the S3 endpoint. Default
@@ -55,7 +55,7 @@ def fully_managed_destination() -> Any:
     the MotherDuck cloud.
     """
     token = os.environ.get("MOTHERDUCK_TOKEN", "")
-    database = os.environ.get("MOTHERDUCK_DATABASE", "oideachais")
+    database = os.environ.get("MOTHERDUCK_DATABASE", "cianfhoghlaim")
     credentials = DuckLakeCredentials(
         ducklake_name=database,
         catalog=f"motherduck:?motherduck_token={token}",
@@ -70,7 +70,7 @@ def byob_destination() -> Any:
     The "sweet spot" for production deployments.
     """
     token = os.environ.get("MOTHERDUCK_TOKEN", "")
-    database = os.environ.get("MOTHERDUCK_DATABASE", "oideachais")
+    database = os.environ.get("MOTHERDUCK_DATABASE", "cianfhoghlaim")
     bucket = os.environ.get("MOTHERDUCK_S3_BUCKET", "ducklake")
     endpoint = os.environ.get("MOTHERDUCK_S3_ENDPOINT", "http://localhost:3900")
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", "")
@@ -106,7 +106,7 @@ def byoc_destination() -> Any:
     metadata (catalog).
     """
     token = os.environ.get("MOTHERDUCK_TOKEN", "")
-    database = os.environ.get("MOTHERDUCK_DATABASE", "oideachais")
+    database = os.environ.get("MOTHERDUCK_DATABASE", "cianfhoghlaim")
     bucket = os.environ.get("MOTHERDUCK_S3_BUCKET", "ducklake")
     endpoint = os.environ.get("MOTHERDUCK_S3_ENDPOINT", "http://localhost:3900")
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", "")

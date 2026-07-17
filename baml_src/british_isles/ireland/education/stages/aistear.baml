@@ -3,7 +3,7 @@
 // Bilingual EN/GA extraction of the Irish Aistear framework.
 // Merged from:
 //   - baml/aistear.baml (208 LOC) — the canonical aistear schema
-//   - baml/oideachais_other/aistear.baml (31 LOC) — the URL-extraction variant
+//   - baml/cianfhoghlaim_other/aistear.baml (31 LOC) — the URL-extraction variant
 //   - baml/early_childhood.baml (82 LOC) — the simplified early_childhood variant
 // See: docs/meaisínfhoghlaim/celtic/Celtic Data Scraping and Integration Plan.md
 //      docs/bonneagar/education-subject-inventory.md (14 Aistear source PDFs)

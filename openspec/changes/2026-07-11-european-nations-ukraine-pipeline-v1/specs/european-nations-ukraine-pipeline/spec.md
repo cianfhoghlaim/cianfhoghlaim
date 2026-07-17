@@ -14,7 +14,7 @@ of `education | law | medicine | statistics | government`, and
 `source` is a snake_case slug. Every source MUST declare its
 `source_id` as `european_nations.<iso3>.<domain>.<source_slug>` and
 land in the canonical DuckLake namespace
-`oideachais.<domain>.european_nations.<iso3>`.
+`cianfhoghlaim.<domain>.european_nations.<iso3>`.
 
 #### Scenario: A new French statute-book source obeys the contract
 
@@ -23,7 +23,7 @@ land in the canonical DuckLake namespace
   `dlt/european_nations/fra/law/legifrance.py`
 - **AND** its `source_id` MUST be `european_nations.fra.law.legifrance`
 - **AND** the DuckLake table MUST be
-  `oideachais.law.european_nations.fra`
+  `cianfhoghlaim.law.european_nations.fra`
 - **AND** the file MUST NOT be created at any legacy path
   (`dlt/eu/fra/`, `dlt/france/law/legifrance.py`, etc.)
 
@@ -109,7 +109,7 @@ conformance contract.
 - **WHEN** the 6 pilot countries' education DLT sources emit rows
 - **THEN** the `european_nations_education` CocoIndex v1 App MUST
   embed each row into the shared LanceDB table
-  `oideachais.eu_nations.education_chunks`
+  `cianfhoghlaim.eu_nations.education_chunks`
 - **AND** each chunk MUST carry `country_code`, `language`,
   `domain="education"`, and the source_url + content_hash
 
@@ -137,9 +137,9 @@ The system MUST provide:
   the institutional counterpart
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the seed instance of the per-nation pattern
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) —
   the BAML cluster taxonomy
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns
@@ -162,7 +162,7 @@ of `education | law | medicine | statistics | government`, and
 `source` is a snake_case slug. Every source MUST declare its
 `source_id` as `european_nations.<iso3>.<domain>.<source_slug>` and
 land in the canonical DuckLake namespace
-`oideachais.<domain>.european_nations.<iso3>`.
+`cianfhoghlaim.<domain>.european_nations.<iso3>`.
 
 #### Scenario: A new French statute-book source obeys the contract
 
@@ -171,7 +171,7 @@ land in the canonical DuckLake namespace
   `dlt/european_nations/fra/law/legifrance.py`
 - **AND** its `source_id` MUST be `european_nations.fra.law.legifrance`
 - **AND** the DuckLake table MUST be
-  `oideachais.law.european_nations.fra`
+  `cianfhoghlaim.law.european_nations.fra`
 - **AND** the file MUST NOT be created at any legacy path
   (`dlt/eu/fra/`, `dlt/france/law/legifrance.py`, etc.)
 
@@ -257,7 +257,7 @@ conformance contract.
 - **WHEN** the 6 pilot countries' education DLT sources emit rows
 - **THEN** the `european_nations_education` CocoIndex v1 App MUST
   embed each row into the shared LanceDB table
-  `oideachais.eu_nations.education_chunks`
+  `cianfhoghlaim.eu_nations.education_chunks`
 - **AND** each chunk MUST carry `country_code`, `language`,
   `domain="education"`, and the source_url + content_hash
 
@@ -285,9 +285,9 @@ The system MUST provide:
   the institutional counterpart
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the seed instance of the per-nation pattern
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) —
   the BAML cluster taxonomy
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

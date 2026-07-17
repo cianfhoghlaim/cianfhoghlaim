@@ -54,7 +54,7 @@ When working in `sruth/tuatha/`, route to the right sub-area:
 | Knowledge graph | `sruth/tuatha/knowledge_graph/` | `.agents/skills/falkordb/` |
 | SIWE auth | `sruth/tuatha/auth/siwe.py` | (SIWE — TBD skill) |
 | x402 micropayments | `sruth/tuatha/sruth/crypteolas/x402.py` | (x402 — TBD skill) |
-| Celtic-language models | `sruth/oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
+| Celtic-language models | `sruth/cianfhoghlaim/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
 | Dagger CI/CD for the sruth/tuatha/ build | `.dagger/` | `.agents/skills/dagger/` |
 
 ## Quick Start
@@ -229,8 +229,8 @@ LANGFUSE_SECRET_KEY=...
   `arm1-oci`
 
 ❌ **Don't use when:**
-- You're working in `sruth/oideachais/` (use
-  `.agents/skills/oideachais-pipeline/SKILL.md`)
+- You're working in `sruth/cianfhoghlaim/` (use
+  `.agents/skills/cianfhoghlaim-pipeline/SKILL.md`)
 - You're working in `sruth/meaisinfhoghlaim/` (use
   `.agents/skills/meaisinfhoghlaim-platform/SKILL.md`)
 - You're working in `sruth/croilar/` (use

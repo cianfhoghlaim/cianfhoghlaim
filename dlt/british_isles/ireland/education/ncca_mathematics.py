@@ -227,7 +227,7 @@ __all__ = [
 
 def create_ncca_mathematics_pipeline(
     pipeline_name: str = "ncca_mathematics_lc6",
-    dataset_name: str = "oideachais.leaving_cert.mathematics",
+    dataset_name: str = "cianfhoghlaim.leaving_cert.mathematics",
 ) -> Any:
     """Return a configured dlt pipeline for the BIEP v1 mathematics NCCA crawl.
 

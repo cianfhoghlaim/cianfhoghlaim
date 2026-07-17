@@ -1,0 +1,16 @@
+{
+  "name": "@cianfhoghlaim/api",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "@orpc/server": "^1.12.0",
+    "@orpc/zod": "^1.12.0",
+    "zod": "^4.0.0",
+    "@cianfhoghlaim/env": "workspace:*",
+    "@cianfhoghlaim/auth": "workspace:*",
+    "@cianfhoghlaim/db": "workspace:*"
+  }
+}

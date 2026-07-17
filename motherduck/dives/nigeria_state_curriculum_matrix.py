@@ -22,7 +22,7 @@ def build_nigeria_state_curriculum_matrix_dive() -> None:
         name=DIVE_NAME,
         sql="""
             SELECT state_code, language, COUNT(*) AS row_count
-            FROM oideachais.education.commonwealth.nga
+            FROM cianfhoghlaim.education.commonwealth.nga
             GROUP BY state_code, language
         """,
     )

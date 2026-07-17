@@ -19,7 +19,7 @@
       `dlt/official_media/source_resolver.py` (4-lookup
       resolver), `baml/processing/official_media.baml`
       (Stage-2 BAML fallback), and the Cognee dataset
-      `oideachais_official_media` with the 4 spec-defined edge types.
+      `cianfhoghlaim_official_media` with the 4 spec-defined edge types.
 
 ## 3. Create the 5 marimo dashboards
 

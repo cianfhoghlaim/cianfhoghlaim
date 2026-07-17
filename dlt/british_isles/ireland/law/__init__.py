@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.ireland.law — Ireland legal DLT sources.
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.law — Ireland legal DLT sources.
 
 Phase 6 of the openspec change. Covers both **statutory** law sources
 (`irish_statute_book`, `doj`, `lawreform`) and the **operational** law

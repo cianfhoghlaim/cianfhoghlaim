@@ -2,7 +2,7 @@
 
 ## 1. Read the spec to understand the 10 requirements
 
-- [x] **1.1** Read `openspec/specs/oideachais-marimo-dashboards/spec.md`
+- [x] **1.1** Read `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md`
       and identify the 10 requirements: R1 5-stage education
       dashboards, R2 Leabharlann full-stack demo,
       R3 Cross-domain + lakehouse + ducklake,
@@ -141,7 +141,7 @@
 - [x] **6.1** Create `proposal.md` (Why + What + Dependencies +
       Cross-repo sync).
 - [x] **6.2** Create `tasks.md` (the 6 task groups above).
-- [x] **6.3** Create `specs/oideachais-marimo-dashboards/spec.md`
+- [x] **6.3** Create `specs/cianfhoghlaim-marimo-dashboards/spec.md`
       delta — 1 MODIFIED requirement "Phase 1 complete: 10
       requirements all functional; 10 marimo dashboards at
       `notebooks/10_marimo_dashboards/0[1-9]_*.py` + `10_*.py`

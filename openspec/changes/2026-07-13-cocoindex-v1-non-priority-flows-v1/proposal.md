@@ -89,7 +89,7 @@ These 25 flows include a mix of:
 
 ## R1–R4 conformance contract
 
-The 4-rule contract (per `oideachais-cocoindex-v1-migration` spec):
+The 4-rule contract (per `cianfhoghlaim-cocoindex-v1-migration` spec):
 
 - **R1** — `from ._lifespan` import; the shared lifespan provides `LANCE_DB` +
   `EMBEDDER` + `RESOLVED_FILE_REGISTRY`.
@@ -217,5 +217,5 @@ $ for nb in \
 - [x] All 25 non-priority flows pass R1-R4 (per the audit)
 - [x] `mise run cocoindex:conformance` exits 0
 - [x] All 8 BAML-using notebooks AST-parse OK
-- [x] 1 ADDED spec delta on `oideachais-cocoindex-v1-migration` is well-formed
+- [x] 1 ADDED spec delta on `cianfhoghlaim-cocoindex-v1-migration` is well-formed
 - [x] Pushed to `origin/pick-4-biep-v1` (NOT `main`)

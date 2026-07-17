@@ -8,7 +8,7 @@ Routes each circular page through the canonical BAML extractor
 `b.ExtractCircular` from
 `cianfhoghlaim/baml/education/lc_extraction/circular_extraction.baml`
 and emits one row per circular to the
-`oideachais_government_circulars` DuckLake table.
+`cianfhoghlaim_government_circulars` DuckLake table.
 
 Honours the project's `USE_LOCAL_SCRAPES` env-var convention by reading
 from the curated `stedding/site_scrape_samples/oide.ie/` fixture cache
@@ -31,7 +31,7 @@ Usage:
     pipeline = dlt.pipeline(
         pipeline_name="gov_ie_circulars_ingest",
         destination="duckdb",
-        dataset_name="oideachais_government_circulars",
+        dataset_name="cianfhoghlaim_government_circulars",
     )
     pipeline.run(gov_ie_circulars_source())
 """

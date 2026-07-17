@@ -1,4 +1,4 @@
-"""oideachais.cianfhoghlaim.dlt.british_isles.ireland.statistics — Ireland statistics sub-package.
+"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.statistics — Ireland statistics sub-package.
 
 Per Phase 3D, each DLT source lives in its own file. Per-source functions
 are re-exported at this package level for backward compatibility.

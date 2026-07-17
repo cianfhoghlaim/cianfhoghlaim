@@ -21,7 +21,7 @@ Republic of Ireland:
 - **4 new BAML extraction functions** (`ExtractJCCurriculum`, `ExtractCBADescriptor`,
   `ExtractJCShortCourse`, `ExtractJCExamPaper`)
 - **1 CocoIndex v1 App** with **36 LanceDB tables** at
-  `oideachais.jc.<subject>.<year>_<lang>` (one per subject × year × language)
+  `cianfhoghlaim.jc.<subject>.<year>_<lang>` (one per subject × year × language)
 - **72 Dagster L2 assets** in `orchestration/defs/2_materials/junior_cycle/`
   (18 subjects × 4 layers: ingest → BAML extract → embed → cognify)
 - **1 MotherDuck Dive** `jc_curriculum_dive` + **1 daily Flight** `jc_pdf_sync_flight`
@@ -82,13 +82,13 @@ hebrew, philosophy, film_studies, financial_literacy, media_literacy,
 personal_professional_development, digital_media, athletic_studies.
 
 All 52 sources honour `USE_LOCAL_SCRAPES=true` and write to the canonical
-DuckLake namespace `oideachais.education.british_isles.ireland.junior_cycle.<subject>.<lang>`
+DuckLake namespace `cianfhoghlaim.education.british_isles.ireland.junior_cycle.<subject>.<lang>`
 (per the `cross-region-pipeline/spec.md` Requirement "Canonical DuckLake namespace shape").
 
 ### 3. New CocoIndex v1 App
 
 `cocoindex/subjects/junior_cycle_embedding.py` — 36 LanceDB tables at
-`oideachais.jc.<subject>.<year>_<lang>`. Conforms to the R1–R4 v1 contract:
+`cianfhoghlaim.jc.<subject>.<year>_<lang>`. Conforms to the R1–R4 v1 contract:
 
 - **R1** — `from cocoindex._shared._lifespan import shared_lifespan`
 - **R2** — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
@@ -119,7 +119,7 @@ group_name convention `2_materials.<subject>.<extraction_slug>`:
   with cross-references to the LC dive (so a teacher can compare Year 3 (JC) → Year 4
   (LC) topic progression).
 - **Daily MotherDuck Flight** `jc_pdf_sync_flight` — re-runs BAML extraction on any new
-  PDFs landed in `s3://garage/oideachais/junior_cycle/<subject>/<lang>/<year>/<file>.pdf`.
+  PDFs landed in `s3://garage/cianfhoghlaim/junior_cycle/<subject>/<lang>/<year>/<file>.pdf`.
 
 ### 6. Spec deltas
 
@@ -166,11 +166,11 @@ Affected repos: cianfhoghlaim (single-repo change)
   the JC capability being extended to full extraction depth
 - [`cross-region-pipeline`](../../specs/cross-region-pipeline/spec.md) —
   the umbrella contract (DuckLake namespace shape, DLT path contract, partition contract)
-- [`oideachais-baml-schemas`](../../specs/oideachais-baml-schemas/spec.md) —
+- [`cianfhoghlaim-baml-schemas`](../../specs/cianfhoghlaim-baml-schemas/spec.md) —
   the BAML extraction library this change writes 4 new files into
-- [`oideachais-cocoindex-v1-migration`](../../specs/oideachais-cocoindex-v1-migration/spec.md) —
+- [`cianfhoghlaim-cocoindex-v1-migration`](../../specs/cianfhoghlaim-cocoindex-v1-migration/spec.md) —
   the R1–R4 v1 conformance contract the new CocoIndex App must obey
-- [`oideachais-marimo-dashboards`](../../specs/oideachais-marimo-dashboards/spec.md) —
+- [`cianfhoghlaim-marimo-dashboards`](../../specs/cianfhoghlaim-marimo-dashboards/spec.md) —
   the 6 BIEP marimo notebooks (this change extends the LC pattern to JC)
 - [`dagster-5-layer-component-architecture`](../../specs/dagster-5-layer-component-architecture/spec.md) —
   the 5-layer Dagster component architecture (Ingestion / Materials / Lifecycle / Asset Generation / Agent Ops)

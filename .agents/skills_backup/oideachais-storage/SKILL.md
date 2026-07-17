@@ -1,5 +1,5 @@
 ---
-name: oideachais-storage
+name: cianfhoghlaim-storage
 description: KCG storage mental model + Critical Constraints. Writes → DuckLake (Parquet on Garage S3, Postgres catalog). Reads → MotherDuck (`md:oideachais`). Long-tail catalogue → Apache Iceberg via Lakekeeper. Change-watching → ChangeDetection.io on `arm1-oci`. Use when writing any storage code, debugging segfaults, onboarding an analyst, or choosing the right destination for a new pipeline.
 ---
 
@@ -45,8 +45,8 @@ Use when you need to:
 - **Storage backend**: Parquet on Garage S3 (dev: port 3900,
   prod: Hetzner Object Storage)
 - **Catalog**: Postgres (`md:oideachais` as the metadata DB)
-- **Schema convention**: `oideachais.{domain}.{nation}`
-- **Writers**: Dagster assets in `sruth/oideachais/dagster_defs/assets/`
+- **Schema convention**: `cianfhoghlaim.{domain}.{nation}`
+- **Writers**: Dagster assets in `sruth/cianfhoghlaim/dagster_defs/assets/`
   and `sruth/tuatha/dagster_assets/`
 - **Why DuckLake**: ACID transactions + time-travel queries +
   zero-copy Parquet + Iceberg metadata for downstream PyIceberg
@@ -104,7 +104,7 @@ catalog = load_catalog(
     uri="https://lakekeeper.cianfhoghlaim.ie/catalog",
     token=os.environ["LAKEKEEPER_TOKEN"],
 )
-table = catalog.load_table("oideachais.education.ie.curriculum")
+table = catalog.load_table("cianfhoghlaim.education.ie.curriculum")
 df = table.scan().to_pandas()
 ```
 
@@ -124,7 +124,7 @@ df = table.scan().to_pandas()
 The KCG variant of `lancedb.connections.SerialDatabaseExecutor`:
 
 ```python
-# sruth/oideachais/storage/serial_executor.py
+# sruth/cianfhoghlaim/storage/serial_executor.py
 import threading
 from contextlib import contextmanager
 
@@ -151,11 +151,11 @@ class SerialDatabaseExecutor:
 **Usage**:
 
 ```python
-executor = SerialDatabaseExecutor("/data/oideachais.duckdb")
+executor = SerialDatabaseExecutor("/data/cianfhoghlaim.duckdb")
 
 # Threaded access — safe
 with executor.connection() as con:
-    con.execute("SELECT * FROM oideachais.education.ie.curriculum LIMIT 10")
+    con.execute("SELECT * FROM cianfhoghlaim.education.ie.curriculum LIMIT 10")
 ```
 
 ### Connection scope (per-operation)
@@ -203,13 +203,13 @@ The HNSW rebuild above 50k rows is **slow** (> 1 hour for
 ### Destination factory (the single entry point)
 
 ```python
-# sruth/oideachais/dlt_utils/destinations.py
+# sruth/cianfhoghlaim/dlt_utils/destinations.py
 import dlt
 import os
 
 
 def get_dlt_destination(
-    dataset_name: str = "oideachais",
+    dataset_name: str = "cianfhoghlaim",
     storage: str = "garage",  # "garage" | "r2" | "local"
 ):
     """The single entry point for DLT destinations.
@@ -226,7 +226,7 @@ def get_dlt_destination(
         )
     elif storage == "local":
         return dlt.destinations.duckdb(
-            database=os.path.expanduser("~/oideachais.duckdb"),
+            database=os.path.expanduser("~/cianfhoghlaim.duckdb"),
         )
     else:
         raise ValueError(f"Unknown storage: {storage}")
@@ -237,8 +237,8 @@ def get_dlt_destination(
 ```python
 pipeline = dlt.pipeline(
     pipeline_name="ireland_curriculum",
-    destination=get_dlt_destination("oideachais", storage="garage"),
-    dataset_name="oideachais.education.ie",
+    destination=get_dlt_destination("cianfhoghlaim", storage="garage"),
+    dataset_name="cianfhoghlaim.education.ie",
 )
 ```
 
@@ -264,9 +264,9 @@ pipeline = dlt.pipeline(
     pipeline_name="ireland_curriculum",
     destination=dlt.destinations.ducklake(
         catalog="postgres://...",
-        storage="s3://sruth/oideachais/",
+        storage="s3://sruth/cianfhoghlaim/",
     ),
-    dataset_name="oideachais.education.ie",
+    dataset_name="cianfhoghlaim.education.ie",
 )
 ```
 
@@ -316,7 +316,7 @@ The `md:oideachais` URL is the MotherDuck database name; the
 
 ### DuckLake 1.0 is GA (2026-06)
 
-DuckLake 1.0 is now the default open-table lakehouse format. The KCG `sruth/oideachais/ducklake/` layer is already on 1.0 (verify with `SELECT ducklake_version();`).
+DuckLake 1.0 is now the default open-table lakehouse format. The KCG `sruth/cianfhoghlaim/ducklake/` layer is already on 1.0 (verify with `SELECT ducklake_version();`).
 
 Key 1.0 features that affect the KCG pipeline:
 
@@ -329,7 +329,7 @@ Key 1.0 features that affect the KCG pipeline:
 
 The `lakehouse-lance-namespace` sidecar registers LanceDB tables as Iceberg tables. Pattern:
 
-1. The Dagster asset writes Parquet to `s3://ducklake/sruth/oideachais/...`
+1. The Dagster asset writes Parquet to `s3://ducklake/sruth/cianfhoghlaim/...`
 2. The LanceDB writer ingests the Parquet into a LanceDB table
 3. The `lakehouse-lance-namespace` sidecar (in the `lakehouse` stack) sees the new table and registers it in the Lakekeeper Iceberg catalog
 4. Any tool that speaks the Iceberg REST protocol (MotherDuck, DuckDB, Trino) can now query the LanceDB data
@@ -340,8 +340,8 @@ The sidecar runs at `http://lakehouse-lance-namespace:8182` and uses the Lakekee
 
 | Layer | What it stores | KCG pattern |
 |:--|:--|:--|
-| **Object storage** | Parquet files + LanceDB tables | Garage S3 (`s3://ducklake/sruth/oideachais/`, `s3://lance/sruth/oideachais/`) |
-| **Lakehouse catalog** | Schema + partition metadata | DuckLake 1.0 (Postgres `lakehouse-postgres:5432/oideachais_catalog`) |
+| **Object storage** | Parquet files + LanceDB tables | Garage S3 (`s3://ducklake/sruth/cianfhoghlaim/`, `s3://lance/sruth/cianfhoghlaim/`) |
+| **Lakehouse catalog** | Schema + partition metadata | DuckLake 1.0 (Postgres `lakehouse-postgres:5432/cianfhoghlaim_catalog`) |
 | **Iceberg REST** | Cross-tool catalogue (MotherDuck, Trino) | Lakekeeper (`http://lakehouse-lakekeeper:8181`) |
 | **Lance namespace** | LanceDB tables exposed as Iceberg | `lakehouse-lance-namespace:8182` (sidecar) |
 | **Vector search** | Embeddings + HNSW | LanceDB Cloud or local LanceDB |

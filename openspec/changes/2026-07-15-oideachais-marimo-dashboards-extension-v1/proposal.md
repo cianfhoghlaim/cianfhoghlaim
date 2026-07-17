@@ -1,8 +1,8 @@
-# Extend the `oideachais-marimo-dashboards` capability (Phase 2)
+# Extend the `cianfhoghlaim-marimo-dashboards` capability (Phase 2)
 
 ## Why
 
-The `oideachais-marimo-dashboards` capability shipped its first 10 dashboards
+The `cianfhoghlaim-marimo-dashboards` capability shipped its first 10 dashboards
 at `notebooks/10_marimo_dashboards/` via commit `44cabc151`. Those 10
 dashboards covered the BIEP v1 corpus, Cognee knowledge graph, cross-archive
 navigation, lakehouse table browser, BAML extraction log viewer, per-subject
@@ -38,7 +38,7 @@ panels, and a health banner).
 - `notebooks/cli.py` — added `11_marimo_dashboards_v2` to
   the `GROUPS` tuple (so `cianfhoghlaim-marimo list 11_marimo_dashboards_v2`
   discovers the new entries)
-- 1 MODIFIED spec delta on `oideachais-marimo-dashboards/spec.md` —
+- 1 MODIFIED spec delta on `cianfhoghlaim-marimo-dashboards/spec.md` —
   adds requirement R-v2 (Phase 2 complete: 5-10 additional marimo
   dashboards at `notebooks/11_marimo_dashboards_v2/0[1-9]_*.py` +
   `10_*.py` ship the leabharlann corpus + university extraction +
@@ -55,7 +55,7 @@ panels, and a health banner).
 
 ## Dependencies
 
-Blocked by: `2026-07-14-oideachais-marimo-dashboards-v1` (the
+Blocked by: `2026-07-14-cianfhoghlaim-marimo-dashboards-v1` (the
 Phase-1 commit `44cabc151` that shipped the first 10 dashboards).
 This change can archive only after the Phase-1 commit lands on
 `main` (already done — Phase 1 archived 2026-07-14).
@@ -67,10 +67,10 @@ Single-repo change (all paths under `cianfhoghlaim/` and
 
 ## Dependencies
 
-- `Blocked by: 2026-07-14-oideachais-marimo-dashboards-v1` (the
+- `Blocked by: 2026-07-14-cianfhoghlaim-marimo-dashboards-v1` (the
   Phase-1 commit `44cabc151` that shipped the first 10 dashboards)
   — already archived on 2026-07-14.
-- `Blocked by (soft): 2026-07-14-oideachais-cognify-knowledge-graph-v1`
+- `Blocked by (soft): 2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1`
   (the cross-archive cognify pass that produces the edge tables
   consumed by the 06-08 cross-archive edge dashboards) — already
   archived on 2026-07-14.

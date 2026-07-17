@@ -59,7 +59,7 @@ the Ragas thresholds (`faithfulness >= 0.8`,
 
 #### Scenario: Asset check fails on Ragas regression
 
-- **GIVEN** a RAG asset (e.g. `oideachais-curriculum-search`)
+- **GIVEN** a RAG asset (e.g. `cianfhoghlaim-curriculum-search`)
   with Ragas faithfulness baseline 0.92
 - **WHEN** a new deployment changes the embedding model
 - **THEN** the next asset materialisation's `AssetCheck`

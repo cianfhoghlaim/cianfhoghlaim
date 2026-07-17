@@ -19,8 +19,8 @@ from __future__ import annotations
 import dlt
 
 # The bare `dlt_sources` import is the convention used by the
-# existing `_oideachais_dlt_sources` builder; the actual module
-# lives at `cianfhoghlaim.pipelines.ingest._oideachais_dlt_sources`.
+# existing `_cianfhoghlaim_dlt_sources` builder; the actual module
+# lives at `cianfhoghlaim.pipelines.ingest._cianfhoghlaim_dlt_sources`.
 # We try both names so this works in CI (where `dlt_sources` is the
 # editable install) and in the monorepo (where the long path is
 # the canonical import).
@@ -38,7 +38,7 @@ except ImportError:
 # Canonical University of Galway configuration.
 # Mirror the config in the `sources.yaml` entry `ie.university.galway`
 # (which uses `kind: university_deep_extraction` per the
-# `oideachais-university-deep-extraction` spec).
+# `cianfhoghlaim-university-deep-extraction` spec).
 UOG_CONFIG = UniversityDeepExtractionConfig(
     university_id="ie-university-galway",
     institution_name="University of Galway",

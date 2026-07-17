@@ -96,7 +96,7 @@ baml/americas/
 
 `cocoindex/americas_california_education_embedding.py`
 embeds every Americas education row into the shared LanceDB table
-`oideachais.americas.education_chunks`.
+`cianfhoghlaim.americas.education_chunks`.
 
 ### 5. New Dagster L1 + L3 assets
 

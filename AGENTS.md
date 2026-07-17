@@ -52,7 +52,7 @@ mise run dagster:oideachais        # launch the lakehouse Dagster UI
 
 | Stack | Port | Domain |
 |:--|--:|:--|
-| `oideachais` | 3080, 3335, 7777, 7778, 8000 | `oideachais.cianfhoghlaim.ie` |
+| `oideachais` | 3080, 3335, 7777, 7778, 8000 | `cianfhoghlaim.cianfhoghlaim.ie` |
 | `litellm` | 4000 | `litellm.cianfhoghlaim.ie` (LLM gateway) |
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
@@ -76,13 +76,13 @@ The root `package.json` declares these `workspaces` and is the only manifest bun
 
 | Workspace | Path | Purpose |
 |:--|:--|:--|
-| `oideachais-web` | `web/apps/oideachais-web/` | TanStack Start + React front-end (the public web app) |
+| `cianfhoghlaim-web` | `web/apps/cianfhoghlaim-web/` | TanStack Start + React front-end (the public web app) |
 | `tuatha-ui` | `web/apps/tuatha-ui/` | Túatha educational MMO front-end |
 | `croilar-web` | `web/apps/croilar-web/` | Croílár multi-persona portfolio |
 | `croilar-portal` | `web/apps/croilar-portal/` | Croílár portfolio dashboard |
 | `tuatha-demo` | `web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
 | `game_showcase` | `web/apps/game_showcase/` | Web game showcase |
-| `oideachais-mcp-filesystem` | `web/apps/oideachais-mcp-filesystem/` | Filesystem MCP server for the data platform |
+| `cianfhoghlaim-mcp-filesystem` | `web/apps/cianfhoghlaim-mcp-filesystem/` | Filesystem MCP server for the data platform |
 | `hono-api` | `web/hono-api/` | Hono API gateway |
 
 The IaC (`iac:bootstrap`, `iac:health`, etc.) lives in the
@@ -165,7 +165,7 @@ Secrets follow a strict three-way contract. **Never** hand-edit `.env`:
 
 > **Migration note (2026-06):** The earlier 1Password + SOPS + Komodo
 > secrets workflow from the predecessor `bonneagar` project
-> (documented in the now-deleted `sruth/oideachais/datasets/secrets_management_plan.md`)
+> (documented in the now-deleted `sruth/cianfhoghlaim/datasets/secrets_management_plan.md`)
 > is **superseded** by this Infisical + Locket + mise flow. 1Password
 > was migrated to Infisical in 2026-06; `sops` and `age` keys are
 > retained in `mise.toml` only for legacy compatibility and should
@@ -458,7 +458,7 @@ Use [`ragas`](.agents/skills/ragas/SKILL.md) with [`langfuse`](.agents/skills/la
 As an autonomous agent operating within the Cianfhoghlaim stack (via OpenCode, Roo, or Cline), you **MUST** adhere to these recursive habits to prevent regressions and maintain stability:
 
 ### 1. Zero Absolute Namespaces in Data Pipelines
-Never import `oideachais.data_platform...` from within the data platform itself. Always use relative or local package imports (e.g., `from dlt_sources.ireland...`). Failing to do so causes critical `ModuleNotFoundError` crashes in the Dagster orchestrator.
+Never import `cianfhoghlaim.data_platform...` from within the data platform itself. Always use relative or local package imports (e.g., `from dlt_sources.ireland...`). Failing to do so causes critical `ModuleNotFoundError` crashes in the Dagster orchestrator.
 
 ### 2. Respect the Ingestion Cache
 Before executing live web scrapes (e.g., Firecrawl on `examinations.ie`) that drain API credits and risk rate limits, always test `dlt` pipelines with the fallback cache enabled:

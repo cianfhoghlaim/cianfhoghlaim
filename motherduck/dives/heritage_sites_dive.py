@@ -17,7 +17,7 @@ from __future__ import annotations
 def build_heritage_sites_dive() -> str:
     """Return the SQL DDL for the heritage sites Dive."""
     return """
-    CREATE OR REPLACE VIEW md:oideachais.dives.heritage_sites AS
+    CREATE OR REPLACE VIEW md:cianfhoghlaim.dives.heritage_sites AS
     SELECT
         'main' AS heritage_kind,
         site_id,
@@ -30,7 +30,7 @@ def build_heritage_sites_dive() -> str:
         description,
         created_at,
         modified_at
-    FROM md:oideachais.celtic.heritage.sites
+    FROM md:cianfhoghlaim.celtic.heritage.sites
     UNION ALL
     SELECT
         'hidden' AS heritage_kind,
@@ -44,7 +44,7 @@ def build_heritage_sites_dive() -> str:
         description,
         created_at,
         modified_at
-    FROM md:oideachais.celtic.heritage.hidden_sites;
+    FROM md:cianfhoghlaim.celtic.heritage.hidden_sites;
     """
 
 
@@ -54,7 +54,7 @@ HERITAGE_KPI_QUERIES = {
             county,
             heritage_kind,
             COUNT(*) AS n_sites
-        FROM md:oideachais.dives.heritage_sites
+        FROM md:cianfhoghlaim.dives.heritage_sites
         WHERE county IS NOT NULL
         GROUP BY county, heritage_kind
         ORDER BY n_sites DESC
@@ -65,7 +65,7 @@ HERITAGE_KPI_QUERIES = {
             site_type,
             heritage_kind,
             COUNT(*) AS n_sites
-        FROM md:oideachais.dives.heritage_sites
+        FROM md:cianfhoghlaim.dives.heritage_sites
         WHERE site_type IS NOT NULL
         GROUP BY site_type, heritage_kind
         ORDER BY n_sites DESC;
@@ -80,7 +80,7 @@ HERITAGE_KPI_QUERIES = {
             heritage_kind,
             latitude,
             longitude
-        FROM md:oideachais.dives.heritage_sites
+        FROM md:cianfhoghlaim.dives.heritage_sites
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL
         LIMIT 10000;
     """,
@@ -90,7 +90,7 @@ HERITAGE_KPI_QUERIES = {
             COUNT(*) AS n_sites,
             COUNT(DISTINCT county) AS n_counties,
             COUNT(DISTINCT site_type) AS n_types
-        FROM md:oideachais.dives.heritage_sites
+        FROM md:cianfhoghlaim.dives.heritage_sites
         GROUP BY heritage_kind
         ORDER BY n_sites DESC;
     """,

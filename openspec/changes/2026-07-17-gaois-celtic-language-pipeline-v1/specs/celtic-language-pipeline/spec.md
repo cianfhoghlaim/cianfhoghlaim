@@ -17,16 +17,16 @@ dlt/language/celtic_curriculum/     # Celtic curriculum + mythology + grammar + 
 
 Each source MUST declare its `source_id` as
 `celtic.<group>.<source_slug>` and land in the canonical DuckLake
-namespace `oideachais.celtic.<group>.<table>` (LanceDB companion table
-at `oideachais.language.<group>_chunks`).
+namespace `cianfhoghlaim.celtic.<group>.<table>` (LanceDB companion table
+at `cianfhoghlaim.language.<group>_chunks`).
 
 #### Scenario: A new Gaois Téarma source obeys the contract
 
 - **WHEN** a developer adds a new Gaois Téarma extraction source
 - **THEN** the DLT source MUST live at `dlt/language/gaois/tearma.py`
 - **AND** its `source_id` MUST be `celtic.gaois.tearma`
-- **AND** the DuckLake table MUST be `oideachais.celtic.gaois.tearma_terms`
-- **AND** the LanceDB companion MUST be `oideachais.language.gaois_chunks`
+- **AND** the DuckLake table MUST be `cianfhoghlaim.celtic.gaois.tearma_terms`
+- **AND** the LanceDB companion MUST be `cianfhoghlaim.language.gaois_chunks`
 
 ### Requirement: 7 source groups ship the full 5-layer pipeline
 
@@ -49,8 +49,8 @@ Dives + 7 marimo notebooks = **41 new files**.
 #### Scenario: Dúchas gets the bbox alignment
 
 - **WHEN** a developer adds the Dúchas CocoIndex v1 App
-- **THEN** the App MUST mount BOTH `oideachais.language.duchas_chunks` AND
-  `oideachais.language.duchas_bboxes` (the 5-level bbox child table)
+- **THEN** the App MUST mount BOTH `cianfhoghlaim.language.duchas_chunks` AND
+  `cianfhoghlaim.language.duchas_bboxes` (the 5-level bbox child table)
 - **AND** each bbox row MUST carry `page_id` + `region_bbox` + `sentence_bbox`
   + `word_bbox` + `letter_bbox` (with NULL fallbacks for unavailable levels)
 - **AND** the MotherDuck Dive MUST aggregate to page-level summaries
@@ -131,11 +131,11 @@ orchestration/defs/3_model_lifecycle/cocoindex_v1/<group>_embedding/defs.yaml
 
 - **WHEN** `dg launch --job duchas_full_pipeline` is invoked
 - **THEN** the L1 ingestion asset MUST run `duchas_source()` and write to
-  DuckLake `oideachais.celtic.duchas.manuscripts`
+  DuckLake `cianfhoghlaim.celtic.duchas.manuscripts`
 - **AND** the L2 BAML asset MUST run `ExtractDuchasManuscript` over the
-  ingested rows and write to DuckLake `oideachais.celtic.duchas.bboxes`
+  ingested rows and write to DuckLake `cianfhoghlaim.celtic.duchas.bboxes`
 - **AND** the L3 CocoIndex App MUST mount
-  `oideachais.language.duchas_chunks` and `oideachais.language.duchas_bboxes`
+  `cianfhoghlaim.language.duchas_chunks` and `cianfhoghlaim.language.duchas_bboxes`
   in LanceDB
 - **AND** the MotherDuck Dive MUST show the new rows in the page-level summary
 
@@ -170,15 +170,15 @@ The system MUST write the 7 source groups' output to the canonical
 DuckLake + S3 destination, matching the Irish education pipeline pattern:
 
 - DLT destination: `@dlt.destination(ducklake, credentials=lakehouse_creds)`
-- S3 staging: `s3://garage/oideachais/language/<group>/<partition>/<file>.jsonl`
+- S3 staging: `s3://garage/cianfhoghlaim/language/<group>/<partition>/<file>.jsonl`
 - MotherDuck attach string: `md:oideachais` (per `nb_utils.LAKEHOUSE_DUCKDB`)
 
 #### Scenario: Gaois terminology writes to S3 + DuckLake
 
 - **WHEN** the Gaois Téarma DLT source runs
-- **THEN** raw rows MUST be staged at `s3://garage/oideachais/language/gaois/tearma/<partition>.jsonl`
+- **THEN** raw rows MUST be staged at `s3://garage/cianfhoghlaim/language/gaois/tearma/<partition>.jsonl`
 - **AND** the canonical DuckLake table MUST be
-  `oideachais.celtic.gaois.tearma_terms`
+  `cianfhoghlaim.celtic.gaois.tearma_terms`
 - **AND** the marimo notebook MUST read from `md:oideachais` via
   `nb_utils.connect_biep_lakehouse()`
 
@@ -206,9 +206,9 @@ The system MUST provide 7 marimo notebooks (one per source group) under
 ## Cross-references
 
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) — the seed instance of the 5-layer Dagster + CocoIndex + MotherDuck pattern
-- [`oideachais-cocoindex-v1-migration`](../oideachais-cocoindex-v1-migration/spec.md) — the R1-R4 conformance contract
-- [`oideachais-baml-schemas`](../oideachais-baml-schemas/spec.md) — the BAML cluster taxonomy
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) — the parent pipeline
+- [`cianfhoghlaim-cocoindex-v1-migration`](../cianfhoghlaim-cocoindex-v1-migration/spec.md) — the R1-R4 conformance contract
+- [`cianfhoghlaim-baml-schemas`](../cianfhoghlaim-baml-schemas/spec.md) — the BAML cluster taxonomy
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) — the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns
 - `.agents/skills/cocoindex/SKILL.md` — R1-R4 conformance contract

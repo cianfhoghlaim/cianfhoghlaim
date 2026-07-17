@@ -35,7 +35,7 @@ The 4 notebooks use the **ibis-first contract** from
 - **`00_biep_v2_overview.py`** — single-pane view across LC + JC + A-Level + GCSE.
   Cross-jurisdiction filter UI: subject / level / language / year / awarding body
   / curriculum region. Reads from
-  `oideachais.<domain>.british_isles.<jurisdiction>.<scope>.*` Lance tables.
+  `cianfhoghlaim.<domain>.british_isles.<jurisdiction>.<scope>.*` Lance tables.
   Renders: subject count, topic coverage histogram, last-sync timestamp, the
   4 BIEP MotherDuck Dives embedded as iframes.
 - **`01_junior_cycle_explorer.py`** — drill into JC learning outcomes by strand
@@ -82,7 +82,7 @@ Each endpoint uses the canonical Hono + oRPC stack pattern from the existing
 
 ### 3. One TanStack Start public page
 
-`web/apps/oideachais-web/src/routes/biep-v2/index.tsx` — a public TanStack
+`web/apps/cianfhoghlaim-web/src/routes/biep-v2/index.tsx` — a public TanStack
 Start page at `/biep-v2` that embeds:
 
 - The 4 marimo notebooks as iframes (the marimo `embed` mode)
@@ -90,13 +90,13 @@ Start page at `/biep-v2` that embeds:
 - The 3 Hono API endpoints (for direct JSON fetching)
 
 The route is server-rendered with TanStack Start (RSC + edge runtime),
-follows the existing `oideachais-web` shell + nav + theming.
+follows the existing `cianfhoghlaim-web` shell + nav + theming.
 
 ### 4. Spec deltas
 
 2 spec deltas:
 
-- `openspec/specs/oideachais-marimo-dashboards/spec.md` — add 1 new requirement:
+- `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md` — add 1 new requirement:
   "Requirement: BIEP v2 cross-jurisdiction notebooks" for the 4 new notebooks
 - `openspec/specs/british-isles-education-pipeline/spec.md` Requirement 5
   (ibis-first contract) — extend the scope from "6 BIEP subject notebooks"
@@ -124,7 +124,7 @@ Affected repos: cianfhoghlaim (single-repo change)
 - The 4 marimo notebooks run end-to-end against the dev lakehouse:
   `marimo run notebooks/04_biep_v2/00_biep_v2_overview.py --headless`
 - The 3 Hono API endpoints return 200 OK with the expected JSON shape
-- The TanStack Start public page renders at `oideachais.cianfhoghlaim.ie/biep-v2`
+- The TanStack Start public page renders at `cianfhoghlaim.cianfhoghlaim.ie/biep-v2`
 - All 4 notebooks work with the Change 3 ensemble audit trail (the
   `biiep_ocr_ensemble` DAG asset is the data source for `03_ocr_ensemble_audit.py`)
 - `mise run lint:skills` still passes (53/53)
@@ -140,7 +140,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the England pipeline whose LanceDB tables this change queries
 - [`british-isles-education-pipeline` Change 3](../2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/) —
   the OCR ensemble whose 4-path per-path DuckLake tables the audit notebook reads
-- [`oideachais-marimo-dashboards`](../../specs/oideachais-marimo-dashboards/spec.md) —
+- [`cianfhoghlaim-marimo-dashboards`](../../specs/cianfhoghlaim-marimo-dashboards/spec.md) —
   the marimo dashboard capability that this change extends
 - [`agentic-frontend-frameworks`](../../specs/agentic-frontend-frameworks/spec.md) —
   the umbrella spec for TanStack Start + CopilotKit + Hono + oRPC

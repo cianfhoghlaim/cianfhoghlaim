@@ -142,7 +142,7 @@ def test_youtube_kg_embedding_module_reexports_constants() -> None:
     assert _yt.LANCEDB_TABLE_SEGMENTS == "video_segments"
     assert _yt.LANCEDB_TABLE_FRAME_CAPTIONS == "video_frame_captions"
     assert _yt.LANCEDB_TABLE_TRIPLES == "video_triples"
-    assert _yt.YOUTUBE_VIDEOS_DUCKLAKE_TABLE == "oideachais.youtube.youtube_videos"
+    assert _yt.YOUTUBE_VIDEOS_DUCKLAKE_TABLE == "cianfhoghlaim.youtube.youtube_videos"
 
 
 def test_youtube_kg_embedding_data_model_has_embedding_columns() -> None:

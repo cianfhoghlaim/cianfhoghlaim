@@ -82,7 +82,7 @@ class CrawlConfig:
     max_depth: int = 5
     delay_seconds: float = 1.0
     concurrent_requests: int = 5
-    user_agent: str = "oideachais-crawler/1.0"
+    user_agent: str = "cianfhoghlaim-crawler/1.0"
     respect_robots: bool = True
     headers: dict[str, str] = field(default_factory=dict)
 

@@ -101,7 +101,7 @@ marimo run bonneagar/stacks/lakehouse/notebooks/lakehouse_pipeline.py
 ```
 [ok] ibis.duckdb connected (md:oideachais)
 [ok] ibis.lancedb connected (rest://lakehouse-lance-namespace:8182)
-[ok] found 6 tables: oideachais.lc.mathematics.{hl,ol}_en, oideol.lc.mathematics.{hl,ol}_ga
+[ok] found 6 tables: cianfhoghlaim.lc.mathematics.{hl,ol}_en, oideol.lc.mathematics.{hl,ol}_ga
 [ok]   - hl_en: 0 rows (expected, pre-ingest)
 [ok]   - ol_en: 0 rows
 [ok]   - hl_ga: 0 rows

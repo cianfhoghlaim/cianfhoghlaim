@@ -18,7 +18,7 @@ attributes:
   langfuse_trace_tag: agent.geog
   langfuse_drop_smoke_spans: true
   cognify:
-    dataset: oideachais_lc_geography
+    dataset: cianfhoghlaim_lc_geography
     top_k: 5
     emit_on:
       - response_generated

@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.isle_of_man.education.isle_of_man — Isle of Man education DLT source.
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.isle_of_man.education.isle_of_man — Isle of Man education DLT source.
 
 Moved from `dlt_sources/crown_dependencies/isle_of_man.py` in
 Phase 3E (Round 11 oideachais audit). Single-source file — no helpers

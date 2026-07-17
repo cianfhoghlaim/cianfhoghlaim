@@ -38,10 +38,10 @@
 
 - [ ] Create the DuckLake migration script at
   `dlt/common/migrations/2026-07-24-biiep-v2-england-changes.sql`:
-  - `CREATE TABLE oideachais.education.british_isles.england.changes`
+  - `CREATE TABLE cianfhoghlaim.education.british_isles.england.changes`
     with the 11 columns from the proposal
 - [ ] Run `mise run ducklake:migrate` to apply the migration
-- [ ] Verify the table is queryable: `duckdb ... "SELECT 1 FROM oideachais.education.british_isles.england.changes LIMIT 0"`
+- [ ] Verify the table is queryable: `duckdb ... "SELECT 1 FROM cianfhoghlaim.education.british_isles.england.changes LIMIT 0"`
 
 ## Stage 4 — Slack/email webhook alerts
 

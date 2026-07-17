@@ -107,7 +107,7 @@ Under `orchestration/defs/2_materials/eu_multilingual/`:
   cross-jurisdiction linking via the `ga`/`en` language pair
 
 Each runs `0 5 * * *` (daily at 05:00 UTC) and emits rows to a new
-`oideachais.multilingual.eu_coverage` DuckLake table.
+`cianfhoghlaim.multilingual.eu_coverage` DuckLake table.
 
 ### 4. Dagster defs (3 L2 + 1 shared L2 config)
 
@@ -132,7 +132,7 @@ Each runs `0 5 * * *` (daily at 05:00 UTC) and emits rows to a new
 
 `cocoindex/eu_multilingual_alignment_embedding.py`:
 - Bilingual (en + ga) embeddings of EU institutional documents
-- LanceDB table: `oideachais.eu.multilingual_alignment_chunks`
+- LanceDB table: `cianfhoghlaim.eu.multilingual_alignment_chunks`
 - Partition: `(institution, language)`
 - Embedding model: BAAI/bge-m3 1024-d
 
@@ -176,7 +176,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the EU institutional scaffold (parent)
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the bilingual reference (Irish + English)
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

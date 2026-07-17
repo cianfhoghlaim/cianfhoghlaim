@@ -93,7 +93,7 @@ cianfhoghlaim/dagster/defs/
 ## The R1–R4 CocoIndex v1 conformance contract (L3)
 
 `CelticModelLifecycleComponent` enforces the 4-rule R1–R4 contract
-(`oideachais-cocoindex-v1` skill) at scaffold time by static
+(`cianfhoghlaim-cocoindex-v1` skill) at scaffold time by static
 source-text inspection of the v1 App module, BEFORE emitting the
 asset:
 
@@ -179,9 +179,9 @@ registered alongside the engineering code-location
 
 - `openspec/changes/2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture/`
 - `openspec/specs/dagster-5-layer-component-architecture/spec.md`
-- `openspec/specs/oideachais-pipeline/spec.md` (modified)
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` (modified)
 - `openspec/specs/meaisinfhoghlaim-platform/spec.md` (modified)
 - `.agents/skills/dagster/SKILL.md` (Dagster 1.13+ patterns)
-- `.agents/skills/oideachais-cocoindex-v1/SKILL.md` (R1–R4 contract)
+- `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md` (R1–R4 contract)
 - `.agents/skills/dlt/SKILL.md` (DLT integration)
 - `.agents/skills/agent-fleet-orchestration/SKILL.md` (12-agent fleet)

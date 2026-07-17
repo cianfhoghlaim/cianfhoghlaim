@@ -23,16 +23,16 @@ import chain in `_oide_helpers.py`:
 
 2 spec deltas:
 
-- `specs/oideachais-pipeline/spec.md` — MODIFIED: canonical
+- `specs/cianfhoghlaim-pipeline/spec.md` — MODIFIED: canonical
   Ireland/law namespaces (dlt + baml) + zero remaining `ie/` refs
-- `specs/oideachais-marimo-dashboards/spec.md` — MODIFIED: marimo
+- `specs/cianfhoghlaim-marimo-dashboards/spec.md` — MODIFIED: marimo
   notebooks reference canonical namespaces only
 
 ## Why
 
-The post-v4 consolidation (2026-06-28) moved `oideachais.dlt.british_isles.ie.*`
-and `oideachais.baml.ie.*` into the canonical
-`oideachais.dlt.british_isles.ireland.education.*` + `oideachais.baml.education.*`
+The post-v4 consolidation (2026-06-28) moved `cianfhoghlaim.dlt.british_isles.ie.*`
+and `cianfhoghlaim.baml.ie.*` into the canonical
+`cianfhoghlaim.dlt.british_isles.ireland.education.*` + `cianfhoghlaim.baml.education.*`
 namespaces, but the `dlt/british_isles/ie/` and `baml/ie/` subtrees (containing
 the Ireland/law extraction sources — 6 DLT files + 6 BAML files + 2 `__init__.py`
 shims) were left behind.
@@ -67,14 +67,14 @@ Files migrated:
 
 | Pattern | Replacement |
 |:--|:--|
-| `from oideachais.dlt.british_isles.ie.law …` | `from oideachais.dlt.british_isles.ireland.education.law …` |
-| `from oideachais.baml.ie.law …` | `from oideachais.baml.education.law …` |
-| `from oideachais.dlt.british_isles.ie.<X>` | `from oideachais.dlt.british_isles.ireland.<X>` |
-| `from oideachais.baml.ie.<X>` | `from oideachais.baml.education.<X>` |
+| `from cianfhoghlaim.dlt.british_isles.ie.law …` | `from cianfhoghlaim.dlt.british_isles.ireland.education.law …` |
+| `from cianfhoghlaim.baml.ie.law …` | `from cianfhoghlaim.baml.education.law …` |
+| `from cianfhoghlaim.dlt.british_isles.ie.<X>` | `from cianfhoghlaim.dlt.british_isles.ireland.<X>` |
+| `from cianfhoghlaim.baml.ie.<X>` | `from cianfhoghlaim.baml.education.<X>` |
 | `dlt/british_isles/ie/` (string path) | `dlt/british_isles/ireland/` |
 | `baml/ie/` (string path) | `baml/education/` |
-| `oideachais.baml.ie.law`, `oideachais.baml.ie.<X>` (docstring refs) | canonical |
-| `oideachais.dlt.british_isles.ie.<X>` (docstring refs) | canonical |
+| `cianfhoghlaim.baml.ie.law`, `cianfhoghlaim.baml.ie.<X>` (docstring refs) | canonical |
+| `cianfhoghlaim.dlt.british_isles.ie.<X>` (docstring refs) | canonical |
 | `cianfhoghlaim.baml.ie.<X>`, `cianfhoghlaim.dlt.british_isles.ie.<X>` | canonical |
 
 ### 3. `_oide_helpers.py` import-chain fix
@@ -125,7 +125,7 @@ ls baml/education/law/                        # 6 .baml + __init__.py
 
 - `sruth.<quadrant>.*` namespace drift (100+ refs) — owned by
   `2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1`
-- `oideachais.<X>` (bare-namespace) drift (100+ refs) — same change
+- `cianfhoghlaim.<X>` (bare-namespace) drift (100+ refs) — same change
 - `sruth/` references in `.agents/skills/` (54 refs) — separate change
 
 ## Dependencies

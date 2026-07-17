@@ -27,7 +27,7 @@ attributes:
     - 1_ingestion/law/ie/court_rules
     - 1_ingestion/law/ie/legal_aid
   cross_source_linkage:
-    target_table: oideachais.education.ie.irish_statute_book.acts
+    target_table: cianfhoghlaim.education.ie.irish_statute_book.acts
     asset: ie_law_statute_linkage
   automation: on_cron
   automation_cron: "0 6 * * *"

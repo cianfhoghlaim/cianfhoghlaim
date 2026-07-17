@@ -1,5 +1,5 @@
 """Dagster L2 asset that probes every British Isles canonical endpoint
-and writes one row per probe to the ``oideachais.endpoint_health``
+and writes one row per probe to the ``cianfhoghlaim.endpoint_health``
 DuckLake table.
 
 Per the
@@ -21,7 +21,7 @@ from dagster import AssetExecutionContext, asset
     description=(
         "Probe every canonical British Isles endpoint via the "
         "endpoint_recovery helper and write one row per probe to "
-        "the oideachais.endpoint_health DuckLake table."
+        "the cianfhoghlaim.endpoint_health DuckLake table."
     ),
     compute_kind="python",
 )
@@ -52,7 +52,7 @@ def endpoint_health_sink(context: AssetExecutionContext) -> dict[str, int]:
     pipeline = dlt.pipeline(
         pipeline_name="endpoint_health_sink",
         destination="duckdb",
-        dataset_name="oideachais_endpoint_health",
+        dataset_name="cianfhoghlaim_endpoint_health",
     )
     load_info = pipeline.run(endpoint_health())
     context.log.info(

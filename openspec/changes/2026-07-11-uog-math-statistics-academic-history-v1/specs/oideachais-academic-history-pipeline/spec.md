@@ -1,8 +1,8 @@
-# oideachais-academic-history-pipeline Specification
+# cianfhoghlaim-academic-history-pipeline Specification
 
 ## Purpose
 
-`oideachais-academic-history-pipeline` is a capability of the Cianfhoghlaim
+`cianfhoghlaim-academic-history-pipeline` is a capability of the Cianfhoghlaim
 platform that ingests a student's personal academic archive (notes,
 assignments, exam papers, answer scripts, worked solutions) and produces:
 
@@ -83,7 +83,7 @@ relevant mathematical content.
 
 The system SHALL validate every extracted math/statistics record with
 deterministic checks (no LLM-as-judge). Findings SHALL be persisted to
-`oideachais_academic_history.validation_findings`.
+`cianfhoghlaim_academic_history.validation_findings`.
 
 #### Scenario: LaTeX well-formedness
 
@@ -180,13 +180,13 @@ agent surface.
   `programme`, and `module_roots`
 - **WHEN** the academic-history ingestion runs
 - **THEN** the pipeline SHALL ingest the user's folder
-- **AND** produce the same `oideachais_academic_history.*` tables
+- **AND** produce the same `cianfhoghlaim_academic_history.*` tables
 
 ## Cross-references
 
-- `oideachais-leabharlann` — the upstream leabharlann corpus capability
-- `oideachais-baml-schemas` — the canonical BAML client + clusters
-- `oideachais-marimo-dashboards` — the parent notebook spec
-- `oideachais-university-deep-extraction` — official module descriptors
+- `cianfhoghlaim-leabharlann` — the upstream leabharlann corpus capability
+- `cianfhoghlaim-baml-schemas` — the canonical BAML client + clusters
+- `cianfhoghlaim-marimo-dashboards` — the parent notebook spec
+- `cianfhoghlaim-university-deep-extraction` — official module descriptors
 - `agent-memory-systems` — the `MemoryBackend` Protocol contract
-- `oideachais-cognify-knowledge-graph` — the cross-archive FalkorDB graph
+- `cianfhoghlaim-cognify-knowledge-graph` — the cross-archive FalkorDB graph

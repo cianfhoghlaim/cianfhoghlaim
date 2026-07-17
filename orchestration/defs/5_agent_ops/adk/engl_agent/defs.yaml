@@ -18,7 +18,7 @@ attributes:
   langfuse_trace_tag: agent.engl
   langfuse_drop_smoke_spans: true
   cognify:
-    dataset: oideachais_lc_english
+    dataset: cianfhoghlaim_lc_english
     top_k: 5
     emit_on:
       - response_generated

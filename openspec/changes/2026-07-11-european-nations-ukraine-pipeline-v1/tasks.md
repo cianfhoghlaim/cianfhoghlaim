@@ -79,7 +79,7 @@ Plus:
   `european-nations-ukraine-pipeline/spec.md`
 - [ ] 8.2 MODIFIED delta on `cross-region-pipeline/spec.md` adding a
   cross-reference to the new EU nations instance
-- [ ] 8.3 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 8.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference
 
 ## 9. Validate

@@ -132,14 +132,14 @@ if COCOINDEX_AVAILABLE:
     # `upstream_blog_monitor.py` so this App's lifespan is
     # self-contained (each App declares all its ContextKeys).
     KG_DB_UPSTREAM = coco.ContextKey[Any](  # type: ignore[index]
-        "oideachais_upstream_kg_db"
+        "cianfhoghlaim_upstream_kg_db"
     )
 
     # R2-exempt: BAML_CLIENT_UPSTREAM is the pre-initialised BAML
     # client for the `upstream_monitoring.baml` schema. Pre-init
     # avoids per-call client construction overhead.
     BAML_CLIENT_UPSTREAM = coco.ContextKey[Any](  # type: ignore[index]
-        "oideachais_baml_client_upstream"
+        "cianfhoghlaim_baml_client_upstream"
     )
 
     @coco.lifespan

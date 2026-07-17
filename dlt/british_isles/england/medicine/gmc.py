@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.england.medicine.gmc — General Medical Council (UK register).
+cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.medicine.gmc — General Medical Council (UK register).
 
 Public search endpoint at `https://www.gmc-uk.org/registration-and-licensing/medical-register`.
 Per-practitioner lookups behind authenticated API are reserved for
