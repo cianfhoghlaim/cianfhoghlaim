@@ -188,17 +188,24 @@ def _build_production_destination(namespace: str) -> Any:
 def get_dlt_destination(
     use_ducklake: bool | None = None,
     namespace: str = DEFAULT_NAMESPACE,
+    mode: str = "read_write",
+    tenant: str | None = None,
+    iceberg: bool = False,
 ) -> Any:
     """
-    Get DLT destination for oideachais pipelines.
+    Get DLT destination for cianfhoghlaim pipelines.
+
+    Per the 2026-08-07-biep-v3-hardening-v1 change: adds `mode`,
+    `tenant`, and `iceberg` flags.
 
     Environment Variables:
         DLT_ENVIRONMENT: "local" (default) or "production"
         USE_DUCKLAKE: "true" (default) or "false"
+        MOTHERDUCK_INSTANCE_SIZE: "small" (default) | "medium" | "large"
 
     Local:
-        - Data: Garage S3 at s3://ducklake/{namespace}/
-        - Metadata: PostgreSQL at localhost:5433, db ducklake_{namespace}
+        - Data: Garage S3 at s3://ducklake/{namespace}[_{tenant}]/
+        - Metadata: PostgreSQL at localhost:5433, db ducklake_{namespace}[_{tenant}]
 
     Production:
         - Data: Cloudflare R2
@@ -207,12 +214,28 @@ def get_dlt_destination(
     Args:
         use_ducklake: Override to force DuckLake or DuckDB fallback
         namespace: S3 prefix + Postgres DB name. Defaults to "cianfhoghlaim".
+        mode: "read_only" | "read_write" | "admin". Default: "read_write".
+        tenant: Optional tenant suffix (multi-tenant deployments).
+            E.g. namespace="cianfhoghlaim", tenant="school-123" →
+            s3://ducklake/cianfhoghlaim/school-123/ + db ducklake_cianfhoghlaim_school_123
+        iceberg: If True, use Iceberg write path (per
+            dlt/common/iceberg_options.py) instead of DuckLake.
 
     Returns:
         Configured destination for DLT pipeline
     """
     if use_ducklake is None:
         use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
+
+    # Multi-tenant namespace suffix
+    effective_namespace = namespace
+    if tenant is not None:
+        effective_namespace = f"{namespace}_{tenant}"
+
+    # Iceberg write path
+    if iceberg:
+        from dlt.common.iceberg_options import build_iceberg_local_destination
+        return build_iceberg_local_destination(namespace=effective_namespace)
 
     if not use_ducklake:
         return get_duckdb_fallback_destination(namespace=namespace)
