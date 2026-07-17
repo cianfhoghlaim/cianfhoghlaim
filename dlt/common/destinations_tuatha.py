@@ -30,7 +30,7 @@ import dlt
 
 # Backwards-compat: try the oideachais cross-quadrant import first.
 try:
-    from cianfhoghlaim.dlt.destinations_oideachais import with_namespace
+    from cianfhoghlaim.dlt.destinations_cianfhoghlaim import with_namespace
 
     with_namespace("educational").re_export_into(globals())
 

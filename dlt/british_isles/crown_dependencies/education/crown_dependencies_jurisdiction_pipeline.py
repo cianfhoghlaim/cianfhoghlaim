@@ -34,9 +34,7 @@ from typing import Any
 import dlt
 
 from dlt.common.destinations_cianfhoghlaim import (
-    with_namespace,
     get_dlt_destination,
-    LAKEHOUSE_DUCKDB,
 )
 
 logger = logging.getLogger(__name__)

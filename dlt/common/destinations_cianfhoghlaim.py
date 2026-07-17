@@ -46,6 +46,13 @@ from .ducklake_options import (
 
 DEFAULT_NAMESPACE = "cianfhoghlaim"
 
+LAKEHOUSE_DUCKDB: str = "md:cianfhoghlaim"
+"""The canonical MotherDuck + DuckLake lakehouse alias for the cianfhoghlaim platform.
+
+Used by the 4 BIEP v3 jurisdiction pipelines + 5 Dagster assets. The
+canonical helper is `dlt.common.destinations_cianfhoghlaim.get_dlt_destination()`.
+"""
+
 
 def _resolve_aws_credentials() -> tuple[str, str, str]:
     """Map lakehouse's GARAGE_* env vars to the AWS_* naming that
