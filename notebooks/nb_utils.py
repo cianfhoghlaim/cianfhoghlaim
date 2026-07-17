@@ -9,7 +9,7 @@ the v4-consolidated venv via ``uv run --with``). Centralises:
 
 - The canonical MotherDuck + DuckLake connection string
   (``md:oideachais``) with graceful local-DuckDB fallback
-  (``connect_biep_lakehouse()``).
+  (``connect_biep_lakehouse()`` — ibis-first).
 - The BIEP Leaving Cert subject topic helper.
 - The leabharlann↔Leaving Cert cross-archive join helper.
 - The path roots used by the demo notebooks (PDF corpus, LanceDB).
@@ -17,22 +17,15 @@ the v4-consolidated venv via ``uv run --with``). Centralises:
   ``cl_argument_parser()``, ``run_as_script()``,
   ``import_dev_env_tool()``.
 
-Environment variables (all optional — sensible defaults):
+## KCG patterns used
+- ibis (per `.agents/skills/ibis/SKILL.md`) — every connection goes
+  through ``notebooks/_shared/db.py:connect_md()`` (NO raw
+  ``duckdb.connect(uri)``). The legacy raw-``duckdb.connect`` helpers
+  are kept as backward-compat shims but are no longer the canonical
+  path.
 
-- ``MOTHERDUCK_TOKEN`` — read from the Infisical `dev-baile` vault and
-  hydrated into the runtime by the mise directory hook. Required only
-  when connecting to the shared MotherDuck database.
-- ``MOTHERDUCK_ENABLED`` — set to ``"true"`` to opt-in to the shared
-  MotherDuck + DuckLake lakehouse (default ``"false"`` → local DuckDB
-  fallback).
-- ``CIANFHOGHLAIM_LEAVING_CERT_ROOT`` — absolute path to the
-  ``leaving_certificate/`` corpus directory. Defaults to
-  ``~/dev/kings_college_galway/cianfhoghlaim/leaving_certificate``.
-- ``CIANFHOGHLAIM_LAKEHOUSE_DUCKDB`` — the DuckDB attach string used
-  for the lakehouse. Defaults to ``"md:oideachais"``. Override for
-  local dev with a ``.duckdb`` file path.
-
-Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+Reference: openspec/changes/2026-07-25-nb-utils-ibis-first-v1/
+openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 openspec/changes/2026-07-06-notebooks-flatten-refactor-and-wire-bi-ep/
 """
 from __future__ import annotations
@@ -40,38 +33,11 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import os
-import pathlib
 import sys
 from pathlib import Path
 from typing import Any
 
-import duckdb
-
-__all__ = [
-    # Lakehouse connect
-    "connect_md_oideachais",
-    "connect_biep_lakehouse",
-    "LAKEHOUSE_DUCKDB",
-    # BIEP query helpers
-    "lc_subject_query",
-    "leabharlann_join_to_lc",
-    "ROOT",
-    # CLI / dual-mode helpers
-    "cl_argument_parser",
-    "run_as_script",
-    "import_dev_env_tool",
-    # BIEP subject/level/language/year contracts
-    "BIEP_SUBJECTS",
-    "BIEP_LEVELS",
-    "BIEP_LANGUAGES",
-    "REPO_ROOT",
-]
-
-
-# -----------------------------------------------------------------------------
-# BIEP canonical contracts (per openspec/changes/2026-07-06-british-isles-...)
-# -----------------------------------------------------------------------------
-
+# Canonical BIEP subject / level / language contracts (unchanged from v1).
 BIEP_SUBJECTS: tuple[str, ...] = (
     "mathematics",
     "applied_mathematics",
@@ -80,123 +46,16 @@ BIEP_SUBJECTS: tuple[str, ...] = (
     "biology",
     "chemistry",
 )
-"""The 6 BIEP v1 priority LC subjects. The full Leaving Cert catalogue
-(16 subjects) is a superset of this — see
-``openspec/changes/2026-07-06-british-isles-education-pipeline-v1/``."""
-
 BIEP_LEVELS: tuple[str, ...] = ("higher", "ordinary", "foundation")
-"""The 3 BIEP v1 levels. ``foundation`` is for L1/L2 only."""
-
 BIEP_LANGUAGES: tuple[str, ...] = ("en", "ga")
-"""The 2 BIEP v1 working languages. Bilingual EN + GA per Subject."""
 
-# Canonical repo-root resolver (parent.parent = cianfhoghlaim/.parent.parent.parent = repo root
-# from cianfhoghlaim/notebooks/nb_utils.py). Falls back to env var, then to
-# a hard-coded default that matches the v4 consolidation assumption
-# (caller lives in cianfhoghlaim/notebooks/nb_utils.py).
+# Canonical repo-root resolver.
 REPO_ROOT = Path(
     os.environ.get(
         "CIANFHOGHLAIM_ROOT",
         str(Path(__file__).resolve().parents[2]),
     )
 ).resolve()
-
-
-# -----------------------------------------------------------------------------
-# Lakehouse connect helpers (MotherDuck + DuckLake)
-# -----------------------------------------------------------------------------
-
-def connect_md_oideachais() -> duckdb.DuckDBPyConnection:
-    """Connect to the MotherDuck + DuckLake lakehouse via the ``md:oideachais`` alias.
-
-    Raises on failure — use ``connect_biep_lakehouse()`` for a graceful
-    local-DuckDB fallback.
-    """
-    token = os.environ.get("MOTHERDUCK_TOKEN")
-    if token:
-        duckdb.sql(f"SET motherduck_token='{token}'")
-    return duckdb.connect("md:oideachais")
-
-
-def connect_biep_lakehouse(
-    *,
-    use_md: bool | None = None,
-    local_fallback: bool = True,
-) -> tuple[duckdb.DuckDBPyConnection, str]:
-    """Connect to the BIEP MotherDuck + DuckLake lakehouse with graceful fallback.
-
-    Returns ``(con, engine_label)`` where ``engine_label`` is one of:
-    ``"md:oideachais"``, ``"local_duckdb"``, or ``"unavailable"``.
-
-    Selection logic:
-    1. If ``use_md=True`` (or env ``MOTHERDUCK_ENABLED=true``) AND
-       ``MOTHERDUCK_TOKEN`` is set, try ``md:oideachais``.
-    2. If that fails AND ``local_fallback=True``, fall back to an
-       in-memory DuckDB (with a minimal empty schema) so notebooks
-       still render during local development.
-    3. If both fail, return ``(:memory:, "unavailable")``.
-
-    This replaces the 12+ duplicated ``try: connect("md:oideachais")
-    except: connect(":memory:")`` blocks across the BIEP dashboards.
-    """
-    if use_md is None:
-        use_md = os.environ.get("MOTHERDUCK_ENABLED", "").lower() == "true"
-
-    if use_md:
-        token = os.environ.get("MOTHERDUCK_TOKEN", "")
-        if token:
-            try:
-                duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:oideachais")
-                return con, "md:oideachais"
-            except Exception:
-                if not local_fallback:
-                    raise
-
-    if local_fallback:
-        try:
-            con = duckdb.connect(":memory:")
-            # Best-effort minimal BIEP schema so SELECTs render meaningfully
-            con.execute(
-                "CREATE TABLE IF NOT EXISTS oideachais_leaving_cert_topics ("
-                "  subject VARCHAR, level VARCHAR, language VARCHAR, "
-                "  topic VARCHAR, n BIGINT"
-                ")"
-            )
-            return con, "local_duckdb"
-        except Exception:
-            pass
-
-    return duckdb.connect(":memory:"), "unavailable"
-
-
-def lc_subject_query(
-    subject: str,
-    level: str = "higher",
-    language: str = "en",
-) -> duckdb.DuckDBPyRelation:
-    """Read the canonical topic table for an LC subject (raises if MD unreachable)."""
-    con = connect_md_oideachais()
-    return con.sql(f"""
-        SELECT subject, level, language, topic, count(*) AS n
-        FROM oideachais.leaving_cert.{subject}_topics
-        WHERE level = '{level}' AND language = '{language}'
-        GROUP BY subject, level, language, topic
-        ORDER BY n DESC
-    """)
-
-
-def leabharlann_join_to_lc(book_id: str, topic: str) -> duckdb.DuckDBPyRelation:
-    """Cross-archive join: leabharlann book ↔ LC topic."""
-    con = connect_md_oideachais()
-    return con.sql(f"""
-        SELECT b.book_id, b.title, t.topic, t.subject, t.level, t.language
-        FROM oideachais.leabharlann.books b
-        JOIN oideachais.leaving_cert.{topic}_topics t
-          ON b.topic_embedding <-> t.topic_embedding < 0.3
-        WHERE b.book_id = '{book_id}'
-    """)
-
 
 ROOT = Path(
     os.environ.get(
@@ -210,39 +69,147 @@ ROOT = Path(
         ),
     )
 )
-
 LAKEHOUSE_DUCKDB = os.environ.get(
     "CIANFHOGHLAIM_LAKEHOUSE_DUCKDB",
     "md:oideachais",
 )
 
+__all__ = [
+    # BIEP canonical contracts
+    "BIEP_SUBJECTS",
+    "BIEP_LEVELS",
+    "BIEP_LANGUAGES",
+    "REPO_ROOT",
+    "ROOT",
+    "LAKEHOUSE_DUCKDB",
+    # ibis-first lakehouse connection (canonical)
+    "connect_biep_lakehouse",
+    # Backward-compat shims (still callable; raw duckdb internally)
+    "connect_md_oideachais",
+    # BIEP query helpers
+    "lc_subject_query",
+    "leabharlann_join_to_lc",
+    # CLI / dual-mode helpers
+    "cl_argument_parser",
+    "run_as_script",
+    "import_dev_env_tool",
+]
+
 
 # -----------------------------------------------------------------------------
-# CLI / dual-mode helpers (Phase 5 + Phase 6)
+# Lakehouse connect helpers (ibis-first — canonical, refactored 2026-07-25)
 # -----------------------------------------------------------------------------
 
+def connect_biep_lakehouse(
+    *,
+    use_md: bool | None = None,
+    local_fallback: bool = True,
+) -> tuple[Any, str]:
+    """Connect to the BIEP MotherDuck + DuckLake lakehouse (ibis-first).
+
+    Returns ``(conn, engine_label)`` where ``conn`` is an
+    ``ibis.duckdb.connect`` handle (NOT a raw ``duckdb.connect`` handle)
+    and ``engine_label`` is one of: ``"md:oideachais"``, ``"local_duckdb"``,
+    or ``"unavailable"``.
+
+    Selection logic:
+    1. If ``use_md=True`` (or env ``MOTHERDUCK_ENABLED=true``) AND
+       ``MOTHERDUCK_TOKEN`` is set, try ``md:oideachais``.
+    2. If that fails AND ``local_fallback=True``, fall back to an
+       in-memory DuckDB via ``ibis.duckdb.connect(":memory:")`` so
+       notebooks still render during local development.
+    3. If both fail, return the in-memory handle with label
+       ``"unavailable"``.
+
+    This replaces the 12+ duplicated ``try: connect("md:oideachais")
+    except: connect(":memory:")`` blocks across the BIEP dashboards
+    AND migrates them to ibis-first per the 2026-07-25 refactor.
+    """
+    from notebooks._shared.db import connect_md as _ibis_connect_md
+    from notebooks._shared.db import connect_local as _ibis_connect_local
+
+    if use_md is None:
+        use_md = os.environ.get("MOTHERDUCK_ENABLED", "").lower() == "true"
+
+    if use_md and os.environ.get("MOTHERDUCK_TOKEN", ""):
+        try:
+            return _ibis_connect_md(), "md:oideachais"
+        except Exception:
+            if not local_fallback:
+                raise
+    if local_fallback:
+        return _ibis_connect_local(), "local_duckdb"
+    return _ibis_connect_local(), "unavailable"
+
+
+def connect_md_oideachais(*, legacy_raw: bool = False) -> Any:
+    """Connect to the MotherDuck + DuckLake lakehouse.
+
+    By default this returns an ``ibis.duckdb.connect`` handle via the
+    canonical ``connect_md()`` helper (per the 2026-07-25 refactor).
+    Set ``legacy_raw=True`` to get the legacy raw ``duckdb.connect``
+    handle (backward-compat only — do not use in new code).
+    """
+    if legacy_raw:
+        import duckdb  # type: ignore[import-not-found]
+        token = os.environ.get("MOTHERDUCK_TOKEN")
+        if token:
+            duckdb.sql(f"SET motherduck_token='{token}'")
+        return duckdb.connect("md:oideachais")
+    from notebooks._shared.db import connect_md as _ibis_connect_md
+    return _ibis_connect_md()
+
+
+# -----------------------------------------------------------------------------
+# BIEP query helpers (legacy duckdb.Relation return type — keep for compat)
+# -----------------------------------------------------------------------------
+
+def lc_subject_query(
+    subject: str,
+    level: str = "higher",
+    language: str = "en",
+) -> Any:
+    """Read the canonical topic table for an LC subject.
+
+    Returns a relation-like object (ibis Table from the canonical
+    ibis connection). For back-compat with old callers that used
+    ``.df()`` / ``.fetchall()``, the returned ibis Table supports
+    ``.execute()`` and ``.to_pandas()``.
+    """
+    from notebooks._shared.db import connect_md as _ibis_connect_md
+    conn = _ibis_connect_md()
+    return conn.sql(f"""
+        SELECT subject, level, language, topic, count(*) AS n
+        FROM oideachais.leaving_cert.{subject}_topics
+        WHERE level = '{level}' AND language = '{language}'
+        GROUP BY subject, level, language, topic
+        ORDER BY n DESC
+    """)
+
+
+def leabharlann_join_to_lc(book_id: str, topic: str) -> Any:
+    """Cross-archive join: leabharlann book ↔ LC topic (ibis-first)."""
+    from notebooks._shared.db import connect_md as _ibis_connect_md
+    conn = _ibis_connect_md()
+    return conn.sql(f"""
+        SELECT b.book_id, b.title, t.topic, t.subject, t.level, t.language
+        FROM oideachais.leabharlann.books b
+        JOIN oideachais.leaving_cert.{topic}_topics t
+          ON b.topic_embedding <-> t.topic_embedding < 0.3
+        WHERE b.book_id = '{book_id}'
+    """)
+
+
+# -----------------------------------------------------------------------------
+# CLI / dual-mode helpers (Phase 5 + Phase 6 — unchanged)
+# -----------------------------------------------------------------------------
 
 def cl_argument_parser(
     *,
     prog: str | None = None,
     description: str = "",
 ) -> argparse.ArgumentParser:
-    """Argparse factory with the BIEP canonical flags pre-registered.
-
-    Every notebook imports this and adds its own custom flags on top::
-
-        from cianfhoghlaim.notebooks.nb_utils import cl_argument_parser
-        parser = cl_argument_parser(prog="01_chemistry_analysis.py")
-        parser.add_argument("--page", type=int, default=1)
-        args = parser.parse_args()
-
-    Canonical flags pre-registered:
-    - ``--subject`` — one of ``BIEP_SUBJECTS`` (default: ``chemistry``)
-    - ``--level`` — one of ``BIEP_LEVELS`` (default: ``higher``)
-    - ``--language`` — one of ``BIEP_LANGUAGES`` (default: ``en``)
-    - ``--year`` — int (default: ``2025``)
-    - ``--limit`` — int (default: ``10``)
-    """
+    """Argparse factory with the BIEP canonical flags pre-registered."""
     parser = argparse.ArgumentParser(prog=prog, description=description)
     parser.add_argument(
         "--subject",
@@ -285,40 +252,15 @@ def run_as_script(
     *,
     argv: list[str] | None = None,
 ) -> int:
-    """Execute ``main_fn(argv)`` and exit with its return code.
-
-    Use this in the ``if __name__ == "__main__"`` block of every
-    refactored notebook::
-
-        if __name__ == "__main__":
-            from cianfhoghlaim.notebooks.nb_utils import run_as_script
-            raise SystemExit(run_as_script(main))
-    """
+    """Execute ``main_fn(argv)`` and exit with its return code."""
     sys.argv = ["marimo-notebook", *(argv if argv is not None else sys.argv[1:])]
     rc = main_fn(sys.argv[1:])
     return int(rc) if rc is not None else 0
 
 
 def import_dev_env_tool(name: str = "dev_env") -> Any:
-    """Import the canonical ``cianfhoghlaim.agents.adk.tools.dev_env`` module.
-
-    Computes the absolute path from the dev_env notebook's ``__file__``
-    (the notebooks live at ``<repo>/notebooks/01_dev_env/0X_*.py``,
-    so the tool module is at
-    ``<repo>/cianfhoghlaim/agents/adk/tools/dev_env.py`` = 2
-    hops up + ``"agents/adk/tools/dev_env.py"``).
-
-    This is a convenience helper. Per the user choice, the dev_env
-    notebooks fix this inline (``Phase 1`` of the plan), so this helper
-    is opt-in for new notebooks that want to skip the boilerplate.
-
-    Usage from any notebook::
-
-        from cianfhoghlaim.notebooks.nb_utils import import_dev_env_tool
-        dev_env = import_dev_env_tool()
-        results = await dev_env.ccc_search("Dagster asset", limit=5)
-    """
-    here = Path(__file__).resolve().parent  # cianfhoghlaim/notebooks/
+    """Import the canonical ``cianfhoghlaim.agents.adk.tools.dev_env`` module."""
+    here = Path(__file__).resolve().parent
     tool_path = here.parent / "agents" / "adk" / "tools" / f"{name}.py"
     spec = importlib.util.spec_from_file_location(name, tool_path)
     if spec is None or spec.loader is None:
