@@ -53,7 +53,8 @@ import dagster as dg
 # CelticAgentOpsComponent). Per Dagster 1.13+, this is the canonical
 # way to mount definitions in a `defs/` folder.
 try:
-    import cianfhoghlaim.orchestration.defs as _defs_pkg
+    # Post-v7 flatten: orchestration/defs is at the repo root, not under cianfhoghlaim.orchestration.
+    import orchestration.defs as _defs_pkg
     defs = dg.load_defs(defs_root=_defs_pkg)
     _DEFS_AVAILABLE = True
 except Exception as _exc:  # pragma: no cover
