@@ -1,0 +1,40 @@
+name: marimo-wasm-publish
+on:
+  push:
+    branches: [main]
+    paths:
+      - "notebooks/**"
+      - "scripts/marimo_wasm_export.py"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install marimo
+        run: |
+          pip install marimo[wasm]>=0.7
+
+      - name: Export BIEP v3 notebooks to WASM
+        run: python scripts/marimo_wasm_export.py
+
+      - name: Commit + push the exported bundles
+        run: |
+          git config user.name "cianhoghlaim-bot"
+          git config user.email "bot@cianfhoghlaim.ie"
+          git add web/apps/cianfhoghlaim-web/public/notebooks/
+          git commit -m "ci(marimo-wasm): re-export BIEP v3 jurisdiction notebooks" || echo "no changes to commit"
+          git push
+
+      - name: Verify bundles exist
+        run: |
+          find web/apps/cianfhoghlaim-web/public/notebooks/ -name "*.html" | head
+          echo "---"
+          cat web/apps/cianfhoghlaim-web/public/notebooks/manifest.json | head -30
