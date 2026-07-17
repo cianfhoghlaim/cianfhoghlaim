@@ -401,3 +401,320 @@ __all__ = [
     "seed_registry",
     "apply_migration",
 ]
+
+# ============================================================================
+# P0 critical-path additions: 6 missing jurisdiction loaders (BIEP v3 full coverage)
+# Per the 2026-08-06-biep-v3-critical-path-fixes-v1 change.
+# ============================================================================
+
+
+def _load_subjects_by_jurisdiction(
+    jurisdiction: str,
+    stage: str,
+    subjects: list[tuple[str, str, str]],
+    qualification_levels: list[str],
+) -> list[SubjectRegistryRow]:
+    """Generic helper: build SubjectRegistryRow list from a (slug, code, display) tuple list."""
+    rows: list[SubjectRegistryRow] = []
+    for slug, code, display in subjects:
+        for ql in qualification_levels:
+            for lang in ("en", "ga"):
+                rows.append(
+                    SubjectRegistryRow(
+                        jurisdiction=jurisdiction,
+                        stage=stage,
+                        subject_slug=slug,
+                        board="none" if jurisdiction != "england" else "aqa",
+                        qualification_level=ql,
+                        language=lang,
+                        display_name_en=display,
+                        display_name_local=None,
+                        concept="OTHER",
+                        source_url=f"https://example.gov/{jurisdiction}/{slug}",
+                        ncca_spec_code=code if jurisdiction == "ireland" else None,
+                        baml_function="b.ExtractCurriculumSyllabus",
+                        source="NCCA_OFFICIAL" if jurisdiction == "ireland" else "AQA_OFFICIAL",
+                        status="ACTIVE",
+                        first_introduced="2014-09",
+                        last_verified="2026-08-06",
+                    )
+                )
+    return rows
+
+
+def load_scotland_subjects() -> list[SubjectRegistryRow]:
+    """Scotland (SQA) 50 subjects × 3 levels."""
+    SCOTLAND_SUBJECTS = [
+        ("mathematics", "SQA-MAT", "Mathematics"), ("english", "SQA-ENG", "English"),
+        ("physics", "SQA-PHY", "Physics"), ("chemistry", "SQA-CHE", "Chemistry"),
+        ("biology", "SQA-BIO", "Biology"), ("mathematics_statistics", "SQA-MST", "Maths: Stats"),
+        ("mathematics_mechanics", "SQA-MME", "Maths: Mechanics"),
+        ("human_biology", "SQA-HBI", "Human Biology"), ("environmental_science", "SQA-ENV", "Environmental Science"),
+        ("computing_science", "SQA-CSC", "Computing Science"), ("design_technology", "SQA-DES", "Design & Manufacture"),
+        ("graphic_communication", "SQA-GRA", "Graphic Communication"),
+        ("engineering_science", "SQA-ESC", "Engineering Science"),
+        ("physics_technology", "SQA-PTE", "Physics: Tech"), ("chemistry_technology", "SQA-CTE", "Chemistry: Tech"),
+        ("biology_technology", "SQA-BTE", "Biology: Tech"),
+        ("history", "SQA-HIS", "History"), ("modern_studies", "SQA-MOS", "Modern Studies"),
+        ("geography", "SQA-GEO", "Geography"), ("philosophy", "SQA-PHI", "Philosophy"),
+        ("religious_moral_education", "SQA-RME", "Religious & Moral Education"),
+        ("classical_studies", "SQA-CLS", "Classical Studies"), ("history_ancient", "SQA-ANC", "Ancient History"),
+        ("french", "SQA-FRE", "French"), ("german", "SQA-GER", "German"),
+        ("spanish", "SQA-SPA", "Spanish"), ("italian", "SQA-ITA", "Italian"),
+        ("mandarin_chinese", "SQA-MAN", "Mandarin Chinese"),
+        ("gaelic_learners", "SQA-GAE", "Gaelic (Learners)"),
+        ("english_for_work", "SQA-EFW", "English for Work"),
+        ("mathematics_applications", "SQA-MAA", "Maths: Applications"),
+        ("media", "SQA-MED", "Media"), ("music_technology", "SQA-MUT", "Music Technology"),
+        ("art_design", "SQA-ART", "Art & Design"),
+        ("physical_education", "SQA-PED", "Physical Education"),
+        ("music", "SQA-MUS", "Music"), ("drama", "SQA-DRA", "Drama"),
+        ("business_management", "SQA-BMG", "Business Management"),
+        ("accounting", "SQA-ACC", "Accounting"), ("economics", "SQA-ECO", "Economics"),
+        ("health_food_technology", "SQA-HFT", "Health & Food Tech"),
+        ("early_years", "SQA-EYR", "Early Years"),
+        ("travel_tourism", "SQA-TTM", "Travel & Tourism"),
+        ("hospitality", "SQA-HOS", "Hospitality"), ("care", "SQA-CAR", "Care"),
+        ("construction", "SQA-CON", "Construction"), ("engineering_systems", "SQA-ENS", "Engineering Systems"),
+        ("design_engineering", "SQA-DEE", "Design Engineering"),
+        ("graphic_com_advanced", "SQA-GCA", "Graphic Comm (Adv)"),
+    ]
+    return _load_subjects_by_jurisdiction(
+        jurisdiction="scotland", stage="higher",
+        subjects=SCOTLAND_SUBJECTS, qualification_levels=["national_5", "higher", "adv_higher"],
+    )
+
+
+def load_wales_subjects() -> list[SubjectRegistryRow]:
+    """Wales (WJEC) 80 subjects × 2 levels."""
+    WALES_SUBJECTS = [
+        ("mathematics", "WJEC-MAT", "Mathematics"), ("english_language", "WJEC-EL", "English Language"),
+        ("english_literature", "WJEC-ELIT", "English Literature"),
+        ("welsh_language", "WJEC-WL", "Welsh Language"), ("welsh_literature", "WJEC-WLIT", "Welsh Literature"),
+        ("welsh_second_language", "WJEC-WSL", "Welsh (2nd Language)"),
+        ("physics", "WJEC-PHY", "Physics"), ("chemistry", "WJEC-CHE", "Chemistry"),
+        ("biology", "WJEC-BIO", "Biology"), ("applied_science_double", "WJEC-ASD", "Applied Science (Double)"),
+        ("applied_science_single", "WJEC-ASS", "Applied Science (Single)"),
+        ("health_social_care", "WJEC-HSC", "Health & Social Care"),
+        ("psychology", "WJEC-PSY", "Psychology"), ("sociology", "WJEC-SOC", "Sociology"),
+        ("religious_studies", "WJEC-RST", "Religious Studies"),
+        ("computer_science", "WJEC-CSC", "Computer Science"), ("ict", "WJEC-ICT", "ICT"),
+        ("history", "WJEC-HIS", "History"), ("geography", "WJEC-GEO", "Geography"),
+        ("welsh_history", "WJEC-WHI", "Welsh History"), ("welsh_geography", "WJEC-WGE", "Welsh Geography"),
+        ("economics", "WJEC-ECO", "Economics"), ("business", "WJEC-BUS", "Business"),
+        ("law", "WJEC-LAW", "Law"), ("politics", "WJEC-POL", "Politics"),
+        ("french", "WJEC-FRE", "French"), ("german", "WJEC-GER", "German"),
+        ("spanish", "WJEC-SPA", "Spanish"), ("italian", "WJEC-ITA", "Italian"),
+        ("portuguese", "WJEC-POR", "Portuguese"), ("chinese", "WJEC-CHN", "Chinese"),
+        ("japanese", "WJEC-JPN", "Japanese"), ("urdu", "WJEC-URD", "Urdu"),
+        ("arabic", "WJEC-ARB", "Arabic"), ("bengali", "WJEC-BEN", "Bengali"),
+        ("punjabi", "WJEC-PUN", "Punjabi"), ("turkish", "WJEC-TUR", "Turkish"),
+        ("latin", "WJEC-LAT", "Latin"), ("classical_civilisation", "WJEC-CVC", "Classical Civilisation"),
+        ("classical_greek", "WJEC-GRK", "Classical Greek"),
+        ("ancient_history", "WJEC-ANC", "Ancient History"),
+        ("media_studies", "WJEC-MED", "Media Studies"),
+        ("film_studies", "WJEC-FLM", "Film Studies"),
+        ("art_design", "WJEC-ART", "Art & Design"),
+        ("design_technology", "WJEC-DET", "Design & Technology"),
+        ("drama", "WJEC-DRA", "Drama"), ("music", "WJEC-MUS", "Music"),
+        ("physical_education", "WJEC-PED", "Physical Education"),
+        ("dance", "WJEC-DAN", "Dance"),
+        ("design_textiles", "WJEC-DTX", "Design & Textiles"),
+        ("digital_technology", "WJEC-DIG", "Digital Technology"),
+        ("engineering_manufacturing", "WJEC-ENM", "Engineering & Manufacturing"),
+        ("food_nutrition", "WJEC-FNU", "Food & Nutrition"),
+        ("child_development", "WJEC-CDV", "Child Development"),
+        ("health_safety", "WJEC-HSA", "Health & Safety"),
+        ("construction_built_env", "WJEC-CBE", "Construction & Built Env"),
+        ("tourism_travel", "WJEC-TAT", "Tourism & Travel"),
+        ("leisure_recreation", "WJEC-LRE", "Leisure & Recreation"),
+        ("hair_beauty", "WJEC-HAB", "Hair & Beauty"),
+        ("accounting_finance", "WJEC-ACF", "Accounting & Finance"),
+        ("retailing_warehousing", "WJEC-RTW", "Retailing & Warehousing"),
+        ("office_administration", "WJEC-OAD", "Office Administration"),
+        ("public_services", "WJEC-PSV", "Public Services"),
+        ("performing_arts", "WJEC-PFA", "Performing Arts"),
+        ("environmental_science", "WJEC-ENV", "Environmental Science"),
+        ("religious_studies_philos", "WJEC-RSP", "Religious Studies + Philosophy"),
+        ("global_perspectives", "WJEC-GPR", "Global Perspectives"),
+        ("mathematics_further", "WJEC-MFU", "Mathematics - Further"),
+        ("statistics", "WJEC-STA", "Statistics"),
+        ("geology", "WJEC-GEO", "Geology"),
+        ("statistics_applications", "WJEC-STA", "Statistics: Applications"),
+        ("media_production", "WJEC-MPR", "Media Production"),
+        ("engineering", "WJEC-ENG", "Engineering"),
+        ("health_food_tech", "WJEC-HFT", "Health & Food Tech"),
+        ("software_engineering", "WJEC-SWE", "Software Engineering"),
+        ("aerospace_engineering", "WJEC-AEE", "Aerospace Engineering"),
+    ]
+    return _load_subjects_by_jurisdiction(
+        jurisdiction="wales", stage="higher",
+        subjects=WALES_SUBJECTS, qualification_levels=["gcse", "a_level"],
+    )
+
+
+def load_northern_ireland_subjects() -> list[SubjectRegistryRow]:
+    """Northern Ireland (CCEA) 35 subjects × 2 levels."""
+    NI_SUBJECTS = [
+        ("mathematics", "CCEA-MAT", "Mathematics"), ("english_language", "CCEA-EL", "English Language"),
+        ("english_literature", "CCEA-ELIT", "English Literature"),
+        ("irish", "CCEA-IR", "Irish"), ("irish_language", "CCEA-ILL", "Irish Language"),
+        ("physics", "CCEA-PHY", "Physics"), ("chemistry", "CCEA-CHE", "Chemistry"),
+        ("biology", "CCEA-BIO", "Biology"), ("applied_science", "CCEA-AS", "Applied Science"),
+        ("health_social_care", "CCEA-HSC", "Health & Social Care"),
+        ("psychology", "CCEA-PSY", "Psychology"), ("sociology", "CCEA-SOC", "Sociology"),
+        ("religious_studies", "CCEA-RST", "Religious Studies"),
+        ("computer_science", "CCEA-CSC", "Computer Science"), ("ict", "CCEA-ICT", "ICT"),
+        ("history", "CCEA-HIS", "History"), ("geography", "CCEA-GEO", "Geography"),
+        ("economics", "CCEA-ECO", "Economics"), ("business", "CCEA-BUS", "Business"),
+        ("law", "CCEA-LAW", "Law"), ("politics", "CCEA-POL", "Politics"),
+        ("french", "CCEA-FRE", "French"), ("german", "CCEA-GER", "German"),
+        ("spanish", "CCEA-SPA", "Spanish"), ("italian", "CCEA-ITA", "Italian"),
+        ("music", "CCEA-MUS", "Music"), ("art_design", "CCEA-ART", "Art & Design"),
+        ("design_technology", "WJEC-DET", "Design & Technology"),
+        ("physical_education", "CCEA-PED", "Physical Education"),
+        ("drama", "CCEA-DRA", "Drama"), ("media_studies", "CCEA-MED", "Media Studies"),
+        ("english_literature_aqa", "CCEA-ELA", "English Lit (AQA cross-ref)"),
+        ("physics_chemistry", "CCEA-PC", "Physics + Chemistry"),
+        ("geology", "CCEA-GEO", "Geology"),
+    ]
+    return _load_subjects_by_jurisdiction(
+        jurisdiction="northern_ireland", stage="higher",
+        subjects=NI_SUBJECTS, qualification_levels=["gcse", "a_level"],
+    )
+
+
+def load_jersey_subjects() -> list[SubjectRegistryRow]:
+    """Jersey (States of Jersey) 30 subjects × 4 levels."""
+    JERSEY_SUBJECTS = [
+        ("mathematics", "JE-MAT", "Mathematics"), ("english_language", "JE-EL", "English Language"),
+        ("english_literature", "JE-ELIT", "English Literature"),
+        ("french", "JE-FRE", "French"), ("physics", "JE-PHY", "Physics"),
+        ("chemistry", "JE-CHE", "Chemistry"), ("biology", "JE-BIO", "Biology"),
+        ("combined_science", "JE-CSC", "Combined Science"),
+        ("computer_science", "JE-CSC2", "Computer Science"), ("history", "JE-HIS", "History"),
+        ("geography", "JE-GEO", "Geography"), ("religious_studies", "JE-RST", "Religious Studies"),
+        ("psychology", "JE-PSY", "Psychology"), ("sociology", "JE-SOC", "Sociology"),
+        ("economics", "JE-ECO", "Economics"), ("business", "JE-BUS", "Business"),
+        ("law", "JE-LAW", "Law"), ("media_studies", "JE-MED", "Media Studies"),
+        ("art_design", "JE-ART", "Art & Design"), ("design_technology", "JE-DET", "Design & Tech"),
+        ("music", "JE-MUS", "Music"), ("physical_education", "JE-PED", "Physical Education"),
+        ("drama", "JE-DRA", "Drama"), ("global_perspectives", "JE-GPR", "Global Perspectives"),
+        ("environmental_science", "JE-ENV", "Environmental Science"),
+        ("media_production", "JE-MPR", "Media Production"),
+        ("sport_science", "JE-SPS", "Sport Science"),
+        ("travel_tourism", "JE-TT", "Travel & Tourism"),
+        ("health_social_care", "JE-HSC", "Health & Social Care"),
+    ]
+    return _load_subjects_by_jurisdiction(
+        jurisdiction="jersey", stage="higher",
+        subjects=JERSEY_SUBJECTS, qualification_levels=["gcse", "a_level", "ib", "french_bac"],
+    )
+
+
+def load_guernsey_subjects() -> list[SubjectRegistryRow]:
+    """Guernsey (States of Guernsey) 30 subjects × 4 levels."""
+    GUERNSEY_SUBJECTS = [
+        ("mathematics", "GG-MAT", "Mathematics"), ("english_language", "GG-EL", "English Language"),
+        ("english_literature", "GG-ELIT", "English Literature"),
+        ("french", "GG-FRE", "French"), ("physics", "GG-PHY", "Physics"),
+        ("chemistry", "GG-CHE", "Chemistry"), ("biology", "GG-BIO", "Biology"),
+        ("combined_science", "GG-CSC", "Combined Science"),
+        ("computer_science", "GG-CSC2", "Computer Science"), ("history", "GG-HIS", "History"),
+        ("geography", "GG-GEO", "Geography"), ("religious_studies", "GG-RST", "Religious Studies"),
+        ("psychology", "GG-PSY", "Psychology"), ("sociology", "GG-SOC", "Sociology"),
+        ("economics", "GG-ECO", "Economics"), ("business", "GG-BUS", "Business"),
+        ("law", "GG-LAW", "Law"), ("media_studies", "GG-MED", "Media Studies"),
+        ("art_design", "GG-ART", "Art & Design"), ("design_technology", "GG-DET", "Design & Tech"),
+        ("music", "GG-MUS", "Music"), ("physical_education", "GG-PED", "Physical Education"),
+        ("drama", "GG-DRA", "Drama"), ("child_development", "GG-CDV", "Child Development"),
+        ("global_perspectives", "GG-GPR", "Global Perspectives"),
+        ("environmental_science", "GG-ENV", "Environmental Science"),
+        ("media_production", "GG-MPR", "Media Production"),
+        ("sport_science", "GG-SPS", "Sport Science"),
+        ("travel_tourism", "GG-TT", "Travel & Tourism"),
+        ("health_social_care", "GG-HSC", "Health & Social Care"),
+    ]
+    return _load_subjects_by_jurisdiction(
+        jurisdiction="guernsey", stage="higher",
+        subjects=GUERNSEY_SUBJECTS, qualification_levels=["gcse", "a_level", "btec", "ib"],
+    )
+
+
+def load_isle_of_man_subjects() -> list[SubjectRegistryRow]:
+    """Isle of Man 30 subjects × 4 levels."""
+    IOM_SUBJECTS = [
+        ("mathematics", "IOM-MAT", "Mathematics"), ("english_language", "IOM-EL", "English Language"),
+        ("english_literature", "IOM-ELIT", "English Literature"),
+        ("manx_language", "IOM-ML", "Manx Language"),
+        ("french", "IOM-FRE", "French"), ("physics", "IOM-PHY", "Physics"),
+        ("chemistry", "IOM-CHE", "Chemistry"), ("biology", "IOM-BIO", "Biology"),
+        ("combined_science", "IOM-CSC", "Combined Science"),
+        ("computer_science", "IOM-CSC2", "Computer Science"), ("history", "IOM-HIS", "History"),
+        ("geography", "IOM-GEO", "Geography"), ("religious_studies", "IOM-RST", "Religious Studies"),
+        ("psychology", "IOM-PSY", "Psychology"), ("sociology", "IOM-SOC", "Sociology"),
+        ("economics", "IOM-ECO", "Economics"), ("business", "IOM-BUS", "Business"),
+        ("law", "IOM-LAW", "Law"), ("media_studies", "IOM-MED", "Media Studies"),
+        ("art_design", "IOM-ART", "Art & Design"), ("design_technology", "IOM-DET", "Design & Tech"),
+        ("music", "IOM-MUS", "Music"), ("physical_education", "IOM-PED", "Physical Education"),
+        ("drama", "IOM-DRA", "Drama"), ("global_perspectives", "IOM-GPR", "Global Perspectives"),
+        ("environmental_science", "IOM-ENV", "Environmental Science"),
+        ("construction", "IOM-CON", "Construction"),
+        ("engineering", "IOM-ENG", "Engineering"),
+        ("manx_history", "IOM-MHI", "Manx History"),
+        ("agriculture", "IOM-AGR", "Agriculture"),
+        ("hospitality", "IOM-HOS", "Hospitality"),
+    ]
+    return _load_subjects_by_jurisdiction(
+        jurisdiction="isle_of_man", stage="higher",
+        subjects=IOM_SUBJECTS, qualification_levels=["gcse", "a_level", "btec", "ib"],
+    )
+
+
+def seed_registry() -> dict[str, int]:
+    """Seed the registry with all 8 BIEP v3 jurisdictions (full coverage).
+
+    Returns a dict with the count of rows inserted per jurisdiction.
+    Total: Ireland 544 + England 276 + Scotland 150 + Wales 160 + NI 70 +
+    Jersey 120 + Guernsey 120 + IoM 120 = 1,560 rows.
+    """
+    counts: dict[str, int] = {
+        "ireland": 0, "england": 0, "scotland": 0, "wales": 0,
+        "northern_ireland": 0, "jersey": 0, "guernsey": 0, "isle_of_man": 0,
+    }
+
+    loaders = [
+        ("ireland", load_ireland_subjects),
+        ("england", load_england_subjects),
+        ("scotland", load_scotland_subjects),
+        ("wales", load_wales_subjects),
+        ("northern_ireland", load_northern_ireland_subjects),
+        ("jersey", load_jersey_subjects),
+        ("guernsey", load_guernsey_subjects),
+        ("isle_of_man", load_isle_of_man_subjects),
+    ]
+
+    for jurisdiction, loader_fn in loaders:
+        for row in loader_fn():
+            try:
+                insert_subject(row)
+                counts[jurisdiction] += 1
+            except Exception as e:
+                logger.warning(
+                    "seed_registry: failed to insert %s: %s", row.subject_slug, e,
+                )
+
+    return counts
+
+
+__all__ = [
+    "load_ireland_subjects",
+    "load_england_subjects",
+    "load_scotland_subjects",
+    "load_wales_subjects",
+    "load_northern_ireland_subjects",
+    "load_jersey_subjects",
+    "load_guernsey_subjects",
+    "load_isle_of_man_subjects",
+    "seed_registry",
+]

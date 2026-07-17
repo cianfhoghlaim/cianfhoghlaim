@@ -119,7 +119,7 @@ def write_status_row(
         token = os.environ.get("MOTHERDUCK_TOKEN", "")
         if token:
             duckdb.sql(f"SET motherduck_token='{token}'")
-        con = duckdb.connect("md:oideachais")
+        con = duckdb.connect("md:cianfhoghlaim")
 
     try:
         con.execute(

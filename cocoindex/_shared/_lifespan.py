@@ -104,7 +104,7 @@ else:
 # `CIANFHOGHLAIM_LANCEDB_URL=http://127.0.0.1:8182` or set
 # `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` in `.env.dev.local`.
 LANCEDB_URI = _CIANFHOGHLAIM_LANCEDB_URL
-EMBED_MODEL = os.getenv("OIDEACHAIS_EMBED_MODEL", "BAAI/bge-large-en-v1.5")
+EMBED_MODEL = os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3")
 EMBED_DIM = 1024
 
 
