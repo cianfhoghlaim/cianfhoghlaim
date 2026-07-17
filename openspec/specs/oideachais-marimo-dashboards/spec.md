@@ -245,10 +245,3 @@ in these notebooks.
 - **AND** the marimo reactive graph SHALL resolve without "Pending"
   cells after 5 seconds
 
-## Cross-references
-
-- [`cianfhoghlaim/notebooks/`](../../cianfhoghlaim/notebooks/) (the 11 Marimo notebooks)
-- [`cianfhoghlaim/notebooks/dashboards/`](../../cianfhoghlaim/notebooks/dashboards/) (the dashboard subdir)
-- [`.agents/skills/marimo/SKILL.md`](../../.agents/skills/marimo/SKILL.md)
-- [`.agents/skills/build-notebook/SKILL.md`](../../.agents/skills/build-notebook/SKILL.md)
-- [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream pipeline)

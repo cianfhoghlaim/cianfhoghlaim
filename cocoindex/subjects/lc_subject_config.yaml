@@ -1,0 +1,35 @@
+# lc_subject_config.yaml
+#
+# The 6 BIEP v1 LC subjects driven by `cocoindex/subjects/lc_subject_embedding.py`
+# (the parameterised CocoIndex v1 App introduced by the
+# 2026-07-25-cocoindex-per-subject-dedup-v1 change).
+#
+# Each row drives one Dagster asset materialisation:
+#   - subject          — the BIEP v1 LC subject slug
+#   - dagster_asset_key — the canonical Dagster asset key
+#                         (preserved exactly from the 7 deprecated
+#                          per-subject files)
+#
+# Schema version: 1
+# Last reviewed: 2026-07-25
+
+schema_version: 1
+
+subjects:
+  - subject: mathematics
+    dagster_asset_key: lc_mathematics_embedding
+
+  - subject: chemistry
+    dagster_asset_key: lc_chemistry_embedding
+
+  - subject: geography
+    dagster_asset_key: lc_geography_embedding
+
+  - subject: english
+    dagster_asset_key: lc_english_embedding
+
+  - subject: gaeilge
+    dagster_asset_key: lc_gaeilge_embedding
+
+  - subject: computer_science
+    dagster_asset_key: lc_computer_science_embedding

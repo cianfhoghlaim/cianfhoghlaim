@@ -141,12 +141,3 @@ contract from the `oideachais-marimo-dashboards` spec.
 - **AND** the `ibis` skill is referenced in the per-notebook
   `## KCG patterns used` docstring
 
-## Cross-references
-
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) — the parent capability (5 education stages + leabharlann corpus)
-- [`agent-platform-cluster`](../agent-platform-cluster/spec.md) — the 8-stack substrate (MotherDuck + Dagster + LiteLLM + Langfuse)
-- [`ncca-leaving-cert-root-pdfs`](../ncca-leaving-cert-root-pdfs/spec.md) *(merged into oideachais-pipeline)* — the 5 NCCA root-level programme PDFs
-- [`apple-photos-ingestion`](../apple-photos-ingestion/spec.md) — the 5th leabharlann corpus, sharing the same CocoIndex v1 pattern
-- [`motherduck-dives`](../../.agents/skills/motherduck-create-dive/SKILL.md) — the 4 Dive authoring model
-
-## Migrated from: *(none)*
