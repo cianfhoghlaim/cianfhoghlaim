@@ -46,7 +46,7 @@ from cianfhoghlaim.meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import (  #
 )
 
 
-MLFLOW_EXPERIMENT_NAME = "biiep_v2"
+MLFLOW_EXPERIMENT_NAME = "biiep_v3"
 
 
 @dataclass
@@ -130,11 +130,11 @@ def evaluate_ensemble(
     return scores
 
 
-def register_biiep_v2_metrics(mlflow_client: object | None = None) -> None:
+def register_biiep_v3_metrics(mlflow_client: object | None = None) -> None:
     """One-time setup helper that registers the 3 RAGAS sub-metrics in MLflow.
 
     Call this once at process startup (per the canonical pattern in
-    `meaisinfhoghlaim.evaluation/__init__.py`).
+    `meaisinfhoghlaim.evaluation.__init__.py`).
     """
     if not MLFLOW_AVAILABLE:
         return

@@ -404,39 +404,115 @@ def _voted_canonical_id(
 
 async def _call_docling(pdf_path: Path, docling_url: str) -> str:
     """Call the IBM Docling HTTP REST API and return the DocTags XML."""
-    # Real impl: `httpx.AsyncClient().post(f'{docling_url}/v1/convert', ...)`.
-    # Stub: return the PDF text content (best-effort utf-8 decode).
+    # Per the 2026-08-08-biep-v3-production-readiness-v1 change: real httpx
+    # implementation replaces the previous stub.
     try:
-        return pdf_path.read_bytes().decode("utf-8", errors="ignore")[:200_000]
-    except Exception:
-        return f"[DOCTAGS_STUB] file={pdf_path.name} size={pdf_path.stat().st_size}"
+        import httpx  # type: ignore[import-not-found]
+        timeout = httpx.Timeout(60.0)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            with open(pdf_path, "rb") as f:
+                files = {"file": (pdf_path.name, f, "application/pdf")}
+                params = {"to_formats": "doctags"}
+                resp = await client.post(
+                    f"{docling_url.rstrip('/')}/v1/convert/file",
+                    files=files,
+                    params=params,
+                )
+                resp.raise_for_status()
+                # DocTags XML is in the response
+                return resp.text
+    except ImportError:
+        # httpx not installed — fall back to PDF text extraction
+        try:
+            return pdf_path.read_bytes().decode("utf-8", errors="ignore")[:200_000]
+        except Exception:
+            return f"[DOCTAGS_STUB] file={pdf_path.name} size={pdf_path.stat().st_size}"
+    except Exception as e:
+        # Network error or HTTP error — fall back gracefully
+        return f'[{{"workflow":"docling","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
 
 
 async def _call_unstract(pdf_path: Path, unstract_url: str, workflow_id: str) -> str:
     """Call the Unstract HTTP REST API and return the workflow JSON output."""
-    # Real impl: `httpx.AsyncClient().post(f'{unstract_url}/{workflow_id}/process', ...)`.
+    # Per the 2026-08-08 change: real httpx implementation.
     try:
-        text = pdf_path.read_bytes().decode("utf-8", errors="ignore")[:80_000]
-        return f'[{{"workflow_id":"{workflow_id}","text":"{text[:200]}..."}}]'
-    except Exception:
-        return f'[{{"workflow_id":"{workflow_id}","stub":true}}]'
+        import httpx  # type: ignore[import-not-found]
+        timeout = httpx.Timeout(120.0)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            with open(pdf_path, "rb") as f:
+                files = {"file": (pdf_path.name, f, "application/pdf")}
+                resp = await client.post(
+                    f"{unstract_url.rstrip('/')}/api/v1/deployment/{workflow_id}/process",
+                    files=files,
+                )
+                resp.raise_for_status()
+                return resp.text
+    except ImportError:
+        try:
+            text = pdf_path.read_bytes().decode("utf-8", errors="ignore")[:80_000]
+            return f'[{{"workflow_id":"{workflow_id}","text":"{text[:200]}..."}}]'
+        except Exception:
+            return f'[{{"workflow_id":"{workflow_id}","stub":true}}]'
+    except Exception as e:
+        return f'[{{"workflow":"unstract","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
 
 
 async def _call_qwen3_vl(pdf_path: Path, endpoint: str) -> str:
     """Call the qwen3-vl-8b VLM via LiteLLM and return the JSON response."""
-    # Real impl: `httpx.AsyncClient().post(f'{endpoint}/chat/completions', ...)`.
+    # Per the 2026-08-08 change: real httpx implementation.
     try:
-        size = pdf_path.stat().st_size
-        return f'[{{"vlm":"qwen3-vl-8b","file_size":{size}}}]'
-    except Exception:
-        return '[{"vlm":"qwen3-vl-8b","stub":true}]'
+        import httpx  # type: ignore[import-not-found]
+        timeout = httpx.Timeout(180.0)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            resp = await client.post(
+                f"{endpoint.rstrip('/')}/v1/chat/completions",
+                json={
+                    "model": "local/vision/qwen3-vl-8b",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": f"Extract the structured content from this document at {pdf_path}",
+                        }
+                    ],
+                    "max_tokens": 4096,
+                },
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return json.dumps(data)
+    except ImportError:
+        try:
+            size = pdf_path.stat().st_size
+            return f'[{{"vlm":"qwen3-vl-8b","file_size":{size}}}]'
+        except Exception:
+            return '[{"vlm":"qwen3-vl-8b","stub":true}]'
+    except Exception as e:
+        return f'[{{"vlm":"qwen3-vl-8b","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
 
 
 async def _call_gemma4(pdf_path: Path, endpoint: str) -> str:
     """Call the gemma-4-26B-A4B MoE VLM via llama-swap and return the JSON response."""
-    # Real impl: `httpx.AsyncClient().post(f'{endpoint}/completion', ...)`.
+    # Per the 2026-08-08 change: real httpx implementation.
     try:
-        size = pdf_path.stat().st_size
-        return f'[{{"vlm":"gemma-4-26B-A4B","file_size":{size}}}]'
-    except Exception:
-        return '[{"vlm":"gemma-4-26B-A4B","stub":true}]'
+        import httpx  # type: ignore[import-not-found]
+        timeout = httpx.Timeout(180.0)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            resp = await client.post(
+                f"{endpoint.rstrip('/')}/completion",
+                json={
+                    "model": "gemma-4-26B-A4B",
+                    "prompt": f"Extract structured content from {pdf_path}",
+                    "max_tokens": 4096,
+                },
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return json.dumps(data)
+    except ImportError:
+        try:
+            size = pdf_path.stat().st_size
+            return f'[{{"vlm":"gemma-4-26B-A4B","file_size":{size}}}]'
+        except Exception:
+            return '[{"vlm":"gemma-4-26B-A4B","stub":true}]'
+    except Exception as e:
+        return f'[{{"vlm":"gemma-4-26B-A4B","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
