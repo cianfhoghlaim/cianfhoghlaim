@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 @asset(
-    group_name="official_media/jurisdictions",
+    group_name="official_media_jurisdictions",
     description="Scotland (Scottish Parliament) official-media cohorts",
 )
 def scotland_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
@@ -26,7 +26,7 @@ def scotland_official_media_ingested(context: AssetExecutionContext) -> dict[str
 
 
 @asset(
-    group_name="official_media/jurisdictions",
+    group_name="official_media_jurisdictions",
     description="Wales (Senedd Cymru) official-media cohorts",
 )
 def wales_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
@@ -38,7 +38,7 @@ def wales_official_media_ingested(context: AssetExecutionContext) -> dict[str, A
 
 
 @asset(
-    group_name="official_media/jurisdictions",
+    group_name="official_media_jurisdictions",
     description="Isle of Man (Tynwald) official-media cohorts",
 )
 def isle_of_man_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
@@ -50,7 +50,7 @@ def isle_of_man_official_media_ingested(context: AssetExecutionContext) -> dict[
 
 
 @asset(
-    group_name="official_media/jurisdictions",
+    group_name="official_media_jurisdictions",
     description="Jersey (States of Jersey) official-media cohorts",
 )
 def jersey_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
@@ -62,7 +62,7 @@ def jersey_official_media_ingested(context: AssetExecutionContext) -> dict[str, 
 
 
 @asset(
-    group_name="official_media/jurisdictions",
+    group_name="official_media_jurisdictions",
     description="Guernsey (States of Guernsey) official-media cohorts",
 )
 def guernsey_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
@@ -74,7 +74,7 @@ def guernsey_official_media_ingested(context: AssetExecutionContext) -> dict[str
 
 
 @asset(
-    group_name="official_media/hmgcc",
+    group_name="official_media_hmgcc",
     description="HMGCC 12-week rolling window",
 )
 def hmgcc_rolling_window_ingested(context: AssetExecutionContext) -> dict[str, Any]:
@@ -86,7 +86,7 @@ def hmgcc_rolling_window_ingested(context: AssetExecutionContext) -> dict[str, A
 
 
 @asset(
-    group_name="official_media/companies_house",
+    group_name="official_media_companies_house",
     description="Companies House Crown body filter (re-identification)",
 )
 def companies_house_crown_filter_ingested(context: AssetExecutionContext) -> dict[str, Any]:

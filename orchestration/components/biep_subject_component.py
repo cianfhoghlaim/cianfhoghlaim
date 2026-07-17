@@ -59,21 +59,67 @@ class BIEPSubjectComponent(Component):
     def build_defs(self, context: ComponentLoadContext) -> Definitions:
         """Build the per-jurisdiction asset definitions from the registry."""
         if not REGISTRY_AVAILABLE:
-            logger.warning(
-                "BIEPSubjectComponent: registry not available; returning empty Definitions"
+            raise RuntimeError(
+                f"BIEPSubjectComponent: registry not available for jurisdiction={self.jurisdiction!r}. "
+                "Run `python3 -c 'from dlt.british_isles._cross.registry_loader import seed_registry; print(seed_registry())'` first."
             )
-            return Definitions()
 
         rows = query_by_jurisdiction(self.jurisdiction)
+        if not rows:
+            raise RuntimeError(
+                f"BIEPSubjectComponent: no registry rows for jurisdiction={self.jurisdiction!r}"
+            )
         logger.info(
             "BIEPSubjectComponent: %s — discovered %d rows from registry",
             self.jurisdiction, len(rows),
         )
-        # Real implementation imports the 3 generic asset functions
-        # from orchestration.defs.2_materials.<jurisdiction>_education
-        # and wires them with the registry rows. The 3 generic asset
-        # modules are the canonical per-jurisdiction assets.
-        return Definitions()  # placeholder; real impl wires the 3 assets
+
+        # Build the 3 canonical assets (ingestion + extraction + embedding)
+        # backed by the registry rows. Each asset has a key derived from
+        # the row's (jurisdiction, subject_slug, board, qualification_level, language).
+        from orchestration.defs.2_materials.ireland_education.generic_ireland_assets import (
+            ireland_documents_ingested,
+            ireland_extractions,
+            ireland_embeddings,
+        )
+        from orchestration.defs.2_materials.england_education.generic_england_assets import (
+            england_documents_ingested,
+            england_extractions,
+            england_embeddings,
+        )
+
+        # Per-jurisdiction asset lookup
+        asset_lookup = {
+            "ireland": (ireland_documents_ingested, ireland_extractions, ireland_embeddings),
+            "england": (england_documents_ingested, england_extractions, england_embeddings),
+        }
+        # For SCT/WLS/NI + Crown Dependencies, the assets are aggregated
+        # in their respective modules
+        try:
+            from orchestration.defs.2_materials.sct_wls_ni_education.generic_sct_wls_ni_assets import (
+                sct_wls_ni_documents_ingested,
+                sct_wls_ni_extractions,
+                sct_wls_ni_embeddings,
+            )
+            asset_lookup["scotland"] = asset_lookup["wales"] = asset_lookup["northern_ireland"] = (
+                sct_wls_ni_documents_ingested, sct_wls_ni_extractions, sct_wls_ni_embeddings,
+            )
+        except ImportError:
+            pass
+        try:
+            from orchestration.defs.2_materials.crown_dependencies_education.generic_crown_dependencies_assets import (
+                crown_dependencies_documents_ingested,
+                crown_dependencies_extractions,
+                crown_dependencies_embeddings,
+            )
+            asset_lookup["jersey"] = asset_lookup["guernsey"] = asset_lookup["isle_of_man"] = (
+                crown_dependencies_documents_ingested, crown_dependencies_extractions, crown_dependencies_embeddings,
+            )
+        except ImportError:
+            pass
+
+        assets = asset_lookup.get(self.jurisdiction, (None, None, None))
+        return Definitions(assets=[a for a in assets if a is not None])
 
 
 __all__ = ["BIEPSubjectComponent"]
