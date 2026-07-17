@@ -23,7 +23,7 @@ Five visualisations:
 - **Panel D** — síneadh fada punctuation accuracy heatmap
 - **Panel E** — punctum delens (ḃ ċ ḋ ġ ṁ ṗ ṡ ṫ) coverage bar
 
-Data source: ``md:oideachais.leaving_cert.<subject>_topics`` with
+Data source: ``md:cianfhoghlaim.leaving_cert.<subject>_topics`` with
 ``language = 'ga'``. Falls back to a synthetic 6-subject ×
 24-LO GA corpus when the lakehouse is unreachable.
 
@@ -120,7 +120,7 @@ def _data_loading(con, BIEP_SUBJECTS, engine_label, mo, pd, hashlib, re):
                 try:
                     _df = con.execute(
                         f"SELECT level, language, count(*) AS n "
-                        f"FROM oideachais.leaving_cert.{_subj}_topics "
+                        f"FROM cianfhoghlaim.leaving_cert.{_subj}_topics "
                         f"WHERE language IN ('en', 'ga') "
                         f"GROUP BY level, language"
                     ).fetchdf()

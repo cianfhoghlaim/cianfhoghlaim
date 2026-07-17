@@ -24,7 +24,7 @@ Five visualisations:
 - **Panel D** — per-language embedding parity (EN vs GA bar)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.leabharlann.embeddings`` (populated by
+Data source: ``md:cianfhoghlaim.leabharlann.embeddings`` (populated by
 the CocoIndex BGE-M3 pass). Falls back to a synthetic 6×36 coverage
 matrix + 200 cosine-similarity samples when the lakehouse is
 unreachable.
@@ -54,7 +54,7 @@ def _intro():
         leabharlann CocoIndex pipeline (per the
         ``oideachais-cocoindex-v1-migration`` spec).
 
-        Live data: ``md:oideachais.leabharlann.embeddings``.
+        Live data: ``md:cianfhoghlaim.leabharlann.embeddings``.
 
         ---
         """
@@ -129,7 +129,7 @@ def _data_loading(
     if engine_label == "md:oideachais":
         try:
             coverage = con.execute(
-                "SELECT * FROM oideachais.leabharlann.embeddings"
+                "SELECT * FROM cianfhoghlaim.leabharlann.embeddings"
             ).fetchdf()
         except Exception:
             coverage = pd.DataFrame()

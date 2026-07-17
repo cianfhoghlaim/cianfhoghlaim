@@ -105,7 +105,7 @@ def _(mo):
                 docs_df = con.execute(
                     """
                     SELECT doc_id, subject, language, source_path, extracted_text
-                    FROM oideachais.gaeilge.documents
+                    FROM cianfhoghlaim.gaeilge.documents
                     WHERE language = 'ga'
                     ORDER BY doc_id
                     LIMIT 2000

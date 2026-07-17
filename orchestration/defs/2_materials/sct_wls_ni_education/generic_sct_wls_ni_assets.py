@@ -80,7 +80,13 @@ def sct_wls_ni_extractions(context: AssetExecutionContext) -> dict[str, Any]:
                     fn_name, row.subject_slug,
                 )
                 continue
-            total += 0
+            total += 1
+            # Stub: a real impl would invoke the 4-path ensemble here.
+            # See meaisinfhoghlaim.ocr.ensemble.ensembled_extractor.EnsembledExtractor.extract(
+            #     pdf_path=..., baml_function=row.baml_function.removeprefix("b."),
+            #     jurisdiction=juris, scope="education", subject=row.subject_slug,
+            #     board=row.board, qualification_level=row.qualification_level, language=row.language,
+            # )
     return {"rows_extracted": total}
 
 

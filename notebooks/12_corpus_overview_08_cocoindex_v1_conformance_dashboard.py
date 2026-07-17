@@ -24,8 +24,8 @@ Five visualisations:
 - **Panel D** — embedder row-count per App
 - **Panel E** — Apps that *do not* use the canonical ``BAAI/bge-m3``
 
-Data source: ``md:oideachais.cocoindex.apps`` +
-``md:oideachais.cocoindex.embedders``. Falls back to a synthetic
+Data source: ``md:cianfhoghlaim.cocoindex.apps`` +
+``md:cianfhoghlaim.cocoindex.embedders``. Falls back to a synthetic
 7-App set (the 6 BIEP v1 + the government_circulars App) when the
 lakehouse is unreachable.
 
@@ -108,10 +108,10 @@ def _data_loading(con, engine_label, mo, pd, hashlib):
             df_apps = con.execute(
                 "SELECT app_id, app_name, uses_v1_api, uses_bge_m3, "
                 "  approximate_row_count, source_file, last_checked_at "
-                "FROM oideachais.cocoindex.apps"
+                "FROM cianfhoghlaim.cocoindex.apps"
             ).fetchdf()
             rows = df_apps.to_dict("records")
-            src = "md:oideachais.cocoindex.apps"
+            src = "md:cianfhoghlaim.cocoindex.apps"
         except Exception as exc:
             rows = []
             src = f"md error: {exc!s:.60s}"
@@ -166,7 +166,7 @@ def _data_loading(con, engine_label, mo, pd, hashlib):
         )
         table_rows.append({
             "app_id": _r["app_id"],
-            "lance_table": f"oideachais.lc.{_r['app_id']}",
+            "lance_table": f"cianfhoghlaim.lc.{_r['app_id']}",
             "row_count": _r["approximate_row_count"],
             "search_supported": True,
             "ranker_available": (_h % 4) >= 1,

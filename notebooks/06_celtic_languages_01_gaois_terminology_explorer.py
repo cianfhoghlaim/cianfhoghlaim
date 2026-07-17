@@ -66,9 +66,9 @@ def _intro(mo):
         ## *Téarma + Logainm + Ainm*
 
         **Source data**: 3 Gaois DuckLake tables
-        (`oideachais.celtic.gaois.tearma_terms`,
+        (`cianfhoghlaim.celtic.gaois.tearma_terms`,
         `logainm_places`, `ainm_biographies`) +
-        the LanceDB `oideachais.language.gaois_chunks` companion.
+        the LanceDB `cianfhoghlaim.language.gaois_chunks` companion.
 
         Per-language LlamaSwap routing:
         - Irish (`ga`) → `uccix-mistral-24b` (UCCIX)
@@ -91,7 +91,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+        db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
         con = duckdb.connect(db_path, read_only=True)
     return (con, use_md)
 
@@ -103,10 +103,10 @@ def _panel_1_language(alt, con, mo, pd):
         """
         SELECT language, source_kind, COUNT(*) AS n_terms
         FROM (
-            SELECT 'ga' AS language, 'tearma' AS source_kind FROM oideachais.celtic.gaois.tearma_terms
-            UNION ALL SELECT 'en', 'tearma' FROM oideachais.celtic.gaois.tearma_terms
-            UNION ALL SELECT 'ga', 'logainm' FROM oideachais.celtic.gaois.logainm_places
-            UNION ALL SELECT 'ga', 'ainm' FROM oideachais.celtic.gaois.ainm_biographies
+            SELECT 'ga' AS language, 'tearma' AS source_kind FROM cianfhoghlaim.celtic.gaois.tearma_terms
+            UNION ALL SELECT 'en', 'tearma' FROM cianfhoghlaim.celtic.gaois.tearma_terms
+            UNION ALL SELECT 'ga', 'logainm' FROM cianfhoghlaim.celtic.gaois.logainm_places
+            UNION ALL SELECT 'ga', 'ainm' FROM cianfhoghlaim.celtic.gaois.ainm_biographies
         )
         GROUP BY language, source_kind
         ORDER BY n_terms DESC
@@ -129,7 +129,7 @@ def _panel_2_domain(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT domain, COUNT(*) AS n_terms
-        FROM oideachais.celtic.gaois.tearma_terms
+        FROM cianfhoghlaim.celtic.gaois.tearma_terms
         WHERE domain IS NOT NULL
         GROUP BY domain
         ORDER BY n_terms DESC
@@ -147,7 +147,7 @@ def _panel_3_top_50(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT term_en, term_ga, domain
-        FROM oideachais.celtic.gaois.tearma_terms
+        FROM cianfhoghlaim.celtic.gaois.tearma_terms
         WHERE term_ga IS NOT NULL OR term_en IS NOT NULL
         ORDER BY id
         LIMIT 50
@@ -163,7 +163,7 @@ def _panel_4_logainm_map(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT place_name, place_name_ga, county, latitude, longitude
-        FROM oideachais.celtic.gaois.logainm_places
+        FROM cianfhoghlaim.celtic.gaois.logainm_places
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL
         LIMIT 5000
         """
@@ -191,9 +191,9 @@ def _panel_5_summary(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT
-            'tearma_terms' AS table_name, COUNT(*) AS n FROM oideachais.celtic.gaois.tearma_terms
-        UNION ALL SELECT 'logainm_places', COUNT(*) FROM oideachais.celtic.gaois.logainm_places
-        UNION ALL SELECT 'ainm_biographies', COUNT(*) FROM oideachais.celtic.gaois.ainm_biographies
+            'tearma_terms' AS table_name, COUNT(*) AS n FROM cianfhoghlaim.celtic.gaois.tearma_terms
+        UNION ALL SELECT 'logainm_places', COUNT(*) FROM cianfhoghlaim.celtic.gaois.logainm_places
+        UNION ALL SELECT 'ainm_biographies', COUNT(*) FROM cianfhoghlaim.celtic.gaois.ainm_biographies
         """
     ).fetchall()
     df = pd.DataFrame(rows, columns=["table_name", "n"])

@@ -45,8 +45,8 @@ def _intro(mo):
         # UD Celtic Treebank Viewer
         ## *CoNLL-U Browser for the 13 Celtic Treebanks*
 
-        **Source data**: `oideachais.celtic.ud_celtic.sentences`
-        + `.tokens` + `oideachais.language.ud_celtic_chunks` (LanceDB).
+        **Source data**: `cianfhoghlaim.celtic.ud_celtic.sentences`
+        + `.tokens` + `cianfhoghlaim.language.ud_celtic_chunks` (LanceDB).
 
         LlamaSwap routing:
         - Irish treebanks → `uccix-mistral-24b`
@@ -65,7 +65,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb"), read_only=True)
+        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
     return (con, use_md)
 
 
@@ -77,7 +77,7 @@ def _panel_1_treebank(alt, con, mo, pd):
         SELECT treebank, language, variety,
                COUNT(*) AS n_sentences,
                SUM(tokens_count) AS n_tokens
-        FROM oideachais.celtic.ud_celtic.sentences
+        FROM cianfhoghlaim.celtic.ud_celtic.sentences
         GROUP BY treebank, language, variety
         ORDER BY n_sentences DESC
         """
@@ -93,7 +93,7 @@ def _panel_2_language(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT language, COUNT(DISTINCT treebank) AS n_treebanks, COUNT(*) AS n_sentences
-        FROM oideachais.celtic.ud_celtic.sentences
+        FROM cianfhoghlaim.celtic.ud_celtic.sentences
         GROUP BY language
         ORDER BY n_sentences DESC
         """
@@ -109,7 +109,7 @@ def _panel_3_top_lemmas(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT lemma, COUNT(*) AS n_occurrences
-        FROM oideachais.celtic.ud_celtic.tokens
+        FROM cianfhoghlaim.celtic.ud_celtic.tokens
         WHERE lemma IS NOT NULL
         GROUP BY lemma
         ORDER BY n_occurrences DESC
@@ -127,7 +127,7 @@ def _panel_4_pos(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT upos, COUNT(*) AS n_tokens
-        FROM oideachais.celtic.ud_celtic.tokens
+        FROM cianfhoghlaim.celtic.ud_celtic.tokens
         WHERE upos IS NOT NULL
         GROUP BY upos
         ORDER BY n_tokens DESC
@@ -144,7 +144,7 @@ def _panel_5_samples(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT sent_id, text, tokens_count
-        FROM oideachais.celtic.ud_celtic.sentences
+        FROM cianfhoghlaim.celtic.ud_celtic.sentences
         WHERE treebank = 'UD_Irish-IDT'
         LIMIT 20
         """

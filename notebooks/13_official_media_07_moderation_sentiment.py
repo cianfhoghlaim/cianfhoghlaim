@@ -102,7 +102,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 """
                 SELECT ig_username, category, posted_at, sentiment_score,
                        moderation_flag, engagement_likes
-                FROM oideachais.official_media.sentiment_scores
+                FROM cianfhoghlaim.official_media.sentiment_scores
                 ORDER BY posted_at DESC
                 LIMIT 5000
                 """

@@ -14,9 +14,9 @@ agent-platform 12-agent fleet (per the agent-platform work at
 ``ciolanza/agents/meaisinfhoghlaim/``):
 
 - **Cognee** — structured knowledge graph
-  (`oideachais.cognee.*_kg_nodes`/`_kg_edges`)
+  (`cianfhoghlaim.cognee.*_kg_nodes`/`_kg_edges`)
 - **Graphiti** — temporal knowledge graph (bi-temporal episodes)
-- **LanceDB** — vector RAG (`oideachais.lance.*`)
+- **LanceDB** — vector RAG (`cianfhoghlaim.lance.*`)
 - **Letta** — long-term agent memory (per-agent stateful blocks)
 
 Five visualisations:
@@ -27,8 +27,8 @@ Five visualisations:
 - **Panel D** — LanceDB vector similarity heatmap (subject × subject)
 - **Panel E** — agent ↔ memory-backend wiring matrix
 
-Data source: ``md:oideachais.cognee.*`` + ``md:oideachais.graphiti.*``
-+ ``md:oideachais.lance.*``. Falls back to a synthetic 4-backend
+Data source: ``md:cianfhoghlaim.cognee.*`` + ``md:cianfhoghlaim.graphiti.*``
++ ``md:cianfhoghlaim.lance.*``. Falls back to a synthetic 4-backend
 matrix when the lakehouse is unreachable.
 
 Reference: ``openspec/specs/oideachais-marimo-dashboards/spec.md``
@@ -53,7 +53,7 @@ def _intro():
 
         Cohort view of the 4 agent-memory backends wired by the
         agent-platform 12-agent fleet. Each backend is read from
-        the corresponding ``oideachais.*`` schema prefix:
+        the corresponding ``cianfhoghlaim.*`` schema prefix:
 
         - **Cognee** — structured knowledge graph (KG nodes + edges)
         - **Graphiti** — temporal knowledge graph (bi-temporal episodes)
@@ -122,10 +122,10 @@ def _data_loading(con, engine_label, mo, pd, hashlib, BIEP_SUBJECTS):
             for _subj in BIEP_SUBJECTS:
                 try:
                     _n = con.execute(
-                        f"SELECT count(*) FROM oideachais.cognee.{_subj}_kg_nodes"
+                        f"SELECT count(*) FROM cianfhoghlaim.cognee.{_subj}_kg_nodes"
                     ).fetchone()
                     _e = con.execute(
-                        f"SELECT count(*) FROM oideachais.cognee.{_subj}_kg_edges"
+                        f"SELECT count(*) FROM cianfhoghlaim.cognee.{_subj}_kg_edges"
                     ).fetchone()
                     counts.append({
                         "subject": _subj,
@@ -137,7 +137,7 @@ def _data_loading(con, engine_label, mo, pd, hashlib, BIEP_SUBJECTS):
                     pass
                 try:
                     _ep = con.execute(
-                        f"SELECT count(*) FROM oideachais.graphiti.{_subj}_episodes"
+                        f"SELECT count(*) FROM cianfhoghlaim.graphiti.{_subj}_episodes"
                     ).fetchone()
                     counts.append({
                         "subject": _subj,
@@ -148,7 +148,7 @@ def _data_loading(con, engine_label, mo, pd, hashlib, BIEP_SUBJECTS):
                     pass
                 try:
                     _v = con.execute(
-                        f"SELECT count(*) FROM oideachais.lance.lc_{_subj}"
+                        f"SELECT count(*) FROM cianfhoghlaim.lance.lc_{_subj}"
                     ).fetchone()
                     counts.append({
                         "subject": _subj,

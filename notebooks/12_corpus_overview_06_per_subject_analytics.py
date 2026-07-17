@@ -112,7 +112,7 @@ def _data_loading(ibis_conn, ibis_ok, engine_label, mo, pd, BIEP_SUBJECTS):
     if ibis_ok and engine_label.startswith("ibis.duckdb.connect('md:"):
         for _subj in BIEP_SUBJECTS:
             try:
-                _tbl = ibis_conn.table(f"oideachais.leaving_cert.{_subj}_topics")
+                _tbl = ibis_conn.table(f"cianfhoghlaim.leaving_cert.{_subj}_topics")
                 _df = _tbl.execute()
                 if not _df.empty:
                     rows.append(_df.assign(subject=_subj))

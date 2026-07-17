@@ -108,7 +108,13 @@ def england_extractions(context: AssetExecutionContext) -> dict[str, Any]:
                 fn_name, row.subject_slug,
             )
             continue
-        counts[row.subject_slug] = counts.get(row.subject_slug, 0) + 0
+        counts[row.subject_slug] = counts.get(row.subject_slug, 0) + 1
+        # Stub: a real impl would invoke the 4-path ensemble here.
+        # See meaisinfhoghlaim.ocr.ensemble.ensembled_extractor.EnsembledExtractor.extract(
+        #     pdf_path=..., baml_function=row.baml_function.removeprefix("b."),
+        #     jurisdiction="england", scope="education", subject=row.subject_slug,
+        #     board=row.board, qualification_level=row.qualification_level, language=row.language,
+        # )
     context.log.info("england_extractions: %s", counts)
     return {"rows_extracted": sum(counts.values())}
 

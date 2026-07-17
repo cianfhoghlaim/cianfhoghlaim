@@ -11,8 +11,8 @@
 
 Operator-facing browser over the MotherDuck + DuckLake lakehouse
 ``md:oideachais`` schema. Lists every table in the
-``oideachais.leaving_cert.*`` + ``oideachais.leabharlann.*`` +
-``oideachais.cognee.*`` + ``oideachais.official_media.*`` schemas
+``cianfhoghlaim.leaving_cert.*`` + ``cianfhoghlaim.leabharlann.*`` +
+``cianfhoghlaim.cognee.*`` + ``cianfhoghlaim.official_media.*`` schemas
 and surfaces per-table row counts + column counts + last-modified
 timestamps.
 
@@ -116,7 +116,7 @@ def _list_tables(con, engine_label, mo, pd):
                 df = pd.DataFrame()
             if not df.empty:
                 rows = df.to_dict("records")
-                src = "md:oideachais.information_schema.tables"
+                src = "md:cianfhoghlaim.information_schema.tables"
             else:
                 rows = []
         except Exception as exc:
@@ -187,7 +187,7 @@ def _viz_schema_breakdown(alt, mo, df):
         )
         .properties(
             width=620, height=300,
-            title="Panel A — tables per schema (oideachais.*)",
+            title="Panel A — tables per schema (cianfhoghlaim.*)",
         )
     )
     mo.ui.altair_chart(chart)
@@ -292,7 +292,7 @@ def _sql_console(con, mo, engine_label):
     """Panel E — ``mo.sql`` console against the live lakehouse."""
     if engine_label == "md:oideachais":
         sql_input = mo.ui.text_area(
-            value="SELECT count(*) AS n FROM oideachais.leabharlann.books",
+            value="SELECT count(*) AS n FROM cianfhoghlaim.leabharlann.books",
             label="📝 SQL to run (md:oideachais)",
         )
     else:

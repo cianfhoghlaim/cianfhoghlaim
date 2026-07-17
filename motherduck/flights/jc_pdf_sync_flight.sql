@@ -15,7 +15,7 @@
 
 CREATE FLIGHT jc_pdf_sync_flight
 SCHEDULE '0 2 * * *'  -- 02:00 UTC daily
-DATABASE md_oideachais
+DATABASE md:cianfhoghlaim
 AS
 
 -- 1. Discover new PDFs in the S3 garage bucket.

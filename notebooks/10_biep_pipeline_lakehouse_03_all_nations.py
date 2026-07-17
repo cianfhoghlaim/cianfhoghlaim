@@ -5,12 +5,12 @@
 #     "duckdb>=1.0",
 # ]
 # ///
-"""oideachais.notebooks.dashboards.education.all_nations — Marimo
+"""cianfhoghlaim.notebooks.dashboards.education.all_nations — Marimo
 notebook that compares Irish, NI, EN, SCT, WLS education pipelines
 side-by-side.
 
 Phase 8 of the openspec change. Reads from
-``oideachais.education.<nation>.<entity>`` (MotherDuck + DuckLake lakehouse
+``cianfhoghlaim.education.<nation>.<entity>`` (MotherDuck + DuckLake lakehouse
 via the ``md:oideachais`` alias; falls back to a local DuckLake attach
 when ``MOTHERDUCK_TOKEN`` is unset).
 """
@@ -38,7 +38,7 @@ def _header(mo):
         # Education — All Nations (Phase 8)
 
         Cross-nation view of the unified MotherDuck + DuckLake lakehouse
-        ``md:oideachais`` — table ``oideachais.education.<nation>.<entity>``.
+        ``md:oideachais`` — table ``cianfhoghlaim.education.<nation>.<entity>``.
         Filter by cycle and subject; charts render on the same x-axis.
         """
     )
@@ -83,15 +83,15 @@ def _summary(con):
     rows = con.execute(
         """
         SELECT 'ie' AS nation, 'NCCA' AS entity, count(*) AS n
-        FROM oideachais.education.ie.ncca_pages
+        FROM cianfhoghlaim.education.ie.ncca_pages
         UNION ALL
-        SELECT 'ni', 'CCEA', count(*) FROM oideachais.education.ni.ccea_pages
+        SELECT 'ni', 'CCEA', count(*) FROM cianfhoghlaim.education.ni.ccea_pages
         UNION ALL
-        SELECT 'en', 'DfE',  count(*) FROM oideachais.education.en.dfe_statistics
+        SELECT 'en', 'DfE',  count(*) FROM cianfhoghlaim.education.en.dfe_statistics
         UNION ALL
-        SELECT 'sct', 'CfE', count(*) FROM oideachais.education.sct.cfe_pages
+        SELECT 'sct', 'CfE', count(*) FROM cianfhoghlaim.education.sct.cfe_pages
         UNION ALL
-        SELECT 'wls', 'CfW', count(*) FROM oideachais.education.wls.cfw_pages
+        SELECT 'wls', 'CfW', count(*) FROM cianfhoghlaim.education.wls.cfw_pages
         """
     ).fetchall()
     return (rows,)

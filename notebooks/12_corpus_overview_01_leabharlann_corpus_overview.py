@@ -23,7 +23,7 @@ Five visualisations:
 - **Panel D** — per-year upload trend (line)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.leabharlann.documents`` (the canonical
+Data source: ``md:cianfhoghlaim.leabharlann.documents`` (the canonical
 corpus table populated by the ``leabharlann_extract`` DLT source).
 Falls back to a synthetic 6-subdir × 36-doc corpus when the lakehouse
 is unreachable.
@@ -52,7 +52,7 @@ def _intro():
         (``ollscoil_na_gaillimhe/``, ``gaeilge/``, ``mata/``,
         ``aigne/``, ``gemini_deep_research/``, ``zotero/``).
 
-        Live data: ``md:oideachais.leabharlann.documents``. Falls back
+        Live data: ``md:cianfhoghlaim.leabharlann.documents``. Falls back
         to a 6×36 synthetic corpus when the lakehouse is unreachable.
 
         ---
@@ -131,7 +131,7 @@ def _data_loading(con, LEABHARLANN_SUBDIRS, engine_label, mo, pd):
     if engine_label == "md:oideachais":
         try:
             corpus = con.execute(
-                "SELECT * FROM oideachais.leabharlann.documents"
+                "SELECT * FROM cianfhoghlaim.leabharlann.documents"
             ).fetchdf()
         except Exception:
             corpus = pd.DataFrame()

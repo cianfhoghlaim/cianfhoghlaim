@@ -27,8 +27,8 @@ Five visualisations:
 - **Panel E** — orphan detection (books with no matching LC topic)
   flag list
 
-Data source: ``md:oideachais.leabharlann.books`` ↔
-``md:oideachais.leaving_cert.<subject>_topics``. Falls back to a
+Data source: ``md:cianfhoghlaim.leabharlann.books`` ↔
+``md:cianfhoghlaim.leaving_cert.<subject>_topics``. Falls back to a
 synthetic cross-archive join (12 books × 6 subjects × 3 levels
 = ~216 candidate edges) when the lakehouse is unreachable.
 
@@ -122,8 +122,8 @@ def _data_loading(con, BIEP_SUBJECTS, engine_label, mo, pd):
                     """
                     SELECT b.book_id, b.title, t.subject, t.level, t.language,
                            (1.0 - b.topic_embedding <-> t.topic_embedding) AS score
-                    FROM oideachais.leabharlann.books b
-                    JOIN oideachais.leaving_cert.chemistry_topics t
+                    FROM cianfhoghlaim.leabharlann.books b
+                    JOIN cianfhoghlaim.leaving_cert.chemistry_topics t
                       ON b.topic_embedding <-> t.topic_embedding < 0.3
                     LIMIT 5000
                     """
@@ -298,7 +298,7 @@ def _viz_orphans(mo, df):
     """Panel E — orphan detection (book count + list of orphan book_ids)."""
     if df.empty:
         mo.md(
-            "_No join edges yet — populate `oideachais.leabharlann.books` "
+            "_No join edges yet — populate `cianfhoghlaim.leabharlann.books` "
             "with embeddings first._"
         )
     else:
@@ -315,7 +315,7 @@ def _viz_orphans(mo, df):
 
             **Definition**: ``book_id`` is an *orphan* if it has
             **zero** matching LC topics in
-            ``oideachais.leaving_cert.*_topics`` within the cosine
+            ``cianfhoghlaim.leaving_cert.*_topics`` within the cosine
             similarity budget ``< 0.3``.
 
             **Current edge count**: {len(df)}

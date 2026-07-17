@@ -55,7 +55,7 @@ def _intro_cell():
         4. **court_rules** — Rules of Court (PDF library)
         5. **legal_aid** — Legal Aid Board (Ireland)
 
-        All 5 sources are read from `oideachais.law.ie.*` DuckLake
+        All 5 sources are read from `cianfhoghlaim.law.ie.*` DuckLake
         tables (MotherDuck `md:oideachais` or local DuckDB fallback).
         """
     )
@@ -98,14 +98,14 @@ def _row_count_cell(mo, con, engine_label):
     # The 7 Pick-8 IE/law DuckLake tables (L2-mirrored BAML extractions).
     # Coalesce to 0 rows when the table is missing (local fallback path).
     tables: list[tuple[str, str]] = [
-        ("piab",         "oideachais.law.ie.piab_pages"),
-        ("piab",         "oideachais.law.ie.piab_forms"),
-        ("courts",       "oideachais.law.ie.courts_forms"),
-        ("courts",       "oideachais.law.ie.court_fees"),
-        ("judgements",   "oideachais.law.ie.judgements"),
-        ("court_rules",  "oideachais.law.ie.court_rules"),
-        ("legal_aid",    "oideachais.law.ie.legal_aid_pages"),
-        ("legal_aid",    "oideachais.law.ie.legal_aid_forms"),
+        ("piab",         "cianfhoghlaim.law.ie.piab_pages"),
+        ("piab",         "cianfhoghlaim.law.ie.piab_forms"),
+        ("courts",       "cianfhoghlaim.law.ie.courts_forms"),
+        ("courts",       "cianfhoghlaim.law.ie.court_fees"),
+        ("judgements",   "cianfhoghlaim.law.ie.judgements"),
+        ("court_rules",  "cianfhoghlaim.law.ie.court_rules"),
+        ("legal_aid",    "cianfhoghlaim.law.ie.legal_aid_pages"),
+        ("legal_aid",    "cianfhoghlaim.law.ie.legal_aid_forms"),
     ]
 
     rows: list[dict] = []
@@ -190,15 +190,15 @@ def _statute_linkage_cell(mo, con, engine_label):
         `related_statutes` / `statutory_basis` arrays extracted by the
         6 BAML functions in `cianfhoghlaim/baml/education/law/*.baml` are
         joined to the canonical
-        `oideachais.education.ie.irish_statute_book.acts` table.
+        `cianfhoghlaim.education.ie.irish_statute_book.acts` table.
         """
     )
 
     # The cross-source statute linkage view is the L2 asset
     # `ie_law_statute_linkage` (defined in
     # cianfhoghlaim/orchestration/defs/2_materials/ie_law/assets.py).
-    # It writes to oideachais.law.ie.ie_law_statute_links.
-    _linkage_table = "oideachais.law.ie.ie_law_statute_links"
+    # It writes to cianfhoghlaim.law.ie.ie_law_statute_links.
+    _linkage_table = "cianfhoghlaim.law.ie.ie_law_statute_links"
     try:
         _n = con.execute(f"SELECT COUNT(*) FROM {_linkage_table}").fetchone()[0]
         _top_statutes = con.execute(

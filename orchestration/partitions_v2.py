@@ -270,3 +270,52 @@ Benefits:
 4. Cleaner Dagster UI (4 partitions vs 208)
 5. No partition conflicts between assets
 """
+
+
+# ============================================================================
+# BIEP v3 2-axis scope × year partition
+# (Per the 2026-08-03-biep-v3-orchestration-components-partitions-sensors-v1 change.)
+# ============================================================================
+
+
+def scope_partition_key(
+    jurisdiction: str,
+    stage: str,
+    subject_slug: str,
+    board: str = "none",
+    qualification_level: str | None = None,
+    language: str = "en",
+) -> str:
+    """Build the canonical `scope` key from the per-jurisdiction fields.
+
+    Canonical shape: `<jurisdiction>__<stage>__<subject_slug>__<board>__<qualification_level>__<language>`
+    """
+    return f"{jurisdiction}__{stage}__{subject_slug}__{board}__{qualification_level or 'untiered'}__{language}"
+
+
+# Static partition set for `year` (4-digit year)
+year_partitions = StaticPartitionsDefinition(
+    [str(y) for y in range(2017, 2028)] + ["undated"]
+)
+
+
+# Generic 2-axis `scope × year` partition (used by all 5 BIEP v3
+# jurisdiction pipelines)
+biiep_v3_scope_year_partition = MultiPartitionsDefinition(
+    partitions={
+        "scope": DynamicPartitionsDefinition(name="cianhoghlaim_scope"),
+        "year": year_partitions,
+    }
+)
+
+
+__all__ = [
+    "scope_partition_key",
+    "year_partitions",
+    "biiep_v3_scope_year_partition",
+    "ireland_curriculum_partitions",
+    "ireland_curriculum_with_language",
+    "valid_subjects",
+    "ireland_cycle_partitions",
+    "ireland_language_partitions",
+]

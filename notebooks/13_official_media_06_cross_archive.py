@@ -106,8 +106,8 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 SELECT om.ig_username, om.category, ncca.topic,
                        ncca.subject, ncca.level, ncca.language,
                        ncca.similarity
-                FROM oideachais.official_media.resolved_sources om
-                JOIN oideachais.leaving_cert.english_topics ncca
+                FROM cianfhoghlaim.official_media.resolved_sources om
+                JOIN cianfhoghlaim.leaving_cert.english_topics ncca
                   ON ncca.topic_embedding <-> om.topic_embedding < 0.3
                 ORDER BY ncca.similarity ASC
                 LIMIT 2000

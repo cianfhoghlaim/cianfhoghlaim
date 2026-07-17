@@ -25,7 +25,7 @@ Five visualisations:
 - **Panel D** — per-subject match-confidence distribution (violin)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.official_media.subject_match`` (the
+Data source: ``md:cianfhoghlaim.official_media.subject_match`` (the
 canonical subject↔profile match table). Falls back to a synthetic
 6-subject × 5-resolver match matrix when the lakehouse is
 unreachable.
@@ -55,7 +55,7 @@ def _intro():
         + Mastodon + Bluesky authoritative-resolution surface — per
         ``dlt/official_media/source_resolver.py``).
 
-        Reads the ``oideachais.official_media.subject_match`` cognify
+        Reads the ``cianfhoghlaim.official_media.subject_match`` cognify
         edges.
 
         ---
@@ -129,7 +129,7 @@ def _data_loading(BIEP_SUBJECTS, RESOLVERS, con, engine_label, mo, np, pd):
     if engine_label == "md:oideachais":
         try:
             edges = con.execute(
-                "SELECT * FROM oideachais.official_media.subject_match"
+                "SELECT * FROM cianfhoghlaim.official_media.subject_match"
             ).fetchdf()
         except Exception:
             edges = pd.DataFrame()

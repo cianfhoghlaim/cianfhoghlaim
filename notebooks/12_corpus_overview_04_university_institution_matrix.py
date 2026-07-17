@@ -23,7 +23,7 @@ Five visualisations:
 - **Panel D** — NUI constituent membership (bar chart)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.hei.institutions`` (populated by the
+Data source: ``md:cianfhoghlaim.hei.institutions`` (populated by the
 ``hei_university`` DLT source from ``dlt/british_isles/ireland/education/hei.json``).
 Falls back to the canonical 13-institution synthetic catalogue when
 the lakehouse is unreachable.
@@ -51,7 +51,7 @@ def _intro():
         tertiary** extraction — the 8 universities + 5 TUs + 3
         colleges loaded from the canonical ``hei.json`` HEI catalogue.
 
-        Live data: ``md:oideachais.hei.institutions`` (populated by
+        Live data: ``md:cianfhoghlaim.hei.institutions`` (populated by
         the ``hei_university`` DLT source).
 
         ---
@@ -144,7 +144,7 @@ def _data_loading(HEI_CATALOG, con, engine_label, mo, pd):
     if engine_label == "md:oideachais":
         try:
             institutions = con.execute(
-                "SELECT * FROM oideachais.hei.institutions"
+                "SELECT * FROM cianfhoghlaim.hei.institutions"
             ).fetchdf()
         except Exception:
             institutions = pd.DataFrame()

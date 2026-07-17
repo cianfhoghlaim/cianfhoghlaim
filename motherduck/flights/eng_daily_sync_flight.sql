@@ -8,7 +8,7 @@
 
 CREATE FLIGHT eng_daily_sync_flight
 SCHEDULE '0 3 * * *'  -- 03:00 UTC daily
-DATABASE md_oideachais
+DATABASE md:cianfhoghlaim
 AS
 
 WITH new_pdfs AS (

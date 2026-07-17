@@ -11,7 +11,7 @@
 
 Joins the academic-history manifest rows (the user's personal
 artefacts) to the official UoG module descriptors
-(`oideachais.education.ie.university_modules`).
+(`cianfhoghlaim.education.ie.university_modules`).
 
 Companion to
 `openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/`.

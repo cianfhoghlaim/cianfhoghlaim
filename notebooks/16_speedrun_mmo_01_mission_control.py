@@ -243,7 +243,7 @@ def _(alt, dlt, mo, pd):
             df_pages = con.execute(
                 """
                 SELECT cycle, subject, language, count(*) AS pages
-                FROM oideachais.curriculum.curriculum_pages
+                FROM cianfhoghlaim.curriculum.curriculum_pages
                 GROUP BY cycle, subject, language
                 ORDER BY pages DESC
                 """
@@ -251,7 +251,7 @@ def _(alt, dlt, mo, pd):
             df_pdfs = con.execute(
                 """
                 SELECT status, count(*) AS n
-                FROM oideachais.curriculum.pdf_downloads
+                FROM cianfhoghlaim.curriculum.pdf_downloads
                 GROUP BY status
                 ORDER BY n DESC
                 """
@@ -309,7 +309,7 @@ def _(alt, dlt, mo, pd):
             df_exams = con.execute(
                 """
                 SELECT level, subject, material_type, status, count(*) AS n
-                FROM oideachais.examinations.all_exam_materials
+                FROM cianfhoghlaim.examinations.all_exam_materials
                 GROUP BY level, subject, material_type, status
                 ORDER BY n DESC
                 """
@@ -317,7 +317,7 @@ def _(alt, dlt, mo, pd):
             df_urls = con.execute(
                 """
                 SELECT level, subject, count(*) AS urls
-                FROM oideachais.examinations.all_exam_materials
+                FROM cianfhoghlaim.examinations.all_exam_materials
                 WHERE pdf_url IS NOT NULL AND pdf_url != ''
                 GROUP BY level, subject
                 ORDER BY urls DESC

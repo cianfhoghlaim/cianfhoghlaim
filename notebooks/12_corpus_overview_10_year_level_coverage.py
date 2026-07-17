@@ -21,8 +21,8 @@ Five visualisations:
 - **Panel D** — per-year bilingual coverage (line chart, EN vs GA)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.education.stage_topics`` + the
-``md:oideachais.hei.institutions`` table (joined via stage_id +
+Data source: ``md:cianfhoghlaim.education.stage_topics`` + the
+``md:cianfhoghlaim.hei.institutions`` table (joined via stage_id +
 academic_year). Falls back to a synthetic 5×9 stage × year matrix +
 5×9 stage × HEI matrix when the lakehouse is unreachable.
 
@@ -49,8 +49,8 @@ def _intro():
         pipeline. Shows how the 9-year window (2017-2026) intersects
         with the 5 stages, the 3 LC levels, and the 13 HEIs.
 
-        Live data: ``md:oideachais.education.stage_topics`` +
-        ``md:oideachais.hei.institutions`` (joined via stage_id +
+        Live data: ``md:cianfhoghlaim.education.stage_topics`` +
+        ``md:cianfhoghlaim.hei.institutions`` (joined via stage_id +
         academic_year).
 
         ---
@@ -136,7 +136,7 @@ def _data_loading(
     if engine_label == "md:oideachais":
         try:
             coverage = con.execute(
-                "SELECT * FROM oideachais.education.year_coverage"
+                "SELECT * FROM cianfhoghlaim.education.year_coverage"
             ).fetchdf()
         except Exception:
             coverage = pd.DataFrame()

@@ -35,7 +35,7 @@ The 7 tabs render side-by-side:
   7 per-subject views; `mo.ui.multiselect` for the filter UI.
 
 TABLES:
-  oideachais.lc.<subject>.<level>_<lang>  (per-subject LanceDB tables)
+  cianfhoghlaim.lc.<subject>.<level>_<lang>  (per-subject LanceDB tables)
 
 Reference: openspec/changes/2026-07-25-flatten-notebooks-v1/
 """
@@ -88,7 +88,7 @@ def _ibis_first_conn(mo):
     """The ibis-first contract per the BIEP v2 spec + 2026-07-25 refactor."""
     from notebooks._shared.db import connect_md
     conn = connect_md()
-    lance_table_suffix = "oideachais.lc.<subject>.<level>_<lang>"
+    lance_table_suffix = "cianfhoghlaim.lc.<subject>.<level>_<lang>"
     mo.md(
         f"✓ ibis-first wired — per-subject LanceDB tables: `{lance_table_suffix}`"
     )
@@ -164,7 +164,7 @@ def _en_vs_ga_tab(conn, subject_filter, level_filter, language_filter):
             SUM(CASE WHEN language = 'ga' THEN n ELSE 0 END) AS ga_count,
             SUM(CASE WHEN language = 'en' THEN n ELSE 0 END) -
                 SUM(CASE WHEN language = 'ga' THEN n ELSE 0 END) AS diff
-        FROM oideachais.lc._all_subjects_topics
+        FROM cianfhoghlaim.lc._all_subjects_topics
         WHERE subject IN %(subjects)s
           AND level IN %(levels)s
         GROUP BY topic
@@ -187,7 +187,7 @@ def _lc_query(conn, subject, subject_filter, level_filter, language_filter):
     return conn.sql(
         """
         SELECT level, language, topic, COUNT(*) AS n
-        FROM oideachais.lc.{subject}_topics
+        FROM cianfhoghlaim.lc.{subject}_topics
         WHERE subject = %(subject)s
           AND level IN %(levels)s
           AND language IN %(languages)s

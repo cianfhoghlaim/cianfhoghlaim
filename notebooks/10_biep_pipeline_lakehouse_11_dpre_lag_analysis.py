@@ -81,7 +81,7 @@ def _controls(mo):
 def _lag_query(con, pd, window_days):
     """Per-OCR-model materialization lag (s) over a rolling window.
 
-    Real query: aggregates the `oideachais.ocr_materialization_lags`
+    Real query: aggregates the `cianfhoghlaim.ocr_materialization_lags`
     heartbeat table written by the existing `oideachais/dagster_defs/`
     assets.
 
@@ -95,7 +95,7 @@ def _lag_query(con, pd, window_days):
                 date_trunc('day', materialization_time) AS day,
                 ocr_model,
                 AVG(EXTRACT(EPOCH FROM (materialization_time - partition_ts))) AS avg_lag_s
-            FROM oideachais.ocr_materialization_lags
+            FROM cianfhoghlaim.ocr_materialization_lags
             WHERE materialization_time > CURRENT_TIMESTAMP - INTERVAL '{window_days.value} days'
             GROUP BY ALL
             """

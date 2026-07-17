@@ -18,13 +18,13 @@ Per the 2026-07-23-biep-v2-marimo-portal-v1 change.
 
 The 4 BIEP v2 jurisdictions + the canonical LanceDB tables:
 
-  🇮🇪 Leaving Cert (LC):  oideachais.lc.<subject>.<level>_<lang>
+  🇮🇪 Leaving Cert (LC):  cianfhoghlaim.lc.<subject>.<level>_<lang>
                            (6 subjects × 2 languages × 3 levels = 18 tables)
-  🇮🇪 Junior Cycle (JC):  oideachais.jc.<subject>.<year>_<lang>
+  🇮🇪 Junior Cycle (JC):  cianfhoghlaim.jc.<subject>.<year>_<lang>
                            (18 subjects × 2 languages × 3 years = 108 tables)
-  🇬🇧 A-Level (England):   oideachais.england.<board>.<subject>.<level>
+  🇬🇧 A-Level (England):   cianfhoghlaim.england.<board>.<subject>.<level>
                            (3 boards × 9 subjects × 2 levels = 54 tables)
-  🇬🇧 GCSE (England):     oideachais.england.<board>.<subject>.<level>
+  🇬🇧 GCSE (England):     cianfhoghlaim.england.<board>.<subject>.<level>
                            (3 boards × 9 subjects × 2 levels = 54 tables)
 
 Cross-jurisdiction filter UI: subject / level / language / year / awarding body / curriculum region.
@@ -121,7 +121,7 @@ def _cross_jurisdiction_table(conn, jurisdiction_filter, subject_filter, level_f
     cohort_table = conn.sql(
         """
         SELECT jurisdiction, board, subject, level, language, COUNT(*) AS chunk_count
-        FROM oideachais.education.british_isles._biep_v2_cohort
+        FROM cianfhoghlaim.education.british_isles._biep_v2_cohort
         WHERE jurisdiction IN %(jurisdictions)s
           AND subject IN %(subjects)s
         GROUP BY jurisdiction, board, subject, level, language

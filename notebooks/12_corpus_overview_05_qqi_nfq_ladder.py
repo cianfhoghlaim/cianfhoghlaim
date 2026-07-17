@@ -24,7 +24,7 @@ Five visualisations:
 - **Panel D** — per-HEI ladder coverage (stacked by QQI award)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.hei.qqi_awards`` (populated from the
+Data source: ``md:cianfhoghlaim.hei.qqi_awards`` (populated from the
 ``qqi_awards`` array in ``hei.json``). Falls back to a synthetic
 8-QQI × 13-HEI ladder matrix when the lakehouse is unreachable.
 
@@ -54,7 +54,7 @@ def _intro():
         Business Studies, Social Care, Early Childhood Care, etc.)
         ladder into the 13 institutions.
 
-        Live data: ``md:oideachais.hei.qqi_awards`` + the
+        Live data: ``md:cianfhoghlaim.hei.qqi_awards`` + the
         ``qi_qqi_ladder`` Cognee edges.
 
         ---
@@ -144,7 +144,7 @@ def _data_loading(HEI_CODES, QQI_AWARDS, con, engine_label, mo, pd):
     if engine_label == "md:oideachais":
         try:
             ladder = con.execute(
-                "SELECT * FROM oideachais.hei.qqi_awards"
+                "SELECT * FROM cianfhoghlaim.hei.qqi_awards"
             ).fetchdf()
         except Exception:
             ladder = pd.DataFrame()

@@ -27,7 +27,7 @@ Renders:
 - **Panel E** — live ``b.ExtractCurriculumSyllabus`` invocation on
   a sample syllabus + typed Pydantic dump
 
-Data source: ``md:oideachais.mlflow.runs`` (where MLflow Traces
+Data source: ``md:cianfhoghlaim.mlflow.runs`` (where MLflow Traces
 emitted by the BAML client flow during the BIEP ingestion).
 Falls back to a synthetic 30-call extraction log (5 functions ×
 6 subjects; deterministic latencies from sha-1 hash) when the
@@ -59,7 +59,7 @@ def _intro():
         latency distribution, success rate, retry counts, and a live
         BAML invocation against a sample syllabus.
 
-        Reads from ``md:oideachais.mlflow.runs`` (where the BAML
+        Reads from ``md:cianfhoghlaim.mlflow.runs`` (where the BAML
         client emits MLflow Traces during BIEP ingestion).
 
         ---
@@ -127,7 +127,7 @@ def _data_loading(con, engine_label, mo, pd, hashlib, dt, BIEP_SUBJECTS):
                 """
                 SELECT run_id, function_name, subject, started_at,
                        latency_ms, status, retries
-                FROM oideachais.mlflow.runs
+                FROM cianfhoghlaim.mlflow.runs
                 WHERE function_name LIKE 'Extract%' OR function_name LIKE 'Generate%'
                 ORDER BY started_at DESC
                 LIMIT 2000
@@ -135,7 +135,7 @@ def _data_loading(con, engine_label, mo, pd, hashlib, dt, BIEP_SUBJECTS):
             ).fetchdf()
             if not df.empty:
                 rows = df.to_dict("records")
-                src = "md:oideachais.mlflow.runs"
+                src = "md:cianfhoghlaim.mlflow.runs"
         except Exception as exc:
             rows = []
             src = f"md error: {exc!s:.60s}"

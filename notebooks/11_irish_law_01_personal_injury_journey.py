@@ -21,10 +21,10 @@ PIAB → High Court flow chart for Irish personal injury claims.
                    → related Irish Statute Book section (unified query)
 
 Lakehouse tables consumed:
-  - oideachais.law.ie.piab_pages
-  - oideachais.law.ie.piab_forms
-  - oideachais.law.ie.courts_forms
-  - oideachais.law.ie.citizensinfo_articles
+  - cianfhoghlaim.law.ie.piab_pages
+  - cianfhoghlaim.law.ie.piab_forms
+  - cianfhoghlaim.law.ie.courts_forms
+  - cianfhoghlaim.law.ie.citizensinfo_articles
 
 Run:
   cd cianfhoghlaim && uv run marimo edit notebooks/12_ireland_law/01_personal_injury_journey.py
@@ -58,7 +58,7 @@ def _setup():
         combining the Personal Injuries Assessment Board (PIAB) process
         pages, the Courts Service forms catalogue, the Citizens
         Information rights articles, and the relevant Irish Statute Book
-        sections — all from the `oideachais.law.ie.*` DuckLake tables.
+        sections — all from the `cianfhoghlaim.law.ie.*` DuckLake tables.
         """
     )
     return (con, mo)
@@ -72,7 +72,7 @@ def _piab_process_steps(con):
             """
             SELECT url, title, page_kind, process_steps,
                    statutory_deadlines, permission_to_sue, summary
-            FROM oideachais.law.ie.piab_pages
+            FROM cianfhoghlaim.law.ie.piab_pages
             ORDER BY page_kind, title
             LIMIT 50
             """
@@ -103,7 +103,7 @@ def _piab_forms(con):
             """
             SELECT url, form_number, form_title, purpose,
                    fee_eur, downloadable_url, fillable_fields
-            FROM oideachais.law.ie.piab_forms
+            FROM cianfhoghlaim.law.ie.piab_forms
             ORDER BY form_number
             LIMIT 50
             """
@@ -134,7 +134,7 @@ def _high_court_forms(con):
             """
             SELECT form_number, form_title, category, purpose,
                    fee_eur, fillable_fields, downloadable_url
-            FROM oideachais.law.ie.courts_forms
+            FROM cianfhoghlaim.law.ie.courts_forms
             WHERE court_level = 'HIGH'
               AND category = 'personal_injury'
             ORDER BY form_number
@@ -183,7 +183,7 @@ def _deadlines(mo):
         _Always verify with a solicitor — these are the canonical statutory
         anchors extracted from the PIAB process pages and the relevant
         ISB sections. The cells above show the live data from
-        `oideachais.law.ie.piab_pages`._
+        `cianfhoghlaim.law.ie.piab_pages`._
         """
     )
 
@@ -201,8 +201,8 @@ def _cross_source(con):
               c.title      AS cib_title,
               c.summary    AS cib_summary,
               c.appeals    AS cib_appeals
-            FROM oideachais.law.ie.piab_pages p
-            JOIN oideachais.law.ie.citizensinfo_articles c
+            FROM cianfhoghlaim.law.ie.piab_pages p
+            JOIN cianfhoghlaim.law.ie.citizensinfo_articles c
               ON c.category = 'JUSTICE'
              AND (LOWER(c.title) LIKE '%personal injury%'
                   OR LOWER(c.summary) LIKE '%injuries board%'
