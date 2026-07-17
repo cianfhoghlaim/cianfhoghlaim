@@ -23,14 +23,14 @@ from typing import Any
 __all__ = ["connect_md", "connect_local", "lakehouse_uri"]
 
 
-LAKEHOUSE_URI_DEFAULT = "md:oideachais"
+LAKEHOUSE_URI_DEFAULT = "md:cianfhoghlaim"
 """The canonical MotherDuck + DuckLake lakehouse alias."""
 
 
 def lakehouse_uri() -> str:
     """Return the canonical lakehouse URI (env override supported).
 
-    Honors ``CIANFHOGHLAIM_LAKEHOUSE_DUCKDB``; defaults to ``md:oideachais``.
+    Honors ``CIANFHOGHLAIM_LAKEHOUSE_DUCKDB``; defaults to ``md:cianfhoghlaim``.
     """
     return os.environ.get(
         "CIANFHOGHLAIM_LAKEHOUSE_DUCKDB",

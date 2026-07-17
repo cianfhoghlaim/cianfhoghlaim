@@ -110,3 +110,20 @@ flights:
       - ga
       - irish
       - daily_sync
+
+- name: ireland_full_coverage_flight
+  module: cianfhoghlaim.motherduck.flights.ireland_full_coverage_flight
+  callable: build_ireland_full_coverage_flight
+  cron: "0 2 * * *"
+- name: england_full_coverage_flight
+  module: cianfhoghlaim.motherduck.flights.england_full_coverage_flight
+  callable: build_england_full_coverage_flight
+  cron: "0 3 * * *"
+- name: sct_wls_ni_flight
+  module: cianfhoghlaim.motherduck.flights.sct_wls_ni_flight
+  callable: build_sct_wls_ni_flight
+  cron: "0 4 * * *"
+- name: crown_dependencies_flight
+  module: cianfhoghlaim.motherduck.flights.crown_dependencies_flight
+  callable: build_crown_dependencies_flight
+  cron: "30 4 * * *"
