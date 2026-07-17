@@ -96,7 +96,7 @@ def _():
                 db_label = "md:oideachais (query failed)"
     else:
         db_path = os.environ.get(
-            "OIDEACHAIS_DUCKDB", "/tmp/oideachais.duckdb"
+            "OIDEACHAIS_DUCKDB", "/tmp/cianfhoghlaim.duckdb"
         )
         demo_db = Path(db_path)
         if demo_db.exists():

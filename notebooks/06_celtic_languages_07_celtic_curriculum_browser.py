@@ -46,8 +46,8 @@ def _intro(mo):
         ## *Curaclam na dTeangacha Ceilteacha*
 
         **Source data**: 6 Celtic-language curriculum DuckLake tables
-        (`oideachais.celtic.curriculum.{irish,scottish_gaelic,welsh,breton,manx,cornish}`)
-        + `oideachais.celtic.curriculum_chunks` (LanceDB).
+        (`cianfhoghlaim.celtic.curriculum.{irish,scottish_gaelic,welsh,breton,manx,cornish}`)
+        + `cianfhoghlaim.celtic.curriculum_chunks` (LanceDB).
 
         LlamaSwap routing:
         - Irish → `uccix-mistral-24b` (UCCIX)
@@ -66,7 +66,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb"), read_only=True)
+        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
     return (con, use_md)
 
 
@@ -79,12 +79,12 @@ def _panel_1_per_lang(alt, con, mo, pd):
                COUNT(DISTINCT education_level) AS n_levels,
                COUNT(DISTINCT curriculum_body) AS n_bodies
         FROM (
-            SELECT 'irish' AS language, education_level, curriculum_body FROM oideachais.celtic.curriculum.irish
-            UNION ALL SELECT 'scottish_gaelic', education_level, curriculum_body FROM oideachais.celtic.curriculum.scottish_gaelic
-            UNION ALL SELECT 'welsh', education_level, curriculum_body FROM oideachais.celtic.curriculum.welsh
-            UNION ALL SELECT 'breton', education_level, curriculum_body FROM oideachais.celtic.curriculum.breton
-            UNION ALL SELECT 'manx', education_level, curriculum_body FROM oideachais.celtic.curriculum.manx
-            UNION ALL SELECT 'cornish', education_level, curriculum_body FROM oideachais.celtic.curriculum.cornish
+            SELECT 'irish' AS language, education_level, curriculum_body FROM cianfhoghlaim.celtic.curriculum.irish
+            UNION ALL SELECT 'scottish_gaelic', education_level, curriculum_body FROM cianfhoghlaim.celtic.curriculum.scottish_gaelic
+            UNION ALL SELECT 'welsh', education_level, curriculum_body FROM cianfhoghlaim.celtic.curriculum.welsh
+            UNION ALL SELECT 'breton', education_level, curriculum_body FROM cianfhoghlaim.celtic.curriculum.breton
+            UNION ALL SELECT 'manx', education_level, curriculum_body FROM cianfhoghlaim.celtic.curriculum.manx
+            UNION ALL SELECT 'cornish', education_level, curriculum_body FROM cianfhoghlaim.celtic.curriculum.cornish
         )
         GROUP BY language
         ORDER BY n_specs DESC
@@ -102,12 +102,12 @@ def _panel_2_level(alt, con, mo, pd):
         """
         SELECT education_level, language, COUNT(*) AS n_specs
         FROM (
-            SELECT 'irish' AS language, education_level FROM oideachais.celtic.curriculum.irish
-            UNION ALL SELECT 'scottish_gaelic', education_level FROM oideachais.celtic.curriculum.scottish_gaelic
-            UNION ALL SELECT 'welsh', education_level FROM oideachais.celtic.curriculum.welsh
-            UNION ALL SELECT 'breton', education_level FROM oideachais.celtic.curriculum.breton
-            UNION ALL SELECT 'manx', education_level FROM oideachais.celtic.curriculum.manx
-            UNION ALL SELECT 'cornish', education_level FROM oideachais.celtic.curriculum.cornish
+            SELECT 'irish' AS language, education_level FROM cianfhoghlaim.celtic.curriculum.irish
+            UNION ALL SELECT 'scottish_gaelic', education_level FROM cianfhoghlaim.celtic.curriculum.scottish_gaelic
+            UNION ALL SELECT 'welsh', education_level FROM cianfhoghlaim.celtic.curriculum.welsh
+            UNION ALL SELECT 'breton', education_level FROM cianfhoghlaim.celtic.curriculum.breton
+            UNION ALL SELECT 'manx', education_level FROM cianfhoghlaim.celtic.curriculum.manx
+            UNION ALL SELECT 'cornish', education_level FROM cianfhoghlaim.celtic.curriculum.cornish
         )
         GROUP BY education_level, language
         ORDER BY n_specs DESC
@@ -125,12 +125,12 @@ def _panel_3_body(alt, con, mo, pd):
         """
         SELECT curriculum_body, COUNT(*) AS n_specs
         FROM (
-            SELECT curriculum_body FROM oideachais.celtic.curriculum.irish
-            UNION ALL SELECT curriculum_body FROM oideachais.celtic.curriculum.scottish_gaelic
-            UNION ALL SELECT curriculum_body FROM oideachais.celtic.curriculum.welsh
-            UNION ALL SELECT curriculum_body FROM oideachais.celtic.curriculum.breton
-            UNION ALL SELECT curriculum_body FROM oideachais.celtic.curriculum.manx
-            UNION ALL SELECT curriculum_body FROM oideachais.celtic.curriculum.cornish
+            SELECT curriculum_body FROM cianfhoghlaim.celtic.curriculum.irish
+            UNION ALL SELECT curriculum_body FROM cianfhoghlaim.celtic.curriculum.scottish_gaelic
+            UNION ALL SELECT curriculum_body FROM cianfhoghlaim.celtic.curriculum.welsh
+            UNION ALL SELECT curriculum_body FROM cianfhoghlaim.celtic.curriculum.breton
+            UNION ALL SELECT curriculum_body FROM cianfhoghlaim.celtic.curriculum.manx
+            UNION ALL SELECT curriculum_body FROM cianfhoghlaim.celtic.curriculum.cornish
         )
         WHERE curriculum_body IS NOT NULL
         GROUP BY curriculum_body
@@ -149,12 +149,12 @@ def _panel_4_cross_lang(alt, con, mo, pd):
         """
         SELECT framework_name, language, education_level
         FROM (
-            SELECT framework_name, 'irish' AS language, education_level FROM oideachais.celtic.curriculum.irish
-            UNION ALL SELECT framework_name, 'scottish_gaelic', education_level FROM oideachais.celtic.curriculum.scottish_gaelic
-            UNION ALL SELECT framework_name, 'welsh', education_level FROM oideachais.celtic.curriculum.welsh
-            UNION ALL SELECT framework_name, 'breton', education_level FROM oideachais.celtic.curriculum.breton
-            UNION ALL SELECT framework_name, 'manx', education_level FROM oideachais.celtic.curriculum.manx
-            UNION ALL SELECT framework_name, 'cornish', education_level FROM oideachais.celtic.curriculum.cornish
+            SELECT framework_name, 'irish' AS language, education_level FROM cianfhoghlaim.celtic.curriculum.irish
+            UNION ALL SELECT framework_name, 'scottish_gaelic', education_level FROM cianfhoghlaim.celtic.curriculum.scottish_gaelic
+            UNION ALL SELECT framework_name, 'welsh', education_level FROM cianfhoghlaim.celtic.curriculum.welsh
+            UNION ALL SELECT framework_name, 'breton', education_level FROM cianfhoghlaim.celtic.curriculum.breton
+            UNION ALL SELECT framework_name, 'manx', education_level FROM cianfhoghlaim.celtic.curriculum.manx
+            UNION ALL SELECT framework_name, 'cornish', education_level FROM cianfhoghlaim.celtic.curriculum.cornish
         )
         WHERE framework_name IS NOT NULL
         ORDER BY framework_name, language
@@ -170,12 +170,12 @@ def _panel_5_summary(alt, con, mo, pd):
     mo.md("## 5. Summary stats")
     rows = con.execute(
         """
-        SELECT 'irish' AS table_name, COUNT(*) AS n FROM oideachais.celtic.curriculum.irish
-        UNION ALL SELECT 'scottish_gaelic', COUNT(*) FROM oideachais.celtic.curriculum.scottish_gaelic
-        UNION ALL SELECT 'welsh', COUNT(*) FROM oideachais.celtic.curriculum.welsh
-        UNION ALL SELECT 'breton', COUNT(*) FROM oideachais.celtic.curriculum.breton
-        UNION ALL SELECT 'manx', COUNT(*) FROM oideachais.celtic.curriculum.manx
-        UNION ALL SELECT 'cornish', COUNT(*) FROM oideachais.celtic.curriculum.cornish
+        SELECT 'irish' AS table_name, COUNT(*) AS n FROM cianfhoghlaim.celtic.curriculum.irish
+        UNION ALL SELECT 'scottish_gaelic', COUNT(*) FROM cianfhoghlaim.celtic.curriculum.scottish_gaelic
+        UNION ALL SELECT 'welsh', COUNT(*) FROM cianfhoghlaim.celtic.curriculum.welsh
+        UNION ALL SELECT 'breton', COUNT(*) FROM cianfhoghlaim.celtic.curriculum.breton
+        UNION ALL SELECT 'manx', COUNT(*) FROM cianfhoghlaim.celtic.curriculum.manx
+        UNION ALL SELECT 'cornish', COUNT(*) FROM cianfhoghlaim.celtic.curriculum.cornish
         """
     ).fetchall()
     df = pd.DataFrame(rows, columns=["table_name", "n"])

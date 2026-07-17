@@ -31,7 +31,7 @@ side-by-side the 4-path OCR/VLM ensemble output (Change 3):
 8. Langfuse trace link
 
 Reads from the per-jurisdiction DuckLake namespace:
-    oideachais.education.british_isles.<jurisdiction>.<scope>.<subject>.*
+    cianfhoghlaim.education.british_isles.<jurisdiction>.<scope>.<subject>.*
     (baml_canonical | unstract_json | qwen3_vl | gemma4 | voted_canonical)
 
 KCG patterns used:
@@ -109,7 +109,7 @@ def _panel_1_source_pdf(conn, record_id_filter):
     source_pdf = conn.sql(
         """
         SELECT source_pdf
-        FROM oideachais.education.british_isles.*._all_records
+        FROM cianfhoghlaim.education.british_isles.*._all_records
         WHERE record_id = %(record_id)s
         LIMIT 1
         """,
@@ -131,7 +131,7 @@ def _panel_2_docling(conn, record_id_filter):
     docling_xml = conn.sql(
         """
         SELECT doctags
-        FROM oideachais.education.british_isles.*._all_docling
+        FROM cianfhoghlaim.education.british_isles.*._all_docling
         WHERE record_id = %(record_id)s
         LIMIT 1
         """,
@@ -149,7 +149,7 @@ def _panel_3_unstract(conn, record_id_filter):
     unstract_json = conn.sql(
         """
         SELECT workflow_id, raw_response
-        FROM oideachais.education.british_isles.*._all_unstract
+        FROM cianfhoghlaim.education.british_isles.*._all_unstract
         WHERE record_id = %(record_id)s
         LIMIT 1
         """,
@@ -171,7 +171,7 @@ def _panel_4_qwen3_vl(conn, record_id_filter):
     qwen3_vl_md = conn.sql(
         """
         SELECT raw_response
-        FROM oideachais.education.british_isles.*._all_qwen3_vl
+        FROM cianfhoghlaim.education.british_isles.*._all_qwen3_vl
         WHERE record_id = %(record_id)s
         LIMIT 1
         """,
@@ -189,7 +189,7 @@ def _panel_5_gemma4(conn, record_id_filter):
     gemma4_md = conn.sql(
         """
         SELECT raw_response
-        FROM oideachais.education.british_isles.*._all_gemma4
+        FROM cianfhoghlaim.education.british_isles.*._all_gemma4
         WHERE record_id = %(record_id)s
         LIMIT 1
         """,
@@ -208,7 +208,7 @@ def _panel_6_ragas_chart(conn, record_id_filter):
     ragas_scores = conn.sql(
         """
         SELECT path, faithfulness, answer_relevance, context_precision
-        FROM oideachais.education.british_isles.*._all_ragas_scores
+        FROM cianfhoghlaim.education.british_isles.*._all_ragas_scores
         WHERE record_id = %(record_id)s
         """,
         params={"record_id": record_id_filter.value},
@@ -234,7 +234,7 @@ def _panel_7_voted_canonical(conn, record_id_filter):
     voted = conn.sql(
         """
         SELECT *
-        FROM oideachais.education.british_isles.*._all_voted_canonical
+        FROM cianfhoghlaim.education.british_isles.*._all_voted_canonical
         WHERE record_id = %(record_id)s
         LIMIT 1
         """,

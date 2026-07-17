@@ -22,8 +22,8 @@ showing the cohort-level roll-up across all 6 subjects:
 - island detection (subjects with < 10 nodes flagged for re-cognify)
 - BAML-driven ``cognee.search`` query box
 
-Data source: ``md:oideachais.cognee.<subject>_kg_nodes`` +
-``md:oideachais.cognee.<subject>_kg_edges``. Falls back to a 30-node
+Data source: ``md:cianfhoghlaim.cognee.<subject>_kg_nodes`` +
+``md:cianfhoghlaim.cognee.<subject>_kg_edges``. Falls back to a 30-node
 synthetic roll-up (5 KCs × 5 LOs per subject = 60 nodes / 24
 edges / 96 cell edges / 4 island pairs) when the lakehouse is
 unreachable.
@@ -57,8 +57,8 @@ def _intro():
         matrix, island detection, and a live `cognee.search()` query
         box.
 
-        Live data: ``md:oideachais.cognee.<subject>_kg_nodes`` +
-        ``md:oideachais.cognee.<subject>_kg_edges``.
+        Live data: ``md:cianfhoghlaim.cognee.<subject>_kg_nodes`` +
+        ``md:cianfhoghlaim.cognee.<subject>_kg_edges``.
 
         ---
         """
@@ -119,7 +119,7 @@ def _data_loading(con, BIEP_SUBJECTS, engine_label, mo, pd):
             try:
                 _n = con.execute(
                     f"SELECT node_id, node_type, label, weight "
-                    f"FROM oideachais.cognee.{_subj}_kg_nodes"
+                    f"FROM cianfhoghlaim.cognee.{_subj}_kg_nodes"
                 ).fetchdf()
                 _n["subject"] = _subj
                 rows_nodes.append(_n)
@@ -128,7 +128,7 @@ def _data_loading(con, BIEP_SUBJECTS, engine_label, mo, pd):
             try:
                 _e = con.execute(
                     f"SELECT source_id AS source, target_id AS target, edge_type, weight "
-                    f"FROM oideachais.cognee.{_subj}_kg_edges"
+                    f"FROM cianfhoghlaim.cognee.{_subj}_kg_edges"
                 ).fetchdf()
                 _e["subject"] = _subj
                 rows_edges.append(_e)

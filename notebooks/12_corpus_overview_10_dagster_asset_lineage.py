@@ -23,7 +23,7 @@ BIEP v1 + leabharlann + cognify pipelines. Reads from the Dagster
 - **Panel E** — Dagster ``SDA`` sensor health banner (live
   ``dg sensor list`` summary, simulated fallback)
 
-Data source: Dagster's run log (``md:oideachais.dagster.events``).
+Data source: Dagster's run log (``md:cianfhoghlaim.dagster.events``).
 Falls back to a synthetic 42-asset graph (7 subjects × 6 BAML
 stages — the lc5/lc6 chain from
 ``openspec/changes/2026-07-13-biep-v1-phases-6-7-unblock-v1/``)
@@ -118,14 +118,14 @@ def _data_loading(con, engine_label, mo, pd, hashlib, BIEP_SUBJECTS):
                 """
                 SELECT asset_key, asset_group, status, duration_seconds,
                        started_at, retries
-                FROM oideachais.dagster.events
+                FROM cianfhoghlaim.dagster.events
                 ORDER BY started_at DESC
                 LIMIT 5000
                 """
             ).fetchdf()
             if not df.empty:
                 rows = df.to_dict("records")
-                src = "md:oideachais.dagster.events"
+                src = "md:cianfhoghlaim.dagster.events"
         except Exception as exc:
             rows = []
             src = f"md error: {exc!s:.60s}"

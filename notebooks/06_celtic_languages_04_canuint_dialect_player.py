@@ -45,8 +45,8 @@ def _intro(mo):
         # Canuint Dialect Player
         ## *Canuint — Fuaimniú na Gaeilge*
 
-        **Source data**: `oideachais.celtic.canuint.word_alignments`
-        + `oideachais.language.canuint_chunks` (LanceDB).
+        **Source data**: `cianfhoghlaim.celtic.canuint.word_alignments`
+        + `cianfhoghlaim.language.canuint_chunks` (LanceDB).
 
         LlamaSwap routing: `qwen3-vl-8b` (audio + text multimodal).
         """
@@ -63,7 +63,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb"), read_only=True)
+        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
     return (con, use_md)
 
 
@@ -75,7 +75,7 @@ def _panel_1_province(alt, con, mo, pd):
         SELECT province, COUNT(*) AS n_words,
                COUNT(DISTINCT location_id) AS n_locations,
                AVG(duration_ms) AS avg_duration_ms
-        FROM oideachais.celtic.canuint.word_alignments
+        FROM cianfhoghlaim.celtic.canuint.word_alignments
         GROUP BY province
         ORDER BY n_words DESC
         """
@@ -91,7 +91,7 @@ def _panel_2_alignment_timeline(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT start_seconds, end_seconds, dialectal_text, standardized_text, province
-        FROM oideachais.celtic.canuint.word_alignments
+        FROM cianfhoghlaim.celtic.canuint.word_alignments
         WHERE recording_id IS NOT NULL
         ORDER BY recording_id, start_seconds
         LIMIT 200
@@ -121,7 +121,7 @@ def _panel_3_dialect_diff(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT province, dialectal_text, standardized_text, COUNT(*) AS n_occurrences
-        FROM oideachais.celtic.canuint.word_alignments
+        FROM cianfhoghlaim.celtic.canuint.word_alignments
         WHERE dialectal_text != standardized_text
         GROUP BY province, dialectal_text, standardized_text
         ORDER BY n_occurrences DESC
@@ -139,7 +139,7 @@ def _panel_4_top_50(alt, con, mo, pd):
         """
         SELECT standardized_text, COUNT(*) AS n_occurrences,
                COUNT(DISTINCT province) AS n_provinces
-        FROM oideachais.celtic.canuint.word_alignments
+        FROM cianfhoghlaim.celtic.canuint.word_alignments
         GROUP BY standardized_text
         ORDER BY n_occurrences DESC
         LIMIT 50
@@ -154,9 +154,9 @@ def _panel_5_summary(alt, con, mo, pd):
     mo.md("## 5. Summary stats")
     rows = con.execute(
         """
-        SELECT 'word_alignments' AS table_name, COUNT(*) AS n FROM oideachais.celtic.canuint.word_alignments
-        UNION ALL SELECT 'recordings', COUNT(*) FROM oideachais.celtic.canuint.recordings
-        UNION ALL SELECT 'locations', COUNT(*) FROM oideachais.celtic.canuint.locations
+        SELECT 'word_alignments' AS table_name, COUNT(*) AS n FROM cianfhoghlaim.celtic.canuint.word_alignments
+        UNION ALL SELECT 'recordings', COUNT(*) FROM cianfhoghlaim.celtic.canuint.recordings
+        UNION ALL SELECT 'locations', COUNT(*) FROM cianfhoghlaim.celtic.canuint.locations
         """
     ).fetchall()
     df = pd.DataFrame(rows, columns=["table_name", "n"])

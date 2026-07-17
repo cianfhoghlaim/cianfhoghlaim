@@ -21,7 +21,7 @@ The cross-board `eng_aqa_vs_ocr_diff` Dagster asset (Change 2 comparator)
 is rendered as a separate comparison view.
 
 Reads from:
-    oideachais.england.<board>.<subject>.<qualification_level>
+    cianfhoghlaim.england.<board>.<subject>.<qualification_level>
 
 KCG patterns used:
 - ibis (per `.agents/skills/ibis/SKILL.md`)
@@ -91,7 +91,7 @@ def _tabs_aqa(conn, eng_subject_filter, qualification_level_filter):
         """
         SELECT subject, qualification_level, specification_code, title, version,
                total_marks, array_length(assessment_objectives) AS ao_count
-        FROM oideachais.education.british_isles.england.aqa._all_qualifications
+        FROM cianfhoghlaim.education.british_isles.england.aqa._all_qualifications
         WHERE subject IN %(subjects)s
           AND qualification_level IN %(levels)s
         ORDER BY subject, qualification_level
@@ -111,7 +111,7 @@ def _tabs_ocr(conn, eng_subject_filter, qualification_level_filter):
         """
         SELECT subject, qualification_level, specification_code, title, version,
                total_marks, array_length(assessment_objectives) AS ao_count
-        FROM oideachais.education.british_isles.england.ocr._all_qualifications
+        FROM cianfhoghlaim.education.british_isles.england.ocr._all_qualifications
         WHERE subject IN %(subjects)s
           AND qualification_level IN %(levels)s
         ORDER BY subject, qualification_level
@@ -131,7 +131,7 @@ def _tabs_edexcel(conn, eng_subject_filter, qualification_level_filter):
         """
         SELECT subject, qualification_level, specification_code, title, version,
                total_marks, array_length(assessment_objectives) AS ao_count
-        FROM oideachais.education.british_isles.england.edexcel._all_qualifications
+        FROM cianfhoghlaim.education.british_isles.england.edexcel._all_qualifications
         WHERE subject IN %(subjects)s
           AND qualification_level IN %(levels)s
         ORDER BY subject, qualification_level
@@ -155,13 +155,13 @@ def _cross_board_diff(conn, eng_subject_filter, qualification_level_filter):
         WITH boards AS (
             SELECT 'aqa' AS board, subject, qualification_level, version,
                    total_marks
-            FROM oideachais.education.british_isles.england.aqa._all_qualifications
+            FROM cianfhoghlaim.education.british_isles.england.aqa._all_qualifications
             UNION ALL
             SELECT 'ocr' AS board, subject, qualification_level, version, total_marks
-            FROM oideachais.education.british_isles.england.ocr._all_qualifications
+            FROM cianfhoghlaim.education.british_isles.england.ocr._all_qualifications
             UNION ALL
             SELECT 'edexcel' AS board, subject, qualification_level, version, total_marks
-            FROM oideachais.education.british_isles.england.edexcel._all_qualifications
+            FROM cianfhoghlaim.education.british_isles.england.edexcel._all_qualifications
         )
         SELECT * FROM boards
         WHERE subject IN %(subjects)s

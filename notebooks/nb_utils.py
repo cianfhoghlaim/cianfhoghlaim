@@ -180,7 +180,7 @@ def lc_subject_query(
     conn = _ibis_connect_md()
     return conn.sql(f"""
         SELECT subject, level, language, topic, count(*) AS n
-        FROM oideachais.leaving_cert.{subject}_topics
+        FROM cianfhoghlaim.leaving_cert.{subject}_topics
         WHERE level = '{level}' AND language = '{language}'
         GROUP BY subject, level, language, topic
         ORDER BY n DESC
@@ -193,8 +193,8 @@ def leabharlann_join_to_lc(book_id: str, topic: str) -> Any:
     conn = _ibis_connect_md()
     return conn.sql(f"""
         SELECT b.book_id, b.title, t.topic, t.subject, t.level, t.language
-        FROM oideachais.leabharlann.books b
-        JOIN oideachais.leaving_cert.{topic}_topics t
+        FROM cianfhoghlaim.leabharlann.books b
+        JOIN cianfhoghlaim.leaving_cert.{topic}_topics t
           ON b.topic_embedding <-> t.topic_embedding < 0.3
         WHERE b.book_id = '{book_id}'
     """)

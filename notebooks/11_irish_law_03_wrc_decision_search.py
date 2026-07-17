@@ -24,10 +24,10 @@ Workplace Relations Commission adjudication decisions — semantic search
      article → relevant Irish Statute Book section
 
 Lakehouse tables consumed:
-  - oideachais.law.ie.wrc_decisions
-  - oideachais.law.ie.wrc_pages
-  - oideachais.law.ie.citizensinfo_articles
-  - oideachais.education.ie.irish_statute_book.acts
+  - cianfhoghlaim.law.ie.wrc_decisions
+  - cianfhoghlaim.law.ie.wrc_pages
+  - cianfhoghlaim.law.ie.citizensinfo_articles
+  - cianfhoghlaim.education.ie.irish_statute_book.acts
 
 Run:
   cd cianfhoghlaim && uv run marimo edit notebooks/12_ireland_law/03_wrc_decision_search.py
@@ -84,7 +84,7 @@ def _search_results(con, query):
             SELECT case_ref, decision_date, complaint_type, outcome,
                    award_amount_eur, claimant, respondent,
                    summary, catchwords
-            FROM oideachais.law.ie.wrc_decisions
+            FROM cianfhoghlaim.law.ie.wrc_decisions
             WHERE LOWER(summary) LIKE '%' || LOWER('{query.value}') || '%'
                OR LOWER(catchwords) LIKE '%' || LOWER('{query.value}') || '%'
                OR LOWER(statutes_cited) LIKE '%' || LOWER('{query.value}') || '%'
@@ -118,7 +118,7 @@ def _outcome_donut(con):
         rows = con.sql(
             """
             SELECT outcome, COUNT(*) AS n
-            FROM oideachais.law.ie.wrc_decisions
+            FROM cianfhoghlaim.law.ie.wrc_decisions
             GROUP BY outcome
             ORDER BY n DESC
             """
@@ -160,7 +160,7 @@ def _top_statutes(con):
             SELECT statute_name, COUNT(*) AS n
             FROM (
               SELECT UNNEST(statutes_cited) AS statute_name
-              FROM oideachais.law.ie.wrc_decisions
+              FROM cianfhoghlaim.law.ie.wrc_decisions
             )
             GROUP BY statute_name
             ORDER BY n DESC
@@ -207,7 +207,7 @@ def _time_to_decision(con):
             SELECT
               CAST(decision_date AS DATE) AS decision_date,
               COUNT(*)                     AS n
-            FROM oideachais.law.ie.wrc_decisions
+            FROM cianfhoghlaim.law.ie.wrc_decisions
             WHERE decision_date IS NOT NULL
             GROUP BY CAST(decision_date AS DATE)
             ORDER BY decision_date
@@ -256,8 +256,8 @@ def _cross_source(con):
               c.title       AS cib_title,
               c.summary     AS cib_summary,
               c.related_statutes
-            FROM oideachais.law.ie.wrc_decisions w
-            LEFT JOIN oideachais.law.ie.citizensinfo_articles c
+            FROM cianfhoghlaim.law.ie.wrc_decisions w
+            LEFT JOIN cianfhoghlaim.law.ie.citizensinfo_articles c
               ON c.category = 'EMPLOYMENT'
              AND (LOWER(c.title) LIKE '%' || LOWER(REPLACE(w.complaint_type, '_', ' ')) || '%'
                   OR LOWER(c.summary) LIKE '%' || LOWER(REPLACE(w.complaint_type, '_', ' ')) || '%')

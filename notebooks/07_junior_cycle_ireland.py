@@ -17,7 +17,7 @@
 Per the 2026-07-23-biep-v2-marimo-portal-v1 change.
 
 Reads from the Junior Cycle LanceDB tables:
-    oideachais.jc.<subject>.<year>_<lang>
+    cianfhoghlaim.jc.<subject>.<year>_<lang>
 
 The 18 NCCA JC subjects + the 36 CBAs are explorable via multi-select.
 
@@ -95,7 +95,7 @@ def _jc_outcomes_table(conn, jc_subject_filter, year_filter, language_filter):
         SELECT subject, year, language, strand, learning_outcome_id,
                learning_outcome_text_en, learning_outcome_text_ga,
                blooms_taxonomy_level
-        FROM oideachais.education.british_isles.ireland.junior_cycle._all_outcomes
+        FROM cianfhoghlaim.education.british_isles.ireland.junior_cycle._all_outcomes
         WHERE subject IN %(subjects)s
           AND year IN %(years)s
           AND language IN %(languages)s
@@ -118,7 +118,7 @@ def _jc_cbas_table(conn, jc_subject_filter):
         """
         SELECT subject, cba_id, title_en, weighting, year,
                evidence_of_learning, success_criteria
-        FROM oideachais.education.british_isles.ireland.junior_cycle._all_cbas
+        FROM cianfhoghlaim.education.british_isles.ireland.junior_cycle._all_cbas
         WHERE subject IN %(subjects)s
         ORDER BY subject, cba_id
         """,
@@ -144,8 +144,8 @@ def _year3_to_year4_progression(conn, jc_subject_filter):
             lc.learning_outcome_id AS lc_lo_id,
             lc.learning_outcome_text_en AS lc_lo_text,
             'YEAR_3 -> LC_OL' AS progression_label
-        FROM oideachais.education.british_isles.ireland.junior_cycle._all_outcomes jc
-        LEFT JOIN oideachais.leaving_cert._all_syllabus lc
+        FROM cianfhoghlaim.education.british_isles.ireland.junior_cycle._all_outcomes jc
+        LEFT JOIN cianfhoghlaim.leaving_cert._all_syllabus lc
           ON lc.subject = jc.subject
          AND lc.level = 'ol'
          AND lc.language = jc.language

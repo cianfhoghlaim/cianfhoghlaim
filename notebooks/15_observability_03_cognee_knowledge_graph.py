@@ -10,7 +10,7 @@
 """03 — Cognee knowledge-graph visualiser (per-subject).
 
 For each BIEP subject, visualises the Cognify pass output —
-reads from ``md:oideachais.cognee.<subject>_kg`` (the table that
+reads from ``md:cianfhoghlaim.cognee.<subject>_kg`` (the table that
 the ``lc5_<subject>_cognified`` Dagster asset materialises).
 
 Falls back to a 20-node synthetic KG (5 NCCA Key Competencies +
@@ -49,7 +49,7 @@ def _intro(mo):
 
         Per-subject view of the Cognify pass output for the 6 BIEP
         priority LC subjects. Reads from
-        ``md:oideachais.cognee.<subject>_kg`` (the Cognee node/edge
+        ``md:cianfhoghlaim.cognee.<subject>_kg`` (the Cognee node/edge
         tables materialised by ``lc5_<subject>_cognified``).
 
         When the lakehouse is unreachable, falls back to a 20-node
@@ -74,7 +74,7 @@ def _controls(mo):
 
 @app.cell
 def _read_lakehouse(subject, mo):
-    """Read the kg nodes for the selected subject from md:oideachais."""
+    """Read the kg nodes for the selected subject from md:cianfhoghlaim."""
     from cianfhoghlaim.notebooks.nb_utils import connect_biep_lakehouse
     con, engine = connect_biep_lakehouse()
     nodes = []
@@ -83,14 +83,14 @@ def _read_lakehouse(subject, mo):
         try:
             nodes_df = con.execute(f"""
                 SELECT node_id, node_type, label, weight
-                FROM md:oideachais.cognee.{subject.value}_kg_nodes
+                FROM md:cianfhoghlaim.cognee.{subject.value}_kg_nodes
             """).fetchdf() if False else con.execute(f"""
                 SELECT node_id, node_type, label, weight
-                FROM oideachais.cognee.{subject.value}_kg_nodes
+                FROM cianfhoghlaim.cognee.{subject.value}_kg_nodes
             """).fetchdf()
             edges_df = con.execute(f"""
                 SELECT source_id AS source, target_id AS target, edge_type, weight
-                FROM oideachais.cognee.{subject.value}_kg_edges
+                FROM cianfhoghlaim.cognee.{subject.value}_kg_edges
             """).fetchdf()
             nodes = nodes_df.to_dict("records")
             edges = edges_df.to_dict("records")
@@ -211,10 +211,10 @@ def _cli_main(argv=None) -> int:
     if engine == "md:oideachais":
         try:
             n_nodes = con.execute(f"""
-                SELECT count(*) FROM oideachais.cognee.{args.subject}_kg_nodes
+                SELECT count(*) FROM cianfhoghlaim.cognee.{args.subject}_kg_nodes
             """).fetchone()
             n_edges = con.execute(f"""
-                SELECT count(*) FROM oideachais.cognee.{args.subject}_kg_edges
+                SELECT count(*) FROM cianfhoghlaim.cognee.{args.subject}_kg_edges
             """).fetchone()
             summary["nodes"] = n_nodes[0] if n_nodes else 0
             summary["edges"] = n_edges[0] if n_edges else 0

@@ -22,12 +22,12 @@ joined result table + drill-down.
   4. Drill-down: click a row → view full text + BAML-extracted fields
 
 Lakehouse tables consumed:
-  - oideachais.law.ie.piab_pages + piab_forms
-  - oideachais.law.ie.courts_forms + judgements + court_fees + court_rules
-  - oideachais.law.ie.wrc_pages + wrc_decisions
-  - oideachais.law.ie.citizensinfo_articles
-  - oideachais.law.ie.gov_ie_pages
-  - oideachais.education.ie.irish_statute_book.acts
+  - cianfhoghlaim.law.ie.piab_pages + piab_forms
+  - cianfhoghlaim.law.ie.courts_forms + judgements + court_fees + court_rules
+  - cianfhoghlaim.law.ie.wrc_pages + wrc_decisions
+  - cianfhoghlaim.law.ie.citizensinfo_articles
+  - cianfhoghlaim.law.ie.gov_ie_pages
+  - cianfhoghlaim.education.ie.irish_statute_book.acts
 
 Run:
   cd cianfhoghlaim && uv run marimo edit notebooks/12_ireland_law/06_unified_cross_source_query.py
@@ -84,27 +84,27 @@ def _all_results(con, query):
     # The 6 sources: each is one or more DuckLake tables
     sources = {
         "PIAB (injuries.ie)": [
-            "oideachais.law.ie.piab_pages",
-            "oideachais.law.ie.piab_forms",
+            "cianfhoghlaim.law.ie.piab_pages",
+            "cianfhoghlaim.law.ie.piab_forms",
         ],
         "Courts Service (courts.ie)": [
-            "oideachais.law.ie.courts_forms",
-            "oideachais.law.ie.judgements",
-            "oideachais.law.ie.court_fees",
-            "oideachais.law.ie.court_rules",
+            "cianfhoghlaim.law.ie.courts_forms",
+            "cianfhoghlaim.law.ie.judgements",
+            "cianfhoghlaim.law.ie.court_fees",
+            "cianfhoghlaim.law.ie.court_rules",
         ],
         "WRC (workplacerelations.ie)": [
-            "oideachais.law.ie.wrc_pages",
-            "oideachais.law.ie.wrc_decisions",
+            "cianfhoghlaim.law.ie.wrc_pages",
+            "cianfhoghlaim.law.ie.wrc_decisions",
         ],
         "Citizens Information (citizensinformation.ie)": [
-            "oideachais.law.ie.citizensinfo_articles",
+            "cianfhoghlaim.law.ie.citizensinfo_articles",
         ],
         "gov.ie (all sub-departments)": [
-            "oideachais.law.ie.gov_ie_pages",
+            "cianfhoghlaim.law.ie.gov_ie_pages",
         ],
         "Irish Statute Book (irishstatutebook.ie)": [
-            "oideachais.education.ie.irish_statute_book.acts",
+            "cianfhoghlaim.education.ie.irish_statute_book.acts",
         ],
     }
     for source_name, tables in sources.items():
@@ -162,38 +162,38 @@ def _joined_results(con, query):
     sql = f"""
         SELECT 'PIAB' AS source, 'page' AS entity_type, url,
                title, summary AS snippet, related_statutes
-        FROM oideachais.law.ie.piab_pages
+        FROM cianfhoghlaim.law.ie.piab_pages
         WHERE LOWER(summary) LIKE '%' || LOWER('{q}') || '%'
            OR LOWER(title)   LIKE '%' || LOWER('{q}') || '%'
         UNION ALL
         SELECT 'Courts', 'form', url, form_title, purpose,
                related_statutes
-        FROM oideachais.law.ie.courts_forms
+        FROM cianfhoghlaim.law.ie.courts_forms
         WHERE LOWER(purpose) LIKE '%' || LOWER('{q}') || '%'
         UNION ALL
         SELECT 'Courts', 'judgement', url, case_name, holding,
                statutes_cited
-        FROM oideachais.law.ie.judgements
+        FROM cianfhoghlaim.law.ie.judgements
         WHERE LOWER(holding) LIKE '%' || LOWER('{q}') || '%'
            OR LOWER(catchwords) LIKE '%' || LOWER('{q}') || '%'
         UNION ALL
         SELECT 'WRC', 'decision', url, case_ref, summary, statutes_cited
-        FROM oideachais.law.ie.wrc_decisions
+        FROM cianfhoghlaim.law.ie.wrc_decisions
         WHERE LOWER(summary) LIKE '%' || LOWER('{q}') || '%'
            OR LOWER(catchwords) LIKE '%' || LOWER('{q}') || '%'
         UNION ALL
         SELECT 'CIB', 'article', url, title, summary, related_statutes
-        FROM oideachais.law.ie.citizensinfo_articles
+        FROM cianfhoghlaim.law.ie.citizensinfo_articles
         WHERE LOWER(summary) LIKE '%' || LOWER('{q}') || '%'
            OR LOWER(title)   LIKE '%' || LOWER('{q}') || '%'
         UNION ALL
         SELECT 'gov.ie', 'press', url, headline, summary, related_statutes
-        FROM oideachais.law.ie.gov_ie_pages
+        FROM cianfhoghlaim.law.ie.gov_ie_pages
         WHERE LOWER(headline) LIKE '%' || LOWER('{q}') || '%'
            OR LOWER(summary)  LIKE '%' || LOWER('{q}') || '%'
         UNION ALL
         SELECT 'ISB', 'act', url, act_title, NULL, NULL
-        FROM oideachais.education.ie.irish_statute_book.acts
+        FROM cianfhoghlaim.education.ie.irish_statute_book.acts
         WHERE LOWER(act_title) LIKE '%' || LOWER('{q}') || '%'
         LIMIT 100
     """
@@ -228,19 +228,19 @@ def _drill_down(con):
         rows = con.sql(
             """
             SELECT 'PIAB' AS source, title, summary AS detail, NULL AS statutes
-            FROM oideachais.law.ie.piab_pages LIMIT 1
+            FROM cianfhoghlaim.law.ie.piab_pages LIMIT 1
             UNION ALL
             SELECT 'Courts', form_title, purpose, related_statutes
-            FROM oideachais.law.ie.courts_forms LIMIT 1
+            FROM cianfhoghlaim.law.ie.courts_forms LIMIT 1
             UNION ALL
             SELECT 'WRC', case_ref, summary, statutes_cited
-            FROM oideachais.law.ie.wrc_decisions LIMIT 1
+            FROM cianfhoghlaim.law.ie.wrc_decisions LIMIT 1
             UNION ALL
             SELECT 'CIB', title, summary, related_statutes
-            FROM oideachais.law.ie.citizensinfo_articles LIMIT 1
+            FROM cianfhoghlaim.law.ie.citizensinfo_articles LIMIT 1
             UNION ALL
             SELECT 'gov.ie', headline, summary, related_statutes
-            FROM oideachais.law.ie.gov_ie_pages LIMIT 1
+            FROM cianfhoghlaim.law.ie.gov_ie_pages LIMIT 1
             """
         ).df()
     except Exception:

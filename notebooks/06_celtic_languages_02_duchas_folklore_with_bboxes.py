@@ -20,10 +20,10 @@ manuscript page, with hover-tooltips showing the Irish transcript +
 English translation per bbox.
 
 Reads from:
-- `oideachais.celtic.duchas.manuscripts` (page-level summaries)
-- `oideachais.celtic.duchas.bboxes` (5-level bbox child table)
-- `oideachais.language.duchas_chunks` (LanceDB vector store)
-- `oideachais.language.duchas_bboxes` (LanceDB bbox child store)
+- `cianfhoghlaim.celtic.duchas.manuscripts` (page-level summaries)
+- `cianfhoghlaim.celtic.duchas.bboxes` (5-level bbox child table)
+- `cianfhoghlaim.language.duchas_chunks` (LanceDB vector store)
+- `cianfhoghlaim.language.duchas_bboxes` (LanceDB bbox child store)
 
 Dual-mode usage:
     # Interactive
@@ -65,7 +65,7 @@ def _intro(mo):
         ## *Bailiúchán na Béaloideais Náisiúnta*
 
         **Source data**: Dúchas DuckLake tables
-        (`oideachais.celtic.duchas.manuscripts` + `.bboxes` +
+        (`cianfhoghlaim.celtic.duchas.manuscripts` + `.bboxes` +
         `.transcriptions`) + the 2 LanceDB companion tables.
 
         **5-level bbox hierarchy**: page → region → sentence → word → letter.
@@ -91,7 +91,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+        db_path = os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb")
         con = duckdb.connect(db_path, read_only=True)
     return (con, use_md)
 
@@ -106,7 +106,7 @@ def _panel_1_collection(alt, con, mo, pd):
                COUNT(DISTINCT volume_id) AS n_volumes,
                COUNT(DISTINCT county) AS n_counties,
                AVG(transcription_confidence) AS avg_confidence
-        FROM oideachais.celtic.duchas.manuscripts
+        FROM cianfhoghlaim.celtic.duchas.manuscripts
         GROUP BY collection
         ORDER BY n_pages DESC
         """
@@ -124,7 +124,7 @@ def _panel_2_county(alt, con, mo, pd):
         SELECT county,
                COUNT(*) AS n_pages,
                COUNT(DISTINCT collection) AS n_collections
-        FROM oideachais.celtic.duchas.manuscripts
+        FROM cianfhoghlaim.celtic.duchas.manuscripts
         WHERE county IS NOT NULL
         GROUP BY county
         ORDER BY n_pages DESC
@@ -147,7 +147,7 @@ def _panel_3_decade(alt, con, mo, pd):
         """
         SELECT SUBSTR(CAST(created_at AS VARCHAR), 1, 4) AS year,
                COUNT(*) AS n_pages
-        FROM oideachais.celtic.duchas.manuscripts
+        FROM cianfhoghlaim.celtic.duchas.manuscripts
         WHERE created_at IS NOT NULL
         GROUP BY year
         ORDER BY year
@@ -164,7 +164,7 @@ def _panel_4_bbox_overlay(alt, con, mo, pd):
     page_row = con.execute(
         """
         SELECT page_id, collection, county, primary_language, ga_text, en_translation, image_url
-        FROM oideachais.celtic.duchas.manuscripts
+        FROM cianfhoghlaim.celtic.duchas.manuscripts
         WHERE ga_text IS NOT NULL
         LIMIT 1
         """
@@ -183,7 +183,7 @@ def _panel_4_bbox_overlay(alt, con, mo, pd):
     bboxes = con.execute(
         """
         SELECT bbox_id, level, x1, y1, x2, y2, text, ga_text, en_translation, confidence
-        FROM oideachais.celtic.duchas.bboxes
+        FROM cianfhoghlaim.celtic.duchas.bboxes
         WHERE page_id = ?
         ORDER BY level, bbox_id
         """,
@@ -223,7 +223,7 @@ def _panel_5_topic(alt, con, mo, pd):
         SELECT topic_code, COUNT(*) AS n_pages
         FROM (
             SELECT UNNEST(STRING_SPLIT(topic_codes, ',')) AS topic_code
-            FROM oideachais.celtic.duchas.manuscripts
+            FROM cianfhoghlaim.celtic.duchas.manuscripts
             WHERE topic_codes IS NOT NULL
         )
         WHERE topic_code != ''

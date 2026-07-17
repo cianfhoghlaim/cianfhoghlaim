@@ -13,7 +13,7 @@
 Cross-archive **Cognee edge** view between the BIEP v1 oideachais
 lakehouse (6 LC subjects × 3 levels × 2 languages × 9 years) and the
 leabharlann corpus (216 PDFs × 6 subdirs). Reads the
-``oideachais.leabharlann.lc_join`` cognify edges produced by the
+``cianfhoghlaim.leabharlann.lc_join`` cognify edges produced by the
 5-stage cognify pass (per ``oideachais-cognify-knowledge-graph``).
 
 Five visualisations:
@@ -25,7 +25,7 @@ Five visualisations:
 - **Panel D** — per-language edge parity (EN / GA / BILINGUAL)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.leabharlann.lc_join`` (the canonical
+Data source: ``md:cianfhoghlaim.leabharlann.lc_join`` (the canonical
 cross-archive join table). Falls back to a synthetic 6×6×3=108
 join-edge matrix when the lakehouse is unreachable.
 
@@ -52,7 +52,7 @@ def _intro():
         oideachais lakehouse (6 LC subjects × 3 levels × 2 languages
         × 9 years) and the leabharlann corpus (216 PDFs × 6 subdirs).
 
-        Reads the ``oideachais.leabharlann.lc_join`` cognify edges
+        Reads the ``cianfhoghlaim.leabharlann.lc_join`` cognify edges
         produced by the 5-stage cognify pass (per
         ``oideachais-cognify-knowledge-graph``).
 
@@ -134,7 +134,7 @@ def _data_loading(
     if engine_label == "md:oideachais":
         try:
             edges = con.execute(
-                "SELECT * FROM oideachais.leabharlann.lc_join"
+                "SELECT * FROM cianfhoghlaim.leabharlann.lc_join"
             ).fetchdf()
         except Exception:
             edges = pd.DataFrame()

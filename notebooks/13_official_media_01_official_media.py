@@ -1,5 +1,5 @@
 """
-oideachais.notebooks.dashboards.official_media — Marimo mission control.
+cianfhoghlaim.notebooks.dashboards.official_media — Marimo mission control.
 
 Phase 6 of the official-media-pipeline openspec change. A single-page
 mission control that surfaces:
@@ -121,7 +121,7 @@ def _(mo):
         Below is the curated allowlist (PR 1 covers IE + NI + EN).
         When the `official_media_extract` Dagster asset has run, this
         table is populated from the DLT-managed
-        `oideachais.official_media.candidates` table instead.
+        `cianfhoghlaim.official_media.candidates` table instead.
         """
     )
     return

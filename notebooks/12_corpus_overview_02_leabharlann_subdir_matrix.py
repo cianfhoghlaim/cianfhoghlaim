@@ -23,8 +23,8 @@ Five visualisations:
 - **Panel D** — per-subdir average pages bar chart
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.leabharlann.documents`` + the topic
-co-occurrence table ``md:oideachais.leabharlann.topic_pairs``.
+Data source: ``md:cianfhoghlaim.leabharlann.documents`` + the topic
+co-occurrence table ``md:cianfhoghlaim.leabharlann.topic_pairs``.
 
 Falls back to a synthetic 6-subdir × 3-language × 3-quadrant
 co-occurrence matrix (6×3×3=54 cells + 12 top topic pairs) when the
@@ -53,8 +53,8 @@ def _intro():
         document's subdir × language × year-quadrant, plus a top-K
         topic co-occurrence matrix within each subdir.
 
-        Live data: ``md:oideachais.leabharlann.documents`` +
-        ``md:oideachais.leabharlann.topic_pairs``.
+        Live data: ``md:cianfhoghlaim.leabharlann.documents`` +
+        ``md:cianfhoghlaim.leabharlann.topic_pairs``.
 
         ---
         """
@@ -133,13 +133,13 @@ def _data_loading(
     if engine_label == "md:oideachais":
         try:
             corpus = con.execute(
-                "SELECT * FROM oideachais.leabharlann.documents"
+                "SELECT * FROM cianfhoghlaim.leabharlann.documents"
             ).fetchdf()
         except Exception:
             corpus = pd.DataFrame()
         try:
             topic_pairs = con.execute(
-                "SELECT * FROM oideachais.leabharlann.topic_pairs"
+                "SELECT * FROM cianfhoghlaim.leabharlann.topic_pairs"
             ).fetchdf()
         except Exception:
             topic_pairs = pd.DataFrame()

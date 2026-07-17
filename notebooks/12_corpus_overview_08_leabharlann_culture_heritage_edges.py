@@ -26,7 +26,7 @@ Five visualisations:
 - **Panel D** — per-language edge parity (EN / GA / BILINGUAL)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.culture_heritage.leabharlann_match``
+Data source: ``md:cianfhoghlaim.culture_heritage.leabharlann_match``
 (populated by the cognify cross-archive pass). Falls back to a
 synthetic 6-subdir × 5-dataset matrix when the lakehouse is
 unreachable.
@@ -146,7 +146,7 @@ def _data_loading(
     if engine_label == "md:oideachais":
         try:
             edges = con.execute(
-                "SELECT * FROM oideachais.culture_heritage.leabharlann_match"
+                "SELECT * FROM cianfhoghlaim.culture_heritage.leabharlann_match"
             ).fetchdf()
         except Exception:
             edges = pd.DataFrame()

@@ -103,7 +103,7 @@ def _(con, duckdb, mo, os, pd, use_md):
         if use_md:
             query = """
                 SELECT cycle, subject, language, count(*) AS pages
-                FROM oideachais.curriculum.curriculum_pages
+                FROM cianfhoghlaim.curriculum.curriculum_pages
                 GROUP BY cycle, subject, language
                 ORDER BY pages DESC
                 LIMIT 25

@@ -70,12 +70,12 @@ __all__ = [
 
 # Canonical DuckLake table names (L2 layer).
 ACAD_TABLES: dict[str, str] = {
-    "coursework": "oideachais.education.ie.uog_math_coursework",
-    "formulas": "oideachais.education.ie.uog_formula_records",
-    "theorems": "oideachais.education.ie.uog_theorem_records",
-    "stats": "oideachais.education.ie.uog_statistical_procedure_records",
-    "numerical": "oideachais.education.ie.uog_numerical_method_records",
-    "nonlinear": "oideachais.education.ie.uog_nonlinear_system_records",
+    "coursework": "cianfhoghlaim.education.ie.uog_math_coursework",
+    "formulas": "cianfhoghlaim.education.ie.uog_formula_records",
+    "theorems": "cianfhoghlaim.education.ie.uog_theorem_records",
+    "stats": "cianfhoghlaim.education.ie.uog_statistical_procedure_records",
+    "numerical": "cianfhoghlaim.education.ie.uog_numerical_method_records",
+    "nonlinear": "cianfhoghlaim.education.ie.uog_nonlinear_system_records",
     "findings": "oideachais_academic_history.validation_findings",
 }
 

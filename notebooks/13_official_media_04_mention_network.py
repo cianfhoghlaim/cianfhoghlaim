@@ -102,7 +102,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 """
                 SELECT source_username, source_platform, target_username,
                        target_platform, mention_count, last_mentioned_at
-                FROM oideachais.official_media.mention_edges
+                FROM cianfhoghlaim.official_media.mention_edges
                 ORDER BY mention_count DESC
                 LIMIT 5000
                 """

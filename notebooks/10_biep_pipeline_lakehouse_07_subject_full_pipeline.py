@@ -186,7 +186,7 @@ def _stage3_lakehouse_query(subjects, level, language):
             try:
                 _row = _con.execute(f"""
                     SELECT count(*) AS n
-                    FROM oideachais.leaving_cert.{_subj}_topics
+                    FROM cianfhoghlaim.leaving_cert.{_subj}_topics
                     WHERE level = '{level.value}' AND language = '{language.value}'
                 """).fetchone()
                 _rows.append({"subject": _subj, "n": _row[0] if _row else 0, "engine": _engine})
@@ -379,7 +379,7 @@ def _cli_main(argv=None) -> int:
     if engine == "md:oideachais":
         try:
             row = con.execute(f"""
-                SELECT count(*) FROM oideachais.leaving_cert.{args.subject}_topics
+                SELECT count(*) FROM cianfhoghlaim.leaving_cert.{args.subject}_topics
                 WHERE level = '{args.level}' AND language = '{args.language}'
             """).fetchone()
             summary["topic_count"] = row[0] if row else 0

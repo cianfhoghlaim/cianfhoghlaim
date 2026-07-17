@@ -21,10 +21,10 @@ and Rules of Court.
   5. Cross-source: find the court form for a given Judgement type
 
 Lakehouse tables consumed:
-  - oideachais.law.ie.courts_forms
-  - oideachais.law.ie.court_fees
-  - oideachais.law.ie.court_rules
-  - oideachais.law.ie.judgements
+  - cianfhoghlaim.law.ie.courts_forms
+  - cianfhoghlaim.law.ie.court_fees
+  - cianfhoghlaim.law.ie.court_rules
+  - cianfhoghlaim.law.ie.judgements
 
 Run:
   cd cianfhoghlaim && uv run marimo edit notebooks/12_ireland_law/02_courts_index.py
@@ -55,7 +55,7 @@ def _setup():
         # Courts Service Index · courts.ie
 
         Forms, judgements, fees, and Rules of Court — one searchable
-        catalogue over the `oideachais.law.ie.*` DuckLake tables.
+        catalogue over the `cianfhoghlaim.law.ie.*` DuckLake tables.
         """
     )
     return (con, mo)
@@ -69,7 +69,7 @@ def _forms(con):
             """
             SELECT form_number, form_title, court_level, category,
                    purpose, fee_eur, fillable_fields, downloadable_url
-            FROM oideachais.law.ie.courts_forms
+            FROM cianfhoghlaim.law.ie.courts_forms
             ORDER BY court_level, category, form_number
             LIMIT 200
             """
@@ -100,7 +100,7 @@ def _fees(con):
             """
             SELECT fee_code, fee_description, amount_eur,
                    court_level, effective_date, notes
-            FROM oideachais.law.ie.court_fees
+            FROM cianfhoghlaim.law.ie.court_fees
             ORDER BY court_level, fee_code
             LIMIT 200
             """
@@ -131,7 +131,7 @@ def _rules(con):
             """
             SELECT rule_number, "order", court_level, subject,
                    effective_date
-            FROM oideachais.law.ie.court_rules
+            FROM cianfhoghlaim.law.ie.court_rules
             ORDER BY court_level, "order", rule_number
             LIMIT 200
             """
@@ -162,7 +162,7 @@ def _judgements(con):
             """
             SELECT neutral_citation, case_name, court_level,
                    decision_date, judge, catchwords, holding
-            FROM oideachais.law.ie.judgements
+            FROM cianfhoghlaim.law.ie.judgements
             ORDER BY decision_date DESC
             LIMIT 50
             """
@@ -199,7 +199,7 @@ def _cross_source(con):
               j.form_title,
               j.fee_eur,
               j.url         AS judgement_url
-            FROM oideachais.law.ie.judgements j
+            FROM cianfhoghlaim.law.ie.judgements j
             LIMIT 50
             """
         ).df()

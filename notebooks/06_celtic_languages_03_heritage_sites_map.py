@@ -52,8 +52,8 @@ def _intro(mo):
         ## *Láithreáin Oidhreachta na hÉireann*
 
         **Source data**: 2 heritage DuckLake tables
-        (`oideachais.celtic.heritage.sites` + `.hidden_sites`) +
-        the LanceDB `oideachais.language.heritage_chunks` companion.
+        (`cianfhoghlaim.celtic.heritage.sites` + `.hidden_sites`) +
+        the LanceDB `cianfhoghlaim.language.heritage_chunks` companion.
 
         LlamaSwap routing: `gemma-4-26B-A4B` (multilingual MoE).
         """
@@ -70,7 +70,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb"), read_only=True)
+        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
     return (con, use_md)
 
 
@@ -83,8 +83,8 @@ def _panel_1_county(alt, con, mo, pd):
                COUNT(*) AS n_sites,
                COUNT(DISTINCT site_type) AS n_types
         FROM (
-            SELECT site_name, county, site_type FROM oideachais.celtic.heritage.sites
-            UNION ALL SELECT site_name, county, 'hidden' FROM oideachais.celtic.heritage.hidden_sites
+            SELECT site_name, county, site_type FROM cianfhoghlaim.celtic.heritage.sites
+            UNION ALL SELECT site_name, county, 'hidden' FROM cianfhoghlaim.celtic.heritage.hidden_sites
         )
         WHERE county IS NOT NULL
         GROUP BY county
@@ -103,7 +103,7 @@ def _panel_2_type(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT site_type, COUNT(*) AS n_sites
-        FROM oideachais.celtic.heritage.sites
+        FROM cianfhoghlaim.celtic.heritage.sites
         WHERE site_type IS NOT NULL
         GROUP BY site_type
         ORDER BY n_sites DESC
@@ -121,7 +121,7 @@ def _panel_3_map(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT site_name, site_name_ga, county, site_type, latitude, longitude
-        FROM oideachais.celtic.heritage.sites
+        FROM cianfhoghlaim.celtic.heritage.sites
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL
         LIMIT 10000
         """
@@ -150,9 +150,9 @@ def _panel_4_hidden(alt, con, mo, pd):
         """
         SELECT
             'main' AS kind, COUNT(*) AS n_sites
-        FROM oideachais.celtic.heritage.sites
+        FROM cianfhoghlaim.celtic.heritage.sites
         UNION ALL
-        SELECT 'hidden', COUNT(*) FROM oideachais.celtic.heritage.hidden_sites
+        SELECT 'hidden', COUNT(*) FROM cianfhoghlaim.celtic.heritage.hidden_sites
         """
     ).fetchall()
     df = pd.DataFrame(rows, columns=["kind", "n_sites"])
@@ -166,8 +166,8 @@ def _panel_5_summary(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT
-            'heritage_sites' AS table_name, COUNT(*) AS n_rows FROM oideachais.celtic.heritage.sites
-        UNION ALL SELECT 'hidden_sites', COUNT(*) FROM oideachais.celtic.heritage.hidden_sites
+            'heritage_sites' AS table_name, COUNT(*) AS n_rows FROM cianfhoghlaim.celtic.heritage.sites
+        UNION ALL SELECT 'hidden_sites', COUNT(*) FROM cianfhoghlaim.celtic.heritage.hidden_sites
         """
     ).fetchall()
     df = pd.DataFrame(rows, columns=["table_name", "n_rows"])

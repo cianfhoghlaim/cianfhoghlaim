@@ -129,7 +129,7 @@ def _data_loading(con, BIEP_SUBJECTS, BIEP_LEVELS, BIEP_LANGUAGES, engine_label,
     if engine_label == "md:oideachais":
         try:
             for _subj in BIEP_SUBJECTS:
-                rel = f"oideachais.leaving_cert.{_subj}_topics"
+                rel = f"cianfhoghlaim.leaving_cert.{_subj}_topics"
                 try:
                     df_subj = con.execute(
                         f"SELECT * FROM {rel}"

@@ -27,7 +27,7 @@ Galway.
 The notebook uses ``mo.sql(engine=md:oideachais)`` (the MotherDuck +
 DuckLake lakehouse) for the underlying queries. When the MotherDuck
 endpoint is unreachable, the notebook falls back to a local DuckDB
-file (``/tmp/oideachais.duckdb``) for development.
+file (``/tmp/cianfhoghlaim.duckdb``) for development.
 
 Reference: openspec/changes/university-of-galway-deep-extraction/
 """
@@ -52,7 +52,7 @@ def _():
         import duckdb
 import ibis  # ibis-first entrypoint
         db_path = os.environ.get(
-            "CIANFHOGHLAIS_UOG_DUCKDB", "/tmp/oideachais.duckdb"
+            "CIANFHOGHLAIS_UOG_DUCKDB", "/tmp/cianfhoghlaim.duckdb"
         )
         if os.path.exists(db_path):
             engine = ibis.duckdb.connect(db_path, read_only=True)
@@ -137,7 +137,7 @@ def _(engine, mo, pd):
                 semester,
                 programme_codes,
                 source_url
-            FROM oideachais.education.ie.university_modules
+            FROM cianfhoghlaim.education.ie.university_modules
             WHERE programme_codes LIKE '%MSCAI%'
               AND academic_year = 2025
             ORDER BY module_code
@@ -186,7 +186,7 @@ def _(engine, mo, pd):
                 ects,
                 programme_codes,
                 source_url
-            FROM oideachais.education.ie.university_courses
+            FROM cianfhoghlaim.education.ie.university_courses
             ORDER BY school, course_code
             """
         ).to_pandas()
@@ -263,7 +263,7 @@ def _(engine, mo, pd):
                 m.module_code,
                 m.module_title,
                 m.recommended_reading
-            FROM oideachais.education.ie.university_modules m
+            FROM cianfhoghlaim.education.ie.university_modules m
             WHERE m.recommended_reading IS NOT NULL
               AND m.recommended_reading != ''
             ORDER BY m.module_code
@@ -329,7 +329,7 @@ def _(engine, mo, pd):
         courses = engine.execute(
             """
             SELECT course_code, course_title, school, source_url
-            FROM oideachais.education.ie.university_courses
+            FROM cianfhoghlaim.education.ie.university_courses
             ORDER BY course_code
             """
         ).to_pandas()

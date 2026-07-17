@@ -24,7 +24,7 @@ DSP, DFA, DoD, Taoiseach, Finance.
   6. Semantic search box (full gov.ie corpus via LanceDB)
 
 Lakehouse tables consumed:
-  - oideachais.law.ie.gov_ie_pages
+  - cianfhoghlaim.law.ie.gov_ie_pages
 
 Run:
   cd cianfhoghlaim && uv run marimo edit notebooks/12_ireland_law/05_gov_ie_law_corpus.py
@@ -70,7 +70,7 @@ def _department_index(con):
         rows = con.sql(
             """
             SELECT department, COUNT(*) AS n
-            FROM oideachais.law.ie.gov_ie_pages
+            FROM cianfhoghlaim.law.ie.gov_ie_pages
             GROUP BY department
             ORDER BY n DESC
             """
@@ -114,7 +114,7 @@ def _press_timeline(con):
             """
             SELECT department, publication_date, headline, summary,
                    key_actions, related_agencies, related_statutes
-            FROM oideachais.law.ie.gov_ie_pages
+            FROM cianfhoghlaim.law.ie.gov_ie_pages
             ORDER BY publication_date DESC
             LIMIT 100
             """
@@ -145,7 +145,7 @@ def _publications(con):
             """
             SELECT department, publication_date, headline, summary,
                    key_actions, url
-            FROM oideachais.law.ie.gov_ie_pages
+            FROM cianfhoghlaim.law.ie.gov_ie_pages
             WHERE LOWER(headline) LIKE '%publication%'
                OR LOWER(summary) LIKE '%published%'
             ORDER BY publication_date DESC
@@ -179,7 +179,7 @@ def _top_statutes(con):
             SELECT statute_name, COUNT(*) AS n
             FROM (
               SELECT UNNEST(related_statutes) AS statute_name
-              FROM oideachais.law.ie.gov_ie_pages
+              FROM cianfhoghlaim.law.ie.gov_ie_pages
             )
             GROUP BY statute_name
             ORDER BY n DESC
@@ -233,10 +233,10 @@ def _cross_source(con):
               w.outcome,
               c.url               AS cib_url,
               c.title             AS cib_title
-            FROM oideachais.law.ie.gov_ie_pages g
-            LEFT JOIN oideachais.law.ie.wrc_decisions w
+            FROM cianfhoghlaim.law.ie.gov_ie_pages g
+            LEFT JOIN cianfhoghlaim.law.ie.wrc_decisions w
               ON LOWER(g.summary) LIKE '%' || LOWER(REPLACE(w.complaint_type, '_', ' ')) || '%'
-            LEFT JOIN oideachais.law.ie.citizensinfo_articles c
+            LEFT JOIN cianfhoghlaim.law.ie.citizensinfo_articles c
               ON LOWER(g.summary) LIKE '%' || LOWER(c.topic) || '%'
             LIMIT 50
             """
@@ -286,7 +286,7 @@ def _semantic_search_results(con, query):
             f"""
             SELECT url, department, publication_date, headline, summary,
                    key_actions, related_agencies, related_statutes
-            FROM oideachais.law.ie.gov_ie_pages
+            FROM cianfhoghlaim.law.ie.gov_ie_pages
             WHERE LOWER(headline) LIKE '%' || LOWER('{query.value}') || '%'
                OR LOWER(summary)   LIKE '%' || LOWER('{query.value}') || '%'
                OR LOWER(key_actions) LIKE '%' || LOWER('{query.value}') || '%'

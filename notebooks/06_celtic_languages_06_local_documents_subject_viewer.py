@@ -46,8 +46,8 @@ def _intro(mo):
         # Local Documents Viewer
         ## *Doiciméid Áitiúla de réir Ábhar*
 
-        **Source data**: `oideachais.celtic.local_documents.{subject}_documents`
-        + `oideachais.language.local_documents_chunks` (LanceDB).
+        **Source data**: `cianfhoghlaim.celtic.local_documents.{subject}_documents`
+        + `cianfhoghlaim.language.local_documents_chunks` (LanceDB).
 
         LlamaSwap routing: `qwen3-vl-8b` (OCR workhorse).
         """
@@ -64,7 +64,7 @@ def _connect(duckdb, os):
             duckdb.sql(f"SET motherduck_token='{token}'")
         con = duckdb.connect("md:oideachais", read_only=True)
     else:
-        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb"), read_only=True)
+        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
     return (con, use_md)
 
 
@@ -74,10 +74,10 @@ def _panel_1_per_subject(alt, con, mo, pd):
     rows = con.execute(
         """
         SELECT 'comp_science' AS subject, COUNT(*) AS n_documents, SUM(size_bytes) AS total_bytes
-        FROM oideachais.celtic.local_documents.comp_science_documents
-        UNION ALL SELECT 'gaeilge', COUNT(*), SUM(size_bytes) FROM oideachais.celtic.local_documents.gaeilge_documents
-        UNION ALL SELECT 'mata', COUNT(*), SUM(size_bytes) FROM oideachais.celtic.local_documents.mata_documents
-        UNION ALL SELECT 'oideachas', COUNT(*), SUM(size_bytes) FROM oideachais.celtic.local_documents.oideachas_documents
+        FROM cianfhoghlaim.celtic.local_documents.comp_science_documents
+        UNION ALL SELECT 'gaeilge', COUNT(*), SUM(size_bytes) FROM cianfhoghlaim.celtic.local_documents.gaeilge_documents
+        UNION ALL SELECT 'mata', COUNT(*), SUM(size_bytes) FROM cianfhoghlaim.celtic.local_documents.mata_documents
+        UNION ALL SELECT 'oideachas', COUNT(*), SUM(size_bytes) FROM cianfhoghlaim.celtic.local_documents.oideachas_documents
         """
     ).fetchall()
     df = pd.DataFrame(rows, columns=["subject", "n_documents", "total_bytes"])
@@ -92,10 +92,10 @@ def _panel_2_extension(alt, con, mo, pd):
         """
         SELECT extension, COUNT(*) AS n_files
         FROM (
-            SELECT extension FROM oideachais.celtic.local_documents.comp_science_documents
-            UNION ALL SELECT extension FROM oideachais.celtic.local_documents.gaeilge_documents
-            UNION ALL SELECT extension FROM oideachais.celtic.local_documents.mata_documents
-            UNION ALL SELECT extension FROM oideachais.celtic.local_documents.oideachas_documents
+            SELECT extension FROM cianfhoghlaim.celtic.local_documents.comp_science_documents
+            UNION ALL SELECT extension FROM cianfhoghlaim.celtic.local_documents.gaeilge_documents
+            UNION ALL SELECT extension FROM cianfhoghlaim.celtic.local_documents.mata_documents
+            UNION ALL SELECT extension FROM cianfhoghlaim.celtic.local_documents.oideachas_documents
         )
         WHERE extension IS NOT NULL
         GROUP BY extension
@@ -122,10 +122,10 @@ def _panel_3_size(alt, con, mo, pd):
             END AS size_bucket,
             COUNT(*) AS n_files
         FROM (
-            SELECT 'comp_science' AS subject, size_bytes FROM oideachais.celtic.local_documents.comp_science_documents
-            UNION ALL SELECT 'gaeilge', size_bytes FROM oideachais.celtic.local_documents.gaeilge_documents
-            UNION ALL SELECT 'mata', size_bytes FROM oideachais.celtic.local_documents.mata_documents
-            UNION ALL SELECT 'oideachas', size_bytes FROM oideachais.celtic.local_documents.oideachas_documents
+            SELECT 'comp_science' AS subject, size_bytes FROM cianfhoghlaim.celtic.local_documents.comp_science_documents
+            UNION ALL SELECT 'gaeilge', size_bytes FROM cianfhoghlaim.celtic.local_documents.gaeilge_documents
+            UNION ALL SELECT 'mata', size_bytes FROM cianfhoghlaim.celtic.local_documents.mata_documents
+            UNION ALL SELECT 'oideachas', size_bytes FROM cianfhoghlaim.celtic.local_documents.oideachas_documents
         )
         GROUP BY subject, size_bucket
         ORDER BY subject, n_files DESC
@@ -144,10 +144,10 @@ def _panel_4_recent(alt, con, mo, pd):
         SELECT file_name, subject, size_bytes, modified_at
         FROM (
             SELECT file_name, 'comp_science' AS subject, size_bytes, modified_at
-            FROM oideachais.celtic.local_documents.comp_science_documents
-            UNION ALL SELECT file_name, 'gaeilge', size_bytes, modified_at FROM oideachais.celtic.local_documents.gaeilge_documents
-            UNION ALL SELECT file_name, 'mata', size_bytes, modified_at FROM oideachais.celtic.local_documents.mata_documents
-            UNION ALL SELECT file_name, 'oideachas', size_bytes, modified_at FROM oideachais.celtic.local_documents.oideachas_documents
+            FROM cianfhoghlaim.celtic.local_documents.comp_science_documents
+            UNION ALL SELECT file_name, 'gaeilge', size_bytes, modified_at FROM cianfhoghlaim.celtic.local_documents.gaeilge_documents
+            UNION ALL SELECT file_name, 'mata', size_bytes, modified_at FROM cianfhoghlaim.celtic.local_documents.mata_documents
+            UNION ALL SELECT file_name, 'oideachas', size_bytes, modified_at FROM cianfhoghlaim.celtic.local_documents.oideachas_documents
         )
         WHERE modified_at IS NOT NULL
         ORDER BY modified_at DESC
@@ -165,10 +165,10 @@ def _panel_5_search(alt, con, mo, pd):
         """
         SELECT file_name, subject, size_bytes
         FROM (
-            SELECT file_name, 'comp_science' AS subject, size_bytes FROM oideachais.celtic.local_documents.comp_science_documents
-            UNION ALL SELECT file_name, 'gaeilge', size_bytes FROM oideachais.celtic.local_documents.gaeilge_documents
-            UNION ALL SELECT file_name, 'mata', size_bytes FROM oideachais.celtic.local_documents.mata_documents
-            UNION ALL SELECT file_name, 'oideachas', size_bytes FROM oideachais.celtic.local_documents.oideachas_documents
+            SELECT file_name, 'comp_science' AS subject, size_bytes FROM cianfhoghlaim.celtic.local_documents.comp_science_documents
+            UNION ALL SELECT file_name, 'gaeilge', size_bytes FROM cianfhoghlaim.celtic.local_documents.gaeilge_documents
+            UNION ALL SELECT file_name, 'mata', size_bytes FROM cianfhoghlaim.celtic.local_documents.mata_documents
+            UNION ALL SELECT file_name, 'oideachas', size_bytes FROM cianfhoghlaim.celtic.local_documents.oideachas_documents
         )
         ORDER BY subject, file_name
         LIMIT 20

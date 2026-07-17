@@ -23,7 +23,7 @@ Five visualisations:
 - **Panel D** — stage-by-stage enrolment funnel (area chart)
 - **Panel E** — health banner (engine + row count + status)
 
-Data source: ``md:oideachais.education.<stage>_topics`` (per the
+Data source: ``md:cianfhoghlaim.education.<stage>_topics`` (per the
 ``oideachais-pipeline`` spec). Falls back to a synthetic 5×3=15 stage
 × level matrix + 5×13 stage × HEI pipeline matrix when the
 lakehouse is unreachable.
@@ -52,7 +52,7 @@ def _intro():
         Primary, Junior Cycle, Senior Cycle, Tertiary) feed into
         the 13 HEIs + the 8+ QQI FET awards.
 
-        Live data: ``md:oideachais.education.<stage>_topics`` (per
+        Live data: ``md:cianfhoghlaim.education.<stage>_topics`` (per
         the ``oideachais-pipeline`` spec).
 
         ---
@@ -139,7 +139,7 @@ def _data_loading(
     if engine_label == "md:oideachais":
         try:
             pipeline = con.execute(
-                "SELECT * FROM oideachais.education.stage_topics"
+                "SELECT * FROM cianfhoghlaim.education.stage_topics"
             ).fetchdf()
         except Exception:
             pipeline = pd.DataFrame()
