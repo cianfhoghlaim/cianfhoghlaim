@@ -22,7 +22,7 @@ This dashboard is the marimo companion to the **TanStack Start
 surface, the TanStack route is the public surface; both render the
 same underlying data.
 
-Data source: ``md:oideachais_official_media.mention_edges`` (the cross-
+Data source: ``md:cianfhoghlaim_official_media.mention_edges`` (the cross-
 platform mention edges produced by the ``official_media_resolver``
 asset). Falls back to a synthetic dataset derived from the 4 allowlist
 YAML fixtures when the lakehouse is unreachable.
@@ -97,7 +97,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             edges_df = con.execute(
                 """
                 SELECT source_username, source_platform, target_username,
@@ -108,9 +108,9 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 """
             ).fetchdf()
             con.close()
-            db_label = "md:oideachais (live MotherDuck + DuckLake)"
+            db_label = "md:cianfhoghlaim (live MotherDuck + DuckLake)"
         except Exception as exc:  # noqa: BLE001
-            db_label = f"md:oideachais — query failed ({exc!s:.60s})"
+            db_label = f"md:cianfhoghlaim — query failed ({exc!s:.60s})"
             edges_df = None
 
     if edges_df is None:

@@ -23,7 +23,7 @@ Five visualisations of the BIEP corpus:
 - **Panel D** — per-subject total depth (horizontal bar)
 - **Panel E** — engine/fallback health banner
 
-Data source: ``md:oideachais`` (MotherDuck + DuckLake lakehouse).
+Data source: ``md:cianfhoghlaim`` (MotherDuck + DuckLake lakehouse).
 Falls back to a synthetic per-subject table built from the
 ``BIEP_SUBJECTS`` / ``BIEP_LEVELS`` / ``BIEP_LANGUAGES`` tuples
 in ``cianfhoghlaim.notebooks.nb_utils`` when the lakehouse is
@@ -55,7 +55,7 @@ def _intro():
         Science) × the 3 LC levels (HL/OL/FL) × the 2 working
         languages (English + Gaeilge) × the 9-year window (2017-2026).
 
-        Live data from ``md:oideachais`` (MotherDuck + DuckLake
+        Live data from ``md:cianfhoghlaim`` (MotherDuck + DuckLake
         lakehouse); synthetic fallback for offline development.
 
         ---
@@ -97,8 +97,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -126,7 +126,7 @@ def _lakehouse_connect(mo, duckdb, os):
 def _data_loading(con, BIEP_SUBJECTS, BIEP_LEVELS, BIEP_LANGUAGES, engine_label, mo):
     """Load the BIEP corpus rows — live or synthetic."""
     rows = []
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             for _subj in BIEP_SUBJECTS:
                 rel = f"cianfhoghlaim.leaving_cert.{_subj}_topics"
@@ -142,7 +142,7 @@ def _data_loading(con, BIEP_SUBJECTS, BIEP_LEVELS, BIEP_LANGUAGES, engine_label,
                 pd.concat(rows, ignore_index=True) if rows
                 else pd.DataFrame()
             )
-            src = "md:oideachais"
+            src = "md:cianfhoghlaim"
         except Exception as exc:
             corpus = pd.DataFrame()
             src = f"md error: {exc!s:.60s}"
@@ -293,7 +293,7 @@ def _viz_subject_depth_bar(alt, mo, corpus):
 @app.cell
 def _health_banner(mo, engine_label, corpus):
     """Panel E — engine + row count + status banner."""
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         _n_subj = (
             int(corpus["subject"].nunique()) if "subject" in corpus.columns else 0
         )

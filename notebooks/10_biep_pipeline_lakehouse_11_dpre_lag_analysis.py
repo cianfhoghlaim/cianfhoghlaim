@@ -43,7 +43,7 @@ def _setup(mo):
     from dotenv import load_dotenv
 
     load_dotenv()
-    con = ibis.duckdb.connect("md:oideachais")
+    con = ibis.duckdb.connect("md:cianfhoghlaim")
     return alt, con, ibis, pd
 
 

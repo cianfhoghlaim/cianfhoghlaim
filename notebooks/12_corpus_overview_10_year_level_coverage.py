@@ -104,8 +104,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -133,7 +133,7 @@ def _data_loading(
     src = engine_label
     coverage = pd.DataFrame()
 
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             coverage = con.execute(
                 "SELECT * FROM cianfhoghlaim.education.year_coverage"
@@ -299,7 +299,7 @@ def _viz_bilingual(alt, mo, coverage):
 
 @app.cell
 def _health_banner(mo, coverage, engine_label):
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         _n_year = int(coverage["year"].nunique()) if "year" in coverage.columns else 0
         status = "🟢 live"
     elif engine_label.startswith("local_duckdb (md unreachable"):

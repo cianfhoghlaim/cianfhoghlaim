@@ -30,7 +30,7 @@ The 4 BIEP v2 jurisdictions + the canonical LanceDB tables:
 Cross-jurisdiction filter UI: subject / level / language / year / awarding body / curriculum region.
 Reads from the canonical Lakehouse via the **ibis-first contract**:
 
-    conn = ibis.duckdb.connect("md:oideachais")
+    conn = ibis.duckdb.connect("md:cianfhoghlaim")
     lance = ibis.lancedb.connect("rest://lakehouse-lance-namespace:8182")
 
 (no raw `duckdb.connect(uri)` — per the ibis-first spec).
@@ -106,10 +106,10 @@ def _ibis_conn(mo):
     import ibis
 
     # The DuckLake (analytics) side
-    conn = ibis.duckdb.connect("md:oideachais")
+    conn = ibis.duckdb.connect("md:cianfhoghlaim")
     # The Lance (vector + structured) side
     lance = ibis.lancedb.connect("rest://lakehouse-lance-namespace:8182")
-    mo.md("✓ ibis-first contract wired (md:oideachais + rest://lakehouse-lance-namespace:8182)")
+    mo.md("✓ ibis-first contract wired (md:cianfhoghlaim + rest://lakehouse-lance-namespace:8182)")
     return conn, lance
 
 

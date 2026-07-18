@@ -19,7 +19,7 @@ document extracted by the BIEP BAML pipeline, compute:
 - Dialect coverage flags (Munster / Connacht / Ulster markers)
 
 Reads directly from the MotherDuck + DuckLake lakehouse at
-``md:oideachais``; falls back to a synthetic sample if the table is
+``md:cianfhoghlaim``; falls back to a synthetic sample if the table is
 empty (so the dashboard still renders during local development).
 """
 from __future__ import annotations
@@ -101,7 +101,7 @@ def _(mo):
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:oideachais")
+                con = duckdb.connect("md:cianfhoghlaim")
                 docs_df = con.execute(
                     """
                     SELECT doc_id, subject, language, source_path, extracted_text
@@ -111,10 +111,10 @@ def _(mo):
                     LIMIT 2000
                     """
                 ).fetchdf()
-                db_label = "md:oideachais (MotherDuck + DuckLake)"
+                db_label = "md:cianfhoghlaim (MotherDuck + DuckLake)"
             except Exception:
                 docs_df = None
-                db_label = "md:oideachais (query failed)"
+                db_label = "md:cianfhoghlaim (query failed)"
     else:
         db_path = os.environ.get(
             "OIDEACHAIS_GAELIC_DUCKDB",

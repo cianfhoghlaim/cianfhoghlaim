@@ -25,8 +25,8 @@ Workers + Container** deployment pattern (R4). The marimo notebook is
 the source artifact; the Cloudflare deployment is the production
 surface; this dashboard verifies the cross-archive join is healthy.
 
-Data source: ``md:oideachais_official_media`` (the resolved official-
-media records) joined against ``md:oideachais`` (the BIEP BLPIPA /
+Data source: ``md:cianfhoghlaim_official_media`` (the resolved official-
+media records) joined against ``md:cianfhoghlaim`` (the BIEP BLPIPA /
 NCCA Leaving-Cert corpus). Falls back to the leabharlann join helper
 when the BIEP lakehouse is unreachable.
 
@@ -100,7 +100,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             cross_df = con.execute(
                 """
                 SELECT om.ig_username, om.category, ncca.topic,
@@ -114,9 +114,9 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 """
             ).fetchdf()
             con.close()
-            db_label = "md:oideachais (live MotherDuck + DuckLake BIEP join)"
+            db_label = "md:cianfhoghlaim (live MotherDuck + DuckLake BIEP join)"
         except Exception as exc:  # noqa: BLE001
-            db_label = f"md:oideachais — join failed ({exc!s:.60s})"
+            db_label = f"md:cianfhoghlaim — join failed ({exc!s:.60s})"
             cross_df = None
 
     if cross_df is None:

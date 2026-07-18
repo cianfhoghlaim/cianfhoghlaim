@@ -12,7 +12,7 @@
 Pattern A6 (DuckDB ⇄ MotherDuck swap, from `spaces/README.md` §1.1) +
 pattern A8 (SQL-fenced-block in marimo, adapted to `mo.sql`).
 
-Data source: `md:oideachais` (MotherDuck, read-only). The notebook reads
+Data source: `md:cianfhoghlaim` (MotherDuck, read-only). The notebook reads
 from the dbt-built `weekly_downloads` model in `oideachais/dbt_project/`
 (the model is built by `dbt build --project-dir oideachais/dbt_project`).
 If the MotherDuck data is not available, the notebook gracefully falls
@@ -47,9 +47,9 @@ def _setup(mo):
     from dotenv import load_dotenv
 
     load_dotenv()
-    # Pattern A6: `md:oideachais?motherduck_token=$MOTHERDUCK_TOKEN` (prod) vs
+    # Pattern A6: `md:cianfhoghlaim?motherduck_token=$MOTHERDUCK_TOKEN` (prod) vs
     # local DuckDB (dev). The .infisical.env template hydrates MOTHERDUCK_TOKEN.
-    con = ibis.ibis.duckdb.connect("md:oideachais")
+    con = ibis.ibis.duckdb.connect("md:cianfhoghlaim")
     return alt, con, ibis, pd
 
 
@@ -62,7 +62,7 @@ def _intro(mo):
         Reactive descriptive stats on the `leabharlann/` corpus. Drag the
         sample-size slider to re-run all 4 charts. Data source: the dbt
         `weekly_downloads` model in `oideachais/dbt_project/`, read from
-        `md:oideachais` (MotherDuck).
+        `md:cianfhoghlaim` (MotherDuck).
         """
     )
     return
@@ -84,7 +84,7 @@ def _slider(mo):
 
 @app.cell
 def _data(con, pd, sample_size):
-    """Read the dbt `weekly_downloads` model from `md:oideachais`.
+    """Read the dbt `weekly_downloads` model from `md:cianfhoghlaim`.
 
     Real query (executes when `MOTHERDUCK_TOKEN` is set and the dbt model
     has been built):
@@ -216,7 +216,7 @@ def _footer_mo(mo, out):
     if bool(out["is_synthetic"].any()):
         mo.md(
             "> ⚠️ **Synthetic data**: the dbt `weekly_downloads` model is not "
-            "available in `md:oideachais`. The notebook is rendering a "
+            "available in `md:cianfhoghlaim`. The notebook is rendering a "
             "deterministic 1,000-row synthetic dataset. Run `dbt build "
             "--project-dir oideachais/dbt_project --target prod` to materialize "
             "the real model."

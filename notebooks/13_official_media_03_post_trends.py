@@ -19,7 +19,7 @@ Three visualisations of the official-media post trends:
 - **Panel B** — posts per platform (bar chart, Instagram vs Mastodon vs Bluesky)
 - **Panel C** — engagement heatmap by day-of-week × hour
 
-Data source: ``md:oideachais_official_media`` (MotherDuck + DuckLake lakehouse
+Data source: ``md:cianfhoghlaim_official_media`` (MotherDuck + DuckLake lakehouse
 table produced by the ``official_media_extract`` DLT pipeline). Falls back to
 a synthetic dataset derived from the 4 allowlist YAML fixtures when the
 lakehouse is unreachable — the same graceful-degradation pattern the
@@ -49,7 +49,7 @@ def _intro():
         / political / public-service / university / emergency-services /
         intelligence-agency handles in the curated allowlist.
 
-        Reads from ``md:oideachais_official_media`` (the official-media
+        Reads from ``md:cianfhoghlaim_official_media`` (the official-media
         DLT pipeline's MotherDuck + DuckLake landing zone). Falls back
         to a synthetic dataset when the lakehouse is unreachable.
 
@@ -95,7 +95,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             posts_df = con.execute(
                 """
                 SELECT ig_username, category, platform, posted_at,
@@ -106,9 +106,9 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 """
             ).fetchdf()
             con.close()
-            db_label = "md:oideachais (live MotherDuck + DuckLake)"
+            db_label = "md:cianfhoghlaim (live MotherDuck + DuckLake)"
         except Exception as exc:  # noqa: BLE001
-            db_label = f"md:oideachais — query failed ({exc!s:.60s})"
+            db_label = f"md:cianfhoghlaim — query failed ({exc!s:.60s})"
             posts_df = None
 
     if posts_df is None:

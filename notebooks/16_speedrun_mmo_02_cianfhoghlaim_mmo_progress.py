@@ -14,7 +14,7 @@ Certificate subjects (mathematics, applied_mathematics, chemistry,
 geography, history, english, gaeilge, computer_science).
 
 For each subject, the dashboard reads the live BGE-M3 quest-pack counts
-from the MotherDuck + DuckLake lakehouse (``md:oideachais``) and surfaces:
+from the MotherDuck + DuckLake lakehouse (``md:cianfhoghlaim``) and surfaces:
 
 1. **Syllabus coverage** — % of the canonical subject topics that have
    been embedded into LanceDB.
@@ -76,7 +76,7 @@ def _(mo):
 
             Per-realm progress for the 8 NCCA Leaving Certificate subjects
             (the MMO "realms"). Reads from the BIEP MotherDuck + DuckLake
-            lakehouse at ``md:oideachais``; falls back to synthetic data
+            lakehouse at ``md:cianfhoghlaim``; falls back to synthetic data
             when the lakehouse is unreachable.
             """
         ),
@@ -100,7 +100,7 @@ def _(level_selector, mo, subject_selector):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             df = con.execute(
                 f"""
                 SELECT
@@ -116,7 +116,7 @@ def _(level_selector, mo, subject_selector):
                 """
             ).fetchdf()
             con.close()
-            engine = "md:oideachais"
+            engine = "md:cianfhoghlaim"
         except Exception as e:
             err = str(e)
             engine = f"{engine} (query failed: {e})"
@@ -201,7 +201,7 @@ def _(duckdb, level_selector, mo, os, subject_selector):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             rows = con.execute(
                 """
                 SELECT subject, count(*) AS chunks
@@ -220,7 +220,7 @@ def _(duckdb, level_selector, mo, os, subject_selector):
         f"""
         ### Syllabus coverage (LanceDB BGE-M3 chunks)
 
-        Engine: `{"md:oideachais" if use_md and token else "synthetic"}`
+        Engine: `{"md:cianfhoghlaim" if use_md and token else "synthetic"}`
         Selected subjects: `{", ".join(subject_selector.value)}`
         Selected levels: `{", ".join(level_selector.value)}`
 
@@ -240,7 +240,7 @@ def _(duckdb, mo, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             row = con.execute(
                 """
                 SELECT anchor_date, merkle_root, on_chain_tx, n_badges_anchored

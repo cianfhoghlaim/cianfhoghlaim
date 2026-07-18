@@ -9,7 +9,7 @@
 
 5-step pipeline visualisation for the
 ``leabharlann_full_stack_demo`` Dagster asset. Reads the demo result
-from the BIEP MotherDuck + DuckLake lakehouse (``md:oideachais``) by
+from the BIEP MotherDuck + DuckLake lakehouse (``md:cianfhoghlaim``) by
 default; falls back to a local DuckDB file at ``LEABHARLANN_DEMO_DB``
 (default ``/tmp/leabharlann_demo.duckdb``) for development.
 
@@ -76,15 +76,15 @@ import ibis  # ibis-first entrypoint
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = ibis.ibis.duckdb.connect("md:oideachais")
+                con = ibis.ibis.duckdb.connect("md:cianfhoghlaim")
                 df = con.execute(
                     "SELECT * FROM leabharlann.full_stack_demo "
                     "ORDER BY started_at DESC LIMIT 1"
                 ).to_pandas()
-                db_label = "md:oideachais (MotherDuck + DuckLake)"
+                db_label = "md:cianfhoghlaim (MotherDuck + DuckLake)"
             except Exception:
                 df = None
-                db_label = "md:oideachais (query failed)"
+                db_label = "md:cianfhoghlaim (query failed)"
     else:
         db_path = os.environ.get("LEABHARLANN_DEMO_DB", "/tmp/leabharlann_demo.duckdb")
         demo_db = Path(db_path)

@@ -101,8 +101,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -128,7 +128,7 @@ def _data_loading(con, LEABHARLANN_SUBDIRS, engine_label, mo, pd):
     src = engine_label
     corpus = pd.DataFrame()
 
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             corpus = con.execute(
                 "SELECT * FROM cianfhoghlaim.leabharlann.documents"
@@ -269,7 +269,7 @@ def _viz_year_trend(alt, mo, corpus):
 @app.cell
 def _health_banner(mo, engine_label, corpus):
     """Panel E — engine + row count + status banner."""
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         _n_subdir = (
             int(corpus["subdir"].nunique())
             if "subdir" in corpus.columns else 0

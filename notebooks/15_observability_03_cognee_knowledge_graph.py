@@ -79,7 +79,7 @@ def _read_lakehouse(subject, mo):
     con, engine = connect_biep_lakehouse()
     nodes = []
     edges = []
-    if engine == "md:oideachais":
+    if engine == "md:cianfhoghlaim":
         try:
             nodes_df = con.execute(f"""
                 SELECT node_id, node_type, label, weight
@@ -94,7 +94,7 @@ def _read_lakehouse(subject, mo):
             """).fetchdf()
             nodes = nodes_df.to_dict("records")
             edges = edges_df.to_dict("records")
-            src = "md:oideachais"
+            src = "md:cianfhoghlaim"
         except Exception as exc:
             src = f"error: {exc}"
     else:
@@ -208,7 +208,7 @@ def _cli_main(argv=None) -> int:
     con, engine = connect_biep_lakehouse()
 
     summary = {"subject": args.subject, "engine": engine, "nodes": 0, "edges": 0}
-    if engine == "md:oideachais":
+    if engine == "md:cianfhoghlaim":
         try:
             n_nodes = con.execute(f"""
                 SELECT count(*) FROM cianfhoghlaim.cognee.{args.subject}_kg_nodes

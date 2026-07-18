@@ -46,7 +46,7 @@ def _setup():
 
     md_token = os.environ.get("MOTHERDUCK_TOKEN", "")
     if md_token:
-        con = duckdb.connect("md:oideachais")
+        con = duckdb.connect("md:cianfhoghlaim")
     else:
         con = duckdb.connect(":memory:")
 

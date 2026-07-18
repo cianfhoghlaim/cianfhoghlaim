@@ -13,7 +13,7 @@
 """End-to-end pipeline testing — BIEP MotherDuck + DuckLake + LanceDB.
 
 Verifies the British-Isles Education pipeline integration:
-Garage S3, MotherDuck + DuckLake lakehouse (``md:oideachais``), and
+Garage S3, MotherDuck + DuckLake lakehouse (``md:cianfhoghlaim``), and
 the BGE-M3 LanceDB vector index.
 
 All credentials are hydrated by the mise directory hook from the
@@ -46,7 +46,7 @@ import ibis  # ibis-first entrypoint
         Validates the British-Isles Education pipeline integration:
         MotherDuck + DuckLake lakehouse, Garage S3, LanceDB (BGE-M3).
 
-        Backend: `{"md:oideachais (MotherDuck + DuckLake)" if use_md else "local DuckDB"}`.
+        Backend: `{"md:cianfhoghlaim (MotherDuck + DuckLake)" if use_md else "local DuckDB"}`.
 
         All credentials come from the Infisical `dev-baile` vault via the
         mise directory hook — no hard-coded secrets in this notebook.
@@ -66,7 +66,7 @@ def _(duckdb, mo, os, use_md):
         if use_md:
             token = os.environ.get("MOTHERDUCK_TOKEN", "")
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con.execute("ATTACH 'md:oideachais' (TYPE MOTHERDUCK);")
+            con.execute("ATTACH 'md:cianfhoghlaim' (TYPE MOTHERDUCK);")
             con.execute("USE oideachais;")
         else:
             con.execute("INSTALL httpfs; LOAD httpfs;")
@@ -90,7 +90,7 @@ def _(duckdb, mo, os, use_md):
         ## 1. Infrastructure status
 
         - **Garage S3:** `{AWS_ENDPOINT}`
-        - **Lakehouse:** `{ "md:oideachais" if use_md else "local DuckDB" }`
+        - **Lakehouse:** `{ "md:cianfhoghlaim" if use_md else "local DuckDB" }`
         """
     )
     return AWS_ACCESS_KEY, AWS_ENDPOINT, AWS_SECRET_KEY, con, ok

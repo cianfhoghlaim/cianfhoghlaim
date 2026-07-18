@@ -115,8 +115,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -141,7 +141,7 @@ def _data_loading(HEI_CODES, QQI_AWARDS, con, engine_label, mo, pd):
     src = engine_label
     ladder = pd.DataFrame()
 
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             ladder = con.execute(
                 "SELECT * FROM cianfhoghlaim.hei.qqi_awards"
@@ -287,7 +287,7 @@ def _viz_hei_ladder(alt, mo, ladder):
 
 @app.cell
 def _health_banner(mo, engine_label, ladder):
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         _n = len(ladder)
         status = "🟢 live"
     elif engine_label.startswith("local_duckdb (md unreachable"):
