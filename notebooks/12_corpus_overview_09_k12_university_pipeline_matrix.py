@@ -107,8 +107,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -136,7 +136,7 @@ def _data_loading(
     src = engine_label
     pipeline = pd.DataFrame()
 
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             pipeline = con.execute(
                 "SELECT * FROM cianfhoghlaim.education.stage_topics"
@@ -287,7 +287,7 @@ def _viz_enrolment_funnel(EDUCATION_STAGES, alt, mo, pipeline):
 
 @app.cell
 def _health_banner(mo, engine_label, pipeline):
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         _n_stages = int(pipeline["stage"].nunique()) if "stage" in pipeline.columns else 0
         status = "🟢 live"
     elif engine_label.startswith("local_duckdb (md unreachable"):

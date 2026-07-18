@@ -96,7 +96,7 @@ def _ibis_conn(mo):
     """The ibis-first contract per the BIEP v2 spec."""
     import ibis
 
-    conn = ibis.duckdb.connect("md:oideachais")
+    conn = ibis.duckdb.connect("md:cianfhoghlaim")
     lance = ibis.lancedb.connect("rest://lakehouse-lance-namespace:8182")
     mo.md("✓ ibis-first contract wired — BIEP v2 DuckLake + Lance ready")
     return conn, lance

@@ -19,11 +19,11 @@ Tools demonstrated:
 - DLT (Extraction & Loading) via the v4 ``cianfhoghlaim.dlt.british_isles.ireland.education.*``
   registry.
 - Dagster (Orchestration) with MultiPartitions(subject, language).
-- DuckLake + DuckDB (Storage & local analytics) at ``md:oideachais``.
+- DuckLake + DuckDB (Storage & local analytics) at ``md:cianfhoghlaim``.
 - CocoIndex v1 (Transformations & BGE-M3 embeddings).
 - LanceDB (Vector Search via ``lance_scan('s3://...')``).
 
-Query path: ``mo.sql(engine=md:oideachais)`` so the notebook executes
+Query path: ``mo.sql(engine=md:cianfhoghlaim)`` so the notebook executes
 end-to-end against the shared MotherDuck + DuckLake lakehouse.
 """
 from __future__ import annotations
@@ -74,8 +74,8 @@ import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse chang
 @app.cell
 def _(duckdb, mo, os):
     env_dropdown = mo.ui.dropdown(
-        options=["md:oideachais", "local_duckdb"],
-        value="md:oideachais",
+        options=["md:cianfhoghlaim", "local_duckdb"],
+        value="md:cianfhoghlaim",
         label="Lakehouse attach",
     )
 
@@ -286,7 +286,7 @@ def _(mo, subject_selector, language_selector):
     sql_area = mo.ui.text_area(
         value=query_text.strip(), rows=10, full_width=True, label="Test query"
     )
-    run_query = mo.ui.run_button(label="Execute against md:oideachais")
+    run_query = mo.ui.run_button(label="Execute against md:cianfhoghlaim")
     mo.vstack([mo.md("### Query the BIEP lakehouse"), sql_area, run_query])
     return run_query, sql_area
 
@@ -306,7 +306,7 @@ def _(duckdb, mo, os, run_query, sql_area):
         if token:
             # ibis.duckdb.connect() picks up the MotherDuck token from the
 # connection URL (?motherduck_token=...) so no global SET is needed.
-        con = ibis.duckdb.connect("md:oideachais")
+        con = ibis.duckdb.connect("md:cianfhoghlaim")
         df = con.execute(sql_area.value).to_pandas()
         con.close()
         output_ui = mo.ui.table(df) if not df.empty else mo.md(
@@ -317,7 +317,7 @@ def _(duckdb, mo, os, run_query, sql_area):
             mo.md(
                 f"**Execution Error:**\n\n```text\n{e}\n```\n\n"
                 "*(Have you run the BIEP Dagster job to populate the "
-                "`md:oideachais` lakehouse yet?)*"
+                "`md:cianfhoghlaim` lakehouse yet?)*"
             ),
             kind="danger",
         )

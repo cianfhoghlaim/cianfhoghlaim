@@ -51,7 +51,7 @@ import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse chang
 
         The notebook is dual-engine: ``MOTHERDUCK_ENABLED=true`` swaps the
         local DuckDB fallback for the shared MotherDuck + DuckLake
-        (``md:oideachais``) attach. Marking-scheme text is sourced from
+        (``md:cianfhoghlaim``) attach. Marking-scheme text is sourced from
         ``curriculum.pdf_extracted_text`` (populated by the `pdf_processing`
         Dagster asset via OCR / ColPali).
 
@@ -140,7 +140,7 @@ def _(
             _token = os.environ.get("MOTHERDUCK_TOKEN", "")
             # ibis.ibis.duckdb.connect() picks up the MotherDuck token from the
 # connection URL (?motherduck_token=...) so no global SET is needed.
-            _con = ibis.duckdb.connect("md:oideachais")
+            _con = ibis.duckdb.connect("md:cianfhoghlaim")
         else:
             if not pathlib.Path(DUCKDB_PATH).exists():
                 err = (

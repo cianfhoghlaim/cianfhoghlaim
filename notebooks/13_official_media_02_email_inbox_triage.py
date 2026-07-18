@@ -75,7 +75,7 @@ def _():
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:oideachais")
+                con = duckdb.connect("md:cianfhoghlaim")
                 inbox_index_df = con.execute(
                     "SELECT * FROM leabharlann_inbox.inbox_index "
                     "ORDER BY date_iso DESC LIMIT 500"
@@ -88,12 +88,12 @@ def _():
                     "SELECT * FROM leabharlann_inbox.inbox_legal_threads "
                     "ORDER BY last_message_at DESC LIMIT 200"
                 ).fetchdf()
-                db_label = "md:oideachais (MotherDuck + DuckLake)"
+                db_label = "md:cianfhoghlaim (MotherDuck + DuckLake)"
             except Exception:
                 inbox_index_df = None
                 inbox_threads_df = None
                 inbox_legal_df = None
-                db_label = "md:oideachais (query failed)"
+                db_label = "md:cianfhoghlaim (query failed)"
     else:
         db_path = os.environ.get(
             "OIDEACHAIS_DUCKDB", "/tmp/cianfhoghlaim.duckdb"

@@ -11,7 +11,7 @@ side-by-side.
 
 Phase 8 of the openspec change. Reads from
 ``cianfhoghlaim.education.<nation>.<entity>`` (MotherDuck + DuckLake lakehouse
-via the ``md:oideachais`` alias; falls back to a local DuckLake attach
+via the ``md:cianfhoghlaim`` alias; falls back to a local DuckLake attach
 when ``MOTHERDUCK_TOKEN`` is unset).
 """
 from __future__ import annotations
@@ -38,7 +38,7 @@ def _header(mo):
         # Education — All Nations (Phase 8)
 
         Cross-nation view of the unified MotherDuck + DuckLake lakehouse
-        ``md:oideachais`` — table ``cianfhoghlaim.education.<nation>.<entity>``.
+        ``md:cianfhoghlaim`` — table ``cianfhoghlaim.education.<nation>.<entity>``.
         Filter by cycle and subject; charts render on the same x-axis.
         """
     )
@@ -53,7 +53,7 @@ def _connect(duckdb, os):
         try:
             # ibis.duckdb.connect() picks up the MotherDuck token from the
 # connection URL (?motherduck_token=...) so no global SET is needed.
-            con.execute("ATTACH 'md:oideachais' (TYPE MOTHERDUCK);")
+            con.execute("ATTACH 'md:cianfhoghlaim' (TYPE MOTHERDUCK);")
             con.execute("USE oideachais;")
             _kind = "motherduck"
         except Exception:  # noqa: BLE001

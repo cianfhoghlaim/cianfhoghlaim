@@ -88,7 +88,7 @@ def _intro(mo):
                                        ▼
                           ┌─────────────────────┐
                           │     MotherDuck      │
-                          │  (md:oideachais)    │
+                          │  (md:cianfhoghlaim)    │
                           └─────────────────────┘
     ```
     """
@@ -177,7 +177,7 @@ def _step_1_to_4(mo):
 
     See `notebooks/04_biep_motherduck/` — the 11 BIEP notebooks
     (6 subject + 1 leabharlann + 4 cross-cutting) wired to the
-    `md:oideachais` MotherDuck database.
+    `md:cianfhoghlaim` MotherDuck database.
 
     ## Step 4: lakehouse inspection
 
@@ -202,7 +202,7 @@ def _nb_utils_tour(mo):
     - `connect_ducklake(...)` — DuckLake connection (Parquet on S3 +
       Postgres catalog)
     - `connect_motherduck(...)` — MotherDuck connection
-      (`md:oideachais`)
+      (`md:cianfhoghlaim`)
     - `connect_baml_client(...)` — BAML client lazy-load + the
       `try / except ImportError` graceful-degradation pattern
 

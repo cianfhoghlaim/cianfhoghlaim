@@ -17,7 +17,7 @@ Conventions:
 
 - PEP 723 inline dependency block
 - 5-panel Altair dashboard layout with health banner
-- `mo.sql(engine=md:oideachais)` for live queries (graceful local
+- `mo.sql(engine=md:cianfhoghlaim)` for live queries (graceful local
   DuckDB fallback via `nb_utils.connect_biep_lakehouse()`)
 - CLI dual-mode (`--module-code`, `--module-title`, `--year`,
   `--limit`) via `nb_utils.cl_argument_parser()` + `nb_utils.run_as_script()`
@@ -32,7 +32,7 @@ Helpers exported:
 - `acad_table(name)` — return the canonical DuckLake table name.
 - `pseudo_id()` — compute the per-user pseudonym hash.
 - `acad_engine_label()` — return one of
-  `{"md:oideachais", "local_duckdb", "unavailable"}`.
+  `{"md:cianfhoghlaim", "local_duckdb", "unavailable"}`.
 - `acad_health_md(engine_label, status, rows)` — render the canonical
   health banner.
 """
@@ -143,7 +143,7 @@ def pseudo_id(manifest=None) -> str:
 
 
 def acad_engine_label() -> str:
-    """Return the engine label (`md:oideachais` / `local_duckdb` /
+    """Return the engine label (`md:cianfhoghlaim` / `local_duckdb` /
     `unavailable`)."""
     if duckdb is None:
         return "unavailable"
@@ -153,10 +153,10 @@ def acad_engine_label() -> str:
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:oideachais")
+                con = duckdb.connect("md:cianfhoghlaim")
                 con.execute("SELECT 1").fetchall()
                 con.close()
-                return "md:oideachais"
+                return "md:cianfhoghlaim"
             except Exception:
                 return "local_duckdb"
     return "local_duckdb"

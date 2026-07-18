@@ -52,7 +52,7 @@ def _intro():
         ``oideachais-marimo-dashboards`` spec R6 + R9.
 
         5 altair charts + a live BAML ``ExtractExamPaperLayout``
-        cell + an ``ibis.duckdb.connect("md:oideachais")`` first
+        cell + an ``ibis.duckdb.connect("md:cianfhoghlaim")`` first
         data cell.
         """
     )
@@ -87,8 +87,8 @@ def _lakehouse_connect_ibis_first(mo, BIEP_SUBJECTS, BIEP_LEVELS, BIEP_LANGUAGES
         token = os.environ.get("MOTHERDUCK_TOKEN", "")
         use_md = os.environ.get("MOTHERDUCK_ENABLED", "false").lower() == "true"
         if use_md and token:
-            ibis_conn = ibis.duckdb.connect("md:oideachais")
-            engine_label = "ibis.duckdb.connect('md:oideachais')"
+            ibis_conn = ibis.duckdb.connect("md:cianfhoghlaim")
+            engine_label = "ibis.duckdb.connect('md:cianfhoghlaim')"
         else:
             # Local fallback: Ibis against an in-memory DuckDB
             ibis_conn = ibis.duckdb.connect(":memory:")
@@ -298,8 +298,8 @@ def _multi_column_footnote(mo):
         demo, see ``ciolanza/notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration.py``.
 
         **ibis-first (R9)**: the first data cell calls
-        ``ibis.duckdb.connect("md:oideachais")`` (with graceful
-        ``:memory:`` fallback) — never ``duckdb.connect("md:oideachais")``
+        ``ibis.duckdb.connect("md:cianfhoghlaim")`` (with graceful
+        ``:memory:`` fallback) — never ``duckdb.connect("md:cianfhoghlaim")``
         directly. This is the canonical KCG entrypoint per the
         ``ibis`` skill.
         """

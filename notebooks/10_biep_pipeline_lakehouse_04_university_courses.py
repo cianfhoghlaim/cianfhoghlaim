@@ -24,7 +24,7 @@ Galway.
      artefacts joined to the matching scraped `CourseDescriptor` rows
      via the new `UoGArtifact-MATCHES-CourseDescriptor` Cognee edge.
 
-The notebook uses ``mo.sql(engine=md:oideachais)`` (the MotherDuck +
+The notebook uses ``mo.sql(engine=md:cianfhoghlaim)`` (the MotherDuck +
 DuckLake lakehouse) for the underlying queries. When the MotherDuck
 endpoint is unreachable, the notebook falls back to a local DuckDB
 file (``/tmp/cianfhoghlaim.duckdb``) for development.
@@ -61,8 +61,8 @@ import ibis  # ibis-first entrypoint
             token = os.environ.get("MOTHERDUCK_TOKEN", "")
             if token:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                engine = ibis.duckdb.connect("md:oideachais")
-                ENGINE_LABEL = "md:oideachais (MotherDuck + DuckLake)"
+                engine = ibis.duckdb.connect("md:cianfhoghlaim")
+                ENGINE_LABEL = "md:cianfhoghlaim (MotherDuck + DuckLake)"
             else:
                 ENGINE_LABEL = "MotherDuck (no token — set MOTHERDUCK_TOKEN)"
                 engine = None

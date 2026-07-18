@@ -59,10 +59,10 @@ import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse chang
         # Exam Papers Explorer
 
         Browse SEC exam materials surfaced by the BIEP exam-material pipeline
-        and persisted in the MotherDuck + DuckLake lakehouse (``md:oideachais``).
+        and persisted in the MotherDuck + DuckLake lakehouse (``md:cianfhoghlaim``).
 
         - ``MOTHERDUCK_ENABLED=true`` → queries a shared MotherDuck database
-        - otherwise → local ``md:oideachais`` DuckDB attach
+        - otherwise → local ``md:cianfhoghlaim`` DuckDB attach
 
         ## Architecture
 
@@ -202,7 +202,7 @@ def _(
                 _token = os.environ.get("MOTHERDUCK_TOKEN", "")
                 # ibis.ibis.ibis.duckdb.connect() picks up the MotherDuck token from the
 # connection URL (?motherduck_token=...) so no global SET is needed.
-                _con = ibis.duckdb.connect("md:oideachais")
+                _con = ibis.duckdb.connect("md:cianfhoghlaim")
             else:
                 if not pathlib.Path(DUCKDB_PATH).exists():
                     raise FileNotFoundError(
@@ -299,7 +299,7 @@ def _(
                 _token = os.environ.get("MOTHERDUCK_TOKEN", "")
                 # ibis.duckdb.connect() picks up the MotherDuck token from the
 # connection URL (?motherduck_token=...) so no global SET is needed.
-                _con = ibis.duckdb.connect("md:oideachais")
+                _con = ibis.duckdb.connect("md:cianfhoghlaim")
             else:
                 if pathlib.Path(DUCKDB_PATH).exists():
                     _con = ibis.duckdb.connect(DUCKDB_PATH, read_only=True)

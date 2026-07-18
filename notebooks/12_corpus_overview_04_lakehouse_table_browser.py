@@ -10,7 +10,7 @@
 """04 — Lakehouse table browser (oideachais-marimo-dashboards spec, R3).
 
 Operator-facing browser over the MotherDuck + DuckLake lakehouse
-``md:oideachais`` schema. Lists every table in the
+``md:cianfhoghlaim`` schema. Lists every table in the
 ``cianfhoghlaim.leaving_cert.*`` + ``cianfhoghlaim.leabharlann.*`` +
 ``cianfhoghlaim.cognee.*`` + ``cianfhoghlaim.official_media.*`` schemas
 and surfaces per-table row counts + column counts + last-modified
@@ -24,7 +24,7 @@ Five visualisations:
 - **Panel D** — column-count distribution (histogram)
 - **Panel E** — live ``SHOW TABLES`` SQL console (mo.sql cell)
 
-Data source: ``md:oideachais`` (MotherDuck + DuckLake). Falls back
+Data source: ``md:cianfhoghlaim`` (MotherDuck + DuckLake). Falls back
 to a synthetic 27-table lakehouse (7 schema prefixes × 3-5 tables
 each = 24-30 tables) when the lakehouse is unreachable.
 
@@ -46,10 +46,10 @@ def _intro():
 
     mo.md(
         r"""
-        # 🗂️ Lakehouse table browser (md:oideachais)
+        # 🗂️ Lakehouse table browser (md:cianfhoghlaim)
 
         Operator-facing browser over the MotherDuck + DuckLake
-        lakehouse ``md:oideachais`` schema. Lists every table in
+        lakehouse ``md:cianfhoghlaim`` schema. Lists every table in
         the BIEP + leabharlann + Cognee + official-media schema
         prefix families and surfaces per-table row counts + column
         counts + last-modified timestamps.
@@ -82,8 +82,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -99,7 +99,7 @@ def _lakehouse_connect(mo, duckdb, os):
 def _list_tables(con, engine_label, mo, pd):
     """Run SHOW TABLES — or synthesise a 27-table lakehouse."""
     rows = []
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             sql = """
                 SELECT table_schema, table_name,
@@ -290,10 +290,10 @@ def _viz_table_list(mo, df):
 @app.cell
 def _sql_console(con, mo, engine_label):
     """Panel E — ``mo.sql`` console against the live lakehouse."""
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         sql_input = mo.ui.text_area(
             value="SELECT count(*) AS n FROM cianfhoghlaim.leabharlann.books",
-            label="📝 SQL to run (md:oideachais)",
+            label="📝 SQL to run (md:cianfhoghlaim)",
         )
     else:
         sql_input = mo.ui.text_area(
@@ -307,7 +307,7 @@ def _sql_console(con, mo, engine_label):
 @app.cell
 def _execute_sql(con, engine_label, sql_input, mo, pd):
     """Execute the SQL from the console — read-only safety."""
-    if engine_label != "md:oideachais":
+    if engine_label != "md:cianfhoghlaim":
         mo.md("⚠️  Engine is offline — SQL console disabled.")
     else:
         try:

@@ -97,8 +97,8 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
-            engine_label = "md:oideachais"
+            con = duckdb.connect("md:cianfhoghlaim")
+            engine_label = "md:cianfhoghlaim"
         except Exception as exc:
             con = duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
@@ -114,7 +114,7 @@ def _lakehouse_connect(mo, duckdb, os):
 def _data_loading(con, BIEP_SUBJECTS, engine_label, mo, pd):
     """Read the cross-archive join edges — live or synthetic fallback."""
     edges = []
-    if engine_label == "md:oideachais":
+    if engine_label == "md:cianfhoghlaim":
         try:
             # Try to read the canonical join table if it exists
             try:
@@ -130,7 +130,7 @@ def _data_loading(con, BIEP_SUBJECTS, engine_label, mo, pd):
                 ).fetchdf()
             except Exception:
                 df = pd.DataFrame()
-            src = "md:oideachais"
+            src = "md:cianfhoghlaim"
             edges = df.to_dict("records") if not df.empty else []
         except Exception as exc:
             edges = []

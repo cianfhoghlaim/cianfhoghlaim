@@ -74,7 +74,7 @@ def _(mo, os, pathlib):
     mo.md(
         f"### Engine: **{engine_label}**\n\n"
         "Set `MOTHERDUCK_ENABLED=true` to switch to the shared MotherDuck + DuckLake "
-        "(`md:oideachais`) lakehouse. Credentials come from the Infisical `dev-baile` vault."
+        "(`md:cianfhoghlaim`) lakehouse. Credentials come from the Infisical `dev-baile` vault."
     )
     return DUCKDB_PATH, MOTHERDUCK_ENABLED, engine_label
 
@@ -113,7 +113,7 @@ def _(DUCKDB_PATH, MOTHERDUCK_ENABLED, cycle_filter, duckdb, mo, os, pathlib, pd
             _token = os.environ.get("MOTHERDUCK_TOKEN", "")
             # ibis.ibis.duckdb.connect() picks up the MotherDuck token from the
 # connection URL (?motherduck_token=...) so no global SET is needed.
-            _con = ibis.duckdb.connect("md:oideachais")
+            _con = ibis.duckdb.connect("md:cianfhoghlaim")
         else:
             if pathlib.Path(DUCKDB_PATH).exists():
                 _con = ibis.duckdb.connect(DUCKDB_PATH, read_only=True)

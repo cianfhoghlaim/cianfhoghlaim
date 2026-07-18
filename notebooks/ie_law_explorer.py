@@ -56,7 +56,7 @@ def _intro_cell():
         5. **legal_aid** — Legal Aid Board (Ireland)
 
         All 5 sources are read from `cianfhoghlaim.law.ie.*` DuckLake
-        tables (MotherDuck `md:oideachais` or local DuckDB fallback).
+        tables (MotherDuck `md:cianfhoghlaim` or local DuckDB fallback).
         """
     )
     return (mo,)

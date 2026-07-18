@@ -43,7 +43,7 @@ def _intro(mo):
         chemistry.**
 
         The 6 stages are executed per subject against the live MotherDuck
-        + DuckLake lakehouse (``md:oideachais``).
+        + DuckLake lakehouse (``md:cianfhoghlaim``).
         """
     )
     return ()
@@ -182,7 +182,7 @@ def _stage3_lakehouse_query(subjects, level, language):
     _con, _engine = connect_biep_lakehouse()
     _rows = []
     for _subj in subjects.value:
-        if _engine == "md:oideachais":
+        if _engine == "md:cianfhoghlaim":
             try:
                 _row = _con.execute(f"""
                     SELECT count(*) AS n
@@ -224,7 +224,7 @@ def _stage4_cocoindex_status(subjects, level, language):
     _con, _engine = connect_biep_lakehouse()
     _status_rows = []
     for _subj in subjects.value:
-        if _engine == "md:oideachais":
+        if _engine == "md:cianfhoghlaim":
             try:
                 _row = _con.execute(f"""
                     SELECT count(*) FROM lance_scan(
@@ -376,7 +376,7 @@ def _cli_main(argv=None) -> int:
         "year": args.year,
         "engine": engine,
     }
-    if engine == "md:oideachais":
+    if engine == "md:cianfhoghlaim":
         try:
             row = con.execute(f"""
                 SELECT count(*) FROM cianfhoghlaim.leaving_cert.{args.subject}_topics

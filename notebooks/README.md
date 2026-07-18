@@ -76,10 +76,10 @@ Re-exported via `from cianfhoghlaim.notebooks import ...`:
 | Variable | Default | Notes |
 |:--|:--|:--|
 | `MOTHERDUCK_TOKEN` | _required for MD_ | Read from Infisical `dev-baile` via mise |
-| `MOTHERDUCK_ENABLED` | `false` | Set `true` to opt-in to `md:oideachais` |
+| `MOTHERDUCK_ENABLED` | `false` | Set `true` to opt-in to `md:cianfhoghlaim` |
 | `USE_LOCAL_SCRAPES` | `false` | Set `true` for the curated `stedding/ingest_queue/` snapshot fallback |
 | `CIANFHOGHLAIM_LEAVING_CERT_ROOT` | `~/dev/.../leaving_certificate` | Override for the BIEP corpus directory |
-| `CIANFHOGHLAIM_LAKEHOUSE_DUCKDB` | `md:oideachais` | DuckDB attach string |
+| `CIANFHOGHLAIM_LAKEHOUSE_DUCKDB` | `md:cianfhoghlaim` | DuckDB attach string |
 | `CIANFHOGHLAIM_ROOT` | `~/dev/kings_college_galway` | Repo root (overridden by `nb_utils.REPO_ROOT`) |
 
 ## Cross-references

@@ -8,7 +8,7 @@ Importable from any notebook under ``cianfhoghlaim/notebooks/`` (or from
 the v4-consolidated venv via ``uv run --with``). Centralises:
 
 - The canonical MotherDuck + DuckLake connection string
-  (``md:oideachais``) with graceful local-DuckDB fallback
+  (``md:cianfhoghlaim``) with graceful local-DuckDB fallback
   (``connect_biep_lakehouse()`` — ibis-first).
 - The BIEP Leaving Cert subject topic helper.
 - The leabharlann↔Leaving Cert cross-archive join helper.
@@ -71,7 +71,7 @@ ROOT = Path(
 )
 LAKEHOUSE_DUCKDB = os.environ.get(
     "CIANFHOGHLAIM_LAKEHOUSE_DUCKDB",
-    "md:oideachais",
+    "md:cianfhoghlaim",
 )
 
 __all__ = [
@@ -109,19 +109,19 @@ def connect_biep_lakehouse(
 
     Returns ``(conn, engine_label)`` where ``conn`` is an
     ``ibis.duckdb.connect`` handle (NOT a raw ``duckdb.connect`` handle)
-    and ``engine_label`` is one of: ``"md:oideachais"``, ``"local_duckdb"``,
+    and ``engine_label`` is one of: ``"md:cianfhoghlaim"``, ``"local_duckdb"``,
     or ``"unavailable"``.
 
     Selection logic:
     1. If ``use_md=True`` (or env ``MOTHERDUCK_ENABLED=true``) AND
-       ``MOTHERDUCK_TOKEN`` is set, try ``md:oideachais``.
+       ``MOTHERDUCK_TOKEN`` is set, try ``md:cianfhoghlaim``.
     2. If that fails AND ``local_fallback=True``, fall back to an
        in-memory DuckDB via ``ibis.duckdb.connect(":memory:")`` so
        notebooks still render during local development.
     3. If both fail, return the in-memory handle with label
        ``"unavailable"``.
 
-    This replaces the 12+ duplicated ``try: connect("md:oideachais")
+    This replaces the 12+ duplicated ``try: connect("md:cianfhoghlaim")
     except: connect(":memory:")`` blocks across the BIEP dashboards
     AND migrates them to ibis-first per the 2026-07-25 refactor.
     """
@@ -133,7 +133,7 @@ def connect_biep_lakehouse(
 
     if use_md and os.environ.get("MOTHERDUCK_TOKEN", ""):
         try:
-            return _ibis_connect_md(), "md:oideachais"
+            return _ibis_connect_md(), "md:cianfhoghlaim"
         except Exception:
             if not local_fallback:
                 raise
@@ -155,7 +155,7 @@ def connect_md_oideachais(*, legacy_raw: bool = False) -> Any:
         token = os.environ.get("MOTHERDUCK_TOKEN")
         if token:
             duckdb.sql(f"SET motherduck_token='{token}'")
-        return duckdb.connect("md:oideachais")
+        return duckdb.connect("md:cianfhoghlaim")
     from notebooks._shared.db import connect_md as _ibis_connect_md
     return _ibis_connect_md()
 

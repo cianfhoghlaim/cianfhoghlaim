@@ -24,8 +24,8 @@ This dashboard is the marimo companion to the **multi-column
 demonstrates the layout; the spec's R5 requirement is that the
 layout works on both narrow and wide viewports.
 
-Data source: ``md:oideachais_official_media.sentiment_scores`` +
-``md:oideachais_official_media.moderation_flags``. Falls back to a
+Data source: ``md:cianfhoghlaim_official_media.sentiment_scores`` +
+``md:cianfhoghlaim_official_media.moderation_flags``. Falls back to a
 synthetic dataset derived from the 4 allowlist YAML fixtures when the
 lakehouse is unreachable.
 
@@ -97,7 +97,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:oideachais")
+            con = duckdb.connect("md:cianfhoghlaim")
             sentiment_df = con.execute(
                 """
                 SELECT ig_username, category, posted_at, sentiment_score,
@@ -108,9 +108,9 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
                 """
             ).fetchdf()
             con.close()
-            db_label = "md:oideachais (live MotherDuck + DuckLake)"
+            db_label = "md:cianfhoghlaim (live MotherDuck + DuckLake)"
         except Exception as exc:  # noqa: BLE001
-            db_label = f"md:oideachais — query failed ({exc!s:.60s})"
+            db_label = f"md:cianfhoghlaim — query failed ({exc!s:.60s})"
             sentiment_df = None
 
     if sentiment_df is None:
