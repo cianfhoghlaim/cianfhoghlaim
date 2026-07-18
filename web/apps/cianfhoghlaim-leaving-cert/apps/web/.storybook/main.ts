@@ -20,6 +20,7 @@ const config: StorybookConfig = {
     "../src/**/*.stories.@(ts|tsx)",
     "../src/components/**/*.stories.@(ts|tsx)",
     "../../packages/ui/src/**/*.stories.@(ts|tsx)",
+    "../../packages/lineage/**/*.stories.@(ts|tsx)",
   ],
   addons: [
     "@storybook/addon-essentials",

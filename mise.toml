@@ -106,6 +106,22 @@ run = "bunx turbo run typecheck"
 description = "Lint TypeScript code via turbo"
 run = "bunx turbo run lint"
 
+[tasks."schema:generate"]
+description = "Generate the BIEP v1 lineage registry + Zod/TanStack DB collection schemas (committed artifacts). Per openspec R27 + R30."
+run = "bun run schema:generate"
+
+[tasks."schema:validate"]
+description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts). Per openspec R30."
+run = "bun run schema:validate"
+
+[tasks."lineage:validate"]
+description = "CI drift gate for the PDF lineage registry (filesystem walk vs committed registry). Per openspec R27."
+run = "bun run lineage:validate"
+
+[tasks."lineage:smoke"]
+description = "Playwright WASM smoke test for the BIEP v1 lineage viewer. Per openspec R33."
+run = "bun run lineage:smoke"
+
 # =============================================================================
 # Turborepo shortcut
 # =============================================================================
@@ -129,13 +145,19 @@ run = "bunx turbo run ${@}"
 # dagster:crypteolas, and the old dagster:oideachais) have been collapsed
 # into the single canonical `dagster:dev` alias. The v4 consolidation
 # (2026-06-28) merged all 5 former code-locations into a single Dagster
-# code-location at `cianfhoghlaim.dagster.definitions`. Phase-1 manifest
-# consolidation (2026-06-30) made `dagster:dev` the canonical name.
+# code-location. Phase-1 manifest consolidation (2026-06-30) made
+# `dagster:dev` the canonical name.
+#
+# Per the 2026-07-14 foundation refactor (`openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1`),
+# the canonical code-location module is `orchestration.definitions` (the
+# v7 flattened package layout puts the package root at the repo root, NOT
+# under a `cianchoghlaim/` sub-directory). The historical
+# `cianchoghlaim.dagster.definitions` path no longer exists.
 # See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
 
 [tasks."dagster:dev"]
-description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann + 12-agent fleet). Loads cianfhoghlaim.dagster.definitions: 199 assets + 31 jobs + 6 schedules + 16 sensors + 22 asset checks."
-run = "uv run dagster dev -m cianfhoghlaim.dagster.definitions"
+description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann + 12-agent fleet). Loads orchestration.definitions: 199 assets + 31 jobs + 6 schedules + 16 sensors + 22 asset checks."
+run = "uv run dagster dev -m orchestration.definitions"
 
 # =============================================================================
 # BIEP v3 Tasks (per the 2026-08-09 cross-cutting-docs change)

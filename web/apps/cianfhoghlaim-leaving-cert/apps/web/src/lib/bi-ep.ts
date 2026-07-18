@@ -25,9 +25,29 @@ export interface BIEPVisualization {
   title: string;
   title_ga: string;
   description: string;
+  /**
+   * @deprecated Use `marimo_cell_id` instead. Retained for backward
+   * compatibility with the existing per-subject pages.
+   */
   marimo_cell: string;
+  /** The marimo notebook cell that renders this visualization (e.g. `"topic_frequency_cell"`). Used by R29 of the lineage viewer. */
+  marimo_cell_id: string;
   /** The BAML function the visualization is sourced from (if any). */
   baml_function?: string;
+  /**
+   * The MotherDuck Dive + Flight that own the underlying data. Renders as
+   * a clickable pill in the lineage viewer (R29).
+   */
+  motherduck_ref: BIEPMotherDuckRef;
+}
+
+export interface BIEPMotherDuckRef {
+  /** MotherDuck Dive name (e.g. `"lc_syllabus_topics"`). */
+  dive_name: string;
+  /** MotherDuck Flight name (e.g. `"lc_pdf_sync_flight"`). */
+  flight_name: string;
+  /** Canonical MotherDuck Dive URL — opened in a new tab from the lineage viewer. */
+  dive_url: string;
 }
 
 export interface BIEPNotebookPath {
@@ -251,7 +271,13 @@ function makeVisualizations(slug: BIEPSubjectSlug): BIEPVisualizations {
       description:
         "Line chart of topic counts grouped by year (BAML `ExtractCurriculumSyllabus` × NCCA syllabus PDFs).",
       marimo_cell: `${slug}_topic_frequency_cell`,
+      marimo_cell_id: `${slug}_topic_frequency_cell`,
       baml_function: "ExtractCurriculumSyllabus",
+      motherduck_ref: {
+        dive_name: "lc_syllabus_topics",
+        flight_name: "lc_pdf_sync_flight",
+        dive_url: `https://app.motherduck.com/dive/${slug}_syllabus_topics`,
+      },
     },
     exam_paper_difficulty: {
       id: "exam_paper_difficulty",
@@ -260,7 +286,13 @@ function makeVisualizations(slug: BIEPSubjectSlug): BIEPVisualizations {
       description:
         "Bar chart of average marks per year (Bloom's taxonomy + BAML `ExtractExamPaperLayout`).",
       marimo_cell: `${slug}_exam_paper_difficulty_cell`,
+      marimo_cell_id: `${slug}_exam_paper_difficulty_cell`,
       baml_function: "ExtractExamPaperLayout",
+      motherduck_ref: {
+        dive_name: "lc_exam_paper_difficulty",
+        flight_name: "lc_pdf_sync_flight",
+        dive_url: `https://app.motherduck.com/dive/${slug}_exam_paper_difficulty`,
+      },
     },
     marking_scheme_complexity: {
       id: "marking_scheme_complexity",
@@ -269,7 +301,13 @@ function makeVisualizations(slug: BIEPSubjectSlug): BIEPVisualizations {
       description:
         "Heatmap of mark allocation per question (BAML `ExtractMarkingSchemeGuideline`).",
       marimo_cell: `${slug}_marking_scheme_complexity_cell`,
+      marimo_cell_id: `${slug}_marking_scheme_complexity_cell`,
       baml_function: "ExtractMarkingSchemeGuideline",
+      motherduck_ref: {
+        dive_name: "lc_marking_complexity",
+        flight_name: "lc_pdf_sync_flight",
+        dive_url: `https://app.motherduck.com/dive/${slug}_marking_complexity`,
+      },
     },
     cross_linguistic_mapping: {
       id: "cross_linguistic_mapping",
@@ -278,7 +316,13 @@ function makeVisualizations(slug: BIEPSubjectSlug): BIEPVisualizations {
       description:
         "Irish ↔ English topic mappings (BAML `ExtractCrossLinguisticConcept`).",
       marimo_cell: `${slug}_cross_linguistic_mapping_cell`,
+      marimo_cell_id: `${slug}_cross_linguistic_mapping_cell`,
       baml_function: "ExtractCrossLinguisticConcept",
+      motherduck_ref: {
+        dive_name: "lc_syllabus_topics",
+        flight_name: "lc_pdf_sync_flight",
+        dive_url: `https://app.motherduck.com/dive/${slug}_syllabus_topics`,
+      },
     },
     asset_generator: {
       id: "asset_generator",
@@ -287,6 +331,12 @@ function makeVisualizations(slug: BIEPSubjectSlug): BIEPVisualizations {
       description:
         "Per-topic asset gallery (FIBO 2D sprite atlases + TRELLIS.2 / SAM-3D-Objects 3D meshes, queued via the Dagster `asset_generation_<subject>` asset).",
       marimo_cell: `${slug}_asset_generator_cell`,
+      marimo_cell_id: `${slug}_asset_generator_cell`,
+      motherduck_ref: {
+        dive_name: "lc_syllabus_topics",
+        flight_name: "lc_pdf_sync_flight",
+        dive_url: `https://app.motherduck.com/dive/${slug}_syllabus_topics`,
+      },
     },
   };
 }
