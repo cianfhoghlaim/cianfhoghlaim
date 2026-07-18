@@ -111,19 +111,47 @@ flights:
       - irish
       - daily_sync
 
-- name: ireland_full_coverage_flight
-  module: cianfhoghlaim.motherduck.flights.ireland_full_coverage_flight
-  callable: build_ireland_full_coverage_flight
-  cron: "0 2 * * *"
-- name: england_full_coverage_flight
-  module: cianfhoghlaim.motherduck.flights.england_full_coverage_flight
-  callable: build_england_full_coverage_flight
-  cron: "0 3 * * *"
-- name: sct_wls_ni_flight
-  module: cianfhoghlaim.motherduck.flights.sct_wls_ni_flight
-  callable: build_sct_wls_ni_flight
-  cron: "0 4 * * *"
-- name: crown_dependencies_flight
-  module: cianfhoghlaim.motherduck.flights.crown_dependencies_flight
-  callable: build_crown_dependencies_flight
-  cron: "30 4 * * *"
+  - name: ireland_full_coverage_flight
+    module: cianfhoghlaim.motherduck.flights.ireland_full_coverage_flight
+    callable: build_ireland_full_coverage_flight
+    cron: "0 2 * * *"
+    timezone: UTC
+    description: "BIEP v3 Ireland full-coverage daily Flight"
+    tags:
+      - biep
+      - ireland
+      - full_coverage
+  - name: england_full_coverage_flight
+    module: cianfhoghlaim.motherduck.flights.england_full_coverage_flight
+    callable: build_england_full_coverage_flight
+    cron: "0 3 * * *"
+    timezone: UTC
+    description: "BIEP v3 England full-coverage daily Flight"
+    tags:
+      - biep
+      - england
+      - full_coverage
+  - name: sct_wls_ni_flight
+    module: cianfhoghlaim.motherduck.flights.sct_wls_ni_flight
+    callable: build_sct_wls_ni_flight
+    cron: "0 4 * * *"
+    timezone: UTC
+    description: "BIEP v3 Scotland + Wales + Northern Ireland full-coverage daily Flight"
+    tags:
+      - biep
+      - scotland
+      - wales
+      - northern_ireland
+      - full_coverage
+  - name: crown_dependencies_flight
+    module: cianfhoghlaim.motherduck.flights.crown_dependencies_flight
+    callable: build_crown_dependencies_flight
+    cron: "30 4 * * *"
+    timezone: UTC
+    description: "BIEP v3 Crown Dependencies (Jersey + Guernsey + Isle of Man) full-coverage daily Flight"
+    tags:
+      - biep
+      - jersey
+      - guernsey
+      - isle_of_man
+      - full_coverage

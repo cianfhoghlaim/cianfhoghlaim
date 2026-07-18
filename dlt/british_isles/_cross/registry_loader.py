@@ -675,8 +675,10 @@ def seed_registry() -> dict[str, int]:
     """Seed the registry with all 8 BIEP v3 jurisdictions (full coverage).
 
     Returns a dict with the count of rows inserted per jurisdiction.
-    Total: Ireland 544 + England 276 + Scotland 150 + Wales 160 + NI 70 +
-    Jersey 120 + Guernsey 120 + IoM 120 = 1,560 rows.
+    Total: Ireland 544 + England 276 + Scotland 600 + Wales 640 +
+    NI 280 + Jersey 480 + Guernsey 480 + IoM 480 = 3,780 rows.
+    Each cohort is enumerated × 2 languages (en, ga) where the awarding
+    body publishes a bilingual curriculum.
     """
     counts: dict[str, int] = {
         "ireland": 0, "england": 0, "scotland": 0, "wales": 0,
@@ -703,6 +705,19 @@ def seed_registry() -> dict[str, int]:
                 logger.warning(
                     "seed_registry: failed to insert %s: %s", row.subject_slug, e,
                 )
+
+    # Per the 2026-08-10-biep-v3-preflight-bug-fixes-v1 change.
+    # Asserts the row count matches the documented total so future loader
+    # changes fail loudly if the docstring/loader drift again.
+    actual = sum(counts.values())
+    expected = 3_780
+    if actual != expected:
+        raise AssertionError(
+            f"seed_registry() expected {expected} rows, got {actual}. "
+            "Either the loader was changed or the docstring needs updating. "
+            "Per-jurisdiction breakdown: "
+            + ", ".join(f"{k}={v}" for k, v in counts.items())
+        )
 
     return counts
 
