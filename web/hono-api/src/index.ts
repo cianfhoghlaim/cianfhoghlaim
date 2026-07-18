@@ -3,6 +3,9 @@ import { cors } from "hono/cors";
 import { auth } from "./auth";
 import { requireAuth, requireOrg } from "./middleware";
 
+import lineageBySubject from "./routes/lineage/[subject]";
+import pdfWildcard from "./routes/pdf/[...r2-key]";
+
 const app = new Hono();
 
 app.use(
@@ -14,6 +17,9 @@ app.use(
       "https://croilar.cianfhoghlaim.ie",
       "https://convex.croilar.cianfhoghlaim.ie",
       "https://auth.croilar.cianfhoghlaim.ie",
+      // The leaving-cert TanStack Start dev server on port 3082 (per the
+      // cianfhoghlaim-leaving-cert app README).
+      "http://localhost:3082",
     ],
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -45,6 +51,17 @@ app.get("/api/admin/stacks", requireAuth, requireOrg("admin"), async (c) => {
   // Will be filled in by PR-4a (Stacks module via Komodo API)
   return c.json({ stacks: [] });
 });
+
+// ----------------------------------------------------------------------------
+// BIEP v1 lineage endpoints (per openspec R30 + R31)
+// ----------------------------------------------------------------------------
+//
+// Both routes are mounted at the top level (no `/api/v1` prefix) so the
+// leaving-cert TanStack Start app's `loader()` can call them via the
+// Vite dev server's `/api/*` reverse-proxy with zero config.
+
+app.route("/", lineageBySubject);
+app.route("/", pdfWildcard);
 
 const port = parseInt(process.env.PORT ?? "4000", 10);
 console.log(`[croilar-hono-api] Listening on port ${port}`);

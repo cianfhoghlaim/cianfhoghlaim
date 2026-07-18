@@ -84,6 +84,11 @@
     "spec:validate": "openspec validate",
     "spec:archive": "openspec archive",
 
+    "schema:generate": "bun run scripts/schema-generate.ts --offline",
+    "schema:validate": "bun run scripts/schema-validate.ts --offline --quiet",
+    "lineage:validate": "bun run scripts/lineage-validate.ts --quiet",
+    "lineage:smoke": "bun run scripts/lineage-smoke.ts",
+
     "validate-stacks": "bash scripts/stack-doctor.sh",
     "doctor:stacks": "bash scripts/stack-doctor.sh --json | jq",
     "validate-env": "uv run python scripts/validate_env.py",
