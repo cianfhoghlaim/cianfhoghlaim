@@ -12,9 +12,11 @@ from __future__ import annotations
 # Per the 2026-08-07 hardening change. Replaces ExtractEn.
 BIEPV3Extract = "gemma-3-4b-it"
 
-# BIEPV3ExtractStrong — the canonical detail-rich client (Qwen 3-VL 8B)
-# Replaces ExtractEnStrong.
-BIEPV3ExtractStrong = "qwen3-vl-8b-it"
+# BIEPV3ExtractStrong — the canonical detail-rich text client (Gemma 3 27B)
+# Replaces ExtractEnStrong. Used for high-fidelity text-only extraction
+# (curriculum syllabus, marking scheme analysis) where a vision-language
+# model would be slower + more expensive + lower text fidelity.
+BIEPV3ExtractStrong = "gemma-3-27b-it"
 
 # BIEPV3Vision — the canonical vision client for the 4-path OCR ensemble
 # Routes through llama-swap with qwen3-vl-8b.

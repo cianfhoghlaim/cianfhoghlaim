@@ -1,6 +1,7 @@
 """England jurisdiction pipeline (BIEP v3 — generic).
 
-Per the 2026-07-29-biep-v3-england-full-coverage-v1 change.
+Per the 2026-07-29-biep-v3-england-full-coverage-v1 change +
+2026-08-10-biep-v3-preflight-bug-fixes-v1 inheritance refactor.
 
 The canonical generic England DLT pipeline. Replaces the per-board
 per-subject DLT sources in
@@ -21,6 +22,8 @@ This single file reads the canonical registry
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination
   factory at ``dlt.common.destinations_cianfhoghlaim`` is used.
+- JurisdictionPipelineBase (per the 2026-08-10 preflight change) —
+  inherits shared boilerplate.
 
 Reference: openspec/changes/2026-07-29-biep-v3-england-full-coverage-v1/
 """
@@ -28,14 +31,10 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
-import dlt
-
-from dlt.common.destinations_cianfhoghlaim import (
-    get_dlt_destination,
+from dlt.british_isles._cross.jurisdiction_pipeline_base import (
+    JurisdictionPipelineBase,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,72 +50,38 @@ ENGLAND_BOARDS: tuple[str, ...] = ("aqa", "ocr", "edexcel")
 ENGLAND_LEVELS: tuple[str, ...] = ("gcse", "a_level")
 
 
-def england_jurisdiction_pipeline(
-    jurisdiction: str = "england",
-    dataset_name: str = "england_education",
-    use_md: bool = True,
-):
-    """The canonical generic England DLT pipeline.
+class EnglandJurisdictionPipeline(JurisdictionPipelineBase):
+    """England jurisdiction pipeline (BIEP v3)."""
 
-    Reads the registry to discover which (subject, board, level) tuples
-    to materialise. Writes per-subject per-board per-level LanceDB
-    tables to ``cianfhoghlaim.education.england.<level>.<board>.<subject>``.
-    """
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+    STAGE = "gcse"
 
-    subjects = query_by_jurisdiction(jurisdiction)
-    if not subjects:
-        raise ValueError(
-            f"No subjects found in the registry for jurisdiction={jurisdiction!r}. "
-            "Run seed_registry() first."
+    def build_pipeline_resource(self):
+        """Yield one row per (board, subject, level) cohort from the registry."""
+        from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+
+        subjects = query_by_jurisdiction(self.jurisdiction)
+        if not subjects:
+            raise ValueError(
+                f"No subjects found in the registry for "
+                f"jurisdiction={self.jurisdiction!r}. "
+                "Run seed_registry() first."
+            )
+
+        logger.info(
+            "england_jurisdiction_pipeline: discovered %d subjects for "
+            "jurisdiction=%r",
+            len(subjects), self.jurisdiction,
         )
 
-    logger.info(
-        "england_jurisdiction_pipeline: discovered %d subjects for jurisdiction=%r",
-        len(subjects), jurisdiction,
-    )
-
-    @dlt.resource(
-        name=f"england_{jurisdiction}_subjects",
-        write_disposition="merge",
-        primary_key=["content_hash"],
-    )
-    def england_subjects():
-        """Yield one row per (board, subject, level) cohort from the registry."""
         for row in subjects:
-            yield {
-                "source_id": (
-                    f"british_isles.england.education.{row.stage}."
-                    f"{row.board}.{row.subject_slug}"
-                ),
-                "country_code": "england",
-                "jurisdiction": "england",
-                "education_stage": row.stage,
-                "exam_board": row.board,
-                "subject": row.subject_slug,
-                "qualification_level": row.qualification_level or "untiered",
-                "language": row.language,
-                "baml_function": row.baml_function,
-                "concept": row.concept,
-                "source_url": row.source_url,
-                "display_name_en": row.display_name_en,
-                "display_name_local": row.display_name_local,
-                "last_verified": row.last_verified or datetime.now(UTC).isoformat()[:10],
-                "ingested_at": datetime.now(UTC).isoformat(),
-                "namespace": (
-                    f"cianfhoghlaim.education.england.{row.stage}.{row.board}.{row.subject_slug}"
-                ),
-            }
+            yield self.subject_to_row(row, self.STAGE)
 
-    pipeline = dlt.pipeline(
-        pipeline_name="england_jurisdiction_pipeline",
-        dataset_name=dataset_name,
-        destination=get_dlt_destination(use_ducklake=use_md),
-    )
-    return pipeline, england_subjects
+
+england_jurisdiction_pipeline = EnglandJurisdictionPipeline("england")
 
 
 __all__ = [
+    "EnglandJurisdictionPipeline",
     "england_jurisdiction_pipeline",
     "ENGLAND_CACHE_ROOT",
     "ENGLAND_BOARDS",
