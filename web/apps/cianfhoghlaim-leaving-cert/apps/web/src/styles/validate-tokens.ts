@@ -44,7 +44,8 @@ const FIX_MODE = process.argv.includes('--fix');
 type Group =
   | 'nations' | 'subjects' | 'competencies' | 'subnations'
   | 'brand' | 'states' | 'surfaces' | 'buttons' | 'materials'
-  | 'typography' | 'spacing' | 'radius' | 'shadows' | 'motion' | 'z';
+  | 'typography' | 'spacing' | 'radius' | 'shadows' | 'motion' | 'z'
+  | 'lineage';
 
 interface ParsedTokens {
   [group: string]: Record<string, string>;
@@ -54,6 +55,7 @@ const EMPTY: ParsedTokens = {
   nations: {}, subjects: {}, competencies: {}, subnations: {},
   brand: {}, states: {}, surfaces: {}, buttons: {}, materials: {},
   typography: {}, spacing: {}, radius: {}, shadows: {}, motion: {}, z: {},
+  lineage: {},
 };
 
 // ============================================================================
@@ -78,6 +80,10 @@ function sectionToGroup(sectionName: string): Group | null {
   if (s.includes('shadow scale')) return 'shadows';
   if (s.includes('motion') || s.includes('animation')) return 'motion';
   if (s.includes('z-index scale')) return 'z';
+  // Per R32 — CocoInsight click-to-highlight; section header literal is
+  // "Lineage viewer (R32 — CocoInsight click-to-highlight)" so the
+  // substring "cocoinsight" makes the match unambiguous.
+  if (s.includes('cocoinsight')) return 'lineage';
   return null;
 }
 
@@ -103,6 +109,7 @@ function stripPrefix(group: Group, key: string): string {
     shadows:      ['shadows-', 'shadow-'],
     motion:       ['motion-'],
     z:            ['z-'],
+    lineage:      ['lineage-', 'lineages-'],
   };
   for (const p of prefixes[group]) {
     if (key.startsWith(p)) return key.slice(p.length);

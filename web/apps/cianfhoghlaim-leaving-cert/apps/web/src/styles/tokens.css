@@ -123,6 +123,16 @@
   --ci-z-modal: 1300;
   --ci-z-popover: 1400;
   --ci-z-toast: 1500;
+
+  /* ===== Lineage viewer (CocoInsight click-to-highlight R32) ===== */
+  /* Per openspec/changes/2026-07-19-leaving-cert-pdf-lineage-and-schema-codegen-v1. */
+  /* Consumed by apps/web/packages/lineage/{StepPreview,LineageDag}.tsx.            */
+  /* The `dim` value is interpreted as `opacity` (0..1) — every UI element    */
+  /* that is NOT in the upstream/downstream sets renders at this opacity.        */
+  --ci-lineage-selected:   #7c3aed;  /* purple-600 — the clicked element */
+  --ci-lineage-upstream:   #2563eb;  /* blue-600 — direct upstream dependencies */
+  --ci-lineage-downstream: #16a34a;  /* green-600 — direct downstream consumers */
+  --ci-lineage-dim: 0.4;             /* opacity 40% — unrelated fields/nodes */
 }
 
 /* ===== BREAKPOINTS (reference only — not custom properties) =====

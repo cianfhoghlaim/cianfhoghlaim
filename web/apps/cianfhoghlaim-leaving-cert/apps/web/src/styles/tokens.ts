@@ -149,6 +149,20 @@ export interface ZIndexTokens {
   toast: number;
 }
 
+/** Lineage viewer (CocoInsight click-to-highlight)
+ * Per openspec/changes/2026-07-19-leaving-cert-pdf-lineage-and-schema-codegen-v1 R32.
+ * The `dim` value is an opacity (0..1), not a color. */
+export interface LineageTokens {
+  /** Purple — the clicked element. */
+  selected: HexColor;
+  /** Blue — direct upstream dependencies of the clicked element. */
+  upstream: HexColor;
+  /** Green — direct downstream consumers of the clicked element. */
+  downstream: HexColor;
+  /** Opacity 0..1 — unrelated fields/nodes render at this opacity. */
+  dim: number;
+}
+
 /**
  * The complete Cianfhoghlaim design token set.
  *
@@ -172,6 +186,8 @@ export interface CianfhoghlaimTokens {
   shadows: ShadowTokens;
   motion: MotionTokens;
   z: ZIndexTokens;
+  /** R32 — CocoInsight click-to-highlight state colors. */
+  lineage: LineageTokens;
 }
 
 /**
@@ -284,6 +300,12 @@ export const tokens: CianfhoghlaimTokens = {
     modal: 1300,
     popover: 1400,
     toast: 1500,
+  },
+  lineage: {
+    selected: '#7c3aed',
+    upstream: '#2563eb',
+    downstream: '#16a34a',
+    dim: 0.4,
   },
 };
 

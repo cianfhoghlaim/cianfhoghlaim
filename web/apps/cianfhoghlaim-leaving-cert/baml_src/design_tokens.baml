@@ -106,6 +106,18 @@ class TypographyTokens {
 }
 
 // ============================================================================
+// Lineage viewer (CocoInsight click-to-highlight) — per R32
+// ============================================================================
+
+class LineageColor {
+  group "lineage"
+  selected   string @description("Purple-600 #7c3aed — the clicked element")
+  upstream   string @description("Blue-600 #2563eb — direct upstream dependencies")
+  downstream string @description("Green-600 #16a34a — direct downstream consumers")
+  dim        string @description("0.4 — opacity for unrelated fields/nodes")
+}
+
+// ============================================================================
 // Aggregate
 // ============================================================================
 
@@ -119,6 +131,7 @@ class DesignTokens {
   spacing      SpacingScale
   radius       RadiusScale
   typography   TypographyTokens
+  lineage      LineageColor
 }
 
 // ============================================================================
