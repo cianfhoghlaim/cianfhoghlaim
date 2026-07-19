@@ -20,7 +20,8 @@
     "radius",
     "shadows",
     "motion",
-    "z"
+    "z",
+    "lineage"
   ],
   "properties": {
     "nations": {
@@ -205,6 +206,18 @@
         "modal":    { "type": "integer" },
         "popover":  { "type": "integer" },
         "toast":    { "type": "integer" }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "description": "Lineage viewer (CocoInsight click-to-highlight) — per R32 of openspec/changes/2026-07-19-leaving-cert-pdf-lineage-and-schema-codegen-v1",
+      "additionalProperties": false,
+      "required": ["selected", "upstream", "downstream", "dim"],
+      "properties": {
+        "selected":   { "$ref": "#/definitions/HexColor", "description": "Purple-600 — the clicked element" },
+        "upstream":   { "$ref": "#/definitions/HexColor", "description": "Blue-600 — direct upstream dependencies" },
+        "downstream": { "$ref": "#/definitions/HexColor", "description": "Green-600 — direct downstream consumers" },
+        "dim":        { "type": "number", "minimum": 0, "maximum": 1, "description": "Opacity 0..1 — unrelated fields/nodes render at this opacity" }
       }
     }
   },

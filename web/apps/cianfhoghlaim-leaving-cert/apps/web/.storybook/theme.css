@@ -5,6 +5,10 @@
  *
  * Tokens consumed: --ci-* from the central tokens.css (single source of
  * truth, per R22). No hardcoded colours, sizes, or fonts.
+ *
+ * Per follow-up #4 of openspec/changes/2026-07-19-leaving-cert-pdf-lineage-and-schema-codegen-v1:
+ * the 4 --ci-lineage-* tokens now live in tokens.css (canonical); the
+ * duplicates here were removed (R22 single-source-of-truth enforcement).
  */
 
 body {
@@ -20,18 +24,6 @@ body {
 [data-theme="ci-light"] {
   --ci-storybook-bg: #f8fafc;
   --ci-storybook-fg: #0f172a;
-}
-
-/* Lineage viewer (R32) tokens — CocoInsight click-to-highlight.
- * Per openspec/changes/2026-07-19-leaving-cert-pdf-lineage-and-schema-codegen-v1.
- * Defaults match packages/lineage/tokens.ts. */
-:root,
-[data-theme="ci-dark"],
-[data-theme="ci-light"] {
-  --ci-lineage-selected: #7c3aed;     /* purple — the clicked element */
-  --ci-lineage-upstream: #2563eb;     /* blue — direct upstream dependencies */
-  --ci-lineage-downstream: #16a34a;   /* green — direct downstream consumers */
-  --ci-lineage-dim: 0.4;              /* 40% opacity — unrelated elements */
 }
 
 .sbdocs,
