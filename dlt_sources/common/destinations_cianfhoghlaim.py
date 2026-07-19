@@ -104,8 +104,11 @@ def _build_local_destination(namespace: str) -> Any:
 
     catalog_uri = f"postgresql://{postgres_user}:{postgres_pass}@{postgres_host}:{postgres_port}/{postgres_db}"
 
-    # S3/Garage storage config
-    bucket_url = f"s3://ducklake/{namespace}/"
+    # S3/Garage storage config.
+    # The canonical bucket name is `ducklake-cianchoghlaim` (per the
+    # 2026-08-13 lakehouse deploy). Override via DUCKLAKE_BUCKET env var.
+    bucket_name = os.environ.get("DUCKLAKE_BUCKET", "ducklake-cianchoghlaim")
+    bucket_url = f"s3://{bucket_name}/{namespace}/"
     endpoint_url = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900")
     # Map the lakehouse's GARAGE_* env vars to the AWS_* naming
     # that boto3 + the DuckDB S3 extension expect.

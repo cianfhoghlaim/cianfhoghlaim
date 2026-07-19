@@ -148,9 +148,11 @@ def query_by_jurisdiction(
     jurisdiction: Jurisdiction,
 ) -> list[SubjectRegistryRow]:
     """Return all registry rows for one jurisdiction (across all stages)."""
-    import duckdb  # type: ignore[import-not-found]
+    from dlt_sources.british_isles._cross.connection import connect_ducklake
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
-    conn = duckdb.connect(uri, read_only=True)
+    schema = os.getenv("BIEP_REGISTRY_SCHEMA", DEFAULT_REGISTRY_SCHEMA)
+    use_catalog = schema.split(".")[0] if "." in schema and uri.startswith("ducklake:") else None
+    conn = connect_ducklake(uri, read_only=True, use_catalog=use_catalog)
     df = conn.execute(
         f"""
         SELECT *
@@ -166,9 +168,11 @@ def query_by_jurisdiction(
 
 def query_by_concept(concept: str) -> list[SubjectRegistryRow]:
     """Return all registry rows for one cross-jurisdiction concept."""
-    import duckdb  # type: ignore[import-not-found]
+    from dlt_sources.british_isles._cross.connection import connect_ducklake
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
-    conn = duckdb.connect(uri, read_only=True)
+    schema = os.getenv("BIEP_REGISTRY_SCHEMA", DEFAULT_REGISTRY_SCHEMA)
+    use_catalog = schema.split(".")[0] if "." in schema and uri.startswith("ducklake:") else None
+    conn = connect_ducklake(uri, read_only=True, use_catalog=use_catalog)
     df = conn.execute(
         f"""
         SELECT *
@@ -187,9 +191,11 @@ def query_by_stage(
     stage: EducationalStage,
 ) -> list[SubjectRegistryRow]:
     """Return all registry rows for one (jurisdiction, stage) tuple."""
-    import duckdb  # type: ignore[import-not-found]
+    from dlt_sources.british_isles._cross.connection import connect_ducklake
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
-    conn = duckdb.connect(uri, read_only=True)
+    schema = os.getenv("BIEP_REGISTRY_SCHEMA", DEFAULT_REGISTRY_SCHEMA)
+    use_catalog = schema.split(".")[0] if "." in schema and uri.startswith("ducklake:") else None
+    conn = connect_ducklake(uri, read_only=True, use_catalog=use_catalog)
     df = conn.execute(
         f"""
         SELECT *
@@ -205,9 +211,11 @@ def query_by_stage(
 
 def query_cross_jurisdiction_bridges() -> list[dict[str, Any]]:
     """Return all cross-jurisdiction bridges (the slug-mappings)."""
-    import duckdb  # type: ignore[import-not-found]
+    from dlt_sources.british_isles._cross.connection import connect_ducklake
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
-    conn = duckdb.connect(uri, read_only=True)
+    schema = os.getenv("BIEP_REGISTRY_SCHEMA", DEFAULT_REGISTRY_SCHEMA)
+    use_catalog = schema.split(".")[0] if "." in schema and uri.startswith("ducklake:") else None
+    conn = connect_ducklake(uri, read_only=True, use_catalog=use_catalog)
     df = conn.execute(
         f"SELECT * FROM {DEFAULT_REGISTRY_SCHEMA}.cross_jurisdiction_bridges ORDER BY concept"
     ).fetch_df()
@@ -267,6 +275,8 @@ def insert_subject(row: SubjectRegistryRow, conn: Any | None = None) -> None:
     owns_conn = conn is None
     if owns_conn:
         conn = duckdb.connect(uri, read_only=False)
+        if uri.startswith("ducklake:"):
+            _setup_s3_secret(conn)
         if attach_catalog:
             try:
                 conn.execute(f"USE {attach_catalog};")

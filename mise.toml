@@ -168,8 +168,8 @@ description = "Smoke-test the 5 canonical lakehouse services (Nimtable :3018 + O
 run = "python3 scripts/smoke_test_lakehouse.py --dev"
 
 [tasks."biep:v3:registry:seed"]
-description = "Seed the British Isles subject registry (3,780 rows across 8 jurisdictions — per the 2026-08-10 preflight bug-fix)"
-run = "python3 -c \"from dlt.british_isles._cross.registry_loader import seed_registry; print(seed_registry())\""
+description = "Seed the British Isles subject registry (3,780 rows across 8 jurisdictions — per the 2026-08-10 preflight bug-fix + 2026-08-13 dlt→dlt_sources rename)"
+run = "python3 -c \"from dlt_sources.british_isles._cross.registry_loader import seed_registry; print(seed_registry())\""
 
 [tasks."biep:v3:marimo:wasm:export"]
 description = "Export all 7 BIEP v3 jurisdiction dashboards to WebAssembly bundles + manifest"
