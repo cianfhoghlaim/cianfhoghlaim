@@ -5,7 +5,7 @@ catalogue + CELLAR metadata repository.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.europeanunion.publications_office import (
+from dlt_sources.europeanunion.publications_office import (
     cellar_documents,
     eu_publications,
 )

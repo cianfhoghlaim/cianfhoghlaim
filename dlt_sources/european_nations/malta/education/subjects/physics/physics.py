@@ -9,6 +9,8 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 Reference: ``openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/``.
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import json
@@ -17,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

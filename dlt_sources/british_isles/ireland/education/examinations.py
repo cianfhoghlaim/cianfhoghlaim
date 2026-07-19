@@ -1,3 +1,5 @@
+import dlt
+
 """
 Education IE source: examinations_source
 
@@ -19,7 +21,7 @@ Partitions:
     )
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.education.examinations import (
+    from dlt_sources.british_isles.ireland.education.examinations import (
         examinations_source, examinations_lc6_source, examinations_lc6_partitions,
         LC6_SUBJECTS, LC6_YEAR_RANGE, PAPER_KINDS,
     )
@@ -32,7 +34,7 @@ Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
            tasks.md — Sub-batch 3.2
 """
 
-import dlt
+import dlt_sources
 
 from ._examinations_helpers import (
     _crawl_examinations,

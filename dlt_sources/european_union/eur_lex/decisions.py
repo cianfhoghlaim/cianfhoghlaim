@@ -5,16 +5,18 @@ emitting one row per ``(celex_id, language)`` for every EU decision
 available on eur-lex.europa.eu.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.european_union._shared import EUInstitutionalSource
-from cianfhoghlaim.dlt.european_union._shared.registries import EU_LANGUAGES
-from cianfhoghlaim.dlt.european_union.eur_lex.regulations import _row_from_cache
+from dlt_sources.european_union._shared import EUInstitutionalSource
+from dlt_sources.european_union._shared.registries import EU_LANGUAGES
+from dlt_sources.european_union.eur_lex.regulations import _row_from_cache
 
 logger = structlog.get_logger(__name__)
 

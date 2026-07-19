@@ -1,5 +1,5 @@
 """Re-export the Turkey Chemistry per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.tur.education.subjects.chemistry.chemistry import (
+from dlt_sources.european_nations.tur.education.subjects.chemistry.chemistry import (
     TURChemistrySource,
     tur_chemistry,
     tur_chemistry_source,

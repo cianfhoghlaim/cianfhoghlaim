@@ -1,5 +1,5 @@
 """Belgium (Belgium) education per-subject DLT sub-tree."""
-from cianfhoghlaim.dlt.european_nations.bel.education.subjects import (
+from dlt_sources.european_nations.bel.education.subjects import (
     mathematics, chemistry, biology, physics, language, computing_science,
 )
 

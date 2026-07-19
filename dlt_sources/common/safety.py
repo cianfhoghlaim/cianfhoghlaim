@@ -5,7 +5,7 @@ Ensures all DuckDB writes through DLT go through the single-threaded executor,
 preventing segfaults and data corruption from concurrent access.
 
 Usage:
-    from cianfhoghlaim.dlt.safety import safe_dlt_run
+    from dlt_sources.safety import safe_dlt_run
 
     load_info = safe_dlt_run(pipeline, source_data)
 
@@ -22,12 +22,14 @@ dlt best-practices:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, TypeVar
 
-import dlt
+import dlt_sources
 
 logger = logging.getLogger(__name__)
 

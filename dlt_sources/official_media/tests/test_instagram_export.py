@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-from cianfhoghlaim.dlt.official_media.instagram_export import (
+from dlt_sources.official_media.instagram_export import (
     FOLLOWER_LIST_KINDS,
     InstagramExportParser,
     instagram_export_source,

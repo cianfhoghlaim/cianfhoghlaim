@@ -35,6 +35,8 @@ of which list it was on), with columns:
     ig_export_id   str   # the export directory name
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -44,7 +46,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

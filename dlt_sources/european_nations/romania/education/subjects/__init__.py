@@ -1,5 +1,5 @@
 """Romania (Romania) per-subject DLT sub-tree."""
-from cianfhoghlaim.dlt.european_nations.rou.education.subjects import (
+from dlt_sources.european_nations.rou.education.subjects import (
     mathematics,
     chemistry,
     biology,

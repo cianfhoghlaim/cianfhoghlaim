@@ -1,5 +1,5 @@
 """Re-export the Cyprus Chemistry per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.cyp.education.subjects.chemistry import (
+from dlt_sources.european_nations.cyp.education.subjects.chemistry import (
     cyp_chemistry,
     cyp_chemistry_source,
 )  # noqa: F401

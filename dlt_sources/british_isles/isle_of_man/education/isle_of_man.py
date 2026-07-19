@@ -8,15 +8,17 @@ to extract.
 Phase 1 fix (2026-07-12): ``www.gov.im`` returns 403 to plain HTTP +
 sitemap.xml. Routes via the Firecrawl stealth proxy with a 10s
 wait_for; falls back to the Wayback Machine on stealth failure.
-See :mod:`cianfhoghlaim.dlt.common.endpoint_recovery`.
+See :mod:`cianfhoghlaim.dlt_sources.common.endpoint_recovery`.
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 
-import dlt
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
+import dlt_sources
+from dlt_sources.common.firecrawl_source import crawl_website
 
 IOM_URLS = {
     "education": "https://www.gov.im/categories/education-training-and-careers/",

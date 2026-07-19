@@ -10,6 +10,8 @@ the shared `_citation_extractor` module.
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -17,7 +19,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 from ._citation_extractor import extract_citations

@@ -1,5 +1,5 @@
 """Re-export the Hungary Biology per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.hun.education.subjects.biology import (
+from dlt_sources.european_nations.hun.education.subjects.biology import (
     hun_biology,
     hun_biology_source,
 )  # noqa: F401

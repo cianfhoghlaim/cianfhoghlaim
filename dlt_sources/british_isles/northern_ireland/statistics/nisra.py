@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for NISRA education statistics.
 
@@ -14,8 +16,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.common.http_client import nisra_client
+import dlt_sources
+from dlt_sources.common.http_client import nisra_client
 
 
 def _get_nisra_factory():

@@ -5,7 +5,7 @@ Provides per-subject DLT resources for all 18 Junior Cycle subjects.
 Each subject yields pages and PDF URLs from curriculumonline.ie.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.subjects.junior_cycle import (
+    from dlt_sources.british_isles.ireland.subjects.junior_cycle import (
         junior_cycle_source,
     )
 
@@ -20,11 +20,13 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 from .base import (

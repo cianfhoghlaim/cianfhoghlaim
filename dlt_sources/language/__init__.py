@@ -30,21 +30,21 @@ def _maybe_func(mod_path: str, attr: str) -> Any:
 
 # Phase 3D per-source re-exports (one function per file).
 # Known-good eager re-exports:
-from cianfhoghlaim.dlt.british_isles.ireland.culture.ainm import ainm_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint import canuint_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint_audio import canuint_audio_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint_dialect_summary import (
+from dlt_sources.british_isles.ireland.culture.ainm import ainm_source
+from dlt_sources.british_isles.ireland.culture.canuint import canuint_source
+from dlt_sources.british_isles.ireland.culture.canuint_audio import canuint_audio_source
+from dlt_sources.british_isles.ireland.culture.canuint_dialect_summary import (
     canuint_dialect_summary_source,
 )
-from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint_search import canuint_search_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.canuint_word_alignment import (
+from dlt_sources.british_isles.ireland.culture.canuint_search import canuint_search_source
+from dlt_sources.british_isles.ireland.culture.canuint_word_alignment import (
     canuint_word_alignment_source,
 )
-from cianfhoghlaim.dlt.british_isles.ireland.culture.gaois_combined import gaois_combined_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.heritage import ie_culture_heritage_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.logainm import logainm_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.tearma import tearma_source
-from cianfhoghlaim.dlt.british_isles.ireland.culture.tearma_search import tearma_search_source
+from dlt_sources.british_isles.ireland.culture.gaois_combined import gaois_combined_source
+from dlt_sources.british_isles.ireland.culture.heritage import ie_culture_heritage_source
+from dlt_sources.british_isles.ireland.culture.logainm import logainm_source
+from dlt_sources.british_isles.ireland.culture.tearma import tearma_source
+from dlt_sources.british_isles.ireland.culture.tearma_search import tearma_search_source
 
 # Lazy re-exports (may be broken upstream).
 duchas_source = _maybe_func("cianfhoghlaim.dlt.british_isles.ireland.culture.duchas", "duchas_source")

@@ -4,11 +4,13 @@ the lazy_extract_exam_paper resource that fires baml.LazyExtractExamPaper
 on-demand from the SPA.
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 from pathlib import Path
 
-import dlt
+import dlt_sources
 
 # Reuse the existing senior_cycle_subjects resource from the existing
 # ireland/senior_cycle.py if present. Otherwise define a minimal stub.

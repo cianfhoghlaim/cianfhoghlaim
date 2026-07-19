@@ -14,8 +14,8 @@ import sys
 from unittest.mock import MagicMock
 
 import pytest
-from cianfhoghlaim.dlt.official_media import classifier as classifier_module
-from cianfhoghlaim.dlt.official_media.classifier import classify_with_baml
+from dlt_sources.official_media import classifier as classifier_module
+from dlt_sources.official_media.classifier import classify_with_baml
 
 # ---------------------------------------------------------------------------
 # BAML missing
@@ -133,7 +133,7 @@ def test_allowlist_filter_invokes_baml_fallback() -> None:
     """End-to-end: AllowlistFilter with the BAML classifier wired in
     accepts a candidate that looks official (heuristic match) when
     BAML returns is_official_media=True with high confidence."""
-    from cianfhoghlaim.dlt.official_media.allowlist import AllowlistFilter
+    from dlt_sources.official_media.allowlist import AllowlistFilter
 
     def fake_baml(ig_username: str, ig_bio: str, ig_external_url: str) -> dict:
         return {

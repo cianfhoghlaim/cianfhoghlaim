@@ -6,13 +6,15 @@ Per-practitioner lookups behind authenticated API are reserved for
 the future `domain-source-registry/v2` change.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+from dlt_sources.common.site_crawler import crawl_site
 
 GMC_RECOVERY_STRATEGY = "stealth"
 """Phase 1 fix: gmc-uk.org returns 403 to plain HTTP. Routes via the
@@ -20,7 +22,7 @@ Firecrawl stealth proxy with a 10s wait_for; falls back to the
 Wayback Machine if stealth also 403s.
 
 The ``fetch`` / ``crawl_site`` calls already pick up this strategy
-via the new :mod:`cianfhoghlaim.dlt.common.endpoint_recovery`
+via the new :mod:`cianfhoghlaim.dlt_sources.common.endpoint_recovery`
 helper — see the ``endpoint_recovery_sink`` L2 asset for the
 operational probe that detects regressions."""
 

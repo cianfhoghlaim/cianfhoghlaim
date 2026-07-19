@@ -16,6 +16,8 @@ Audio storage:
 - Organized by book ID (e.g., book1760)
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -26,11 +28,11 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-import dlt
+import dlt_sources
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 from observability.logging import get_logger
-from cianfhoghlaim.dlt.common._http_factories import HttpClientFactory
+from dlt_sources.common._http_factories import HttpClientFactory
 
 logger = get_logger(__name__)
 

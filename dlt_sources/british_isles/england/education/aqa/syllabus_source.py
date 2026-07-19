@@ -24,12 +24,14 @@ Edexcel + WJEC Eduqas); the 5-nation matrix documents each board
 in its own scaffolded source.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.england.education.aqa.syllabus_source import (
+    from dlt_sources.british_isles.england.education.aqa.syllabus_source import (
         aqa_syllabus_source,
     )
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -38,7 +40,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CACHE_DIR = Path("stedding/site_scrape_samples/aqa")
 URLS_CACHE_PATH = Path("stedding/site_scrape_samples/aqa/urls.json")

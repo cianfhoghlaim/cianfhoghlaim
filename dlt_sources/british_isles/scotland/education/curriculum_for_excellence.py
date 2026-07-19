@@ -1,10 +1,12 @@
+import dlt
+
 """
 Education SCT source: curriculum_for_excellence_source
 
 Split from uk/scotland/curriculum_for_excellence.py in Phase 3D.
 """
 
-import dlt
+import dlt_sources
 
 from ._curriculum_for_excellence_helpers import (
     _crawl_education_gov_scot,

@@ -9,12 +9,14 @@ ncca-leaving-cert-root-pdfs/spec.md` Requirement R1.
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import pathlib
 from typing import Iterator
 
-import dlt
+import dlt_sources
 
 
 _ROOT_PDFS = (

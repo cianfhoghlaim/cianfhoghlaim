@@ -10,15 +10,17 @@ https://github.com/cianfhoghlaim/kings_college_galway/issues/19
 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT sources.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+from dlt_sources.common.site_crawler import crawl_site
 
 def _crawl_source(*args, **kwargs):
     # The legacy _crawl_source took (source_name, base_url, ...) — source_name

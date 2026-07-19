@@ -9,7 +9,7 @@ API: https://www.tearma.ie/api/
 Download: https://www.tearma.ie/ioslodail/
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.culture.tearma import tearma_source
+    from dlt_sources.british_isles.ireland.culture.tearma import tearma_source
 
     pipeline = dlt.pipeline(
         pipeline_name="tearma",
@@ -24,12 +24,14 @@ Shared helpers + module constants + `TerminologyLinker` live at
 `cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers`.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers import _load_tearma_terms
+import dlt_sources
+from dlt_sources.british_isles.ireland.culture._tearma_helpers import _load_tearma_terms
 
 
 @dlt.source(name="tearma")

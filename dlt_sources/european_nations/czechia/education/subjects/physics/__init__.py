@@ -1,5 +1,5 @@
 """Re-export the Czechia Physics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.cze.education.subjects.physics import (
+from dlt_sources.european_nations.cze.education.subjects.physics import (
     cze_physics,
     cze_physics_source,
 )  # noqa: F401

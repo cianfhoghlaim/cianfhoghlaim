@@ -1,13 +1,15 @@
 """DLT source for the Inter-American Development Bank (Inter-American Development Bank)."""
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.european_nations._shared.nation_source import (
+from dlt_sources.european_nations._shared.nation_source import (
     NationSource,
     row_from_cache,
     use_local_scrapes,

@@ -13,6 +13,8 @@ Based on research from:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -23,9 +25,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 from dlt.sources import DltResource
-from cianfhoghlaim.dlt.common.http_client import logainm_client, tearma_client
+from dlt_sources.common.http_client import logainm_client, tearma_client
 
 # Gaois API endpoints
 GAOIS_BASE_URL = "https://www.gaois.ie"

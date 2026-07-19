@@ -136,7 +136,7 @@ class SourceResolver:
             return None
         # The real implementation lives in source_resolver.live; this
         # signature is what `source_resolver.live` implements.
-        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_wikipedia
+        from dlt_sources.official_media._resolver_live import lookup_wikipedia
 
         return await lookup_wikipedia(title)
 
@@ -146,7 +146,7 @@ class SourceResolver:
                 "lookup_skipped_offline", authority="companies_house", name=name
             )
             return None
-        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_companies_house
+        from dlt_sources.official_media._resolver_live import lookup_companies_house
 
         return await lookup_companies_house(name)
 
@@ -154,7 +154,7 @@ class SourceResolver:
         if not self.live_lookups:
             logger.debug("lookup_skipped_offline", authority="cro_ireland", name=name)
             return None
-        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_cro
+        from dlt_sources.official_media._resolver_live import lookup_cro
 
         return await lookup_cro(name)
 
@@ -166,7 +166,7 @@ class SourceResolver:
                 "lookup_skipped_offline", authority="mastodon", ig_username=ig_username
             )
             return None
-        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_mastodon
+        from dlt_sources.official_media._resolver_live import lookup_mastodon
 
         return await lookup_mastodon(ig_username)
 
@@ -176,7 +176,7 @@ class SourceResolver:
                 "lookup_skipped_offline", authority="bluesky", ig_username=ig_username
             )
             return None
-        from cianfhoghlaim.dlt.official_media._resolver_live import lookup_bluesky
+        from dlt_sources.official_media._resolver_live import lookup_bluesky
 
         return await lookup_bluesky(ig_username)
 

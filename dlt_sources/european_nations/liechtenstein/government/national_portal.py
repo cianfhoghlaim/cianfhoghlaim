@@ -17,14 +17,16 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 Reference: ``openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/``.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.european_nations._shared import (
+from dlt_sources.european_nations._shared import (
     NationSource,
     row_from_cache,
     use_local_scrapes,

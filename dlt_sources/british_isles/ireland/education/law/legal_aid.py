@@ -19,17 +19,19 @@ Reference: openspec/changes/archive/2026-07-07-finalize-v4-landing/
            absorbed/2026-07-06-ireland-legal-pipeline/proposal.md
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
 import structlog
 
-import dlt
+import dlt_sources
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
+from dlt_sources.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
     _crawl_source,
 )
 

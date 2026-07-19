@@ -17,14 +17,16 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 Reference: ``openspec/changes/2026-07-11-americas-california-pipeline-v1/``.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.european_nations._shared.nation_source import (
+from dlt_sources.european_nations._shared.nation_source import (
     NationSource,
     row_from_cache,
     use_local_scrapes,

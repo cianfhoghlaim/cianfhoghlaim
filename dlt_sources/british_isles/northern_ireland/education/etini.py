@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for ETI (Education and Training Inspectorate) NI.
 
@@ -8,9 +10,9 @@ https://www.etini.gov.uk/
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
+from dlt_sources.common.firecrawl_source import crawl_website
 
 
 def _crawl_eti_inspections(max_pages: int = 200) -> Iterator[dict[str, Any]]:

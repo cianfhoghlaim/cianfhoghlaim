@@ -159,7 +159,7 @@ async def lookup_mastodon(ig_username: str) -> dict[str, Any] | None:
     ``masodon.club``. Real production code would scrape the bio or
     cross-reference the official website's webfinger record.
     """
-    from cianfhoghlaim.dlt.official_media.fediverse import resolve_mastodon
+    from dlt_sources.official_media.fediverse import resolve_mastodon
 
     for host in ("mastodon.social", "masodon.club"):
         result = await resolve_mastodon(ig_username, host=host)
@@ -170,6 +170,6 @@ async def lookup_mastodon(ig_username: str) -> dict[str, Any] | None:
 
 async def lookup_bluesky(ig_username: str) -> dict[str, Any] | None:
     """Look up the Bluesky handle for ``ig_username``."""
-    from cianfhoghlaim.dlt.official_media.fediverse import resolve_bluesky
+    from dlt_sources.official_media.fediverse import resolve_bluesky
 
     return await resolve_bluesky(ig_username)

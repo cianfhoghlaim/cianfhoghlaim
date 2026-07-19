@@ -8,13 +8,15 @@ Provides utilities for:
 - Last-modified tracking for efficient re-crawls
 
 DEPRECATION NOTE: `crawl_source` was previously exported from this module
-but the canonical home is now `cianfhoghlaim.dlt.common.site_crawler`. The
+but the canonical home is now `cianfhoghlaim.dlt_sources.common.site_crawler`. The
 shim below emits a `DeprecationWarning` and re-exports the new function.
 Per the `2026-07-15-pipeline-architecture-clarity-v1` change, this
 module's `crawl_source` will be removed in a follow-up change.
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import warnings
@@ -22,7 +24,7 @@ from collections.abc import Callable, Iterator
 from datetime import UTC, datetime
 from typing import Any, TypeVar
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)
@@ -39,7 +41,7 @@ def __getattr__(name: str) -> Any:
     """Lazy re-export shim for the deprecated `crawl_source` symbol.
 
     Emits a `DeprecationWarning` on first access so existing call sites
-    can be migrated to `from cianfhoghlaim.dlt.common.site_crawler import
+    can be migrated to `from cianfhoghlaim.dlt_sources.common.site_crawler import
     crawl_site`. The shim adapts the new `crawl_site` (which yields
     `CrawledPage` dataclasses) to the legacy API (which yields `dict`),
     so existing call sites that do `page["nation"] = "en"` keep working.
@@ -52,7 +54,7 @@ def __getattr__(name: str) -> Any:
             DeprecationWarning,
             stacklevel=2,
         )
-        from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+        from dlt_sources.common.site_crawler import crawl_site
 
         def _crawl_source_shim(*args: Any, **kwargs: Any) -> Any:
             for page in crawl_site(*args, **kwargs):

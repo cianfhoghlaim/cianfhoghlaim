@@ -1,3 +1,5 @@
+import dlt
+
 """
 Education SCT source: gaelic_curriculum_source
 
@@ -6,9 +8,9 @@ Split from uk/scotland/curriculum_for_excellence.py in Phase 3D.
 
 from datetime import UTC, datetime
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
+from dlt_sources.common.firecrawl_source import crawl_website
 from ._curriculum_for_excellence_helpers import (
     CFE_URLS,
 )

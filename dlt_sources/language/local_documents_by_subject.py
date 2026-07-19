@@ -1,3 +1,5 @@
+import dlt
+
 """
 Culture IE source: local_documents_by_subject_source
 
@@ -7,8 +9,8 @@ Split from ireland/local_documents.py in Phase 3D.
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.constants.local_sources import (
+import dlt_sources
+from dlt_sources.constants.local_sources import (
     BUNCHLOCH_PATH,
     LOCAL_SUBJECT_PATHS,
 )

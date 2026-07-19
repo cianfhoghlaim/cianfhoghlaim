@@ -2,7 +2,7 @@
 
 Per the 2026-07-27-biep-v3-canonical-registry-v1 change.
 """
-from dlt.british_isles._cross.registry_api import (
+from dlt_sources.british_isles._cross.registry_api import (
     SubjectRegistryRow,
     query_by_jurisdiction,
     query_by_concept,

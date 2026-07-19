@@ -12,12 +12,14 @@ Parses CoNLL-U format files from:
 - UD_Archaic_Irish-OGAM
 """
 from __future__ import annotations
+import dlt
+
 
 import re
 from collections.abc import Iterator
 from pathlib import Path
 
-import dlt
+import dlt_sources
 from dlt.sources import DltResource
 
 # Celtic language treebanks

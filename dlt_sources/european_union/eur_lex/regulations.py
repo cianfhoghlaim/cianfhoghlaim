@@ -15,6 +15,8 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 Reference: ``openspec/specs/european-union-official-language-pipeline/spec.md``
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -23,14 +25,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.european_union._shared import (
+from dlt_sources.european_union._shared import (
     EUInstitutionalSource,
     use_local_scrapes,
 )
-from cianfhoghlaim.dlt.european_union._shared.registries import (
+from dlt_sources.european_union._shared.registries import (
     EU_LANGUAGES,
 )
 

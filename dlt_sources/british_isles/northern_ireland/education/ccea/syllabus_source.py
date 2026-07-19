@@ -25,12 +25,14 @@ language code ``ga`` is shared with the Irish Republic
 NCCA Gaeltacht-school syllabuses on the same topics.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ccea.syllabus_source import (
+    from dlt_sources.british_isles.northern_ireland.education.ccea.syllabus_source import (
         ccea_syllabus_source,
     )
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -39,7 +41,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CACHE_DIR = Path("stedding/site_scrape_samples/ccea")
 URLS_CACHE_PATH = Path("stedding/site_scrape_samples/ccea/urls.json")

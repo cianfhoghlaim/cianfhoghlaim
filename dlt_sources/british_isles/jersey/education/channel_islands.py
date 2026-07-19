@@ -8,10 +8,12 @@ constant + crawl helper live in the sibling `_channel_islands_helpers.py`.
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 
-import dlt
+import dlt_sources
 
 from ._channel_islands_helpers import CHANNEL_ISLANDS_URLS, _crawl_jersey_education
 

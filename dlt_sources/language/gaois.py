@@ -14,7 +14,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 - Automatic retries
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.culture.gaois import logainm_source
+    from dlt_sources.british_isles.ireland.culture.gaois import logainm_source
 
     pipeline = dlt.pipeline(
         pipeline_name="logainm",
@@ -23,15 +23,17 @@ Usage:
     pipeline.run(logainm_source(county="galway"))
 """
 from __future__ import annotations
+import dlt
+
 
 import re
 from collections.abc import Iterator
 
-import dlt
+import dlt_sources
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 from cianfhoghlaim.observability.logging import get_logger
-from cianfhoghlaim.dlt.common.http_client import ainm_client, logainm_client, tearma_client
+from dlt_sources.common.http_client import ainm_client, logainm_client, tearma_client
 
 logger = get_logger(__name__)
 

@@ -1,12 +1,14 @@
 """Computer Science DLT source — Cianfhoghlaim Oideachais."""
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CIANFHOGHLAIM_ROOT = Path(__file__).resolve().parents[3]
 COMP_CORPUS = CIANFHOGHLAIM_ROOT / "leaving_certificate" / "computer_science"

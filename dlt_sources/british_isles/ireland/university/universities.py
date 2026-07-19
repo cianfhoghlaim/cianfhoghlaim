@@ -47,6 +47,8 @@ BAML extraction (per `baml/education/university/university_extraction.baml`):
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -55,7 +57,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

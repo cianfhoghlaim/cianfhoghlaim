@@ -1,5 +1,5 @@
 """Netherlands (Netherlands) education subjects — per-subject DLT modules."""
-from cianfhoghlaim.dlt.european_nations.nld.education.subjects import (
+from dlt_sources.european_nations.nld.education.subjects import (
     mathematics, chemistry, biology, physics, language, computing_science,
 )
 

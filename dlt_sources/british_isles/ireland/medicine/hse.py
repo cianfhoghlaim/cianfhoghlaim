@@ -6,14 +6,16 @@ through the shared firecrawl_source router. Yields one page dict per
 URL in `HSE_URLS`.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+from dlt_sources.common.site_crawler import crawl_site
 
 def _crawl_source(*args, **kwargs):
     # The legacy _crawl_source took (source_name, base_url, ...) — source_name

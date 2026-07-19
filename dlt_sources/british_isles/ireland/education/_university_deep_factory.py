@@ -26,6 +26,8 @@ paid fallback, CreditBudget guard).
 Reference: openspec/changes/university-of-galway-deep-extraction/
 """
 from __future__ import annotations
+import dlt
+
 
 import asyncio
 import hashlib
@@ -38,7 +40,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
-import dlt
+import dlt_sources
 import structlog
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 

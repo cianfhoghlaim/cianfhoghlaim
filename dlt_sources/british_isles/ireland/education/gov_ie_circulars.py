@@ -24,7 +24,7 @@ Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
            tasks.md — Sub-batch 3.3.1
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.education.gov_ie_circulars import (
+    from dlt_sources.british_isles.ireland.education.gov_ie_circulars import (
         gov_ie_circulars_source,
     )
 
@@ -36,6 +36,8 @@ Usage:
     pipeline.run(gov_ie_circulars_source())
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -44,7 +46,7 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 
-import dlt
+import dlt_sources
 from observability.logging import get_logger
 
 logger = get_logger(__name__)

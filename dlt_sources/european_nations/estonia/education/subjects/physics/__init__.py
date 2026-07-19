@@ -1,5 +1,5 @@
 """Re-export the Estonia Physics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.est.education.subjects.physics import (
+from dlt_sources.european_nations.est.education.subjects.physics import (
     est_physics,
     est_physics_source,
 )  # noqa: F401

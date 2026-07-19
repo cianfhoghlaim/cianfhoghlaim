@@ -1,5 +1,5 @@
 """Croatia (Croatia) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.hrv import (
+from dlt_sources.european_nations.hrv import (
     education,
     government,
     law,

@@ -1,5 +1,5 @@
 """Government of Jersey (jersey) per-island education sub-tree (Phase 2 split)."""
-from cianfhoghlaim.dlt.british_isles.jersey.education.island import (
+from dlt_sources.british_isles.jersey.education.island import (
     jersey_education,
 )  # noqa: F401
 

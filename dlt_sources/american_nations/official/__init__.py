@@ -5,7 +5,7 @@ Pan American Health Organization, Inter-American Development Bank, Community of 
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.americas.official import (
+from dlt_sources.americas.official import (
     celac,
     idb,
     oas,

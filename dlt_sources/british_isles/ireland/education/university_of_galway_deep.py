@@ -16,7 +16,7 @@ Reference: openspec/changes/university-of-galway-deep-extraction/
 """
 from __future__ import annotations
 
-import dlt
+import dlt_sources
 
 # The bare `dlt_sources` import is the convention used by the
 # existing `_cianfhoghlaim_dlt_sources` builder; the actual module
@@ -25,12 +25,12 @@ import dlt
 # editable install) and in the monorepo (where the long path is
 # the canonical import).
 try:
-    from cianfhoghlaim.dlt._university_deep_factory import (
+    from dlt_sources._university_deep_factory import (
         UniversityDeepExtractionConfig,
         create_university_deep_extraction_source,
     )
 except ImportError:
-    from cianfhoghlaim.dlt._university_deep_factory import (  # type: ignore[no-redef]
+    from dlt_sources._university_deep_factory import (  # type: ignore[no-redef]
         UniversityDeepExtractionConfig,
         create_university_deep_extraction_source,
     )

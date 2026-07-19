@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for Estyn inspection reports.
 
@@ -10,9 +12,9 @@ Supports both English and Welsh language content.
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
+from dlt_sources.common.firecrawl_source import crawl_website
 
 ESTYN_URLS = {
     "main": "https://www.estyn.gov.wales",

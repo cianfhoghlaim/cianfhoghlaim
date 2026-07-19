@@ -12,9 +12,9 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any, ClassVar
 
-import dlt
+import dlt_sources
 
-from dlt.common.destinations_cianfhoghlaim import get_dlt_destination
+from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
 
 
 VALID_JURISDICTIONS: tuple[str, ...] = (

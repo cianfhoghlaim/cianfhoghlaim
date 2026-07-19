@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for ncca.ie (National Council for Curriculum and Assessment).
 
@@ -19,7 +21,7 @@ level, in both EN + GA. Partitions are:
     )
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.education.ncca import (
+    from dlt_sources.british_isles.ireland.education.ncca import (
         ncca_source, LC6_SUBJECTS, ncca_lc6_partitions,
     )
 
@@ -49,7 +51,7 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 from observability.logging import get_logger
 
 logger = get_logger(__name__)
@@ -255,7 +257,7 @@ def _crawl_ncca(
         # Phase 1 endpoint recovery: ncca.ie returns 403 to plain HTTP
         # (WAF). Route via Firecrawl stealth proxy. Falls back to
         # Wayback Machine on stealth failure. Honours USE_LOCAL_SCRAPES.
-        from cianfhoghlaim.dlt.common.endpoint_recovery import (
+        from dlt_sources.common.endpoint_recovery import (
             EndpointRecoveryStrategy,
             fetch,
         )

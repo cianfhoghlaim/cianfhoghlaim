@@ -5,16 +5,18 @@ Split from celtic/canuint.py in Phase 3D.
 """
 
 from __future__ import annotations
+import dlt
+
 
 import re
 from collections.abc import Iterator
 
-import dlt
+import dlt_sources
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 
 try:
-    from cianfhoghlaim.dlt.common.http_client import canuint_client  # noqa: F401
+    from dlt_sources.common.http_client import canuint_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

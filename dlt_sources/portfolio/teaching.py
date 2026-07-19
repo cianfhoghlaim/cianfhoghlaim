@@ -7,7 +7,7 @@ Extracts placement reports, student feedback, and curriculum materials
 for downstream BAML extraction.
 
 Usage:
-    import dlt
+    import dlt_sources
     from pipelines.teaching import teaching_pdf_source
 
     pipeline = dlt.pipeline(
@@ -22,7 +22,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 from pipelines.cv.source import AUTHOR_DIR, REPO_ROOT, cv_pdf_text_resource
 
 

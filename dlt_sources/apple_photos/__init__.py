@@ -34,6 +34,8 @@ It joins the existing 4 leabharlann sources (books, zotero,
 takeout, UoG) to make Apple Photos the 5th corpus.
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import logging
@@ -44,7 +46,7 @@ import time
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

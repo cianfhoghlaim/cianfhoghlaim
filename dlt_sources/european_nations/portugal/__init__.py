@@ -1,5 +1,5 @@
 """Portugal (Portugal) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.prt import (
+from dlt_sources.european_nations.prt import (
     education,
     government,
     law,

@@ -1,5 +1,5 @@
 """Re-export the Lithuania Native language and literature per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.ltu.education.subjects.language import (
+from dlt_sources.european_nations.ltu.education.subjects.language import (
     ltu_language,
     ltu_language_source,
 )  # noqa: F401

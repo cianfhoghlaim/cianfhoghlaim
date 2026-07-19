@@ -36,17 +36,19 @@ the DoJ sub-tree). The existing `doj` source is kept for backwards
 compat; new consumers should use `gov_ie_law_source()` instead.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
 import structlog
 
-import dlt
+import dlt_sources
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]
+from dlt_sources.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]
     _crawl_source,
 )
 

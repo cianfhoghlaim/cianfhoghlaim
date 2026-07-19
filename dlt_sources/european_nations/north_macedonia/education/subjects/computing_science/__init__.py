@@ -1,5 +1,5 @@
 """Re-export the North Macedonia Computing Science per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.mkd.education.subjects.computing_science.computing_science import (
+from dlt_sources.european_nations.mkd.education.subjects.computing_science.computing_science import (
     MKDComputingScienceSource,
     mkd_computing_science,
     mkd_computing_science_source,

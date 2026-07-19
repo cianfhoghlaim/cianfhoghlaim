@@ -1,5 +1,5 @@
 """Malta (Malta) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.mlt import (
+from dlt_sources.european_nations.mlt import (
     education,
     government,
     law,

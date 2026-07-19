@@ -7,12 +7,14 @@ download — that is reserved for the future
 `domain-source-registry/v2` change).
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

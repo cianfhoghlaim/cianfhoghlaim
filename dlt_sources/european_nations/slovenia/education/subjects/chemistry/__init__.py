@@ -1,5 +1,5 @@
 """Re-export the Slovenia Chemistry per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.svn.education.subjects.chemistry import (
+from dlt_sources.european_nations.svn.education.subjects.chemistry import (
     svn_chemistry,
     svn_chemistry_source,
 )  # noqa: F401

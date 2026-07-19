@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (
+    from dlt_sources.british_isles.ireland.education.curriculum import (
         curriculum_source,
     )
 
@@ -31,6 +31,8 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import os
 from collections.abc import Iterator
@@ -38,16 +40,16 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
-from cianfhoghlaim.dlt.common.content_deduplication import (
+from dlt_sources.common.content_deduplication import (
     ContentDeduplicator,
 )
-from cianfhoghlaim.dlt.common.curriculum_registry import (
+from dlt_sources.common.curriculum_registry import (
     SubjectRegistry,
     URLResolver,
 )
-from cianfhoghlaim.dlt.common.source_adapters import (
+from dlt_sources.common.source_adapters import (
     get_all_adapters,
 )
 

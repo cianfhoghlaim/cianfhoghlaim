@@ -119,7 +119,7 @@ class AllowlistFilter:
         if self.baml_classifier is None:
             # Default to the BAML classifier; it returns None when the
             # baml_client is not generated, so Stage-1 is unaffected.
-            from cianfhoghlaim.dlt.official_media.classifier import classify_with_baml
+            from dlt_sources.official_media.classifier import classify_with_baml
 
             self.baml_classifier = classify_with_baml
         self._load()

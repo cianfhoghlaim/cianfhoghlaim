@@ -1,3 +1,5 @@
+import dlt
+
 """
 Education IE source: sec_examinations_browser_source
 
@@ -7,7 +9,7 @@ Split from ireland/examinations.py in Phase 3D.
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 
 from ._examinations_helpers import (
     ALL_JC_SUBJECTS,

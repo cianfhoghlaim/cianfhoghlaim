@@ -1,5 +1,5 @@
 """Re-export the Albania Mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.alb.education.subjects.mathematics.mathematics import (
+from dlt_sources.european_nations.alb.education.subjects.mathematics.mathematics import (
     ALBMathematicsSource,
     alb_mathematics,
     alb_mathematics_source,

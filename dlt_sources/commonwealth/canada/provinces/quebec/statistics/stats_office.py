@@ -8,11 +8,13 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 ``stedding/ingest_queue/commonwealth/can/qc/statistics/<lang>/``.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

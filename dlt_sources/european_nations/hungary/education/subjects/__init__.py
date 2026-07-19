@@ -1,5 +1,5 @@
 """Hungary (Hungary) per-subject DLT sub-tree."""
-from cianfhoghlaim.dlt.european_nations.hun.education.subjects import (
+from dlt_sources.european_nations.hun.education.subjects import (
     mathematics,
     chemistry,
     biology,

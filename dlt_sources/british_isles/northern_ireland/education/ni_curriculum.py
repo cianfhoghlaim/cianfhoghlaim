@@ -1,10 +1,12 @@
+import dlt
+
 """
 Education NI source: ni_curriculum_source
 
 Split from uk/northern_ireland/ccea_curriculum.py in Phase 3D.
 """
 
-import dlt
+import dlt_sources
 
 from ._ccea_curriculum_helpers import (
     _crawl_ni_curriculum,

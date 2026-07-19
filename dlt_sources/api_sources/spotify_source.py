@@ -1,10 +1,12 @@
+import dlt
+
 """Spotify REST API Source.
 
 Defines DLT sources for ingesting Spotify data via the Web API.
 Uses Client Credentials flow for automatic token management.
 
 Usage:
-    import dlt
+    import dlt_sources
     from pipelines.spotify import spotify_source
 
     pipeline = dlt.pipeline(
@@ -24,7 +26,7 @@ import os
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 import requests
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 from pipelines.spotify.resources import get_artist_endpoints

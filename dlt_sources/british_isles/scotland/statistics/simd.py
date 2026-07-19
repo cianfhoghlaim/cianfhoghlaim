@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for Scottish Index of Multiple Deprivation (SIMD).
 
@@ -9,9 +11,9 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website, scrape_page
+from dlt_sources.common.firecrawl_source import crawl_website, scrape_page
 
 SIMD_URLS = {
     "main": "https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/",

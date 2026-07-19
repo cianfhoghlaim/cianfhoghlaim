@@ -1,5 +1,5 @@
 """Re-export the Montenegro Biology per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.mne.education.subjects.biology.biology import (
+from dlt_sources.european_nations.mne.education.subjects.biology.biology import (
     MNEBiologySource,
     mne_biology,
     mne_biology_source,

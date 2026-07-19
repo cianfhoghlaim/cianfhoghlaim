@@ -7,13 +7,15 @@ XML API. ~30,000 acts / SIs; uses `dlt.sources.incremental` on
 parquet per year.
 """
 from __future__ import annotations
+import dlt
+
 
 import os
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

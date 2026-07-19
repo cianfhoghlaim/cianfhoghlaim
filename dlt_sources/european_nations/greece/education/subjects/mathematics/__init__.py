@@ -1,5 +1,5 @@
 """Re-export the Greece Mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.grc.education.subjects.mathematics import (
+from dlt_sources.european_nations.grc.education.subjects.mathematics import (
     grc_mathematics,
     grc_mathematics_source,
 )  # noqa: F401

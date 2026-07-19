@@ -1,3 +1,5 @@
+import dlt
+
 """
 Education IE source: deep_research_source
 
@@ -6,7 +8,7 @@ Split from ireland/agentic_discovery.py in Phase 3D.
 
 from datetime import UTC, datetime
 
-import dlt
+import dlt_sources
 
 from ._agentic_discovery_helpers import (
     _get_firecrawl_client,

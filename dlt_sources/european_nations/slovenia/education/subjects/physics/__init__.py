@@ -1,5 +1,5 @@
 """Re-export the Slovenia Physics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.svn.education.subjects.physics import (
+from dlt_sources.european_nations.svn.education.subjects.physics import (
     svn_physics,
     svn_physics_source,
 )  # noqa: F401

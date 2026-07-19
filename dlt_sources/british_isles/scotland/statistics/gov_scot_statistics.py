@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for Scottish Government education statistics.
 
@@ -15,9 +17,9 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website, scrape_page
+from dlt_sources.common.firecrawl_source import crawl_website, scrape_page
 
 # Key statistics publications
 SCOT_STATISTICS = {

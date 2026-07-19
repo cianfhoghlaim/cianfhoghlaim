@@ -8,7 +8,7 @@ Provides:
 - Incremental state management
 
 Usage:
-    from cianfhoghlaim.dlt.common.content_deduplication import (
+    from dlt_sources.common.content_deduplication import (
         ContentDeduplicator,
         DeduplicationResult,
     )
@@ -30,7 +30,7 @@ from datetime import datetime
 from typing import Any
 
 import structlog
-from cianfhoghlaim.dlt.common.source_adapters import NormalizedPage
+from dlt_sources.common.source_adapters import NormalizedPage
 
 logger = structlog.get_logger(__name__)
 

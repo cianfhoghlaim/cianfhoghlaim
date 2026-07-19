@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for England DfE Explore Education Statistics API.
 
@@ -20,9 +22,9 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
-from cianfhoghlaim.dlt.common.http_client import dfe_explore_client
+from dlt_sources.common.http_client import dfe_explore_client
 
 logger = structlog.get_logger(__name__)
 

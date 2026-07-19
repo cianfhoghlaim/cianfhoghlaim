@@ -1,5 +1,5 @@
 """Re-export the Bulgaria Computing / Computer Science per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.bgr.education.subjects.computing_science import (
+from dlt_sources.european_nations.bgr.education.subjects.computing_science import (
     bgr_computing_science,
     bgr_computing_science_source,
 )  # noqa: F401

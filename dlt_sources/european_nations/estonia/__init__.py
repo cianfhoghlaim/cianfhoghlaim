@@ -1,5 +1,5 @@
 """Estonia (Estonia) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.est import (
+from dlt_sources.european_nations.est import (
     education,
     government,
     law,

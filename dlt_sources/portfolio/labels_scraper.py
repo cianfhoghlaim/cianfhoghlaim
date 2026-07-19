@@ -1,3 +1,5 @@
+import dlt
+
 """Label Scraper using Firecrawl.
 
 Scrapes artist profiles and releases from record label websites.
@@ -28,7 +30,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
 
-import dlt
+import dlt_sources
 import httpx
 from pipelines.labels.base import (
     LabelName,

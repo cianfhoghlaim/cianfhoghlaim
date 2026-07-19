@@ -1,5 +1,5 @@
 """Slovenia (Slovenia) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.svn import (
+from dlt_sources.european_nations.svn import (
     education,
     government,
     law,

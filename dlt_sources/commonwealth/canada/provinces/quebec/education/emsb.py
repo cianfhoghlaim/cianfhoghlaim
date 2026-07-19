@@ -7,6 +7,8 @@ The Quebec deep education cluster source. Honours
 Reference: ``openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/``.
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 from collections.abc import Iterator
@@ -14,7 +16,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

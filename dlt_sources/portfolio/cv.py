@@ -1,3 +1,5 @@
+import dlt
+
 """CV PDF Ingestion DLT Pipeline.
 
 Filesystem-source pipeline that reads scanned PDFs from the
@@ -7,7 +9,7 @@ Uses the DLT filesystem core source with pdfplumber for text extraction.
 Extracted text is stored in DuckDB for downstream BAML extraction.
 
 Usage:
-    import dlt
+    import dlt_sources
     from pipelines.cv import cv_pdf_source
 
     pipeline = dlt.pipeline(
@@ -21,7 +23,7 @@ Usage:
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 from _shared.config import get_author_dir, get_repo_root
 
 REPO_ROOT = get_repo_root()
