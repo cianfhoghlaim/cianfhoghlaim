@@ -16,16 +16,6 @@ function ExtractNorwayStatute(
   nation: string,
   language: string,
   text: string
-) -> NORStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following Norway
-    text. Preserve the statute id, jurisdiction, and official_status exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> NorwayStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

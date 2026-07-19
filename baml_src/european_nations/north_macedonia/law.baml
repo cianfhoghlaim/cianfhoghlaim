@@ -16,17 +16,6 @@ function ExtractMKDStatute(
   nation: string,
   language: string,
   text: string
-) -> MKDStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    North Macedonia legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MKDStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

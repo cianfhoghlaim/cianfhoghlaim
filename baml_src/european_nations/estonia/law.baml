@@ -15,16 +15,6 @@ function ExtractEstoniaStatute(
   nation: string,
   language: string,
   text: string
-) -> ESTStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Estonia statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> EstoniaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

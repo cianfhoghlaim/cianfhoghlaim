@@ -17,18 +17,6 @@ function ExtractMKDSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> MKDSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical per-subject curriculum record from the
-    following North Macedonia text. Preserve the subject slug + the official
-    language(s) (mk) + the canonical grade level.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MKDSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

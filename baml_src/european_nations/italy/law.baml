@@ -15,16 +15,6 @@ function ExtractITALawDocument(
   country_code: string,
   language: string,
   text: string
-) -> ITALawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Italy
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ITALawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

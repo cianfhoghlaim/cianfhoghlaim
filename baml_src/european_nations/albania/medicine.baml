@@ -17,17 +17,6 @@ function ExtractALBHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> ALBHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Albania text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ALBHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

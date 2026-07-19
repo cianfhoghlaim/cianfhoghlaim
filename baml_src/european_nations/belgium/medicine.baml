@@ -16,17 +16,6 @@ function ExtractBelgiumHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> BELHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical health guidance record from the following
-    Belgium text. Preserve the agency, advisory id, and
-    target_audience exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BelgiumHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

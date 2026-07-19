@@ -16,16 +16,6 @@ function ExtractIcelandStatute(
   nation: string,
   language: string,
   text: string
-) -> ISLStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following Iceland
-    text. Preserve the statute id, jurisdiction, and official_status exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> IcelandStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

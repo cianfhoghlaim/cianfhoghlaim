@@ -16,17 +16,6 @@ function ExtractMNEStatute(
   nation: string,
   language: string,
   text: string
-) -> MNEStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Montenegro legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MNEStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

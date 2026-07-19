@@ -15,16 +15,6 @@ function ExtractESPLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> ESPLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Spain
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ESPLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,16 +16,6 @@ function ExtractSloveniaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> SVNHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Slovenia health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SloveniaHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,16 +16,6 @@ function ExtractGreeceHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> GRCHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Greece health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> GreeceHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

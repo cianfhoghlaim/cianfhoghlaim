@@ -17,18 +17,6 @@ function ExtractNetherlandsSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> NLDSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical subject curriculum record from the following
-    Netherlands text. Preserve the subject slug, grade level,
-    and the bulleted learning-outcome statements exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> NetherlandsSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

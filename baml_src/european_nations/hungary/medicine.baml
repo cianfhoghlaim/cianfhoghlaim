@@ -16,16 +16,6 @@ function ExtractHungaryHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> HUNHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Hungary health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> HungaryHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

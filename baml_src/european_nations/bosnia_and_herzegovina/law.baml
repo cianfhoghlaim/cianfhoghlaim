@@ -16,17 +16,6 @@ function ExtractBIHStatute(
   nation: string,
   language: string,
   text: string
-) -> BIHStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Bosnia and Herzegovina legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BIHStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,16 +16,6 @@ function ExtractLiechtensteinStatute(
   nation: string,
   language: string,
   text: string
-) -> LIEStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following Liechtenstein
-    text. Preserve the statute id, jurisdiction, and official_status exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> LiechtensteinStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

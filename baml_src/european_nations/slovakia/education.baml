@@ -18,17 +18,6 @@ function ExtractSlovakiaSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> SVKSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical Slovakia subject curriculum row from the text.
-    Preserve the canonical learning outcomes and the grade_level tag.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SlovakiaSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

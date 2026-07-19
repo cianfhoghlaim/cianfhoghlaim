@@ -16,16 +16,6 @@ function ExtractFinlandStatute(
   nation: string,
   language: string,
   text: string
-) -> FINStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following Finland
-    text. Preserve the statute id, jurisdiction, and official_status exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> FinlandStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -17,17 +17,6 @@ function ExtractMDAHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> MDAHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Moldova text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MDAHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

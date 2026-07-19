@@ -16,16 +16,6 @@ function ExtractEstoniaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> ESTHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Estonia health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> EstoniaHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

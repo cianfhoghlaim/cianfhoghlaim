@@ -15,16 +15,6 @@ function ExtractSloveniaStatute(
   nation: string,
   language: string,
   text: string
-) -> SVNStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Slovenia statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SloveniaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

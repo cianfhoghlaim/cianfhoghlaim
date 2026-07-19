@@ -17,18 +17,6 @@ function ExtractFinlandSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> FINSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical subject curriculum record from the following
-    Finland text. Preserve the subject slug, grade level,
-    and the bulleted learning-outcome statements exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> FinlandSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

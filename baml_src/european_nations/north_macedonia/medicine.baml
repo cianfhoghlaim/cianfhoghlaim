@@ -17,17 +17,6 @@ function ExtractMKDHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> MKDHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following North Macedonia text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MKDHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

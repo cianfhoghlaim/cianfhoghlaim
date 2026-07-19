@@ -17,17 +17,6 @@ function ExtractMNEHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> MNEHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Montenegro text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MNEHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

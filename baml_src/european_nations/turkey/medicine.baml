@@ -17,17 +17,6 @@ function ExtractTURHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> TURHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Turkey text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> TURHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

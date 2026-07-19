@@ -16,17 +16,6 @@ function ExtractAustriaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> AUTHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical health guidance record from the following
-    Austria text. Preserve the agency, advisory id, and
-    target_audience exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> AustriaHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

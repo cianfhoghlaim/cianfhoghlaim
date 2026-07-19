@@ -15,16 +15,6 @@ function ExtractPOLLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> POLLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Poland
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> POLLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -18,17 +18,6 @@ function ExtractPortugalSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> PRTSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical Portugal subject curriculum row from the text.
-    Preserve the canonical learning outcomes and the grade_level tag.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> PortugalSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

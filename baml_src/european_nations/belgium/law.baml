@@ -16,16 +16,6 @@ function ExtractBelgiumStatute(
   nation: string,
   language: string,
   text: string
-) -> BELStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following Belgium
-    text. Preserve the statute id, jurisdiction, and official_status exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BelgiumStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

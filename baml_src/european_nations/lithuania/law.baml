@@ -15,16 +15,6 @@ function ExtractLithuaniaStatute(
   nation: string,
   language: string,
   text: string
-) -> LTUStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Lithuania statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> LithuaniaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

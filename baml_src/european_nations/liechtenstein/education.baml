@@ -17,18 +17,6 @@ function ExtractLiechtensteinSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> LIESubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical subject curriculum record from the following
-    Liechtenstein text. Preserve the subject slug, grade level,
-    and the bulleted learning-outcome statements exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> LiechtensteinSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -18,17 +18,6 @@ function ExtractCyprusSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> CYPSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical Cyprus subject curriculum row from the text.
-    Preserve the canonical learning outcomes and the grade_level tag.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CyprusSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,16 +16,6 @@ function ExtractRomaniaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> ROUHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Romania health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> RomaniaHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,17 +16,6 @@ function ExtractFinlandHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> FINHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical health guidance record from the following
-    Finland text. Preserve the agency, advisory id, and
-    target_audience exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> FinlandHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
