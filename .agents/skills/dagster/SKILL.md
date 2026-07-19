@@ -9,7 +9,7 @@ description:
 
 ## Core Dagster Concepts
 # Oideachais Project Specific Rules
-- **Environment**: Start local environment with `uv run dagster dev -m cianfhoghlaim.orchestration.definitions` inside the `cianfhoghlaim` directory.
+- **Environment**: Start local environment with `uv run dagster dev -m orchestration.definitions` inside the `cianfhoghlaim` directory.
 - **Partitions**: `ireland/curriculum/` assets are MultiPartitioned by `language` and `subject` (e.g., `"en|mathematics"`). The lc5/lc6 BIEP assets are additionally partitioned by `level` (`higher` / `ordinary`) — 42 assets total = 7 subjects × 6 BAML stages.
 - **Lakehouse**: MotherDuck/DuckLake is the sink. Ensure `USE_DUCKLAKE=true` if using MotherDuck, otherwise it uses a local DuckDB file.
 - **Namespaces**: NEVER use absolute namespaces (e.g. `cianfhoghlaim.orchestration...`) from within the orchestration layer. Always use relative or local package imports.
@@ -214,7 +214,7 @@ Use port 3000 only for croilar-specific work.
 # KCG engineering Dagster stack (the canonical one)
 cd oideachais
 uv add dagster dagster-duckdb "dagster-dlt>=0.29.11"
-uv run dagster dev -m cianfhoghlaim.orchestration.definitions
+uv run dagster dev -m orchestration.definitions
 # UI at http://localhost:3335
 ```
 
