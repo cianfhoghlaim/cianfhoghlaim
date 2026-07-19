@@ -85,7 +85,12 @@ class SubjectRegistryRow:
 
 
 def _ibis_conn():
-    """The ibis-first connection (per the BIEP v3 spec)."""
+    """The ibis-first connection (per the BIEP v3 spec).
+
+    Honors `BIEP_REGISTRY_URI` env var to override the default
+    `md:cianfhoghlaim` MotherDuck connection (e.g., for local dev against
+    DuckLake or a test DuckDB file).
+    """
     try:
         import ibis  # type: ignore[import-not-found]
     except ImportError as exc:
@@ -93,7 +98,8 @@ def _ibis_conn():
             "ibis is required for the registry API. "
             "Install with `uv add ibis-framework[duckdb]`."
         ) from exc
-    return ibis.duckdb.connect("md:cianfhoghlaim", read_only=True)
+    uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
+    return ibis.duckdb.connect(uri, read_only=True)
 
 
 def query_by_jurisdiction(
@@ -164,9 +170,13 @@ def query_cross_jurisdiction_bridges() -> list[dict[str, Any]]:
 
 
 def insert_subject(row: SubjectRegistryRow) -> None:
-    """Insert one row into the registry (write to a separate connection)."""
+    """Insert one row into the registry (write to a separate connection).
+
+    Honors `BIEP_REGISTRY_URI` env var (same as `_ibis_conn`).
+    """
     import ibis  # type: ignore[import-not-found]
-    conn = ibis.duckdb.connect("md:cianfhoghlaim", read_only=False)
+    uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
+    conn = ibis.duckdb.connect(uri, read_only=False)
     conn.sql(
         """
         INSERT OR REPLACE INTO cianfhoghlaim.education._registry.subjects
