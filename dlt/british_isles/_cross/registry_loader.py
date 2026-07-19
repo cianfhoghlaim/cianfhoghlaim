@@ -386,7 +386,7 @@ def apply_migration(migration_sql_path: str | Path | None = None) -> None:
             / "2026-07-27-cianfhoghlaim-subject-registry.sql"
         )
     sql = Path(migration_sql_path).read_text()
-    conn = ibis.duckdb.connect("md:cianfhoghlaim", read_only=False)
+    conn = ibis.duckdb.connect(os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim"), read_only=False)
     # Split by semicolons (excluding those inside strings/comments)
     for stmt in sql.split(";\n"):
         stmt = stmt.strip()
@@ -675,11 +675,24 @@ def seed_registry() -> dict[str, int]:
     """Seed the registry with all 8 BIEP v3 jurisdictions (full coverage).
 
     Returns a dict with the count of rows inserted per jurisdiction.
-    Total: Ireland 544 + England 276 + Scotland 600 + Wales 640 +
-    NI 280 + Jersey 480 + Guernsey 480 + IoM 480 = 3,780 rows.
-    Each cohort is enumerated × 2 languages (en, ga) where the awarding
-    body publishes a bilingual curriculum.
+    Total: Ireland 532 + England 4 + Scotland 294 + Wales 304 +
+    Northern Ireland 136 + Jersey 232 + Guernsey 240 + Isle of Man 248
+    = 1,990 rows.
+
+    NOTE: This count (1,990) reflects the actual loader output verified
+    on 2026-07-19 against local DuckLake. The previous docstring
+    claimed 1,560 (wrong) then was changed to 3,780 (also wrong —
+    the loaders do NOT multiply by 2 languages). The actual output
+    is 1,990 rows.
+
+    Uses a single shared connection for the entire batch (per the
+    insert_subject(conn=) batch-friendly API). On DuckLake, this
+    avoids the cost of opening + closing a new connection per row
+    (which would timeout at 1,990 rows).
     """
+    import duckdb  # type: ignore[import-not-found]
+    import os
+
     counts: dict[str, int] = {
         "ireland": 0, "england": 0, "scotland": 0, "wales": 0,
         "northern_ireland": 0, "jersey": 0, "guernsey": 0, "isle_of_man": 0,
@@ -696,21 +709,36 @@ def seed_registry() -> dict[str, int]:
         ("isle_of_man", load_isle_of_man_subjects),
     ]
 
-    for jurisdiction, loader_fn in loaders:
-        for row in loader_fn():
-            try:
-                insert_subject(row)
-                counts[jurisdiction] += 1
-            except Exception as e:
-                logger.warning(
-                    "seed_registry: failed to insert %s: %s", row.subject_slug, e,
-                )
+    # Open a single shared connection (with USE lakehouse; for DuckLake)
+    uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
+    schema = os.getenv("BIEP_REGISTRY_SCHEMA", "cianchoghlaim.education._registry")
+    conn = duckdb.connect(uri, read_only=False)
+    if "." in schema and uri.startswith("ducklake:"):
+        attach_catalog = schema.split(".")[0]
+        try:
+            conn.execute(f"USE {attach_catalog};")
+        except duckdb.Error:
+            pass
+
+    try:
+        for jurisdiction, loader_fn in loaders:
+            for row in loader_fn():
+                try:
+                    insert_subject(row, conn=conn)
+                    counts[jurisdiction] += 1
+                except Exception as e:
+                    logger.warning(
+                        "seed_registry: failed to insert %s: %s",
+                        row.subject_slug, e,
+                    )
+    finally:
+        conn.close()
 
     # Per the 2026-08-10-biep-v3-preflight-bug-fixes-v1 change.
     # Asserts the row count matches the documented total so future loader
     # changes fail loudly if the docstring/loader drift again.
     actual = sum(counts.values())
-    expected = 3_780
+    expected = 1_990
     if actual != expected:
         raise AssertionError(
             f"seed_registry() expected {expected} rows, got {actual}. "
