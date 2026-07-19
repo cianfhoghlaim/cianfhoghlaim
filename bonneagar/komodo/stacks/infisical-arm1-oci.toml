@@ -12,7 +12,7 @@ description = "Infisical — Self-hosted secret vault (arm1-oci, port 8081, infi
 tags = ["host:arm1-oci","tier:infrastructure","type:infrastructure","domain:infisical.cianfhoghlaim.ie"]
 [stack.config]
 server_id = "arm1-oci"
-run_directory = "/etc/komodo/sruth/infrastructure/infisical"
+run_directory = "/etc/komodo/bonneagar/infisical"
 file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
 environment = """
 INFISICAL_URL=http://infisical-backend:8080

@@ -17,7 +17,7 @@
 # LOGFIRE - OTEL Collector
 # -----------------------------------------------------------------------------
 # Logfire cloud is SaaS at https://logfire.pydantic.dev. The local
-# infrastructure/stacks/logfire/ deploys an OpenTelemetry Collector that
+# bonneagar/stacks/logfire/ deploys an OpenTelemetry Collector that
 # receives OTLP traces on :4317 (gRPC) / :4318 (HTTP) and forwards to
 # Logfire cloud. KCG Python services send via the logfire SDK (HTTPS direct)
 # or via OTLP to the local collector (which fans out to Logfire cloud).

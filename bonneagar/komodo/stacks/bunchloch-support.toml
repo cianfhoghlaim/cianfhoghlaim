@@ -22,9 +22,9 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/litellm"
 file_paths = [
-  "infrastructure/stacks/litellm/compose.yaml",
-  "infrastructure/stacks/litellm/sidecar.yaml",
-  "infrastructure/stacks/litellm/secrets.env",
+  "bonneagar/stacks/litellm/compose.yaml",
+  "bonneagar/stacks/litellm/sidecar.yaml",
+  "bonneagar/stacks/litellm/secrets.env",
 ]
 environment = """
 LITELLM_PORT=4000
@@ -54,9 +54,9 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/lancedb"
 file_paths = [
-  "infrastructure/stacks/lancedb/compose.yaml",
-  "infrastructure/stacks/lancedb/sidecar.yaml",
-  "infrastructure/stacks/lancedb/secrets.env",
+  "bonneagar/stacks/lancedb/compose.yaml",
+  "bonneagar/stacks/lancedb/sidecar.yaml",
+  "bonneagar/stacks/lancedb/secrets.env",
 ]
 environment = """
 LANCEDB_PORT=8080
@@ -85,9 +85,9 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/langfuse"
 file_paths = [
-  "infrastructure/stacks/langfuse/compose.yaml",
-  "infrastructure/stacks/langfuse/sidecar.yaml",
-  "infrastructure/stacks/langfuse/secrets.env",
+  "bonneagar/stacks/langfuse/compose.yaml",
+  "bonneagar/stacks/langfuse/sidecar.yaml",
+  "bonneagar/stacks/langfuse/secrets.env",
 ]
 environment = """
 LANGFUSE_PORT=3000

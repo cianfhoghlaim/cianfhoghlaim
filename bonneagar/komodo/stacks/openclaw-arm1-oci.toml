@@ -31,7 +31,7 @@ server_id = "arm1-oci"
 # to `ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1`. The arm1-oci stack
 # references the LOCAL image, not the private upstream.
 image = "ghcr.io/cianfhoghlaim/openclaw:2026.6-arm1"
-run_directory = "/etc/komodo/sruth/infrastructure/stacks/openclaw"
+run_directory = "/etc/komodo/sruth/bonneagar/stacks/openclaw"
 file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
 environment = """
 LOCKET_MODE=watch
