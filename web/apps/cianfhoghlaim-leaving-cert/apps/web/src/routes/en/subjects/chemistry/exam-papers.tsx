@@ -30,4 +30,5 @@ function ChemistryExampapersPage() {
     </div>
   );
 
+}
 // (no further navigation)

@@ -28,4 +28,5 @@ function GeographySyllabusPage() {
     </div>
   );
 
+}
 // (no further navigation)

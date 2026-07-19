@@ -30,4 +30,5 @@ function GeographyStudyplanPage() {
     </div>
   );
 
+}
 // (no further navigation)

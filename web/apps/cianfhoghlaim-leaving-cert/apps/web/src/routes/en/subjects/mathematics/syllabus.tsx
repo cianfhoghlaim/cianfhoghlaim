@@ -28,4 +28,5 @@ function MathematicsSyllabusPage() {
     </div>
   );
 
+}
 // (no further navigation)

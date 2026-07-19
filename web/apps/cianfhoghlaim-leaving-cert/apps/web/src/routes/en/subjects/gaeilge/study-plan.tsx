@@ -30,4 +30,5 @@ function GaeilgeStudyplanPage() {
     </div>
   );
 
+}
 // (no further navigation)

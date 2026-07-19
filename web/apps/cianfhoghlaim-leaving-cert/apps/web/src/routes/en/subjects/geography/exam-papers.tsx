@@ -30,4 +30,5 @@ function GeographyExampapersPage() {
     </div>
   );
 
+}
 // (no further navigation)

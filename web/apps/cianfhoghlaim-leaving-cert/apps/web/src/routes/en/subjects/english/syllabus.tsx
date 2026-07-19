@@ -28,4 +28,5 @@ function EnglishSyllabusPage() {
     </div>
   );
 
+}
 // (no further navigation)
