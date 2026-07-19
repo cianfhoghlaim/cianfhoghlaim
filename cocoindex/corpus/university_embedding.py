@@ -65,7 +65,7 @@ except ImportError as exc:  # pragma: no cover - defensive
 
 # Shared lifespan (REFACTORING.md item 12) — the canonical home for
 # `LANCE_DB` + `EMBEDDER` + `LANCEDB_URI` + `EMBED_DIM` + `EMBED_MODEL`.
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,
@@ -338,7 +338,7 @@ async def search_university_courses(
     try:
         # The canonical v1 search pattern is `lancedb.search()` over
         # the mounted table; we delegate to the shared LANCE_DB.
-        from ._lifespan import LANCE_DB  # type: ignore[no-redef]
+        from .._shared._lifespan import LANCE_DB  # type: ignore[no-redef]
         # In the v1 conformance contract, `search()` is exposed by
         # every App via `lancedb.VectorSearchQuery`. The full
         # implementation lives in the leabharlann_embedding.py

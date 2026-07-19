@@ -61,7 +61,7 @@ except ImportError:  # pragma: no cover
 
 
 # The shared CocoIndex v1 lifespan (REFACTORING.md item 12).
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,

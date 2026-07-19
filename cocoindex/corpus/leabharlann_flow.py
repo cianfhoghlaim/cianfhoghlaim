@@ -24,7 +24,7 @@ Migrated from the original skeleton (which had no `coco.App(...)` at
 module scope) to the canonical v1 pattern (R1–R4 conformance contract)
 by the `2026-07-09-cocoindex-v1-remaining-apps-v1` change.
 
-- **R1** — `from ._lifespan import shared_lifespan`
+- **R1** — `from .._shared._lifespan import shared_lifespan`
 - **R2** — `leabharlann_flow_app = coco.App(coco.AppConfig(name=...))`
 - **R3** — `lancedb.mount_table_target(LANCE_DB, ...)`
 - **R4** — `target_table.declare_vector_index(column="embedding")`
@@ -63,7 +63,7 @@ except ImportError as e:
 
 
 # R1: shared lifespan + canonical ContextKeys.
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,

@@ -11,7 +11,7 @@ Thinking.
 
 Follows the canonical v1 pattern (R1–R4 conformance contract):
 
-- **R1** — `from ._lifespan import shared_lifespan` (delegates to the
+- **R1** — `from .._shared._lifespan import shared_lifespan` (delegates to the
   shared lifespan in `_lifespan.py`)
 - **R2** — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`;
   declares `cross_subject_competency_app = coco.App(coco.AppConfig(name=...))`
@@ -54,7 +54,7 @@ except ImportError as e:
 
 
 # R1: shared lifespan + canonical ContextKeys from `._lifespan`.
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,

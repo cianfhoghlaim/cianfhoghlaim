@@ -8,7 +8,7 @@ source (vs the absorbed `ireland_legal_embedding.py` which unifies all
 
 R1-R4 v1 conformance contract (per the `cianfhoghlaim-cocoindex-v1` skill):
 
-- R1 — `from ._lifespan import shared_lifespan` (this module)
+- R1 — `from .._shared._lifespan import shared_lifespan` (this module)
 - R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
 - R3 — `PIABEmbedding = coco.App(coco.AppConfig(name="PIABEmbedding"))`
         at module scope
@@ -51,7 +51,7 @@ except ImportError as exc:  # pragma: no cover - defensive
 
 
 # R1 — Shared lifespan
-from ._lifespan import (  # noqa: E402, F401
+from .._shared._lifespan import (  # noqa: E402, F401
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,  # R1 — required for cocoindex v1 conformance

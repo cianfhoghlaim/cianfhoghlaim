@@ -53,7 +53,7 @@ except ImportError as e:
 
 
 # The shared CocoIndex v1 lifespan
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     LANCE_DB,
     EMBEDDER,
     RESOLVED_FILE_REGISTRY,

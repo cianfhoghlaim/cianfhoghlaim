@@ -10,7 +10,7 @@ Mounts **TWO** LanceDB tables:
    (page → region → sentence → word → letter)
 
 R1–R4 v1 conformance contract:
-- R1 — ``from ._lifespan import shared_lifespan``
+- R1 — ``from .._shared._lifespan import shared_lifespan``
 - R2 — ``LANCE_DB`` + ``EMBEDDER`` from ``_lifespan``
 - R3 — ``app = coco.App(coco.AppConfig(name=...))`` at module scope
 - R4 — ``@coco.fn`` + ``lancedb.mount_table_target(LANCE_DB, ...)``
@@ -50,7 +50,7 @@ except ImportError as exc:  # pragma: no cover - defensive
     lancedb = None  # type: ignore[assignment]
 
 
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,

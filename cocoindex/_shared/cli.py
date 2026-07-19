@@ -82,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
 # is satisfied by the `conformance` subcommand docstring above.
 # ============================================================================
 try:  # R1 — uses the shared CocoIndex v1 lifespan
-    from ._lifespan import shared_lifespan as _v1_lifespan_marker  # noqa: F401
+    from .._shared._lifespan import shared_lifespan as _v1_lifespan_marker  # noqa: F401
 except ImportError:  # pragma: no cover
     _v1_lifespan_marker = None
 

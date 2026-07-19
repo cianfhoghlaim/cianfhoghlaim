@@ -7,7 +7,7 @@ maintaining consistency across the other 14). Implements a static
 linter that walks every v1 CocoIndex App under
 `cianfhoghlaim/cocoindex_flows/` and applies 4 conformance rules:
 
-- **R1** — `from ._lifespan import shared_lifespan` (delegates to
+- **R1** — `from .._shared._lifespan import shared_lifespan` (delegates to
   the shared lifespan; REFACTORING.md item 12)
 - **R2** — no new `coco.ContextKey[` declarations outside
   `_lifespan.py` without a sibling `# R2-exempt: <reason>` comment
@@ -58,7 +58,7 @@ except ImportError:  # pragma: no cover
     COCOINDEX_AVAILABLE = False
 
 
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,
@@ -132,14 +132,14 @@ def _parse_python(path: pathlib.Path) -> ast.Module | None:
 
 
 def _check_r1(tree: ast.Module, source: str) -> tuple[bool, str]:
-    """R1 — `from ._lifespan import shared_lifespan` (or equivalent)."""
+    """R1 — `from .._shared._lifespan import shared_lifespan` (or equivalent)."""
     has_import = (
-        "from ._lifespan import" in source
+        "from .._shared._lifespan import" in source
         and "shared_lifespan" in source
     )
     if has_import:
         return True, ""
-    return False, "R1 FAIL — no `from ._lifespan import shared_lifespan`"
+    return False, "R1 FAIL — no `from .._shared._lifespan import shared_lifespan`"
 
 
 def _check_r2(tree: ast.Module, source: str) -> tuple[bool, str]:

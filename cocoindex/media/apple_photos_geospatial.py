@@ -25,7 +25,7 @@ from typing import Annotated, Any
 
 import structlog
 
-from ._lifespan import COCOINDEX_AVAILABLE
+from .._shared._lifespan import COCOINDEX_AVAILABLE
 
 # R4-exempt: GeoParquet output (no LanceDB table, no embedding column).
 # This App emits the 2 GeoParquet files for QGIS / marimo visualisation
@@ -223,7 +223,7 @@ except ImportError:  # pragma: no cover
     _v1_conformance_app = None
 
 try:  # R3 — `mount_table_target` (analogous to `geoparquet.write` for GeoParquet)
-    from ._lifespan import LANCE_DB as _v1_lance_db  # noqa: F401
+    from .._shared._lifespan import LANCE_DB as _v1_lance_db  # noqa: F401
     from cocoindex.connectors import lancedb as _v1_lancedb_mod  # type: ignore[import-not-found]
 
     async def _v1_mount_target() -> None:
