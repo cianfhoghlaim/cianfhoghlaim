@@ -17,17 +17,6 @@ function ExtractSRBHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> SRBHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Serbia text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SRBHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

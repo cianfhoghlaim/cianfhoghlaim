@@ -15,16 +15,6 @@ function ExtractPortugalStatute(
   nation: string,
   language: string,
   text: string
-) -> PRTStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Portugal statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> PortugalStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

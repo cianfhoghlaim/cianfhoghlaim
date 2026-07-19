@@ -17,18 +17,6 @@ function ExtractSRBSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> SRBSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical per-subject curriculum record from the
-    following Serbia text. Preserve the subject slug + the official
-    language(s) (sr) + the canonical grade level.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SRBSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

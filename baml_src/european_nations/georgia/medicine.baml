@@ -17,17 +17,6 @@ function ExtractGEOHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> GEOHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Georgia text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> GEOHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

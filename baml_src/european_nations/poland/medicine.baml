@@ -15,16 +15,6 @@ function ExtractPOLMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> POLMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Poland
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> POLMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

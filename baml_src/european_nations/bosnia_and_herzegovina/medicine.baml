@@ -17,17 +17,6 @@ function ExtractBIHHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> BIHHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical public-health guidance record from the
-    following Bosnia and Herzegovina text. Preserve the issuing agency + the
-    advisory id.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BIHHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

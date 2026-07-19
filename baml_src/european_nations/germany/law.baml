@@ -15,16 +15,6 @@ function ExtractDEULawDocument(
   country_code: string,
   language: string,
   text: string
-) -> DEULawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Germany
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> DEULawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

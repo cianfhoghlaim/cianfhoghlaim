@@ -15,16 +15,6 @@ function ExtractESPMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> ESPMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Spain
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ESPMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

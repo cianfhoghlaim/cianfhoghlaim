@@ -15,16 +15,6 @@ function ExtractCroatiaStatute(
   nation: string,
   language: string,
   text: string
-) -> HRVStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Croatia statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CroatiaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

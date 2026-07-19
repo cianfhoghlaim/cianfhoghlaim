@@ -16,17 +16,6 @@ function ExtractXKXStatute(
   nation: string,
   language: string,
   text: string
-) -> XKXStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Kosovo legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> XKXStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

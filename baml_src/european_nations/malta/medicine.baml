@@ -16,16 +16,6 @@ function ExtractMaltaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> MLTHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Malta health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MaltaHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

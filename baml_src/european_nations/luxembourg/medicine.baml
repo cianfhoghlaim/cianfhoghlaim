@@ -16,17 +16,6 @@ function ExtractLuxembourgHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> LUXHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical health guidance record from the following
-    Luxembourg text. Preserve the agency, advisory id, and
-    target_audience exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> LuxembourgHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

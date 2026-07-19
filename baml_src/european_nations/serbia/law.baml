@@ -16,17 +16,6 @@ function ExtractSRBStatute(
   nation: string,
   language: string,
   text: string
-) -> SRBStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Serbia legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SRBStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

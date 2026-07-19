@@ -17,18 +17,6 @@ function ExtractBIHSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> BIHSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical per-subject curriculum record from the
-    following Bosnia and Herzegovina text. Preserve the subject slug + the official
-    language(s) (bs, hr, sr) + the canonical grade level.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BIHSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

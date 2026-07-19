@@ -18,17 +18,6 @@ function ExtractLatviaSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> LVASubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical Latvia subject curriculum row from the text.
-    Preserve the canonical learning outcomes and the grade_level tag.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> LatviaSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

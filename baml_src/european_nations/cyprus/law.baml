@@ -15,16 +15,6 @@ function ExtractCyprusStatute(
   nation: string,
   language: string,
   text: string
-) -> CYPStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Cyprus statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CyprusStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

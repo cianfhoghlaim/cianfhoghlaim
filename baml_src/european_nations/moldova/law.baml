@@ -16,17 +16,6 @@ function ExtractMDAStatute(
   nation: string,
   language: string,
   text: string
-) -> MDAStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Moldova legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MDAStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

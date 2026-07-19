@@ -15,16 +15,6 @@ function ExtractFRAMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> FRAMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following France
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> FRAMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

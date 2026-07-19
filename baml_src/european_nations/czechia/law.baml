@@ -15,16 +15,6 @@ function ExtractCzechiaStatute(
   nation: string,
   language: string,
   text: string
-) -> CZEStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Czechia statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CzechiaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

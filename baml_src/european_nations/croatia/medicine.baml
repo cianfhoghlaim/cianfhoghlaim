@@ -16,16 +16,6 @@ function ExtractCroatiaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> HRVHealthGuidance {
-  client Claude
-  prompt #"
-    Extract the canonical Croatia health guidance record from the text.
-    Preserve the advisory_id and the target_audience tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CroatiaHealthGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

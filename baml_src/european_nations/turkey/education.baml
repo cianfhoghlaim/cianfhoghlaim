@@ -17,18 +17,6 @@ function ExtractTURSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> TURSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical per-subject curriculum record from the
-    following Turkey text. Preserve the subject slug + the official
-    language(s) (tr) + the canonical grade level.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> TURSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

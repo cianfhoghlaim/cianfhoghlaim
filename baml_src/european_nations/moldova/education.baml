@@ -17,18 +17,6 @@ function ExtractMDASubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> MDASubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical per-subject curriculum record from the
-    following Moldova text. Preserve the subject slug + the official
-    language(s) (ro) + the canonical grade level.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MDASubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

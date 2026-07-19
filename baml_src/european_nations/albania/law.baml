@@ -16,17 +16,6 @@ function ExtractALBStatute(
   nation: string,
   language: string,
   text: string
-) -> ALBStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Albania legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ALBStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

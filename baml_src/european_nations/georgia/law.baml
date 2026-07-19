@@ -16,17 +16,6 @@ function ExtractGEOStatute(
   nation: string,
   language: string,
   text: string
-) -> GEOStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following
-    Georgia legislative text. Preserve the canonical statute id + the
-    official status.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> GEOStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

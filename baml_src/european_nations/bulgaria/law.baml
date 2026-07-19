@@ -15,16 +15,6 @@ function ExtractBulgariaStatute(
   nation: string,
   language: string,
   text: string
-) -> BGRStatute {
-  client Claude
-  prompt #"
-    Extract the canonical Bulgaria statute record from the text.
-    Preserve the statute_id and the official_status tag exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BulgariaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

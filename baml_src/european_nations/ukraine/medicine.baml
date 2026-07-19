@@ -15,16 +15,6 @@ function ExtractUKRMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> UKRMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Ukraine
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> UKRMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

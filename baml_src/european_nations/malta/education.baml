@@ -18,17 +18,6 @@ function ExtractMaltaSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> MLTSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical Malta subject curriculum row from the text.
-    Preserve the canonical learning outcomes and the grade_level tag.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MaltaSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -11,21 +11,10 @@ class NationJurisdictionMetadata {
   content_hash string?
 }
 
-function extract_nation_jurisdiction_metadata(
-  country_code: string,
+function ExtractNationJurisdictionMetadata(
+  countryCode: string,
   language: string,
   text: string
-) -> NationJurisdictionMetadata {
-  client Claude
-  prompt #"
-    Extract the canonical jurisdiction metadata record from the
-    following text. The country_code is the ISO 3166-1 alpha-3 of
-    the country the document describes.
-
-    Country: {{ country_code }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> NationJurisdictionMetadata {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

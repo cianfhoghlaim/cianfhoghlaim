@@ -16,16 +16,6 @@ function ExtractAustriaStatute(
   nation: string,
   language: string,
   text: string
-) -> AUTStatute {
-  client Claude
-  prompt #"
-    Extract the canonical statute record from the following Austria
-    text. Preserve the statute id, jurisdiction, and official_status exactly.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> AustriaStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

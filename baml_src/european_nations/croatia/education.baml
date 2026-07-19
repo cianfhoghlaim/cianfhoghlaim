@@ -18,17 +18,6 @@ function ExtractCroatiaSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> HRVSubjectCurriculum {
-  client Claude
-  prompt #"
-    Extract the canonical Croatia subject curriculum row from the text.
-    Preserve the canonical learning outcomes and the grade_level tag.
-
-    Nation: { nation }
-    Language: { language }
-    Subject: { subject }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CroatiaSubjectCurriculum {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

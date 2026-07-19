@@ -15,16 +15,6 @@ function ExtractDEUMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> DEUMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Germany
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> DEUMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
