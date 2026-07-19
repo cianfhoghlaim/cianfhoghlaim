@@ -291,3 +291,20 @@ Cross-references:
   the 42 lc5/lc6 assets that drive the Flights
 - [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
   the DuckLake sink layer
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The canonical MotherDuck database alias is `md:cianchoghlaim` (NOT `md:oideachais`
+  which was the pre-v7 name). The pre-v7 BIEP Dives that referenced `md:oideachais`
+  were migrated to `md:cianchoghlaim` in the P1 lakehouse-population change.
+- MotherDuck Flights are now configured via
+  `openspec/changes/2026-08-02-biep-v3-motherduck-flights-v1/` (the canonical
+  per-day BIEP Flights `lc_pdf_sync_flight` etc.)
+- For BIEP analytics, the 4 canonical Dives are:
+  - `lc_syllabus_topics`
+  - `lc_exam_paper_difficulty`
+  - `lc_marking_complexity`
+  - `gov_circulars_archive`
+

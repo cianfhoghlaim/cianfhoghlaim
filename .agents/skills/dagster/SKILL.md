@@ -517,3 +517,21 @@ Cross-references:
   the 4 Dives
 - [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
   per-subject notebooks
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The canonical Dagster code-location entry point is:
+  `uv run dagster dev -m orchestration.definitions`
+  (NOT `uv run dagster dev -m cianfhoghlaim.dagster.definitions` which was the
+  pre-v7 path that no longer exists)
+- The 5 KCG Components map to the 5-layer DAG:
+  - L1 Ingestion (CelticIngestionComponent) — NCCA / SEC / gov.ie DLT sources
+  - L2 Materials (CelticMaterialsComponent) — BAML extraction with R1-R4 conformance
+  - L3 Model Lifecycle (CelticModelLifecycleComponent) — 17 v1 CocoIndex Apps
+  - L4 Asset Generation (CelticAssetGenerationComponent) — marimo notebooks, web routes
+  - L5 Agent Ops (CelticAgentOpsComponent) — 12 agents × 5 assets = 60 assets
+- Component definition files are at `orchestration/components/layer{1..5}_*.py`
+- Defs tree is at `orchestration/defs/{1_ingestion,2_materials,3_model_lifecycle,4_asset_generation,5_agent_ops}/`
+

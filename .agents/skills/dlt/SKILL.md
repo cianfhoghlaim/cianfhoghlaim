@@ -442,3 +442,20 @@ notebooks:
   "small data" workshop (SF 2025): dlt pipelines for small
   files, REST API ingestion patterns, and DuckDB destination
   examples.
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- DLT sources are now at `cianchoghlaim.dlt.british_isles.<jurisdiction>.education.<source>`
+- The canonical CLI entry point is `python -m cianfhoghlaim.dlt.cli run-pipeline`
+  (NOT `python -m cianfhoghlaim.dlt.run_pipeline` which was the pre-v7 name)
+- The new BIEP v3 jurisdiction pipelines live at:
+  - `dlt/british_isles/ireland/education/ireland_jurisdiction_pipeline.py`
+  - `dlt/british_isles/england/education/england_jurisdiction_pipeline.py`
+  - `dlt/british_isles/sct_wls_ni/education/sct_wls_ni_jurisdiction_pipeline.py`
+  - `dlt/british_isles/crown_dependencies/education/crown_dependencies_jurisdiction_pipeline.py`
+- Each pipeline uses `dlt.common.curriculum_registry.SubjectRegistry` for canonical subject metadata
+- The destination is configured via `dlt.common.destinations_cianfhoghlaim.get_dlt_destination(use_ducklake=True)`
+- The 4 destinations: local DuckDB, MotherDuck BYOB, Garage S3 + Lakekeeper, R2 + Lakekeeper
+
