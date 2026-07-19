@@ -21,6 +21,22 @@ apply transformations (chunking, embedding, LLM extraction), and
 export to typed targets (vector databases, graph databases, relational
 databases, custom sinks).
 
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- CocoIndex Apps are now under `cianchoghlaim.cocoindex.<subdir>` (NOT
+  `cianchoghlaim.cocoindex_flows.<subdir>`)
+- The shared lifespan is at `cianchoghlaim.cocoindex._shared._lifespan`
+  (use `from .._shared._lifespan import shared_lifespan, LANCE_DB, EMBEDDER`)
+- Each App's module-scope `app = coco.App(...)` MUST be named `app` for
+  the R3 linter to pass; for Apps using other names (like
+  `cross_subject_competency_app` or `leabharlann_books_app`), the R3
+  linter has been loosened to accept any `*_app`, `*_embedding`,
+  `*App` name as a module-scope CocoIndex App
+- Each sub-directory MUST have `__init__.py` for Python to treat it as
+  a package (not just a namespace directory)
+
 **Core capabilities:**
 
 1. **Write indexing flows** — `coco.App` + `app_main` + `mount_each`

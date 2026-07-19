@@ -30,6 +30,26 @@ LLM extraction framework used across the oideachais lakehouse.
    the `DuckLake` tables defined in
    `dlt/british_isles/ireland/education/`.
 
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The `.baml` source files now live at `baml_src/` (NOT `baml/`)
+- The auto-generated Python client lives at `baml_client/baml_client/`
+  (with an extra `baml_client/` wrapper due to the post-flatten wheel layout)
+- The canonical import path for BAML functions is:
+  `from cianfhoghlaim.baml_client import b`
+- The `_legacy/` sub-directory contains deprecated BAML files that
+  are kept for one release cycle per openspec deprecation policy
+- BAML 0.223.0 (NOT 0.222) is the canonical compiler; key differences:
+  - Test blocks MUST use lowercase `test` (was PascalCase `Test` in 0.222)
+  - String-literal dotted-path type refs like `"baml_src.X.Y.Z"` are REJECTED
+  - Class field defaults like `field string = "en"` are REJECTED
+  - Use `from ..shared.file import ClassName` for cross-file imports
+
+For new BAML functions in the v7 flattened layout, see:
+openspec/specs/oideachais-baml-schemas/spec.md (canonical BAML spec)
+
 ## When to use this skill
 
 Use when you need to:

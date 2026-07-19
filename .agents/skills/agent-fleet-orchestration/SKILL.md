@@ -17,6 +17,21 @@ layer, or the cross-quadrant observability contract. The
 This skill covers the **orchestration** of the 12 agents into
 a single fleet.
 
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The 12-agent fleet is now under `cianchoghlaim.meaisinfhoghlaim.agents.*`
+  (NOT `cianchoghlaim.agents.meaisinfhoghlaim.*` which was the pre-v7 layout)
+- The 5 sub-frameworks are: ADK (Google), Agno, Pydantic-AI, Custom, Pipecat
+- The routing keyword map canonical seed lives at `agents/routing_keywords.py`
+- Each subject agent's wire metadata is at
+  `agents/tuatha/wiring.py:SubjectAgentWiring` (NOT in the agent module
+  itself, but in the central wiring file)
+- For new agents: register them in `agents/routing_keywords.py`,
+  add SubjectAgentWiring entry in `wiring.py`, then create the
+  L5 CelticAgentOpsComponent config in `orchestration/components/layer5_agent_ops.py`
+
 ## When to use this skill
 
 Use when you need to:
