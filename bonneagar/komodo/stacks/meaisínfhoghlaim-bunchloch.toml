@@ -3,7 +3,7 @@
 # =============================================================================
 # Deployed on bunchloch (MacBook M4 Max) which has unified memory
 # sufficient for GGUF model swap. The compose files live under
-# meaisínfhoghlaim/ (not infrastructure/stacks/) because they are
+# meaisínfhoghlaim/ (not bonneagar/stacks/) because they are
 # application-owned rather than infrastructure-owned.
 #
 # Per the meaisínfhoghlaim/AGENTS.md contract, this stack is a prerequisite

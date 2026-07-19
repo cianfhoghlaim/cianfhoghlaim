@@ -29,7 +29,7 @@ server_id = "arm1-oci"
 # to `ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1`. The arm1-oci stack
 # references the LOCAL image, not the private upstream.
 image = "ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1"
-run_directory = "/etc/komodo/sruth/infrastructure/stacks/openchamber"
+run_directory = "/etc/komodo/sruth/bonneagar/stacks/openchamber"
 file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
 environment = """
 LOCKET_MODE=watch
