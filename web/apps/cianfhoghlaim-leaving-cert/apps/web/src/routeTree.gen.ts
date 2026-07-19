@@ -20,6 +20,8 @@ import { Route as EnFoundationsRouteImport } from './routes/en/foundations'
 import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
 import { Route as EnAgentsRouteImport } from './routes/en/agents'
 import { Route as EnAboutRouteImport } from './routes/en/about'
+import { Route as GaPortalIndexRouteImport } from './routes/ga/portal/index'
+import { Route as EnPortalIndexRouteImport } from './routes/en/portal/index'
 import { Route as GaSubjectsTireolaiochtRouteImport } from './routes/ga/subjects/tireolaiocht'
 import { Route as GaSubjectsRiomheolaiochtRouteImport } from './routes/ga/subjects/riomheolaiocht'
 import { Route as GaSubjectsMataRouteImport } from './routes/ga/subjects/mata'
@@ -38,6 +40,38 @@ import { Route as EnKeyCompetenciesSlugRouteImport } from './routes/en/key-compe
 import { Route as EnFoundationsSlugRouteImport } from './routes/en/foundations.$slug'
 import { Route as EnAssetsSubjectRouteImport } from './routes/en/assets/$subject'
 import { Route as EnAgentsAgentRouteImport } from './routes/en/agents.$agent'
+import { Route as EnSubjectsMathematicsIndexRouteImport } from './routes/en/subjects/mathematics/index'
+import { Route as EnSubjectsGeographyIndexRouteImport } from './routes/en/subjects/geography/index'
+import { Route as EnSubjectsGaeilgeIndexRouteImport } from './routes/en/subjects/gaeilge/index'
+import { Route as EnSubjectsEnglishIndexRouteImport } from './routes/en/subjects/english/index'
+import { Route as EnSubjectsComputer_scienceIndexRouteImport } from './routes/en/subjects/computer_science/index'
+import { Route as EnSubjectsChemistryIndexRouteImport } from './routes/en/subjects/chemistry/index'
+import { Route as GaLeavingCertSubjectLineageRouteImport } from './routes/ga/leaving-cert/$subject/lineage'
+import { Route as EnSubjectsMathematicsSyllabusRouteImport } from './routes/en/subjects/mathematics/syllabus'
+import { Route as EnSubjectsMathematicsStudyPlanRouteImport } from './routes/en/subjects/mathematics/study-plan'
+import { Route as EnSubjectsMathematicsMarkingSchemesRouteImport } from './routes/en/subjects/mathematics/marking-schemes'
+import { Route as EnSubjectsMathematicsExamPapersRouteImport } from './routes/en/subjects/mathematics/exam-papers'
+import { Route as EnSubjectsGeographySyllabusRouteImport } from './routes/en/subjects/geography/syllabus'
+import { Route as EnSubjectsGeographyStudyPlanRouteImport } from './routes/en/subjects/geography/study-plan'
+import { Route as EnSubjectsGeographyMarkingSchemesRouteImport } from './routes/en/subjects/geography/marking-schemes'
+import { Route as EnSubjectsGeographyExamPapersRouteImport } from './routes/en/subjects/geography/exam-papers'
+import { Route as EnSubjectsGaeilgeSyllabusRouteImport } from './routes/en/subjects/gaeilge/syllabus'
+import { Route as EnSubjectsGaeilgeStudyPlanRouteImport } from './routes/en/subjects/gaeilge/study-plan'
+import { Route as EnSubjectsGaeilgeMarkingSchemesRouteImport } from './routes/en/subjects/gaeilge/marking-schemes'
+import { Route as EnSubjectsGaeilgeExamPapersRouteImport } from './routes/en/subjects/gaeilge/exam-papers'
+import { Route as EnSubjectsEnglishSyllabusRouteImport } from './routes/en/subjects/english/syllabus'
+import { Route as EnSubjectsEnglishStudyPlanRouteImport } from './routes/en/subjects/english/study-plan'
+import { Route as EnSubjectsEnglishMarkingSchemesRouteImport } from './routes/en/subjects/english/marking-schemes'
+import { Route as EnSubjectsEnglishExamPapersRouteImport } from './routes/en/subjects/english/exam-papers'
+import { Route as EnSubjectsComputer_scienceSyllabusRouteImport } from './routes/en/subjects/computer_science/syllabus'
+import { Route as EnSubjectsComputer_scienceStudyPlanRouteImport } from './routes/en/subjects/computer_science/study-plan'
+import { Route as EnSubjectsComputer_scienceMarkingSchemesRouteImport } from './routes/en/subjects/computer_science/marking-schemes'
+import { Route as EnSubjectsComputer_scienceExamPapersRouteImport } from './routes/en/subjects/computer_science/exam-papers'
+import { Route as EnSubjectsChemistrySyllabusRouteImport } from './routes/en/subjects/chemistry/syllabus'
+import { Route as EnSubjectsChemistryStudyPlanRouteImport } from './routes/en/subjects/chemistry/study-plan'
+import { Route as EnSubjectsChemistryMarkingSchemesRouteImport } from './routes/en/subjects/chemistry/marking-schemes'
+import { Route as EnSubjectsChemistryExamPapersRouteImport } from './routes/en/subjects/chemistry/exam-papers'
+import { Route as EnLeavingCertSubjectLineageRouteImport } from './routes/en/leaving-cert/$subject/lineage'
 import { Route as EnLeavingCertSubjectSectionRouteImport } from './routes/en/leaving-cert/$subject.$section'
 import { Route as EnLeavingCertSubjectPracticeTopicRouteImport } from './routes/en/leaving-cert/$subject.practice.$topic'
 
@@ -94,6 +128,16 @@ const EnAgentsRoute = EnAgentsRouteImport.update({
 const EnAboutRoute = EnAboutRouteImport.update({
   id: '/en/about',
   path: '/en/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaPortalIndexRoute = GaPortalIndexRouteImport.update({
+  id: '/ga/portal/',
+  path: '/ga/portal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnPortalIndexRoute = EnPortalIndexRouteImport.update({
+  id: '/en/portal/',
+  path: '/en/portal/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GaSubjectsTireolaiochtRoute = GaSubjectsTireolaiochtRouteImport.update({
@@ -188,6 +232,196 @@ const EnAgentsAgentRoute = EnAgentsAgentRouteImport.update({
   path: '/$agent',
   getParentRoute: () => EnAgentsRoute,
 } as any)
+const EnSubjectsMathematicsIndexRoute =
+  EnSubjectsMathematicsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => EnSubjectsMathematicsRoute,
+  } as any)
+const EnSubjectsGeographyIndexRoute =
+  EnSubjectsGeographyIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => EnSubjectsGeographyRoute,
+  } as any)
+const EnSubjectsGaeilgeIndexRoute = EnSubjectsGaeilgeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EnSubjectsGaeilgeRoute,
+} as any)
+const EnSubjectsEnglishIndexRoute = EnSubjectsEnglishIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EnSubjectsEnglishRoute,
+} as any)
+const EnSubjectsComputer_scienceIndexRoute =
+  EnSubjectsComputer_scienceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => EnSubjectsComputer_scienceRoute,
+  } as any)
+const EnSubjectsChemistryIndexRoute =
+  EnSubjectsChemistryIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => EnSubjectsChemistryRoute,
+  } as any)
+const GaLeavingCertSubjectLineageRoute =
+  GaLeavingCertSubjectLineageRouteImport.update({
+    id: '/lineage',
+    path: '/lineage',
+    getParentRoute: () => GaLeavingCertSubjectRoute,
+  } as any)
+const EnSubjectsMathematicsSyllabusRoute =
+  EnSubjectsMathematicsSyllabusRouteImport.update({
+    id: '/syllabus',
+    path: '/syllabus',
+    getParentRoute: () => EnSubjectsMathematicsRoute,
+  } as any)
+const EnSubjectsMathematicsStudyPlanRoute =
+  EnSubjectsMathematicsStudyPlanRouteImport.update({
+    id: '/study-plan',
+    path: '/study-plan',
+    getParentRoute: () => EnSubjectsMathematicsRoute,
+  } as any)
+const EnSubjectsMathematicsMarkingSchemesRoute =
+  EnSubjectsMathematicsMarkingSchemesRouteImport.update({
+    id: '/marking-schemes',
+    path: '/marking-schemes',
+    getParentRoute: () => EnSubjectsMathematicsRoute,
+  } as any)
+const EnSubjectsMathematicsExamPapersRoute =
+  EnSubjectsMathematicsExamPapersRouteImport.update({
+    id: '/exam-papers',
+    path: '/exam-papers',
+    getParentRoute: () => EnSubjectsMathematicsRoute,
+  } as any)
+const EnSubjectsGeographySyllabusRoute =
+  EnSubjectsGeographySyllabusRouteImport.update({
+    id: '/syllabus',
+    path: '/syllabus',
+    getParentRoute: () => EnSubjectsGeographyRoute,
+  } as any)
+const EnSubjectsGeographyStudyPlanRoute =
+  EnSubjectsGeographyStudyPlanRouteImport.update({
+    id: '/study-plan',
+    path: '/study-plan',
+    getParentRoute: () => EnSubjectsGeographyRoute,
+  } as any)
+const EnSubjectsGeographyMarkingSchemesRoute =
+  EnSubjectsGeographyMarkingSchemesRouteImport.update({
+    id: '/marking-schemes',
+    path: '/marking-schemes',
+    getParentRoute: () => EnSubjectsGeographyRoute,
+  } as any)
+const EnSubjectsGeographyExamPapersRoute =
+  EnSubjectsGeographyExamPapersRouteImport.update({
+    id: '/exam-papers',
+    path: '/exam-papers',
+    getParentRoute: () => EnSubjectsGeographyRoute,
+  } as any)
+const EnSubjectsGaeilgeSyllabusRoute =
+  EnSubjectsGaeilgeSyllabusRouteImport.update({
+    id: '/syllabus',
+    path: '/syllabus',
+    getParentRoute: () => EnSubjectsGaeilgeRoute,
+  } as any)
+const EnSubjectsGaeilgeStudyPlanRoute =
+  EnSubjectsGaeilgeStudyPlanRouteImport.update({
+    id: '/study-plan',
+    path: '/study-plan',
+    getParentRoute: () => EnSubjectsGaeilgeRoute,
+  } as any)
+const EnSubjectsGaeilgeMarkingSchemesRoute =
+  EnSubjectsGaeilgeMarkingSchemesRouteImport.update({
+    id: '/marking-schemes',
+    path: '/marking-schemes',
+    getParentRoute: () => EnSubjectsGaeilgeRoute,
+  } as any)
+const EnSubjectsGaeilgeExamPapersRoute =
+  EnSubjectsGaeilgeExamPapersRouteImport.update({
+    id: '/exam-papers',
+    path: '/exam-papers',
+    getParentRoute: () => EnSubjectsGaeilgeRoute,
+  } as any)
+const EnSubjectsEnglishSyllabusRoute =
+  EnSubjectsEnglishSyllabusRouteImport.update({
+    id: '/syllabus',
+    path: '/syllabus',
+    getParentRoute: () => EnSubjectsEnglishRoute,
+  } as any)
+const EnSubjectsEnglishStudyPlanRoute =
+  EnSubjectsEnglishStudyPlanRouteImport.update({
+    id: '/study-plan',
+    path: '/study-plan',
+    getParentRoute: () => EnSubjectsEnglishRoute,
+  } as any)
+const EnSubjectsEnglishMarkingSchemesRoute =
+  EnSubjectsEnglishMarkingSchemesRouteImport.update({
+    id: '/marking-schemes',
+    path: '/marking-schemes',
+    getParentRoute: () => EnSubjectsEnglishRoute,
+  } as any)
+const EnSubjectsEnglishExamPapersRoute =
+  EnSubjectsEnglishExamPapersRouteImport.update({
+    id: '/exam-papers',
+    path: '/exam-papers',
+    getParentRoute: () => EnSubjectsEnglishRoute,
+  } as any)
+const EnSubjectsComputer_scienceSyllabusRoute =
+  EnSubjectsComputer_scienceSyllabusRouteImport.update({
+    id: '/syllabus',
+    path: '/syllabus',
+    getParentRoute: () => EnSubjectsComputer_scienceRoute,
+  } as any)
+const EnSubjectsComputer_scienceStudyPlanRoute =
+  EnSubjectsComputer_scienceStudyPlanRouteImport.update({
+    id: '/study-plan',
+    path: '/study-plan',
+    getParentRoute: () => EnSubjectsComputer_scienceRoute,
+  } as any)
+const EnSubjectsComputer_scienceMarkingSchemesRoute =
+  EnSubjectsComputer_scienceMarkingSchemesRouteImport.update({
+    id: '/marking-schemes',
+    path: '/marking-schemes',
+    getParentRoute: () => EnSubjectsComputer_scienceRoute,
+  } as any)
+const EnSubjectsComputer_scienceExamPapersRoute =
+  EnSubjectsComputer_scienceExamPapersRouteImport.update({
+    id: '/exam-papers',
+    path: '/exam-papers',
+    getParentRoute: () => EnSubjectsComputer_scienceRoute,
+  } as any)
+const EnSubjectsChemistrySyllabusRoute =
+  EnSubjectsChemistrySyllabusRouteImport.update({
+    id: '/syllabus',
+    path: '/syllabus',
+    getParentRoute: () => EnSubjectsChemistryRoute,
+  } as any)
+const EnSubjectsChemistryStudyPlanRoute =
+  EnSubjectsChemistryStudyPlanRouteImport.update({
+    id: '/study-plan',
+    path: '/study-plan',
+    getParentRoute: () => EnSubjectsChemistryRoute,
+  } as any)
+const EnSubjectsChemistryMarkingSchemesRoute =
+  EnSubjectsChemistryMarkingSchemesRouteImport.update({
+    id: '/marking-schemes',
+    path: '/marking-schemes',
+    getParentRoute: () => EnSubjectsChemistryRoute,
+  } as any)
+const EnSubjectsChemistryExamPapersRoute =
+  EnSubjectsChemistryExamPapersRouteImport.update({
+    id: '/exam-papers',
+    path: '/exam-papers',
+    getParentRoute: () => EnSubjectsChemistryRoute,
+  } as any)
+const EnLeavingCertSubjectLineageRoute =
+  EnLeavingCertSubjectLineageRouteImport.update({
+    id: '/en/leaving-cert/$subject/lineage',
+    path: '/en/leaving-cert/$subject/lineage',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const EnLeavingCertSubjectSectionRoute =
   EnLeavingCertSubjectSectionRouteImport.update({
     id: '/en/leaving-cert/$subject/$section',
@@ -218,20 +452,54 @@ export interface FileRoutesByFullPath {
   '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
-  '/en/subjects/chemistry': typeof EnSubjectsChemistryRoute
-  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRoute
-  '/en/subjects/english': typeof EnSubjectsEnglishRoute
-  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRoute
-  '/en/subjects/geography': typeof EnSubjectsGeographyRoute
-  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRoute
-  '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
+  '/en/subjects/chemistry': typeof EnSubjectsChemistryRouteWithChildren
+  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRouteWithChildren
+  '/en/subjects/english': typeof EnSubjectsEnglishRouteWithChildren
+  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRouteWithChildren
+  '/en/subjects/geography': typeof EnSubjectsGeographyRouteWithChildren
+  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRouteWithChildren
+  '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRouteWithChildren
   '/ga/subjects/bearla': typeof GaSubjectsBearlaRoute
   '/ga/subjects/ceimic': typeof GaSubjectsCeimicRoute
   '/ga/subjects/gaeilge': typeof GaSubjectsGaeilgeRoute
   '/ga/subjects/mata': typeof GaSubjectsMataRoute
   '/ga/subjects/riomheolaiocht': typeof GaSubjectsRiomheolaiochtRoute
   '/ga/subjects/tireolaiocht': typeof GaSubjectsTireolaiochtRoute
+  '/en/portal/': typeof EnPortalIndexRoute
+  '/ga/portal/': typeof GaPortalIndexRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
+  '/en/leaving-cert/$subject/lineage': typeof EnLeavingCertSubjectLineageRoute
+  '/en/subjects/chemistry/exam-papers': typeof EnSubjectsChemistryExamPapersRoute
+  '/en/subjects/chemistry/marking-schemes': typeof EnSubjectsChemistryMarkingSchemesRoute
+  '/en/subjects/chemistry/study-plan': typeof EnSubjectsChemistryStudyPlanRoute
+  '/en/subjects/chemistry/syllabus': typeof EnSubjectsChemistrySyllabusRoute
+  '/en/subjects/computer_science/exam-papers': typeof EnSubjectsComputer_scienceExamPapersRoute
+  '/en/subjects/computer_science/marking-schemes': typeof EnSubjectsComputer_scienceMarkingSchemesRoute
+  '/en/subjects/computer_science/study-plan': typeof EnSubjectsComputer_scienceStudyPlanRoute
+  '/en/subjects/computer_science/syllabus': typeof EnSubjectsComputer_scienceSyllabusRoute
+  '/en/subjects/english/exam-papers': typeof EnSubjectsEnglishExamPapersRoute
+  '/en/subjects/english/marking-schemes': typeof EnSubjectsEnglishMarkingSchemesRoute
+  '/en/subjects/english/study-plan': typeof EnSubjectsEnglishStudyPlanRoute
+  '/en/subjects/english/syllabus': typeof EnSubjectsEnglishSyllabusRoute
+  '/en/subjects/gaeilge/exam-papers': typeof EnSubjectsGaeilgeExamPapersRoute
+  '/en/subjects/gaeilge/marking-schemes': typeof EnSubjectsGaeilgeMarkingSchemesRoute
+  '/en/subjects/gaeilge/study-plan': typeof EnSubjectsGaeilgeStudyPlanRoute
+  '/en/subjects/gaeilge/syllabus': typeof EnSubjectsGaeilgeSyllabusRoute
+  '/en/subjects/geography/exam-papers': typeof EnSubjectsGeographyExamPapersRoute
+  '/en/subjects/geography/marking-schemes': typeof EnSubjectsGeographyMarkingSchemesRoute
+  '/en/subjects/geography/study-plan': typeof EnSubjectsGeographyStudyPlanRoute
+  '/en/subjects/geography/syllabus': typeof EnSubjectsGeographySyllabusRoute
+  '/en/subjects/mathematics/exam-papers': typeof EnSubjectsMathematicsExamPapersRoute
+  '/en/subjects/mathematics/marking-schemes': typeof EnSubjectsMathematicsMarkingSchemesRoute
+  '/en/subjects/mathematics/study-plan': typeof EnSubjectsMathematicsStudyPlanRoute
+  '/en/subjects/mathematics/syllabus': typeof EnSubjectsMathematicsSyllabusRoute
+  '/ga/leaving-cert/$subject/lineage': typeof GaLeavingCertSubjectLineageRoute
+  '/en/subjects/chemistry/': typeof EnSubjectsChemistryIndexRoute
+  '/en/subjects/computer_science/': typeof EnSubjectsComputer_scienceIndexRoute
+  '/en/subjects/english/': typeof EnSubjectsEnglishIndexRoute
+  '/en/subjects/gaeilge/': typeof EnSubjectsGaeilgeIndexRoute
+  '/en/subjects/geography/': typeof EnSubjectsGeographyIndexRoute
+  '/en/subjects/mathematics/': typeof EnSubjectsMathematicsIndexRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
 export interface FileRoutesByTo {
@@ -251,20 +519,48 @@ export interface FileRoutesByTo {
   '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
-  '/en/subjects/chemistry': typeof EnSubjectsChemistryRoute
-  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRoute
-  '/en/subjects/english': typeof EnSubjectsEnglishRoute
-  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRoute
-  '/en/subjects/geography': typeof EnSubjectsGeographyRoute
-  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRoute
-  '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
+  '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRouteWithChildren
   '/ga/subjects/bearla': typeof GaSubjectsBearlaRoute
   '/ga/subjects/ceimic': typeof GaSubjectsCeimicRoute
   '/ga/subjects/gaeilge': typeof GaSubjectsGaeilgeRoute
   '/ga/subjects/mata': typeof GaSubjectsMataRoute
   '/ga/subjects/riomheolaiocht': typeof GaSubjectsRiomheolaiochtRoute
   '/ga/subjects/tireolaiocht': typeof GaSubjectsTireolaiochtRoute
+  '/en/portal': typeof EnPortalIndexRoute
+  '/ga/portal': typeof GaPortalIndexRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
+  '/en/leaving-cert/$subject/lineage': typeof EnLeavingCertSubjectLineageRoute
+  '/en/subjects/chemistry/exam-papers': typeof EnSubjectsChemistryExamPapersRoute
+  '/en/subjects/chemistry/marking-schemes': typeof EnSubjectsChemistryMarkingSchemesRoute
+  '/en/subjects/chemistry/study-plan': typeof EnSubjectsChemistryStudyPlanRoute
+  '/en/subjects/chemistry/syllabus': typeof EnSubjectsChemistrySyllabusRoute
+  '/en/subjects/computer_science/exam-papers': typeof EnSubjectsComputer_scienceExamPapersRoute
+  '/en/subjects/computer_science/marking-schemes': typeof EnSubjectsComputer_scienceMarkingSchemesRoute
+  '/en/subjects/computer_science/study-plan': typeof EnSubjectsComputer_scienceStudyPlanRoute
+  '/en/subjects/computer_science/syllabus': typeof EnSubjectsComputer_scienceSyllabusRoute
+  '/en/subjects/english/exam-papers': typeof EnSubjectsEnglishExamPapersRoute
+  '/en/subjects/english/marking-schemes': typeof EnSubjectsEnglishMarkingSchemesRoute
+  '/en/subjects/english/study-plan': typeof EnSubjectsEnglishStudyPlanRoute
+  '/en/subjects/english/syllabus': typeof EnSubjectsEnglishSyllabusRoute
+  '/en/subjects/gaeilge/exam-papers': typeof EnSubjectsGaeilgeExamPapersRoute
+  '/en/subjects/gaeilge/marking-schemes': typeof EnSubjectsGaeilgeMarkingSchemesRoute
+  '/en/subjects/gaeilge/study-plan': typeof EnSubjectsGaeilgeStudyPlanRoute
+  '/en/subjects/gaeilge/syllabus': typeof EnSubjectsGaeilgeSyllabusRoute
+  '/en/subjects/geography/exam-papers': typeof EnSubjectsGeographyExamPapersRoute
+  '/en/subjects/geography/marking-schemes': typeof EnSubjectsGeographyMarkingSchemesRoute
+  '/en/subjects/geography/study-plan': typeof EnSubjectsGeographyStudyPlanRoute
+  '/en/subjects/geography/syllabus': typeof EnSubjectsGeographySyllabusRoute
+  '/en/subjects/mathematics/exam-papers': typeof EnSubjectsMathematicsExamPapersRoute
+  '/en/subjects/mathematics/marking-schemes': typeof EnSubjectsMathematicsMarkingSchemesRoute
+  '/en/subjects/mathematics/study-plan': typeof EnSubjectsMathematicsStudyPlanRoute
+  '/en/subjects/mathematics/syllabus': typeof EnSubjectsMathematicsSyllabusRoute
+  '/ga/leaving-cert/$subject/lineage': typeof GaLeavingCertSubjectLineageRoute
+  '/en/subjects/chemistry': typeof EnSubjectsChemistryIndexRoute
+  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceIndexRoute
+  '/en/subjects/english': typeof EnSubjectsEnglishIndexRoute
+  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeIndexRoute
+  '/en/subjects/geography': typeof EnSubjectsGeographyIndexRoute
+  '/en/subjects/mathematics': typeof EnSubjectsMathematicsIndexRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
 export interface FileRoutesById {
@@ -285,20 +581,54 @@ export interface FileRoutesById {
   '/en/foundations/$slug': typeof EnFoundationsSlugRoute
   '/en/key-competencies/$slug': typeof EnKeyCompetenciesSlugRoute
   '/en/subjects/$subject': typeof EnSubjectsSubjectRoute
-  '/en/subjects/chemistry': typeof EnSubjectsChemistryRoute
-  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRoute
-  '/en/subjects/english': typeof EnSubjectsEnglishRoute
-  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRoute
-  '/en/subjects/geography': typeof EnSubjectsGeographyRoute
-  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRoute
-  '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRoute
+  '/en/subjects/chemistry': typeof EnSubjectsChemistryRouteWithChildren
+  '/en/subjects/computer_science': typeof EnSubjectsComputer_scienceRouteWithChildren
+  '/en/subjects/english': typeof EnSubjectsEnglishRouteWithChildren
+  '/en/subjects/gaeilge': typeof EnSubjectsGaeilgeRouteWithChildren
+  '/en/subjects/geography': typeof EnSubjectsGeographyRouteWithChildren
+  '/en/subjects/mathematics': typeof EnSubjectsMathematicsRouteWithChildren
+  '/ga/leaving-cert/$subject': typeof GaLeavingCertSubjectRouteWithChildren
   '/ga/subjects/bearla': typeof GaSubjectsBearlaRoute
   '/ga/subjects/ceimic': typeof GaSubjectsCeimicRoute
   '/ga/subjects/gaeilge': typeof GaSubjectsGaeilgeRoute
   '/ga/subjects/mata': typeof GaSubjectsMataRoute
   '/ga/subjects/riomheolaiocht': typeof GaSubjectsRiomheolaiochtRoute
   '/ga/subjects/tireolaiocht': typeof GaSubjectsTireolaiochtRoute
+  '/en/portal/': typeof EnPortalIndexRoute
+  '/ga/portal/': typeof GaPortalIndexRoute
   '/en/leaving-cert/$subject/$section': typeof EnLeavingCertSubjectSectionRoute
+  '/en/leaving-cert/$subject/lineage': typeof EnLeavingCertSubjectLineageRoute
+  '/en/subjects/chemistry/exam-papers': typeof EnSubjectsChemistryExamPapersRoute
+  '/en/subjects/chemistry/marking-schemes': typeof EnSubjectsChemistryMarkingSchemesRoute
+  '/en/subjects/chemistry/study-plan': typeof EnSubjectsChemistryStudyPlanRoute
+  '/en/subjects/chemistry/syllabus': typeof EnSubjectsChemistrySyllabusRoute
+  '/en/subjects/computer_science/exam-papers': typeof EnSubjectsComputer_scienceExamPapersRoute
+  '/en/subjects/computer_science/marking-schemes': typeof EnSubjectsComputer_scienceMarkingSchemesRoute
+  '/en/subjects/computer_science/study-plan': typeof EnSubjectsComputer_scienceStudyPlanRoute
+  '/en/subjects/computer_science/syllabus': typeof EnSubjectsComputer_scienceSyllabusRoute
+  '/en/subjects/english/exam-papers': typeof EnSubjectsEnglishExamPapersRoute
+  '/en/subjects/english/marking-schemes': typeof EnSubjectsEnglishMarkingSchemesRoute
+  '/en/subjects/english/study-plan': typeof EnSubjectsEnglishStudyPlanRoute
+  '/en/subjects/english/syllabus': typeof EnSubjectsEnglishSyllabusRoute
+  '/en/subjects/gaeilge/exam-papers': typeof EnSubjectsGaeilgeExamPapersRoute
+  '/en/subjects/gaeilge/marking-schemes': typeof EnSubjectsGaeilgeMarkingSchemesRoute
+  '/en/subjects/gaeilge/study-plan': typeof EnSubjectsGaeilgeStudyPlanRoute
+  '/en/subjects/gaeilge/syllabus': typeof EnSubjectsGaeilgeSyllabusRoute
+  '/en/subjects/geography/exam-papers': typeof EnSubjectsGeographyExamPapersRoute
+  '/en/subjects/geography/marking-schemes': typeof EnSubjectsGeographyMarkingSchemesRoute
+  '/en/subjects/geography/study-plan': typeof EnSubjectsGeographyStudyPlanRoute
+  '/en/subjects/geography/syllabus': typeof EnSubjectsGeographySyllabusRoute
+  '/en/subjects/mathematics/exam-papers': typeof EnSubjectsMathematicsExamPapersRoute
+  '/en/subjects/mathematics/marking-schemes': typeof EnSubjectsMathematicsMarkingSchemesRoute
+  '/en/subjects/mathematics/study-plan': typeof EnSubjectsMathematicsStudyPlanRoute
+  '/en/subjects/mathematics/syllabus': typeof EnSubjectsMathematicsSyllabusRoute
+  '/ga/leaving-cert/$subject/lineage': typeof GaLeavingCertSubjectLineageRoute
+  '/en/subjects/chemistry/': typeof EnSubjectsChemistryIndexRoute
+  '/en/subjects/computer_science/': typeof EnSubjectsComputer_scienceIndexRoute
+  '/en/subjects/english/': typeof EnSubjectsEnglishIndexRoute
+  '/en/subjects/gaeilge/': typeof EnSubjectsGaeilgeIndexRoute
+  '/en/subjects/geography/': typeof EnSubjectsGeographyIndexRoute
+  '/en/subjects/mathematics/': typeof EnSubjectsMathematicsIndexRoute
   '/en/leaving-cert/$subject/practice/$topic': typeof EnLeavingCertSubjectPracticeTopicRoute
 }
 export interface FileRouteTypes {
@@ -333,7 +663,41 @@ export interface FileRouteTypes {
     | '/ga/subjects/mata'
     | '/ga/subjects/riomheolaiocht'
     | '/ga/subjects/tireolaiocht'
+    | '/en/portal/'
+    | '/ga/portal/'
     | '/en/leaving-cert/$subject/$section'
+    | '/en/leaving-cert/$subject/lineage'
+    | '/en/subjects/chemistry/exam-papers'
+    | '/en/subjects/chemistry/marking-schemes'
+    | '/en/subjects/chemistry/study-plan'
+    | '/en/subjects/chemistry/syllabus'
+    | '/en/subjects/computer_science/exam-papers'
+    | '/en/subjects/computer_science/marking-schemes'
+    | '/en/subjects/computer_science/study-plan'
+    | '/en/subjects/computer_science/syllabus'
+    | '/en/subjects/english/exam-papers'
+    | '/en/subjects/english/marking-schemes'
+    | '/en/subjects/english/study-plan'
+    | '/en/subjects/english/syllabus'
+    | '/en/subjects/gaeilge/exam-papers'
+    | '/en/subjects/gaeilge/marking-schemes'
+    | '/en/subjects/gaeilge/study-plan'
+    | '/en/subjects/gaeilge/syllabus'
+    | '/en/subjects/geography/exam-papers'
+    | '/en/subjects/geography/marking-schemes'
+    | '/en/subjects/geography/study-plan'
+    | '/en/subjects/geography/syllabus'
+    | '/en/subjects/mathematics/exam-papers'
+    | '/en/subjects/mathematics/marking-schemes'
+    | '/en/subjects/mathematics/study-plan'
+    | '/en/subjects/mathematics/syllabus'
+    | '/ga/leaving-cert/$subject/lineage'
+    | '/en/subjects/chemistry/'
+    | '/en/subjects/computer_science/'
+    | '/en/subjects/english/'
+    | '/en/subjects/gaeilge/'
+    | '/en/subjects/geography/'
+    | '/en/subjects/mathematics/'
     | '/en/leaving-cert/$subject/practice/$topic'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -353,12 +717,6 @@ export interface FileRouteTypes {
     | '/en/foundations/$slug'
     | '/en/key-competencies/$slug'
     | '/en/subjects/$subject'
-    | '/en/subjects/chemistry'
-    | '/en/subjects/computer_science'
-    | '/en/subjects/english'
-    | '/en/subjects/gaeilge'
-    | '/en/subjects/geography'
-    | '/en/subjects/mathematics'
     | '/ga/leaving-cert/$subject'
     | '/ga/subjects/bearla'
     | '/ga/subjects/ceimic'
@@ -366,7 +724,41 @@ export interface FileRouteTypes {
     | '/ga/subjects/mata'
     | '/ga/subjects/riomheolaiocht'
     | '/ga/subjects/tireolaiocht'
+    | '/en/portal'
+    | '/ga/portal'
     | '/en/leaving-cert/$subject/$section'
+    | '/en/leaving-cert/$subject/lineage'
+    | '/en/subjects/chemistry/exam-papers'
+    | '/en/subjects/chemistry/marking-schemes'
+    | '/en/subjects/chemistry/study-plan'
+    | '/en/subjects/chemistry/syllabus'
+    | '/en/subjects/computer_science/exam-papers'
+    | '/en/subjects/computer_science/marking-schemes'
+    | '/en/subjects/computer_science/study-plan'
+    | '/en/subjects/computer_science/syllabus'
+    | '/en/subjects/english/exam-papers'
+    | '/en/subjects/english/marking-schemes'
+    | '/en/subjects/english/study-plan'
+    | '/en/subjects/english/syllabus'
+    | '/en/subjects/gaeilge/exam-papers'
+    | '/en/subjects/gaeilge/marking-schemes'
+    | '/en/subjects/gaeilge/study-plan'
+    | '/en/subjects/gaeilge/syllabus'
+    | '/en/subjects/geography/exam-papers'
+    | '/en/subjects/geography/marking-schemes'
+    | '/en/subjects/geography/study-plan'
+    | '/en/subjects/geography/syllabus'
+    | '/en/subjects/mathematics/exam-papers'
+    | '/en/subjects/mathematics/marking-schemes'
+    | '/en/subjects/mathematics/study-plan'
+    | '/en/subjects/mathematics/syllabus'
+    | '/ga/leaving-cert/$subject/lineage'
+    | '/en/subjects/chemistry'
+    | '/en/subjects/computer_science'
+    | '/en/subjects/english'
+    | '/en/subjects/gaeilge'
+    | '/en/subjects/geography'
+    | '/en/subjects/mathematics'
     | '/en/leaving-cert/$subject/practice/$topic'
   id:
     | '__root__'
@@ -399,7 +791,41 @@ export interface FileRouteTypes {
     | '/ga/subjects/mata'
     | '/ga/subjects/riomheolaiocht'
     | '/ga/subjects/tireolaiocht'
+    | '/en/portal/'
+    | '/ga/portal/'
     | '/en/leaving-cert/$subject/$section'
+    | '/en/leaving-cert/$subject/lineage'
+    | '/en/subjects/chemistry/exam-papers'
+    | '/en/subjects/chemistry/marking-schemes'
+    | '/en/subjects/chemistry/study-plan'
+    | '/en/subjects/chemistry/syllabus'
+    | '/en/subjects/computer_science/exam-papers'
+    | '/en/subjects/computer_science/marking-schemes'
+    | '/en/subjects/computer_science/study-plan'
+    | '/en/subjects/computer_science/syllabus'
+    | '/en/subjects/english/exam-papers'
+    | '/en/subjects/english/marking-schemes'
+    | '/en/subjects/english/study-plan'
+    | '/en/subjects/english/syllabus'
+    | '/en/subjects/gaeilge/exam-papers'
+    | '/en/subjects/gaeilge/marking-schemes'
+    | '/en/subjects/gaeilge/study-plan'
+    | '/en/subjects/gaeilge/syllabus'
+    | '/en/subjects/geography/exam-papers'
+    | '/en/subjects/geography/marking-schemes'
+    | '/en/subjects/geography/study-plan'
+    | '/en/subjects/geography/syllabus'
+    | '/en/subjects/mathematics/exam-papers'
+    | '/en/subjects/mathematics/marking-schemes'
+    | '/en/subjects/mathematics/study-plan'
+    | '/en/subjects/mathematics/syllabus'
+    | '/ga/leaving-cert/$subject/lineage'
+    | '/en/subjects/chemistry/'
+    | '/en/subjects/computer_science/'
+    | '/en/subjects/english/'
+    | '/en/subjects/gaeilge/'
+    | '/en/subjects/geography/'
+    | '/en/subjects/mathematics/'
     | '/en/leaving-cert/$subject/practice/$topic'
   fileRoutesById: FileRoutesById
 }
@@ -417,20 +843,23 @@ export interface RootRouteChildren {
   GaAboutRoute: typeof GaAboutRoute
   EnAssetsSubjectRoute: typeof EnAssetsSubjectRoute
   EnSubjectsSubjectRoute: typeof EnSubjectsSubjectRoute
-  EnSubjectsChemistryRoute: typeof EnSubjectsChemistryRoute
-  EnSubjectsComputer_scienceRoute: typeof EnSubjectsComputer_scienceRoute
-  EnSubjectsEnglishRoute: typeof EnSubjectsEnglishRoute
-  EnSubjectsGaeilgeRoute: typeof EnSubjectsGaeilgeRoute
-  EnSubjectsGeographyRoute: typeof EnSubjectsGeographyRoute
-  EnSubjectsMathematicsRoute: typeof EnSubjectsMathematicsRoute
-  GaLeavingCertSubjectRoute: typeof GaLeavingCertSubjectRoute
+  EnSubjectsChemistryRoute: typeof EnSubjectsChemistryRouteWithChildren
+  EnSubjectsComputer_scienceRoute: typeof EnSubjectsComputer_scienceRouteWithChildren
+  EnSubjectsEnglishRoute: typeof EnSubjectsEnglishRouteWithChildren
+  EnSubjectsGaeilgeRoute: typeof EnSubjectsGaeilgeRouteWithChildren
+  EnSubjectsGeographyRoute: typeof EnSubjectsGeographyRouteWithChildren
+  EnSubjectsMathematicsRoute: typeof EnSubjectsMathematicsRouteWithChildren
+  GaLeavingCertSubjectRoute: typeof GaLeavingCertSubjectRouteWithChildren
   GaSubjectsBearlaRoute: typeof GaSubjectsBearlaRoute
   GaSubjectsCeimicRoute: typeof GaSubjectsCeimicRoute
   GaSubjectsGaeilgeRoute: typeof GaSubjectsGaeilgeRoute
   GaSubjectsMataRoute: typeof GaSubjectsMataRoute
   GaSubjectsRiomheolaiochtRoute: typeof GaSubjectsRiomheolaiochtRoute
   GaSubjectsTireolaiochtRoute: typeof GaSubjectsTireolaiochtRoute
+  EnPortalIndexRoute: typeof EnPortalIndexRoute
+  GaPortalIndexRoute: typeof GaPortalIndexRoute
   EnLeavingCertSubjectSectionRoute: typeof EnLeavingCertSubjectSectionRoute
+  EnLeavingCertSubjectLineageRoute: typeof EnLeavingCertSubjectLineageRoute
   EnLeavingCertSubjectPracticeTopicRoute: typeof EnLeavingCertSubjectPracticeTopicRoute
 }
 
@@ -511,6 +940,20 @@ declare module '@tanstack/react-router' {
       path: '/en/about'
       fullPath: '/en/about'
       preLoaderRoute: typeof EnAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/portal/': {
+      id: '/ga/portal/'
+      path: '/ga/portal'
+      fullPath: '/ga/portal/'
+      preLoaderRoute: typeof GaPortalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/portal/': {
+      id: '/en/portal/'
+      path: '/en/portal'
+      fullPath: '/en/portal/'
+      preLoaderRoute: typeof EnPortalIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ga/subjects/tireolaiocht': {
@@ -639,6 +1082,230 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnAgentsAgentRouteImport
       parentRoute: typeof EnAgentsRoute
     }
+    '/en/subjects/mathematics/': {
+      id: '/en/subjects/mathematics/'
+      path: '/'
+      fullPath: '/en/subjects/mathematics/'
+      preLoaderRoute: typeof EnSubjectsMathematicsIndexRouteImport
+      parentRoute: typeof EnSubjectsMathematicsRoute
+    }
+    '/en/subjects/geography/': {
+      id: '/en/subjects/geography/'
+      path: '/'
+      fullPath: '/en/subjects/geography/'
+      preLoaderRoute: typeof EnSubjectsGeographyIndexRouteImport
+      parentRoute: typeof EnSubjectsGeographyRoute
+    }
+    '/en/subjects/gaeilge/': {
+      id: '/en/subjects/gaeilge/'
+      path: '/'
+      fullPath: '/en/subjects/gaeilge/'
+      preLoaderRoute: typeof EnSubjectsGaeilgeIndexRouteImport
+      parentRoute: typeof EnSubjectsGaeilgeRoute
+    }
+    '/en/subjects/english/': {
+      id: '/en/subjects/english/'
+      path: '/'
+      fullPath: '/en/subjects/english/'
+      preLoaderRoute: typeof EnSubjectsEnglishIndexRouteImport
+      parentRoute: typeof EnSubjectsEnglishRoute
+    }
+    '/en/subjects/computer_science/': {
+      id: '/en/subjects/computer_science/'
+      path: '/'
+      fullPath: '/en/subjects/computer_science/'
+      preLoaderRoute: typeof EnSubjectsComputer_scienceIndexRouteImport
+      parentRoute: typeof EnSubjectsComputer_scienceRoute
+    }
+    '/en/subjects/chemistry/': {
+      id: '/en/subjects/chemistry/'
+      path: '/'
+      fullPath: '/en/subjects/chemistry/'
+      preLoaderRoute: typeof EnSubjectsChemistryIndexRouteImport
+      parentRoute: typeof EnSubjectsChemistryRoute
+    }
+    '/ga/leaving-cert/$subject/lineage': {
+      id: '/ga/leaving-cert/$subject/lineage'
+      path: '/lineage'
+      fullPath: '/ga/leaving-cert/$subject/lineage'
+      preLoaderRoute: typeof GaLeavingCertSubjectLineageRouteImport
+      parentRoute: typeof GaLeavingCertSubjectRoute
+    }
+    '/en/subjects/mathematics/syllabus': {
+      id: '/en/subjects/mathematics/syllabus'
+      path: '/syllabus'
+      fullPath: '/en/subjects/mathematics/syllabus'
+      preLoaderRoute: typeof EnSubjectsMathematicsSyllabusRouteImport
+      parentRoute: typeof EnSubjectsMathematicsRoute
+    }
+    '/en/subjects/mathematics/study-plan': {
+      id: '/en/subjects/mathematics/study-plan'
+      path: '/study-plan'
+      fullPath: '/en/subjects/mathematics/study-plan'
+      preLoaderRoute: typeof EnSubjectsMathematicsStudyPlanRouteImport
+      parentRoute: typeof EnSubjectsMathematicsRoute
+    }
+    '/en/subjects/mathematics/marking-schemes': {
+      id: '/en/subjects/mathematics/marking-schemes'
+      path: '/marking-schemes'
+      fullPath: '/en/subjects/mathematics/marking-schemes'
+      preLoaderRoute: typeof EnSubjectsMathematicsMarkingSchemesRouteImport
+      parentRoute: typeof EnSubjectsMathematicsRoute
+    }
+    '/en/subjects/mathematics/exam-papers': {
+      id: '/en/subjects/mathematics/exam-papers'
+      path: '/exam-papers'
+      fullPath: '/en/subjects/mathematics/exam-papers'
+      preLoaderRoute: typeof EnSubjectsMathematicsExamPapersRouteImport
+      parentRoute: typeof EnSubjectsMathematicsRoute
+    }
+    '/en/subjects/geography/syllabus': {
+      id: '/en/subjects/geography/syllabus'
+      path: '/syllabus'
+      fullPath: '/en/subjects/geography/syllabus'
+      preLoaderRoute: typeof EnSubjectsGeographySyllabusRouteImport
+      parentRoute: typeof EnSubjectsGeographyRoute
+    }
+    '/en/subjects/geography/study-plan': {
+      id: '/en/subjects/geography/study-plan'
+      path: '/study-plan'
+      fullPath: '/en/subjects/geography/study-plan'
+      preLoaderRoute: typeof EnSubjectsGeographyStudyPlanRouteImport
+      parentRoute: typeof EnSubjectsGeographyRoute
+    }
+    '/en/subjects/geography/marking-schemes': {
+      id: '/en/subjects/geography/marking-schemes'
+      path: '/marking-schemes'
+      fullPath: '/en/subjects/geography/marking-schemes'
+      preLoaderRoute: typeof EnSubjectsGeographyMarkingSchemesRouteImport
+      parentRoute: typeof EnSubjectsGeographyRoute
+    }
+    '/en/subjects/geography/exam-papers': {
+      id: '/en/subjects/geography/exam-papers'
+      path: '/exam-papers'
+      fullPath: '/en/subjects/geography/exam-papers'
+      preLoaderRoute: typeof EnSubjectsGeographyExamPapersRouteImport
+      parentRoute: typeof EnSubjectsGeographyRoute
+    }
+    '/en/subjects/gaeilge/syllabus': {
+      id: '/en/subjects/gaeilge/syllabus'
+      path: '/syllabus'
+      fullPath: '/en/subjects/gaeilge/syllabus'
+      preLoaderRoute: typeof EnSubjectsGaeilgeSyllabusRouteImport
+      parentRoute: typeof EnSubjectsGaeilgeRoute
+    }
+    '/en/subjects/gaeilge/study-plan': {
+      id: '/en/subjects/gaeilge/study-plan'
+      path: '/study-plan'
+      fullPath: '/en/subjects/gaeilge/study-plan'
+      preLoaderRoute: typeof EnSubjectsGaeilgeStudyPlanRouteImport
+      parentRoute: typeof EnSubjectsGaeilgeRoute
+    }
+    '/en/subjects/gaeilge/marking-schemes': {
+      id: '/en/subjects/gaeilge/marking-schemes'
+      path: '/marking-schemes'
+      fullPath: '/en/subjects/gaeilge/marking-schemes'
+      preLoaderRoute: typeof EnSubjectsGaeilgeMarkingSchemesRouteImport
+      parentRoute: typeof EnSubjectsGaeilgeRoute
+    }
+    '/en/subjects/gaeilge/exam-papers': {
+      id: '/en/subjects/gaeilge/exam-papers'
+      path: '/exam-papers'
+      fullPath: '/en/subjects/gaeilge/exam-papers'
+      preLoaderRoute: typeof EnSubjectsGaeilgeExamPapersRouteImport
+      parentRoute: typeof EnSubjectsGaeilgeRoute
+    }
+    '/en/subjects/english/syllabus': {
+      id: '/en/subjects/english/syllabus'
+      path: '/syllabus'
+      fullPath: '/en/subjects/english/syllabus'
+      preLoaderRoute: typeof EnSubjectsEnglishSyllabusRouteImport
+      parentRoute: typeof EnSubjectsEnglishRoute
+    }
+    '/en/subjects/english/study-plan': {
+      id: '/en/subjects/english/study-plan'
+      path: '/study-plan'
+      fullPath: '/en/subjects/english/study-plan'
+      preLoaderRoute: typeof EnSubjectsEnglishStudyPlanRouteImport
+      parentRoute: typeof EnSubjectsEnglishRoute
+    }
+    '/en/subjects/english/marking-schemes': {
+      id: '/en/subjects/english/marking-schemes'
+      path: '/marking-schemes'
+      fullPath: '/en/subjects/english/marking-schemes'
+      preLoaderRoute: typeof EnSubjectsEnglishMarkingSchemesRouteImport
+      parentRoute: typeof EnSubjectsEnglishRoute
+    }
+    '/en/subjects/english/exam-papers': {
+      id: '/en/subjects/english/exam-papers'
+      path: '/exam-papers'
+      fullPath: '/en/subjects/english/exam-papers'
+      preLoaderRoute: typeof EnSubjectsEnglishExamPapersRouteImport
+      parentRoute: typeof EnSubjectsEnglishRoute
+    }
+    '/en/subjects/computer_science/syllabus': {
+      id: '/en/subjects/computer_science/syllabus'
+      path: '/syllabus'
+      fullPath: '/en/subjects/computer_science/syllabus'
+      preLoaderRoute: typeof EnSubjectsComputer_scienceSyllabusRouteImport
+      parentRoute: typeof EnSubjectsComputer_scienceRoute
+    }
+    '/en/subjects/computer_science/study-plan': {
+      id: '/en/subjects/computer_science/study-plan'
+      path: '/study-plan'
+      fullPath: '/en/subjects/computer_science/study-plan'
+      preLoaderRoute: typeof EnSubjectsComputer_scienceStudyPlanRouteImport
+      parentRoute: typeof EnSubjectsComputer_scienceRoute
+    }
+    '/en/subjects/computer_science/marking-schemes': {
+      id: '/en/subjects/computer_science/marking-schemes'
+      path: '/marking-schemes'
+      fullPath: '/en/subjects/computer_science/marking-schemes'
+      preLoaderRoute: typeof EnSubjectsComputer_scienceMarkingSchemesRouteImport
+      parentRoute: typeof EnSubjectsComputer_scienceRoute
+    }
+    '/en/subjects/computer_science/exam-papers': {
+      id: '/en/subjects/computer_science/exam-papers'
+      path: '/exam-papers'
+      fullPath: '/en/subjects/computer_science/exam-papers'
+      preLoaderRoute: typeof EnSubjectsComputer_scienceExamPapersRouteImport
+      parentRoute: typeof EnSubjectsComputer_scienceRoute
+    }
+    '/en/subjects/chemistry/syllabus': {
+      id: '/en/subjects/chemistry/syllabus'
+      path: '/syllabus'
+      fullPath: '/en/subjects/chemistry/syllabus'
+      preLoaderRoute: typeof EnSubjectsChemistrySyllabusRouteImport
+      parentRoute: typeof EnSubjectsChemistryRoute
+    }
+    '/en/subjects/chemistry/study-plan': {
+      id: '/en/subjects/chemistry/study-plan'
+      path: '/study-plan'
+      fullPath: '/en/subjects/chemistry/study-plan'
+      preLoaderRoute: typeof EnSubjectsChemistryStudyPlanRouteImport
+      parentRoute: typeof EnSubjectsChemistryRoute
+    }
+    '/en/subjects/chemistry/marking-schemes': {
+      id: '/en/subjects/chemistry/marking-schemes'
+      path: '/marking-schemes'
+      fullPath: '/en/subjects/chemistry/marking-schemes'
+      preLoaderRoute: typeof EnSubjectsChemistryMarkingSchemesRouteImport
+      parentRoute: typeof EnSubjectsChemistryRoute
+    }
+    '/en/subjects/chemistry/exam-papers': {
+      id: '/en/subjects/chemistry/exam-papers'
+      path: '/exam-papers'
+      fullPath: '/en/subjects/chemistry/exam-papers'
+      preLoaderRoute: typeof EnSubjectsChemistryExamPapersRouteImport
+      parentRoute: typeof EnSubjectsChemistryRoute
+    }
+    '/en/leaving-cert/$subject/lineage': {
+      id: '/en/leaving-cert/$subject/lineage'
+      path: '/en/leaving-cert/$subject/lineage'
+      fullPath: '/en/leaving-cert/$subject/lineage'
+      preLoaderRoute: typeof EnLeavingCertSubjectLineageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en/leaving-cert/$subject/$section': {
       id: '/en/leaving-cert/$subject/$section'
       path: '/en/leaving-cert/$subject/$section'
@@ -691,6 +1358,143 @@ const EnKeyCompetenciesRouteChildren: EnKeyCompetenciesRouteChildren = {
 const EnKeyCompetenciesRouteWithChildren =
   EnKeyCompetenciesRoute._addFileChildren(EnKeyCompetenciesRouteChildren)
 
+interface EnSubjectsChemistryRouteChildren {
+  EnSubjectsChemistryExamPapersRoute: typeof EnSubjectsChemistryExamPapersRoute
+  EnSubjectsChemistryMarkingSchemesRoute: typeof EnSubjectsChemistryMarkingSchemesRoute
+  EnSubjectsChemistryStudyPlanRoute: typeof EnSubjectsChemistryStudyPlanRoute
+  EnSubjectsChemistrySyllabusRoute: typeof EnSubjectsChemistrySyllabusRoute
+  EnSubjectsChemistryIndexRoute: typeof EnSubjectsChemistryIndexRoute
+}
+
+const EnSubjectsChemistryRouteChildren: EnSubjectsChemistryRouteChildren = {
+  EnSubjectsChemistryExamPapersRoute: EnSubjectsChemistryExamPapersRoute,
+  EnSubjectsChemistryMarkingSchemesRoute:
+    EnSubjectsChemistryMarkingSchemesRoute,
+  EnSubjectsChemistryStudyPlanRoute: EnSubjectsChemistryStudyPlanRoute,
+  EnSubjectsChemistrySyllabusRoute: EnSubjectsChemistrySyllabusRoute,
+  EnSubjectsChemistryIndexRoute: EnSubjectsChemistryIndexRoute,
+}
+
+const EnSubjectsChemistryRouteWithChildren =
+  EnSubjectsChemistryRoute._addFileChildren(EnSubjectsChemistryRouteChildren)
+
+interface EnSubjectsComputer_scienceRouteChildren {
+  EnSubjectsComputer_scienceExamPapersRoute: typeof EnSubjectsComputer_scienceExamPapersRoute
+  EnSubjectsComputer_scienceMarkingSchemesRoute: typeof EnSubjectsComputer_scienceMarkingSchemesRoute
+  EnSubjectsComputer_scienceStudyPlanRoute: typeof EnSubjectsComputer_scienceStudyPlanRoute
+  EnSubjectsComputer_scienceSyllabusRoute: typeof EnSubjectsComputer_scienceSyllabusRoute
+  EnSubjectsComputer_scienceIndexRoute: typeof EnSubjectsComputer_scienceIndexRoute
+}
+
+const EnSubjectsComputer_scienceRouteChildren: EnSubjectsComputer_scienceRouteChildren =
+  {
+    EnSubjectsComputer_scienceExamPapersRoute:
+      EnSubjectsComputer_scienceExamPapersRoute,
+    EnSubjectsComputer_scienceMarkingSchemesRoute:
+      EnSubjectsComputer_scienceMarkingSchemesRoute,
+    EnSubjectsComputer_scienceStudyPlanRoute:
+      EnSubjectsComputer_scienceStudyPlanRoute,
+    EnSubjectsComputer_scienceSyllabusRoute:
+      EnSubjectsComputer_scienceSyllabusRoute,
+    EnSubjectsComputer_scienceIndexRoute: EnSubjectsComputer_scienceIndexRoute,
+  }
+
+const EnSubjectsComputer_scienceRouteWithChildren =
+  EnSubjectsComputer_scienceRoute._addFileChildren(
+    EnSubjectsComputer_scienceRouteChildren,
+  )
+
+interface EnSubjectsEnglishRouteChildren {
+  EnSubjectsEnglishExamPapersRoute: typeof EnSubjectsEnglishExamPapersRoute
+  EnSubjectsEnglishMarkingSchemesRoute: typeof EnSubjectsEnglishMarkingSchemesRoute
+  EnSubjectsEnglishStudyPlanRoute: typeof EnSubjectsEnglishStudyPlanRoute
+  EnSubjectsEnglishSyllabusRoute: typeof EnSubjectsEnglishSyllabusRoute
+  EnSubjectsEnglishIndexRoute: typeof EnSubjectsEnglishIndexRoute
+}
+
+const EnSubjectsEnglishRouteChildren: EnSubjectsEnglishRouteChildren = {
+  EnSubjectsEnglishExamPapersRoute: EnSubjectsEnglishExamPapersRoute,
+  EnSubjectsEnglishMarkingSchemesRoute: EnSubjectsEnglishMarkingSchemesRoute,
+  EnSubjectsEnglishStudyPlanRoute: EnSubjectsEnglishStudyPlanRoute,
+  EnSubjectsEnglishSyllabusRoute: EnSubjectsEnglishSyllabusRoute,
+  EnSubjectsEnglishIndexRoute: EnSubjectsEnglishIndexRoute,
+}
+
+const EnSubjectsEnglishRouteWithChildren =
+  EnSubjectsEnglishRoute._addFileChildren(EnSubjectsEnglishRouteChildren)
+
+interface EnSubjectsGaeilgeRouteChildren {
+  EnSubjectsGaeilgeExamPapersRoute: typeof EnSubjectsGaeilgeExamPapersRoute
+  EnSubjectsGaeilgeMarkingSchemesRoute: typeof EnSubjectsGaeilgeMarkingSchemesRoute
+  EnSubjectsGaeilgeStudyPlanRoute: typeof EnSubjectsGaeilgeStudyPlanRoute
+  EnSubjectsGaeilgeSyllabusRoute: typeof EnSubjectsGaeilgeSyllabusRoute
+  EnSubjectsGaeilgeIndexRoute: typeof EnSubjectsGaeilgeIndexRoute
+}
+
+const EnSubjectsGaeilgeRouteChildren: EnSubjectsGaeilgeRouteChildren = {
+  EnSubjectsGaeilgeExamPapersRoute: EnSubjectsGaeilgeExamPapersRoute,
+  EnSubjectsGaeilgeMarkingSchemesRoute: EnSubjectsGaeilgeMarkingSchemesRoute,
+  EnSubjectsGaeilgeStudyPlanRoute: EnSubjectsGaeilgeStudyPlanRoute,
+  EnSubjectsGaeilgeSyllabusRoute: EnSubjectsGaeilgeSyllabusRoute,
+  EnSubjectsGaeilgeIndexRoute: EnSubjectsGaeilgeIndexRoute,
+}
+
+const EnSubjectsGaeilgeRouteWithChildren =
+  EnSubjectsGaeilgeRoute._addFileChildren(EnSubjectsGaeilgeRouteChildren)
+
+interface EnSubjectsGeographyRouteChildren {
+  EnSubjectsGeographyExamPapersRoute: typeof EnSubjectsGeographyExamPapersRoute
+  EnSubjectsGeographyMarkingSchemesRoute: typeof EnSubjectsGeographyMarkingSchemesRoute
+  EnSubjectsGeographyStudyPlanRoute: typeof EnSubjectsGeographyStudyPlanRoute
+  EnSubjectsGeographySyllabusRoute: typeof EnSubjectsGeographySyllabusRoute
+  EnSubjectsGeographyIndexRoute: typeof EnSubjectsGeographyIndexRoute
+}
+
+const EnSubjectsGeographyRouteChildren: EnSubjectsGeographyRouteChildren = {
+  EnSubjectsGeographyExamPapersRoute: EnSubjectsGeographyExamPapersRoute,
+  EnSubjectsGeographyMarkingSchemesRoute:
+    EnSubjectsGeographyMarkingSchemesRoute,
+  EnSubjectsGeographyStudyPlanRoute: EnSubjectsGeographyStudyPlanRoute,
+  EnSubjectsGeographySyllabusRoute: EnSubjectsGeographySyllabusRoute,
+  EnSubjectsGeographyIndexRoute: EnSubjectsGeographyIndexRoute,
+}
+
+const EnSubjectsGeographyRouteWithChildren =
+  EnSubjectsGeographyRoute._addFileChildren(EnSubjectsGeographyRouteChildren)
+
+interface EnSubjectsMathematicsRouteChildren {
+  EnSubjectsMathematicsExamPapersRoute: typeof EnSubjectsMathematicsExamPapersRoute
+  EnSubjectsMathematicsMarkingSchemesRoute: typeof EnSubjectsMathematicsMarkingSchemesRoute
+  EnSubjectsMathematicsStudyPlanRoute: typeof EnSubjectsMathematicsStudyPlanRoute
+  EnSubjectsMathematicsSyllabusRoute: typeof EnSubjectsMathematicsSyllabusRoute
+  EnSubjectsMathematicsIndexRoute: typeof EnSubjectsMathematicsIndexRoute
+}
+
+const EnSubjectsMathematicsRouteChildren: EnSubjectsMathematicsRouteChildren = {
+  EnSubjectsMathematicsExamPapersRoute: EnSubjectsMathematicsExamPapersRoute,
+  EnSubjectsMathematicsMarkingSchemesRoute:
+    EnSubjectsMathematicsMarkingSchemesRoute,
+  EnSubjectsMathematicsStudyPlanRoute: EnSubjectsMathematicsStudyPlanRoute,
+  EnSubjectsMathematicsSyllabusRoute: EnSubjectsMathematicsSyllabusRoute,
+  EnSubjectsMathematicsIndexRoute: EnSubjectsMathematicsIndexRoute,
+}
+
+const EnSubjectsMathematicsRouteWithChildren =
+  EnSubjectsMathematicsRoute._addFileChildren(
+    EnSubjectsMathematicsRouteChildren,
+  )
+
+interface GaLeavingCertSubjectRouteChildren {
+  GaLeavingCertSubjectLineageRoute: typeof GaLeavingCertSubjectLineageRoute
+}
+
+const GaLeavingCertSubjectRouteChildren: GaLeavingCertSubjectRouteChildren = {
+  GaLeavingCertSubjectLineageRoute: GaLeavingCertSubjectLineageRoute,
+}
+
+const GaLeavingCertSubjectRouteWithChildren =
+  GaLeavingCertSubjectRoute._addFileChildren(GaLeavingCertSubjectRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EnAboutRoute: EnAboutRoute,
@@ -705,20 +1509,23 @@ const rootRouteChildren: RootRouteChildren = {
   GaAboutRoute: GaAboutRoute,
   EnAssetsSubjectRoute: EnAssetsSubjectRoute,
   EnSubjectsSubjectRoute: EnSubjectsSubjectRoute,
-  EnSubjectsChemistryRoute: EnSubjectsChemistryRoute,
-  EnSubjectsComputer_scienceRoute: EnSubjectsComputer_scienceRoute,
-  EnSubjectsEnglishRoute: EnSubjectsEnglishRoute,
-  EnSubjectsGaeilgeRoute: EnSubjectsGaeilgeRoute,
-  EnSubjectsGeographyRoute: EnSubjectsGeographyRoute,
-  EnSubjectsMathematicsRoute: EnSubjectsMathematicsRoute,
-  GaLeavingCertSubjectRoute: GaLeavingCertSubjectRoute,
+  EnSubjectsChemistryRoute: EnSubjectsChemistryRouteWithChildren,
+  EnSubjectsComputer_scienceRoute: EnSubjectsComputer_scienceRouteWithChildren,
+  EnSubjectsEnglishRoute: EnSubjectsEnglishRouteWithChildren,
+  EnSubjectsGaeilgeRoute: EnSubjectsGaeilgeRouteWithChildren,
+  EnSubjectsGeographyRoute: EnSubjectsGeographyRouteWithChildren,
+  EnSubjectsMathematicsRoute: EnSubjectsMathematicsRouteWithChildren,
+  GaLeavingCertSubjectRoute: GaLeavingCertSubjectRouteWithChildren,
   GaSubjectsBearlaRoute: GaSubjectsBearlaRoute,
   GaSubjectsCeimicRoute: GaSubjectsCeimicRoute,
   GaSubjectsGaeilgeRoute: GaSubjectsGaeilgeRoute,
   GaSubjectsMataRoute: GaSubjectsMataRoute,
   GaSubjectsRiomheolaiochtRoute: GaSubjectsRiomheolaiochtRoute,
   GaSubjectsTireolaiochtRoute: GaSubjectsTireolaiochtRoute,
+  EnPortalIndexRoute: EnPortalIndexRoute,
+  GaPortalIndexRoute: GaPortalIndexRoute,
   EnLeavingCertSubjectSectionRoute: EnLeavingCertSubjectSectionRoute,
+  EnLeavingCertSubjectLineageRoute: EnLeavingCertSubjectLineageRoute,
   EnLeavingCertSubjectPracticeTopicRoute:
     EnLeavingCertSubjectPracticeTopicRoute,
 }
