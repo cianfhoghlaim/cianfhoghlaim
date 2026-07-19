@@ -30,12 +30,13 @@ from typing import Any
 from urllib import error as urllib_error
 from urllib import request as urllib_request
 
-# The 4 canonical endpoints per the proposal
+# The 5 canonical endpoints per the proposal
 ENDPOINTS: list[tuple[str, str, str]] = [
     ("Nimtable", "http://localhost:3018/", "Iceberg catalog UI"),
     ("Olake", "http://localhost:3901/health", "CDC engine health"),
-    ("LanceDB Viewer", "http://localhost:8081/v1/databases", "Lance table viewer"),
-    ("Lakekeeper", "http://localhost:8181/health/deep", "REST catalog deep health"),
+    ("LanceDB Viewer", "http://localhost:8088/healthz", "Lance table viewer"),
+    ("Lance sidecar", "http://localhost:8182/health", "Lance namespace sidecar"),
+    ("Lakekeeper", "http://localhost:8181/health", "REST catalog health"),
 ]
 
 DEFAULT_TIMEOUT_S: float = 5.0
@@ -77,9 +78,14 @@ def main() -> int:
         action="store_true",
         help="Only check Lakekeeper (the rest catalog).",
     )
+    parser.add_argument(
+        "--dev",
+        action="store_true",
+        help="Dev mode: nimtable + olake are expected to be no-ops (return 000 / connection refused).",
+    )
     args = parser.parse_args()
 
-    endpoints = ENDPOINTS if not args.lakekeeper_only else [ENDPOINTS[3]]
+    endpoints = ENDPOINTS if not args.lakekeeper_only else [ENDPOINTS[4]]
 
     print(f"BIEP v3 Lakehouse smoke-test ({len(endpoints)} endpoint(s))")
     print(f"  timeout: {args.timeout}s per endpoint")
@@ -88,6 +94,12 @@ def main() -> int:
     all_ok = True
     for name, url, description in endpoints:
         ok, detail = _probe(name, url, description, timeout=args.timeout)
+        # Dev mode: nimtable + olake are no-op alpine stubs that
+        # return 000 / connection refused. Treat as INFO not FAIL.
+        if not ok and args.dev and name in ("Nimtable", "Olake"):
+            print(f"  [INFO] {name:<18} {url}")
+            print(f"           (dev mode: {name} is a no-op stub, expected to fail)")
+            continue
         marker = "OK" if ok else "FAIL"
         print(f"  [{marker}] {name:<18} {url}")
         if ok:
@@ -97,21 +109,34 @@ def main() -> int:
             print(f"           {detail}")
             all_ok = False
 
-    # Lakekeeper-specific deep health check parsing
+    # Lakekeeper-specific health check parsing
     if not args.lakekeeper_only:
         print()
-        print("Lakekeeper deep-health body parsing:")
+        print("Lakekeeper health body parsing:")
         try:
-            req = urllib_request.Request(ENDPOINTS[3][1], method="GET")
-            with urllib_request.urlopen(req, timeout=args.timeout) as resp:
-                body = json.loads(resp.read().decode("utf-8"))
-                pg = body.get("postgres", "unknown")
-                s3 = body.get("s3", "unknown")
-                print(f"  postgres: {pg}")
-                print(f"  s3:       {s3}")
-                if pg != "healthy" or s3 != "healthy":
-                    print("  WARN: one or more dependencies report non-healthy")
-                    all_ok = False
+            # The Lakekeeper endpoint is the 4th in the ENDPOINTS list (index 4 since we have 5 endpoints).
+            lk_idx = next(
+                (i for i, (n, _, _) in enumerate(endpoints) if n == "Lakekeeper"),
+                None,
+            )
+            if lk_idx is not None:
+                req = urllib_request.Request(endpoints[lk_idx][1], method="GET")
+                with urllib_request.urlopen(req, timeout=args.timeout) as resp:
+                    body = json.loads(resp.read().decode("utf-8"))
+                    health = body.get("health", "unknown")
+                    services = body.get("services", {})
+                    print(f"  health: {health}")
+                    for svc_name, svc_reports in services.items():
+                        for report in svc_reports:
+                            name = report.get("name", "?")
+                            status = report.get("status", "?")
+                            marker = "OK" if status == "ok" else "FAIL"
+                            print(f"  [{marker}] {svc_name}.{name}: {status}")
+                            if status != "ok":
+                                all_ok = False
+                    if health != "ok":
+                        print("  WARN: overall health is not 'ok'")
+                        all_ok = False
         except (urllib_error.URLError, TimeoutError, OSError) as e:
             print(f"  could not parse Lakekeeper body: {e}")
 

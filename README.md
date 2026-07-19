@@ -886,3 +886,11 @@ New Zealand (the Māori King Movement)
 p. 6).
 
 
+
+<!-- AGENT_TELEMETRY_START -->
+> **Agent Telemetry (Last Updated: 2026-07-19 01:52:53 UTC)**
+> - **Total Cached Structural Documents:** 0
+> - **Examinations.ie Cache:**        0 files
+> - **NCCA.ie Cache:**        0 files
+> - **CurriculumOnline Cache:**        0 files
+<!-- AGENT_TELEMETRY_END -->
