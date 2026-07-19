@@ -164,12 +164,12 @@ run = "uv run dagster dev -m orchestration.definitions"
 # =============================================================================
 
 [tasks."biep:v3:lakehouse:smoke-test"]
-description = "Smoke-test the 3 canonical lakehouse services (Nimtable :3018 + Olake :3901 + LanceDB Viewer :8081)"
-run = "uv run python -c \"import urllib.request; [urllib.request.urlopen(f'http://localhost:{p}/health' if p != 8081 else f'http://localhost:{p}/v1/databases', timeout=3) for p in [3018, 3901, 8081]]; print('OK')\""
+description = "Smoke-test the 5 canonical lakehouse services (Nimtable :3018 + Olake :3901 + LanceDB Viewer :8088 + Lance sidecar :8182 + Lakekeeper :8181) — per the 2026-08-11-biep-v3-lakehouse-population-v1 change"
+run = "python3 scripts/smoke_test_lakehouse.py --dev"
 
 [tasks."biep:v3:registry:seed"]
-description = "Seed the British Isles subject registry (1,560 rows across 8 jurisdictions)"
-run = "uv run python -c \"from dlt.british_isles._cross.registry_loader import seed_registry; print(seed_registry())\""
+description = "Seed the British Isles subject registry (3,780 rows across 8 jurisdictions — per the 2026-08-10 preflight bug-fix)"
+run = "python3 -c \"from dlt.british_isles._cross.registry_loader import seed_registry; print(seed_registry())\""
 
 [tasks."biep:v3:marimo:wasm:export"]
 description = "Export all 7 BIEP v3 jurisdiction dashboards to WebAssembly bundles + manifest"
