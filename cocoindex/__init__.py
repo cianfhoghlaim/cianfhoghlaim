@@ -31,7 +31,7 @@ __all__ = [
 def __getattr__(name: str) -> object:
     """Lazy attribute access — defer cocoindex imports until needed."""
     if name in {"LANCE_DB", "EMBEDDER", "RESOLVED_FILE_REGISTRY", "lifespan", "RESOLVED_REGISTRY"}:
-        from cianfhoghlaim.cocoindex import _lifespan
+        from ._shared import _lifespan
 
         return getattr(_lifespan, name)
     if name == "V1_APPS":

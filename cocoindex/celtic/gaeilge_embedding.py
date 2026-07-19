@@ -8,7 +8,7 @@ Gaeilge is Irish-only — no English sibling per the BIEP v1 spec
 requirement "gaeilge-only syllabuses (no English sibling)".
 
 R1–R4 v1 conformance contract per `_lifespan.py`:
-- R1 — `from ._lifespan import shared_lifespan`
+- R1 — `from .._shared._lifespan import shared_lifespan`
 - R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
 - R3 — `app = coco.App(coco.AppConfig(name=...))` at module scope
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
@@ -45,7 +45,7 @@ except ImportError as e:
     localfs = None  # type: ignore[assignment]
 
 
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,

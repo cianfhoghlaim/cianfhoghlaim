@@ -32,7 +32,7 @@ from typing import Any
 
 import structlog
 
-from ._lifespan import COCOINDEX_AVAILABLE, LANCE_DB
+from .._shared._lifespan import COCOINDEX_AVAILABLE, LANCE_DB
 
 # CocoIndex is optional — degrade gracefully if not installed.
 try:

@@ -10,7 +10,7 @@ mathematics_embedding.py, etc.) have been collapsed into this single
 flow per the 2026-07-25-cocoindex-per-subject-dedup-v1 change.
 
 R1–R4 v1 conformance contract:
-- R1 — `from ._lifespan import shared_lifespan` (delegates to the
+- R1 — `from .._shared._lifespan import shared_lifespan` (delegates to the
   shared lifespan in `_lifespan.py`)
 - R2 — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
 - R3 — `app = coco.App(coco.AppConfig(name="lc_subject_embedding"))`
@@ -54,7 +54,7 @@ except ImportError as e:
     localfs = None  # type: ignore[assignment]
 
 
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,

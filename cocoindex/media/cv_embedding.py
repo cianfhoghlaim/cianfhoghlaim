@@ -249,7 +249,7 @@ def _v0_flow_def_compat(**kwargs):
 # v1 conformance scaffold (R1–R4) per
 # openspec/changes/2026-07-13-cocoindex-v1-non-priority-flows-v1.
 try:  # R1 — uses the shared CocoIndex v1 lifespan
-    from ._lifespan import shared_lifespan as _v1_lifespan_marker  # noqa: F401, E402
+    from .._shared._lifespan import shared_lifespan as _v1_lifespan_marker  # noqa: F401, E402
 except ImportError:  # pragma: no cover
     _v1_lifespan_marker = None
 
@@ -264,7 +264,7 @@ except ImportError:  # pragma: no cover
     _v1_conformance_app = None
 
 try:  # R3 — `mount_table_target`; R4 — `declare_vector_index`
-    from ._lifespan import LANCE_DB as _v1_lance_db  # noqa: F401, E402
+    from .._shared._lifespan import LANCE_DB as _v1_lance_db  # noqa: F401, E402
     from cocoindex.connectors import lancedb as _v1_lancedb_mod  # type: ignore[import-not-found]
 
     async def _v1_mount_target() -> None:

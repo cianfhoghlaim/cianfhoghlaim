@@ -38,7 +38,7 @@ from typing import Annotated, Any
 
 import structlog
 
-from ._lifespan import (
+from .._shared._lifespan import (
     COCOINDEX_AVAILABLE,
     EMBED_DIM,
     EMBED_MODEL,

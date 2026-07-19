@@ -82,7 +82,7 @@ except ImportError as e:
 # The shared CocoIndex v1 lifespan (REFACTORING.md item 12) —
 # imported from the canonical home so the 9 v1 Apps don't re-declare
 # the same `@coco.lifespan` 9 times.
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,

@@ -8,7 +8,7 @@ Per the 2026-07-21-biep-v2-england-aqa-ocr-baml-pipeline-v1 change.
     - england_edexcel_education_embedding.py
 
 Each App conforms to the R1–R4 v1 conformance contract:
-- **R1** — `from ._lifespan import shared_lifespan`
+- **R1** — `from .._shared._lifespan import shared_lifespan`
 - **R2** — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
 - **R3** — `app = coco.App(coco.AppConfig(name=...))` at module scope
 - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`

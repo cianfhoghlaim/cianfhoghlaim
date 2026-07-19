@@ -18,7 +18,7 @@ is `ireland_legal_chunks` in LanceDB).
 
 The R1-R4 conformance contract (per the `cianfhoghlaim-cocoindex-v1` skill):
 
-- R1: `from ._lifespan import shared_lifespan` (this module)
+- R1: `from .._shared._lifespan import shared_lifespan` (this module)
 - R2: imports the canonical `ContextKey`s (LANCE_DB, EMBEDDER) from `._lifespan`
 - R3: `IrelandLegalEmbedding = coco.App(name="IrelandLegalEmbedding")` at module scope
 - R4: ≥1 `@coco.fn` decorator AND uses `lancedb.mount_table_target(LANCE_DB, ...)`
@@ -60,7 +60,7 @@ except ImportError as exc:  # pragma: no cover - defensive
 
 # Shared lifespan (REFACTORING.md item 12) — the canonical home for
 # `LANCE_DB` + `EMBEDDER` + `LANCEDB_URI` + `EMBED_DIM` + `EMBED_MODEL`.
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBED_MODEL,
     EMBEDDER,
     LANCE_DB,

@@ -27,7 +27,7 @@ from typing import Annotated, Any
 
 import structlog
 
-from ._lifespan import (
+from .._shared._lifespan import (
     COCOINDEX_AVAILABLE,
     EMBED_DIM,
     EMBED_MODEL,
@@ -46,7 +46,7 @@ try:
     from cocoindex.ops.text import RecursiveSplitter  # type: ignore[import-not-found]
 
     if COCOINDEX_AVAILABLE:
-        from ._lifespan import LANCE_DB  # type: ignore[assignment]
+        from .._shared._lifespan import LANCE_DB  # type: ignore[assignment]
     else:
         LANCE_DB = None  # type: ignore[assignment]
 except ImportError as e:
@@ -219,7 +219,7 @@ if COCOINDEX_AVAILABLE:
         return json.dumps(tables)
 
     async def _embed(text: str) -> list[float]:  # type: ignore[no-untyped-def]
-        from ._lifespan import EMBEDDER  # type: ignore[assignment]
+        from .._shared._lifespan import EMBEDDER  # type: ignore[assignment]
 
         return await EMBEDDER.embed(text)  # type: ignore[union-attr]
 
@@ -257,8 +257,8 @@ async def search_agents_md(
         logger.warning("search_agents_md: CocoIndex not available; returning empty list")
         return []
 
-    from ._lifespan import EMBEDDER  # type: ignore[assignment]
-    from ._lifespan import LANCE_DB as _LANCE_DB  # type: ignore[assignment]
+    from .._shared._lifespan import EMBEDDER  # type: ignore[assignment]
+    from .._shared._lifespan import LANCE_DB as _LANCE_DB  # type: ignore[assignment]
 
     query_embedding = await EMBEDDER.embed(query)  # type: ignore[union-attr]
 

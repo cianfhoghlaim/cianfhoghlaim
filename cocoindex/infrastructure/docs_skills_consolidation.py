@@ -115,7 +115,7 @@ DEFAULT_SKILLS_ROOT = pathlib.Path(
 # =============================================================================
 
 
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,  # noqa: F401 — re-exported for back-compat
     LANCE_DB,  # noqa: F401 — re-exported for back-compat
     LANCEDB_URI as _SHARED_LANCEDB_URI,

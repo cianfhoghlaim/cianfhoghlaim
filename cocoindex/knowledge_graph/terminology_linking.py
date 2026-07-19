@@ -416,7 +416,7 @@ if __name__ == "__main__":
 # (`coccoindex_v1_migrate.py --check-only`); no runtime path references them.
 # ============================================================================
 try:  # R1 — uses the shared CocoIndex v1 lifespan
-    from ._lifespan import shared_lifespan as _v1_lifespan_marker  # noqa: F401, E402
+    from .._shared._lifespan import shared_lifespan as _v1_lifespan_marker  # noqa: F401, E402
 except ImportError:  # pragma: no cover
     _v1_lifespan_marker = None
 
@@ -431,7 +431,7 @@ except ImportError:  # pragma: no cover
     _v1_conformance_app = None
 
 try:  # R3 — `mount_table_target`; R4 — `declare_vector_index`
-    from ._lifespan import LANCE_DB as _v1_lance_db  # noqa: F401, E402
+    from .._shared._lifespan import LANCE_DB as _v1_lance_db  # noqa: F401, E402
     from cocoindex.connectors import lancedb as _v1_lancedb_mod  # type: ignore[import-not-found]
 
     async def _v1_mount_target() -> None:

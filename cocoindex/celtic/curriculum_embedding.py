@@ -41,7 +41,7 @@ except ImportError as exc:
     lancedb = None  # type: ignore[assignment]
 
 
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,

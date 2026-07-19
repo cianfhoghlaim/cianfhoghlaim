@@ -74,7 +74,7 @@ except ImportError:  # pragma: no cover
 # The shared CocoIndex v1 lifespan (REFACTORING.md item 12) — imported
 # from the canonical home so every v1 App declares the same
 # EMBEDDER + LANCE_DB + RESOLVED_FILE_REGISTRY context keys.
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,

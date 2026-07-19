@@ -7,7 +7,7 @@ LanceDB via BGE-M3 (multilingual 1024-d, supports Irish).
 LanceDB table: ``cianfhoghlaim.language.gaois_chunks``.
 
 R1–R4 v1 conformance contract per ``_lifespan.py``:
-- R1 — ``from ._lifespan import shared_lifespan``
+- R1 — ``from .._shared._lifespan import shared_lifespan``
 - R2 — Imports the canonical ``LANCE_DB`` + ``EMBEDDER`` from ``_lifespan``
 - R3 — ``app = coco.App(coco.AppConfig(name=...))`` at module scope
 - R4 — ``@coco.fn`` decorator + ``lancedb.mount_table_target(LANCE_DB, ...)``
@@ -52,7 +52,7 @@ except ImportError as exc:  # pragma: no cover - defensive
 
 
 # Shared lifespan (REFACTORING.md item 12).
-from ._lifespan import (  # noqa: E402
+from .._shared._lifespan import (  # noqa: E402
     EMBEDDER,
     EMBED_DIM,
     EMBED_MODEL,

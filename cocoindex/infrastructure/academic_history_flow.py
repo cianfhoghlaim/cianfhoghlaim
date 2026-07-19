@@ -11,7 +11,7 @@ assets and writes the embedded rows into a single LanceDB table
 The App follows the canonical v1 pattern documented in
 `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md`:
 
-- R1 — `from ._lifespan import shared_lifespan`
+- R1 — `from .._shared._lifespan import shared_lifespan`
 - R2 — uses the canonical ContextKeys (`LANCE_DB`, `EMBEDDER`)
 - R3 — `coco.App(...)` at module scope
 - R4 — `@coco.fn(memo=True)` on every expensive processor
@@ -59,22 +59,22 @@ _LANCEDB_URI_FALLBACK: str = os.environ.get("LANCEDB_URI", "rest://lakehouse-lan
 _LANCE_DB_FALLBACK: Any = None
 
 try:
-    from ._lifespan import (
+    from .._shared._lifespan import (
         EMBED_DIM as _LIFESPAN_EMBED_DIM,
     )
-    from ._lifespan import (
+    from .._shared._lifespan import (
         EMBED_MODEL as _LIFESPAN_EMBED_MODEL,
     )
-    from ._lifespan import (  # type: ignore[import-not-found]
+    from .._shared._lifespan import (  # type: ignore[import-not-found]
         EMBEDDER as _LIFESPAN_EMBEDDER,
     )
-    from ._lifespan import (
+    from .._shared._lifespan import (
         LANCE_DB as _LIFESPAN_LANCE_DB,
     )
-    from ._lifespan import (
+    from .._shared._lifespan import (
         LANCEDB_URI as _LIFESPAN_LANCEDB_URI,
     )
-    from ._lifespan import (
+    from .._shared._lifespan import (
         shared_lifespan as _LIFESPAN_SHARED_LIFESPAN,  # noqa: N812
     )
 

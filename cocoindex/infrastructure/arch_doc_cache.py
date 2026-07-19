@@ -28,7 +28,7 @@ from typing import Any
 
 import structlog
 
-from ._lifespan import COCOINDEX_AVAILABLE
+from .._shared._lifespan import COCOINDEX_AVAILABLE
 
 # CocoIndex is optional — degrade gracefully if not installed.
 try:
