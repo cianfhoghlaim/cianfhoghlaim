@@ -46,10 +46,10 @@ def _setup():
 
     md_token = os.environ.get("MOTHERDUCK_TOKEN", "")
     if md_token:
-        con = duckdb.connect("md:cianfhoghlaim")
+        con = ibis.duckdb.connect("md:cianfhoghlaim")
     else:
         # Local DuckDB fallback: empty schema + a single placeholder row.
-        con = duckdb.connect(":memory:")
+        con = ibis.duckdb.connect(":memory:")
     mo.md(
         """
         # Personal Injury Journey · PIAB → High Court

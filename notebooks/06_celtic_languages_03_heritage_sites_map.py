@@ -68,9 +68,9 @@ def _connect(duckdb, os):
         token = os.environ.get("MOTHERDUCK_TOKEN", "")
         if token:
             duckdb.sql(f"SET motherduck_token='{token}'")
-        con = duckdb.connect("md:cianfhoghlaim", read_only=True)
+        con = ibis.duckdb.connect("md:cianfhoghlaim", read_only=True)
     else:
-        con = duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
+        con = ibis.duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
     return (con, use_md)
 
 

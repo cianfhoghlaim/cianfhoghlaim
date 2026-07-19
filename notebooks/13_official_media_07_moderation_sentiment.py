@@ -97,7 +97,7 @@ def _data_loading(mo, duckdb, os, pd, allowlist_categories):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             sentiment_df = con.execute(
                 """
                 SELECT ig_username, category, posted_at, sentiment_score,

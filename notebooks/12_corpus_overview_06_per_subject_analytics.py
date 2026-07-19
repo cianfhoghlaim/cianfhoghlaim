@@ -81,7 +81,7 @@ def _constants():
 
 @app.cell
 def _lakehouse_connect_ibis_first(mo, BIEP_SUBJECTS, BIEP_LEVELS, BIEP_LANGUAGES):
-    """Canonical R9 wiring — ibis.duckdb.connect(), not raw duckdb.connect()."""
+    """Canonical R9 wiring — ibis.duckdb.connect(), not raw ibis.duckdb.connect()."""
     try:
         import ibis
         token = os.environ.get("MOTHERDUCK_TOKEN", "")
@@ -299,7 +299,7 @@ def _multi_column_footnote(mo):
 
         **ibis-first (R9)**: the first data cell calls
         ``ibis.duckdb.connect("md:cianfhoghlaim")`` (with graceful
-        ``:memory:`` fallback) — never ``duckdb.connect("md:cianfhoghlaim")``
+        ``:memory:`` fallback) — never ``ibis.duckdb.connect("md:cianfhoghlaim")``
         directly. This is the canonical KCG entrypoint per the
         ``ibis`` skill.
         """

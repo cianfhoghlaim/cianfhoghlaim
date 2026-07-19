@@ -98,13 +98,13 @@ def _lakehouse_connect(mo, duckdb, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             engine_label = "md:cianfhoghlaim"
         except Exception as exc:
-            con = duckdb.connect(":memory:")
+            con = ibis.duckdb.connect(":memory:")
             engine_label = f"local_duckdb (md unreachable: {type(exc).__name__})"
     else:
-        con = duckdb.connect(":memory:")
+        con = ibis.duckdb.connect(":memory:")
         engine_label = "local_duckdb (offline fallback)"
 
     mo.md(f"### Engine: **{engine_label}**")

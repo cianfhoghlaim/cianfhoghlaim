@@ -101,7 +101,7 @@ def _(mo):
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:cianfhoghlaim")
+                con = ibis.duckdb.connect("md:cianfhoghlaim")
                 docs_df = con.execute(
                     """
                     SELECT doc_id, subject, language, source_path, extracted_text
@@ -123,7 +123,7 @@ def _(mo):
         local_db = pathlib.Path(db_path)
         if local_db.exists():
             try:
-                con = duckdb.connect(str(local_db), read_only=True)
+                con = ibis.duckdb.connect(str(local_db), read_only=True)
                 docs_df = con.execute(
                     """
                     SELECT doc_id, subject, language, source_path, extracted_text

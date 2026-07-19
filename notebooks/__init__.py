@@ -35,7 +35,7 @@ Helpers (re-exported from nb_utils.py):
 
 Reference: openspec/changes/2026-07-06-notebooks-flatten-refactor-and-wire-bi-ep/
 """
-from cianfhoghlaim.notebooks.nb_utils import (
+from .nb_utils import (
     BIEP_LANGUAGES,
     BIEP_LEVELS,
     BIEP_SUBJECTS,

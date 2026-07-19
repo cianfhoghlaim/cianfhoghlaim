@@ -100,7 +100,7 @@ def _(level_selector, mo, subject_selector):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             df = con.execute(
                 f"""
                 SELECT
@@ -201,7 +201,7 @@ def _(duckdb, level_selector, mo, os, subject_selector):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             rows = con.execute(
                 """
                 SELECT subject, count(*) AS chunks
@@ -240,7 +240,7 @@ def _(duckdb, mo, os):
     if use_md and token:
         try:
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             row = con.execute(
                 """
                 SELECT anchor_date, merkle_root, on_chain_tx, n_badges_anchored
