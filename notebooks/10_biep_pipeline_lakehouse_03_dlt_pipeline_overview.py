@@ -18,7 +18,7 @@ def __():
 @app.cell
 def __():
     """Show the 8 British Isles nations × 4 domains = 32 dlt sources + 2 special (filesystem, api, language, official_media, portfolio)."""
-    from cianfhoghlaim.dlt import __init__ as dlt_init
+    from dlt_sources import __init__ as dlt_init
     return dlt_init,
 
 

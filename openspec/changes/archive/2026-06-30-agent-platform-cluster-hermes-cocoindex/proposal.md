@@ -136,7 +136,7 @@ group, deployed on `bunchloch` (not `arm1-oci`).
   - `langfuse:` — full observability wiring
 - **Network model rewrite** — the upstream
   `network_mode: host` is rewritten to explicit published ports
-  on the `cianchoghlaim` bridge network. Dashboard binds
+  on the `cianfhoghlaim` bridge network. Dashboard binds
   `127.0.0.1:9119`; webhook ports (Telegram 8443, etc.) stay
   on `127.0.0.1` only.
 - **3-layer auth:**
@@ -592,7 +592,7 @@ A 5th `### Requirement:` block is added to the
   scoped to the user's Pocket ID subject only.
 - **Risk: `network_mode: host` rewrite breaks the
   gateway.** **Mitigation:** the Hermes compose file
-  keeps the gateway inside the `cianchoghlaim` bridge
+  keeps the gateway inside the `cianfhoghlaim` bridge
   network; the webhook ports (Telegram 8443, etc.)
   bind to `127.0.0.1` only; the dashboard binds
   `127.0.0.1:9119`. Documented in the Hermes README

@@ -176,7 +176,7 @@ once the Rust toolchain wiring lands.
 ### Requirement: Module location
 The Dagger module SHALL live at `infrastructure/dagger/`. Its entrypoint
 SHALL be declared in `pyproject.toml` as
-`[project.entry-points."dagger.mod"] main_object = "cianchoghlaim:UnifiedPipeline"`.
+`[project.entry-points."dagger.mod"] main_object = "cianfhoghlaim:UnifiedPipeline"`.
 
 #### Scenario: dagger develop loads the module
 - **WHEN** the operator runs `cd infrastructure/dagger && dagger develop`
@@ -235,7 +235,7 @@ The `Ignore` exclude list SHALL cover `.venv`, `node_modules`,
 #### Scenario: pinned base image
 - **WHEN** the operator runs `dagger develop`
 - **THEN** the module SHALL load without errors even if the host has no
-  internet (Dagger caches the pinned images in the `cianchoghlaim-*-cache`
+  internet (Dagger caches the pinned images in the `cianfhoghlaim-*-cache`
   volume).
 
 ### Requirement: Locket secret model

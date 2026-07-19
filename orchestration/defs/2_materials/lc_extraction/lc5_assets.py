@@ -56,7 +56,7 @@ except ImportError:
     b = None
 
 try:
-    from cianfhoghlaim.dlt.filesystem.leaving_cert_source import lc5_documents
+    from dlt_sources.filesystem.leaving_cert_source import lc5_documents
     DLT_AVAILABLE = True
 except ImportError:
     DLT_AVAILABLE = False

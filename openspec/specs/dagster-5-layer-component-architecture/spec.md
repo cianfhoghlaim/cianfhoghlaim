@@ -192,7 +192,7 @@ be retired and replaced by the 5-layer shape.
 The system SHALL treat the repository root as the canonical location of the
 `cianfhoghlaim` Python package. Every `from cianfhoghlaim.X import Y` import
 SHALL resolve against the flat repo-root layout — there SHALL NOT be a
-separate `cianchoghlaim/` subdirectory containing the package source.
+separate `cianfhoghlaim/` subdirectory containing the package source.
 
 The package marker files (`__init__.py`, `__main__.py`, `__deployment__.py`,
 `cli.py` for the cianfhoghlaim CLI) SHALL live at the repository root and
@@ -234,7 +234,7 @@ import in test code or documentation SHALL be rewritten to
 
 - **WHEN** the user runs `python -c "from cianfhoghlaim.dlt.common.cli import main"`
 - **THEN** the import SHALL succeed
-- **AND THEN** the resolution path SHALL be `orchestration/...` or `dlt/...` at the repo root (NOT from a non-existent `cianchoghlaim/` subdirectory)
+- **AND THEN** the resolution path SHALL be `orchestration/...` or `dlt/...` at the repo root (NOT from a non-existent `cianfhoghlaim/` subdirectory)
 
 #### Scenario: Dagster code-location loads
 

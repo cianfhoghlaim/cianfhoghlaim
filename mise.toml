@@ -151,8 +151,8 @@ run = "bunx turbo run ${@}"
 # Per the 2026-07-14 foundation refactor (`openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1`),
 # the canonical code-location module is `orchestration.definitions` (the
 # v7 flattened package layout puts the package root at the repo root, NOT
-# under a `cianchoghlaim/` sub-directory). The historical
-# `cianchoghlaim.dagster.definitions` path no longer exists.
+# under a `cianfhoghlaim/` sub-directory). The historical
+# `cianfhoghlaim.dagster.definitions` path no longer exists.
 # See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
 
 [tasks."dagster:dev"]

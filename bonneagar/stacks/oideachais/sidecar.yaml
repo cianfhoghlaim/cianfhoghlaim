@@ -11,7 +11,7 @@
 #      pinned to a specific version, NOT :latest, per GOLD_STANDARD
 #      "Forbidden patterns").
 #   2. The shared `locket_secrets` tmpfs volume declaration.
-#   3. The `locket_secrets` and `cianchoghlaim` external networks.
+#   3. The `locket_secrets` and `cianfhoghlaim` external networks.
 #
 # The 3 app services (dagster, api, frontend) in compose.yaml declare
 # their own depends_on: locket: condition: service_healthy; this

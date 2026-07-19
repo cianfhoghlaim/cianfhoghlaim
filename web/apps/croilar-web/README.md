@@ -188,7 +188,7 @@ only re-skin the `personas/` registry.
   - `croilar-marimo` (Python 3.12 + uv)
   - `croilar-image-pipeline` (Node 20)
 - **Dagger `CroilarPipeline`** in
-  `infrastructure/dagger/cianchoghlaim_dagger/__init__.py` with 6
+  `infrastructure/dagger/cianfhoghlaim_dagger/__init__.py` with 6
   functions: `ci`, `build_images`, `deploy_cloudflare`,
   `deploy_komodo`, `deploy_pangolin`, `gitops_fullstack`. All
   deploys are gated by an `approved: bool = False` parameter.
@@ -686,7 +686,7 @@ infrastructure/
 │   ├── croilar-renovate-pr.toml
 │   ├── croilar-backup.toml
 │   └── croilar-gitops-fullstack.toml
-├── dagger/cianchoghlaim_dagger/__init__.py  # CroilarPipeline class
+├── dagger/cianfhoghlaim_dagger/__init__.py  # CroilarPipeline class
 └── stacks/
     ├── storage/croilar-postgres/
     └── engineering/

@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.celtic — placeholder package marker.
+"""cianfhoghlaim.cocoindex.celtic — placeholder package marker.
 """

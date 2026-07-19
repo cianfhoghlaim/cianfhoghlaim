@@ -62,7 +62,7 @@ agent_os:
   build:
     context: ../../../..
     dockerfile: sruth/oideachais/agent_os/Dockerfile
-  container_name: cianchoghlaim-oideachais-agent-os
+  container_name: cianfhoghlaim-oideachais-agent-os
   restart: unless-stopped
   ports:
     - "${AGENT_OS_PORT:-7777}:7777"
@@ -86,7 +86,7 @@ agent_os:
   volumes:
     - locket_secrets:/run/secrets/locket:ro
   networks:
-    - cianchoghlaim
+    - cianfhoghlaim
     - lakehouse
   deploy:
     resources:
@@ -103,7 +103,7 @@ adk_agents:
   build:
     context: ../../../..
     dockerfile: sruth/oideachais/Dockerfile.adk
-  container_name: cianchoghlaim-oideachais-adk-agents
+  container_name: cianfhoghlaim-oideachais-adk-agents
   restart: unless-stopped
   ports:
     - "${ADK_PORT:-7778}:7778"
@@ -127,7 +127,7 @@ adk_agents:
   volumes:
     - locket_secrets:/run/secrets/locket:ro
   networks:
-    - cianchoghlaim
+    - cianfhoghlaim
     - lakehouse
   deploy:
     resources:
@@ -196,7 +196,7 @@ Add the 2 new services to the oideachais quadrant row.
 - The new services are additive (no existing services modified)
 - The `api` service can still invoke ADK agents and the Agno
   AgentOS via HTTP (using the new Traefik routes or direct
-  container-to-container on the `cianchoghlaim` network)
+  container-to-container on the `cianfhoghlaim` network)
 - Existing deployments that do not need ADK / Agno can simply
   not start the new services (`docker compose up --scale
   adk_agents=0`)

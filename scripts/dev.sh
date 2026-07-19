@@ -54,7 +54,7 @@ if $STATUS; then
   # Docker
   if docker info &>/dev/null; then
     echo "  Docker:   running"
-    docker ps --filter "name=cianchoghlaim-oideachais" --format "  ├─ {{.Names}}: {{.Status}}" 2>/dev/null || echo "  └─ (no oideachais containers)"
+    docker ps --filter "name=cianfhoghlaim-oideachais" --format "  ├─ {{.Names}}: {{.Status}}" 2>/dev/null || echo "  └─ (no oideachais containers)"
   else
     echo "  Docker:   not running (OrbStack/Docker Desktop not started)"
   fi

@@ -38,7 +38,7 @@ def _():
     import boto3
     import pandas as pd
     import altair as alt
-    import dlt
+    import dlt_sources
 
     AWS_ENDPOINT = os.getenv("AWS_ENDPOINT_URL", "http://localhost:3900")
     AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID", "")

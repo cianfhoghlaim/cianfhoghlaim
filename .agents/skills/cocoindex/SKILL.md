@@ -25,9 +25,9 @@ databases, custom sinks).
 
 Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 
-- CocoIndex Apps are now under `cianchoghlaim.cocoindex.<subdir>` (NOT
-  `cianchoghlaim.cocoindex_flows.<subdir>`)
-- The shared lifespan is at `cianchoghlaim.cocoindex._shared._lifespan`
+- CocoIndex Apps are now under `cianfhoghlaim.cocoindex.<subdir>` (NOT
+  `cianfhoghlaim.cocoindex_flows.<subdir>`)
+- The shared lifespan is at `cianfhoghlaim.cocoindex._shared._lifespan`
   (use `from .._shared._lifespan import shared_lifespan, LANCE_DB, EMBEDDER`)
 - Each App's module-scope `app = coco.App(...)` MUST be named `app` for
   the R3 linter to pass; for Apps using other names (like

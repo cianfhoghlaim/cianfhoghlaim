@@ -11,7 +11,7 @@ reference.  The HTTP calls (Komodo / Pangolin / Cloudflare / LiteLLM)
 go through ``curlimages/curl:8.11.1`` containers, which is the same
 pattern the prior TypeScript implementation used.
 
-All 8 callable functions compose via ``CianchoghlaimDagger``, the
+All 8 callable functions compose via ``CianfhoghlaimDagger``, the
 top-level orchestrator registered as the Dagger entry-point class.
 Deploy and rollback are gated by an ``approved: bool = False``
 parameter for belt-and-braces production safety.
@@ -41,7 +41,7 @@ from dagger import (
 )
 
 __all__ = [
-    "CianchoghlaimDagger",
+    "CianfhoghlaimDagger",
     "InfrastructurePipeline",
     "WebPipeline",
     "DataPipeline",
@@ -74,17 +74,17 @@ __all__ = [
 
 def uv_cache() -> CacheVolume:
     """Cache the Python uv package store at ``/root/.cache/uv``."""
-    return dag.cache_volume("cianchoghlaim-uv-cache")
+    return dag.cache_volume("cianfhoghlaim-uv-cache")
 
 
 def bun_cache() -> CacheVolume:
     """Cache the Bun install / module store at ``/root/.bun``."""
-    return dag.cache_volume("cianchoghlaim-bun-cache")
+    return dag.cache_volume("cianfhoghlaim-bun-cache")
 
 
 def cargo_cache(name: str = "registry") -> CacheVolume:
     """Cache the Rust cargo registry at ``/usr/local/cargo/registry``."""
-    return dag.cache_volume(f"cianchoghlaim-cargo-{name}")
+    return dag.cache_volume(f"cianfhoghlaim-cargo-{name}")
 
 
 # ============================================================================
@@ -228,14 +228,14 @@ def locket_secrets_env(
 
         # service: <service_name>
         # vault: <vault>
-        # rendered-by: cianchoghlaim-dagger v0.1.0
+        # rendered-by: cianfhoghlaim-dagger v0.1.0
 
         KEY={{ infisical://dev-baile/folder/key }}
     """
     lines: list[str] = [
         f"# service: {service_name}",
         f"# vault: {vault}",
-        f"# rendered-by: cianchoghlaim-dagger v0.1.0",
+        f"# rendered-by: cianfhoghlaim-dagger v0.1.0",
         "# Locket substitutes the {{ infisical://... }} refs at container runtime",
         "",
     ]
@@ -1301,7 +1301,7 @@ class CroilarPipeline:
 
 
 @object_type
-class CianchoghlaimDagger:
+class CianfhoghlaimDagger:
     """Top-level orchestrator that composes the 3 pipelines.
 
     All four top-level functions (``testAll``, ``buildImages``,

@@ -79,11 +79,11 @@ secrets:
   infisical_secret:
     file: /dev/null
 
-# Top-level networks: block in the base compose declares `cianchoghlaim`
+# Top-level networks: block in the base compose declares `cianfhoghlaim`
 # as external. In dev mode on bunchloch, this network IS created (by the
 # lakehouse/litellm/etc. cold-boot), so we keep it external. The previous
 # "external: false" override broke DNS for sibling services like dragonfly.
 networks:
   cianfhoghlaim:
     external: true
-    name: cianchoghlaim
+    name: cianfhoghlaim

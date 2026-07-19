@@ -43,7 +43,7 @@ openchamber:
   ports: ["127.0.0.1:3000:3000"]            # not :latest, not 3030:8080
   environment:
     OPENCHAMBER_PORT: "3000"
-    OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianchoghlaim-dark}
+    OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianfhoghlaim-dark}
     OPENCHAMBER_LOG_LEVEL: ${OPENCHAMBER_LOG_LEVEL:-info}
     # OPENCODE_HOST intentionally NOT set (bundled mode)
   volumes: [openchamber-state:/home/bun/.openchamber]

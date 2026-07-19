@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.biep_parity — placeholder package marker.
+"""cianfhoghlaim.cocoindex.biep_parity — placeholder package marker.
 """

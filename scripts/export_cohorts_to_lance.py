@@ -47,10 +47,10 @@ def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
         f"ENDPOINT 'localhost:3900', USE_SSL false, URL_STYLE 'path')"
     )
     con.execute(
-        "ATTACH 'ducklake:postgres:dbname=ducklake_cianchoghlaim "
+        "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
         "host=localhost port=5433 user=lakekeeper "
         "password=805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9' "
-        "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianchoghlaim/cianfhoghlaim/')"
+        "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
     )
     con.execute("USE cianfhoghlaim;")
     return con
@@ -63,7 +63,7 @@ def export_jurisdiction_to_lance(
     """Read one jurisdiction's cohort rows from DuckLake (via Parquet) + write to Lance."""
     import lance
 
-    dataset_name = f"cianchoghlaim_education_{jurisdiction}_subjects"
+    dataset_name = f"cianfhoghlaim_education_{jurisdiction}_subjects"
     dataset_path = LANCEDB_PATH / dataset_name
 
     t0 = time.time()
@@ -73,7 +73,7 @@ def export_jurisdiction_to_lance(
     # catalog doesn't expose these as tables (they're managed by dlt's staging
     # layer), so we read the Parquet files directly.
     parquet_glob = (
-        f"s3://ducklake-cianchoghlaim/cianfhoghlaim/"
+        f"s3://ducklake-cianfhoghlaim/cianfhoghlaim/"
         f"{jurisdiction}_education/{jurisdiction}_subjects/*.parquet"
     )
     try:

@@ -101,7 +101,7 @@ logger = structlog.get_logger(__name__)
 )
 def {subject}_syllabus_raw(context: dg.AssetExecutionContext) -> dg.MaterializeResult:
     """Ingest the {title} PDFs into DuckLake via the DLT source."""
-    import dlt
+    import dlt_sources
 
     from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.{subject} import {code}_source
 

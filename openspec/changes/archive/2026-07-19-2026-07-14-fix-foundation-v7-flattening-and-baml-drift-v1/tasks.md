@@ -61,7 +61,7 @@
 - [ ] **A.4.3** Fix `[tool.ruff.lint.isort]`:
   - Change `known-first-party = ["sruth", "oideachais", "sruth/tuatha", "codeolas", "códeolas", "sruth_browser"]`
   - To `known-first-party = ["cianfhoghlaim"]`
-- [ ] **A.4.4** Add `[tool.uv.sources]` entry `cianchoghlaim = { workspace = true }`
+- [ ] **A.4.4** Add `[tool.uv.sources]` entry `cianfhoghlaim = { workspace = true }`
   (already present per current state — verify).
 
 ### A.5 — Update `mise.toml` references
@@ -89,11 +89,11 @@
 - [ ] **A.8.2** Run `python -c "from cianfhoghlaim.dlt.common.cli import main"` — should succeed.
 - [ ] **A.8.3** Run `python -m cianfhoghlaim --version` — should print `cianfhoghlaim-monorepo 0.4.0`.
 - [ ] **A.8.4** Run `python -c "from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check"` — should succeed.
-- [ ] **A.8.5** Run `python -c "import cianfhoghlaim.cli; print(cianchoghlaim.cli.main.__module__)"` — should print `...cli`.
+- [ ] **A.8.5** Run `python -c "import cianfhoghlaim.cli; print(cianfhoghlaim.cli.main.__module__)"` — should print `...cli`.
 - [ ] **A.8.6** Run `python -c "from cianfhoghlaim.dagster.cli import materialize_asset"` — should succeed (if `dagster/cli.py` exists; if not, add a shim in step A.8.6.1).
 - [ ] **A.8.6.1** *(conditional)* If `dagster/cli.py` doesn't exist, add
       `orchestration/__init__.py` + `orchestration/dagster/__init__.py` + `orchestration/dagster/cli.py` shim that re-exports from
-      `cianchoghlaim.dagster.cli` (a new module that wraps
+      `cianfhoghlaim.dagster.cli` (a new module that wraps
       `dagster.cli`).
 
 ### A.9 — Sanity gates

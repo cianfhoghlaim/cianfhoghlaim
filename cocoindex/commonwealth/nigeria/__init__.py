@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.nigeria — auto-generated package marker.
+"""cianfhoghlaim.cocoindex.nigeria — auto-generated package marker.
 """

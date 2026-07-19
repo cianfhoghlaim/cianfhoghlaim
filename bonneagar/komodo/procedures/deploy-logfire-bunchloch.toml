@@ -24,7 +24,7 @@ description = "Deploy Logfire OTEL Collector to bunchloch — prereqs → logfir
 # =============================================================================
 # STAGE 0: Prerequisites
 # =============================================================================
-# The logfire sidecar requires the cianchoghlaim_locket_secrets external tmpfs
+# The logfire sidecar requires the cianfhoghlaim_locket_secrets external tmpfs
 # volume. Created idempotently by a build (defined in the locket sidecar).
 # -----------------------------------------------------------------------------
 

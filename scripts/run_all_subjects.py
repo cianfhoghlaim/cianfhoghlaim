@@ -1,6 +1,6 @@
 import os
 import sys
-import dlt
+import dlt_sources
 
 sys.path.insert(0, os.path.dirname(__file__))
 

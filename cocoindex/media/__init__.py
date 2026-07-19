@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.media — placeholder package marker.
+"""cianfhoghlaim.cocoindex.media — placeholder package marker.
 """

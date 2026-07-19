@@ -19,7 +19,7 @@
   - Volumes: `openclaw-state:/home/node/.openclaw`, `./config:/home/node/.openclaw/config:ro`, `./skills-curated:/home/node/.openclaw/workspace/skills:ro`.
   - `depends_on: locket: { condition: service_healthy }`
   - `volumes: [stack-secrets:/run/secrets/locket:ro]`, `env_file: [/run/secrets/locket/secrets.env]`
-  - `networks: [cianchoghlaim]`
+  - `networks: [cianfhoghlaim]`
   - `deploy.resources.limits: { cpus: '2', memory: 2G }`
   - `user: "1000:1000"` (matches the upstream image's non-root user; required so `OPENCLAW_STATE_DIR` is writable).
   - `security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`.

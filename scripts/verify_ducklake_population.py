@@ -18,22 +18,22 @@ con.execute(
     f"ENDPOINT '{ENDPOINT}', USE_SSL false, URL_STYLE 'path')"
 )
 con.execute(
-    "ATTACH 'ducklake:postgres:dbname=ducklake_cianchoghlaim "
+    "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
     "host=localhost port=5433 user=lakekeeper "
     "password=805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9' "
-    "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianchoghlaim/cianfhoghlaim/')"
+    "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
 )
 con.execute("USE cianfhoghlaim;")
 
 paths = [
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/england_education/england_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/scotland_education/scotland_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/wales_education/wales_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/northern_ireland_education/northern_ireland_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/jersey_education/jersey_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/guernsey_education/guernsey_subjects/*.parquet",
-    "s3://ducklake-cianchoghlaim/cianfhoghlaim/isle_of_man_education/isle_of_man_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/england_education/england_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/scotland_education/scotland_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/wales_education/wales_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/northern_ireland_education/northern_ireland_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/jersey_education/jersey_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/guernsey_education/guernsey_subjects/*.parquet",
+    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/isle_of_man_education/isle_of_man_subjects/*.parquet",
 ]
 
 print("Lakehouse population (Parquet files):")
@@ -48,7 +48,7 @@ print()
 print("Sample ireland row:")
 for r in con.execute(
     "SELECT jurisdiction, subject, language, source_url FROM "
-    "read_parquet('s3://ducklake-cianchoghlaim/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet') "
+    "read_parquet('s3://ducklake-cianfhoghlaim/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet') "
     "LIMIT 3"
 ).fetchall():
     print(f"  {r}")

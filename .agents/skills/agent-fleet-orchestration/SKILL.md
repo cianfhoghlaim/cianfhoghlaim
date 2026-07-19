@@ -21,8 +21,8 @@ a single fleet.
 
 Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 
-- The 12-agent fleet is now under `cianchoghlaim.meaisinfhoghlaim.agents.*`
-  (NOT `cianchoghlaim.agents.meaisinfhoghlaim.*` which was the pre-v7 layout)
+- The 12-agent fleet is now under `cianfhoghlaim.meaisinfhoghlaim.agents.*`
+  (NOT `cianfhoghlaim.agents.meaisinfhoghlaim.*` which was the pre-v7 layout)
 - The 5 sub-frameworks are: ADK (Google), Agno, Pydantic-AI, Custom, Pipecat
 - The routing keyword map canonical seed lives at `agents/routing_keywords.py`
 - Each subject agent's wire metadata is at

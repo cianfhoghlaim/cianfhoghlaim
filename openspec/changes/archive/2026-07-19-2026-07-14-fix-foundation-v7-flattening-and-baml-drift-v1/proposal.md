@@ -90,7 +90,7 @@ are planned as follow-up changes per the 30/06/2026 deep-cuts workshop.
 - The symlink-tree approach (creating `cianfhoghlaim/{dlt,agents,...}` symlinks) is
   NOT what we're doing — the package IS the repo root. The confusion in the prior
   change `2026-07-17-v7-flatten-…` (commit `41e7ea951`) is that the docstring of
-  `__init__.py:14-17` claimed `cianchoghlaim/{core,pipelines,...}` subdirs that
+  `__init__.py:14-17` claimed `cianfhoghlaim/{core,pipelines,...}` subdirs that
   never existed. This change documents the actual layout in the new
   `__init__.py` docstring.
 - The hatch `force-include` must NOT include huge non-Python assets
@@ -106,7 +106,7 @@ are planned as follow-up changes per the 30/06/2026 deep-cuts workshop.
 3. `python -m cianfhoghlaim --version` prints `cianfhoghlaim-monorepo 0.4.0`.
 4. `python -c "from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check"` succeeds.
 5. `mise run cic:dagster:list-assets` returns the 199-asset graph.
-6. `python -c "import cianfhoghlaim.cli; print(cianchoghlaim.cli.main.__module__)"` returns the renamed module path.
+6. `python -c "import cianfhoghlaim.cli; print(cianfhoghlaim.cli.main.__module__)"` returns the renamed module path.
 
 ## Theme B — Fix BAML surface (implemented now)
 
@@ -174,7 +174,7 @@ separate change with its own `proposal.md` + `tasks.md` + spec deltas.
 
 ### Theme D — Notebooks + WASM
 - 65 of 109 notebooks use raw `duckdb.connect(uri)` despite the ibis-first mandate
-  (`cianchoghlaim-marimo-dashboards/spec.md` R9).
+  (`cianfhoghlaim-marimo-dashboards/spec.md` R9).
 - Hardcoded Garage credentials at
   `notebooks/10_biep_pipeline_lakehouse_02_lakehouse_inspector.py:67-68`.
 - `scripts/marimo_wasm_export.py` is a stub — writes a placeholder HTML.
@@ -243,7 +243,7 @@ BAML 5-category compile-error fix").
 - [x] `mise run cic:dagster:dev` starts (reconciled via Theme A — points to `orchestration.definitions`).
 - [x] All 4 cross-reference markers (`__init__.py:__plan__`, `__openspec_change__`,
       `__active_nations__`, `__active_languages__`) round-trip correctly
-      through `python -c "import cianfhoghlaim; print(cianchoghlaim.__plan__)"`.
+      through `python -c "import cianfhoghlaim; print(cianfhoghlaim.__plan__)"`.
 - [x] `iac/commands/sync-procedures.ts` rewritten as a real TOML parser
       (uses `smol-toml`, maps `BashCommand` / `DeployStack` / `HttpCheck`
       execution types, handles array vs single procedure TOML shapes).

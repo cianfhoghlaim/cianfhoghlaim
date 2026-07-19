@@ -76,7 +76,7 @@ networks:
 - `networks: - cianfhoghlaim` (or other shared network)
 - `depends_on: locket: condition: service_healthy` (so secrets are ready)
 - Named volumes (NOT bind mounts) for stateful data
-- `container_name:` prefixed with `cianchoghlaim-` for docker ps grep
+- `container_name:` prefixed with `cianfhoghlaim-` for docker ps grep
 
 **Forbidden:**
 - `image: :latest` — always pin to `<major>.<minor>.<patch>`
@@ -144,7 +144,7 @@ networks:
 ```
 
 **Mandatory fields:**
-- Mounts the shared `cianchoghlaim_locket_secrets` external volume as read-only
+- Mounts the shared `cianfhoghlaim_locket_secrets` external volume as read-only
 - Health-check confirms the `secrets.env` file is present
 - Uses the same shared network as the main service
 
@@ -249,8 +249,8 @@ The `stack-doctor` checks:
 - `pangolin.yaml` uses 6-label pattern (if web-facing)
 - `secrets.env` has no plaintext (regex match against known-key patterns)
 - `blueprint.yaml` has required fields
-- `container_name:` is prefixed `cianchoghlaim-`
-- `networks:` uses the shared `cianchoghlaim` network
+- `container_name:` is prefixed `cianfhoghlaim-`
+- `networks:` uses the shared `cianfhoghlaim` network
 
 Stacks that fail validation are listed in the audit report with the
 specific file and line that needs fixing. **No stack may be deployed

@@ -73,7 +73,7 @@ volumes:
 networks:
   cianfhoghlaim:
     external: true
-    name: cianchoghlaim
+    name: cianfhoghlaim
   lakehouse:
     name: lakehouse_lakehouse
     external: true

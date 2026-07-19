@@ -11,7 +11,7 @@ Run once after `km deploy stack lakehouse-bunchloch --action=up`:
 
 This script:
 1. Connects to the local Postgres via the lakehouse-bunchloch service.
-2. Creates the `ducklake_cianchoghlaim` database (idempotent).
+2. Creates the `ducklake_cianfhoghlaim` database (idempotent).
 3. ATTACHes a DuckLake catalog backed by that Postgres + Garage S3.
 4. Creates the `education.subjects` table.
 
@@ -31,8 +31,8 @@ PG_HOST: str = os.getenv("PG_HOST", "localhost")
 PG_PORT: int = int(os.getenv("PG_PORT", "5433"))
 PG_USER: str = os.getenv("PG_USER", "lakekeeper")
 PG_PASSWORD: str = os.getenv("PG_PASSWORD", "")
-PG_DB: str = os.getenv("PG_DB", "ducklake_cianchoghlaim")
-S3_BUCKET: str = os.getenv("S3_BUCKET", "ducklake-cianchoghlaim")
+PG_DB: str = os.getenv("PG_DB", "ducklake_cianfhoghlaim")
+S3_BUCKET: str = os.getenv("S3_BUCKET", "ducklake-cianfhoghlaim")
 S3_ENDPOINT: str = os.getenv("S3_ENDPOINT", "http://localhost:3900")
 S3_REGION: str = os.getenv("S3_REGION", "garage")
 

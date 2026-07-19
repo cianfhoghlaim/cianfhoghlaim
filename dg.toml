@@ -16,9 +16,9 @@ directory_type = "workspace"
 # the canonical module path is `orchestration.definitions` (the file
 # `orchestration/definitions.py` at repo root). The historical paths
 # `assets.definitions` (which never existed on disk) and
-# `cianchoghlaim.assets.definitions` and `cianchoghlaim.dagster.definitions`
+# `cianfhoghlaim.assets.definitions` and `cianfhoghlaim.dagster.definitions`
 # (both blocked by the missing cianfhoghlaim/ Python package) are superseded.
 [[workspace.locations]]
 path = "."
-code_location_name = "cianchoghlaim"
+code_location_name = "cianfhoghlaim"
 module_name = "orchestration.definitions"

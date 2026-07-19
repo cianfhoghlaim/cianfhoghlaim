@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.denmark — auto-generated package marker.
+"""cianfhoghlaim.cocoindex.denmark — auto-generated package marker.
 """

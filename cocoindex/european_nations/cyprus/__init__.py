@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.cyprus — auto-generated package marker.
+"""cianfhoghlaim.cocoindex.cyprus — auto-generated package marker.
 """

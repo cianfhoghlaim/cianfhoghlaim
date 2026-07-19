@@ -351,7 +351,7 @@ leabharlann stack overview, the KCG Dagster workspace has
 
 ### The 5-stage leabharlann asset materialisation order
 
-The leabharlann pipeline (`.agents/skills/kcg-leabharlann-pipeline/SKILL.md`)
+The leabharlann pipeline (`.agents/skills/leabharlann-pipeline/SKILL.md`)
 is wired as 7 specific Dagster assets that fire in order:
 
 1. `leabharlann_books_raw` (Stage 2: DLT filesystem scan)

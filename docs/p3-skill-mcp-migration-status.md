@@ -20,7 +20,7 @@ historical references, not path references, and should NOT be
 removed.
 
 The migration swept ALL path references (e.g.
-`sruth/cianchoghlaim/`, `sruth/meaisinfhoghlaim/`, `sruth/tuatha/`,
+`sruth/cianfhoghlaim/`, `sruth/meaisinfhoghlaim/`, `sruth/tuatha/`,
 `sruth/croilar/`, `sruth/oideachais/`) via the sed pattern. The
 3 remaining `sruth/` strings are **mentions of the historical
 naming convention** in the History sections, which is the correct
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: fail on sruth/ PATH refs
         run: |
-          ! grep -rE "sruth/(cianchoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" .agents/skills/ docs/
+          ! grep -rE "sruth/(cianfhoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" .agents/skills/ docs/
 ```
 
 The 3 remaining `sruth/` History-section mentions are NOT matched by

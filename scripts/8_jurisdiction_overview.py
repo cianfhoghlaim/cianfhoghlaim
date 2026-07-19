@@ -28,10 +28,10 @@ def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
         f"ENDPOINT 'localhost:3900', USE_SSL false, URL_STYLE 'path')"
     )
     con.execute(
-        "ATTACH 'ducklake:postgres:dbname=ducklake_cianchoghlaim "
+        "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
         "host=localhost port=5433 user=lakekeeper "
         "password=805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9' "
-        "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianchoghlaim/cianfhoghlaim/')"
+        "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
     )
     con.execute("USE cianfhoghlaim;")
     return con
@@ -64,7 +64,7 @@ def main() -> int:
         "northern_ireland", "jersey", "guernsey", "isle_of_man",
     ]:
         glob = (
-            f"s3://ducklake-cianchoghlaim/cianfhoghlaim/"
+            f"s3://ducklake-cianfhoghlaim/cianfhoghlaim/"
             f"{jurisdiction}_education/{jurisdiction}_subjects/*.parquet"
         )
         try:
@@ -85,7 +85,7 @@ def main() -> int:
     import sys
     lance_path = "/Users/cianmacandeisigh/dev/kings_college_galway/storage/data/lancedb"
     for d in sorted(os.listdir(lance_path)):
-        if d.startswith("cianchoghlaim_education_") and os.path.isdir(f"{lance_path}/{d}"):
+        if d.startswith("cianfhoghlaim_education_") and os.path.isdir(f"{lance_path}/{d}"):
             try:
                 import lance
                 ds = lance.dataset(f"{lance_path}/{d}")

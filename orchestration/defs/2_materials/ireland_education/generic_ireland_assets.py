@@ -79,7 +79,7 @@ IRELAND_EMBEDDING_GROUP = "3_model_lifecycle/education/ireland/embeddings"
 )
 def ireland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all Ireland cohorts (544+ rows)."""
-    from dlt.british_isles.ireland.education.ireland_jurisdiction_pipeline import (
+    from dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline import (
         ireland_jurisdiction_pipeline,
     )
 
@@ -112,7 +112,7 @@ def ireland_extractions(context: AssetExecutionContext) -> dict[str, Any]:
         context.log.warning("BAML not available; returning stub")
         return {"rows_extracted": 0}
 
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
     subjects = query_by_jurisdiction("ireland")
     counts: dict[str, int] = {}
@@ -155,7 +155,7 @@ def ireland_extractions(context: AssetExecutionContext) -> dict[str, Any]:
 )
 def ireland_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 3 — CocoIndex embedding for all Ireland cohorts."""
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
     subjects = query_by_jurisdiction("ireland")
     context.log.info(

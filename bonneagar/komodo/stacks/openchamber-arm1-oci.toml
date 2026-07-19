@@ -36,7 +36,7 @@ LOCKET_MODE=watch
 INFISICAL_CLIENT_ID=infisical-machine-identity-openchamber
 INFISICAL_SECRET_FILE=/etc/komodo/secrets/infisical_secret
 OPENCHAMBER_PORT=3000
-OPENCHAMBER_THEME=cianchoghlaim-dark
+OPENCHAMBER_THEME=cianfhoghlaim-dark
 OPENCHAMBER_LOG_LEVEL=info
 PANGOLIN_DOMAIN=openchamber.cianfhoghlaim.ie
 """

@@ -2,7 +2,7 @@
 
 This directory contains both TypeScript (Pulumi + Dagger + Komodo
 resource-syncs) and Python (IaC clients + commands) sources. The
-canonical entry-point is `cianchoghlaim.bonneagar.iac.main` (the Pulumi
+canonical entry-point is `cianfhoghlaim.bonneagar.iac.main` (the Pulumi
 orchestrator). Standalone scripts (`scripts/stack-doctor.sh`,
 `scripts/marimo_wasm_export.py`, etc.) are not part of this sub-module.
 

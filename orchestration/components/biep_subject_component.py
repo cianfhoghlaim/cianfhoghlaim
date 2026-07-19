@@ -25,7 +25,7 @@ from typing import Any
 from dagster import Component, ComponentLoadContext, Definitions
 
 try:
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
     REGISTRY_AVAILABLE = True
 except ImportError:
     REGISTRY_AVAILABLE = False

@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.corpus — placeholder package marker.
+"""cianfhoghlaim.cocoindex.corpus — placeholder package marker.
 """

@@ -33,7 +33,7 @@ except ImportError:
     b = None
 
 try:
-    from cianfhoghlaim.dlt.filesystem.gemini_corpus_source import (
+    from dlt_sources.filesystem.gemini_corpus_source import (
         gemini_documents, GEMINI_CORPORA, CORPUS_BAML_FUNCTIONS,
     )
     DLT_AVAILABLE = True

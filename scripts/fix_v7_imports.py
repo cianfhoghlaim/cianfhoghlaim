@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Bulk-fix stale `from cianfhoghlaim.dlt.X` imports to `from dlt.X`.
 
-Per the v7 flattened layout, the `cianchoghlaim/dlt/` sub-directory was
+Per the v7 flattened layout, the `cianfhoghlaim/dlt/` sub-directory was
 removed and the dlt sub-package now lives at the repo root (so
-`cianchoghlaim.dlt.X` → `dlt.X`).
+`cianfhoghlaim.dlt.X` → `dlt.X`).
 
 This script:
 1. Walks all .py files under dlt/, orchestration/, baml_src/, motherduck/, cocoindex/, meaisinfhoghlaim/, agents/

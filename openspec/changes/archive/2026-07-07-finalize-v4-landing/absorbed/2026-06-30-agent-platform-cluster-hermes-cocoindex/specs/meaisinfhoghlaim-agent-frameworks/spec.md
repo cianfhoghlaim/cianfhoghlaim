@@ -123,7 +123,7 @@ container SHALL add the subject at deploy time.
 The system SHALL NOT use `network_mode: host` for the Hermes
 container. The upstream Hermes `docker-compose.yml` uses
 host networking; this delta rewrites the network model to
-fit the 6-file GOLD_STANDARD pattern (shared `cianchoghlaim`
+fit the 6-file GOLD_STANDARD pattern (shared `cianfhoghlaim`
 bridge network with explicit published ports):
 
 - Dashboard: `127.0.0.1:9119:9119` (exposed to Pangolin)
@@ -146,7 +146,7 @@ around.
 - **AND** the `hermes` service SHALL declare the 5 port
   publishes above (9119 to Pangolin, 4 webhook ports to
   127.0.0.1 only)
-- **AND** `networks: [cianchoghlaim]` SHALL be set
+- **AND** `networks: [cianfhoghlaim]` SHALL be set
 
 ### Requirement: Hermes channels do not overlap OpenClaw
 

@@ -447,7 +447,7 @@ notebooks:
 
 Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 
-- DLT sources are now at `cianchoghlaim.dlt.british_isles.<jurisdiction>.education.<source>`
+- DLT sources are now at `cianfhoghlaim.dlt.british_isles.<jurisdiction>.education.<source>`
 - The canonical CLI entry point is `python -m cianfhoghlaim.dlt.cli run-pipeline`
   (NOT `python -m cianfhoghlaim.dlt.run_pipeline` which was the pre-v7 name)
 - The new BIEP v3 jurisdiction pipelines live at:
