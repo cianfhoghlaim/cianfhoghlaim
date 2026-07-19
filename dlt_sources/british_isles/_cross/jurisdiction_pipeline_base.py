@@ -12,6 +12,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any, ClassVar
 
+import dlt
 import dlt_sources
 
 from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
@@ -93,6 +94,13 @@ class JurisdictionPipelineBase:
         """
         stage = stage or self.STAGE
         board = getattr(row, "board", None) or "none"
+        qual_level = getattr(row, "qualification_level", None) or "untiered"
+        # Compute the content_hash deterministically so re-runs are idempotent
+        # (the dlt @dlt.resource uses primary_key=["content_hash"]).
+        content_hash = (
+            f"{self.jurisdiction}|{stage}|{row.subject_slug}|{board}|"
+            f"{qual_level}|{row.language}"
+        )
         return {
             "source_id": (
                 f"british_isles.{self.jurisdiction}.education.{stage}."
@@ -103,7 +111,7 @@ class JurisdictionPipelineBase:
             "education_stage": stage,
             "exam_board": board,
             "subject": row.subject_slug,
-            "qualification_level": getattr(row, "qualification_level", None) or "untiered",
+            "qualification_level": qual_level,
             "language": row.language,
             "baml_function": row.baml_function,
             "concept": row.concept,
@@ -116,6 +124,7 @@ class JurisdictionPipelineBase:
                 f"cianfhoghlaim.education.{self.jurisdiction}.{stage}."
                 f"{board}.{row.subject_slug}"
             ),
+            "content_hash": content_hash,
         }
 
     def build_pipeline(self, dataset_name: str | None = None) -> Any:

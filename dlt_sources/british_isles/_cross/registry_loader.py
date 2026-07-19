@@ -713,6 +713,9 @@ def seed_registry() -> dict[str, int]:
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
     schema = os.getenv("BIEP_REGISTRY_SCHEMA", "cianchoghlaim.education._registry")
     conn = duckdb.connect(uri, read_only=False)
+    if uri.startswith("ducklake:"):
+        from dlt_sources.british_isles._cross.connection import _setup_s3_secret
+        _setup_s3_secret(conn)
     if "." in schema and uri.startswith("ducklake:"):
         attach_catalog = schema.split(".")[0]
         try:
