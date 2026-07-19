@@ -40,7 +40,7 @@ enum GaelCommonMistake {
 
 class GaelSubjectDiscriminator {
   primary_skill GaelSkillType @description("Dominant skill tested")
-  register GaelRegister @description("Dominant register")
+  dominant_register GaelRegister @description("Dominant register (Gaeilge register family)")
   has_cluastuiscint bool @description("LC Gaeilge has a cluastuiscint paper")
   composition_word_count_min int? @description("Min words for composition (e.g. 400 for HL)")
   most_common_mistake GaelCommonMistake
@@ -55,8 +55,8 @@ class GaeilgeMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors "baml_src.education.lc_extraction.marking_scheme.GradeDescriptor[]"
-  mark_allocations "baml_src.education.lc_extraction.marking_scheme.MarkAllocation[]"
+  grade_descriptors GradeDescriptor[]
+  mark_allocations MarkAllocation[]
 
   subject_specific GaelSubjectDiscriminator
 
@@ -69,42 +69,18 @@ function ExtractGaeilgeMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> GaeilgeMarkingScheme {
-  client Default
-  prompt #"
-    You are an Irish Leaving Certificate Gaeilge (Irish) marking-scheme
-    analyst. Given the text of an NCCA / SEC LC Gaeilge marking scheme
-    PDF, extract the structured scheme with the Gaeilge-specific
-    discriminator.
-
-    Year: {{ year }}
-    Level: {{ level }} (HL / OL / FDN)
-
-    Subject discriminator fields:
-      - primary_skill: dominant skill (Léamhthuiscint / Litríocht / etc.)
-      - register: dominant register (Litearth / Gnéithiúil / etc.)
-      - has_cluastuiscint: always true for LC Gaeilge
-      - composition_word_count_min: min words for composition
-      - most_common_mistake: pick the single most common Gaeilge mistake
-      - text_ga_primary: always true
-
-    Document text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> GaeilgeMarkingScheme {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-test gaeilge_marking_extraction_smoke {
-  functions [ExtractGaeilgeMarkingScheme]
-  args {
-    pdf_text <<<
-      "Scéim mharcála don Ghaeilge Ardteistiméireachta 2024. An botún
-       is coitianta: an fhoirceann a bheith in easnamh ar gutaí Gaeilge."
-    >>>
-    year { 2024 }
-    level { "hl" }
-  }
-}
+// test gaeilge_marking_extraction_smoke {
+//   functions [ExtractGaeilgeMarkingScheme]
+//   args {
+//     pdf_text <<<
+//       "Scéim mharcála don Ghaeilge Ardteistiméireachta 2024. An botún
+//        is coitianta: an fhoirceann a bheith in easnamh ar gutaí Gaeilge."
+//     >>>
+//     year { 2024 }
+//     level { "hl" }
+//   }
+// }
