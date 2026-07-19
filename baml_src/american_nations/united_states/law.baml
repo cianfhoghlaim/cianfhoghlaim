@@ -16,16 +16,6 @@ function ExtractUS_US_CALawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> US_US_CALawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following California
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> US_US_CALawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

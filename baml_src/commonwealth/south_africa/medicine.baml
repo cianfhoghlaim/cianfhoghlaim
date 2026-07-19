@@ -15,16 +15,6 @@ function ExtractZAFMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> ZAFMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following South Africa
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ZAFMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

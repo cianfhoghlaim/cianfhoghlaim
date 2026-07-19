@@ -16,16 +16,6 @@ function ExtractVENLawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> VENLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Venezuela
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> VENLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

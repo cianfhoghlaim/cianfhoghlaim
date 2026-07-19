@@ -105,189 +105,45 @@ class MutationTriggerPattern {
 function ExtractGrammarPatterns(
   text: string @description("Celtic language text"),
   language: CelticLanguage @description("Language of the text")
-) -> GrammarPattern[] {
-  client Claude
-  prompt #"
-    Identify grammatical patterns in this {{ language }} text.
-
-    Text: {{ text }}
-
-    Look for:
-    1. VSO word order - verb before subject
-    2. Copula constructions - is/tá in Irish
-    3. Prepositional pronouns - agam, agat, orm, etc.
-    4. Initial mutations triggered by particles/articles
-    5. Genitive constructions - noun + noun
-    6. Verbal noun constructions - ag + verbal noun
-    7. Cleft sentences - Is é X a rinne Y
-    8. Relative clauses - with 'a' particle
-
-    For each pattern provide:
-    - Type of pattern
-    - Example from the text
-    - English translation
-    - Structural description
-
-    {{ ctx.output_format }}
-  "#
+) -> GrammarPattern[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Analyze Irish copula usage
 function ExtractIrishCopula(
   sentence: string @description("Irish sentence possibly containing copula")
-) -> IrishCopulaPattern? {
-  client Claude
-  prompt #"
-    Analyze the copula usage in this Irish sentence.
-
-    Sentence: {{ sentence }}
-
-    Irish has two copulas:
-    1. IS - for identification, classification, emphasis
-       - Is múinteoir mé (I am a teacher)
-       - Is í Máire an múinteoir (Mary is the teacher)
-       - Is é Seán a rinne é (It was Seán who did it)
-
-    2. TÁ (not a copula, but existential/locative 'bí')
-       - Tá mé go maith (I am well)
-       - Tá mé sa bhaile (I am at home)
-       - Tá teach agam (I have a house)
-
-    Determine:
-    - Which type of copula construction
-    - The form used (is, ba, ní, an, nach, gur, etc.)
-    - The predicate and subject
-    - Why this form is appropriate
-
-    Return null if no copula pattern is present.
-
-    {{ ctx.output_format }}
-  "#
+) -> IrishCopulaPattern? {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Analyze VSO word order
 function AnalyzeVSOOrder(
   sentence: string @description("Celtic sentence"),
   language: CelticLanguage @description("Language")
-) -> VSOPattern {
-  client Claude
-  prompt #"
-    Analyze the VSO (Verb-Subject-Object) word order in this {{ language }} sentence.
-
-    Sentence: {{ sentence }}
-
-    Celtic languages use VSO as their basic word order:
-    - Verb comes first
-    - Subject follows verb
-    - Object follows subject
-
-    Identify:
-    - The main verb
-    - The subject (may be fused with verb in synthetic forms)
-    - The object (if present)
-    - Any adverbs, adjuncts, or modifiers
-
-    Note: In Irish, some verb forms include the pronoun (synthetic):
-    - Beidh mé (analytic) vs Bead (synthetic: I will be)
-
-    {{ ctx.output_format }}
-  "#
+) -> VSOPattern {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract possession patterns
 function ExtractPossession(
   sentence: string @description("Sentence expressing possession")
-) -> PossessionPattern {
-  client Claude
-  prompt #"
-    Analyze how possession is expressed in this Irish sentence.
-
-    Sentence: {{ sentence }}
-
-    Irish expresses possession in multiple ways:
-    1. Tá X ag Y - Y has X (most common)
-       - Tá carr agam = I have a car
-
-    2. Is le Y X - X belongs to Y
-       - Is liomsa an leabhar = The book is mine
-
-    3. Mo/do/a + noun - possessive adjective
-       - Mo theach = my house
-
-    4. Noun + noun (genitive)
-       - Teach Sheáin = Seán's house
-
-    Identify:
-    - What is possessed
-    - Who possesses it
-    - Which construction is used
-    - English translation
-
-    {{ ctx.output_format }}
-  "#
+) -> PossessionPattern {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate prepositional pronoun table
 function GeneratePrepositionalPronouns(
   preposition: string @description("Base preposition"),
   language: CelticLanguage @description("Language")
-) -> PrepositionalPronoun[] {
-  client Claude
-  prompt #"
-    Generate the full prepositional pronoun paradigm for this {{ language }} preposition.
-
-    Preposition: {{ preposition }}
-
-    Irish prepositional pronouns fuse preposition + personal pronoun:
-    - ag (at) → agam, agat, aige, aici, againn, agaibh, acu
-    - le (with) → liom, leat, leis, léi, linn, libh, leo
-    - ar (on) → orm, ort, air, uirthi, orainn, oraibh, orthu
-
-    Provide all forms:
-    - 1st person singular
-    - 2nd person singular
-    - 3rd person singular masculine
-    - 3rd person singular feminine
-    - 1st person plural
-    - 2nd person plural
-    - 3rd person plural
-
-    {{ ctx.output_format }}
-  "#
+) -> PrepositionalPronoun[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Document mutation triggers
 function DocumentMutationTriggers(
   language: CelticLanguage @description("Language to document")
-) -> MutationTriggerPattern[] {
-  client Claude
-  prompt #"
-    Document the main initial mutation triggers in {{ language }}.
-
-    For Irish, include:
-    LENITION (séimhiú) triggers:
-    - Feminine singular nouns after 'an'
-    - After possessives (mo, do, a [his])
-    - Past tense marker 'd'
-    - Certain prepositions
-
-    ECLIPSIS (urú) triggers:
-    - After 'i' (in)
-    - After numbers 7-10
-    - After plural 'na'
-    - After possessive 'ár, bhur, a [their]'
-
-    For Welsh mutations, include soft, nasal, and aspirate triggers.
-
-    For each trigger provide:
-    - What triggers it
-    - What mutation type
-    - What parts of speech are affected
-    - An example
-    - Any exceptions
-
-    {{ ctx.output_format }}
-  "#
+) -> MutationTriggerPattern[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -314,30 +170,6 @@ function ExtractCelticGrammar(
   text: string,
   language: CelticLanguageCurriculum,
   max_patterns: int?
-) -> CelticGrammarPattern[] {
-  client LlamaSwapReasoningClient
-  prompt #"
-    Extract grammar patterns from this {{ language }} text.
-
-    {{ ctx.output_format }}
-
-    Text:
-    {{ text }}
-
-    For each pattern, identify:
-    - The pattern type (VSO, COPULA, PREPOSITIONAL_PRONOUN, MUTATION_TRIGGER,
-      GENITIVE_PHRASE, VERBAL_NOUN, CLEFT, RELATIVE, POSSESSION, PROGRESSIVE)
-    - The source text example
-    - The English translation
-    - A detailed grammar explanation
-    - A word-by-word grammatical breakdown (optional)
-    - Difficulty 1-5
-    - Common learner errors
-
-    Important:
-    - Preserve Celtic-language text with fadas / circumflexes
-    - For Irish (IRISH), dispatch via `uccix-mistral-24b` (UCCIX)
-    - For Welsh/Scottish/Breton/Manx/Cornish, dispatch via `gemma-4-26B-A4B`
-    - Return at most {{ max_patterns or 10 }} patterns, ranked by frequency
-  "#
+) -> CelticGrammarPattern[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

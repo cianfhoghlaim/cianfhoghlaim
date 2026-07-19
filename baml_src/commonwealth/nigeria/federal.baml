@@ -17,17 +17,6 @@ function ExtractNigerianFederalCurriculumSpec(
   federal_institution: string,
   language: string,
   text: string
-) -> NigerianFederalCurriculumSpec {
-  client Claude
-  prompt #"
-    Extract the canonical Nigerian federal curriculum record from
-    the following text. The federal_institution MUST be preserved
-    exactly.
-
-    Federal institution: {{ federal_institution }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> NigerianFederalCurriculumSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

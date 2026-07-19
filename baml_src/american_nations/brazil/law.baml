@@ -16,16 +16,6 @@ function ExtractBRALawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> BRALawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Brazil
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> BRALawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

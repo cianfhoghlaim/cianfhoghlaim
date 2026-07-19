@@ -17,16 +17,6 @@ class EurydiceNationalEducationStructure {
 function ExtractEurydiceNationalEducationStructure(
   language: EULanguage,
   text: string
-) -> EurydiceNationalEducationStructure {
-  client Claude
-  prompt #"
-    Extract the canonical Eurydice national education structure
-    record. The country_code is the ISO 3166-1 alpha-3 of the country
-    the page describes (not the language).
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EurydiceNationalEducationStructure {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

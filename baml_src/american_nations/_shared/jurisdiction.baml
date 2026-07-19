@@ -11,21 +11,10 @@ class AmericasJurisdictionMetadata {
   content_hash string?
 }
 
-function extract_americas_jurisdiction_metadata(
+function ExtractAmericasJurisdictionMetadata(
   jurisdiction: string,
   language: string,
   text: string
-) -> AmericasJurisdictionMetadata {
-  client Claude
-  prompt #"
-    Extract the canonical Americas jurisdiction metadata record from
-    the following text. The jurisdiction is the sub-state slug or
-    ISO 3166-1 alpha-3 of the jurisdiction the document describes.
-
-    Jurisdiction: {{ jurisdiction }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> AmericasJurisdictionMetadata {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

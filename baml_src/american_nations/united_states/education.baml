@@ -16,16 +16,6 @@ function ExtractUS_US_CAEducationDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> US_US_CAEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following California
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> US_US_CAEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

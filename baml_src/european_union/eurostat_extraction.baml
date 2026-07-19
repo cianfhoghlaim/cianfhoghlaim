@@ -17,16 +17,6 @@ class EurostatDatasetMetadata {
 function ExtractEurostatDatasetMetadata(
   language: EULanguage,
   text: string
-) -> EurostatDatasetMetadata {
-  client Claude
-  prompt #"
-    Extract the canonical Eurostat dataset metadata record. The
-    dataset_id is the Eurostat dataset code (e.g. 'educ_uoe_grad02')
-    and MUST be preserved exactly.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EurostatDatasetMetadata {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

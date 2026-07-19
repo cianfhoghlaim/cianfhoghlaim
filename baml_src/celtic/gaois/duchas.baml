@@ -282,129 +282,38 @@ class DuchasPhotograph {
 // Parse CBES volume response
 function ParseSchoolsVolume(
   json_response: string
-) -> DuchasSchoolsVolume {
-  client Extractor
-  prompt #"
-    Parse this Dúchas Schools Collection (CBÉS) API response.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract:
-    - Volume ID and number
-    - School information (name, location, teacher)
-    - All parts and items within the volume
-    - Topic classifications
-    - Collector and informant information
-    - Any available transcriptions
-
-    Important:
-    - Preserve Irish text with fadas
-    - Link place IDs to Logainm
-    - Note transcription availability and quality
-  "#
+) -> DuchasSchoolsVolume {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Parse CBED person response
 function ParsePerson(
   json_response: string
-) -> DuchasPerson {
-  client Extractor
-  prompt #"
-    Parse this Dúchas Persons Database (CBÉD) API response.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract all biographical information:
-    - Name variants (Irish and English forms)
-    - Birth and death years with accuracy notes
-    - Location (county, place, country)
-    - Occupations
-    - External links (Ainm.ie, VIAF)
-  "#
+) -> DuchasPerson {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Parse CBEG photograph response
 function ParsePhotograph(
   json_response: string
-) -> DuchasPhotograph {
-  client Extractor
-  prompt #"
-    Parse this Dúchas Photographic Collection (CBÉG) API response.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract:
-    - Image URL and digitization status
-    - Title and description
-    - Handbook topic classification
-    - People (photographer and subjects)
-    - Location and date information
-    - Copyright and condition
-  "#
+) -> DuchasPhotograph {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract folklore topics from a Schools Collection item
 function ClassifyFolkloreTopic(
   item_text: string,
   available_topics: DuchasSchoolsTopic[]
-) -> DuchasSchoolsTopic[] {
-  client Extractor
-  prompt #"
-    Classify this folklore text according to the Schools Collection Subject List.
-
-    {{ ctx.output_format }}
-
-    Text:
-    {{ item_text }}
-
-    Available topics:
-    {{ available_topics }}
-
-    Select all applicable topics from the list. Consider:
-    - Primary subject matter
-    - Secondary themes mentioned
-    - Cultural practices described
-    - Historical references
-    - Supernatural elements
-
-    Return the topic objects that best match this content.
-  "#
+) -> DuchasSchoolsTopic[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Link Schools Collection story to modern Logainm places
 function LinkStoryToPlaces(
   story: DuchasSchoolsItem,
   mentioned_places: string[]
-) -> int[] {
-  client Extractor
-  prompt #"
-    Identify Logainm place IDs for locations mentioned in this folklore story.
-
-    Story:
-    - Title: {{ story.title }}
-    - From: County ID {{ story.county_id }}, Place ID {{ story.place_id }}
-
-    Places mentioned in text:
-    {{ mentioned_places }}
-
-    For each mentioned place, provide the most likely Logainm place ID.
-    Consider:
-    - Spelling variations (old vs modern Irish)
-    - English anglicizations
-    - Local vs official names
-    - Geographic context from the story's origin
-
-    Return a list of Logainm IDs.
-  "#
+) -> int[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -473,34 +382,8 @@ class DuchasTranscriptionLine {
 function ExtractDuchasManuscript(
   xml_record: string,
   image_path: string?
-) -> DuchasManuscriptRecord {
-  client LlamaSwapReasoningClient
-  prompt #"
-    Parse this Dúchas (National Folklore Collection) manuscript record.
-
-    {{ ctx.output_format }}
-
-    XML metadata:
-    {{ xml_record }}
-
-    {% if image_path %}
-    Manuscript page image: {{ image_path }}
-
-    Inspect the image to:
-    - Determine the manuscript page dimensions (width × height in pixels)
-    - Identify the primary language (ga or en)
-    - Transcribe any visible handwritten text (preserve fadas: á é í ó ú)
-    - Provide an English translation if requested
-    - Classify per the Handbook of Irish Folklore topic codes (A-N)
-    - Estimate OCR confidence 0-1
-    {% endif %}
-
-    Important:
-    - Preserve Irish text with fadas
-    - Link place IDs to Logainm
-    - If transcription is human-verified, set human_verified=true
-    - If no image is available, work from XML metadata only
-  "#
+) -> DuchasManuscriptRecord {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract 5-level bounding box alignment from a handwritten manuscript page
@@ -510,43 +393,8 @@ function ExtractDuchasImageBoundingBox(
   image_path: string,
   transcript: string,
   collection: DuchasCollection
-) -> DuchasBoundingBox[] {
-  client LlamaSwapReasoningClient
-  prompt #"
-    Extract the 5-level bounding box layout from this handwritten manuscript page.
-
-    {{ ctx.output_format }}
-
-    Manuscript page image: {{ image_path }}
-    Collection: {{ collection }}
-
-    Existing transcript (for alignment):
-    {{ transcript }}
-
-    Return the bounding boxes at ALL 5 levels where available:
-    1. **page** (1 box, full page extent)
-    2. **region** (paragraph-level, multiple per page)
-    3. **sentence** (1+ per region)
-    4. **word** (1+ per sentence)
-    5. **letter** (1+ per word, only if legible; NULL otherwise)
-
-    Each bbox MUST carry:
-    - `bbox_id` (e.g., "page:cbes:0460:6492:page", "region:cbes:0460:6492:r1", "sentence:cbes:0460:6492:r1:s1", "word:cbes:0460:6492:r1:s1:w3", "letter:cbes:0460:6492:r1:s1:w3:l2")
-    - `parent_bbox_id` linking to the parent level
-    - `bbox` coordinates in pixels (x1, y1, x2, y2)
-    - `text` for sentence/word level (NULL for region/letter)
-    - `ga_text` + `en_translation` for sentence/word level
-    - `confidence` 0-1
-    - `handwritten=true` for handwritten pages
-
-    Important:
-    - For the `dots-ocr` layout specialist, prefer region-level bbox when
-      letter-level is unavailable
-    - Use `LlamaSwap client=LlamaSwapReasoningClient` to dispatch through
-      the canonical OCR/VLM registry
-    - Empty `letter_bbox` rows when the manuscript is too low-quality for
-      letter-level alignment (NULL fallback)
-  "#
+) -> DuchasBoundingBox[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract a transcription line-by-line from a handwritten manuscript page
@@ -555,34 +403,6 @@ function ExtractDuchasTranscription(
   handwritten_image: string,
   collection: DuchasCollection,
   language_hint: string?
-) -> DuchasTranscriptionLine[] {
-  client LlamaSwapReasoningClient
-  prompt #"
-    Transcribe this handwritten manuscript page line-by-line.
-
-    {{ ctx.output_format }}
-
-    Manuscript page image: {{ handwritten_image }}
-    Collection: {{ collection }}
-    {% if language_hint %}
-    Language hint: {{ language_hint }} (either "ga" for Irish or "en" for English)
-    {% endif %}
-
-    For each line of text on the page, return:
-    - `line_number` (1-indexed)
-    - `ga_text` (preserve fadas: á é í ó ú)
-    - `en_translation` (if requested and the line is in Irish)
-    - `confidence` 0-1
-    - `handwritten=true` (always true for Dúchas manuscripts)
-    - Approximate bbox (the rough position the vision model gives;
-      the ExtractDuchasImageBoundingBox step refines this)
-
-    Important:
-    - Lines with only Irish should have NULL `en_translation`
-    - Lines with only English should have NULL `ga_text`
-    - Skip empty lines (whitespace-only)
-    - Preserve page-number annotations (e.g., "— 42 —") as separate lines
-    - Use the `LlamaSwap` client + `LlamaSwapReasoningClient` for the
-      canonical OCR/VLM registry routing
-  "#
+) -> DuchasTranscriptionLine[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

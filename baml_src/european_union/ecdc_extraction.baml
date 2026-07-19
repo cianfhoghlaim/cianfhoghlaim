@@ -16,15 +16,6 @@ class ECDCSurveillance {
 function ExtractECDCSurveillance(
   language: EULanguage,
   text: string
-) -> ECDCSurveillance {
-  client Claude
-  prompt #"
-    Extract the canonical ECDC surveillance record from the following
-    surveillance text. The dataset_id is the ECDC atlas identifier.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> ECDCSurveillance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

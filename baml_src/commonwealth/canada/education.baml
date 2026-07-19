@@ -15,16 +15,6 @@ function ExtractCANEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> CANEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following Canada
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CANEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

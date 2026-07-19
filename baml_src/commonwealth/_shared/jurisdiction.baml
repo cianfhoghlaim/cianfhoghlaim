@@ -12,21 +12,10 @@ class CommonwealthJurisdictionMetadata {
   content_hash string?
 }
 
-function extract_commonwealth_jurisdiction_metadata(
-  country_code: string,
+function ExtractCommonwealthJurisdictionMetadata(
+  countryCode: string,
   language: string,
   text: string
-) -> CommonwealthJurisdictionMetadata {
-  client Claude
-  prompt #"
-    Extract the canonical Commonwealth jurisdiction metadata record
-    from the following text. The country_code is the ISO 3166-1 alpha-3
-    of the country the document describes.
-
-    Country: {{ country_code }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> CommonwealthJurisdictionMetadata {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

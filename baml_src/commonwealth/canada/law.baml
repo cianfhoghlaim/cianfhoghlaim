@@ -15,16 +15,6 @@ function ExtractCANLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> CANLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Canada
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CANLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

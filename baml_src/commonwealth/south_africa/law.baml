@@ -15,16 +15,6 @@ function ExtractZAFLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> ZAFLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following South Africa
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ZAFLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

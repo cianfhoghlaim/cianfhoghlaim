@@ -15,16 +15,6 @@ function ExtractCanadianProvinceDocument(
   province: string,
   language: string,
   text: string
-) -> CanadianProvinceDocument {
-  client Claude
-  prompt #"
-    Extract the canonical Canadian province document from the
-    following text.
-
-    Province: {{ province }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> CanadianProvinceDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -87,57 +87,18 @@ class CurriculumUnit {
 }
 
 // Extract curriculum unit from document
-function ExtractCurriculumUnit(document: string, language: CelticLanguageCurriculum, nation: string) -> CurriculumUnit {
-  client CelticContentFallback
-  prompt #"
-    Extract structured curriculum information from this Celtic language education document.
-
-    Target Language: {{ language }}
-    Nation: {{ nation }}
-
-    Document:
-    {{ document }}
-
-    Extract all learning outcomes, grammar topics, vocabulary, and cultural content.
-    Ensure Celtic text is accurately transcribed with proper diacritics.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractCurriculumUnit(document: string, language: CelticLanguageCurriculum, nation: string) -> CurriculumUnit {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract grammar explanation
-function ExtractGrammarTopic(content: string, language: CelticLanguageCurriculum) -> GrammarTopic {
-  client CelticContentFallback
-  prompt #"
-    Extract a structured grammar explanation from this Celtic language content.
-
-    Language: {{ language }}
-
-    Content:
-    {{ content }}
-
-    Provide clear examples with translations and note common learner errors.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractGrammarTopic(content: string, language: CelticLanguageCurriculum) -> GrammarTopic {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract vocabulary from text
-function ExtractVocabulary(text: string, language: CelticLanguageCurriculum, theme: string?) -> VocabularySet {
-  client FastExtraction
-  prompt #"
-    Extract vocabulary from this Celtic language text.
-
-    Language: {{ language }}
-    Theme: {{ theme or "general" }}
-
-    Text:
-    {{ text }}
-
-    Include pronunciation guides and grammatical information.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractVocabulary(text: string, language: CelticLanguageCurriculum, theme: string?) -> VocabularySet {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate learning outcome assessment
@@ -162,20 +123,8 @@ function GenerateAssessment(
   outcome: CelticLearningOutcome,
   language: CelticLanguageCurriculum,
   question_count: int
-) -> OutcomeAssessment {
-  client CelticContentFallback
-  prompt #"
-    Generate an assessment for this Celtic language learning outcome.
-
-    Language: {{ language }}
-    Outcome: {{ outcome.description }}
-    Number of questions: {{ question_count }}
-
-    Create varied question types testing the specified skill domains.
-    Include Celtic text with accurate spelling and diacritics.
-
-    {{ ctx.output_format }}
-  "#
+) -> OutcomeAssessment {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Compare curriculum across Celtic nations
@@ -193,27 +142,8 @@ function CompareCelticCurricula(
   irish_content: string?,
   gaelic_content: string?,
   welsh_content: string?
-) -> CurriculumComparison {
-  client Claude
-  prompt #"
-    Compare how this topic is taught across Celtic language curricula.
-
-    Topic: {{ topic }}
-
-    Irish Curriculum:
-    {{ irish_content or "Not provided" }}
-
-    Scottish Gaelic Curriculum:
-    {{ gaelic_content or "Not provided" }}
-
-    Welsh Curriculum:
-    {{ welsh_content or "Not provided" }}
-
-    Identify similarities, differences, and opportunities for cross-Celtic learning.
-    Highlight shared linguistic features (cognates, grammar patterns).
-
-    {{ ctx.output_format }}
-  "#
+) -> CurriculumComparison {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -246,25 +176,8 @@ class CelticCurriculumComparison {
 function CompareCelticNations(
   topic_query: string,
   scope: string[],
-) -> CelticCurriculumComparison {
-  client LitellmClient
-  prompt #"
-    The user wants to know how "{{ topic_query }}" is taught across
-    these Celtic-nation curricula: {{ scope }}.
-
-    For each nation, return:
-      - nation_code, nation_name_en, nation_name_native
-      - curriculum_body (e.g. "NCCA" for ROI, "CCEA" for NI, etc.)
-      - topic_label_en, topic_label_native (if not English)
-      - year_level (e.g. "Senior Cycle", "A-Level", "Higher")
-      - topic_code (the official code if known)
-      - similar_topics: topic_codes from other nations that map
-
-    Also produce:
-      - shared_year_levels: the union of year_levels across nations
-      - notes: a 1-2 sentence explanation of the cross-jurisdiction
-        mapping (note any equivalences or divergences)
-  "#
+) -> CelticCurriculumComparison {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -292,33 +205,6 @@ class CelticCurriculumSpec {
 function ExtractCelticCurriculum(
   text: string,
   language: CelticLanguageCurriculum
-) -> CelticCurriculumSpec {
-  client LlamaSwapReasoningClient
-  prompt #"
-    Extract a structured curriculum specification for the {{ language }} curriculum
-    described in the following text.
-
-    {{ ctx.output_format }}
-
-    Text:
-    {{ text }}
-
-    Extract:
-    - The Celtic language (IRISH / SCOTTISH_GAELIC / WELSH / MANX / CORNISH / BRETON)
-    - The nation code (ISO 3166-1 alpha-3)
-    - The education level (PRIMARY / SECONDARY / HIGHER)
-    - All year levels covered
-    - The authoritative curriculum body (NCCA for Ireland, SQA for Scotland,
-      WJEC for Wales, etc.)
-    - The framework name (in both English and the native Celtic language)
-    - Per-level learning outcomes (id, description, skill domains, prerequisites)
-    - Assessment methods used
-    - Cultural context (optional)
-
-    Important:
-    - Preserve Celtic-language text with fadas / circumflexes (á é í ó ú)
-    - Link to the canonical `CelticLearningOutcome` class for outcomes
-    - For Irish (IRISH), dispatch via `uccix-mistral-24b`
-    - For Welsh/Scottish/Breton/Manx/Cornish, dispatch via `gemma-4-26B-A4B`
-  "#
+) -> CelticCurriculumSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

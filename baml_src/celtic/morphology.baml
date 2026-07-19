@@ -136,58 +136,16 @@ class AdjectiveComparison {
 function ExtractVerbConjugation(
   verb: string @description("Verb infinitive or any form"),
   language: CelticLanguage @description("Language of the verb")
-) -> VerbConjugation {
-  client Claude
-  prompt #"
-    Generate the complete conjugation paradigm for this Celtic verb.
-
-    Verb: {{ verb }}
-    Language: {{ language }}
-
-    Provide all forms for:
-    - Present tense (all persons + autonomous)
-    - Past tense (all persons + autonomous)
-    - Future tense (all persons + autonomous)
-    - Conditional (all persons + autonomous)
-    - Imperative (all persons)
-    - Verbal noun and verbal adjective
-
-    For Irish, note:
-    - First conjugation: short stems, regular endings
-    - Second conjugation: polysyllabic, syncopation
-    - Irregular verbs: bí, abair, beir, clois, déan, faigh, feic, ith, tabhair, tar, téigh
-
-    {{ ctx.output_format }}
-  "#
+) -> VerbConjugation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract noun declension
 function ExtractNounDeclension(
   noun: string @description("Noun in any form"),
   language: CelticLanguage @description("Language of the noun")
-) -> NounDeclension {
-  client Claude
-  prompt #"
-    Generate the complete declension paradigm for this Celtic noun.
-
-    Noun: {{ noun }}
-    Language: {{ language }}
-
-    Provide:
-    - Gender (masculine/feminine)
-    - Declension class
-    - All case forms (nominative, genitive, vocative, dative if applicable)
-    - Singular and plural forms
-
-    For Irish, note:
-    - First declension: masculine, ends in consonant (fear -> fir)
-    - Second declension: feminine, ends in consonant (cos -> coise)
-    - Third declension: mostly feminine, -(e)acht (bliain -> bliana)
-    - Fourth declension: ends in vowel (dalta -> daltaí)
-    - Fifth declension: irregular feminines (bean -> mná)
-
-    {{ ctx.output_format }}
-  "#
+) -> NounDeclension {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Identify conjugation/declension class
@@ -195,49 +153,16 @@ function IdentifyMorphologicalClass(
   word: string @description("Word to classify"),
   pos: PartOfSpeech @description("Part of speech"),
   language: CelticLanguage @description("Language")
-) -> string {
-  client ClaudeHaiku
-  prompt #"
-    Identify the morphological class of this {{ language }} {{ pos }}.
-
-    Word: {{ word }}
-
-    For verbs, identify:
-    - First or Second conjugation
-    - Whether it's irregular
-
-    For nouns, identify:
-    - First through Fifth declension
-    - Gender
-
-    Return the class name (e.g., "First Declension, Masculine" or "Second Conjugation").
-
-    {{ ctx.output_format }}
-  "#
+) -> string {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Compare adjectives
 function CompareAdjective(
   adjective: string @description("Adjective in positive form"),
   language: CelticLanguage @description("Language")
-) -> AdjectiveComparison {
-  client ClaudeHaiku
-  prompt #"
-    Provide the comparison forms for this {{ language }} adjective.
-
-    Adjective: {{ adjective }}
-
-    For Irish adjectives:
-    - Comparative: níos + adjective (or irregular form)
-    - Superlative: is + adjective (or irregular form)
-
-    Examples:
-    - mór -> níos mó -> is mó
-    - beag -> níos lú -> is lú
-    - maith -> níos fearr -> is fearr
-
-    {{ ctx.output_format }}
-  "#
+) -> AdjectiveComparison {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -273,34 +198,6 @@ function ExtractCelticMorphology(
   text: string,
   language: CelticLanguageCurriculum,
   word_class_hint: string?
-) -> CelticMorphologySpec[] {
-  client LlamaSwapReasoningClient
-  prompt #"
-    Extract morphology from this {{ language }} text.
-
-    {{ ctx.output_format }}
-
-    Text:
-    {{ text }}
-
-    {% if word_class_hint %}
-    Focus on: {{ word_class_hint }} words
-    {% endif %}
-
-    For each significant word (nouns, verbs, adjectives), identify:
-    - The word being analysed
-    - The word class (noun, verb, adjective, etc.)
-    - The inflection class (1st/2nd conjugation for verbs; 1st/2nd/3rd/5th declension for nouns)
-    - The full paradigm (all inflected forms with features)
-    - IPA pronunciation for each form
-    - Initial mutations (if any)
-    - Morphology notes
-    - Cognates in other Celtic languages
-    - Difficulty 1-5
-
-    Important:
-    - Preserve Celtic-language text with fadas / circumflexes
-    - For Irish (IRISH), dispatch via `uccix-mistral-24b` (UCCIX)
-    - For Welsh/Scottish/Breton/Manx/Cornish, dispatch via `gemma-4-26B-A4B`
-  "#
+) -> CelticMorphologySpec[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

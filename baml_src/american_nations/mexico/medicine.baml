@@ -16,16 +16,6 @@ function ExtractMEXMedicineDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> MEXMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Mexico
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MEXMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

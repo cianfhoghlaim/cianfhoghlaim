@@ -16,16 +16,6 @@ function ExtractMEXLawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> MEXLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Mexico
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MEXLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

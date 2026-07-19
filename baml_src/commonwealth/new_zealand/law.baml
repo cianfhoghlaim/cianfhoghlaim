@@ -15,16 +15,6 @@ function ExtractNZLLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> NZLLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following New Zealand
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> NZLLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,16 +16,6 @@ function ExtractMEXEducationDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> MEXEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following Mexico
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> MEXEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -56,64 +56,27 @@ class EURLexTreaty {
 function ExtractEURLexRegulation(
   language: EULanguage,
   text: string
-) -> EURLexRegulation {
-  client Claude
-  prompt #"
-    Extract the canonical EUR-Lex regulation record from the
-    following regulation text. The CELEX ID is the canonical
-    identifier; preserve it exactly.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EURLexRegulation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractEURLexDirective(
   language: EULanguage,
   text: string
-) -> EURLexDirective {
-  client Claude
-  prompt #"
-    Extract the canonical EUR-Lex directive record. Preserve the
-    CELEX ID and the transposition deadline exactly.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EURLexDirective {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractEURLexDecision(
   language: EULanguage,
   text: string
-) -> EURLexDecision {
-  client Claude
-  prompt #"
-    Extract the canonical EUR-Lex decision record. Preserve the
-    CELEX ID exactly.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EURLexDecision {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractEURLexTreaty(
   language: EULanguage,
   text: string
-) -> EURLexTreaty {
-  client Claude
-  prompt #"
-    Extract the canonical EU treaty record. Preserve the CELEX ID,
-    signature date, and entry-into-force date exactly.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EURLexTreaty {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
