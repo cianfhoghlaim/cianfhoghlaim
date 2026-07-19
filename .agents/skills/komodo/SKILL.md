@@ -386,7 +386,7 @@ that differ from the upstream docs above:
 ```bash
 # 1. Add the stack to mise.toml (optional — for mise-managed stacks)
 echo '[env._.path]' >> mise.toml
-echo '_.path = ["./infrastructure/stacks/<surface>/scripts"]' >> mise.toml
+echo '_.path = ["./bonneagar/stacks/<surface>/scripts"]' >> mise.toml
 
 # 2. Register the stack in komodo
 komodo resource sync --stack infrastructure/stacks/<surface>/<name>

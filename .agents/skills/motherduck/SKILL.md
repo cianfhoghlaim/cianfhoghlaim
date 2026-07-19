@@ -83,14 +83,14 @@ uvx mcp-server-motherduck \
 
 # MotherDuck cloud (KCG read-only consumer)
 uvx mcp-server-motherduck \
-  --db-path md:oideachais \
+  --db-path md:cianhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
   --read-only --saas-mode
 
 # Production: streaming HTTP + timeout
 uvx mcp-server-motherduck \
   --transport stream \
-  --db-path md:oideachais \
+  --db-path md:cianhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
   --saas-mode \
   --max-rows 4096 --max-chars 200000 \
@@ -277,7 +277,7 @@ save_dive(
   `gov.ie/.../circulars/...` for cross-referencing with NCCA
   syllabus changes.
 - **Cross-Dive joins** — the marimo notebooks use
-  `duckdb.connect("md:oideachais")` to join across all 4 Dives
+  `duckdb.connect("md:cianhoghlaim")` to join across all 4 Dives
   for end-to-end analytics.
 
 Cross-references:

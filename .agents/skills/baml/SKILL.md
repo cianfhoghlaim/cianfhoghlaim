@@ -1,6 +1,6 @@
 ---
 name: baml
-description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `baml/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers the 5 canonical lc6 extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram) + static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector', 'lc6', 'lc_extraction'.
+description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers the 5 canonical lc6 extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram) + static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector', 'lc6', 'lc_extraction'.
 ---
 
 # BAML Skill
@@ -22,7 +22,7 @@ LLM extraction framework used across the oideachais lakehouse.
    leaving_cert_*_extraction, morphology, multi_nation_curriculum,
    named_entities, ocr_extraction, ocr_validation, oideachas,
    portfolio_extraction, site_analysis, …). The auto-generated
-   client lives in `baml_client/`.
+   client lives in `baml_client/baml_client/`.
 2. **Constraint rule** — use BAML to enforce Zod-like constraints on
    the LLM output, preventing parser crashes downstream in the
    Dagster / DLT pipelines.
@@ -107,7 +107,7 @@ test primary_extraction {
 Run `baml generate` to regenerate the Python client. Then:
 
 ```python
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 outcomes = b.ExtractPrimaryLearningOutcomes(document_text)
 for o in outcomes:
     print(f"[{o.stage}] {o.curriculum_area}: {o.learning_outcome}")
@@ -148,8 +148,8 @@ function ExecuteBAML(
 Python glue:
 
 ```python
-from baml_client import b
-from baml_client.type_builder import TypeBuilder
+from cianfhoghlaim.baml_client import b
+from cianfhoghlaim.baml_client.type_builder import TypeBuilder
 
 def extract_anything(content: str):
     # Step 1: ask the LLM to describe the schema
@@ -178,7 +178,7 @@ function ExtractReceiptTransactions(
 
 ```python
 import baml_py
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 
 with open("receipt.png", "rb") as f:
     image = baml_py.Image.from_base64("image/png", base64.b64encode(f.read()).decode())
@@ -209,7 +209,7 @@ function GenerateSummary(content: string) -> string
 ```
 
 ```python
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 
 stream = b.stream.GenerateSummary(content)
 async for chunk in stream:
@@ -307,8 +307,8 @@ For dynamic schemas with partial streaming:
 
 ```python
 import asyncio
-from baml_client import b
-from baml_client.type_builder import TypeBuilder
+from cianfhoghlaim.baml_client import b
+from cianfhoghlaim.baml_client.type_builder import TypeBuilder
 
 async def extract_with_streaming(content: str):
     schema = b.GenerateBAML(content)
@@ -434,7 +434,7 @@ resource. Wire the BAML-generated Pydantic class as the
 
 ```python
 import dlt
-from backend.baml_client import b
+from cianfhoghlaim.baml_client import b
 from backend.baml_client.types import ResearchInsight
 
 @dlt.source
@@ -562,7 +562,7 @@ and adaptive TypeBuilder schemas.
 ## Pattern 8: Tracing + Collector observability (added 2026-06)
 
 ```python
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 from baml_client.tracing import trace, set_tags
 from baml_py import Collector
 
