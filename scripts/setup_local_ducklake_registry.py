@@ -32,7 +32,7 @@ PG_PORT: int = int(os.getenv("PG_PORT", "5433"))
 PG_USER: str = os.getenv("PG_USER", "lakekeeper")
 PG_PASSWORD: str = os.getenv("PG_PASSWORD", "")
 PG_DB: str = os.getenv("PG_DB", "ducklake_cianchoghlaim")
-S3_BUCKET: str = os.getenv("S3_BUCKET", "ducklake_cianchoghlaim")
+S3_BUCKET: str = os.getenv("S3_BUCKET", "ducklake-cianchoghlaim")
 S3_ENDPOINT: str = os.getenv("S3_ENDPOINT", "http://localhost:3900")
 S3_REGION: str = os.getenv("S3_REGION", "garage")
 
@@ -54,16 +54,20 @@ def main() -> int:
     )
     ducklake_uri = f"ducklake:postgres:{pg_uri}"
 
+    # DuckLake's CREATE SECRET requires the ENDPOINT without `http://` prefix
+    # (DuckLake prepends its own scheme). Strip it from the env var.
+    endpoint_no_scheme = S3_ENDPOINT.replace("http://", "").replace("https://", "")
+
     print(f"BIEP v3 local DuckLake setup")
     print(f"  Postgres: {PG_HOST}:{PG_PORT} db={PG_DB} user={PG_USER}")
-    print(f"  S3 bucket: {S3_BUCKET} @ {S3_ENDPOINT}")
+    print(f"  S3 bucket: {S3_BUCKET} @ {S3_ENDPOINT} (DuckLake endpoint: {endpoint_no_scheme})")
     print()
 
     con = duckdb.connect(":memory:")
     con.execute("INSTALL ducklake; LOAD ducklake;")
     con.execute("INSTALL httpfs; LOAD httpfs;")
 
-    # Create the S3 secret
+    # Create the S3 secret (note: no http:// prefix in ENDPOINT)
     con.execute(
         f"""
         CREATE OR REPLACE SECRET garage_s3 (
@@ -71,7 +75,7 @@ def main() -> int:
             KEY_ID '{os.environ["AWS_ACCESS_KEY_ID"]}',
             SECRET '{os.environ["AWS_SECRET_ACCESS_KEY"]}',
             REGION '{S3_REGION}',
-            ENDPOINT '{S3_ENDPOINT}',
+            ENDPOINT '{endpoint_no_scheme}',
             USE_SSL false, URL_STYLE 'path'
         )
         """
@@ -107,6 +111,17 @@ def main() -> int:
             f"ATTACH '{ducklake_uri}' AS lakehouse (DATA_PATH 's3://{S3_BUCKET}/', OVERRIDE_DATA_PATH true)"
         )
     print(f"OK: DuckLake ATTACH'd as 'lakehouse'")
+
+    # Update the stored DATA_PATH in the DuckLake metadata so future
+    # connections without OVERRIDE_DATA_PATH still write to the correct bucket.
+    try:
+        con.execute(
+            "UPDATE ducklake_metadata SET value = ? WHERE key = 'data_path'",
+            [f"s3://{S3_BUCKET}/"],
+        )
+        print(f"OK: DuckLake metadata data_path updated to s3://{S3_BUCKET}/")
+    except duckdb.Error as e:
+        print(f"WARN: could not update data_path: {e}")
 
     con.execute("USE lakehouse;")
     con.execute("CREATE SCHEMA IF NOT EXISTS education;")
