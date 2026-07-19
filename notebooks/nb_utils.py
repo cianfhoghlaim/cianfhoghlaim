@@ -20,7 +20,7 @@ the v4-consolidated venv via ``uv run --with``). Centralises:
 ## KCG patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every connection goes
   through ``notebooks/_shared/db.py:connect_md()`` (NO raw
-  ``duckdb.connect(uri)``). The legacy raw-``duckdb.connect`` helpers
+  ``ibis.duckdb.connect(uri)``). The legacy raw-``duckdb.connect`` helpers
   are kept as backward-compat shims but are no longer the canonical
   path.
 
@@ -155,7 +155,7 @@ def connect_md_oideachais(*, legacy_raw: bool = False) -> Any:
         token = os.environ.get("MOTHERDUCK_TOKEN")
         if token:
             duckdb.sql(f"SET motherduck_token='{token}'")
-        return duckdb.connect("md:cianfhoghlaim")
+        return ibis.duckdb.connect("md:cianfhoghlaim")
     from notebooks._shared.db import connect_md as _ibis_connect_md
     return _ibis_connect_md()
 

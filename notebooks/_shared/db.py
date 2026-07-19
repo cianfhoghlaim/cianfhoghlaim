@@ -1,7 +1,7 @@
 """Canonical ibis-first connection helper for the Cianfhoghlaim lakehouse.
 
 The single source of truth for connecting to the BIEP MotherDuck +
-DuckLake lakehouse. Replaces the 5+ raw `duckdb.connect(...)` call-sites
+DuckLake lakehouse. Replaces the 5+ raw `ibis.duckdb.connect(...)` call-sites
 in the legacy `nb_utils.py`.
 
 The pattern matches `marimo_dashboards/06_per_subject_analytics.py:84-95`
@@ -9,7 +9,7 @@ which already used ibis-first successfully.
 
 ## KCG patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — `ibis.duckdb.connect`
-  is the canonical entry point; no raw `duckdb.connect(uri)`.
+  is the canonical entry point; no raw `ibis.duckdb.connect(uri)`.
 - marimo (per `.agents/skills/marimo/SKILL.md`) — pure functions,
   marimo-agnostic.
 

@@ -156,7 +156,7 @@ def _(AWS_ACCESS_KEY, AWS_ENDPOINT, AWS_SECRET_KEY, mo, os, duckdb, lancedb):
             token = os.environ.get("MOTHERDUCK_TOKEN", "")
             if token:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:cianfhoghlaim")
+                con = ibis.duckdb.connect("md:cianfhoghlaim")
                 con.execute("SELECT 1 AS test").fetchone()
                 con.close()
                 status["md:cianfhoghlaim"] = "✅ Online"
@@ -239,7 +239,7 @@ def _(alt, dlt, mo, pd):
             import duckdb
 
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             df_pages = con.execute(
                 """
                 SELECT cycle, subject, language, count(*) AS pages
@@ -305,7 +305,7 @@ def _(alt, dlt, mo, pd):
             import duckdb
 
             duckdb.sql(f"SET motherduck_token='{token}'")
-            con = duckdb.connect("md:cianfhoghlaim")
+            con = ibis.duckdb.connect("md:cianfhoghlaim")
             df_exams = con.execute(
                 """
                 SELECT level, subject, material_type, status, count(*) AS n

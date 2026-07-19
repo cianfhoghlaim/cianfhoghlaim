@@ -2,7 +2,7 @@
 
 This is the canonical ibis-first helper package per the 2026-07-25
 refactor batch. Every notebook that needs a lakehouse connection
-SHALL import from here rather than calling raw `duckdb.connect(uri)`.
+SHALL import from here rather than calling raw `ibis.duckdb.connect(uri)`.
 
 ## KCG patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — `ibis.duckdb.connect`

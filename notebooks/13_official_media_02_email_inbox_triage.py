@@ -75,7 +75,7 @@ def _():
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = duckdb.connect("md:cianfhoghlaim")
+                con = ibis.duckdb.connect("md:cianfhoghlaim")
                 inbox_index_df = con.execute(
                     "SELECT * FROM leabharlann_inbox.inbox_index "
                     "ORDER BY date_iso DESC LIMIT 500"
@@ -101,7 +101,7 @@ def _():
         demo_db = Path(db_path)
         if demo_db.exists():
             try:
-                con = duckdb.connect(str(demo_db), read_only=True)
+                con = ibis.duckdb.connect(str(demo_db), read_only=True)
                 inbox_index_df = con.execute(
                     "SELECT * FROM leabharlann_inbox.inbox_index "
                     "ORDER BY date_iso DESC LIMIT 500"

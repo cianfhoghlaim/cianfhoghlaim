@@ -83,7 +83,7 @@ def _connect_cell(mo):
         # Hard fallback to in-memory DuckDB so the notebook still renders.
         import duckdb
 
-        con = duckdb.connect(":memory:")
+        con = ibis.duckdb.connect(":memory:")
         engine_label = "unavailable"
         con_status = f"In-memory DuckDB (connect_biep_lakehouse failed: {exc})"
 

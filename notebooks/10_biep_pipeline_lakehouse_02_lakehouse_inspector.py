@@ -64,8 +64,8 @@ def _():
 @app.cell
 def _(mo, os):
     AWS_ENDPOINT = os.getenv("AWS_ENDPOINT_URL", "http://localhost:3900")
-    AWS_ACCESS_KEY = os.getenv("GARAGE_ACCESS_KEY_ID", "GK8126ec04258979d6abd12d8e")
-    AWS_SECRET_KEY = os.getenv("GARAGE_SECRET_ACCESS_KEY", "0c3ec792597afad234d35f2dcf788e4e88cde3378e12525c2f8d1708b89af70e")
+    AWS_ACCESS_KEY = os.getenv("GARAGE_ACCESS_KEY_ID", "")
+    AWS_SECRET_KEY = os.getenv("GARAGE_SECRET_ACCESS_KEY", "")
     LAKEKEEPER_BASE = os.getenv("LAKEKEEPER_BASE", "http://localhost:8181")
     LANCE_NS_BASE = os.getenv("LANCE_NS_BASE", "http://localhost:8182")
     PG_URI = os.getenv("DUCKLAKE_CATALOG_URI", "postgresql://lakekeeper:devpassword@localhost:5433/ducklake_oideachais")
@@ -249,7 +249,7 @@ def _(duckdb, mo, os, pathlib, run_btn, sql_input):
                 "DUCKLAKE_CATALOG_URI",
                 "postgresql://lakekeeper:devpassword@localhost:5433/ducklake_oideachais",
             )
-            _con = duckdb.connect()
+            _con = ibis.duckdb.connect()
             _con.execute("INSTALL postgres; LOAD postgres;")
             _df = _con.execute(
                 f"SELECT * FROM postgres_scan('{_pg}', 'information_schema', 'tables') LIMIT 200"

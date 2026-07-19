@@ -33,7 +33,7 @@ Reads from the canonical Lakehouse via the **ibis-first contract**:
     conn = ibis.duckdb.connect("md:cianfhoghlaim")
     lance = ibis.lancedb.connect("rest://lakehouse-lance-namespace:8182")
 
-(no raw `duckdb.connect(uri)` — per the ibis-first spec).
+(no raw `ibis.duckdb.connect(uri)` — per the ibis-first spec).
 
 KCG patterns used:
 - ibis (per `.agents/skills/ibis/SKILL.md`)
@@ -101,7 +101,7 @@ def _ibis_conn(mo):
     """The ibis-first contract per the BIEP v2 spec.
 
     First data cell executes the canonical ibis queries.
-    No raw `duckdb.connect()` per the ibis-first contract.
+    No raw `ibis.duckdb.connect()` per the ibis-first contract.
     """
     import ibis
 
