@@ -11,19 +11,14 @@ directory_type = "workspace"
 [workspace]
 
 # Single consolidated code-location: the entire cianfhoghlaim package.
-# Module: assets.definitions exposes (post-Phase-1 fix 2026-06-30, post-v7
-# flatten 2026-07-17):
-#   - 199 assets across Ireland education (5 cycles × EN/GA), leabharlann,
-#     OCR/HTR, geospatial, model conversion, ML training, mythology
-#   - 31 jobs, 6 schedules, 16 sensors, 22 asset checks
-#   - 12-agent fleet (root, curriculum, translation, corpus, research, …)
-#   - DLT source wrappers, dbt-duckdb project, CocoIndex v1 Apps
-# Note: prior versions referenced `cianfhoghlaim.assets.definitions` which
-# never existed on disk — that path was a v4-consolidation wiring bug.
-# Post-v7, the module_name is just `assets.definitions` (no prefix).
-# See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
-# (Phase 1, T1.7) and openspec/changes/2026-07-17-v7-flatten-.../.
+# Per the 2026-07-14 foundation refactor
+# (openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1),
+# the canonical module path is `orchestration.definitions` (the file
+# `orchestration/definitions.py` at repo root). The historical paths
+# `assets.definitions` (which never existed on disk) and
+# `cianchoghlaim.assets.definitions` and `cianchoghlaim.dagster.definitions`
+# (both blocked by the missing cianfhoghlaim/ Python package) are superseded.
 [[workspace.locations]]
 path = "."
-code_location_name = "cianfhoghlaim"
-module_name = "assets.definitions"
+code_location_name = "cianchoghlaim"
+module_name = "orchestration.definitions"
