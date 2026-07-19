@@ -1,22 +1,19 @@
-"""cianfhoghlaim.dlt.british_isles.ireland.law — Ireland legal DLT sources (Pick-8 scope).
+"""dlt.british_isles.ireland.education — Ireland education DLT sources.
 
-Pick-8 scoped reimplementation of the 5 highest-value operational-law
-sources for the Ireland/law quadrant. Co-exists with the absorbed
-`2026-07-06-ireland-legal-pipeline` change (which lives at
-`cianfhoghlaim/dlt/british_isles/ireland/law/`) — these are
-intentionally distinct paths so the data plane has 2 parallel ingress
-routes for the same domain.
+The education sub-package hosts:
+- The 6 NCCA per-subject DLT sources (ncca_<subject>.py)
+- The Junior Cycle subject factory
+- The Leaving Cert composite source
+- The 4 BIEP v3 jurisdiction pipeline classes (incl. IrelandJurisdictionPipeline)
 
-Sources:
-- `piab`         — Personal Injuries Assessment Board (injuries.ie)
-- `courts`       — Courts Service of Ireland — forms + fees (courts.ie)
-- `judgements`   — Judgements.ie — published court decisions
-- `court_rules`  — Court Rules library (court-rules.ie / courts.ie/rules)
-- `legal_aid`    — Legal Aid Board (legalaidboard.ie)
+The pre-v7 layout had `cianchoghlaim/dlt/british_isles/ireland/law/` as a
+sibling — that path was a Pick-8 scoped legal data source reimplementation
+that co-exists with the absorbed `2026-07-06-ireland-legal-pipeline` change.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.british_isles.ireland.law import (
+# Post-v7: import from the canonical sibling submodules directly.
+from dlt.british_isles.ireland.law import (  # noqa: F401
     court_rules,
     courts,
     judgements,
