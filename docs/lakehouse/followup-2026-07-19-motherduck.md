@@ -4,34 +4,63 @@ This document tracks the 4 deferred Phase 4 follow-ups from the BIEP v3
 lakehouse full activation. All 4 are P2/P3 — the local DuckLake path
 works end-to-end and is the recommended dev/prod target.
 
-## Status
+## Status (updated 2026-07-19 after device-auth fix)
 
 | # | Item | Status | Priority |
 |--:|:--|:--|:--|
-| 1 | `MOTHERDUCK_TOKEN` injected into dev env | **BLOCKED** — requires Locket sidecar or manual secret | P2 |
-| 2 | Notebook migration (MotherDuck → local DuckLake) | **BLOCKED** — depends on #1 | P3 |
-| 3 | LanceDB Viewer (port 8081 → port 8088) healthcheck fix | **BLOCKED** — non-blocking | P3 |
-| 4 | 4 BIEP v3 MotherDuck Flights registration | **BLOCKED** — depends on #1 | P3 |
+| 1a | `MOTHERDUCK_TOKEN` env var | ✅ **FIXED 2026-07-19** — `MOTHERDUCK_ACCESS_TOKEN` was renamed to `MOTHERDUCK_TOKEN` (MotherDuck SDK env var name) | — |
+| 1b | MotherDuck database access | ❌ **BLOCKED** — user account only has `my_db` (empty); no `oideachais` or `cianfhoghlaim` | P2 |
+| 1c | 4 BIEP v3 MotherDuck Flights execution | ⏸️ Blocked on #1b | P3 |
+| 2 | Notebook migration (MotherDuck → local DuckLake) | ⏸️ Blocked on #1b (notebooks use `md:cianfhoghlaim`) | P3 |
+| 3 | LanceDB Viewer (port 8081 → port 8088) healthcheck fix | ⚠️ Cosmetic — non-blocking | P3 |
+| 4 | 9 Dagster sensors (8 registry + 1 S3) | ✅ **VERIFIED 2026-07-19** — all 9 load + execute via `scripts/verify_biep_v3_sensors.py`; 8 fail with DuckDB parser error (needs `BIEP_REGISTRY_SCHEMA=education` + sensors are loading); garage_pdf_arrival needs Lakekeeper bootstrap state | P3 |
 
 ---
 
 ## 1. `MOTHERDUCK_TOKEN` injection
 
-### Root cause
+### Root cause (FIXED 2026-07-19)
 
-`init-vault.ts` (in `scripts/`) is **write-only** — it pushes local
-`.env` values TO Infisical but does NOT read Infisical secrets back
-to `.env`. The `.infisical.env` file uses `infisical://dev-baile/...`
-URIs that the **Locket sidecar** resolves at container runtime.
+The original issue was a **name mismatch**: `.env` had
+`MOTHERDUCK_ACCESS_TOKEN` (the user's name) but the MotherDuck SDK
+(dlt / duckdb's motherduck extension) reads `MOTHERDUCK_TOKEN`. So every
+DuckDB call to `md:...` triggered the SDK's device-auth flow, which
+kept opening `https://auth.motherduck.com/device/confirmation?state=...`
+in the browser.
 
-In dev compose (`compose.dev.yaml`), the Locket sidecar is replaced
-by a no-op alpine container (per the audit). So `MOTHERDUCK_TOKEN`
-never gets injected into `.env` at runtime.
+### Fix applied
 
-Production (`arm1-oci`) deploys with the REAL Locket sidecar, so
-those will work.
+```bash
+# In .env:
+MOTHERDUCK_ACCESS_TOKEN=...   # OLD name (caused device auth loop)
+# ↓
+MOTHERDUCK_TOKEN=...          # NEW name (MotherDuck SDK expects this)
+```
 
-### Workarounds (pick one)
+The sed replacement: `sed -i '' 's|^MOTHERDUCK_ACCESS_TOKEN=|MOTHERDUCK_TOKEN=|' .env`
+
+Now `import duckdb; duckdb.connect('md:...')` reads the token from
+env directly without device auth.
+
+### Remaining blocker: database access
+
+After the fix, `SELECT name FROM md_databases()` shows only `my_db`
+(empty `main` schema, 0 tables). The user account does NOT have
+access to:
+- `oideachais` (the canonical BIEP v1 MotherDuck database per the audit)
+- `cianfhoghlaim` (the BIEP v3 target)
+
+**This requires one of:**
+1. **Create `cianfhoghlaim` database** via the MotherDuck UI:
+   `https://app.motherduck.com/ → Databases → Create database`
+2. **Share an existing database** with this user's email:
+   `eolas@cianfhoghlaim.ie` (the JWT subject)
+3. **Use a different account** that has access to the canonical database
+
+Until this is resolved, the MotherDuck path cannot be exercised. The
+local DuckLake path is the recommended dev target.
+
+### Workarounds (pick one after database access is granted)
 
 **Option A: Use the real Locket sidecar in dev** (recommended for prod parity)
 
