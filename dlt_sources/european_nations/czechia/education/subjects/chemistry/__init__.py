@@ -1,5 +1,5 @@
 """Re-export the Czechia Chemistry per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.cze.education.subjects.chemistry import (
+from dlt_sources.european_nations.cze.education.subjects.chemistry import (
     cze_chemistry,
     cze_chemistry_source,
 )  # noqa: F401

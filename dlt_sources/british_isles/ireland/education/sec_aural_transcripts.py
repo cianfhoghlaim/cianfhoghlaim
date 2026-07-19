@@ -13,6 +13,8 @@ PDF parsing uses:
 - BAML for structured entity extraction
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import re
@@ -23,7 +25,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 from dlt.sources import DltResource
 from observability.logging import get_logger
 

@@ -1,5 +1,5 @@
 """Latvia (Latvia) per-subject DLT sub-tree."""
-from cianfhoghlaim.dlt.european_nations.lva.education.subjects import (
+from dlt_sources.european_nations.lva.education.subjects import (
     mathematics,
     chemistry,
     biology,

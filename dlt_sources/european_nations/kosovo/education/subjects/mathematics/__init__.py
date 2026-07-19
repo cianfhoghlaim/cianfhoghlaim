@@ -1,5 +1,5 @@
 """Re-export the Kosovo Mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.xkx.education.subjects.mathematics.mathematics import (
+from dlt_sources.european_nations.xkx.education.subjects.mathematics.mathematics import (
     XKXMathematicsSource,
     xkx_mathematics,
     xkx_mathematics_source,

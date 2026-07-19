@@ -1,3 +1,5 @@
+import dlt
+
 """
 Shared Firecrawl utilities for web scraping across nations.
 
@@ -17,7 +19,7 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

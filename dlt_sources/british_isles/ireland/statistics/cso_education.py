@@ -5,14 +5,16 @@ Split from geospatial/cso_small_areas.py in Phase 3D.
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 
-import dlt
+import dlt_sources
 from dlt.sources import TDataItem
 
 try:
-    from cianfhoghlaim.dlt.common.http_client import cso_pxstat_client, data_gov_ie_client  # noqa: F401
+    from dlt_sources.common.http_client import cso_pxstat_client, data_gov_ie_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

@@ -16,6 +16,8 @@ The destination DuckLake namespace is:
 Reference: openspec/changes/2026-07-20-biep-v2-junior-cycle-extraction-v1/
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -23,7 +25,7 @@ import re
 from datetime import UTC, datetime
 from pathlib import Path
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

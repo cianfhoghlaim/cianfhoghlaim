@@ -5,7 +5,7 @@ School Education Gateway.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.europeanunion.education import (
+from dlt_sources.europeanunion.education import (
     cedefop,
     eurydice,
     school_education_gateway,

@@ -1,10 +1,12 @@
+import dlt
+
 """
 Education EN source: edexcel_qualifications_source
 
 Split from uk/england/national_curriculum.py in Phase 3D.
 """
 
-import dlt
+import dlt_sources
 
 from ._national_curriculum_helpers import (
     _crawl_exam_board,

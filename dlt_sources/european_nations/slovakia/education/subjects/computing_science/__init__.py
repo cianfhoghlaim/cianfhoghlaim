@@ -1,5 +1,5 @@
 """Re-export the Slovakia Computing / Computer Science per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.svk.education.subjects.computing_science import (
+from dlt_sources.european_nations.svk.education.subjects.computing_science import (
     svk_computing_science,
     svk_computing_science_source,
 )  # noqa: F401

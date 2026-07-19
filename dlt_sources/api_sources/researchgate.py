@@ -20,12 +20,14 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
 from typing import Any
 
-import dlt
+import dlt_sources
 from _shared.config import get_repo_root
 
 REPO_ROOT = get_repo_root()

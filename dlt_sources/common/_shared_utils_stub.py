@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.cianfhoghlaim.dlt.common._shared_utils_stub — in-tree replacement
+cianfhoghlaim.cianfhoghlaim.dlt_sources.common._shared_utils_stub — in-tree replacement
 for `shared.utils`.
 
 The `cianfhoghlaim.dlt_sources.http_client` module does

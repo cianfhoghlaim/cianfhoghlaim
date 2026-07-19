@@ -5,6 +5,8 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 from collections.abc import Iterator
@@ -12,7 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

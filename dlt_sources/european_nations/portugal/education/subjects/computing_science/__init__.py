@@ -1,5 +1,5 @@
 """Re-export the Portugal Computing / Computer Science per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.prt.education.subjects.computing_science import (
+from dlt_sources.european_nations.prt.education.subjects.computing_science import (
     prt_computing_science,
     prt_computing_science_source,
 )  # noqa: F401

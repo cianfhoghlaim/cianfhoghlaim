@@ -24,10 +24,10 @@ etini = _maybe("etini", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.northern_
 nisra = _maybe("nisra", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.northern_ireland.statistics.nisra")
 
 # Phase 3D per-source re-exports.
-from cianfhoghlaim.dlt.british_isles.northern_ireland.education._ccea_curriculum_helpers import NI_CURRICULUM_URLS
-from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ccea_qualifications import ccea_qualifications_source
-from cianfhoghlaim.dlt.british_isles.northern_ireland.education.irish_medium_ni import irish_medium_ni_source
-from cianfhoghlaim.dlt.british_isles.northern_ireland.education.ni_curriculum import ni_curriculum_source
+from dlt_sources.british_isles.northern_ireland.education._ccea_curriculum_helpers import NI_CURRICULUM_URLS
+from dlt_sources.british_isles.northern_ireland.education.ccea_qualifications import ccea_qualifications_source
+from dlt_sources.british_isles.northern_ireland.education.irish_medium_ni import irish_medium_ni_source
+from dlt_sources.british_isles.northern_ireland.education.ni_curriculum import ni_curriculum_source
 
 __all__ = [
     "NI_CURRICULUM_URLS",

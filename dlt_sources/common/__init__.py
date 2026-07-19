@@ -1,6 +1,6 @@
 """endpoint_recovery package — exposes the canonical 3-strategy helper."""
 
-from dlt.common.endpoint_recovery import (
+from dlt_sources.common.endpoint_recovery import (
     BackendUsed,
     EndpointRecoveryStrategy,
     PROBE_LIST,

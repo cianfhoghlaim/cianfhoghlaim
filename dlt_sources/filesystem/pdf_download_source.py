@@ -13,7 +13,7 @@ reading from the curated `cianfhoghlaim/leaving_certificate/<subject>/`
 sample corpus (skipping the download step entirely).
 
 Uses `apply_ducklake_1_0_optimisations()` from
-`cianfhoghlaim.dlt.common.ducklake_options` to register the
+`cianfhoghlaim.dlt_sources.common.ducklake_options` to register the
 DuckLake 1.0 sort + bucket + inlining optimisations on the
 `pdf_downloads` table once it's materialised.
 
@@ -26,7 +26,7 @@ Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
            tasks.md — Phase 4 (item 4.1)
 
 Usage:
-    from cianfhoghlaim.dlt.filesystem.pdf_download_source import (
+    from dlt_sources.filesystem.pdf_download_source import (
         pdf_download_source, pdf_download_lc6_partitions,
     )
 
@@ -34,6 +34,8 @@ Usage:
     pipeline.run(pdf_download_source(subject="mathematics", language="en", year=2024))
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -41,9 +43,9 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.examinations import LC6_SUBJECTS
+from dlt_sources.british_isles.ireland.education.examinations import LC6_SUBJECTS
 
-import dlt
+import dlt_sources
 from observability.logging import get_logger
 
 logger = get_logger(__name__)
@@ -352,14 +354,14 @@ def post_create_pdf_downloads_table(dataset_name: str) -> list[str]:
     `pdf_downloads` table once it's materialised.
 
     Wraps `apply_ducklake_1_0_optimisations()` from
-    `cianfhoghlaim.dlt.common.ducklake_options` — adds the 3
+    `cianfhoghlaim.dlt_sources.common.ducklake_options` — adds the 3
     DuckLake 1.0 features (data inlining, sort by `sha256`,
     optional bucket partitioning).
 
     Per tasks.md item 4.1: "Uses `apply_ducklake_1_0_optimisations()`
     from `dlt/common/ducklake_options.py`".
     """
-    from cianfhoghlaim.dlt.common.ducklake_options import (
+    from dlt_sources.common.ducklake_options import (
         apply_ducklake_1_0_optimisations,
     )
 

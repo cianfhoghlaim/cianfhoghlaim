@@ -15,25 +15,25 @@ directory obeys the canonical contract:
 
 Re-exports the per-institution submodules so call sites can do:
 
-    from cianfhoghlaim.dlt.european_union import eur_lex, eurydice, ema
+    from dlt_sources.european_union import eur_lex, eurydice, ema
     pipeline.run(eur_lex.regulations_source())
 
 or import the specific source function:
 
-    from cianfhoghlaim.dlt.european_union.eur_lex.regulations import (
+    from dlt_sources.european_union.eur_lex.regulations import (
         eur_lex_regulations_source,
     )
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.european_union import (
+from dlt_sources.european_union import (
     education,
     government,
     medicine,
     publications_office,
     statistics,
 )
-from cianfhoghlaim.dlt.european_union.eur_lex import (
+from dlt_sources.european_union.eur_lex import (
     cjeu_case_law,
     decisions,
     directives,

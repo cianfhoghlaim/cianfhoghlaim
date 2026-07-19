@@ -13,6 +13,8 @@ Reference: openspec/changes/leabharlann-cocoindex-v1/specs/leabharlann-ingestion
 """
 
 from __future__ import annotations
+import dlt
+
 
 import os
 import re
@@ -20,7 +22,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 from ._scanner import (

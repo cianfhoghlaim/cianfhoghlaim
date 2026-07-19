@@ -26,11 +26,11 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-import dlt
+import dlt_sources
 
 # Backwards-compat: try the oideachais cross-quadrant import first.
 try:
-    from cianfhoghlaim.dlt.destinations_cianfhoghlaim import with_namespace
+    from dlt_sources.destinations_cianfhoghlaim import with_namespace
 
     with_namespace("educational").re_export_into(globals())
 

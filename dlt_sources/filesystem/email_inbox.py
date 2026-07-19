@@ -35,6 +35,8 @@ Reference: openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/
 """
 
 from __future__ import annotations
+import dlt
+
 
 import mailbox
 import os
@@ -47,7 +49,7 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 from ._takeout_paths import (
@@ -793,7 +795,7 @@ def create_email_inbox_pipeline(
     dataset_name: str = "leabharlann_email_inbox",
 ):
     """Create a DLT pipeline for the email-inbox source."""
-    import dlt as _dlt
+    import dlt_sources as _dlt
 
     return _dlt.pipeline(
         pipeline_name="leabharlann_email_inbox_pipeline",

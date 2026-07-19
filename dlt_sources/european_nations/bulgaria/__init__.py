@@ -1,5 +1,5 @@
 """Bulgaria (Bulgaria) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.bgr import (
+from dlt_sources.european_nations.bgr import (
     education,
     government,
     law,

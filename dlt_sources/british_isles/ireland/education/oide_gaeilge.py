@@ -1,10 +1,12 @@
+import dlt
+
 """
 Education IE source: oide_gaeilge_source
 
 Split from ireland/oide.py in Phase 3D.
 """
 
-import dlt
+import dlt_sources
 
 from ._oide_helpers import (
     _crawl_oide_section,

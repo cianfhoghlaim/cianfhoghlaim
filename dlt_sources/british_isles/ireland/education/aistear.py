@@ -12,13 +12,15 @@ Datasets produced:
   naionra_listings        — Naionra rows (Gaeloideachas.ie / Pobal)
 """
 from __future__ import annotations
+import dlt
+
 
 import logging
 import os
 from datetime import UTC, datetime
 from pathlib import Path
 
-import dlt
+import dlt_sources
 
 logger = logging.getLogger(__name__)
 

@@ -23,6 +23,8 @@ channel.
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import json
@@ -33,7 +35,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import yaml
 
 # The curated watchlist (a small YAML document). Loaded at import time so

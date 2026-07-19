@@ -8,6 +8,8 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 ``stedding/ingest_queue/commonwealth/nga/education/jamb/<lang>/``.
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 from collections.abc import Iterator
@@ -15,10 +17,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.common.endpoint_recovery import (
+from dlt_sources.common.endpoint_recovery import (
     EndpointRecoveryStrategy,
     fetch,
 )

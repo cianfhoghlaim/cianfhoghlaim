@@ -1,5 +1,5 @@
 """Re-export the Albania Chemistry per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.alb.education.subjects.chemistry.chemistry import (
+from dlt_sources.european_nations.alb.education.subjects.chemistry.chemistry import (
     ALBChemistrySource,
     alb_chemistry,
     alb_chemistry_source,

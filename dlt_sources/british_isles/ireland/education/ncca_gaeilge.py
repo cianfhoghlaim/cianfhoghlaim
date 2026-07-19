@@ -22,7 +22,7 @@ The canonical BIEP v1 pattern (per `9e97ca0ca`):
 
 Usage:
 
-    from cianfhoghlaim.dlt.british_isles.ireland.education.ncca_gaeilge import (
+    from dlt_sources.british_isles.ireland.education.ncca_gaeilge import (
         ncca_gaeilge_source,
     )
 
@@ -32,6 +32,8 @@ Usage:
 Reference: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1/
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -40,9 +42,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from cianfhoghlaim.dlt.common.named_destinations import named_destination
+from dlt_sources.common.named_destinations import named_destination
 
-import dlt
+import dlt_sources
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 INGEST_QUEUE = REPO_ROOT / "stedding" / "ingest_queue" / "ncca" / "gaeilge"
@@ -222,7 +224,7 @@ def create_ncca_gaeilge_pipeline(
     Honours `USE_LOCAL_SCRAPES=true` and the canonical
     `warehouse` named destination via the named_destinations factory.
     """
-    import dlt as _dlt
+    import dlt_sources as _dlt
 
     return _dlt.pipeline(
         pipeline_name=pipeline_name,

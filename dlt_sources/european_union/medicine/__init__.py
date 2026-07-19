@@ -5,7 +5,7 @@ European Health Data Space.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.europeanunion.medicine import (
+from dlt_sources.europeanunion.medicine import (
     ecdc_surveillance,
     ema_medicines_register,
     european_health_data_space,

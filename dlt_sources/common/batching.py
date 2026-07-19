@@ -10,7 +10,7 @@ Best Practices (from CLAUDE.md):
 - Recreate indexes after batch complete
 
 Usage:
-    from cianfhoghlaim.dlt.batching import (
+    from dlt_sources.batching import (
         batch_embeddings,
         EmbeddingBatcher,
     )

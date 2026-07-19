@@ -1,3 +1,5 @@
+import dlt
+
 """Artwork Processing DLT Source.
 
 Downloads artwork images, extracts metadata, caches to R2,
@@ -10,7 +12,7 @@ and creates a unified artwork dataset with:
 - References back to source entities
 
 Usage:
-    import dlt
+    import dlt_sources
     from pipelines.artwork import artwork_source
 
     pipeline = dlt.pipeline(
@@ -35,7 +37,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass, field
 from typing import Any
 
-import dlt
+import dlt_sources
 import httpx
 
 

@@ -1,3 +1,5 @@
+import dlt
+
 """
 Culture IE source: local_education_documents_source
 
@@ -8,8 +10,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.constants.local_sources import (
+import dlt_sources
+from dlt_sources.constants.local_sources import (
     BUNCHLOCH_PATH,
 )
 

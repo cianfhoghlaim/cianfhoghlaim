@@ -13,6 +13,8 @@ local DuckDB lake (or the `warehouse` named destination on the remote
 runtime).
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -20,8 +22,8 @@ import re
 from pathlib import Path
 from typing import Iterator
 
-import dlt
-from dlt.hub import run
+import dlt_sources
+from dlt_sources.hub import run
 
 # Honour the project's `USE_LOCAL_SCRAPES` env-var convention (per the
 # AGENTS.md "Respect the Ingestion Cache" rule + the dlthub platform

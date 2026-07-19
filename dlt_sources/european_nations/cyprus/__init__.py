@@ -1,5 +1,5 @@
 """Cyprus (Cyprus) national pipeline — re-exports the per-domain sub-trees."""
-from cianfhoghlaim.dlt.european_nations.cyp import (
+from dlt_sources.european_nations.cyp import (
     education,
     government,
     law,

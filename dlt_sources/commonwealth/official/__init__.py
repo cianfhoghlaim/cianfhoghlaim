@@ -5,7 +5,7 @@ Foundation DLT sources.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.commonwealth.official import (
+from dlt_sources.commonwealth.official import (
     commonwealth_foundation,
     commonwealth_secretariat,
 )

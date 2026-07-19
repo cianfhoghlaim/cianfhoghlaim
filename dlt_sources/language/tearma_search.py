@@ -6,7 +6,7 @@ The companion bulk-export source lives at
 `cianfhoghlaim.dlt.british_isles.ireland.culture.tearma`.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.culture.tearma_search import tearma_search_source
+    from dlt_sources.british_isles.ireland.culture.tearma_search import tearma_search_source
 
     pipeline = dlt.pipeline(
         pipeline_name="tearma_search",
@@ -20,12 +20,14 @@ module constants + `TerminologyLinker` live at
 `cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers`.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers import _search_tearma_api
+import dlt_sources
+from dlt_sources.british_isles.ireland.culture._tearma_helpers import _search_tearma_api
 
 
 @dlt.source(name="tearma_search")

@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from cianfhoghlaim.dlt.constants.local_sources import (
+from dlt_sources.constants.local_sources import (
     EXTRACTION_CONFIG,
     FILE_TYPE_EXTENSIONS,
     LOCAL_SUBJECT_PATHS,

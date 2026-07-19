@@ -20,7 +20,7 @@ fallback is documented in `openspec/changes/ncca-leaving-cert-syllabi-corpus/`
 but is not used here because the PDFs are already on disk.
 
 Usage:
-    from cianfhoghlaim.dlt.subjects.mathematics import math_source
+    from dlt_sources.subjects.mathematics import math_source
     pipeline = dlt.pipeline(pipeline_name="math_pipeline", destination=...)
     load_info = pipeline.run(math_source())
 
@@ -30,13 +30,15 @@ See:
     cianfhoghlaim/baml/qpack_mathematics.baml (the BAML contract)
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 # Canonical paths
 CIANFHOGHLAIM_ROOT = Path(__file__).resolve().parents[3]

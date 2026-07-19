@@ -1,3 +1,5 @@
+import dlt
+
 """SoundCloud Audio Downloader.
 
 Downloads SoundCloud audio files to Cloudflare R2 for portfolio streaming.
@@ -14,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 from pipelines.shared.r2_client import R2Client
 
 

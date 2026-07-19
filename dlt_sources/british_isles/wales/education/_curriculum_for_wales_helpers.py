@@ -8,8 +8,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website, scrape_page
-from cianfhoghlaim.dlt.common.incremental import compute_content_hash
+from dlt_sources.common.firecrawl_source import crawl_website, scrape_page
+from dlt_sources.common.incremental import compute_content_hash
 
 AOLE_AREAS = [
     "expressive_arts",

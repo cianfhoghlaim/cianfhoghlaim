@@ -20,6 +20,8 @@ This source is a sibling of the existing `ncca.py` source and reuses the same
 """
 
 from __future__ import annotations
+import dlt
+
 
 import re
 from collections.abc import Iterator
@@ -29,7 +31,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

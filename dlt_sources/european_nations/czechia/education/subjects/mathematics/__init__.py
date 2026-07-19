@@ -1,5 +1,5 @@
 """Re-export the Czechia Mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.cze.education.subjects.mathematics import (
+from dlt_sources.european_nations.cze.education.subjects.mathematics import (
     cze_mathematics,
     cze_mathematics_source,
 )  # noqa: F401

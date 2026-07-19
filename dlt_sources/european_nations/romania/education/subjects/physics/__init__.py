@@ -1,5 +1,5 @@
 """Re-export the Romania Physics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.rou.education.subjects.physics import (
+from dlt_sources.european_nations.rou.education.subjects.physics import (
     rou_physics,
     rou_physics_source,
 )  # noqa: F401

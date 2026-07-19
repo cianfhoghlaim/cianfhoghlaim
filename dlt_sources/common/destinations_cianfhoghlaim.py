@@ -35,6 +35,7 @@ import os
 from typing import Any
 
 import dlt
+import dlt_sources
 from dlt.destinations.impl.ducklake.configuration import DuckLakeCredentials
 
 # DuckLake 1.0 helpers (the 2026-04-13 launch features).
@@ -50,7 +51,7 @@ LAKEHOUSE_DUCKDB: str = "md:cianfhoghlaim"
 """The canonical MotherDuck + DuckLake lakehouse alias for the cianfhoghlaim platform.
 
 Used by the 4 BIEP v3 jurisdiction pipelines + 5 Dagster assets. The
-canonical helper is `dlt.common.destinations_cianfhoghlaim.get_dlt_destination()`.
+canonical helper is `dlt_sources.common.destinations_cianfhoghlaim.get_dlt_destination()`.
 """
 
 
@@ -234,7 +235,7 @@ def get_dlt_destination(
 
     # Iceberg write path
     if iceberg:
-        from dlt.common.iceberg_options import build_iceberg_local_destination
+        from dlt_sources.common.iceberg_options import build_iceberg_local_destination
         return build_iceberg_local_destination(namespace=effective_namespace)
 
     if not use_ducklake:
@@ -404,7 +405,7 @@ class _NamespacedDestinations:
 
         Lets `tuatha/dlt_utils/destinations.py` be a single line:
 
-            from cianfhoghlaim.dlt.destinations_oideachais import with_namespace
+            from dlt_sources.destinations_oideachais import with_namespace
             with_namespace("tuath").re_export_into(globals())
         """
         g["NAMESPACE"] = self.NAMESPACE

@@ -1,3 +1,5 @@
+import dlt
+
 """SoundCloud Scraper.
 
 Crawl4AI-based scraper for extracting SoundCloud profile data.
@@ -16,7 +18,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-import dlt
+import dlt_sources
 
 # SoundCloud profile URL for Aleyum
 ALEYUM_SOUNDCLOUD_URL = "https://soundcloud.com/aleyummusic"

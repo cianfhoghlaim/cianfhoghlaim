@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for Scotland Insight National Benchmarking data.
 
@@ -9,9 +11,9 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website, scrape_page
+from dlt_sources.common.firecrawl_source import crawl_website, scrape_page
 
 INSIGHT_URLS = {
     "main": "https://www.gov.scot/policies/schools/school-performance/",

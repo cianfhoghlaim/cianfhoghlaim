@@ -1,7 +1,7 @@
 """Americas regional pipeline — re-exports."""
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.americas import (
+from dlt_sources.americas import (
     Brazil,
     Mexico,
     official,

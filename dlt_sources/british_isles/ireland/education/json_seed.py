@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for loading existing scraped JSON as seed data.
 
@@ -11,7 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 from ..constants.education_sources import EDUCATION_SITES
 

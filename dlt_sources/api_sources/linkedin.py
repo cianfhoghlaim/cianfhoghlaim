@@ -16,7 +16,7 @@ The output is a DuckDB table (one row per scrape) suitable for
 downstream BAML extraction via the linkedin_profile_extraction schema.
 
 Usage:
-    import dlt
+    import dlt_sources
     from pipelines.linkedin import linkedin_profile_resource
 
     pipeline = dlt.pipeline(
@@ -31,12 +31,14 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
 from typing import Any
 
-import dlt
+import dlt_sources
 from _shared.config import get_repo_root
 
 REPO_ROOT = get_repo_root()

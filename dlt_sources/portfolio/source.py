@@ -36,6 +36,8 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -44,7 +46,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 from _shared.config.paths import get_author_dir, resolve_path
 
 CHUNK_SIZE = 1 << 16  # 64 KiB

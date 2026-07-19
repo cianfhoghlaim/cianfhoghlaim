@@ -4,7 +4,7 @@ Each sub-module is a small `@dlt.resource` over a public endpoint.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.british_isles.ireland.medicine import (
+from dlt_sources.british_isles.ireland.medicine import (
     doh,
     hpsc,
     hse,

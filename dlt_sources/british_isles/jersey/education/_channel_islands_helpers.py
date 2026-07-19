@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
+from dlt_sources.common.firecrawl_source import crawl_website
 
 CHANNEL_ISLANDS_URLS = {
     "jersey": {

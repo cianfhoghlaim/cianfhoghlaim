@@ -15,7 +15,7 @@ on the remote runtime, with a local DuckDB fallback for dev.
 
 Usage:
 
-    from cianfhoghlaim.dlt.common.named_destinations import (
+    from dlt_sources.common.named_destinations import (
         named_destination,
         DESTINATIONS,
     )
@@ -31,12 +31,14 @@ Usage:
 Reference: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1/
 """
 from __future__ import annotations
+import dlt
+
 
 import os
 from collections.abc import Callable
 from typing import Any
 
-import dlt
+import dlt_sources
 
 # ============================================================================
 # Named destination registry

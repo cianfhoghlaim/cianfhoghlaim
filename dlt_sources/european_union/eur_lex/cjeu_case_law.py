@@ -5,6 +5,8 @@ emitting one row per ``(case_id, language)`` for every CJEU decision
 available on curia.europa.eu.
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 from collections.abc import Iterator
@@ -12,14 +14,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.european_union._shared import (
+from dlt_sources.european_union._shared import (
     EUInstitutionalSource,
     use_local_scrapes,
 )
-from cianfhoghlaim.dlt.european_union._shared.registries import EU_LANGUAGES
+from dlt_sources.european_union._shared.registries import EU_LANGUAGES
 
 logger = structlog.get_logger(__name__)
 

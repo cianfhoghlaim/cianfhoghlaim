@@ -17,17 +17,19 @@ Honours `USE_LOCAL_SCRAPES=true` falling back to
 `stedding/ingest_queue/courts.ie/`.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
 import structlog
 
-import dlt
+import dlt_sources
 
 logger = structlog.get_logger(__name__)
 
-from cianfhoghlaim.dlt.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]
+from dlt_sources.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]
     _crawl_source,
 )
 

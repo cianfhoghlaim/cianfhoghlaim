@@ -25,11 +25,11 @@ insight_benchmarking = _maybe(
 simd = _maybe("simd", "cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.statistics.simd")
 
 # Phase 3D per-source re-exports.
-from cianfhoghlaim.dlt.british_isles.scotland.education.curriculum_for_excellence import (
+from dlt_sources.british_isles.scotland.education.curriculum_for_excellence import (
     curriculum_for_excellence_source,
 )
-from cianfhoghlaim.dlt.british_isles.scotland.education.gaelic_curriculum import gaelic_curriculum_source
-from cianfhoghlaim.dlt.british_isles.scotland.education.sqa_qualifications import sqa_qualifications_source
+from dlt_sources.british_isles.scotland.education.gaelic_curriculum import gaelic_curriculum_source
+from dlt_sources.british_isles.scotland.education.sqa_qualifications import sqa_qualifications_source
 
 __all__ = [
     "curriculum_for_excellence",

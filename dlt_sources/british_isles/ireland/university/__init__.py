@@ -44,6 +44,8 @@ Cross-references:
 """
 
 from __future__ import annotations
+import dlt
+
 
 from .cao import (
     CAO_CACHE_DIR,

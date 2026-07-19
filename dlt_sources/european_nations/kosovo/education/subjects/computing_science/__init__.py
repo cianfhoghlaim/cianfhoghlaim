@@ -1,5 +1,5 @@
 """Re-export the Kosovo Computing Science per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.xkx.education.subjects.computing_science.computing_science import (
+from dlt_sources.european_nations.xkx.education.subjects.computing_science.computing_science import (
     XKXComputingScienceSource,
     xkx_computing_science,
     xkx_computing_science_source,

@@ -5,10 +5,12 @@ Split from geospatial/geohive.py in Phase 3D.
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 
-import dlt
+import dlt_sources
 from dlt.sources import TDataItem
 
 try:

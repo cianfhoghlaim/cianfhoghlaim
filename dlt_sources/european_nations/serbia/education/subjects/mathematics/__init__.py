@@ -1,5 +1,5 @@
 """Re-export the Serbia Mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.srb.education.subjects.mathematics.mathematics import (
+from dlt_sources.european_nations.srb.education.subjects.mathematics.mathematics import (
     SRBMathematicsSource,
     srb_mathematics,
     srb_mathematics_source,

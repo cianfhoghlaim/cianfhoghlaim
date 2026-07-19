@@ -9,7 +9,7 @@ Provides the BaseSubjectSource class that handles:
 - Content hashing for deduplication
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.ireland.subjects.base import (
+    from dlt_sources.british_isles.ireland.subjects.base import (
         create_subject_source,
         crawl_subject,
         extract_pdfs_from_subject,
@@ -20,6 +20,8 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -30,7 +32,7 @@ from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
-import dlt
+import dlt_sources
 import structlog
 
 from ..curriculum_registry import SubjectRegistry, URLResolver

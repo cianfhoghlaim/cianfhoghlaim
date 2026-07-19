@@ -23,6 +23,8 @@ When the env var is "false", it would fall back to Firecrawl — but the
 local cache is the canonical source for the 7 priority subjects.
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import json
@@ -33,7 +35,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

@@ -1,5 +1,5 @@
 """Re-export the Kosovo Biology per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.xkx.education.subjects.biology.biology import (
+from dlt_sources.european_nations.xkx.education.subjects.biology.biology import (
     XKXBiologySource,
     xkx_biology,
     xkx_biology_source,

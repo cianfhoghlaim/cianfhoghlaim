@@ -5,14 +5,16 @@ Split from celtic/gaois.py in Phase 3D.
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 
-import dlt
+import dlt_sources
 from dlt.sources import DltResource
 
 try:
-    from cianfhoghlaim.dlt.common.http_client import ainm_client, logainm_client, tearma_client  # noqa: F401
+    from dlt_sources.common.http_client import ainm_client, logainm_client, tearma_client  # noqa: F401
 except ImportError:
     pass  # shared.http is unavailable; functions must lazy-import at call-time
 

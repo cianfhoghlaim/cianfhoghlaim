@@ -5,7 +5,7 @@ Commission press / Parliament documents / Council documents streams.
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.europeanunion.government import (
+from dlt_sources.europeanunion.government import (
     commission_press,
     council_documents,
     europa_portal,

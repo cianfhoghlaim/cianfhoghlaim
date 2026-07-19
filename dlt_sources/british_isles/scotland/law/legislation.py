@@ -3,9 +3,11 @@ cianfhoghlaim.cianfhoghlaim.dlt.british_isles.scotland.law.legislation — Scott
 Phase 7 of the openspec change.
 """
 from __future__ import annotations
-
 import dlt
-from cianfhoghlaim.dlt.law._legislation_helper import _crawl_legislation
+
+
+import dlt_sources
+from dlt_sources.law._legislation_helper import _crawl_legislation
 
 
 @dlt.source(name="sct_legislation")

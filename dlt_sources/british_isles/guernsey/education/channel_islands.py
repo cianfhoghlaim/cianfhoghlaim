@@ -10,11 +10,13 @@ canonical home for the shared data).
 """
 
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 
-import dlt
-from cianfhoghlaim.dlt.british_isles.jersey.education._channel_islands_helpers import (
+import dlt_sources
+from dlt_sources.british_isles.jersey.education._channel_islands_helpers import (
     CHANNEL_ISLANDS_URLS,
     _crawl_guernsey_education,
 )

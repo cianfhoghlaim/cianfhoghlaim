@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import Any
 
-import dlt
+import dlt_sources
 
 
 def build_iceberg_local_destination(

@@ -27,13 +27,15 @@ Reference: openspec/changes/ingest-culture-heritage/proposal.md
 """
 
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import json
 from collections.abc import Iterator
 from pathlib import Path
 
-import dlt
+import dlt_sources
 
 logger_module_name = __name__
 

@@ -1,5 +1,5 @@
 """Re-export the Turkey Biology per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.tur.education.subjects.biology.biology import (
+from dlt_sources.european_nations.tur.education.subjects.biology.biology import (
     TURBiologySource,
     tur_biology,
     tur_biology_source,

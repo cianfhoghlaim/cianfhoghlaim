@@ -5,13 +5,15 @@ Source: `https://www.gov.ie/en/organisation/department-of-health/`
 public service pages. Firecrawl crawl over the gov.ie sub-tree.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+from dlt_sources.common.site_crawler import crawl_site
 
 def _crawl_source(*args, **kwargs):
     # The legacy _crawl_source took (source_name, base_url, ...) — source_name

@@ -19,7 +19,7 @@ The canonical BIEP v1 pattern (per `9e97ca0ca`):
 
 Usage:
 
-    from cianfhoghlaim.dlt.british_isles.ireland.education.ncca_mathematics import (
+    from dlt_sources.british_isles.ireland.education.ncca_mathematics import (
         ncca_mathematics_source,
         ncca_mathematics_partitions,
     )
@@ -34,6 +34,8 @@ Usage:
 Reference: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1/
 """
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -42,9 +44,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from cianfhoghlaim.dlt.common.named_destinations import named_destination
+from dlt_sources.common.named_destinations import named_destination
 
-import dlt
+import dlt_sources
 
 # Canonical BIEP v1 ingest queue (the curated local cache)
 REPO_ROOT = Path(__file__).resolve().parents[5]
@@ -234,7 +236,7 @@ def create_ncca_mathematics_pipeline(
     Honours `USE_LOCAL_SCRAPES=true` and the canonical
     `warehouse` named destination via the named_destinations factory.
     """
-    import dlt as _dlt
+    import dlt_sources as _dlt
 
     return _dlt.pipeline(
         pipeline_name=pipeline_name,

@@ -26,12 +26,14 @@ International GCSE (iGCSE) as a distinct qualification — ~70
 subjects vs AQA's ~50.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.england.education.pearson.syllabus_source import (
+    from dlt_sources.british_isles.england.education.pearson.syllabus_source import (
         pearson_syllabus_source,
     )
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -40,7 +42,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CACHE_DIR = Path("stedding/site_scrape_samples/pearson")
 URLS_CACHE_PATH = Path("stedding/site_scrape_samples/pearson/urls.json")

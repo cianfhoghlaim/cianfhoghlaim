@@ -1,3 +1,5 @@
+import dlt
+
 """GitHub REST API Source for Portfolio.
 
 Adapted from github-intelligence pipeline for portfolio repository insights.
@@ -19,7 +21,7 @@ import os
 from collections.abc import Iterator
 from typing import Any
 
-import dlt
+import dlt_sources
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 
 # Consolidated author identity (was `Yedya` under the old `aleyum` persona).

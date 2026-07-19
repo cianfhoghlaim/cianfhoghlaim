@@ -1,5 +1,5 @@
 """Re-export the Moldova Mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.mda.education.subjects.mathematics.mathematics import (
+from dlt_sources.european_nations.mda.education.subjects.mathematics.mathematics import (
     MDAMathematicsSource,
     mda_mathematics,
     mda_mathematics_source,

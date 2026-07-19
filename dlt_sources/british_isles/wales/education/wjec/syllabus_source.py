@@ -24,12 +24,14 @@ for Welsh; the same awarding body publishes under the brand
 editions of the same syllabuses.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.wales.education.wjec.syllabus_source import (
+    from dlt_sources.british_isles.wales.education.wjec.syllabus_source import (
         wjec_syllabus_source,
     )
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -38,7 +40,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CACHE_DIR = Path("stedding/site_scrape_samples/wjec")
 URLS_CACHE_PATH = Path("stedding/site_scrape_samples/wjec/urls.json")

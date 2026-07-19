@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for GIAS (Get Information About Schools).
 
@@ -18,8 +20,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.common.http_client import get_info_schools_client
+import dlt_sources
+from dlt_sources.common.http_client import get_info_schools_client
 
 
 def _get_gias_factory():

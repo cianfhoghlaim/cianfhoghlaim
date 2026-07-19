@@ -4,13 +4,15 @@ Reads NCCA Leaving Certificate English + Junior Cycle English PDFs.
 2 NCCA levels (OL + HL) + JC.
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CIANFHOGHLAIM_ROOT = Path(__file__).resolve().parents[3]
 ENGL_CORPUS = CIANFHOGHLAIM_ROOT / "leaving_certificate" / "english"

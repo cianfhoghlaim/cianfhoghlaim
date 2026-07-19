@@ -1,5 +1,5 @@
 """Re-export the North Macedonia Language per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.mkd.education.subjects.language.language import (
+from dlt_sources.european_nations.mkd.education.subjects.language.language import (
     MKDLanguageSource,
     mkd_language,
     mkd_language_source,

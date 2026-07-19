@@ -1,5 +1,5 @@
 """Re-export the Moldova Language per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.mda.education.subjects.language.language import (
+from dlt_sources.european_nations.mda.education.subjects.language.language import (
     MDALanguageSource,
     mda_language,
     mda_language_source,

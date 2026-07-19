@@ -1,5 +1,5 @@
 """Re-export the Lithuania Physics per-subject DLT source."""
-from cianfhoghlaim.dlt.european_nations.ltu.education.subjects.physics import (
+from dlt_sources.european_nations.ltu.education.subjects.physics import (
     ltu_physics,
     ltu_physics_source,
 )  # noqa: F401

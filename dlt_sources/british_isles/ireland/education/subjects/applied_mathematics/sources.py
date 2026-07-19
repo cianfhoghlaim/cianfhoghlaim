@@ -14,13 +14,15 @@ See:
     cianfhoghlaim/baml/qpack_applied_mathematics.baml (the BAML contract)
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CIANFHOGHLAIM_ROOT = Path(__file__).resolve().parents[3]
 APPM_CORPUS = CIANFHOGHLAIM_ROOT / "leaving_certificate" / "applied_mathematics"

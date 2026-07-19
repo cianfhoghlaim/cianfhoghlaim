@@ -7,21 +7,23 @@ https://github.com/cianfhoghlaim/kings_college_galway/issues/19
 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT sources.
 """
 from __future__ import annotations
+import dlt
+
 
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
-from cianfhoghlaim.dlt.common.site_crawler import crawl_site
+from dlt_sources.common.site_crawler import crawl_site
 
 IOM_RECOVERY_STRATEGY = "stealth"
 """Phase 1 fix: ``www.gov.im`` returns 403 to plain HTTP + sitemap.xml.
 Routes via the Firecrawl stealth proxy with a 10s wait_for; falls
 back to the Wayback Machine on stealth failure. See the
-:mod:`cianfhoghlaim.dlt.common.endpoint_recovery` helper for the
+:mod:`cianfhoghlaim.dlt_sources.common.endpoint_recovery` helper for the
 operational probe."""
 
 

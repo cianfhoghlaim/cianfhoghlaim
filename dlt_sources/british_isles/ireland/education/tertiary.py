@@ -6,11 +6,13 @@ Honors USE_LOCAL_SCRAPES=true to read from /stedding/ingest_queue/tertiary/
 cache. Live scraping uses Skyvern/Stagehand for the JS-heavy CAO dropdowns.
 """
 from __future__ import annotations
+import dlt
+
 
 import os
 from pathlib import Path
 
-import dlt
+import dlt_sources
 
 TERTIARY_CACHE_DIR = Path(os.getenv("STEDDING_INGEST_QUEUE", "/stedding/ingest_queue")) / "tertiary"
 

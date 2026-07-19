@@ -19,7 +19,7 @@ Firecrawl-crawl of the SQA National Qualifications finder
 ``MultiPartitionsDefinition(cycle=["national_5", "higher", "advanced_higher"], subject, language)``.
 
 Usage:
-    from cianfhoghlaim.dlt.british_isles.scotland.education.sqa.syllabus_source import (
+    from dlt_sources.british_isles.scotland.education.sqa.syllabus_source import (
         sqa_syllabus_source,
     )
     pipeline = dlt.pipeline(
@@ -30,6 +30,8 @@ Usage:
 """
 
 from __future__ import annotations
+import dlt
+
 
 import json
 import os
@@ -38,7 +40,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CACHE_DIR = Path("stedding/site_scrape_samples/sqa")
 URLS_CACHE_PATH = Path("stedding/site_scrape_samples/sqa/urls.json")

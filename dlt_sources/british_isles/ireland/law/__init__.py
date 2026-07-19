@@ -8,7 +8,7 @@ sources added in `2026-07-06-ireland-legal-pipeline` (`injuries_ie`,
 """
 from __future__ import annotations
 
-from cianfhoghlaim.dlt.british_isles.ireland.law import (
+from dlt_sources.british_isles.ireland.law import (
     citizensinformation,
     courts_ie,
     doj,

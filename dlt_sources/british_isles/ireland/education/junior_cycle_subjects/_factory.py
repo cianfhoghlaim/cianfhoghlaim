@@ -25,6 +25,8 @@ per the cross-region-pipeline spec (canonical DuckLake namespace shape).
 Reference: openspec/changes/2026-07-20-biep-v2-junior-cycle-extraction-v1/
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 import os
@@ -34,7 +36,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 import structlog
 
 logger = structlog.get_logger(__name__)

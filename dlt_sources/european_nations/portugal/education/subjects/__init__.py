@@ -1,5 +1,5 @@
 """Portugal (Portugal) per-subject DLT sub-tree."""
-from cianfhoghlaim.dlt.european_nations.prt.education.subjects import (
+from dlt_sources.european_nations.prt.education.subjects import (
     mathematics,
     chemistry,
     biology,

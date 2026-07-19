@@ -1,5 +1,5 @@
 """Nigerian federal education DLT re-exports."""
-from cianfhoghlaim.dlt.commonwealth.nga.education import (
+from dlt_sources.commonwealth.nga.education import (
     federal_ministry_of_education,
     jamb,
     nabteb,

@@ -4,13 +4,15 @@ Reads the NCCA Leaving Certificate Chemistry PDFs from
 `cianfhoghlaim/leaving_certificate/chemistry/en/`. 2 NCCA levels (OL + HL).
 """
 from __future__ import annotations
+import dlt
+
 
 import hashlib
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-import dlt
+import dlt_sources
 
 CIANFHOGHLAIM_ROOT = Path(__file__).resolve().parents[3]
 CHEM_CORPUS = CIANFHOGHLAIM_ROOT / "leaving_certificate" / "chemistry"

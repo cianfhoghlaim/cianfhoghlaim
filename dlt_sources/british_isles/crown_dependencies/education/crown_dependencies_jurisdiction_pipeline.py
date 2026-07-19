@@ -19,7 +19,7 @@ Covers:
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination
-  factory at ``dlt.common.destinations_cianfhoghlaim`` is used.
+  factory at ``dlt_sources.common.destinations_cianfhoghlaim`` is used.
 - JurisdictionPipelineBase (per the 2026-08-10 preflight change) —
   inherits shared boilerplate.
 
@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import logging
 
-from dlt.british_isles._cross.jurisdiction_pipeline_base import (
+from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import (
     JurisdictionPipelineBase,
 )
 
@@ -46,7 +46,7 @@ class CrownDependenciesJurisdictionPipeline(JurisdictionPipelineBase):
 
     def build_pipeline_resource(self):
         """Yield one row per (board, subject, level) cohort from the registry."""
-        from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+        from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
         subjects = query_by_jurisdiction(self.jurisdiction)
         if not subjects:

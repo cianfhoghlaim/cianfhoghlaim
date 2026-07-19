@@ -1,3 +1,5 @@
+import dlt
+
 """
 DLT source for StatsWales OData API.
 
@@ -20,8 +22,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
 
-import dlt
-from cianfhoghlaim.dlt.common.http_client import stats_wales_odata_client
+import dlt_sources
+from dlt_sources.common.http_client import stats_wales_odata_client
 
 
 def _get_odata_factory():

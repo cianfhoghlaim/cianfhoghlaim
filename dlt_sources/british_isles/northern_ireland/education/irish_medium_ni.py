@@ -1,3 +1,5 @@
+import dlt
+
 """
 Education NI source: irish_medium_ni_source
 
@@ -6,9 +8,9 @@ Split from uk/northern_ireland/ccea_curriculum.py in Phase 3D.
 
 from datetime import UTC, datetime
 
-import dlt
+import dlt_sources
 
-from cianfhoghlaim.dlt.common.firecrawl_source import crawl_website
+from dlt_sources.common.firecrawl_source import crawl_website
 from ._ccea_curriculum_helpers import (
     NI_CURRICULUM_URLS,
 )

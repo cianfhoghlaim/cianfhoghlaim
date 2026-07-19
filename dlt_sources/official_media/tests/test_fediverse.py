@@ -10,7 +10,7 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from cianfhoghlaim.dlt.official_media.fediverse import (
+from dlt_sources.official_media.fediverse import (
     resolve_bluesky,
     resolve_mastodon,
 )

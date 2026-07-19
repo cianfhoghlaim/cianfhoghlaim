@@ -8,7 +8,7 @@ Provides adapters that:
 - Support bilingual content (English/Irish)
 
 Usage:
-    from cianfhoghlaim.dlt.common.source_adapters import (
+    from dlt_sources.common.source_adapters import (
         CurriculumOnlineAdapter,
         NCCAAdapter,
         ExaminationsAdapter,
@@ -28,7 +28,7 @@ from typing import Any, Protocol
 from urllib.parse import parse_qs, urlparse
 
 import structlog
-from cianfhoghlaim.dlt.common.incremental import compute_content_hash
+from dlt_sources.common.incremental import compute_content_hash
 
 logger = structlog.get_logger(__name__)
 

@@ -1,5 +1,5 @@
 """Re-export the England mathematics per-subject DLT source."""
-from cianfhoghlaim.dlt.british_isles.en.education.subjects.mathematics import (
+from dlt_sources.british_isles.en.education.subjects.mathematics import (
     en_mathematics,
     en_mathematics_source,
 )  # noqa: F401

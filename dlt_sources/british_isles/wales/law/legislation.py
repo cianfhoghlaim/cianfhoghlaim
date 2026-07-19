@@ -3,9 +3,11 @@ cianfhoghlaim.cianfhoghlaim.dlt.british_isles.wales.law.legislation — Welsh le
 Phase 7 of the openspec change.
 """
 from __future__ import annotations
-
 import dlt
-from cianfhoghlaim.dlt.law._legislation_helper import _crawl_legislation
+
+
+import dlt_sources
+from dlt_sources.law._legislation_helper import _crawl_legislation
 
 
 @dlt.source(name="wls_legislation")

@@ -11,7 +11,7 @@ Asserts the two-stage filter:
 from __future__ import annotations
 
 import pytest
-from cianfhoghlaim.dlt.official_media.allowlist import (
+from dlt_sources.official_media.allowlist import (
     AllowlistFilter,
     allowlist_filter,
 )

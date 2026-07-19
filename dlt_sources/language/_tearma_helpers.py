@@ -10,7 +10,7 @@ Pre-existing fragile imports (out of this monorepo) are hardened with
 `try/except ImportError` per the Phase 3D pattern:
 - `from observability.logging import get_logger` — provided by an
   external observability package.
-- `from cianfhoghlaim.dlt.common.http_client import tearma_client` — provided by an external
+- `from cianfhoghlaim.dlt_sources.common.http_client import tearma_client` — provided by an external
   `shared` package.
 
 When these imports are missing the helpers fall back to no-op logger
@@ -40,7 +40,7 @@ except ImportError:  # observability package not in this monorepo
 
 
 try:
-    from cianfhoghlaim.dlt.common.http_client import tearma_client  # type: ignore[import-not-found]
+    from dlt_sources.common.http_client import tearma_client  # type: ignore[import-not-found]
 except ImportError:  # shared package not in this monorepo
     tearma_client = None  # type: ignore[assignment]
 
