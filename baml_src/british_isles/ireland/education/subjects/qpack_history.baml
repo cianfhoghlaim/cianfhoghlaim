@@ -128,36 +128,12 @@ function GenerateHistQuestPack(
   past_papers: PastPaper[],
   marking_schemes: MarkingSchemeSec[],
   level: string
-) -> HistQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate History expert. Build a
-    formative assessment quest pack for NCCA History at the {{ level }}
-    level (JC, LC_OL, or LC_HL).
-
-    Cover ALL learning outcomes with ≥1 FormativeItem each. Reference
-    the source NCCA PDF page in each item's evidence. Order items by
-    difficulty (1 → 5). Suggest cross-subject links to Gaeilge and
-    English (literature as historical source).
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+) -> HistQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractHistLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all History learning outcome statements from the following
-    NCCA syllabus paragraph.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractHistLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -170,20 +146,8 @@ function ExtractHistLOStatement(paragraph: string) -> string[] {
 // source where present, and falls back to the English statements
 // with a leading '[EN-only]' marker otherwise.
 
-function ExtractHistGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"
-    Extract all NCCA History strand/outcome statements in Irish
-    (Gaeilge) from the following NCCA syllabus paragraph. Return
-    them as a list of full Irish statements, verbatim from the
-    source, with the LO code if present (e.g. 'LC-HIST-LO-3.1: ...').
-    If no Irish translation is available in the paragraph, return
-    the English statements verbatim with a leading '[EN-only]' marker.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractHistGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateHistFormativeItem(
@@ -191,44 +155,17 @@ function GenerateHistFormativeItem(
   difficulty: int,
   level: string,
   topic: string
-) -> HistFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a single History formative item for NCCA LO {{ lo_code }}.
-
-    Difficulty: {{ difficulty }}
-    Level: {{ level }} (JC / LC_OL / LC_HL)
-    Topic: {{ topic }}
-
-    Include 4 graduated hints, ≥2 common errors, evidence.source_page,
-    bilingual EN + GA, est_time_minutes 1-30.
-
-    {{ ctx.output_format }}
-  "#
+) -> HistFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ScoreHistFormativeResponse(
   item: HistFormativeItem,
   attempt: HistFormativeItemAttempt
-) -> HistScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the History formative item attempt.
-
-    Item: {{ item }}
-    Attempt: {{ attempt }}
-
-    {{ ctx.output_format }}
-  "#
+) -> HistScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateHistQuestPack(pack: HistQuestPack) -> HistQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the History quest pack.
-
-    Pack: {{ pack }}
-
-    {{ ctx.output_format }}
-  "#
+function ValidateHistQuestPack(pack: HistQuestPack) -> HistQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

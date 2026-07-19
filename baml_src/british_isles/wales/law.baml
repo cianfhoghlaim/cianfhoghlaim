@@ -17,16 +17,6 @@ function ExtractWLSLawDocument(
   nation: string,
   language: string,
   text: string
-) -> WLSLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Wales
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> WLSLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

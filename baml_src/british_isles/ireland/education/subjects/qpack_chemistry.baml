@@ -142,37 +142,12 @@ function GenerateChemQuestPack(
   past_papers: PastPaper[],
   marking_schemes: MarkingSchemeSec[],
   level: string
-) -> ChemQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate Chemistry expert. Build a
-    formative assessment quest pack for NCCA Chemistry at the {{ level }}
-    level (JC, LC_OL, or LC_HL).
-
-    Cover ALL learning outcomes with ≥1 FormativeItem each. Reference
-    the source NCCA PDF page in each item's evidence. Order items by
-    difficulty (1 → 5). Suggest cross-subject links to Applied
-    Mathematics (mechanics for kinetics) and to Physics (atomic
-    structure, waves for spectroscopy).
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+) -> ChemQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractChemLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all Chemistry learning outcome statements from the
-    following NCCA syllabus paragraph.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractChemLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -185,20 +160,8 @@ function ExtractChemLOStatement(paragraph: string) -> string[] {
 // translate. LC Chemistry syllabi are mostly English-only, so the
 // fallback path is the common case.
 
-function ExtractChemGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"
-    Extract all NCCA Chemistry strand/outcome statements in Irish
-    (Gaeilge) from the following NCCA syllabus paragraph. Return
-    them as a list of full Irish statements, verbatim from the
-    source, with the LO code if present (e.g. 'LC-CHEM-LO-2.4: ...').
-    If no Irish translation is available in the paragraph, return
-    the English statements verbatim with a leading '[EN-only]' marker.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractChemGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateChemFormativeItem(
@@ -206,48 +169,17 @@ function GenerateChemFormativeItem(
   difficulty: int,
   level: string,
   topic: string
-) -> ChemFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a single formative assessment item for the NCCA Chemistry
-    learning outcome {{ lo_code }}.
-
-    Difficulty: {{ difficulty }}
-    Level: {{ level }} (JC / LC_OL / LC_HL)
-    Topic: {{ topic }}
-
-    Include 4 graduated hints, ≥2 common errors, evidence.source_page,
-    bilingual EN + GA, est_time_minutes 1-30.
-
-    {{ ctx.output_format }}
-  "#
+) -> ChemFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ScoreChemFormativeResponse(
   item: ChemFormativeItem,
   attempt: ChemFormativeItemAttempt
-) -> ChemScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the Chemistry formative item attempt.
-
-    Item: {{ item }}
-    Attempt: {{ attempt }}
-
-    Compute marks, feedback_en + feedback_ga, badge_earned.
-
-    {{ ctx.output_format }}
-  "#
+) -> ChemScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateChemQuestPack(pack: ChemQuestPack) -> ChemQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the Chemistry quest pack. Check LO codes + difficulty
-    bounds + time bounds.
-
-    Pack: {{ pack }}
-
-    {{ ctx.output_format }}
-  "#
+function ValidateChemQuestPack(pack: ChemQuestPack) -> ChemQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

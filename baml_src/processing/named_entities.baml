@@ -134,144 +134,34 @@ class FestivalEntity {
 function ExtractCelticEntities(
   text: string @description("Celtic folklore or historical text"),
   language: CelticLanguage @description("Language of the text")
-) -> CelticNamedEntity[] {
-  client Claude
-  prompt #"
-    Extract all named entities from this {{ language }} text.
-
-    Text: {{ text }}
-
-    Look for:
-    1. PERSON: Names of people, collectors, storytellers, historical figures
-    2. PLACE: Townlands, parishes, counties, geographic features
-       - Include both Irish and English forms
-       - Note: Irish placenames often start with Baile, Cill, Ard, Cnoc, etc.
-    3. SUPERNATURAL: Fairies (sí, sióg), ghosts (taibhse), spirits
-       - Bean sí, púca, leipreachán, etc.
-    4. FESTIVAL: Calendar customs - Samhain, Bealtaine, Lá Fhéile Bríde
-    5. ARTIFACT: Holy wells (tobar), fairy forts (ráth, lios), standing stones
-
-    For each entity provide:
-    - The exact text as it appears
-    - Normalized/standardized form
-    - Both Irish and English forms if available
-    - Confidence level
-
-    {{ ctx.output_format }}
-  "#
+) -> CelticNamedEntity[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract person entities with detailed metadata
 function ExtractPersonEntities(
   text: string @description("Text containing person references")
-) -> PersonEntity[] {
-  client Claude
-  prompt #"
-    Extract all person references from this folklore text.
-
-    Text: {{ text }}
-
-    For each person, identify:
-    - Full name (as given)
-    - Irish form of name if different
-    - Role (collector, informant, teacher, priest, etc.)
-    - Gender
-    - Approximate dates if mentioned
-    - Location association
-    - Occupation if mentioned
-
-    Common collector/informant patterns:
-    - "collected by", "bailíodh ó", "told by", "from the mouth of"
-    - Teacher names in Schools' Collection
-
-    {{ ctx.output_format }}
-  "#
+) -> PersonEntity[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract and link place entities
 function ExtractPlaceEntities(
   text: string @description("Text with place references")
-) -> PlaceEntity[] {
-  client Claude
-  prompt #"
-    Extract all place references from this text.
-
-    Text: {{ text }}
-
-    For each place:
-    - Name as written
-    - Irish form (starting with Baile, Cill, etc.)
-    - English form if different
-    - Type: townland, parish, county, barony, province
-    - County and province if determinable
-
-    Irish placename elements:
-    - Baile (town), Cill (church), Ard (height), Cnoc (hill)
-    - Inis (island), Loch (lake), Abhainn (river)
-    - Dún (fort), Ráth (ringfort), Caisleán (castle)
-
-    {{ ctx.output_format }}
-  "#
+) -> PlaceEntity[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract supernatural entities
 function ExtractSupernaturalEntities(
   text: string @description("Folklore text about supernatural beings")
-) -> SupernaturalEntity[] {
-  client Claude
-  prompt #"
-    Extract supernatural beings and folklore entities from this text.
-
-    Text: {{ text }}
-
-    Look for:
-    - Fairies: sí, sióg, aos sí, daoine maithe, daoine uaisle
-    - Banshee: bean sí (announces death)
-    - Púca: shape-shifter, often a horse
-    - Ghosts: taibhse, sprid
-    - Changelings: iarlais, plentyn newid
-    - Water spirits: each uisce (water horse), murúch (mermaid)
-    - Other: dúlachán (headless), fear gorta (famine spirit)
-
-    For each entity describe:
-    - Name/type
-    - How it appears
-    - What it does
-    - Where it's found
-    - How to protect against it
-
-    {{ ctx.output_format }}
-  "#
+) -> SupernaturalEntity[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract festivals and calendar customs
 function ExtractFestivalEntities(
   text: string @description("Text mentioning festivals or customs")
-) -> FestivalEntity[] {
-  client Claude
-  prompt #"
-    Extract festival and calendar custom references from this text.
-
-    Text: {{ text }}
-
-    Major Celtic festivals:
-    - Samhain (Oct 31/Nov 1) - Halloween, end of harvest
-    - Bealtaine (May 1) - Start of summer
-    - Imbolc / Lá Fhéile Bríde (Feb 1) - St. Brigid's Day
-    - Lúnasa (Aug 1) - Harvest festival
-
-    Christian adaptations:
-    - Lá Nollag (Christmas)
-    - Cáisc (Easter)
-    - Féile Pádraig (St. Patrick's Day)
-
-    For each festival describe:
-    - Name in Irish and English
-    - Date
-    - Associated customs
-    - Foods
-    - Beliefs
-
-    {{ ctx.output_format }}
-  "#
+) -> FestivalEntity[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

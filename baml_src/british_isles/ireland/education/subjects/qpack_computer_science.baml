@@ -122,59 +122,22 @@ class CompQuestPackValidation {
   warnings string[]
 }
 
-function GenerateCompQuestPack(syllabus: LeavingCertSyllabus, past_papers: PastPaper[], marking_schemes: MarkingSchemeSec[], level: string) -> CompQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate Computer Science expert.
-    Build a formative assessment quest pack for NCCA Computer Science at the {{ level }} level.
-
-    Cover ALL learning outcomes with ≥1 FormativeItem each. Reference the
-    source NCCA PDF page in each item's evidence. Order by difficulty (1-5).
-    Suggest cross-subject links to Mathematics (algorithms, complexity) and
-    to Applied Mathematics (computational modelling).
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+function GenerateCompQuestPack(syllabus: LeavingCertSyllabus, past_papers: PastPaper[], marking_schemes: MarkingSchemeSec[], level: string) -> CompQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractCompLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all Computer Science learning outcome statements from the following NCCA syllabus paragraph.
-    Paragraph: {{ paragraph }}
-    {{ ctx.output_format }}
-  "#
+function ExtractCompLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GenerateCompFormativeItem(lo_code: string, difficulty: int, level: string, topic: string) -> CompFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a CS formative item for NCCA LO {{ lo_code }}.
-    Difficulty: {{ difficulty }}; Level: {{ level }}; Topic: {{ topic }}
-    4 graduated hints, ≥2 common errors, evidence.source_page, bilingual EN+GA.
-    For CODE_COMPLETION items, include a Python code snippet in the prompt.
-    {{ ctx.output_format }}
-  "#
+function GenerateCompFormativeItem(lo_code: string, difficulty: int, level: string, topic: string) -> CompFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ScoreCompFormativeResponse(item: CompFormativeItem, attempt: CompFormativeItemAttempt) -> CompScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the CS formative item attempt.
-    Item: {{ item }}; Attempt: {{ attempt }}
-    For code items, run the code mentally + check correctness.
-    {{ ctx.output_format }}
-  "#
+function ScoreCompFormativeResponse(item: CompFormativeItem, attempt: CompFormativeItemAttempt) -> CompScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateCompQuestPack(pack: CompQuestPack) -> CompQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the Computer Science quest pack. Pack: {{ pack }}
-    {{ ctx.output_format }}
-  "#
+function ValidateCompQuestPack(pack: CompQuestPack) -> CompQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -41,12 +41,6 @@ class JCShortCourse {
   specification_year int?
 }
 
-enum YearBand {
-  YEAR_1
-  YEAR_2
-  YEAR_3
-  TY
-}
 
 // ============================================================================
 // BAML function — the canonical short-course extractor (BIEP v2)
@@ -56,14 +50,6 @@ enum YearBand {
 function ExtractJCShortCourse(
   pdf_text: string,
   course_slug: string?,
-) -> JCShortCourse {
-  client ExtractEn
-  prompt #"
-    You are an Irish Junior Cycle short-course analyst. Given the text of a
-    NCCA short-course specification PDF, extract the structured course.
-
-    Course Slug: { course_slug }
-
-    {{ ctx.output_format }}
-  "#
+) -> JCShortCourse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -88,30 +88,8 @@ function GenerateLanguageQuest(
   language: CelticLanguage,
   zone: string,
   difficulty: QuestDifficulty
-) -> Quest {
-  client CelticContentFallback
-  prompt #"
-    Generate an immersive language learning quest for the Tuath Celtic MMO.
-
-    Learning Outcome: {{ learning_outcome.description }}
-    Target Language: {{ language }}
-    Game Zone: {{ zone }}
-    Difficulty: {{ difficulty }}
-
-    Create a quest that:
-    - Teaches the learning outcome through gameplay
-    - Uses authentic Celtic language appropriate to difficulty
-    - Integrates with Celtic mythology and culture
-    - Has 3-5 meaningful objectives
-    - Provides graduated hints (4 levels)
-    - Includes vocabulary and grammar notes
-
-    For BEGINNER: Simple greetings, basic nouns
-    For INTERMEDIATE: Sentences, verb conjugations
-    For ADVANCED: Complex grammar, idioms, literature
-
-    {{ ctx.output_format }}
-  "#
+) -> Quest {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate mythology-based quest
@@ -120,30 +98,8 @@ function GenerateMythologyQuest(
   character: MythologicalCharacter?,
   language: CelticLanguage,
   difficulty: QuestDifficulty
-) -> Quest {
-  client Claude
-  prompt #"
-    Generate a mythology-based quest inspired by this Celtic story.
-
-    Story: {{ story.title }}
-    Summary: {{ story.summary }}
-    Themes: {{ story.themes }}
-    {% if character %}
-    Character: {{ character.name }} - {{ character.description }}
-    {% endif %}
-
-    Target Language: {{ language }}
-    Difficulty: {{ difficulty }}
-
-    Create a quest that:
-    - Retells or explores the mythological story
-    - Teaches Celtic language through the narrative
-    - Features authentic mythological characters
-    - Connects to real Celtic learning outcomes
-    - Creates an immersive experience
-
-    {{ ctx.output_format }}
-  "#
+) -> Quest {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // NPC Generation
@@ -183,29 +139,8 @@ function GenerateNPC(
   role: string,
   language: CelticLanguage,
   mythological_inspiration: MythologicalCharacter?
-) -> NPC {
-  client CelticContentFallback
-  prompt #"
-    Generate an NPC for the Tuath Celtic MMO.
-
-    Game Zone: {{ zone }}
-    Role: {{ role }}
-    Primary Language: {{ language }}
-    {% if mythological_inspiration %}
-    Mythological Inspiration: {{ mythological_inspiration.name }}
-    Character Type: {{ mythological_inspiration.character_type }}
-    Traits: {{ mythological_inspiration.personality }}
-    {% endif %}
-
-    Create an NPC that:
-    - Fits the Celtic cultural context of the zone
-    - Speaks authentically in the target language
-    - Can teach or guide players in language learning
-    - Has memorable personality and appearance
-    - Includes multiple greeting variations
-
-    {{ ctx.output_format }}
-  "#
+) -> NPC {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // World Building
@@ -246,29 +181,8 @@ function GenerateGameLocation(
   real_world_basis: string?,
   mythology_connection: MythologicalLocation?,
   language: CelticLanguage
-) -> GameLocation {
-  client Claude
-  prompt #"
-    Generate a game location for the Tuath Celtic MMO.
-
-    Zone: {{ zone }}
-    {% if real_world_basis %}Real World Basis: {{ real_world_basis }}{% endif %}
-    {% if mythology_connection %}
-    Mythology Connection: {{ mythology_connection.name }}
-    Description: {{ mythology_connection.description }}
-    Significance: {{ mythology_connection.significance }}
-    {% endif %}
-    Primary Language: {{ language }}
-
-    Create a location that:
-    - Authentically represents Celtic culture
-    - Provides language learning opportunities
-    - Has rich atmospheric description
-    - Includes interactive features
-    - Connects to mythology where appropriate
-
-    {{ ctx.output_format }}
-  "#
+) -> GameLocation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Item Generation
@@ -297,22 +211,6 @@ function GenerateGameItem(
   rarity: string,
   mythology_inspiration: string?,
   language: CelticLanguage
-) -> GameItem {
-  client FastExtraction
-  prompt #"
-    Generate a game item for the Tuath Celtic MMO.
-
-    Item Type: {{ item_type }}
-    Rarity: {{ rarity }}
-    {% if mythology_inspiration %}Mythology Inspiration: {{ mythology_inspiration }}{% endif %}
-    Language for names: {{ language }}
-
-    Create an item with:
-    - Authentic Celtic name and English equivalent
-    - Lore connecting to Celtic mythology
-    - Celtic inscription if appropriate
-    - Stats fitting the rarity level
-
-    {{ ctx.output_format }}
-  "#
+) -> GameItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

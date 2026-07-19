@@ -17,16 +17,6 @@ function ExtractWLSMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> WLSMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Wales
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> WLSMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

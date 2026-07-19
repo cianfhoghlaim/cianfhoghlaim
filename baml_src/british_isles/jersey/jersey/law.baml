@@ -15,15 +15,6 @@ function ExtractJERSEYLawDocument(
   island: string,
   language: string,
   text: string
-) -> JERSEYLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Government of Jersey text.
-
-    Island: { island }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> JERSEYLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

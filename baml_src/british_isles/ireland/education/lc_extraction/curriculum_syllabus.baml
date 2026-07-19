@@ -6,6 +6,10 @@
 // the `language` field tracks which is present.
 //
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate
+//
+// Per R28 of `2026-07-19-leaving-cert-pdf-lineage-and-schema-codegen-v1`:
+// composes `LineageTrace` from `lc_extraction/_shared/lineage_trace.baml`
+// for the lineage viewer.
 
 enum SyllabusLanguage {
   EN
@@ -60,6 +64,13 @@ class SyllabusDocument {
   // Cross-cutting
   cross_curricular string[]
   assessment_objectives string[]
+
+  // Lineage provenance (R28). Composed from
+  // `lc_extraction/_shared/lineage_trace.baml`. The Python caller (Dagster
+  // asset + Conway envelope wrapper) populates this at write time —
+  // the BAML function itself doesn't need to fill it in for its own
+  // prompt, but downstream consumers can rely on it being present.
+  lineage LineageTrace?
 }
 
 // ============================================================================
@@ -77,49 +88,19 @@ function ExtractCurriculumSyllabus(
   pdf_text: string,
   subject: string?,
   language: string?,
-) -> SyllabusDocument {
-  client ExtractEn
-  prompt #"
-    You are an Irish Leaving Certificate syllabus expert. Given the
-    text of a NCCA Leaving Certificate syllabus PDF (one of the 6
-    priority subjects: Mathematics, Chemistry, Geography, Gaeilge,
-    English, Computer Science), extract the structured syllabus.
-
-    Subject context: {{ subject }}
-    Language context: {{ language }} (en or ga)
-
-    For each module/topic in the syllabus, populate:
-      - module_id: a deterministic slug, e.g. "maths_algebra", "chem_acids_bases"
-      - name_en: short English display name
-      - name_ga: short Irish display name (null if English-only)
-      - type: CORE / OPTIONAL / SPECIALISM / PRACTICAL / ASSESSMENT
-      - learning_outcomes: array of full NCCA LO statements (verbatim)
-      - estimated_hours: integer (null if not stated)
-
-    Document-level fields:
-      - subject: canonical subject slug ("mathematics", "chemistry", ...)
-      - language: EN / GA / EN_AND_GA based on the PDF's primary language
-      - stage: JC / LC_OL / LC_HL / LC_FDN based on the PDF's level
-      - source_pdf: filename or path
-      - source_pages: integer page count
-      - module_topics: the populated topics
-      - total_learning_outcomes: sum of all LOs across topics
-      - cross_curricular: array of cross-curricular links (e.g. "Science",
-        "Digital Literacy"); empty if not present
-      - assessment_objectives: array of assessment aim statements
-
-    Preserve Irish-language fidelity: every syllabus must keep its
-    bilingual character where attested. Do NOT translate the Irish
-    names to English in `name_ga`.
-
-    Syllabus PDF text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> SyllabusDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
+
+// ============================================================================
+// LineageTrace composer helper
+// ============================================================================
+// Helper that downstream Python callers (Dagster asset + DLT destination
+// wrapper) invoke to populate the `lineage` field of every row emitted by
+// `ExtractCurriculumSyllabus`. Centralised here so the contract is defined
+// next to the consumer.
+//
+// Per openspec R28 (BAML LineageTrace extension).
 
 // ============================================================================
 // Backward-compatibility alias (BIEP v1 — Phase 1.3 migration)

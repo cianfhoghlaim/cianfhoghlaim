@@ -80,36 +80,8 @@ function ExtractLC6Syllabus(
   subject: string,
   text: string,
   language: string,
-) -> LCSyllabus {
-  client Default
-  prompt #"
-    You are an Irish Leaving Certificate syllabus expert for the
-    {{ subject }} subject. Given the text of a NCCA Leaving
-    Certificate syllabus PDF (one of: Mathematics, Chemistry,
-    Geography, Gaeilge, English, Computer Science), extract the
-    structured syllabus and return it in the canonical LCSyllabus
-    shape.
-
-    Language: {{ language }} (en or ga)
-    Source text:
-    ---
-    {{ text }}
-    ---
-
-    Required fields:
-      - subject: the canonical LC6Subject slug (lowercase string)
-      - language: 'en' or 'ga'
-      - topic_count: integer
-      - learning_outcome_count: integer
-      - document: the full SyllabusDocument (modules, LOs, etc.)
-      - level: 'LC_FL' / 'LC_OL' / 'LC_HL' / 'JC' when known
-
-    Preserve Irish-language fidelity: every syllabus must keep its
-    bilingual character where attested. Do NOT translate the
-    Irish names to English in `name_ga`.
-
-    {{ ctx.output_format }}
-  "#
+) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -122,44 +94,26 @@ function ExtractLC6Syllabus(
 // subject. Each is a one-line alias for ExtractLC6Syllabus
 // with the `subject` argument pinned.
 
-function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {
-  client Default
-  prompt #"
-    {{ ExtractLC6Syllabus(subject="mathematics", text=text, language=language) }}
-  "#
+function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {
-  client Default
-  prompt #"
-    {{ ExtractLC6Syllabus(subject="chemistry", text=text, language=language) }}
-  "#
+function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {
-  client Default
-  prompt #"
-    {{ ExtractLC6Syllabus(subject="geography", text=text, language=language) }}
-  "#
+function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {
-  client Default
-  prompt #"
-    {{ ExtractLC6Syllabus(subject="gaeilge", text=text, language=language) }}
-  "#
+function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {
-  client Default
-  prompt #"
-    {{ ExtractLC6Syllabus(subject="english", text=text, language=language) }}
-  "#
+function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {
-  client Default
-  prompt #"
-    {{ ExtractLC6Syllabus(subject="computer_science", text=text, language=language) }}
-  "#
+function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

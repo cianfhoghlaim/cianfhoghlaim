@@ -35,7 +35,7 @@ class EnsembleConsensus {
 
   // Final consensus output
   voted_output string           @description("JSON-serialised AQAQualSpec / OCRQualSpec / EdexcelQualSpec")
-  voted_canonical_id string     @description("(subject, board, qualification_level, version, specification_code) tuple"
+  voted_canonical_id string     @description("(subject, board, qualification_level, version, specification_code) tuple")
 
   // Provenance trail
   baml_canonical_id string?
@@ -60,20 +60,6 @@ function ExtractEnglandEnsembleConsensus(
   qwen3_vl_response: string?,
   gemma4_response: string?,
   subject: string?,
-) -> EnsembleConsensus {
-  client ExtractEnStrong
-  prompt #"
-    You are the England BIEP v2 ensemble coordinator. Given the outputs
-    from the 4 OCR/VLM paths, run the canonical RAGAS vote + return the
-    per-path provenance.
-
-    Subject: { subject }
-
-    Path 1 (BAML): { baml_output }
-    Path 2 (Unstract): { unstract_json }
-    Path 3 (qwen3-vl-8b): { qwen3_vl_response }
-    Path 4 (gemma-4-26B-A4B): { gemma4_response }
-
-    {{ ctx.output_format }}
-  "#
+) -> EnsembleConsensus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

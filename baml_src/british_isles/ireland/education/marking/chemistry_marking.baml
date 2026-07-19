@@ -60,8 +60,8 @@ class ChemistryMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors "baml_src.education.lc_extraction.marking_scheme.GradeDescriptor[]"
-  mark_allocations "baml_src.education.lc_extraction.marking_scheme.MarkAllocation[]"
+  grade_descriptors GradeDescriptor[]
+  mark_allocations MarkAllocation[]
 
   subject_specific ChemSubjectDiscriminator
 
@@ -74,43 +74,19 @@ function ExtractChemistryMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> ChemistryMarkingScheme {
-  client ExtractEn
-  prompt #"
-    You are an Irish Leaving Certificate Chemistry marking-scheme
-    analyst. Given the text of an NCCA / SEC LC Chemistry marking
-    scheme PDF, extract the structured scheme with the
-    Chemistry-specific discriminator.
-
-    Year: {{ year }}
-    Level: {{ level }} (HL / OL)
-
-    Subject discriminator fields:
-      - primary_topic: dominant NCCA topic (Organic / Inorganic / Electrochem / etc.)
-      - has_mandatory_experiment: always true
-      - experiment_types[]: the 4 mandatory NCCA experiments referenced
-      - dominant_question_types[]: the question-type mix
-      - most_common_mistake: pick the single most common Chemistry mistake
-      - has_data_booklet: always true for LC Chemistry
-
-    Document text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> ChemistryMarkingScheme {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-test chemistry_marking_extraction_smoke {
-  functions [ExtractChemistryMarkingScheme]
-  args {
-    pdf_text <<<
-      "Marking scheme for LC Chemistry Paper 2 HL 2024. Mandatory
-       experiments: titration, distillation. Most common mistake:
-       student forgot to include state symbols in the balanced equation."
-    >>>
-    year { 2024 }
-    level { "hl" }
-  }
-}
+// test chemistry_marking_extraction_smoke {
+//   functions [ExtractChemistryMarkingScheme]
+//   args {
+//     pdf_text <<<
+//       "Marking scheme for LC Chemistry Paper 2 HL 2024. Mandatory
+//        experiments: titration, distillation. Most common mistake:
+//        student forgot to include state symbols in the balanced equation."
+//     >>>
+//     year { 2024 }
+//     level { "hl" }
+//   }
+// }

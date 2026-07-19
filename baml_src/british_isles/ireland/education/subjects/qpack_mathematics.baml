@@ -164,44 +164,12 @@ function GenerateMathQuestPack(
   past_papers: PastPaper[],
   marking_schemes: MarkingSchemeSec[],
   level: string
-) -> MathQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate Mathematics expert.
-    Build a formative assessment quest pack for NCCA Mathematics at the
-    {{ level }} level.
-
-    The quest pack should:
-    - Cover ALL learning outcomes in the syllabus that are appropriate
-      for the {{ level }} level (Foundation, Ordinary, or Higher).
-    - Contain ≥1 MathFormativeItem per learning outcome.
-    - Bilingual EN + GA on every user-facing text field (text_ga may be
-      null for EN-only LOs).
-    - Reference the source NCCA PDF page in each item's evidence.
-    - Be ordered by difficulty (1 → 5).
-    - Suggest cross-subject links to Applied Mathematics (APPM) and
-      Chemistry where the topic naturally bridges.
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+) -> MathQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractMathLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all Mathematics learning outcome statements from the
-    following NCCA syllabus paragraph. Return them as a list of full
-    statements (verbatim from the source, with the LO code if present).
-
-    Paragraph:
-    {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractMathLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -213,22 +181,8 @@ function ExtractMathLOStatement(paragraph: string) -> string[] {
 // (Gaeilge) statement text. Rare for Mathematics syllabi (most are
 // EN-only) but the shape is canonical so the GA path runs end-to-end.
 
-function ExtractMathGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"
-    Extract all NCCA Mathematics strand/outcome statements in Irish
-    (Gaeilge) from the following NCCA syllabus paragraph. Return
-    them as a list of full Irish statements, verbatim from the
-    source, with the LO code if present (e.g. 'LC-MATHS-LO-2.4: ...').
-    For Mathematics, the source language is typically English; if
-    no Irish translation is available in the paragraph, return the
-    English statements verbatim and tag them with a leading
-    '[EN-only]' marker.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractMathGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateMathFormativeItem(
@@ -236,90 +190,23 @@ function GenerateMathFormativeItem(
   difficulty: int,
   level: string,
   topic: string
-) -> MathFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a single formative assessment item for the NCCA Leaving
-    Certificate (or Junior Cycle) Mathematics learning outcome
-    {{ lo_code }}.
-
-    Difficulty: {{ difficulty }} (1 = easiest, 5 = hardest)
-    Level: {{ level }} (JC / LC_FL / LC_OL / LC_HL)
-    Topic: {{ topic }}
-
-    The item must:
-    - Be appropriate for the stated difficulty + level
-    - Reference a specific NCCA PDF page in the evidence.source_page
-    - Have 4 graduated hints (Level 1 nudge → Level 4 step-by-step)
-    - List ≥2 common student errors in common_errors
-    - Be bilingual EN + GA (text_ga may be null for EN-only LOs)
-    - Have an est_time_minutes between 1 and 30
-
-    Use the math_agent feedback channel by default.
-
-    {{ ctx.output_format }}
-  "#
+) -> MathFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ScoreMathFormativeResponse(
   item: MathFormativeItem,
   attempt: MathFormativeItemAttempt
-) -> MathScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the following student attempt at the formative item.
-
-    Item:
-    - LO: {{ item.lo_code }}
-    - Level: {{ item.level }}
-    - Difficulty: {{ item.difficulty }}
-    - Expected answer: {{ item.expected_answer }}
-    - Marking scheme: {{ item.marking_scheme }}
-
-    Student attempt:
-    - Response: {{ attempt.student_response }}
-    - Format: {{ attempt.response_format }}
-    - Time taken: {{ attempt.time_taken_seconds }} seconds
-    - Hints used: {{ attempt.hints_used }} of 4
-
-    Compute:
-    - Total marks (from the marking scheme)
-    - Marks awarded (per-step breakdown)
-    - is_correct
-    - partial_credit_pct
-    - feedback_en + feedback_ga (bilingual)
-    - next_recommended_lo (suggest the next LO based on this attempt)
-    - badge_earned (true iff partial_credit_pct >= 80)
-
-    Be encouraging in the feedback. Use Irish-language feedback when
-    the student wrote in Irish or when the item is Gaeilge-taught.
-
-    {{ ctx.output_format }}
-  "#
+) -> MathScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
 // Helper: validate that all items in a quest pack reference valid LOs
 // ============================================================================
 
-function ValidateMathQuestPack(pack: MathQuestPack) -> MathQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the following Mathematics quest pack.
-
-    Check that:
-    - All items reference LO codes that match the pack's level
-    - The total_marks equals the sum of item.marks_per_step
-    - Each item's evidence.source_pdf exists in the corpus
-    - Each item's difficulty is within [1, 5]
-    - Each item's est_time_minutes is within [1, 30]
-
-    Pack: {{ pack }}
-
-    Return the validation result.
-
-    {{ ctx.output_format }}
-  "#
+function ValidateMathQuestPack(pack: MathQuestPack) -> MathQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 class MathQuestPackValidation {

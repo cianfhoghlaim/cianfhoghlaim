@@ -145,191 +145,90 @@ class HandwrittenEquation {
 // Functions
 // =============================================================================
 
-function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepResearchReport {
-  client ExtractEn
-  prompt #"
-    You are an expert research analyst. Extract a structured summary of a Gemini Deep Research report.
-
-    File name: {{ file_name }}
-
-    The report text follows. Extract the topic (one sentence), the high-level domain,
-    a 2-3 sentence summary, 3-7 key findings (each a single sentence), the list of
-    cited URLs (with anchor text when present), the Gemini account label if the
-    document mentions it (else null), the research date if discernible (else null),
-    and your overall confidence 0.0-1.0.
-
-    Report text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepResearchReport {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: string) -> UniversityOfGalwayArtifact {
-  client ExtractEn
-  prompt #"
-    You are an expert archivist of a University of Galway student's academic record.
-    Extract a structured summary of a single academic artefact.
-
-    File name: {{ file_name }}
-    File type: {{ file_type }}
-
-    Determine: the artefact kind (assignment, exam, lecture notes, action research,
-    placement, code file, scanned pages, presentation, transcript, or other), the
-    course code if extractable from the file name or contents (e.g. CT511, GA101,
-    ED305, GF107), the module / paper title if known, the programme stage
-    (undergraduate, PGCE, masters, PhD, professional, unknown), the language
-    (always "en" for this change), 3-7 key topics, whether the artefact contains
-    handwriting that would need OCR / HTR (true for .pages files, scanned PDFs, or
-    any document where you can see reference to handwritten notes), the approximate
-    word count if discernible, and your overall confidence 0.0-1.0.
-
-    Artefact text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: string) -> UniversityOfGalwayArtifact {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> HandwrittenEquation[] {
-  client ExtractEn
-  prompt #"
-    You are an expert OCR / HTR analyst. The following text was extracted from a
-    handwritten page (e.g. an Apple Pages file, a scanned PDF, or a maths
-    notebook). Extract every distinct mathematical equation as a separate
-    `HandwrittenEquation`.
-
-    File name: {{ file_name }}
-
-    For each equation emit:
-      - `latex`: the LaTeX representation, using \\\\ for backslashes inside strings
-      - `verbatim`: the verbatim transcription as best you can
-      - `context`: the surrounding sentence or paragraph
-      - `confidence`: a float 0.0-1.0 reflecting how certain the LaTeX is
-      - `equation_confidence`: one of HIGH, MEDIUM, LOW, UNREADABLE
-
-    OCR text:
-    ---
-    {{ ocr_text }}
-    ---
-
-    If the OCR text contains no equations, return an empty list.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> HandwrittenEquation[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {
-  client ExtractEn
-  prompt #"
-    You are an expert academic archivist. Extract structured metadata from a
-    research paper PDF.
-
-    File name: {{ file_name }}
-    Filename-derived arXiv ID (use only if confirmed by the text): {{ arxiv_id }}
-
-    Determine:
-      - `paper_kind`: one of arxiv_preprint, journal_article, conference_paper,
-        thesis, book_chapter, book, or other.
-      - `arxiv_id`: the bare identifier (e.g. "2504.02890"). Null if the paper
-        is not an arXiv paper.
-      - `doi`: the Digital Object Identifier, if visible on the first page.
-        Format as "10.xxxx/xxxx" without the "doi:" prefix.
-      - `title`: the paper title, cleaned of any newline artefacts.
-      - `authors`: ordered list of {name, affiliation}. Use null for missing
-        affiliations. Don't invent authors.
-      - `year`: 4-digit publication year, or null.
-      - `abstract`: the paper abstract, or null if not visible in the first
-        2 pages.
-      - `venue`: journal/conference name for journal_article and
-        conference_paper; institution for thesis; null otherwise.
-      - `irish_relevant`: true if the paper is about the Irish language,
-        Celtic NLP, or Irish-language HTR/OCR.
-      - `htr_relevant`: true if the paper is about handwritten text recognition
-        or handwriting recognition more broadly (any language).
-      - `confidence`: 0.0-1.0.
-
-    Paper text (first ~2 pages):
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // Tests
 // =============================================================================
 
-test ExtractGeminiReportTest {
-  functions [ExtractGeminiReport]
-  args {
-    pdf_text #"
-      # Cross-border Medical Malpractice: A Comparative Study
+// test ExtractGeminiReportTest {
+//   functions [ExtractGeminiReport]
+//   args {
+//     pdf_text #"
+//       # Cross-border Medical Malpractice: A Comparative Study
+// 
+//       This report examines the legal recourse available to dual British-Irish
+//       citizens who experience medical malpractice in either jurisdiction.
+// 
+//       Key findings:
+//       1. The Common Travel Area provides limited reciprocal enforcement.
+//       2. Statute of limitations varies by jurisdiction.
+//       3. Expert witness requirements differ significantly.
+//     "#
+//     file_name "cross_border_medical_malpractice_and_data_breach.pdf"
+//   }
+// }
 
-      This report examines the legal recourse available to dual British-Irish
-      citizens who experience medical malpractice in either jurisdiction.
+// test ExtractUoGArtifactTest {
+//   functions [ExtractUoGArtifact]
+//   args {
+//     pdf_text #"
+//       ED305 Assignment 2: A reflective account of a 4th-year B.Ed placement
+//       at an urban DEIS school. Topics: lesson planning, classroom management,
+//       inclusive education, assessment for learning.
+//     "#
+//     file_name "ed305_assignment_2.pdf"
+//     file_type "pdf"
+//   }
+// }
 
-      Key findings:
-      1. The Common Travel Area provides limited reciprocal enforcement.
-      2. Statute of limitations varies by jurisdiction.
-      3. Expert witness requirements differ significantly.
-    "#
-    file_name "cross_border_medical_malpractice_and_data_breach.pdf"
-  }
-}
+// test ExtractHandwrittenEquationsTest {
+//   functions [ExtractHandwrittenEquations]
+//   args {
+//     ocr_text #"
+//       Q1. Compute the definite integral
+//         \int_0^1 x^2 \, dx
+//       using the Fundamental Theorem of Calculus.
+//     "#
+//     file_name "measurements.pages"
+//   }
+// }
 
-test ExtractUoGArtifactTest {
-  functions [ExtractUoGArtifact]
-  args {
-    pdf_text #"
-      ED305 Assignment 2: A reflective account of a 4th-year B.Ed placement
-      at an urban DEIS school. Topics: lesson planning, classroom management,
-      inclusive education, assessment for learning.
-    "#
-    file_name "ed305_assignment_2.pdf"
-    file_type "pdf"
-  }
-}
-
-test ExtractHandwrittenEquationsTest {
-  functions [ExtractHandwrittenEquations]
-  args {
-    ocr_text #"
-      Q1. Compute the definite integral
-        \int_0^1 x^2 \, dx
-      using the Fundamental Theorem of Calculus.
-    "#
-    file_name "measurements.pages"
-  }
-}
-
-test ExtractZoteroMetadataTest {
-  functions [ExtractZoteroMetadata]
-  args {
-    pdf_text #"
-      gaHealth: An English-Irish Bilingual Corpus of Health
-      Records for Irish NLP
-
-      Lankford, Mark and others
-
-      Abstract: We present gaHealth, a bilingual (English-Irish) corpus of
-      de-identified health records, designed to support downstream NLP tasks
-      including named-entity recognition, translation, and clinical text
-      summarisation in the Irish language.
-
-      1. Introduction
-      The Irish language is severely under-resourced in health NLP...
-    "#
-    file_name "Lankford et al. - 2024 - gaHealth An English-Irish Bilingual Corpus of Hea.pdf"
-    arxiv_id "2402.02890"
-  }
-}
+// test ExtractZoteroMetadataTest {
+//   functions [ExtractZoteroMetadata]
+//   args {
+//     pdf_text #"
+//       gaHealth: An English-Irish Bilingual Corpus of Health
+//       Records for Irish NLP
+// 
+//       Lankford, Mark and others
+// 
+//       Abstract: We present gaHealth, a bilingual (English-Irish) corpus of
+//       de-identified health records, designed to support downstream NLP tasks
+//       including named-entity recognition, translation, and clinical text
+//       summarisation in the Irish language.
+// 
+//       1. Introduction
+//       The Irish language is severely under-resourced in health NLP...
+//     "#
+//     file_name "Lankford et al. - 2024 - gaHealth An English-Irish Bilingual Corpus of Hea.pdf"
+//     arxiv_id "2402.02890"
+//   }
+// }
 
 
 // =============================================================================
@@ -382,45 +281,8 @@ function PreResearchSite(
   goal: string,
   backend_payload: string,
   backend_name: string
-) -> ResearchSiteMap {
-  client ExtractEnStrong
-  prompt #"
-    You are a senior web-research strategist. You just received a structured
-    pre-research response from the {{ backend_name }} backend for a
-    pre-research goal on a target URL.
-
-    Your job is to translate that raw response into a typed
-    ``ResearchSiteMap`` that the oideachais pipeline can act on. The
-    pipeline will use ``recommended_strategy`` to pick a backend for the
-    bulk crawl, and ``recommended_schema`` to drive per-page LLM extraction.
-
-    Target URL: {{ url }}
-    Pre-research goal: {{ goal }}
-    Backend raw response:
-    ---
-    {{ backend_payload }}
-    ---
-
-    The schema fields you must fill are:
-    - ``sitemap_urls`` — extract every URL mentioned in the payload (limit 50)
-    - ``primary_content_types`` — 2-5 content types you can see in the payload,
-      chosen from: press_releases, case_decisions, policy_documents, statistics,
-      guidance_documents, legislation, forms, dashboards, contact_pages, about_pages
-    - ``site_structure_summary`` — 2-3 sentence summary of the site's structure
-    - ``recommended_strategy`` — one of 'crawl4ai-static' (default; static HTML,
-      no anti-bot), 'firecrawl-agent' (heavy JS rendering needed), or
-      'stagehand-interactive' (login wall, search box, multi-step flow)
-    - ``recommended_schema`` — a JSON schema that describes a single page's
-      record shape, e.g. for press_releases: {date, title, summary, source_url, tags}
-    - ``estimated_pages`` — approximate number of pages in the sitemap
-    - ``estimated_credits`` — Firecrawl credits if every page were scraped
-      (assume 1 credit per page as a first estimate; adjust if the site is
-      clearly large/small)
-    - ``backend_used`` — copy the value of {{ backend_name }}
-    - ``confidence`` — your overall confidence 0.0-1.0 in the extraction
-
-    {{ ctx.output_format }}
-  "#
+) -> ResearchSiteMap {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -452,41 +314,8 @@ function CondenseToCriticalInfo(
   raw_markdown: string,
   goal: string,
   max_output_bytes: int
-) -> CondensedPage {
-  client ExtractEn
-  prompt #"
-    You are a precision data condenser. A user wants to know what data they
-    have and how it was sourced. The source markdown below is the full
-    content of one web page — typically 10-200 KB. Your job is to produce a
-    ``CondensedPage`` that preserves the information that matters for the
-    user's goal, and discards the rest.
-
-    The output MUST be small — under {{ max_output_bytes }} bytes
-    (counting the JSON encoding of the full record). Aim for 3-7 ``key_facts``
-    and 0-10 ``entities``.
-
-    User's goal: {{ goal }}
-
-    Source markdown (the full page, may be truncated with …):
-    ---
-    {{ raw_markdown }}
-    ---
-
-    Extract:
-    - ``title`` — the page title
-    - ``one_sentence_summary`` — one sentence
-    - ``key_facts`` — 3-7 atomic facts (each a single sentence)
-    - ``entities`` — 0-10 named entities (people, orgs, dates, places, case_refs,
-      statutes, policy_doc, amounts). For each, set ``kind`` to one of the
-      listed types, ``value`` to the display value, and ``url`` if the entity
-      has a source link
-    - ``ui_indicators`` — leave this empty (IdentifyUiPatterns fills it later)
-    - ``bytes_in`` — exact byte count of the input markdown
-    - ``bytes_out`` — your best estimate of the output JSON size
-    - ``confidence`` — your overall confidence 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> CondensedPage {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -518,36 +347,8 @@ class UiIndicator {
 function IdentifyUiPatterns(
   raw_markdown: string,
   goal: string
-) -> UiIndicator[] {
-  client ExtractEn
-  prompt #"
-    You are a UI pattern detector. Given a page's markdown content and the
-    user's research goal, identify any interactive elements that the
-    user might want to script (e.g. "type a query into the case search box",
-    "click the date range filter", "log in to access the protected reports").
-
-    For each distinct UI element you find, return a ``UiIndicator`` with:
-    - ``has_ui`` — true if at least one element is worth scripting
-    - ``ui_type`` — one of: SEARCH_BOX, FORM, DASHBOARD, MAP, LOGIN_WALL,
-      FILE_DOWNLOAD, CAROUSEL, TIMELINE, OTHER, NONE
-    - ``element_label`` — short description (3-8 words)
-    - ``grounding_query`` — natural-language query for the visual-grounding
-      step, e.g. "the case search input box at the top of the page"
-    - ``confidence`` — 0.0-1.0
-
-    User's goal: {{ goal }}
-
-    Page markdown (may be truncated with …):
-    ---
-    {{ raw_markdown }}
-    ---
-
-    Return 0-N indicators. If the page is a plain article or press release
-    with no interactive elements, return one indicator with ``has_ui=false``
-    and ``ui_type=NONE``.
-
-    {{ ctx.output_format }}
-  "#
+) -> UiIndicator[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -575,34 +376,8 @@ class GroundedElement {
 function VisualGroundingFromScreenshot(
   screenshot_description: string,
   natural_language_query: string
-) -> GroundedElement {
-  client ExtractEnStrong
-  prompt #"
-    You are a visual element localiser. Given a description of a screenshot
-    and a natural-language query describing the element to find, return the
-    element's bounding box and metadata.
-
-    Screenshot description:
-    ---
-    {{ screenshot_description }}
-    ---
-
-    Query: {{ natural_language_query }}
-
-    Return:
-    - ``label`` — short label for the element (3-8 words)
-    - ``bbox`` — normalised bounding box in 0-1 image coordinates
-      (x_min, y_min, x_max, y_max)
-    - ``action`` — what the user would do with this element: 'click', 'type',
-      'select', 'hover', 'drag', 'submit'
-    - ``selector`` — best-guess CSS selector, if derivable; null otherwise
-    - ``confidence`` — your confidence in this grounding, 0.0-1.0
-
-    If the element is not visible in the screenshot, return confidence=0
-    and bbox=[0, 0, 0, 0].
-
-    {{ ctx.output_format }}
-  "#
+) -> GroundedElement {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -615,35 +390,8 @@ function SummarizeSite(
   goal: string,
   sitemap_urls: string[],
   sample_markdown: string
-) -> ResearchSiteMap {
-  client ExtractEn
-  prompt #"
-    You are a senior web-research strategist. The credit budget for paid
-    pre-research is exhausted, so we are running a free fallback: a sitemap
-    crawl + a single sample-page scrape. From these two signals, produce a
-    ``ResearchSiteMap`` so the bulk-crawl pipeline can still act on the
-    source.
-
-    Target URL: {{ url }}
-    Pre-research goal: {{ goal }}
-    Sitemap size: {{ sitemap_urls | length }} URLs
-
-    Sitemap (first 50):
-    {% for u in sitemap_urls[:50] %}
-    - {{ u }}
-    {% endfor %}
-
-    Sample page markdown (truncated with …):
-    ---
-    {{ sample_markdown }}
-    ---
-
-    Extract the same fields as PreResearchSite. Note that your
-    ``estimated_pages`` is the size of the sitemap. Set ``backend_used`` to
-    'crawl4ai_local' and ``credits_spent`` to 0.
-
-    {{ ctx.output_format }}
-  "#
+) -> ResearchSiteMap {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -670,141 +418,128 @@ function ClassifySiteCivic(
   url: string,
   site_structure_summary: string,
   primary_content_types: string[]
-) -> AuthorArchiveCivicCategory {
-  client ExtractEn
-  prompt #"
-    You are a British Isles civic-source classifier. Given a pre-researched
-    site's URL, a 2-3 sentence summary, and the list of detected content
-    types, classify the site into one of the 10 official_media categories.
-
-    URL: {{ url }}
-    Summary: {{ site_structure_summary }}
-    Content types: {{ primary_content_types }}
-
-    Return the single best-fitting AuthorArchiveCivicCategory.
-
-    {{ ctx.output_format }}
-  "#
+) -> AuthorArchiveCivicCategory {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // Tests for the new functions
 // =============================================================================
 
-test PreResearchSiteTest {
-  functions [PreResearchSite]
-  args {
-    url "https://www.cps.gov.uk"
-    goal "Identify all press releases, prosecution guidance, and case decision databases published 2020-2026."
-    backend_payload #"
-      Sitemap (3,847 URLs):
-        https://www.cps.gov.uk/
-        https://www.cps.gov.uk/legal-guidance
-        https://www.cps.gov.uk/legal-guidance/prosecution-guidance
-        https://www.cps.gov.uk/legal-guidance/legal-guidance-corporate-manslaughter
-        https://www.cps.gov.uk/news
-        https://www.cps.gov.uk/news/press-releases
-        https://www.cps.gov.uk/legal-guidance/case-decisions
-        https://www.cps.gov.uk/legal-guidance/case-decisions/r-v-...
-        https://www.cps.gov.uk/about
-      Primary content types: prosecution_guidance, case_decisions, press_releases, statistics
-      Estimated pages: 3,847
-    "#
-    backend_name "firecrawl_mcp"
-  }
-}
+// test PreResearchSiteTest {
+//   functions [PreResearchSite]
+//   args {
+//     url "https://www.cps.gov.uk"
+//     goal "Identify all press releases, prosecution guidance, and case decision databases published 2020-2026."
+//     backend_payload #"
+//       Sitemap (3,847 URLs):
+//         https://www.cps.gov.uk/
+//         https://www.cps.gov.uk/legal-guidance
+//         https://www.cps.gov.uk/legal-guidance/prosecution-guidance
+//         https://www.cps.gov.uk/legal-guidance/legal-guidance-corporate-manslaughter
+//         https://www.cps.gov.uk/news
+//         https://www.cps.gov.uk/news/press-releases
+//         https://www.cps.gov.uk/legal-guidance/case-decisions
+//         https://www.cps.gov.uk/legal-guidance/case-decisions/r-v-...
+//         https://www.cps.gov.uk/about
+//       Primary content types: prosecution_guidance, case_decisions, press_releases, statistics
+//       Estimated pages: 3,847
+//     "#
+//     backend_name "firecrawl_mcp"
+//   }
+// }
 
-test CondenseToCriticalInfoTest {
-  functions [CondenseToCriticalInfo]
-  args {
-    raw_markdown #"
-      # CPS publishes new guidance on prosecuting sexual offences
+// test CondenseToCriticalInfoTest {
+//   functions [CondenseToCriticalInfo]
+//   args {
+//     raw_markdown #"
+//       # CPS publishes new guidance on prosecuting sexual offences
+// 
+//       The Crown Prosecution Service has today (15 January 2024) published
+//       new legal guidance on prosecuting sexual offences. The guidance
+//       updates the previous 2017 edition and reflects the latest case law
+//       from the Court of Appeal.
+// 
+//       Key changes include:
+//       - New section on digital evidence handling
+//       - Updated thresholds for charging decisions
+//       - Revised guidance on consent and capacity
+// 
+//       Director of Public Prosecutions Max Hill KC said: "This guidance
+//       represents our most comprehensive review in seven years. It is the
+//       product of extensive consultation with victims' groups, defence
+//       practitioners, and the judiciary."
+// 
+//       The full guidance is available on the CPS website at
+//       https://www.cps.gov.uk/legal-guidance/prosecuting-sexual-offences.
+// 
+//       For media enquiries, contact the CPS press office on 020 3357 0897.
+//     "#
+//     goal "Extract press release summary and key changes"
+//     max_output_bytes 2048
+//   }
+// }
 
-      The Crown Prosecution Service has today (15 January 2024) published
-      new legal guidance on prosecuting sexual offences. The guidance
-      updates the previous 2017 edition and reflects the latest case law
-      from the Court of Appeal.
+// test IdentifyUiPatternsTest {
+//   functions [IdentifyUiPatterns]
+//   args {
+//     raw_markdown #"
+//       # CPS Case Decisions
+// 
+//       Search the CPS case decisions database:
+// 
+//       [search box: "Enter case name, citation, or keyword"]
+// 
+//       Filters:
+//       - Date range: [from] [to]
+//       - Charge type: [dropdown]
+//       - Court: [dropdown]
+// 
+//       Results (showing 1-10 of 4,521):
+//     "#
+//     goal "Find the case search input box for the research workflow"
+//   }
+// }
 
-      Key changes include:
-      - New section on digital evidence handling
-      - Updated thresholds for charging decisions
-      - Revised guidance on consent and capacity
+// test VisualGroundingFromScreenshotTest {
+//   functions [VisualGroundingFromScreenshot]
+//   args {
+//     screenshot_description "Page with a header containing the CPS logo, a horizontal navigation bar, a search box labelled 'Search CPS', a sidebar with topic links (Legal guidance, Case decisions, News), and a main content area showing 'Press releases'."
+//     natural_language_query "the case search input box at the top of the page"
+//   }
+// }
 
-      Director of Public Prosecutions Max Hill KC said: "This guidance
-      represents our most comprehensive review in seven years. It is the
-      product of extensive consultation with victims' groups, defence
-      practitioners, and the judiciary."
+// test SummarizeSiteTest {
+//   functions [SummarizeSite]
+//   args {
+//     url "https://www.cps.gov.uk"
+//     goal "Extract press releases and legal guidance"
+//     sitemap_urls [
+//       "https://www.cps.gov.uk/",
+//       "https://www.cps.gov.uk/news",
+//       "https://www.cps.gov.uk/legal-guidance",
+//       "https://www.cps.gov.uk/about"
+//     ]
+//     sample_markdown #"
+//       # Crown Prosecution Service
+// 
+//       The Crown Prosecution Service is the principal public prosecution
+//       service for England and Wales. We prosecute criminal cases investigated
+//       by the police and other investigative bodies.
+// 
+//       Our work includes:
+//       - Deciding whether to charge suspects
+//       - Preparing cases for court
+//       - Conducting prosecutions in magistrates' and crown courts
+//     "#
+//   }
+// }
 
-      The full guidance is available on the CPS website at
-      https://www.cps.gov.uk/legal-guidance/prosecuting-sexual-offences.
-
-      For media enquiries, contact the CPS press office on 020 3357 0897.
-    "#
-    goal "Extract press release summary and key changes"
-    max_output_bytes 2048
-  }
-}
-
-test IdentifyUiPatternsTest {
-  functions [IdentifyUiPatterns]
-  args {
-    raw_markdown #"
-      # CPS Case Decisions
-
-      Search the CPS case decisions database:
-
-      [search box: "Enter case name, citation, or keyword"]
-
-      Filters:
-      - Date range: [from] [to]
-      - Charge type: [dropdown]
-      - Court: [dropdown]
-
-      Results (showing 1-10 of 4,521):
-    "#
-    goal "Find the case search input box for the research workflow"
-  }
-}
-
-test VisualGroundingFromScreenshotTest {
-  functions [VisualGroundingFromScreenshot]
-  args {
-    screenshot_description "Page with a header containing the CPS logo, a horizontal navigation bar, a search box labelled 'Search CPS', a sidebar with topic links (Legal guidance, Case decisions, News), and a main content area showing 'Press releases'."
-    natural_language_query "the case search input box at the top of the page"
-  }
-}
-
-test SummarizeSiteTest {
-  functions [SummarizeSite]
-  args {
-    url "https://www.cps.gov.uk"
-    goal "Extract press releases and legal guidance"
-    sitemap_urls [
-      "https://www.cps.gov.uk/",
-      "https://www.cps.gov.uk/news",
-      "https://www.cps.gov.uk/legal-guidance",
-      "https://www.cps.gov.uk/about"
-    ]
-    sample_markdown #"
-      # Crown Prosecution Service
-
-      The Crown Prosecution Service is the principal public prosecution
-      service for England and Wales. We prosecute criminal cases investigated
-      by the police and other investigative bodies.
-
-      Our work includes:
-      - Deciding whether to charge suspects
-      - Preparing cases for court
-      - Conducting prosecutions in magistrates' and crown courts
-    "#
-  }
-}
-
-test ClassifySiteCivicTest {
-  functions [ClassifySiteCivic]
-  args {
-    url "https://www.cps.gov.uk"
-    site_structure_summary "Crown Prosecution Service — the principal public prosecution service for England and Wales. Site hosts legal guidance, case decisions, press releases, and statistics on prosecution outcomes."
-    primary_content_types ["press_releases", "legal_guidance", "case_decisions", "statistics"]
-  }
-}
+// test ClassifySiteCivicTest {
+//   functions [ClassifySiteCivic]
+//   args {
+//     url "https://www.cps.gov.uk"
+//     site_structure_summary "Crown Prosecution Service — the principal public prosecution service for England and Wales. Site hosts legal guidance, case decisions, press releases, and statistics on prosecution outcomes."
+//     primary_content_types ["press_releases", "legal_guidance", "case_decisions", "statistics"]
+//   }
+// }

@@ -144,34 +144,28 @@ class Notebook {
   difficulty string
 }
 
-function GetSubjectList(language: string) -> Subject[] {
-  client Claude
-  prompt #"You are the cianfhoghlaim content catalogue. Return the 8 NCCA Leaving Certificate subjects (Mathematics, Applied Mathematics, Chemistry, Geography, History, English, Gaeilge, Computer Science) in {{ language }} with the 5x8 mastery matrix."
+function GetSubjectList(language: string) -> Subject[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {
-  client Claude
-  prompt #"You are the cianfhoghlaim content catalogue. Return the LC past exam papers for {{ subject }} from {{ year_from }} to {{ year_to }}, with the year, paper number, topic tags, and CF R2 keys."
+function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> MarkingSchemeShared[] {
-  client Claude
-  prompt #"You are the cianfhoghlaim content catalogue. Return the LC marking schemes for {{ subject }} from {{ year_from }} to {{ year_to }}, with the rubric style, criteria, common mistakes, and penalisations."
+function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> MarkingSchemeShared[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] {
-  client Claude
-  prompt #"You are the cianfhoghlaim formative assessment generator. Generate 3-5 practice items for {{ subject }} {{ lo_code }}, bilingual EN + GA, with the 13-tier éraic mastery progression."
+function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GetFoundations() -> Foundation[] {
-  client Claude
-  prompt #"You are the cianfhoghlaim content catalogue. Return the 5 NCCA root-level programme PDFs (key-competencies, sc-l1-l2-programme, scr-advisory, online-learning, online-certification) with the page count and description."
+function GetFoundations() -> Foundation[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GetNotebooks(subject: string) -> Notebook[] {
-  client Claude
-  prompt #"You are the cianfhoghlaim content catalogue. Return the marimo notebooks for {{ subject }} (1 main + any cross-subject notebooks) with the title, marimo URL, cocoindex path, and difficulty."
+function GetNotebooks(subject: string) -> Notebook[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -188,13 +182,11 @@ function GetNotebooks(subject: string) -> Notebook[] {
 // from the v0.223.0 / 5-tangent bump).
 
 /// Bilingual EN+GA text extractor; returns the canonical BilingualText shape.
-function ExtractBilingualText(content: string) -> BilingualText {
-  client Default
-  prompt #"Extract the structured bilingual text from: {{ content }}. Return the English text (text_en) and the Irish (Gaeilge) text (text_ga) where present. If only one language is present in the source, leave the other field as null. The 6-language form (text_gd / text_cy / text_gv / text_kw) stays null unless the source explicitly carries Scottish Gaelic / Welsh / Manx / Cornish text."#
+function ExtractBilingualText(content: string) -> BilingualText {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 /// NCCA strand/outcome extractor; returns the GA-canonical statement list.
-function ExtractStrandGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"Extract the NCCA strand/outcome statements in Irish (Gaeilge) from: {{ paragraph }}. Return them as a list of full Irish statements, verbatim from the source, with the LO code if present (e.g. 'LC-GAEL-LO-2.4: ...'). Use the same wording and punctuation as the NCCA source PDF."#
+function ExtractStrandGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

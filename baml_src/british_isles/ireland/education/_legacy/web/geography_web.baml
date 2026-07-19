@@ -122,95 +122,31 @@ class GeographyMarkingQuestion {
 // Functions
 // ============================================================================
 
-function WebStudyPlan(
+function GeographyWebStudyPlan(
   subject: string,
   weeks_until_exam: int,
   target_level: GeographyLevel,
   language: GeographyLanguage,
   focus_topics: string[]
-) -> GeographyWebStudyPlanResponse {
-  // Build a per-subject study plan over `weeks_until_exam` weeks for the
-  // chosen target_level (LC HL/OL/FL or JC). The function delegates to the
-  // per-subject qpack + syllabus extraction in qpack_geography.baml to ground the
-  // plan in real NCCA learning outcomes and SEC past-paper questions.
-  //
-  // The Convex action convex/geography/generateStudyPlan.ts invokes this
-  // function and persists the response to study_plans.
-  prompt #"
-    You are the Geography study planner for the Cianfhoghlaim BIEP v1
-    per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Target level: { target_level }
-    Language: { language }
-    Weeks until exam: { weeks_until_exam }
-    Optional focus topics: { focus_topics }
-
-    Build a { weeks_until_exam }-week { target_level } Geography study
-    plan grounded in the NCCA Geography syllabus + SEC past-paper corpus.
-    Each week must reference concrete syllabus topics + past-paper
-    question ids + PCLM marking-scheme patterns. Include 3-5 milestones
-    (one per assessment block).
-
-    Return strictly as GeographyWebStudyPlanResponse with
-    bilingual EN+GA fields where applicable.
-  "#
+) -> GeographyWebStudyPlanResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function WebExamPaperDiscussion(
+function GeographyWebExamPaperDiscussion(
   subject: string,
   paper_year: int,
   paper_level: GeographyLevel,
   paper_language: GeographyLanguage,
   question_text: string
-) -> GeographyWebExamPaperDiscussionResponse {
-  // Walk a student through a single Geography past-paper question.
-  // Returns the PCLM marking scheme + a model answer outline + common
-  // mistakes + marks breakdown + follow-up questions.
-  //
-  // Invoked by the Convex action convex/geography/discussExamPaper.ts.
-  prompt #"
-    You are the Geography exam-paper discussion tutor for the Cianfhoghlaim
-    BIEP v1 per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Paper year: { paper_year }
-    Paper level: { paper_level }
-    Paper language: { paper_language }
-    Question: { question_text }
-
-    Explain the PCLM marking scheme for this question, then walk through a
-    step-by-step model answer outline (in English + Gaeilge where
-    applicable), highlight common student mistakes, and propose 3
-    follow-up questions the tutor might ask.
-
-    Return strictly as GeographyWebExamPaperDiscussionResponse.
-  "#
+) -> GeographyWebExamPaperDiscussionResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function WebMarkingSchemeExplanation(
+function GeographyWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: GeographyLevel,
   paper_language: GeographyLanguage
-) -> GeographyWebMarkingSchemeExplanationResponse {
-  // Explain the full marking scheme (PCLM patterns) for an entire
-  // Geography past paper at the chosen level + language.
-  //
-  // Invoked directly from apps/.../routes/en/subjects/geography/marking-schemes.
-  prompt #"
-    You are the Geography marking-scheme explainer for the Cianfhoghlaim
-    BIEP v1 per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Paper year: { paper_year }
-    Paper level: { paper_level }
-    Paper language: { paper_language }
-
-    Walk through every section + question in the marking scheme. Highlight
-    the PCLM patterns used (e.g. partial credit for setup, marks for
-    logical marking, dependent steps).
-
-    Return strictly as GeographyWebMarkingSchemeExplanationResponse.
-  "#
+) -> GeographyWebMarkingSchemeExplanationResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

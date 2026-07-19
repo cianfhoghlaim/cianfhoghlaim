@@ -16,18 +16,7 @@
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate
 
 enum DiagramKind {
-  MOLECULAR_STRUCTURE   @description("Chemistry: Lewis structure, ball-and-stick")
-  APPARATUS             @description("Lab equipment diagram")
-  FLOWCHART             @description("Process / algorithm flow")
-  LOGIC_GATES           @description("AND / OR / NOT gate schematic")
-  NETWORK_TOPOLOGY      @description("Computer network graph")
-  MAP                   @description("Geographic map or cross-section")
-  CLIMATE_GRAPH         @description("Temperature/precipitation bar+line")
-  CROSS_SECTION         @description("Earth/atmosphere vertical slice")
-  FUNCTION_GRAPH        @description("Plot of f(x)")
-  GEOMETRIC_SHAPE       @description("Triangle, polygon, etc.")
-  TABLE                 @description("Tabular data with caption")
-  OTHER
+  EXTRACTED_FROM_DOCUMENT
 }
 
 enum RegionRole {
@@ -70,4 +59,8 @@ class SyllabusDiagram {
 
   // Cross-link to the syllabus Learning Outcome(s) the diagram illustrates
   related_lo_ids string[]
+
+  // Lineage provenance (R28). Composed from
+  // `lc_extraction/_shared/lineage_trace.baml`.
+  lineage LineageTrace?
 }

@@ -228,132 +228,67 @@ class TeachingResource {
 // EXTRACTION FUNCTIONS
 // =============================================================================
 
-function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {
-    client Claude
-    prompt #"
-        Extract structured curriculum specification data from the following document.
-        Preserve text in its original language(s) - do not translate.
-
-        Document:
-        {{ document }}
-
-        {{ ctx.output_format }}
-    "#
+function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractExamPaper(document: string) -> ExamPaperIsles {
-    client Claude
-    prompt #"
-        Extract structured exam paper data from the following document.
-        Include all questions with their marks and any sub-parts.
-        Preserve text in its original language(s).
-
-        Document:
-        {{ document }}
-
-        {{ ctx.output_format }}
-    "#
+function ExtractExamPaper(document: string) -> ExamPaperIsles {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractTerminology(document: string) -> TermEntry[] {
-    client Claude
-    prompt #"
-        Extract terminology entries from the following document.
-        Include terms in all available languages.
-
-        Document:
-        {{ document }}
-
-        {{ ctx.output_format }}
-    "#
+function ExtractTerminology(document: string) -> TermEntry[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractTeachingResource(document: string) -> TeachingResource {
-    client Claude
-    prompt #"
-        Extract teaching resource metadata from the following document.
-        Preserve text in its original language(s).
-
-        Document:
-        {{ document }}
-
-        {{ ctx.output_format }}
-    "#
+function ExtractTeachingResource(document: string) -> TeachingResource {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function DetectDocumentType(document: string) -> DocumentTypeIsles {
-    client ClaudeMini
-    prompt #"
-        Classify the following education document into one of these types:
-        - CURRICULUM_SPECIFICATION
-        - SYLLABUS
-        - EXAM_PAPER
-        - MARKING_SCHEME
-        - CHIEF_EXAMINER_REPORT
-        - TEACHING_RESOURCE
-        - ASSESSMENT_GUIDELINES
-        - POLICY_DOCUMENT
-        - STATUTORY_GUIDANCE
-        - TERMINOLOGY
-        - TEXTBOOK
-
-        Document excerpt:
-        {{ document[:2000] }}
-
-        {{ ctx.output_format }}
-    "#
+function DetectDocumentType(document: string) -> DocumentTypeIsles {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function DetectLanguages(text: string) -> LanguageCodeIsles[] {
-    client ClaudeMini
-    prompt #"
-        Detect which languages are present in the following text.
-        Return all languages found, not just the primary one.
-
-        Text:
-        {{ text[:1000] }}
-
-        {{ ctx.output_format }}
-    "#
+function DetectLanguages(text: string) -> LanguageCodeIsles[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // TEST CASES
 // =============================================================================
 
-test ExtractIrishSpec {
-    functions [ExtractCurriculumSpec]
-    args {
-        document #"
-            Sonraíocht Churaclaim
-            Gaeilge - Ardteistiméireacht
+// test ExtractIrishSpec {
+//     functions [ExtractCurriculumSpec]
+//     args {
+//         document #"
+//             Sonraíocht Churaclaim
+//             Gaeilge - Ardteistiméireacht
+// 
+//             Cuspóirí:
+//             - Scileanna cumarsáide a fhorbairt
+//             - Tuiscint ar litríocht na Gaeilge
+// 
+//             Measúnú:
+//             - Páipéar 1: 40%
+//             - Páipéar 2: 20%
+//             - Scrúdú Béil: 40%
+//         "#
+//     }
+// }
 
-            Cuspóirí:
-            - Scileanna cumarsáide a fhorbairt
-            - Tuiscint ar litríocht na Gaeilge
-
-            Measúnú:
-            - Páipéar 1: 40%
-            - Páipéar 2: 20%
-            - Scrúdú Béil: 40%
-        "#
-    }
-}
-
-test ExtractWelshSpec {
-    functions [ExtractCurriculumSpec]
-    args {
-        document #"
-            Manyleb TGAU Cymraeg
-
-            Amcanion:
-            - Datblygu sgiliau cyfathrebu
-            - Deall llenyddiaeth Gymraeg
-
-            Asesiad:
-            - Uned 1: Llafar 25%
-            - Uned 2: Darllen 25%
-            - Uned 3: Ysgrifennu 50%
-        "#
-    }
-}
+// test ExtractWelshSpec {
+//     functions [ExtractCurriculumSpec]
+//     args {
+//         document #"
+//             Manyleb TGAU Cymraeg
+// 
+//             Amcanion:
+//             - Datblygu sgiliau cyfathrebu
+//             - Deall llenyddiaeth Gymraeg
+// 
+//             Asesiad:
+//             - Uned 1: Llafar 25%
+//             - Uned 2: Darllen 25%
+//             - Uned 3: Ysgrifennu 50%
+//         "#
+//     }
+// }

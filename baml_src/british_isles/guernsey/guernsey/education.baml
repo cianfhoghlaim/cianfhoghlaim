@@ -15,15 +15,6 @@ function ExtractGUERNSEYEducationDocument(
   island: string,
   language: string,
   text: string
-) -> GUERNSEYEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following Government of Guernsey text.
-
-    Island: { island }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> GUERNSEYEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

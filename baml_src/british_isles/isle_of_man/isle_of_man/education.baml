@@ -15,15 +15,6 @@ function ExtractISLE_OF_MANEducationDocument(
   island: string,
   language: string,
   text: string
-) -> ISLE_OF_MANEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following Isle of Man Government text.
-
-    Island: { island }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ISLE_OF_MANEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

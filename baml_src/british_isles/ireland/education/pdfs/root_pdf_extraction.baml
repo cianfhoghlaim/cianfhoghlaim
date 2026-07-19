@@ -42,39 +42,8 @@ class NCCAKeyCompetencyRootPdf {
   @@stream.done
 }
 
-function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {
-  client Claude
-  prompt #"You are an expert at extracting the 5 NCCA Senior Cycle Key Competencies from the official NCCA document.
-
-Given the text of the `key-competencies-in-senior-cycle_en.pdf` document, extract exactly 5 NCCA Key Competencies. Each competency has a code, a name, and a definition statement.
-
-The 5 NCCA Key Competencies are:
-1. Information Processing (KC-IP)
-2. Communicating (KC-CO)
-3. Working with Others (KC-WO)
-4. Personal Effectiveness (KC-Prince Edward Island)
-5. Critical & Creative Thinking (KC-CT)
-
-For each competency, extract:
-- `code`: the canonical NCCA competency code
-- `name_en`: the English name
-- `name_ga`: the Irish translation (use null if the syllabus is EN-only)
-- `definition_en`: the verbatim English definition statement
-- `definition_ga`: the verbatim Irish definition (or null if EN-only)
-- `source_pdf`: 'key-competencies-in-senior-cycle_en.pdf'
-- `source_page`: the PDF page where the competency appears
-- `excerpt_en`: a verbatim English excerpt from the source
-- `excerpt_ga`: a verbatim Irish excerpt (or null)
-
-Return the 5 competencies in this exact order:
-1. Information Processing
-2. Communicating
-3. Working with Others
-4. Personal Effectiveness
-5. Critical & Creative Thinking
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -90,19 +59,8 @@ class PedagogySet {
   @@stream.done
 }
 
-function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {
-  client Claude
-  prompt #"You are an expert at extracting pedagogical guidance from the NCCA document on online learning environments.
-
-Given the text of `the-potential-of-online-learning-environments_en.pdf`, extract:
-- The introduction (the document's opening statement)
-- 6-10 pedagogical principles for online learning (bilingual EN+GA)
-- The recommended practices for educators (bilingual EN+GA)
-- The technology recommendations (bilingual EN+GA)
-- The source PDF page references
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -118,19 +76,8 @@ class CertGuidance {
   @@stream.done
 }
 
-function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {
-  client Claude
-  prompt #"You are an expert at extracting certification + reporting guidance from the NCCA document.
-
-Given the text of `the-potential-of-technology-to-support-online-certification-and-reporting.pdf`, extract:
-- The introduction
-- The certification mechanisms for online assessment (digital badges, e-portfolios, blockchain credentials, etc.) — bilingual EN+GA
-- The reporting recommendations — bilingual EN+GA
-- The technology requirements — bilingual EN+GA
-- The source PDF page references
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -146,19 +93,8 @@ class ExaminerCommentary {
   @@stream.done
 }
 
-function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {
-  client Claude
-  prompt #"You are an expert at extracting Chief Examiner commentary from the SEC State Examinations Commission Advisory Report.
-
-Given the text of `scr-advisory-report_en.pdf`, extract:
-- The introduction
-- The paper-by-paper guidance from the Chief Examiner (per subject, per paper, per level) — bilingual EN+GA
-- The common mistakes flagged by the Chief Examiner — bilingual EN+GA
-- The marker expectations (PCLM conventions, marking patterns) — bilingual EN+GA
-- The source PDF page references
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -174,17 +110,6 @@ class AimsExpectations {
   @@stream.done
 }
 
-function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {
-  client Claude
-  prompt #"You are an expert at extracting the Senior Cycle L1 + L2 Programme Statement from the NCCA document.
-
-Given the text of `SC-L1-L2-Programme-Statement.pdf`, extract:
-- The introduction
-- The 4-8 aims of the Senior Cycle programme — bilingual EN+GA
-- The expectations for students at L1 (Foundation) and L2 (Ordinary) levels — bilingual EN+GA
-- The rationale for the Senior Cycle curriculum — bilingual EN+GA
-- The source PDF page references
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

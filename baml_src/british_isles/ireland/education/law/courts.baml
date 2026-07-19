@@ -43,64 +43,13 @@ class CourtFee {
 function ExtractCourtForm(
   page_url: string,
   page_html: string,
-) -> CourtForm {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Courts Service of Ireland forms extraction
-    specialist working for Cianfhoghlaim Oideachais.
-
-    The Courts Service website (courts.ie) hosts hundreds of forms
-    across District, Circuit, High, Supreme, and Court of Appeal.
-
-    Source URL: {{ page_url }}
-    HTML content (first 16,000 chars):
-    ---
-    {{ page_html }}
-    ---
-
-    Extract:
-      url                — source URL
-      form_number        — e.g. "Form 1", "HC1", "CC5A"
-      form_title         — title of the form
-      court_level        — DISTRICT | CIRCUIT | HIGH | SUPREME | COURT_OF_APPEAL | SPECIAL
-      category           — personal_injury | family | criminal | civil | probate | licensing | taxation | other
-      purpose            — plain-English description of when to use
-      parties            — Plaintiff | Defendant | Applicant | Respondent | Petitioner
-      fee_eur            — fee in EUR (€) if listed
-      downloadable_url   — PDF URL
-      fillable_fields    — names of fields the form requires
-      related_statutes   — StatuteReference[] citing relevant Acts
-      extraction_confidence — 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> CourtForm {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractCourtFee(
   page_url: string,
   page_html: string,
-) -> CourtFee {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Courts Service of Ireland fee-schedule extraction
-    specialist.
-
-    Source URL: {{ page_url }}
-    HTML content (first 8,000 chars):
-    ---
-    {{ page_html }}
-    ---
-
-    Extract:
-      url                 — source URL
-      fee_code            — e.g. "A1", "B2", "C5"
-      fee_description     — what the fee is for
-      amount_eur          — EUR (€)
-      court_level         — DISTRICT | CIRCUIT | HIGH | SUPREME | COURT_OF_APPEAL | SPECIAL
-      effective_date      — ISO 8601
-      notes               — any conditions
-      extraction_confidence — 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> CourtFee {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -33,39 +33,6 @@ class Judgement {
 function ExtractJudgement(
   page_url: string,
   page_html: string,
-) -> Judgement {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Irish case-law extraction specialist working for
-    Cianfhoghlaim Oideachais.
-
-    Judgements.ie (operated by the Courts Service) hosts ~30,000
-    published decisions from the Supreme Court ([IESC]), Court of
-    Appeal ([IECA]), High Court ([IEHC]), and Circuit Court ([IECCA]).
-    Each judgement has a neutral citation, catchwords, a holding, and
-    cites statutes + other cases.
-
-    Source URL: {{ page_url }}
-    HTML content (first 24,000 chars):
-    ---
-    {{ page_html }}
-    ---
-
-    Extract:
-      url                — source URL
-      neutral_citation   — e.g. "[2024] IESC 12" or "[2024] IEHC 312"
-      case_name          — e.g. "Smith v. Jones"
-      parties            — parties to the action
-      judge              — presiding judge(s)
-      decision_date      — ISO 8601
-      court_level        — DISTRICT | CIRCUIT | HIGH | SUPREME | COURT_OF_APPEAL | SPECIAL
-      catchwords         — the catchword phrases (5-15 subject keywords)
-      holding            — 1-3 sentence summary of the holding
-      statutes_cited     — StatuteReference[] (CRITICAL — the join key
-                          against cianfhoghlaim.education.ie.irish_statute_book.acts)
-      cases_cited        — other case citations referenced
-      extraction_confidence — 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> Judgement {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

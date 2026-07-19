@@ -9,21 +9,6 @@
 //
 // Reference: openspec/changes/2026-07-21-biep-v2-england-aqa-ocr-baml-pipeline-v1/
 
-enum ExamBoard {
-  AQA
-  OCR
-  EDEXCEL
-  WJEC
-  CAIE
-}
-
-enum QualificationLevel {
-  GCSE
-  A_LEVEL
-  AS_LEVEL
-  GCSE_SHORT
-  BTEC
-}
 
 class AssessmentObjective {
   ao_id string
@@ -33,7 +18,7 @@ class AssessmentObjective {
 }
 
 class AQAQualSpec {
-  board ExamBoard = "AQA"
+  board ExamBoard ?
   qualification_level QualificationLevel
   subject string       @description("Subject slug (e.g. 'mathematics', 'english_language')")
   specification_code string  @description("e.g. '8035' for AQA GCSE Maths")
@@ -49,11 +34,11 @@ class AQAQualSpec {
 
   source_pdf string
   source_pages int
-  language string = "en"
+  language string?
 }
 
 class OCRQualSpec {
-  board ExamBoard = "OCR"
+  board ExamBoard ?
   qualification_level QualificationLevel
   subject string       @description("Subject slug (e.g. 'mathematics', 'english_language')")
   specification_code string  @description("e.g. 'J560' for OCR GCSE Maths")
@@ -68,11 +53,11 @@ class OCRQualSpec {
 
   source_pdf string
   source_pages int
-  language string = "en"
+  language string?
 }
 
 class EdexcelQualSpec {
-  board ExamBoard = "EDEXCEL"
+  board ExamBoard ?
   qualification_level QualificationLevel
   subject string       @description("Subject slug (e.g. 'mathematics', 'english_language')")
   specification_code string  @description("e.g. '1MA1' for Edexcel GCSE Maths")
@@ -87,7 +72,7 @@ class EdexcelQualSpec {
 
   source_pdf string
   source_pages int
-  language string = "en"
+  language string?
 }
 
 // ============================================================================
@@ -98,52 +83,22 @@ function ExtractAQAQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> AQAQualSpec {
-  client ExtractEnStrong
-  prompt #"
-    You are an England AQA qualification specification analyst. Given the
-    text of an AQA specification PDF (e.g. GCSE Mathematics 8035), extract
-    the structured qualification record.
-
-    Subject: { subject }
-    Qualification Level: { qualification_level }
-
-    {{ ctx.output_format }}
-  "#
+) -> AQAQualSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractOCRQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> OCRQualSpec {
-  client ExtractEnStrong
-  prompt #"
-    You are an England OCR qualification specification analyst. Given the
-    text of an OCR specification PDF, extract the structured qualification
-    record.
-
-    Subject: { subject }
-    Qualification Level: { qualification_level }
-
-    {{ ctx.output_format }}
-  "#
+) -> OCRQualSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractEdexcelQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> EdexcelQualSpec {
-  client ExtractEnStrong
-  prompt #"
-    You are an England Edexcel (Pearson) qualification specification
-    analyst. Given the text of an Edexcel specification PDF, extract the
-    structured qualification record.
-
-    Subject: { subject }
-    Qualification Level: { qualification_level }
-
-    {{ ctx.output_format }}
-  "#
+) -> EdexcelQualSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

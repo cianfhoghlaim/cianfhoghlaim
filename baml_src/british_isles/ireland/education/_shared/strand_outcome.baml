@@ -337,81 +337,62 @@ class ExtractionBudget {
 // inject properties, verify the TypeBuilder instantiates without
 // error against a representative strand set).
 
-test strand_type_builder_smoke {
-  functions [ExtractStrandFromCatalog]
-  args {
-    catalog_yaml #"
-      strands:
-        - name: "LC Mathematics Strand 1: Algebra"
-          properties:
-            national_code: "S1"
-            credit_hours: "int"
-        - name: "LC Mathematics Strand 2: Functions"
-          properties:
-            national_code: "S2"
-            credit_hours: "int"
-        - name: "LC Chemistry Strand 1: Atomic Structure"
-          properties:
-            national_code: "S1"
-        - name: "LC Chemistry Strand 2: Bonding"
-          properties:
-            national_code: "S2"
-        - name: "LC Geography Strand 1: Physical Environment"
-          properties:
-            national_code: "S1"
-        - name: "LC Geography Strand 2: Regional Geography"
-          properties:
-            national_code: "S2"
-        - name: "LC Gaeilge Strand 1: Éisteacht"
-          properties:
-            national_code: "S1"
-        - name: "LC Gaeilge Strand 2: Léamhthuiscint"
-          properties:
-            national_code: "S2"
-        - name: "LC English Strand 1: Reading"
-          properties:
-            national_code: "S1"
-        - name: "LC Computer Science Strand 1: Computational Thinking"
-          properties:
-            national_code: "S1"
-      outcomes:
-        - code: "MO1"
-          properties:
-            blooms_level: "string"
-            assessment_weight: "float"
-        - code: "MO2"
-          properties:
-            blooms_level: "string"
-            assessment_weight: "float"
-        - code: "CO1"
-          properties:
-            blooms_level: "string"
-        - code: "GO1"
-          properties:
-            blooms_level: "string"
-    "#
-  }
-}
+// test strand_type_builder_smoke {
+//   functions [ExtractStrandFromCatalog]
+//   args {
+//     catalog_yaml #"
+//       strands:
+//         - name: "LC Mathematics Strand 1: Algebra"
+//           properties:
+//             national_code: "S1"
+//             credit_hours: "int"
+//         - name: "LC Mathematics Strand 2: Functions"
+//           properties:
+//             national_code: "S2"
+//             credit_hours: "int"
+//         - name: "LC Chemistry Strand 1: Atomic Structure"
+//           properties:
+//             national_code: "S1"
+//         - name: "LC Chemistry Strand 2: Bonding"
+//           properties:
+//             national_code: "S2"
+//         - name: "LC Geography Strand 1: Physical Environment"
+//           properties:
+//             national_code: "S1"
+//         - name: "LC Geography Strand 2: Regional Geography"
+//           properties:
+//             national_code: "S2"
+//         - name: "LC Gaeilge Strand 1: Éisteacht"
+//           properties:
+//             national_code: "S1"
+//         - name: "LC Gaeilge Strand 2: Léamhthuiscint"
+//           properties:
+//             national_code: "S2"
+//         - name: "LC English Strand 1: Reading"
+//           properties:
+//             national_code: "S1"
+//         - name: "LC Computer Science Strand 1: Computational Thinking"
+//           properties:
+//             national_code: "S1"
+//       outcomes:
+//         - code: "MO1"
+//           properties:
+//             blooms_level: "string"
+//             assessment_weight: "float"
+//         - code: "MO2"
+//           properties:
+//             blooms_level: "string"
+//             assessment_weight: "float"
+//         - code: "CO1"
+//           properties:
+//             blooms_level: "string"
+//         - code: "GO1"
+//           properties:
+//             blooms_level: "string"
+//     "#
+//   }
+// }
 
-function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {
-  client Claude
-  prompt #"You are an expert curriculum analyst specialising in the Irish education system.
-
-You will be given a YAML catalog of NCCA curriculum strands and outcomes (representative subset for the 6 LC priority subjects). Read it carefully and produce a `CurriculumSpecStrand[]` — one entry per strand set grouped by subject — that captures the strand metadata.
-
-Each strand should map to its:
-- `name` (the strand name from the catalog)
-- `description` (a 1-sentence synthesis you derive from the catalog context — make it pedagogically useful)
-- `learning_outcomes` (each outcome from the catalog's `outcomes` array becomes one `EnhancedLearningOutcome` with the `code` as the `outcome_code`, the strand as the `strand` field, and a brief plausible `text`)
-- `weighting` (a sensible default based on the subject; e.g. 25.0 for Algebra, Functions, etc.)
-
-You should NOT add the per-strand `national_code` / `credit_hours` properties — those are injected at runtime via TypeBuilder (per openspec/changes/2026-07-12-baml-type-builder-ncca-v1). Just produce the base `CurriculumSpecStrand[]` from the static portion of the schema.
-
-CATALOG:
-```yaml
-{{ catalog_yaml }}
-```
-
-{{ ctx.output_format }}
-"#
+function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

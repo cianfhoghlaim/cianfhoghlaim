@@ -47,22 +47,18 @@ class TeachingQualification {
   @@stream.done
 }
 
-function ExtractPlacement(text: string) -> Placement[] {
-  // Extracts school placement records from teaching PDFs.
-  // Returns school, dates, subjects, year groups, and descriptions.
+function ExtractPlacement(text: string) -> Placement[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractStudentFeedback(text: string) -> StudentFeedback[] {
-  // Extracts student and supervisor feedback with ratings and categories.
-  // Supports both English and Gaeilge source text.
+function ExtractStudentFeedback(text: string) -> StudentFeedback[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractCurriculumDesigned(text: string) -> CurriculumDesigned[] {
-  // Extracts curriculum materials designed during placements.
-  // Lesson plans, schemes of work, rubrics, worksheets, presentations.
+function ExtractCurriculumDesigned(text: string) -> CurriculumDesigned[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractTeachingQualification(text: string) -> TeachingQualification[] {
-  // Extracts teaching qualifications, registrations, and certifications.
-  // Teaching Council registration, Garda Vetting, BCS PGC, PME.
+function ExtractTeachingQualification(text: string) -> TeachingQualification[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

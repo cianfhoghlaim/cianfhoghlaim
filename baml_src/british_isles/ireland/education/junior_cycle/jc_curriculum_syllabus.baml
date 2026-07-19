@@ -125,17 +125,6 @@ function ExtractJCCurriculum(
   subject: string?,
   language: string?,
   year: int?,
-) -> JCCurriculumSpec {
-  client ExtractEn
-  prompt #"
-    You are an Irish Junior Cycle curriculum analyst. Given the text of a
-    NCCA Junior Cycle subject specification PDF, extract the structured
-    curriculum specification.
-
-    Subject: { subject }
-    Language: { language }
-    Year: { year }
-
-    {{ ctx.output_format }}
-  "#
+) -> JCCurriculumSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

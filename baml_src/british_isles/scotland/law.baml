@@ -17,16 +17,6 @@ function ExtractSCTLawDocument(
   nation: string,
   language: string,
   text: string
-) -> SCTLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Scotland
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> SCTLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -29,33 +29,6 @@ class CourtRule {
 function ExtractCourtRule(
   page_url: string,
   page_html: string,
-) -> CourtRule {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Irish Court Rules extraction specialist working
-    for Cianfhoghlaim Oideachais.
-
-    The Court Rules library (courts.ie/rules) hosts the Rules of Court
-    for District, Circuit, High, Supreme, and Court of Appeal. Each
-    rule is identified by an Order + rule number (e.g. 'O. 5 r. 9').
-
-    Source URL: {{ page_url }}
-    HTML content (first 20,000 chars):
-    ---
-    {{ page_html }}
-    ---
-
-    Extract:
-      url                — source URL
-      rule_number        — e.g. "O. 5 r. 9", "RSC O. 11", "DCR O. 39"
-      order              — the Order (chapter) this rule belongs to
-      court_level        — DISTRICT | CIRCUIT | HIGH | SUPREME | COURT_OF_APPEAL | SPECIAL
-      subject            — plain-English subject of the rule
-      full_text          — full rule text when available
-      effective_date     — ISO 8601
-      related_statutes   — StatuteReference[] citing the parent Acts
-      extraction_confidence — 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> CourtRule {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

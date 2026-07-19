@@ -191,333 +191,184 @@ class ProgrammeDescriptor {
 function ExtractCourseDescriptor(
   course_page_markdown: string,
   course_url: string
-) -> CourseDescriptor {
-  client ExtractEn
-  prompt #"
-    You are a precise academic-catalogue extractor for British Isles
-    university websites. The markdown below is the full content of a
-    single course / module page (e.g. 'CT516 — Deep Learning' on the
-    University of Galway website).
-
-    Source URL: {{ course_url }}
-
-    Extract every field of the `CourseDescriptor` schema. Rules:
-      - `course_code`: the short alphanumeric code (e.g. 'CT516'). If the
-        page uses a long code like 'CT511-1' or 'CT511/A', use the short
-        form 'CT511' (the part before the slash / dash).
-      - `ects`: integer ECTS credit value. If the page shows '5 ECTS' or
-        '10 credits', set 5 or 10. If the page is ambiguous, set 0 and
-        lower `confidence`.
-      - `learning_outcomes`: 3-7 bullets, each a single sentence, copied
-        verbatim when possible.
-      - `lecturers`: extract every named lecturer with email and profile
-        URL when visible. Mark the module coordinator as
-        `is_coordinator=true`. The name 'John McCarthy' is more likely a
-        coordinator than 'Conor O'Brien' is — use page position (name
-        first under 'Module Coordinator' / 'Module Lead') as the signal.
-      - `recommended_reading`: extract the reading list from the page
-        (typically a `<ul>` after 'Recommended Reading' or 'Essential
-        Reading'). For each item, decide the format:
-          * A 13-digit ISBN → format=ISBN_13
-          * A '10.xxxx/yyyy' string → format=DOI
-          * A http(s):// link → format=URL
-          * A library shelf-mark like 'Reserve: 005.1 GOO' → format=INTERNAL_REF
-          * Otherwise → format=OTHER
-        Mark items labelled 'essential' or 'core' with `essential=true`.
-      - `programme_codes`: extract every programme code this course is
-        listed under (e.g. 'MSCAI' for the M.Sc. AI, 'BScCS' for the
-        B.Sc. CS). If the page shows the course in multiple programmes,
-        list them all.
-      - `source_url`: copy the input `course_url` verbatim.
-      - `scraped_at`: set to the current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0 reflecting your overall confidence.
-
-    Course page markdown (may be truncated with …):
-    ---
-    {{ course_page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> CourseDescriptor {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractModuleDescriptor(
   module_page_markdown: string,
   module_url: string
-) -> ModuleDescriptor {
-  client ExtractEn
-  prompt #"
-    You are a precise academic-catalogue extractor for British Isles
-    university websites. The markdown below is the full content of a
-    single module page. In Irish / UK university terminology, a
-    'module' is a single unit of study (called a 'course' in the
-    US). Extract a `ModuleDescriptor` with the same field semantics
-    as `CourseDescriptor` (just renamed `module_code` / `module_title`
-    for clarity).
-
-    Source URL: {{ module_url }}
-
-    Extract every field of the `ModuleDescriptor` schema. Rules:
-      - `module_code`: the short alphanumeric module code.
-      - `ects`: integer ECTS credit value.
-      - `learning_outcomes`: 3-7 bullets, each a single sentence.
-      - `lecturers`: 1-5 lecturer records with coordinator marked.
-      - `recommended_reading`: full reading list with format detection.
-      - `programme_codes`: programme codes this module belongs to.
-      - `source_url`: copy the input `module_url` verbatim.
-      - `scraped_at`: set to the current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Module page markdown (may be truncated with …):
-    ---
-    {{ module_page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> ModuleDescriptor {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractProgrammeDescriptor(
   programme_page_markdown: string,
   programme_url: string
-) -> ProgrammeDescriptor {
-  client ExtractEn
-  prompt #"
-    You are a precise academic-catalogue extractor for British Isles
-    university websites. The markdown below is the full content of a
-    single programme page (e.g. 'MScAI — Master of Science
-    (Artificial Intelligence)' on the University of Galway website).
-
-    Source URL: {{ programme_url }}
-
-    Extract every field of the `ProgrammeDescriptor` schema. Rules:
-      - `programme_code`: the short programme code (e.g. 'MSCAI',
-        'BScCS', 'HDSD'). On Irish / UK pages the code is often
-        shown next to the title in the format '(MSCAI) MSc in AI'.
-      - `programme_title`: the full programme title (e.g. 'Master of
-        Science (Artificial Intelligence)').
-      - `nfq_level`: the NFQ level of the FINAL AWARD (NFQ_9 for
-        M.Sc., NFQ_8 for B.Sc. Hons, NFQ_7 for B.Sc. / Higher
-        Diploma).
-      - `duration_months`: 12 for a 1-year M.Sc., 48 for a 4-year
-        B.Sc., 9 for a 1-semester Postgraduate Certificate, etc.
-      - `mode`: FULL_TIME, PART_TIME, BOTH, or ONLINE.
-      - `total_ects`: total ECTS to graduate. 60 for a 1-year M.Sc.,
-        240 for a 4-year B.Sc., 30 for a Postgraduate Certificate.
-      - `module_codes`: every module code listed in the programme
-        structure (typically 6-20 entries). If the page shows a
-        curriculum table, extract every row.
-      - `entry_requirements`: 1-3 sentence summary.
-      - `source_url`: copy the input `programme_url` verbatim.
-      - `scraped_at`: set to the current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Programme page markdown (may be truncated with …):
-    ---
-    {{ programme_page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> ProgrammeDescriptor {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractReadingList(
   module_page_markdown: string,
   module_url: string
-) -> ReadingListItem[] {
-  client ExtractEn
-  prompt #"
-    You are a precise reading-list extractor. The markdown below is
-    the full content of a single module / course page on a British
-    Isles university website. Extract every recommended-reading
-    item into a `ReadingListItem`.
-
-    Source URL: {{ module_url }}
-
-    For each reading item emit:
-      - `format`: ISBN_13 if you can see a 13-digit ISBN; DOI if you
-        can see a '10.xxxx/yyyy' string; URL if you can see a
-        http(s):// link; INTERNAL_REF for library shelf-marks like
-        'Reserve: 005.1 GOO'; OTHER otherwise.
-      - `title`: the book / paper title.
-      - `authors`: ordered list of author / editor names. Empty if
-        not visible.
-      - `year`: 4-digit publication year, or null.
-      - `isbn_13`: set when format=ISBN_13. MUST be exactly 13 digits
-        with no dashes or spaces (the deterministic eval
-        `reading_list_isbn13_format` rejects any other shape).
-      - `doi`: set when format=DOI. Format as '10.xxxx/yyyy' without
-        the 'doi:' prefix.
-      - `url`: set when format=URL or format=DOI.
-      - `library_ref`: set when format=INTERNAL_REF.
-      - `essential`: true if the reading is labelled 'essential',
-        'core', or 'required'. false otherwise.
-      - `confidence`: 0.0-1.0.
-
-    If the page has no reading list, return an empty list.
-
-    Module page markdown (may be truncated with …):
-    ---
-    {{ module_page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> ReadingListItem[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // Tests
 // =============================================================================
 
-test ExtractCourseDescriptorTest {
-  functions [ExtractCourseDescriptor]
-  args {
-    course_page_markdown #"
-      # CT516 — Deep Learning
+// test ExtractCourseDescriptorTest {
+//   functions [ExtractCourseDescriptor]
+//   args {
+//     course_page_markdown #"
+//       # CT516 — Deep Learning
+// 
+//       **School:** School of Computer Science
+//       **NFQ Level:** 9 (Masters)
+//       **ECTS:** 10
+//       **Semester:** Semester 1
+//       **Academic Year:** 2025-26
+// 
+//       ## Module Description
+//       This module introduces the foundations of deep learning, covering
+//       feedforward and convolutional networks, recurrent networks,
+//       attention mechanisms, and transformer architectures. Students
+//       will implement and train models using PyTorch on a series of
+//       coursework assignments and a final project.
+// 
+//       ## Learning Outcomes
+//       On completion of this module, students should be able to:
+//       1. Explain the mathematical foundations of gradient descent,
+//          backpropagation, and stochastic optimisation.
+//       2. Implement feedforward, convolutional, and recurrent neural
+//          networks in PyTorch.
+//       3. Apply transformer architectures to sequence-modelling tasks.
+//       4. Evaluate deep-learning models using appropriate metrics.
+//       5. Diagnose and fix common training pathologies (overfitting,
+//          underfitting, vanishing gradients, mode collapse).
+// 
+//       ## Assessment
+//       - Continuous assessment: 60% (3 assignments, 20% each)
+//       - Final exam: 40%
+// 
+//       ## Prerequisites
+//       CT511 (Software Engineering), MA335 (Mathematical Statistics)
+// 
+//       ## Lecturers
+//       - **Dr. Jane Smith** (Module Coordinator)
+//         jane.smith@universityofgalway.ie
+//         https://www.universityofgalway.ie/our-research/people/jane-smith
+//       - **Dr. Conor O'Brien**
+//         conor.obrien@universityofgalway.ie
+//         https://www.universityofgalway.ie/our-research/people/conor-obrien
+// 
+//       ## Recommended Reading
+//       - **Essential:** Deep Learning, Ian Goodfellow, Yoshua Bengio,
+//         Aaron Courville. MIT Press, 2016. ISBN 9780262033848.
+//       - **Essential:** Neural Networks and Deep Learning, Michael
+//         Nielsen. Online, 2015. http://neuralnetworksanddeeplearning.com/
+//       - **Recommended:** Attention Is All You Need, Vaswani et al.
+//         NeurIPS 2017. doi:10.5555/3295222.3295349.
+//       - **Reserve:** Library Reserve: 005.1 GOO (Goodfellow)
+//     "#
+//     course_url "https://www.universityofgalway.ie/programs/ct516-deep-learning.html"
+//   }
+// }
 
-      **School:** School of Computer Science
-      **NFQ Level:** 9 (Masters)
-      **ECTS:** 10
-      **Semester:** Semester 1
-      **Academic Year:** 2025-26
+// test ExtractModuleDescriptorTest {
+//   functions [ExtractModuleDescriptor]
+//   args {
+//     module_page_markdown #"
+//       # MA335 — Mathematical Statistics
+// 
+//       **School:** School of Mathematical and Statistical Sciences
+//       **NFQ Level:** 8 (B.Sc. Hons)
+//       **ECTS:** 5
+//       **Semester:** Semester 2
+// 
+//       ## Description
+//       Probability theory, statistical inference, and applied
+//       regression. Covers estimators, hypothesis tests, confidence
+//       intervals, and linear models.
+// 
+//       ## Learning Outcomes
+//       1. State and apply the axioms of probability.
+//       2. Construct and interpret confidence intervals.
+//       3. Perform hypothesis tests at the 0.05 significance level.
+//       4. Fit and interpret simple linear regression models.
+// 
+//       ## Assessment
+//       - Exam: 70%
+//       - CA: 30% (problem sets)
+// 
+//       ## Lecturers
+//       - **Dr. Mary O'Connell** (Coordinator)
+//     "#
+//     module_url "https://www.universityofgalway.ie/programs/ma335-mathematical-statistics.html"
+//   }
+// }
 
-      ## Module Description
-      This module introduces the foundations of deep learning, covering
-      feedforward and convolutional networks, recurrent networks,
-      attention mechanisms, and transformer architectures. Students
-      will implement and train models using PyTorch on a series of
-      coursework assignments and a final project.
+// test ExtractProgrammeDescriptorTest {
+//   functions [ExtractProgrammeDescriptor]
+//   args {
+//     programme_page_markdown #"
+//       # Master of Science (Artificial Intelligence) — MSCAI
+// 
+//       **School:** School of Computer Science
+//       **NFQ Level:** 9 (Masters)
+//       **Duration:** 12 months (full-time)
+//       **Total ECTS:** 90
+//       **Mode:** Full-time
+// 
+//       ## Overview
+//       The M.Sc. in AI is a 1-year taught Masters designed for
+//       graduates with a B.Sc. in Computer Science (or equivalent)
+//       who want to deepen their knowledge of modern AI techniques.
+//       The programme is delivered through 8 taught modules (60 ECTS)
+//       plus a 30 ECTS research dissertation.
+// 
+//       ## Modules (Taught)
+//       - CT510 — Programming for AI
+//       - CT511 — Software Engineering
+//       - CT512 — Machine Learning
+//       - CT513 — Knowledge Representation
+//       - CT514 — Natural Language Processing
+//       - CT515 — Computer Vision
+//       - CT516 — Deep Learning
+//       - CT517 — AI Ethics and Society
+// 
+//       ## Modules (Dissertation)
+//       - CT518 — Research Dissertation (30 ECTS)
+// 
+//       ## Entry Requirements
+//       A B.Sc. Hons in Computer Science (or equivalent) with a
+//       2:1 grade or higher. Programming experience required.
+//     "#
+//     programme_url "https://www.universityofgalway.ie/programs/mscai.html"
+//   }
+// }
 
-      ## Learning Outcomes
-      On completion of this module, students should be able to:
-      1. Explain the mathematical foundations of gradient descent,
-         backpropagation, and stochastic optimisation.
-      2. Implement feedforward, convolutional, and recurrent neural
-         networks in PyTorch.
-      3. Apply transformer architectures to sequence-modelling tasks.
-      4. Evaluate deep-learning models using appropriate metrics.
-      5. Diagnose and fix common training pathologies (overfitting,
-         underfitting, vanishing gradients, mode collapse).
-
-      ## Assessment
-      - Continuous assessment: 60% (3 assignments, 20% each)
-      - Final exam: 40%
-
-      ## Prerequisites
-      CT511 (Software Engineering), MA335 (Mathematical Statistics)
-
-      ## Lecturers
-      - **Dr. Jane Smith** (Module Coordinator)
-        jane.smith@universityofgalway.ie
-        https://www.universityofgalway.ie/our-research/people/jane-smith
-      - **Dr. Conor O'Brien**
-        conor.obrien@universityofgalway.ie
-        https://www.universityofgalway.ie/our-research/people/conor-obrien
-
-      ## Recommended Reading
-      - **Essential:** Deep Learning, Ian Goodfellow, Yoshua Bengio,
-        Aaron Courville. MIT Press, 2016. ISBN 9780262033848.
-      - **Essential:** Neural Networks and Deep Learning, Michael
-        Nielsen. Online, 2015. http://neuralnetworksanddeeplearning.com/
-      - **Recommended:** Attention Is All You Need, Vaswani et al.
-        NeurIPS 2017. doi:10.5555/3295222.3295349.
-      - **Reserve:** Library Reserve: 005.1 GOO (Goodfellow)
-    "#
-    course_url "https://www.universityofgalway.ie/programs/ct516-deep-learning.html"
-  }
-}
-
-test ExtractModuleDescriptorTest {
-  functions [ExtractModuleDescriptor]
-  args {
-    module_page_markdown #"
-      # MA335 — Mathematical Statistics
-
-      **School:** School of Mathematical and Statistical Sciences
-      **NFQ Level:** 8 (B.Sc. Hons)
-      **ECTS:** 5
-      **Semester:** Semester 2
-
-      ## Description
-      Probability theory, statistical inference, and applied
-      regression. Covers estimators, hypothesis tests, confidence
-      intervals, and linear models.
-
-      ## Learning Outcomes
-      1. State and apply the axioms of probability.
-      2. Construct and interpret confidence intervals.
-      3. Perform hypothesis tests at the 0.05 significance level.
-      4. Fit and interpret simple linear regression models.
-
-      ## Assessment
-      - Exam: 70%
-      - CA: 30% (problem sets)
-
-      ## Lecturers
-      - **Dr. Mary O'Connell** (Coordinator)
-    "#
-    module_url "https://www.universityofgalway.ie/programs/ma335-mathematical-statistics.html"
-  }
-}
-
-test ExtractProgrammeDescriptorTest {
-  functions [ExtractProgrammeDescriptor]
-  args {
-    programme_page_markdown #"
-      # Master of Science (Artificial Intelligence) — MSCAI
-
-      **School:** School of Computer Science
-      **NFQ Level:** 9 (Masters)
-      **Duration:** 12 months (full-time)
-      **Total ECTS:** 90
-      **Mode:** Full-time
-
-      ## Overview
-      The M.Sc. in AI is a 1-year taught Masters designed for
-      graduates with a B.Sc. in Computer Science (or equivalent)
-      who want to deepen their knowledge of modern AI techniques.
-      The programme is delivered through 8 taught modules (60 ECTS)
-      plus a 30 ECTS research dissertation.
-
-      ## Modules (Taught)
-      - CT510 — Programming for AI
-      - CT511 — Software Engineering
-      - CT512 — Machine Learning
-      - CT513 — Knowledge Representation
-      - CT514 — Natural Language Processing
-      - CT515 — Computer Vision
-      - CT516 — Deep Learning
-      - CT517 — AI Ethics and Society
-
-      ## Modules (Dissertation)
-      - CT518 — Research Dissertation (30 ECTS)
-
-      ## Entry Requirements
-      A B.Sc. Hons in Computer Science (or equivalent) with a
-      2:1 grade or higher. Programming experience required.
-    "#
-    programme_url "https://www.universityofgalway.ie/programs/mscai.html"
-  }
-}
-
-test ExtractReadingListTest {
-  functions [ExtractReadingList]
-  args {
-    module_page_markdown #"
-      # CT511 — Software Engineering
-
-      ## Recommended Reading
-      - **Essential:** Clean Architecture, Robert C. Martin.
-        Pearson, 2017. ISBN 9780134494166.
-      - **Essential:** Designing Data-Intensive Applications,
-        Martin Kleppmann. O'Reilly, 2017.
-        ISBN 9781449373320.
-      - **Recommended:** Site Reliability Engineering, Niall
-        Murphy et al. O'Reilly, 2016. ISBN 9781491929124.
-    "#
-    module_url "https://www.universityofgalway.ie/programs/ct511-software-engineering.html"
-  }
-}
+// test ExtractReadingListTest {
+//   functions [ExtractReadingList]
+//   args {
+//     module_page_markdown #"
+//       # CT511 — Software Engineering
+// 
+//       ## Recommended Reading
+//       - **Essential:** Clean Architecture, Robert C. Martin.
+//         Pearson, 2017. ISBN 9780134494166.
+//       - **Essential:** Designing Data-Intensive Applications,
+//         Martin Kleppmann. O'Reilly, 2017.
+//         ISBN 9781449373320.
+//       - **Recommended:** Site Reliability Engineering, Niall
+//         Murphy et al. O'Reilly, 2016. ISBN 9781491929124.
+//     "#
+//     module_url "https://www.universityofgalway.ie/programs/ct511-software-engineering.html"
+//   }
+// }
 
 // =============================================================================
 // Tertiary 18+ stage — 8 universities + 5 TUs + QQI + CAO + SOLAS
@@ -701,269 +552,96 @@ class SOLASCourse {
 function ExtractUniversityInfo(
   page_markdown: string,
   institution_id: string
-) -> University {
-  client ExtractEn
-  prompt #"
-    You are a precise institution-registry extractor for the 8 Republic of
-    Ireland universities. The markdown below is the 'About' / 'Our
-    University' page content from one of these institutions' websites.
-
-    Institution id: {{ institution_id }}
-
-    Extract every field of the `University` schema. Rules:
-      - `institution_id`: MUST be one of the 8 kebab-case ids:
-          - 'ie-university-trinity'   (Trinity College Dublin)
-          - 'ie-university-ucd'       (University College Dublin)
-          - 'ie-university-ucc'       (University College Cork)
-          - 'ie-university-galway'    (University of Galway, formerly NUIG)
-          - 'ie-university-limerick'  (University of Limerick)
-          - 'ie-university-dcu'       (Dublin City University)
-          - 'ie-university-maynooth'  (Maynooth University)
-          - 'ie-university-rcsi'      (Royal College of Surgeons in Ireland)
-      - `university_type`: TRADITIONAL for the 7 NUI / pre-1997
-        institutions; SPECIALIST for RCSI (medical school); TECHNOLOGICAL
-        for the 5 TUs (these have a separate TU schema).
-      - `nfq_min`: 6 for the 7 traditional universities (RCSI=8).
-      - `nfq_max`: always 10 (the Tertiary 18+ bracket upper bound).
-      - `faculty_slugs`: derive from the page's navigation. Typical
-        4-6 entries. Slugs are kebab-case.
-      - `language`: always 'en' for the 8 IE universities.
-      - `source_url`: copy the canonical homepage URL (the input
-        `institution_id` resolves to `https://www.<slug>.ie`).
-      - `scraped_at`: current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Page markdown (may be truncated with …):
-    ---
-    {{ page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> University {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractTuInfo(
   page_markdown: string,
   tu_id: string
-) -> TU {
-  client ExtractEn
-  prompt #"
-    You are a precise institution-registry extractor for the 5 Republic
-    of Ireland Technological Universities. The markdown below is the
-    'About' / 'Our TU' page content from one of these institutions'
-    websites.
-
-    TU id: {{ tu_id }}
-
-    Extract every field of the `TU` schema. Rules:
-      - `tu_id`: MUST be one of the 5 kebab-case ids:
-          - 'ie-tu-dublin'    (TU Dublin, est. 2019)
-          - 'ie-tu-munster'   (MTU, est. 2021)
-          - 'ie-tu-shannon'   (TUS, est. 2021)
-          - 'ie-tu-atlantic'  (ATU, est. 2022)
-          - 'ie-tu-south-east' (SETU, est. 2022)
-      - `parent_iots`: the predecessor Institutes of Technology.
-        E.g. for TUD: ['DIT', 'ITB', 'ITT'] (3 predecessors).
-      - `campus_slugs`: derive from the page's navigation.
-        Typical 3-5 entries.
-      - `nfq_max`: 10 for TUD/MTU/TUS/ATU, 9 for SETU (which does not
-        yet award doctorates as of 2026).
-      - `language`: always 'en' for the 5 IE TUs.
-      - `source_url`: copy the canonical homepage URL.
-      - `scraped_at`: current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Page markdown (may be truncated with …):
-    ---
-    {{ page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> TU {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractQQIAward(
   page_markdown: string,
   award_code: string
-) -> QQIAward {
-  client ExtractEn
-  prompt #"
-    You are a precise QQI-award extractor. The markdown below is the
-    canonical award description from https://www.qqi.ie for one of
-    the 10 canonical Tertiary 18+ QQI awards.
-
-    Award code: {{ award_code }}
-
-    Extract every field of the `QQIAward` schema. Rules:
-      - `award_code`: MUST be one of the 10 kebab-case codes:
-          - 'NFQ6-HC'         (Higher Certificate)
-          - 'NFQ7-BA'         (Bachelor Degree, Ordinary)
-          - 'NFQ8-BA-HONS'    (Bachelor Degree, Honours)
-          - 'NFQ8-HDIP'       (Higher Diploma)
-          - 'NFQ8-GDIP'       (Graduate Diploma)
-          - 'NFQ9-PG-CERT'    (Postgraduate Certificate)
-          - 'NFQ9-PG-DIP'     (Postgraduate Diploma)
-          - 'NFQ9-MASTERS'    (Masters Degree)
-          - 'NFQ10-PHD'       (Doctoral Degree)
-          - 'NFQ10-DPROF'     (Professional Doctorate)
-      - `ects`: canonical ECTS for the full award (60 / 180 / 240 /
-        60 / 60 / 30 / 60 / 90 / 0 / 0 respectively).
-      - `duration_months`: typical duration in months (12 / 36 / 48 /
-        12 / 12 / 6 / 12 / 18 / 48 / 48 respectively).
-      - `category`: kebab-case award category, e.g. 'higher_diploma',
-        'masters', 'doctoral'.
-      - `issuing_body`: always 'QQI'.
-      - `source_url`: https://www.qqi.ie/<award_code>.
-      - `scraped_at`: current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Page markdown (may be truncated with …):
-    ---
-    {{ page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> QQIAward {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractCAOChoice(
   page_markdown: string,
   cao_code: string
-) -> CAOChoice {
-  client ExtractEn
-  prompt #"
-    You are a precise CAO-course-choice extractor. The markdown below is
-    the canonical course page from https://www.cao.ie for a single
-    course in the CAO undergraduate catalog.
-
-    CAO code: {{ cao_code }}
-
-    Extract every field of the `CAOChoice` schema. Rules:
-      - `cao_code`: the 5-character CAO course code, e.g. 'CK101'
-        (UCC Arts), 'GY101' (UoG Arts), 'DC001' (DCU Arts), 'TR085'
-        (TCD Computer Science), 'TU801' (TUD Creative Digital Media).
-      - `year`: the year this record applies to (typically the latest
-        year mentioned on the page).
-      - `institution_id`: the kebab-case institution id (cross-ref to
-        `University.institution_id`). E.g. 'GY101' -> 'ie-university-galway'.
-      - `cao_field`: derive from the course title. E.g. Computer
-        Science -> COMPUTING_ENGINEERING; Medicine -> MEDICINE_HEALTH.
-      - `nfq_level`: typically NFQ_7 for Ord BA, NFQ_8 for Hons BA,
-        NFQ_9 for Masters. Confirm against the duration_months.
-      - `points_required`: latest median points for an offer (integer).
-        Null if the course uses mature applicants only.
-      - `mature_applicant_path`: true if the course is also offered via
-        the Mature Applicants route (most are).
-      - `source_url`: https://www.cao.ie/index.php?page=courses&course=<cao_code>.
-      - `scraped_at`: current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Page markdown (may be truncated with …):
-    ---
-    {{ page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> CAOChoice {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractSOLASCourse(
   page_markdown: string,
   course_code: string
-) -> SOLASCourse {
-  client ExtractEn
-  prompt #"
-    You are a precise SOLAS Further Education course extractor. The
-    markdown below is the canonical course page from
-    https://www.fetchcourses.ie for a single PLC / apprenticeship /
-    Youthreach course.
-
-    Course code: {{ course_code }}
-
-    Extract every field of the `SOLASCourse` schema. Rules:
-      - `course_code`: the SOLAS / fetchcourses.ie course code.
-      - `etb_slug`: the kebab-case slug of the 16 Education and Training
-        Boards. E.g. 'galway-roscommon', 'city-of-dublin', 'cork'.
-      - `etb_name`: the full ETB name (resolve from the slug).
-      - `course_title`: the course title as listed on fetchcourses.ie.
-      - `solas_path`: PLC for most post-Leaving-Cert courses;
-        APPRENTICESHIP for designated crafts; YOUTHREACH for early-school-
-        leaver programmes; etc.
-      - `qqi_level`: the NFQ level on completion (NFQ_5 / NFQ_6 for PLCs,
-        higher for some apprenticeships).
-      - `award_code`: the QQI award code on completion (e.g. 'NFQ6-HC');
-        null if not QQI-anchored.
-      - `fetchcourses_url`: the canonical URL for this course.
-      - `scraped_at`: current ISO-8601 timestamp.
-      - `confidence`: 0.0-1.0.
-
-    Page markdown (may be truncated with …):
-    ---
-    {{ page_markdown }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> SOLASCourse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // Tests (Tertiary 18+)
 // =============================================================================
 
-test ExtractUniversityInfoTest {
-  functions [ExtractUniversityInfo]
-  args {
-    page_markdown #"
-      # University of Galway — About Us
+// test ExtractUniversityInfoTest {
+//   functions [ExtractUniversityInfo]
+//   args {
+//     page_markdown #"
+//       # University of Galway — About Us
+// 
+//       The University of Galway (UoG, formerly NUI Galway, founded 1845)
+//       is one of the 8 Republic of Ireland universities. We are a leading
+//       research-intensive institution with 5 faculties:
+// 
+//       - Arts, Social Sciences and Celtic Studies
+//       - Business, Public Policy and Law
+//       - College of Science and Engineering
+//       - Medicine, Nursing and Health Sciences
+// 
+//       We award NFQ Level 6 (Higher Certificate) through NFQ Level 10
+//       (Doctoral Degree).
+//     "#
+//     institution_id "ie-university-galway"
+//   }
+// }
 
-      The University of Galway (UoG, formerly NUI Galway, founded 1845)
-      is one of the 8 Republic of Ireland universities. We are a leading
-      research-intensive institution with 5 faculties:
+// test ExtractQQIAwardTest {
+//   functions [ExtractQQIAward]
+//   args {
+//     page_markdown #"
+//       # Bachelor Degree (Honours) — NFQ Level 8
+// 
+//       The Bachelor Degree (Honours) is a 4-year full-time programme
+//       at NFQ Level 8, totalling 240 ECTS credits on graduation.
+//       It is awarded by QQI and is the standard undergraduate honours
+//       degree in Ireland (B.Sc. Hons, B.A. Hons, B.Ed., B.Eng., etc.).
+//     "#
+//     award_code "NFQ8-BA-HONS"
+//   }
+// }
 
-      - Arts, Social Sciences and Celtic Studies
-      - Business, Public Policy and Law
-      - College of Science and Engineering
-      - Medicine, Nursing and Health Sciences
-
-      We award NFQ Level 6 (Higher Certificate) through NFQ Level 10
-      (Doctoral Degree).
-    "#
-    institution_id "ie-university-galway"
-  }
-}
-
-test ExtractQQIAwardTest {
-  functions [ExtractQQIAward]
-  args {
-    page_markdown #"
-      # Bachelor Degree (Honours) — NFQ Level 8
-
-      The Bachelor Degree (Honours) is a 4-year full-time programme
-      at NFQ Level 8, totalling 240 ECTS credits on graduation.
-      It is awarded by QQI and is the standard undergraduate honours
-      degree in Ireland (B.Sc. Hons, B.A. Hons, B.Ed., B.Eng., etc.).
-    "#
-    award_code "NFQ8-BA-HONS"
-  }
-}
-
-test ExtractCAOChoiceTest {
-  functions [ExtractCAOChoice]
-  args {
-    page_markdown #"
-      # GY101 — Bachelor of Arts (Arts, Social Sciences and Celtic Studies)
-
-      Institution: University of Galway
-      Duration: 4 years (NFQ Level 8, Honours Bachelor Degree)
-      Field: Arts, Humanities, Social Sciences
-
-      ## CAO Points
-      Latest round 1: 356 points (median)
-
-      ## Mature Applicants
-      This course accepts applications from mature applicants (21+ on
-      1 January of the year of entry) via the Mature Applicants Office.
-    "#
-    cao_code "GY101"
-  }
-}
+// test ExtractCAOChoiceTest {
+//   functions [ExtractCAOChoice]
+//   args {
+//     page_markdown #"
+//       # GY101 — Bachelor of Arts (Arts, Social Sciences and Celtic Studies)
+// 
+//       Institution: University of Galway
+//       Duration: 4 years (NFQ Level 8, Honours Bachelor Degree)
+//       Field: Arts, Humanities, Social Sciences
+// 
+//       ## CAO Points
+//       Latest round 1: 356 points (median)
+// 
+//       ## Mature Applicants
+//       This course accepts applications from mature applicants (21+ on
+//       1 January of the year of entry) via the Mature Applicants Office.
+//     "#
+//     cao_code "GY101"
+//   }
+// }
