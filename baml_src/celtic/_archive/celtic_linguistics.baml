@@ -197,69 +197,21 @@ function ExtractMorphology(
   word: string @description("The word to analyze"),
   context: string @description("Sentence or phrase containing the word"),
   language: CelticLanguageArchive @description("Celtic language of the word")
-) -> LinguisticToken {
-  client Claude
-  prompt #"
-    Analyze the following Celtic word and extract its morphological features.
-
-    Word: {{ word }}
-    Context: {{ context }}
-    Language: {{ language }}
-
-    Provide:
-    1. The lemma (dictionary form)
-    2. Part of speech
-    3. Grammatical features (gender, number, case, etc.)
-    4. Any initial mutation present
-    5. English gloss
-
-    {{ ctx.output_format }}
-  "#
+) -> LinguisticToken {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Analyze a complete sentence for linguistic annotation
 function AnalyzeSentence(
   sentence: string @description("Celtic language sentence"),
   language: CelticLanguageArchive @description("Language of the sentence")
-) -> LinguisticToken[] {
-  client Claude
-  prompt #"
-    Analyze this {{ language }} sentence and annotate each token.
-
-    Sentence: {{ sentence }}
-
-    For each word, provide:
-    - Surface form (as written)
-    - Lemma (dictionary form)
-    - Part of speech
-    - Morphological features
-    - Initial mutation if any
-
-    Note Celtic-specific features like:
-    - Initial mutations (lenition, eclipsis, etc.)
-    - Synthetic verb forms with fused pronouns
-    - Case marking on nouns
-
-    {{ ctx.output_format }}
-  "#
+) -> LinguisticToken[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Identify the dialect of Irish text
 function IdentifyDialect(
   text: string @description("Irish language text sample")
-) -> IrishDialectArchive {
-  client ClaudeHaiku
-  prompt #"
-    Analyze this Irish text and identify which dialect it represents.
-
-    Text: {{ text }}
-
-    Look for dialect markers like:
-    - Munster: 'do' for past tense, '-ínn' verbal noun endings
-    - Connacht: 'a' for verbal nouns, different vowel quality
-    - Ulster: 'chan' for negation, 'cha/chan' patterns
-    - Standard: Official spelling and grammar
-
-    {{ ctx.output_format }}
-  "#
+) -> IrishDialectArchive {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

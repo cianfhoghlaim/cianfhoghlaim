@@ -17,16 +17,6 @@ function ExtractNigerianStateCurriculumSpec(
   state_code: string,
   language: string,
   text: string
-) -> NigerianStateCurriculumSpec {
-  client Claude
-  prompt #"
-    Extract the canonical Nigerian state document from the following
-    text. The state_code + domain MUST be preserved exactly.
-
-    State code: {{ state_code }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> NigerianStateCurriculumSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

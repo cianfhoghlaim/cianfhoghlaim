@@ -49,22 +49,8 @@ class EUDocument {
 function ExtractEUDocument(
   language: EULanguage,
   text: string
-) -> EUDocument {
-  client Claude
-  prompt #"
-    Extract a structured multilingual EU document from the following
-    raw text. The document is published in {{ language }} by one of
-    the EU institutions.
-
-    Return a single EUDocument with the canonical multilingual
-    document shape. Preserve the original text in the row's language;
-    do NOT translate.
-
-    Document text:
-    {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EUDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
@@ -94,19 +80,6 @@ function ExtractEUDocumentBilingualEnGa(
   institution: EUInstitution,
   language: EULanguage,
   text: string
-) -> EUExtractableBilingualDocument {
-  client Claude
-  prompt #"
-    Extract the canonical EU document from the following text.
-    When the source document is in English or Irish (Gaeilge), populate
-    the corresponding BilingualTextEnGa fields. When in another
-    language, set the en/ga fields to null and the language_availability
-    accordingly.
-
-    Institution: {{ institution }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EUExtractableBilingualDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

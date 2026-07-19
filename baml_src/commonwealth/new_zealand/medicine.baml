@@ -15,16 +15,6 @@ function ExtractNZLMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> NZLMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following New Zealand
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> NZLMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

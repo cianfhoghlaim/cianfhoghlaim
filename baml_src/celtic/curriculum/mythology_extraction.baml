@@ -122,55 +122,18 @@ class CelticTerm {
 }
 
 // Extract character from mythology text
-function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) -> MythologicalCharacter {
-  client CelticContentFallback
-  prompt #"
-    Extract a detailed mythological character profile from this Celtic text.
-
-    Tradition: {{ tradition }}
-
-    Text:
-    {{ text }}
-
-    Capture all names, relationships, and story appearances.
-    Include Celtic language terms with accurate spelling.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) -> MythologicalCharacter {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract story structure
-function ExtractMythologicalStory(text: string) -> MythologicalStory {
-  client Claude
-  prompt #"
-    Extract the structure and content of this Celtic mythological story.
-
-    Text:
-    {{ text }}
-
-    Identify the tradition, cycle, key characters, and themes.
-    Note Celtic terms and their meanings.
-    Assess educational value for language learners.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractMythologicalStory(text: string) -> MythologicalStory {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract location lore
-function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -> MythologicalLocation {
-  client FastExtraction
-  prompt #"
-    Extract mythological location information from this Celtic text.
-
-    Tradition: {{ tradition }}
-
-    Text:
-    {{ text }}
-
-    Identify names in Celtic languages, significance, and associated stories.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -> MythologicalLocation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate NPC dialogue from character
@@ -194,31 +157,8 @@ function GenerateNPCDialogue(
   context: string,
   player_level: int,
   target_language: CelticLanguage
-) -> NPCDialogue {
-  client CelticContentFallback
-  prompt #"
-    Generate immersive NPC dialogue for this Celtic mythological character.
-
-    Character: {{ character.name }}
-    Character Type: {{ character.character_type }}
-    Tradition: {{ character.tradition }}
-    Key Traits: {{ character.personality }}
-
-    Game Context: {{ context }}
-    Player Level: {{ player_level }}
-    Target Language: {{ target_language }}
-
-    Create authentic dialogue that:
-    - Reflects the character's mythology and personality
-    - Uses appropriate Celtic language for the player's level
-    - Includes educational language learning moments
-    - Maintains immersive storytelling
-
-    For lower levels (1-5), use simple phrases with translations.
-    For higher levels (15+), use more complex language with less translation.
-
-    {{ ctx.output_format }}
-  "#
+) -> NPCDialogue {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract folklore for NPC behavior
@@ -232,19 +172,8 @@ class FolkloreElement {
   @@stream.done
 }
 
-function ExtractFolkloreElements(text: string) -> FolkloreElement[] {
-  client FastExtraction
-  prompt #"
-    Extract folklore elements from this Celtic text that could enhance game immersion.
-
-    Text:
-    {{ text }}
-
-    Identify customs, superstitions, beliefs, and traditions.
-    Suggest how each could be incorporated into the game.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractFolkloreElements(text: string) -> FolkloreElement[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -284,42 +213,6 @@ function GenerateNpcDialogue(
   player_utterance: string,
   conversation_history: string,  // last 6 turns, formatted as "Speaker: text"
   scholarly_source: string,  // the cached Wikipedia article for this NPC
-) -> NpcDialogueExchange {
-  client LitellmClient
-  prompt #"
-    You are roleplaying {{ npc_name }} ({{ npc_title }}) from {{ nation_code }}
-    in the {{ era }} era. You are one of 6 Celtic NPCs in a Hades-style
-    dialogue game set on a navigable British Isles map.
-
-    The player just said:
-      "{{ player_utterance }}"
-
-    Conversation so far:
-    ---
-    {{ conversation_history }}
-    ---
-
-    Your character's source material (Wikipedia excerpt, paraphrased):
-    ---
-    {{ scholarly_source }}
-    ---
-
-    Respond with:
-      - utterance_en, utterance_ga (Irish translation, can be a brief
-        poetic fragment)
-      - scholarly_footnote_en, scholarly_footnote_ga: a 1-sentence
-        citation pointing to the source material
-      - emotional_tone: one of "wry", "wounded", "curious", "defiant",
-        "gentle"
-      - asks_player_about: a 1-sentence prompt for the next turn
-      - quest_offered: (optional) a short quest hook
-      - artifact_granted: (optional) an artifact name if the player
-        earned something
-
-    Voice rules:
-      - Stay in character, never break the fourth wall
-      - Ground every claim in the source material
-      - Mix in 1 Irish-language phrase per 3 turns
-      - Don't be longer than 3 sentences per turn
-  "#
+) -> NpcDialogueExchange {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -178,77 +178,22 @@ class GlossaryEntry {
 // Parse Logainm API JSON response for a single place
 function ParseLogainmPlace(
   json_response: string
-) -> LogainmPlace {
-  client Extractor
-  prompt #"
-    Parse this Logainm.ie API JSON response and extract structured place data.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract all available fields:
-    - Place ID and cluster ID
-    - Names in Irish (ga) and English (en)
-    - Category classification
-    - Geographic coordinates (note if accurate or extrapolated)
-    - Administrative hierarchy (county, barony, parish, ED)
-    - Gaeltacht, post office, NI flags
-    - Glossary references for etymology
-    - Timestamps
-
-    Important:
-    - Preserve Irish text with fadas (á, é, í, ó, ú)
-    - Extract both Irish and English name variants
-    - Note coordinate accuracy
-  "#
+) -> LogainmPlace {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Parse Logainm search results
 function ParseLogainmSearchResults(
   json_response: string
-) -> LogainmSearchResult {
-  client Extractor
-  prompt #"
-    Parse this Logainm.ie API search results JSON and extract all places.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract:
-    - All places in the results array
-    - Pagination metadata (total count, page, per_page)
-    - Determine if more pages are available
-
-    For each place, extract full details as per LogainmPlace schema.
-  "#
+) -> LogainmSearchResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract placename etymology from glossary references
 function ExtractPlacenameEtymology(
   place: LogainmPlace
-) -> string {
-  client Extractor
-  prompt #"
-    Given this Logainm place record, explain the etymology of the placename.
-
-    Place:
-    - Irish name: {{ place.name.ga }}
-    - English name: {{ place.name.en }}
-    - Glossary entries: {{ place.glossary_entries }}
-    - Category: {{ place.category }}
-
-    Provide a clear explanation of:
-    1. The meaning of the Irish placename
-    2. How the glossary elements combine
-    3. Any historical or linguistic notes
-    4. The relationship between Irish and English forms
-
-    Write in clear, accessible English with Irish terms explained.
-  "#
+) -> string {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Find places within a geographic radius
@@ -257,23 +202,8 @@ function ParseGeoQuery(
   center_lat: float,
   center_lon: float,
   radius_m: int
-) -> LogainmSearchResult {
-  client Extractor
-  prompt #"
-    Parse this Logainm.ie geographic query response.
-
-    {{ ctx.output_format }}
-
-    Query parameters:
-    - Center: {{ center_lat }}, {{ center_lon }}
-    - Radius: {{ radius_m }} metres
-
-    JSON Response:
-    {{ json_response }}
-
-    Results are sorted by proximity to center point.
-    Extract all places with their full details and note their relative positions.
-  "#
+) -> LogainmSearchResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -293,24 +223,6 @@ class LogainmDuchasLink {
 function EnrichPlaceWithFolklore(
   place: LogainmPlace,
   duchas_data: string
-) -> LogainmDuchasLink {
-  client Extractor
-  prompt #"
-    Link this Logainm place to Dúchas Schools Collection data.
-
-    {{ ctx.output_format }}
-
-    Logainm Place:
-    - ID: {{ place.id }}
-    - Name: {{ place.name.ga }} / {{ place.name.en }}
-    - County: {{ place.county }}
-
-    Dúchas data:
-    {{ duchas_data }}
-
-    Extract:
-    - Number of schools in this place
-    - Number of folklore stories collected here
-    - Volume numbers containing stories from this location
-  "#
+) -> LogainmDuchasLink {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

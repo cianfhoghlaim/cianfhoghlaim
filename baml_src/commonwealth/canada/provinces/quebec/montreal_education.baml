@@ -16,16 +16,6 @@ function ExtractMontrealSchoolBoardDocument(
   school_board: string,
   language: string,
   text: string
-) -> MontrealSchoolBoardRecord {
-  client Claude
-  prompt #"
-    Extract the canonical Montreal school-board document from the
-    following text.
-
-    School board: {{ school_board }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> MontrealSchoolBoardRecord {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

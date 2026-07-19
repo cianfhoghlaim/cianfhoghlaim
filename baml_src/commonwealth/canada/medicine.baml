@@ -15,16 +15,6 @@ function ExtractCANMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> CANMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Canada
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> CANMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -18,16 +18,6 @@ class EMAMedicine {
 function ExtractEMAMedicine(
   language: EULanguage,
   text: string
-) -> EMAMedicine {
-  client Claude
-  prompt #"
-    Extract the canonical EMA medicine record from the following
-    European Public Assessment Report (EPAR) text. The medicine_id is
-    the EMA ID (EMEA/H/C/...) and MUST be preserved exactly.
-
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EMAMedicine {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

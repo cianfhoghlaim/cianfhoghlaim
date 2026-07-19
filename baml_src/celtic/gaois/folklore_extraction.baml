@@ -68,31 +68,8 @@ class DuchasPersonNameExtraction {
 // Parse Dúchas XML response
 function ParseDuchasXML(
   xml_content: string
-) -> DuchasXMLRecord {
-  client Extractor
-  prompt #"
-    Parse this Dúchas.ie XML metadata and extract structured information.
-
-    {{ ctx.output_format }}
-
-    XML Content:
-    {{ xml_content }}
-
-    Extract all fields from the XML structure:
-    - Entry ID from the entryID attribute
-    - Volume information from the <volume> element
-    - School location from <schoolLocation> with lat/lon coordinates
-    - School name and roll number
-    - Teacher name from <teacherName>
-    - Any collector/informant information
-    - Story title if present
-    - Page image URLs
-
-    Important:
-    - Preserve Irish names with fadas (á, é, í, ó, ú)
-    - County codes are 2-letter (GA=Galway, DO=Donegal, etc.)
-    - Coordinates have 16 decimal precision
-  "#
+) -> DuchasXMLRecord {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -126,37 +103,8 @@ class HandwritingExtraction {
 function ExtractHandwriting(
   page_image: image,
   context: DuchasXMLRecord?
-) -> HandwritingExtraction {
-  client VisionExtractor
-  prompt #"
-    Extract text from this handwritten Irish manuscript page.
-
-    {{ ctx.output_format }}
-
-    {% if context %}
-    Context from XML metadata:
-    - Volume: {{ context.volume_number }}
-    - School: {{ context.school_name }}
-    - Teacher: {{ context.teacher_name.full_name }}
-    - Location: {{ context.location.name_ga }}, Co. {{ context.location.county_code }}
-    {% endif %}
-
-    Image:
-    {{ page_image }}
-
-    Tasks:
-    1. Transcribe all handwritten text, preserving Irish spelling and fadas
-    2. Identify the primary language (Irish/English/Mixed)
-    3. Note any titles, headings, or section breaks
-    4. Describe any illustrations or drawings
-    5. Assess legibility and note any difficult passages
-    6. Look for collector/informant names written on the page
-
-    For Irish text:
-    - Preserve pre-reform spelling if used (e.g., 'aithne' not 'aithint')
-    - Note any dialectal spellings
-    - Preserve séimhiú (lenition) marks correctly
-  "#
+) -> HandwritingExtraction {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Batch extraction for multi-page stories
@@ -176,37 +124,8 @@ class StoryExtraction {
 function ExtractStory(
   page_images: image[],
   metadata: DuchasXMLRecord
-) -> StoryExtraction {
-  client VisionExtractor
-  prompt #"
-    Extract and combine a complete story from these manuscript pages.
-
-    {{ ctx.output_format }}
-
-    Metadata:
-    {{ metadata }}
-
-    Process each page image in order:
-    {% for img in page_images %}
-    Page {{ loop.index }}: {{ img }}
-    {% endfor %}
-
-    Tasks:
-    1. Transcribe each page in order
-    2. Combine into a single coherent transcription
-    3. Identify and classify the folklore topic(s)
-    4. Generate a brief summary
-    5. Note the languages used throughout
-
-    For story classification, use these categories:
-    - LOCAL_HISTORY: Stories about local events, places, people
-    - FOLK_TALES: Traditional stories and legends
-    - SONGS_POETRY: Songs, rhymes, poetry
-    - CUSTOMS_BELIEFS: Traditional practices and beliefs
-    - SUPERNATURAL: Fairies, ghosts, supernatural events
-    - PLACE_NAMES: Stories explaining placenames
-    - CRAFTS_TRADES: Traditional skills and occupations
-  "#
+) -> StoryExtraction {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================

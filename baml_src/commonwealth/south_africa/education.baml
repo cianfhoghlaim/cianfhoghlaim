@@ -15,16 +15,6 @@ function ExtractZAFEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> ZAFEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following South Africa
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ZAFEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -16,16 +16,6 @@ function ExtractVENEducationDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> VENEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following Venezuela
-    text. Preserve the canonical document id exactly.
-
-    Jurisdiction: { jurisdiction }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> VENEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

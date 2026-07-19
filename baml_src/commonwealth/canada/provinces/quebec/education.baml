@@ -22,16 +22,6 @@ function ExtractQuebecEducationDocument(
   province: string,
   language: string,
   text: string
-) -> QuebecEducationBilingualRecord {
-  client Claude
-  prompt #"
-    Extract the canonical Quebec education record from the following
-    text. The title + summary MUST be bilingual (fr + en where present).
-
-    Province: {{ province }}
-    Language: {{ language }}
-    Text: {{ text }}
-
-    {{ ctx.output_format }}
-  "#
+) -> QuebecEducationBilingualRecord {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -15,16 +15,6 @@ function ExtractINDMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> INDMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following India
-    text. Preserve the canonical document id exactly.
-
-    Country: { country_code }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> INDMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

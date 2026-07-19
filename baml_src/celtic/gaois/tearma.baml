@@ -280,85 +280,23 @@ class ITTerm {
 // Parse Tearma API JSON response for a single term
 function ParseTearmaTerm(
   json_response: string
-) -> TearmaTerm {
-  client Extractor
-  prompt #"
-    Parse this Tearma.ie terminology API JSON response and extract structured term data.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract all available fields:
-    - Term ID
-    - Irish term (ga) with variants and abbreviations
-    - English term (en) with variants and abbreviations
-    - Grammar information (gender, declension, plurals, etc.)
-    - Subject domains
-    - Status
-    - Definitions in both languages
-    - Usage examples
-    - Related terms (synonyms, broader, narrower)
-    - Source and authority information
-    - Timestamps
-
-    Important:
-    - Preserve Irish text with fadas (sínte fada): á, é, í, ó, ú
-    - Extract all grammatical forms (genitive, plural, etc.)
-    - Note the preferred/recommended term if multiple variants exist
-    - Identify the source authority (Coiste Téarmaíochta, Fiontar, etc.)
-  "#
+) -> TearmaTerm {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Parse Tearma search results
 function ParseTearmaSearchResults(
   json_response: string
-) -> TearmaSearchResult {
-  client Extractor
-  prompt #"
-    Parse this Tearma.ie search results JSON and extract all matching terms.
-
-    {{ ctx.output_format }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract:
-    - All terms in the results array
-    - Pagination metadata (total count, page, per_page)
-    - Original search query
-    - Determine if more pages are available
-
-    For each term, extract full details as per TearmaTerm schema.
-    Preserve Irish text with fadas throughout.
-  "#
+) -> TearmaSearchResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract domain-specific terminology
 function ExtractDomainTerminology(
   json_response: string,
   target_domain: TerminologyDomain
-) -> TearmaDomainTerms {
-  client Extractor
-  prompt #"
-    Extract terminology for a specific domain from Tearma.ie data.
-
-    {{ ctx.output_format }}
-
-    Target domain: {{ target_domain }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract:
-    - All terms belonging to the specified domain
-    - Domain name in Irish and English
-    - Term count
-    - Full term details for each entry
-
-    Filter to only include terms where the domain matches.
-  "#
+) -> TearmaDomainTerms {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract educational terminology for curriculum alignment
@@ -366,111 +304,31 @@ function ExtractEducationalTerms(
   json_response: string,
   subject: string,
   level: string
-) -> EducationalTerm[] {
-  client Extractor
-  prompt #"
-    Extract educational terminology suitable for Irish curriculum.
-
-    {{ ctx.output_format }}
-
-    Subject: {{ subject }}
-    Level: {{ level }}
-
-    JSON Response:
-    {{ json_response }}
-
-    Extract terms that are:
-    - Relevant to the specified subject
-    - Appropriate for the education level
-    - Have both Irish and English forms
-    - Include clear definitions for students
-
-    For curriculum alignment, also extract any NCCA reference codes if present.
-  "#
+) -> EducationalTerm[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract Irish grammar information from term
 function ExtractIrishGrammar(
   term_text: string,
   context: string
-) -> IrishGrammar {
-  client Extractor
-  prompt #"
-    Extract detailed Irish grammatical information for this term.
-
-    {{ ctx.output_format }}
-
-    Term: {{ term_text }}
-    Context: {{ context }}
-
-    Analyze and extract:
-    - Part of speech (ainmfhocal, briathar, aidiacht, etc.)
-    - For nouns: gender, declension class, genitive singular/plural, nominative plural
-    - For verbs: verbal noun, verbal adjective, conjugation, autonomous form
-    - For adjectives: comparative, superlative, genitive forms
-    - Any irregular forms or special notes
-
-    Use standard Irish grammatical terminology and notation.
-  "#
+) -> IrishGrammar {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate bilingual term card for vocabulary learning
 function GenerateTermCard(
   term: TearmaTerm
-) -> string {
-  client Extractor
-  prompt #"
-    Generate a bilingual vocabulary card for this terminology term.
-
-    Term data:
-    - Irish: {{ term.term_ga.text }}
-    - English: {{ term.term_en.text }}
-    - Domain: {{ term.domains }}
-    - Grammar: {{ term.grammar }}
-    - Definition (GA): {{ term.definition_ga }}
-    - Definition (EN): {{ term.definition_en }}
-    - Examples: {{ term.examples }}
-
-    Create a formatted vocabulary card that includes:
-    1. The Irish term prominently displayed
-    2. Pronunciation guide if available
-    3. Grammatical information (gender, plural, etc.)
-    4. English translation
-    5. Brief definition
-    6. One example sentence in both languages
-    7. Related terms for vocabulary expansion
-
-    Format for educational use (flashcard or study guide style).
-  "#
+) -> string {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Link term to Logainm placenames (for geographic terminology)
 function LinkTermToPlacenames(
   term: TearmaTerm,
   placename_contexts: string[]
-) -> int[] {
-  client Extractor
-  prompt #"
-    Identify Logainm place IDs where this term appears in placenames.
-
-    Term:
-    - Irish: {{ term.term_ga.text }}
-    - English: {{ term.term_en.text }}
-    - Domain: {{ term.domains }}
-
-    Placename contexts mentioning this term:
-    {{ placename_contexts }}
-
-    For geographic/topographic terminology (e.g., cnoc, loch, gleann, baile),
-    find placenames that use this element.
-
-    Return Logainm place IDs where:
-    - The term appears as a placename element
-    - The meaning relates to the term's definition
-    - Historical forms of the term are present
-
-    This links Tearma terminology to real places for educational context.
-  "#
+) -> int[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Translate term between English and Irish with full context
@@ -478,29 +336,8 @@ function TranslateTerm(
   source_text: string,
   source_language: string,
   domain_context: TerminologyDomain?
-) -> TearmaTerm {
-  client Extractor
-  prompt #"
-    Find or generate the Irish-English translation for this term.
-
-    {{ ctx.output_format }}
-
-    Source text: {{ source_text }}
-    Source language: {{ source_language }}
-    Domain context: {{ domain_context }}
-
-    Provide:
-    - The term in both Irish and English
-    - Grammatical information for the Irish form
-    - Definition in both languages
-    - Domain classification
-    - Any usage notes or context
-
-    If multiple translations exist, identify the preferred/official one
-    from An Coiste Téarmaíochta or other authoritative sources.
-
-    Preserve fadas in Irish text: á, é, í, ó, ú
-  "#
+) -> TearmaTerm {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -528,30 +365,8 @@ class DuchasFolkloreReference {
 function FindFolkloreUsage(
   term: TearmaTerm,
   duchas_search_results: string
-) -> TearmaFolkloreLink {
-  client Extractor
-  prompt #"
-    Find uses of this terminology term in the National Folklore Collection.
-
-    {{ ctx.output_format }}
-
-    Term:
-    - ID: {{ term.id }}
-    - Irish: {{ term.term_ga.text }}
-    - English: {{ term.term_en.text }}
-    - Domain: {{ term.domains }}
-
-    Dúchas search results:
-    {{ duchas_search_results }}
-
-    Extract:
-    - References in Schools Collection (CBÉS)
-    - References in Main Manuscripts (CBÉ)
-    - Historical or dialectal forms of the term
-    - Context showing how the term was used traditionally
-
-    This links modern terminology to traditional usage documented in folklore.
-  "#
+) -> TearmaFolkloreLink {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Combined lookup across Tearma and Logainm
@@ -570,30 +385,6 @@ function CrossReferencePlacenameElement(
   term_text: string,
   tearma_data: string,
   logainm_glossary: string
-) -> BilingualPlaceTerm {
-  client Extractor
-  prompt #"
-    Cross-reference this term across Tearma.ie and Logainm.ie glossary.
-
-    {{ ctx.output_format }}
-
-    Term: {{ term_text }}
-
-    Tearma.ie data:
-    {{ tearma_data }}
-
-    Logainm.ie glossary:
-    {{ logainm_glossary }}
-
-    Determine:
-    - Whether the term exists in Tearma (modern terminology)
-    - Whether it's in Logainm glossary (placename element)
-    - Combined meaning and usage
-    - Example placenames if it's a geographic element
-
-    Common placename elements include:
-    - baile (town), cnoc (hill), loch (lake), gleann (glen)
-    - dún (fort), cill (church), inis (island), carraig (rock)
-    - ard (height), droichead (bridge), port (port/bank)
-  "#
+) -> BilingualPlaceTerm {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
