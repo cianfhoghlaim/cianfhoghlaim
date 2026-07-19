@@ -30,4 +30,5 @@ function MathematicsStudyplanPage() {
     </div>
   );
 
+}
 // (no further navigation)

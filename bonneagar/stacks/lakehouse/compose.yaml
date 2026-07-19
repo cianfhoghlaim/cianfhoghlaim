@@ -332,6 +332,13 @@ services:
       LAKEKEEPER__SERVE_SWAGGER_UI: "true"
       # Logging
       RUST_LOG: ${RUST_LOG:-info}
+      # Garage S3 credentials — Lakekeeper validates warehouses by writing a
+      # test metadata file to S3; without credentials it gets 403. Injected
+      # from .env (Locket-resolved) or dev fallback.
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?GARAGE_ACCESS_KEY_ID must be set}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set}
+      AWS_REGION: ${AWS_REGION:-garage}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://garage:3900}
     depends_on:
       postgres:
         condition: service_healthy

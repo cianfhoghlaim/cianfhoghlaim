@@ -28,4 +28,5 @@ function GaeilgeSyllabusPage() {
     </div>
   );
 
+}
 // (no further navigation)

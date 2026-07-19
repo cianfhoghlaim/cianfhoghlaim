@@ -30,4 +30,5 @@ function ChemistryStudyplanPage() {
     </div>
   );
 
+}
 // (no further navigation)

@@ -30,4 +30,5 @@ function ComputerScienceStudyplanPage() {
     </div>
   );
 
+}
 // (no further navigation)

@@ -28,4 +28,5 @@ function ComputerScienceSyllabusPage() {
     </div>
   );
 
+}
 // (no further navigation)

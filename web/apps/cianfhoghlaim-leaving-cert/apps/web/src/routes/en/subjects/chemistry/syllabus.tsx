@@ -28,4 +28,5 @@ function ChemistrySyllabusPage() {
     </div>
   );
 
+}
 // (no further navigation)
