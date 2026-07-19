@@ -47,7 +47,7 @@ deployments and is **the auth model this change adopts**.
 The stack runs a single `openclaw` container (the upstream
 image, pinned to a semver) plus a `locket` sidecar for
 Infisical secret injection. Networking: shared
-`cianchoghlaim` bridge so the gateway can reach internal
+`cianfhoghlaim` bridge so the gateway can reach internal
 services (e.g. the LiteLLM gateway at `:4000`, once the
 `litellm-minimax-vendor-derisking` change lands).
 

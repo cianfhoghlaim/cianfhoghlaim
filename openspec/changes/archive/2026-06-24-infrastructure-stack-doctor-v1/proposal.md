@@ -48,7 +48,7 @@ openspec change)
 - **Locket Sidecar Contract** — every `sidecar.yaml` SHALL use the
   `user: "65532:65532"` + `no-new-privileges:true` + `cap_drop: [ALL]`
   + `read_only: true` + `tmpfs: [/run/secrets/locket:size=1m,mode=0700]`
-  security baseline; the `cianchoghlaim_locket_secrets` external
+  security baseline; the `cianfhoghlaim_locket_secrets` external
   tmpfs volume SHALL be shared across all 86+ stacks
 - **Locket 3-Mode Contract** — every `sidecar.yaml` SHALL declare
   `LOCKET_MODE` as one of `watch` / `exec` / `oneshot`; the

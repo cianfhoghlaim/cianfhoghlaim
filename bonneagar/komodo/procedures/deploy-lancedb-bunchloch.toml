@@ -23,7 +23,7 @@ server_id = "bunchloch"
 # =============================================================================
 # STAGE 0: Prerequisites
 # =============================================================================
-# The lancedb sidecar requires the cianchoghlaim_locket_secrets external tmpfs
+# The lancedb sidecar requires the cianfhoghlaim_locket_secrets external tmpfs
 # volume. Created idempotently by a build (defined in the locket sidecar).
 # -----------------------------------------------------------------------------
 

@@ -77,14 +77,14 @@ from agno.team import Team
 from agno.models.openai.like import OpenAILike
 
 # KCG uses Z.ai GLM-4.6 for cost + speed, with OpenAI as fallback
-kcg_model = OpenAILike(
+model = OpenAILike(
     id="glm-4.6",
     base_url="https://api.z.ai/v1",
     api_key=os.environ["Z_AI_API_KEY"],
 )
 
-kcg_team = Team(
-    name="kcg_curriculum_team",
+team = Team(
+    name="curriculum_team",
     mode="coordinate",  # coordinator routes to specialists
     members=[
         curriculum_agent,   # NCCA + SEC + DES specialist

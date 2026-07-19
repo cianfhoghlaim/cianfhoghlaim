@@ -55,7 +55,7 @@ import logfire
 from langfuse.decorators import observe, langfuse_context
 
 
-@observe(name="kcg_curriculum_search", as_type="workflow")
+@observe(name="curriculum_search", as_type="workflow")
 def curriculum_search(query: str) -> list[dict]:
     """Top-level workflow — emitted as a Langfuse workflow span."""
     results = vector_search(query)
@@ -149,7 +149,7 @@ def llm_call(prompt: str) -> str:
 from langfuse import Langfuse
 
 langfuse = Langfuse()
-prompt = langfuse.get_prompt("kcg_system_prompt", label="production")
+prompt = langfuse.get_prompt("system_prompt", label="production")
 response = openai_client.chat(prompt.compile(variables={"query": query}))
 ```
 
@@ -321,7 +321,7 @@ uv run python infrastructure/scripts/cognee-ingest-docs.py --summary --all
 ```
 
 The **pre-flight checklist** is: (1) Cognee stack is up
-(`docker ps --filter name=cianchoghlaim-cognee`),
+(`docker ps --filter name=cianfhoghlaim-cognee`),
 (2) REST API reachable (`curl -sf
 http://localhost:8100/health`),
 (3) `LLM_API_KEY` set (mise-hydrated from `.env` →

@@ -364,7 +364,7 @@ documented" — agent merges code (CCC) with architecture
 | Doc | Lines | Purpose |
 |:--|--:|:--|
 | `.agents/skills/ccc/SKILL.md` | 400 | Agent usage guide for CCC |
-| `.agents/skills/ccc/references/kcg-integration/CCC_INTEGRATION.md` | 187 | KCG-specific setup + dual-search workflow |
+| `.agents/skills/ccc/references/integration/CCC_INTEGRATION.md` | 187 | KCG-specific setup + dual-search workflow |
 | `.agents/skills/ccc/references/health/cocoindex_readiness_audit.md` | 327 | Index health audit (1.4 GB → 2.1 GB, 8,845 files, 257,957 chunks) |
 | `.agents/skills/ccc/references/settings.md` | — | Index settings (`include_patterns`, `exclude_patterns`, embedding model) |
 | `.agents/skills/ccc/references/management.md` | — | CLI commands (init, index, search, status, reset, doctor, mcp, daemon) |

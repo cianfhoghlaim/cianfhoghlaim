@@ -15,7 +15,7 @@
 - [ ] Both services have `depends_on: locket: condition: service_healthy`
 - [ ] Both services have `env_file: /run/secrets/locket/secrets.env`
 - [ ] Both services have `locket_secrets:/run/secrets/locket:ro` volume mount
-- [ ] Both services are on the `cianchoghlaim` + `lakehouse` networks
+- [ ] Both services are on the `cianfhoghlaim` + `lakehouse` networks
 
 ## Phase 3: Add Traefik routers to pangolin.yaml
 

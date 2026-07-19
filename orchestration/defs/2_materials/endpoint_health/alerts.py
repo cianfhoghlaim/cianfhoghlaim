@@ -25,7 +25,7 @@ logger = structlog.get_logger(__name__)
 )
 def endpoint_health_alerts(context: AssetExecutionContext) -> dict[str, int]:
     """Detect regressions in the British Isles endpoint surface."""
-    from cianfhoghlaim.dlt.common.endpoint_recovery import probe_all_39
+    from dlt_sources.common.endpoint_recovery import probe_all_39
 
     current = asyncio.run(probe_all_39())
     broken = {src: status for src, status in current.items() if status not in (200, 201, 204)}

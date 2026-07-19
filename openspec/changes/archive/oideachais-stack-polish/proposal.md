@@ -67,7 +67,7 @@ Create `infrastructure/stacks/sruth/oideachais/README.md` with:
 - Purpose: 1-paragraph summary
 - Architecture: 3 services (dagster, api, frontend) + 1 sidecar (locket)
 - Ports: 3335 (dagster), 8000 (api), 3080 (frontend)
-- Networks: cianchoghlaim, lakehouse
+- Networks: cianfhoghlaim, lakehouse
 - Dependencies: lakehouse (Garage S3, Postgres, Lakekeeper, Lance NS),
   litellm (LLM gateway), langfuse (LLM observability)
 - Commands: local dev + production

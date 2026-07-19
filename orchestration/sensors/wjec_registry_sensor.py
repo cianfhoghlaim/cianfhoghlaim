@@ -30,7 +30,7 @@ def wjec_registry_sensor(context: SensorEvaluationContext) -> Any:
     cursor_last_seen = cursor_data.get("last_seen", "1970-01-01T00:00:00+00:00")
 
     try:
-        from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+        from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
         rows = query_by_jurisdiction("wales")
     except Exception as e:
         return SkipReason(f"WJEC registry unavailable: {e}")

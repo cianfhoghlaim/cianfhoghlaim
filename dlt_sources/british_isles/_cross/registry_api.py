@@ -54,11 +54,11 @@ Language = Literal["en", "ga", "cy", "gd", "gv"]
 # The canonical BIEP v3 registry schema.
 # Defaults to `{DEFAULT_SUBJECTS_TABLE}` (MotherDuck
 # convention), but `BIEP_REGISTRY_SCHEMA` env var can override (e.g.,
-# `cianchoghlaim.education.subjects` for DuckLake which doesn't support
+# `cianfhoghlaim.education.subjects` for DuckLake which doesn't support
 # dotted schema names).
 DEFAULT_REGISTRY_SCHEMA: str = os.getenv(
     "BIEP_REGISTRY_SCHEMA",
-    "cianchoghlaim.education._registry",
+    "cianfhoghlaim.education._registry",
 )
 DEFAULT_SUBJECTS_TABLE: str = f"{DEFAULT_REGISTRY_SCHEMA}.subjects"
 

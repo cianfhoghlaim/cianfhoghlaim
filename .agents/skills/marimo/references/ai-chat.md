@@ -110,7 +110,7 @@ def _():
         api_key=os.environ["Z_AI_API_KEY"],
     )
     team = Team(
-        name="kcg_team",
+        name="team",
         mode="coordinate",
         members=[curriculum_agent, translation_agent],
         model=model,

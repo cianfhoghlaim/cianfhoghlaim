@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.ukraine — auto-generated package marker.
+"""cianfhoghlaim.cocoindex.ukraine — auto-generated package marker.
 """

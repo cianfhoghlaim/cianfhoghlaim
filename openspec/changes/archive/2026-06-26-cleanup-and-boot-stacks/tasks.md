@@ -34,7 +34,7 @@
 
 - [x] 3.1 Write `infrastructure/stacks/logfire/compose.yaml` — OpenTelemetry collector forwarding to Logfire cloud (Pydantic Logfire is SaaS-only)
 - [x] 3.2 Write `infrastructure/stacks/logfire/blueprint.yaml` — stub file documenting why no Pangolin route (SaaS-only UI)
-- [x] 3.3 Write `infrastructure/stacks/logfire/sidecar.yaml` — standard Locket sidecar pattern with `cianchoghlaim_locket_secrets` tmpfs volume
+- [x] 3.3 Write `infrastructure/stacks/logfire/sidecar.yaml` — standard Locket sidecar pattern with `cianfhoghlaim_locket_secrets` tmpfs volume
 - [x] 3.4 SKIP `infrastructure/stacks/logfire/pangolin.yaml` — local OTEL collector has no web UI; Logfire UI is SaaS at logfire.pydantic.dev (documented in stack README; matches kcg-pangolin-stack skill's "Reference stack (not deployed)" classification)
 - [x] 3.5 Update `infrastructure/stacks/logfire/secrets.env` — migrate Jinja `{{ infisical:///write_token }}` → canonical `infisical://dev-baile/logfire/write_token`
 - [x] 3.6 Write `infrastructure/stacks/logfire/config/otelcol.yaml` — OTEL Collector configuration (receivers, processors, exporters)

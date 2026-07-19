@@ -17,7 +17,7 @@
 |:--|:--|:--|
 | **Lakehouse stack deploy** | ✅ 6/11 services healthy | Garage + Postgres + Lakekeeper + Lance sidecar + LanceDB Viewer + ClickHouse + Redis |
 | **Garage layout fix** | ✅ 93.1 GiB capacity | `garage layout assign + apply` |
-| **Lakekeeper bootstrap** | ✅ Bootstrapped | 10 namespaces created (cianchoghlaim + education + 8 jurisdictions) |
+| **Lakekeeper bootstrap** | ✅ Bootstrapped | 10 namespaces created (cianfhoghlaim + education + 8 jurisdictions) |
 | **Local DuckLake registry** | ✅ 1,990 subjects | 24s to seed, persistent across restarts |
 | **4 jurisdiction pipelines × 8 jurisdictions** | ✅ 1,990 cohort rows | 5.4s total wall-clock |
 | **7 Lance datasets** | ✅ 5,958 rows exported | Stored at `storage/data/lancedb/` |
@@ -68,7 +68,7 @@
 | `dlt/british_isles/_cross/registry_api.py` ibis ≥ 10 API | `params=` kwarg removed | Switched to raw duckdb |
 | `dlt/` shadows real dlt 1.29.0 | `@dlt.source` decorators unusable | Renamed `dlt/` → `dlt_sources/` |
 | Garage cluster layout unassigned | S3 writes silently failed | `garage layout assign + apply` |
-| DuckLake `data_path` pointed at wrong bucket | DuckLake connection errors | Updated metadata to `s3://ducklake-cianchoghlaim/` |
+| DuckLake `data_path` pointed at wrong bucket | DuckLake connection errors | Updated metadata to `s3://ducklake-cianfhoghlaim/` |
 | DuckLake `CREATE SECRET` required `http://`-less endpoint | URL parsing failure | Stripped scheme in setup script |
 | `dlt_sources/british_isles/_cross/jurisdiction_pipeline_base.py` missing `import dlt` | `NameError: name 'dlt' is not defined` | Added explicit `import dlt` |
 | Missing `content_hash` on cohort rows | dlt primary_key constraint failure | Added deterministic hash in `subject_to_row()` |
@@ -92,7 +92,7 @@
 |:--|:--|
 | `scripts/smoke_test_lakehouse.py` | 5-endpoint probe (Nimtable/Olake/LanceDB Viewer/Lance sidecar/Lakekeeper) |
 | `scripts/setup_local_ducklake_registry.py` | One-shot Postgres DB + DuckLake catalog + table creation |
-| `scripts/fix_v7_imports.py` | Bulk-fix `cianchoghlaim.dlt.X` → `dlt.X` (1,544 files) |
+| `scripts/fix_v7_imports.py` | Bulk-fix `cianfhoghlaim.dlt.X` → `dlt.X` (1,544 files) |
 | `scripts/fix_dlt_shadow.py` | Bulk-fix `dlt.X` → `dlt_sources.X` (1,855 files) |
 | `scripts/revert_dlt_1x_submodule_imports.py` | Restore real `dlt.sources` / `dlt.destinations` / etc. |
 | `scripts/restore_dlt_sources_common.py` | Restore `dlt_sources.common.X` for hardcoded local modules |

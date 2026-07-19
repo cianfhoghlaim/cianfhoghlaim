@@ -57,8 +57,8 @@ def _():
     """The top metric strip. Reads the allowlist size as a proxy for
     the number of candidates when the DLT-managed candidates table
     is empty (the typical first-time-run state)."""
-    from cianfhoghlaim.dlt.official_media.allowlist import allowlist_filter
-    from cianfhoghlaim.dlt.official_media.source_resolver import source_resolver
+    from dlt_sources.official_media.allowlist import allowlist_filter
+    from dlt_sources.official_media.source_resolver import source_resolver
 
     total_candidates = allowlist_filter.size
     categories = allowlist_filter.categories()
@@ -132,7 +132,7 @@ def _():
     """The filterable candidates table. Iterates the allowlist
     directly; the DLT-managed candidates table is read instead once
     the asset has materialised."""
-    from cianfhoghlaim.dlt.official_media.allowlist import allowlist_filter
+    from dlt_sources.official_media.allowlist import allowlist_filter
 
     rows = []
     for category, usernames in allowlist_filter.categories().items():
@@ -170,7 +170,7 @@ def _(candidates_table, mo):
         row = selected_rows[0]
         ig_username = row.get("ig_username", "")
         try:
-            from cianfhoghlaim.dlt.official_media.source_resolver import source_resolver
+            from dlt_sources.official_media.source_resolver import source_resolver
 
             resolved = source_resolver.resolve(ig_username, category=row.get("category"))
             detail_md = (

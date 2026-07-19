@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.commonwealth_cross — placeholder package marker.
+"""cianfhoghlaim.cocoindex.commonwealth_cross — placeholder package marker.
 """

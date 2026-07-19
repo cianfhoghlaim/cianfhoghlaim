@@ -21,18 +21,18 @@ bunchloch (MacBook M4 Max)
 
 | Service | Container | Host port | Internal port | Healthcheck |
 |---|--:|--:|--:|---|
-| `dagster` | `cianchoghlaim-oideachais-dagster` | 3335 | 3000 | `/server_info` |
-| `api` | `cianchoghlaim-oideachais-api` | 8000 | 8000 | `/health` |
-| `frontend` | `cianchoghlaim-oideachais-frontend` | **3080** | 3000 | `/` |
-| `agent_os` | `cianchoghlaim-oideachais-agent-os` | 7777 | 7777 | `/health` |
-| `adk_agents` | `cianchoghlaim-oideachais-adk-agents` | 7778 | 7778 | `/health` |
-| `locket` | `cianchoghlaim-oideachais-locket` | (no host port) | (no container port) | `/run/secrets/locket/secrets.env` |
+| `dagster` | `cianfhoghlaim-oideachais-dagster` | 3335 | 3000 | `/server_info` |
+| `api` | `cianfhoghlaim-oideachais-api` | 8000 | 8000 | `/health` |
+| `frontend` | `cianfhoghlaim-oideachais-frontend` | **3080** | 3000 | `/` |
+| `agent_os` | `cianfhoghlaim-oideachais-agent-os` | 7777 | 7777 | `/health` |
+| `adk_agents` | `cianfhoghlaim-oideachais-adk-agents` | 7778 | 7778 | `/health` |
+| `locket` | `cianfhoghlaim-oideachais-locket` | (no host port) | (no container port) | `/run/secrets/locket/secrets.env` |
 
 ## Networks
 
 | Network | Type | Used for |
 |---|---|---|
-| `cianchoghlaim` | external | Primary dev/control plane (shared with 94 other stacks) |
+| `cianfhoghlaim` | external | Primary dev/control plane (shared with 94 other stacks) |
 | `lakehouse_lakehouse` | external | Data plane (Garage S3, Postgres, Lakekeeper, Lance NS, LiteLLM) |
 
 ## Dependencies (sibling stacks)

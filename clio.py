@@ -2,7 +2,7 @@
 
 Deprecated: this file exists for one release cycle per the v7
 flattening consolidation. Update any external scripts that import
-from `cianchoghlaim.clio` to import from `cianchoghlaim.cli` instead.
+from `cianfhoghlaim.clio` to import from `cianfhoghlaim.cli` instead.
 
 See `openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1`
 for the rename rationale.

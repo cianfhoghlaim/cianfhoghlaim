@@ -711,7 +711,7 @@ def seed_registry() -> dict[str, int]:
 
     # Open a single shared connection (with USE lakehouse; for DuckLake)
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
-    schema = os.getenv("BIEP_REGISTRY_SCHEMA", "cianchoghlaim.education._registry")
+    schema = os.getenv("BIEP_REGISTRY_SCHEMA", "cianfhoghlaim.education._registry")
     conn = duckdb.connect(uri, read_only=False)
     if uri.startswith("ducklake:"):
         from dlt_sources.british_isles._cross.connection import _setup_s3_secret

@@ -22,7 +22,7 @@ don't have:
 
 The upstream `docker-compose.yml` uses `network_mode: host`.
 This rewrite fits the 6-file GOLD_STANDARD pattern with
-explicit published ports on the `cianchoghlaim` bridge
+explicit published ports on the `cianfhoghlaim` bridge
 network. The upstream 206k-star count is a popularity signal
 (treat with appropriate skepticism per the
 `hermes-agent-research-2026-06-30` audit), but the MIT
@@ -149,7 +149,7 @@ curl -fsS -H "Authorization: Bearer $HERMES_API_SERVER_KEY" \
 
 The upstream `NousResearch/hermes-agent` `docker-compose.yml`
 uses `network_mode: host`. The Cianfhoghlaim GOLD_STANDARD
-pattern requires the shared `cianchoghlaim` bridge network
+pattern requires the shared `cianfhoghlaim` bridge network
 with explicit published ports. The rewrite:
 
 - **Dashboard:** `127.0.0.1:9119:9119` (exposed to Pangolin

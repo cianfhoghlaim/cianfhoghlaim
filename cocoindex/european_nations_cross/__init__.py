@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.european_nations_cross — auto-generated package marker.
+"""cianfhoghlaim.cocoindex.european_nations_cross — auto-generated package marker.
 """

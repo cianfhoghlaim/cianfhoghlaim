@@ -296,9 +296,9 @@ Cross-references:
 
 Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 
-- The canonical MotherDuck database alias is `md:cianchoghlaim` (NOT `md:oideachais`
+- The canonical MotherDuck database alias is `md:cianfhoghlaim` (NOT `md:oideachais`
   which was the pre-v7 name). The pre-v7 BIEP Dives that referenced `md:oideachais`
-  were migrated to `md:cianchoghlaim` in the P1 lakehouse-population change.
+  were migrated to `md:cianfhoghlaim` in the P1 lakehouse-population change.
 - MotherDuck Flights are now configured via
   `openspec/changes/2026-08-02-biep-v3-motherduck-flights-v1/` (the canonical
   per-day BIEP Flights `lc_pdf_sync_flight` etc.)

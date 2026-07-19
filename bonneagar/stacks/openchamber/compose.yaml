@@ -47,7 +47,7 @@ services:
       - "127.0.0.1:3000:3000"
     environment:
       OPENCHAMBER_PORT: "3000"
-      OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianchoghlaim-dark}
+      OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianfhoghlaim-dark}
       OPENCHAMBER_LOG_LEVEL: ${OPENCHAMBER_LOG_LEVEL:-info}
       # NOTE: OPENCODE_HOST intentionally NOT set (bundled mode)
       # NOTE: OPENCHAMBER_TUNNEL_TOKEN intentionally NOT set (no Cloudflare tunnel in v1)
@@ -76,4 +76,4 @@ volumes:
 networks:
   cianfhoghlaim:
     external: true
-    name: cianchoghlaim
+    name: cianfhoghlaim

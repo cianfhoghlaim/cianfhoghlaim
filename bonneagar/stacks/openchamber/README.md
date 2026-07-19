@@ -53,7 +53,7 @@ from your Cloudflare Zero Trust dashboard. Documented in
 ## Key Features
 
 - **Bundled OpenCode runtime** — no separate daemon required
-- **18+ themes** — including the canonical `cianchoghlaim-dark`
+- **18+ themes** — including the canonical `cianfhoghlaim-dark`
 - **Persistent session state** — `openchamber-state` named volume
 - **3 LLM providers** — OpenAI, Anthropic, minimax-compatible
 - **Pocket ID OIDC SSO** — primary auth at the Pangolin layer
@@ -92,7 +92,7 @@ km run procedure deploy-openchamber-arm1-oci
 | `ANTHROPIC_API_KEY` | no | Anthropic provider key | from Locket/Infisical |
 | `MINIMAX_API_KEY` | yes (prod) | minimax-compatible provider key (default in v1) | from Locket/Infisical |
 | `OPENCHAMBER_PORT` | no | UI port | `3000` |
-| `OPENCHAMBER_THEME` | no | Default theme | `cianchoghlaim-dark` |
+| `OPENCHAMBER_THEME` | no | Default theme | `cianfhoghlaim-dark` |
 | `OPENCHAMBER_LOG_LEVEL` | no | Log level (debug/info/warn/error) | `info` |
 | `OPENCODE_HOST` | no | External OpenCode daemon URL (external mode only) | not set (bundled mode) |
 | `OPENCHAMBER_TUNNEL_TOKEN` | no | Cloudflare tunnel token (tunnel mode only) | not set (Pangolin handles routing) |

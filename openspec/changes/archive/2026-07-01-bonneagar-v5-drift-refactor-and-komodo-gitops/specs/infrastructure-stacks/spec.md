@@ -17,7 +17,7 @@ across all 88 stacks. The contract is:
 - `read_only: true`
 - `tmpfs: [/run/secrets/locket:size=1m,mode=0700,uid=65532,gid=65532]`
 - `volumes: [<stack>-locket-secrets:/run/secrets/locket:ro]`
-  (the per-stack tmpfs; `cianchoghlaim_locket_secrets` is a
+  (the per-stack tmpfs; `cianfhoghlaim_locket_secrets` is a
   legacy shared-volume alias that no stack uses)
 - `environment.LOCKET_MODE`: one of `watch` / `exec` / `oneshot`
 - `environment.LOCKET_SECRETS_FILE: /run/secrets/locket/secrets.env`
@@ -43,7 +43,7 @@ SHALL be rejected.
   `image: ghcr.io/cianfhoghlaim/locket:latest`
 - **WHEN** the stack-doctor runs
 - **THEN** the gate SHALL fail with exit code 8 + a clear error
-  message ("cianchoghlaim/locket does not exist; use
+  message ("cianfhoghlaim/locket does not exist; use
   bpbradley/locket:infisical — see
   https://github.com/bpbradley/locket")
 

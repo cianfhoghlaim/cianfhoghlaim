@@ -25,7 +25,7 @@ from dagster import (
     asset,
 )
 
-import dlt
+import dlt_sources
 
 # Lazy imports of the BAML client + CocoIndex v1 App
 try:

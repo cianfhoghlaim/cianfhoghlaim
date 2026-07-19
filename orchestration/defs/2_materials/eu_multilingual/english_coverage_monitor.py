@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-import dlt
+import dlt_sources
 from dagster import AssetExecutionContext, asset
 
 

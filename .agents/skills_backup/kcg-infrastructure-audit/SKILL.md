@@ -161,10 +161,10 @@ generates the per-week `HEALTH_REPORT.md` delta.
     {"Names": "locket", "Image": "ghcr.io/cianfhoghlaim/locket:1.0.0", "State": "running", ...}
   ],
   "networks": [
-    {"Name": "cianchoghlaim_locket_secrets", "Driver": "local"}
+    {"Name": "cianfhoghlaim_locket_secrets", "Driver": "local"}
   ],
   "volumes": [
-    {"Name": "cianchoghlaim_locket_secrets", "Driver": "local"}
+    {"Name": "cianfhoghlaim_locket_secrets", "Driver": "local"}
   ]
 }
 ```

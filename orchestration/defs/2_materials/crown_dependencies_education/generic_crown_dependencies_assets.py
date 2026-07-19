@@ -36,7 +36,7 @@ CROWN_EMBEDDING_GROUP = "3_model_lifecycle/education/crown_dependencies/embeddin
     description="Generic Crown Dependencies ingestion (BIEP v3).",
 )
 def crown_dependencies_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.british_isles.crown_dependencies.education.crown_dependencies_jurisdiction_pipeline import (
+    from dlt_sources.british_isles.crown_dependencies.education.crown_dependencies_jurisdiction_pipeline import (
         crown_dependencies_jurisdiction_pipeline,
         CROWN_DEPENDENCIES,
     )
@@ -58,8 +58,8 @@ def crown_dependencies_documents_ingested(context: AssetExecutionContext) -> dic
 def crown_dependencies_extractions(context: AssetExecutionContext) -> dict[str, Any]:
     if not BAML_AVAILABLE:
         return {"rows_extracted": 0}
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
-    from dlt.british_isles.crown_dependencies.education.crown_dependencies_jurisdiction_pipeline import (
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles.crown_dependencies.education.crown_dependencies_jurisdiction_pipeline import (
         CROWN_DEPENDENCIES,
     )
     total = 0
@@ -90,8 +90,8 @@ def crown_dependencies_extractions(context: AssetExecutionContext) -> dict[str, 
     description="Generic Crown Dependencies CocoIndex embedding (BIEP v3).",
 )
 def crown_dependencies_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
-    from dlt.british_isles.crown_dependencies.education.crown_dependencies_jurisdiction_pipeline import (
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles.crown_dependencies.education.crown_dependencies_jurisdiction_pipeline import (
         CROWN_DEPENDENCIES,
     )
     total = 0

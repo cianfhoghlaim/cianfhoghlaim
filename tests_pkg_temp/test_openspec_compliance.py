@@ -9,7 +9,7 @@ in lock-step with the delta at
 
 This module is the in-process pytest gate that runs alongside
 the existing openspec CLI in the Dagger CI image
-(``bonneagar/dagger/cianchoghlaim_dagger/__init__.py``).
+(``bonneagar/dagger/cianfhoghlaim_dagger/__init__.py``).
 
 The 4 contracts enforced here:
 

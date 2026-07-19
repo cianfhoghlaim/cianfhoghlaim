@@ -77,27 +77,27 @@ http:
     oideachais-web:
       loadBalancer:
         servers:
-          - url: "http://cianchoghlaim-oideachais-frontend:3000"
+          - url: "http://cianfhoghlaim-oideachais-frontend:3000"
 
     oideachais-api:
       loadBalancer:
         servers:
-          - url: "http://cianchoghlaim-oideachais-api:8000"
+          - url: "http://cianfhoghlaim-oideachais-api:8000"
 
     oideachais-dagster:
       loadBalancer:
         servers:
-          - url: "http://cianchoghlaim-oideachais-dagster:3000"
+          - url: "http://cianfhoghlaim-oideachais-dagster:3000"
 
     oideachais-agent-os:
       loadBalancer:
         servers:
-          - url: "http://cianchoghlaim-oideachais-agent-os:7777"
+          - url: "http://cianfhoghlaim-oideachais-agent-os:7777"
 
     oideachais-adk-agents:
       loadBalancer:
         servers:
-          - url: "http://cianchoghlaim-oideachais-adk-agents:7778"
+          - url: "http://cianfhoghlaim-oideachais-adk-agents:7778"
 
   middlewares:
     # CORS for the API — lets the frontend at oideachais.cianfhoghlaim.ie

@@ -319,8 +319,8 @@ The KCG ingestion pipeline is a 5-stage SequentialAgent:
 ```python
 from google.adk.agents import SequentialAgent
 
-kcg_pipeline = SequentialAgent(
-    name="kcg_ingestion",
+pipeline = SequentialAgent(
+    name="ingestion",
     sub_agents=[
         ocr_agent,        # PDF → text (Docling, PaddleOCR, ColPali)
         baml_extractor,   # text → typed BAML class

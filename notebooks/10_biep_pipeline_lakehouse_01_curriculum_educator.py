@@ -176,7 +176,7 @@ def _(mo):
         pipeline output is routed dynamically:
 
         ```python
-        from cianfhoghlaim.dlt.common.motherduck_options import byob_destination
+        from dlt_sources.common.motherduck_options import byob_destination
 
         # Default to the BIEP "sweet spot": MotherDuck catalog + Garage S3 storage
         destination = byob_destination()

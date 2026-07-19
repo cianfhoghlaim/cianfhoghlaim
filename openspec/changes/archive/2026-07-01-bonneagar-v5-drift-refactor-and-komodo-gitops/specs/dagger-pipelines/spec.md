@@ -5,7 +5,7 @@
 ### Requirement: iac-bootstrap Dagger Function
 
 The Dagger module SHALL expose an `iac_bootstrap()` function
-at `bonneagar/dagger/cianchoghlaim_dagger/` that wraps
+at `bonneagar/dagger/cianfhoghlaim_dagger/` that wraps
 `bun run iac:bootstrap`. The function MUST take the 4 IaC
 config values (Pangolin URL, Komodo URL, Infisical URL,
 Pangolin org ID) as Dagger secret args + the 5 IaC auth
@@ -65,7 +65,7 @@ rewritten to reflect the dual-language architecture (Python
 
 #### Scenario: ts_submodules is not consumed by any code path
 
-- **WHEN** `rg -n 'ts_submodules|Module\(|import_module' bonneagar/dagger/cianchoghlaim_dagger/`
+- **WHEN** `rg -n 'ts_submodules|Module\(|import_module' bonneagar/dagger/cianfhoghlaim_dagger/`
   is run
 - **THEN** the Python module SHALL reference the TS
   submodule's directory at least once (in the docstring)

@@ -44,7 +44,7 @@ documented in `.agents/skills/kcg-pangolin-stack/SKILL.md`.
 - **THEN** the Locket container SHALL have `user: 65532:65532` +
   `no-new-privileges: true` + `cap_drop: [ALL]` + `read_only: true`
   + `tmpfs: [/run/secrets/locket:size=1m,mode=0700]`
-- **AND** the `cianchoghlaim_locket_secrets` external tmpfs volume
+- **AND** the `cianfhoghlaim_locket_secrets` external tmpfs volume
   SHALL be mounted
 
 ## ADDED Requirements
@@ -129,11 +129,11 @@ across all 86+ stacks. The contract is:
 - `cap_drop: ["ALL"]`
 - `read_only: true`
 - `tmpfs: [/run/secrets/locket:size=1m,mode=0700,uid=65532,gid=65532]`
-- `volumes: [cianchoghlaim_locket_secrets:/run/secrets/locket:ro]`
+- `volumes: [cianfhoghlaim_locket_secrets:/run/secrets/locket:ro]`
 - `environment.LOCKET_MODE`: one of `watch` / `exec` / `oneshot`
 - `environment.LOCKET_SECRETS_FILE: /run/secrets/locket/secrets.env`
 
-The `cianchoghlaim_locket_secrets` external tmpfs volume is
+The `cianfhoghlaim_locket_secrets` external tmpfs volume is
 defined in `infrastructure/locket/compose.yaml` and is
 **shared** across all 86+ stacks.
 

@@ -62,7 +62,7 @@ ENGLAND_EMBEDDING_GROUP = "3_model_lifecycle/education/england/embeddings"
 )
 def england_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all England cohorts (276 rows)."""
-    from dlt.british_isles.england.education.england_jurisdiction_pipeline import (
+    from dlt_sources.british_isles.england.education.england_jurisdiction_pipeline import (
         england_jurisdiction_pipeline,
     )
 
@@ -94,7 +94,7 @@ def england_extractions(context: AssetExecutionContext) -> dict[str, Any]:
         context.log.warning("BAML not available; returning stub")
         return {"rows_extracted": 0}
 
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
     subjects = query_by_jurisdiction("england")
     counts: dict[str, int] = {}
@@ -134,7 +134,7 @@ def england_extractions(context: AssetExecutionContext) -> dict[str, Any]:
 )
 def england_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 3 — CocoIndex embedding for all England cohorts."""
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
     subjects = query_by_jurisdiction("england")
     context.log.info(

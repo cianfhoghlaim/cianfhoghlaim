@@ -90,7 +90,7 @@ def _(env_dropdown, mo, os):
 @app.cell
 def _(mo, selected_env):
     """DLT Pipeline status."""
-    import dlt
+    import dlt_sources
 
     try:
         # Get pipeline info

@@ -77,7 +77,7 @@ def _imports():
 @app.cell
 def _allowlist_categories():
     """Read the curated allowlist once (shared across cells)."""
-    from cianfhoghlaim.dlt.official_media.allowlist import allowlist_filter
+    from dlt_sources.official_media.allowlist import allowlist_filter
 
     return (allowlist_filter.categories(),)
 

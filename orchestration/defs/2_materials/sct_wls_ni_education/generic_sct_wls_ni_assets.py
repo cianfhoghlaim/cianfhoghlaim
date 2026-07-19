@@ -41,7 +41,7 @@ SCT_WLS_NI_EMBEDDING_GROUP = "3_model_lifecycle/education/sct_wls_ni/embeddings"
     ),
 )
 def sct_wls_ni_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
+    from dlt_sources.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
         sct_wls_ni_jurisdiction_pipeline,
         SCT_WLS_NI_JURISDICTIONS,
     )
@@ -63,8 +63,8 @@ def sct_wls_ni_documents_ingested(context: AssetExecutionContext) -> dict[str, A
 def sct_wls_ni_extractions(context: AssetExecutionContext) -> dict[str, Any]:
     if not BAML_AVAILABLE:
         return {"rows_extracted": 0}
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
-    from dlt.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
         SCT_WLS_NI_JURISDICTIONS,
     )
     total = 0
@@ -95,8 +95,8 @@ def sct_wls_ni_extractions(context: AssetExecutionContext) -> dict[str, Any]:
     description="Generic SCT + WLS + NI CocoIndex embedding (BIEP v3).",
 )
 def sct_wls_ni_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.british_isles._cross.registry_api import query_by_jurisdiction
-    from dlt.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
+    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
+    from dlt_sources.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
         SCT_WLS_NI_JURISDICTIONS,
     )
     total = 0

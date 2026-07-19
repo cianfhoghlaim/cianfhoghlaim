@@ -121,7 +121,7 @@ def _data_loading(mo, duckdb, os, allowlist_categories, DATASET_NAME, EDGE_TYPES
     if edges_df is None:
         # Graceful fallback — synthesise edges from the 4 allowlist
         # YAML fixtures, anchored on the 4 spec-defined edge types.
-        from cianfhoghlaim.dlt.official_media.fediverse import (
+        from dlt_sources.official_media.fediverse import (
             resolve_bluesky,
             resolve_mastodon,
         )
@@ -356,7 +356,7 @@ def _baml_extractor(mo):
 @app.cell
 def _allowlist_categories():
     """Read the curated allowlist once (shared across cells)."""
-    from cianfhoghlaim.dlt.official_media.allowlist import allowlist_filter
+    from dlt_sources.official_media.allowlist import allowlist_filter
 
     return (allowlist_filter.categories(),)
 

@@ -18,7 +18,7 @@ This change lives in the **cianfhoghlaim repo**.
 
 - `grep -rl "sruth/" .agents/skills/ | wc -l` (the audit count)
 - `find .agents/skills -name "SKILL.md" -exec sed -i ''
-  's|sruth/cianchoghlaim/|.|g;
+  's|sruth/cianfhoghlaim/|.|g;
   s|sruth/meaisinfhoghlaim/|agents/meaisinfhoghlaim/|g;
   s|sruth/tuatha/|web/apps/tuatha-ui/|g;
   s|sruth/croilar/|web/apps/croilar-portal/|g;

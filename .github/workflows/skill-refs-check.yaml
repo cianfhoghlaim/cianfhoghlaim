@@ -9,7 +9,7 @@ jobs:
 
       - name: fail on sruth/ PATH references
         run: |
-          if grep -rE "sruth/(cianchoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" .agents/skills/ docs/ 2>/dev/null; then
+          if grep -rE "sruth/(cianfhoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" .agents/skills/ docs/ 2>/dev/null; then
             echo "ERROR: Found legacy sruth/ PATH references — run the P3 sed migration"
             exit 1
           fi

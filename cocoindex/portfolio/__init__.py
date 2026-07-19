@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.portfolio — placeholder package marker.
+"""cianfhoghlaim.cocoindex.portfolio — placeholder package marker.
 """

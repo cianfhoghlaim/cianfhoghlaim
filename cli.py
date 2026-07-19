@@ -53,9 +53,9 @@ def main(argv: list[str] | None = None) -> int:
             "cianfhoghlaim-baml",
             "cianfhoghlaim-marimo",
             "cianfhoghlaim-stack-doctor",
-            "cianchoghlaim.orchestration",
+            "cianfhoghlaim.orchestration",
             "cianfhoghlaim-dlt",
-            "cianchoghlaim-cocoindex",
+            "cianfhoghlaim-cocoindex",
         ):
             print(sub)
         return 0

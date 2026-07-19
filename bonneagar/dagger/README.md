@@ -86,7 +86,7 @@ mise run dagger:deploy-cloudflare   # dagger call deploy (staging)
 ```
 infrastructure/dagger/
 ├── dagger.json                              # engine v0.19.2, Python SDK, TS submodule dep
-├── pyproject.toml                           # entry point: cianchoghlaim:UnifiedPipeline
+├── pyproject.toml                           # entry point: cianfhoghlaim:UnifiedPipeline
 ├── README.md                                # this file
 │
 ├── src/
@@ -185,7 +185,7 @@ the Locket template format:
 ```bash
 # service: infrastructure
 # vault: dev-baile
-# rendered-by: cianchoghlaim-dagger v0.1.0
+# rendered-by: cianfhoghlaim-dagger v0.1.0
 # Locket will substitute the {{ infisical://... }} refs at container runtime
 
 INFISICAL_TOKEN={{ infisical://dev-baile/infisical_cianfhoghlaim/service-token }}

@@ -11,7 +11,7 @@ from __future__ import annotations
 import asyncio
 from datetime import UTC, datetime
 
-import dlt
+import dlt_sources
 import pandas as pd
 from dagster import AssetExecutionContext, asset
 
@@ -27,7 +27,7 @@ from dagster import AssetExecutionContext, asset
 )
 def endpoint_health_sink(context: AssetExecutionContext) -> dict[str, int]:
     """Run probe_all_39 and emit the result as a dlt resource."""
-    from cianfhoghlaim.dlt.common.endpoint_recovery import probe_all_39
+    from dlt_sources.common.endpoint_recovery import probe_all_39
 
     results = asyncio.run(probe_all_39())
 

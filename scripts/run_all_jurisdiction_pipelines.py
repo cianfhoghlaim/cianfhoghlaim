@@ -8,7 +8,7 @@ For each of the 8 jurisdictions, this script:
 2. Iterates the resource to collect all cohort rows
 3. Loads them into DuckLake via `pipeline.run(...)`
 
-Writes to `s3://ducklake-cianchoghlaim/{namespace}/{dataset}/...`
+Writes to `s3://ducklake-cianfhoghlaim/{namespace}/{dataset}/...`
 via local Postgres-backed DuckLake + Garage S3.
 """
 from __future__ import annotations

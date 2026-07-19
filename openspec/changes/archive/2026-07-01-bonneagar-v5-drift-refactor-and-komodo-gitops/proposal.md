@@ -106,7 +106,7 @@ across 6 directories that actively breaks the GitOps loop:
    use TS not Python only") but the `README.md` documents
    8 false claims (wrong engine version, wrong entry point,
    non-existent sub-package dirs, wrong file count). The
-   Python `cianchoghlaim_dagger/__init__.py` module is the
+   Python `cianfhoghlaim_dagger/__init__.py` module is the
    canonical runtime but has an internal 5× Komodo-curl
    duplication opportunity.
 
@@ -384,7 +384,7 @@ data backups.
 | `bonneagar/DEPLOYMENT-STRATEGY.md` | 2-host topology only (arm1-oci + bunchloch); mark all 4 known blockers fixed; update §3 to reference the 8-phase bootstrap |
 | `bonneagar/GOLD_STANDARD.md` | Document the 4 blueprint schema variants in active use; update §3 Locket exemplar to `ghcr.io/bpbradley/locket:infisical` |
 | `bonneagar/QUADRANT-TO-STACK-MAP.md` | Remove `tuatha/dagster_assets/definitions.py` ref; fix `komodo-periphery-macbook` → `komodo-periphery-bunchloch`; add 18 missing domain entries |
-| `bonneagar/dagger/README.md` | Rewrite to reflect actual reality (engine v0.20.8; entry point `CianchoghlaimDagger`; the TypeScript submodule IS used per user; cross-module composition exists; 34 .ts files not 31; sub-packages don't exist as dirs) |
+| `bonneagar/dagger/README.md` | Rewrite to reflect actual reality (engine v0.20.8; entry point `CianfhoghlaimDagger`; the TypeScript submodule IS used per user; cross-module composition exists; 34 .ts files not 31; sub-packages don't exist as dirs) |
 | `bonneagar/dagger/ts_submodules/bonneagar/README.md` | Rewrite to reflect actual usage pattern (preserved per user decision) |
 | `bonneagar/cli.py` | Fix 32 phantom stacks → 0; update stack count to 88 |
 

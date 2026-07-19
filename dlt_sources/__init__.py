@@ -1,7 +1,7 @@
 """cianfhoghlaim.dlt — DLT ingestion layer + cross-jurisdiction registry + common helpers.
 
 Post-v7 flattening: this directory IS the canonical location of the
-`cianchoghlaim.dlt` Python sub-module. Earlier layouts used a
+`cianfhoghlaim.dlt` Python sub-module. Earlier layouts used a
 `dlt/sources/` directory; the canonical entries now live as direct
 siblings (`dlt/british_isles/`, `dlt/commonwealth/`, etc.).
 """

@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.american_nations — placeholder package marker.
+"""cianfhoghlaim.cocoindex.american_nations — placeholder package marker.
 """

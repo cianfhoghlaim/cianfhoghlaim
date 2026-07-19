@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
     description="Scotland (Scottish Parliament) official-media cohorts",
 )
 def scotland_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.sct.sources import fetch_scotland_sources
+    from dlt_sources.official_media.sct.sources import fetch_scotland_sources
     import asyncio
     rows = asyncio.run(fetch_scotland_sources())
     context.add_output_metadata({"row_count": len(rows), "jurisdiction": "scotland"})
@@ -30,7 +30,7 @@ def scotland_official_media_ingested(context: AssetExecutionContext) -> dict[str
     description="Wales (Senedd Cymru) official-media cohorts",
 )
 def wales_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.wls.sources import fetch_wales_sources
+    from dlt_sources.official_media.wls.sources import fetch_wales_sources
     import asyncio
     rows = asyncio.run(fetch_wales_sources())
     context.add_output_metadata({"row_count": len(rows), "jurisdiction": "wales"})
@@ -42,7 +42,7 @@ def wales_official_media_ingested(context: AssetExecutionContext) -> dict[str, A
     description="Isle of Man (Tynwald) official-media cohorts",
 )
 def isle_of_man_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.iom.sources import fetch_iom_sources
+    from dlt_sources.official_media.iom.sources import fetch_iom_sources
     import asyncio
     rows = asyncio.run(fetch_iom_sources())
     context.add_output_metadata({"row_count": len(rows), "jurisdiction": "isle_of_man"})
@@ -54,7 +54,7 @@ def isle_of_man_official_media_ingested(context: AssetExecutionContext) -> dict[
     description="Jersey (States of Jersey) official-media cohorts",
 )
 def jersey_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.jsy.sources import fetch_jersey_sources
+    from dlt_sources.official_media.jsy.sources import fetch_jersey_sources
     import asyncio
     rows = asyncio.run(fetch_jersey_sources())
     context.add_output_metadata({"row_count": len(rows), "jurisdiction": "jersey"})
@@ -66,7 +66,7 @@ def jersey_official_media_ingested(context: AssetExecutionContext) -> dict[str, 
     description="Guernsey (States of Guernsey) official-media cohorts",
 )
 def guernsey_official_media_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.ggy.sources import fetch_guernsey_sources
+    from dlt_sources.official_media.ggy.sources import fetch_guernsey_sources
     import asyncio
     rows = asyncio.run(fetch_guernsey_sources())
     context.add_output_metadata({"row_count": len(rows), "jurisdiction": "guernsey"})
@@ -78,7 +78,7 @@ def guernsey_official_media_ingested(context: AssetExecutionContext) -> dict[str
     description="HMGCC 12-week rolling window",
 )
 def hmgcc_rolling_window_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.hmgcc.rolling_window import fetch_hmgcc_rolling_window
+    from dlt_sources.official_media.hmgcc.rolling_window import fetch_hmgcc_rolling_window
     import asyncio
     rows = asyncio.run(fetch_hmgcc_rolling_window(lookback_weeks=12))
     context.add_output_metadata({"row_count": len(rows), "lookback_weeks": 12})
@@ -90,7 +90,7 @@ def hmgcc_rolling_window_ingested(context: AssetExecutionContext) -> dict[str, A
     description="Companies House Crown body filter (re-identification)",
 )
 def companies_house_crown_filter_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt.official_media.companies_house.crown_filter import (
+    from dlt_sources.official_media.companies_house.crown_filter import (
         CANONICAL_CROWN_BODIES, filter_crown_bodies,
     )
     # Stub: a real impl would fetch from Companies House API

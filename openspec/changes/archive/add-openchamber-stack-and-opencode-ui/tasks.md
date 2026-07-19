@@ -14,13 +14,13 @@
   - Port: `127.0.0.1:3000:3000` (Pangolin routes 3000).
   - `restart: unless-stopped`
   - Healthcheck: `curl -fs http://localhost:3000/api/health || exit 1` (`interval: 30s, timeout: 10s, retries: 3, start_period: 20s`).
-  - Environment block: `OPENCHAMBER_PORT=3000`, `OPENCHAMBER_THEME=${OPENCHAMBER_THEME:-cianchoghlaim-dark}`, `OPENCHAMBER_LOG_LEVEL=${OPENCHAMBER_LOG_LEVEL:-info}`.
+  - Environment block: `OPENCHAMBER_PORT=3000`, `OPENCHAMBER_THEME=${OPENCHAMBER_THEME:-cianfhoghlaim-dark}`, `OPENCHAMBER_LOG_LEVEL=${OPENCHAMBER_LOG_LEVEL:-info}`.
   - **NO `OPENCODE_HOST` env var** — bundled mode only.
   - **NO `OPENCHAMBER_TUNNEL_TOKEN` env var** — no Cloudflare tunnel in v1.
   - Volumes: `openchamber-state:/home/bun/.openchamber`.
   - `depends_on: locket: { condition: service_healthy }`
   - `volumes: [stack-secrets:/run/secrets/locket:ro]`, `env_file: [/run/secrets/locket/secrets.env]`
-  - `networks: [cianchoghlaim]`
+  - `networks: [cianfhoghlaim]`
   - `deploy.resources.limits: { cpus: '1', memory: 1G }`
   - `security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`.
 - [ ] **1.3** — Write `infrastructure/stacks/openchamber/sidecar.yaml` (canonical Locket shape — copy from `infrastructure/stacks/openclaw/sidecar.yaml` template; adjust `container_name: openchamber-locket`).
@@ -35,7 +35,7 @@
   - `http.services.openchamber.loadBalancer.servers[0].url: "http://openchamber:3000"`.
 - [ ] **1.6** — Write `infrastructure/stacks/openchamber/blueprint.yaml` (6-label shape, single entry for the UI route; mirror `infrastructure/stacks/openclaw/blueprint.yaml` template).
 - [ ] **1.7** — Write `infrastructure/stacks/openchamber/.env.example`:
-  - Non-secret defaults: `OPENCHAMBER_PORT=3000`, `OPENCHAMBER_THEME=cianchoghlaim-dark`, `OPENCHAMBER_LOG_LEVEL=info`, `PANGOLIN_DOMAIN=openchamber.cianfhoghlaim.ie`.
+  - Non-secret defaults: `OPENCHAMBER_PORT=3000`, `OPENCHAMBER_THEME=cianfhoghlaim-dark`, `OPENCHAMBER_LOG_LEVEL=info`, `PANGOLIN_DOMAIN=openchamber.cianfhoghlaim.ie`.
   - Documented placeholder for `OPENCHAMBER_UI_PASSWORD` (set via Locket).
 
 ## Phase 2 — Komodo orchestration

@@ -1,2 +1,2 @@
-"""cianchoghlaim.cocoindex.infrastructure — placeholder package marker.
+"""cianfhoghlaim.cocoindex.infrastructure — placeholder package marker.
 """

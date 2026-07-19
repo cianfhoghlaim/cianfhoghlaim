@@ -255,7 +255,7 @@ services:
     build:
       context: ../../../..
       dockerfile: sruth/oideachais/agent_os/Dockerfile
-    container_name: cianchoghlaim-oideachais-agent-os
+    container_name: cianfhoghlaim-oideachais-agent-os
     restart: unless-stopped
     ports:
       - "${AGENT_OS_PORT:-7777}:7777"
@@ -278,7 +278,7 @@ services:
     volumes:
       - locket_secrets:/run/secrets/locket:ro
     networks:
-      - cianchoghlaim
+      - cianfhoghlaim
       - lakehouse
     deploy:
       resources:
@@ -300,7 +300,7 @@ services:
     build:
       context: ../../../..
       dockerfile: sruth/oideachais/Dockerfile.adk
-    container_name: cianchoghlaim-oideachais-adk-agents
+    container_name: cianfhoghlaim-oideachais-adk-agents
     restart: unless-stopped
     ports:
       - "${ADK_PORT:-7778}:7778"
@@ -323,7 +323,7 @@ services:
     volumes:
       - locket_secrets:/run/secrets/locket:ro
     networks:
-      - cianchoghlaim
+      - cianfhoghlaim
       - lakehouse
     deploy:
       resources:
