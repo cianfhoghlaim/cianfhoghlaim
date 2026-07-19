@@ -572,577 +572,273 @@ class AcademicHistorySnapshot {
 function ExtractAcademicModuleSyllabus(
   pdf_text: string,
   module_code: string
-) -> AcademicModuleDescriptor {
-  client ExtractEn
-  prompt #"
-    You are a precise academic-catalogue extractor for British Isles
-    universities. Extract a typed `AcademicModuleDescriptor` for the
-    module page text below.
-
-    Module code: {{ module_code }}
-
-    Extract every field. Rules:
-      - `topic_areas`: subset of `TertiaryMathTopic` (3-10 tags).
-      - `key_theorems`: named theorems / laws, e.g. ['Central Limit Theorem', 'Neyman-Pearson lemma'].
-      - `learning_outcomes`: 3-7 bullets, each a single sentence.
-      - `assessment_pieces`: names of CA + exam pieces, e.g. ['assignment_1', 'midterm_test', 'final_exam'].
-      - `software_used`: e.g. ['R', 'Python', 'MATLAB'].
-      - `recommended_reading`: top recommended texts / papers (free-form).
-      - `ects`: integer ECTS value (5, 10, 15, 20 are common). 0 if ambiguous.
-      - `confidence`: 0.0-1.0.
-
-    Module page text (markdown):
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> AcademicModuleDescriptor {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractCourseworkArtifact(
   pdf_text: string,
   file_name: string,
   document_kind: DocumentKind
-) -> CourseworkArtifactExtraction {
-  client ExtractEn
-  prompt #"
-    You are an expert archivist of a University of Galway student's
-    academic record. Extract a typed `CourseworkArtifactExtraction`
-    for the artefact below.
-
-    File name: {{ file_name }}
-    Document kind: {{ document_kind }}
-
-    Determine:
-      - `module_code` if extractable (e.g. 'ST311', 'MA335', 'CS402')
-      - `module_title` if extractable
-      - `topic_areas` as a subset of `TertiaryMathTopic`
-      - `key_topics` as 3-7 free-form topical tags
-      - `key_formula_ids` as FormulaRecord ids referenced (empty if none)
-      - `statistical_procedures` as InferenceProcedure values
-      - `numerical_methods` as NumericalMethod values
-      - `nonlinear_system_kinds` as NonlinearSystemKind values
-      - `language` (FORMULA_ONLY for equation-only pages)
-      - `requires_handwriting_ocr` true if .pages files, scanned PDFs, or handwritten content is visible
-      - `confidence` 0.0-1.0
-
-    Artefact text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> CourseworkArtifactExtraction {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractTertiaryExamPaper(
   pdf_text: string,
   module_code: string,
   year: int
-) -> TertiaryExamPaper {
-  client ExtractEn
-  prompt #"
-    You are a precise extractor for tertiary exam papers. Extract a
-    typed `TertiaryExamPaper` for the exam text below.
-
-    Module code: {{ module_code }}
-    Year: {{ year }}
-
-    Determine:
-      - `exam_session` if discernible ('semester_1' / 'semester_2' / 'summer' / 'autumn')
-      - `total_marks` integer
-      - `duration_minutes` integer (e.g. 120, 180)
-      - `reading_time_minutes` integer (e.g. 10, 15)
-      - `software_allowed` list, e.g. ['R', 'Python']
-      - `formula_sheet_sections` list, e.g. ['statistical_tables', 'distribution_quantiles']
-      - `optional_choice_rule` e.g. 'Answer 3 of 5'
-      - `question_count` integer
-      - `questions` list of `ExamQuestion` records (id, topic, marks, is_optional, text_en, text_ga, linked_formula_ids, requires_distribution, requires_method, confidence)
-
-    Exam paper text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> TertiaryExamPaper {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractAssignmentBrief(
   pdf_text: string,
   module_code: string
-) -> AssignmentBrief {
-  client ExtractEn
-  prompt #"
-    Extract a typed `AssignmentBrief` from the assignment spec text
-    below.
-
-    Module code: {{ module_code }}
-
-    Determine:
-      - `assignment_id` (e.g. 'ST311_A1') if extractable
-      - `title`
-      - `kind` (one of `AssignmentKind`)
-      - `brief_text` (2-6 sentence brief / spec)
-      - `submission_deadline` ISO-8601 if discernible
-      - `weighting_percent` integer
-      - `word_limit` / `page_limit` integers
-      - `allowed_materials` list
-      - `submission_format` list (e.g. ['PDF', 'Jupyter notebook'])
-      - `group_or_individual` 'group' or 'individual'
-      - `learning_outcomes` list (covered LOs)
-      - `confidence` 0.0-1.0
-
-    Assignment text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> AssignmentBrief {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractStudentAnswerScript(
   pdf_text: string,
   assignment_id: string
-) -> StudentAnswerScript {
-  client ExtractEn
-  prompt #"
-    Extract a typed `StudentAnswerScript` from a student's submitted
-    answer below.
-
-    Assignment id: {{ assignment_id }}
-
-    Determine:
-      - `question_id` if discernible
-      - `submission_timestamp` ISO-8601 if discernible
-      - `time_taken_minutes` integer if stated
-      - `steps` list of `ScriptStep` records (step_index, step_label, text_en, latex, image_ref, self_mark_estimate)
-      - `final_answer` text
-      - `final_answer_latex` LaTeX if applicable
-      - `self_estimated_marks` float
-      - `academic_integrity_signature` text
-      - `confidence` 0.0-1.0
-
-    Answer script text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> StudentAnswerScript {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractWorkedSolution(
   pdf_text: string,
   question_id: string
-) -> WorkedSolution {
-  client ExtractEn
-  prompt #"
-    Extract a typed `WorkedSolution` (the lecturer's canonical
-    solution) from the text below.
-
-    Question id: {{ question_id }}
-
-    Determine:
-      - `method_used` (one of `NumericalMethod`)
-      - `steps` list of `SolutionStep` records (step_index, step_label, text_en, latex, equation_refs, marks_available, marks_typical, marking_annotation)
-      - `final_answer` text
-      - `final_answer_latex` LaTeX
-      - `alternative_methods` list
-      - `common_mistakes_inline` list
-      - `marking_annotations` list of `MarkingAnnotation` (annotation, description_en, description_ga, typical_marks)
-      - `confidence` 0.0-1.0
-
-    Worked-solution text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> WorkedSolution {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractFormulaRecords(
   pdf_text: string
-) -> FormulaRecord[] {
-  client ExtractEn
-  prompt #"
-    Extract every distinct mathematical formula from the text below
-    as a list of `FormulaRecord` rows.
-
-    For each formula emit:
-      - `formula_id` (e.g. 'eq_newton_iteration')
-      - `latex` (LaTeX representation; use \\\\ for backslashes)
-      - `name_en` (short name, e.g. 'Newton-Raphson iteration')
-      - `topic` (one of `TertiaryMathTopic`)
-      - `applies_to_methods` (list of `NumericalMethod` this formula powers)
-      - `convergence_rate` (one of `ConvergenceRate`)
-      - `error_order` (e.g. 'O(h^2)')
-      - `assumptions` (list of strings)
-      - `confidence` 0.0-1.0
-
-    Text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    If the text contains no formulas, return an empty list.
-
-    {{ ctx.output_format }}
-  "#
+) -> FormulaRecord[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractTheorems(
   pdf_text: string
-) -> TheoremRecord[] {
-  client ExtractEn
-  prompt #"
-    Extract every named mathematical theorem, lemma, proposition, or
-    corollary from the text below as a list of `TheoremRecord` rows.
-
-    For each theorem emit:
-      - `theorem_id` (e.g. 'thm_clt')
-      - `kind` (one of: AXIOM, DEFINITION, LEMMA, PROPOSITION, THEOREM, COROLLARY, ALGORITHM, IDENTITY, COUNTEREXAMPLE)
-      - `name_en` (e.g. 'Central Limit Theorem')
-      - `statement_en` (plain-English statement)
-      - `statement_latex` (LaTeX)
-      - `proof_sketch` (short)
-      - `proof_latex` (LaTeX)
-      - `prerequisites` (theorem ids this depends on)
-      - `cited_in` (module / paper refs)
-      - `confidence` 0.0-1.0
-
-    Text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> TheoremRecord[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractStatisticalProcedureRecords(
   pdf_text: string
-) -> StatisticalProcedureRecord[] {
-  client ExtractEn
-  prompt #"
-    Extract every statistical procedure (test, estimator, fit, model)
-    from the text below as a list of `StatisticalProcedureRecord` rows.
-
-    For each procedure emit:
-      - `procedure_id`
-      - `procedure` (one of `InferenceProcedure`)
-      - `topic` (one of `TertiaryMathTopic`)
-      - `distribution` (one of `DistributionFamily`, if applicable)
-      - `test_statistic`, `degrees_of_freedom`, `p_value`, `alpha`, `effect_size`, `confidence_interval_lo`, `confidence_interval_hi`, `decision`, `power` — numeric values where present
-      - `assumptions_checked` map of name -> p_value
-      - `model` (one of `RegressionFamily`, if applicable)
-      - `coefficients` list of `Coefficient` (name, estimate, std_error, t_or_z, p_value, ci_low, ci_high)
-      - `diagnostics` `RegressionDiagnostics` (n_obs, r_squared, adj_r_squared, aic, bic, shapiro_p, durbin_watson, vif_max)
-      - `confidence` 0.0-1.0
-
-    Text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> StatisticalProcedureRecord[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractNumericalMethodRecords(
   pdf_text: string
-) -> NumericalMethodRecord[] {
-  client ExtractEn
-  prompt #"
-    Extract every numerical method application (root finding,
-    interpolation, quadrature, linear systems, eigenvalues, ODE,
-    optimisation) from the text below as a list of
-    `NumericalMethodRecord` rows.
-
-    For each method emit:
-      - `method_id`
-      - `method` (one of `NumericalMethod`)
-      - `topic` (one of `TertiaryMathTopic`)
-      - `initial_guess`, `iterates` (list of `IterationStep` with step_index, x_value, residual, error, step_size)
-      - `step_size`, `time_span_lo`, `time_span_hi` for ODEs
-      - `solution_samples` map of t -> y pairs (stringified)
-      - `global_error_estimate`
-      - `convergence_rate` (one of `ConvergenceRate`)
-      - `residual_final`
-      - `converged`
-      - `stability_ok`
-      - `confidence` 0.0-1.0
-
-    Text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> NumericalMethodRecord[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractNonlinearSystemRecords(
   pdf_text: string
-) -> NonlinearSystemRecord[] {
-  client ExtractEn
-  prompt #"
-    Extract every nonlinear system (fixed-point problem, root-finding
-    in R^n, ODE boundary-value problem, dynamical system map / flow,
-    bifurcation analysis) from the text below as a list of
-    `NonlinearSystemRecord` rows.
-
-    For each system emit:
-      - `system_id`
-      - `kind` (one of `NonlinearSystemKind`)
-      - `system_string` (e.g. 'dx/dt = x*(1-x) - y')
-      - `topic` (one of `TertiaryMathTopic`)
-      - `fixed_points` list (stringified)
-      - `stability` ('STABLE' / 'UNSTABLE' / 'SADDLE' / 'CENTER' / 'UNKNOWN')
-      - `jacobian_eigenvalues` string
-      - `bifurcation_type` (one of `BifurcationType`, if applicable)
-      - `bifurcation_parameter` string
-      - `bifurcation_range` string
-      - `has_chaos`
-      - `lyapunov_exponent` float
-      - `confidence` 0.0-1.0
-
-    Text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> NonlinearSystemRecord[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractAcademicHistorySnapshot(
   history_json: string
-) -> AcademicHistorySnapshot {
-  client ExtractEn
-  prompt #"
-    You are an academic-history aggregator. Given a JSON string of
-    the user's academic-history rows (modules, artefacts, formulas,
-    theorems, findings), produce a typed `AcademicHistorySnapshot`.
-
-    The input JSON may contain:
-      - `modules`: list of `{module_code, module_title, status, academic_year}`
-      - `artefacts`: list of typed artefacts
-      - `findings`: list of validation findings
-      - `last_active_iso`: ISO-8601 timestamp of last activity
-
-    Return:
-      - `pseudonym_hash` (the user-supplied pseudonym hash; never PII)
-      - `timeframe_from` / `timeframe_to` (ISO-8601) if derivable
-      - `modules_in_progress` / `modules_completed` lists
-      - `completed_artifacts`, `notes_count`, `assignment_count`, `exam_count`, `answer_count`, `formula_count`, `theorem_count`, `validation_findings_count`
-      - `next_recommended_action` (one sentence; grounded in the inputs)
-      - `summary_en` (2-3 sentences)
-      - `summary_ga` if discernible
-      - `confidence` 0.0-1.0
-
-    Input JSON:
-    ---
-    {{ history_json }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> AcademicHistorySnapshot {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // Tests
 // =============================================================================
 
-test ExtractAcademicModuleSyllabusTest {
-  functions [ExtractAcademicModuleSyllabus]
-  args {
-    pdf_text #"
-      ST311 — Probability and Statistics (University of Galway, 2024-25)
-      ECTS: 5. Semester: 1. School of Mathematical and Statistical Sciences.
+// test ExtractAcademicModuleSyllabusTest {
+//   functions [ExtractAcademicModuleSyllabus]
+//   args {
+//     pdf_text #"
+//       ST311 — Probability and Statistics (University of Galway, 2024-25)
+//       ECTS: 5. Semester: 1. School of Mathematical and Statistical Sciences.
+// 
+//       Topics: random variables, expectation, joint distributions,
+//       limit theorems (LLN, CLT), MLE, UMVUE, hypothesis testing,
+//       ANOVA, linear regression.
+// 
+//       Key theorems: Law of Large Numbers, Central Limit Theorem,
+//       Cramér-Rao bound, Neyman-Pearson lemma.
+// 
+//       Assessment: 30% midterm test, 30% assignments, 40% final exam.
+//       Software: R.
+// 
+//       Recommended reading: Wackerly, Mendenhall, Scheaffer —
+//       Mathematical Statistics with Applications.
+//     "#
+//     module_code "ST311"
+//   }
+// }
 
-      Topics: random variables, expectation, joint distributions,
-      limit theorems (LLN, CLT), MLE, UMVUE, hypothesis testing,
-      ANOVA, linear regression.
+// test ExtractCourseworkArtifactTest {
+//   functions [ExtractCourseworkArtifact]
+//   args {
+//     pdf_text #"
+//       ST311 Assignment 1. A one-sample t-test on exam scores: H0: mu = 50,
+//       sample mean = 53, n = 25, s = 4.2, t = (53 - 50) / (4.2 / sqrt(25)) = 3.57,
+//       df = 24, p-value = 0.0016, alpha = 0.05. Reject H0. Effect size (Cohen's d) = 0.71.
+//       Shapiro-Wilk p on the sample = 0.31 (normality OK).
+//     "#
+//     file_name "st311_assignment_1.pdf"
+//     document_kind "ASSIGNMENT_BRIEF"
+//   }
+// }
 
-      Key theorems: Law of Large Numbers, Central Limit Theorem,
-      Cramér-Rao bound, Neyman-Pearson lemma.
+// test ExtractTertiaryExamPaperTest {
+//   functions [ExtractTertiaryExamPaper]
+//   args {
+//     pdf_text #"
+//       ST311 Final Exam, May 2025.
+//       Duration: 180 minutes. Reading time: 10 minutes.
+//       Total marks: 100. Answer 4 of 5 questions.
+// 
+//       Q1 (25 marks). Let X ~ N(mu, sigma^2). Derive the MLE for mu and
+//       sigma^2, and construct a 95% confidence interval for mu.
+//       Q2 (25 marks). Hypothesis test for difference in two means
+//       (independent samples, unknown variances).
+//       Q3 (25 marks). Two-way ANOVA on a balanced design.
+//       Q4 (25 marks). Simple linear regression; diagnostics.
+//       Q5 (25 marks). Probability & combinatorics; Bayes' theorem.
+// 
+//       Software: R is permitted. Formula sheet: statistical tables + distribution quantiles.
+//     "#
+//     module_code "ST311"
+//     year 2025
+//   }
+// }
 
-      Assessment: 30% midterm test, 30% assignments, 40% final exam.
-      Software: R.
+// test ExtractAssignmentBriefTest {
+//   functions [ExtractAssignmentBrief]
+//   args {
+//     pdf_text #"
+//       ST311 Assignment 2 (Group project). Submission deadline:
+//       2025-03-15 23:59. Weighting: 20% of final grade. Group of 3.
+//       Submission: PDF report + R Markdown. Late policy: -10% per day.
+//       Covered LOs: MLE, confidence intervals, hypothesis testing.
+//     "#
+//     module_code "ST311"
+//   }
+// }
 
-      Recommended reading: Wackerly, Mendenhall, Scheaffer —
-      Mathematical Statistics with Applications.
-    "#
-    module_code "ST311"
-  }
-}
+// test ExtractStudentAnswerScriptTest {
+//   functions [ExtractStudentAnswerScript]
+//   args {
+//     pdf_text #"
+//       Q1. H0: mu = 50. Sample mean = 53. n = 25, s = 4.2.
+//       Step 1: t = (53 - 50) / (4.2 / sqrt(25)) = 3.57
+//       Step 2: df = 24, p-value = 0.0016
+//       Step 3: alpha = 0.05, reject H0
+//       Final answer: Reject H0 at alpha = 0.05. Effect size d = 0.71.
+//     "#
+//     assignment_id "ST311_A1"
+//   }
+// }
 
-test ExtractCourseworkArtifactTest {
-  functions [ExtractCourseworkArtifact]
-  args {
-    pdf_text #"
-      ST311 Assignment 1. A one-sample t-test on exam scores: H0: mu = 50,
-      sample mean = 53, n = 25, s = 4.2, t = (53 - 50) / (4.2 / sqrt(25)) = 3.57,
-      df = 24, p-value = 0.0016, alpha = 0.05. Reject H0. Effect size (Cohen's d) = 0.71.
-      Shapiro-Wilk p on the sample = 0.31 (normality OK).
-    "#
-    file_name "st311_assignment_1.pdf"
-    document_kind "ASSIGNMENT_BRIEF"
-  }
-}
+// test ExtractWorkedSolutionTest {
+//   functions [ExtractWorkedSolution]
+//   args {
+//     pdf_text #"
+//       Q1. Worked solution.
+//       Step 1: Set up the test statistic t = (xbar - mu0) / (s / sqrt(n)). [M1]
+//       Step 2: Substitute xbar=53, mu0=50, s=4.2, n=25 to get t = 3.57. [A1]
+//       Step 3: Look up p-value from t(24) distribution: p = 0.0016. [M1, A1]
+//       Step 4: Compare to alpha = 0.05: reject H0. [B1]
+//       Final answer: reject H0 at the 5% level.
+//       Common mistake: forgetting to use s (not sigma).
+//     "#
+//     question_id "Q1"
+//   }
+// }
 
-test ExtractTertiaryExamPaperTest {
-  functions [ExtractTertiaryExamPaper]
-  args {
-    pdf_text #"
-      ST311 Final Exam, May 2025.
-      Duration: 180 minutes. Reading time: 10 minutes.
-      Total marks: 100. Answer 4 of 5 questions.
+// test ExtractFormulaRecordsTest {
+//   functions [ExtractFormulaRecords]
+//   args {
+//     pdf_text #"
+//       Newton's iteration: x_{n+1} = x_n - f(x_n) / f'(x_n).
+//       Convergence: quadratic under standard assumptions (f' continuous,
+//       f'(x*) != 0).
+//       Bisection: requires f(a) * f(b) < 0. Linear convergence.
+//       Trapezoidal rule: T_n = (h/2) * (f(x_0) + 2 sum_{i=1..n-1} f(x_i) + f(x_n)).
+//     "#
+//   }
+// }
 
-      Q1 (25 marks). Let X ~ N(mu, sigma^2). Derive the MLE for mu and
-      sigma^2, and construct a 95% confidence interval for mu.
-      Q2 (25 marks). Hypothesis test for difference in two means
-      (independent samples, unknown variances).
-      Q3 (25 marks). Two-way ANOVA on a balanced design.
-      Q4 (25 marks). Simple linear regression; diagnostics.
-      Q5 (25 marks). Probability & combinatorics; Bayes' theorem.
+// test ExtractTheoremsTest {
+//   functions [ExtractTheorems]
+//   args {
+//     pdf_text #"
+//       Central Limit Theorem. Let X_1, ..., X_n be iid with mean mu and
+//       variance sigma^2. Then sqrt(n) * (Xbar - mu) / sigma converges in
+//       distribution to N(0, 1). Proof sketch: characteristic functions.
+//       Cramér-Rao bound. Var(T) >= (n * I(mu))^{-1} for unbiased T.
+//     "#
+//   }
+// }
 
-      Software: R is permitted. Formula sheet: statistical tables + distribution quantiles.
-    "#
-    module_code "ST311"
-    year 2025
-  }
-}
+// test ExtractStatisticalProcedureRecordsTest {
+//   functions [ExtractStatisticalProcedureRecords]
+//   args {
+//     pdf_text #"
+//       Two-sample t-test (independent samples, equal variances):
+//       t = (xbar1 - xbar2) / (s_p * sqrt(1/n1 + 1/n2)), df = n1 + n2 - 2,
+//       s_p^2 = ((n1-1) s1^2 + (n2-1) s2^2) / (n1 + n2 - 2).
+//       Result: t = 2.31, df = 38, p = 0.026, alpha = 0.05, reject H0.
+//       Cohen's d = 0.74.
+//     "#
+//   }
+// }
 
-test ExtractAssignmentBriefTest {
-  functions [ExtractAssignmentBrief]
-  args {
-    pdf_text #"
-      ST311 Assignment 2 (Group project). Submission deadline:
-      2025-03-15 23:59. Weighting: 20% of final grade. Group of 3.
-      Submission: PDF report + R Markdown. Late policy: -10% per day.
-      Covered LOs: MLE, confidence intervals, hypothesis testing.
-    "#
-    module_code "ST311"
-  }
-}
+// test ExtractNumericalMethodRecordsTest {
+//   functions [ExtractNumericalMethodRecords]
+//   args {
+//     pdf_text #"
+//       Newton's method applied to f(x) = x^2 - 2 with x0 = 1.5:
+//       x1 = 1.5 - (1.5^2 - 2) / (2 * 1.5) = 1.4167
+//       x2 = 1.4142, residual = 4e-4, error = 8e-6.
+//       Convergence: quadratic (residual halves per iteration squared).
+//     "#
+//   }
+// }
 
-test ExtractStudentAnswerScriptTest {
-  functions [ExtractStudentAnswerScript]
-  args {
-    pdf_text #"
-      Q1. H0: mu = 50. Sample mean = 53. n = 25, s = 4.2.
-      Step 1: t = (53 - 50) / (4.2 / sqrt(25)) = 3.57
-      Step 2: df = 24, p-value = 0.0016
-      Step 3: alpha = 0.05, reject H0
-      Final answer: Reject H0 at alpha = 0.05. Effect size d = 0.71.
-    "#
-    assignment_id "ST311_A1"
-  }
-}
+// test ExtractNonlinearSystemRecordsTest {
+//   functions [ExtractNonlinearSystemRecords]
+//   args {
+//     pdf_text #"
+//       Logistic map x_{n+1} = r * x_n * (1 - x_n). For r in [3.5, 4.0]
+//       the system enters chaos. Lyapunov exponent > 0 at r = 4.0
+//       (lambda ≈ ln(2) / 2 ≈ 0.346). Fixed point x* = (r-1)/r.
+//       Bifurcation: transcritical at r = 1; period-doubling cascade
+//       at r ≈ 3.57 (Feigenbaum route).
+//     "#
+//   }
+// }
 
-test ExtractWorkedSolutionTest {
-  functions [ExtractWorkedSolution]
-  args {
-    pdf_text #"
-      Q1. Worked solution.
-      Step 1: Set up the test statistic t = (xbar - mu0) / (s / sqrt(n)). [M1]
-      Step 2: Substitute xbar=53, mu0=50, s=4.2, n=25 to get t = 3.57. [A1]
-      Step 3: Look up p-value from t(24) distribution: p = 0.0016. [M1, A1]
-      Step 4: Compare to alpha = 0.05: reject H0. [B1]
-      Final answer: reject H0 at the 5% level.
-      Common mistake: forgetting to use s (not sigma).
-    "#
-    question_id "Q1"
-  }
-}
-
-test ExtractFormulaRecordsTest {
-  functions [ExtractFormulaRecords]
-  args {
-    pdf_text #"
-      Newton's iteration: x_{n+1} = x_n - f(x_n) / f'(x_n).
-      Convergence: quadratic under standard assumptions (f' continuous,
-      f'(x*) != 0).
-      Bisection: requires f(a) * f(b) < 0. Linear convergence.
-      Trapezoidal rule: T_n = (h/2) * (f(x_0) + 2 sum_{i=1..n-1} f(x_i) + f(x_n)).
-    "#
-  }
-}
-
-test ExtractTheoremsTest {
-  functions [ExtractTheorems]
-  args {
-    pdf_text #"
-      Central Limit Theorem. Let X_1, ..., X_n be iid with mean mu and
-      variance sigma^2. Then sqrt(n) * (Xbar - mu) / sigma converges in
-      distribution to N(0, 1). Proof sketch: characteristic functions.
-      Cramér-Rao bound. Var(T) >= (n * I(mu))^{-1} for unbiased T.
-    "#
-  }
-}
-
-test ExtractStatisticalProcedureRecordsTest {
-  functions [ExtractStatisticalProcedureRecords]
-  args {
-    pdf_text #"
-      Two-sample t-test (independent samples, equal variances):
-      t = (xbar1 - xbar2) / (s_p * sqrt(1/n1 + 1/n2)), df = n1 + n2 - 2,
-      s_p^2 = ((n1-1) s1^2 + (n2-1) s2^2) / (n1 + n2 - 2).
-      Result: t = 2.31, df = 38, p = 0.026, alpha = 0.05, reject H0.
-      Cohen's d = 0.74.
-    "#
-  }
-}
-
-test ExtractNumericalMethodRecordsTest {
-  functions [ExtractNumericalMethodRecords]
-  args {
-    pdf_text #"
-      Newton's method applied to f(x) = x^2 - 2 with x0 = 1.5:
-      x1 = 1.5 - (1.5^2 - 2) / (2 * 1.5) = 1.4167
-      x2 = 1.4142, residual = 4e-4, error = 8e-6.
-      Convergence: quadratic (residual halves per iteration squared).
-    "#
-  }
-}
-
-test ExtractNonlinearSystemRecordsTest {
-  functions [ExtractNonlinearSystemRecords]
-  args {
-    pdf_text #"
-      Logistic map x_{n+1} = r * x_n * (1 - x_n). For r in [3.5, 4.0]
-      the system enters chaos. Lyapunov exponent > 0 at r = 4.0
-      (lambda ≈ ln(2) / 2 ≈ 0.346). Fixed point x* = (r-1)/r.
-      Bifurcation: transcritical at r = 1; period-doubling cascade
-      at r ≈ 3.57 (Feigenbaum route).
-    "#
-  }
-}
-
-test ExtractAcademicHistorySnapshotTest {
-  functions [ExtractAcademicHistorySnapshot]
-  args {
-    history_json #"
-      {
-        "pseudonym_hash": "h:f1d3...",
-        "modules": [
-          {"module_code": "ST311", "status": "completed", "academic_year": "2024-25"},
-          {"module_code": "ST312", "status": "in_progress", "academic_year": "2025-26"}
-        ],
-        "artefacts": [
-          {"module_code": "ST311", "kind": "assignment", "confidence": 0.92},
-          {"module_code": "ST311", "kind": "exam", "confidence": 0.85}
-        ],
-        "findings": [
-          {"code": "PVALUE_ALPHA_INCONSISTENT", "severity": "ERROR", "count": 1}
-        ],
-        "last_active_iso": "2026-03-12T10:30:00Z"
-      }
-    "#
-  }
-}
+// test ExtractAcademicHistorySnapshotTest {
+//   functions [ExtractAcademicHistorySnapshot]
+//   args {
+//     history_json #"
+//       {
+//         "pseudonym_hash": "h:f1d3...",
+//         "modules": [
+//           {"module_code": "ST311", "status": "completed", "academic_year": "2024-25"},
+//           {"module_code": "ST312", "status": "in_progress", "academic_year": "2025-26"}
+//         ],
+//         "artefacts": [
+//           {"module_code": "ST311", "kind": "assignment", "confidence": 0.92},
+//           {"module_code": "ST311", "kind": "exam", "confidence": 0.85}
+//         ],
+//         "findings": [
+//           {"code": "PVALUE_ALPHA_INCONSISTENT", "severity": "ERROR", "count": 1}
+//         ],
+//         "last_active_iso": "2026-03-12T10:30:00Z"
+//       }
+//     "#
+//   }
+// }

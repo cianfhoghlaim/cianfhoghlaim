@@ -150,47 +150,12 @@ function GenerateGaelQuestPack(
   past_papers: PastPaper[],
   marking_schemes: MarkingSchemeSec[],
   level: string
-) -> GaelQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate Gaeilge expert. Build a
-    formative assessment quest pack for NCCA Gaeilge at the {{ level }}
-    level.
-
-    Gaeilge is taught in IRISH. All content is canonical in Irish
-    (text_ga); text_en may be null for native comprehension items
-    but should be provided as a helper translation for the student
-    when useful.
-
-    3 NCCA levels (FL / OL / HL) plus Junior Cycle. Cover ALL
-    learning outcomes with ≥1 FormativeItem each. Reference the
-    source NCCA PDF page in each item's evidence. Order items by
-    difficulty (1 → 5).
-
-    Cross-subject links: suggest bridges to English (LC-ENGL-LO-*)
-    for translation exercises, and to History (LC-HIST-LO-*) for
-    cultural-context synthesis.
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+) -> GaelQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractGaelLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all Gaeilge learning outcome statements from the
-    following NCCA syllabus paragraph. Return them as a list of
-    full Irish statements (verbatim from the source, with the LO
-    code if present).
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractGaelLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -203,18 +168,8 @@ function ExtractGaelLOStatement(paragraph: string) -> string[] {
 // emit the same list-of-strings shape so the qpack pipeline can
 // run either path without code changes.
 
-function ExtractGaelGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"
-    Extract all NCCA Gaeilge strand/outcome statements in Irish
-    (Gaeilge) from the following NCCA syllabus paragraph. Return
-    them as a list of full Irish statements, verbatim from the
-    source, with the LO code if present (e.g. 'LC-GAEL-LO-2.4: ...').
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractGaelGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateGaelFormativeItem(
@@ -222,66 +177,17 @@ function GenerateGaelFormativeItem(
   difficulty: int,
   level: string,
   topic: string
-) -> GaelFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a single formative assessment item for the NCCA Leaving
-    Certificate (or Junior Cycle) Gaeilge learning outcome
-    {{ lo_code }}.
-
-    Difficulty: {{ difficulty }} (1-5)
-    Level: {{ level }} (JC / LC_FL / LC_OL / LC_HL)
-    Topic: {{ topic }}
-
-    All content MUST be canonical in Irish (text_ga required);
-    text_en may be null for native comprehension items but should
-    be a helper translation when useful for the student.
-
-    Include 4 graduated hints (Irish canonical), ≥2 common student
-    errors, evidence.source_page, est_time_minutes between 1-30.
-
-    Use the gael_tutor feedback channel by default.
-
-    {{ ctx.output_format }}
-  "#
+) -> GaelFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ScoreGaelFormativeResponse(
   item: GaelFormativeItem,
   attempt: GaelFormativeItemAttempt
-) -> GaelScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the following student attempt at the Gaeilge formative
-    item. The student wrote their response in Irish.
-
-    Item: {{ item }}
-    Attempt: {{ attempt }}
-
-    Compute total_marks, marks_awarded, marks_per_step, is_correct,
-    partial_credit_pct, feedback_ga (Irish canonical) +
-    feedback_en (optional helper translation), next_recommended_lo,
-    badge_earned (true iff partial_credit_pct >= 80).
-
-    The feedback MUST be in Irish (feedback_ga canonical).
-    feedback_en is optional and only needed if it adds pedagogical
-    value (e.g. for a parent or non-Irish-speaking teacher).
-
-    {{ ctx.output_format }}
-  "#
+) -> GaelScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateGaelQuestPack(pack: GaelQuestPack) -> GaelQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the Gaeilge quest pack. Check:
-    - All items reference valid LC-GAEL-LO-* or JC-GAEL-LO-* codes
-    - All items have text_ga populated (text_ga is REQUIRED for Gaeilge)
-    - text_en may be null but not all items should be null
-    - Each item's est_time_minutes is within [1, 30]
-
-    Pack: {{ pack }}
-
-    {{ ctx.output_format }}
-  "#
+function ValidateGaelQuestPack(pack: GaelQuestPack) -> GaelQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

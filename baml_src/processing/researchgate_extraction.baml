@@ -43,21 +43,10 @@ class ResearchGateProfile {
   @@stream.done
 }
 
-function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {
-  // Extracts structured profile + publication data from a ResearchGate
-  // profile page (HTML or pre-extracted JSON).
-  //
-  // The function should extract:
-  //   - Name, headline, institution, location, about
-  //   - Fields of study and skills/expertise
-  //   - The full list of publications (with citation counts if visible)
-  //   - Aggregate stats (followers, following, h-index, total reads,
-  //     total citations) when displayed
-  //   - streamId and ownerDisplayName from the page metadata
+function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractResearchGatePublication(publication_text: string) -> ResearchGatePublication {
-  // Extracts a single publication record from a snippet of HTML or
-  // JSON describing one paper. Used to backfill missing publications
-  // discovered after the initial profile scrape.
+function ExtractResearchGatePublication(publication_text: string) -> ResearchGatePublication {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -74,12 +74,6 @@ class JCExamPaper {
   total_questions int
 }
 
-enum YearBand {
-  YEAR_1
-  YEAR_2
-  YEAR_3
-  TY
-}
 
 // ============================================================================
 // BAML function — the canonical JC exam-paper extractor (BIEP v2)
@@ -92,16 +86,6 @@ function ExtractJCExamPaper(
   subject: string?,
   level: string?,
   year: int?,
-) -> JCExamPaper {
-  client ExtractEn
-  prompt #"
-    You are an Irish Junior Cycle exam-paper layout analyst. Given the
-    text of a NCCA JC exam paper PDF, extract the structured paper.
-
-    Subject: { subject }
-    Level: { level }
-    Year: { year }
-
-    {{ ctx.output_format }}
-  "#
+) -> JCExamPaper {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

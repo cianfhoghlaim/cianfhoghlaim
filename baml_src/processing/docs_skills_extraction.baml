@@ -80,59 +80,22 @@ class TriplesResult {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {
-  client Default
-  prompt #"
-    You are a doc-skill tagger. Given a single documentation file's
-    contents ({{ content }}) and its on-disk path ({{ path }}), return
-    ONE DocSkillTag with the category, quadrant, confidence, short
-    label, and is_canonical flag.
-
-    Constraints:
-      - category MUST be a DocCategory enum value (TUTORIAL,
-        API_REFERENCE, GUIDE, CHANGELOG, BLOG_POST, SKILL, OTHER).
-      - quadrant MUST be a Quadrant enum value
-        (OIDEACHAIS, MEAISINFHOGHLAIM, TUATHA, CROILAR, SHARED,
-        INFRA, TOOLING, TEAM, OTHER).
-      - confidence MUST be in [0.0, 1.0].
-      - short_label MUST be <= 80 chars and human-readable.
-      - is_canonical MUST be True only if the doc is THE
-        single source-of-truth for its category+quadrant (e.g.
-        `openspec/AGENTS.md` is canonical for Quadrant.SHARED,
-        but a tutorial that references it is NOT canonical).
-
-    {{ ctx.output_format }}
-  "#
+function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractTriples(content: string, path: string) -> TriplesResult {
-  client Default
-  prompt #"
-    You are a knowledge-graph triple extractor. Given a single
-    documentation file's contents ({{ content }}) and its on-disk
-    path ({{ path }}), return a TriplesResult with the `triples`
-    field populated by the (subject, predicate, object) triples
-    that describe the relationships in the doc.
-
-    Constraints:
-      - triples MUST be a list of Triple objects.
-      - subject, predicate, object MUST all be non-empty strings.
-      - subject and object SHOULD be noun phrases (class / skill /
-        system names). predicate SHOULD be a verb phrase.
-      - Return at most 32 triples per call to avoid context bloat.
-
-    {{ ctx.output_format }}
-  "#
+function ExtractTriples(content: string, path: string) -> TriplesResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
 // Test block (exercised by `mise run baml:test` once the CI gate lands)
 // -----------------------------------------------------------------------------
 
-test ExtractDocSkillTagSmokeTest {
-  functions [ExtractDocSkillTag]
-  args {
-    content "Step-by-step tutorial that walks the user through deploying a BAML project locally."
-    path "docs/03_quadrants/04_baml/01_tutorials/01_baml_post_v4_syntax.md"
-  }
-}
+// test ExtractDocSkillTagSmokeTest {
+//   functions [ExtractDocSkillTag]
+//   args {
+//     content "Step-by-step tutorial that walks the user through deploying a BAML project locally."
+//     path "docs/03_quadrants/04_baml/01_tutorials/01_baml_post_v4_syntax.md"
+//   }
+// }

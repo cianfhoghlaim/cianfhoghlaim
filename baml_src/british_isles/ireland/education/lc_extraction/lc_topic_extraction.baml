@@ -90,66 +90,13 @@ function ExtractCrossSubjectTopics(
   language: string,
   pdf_text: string,
   source_pdf: string,
-) -> CrossSubjectTopicSet {
-  client ExtractEn
-  prompt #"
-    You are the BIEP v1 cross-subject topic extractor. Given the
-    following NCCA Leaving Certificate {{ subject }} syllabus text at
-    level {{ level }} (language: {{ language }}), extract the
-    canonical cross-subject topics.
-
-    Source PDF: {{ source_pdf }}
-
-    PDF text (first 12,000 chars):
-    ---
-    {{ pdf_text }}
-    ---
-
-    Return a CrossSubjectTopicSet with:
-      - subject, level, language
-      - topics: list of CrossSubjectTopic
-        (each with topic_id="{subject}-{topic-slug}-{level}",
-         subject, topic_label_en, topic_label_ga, level,
-         ncca_lo_code, key_competencies, related_subjects,
-         related_topic_ids, source_pdf, source_page,
-         extraction_confidence 0.0-1.0, extracted_at=ISO datetime)
-      - total_topics: integer
-      - cross_subject_bridges: count of topics that link to >=1
-        other SubjectArea
-
-    Identify cross-subject links (e.g. a Mathematics "Statistics" topic
-    that bridges to "Geography — Data Analysis", a Chemistry
-    "Acids/Bases" topic that bridges to "Biology — pH Balance"). Be
-    CONSERVATIVE — only mark related_subjects when the connection is
-    explicit in the syllabus text, not inferred.
-
-    Preserve BILINGUAL nature: every CrossSubjectTopic should have
-    BOTH topic_label_en and topic_label_ga (topic_label_ga may be null
-    for EN-only syllabi).
-
-    {{ ctx.output_format }}
-  "#
+) -> CrossSubjectTopicSet {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function LinkTopicToCompetency(
   topic: CrossSubjectTopic,
   competency: NCCAKeyCompetency,
-) -> CrossSubjectTopic {
-  client ExtractEn
-  prompt #"
-    Validate that the given NCCA Key Competency ({{ competency }}) is
-    correctly associated with the following cross-subject topic.
-
-    Topic:
-    {{ topic }}
-
-    If the association is valid, return the topic unchanged. If the
-    competency is mis-assigned, REMOVE it from
-    topic.key_competencies and set
-    topic.extraction_confidence = max(0, topic.extraction_confidence - 0.2).
-
-    Always return a CrossSubjectTopic.
-
-    {{ ctx.output_format }}
-  "#
+) -> CrossSubjectTopic {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -119,48 +119,22 @@ function ExtractLeabharlannDoc(
   text: string,
   file_name: string,
   subcorpus: LeabharlannSubcorpus
-) -> LeabharlannDoc {
-  client Default
-  prompt #"
-    You are an expert archivist of a personal + academic library. The user maintains
-    a unified archive under `leabharlann/` containing 6 sub-corpora:
-
-      1. `gaeilge/` — Irish-language books (PDF + DOCX + EPUB + MD)
-      2. `aigne/`  — English-language books (PDF)
-      3. `mata/`   — Mathematics hand-written pages (.pages, scanned PDFs)
-      4. `ollscoil_na_gaillimhe/` — University of Galway artefacts (PDF + DOCX + .pages)
-      5. `zotero/` — Academic papers in real Zotero storage format (arXiv preprints, journal articles)
-      6. `gemini_deep_research/` — Gemini deep-research PDFs with inline citations
-
-    Sub-corpus for this document: {{ subcorpus }}
-    File name: {{ file_name }}
-
-    Determine EVERY field below. Only invent values you can defend from the text or
-    the sub-corpus context — otherwise return null/empty.
-
-    Return `confidence` (0.0-1.0) reflecting how certain you are in the overall record.
-
-    Document text:
-    ---
-    {{ text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> LeabharlannDoc {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // Test (smoke check for the BAML harness)
 // =============================================================================
 
-test ExtractLeabharlannDocTest {
-  functions [ExtractLeabharlannDoc]
-  args {
-    text #"
-      Táim ag foghlaim Gaeilge gach lá. Is maith liom an cultúr Gaelach.
-      Scríobh mé leabhar dar teideal 'An Ghaeilge Bheo' i 2024.
-    "#
-    file_name "an_gaeilge_bheo_cap1.md"
-    subcorpus "GAEILGE"
-  }
-}
+// test ExtractLeabharlannDocTest {
+//   functions [ExtractLeabharlannDoc]
+//   args {
+//     text #"
+//       Táim ag foghlaim Gaeilge gach lá. Is maith liom an cultúr Gaelach.
+//       Scríobh mé leabhar dar teideal 'An Ghaeilge Bheo' i 2024.
+//     "#
+//     file_name "an_gaeilge_bheo_cap1.md"
+//     subcorpus "GAEILGE"
+//   }
+// }

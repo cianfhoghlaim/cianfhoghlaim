@@ -163,36 +163,12 @@ function GenerateAppmQuestPack(
   past_papers: PastPaper[],
   marking_schemes: MarkingSchemeSec[],
   level: string
-) -> AppmQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate Applied Mathematics expert.
-    Build a formative assessment quest pack for NCCA APPM at the {{ level }} level.
-
-    Applied Mathematics is Higher Level only. Cover ALL learning outcomes
-    in the syllabus with ≥1 FormativeItem each. Reference the source
-    NCCA PDF page in each item's evidence. Order items by difficulty (1 → 5).
-    Suggest cross-subject links to Mathematics (LC-MATHS-LO-*) where
-    natural (calculus, vectors, complex numbers all bridge naturally).
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+) -> AppmQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractAppmLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all Applied Mathematics learning outcome statements from
-    the following NCCA syllabus paragraph.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractAppmLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -205,20 +181,8 @@ function ExtractAppmLOStatement(paragraph: string) -> string[] {
 // almost entirely English-language at NCCA level; the fallback
 // path is the common case here.
 
-function ExtractAppmGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"
-    Extract all NCCA Applied Mathematics strand/outcome statements
-    in Irish (Gaeilge) from the following NCCA syllabus paragraph.
-    Return them as a list of full Irish statements, verbatim from
-    the source, with the LO code if present (e.g. 'LC-APPM-LO-2.4: ...').
-    If no Irish translation is available in the paragraph, return
-    the English statements verbatim with a leading '[EN-only]' marker.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractAppmGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateAppmFormativeItem(
@@ -226,58 +190,17 @@ function GenerateAppmFormativeItem(
   difficulty: int,
   level: string,
   topic: string
-) -> AppmFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a single formative assessment item for the NCCA Leaving
-    Certificate Applied Mathematics learning outcome {{ lo_code }}.
-
-    Difficulty: {{ difficulty }} (1-5)
-    Level: {{ level }} (LC_HL only)
-    Topic: {{ topic }}
-
-    Include 4 graduated hints, ≥2 common errors, evidence.source_page,
-    bilingual EN + GA (text_ga may be null for EN-only LOs), and
-    est_time_minutes between 1 and 30.
-
-    Use the appm_agent feedback channel by default.
-
-    {{ ctx.output_format }}
-  "#
+) -> AppmFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ScoreAppmFormativeResponse(
   item: AppmFormativeItem,
   attempt: AppmFormativeItemAttempt
-) -> AppmScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the following student attempt at the APPM formative item.
-
-    Item: {{ item }}
-    Attempt: {{ attempt }}
-
-    Compute total_marks, marks_awarded, marks_per_step, is_correct,
-    partial_credit_pct, feedback_en + feedback_ga, next_recommended_lo,
-    badge_earned (true iff partial_credit_pct >= 80).
-
-    Use Irish-language feedback when the student wrote in Irish.
-
-    {{ ctx.output_format }}
-  "#
+) -> AppmScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateAppmQuestPack(pack: AppmQuestPack) -> AppmQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the Applied Mathematics quest pack. Check:
-    - All items reference valid LC-APPM-LO-* codes
-    - All items are HL level (APPM is Higher only)
-    - Each item's difficulty is within [1, 5]
-    - Each item's est_time_minutes is within [1, 30]
-
-    Pack: {{ pack }}
-
-    {{ ctx.output_format }}
-  "#
+function ValidateAppmQuestPack(pack: AppmQuestPack) -> AppmQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

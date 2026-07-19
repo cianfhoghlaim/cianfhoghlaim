@@ -135,66 +135,6 @@ class PrimaryAreaSpecStage {
 function ExtractPrimaryArea(
   text: string,
   area: string,
-) -> PrimaryAreaSpecStage {
-  client ExtractEn
-  prompt #"
-    You are an Irish Primary School Curriculum (NCCA) expert for ages 4-12.
-    Given the text of a NCCA Primary Curriculum area document (one of the
-    4 areas: English, Gaeilge, Mathematics, SESE), extract the structured
-    spec.
-
-    Area context: {{ area }} (ENGLISH / GAEILGE / MATHEMATICS / SESE)
-
-    Constraints (per the ireland-primary-jc-dlt-baml spec):
-      - Stage = PRIMARY ONLY — do NOT extract Senior Cycle / Leaving
-        Cert learning outcomes (no LC, no HL/OL distinction).
-      - Year levels SHALL be one of JUNIOR_INFANTS, SENIOR_INFANTS,
-        FIRST, SECOND, THIRD, FOURTH, FIFTH, SIXTH (the 8 NCCA
-        Primary year levels).
-      - For area = MATHEMATICS, populate `maths_strand` with one of
-        NUMBER, ALGEBRA, SHAPE_SPACE, MEASURE, DATA (the 5 NCCA
-        Primary Mathematics strands).
-      - Preserve Irish-language fidelity: every Primary curriculum
-        area is bilingual; do NOT translate `text_ga` / `title_ga`
-        to English.
-
-    For each learning outcome in the document:
-      - outcome_id: deterministic slug, e.g. 'maths_first_number_count_to_20'
-      - text_en: full English outcome text (verbatim)
-      - text_ga: full Irish outcome text (null if EN-only)
-      - year_level: one of the 8 PrimaryYearLevel enum values
-      - area: same as the parent document area
-      - maths_strand: one of the 5 PrimaryMathsStrand values (only for MATHEMATICS; null otherwise)
-      - blooms_level: optional Bloom's taxonomy level
-      - cross_curricular_links: array of cross-area links (empty if none)
-
-    For each strand:
-      - strand_id: deterministic slug
-      - title_en / title_ga: bilingual display names
-      - description_en / description_ga: bilingual strand description
-      - weighting_pct: integer (null if not stated)
-      - outcomes: the populated outcomes array
-
-    Document-level fields:
-      - area: ENGLISH / GAEILGE / MATHEMATICS / SESE
-      - language: en / ga / bilingual based on the PDF's primary language
-      - year_levels: array of the 8 NCCA Primary year levels covered
-      - source_pdf: filename or path
-      - source_pages: integer page count
-      - rationale_en / rationale_ga: bilingual rationale text
-      - strands: the populated strands
-      - total_learning_outcomes: sum of all LOs across strands
-      - integration_links: array of cross-area links
-      - key_competencies: array of NCCA key competencies
-      - assessment_approach: plain-English assessment description
-      - extracted_at: ISO 8601 datetime
-      - extraction_confidence: 0.0-1.0
-
-    Document text:
-    ---
-    {{ text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> PrimaryAreaSpecStage {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

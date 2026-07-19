@@ -17,16 +17,6 @@ function ExtractENMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> ENMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following England
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ENMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

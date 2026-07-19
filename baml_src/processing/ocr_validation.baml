@@ -273,121 +273,31 @@ function ValidateOCRResult(
   ocr_text: string,
   model_id: string,
   processing_time: float
-) -> OCRValidationResult {
-  client Validator
-  prompt #"
-    Validate this OCR output and assess its quality.
-
-    {{ ctx.output_format }}
-
-    Model ID: {{ model_id }}
-    Processing time: {{ processing_time }}s
-
-    OCR Text:
-    {{ ocr_text }}
-
-    Assess:
-    1. Overall quality (EXCELLENT/GOOD/FAIR/POOR/FAILED)
-    2. Confidence score (0-1 based on text coherence)
-    3. Language detection
-    4. If Irish detected, assess fada accuracy and spelling standard
-    5. Whether manual review is needed
-    6. Specific issues found
-
-    For Irish content:
-    - Check fadas on: á, é, í, ó, ú
-    - Check for common OCR errors (a/á confusion, lenition)
-    - Identify spelling standard (pre-reform vs modern)
-    - Note dialect indicators if present
-  "#
+) -> OCRValidationResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Validate Irish language quality specifically
 function ValidateIrishContent(
   text: string
-) -> IrishContentQuality {
-  client IrishValidator
-  prompt #"
-    Analyze this text for Irish language quality.
-
-    {{ ctx.output_format }}
-
-    Text:
-    {{ text }}
-
-    Check:
-    1. Fada accuracy - are fadas (síneadh fada) correct?
-       - á, é, í, ó, ú should be present where expected
-       - No fadas on wrong vowels
-    2. Spelling standard
-       - Pre-1948: mhaith, bhí, séadna
-       - Modern: maith, bí, séanna
-    3. Dialect indicators
-       - Connacht: tú/sibh forms, specific vocabulary
-       - Munster: -ís endings, specific vocabulary
-       - Ulster: specific vocabulary, pronunciation markers
-    4. Common OCR errors for Irish
-       - a/á confusion (most common)
-       - c/ċ (old script)
-       - Missing h for lenition
-  "#
+) -> IrishContentQuality {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract document structure
 function ExtractDocumentStructure(
   ocr_text: string,
   page_count: int
-) -> DocumentStructure {
-  client Extractor
-  prompt #"
-    Extract the structure of this document from OCR text.
-
-    {{ ctx.output_format }}
-
-    Page count: {{ page_count }}
-
-    OCR Text:
-    {{ ocr_text }}
-
-    Identify:
-    1. Document type (curriculum, exam, textbook, etc.)
-    2. Title and headers
-    3. Tables (convert to markdown)
-    4. Lists
-    5. Reading order
-    6. Column layout
-  "#
+) -> DocumentStructure {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Compare results from multiple OCR models
 function CompareOCRModels(
   document_id: string,
   model_results: ModelResult[]
-) -> ModelComparisonResult {
-  client Analyzer
-  prompt #"
-    Compare OCR results from multiple models and select the best.
-
-    {{ ctx.output_format }}
-
-    Document ID: {{ document_id }}
-
-    Model Results:
-    {{ model_results }}
-
-    Analysis:
-    1. Rank models by overall quality
-    2. Identify the best model and explain why
-    3. Calculate text consensus (how much models agree)
-    4. Find regions where models disagree
-    5. For Irish content, identify best model for Irish
-
-    Selection criteria:
-    - Higher confidence = better
-    - Longer coherent text = better
-    - Correct fadas for Irish = critical
-    - Fewer obvious OCR errors = better
-  "#
+) -> ModelComparisonResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================

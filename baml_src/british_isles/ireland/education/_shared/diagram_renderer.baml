@@ -64,30 +64,8 @@ function RenderConceptMap(
   past_papers_json: string,
   marking_schemes_json: string,
   five_key_competencies_json: string,
-) -> DiagramPayload {
-  client Claude
-  prompt #"You are an expert at rendering concept-map diagrams for Irish Leaving Certificate subjects.
-
-Given:
-- `subject`: the NCCA subject slug (mathematics, applied_mathematics, chemistry, geography, history, english, gaeilge, computer_science)
-- `language`: the bilingual mode ('en' or 'ga')
-- `syllabus_topics_json`: the syllabus topics + learning outcomes
-- `past_papers_json`: the past exam questions (2017-2025)
-- `marking_schemes_json`: the marking scheme patterns
-- `five_key_competencies_json`: the 5 NCCA Key Competencies (Information Processing, Communicating, Working with Others, Personal Effectiveness, Critical & Creative Thinking)
-
-Render a CONCEPT MAP diagram with:
-- 5 root nodes (one per NCCA Key Competency) — labelled bilingually
-- Child nodes per syllabus topic (1-2 per topic)
-- Edges from root → topic (the Key Competency that the topic primarily serves)
-- Edges between topics (prerequisites + assessment dependencies)
-
-Return the DiagramPayload with the nodes + edges + caption + source_evidence.
-The diagram MUST be self-contained (no external images, no JavaScript) — the
-consuming app will render the SVG via React Flow + D3.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+) -> DiagramPayload {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -99,27 +77,8 @@ function RenderTopicHeatmap(
   language: string,
   past_papers_json: string,
   year_range: int[],
-) -> DiagramPayload {
-  client Claude
-  prompt #"You are an expert at rendering topic-frequency heatmaps for Irish Leaving Certificate subjects.
-
-Given:
-- `subject`: the NCCA subject slug
-- `language`: the bilingual mode ('en' or 'ga')
-- `past_papers_json`: the past exam questions (2017-2025) tagged by topic + paper + year + marks
-- `year_range`: the range of years to include (e.g., [2017, 2025])
-
-Render a TOPIC HEATMAP diagram with:
-- Nodes = unique (topic, paper, year) triples
-- Edges weighted by the question count or marks per triple
-- The heatmap intensity is mapped from the weighted edges
-- The layout is a 2.5D matrix (X = year, Y = topic, Z = paper) rendered as an SVG
-
-Return the DiagramPayload with the nodes + edges + caption + source_evidence.
-The diagram will be rendered via D3 v8 + Vega-Lite altair fallback.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+) -> DiagramPayload {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -132,28 +91,8 @@ function RenderPCLMFlow(
   marking_scheme_json: string,
   paper: string,
   year: int,
-) -> DiagramPayload {
-  client Claude
-  prompt #"You are an expert at rendering PCLM (Partial Credit, Logical Marking) flow diagrams for Irish Leaving Certificate subjects.
-
-Given:
-- `subject`: the NCCA subject slug
-- `language`: the bilingual mode ('en' or 'ga')
-- `marking_scheme_json`: the marking scheme patterns
-- `paper`: the paper (e.g., 'paper-1', 'paper-2', 'paper-1-f')
-- `year`: the exam year
-
-Render a PCLM FLOW diagram with:
-- Question nodes (one per question in the paper)
-- Per-criterion nodes (each question has 2-5 marking criteria)
-- Partial-credit edges (the order in which marks are awarded)
-- Common-mistake edges (the deductions for common errors)
-
-Return the DiagramPayload with the nodes + edges + caption + source_evidence.
-The diagram will be rendered via React Flow + dagre layout.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+) -> DiagramPayload {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -165,26 +104,6 @@ function RenderQuestionSankey(
   language: string,
   past_papers_json: string,
   year_range: int[],
-) -> DiagramPayload {
-  client Claude
-  prompt #"You are an expert at rendering question → topic → difficulty → year Sankey diagrams for Irish Leaving Certificate subjects.
-
-Given:
-- `subject`: the NCCA subject slug
-- `language`: the bilingual mode ('en' or 'ga')
-- `past_papers_json`: the past exam questions (2017-2025)
-- `year_range`: the range of years to include
-
-Render a QUESTION SANKEY diagram with:
-- Source nodes: questions (1 per question in past_papers_json)
-- Middle nodes: topics (the NCCA syllabus topics)
-- Sink nodes: years (the exam year)
-
-The flow weight is the question count per topic-year pair.
-
-Return the DiagramPayload with the nodes + edges + caption + source_evidence.
-The diagram will be rendered via D3 Sankey.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-"#
+) -> DiagramPayload {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

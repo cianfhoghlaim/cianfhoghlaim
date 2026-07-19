@@ -28,28 +28,6 @@ class PastPaper {
   @@stream.done
 }
 
-function ExtractPastPaper(pdf_text: string) -> PastPaper {
-  client LitellmClient
-  prompt #"
-    You are an Irish Leaving Certificate exam paper analyst. Extract all
-    questions from the following exam paper PDF text.
-
-    For each question:
-    - `questionNumber`: the printed question number
-    - `topic`: the primary Leaving Cert topic (e.g. 'Differentiation',
-      'Cell Division', 'The Plant') — NOT generic terms like 'Question 1'
-    - `subtopic`: optional more granular topic
-    - `marks`: the maximum marks printed next to the question
-    - `questionText`: the full text of the question
-    - `isOptional`: true if this question is in a 'pick from' section
-
-    Subject: {{ ctx.subject }}
-    Year: {{ ctx.year }}
-    Paper: {{ ctx.paper }}
-
-    PDF text:
-    {{ pdf_text }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractPastPaper(pdf_text: string) -> PastPaper {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

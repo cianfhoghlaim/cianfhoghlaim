@@ -122,95 +122,31 @@ class ComputerScienceMarkingQuestion {
 // Functions
 // ============================================================================
 
-function WebStudyPlan(
+function ComputerScienceWebStudyPlan(
   subject: string,
   weeks_until_exam: int,
   target_level: ComputerScienceLevel,
   language: ComputerScienceLanguage,
   focus_topics: string[]
-) -> ComputerScienceWebStudyPlanResponse {
-  // Build a per-subject study plan over `weeks_until_exam` weeks for the
-  // chosen target_level (LC HL/OL/FL or JC). The function delegates to the
-  // per-subject qpack + syllabus extraction in qpack_computer_science.baml to ground the
-  // plan in real NCCA learning outcomes and SEC past-paper questions.
-  //
-  // The Convex action convex/computer_science/generateStudyPlan.ts invokes this
-  // function and persists the response to study_plans.
-  prompt #"
-    You are the Computer Science study planner for the Cianfhoghlaim BIEP v1
-    per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Target level: { target_level }
-    Language: { language }
-    Weeks until exam: { weeks_until_exam }
-    Optional focus topics: { focus_topics }
-
-    Build a { weeks_until_exam }-week { target_level } Computer Science study
-    plan grounded in the NCCA Computer Science syllabus + SEC past-paper corpus.
-    Each week must reference concrete syllabus topics + past-paper
-    question ids + PCLM marking-scheme patterns. Include 3-5 milestones
-    (one per assessment block).
-
-    Return strictly as ComputerScienceWebStudyPlanResponse with
-    bilingual EN+GA fields where applicable.
-  "#
+) -> ComputerScienceWebStudyPlanResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function WebExamPaperDiscussion(
+function ComputerScienceWebExamPaperDiscussion(
   subject: string,
   paper_year: int,
   paper_level: ComputerScienceLevel,
   paper_language: ComputerScienceLanguage,
   question_text: string
-) -> ComputerScienceWebExamPaperDiscussionResponse {
-  // Walk a student through a single Computer Science past-paper question.
-  // Returns the PCLM marking scheme + a model answer outline + common
-  // mistakes + marks breakdown + follow-up questions.
-  //
-  // Invoked by the Convex action convex/computer_science/discussExamPaper.ts.
-  prompt #"
-    You are the Computer Science exam-paper discussion tutor for the Cianfhoghlaim
-    BIEP v1 per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Paper year: { paper_year }
-    Paper level: { paper_level }
-    Paper language: { paper_language }
-    Question: { question_text }
-
-    Explain the PCLM marking scheme for this question, then walk through a
-    step-by-step model answer outline (in English + Gaeilge where
-    applicable), highlight common student mistakes, and propose 3
-    follow-up questions the tutor might ask.
-
-    Return strictly as ComputerScienceWebExamPaperDiscussionResponse.
-  "#
+) -> ComputerScienceWebExamPaperDiscussionResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function WebMarkingSchemeExplanation(
+function ComputerScienceWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: ComputerScienceLevel,
   paper_language: ComputerScienceLanguage
-) -> ComputerScienceWebMarkingSchemeExplanationResponse {
-  // Explain the full marking scheme (PCLM patterns) for an entire
-  // Computer Science past paper at the chosen level + language.
-  //
-  // Invoked directly from apps/.../routes/en/subjects/computer_science/marking-schemes.
-  prompt #"
-    You are the Computer Science marking-scheme explainer for the Cianfhoghlaim
-    BIEP v1 per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Paper year: { paper_year }
-    Paper level: { paper_level }
-    Paper language: { paper_language }
-
-    Walk through every section + question in the marking scheme. Highlight
-    the PCLM patterns used (e.g. partial credit for setup, marks for
-    logical marking, dependent steps).
-
-    Return strictly as ComputerScienceWebMarkingSchemeExplanationResponse.
-  "#
+) -> ComputerScienceWebMarkingSchemeExplanationResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -45,70 +45,13 @@ class LegalAidForm {
 function ExtractLegalAidPage(
   page_url: string,
   page_html: string,
-) -> LegalAidPage {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Legal Aid Board (Ireland) extraction specialist
-    working for Cianfhoghlaim Oideachais.
-
-    The Legal Aid Board (legalaidboard.ie) administers civil legal aid
-    and family mediation services. Their site documents the eligibility
-    criteria, services, and application process for legal aid.
-
-    Statutes to anchor on:
-      - Civil Legal Aid Act 1995
-      - Civil Legal Aid (Amendment) Act 2022
-      - Family Law Act 2019 (Part 4 — family mediation)
-
-    Source URL: {{ page_url }}
-    HTML content (first 16,000 chars):
-    ---
-    {{ page_html }}
-    ---
-
-    Extract:
-      url                    — source URL
-      title                  — page <title>
-      page_kind              — services | apply | about | news | publication | other
-      legal_aid_category     — CIVIL | CRIMINAL | FAMILY_MEDIATION | ASYLUM | OTHER
-      eligibility_outcome    — ELIGIBLE | PARTIALLY_ELIGIBLE | INELIGIBLE | UNKNOWN
-      eligibility_criteria   — conditions (income thresholds, asset limits, etc.)
-      services_offered       — concrete services described
-      application_steps      — ordered steps to apply
-      statutory_basis        — StatuteReference[] citing relevant Acts
-      summary                — 2-3 sentence summary
-      extraction_confidence  — 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> LegalAidPage {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ExtractLegalAidForm(
   page_url: string,
   page_html: string,
-) -> LegalAidForm {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Legal Aid Board (Ireland) forms extraction
-    specialist.
-
-    Source URL: {{ page_url }}
-    HTML content (first 8,000 chars):
-    ---
-    {{ page_html }}
-    ---
-
-    Extract:
-      url                    — source URL
-      form_number            — e.g. "LAB-1", "Civil Legal Aid Application Form"
-      form_title             — title of the form
-      legal_aid_category     — CIVIL | CRIMINAL | FAMILY_MEDIATION | ASYLUM | OTHER
-      purpose                — plain-English description of when to use
-      downloadable_url       — PDF URL
-      fillable_fields        — names of fields the form requires
-      related_statutes       — StatuteReference[] citing relevant Acts
-      extraction_confidence  — 0.0-1.0
-
-    {{ ctx.output_format }}
-  "#
+) -> LegalAidForm {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

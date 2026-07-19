@@ -170,170 +170,40 @@ class MatriculationAudit {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractCAOCourseList(page_markdown: string, year: int) -> CAOCourse[] {
-  client Claude
-  prompt #"Extract the requested data.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    {{page_markdown}}
-"#
+function ExtractCAOCourseList(page_markdown: string, year: int) -> CAOCourse[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {
-  client Claude
-  prompt #"Extract the requested data.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    {{page_markdown}}
-"#
+function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {
-  client Claude
-  prompt #"Extract the requested data.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    {{page_markdown}}
-"#
+function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {
-  client Claude
-  prompt #"You are an expert at parsing Irish Apprenticeship programme listings.
-
-Parse the SOLAS (or equivalent) apprenticeship directory.
-
-PAGE MARKDOWN:
-{{ page_markdown }}
-
-For each apprenticeship programme, extract:
-1. Programme name (e.g., "Electrician", "Carpentry & Joinery", "Plumbing", "Software Developer")
-2. Trade/sector classification
-3. Awarding body (SOLAS, ETB, IMI, etc.)
-4. Duration (typically 2-4 years)
-5. NFQ level (5-8)
-6. Off-the-job training location
-7. On-the-job employer requirements
-8. Entry requirements (minimum age, education)
-9. Progression routes to higher education (CAO courses, university pathways)
-10. Source URL
-
-Apprenticeships are an ALTERNATIVE pathway to CAO courses, particularly for craft and technical trades.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    ENTRIES: {{ page_markdown|length }} chars
-"#
+function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
 function ExtractApplicationTimeline(page_markdown: string,
-  year: int) -> ApplicationTimeline {
-  client Claude
-  prompt #"You are an expert at parsing the Irish CAO (Central Applications Office) application timeline.
-
-Parse the CAO application timeline for a specific year.
-
-YEAR: {{ year }}
-
-PAGE MARKDOWN:
-{{ page_markdown }}
-
-Extract all critical dates and milestones:
-1. Application opens (typically November of preceding year)
-2. Application closes (typically February 1st)
-3. Change of mind opens (typically May)
-4. Change of mind closes (typically July 1st)
-5. Round 1 offers (typically August)
-6. Round 2 offers (typically late August)
-7. Acceptance deadlines
-8. Late application window
-9. HEAR/DARE scheme deadlines
-10. Mature applicant deadlines
-11. QQI FET application deadlines
-
-These dates power the ApplicationTimelineGuide agent in the Tertiary team. Be exact with dates and provide both year-specific and rolling calendar info.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    YEAR: {{ year }}
-"#
+  year: int) -> ApplicationTimeline {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
 function EstimateCoursePoints(course: CAOCourse,
   historical_points: int[],
-  applicant_profile: string) -> CoursePointsPrediction {
-  client Claude
-  prompt #"You are an expert at predicting CAO course points for an applicant.
-
-Given a course's historical points data and an applicant's profile, estimate the points they'll need.
-
-COURSE: {{ course.course_code }} - {{ course.title_en }}
-HISTORICAL POINTS: {{ historical_points|join(", ") }}
-
-APPLICANT PROFILE:
-{{ applicant_profile }}
-
-Provide:
-1. Predicted points range (low and high)
-2. Confidence level (high if data is strong, low if volatile)
-3. Trend analysis (rising, falling, stable)
-4. Key factors that could shift points this year (e.g., "new supply from neighbouring school", "popularity surge")
-5. Recommendation (apply, strong backup needed, or re-consider)
-6. Alternative courses to consider (similar level, similar subject, nearby institution)
-
-This powers the Tertiary team's points estimation feature.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    COURSE: {{ course.course_code }}
-    YEARS: {{ historical_points|length }}
-"#
+  applicant_profile: string) -> CoursePointsPrediction {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
 function AuditMatriculation(institution: string,
   course_code: string,
-  applicant_grades: string) -> MatriculationAudit {
-  client Claude
-  prompt #"You are an expert at auditing a student's Leaving Certificate grades against NUI/HEI matriculation requirements.
-
-Audit the applicant's grades against the matriculation rules for a specific course.
-
-INSTITUTION: {{ institution }}
-COURSE: {{ course_code }}
-
-APPLICANT GRADES:
-{{ applicant_grades }}
-
-Provide:
-1. Overall pass/fail status
-2. Per-requirement analysis (which subject/grade combinations meet/fail/miss)
-3. Near-miss subjects (one grade short of meeting the requirement)
-4. Failed requirements (subjects not taken or grades too low)
-5. Compensating subjects (if NUI allows compensation)
-6. Recommendations (could the applicant re-sit, apply for QQI FET, etc.)
-7. Alternative courses that match the applicant's profile
-8. Bilingual feedback labels
-
-This audit is the critical decision-support feature for the MatriculationCheck agent.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    INSTITUTION: {{ institution }}
-    COURSE: {{ course_code }}
-"#
+  applicant_grades: string) -> MatriculationAudit {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
@@ -341,76 +211,17 @@ This audit is the critical decision-support feature for the MatriculationCheck a
 // From-URL extraction functions (merged from cianfhoghlaim_other/tertiary.baml)
 // =============================================================================
 
-function ExtractCAOCourseListFromUrl(page_url: string, year: int) -> CAOCourse[] {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Irish CAO course directory analyst working for
-    Cianfhoghlaim Oideachais (the bilingual agentic platform).
-
-    Source: {{ page_url }}
-    Year: {{ year }}
-
-    CAO course codes are 2-3 characters: UCD=DN*, UCG=GY*, UCC=CK*, UL=LM*,
-    MU=MH*, TCD=TR*, DCU=DC*, ATU=GA*/LY*/SG*/AL*, TUS=LC*/TL*, SETU=WD*/CW*,
-    MTU=CR*/MT*, RCSI=RC*, MIC=MI*.
-
-    The 10 NFQ levels (1-10) are defined per Irish National Framework of
-    Qualifications. Typical CAO courses are NFQ_7 (Level 7 Ordinary Bachelor)
-    or NFQ_8 (Level 8 Honours Bachelor).
-
-    Always extract BOTH English and Irish versions of the title.
-
-    Return CAOCourse[] as {{ ctx.output_format }}.
-  "#
+function ExtractCAOCourseListFromUrl(page_url: string, year: int) -> CAOCourse[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Irish matriculation requirements analyst working for
-    Cianfhoghlaim Oideachais.
-
-    Source: {{ page_url }}
-    Institution: {{ institution }}
-
-    The NUI standard matriculation rules are:
-      - 3 H5s (Higher level) including English, Irish, Mathematics
-      - 4 O6/H7s (Ordinary or Higher level) including English, Irish, Mathematics
-      - Specific subject + grade requirements for certain courses:
-        H4 in Chemistry for Medicine
-        H4 in a Modern Continental Language for Modern Languages
-        H4 in Physics for Engineering
-      - For non-NUI (TCD, DCU, IoTs), different rules apply
-
-    Always capture the institution, pathway, subject, minimum_grade (H4, O6, etc.),
-    and any notes (e.g., "required for Modern Languages", "lab science required for
-    Medicine").
-
-    Return MatriculationRequirement[] as {{ ctx.output_format }}.
-  "#
+function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function AuditMatriculationStdLib(
   institution: string,
   applicant_grades: map<string, string>
-) -> MatriculationAudit {
-  client Claude
-  prompt #"
-    You are an expert Irish matriculation auditor working for
-    Cianfhoghlaim Oideachais.
-
-    INSTITUTION: {{ institution }}
-    APPLICANT GRADES: {{ applicant_grades }}
-
-    Check the applicant's LC grades against the matriculation rules for the
-    given institution. Capture failed requirements and near-misses (one
-    grade short). Produce a bilingual summary explaining the result.
-
-    CAO points table (for context):
-      H1: 100, H2: 88, H3: 77, H4: 66, H5: 56, H6: 46, H7: 37, H8: 0
-      O1: 56, O2: 46, O3: 37, O4: 28, O5: 20, O6: 12, O7: 0, O8: 0
-      Bonus: H6 or higher in Higher Level Mathematics awards +25 points
-
-    Return MatriculationAudit as {{ ctx.output_format }}.
-  "#
+) -> MatriculationAudit {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

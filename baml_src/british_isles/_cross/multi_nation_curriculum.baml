@@ -275,116 +275,29 @@ function ExtractCrossNationSpec(
   document: string,
   nation: Nation,
   level: NationEducationLevel
-) -> CrossNationCurriculumSpec {
-  client Claude
-  prompt #"
-    Extract a structured curriculum specification from this {{ nation }} education document.
-
-    Education Level: {{ level }}
-
-    Focus on extracting:
-    1. Specification metadata (title, subject, version, dates)
-    2. All learning outcomes with proper structure
-    3. Assessment structure and weightings
-    4. Skills, knowledge areas, and cross-curricular links
-    5. Prerequisites and progression paths
-
-    Important:
-    - Preserve text in original language (especially for Celtic languages)
-    - Include native language titles/descriptions where available
-    - Mark outcomes as core vs optional
-    - Note any unique features of this nation's curriculum
-
-    Document:
-    {{ document }}
-
-    {{ ctx.output_format }}
-  "#
+) -> CrossNationCurriculumSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function AlignOutcomes(
   source_outcomes: CrossNationLearningOutcome[],
   target_outcomes: CrossNationLearningOutcome[]
-) -> OutcomeAlignment[] {
-  client Claude
-  prompt #"
-    Analyze these learning outcomes from different nations and identify alignments.
-
-    Source Outcomes ({{ source_outcomes[0].nation }}):
-    {{ source_outcomes }}
-
-    Target Outcomes ({{ target_outcomes[0].nation }}):
-    {{ target_outcomes }}
-
-    For each potential alignment, determine:
-    1. Alignment type (equivalent, partial overlap, prerequisite, etc.)
-    2. Confidence score (0.0 to 1.0)
-    3. Shared concepts and differences
-    4. Clear reasoning for the alignment
-
-    Consider:
-    - Semantic similarity of descriptions
-    - Skill overlap
-    - Knowledge area coverage
-    - Different pedagogical approaches to same content
-    - Age-appropriateness differences
-
-    {{ ctx.output_format }}
-  "#
+) -> OutcomeAlignment[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function CompareCurricula(
   specs: CrossNationCurriculumSpec[],
   subject: string
-) -> CrossNationComparison {
-  client ClaudeOpus
-  prompt #"
-    Perform a comprehensive comparison of {{ subject }} curricula across these nations.
-
-    Specifications:
-    {{ specs }}
-
-    Produce:
-    1. Executive summary of key findings
-    2. Detailed outcome-level alignments
-    3. Coverage matrix showing cross-nation mapping
-    4. Key similarities and differences
-    5. Recommendations for resource sharing between nations
-
-    Consider:
-    - Content coverage and depth
-    - Skill emphasis differences
-    - Assessment approach variations
-    - Pedagogical philosophy differences
-    - Language and cultural considerations
-
-    {{ ctx.output_format }}
-  "#
+) -> CrossNationComparison {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function IdentifyResourceSharing(
   source_spec: CrossNationCurriculumSpec,
   target_specs: CrossNationCurriculumSpec[]
-) -> ResourceSharingRecommendation[] {
-  client Claude
-  prompt #"
-    Identify opportunities for sharing educational resources from {{ source_spec.nation }}
-    with these other nations' curricula.
-
-    Source Curriculum ({{ source_spec.nation }}):
-    {{ source_spec }}
-
-    Target Curricula:
-    {{ target_specs }}
-
-    For each potential resource sharing opportunity:
-    1. Which source outcomes have good coverage in targets
-    2. What adaptations might be needed
-    3. Translation requirements (especially Celtic languages)
-    4. Cultural context considerations
-
-    {{ ctx.output_format }}
-  "#
+) -> ResourceSharingRecommendation[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 class ResourceSharingRecommendation {
@@ -406,25 +319,8 @@ class ResourceSharingRecommendation {
 // LEVEL EQUIVALENCE MAPPING
 // ============================================================================
 
-function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLevel[] {
-  client ClaudeMini
-  prompt #"
-    Given this education level: {{ level }}
-
-    Return all equivalent levels from other nations in the British Isles.
-
-    Consider:
-    - Age ranges
-    - Curriculum complexity
-    - Qualification equivalence
-    - Progression pathways
-
-    Known equivalences:
-    - IE Junior Cycle ≈ EN Key Stage 3-4 ≈ SC Third Level ≈ WA Progression Step 3-4 ≈ NI Key Stage 3-4
-    - IE Leaving Cert ≈ EN A-Level ≈ SC Higher/Advanced Higher ≈ WA Post-16 ≈ NI Post-16
-
-    {{ ctx.output_format }}
-  "#
+function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLevel[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -448,26 +344,8 @@ class TranslationResult {
   terminology_used string[]? @description("Official terminology applied")
 }
 
-function TranslateEducationalContent(request: TranslationRequest) -> TranslationResult {
-  client Claude
-  prompt #"
-    Translate this educational content for {{ request.domain }}.
-
-    Source ({{ request.source_language }}):
-    {{ request.source_text }}
-
-    Target language: {{ request.target_language }}
-    Context: {{ request.context }}
-
-    Important:
-    - Use official educational terminology for {{ request.target_language }}
-    - Maintain pedagogical accuracy
-    - For Celtic languages, use modern standardized forms
-    - Flag any terms that need expert review
-    - Note any cultural adaptations made
-
-    {{ ctx.output_format }}
-  "#
+function TranslateEducationalContent(request: TranslationRequest) -> TranslationResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -502,67 +380,67 @@ client<llm> ClaudeMini {
 // TEST CASES
 // ============================================================================
 
-test ExtractIrishJCSpec {
-  functions [ExtractCrossNationSpec]
-  args {
-    document #"
-      Junior Cycle Mathematics Specification
-      NCCA 2023
+// test ExtractIrishJCSpec {
+//   functions [ExtractCrossNationSpec]
+//   args {
+//     document #"
+//       Junior Cycle Mathematics Specification
+//       NCCA 2023
+// 
+//       Strands:
+//       1. Number (25%)
+//       2. Algebra (20%)
+//       3. Geometry and Trigonometry (30%)
+//       4. Statistics and Probability (25%)
+// 
+//       Learning Outcomes:
+//       N.1 Students should be able to use whole numbers, fractions, decimals...
+//       A.1 Students should be able to investigate patterns and relationships...
+// 
+//       Assessment:
+//       - Classroom-Based Assessment 1: 10%
+//       - Classroom-Based Assessment 2: 10%
+//       - Final Examination: 80%
+//     "#
+//     nation "IRELAND"
+//     level "IE_JUNIOR_CYCLE"
+//   }
+// }
 
-      Strands:
-      1. Number (25%)
-      2. Algebra (20%)
-      3. Geometry and Trigonometry (30%)
-      4. Statistics and Probability (25%)
-
-      Learning Outcomes:
-      N.1 Students should be able to use whole numbers, fractions, decimals...
-      A.1 Students should be able to investigate patterns and relationships...
-
-      Assessment:
-      - Classroom-Based Assessment 1: 10%
-      - Classroom-Based Assessment 2: 10%
-      - Final Examination: 80%
-    "#
-    nation "IRELAND"
-    level "IE_JUNIOR_CYCLE"
-  }
-}
-
-test AlignMathsOutcomes {
-  functions [AlignOutcomes]
-  args {
-    source_outcomes [
-      {
-        outcome_id: "IE_JC_MATH_N1",
-        nation: "IRELAND",
-        level: "IE_JUNIOR_CYCLE",
-        framework: "JUNIOR_CYCLE",
-        title: "Number operations",
-        description: "Use whole numbers, fractions, decimals and percentages",
-        subject: "mathematics",
-        strand: "number",
-        skills: ["calculation", "estimation", "problem-solving"],
-        knowledge_areas: ["arithmetic", "fractions"],
-        is_core: true,
-        source_url: "https://curriculumonline.ie"
-      }
-    ]
-    target_outcomes [
-      {
-        outcome_id: "SC_N5_MATH_NUM1",
-        nation: "SCOTLAND",
-        level: "SC_NATIONAL_5",
-        framework: "CURRICULUM_FOR_EXCELLENCE",
-        title: "Numerical calculations",
-        description: "Apply numerical skills in real-life contexts",
-        subject: "mathematics",
-        strand: "numeracy",
-        skills: ["calculation", "application", "reasoning"],
-        knowledge_areas: ["number operations"],
-        is_core: true,
-        source_url: "https://sqa.org.uk"
-      }
-    ]
-  }
-}
+// test AlignMathsOutcomes {
+//   functions [AlignOutcomes]
+//   args {
+//     source_outcomes [
+//       {
+//         outcome_id: "IE_JC_MATH_N1",
+//         nation: "IRELAND",
+//         level: "IE_JUNIOR_CYCLE",
+//         framework: "JUNIOR_CYCLE",
+//         title: "Number operations",
+//         description: "Use whole numbers, fractions, decimals and percentages",
+//         subject: "mathematics",
+//         strand: "number",
+//         skills: ["calculation", "estimation", "problem-solving"],
+//         knowledge_areas: ["arithmetic", "fractions"],
+//         is_core: true,
+//         source_url: "https://curriculumonline.ie"
+//       }
+//     ]
+//     target_outcomes [
+//       {
+//         outcome_id: "SC_N5_MATH_NUM1",
+//         nation: "SCOTLAND",
+//         level: "SC_NATIONAL_5",
+//         framework: "CURRICULUM_FOR_EXCELLENCE",
+//         title: "Numerical calculations",
+//         description: "Apply numerical skills in real-life contexts",
+//         subject: "mathematics",
+//         strand: "numeracy",
+//         skills: ["calculation", "application", "reasoning"],
+//         knowledge_areas: ["number operations"],
+//         is_core: true,
+//         source_url: "https://sqa.org.uk"
+//       }
+//     ]
+//   }
+// }

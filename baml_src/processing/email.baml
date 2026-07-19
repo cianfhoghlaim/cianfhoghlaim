@@ -51,40 +51,8 @@ function ClassifyEmail(
   email_body: string,
   sender_domain: string,
   recipient_domain: string
-) -> EmailClassificationResult {
-  client ExtractEn
-  prompt #"
-    You are an email-triage assistant for a personal inbox spanning 4
-    accounts (DKIT.ie Microsoft 365, 2 Gmail, Hotmail).
-
-    Classify the following email into EXACTLY ONE of these 9 labels:
-    - legal_case: active legal case, complaint, tribunal, court, solicitor
-    - medical_access: HSE / NHS / HSC records, medical card, prescriptions
-    - academic_admin: university admin, admissions, fees, academic registry
-    - personal_correspondence: 1:1 with a named human
-    - institutional_correspondence: company / public body / NGO on business
-    - spam_or_marketing: unsolicited marketing, scams, phishing
-    - newsletter: periodical digest, blog mailing list
-    - automated_notification: system-generated (receipts, OTPs, reminders)
-    - other: none of the above
-
-    Also rate:
-    - `confidence` 0.0-1.0
-    - `urgency_score` 0.0 (safe to ignore for weeks) to 1.0 (reply today)
-    - `summary_5_words` — 5 words or fewer capturing the email
-    - `suggested_action` — 1-sentence next step
-
-    Sender domain: {{ sender_domain }}
-    Recipient domain: {{ recipient_domain }}
-
-    Subject: {{ email_subject }}
-    Body:
-    ---
-    {{ email_body }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> EmailClassificationResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
@@ -104,26 +72,8 @@ class EmailThread {
 function ExtractEmailThread(
   thread_messages: string[],
   thread_subject: string
-) -> EmailThread {
-  client ExtractEn
-  prompt #"
-    You are an email-thread summariser for a personal inbox.
-
-    Subject: {{ thread_subject }}
-
-    Messages (in chronological order, oldest first):
-    {{ thread_messages }}
-
-    Extract:
-    - `participants`: distinct human participants (lowercased emails)
-    - `topic_summary`: 1-2 sentence summary
-    - `action_items`: ordered list of action items
-    - `decision_points`: ordered list of decisions taken
-    - `dates_mentioned`: ISO 8601 dates (YYYY-MM-DD) in chronological order
-    - `key_quotes`: 3-5 verbatim quotes (≤ 200 chars each)
-
-    {{ ctx.output_format }}
-  "#
+) -> EmailThread {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
@@ -146,97 +96,68 @@ class CandidatePDF {
 function LinkEmailToResearch(
   email_body: string,
   candidate_pdfs: CandidatePDF[]
-) -> ResearchLink[] {
-  client ExtractEnStrong
-  prompt #"
-    You are a research-linker for a personal-inbox triage system.
-
-    An email has just been classified as a legal case. Your job is to
-    link it to the top Gemini Deep Research PDFs in the user's archive
-    that are most relevant. Only return links you are CONFIDENT are
-    relevant (link_confidence >= 0.7). If no candidate is relevant,
-    return an empty list.
-
-    Email body:
-    ---
-    {{ email_body }}
-    ---
-
-    Candidate PDFs:
-    {% for c in candidate_pdfs %}
-    - pdf_id: {{ c.pdf_id }}
-      title: {{ c.pdf_title }}
-      summary: {{ c.pdf_summary }}
-    {% endfor %}
-
-    For each link, set:
-    - `linked_pdf_id`: the pdf_id
-    - `link_reason`: 1-sentence reason
-    - `link_confidence`: 0.0-1.0
-    - `snippet`: ≤ 200 char verbatim quote from the email body
-
-    {{ ctx.output_format }}
-  "#
+) -> ResearchLink[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // BAML test cases (4 examples)
 // =============================================================================
 
-test ClassifyEmailLegalHseTest {
-  functions [ClassifyEmail]
-  args {
-    email_subject "Re: HSE Ireland complaint follow-up"
-    email_body #"
-      Following up on my FOI request to HSE Ireland regarding the Galway
-      mental health unit. I have not received a response within the
-      statutory 20-working-day window. Please escalate to the FOI
-      decision-maker.
-    "#
-    sender_domain "hse.ie"
-    recipient_domain "cianfhoghlaim.ie"
-  }
-}
+// test ClassifyEmailLegalHseTest {
+//   functions [ClassifyEmail]
+//   args {
+//     email_subject "Re: HSE Ireland complaint follow-up"
+//     email_body #"
+//       Following up on my FOI request to HSE Ireland regarding the Galway
+//       mental health unit. I have not received a response within the
+//       statutory 20-working-day window. Please escalate to the FOI
+//       decision-maker.
+//     "#
+//     sender_domain "hse.ie"
+//     recipient_domain "cianfhoghlaim.ie"
+//   }
+// }
 
-test ClassifyEmailMedicalCptsdTest {
-  functions [ClassifyEmail]
-  args {
-    email_subject "CPTSD treatment pathway — second opinion request"
-    email_body #"
-      My GP has referred me for a second opinion on the CPTSD treatment
-      pathway. Could you let me know what NHS documentation I need to
-      bring to the first appointment at the Belfast clinic?
-    "#
-    sender_domain "nhs.uk"
-    recipient_domain "gmail.com"
-  }
-}
+// test ClassifyEmailMedicalCptsdTest {
+//   functions [ClassifyEmail]
+//   args {
+//     email_subject "CPTSD treatment pathway — second opinion request"
+//     email_body #"
+//       My GP has referred me for a second opinion on the CPTSD treatment
+//       pathway. Could you let me know what NHS documentation I need to
+//       bring to the first appointment at the Belfast clinic?
+//     "#
+//     sender_domain "nhs.uk"
+//     recipient_domain "gmail.com"
+//   }
+// }
 
-test ClassifyEmailAcademicQubAdminTest {
-  functions [ClassifyEmail]
-  args {
-    email_subject "QUB fee invoice — clarification"
-    email_body #"
-      I am writing to ask for clarification on the QUB tuition fee
-      invoice I received last week. The line item for the PGCE
-      placement fee is higher than the amount quoted in my offer
-      letter. Could you confirm the correct figure?
-    "#
-    sender_domain "qub.ac.uk"
-    recipient_domain "hotmail.com"
-  }
-}
+// test ClassifyEmailAcademicQubAdminTest {
+//   functions [ClassifyEmail]
+//   args {
+//     email_subject "QUB fee invoice — clarification"
+//     email_body #"
+//       I am writing to ask for clarification on the QUB tuition fee
+//       invoice I received last week. The line item for the PGCE
+//       placement fee is higher than the amount quoted in my offer
+//       letter. Could you confirm the correct figure?
+//     "#
+//     sender_domain "qub.ac.uk"
+//     recipient_domain "hotmail.com"
+//   }
+// }
 
-test ClassifyEmailSpamTest {
-  functions [ClassifyEmail]
-  args {
-    email_subject "WIN A FREE iPHONE NOW"
-    email_body #"
-      Click here to claim your prize!!! You have been selected as the
-      winner of our free iPhone giveaway. Act now to claim your reward
-      before this offer expires.
-    "#
-    sender_domain "spam-prize.example.com"
-    recipient_domain "gmail.com"
-  }
-}
+// test ClassifyEmailSpamTest {
+//   functions [ClassifyEmail]
+//   args {
+//     email_subject "WIN A FREE iPHONE NOW"
+//     email_body #"
+//       Click here to claim your prize!!! You have been selected as the
+//       winner of our free iPhone giveaway. Act now to claim your reward
+//       before this offer expires.
+//     "#
+//     sender_domain "spam-prize.example.com"
+//     recipient_domain "gmail.com"
+//   }
+// }

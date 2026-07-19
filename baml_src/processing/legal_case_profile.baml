@@ -27,17 +27,6 @@ enum CaseCategory {
   OTHER
 }
 
-enum Jurisdiction {
-  IRELAND
-  NORTHERN_IRELAND
-  UNITED_KINGDOM
-  CROSS_BORDER
-  EUROPEAN_UNION
-  ECHR
-  UNITED_STATES
-  INTERNATIONAL
-  UNKNOWN
-}
 
 class TimelineEvent {
   event_id string

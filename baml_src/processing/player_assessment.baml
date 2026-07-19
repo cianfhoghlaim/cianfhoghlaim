@@ -97,28 +97,8 @@ function AnalyzePlayerResponse(
   context: string,
   language: CelticLanguage,
   skill_being_tested: SkillDomain
-) -> ResponseAnalysis {
-  client CelticContentFallback
-  prompt #"
-    Analyze this player's Celtic language response in an educational game context.
-
-    Player Response: {{ player_response }}
-    {% if expected_response %}Expected Response: {{ expected_response }}{% endif %}
-    Context: {{ context }}
-    Language: {{ language }}
-    Skill Being Tested: {{ skill_being_tested }}
-
-    Provide detailed analysis including:
-    - Whether the response is correct (be lenient for minor spelling variations)
-    - Specific spelling errors with Celtic language rules
-    - Grammar errors with clear explanations
-    - Encouraging, constructive feedback
-    - Feedback in the target language for immersion
-
-    Remember this is a game - be encouraging while educational.
-
-    {{ ctx.output_format }}
-  "#
+) -> ResponseAnalysis {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate adaptive assessment
@@ -160,30 +140,8 @@ function GenerateAdaptiveAssessment(
   player_profile: PlayerLanguageProfile,
   focus_areas: SkillDomain[],
   question_count: int
-) -> AdaptiveAssessment {
-  client CelticContentFallback
-  prompt #"
-    Generate an adaptive language assessment for this player.
-
-    Player Profile:
-    - Language: {{ player_profile.language }}
-    - Current Level: {{ player_profile.overall_level }}
-    - Strengths: {{ player_profile.strengths }}
-    - Areas to Improve: {{ player_profile.areas_for_improvement }}
-
-    Focus Areas: {{ focus_areas }}
-    Number of Questions: {{ question_count }}
-
-    Create questions that:
-    - Start at the player's current level
-    - Mix question types (translation, fill_blank, etc.)
-    - Focus on identified weak areas
-    - Include some review of strengths
-    - Progress in difficulty
-    - Are engaging and game-appropriate
-
-    {{ ctx.output_format }}
-  "#
+) -> AdaptiveAssessment {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Placement test
@@ -206,34 +164,8 @@ class PlacementResult {
 function EvaluatePlacementTest(
   responses: PlacementResponse[],
   language: CelticLanguage
-) -> PlacementResult {
-  client Claude
-  prompt #"
-    Evaluate this Celtic language placement test to determine player's starting level.
-
-    Language: {{ language }}
-
-    Responses:
-    {% for response in responses %}
-    Question: {{ response.question }}
-    Player Answer: {{ response.answer }}
-    Correct Answer: {{ response.correct_answer }}
-    Skill Tested: {{ response.skill }}
-    Difficulty: {{ response.difficulty }}
-    {% endfor %}
-
-    Determine:
-    - Overall proficiency level (CEFR A1-C2)
-    - Skill-by-skill breakdown
-    - Known vocabulary and grammar
-    - Appropriate starting zone in game
-    - First quests suited to level
-    - Personalized learning tips
-
-    Be encouraging - even beginners should feel welcome!
-
-    {{ ctx.output_format }}
-  "#
+) -> PlacementResult {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 class PlacementResponse {
@@ -287,30 +219,8 @@ function GenerateProgressReport(
   activity_data: map<string, string>,
   language: CelticLanguage,
   period: string
-) -> ProgressReport {
-  client CelticContentFallback
-  prompt #"
-    Generate an encouraging progress report for this Celtic language learner.
-
-    Player ID: {{ player_id }}
-    Language: {{ language }}
-    Period: {{ period }}
-
-    Activity Data:
-    {{ activity_data }}
-
-    Create a report that:
-    - Celebrates achievements and progress
-    - Includes a summary in the target Celtic language
-    - Identifies areas of improvement
-    - Sets achievable next goals
-    - Provides motivation to continue
-    - Uses warm, encouraging tone
-
-    End with a Celtic phrase of encouragement.
-
-    {{ ctx.output_format }}
-  "#
+) -> ProgressReport {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -348,27 +258,6 @@ function GenerateExitCardQuestions(
   level: string,
   num_questions: int,
   curriculum_extract: CircularExtraction?,
-) -> ExitCardSet {
-  client LitellmClient
-  prompt #"
-    Generate a bilingual (EN + Gaeilge) "exit card" of {{ num_questions }}
-    formative assessment questions for the topic "{{ lesson_topic }}"
-    in {{ subject }} at {{ level }}.
-
-    The exit card is a 3-minute end-of-lesson check for understanding.
-    Mix question types: roughly half multiple_choice, a quarter
-    short_answer, a quarter numeric.
-
-    Each question must include:
-      - prompt_en, prompt_ga (Irish translation)
-      - question_type
-      - correct_answer
-      - explanation_en, explanation_ga
-      - bloom_level (one of: remember, understand, apply, analyze, evaluate, create)
-      - marking_point_ref: if curriculum_extract is provided, link
-        to a topic_code from the marking scheme
-
-    Aim for a balanced bloom distribution (don't put all 6 questions
-    at "remember" level).
-  "#
+) -> ExitCardSet {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

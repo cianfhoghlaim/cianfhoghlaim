@@ -17,16 +17,6 @@ function ExtractENLawDocument(
   nation: string,
   language: string,
   text: string
-) -> ENLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following England
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ENLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

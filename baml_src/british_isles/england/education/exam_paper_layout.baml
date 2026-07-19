@@ -44,7 +44,7 @@ class AQAExamPaper {
   qualification_level QualificationLevel
   subject string
   paper_code string         @description("e.g. '8035/1F' for AQA GCSE Maths Foundation")
-  language string = "en"
+  language string?
   level string               @description("e.g. 'foundation' / 'higher'")
   year int
 
@@ -63,17 +63,6 @@ function ExtractAQAExamPaper(
   subject: string?,
   qualification_level: string?,
   year: int?,
-) -> AQAExamPaper {
-  client ExtractEnStrong
-  prompt #"
-    You are an England AQA / OCR / Edexcel exam-paper layout analyst. Given
-    the text of an exam-paper PDF, detect the awarding body (AQA / OCR /
-    Edexcel), then extract the structured exam paper.
-
-    Subject: { subject }
-    Qualification Level: { qualification_level }
-    Year: { year }
-
-    {{ ctx.output_format }}
-  "#
+) -> AQAExamPaper {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

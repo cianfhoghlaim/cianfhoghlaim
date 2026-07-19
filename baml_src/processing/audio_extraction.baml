@@ -111,36 +111,8 @@ class VocabularyNote {
 function ExtractCanuintPage(
   page_content: string,
   barony_id: int
-) -> CanuintRecording {
-  client Extractor
-  prompt #"
-    Extract audio recording metadata from this Canúint.ie page.
-
-    {{ ctx.output_format }}
-
-    Barony ID: {{ barony_id }}
-
-    Page content:
-    {{ page_content }}
-
-    Extract:
-    1. Recording ID (formats: QQTRIN*, OD*, QAC*)
-    2. Speaker name(s) and townland
-    3. Recording year
-    4. Location details
-    5. Transcription status (check for "Transcript coming soon")
-    6. Any transcription text if available
-
-    For Irish names and placenames:
-    - Preserve fadas (á, é, í, ó, ú)
-    - Keep Irish language forms
-    - Note if standardized form differs
-
-    Classify dialect based on barony location:
-    - Munster: Clare, Kerry, Cork, Waterford
-    - Connacht: Galway, Mayo, Roscommon
-    - Ulster: Donegal
-  "#
+) -> CanuintRecording {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract multiple recordings from barony listing page
@@ -148,26 +120,8 @@ function ExtractBaronyRecordings(
   page_content: string,
   barony_id: int,
   barony_name: string
-) -> CanuintRecording[] {
-  client Extractor
-  prompt #"
-    Extract all recording metadata from this Canúint.ie barony page.
-
-    {{ ctx.output_format }}
-
-    Barony: {{ barony_name }} (ID: {{ barony_id }})
-
-    Page content:
-    {{ page_content }}
-
-    For each recording entry, extract:
-    1. Speaker name and townland
-    2. Recording ID
-    3. Year if shown
-    4. Transcription status
-
-    Return an array of recordings found on this page.
-  "#
+) -> CanuintRecording[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ============================================================================
@@ -225,28 +179,6 @@ function AnalyzeDialect(
   transcription: CanuintTranscription,
   speaker: CanuintSpeaker,
   location: CanuintLocation
-) -> DialectAnalysis {
-  client Extractor
-  prompt #"
-    Analyze Irish dialect features in this transcription.
-
-    {{ ctx.output_format }}
-
-    Speaker: {{ speaker.name }} from {{ speaker.townland }}
-    Location: {{ location.barony_name }}, {{ location.county }}
-
-    Transcription:
-    {{ transcription.full_text }}
-
-    Identify:
-    1. Phonetic features (e.g., broad/slender distinctions, vowel sounds)
-    2. Morphological features (e.g., verb conjugations, prepositions)
-    3. Dialect-specific vocabulary
-    4. Classify as Munster/Connacht/Ulster dialect
-
-    Reference features:
-    - Munster: 'sé do bheatha vs. fáilte, is + adjective patterns
-    - Connacht: muid vs. sinn, distinctive verb endings
-    - Ulster: use of 'cha' for negation, distinct vowel qualities
-  "#
+) -> DialectAnalysis {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

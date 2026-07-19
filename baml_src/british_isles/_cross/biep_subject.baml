@@ -60,18 +60,6 @@ enum AwardingBody {
   SQA                      // Scotland
 }
 
-enum QualificationLevel {
-  HL                       // Higher Level (Ireland LC)
-  OL                       // Ordinary Level (Ireland LC)
-  FL                       // Foundation Level (Ireland LC)
-  FOUNDATION_TIER          // England GCSE Foundation
-  HIGHER_TIER              // England GCSE Higher
-  UNTIERED
-  YEAR_1
-  YEAR_2
-  YEAR_3
-  TY                       // Transition Year (Ireland)
-}
 
 enum Language {
   EN                       // English
@@ -185,24 +173,13 @@ class CrossJurisdictionBridge {
 // ----------------------------------------------------------------------------
 
 function QueryRegistryByJurisdiction(
-  jurisdiction: Jurisdiction,
-) -> SubjectRegistryRow[] {
-  client ExtractEn
-  prompt #"
-    Return all registry rows where jurisdiction matches.
-
-    Jurisdiction: { jurisdiction }
-  "#
+  jurisdiction: "baml_src.british_isles._cross.biep_subject.Jurisdiction",
+) -> SubjectRegistryRow[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function QueryRegistryByConcept(
   concept: CrossJurisdictionConcept,
-) -> SubjectRegistryRow[] {
-  client ExtractEn
-  prompt #"
-    Return all registry rows across all 8 British Isles jurisdictions
-    that map to the given concept.
-
-    Concept: { concept }
-  "#
+) -> SubjectRegistryRow[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

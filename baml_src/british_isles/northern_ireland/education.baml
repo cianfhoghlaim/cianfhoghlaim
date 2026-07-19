@@ -17,16 +17,6 @@ function ExtractNIEducationDocument(
   nation: string,
   language: string,
   text: string
-) -> NIEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following Northern Ireland
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> NIEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

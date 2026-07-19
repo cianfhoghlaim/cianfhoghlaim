@@ -15,15 +15,6 @@ function ExtractGUERNSEYLawDocument(
   island: string,
   language: string,
   text: string
-) -> GUERNSEYLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Government of Guernsey text.
-
-    Island: { island }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> GUERNSEYLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

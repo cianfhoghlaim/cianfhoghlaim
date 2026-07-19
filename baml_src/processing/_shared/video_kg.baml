@@ -80,69 +80,16 @@ function ExtractVideoKnowledgeTriple(
   video_id: string,
   transcript: string,
   frame_captions: string[]
-) -> KnowledgeTriple[] {
-  client LlamaSwapClient
-  prompt #"
-    You are extracting a typed knowledge graph from a curated educational
-    YouTube tutorial.
-
-    Video ID: {{ video_id }}
-
-    Audio transcript (WhisperX-aligned, per-segment):
-    ```
-    {{ transcript }}
-    ```
-
-    Frame captions (qwen3-vl-8b, 1 frame per 10 seconds):
-    ```
-    {% for caption in frame_captions %}
-    - {{ caption }}
-    {% endfor %}
-    ```
-
-    Extract all knowledge triples you can identify in this video.
-    For each triple, classify it into one of the 5 kinds:
-      - Concept         : a named idea / definition
-      - Definition      : a property or formal definition of a Concept
-      - Example         : a concrete instance of a Concept
-      - Formula         : a mathematical or logical formula
-      - VisualSequence  : a sequence of frames that visualises a Concept
-
-    For each triple, assign a confidence in [0, 1].
-    If the triple is grounded in a specific frame caption, set
-    `source_frame_idx` to that frame's 1-based index; otherwise null.
-    If the triple is grounded in a specific transcript segment, set
-    `source_segment_idx` to that segment's 1-based index; otherwise null.
-
-    {{ ctx.output_format }}
-  "#
+) -> KnowledgeTriple[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
 function ExtractConceptChain(
   triples: KnowledgeTriple[],
   video_id: string
-) -> ConceptChain {
-  client LlamaSwapReasoningClient
-  prompt #"
-    You are organising a list of knowledge triples from the YouTube
-    tutorial `{{ video_id }}` into a prerequisite chain.
-
-    Triples (unsorted):
-    ```
-    {% for t in triples %}
-    - [{{ t.triple_kind }}] {{ t.subject }} {{ t.verb }} {{ t.object }}  (confidence {{ t.confidence }})
-    {% endfor %}
-    ```
-
-    Produce a ConceptChain that:
-    1. Orders the triples from most foundational to most advanced.
-    2. Writes a 1-2 sentence `chain_summary` describing the progression.
-    3. Lists the prerequisites the viewer is assumed to know.
-    4. Names the inferred target audience.
-
-    {{ ctx.output_format }}
-  "#
+) -> ConceptChain {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
@@ -150,33 +97,6 @@ function ExtractFrameSequence(
   video_id: string,
   frame_paths: string[],
   fps_sampled: float
-) -> VisualSequence {
-  client LlamaSwapClient
-  prompt #"
-    You are extracting a structured timeline of visual scenes from a
-    curated educational YouTube tutorial.
-
-    Video ID: {{ video_id }}
-    Frames sampled: {{ frame_paths | length }} (at {{ fps_sampled }} fps)
-
-    For each frame (1-based), describe what is shown:
-    - The caption (what's on screen; what the speaker is pointing at).
-    - Whether the frame contains a diagram / whiteboard / figure.
-    - Whether the frame contains a mathematical formula.
-    - Whether the frame contains source code.
-    - If a diagram is present, the named regions / objects / labels
-      extracted by the diagram-pointing model.
-
-    Then write a 1-2 sentence `sequence_summary` of the visual
-    progression of the video.
-
-    The frame paths are available locally at:
-    ```
-    {% for p in frame_paths %}
-    - {{ p }}
-    {% endfor %}
-    ```
-
-    {{ ctx.output_format }}
-  "#
+) -> VisualSequence {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

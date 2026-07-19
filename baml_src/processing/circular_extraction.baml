@@ -44,29 +44,6 @@ class CircularExtraction {
 function ExtractCircularMeta(
   pdf_text: string,
   filename: string,
-) -> CircularExtraction {
-  client LitellmClient
-  prompt #"
-    Extract the Irish Department of Education circular metadata and
-    marking scheme structure from the following Leaving Certificate
-    past-paper text.
-
-    Filename: {{ filename }}
-
-    Past-paper text (first 8,000 chars):
-    ---
-    {{ pdf_text }}
-    ---
-
-    Return a CircularExtraction with:
-      - circular_number, issued_year, issuing_body, title_en, title_ga
-      - subject, level (Leaving Cert or Junior Cert)
-      - scheme.total_marking_points, scheme.topics (with topic_code,
-        topic_label, marking_points, paper_section)
-      - scheme.estimated_paper_duration_min
-      - scheme.has_orale (true if Irish oral component)
-      - scheme.has_coursework (true if any coursework/portfolio)
-      - raw_text_excerpt: 200-300 char literal excerpt
-      - extraction_confidence: 0.0 to 1.0
-  "#
+) -> CircularExtraction {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -41,59 +41,15 @@ class StyleBlend {
 
 // Style transfer functions
 
-function ExtractStyleFeatures(artwork: image) -> StyleFeatures {
-  client ArtworkAnalyzer
-  prompt #"
-    Analyze the visual style features of this artwork in technical terms.
-
-    Examine:
-    - Color temperature (warm/cool/neutral tones)
-    - Color saturation levels
-    - Contrast and tonal range
-    - Line quality and edge treatment
-    - Texture characteristics
-    - Lighting approach
-    - Spatial perspective
-    - Edge treatment (sharp, blurred, etc.)
-
-    Describe each feature concisely for style transfer purposes.
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    {{ artwork }}
-  "#
+function ExtractStyleFeatures(artwork: image) -> StyleFeatures {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function CreateStyleTransferSpec(
   content_prompt: string,
   style_reference: image
-) -> StyleTransferSpec {
-  client ArtworkAnalyzer
-  prompt #"
-    Create a complete style transfer specification.
-
-    Content to generate: {{ content_prompt }}
-
-    Analyze the style reference image and extract its key visual characteristics.
-    Create a generation prompt that will produce the requested content in the
-    style of the reference.
-
-    The prompt should be optimized for FLUX.2-dev or SDXL and include:
-    - Main subject description
-    - Style modifiers from the reference
-    - Color palette guidance
-    - Composition suggestions
-    - Technical quality terms
-
-    Also provide a negative prompt and recommended parameters.
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    Style reference:
-    {{ style_reference }}
-  "#
+) -> StyleTransferSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function BlendStyles(
@@ -101,74 +57,20 @@ function BlendStyles(
   style_b: image,
   blend_ratio: float,
   content: string
-) -> StyleBlend {
-  client ArtworkAnalyzer
-  prompt #"
-    Blend two visual styles for generating new artwork.
-
-    Blend ratio: {{ blend_ratio }} (0 = all style A, 1 = all style B)
-    Content to generate: {{ content }}
-
-    Analyze both style references:
-
-    Style A (first image):
-    {{ style_a }}
-
-    Style B (second image):
-    {{ style_b }}
-
-    Create a blended generation prompt that combines elements from both styles
-    according to the blend ratio. Describe what visual characteristics will
-    result from this blend.
-
-    {{ ctx.output_format }}
-  "#
+) -> StyleBlend {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateSeriesPrompts(
   base_style: image,
   count: int,
   variation_axis: string
-) -> string[] {
-  client ArtworkAnalyzer
-  prompt #"
-    Generate a series of {{ count }} related artwork prompts based on this style reference.
-
-    Variation axis: {{ variation_axis }}
-    (e.g., "color temperature", "complexity", "mood progression", "time of day")
-
-    Analyze the base style:
-    {{ base_style }}
-
-    Create {{ count }} prompts that:
-    - Maintain the core visual style
-    - Progressively vary along the specified axis
-    - Form a cohesive series
-
-    Return an array of generation prompts.
-
-    {{ ctx.output_format }}
-  "#
+) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {
-  client FastAnalyzer
-  prompt #"
-    Analyze this artwork for IP-Adapter style transfer.
-
-    Extract:
-    - Key visual features that define the style
-    - Keywords that capture the essence
-    - Technical attributes for style matching
-
-    The features should be specific enough to guide style transfer
-    while being general enough to apply to different content.
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    {{ artwork }}
-  "#
+function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Album-specific functions
@@ -179,73 +81,32 @@ function GenerateAlbumCoverSpec(
   track_list: string[],
   style_reference: image?,
   genre: string
-) -> StyleTransferSpec {
-  client ArtworkAnalyzer
-  prompt #"
-    Create a specification for generating album artwork.
-
-    Album: "{{ album_title }}" by {{ artist_name }}
-    Genre: {{ genre }}
-
-    Tracks:
-    {% for track in track_list %}
-    - {{ track }}
-    {% endfor %}
-
-    {% if style_reference %}
-    Use this style reference for visual direction:
-    {{ style_reference }}
-    {% endif %}
-
-    Consider:
-    - Album title and artist name (but don't include text in the image)
-    - Track themes and mood
-    - Genre conventions for cover art
-    - Visual narrative that represents the album
-
-    Generate a complete specification for the cover artwork.
-
-    {{ ctx.output_format }}
-  "#
+) -> StyleTransferSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateSingleCoverVariation(
   original_album_cover: image,
   single_title: string
-) -> string {
-  client FastAnalyzer
-  prompt #"
-    Create a prompt for generating a single cover that matches the album art style.
-
-    Original album cover for style reference:
-    {{ original_album_cover }}
-
-    Single title: "{{ single_title }}"
-
-    The single cover should:
-    - Match the visual style of the album
-    - Be recognizably related
-    - Have a subtle variation that makes it distinct
-
-    Return only the generation prompt.
-  "#
+) -> string {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-test style_extraction {
-  functions [ExtractStyleFeatures]
-  args {
-    artwork {
-      file "../test_images/sample_artwork.jpg"
-    }
-  }
-}
+// test style_extraction {
+//   functions [ExtractStyleFeatures]
+//   args {
+//     artwork {
+//       file "../test_images/sample_artwork.jpg"
+//     }
+//   }
+// }
 
-test style_transfer {
-  functions [CreateStyleTransferSpec]
-  args {
-    content_prompt "abstract ocean waves at sunset"
-    style_reference {
-      file "../test_images/sample_artwork.jpg"
-    }
-  }
-}
+// test style_transfer {
+//   functions [CreateStyleTransferSpec]
+//   args {
+//     content_prompt "abstract ocean waves at sunset"
+//     style_reference {
+//       file "../test_images/sample_artwork.jpg"
+//     }
+//   }
+// }

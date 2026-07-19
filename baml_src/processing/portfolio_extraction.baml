@@ -293,130 +293,28 @@ class HybridProfile {
 // =============================================================================
 
 // Extract profile from CV/resume document
-function ExtractProfileFromCV(document: string) -> HybridProfile {
-    client Extractor
-    prompt #"
-        Extract a complete professional profile from the following CV/resume document.
-
-        Analyze the document and extract:
-        1. Personal information (name, contact details)
-        2. Professional summary or objective
-        3. Work experience with dates and achievements
-        4. Education history
-        5. Technical and soft skills with categories
-        6. Projects and portfolio items
-        7. Certifications and awards
-        8. Languages spoken
-        9. Social media links if mentioned
-
-        For skills, categorize them appropriately:
-        - PROGRAMMING_LANGUAGE for code languages
-        - FRAMEWORK for libraries/frameworks
-        - DATABASE for data storage technologies
-        - DEVOPS for deployment/infrastructure tools
-        - CLOUD for cloud platforms
-        - AI_ML for machine learning tools
-        - GAME_ENGINE for game development engines
-        - AUDIO for music/audio production
-        - DESIGN for visual design tools
-        - LANGUAGE for human languages
-
-        Determine if this is primarily a DEVELOPER, MUSICIAN, EDUCATOR, RESEARCHER, or HYBRID profile.
-
-        CV/Resume Document:
-        {{ document }}
-    "#
+function ExtractProfileFromCV(document: string) -> HybridProfile {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract profile from GitHub README
-function ExtractProfileFromGitHubReadme(readme: string, username: string) -> DeveloperProfile {
-    client Extractor
-    prompt #"
-        Extract a developer profile from a GitHub README profile.
-
-        GitHub Username: {{ username }}
-
-        README Content:
-        {{ readme }}
-
-        Extract:
-        1. Name and professional title
-        2. Bio/summary from the README
-        3. Skills mentioned or shown via badges/icons
-        4. Projects highlighted in the README
-        5. Social links mentioned
-        6. Any statistics or achievements mentioned
-        7. Contact information if available
-
-        For skills shown as badges (e.g., shields.io badges), identify the technology name.
-    "#
+function ExtractProfileFromGitHubReadme(readme: string, username: string) -> DeveloperProfile {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract music profile from Spotify/SoundCloud data
-function ExtractMusicProfile(platformData: string, platform: PlatformType) -> MusicProfile {
-    client Extractor
-    prompt #"
-        Extract a music producer profile from streaming platform data.
-
-        Platform: {{ platform }}
-
-        Platform Data:
-        {{ platformData }}
-
-        Extract:
-        1. Artist name and any aliases
-        2. Biography text
-        3. Primary genres
-        4. Listener/follower statistics
-        5. Discography (albums, EPs, singles)
-        6. Popular/top tracks with stream counts
-        7. Collaborators if mentioned
-        8. Any equipment/software mentioned
-        9. Musical influences mentioned
-    "#
+function ExtractMusicProfile(platformData: string, platform: PlatformType) -> MusicProfile {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract game project details from documentation/README
-function ExtractGameProject(projectDocs: string) -> GameProject {
-    client Extractor
-    prompt #"
-        Extract game project information from the following documentation.
-
-        Documentation:
-        {{ projectDocs }}
-
-        Extract:
-        1. Project title and description
-        2. Game engine used (Unity, Unreal, Godot, etc.)
-        3. Target platforms
-        4. Technologies and tools used
-        5. Development status
-        6. Demo URL if available
-        7. Repository URL if available
-        8. Media URLs (screenshots, trailers)
-        9. Your role in the project
-    "#
+function ExtractGameProject(projectDocs: string) -> GameProject {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Merge profiles from multiple sources into unified profile
-function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {
-    client Extractor
-    prompt #"
-        Merge the following profile extractions into a single unified profile.
-
-        Profiles from different sources:
-        {{ profiles }}
-
-        Rules for merging:
-        1. Use the most complete/detailed version of each field
-        2. Combine skills, removing duplicates
-        3. Combine projects, removing duplicates
-        4. Combine experience entries, removing duplicates
-        5. Keep all unique social links
-        6. Use the most recent contact information
-        7. Merge summaries into a cohesive bio
-        8. Determine the overall profile type based on content weight
-    "#
+function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Generate profile summary for a specific tenant context
@@ -424,81 +322,60 @@ function GenerateProfileSummary(
     profile: HybridProfile,
     tenantType: ProfileType,
     maxLength: int
-) -> string {
-    client ExtractorFast
-    prompt #"
-        Generate a professional summary for the following profile.
-
-        Profile:
-        {{ profile }}
-
-        Target Context: {{ tenantType }}
-        Maximum Length: {{ maxLength }} characters
-
-        {% if tenantType == ProfileType.MUSICIAN %}
-        Focus on: Music production experience, genres, releases, collaborations
-        {% elif tenantType == ProfileType.DEVELOPER %}
-        Focus on: Technical skills, projects, experience, technologies
-        {% elif tenantType == ProfileType.EDUCATOR %}
-        Focus on: Teaching experience, curriculum development, educational projects
-        {% else %}
-        Create a balanced summary covering all aspects
-        {% endif %}
-
-        Write a compelling, third-person professional summary.
-    "#
+) -> string {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // TESTS
 // =============================================================================
 
-test ExtractProfileFromCVTest {
-    functions [ExtractProfileFromCV]
-    args {
-        document #"
-            CONOR HYNES
-            Music Producer & Game Developer
-            Dublin, Ireland
-            conor@aleyum.com | github.com/aleyum | spotify.com/artist/aleyum
+// test ExtractProfileFromCVTest {
+//     functions [ExtractProfileFromCV]
+//     args {
+//         document #"
+//             CONOR HYNES
+//             Music Producer & Game Developer
+//             Dublin, Ireland
+//             conor@aleyum.com | github.com/aleyum | spotify.com/artist/aleyum
+// 
+//             SUMMARY
+//             Electronic music producer and game developer with 5+ years experience
+//             creating ambient soundscapes and interactive audio experiences.
+// 
+//             SKILLS
+//             - Audio: Ableton Live, Logic Pro X, Max/MSP
+//             - Game Dev: Unity, Unreal Engine 5, FMOD
+//             - Programming: C#, Python, TypeScript
+// 
+//             EXPERIENCE
+//             Freelance Music Producer | 2019 - Present
+//             - Released 3 EPs on indie labels
+//             - Composed soundtracks for 5 indie games
+// 
+//             EDUCATION
+//             BA Music Technology | Trinity College Dublin | 2019
+//         "#
+//     }
+// }
 
-            SUMMARY
-            Electronic music producer and game developer with 5+ years experience
-            creating ambient soundscapes and interactive audio experiences.
-
-            SKILLS
-            - Audio: Ableton Live, Logic Pro X, Max/MSP
-            - Game Dev: Unity, Unreal Engine 5, FMOD
-            - Programming: C#, Python, TypeScript
-
-            EXPERIENCE
-            Freelance Music Producer | 2019 - Present
-            - Released 3 EPs on indie labels
-            - Composed soundtracks for 5 indie games
-
-            EDUCATION
-            BA Music Technology | Trinity College Dublin | 2019
-        "#
-    }
-}
-
-test ExtractMusicProfileTest {
-    functions [ExtractMusicProfile]
-    args {
-        platformData #"
-            Artist: Aleyum
-            Monthly Listeners: 15,432
-            Genres: Electronic, Ambient, Experimental
-
-            Top Tracks:
-            1. Connemara Dreams - 45,000 plays
-            2. Celtic Circuits - 32,000 plays
-            3. Digital Fog - 28,000 plays
-
-            Albums:
-            - "Spectral Waves" EP (2024) - 6 tracks
-            - "Memory Palace" (2023) - 10 tracks
-        "#
-        platform PlatformType.SPOTIFY
-    }
-}
+// test ExtractMusicProfileTest {
+//     functions [ExtractMusicProfile]
+//     args {
+//         platformData #"
+//             Artist: Aleyum
+//             Monthly Listeners: 15,432
+//             Genres: Electronic, Ambient, Experimental
+// 
+//             Top Tracks:
+//             1. Connemara Dreams - 45,000 plays
+//             2. Celtic Circuits - 32,000 plays
+//             3. Digital Fog - 28,000 plays
+// 
+//             Albums:
+//             - "Spectral Waves" EP (2024) - 6 tracks
+//             - "Memory Palace" (2023) - 10 tracks
+//         "#
+//         platform PlatformType.SPOTIFY
+//     }
+// }

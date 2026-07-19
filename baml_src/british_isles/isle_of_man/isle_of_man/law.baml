@@ -15,15 +15,6 @@ function ExtractISLE_OF_MANLawDocument(
   island: string,
   language: string,
   text: string
-) -> ISLE_OF_MANLawDocument {
-  client Claude
-  prompt #"
-    Extract the canonical law record from the following Isle of Man Government text.
-
-    Island: { island }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ISLE_OF_MANLawDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

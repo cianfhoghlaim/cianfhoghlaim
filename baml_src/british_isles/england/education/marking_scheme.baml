@@ -57,16 +57,6 @@ function ExtractAQAMarkingScheme(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> AQAMarkingScheme {
-  client ExtractEnStrong
-  prompt #"
-    You are an England AQA / OCR / Edexcel marking-scheme analyst. Given the
-    text of a marking-scheme PDF, extract the structured marking scheme +
-    grade boundaries.
-
-    Subject: { subject }
-    Qualification Level: { qualification_level }
-
-    {{ ctx.output_format }}
-  "#
+) -> AQAMarkingScheme {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

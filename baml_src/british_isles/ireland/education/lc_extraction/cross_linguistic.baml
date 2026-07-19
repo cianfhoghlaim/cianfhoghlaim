@@ -30,4 +30,8 @@ class CrossLinguisticConcept {
   translation_fidelity float
   // Cultural / contextual notes
   notes string?
+
+  // Lineage provenance (R28). Composed from
+  // `lc_extraction/_shared/lineage_trace.baml`.
+  lineage LineageTrace?
 }

@@ -124,95 +124,31 @@ class MathematicsMarkingQuestion {
 // Functions
 // ============================================================================
 
-function WebStudyPlan(
+function MathematicsWebStudyPlan(
   subject: string,
   weeks_until_exam: int,
   target_level: MathematicsLevel,
   language: MathematicsLanguage,
   focus_topics: string[]
-) -> MathematicsWebStudyPlanResponse {
-  // Build a per-subject study plan over `weeks_until_exam` weeks for the
-  // chosen target_level (LC HL/OL/FL or JC). The function delegates to the
-  // per-subject qpack + syllabus extraction in qpack_mathematics.baml to ground the
-  // plan in real NCCA learning outcomes and SEC past-paper questions.
-  //
-  // The Convex action convex/mathematics/generateStudyPlan.ts invokes this
-  // function and persists the response to study_plans.
-  prompt #"
-    You are the Mathematics study planner for the Cianfhoghlaim BIEP v1
-    per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Target level: { target_level }
-    Language: { language }
-    Weeks until exam: { weeks_until_exam }
-    Optional focus topics: { focus_topics }
-
-    Build a { weeks_until_exam }-week { target_level } Mathematics study
-    plan grounded in the NCCA Mathematics syllabus + SEC past-paper corpus.
-    Each week must reference concrete syllabus topics + past-paper
-    question ids + PCLM marking-scheme patterns. Include 3-5 milestones
-    (one per assessment block).
-
-    Return strictly as MathematicsWebStudyPlanResponse with
-    bilingual EN+GA fields where applicable.
-  "#
+) -> MathematicsWebStudyPlanResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function WebExamPaperDiscussion(
+function MathematicsWebExamPaperDiscussion(
   subject: string,
   paper_year: int,
   paper_level: MathematicsLevel,
   paper_language: MathematicsLanguage,
   question_text: string
-) -> MathematicsWebExamPaperDiscussionResponse {
-  // Walk a student through a single Mathematics past-paper question.
-  // Returns the PCLM marking scheme + a model answer outline + common
-  // mistakes + marks breakdown + follow-up questions.
-  //
-  // Invoked by the Convex action convex/mathematics/discussExamPaper.ts.
-  prompt #"
-    You are the Mathematics exam-paper discussion tutor for the Cianfhoghlaim
-    BIEP v1 per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Paper year: { paper_year }
-    Paper level: { paper_level }
-    Paper language: { paper_language }
-    Question: { question_text }
-
-    Explain the PCLM marking scheme for this question, then walk through a
-    step-by-step model answer outline (in English + Gaeilge where
-    applicable), highlight common student mistakes, and propose 3
-    follow-up questions the tutor might ask.
-
-    Return strictly as MathematicsWebExamPaperDiscussionResponse.
-  "#
+) -> MathematicsWebExamPaperDiscussionResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function WebMarkingSchemeExplanation(
+function MathematicsWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: MathematicsLevel,
   paper_language: MathematicsLanguage
-) -> MathematicsWebMarkingSchemeExplanationResponse {
-  // Explain the full marking scheme (PCLM patterns) for an entire
-  // Mathematics past paper at the chosen level + language.
-  //
-  // Invoked directly from apps/.../routes/en/subjects/mathematics/marking-schemes.
-  prompt #"
-    You are the Mathematics marking-scheme explainer for the Cianfhoghlaim
-    BIEP v1 per-subject interactive web surface.
-
-    Subject slug: { subject }
-    Paper year: { paper_year }
-    Paper level: { paper_level }
-    Paper language: { paper_language }
-
-    Walk through every section + question in the marking scheme. Highlight
-    the PCLM patterns used (e.g. partial credit for setup, marks for
-    logical marking, dependent steps).
-
-    Return strictly as MathematicsWebMarkingSchemeExplanationResponse.
-  "#
+) -> MathematicsWebMarkingSchemeExplanationResponse {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

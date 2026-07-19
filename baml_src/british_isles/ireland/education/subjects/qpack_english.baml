@@ -136,36 +136,12 @@ function GenerateEnglQuestPack(
   past_papers: PastPaper[],
   marking_schemes: MarkingSchemeSec[],
   level: string
-) -> EnglQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate English expert. Build a
-    formative assessment quest pack for NCCA English at the {{ level }}
-    level (JC, LC_OL, or LC_HL).
-
-    Cover ALL learning outcomes with ≥1 FormativeItem each. Reference
-    the source NCCA PDF page in each item's evidence. Order items by
-    difficulty (1 → 5). Suggest cross-subject links to Gaeilge (for
-    translation practice) and to History (for cultural-context synthesis).
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+) -> EnglQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractEnglLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all English learning outcome statements from the following
-    NCCA syllabus paragraph.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractEnglLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateEnglFormativeItem(
@@ -173,47 +149,17 @@ function GenerateEnglFormativeItem(
   difficulty: int,
   level: string,
   topic: string
-) -> EnglFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a single formative assessment item for the NCCA English
-    learning outcome {{ lo_code }}.
-
-    Difficulty: {{ difficulty }}
-    Level: {{ level }} (JC / LC_OL / LC_HL)
-    Topic: {{ topic }}
-
-    Include 4 graduated hints, ≥2 common errors, evidence.source_page,
-    bilingual EN + GA, est_time_minutes 1-30.
-
-    {{ ctx.output_format }}
-  "#
+) -> EnglFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function ScoreEnglFormativeResponse(
   item: EnglFormativeItem,
   attempt: EnglFormativeItemAttempt
-) -> EnglScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the English formative item attempt.
-
-    Item: {{ item }}
-    Attempt: {{ attempt }}
-
-    Compute marks, feedback_en + feedback_ga, badge_earned.
-
-    {{ ctx.output_format }}
-  "#
+) -> EnglScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateEnglQuestPack(pack: EnglQuestPack) -> EnglQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the English quest pack. Check LO codes + difficulty bounds + time bounds.
-
-    Pack: {{ pack }}
-
-    {{ ctx.output_format }}
-  "#
+function ValidateEnglQuestPack(pack: EnglQuestPack) -> EnglQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

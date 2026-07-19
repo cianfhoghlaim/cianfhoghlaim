@@ -115,71 +115,14 @@ function ExtractImagePrompt(
   subject: string,
   cycle: string,
   purpose: ImagePurpose
-) -> ImagePromptSpec {
-  client LiteLLM
-  prompt #"
-    You are an expert educational illustrator specialising in {subject} for the
-    {cycle} cycle. You are designing a single study-asset image whose purpose is
-    to help a student learn the following learning outcome:
-
-    <outcome>
-    {{ outcome_text }}
-    </outcome>
-
-    Design an image that captures the essence of this outcome. The image will
-    be rendered by the Bria FIBO model (JSON-config driven) with a fallback
-    to Qwen-Image / Z-Image-Turbo.
-
-    Choose:
-      - purpose: {{ purpose }} (already specified)
-      - camera_angle, lighting, mood, style, composition
-      - text_overlays: short labels, formulas, or definitions
-      - negative_prompts: things to avoid
-      - cta_text: optional tagline
-
-    If the outcome is in English but the student is Irish, provide an
-    `irish_translation` of subject_text and text_overlays.
-
-    Return the spec as {{ ctx.output_format }}.
-  "#
+) -> ImagePromptSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function BuildFIBOConfig(
   spec: ImagePromptSpec,
   outcome_id: string,
   syllabus_path: string
-) -> FIBOConfig {
-  client LiteLLM
-  prompt #"
-    You translate an educational ImagePromptSpec into a deterministic Bria
-    FIBO JSON config. The config will be sent verbatim to
-    http://mlx-omni:10240/v1/images/generations (or a fallback generator).
-
-    Spec:
-    - purpose:       {{ spec.purpose }}
-    - subject:       {{ spec.subject_text }}
-    - camera:        {{ spec.camera_angle }}
-    - lighting:      {{ spec.lighting }}
-    - mood:          {{ spec.mood }}
-    - style:         {{ spec.style }}
-    - composition:   {{ spec.composition }}
-    - text_overlays: {{ spec.text_overlays }}
-    - negatives:     {{ spec.negative_prompts }}
-    - cta:           {{ spec.cta_text }}
-
-    Context:
-    - outcome_id:    {{ outcome_id }}
-    - syllabus_path: {{ syllabus_path }}
-
-    Construct a FIBOConfig with:
-      - seed: deterministic — derive from outcome_id (use SHA-256 first 8 hex digits)
-      - width/height: 1024×1024 by default
-      - steps: 30
-      - cfg_scale: 7.0
-      - camera / lighting / composition: fill in with the chosen values
-      - metadata.outcome_id: {{ outcome_id }}
-      - metadata.syllabus_path: {{ syllabus_path }}
-
-    Return the config as {{ ctx.output_format }}.
-  "#
+) -> FIBOConfig {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

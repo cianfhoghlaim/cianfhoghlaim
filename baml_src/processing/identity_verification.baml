@@ -52,24 +52,18 @@ class VerificationSummary {
   lastUpdated string
 }
 
-function ExtractIdentityDocument(text: string) -> IdentityDocument[] {
-  // Extracts non-PII identity document metadata.
-  // PASS/FAIL only — do NOT extract full document numbers, names, addresses, or birth dates.
-  // Redact all PII fields to last 4 digits or omit.
+function ExtractIdentityDocument(text: string) -> IdentityDocument[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractGardaVetting(text: string) -> GardaVetting[] {
-  // Extracts Garda Vetting metadata.
-  // Reference number last 4 digits only. Status: Clear / Pending / Expired.
+function ExtractGardaVetting(text: string) -> GardaVetting[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistration[] {
-  // Extracts professional registration metadata.
-  // Teaching Council, BCS, etc. Registration number last 4 digits only.
+function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistration[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVetting[], regs: ProfessionalRegistration[]) -> VerificationSummary {
-  // Aggregates all verification data into a single summary.
-  // Counts verified, pending, and expired documents.
-  // Sets lastUpdated to the current date.
+function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVetting[], regs: ProfessionalRegistration[]) -> VerificationSummary {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

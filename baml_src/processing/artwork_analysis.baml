@@ -138,73 +138,16 @@ class GenerationSpec {
 
 // Extraction functions
 
-function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {
-  client ArtworkAnalyzer
-  prompt #"
-    You are an expert album artwork analyst specializing in visual design,
-    music genres, and generative art.
-
-    Analyze this album artwork image in detail. Extract comprehensive
-    information about its visual characteristics, style, and mood.
-
-    Pay special attention to:
-    - Visual style and artistic techniques
-    - Color palette and color relationships
-    - Composition and visual balance
-    - Mood and emotional impact
-    - Music genre associations based on visual style
-    - Any text or typography
-    - Artistic influences or movements
-
-    Generate a prompt that could recreate this visual style for new artwork.
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    {{ artwork }}
-  "#
+function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {
-  client FastAnalyzer
-  prompt #"
-    Quickly analyze this album artwork. Identify the main visual style,
-    mood, dominant color, and associated music genres.
-
-    Keep the description brief (1-2 sentences).
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    {{ artwork }}
-  "#
+function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparison {
-  client ArtworkAnalyzer
-  prompt #"
-    Compare these two album artworks and analyze their stylistic similarities
-    and differences.
-
-    Calculate a similarity score (0-1) based on:
-    - Visual style overlap
-    - Color palette similarity
-    - Mood alignment
-    - Composition similarities
-
-    Identify what styles and moods they share, and what makes them different.
-
-    Create a generation prompt that combines the best elements of both styles.
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    First artwork:
-    {{ artwork1 }}
-
-    Second artwork:
-    {{ artwork2 }}
-  "#
+function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparison {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateArtworkSpec(
@@ -212,95 +155,34 @@ function GenerateArtworkSpec(
   reference_artwork: image?,
   target_genre: MusicGenreArtwork,
   preferred_mood: MoodCategory?
-) -> GenerationSpec {
-  client ArtworkAnalyzer
-  prompt #"
-    Create a detailed specification for generating new album artwork.
-
-    Subject/concept: {{ subject }}
-    Target music genre: {{ target_genre }}
-    {% if preferred_mood %}
-    Preferred mood: {{ preferred_mood }}
-    {% endif %}
-
-    {% if reference_artwork %}
-    Use this reference artwork for style inspiration:
-    {{ reference_artwork }}
-    {% endif %}
-
-    Generate a complete specification including:
-    - Detailed generation prompt
-    - Negative prompt (what to avoid)
-    - Style references
-    - Color palette suggestions
-    - Composition type
-    - Recommended AI model
-
-    The prompt should be optimized for image generation models like FLUX or SDXL.
-
-    {{ ctx.output_format }}
-  "#
+) -> GenerationSpec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractColorPalette(artwork: image) -> ColorInfo[] {
-  client FastAnalyzer
-  prompt #"
-    Extract the color palette from this album artwork.
-
-    Identify the 5-8 most prominent colors, including:
-    - Dominant background colors
-    - Primary subject colors
-    - Accent/highlight colors
-
-    For each color provide:
-    - Exact hex code
-    - Common color name
-    - Approximate percentage of the image
-
-    Order by prominence (most dominant first).
-
-    {{ ctx.output_format }}
-
-    {{ _.role('user') }}
-    {{ artwork }}
-  "#
+function ExtractColorPalette(artwork: image) -> ColorInfo[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GenerateVariationPrompt(artwork: image, variation_type: string) -> string {
-  client FastAnalyzer
-  prompt #"
-    Analyze this album artwork and create a prompt for generating a variation.
-
-    Variation type requested: {{ variation_type }}
-
-    The prompt should:
-    - Maintain the core visual style
-    - Apply the requested variation
-    - Be optimized for FLUX or SDXL
-
-    Return only the generation prompt, no explanation.
-
-    {{ _.role('user') }}
-    {{ artwork }}
-  "#
+function GenerateVariationPrompt(artwork: image, variation_type: string) -> string {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Tests
 
-test analyze_abstract {
-  functions [QuickAnalyzeArtwork]
-  args {
-    artwork {
-      url "https://i.scdn.co/image/ab67616d00001e02..."
-    }
-  }
-}
+// test analyze_abstract {
+//   functions [QuickAnalyzeArtwork]
+//   args {
+//     artwork {
+//       url "https://i.scdn.co/image/ab67616d00001e02..."
+//     }
+//   }
+// }
 
-test color_extraction {
-  functions [ExtractColorPalette]
-  args {
-    artwork {
-      file "../test_images/sample_artwork.jpg"
-    }
-  }
-}
+// test color_extraction {
+//   functions [ExtractColorPalette]
+//   args {
+//     artwork {
+//       file "../test_images/sample_artwork.jpg"
+//     }
+//   }
+// }

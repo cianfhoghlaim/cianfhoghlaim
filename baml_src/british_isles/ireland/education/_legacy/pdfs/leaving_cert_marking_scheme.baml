@@ -45,36 +45,6 @@ enum MarkingType {
   AO7
 }
 
-function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {
-  client OideachaisDefault
-  prompt #"
-    You are an Irish Leaving Certificate marking scheme analyst. Extract
-    all marking points from the following marking scheme PDF text.
-
-    For each marking point:
-    - `questionNumber`: the printed question number (1, 2, 3, ...)
-    - `partLabel`: optional sub-part label like '(a)', '(b)', '(i)' (null if not present)
-    - `markValue`: the marks awarded for this point (integer)
-    - `markType`: the type of mark, one of:
-      - `M1A1` — Method mark 1, Accuracy mark 1 (maths)
-      - `M2A1` — Method mark 2, Accuracy mark 1 (maths)
-      - `A1` — Accuracy mark 1 (maths)
-      - `B1` — Band mark 1 (maths)
-      - `AO1`-`AO7` — Assessment Objective 1-7 (most non-maths subjects)
-    - `answerText`: the expected answer or marking instruction
-    - `alternativeAnswers`: optional list of acceptable alternative answers
-    - `isOptional`: true if this marking point is in an optional question
-    - `requiresFormulaImage`: true if this marking point references a
-      LaTeX formula image (these are handled by Stage 2 diagram_detector
-      + the deepseek-ocr-2 model)
-
-    Subject context: {{ subject }}
-    Year context: {{ year }}
-    Paper context: {{ paper }}
-
-    Marking scheme text:
-    {{ pdf_text }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

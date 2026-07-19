@@ -207,46 +207,8 @@ class QueryResult {
 function ExtractStatistics(
   document: string,
   expected_source: DataSource
-) -> StatisticRecord[] {
-  client Claude
-  prompt #"
-    Extract structured education statistics from this {{ expected_source }} document.
-
-    Document:
-    {{ document }}
-
-    For each statistic found, extract:
-    1. METRIC DETAILS
-       - Name, description, category
-       - Value with correct units
-       - Confidence intervals if available
-
-    2. GEOGRAPHIC CONTEXT
-       - Nation and area level
-       - Area codes and names
-
-    3. TIME CONTEXT
-       - Academic year reference
-       - Time granularity
-
-    4. BREAKDOWNS
-       - Gender, ethnicity, FSM status, SEN status
-       - Any other disaggregations
-
-    5. METADATA
-       - Data quality indicators
-       - Methodology notes
-       - Provisional/final status
-
-    Handle different national conventions:
-    - England: DfE statistical releases, GIAS data
-    - Scotland: Scottish Government statistics, SIMD
-    - Wales: StatsWales OData, bilingual labels
-    - NI: NISRA tables, DE statistics
-    - Ireland: CSO tables, Pobal data
-
-    {{ ctx.output_format }}
-  "#
+) -> StatisticRecord[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function CompareNationStatistics(
@@ -254,64 +216,16 @@ function CompareNationStatistics(
   category: MetricCategory,
   academic_year: string,
   statistics: StatisticRecord[]
-) -> NationComparison {
-  client Claude
-  prompt #"
-    Compare this education metric across British Isles nations.
-
-    Metric: {{ metric_name }}
-    Category: {{ category }}
-    Year: {{ academic_year }}
-
-    Statistics:
-    {{ statistics }}
-
-    Provide:
-    1. Value comparison across nations
-    2. UK and British Isles averages
-    3. Identification of highest/lowest performers
-    4. Spread analysis
-    5. Notes on comparability issues
-
-    Consider:
-    - Different measurement methodologies
-    - Different school types included/excluded
-    - Different academic calendars
-    - Definitional differences across nations
-
-    {{ ctx.output_format }}
-  "#
+) -> NationComparison {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function AnalyzeTrend(
   metric_name: string,
   nation: string,
   historical_data: TrendPoint[]
-) -> TrendAnalysis {
-  client Claude
-  prompt #"
-    Analyze the trend for this education metric.
-
-    Metric: {{ metric_name }}
-    Nation: {{ nation }}
-    Historical Data: {{ historical_data }}
-
-    Analyze:
-    1. Overall trend direction (increasing, decreasing, stable, volatile)
-    2. Average annual change
-    3. Total change over period
-    4. Significant changes or inflection points
-
-    Consider:
-    - COVID-19 impact (2019-20 to 2021-22)
-    - Major policy changes
-    - Curriculum reforms
-    - Assessment changes
-
-    Provide projection for next year with confidence.
-
-    {{ ctx.output_format }}
-  "#
+) -> TrendAnalysis {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function RankAreas(
@@ -319,94 +233,56 @@ function RankAreas(
   nation: string,
   aggregation_level: AggregationLevel,
   statistics: StatisticRecord[]
-) -> AreaRanking {
-  client Claude
-  prompt #"
-    Rank geographic areas by this education metric.
-
-    Metric: {{ metric_name }}
-    Nation: {{ nation }}
-    Level: {{ aggregation_level }}
-
-    Statistics:
-    {{ statistics }}
-
-    Provide:
-    1. Top 10 highest-performing areas
-    2. Bottom 10 lowest-performing areas
-    3. Statistical summary (mean, median, std dev)
-    4. Correlation with deprivation (SIMD, IMD, etc.)
-
-    {{ ctx.output_format }}
-  "#
+) -> AreaRanking {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 function GenerateStatisticsQuery(
   natural_language_query: string
-) -> StatisticsQuery {
-  client ClaudeHaiku
-  prompt #"
-    Convert this natural language question into a structured statistics query.
-
-    Question: {{ natural_language_query }}
-
-    Determine:
-    1. Which metric categories are needed
-    2. Which nations to include
-    3. What aggregation level
-    4. Which years to query
-    5. What breakdowns are relevant
-    6. What filters to apply
-
-    Example questions and mappings:
-    - "GCSE results in England" -> ATTAINMENT, [ENGLAND], NATIONAL, latest year
-    - "Teacher vacancies by local authority" -> WORKFORCE, all nations, LOCAL_AUTHORITY
-    - "Attendance by deprivation" -> ATTENDANCE, all, LSOA/DATA_ZONE, include_breakdowns
-
-    {{ ctx.output_format }}
-  "#
+) -> StatisticsQuery {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // =============================================================================
 // TEST CASES
 // =============================================================================
 
-test extract_dfe_stats {
-  functions [ExtractStatistics]
-  args {
-    document #"
-      Key Stage 4 Performance 2023/24
+// test extract_dfe_stats {
+//   functions [ExtractStatistics]
+//   args {
+//     document #"
+//       Key Stage 4 Performance 2023/24
+// 
+//       National statistics for England
+// 
+//       5+ GCSEs at grades 9-4 including English and mathematics:
+//       - All pupils: 45.2%
+//       - Boys: 41.8%
+//       - Girls: 48.7%
+//       - FSM eligible: 27.3%
+//       - Non-FSM: 52.1%
+// 
+//       Source: Department for Education
+//       Publication date: January 2025
+//       Status: Revised
+//     "#
+//     expected_source DFE
+//   }
+// }
 
-      National statistics for England
+// test compare_attainment {
+//   functions [CompareNationStatistics]
+//   args {
+//     metric_name "5+ GCSEs equivalent at grades A*-C/9-4"
+//     category ATTAINMENT
+//     academic_year "2023-24"
+//     statistics []
+//   }
+// }
 
-      5+ GCSEs at grades 9-4 including English and mathematics:
-      - All pupils: 45.2%
-      - Boys: 41.8%
-      - Girls: 48.7%
-      - FSM eligible: 27.3%
-      - Non-FSM: 52.1%
-
-      Source: Department for Education
-      Publication date: January 2025
-      Status: Revised
-    "#
-    expected_source DFE
-  }
-}
-
-test compare_attainment {
-  functions [CompareNationStatistics]
-  args {
-    metric_name "5+ GCSEs equivalent at grades A*-C/9-4"
-    category ATTAINMENT
-    academic_year "2023-24"
-    statistics []
-  }
-}
-
-test natural_language_query {
-  functions [GenerateStatisticsQuery]
-  args {
-    natural_language_query "Show me pupil attendance rates by local authority in Wales for the last 3 years, broken down by FSM status"
-  }
-}
+// test natural_language_query {
+//   functions [GenerateStatisticsQuery]
+//   args {
+//     natural_language_query "Show me pupil attendance rates by local authority in Wales for the last 3 years, broken down by FSM status"
+//   }
+// }

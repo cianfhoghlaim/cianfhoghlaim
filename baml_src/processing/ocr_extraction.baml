@@ -119,64 +119,16 @@ class TaleType {
 function ExtractHiddenHeritagesTale(
   page_content: string,
   tale_id: string
-) -> HiddenHeritagesTale {
-  client Extractor
-  prompt #"
-    Extract folklore tale data from this Hidden Heritages page.
-
-    {{ ctx.output_format }}
-
-    Tale ID: {{ tale_id }}
-
-    Page content:
-    {{ page_content }}
-
-    Extract:
-    1. Tale title and original language title
-    2. Collector and informant names
-    3. Collection location and date
-    4. Full transcription text
-    5. Language (Irish/Gaelic/Scots/English)
-    6. Any ATU tale type classification
-    7. Topic/theme classifications
-
-    For Irish (ga) content:
-    - Preserve fadas correctly
-    - Note if using pre-reform or modern spelling
-
-    For Scottish Gaelic (gd) content:
-    - Preserve grave accents correctly
-    - Note regional spelling variations
-  "#
+) -> HiddenHeritagesTale {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Extract tales listing from browse page
 function ExtractTalesListing(
   page_content: string,
   page_number: int
-) -> TalesListingPage {
-  client Extractor
-  prompt #"
-    Extract tales listing from this Hidden Heritages browse page.
-
-    {{ ctx.output_format }}
-
-    Page number: {{ page_number }}
-
-    Page content:
-    {{ page_content }}
-
-    For each tale in the listing, extract:
-    1. Tale ID (from URL)
-    2. Title
-    3. Collector name
-    4. Informant name
-    5. Location summary
-    6. Language indicator
-    7. Collection source (CBE for Ireland, SA for Scotland)
-
-    Return structured list of tale summaries.
-  "#
+) -> TalesListingPage {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // Summary of tales on a listing page

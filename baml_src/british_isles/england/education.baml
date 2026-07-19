@@ -17,16 +17,6 @@ function ExtractENEducationDocument(
   nation: string,
   language: string,
   text: string
-) -> ENEducationDocument {
-  client Claude
-  prompt #"
-    Extract the canonical education record from the following England
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> ENEducationDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

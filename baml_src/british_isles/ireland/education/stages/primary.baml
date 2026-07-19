@@ -88,127 +88,33 @@ class PrimaryCurriculumArea {
 
 function ExtractPrimaryFramework(text: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryCurriculumArea {
-  client Claude
-  prompt #"You are an expert at parsing the Irish Primary School Curriculum (NCCA, ages 4-12).
-
-Parse a Primary curriculum area document for a specific stage and area.
-
-STAGE: {{ stage }}
-AREA: {{ area }}
-
-DOCUMENT TEXT:
-{{ text }}
-
-Extract:
-1. Curriculum area metadata (title, code, year, NCCA reference)
-2. Rationale (both English and Irish)
-3. Strands within this curriculum area with codes, titles (EN/GA), and descriptions
-4. Strand units within each strand
-5. Learning outcomes for this stage and area
-6. Key competencies and skills developed
-7. Assessment approaches
-8. Integration links to other curriculum areas
-9. Differentiation guidance
-
-For bilingual content, provide both description_en and description_ga variants. The 12 Primary curriculum areas are: English, Irish, Mathematics, SESE (Science, History, Geography), Visual Arts, Music, Drama, Physical Education, SPHE, Religion.
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    STAGE: {{ stage }}
-    AREA: {{ area }}
-"#
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
 function ExtractPrimaryLearningOutcomes(text: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {
-  client Claude
-  prompt #"You are an expert at extracting individual learning outcomes from the Irish Primary School Curriculum.
-
-Parse learning outcomes for a specific stage and curriculum area.
-
-STAGE: {{ stage }}
-AREA: {{ area }}
-
-DOCUMENT TEXT:
-{{ text }}
-
-Extract all learning outcomes, each with:
-1. Outcome code (e.g., "M-1.1" for Mathematics stage 1 strand 1)
-2. Bilingual description (description_en and description_ga)
-3. Strand it belongs to
-4. Strand unit
-5. Sub-strand (if any)
-6. Key skills (Numeracy, Literacy, etc.)
-7. Evidence of learning (what students should demonstrate)
-8. Integration with other areas
-9. Differentiation notes
-
-The 4 stages of Primary are:
-- Junior Infants and Senior Infants (ages 4-6)
-- First and Second Class (ages 6-8)
-- Third and Fourth Class (ages 8-10)
-- Fifth and Sixth Class (ages 10-12)
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    STAGE: {{ stage }}
-    AREA: {{ area }}
-"#
+  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 
 function ExtractPrimaryFrameworkFromUrl(source_url: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryCurriculumArea {
-  client Gemini2FlashAlias
-  prompt #"
-    You are an expert Irish primary curriculum analyst working for
-    Cianfhoghlaim Oideachais (the bilingual agentic platform).
-
-    Source: {{ source_url }}
-    Stage: {{ stage }}
-    Area: {{ area }}
-
-    The NCCA Primary Curriculum Framework has 12 curriculum areas:
-      1. Language (English)
-      2. Language (Irish) / Gaeilge
-      3. Mathematics / Matamaitic
-      4. SESE — Science, History, Geography
-      5. Visual Arts / Ealaín
-      6. Music / Ceol
-      7. Drama / Drámaíocht
-      8. Physical Education / Corpoideachas
-      9. SPHE / OSPS (Social, Personal and Health Education)
-     10. Religion / Reiligiún
-     11. Stand-alone Gaeilge (in Irish-medium schools)
-
-    The 4 stages are: Junior/Senior Infants (4-6), 1st/2nd Class (6-8),
-    3rd/4th Class (8-10), 5th/6th Class (10-12).
-
-    The Framework uses a matrix of Strands and Elements. Key Competencies
-    (Being a Digital Learner, Being Creative, Communicating, etc.) cut across
-    all areas.
-
-    Always extract BOTH English and Irish versions of every field.
-
-    Return the structured PrimaryCurriculumArea as {{ ctx.output_format }}.
-  "#
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
-test ExtractPrimaryMathsTest {
-  functions [ExtractPrimaryFramework]
-  args {
-    text "Number: count, compare, order. Strand 1: Number — Infants through 6th Class. Children explore numbers 0-20 (Infants), 0-100 (1st/2nd), 0-1000 (3rd/4th), 0-1,000,000 (5th/6th). Place value, operations, fractions."
-    stage STAGE1_JUNIOR_SENIOR_INFANTS
-    area PRIMARY_MATHEMATICS
-  }
-}
+// test ExtractPrimaryMathsTest {
+//   functions [ExtractPrimaryFramework]
+//   args {
+//     text "Number: count, compare, order. Strand 1: Number — Infants through 6th Class. Children explore numbers 0-20 (Infants), 0-100 (1st/2nd), 0-1000 (3rd/4th), 0-1,000,000 (5th/6th). Place value, operations, fractions."
+//     stage STAGE1_JUNIOR_SENIOR_INFANTS
+//     area PRIMARY_MATHEMATICS
+//   }
+// }

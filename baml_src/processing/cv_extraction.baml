@@ -64,34 +64,26 @@ class ProfessionalExperience {
   @@stream.done
 }
 
-function ExtractCV(text: string) -> EducationEntry[] {
-  // Extracts education history from CV text.
-  // Returns an array of education entries — degrees, diplomas, certificates.
-  // Supports both English and Gaeilge source text.
-  // Uses the specialised Irish models (UCCIX, GaBERT) from the LiteLLM proxy.
+function ExtractCV(text: string) -> EducationEntry[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractAward(text: string) -> Award[] {
-  // Extracts awards, scholarships, and honours.
-  // Categorises into Academic, Professional, Teaching, and Music.
+function ExtractAward(text: string) -> Award[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractPublication(text: string) -> Publication[] {
-  // Extracts academic publications and conference papers.
-  // Title, venue, year, authors, abstract.
+function ExtractPublication(text: string) -> Publication[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractReference(text: string) -> Reference[] {
-  // Extracts professional and academic references.
-  // Name, title, institution, email, relationship.
+function ExtractReference(text: string) -> Reference[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractSkills(text: string) -> SkillCategoryCv[] {
-  // Extracts skill categories with proficiency levels.
-  // Categories: Music Production, Software Development, Languages, Teaching.
+function ExtractSkills(text: string) -> SkillCategoryCv[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractExperience(text: string) -> ProfessionalExperience[] {
-  // Extracts professional experience history.
-  // Title, organization, dates, description (en + ga).
+function ExtractExperience(text: string) -> ProfessionalExperience[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

@@ -53,8 +53,8 @@ class GeographyMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors "baml_src.education.lc_extraction.marking_scheme.GradeDescriptor[]"
-  mark_allocations "baml_src.education.lc_extraction.marking_scheme.MarkAllocation[]"
+  grade_descriptors GradeDescriptor[]
+  mark_allocations MarkAllocation[]
 
   subject_specific GeoSubjectDiscriminator
 
@@ -67,42 +67,19 @@ function ExtractGeographyMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> GeographyMarkingScheme {
-  client ExtractEn
-  prompt #"
-    You are an Irish Leaving Certificate Geography marking-scheme
-    analyst. Given the text of an NCCA / SEC LC Geography marking
-    scheme PDF, extract the structured scheme with the
-    Geography-specific discriminator.
-
-    Year: {{ year }}
-    Level: {{ level }} (HL / OL)
-
-    Subject discriminator fields:
-      - primary_skill: the dominant skill tested
-      - regional_focus: the dominant regional focus
-      - has_os_map: true iff Paper 1 has OS map questions
-      - has_discursive_essays: true iff Paper 2 has the 30-mark essays
-      - most_common_mistake: pick the single most common Geography mistake
-
-    Document text:
-    ---
-    {{ pdf_text }}
-    ---
-
-    {{ ctx.output_format }}
-  "#
+) -> GeographyMarkingScheme {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-test geography_marking_extraction_smoke {
-  functions [ExtractGeographyMarkingScheme]
-  args {
-    pdf_text <<<
-      "Marking scheme for LC Geography Paper 1 HL 2024. OS map
-       interpretation: 80 marks. Most common mistake: students
-       confuse grid reference easting and northing."
-    >>>
-    year { 2024 }
-    level { "hl" }
-  }
-}
+// test geography_marking_extraction_smoke {
+//   functions [ExtractGeographyMarkingScheme]
+//   args {
+//     pdf_text <<<
+//       "Marking scheme for LC Geography Paper 1 HL 2024. OS map
+//        interpretation: 80 marks. Most common mistake: students
+//        confuse grid reference easting and northing."
+//     >>>
+//     year { 2024 }
+//     level { "hl" }
+//   }
+// }

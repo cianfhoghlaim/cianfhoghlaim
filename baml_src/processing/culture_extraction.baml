@@ -35,27 +35,6 @@ class CultureHeritageClaim {
 function ExtractCultureClaims(
   pdf_path: string,
   context: string
-) -> CultureHeritageClaim[] {
-  client LitellmClient
-  prompt #"
-    You are a senior Irish cultural-heritage analyst.
-    Read the PDF at `{{ pdf_path }}` and extract every verifiable cultural-heritage claim.
-
-    Context: {{ context }}
-
-    For each claim, output:
-      - claim_text           (a single, self-contained sentence)
-      - people_mentioned     (list of named individuals)
-      - places_mentioned     (list of place-names)
-      - dates                (list of date expressions)
-      - evidence_quality     (PRIMARY | SECONDARY | INFERENCE)
-      - wikipedia_links      (list of any https://en.wikipedia.org/wiki/... URLs cited or implied)
-      - confidence           (0.0-1.0 self-rated)
-
-    Use PRIMARY for verifiable public records (birth cert, memorial inscription, gazetteer entry).
-    Use SECONDARY for newspaper, biography, or Wikipedia citations.
-    Use INFERENCE for analytical synthesis or interpretation.
-
-    Output a JSON array of CultureHeritageClaim objects.
-  "#
+) -> CultureHeritageClaim[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

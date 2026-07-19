@@ -127,32 +127,12 @@ class GeogQuestPackValidation {
   warnings string[]
 }
 
-function GenerateGeogQuestPack(syllabus: LeavingCertSyllabus, past_papers: PastPaper[], marking_schemes: MarkingSchemeSec[], level: string) -> GeogQuestPack {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate Geography expert. Build a formative
-    assessment quest pack for NCCA Geography at the {{ level }} level.
-
-    Cover ALL learning outcomes with ≥1 FormativeItem each. Reference the
-    source NCCA PDF page in each item's evidence. Order by difficulty (1-5).
-    Suggest cross-subject links to Mathematics (statistics for fieldwork).
-
-    Syllabus: {{ syllabus }}
-    Past papers: {{ past_papers }}
-    Marking schemes: {{ marking_schemes }}
-
-    {{ ctx.output_format }}
-  "#
+function GenerateGeogQuestPack(syllabus: LeavingCertSyllabus, past_papers: PastPaper[], marking_schemes: MarkingSchemeSec[], level: string) -> GeogQuestPack {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractGeogLOStatement(paragraph: string) -> string[] {
-  client ExtractEn
-  prompt #"
-    Extract all Geography learning outcome statements from the
-    following NCCA syllabus paragraph.
-    Paragraph: {{ paragraph }}
-    {{ ctx.output_format }}
-  "#
+function ExtractGeogLOStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // -----------------------------------------------------------------------------
@@ -163,45 +143,18 @@ function ExtractGeogLOStatement(paragraph: string) -> string[] {
 // the Irish (Gaeilge) statements verbatim with a leading '[EN-only]'
 // fallback marker for LOs the NCCA did not translate.
 
-function ExtractGeogGaStatement(paragraph: string) -> string[] {
-  client Default
-  prompt #"
-    Extract all NCCA Geography strand/outcome statements in Irish
-    (Gaeilge) from the following NCCA syllabus paragraph. Return
-    them as a list of full Irish statements, verbatim from the
-    source, with the LO code if present (e.g. 'LC-GEOG-LO-2.5: ...').
-    If no Irish translation is available in the paragraph, return
-    the English statements verbatim with a leading '[EN-only]' marker.
-
-    Paragraph: {{ paragraph }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractGeogGaStatement(paragraph: string) -> string[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function GenerateGeogFormativeItem(lo_code: string, difficulty: int, level: string, topic: string) -> GeogFormativeItem {
-  client ExtractEnStrong
-  prompt #"
-    Generate a Geography formative item for NCCA LO {{ lo_code }}.
-    Difficulty: {{ difficulty }}; Level: {{ level }}; Topic: {{ topic }}
-    4 graduated hints, ≥2 common errors, evidence.source_page, bilingual EN+GA.
-    {{ ctx.output_format }}
-  "#
+function GenerateGeogFormativeItem(lo_code: string, difficulty: int, level: string, topic: string) -> GeogFormativeItem {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ScoreGeogFormativeResponse(item: GeogFormativeItem, attempt: GeogFormativeItemAttempt) -> GeogScoreBreakdown {
-  client ExtractEnStrong
-  prompt #"
-    Score the Geography formative item attempt.
-    Item: {{ item }}; Attempt: {{ attempt }}
-    {{ ctx.output_format }}
-  "#
+function ScoreGeogFormativeResponse(item: GeogFormativeItem, attempt: GeogFormativeItemAttempt) -> GeogScoreBreakdown {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
-function ValidateGeogQuestPack(pack: GeogQuestPack) -> GeogQuestPackValidation {
-  client ExtractEn
-  prompt #"
-    Validate the Geography quest pack. Pack: {{ pack }}
-    {{ ctx.output_format }}
-  "#
+function ValidateGeogQuestPack(pack: GeogQuestPack) -> GeogQuestPackValidation {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

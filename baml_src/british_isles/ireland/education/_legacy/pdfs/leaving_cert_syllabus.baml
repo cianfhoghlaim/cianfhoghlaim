@@ -36,27 +36,8 @@ class LeavingCertSyllabus {
   @@stream.done
 }
 
-function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {
-  client LitellmClient
-  prompt #"
-    You are an Irish Leaving Certificate syllabus expert. Extract all topics
-    and learning outcomes from the following syllabus PDF text.
-
-    For each topic:
-    - `name` is a short display name (e.g. 'Differentiation', 'Cell Biology')
-    - `description` is a 1-2 sentence summary of what the topic covers
-    - `learningOutcomes` are the full NCCA learning outcome statements
-    - `weightPct` is your best estimate of what % of the total exam this
-      topic represents (0-100). If unknown, use 0.
-
-    Subject context: {{ ctx.subject }}
-    Year context: {{ ctx.year }}
-
-    PDF text:
-    {{ pdf_text }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
 
 // ---------------------------------------------------------------------------
@@ -84,36 +65,6 @@ class SyllabusStructure {
   @@stream.done
 }
 
-function ExtractSyllabusStructure(pdf_text: string, subject: string, language: string) -> SyllabusStructure {
-  client ExtractEnStrong
-  prompt #"
-    You are an Irish Leaving Certificate syllabus expert. The NCCA does NOT
-    publish separate Higher-Level and Ordinary-Level PDFs. Instead, the
-    currently-taught syllabus for each subject is ONE PDF that contains
-    sections for all examination levels the subject offers.
-
-    Your task: split the syllabus into its logical level sections and report
-    the per-level structure.
-
-    Subject: {{ subject }}
-    Language: {{ language }}
-
-    Important conventions:
-    - For Mathematics and Gaeilge (Irish), there are THREE levels: Foundation,
-      Ordinary, Higher. Each must be a separate entry in `level_sections`.
-    - For English, History, Geography, Chemistry, Applied Mathematics, and
-      Computer Science, there are TWO levels: Ordinary and Higher. There is
-      NO Foundation section.
-    - For Gaeilge (the Irish language subject), the levels are sometimes
-      labelled "Bonnleibhéal" (Foundation), "Gnáthleibhéal" (Ordinary),
-      "Ardleibhéal" (Higher) — map these to the English level names.
-    - `level_sections` MUST be ordered from lowest to highest (Foundation,
-      then Ordinary, then Higher) and contain exactly the levels the subject
-      is examined at — no extras, no omissions.
-
-    PDF text:
-    {{ pdf_text }}
-
-    {{ ctx.output_format }}
-  "#
+function ExtractSyllabusStructure(pdf_text: string, subject: string, language: string) -> SyllabusStructure {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

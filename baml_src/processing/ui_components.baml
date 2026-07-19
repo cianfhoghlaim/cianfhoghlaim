@@ -53,26 +53,6 @@ function SuggestUIComponents(
   extracted_subjects: string[],
   cognee_index_summary: string,
   stage: string
-) -> UIComponentSuggestion[] {
-  client LiteLLM
-  prompt #"You are a UI/UX strategist for the Cianfhoghlaim Oideachais bilingual agentic platform (covering Aistear, Primary, Junior Cycle, Senior Cycle, Tertiary).
-
-Given the BAML-extracted subjects, the Cognee index summary, and the educational stage, suggest the optimal set of UI components for the SPA.
-
-Prioritise:
-- Bilingual EN + GA support
-- Evidence-rich (every fact has a citation chip to NCCA, SEC, CAO, HEI source)
-- Integration with the Oideachas Chat (AG-UI streaming)
-- Lazy BAML extraction (only when the user opens a past paper)
-
-STAGE: {{ stage }}
-EXTRACTED SUBJECTS: {% for s in extracted_subjects %}- {{ s }}{% endfor %}
-COGNEE INDEX SUMMARY:
-{{ cognee_index_summary }}
-
-{{ ctx.output_format(prefix="Answer with this format:\n") }}
-
-{{ _.role("user") }}
-    STAGE: {{ stage }}
-    SUBJECTS: {{ extracted_subjects|length }} items"#
+) -> UIComponentSuggestion[] {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }

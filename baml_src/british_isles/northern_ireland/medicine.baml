@@ -17,16 +17,6 @@ function ExtractNIMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> NIMedicineDocument {
-  client Claude
-  prompt #"
-    Extract the canonical medicine record from the following Northern Ireland
-    text. Preserve the canonical URL + the awarding body identifier.
-
-    Nation: { nation }
-    Language: { language }
-    Text: { text }
-
-    { ctx.output_format }
-  "#
+) -> NIMedicineDocument {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
 }
