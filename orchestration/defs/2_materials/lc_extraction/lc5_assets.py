@@ -49,7 +49,7 @@ from typing import Any
 from dagster import AssetExecutionContext, asset
 
 try:
-    from cianfhoghlaim.baml_client import b
+    from baml_client import b
     BAML_AVAILABLE = True
 except ImportError:
     BAML_AVAILABLE = False

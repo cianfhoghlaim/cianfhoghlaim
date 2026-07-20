@@ -377,7 +377,7 @@ class OCRModelRegistry(ConfigurableResource):
 
     def get_registry(self):
         # v4: import from the v4 home `cianfhoghlaim.ocr.models`
-        from cianfhoghlaim.ocr.models import ModelRegistry as _V4ModelRegistry
+        from ocr.models import ModelRegistry as _V4ModelRegistry
         return _V4ModelRegistry(custom_models=None)
 
 

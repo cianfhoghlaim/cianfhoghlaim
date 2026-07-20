@@ -100,9 +100,9 @@ class CelticIngestionComponent(Component):
     def _build_default_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """The non-state-backed path: emit a single @asset with the
         canonical 5-layer group_name."""
-        from cianfhoghlaim.core.dlt._cianfhoghlaim_dlt_utils.destinations import get_dlt_destination
-        from cianfhoghlaim.core.dlt._cianfhoghlaim_dlt_utils.safety import safe_dlt_run
-        from cianfhoghlaim.core.dlt._cianfhoghlaim_dlt_utils.source_factory import (
+        from dlt_sources.common.destinations import get_dlt_destination
+        from dlt_sources.common.safety import safe_dlt_run
+        from dlt_sources.common.source_factory import (
             get_default_factory,
         )
 
@@ -165,7 +165,7 @@ class CelticIngestionComponent(Component):
         and a system-level `dg utils refresh-defs-state` cron that runs
         at the start of each month.
         """
-        from cianfhoghlaim.core.dlt._cianfhoghlaim_dlt_utils.source_factory import (
+        from dlt_sources.common.source_factory import (
             get_default_factory,
         )
 
@@ -197,7 +197,7 @@ class CelticIngestionComponent(Component):
         file as JSON. Called by `dg utils refresh-defs-state`."""
         import json
 
-        from cianfhoghlaim.core.dlt._cianfhoghlaim_dlt_utils.source_factory import (
+        from dlt_sources.common.source_factory import (
             get_default_factory,
         )
 

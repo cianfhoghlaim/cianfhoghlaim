@@ -10,7 +10,7 @@ Key Changes from partitions.py:
 - Language is secondary partition (optional) or config
 
 Usage:
-    from cianfhoghlaim.orchestration.partitions_v2 import (
+    from orchestration.partitions_v2 import (
         ireland_curriculum_partitions,
         get_subjects_for_group,
         CURRICULUM_CONFIG_SCHEMA,

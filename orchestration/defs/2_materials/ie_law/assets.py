@@ -30,7 +30,7 @@ from dagster import AssetExecutionContext, asset
 # cianfhoghlaim/baml/education/law/*.baml and exposed via the canonical
 # baml_client (Pydantic v2 mirror).
 try:
-    from cianfhoghlaim.baml_client import b
+    from baml_client import b
     BAML_AVAILABLE = True
 except ImportError:
     BAML_AVAILABLE = False

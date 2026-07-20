@@ -27,20 +27,20 @@ Dagster 1.13+ features used:
 """
 from __future__ import annotations
 
-from cianfhoghlaim.orchestration.components.layer1_ingestion import (
+from orchestration.components.layer1_ingestion import (
     CelticIngestionComponent,
 )
-from cianfhoghlaim.orchestration.components.layer2_materials import (
+from orchestration.components.layer2_materials import (
     CelticMaterialsComponent,
 )
-from cianfhoghlaim.orchestration.components.layer3_model_lifecycle import (
+from orchestration.components.layer3_model_lifecycle import (
     CelticModelLifecycleComponent,
     ConformanceError,
 )
-from cianfhoghlaim.orchestration.components.layer4_asset_generation import (
+from orchestration.components.layer4_asset_generation import (
     CelticAssetGenerationComponent,
 )
-from cianfhoghlaim.orchestration.components.layer5_agent_ops import (
+from orchestration.components.layer5_agent_ops import (
     CelticAgentOpsComponent,
 )
 
