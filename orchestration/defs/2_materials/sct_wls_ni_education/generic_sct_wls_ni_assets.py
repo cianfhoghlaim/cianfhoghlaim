@@ -6,7 +6,6 @@ The canonical generic Scotland + Wales + Northern Ireland Dagster assets.
 Handles 3 jurisdictions via a single factory function that selects the
 jurisdiction at asset materialisation time.
 """
-from __future__ import annotations
 
 import logging
 from typing import Any
@@ -15,6 +14,8 @@ from dagster import (
     AssetCheckResult,
     AssetExecutionContext,
     asset,
+    asset_check,
+    AssetCheckExecutionContext,
 )
 
 try:
@@ -27,9 +28,9 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 # 5-layer group_name convention
-SCT_WLS_NI_INGESTION_GROUP = "1_ingestion/education/sct_wls_ni/documents"
-SCT_WLS_NI_EXTRACTION_GROUP = "2_materials/education/sct_wls_ni/extractions"
-SCT_WLS_NI_EMBEDDING_GROUP = "3_model_lifecycle/education/sct_wls_ni/embeddings"
+SCT_WLS_NI_INGESTION_GROUP = "1_ingestion_education_sct_wls_ni_documents"
+SCT_WLS_NI_EXTRACTION_GROUP = "2_materials_education_sct_wls_ni_extractions"
+SCT_WLS_NI_EMBEDDING_GROUP = "3_model_lifecycle_education_sct_wls_ni_embeddings"
 
 
 @asset(
@@ -106,7 +107,7 @@ def sct_wls_ni_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 @asset_check(asset=sct_wls_ni_extractions)
-def sct_wls_ni_extractions_ragas_check(context) -> AssetCheckResult:
+def sct_wls_ni_extractions_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
     return AssetCheckResult(
         passed=True, severity="WARN",
         metadata={"ragas_score": 0.85, "threshold": 0.70},

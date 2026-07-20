@@ -8,7 +8,6 @@ This pre-render keeps the page-load fast path (the `?cache=true`
 query parameter reads from the Convex `diagram_cache` table).
 """
 
-from __future__ import annotations
 
 from datetime import datetime, timezone
 
@@ -40,7 +39,7 @@ LANGUAGES = ("en", "ga")
     partitions_def=DailyPartitionsDefinition(start_date="2026-07-02"),
     description="Daily pre-render of the 4 diagram modes × 8 subjects × EN/GA = 64 SVGs",
 )
-def daily_diagram_pre_render(context) -> dict[str, int]:
+def daily_diagram_pre_render(context: AssetExecutionContext) -> dict[str, int]:
     """Render all 64 diagram SVGs and write to s3://cianfhoghlaim-diagram-cache/.
 
     Returns the count of rendered SVGs (64 on success).

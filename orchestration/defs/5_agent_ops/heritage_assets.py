@@ -6,7 +6,6 @@ byte-for-byte identical to the legacy `cianfhoghlaim-web/convex/schema.ts`
 for the 5 carried-over tables.
 """
 
-from __future__ import annotations
 
 from dagster import (
     AssetExecutionContext,
@@ -37,7 +36,7 @@ ALL_TABLES = CARRIED_OVER_TABLES + NEW_TABLES
     group_name="heritage",
     description="Verify that the conic-leaving-cert Convex deployment has all 8 tables (5 carried-over + 3 new)",
 )
-def convex_table_integrity(context) -> dict[str, list[str]]:
+def convex_table_integrity(context: AssetExecutionContext) -> dict[str, list[str]]:
     """Verify the 8 Convex tables exist with the correct schema.
 
     Per openspec/changes/rewrite-cianfhoghlaim-leaving-cert-v2/specs/
@@ -58,7 +57,7 @@ def convex_table_integrity(context) -> dict[str, list[str]]:
     group_name="heritage",
     description="Verify the BetterAuth session flow round-trips with Pocket ID OIDC",
 )
-def pocket_id_session_roundtrip(context) -> dict[str, str]:
+def pocket_id_session_roundtrip(context: AssetExecutionContext) -> dict[str, str]:
     """Verify the Pocket ID OIDC sign-in flow round-trips with 200 OK.
 
     Per R6 + openspec/changes/leaving-cert-2026/ tests.
@@ -75,7 +74,7 @@ def pocket_id_session_roundtrip(context) -> dict[str, str]:
     group_name="heritage",
     description="Verify the Convex auth.config.ts points at Pocket ID OIDC discovery",
 )
-def convex_auth_config_integrity(context) -> dict[str, str]:
+def convex_auth_config_integrity(context: AssetExecutionContext) -> dict[str, str]:
     """Verify the Convex auth.config.ts is wired to Pocket ID OIDC."""
     # TODO: read the auth.config.ts + verify the OIDC domain
     context.log.info("Verifying Convex auth.config.ts...")

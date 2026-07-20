@@ -20,7 +20,6 @@ Per openspec/changes/archive/2026-07-07-finalize-v4-landing/
    absorbed/2026-07-06-ireland-legal-pipeline/proposal.md
    (Pick-8 scoped reimplementation).
 """
-from __future__ import annotations
 
 from typing import Any
 

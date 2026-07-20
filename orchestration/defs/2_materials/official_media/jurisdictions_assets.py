@@ -3,7 +3,6 @@
 Per the 2026-08-05-official-media-biiep-v3-coverage-v1 change
 (closes GitHub issue #47 — add SCT + WLS + IoM + JEY + GGY jurisdictions).
 """
-from __future__ import annotations
 
 import logging
 from typing import Any

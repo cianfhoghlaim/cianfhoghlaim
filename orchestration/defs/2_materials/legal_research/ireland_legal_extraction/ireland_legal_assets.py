@@ -13,7 +13,6 @@ Pipeline:
 
 Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
 """
-from __future__ import annotations
 
 from typing import Any
 

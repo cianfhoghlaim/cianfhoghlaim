@@ -1,9 +1,9 @@
 """endpoint_health L2 module — exports the sink + alerts assets."""
 
-from orchestration.defs.two_materials.endpoint_health.alerts import (
+from orchestration.defs.2_materials.endpoint_health.alerts import (
     endpoint_health_alerts,
 )
-from orchestration.defs.two_materials.endpoint_health.sink import (
+from orchestration.defs.2_materials.endpoint_health.sink import (
     endpoint_health_sink,
 )
 
