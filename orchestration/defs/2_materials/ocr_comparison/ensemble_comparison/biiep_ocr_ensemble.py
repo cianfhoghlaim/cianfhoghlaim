@@ -27,7 +27,7 @@ from dagster import (
 )
 
 try:
-    from cianfhoghlaim.meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import (
+    from meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import (
         EnsembledExtractor,
         EnsembleResult,
     )
@@ -38,7 +38,7 @@ except ImportError:
     EnsembleResult = None  # type: ignore[assignment]
 
 try:
-    from cianfhoghlaim.meaisinfhoghlaim.evaluation.ragas_biiep_ensemble import (
+    from meaisinfhoghlaim.evaluation.ragas_biiep_ensemble import (
         evaluate_ensemble,
         RAGASScore,
     )

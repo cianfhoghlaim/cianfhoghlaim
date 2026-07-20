@@ -29,7 +29,7 @@ from dagster import (
 )
 
 try:
-    from cianfhoghlaim.baml_client import b  # type: ignore[import-not-found]
+    from baml_client import b  # type: ignore[import-not-found]
     BAML_AVAILABLE = True
 except ImportError:
     BAML_AVAILABLE = False

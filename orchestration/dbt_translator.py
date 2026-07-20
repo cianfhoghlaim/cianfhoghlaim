@@ -25,7 +25,7 @@ Why this exists:
 
 Usage:
 
-    from cianfhoghlaim.orchestration.dbt_translator import CelticDagsterDbtTranslator
+    from orchestration.dbt_translator import CelticDagsterDbtTranslator
     from dagster_dbt import DbtCliResource, dbt_assets
 
     dbt = DbtCliResource(project_dir=Path(__file__).parent / "dbt_project")

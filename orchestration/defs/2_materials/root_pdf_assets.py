@@ -29,7 +29,7 @@ import dlt_sources
 
 # Lazy imports of the BAML client + CocoIndex v1 App
 try:
-    from cianfhoghlaim.baml_client import b
+    from baml_client import b
     BAML_AVAILABLE = True
 except ImportError:
     BAML_AVAILABLE = False

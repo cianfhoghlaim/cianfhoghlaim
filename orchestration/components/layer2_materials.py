@@ -66,7 +66,7 @@ class CelticMaterialsComponent(Component):
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 1 partitioned @asset + 1 partition-aware @asset_check."""
-        from cianfhoghlaim.orchestration.partitions_v2 import (
+        from orchestration.partitions_v2 import (
             ireland_curriculum_partitions,
         )
 

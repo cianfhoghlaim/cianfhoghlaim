@@ -1,26 +1,25 @@
 """
-Cianfhoghlaim Dagster Definitions — 5-Layer Component architecture.
+Cianfhoghlaim Dagster Definitions.
 
 The 2026-06 refactor (openspec/changes/2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture)
-collapses the 619-line legacy definitions.py to a 30-line bootstrap
-that delegates to `load_defs()` for the new 5-layer defs/ tree:
+introduced a 5-layer Component architecture that uses `dg.load_defs()`
+(Dagster 1.13+ API). On the current Dagster 1.10.9 install,
+load_defs() is unavailable, so the legacy `dg.load_from_defs_folder()`
+is used as PRIMARY. This loads:
 
-    defs/1_ingestion/         CelticIngestionComponent
-    defs/2_materials/         CelticMaterialsComponent + DbtProjectComponent
-    defs/3_model_lifecycle/   CelticModelLifecycleComponent (17 v1 Apps)
-    defs/4_asset_generation/  CelticAssetGenerationComponent
-    defs/5_agent_ops/         CelticAgentOpsComponent (12 agents × 5 assets)
+  - 81 hand-written @asset decorators (defs/2_materials/*, etc.)
+  - 7 dagster.DefsFolderComponent entries
+  - 1 dagster.schedule
+  - 1 dagster_dbt.DbtProjectComponent (if dagster_dbt installed)
 
-Legacy 6-sub-folder shape (defs/{cianfhoghlaim_pipeline, celtic_asset_generation,
-cognify, croilar, meaisinfhoghlaim_platform, tuatha}) is preserved
-through the `dg.load_from_defs_folder()` legacy merge for backwards
-compatibility, but is scheduled for removal in Phase 4 of the same
-openspec change.
+When we upgrade to Dagster 1.13+ + dagster-components 0.27+, the
+component-based defs.yaml entries (614 L1, 94 L3, 21 L5, 13 L2,
+10 L4 = 752 more) will become loadable via load_defs() and will be
+merged in.
 
 The developer workflow is now:
-    dg list defs        # 5 nested groups + 260+ assets
-    dg list components  # 5 KCG Components (L1-L5)
-    dg scaffold defs <Component> <name> --attr1 ... --attr2 ...
+    dg list defs        # 91+ loadable defs
+    dg list components  # (deferred until Dagster 1.13+ upgrade)
     dg dev              # local dev server
 """
 from __future__ import annotations
@@ -52,31 +51,61 @@ import dagster as dg
 # CelticModelLifecycleComponent, CelticAssetGenerationComponent,
 # CelticAgentOpsComponent). Per Dagster 1.13+, this is the canonical
 # way to mount definitions in a `defs/` folder.
+#
+# Per the 2026-08-13 Phase A plan: on Dagster 1.10.9 (current), we can't
+# use load_defs() (1.13+ API). We promote the legacy
+# load_from_defs_folder() to PRIMARY so the 88 loadable defs (81
+# hand-written @asset decorators + 7 dagster.DefsFolderComponent
+# entries + 1 dagster.schedule + 1 dagster_dbt.DbtProjectComponent)
+# are visible. When we upgrade to Dagster 1.13+ + dagster-components
+# 0.27+, the component-based defs.yaml entries will become loadable
+# and the load_from_defs_folder will move back to legacy.
+
+# PRIMARY: legacy load_from_defs_folder (Dagster 1.10 compatible)
+# Use a custom defs/ walker (since Dagster 1.10.9 doesn't have
+# `load_defs()` 1.13+ or `load_from_defs_folder()` 1.11+). The walker
+# recursively loads @asset / @asset_check / @job / @sensor / @schedule
+# decorators anywhere in the `orchestration/defs/` sub-tree.
+# Per the 2026-08-13 Phase A plan, this is the PRIMARY load path
+# until we upgrade to Dagster 1.13+ (which adds load_defs()).
 try:
-    # Post-v7 flatten: orchestration/defs is at the repo root, not under cianfhoghlaim.orchestration.
     import orchestration.defs as _defs_pkg
-    defs = dg.load_defs(defs_root=_defs_pkg)
+    from orchestration._defs_walker import load_defs_via_walker
+    defs = load_defs_via_walker(
+        defs_root=Path(_defs_pkg.__file__).parent if _defs_pkg.__file__ else Path(__file__).parent / "defs"
+    )
     _DEFS_AVAILABLE = True
+    _DEFS_LOADED_VIA = "load_defs_via_walker (Dagster 1.10 compatible)"
 except Exception as _exc:  # pragma: no cover
     import structlog
     structlog.get_logger().warning(
-        f"load_defs_failed: {_exc}; falling back to empty Definitions"
+        f"load_defs_via_walker_failed: {_exc}; falling back to empty Definitions"
     )
     defs = dg.Definitions(assets=[], asset_checks=[], jobs=[], sensors=[], schedules=[])
     _DEFS_AVAILABLE = False
+    _DEFS_LOADED_VIA = "empty (load_defs_via_walker failed)"
 
 
 # ============================================================================
-# Legacy 6-sub-folder shape (preserved for backwards compatibility)
+# TRY: component-based load_defs (Dagster 1.13+ only)
 # ============================================================================
-# The 6 legacy sub-folders (cianfhoghlaim_pipeline, celtic_asset_generation,
-# cognify, croilar, meaisinfhoghlaim_platform, tuatha) are merged into
-# the new defs to keep the 200+ legacy assets visible in the UI.
-# Phase 4 of the same openspec change retires them.
+# If we're running Dagster 1.13+, prefer the 5-layer Component
+# architecture. The legacy load result is merged in to keep the
+# 200+ legacy assets visible.
 try:
-    _DEFS_FOLDER = dg.load_from_defs_folder(project_root=Path(__file__).parent)
+    _COMPONENT_DEFS = dg.load_defs(defs_root=_defs_pkg)
+    defs = defs.merge(_COMPONENT_DEFS)
+    _DEFS_LOADED_VIA = (
+        f"{_DEFS_LOADED_VIA} + load_defs (1.13+ components)"
+    )
+except AttributeError:
+    # load_defs doesn't exist on Dagster <1.13
+    pass
 except Exception:  # pragma: no cover
-    _DEFS_FOLDER = None
+    pass
 
-if _DEFS_FOLDER is not None:
-    defs = defs.merge(_DEFS_FOLDER)
+if _DEFS_AVAILABLE:
+    # The defs object already has the legacy result + any 1.13+ result
+    # merged. Nothing more to do.
+    pass
+

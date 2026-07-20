@@ -18,7 +18,7 @@ from dagster import (
 )
 
 try:
-    from cianfhoghlaim.tuatha.asset_generation.fibo import education_fibo
+    from tuatha.asset_generation.fibo import education_fibo
     FIBO_AVAILABLE = True
 except ImportError:
     FIBO_AVAILABLE = False
