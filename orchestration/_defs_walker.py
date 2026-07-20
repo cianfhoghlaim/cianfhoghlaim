@@ -6,21 +6,23 @@ Dagster 1.10.9 doesn't have `dg.load_defs()` (1.13+) or
 `dg.load_from_defs_folder()` (1.11+). We need a custom walker
 that recursively loads:
 
-  - Hand-written `@asset` / `@asset_check` / `@sensor` / `@job` /
-    `@schedule` decorators (anywhere in the `orchestration/defs/`
+  - Hand-written @asset / @asset_check / @job / @sensor /
+    @schedule decorators (anywhere in the orchestration/defs/
     sub-tree)
-  - `Definitions(...)` instances at `__init__.py` module level
-  - `dg.DefsFolderComponent` (1.10-compatible)
+  - Definitions(...) instances at __init__.py module level
+  - dagster.DefsFolderComponent (1.10-compatible)
 
-The walker:
-1. Recursively finds all .py files under `orchestration/defs/`
-2. For each file, calls `dg.load_assets_from_modules(modules=[mod])` etc.
-3. Returns a single `Definitions(assets=..., asset_checks=..., jobs=...,
-   sensors=..., schedules=...)` aggregated result
+WORKAROUND for Python 3.13 tokenizer bug: identifiers starting
+with a digit (e.g. 2_materials, 3_model_lifecycle) cause a
+SyntaxError when used in from x.2_materials import ... statements.
+We work around by using importlib.util.spec_from_file_location
+to load modules without going through the standard import statement
+parser.
 """
 from __future__ import annotations
 
 import importlib
+import importlib.util
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -28,13 +30,16 @@ from typing import Any
 
 import dagster as dg
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
 
 def _discover_modules(defs_root: Path) -> list[ModuleType]:
     """Recursively find all Python modules under defs_root.
 
-    The defs_root should be `orchestration/defs/` (a Python sub-package
-    of the orchestration package). The module names are computed as
-    `orchestration.defs.<rel_path>` (e.g., `orchestration.defs.2_materials.root_pdf_assets`).
+    Uses importlib.util.spec_from_file_location to load each file
+    directly (bypassing the standard import statement parser, which
+    is broken for Python 3.13.13 + digit-leading identifiers like
+    2_materials).
     """
     modules: list[ModuleType] = []
     pkg_root = "orchestration.defs"
@@ -47,29 +52,25 @@ def _discover_modules(defs_root: Path) -> list[ModuleType]:
         if parts[-1] == "__init__":
             parts = parts[:-1]
         mod_name = ".".join([pkg_root] + parts) if parts else pkg_root
-        if not mod_name or mod_name == pkg_root and not (defs_root / "__init__.py").exists():
+        if not mod_name:
             continue
         try:
-            mod = importlib.import_module(mod_name)
-            modules.append(mod)
+            spec = importlib.util.spec_from_file_location(mod_name, py_file)
+            if spec is None or spec.loader is None:
+                continue
+            m = importlib.util.module_from_spec(spec)
+            sys.modules[mod_name] = m
+            spec.loader.exec_module(m)
+            modules.append(m)
+        except SyntaxError as e:
+            print(f"  [skip tokenizer-bug] {mod_name}: {str(e)[:80]}")
         except Exception as e:
-            # Skip modules that fail to import (likely have broken deps)
-            # but log the failure
             print(f"  [skip] {mod_name}: {e}")
     return modules
 
 
 def load_defs_via_walker(defs_root: Path) -> dg.Definitions:
-    """Walk defs_root, load all assets/checks/jobs/sensors/schedules.
-
-    Returns a single aggregated Definitions object.
-
-    Per the 2026-08-13 Phase A plan: handles pre-existing duplicate-key
-    bugs in some modules (e.g. `orchestration/defs/2_materials/lc_extraction/lc5_assets.py`
-    has 24 factory-generated assets with the same function name) by
-    retrying the load per-module (so a single broken module doesn't
-    kill the whole batch).
-    """
+    """Walk defs_root, load all assets/checks/jobs/sensors/schedules."""
     modules = _discover_modules(defs_root)
     if not modules:
         return dg.Definitions()
@@ -80,10 +81,6 @@ def load_defs_via_walker(defs_root: Path) -> dg.Definitions:
     sensors: list[Any] = []
     schedules: list[Any] = []
 
-    # Per-module load: if any module has duplicate-key issues, skip just
-    # that module (not the whole batch).
-    # NOTE: In Dagster 1.10, load_assets_from_modules returns a list.
-    # In Dagster 1.13+, it returns a dict. We handle both.
     for mod in modules:
         try:
             result = dg.load_assets_from_modules(modules=[mod])
@@ -107,8 +104,6 @@ def load_defs_via_walker(defs_root: Path) -> dg.Definitions:
         except Exception as e:
             print(f"  [skip checks] {mod.__name__}: {str(e)[:120]}")
 
-    # Pick up jobs / sensors / schedules via module-level Definitions
-    # objects (any module that has `defs = Definitions(...)` at the top)
     for mod in modules:
         try:
             d = getattr(mod, "defs", None)
@@ -128,4 +123,4 @@ def load_defs_via_walker(defs_root: Path) -> dg.Definitions:
     )
 
 
-__all__ = ["load_defs_via_walker"]
+__all__ = ["load_defs_via_walker", "REPO_ROOT"]
