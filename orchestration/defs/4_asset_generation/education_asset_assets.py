@@ -9,7 +9,6 @@ Outputs:
   - 2D sprite atlases via headless render → s3://cianfhoghlaim-asset-v2/2d/{subject}/
 """
 
-from __future__ import annotations
 
 from dagster import (
     AssetExecutionContext,
@@ -36,7 +35,7 @@ SUBJECTS = (
     partitions_def=DailyPartitionsDefinition(start_date="2026-07-02"),
     description="Daily FIBO 2D sprite atlas generation for the 8 NCCA subjects",
 )
-def daily_2d_asset_generation(context) -> dict[str, int]:
+def daily_2d_asset_generation(context: AssetExecutionContext) -> dict[str, int]:
     """Generate the 2D sprite atlases for the 8 NCCA subjects via FIBO."""
     if not FIBO_AVAILABLE:
         context.log.warning("FIBO not available; skipping 2D generation")
@@ -63,7 +62,7 @@ def daily_2d_asset_generation(context) -> dict[str, int]:
     partitions_def=DailyPartitionsDefinition(start_date="2026-07-02"),
     description="Daily 3D mesh generation for the 8 NCCA subjects via TRELLIS.2 + SAM-3D-Objects",
 )
-def daily_3d_asset_generation(context) -> dict[str, int]:
+def daily_3d_asset_generation(context: AssetExecutionContext) -> dict[str, int]:
     """Generate the 3D meshes for the 8 NCCA subjects via TRELLIS.2 + SAM-3D-Objects.
 
     Hard cap: 50 GLB/week per subject (per the LLM-stack-hierarchy doc).

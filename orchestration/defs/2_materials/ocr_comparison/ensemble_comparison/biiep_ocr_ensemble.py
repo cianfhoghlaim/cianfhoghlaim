@@ -10,7 +10,6 @@ and the RAGAS metrics are scored via
 
 Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
 """
-from __future__ import annotations
 
 from typing import Any
 
@@ -19,6 +18,8 @@ from dagster import (
     AssetExecutionContext,
     AssetSpec,
     asset,
+    asset_check,
+    AssetCheckExecutionContext,
     define_asset_job,
     sensor,
     MaterializeResult,
@@ -108,7 +109,7 @@ def biiep_ocr_ensemble(context: AssetExecutionContext) -> dict[str, Any]:
         ">= 0.70 (the BIEP v2 production threshold)."
     ),
 )
-def biiep_ocr_ensemble_ragas_check(context) -> AssetCheckResult:
+def biiep_ocr_ensemble_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
     """Dagster asset_check: ragas_score >= 0.70."""
     if not RAGAS_AVAILABLE:
         return AssetCheckResult(

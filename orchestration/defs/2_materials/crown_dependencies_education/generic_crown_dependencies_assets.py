@@ -6,7 +6,6 @@ The canonical generic Crown Dependencies Dagster assets. Handles the 3
 Crown Dependencies (Jersey + Guernsey + Isle of Man) via a single
 factory function.
 """
-from __future__ import annotations
 
 import logging
 from typing import Any
@@ -15,6 +14,8 @@ from dagster import (
     AssetCheckResult,
     AssetExecutionContext,
     asset,
+    asset_check,
+    AssetCheckExecutionContext,
 )
 
 try:
@@ -26,9 +27,9 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-CROWN_INGESTION_GROUP = "1_ingestion/education/crown_dependencies/documents"
-CROWN_EXTRACTION_GROUP = "2_materials/education/crown_dependencies/extractions"
-CROWN_EMBEDDING_GROUP = "3_model_lifecycle/education/crown_dependencies/embeddings"
+CROWN_INGESTION_GROUP = "1_ingestion_education_crown_dependencies_documents"
+CROWN_EXTRACTION_GROUP = "2_materials_education_crown_dependencies_extractions"
+CROWN_EMBEDDING_GROUP = "3_model_lifecycle_education_crown_dependencies_embeddings"
 
 
 @asset(
@@ -101,7 +102,7 @@ def crown_dependencies_embeddings(context: AssetExecutionContext) -> dict[str, A
 
 
 @asset_check(asset=crown_dependencies_extractions)
-def crown_dependencies_extractions_ragas_check(context) -> AssetCheckResult:
+def crown_dependencies_extractions_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
     return AssetCheckResult(
         passed=True, severity="WARN",
         metadata={"ragas_score": 0.85, "threshold": 0.70},

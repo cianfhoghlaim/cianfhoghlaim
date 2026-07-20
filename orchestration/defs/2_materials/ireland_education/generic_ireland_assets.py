@@ -20,7 +20,6 @@ backed by the canonical registry + the canonical component.
 
 Reference: openspec/changes/2026-07-28-biep-v3-ireland-full-coverage-v1/
 """
-from __future__ import annotations
 
 import logging
 from typing import Any
@@ -29,6 +28,8 @@ from dagster import (
     AssetCheckResult,
     AssetExecutionContext,
     asset,
+    asset_check,
+    AssetCheckExecutionContext,
     AssetSpec,
 )
 
@@ -58,9 +59,9 @@ logger = logging.getLogger(__name__)
 # (per openspec/specs/dagster-5-layer-component-architecture/spec.md)
 # -----------------------------------------------------------------------------
 
-IRELAND_INGESTION_GROUP = "1_ingestion/education/ireland/documents"
-IRELAND_EXTRACTION_GROUP = "2_materials/education/ireland/extractions"
-IRELAND_EMBEDDING_GROUP = "3_model_lifecycle/education/ireland/embeddings"
+IRELAND_INGESTION_GROUP = "1_ingestion_education_ireland_documents"
+IRELAND_EXTRACTION_GROUP = "2_materials_education_ireland_extractions"
+IRELAND_EMBEDDING_GROUP = "3_model_lifecycle_education_ireland_embeddings"
 
 
 # -----------------------------------------------------------------------------
@@ -172,7 +173,7 @@ def ireland_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
 # -----------------------------------------------------------------------------
 
 @asset_check(asset=ireland_extractions)
-def ireland_extractions_ragas_check(context) -> AssetCheckResult:
+def ireland_extractions_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
     """Dagster asset_check: ragas_score >= 0.70 on the Ireland extraction."""
     return AssetCheckResult(
         passed=True,
