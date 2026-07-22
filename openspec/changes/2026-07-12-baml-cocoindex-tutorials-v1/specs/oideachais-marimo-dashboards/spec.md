@@ -3,7 +3,7 @@
 ### Requirement: 5 new BAML+CocoIndex tutorial notebooks render in marimo edit + dual-mode CLI
 
 The system SHALL provide 5 new marimo tutorial notebooks at
-`cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
+`notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
 covering the full BAML 0.223.0 + CocoIndex v1 + vision-model stack.
 The 5 notebooks SHALL be CLI-discoverable via
 `uv run cianfhoghlaim-marimo list 13_baml_cocoindex_tutorial` and
@@ -22,7 +22,7 @@ The 5 notebooks are:
 #### Scenario: 5 tutorial files AST-parse + CLI-discoverable
 
 - **GIVEN** the 5 follow-up tutorials exist at
-  `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
+  `notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
 - **WHEN** the user runs
   `python -c "import ast; ast.parse(open(f).read())"` for each
 - **THEN** all 5 files parse without SyntaxError

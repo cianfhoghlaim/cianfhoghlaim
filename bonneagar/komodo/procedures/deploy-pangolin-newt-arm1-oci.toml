@@ -1,0 +1,105 @@
+# =============================================================================
+# DEPLOY PANGOLIN-NEWT-ARM1-OCI PROCEDURE
+# =============================================================================
+# Deploys the newt client on arm1-oci (the control-plane host). The
+# server-side newt is different from the bunchloch one in 2 ways:
+#   1. It runs INSIDE the pangolin stack (compose extension) on arm1-oci
+#      so it can register site_resources without going through the
+#      bunchloch tunnel
+#   2. It uses the dedicated newt.yaml at stacks/pangolin/newt.yaml
+#      (not stacks/newt/docker-compose.yaml — that's the bunchloch site)
+#
+# Architecture (the convergence topology):
+#   arm1-oci — pangolin (Pangolin EE) + gerbil (WireGuard server) + newt
+#   bunchloch — newt (WireGuard client) → connects to gerbil
+#
+# The newt-on-arm1-oci is a SECONDARY newt that runs alongside the
+# primary bunchloch newt. It exists so that arm1-oci-hosted services
+# (hermes, openclaw, openchamber) can reach the Pangolin mesh without
+# needing a tunnel back to bunchloch first.
+#
+# Spec: openspec/changes/2026-07-14-deploy-pangolin-newt-arm1-oci-v1
+# Companion: openspec/changes/2026-07-14-bump-newt-v1.14.0-cross-cluster-v1
+#            openspec/changes/2026-07-14-iac-sync-sites-pangolin-integrations-api-v1
+#
+# Usage:
+#   km run procedure deploy-pangolin-newt-arm1-oci
+#   km run procedure deploy-pangolin-newt-arm1-oci -- --skip=iac-provision
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-pangolin-newt-arm1-oci"
+description = "Deploy newt (Pangolin client, v1.14.0) on arm1-oci — iac-provision (sync-sites) → stackup (pangolin compose extension) → wireguard-tunnel → health-checks"
+server_id = "arm1-oci"
+
+# =============================================================================
+# STAGE 0: Pre-flight (Pangolin + Infisical must be healthy)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghlaim.ie/api/v1/", expected_status = 200, timeout_s = 15, name = "pangolin-healthy", description = "Pangolin must be reachable + healthy before any newt work" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -ksSf -o /dev/null -w '%{http_code}' https://infisical.cianfhoghlaim.ie/ 2>&1 | head -1", timeout_s = 10, name = "infisical-healthy", description = "Infisical must be reachable (HTTP 200) before any newt work" } }
+
+# =============================================================================
+# STAGE 1: iac-provision (provision the arm1-oci newt site via API)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "iac-provision"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && bun run iac:sync:sites 2>&1 | tail -20", timeout_s = 60, description = "Provision the arm1-oci-newt site via the Pangolin Integrations API + write credentials to .env", require_success = false } }
+
+# =============================================================================
+# STAGE 2: StackUp (extend the pangolin compose with newt)
+# =============================================================================
+# Uses `docker compose -f pangolin.yaml -f newt.yaml up -d` (the
+# canonical merge pattern from the bons KCG docs).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "stackup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/pangolin/core && docker compose -f compose.yaml -f sidecar.yaml -f newt.yaml -f newt.sidecar.yaml up -d newt 2>&1 | tail -15", timeout_s = 120, description = "Extend the pangolin compose with the newt service + newt sidecar (Locket for secrets)", require_success = true } }
+
+# =============================================================================
+# STAGE 3: WireGuard tunnel check
+# =============================================================================
+# The arm1-oci newt is a "secondary" newt (it shares the WireGuard mesh
+# with the bunchloch newt). It should register with the local gerbil
+# (which is also on arm1-oci) within 60s.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "wireguard-tunnel"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..12}; do docker logs pangolin-newt --tail 30 2>&1 | grep -q 'tunnel established' && break; sleep 5; done; docker exec pangolin-newt -- wg show 2>&1 | head -10", timeout_s = 90, description = "Wait up to 60s for the newt WireGuard tunnel to establish + dump wg show", require_success = true } }
+
+# =============================================================================
+# STAGE 4: Health checks (5-point verification, mirrors v2 of bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker ps --filter 'name=pangolin-newt' --format '{{.Names}}\\t{{.Status}}'", timeout_s = 15, name = "4a-newt-up", description = "pangolin-newt service is Up" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs pangolin-newt-locket --tail 20 2>&1 | grep -E 'secrets resolved' | tail -1", timeout_s = 15, name = "4b-locket-secrets-resolved", description = "newt-sidecar Locket has resolved 2 secrets (NEWT_ARM1_ID, NEWT_ARM1_SECRET)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker exec pangolin-newt -- newt --version 2>&1 | head -3 | grep -qE '1\\.14\\.0' && echo 'newt version OK' || echo 'newt version MISMATCH (expected 1.14.0)'", timeout_s = 10, name = "4c-newt-version-1.14.0", description = "Assert newt binary is at v1.14.0", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "HANDSHAKE=$(docker exec pangolin-newt -- wg show 2>&1 | grep 'latest handshake' | head -1); if [ -n \"$HANDSHAKE\" ]; then echo \"tunnel handshake: $HANDSHAKE\"; else echo 'NO HANDSHAKE YET (tunnel not established)'; exit 1; fi", timeout_s = 10, name = "4d-wireguard-handshake", description = "Verify newt has a recent WireGuard handshake", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghlaim.ie/api/v1/", expected_status = 200, timeout_s = 15, name = "4e-pangolin-core-reachable", description = "Pangolin core must remain reachable (the newt shouldn't break the control plane)" } }

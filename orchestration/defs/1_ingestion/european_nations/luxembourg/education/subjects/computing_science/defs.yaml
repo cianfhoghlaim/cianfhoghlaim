@@ -1,0 +1,37 @@
+# defs/1_ingestion/european_nations/lux/education/subjects/computing_science/defs.yaml
+#
+# L1 CelticIngestionComponent for the Luxembourg (Luxembourg)
+# computing_science per-subject DLT source (EU full-depth expansion change).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/lux/education/subjects/computing_science.py` with
+# `source_id="european_nations.lux.education.subjects.computing_science"`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_lux_computing_science
+  module: cianfhoghlaim.dlt.european_nations.lux.education.subjects.computing_science
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["european_nations"]
+    - country:
+        values: ["lux"]
+    - subject:
+        values: ["computing_science"]
+    - language:
+        values: ["lb", "fr", "de"]
+  use_local_scrapes: true
+  asset_check: european_nations_lux_computing_science_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - lux
+    - computing_science
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline

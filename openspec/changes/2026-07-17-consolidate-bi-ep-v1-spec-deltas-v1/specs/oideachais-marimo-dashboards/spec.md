@@ -1,7 +1,7 @@
-# `oideachais-marimo-dashboards` MODIFIED — Declare on-disk count as canonical source of truth + update cross-reference
+# `cianfhoghlaim-marimo-dashboards` MODIFIED — Declare on-disk count as canonical source of truth + update cross-reference
 
 > One new requirement + one modified cross-reference against the
-> canonical `openspec/specs/oideachais-marimo-dashboards/spec.md`:
+> canonical `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md`:
 >
 > 1. The canonical spec's `## Cross-references` section (line 250)
 >    states "(the 11 Marimo notebooks)" — this is a stale count.
@@ -10,7 +10,7 @@
 >    + the v3 study tools) reference "5", "11", "25", and "50"
 >    counts respectively, all of which are inconsistent with the
 >    on-disk reality. The canonical on-disk count via
->    `ls cianfhoghlaim/notebooks/**/*.py | wc -l` is the source of
+>    `ls notebooks/**/*.py | wc -l` is the source of
 >    truth.
 >
 > 2. A new requirement "On-disk marimo notebook count is the
@@ -23,8 +23,8 @@
 ### Requirement: On-disk marimo notebook count is the canonical source of truth
 
 The system SHALL consider the on-disk count of `.py` files at
-`cianfhoghlaim/notebooks/**/*.py` (verified via
-`ls cianfhoghlaim/notebooks/**/*.py | wc -l`) as the canonical
+`notebooks/**/*.py` (verified via
+`ls notebooks/**/*.py | wc -l`) as the canonical
 source of truth for all marimo notebook count claims in any
 openspec change proposal or spec delta.
 
@@ -68,15 +68,15 @@ non-archived changes that have already shipped):
 
 | Source change | Stale claim | Where |
 |:--|:--|:--|
-| `2026-07-14-oideachais-marimo-dashboards-v1` | "11 BIEP notebooks" (refers to `04_biep_motherduck/` count, which IS accurate; the 10 v1 dashboards claim is also accurate) | spec.md Scenario 1 + Scenario 3 |
-| `2026-07-15-oideachais-marimo-dashboards-extension-v1` | "Existing 15+10=25 notebooks still AST-parse" | spec.md line 119-127 |
+| `2026-07-14-cianfhoghlaim-marimo-dashboards-v1` | "11 BIEP notebooks" (refers to `04_biep_motherduck/` count, which IS accurate; the 10 v1 dashboards claim is also accurate) | spec.md Scenario 1 + Scenario 3 |
+| `2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1` | "Existing 15+10=25 notebooks still AST-parse" | spec.md line 119-127 |
 | `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1` | "Existing 30+10+10=50 notebooks still AST-parse" | spec.md line 104-118 |
 | `2026-07-12-baml-cocoindex-tutorials-v1` | "5 new BAML tutorials" (the 5 EN tutorials; the 5 GA siblings came from `2026-07-13-baml-cocoindex-tutorials-ga-v1`) | spec.md line 7-40 |
 
 #### Scenario: `ls` returns the canonical on-disk count
 
 - **WHEN** a developer runs
-      `ls cianfhoghlaim/notebooks/**/*.py | wc -l`
+      `ls notebooks/**/*.py | wc -l`
 - **THEN** the output SHALL be the canonical count (134 clean; 160
       raw)
 - **AND** the on-disk breakdown per the table above SHALL be
@@ -92,7 +92,7 @@ non-archived changes that have already shipped):
 #### Scenario: Stale claim documentation
 
 - **GIVEN** a developer reads the 4 source-change spec deltas at
-      `openspec/changes/2026-07-{12,14,15,16}-{...}/specs/oideachais-marimo-dashboards/spec.md`
+      `openspec/changes/2026-07-{12,14,15,16}-{...}/specs/cianfhoghlaim-marimo-dashboards/spec.md`
 - **WHEN** they cross-reference the claims against the canonical
       on-disk count
 - **THEN** the cross-reference table above SHALL be the source of
@@ -100,11 +100,11 @@ non-archived changes that have already shipped):
 
 ## Cross-references *(updated line 250)*
 
-- [`cianfhoghlaim/notebooks/`](../../cianfhoghlaim/notebooks/) (the on-disk count of Marimo notebooks — see the new "On-disk marimo notebook count is the canonical source of truth" requirement above; verified via `ls cianfhoghlaim/notebooks/**/*.py | wc -l` = 134 clean / 160 raw)
-- [`cianfhoghlaim/notebooks/dashboards/`](../../cianfhoghlaim/notebooks/dashboards/) (the dashboard subdir)
+- [`notebooks/`](../../notebooks/) (the on-disk count of Marimo notebooks — see the new "On-disk marimo notebook count is the canonical source of truth" requirement above; verified via `ls notebooks/**/*.py | wc -l` = 134 clean / 160 raw)
+- [`notebooks/dashboards/`](../../notebooks/dashboards/) (the dashboard subdir)
 - [`.agents/skills/marimo/SKILL.md`](../../.agents/skills/marimo/SKILL.md)
 - [`.agents/skills/build-notebook/SKILL.md`](../../.agents/skills/build-notebook/SKILL.md)
-- [`openspec/specs/oideachais-leabharlann/spec.md`](oideachais-leabharlann/spec.md) (the upstream pipeline — the source of truth for the 6 sub-corpora + 225 documents)
+- [`openspec/specs/cianfhoghlaim-leabharlann/spec.md`](cianfhoghlaim-leabharlann/spec.md) (the upstream pipeline — the source of truth for the 6 sub-corpora + 225 documents)
 
 ## Stale-claim history *(added by this consolidation change)*
 
@@ -115,8 +115,8 @@ count claims. The on-disk count is the canonical source of truth
 | Source change | Stale claim | Resolution |
 |:--|:--|:--|
 | `2026-07-12-baml-cocoindex-tutorials-v1` | "5 new BAML tutorials" | Accurate (the 5 EN tutorials are the "new" additions; the 5 GA siblings came from `2026-07-13-baml-cocoindex-tutorials-ga-v1`) |
-| `2026-07-14-oideachais-marimo-dashboards-v1` | "11 BIEP notebooks" + "10 v1 dashboards" | Accurate (the 11 BIEP motherduck + 10 v1 dashboards) |
-| `2026-07-15-oideachais-marimo-dashboards-extension-v1` | "Existing 15+10=25 notebooks still AST-parse" | Stale — replaced by the on-disk count |
+| `2026-07-14-cianfhoghlaim-marimo-dashboards-v1` | "11 BIEP notebooks" + "10 v1 dashboards" | Accurate (the 11 BIEP motherduck + 10 v1 dashboards) |
+| `2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1` | "Existing 15+10=25 notebooks still AST-parse" | Stale — replaced by the on-disk count |
 | `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1` | "Existing 30+10+10=50 notebooks still AST-parse" | Stale — replaced by the on-disk count |
 
 **Summary**: 4 stale count claims across 4 source-change spec deltas

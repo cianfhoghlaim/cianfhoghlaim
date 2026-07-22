@@ -1,0 +1,79 @@
+# =============================================================================
+# DEPLOY LANGFUSE-ARM1-OCI PROCEDURE
+# =============================================================================
+# Deploys langfuse to arm1-oci as the LLM observability sink for the
+# agent-platform cluster. langfuse on arm1-oci is a hard dep for
+# deploy-openclaw-arm1-oci and deploy-hermes-arm1-oci (Stage 1 in each).
+#
+# Architecture:
+#   arm1-oci — langfuse-web + langfuse-worker (Pangolin-routed at
+#              langfuse.cianfhoghlaim.ie, Pocket ID SSO)
+#              langfuse-locket (Infisical secret injection)
+#
+# Dependencies:
+#   - lakehouse (the centralised data plane) → bunchloch (bunchloch-side)
+#   - pangolin-core-arm1 (Traefik + Pocket ID OIDC)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-langfuse-arm1-oci
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-langfuse-arm1-oci"
+description = "Deploy langfuse to arm1-oci — preflight → lakehouse data plane → DeployStack langfuse → ApplyBlueprint + health"
+server_id = "arm1-oci"
+
+# =============================================================================
+# STAGE 0: Pre-flight
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run preflight:arm-oci --strict", timeout_s = 60, description = "4-check preflight gate" } }
+
+# =============================================================================
+# STAGE 1: Verify the lakehouse data plane is reachable
+# =============================================================================
+# The lakehouse stack runs on bunchloch (this Mac) but is required for
+# the langfuse arm1-oci stack to work (it uses lakehouse-postgres for the
+# db=langfuse database + lakehouse-clickhouse for the event store).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "lakehouse-data-plane"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://lakekeeper.cianfhoghlaim.ie/health", expected_status = 200, timeout_s = 30, name = "lakehouse-lakekeeper-health" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://langfuse.cianfhoghlaim.ie/api/public/health", expected_status = 200, timeout_s = 30, name = "langfuse-already-deployed-check" } }
+
+# =============================================================================
+# STAGE 2: langfuse stack (arm1-oci)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "langfuse-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "langfuse" } }
+
+# =============================================================================
+# STAGE 3: Pangolin routes + health verification
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-langfuse-routes" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://langfuse.cianfhoghlaim.ie/api/public/health", expected_status = 200, timeout_s = 30, name = "langfuse-health" } }

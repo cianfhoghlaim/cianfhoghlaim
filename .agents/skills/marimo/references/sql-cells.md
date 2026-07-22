@@ -166,7 +166,7 @@ def _():
 def _():
     con = _
     df = mo.sql(
-        "SELECT * FROM oideachais.education.ie.curriculum LIMIT 100",
+        "SELECT * FROM cianfhoghlaim.education.ie.curriculum LIMIT 100",
         engine=con,
         output=False,
     )

@@ -1,6 +1,6 @@
 ---
 name: baml
-description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `cianfhoghlaim/baml/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers the 5 canonical lc6 extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram) + static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector', 'lc6', 'lc_extraction'.
+description: BAML v0.223.0 / baml-language 0.13.1-nightly — schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas in `.baml` files under `baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a schema with `baml-cli test`. Covers the 5 canonical lc6 extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram) + static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), `@trace` + Collector observability, BAML VM/lambdas/optional-chaining, and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src', '@trace', 'Collector', 'lc6', 'lc_extraction'.
 ---
 
 # BAML Skill
@@ -14,7 +14,7 @@ LLM extraction framework used across the oideachais lakehouse.
 ## Project rules (PRESERVED from the original 9-line skill)
 
 1. **Location rule** — define all prompt engineering and extraction
-   boundaries in `.baml` files within `cianfhoghlaim/baml/`
+   boundaries in `.baml` files within `baml/`
    (the `baml_src/` symlink points here post-v4). The directory
    contains 23+ BAML files (audio_extraction, celtic_linguistics,
    celtic_sources, cognates, curriculum_extraction,
@@ -22,13 +22,33 @@ LLM extraction framework used across the oideachais lakehouse.
    leaving_cert_*_extraction, morphology, multi_nation_curriculum,
    named_entities, ocr_extraction, ocr_validation, oideachas,
    portfolio_extraction, site_analysis, …). The auto-generated
-   client lives in `cianfhoghlaim/baml_client/`.
+   client lives in `baml_client/baml_client/`.
 2. **Constraint rule** — use BAML to enforce Zod-like constraints on
    the LLM output, preventing parser crashes downstream in the
    Dagster / DLT pipelines.
 3. **Mapping rule** — ensure the extraction schemas map directly to
    the `DuckLake` tables defined in
-   `cianfhoghlaim/dlt/british_isles/ireland/education/`.
+   `dlt/british_isles/ireland/education/`.
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The `.baml` source files now live at `baml_src/` (NOT `baml/`)
+- The auto-generated Python client lives at `baml_client/baml_client/`
+  (with an extra `baml_client/` wrapper due to the post-flatten wheel layout)
+- The canonical import path for BAML functions is:
+  `from cianfhoghlaim.baml_client import b`
+- The `_legacy/` sub-directory contains deprecated BAML files that
+  are kept for one release cycle per openspec deprecation policy
+- BAML 0.223.0 (NOT 0.222) is the canonical compiler; key differences:
+  - Test blocks MUST use lowercase `test` (was PascalCase `Test` in 0.222)
+  - String-literal dotted-path type refs like `"baml_src.X.Y.Z"` are REJECTED
+  - Class field defaults like `field string = "en"` are REJECTED
+  - Use `from ..shared.file import ClassName` for cross-file imports
+
+For new BAML functions in the v7 flattened layout, see:
+openspec/specs/oideachais-baml-schemas/spec.md (canonical BAML spec)
 
 ## When to use this skill
 
@@ -47,7 +67,7 @@ Use when you need to:
 ## Pattern 1: Static extraction (the existing pattern)
 
 ```baml
-// cianfhoghlaim/baml/education/curriculum_extraction.baml
+// baml/education/curriculum_extraction.baml
 class PrimaryLearningOutcome {
   stage string
   curriculum_area string
@@ -87,7 +107,7 @@ test primary_extraction {
 Run `baml generate` to regenerate the Python client. Then:
 
 ```python
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 outcomes = b.ExtractPrimaryLearningOutcomes(document_text)
 for o in outcomes:
     print(f"[{o.stage}] {o.curriculum_area}: {o.learning_outcome}")
@@ -128,8 +148,8 @@ function ExecuteBAML(
 Python glue:
 
 ```python
-from baml_client import b
-from baml_client.type_builder import TypeBuilder
+from cianfhoghlaim.baml_client import b
+from cianfhoghlaim.baml_client.type_builder import TypeBuilder
 
 def extract_anything(content: str):
     # Step 1: ask the LLM to describe the schema
@@ -158,7 +178,7 @@ function ExtractReceiptTransactions(
 
 ```python
 import baml_py
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 
 with open("receipt.png", "rb") as f:
     image = baml_py.Image.from_base64("image/png", base64.b64encode(f.read()).decode())
@@ -175,7 +195,7 @@ result = b.ExtractDocumentStructure(document=pdf)
 
 See [`references/multimodal-vision.md`](references/multimodal-vision.md)
 for PIL preprocessing, client config, and the OCR pattern (the
-in-repo `cianfhoghlaim/baml/ocr_extraction.baml` uses this).
+in-repo `baml/ocr_extraction.baml` uses this).
 
 ## Pattern 4: Streaming extraction
 
@@ -189,7 +209,7 @@ function GenerateSummary(content: string) -> string
 ```
 
 ```python
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 
 stream = b.stream.GenerateSummary(content)
 async for chunk in stream:
@@ -243,7 +263,7 @@ for the retry-loop pattern.
 ## Pattern 6: Named clients + retry policies
 
 ```baml
-// cianfhoghlaim/baml/clients.baml
+// baml/clients.baml
 client<llm> ExtractEn {
   provider "openai"
   options {
@@ -287,8 +307,8 @@ For dynamic schemas with partial streaming:
 
 ```python
 import asyncio
-from baml_client import b
-from baml_client.type_builder import TypeBuilder
+from cianfhoghlaim.baml_client import b
+from cianfhoghlaim.baml_client.type_builder import TypeBuilder
 
 async def extract_with_streaming(content: str):
     schema = b.GenerateBAML(content)
@@ -382,7 +402,7 @@ Configure two generators so a single `baml-cli generate`
 run produces both client libraries:
 
 ```baml
-// cianfhoghlaim/baml/generators.baml
+// baml/generators.baml
 
 // Generator 1: Python data layer (DLT + Dagster)
 generator python_client {
@@ -414,7 +434,7 @@ resource. Wire the BAML-generated Pydantic class as the
 
 ```python
 import dlt
-from backend.baml_client import b
+from cianfhoghlaim.baml_client import b
 from backend.baml_client.types import ResearchInsight
 
 @dlt.source
@@ -525,9 +545,9 @@ and adaptive TypeBuilder schemas.
 
 ## Cross-references
 
-- [`cianfhoghlaim/baml/`](../../../cianfhoghlaim/baml/) — the 23+ BAML files (the `baml_src/` symlink points here)
-- [`cianfhoghlaim/baml_client/`](../../../cianfhoghlaim/baml_client/) — the auto-generated client
-- [`cianfhoghlaim/baml/README.md`](../../../cianfhoghlaim/baml/README.md) — the BAML file map
+- [`baml/`](../../../baml/) — the 23+ BAML files (the `baml_src/` symlink points here)
+- [`baml_client/`](../../../baml_client/) — the auto-generated client
+- [`baml/README.md`](../../../baml/README.md) — the BAML file map
 - [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) — how
   to use BAML inside a CocoIndex v1 App
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the type-safe
@@ -542,13 +562,13 @@ and adaptive TypeBuilder schemas.
 ## Pattern 8: Tracing + Collector observability (added 2026-06)
 
 ```python
-from baml_client import b
+from cianfhoghlaim.baml_client import b
 from baml_client.tracing import trace, set_tags
 from baml_py import Collector
 
 @trace                          # <-- NOT @observe
 async def extract_with_trace(receipt: str, run_id: str):
-    set_tags(parent_id=run_id, app="oideachais")
+    set_tags(parent_id=run_id, app="cianfhoghlaim")
     collector = Collector(name=f"extract-{run_id}")
     result = await b.ExtractReceipt(receipt, baml_options={"collector": collector})
     log = collector.last
@@ -599,11 +619,11 @@ from cianfhoghlaim.baml.education.lc_extraction import (
 Each module exposes the matching BAML `@function`. The
 `@function` calls are wired into the `lc5/lc6` Dagster assets
 (42 total = 7 subjects × 6 stages) in
-`cianfhoghlaim/orchestration/defs/2_materials/`. The Pydantic
+`orchestration/defs/2_materials/`. The Pydantic
 classes generated by `baml-cli generate` are the canonical
 `primary_key` source-of-truth for the matching
 `@dlt.resource(write_disposition="merge")` wrappers in
-`cianfhoghlaim/dlt/british_isles/ireland/education/`.
+`dlt/british_isles/ireland/education/`.
 
 **British-Isles Education pipeline use case:**
 
@@ -614,7 +634,7 @@ classes generated by `baml-cli generate` are the canonical
 - **`gov.ie` circulars** — the 7th v1 CocoIndex App
   (`government_circulars`) uses `ExtractCurriculumSyllabus`
   against `gov.ie/.../circulars/...` PDFs to populate
-  `oideachais.education.ie.gov_circulars_archive` (one of the 4
+  `cianfhoghlaim.education.ie.gov_circulars_archive` (one of the 4
   MotherDuck Dives).
 - **Cross-linguistic concept extraction** —
   `ExtractCrossLinguisticConcept` aligns Gaeilge and English
@@ -627,7 +647,7 @@ classes generated by `baml-cli generate` are the canonical
   `lc_exam_difficulty`, `lc_marking_complexity`,
   `gov_circulars_archive` are the read-only consumer surfaces.
 - **6 per-subject marimo notebooks** — each LC subject gets a
-  notebook in `cianfhoghlaim/notebooks/` that queries its BAML
+  notebook in `notebooks/` that queries its BAML
   rows via `mo.sql(engine=md:oideachais)`.
 - **7 v1 CocoIndex Apps** — the per-subject embedding pipelines
   consume the BAML-extracted chunks via the canonical

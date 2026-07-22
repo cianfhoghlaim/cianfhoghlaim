@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# .githooks/prepare-commit-msg
+#
+# Strip any Co-Authored-By trailer naming Claude or Anthropic, regardless of
+# which agent runtime produced it. Defends against future re-installs of
+# Claude Code (which hardcodes this trailer client-side).
+#
+# Called by git with three positional args:
+#   $1 = path to the prepared commit-message file
+#   $2 = source of the message (message|template|merge|squash|commit)
+#   $3 = SHA1 of the commit being amended (or empty)
+#
+# We operate ONLY on the file git hands us, never on $1's content directly.
+
+set -euo pipefail
+
+MSG="$1"
+if [[ ! -f "$MSG" ]]; then
+  exit 0
+fi
+
+# Strip matching lines (case-insensitive). The .bak dance is required because
+# BSD sed on macOS requires the suffix and the original file must be
+# atomically replaceable on the same filesystem.
+sed -i.bak -E '/^[Cc]o-[Aa]uthored-[Bb]y:[ \t]*.*(Claude|anthropic\.com).*$/d' "$MSG"
+rm -f "${MSG}.bak"
+
+exit 0

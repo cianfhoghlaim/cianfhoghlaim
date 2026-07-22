@@ -1,0 +1,67 @@
+# =============================================================================
+# OpenChamber Web — local Dockerfile (built from the v1.14.1 GitHub release
+# tarball because the upstream GHCR image is private)
+# =============================================================================
+# Build:
+#   docker buildx build --platform linux/arm64 \
+#     -t openchamber:local-1.14.1 -f Dockerfile.openchamber-web .
+#
+# This Dockerfile builds the openchamber-web package (v1.14.1) from
+# source. The build context must include the `package/` subdirectory
+# containing the unpacked v1.14.1 release tarball:
+#   package/
+#     package.json
+#     package-lock.json  (or bun.lock)
+#     bin/  dist/  public/  server/  ...
+#
+# Output: ghcr.io/cianfhoghlaim/openchamber:1.14.1-arm1
+# =============================================================================
+
+# Stage 1: install deps
+FROM node:22-bookworm AS builder
+
+WORKDIR /tmp/build
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 make g++ ca-certificates curl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY package/ /tmp/build/
+
+RUN npm install --omit=dev --no-audit --no-fund --no-cache
+
+# Stage 2: minimal runtime, drop privileges
+FROM node:22-bookworm-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    useradd -r -u 65532 -g 65532 -m -d /home/bun -s /bin/bash openchamber 2>/dev/null || true
+
+USER 65532:65532
+ENV HOME=/home/bun
+ENV XDG_CONFIG_HOME=/home/bun/.config
+ENV XDG_DATA_HOME=/home/bun/.local/share
+ENV XDG_CACHE_HOME=/home/bun/.cache
+ENV PATH=/home/bun/.openchamber/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+WORKDIR /home/bun/.openchamber
+
+COPY --from=builder --chown=65532:65532 /tmp/build/ /home/bun/.openchamber/
+
+# Pre-create the config dirs as 65532:65532 (so openchamber can write
+# its state without permission errors when the compose file mounts
+# tmpfs over /home/bun/.config)
+RUN mkdir -p /home/bun/.config/openchamber /home/bun/.config/openchamber/run \
+             /home/bun/.local/share/openchamber && \
+    chown -R 65532:65532 /home/bun
+
+ENV OPENCHAMBER_PORT=3000
+ENV OPENCHAMBER_LOG_LEVEL=info
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=20s \
+    CMD curl -fs http://localhost:3000/api/health || exit 1
+
+CMD ["node", "bin/cli.js", "serve"]

@@ -45,23 +45,23 @@
 ## 4. Create the 5 _ga companion marimo notebooks
 
 - [x] **4.1** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax_ga.py`
+      `notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax_ga.py`
       (~316 LOC; covers the bilingual EN+GA syntax additions +
       a `bilingual(en, ga)` rendering helper)
 - [x] **4.2** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough_ga.py`
+      `notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough_ga.py`
       (~382 LOC; covers the 6 GA-LC-subject qpack variants with the
       `Extract<Subject>GaStatement` functions)
 - [x] **4.3** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline_ga.py`
+      `notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline_ga.py`
       (~318 LOC; covers the vision+PDF pipeline on Gaeilge NCCA PDFs +
       the side-by-side `gemma-4` vs `qwen3-vl` comparison)
 - [x] **4.4** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration_ga.py`
+      `notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration_ga.py`
       (~294 LOC; covers the 3 CocoIndex+BAML integration patterns on
       GA content)
 - [x] **4.5** Create
-      `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration_ga.py`
+      `notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration_ga.py`
       (~289 LOC; covers the bilingual audit of the 10 BAML additions)
 - [x] **4.6** Confirm all 5 _ga notebooks AST-parse under
       `python -c "import ast; ast.parse(open(f).read())"`

@@ -47,7 +47,7 @@ The system SHALL continue to read from the existing DuckLake catalog.
 
 #### Scenario: No regression
 
-- **WHEN** `oideachais_assets_embedded` or `meaisinfhoghlaim_assets_embedded` materializes
+- **WHEN** `cianfhoghlaim_assets_embedded` or `meaisinfhoghlaim_assets_embedded` materializes
 - **THEN** Dagster SHALL continue to query the DuckLake catalog and embed the result
 
 ### Requirement: Analyzer Bun Script
@@ -168,12 +168,12 @@ The 12 default streams SHALL be declared in
 The system SHALL NOT include a local pre-Phase-2.3 fallback
 implementation in `cianfhoghlaim/dlt_utils/destinations.py`.
 The file SHALL be a thin re-export shim from the canonical
-`oideachais.dlt_utils.destinations` module via the
+`cianfhoghlaim.dlt_utils.destinations` module via the
 `with_namespace("croilar")` factory.
 
 The local fallback was originally needed because the croilar
 packaging fix (commit `e9e0fc7d2`) had not yet been applied,
-so `import oideachais.dlt_utils.destinations` would
+so `import cianfhoghlaim.dlt_utils.destinations` would
 fail from inside the croilar venv. The packaging fix
 introduced `croilar/__init__.py` + changed pyproject
 `packages = ["."]` + post-install `croilar/scripts/fix-pth.sh`
@@ -195,7 +195,7 @@ the destination API changes.
 - **THEN** the import succeeds
 - **AND** `NAMESPACE == "croilar"`
 - **AND** the value comes from the canonical
-  `oideachais.dlt_utils.destinations.with_namespace("croilar")`
+  `cianfhoghlaim.dlt_utils.destinations.with_namespace("croilar")`
   factory (not from a local fallback)
 
 #### Scenario: The 4 canonical exports are all available

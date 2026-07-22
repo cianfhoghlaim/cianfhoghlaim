@@ -45,7 +45,7 @@ Qdrant's MaxSim scoring picks the best patch match per document.
 
 ## KCG examples
 
-- `cianfhoghlaim/cocoindex/leabharlann_embedding.py` — text-only
+- `cocoindex/leabharlann_embedding.py` — text-only
   (BGE-large-en-v1.5) for the leabharlann books corpus
 - The external `docs/cocoindex/image_search/` example (now in
   upstream cocoindex repo) is the canonical CLIP + Qdrant + FastAPI

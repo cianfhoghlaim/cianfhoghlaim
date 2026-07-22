@@ -1,0 +1,38 @@
+# defs/1_ingestion/european_nations/mkd/education/subjects/physics/defs.yaml
+#
+# L1 CelticIngestionComponent for the North Macedonia Physics
+# per-subject DLT source (EU candidate/neighbour full-depth
+# expansion).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/mkd/education/subjects/physics/physics.py` with
+# `source_id="european_nations.mkd.education.subjects.physics"` and lands in
+# the DuckLake table `cianfhoghlaim.education.european_nations.mkd.physics`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_mkd_physics
+  module: cianfhoghlaim.dlt.european_nations.mkd.education.subjects.physics.physics
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - nation:
+        values: ["mkd"]
+    - subject:
+        values: ["physics"]
+    - language:
+        values: ["mk"]
+  use_local_scrapes: true
+  asset_check: european_nations_mkd_physics_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - mkd
+    - physics
+    - education
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline

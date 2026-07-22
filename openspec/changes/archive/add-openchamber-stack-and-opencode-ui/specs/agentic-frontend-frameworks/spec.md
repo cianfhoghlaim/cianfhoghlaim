@@ -25,7 +25,7 @@ The system SHALL expose a browser-based OpenCode UI at `openchamber.cianfhoghlai
 - **AND** the session list SHALL be searchable by topic or date
 
 #### Scenario: Theme selection persists
-- **WHEN** a user selects the `cianchoghlaim-dark` theme
+- **WHEN** a user selects the `cianfhoghlaim-dark` theme
 - **THEN** the theme SHALL persist across sessions (stored in `openchamber-state`)
 - **AND** a new visitor SHALL see the theme the user previously chose
 

@@ -20,7 +20,7 @@ Use when you need to:
   is **only** for paid game features, not for educational
   content
 - "Onboard a new formative feedback agent (tutor / narrator /
-  quest / research)" — see `sruth/oideachais/agents/adk/`
+  quest / research)" — see `sruth/cianfhoghlaim/agents/adk/`
 - "Deploy the MMO to `bunchloch` or `arm1-oci`"
 - "Cross-compile the iOS / KMP / RN / Godot client"
 - "Configure the pent-elemental cosmology (Spirit / Water /
@@ -45,7 +45,7 @@ Research Assistant) that deliver **formative feedback** during
 quests, mapped to the NCCA / CfE / CfW / CCEA / SQA curriculum
 frameworks.
 
-The 4 agents live at `sruth/oideachais/agents/adk/` (Phase 5 of the
+The 4 agents live at `sruth/cianfhoghlaim/agents/adk/` (Phase 5 of the
 6-phase refactor plan moved them from `sruth/tuatha/agents/adk/`;
 the tuatha files are now thin re-exports). The pedagogical
 framework they implement lives in
@@ -134,7 +134,7 @@ agent's memory, the player's mastery) and in Cognee
 
 The full Tuath agent system (1586 lines) is in
 `references/tuath-agent-architecture.md`. The canonical
-implementations live at `sruth/oideachais/agents/adk/` (Phase 5 of
+implementations live at `sruth/cianfhoghlaim/agents/adk/` (Phase 5 of
 the 6-phase refactor plan moved them from
 `sruth/tuatha/agents/adk/`; the tuatha files are now thin
 re-exports). Each agent is one of the 4 formative feedback
@@ -262,7 +262,7 @@ When working in `sruth/tuatha/`, route to the right sub-area:
 | Web front-end | `sruth/tuatha/ui/` | `.agents/skills/tanstack-start/`, this skill |
 | SIWE auth | `sruth/tuatha/auth/siwe.py` | `.agents/skills/better-auth/` + this skill |
 | x402 micropayments | `sruth/tuatha/sruth/crypteolas/x402.py` | `.agents/skills/upstream-mirrors/SKILL.md` (x402 mirror) |
-| Celtic-language models | `sruth/oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
+| Celtic-language models | `sruth/cianfhoghlaim/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
 | Agent observability | Dagster + Langfuse | `.agents/skills/agent-observability/` |
 | Deploy the stack | `infrastructure/stacks/sruth/tuatha/` | `.agents/skills/stack-ops/` |
 
@@ -515,7 +515,7 @@ NPCs use to assess the player's mastery. Key patterns:
   warns the user if a Foundation question is dropped
   on a Higher paper
 
-The exam builder lives in `sruth/oideachais/web/src/components/
+The exam builder lives in `sruth/cianfhoghlaim/web/src/components/
 exam-builder/` and consumes the leaving-cert TanStack
 paper corpus that the MMO's NPCs cite in dialogue.
 
@@ -549,11 +549,11 @@ doesn't use TanStack.
 
 **Data plane**:
 - **In-game state**: SpacetimeDB (real-time, low-latency)
-- **Premium content**: served from `sruth/oideachais/` (DuckLake)
+- **Premium content**: served from `sruth/cianfhoghlaim/` (DuckLake)
   — paid via x402 micro-transactions in Crypteolas token
 - **Dagster assets**: `sruth/tuatha/dagster_assets/` for the
   MMO's curriculum-in-game asset graph (separate from
-  `sruth/oideachais/dagster_defs/`)
+  `sruth/cianfhoghlaim/dagster_defs/`)
 
 The 6 canonical KCG docs for Tuath live in `docs/06-product/`:
 `babylonjs.md`, `crypteolas.md`, `game-development.md`,

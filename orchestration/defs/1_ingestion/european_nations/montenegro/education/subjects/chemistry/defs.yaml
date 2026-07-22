@@ -1,0 +1,38 @@
+# defs/1_ingestion/european_nations/mne/education/subjects/chemistry/defs.yaml
+#
+# L1 CelticIngestionComponent for the Montenegro Chemistry
+# per-subject DLT source (EU candidate/neighbour full-depth
+# expansion).
+#
+# Per the cross-region path contract this source lives at
+# `dlt/european_nations/mne/education/subjects/chemistry/chemistry.py` with
+# `source_id="european_nations.mne.education.subjects.chemistry"` and lands in
+# the DuckLake table `cianfhoghlaim.education.european_nations.mne.chemistry`.
+#
+# Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_mne_chemistry
+  module: cianfhoghlaim.dlt.european_nations.mne.education.subjects.chemistry.chemistry
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - nation:
+        values: ["mne"]
+    - subject:
+        values: ["chemistry"]
+    - language:
+        values: ["sr"]
+  use_local_scrapes: true
+  asset_check: european_nations_mne_chemistry_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - mne
+    - chemistry
+    - education
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-13-eu-nations-full-depth-expansion-v1
+    spec: european-nations-ukraine-pipeline

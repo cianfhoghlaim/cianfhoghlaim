@@ -49,7 +49,7 @@ layer for CocoIndex v1 conformance (REFACTORING.md item 12).
 ### Requirement: Upstream Blog Monitor
 
 The system SHALL expose a CocoIndex v1 App at
-`oideachais.cocoindex_flows.upstream_blog_monitor` (named
+`cianfhoghlaim.cocoindex_flows.upstream_blog_monitor` (named
 `UpstreamBlogMonitor` in `coco.AppConfig`) that ingests Firecrawl
 webhook payloads for blog posts from the four upstream packages
 (motherduck / dlthub / lancedb / cocoindex), extracts structured
@@ -62,7 +62,7 @@ LanceDB chunks and FalkorDB graph nodes + edges.
   motherduck blog post
 - **WHEN** the payload lands in
   `stedding/upstream_blog_payloads/` and `uv run cocoindex update
-  oideachais.cocoindex_flows.upstream_blog_monitor` runs
+  cianfhoghlaim.cocoindex_flows.upstream_blog_monitor` runs
 - **THEN** the App SHALL emit at least one `UpstreamBlogChunk`
   row to LanceDB table `upstream_blog_chunks` (HNSW index on
   `embedding`)
@@ -97,7 +97,7 @@ LanceDB chunks and FalkorDB graph nodes + edges.
 ### Requirement: CocoIndex v1 Conformance
 
 The system SHALL expose a CocoIndex v1 App at
-`oideachais.cocoindex_flows.cocoindex_v1_conformance` (named
+`cianfhoghlaim.cocoindex_flows.cocoindex_v1_conformance` (named
 `CocoIndexV1Conformance`) that implements a static linter
 enforcing 4 conformance rules on every v1 CocoIndex App under
 `cianfhoghlaim/cocoindex_flows/`, and SHALL expose a
@@ -167,7 +167,7 @@ enforcing 4 conformance rules on every v1 CocoIndex App under
 ### Requirement: Upstream API Surface Monitor
 
 The system SHALL expose a CocoIndex v1 App at
-`oideachais.cocoindex_flows.upstream_api_surface` (named
+`cianfhoghlaim.cocoindex_flows.upstream_api_surface` (named
 `UpstreamApiSurface`) that watches the canonical CocoIndex v1
 docs URLs (`/docs/skill.md`, `/docs/getting_started/quickstart`,
 `/docs/advanced_topics/live_component`, `/docs/connectors/falkordb`,
@@ -183,7 +183,7 @@ detected.
 - **GIVEN** a new CocoIndex v1.x patch has shipped and the
   `cocoindex_docs.yml` Firecrawl monitor has fired
 - **WHEN** `uv run cocoindex update
-  oideachais.cocoindex_flows.upstream_api_surface` runs
+  cianfhoghlaim.cocoindex_flows.upstream_api_surface` runs
 - **THEN** the App SHALL emit at least one `ApiChangeChunk` row
   to LanceDB table `upstream_api_chunks`
 - **AND** the App SHALL declare one `ApiChangeNode` +
@@ -222,7 +222,7 @@ detected.
 ### Requirement: Canonical Package Enum
 
 The system SHALL expose a canonical `Package` enum at
-`oideachais.core.types.Package` with the values `MOTHERDUCK`,
+`cianfhoghlaim.core.types.Package` with the values `MOTHERDUCK`,
 `DLTHUB`, `LANCEDB`, `COCOINDEX`, re-exported from
 `codeolas.core.types` for the publishable wheel. The enum SHALL
 be the single source of truth for the four upstream packages
@@ -235,7 +235,7 @@ monitoring pipeline watches.
   tag an artefact by upstream package
 - **WHEN** the module imports `Package`
 - **THEN** the import SHALL resolve to the canonical enum at
-  `oideachais.core.types.Package`
+  `cianfhoghlaim.core.types.Package`
 - **AND** no module SHALL redeclare a local `Package` enum
 
 #### Scenario: BAML client enforcement
@@ -245,14 +245,14 @@ monitoring pipeline watches.
   `baml_src/upstream_monitoring.baml`
 - **WHEN** the function returns
 - **THEN** the `package` field SHALL be typed as
-  `oideachais.core.types.Package` (not a string)
+  `cianfhoghlaim.core.types.Package` (not a string)
 - **AND** the BAML client SHALL reject any value not in the
   enum at validation time
 
 ### Requirement: Canonical BlogPostType Enum
 
 The system SHALL expose a canonical `BlogPostType` enum at
-`oideachais.core.types.BlogPostType` with the values
+`cianfhoghlaim.core.types.BlogPostType` with the values
 `ANNOUNCEMENT`, `TUTORIAL`, `BENCHMARK`, `CASE_STUDY`,
 `RELEASE_NOTES`, `API_DOC`, re-exported from
 `codeolas.core.types` for the publishable wheel. The enum SHALL
@@ -266,7 +266,7 @@ blog posts by the `ExtractBlogPostMetadata` BAML function.
   `baml_src/upstream_monitoring.baml`
 - **WHEN** the function returns
 - **THEN** the `blog_post_type` field SHALL be typed as
-  `oideachais.core.types.BlogPostType` (not a string)
+  `cianfhoghlaim.core.types.BlogPostType` (not a string)
 - **AND** the BAML client SHALL reject any value not in the
   enum at validation time
 - **AND** the Firecrawl monitor `--goal` strings for each of

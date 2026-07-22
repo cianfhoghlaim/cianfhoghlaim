@@ -71,16 +71,16 @@ For KCG agents, the canonical pattern is:
    provider directly. This is for cost tracking + Langfuse
    observability.
 2. **All Cognee + Graphiti calls are wrapped in the
-   `cianfhoghlaim/agents/` shim**. The actual model-layer lives
-   in `cianfhoghlaim/meaisinfhoghlaim/memory/`.
+   `agents/` shim**. The actual model-layer lives
+   in `agents/meaisinfhoghlaim/memory/`.
 3. **All FalkorDB + Memgraph calls go through
-   `cianfhoghlaim/storage/graph/`** (the application-layer client).
-4. **LanceDB schemas** follow the `cianfhoghlaim/cocoindex/`
+   `storage/graph/`** (the application-layer client).
+4. **LanceDB schemas** follow the `cocoindex/`
    v1 App pattern. Do NOT create ad-hoc LanceDB tables.
 
 ## Pair this skill with
 
-- `oideachais-storage/SKILL.md` — the KCG storage mental model
+- `cianfhoghlaim-storage/SKILL.md` — the KCG storage mental model
   (which backends store what)
 - `cognee/SKILL.md` — the Cognee detail
 - `graphiti/SKILL.md` — the Graphiti detail
@@ -94,4 +94,4 @@ For KCG agents, the canonical pattern is:
 - [LanceDB docs](https://lancedb.github.io/lancedb)
 - [FalkorDB docs](https://docs.falkordb.com)
 - [Memgraph docs](https://memgraph.com/docs)
-- [oideachais-cognify-knowledge-graph spec](.agents/skills/oideachais-storage/SKILL.md)
+- [cianfhoghlaim-cognify-knowledge-graph spec](.agents/skills/cianfhoghlaim-storage/SKILL.md)

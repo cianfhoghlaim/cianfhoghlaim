@@ -65,7 +65,7 @@ Each reference carries:
 
 - **§0 Why this plan** — replaces the original "Tangent N"
   framing with a technology-first deploy narrative
-- **§1 Monorepo grounding** — table of `sruth/oideachais/`,
+- **§1 Monorepo grounding** — table of `sruth/cianfhoghlaim/`,
   `sruth/tuatha/`, `infrastructure/`, and skill assets the plan
   consumes
 - **§2-N domain body** — BAML schemas, source registries,
@@ -146,7 +146,7 @@ must respect:
 
 | Phase | Generic description | Example (plan 01) |
 |:--|:--|:--|
-| 0 | Source registry complete (8 nations × 5 kinds) | `sruth/oideachais/sources.yaml` populated; `openspec validate oideachais-pipeline` passes |
+| 0 | Source registry complete (8 nations × 5 kinds) | `sruth/cianfhoghlaim/sources.yaml` populated; `openspec validate cianfhoghlaim-pipeline` passes |
 | 1 | DLT pipelines ingest the source authorities | `sec_examinations`, `ccea_ni_curriculum`, `dfe_england_national_curriculum` materialise in DuckLake |
 | 2 | BAML extractor (v1, gold-set validated) | `EquivalenceAssertion` at 90% precision on a 50-paper gold set |
 | 3 | BAML extractor (v2, scale-up) | `SkillAssertion` extracts 10,000 skill tags from SEC corpus |
@@ -184,9 +184,9 @@ plan's reference.
   OIDC + DID layer for the identity surface
 - `.agents/skills/agent-observability/SKILL.md` —
   Langfuse + MLflow for plan-specific eval + cost gates
-- `sruth/oideachais/sources.yaml` — the 8-nation × 5-kind
+- `sruth/cianfhoghlaim/sources.yaml` — the 8-nation × 5-kind
   source registry
-- `sruth/oideachais/baml_src/` — the BAML schemas the plans add
+- `sruth/cianfhoghlaim/baml_src/` — the BAML schemas the plans add
 - `infrastructure/stacks/identity/` — the Pocket ID
   stack
 - `sruth/tuatha/sruth/crypteolas/` — the deferred x402 / on-chain

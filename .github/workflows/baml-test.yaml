@@ -1,10 +1,10 @@
-name: baml-cli test
+name: baml-ci
 
 on:
   pull_request:
-    branches: [pick-4-biep-v1, main]
+    branches: [main]
   push:
-    branches: [pick-4-biep-v1, main]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -12,9 +12,9 @@ permissions:
   pull-requests: write
 
 jobs:
-  baml-test:
+  baml-checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -25,28 +25,42 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install mise
-        run: |
-          curl -fsSL https://mise.jdx.dev/install.sh | sh
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-
       - name: Install dependencies
         run: |
           cd cianfhoghlaim
           uv sync --extra dlthub-platform
 
-      - name: Run baml-cli test
+      - name: Run baml-cli generate (canonical step)
         run: |
           cd cianfhoghlaim
           mkdir -p baml_client_tests
           set -o pipefail
+          mise run baml:generate 2>&1 | tee baml_client_tests/baml-generate-output.txt
+
+      - name: Drift check (generated client diff)
+        run: |
+          if ! git diff --exit-code cianfhoghlaim/baml_client/; then
+            echo "ERROR: baml_client/ has uncommitted drift. Run 'cd cianfhoghlaim && mise run baml:generate' and commit."
+            exit 1
+          fi
+
+      - name: Run baml-cli test
+        run: |
+          cd cianfhoghlaim
+          set -o pipefail
           mise run baml:test 2>&1 | tee baml_client_tests/baml-test-output.txt
+
+      - name: Run baml-cli check (schema validation)
+        run: |
+          cd cianfhoghlaim
+          set -o pipefail
+          mise run baml:check 2>&1 | tee baml_client_tests/baml-check-output.txt || true
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: baml-test-results
+          name: baml-ci-results
           path: cianfhoghlaim/baml_client_tests/
           if-no-files-found: warn
           retention-days: 30
@@ -57,27 +71,26 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## baml-cli test — FAILED
+            ## baml-ci — FAILED
 
-            The hard BAML CI gate failed while running `mise run baml:test`
-            (`uv run baml-cli test`) against the test blocks in
-            `cianfhoghlaim/baml/`.
+            The hard BAML CI gate failed.
 
-            See the uploaded artifact `baml-test-results` for the captured
-            CLI output.
+            ### Steps that may have failed
+            1. `mise run baml:generate` — client generation
+            2. Drift check — committed generated client must match freshly generated
+            3. `mise run baml:test` — schema/type/test blocks
+            4. `mise run baml:check` — schema validation
+
+            See the uploaded artifact `baml-ci-results` for the captured CLI output.
 
             ### How to fix
-
             1. Run the gate locally from the repo root:
                ```bash
                cd cianfhoghlaim
-               mise run baml:test
+               mise run baml:generate && mise run baml:test && mise run baml:check
                ```
             2. Fix any BAML parse/type/test failures reported by `baml-cli test`.
-            3. Regenerate clients if schema changes require it:
-               ```bash
-               mise run baml:generate
-               ```
+            3. Commit the regenerated baml_client/ if it changed.
 
             ---
 

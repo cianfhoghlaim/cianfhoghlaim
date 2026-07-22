@@ -1,0 +1,38 @@
+# defs/1_ingestion/americas/Mexico/law/defs.yaml
+#
+# L1 ingestion for the Mexico law DLT source.
+#
+# Per the canonical cross-region path contract this source lives at
+# ``dlt/americas/Mexico/law/dof.py`` with
+# ``source_id="americas.Mexico.law.dof"`` and lands in the
+# DuckLake table ``cianfhoghlaim.law.americas.Mexico``.
+#
+# Reference: openspec/changes/2026-07-11-americas-california-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: americas_mex_law
+  module: cianfhoghlaim.dlt.americas.Mexico.law.dof
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["americas"]
+    - jurisdiction:
+        values: ["Mexico"]
+    - language:
+        values: ["es"]
+  use_local_scrapes: true
+  asset_check: americas_mex_law_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - americas
+    - Mexico
+    - law
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-11-americas-california-pipeline-v1
+    spec: americas-california-pipeline
+
+    country_name: "Mexico"
+    official_languages: ['es']

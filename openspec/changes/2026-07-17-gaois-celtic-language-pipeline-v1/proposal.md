@@ -61,13 +61,13 @@ change:
 
 | App | LanceDB table | LlamaSwap routing |
 |:--|:--|:--|
-| `gaois_embedding.py` | `oideachais.language.gaois_chunks` | `uccix-mistral-24b` (Irish) / `gemma-4-26B-A4B` (English) |
-| `duchas_embedding.py` | `oideachais.language.duchas_chunks` (with `duchas_bboxes` child table) | `molmo2-8b` + `dots-ocr` |
-| `heritage_embedding.py` | `oideachais.language.heritage_chunks` | `gemma-4-26B-A4B` |
-| `canuint_embedding.py` | `oideachais.language.canuint_chunks` | `qwen3-vl-8b` (audio + text) |
-| `ud_celtic_embedding.py` | `oideachais.language.ud_celtic_chunks` | `uccix-mistral-24b` (Irish) / `gemma-4-26B-A4B` (Celtic) |
-| `local_documents_embedding.py` | `oideachais.language.local_documents_chunks` | `qwen3-vl-8b` |
-| `celtic_curriculum_embedding.py` | `oideachais.celtic.curriculum_chunks` | `uccix-mistral-24b` (Irish) / `gemma-4-26B-A4B` (Welsh/Scottish/Breton) |
+| `gaois_embedding.py` | `cianfhoghlaim.language.gaois_chunks` | `uccix-mistral-24b` (Irish) / `gemma-4-26B-A4B` (English) |
+| `duchas_embedding.py` | `cianfhoghlaim.language.duchas_chunks` (with `duchas_bboxes` child table) | `molmo2-8b` + `dots-ocr` |
+| `heritage_embedding.py` | `cianfhoghlaim.language.heritage_chunks` | `gemma-4-26B-A4B` |
+| `canuint_embedding.py` | `cianfhoghlaim.language.canuint_chunks` | `qwen3-vl-8b` (audio + text) |
+| `ud_celtic_embedding.py` | `cianfhoghlaim.language.ud_celtic_chunks` | `uccix-mistral-24b` (Irish) / `gemma-4-26B-A4B` (Celtic) |
+| `local_documents_embedding.py` | `cianfhoghlaim.language.local_documents_chunks` | `qwen3-vl-8b` |
+| `celtic_curriculum_embedding.py` | `cianfhoghlaim.celtic.curriculum_chunks` | `uccix-mistral-24b` (Irish) / `gemma-4-26B-A4B` (Welsh/Scottish/Breton) |
 
 Each App uses `BAAI/bge-m3` (1024-d) for embeddings, dispatches through
 the canonical OCR/VLM registry (`meaisinfhoghlaim.models.registry`), and
@@ -116,7 +116,7 @@ for the 7 CocoIndex Apps (per-language + per-source routing).
 ### 9. 1 MODIFIED + 2 MODIFIED spec deltas
 
 - ADDED Requirements on `celtic-language-pipeline/spec.md` (new umbrella)
-- MODIFIED delta on `oideachais-pipeline/spec.md` (cross-reference)
+- MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` (cross-reference)
 - MODIFIED delta on `british-isles-education-pipeline/spec.md` (cross-reference)
 
 ## Dependencies
@@ -137,9 +137,9 @@ Push target:    origin/pick-4-biep-v1
 ## Cross-references
 
 - [`british-isles-education-pipeline`](../../specs/british-isles-education-pipeline/spec.md) — the seed instance of the 5-layer Dagster + CocoIndex + MotherDuck pattern
-- [`oideachais-cocoindex-v1-migration`](../../specs/oideachais-cocoindex-v1-migration/spec.md) — the R1-R4 conformance contract
-- [`oideachais-baml-schemas`](../../specs/oideachais-baml-schemas/spec.md) — the BAML cluster taxonomy
-- [`oideachais-pipeline`](../../specs/oideachais-pipeline/spec.md) — the parent pipeline
+- [`cianfhoghlaim-cocoindex-v1-migration`](../../specs/cianfhoghlaim-cocoindex-v1-migration/spec.md) — the R1-R4 conformance contract
+- [`cianfhoghlaim-baml-schemas`](../../specs/cianfhoghlaim-baml-schemas/spec.md) — the BAML cluster taxonomy
+- [`cianfhoghlaim-pipeline`](../../specs/cianfhoghlaim-pipeline/spec.md) — the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns
 - `.agents/skills/cocoindex/SKILL.md` — R1-R4 conformance contract

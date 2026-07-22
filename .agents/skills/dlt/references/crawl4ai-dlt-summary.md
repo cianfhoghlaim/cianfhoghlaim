@@ -41,10 +41,10 @@ load_info = pipeline.run(scraped_pages(["https://example.com/page1", ...]))
 ## KCG usage
 
 - The KCG stack uses **Firecrawl** as the primary scraper
-  (`FirecrawlSource` in `cianfhoghlaim/dlt/`)
+  (`FirecrawlSource` in `dlt/`)
 - `crawl4ai` is the fallback for JS-heavy sites that Firecrawl
   cannot handle
-- The `oideachais-leabharlann` spec uses crawl4ai for some Google
+- The `cianfhoghlaim-leabharlann` spec uses crawl4ai for some Google
   Takeout HTML pages
 
 ## Reference

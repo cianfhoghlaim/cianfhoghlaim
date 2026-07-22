@@ -2,17 +2,17 @@
 
 ### Requirement: 8-step tutorial presence
 
-The system SHALL provide exactly 8 marimo notebooks at `cianfhoghlaim/notebooks/{01..08}_*.py`, one per numbered tutorial step.
+The system SHALL provide exactly 8 marimo notebooks at `notebooks/{01..08}_*.py`, one per numbered tutorial step.
 
 #### Scenario: All 8 notebooks present
 
-- **WHEN** the user runs `ls cianfhoghlaim/notebooks/{01..08}_*.py`
+- **WHEN** the user runs `ls notebooks/{01..08}_*.py`
 - **THEN** exactly 8 files exist
 - **AND** `marimo edit 01_overview_setup.py` renders without error
 
 ### Requirement: Legacy preservation
 
-The system SHALL preserve the existing 50+ stage-specific notebooks under `cianfhoghlaim/notebooks/legacy/` (unmodified) so the existing per-subject / per-corpus analyses remain reachable.
+The system SHALL preserve the existing 50+ stage-specific notebooks under `notebooks/legacy/` (unmodified) so the existing per-subject / per-corpus analyses remain reachable.
 
 #### Scenario: Legacy discovery
 
@@ -57,16 +57,16 @@ The system SHALL provide a `docs/agents/five-tangent-modernization.md` companion
 
 ### Requirement: Workshop vendoring
 
-The system SHALL vendor the `DataTalksClub/llm-zoomcamp/cohorts/2026/workshops/dlt` workshop at `cianfhoghlaim/dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/` as a read-only reference (MIT-licensed, sparse-checkout, regenerable). The vendored workshop is NOT imported — it's documentation only.
+The system SHALL vendor the `DataTalksClub/llm-zoomcamp/cohorts/2026/workshops/dlt` workshop at `dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/` as a read-only reference (MIT-licensed, sparse-checkout, regenerable). The vendored workshop is NOT imported — it's documentation only.
 
 #### Scenario: Reference workshop present
 
-- **WHEN** the user runs `ls cianfhoghlaim/dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/`
+- **WHEN** the user runs `ls dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/`
 - **THEN** the dlt workshop files exist (e.g. `01-overview.ipynb`, `02-dlt-resources.ipynb`)
 
 ### Requirement: 5-notebook BAML+CocoIndex tutorial track
 
-The system SHALL provide 5 marimo tutorial notebooks at `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/` (a new directory following the existing 01-12 numbering scheme) covering the full BAML 0.223.0 + CocoIndex v1 + vision-model stack. The 5 notebooks SHALL be:
+The system SHALL provide 5 marimo tutorial notebooks at `notebooks/13_baml_cocoindex_tutorial/` (a new directory following the existing 01-12 numbering scheme) covering the full BAML 0.223.0 + CocoIndex v1 + vision-model stack. The 5 notebooks SHALL be:
 
 1. `01_baml_post_v4_syntax.py` — canonical post-v4 BAML 0.223.0 syntax (`generator` block + `field Type` whitespace + `enum` / `class` / `function` + `@description` + `image` + `@stream.*` + `?` optionality)
 2. `02_qpack_8_subject_walkthrough.py` — the 8 `qpack_<subject>.baml` files, demonstrating the `paragraph → LO[] → FormativeItem → Score → Validate` pattern across all 8 LC subjects (40+ BAML calls)
@@ -76,7 +76,7 @@ The system SHALL provide 5 marimo tutorial notebooks at `cianfhoghlaim/notebooks
 
 #### Scenario: 5 tutorial files present and CLI-discoverable
 
-- **GIVEN** the 5 follow-up tutorials exist at `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
+- **GIVEN** the 5 follow-up tutorials exist at `notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
 - **WHEN** the user runs `uv run cianfhoghlaim-marimo list 13_baml_cocoindex_tutorial`
 - **THEN** the CLI returns exactly 5 entries
 - **AND** `uv run cianfhoghlaim-marimo edit 13_baml_cocoindex_tutorial/01_baml_post_v4_syntax` opens marimo edit without error
@@ -92,11 +92,11 @@ The system SHALL provide 5 marimo tutorial notebooks at `cianfhoghlaim/notebooks
 
 ### Requirement: `01_overview_setup.py` Step 0.5 pointer
 
-The system SHALL append a "Step 0.5: the BAML+CocoIndex tutorial track" Markdown cell to `cianfhoghlaim/notebooks/01_overview_setup.py`'s table of contents between Step 0 (env setup) and Step 1 (vision models). The pointer SHALL link to the 5 tutorial notebooks in `notebooks/13_baml_cocoindex_tutorial/` and SHALL list their purpose in 1-line summaries.
+The system SHALL append a "Step 0.5: the BAML+CocoIndex tutorial track" Markdown cell to `notebooks/01_overview_setup.py`'s table of contents between Step 0 (env setup) and Step 1 (vision models). The pointer SHALL link to the 5 tutorial notebooks in `notebooks/13_baml_cocoindex_tutorial/` and SHALL list their purpose in 1-line summaries.
 
 #### Scenario: Step 0.5 pointer cell renders in marimo
 
-- **WHEN** the user runs `marimo edit cianfhoghlaim/notebooks/01_overview_setup.py`
+- **WHEN** the user runs `marimo edit notebooks/01_overview_setup.py`
 - **THEN** the notebook renders with a "Step 0.5: the BAML+CocoIndex tutorial track" Markdown cell
 - **AND** the cell lists all 5 tutorial notebooks with their 1-line summaries
 - **AND** the cell does not depend on any of the 5 tutorial notebooks existing (it links to the dir by reference)

@@ -23,7 +23,7 @@ v1 stack can be archived as a coherent unit:
    `openspec/specs/british-isles-education-pipeline/spec.md` should
    carry the consolidated R0–R7 sequential history.
 
-2. **oideachais-baml-schemas spec**: 6 separate ADDED Requirements
+2. **cianfhoghlaim-baml-schemas spec**: 6 separate ADDED Requirements
    spread across 5 changes —
    `2026-07-10-fix-baml-codegen-v4-syntax-v1` (2) +
    `2026-07-12-baml-cli-test-ci-gate-v1` (1) +
@@ -33,7 +33,7 @@ v1 stack can be archived as a coherent unit:
    consolidation into 4 logical change groups (v0.212+ migration /
    v0.223 test CI gate / v0.223 type-builder / Option-2 50-error fix).
 
-3. **oideachais-cognify-knowledge-graph spec**: the "Leabharlann
+3. **cianfhoghlaim-cognify-knowledge-graph spec**: the "Leabharlann
    cognify" requirement says "the 3 leabharlann corpora (books,
    zotero, takeout)" — but the canonical leabharlann spec covers 6
    sub-corpora (`aigne/`, `gaeilge/`, `gemini_deep_research/`, `mata/`,
@@ -41,15 +41,15 @@ v1 stack can be archived as a coherent unit:
    cognify spec delta (and the parent change's claim) need to mention
    the 6 sub-corpora, not the legacy 3.
 
-4. **oideachais-marimo-dashboards spec**: 4 stale count claims across
+4. **cianfhoghlaim-marimo-dashboards spec**: 4 stale count claims across
    4 change subdirs:
-   - `2026-07-14-oideachais-marimo-dashboards-v1` claims "11 BIEP
+   - `2026-07-14-cianfhoghlaim-marimo-dashboards-v1` claims "11 BIEP
      notebooks" (the BIEP motherduck subdir count, accurate) but the
      change's "10 follow-up dashboards" claim is the 10 v1 dashboards.
-   - `2026-07-15-oideachais-marimo-dashboards-extension-v1` claims
+   - `2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1` claims
      "Existing 15+10=25 notebooks" — but the on-disk count of all
      marimo notebooks at the time was the current
-     `ls cianfhoghlaim/notebooks/**/*.py | wc -l` count (134 clean
+     `ls notebooks/**/*.py | wc -l` count (134 clean
      notebooks on disk today).
    - `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1` claims
      "Existing 30+10+10=50 notebooks" — same: should be aligned to
@@ -60,9 +60,9 @@ v1 stack can be archived as a coherent unit:
      `2026-07-13-baml-cocoindex-tutorials-ga-v1` change).
 
    The canonical spec at
-   `openspec/specs/oideachais-marimo-dashboards/spec.md` should
+   `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md` should
    document that **the on-disk count from
-   `ls cianfhoghlaim/notebooks/**/*.py | wc -l` is the source of
+   `ls notebooks/**/*.py | wc -l` is the source of
    truth** for all marimo notebook count claims, and the canonical
    cross-reference at line 250 ("the 11 Marimo notebooks") should be
    updated to reflect the current on-disk count.
@@ -71,9 +71,9 @@ v1 stack can be archived as a coherent unit:
    the same `(:LeabharlannAuthor)-[:COREFERS_WITH]->(:CultureHeritagePerson)`
    + `(:LeabharlannDoc)-[:ABOUT]->(:CultureHeritagePlace)` edges are
    shipped by **two files**:
-   - `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`
+   - `storage/cognify/rules/cross_archive_biep_edges.py`
      (the BIEP cross-archive file, owned by the cognify change)
-   - `cianfhoghlaim/storage/cognify/rules/leabharlann_culture_heritage.py`
+   - `storage/cognify/rules/leabharlann_culture_heritage.py`
      (the leabharlann orchestrator, owned by the leabharlann change)
 
    The leabharlann change owns the 4 leabharlann-X rules
@@ -98,29 +98,29 @@ deltas against the canonical specs, no code changes:
 | File | Action | Why |
 |:--|:--|:--|
 | `openspec/specs/british-isles-education-pipeline/spec.md` | MODIFIED (via delta) | Re-namespace the 9 ADDED Requirements from 7 changes into R0–R7 sequential R-group history |
-| `openspec/specs/oideachais-baml-schemas/spec.md` | MODIFIED (via delta) | Re-namespace the 6 ADDED Requirements from 5 changes into 4 logical change groups |
-| `openspec/specs/oideachais-cognify-knowledge-graph/spec.md` | MODIFIED (via delta) | Update the "3 leabharlann corpora" claim to "6 sub-corpora" |
-| `openspec/specs/oideachais-marimo-dashboards/spec.md` | MODIFIED (via delta) | Declare the on-disk count (`ls cianfhoghlaim/notebooks/**/*.py \| wc -l`) as the canonical source of truth; align the cross-reference |
+| `openspec/specs/cianfhoghlaim-baml-schemas/spec.md` | MODIFIED (via delta) | Re-namespace the 6 ADDED Requirements from 5 changes into 4 logical change groups |
+| `openspec/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md` | MODIFIED (via delta) | Update the "3 leabharlann corpora" claim to "6 sub-corpora" |
+| `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md` | MODIFIED (via delta) | Declare the on-disk count (`ls notebooks/**/*.py \| wc -l`) as the canonical source of truth; align the cross-reference |
 
 The spec deltas live at:
 - `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/british-isles-education-pipeline/spec.md`
-- `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/oideachais-baml-schemas/spec.md`
-- `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/oideachais-cognify-knowledge-graph/spec.md`
-- `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/oideachais-marimo-dashboards/spec.md`
+- `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/cianfhoghlaim-baml-schemas/spec.md`
+- `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md`
+- `openspec/changes/2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md`
 
 ## Out of scope
 
 - The 50+ archived openspec changes under `openspec/changes/archive/*`
   are NOT touched (hard rule).
-- The 7 `cianfhoghlaim/baml/education/lc_extraction/*.baml` files
+- The 7 `baml/education/lc_extraction/*.baml` files
   (owned by the BIEP v1 change) are NOT modified (hard rule).
 - The `cross_archive_biep_edges.py` source code is NOT modified
   (hard rule — the duplicate leabharlann → culture-heritage edges
   remain in 2 files; the consolidation change only re-namespace the
   spec deltas to declare the ownership boundary).
 - The 4 source change subdirs
-  (`2026-07-14-oideachais-marimo-dashboards-v1` /
-  `2026-07-15-oideachais-marimo-dashboards-extension-v1` /
+  (`2026-07-14-cianfhoghlaim-marimo-dashboards-v1` /
+  `2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1` /
   `2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1` /
   `2026-07-12-baml-cocoindex-tutorials-v1`) are NOT modified —
   the stale count claims remain in the change subdirs as historical
@@ -158,11 +158,11 @@ Blocked by (soft):
   - 2026-07-13-fix-baml-50-out-of-scope-errors-v1 (BAML side)
     (Option 2 fix — the 1 ADDED consolidated into the Option-2
     50-error fix requirement)
-  - 2026-07-14-oideachais-cognify-knowledge-graph-v1
+  - 2026-07-14-cianfhoghlaim-cognify-knowledge-graph-v1
     (the 3 corpora claim — the 1 MODIFIED requirement consolidates
     to 6 sub-corpora)
-  - 2026-07-14-oideachais-marimo-dashboards-v1
-  - 2026-07-15-oideachais-marimo-dashboards-extension-v1
+  - 2026-07-14-cianfhoghlaim-marimo-dashboards-v1
+  - 2026-07-15-cianfhoghlaim-marimo-dashboards-extension-v1
   - 2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1
   - 2026-07-12-baml-cocoindex-tutorials-v1
     (the 4 marimo count claims — the 1 MODIFIED requirement declares
@@ -195,9 +195,9 @@ Affected repos: cianfhoghlaim (single-repo change)
   `(:LeabharlannAuthor)-[:COREFERS_WITH]->(:CultureHeritagePerson)` +
   `(:LeabharlannDoc)-[:ABOUT]->(:CultureHeritagePlace)` edges are
   implemented in BOTH
-  `cianfhoghlaim/storage/cognify/rules/cross_archive_biep_edges.py`
+  `storage/cognify/rules/cross_archive_biep_edges.py`
   (owned by the cognify change) AND
-  `cianfhoghlaim/storage/cognify/rules/leabharlann_culture_heritage.py`
+  `storage/cognify/rules/leabharlann_culture_heritage.py`
   (owned by the leabharlann change). Per the "Do NOT modify the
   existing cross-archive code" hard rule in this change's brief, the
   duplicate code is left in place. The spec delta declares the

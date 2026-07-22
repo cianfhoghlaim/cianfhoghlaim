@@ -1,4 +1,0 @@
-"""Re-export the qc statistics DLT source."""
-from cianfhoghlaim.dlt.commonwealth.can.qc.statistics import qc_stats_office  # noqa: F401
-
-__all__ = ["qc_stats_office"]

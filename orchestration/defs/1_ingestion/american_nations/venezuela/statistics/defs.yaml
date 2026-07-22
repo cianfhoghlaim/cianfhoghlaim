@@ -1,0 +1,38 @@
+# defs/1_ingestion/americas/Venezuela/statistics/defs.yaml
+#
+# L1 ingestion for the Venezuela statistics DLT source.
+#
+# Per the canonical cross-region path contract this source lives at
+# ``dlt/americas/Venezuela/statistics/ine.py`` with
+# ``source_id="americas.Venezuela.statistics.ine"`` and lands in the
+# DuckLake table ``cianfhoghlaim.statistics.americas.Venezuela``.
+#
+# Reference: openspec/changes/2026-07-11-americas-california-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: americas_ven_statistics
+  module: cianfhoghlaim.dlt.americas.Venezuela.statistics.ine
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["americas"]
+    - jurisdiction:
+        values: ["Venezuela"]
+    - language:
+        values: ["es"]
+  use_local_scrapes: true
+  asset_check: americas_ven_statistics_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - americas
+    - Venezuela
+    - statistics
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-11-americas-california-pipeline-v1
+    spec: americas-california-pipeline
+
+    country_name: "Venezuela"
+    official_languages: ['es']

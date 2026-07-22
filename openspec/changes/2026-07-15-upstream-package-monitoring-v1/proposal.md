@@ -17,12 +17,12 @@ runtime surfaces:
   `upstream_blog_monitor`, `upstream_api_surface`, and
   `cocoindex_v1_conformance`.
 - Adds four Firecrawl-driven monitor entrypoints under
-  `cianfhoghlaim/scripts/upstream/` for `motherduck`, `dlthub`,
+  `scripts/upstream/` for `motherduck`, `dlthub`,
   `lancedb`, and `cocoindex`.
 - Adds a FastAPI n8n bridge at
-  `cianfhoghlaim/web/hono-api/src/routes/upstream_webhook.py`.
+  `web/hono-api/src/routes/upstream_webhook.py`.
 - Adds a Dagster polling sensor at
-  `cianfhoghlaim/orchestration/sensors/upstream_breaking_change_sensor.py`.
+  `orchestration/sensors/upstream_breaking_change_sensor.py`.
 - Adds the Phase 1 completion requirement to the
   `upstream-package-monitoring` capability delta.
 
@@ -33,7 +33,7 @@ release changes:
 
 1. Firecrawl fetches canonical changelog / blog / GitHub release pages.
 2. BAML `ExtractPackageRelease` extracts typed release metadata.
-3. Rows land in `md:oideachais_upstream.upstream_monitoring`.
+3. Rows land in `md:cianfhoghlaim_upstream.upstream_monitoring`.
 4. Breaking changes are posted to the n8n bridge.
 5. The Dagster sensor polls the MotherDuck table and emits downstream
    materialisation requests.

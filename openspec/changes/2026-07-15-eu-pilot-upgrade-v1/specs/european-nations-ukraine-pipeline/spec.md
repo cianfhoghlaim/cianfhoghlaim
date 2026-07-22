@@ -97,7 +97,7 @@ DLT sources + L1 defs to Wales / England / Northern Ireland.
   the EU nations scaffold (parent of Ukraine)
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the BIEP parent spec (per-subject template)
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

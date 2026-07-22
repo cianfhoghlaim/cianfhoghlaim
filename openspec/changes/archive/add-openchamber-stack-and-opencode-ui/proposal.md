@@ -37,7 +37,7 @@ resource mesh.
 A single-service stack running the upstream OpenChamber
 container (built on `oven/bun:1.3.5@sha256:<digest>` with
 `opencode-ai` bundled) plus a `locket` sidecar for Infisical
-secret injection. Networking: shared `cianchoghlaim` bridge.
+secret injection. Networking: shared `cianfhoghlaim` bridge.
 
 - `compose.yaml` — single service, named volume for
   persistent session state (`openchamber-state`).

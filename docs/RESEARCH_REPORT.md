@@ -21,10 +21,10 @@ The 2026-06-28 BrowserBase research program produced **45 markdown research file
 
 | Change | Cross-spec | ADDED Requirements | Status |
 |:--|:--|--:|:--|
-| `2026-06-28-browserbase-phase-1a-decisions` | `oideachais-pipeline` | 6 | ✅ valid |
-| `2026-06-28-browserbase-phase-1b-decisions` | `oideachais-storage` | 6 | ✅ valid |
+| `2026-06-28-browserbase-phase-1a-decisions` | `cianfhoghlaim-pipeline` | 6 | ✅ valid |
+| `2026-06-28-browserbase-phase-1b-decisions` | `cianfhoghlaim-storage` | 6 | ✅ valid |
 | `2026-06-28-browserbase-phase-2-decisions` | `meaisinfhoghlaim-platform` (+ `infrastructure-stacks`) | 8 | ✅ valid |
-| `2026-06-28-browserbase-phase-3-decisions` | `oideachais-pipeline` | 7 | ✅ valid |
+| `2026-06-28-browserbase-phase-3-decisions` | `cianfhoghlaim-pipeline` | 7 | ✅ valid |
 | **TOTAL** | | **27** | **4/4 pass** |
 
 ## Key research findings (cross-phase)
@@ -113,11 +113,11 @@ Each file follows the **7-section template**:
 ```
 openspec/changes/2026-06-28-browserbase-phase-1a-decisions/
   proposal.md, tasks.md
-  specs/oideachais-pipeline/spec.md (6 ADDED Requirements)
+  specs/cianfhoghlaim-pipeline/spec.md (6 ADDED Requirements)
 
 openspec/changes/2026-06-28-browserbase-phase-1b-decisions/
   proposal.md, tasks.md
-  specs/oideachais-storage/spec.md (6 ADDED Requirements)
+  specs/cianfhoghlaim-storage/spec.md (6 ADDED Requirements)
 
 openspec/changes/2026-06-28-browserbase-phase-2-decisions/
   proposal.md, tasks.md
@@ -126,7 +126,7 @@ openspec/changes/2026-06-28-browserbase-phase-2-decisions/
 
 openspec/changes/2026-06-28-browserbase-phase-3-decisions/
   proposal.md, tasks.md
-  specs/oideachais-pipeline/spec.md (7 ADDED Requirements)
+  specs/cianfhoghlaim-pipeline/spec.md (7 ADDED Requirements)
 ```
 
 All 4 changes pass `openspec validate --strict`.

@@ -51,7 +51,7 @@ file_path, file_mtime)` to decide whether to re-run.
 
 A file that fails BAML extraction is logged and skipped. The
 flow continues. Check the asset check report for the count of
-skipped files (see `cianfhoghlaim/orchestration/defs/docs_skills_assets.py`).
+skipped files (see `orchestration/defs/docs_skills_assets.py`).
 
 ## Concurrency control
 
@@ -62,9 +62,9 @@ skipped files (see `cianfhoghlaim/orchestration/defs/docs_skills_assets.py`).
 
 ## KCG live-update patterns
 
-- `cianfhoghlaim/cocoindex/docs_skills_consolidation.py` —
+- `cocoindex/docs_skills_consolidation.py` —
   live-walks `docs/` and `.agents/skills/`
-- `cianfhoghlaim/cocoindex/codebase_indexing.py` — live-walks
+- `cocoindex/codebase_indexing.py` — live-walks
   the repo (replacement for the legacy `ccc` CLI)
-- `cianfhoghlaim/cocoindex/leabharlann_embedding.py` —
+- `cocoindex/leabharlann_embedding.py` —
   live-walks `leabharlann/`

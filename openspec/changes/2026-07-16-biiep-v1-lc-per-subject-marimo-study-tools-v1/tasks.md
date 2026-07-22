@@ -2,11 +2,11 @@
 
 ## 1. Audit the existing marimo dashboard infrastructure
 
-- [x] Listed `cianfhoghlaim/notebooks/leaving_cert/` — the 6 existing
+- [x] Listed `notebooks/leaving_cert/` — the 6 existing
       per-subject visualisation notebooks (mathematics.py,
       chemistry.py, geography.py, gaeilge.py, english.py,
       computer_science.py)
-- [x] Confirmed `cianfhoghlaim/notebooks/12_subject_*` does not exist
+- [x] Confirmed `notebooks/12_subject_*` does not exist
       (the new subdir was created)
 - [x] Verified the 6 `qpack_<subject>.baml` files exist with 5-6
       functions per subject (mathematics: 6, chemistry: 6,
@@ -34,7 +34,7 @@
 ## 3. Register the new subdir in `cli.py`
 
 - [x] Added `"12_subject_study_tools"` to the `GROUPS` tuple in
-      `cianfhoghlaim/notebooks/cli.py` (with explanatory inline
+      `notebooks/cli.py` (with explanatory inline
       comment + openspec change reference)
 
 ## 4. Verify the 6 notebooks AST-parse
@@ -64,7 +64,7 @@
 
 - [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/proposal.md`
 - [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/tasks.md`
-- [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/specs/oideachais-marimo-dashboards/spec.md`
+- [x] `openspec/changes/2026-07-16-biiep-v1-lc-per-subject-marimo-study-tools-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md`
       (MODIFIED delta — adds R-Phase-3 requirement)
 
 ## 8. Commit + push

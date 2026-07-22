@@ -1,0 +1,33 @@
+# =============================================================================
+# TINYAUTH - Pangolin blueprint (bulk import format)
+# =============================================================================
+# Auto-generated for the Tinyauth stack. The blueprint is the bulk
+# import format for the Pangolin Integrations API (PUT /org/{orgId}/blueprint
+# with a base64-encoded JSON payload). This file is the canonical
+# source — the bons IaC generates it from compose.yaml + sidecar.yaml
+# + secrets.env + pangolin.yaml + .env.example via
+# `scripts/generate-komodo-stacks.ts`.
+# =============================================================================
+
+pangolin:
+  blueprint:
+    name: tinyauth
+    resources:
+      - name: tinyauth
+        mode: http
+        full-domain: tinyauth.cianfhoghlaim.ie
+        destination-port: 10000
+        protocol: https
+        ssl: true
+        roles:
+          - "Admin"
+      - name: tinyauth-oauth-callback
+        mode: http
+        full-domain: tinyauth.cianfhoghlaim.ie
+        destination-port: 10000
+        protocol: https
+        path: /api/oauth/callback/pocketid
+        ssl: true
+        roles:
+          - "Admin"
+    siteId: bunchloch-newt

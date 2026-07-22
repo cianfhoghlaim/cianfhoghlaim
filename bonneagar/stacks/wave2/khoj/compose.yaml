@@ -1,0 +1,81 @@
+# =============================================================================
+# KHOJ - Personal AI Assistant (bunchloch)
+# =============================================================================
+# Khoj is a personal AI assistant that searches, browses, and reasons
+# across your notes, documents, and codebase. It supports
+# self-hosted LLMs (via LiteLLM/Ollama) and provides a desktop
+# + browser + mobile UI.
+#
+# Architecture:
+#   bunchloch (MacBook M4) — khoj (ghcr.io/khoj-ai/khoj:v1.30.0 on :42110)
+#     - 42110 — Web UI
+#
+# The Khoj image is multi-arch (linux/amd64,linux/arm64) on
+# GitHub Container Registry.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml \
+#                                -f sidecar.yaml up -d
+# =============================================================================
+
+name: khoj
+
+services:
+  khoj:
+    # Pinned 2026-07-08 (ghcr.io/khoj-ai/khoj:v1.30.0 on GHCR — public
+    # upstream image, no org-private image used). Multi-arch supported.
+    image: ghcr.io/khoj-ai/khoj:v1.30.0
+    container_name: khoj
+    restart: unless-stopped
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    ports:
+      - "${KHOJ_PORT:-42110}:42110"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: khoj
+      POSTGRES_HOST: lakehouse-postgres
+      POSTGRES_PORT: "5432"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:-devpassword}@lakehouse-postgres:5432/khoj
+      KHOJ_DOMAIN: ${KHOJ_DOMAIN:-https://khoj.cianfhoghlaim.ie}
+      KHOJ_PORT: "42110"
+      KHOJ_NO_HTTPS: "false"
+      KHOJ_LLM_PROVIDER: openai
+      OPENAI_API_BASE: ${OPENAI_API_BASE:-http://litellm:4000/v1}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-1234}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire:4317}
+    volumes:
+      - khoj-data:/home/khoj/.khoj
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "wget --no-verbose --tries=1 --spider http://localhost:42110/api/health || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+volumes:
+  khoj-data:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

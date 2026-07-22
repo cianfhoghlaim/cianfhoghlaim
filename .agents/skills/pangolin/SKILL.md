@@ -533,8 +533,8 @@ WireGuard tunnels wire them together:
 The 3 hosts are wired by **Newt tunnel agents** (one per
 host) and **Pocket ID OIDC SSO** (the single auth provider
 for the whole cluster). See
-`.agents/skills/kcg-bunchloch/SKILL.md` for the full
-service map and `.agents/skills/kcg-convergence/SKILL.md`
+`.agents/skills/bunchloch/SKILL.md` for the full
+service map and `.agents/skills/convergence/SKILL.md`
 for the 6 docker-compose categories that run on these hosts.
 
 ### Related skills

@@ -10,11 +10,11 @@
 
 ## 2. Named destinations factory (DONE)
 
-- [x] 2.1 `cianfhoghlaim/dlt/common/named_destinations.py` — the canonical named destination registry (warehouse / lakehouse / local_duckb)
+- [x] 2.1 `dlt/common/named_destinations.py` — the canonical named destination registry (warehouse / lakehouse / local_duckb)
 
 ## 3. 6 per-subject NCCA crawl DLT sources (DONE)
 
-- [x] 3.1 `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_mathematics.py`
+- [x] 3.1 `dlt/british_isles/ireland/education/ncca_mathematics.py`
   - `@dlt.resource(name="mathematics_syllabus", write_disposition="merge", primary_key=["url"])`
   - `named_destination("warehouse")`
   - `USE_LOCAL_SCRAPES=true` reads from `stedding/ingest_queue/ncca/mathematics/`
@@ -36,7 +36,7 @@
 
 ## 5. 1 unified BAML extractor (DONE)
 
-- [x] 5.1 `cianfhoghlaim/baml/education/unified_extraction.baml` — the unified extractor
+- [x] 5.1 `baml/education/unified_extraction.baml` — the unified extractor
   - `enum LC6Subject` (6 subjects)
   - `enum LC6Language` (en + ga)
   - `class LCSyllabus` — the unified return type with `subject` discriminator

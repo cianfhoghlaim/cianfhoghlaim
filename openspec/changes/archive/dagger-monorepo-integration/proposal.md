@@ -13,7 +13,7 @@ Scope is intentionally narrow: **6-8 callable functions** that unblock the broke
 ### Add: `infrastructure/dagger/` (new module)
 
 - **`infrastructure/dagger/dagger.json`** — Dagger engine v0.19.2, Python SDK, declares a TypeScript dependency on the prior `bonneagar` impl.
-- **`infrastructure/dagger/pyproject.toml`** — package name `cianchoghlaim-dagger`, `[project.entry-points."dagger.mod"] main_object = "cianchoghlaim:UnifiedPipeline"`.
+- **`infrastructure/dagger/pyproject.toml`** — package name `cianfhoghlaim-dagger`, `[project.entry-points."dagger.mod"] main_object = "cianfhoghlaim:UnifiedPipeline"`.
 - **`infrastructure/dagger/src/__init__.py`** — exports `UnifiedPipeline` (`@object_type`) with 4 top-level orchestrators: `test_all()`, `build_images()`, `deploy()`, `rollback()`.
 - **`infrastructure/dagger/src/infrastructure/__init__.py`** — `InfrastructurePipeline` (`@object_type`) with `test()`, `build_api()`, `deploy()`, `rollback()`. Drives Pulumi → Locket template render → Komodo redeploy → Pangolin label verify.
 - **`infrastructure/dagger/src/web/__init__.py`** — `WebPipeline` with `test()`, `build_ui()`, `deploy()`, `rollback()`. Drives `bunx turbo run build` → Cloudflare Pages (via TS submodule) → Komodo redeploy.

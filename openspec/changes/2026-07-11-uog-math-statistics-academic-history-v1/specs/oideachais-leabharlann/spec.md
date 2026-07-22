@@ -1,4 +1,4 @@
-# oideachais-leabharlann — academic-history delta
+# cianfhoghlaim-leabharlann — academic-history delta
 
 ## ADDED Requirements
 
@@ -7,7 +7,7 @@
 The system SHALL provide a `academic_history_math_coursework`
 extraction that builds on `ExtractUoGArtifact` and applies
 math-aware BAML functions from
-`cianfhoghlaim/baml/education/university/mathematics_statistics_extraction.baml`.
+`baml/education/university/mathematics_statistics_extraction.baml`.
 
 #### Scenario: mata/ artefact extracted as math
 

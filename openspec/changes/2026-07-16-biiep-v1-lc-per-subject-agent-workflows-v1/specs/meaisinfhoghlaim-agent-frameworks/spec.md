@@ -9,7 +9,7 @@ for each of the 6 BIEP v1 Leaving Certificate subjects
 (**Mathematics, Chemistry, Geography, Gaeilge, English, Computer
 Science**) — 18 handlers in total — wired through the existing
 `WireSubjectAgent` dataclass in
-`cianfhoghlaim/agents/tuatha/wiring.py`.
+`agents/tuatha/wiring.py`.
 
 The 3 per-subject handlers are:
 
@@ -43,7 +43,7 @@ The 3 handlers SHALL be exposed on the existing
 each of the 6 per-subject agent modules.
 
 The shared async dispatcher functions live in
-`cianfhoghlaim/agents/tuatha/_workflow_handlers.py` so the 3
+`agents/tuatha/_workflow_handlers.py` so the 3
 handler bodies are not duplicated across the 6 per-subject modules
 (`build_subject_workflow_handlers(wiring, syllabus, past_paper,
 marking_scheme, formative_item, response_score)` returns a
@@ -64,7 +64,7 @@ same `_workflow_handlers` factory.
 #### Scenario: `WireSubjectAgent` exposes the 3 new handler fields
 
 - **GIVEN** the
-      `cianfhoghlaim/agents/tuatha/wiring.py` module
+      `agents/tuatha/wiring.py` module
 - **WHEN** an agent runs
       `python3 -c "from cianfhoghlaim.agents.tuatha.wiring import WireSubjectAgent; print(sorted(WireSubjectAgent.__dataclass_fields__))"`
 - **THEN** the printed field names SHALL contain exactly these 3 new
@@ -141,9 +141,9 @@ same `_workflow_handlers` factory.
 #### Scenario: The 18 handlers consume `Generate<Subject>FormativeItem`
 
 - **GIVEN** any of the 6 per-subject BAML files at
-      `cianfhoghlaim/baml/education/subjects/qpack_<subject>.baml`
+      `baml/education/subjects/qpack_<subject>.baml`
 - **WHEN** an agent runs
-      `grep -E "^function" cianfhoghlaim/baml/education/subjects/qpack_<subject>.baml`
+      `grep -E "^function" baml/education/subjects/qpack_<subject>.baml`
 - **THEN** the output SHALL include the
       `Generate<Subject>FormativeItem` function (used by the
       per-subject `*_formative_item_generate_tool` that each
@@ -160,25 +160,25 @@ same `_workflow_handlers` factory.
 ADDED Requirement that extends the existing "8 NCCA subject
 agent definitions wired to Layer 5" contract with the user-facing
 workflow surface; the `Langfuse callbacks wired at agent
-construction time`, `Cognify emit step pushes to oideachais_lc_<subject>`,
+construction time`, `Cognify emit step pushes to cianfhoghlaim_lc_<subject>`,
 `StorageBackend Protocol enforced on subject agents`, and
 `MemoryBackend Protocol contract` requirements remain unchanged.)*
 
 ## Cross-references
 
-- [`cianfhoghlaim/agents/tuatha/_workflow_handlers.py`](../../../cianfhoghlaim/agents/tuatha/_workflow_handlers.py) —
+- [`agents/tuatha/_workflow_handlers.py`](../../../agents/tuatha/_workflow_handlers.py) —
   the 3 shared async dispatchers + the dataclass attacher.
-- [`cianfhoghlaim/agents/tuatha/wiring.py`](../../../cianfhoghlaim/agents/tuatha/wiring.py) —
+- [`agents/tuatha/wiring.py`](../../../agents/tuatha/wiring.py) —
   the `WireSubjectAgent` dataclass (now extended with the 3
   `Callable | None` handler fields).
 - The 6 per-subject agent modules:
-  [`math_agent.py`](../../../cianfhoghlaim/agents/tuatha/math_agent.py),
-  [`chem_agent.py`](../../../cianfhoghlaim/agents/tuatha/chem_agent.py),
-  [`geog_agent.py`](../../../cianfhoghlaim/agents/tuatha/geog_agent.py),
-  [`gael_agent.py`](../../../cianfhoghlaim/agents/tuatha/gael_agent.py),
-  [`engl_agent.py`](../../../cianfhoghlaim/agents/tuatha/engl_agent.py),
-  [`comp_agent.py`](../../../cianfhoghlaim/agents/tuatha/comp_agent.py).
+  [`math_agent.py`](../../../agents/tuatha/math_agent.py),
+  [`chem_agent.py`](../../../agents/tuatha/chem_agent.py),
+  [`geog_agent.py`](../../../agents/tuatha/geog_agent.py),
+  [`gael_agent.py`](../../../agents/tuatha/gael_agent.py),
+  [`engl_agent.py`](../../../agents/tuatha/engl_agent.py),
+  [`comp_agent.py`](../../../agents/tuatha/comp_agent.py).
 - The 6 LC-extraction BAML files at
-  `cianfhoghlaim/baml/education/subjects/qpack_<subject>.baml`.
+  `baml/education/subjects/qpack_<subject>.baml`.
 - The BIEP v1 flagship spec:
   [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md).

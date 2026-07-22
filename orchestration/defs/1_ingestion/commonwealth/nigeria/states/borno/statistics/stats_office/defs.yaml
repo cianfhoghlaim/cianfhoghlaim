@@ -1,0 +1,37 @@
+# defs/1_ingestion/commonwealth/nga/states/Borno State/statistics/stats_office/defs.yaml
+#
+# L1 CelticIngestionComponent for the Borno statistics DLT source.
+#
+# Reference: openspec/changes/2026-07-12-commonwealth-nigeria-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: commonwealth_nga_state_nga_bor_stats_office
+  module: cianfhoghlaim.dlt.commonwealth.nga.states.Borno State.statistics.stats_office
+  schedule:
+    cron: "0 5 * * *"
+    timezone: UTC
+  partitions:
+    - country:
+        values: ["nga"]
+    - state_code:
+        values: ["Borno State"]
+    - domain:
+        values: ["statistics"]
+    - language:
+        values: ["en", "ha"]
+  use_local_scrapes: true
+  asset_check: commonwealth_nga_state_nga_bor_stats_office_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - commonwealth
+    - nigeria
+    - nga
+    - Borno State
+    - statistics
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-12-commonwealth-nigeria-pipeline-v1
+    spec: commonwealth-pipeline
+
+    country_name: "Borno State"
+    official_languages: ['en', 'ha']

@@ -1,0 +1,37 @@
+# =============================================================================
+# HERMES — Komodo-Orchestrated Stack (arm1-oci, private Pangolin)
+# =============================================================================
+# Long-running autonomous agent runtime as the 3rd vertex in the agent-platform
+# cluster (alongside openclaw + openchamber). NousResearch hermes-agent
+# v0.18.0 / packaged as nousresearch/hermes-agent:v2026.7.1 (the upstream
+# 0.17.0 tag is private at GHCR; we use the public Docker Hub mirror).
+#
+# Architecture:
+#   arm1-oci — hermes (:9119 host → :9119 container, s6-overlay CLI agent)
+#              hermes-locket (Infisical secret injection)
+#   Routed through Pangolin:
+#     hermes.cianfhoghlaim.ie → arm1-oci:hermes:9119 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile). 9 total Infisical
+# items (api_server_key + openai_api_key + openai_base_url + langfuse_*
+# + operator_pocket_id_subject + channel tokens + otel_exporter_otlp_endpoint).
+#
+# Usage:
+#   km deploy stack hermes
+# =============================================================================
+
+[[stack]]
+name = "hermes"
+description = "Hermes Autonomous Agent — NousResearch hermes-agent v2026.7.1 (arm1-oci, port 9119, hermes.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci", "tier:control-plane", "type:agent-runtime", "domain:hermes.cianfhoghlaim.ie"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/bonneagar/stacks/hermes"
+file_paths = ["compose.yaml", "sidecar.yaml", "pangolin.yaml", "blueprint.yaml"]
+
+[stack.config.environment]
+LOCKET_MODE = "watch"
+HERMES_OPERATOR_POCKET_ID_SUBJECT = "${HERMES_OPERATOR_POCKET_ID_SUBJECT}"
+INFISICAL_CLIENT_ID = "${INFISICAL_CLIENT_ID}"
+INFISICAL_SECRET_FILE = "${INFISICAL_SECRET_FILE}"

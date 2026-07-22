@@ -42,18 +42,18 @@ When assuming the `data-engineer` persona, use these rules:
   local dev. Set `USE_DUCKLAKE=true` to switch to MotherDuck.
 - **Tests**: disable plugins during testing by setting
   `DLT_DISABLE_PLUGINS=true`.
-- **Source location**: `dlt_sources` lives at `cianfhoghlaim/dlt/`
-  (NOT `cianfhoghlaim/data_platform/dlt_sources/`, which is a deprecated
-  path mentioned in the old skill; NOT `cianfhoghlaim/dlt/`,
+- **Source location**: `dlt_sources` lives at `dlt/`
+  (NOT `data_platform/dlt_sources/`, which is a deprecated
+  path mentioned in the old skill; NOT `dlt/`,
   which was the pre-v4 path).
-- **Imports**: All `oideachais.data_platform...` absolute imports have
+- **Imports**: All `cianfhoghlaim.data_platform...` absolute imports have
   been removed; use relative or local `dlt_sources` imports
   (e.g. `from cianfhoghlaim.dlt.british_isles.ireland.education.ncca...`).
 - **Offline fallback**: `USE_LOCAL_SCRAPES=true` routes extraction
   to `stedding/ingest_queue/` (the curated local cache) instead of
   live web scraping (avoids API rate limits and credit drain).
 - **Absolute namespaces** (per project AGENTS.md): NEVER import
-  `oideachais.data_platform...` from within the data platform — use
+  `cianfhoghlaim.data_platform...` from within the data platform — use
   relative imports.
 - **Ingestion cache** (per project AGENTS.md): Test with
   `USE_LOCAL_SCRAPES=true` before live web scraping to avoid API
@@ -64,7 +64,7 @@ When assuming the `data-engineer` persona, use these rules:
 When tasked with dlt operations or data exploration, use this
 guide to invoke the most appropriate resource:
 
-### Data exploration & notebooks (cianfhoghlaim/notebooks/)
+### Data exploration & notebooks (notebooks/)
 
 - **`explore-data`**: Use to analyze datasets and create an
   `analysis_plan.md` artifact
@@ -176,7 +176,7 @@ def primary_outcomes(pdf_path: str) -> list[PrimaryOutcomeRow]:
 pipeline = dlt.pipeline(
     pipeline_name="ireland_primary_curriculum",
     destination="ducklake",
-    dataset_name="oideachais.education.ie",
+    dataset_name="cianfhoghlaim.education.ie",
 )
 load_info = pipeline.run(primary_outcomes("ncca_primary.pdf"))
 print(load_info)
@@ -224,7 +224,7 @@ def mathematics_syllabus(pdf_path: str):
 pipeline = dlt.pipeline(
     pipeline_name="lc6_ncca",
     destination="ducklake",
-    dataset_name="oideachais.leaving_cert",
+    dataset_name="cianfhoghlaim.leaving_cert",
 )
 load_info = pipeline.run(
     mathematics_syllabus("leaving_certificate/mathematics/en/...syllabus.pdf")
@@ -237,7 +237,7 @@ The same pattern is repeated for the other 5 LC subjects
 `english_syllabus`, `computer_science_syllabus`) plus a
 `government_circulars` resource for `gov.ie` education circulars.
 Each resource is wrapped in `@dlt_assets` in
-`cianfhoghlaim/orchestration/defs/2_materials/` and contributes
+`orchestration/defs/2_materials/` and contributes
 to the 7 v1 CocoIndex Apps (6 LC + `government_circulars`) and
 the 4 MotherDuck Dives (`lc_syllabus_topics`,
 `lc_exam_difficulty`, `lc_marking_complexity`,
@@ -280,7 +280,7 @@ import dlt
     dlt_pipeline=dlt.pipeline(
         pipeline_name="ireland_curriculum",
         destination="ducklake",
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     ),
 )
 def ireland_curriculum_assets(context, dlt_run_resource: DagsterDltResource):
@@ -313,14 +313,14 @@ multiprocess_executor, parallel assets, and incremental loading.
 - Fetch all data in a single `fetch_all()` call (OOM risk for > 1M rows)
 - Use `write_disposition="merge"` without a `primary_key` (silently
   appends duplicates)
-- Import `oideachais.data_platform.dlt_sources` from within
-  `cianfhoghlaim/` (use relative imports via `from cianfhoghlaim.dlt...`)
+- Import `cianfhoghlaim.data_platform.dlt_sources` from within
+  `cianfhoghlaim/` (use relative imports (`from .dlt...`)
 - Hand-write DDL for the destination (let dlt infer the schema from
   the resource yield)
 - Run live web scraping without `USE_LOCAL_SCRAPES=true` first
   (drains API credits and risks rate limits)
 - Add a BAML client inline in a function (use a named client in
-  `cianfhoghlaim/baml/clients.baml`)
+  `baml/clients.baml`)
 - Pin `dlt==1.27.0` or `dlt==1.27.1` — both YANKED from PyPI for a
   data-loss bug; the fix is 1.27.2 (or upgrade to ≥ 1.28.1).
 - Use `write_disposition="replace"` (deprecated in 1.28.0) — use the
@@ -386,11 +386,11 @@ Education pipeline (`openspec/changes/lc6-biep/`). It drives:
   layout / marking scheme / cross-linguistic / syllabus diagram)
   across the 6 LC subjects (Mathematics, Chemistry, Geography,
   Gaeilge, English, Computer Science) — **42 lc5/lc6 Dagster assets
-  total** in `cianfhoghlaim/orchestration/defs/2_materials/`.
+  total** in `orchestration/defs/2_materials/`.
 - **`gov.ie` circulars** — the `government_circulars` resource
   mirrors the 7th v1 CocoIndex App (`government_circulars`),
   landing pages from `gov.ie/.../circulars/...` into
-  `oideachais.education.ie.gov_circulars_archive` (one of the 4
+  `cianfhoghlaim.education.ie.gov_circulars_archive` (one of the 4
   canonical MotherDuck Dives).
 - **Dual-language fan-out** — every resource is partitioned by
   `language` (`en` / `ga`) so the Gaeilge syllabus runs in parallel
@@ -434,7 +434,7 @@ Cross-references:
   LLM-judge `--goal` filter. The n8n workflow
   `bonneagar/stacks/n8n/workflows/upstream-blog-monitor.json`
   writes the payload to
-  `s3://oideachais-upstream-webhooks/dlthub/...jsonl` and triggers
+  `s3://cianfhoghlaim-upstream-webhooks/dlthub/...jsonl` and triggers
   the Dagster asset `upstream_blog_monitor_ingest`.
 notebooks:
 
@@ -442,3 +442,20 @@ notebooks:
   "small data" workshop (SF 2025): dlt pipelines for small
   files, REST API ingestion patterns, and DuckDB destination
   examples.
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- DLT sources are now at `cianfhoghlaim.dlt.british_isles.<jurisdiction>.education.<source>`
+- The canonical CLI entry point is `python -m cianfhoghlaim.dlt.cli run-pipeline`
+  (NOT `python -m cianfhoghlaim.dlt.run_pipeline` which was the pre-v7 name)
+- The new BIEP v3 jurisdiction pipelines live at:
+  - `dlt/british_isles/ireland/education/ireland_jurisdiction_pipeline.py`
+  - `dlt/british_isles/england/education/england_jurisdiction_pipeline.py`
+  - `dlt/british_isles/sct_wls_ni/education/sct_wls_ni_jurisdiction_pipeline.py`
+  - `dlt/british_isles/crown_dependencies/education/crown_dependencies_jurisdiction_pipeline.py`
+- Each pipeline uses `dlt.common.curriculum_registry.SubjectRegistry` for canonical subject metadata
+- The destination is configured via `dlt.common.destinations_cianfhoghlaim.get_dlt_destination(use_ducklake=True)`
+- The 4 destinations: local DuckDB, MotherDuck BYOB, Garage S3 + Lakekeeper, R2 + Lakekeeper
+

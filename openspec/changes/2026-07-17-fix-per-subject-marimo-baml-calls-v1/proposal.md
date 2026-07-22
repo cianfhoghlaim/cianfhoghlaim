@@ -2,9 +2,9 @@
 
 ## Summary
 
-The six per-subject study-tool notebooks in `cianfhoghlaim/notebooks/12_subject_study_tools/` displayed BAML-looking state dictionaries instead of invoking the generated BAML client. Their `_per_subject_baml` cells recorded `{"function": "Generate<Subject>FormativeItem", "status": "invoked"}` and a deferred quest-pack placeholder, so the UI shipped as theatre.
+The six per-subject study-tool notebooks in `notebooks/12_subject_study_tools/` displayed BAML-looking state dictionaries instead of invoking the generated BAML client. Their `_per_subject_baml` cells recorded `{"function": "Generate<Subject>FormativeItem", "status": "invoked"}` and a deferred quest-pack placeholder, so the UI shipped as theatre.
 
-The six `cianfhoghlaim/notebooks/leaving_cert/<subject>.py` dashboards also used stale quest-pack calls: several referenced non-existent long-form BAML functions such as `GenerateComputerScienceQuestPack`, `GenerateEnglishQuestPack`, `GenerateGaeilgeQuestPack`, and `GenerateGeographyQuestPack`; all six passed the old `(topic, level, language, n_items)` shape instead of the canonical `(syllabus, past_papers, marking_schemes, level)` signature.
+The six `notebooks/leaving_cert/<subject>.py` dashboards also used stale quest-pack calls: several referenced non-existent long-form BAML functions such as `GenerateComputerScienceQuestPack`, `GenerateEnglishQuestPack`, `GenerateGaeilgeQuestPack`, and `GenerateGeographyQuestPack`; all six passed the old `(topic, level, language, n_items)` shape instead of the canonical `(syllabus, past_papers, marking_schemes, level)` signature.
 
 This change replaces the dead-code dictionaries with real synchronous BAML client calls and aligns the leaving_cert dashboards with the generated `qpack_<subject>.baml` signatures.
 

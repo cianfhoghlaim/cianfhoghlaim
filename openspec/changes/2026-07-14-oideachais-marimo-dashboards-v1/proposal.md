@@ -2,7 +2,7 @@
 
 ## Why
 
-The `oideachais-marimo-dashboards` capability spec defines the
+The `cianfhoghlaim-marimo-dashboards` capability spec defines the
 marimo notebook surface for the BIEP v1 + Cognee + cross-archive
 + Gaeilge + Dagster lineage dashboards. The spec carries **10
 requirements** (R1–R10) covering:
@@ -61,7 +61,7 @@ delta).
 ## What ships
 
 10 dashboards, each ~300–400 LOC, each matching the
-`oideachais-marimo-dashboards` spec:
+`cianfhoghlaim-marimo-dashboards` spec:
 
 | # | Notebook | Coverage | Spec reqs |
 |---|---------|----------|-----------|
@@ -102,9 +102,9 @@ Each dashboard follows the canonical KCG pattern:
 | `ciolanza/notebooks/10_marimo_dashboards/08_cocoindex_v1_conformance_dashboard.py` | NEW (R10 7-App v1 conformance — 5 panels) | +~329 |
 | `ciolanza/notebooks/10_marimo_dashboards/09_agent_memory_dashboard.py` | NEW (R2+R7 Cognee + Graphiti + LanceDB + Letta cohort — 5 panels) | +~389 |
 | `ciolanza/notebooks/10_marimo_dashboards/10_dagster_asset_lineage.py` | NEW (R7+R9 Dagster asset success / duration / sensor health — 5 panels) | +~374 |
-| `openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/proposal.md` | NEW (this file) | +~120 |
-| `openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/tasks.md` | NEW (7 task groups) | +~120 |
-| `openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/specs/oideachais-marimo-dashboards/spec.md` | NEW (1 MODIFIED requirement) | +~80 |
+| `openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/proposal.md` | NEW (this file) | +~120 |
+| `openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/tasks.md` | NEW (7 task groups) | +~120 |
+| `openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md` | NEW (1 MODIFIED requirement) | +~80 |
 
 Total: 10 dashboards (~3,500 LOC) + 3 change artifacts (~320 LOC).
 

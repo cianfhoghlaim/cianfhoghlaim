@@ -2,9 +2,9 @@
 
 ## 1. Inspect existing BAML test blocks
 
-- [x] 1.1 Inspect `cianfhoghlaim/baml/clients.baml` route tests.
-- [x] 1.2 Inspect `cianfhoghlaim/baml/processing/docs_skills_extraction.baml` smoke test.
-- [x] 1.3 Count all `test` blocks under `cianfhoghlaim/baml/**/*.baml`.
+- [x] 1.1 Inspect `baml/clients.baml` route tests.
+- [x] 1.2 Inspect `baml/processing/docs_skills_extraction.baml` smoke test.
+- [x] 1.3 Count all `test` blocks under `baml/**/*.baml`.
   - Result: 37 total test blocks across 13 `.baml` files.
 
 ## 2. Verify local `baml:test` entrypoint
@@ -32,5 +32,5 @@
 ## 5. Validate
 
 - [x] 5.1 Validate `.github/workflows/baml-test.yaml` as YAML.
-- [x] 5.2 Add OpenSpec spec delta for `oideachais-baml-schemas`.
+- [x] 5.2 Add OpenSpec spec delta for `cianfhoghlaim-baml-schemas`.
 - [x] 5.3 Run `openspec validate 2026-07-12-baml-cli-test-ci-gate-v1 --strict`.

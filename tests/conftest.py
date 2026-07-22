@@ -286,7 +286,7 @@ def dagster_test_context():
 def dlt_test_pipeline():
     """Create a DLT test pipeline context."""
     try:
-        import dlt
+        import dlt_sources
         return dlt.pipeline(
             pipeline_name="test_pipeline",
             destination="duckdb",

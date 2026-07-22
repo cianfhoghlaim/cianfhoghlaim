@@ -119,8 +119,8 @@ layer (before the GeoParquet write).
 
 ## Cross-references
 
-- [`oideachais-leabharlann`](../oideachais-leabharlann/spec.md) — the parent capability (6-source leabharlann corpus)
-- [`oideachais-cognify-knowledge-graph`](../oideachais-cognify-knowledge-graph/spec.md) — the cognify cross-archive rules
+- [`cianfhoghlaim-leabharlann`](../cianfhoghlaim-leabharlann/spec.md) — the parent capability (6-source leabharlann corpus)
+- [`cianfhoghlaim-cognify-knowledge-graph`](../cianfhoghlaim-cognify-knowledge-graph/spec.md) — the cognify cross-archive rules
 - [`cocoindex`](../../.agents/skills/cocoindex/SKILL.md) — the v1 CocoIndex pattern
 - [`apple-photos-ingestion`](../../.agents/skills/apple-photos-ingestion/SKILL.md) — the skill that this spec canonicalises
 

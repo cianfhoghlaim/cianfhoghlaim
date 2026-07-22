@@ -1,6 +1,6 @@
 ---
 name: lancedb
-description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, time-travel / versioned RAG, LanceDB Cloud, Lance + Iceberg, Ibis + lance_scan, the embeddings registry, or production-scale vector storage. Powers the BIEP `oideachais.lc.<subject>.<level>_<lang>` companion tables (the canonical v1 CocoIndex `mount_table_target` target for the 6 LC subjects + `gov.ie` circulars) using the shared `BAAI/bge-m3` 1024-d embedder.
+description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, time-travel / versioned RAG, LanceDB Cloud, Lance + Iceberg, Ibis + lance_scan, the embeddings registry, or production-scale vector storage. Powers the BIEP `cianfhoghlaim.lc.<subject>.<level>_<lang>` companion tables (the canonical v1 CocoIndex `mount_table_target` target for the 6 LC subjects + `gov.ie` circulars) using the shared `BAAI/bge-m3` 1024-d embedder.
 ---
 
 # LanceDB - Embedded Vector Database
@@ -516,13 +516,13 @@ ns = lance.namespace.connect(
 )
 
 # Register an existing Lance table as an Iceberg table
-ns.create_namespace("oideachais")
-ns.create_table("oideachais.leabharlann_books", metadata={"lance_uri": "s3://lance/leabharlann_books"})
+ns.create_namespace("cianfhoghlaim")
+ns.create_table("cianfhoghlaim.leabharlann_books", metadata={"lance_uri": "s3://lance/leabharlann_books"})
 
 # Query from PyIceberg
 from pyiceberg.catalog import load_catalog
-catalog = load_catalog("oideachais", type="rest", uri="http://lakekeeper:8181/catalog")
-tbl = catalog.load_table("oideachais.leabharlann_books")
+catalog = load_catalog("cianfhoghlaim", type="rest", uri="http://lakekeeper:8181/catalog")
+tbl = catalog.load_table("cianfhoghlaim.leabharlann_books")
 df = tbl.scan().to_pandas()
 ```
 
@@ -680,7 +680,7 @@ use the rclone-sidecar Compose pattern (see
   blobs are <1 MB) and **Dedicated** for upstream blog payloads
   (where blobs can be >10 MB).
 - **LanceDB embedder model note** — the value actually exported by
-  `cianfhoghlaim/cocoindex/_lifespan.py:70` is
+  `cocoindex/_lifespan.py:70` is
   `BAAI/bge-large-en-v1.5` (English-only, 1024-dim), NOT `BAAI/bge-m3`
   as some CocoIndex v1 App docstrings claim. Both are 1024-dim so the
   discrepancy is latent. Apps whose docstrings claim `bge-m3` will be
@@ -689,7 +689,7 @@ use the rclone-sidecar Compose pattern (see
   `infrastructure/firecrawl/monitors/upstream_packages/` is the
   Firecrawl monitor that detects Lance Format / Lance Blob / multimodal
   / Lance Namespace releases via the LLM-judge `--goal` filter.
-  See the `oideachais-cocoindex-v1` skill for the 14 v1 CocoIndex Apps
+  See the `cianfhoghlaim-cocoindex-v1` skill for the 14 v1 CocoIndex Apps
   that consume these updates.
 
 ## Examples
@@ -721,8 +721,8 @@ LanceDB as the **vector companion** to DuckLake. Each of the
 7 v1 CocoIndex Apps (6 LC subjects + `government_circulars`)
 mounts a LanceDB table via the canonical `mount_table_target`
 pattern (the v1 conformance R4 contract). The 24+1 BIEP tables
-all live under `oideachais.lc.<subject>.<level>_<lang>` and
-`oideachais.education.ie.gov_circulars`:
+all live under `cianfhoghlaim.lc.<subject>.<level>_<lang>` and
+`cianfhoghlaim.education.ie.gov_circulars`:
 
 ```python
 import lancedb
@@ -748,7 +748,7 @@ class MathChunk(LanceModel):
 db = lancedb.connect("s3://garage/lance")
 
 # 1 of the 24 BIEP per-subject tables (en/higher/Mathematics)
-table = db.open_table("oideachais.lc.mathematics.higher_en")
+table = db.open_table("cianfhoghlaim.lc.mathematics.higher_en")
 
 # Hybrid vector + BM25 search with RRF reranking (the canonical KCG pattern)
 results = (
@@ -766,7 +766,7 @@ results = (
 
 - **24+1 LanceDB companion tables** — one per
   `(subject, level, language)` partition, plus
-  `oideachais.education.ie.gov_circulars` for the `gov.ie`
+  `cianfhoghlaim.education.ie.gov_circulars` for the `gov.ie`
   circulars. Each table holds 1024-d `BAAI/bge-m3` vectors
   over BAML-extracted chunks.
 - **Bilingual RAG** — the `BAAI/bge-m3` embedder is
@@ -774,7 +774,7 @@ results = (
   English and Gaeilge chunks (ranked via the
   `BAML ExtractCrossLinguisticConcept` mapping).
 - **`lance_scan()` from DuckDB** — the marimo notebooks
-  join `lance_scan('s3://garage/lance/oideachais.lc.<subject>.*')`
+  join `lance_scan('s3://garage/lance/cianfhoghlaim.lc.<subject>.*')`
   against the DuckLake `curriculum_syllabus` tables in a single
   federated SQL query.
 - **Time-travel for syllabus versions** — each BIEP table is

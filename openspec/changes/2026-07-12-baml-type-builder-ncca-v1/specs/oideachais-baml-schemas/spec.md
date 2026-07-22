@@ -1,4 +1,4 @@
-# Spec Delta — oideachais-baml-schemas
+# Spec Delta — cianfhoghlaim-baml-schemas
 
 This delta adds 1 new Requirement to the existing 18 (18 → 19).
 The MODIFIED section is the new requirements only; the existing
@@ -8,17 +8,17 @@ The MODIFIED section is the new requirements only; the existing
 
 ### Requirement: NCCA strand/outcome catalog supports runtime TypeBuilder mutation
 
-The `oideachais-baml-schemas` capability SHALL support runtime
+The `cianfhoghlaim-baml-schemas` capability SHALL support runtime
 injection of per-strand, per-outcome, per-curriculum-spec, and
 per-assessment-component properties into the 4 canonical NCCA-related
 BAML classes — `LearningOutcome`, `CurriculumStrand`,
 `CurriculumSpecStrand`, and `AssessmentComponentStrand` — marked
 `@@dynamic` per the BAML v0.221+ `TypeBuilder` spec, with the
 catalog loaded at startup from the canonical YAML config file at
-`cianfhoghlaim/baml/education/_shared/strand_catalog.yaml`.
+`baml/education/_shared/strand_catalog.yaml`.
 
 The runtime helper SHALL be `build_ncca_strand_type_builder()`
-in `cianfhoghlaim/baml/education/_shared/strand_type_builder.py`.
+in `baml/education/_shared/strand_type_builder.py`.
 
 This capability decouples the **schema-deployment cycle**
 (`baml-cli generate` + release) from the **catalog-update cycle**
@@ -28,8 +28,8 @@ the pipeline without redeploying the BAML schema.
 
 #### Scenario: 4 `@@dynamic` markers are present on the canonical NCCA classes
 
-- **GIVEN** the file `cianfhoghlaim/baml/education/_shared/strand_outcome.baml`
-- **WHEN** `grep -c "@@dynamic" cianfhoghlaim/baml/education/_shared/strand_outcome.baml`
+- **GIVEN** the file `baml/education/_shared/strand_outcome.baml`
+- **WHEN** `grep -c "@@dynamic" baml/education/_shared/strand_outcome.baml`
   is run
 - **THEN** the count is exactly 4
 - **AND** the 4 markers are attached to the class declarations
@@ -41,7 +41,7 @@ the pipeline without redeploying the BAML schema.
 #### Scenario: TypeBuilder helper loads the catalog YAML successfully
 
 - **GIVEN** the catalog YAML at
-  `cianfhoghlaim/baml/education/_shared/strand_catalog.yaml`
+  `baml/education/_shared/strand_catalog.yaml`
   contains the 6 LC priority subjects (Mathematics, Chemistry,
   Geography, Gaeilge, English, Computer Science)
 - **WHEN** `python -m cianfhoghlaim.baml.education._shared.strand_type_builder`
@@ -69,7 +69,7 @@ the pipeline without redeploying the BAML schema.
 
 #### Scenario: Catalog YAML is valid
 
-- **GIVEN** `cianfhoghlaim/baml/education/_shared/strand_catalog.yaml`
+- **GIVEN** `baml/education/_shared/strand_catalog.yaml`
 - **WHEN** `uv run python -c "import yaml; yaml.safe_load(open('...'))"`
   is run
 - **THEN** the YAML parses as a valid `dict[str, Any]`
@@ -86,7 +86,7 @@ the pipeline without redeploying the BAML schema.
   yearly update adds a new strand `LC Mathematics Strand 5: Discrete
   Mathematics`)
 - **WHEN** the operator edits
-  `cianfhoghlaim/baml/education/_shared/strand_catalog.yaml` to
+  `baml/education/_shared/strand_catalog.yaml` to
   add the new strand + its properties
   (no `baml-cli generate`, no schema redeploy)
 - **THEN** the next pipeline run that calls
@@ -114,7 +114,7 @@ the pipeline without redeploying the BAML schema.
   files (per the
   `openspec/changes/2026-07-06-british-isles-education-pipeline-v1/`
   change)
-- **WHEN** `git diff --stat origin/pick-4-biep-v1 -- cianfhoghlaim/baml/education/lc_extraction/`
+- **WHEN** `git diff --stat origin/pick-4-biep-v1 -- baml/education/lc_extraction/`
   is run after this change lands
 - **THEN** the diff is empty
 - **AND** the BIEP v1 Phase 4-5 DAG materialization is not

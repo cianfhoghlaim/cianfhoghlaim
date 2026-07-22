@@ -22,15 +22,15 @@ shape.
 The per-subject deliverable surface:
 
 - 6 per-subject NCCA crawl DLT sources at
-  `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_<subject>.py`
+  `dlt/british_isles/ireland/education/ncca_<subject>.py`
 - 6 per-subject qpack BAMLs at
-  `cianfhoghlaim/baml/education/subjects/qpack_<subject>.baml` (EXISTING)
+  `baml/education/subjects/qpack_<subject>.baml` (EXISTING)
 - 1 unified BAML extractor at
-  `cianfhoghlaim/baml/education/unified_extraction.baml`
+  `baml/education/unified_extraction.baml`
 - 1 named destinations factory at
-  `cianfhoghlaim/dlt/common/named_destinations.py`
+  `dlt/common/named_destinations.py`
 - 6 per-subject L1 defs YAMLs at
-  `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6/<subject>.yaml`
+  `orchestration/defs/1_ingestion/curriculum/lc6/<subject>.yaml`
 
 Each per-subject NCCA crawl DLT source carries the canonical BIEP v1 dlt
 pattern: `@dlt.resource(name="<subject>_syllabus",
@@ -59,21 +59,21 @@ filesystem.leaving_cert.<subject>`, `automation_cron = "0 4 * * *"`
   — Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science
 - **WHEN** the operator checks the per-subject surface
 - **THEN** 13 files SHALL exist:
-  - `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_mathematics.py`
-  - `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_chemistry.py`
-  - `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_geography.py`
-  - `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_gaeilge.py`
-  - `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_english.py`
-  - `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_computer_science.py`
-  - `cianfhoghlaim/baml/education/subjects/qpack_mathematics.baml`
-  - `cianfhoghlaim/baml/education/subjects/qpack_chemistry.baml`
-  - `cianfhoghlaim/baml/education/subjects/qpack_geography.baml`
-  - `cianfhoghlaim/baml/education/subjects/qpack_gaeilge.baml`
-  - `cianfhoghlaim/baml/education/subjects/qpack_english.baml`
-  - `cianfhoghlaim/baml/education/subjects/qpack_computer_science.baml`
-  - `cianfhoghlaim/baml/education/unified_extraction.baml`
+  - `dlt/british_isles/ireland/education/ncca_mathematics.py`
+  - `dlt/british_isles/ireland/education/ncca_chemistry.py`
+  - `dlt/british_isles/ireland/education/ncca_geography.py`
+  - `dlt/british_isles/ireland/education/ncca_gaeilge.py`
+  - `dlt/british_isles/ireland/education/ncca_english.py`
+  - `dlt/british_isles/ireland/education/ncca_computer_science.py`
+  - `baml/education/subjects/qpack_mathematics.baml`
+  - `baml/education/subjects/qpack_chemistry.baml`
+  - `baml/education/subjects/qpack_geography.baml`
+  - `baml/education/subjects/qpack_gaeilge.baml`
+  - `baml/education/subjects/qpack_english.baml`
+  - `baml/education/subjects/qpack_computer_science.baml`
+  - `baml/education/unified_extraction.baml`
 - **AND** 6 per-subject L1 defs YAMLs SHALL exist at
-  `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6/`
+  `orchestration/defs/1_ingestion/curriculum/lc6/`
   (`mathematics.yaml`, `chemistry.yaml`, `geography.yaml`,
   `gaeilge.yaml`, `english.yaml`, `computer_science.yaml`)
 

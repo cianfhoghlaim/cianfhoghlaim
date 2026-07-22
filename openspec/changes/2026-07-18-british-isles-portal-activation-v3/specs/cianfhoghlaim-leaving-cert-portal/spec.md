@@ -33,10 +33,10 @@ marks ÷ study-hours), `total_hours` (int), `assets` (AssetDescriptor[]),
 
 The system SHALL provide a CocoIndex v1 App at
 `cocoindex/portal_study_plan_embedding.py` that conforms to the R1-R4
-contract documented in `openspec/specs/oideachais-cocoindex-v1-migration/spec.md`.
+contract documented in `openspec/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md`.
 
 The App SHALL mount its target on the canonical LanceDB table
-`oideachais.portal.study_plan_chunks` using `BAAI/bge-m3` (1024-d)
+`cianfhoghlaim.portal.study_plan_chunks` using `BAAI/bge-m3` (1024-d)
 as the shared embedder via the canonical `_lifespan.py` shared home.
 
 #### Scenario: A developer reads the App skeleton
@@ -49,7 +49,7 @@ as the shared embedder via the canonical `_lifespan.py` shared home.
 
 The system SHALL provide a MotherDuck Dive named `lc_study_plan_dive`
 that renders a KPI strip + a filterable table + a trend chart over the
-`oideachais.portal.study_plan_chunks` LanceDB companion.
+`cianfhoghlaim.portal.study_plan_chunks` LanceDB companion.
 
 The system SHALL also provide a daily MotherDuck Flight named
 `lc_study_plan_flight` that runs `dagster materialise -a study_plan_extract`
@@ -57,7 +57,7 @@ once per day.
 
 #### Scenario: A user opens the Dive
 
-- **GIVEN** `oideachais.portal.study_plan_chunks` has at least 1 row
+- **GIVEN** `cianfhoghlaim.portal.study_plan_chunks` has at least 1 row
 - **WHEN** the user opens the Dive URL
 - **THEN** the KPI strip renders with ≥ 3 metrics (study plans / week, subnation coverage %, asset fan-out histogram)
 - **AND** the filterable table renders all rows
@@ -71,7 +71,7 @@ once per day.
 
 ### Requirement: Cloudflare R2 + Hono-issued signed URLs (R14)
 
-The system SHALL provide a Cloudflare R2 bucket named `oideachais-pdfs`
+The system SHALL provide a Cloudflare R2 bucket named `cianfhoghlaim-pdfs`
 plus a Hono route on the `hono-api` service that issues **signed GET
 URLs** valid for 15 minutes. (No Cloudflare Worker is required — the
 Hono service already has S3 credentials via the Garage S3 backend, so
@@ -116,7 +116,7 @@ This pattern follows `openspec/specs/official-media-marimo/spec.md` R4
 ### Requirement: Storybook design system (R16)
 
 The system SHALL provide a Storybook 8 + Vite-plugin instance at
-`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/.storybook/`
+`web/apps/cianfhoghlaim-leaving-cert/apps/web/.storybook/`
 with ≥ 18 stories + the `<Ci*>` component family + the bilingual EN+GA
 labels + dark/light themes.
 
@@ -154,7 +154,7 @@ BAML extraction files via the `ExtractAistearFramework` /
 
 For v2 (deferred), the `Aistear` and `Tertiary` CocoIndex apps
 (`aistear_embedding.py`, `tertiary_embedding.py`) will be added to
-`cianfhoghlaim/cocoindex/` as CocoIndex v1 Apps (R1–R4 conformant)
+`cocoindex/` as CocoIndex v1 Apps (R1–R4 conformant)
 following the pattern of the existing `primary_embedding.py` +
 `junior_cycle_embedding.py` apps.
 
@@ -203,7 +203,7 @@ following the pattern of the existing `primary_embedding.py` +
 The system SHALL enable CopilotKit v2 A2UI (`runtime.a2ui: {}`) on the
 server + `<CopilotKit a2ui={{ theme, catalog }}>` on the client. The
 A2UI catalog at
-`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/ui/a2ui-catalog.tsx`
+`web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/ui/a2ui-catalog.tsx`
 SHALL map each of the 6 per-subject BAML `<subject>_web.baml` output
 classes to an A2UI component definition + renderer:
 
@@ -222,7 +222,7 @@ classes to an A2UI component definition + renderer:
 | (existing) | `TranslationToggle` | `<CiTranslationToggle>` |
 
 The 8 NCCA ADK specialists
-(`cianfhoghlaim/agents/tuatha/{math,chem,geog,gael,engl,comp,appm,hist}_agent.py`)
+(`agents/tuatha/{math,chem,geog,gael,engl,comp,appm,hist}_agent.py`)
 SHALL be registered as CopilotKit dispatch targets and SHALL emit A2UI
 operations (`createSurface` / `updateComponents` / `updateDataModel`)
 when responding to user queries.
@@ -335,7 +335,7 @@ autonomously generate, test, and self-heal UI surfaces WITHOUT
 violating the design system or generating unusable code.
 
 The MCP server SHALL live at
-`cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/mcp/design-system-server.py`
+`web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/mcp/design-system-server.py`
 and SHALL expose 4 tools:
 
 | Tool | Purpose |

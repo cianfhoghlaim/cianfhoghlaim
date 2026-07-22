@@ -1,0 +1,20 @@
+# defs.yaml — 36 NCCA JC CBA (Classroom-Based Assessment) Dagster assets (BIEP v2)
+#
+# Per the 2026-07-20-biep-v2-junior-cycle-extraction-v1 change.
+#
+# The 18 NCCA JC subjects each have 2 CBAs (Year 2 + Year 3) = 36 total.
+# The canonical 36 CBA IDs are computed at runtime by
+# `dlt/british_isles/ireland/education/junior_cycle_cbas/_factory.py:list_jc_cba_ids()`.
+
+type: cianfhoghlaim.orchestration.components.JuniorCycleCBAComponent
+
+attributes:
+  baml_function: ExtractCBADescriptor
+  source_asset: 1_ingestion_curriculum_jc/ireland/education/junior_cycle_cbas
+  partition_strategy: by_cba
+  asset_check_kind: row_count
+  cba_id_pattern: "{subject}_{cba_idx}"   # e.g. english_1, mathematics_2, ...
+  namespace_pattern: "cianfhoghlaim.education.british_isles.ireland.junior_cycle.cbas.{subject}.{cba_id}"
+  cocoindex_app: junior_cycle_embedding
+  cognify_dataset: cianfhoghlaim_ireland_junior_cycle_cbas
+  automation_cron: "0 7 * * *"

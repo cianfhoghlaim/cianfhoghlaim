@@ -1,12 +1,12 @@
-# Tasks — Restore the canonical `cianfhoghlaim/ocr/` Python package
+# Tasks — Restore the canonical `ocr/` Python package
 
 ## 1. Verify the broken state
 
 - [x] `git checkout pick-4-biep-v1`
 - [x] Confirm `git status` shows the 3 deletions
-  (`D cianfhoghlaim/ocr/__init__.py`,
-  `D cianfhoghlaim/ocr/models/__init__.py`,
-  `D cianfhoghlaim/ocr/models/registry.py`)
+  (`D ocr/__init__.py`,
+  `D ocr/models/__init__.py`,
+  `D ocr/models/registry.py`)
 - [x] Reproduce the `ModuleNotFoundError`:
   `uv run python -c "from cianfhoghlaim.ocr.models.registry import VISION_MODELS, CLASSICAL_OCR"`
 - [x] Confirm the back-compat shims also fail with
@@ -18,11 +18,11 @@
 
 ## 2. Restore the canonical package from HEAD
 
-- [x] `git checkout HEAD -- cianfhoghlaim/ocr/`
+- [x] `git checkout HEAD -- ocr/`
 - [x] Verify line counts match HEAD:
-  `wc -l cianfhoghlaim/ocr/__init__.py cianfhoghlaim/ocr/models/__init__.py cianfhoghlaim/ocr/models/registry.py`
+  `wc -l ocr/__init__.py ocr/models/__init__.py ocr/models/registry.py`
   → 81 / 71 / 929 = 1081 total
-- [x] Verify `git status --porcelain cianfhoghlaim/ocr/` is now
+- [x] Verify `git status --porcelain ocr/` is now
   empty (files match HEAD byte-for-byte)
 
 ## 3. Verify the canonical import works
@@ -45,7 +45,7 @@
   (19 files), scope (3 restored files only), and the **stale
   audit claims** about `pyproject.toml` line numbers
 - [x] `tasks.md` — this file
-- [x] `specs/oideachais-marimo-dashboards/spec.md` — MODIFIED:
+- [x] `specs/cianfhoghlaim-marimo-dashboards/spec.md` — MODIFIED:
   ADDED 1 requirement
 
 ## 5. Validate the openspec change
@@ -56,8 +56,8 @@
 ## 6. Commit and push
 
 - [ ] Stage only the restored files + the new openspec change:
-  `git add cianfhoghlaim/ocr/ openspec/changes/2026-07-17-restore-ocr-python-package-v1/`
+  `git add ocr/ openspec/changes/2026-07-17-restore-ocr-python-package-v1/`
 - [ ] Commit (using the build-agent identity, per the prompt):
-  `git -c user.email="build-agent@cianfhoghlaim" -c user.name="Build Agent" commit -m "fix(infrastructure): restore the canonical cianfhoghlaim/ocr/ Python package"`
+  `git -c user.email="build-agent@cianfhoghlaim" -c user.name="Build Agent" commit -m "fix(infrastructure): restore the canonical ocr/ Python package"`
 - [ ] Push to `origin/pick-4-biep-v1` (NOT `main`):
   `git push --set-upstream origin pick-4-biep-v1`

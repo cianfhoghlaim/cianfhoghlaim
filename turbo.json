@@ -75,7 +75,7 @@
     },
     "croilar:export:wasm": {
       "cache": false,
-      "outputs": ["cianfhoghlaim/web/apps/croilar-portal/public/wasm/**"]
+      "outputs": ["web/apps/croilar-portal/public/wasm/**"]
     }
   },
   "ui": "tui"

@@ -1,0 +1,57 @@
+# =============================================================================
+# CONTROL-PLANE STACK — Locket sidecar config (overlay)
+# =============================================================================
+# This is the shared Locket sidecar config used by every service in the
+# control-plane stack. The compose.yaml uses YAML anchors + aliases
+# (`&locket-common` / `<<: *locket-common`) to apply this config to
+# every service.
+#
+# Locket resolves the {{ infisical:///... }} refs in secrets.env against
+# the canonical Infisical vault (configured via the INFISICAL_* env vars).
+# The output directory is a tmpfs at /run/secrets/locket — services
+# mount it read-only.
+# =============================================================================
+
+# Locket service config (the sidecar)
+locket:
+  image: ghcr.io/bpbradley/locket:infisical
+  user: "1000:1000"
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  restart: unless-stopped
+  init: true
+  environment:
+    # Infisical connection
+    INFISICAL_URL: ${INFISICAL_URL}
+    INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+    INFISICAL_CLIENT_SECRET_FILE: /run/secrets/infisical/client_secret
+    INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+    INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_DEFAULT_ENVIRONMENT:-dev}
+    INFISICAL_DEFAULT_PATH: /
+    # Locket mode (watch by default — hot-reload on secrets change)
+    LOCKET_MODE: ${LOCKET_MODE:-watch}
+  command:
+    - "--provider=infisical"
+    - "--infisical-client-secret=file:/run/secrets/infisical/client_secret"
+    - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+    - "--infisical-default-environment=$${INFISICAL_DEFAULT_ENVIRONMENT}"
+    - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID}"
+    - "--map=/templates:/run/secrets/locket"
+  volumes:
+    - ./secrets.env:/templates/secrets.env:ro
+    - locket-out:/run/secrets/locket
+  healthcheck:
+    test: ["CMD", "sh", "-c", "test -f /run/secrets/locket/secrets.env"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+
+volumes:
+  locket-out:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "uid=1000,gid=1000,mode=0700"

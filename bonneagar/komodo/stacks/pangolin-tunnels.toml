@@ -1,0 +1,89 @@
+# =============================================================================
+# Pangolin Tunnel Agents Stack Configuration
+# =============================================================================
+# Defines tunnel agents for Pangolin:
+# - Newt: Server-side agent that exposes services TO Pangolin
+# - OLM: Client-side agent for TCP connections FROM your machine TO Pangolin
+#
+# Deployment:
+#   komodo procedure run deploy-tunnels
+#
+# v5 cleanup: renamed newt-oci -> newt-arm1-oci, dropped the duplicate
+# olm-oci (olm-oracle + olm-oci pointed at the same arm1-oci host).
+# The canonical OLM client now lives at stacks/olm-arm1-oci/ (moved
+# from bonneagar/pangolin/olm-oracle/).
+#
+# Prerequisites:
+#   1. Create Newt/OLM sites in Pangolin UI (Sites -> Create Site)
+#   2. Store credentials in Infisical (vault: dev-baile, path: /<stack>)
+#   3. Ensure Locket sidecar can reach Infisical
+# =============================================================================
+
+[[stack]]
+name = "newt-arm1-oci"
+description = "Pangolin Newt tunnel agent - exposes arm1-oci services to Pangolin"
+tags = [
+  "host:arm1-oci",
+  "tier:infrastructure",
+  "type:tunnel",
+  "tunnel:newt"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/newt-arm1-oci"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+LOCKET_MODE=watch
+"""
+
+##
+
+# The canonical OLM client. The v5 refactor moved it from
+# bonneagar/pangolin/olm-oracle/ to stacks/olm-arm1-oci/ (6/6
+# GOLD_STANDARD). The legacy "olm-oracle" + "olm-oci" aliases
+# are removed (both pointed at the same arm1-oci host).
+[[stack]]
+name = "olm-arm1-oci"
+description = "Pangolin OLM tunnel client - TCP access to arm1-oci services (SSH + DB)"
+tags = [
+  "host:arm1-oci",
+  "tier:infrastructure",
+  "type:tunnel",
+  "tunnel:olm"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/stacks/olm-arm1-oci"
+file_paths = ["compose.yaml", "sidecar.yaml", "pangolin.yaml", "blueprint.yaml"]
+environment = """
+PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+LOCKET_MODE=watch
+"""
+
+##
+
+# =============================================================================
+# Deploy Procedure
+# =============================================================================
+# Run: komodo procedure run deploy-tunnels
+
+[[procedure]]
+name = "deploy-tunnels"
+description = "Deploy all Pangolin tunnel agents (Newt + OLM)"
+
+[[procedure.config.stage]]
+name = "newt-agents"
+description = "Deploy Newt agents for service exposure"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "newt-arm1-oci", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "olm-agents"
+description = "Deploy OLM agent for direct arm1-oci access"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "olm-arm1-oci", execution.params.services = [], enabled = true }
+]

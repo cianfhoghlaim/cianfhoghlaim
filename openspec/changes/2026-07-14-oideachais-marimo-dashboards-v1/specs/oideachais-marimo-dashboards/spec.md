@@ -43,7 +43,7 @@ gate as the other 12 functional groups.
 
 - **GIVEN** the `ciolanza-marimo` CLI's GROUPS tuple has been
   extended with `"10_marimo_dashboards"` (added 2026-07-14 per
-  openspec change `2026-07-14-oideachais-marimo-dashboards-v1`)
+  openspec change `2026-07-14-cianfhoghlaim-marimo-dashboards-v1`)
 - **WHEN** the operator runs
       `uv run cianfhoghlaim-marimo list 10_marimo_dashboards`
 - **THEN** the CLI SHALL return 10 dashboards (one per row)
@@ -73,10 +73,10 @@ gate as the other 12 functional groups.
         asset success / duration / pending-reattempt view + sensor
         health banner)
 
-#### Scenario: 1 MODIFIED spec delta for oideachais-marimo-dashboards is well-formed
+#### Scenario: 1 MODIFIED spec delta for cianfhoghlaim-marimo-dashboards is well-formed
 
-- **WHEN** `openspec validate 2026-07-14-oideachais-marimo-dashboards-v1 --strict`
+- **WHEN** `openspec validate 2026-07-14-cianfhoghlaim-marimo-dashboards-v1 --strict`
   is run
 - **THEN** the validator SHALL report zero errors
 - **AND** the spec delta SHALL appear in
-  `openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/specs/oideachais-marimo-dashboards/spec.md`
+  `openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md`

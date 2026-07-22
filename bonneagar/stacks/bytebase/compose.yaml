@@ -1,0 +1,64 @@
+name: bytebase
+
+services:
+  # ---------------------------------------------------------------------------
+  # Bytebase — Database CI/CD with SQL review, GitOps
+  # ---------------------------------------------------------------------------
+  # Per your decision: bytebase in engineering/ (it's a control-plane DB
+  # tool but lives in engineering/ as a developer-tooling entry point).
+  # Reviews SQL migrations across our 6+ Postgres instances (litellm,
+  # langfuse, n8n, windmill, cognee, garage, pangolin, forgejo).
+  # ---------------------------------------------------------------------------
+  bytebase:
+    image: bytebase/bytebase:latest
+    container_name: bytebase
+    restart: unless-stopped
+    ports:
+      - "5670:8080"
+    environment:
+      - PG_URL=postgresql://bytebase:{{BYTEBASE_PG_PASSWORD}}@bytebase-pg/bytebase
+      - EXTERNAL_URL=http://bytebase.cianfhoghlaim.ie
+    volumes:
+      - bytebase_data:/var/opt/bytebase
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+    networks:
+      - cianfhoghlaim
+
+  # Bytebase's own Postgres backend
+  bytebase-pg:
+    image: postgres:16
+    container_name: bytebase-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bytebase
+      POSTGRES_USER: bytebase
+      POSTGRES_PASSWORD: ${BYTEBASE_PG_PASSWORD}
+    volumes:
+      - bytebase_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d bytebase -U bytebase"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  bytebase_data:
+    driver: local
+  bytebase_pg_data:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

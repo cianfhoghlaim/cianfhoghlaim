@@ -89,7 +89,7 @@ export default {
 
 - `infrastructure/stacks/marimo/` — the canonical
   KCG Cloudflare Workers + marimo stack
-- `cianfhoghlaim/notebooks/` — example notebooks (curriculum,
+- `notebooks/` — example notebooks (curriculum,
   leabharlann, etc.) that follow this pattern
 - The 5 educational-stage dashboards at
   `/dashboards/aistear|primary|junior_cycle|senior_cycle|tertiary`
@@ -97,7 +97,7 @@ export default {
 ## When to use this pattern
 
 ✅ **Use when:**
-- The dashboard is public (or auth-gated via `cianfhoghlaim/web/apps/croilar-portal`)
+- The dashboard is public (or auth-gated via `web/apps/croilar-portal`)
 - The dashboard is read-heavy (lots of users, few writes)
 - You need global edge caching (Cloudflare's network)
 - You're deploying to `arm1-oci` or a Cloudflare Enterprise

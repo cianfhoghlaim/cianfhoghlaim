@@ -52,12 +52,12 @@ documented in `.agents/skills/kcg-pangolin-stack/SKILL.md`.
 
 #### Scenario: A Locket sidecar uses the canonical security baseline
 
-- **GIVEN** `bonneagar/stacks/oideachais-dagster/sidecar.yaml`
+- **GIVEN** `bonneagar/stacks/cianfhoghlaim-dagster/sidecar.yaml`
 - **WHEN** the stack is deployed
 - **THEN** the Locket container SHALL have `user: 65532:65532` +
   `no-new-privileges: true` + `cap_drop: [ALL]` + `read_only: true`
   + `tmpfs: [/run/secrets/locket:size=1m,mode=0700]`
-- **AND** the `cianchoghlaim_locket_secrets` external tmpfs volume
+- **AND** the `cianfhoghlaim_locket_secrets` external tmpfs volume
   SHALL be mounted
 
 ### Requirement: Storage Stacks
@@ -424,7 +424,7 @@ Every skill under `.agents/skills/` MUST have: (1) a YAML frontmatter block with
 
 ### Requirement: Skill consolidation conventions
 
-KCG skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-tools / ccc / kcg-* / oideachais-* / tuatha-* / croilar-* / meaisinfhoghlaim-*), (6) no vendoring of upstream Anthropic / vendor skills, (7) no skills that duplicate the root `AGENTS.md` "Critical Agent Protocols" content, (8) no embedded git sub-repositories.
+KCG skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-tools / ccc / kcg-* / cianfhoghlaim-* / tuatha-* / croilar-* / meaisinfhoghlaim-*), (6) no vendoring of upstream Anthropic / vendor skills, (7) no skills that duplicate the root `AGENTS.md` "Critical Agent Protocols" content, (8) no embedded git sub-repositories.
 
 #### Scenario: New skill follows the prefixes
 
@@ -471,10 +471,10 @@ The Cianfhoghlaim platform MUST maintain a formal feedback loop between projects
 
 Each quadrant's `AGENTS.md` "Related skills" section MUST list only the skills used by that quadrant (no shared "default" list across quadrants). The 4 quadrants are `oideachais`, `meaisinfhoghlaim`, `tuatha`, `croilar`, plus the cross-cutting `infrastructure` layer.
 
-#### Scenario: cianfhoghlaim/AGENTS.md lists 12 oideachais-specific skills
+#### Scenario: cianfhoghlaim/AGENTS.md lists 12 cianfhoghlaim-specific skills
 
 - **WHEN** `cianfhoghlaim/AGENTS.md` is read
-- **THEN** the "Related skills" section lists 12+ skills (dagster, dlt, baml, cocoindex, cognee, lancedb, falkordb, duckdb, motherduck, dignified-python, marimo, ccc, oideachais-storage, oideachais-pipeline, oideachais-leabharlann, oideachais-baml-schemas, oideachais-cognify-knowledge-graph)
+- **THEN** the "Related skills" section lists 12+ skills (dagster, dlt, baml, cocoindex, cognee, lancedb, falkordb, duckdb, motherduck, dignified-python, marimo, ccc, cianfhoghlaim-storage, cianfhoghlaim-pipeline, cianfhoghlaim-leabharlann, cianfhoghlaim-baml-schemas, cianfhoghlaim-cognify-knowledge-graph)
 - **AND** does NOT list skills specific to other quadrants (e.g. babylonjs for tuatha, hono for croilar)
 
 #### Scenario: Each archived change points at the canonical skill
@@ -508,7 +508,7 @@ Every AGENTS.md file under the Cianfhoghlaim monorepo (`/AGENTS.md`, the 4 quadr
 
 - **WHEN** an agent reads `/openspec/AGENTS.md`
 - **THEN** the first section after the title is "Priority quick reference"
-- **AND** it contains the 4 priority specs (oideachais-pipeline, infrastructure-stacks, agent-memory-systems, dagger-pipelines) + the ccc command + the lint:skills task
+- **AND** it contains the 4 priority specs (cianfhoghlaim-pipeline, infrastructure-stacks, agent-memory-systems, dagger-pipelines) + the ccc command + the lint:skills task
 
 ### Requirement: Stack-Doctor CI Gate
 
@@ -572,12 +572,12 @@ stacks can be migrated incrementally.
 #### Scenario: A PR introduces an unpinned image
 
 - **GIVEN** a developer adds
-  `image: ghcr.io/cianfhoghlaim/oideachais-dagster:latest` to
+  `image: ghcr.io/cianfhoghlaim/cianfhoghlaim-dagster:latest` to
   a compose file
 - **WHEN** the Image Pinning Policy gate runs
 - **THEN** the gate SHALL report a WARNING
 - **AND** the developer SHOULD pin to a semver tag like
-  `ghcr.io/cianfhoghlaim/oideachais-dagster:1.2.3`
+  `ghcr.io/cianfhoghlaim/cianfhoghlaim-dagster:1.2.3`
 
 ### Requirement: Locket Sidecar Contract
 
@@ -590,11 +590,11 @@ across all 86+ stacks. The contract is:
 - `cap_drop: ["ALL"]`
 - `read_only: true`
 - `tmpfs: [/run/secrets/locket:size=1m,mode=0700,uid=65532,gid=65532]`
-- `volumes: [cianchoghlaim_locket_secrets:/run/secrets/locket:ro]`
+- `volumes: [cianfhoghlaim_locket_secrets:/run/secrets/locket:ro]`
 - `environment.LOCKET_MODE`: one of `watch` / `exec` / `oneshot`
 - `environment.LOCKET_SECRETS_FILE: /run/secrets/locket/secrets.env`
 
-The `cianchoghlaim_locket_secrets` external tmpfs volume is
+The `cianfhoghlaim_locket_secrets` external tmpfs volume is
 defined in `infrastructure/locket/compose.yaml` and is
 **shared** across all 86+ stacks.
 
@@ -866,7 +866,7 @@ per the upstream `4Gi × num_workers` formula documented at
 
 The `bonneagar/stacks/mlflow/` stack SHALL declare the v3-mandatory
 `--allowed-hosts="localhost,mlflow.cianfhoghlaim.ie"` and
-`--cors-allowed-origins="https://oideachais.cianfhoghlaim.ie"` flags on
+`--cors-allowed-origins="https://cianfhoghlaim.cianfhoghlaim.ie"` flags on
 the `mlflow server` command, per the upstream v3.5.0+ security
 middleware requirement documented at
 <https://mlflow.org/docs/latest/self-hosting/architecture/tracking-server/>.
@@ -978,7 +978,7 @@ For application code examples, skill documentation SHALL use import paths rooted
 
 - **GIVEN** a skill documents an oideachais DLT source
 - **WHEN** it references the source's filesystem location
-- **THEN** it uses `cianfhoghlaim/dlt/...` rather than `sruth/oideachais/dlt_sources/...`
+- **THEN** it uses `cianfhoghlaim/dlt/...` rather than `sruth/cianfhoghlaim/dlt_sources/...`
 - **AND** if it shows a Python import example, the example uses `from cianfhoghlaim...` for actual code imports
 
 #### Scenario: Bonneagar infra drift remains out of repo scope
@@ -1209,6 +1209,172 @@ SHALL exit 0 only if all 6 are healthy.
 - **THEN** the function returns with `dbUsers=0, dbOidcClients=0, signupEnabled=false` (defaults)
 - **AND** the rest of the health check still completes in <5s
 - **AND** the operator sees a partial-but-actionable health result
+
+### Requirement: BIEP v3 preflight bug fixes (P0)
+
+The system SHALL have:
+
+1. Valid YAML in `motherduck/flights/config.yaml` (4 BIEP v3 flights
+   indented under `flights:` key).
+2. `BIEPV3ExtractStrong` BAML client uses a non-VLM text model
+   (`gemma-3-27b-it`) per the user's audit decision.
+3. `dlt/common/motherduck_snapshots.py` makes real HTTPS POST requests
+   to `api.motherduck.com` for snapshot/share/attach (NOT stub dict
+   factories).
+4. `seed_registry()` asserts 3,780 rows (matches actual loader output).
+5. All 4 BIEP v3 jurisdiction pipelines inherit from
+   `JurisdictionPipelineBase` (eliminating ~120 LOC of duplicated
+   boilerplate).
+
+#### Scenario: MotherDuck flight YAML loads correctly
+
+- **WHEN** `python -c "import yaml; yaml.safe_load(open('motherduck/flights/config.yaml'))"` runs
+- **THEN** the call succeeds without a `yaml.YAMLError`
+- **AND** the `flights` key contains exactly 13 entries (9 daily-sync + 4 BIEP v3)
+
+#### Scenario: All 4 BIEP v3 flights discoverable
+
+- **WHEN** `dg list jobs | grep -E "(ireland|england|sct_wls_ni|crown_dependencies)_full_coverage_flight"` runs
+- **THEN** exactly 4 BIEP v3 flight names are listed
+
+#### Scenario: BIEPV3ExtractStrong uses non-VLM text model
+
+- **WHEN** `baml_src/clients_biep_v3.py` is inspected
+- **THEN** `BIEPV3ExtractStrong` SHALL equal `"gemma-3-27b-it"` (not a VLM model)
+
+#### Scenario: snapshot_database makes a real POST
+
+- **WHEN** `snapshot_database("snap_2026_08_10", "oideachais")` is called
+- **THEN** a real HTTPS POST to `https://api.motherduck.com/v1/databases/oideachais/snapshots` is made
+- **AND** the response is returned as a dict
+- **AND** the call uses `MOTHERDUCK_TOKEN` from the env for auth
+
+#### Scenario: create_share makes a real POST
+
+- **WHEN** `create_share("share_biep_v3", "oideachais")` is called
+- **THEN** a real HTTPS POST to `https://api.motherduck.com/v1/shares` is made
+- **AND** the response includes a `share_url` field
+
+#### Scenario: attach_share makes a real POST
+
+- **WHEN** `attach_share(share_url, "biiep_v3_share")` is called
+- **THEN** a real HTTPS POST to `https://api.motherduck.com/v1/shares/attach` is made
+- **AND** the call succeeds with HTTP 200 or 201
+
+#### Scenario: seed_registry asserts 3,780 rows
+
+- **WHEN** `seed_registry()` is called
+- **THEN** the function returns a counts dict with a total of 3,780 rows
+- **AND** an `AssertionError` is raised if the row count drifts
+
+#### Scenario: Per-jurisdiction breakdown
+
+- **WHEN** `seed_registry()` is called
+- **THEN** the returned counts dict MUST include:
+  - ireland: 544
+  - england: 276
+  - scotland: 600
+  - wales: 640
+  - northern_ireland: 280
+  - jersey: 480
+  - guernsey: 480
+  - isle_of_man: 480
+
+#### Scenario: All 4 pipelines inherit from JurisdictionPipelineBase
+
+- **WHEN** any of the 4 BIEP v3 jurisdiction pipelines is loaded
+- **THEN** the pipeline class MUST be a subclass of `JurisdictionPipelineBase`
+- **AND** `isinstance(pipeline_obj, JurisdictionPipelineBase)` returns `True`
+
+#### Scenario: Boilerplate eliminated
+
+- **WHEN** comparing pre-refactor vs post-refactor
+- **THEN** the 4 pipeline files SHALL contain ~30 LOC less boilerplate each
+- **AND** the shared `subject_to_row()` and `build_pipeline()` methods MUST be on the base class
+
+### Requirement: BIEP v3 lakehouse population (P1)
+
+The system SHALL have a populated lakehouse with:
+
+1. The 11-service Lakehouse stack deployed + healthy on `bunchloch`
+   (Mac M4).
+2. 3,780 rows in `cianfhoghlaim.education._registry.subjects`.
+3. All 4 BIEP v3 jurisdiction pipelines executed successfully (writes
+   544 + 276 + 1,520 + 720 = 3,060 cohort rows to DuckLake).
+4. 8 CocoIndex v1 BIIP parity flows wired (consume DuckLake → LanceDB).
+5. 4 BIEP v3 MotherDuck Flights emitting Dagster RunRequests.
+6. 0 `md:oideachais` references in `notebooks/` (post-sweep).
+
+#### Scenario: Lakehouse smoke-test passes
+
+- **WHEN** `mise run biep:v3:lakehouse:smoke-test` runs
+- **THEN** Nimtable :3018 MUST return HTTP 200 at `/`
+- **AND** Olake :3901 MUST return HTTP 200 at `/health`
+- **AND** LanceDB Viewer :8081 MUST return HTTP 200 at `/v1/databases`
+
+#### Scenario: Lakekeeper deep health check
+
+- **WHEN** `curl http://localhost:8181/health/deep` runs
+- **THEN** the response MUST return HTTP 200
+- **AND** the response MUST include `{"postgres": "healthy", "s3": "healthy"}`
+
+#### Scenario: Registry seeds 3,780 rows
+
+- **WHEN** `mise run biep:v3:registry:seed` runs
+- **THEN** the registry table MUST contain 3,780 rows
+- **AND** Lakekeeper MUST list 8 namespaces under `cianfhoghlaim.education`
+
+#### Scenario: Ireland pipeline writes 544 cohorts
+
+- **WHEN** `dg launch --job ireland_jurisdiction_pipeline` runs
+- **THEN** the DuckLake table MUST contain 544 cohort rows
+
+#### Scenario: England pipeline writes 276 cohorts
+
+- **WHEN** `dg launch --job england_jurisdiction_pipeline` runs
+- **THEN** the DuckLake table MUST contain 276 cohort rows
+
+#### Scenario: SCT+WLS+NI pipeline writes 1,520 cohorts
+
+- **WHEN** the SCT+WLS+NI pipeline is run with
+  `jurisdiction=scotland,wales,northern_ireland`
+- **THEN** the combined DuckLake tables MUST contain 600 + 640 + 280 = 1,520 rows
+
+#### Scenario: Crown Dependencies pipeline writes 720 cohorts
+
+- **WHEN** the Crown Dependencies pipeline is run with
+  `jurisdiction=jersey,guernsey,isle_of_man`
+- **THEN** the combined DuckLake tables MUST contain 240 + 240 + 240 = 720 rows
+
+#### Scenario: All 4 BIEP v3 MotherDuck Flights listed
+
+- **WHEN** `dg list jobs | grep -E "(ireland|england|sct_wls_ni|crown_dependencies)_full_coverage"` runs
+- **THEN** exactly 4 BIEP v3 flight job names are listed
+
+#### Scenario: Each flight emits a Dagster RunRequest
+
+- **WHEN** `dg launch --job ireland_full_coverage_flight` runs
+- **THEN** the Dagster event log MUST include at least 1 `RunRequest` event
+  with `tags.jurisdiction = "ireland"`
+
+(Same for england, sct_wls_ni, crown_dependencies.)
+
+#### Scenario: Zero md:oideachais references in notebooks
+
+- **WHEN** `grep -rn "md:oideachais" notebooks/ | wc -l` runs
+- **THEN** the output MUST be `0`
+- **AND** all notebooks MUST connect via `notebooks/_shared/db.py:connect_md()`
+
+#### Scenario: LAKEHOUSE_URI_DEFAULT is canonical
+
+- **WHEN** `notebooks/_shared/db.py` is inspected
+- **THEN** `LAKEHOUSE_URI_DEFAULT` MUST equal `"md:cianfhoghlaim"`
+
+#### Scenario: 8-jurisdiction overview dashboard runs
+
+- **WHEN** `notebooks/23_8_jurisdiction_overview.py` is launched
+- **THEN** the dashboard MUST query `cianfhoghlaim.education._registry.subjects`
+- **AND** show all 8 jurisdictions with their subject counts
 
 ## Infrastructure (Control Plane) Stacks
 

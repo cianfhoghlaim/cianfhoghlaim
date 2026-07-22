@@ -51,20 +51,20 @@ For KCG workloads, always prefer **CTAS from Parquet on S3**:
 
 ```sql
 -- Single table from a Parquet file
-CREATE TABLE oideachais.curriculum_dlt.ie_education_primary
+CREATE TABLE cianfhoghlaim.curriculum_dlt.ie_education_primary
 AS
 SELECT *
 FROM read_parquet('s3://ducklake/staging/ie_education_primary/*.parquet',
                   hive_partitioning = true);
 
 -- Append into an existing table
-INSERT INTO oideachais.curriculum_dlt.ie_education_primary
+INSERT INTO cianfhoghlaim.curriculum_dlt.ie_education_primary
 SELECT *
 FROM read_parquet('s3://ducklake/incoming/ie_education_primary_2026_06_24/*.parquet',
                   hive_partitioning = true);
 
 -- Bulk-load from a Postgres endpoint
-INSERT INTO oideachais.curriculum_dlt.ie_education_primary
+INSERT INTO cianfhoghlaim.curriculum_dlt.ie_education_primary
 SELECT *
 FROM postgres_scan('host=lakehouse-postgres port=5432 dbname=lakehouse',
                    'SELECT * FROM ie_education_primary');
@@ -82,7 +82,7 @@ import duckdb
 import pandas as pd
 
 con = duckdb.connect("md:?motherduck_token=...")
-con.sql("CREATE OR REPLACE TABLE oideachais.curriculum_dlt.ie_education_primary AS "
+con.sql("CREATE OR REPLACE TABLE cianfhoghlaim.curriculum_dlt.ie_education_primary AS "
         "SELECT * FROM df")  # df is a Pandas DataFrame
 ```
 
@@ -91,7 +91,7 @@ For Polars, the same pattern works (`con.sql("... FROM pl_df")`).
 ## Loading from HTTPS
 
 ```sql
-CREATE TABLE oideachais.curriculum_dlt.ie_education_primary AS
+CREATE TABLE cianfhoghlaim.curriculum_dlt.ie_education_primary AS
 SELECT *
 FROM read_csv('https://example.com/curriculum.csv',
               header = true,
@@ -129,7 +129,7 @@ For analytics modeling, prefer **dbt-duckdb** (with a MotherDuck
 profile) or **SQLMesh** with a DuckDB engine. The pattern:
 
 ```
-cianfhoghlaim/orchestration/sqlmesh/
+orchestration/sqlmesh/
 ├── dbt_project.yml
 ├── profiles.yml                # MotherDuck profile
 ├── models/
@@ -163,7 +163,7 @@ re-materialisation.
 - `motherduck-analytics/SKILL.md` — query the tables you just
   designed
 - `dlt/SKILL.md` — DLT sources that feed into MotherDuck
-- `oideachais-storage/SKILL.md` — the KCG DuckLake layout
+- `cianfhoghlaim-storage/SKILL.md` — the KCG DuckLake layout
 
 ## Cross-references
 

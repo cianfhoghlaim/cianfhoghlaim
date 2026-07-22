@@ -4,7 +4,7 @@
 Hono (Japanese for "flame") is a lightweight, ultra-fast web framework for building APIs and web applications at the edge. It runs on Cloudflare Workers, Deno, Bun, and Node.js with a single codebase. Its minimal footprint and middleware-based architecture make it ideal for serverless edge computing.
 
 ## Why This Matters for Kings' College Galway
-Hono is used as the HTTP framework throughout the Cianfhoghlaim stack: API gateways on Cloudflare Workers, MCP server endpoints, and the `api-unified` example that combines MCP + oRPC + OpenAPI + AI streaming in a single Hono app. The `cloudflare-auth-worker` shows the auth pattern used for securing API routes. The `duckdb-api` example demonstrates querying analytical databases from edge functions — the pattern used for curriculum analytics in `sruth/oideachais/`. The `hn-summary` example shows AI-powered content summarization at the edge, directly informing the content generation pipelines.
+Hono is used as the HTTP framework throughout the Cianfhoghlaim stack: API gateways on Cloudflare Workers, MCP server endpoints, and the `api-unified` example that combines MCP + oRPC + OpenAPI + AI streaming in a single Hono app. The `cloudflare-auth-worker` shows the auth pattern used for securing API routes. The `duckdb-api` example demonstrates querying analytical databases from edge functions — the pattern used for curriculum analytics in `sruth/cianfhoghlaim/`. The `hn-summary` example shows AI-powered content summarization at the edge, directly informing the content generation pipelines.
 
 ## Key Patterns Preserved
 - **docs/web/hono/cloudflare-auth-worker/README.md** — Authentication worker with Hono on Cloudflare Workers

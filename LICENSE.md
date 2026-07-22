@@ -5,9 +5,19 @@ License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
 
 **Licensor:** Cian Pierce Lyons (Irish Passport Name: Cian Mac Liatháin)
 
-**Licensed Work:** The cianfhoghlaim/cianfhoghlaim monorepo (encompassing all orchestration logic, machine learning pipelines, the Agent Development Kit, blockchain analytics agents, and interactive gamification clients contained within this repository).
+**Licensed Work:** The cianfhoghlaim/cianfhoghlaim monorepo (encompassing all orchestration logic, machine learning pipelines, the Agent Development Kit, blockchain analytics agents, interactive gamification clients, AND the GitOps infrastructure — Komodo resource-syncs, Pangolin config, Infisical secret contracts, Locket sidecar runtime, and the 88 Docker Compose stacks contained within this repository).
 
-The companion repositories [cianfhoghlaim/bonneagar](https://github.com/cianfhoghlaim/bonneagar) (GitOps infrastructure) and [cianfhoghlaim/leabharlann](https://github.com/cianfhoghlaim/leabharlann) (digital library) are separately licensed under the same Business Source License 1.1 by the same Licensor.
+The companion repository [cianfhoghlaim/leabharlann](https://github.com/cianfhoghlaim/leabharlann) (digital library) is separately licensed under the same Business Source License 1.1 by the same Licensor.
+
+> **Note (post-v7, 2026-07-17):** The previous companion
+> [cianfhoghlaim/bonneagar](https://github.com/cianfhoghlaim/bonneagar)
+> (GitOps infrastructure) has been merged back into this monorepo
+> as the `bonneagar/` subdirectory. Its history is preserved in the
+> in-tree `bonneagar/komodo/resource-syncs/{arm1-oci,bunchloch,...}.toml`
+> files and the standalone repo at
+> `github.com/cianfhoghlaim/bonneagar` is now archived as
+> `archive-bonneagar`. The IaC is governed by this same BUSL-1.1
+> license.
 
 **Additional Use Grant:**
 You may make production use of the Licensed Work strictly for non-commercial, non-profit, cultural preservation, and academic research purposes, provided such use occurs entirely within the legal jurisdictions of 

@@ -1,0 +1,48 @@
+# =============================================================================
+# CROILAR-BUNCHLOCH — Music Intelligence Pipeline on MacBook M4
+# =============================================================================
+# Aleyum (the Croilar music intelligence pipeline): dragonfly cache + dagster
+# (webserver + daemon) for Spotify/SoundCloud ingestion and embeddings.
+#
+# Uses the same Locket + cianfhoghlaim_locket_secrets external volume pattern
+# as the other bunchloch engineering stacks.
+# =============================================================================
+
+[[stack]]
+name = "croilar-bunchloch"
+description = "Croilar (aleyum) — music intelligence pipeline. Dagster webserver + daemon + dragonfly cache. Uses --profile dagster for the pipeline services."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:music-pipeline",
+  "stack:croilar",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/croilar"
+file_paths = [
+  "croilar/compose.yaml",
+  "croilar/sidecar.yaml",
+  "croilar/secrets.env",
+]
+environment = """
+REDIS_PORT=6381
+DAGSTER_PORT=3106
+DAGSTER_DEPLOYMENT=development
+INFISICAL_PROJECT_ID=dev-baile
+LOCKET_MODE=watch
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# Resource limits (MacBook M4 Max — share with other stacks)
+# -----------------------------------------------------------------------------
+# Dagster webserver: 2 CPUs, 4 GB
+# Dagster daemon:     1 CPU, 2 GB
+# Dragonfly cache:   1 CPU, 1 GB

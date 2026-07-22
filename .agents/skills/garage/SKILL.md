@@ -76,4 +76,4 @@ Wave 2 (this): openspec/research/2026-06-28-browserbase-program-2/live-docs/82-l
 - `.agents/skills/change-detection/SKILL.md` — Firecrawl monitor on /releases
 - `.agents/skills/secrets-management/SKILL.md` — Locket for rpc_secret/admin_token
 - `openspec/specs/infrastructure-stacks/spec.md:288,815`
-- `openspec/changes/2026-06-28-browserbase-phase-1b-decisions/specs/oideachais-storage/`
+- `openspec/changes/2026-06-28-browserbase-phase-1b-decisions/specs/cianfhoghlaim-storage/`

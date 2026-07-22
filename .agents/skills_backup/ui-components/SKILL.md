@@ -57,7 +57,7 @@ bunx shadcn@latest add form
 
 ## 2. Drag-and-drop exam builder (`@dnd-kit`)
 
-The KCG exam builder (used in `sruth/oideachais/web/src/components/
+The KCG exam builder (used in `sruth/cianfhoghlaim/web/src/components/
 exam-builder/`) uses `@dnd-kit` for drag-and-drop question
 reordering. The pattern:
 
@@ -275,9 +275,9 @@ mappings to use as design starting points:
 | Inspiration | Pattern | Apply to |
 |:--|:--|:--|
 | **MotherDuck** | 3-panel layout (Object Explorer \| SQL Notebook \| Table Explorer), column-explorer sparklines | `sruth/crypteolas/` analytics, `aleyum/` monitoring |
-| **PostHog** | Lemon UI depth buttons (`border-b-4` active), Navigation 3000 multi-panel | `sruth/oideachais/` dashboards, `aleyum/` infra |
-| **Duolingo** | Streak (loss aversion), hearts, snake path, 3D tactile buttons | `tuath/` XP / quest progression, `sruth/oideachais/` learning path |
-| **Khan Academy** | Wonder Blocks design system, mastery levels (Attempted → Familiar → Proficient → Mastered), semantic pills | `sruth/oideachais/` curriculum progression, `tuath/` skill trees |
+| **PostHog** | Lemon UI depth buttons (`border-b-4` active), Navigation 3000 multi-panel | `sruth/cianfhoghlaim/` dashboards, `aleyum/` infra |
+| **Duolingo** | Streak (loss aversion), hearts, snake path, 3D tactile buttons | `tuath/` XP / quest progression, `sruth/cianfhoghlaim/` learning path |
+| **Khan Academy** | Wonder Blocks design system, mastery levels (Attempted → Familiar → Proficient → Mastered), semantic pills | `sruth/cianfhoghlaim/` curriculum progression, `tuath/` skill trees |
 
 ### Game UI inspirations
 

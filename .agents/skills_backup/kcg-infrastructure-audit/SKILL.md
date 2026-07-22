@@ -161,10 +161,10 @@ generates the per-week `HEALTH_REPORT.md` delta.
     {"Names": "locket", "Image": "ghcr.io/cianfhoghlaim/locket:1.0.0", "State": "running", ...}
   ],
   "networks": [
-    {"Name": "cianchoghlaim_locket_secrets", "Driver": "local"}
+    {"Name": "cianfhoghlaim_locket_secrets", "Driver": "local"}
   ],
   "volumes": [
-    {"Name": "cianchoghlaim_locket_secrets", "Driver": "local"}
+    {"Name": "cianfhoghlaim_locket_secrets", "Driver": "local"}
   ]
 }
 ```
@@ -215,7 +215,7 @@ DOCTOR_EXIT=$?
 if [[ $((DIFF_EXIT | PROBE_EXIT | DOCTOR_EXIT)) -ne 0 ]]; then
   mise run locket:exec -- \
     python -c "
-      from sruth.oideachais.cognee_integration.cross_stage_cognify import emit_alert
+      from sruth.cianfhoghlaim.cognee_integration.cross_stage_cognify import emit_alert
       emit_alert('infra-audit', $((DIFF_EXIT | PROBE_EXIT | DOCTOR_EXIT)))
     "
 fi

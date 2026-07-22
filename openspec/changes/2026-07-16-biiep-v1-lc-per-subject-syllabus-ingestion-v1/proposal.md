@@ -45,7 +45,7 @@ locked plan. Applied Mathematics + History are explicitly out of
 scope per the user.
 
 - **NEW**: 6 per-subject NCCA crawl DLT sources at
-  `cianfhoghlaim/dlt/british_isles/ireland/education/ncca_<subject>.py`
+  `dlt/british_isles/ireland/education/ncca_<subject>.py`
   - `ncca_mathematics.py` — Mathematics LC syllabus crawler
   - `ncca_chemistry.py` — Chemistry LC syllabus crawler
   - `ncca_geography.py` — Geography LC syllabus crawler
@@ -60,11 +60,11 @@ scope per the user.
   to read from `stedding/ingest_queue/ncca/<subject>/<lang>/`, and
   the `default` BAML client (minimax-m3 per `667635dfd`).
 
-- **NEW**: `cianfhoghlaim/dlt/common/named_destinations.py` — the
+- **NEW**: `dlt/common/named_destinations.py` — the
   canonical named destination registry (warehouse / lakehouse /
   local_duckdb) used by the 6 per-subject sources.
 
-- **NEW**: `cianfhoghlaim/baml/education/unified_extraction.baml` —
+- **NEW**: `baml/education/unified_extraction.baml` —
   the unified LC6 BAML extractor exposing:
   - `ExtractLC6Syllabus(subject, text, language) -> LCSyllabus`
   - 6 per-subject thin wrappers
@@ -75,7 +75,7 @@ scope per the user.
   - Routes to the `Default` client (minimax-m3 per `667635dfd`)
 
 - **EXISTING (verified)**: 6 qpack BAMLs at
-  `cianfhoghlaim/baml/education/subjects/qpack_<subject>.baml`
+  `baml/education/subjects/qpack_<subject>.baml`
   Each carries the canonical `<Subject>Syllabus` pipeline:
   `Generate<Subject>QuestPack(syllabus: LeavingCertSyllabus, ...)` +
   `Extract<Subject>LOStatement(paragraph)` + per-subject formatters.
@@ -83,7 +83,7 @@ scope per the user.
   `Engl*` / `Chem*` / `Geog*` / `Gael*` / `Comp*`.
 
 - **NEW**: 6 per-subject L1 ingestion defs YAMLs at
-  `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum/lc6/<subject>.yaml`
+  `orchestration/defs/1_ingestion/curriculum/lc6/<subject>.yaml`
   Each wraps a `CelticIngestionComponent` with:
   - `source_id: filesystem.leaving_cert.<subject>`
   - `domain: curriculum`, `nation: ie`, `subject: <subject>`
@@ -137,7 +137,7 @@ developed in parallel).
   - `qpack_english.baml` ✓
   - `qpack_computer_science.baml` ✓
 - 1 unified BAML extractor at
-  `cianfhoghlaim/baml/education/unified_extraction.baml` compiles
+  `baml/education/unified_extraction.baml` compiles
   cleanly (verified by isolated `baml-cli generate` run — the
   `baml:generate` mise task is blocked by parallel agents'
   out-of-scope BAML files in `baml/education/grading/`,

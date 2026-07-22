@@ -42,7 +42,7 @@ results = con.execute("""
         b.chunk_start,
         m.curriculum_area
     FROM books b
-    JOIN oideachais.education.ie.curriculum m
+    JOIN cianfhoghlaim.education.ie.curriculum m
       ON b.subject = m.subject
     WHERE b.subject = 'irish'
     LIMIT 10

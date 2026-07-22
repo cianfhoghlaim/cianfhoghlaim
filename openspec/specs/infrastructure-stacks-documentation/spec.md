@@ -37,7 +37,7 @@ The system SHALL provide a per-stack doc file at
 2. **Why-GitOps** — one paragraph: why we self-host this stack on
    `arm1-oci` / `bunchloch` instead of using a SaaS.
 3. **Cross-references** — links to the originating spec (e.g.
-   `oideachais-pipeline/spec.md`), the AGENTS.md entry, and the
+   `cianfhoghlaim-pipeline/spec.md`), the AGENTS.md entry, and the
    upstream docs URL.
 4. **Tags** — a `tags: [<space>, <stack-name>, <protocol>]` YAML
    frontmatter for search.

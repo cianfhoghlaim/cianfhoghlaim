@@ -321,7 +321,7 @@
       entries
 - [ ] 8.6 Rewrite `bonneagar/dagger/README.md`: reflect
       actual reality (engine v0.20.8; entry point
-      `CianchoghlaimDagger`; TypeScript submodule IS used per
+      `CianfhoghlaimDagger`; TypeScript submodule IS used per
       user; cross-module composition exists; 34 .ts files
       not 31; sub-packages don't exist as dirs)
 - [ ] 8.7 Rewrite

@@ -1,0 +1,35 @@
+# defs/1_ingestion/european_nations/esp/statistics/defs.yaml
+#
+# L1 ingestion for the Spain statistics DLT source.
+#
+# Per the canonical cross-region path contract this source lives at
+# ``dlt/european_nations/esp/statistics/ine.py`` with
+# ``source_id="european_nations.esp.statistics.ine"`` and lands in
+# the DuckLake table ``cianfhoghlaim.statistics.european_nations.esp``.
+#
+# Reference: openspec/changes/2026-07-11-european-nations-ukraine-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_nations_esp_statistics
+  module: cianfhoghlaim.dlt.european_nations.esp.statistics.ine
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["european_nations"]
+    - country:
+        values: ["esp"]
+    - language:
+        values: ["es", "ca", "gl", "eu"]
+  use_local_scrapes: true
+  asset_check: european_nations_esp_statistics_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_nations
+    - esp
+    - statistics
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-11-european-nations-ukraine-pipeline-v1
+    spec: european-nations-ukraine-pipeline

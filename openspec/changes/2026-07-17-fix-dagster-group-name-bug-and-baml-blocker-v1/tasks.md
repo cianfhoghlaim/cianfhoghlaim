@@ -9,16 +9,16 @@ grep -rE 'group_name\s*=\s*"[^"]*/' cianfhoghlaim/orchestration --include='*.py'
 
 # 5 files containing the 44 + the 6 component scaffolding files
 files=(
-  "cianfhoghlaim/orchestration/components/layer1_ingestion.py"
-  "cianfhoghlaim/orchestration/components/layer2_materials.py"
-  "cianfhoghlaim/orchestration/components/layer3_model_lifecycle.py"
-  "cianfhoghlaim/orchestration/components/layer4_asset_generation.py"
-  "cianfhoghlaim/orchestration/components/layer5_agent_ops.py"
-  "cianfhoghlaim/orchestration/defs/2_materials/ie_law/assets.py"
-  "cianfhoghlaim/orchestration/defs/2_materials/lc_extraction/lc5_assets.py"
-  "cianfhoghlaim/orchestration/defs/2_materials/legal_research/ireland_legal_extraction/ireland_legal_assets.py"
-  "cianfhoghlaim/orchestration/defs/3_model_lifecycle/legal_research/gemini_corpus/gemini_corpus_assets.py"
-  "cianfhoghlaim/orchestration/defs/4_asset_generation/education_asset_assets.py"
+  "orchestration/components/layer1_ingestion.py"
+  "orchestration/components/layer2_materials.py"
+  "orchestration/components/layer3_model_lifecycle.py"
+  "orchestration/components/layer4_asset_generation.py"
+  "orchestration/components/layer5_agent_ops.py"
+  "orchestration/defs/2_materials/ie_law/assets.py"
+  "orchestration/defs/2_materials/lc_extraction/lc5_assets.py"
+  "orchestration/defs/2_materials/legal_research/ireland_legal_extraction/ireland_legal_assets.py"
+  "orchestration/defs/3_model_lifecycle/legal_research/gemini_corpus/gemini_corpus_assets.py"
+  "orchestration/defs/4_asset_generation/education_asset_assets.py"
 )
 
 for f in "${files[@]}"; do
@@ -42,7 +42,7 @@ import glob
 
 valid_pattern = re.compile(r'^[A-Za-z0-9_]+$')
 all_files = []
-for pattern in ['cianfhoghlaim/orchestration/**/*.py']:
+for pattern in ['orchestration/**/*.py']:
     all_files.extend(glob.glob(pattern, recursive=True))
 
 count = 0
@@ -73,17 +73,17 @@ print(f'Invalid (static): {violations}')
 
 ```bash
 # Class -> enum migration at line 35
-sed -i '' 's|class KnowledgeTripleKind { Concept$|enum KnowledgeTripleKind { Concept|' cianfhoghlaim/baml/processing/_shared/video_kg.baml
+sed -i '' 's|class KnowledgeTripleKind { Concept$|enum KnowledgeTripleKind { Concept|' baml/processing/_shared/video_kg.baml
 
 # v0.212 client syntax -> v0.223 named-client references
-sed -i '' 's|client "litellm/qwen3-vl-8b"|client LlamaSwapClient|g' cianfhoghlaim/baml/processing/_shared/video_kg.baml
-sed -i '' 's|client "litellm/qwen3.6-27b-mtp"|client LlamaSwapReasoningClient|g' cianfhoghlaim/baml/processing/_shared/video_kg.baml
+sed -i '' 's|client "litellm/qwen3-vl-8b"|client LlamaSwapClient|g' baml/processing/_shared/video_kg.baml
+sed -i '' 's|client "litellm/qwen3.6-27b-mtp"|client LlamaSwapReasoningClient|g' baml/processing/_shared/video_kg.baml
 
 # list<string> -> string[]
-sed -i '' 's|list<string>|string\[\]|g' cianfhoghlaim/baml/processing/_shared/video_kg.baml
+sed -i '' 's|list<string>|string\[\]|g' baml/processing/_shared/video_kg.baml
 
 # Verify
-grep -nE "(class|enum) KnowledgeTripleKind|client [A-Z]|client \"|list<|string\[\]" cianfhoghlaim/baml/processing/_shared/video_kg.baml
+grep -nE "(class|enum) KnowledgeTripleKind|client [A-Z]|client \"|list<|string\[\]" baml/processing/_shared/video_kg.baml
 # Should show enum KnowledgeTripleKind + 3 client <Identifier> + string[]
 ```
 
@@ -99,11 +99,11 @@ cd cianfhoghlaim && baml-cli check 2>&1 | grep -c video_kg
 # Should print: 0 (the video_kg.baml file has no errors anymore)
 
 # Verify the class->enum migration
-grep -nE "enum KnowledgeTripleKind" cianfhoghlaim/baml/processing/_shared/video_kg.baml
+grep -nE "enum KnowledgeTripleKind" baml/processing/_shared/video_kg.baml
 # Should print: 35:enum KnowledgeTripleKind {
 
 # Verify the v0.223 client references
-grep -nE "client (LlamaSwap|Litellm)" cianfhoghlaim/baml/processing/_shared/video_kg.baml
+grep -nE "client (LlamaSwap|Litellm)" baml/processing/_shared/video_kg.baml
 # Should print 3 lines: 2 LlamaSwapClient + 1 LlamaSwapReasoningClient
 ```
 
@@ -112,7 +112,7 @@ grep -nE "client (LlamaSwap|Litellm)" cianfhoghlaim/baml/processing/_shared/vide
 - `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/proposal.md`
 - `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/tasks.md`
 - `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/specs/dagster-5-layer-component-architecture/spec.md` — 1 MODIFIED requirement
-- `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/specs/oideachais-baml-schemas/spec.md` — 1 MODIFIED requirement
+- `openspec/changes/2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1/specs/cianfhoghlaim-baml-schemas/spec.md` — 1 MODIFIED requirement
 
 ## Step 5 — Commit + push (5 min)
 
@@ -123,7 +123,7 @@ git -c user.email="build-agent@cianfhoghlaim" -c user.name="Build Agent" commit 
 
 Implements openspec change 2026-07-17-fix-dagster-group-name-bug-and-baml-blocker-v1
 (2 MODIFIED spec deltas on dagster-5-layer-component-architecture
-+ oideachais-baml-schemas).
++ cianfhoghlaim-baml-schemas).
 
 Fixes 2 related blockers:
 

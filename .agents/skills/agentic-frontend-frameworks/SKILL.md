@@ -1,6 +1,6 @@
 ---
 name: agentic-frontend-frameworks
-description: The umbrella skill for building **agentic web frontends** in the Cianfhoghlaim stack — stitches TanStack Start + CopilotKit + AG-UI + Convex + Hono + oRPC + Cloudflare + BAML / Pydantic AI / Agno / Google ADK into a coherent agent-driven web app. Use when designing a new agentic web surface (a tutor, a research UI, a knowledge-graph explorer, a portfolio analyser), wiring the AG-UI protocol between an agent runtime and a CopilotKit React UI, picking the right backend (BAML for typed structured outputs, Pydantic AI for Pydantic-native agent graphs, Agno for multi-agent orchestration, Google ADK for Google-AI-native workflows), or asking "how do I add an agent to a cianfhoghlaim/ app?", "which CopilotKit component streams AG-UI events?", "what is the canonical 4-surface layout?". The 4 canonical surfaces are `cianfhoghlaim/web/apps/oideachais-web/`, `cianfhoghlaim/web/apps/croilar-web/`, `cianfhoghlaim/web/apps/croilar-portal/`, and `cianfhoghlaim/web/apps/tuatha-ui/` — the same architecture diagram maps onto each. Plus a 5th cross-cutting **agent-IDE** surface: OpenChamber (`infrastructure/stacks/openchamber/`, OpenCode web/desktop UI with bundled `opencode-ai`, port 3000, deployed to `openchamber.cianfhoghlaim.ie` on `arm1-oci`).
+description: The umbrella skill for building **agentic web frontends** in the Cianfhoghlaim stack — stitches TanStack Start + CopilotKit + AG-UI + Convex + Hono + oRPC + Cloudflare + BAML / Pydantic AI / Agno / Google ADK into a coherent agent-driven web app. Use when designing a new agentic web surface (a tutor, a research UI, a knowledge-graph explorer, a portfolio analyser), wiring the AG-UI protocol between an agent runtime and a CopilotKit React UI, picking the right backend (BAML for typed structured outputs, Pydantic AI for Pydantic-native agent graphs, Agno for multi-agent orchestration, Google ADK for Google-AI-native workflows), or asking "how do I add an agent to a cianfhoghlaim/ app?", "which CopilotKit component streams AG-UI events?", "what is the canonical 4-surface layout?". The 4 canonical surfaces are `web/apps/cianfhoghlaim-web/`, `web/apps/croilar-web/`, `web/apps/croilar-portal/`, and `web/apps/tuatha-ui/` — the same architecture diagram maps onto each. Plus a 5th cross-cutting **agent-IDE** surface: OpenChamber (`infrastructure/stacks/openchamber/`, OpenCode web/desktop UI with bundled `opencode-ai`, port 3000, deployed to `openchamber.cianfhoghlaim.ie` on `arm1-oci`).
 ---
 
 # Agentic Frontend Frameworks (umbrella skill)
@@ -20,8 +20,8 @@ Use when you need to:
   human-in-the-loop) to a TanStack Start app"
 - "Add a new agent to the 4-agent Celtic Tutor system"
 - "Add MCP / A2UI / MCP-UI to an existing web surface"
-- "Understand the relationship between `cianfhoghlaim/web/apps/oideachais-web/`,
-  `cianfhoghlaim/web/apps/croilar-web/`, `cianfhoghlaim/web/apps/croilar-portal/`, `cianfhoghlaim/web/apps/tuatha-ui/`"
+- "Understand the relationship between `web/apps/cianfhoghlaim-web/`,
+  `web/apps/croilar-web/`, `web/apps/croilar-portal/`, `web/apps/tuatha-ui/`"
 - "Explain the KCG agentic-web pattern to a new contributor"
 
 ## Overview
@@ -45,10 +45,10 @@ monorepo:
 
 | # | Surface | Path | Quadrant | Primary agent |
 |:--|:--|:--|:--|:--|
-| 1 | **Oideachais Web** | `cianfhoghlaim/web/apps/oideachais-web/` | `oideachais` | Celtic Tutor (BAML) |
-| 2 | **Croílár Web** | `cianfhoghlaim/web/apps/croilar-web/` | `croilar` | Portfolio Research Assistant (Pydantic AI) |
-| 3 | **Croílár Portal** | `cianfhoghlaim/web/apps/croilar-portal/` | `croilar` | Admin / Curatorial Agent (Agno) |
-| 4 | **Tuatha UI** | `cianfhoghlaim/web/apps/tuatha-ui/` | `tuatha` | Quest Guide / Mythology Narrator (Google ADK) |
+| 1 | **Oideachais Web** | `web/apps/cianfhoghlaim-web/` | `oideachais` | Celtic Tutor (BAML) |
+| 2 | **Croílár Web** | `web/apps/croilar-web/` | `croilar` | Portfolio Research Assistant (Pydantic AI) |
+| 3 | **Croílár Portal** | `web/apps/croilar-portal/` | `croilar` | Admin / Curatorial Agent (Agno) |
+| 4 | **Tuatha UI** | `web/apps/tuatha-ui/` | `tuatha` | Quest Guide / Mythology Narrator (Google ADK) |
 
 The 4 surfaces share the same architecture diagram; the
 delta is the agent runtime, the dataset the agent reads
@@ -154,7 +154,7 @@ re-renders the right component.
 
 ## The 4 canonical surfaces
 
-### 1. Oideachais Web (`cianfhoghlaim/web/apps/oideachais-web/`)
+### 1. Oideachais Web (`web/apps/cianfhoghlaim-web/`)
 
 - **Stack:** TanStack Start + CopilotKit + AG-UI +
   Cloudflare Workers
@@ -165,7 +165,7 @@ re-renders the right component.
 - **Primary agent:** Celtic Tutor (Gaeilge)
 - **Deployment:** Cloudflare Workers via Alchemy
 
-### 2. Croílár Web (`cianfhoghlaim/web/apps/croilar-web/`)
+### 2. Croílár Web (`web/apps/croilar-web/`)
 
 - **Stack:** TanStack Start + CopilotKit + AG-UI +
   Cloudflare Workers
@@ -178,7 +178,7 @@ re-renders the right component.
   carlcashman)
 - **Deployment:** Cloudflare Workers via Alchemy
 
-### 3. Croílár Portal (`cianfhoghlaim/web/apps/croilar-portal/`)
+### 3. Croílár Portal (`web/apps/croilar-portal/`)
 
 - **Stack:** TanStack Start + CopilotKit + AG-UI +
   Hono (the OIDC bridge) + Convex
@@ -190,7 +190,7 @@ re-renders the right component.
   pan-Celtic knowledge graph)
 - **Deployment:** Cloudflare Workers via Alchemy
 
-### 4. Tuatha UI (`cianfhoghlaim/web/apps/tuatha-ui/`)
+### 4. Tuatha UI (`web/apps/tuatha-ui/`)
 
 - **Stack:** TanStack Start + CopilotKit + AG-UI +
   SpacetimeDB (the MMO state engine) + Convex (the
@@ -315,8 +315,8 @@ The full contract is in
   Langfuse / MLflow / RAGAS observability stack.
 - `openspec/specs/agentic-frontend-frameworks/spec.md` —
   the round-6 capability spec (this skill is the body).
-- `cianfhoghlaim/web/apps/oideachais-web/`, `cianfhoghlaim/web/apps/croilar-web/`,
-  `cianfhoghlaim/web/apps/croilar-portal/`, `cianfhoghlaim/web/apps/tuatha-ui/` — the 4 canonical
+- `web/apps/cianfhoghlaim-web/`, `web/apps/croilar-web/`,
+  `web/apps/croilar-portal/`, `web/apps/tuatha-ui/` — the 4 canonical
   surfaces.
 - `infrastructure/stacks/openchamber/` — the 5th
   cross-cutting agent-IDE surface (OpenCode web/desktop UI
@@ -521,11 +521,11 @@ The `ag-ui` skill (in `.agents/skills/ag-ui/SKILL.md`) documents the full protoc
 
 Pydantic AI is a Pydantic-native agent framework that pairs naturally with the AG-UI protocol. The Pydantic AI Gateway (BYOK/managed/cost-limits) routes the agent's LLM calls through a central gateway, with cost limits per agent per model.
 
-The KCG pattern: any new agent (e.g. the 12 in `cianfhoghlaim/agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
+The KCG pattern: any new agent (e.g. the 12 in `agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
 
 ### DBOS durable execution
 
-DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The KCG pattern is documented in the `pydantic-ai` skill, with a reference implementation in `cianfhoghlaim/agents/dbos_demo.py`.
+DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The KCG pattern is documented in the `pydantic-ai` skill, with a reference implementation in `agents/dbos_demo.py`.
 
 ### Pair this skill with
 

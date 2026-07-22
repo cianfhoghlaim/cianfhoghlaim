@@ -43,7 +43,7 @@ Add the `language_availability` metadata field to each source's
 ## 5. CocoIndex v1 App
 
 - [ ] 5.1 Create
-  `cianfhoghlaim/cocoindex/eu_multilingual_alignment_embedding.py`
+  `cocoindex/eu_multilingual_alignment_embedding.py`
 - [ ] 5.2 Imports `from ._lifespan import shared_lifespan`
 - [ ] 5.3 Embeds with `BAAI/bge-m3` 1024-d
 - [ ] 5.4 Partitions on `(institution, language)`
@@ -52,11 +52,11 @@ Add the `language_availability` metadata field to each source's
 ## 6. MotherDuck Dive + Flight
 
 - [ ] 6.1 Create
-  `cianfhoghlaim/motherduck/dives/eu_multilingual_coverage.py`
+  `motherduck/dives/eu_multilingual_coverage.py`
 - [ ] 6.2 Create
-  `cianfhoghlaim/motherduck/flights/eu_multilingual_daily_sync_flight.py`
+  `motherduck/flights/eu_multilingual_daily_sync_flight.py`
 - [ ] 6.3 Append the flight to
-  `cianfhoghlaim/motherduck/flights/config.yaml` (cron `0 5 * * *`)
+  `motherduck/flights/config.yaml` (cron `0 5 * * *`)
 
 ## 7. Cache fixtures
 
@@ -69,7 +69,7 @@ fixtures under `stedding/ingest_queue/eu/<institution>/<lang>/sample.json`
 - [ ] 8.1 MODIFIED delta on `european-union-official-language-pipeline/spec.md`
   declaring the BilingualTextEnGa extraction + language_availability metadata
 - [ ] 8.2 MODIFIED delta on `cross-region-pipeline/spec.md` cross-referencing
-- [ ] 8.3 MODIFIED delta on `oideachais-pipeline/spec.md` cross-referencing
+- [ ] 8.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` cross-referencing
 
 ## 9. Validate
 

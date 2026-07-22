@@ -1,0 +1,48 @@
+name: backrest
+
+services:
+  # ---------------------------------------------------------------------------
+  # backrest — web UI + scheduler for Restic backups
+  # ---------------------------------------------------------------------------
+  # Backs up our 70+ Docker volumes to Garage S3 via Restic. Critical because
+  # the lakehouse, dagster DB, langfuse, cognee, etc. all hold state that
+  # would be expensive to rebuild from scratch.
+  # ---------------------------------------------------------------------------
+  backrest:
+    image: garethgeorge/backrest:latest
+    container_name: backrest
+    restart: unless-stopped
+    ports:
+      - "9898:9898"
+    environment:
+      - BACKREST_DATA=/data
+      - BACKREST_HOST=0.0.0.0:9898
+      # Restic repo: Garage S3
+      - XDG_CONFIG_HOME=/config
+    volumes:
+      - backrest_data:/data
+      - backrest_config:/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9898/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2'
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  backrest_data:
+    driver: local
+  backrest_config:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

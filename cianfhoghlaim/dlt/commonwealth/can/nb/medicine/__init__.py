@@ -1,4 +1,0 @@
-"""Re-export the nb medicine DLT source."""
-from cianfhoghlaim.dlt.commonwealth.can.nb.medicine import nb_health_authority  # noqa: F401
-
-__all__ = ["nb_health_authority"]

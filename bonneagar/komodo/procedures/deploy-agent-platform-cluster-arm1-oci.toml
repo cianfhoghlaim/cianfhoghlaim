@@ -1,0 +1,127 @@
+# =============================================================================
+# DEPLOY AGENT-PLATFORM-CLUSTER-ARM1-OCI PROCEDURE (OMNIBUS)
+# =============================================================================
+# The omnibus that brings the 3 agent surfaces (hermes + openclaw + openchamber)
+# up in dependency order on arm1-oci. Mirrors the bunchloch omnibus
+# (`deploy-agent-platform-cluster-bunchloch.toml`) with arm1-oci host context.
+#
+# Single command brings up the 6-stack agent-platform subset:
+#
+#   Stage 0: preflight            → 4-check safety gate (Pangolin + Komodo + Infisical + namespace)
+#   Stage 1: control-plane         → pangolin + langfuse + observability
+#   Stage 2: 3 agent surfaces      → hermes + openclaw + openchamber
+#   Stage 3: Pangolin routes      → apply-openclaw/openchamber/hermes blueprints
+#   Stage 4: health checks        → all 3 endpoints return 200
+#   Stage 5: validate             → 0 hard failures
+#
+# Accepts --skip=<stage> flags for partial re-deploys.
+#
+# Usage:
+#   km run procedure deploy-agent-platform-cluster-arm1-oci
+#   km run procedure deploy-agent-platform-cluster-arm1-oci -- --skip=observability
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-agent-platform-cluster-arm1-oci"
+description = "Omnibus: 3 agent surfaces (hermes + openclaw + openchamber) on arm1-oci — preflight → control-plane → surfaces → Pangolin routes → health → validate"
+server_id = "arm1-oci"
+
+# =============================================================================
+# STAGE 0: Pre-flight (4-check safety gate)
+# =============================================================================
+# Hard-gate: if preflight exits non-zero, the omnibus aborts here (the
+# require_success=true flag propagates the exit code). The --emit-md
+# report is captured to a versioned path under /tmp/preflight-reports/
+# so every deploy attempt leaves an auditable artifact.
+#
+# Spec: openspec/changes/2026-07-13-arm-oci-deploy-preflight-hard-gate-v1
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /tmp/preflight-reports/arm-oci && bun run preflight:arm-oci --strict --emit-md > /tmp/preflight-reports/arm-oci/$(date -u +%Y%m%dT%H%M%SZ).md 2>&1; ec=$?; if [ $ec -ne 0 ]; then echo \"preflight:arm-oci failed (exit $ec); report at /tmp/preflight-reports/arm-oci/$(date -u +%Y%m%dT%H%M%SZ).md\"; fi; exit $ec", timeout_s = 60, description = "Pangolin + Komodo + Infisical + namespace check; emits a timestamped report; HARD-GATED by require_success=true", require_success = true } }
+
+# =============================================================================
+# STAGE 1: Control-plane foundation (pangolin + langfuse + observability)
+# =============================================================================
+# Cross-cutting prerequisites (pangolin-first, komodo-core, infisical-first,
+# locket-deploy) are assumed already up (they're in the `cross-cutting`
+# resource-sync and run on every host). Here we bring up the 3 application-tier
+# observability stacks.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "control-plane-foundation"
+skip_if_flag = "foundation"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-langfuse-arm1-oci" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-observability-arm1-oci" } }
+
+# =============================================================================
+# STAGE 2: 3 agent surfaces (hermes + openclaw + openchamber)
+# =============================================================================
+# The order matters: langfuse is up (Stage 1), so openclaw + hermes can
+# register their MCP servers with langfuse. openchamber is independent
+# (talks to the local opencode daemon via OPENCODE_HOST).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "agent-surfaces"
+skip_if_flag = "surfaces"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-openclaw-arm1-oci" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-openchamber-arm1-oci" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-hermes-arm1-oci" } }
+
+# =============================================================================
+# STAGE 3: Pangolin routes (apply the 3 blueprints)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+skip_if_flag = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-openclaw-routes" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-openchamber-routes" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-hermes-routes" } }
+
+# =============================================================================
+# STAGE 4: Health verification (3 endpoints)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://openclaw.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "health-check-openclaw" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://openchamber.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "health-check-openchamber" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://hermes.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "health-check-hermes" } }
+
+# =============================================================================
+# STAGE 5: Validate (the 4 stack-doctor gates + 87-stack count check)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "validate"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run validate-stacks", timeout_s = 120, description = "Run the 4 stack-doctor gates against the 87 stacks" } }

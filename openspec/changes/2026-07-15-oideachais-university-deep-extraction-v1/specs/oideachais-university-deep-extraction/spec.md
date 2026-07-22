@@ -1,17 +1,17 @@
-# Spec Delta — oideachais-university-deep-extraction
+# Spec Delta — cianfhoghlaim-university-deep-extraction
 
-This delta adds one new requirement to the existing `oideachais-university-deep-extraction` capability, documenting that Phase 1 of the capability is now shipped. The 8 pre-existing requirements (per-university config schema / two URL surfaces per university / BAML course+module+programme+reading-list extraction / 3-stage pre-research→bulk-scrape→condense pipeline / 5 Dagster assets / CocoIndex v1 App for course+module embeddings / Cognee cross-archive edge / marimo notebook with 4 tabs) are preserved unchanged.
+This delta adds one new requirement to the existing `cianfhoghlaim-university-deep-extraction` capability, documenting that Phase 1 of the capability is now shipped. The 8 pre-existing requirements (per-university config schema / two URL surfaces per university / BAML course+module+programme+reading-list extraction / 3-stage pre-research→bulk-scrape→condense pipeline / 5 Dagster assets / CocoIndex v1 App for course+module embeddings / Cognee cross-archive edge / marimo notebook with 4 tabs) are preserved unchanged.
 
 ## ADDED Requirements
 
 ### Requirement: Phase 1 ship — Tertiary 18+ DLT + BAML loop is functionally complete
 
-The `oideachais-university-deep-extraction` capability SHALL be considered Phase 1 complete once all 5 Tertiary 18+ DLT sources (`universities` + `tus` + `qqi_awards` + `cao` + `solas`), the 5+ Pydantic classes + 4+ enums + 5+ functions in `baml/education/university/university_extraction.baml`, and the 1 Layer 1 Ingestion `defs.yaml` cron asset at `orchestration/defs/1_ingestion/university/defs.yaml` (containing 5 `CelticIngestionComponent` entries — one per DLT source) are present, AST-parse cleanly, and the BAML file generates zero parse errors attributable to the Tertiary 18+ content under `mise run baml:generate`.
+The `cianfhoghlaim-university-deep-extraction` capability SHALL be considered Phase 1 complete once all 5 Tertiary 18+ DLT sources (`universities` + `tus` + `qqi_awards` + `cao` + `solas`), the 5+ Pydantic classes + 4+ enums + 5+ functions in `baml/education/university/university_extraction.baml`, and the 1 Layer 1 Ingestion `defs.yaml` cron asset at `orchestration/defs/1_ingestion/university/defs.yaml` (containing 5 `CelticIngestionComponent` entries — one per DLT source) are present, AST-parse cleanly, and the BAML file generates zero parse errors attributable to the Tertiary 18+ content under `mise run baml:generate`.
 
 #### Scenario: 5 Tertiary 18+ DLT sources ship at the canonical paths
 
-- **GIVEN** the 2026-07-15-oideachais-university-deep-extraction-v1 change has landed
-- **WHEN** `ls cianfhoghlaim/dlt/british_isles/ireland/university/{universities,tus,qqi_awards,cao,solas}.py` is run
+- **GIVEN** the 2026-07-15-cianfhoghlaim-university-deep-extraction-v1 change has landed
+- **WHEN** `ls dlt/british_isles/ireland/university/{universities,tus,qqi_awards,cao,solas}.py` is run
 - **THEN** all 5 files exist
 - **AND** each AST-parses cleanly under `uv run python3 -c "import ast; ast.parse(open('<file>').read())"`
 - **AND** each follows the canonical BIEP v1 dlt pattern: `@dlt.resource(name="tertiary_<area>", write_disposition="merge", primary_key=["<id>"])`, structlog observability, honors `USE_LOCAL_SCRAPES=true` (default) to read from `/stedding/ingest_queue/university/<area>/`
@@ -20,7 +20,7 @@ The `oideachais-university-deep-extraction` capability SHALL be considered Phase
 #### Scenario: 5+ Pydantic classes + 4+ enums + 5+ BAML functions ship in the extended university_extraction.baml
 
 - **GIVEN** the change has landed
-- **WHEN** `cianfhoghlaim/baml/education/university/university_extraction.baml` is read
+- **WHEN** `baml/education/university/university_extraction.baml` is read
 - **THEN** it defines **at least 5 new Pydantic classes**: `University` (the 8 universities) + `TU` (the 5 TUs) + `QQIAward` (the 10 QQI awards) + `CAOChoice` (a CAO course choice) + `SOLASCourse` (a SOLAS PLC / apprenticeship)
 - **AND** it defines **at least 4 new enums**: `UniversityType` (TRADITIONAL / SPECIALIST / TECHNOLOGICAL / PRIVATE) + `QQILevel` (NFQ_6 / NFQ_7 / NFQ_8 / NFQ_9 / NFQ_10) + `CAOField` (ARTS_HUMANITIES / BUSINESS_LAW / SCIENCE / COMPUTING_ENGINEERING / MEDICINE_HEALTH / EDUCATION / MUSIC_PERFORMING / AGRICULTURE_VET) + `SOLASPath` (PLC / APPRENTICESHIP / YOUTHREACH / ADULT_LITERACY / VTOS / COMMUNITY_TRAINING)
 - **AND** it defines **at least 5 new BAML functions** (`ExtractUniversityInfo` + `ExtractTuInfo` + `ExtractQQIAward` + `ExtractCAOChoice` + `ExtractSOLASCourse`) that each returns one of the 5 new Pydantic classes
@@ -30,7 +30,7 @@ The `oideachais-university-deep-extraction` capability SHALL be considered Phase
 #### Scenario: 1 Layer 1 Ingestion cron asset ships at the canonical path
 
 - **GIVEN** the change has landed
-- **WHEN** `ls cianfhoghlaim/orchestration/defs/1_ingestion/university/defs.yaml` is run
+- **WHEN** `ls orchestration/defs/1_ingestion/university/defs.yaml` is run
 - **THEN** the file exists
 - **AND** it is valid YAML under `uv run python3 -c "import yaml; yaml.safe_load(open('<file>').read())"`
 - **AND** it contains **exactly 5** `CelticIngestionComponent` entries (one per DLT source: `ireland_tertiary_universities` + `ireland_tertiary_tus` + `ireland_tertiary_qqi` + `ireland_tertiary_cao` + `ireland_tertiary_solas`)
@@ -42,13 +42,13 @@ The `oideachais-university-deep-extraction` capability SHALL be considered Phase
 
 - **GIVEN** the BIEP v1 flagship has shipped (covering Senior Cycle / Leaving Cert 15-18yo via `british-isles-education-pipeline`)
 - **AND** the `ireland-primary-jc-dlt-baml` Phase 1 has shipped (covering Primary 4-12yo + Junior Cycle 12-15yo via the 2026-07-14 dispatch)
-- **AND** the `oideachais-university-deep-extraction` Phase 1 has shipped (covering Tertiary 18+ via this change)
+- **AND** the `cianfhoghlaim-university-deep-extraction` Phase 1 has shipped (covering Tertiary 18+ via this change)
 - **WHEN** the 4 capability specs are listed
 - **THEN** they collectively cover the full K-12 → university pipeline for the Republic of Ireland:
   - Primary (5-6yo infants + 6-12yo) ← `ireland-primary-jc-dlt-baml`
   - Junior Cycle (12-15yo) ← `ireland-primary-jc-dlt-baml`
   - Senior Cycle / Leaving Cert (15-18yo) ← `british-isles-education-pipeline`
-  - Tertiary 18+ (universities + TUs + QQI + CAO + SOLAS) ← `oideachais-university-deep-extraction` (this change)
+  - Tertiary 18+ (universities + TUs + QQI + CAO + SOLAS) ← `cianfhoghlaim-university-deep-extraction` (this change)
 - **AND** no student age bracket (NFQ 1-10) is left uncovered in the canonical spec catalogue
 - **AND** the 4 specs collectively index **8 universities** + **5 TUs** + **10 QQI awards** + **4 CAO rounds** + **16 ETBs** for the Tertiary 18+ stage
 

@@ -10,7 +10,7 @@ MiniMax-M3 generator rewrite + the `MarkingPoint` duplicate fix.
 This follow-up change implements the **Option 2** choice from the
 shipped `SCOPE_DECISION.md`: fix ALL 50 pre-existing BAML `field: type`
 diagnostics (and their cascading parse failures) across the
-`cianfhoghlaim/baml/` tree — including the 7
+`baml/` tree — including the 7
 `baml/education/lc_extraction/*.baml` files that the prior change
 explicitly deferred.
 
@@ -247,7 +247,7 @@ is documented in the proposal and commit message.
   harness correctly compiles + invokes each test block)
 - [x] The 9 BAML-using notebooks AST-parse OK
 - [x] The 2 MODIFIED spec deltas (`british-isles-education-pipeline` +
-  `oideachais-baml-schemas`) are well-formed
+  `cianfhoghlaim-baml-schemas`) are well-formed
 - [x] The 7 `lc_extraction/*.baml` files still compile + the canonical
   types `MarkingScheme`, `BilingualText`, etc. are still present in
   the generated `baml_client/types.py`

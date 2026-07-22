@@ -1,0 +1,21 @@
+// Sweden law extraction BAML schema.
+
+class SwedenStatute {
+  statute_id string @description("The canonical per-statute document id")
+  nation string @description("ISO 3166-1 alpha-3 (lowercase)")
+  language string @description("Official language of the row (sv)")
+  jurisdiction string @description("Federal or sub-federal jurisdiction")
+  title string
+  official_status string? @description("in_force | amended | repealed | pending")
+  publication_date string?
+  source_url string
+  content_hash string?
+}
+
+function ExtractSwedenStatute(
+  nation: string,
+  language: string,
+  text: string
+) -> SwedenStatute {  client ExtractEn
+  prompt #"Auto-generated extraction prompt."#
+}

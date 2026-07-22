@@ -1,6 +1,6 @@
 # Spec Delta — croilar-data-engineering
 
-This delta modifies existing requirements in the `croilar-data-engineering` capability (renamed `sruth.croilar.X` → `croilar.X` in canonical-positive scenarios + renamed `sruth.oideachais.X` → `oideachais.X`) and adds one new requirement to codify the v4 namespace convention.
+This delta modifies existing requirements in the `croilar-data-engineering` capability (renamed `sruth.croilar.X` → `croilar.X` in canonical-positive scenarios + renamed `sruth.cianfhoghlaim.X` → `cianfhoghlaim.X`) and adds one new requirement to codify the v4 namespace convention.
 
 ## ADDED Requirements
 
@@ -13,24 +13,24 @@ The `croilar-data-engineering` capability spec SHALL use the v4 namespace conven
    - `from croilar.pipelines.shared.r2_client import R2Client` (NOT `from sruth.croilar.pipelines.shared.r2_client import R2Client`)
    - `from croilar._shared.streams import ...` (NOT `from sruth.croilar._shared.streams import ...`)
    - `from croilar._shared.database import ...` (NOT `from sruth.croilar._shared.database import ...`)
-   - `from oideachais.dlt_utils.destinations import with_namespace` (NOT `from sruth.oideachais.dlt_utils.destinations import with_namespace`)
+   - `from cianfhoghlaim.dlt_utils.destinations import with_namespace` (NOT `from sruth.cianfhoghlaim.dlt_utils.destinations import with_namespace`)
 2. **Historical refs** (e.g. the v3-era packaging fix at `e9e0fc7d2` that put `sruth/` on `sys.path` so `import sruth.oideachais` worked) SHALL be preserved verbatim — they document the v3 → v4 transition.
-3. **The factory pattern** `oideachais.dlt_utils.destinations.with_namespace("croilar")` is the canonical way for the croilar quadrant to obtain its namespaced destination — SHALL be preserved.
+3. **The factory pattern** `cianfhoghlaim.dlt_utils.destinations.with_namespace("croilar")` is the canonical way for the croilar quadrant to obtain its namespaced destination — SHALL be preserved.
 
 #### Scenario: A spec contributor edits the croilar-data-engineering spec
 
 - **GIVEN** a contributor wants to add a new scenario to the croilar-data-engineering spec at `openspec/specs/croilar-data-engineering/spec.md`
 - **WHEN** the contributor writes a Python import statement in the scenario
 - **THEN** the import SHALL use the v4 form `from croilar.<module> import <symbol>` (NOT `from sruth.croilar.<module> import <symbol>`)
-- **AND** cross-quadrant imports SHALL use the v4 form `from oideachais.<module> import <symbol>` (NOT `from sruth.oideachais.<module> import <symbol>`)
+- **AND** cross-quadrant imports SHALL use the v4 form `from cianfhoghlaim.<module> import <symbol>` (NOT `from sruth.cianfhoghlaim.<module> import <symbol>`)
 - **AND** if the contributor wants to document the v3 → v4 transition (e.g. the pre-fix `import sruth.oideachais` behavior), they SHOULD use the parenthetical "(after the packaging fix at commit `e9e0fc7d2`)" form
 
 #### Scenario: The canonical namespace factory still works
 
-- **GIVEN** the `oideachais.dlt_utils.destinations.with_namespace("croilar")` factory
+- **GIVEN** the `cianfhoghlaim.dlt_utils.destinations.with_namespace("croilar")` factory
 - **WHEN** the croilar quadrant imports `NAMESPACE` via `from croilar.dlt_utils.destinations import NAMESPACE`
 - **THEN** `NAMESPACE == "croilar"`
-- **AND** the value comes from the canonical `oideachais.dlt_utils.destinations.with_namespace("croilar")` factory
+- **AND** the value comes from the canonical `cianfhoghlaim.dlt_utils.destinations.with_namespace("croilar")` factory
 - **AND** the local fallback at `croilar/dlt_utils/destinations.py` (if it still exists) is dead code and MUST be removed (~88 lines of duplication)
 
 #### Scenario: The R2Client remains importable from the canonical croilar location

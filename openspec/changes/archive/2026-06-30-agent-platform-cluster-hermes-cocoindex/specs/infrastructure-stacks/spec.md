@@ -45,7 +45,7 @@ at 70% utilization).
   (9119 to Pangolin; 8443/8090/8080/8645 webhook ports to
   127.0.0.1 only)
 - **AND** no `network_mode: host` line SHALL appear
-- **AND** `networks: [cianchoghlaim]` SHALL be set
+- **AND** `networks: [cianfhoghlaim]` SHALL be set
 - **AND** the service SHALL declare `restart: unless-stopped`
   and a healthcheck against `/api/health` on port 9119
 - **AND** `deploy.resources.limits: { cpus: '2', memory: 2G }`

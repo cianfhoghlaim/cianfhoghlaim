@@ -1,0 +1,12 @@
+{
+  "name": "@cianfhoghlaim/auth",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.4.0",
+    "@cianfhoghlaim/db": "workspace:*",
+    "@cianfhoghlaim/env": "workspace:*"
+  }
+}

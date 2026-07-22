@@ -1,4 +1,4 @@
-# `oideachais-baml-schemas` MODIFIED — Consolidate 6 ADDED Requirements from 5 changes into 4 logical change groups
+# `cianfhoghlaim-baml-schemas` MODIFIED — Consolidate 6 ADDED Requirements from 5 changes into 4 logical change groups
 
 > Consolidates the 6 ADDED Requirements shipped across the 5 source
 > changes (2 + 1 + 1 + 1 + 1) into 4 logical change groups (v0.212+
@@ -14,7 +14,7 @@
 The `baml_client/` Python module SHALL regenerate cleanly
 (`mise run baml:generate` exits 0 with respect to the 17
 processing-cluster files) after migrating all `.baml` files in
-`cianfhoghlaim/baml/processing/` from the deprecated Pydantic-style
+`baml/processing/` from the deprecated Pydantic-style
 `field: type` syntax to BAML v0.212+ canonical `field type`
 (whitespace-separated) syntax.
 
@@ -31,7 +31,7 @@ tokens, so it never rewrites content inside BAML prompts.
 
 #### Scenario: baml:generate succeeds for the 17 migrated processing files
 
-- **GIVEN** the 17 `.baml` files in `cianfhoghlaim/baml/processing/`
+- **GIVEN** the 17 `.baml` files in `baml/processing/`
       are rewritten to canonical v0.212+ syntax (per
       `scripts/migrate-baml-syntax.py --apply`)
 - **WHEN** `mise run baml:generate` is run and the validator reaches
@@ -39,7 +39,7 @@ tokens, so it never rewrites content inside BAML prompts.
 - **THEN** the validator reports 0 Pydantic-style errors in those 17
       files
 - **AND** `baml_client/` is regenerated at
-      `cianfhoghlaim/baml/shared/baml_client/`
+      `baml/shared/baml_client/`
 
 #### Scenario: Migration script is idempotent
 
@@ -118,24 +118,24 @@ output SHALL be uploaded under the `baml-test-results` artifact with
 
 ### Requirement: BAML v0.223 NCCA strand/outcome TypeBuilder — runtime mutation
 
-The `oideachais-baml-schemas` capability SHALL support runtime
+The `cianfhoghlaim-baml-schemas` capability SHALL support runtime
 injection of per-strand, per-outcome, per-curriculum-spec, and
 per-assessment-component properties into the 4 canonical
 NCCA-related BAML classes — `LearningOutcome`, `CurriculumStrand`,
 `CurriculumSpecStrand`, and `AssessmentComponentStrand` — marked
 `@@dynamic` per the BAML v0.221+ `TypeBuilder` spec, with the catalog
 loaded at startup from the canonical YAML config file at
-`cianfhoghlaim/baml/education/_shared/strand_catalog.yaml`. The
+`baml/education/_shared/strand_catalog.yaml`. The
 runtime helper SHALL be `build_ncca_strand_type_builder()` in
-`cianfhoghlaim/baml/education/_shared/strand_type_builder.py`.
+`baml/education/_shared/strand_type_builder.py`.
 
 *(Consolidates the 1 ADDED Requirement from
 `2026-07-12-baml-type-builder-ncca-v1`.)*
 
 #### Scenario: 4 `@@dynamic` markers are present on the canonical NCCA classes
 
-- **GIVEN** the file `cianfhoghlaim/baml/education/_shared/strand_outcome.baml`
-- **WHEN** `grep -c "@@dynamic" cianfhoghlaim/baml/education/_shared/strand_outcome.baml`
+- **GIVEN** the file `baml/education/_shared/strand_outcome.baml`
+- **WHEN** `grep -c "@@dynamic" baml/education/_shared/strand_outcome.baml`
       is run
 - **THEN** the count is exactly 4
 - **AND** the 4 markers are attached to the class declarations for
@@ -145,7 +145,7 @@ runtime helper SHALL be `build_ncca_strand_type_builder()` in
 #### Scenario: TypeBuilder helper loads the catalog YAML successfully
 
 - **GIVEN** the catalog YAML at
-      `cianfhoghlaim/baml/education/_shared/strand_catalog.yaml`
+      `baml/education/_shared/strand_catalog.yaml`
       contains the 6 LC priority subjects (Mathematics, Chemistry,
       Geography, Gaeilge, English, Computer Science)
 - **WHEN** `python -m cianfhoghlaim.baml.education._shared.strand_type_builder`
@@ -173,7 +173,7 @@ runtime helper SHALL be `build_ncca_strand_type_builder()` in
       yearly update adds a new strand
       `LC Mathematics Strand 5: Discrete Mathematics`)
 - **WHEN** the operator edits
-      `cianfhoghlaim/baml/education/_shared/strand_catalog.yaml` to
+      `baml/education/_shared/strand_catalog.yaml` to
       add the new strand + its properties (no `baml-cli generate`,
       no schema redeploy)
 - **THEN** the next pipeline run that calls
@@ -186,7 +186,7 @@ runtime helper SHALL be `build_ncca_strand_type_builder()` in
 
 - **GIVEN** the BIEP v1 owns the 7
       `baml/education/lc_extraction/*.baml` files
-- **WHEN** `git diff --stat origin/pick-4-biep-v1 -- cianfhoghlaim/baml/education/lc_extraction/`
+- **WHEN** `git diff --stat origin/pick-4-biep-v1 -- baml/education/lc_extraction/`
       is run after this change lands
 - **THEN** the diff is empty
 - **AND** the BIEP v1 Phase 4-5 DAG materialization is not blocked
@@ -194,10 +194,10 @@ runtime helper SHALL be `build_ncca_strand_type_builder()` in
 
 ### Requirement: BAML Option-2 fix — 50 pre-existing `field: type` errors resolved
 
-The `oideachais-baml-schemas` capability SHALL have all 50
+The `cianfhoghlaim-baml-schemas` capability SHALL have all 50
 pre-existing BAML `field: type` parse diagnostics (captured in the
 baseline at `openspec/changes/2026-07-13-baml-final-cleanup-v1/SCOPE_DECISION.md`)
-resolved across the full `cianfhoghlaim/baml/` tree. `mise run
+resolved across the full `baml/` tree. `mise run
 baml:generate` SHALL exit 0 against the current tree. The canonical
 types `MarkingScheme`, `MarkingSchemeSec`, `MarkingSchemeStrand`,
 `BilingualText`, `PastPaper`, `NCCAKeyCompetency`,
@@ -221,7 +221,7 @@ same Pydantic output classes as before.
 - **WHEN** `mise run baml:generate` is run from the repo root
 - **THEN** it exits with code 0
 - **AND** the `baml_client/` directory is regenerated successfully
-      (14 files written to `cianfhoghlaim/baml_client/baml_client/`)
+      (14 files written to `baml/baml_client/`)
 - **AND** the canonical types `MarkingScheme`, `MarkingSchemeSec`,
       `MarkingSchemeStrand`, `BilingualText`, `PastPaper`,
       `NCCAKeyCompetency`, `CrossNationLearningOutcome` are all
@@ -230,8 +230,8 @@ same Pydantic output classes as before.
 #### Scenario: full BAML tree compiles cleanly
 
 - **GIVEN** the canonical 75-file `.baml` tree at
-      `cianfhoghlaim/baml/`
-- **WHEN** `uv run baml-cli generate --from cianfhoghlaim/baml_src`
+      `baml/`
+- **WHEN** `uv run baml-cli generate --from baml_src`
       is invoked
 - **THEN** the BAML parser reports 0 `error:` lines in its output
 - **AND** the parser reports 0 `warning:` lines related to
@@ -275,7 +275,7 @@ generators active; the historical 8-generator layout preserved as a
 comment block) — it lives in the `clients.baml` file and is
 **not** part of this consolidation (it doesn't touch the BAML schema
 grammar or the `baml_cli test` flow; it's a generator wiring
-change). See `openspec/changes/2026-07-13-baml-final-cleanup-v1/specs/oideachais-baml-schemas/spec.md`
+change). See `openspec/changes/2026-07-13-baml-final-cleanup-v1/specs/cianfhoghlaim-baml-schemas/spec.md`
 for the standalone delta.
 
 **Summary**: 6 ADDED Requirements from 5 source changes consolidated

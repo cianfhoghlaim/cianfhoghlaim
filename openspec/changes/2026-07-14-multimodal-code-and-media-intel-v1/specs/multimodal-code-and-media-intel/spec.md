@@ -13,7 +13,7 @@ knowledge graph that closes the 4 surviving gaps from the archived
 
 The system SHALL provide 5 new CocoIndex v1 Apps, each R1+R2+R3+R4
 conformant, mounted as `CelticModelLifecycleComponent` L3 defs under
-`cianfhoghlaim/orchestration/defs/3_model_lifecycle/cocoindex_v1/`. Each
+`orchestration/defs/3_model_lifecycle/cocoindex_v1/`. Each
 App SHALL fan into the shared `multihop_search` `@coco.fn(memo=True)`
 primitive so that one MCP-level `multihop_search(question, limit=10)`
 call can synthesize answers across all 5 Apps + the existing
@@ -57,7 +57,7 @@ The 5 Apps are:
 
 #### Scenario: One MCP call fans across all 5 Apps
 
-- **GIVEN** a developer opens the `oideachais-web` TanStack Start UI and
+- **GIVEN** a developer opens the `cianfhoghlaim-web` TanStack Start UI and
   invokes the `cocoindex-code.multihop_search` MCP tool with the
   question `"How does the cianfhoghlaim Lakehouse stack relate to the
   3Blue1Brown linear-algebra tutorial?"`
@@ -122,10 +122,10 @@ transcription, and SHALL NOT introduce a new ASR backend.
 
 The system SHALL register 5 new cognify datasets — `multimedia_kg`,
 `package_changelog`, `codebase_git_history`, `media_local`,
-`repo_arch_docs` — under `cianfhoghlaim/cognify/datasets/` following
-the existing `oideachais_cognify_*` pattern. Each dataset SHALL be
+`repo_arch_docs` — under `cognify/datasets/` following
+the existing `cianfhoghlaim_cognify_*` pattern. Each dataset SHALL be
 cognified on the same daily schedule as the existing 7 cognify clusters
-(per the `oideachais-cognify-knowledge-graph` spec).
+(per the `cianfhoghlaim-cognify-knowledge-graph` spec).
 
 #### Scenario: A new video is cognified
 
@@ -134,6 +134,6 @@ cognified on the same daily schedule as the existing 7 cognify clusters
 - **WHEN** the `cognify_multimedia_kg` Dagster asset materialises on
   the daily cron
 - **THEN** the BAML-extracted triples are loaded into the Cognee
-  knowledge graph alongside the existing `oideachais_cognify_*` clusters
+  knowledge graph alongside the existing `cianfhoghlaim_cognify_*` clusters
 - **AND** a Graphiti episode is appended with the `source_kind =
   "youtube_kg"` marker for bi-temporal tracking

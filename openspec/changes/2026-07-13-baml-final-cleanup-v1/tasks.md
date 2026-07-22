@@ -2,7 +2,7 @@
 
 ## Step 1 — Refactor `clients.baml` to minimax-m3 default
 
-- [x] Preserve the historical 8-generator setup as a comment block in `cianfhoghlaim/baml/clients.baml`.
+- [x] Preserve the historical 8-generator setup as a comment block in `baml/clients.baml`.
 - [x] Make `generator default` the only active text-extraction generator.
 - [x] Point `default` at `minimax-m3` via `MINIMAX_BASE_URL` + `MINIMAX_API_KEY`.
 - [x] Keep `local_vision_gemma4` active.
@@ -41,7 +41,7 @@
 
 ## Step 7 — Write OpenSpec deltas
 
-- [x] Add `specs/oideachais-baml-schemas/spec.md` with one ADDED requirement for the active single `minimax-m3` text generator.
+- [x] Add `specs/cianfhoghlaim-baml-schemas/spec.md` with one ADDED requirement for the active single `minimax-m3` text generator.
 - [x] Add `specs/british-isles-education-pipeline/spec.md` with one ADDED requirement for unique `MarkingPoint*` names.
 
 ## Validation

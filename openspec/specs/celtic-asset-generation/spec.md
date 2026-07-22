@@ -58,14 +58,14 @@ references live at
   extraction calls `ExtractLearningOutcome` (BGE + GLM-4.6
   fallback) to extract typed outcomes
 - **AND** the CocoIndex v1 flow embeds each outcome in
-  the `oideachais.education.ie.primary.maths.outcomes`
+  the `cianfhoghlaim.education.ie.primary.maths.outcomes`
   LanceDB table
 - **AND** the Cognee cognify call builds the knowledge
   graph nodes
 - **AND** the Graphiti episode is appended to the temporal
   KG
 - **AND** the marimo dashboard at
-  `https://oideachais.cianfhoghlaim.ie/dashboards/
+  `https://cianfhoghlaim.cianfhoghlaim.ie/dashboards/
   primary-maths` shows the new outcomes
 
 #### Scenario: A bilingual asset needs Irish + English forms
@@ -121,7 +121,7 @@ Each pipeline is independently runnable from Dagster — they are NOT chained as
 #### Scenario: Independent activation
 
 - **WHEN** Dagster materialises `assets/asset_generation/official_documents/syllabus.py`
-- **THEN** the syllabus extraction runs alone, writing to `ducklake://oideachais.assets.official_documents.syllabus`
+- **THEN** the syllabus extraction runs alone, writing to `ducklake://cianfhoghlaim.assets.official_documents.syllabus`
 - **AND** subject_assets / language_assets / exporters do NOT trigger
 - **AND** the four pipelines share no DAG dependencies
 

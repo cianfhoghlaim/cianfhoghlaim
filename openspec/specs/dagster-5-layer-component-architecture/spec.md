@@ -129,7 +129,7 @@ feature set:
 The `CelticModelLifecycleComponent` SHALL call
 `cocoindex_v1_conformance.check_module(module)` BEFORE emitting
 the asset. The check enforces the 4-rule R1–R4 contract
-(`oideachais-cocoindex-v1` skill):
+(`cianfhoghlaim-cocoindex-v1` skill):
 
 - **R1** — Module imports `from ._lifespan import shared_lifespan`
 - **R2** — Module imports the canonical ContextKeys (`LANCE_DB`, `EMBEDDER`, `RESOLVED_FILE_REGISTRY`) OR declares an additional one with `# R2-exempt: <reason>`
@@ -167,7 +167,7 @@ On R1–R4 fail, `dg.Failure` is raised with the exact rule + a
 The Cianfhoghlaim Dagster definitions SHALL be organised into
 exactly 5 `defs/<layer>/` folders (one per layer), each with a
 `defs.yaml` root mount + per-domain sub-folders. The previous
-6-sub-folder shape (`oideachais_pipeline`, `celtic_asset_generation`,
+6-sub-folder shape (`cianfhoghlaim_pipeline`, `celtic_asset_generation`,
 `cognify`, `croilar`, `meaisinfhoghlaim_platform`, `tuatha`) SHALL
 be retired and replaced by the 5-layer shape.
 
@@ -175,7 +175,7 @@ be retired and replaced by the 5-layer shape.
 
 - **WHEN** `ls cianfhoghlaim/dagster/defs/` runs
 - **THEN** the output includes exactly: `1_ingestion/`, `2_materials/`, `3_model_lifecycle/`, `4_asset_generation/`, `5_agent_ops/`
-- **AND** the previous 6 sub-folders (`oideachais_pipeline/`, `celtic_asset_generation/`, `cognify/`, `croilar/`, `meaisinfhoghlaim_platform/`, `tuatha/`) do NOT exist
+- **AND** the previous 6 sub-folders (`cianfhoghlaim_pipeline/`, `celtic_asset_generation/`, `cognify/`, `croilar/`, `meaisinfhoghlaim_platform/`, `tuatha/`) do NOT exist
 
 #### Scenario: Each layer has at least 1 sub-folder
 
@@ -186,4 +186,67 @@ be retired and replaced by the 5-layer shape.
 - **AND** the output for `4_asset_generation/` SHALL include at least: `marimo_dashboards/`, `tanstack_pages/`, `orpc_routes/`
 - **AND** the output for `5_agent_ops/` SHALL include at least: `custom/`, `adk/`, `agno/`
 - **AND** the `5_agent_ops/pipecat/` sub-folder is INTENTIONALLY ABSENT (the voice agent is deferred to a follow-on change per user direction)
+
+### Requirement: Canonical v7 flattened package layout
+
+The system SHALL treat the repository root as the canonical location of the
+`cianfhoghlaim` Python package. Every `from cianfhoghlaim.X import Y` import
+SHALL resolve against the flat repo-root layout — there SHALL NOT be a
+separate `cianfhoghlaim/` subdirectory containing the package source.
+
+The package marker files (`__init__.py`, `__main__.py`, `__deployment__.py`,
+`cli.py` for the cianfhoghlaim CLI) SHALL live at the repository root and
+SHALL use the `__double_underscore__` naming convention so they sort first in
+directory listings.
+
+The top-level sub-directories SHALL serve as `cianfhoghlaim` sub-modules
+either by (a) carrying an `__init__.py` (regular package) or (b) relying on
+Python 3.12+ implicit namespace package semantics. The following
+directories SHALL be importable as `cianfhoghlaim.<name>`:
+
+- `agents/` → `cianfhoghlaim.agents`
+- `baml_src/` → `cianfhoghlaim.baml_src`
+- `bonneagar/` → `cianfhoghlaim.bonneagar`
+- `cocoindex/` → `cianfhoghlaim.cocoindex`
+- `dlt/` → `cianfhoghlaim.dlt`
+- `meaisinfhoghlaim/` → `cianfhoghlaim.meaisinfhoghlaim`
+- `notebooks/` → `cianfhoghlaim.notebooks`
+- `orchestration/` → `cianfhoghlaim.orchestration`
+
+The web and spaces directories SHALL NOT be part of the Python package
+(the web/ sub-tree is bun-managed; spaces/ is a separate project with its own
+`pyproject.toml`).
+
+The Dagster code-location entry point SHALL be
+`orchestration.definitions` (the file `orchestration/definitions.py` at the
+repository root). The historical path `cianfhoghlaim.dagster.definitions`
+SHALL NOT be the entry point. Any `from cianfhoghlaim.dagster.X import Y`
+import in test code or documentation SHALL be rewritten to
+`from orchestration.X import Y`.
+
+#### Scenario: uv sync succeeds
+
+- **WHEN** the user runs `uv sync` from the repository root
+- **THEN** uv SHALL resolve all dependencies (including dagster >= 1.13, duckdb >= 1.4, cocoindex >= 1.0,<2.0,!=1.0.8, lancedb >= 0.15)
+- **AND THEN** exit 0
+
+#### Scenario: Python imports resolve
+
+- **WHEN** the user runs `python -c "from cianfhoghlaim.dlt.common.cli import main"`
+- **THEN** the import SHALL succeed
+- **AND THEN** the resolution path SHALL be `orchestration/...` or `dlt/...` at the repo root (NOT from a non-existent `cianfhoghlaim/` subdirectory)
+
+#### Scenario: Dagster code-location loads
+
+- **WHEN** the user runs `mise run cic:dagster:dev`
+- **THEN** Dagster SHALL load the 5-layer component architecture from the
+  `orchestration/defs/` directory tree
+- **AND THEN** the code location SHALL report 199 assets + 31 jobs + 6 schedules + 16 sensors + 22 asset checks
+
+#### Scenario: Dagster module-name canonical
+
+- **WHEN** the user reads `dg.toml`
+- **THEN** the `module_name` field SHALL equal `orchestration.definitions`
+- **AND THEN** the `mise.toml:138` `cic:dagster:dev` task body SHALL run
+      `uv run dagster dev -m orchestration.definitions`
 

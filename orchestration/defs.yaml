@@ -1,0 +1,34 @@
+# cianfhoghlaim/dagster_defs/defs.yaml — the new (2026-06) `defs/` mount point.
+#
+# Per the Dagster 1.10 Components preview
+# (`docs.dagster.io/api/dagster/components`), the canonical way to
+# mount multiple Components + Python modules in a `defs/` folder is
+# to declare them in a `defs.yaml` at the root of the folder. The
+# `dg load_from_defs_folder()` helper then constructs the `Definitions`.
+#
+# This file is the root of the oideachais `defs/` folder and mounts:
+# - The `assets/` Python module (the legacy hand-written assets).
+# - The `sensors/` Python module (the directory-watch sensors).
+# - The `schedules.py` module (the cron schedules).
+# - The 3 KCG-specific Components (via Python post-processing).
+#
+# The `dg list components` command discovers the 3 KCG components
+# automatically (per the `[tool.dg] registry_modules` setting in
+# `cianfhoghlaim/pyproject.toml`).
+---
+type: dagster.DefsFolderComponent
+attributes: {}
+post_processing:
+  assets:
+    # The 3 KCG-specific Components that need a defs.yaml entry to
+    # appear in `dg list defs`. Each is instantiated from Python
+    # (not YAML) so we can pass the source_id directly.
+    - target: "tag:kcg_component=celtic_dlt_source"
+      attributes:
+        tags: {kcg_component: "celtic_dlt_source"}
+    - target: "tag:kcg_component=celtic_lancedb_hnsw"
+      attributes:
+        tags: {kcg_component: "celtic_lancedb_hnsw"}
+    - target: "tag:kcg_component=celtic_cocoindex_v1"
+      attributes:
+        tags: {kcg_component: "celtic_cocoindex_v1"}

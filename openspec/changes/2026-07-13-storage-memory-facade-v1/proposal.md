@@ -6,7 +6,7 @@ The T4 commit `0bf713c45` ("feat(agents): T4 agent-fleet + baml
 0.212 + observability + storage facades") added the
 `storage-memory-facade` capability:
 
-- `cianfhoghlaim/storage/memf.py` (481 LOC) — the canonical
+- `storage/memf.py` (481 LOC) — the canonical
   `MemoryBackend` Protocol + 3 concrete backends
   (`GraphitiBackend` + `FalkorDBBackend` +
   `InMemoryLanceDBBackend`) + `get_default_backend()` factory with
@@ -46,7 +46,7 @@ pass with a new ADDED requirement on `agent-memory-systems`.
 
 ### 1. Smoke test the `MemoryBackend` factory
 
-Add `cianfhoghlaim/tests/test_memory_backend_smoke.py` with 3
+Add `tests/test_memory_backend_smoke.py` with 3
 pytest scenarios that run in the CI hermetic environment (no
 Graphiti / no FalkorDB → the factory falls through to
 `InMemoryLanceDBBackend` per the cascade):
@@ -63,18 +63,18 @@ Graphiti / no FalkorDB → the factory falls through to
 ### 2. AST-parse the 9 BAML + 6 per-subject notebooks
 
 Verifies that the 15 notebooks
-(`cianfhoghlaim/notebooks/03_leaving_cert/*.py` +
-`cianfhoghlaim/notebooks/04_biep_motherduck/07_subject_full_pipeline.py`
-+ `cianfhoghlaim/notebooks/legacy/corpora/{subject_full_pipeline_runner.py,
+(`notebooks/03_leaving_cert/*.py` +
+`notebooks/04_biep_motherduck/07_subject_full_pipeline.py`
++ `notebooks/legacy/corpora/{subject_full_pipeline_runner.py,
 law/01_law_corpus_overview.py}` + the 6 per-subject stubs at
-`cianfhoghlaim/notebooks/leaving_cert/{chemistry,computer_science,
+`notebooks/leaving_cert/{chemistry,computer_science,
 english,gaeilge,geography,mathematics}.py`) all AST-parse OK
 after the storage-facade refactor.
 
 ### 3. Audit the 8 NCCA agents
 
 `grep -n "graphiti_client\|falkordb_client\|memgraph_client"
-cianfhoghlaim/agents/tuatha/<slug>_agent.py` returns 0 matches
+agents/tuatha/<slug>_agent.py` returns 0 matches
 for each of the 8 agents. The agents consume the canonical
 `wiring.py` module which uses `get_default_backend()` internally
 — never direct client imports.
@@ -90,10 +90,10 @@ have no direct imports) on the existing
 
 - `openspec validate 2026-07-13-storage-memory-facade-v1 --strict`
   passes (1 ADDED spec delta well-formed)
-- `uv run pytest cianfhoghlaim/tests/test_memory_backend_smoke.py`
+- `uv run pytest tests/test_memory_backend_smoke.py`
   reports 3 tests — all pass
 - `grep -n "graphiti_client\|falkordb_client\|memgraph_client"
-  cianfhoghlaim/agents/tuatha/{gael,math,hist,geog,chem,comp,engl,appm}_agent.py`
+  agents/tuatha/{gael,math,hist,geog,chem,comp,engl,appm}_agent.py`
   returns 0 matches per agent
 - `python3 -c "import ast; ast.parse(open(...))"` succeeds for
   each of the 9 BAML + 6 per-subject notebooks (15 total)
@@ -125,7 +125,7 @@ Not applicable — this is a single-repo change. `bonneagar` +
 
 ## Files touched
 
-- **Add**: `cianfhoghlaim/tests/test_memory_backend_smoke.py` —
+- **Add**: `tests/test_memory_backend_smoke.py` —
   the 3 smoke-test scenarios
 - **Add**: `openspec/changes/2026-07-13-storage-memory-facade-v1/`
   (the 4 openspec change files: `proposal.md` + `tasks.md` +

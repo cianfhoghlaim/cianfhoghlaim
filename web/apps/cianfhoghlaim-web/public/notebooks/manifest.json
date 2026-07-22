@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-07-17T18:37:35.584702+00:00",
+  "count": 7,
+  "notebooks": [
+    {
+      "notebook": "notebooks/18_cianfhoghlaim_subject_registry.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/18_cianfhoghlaim_subject_registry",
+      "bundle_size_kb": 0.7412109375,
+      "exported_at": "2026-07-17T18:37:35.583202+00:00"
+    },
+    {
+      "notebook": "notebooks/19_ireland_pipeline_dashboard.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/19_ireland_pipeline_dashboard",
+      "bundle_size_kb": 0.7255859375,
+      "exported_at": "2026-07-17T18:37:35.583442+00:00"
+    },
+    {
+      "notebook": "notebooks/20_england_pipeline_dashboard.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/20_england_pipeline_dashboard",
+      "bundle_size_kb": 0.7255859375,
+      "exported_at": "2026-07-17T18:37:35.583777+00:00"
+    },
+    {
+      "notebook": "notebooks/21_sct_wls_ni_pipeline_dashboard.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/21_sct_wls_ni_pipeline_dashboard",
+      "bundle_size_kb": 0.7373046875,
+      "exported_at": "2026-07-17T18:37:35.584029+00:00"
+    },
+    {
+      "notebook": "notebooks/22_crown_dependencies_dashboard.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/22_crown_dependencies_dashboard",
+      "bundle_size_kb": 0.7333984375,
+      "exported_at": "2026-07-17T18:37:35.584271+00:00"
+    },
+    {
+      "notebook": "notebooks/23_8_jurisdiction_overview.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/23_8_jurisdiction_overview",
+      "bundle_size_kb": 0.7138671875,
+      "exported_at": "2026-07-17T18:37:35.584471+00:00"
+    },
+    {
+      "notebook": "notebooks/40_leaving_cert_subject_panel.py",
+      "bundle_dir": "web/apps/cianfhoghlaim-web/public/notebooks/40_leaving_cert_subject_panel",
+      "bundle_size_kb": 0.7255859375,
+      "exported_at": "2026-07-17T18:37:35.584699+00:00"
+    }
+  ]
+}

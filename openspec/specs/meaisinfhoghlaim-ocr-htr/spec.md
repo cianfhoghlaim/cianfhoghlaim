@@ -151,5 +151,5 @@ and through `qwen3-vl-8b` for the Gemini corpus.
 - [`.agents/skills/document-intelligence/`](../../.agents/skills/document-intelligence/SKILL.md)
 - [`.agents/skills/data-engineer/`](../../.agents/skills/data-engineer/SKILL.md)
 - [`openspec/specs/meaisinfhoghlaim-platform/spec.md`](meaisinfhoghlaim-platform/spec.md) (the quadrant overview)
-- [`openspec/specs/oideachais-pipeline/spec.md`](../oideachais-pipeline/spec.md) (LC5 + Gemini assets)
-- [`openspec/specs/oideachais-leabharlann/spec.md`](../oideachais-leabharlann/spec.md) (the upstream leabharlann pipeline)
+- [`openspec/specs/cianfhoghlaim-pipeline/spec.md`](../cianfhoghlaim-pipeline/spec.md) (LC5 + Gemini assets)
+- [`openspec/specs/cianfhoghlaim-leabharlann/spec.md`](../cianfhoghlaim-leabharlann/spec.md) (the upstream leabharlann pipeline)

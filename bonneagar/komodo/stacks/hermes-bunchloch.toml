@@ -1,0 +1,14 @@
+# Komodo stack registration: Hermes (bunchloch)
+# Per the add-openclaw-stack-and-channel-fanout precedent
+[[stack]]
+name = "hermes"
+server_id = "bunchloch"
+run_directory = "/etc/komodo/sruth/bonneagar/stacks/hermes"
+file_paths = ["compose.yaml", "sidecar.yaml", "pangolin.yaml", "blueprint.yaml"]
+tags = ["host:bunchloch", "tier:control-plane", "type:agent-runtime", "domain:hermes.cianfhoghlaim.ie"]
+
+[stack.environment]
+LOCKET_MODE = "watch"
+HERMES_OPERATOR_POCKET_ID_SUBJECT = "${HERMES_OPERATOR_POCKET_ID_SUBJECT}"
+INFISICAL_CLIENT_ID = "${INFISICAL_CLIENT_ID}"
+INFISICAL_SECRET_FILE = "${INFISICAL_SECRET_FILE}"

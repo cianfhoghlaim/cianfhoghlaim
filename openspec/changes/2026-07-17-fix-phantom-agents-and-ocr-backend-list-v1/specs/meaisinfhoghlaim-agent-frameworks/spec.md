@@ -9,8 +9,8 @@ preserved unchanged.
 ### Requirement: 8 per-subject ADK specialists resolve to `agents/tuatha/<slug>_agent.py` and dispatch via `select_optimal_for_m4_max`
 
 The system SHALL wire the 8 NCCA subject specialists in the ADK root
-agent (`cianfhoghlaim/agents/adk/root_agent.py`) to the canonical
-per-subject modules at `cianfhoghlaim/agents/tuatha/<slug>_agent.py`,
+agent (`agents/adk/root_agent.py`) to the canonical
+per-subject modules at `agents/tuatha/<slug>_agent.py`,
 where `<slug>` is one of
 `math`, `appm`, `chem`, `geog`, `hist`, `engl`, `gael`, `comp`.
 
@@ -41,7 +41,7 @@ back-compat alias that emits `DeprecationWarning` and delegates to
 - **WHEN** `python -c "from importlib import import_module; [import_module(f'cianfhoghlaim.agents.tuatha.{s}_agent') for s in ['math', 'appm', 'chem', 'geog', 'hist', 'engl', 'gael', 'comp']]"`
 - **THEN** the command exits 0 with no `ModuleNotFoundError`
 - **AND** all 8 modules resolve to physical files under
-  `cianfhoghlaim/agents/tuatha/`
+  `agents/tuatha/`
 
 #### Scenario: select_optimal_for_m4_max is the canonical M4-Max helper
 
@@ -59,5 +59,5 @@ back-compat alias that emits `DeprecationWarning` and delegates to
 
 #### Scenario: no phantom `meaisinfhoghlaim.educational` paths remain in `root_agent.py`
 
-- **WHEN** `grep -nE "meaisinfhoghlaim\.educational" cianfhoghlaim/agents/adk/root_agent.py`
+- **WHEN** `grep -nE "meaisinfhoghlaim\.educational" agents/adk/root_agent.py`
 - **THEN** the output SHALL be empty (0 matches)

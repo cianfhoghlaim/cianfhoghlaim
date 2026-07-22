@@ -138,7 +138,7 @@ because its UI is SaaS at `https://logfire.pydantic.dev`.
 
 ### Requirement: Datadog Python observability is a graceful no-op
 
-The system SHALL show actual Python import examples using the v4 `cianfhoghlaim` package root. Legacy `from oideachais...` examples MUST be rewritten when they are code imports rather than documentation shorthand.
+The system SHALL show actual Python import examples using the v4 `cianfhoghlaim` package root. Legacy `from cianfhoghlaim...` examples MUST be rewritten when they are code imports rather than documentation shorthand.
 
 #### Scenario: setup_datadog_apm import example uses cianfhoghlaim
 

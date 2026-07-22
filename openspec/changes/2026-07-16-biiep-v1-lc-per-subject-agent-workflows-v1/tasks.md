@@ -9,8 +9,8 @@
       Notable dirty paths visible at audit time:
       - `M .github/workflows/cocoindex-conformance.yaml`
       - `M .gitignore`
-      - 17 modified files in `cianfhoghlaim/dlt/{british_isles,common}/`
-      - 3 deleted files in `cianfhoghlaim/ocr/`
+      - 17 modified files in `dlt/{british_isles,common}/`
+      - 3 deleted files in `ocr/`
       - 8 deleted files in `openspec/changes/2026-07-10/`
       - 10 deleted files in `openspec/changes/2026-07-11/`
       - 8 deleted files in `openspec/changes/2026-07-12/`
@@ -20,12 +20,12 @@
 
 ## Step 1 — Audit the existing 8 NCCA subject agents
 
-- [x] **1.1** List the 8 module files at `cianfhoghlaim/agents/tuatha/`:
+- [x] **1.1** List the 8 module files at `agents/tuatha/`:
       - `gael_agent.py` (198 lines), `math_agent.py` (269), `appm_agent.py` (188),
         `chem_agent.py` (165), `comp_agent.py` (130), `engl_agent.py` (129),
         `geog_agent.py` (129), `hist_agent.py` (134).
 - [x] **1.2** Confirm the wiring module exists at
-      `cianfhoghlaim/agents/tuatha/wiring.py` (598 lines).
+      `agents/tuatha/wiring.py` (598 lines).
 - [x] **1.3** Confirm the `SUBJECT_WIRING` dict has all 8 NCCA subjects
       including the 6 in-scope (`gaeilge`, `mathematics`, `chemistry`,
       `computer_science`, `english`, `geography`) + the 2 out-of-scope
@@ -35,7 +35,7 @@
 
 ## Step 2 — Ship the per-subject workflow handlers
 
-- [x] **2.1** Create `cianfhoghlaim/agents/tuatha/_workflow_handlers.py`
+- [x] **2.1** Create `agents/tuatha/_workflow_handlers.py`
       with the 3 shared async dispatcher functions
       (`make_study_plan`, `discuss_exam_paper`, `explain_marking_scheme`)
       + the `StudyPlanContext` dataclass + the
@@ -71,7 +71,7 @@
       `wiring.py` + `_workflow_handlers.py` (8 files total):
       ```bash
       for s in math chem geog gaeil engl comp; do
-        uv run python3 -c "import ast; ast.parse(open('cianfhoghlaim/agents/tuatha/${s}_agent.py').read()); print('OK')"
+        uv run python3 -c "import ast; ast.parse(open('agents/tuatha/${s}_agent.py').read()); print('OK')"
       done
       ```
 - [x] **4.2** Smoke-test the runtime import + the 3 handler

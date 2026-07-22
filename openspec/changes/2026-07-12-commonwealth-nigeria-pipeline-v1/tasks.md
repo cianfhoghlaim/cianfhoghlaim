@@ -40,7 +40,7 @@ For each of 36 states + 1 FCT:
 ## 4. CocoIndex v1 App
 
 - [ ] 4.1 Create
-  `cianfhoghlaim/cocoindex/nigeria_education_embedding.py`
+  `cocoindex/nigeria_education_embedding.py`
 - [ ] 4.2 Imports `from ._lifespan import shared_lifespan`
 - [ ] 4.3 Embeds with `BAAI/bge-m3` (1024-d)
 - [ ] 4.4 Partitions on `state_code + language`
@@ -49,9 +49,9 @@ For each of 36 states + 1 FCT:
 ## 5. MotherDuck Dive + Flight
 
 - [ ] 5.1 Create
-  `cianfhoghlaim/motherduck/dives/nigeria_state_curriculum_matrix.py`
+  `motherduck/dives/nigeria_state_curriculum_matrix.py`
 - [ ] 5.2 Create
-  `cianfhoghlaim/motherduck/flights/nigeria_daily_sync_flight.py`
+  `motherduck/flights/nigeria_daily_sync_flight.py`
 - [ ] 5.3 Append `nigeria_daily_sync_flight` to the flights
   `config.yaml` (cron `0 6 * * *`)
 

@@ -5,7 +5,7 @@
 ### Requirement: academic_history_agent MUST depend on the MemoryBackend Protocol
 
 The system SHALL provide an `academic_history_agent` at
-`cianfhoghlaim/agents/meaisinfhoghlaim/educational/academic_history_agent.py`
+`agents/meaisinfhoghlaim/educational/academic_history_agent.py`
 that MUST depend on the `MemoryBackend` StorageBackend Protocol via
 `from cianfhoghlaim.storage.memf import get_default_backend` rather
 than importing `graphiti_client`, `falkordb_client`, or
@@ -29,7 +29,7 @@ elsewhere in this spec.
 
 The system SHALL add a 13th `ROUTING_KEYWORDS` bucket
 `academic_history_agent` to
-`cianfhoghlaim/agents/routing_keywords.py` covering:
+`agents/routing_keywords.py` covering:
 
 - "my history", "my notes", "my modules", "my assignments"
 - "my exam history", "my answers", "my progress"

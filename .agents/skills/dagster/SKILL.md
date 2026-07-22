@@ -4,12 +4,12 @@ description:
   Expert guidance for working with Dagster and the dg CLI. ALWAYS use before doing any task that requires
   knowledge specific to Dagster, or that references assets, materialization, components, data tools or data pipelines.
   Common tasks may include creating a new project, adding new definitions, understanding the current project structure, answering general questions about the codebase (finding asset, schedule, sensor, component or job definitions), debugging issues, or providing deep information about a specific Dagster concept.
-  Drives the British-Isles Education pipeline (42 lc5/lc6 assets = 7 subjects × 6 BAML stages) via `cianfhoghlaim/orchestration/defs/2_materials/`.
+  Drives the British-Isles Education pipeline (42 lc5/lc6 assets = 7 subjects × 6 BAML stages) via `orchestration/defs/2_materials/`.
 ---
 
 ## Core Dagster Concepts
 # Oideachais Project Specific Rules
-- **Environment**: Start local environment with `uv run dagster dev -m cianfhoghlaim.orchestration.definitions` inside the `cianfhoghlaim` directory.
+- **Environment**: Start local environment with `uv run dagster dev -m orchestration.definitions` inside the `cianfhoghlaim` directory.
 - **Partitions**: `ireland/curriculum/` assets are MultiPartitioned by `language` and `subject` (e.g., `"en|mathematics"`). The lc5/lc6 BIEP assets are additionally partitioned by `level` (`higher` / `ordinary`) — 42 assets total = 7 subjects × 6 BAML stages.
 - **Lakehouse**: MotherDuck/DuckLake is the sink. Ensure `USE_DUCKLAKE=true` if using MotherDuck, otherwise it uses a local DuckDB file.
 - **Namespaces**: NEVER use absolute namespaces (e.g. `cianfhoghlaim.orchestration...`) from within the orchestration layer. Always use relative or local package imports.
@@ -151,23 +151,23 @@ schedule and ownership.
 │  Layer 4: Asset Generation (Dagster re-materialization) │
 │  → marimo dashboards (5 educational stages)             │
 │  → FastAPI routes (`/dashboards/*`, `/api/*`)          │
-│  → TanStack Start front-end (`cianfhoghlaim/web/apps/oideachais-web/`)         │
+│  → TanStack Start front-end (`web/apps/cianfhoghlaim-web/`)         │
 └────────────────────────────────────────────────────────┘
 ```
 
 **Asset groups:**
 
-- `oideachais-pipeline` — Layer 1 (DLT ingestion, 33+ sources
+- `cianfhoghlaim-pipeline` — Layer 1 (DLT ingestion, 33+ sources
   for Ireland, UK, Celtic, geospatial)
-- `oideachais-cognify-knowledge-graph` — Layer 2 + 3
+- `cianfhoghlaim-cognify-knowledge-graph` — Layer 2 + 3
   (cognify, 3 leabharlann cognify, 3 cross-archive edges)
-- `oideachais-leabharlann` — Layer 2 (3 v1 CocoIndex Apps
+- `cianfhoghlaim-leabharlann` — Layer 2 (3 v1 CocoIndex Apps
   for the leabharlann corpus)
-- `oideachais-semantic-search` — Layer 3 (cross-corpus
+- `cianfhoghlaim-semantic-search` — Layer 3 (cross-corpus
   LanceDB HNSW search)
-- `oideachais-marimo-dashboards` — Layer 4 (11 marimo
+- `cianfhoghlaim-marimo-dashboards` — Layer 4 (11 marimo
   notebooks for the 5 educational stages)
-- `oideachais-baml-schemas` — Layer 2 (BAML extraction
+- `cianfhoghlaim-baml-schemas` — Layer 2 (BAML extraction
 
   schemas, 23+ files)
 - `docs-skills-consolidation` — Layer 4 (the
@@ -214,15 +214,15 @@ Use port 3000 only for croilar-specific work.
 # KCG engineering Dagster stack (the canonical one)
 cd oideachais
 uv add dagster dagster-duckdb "dagster-dlt>=0.29.11"
-uv run dagster dev -m cianfhoghlaim.orchestration.definitions
+uv run dagster dev -m orchestration.definitions
 # UI at http://localhost:3335
 ```
 
 The KCG Dagster integration lives at:
 
-- `cianfhoghlaim/orchestration/defs/` — the Dagster
+- `orchestration/defs/` — the Dagster
   definitions module (assets, jobs, schedules, sensors, resources)
-- `cianfhoghlaim/orchestration/definitions.py` —
+- `orchestration/definitions.py` —
   the entry point
 - `dg.toml` — the Dagster workspace config (registers
   oideachais, tuatha, meaisínfhoghlaim, croilar as code-locations)
@@ -306,7 +306,7 @@ attributes:
 
 ### Multi-tenant DLT asset factory (legacy `@dlt_assets`)
 
-The KCG `cianfhoghlaim/orchestration/defs/1_ingestion/curriculum_dlt_assets.py`
+The KCG `orchestration/defs/1_ingestion/curriculum_dlt_assets.py`
 defines a factory pattern for the 33+ Ireland curriculum
 assets, each with the canonical
 `MultiPartitionsDefinition(language, subject)` partition:
@@ -317,7 +317,7 @@ assets, each with the canonical
     dlt_pipeline=dlt.pipeline(
         pipeline_name="ireland_curriculum",
         destination="ducklake",
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     ),
     partitions_def=MultiPartitionsDefinition({
         "language": StaticPartitionsDefinition(["en", "ga"]),
@@ -331,7 +331,7 @@ def ireland_curriculum_assets(context, dlt_run_resource):
 
 ## KCG: 21-asset-module / 7-group inventory (canonical)
 
-Per `cianfhoghlaim/orchestration/definitions.py` and the
+Per `orchestration/definitions.py` and the
 leabharlann stack overview, the KCG Dagster workspace has
 **21 asset modules** across **7 groups**:
 
@@ -346,12 +346,12 @@ leabharlann stack overview, the KCG Dagster workspace has
 | `leabharlann` | 0 (orchestrator) | The cross-stage orchestrator |
 
 **Total**: 56+ asset instances, all sharing the
-`oideachais.{domain}.{nation}.{entity}` asset-key contract
+`cianfhoghlaim.{domain}.{nation}.{entity}` asset-key contract
 (see `.agents/skills/agent-memory-systems/SKILL.md`).
 
 ### The 5-stage leabharlann asset materialisation order
 
-The leabharlann pipeline (`.agents/skills/kcg-leabharlann-pipeline/SKILL.md`)
+The leabharlann pipeline (`.agents/skills/leabharlann-pipeline/SKILL.md`)
 is wired as 7 specific Dagster assets that fire in order:
 
 1. `leabharlann_books_raw` (Stage 2: DLT filesystem scan)
@@ -364,7 +364,7 @@ is wired as 7 specific Dagster assets that fire in order:
 7. `cognee_cross_archive_edges` (Stage 5: edges, **queued**)
 
 The **first 5 are wired**; the last 2 are queued in
-`cianfhoghlaim/REFACTORING.md` Feature 2.
+`REFACTORING.md` Feature 2.
 
 ```
 
@@ -429,11 +429,11 @@ The Cianfhoghlaim platform runs 5 code-locations from a single Dagster UI:
 
 | Code-location | Path | Workspace member |
 |:--|:--|:--|
-| `oideachais` | `cianfhoghlaim/orchestration/defs/` | The lakehouse (280+ assets) |
-| `tuath` | `cianfhoghlaim/agents/tuatha/dagster_assets/` | The Celtic MMO |
-| `crypteolas` | `cianfhoghlaim/agents/crypteolas/dagster_assets/` | The crypto data platform |
-| `croilar` | `cianfhoghlaim/web/apps/croilar-portal/definitions.py` | The multi-persona portfolio |
-| `meaisin_heartbeat` | `cianfhoghlaim/agents/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
+| `oideachais` | `orchestration/defs/` | The lakehouse (280+ assets) |
+| `tuath` | `agents/tuatha/dagster_assets/` | The Celtic MMO |
+| `crypteolas` | `agents/crypteolas/dagster_assets/` | The crypto data platform |
+| `croilar` | `web/apps/croilar-portal/definitions.py` | The multi-persona portfolio |
+| `meaisin_heartbeat` | `agents/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
 
 All 5 are registered in the root `dg.toml` workspace file:
 
@@ -443,7 +443,7 @@ All 5 are registered in the root `dg.toml` workspace file:
 name = "cianfhoghlaim"
 
 [[workspace.locations]]
-location = "oideachais"
+location = "cianfhoghlaim"
 
 [[workspace.locations]]
 location = "tuath"
@@ -470,7 +470,7 @@ from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.mathematics impo
     dlt_pipeline=dlt.pipeline(
         pipeline_name="lc6_mathematics",
         destination="ducklake",
-        dataset_name="oideachais.leaving_cert",
+        dataset_name="cianfhoghlaim.leaving_cert",
     ),
 )
 def lc6_mathematics_assets(context, dlt_run_resource: DagsterDltResource):
@@ -481,7 +481,7 @@ The same wrapper pattern is repeated for the other 5 LC subjects
 (`lc6_chemistry_assets`, `lc6_geography_assets`,
 `lc6_gaeilge_assets`, `lc6_english_assets`,
 `lc6_computer_science_assets`) plus `lc6_government_circulars_assets`
-— each in `cianfhoghlaim/orchestration/defs/2_materials/` with
+— each in `orchestration/defs/2_materials/` with
 `MultiPartitionsDefinition(language=StaticPartitionsDefinition(["en", "ga"]),
 subject=StaticPartitionsDefinition(["mathematics", "chemistry", ...]))`.
 
@@ -491,14 +491,14 @@ subject=StaticPartitionsDefinition(["mathematics", "chemistry", ...]))`.
   `government_circulars`) × 6 BAML stages (curriculum syllabus /
   exam paper layout / marking scheme / cross-linguistic /
   syllabus diagram / question corpus) in
-  `cianfhoghlaim/orchestration/defs/2_materials/`.
+  `orchestration/defs/2_materials/`.
 - **`MultiPartitionsDefinition`** — `language` (`en` / `ga`) ×
   `subject` (6 LC subjects) × `level` (`higher` / `ordinary`) so
   the Gaeilge Higher Mathematics syllabus runs in parallel with
   English Ordinary Mathematics.
 - **Lakehouse sink** — every `@dlt_assets` writes to
   `ducklake` (MotherDuck-managed) under
-  `oideachais.leaving_cert.<subject>.<level>_<lang>`.
+  `cianfhoghlaim.leaving_cert.<subject>.<level>_<lang>`.
 - **Downstream surface** — the 7 v1 CocoIndex Apps consume the
   DuckLake tables; the 4 MotherDuck Dives + 6 per-subject marimo
   notebooks consume the CocoIndex output.
@@ -517,3 +517,21 @@ Cross-references:
   the 4 Dives
 - [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
   per-subject notebooks
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The canonical Dagster code-location entry point is:
+  `uv run dagster dev -m orchestration.definitions`
+  (NOT `uv run dagster dev -m cianfhoghlaim.dagster.definitions` which was the
+  pre-v7 path that no longer exists)
+- The 5 KCG Components map to the 5-layer DAG:
+  - L1 Ingestion (CelticIngestionComponent) — NCCA / SEC / gov.ie DLT sources
+  - L2 Materials (CelticMaterialsComponent) — BAML extraction with R1-R4 conformance
+  - L3 Model Lifecycle (CelticModelLifecycleComponent) — 17 v1 CocoIndex Apps
+  - L4 Asset Generation (CelticAssetGenerationComponent) — marimo notebooks, web routes
+  - L5 Agent Ops (CelticAgentOpsComponent) — 12 agents × 5 assets = 60 assets
+- Component definition files are at `orchestration/components/layer{1..5}_*.py`
+- Defs tree is at `orchestration/defs/{1_ingestion,2_materials,3_model_lifecycle,4_asset_generation,5_agent_ops}/`
+

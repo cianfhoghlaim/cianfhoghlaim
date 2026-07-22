@@ -2,7 +2,7 @@
 
 ## Step 1 — Verify the `storage/memf.py` factory works end-to-end (15 min)
 
-1. [x] `ls cianfhoghlaim/storage/memf.py` → confirm 481-LOC file
+1. [x] `ls storage/memf.py` → confirm 481-LOC file
    exists at the canonical location.
 2. [x] `uv run python -c "import asyncio; from
    cianfhoghlaim.storage.memf import get_default_backend,
@@ -13,7 +13,7 @@
 ## Step 2 — Audit the 8 NCCA agents for direct graphiti / falkordb / memgraph imports (30 min)
 
 3. [x] `grep -n "graphiti_client\|falkordb_client\|memgraph_client"
-   cianfhoghlaim/agents/tuatha/<slug>_agent.py` for each of the
+   agents/tuatha/<slug>_agent.py` for each of the
    8 agents (`gael_agent`, `math_agent`, `hist_agent`,
    `geog_agent`, `chem_agent`, `comp_agent`, `engl_agent`,
    `appm_agent`) → 0 matches per agent.
@@ -25,25 +25,25 @@
 
 5. [x] `python3 -c "import ast; ast.parse(open('<notebook>').read())"`
    succeeds for each of:
-   - `cianfhoghlaim/notebooks/03_leaving_cert/01_chemistry_analysis.py`
-   - `cianfhoghlaim/notebooks/03_leaving_cert/05_mathematics_analysis.py`
-   - `cianfhoghlaim/notebooks/03_leaving_cert/03_gaeilge_analysis.py`
-   - `cianfhoghlaim/notebooks/03_leaving_cert/02_computer_science_analysis.py`
-   - `cianfhoghlaim/notebooks/03_leaving_cert/04_geography_analysis.py`
-   - `cianfhoghlaim/notebooks/03_leaving_cert/06_en_vs_ga_comparison.py`
-   - `cianfhoghlaim/notebooks/04_biep_motherduck/07_subject_full_pipeline.py`
-   - `cianfhoghlaim/notebooks/legacy/corpora/subject_full_pipeline_runner.py`
-   - `cianfhoghlaim/notebooks/legacy/corpora/law/01_law_corpus_overview.py`
-   - `cianfhoghlaim/notebooks/leaving_cert/chemistry.py`
-   - `cianfhoghlaim/notebooks/leaving_cert/computer_science.py`
-   - `cianfhoghlaim/notebooks/leaving_cert/english.py`
-   - `cianfhoghlaim/notebooks/leaving_cert/gaeilge.py`
-   - `cianfhoghlaim/notebooks/leaving_cert/geography.py`
-   - `cianfhoghlaim/notebooks/leaving_cert/mathematics.py`
+   - `notebooks/03_leaving_cert/01_chemistry_analysis.py`
+   - `notebooks/03_leaving_cert/05_mathematics_analysis.py`
+   - `notebooks/03_leaving_cert/03_gaeilge_analysis.py`
+   - `notebooks/03_leaving_cert/02_computer_science_analysis.py`
+   - `notebooks/03_leaving_cert/04_geography_analysis.py`
+   - `notebooks/03_leaving_cert/06_en_vs_ga_comparison.py`
+   - `notebooks/04_biep_motherduck/07_subject_full_pipeline.py`
+   - `notebooks/legacy/corpora/subject_full_pipeline_runner.py`
+   - `notebooks/legacy/corpora/law/01_law_corpus_overview.py`
+   - `notebooks/leaving_cert/chemistry.py`
+   - `notebooks/leaving_cert/computer_science.py`
+   - `notebooks/leaving_cert/english.py`
+   - `notebooks/leaving_cert/gaeilge.py`
+   - `notebooks/leaving_cert/geography.py`
+   - `notebooks/leaving_cert/mathematics.py`
 
 ## Step 4 — Add the 3-scenario smoke test (30 min)
 
-6. [x] Create `cianfhoghlaim/tests/test_memory_backend_smoke.py`
+6. [x] Create `tests/test_memory_backend_smoke.py`
    with 3 scenarios:
    - `test_get_default_backend_returns_implementation` —
      asserts `isinstance(backend, MemoryBackend)` + kind ∈

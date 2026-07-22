@@ -57,7 +57,7 @@ fixtures. Do NOT replace the existing 5 baseline DLT sources.
   for the 30-country full-depth layer
 - [ ] 3.2 MODIFIED delta on `cross-region-pipeline/spec.md` adding a
   cross-reference
-- [ ] 3.3 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 3.3 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference
 
 ## 4. Validate

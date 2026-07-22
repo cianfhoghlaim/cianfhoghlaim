@@ -64,8 +64,8 @@ and the agent backends (Pydantic AI, Agno, Google ADK, BAML):
 
 ```
    ┌──────────────────┐
-   │  CopilotKit      │  ← UI (cianfhoghlaim/web/apps/oideachais-web, cianfhoghlaim/web/apps/tuatha-ui,
-   │  (React)         │    cianfhoghlaim/web/apps/croilar-portal)
+   │  CopilotKit      │  ← UI (web/apps/cianfhoghlaim-web, web/apps/tuatha-ui,
+   │  (React)         │    web/apps/croilar-portal)
    └────────┬─────────┘
             │ consumes SSE
             ▼
@@ -182,10 +182,10 @@ indicators, intermediate tool results, multimodal artifacts
 
 ## KCG integration
 
-- **cianfhoghlaim/web/apps/oideachais-web** — `cianfhoghlaim/web/apps/oideachais-web/src/lib/ag-ui/` (the
+- **web/apps/cianfhoghlaim-web** — `web/apps/cianfhoghlaim-web/src/lib/ag-ui/` (the
   canonical AG-UI client wrappers)
-- **CopilotKit UI** — `cianfhoghlaim/web/apps/oideachais-web/src/components/copilot/`
-- **Hono (oRPC) proxy** — `cianfhoghlaim/web/apps/oideachais-web/src/server/router.py`
+- **CopilotKit UI** — `web/apps/cianfhoghlaim-web/src/components/copilot/`
+- **Hono (oRPC) proxy** — `web/apps/cianfhoghlaim-web/src/server/router.py`
 - **Langfuse** — every AG-UI event is traced (token, tool_call,
   state, done) for full observability
 
@@ -269,7 +269,7 @@ agent.sendMessage("What quests do I have?").collect { state ->
 **Authentication** is per-client: `bearerToken(...)`,
 `apiKey(...)`, or `basicAuth(...)`. For the KCG stack, the
 token is the SIWE session JWT from BetterAuth
-(`cianfhoghlaim/agents/tuatha/auth/siwe.py`).
+(`agents/tuatha/auth/siwe.py`).
 
 **Streamed events** are auto-rewritten: chunked
 `TEXT_MESSAGE_CHUNK` / `TOOL_CALL_CHUNK` are expanded into
@@ -317,5 +317,5 @@ for the 191-line official Kotlin SDK reference.
 - A2UI: <https://a2ui.org/>
 - CopilotKit: <https://docs.copilotkit.ai/>
 - Pydantic AI AG-UI adapter: <https://ai.pydantic.dev/ui/ag-ui>
-- KCG AG-UI client: `cianfhoghlaim/web/apps/oideachais-web/src/lib/ag-ui/`
+- KCG AG-UI client: `web/apps/cianfhoghlaim-web/src/lib/ag-ui/`
 - AG-UI Kotlin SDK: <https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/kotlin>

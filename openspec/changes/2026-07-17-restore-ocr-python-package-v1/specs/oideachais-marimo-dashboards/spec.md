@@ -1,7 +1,7 @@
-# MODIFIED Requirements — restore the canonical `cianfhoghlaim/ocr/` package
+# MODIFIED Requirements — restore the canonical `ocr/` package
 
 > **Why this delta:** The BIEP notebooks documented under the
-> `oideachais-marimo-dashboards` capability depend on
+> `cianfhoghlaim-marimo-dashboards` capability depend on
 > `cianfhoghlaim.ocr.models.registry.VISION_MODELS` and
 > `CLASSICAL_OCR` (via the dlt / cocoindex / orchestration
 > sub-trees). When the canonical package is missing, every PDF
@@ -11,16 +11,16 @@
 
 ## ADDED Requirements
 
-### Requirement: Canonical `cianfhoghlaim/ocr/` Python package
+### Requirement: Canonical `ocr/` Python package
 
 The system SHALL provide the canonical v4 OCR/VLM model
-registry Python package at `cianfhoghlaim/ocr/` with the
+registry Python package at `ocr/` with the
 following layout, per the v4 platform spec
 (`openspec/specs/meaisinfhoghlaim-platform/spec.md` line 685)
 and commit `0fceb8654`:
 
 ```text
-cianfhoghlaim/ocr/
+ocr/
 ├── __init__.py           # re-exports the canonical symbols
 └── models/
     ├── __init__.py       # re-exports + back-compat OCR_MODELS / VLM_MODELS aliases
@@ -35,9 +35,9 @@ is executed.
 
 #### Scenario: Canonical import resolves
 
-- **GIVEN** the `cianfhoghlaim/ocr/__init__.py`,
-  `cianfhoghlaim/ocr/models/__init__.py`, and
-  `cianfhoghlaim/ocr/models/registry.py` files exist on disk
+- **GIVEN** the `ocr/__init__.py`,
+  `ocr/models/__init__.py`, and
+  `ocr/models/registry.py` files exist on disk
   with content matching `HEAD` (commit `0fceb8654`)
 - **WHEN** a Python process executes
   `from cianfhoghlaim.ocr.models.registry import VISION_MODELS, CLASSICAL_OCR`
@@ -64,8 +64,8 @@ is executed.
 #### Scenario: Back-compat shims re-export the canonical symbols
 
 - **GIVEN** the parallel-agent back-compat shims at
-  `cianfhoghlaim/meaisinfhoghlaim/ocr/__init__.py` and
-  `cianfhoghlaim/meaisinfhoghlaim/models/{__init__,registry}.py`
+  `meaisinfhoghlaim/ocr/__init__.py` and
+  `meaisinfhoghlaim/models/{__init__,registry}.py`
   (each emitting a `DeprecationWarning`)
 - **WHEN** a Python process executes
   `from cianfhoghlaim.meaisinfhoghlaim.models import VISION_MODELS`
@@ -78,8 +78,8 @@ is executed.
 #### Scenario: Test conformance — `test_ocr_vlm_registry.py`
 
 - **GIVEN** the test file
-  `cianfhoghlaim/tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py`
-- **WHEN** `pytest cianfhoghlaim/tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py`
+  `tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py`
+- **WHEN** `pytest tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py`
   is run
 - **THEN** the `import` statements SHALL resolve
 - **AND** the conformance assertions on `VISION_MODELS` (model

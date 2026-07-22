@@ -212,7 +212,7 @@ The omnibus procedure `deploy-agent-platform-cluster-arm1-oci` brings all 3 surf
 
 - **WHEN** `km run procedure deploy-openclaw-arm1-oci` completes
 - **THEN** `https://openclaw.cianfhoghlaim.ie/api/health` returns 200
-- **AND** the `openclaw` container joins the `cianchoghlaim` bridge network
+- **AND** the `openclaw` container joins the `cianfhoghlaim` bridge network
 - **AND** Locket injects the `dev-baile/openclaw/*` Infisical secrets
 - **AND** the WS protocol v3 handshake (challenge + auth + connect) returns 200 at `ws://openclaw.cianfhoghlaim.ie:18789`
 
@@ -221,7 +221,7 @@ The omnibus procedure `deploy-agent-platform-cluster-arm1-oci` brings all 3 surf
 - **WHEN** `km run procedure deploy-openchamber-arm1-oci` completes
 - **THEN** `https://openchamber.cianfhoghlaim.ie/api/health` returns 200
 - **AND** the openchamber UI serves its bundled React frontend at `https://openchamber.cianfhoghlaim.ie/`
-- **AND** the `openchamber` container joins the `cianchoghlaim` bridge network
+- **AND** the `openchamber` container joins the `cianfhoghlaim` bridge network
 - **AND** Locket injects the `dev-baile/openchamber/*` Infisical secrets
 
 #### Scenario: hermes.cianfhoghlaim.ie is reachable

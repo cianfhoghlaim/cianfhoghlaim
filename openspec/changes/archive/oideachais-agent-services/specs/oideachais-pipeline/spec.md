@@ -14,7 +14,7 @@ in-process inside the `api` image.
   `google-adk` or `agno` Python packages (the agent runtimes
   are isolated to their own containers)
 - **AND** the `api` service MUST be able to invoke the ADK
-  agents and the AgentOS via HTTP (on the `cianchoghlaim` or
+  agents and the AgentOS via HTTP (on the `cianfhoghlaim` or
   `lakehouse` Docker network)
 
 #### Scenario: An agent is added to the ADK framework

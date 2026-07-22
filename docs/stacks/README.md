@@ -94,7 +94,7 @@ The 4-section template for each doc:
 - [`mailcow-dockerized`](./mailcow-dockerized.md)
 - [`meaisinfoghlaim`](./meaisinfoghlaim.md)
 - [`n8n`](./n8n.md)
-- [`oideachais`](./oideachais.md)
+- [`oideachais`](./cianfhoghlaim.md)
 - [`olake`](./olake.md)
 - [`olmocr`](./olmocr.md)
 - [`paddleocr`](./paddleocr.md)

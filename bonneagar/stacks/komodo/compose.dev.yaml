@@ -1,0 +1,35 @@
+# Komodo dev override (Local development only — do not use in production)
+# ----------------------------------------------------------------------------
+# Injects the minimum env vars komodo-core needs to start. In production
+# these flow through the Locket sidecar from Infisical.
+# Usage:
+#   docker compose -f compose.yaml -f compose.dev.yaml up -d
+# ----------------------------------------------------------------------------
+services:
+  ferretdb:
+    environment:
+      FERRETDB_POSTGRESQL_URL: postgres://komodo:devpassword@komodo-postgres:5432/komodo
+
+  komodo-postgres:
+    environment:
+      POSTGRES_DB: komodo
+      POSTGRES_USER: komodo
+      POSTGRES_PASSWORD: devpassword
+
+  core:
+    env_file:
+      - ./secrets.env
+    environment:
+      KOMODO_DATABASE_USERNAME: komodo
+      KOMODO_DATABASE_PASSWORD: devpassword
+      KOMODO_DATABASE_NAME: komodo
+      KOMODO_HOST: ${KOMODO_HOST:-http://localhost:9120}
+      KOMODO_JWT_SECRET: ${KOMODO_JWT_SECRET:-dev-jwt-secret-not-for-production}
+      KOMODO_PASSKEY: ${KOMODO_PASSKEY:-dev-passkey-not-for-production}
+      KOMODO_WEBHOOK_SECRET: ${KOMODO_WEBHOOK_SECRET:-dev-webhook-secret-not-for-production}
+      KOMODO_LOCAL_AUTH: "true"
+      KOMODO_INIT_ADMIN_USERNAME: ${KOMODO_INIT_ADMIN_USERNAME:-ciansedai}
+      KOMODO_INIT_ADMIN_PASSWORD: ${KOMODO_INIT_ADMIN_PASSWORD:-changeme-not-for-production}
+      KOMODO_OIDC_ENABLED: "false"
+      KOMODO_REQUEST_RATE_LIMIT: "500"
+      KOMODO_BACKUP_ENABLED: "false"

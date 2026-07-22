@@ -74,7 +74,7 @@ structlog event for observability.
   **`dlt/british_isles/isle_of_man/education/isle_of_man.py`**: switch
   to `strategy="stealth"` + `wait_for=10s`.
 
-### 3. New DuckLake table `oideachais.endpoint_health`
+### 3. New DuckLake table `cianfhoghlaim.endpoint_health`
 
 A new endpoint-health monitoring table populated by
 `endpoint_recovery.fetch()`. Columns:
@@ -130,7 +130,7 @@ Affected repos: cianfhoghlaim (single-repo change)
 
 - [`british-isles-education-pipeline`](../../specs/british-isles-education-pipeline/spec.md) —
   the spec that owns the British Isles DLT + BAML + Dagster + MotherDuck stack
-- [`oideachais-pipeline`](../../specs/oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../../specs/cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - [`site-crawler`](../../specs/site-crawler/spec.md) —
   the canonical site-scraper primitive

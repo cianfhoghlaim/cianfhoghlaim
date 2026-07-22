@@ -1,13 +1,13 @@
 ---
-name: oideachais-leabharlann
-description: The KCG leabharlann (personal archive) pipeline pattern in `sruth/oideachais/`. Covers the 4 dlt sources (books, zotero, takeout_v1, uog_coursework), the 3 v1 CocoIndex Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding), the 7 Dagster assets in `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py`, the 1 directory-watch sensor, the 3 cognify passes (leabharlann_cognify), the 3 cross-archive edge rules (leabharlann_cross_archive), and the canonical home for the leabharlann subtree at `leabharlann/`. Use when adding a new corpus, wiring a v1 CocoIndex App, registering a sensor, running a cognify pass, populating the cross-archive graph, or implementing the BAML extraction for Zotero papers.
+name: cianfhoghlaim-leabharlann
+description: The KCG leabharlann (personal archive) pipeline pattern in `sruth/cianfhoghlaim/`. Covers the 4 dlt sources (books, zotero, takeout_v1, uog_coursework), the 3 v1 CocoIndex Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding), the 7 Dagster assets in `sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py`, the 1 directory-watch sensor, the 3 cognify passes (leabharlann_cognify), the 3 cross-archive edge rules (leabharlann_cross_archive), and the canonical home for the leabharlann subtree at `leabharlann/`. Use when adding a new corpus, wiring a v1 CocoIndex App, registering a sensor, running a cognify pass, populating the cross-archive graph, or implementing the BAML extraction for Zotero papers.
 ---
 
 # Oideachais Leabharlann
 
 ## Purpose
 
-The `sruth/oideachais/` quadrant houses the **leabharlann** (Irish for
+The `sruth/cianfhoghlaim/` quadrant houses the **leabharlann** (Irish for
 "library") pipeline — the personal-archive ingestion + embedding
 + cognify + cross-archive edge-rule system that powers the
 KCG knowledge graph. This skill captures the 4-source + 3-App
@@ -29,13 +29,13 @@ Use when you need to:
 
 | Source | Path | Purpose |
 |:--|:--|:--|
-| `books` | `sruth/oideachais/dlt_sources/author_archive/books_source.py` | PDFs + DOCX + EPUB + Markdown from `leabharlann/gaeilge/` and `leabharlann/aigne/` |
-| `zotero` | `sruth/oideachais/dlt_sources/author_archive/zotero_source.py` | Zotero-exported PDFs with full text + metadata |
-| `takeout_v1` | `sruth/oideachais/dlt_sources/author_archive/takeout_source.py` | Google Takeout filesystem (auto-discovered at `stedding/Takeout/`) |
-| `uog_coursework` | `sruth/oideachais/dlt_sources/author_archive/uog_coursework_source.py` | University of Galway coursework PDFs |
+| `books` | `sruth/cianfhoghlaim/dlt_sources/author_archive/books_source.py` | PDFs + DOCX + EPUB + Markdown from `leabharlann/gaeilge/` and `leabharlann/aigne/` |
+| `zotero` | `sruth/cianfhoghlaim/dlt_sources/author_archive/zotero_source.py` | Zotero-exported PDFs with full text + metadata |
+| `takeout_v1` | `sruth/cianfhoghlaim/dlt_sources/author_archive/takeout_source.py` | Google Takeout filesystem (auto-discovered at `stedding/Takeout/`) |
+| `uog_coursework` | `sruth/cianfhoghlaim/dlt_sources/author_archive/uog_coursework_source.py` | University of Galway coursework PDFs |
 
 The 4 dlt sources are registered in
-`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` and are
+`sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py` and are
 materialised by the `leabharlann_full_stack_demo` asset group
 (the canonical end-to-end pipeline).
 
@@ -47,10 +47,10 @@ materialised by the `leabharlann_full_stack_demo` asset group
 | `leabharlann_zotero_embedding` | `LeabharlannZoteroApp` | `leabharlann_zotero` | `search_leabharlann_zotero(query, limit=10)` |
 | `leabharlann_takeout_embedding` | `LeabharlannTakeoutApp` | `leabharlann_takeout` | `search_leabharlann_takeout(query, limit=10)` |
 
-The 3 Apps live at `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
+The 3 Apps live at `sruth/cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py`
 (the canonical v1 home). Each App is a `coco.App` instance with
 `@coco.lifespan` + `@coco.fn` decorators (per the canonical v1
-pattern in `sruth/oideachais/cocoindex_flows/codebase_indexing.py`).
+pattern in `sruth/cianfhoghlaim/cocoindex_flows/codebase_indexing.py`).
 
 ## The 7 Dagster assets (the orchestration surface)
 
@@ -65,12 +65,12 @@ pattern in `sruth/oideachais/cocoindex_flows/codebase_indexing.py`).
 | `leabharlann_full_stack_demo` | `leabharlann_ingestion` | The end-to-end pipeline (all 6 above + the cognify passes) |
 
 The 7 assets are registered in
-`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` (the
+`sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py` (the
 canonical home for the asset group).
 
 ## The 1 directory-watch sensor
 
-`sruth/oideachais/dagster_defs/sensors/leabharlann_sensor.py:LeabharlannDirectorySensor`
+`sruth/cianfhoghlaim/dagster_defs/sensors/leabharlann_sensor.py:LeabharlannDirectorySensor`
 monitors the `leabharlann/gaeilge/` + `leabharlann/aigne/` +
 `stedding/Takeout/` directories for new files. When a new file
 appears, the sensor materialises the relevant asset. The sensor
@@ -86,7 +86,7 @@ pattern).
 | `leabharlann_takeout_cognify` | `leabharlann_takeout` | Cognifies the Google Takeout into the knowledge graph |
 
 The 3 cognify passes are at
-`sruth/oideachais/cognee_integration/leabharlann_cognify.py` (the
+`sruth/cianfhoghlaim/cognee_integration/leabharlann_cognify.py` (the
 canonical home for the cognify adapters).
 
 ## The 3 cross-archive edge rules (the cross-corpus surface)
@@ -98,7 +98,7 @@ canonical home for the cognify adapters).
 | `TakeoutDoc-CITES-GeminiReport` | A `leabharlann_takeout_doc` cites a `author_archive_gemini_report` (the match is detected by URL substring) |
 
 The 3 edge rules are at
-`sruth/oideachais/cognify_rules/leabharlann_cross_archive.py` (the
+`sruth/cianfhoghlaim/cognify_rules/leabharlann_cross_archive.py` (the
 canonical home for the edge rules).
 
 ## The canonical `leabharlann/` subtree
@@ -128,7 +128,7 @@ The 4 dlt sources auto-discover files in these directories.
 1. Create the corpus directory at `leabharlann/cineáltas/`.
 
 2. Add the dlt source at
-   `sruth/oideachais/dlt_sources/author_archive/cinealtas_source.py`:
+   `sruth/cianfhoghlaim/dlt_sources/author_archive/cinealtas_source.py`:
 
    ```python
    @dlt.resource(name="cinealtas_chunks", write_disposition="merge")
@@ -138,31 +138,31 @@ The 4 dlt sources auto-discover files in these directories.
    ```
 
 3. Add the v1 CocoIndex App at
-   `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py:LeabharlannCinealtasApp`
-   (or a new file `sruth/oideachais/cocoindex_flows/cinealtas_embedding.py`).
+   `sruth/cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py:LeabharlannCinealtasApp`
+   (or a new file `sruth/cianfhoghlaim/cocoindex_flows/cinealtas_embedding.py`).
 
 4. Add the Dagster asset at
-   `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py:leabharlann_cinealtas`.
+   `sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py:leabharlann_cinealtas`.
 
 5. Update the sensor at
-   `sruth/oideachais/dagster_defs/sensors/leabharlann_sensor.py` to also
+   `sruth/cianfhoghlaim/dagster_defs/sensors/leabharlann_sensor.py` to also
    watch `leabharlann/cineáltas/`.
 
 6. Add the cognify pass at
-   `sruth/oideachais/cognee_integration/leabharlann_cognify.py:leabharlann_cinealtas_cognify`.
+   `sruth/cianfhoghlaim/cognee_integration/leabharlann_cognify.py:leabharlann_cinealtas_cognify`.
 
 7. Add the cross-archive edge rules at
-   `sruth/oideachais/cognify_rules/leabharlann_cross_archive.py:LeabharlannCinealtasCrossArchive`.
+   `sruth/cianfhoghlaim/cognify_rules/leabharlann_cross_archive.py:LeabharlannCinealtasCrossArchive`.
 
 8. Update the BAML extraction schemas at
-   `sruth/oideachais/baml_src/leabharlann_extraction.baml`.
+   `sruth/cianfhoghlaim/baml_src/leabharlann_extraction.baml`.
 
 ## Common failure modes
 
 | Symptom | Cause | Fix |
 |:--|:--|:--|
 | `leabharlann_full_stack_demo` is hanging | The 4 dlt sources are blocking on each other | Run the 4 dlt sources in parallel via `@dlt.resource(parallel=True)` |
-| The LanceDB table is empty | The v1 CocoIndex App never materialised | Run `mise run locket:exec -- uv run oideachais cocoindex update oideachais.cocoindex_flows.leabharlann_embedding:LeabharlannBooksApp` |
+| The LanceDB table is empty | The v1 CocoIndex App never materialised | Run `mise run locket:exec -- uv run oideachais cocoindex update cianfhoghlaim.cocoindex_flows.leabharlann_embedding:LeabharlannBooksApp` |
 | The cognify pass finds no entities | The Cognee API key is wrong | Check the `cognee.cianfhoghlaim.ie:8000` API key in the vault |
 | The cross-archive edge rule finds no matches | The arxiv_id format is wrong | Add a `arxiv_id_normaliser` to the rule |
 | The directory-watch sensor doesn't fire | The sensor is in `default_status=stopped` | Set the sensor to `default_status=running` in `definitions.py` |
@@ -174,16 +174,16 @@ The 4 dlt sources auto-discover files in these directories.
 - `.agents/skills/baml/SKILL.md` — the BAML extraction schemas
 - `.agents/skills/dlt/SKILL.md` — the dlt source patterns
 - `.agents/skills/dagster/SKILL.md` — the Dagster asset + sensor patterns
-- `.agents/skills/oideachais-storage/SKILL.md` — the DuckLake + MotherDuck + LanceDB storage layer
+- `.agents/skills/cianfhoghlaim-storage/SKILL.md` — the DuckLake + MotherDuck + LanceDB storage layer
 - `.agents/skills/cross-domain-registry/SKILL.md` — the cross-corpus entity contract
-- `.agents/skills/oideachais-cocoindex-v1/SKILL.md` — the 11 v1 Apps canonical pattern
-- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical 3-App v1 home
-- `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` — the 7-asset home
-- `sruth/oideachais/dagster_defs/sensors/leabharlann_sensor.py` — the 1-sensor home
-- `sruth/oideachais/cognee_integration/leabharlann_cognify.py` — the 3-cognify home
-- `sruth/oideachais/cognify_rules/leabharlann_cross_archive.py` — the 3-edge-rule home
-- `sruth/oideachais/baml_src/leabharlann_extraction.baml` — the BAML schema
-- `openspec/specs/oideachais-leabharlann/spec.md` — the canonical spec
+- `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md` — the 11 v1 Apps canonical pattern
+- `sruth/cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py` — the canonical 3-App v1 home
+- `sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py` — the 7-asset home
+- `sruth/cianfhoghlaim/dagster_defs/sensors/leabharlann_sensor.py` — the 1-sensor home
+- `sruth/cianfhoghlaim/cognee_integration/leabharlann_cognify.py` — the 3-cognify home
+- `sruth/cianfhoghlaim/cognify_rules/leabharlann_cross_archive.py` — the 3-edge-rule home
+- `sruth/cianfhoghlaim/baml_src/leabharlann_extraction.baml` — the BAML schema
+- `openspec/specs/cianfhoghlaim-leabharlann/spec.md` — the canonical spec
 
 ## Email inbox pipeline (2026-06-29)
 
@@ -193,7 +193,7 @@ DKIT.ie Microsoft 365, 2 Gmail, Hotmail) into the leabharlann
 lakehouse alongside the static Gemini / Zotero / Takeout corpora.
 
 - **DLT source** —
-  `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/leabharlann/email_inbox.py`
+  `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/leabharlann/email_inbox.py`
   yields 4 resources (`inbox_index`, `inbox_threads`,
   `inbox_attachments`, `inbox_legal_threads`) from
   `/srv/mailcow-exports/mailbox-<account>-*.mbox`. MBOX parsing uses
@@ -209,7 +209,7 @@ lakehouse alongside the static Gemini / Zotero / Takeout corpora.
   `_takeout_paths.TakeoutAccountConfig.gpg_encrypt_paths` knob
   (prefixes `legal/`, `medical/`, `hsc/`, `nhs/`).
 - **Example config** —
-  `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/leabharlann/_email_accounts.example.yaml`
+  `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/leabharlann/_email_accounts.example.yaml`
   with 4 example accounts (dkit_ie, gmail_personal, gmail_academic,
   hotmail_legacy).
 - **LBYL exception handling** — every `next()` boundary catches
@@ -218,7 +218,7 @@ lakehouse alongside the static Gemini / Zotero / Takeout corpora.
   `mailbox_empty` log warning.
 - **Cross-reference**: the full BAML + CocoIndex + Dagster + marimo
   + cognify wiring lives in
-  [`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md).
+  [`.agents/skills/cianfhoghlaim-email-triage/SKILL.md`](../cianfhoghlaim-email-triage/SKILL.md).
   The canonical openspec change is
   [`openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/`](../../openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/).
 

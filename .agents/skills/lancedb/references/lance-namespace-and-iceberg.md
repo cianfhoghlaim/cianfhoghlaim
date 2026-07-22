@@ -38,9 +38,9 @@ lance_table = lance_db.create_table("books", schema=BookSchema, mode="overwrite"
 lance_table.add([...])
 
 # 2. Register as an Iceberg table
-ns.create_namespace("oideachais")
+ns.create_namespace("cianfhoghlaim")
 ns.create_table(
-    "oideachais.leabharlann_books",
+    "cianfhoghlaim.leabharlann_books",
     metadata={"lance_uri": "s3://lance/leabharlann_books/books"},
 )
 ```
@@ -51,11 +51,11 @@ ns.create_table(
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "oideachais",
+    "cianfhoghlaim",
     type="rest",
     uri="http://lakekeeper.cianfhoghlaim.ie:8181/catalog",
 )
-tbl = catalog.load_table("oideachais.leabharlann_books")
+tbl = catalog.load_table("cianfhoghlaim.leabharlann_books")
 df = tbl.scan().to_pandas()
 ```
 
@@ -64,11 +64,11 @@ df = tbl.scan().to_pandas()
 ```sql
 INSTALL iceberg;
 LOAD iceberg;
-ATTACH 'oideachais' AS oideachais (
+ATTACH 'cianfhoghlaim' AS oideachais (
     TYPE iceberg,
     ENDPOINT 'http://lakekeeper.cianfhoghlaim.ie:8181/catalog'
 );
-SELECT * FROM oideachais.leabharlann_books WHERE subject = 'irish' LIMIT 10;
+SELECT * FROM cianfhoghlaim.leabharlann_books WHERE subject = 'irish' LIMIT 10;
 ```
 
 ## Schema evolution
@@ -99,7 +99,7 @@ The KCG stack uses **Lakekeeper** as the Iceberg REST catalog
 (deployed in `infrastructure/stacks/`), and the `oideachais` DuckLake
 sink is a sibling of the Iceberg tables. The companion-table pattern
 is documented in the
-`cianfhoghlaim/orchestration/defs/` Iceberg asset group (see
+`orchestration/defs/` Iceberg asset group (see
 the `dagster` skill's `references/integrations/dagster-iceberg/INDEX.md`).
 
 ## Reference

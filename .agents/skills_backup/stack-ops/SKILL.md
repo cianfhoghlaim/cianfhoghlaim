@@ -161,7 +161,7 @@ each a top-level uv workspace:
 
 | Quadrant | Path | Wheel name | Use case |
 |:--|:--|:--|:--|
-| **Oideachais** | `sruth/oideachais/` | `oideachais` | Celtic education data platform |
+| **Oideachais** | `sruth/cianfhoghlaim/` | `oideachais` | Celtic education data platform |
 | **Meaisínfhoghlaim** | `sruth/meaisínfhoghlaim/` | `sruth/meaisinfhoghlaim` | AI/ML services |
 | **Tuatha** | `sruth/tuatha/` | `tuath` | Celtic MMO + crypto platform |
 | **Croílár** | `sruth/croilar/` | (TS) | Public persona site |
@@ -180,12 +180,12 @@ each a top-level uv workspace:
 | Networking | `pangolin` | `infrastructure/pangolin/` |
 | Secrets | `infisical` | `.infisical.env` |
 | Object storage | `garage` (S3-compatible) | `infrastructure/stacks/garage/` |
-| Lakehouse | `ducklake` (DuckDB + S3) | `sruth/oideachais/storage/ducklake_client.py` |
-| Vector DB | `lancedb` | `sruth/oideachais/storage/lancedb.py` |
-| Knowledge graph | `falkordb` | `sruth/oideachais/graph/falkordb.py` |
-| Orchestration | `dagster` | `sruth/oideachais/dagster_defs/` |
-| Front-end | `tanstack-start` | `sruth/oideachais/web/`, `sruth/tuatha/ui/`, `sruth/croilar/apps/portal/` |
-| API | `hono` | `sruth/oideachais/web/src/server/`, `sruth/tuatha/ui/src/server/` |
+| Lakehouse | `ducklake` (DuckDB + S3) | `sruth/cianfhoghlaim/storage/ducklake_client.py` |
+| Vector DB | `lancedb` | `sruth/cianfhoghlaim/storage/lancedb.py` |
+| Knowledge graph | `falkordb` | `sruth/cianfhoghlaim/graph/falkordb.py` |
+| Orchestration | `dagster` | `sruth/cianfhoghlaim/dagster_defs/` |
+| Front-end | `tanstack-start` | `sruth/cianfhoghlaim/web/`, `sruth/tuatha/ui/`, `sruth/croilar/apps/portal/` |
+| API | `hono` | `sruth/cianfhoghlaim/web/src/server/`, `sruth/tuatha/ui/src/server/` |
 
 ### Multi-network isolation
 
@@ -202,7 +202,7 @@ KCG services are isolated in 4 networks:
 
 | Range | Use case |
 |:--|:--|
-| 3000-3499 | User-facing apps (sruth/oideachais/web, sruth/tuatha/ui, croilar) |
+| 3000-3499 | User-facing apps (sruth/cianfhoghlaim/web, sruth/tuatha/ui, croilar) |
 | 3500-3999 | APIs (FastAPI, Hono) |
 | 4000-4499 | Dagster (webserver, daemon, gRPC) |
 | 5000-5499 | Data stores (Postgres, FalkorDB, LanceDB) |

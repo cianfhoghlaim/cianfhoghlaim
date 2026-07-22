@@ -82,7 +82,7 @@
 - [x] **1.1** — `mkdir -p bonneagar/stacks/hermes/config`
 - [x] **1.2** — Write `bonneagar/stacks/hermes/compose.yaml`:
   - ✓ `name: hermes`
-  - ✓ Single `hermes` service on the `cianchoghlaim` bridge
+  - ✓ Single `hermes` service on the `cianfhoghlaim` bridge
     network with explicit port publishes for the dashboard
     (9119) and webhook channels (8443/8090/8080/8645) on
     `127.0.0.1`.
@@ -95,7 +95,7 @@
   - ✓ Volumes: `hermes-state`, `./config:ro`.
   - ✓ `depends_on: locket: { condition: service_healthy }`
     (declared in sidecar.yaml per the 6-file convention).
-  - ✓ `networks: [cianchoghlaim]`
+  - ✓ `networks: [cianfhoghlaim]`
   - ✓ `deploy.resources.limits: { cpus: '2', memory: 2G }`
   - ✓ `security_opt: [no-new-privileges:true]`,
     `cap_drop: [ALL]`.

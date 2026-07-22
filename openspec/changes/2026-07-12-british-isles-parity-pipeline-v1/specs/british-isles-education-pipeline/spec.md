@@ -26,7 +26,7 @@ Per-nation parity requires:
   `language ∈ ("en", "gd")` (Scots Gaelic)
 - **AND** the `scotland_education` CocoIndex v1 App MUST embed every
   per-subject row into
-  `oideachais.lc.scotland.<subject>.<level>_<language>`
+  `cianfhoghlaim.lc.scotland.<subject>.<level>_<language>`
 - **AND** the `sct_curriculum_dive` MotherDuck Dive MUST surface the
   per-subject curriculum coverage matrix
 
@@ -42,7 +42,7 @@ LanceDB HNSW index.
 
 - **WHEN** the `wales_education` CocoIndex v1 App materialises
 - **THEN** it MUST embed every Welsh per-subject row into the shared
-  LanceDB table `oideachais.lc.wales.<subject>.<level>_<language>`
+  LanceDB table `cianfhoghlaim.lc.wales.<subject>.<level>_<language>`
 - **AND** it MUST honour the R1–R4 conformance contract (the
   `cocoindex_v1_conformance` App MUST report `passed=True` for it)
 
@@ -58,7 +58,7 @@ LanceDB HNSW index.
   the Commonwealth counterpart
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the seed instance of the contract
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `docs/agents/british_isles_endpoint_health_audit.md` —
   the Phase 1 endpoint snapshot

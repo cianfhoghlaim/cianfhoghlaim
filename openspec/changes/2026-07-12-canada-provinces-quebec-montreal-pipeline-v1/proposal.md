@@ -88,7 +88,7 @@ domain).
 
 - `dlt/commonwealth/can/qc/education/embedding.py` — embeds the 5
   Quebec education sources + 4 Montreal universities into the
-  shared LanceDB table `oideachais.commonwealth.can.qc.education_chunks`,
+  shared LanceDB table `cianfhoghlaim.commonwealth.can.qc.education_chunks`,
   partitioned by `language ∈ ("fr", "en")`.
 - Per-province CocoIndex v1 Apps (one per deep-dive province).
 
@@ -136,7 +136,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the parent pipeline
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the bilingual reference (Ireland `en` + `ga`)
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `docs/agents/british_isles_endpoint_health_audit.md` —
   the Phase 1 endpoint snapshot

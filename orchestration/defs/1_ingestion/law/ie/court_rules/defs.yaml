@@ -1,0 +1,12 @@
+# defs.yaml — Pick-8 IE/law L1 (Ingestion) component for the Court Rules source.
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.law.court_rules
+  domain: law
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  dlt_source: cianfhoghlaim.dlt.british_isles.ie.law.court_rules.court_rules_source
+  destination_table: cianfhoghlaim.law.ie.court_rules
+  fallback_resources:
+    - stedding/ingest_queue/courts.ie/rules/

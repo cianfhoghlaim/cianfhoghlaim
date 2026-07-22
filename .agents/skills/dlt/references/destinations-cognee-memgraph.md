@@ -76,8 +76,8 @@ import cognee
 
 @cognee_destination(batch_size=10)
 def my_destination(items, table):
-    await cognee.add(text, dataset_name="oideachais_curriculum")
-    await cognee.cognify(dataset_name="oideachais_curriculum")
+    await cognee.add(text, dataset_name="cianfhoghlaim_curriculum")
+    await cognee.cognify(dataset_name="cianfhoghlaim_curriculum")
 ```
 
 ## Rate limiting
@@ -98,10 +98,10 @@ def cognee_destination(items, table):
 
 ## KCG usage
 
-- `oideachais-cognify-knowledge-graph` spec — 5-stage cross-stage
+- `cianfhoghlaim-cognify-knowledge-graph` spec — 5-stage cross-stage
   cognify + 3 leabharlann cognify + 3 cross-archive FalkorDB edges
-- `cianfhoghlaim/cocoindex/cognee_integration/` — the 3 cognify adapters
-- `cianfhoghlaim/storage/graph/` — the application-layer FalkorDB + Memgraph
+- `cocoindex/cognee_integration/` — the 3 cognify adapters
+- `storage/graph/` — the application-layer FalkorDB + Memgraph
   clients (FalkorDB is the primary, Memgraph is the secondary)
 
 ## Reference

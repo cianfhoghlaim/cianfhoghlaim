@@ -55,7 +55,7 @@ import logfire
 from langfuse.decorators import observe, langfuse_context
 
 
-@observe(name="kcg_curriculum_search", as_type="workflow")
+@observe(name="curriculum_search", as_type="workflow")
 def curriculum_search(query: str) -> list[dict]:
     """Top-level workflow — emitted as a Langfuse workflow span."""
     results = vector_search(query)
@@ -149,7 +149,7 @@ def llm_call(prompt: str) -> str:
 from langfuse import Langfuse
 
 langfuse = Langfuse()
-prompt = langfuse.get_prompt("kcg_system_prompt", label="production")
+prompt = langfuse.get_prompt("system_prompt", label="production")
 response = openai_client.chat(prompt.compile(variables={"query": query}))
 ```
 
@@ -220,12 +220,12 @@ For every new agent in the KCG stack, ensure:
 
 ## KCG integration
 
-- `cianfhoghlaim/observability/` — the integration module
+- `observability/` — the integration module
   (Logfire + MLflow + Langfuse + Ragas)
-- `cianfhoghlaim/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
-- `cianfhoghlaim/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
+- `agents/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
+- `agents/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
   100 samples × 4 metrics
-- Dagster assets: `cianfhoghlaim/orchestration/defs/quality_assets.py`
+- Dagster assets: `orchestration/defs/quality_assets.py`
   (the Ragas asset_check group)
 
 ## Related skills
@@ -321,7 +321,7 @@ uv run python infrastructure/scripts/cognee-ingest-docs.py --summary --all
 ```
 
 The **pre-flight checklist** is: (1) Cognee stack is up
-(`docker ps --filter name=cianchoghlaim-cognee`),
+(`docker ps --filter name=cianfhoghlaim-cognee`),
 (2) REST API reachable (`curl -sf
 http://localhost:8100/health`),
 (3) `LLM_API_KEY` set (mise-hydrated from `.env` →
@@ -609,7 +609,7 @@ MLflow added a GenAI evaluation mode in 2026 that complements Langfuse:
 - Tracks quality metrics (faithfulness, answer relevance, context precision) per model
 - Integrates with the MLflow model registry: a model can only be promoted to "Production" if it passes the eval gate
 
-The KCG pattern: nightly batch eval of the `cianfhoghlaim/agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `cianfhoghlaim/meaisinfhoghlaim/dagster_defs/`) is the entry point.
+The KCG pattern: nightly batch eval of the `agents/curriculum_agent` against the `cianfhoghlaim_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `agents/meaisinfhoghlaim/dagster_defs/`) is the entry point.
 
 ### RAGAS trace-based metrics
 
@@ -620,7 +620,7 @@ RAGAS now ships trace-based metrics that work on the Langfuse trace (not just th
 - **Context precision** — is the retrieved context actually relevant?
 - **Context recall** — is the retrieved context complete?
 
-The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `cianfhoghlaim/orchestration/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
+The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `orchestration/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
 
 ### Logfire MCP (2026-06)
 

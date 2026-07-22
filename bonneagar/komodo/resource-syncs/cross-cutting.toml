@@ -1,0 +1,90 @@
+# =============================================================================
+# CROSS-CUTTING RESOURCE SYNC
+# =============================================================================
+# GitOps configuration for the cross-host prerequisites that must be
+# in place BEFORE the per-host syncs (arm1-oci.toml + bunchloch.toml)
+# can do their work. Komodo auto-pulls this file every 60s and
+# reconciles Komodo state with the TOMLs declared in resource_path.
+#
+# Scope (10 cross-cutting prerequisites, deploy order matters):
+#   1. pangolin-first                  — Pangolin mesh backbone + Pocket ID OIDC
+#   2. komodo-core                     — Komodo Core service (the orchestration brain)
+#   3. infisical-first                 — Infisical vault HTTP-only health check (no ssh)
+#   4. locket-deploy                   — Locket sidecar pattern (secrets injection at runtime)
+#   5. deploy-infisical-arm1-oci       — Infisical deploy + iac:bootstrap-infisical
+#                                         (NEW 2026-07-12 — replaces undocumented container 3c1be3d92f88)
+#   6. deploy-pocket-id-bunchloch      — Pocket ID OIDC IdP (the bunchloch side)
+#   7. deploy-tinyauth-bunchloch       — Tinyauth ForwardAuth middleware (the bunchloch side)
+#   8. deploy-pocket-id-arm1-oci       — Pocket ID OIDC IdP (the arm1-oci migration target)
+#   9. deploy-pangolin-newt-arm1-oci   — arm1-oci newt client (the control-plane side)
+#  10. deploy-newt-bunchloch-v2        — bunchloch newt client (the operator-laptop side)
+#
+# The bundled 5-control-plane stack itself (Komodo + Infisical + Pangolin +
+# Pocket ID + Tinyauth + Locket) is declared in `stacks/control-plane/`
+# (6-file GOLD_STANDARD contract) and managed by the bons IaC's
+# `iac:bootstrap-control-plane` command. The resource sync at
+# `komodo/resource-syncs/control-plane-arm1-oci.toml` would track it
+# post-archive (the bundled stack is deployed by Komodo, not by a
+# procedure that lives in cross-cutting).
+#
+# Per the bonneagar-v5 drift refactor:
+#   - 60s interval (sub-minute convergence)
+#   - on_pull=true (Komodo proactively pulls on the schedule)
+#   - delete=false (safety — a typo in TOML never deletes live resources)
+#   - managed=true (Komodo owns the resource state, not the IaC scripts)
+#
+# server_id convention:
+#   The 10 prerequisite procedures in `procedures/*.toml` (this sync) all
+#   declare `server_id` (the convention is documented in
+#   `komodo/procedures/server_id_legend.md`). Procedures without
+#   `server_id` are back-compat-shown in both host UIs.
+# =============================================================================
+
+[[resource_sync]]
+name = "cross-cutting"
+description = "10 cross-host prerequisite procedures (pangolin-first + komodo-core + infisical-first + locket-deploy + deploy-infisical-arm1-oci + 5 deploy procedures) — must run before the per-host syncs. The bundled 5-control-plane stack is managed by the bons IaC's iac:bootstrap-control-plane command (see stacks/control-plane/)."
+
+[resource_sync.config]
+# Repository configuration - Forgejo at git.cianfhoghlaim.ie
+# Same repo + branch as the arm1-oci + bunchloch syncs (GitOps is mono-repo).
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+# Resource paths under <repo-root>/<branch>/ :
+#   - procedures: 10 host-agnostic prerequisite procedures (all declare server_id)
+#   - servers: shared Periphery registrations (arm1-oci + bunchloch
+#     peripheries must be registered before the per-host syncs fire)
+resource_path = [
+  "bonneagar/komodo/procedures/pangolin-first.toml",
+  "bonneagar/komodo/procedures/komodo-core.toml",
+  "bonneagar/komodo/procedures/infisical-first.toml",
+  "bonneagar/komodo/procedures/locket-deploy.toml",
+  "bonneagar/komodo/procedures/deploy-infisical-arm1-oci.toml",
+  "bonneagar/komodo/procedures/deploy-pocket-id-bunchloch.toml",
+  "bonneagar/komodo/procedures/deploy-tinyauth-bunchloch.toml",
+  "bonneagar/komodo/procedures/deploy-pocket-id-arm1-oci.toml",
+  "bonneagar/komodo/procedures/deploy-pangolin-newt-arm1-oci.toml",
+  "bonneagar/komodo/procedures/deploy-newt-bunchloch-v2.toml",
+  "bonneagar/komodo/procedures/server_id_legend.md",
+  "bonneagar/komodo/servers/*.toml",
+]
+
+# 60s poll interval — Komodo pulls the repo on this cadence.
+# Same cadence as arm1-oci + bunchloch syncs (synchronised convergence).
+interval = "60s"
+
+# Managed mode - Komodo owns these resources.
+# Edit the TOML → commit → resource-sync auto-applies.
+managed = true
+
+# Safety: don't delete resources that aren't in this list of files.
+# A typo in resource_path never wipes live infrastructure.
+delete = false
+
+# Git provider for webhook + clone semantics.
+git_provider = "git.cianfhoghlaim.ie"
+
+# Sync triggers
+on_sync = true
+on_pull = true

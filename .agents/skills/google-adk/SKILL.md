@@ -319,8 +319,8 @@ The KCG ingestion pipeline is a 5-stage SequentialAgent:
 ```python
 from google.adk.agents import SequentialAgent
 
-kcg_pipeline = SequentialAgent(
-    name="kcg_ingestion",
+pipeline = SequentialAgent(
+    name="ingestion",
     sub_agents=[
         ocr_agent,        # PDF → text (Docling, PaddleOCR, ColPali)
         baml_extractor,   # text → typed BAML class
@@ -331,7 +331,7 @@ kcg_pipeline = SequentialAgent(
 )
 ```
 
-This is wired up via the `oideachais-curriculum-extraction`
+This is wired up via the `cianfhoghlaim-curriculum-extraction`
 Dagster asset, which runs the pipeline against incoming NCCA
 PDFs.
 
@@ -373,7 +373,7 @@ Memory Bank or a custom backend).
 - A2A Protocol: <https://a2a.dev/>
 - Agent Engine: <https://cloud.google.com/agent-engine>
 - Gemini Live API: <https://ai.google.dev/gemini-api/docs/live>
-- KCG agent chain: `oideachais-curriculum-extraction` Dagster
+- KCG agent chain: `cianfhoghlaim-curriculum-extraction` Dagster
   asset
 - KCG examples: `cianfhoghlaim/saoi/` (the canonical KCG ADK
   project layout)
@@ -433,6 +433,6 @@ the new email-inbox pipeline with 4 read-only tools
 is the agent-platform sub-agent's scope, but the ADK framework
 patterns (SequentialAgent, LoopAgent, citation_callbacks, A2A
 Protocol) are reused as-is — see
-[`.agents/skills/oideachais-email-triage/SKILL.md`](../oideachais-email-triage/SKILL.md)
+[`.agents/skills/cianfhoghlaim-email-triage/SKILL.md`](../cianfhoghlaim-email-triage/SKILL.md)
 for the full BAML + Dagster + marimo + cognify wiring.
 

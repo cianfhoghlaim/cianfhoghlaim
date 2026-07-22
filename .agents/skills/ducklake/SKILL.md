@@ -1,6 +1,6 @@
 ---
 name: ducklake
-description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical KCG sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `oideachais.leaving_cert.*` and `oideachais.education.ie.*` schemas in the `md:oideachais` MotherDuck database.
+description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical KCG sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*` schemas in the `md:oideachais` MotherDuck database.
 ---
 
 # DuckLake Expert Assistant
@@ -43,8 +43,8 @@ lakehouse sink with this topology:
 
 - **Single `md:oideachais` (MotherDuck) database** + single
   `ducklake:oideachais` (Garage S3) catalog
-- **Schemas of the form `oideachais.{domain}.{nation}`**
-  (e.g. `oideachais.education.ie`, `oideachais.medicine.ni`)
+- **Schemas of the form `cianfhoghlaim.{domain}.{nation}`**
+  (e.g. `cianfhoghlaim.education.ie`, `cianfhoghlaim.medicine.ni`)
 - **Lakekeeper Iceberg metadata** at port 8181 (for PyIceberg /
   Spark / Trino access; auto-created by DuckLake)
 - **Lance Namespace sidecar** at port 9000 (for LanceDB
@@ -52,12 +52,12 @@ lakehouse sink with this topology:
   both DuckLake and Iceberg)
 - **Marimo + Dagster** read/write the canonical DuckLake tables
 
-The Dagster asset group `oideachais-pipeline` orchestrates
+The Dagster asset group `cianfhoghlaim-pipeline` orchestrates
 the 4-layer pipeline (Ingestion → Materials → Model
 Lifecycle → Asset Generation) with the DuckLake sink as the
 final destination.
 
-The canonical client is at `cianfhoghlaim/storage/ducklake_client.py`
+The canonical client is at `storage/ducklake_client.py`
 (Postgres catalog + Garage S3 connection).
 
 ## Key Reference Materials
@@ -948,7 +948,7 @@ con = duckdb.connect("md:oideachais")
 
 ### KCG-cocoindex chunked Parquet writes
 
-The `cianfhoghlaim/cocoindex/` Apps write to DuckLake in
+The `cocoindex/` Apps write to DuckLake in
 ZSTD-compressed Parquet, with row group size tuned for HNSW
 rebuild performance:
 
@@ -989,7 +989,7 @@ curriculum area, use `QUALIFY`:
 
 ```sql
 SELECT *
-FROM oideachais.education.ie.curriculum
+FROM cianfhoghlaim.education.ie.curriculum
 QUALIFY ROW_NUMBER() OVER (
     PARTITION BY subject, curriculum_area
     ORDER BY academic_year DESC
@@ -1030,8 +1030,8 @@ The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
 DuckLake as the **canonical BIEP sink**. The 24+ per-subject
 tables (`6 subjects × 2 languages × 2 levels = 24 partitions`
 per BAML extraction stage) all live in DuckLake under the
-`oideachais.leaving_cert.*` schema, plus the `gov.ie` circulars
-in `oideachais.education.ie.gov_circulars_archive`. The
+`cianfhoghlaim.leaving_cert.*` schema, plus the `gov.ie` circulars
+in `cianfhoghlaim.education.ie.gov_circulars_archive`. The
 canonical MotherDuck-DuckLake pattern is:
 
 ```python
@@ -1044,7 +1044,7 @@ con.execute("INSTALL ducklake; LOAD ducklake;")
 con.execute("""
     CREATE SECRET motherduck_secret (
         TYPE MOTHERDUCK,
-        TOKEN '...from_infisical://dev-baile/oideachais/MOTHERDUCK_TOKEN'
+        TOKEN '...from_infisical://dev-baile/cianfhoghlaim/MOTHERDUCK_TOKEN'
     )
 """)
 con.execute("""
@@ -1058,7 +1058,7 @@ con.execute("""
 # Now query the BIEP tables
 df = con.execute("""
     SELECT subject, level, language, count(*) AS n_modules
-    FROM oideachais.leaving_cert.curriculum_syllabus
+    FROM cianfhoghlaim.leaving_cert.curriculum_syllabus
     WHERE subject IN (
         'mathematics', 'chemistry', 'geography',
         'gaeilge', 'english', 'computer_science'
@@ -1070,14 +1070,14 @@ df = con.execute("""
 
 The BIEP DuckLake catalog layout:
 
-- **Schemas**: `oideachais.leaving_cert` (LC subjects),
-  `oideachais.education.ie` (gov.ie circulars + NCCA raw).
+- **Schemas**: `cianfhoghlaim.leaving_cert` (LC subjects),
+  `cianfhoghlaim.education.ie` (gov.ie circulars + NCCA raw).
 - **Per-subject tables**:
-  `oideachais.leaving_cert.<subject>_<lang>_<level>.curriculum_syllabus`
+  `cianfhoghlaim.leaving_cert.<subject>_<lang>_<level>.curriculum_syllabus`
   / `exam_paper_layout` / `marking_scheme_guideline` /
   `cross_linguistic_concept` / `syllabus_diagram`.
 - **`gov.ie` circulars**:
-  `oideachais.education.ie.gov_circulars_archive` — populated
+  `cianfhoghlaim.education.ie.gov_circulars_archive` — populated
   by the `government_circulars` CocoIndex v1 App.
 
 **British-Isles Education pipeline use case:**
@@ -1090,12 +1090,12 @@ The BIEP DuckLake catalog layout:
   (term mapping payload), `GEOMETRY` for the geospatial subject
   tables (Geography, in development).
 - **Time-travel for syllabus versions** —
-  `SELECT * FROM oideachais.leaving_cert.mathematics_en_higher.curriculum_syllabus
+  `SELECT * FROM cianfhoghlaim.leaving_cert.mathematics_en_higher.curriculum_syllabus
   FOR SYSTEM_TIME AS OF '2026-06-01'` lets the marimo notebooks
   diff academic years.
 - **Lakekeeper Iceberg shadow** — the same data is exposed as
   Iceberg to PyIceberg / Spark / Trino via the
-  `oideachais_lakekeeper:8181` REST catalog (see
+  `cianfhoghlaim_lakekeeper:8181` REST catalog (see
   `iceberg-lakekeeper/SKILL.md`).
 
 Cross-references:

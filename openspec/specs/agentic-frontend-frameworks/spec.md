@@ -75,7 +75,7 @@ bottom:
    `.agents/skills/ag-ui/`)
 4. **Realtime backend** — Convex (per
    `.agents/skills/convex/`) for persona surfaces, or
-   MotherDuck / DuckLake (per `.agents/skills/oideachais-
+   MotherDuck / DuckLake (per `.agents/skills/cianfhoghlaim-
    storage/`) for read-only surfaces
 5. **API gateway** — Hono + oRPC (per
    `.agents/skills/hono/` + `.agents/skills/orpc/`)
@@ -136,7 +136,7 @@ plane, user) tuple. The 4 surfaces are:
 
 | # | Surface | Stack | Auth | Data plane | User |
 |:--|:--|:--|:--|:--|:--|
-| 1 | `cianfhoghlaim/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `oideachais.education.ie.*` (MotherDuck) | Irish educators + students |
+| 1 | `cianfhoghlaim/web` | TanStack Start + Hono | **No auth** (public lakehouse) | `cianfhoghlaim.education.ie.*` (MotherDuck) | Irish educators + students |
 | 2 | `cianfhoghlaim/apps/web` | TanStack Start + Hono | **No auth** (public portfolio) | Convex (read-only) | Public visitors |
 | 3 | `cianfhoghlaim/apps/portal` | TanStack Start + Hono + BetterAuth | **OAuth + SIWE + 2FA** | Convex (read-write) | The 3 personas (aleyum, cianfhoghlaim, carlcashman) |
 | 4 | `cianfhoghlaim/ui` | TanStack Start + Babylon.js | **SIWE** (Ethereum wallet) | Convex (realtime) + SpacetimeDB | Tuatha game players |
@@ -278,7 +278,7 @@ Moycullen).
 
 #### Scenario: Personal lineage never appears on the public surface
 
-- **GIVEN** the user opens any page on `oideachais.cianfhoghlaim.ie`
+- **GIVEN** the user opens any page on `cianfhoghlaim.cianfhoghlaim.ie`
 - **WHEN** the page renders
 - **THEN** no text matches the regex `Ci[ae]n M[ae]c a[nm] D[ée]isi[gh]`
 - **AND** no text matches the family surnames Deacy, Lyons, Morris, Conroy

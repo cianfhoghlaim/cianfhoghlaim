@@ -78,19 +78,19 @@ uvx mcp-server-motherduck --help
 
 # Local DuckDB file (read-only)
 uvx mcp-server-motherduck \
-  --db-path /Users/cianmacandeisigh/dev/kings_college_galway/stedding/oideachais.duckdb \
+  --db-path /Users/cianmacandeisigh/dev/kings_college_galway/stedding/cianfhoghlaim.duckdb \
   --read-only
 
 # MotherDuck cloud (KCG read-only consumer)
 uvx mcp-server-motherduck \
-  --db-path md:oideachais \
+  --db-path md:cianhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
   --read-only --saas-mode
 
 # Production: streaming HTTP + timeout
 uvx mcp-server-motherduck \
   --transport stream \
-  --db-path md:oideachais \
+  --db-path md:cianhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
   --saas-mode \
   --max-rows 4096 --max-chars 200000 \
@@ -172,17 +172,17 @@ data-sharing semantics.
     catalog.
   - **Data clustering** — 10× faster reads on clustered tables via
     the new `set_sorted_by` helper in
-    `cianfhoghlaim/dlt/dlt_utils/ducklake_options.py`.
+    `dlt/dlt_utils/ducklake_options.py`.
   - **Bucket partitioning** — new `set_bucket_partition` helper for
     multi-tenant workloads where row counts vary by 10× across
     partitions.
   - **Geometry + variant types** — DuckLake 1.0 adds first-class
     support for the `GEOMETRY` and `VARIANT` types, useful for the
     geospatial assets in
-    `cianfhoghlaim/orchestration/defs/2_materials/geospatial_assets.py`.
+    `orchestration/defs/2_materials/geospatial_assets.py`.
 - **3 hosting options** — fully managed (MotherDuck SaaS, default
   for KCG dev), BYOB (your own Garage S3 bucket, default for KCG
-  production per `cianfhoghlaim/dlt/dlt_utils/motherduck_options.py:byob_destination`),
+  production per `dlt/dlt_utils/motherduck_options.py:byob_destination`),
   and BYOC (your own compute + your own bucket — for regulated
   workloads).
 - **MotherDuck upstream monitor** — `motherduck_blog.yml` in
@@ -208,7 +208,7 @@ Source: `/docs/key-tasks/ai-and-motherduck/dives/` and `/sql-reference/mcp/`.
 
 ## MotherDuck token — Business-tier required (carry forward)
 
-KCG notebooks use 4 shared databases (`oideachais_public`, `oideachais_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
+KCG notebooks use 4 shared databases (`cianfhoghlaim_public`, `cianfhoghlaim_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
 
 ## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
 
@@ -217,7 +217,7 @@ the BAML-extracted DuckLake tables via **4 MotherDuck Dives**
 (the read-only consumer surface) and **6 MotherDuck Flights**
 (the scheduled backfill surface). All 10 are wired into the
 `oideachais` MotherDuck database under the
-`oideachais.leaving_cert.*` and `oideachais.education.ie.*`
+`cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*`
 schemas.
 
 **The 4 Dives (read-only dashboards):**
@@ -245,7 +245,7 @@ save_dive(
             title,
             hours,
             cardinality(learning_outcomes) AS n_outcomes
-        FROM oideachais.leaving_cert.curriculum_syllabus
+        FROM cianfhoghlaim.leaving_cert.curriculum_syllabus
         WHERE subject IN (
             'mathematics', 'chemistry', 'geography',
             'gaeilge', 'english', 'computer_science'
@@ -257,7 +257,7 @@ save_dive(
 **The 6 Flights (scheduled backfills):**
 
 - `flight_lc_mathematics_backfill` — re-extracts the BAML
-  rows for Mathematics from `oideachais.leaving_cert.mathematics_*`
+  rows for Mathematics from `cianfhoghlaim.leaving_cert.mathematics_*`
   on the 1st of every month
 - `flight_lc_chemistry_backfill`, `flight_lc_geography_backfill`,
   `flight_lc_gaeilge_backfill`, `flight_lc_english_backfill`,
@@ -277,7 +277,7 @@ save_dive(
   `gov.ie/.../circulars/...` for cross-referencing with NCCA
   syllabus changes.
 - **Cross-Dive joins** — the marimo notebooks use
-  `duckdb.connect("md:oideachais")` to join across all 4 Dives
+  `duckdb.connect("md:cianhoghlaim")` to join across all 4 Dives
   for end-to-end analytics.
 
 Cross-references:
@@ -291,3 +291,20 @@ Cross-references:
   the 42 lc5/lc6 assets that drive the Flights
 - [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
   the DuckLake sink layer
+
+## v7 flattening migration notes (added 2026-07-19)
+
+Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
+
+- The canonical MotherDuck database alias is `md:cianfhoghlaim` (NOT `md:oideachais`
+  which was the pre-v7 name). The pre-v7 BIEP Dives that referenced `md:oideachais`
+  were migrated to `md:cianfhoghlaim` in the P1 lakehouse-population change.
+- MotherDuck Flights are now configured via
+  `openspec/changes/2026-08-02-biep-v3-motherduck-flights-v1/` (the canonical
+  per-day BIEP Flights `lc_pdf_sync_flight` etc.)
+- For BIEP analytics, the 4 canonical Dives are:
+  - `lc_syllabus_topics`
+  - `lc_exam_paper_difficulty`
+  - `lc_marking_complexity`
+  - `gov_circulars_archive`
+

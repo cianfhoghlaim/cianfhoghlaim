@@ -1,5 +1,5 @@
 ---
-name: oideachais-email-triage
+name: cianfhoghlaim-email-triage
 description: |
   This skill should be used when working on the email-triage pipeline
   that ingests the user's personal + professional email from 4 accounts
@@ -11,27 +11,27 @@ description: |
   Google ADK `email_triage` agent (port 7778), the marimo notebook
   (primary manual surface), the openclaw WebChat sub-UI (secondary),
   the Cognee cognify dataset + 3 cross-archive edge types, and the
-  `oideachais-email-triage` openspec capability. Trigger phrases
+  `cianfhoghlaim-email-triage` openspec capability. Trigger phrases
   include 'email inbox', 'MBOX', 'Mailcow', 'email_triage', 'classify
   email', 'link thread to research', 'find loose threads', 'IMAP
   sync', 'leabharlann inbox', 'email.baml', 'email_full_stack_demo',
-  'oideachais-email-triage', 'dovecot_imapsync_runner'.
+  'cianfhoghlaim-email-triage', 'dovecot_imapsync_runner'.
 when_to_load: |
   Load when adding/modifying the MBOX DLT source, the email.baml
   schema, the CocoIndex `leabharlann_inbox_embedding` App, the
   Dagster `leabharlann_inbox_*` assets, the Google ADK
   `email_triage` agent, the marimo `email_inbox_triage.py` notebook,
   the Cognee inbox cognify + cross-archive edges, the Mailcow stack
-  wiring, the openclaw email sub-UI, or the `oideachais-email-triage`
+  wiring, the openclaw email sub-UI, or the `cianfhoghlaim-email-triage`
   openspec capability.
-location: .agents/skills/oideachais-email-triage/SKILL.md
+location: .agents/skills/cianfhoghlaim-email-triage/SKILL.md
 ---
 
 # Oideachais Email Triage
 
 ## Overview
 
-The `oideachais-email-triage` capability ingests the user's actual
+The `cianfhoghlaim-email-triage` capability ingests the user's actual
 email mailbox (not just the static leabharlann PDFs) and links it to
 the Gemini Deep Research corpus so the user can answer questions like
 "which email thread about HSE Ireland malpractice do I still owe a
@@ -43,18 +43,18 @@ It composes 8 sub-systems:
    self-hosted Postfix + Dovecot + SOGo + Rspamd + ClamAV with the
    built-in `dovecot_imapsync_runner` ofelia job.
 2. **MBOX DLT source**
-   (`cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/leabharlann/email_inbox.py`)
+   (`cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/leabharlann/email_inbox.py`)
    — reads MBOX files from `/srv/mailcow-exports/`, parses with
    Python's `mailbox` stdlib, reconstructs threads via `In-Reply-To`
    + normalised subject.
 3. **BAML `email.baml`**
-   (`cianfhoghlaim/core/baml/_oideachais_src/email.baml`) —
+   (`cianfhoghlaim/core/baml/_cianfhoghlaim_src/email.baml`) —
    `ClassifyEmail` (9-label enum), `ExtractEmailThread`,
    `LinkEmailToResearch`.
 4. **CocoIndex v1 App `leabharlann_inbox_embedding`** (4th App
    alongside books/zotero/takeout) — embeds with
    BAAI/bge-large-en-v1.5 (1024-d) into
-   `oideachais_inbox_messages` LanceDB table.
+   `cianfhoghlaim_inbox_messages` LanceDB table.
 5. **Dagster assets** — 5 new in the `leabharlann_ingestion` group
    (7 → 12) + 1 full-stack demo asset
    (`leabharlann_email_full_stack_demo`).
@@ -105,7 +105,7 @@ It composes 8 sub-systems:
         ┌──────────────────────────────────┐
         │ CocoIndex                       │
         │ leabharlann_inbox_embedding     │
-        │  → oideachais_inbox_messages    │
+        │  → cianfhoghlaim_inbox_messages    │
         │    (LanceDB, 1024-d, cosine+FTS)│
         └──────────────┬───────────────────┘
                        ▼
@@ -160,7 +160,7 @@ It composes 8 sub-systems:
 
 ### MBOX DLT source
 
-- **Path**: `cianfhoghlaim/pipelines/ingest/_oideachais_dlt_sources/leabharlann/email_inbox.py`
+- **Path**: `cianfhoghlaim/pipelines/ingest/_cianfhoghlaim_dlt_sources/leabharlann/email_inbox.py`
 - **Source name**: `leabharlann_email_inbox`
 - **Resources**: `inbox_index`, `inbox_threads`,
   `inbox_attachments`, `inbox_legal_threads`
@@ -175,7 +175,7 @@ It composes 8 sub-systems:
 
 ### BAML `email.baml`
 
-- **Path**: `cianfhoghlaim/core/baml/_oideachais_src/email.baml`
+- **Path**: `cianfhoghlaim/core/baml/_cianfhoghlaim_src/email.baml`
 - **3 classes**: `EmailClassificationResult`, `EmailThread`,
   `ResearchLink`.
 - **3 functions**:
@@ -195,13 +195,13 @@ It composes 8 sub-systems:
 ### CocoIndex `leabharlann_inbox_embedding`
 
 - **Path**: 4th App in
-  `cianfhoghlaim/embeddings/_oideachais_src/leabharlann_embedding.py`
+  `cianfhoghlaim/embeddings/_cianfhoghlaim_src/leabharlann_embedding.py`
 - **Source**: `localfs.walk_dir("/srv/mailcow-exports",
   recursive=True, path_matcher=...,
   included_patterns=["**/*.mbox"], live=True)`.
 - **Per-message embedding**: BAAI/bge-large-en-v1.5 (1024-d) via
   the shared `EMBEDDER` ContextKey from `_lifespan.py`.
-- **LanceDB target**: `oideachais_inbox_messages` with columns
+- **LanceDB target**: `cianfhoghlaim_inbox_messages` with columns
   `(id, account, year, date_iso, subject, sender, recipients,
   body_excerpt, embedding, baml_class, baml_urgency, thread_id)`.
 - **Indexes**: cosine vector index on `embedding` + FTS index on
@@ -211,7 +211,7 @@ It composes 8 sub-systems:
 
 ### Dagster assets (5 new + 1 demo)
 
-- **Path**: `cianfhoghlaim/assets/_oideachais_dagster_defs/assets/leabharlann_inbox_assets.py`
+- **Path**: `cianfhoghlaim/assets/_cianfhoghlaim_dagster_defs/assets/leabharlann_inbox_assets.py`
   + `leabharlann_email_full_stack_demo.py`
 - **Assets** (in `group_name="leabharlann_ingestion"`):
   1. `leabharlann_inbox_raw` (dlt.run, partition `account`)
@@ -225,7 +225,7 @@ It composes 8 sub-systems:
   `leabharlann_email_full_stack_demo` — end-to-end on 1 sample
   legal thread.
 - **Sensor**:
-  `cianfhoghlaim/assets/_oideachais_dagster_defs/sensors/leabharlann_inbox_sensors.py`
+  `cianfhoghlaim/assets/_cianfhoghlaim_dagster_defs/sensors/leabharlann_inbox_sensors.py`
   — 60s poll on `/srv/mailcow-exports/`.
 
 ### Google ADK `email_triage` agent
@@ -247,7 +247,7 @@ It composes 8 sub-systems:
 ### Marimo notebook (primary manual surface)
 
 - **Path**:
-  `cianfhoghlaim/notebooks/_oideachais/dashboards/email_inbox_triage.py`
+  `cianfhoghlaim/notebooks/_cianfhoghlaim/dashboards/email_inbox_triage.py`
 - **5 sections**:
   1. Loose threads sorted by urgency
   2. Legal-case prioritisation with linked Gemini PDFs
@@ -278,7 +278,7 @@ It composes 8 sub-systems:
 - **Path**: `openclaw.cianfhoghlaim.ie/email` (1 sub-UI
   mounted in the existing openclaw stack).
 - **Curated skills**: 10 → 11 (1 new symlink to
-  `oideachais-email-triage`).
+  `cianfhoghlaim-email-triage`).
 - **openclaw.json**: +1 `channel_overrides` entry for
   `email_triage` agent.
 
@@ -322,15 +322,15 @@ It composes 8 sub-systems:
 
 ## Cross-references
 
-- [`.agents/skills/oideachais-leabharlann/SKILL.md`](../oideachais-leabharlann/SKILL.md) —
+- [`.agents/skills/cianfhoghlaim-leabharlann/SKILL.md`](../cianfhoghlaim-leabharlann/SKILL.md) —
   the upstream leabharlann capability
-- [`.agents/skills/oideachais-baml-schemas/SKILL.md`](../oideachais-baml-schemas/SKILL.md) —
+- [`.agents/skills/cianfhoghlaim-baml-schemas/SKILL.md`](../cianfhoghlaim-baml-schemas/SKILL.md) —
   the 6 existing BAML files + the new `email.baml`
-- [`.agents/skills/oideachais-cocoindex-v1/SKILL.md`](../oideachais-cocoindex-v1/SKILL.md) —
+- [`.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md`](../cianfhoghlaim-cocoindex-v1/SKILL.md) —
   the v1 App convention + the 4 v1 Apps
-- [`.agents/skills/oideachais-cognify-knowledge-graph/SKILL.md`](../oideachais-cognify-knowledge-graph/SKILL.md) —
+- [`.agents/skills/cianfhoghlaim-cognify-knowledge-graph/SKILL.md`](../cianfhoghlaim-cognify-knowledge-graph/SKILL.md) —
   the cognify + cross-archive edges
-- [`.agents/skills/oideachais-marimo-dashboards/SKILL.md`](../oideachais-marimo-dashboards/SKILL.md) —
+- [`.agents/skills/cianfhoghlaim-marimo-dashboards/SKILL.md`](../cianfhoghlaim-marimo-dashboards/SKILL.md) —
   the 11 existing Marimo notebooks + the new
   `email_inbox_triage.py`
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the DLT
@@ -357,7 +357,7 @@ It composes 8 sub-systems:
 - [`.agents/skills/secrets-management/SKILL.md`](../secrets-management/SKILL.md) —
   the Infisical + Locket + mise 3-way contract (used for the
   12 new vault refs)
-- [`openspec/specs/oideachais-email-triage/spec.md`](../../openspec/specs/oideachais-email-triage/spec.md) —
+- [`openspec/specs/cianfhoghlaim-email-triage/spec.md`](../../openspec/specs/cianfhoghlaim-email-triage/spec.md) —
   the canonical capability spec
 - [`openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/`](../../openspec/changes/2026-06-29-leabharlann-email-inbox-pipeline/) —
   the openspec change artifacts (proposal, tasks, 11 spec

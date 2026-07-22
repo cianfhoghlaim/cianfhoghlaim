@@ -2,7 +2,7 @@
 
 ## 1. Create the shared helper
 
-- [ ] 1.1 Create `cianfhoghlaim/dlt/common/endpoint_recovery.py` with:
+- [ ] 1.1 Create `dlt/common/endpoint_recovery.py` with:
   - `RecoveredPage` dataclass (`status`, `backend_used`,
     `content_hash`, `content`, `language`, `wayback_snapshot_url`,
     `firecrawl_metadata`)
@@ -58,7 +58,7 @@
 - [ ] 5.1 ADDED Requirement on
   `british-isles-education-pipeline/spec.md` for the
   `endpoint_health_sink` + `endpoint_health_alerts` assets
-- [ ] 5.2 MODIFIED delta on `oideachais-pipeline/spec.md` adding a
+- [ ] 5.2 MODIFIED delta on `cianfhoghlaim-pipeline/spec.md` adding a
   cross-reference to the new `endpoint_recovery` helper
 
 ## 6. Validate

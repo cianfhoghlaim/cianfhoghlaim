@@ -58,19 +58,19 @@ if __name__ == "__main__":
 
 ## KCG examples
 
-- `cianfhoghlaim/cocoindex/image_search/pipeline.py` (deleted
+- `cocoindex/image_search/pipeline.py` (deleted
   with the docs but the pattern is the same) — CLIP embeddings +
   Qdrant + FastAPI
-- `cianfhoghlaim/cocoindex/image_search_colpali/pipeline.py` —
+- `cocoindex/image_search_colpali/pipeline.py` —
   ColPali multi-vector + Qdrant MaxSim + FastAPI
-- `cianfhoghlaim/agents/api/_oideachais_api/routes/search.py` — the KCG `/search/semantic`
+- `agents/api/_cianfhoghlaim_api/routes/search.py` — the KCG `/search/semantic`
   endpoint (FastAPI route that hits the v1 leabharlann embeddings)
 
 ## Deployment
 
 The FastAPI server + CocoIndex app can be deployed via:
 
-- Docker (recommended; the `cianfhoghlaim/agents/api/_oideachais_api` ships a `Dockerfile`)
+- Docker (recommended; the `agents/api/_cianfhoghlaim_api` ships a `Dockerfile`)
 - `dagster-modal` (the Dagster integration that runs the code on
   Modal — see the `dagster` skill)
 - Plain `uvicorn main:app` for local dev

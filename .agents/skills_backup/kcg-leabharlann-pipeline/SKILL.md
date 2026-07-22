@@ -68,7 +68,7 @@ Key secret categories:
 
 ## Stage 2 — DLT filesystem scan with SHA-256 dedup
 
-`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py:leabharlann_books_raw`
+`sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py:leabharlann_books_raw`
 materialises → `dlt_sources.author_archive.leabharlann_books_source()`
 walks `leabharlann/{gaeilge,aigne}/`, hashes every file with
 SHA-256, yields one row per file with metadata + preview_path.
@@ -76,7 +76,7 @@ SHA-256, yields one row per file with metadata + preview_path.
 `FileHashTracker` memoises the file-hash ledger. The dlt
 primary key (`file_hash`) prevents re-loads on incremental
 re-runs. Output goes to DuckLake
-(`oideachais.author_archive_uog.documents` or similar).
+(`cianfhoghlaim.author_archive_uog.documents` or similar).
 
 Similarly:
 
@@ -94,7 +94,7 @@ Key Stage 2 properties:
 | Primary key | `file_hash` (SHA-256 of file bytes) |
 | Partition columns | `account` + `domain` |
 | Incremental strategy | Hash-based (mtime-insensitive) |
-| Output | DuckLake (`oideachais.<domain>.<account>.<entity>`) |
+| Output | DuckLake (`cianfhoghlaim.<domain>.<account>.<entity>`) |
 | Memoisation | `FileHashTracker` ledger in DuckDB |
 
 ## Stage 3 — BAML structured extraction
@@ -113,7 +113,7 @@ gateway** → `litellm/gemini-2.5-flash` (cheap) or
 `litellm/anthropic/claude-sonnet-4` via the `ExtractEnStrong`
 fallback (accurate).
 
-The BAML schemas (`sruth/oideachais/baml_src/`) cover the full
+The BAML schemas (`sruth/cianfhoghlaim/baml_src/`) cover the full
 Celtic curriculum: `aistear.baml`, `primary.baml`,
 `junior_cycle.baml`, `tertiary.baml`, `ui_components.baml`,
 `curriculum_extraction.baml`, `author_archive.baml`
@@ -122,7 +122,7 @@ Celtic curriculum: `aistear.baml`, `primary.baml`,
 ## Stage 4 — CocoIndex v1 incremental embedding
 
 `leabharlann_cocoindex_zotero_update` materialises → invokes
-`subprocess.run(["cocoindex", "update", "oideachais.cocoindex_flows.leabharlann_embedding:LeabharlannZoteroEmbedding"])`.
+`subprocess.run(["cocoindex", "update", "cianfhoghlaim.cocoindex_flows.leabharlann_embedding:LeabharlannZoteroEmbedding"])`.
 
 The v1 App:
 
@@ -147,7 +147,7 @@ lance_table=leabharlann_zotero`.
 
 ## Stage 5 — Cognee cognify (cross-archive)
 
-`(queued — see sruth/oideachais/REFACTORING.md Feature 2)`. The
+`(queued — see sruth/cianfhoghlaim/REFACTORING.md Feature 2)`. The
 plan is to add `cognee_cognify_zotero` (and the equivalent
 for books / takeout) + `cognee_cross_archive_edges` + 1
 FastAPI route + 1 daily cron sensor.
@@ -195,7 +195,7 @@ ireland_primary_jc, crown_dependencies, leabharlann}`.
 | Cognee | `https://cognee.cianfhoghlaim.ie:8000` |
 | FalkorDB | `https://falkordb.cianfhoghlaim.ie:6379` |
 | MotherDuck | `md:oideachais` (read-only) |
-| TanStack Start (sruth/oideachais/web) | `https://oideachais.cianfhoghlaim.ie` |
+| TanStack Start (sruth/cianfhoghlaim/web) | `https://cianfhoghlaim.cianfhoghlaim.ie` |
 
 ## Cross-references
 
@@ -205,7 +205,7 @@ ireland_primary_jc, crown_dependencies, leabharlann}`.
   docker-compose categories
 - `.agents/skills/oideachas-pipeline/SKILL.md` — the
   oideachais pipeline (the source of the flow)
-- `.agents/skills/oideachais-storage/SKILL.md` — the
+- `.agents/skills/cianfhoghlaim-storage/SKILL.md` — the
   DuckLake + MotherDuck + Iceberg mental model
 - `.agents/skills/dagster/SKILL.md` — the Dagster asset
   + group + partition patterns
@@ -217,9 +217,9 @@ ireland_primary_jc, crown_dependencies, leabharlann}`.
   flow patterns
 - `.agents/skills/cognee/SKILL.md` — the Cognee cognify
   + 8 canonical relationship types
-- `sruth/oideachais/STATUS.md` — pipeline state (single source
+- `sruth/cianfhoghlaim/STATUS.md` — pipeline state (single source
   of truth)
-- `sruth/oideachais/REFACTORING.md` — refactor backlog (Stage 5
+- `sruth/cianfhoghlaim/REFACTORING.md` — refactor backlog (Stage 5
   is queued)
 
 ## Ingestion layer (Browserbase + Agno + GLM-4.6v + BAML + Cognee)
@@ -343,7 +343,7 @@ The agent also reuses the Cognee graph + GLM-4.6v to
 streamed via the Ag-UI `gen_ui_event` protocol. This
 is useful for design QA ("does the scraped structure
 match the design system?") and for the
-`sruth/oideachais/visual_archive` demo in the marimo
+`sruth/cianfhoghlaim/visual_archive` demo in the marimo
 notebooks.
 
 ### Medallion R2 architecture (the asset-key contract)
@@ -402,7 +402,7 @@ last materialised and which upstream failed.
   the Agno agent propose the diff, then a human
   approves via the `Schema Patch` Dagster asset.
 - **Don't normalise the Cognee ontology per-page** —
-  use the **shared** `oideachais.education.{nation}.{entity}`
+  use the **shared** `cianfhoghlaim.education.{nation}.{entity}`
   ontology from `cross-domain-registry`; Cognee adds
   nodes/edges, never redefines classes.
 - **Don't bypass Dagster** — the whole point of the
@@ -428,18 +428,18 @@ superseded by the round-8 docs → skills migration).
 The leabharlann pipeline now uses CocoIndex v1 (1.0.1–1.0.7) for embedding, replacing the v0 flows. The 5-stage flow:
 
 1. **Secret injection** (unchanged) — Locket sidecar reads Infisical `dev-baile/leabharlann/...`
-2. **DLT SHA-256 dedup** (unchanged) — `sruth/oideachais/dlt_sources/author_archive/`
-3. **BAML extraction** (unchanged) — `sruth/oideachais/baml_src/curriculum_extraction.baml`
+2. **DLT SHA-256 dedup** (unchanged) — `sruth/cianfhoghlaim/dlt_sources/author_archive/`
+3. **BAML extraction** (unchanged) — `sruth/cianfhoghlaim/baml_src/curriculum_extraction.baml`
 4. **CocoIndex v1 embedding** (UPDATED) — uses the 3 new v1 Apps:
-   - `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the main BGE-M3 embedder
-   - `sruth/oideachais/cocoindex_flows/codebase_indexing.py` — the code graph companion
-   - `sruth/oideachais/cocoindex_flows/unified_embedding.py` — the unified per-quadrant embedder
+   - `sruth/cianfhoghlaim/cocoindex_flows/leabharlann_embedding.py` — the main BGE-M3 embedder
+   - `sruth/cianfhoghlaim/cocoindex_flows/codebase_indexing.py` — the code graph companion
+   - `sruth/cianfhoghlaim/cocoindex_flows/unified_embedding.py` — the unified per-quadrant embedder
 5. **Cognee cognify** (UPDATED) — uses the 2026-06 features:
    - `cognify(time_range=...)` for temporal cognify (the new feature)
    - `improve()` to bridge session Q&A into the permanent graph
    - `recall(session_id=...)` for session-first search with auto-fallback
 
-The 5 v1 Apps are wired into the Dagster code-location under the `leabharlann_embedding` asset group. The v1 Apps are registered in `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` (see the round 7 phase 1-3 commits for the implementation detail).
+The 5 v1 Apps are wired into the Dagster code-location under the `leabharlann_embedding` asset group. The v1 Apps are registered in `sruth/cianfhoghlaim/dagster_defs/assets/leabharlann_assets.py` (see the round 7 phase 1-3 commits for the implementation detail).
 
 ### Why v1 (vs the v0 flows)
 

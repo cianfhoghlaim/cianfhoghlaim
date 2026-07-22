@@ -1,0 +1,112 @@
+# OpenChamber — local dev override (mirrors langfuse/litellm dev pattern)
+# ----------------------------------------------------------------------------
+# Mirrors the langfuse/cognee/litellm dev override pattern:
+#   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+#      resolves without booting the real Infisical-injection sidecar.
+#   2. `env_file: ../../../.env` (mise-hydrated local .env) is mounted
+#      so secrets reach the containers directly.
+#   3. The container's bundled `opencode-ai` runtime is reachable at
+#      http://localhost:3000 (port-mapped to host via 127.0.0.1:3000).
+#
+# Usage:
+#   docker compose \
+#     --env-file ../../../.env \
+#     -f stacks/openchamber/compose.yaml \
+#     -f stacks/openchamber/sidecar.yaml \
+#     -f stacks/openchamber/compose.dev.yaml \
+#     up -d
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: openchamber-locket-dev
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op openchamber locket — secrets from .env via env_file'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - default
+
+  # OpenChamber UI (with bundled opencode-ai runtime) — dev override
+  openchamber:
+    depends_on:
+      locket:
+        condition: service_started
+    # Dev override: use the locally-built image (built from the v1.14.1
+    # GitHub release tarball at /tmp/openchamber-build/Docker/Dockerfile.openchamber-web).
+    # The upstream GHCR image (`ghcr.io/openchamber/openchamber:1.0.0`) is
+    # private at GHCR — see the dockerfile comment for the build recipe.
+    image: openchamber:local-1.14.1
+    # Use port 13000 (host) → 3000 (container) to avoid clashing with
+    # unstract-frontend on port 3000.
+    ports: !reset
+      - "127.0.0.1:13000:3000"
+    # Dev override: drop read_only + security caps (the upstream image is
+    # designed for prod hardening; in dev we let it write to ~/.config)
+    read_only: false
+    security_opt: !reset []
+    cap_drop: !reset []
+    # openchamber CLI is a foreground server (similar to hermes); needs
+    # tty + stdin_open to stay alive. Without these it exits immediately.
+    tty: true
+    stdin_open: true
+    # Run in foreground mode (default daemon mode tries to fork/exec)
+    command: ["node", "bin/cli.js", "serve", "--foreground"]
+    # Mount the state dir as a writable subdirectory so it doesn't shadow
+    # the WORKDIR (the production compose.yaml mounts at /home/bun/.openchamber
+    # which HIDES the built-in node_modules/opencode-ai — that's why the
+    # `Unable to locate opencode CLI` error keeps firing).
+    volumes:
+      - openchamber-state:/home/bun/.openchamber/state
+    # Add host.docker.internal DNS so the container can reach the host's
+    # opencode server (running on port 4096 from mise opencode 1.17.9).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ../../../.env
+    environment:
+      OPENCHAMBER_PORT: "3000"
+      OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianfhoghlaim-dark}
+      OPENCHAMBER_LOG_LEVEL: ${OPENCHAMBER_LOG_LEVEL:-info}
+      # Use the host's opencode server (running via mise on port 4096).
+      # The opencode-ai npm package ships x86_64 binaries in arm64 tarballs
+      # (upstream packaging bug — confirmed in 1.17.12 + v1.0.180 releases),
+      # so we point openchamber at the real ARM64 host binary instead.
+      OPENCODE_HOST: http://host.docker.internal:4096
+      OPENCODE_SKIP_START: "true"
+      # UI 2nd-factor auth password
+      OPENCHAMBER_UI_PASSWORD: ${OPENCHAMBER_UI_PASSWORD}
+      # LLM provider — LiteLLM chokepoint
+      OPENAI_API_KEY: ${LITELLM_MASTER_KEY:-sk-litellm-master-2026-xxx}
+      OPENAI_BASE_URL: http://litellm:4000/v1
+      # Observability
+      OTEL_SERVICE_NAME: openchamber
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://langfuse-web:3000/api/public/otel}
+    networks:
+      - default
+      - cianfhoghlaim
+
+# Top-level secrets: block from sidecar.yaml references the production
+# Infisical secret file (../../infisical_secret). Override with /dev/null
+# so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null
+
+# Top-level networks: block in the base compose declares `cianfhoghlaim`
+# as external. In dev mode on bunchloch, this network IS created (by the
+# lakehouse/litellm/etc. cold-boot), so we keep it external. The previous
+# "external: false" override broke DNS for sibling services like dragonfly.
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim

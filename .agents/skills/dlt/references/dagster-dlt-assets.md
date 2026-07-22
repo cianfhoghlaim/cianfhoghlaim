@@ -24,7 +24,7 @@ def ireland_curriculum_source():
     dlt_pipeline=dlt.pipeline(
         pipeline_name="ireland_curriculum",
         destination="ducklake",
-        dataset_name="oideachais.education.ie",
+        dataset_name="cianfhoghlaim.education.ie",
     ),
 )
 def ireland_curriculum_assets(context, dlt_run_resource: DagsterDltResource):
@@ -106,9 +106,9 @@ The 5 parallel endpoints will run on 5 workers.
 
 ## KCG usage
 
-- `cianfhoghlaim/orchestration/defs/ireland/curriculum_dlt_assets.py` —
+- `orchestration/defs/ireland/curriculum_dlt_assets.py` —
   the 33+ Ireland curriculum assets, each wrapping a dlt source
-- `cianfhoghlaim/orchestration/defs/leabharlann_assets.py` — 7
+- `orchestration/defs/leabharlann_assets.py` — 7
   leabharlann assets (4 dlt sources + 3 CocoIndex v1 embedding
   updates)
 - The 4-quadrant MultiPartitions by `language + subject` for

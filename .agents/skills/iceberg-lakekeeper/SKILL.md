@@ -1,6 +1,6 @@
 ---
 name: iceberg-lakekeeper
-description: KCG canonical reference for Apache Iceberg 1.4+ tables, the Iceberg REST catalog spec, and the Lakekeeper (Rust, lakekeeper.io) catalog implementation that backs `infrastructure/stacks/lakehouse`. Use when designing time-travel / hidden-partitioning / schema-evolution flows, wiring PyIceberg / DuckDB / Spark / Trino against the `lakehouse-lakekeeper:8181` REST endpoint, choosing between DuckDB ATTACH and PyIceberg for read paths, or extending the `oideachais-pipeline` lakehouse ingestion with Iceberg features (sort orders, Z-order, V3 Variant, encryption.key-id, soft-delete, undrop, vended credentials).
+description: KCG canonical reference for Apache Iceberg 1.4+ tables, the Iceberg REST catalog spec, and the Lakekeeper (Rust, lakekeeper.io) catalog implementation that backs `infrastructure/stacks/lakehouse`. Use when designing time-travel / hidden-partitioning / schema-evolution flows, wiring PyIceberg / DuckDB / Spark / Trino against the `lakehouse-lakekeeper:8181` REST endpoint, choosing between DuckDB ATTACH and PyIceberg for read paths, or extending the `cianfhoghlaim-pipeline` lakehouse ingestion with Iceberg features (sort orders, Z-order, V3 Variant, encryption.key-id, soft-delete, undrop, vended credentials).
 ---
 
 # Iceberg + Lakekeeper (KCG canonical)

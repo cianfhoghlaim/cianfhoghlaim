@@ -55,7 +55,7 @@ def __():
 
 @app.cell
 def __():
-    import dlt
+    import dlt_sources
     from cianfhoghlaim.dlt.british_isles.ireland.education.subjects.{subject} import {subject}_source
     from cianfhoghlaim.baml_client import b
     from pathlib import Path

@@ -32,7 +32,7 @@ Each step is one marimo notebook. Editing a cell causes dependent cells to re-ru
 - `openspec/changes/2026-07-08-five-tangent-modernization/` (the change record)
 - `cianfhoghlaim/dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/` (the reference workshop)
 - `docs/agents/five-tangent-modernization.md` (the 5-tangent companion doc)
-- `openspec/specs/oideachais-marimo-dashboards/spec.md` (the older notebook-spec this composes with)
+- `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md` (the older notebook-spec this composes with)
 - `openspec/specs/dlthub-platform-integration/spec.md` (the dlthub wire-up exercised in step 7)
 
 ## Requirements

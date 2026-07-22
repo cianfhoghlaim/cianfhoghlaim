@@ -11,40 +11,40 @@
 ## 2. Inspect the existing official-media pipeline + marimo work
 
 - [x] **2.1** Identified the existing 2 notebooks at
-      `cianfhoghlaim/notebooks/09_official_media/`:
+      `notebooks/09_official_media/`:
       `01_official_media.py` (4-panel mission control, covers R1) and
       `02_email_inbox_triage.py` (inbox triage, out of scope).
 - [x] **2.2** Identified the canonical data sources:
-      `cianfhoghlaim/dlt/official_media/allowlist.py` (Stage-1 filter),
-      `cianfhoghlaim/dlt/official_media/source_resolver.py` (4-lookup
-      resolver), `cianfhoghlaim/baml/processing/official_media.baml`
+      `dlt/official_media/allowlist.py` (Stage-1 filter),
+      `dlt/official_media/source_resolver.py` (4-lookup
+      resolver), `baml/processing/official_media.baml`
       (Stage-2 BAML fallback), and the Cognee dataset
-      `oideachais_official_media` with the 4 spec-defined edge types.
+      `cianfhoghlaim_official_media` with the 4 spec-defined edge types.
 
 ## 3. Create the 5 marimo dashboards
 
 - [x] **3.1** Create
-      `cianfhoghlaim/notebooks/09_official_media/03_post_trends.py`
+      `notebooks/09_official_media/03_post_trends.py`
       (~360 lines; 3 panels: posts per day, per platform, engagement
       heatmap; 1 BAML `ClassifyOfficialMedia` extractor; covers R1
       timeline sub-requirement).
 - [x] **3.2** Create
-      `cianfhoghlaim/notebooks/09_official_media/04_mention_network.py`
+      `notebooks/09_official_media/04_mention_network.py`
       (~345 lines; 3 panels: source platform, mention overlap matrix,
       top-15 mention pairs; 1 BAML extractor; covers R2 TanStack route
       preview).
 - [x] **3.3** Create
-      `cianfhoghlaim/notebooks/09_official_media/05_fediverse_coverage.py`
+      `notebooks/09_official_media/05_fediverse_coverage.py`
       (~390 lines; 3 panels: 4 edge-type counts, fediverse instance
       distribution, edge direction; 1 BAML extractor; covers R3 Cognee
       dataset edges).
 - [x] **3.4** Create
-      `cianfhoghlaim/notebooks/09_official_media/06_cross_archive.py`
+      `notebooks/09_official_media/06_cross_archive.py`
       (~425 lines; 3 panels: link strength by category, NCCA subject
       coverage, R4 Cloudflare deployment status; 1 BAML extractor;
       covers R4 cross-archive + deployment).
 - [x] **3.5** Create
-      `cianfhoghlaim/notebooks/09_official_media/07_moderation_sentiment.py`
+      `notebooks/09_official_media/07_moderation_sentiment.py`
       (~390 lines; 4 tabs (sentiment over time, moderation flags,
       sentiment by category, BAML extractor); 1 BAML extractor;
       covers R5 multi-column tabs layout).

@@ -1,4 +1,4 @@
-# Spec Delta — oideachais-baml-schemas
+# Spec Delta — cianfhoghlaim-baml-schemas
 
 This delta adds 2 new Requirements to the existing 16 (16 → 18).
 The MODIFIED section is the new requirements only; the existing
@@ -10,20 +10,20 @@ The MODIFIED section is the new requirements only; the existing
 
 The `baml_client/` Python module SHALL regenerate cleanly (`mise run baml:generate`
 exits 0 with respect to the 17 processing-cluster files) after migrating all
-`.baml` files in `cianfhoghlaim/baml/processing/` from the deprecated
+`.baml` files in `baml/processing/` from the deprecated
 Pydantic-style `field: type` syntax to BAML v0.212+ canonical
 `field type` (whitespace-separated) syntax.
 
 #### Scenario: baml:generate succeeds for the 17 migrated processing files
 
-- **GIVEN** the 17 `.baml` files in `cianfhoghlaim/baml/processing/` are
+- **GIVEN** the 17 `.baml` files in `baml/processing/` are
   rewritten to canonical v0.212+ syntax (per
   `scripts/migrate-baml-syntax.py --apply`)
 - **WHEN** `mise run baml:generate` is run and the validator reaches the
   processing cluster
 - **THEN** the validator reports 0 Pydantic-style errors in those 17 files
 - **AND** `baml_client/` is regenerated at
-  `cianfhoghlaim/baml/shared/baml_client/`
+  `baml/shared/baml_client/`
 
 #### Scenario: Migration script is idempotent
 

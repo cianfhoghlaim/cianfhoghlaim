@@ -67,7 +67,7 @@ The 5 Apps are:
 
 #### Scenario: One MCP call fans across all 5 Apps
 
-- **GIVEN** a developer opens the `oideachais-web` TanStack Start UI and
+- **GIVEN** a developer opens the `cianfhoghlaim-web` TanStack Start UI and
   invokes the `cocoindex-code.multihop_search` MCP tool with the
   question `"How does the cianfhoghlaim Lakehouse stack relate to the
   3Blue1Brown linear-algebra tutorial?"`
@@ -127,9 +127,9 @@ transcription, and SHALL NOT introduce a new ASR backend.
 The system SHALL register 5 new cognify datasets — `multimedia_kg`,
 `package_changelog`, `codebase_git_history`, `media_local`,
 `repo_arch_docs` — under `cianfhoghlaim/cognify/datasets/` following
-the existing `oideachais_cognify_*` pattern. Each dataset SHALL be
+the existing `cianfhoghlaim_cognify_*` pattern. Each dataset SHALL be
 cognified on the same daily schedule as the existing 7 cognify clusters
-(per the `oideachais-cognify-knowledge-graph` spec).
+(per the `cianfhoghlaim-cognify-knowledge-graph` spec).
 
 #### Scenario: A new video is cognified
 
@@ -138,23 +138,23 @@ cognified on the same daily schedule as the existing 7 cognify clusters
 - **WHEN** the `cognify_multimedia_kg` Dagster asset materialises on
   the daily cron
 - **THEN** the BAML-extracted triples are loaded into the Cognee
-  knowledge graph alongside the existing `oideachais_cognify_*` clusters
+  knowledge graph alongside the existing `cianfhoghlaim_cognify_*` clusters
 - **AND** a Graphiti episode is appended with the `source_kind =
   "youtube_kg"` marker for bi-temporal tracking
 
 ## Cross-references
 
-- `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` — the R1+R2+R3+R4
+- `openspec/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md` — the R1+R2+R3+R4
   conformance contract that all 5 new Apps satisfy
 - `openspec/specs/celtic-asset-generation/spec.md` — the 5-stage Celtic-asset
   pipeline that Stream 5 (`media_local_embedding.py`) + Stream 1
   (`youtube_kg_embedding.py`) feed into as asset-generation consumers
 - `openspec/specs/indexing-and-cognition/spec.md` — the existing
   `cocoindex-code` MCP server (the surface for the 3 new MCP tools)
-- `openspec/specs/oideachais-pipeline/spec.md` — DLT orchestration registration
-- `openspec/specs/oideachais-baml-schemas/spec.md` — BAML schema registration
-- `openspec/specs/oideachais-cognify-knowledge-graph/spec.md` — cognify
-  dataset pattern (the existing `oideachais_cognify_*` siblings)
+- `openspec/specs/cianfhoghlaim-pipeline/spec.md` — DLT orchestration registration
+- `openspec/specs/cianfhoghlaim-baml-schemas/spec.md` — BAML schema registration
+- `openspec/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md` — cognify
+  dataset pattern (the existing `cianfhoghlaim_cognify_*` siblings)
 - `openspec/specs/retro-game-design-catalogue/spec.md` — the canonical
   game-capture spec; Stream 5 is the player-content sibling
 - `.agents/skills/cocoindex/SKILL.md` — R1+R2+R3+R4 + `_lifespan.py`

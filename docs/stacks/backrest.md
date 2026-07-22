@@ -6,7 +6,7 @@ Backrest is a web-based management interface for Restic, the fast and secure bac
 
 ## Why it stays in komodo/pangolin/infisical GitOps
 
-Runs on arm1-oci as part of the zero-trust mesh backbone (Pangolin + Pocket ID + Komodo). All credentials come from Infisical; all ports bind to the cianchoghlaim bridge network; no public exposure without a Pangolin route.
+Runs on arm1-oci as part of the zero-trust mesh backbone (Pangolin + Pocket ID + Komodo). All credentials come from Infisical; all ports bind to the cianfhoghlaim bridge network; no public exposure without a Pangolin route.
 
 ## Cross-references
 

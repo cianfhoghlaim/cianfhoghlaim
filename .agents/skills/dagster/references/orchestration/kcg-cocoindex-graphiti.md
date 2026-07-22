@@ -19,7 +19,7 @@ the older one is deprecated.
 ## Asset graph (canonical)
 
 ```python
-# cianfhoghlaim/orchestration/defs/curriculum_assets.py
+# orchestration/defs/curriculum_assets.py
 from dagster import asset, AssetExecutionContext
 from dagster_cocoindex import CocoIndexResource
 
@@ -129,12 +129,12 @@ def vector_embeddings_check(context: AssetCheckEvaluationContext, vector_embeddi
 
 ## KCG production usage
 
-- The `oideachais-pipeline` spec — the canonical asset graph
-- The `cianfhoghlaim/orchestration/defs/curriculum_assets.py` — the
+- The `cianfhoghlaim-pipeline` spec — the canonical asset graph
+- The `orchestration/defs/curriculum_assets.py` — the
   33+ Ireland curriculum assets
-- The `cianfhoghlaim/orchestration/sensors/leabharlann_sensors.py` —
+- The `orchestration/sensors/leabharlann_sensors.py` —
   the directory-watch sensors that fire the affected partitions
-- The `cianfhoghlaim/cocoindex/learning_outcome_graph.py` —
+- The `cocoindex/learning_outcome_graph.py` —
   the Graphiti ingestion flow
 
 ## Reference
@@ -143,7 +143,7 @@ def vector_embeddings_check(context: AssetCheckEvaluationContext, vector_embeddi
   the older `Dagster Orchestration for Cocoindex, Graphiti.md` (399
   lines) were in `docs/dagster/` (deleted with the
   `sync-skills-from-docs` change)
-- The `oideachais-pipeline` openspec spec for the partition scheme
+- The `cianfhoghlaim-pipeline` openspec spec for the partition scheme
   + asset graph
 - The `cocoindex` skill for the v0 → v1 migration
 - The `graphiti` skill for the bi-temporal model

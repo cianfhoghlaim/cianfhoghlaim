@@ -35,7 +35,7 @@
     `pull_policy: if_not_present`).
   - **`network_mode` is NOT `host`** (the upstream default is
     rewritten to the 6-file GOLD_STANDARD pattern). The
-    gateway runs on the `cianchoghlaim` bridge network with
+    gateway runs on the `cianfhoghlaim` bridge network with
     explicit port publishes:
     - `127.0.0.1:9119:9119` (dashboard, exposed to Pangolin)
     - `127.0.0.1:8443:8443` (Telegram webhook, internal only)
@@ -56,7 +56,7 @@
   - `depends_on: locket: { condition: service_healthy }`
   - `volumes: [stack-secrets:/run/secrets/locket:ro]`,
     `env_file: [/run/secrets/locket/secrets.env]`
-  - `networks: [cianchoghlaim]`
+  - `networks: [cianfhoghlaim]`
   - `deploy.resources.limits: { cpus: '2', memory: 2G }`
   - `security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`.
 - [ ] **1.3** — Write `bonneagar/stacks/hermes/sidecar.yaml`

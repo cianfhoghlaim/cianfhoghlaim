@@ -1,4 +1,4 @@
-# Spec Delta: oideachais-marimo-dashboards
+# Spec Delta: cianfhoghlaim-marimo-dashboards
 
 > Parent change: [../proposal.md](../../proposal.md)
 
@@ -7,9 +7,9 @@
 ### Requirement: Phase 2 — 10 additional marimo dashboards (leabharlann corpus + university extraction + cross-archive edges + K-12 → university pipeline coverage)
 
 The system SHALL provide **10 additional marimo dashboards** at
-`cianfhoghlaim/notebooks/11_marimo_dashboards_v2/0[1-9]_*.py` +
+`notebooks/11_marimo_dashboards_v2/0[1-9]_*.py` +
 `10_*.py`. These extend the 10 dashboards shipped by
-`2026-07-14-oideachais-marimo-dashboards-v1` (commit `44cabc151`).
+`2026-07-14-cianfhoghlaim-marimo-dashboards-v1` (commit `44cabc151`).
 Each Phase-2 dashboard:
 
 - Uses the PEP 723 inline dependency header (`# /// script` block)
@@ -23,7 +23,7 @@ Each Phase-2 dashboard:
   line, area) plus a health banner
 - Is discoverable via `uv run cianfhoghlaim-marimo list
   11_marimo_dashboards_v2` (the `GROUPS` tuple in
-  `cianfhoghlaim/notebooks/cli.py` MUST include
+  `notebooks/cli.py` MUST include
   `"11_marimo_dashboards_v2"`)
 
 The 10 Phase-2 dashboards are:
@@ -43,7 +43,7 @@ The 10 Phase-2 dashboards are:
 
 #### Scenario: Leabharlann corpus overview renders
 
-- **GIVEN** the `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/01_leabharlann_corpus_overview.py` notebook
+- **GIVEN** the `notebooks/11_marimo_dashboards_v2/01_leabharlann_corpus_overview.py` notebook
 - **WHEN** the user runs `marimo edit 01_leabharlann_corpus_overview.py`
 - **THEN** the notebook SHALL render with 5 panels (per-subdir doc
   count, language pie, file-size violin, per-year trend, health
@@ -54,7 +54,7 @@ The 10 Phase-2 dashboards are:
 
 #### Scenario: University institution matrix renders
 
-- **GIVEN** the `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/04_university_institution_matrix.py` notebook
+- **GIVEN** the `notebooks/11_marimo_dashboards_v2/04_university_institution_matrix.py` notebook
 - **WHEN** the user runs `marimo edit 04_university_institution_matrix.py`
 - **THEN** the notebook SHALL render with 5 panels (institution-type
   distribution pie, institution × NFQ-max heatmap, CAO coverage bar,
@@ -65,7 +65,7 @@ The 10 Phase-2 dashboards are:
 
 #### Scenario: QQI NFQ ladder renders
 
-- **GIVEN** the `cianfhoghlaim/notebooks/11_marimo_dashboards_v2/05_qqi_nfq_ladder.py` notebook
+- **GIVEN** the `notebooks/11_marimo_dashboards_v2/05_qqi_nfq_ladder.py` notebook
 - **WHEN** the user runs `marimo edit 05_qqi_nfq_ladder.py`
 - **THEN** the notebook SHALL render with 5 panels (QQI × HEI ladder
   matrix heatmap, NFQ distribution, ladder density by NFQ, per-HEI
@@ -86,9 +86,9 @@ The 10 Phase-2 dashboards are:
   subdir / resolver / dataset matrix, edge-type distribution,
   top-15 strongest edges, language parity, health banner)
 - **AND** it SHALL consume the canonical cognify cross-archive edge
-  tables (`oideachais.leabharlann.lc_join`,
-  `oideachais.official_media.subject_match`,
-  `oideachais.culture_heritage.leabharlann_match`)
+  tables (`cianfhoghlaim.leabharlann.lc_join`,
+  `cianfhoghlaim.official_media.subject_match`,
+  `cianfhoghlaim.culture_heritage.leabharlann_match`)
 
 #### Scenario: K-12 → university pipeline matrix renders
 
@@ -106,7 +106,7 @@ The 10 Phase-2 dashboards are:
 #### Scenario: CLI discovers all 10 Phase-2 dashboards
 
 - **GIVEN** the `GROUPS` tuple in
-  `cianfhoghlaim/notebooks/cli.py` includes
+  `notebooks/cli.py` includes
   `"11_marimo_dashboards_v2"`
 - **WHEN** the user runs `uv run cianfhoghlaim-marimo list
   11_marimo_dashboards_v2`
@@ -128,25 +128,25 @@ The 10 Phase-2 dashboards are:
 
 ## Cross-references
 
-- [`openspec/specs/oideachais-marimo-dashboards/spec.md`](../../specs/oideachais-marimo-dashboards/spec.md)
+- [`openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md`](../../specs/cianfhoghlaim-marimo-dashboards/spec.md)
   (the capability spec this delta modifies — the 10 prior requirements
   ship the 10 Phase-1 dashboards from commit `44cabc151`)
-- [`openspec/changes/2026-07-14-oideachais-marimo-dashboards-v1/`](../../2026-07-14-oideachais-marimo-dashboards-v1/)
+- [`openspec/changes/2026-07-14-cianfhoghlaim-marimo-dashboards-v1/`](../../2026-07-14-cianfhoghlaim-marimo-dashboards-v1/)
   (the Phase-1 change that shipped the 10 prior dashboards — this
   Phase-2 change extends them)
 - [`.agents/skills/marimo/SKILL.md`](../../../.agents/skills/marimo/SKILL.md)
   (the canonical marimo skill — PEP 723 inline deps, `@app.cell(column=N)`)
 - [`.agents/skills/motherduck/SKILL.md`](../../../.agents/skills/motherduck/SKILL.md)
   (the MotherDuck `md:oideachais` connection contract)
-- [`.agents/skills/oideachais-cocoindex-v1/SKILL.md`](../../../.agents/skills/oideachais-cocoindex-v1/SKILL.md)
+- [`.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md`](../../../.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md)
   (the BAAI/bge-m3 1024-d embedder contract for the embedding coverage dashboard)
-- [`openspec/specs/oideachais-leabharlann/spec.md`](../../specs/oideachais-leabharlann/spec.md)
+- [`openspec/specs/cianfhoghlaim-leabharlann/spec.md`](../../specs/cianfhoghlaim-leabharlann/spec.md)
   (the leabharlann corpus pipeline that the leabharlann dashboards consume)
-- [`openspec/specs/oideachais-university-deep-extraction/spec.md`](../../specs/oideachais-university-deep-extraction/spec.md)
+- [`openspec/specs/cianfhoghlaim-university-deep-extraction/spec.md`](../../specs/cianfhoghlaim-university-deep-extraction/spec.md)
   (the university / QQI extraction that the university dashboards consume)
-- [`openspec/specs/oideachais-cognify-knowledge-graph/spec.md`](../../specs/oideachais-cognify-knowledge-graph/spec.md)
+- [`openspec/specs/cianfhoghlaim-cognify-knowledge-graph/spec.md`](../../specs/cianfhoghlaim-cognify-knowledge-graph/spec.md)
   (the cognify cross-archive pass that produces the edge tables consumed
   by the 06-08 cross-archive edge dashboards)
-- [`openspec/specs/oideachais-pipeline/spec.md`](../../specs/oideachais-pipeline/spec.md)
+- [`openspec/specs/cianfhoghlaim-pipeline/spec.md`](../../specs/cianfhoghlaim-pipeline/spec.md)
   (the 5-stage Celtic education pipeline that the 09-10 dashboards
   visualise)

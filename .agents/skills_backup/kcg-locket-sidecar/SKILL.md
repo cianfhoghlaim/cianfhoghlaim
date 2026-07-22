@@ -1,6 +1,6 @@
 ---
 name: kcg-locket-sidecar
-description: Wire a Locket sidecar into a Docker Compose stack that needs Infisical secret injection at runtime in the Cianfhoghlaim monorepo. Covers the canonical `sidecar.yaml` template (the 3 observed variants across 86+ stacks: linkwarden-style with tmpfs driver_opts, cognee-style with `type: tmpfs` block, pocket-id-style with Komodo env block), the `secrets.env` URI syntax (`infisical://dev-baile/<svc>/<key>`), the 3 Locket modes (`watch` / `exec` / `oneshot`), the `user: 65532:65532` + `no-new-privileges:true` + `cap_drop: [ALL]` security baseline, the `cianchoghlaim_locket_secrets` shared tmpfs volume contract, and the relationship between `secrets.env` (the consumer) and `sidecar.yaml` (the Locket injection). Use when adding a new stack that needs secrets at runtime, debugging a missing env var, or migrating a stack from the v0 secret-injection pattern to Locket.
+description: Wire a Locket sidecar into a Docker Compose stack that needs Infisical secret injection at runtime in the Cianfhoghlaim monorepo. Covers the canonical `sidecar.yaml` template (the 3 observed variants across 86+ stacks: linkwarden-style with tmpfs driver_opts, cognee-style with `type: tmpfs` block, pocket-id-style with Komodo env block), the `secrets.env` URI syntax (`infisical://dev-baile/<svc>/<key>`), the 3 Locket modes (`watch` / `exec` / `oneshot`), the `user: 65532:65532` + `no-new-privileges:true` + `cap_drop: [ALL]` security baseline, the `cianfhoghlaim_locket_secrets` shared tmpfs volume contract, and the relationship between `secrets.env` (the consumer) and `sidecar.yaml` (the Locket injection). Use when adding a new stack that needs secrets at runtime, debugging a missing env var, or migrating a stack from the v0 secret-injection pattern to Locket.
 ---
 
 # KCG Locket Sidecar
@@ -49,14 +49,14 @@ services:
       LOCKET_MODE: watch                          # "watch" | "exec" | "oneshot"
       LOCKET_SECRETS_FILE: /run/secrets/locket/secrets.env
     volumes:
-      - cianchoghlaim_locket_secrets:/run/secrets/locket:ro
+      - cianfhoghlaim_locket_secrets:/run/secrets/locket:ro
     restart: unless-stopped
     depends_on:
       <main-service>:
         condition: service_healthy
 
 volumes:
-  cianchoghlaim_locket_secrets:
+  cianfhoghlaim_locket_secrets:
     external: true   # defined in infrastructure/locket/compose.yaml
 ```
 
@@ -76,8 +76,8 @@ multi-quadrant refactor plan.
 
 ```bash
 # infrastructure/stacks/<name>/secrets.env
-INFI_DATABASE_URL=infisical://dev-baile/sruth/oideachais/database_url
-INFI_LANCEDB_URI=infisical://dev-baile/sruth/oideachais/lancedb_uri
+INFI_DATABASE_URL=infisical://dev-baile/sruth/cianfhoghlaim/database_url
+INFI_LANCEDB_URI=infisical://dev-baile/sruth/cianfhoghlaim/lancedb_uri
 INFI_HF_TOKEN=infisical://dev-baile/cross-cutting/hf_token
 INFI_PANGOLIN_API_KEY=infisical://dev-baile/control-plane/pangolin_api_key
 ```
@@ -112,14 +112,14 @@ The 4 rules are enforced by `bun run stack-doctor` (a violation is
 
 ## The shared tmpfs volume (the contract)
 
-`cianchoghlaim_locket_secrets` is an **external** volume defined in
+`cianfhoghlaim_locket_secrets` is an **external** volume defined in
 `infrastructure/locket/compose.yaml`. Every stack that uses Locket
 mounts the same external volume — the secrets are NOT per-stack.
 
 ```yaml
 # infrastructure/locket/compose.yaml
 volumes:
-  cianchoghlaim_locket_secrets:
+  cianfhoghlaim_locket_secrets:
     driver: local
     driver_opts:
       type: tmpfs
@@ -132,14 +132,14 @@ volume across all 86+ stacks without exhausting memory.
 
 ## Worked example: add a new Locket-protected stack
 
-1. Add `infrastructure/stacks/oideachais-dagster/secrets.env`:
+1. Add `infrastructure/stacks/cianfhoghlaim-dagster/secrets.env`:
 
    ```bash
-   INFI_DAGSTER_HOME=infisical://dev-baile/sruth/oideachais/dagster_home
-   INFI_DAGSTER_DB=infisical://dev-baile/sruth/oideachais/dagster_db_url
+   INFI_DAGSTER_HOME=infisical://dev-baile/sruth/cianfhoghlaim/dagster_home
+   INFI_DAGSTER_DB=infisical://dev-baile/sruth/cianfhoghlaim/dagster_db_url
    ```
 
-2. Add `infrastructure/stacks/oideachais-dagster/sidecar.yaml`:
+2. Add `infrastructure/stacks/cianfhoghlaim-dagster/sidecar.yaml`:
 
    ```yaml
    services:
@@ -153,27 +153,27 @@ volume across all 86+ stacks without exhausting memory.
        environment:
          LOCKET_MODE: watch
          LOCKET_SECRETS_FILE: /run/secrets/locket/secrets.env
-       volumes: [cianchoghlaim_locket_secrets:/run/secrets/locket:ro]
+       volumes: [cianfhoghlaim_locket_secrets:/run/secrets/locket:ro]
        restart: unless-stopped
    volumes:
-     cianchoghlaim_locket_secrets: { external: true }
+     cianfhoghlaim_locket_secrets: { external: true }
    ```
 
-3. Add `infrastructure/stacks/oideachais-dagster/compose.yaml`:
+3. Add `infrastructure/stacks/cianfhoghlaim-dagster/compose.yaml`:
 
    ```yaml
    services:
      dagster:
-       image: ghcr.io/cianfhoghlaim/oideachais-dagster:latest
+       image: ghcr.io/cianfhoghlaim/cianfhoghlaim-dagster:latest
        env_file: /run/secrets/locket/secrets.env   # the Locket tmpfs
-       volumes: [cianchoghlaim_locket_secrets:/run/secrets/locket:ro]
+       volumes: [cianfhoghlaim_locket_secrets:/run/secrets/locket:ro]
    ```
 
 4. Wire the 2 files together:
 
    ```bash
    cd infrastructure/komodo
-   docker compose -f compose.yaml -f ../stacks/oideachais-dagster/compose.yaml -f ../stacks/oideachais-dagster/sidecar.yaml up -d
+   docker compose -f compose.yaml -f ../stacks/cianfhoghlaim-dagster/compose.yaml -f ../stacks/cianfhoghlaim-dagster/sidecar.yaml up -d
    ```
 
 5. Verify:
@@ -188,9 +188,9 @@ volume across all 86+ stacks without exhausting memory.
 | Symptom | Cause | Fix |
 |:--|:--|:--|
 | `env_file: /run/secrets/locket/secrets.env: No such file or directory` | Locket didn't run | Check `docker compose ps locket`; the Locket container must be `Up` |
-| `Locket: infisical URI not found: infisical://dev-baile/sruth/oideachais/foo` | The URI path doesn't match the vault | Run `bun run scripts/init-vault.ts` to create the secret |
+| `Locket: infisical URI not found: infisical://dev-baile/sruth/cianfhoghlaim/foo` | The URI path doesn't match the vault | Run `bun run scripts/init-vault.ts` to create the secret |
 | `Locket: 401 Unauthorized` | The machine identity token expired | Re-run `mise run locket:init` |
-| `Locket: tmpfs volume not mounted` | The `cianchoghlaim_locket_secrets` external volume is missing | Run `docker compose -f infrastructure/locket/compose.yaml up -d` |
+| `Locket: tmpfs volume not mounted` | The `cianfhoghlaim_locket_secrets` external volume is missing | Run `docker compose -f infrastructure/locket/compose.yaml up -d` |
 
 ## Cross-references
 

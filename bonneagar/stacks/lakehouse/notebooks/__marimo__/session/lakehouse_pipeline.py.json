@@ -1,0 +1,176 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.13",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "6fa46d437cac29bcefb64ee8fbc01339",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"lakehouse-pipeline-demo\">Lakehouse Pipeline Demo</h1>\n<span class=\"paragraph\">This notebook demonstrates the unified data lakehouse architecture:</span>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Local</th>\n<th>Remote</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Query Engine</td>\n<td>DuckDB</td>\n<td>MotherDuck</td>\n</tr>\n<tr>\n<td>SQL Catalog</td>\n<td>DuckLake</td>\n<td>DuckLake (PlanetScale)</td>\n</tr>\n<tr>\n<td>Vector Catalog</td>\n<td>Lance Namespace</td>\n<td>Lance Namespace</td>\n</tr>\n<tr>\n<td>Object Storage</td>\n<td>Garage S3</td>\n<td>Cloudflare R2</td>\n</tr>\n</tbody>\n</table>\n<span class=\"paragraph\"><strong>Key Pattern</strong>: Same code, different destination. Validate locally, deploy to cloud.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "e98133e7ef23de652b2770b2ebe299bf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "c243423c67797b1904f9d4a0ed176038",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='bkHC-0' random-id='adbae6e4-c5aa-7922-4d42-bfa389a7702e'><marimo-radio data-initial-value='&quot;local&quot;' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eEnvironment&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;local&quot;,&quot;remote&quot;]' data-inline='false' data-disabled='false'></marimo-radio></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "88751c63eeed9906bed146a5c19fe99a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Using Local Development configuration\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "PKri",
+      "code_hash": "621a3c57cfb73c0f27fe6f22c1a5c569",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-1-define-data-source\">Step 1: Define Data Source</h2>\n<span class=\"paragraph\">Using the Hacker News API as our example data source.\nThe <code>@dlt.resource</code> decorator handles incremental loading and schema inference.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "22d29bfbfebcc4fd35c4bb2b7a0006bc",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "b6f0e3a9b62df206e7e60f7c6c0e4dc0",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "b317fdf4f0465e973ee689414ec79e23",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "b0af6424ed8abecd6c300a742a536571",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-2-query-with-duckdb\">Step 2: Query with DuckDB</h2>\n<span class=\"paragraph\">DuckDB can query DuckLake tables directly using the <code>ducklake</code> extension.\nThe same queries work whether data is local or in the cloud.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "cc5606d1115082f4ca4c3d377d4e5cda",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "1e7497408191daacb71776ce19ed1d19",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-3-register-lance-table\">Step 3: Register Lance Table</h2>\n<span class=\"paragraph\">Lance tables are registered in the Iceberg catalog using the \"trojan horse\" pattern.\nThe table appears as an Iceberg table with <code>table_type=lance</code> property.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "b63b3f773a0c20742b0f88ea214972e5",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "c3b124a7874461468891dac2a8e8e3e6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-4-switch-to-remote\">Step 4: Switch to Remote</h2>\n<span class=\"paragraph\">To deploy to production, change the environment selector above to <strong>Remote Production</strong>.</span>\n<span class=\"paragraph\">The same code works with:</span>\n<ul>\n<li><strong>MotherDuck</strong> instead of local DuckDB</li>\n<li><strong>PlanetScale PostgreSQL</strong> for catalog metadata</li>\n<li><strong>Cloudflare R2</strong> for object storage</li>\n<li><strong>Lance Cloud</strong> for vector storage</li>\n</ul>\n<span class=\"paragraph\"><strong>Environment Variables Required for Remote</strong>:\n<div class=\"language-bash codehilite\"><pre><span></span><code><span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">MOTHERDUCK_TOKEN</span><span class=\"o\">=</span><span class=\"s2\">&quot;your-token&quot;</span>\n<span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">PLANETSCALE_HOST</span><span class=\"o\">=</span><span class=\"s2\">&quot;aws.connect.psdb.cloud&quot;</span>\n<span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">PLANETSCALE_USER</span><span class=\"o\">=</span><span class=\"s2\">&quot;lakehouse&quot;</span>\n<span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">PLANETSCALE_PASSWORD</span><span class=\"o\">=</span><span class=\"s2\">&quot;your-password&quot;</span>\n<span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">R2_ACCESS_KEY_ID</span><span class=\"o\">=</span><span class=\"s2\">&quot;your-key&quot;</span>\n<span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">R2_SECRET_ACCESS_KEY</span><span class=\"o\">=</span><span class=\"s2\">&quot;your-secret&quot;</span>\n<span class=\"nb\">export</span><span class=\"w\"> </span><span class=\"nv\">R2_ACCOUNT_ID</span><span class=\"o\">=</span><span class=\"s2\">&quot;your-account&quot;</span>\n</code></pre></div></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "b6858ab7d17066170db8869355268d3c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"architecture-summary\">Architecture Summary</h2>\n<div class=\"language-tsql codehilite\"><pre><span></span><code><span class=\"err\">\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510</span>\n<span class=\"err\">\u2502</span><span class=\"w\">                     </span><span class=\"k\">Data</span><span class=\"w\"> </span><span class=\"n\">Pipeline</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"n\">dlt</span><span class=\"p\">)</span><span class=\"w\">                      </span><span class=\"err\">\u2502</span>\n<span class=\"err\">\u2502</span><span class=\"w\">  </span><span class=\"nv\">@dlt</span><span class=\"p\">.</span><span class=\"n\">resource</span><span class=\"w\"> </span><span class=\"err\">\u2192</span><span class=\"w\"> </span><span class=\"n\">pipeline</span><span class=\"p\">.</span><span class=\"n\">run</span><span class=\"p\">()</span><span class=\"w\"> </span><span class=\"err\">\u2192</span><span class=\"w\"> </span><span class=\"n\">destination</span><span class=\"w\">               </span><span class=\"err\">\u2502</span>\n<span class=\"err\">\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518</span>\n<span class=\"w\">                      </span><span class=\"err\">\u2502</span>\n<span class=\"w\">            </span><span class=\"err\">\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510</span>\n<span class=\"w\">            </span><span class=\"err\">\u2502</span><span class=\"w\">                   </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2510</span><span class=\"w\">       </span><span class=\"err\">\u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2510</span>\n<span class=\"w\">      </span><span class=\"err\">\u2502</span><span class=\"w\"> </span><span class=\"n\">DuckLake</span><span class=\"w\">  </span><span class=\"err\">\u2502</span><span class=\"w\">       </span><span class=\"err\">\u2502</span><span class=\"w\"> </span><span class=\"n\">Lance</span><span class=\"w\"> </span><span class=\"n\">NS</span><span class=\"w\">  </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u2502</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"k\">SQL</span><span class=\"p\">)</span><span class=\"w\">     </span><span class=\"err\">\u2502</span><span class=\"w\">       </span><span class=\"err\">\u2502</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"n\">Vector</span><span class=\"p\">)</span><span class=\"w\">  </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2518</span><span class=\"w\">       </span><span class=\"err\">\u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2518</span>\n<span class=\"w\">            </span><span class=\"err\">\u2502</span><span class=\"w\">                   </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2510</span>\n<span class=\"w\">      </span><span class=\"err\">\u2502</span><span class=\"w\">       </span><span class=\"n\">Iceberg</span><span class=\"w\"> </span><span class=\"k\">Catalog</span><span class=\"w\">        </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u2502</span><span class=\"w\">       </span><span class=\"p\">(</span><span class=\"n\">Lakekeeper</span><span class=\"p\">)</span><span class=\"w\">           </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518</span>\n<span class=\"w\">                    </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510</span>\n<span class=\"w\">      </span><span class=\"err\">\u2502</span><span class=\"w\">        </span><span class=\"k\">Object</span><span class=\"w\"> </span><span class=\"n\">Storage</span><span class=\"w\">         </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u2502</span><span class=\"w\">   </span><span class=\"n\">Garage</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"k\">local</span><span class=\"p\">)</span><span class=\"w\"> </span><span class=\"o\">/</span><span class=\"w\"> </span><span class=\"n\">R2</span><span class=\"w\"> </span><span class=\"p\">(</span><span class=\"n\">cloud</span><span class=\"p\">)</span><span class=\"w\"> </span><span class=\"err\">\u2502</span>\n<span class=\"w\">      </span><span class=\"err\">\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

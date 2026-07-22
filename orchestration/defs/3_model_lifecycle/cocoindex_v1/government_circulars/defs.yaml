@@ -1,0 +1,39 @@
+# defs/3_model_lifecycle/cocoindex_v1/government_circulars/defs.yaml
+#
+# L3 model-lifecycle for the BIEP v1 gov.ie education circulars
+# CocoIndex v1 App (the 7th v1 App per the BIEP spec).
+#
+# Per the british-isles-education-pipeline spec — `CocoIndex v1
+# embeddings (BGE-M3) into LanceDB` Requirement.
+# Table: cianfhoghlaim.government.circulars.<dept>_<year>_<language>.
+#
+# Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: GovernmentCircularsEmbedding
+  app_group: government_circulars
+  module: cianfhoghlaim.cocoindex.government_circulars_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  depts:
+    - DES
+    - NCCA
+    - SEC
+    - DOE_NI
+  languages:
+    - en
+    - ga
+  table_name_pattern: cianfhoghlaim.government.circulars.<dept>_<year>_<language>
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  tags:
+    - biep
+    - gov-circulars
+    - cocoindex-v1
+    - embedding
+  metadata:
+    openspec_change: 2026-07-06-british-isles-education-pipeline-v1
+    spec: british-isles-education-pipeline

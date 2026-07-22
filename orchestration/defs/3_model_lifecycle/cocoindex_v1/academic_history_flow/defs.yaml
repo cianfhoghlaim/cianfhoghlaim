@@ -1,0 +1,24 @@
+# defs/3_model_lifecycle/cocoindex_v1/academic_history_flow/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the AcademicHistoryFlow v1
+# CocoIndex App. Embeds chunks + formulas into the
+# `cianfhoghlaim_academic_history` LanceDB table using BAAI/bge-m3
+# (1024-d) to match the existing leabharlann embedding model.
+#
+# Per openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/
+type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: AcademicHistoryFlow
+  module: cianfhoghlaim.cocoindex.academic_history_flow
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  table_name: cianfhoghlaim_academic_history
+  source_tables:
+    - cianfhoghlaim.education.ie.uog_math_coursework
+    - cianfhoghlaim.education.ie.uog_formula_records
+    - cianfhoghlaim.education.ie.uog_theorem_records
+    - cianfhoghlaim.education.ie.uog_statistical_procedure_records
+    - cianfhoghlaim.education.ie.uog_numerical_method_records
+    - cianfhoghlaim.education.ie.uog_nonlinear_system_records
+    - cianfhoghlaim_academic_history.validation_findings

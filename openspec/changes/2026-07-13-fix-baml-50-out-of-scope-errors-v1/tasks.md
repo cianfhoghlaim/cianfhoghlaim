@@ -73,7 +73,7 @@
 
 - [x] `proposal.md` — the full Why/What/Acceptance narrative.
 - [x] `tasks.md` — this file.
-- [x] `specs/oideachais-baml-schemas/spec.md` — 1 ADDED requirement
+- [x] `specs/cianfhoghlaim-baml-schemas/spec.md` — 1 ADDED requirement
   capturing the "all 50 errors resolved; baml:generate exits 0" gate.
 - [x] `specs/british-isles-education-pipeline/spec.md` — 1 ADDED
   requirement capturing the lc_extraction/*.baml syntax contract.

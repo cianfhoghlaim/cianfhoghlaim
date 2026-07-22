@@ -4,7 +4,7 @@
 
 ```bash
 cd /Users/cianmacandeisigh/dev/kings_college_galway
-uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
+uv run python dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
   | tee /tmp/cocoindex-baseline.txt
 grep "FAIL" /tmp/cocoindex-baseline.txt | wc -l
 # 25
@@ -66,7 +66,7 @@ comments to break the R2 audit regex:
 
 ```bash
 cd /Users/cianmacandeisigh/dev/kings_college_galway
-uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
+uv run python dlt/common/cocoindex_v1_migrate.py --check-only 2>&1 \
   | tee /tmp/cocoindex-post.txt
 
 grep "FAIL" /tmp/cocoindex-post.txt | wc -l
@@ -80,14 +80,14 @@ grep "FAIL" /tmp/cocoindex-post.txt | wc -l
 
 ```bash
 for nb in \
-  cianfhoghlaim/notebooks/03_leaving_cert/01_chemistry_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/05_mathematics_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/03_gaeilge_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/02_computer_science_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/04_geography_analysis.py \
-  cianfhoghlaim/notebooks/03_leaving_cert/06_en_vs_ga_comparison.py \
-  cianfhoghlaim/notebooks/04_biep_motherduck/07_subject_full_pipeline.py \
-  cianfhoghlaim/notebooks/legacy/corpora/subject_full_pipeline_runner.py; do
+  notebooks/03_leaving_cert/01_chemistry_analysis.py \
+  notebooks/03_leaving_cert/05_mathematics_analysis.py \
+  notebooks/03_leaving_cert/03_gaeilge_analysis.py \
+  notebooks/03_leaving_cert/02_computer_science_analysis.py \
+  notebooks/03_leaving_cert/04_geography_analysis.py \
+  notebooks/03_leaving_cert/06_en_vs_ga_comparison.py \
+  notebooks/04_biep_motherduck/07_subject_full_pipeline.py \
+  notebooks/legacy/corpora/subject_full_pipeline_runner.py; do
   echo "=== $nb ==="
   uv run python3 -c "import ast; ast.parse(open('$nb').read()); print('OK: AST-parse passed')" 2>&1
 done
@@ -101,7 +101,7 @@ Create `openspec/changes/2026-07-13-cocoindex-v1-non-priority-flows-v1/`:
 
 - [x] `proposal.md` — lists the 25 flows migrated + the R1-R4 conformance status
 - [x] `tasks.md` — this file (the 5 steps above)
-- [x] `specs/oideachais-cocoindex-v1-migration/spec.md` — 1 ADDED requirement:
+- [x] `specs/cianfhoghlaim-cocoindex-v1-migration/spec.md` — 1 ADDED requirement:
       "All 47 CocoIndex flows (22 priority + 25 non-priority) pass the
       R1-R4 conformance contract; `mise run cocoindex:conformance` exits 0"
 
@@ -119,7 +119,7 @@ git -c user.email="build-agent@cianfhoghlaim" -c user.name="Build Agent" commit 
   "feat(cocoindex): migrate 25 non-priority flows to v1 conformance (R1-R4)
 
 Implements openspec change 2026-07-13-cocoindex-v1-non-priority-flows-v1
-(1 ADDED spec delta on oideachais-cocoindex-v1-migration).
+(1 ADDED spec delta on cianfhoghlaim-cocoindex-v1-migration).
 
 The 25 non-priority CocoIndex flows (per the T3 audit at
 commit 678b1e4d9) are migrated to the v1 conformance contract:
@@ -153,5 +153,5 @@ git push --set-upstream origin pick-4-biep-v1
 - [x] 25 non-priority CocoIndex flows all pass R1-R4 conformance
 - [x] `mise run cocoindex:conformance` exits 0
 - [x] The 8 BAML-using notebooks AST-parse OK
-- [x] 1 ADDED spec delta on `oideachais-cocoindex-v1-migration` is well-formed
+- [x] 1 ADDED spec delta on `cianfhoghlaim-cocoindex-v1-migration` is well-formed
 - [x] Pushed to `origin/pick-4-biep-v1` (NOT `main`)

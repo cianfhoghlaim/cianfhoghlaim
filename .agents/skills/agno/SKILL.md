@@ -63,7 +63,7 @@ Activate when users need:
   **Memgraph** for Cypher
 - The KCG agent chain: **OCR → BAML → embedding → Graphiti
   → RAGAS** (5 SequentialAgents in a Dagster asset)
-- Dagster wiring: `oideachais-curriculum-extraction` runs the
+- Dagster wiring: `cianfhoghlaim-curriculum-extraction` runs the
   agent chain against NCCA PDFs
 - DLT wiring: `@dlt.destination` writes the BAML output to
   DuckLake
@@ -77,14 +77,14 @@ from agno.team import Team
 from agno.models.openai.like import OpenAILike
 
 # KCG uses Z.ai GLM-4.6 for cost + speed, with OpenAI as fallback
-kcg_model = OpenAILike(
+model = OpenAILike(
     id="glm-4.6",
     base_url="https://api.z.ai/v1",
     api_key=os.environ["Z_AI_API_KEY"],
 )
 
-kcg_team = Team(
-    name="kcg_curriculum_team",
+team = Team(
+    name="curriculum_team",
     mode="coordinate",  # coordinator routes to specialists
     members=[
         curriculum_agent,   # NCCA + SEC + DES specialist
@@ -391,7 +391,7 @@ The KCG 5-stage pipeline is a Dagster asset that orchestrates
 5 Agno agents:
 
 ```python
-# cianfhoghlaim/orchestration/defs/curriculum_assets.py
+# orchestration/defs/curriculum_assets.py
 from dagster import asset, AssetExecutionContext
 from agno.os import AgentOS
 from cianfhoghlaim.agents.agno import (
@@ -477,7 +477,7 @@ result = agent.run("https://github.com/agno-agi/agno")
 - **Z.ai GLM-4.6:** <https://docs.z.ai/guides/llm/glm-4.6>
 - **A2A Protocol:** <https://a2a.dev/>
 - **AG-UI Protocol:** <https://ag-ui.com/>
-- **KCG Dagster asset:** `cianfhoghlaim/orchestration/defs/curriculum_assets.py`
+- **KCG Dagster asset:** `orchestration/defs/curriculum_assets.py`
 - **Related skills:** `.agents/skills/google-adk/`,
   `.agents/skills/pydantic-ai/`, `.agents/skills/litellm/`,
   `.agents/skills/langfuse/`, `.agents/skills/cognee/`,

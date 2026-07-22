@@ -1,0 +1,12 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+private-resources:
+  letta:
+    name: "Letta Agent Memory"
+    mode: "http"
+    destination-port: 8283
+    full-domain: "letta.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "letta"

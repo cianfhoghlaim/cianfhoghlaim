@@ -18,7 +18,7 @@ This follow-up ships **both** deliverables:
    for the 5-notebook tutorial track + the `01_overview_setup.py`
    Step 0.5 pointer)
 2. The 5 marimo tutorial notebooks at
-   `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
+   `notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
    (the directory was reserved by commit `409898008`; this change
    fills it in)
 
@@ -29,15 +29,15 @@ This follow-up ships **both** deliverables:
 | `openspec/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md` | NEW (created from scratch; 8 requirements) | +~150 |
 | `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/` | NEW (proposal.md + tasks.md + 2 spec deltas) | +~250 |
 | `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md` | NEW (1 MODIFIED delta to add 2 ADDED requirements) | +~80 |
-| `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/specs/oideachais-marimo-dashboards/spec.md` | NEW (1 ADDED requirement for the 5 tutorial notebooks) | +~40 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax.py` | NEW (BAML post-v4 syntax walkthrough) | +~600 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough.py` | NEW (8 qpack files walkthrough) | +~500 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline.py` | NEW (vision+PDF pipeline + side-by-side gemma-4 vs qwen3-vl) | +~500 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration.py` | NEW (3 real CocoIndex+BAML patterns) | +~400 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration.py` | NEW (42-renames audit notebook) | +~500 |
-| `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/README.md` | MODIFY (replace the placeholder with the canonical 5-notebook README) | ~+60 |
-| `cianfhoghlaim/notebooks/01_overview_setup.py` | NEW (welcome + Step 0.5 pointer + Steps 1-4 + nb_utils tour) | +~250 |
-| `cianfhoghlaim/notebooks/cli.py` | MODIFY (add `13_baml_cocoindex_tutorial` to the GROUPS tuple so `cianfhoghlaim-marimo list` discovers the 5 entries) | ~+5 |
+| `openspec/changes/2026-07-12-baml-cocoindex-tutorials-v1/specs/cianfhoghlaim-marimo-dashboards/spec.md` | NEW (1 ADDED requirement for the 5 tutorial notebooks) | +~40 |
+| `notebooks/13_baml_cocoindex_tutorial/01_baml_post_v4_syntax.py` | NEW (BAML post-v4 syntax walkthrough) | +~600 |
+| `notebooks/13_baml_cocoindex_tutorial/02_qpack_8_subject_walkthrough.py` | NEW (8 qpack files walkthrough) | +~500 |
+| `notebooks/13_baml_cocoindex_tutorial/03_education_pdf_vision_pipeline.py` | NEW (vision+PDF pipeline + side-by-side gemma-4 vs qwen3-vl) | +~500 |
+| `notebooks/13_baml_cocoindex_tutorial/04_cocoindex_baml_integration.py` | NEW (3 real CocoIndex+BAML patterns) | +~400 |
+| `notebooks/13_baml_cocoindex_tutorial/05_post_v4_duplicate_audit_and_migration.py` | NEW (42-renames audit notebook) | +~500 |
+| `notebooks/13_baml_cocoindex_tutorial/README.md` | MODIFY (replace the placeholder with the canonical 5-notebook README) | ~+60 |
+| `notebooks/01_overview_setup.py` | NEW (welcome + Step 0.5 pointer + Steps 1-4 + nb_utils tour) | +~250 |
+| `notebooks/cli.py` | MODIFY (add `13_baml_cocoindex_tutorial` to the GROUPS tuple so `cianfhoghlaim-marimo list` discovers the 5 entries) | ~+5 |
 
 ## The 5 tutorials (summary)
 
@@ -65,26 +65,26 @@ check.
    `280c0aabe` + 2 ADDED requirements for the 5-notebook tutorial
    track).
 2. Create the 5 marimo tutorial notebooks at
-   `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
+   `notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
    (each 400-600 lines; dual-mode marimo + `uv run`; PEP 723 inline
    dependency blocks; substantive content per the snippet in the
    parent change proposal).
 3. Add the Step 0.5 pointer in
-   `cianfhoghlaim/notebooks/01_overview_setup.py` (a new welcome +
+   `notebooks/01_overview_setup.py` (a new welcome +
    architecture diagram + Step 0.5 BAML+CocoIndex tutorial pointer
    + Steps 1-4 + nb_utils tour).
 4. Update the `README.md` placeholder in
-   `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/` to the
+   `notebooks/13_baml_cocoindex_tutorial/` to the
    canonical 5-notebook README.
 5. Add `13_baml_cocoindex_tutorial` to the `GROUPS` tuple in
-   `cianfhoghlaim/notebooks/cli.py` so `cianfhoghlaim-marimo list`
+   `notebooks/cli.py` so `cianfhoghlaim-marimo list`
    discovers the 5 entries.
 6. Verify each tutorial AST-parses under Python 3.13
    (`python -c "import ast; ast.parse(open(f).read())"`) and the
    CLI discovery returns 5 entries.
 7. Write the 2 openspec spec deltas (1 MODIFIED on
    `end-to-end-llm-zoomcamp-style-tutorial` adding 2 ADDED
-   requirements; 1 ADDED on `oideachais-marimo-dashboards`).
+   requirements; 1 ADDED on `cianfhoghlaim-marimo-dashboards`).
 8. `openspec validate 2026-07-12-baml-cocoindex-tutorials-v1 --strict`
    must pass before commit.
 9. Single commit + push to `origin/pick-4-biep-v1`.
@@ -144,7 +144,7 @@ reference for Tutorial 1 §7 + Tutorial 2 §7).
 - [x] `end-to-end-llm-zoomcamp-style-tutorial` spec exists with 8
       requirements (6 original + 2 ADDED for the 5-notebook tutorial
       track)
-- [x] `oideachais-marimo-dashboards` spec delta is well-formed
+- [x] `cianfhoghlaim-marimo-dashboards` spec delta is well-formed
       (1 ADDED requirement for the 5 tutorial notebooks)
 - [x] `notebooks/13_baml_cocoindex_tutorial/` contains 5 files
       (`01..05`)

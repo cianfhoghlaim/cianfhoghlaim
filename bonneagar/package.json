@@ -1,0 +1,29 @@
+{
+  "name": "@bonneagar/iac-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Top-level wrapper for the bons IaC scripts. Delegates to iac/package.json — run from here OR cd into iac/ and run the same scripts directly. This file exists so `bun run iac:bootstrap-control-plane-bunchloch` works from the bons standalone bons worktree bons subdir bons subdir bons subdir (the canonical location for the bons IaC).",
+  "private_bons_iac_note": "The canonical bons IaC lives in iac/package.json. This file just delegates so you don't have to cd into iac/ every time. The bons IaC scripts are the source of truth.",
+  "scripts": {
+    "iac:bootstrap": "cd iac && bun run bootstrap",
+    "iac:bootstrap-pocketid-admin": "cd iac && bun run bootstrap-pocketid-admin",
+    "iac:bootstrap-infisical": "cd iac && bun run bootstrap-infisical",
+    "iac:bootstrap-locket-binary": "cd iac && bun run bootstrap-locket-binary",
+    "iac:bootstrap-control-plane": "cd iac && bun run bootstrap-control-plane",
+    "iac:bootstrap-control-plane-bunchloch": "cd iac && bun run bootstrap-control-plane-bunchloch",
+    "iac:bootstrap-control-plane-arm1-oci": "cd iac && bun run bootstrap-control-plane-arm1-oci",
+    "iac:wire-pocketid-as-oidc": "cd iac && bun run wire-pocketid-as-oidc",
+    "iac:deploy-periphery": "cd iac && bun run deploy-periphery",
+    "iac:deploy-newt": "cd iac && bun run deploy-newt",
+    "iac:plan": "cd iac && bun run plan",
+    "iac:deploy": "cd iac && bun run deploy",
+    "iac:health": "cd iac && bun run health",
+    "iac:rotate-auth": "cd iac && bun run rotate-auth",
+    "iac:teardown": "cd iac && bun run teardown --force",
+    "iac:sync:secrets": "cd iac && bun run sync:secrets",
+    "iac:sync:resources": "cd iac && bun run sync:resources",
+    "iac:sync:procedures": "cd iac && bun run sync:procedures",
+    "iac:sync:resource-syncs": "cd iac && bun run sync:resource-syncs"
+  }
+}

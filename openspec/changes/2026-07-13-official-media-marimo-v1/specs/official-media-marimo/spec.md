@@ -3,7 +3,7 @@
 ### Requirement: Five follow-up marimo dashboards at notebooks/09_official_media/03..07_*.py
 
 The system SHALL provide 5 follow-up marimo dashboards at
-`cianfhoghlaim/notebooks/09_official_media/{03..07}_*.py` that
+`notebooks/09_official_media/{03..07}_*.py` that
 visualise the 5 spec requirements of the `official-media-marimo`
 capability. The 5 dashboards SHALL:
 
@@ -13,7 +13,7 @@ capability. The 5 dashboards SHALL:
 4. Render via `uv run marimo run --headless <file>` without runtime
    failure (the headless server should bind to a port and serve the
    notebook).
-5. Read data from `md:oideachais_official_media` (MotherDuck + DuckLake
+5. Read data from `md:cianfhoghlaim_official_media` (MotherDuck + DuckLake
    lakehouse) and fall back gracefully to a synthetic allowlist-derived
    dataset when the lakehouse is unreachable.
 6. Each dashboard SHALL render 3–5 altair visualisations
@@ -41,7 +41,7 @@ The 5 dashboards are:
 #### Scenario: All 5 dashboards AST-parse
 
 - **GIVEN** the 5 dashboards exist at
-  `cianfhoghlaim/notebooks/09_official_media/{03..07}_*.py`
+  `notebooks/09_official_media/{03..07}_*.py`
 - **WHEN** the user runs `ast.parse(open(f).read())` for each
 - **THEN** all 5 files parse without SyntaxError
 

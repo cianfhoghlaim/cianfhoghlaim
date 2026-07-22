@@ -27,7 +27,7 @@ library.
 
 ### 1. DLT source
 
-`cianfhoghlaim/dlt/apple_photos/__init__.py` —
+`dlt/apple_photos/__init__.py` —
 `apple_photos_source()`. Scans `leabharlann/photos/` and yields
 one row per photo with 12 columns (photo_id, capture_date,
 latitude, longitude, camera_model, width, height, file_path,
@@ -114,8 +114,8 @@ surface a `WARN:` log line.
 
 ## Reference
 
-- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/oideachais-leabharlann/spec.md`
-- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/oideachais-cocoindex-v1-migration/spec.md`
+- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/cianfhoghlaim-leabharlann/spec.md`
+- `openspec/changes/2026-06-30-agent-platform-cluster-hermes-cocoindex/specs/cianfhoghlaim-cocoindex-v1-migration/spec.md`
 - `osxphotos` library: https://github.com/RhetTbull/osxphotos (MIT)
 - HMG-precedent cross-frame inference (out of scope; this
   skill mirrors the pattern from the user's prior

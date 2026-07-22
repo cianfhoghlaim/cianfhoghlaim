@@ -1,0 +1,20 @@
+# defs.yaml — Per-subject England AQA Dagster assets (BIEP v2)
+#
+# Per the 2026-07-21-biep-v2-england-aqa-ocr-baml-pipeline-v1 change.
+#
+# 9 subjects × 2 qualification levels × 3 layers = 54 AQA Dagster assets
+# (Layer 1: DLT ingest, Layer 2: BAML Extract, Layer 3: CocoIndex embed).
+
+type: cianfhoghlaim.orchestration.components.EnglandBoardSubjectComponent
+
+attributes:
+  exam_board: aqa
+  baml_function: ExtractAQAQualSpec
+  source_asset: 1_ingestion_curriculum_eng/aqa/subjects
+  partition_strategy: by_board_subject
+  asset_check_kind: row_count
+  namespace_pattern: "cianfhoghlaim.education.british_isles.england.aqa.{subject}.{qualification_level}"
+  cocoindex_app: england_aqa_education_embedding
+  cognify_dataset: cianfhoghlaim_england_aqa
+  automation_cron: "0 6 * * *"
+  dagster_group_name_prefix: "2_materials_curriculum_eng_aqa"

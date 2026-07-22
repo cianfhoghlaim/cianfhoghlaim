@@ -4,7 +4,7 @@
 
 The NCCA strand / outcome / curriculum-spec / assessment-component tree
 changes yearly. Today, every NCCA refresh requires regenerating the
-BAML `.baml` files in `cianfhoghlaim/baml/education/_shared/`
+BAML `.baml` files in `baml/education/_shared/`
 (`strand_outcome.baml` + the 4 NCCA-related class definitions
 `LearningOutcome`, `CurriculumStrand`, `CurriculumSpecStrand`,
 `AssessmentComponentStrand`), which means redeploying the BAML
@@ -190,5 +190,5 @@ all live in the `cianfhoghlaim` monorepo. No `bonneagar/` or
 - [x] `mise run baml:test` adds 0 new validation errors beyond
       the 50 pre-existing out-of-scope errors (verified: 1754
       errors before, 1754 errors after — same count)
-- [x] 1 ADDED Requirement on the `oideachais-baml-schemas` spec
+- [x] 1 ADDED Requirement on the `cianfhoghlaim-baml-schemas` spec
 - [ ] Pushed to `origin/pick-4-biep-v1` (NOT `main`)

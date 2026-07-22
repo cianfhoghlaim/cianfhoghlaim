@@ -20,7 +20,7 @@ operational steps for the **canonical-docs → Cognee** path.
 
 1. **Cognee stack is up**:
    ```bash
-   docker ps --filter "name=cianchoghlaim-cognee" --format "{{.Names}}: {{.Status}}"
+   docker ps --filter "name=cianfhoghlaim-cognee" --format "{{.Names}}: {{.Status}}"
    # Expected: cianfhoghlaim-cognee: Up <N> (healthy)
    ```
    If not running, bring it up:
@@ -99,7 +99,7 @@ The `cognee-ingest` workflow at `.github/workflows/cognee-ingest.yaml`
 - **Schedule trigger**: every Sunday at 04:00 UTC
 - **Required secrets** (configured in repo settings):
   - `COGNEE_API_URL` — the Cognee REST API URL (e.g.
-    `http://cianchoghlaim-cognee:8000` for in-cluster, or
+    `http://cianfhoghlaim-cognee:8000` for in-cluster, or
     `http://localhost:8100` for local)
   - `COGNEE_API_KEY` — the Cognee API key (if configured)
   - `LLM_API_KEY` — the DeepSeek API key (for cognify)
@@ -181,7 +181,7 @@ curl -s http://localhost:8100/api/v1/datasets | jq
 The Cognee REST API isn't reachable. Check:
 
 ```bash
-docker ps --filter "name=cianchoghlaim-cognee" --format "{{.Names}}: {{.Status}}"
+docker ps --filter "name=cianfhoghlaim-cognee" --format "{{.Names}}: {{.Status}}"
 # If not running:
 cd infrastructure/stacks/cognee
 docker compose -f compose.yaml -f sidecar.yaml up -d

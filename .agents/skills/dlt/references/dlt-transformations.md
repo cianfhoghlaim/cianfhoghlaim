@@ -100,9 +100,9 @@ The destination has 3 tables: `raw_text`, `chunk`, `entity`.
 
 The KCG stack uses `dlt.transformer` in:
 
-- `cianfhoghlaim/dlt/british_isles/ireland/` — chain raw pages → parsed
+- `dlt/british_isles/ireland/` — chain raw pages → parsed
   curriculum → BAML-extracted outcomes
-- `cianfhoghlaim/dlt/leabharlann/` — chain Takeout files
+- `dlt/leabharlann/` — chain Takeout files
   → extracted text → BAML entities
 
 ## Reference

@@ -1,0 +1,39 @@
+# =============================================================================
+# OLM (Pangolin Tunnel Client) - ARM1-OCI
+# =============================================================================#
+# The OLM client is a Pangolin tunnel client that provides TCP tunnel
+# access for SSH and database connections to the arm1-oci host.
+#
+# This stack was moved from bonneagar/pangolin/olm-oracle/ to
+# stacks/olm-arm1-oci/ in the v5 drift refactor (see
+# openspec/changes/2026-07-01-bonneagar-v5-drift-refactor-and-komodo-gitops/).
+#
+# USAGE:
+#   Development:  docker compose -f compose.yaml up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# PREREQUISITES:
+#   - Pangolin running and accessible
+#   - OLM site "arm1-oci-olm" created in Pangolin UI
+#   - Credentials stored in Infisical (vault: dev-baile, path: /olm-arm1-oci)
+# =============================================================================
+
+name: olm-arm1-oci
+
+services:
+  olm:
+    image: fosrl/olm:latest
+    container_name: olm-arm1-oci
+    restart: unless-stopped
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      OLM_ID: ${OLM_ID:-}
+      OLM_SECRET: ${OLM_SECRET:-}
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    labels:
+      - "komodo.skip=true"
+    network_mode: host

@@ -1,0 +1,17 @@
+# =============================================================================
+# TINYAUTH - Locket sidecar config (Infisical provider)
+# =============================================================================
+# This file is the SECOND compose in the merge order; Komodo deploys with:
+#   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# The Locket sidecar reads the resolved secrets from Infisical and writes
+# them to /run/secrets/locket/secrets.env. The Tinyauth container then
+# sources that file as its env_file. The 4 secret keys below are the
+# minimum Tinyauth v4 needs to authenticate users via Pocket ID.
+# =============================================================================
+
+services:
+  locket:
+    environment:
+      - INFISICAL_SECRET_PATH=/tinyauth
+      - INFISICAL_SECRET_KEYS=PROVIDERS_POCKETID_CLIENT_ID,PROVIDERS_POCKETID_CLIENT_SECRET

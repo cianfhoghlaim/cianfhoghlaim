@@ -95,7 +95,7 @@ For each of the 30 countries (6 pilot upgrade + 24 new):
    `baml/european_nations/<iso3>/{education,law,medicine}.baml` with
    per-country extraction functions
 4. **1 CocoIndex v1 App** at
-   `cianfhoghlaim/cocoindex/european_nations_<iso3>_education_embedding.py`
+   `cocoindex/european_nations_<iso3>_education_embedding.py`
 5. **6 L1 + 1 L3 Dagster defs**
 6. **1 cache fixture per subject** (6 per country) under
    `stedding/ingest_queue/european_nations/<iso3>/education/subjects/<subject>/<lang>/`
@@ -136,7 +136,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the existing EU nations scaffold (Phase 2)
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the Ireland-level template (Phase 2 BIEP parity)
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `.agents/skills/dlt/SKILL.md` — DLT conventions
 - `.agents/skills/baml/SKILL.md` — BAML schema patterns

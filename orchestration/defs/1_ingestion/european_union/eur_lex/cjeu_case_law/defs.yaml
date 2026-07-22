@@ -1,0 +1,55 @@
+# defs/1_ingestion/european_union/eur_lex/cjeu_case_law/defs.yaml
+#
+# L1 ingestion for the CJEU case-law ingestion. 24 EU official language
+# partition.
+#
+# Reference: openspec/changes/2026-07-11-european-union-official-language-pipeline-v1/
+type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+attributes:
+  source_name: european_union_cjeu_case_law
+  module: cianfhoghlaim.dlt.european_union.eur_lex.cjeu_case_law
+  schedule:
+    cron: "0 3 * * *"
+    timezone: UTC
+  partitions:
+    - region:
+        values: ["european_union"]
+    - institution:
+        values: ["cjeu"]
+    - language:
+        values:
+          - bg
+          - hr
+          - cs
+          - da
+          - nl
+          - en
+          - et
+          - fi
+          - fr
+          - de
+          - el
+          - hu
+          - ga
+          - it
+          - lv
+          - lt
+          - mt
+          - pl
+          - pt
+          - ro
+          - sk
+          - sl
+          - es
+          - sv
+  use_local_scrapes: true
+  asset_check: cjeu_case_law_partition_min
+  asset_check_min_rows: 1
+  tags:
+    - european_union
+    - cjeu
+    - case_law
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-11-european-union-official-language-pipeline-v1
+    spec: european-union-official-language-pipeline

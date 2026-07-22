@@ -1,0 +1,18 @@
+# Bytebase project configuration — manages the "bunchloch" PlanetScale DB.
+# Self-hosted arm1-oci Postgres is the fallback.
+environments:
+  - name: production
+    title: "PlanetScale eu-west-3 (bunchloch)"
+    database:
+      host: eu-west-3.pg.psdb.cloud
+      port: 5432
+      name: bunchloch
+      ssl: require
+    schemas: [vikunja, n8n, calcom, paperless, glance, changedetect]
+
+  - name: fallback
+    title: "arm1-oci self-hosted Postgres (infisical-db)"
+    database:
+      host: infisical-db
+      port: 5432
+    schemas: [vikunja, n8n, calcom, paperless, glance, changedetect]

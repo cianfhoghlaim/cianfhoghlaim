@@ -2,7 +2,7 @@
 
 ## Why
 
-The `oideachais-university-deep-extraction` capability covers the
+The `cianfhoghlaim-university-deep-extraction` capability covers the
 **Tertiary 18+** stage of the K-12 → university pipeline. While the
 existing spec already documents the per-university website
 deep-extraction template (case study: UoG) via 8 requirements
@@ -22,14 +22,14 @@ with the upstream packages:
 | Primary | 4-12 (5-6yo infants + 6-12yo) | `ireland-primary-jc-dlt-baml` |
 | Junior Cycle | 12-15 | `ireland-primary-jc-dlt-baml` |
 | Senior Cycle / Leaving Cert | 15-18 | `british-isles-education-pipeline` |
-| **Tertiary 18+** | **18+ (university + PLC + apprenticeship)** | **`oideachais-university-deep-extraction` (this)** |
+| **Tertiary 18+** | **18+ (university + PLC + apprenticeship)** | **`cianfhoghlaim-university-deep-extraction` (this)** |
 
 the 4 specs collectively cover the full **K-12 → university** pipeline
 (NFQ 1-10) for the Republic of Ireland.
 
 ## What changes
 
-### 1. 5 new DLT sources at `cianfhoghlaim/dlt/british_isles/ireland/university/`
+### 1. 5 new DLT sources at `dlt/british_isles/ireland/university/`
 
 - **`universities.py`** — the **8 Republic of Ireland universities**
   (TCD, UCD, UCC, UoG, UL, DCU, Maynooth, RCSI) per the Universities
@@ -83,7 +83,7 @@ ModuleDescriptor, ProgrammeDescriptor, ReadingListItem). This change
 - **5 new BAML functions** — `ExtractUniversityInfo` +
   `ExtractTuInfo` + `ExtractQQIAward` + `ExtractCAOChoice` +
   `ExtractSOLASCourse`. All route through the canonical `ExtractEn`
-  LiteLLM client (per the `oideachais-baml-schemas` spec → the
+  LiteLLM client (per the `cianfhoghlaim-baml-schemas` spec → the
   `minimax-m3` single text generator from commit `667635dfd`).
 - **3 new tests** — `ExtractUniversityInfoTest` +
   `ExtractQQIAwardTest` + `ExtractCAOChoiceTest` (exercising the
@@ -105,7 +105,7 @@ Per the BIEP v1 `CelticIngestionComponent` pattern (per the
 ### 4. 1 MODIFIED spec delta
 
 Adds 1 ADDED Requirement to the existing
-`oideachais-university-deep-extraction` spec documenting that
+`cianfhoghlaim-university-deep-extraction` spec documenting that
 Phase 1 of the capability is now shipped (5 DLT sources +
 1 BAML extractor + 1 defs.yaml cron asset all working end-to-end).
 
@@ -145,7 +145,7 @@ BAML + Dagster cron template).
 - CocoIndex v1 Apps for Tertiary embeddings (deferred; the existing
   `university_embedding.py` covers the UoG case study).
 - Marimo dashboards for Tertiary 18+ (the
-  `oideachais-marimo-dashboards` spec covers K-12; a Tertiary dashboard
+  `cianfhoghlaim-marimo-dashboards` spec covers K-12; a Tertiary dashboard
   is deferred).
 - QQI Level 5 (NFQ 5) coverage (the SOLAS PLC pathway; the spec
   covers NFQ 6-10 only).
@@ -155,16 +155,16 @@ BAML + Dagster cron template).
 
 ## Cross-references
 
-- [`oideachais-university-deep-extraction` spec](../specs/oideachais-university-deep-extraction/spec.md)
+- [`cianfhoghlaim-university-deep-extraction` spec](../specs/cianfhoghlaim-university-deep-extraction/spec.md)
   — the capability spec this change implements (8 requirements,
   per-university deep-extraction template)
 - [`ireland-primary-jc-dlt-baml` spec](../specs/ireland-primary-jc-dlt-baml/spec.md)
   — the upstream K-12 (Primary + JC) capability
 - [`british-isles-education-pipeline` spec](../specs/british-isles-education-pipeline/spec.md)
   — the Senior Cycle / LC flagship BIEP v1
-- [`oideachais-baml-schemas` spec](../specs/oideachais-baml-schemas/spec.md)
+- [`cianfhoghlaim-baml-schemas` spec](../specs/cianfhoghlaim-baml-schemas/spec.md)
   — the canonical BAML client setup (the `ExtractEn` client → `minimax-m3`)
-- [`oideachais-pipeline` spec](../specs/oideachais-pipeline/spec.md)
+- [`cianfhoghlaim-pipeline` spec](../specs/cianfhoghlaim-pipeline/spec.md)
   — the parent 5-stage capability
 - Commit `9e97ca0ca` — `feat(dlt): ship the BIEP v1 canonical DLT pattern`
   (the canonical DLT source pattern used here)

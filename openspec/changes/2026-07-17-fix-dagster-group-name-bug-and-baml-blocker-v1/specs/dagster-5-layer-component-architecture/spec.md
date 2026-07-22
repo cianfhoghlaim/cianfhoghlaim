@@ -34,11 +34,11 @@ The system SHALL enforce:
   (alias `get_default_for_m4_max`) SHALL be exposed for M4-Max
   hardware dispatch. It returns the canonical low-VRAM model selection
   using the same `"select_ocr_backend"` pattern from
-  `oideachais-cocoindex-v1/SKILL.md`.
+  `cianfhoghlaim-cocoindex-v1/SKILL.md`.
 
 #### Scenario: No legacy `@schedule` exists
 
-- **WHEN** `ccc search "@schedule\(" cianfhoghlaim/dagster/` runs
+- **WHEN** `ccc search "@schedule\(" dagster/` runs
 - **THEN** 0 hits SHALL appear
 - **AND** `dg list schedules` returns 0 schedules
 - **AND** `dg list defs --json | jq '.[] | select(.automation_condition != null) | .key' | wc -l` returns at least 260
@@ -58,7 +58,7 @@ The system SHALL enforce:
 
 #### Scenario: All `group_name` values MUST match `^[A-Za-z0-9_]+$`
 
-- **WHEN** `python3 -c "import re, glob; [print(f) for f in sorted(glob.glob('cianfhoghlaim/orchestration/**/*.py', recursive=True)) if re.search(r'group_name\\s*=\\s*\"[^\"]*/[^\"]*\"', open(f).read())]"` runs
+- **WHEN** `python3 -c "import re, glob; [print(f) for f in sorted(glob.glob('orchestration/**/*.py', recursive=True)) if re.search(r'group_name\\s*=\\s*\"[^\"]*/[^\"]*\"', open(f).read())]"` runs
 - **THEN** 0 files are printed
 - **AND** `dg.load_defs()` from `dagster.load_defs` returns successfully (no Pydantic validation error)
 - **AND** the post-migration count is 63+ group_name values across 11 files, all matching the regex

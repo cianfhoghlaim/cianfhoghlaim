@@ -20,7 +20,7 @@ while preserving every short ID. It does NOT touch:
 - `source_id` strings
 - asset keys
 - Dagster partition values (`country: ["deu"]`)
-- DuckLake table names (`oideachais.<...>.<iso3>...`)
+- DuckLake table names (`cianfhoghlaim.<...>.<iso3>...`)
 - cache directory names
 - BAML parameter names (`nation: string`)
 
@@ -108,7 +108,7 @@ class GermanyEducationChunk:
     """A chunk for the Germany education pipeline."""
 ```
 
-The `TABLE_NAME` stays `oideachais.lc.european_nations.deu.education_chunks`.
+The `TABLE_NAME` stays `cianfhoghlaim.lc.european_nations.deu.education_chunks`.
 
 ## Sub-state convention
 
@@ -155,7 +155,7 @@ Affected repos: cianfhoghlaim (single-repo change)
 - All MotherDuck Dive descriptions use full country names
 - All CocoIndex v1 App descriptions use full country names
 - **No file paths, module names, source_id strings, partition values, table names, cache directory names, BAML parameter names were renamed**
-- `git grep "DE " cianfhoghlaim/dlt/european_nations/` returns 0 short-code-in-comment hits (every short ID must be wrapped in display strings only)
+- `git grep "DE " dlt/european_nations/` returns 0 short-code-in-comment hits (every short ID must be wrapped in display strings only)
 - `git grep "nga_los" cianfhoghlaim/` still returns the existing matches (file paths preserved)
 - All existing 5 commits still build + validate
 - `dg check yaml` passes
@@ -168,7 +168,7 @@ Affected repos: cianfhoghlaim (single-repo change)
   the umbrella contract
 - [`british-isles-education-pipeline`](../british-isles-education-pipeline/spec.md) —
   the BIEP spec (light touch)
-- [`oideachais-pipeline`](../oideachais-pipeline/spec.md) —
+- [`cianfhoghlaim-pipeline`](../cianfhoghlaim-pipeline/spec.md) —
   the parent pipeline
 - `openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/` —
   the change this rename complements

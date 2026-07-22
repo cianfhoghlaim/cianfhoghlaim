@@ -1,0 +1,31 @@
+# defs/2_materials/legal_research/ireland_legal_extraction/defs.yaml
+#
+# L2 CelticMaterialsComponent for the Ireland Legal Pipeline.
+# 9 BAML extraction functions in
+# cianfhoghlaim/baml_src/processing/ireland_legal_extraction.baml:
+#
+#   - b.ExtractPIABPage             → cianfhoghlaim.law.ie.piab_pages
+#   - b.ExtractCourtForm            → cianfhoghlaim.law.ie.courts_forms
+#   - b.ExtractJudgement            → cianfhoghlaim.law.ie.judgements
+#   - b.ExtractCourtFee             → cianfhoghlaim.law.ie.court_fees
+#   - b.ExtractCourtRule            → cianfhoghlaim.law.ie.court_rules
+#   - b.ExtractWRCDecision          → cianfhoghlaim.law.ie.wrc_decisions
+#   - b.ExtractWRCProcedure         → cianfhoghlaim.law.ie.wrc_pages
+#   - b.ExtractCitizensInfoArticle  → cianfhoghlaim.law.ie.citizensinfo_articles
+#   - b.ExtractGovIEPressRelease    → cianfhoghlaim.law.ie.gov_ie_pages
+#   - b.LinkStatutesToActs          → cianfhoghlaim.law.ie.statute_links
+#
+# Plus the cross-source `LinkStatutesToActs` function that joins the
+# extracted `statutes_cited` arrays to
+# cianfhoghlaim.education.ie.irish_statute_book.acts.
+#
+# Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
+type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.ExtractPIABPage
+  source_asset: 1_ingestion/law/ie/injuries_board
+  partition_strategy: by_nation
+  asset_check_kind: row_count
+  subject: ireland_legal
+  language: en
+  automation_cron: "0 6 * * *"
