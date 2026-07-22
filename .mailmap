@@ -1,0 +1,20 @@
+# .mailmap — map false-attribution authors to the canonical human identity.
+#
+# GitHub honors this file when rendering the Contributors graph + PR commit
+# lists + blame views: any commit with the wrong-side identity will be
+# displayed as the proper-side identity, even though the raw SHA stays
+# unchanged. This is the standard fix for "Claude Code committed with author
+# Claude <claude@anthropic.com> but the work was actually done on behalf of
+# the human user via the user's agent runtime (OpenCode + MiniMax-M3 here)".
+#
+# Format (each line):
+#   Proper Name <proper@email>  <wrong@email>          # short form (keeps wrong name)
+#   Proper Name <proper@email>  Wrong Name <wrong@em>  # full form
+
+# Claude Code's hardcoded author identity → the user's primary human identity.
+# 3 commits on main with this author (the `feat(lc-2026): end-to-end Leaving
+# Cert pipeline working` series) — they were authored when the user's
+# workflow accidentally invoked Claude Code through scripts/claude-with-secrets.sh
+# before that script was retired in the 2026-07-21-purge-claude-coauthor-trailer
+# openspec change.
+cianfhoghlaim <cianmacliathain@gmail.com> <claude@anthropic.com>
