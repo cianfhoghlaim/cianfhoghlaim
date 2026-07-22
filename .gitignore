@@ -361,3 +361,5 @@ id_*
 
 # TypeScript build artefacts
 *.tsbuildinfo
+# Scratch directory (session artifacts + filter-repo audit maps)
+.scratch/
