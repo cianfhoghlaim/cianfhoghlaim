@@ -1,0 +1,139 @@
+# =============================================================================
+# DEPLOY-BUNCHLOCH-INFISICAL-FALLBACK-V1 PROCEDURE
+# =============================================================================
+# Companion to openspec/changes/2026-07-24-deploy-openclaw-hermes-bunchloch-local-infisical-fallback-v1
+#
+# Brings up a local Infisical vault on bunchloch (port 8081, no Pangolin
+# routing) when the arm1-oci Pangolin private resource for
+# infisical.cianfhoghlaim.ie is returning 502 Bad Gateway.
+#
+# Architecture (during the fallback window):
+#   bunchloch (MacBook M4) — infisical-backend (:8081 host -> :8081 container)
+#                            infisical-db (postgres:16-alpine)
+#                            infisical-redis (redis:7.4-alpine)
+#                            openclaw (:18789, with locket sidecar)
+#                            hermes (:9119, with locket sidecar)
+#   Routed via: NONE (Pangolin is intentionally bypassed)
+#   Locket: /etc/komodo/secrets/infisical_secret (mounted by Periphery)
+#
+# The procedure does NOT touch arm1-oci. The OCI repair is the follow-up
+# change 2026-07-24-iac-sync-sites-pangolin-private-infisical-repair-v1.
+#
+# Usage:
+#   km run procedure deploy-bunchloch-infisical-fallback-v1
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-bunchloch-infisical-fallback-v1"
+description = "Emergency fallback: local Infisical vault on bunchloch (port 8081) when arm1-OCI Pangolin private resource returns 502 — preflight -> compose up -> seed vault -> locket healthcheck -> openclaw + hermes"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Preflight (verify OCI is broken, NOT the local side)
+# =============================================================================
+# Hard preflight per the v6-drift change. The OCI preflight is permitted
+# to FAIL on the Infisical check (that's the trigger for this procedure);
+# Pangolin + Komodo + namespace checks must PASS.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run preflight:arm-oci --skip-namespace 2>&1 | tee /tmp/preflight-arm-oci-fallback-$(date -u +%Y%m%dT%H%M%SZ).log | grep -E '(Pangolin health|Komodo health|Infisical health)'", timeout_s = 30, description = "Verify OCI Infisical is unhealthy (Pangolin + Komodo must still be reachable; Infisical check expected to FAIL with 502)", require_success = false } }
+
+# =============================================================================
+# STAGE 1: External network + Periphery mount dir
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "network-and-mount"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker network create bunchloch-infra 2>&1 || true", timeout_s = 10, description = "Create the bunchloch-infra external bridge network (idempotent)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /etc/komodo/secrets && chmod 0755 /etc/komodo/secrets", timeout_s = 10, description = "Create the Periphery mount dir for infisical_secret (mode 0755 — the file itself is 0600)" } }
+
+# =============================================================================
+# STAGE 2: Bring up local Infisical
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "infisical-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/infisical && docker compose pull 2>&1 | tail -10", timeout_s = 180, description = "Pull the 3 Infisical images (backend + postgres + redis)", require_success = false } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/infisical && docker compose up -d 2>&1 | tail -20", timeout_s = 120, description = "Start the local Infisical stack (postgres + redis + backend)", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..24}; do sleep 5; STATUS=$(curl -ksS -o /dev/null -w '%{http_code}' http://127.0.0.1:8081/api/status 2>&1); if [ \"$STATUS\" = '200' ]; then echo \"OK: infisical /api/status returned 200 after ${i} attempts\"; break; fi; echo \"waiting for infisical... attempt $i (status=$STATUS)\"; done; if [ \"$STATUS\" != '200' ]; then echo 'ERROR: local infisical never returned 200 after 120s'; exit 1; fi", timeout_s = 180, description = "Poll http://127.0.0.1:8081/api/status until 200 (max 120s)", require_success = true } }
+
+# =============================================================================
+# STAGE 3: Seed the dev-baile project (operator runs seed script in browser)
+# =============================================================================
+# The seed script is interactive — it requires the operator to capture
+# PROJECT_ID + CLIENT_ID + CLIENT_SECRET from a browser session at
+# http://127.0.0.1:8081. We print the instructions and require the
+# operator to run the seed script manually; the procedure then verifies
+# the secrets file was written.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "seed-vault"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "echo 'ACTION REQUIRED: open http://127.0.0.1:8081 in a browser, sign up first user, create project dev-baile, create machine identity bons-iac, capture CLIENT_ID + CLIENT_SECRET. Then run: INFISICAL_PROJECT_ID=... INFISICAL_CLIENT_ID=... INFISICAL_CLIENT_SECRET=... bun run scripts/seed-bunchloch-fallback-vault.sh'; echo 'Press Enter when seed script has completed successfully'; read -r", timeout_s = 300, description = "Operator: sign up at http://127.0.0.1:8081, create dev-baile project + bons-iac machine identity, then run seed-bunchloch-fallback-vault.sh" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "test -f /etc/komodo/secrets/infisical_secret && (test $(stat -f %a /etc/komodo/secrets/infisical_secret) = '600' || echo 'WARNING: infisical_secret mode is not 0600') && echo 'OK: /etc/komodo/secrets/infisical_secret present'", timeout_s = 10, description = "Verify the seed script wrote /etc/komodo/secrets/infisical_secret (mode 0600)", require_success = true } }
+
+# =============================================================================
+# STAGE 4: Locket + agent surfaces
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "agent-surfaces"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mise run iac:bootstrap-locket-binary 2>&1 | tail -5 || (command -v locket >/dev/null 2>&1 && echo 'locket binary already present')", timeout_s = 60, description = "Install /usr/local/bin/locket via the bons IaC (idempotent)", require_success = false } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "INFISICAL_URL=http://127.0.0.1:8081 locket --provider=infisical --infisical-client-id=$INFISICAL_CLIENT_ID --infisical-client-secret=file:/etc/komodo/secrets/infisical_secret --map=/tmp/locket-smoke:/tmp/locket-smoke --mode=oneshot healthcheck 2>&1 | tail -10", timeout_s = 30, description = "Smoke-test locket against the LOCAL Infisical vault (expect >= 16 resolved secrets)", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/openclaw && docker compose -f compose.yaml -f sidecar.yaml up -d 2>&1 | tail -15", timeout_s = 120, description = "Start the openclaw stack (openclaw + openclaw-locket)", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/hermes && docker compose -f compose.yaml -f sidecar.yaml up -d 2>&1 | tail -15", timeout_s = 120, description = "Start the hermes stack (hermes + hermes-locket)", require_success = true } }
+
+# =============================================================================
+# STAGE 5: Health checks
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker ps --filter 'name=openclaw|hermes' --format 'table {{.Names}}\\t{{.Status}}'", timeout_s = 15, description = "openclaw + hermes + locket containers are Up" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -fsS http://openclaw:18789/api/health 2>&1 | head -3", timeout_s = 10, name = "openclaw-health", description = "openclaw /api/health returns 200", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -fsS http://hermes:9119/api/health 2>&1 | head -3", timeout_s = 10, name = "hermes-health", description = "hermes /api/health returns 200", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs openclaw-locket --tail 20 2>&1 | grep -E 'secrets resolved' | tail -1", timeout_s = 10, description = "openclaw-locket reports secrets resolved (openclaw/health tier check)" } }
+
+# =============================================================================
+# STAGE 6: Audit record
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "audit"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "TS=$(date -u +%Y%m%dT%H%M%SZ); cat > /tmp/bunchloch-infisical-fallback-${TS}.json <<EOF\n{\n  \"ts\": \"$TS\",\n  \"action\": \"deploy-bunchloch-infisical-fallback-v1\",\n  \"host\": \"bunchloch\",\n  \"trigger\": \"arm1-oci pangolin private resource for infisical.cianfhoghlaim.ie returning 502\",\n  \"vault_url\": \"http://127.0.0.1:8081\",\n  \"vault_project\": \"dev-baile\",\n  \"machine_identity\": \"bons-iac\",\n  \"agent_surfaces\": [\"openclaw\", \"hermes\"],\n  \"komodo_procedure\": \"deploy-bunchloch-infisical-fallback-v1\",\n  \"openspec_change\": \"2026-07-24-deploy-openclaw-hermes-bunchloch-local-infisical-fallback-v1\"\n}\nEOF\necho \"wrote audit record: /tmp/bunchloch-infisical-fallback-${TS}.json\"", timeout_s = 10, description = "Write a JSON audit record to /tmp/bunchloch-infisical-fallback-${TS}.json" } }
