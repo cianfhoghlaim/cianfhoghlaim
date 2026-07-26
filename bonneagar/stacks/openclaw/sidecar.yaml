@@ -54,7 +54,14 @@ services:
     depends_on:
       locket:
         condition: service_healthy
-    user: "65532:65532"
+    # No user: override — the upstream Dockerfile sets USER 1000:1000.
+    # Overriding to 65532:65532 (nobody) breaks Docker's tmpfs mode:1777
+    # security policy under no-new-privileges (docker daemon refuses
+    # the world-writable tmpfs for an unprivileged user). The tmpfs
+    # mode:1777 is required by the openclaw binary for its /tmp scratch
+    # space. The locket stack-secrets volume is world-readable (mode
+    # 755 in the volumes: driver_opts below) so user 1000 can still
+    # read /run/secrets/locket/secrets.env.
     volumes:
       - stack-secrets:/run/secrets/locket:ro
     # The /run/secrets/locket/secrets.env file is materialized by the locket
@@ -62,12 +69,6 @@ services:
     # upstream `node openclaw.mjs gateway` CMD (Dockerfile line 67-68). This
     # sidesteps docker compose's parse-time env_file validation (which would
     # reject /run/secrets/* even though it's a runtime path).
-    #
-    # The openclaw container runs as uid 65532 to match the locket sidecar
-    # (so it can read /run/secrets/locket/*); the upstream Dockerfile's USER
-    # is 1000 but the openclaw.mjs gateway writes its state to
-    # OPENCLAW_STATE_DIR which we mount as a volume (so the uid mismatch
-    # doesn't matter for the on-disk state).
     command:
       - /bin/sh
       - -c
@@ -75,7 +76,34 @@ services:
         set -a
         . /run/secrets/locket/secrets.env
         set +a
-        exec node openclaw.mjs gateway
+        exec node openclaw.mjs gateway --allow-unconfigured
+
+  # Locket chmod init — runs once, after the locket sidecar is healthy.
+  # The locket binary (uid 65532) writes /run/secrets/locket/secrets.env
+  # with mode 600 (user-only). This init container chmod's the file to
+  # mode 644 so the consumer (openclaw, user 1000) can read it.
+  openclaw-chmod-init:
+    image: alpine:3.20
+    user: "0:0"
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        if [ -f /run/secrets/locket/secrets.env ]; then
+          chmod 644 /run/secrets/locket/secrets.env
+          echo "OK: /run/secrets/locket/secrets.env chmod'd to 644"
+        else
+          echo "ERROR: /run/secrets/locket/secrets.env not found"
+          exit 1
+        fi
+    restart: "no"
+    networks:
+      - stack
 
 secrets:
   infisical_secret:

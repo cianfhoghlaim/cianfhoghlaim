@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/openclaw/openclaw/main/schema/openclaw.config.schema.json",
   "version": "1.0",
   "gateway": {
+    "mode": "local",
     "port": 18789,
     "bridge_port": 18790,
     "log_level": "info",

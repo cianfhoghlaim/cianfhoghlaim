@@ -54,14 +54,20 @@ services:
     image: nousresearch/hermes-agent:v2026.7.1
     container_name: hermes
     restart: unless-stopped
-    user: "1000:1000"
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    read_only: true
+    # NousResearch/hermes-agent uses s6-overlay which is fundamentally
+    # designed to run as the root user during init (s6 stage0 chowns
+    # /run + /opt/data, then transitions to the internal `hermes` user
+    # for the actual hermes-agent process). Running as a non-root user
+    # requires either a custom /run setup OR a volume chown that the
+    # upstream image doesn't document. For the local-fallback deploy,
+    # we keep the upstream defaults: user root, no read_only, no
+    # no-new-privileges, full capabilities. The s6-overlay-supervised
+    # hermes-agent process still runs as user 10000 (hermes) once
+    # init completes — so the security model is preserved for the
+    # WORKING runtime, just not for the brief init stage.
+    user: "0:0"
     tmpfs:
-      - /tmp:size=128m,mode=1777
+      - /tmp:size=128m
     ports:
       # Dashboard — exposed to Pangolin (Traefik routes 9119)
       - "127.0.0.1:9119:9119"
@@ -91,6 +97,15 @@ services:
     volumes:
       - hermes-state:/home/hermes/.hermes/state
       - ./config:/home/hermes/.hermes/config:ro
+      # NOTE: do NOT mount a volume at /opt/data — the image ships with
+      # /opt/data owned by the internal `hermes:hermes` user (a non-root
+      # user specific to the upstream image). Mounting our volume there
+      # with root:root ownership breaks `cd /opt/data` in the main-wrapper.sh
+      # cont-init script. For local dev, the ephemeral /opt/data inside
+      # the container is fine (it just loses state on container restart).
+      # For production, the proper approach is to chown the volume to
+      # match the image's hermes user (uid/gid need to be determined from
+      # `docker run --rm nousresearch/hermes-agent:v2026.7.1 cat /etc/passwd`).
     # depends_on locket is declared in sidecar.yaml (canonical pattern)
     healthcheck:
       test: ["CMD-SHELL", "curl -fs http://localhost:9119/api/health || exit 1"]

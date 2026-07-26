@@ -8,10 +8,16 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    read_only: true
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-path=/langfuse"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -20,16 +26,20 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
+      test: ["CMD", "locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 5s
     networks:
-      - default
+      - langfuse
+      - lakehouse
 
-  # langfuse-web: depends on locket (already in compose.dev.yaml override;
-  # this sidecar override is the runtime version)
+  # langfuse-web + langfuse-worker receive resolved secrets via the
+  # .env file at ~/.komodo-stacks/langfuse/.env (auto-loaded by docker
+  # compose). The locket sidecar is also mounted (read-only) for the
+  # future when the langfuse services are upgraded to source
+  # /run/secrets/locket/secrets.env.
   langfuse-web:
     depends_on:
       locket:
@@ -46,7 +56,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
 
 volumes:
   stack-secrets:
@@ -54,4 +64,12 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+      o: uid=65532,gid=65532,mode=755
+
+networks:
+  langfuse:
+    external: true
+    name: langfuse_langfuse
+  lakehouse:
+    external: true
+    name: lakehouse_lakehouse

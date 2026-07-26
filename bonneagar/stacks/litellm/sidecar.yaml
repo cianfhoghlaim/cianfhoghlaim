@@ -8,10 +8,16 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    read_only: true
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-path=/litellm"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -20,7 +26,7 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -28,10 +34,10 @@ services:
     networks:
       - stack
 
-  # litellm service needs the secrets injected (volume mount only;
-  # the env_file path /run/secrets/locket/secrets.env isn't used after
-  # the centralise-data-plane rewrite — secrets come from the lakehouse
-  # stack via the shared secrets.env + the centralised env vars)
+  # litellm service — receives resolved secrets via the .env file at
+  # ~/.komodo-stacks/litellm/.env (auto-loaded by docker compose). The
+  # locket sidecar is also mounted (read-only) for the future when the
+  # litellm service is upgraded to source /run/secrets/locket/secrets.env.
   litellm:
     depends_on:
       locket:
@@ -41,7 +47,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical/infisical_secret
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
 
 volumes:
   stack-secrets:
@@ -49,7 +55,7 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+      o: uid=65532,gid=65532,mode=755
 
 networks:
   stack:

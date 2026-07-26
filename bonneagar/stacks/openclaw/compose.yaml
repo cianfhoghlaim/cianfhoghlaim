@@ -39,7 +39,7 @@ services:
       - ALL
     read_only: true
     tmpfs:
-      - /tmp:size=64m,mode=1777
+      - /tmp:size=64m
     ports:
       # WebSocket RPC — exposed to Pangolin (Traefik routes 18789)
       - "127.0.0.1:18789:18789"

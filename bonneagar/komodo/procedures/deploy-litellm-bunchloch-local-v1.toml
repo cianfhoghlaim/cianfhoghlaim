@@ -1,0 +1,83 @@
+# =============================================================================
+# DEPLOY-LITELLM-BUNCHLOCH-LOCAL-V1 PROCEDURE
+# =============================================================================
+# Brings up the LiteLLM M3 chokepoint gateway on bunchloch using the LOCAL
+# Infisical fallback (bypasses the broken OCI private resource). The
+# gateway uses the centralised lakehouse-postgres for its model registry
+# (db=litellm) and litellm locket sidecar pattern for secret resolution.
+#
+# Architecture:
+#   bunchloch — litellm (:4000 host → :4000 container, OpenAI-compatible API)
+#              litellm-locket (Locket sidecar, Infisical secret injection)
+#   Routed through: openclaw + hermes (when their locket bug is fixed)
+#   Backend:     lakehouse-postgres (db=litellm) + Langfuse (otlp tracing)
+#
+# Secrets: 7 litellm + 11 LLM providers + 9 lakehouse (already seeded by
+# `seed-bunchloch-litellm-langfuse-fallback.sh`).
+#
+# Usage:
+#   km run procedure deploy-litellm-bunchloch-local-v1
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-litellm-bunchloch-local-v1"
+description = "Deploy LiteLLM on bunchloch using the local Infisical fallback + local lakehouse — preflight → infisical → compose up → health check"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Pre-flight (verify lakehouse + infisical are up)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker ps --filter name=lakehouse-postgres --filter name=infisical-backend --format '{{.Names}} {{.Status}}' | head -3", timeout_s = 10, name = "lakehouse-and-infisical-up", description = "Verify lakehouse-postgres and infisical-backend are running (prerequisites for LiteLLM)", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://127.0.0.1:8081/api/status", expected_status = 200, timeout_s = 10, name = "local-infisical-healthy", description = "Local Infisical vault is healthy" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker exec lakehouse-postgres psql -U lakekeeper -d postgres -c '\\l' | grep -E 'litellm' | wc -l", timeout_s = 10, name = "litellm-db-exists", description = "Verify the litellm database has been created in lakehouse-postgres" } }
+
+# =============================================================================
+# STAGE 1: Bons-iac credential + symlinks
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "test -f ~/.locket/infisical_secret && test $(stat -f %a ~/.locket/infisical_secret) = '600' && echo 'OK: bons-iac credential present and mode 0600'", timeout_s = 10, name = "bons-iac-credential", description = "Verify the bons-iac Universal Auth credential file exists and is mode 0600" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mkdir -p ~/.komodo-stacks/litellm && for f in ~/dev/kings_college_galway/bonneagar/stacks/litellm/* ~/dev/kings_college_galway/bonneagar/stacks/litellm/.[!.]*; do [ -e \"$f\" ] && ln -sf \"$f\" ~/.komodo-stacks/litellm/; done && ls ~/.komodo-stacks/litellm/ | wc -l", timeout_s = 10, name = "litellm-symlinks", description = "Symlink the litellm stack files into ~/.komodo-stacks/litellm/" } }
+
+# =============================================================================
+# STAGE 2: LiteLLM up
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "litellm-up"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd ~/.komodo-stacks/litellm && set -a && . ./.env.local && . ./.env && set +a && docker compose -f compose.yaml -f sidecar.yaml -f compose.local.yaml up -d 2>&1 | tail -8", timeout_s = 180, name = "litellm-compose-up", description = "Bring up the litellm stack (litellm + litellm-locket)", require_success = true } }
+
+# =============================================================================
+# STAGE 3: Health checks
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "sleep 30 && docker ps --filter name=litellm --format 'table {{.Names}}\\t{{.Status}}'", timeout_s = 40, name = "litellm-up", description = "Verify litellm + litellm-locket are Up" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:4000/health/liveliness", expected_status = 200, timeout_s = 15, name = "health-check-liveliness", description = "LiteLLM /health/liveliness returns 200" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:4000/health/readiness", expected_status = 200, timeout_s = 15, name = "health-check-readiness", description = "LiteLLM /health/readiness returns 200" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -sS http://localhost:4000/v1/models -H \"Authorization: Bearer $(grep LITELLM_MASTER_KEY ~/.komodo-stacks/litellm/.env | cut -d= -f2)\" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(f\"  models endpoint returns {len(d.get(\\\"data\\\",[]))} models (gateway up)\")'", timeout_s = 10, name = "models-endpoint", description = "Verify the /v1/models endpoint returns 200 (the auth + gateway are functional)" } }

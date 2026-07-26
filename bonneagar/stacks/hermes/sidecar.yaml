@@ -8,7 +8,13 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    read_only: true
+    # NOTE: read_only: true causes the locket to fall back to passthrough
+    # mode (it can't create the .tmp.<id> atomic-write staging file on a
+    # read-only rootfs). The locket DOES NOT NEED read_only for security
+    # because it only writes to /run/secrets/locket/* which is a dedicated
+    # tmpfs volume (driver_opts mode:755). We keep cap_drop: [ALL] +
+    # no-new-privileges for the rest of the hardening.
+    read_only: false
     environment:
       INFISICAL_URL: ${INFISICAL_URL}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
@@ -42,7 +48,13 @@ services:
     depends_on:
       locket:
         condition: service_healthy
-    user: "65532:65532"
+    # No user: override — the upstream NousResearch/hermes-agent image uses
+    # s6-overlay which requires running as a specific user (the WORKDIR is
+    # owned by root and s6-overlay checks /run ownership at init). Overriding
+    # to 65532:65532 (nobody) triggers the `fatal: /run belongs to uid 0
+    # instead of 65532` s6-overlay error. The locket stack-secrets volume is
+    # world-readable (mode 755 in the volumes: driver_opts below) so the
+    # upstream user can read /run/secrets/locket/secrets.env.
     volumes:
       - stack-secrets:/run/secrets/locket:ro
     # The /run/secrets/locket/secrets.env file is materialized by the locket
@@ -58,6 +70,33 @@ services:
         . /run/secrets/locket/secrets.env
         set +a
         exec hermes-agent gateway
+
+  # Locket chmod init — runs once, after the locket sidecar is healthy.
+  # The locket binary (uid 65532) writes /run/secrets/locket/secrets.env
+  # with mode 600 (user-only). This init container chmod's the file to
+  # mode 644 so the consumer (hermes) can read it.
+  hermes-chmod-init:
+    image: alpine:3.20
+    user: "0:0"
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        if [ -f /run/secrets/locket/secrets.env ]; then
+          chmod 644 /run/secrets/locket/secrets.env
+          echo "OK: /run/secrets/locket/secrets.env chmod'd to 644"
+        else
+          echo "ERROR: /run/secrets/locket/secrets.env not found"
+          exit 1
+        fi
+    restart: "no"
+    networks:
+      - stack
 
 secrets:
   infisical_secret:
