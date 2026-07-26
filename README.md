@@ -7,6 +7,78 @@
 [![License](https://img.shields.io/badge/license-BUSL_1.1-green)](LICENSE.md)
 [![v7 flat](https://img.shields.io/badge/v7-flattened_2026--07--17-informational)](openspec/changes/2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/)
 
+> **Useful companion resources:** To understand the container, data, indexing,
+> storage, and infrastructure patterns used throughout this project, see the
+> hands-on labs at [iximiuz Labs](https://labs.iximiuz.com/), the database
+> references at [DBQuacks](https://dbquacks.com/), and the official
+> documentation, blogs, and examples for
+> [CocoIndex](https://cocoindex.io/), [dlt](https://dlthub.com/docs/),
+> [LanceDB](https://lancedb.com/), [DuckDB](https://duckdb.org/docs/),
+> [MotherDuck](https://motherduck.com/docs/), [Komodo](https://komo.do/), and
+> [Pangolin](https://docs.pangolin.net/). These are useful external guides to
+> the key technologies and design choices represented in the repository.
+
+---
+
+## Addendum — A note for anyone looking at this project right now
+
+> **The project is sprawling on purpose.** It is a research-and-deployment
+> platform for the British Isles education corpus, an agentic AI fleet, a
+> self-hosted infrastructure mesh, and a minority-language ML playground
+> — all federated by a single `bun + uv + turbo` monorepo. Because the
+> goal is a deliberately overcomplicated Master's completed in a year,
+> many subsystems that *do* work are partially obscured by the design
+> choices meant for *my* team's downstream use. Read this section before
+> forming an opinion about the repo.
+>
+> **The value for anyone looking at this project today is in the
+> specific combinations of already well-calculated open-source
+> packages.** The data engineering (DLT + Dagster + BAML + CocoIndex +
+> DuckLake + LanceDB + MotherDuck + Marimo), the DevOps (Komodo +
+> Pangolin + Infisical + Locket + Pocket ID + Traefik + Garage S3), the
+> web-development (TanStack Start + Convex + Hono + CopilotKit + oRPC +
+> AG-UI + Cloudflare), and the agent layer (Agno + Google ADK + Pydantic
+> AI + LiteLLM + Letta + Cognee + Graphiti + Langfuse + MLflow) are each
+> real, working open-source compositions. You can copy any slice
+> independently.
+>
+> **You can take the same data pipelines and rewire them for any other
+> jurisdiction.** The `dlt_sources/` + `baml_src/` + `cocoindex/` +
+> `motherduck/` + `notebooks/` stack already produces the official
+> legal, medical, education, and government documents for the British
+> Isles. Retargeting it for, say, the US CMS, the WHO IRIS repository,
+> the *Bundesministerium für Bildung*, or the French *Ministère de
+> l'Éducation* means changing the jurisdiction enum, the BAML schemas,
+> the scrape cache roots, and the destination namespaces — the core
+> pipeline shape stays the same. Use `USE_LOCAL_SCRAPES=true` while you
+> rebuild; the curated cache at `stedding/ingest_queue/` lets you iterate
+> without spending scrape credits.
+>
+> **The cheapest way to do this is a cheap coding agent.** A
+> €20/month **Gemini Deep Research Pro** subscription is the right tool
+> for the *first* hour — finding the authoritative ministry, exam-board,
+> or medical-register endpoints and the licensing constraints. A
+> **MiniMax coding plan** (or the local **OpenCode Go** CLI) is the right
+> tool for the *next* two days — the iterative file-local refactor
+> across `dlt_sources/` + `baml_src/` + `cocoindex/` + `motherduck/`.
+> **GitHub Copilot** is a fine runner-up for single-file edits. None of
+> them need the full monorepo.
+>
+> **Use my notes as a blueprint for your own deep-research tangent.**
+> The [`leabharlann`](https://github.com/cianfhoghlaim/leabharlann)
+> repository (3.4 GB, 216 docs × 6 subdirs) holds the source materials
+> that informed *every* sub-agent, BAML schema, and CocoIndex flow in
+> this repo. They are unique to my circumstances; treat them as a
+> worked example of *how* to do a deep-research tangent in this domain,
+> not as *what* to copy. The benefit of doing this kind of testing with
+> the named tools is that you get a working knowledge graph + a working
+> pipeline + a working dashboard in roughly one weekend.
+>
+> **The full per-area deep-cuts report — what each package composes,
+> which 3-5 files to copy, which 5 lines to change, which 1 assumption
+> is hardest to escape, and which coding agent to point at which job
+> — lives at [`docs/CHOP_AND_CHANGE_GUIDE.md`](docs/CHOP_AND_CHANGE_GUIDE.md).**
+
 ---
 
 > ## ⚠️ Important Disclaimer
@@ -888,7 +960,7 @@ p. 6).
 
 
 <!-- AGENT_TELEMETRY_START -->
-> **Agent Telemetry (Last Updated: 2026-07-19 01:52:53 UTC)**
+> **Agent Telemetry (Last Updated: 2026-07-22 22:11:25 UTC)**
 > - **Total Cached Structural Documents:** 0
 > - **Examinations.ie Cache:**        0 files
 > - **NCCA.ie Cache:**        0 files
