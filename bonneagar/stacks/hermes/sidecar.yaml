@@ -9,10 +9,19 @@ services:
     cap_drop:
       - ALL
     read_only: true
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      # NOTE: --infisical-default-project-id and --infisical-default-environment
+      # are intentionally NOT passed as CLI flags — see openclaw/sidecar.yaml
+      # for the same comment. The INFISICAL_PROJECT_ID + INFISICAL_ENV env
+      # vars (declared in the `environment:` block above) drive these values.
+      - "--infisical-default-path=/hermes"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -21,7 +30,7 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -33,16 +42,26 @@ services:
     depends_on:
       locket:
         condition: service_healthy
+    user: "65532:65532"
     volumes:
       - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-    # env_file path is intentionally a runtime path; only resolves after
-    # locket sidecar hydrates /run/secrets/locket/secrets.env at container start.
+    # The /run/secrets/locket/secrets.env file is materialized by the locket
+    # sidecar at container start. We source it via a shell wrapper around the
+    # upstream hermes-agent CMD. This sidesteps docker compose's parse-time
+    # env_file validation (which would reject /run/secrets/* even though it's
+    # a runtime path).
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
+        exec hermes-agent gateway
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   stack-secrets:
@@ -50,7 +69,7 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+      o: uid=65532,gid=65532,mode=755
 
 networks:
   stack:

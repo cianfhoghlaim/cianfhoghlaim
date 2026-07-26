@@ -9,10 +9,31 @@ services:
     cap_drop:
       - ALL
     read_only: true
+    # The 4 runtime-configurable values (INFISICAL_URL, INFISICAL_CLIENT_ID,
+    # INFISICAL_PROJECT_ID, INFISICAL_ENV) are passed via `environment:` below
+    # so locket picks them up from the container env. The 2 static values
+    # (INFISICAL_DEFAULT_PATH, INFISICAL_CLIENT_SECRET) are baked into the
+    # command. The LOCKET_MODE is also env-driven.
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      # Locket uses the `INFISICAL_DEFAULT_*` prefix for project + env defaults
+      # (the `--infisical-default-project-id` / `--infisical-default-environment`
+      # CLI flags read these env vars). The `INFISICAL_PROJECT_ID` / `INFISICAL_ENV`
+      # env vars are kept for other consumers (e.g. the openclaw container itself).
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      # NOTE: --infisical-default-project-id and --infisical-default-environment
+      # are intentionally NOT passed as CLI flags — locket reads them from the
+      # INFISICAL_PROJECT_ID + INFISICAL_ENV env vars (declared in the
+      # `environment:` block above). This keeps the sidecar.yaml portable
+      # across the OCI vault (project f3cff583-...) and the bunchloch-local
+      # fallback vault (project d900f50a-...) — the value flows from
+      # .env.local, NOT from a hardcoded UUID in compose.
+      - "--infisical-default-path=/openclaw"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -21,7 +42,7 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -33,16 +54,32 @@ services:
     depends_on:
       locket:
         condition: service_healthy
+    user: "65532:65532"
     volumes:
       - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-    # env_file path is intentionally a runtime path; only resolves after
-    # locket sidecar hydrates /run/secrets/locket/secrets.env at container start.
+    # The /run/secrets/locket/secrets.env file is materialized by the locket
+    # sidecar at container start. We source it via a shell wrapper around the
+    # upstream `node openclaw.mjs gateway` CMD (Dockerfile line 67-68). This
+    # sidesteps docker compose's parse-time env_file validation (which would
+    # reject /run/secrets/* even though it's a runtime path).
+    #
+    # The openclaw container runs as uid 65532 to match the locket sidecar
+    # (so it can read /run/secrets/locket/*); the upstream Dockerfile's USER
+    # is 1000 but the openclaw.mjs gateway writes its state to
+    # OPENCLAW_STATE_DIR which we mount as a volume (so the uid mismatch
+    # doesn't matter for the on-disk state).
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
+        exec node openclaw.mjs gateway
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   stack-secrets:
@@ -50,7 +87,11 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+      # mode 755 (not 700) so the openclaw container (uid 1000) can read
+      # /run/secrets/locket/secrets.env. The locket sidecar (uid 65532)
+      # is the only writer; the openclaw container mounts the volume
+      # read-only.
+      o: uid=65532,gid=65532,mode=755
 
 networks:
   stack:
