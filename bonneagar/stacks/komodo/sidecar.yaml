@@ -1,11 +1,8 @@
-# =============================================================================
-# KOMODO CORE - Locket Sidecar Configuration
-# =============================================================================
-# Injects secrets from Infisical into the environment
-
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    # NOTE: replaced locket v0.17.3 with bons-locker-shim:infisical-0.2.0
+    # (see openclaw/sidecar.yaml for full context).
+    image: bons-locker-shim:infisical-0.2.0
     container_name: komodo-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -13,55 +10,63 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    read_only: false
     environment:
-      # Locket reads these env vars to talk to Infisical. The
-      # values are injected at compose time from the operator's
-      # environment (`.env` or shell). The `${...}` here is a
-      # single-dollar Compose substitution; not a `$$` escape.
+      INFISICAL_URL: ${INFISICAL_URL}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
-    command:
-      - "--provider=infisical"
-      - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
-      - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-}"
-      - "--map=/templates:/run/secrets/locket"
-      - "--mode=${LOCKET_MODE:-watch}"
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
+      INFISICAL_DEFAULT_PATH: /komodo
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
-      - komodo-secrets:/run/secrets/locket
+      - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
-      interval: 10s
-      timeout: 5s
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
       retries: 3
       start_period: 5s
     networks:
       - komodo
 
-  # Override core to depend on locket and use injected secrets
-  core:
+  # Komodo services — receive resolved secrets via the .env file at
+  # ~/.komodo-stacks/komodo/.env (auto-loaded by docker compose). The
+  # locket sidecar is also mounted (read-only) for the future when the
+  # Komodo services are upgraded to source /run/secrets/locket/secrets.env.
+  ferretdb:
     depends_on:
       locket:
         condition: service_healthy
-      ferretdb:
-        condition: service_started
     volumes:
-      - komodo-secrets:/run/secrets/locket:ro
-    env_file:
-      - path: /run/secrets/locket/secrets.env
-        required: false
+      - stack-secrets:/run/secrets/locket:ro
+
+  komodo-core:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
 
 secrets:
   infisical_secret:
-    file: ${INFISICAL_SECRET_FILE:-../../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
 
 volumes:
-  komodo-secrets:
+  stack-secrets:
     driver: local
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+      o: uid=65532,gid=65532,mode=755
+
+networks:
+  komodo:
+    external: true
+    name: komodo

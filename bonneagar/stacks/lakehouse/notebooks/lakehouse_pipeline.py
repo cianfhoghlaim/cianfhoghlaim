@@ -26,7 +26,6 @@ The "remote" cell toggles the same code to MotherDuck + Lance Cloud + R2
 (those branches are kept for future production migration; today the
 bunchloch-local path is fully wired).
 """
-from __future__ import annotations
 
 import marimo
 
@@ -69,7 +68,7 @@ def _(mo):
         label="Environment",
     )
     environment
-    return (environment,)
+    return environment, os
 
 
 @app.cell
@@ -120,15 +119,13 @@ def _(environment, os):
 
 @app.cell
 def _(mo):
-    mo.md(
-        """
+    mo.md("""
     ## Step 2 — List the BIEP tables (against the local Lakekeeper)
 
     The 6 BIEP subject namespaces live in the ``lakehouse_oideachais``
     DuckLake catalog and are mirrored as Iceberg tables in Lakekeeper.
     Each subject has 4 tables — one per (level × language).
-        """
-    )
+    """)
     return
 
 
@@ -154,8 +151,7 @@ def _(CONFIG, mo, requests):
 
 @app.cell
 def _(mo):
-    mo.md(
-        """
+    mo.md("""
     ## Step 3 — Verify the 6 BIEP subjects' tables exist
 
     We pre-create 4 tables per subject in the DuckLake catalog:
@@ -174,15 +170,13 @@ def _(mo):
     ``ducklake_<namespace>`` databases on first boot; the actual
     tables are created by the BAML extraction flow (see
     `openspec/changes/2026-07-06-british-isles-education-pipeline-v1`).
-        """
-    )
+    """)
     return
 
 
 @app.cell
 def _(mo):
-    mo.md(
-        """
+    mo.md("""
     ## Architecture Summary
 
     ```
@@ -206,8 +200,7 @@ def _(mo):
               │  lakehouse-lance-namespace (REST)      │
               └────────────────────────────────────────┘
     ```
-        """
-    )
+    """)
     return
 
 

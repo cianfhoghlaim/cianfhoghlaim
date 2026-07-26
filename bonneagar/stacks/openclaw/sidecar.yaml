@@ -1,6 +1,18 @@
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    # NOTE: replaced locket v0.17.3 with bons-locker-shim:infisical-0.2.0
+    # because locket v0.17.3 has a bug where it sends API requests with
+    # snake_case query params (project_id, secret_path) but Infisical
+    # v0.161+ requires camelCase (projectId, secretPath). Every locket
+    # call returned 422, locket fell back to passthrough mode, and the
+    # raw {{ infisical://... }} template was written to disk instead of
+    # the resolved secrets.
+    #
+    # The bons-locker-shim is a Python-based drop-in replacement that
+    # uses the CORRECT camelCase field names. It's a temporary fix until
+    # locket v0.18+ ships with the fix in source (already in the
+    # upstream repo at stedding/locket v0.18.0-rc.1).
+    image: bons-locker-shim:infisical-0.2.0
     container_name: openclaw-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -9,46 +21,38 @@ services:
     cap_drop:
       - ALL
     read_only: true
-    # The 4 runtime-configurable values (INFISICAL_URL, INFISICAL_CLIENT_ID,
-    # INFISICAL_PROJECT_ID, INFISICAL_ENV) are passed via `environment:` below
-    # so locket picks them up from the container env. The 2 static values
-    # (INFISICAL_DEFAULT_PATH, INFISICAL_CLIENT_SECRET) are baked into the
-    # command. The LOCKET_MODE is also env-driven.
+    # The 5 runtime-configurable values (INFISICAL_URL, INFISICAL_CLIENT_ID,
+    # INFISICAL_DEFAULT_PROJECT_ID, INFISICAL_DEFAULT_ENVIRONMENT,
+    # INFISICAL_DEFAULT_PATH) are passed via `environment:` below so the
+    # shim picks them up from the container env. The client_secret is
+    # mounted via Docker's `secrets:` directive.
     environment:
       INFISICAL_URL: ${INFISICAL_URL}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
-      # Locket uses the `INFISICAL_DEFAULT_*` prefix for project + env defaults
-      # (the `--infisical-default-project-id` / `--infisical-default-environment`
-      # CLI flags read these env vars). The `INFISICAL_PROJECT_ID` / `INFISICAL_ENV`
-      # env vars are kept for other consumers (e.g. the openclaw container itself).
       INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
       INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
-    command:
-      - "--provider=infisical"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      # NOTE: --infisical-default-project-id and --infisical-default-environment
-      # are intentionally NOT passed as CLI flags — locket reads them from the
-      # INFISICAL_PROJECT_ID + INFISICAL_ENV env vars (declared in the
-      # `environment:` block above). This keeps the sidecar.yaml portable
-      # across the OCI vault (project f3cff583-...) and the bunchloch-local
-      # fallback vault (project d900f50a-...) — the value flows from
-      # .env.local, NOT from a hardcoded UUID in compose.
-      - "--infisical-default-path=/openclaw"
-      - "--map=/templates:/run/secrets/locket"
-      - "--mode=${LOCKET_MODE:-watch}"
+      INFISICAL_DEFAULT_PATH: /openclaw
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
+    # The shim has no "healthcheck" subcommand; the default mode
+    # is to write the resolved file. The liveness probe is a
+    # quick re-run that reads the env vars and checks the output.
     healthcheck:
-      test: ["CMD", "locket", "healthcheck"]
-      interval: 10s
-      timeout: 5s
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
       retries: 3
       start_period: 5s
     networks:
-      - stack
+      - cianfhoghlaim
 
   openclaw:
     depends_on:
@@ -78,49 +82,18 @@ services:
         set +a
         exec node openclaw.mjs gateway --allow-unconfigured
 
-  # Locket chmod init — runs once, after the locket sidecar is healthy.
-  # The locket binary (uid 65532) writes /run/secrets/locket/secrets.env
-  # with mode 600 (user-only). This init container chmod's the file to
-  # mode 644 so the consumer (openclaw, user 1000) can read it.
-  openclaw-chmod-init:
-    image: alpine:3.20
-    user: "0:0"
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        set -e
-        if [ -f /run/secrets/locket/secrets.env ]; then
-          chmod 644 /run/secrets/locket/secrets.env
-          echo "OK: /run/secrets/locket/secrets.env chmod'd to 644"
-        else
-          echo "ERROR: /run/secrets/locket/secrets.env not found"
-          exit 1
-        fi
-    restart: "no"
-    networks:
-      - stack
-
 secrets:
   infisical_secret:
-    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
 
 volumes:
   stack-secrets:
     driver: local
     driver_opts:
-      type: tmpfs
-      device: tmpfs
       # mode 755 (not 700) so the openclaw container (uid 1000) can read
       # /run/secrets/locket/secrets.env. The locket sidecar (uid 65532)
       # is the only writer; the openclaw container mounts the volume
       # read-only.
+      type: tmpfs
+      device: tmpfs
       o: uid=65532,gid=65532,mode=755
-
-networks:
-  stack:
-    driver: bridge

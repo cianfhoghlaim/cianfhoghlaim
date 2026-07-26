@@ -1,6 +1,8 @@
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    # NOTE: replaced locket v0.17.3 with bons-locker-shim:infisical-0.2.0
+    # (see openclaw/sidecar.yaml for full context). Same shim, env-driven.
+    image: bons-locker-shim:infisical-0.2.0
     container_name: hermes-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -8,11 +10,10 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    # NOTE: read_only: true causes the locket to fall back to passthrough
-    # mode (it can't create the .tmp.<id> atomic-write staging file on a
-    # read-only rootfs). The locket DOES NOT NEED read_only for security
-    # because it only writes to /run/secrets/locket/* which is a dedicated
-    # tmpfs volume (driver_opts mode:755). We keep cap_drop: [ALL] +
+    # NOTE: read_only: false — the shim writes to /run/secrets/locket/*
+    # which is a dedicated tmpfs volume (driver_opts mode:755). The shim
+    # needs to create temp files in /tmp (which is the container's /tmp
+    # tmpfs) during atomic writes. We keep cap_drop: [ALL] +
     # no-new-privileges for the rest of the hardening.
     read_only: false
     environment:
@@ -20,41 +21,34 @@ services:
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
       INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
       INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
-    command:
-      - "--provider=infisical"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      # NOTE: --infisical-default-project-id and --infisical-default-environment
-      # are intentionally NOT passed as CLI flags — see openclaw/sidecar.yaml
-      # for the same comment. The INFISICAL_PROJECT_ID + INFISICAL_ENV env
-      # vars (declared in the `environment:` block above) drive these values.
-      - "--infisical-default-path=/hermes"
-      - "--map=/templates:/run/secrets/locket"
-      - "--mode=${LOCKET_MODE:-watch}"
+      INFISICAL_DEFAULT_PATH: /hermes
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "locket", "healthcheck"]
-      interval: 10s
-      timeout: 5s
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
       retries: 3
       start_period: 5s
     networks:
-      - stack
+      - cianfhoghlaim
 
   hermes:
     depends_on:
       locket:
         condition: service_healthy
-    # No user: override — the upstream NousResearch/hermes-agent image uses
-    # s6-overlay which requires running as a specific user (the WORKDIR is
-    # owned by root and s6-overlay checks /run ownership at init). Overriding
-    # to 65532:65532 (nobody) triggers the `fatal: /run belongs to uid 0
-    # instead of 65532` s6-overlay error. The locket stack-secrets volume is
-    # world-readable (mode 755 in the volumes: driver_opts below) so the
-    # upstream user can read /run/secrets/locket/secrets.env.
+    # No user: override — see hermes/compose.yaml for the s6-overlay
+    # permissions discussion. The internal `hermes` user (uid 10000) is
+    # used. The locket stack-secrets volume is world-readable (mode
+    # 755) so the hermes user can read /run/secrets/locket/secrets.env.
     volumes:
       - stack-secrets:/run/secrets/locket:ro
     # The /run/secrets/locket/secrets.env file is materialized by the locket
@@ -72,9 +66,10 @@ services:
         exec hermes-agent gateway
 
   # Locket chmod init — runs once, after the locket sidecar is healthy.
-  # The locket binary (uid 65532) writes /run/secrets/locket/secrets.env
-  # with mode 600 (user-only). This init container chmod's the file to
-  # mode 644 so the consumer (hermes) can read it.
+  # The shim writes secrets.env with mode 644 (it uses os.chmod 0o644
+  # explicitly in write_atomic). This init is now redundant but kept
+  # for defense-in-depth — it ensures the file is readable regardless
+  # of the shim's file mode behavior.
   hermes-chmod-init:
     image: alpine:3.20
     user: "0:0"
@@ -96,11 +91,11 @@ services:
         fi
     restart: "no"
     networks:
-      - stack
+      - cianfhoghlaim
 
 secrets:
   infisical_secret:
-    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
 
 volumes:
   stack-secrets:
@@ -109,7 +104,3 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: uid=65532,gid=65532,mode=755
-
-networks:
-  stack:
-    driver: bridge

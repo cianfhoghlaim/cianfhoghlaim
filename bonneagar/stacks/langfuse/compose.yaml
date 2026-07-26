@@ -169,6 +169,7 @@ services:
     networks:
       - langfuse
       - lakehouse
+      - cianfhoghlaim   # cross-stack DNS for openclaw + hermes to reach langfuse
 
 # =============================================================================
 # NETWORKS
@@ -179,3 +180,6 @@ networks:
   lakehouse:
     name: lakehouse_lakehouse
     external: true
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim
