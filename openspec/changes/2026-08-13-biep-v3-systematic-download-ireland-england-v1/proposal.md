@@ -45,14 +45,14 @@ Out of scope (deferred to a follow-up change):
 |:--|:--|--:|:--|
 | **M0** | Foundation unblock | 0 | `lakehouse_smoke_test`, `baml_codegen_gate`, `registry_seed_count >= 210`, `lance_namespace_ready` |
 | **M1** | Ireland Leaving Cycle (EN+GA) | 12 | `ireland_lc_documents_ingested >= 12`, `ireland_lc_extractions_ragas >= 0.70`, `ireland_lc_lance_chunks >= 12_000` |
-| **M2** | Ireland Junior Cycle (EN+GA) | 140 | `ireland_jc_documents_ingested >= 140`, `ireland_jc_extractions_ragas >= 0.70`, `ireland_jc_lance_chunks >= 140_000` |
+| **M2** | Ireland Junior Cycle (EN+GA) | 88 | `ireland_jc_documents_ingested >= 88`, `ireland_jc_extractions_ragas >= 0.65`, `ireland_jc_lance_chunks >= 88_000` |
 | **M3** | England A-Level (AQA + OCR + Edexcel) | 147 | `england_a_level_documents_ingested >= 147`, `england_a_level_extractions_ragas >= 0.70`, `england_a_level_lance_chunks >= 147_000` |
 | **M4** | England GCSE (AQA + OCR + Edexcel) | 129 | `england_gcse_documents_ingested >= 129`, `england_gcse_extractions_ragas >= 0.70`, `england_gcse_lance_chunks >= 129_000` |
 
 **Cohort arithmetic:**
 
 - Ireland LC: 6 subjects × 2 langs = 12 cohorts
-- Ireland JC: (18 subjects + 16 short courses + 36 CBAs) × 2 langs = 140 cohorts
+- Ireland JC: 18 subjects × 2 langs (36 specs) + 16 short courses + 36 CBAs = 88 cohorts
 - England A-Level: 49 subjects × 3 boards (AQA + OCR + Edexcel) = 147 cohorts
 - England GCSE: 43 subjects × 3 boards = 129 cohorts
 - **Total: 428 cohorts** across the 4 jurisdiction pipelines

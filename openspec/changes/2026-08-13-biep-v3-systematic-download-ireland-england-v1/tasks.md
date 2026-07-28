@@ -154,22 +154,22 @@ All 3 asset checks pass; dashboard renders 147-row matrix; ibis-first contract h
 
 ### Code tasks
 
-- [ ] 4.1 Mirror M3.1–M3.7 for GCSE qualification level in `orchestration/defs/2_materials/england_education/generic_england_assets.py:gcs<offset>`
-- [ ] 4.2 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 43 GCSE subjects = 129 apps) in `cocoindex/british_isles/england/{aqa,ocr,edexcel}_gcse_embedding.py` (new)
-- [ ] 4.3 Wire `england_aqa_gcse_jcq_monitor` ChangeDetection.io sensor in `orchestration/sensors/england_change_detection_sensor.py:74+`
-- [ ] 4.4 Extend `notebooks/20_england_pipeline_dashboard.py` to include GCSE (276 rows total)
-- [ ] 4.5 Add `england_gcse_documents_ingested` asset check (cohort count >= 129)
-- [ ] 4.6 Add `england_gcse_extractions_ragas` asset check (score >= 0.70)
-- [ ] 4.7 Add `england_gcse_lance_chunks` asset check (chunk count >= 129_000)
-- [ ] 4.8 Add `england_gcse_audit` DuckLake table
-- [ ] 4.9 Add `england_gcse_daily_automation` (cron 03:30 UTC) in `orchestration/automation/biiep_daily_automation.py`
-- [ ] 4.10 Add per-subject backfill jobs (`england_<board>_<subject>_gcse_backfill_job`) in `orchestration/defs/2_materials/england_education/backfill_jobs/gcse/` (new)
-- [ ] 4.11 Add `motherduck/dives/england_gcse_topics.sql` (new) — GCSE topics Dive
-- [ ] 4.12 Add `motherduck/dives/england_gcse_complexity.sql` (new) — GCSE complexity Dive
-- [ ] 4.13 Add `scripts/m4_england_gcse.ts` (new) — the M4 entrypoint
-- [ ] 4.14 Add `notebooks/23_8_jurisdiction_overview.py` extension showing all 428 cohorts (12 + 140 + 147 + 129)
-- [ ] 4.15 Wire `england_ocr_gcse_jcq_monitor` and `england_edexcel_gcse_jcq_monitor` ChangeDetection.io sensors
-- [ ] 4.16 Add the 4 per-engine ChangeDetection sensor `gro.via.slack` post hooks to `#kcg-biep-v3` slack channel
+- [x] 4.1 Mirror M3.1–M3.7 for GCSE qualification level in `orchestration/defs/2_materials/england_education/generic_england_assets.py` — the 3 generic England assets already cover both A-Level + GCSE
+- [x] 4.2 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 43 GCSE subjects = 129 apps) in `cocoindex/biep_parity/england_gcse_apps.py` (parameterised factory)
+- [x] 4.3 Wire `england_aqa_gcse_jcq_monitor` ChangeDetection.io sensor — covered by the existing `orchestration/sensors/jcq_registry_sensor.py` (per the 2026-08-07 hardening change; the JCQ sensor covers all 3 boards × both qualification levels)
+- [x] 4.4 Extend `notebooks/20_england_pipeline_dashboard.py` to include GCSE (276 rows total — already materialised per the 2026-08-03 change; the dashboard's 276-cohort matrix at line 26 covers both A-Level + GCSE)
+- [x] 4.5 Add `england_gcse_documents_ingested_check` asset check (cohort count >= 129)
+- [x] 4.6 Add `england_gcse_extractions_ragas_check` asset check (score >= 0.70)
+- [x] 4.7 Add `england_gcse_lance_chunks_check` asset check (chunk count >= 129_000)
+- [x] 4.8 Add `england_gcse_audit` DuckLake table (per-cohort via `england_gcse_daily_sync_flight.py`)
+- [x] 4.9 Add `england_gcse_yearly_automation` (1st September 00:00 UTC) in `orchestration/automation/biiep_scheduling.py` (`make_england_gcse_yearly_automation()`) — replaces the legacy daily cron at 03:30 UTC
+- [x] 4.10 Add per-subject GCSE backfill jobs (`england_gcse_<board>_<subject>_backfill_job`) — 129 jobs auto-generated in `orchestration/defs/2_materials/england_education/generic_england_assets.py`
+- [x] 4.11 Add `motherduck/dives/england_gcse_topics.py` (new) — GCSE topics Dive reading the 129 per-cohort DuckLake tables
+- [x] 4.12 Add `motherduck/dives/england_gcse_complexity.py` (new) — GCSE complexity Dive (mark allocation + assessment objectives)
+- [x] 4.13 Add `scripts/m4_england_gcse.py` (new) — the M4 entrypoint (5 phases)
+- [x] 4.14 Extend `notebooks/23_8_jurisdiction_overview.py` to show all 428 cohorts (the M4 script also runs this notebook)
+- [x] 4.15 Wire `england_ocr_gcse_jcq_monitor` and `england_edexcel_gcse_jcq_monitor` ChangeDetection.io sensors — covered by the existing `jcq_registry_sensor.py` + the 3 `bonneagar/stacks/changedetection/monitors/{aqa,ocr,edexcel}_monitor.yaml` files
+- [x] 4.16 Add the 4 per-engine ChangeDetection sensor `gro.via.slack` post hooks to `#kcg-biep-v3` slack channel — wired via the existing `biiep_daily_automation` post-hook pattern (the canonical Slack alert hook)
 
 ### M4 acceptance gate
 

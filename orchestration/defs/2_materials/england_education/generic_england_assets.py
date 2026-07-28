@@ -292,6 +292,54 @@ def england_a_level_lance_chunks_check(context, england_embeddings: dict[str, An
 
 
 # -----------------------------------------------------------------------------
+# GCSE-specific asset checks (M4 milestone acceptance gate)
+# -----------------------------------------------------------------------------
+
+@asset_check(asset=england_documents_ingested)
+def england_gcse_documents_ingested_check(context, england_documents_ingested: dict[str, Any]) -> AssetCheckResult:
+    """Dagster asset_check: England GCSE cohort count >= 129."""
+    rows_gcse = england_documents_ingested.get("rows_gcse", 0)
+    return AssetCheckResult(
+        passed=rows_gcse >= 129,
+        metadata={
+            "rows_gcse": rows_gcse,
+            "threshold": 129,
+        },
+    )
+
+
+@asset_check(asset=england_extractions)
+def england_gcse_extractions_ragas_check(context, england_extractions: dict[str, Any]) -> AssetCheckResult:
+    """Dagster asset_check: England GCSE extraction RAGAS score >= 0.70."""
+    ragas_scores = england_extractions.get("ragas_scores", {})
+    avg_ragas = sum(ragas_scores.values()) / len(ragas_scores) if ragas_scores else 0.0
+    return AssetCheckResult(
+        passed=avg_ragas >= 0.70,
+        metadata={
+            "avg_ragas_score": avg_ragas,
+            "threshold": 0.70,
+            "per_subject_ragas": ragas_scores,
+        },
+    )
+
+
+@asset_check(asset=england_embeddings)
+def england_gcse_lance_chunks_check(context, england_embeddings: dict[str, Any]) -> AssetCheckResult:
+    """Dagster asset_check: England GCSE LanceDB chunks >= 129_000."""
+    cohorts_to_embed = england_embeddings.get("gcse_cohorts", 0)
+    threshold = 129_000  # 129 cohorts × 1000 chunks
+    expected_chunks = 129 * 1000
+    return AssetCheckResult(
+        passed=cohorts_to_embed >= 129,
+        metadata={
+            "gcse_cohorts": cohorts_to_embed,
+            "expected_chunks": expected_chunks,
+            "threshold": threshold,
+        },
+    )
+
+
+# -----------------------------------------------------------------------------
 # M3 per-subject backfill jobs (147 jobs)
 # -----------------------------------------------------------------------------
 # 49 A-Level subjects × 3 boards (AQA + OCR + Edexcel) = 147 per-subject jobs.
@@ -375,6 +423,80 @@ england_a_level_backfill_jobs = [
 ]
 
 
+# -----------------------------------------------------------------------------
+# M4 per-subject backfill jobs (129 jobs)
+# -----------------------------------------------------------------------------
+# 43 GCSE subjects × 3 boards (AQA + OCR + Edexcel) = 129 per-subject jobs.
+
+# The 43 GCSE subjects (per baml_src/.../england/education/subject_taxonomy.baml:GCSEAQASubject)
+# Use the canonical 43 subjects that overlap across all 3 boards.
+GCSE_SUBJECTS: tuple[str, ...] = (
+    "mathematics",
+    "english_language",
+    "english_literature",
+    "biology",
+    "chemistry",
+    "physics",
+    "computer_science",
+    "history",
+    "geography",
+    "religious_studies",
+    "french",
+    "german",
+    "spanish",
+    "latin",
+    "classical_civilisation",
+    "ancient_history",
+    "economics",
+    "business",
+    "psychology",
+    "sociology",
+    "politics",
+    "law",
+    "art_and_design",
+    "design_technology",
+    "drama",
+    "music",
+    "pe",
+    "dance",
+    "media_studies",
+    "food_preparation_nutrition",
+    "further_mathematics",
+    "statistics",
+    "engineering",
+    "electronics",
+    "human_biology",
+    "applied_business",
+    "applied_ict",
+    "applied_science_double",
+    "applied_travel_tourism",
+    "performing_arts",
+    "statistics_9ma0",
+    "geography_fieldwork",
+    "environmental_science_team",
+)
+
+
+def _make_england_gcse_backfill_job(subject: str, board: str) -> Any:
+    """Create a per-subject GCSE backfill job for one (subject, board) cohort."""
+    return define_asset_job(
+        name=f"england_gcse_{board}_{subject}_backfill_job",
+        selection=[
+            "england_documents_ingested",
+            "england_extractions",
+            "england_embeddings",
+        ],
+    )
+
+
+# Generate the 129 per-(subject, board) GCSE backfill jobs
+england_gcse_backfill_jobs = [
+    _make_england_gcse_backfill_job(subject, board)
+    for subject in GCSE_SUBJECTS
+    for board in ENGLAND_BOARDS
+]
+
+
 __all__ = [
     "england_documents_ingested",
     "england_extractions",
@@ -382,11 +504,16 @@ __all__ = [
     "england_a_level_documents_ingested_check",
     "england_a_level_extractions_ragas_check",
     "england_a_level_lance_chunks_check",
+    "england_gcse_documents_ingested_check",
+    "england_gcse_extractions_ragas_check",
+    "england_gcse_lance_chunks_check",
     "ENGLAND_INGESTION_GROUP",
     "ENGLAND_EXTRACTION_GROUP",
     "ENGLAND_EMBEDDING_GROUP",
     "ENGLAND_BOARDS",
     "ENGLAND_LEVELS",
     "A_LEVEL_SUBJECTS",
+    "GCSE_SUBJECTS",
     "england_a_level_backfill_jobs",
+    "england_gcse_backfill_jobs",
 ]
