@@ -91,6 +91,42 @@ export class PangolinClient {
     );
   }
 
+  // -------------------------------------------------------------------------
+  // Identity Providers (OIDC / SAML) — Pocket ID wiring
+  // -------------------------------------------------------------------------
+  // GET /api/v1/idp?org_id=... — list IdPs for an org
+  listIdps() {
+    return this.call<{ data: Array<{ idp_id: string; name: string; provider_type: string }> }>(
+      `/idp?org_id=${this.orgId}`,
+    );
+  }
+  // POST /api/v1/idp — create an IdP (OIDC / OAuth2 / SAML)
+  createIdp(opts: {
+    org_id: string;
+    name: string;
+    provider_type: "OAuth2OIDC" | "OAuth2Generic" | "SAML";
+    client_id: string;
+    client_secret: string;
+    authorization_url?: string;
+    token_url?: string;
+    userinfo_url?: string;
+    scopes?: string;
+    identifier_path?: string;
+    email_path?: string;
+    name_path?: string;
+    auto_provision?: boolean;
+  }) {
+    return this.call<{ data: { idp_id: string } }>(`/idp`, opts);
+  }
+  // DELETE /api/v1/idp/{idp_id}?org_id=... — remove an IdP
+  async deleteIdp(idpId: string) {
+    const r = await fetch(
+      `${this.base}/idp/${idpId}?org_id=${this.orgId}`,
+      { method: "DELETE", headers: { Authorization: `Bearer ${this.apiKey}` } },
+    );
+    if (!r.ok) throw new Error(`pangolin delete idp ${idpId} failed: ${r.status} ${await r.text()}`);
+  }
+
   // -----------------------------------------------------------------------
   // Blueprint import (the 3 methods — bulk surface)
   // -----------------------------------------------------------------------
