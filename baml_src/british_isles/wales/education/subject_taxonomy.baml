@@ -135,3 +135,26 @@ function ExtractWalesSyllabus(
     {{ ctx.output_format }}
   "#
 }
+
+test ExtractWalesSyllabus {
+  functions [ExtractWalesSyllabus]
+  args {
+    pdf_text #"
+      Mathematics GCSE
+      WJEC Qualification Specification (Welsh-medium)
+
+      The GCSE Mathematics course develops mathematical reasoning and
+      problem-solving skills across algebra, geometry, statistics, and
+      number. The course is taught in Welsh (Cymraeg) and assessed via
+      two written papers, each worth 80 marks.
+
+      Topics:
+      - Number (AO1): 25%
+      - Algebra (AO2): 30%
+      - Geometry (AO3): 20%
+      - Statistics (AO4): 25%
+    "#
+    subject "MATHEMATICS"
+    level "GCSE"
+  }
+}

@@ -205,6 +205,42 @@ run = "grep -rE 'duckdb\\.connect\\(' orchestration/defs/2_materials/ireland_edu
 description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
 run = "uv run python scripts/validate_snake_case_filenames.py"
 
+# Per-jurisdiction entries (the 6 deferred jurisdictions)
+[tasks."biep:v3:m5"]
+description = "BIEP v3 M5 — Scotland pipeline (150 cohorts, SQA × 3 levels)"
+run = "uv run python scripts/m5_scotland.py"
+[tasks."biep:v3:m6"]
+description = "BIEP v3 M6 — Wales pipeline (160 cohorts, WJEC × 2 levels)"
+run = "uv run python scripts/m6_wales.py"
+[tasks."biep:v3:m7"]
+description = "BIEP v3 M7 — Northern Ireland pipeline (70 cohorts, CCEA × 2 levels)"
+run = "uv run python scripts/m7_northern_ireland.py"
+[tasks."biep:v3:m8"]
+description = "BIEP v3 M8 — Jersey pipeline (120 cohorts, 30 subjects × 4 levels)"
+run = "uv run python scripts/m8_jersey.py"
+[tasks."biep:v3:m9"]
+description = "BIEP v3 M9 — Guernsey pipeline (120 cohorts, 30 subjects × 4 levels)"
+run = "uv run python scripts/m9_guernsey.py"
+[tasks."biep:v3:m10"]
+description = "BIEP v3 M10 — Isle of Man pipeline (120 cohorts, 30 subjects × 4 levels)"
+run = "uv run python scripts/m10_isle_of_man.py"
+
+# Scanner entries
+[tasks."biep:v3:filesystem:monthly:sync"]
+description = "BIEP v3 filesystem monthly sync — runs the 11 canonical filesystem DLT sources + writes the monthly sync status"
+run = "uv run python motherduck/flights/filesystem_monthly_sync_flight.py"
+[tasks."biep:v3:language:monthly:sync"]
+description = "BIEP v3 language monthly sync — runs the 19 canonical language DLT sources + writes the monthly sync status"
+run = "uv run python motherduck/flights/language_monthly_sync_flight.py"
+
+# Operator surface (Phase 5)
+[tasks."biep:v3:setup"]
+description = "BIEP v3 full setup — Docker + lakehouse stack + BAML codegen + registry seed + lance namespace + openspec validate + lint:skills"
+run = "uv run python scripts/biiep_v3_setup.py"
+[tasks."biep:v3:status"]
+description = "BIEP v3 full status — lakehouse health + registry count + BAML codegen + asset count + MotherDuck Dive + Flight status"
+run = "uv run python scripts/biiep_v3_status.py"
+
 # =============================================================================
 # Cianfhoghlaim Consolidated Tasks (post-Phase-1 2026-06-30)
 # =============================================================================

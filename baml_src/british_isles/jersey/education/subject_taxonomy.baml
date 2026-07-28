@@ -119,3 +119,26 @@ function ExtractJerseySyllabus(
     {{ ctx.output_format }}
   "#
 }
+
+test ExtractJerseySyllabus {
+  functions [ExtractJerseySyllabus]
+  args {
+    pdf_text #"
+      Mathematics GCSE
+      States of Jersey Education Department
+
+      The Jersey GCSE Mathematics course is taught in English and is
+      modelled on the English GCSE with Jersey-specific additions. The
+      course is assessed via three written papers (2 × 1.5 hours + 1 × 2
+      hours), each worth 80 marks.
+
+      Topics:
+      - Number (AO1): 25%
+      - Algebra (AO2): 30%
+      - Geometry (AO3): 20%
+      - Statistics (AO4): 25%
+    "#
+    subject "MATHEMATICS"
+    level "GCSE"
+  }
+}

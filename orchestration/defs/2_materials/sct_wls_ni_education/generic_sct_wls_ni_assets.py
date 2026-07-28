@@ -1,116 +1,106 @@
-"""SCT + WLS + NI generic Dagster assets (BIEP v3).
+"""SCT + WLS + NI generic Dagster assets — RE-EXPORT SHIM.
 
-Per the 2026-07-30-biep-v3-sct-wls-ni-v1 change.
+Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
+the 3 jurisdictions (Scotland + Wales + Northern Ireland) have been
+**promoted to proper per-jurisdiction directories**. The canonical
+Dagster assets for each jurisdiction are now in:
+- `orchestration/defs/2_materials/scotland_education/scotland_assets.py`
+- `orchestration/defs/2_materials/wales_education/wales_assets.py`
+- `orchestration/defs/2_materials/northern_ireland_education/northern_ireland_assets.py`
 
-The canonical generic Scotland + Wales + Northern Ireland Dagster assets.
-Handles 3 jurisdictions via a single factory function that selects the
-jurisdiction at asset materialisation time.
+This file is kept as a **re-export shim** for backward compatibility
+with the BIEP v3 deferred openspec change
+`2026-07-30-biep-v3-sct-wls-ni-v1/` and the BIEP v3 orchestration
+assets that may still import the `sct_wls_ni_*` asset names.
+
+Because Python doesn't allow numeric segments in module paths, the
+canonical home uses a different import path. The 3 per-jurisdiction
+Dagster assets are exposed via the BIEP v3 orchestration loaders
+(which use a different import strategy — see the per-jurisdiction
+asset files directly).
+
+Reference: openspec/changes/2026-07-30-biep-v3-sct-wls-ni-v1/
+Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-england-v1/
 """
+from __future__ import annotations
 
 import logging
-from typing import Any
-
-from dagster import (
-    AssetCheckResult,
-    AssetExecutionContext,
-    asset,
-    asset_check,
-    AssetCheckExecutionContext,
-)
-
-try:
-    from baml_client import b  # type: ignore[import-not-found]
-    BAML_AVAILABLE = True
-except ImportError:
-    BAML_AVAILABLE = False
-    b = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
-# 5-layer group_name convention
-SCT_WLS_NI_INGESTION_GROUP = "1_ingestion_education_sct_wls_ni_documents"
-SCT_WLS_NI_EXTRACTION_GROUP = "2_materials_education_sct_wls_ni_extractions"
-SCT_WLS_NI_EMBEDDING_GROUP = "3_model_lifecycle_education_sct_wls_ni_embeddings"
+# The 3 per-jurisdiction assets live in the per-jurisdiction proper
+# files. To avoid the Python 2_materials import issue, we re-import
+# them via the per-jurisdiction module names.
+import importlib
 
-
-@asset(
-    group_name=SCT_WLS_NI_INGESTION_GROUP,
-    description=(
-        "Generic Scotland + Wales + NI ingestion (BIEP v3). "
-        "Replaces per-jurisdiction per-subject assets. "
-        "Per the 2026-07-30-biep-v3-sct-wls-ni-v1 change."
-    ),
+# Re-export the 3 per-jurisdiction Dagster assets via the per-jurisdiction proper files
+_scotland_module = importlib.import_module(
+    "orchestration.defs.materials.scotland_education.scotland_assets".replace(
+        "materials", "2_materials"
+    )
 )
-def sct_wls_ni_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt_sources.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
-        sct_wls_ni_jurisdiction_pipeline,
-        SCT_WLS_NI_JURISDICTIONS,
+scotland_documents_ingested = _scotland_module.scotland_documents_ingested
+scotland_extractions = _scotland_module.scotland_extractions
+scotland_embeddings = _scotland_module.scotland_embeddings
+scotland_documents_ingested_check = _scotland_module.scotland_documents_ingested_check
+scotland_extractions_ragas_check = _scotland_module.scotland_extractions_ragas_check
+scotland_lance_chunks_check = _scotland_module.scotland_lance_chunks_check
+
+_wales_module = importlib.import_module(
+    "orchestration.defs.materials.wales_education.wales_assets".replace(
+        "materials", "2_materials"
+    )
+)
+wales_documents_ingested = _wales_module.wales_documents_ingested
+wales_extractions = _wales_module.wales_extractions
+wales_embeddings = _wales_module.wales_embeddings
+wales_documents_ingested_check = _wales_module.wales_documents_ingested_check
+wales_extractions_ragas_check = _wales_module.wales_extractions_ragas_check
+wales_lance_chunks_check = _wales_module.wales_lance_chunks_check
+
+_ni_module = importlib.import_module(
+    "orchestration.defs.materials.northern_ireland_education.northern_ireland_assets".replace(
+        "materials", "2_materials"
+    )
+)
+northern_ireland_documents_ingested = _ni_module.northern_ireland_documents_ingested
+northern_ireland_extractions = _ni_module.northern_ireland_extractions
+northern_ireland_embeddings = _ni_module.northern_ireland_embeddings
+northern_ireland_documents_ingested_check = _ni_module.northern_ireland_documents_ingested_check
+northern_ireland_extractions_ragas_check = _ni_module.northern_ireland_extractions_ragas_check
+northern_ireland_lance_chunks_check = _ni_module.northern_ireland_lance_chunks_check
+
+
+# Backward-compat stubs — the legacy sct_wls_ni_* names raise
+# NotImplementedError to point users at the per-jurisdiction proper
+# assets + the new mise tasks (biep:v3:m5, m6, m7).
+
+def sct_wls_ni_documents_ingested():
+    raise NotImplementedError(
+        "sct_wls_ni_documents_ingested is a re-export shim. "
+        "Use the per-jurisdiction assets (scotland_documents_ingested, "
+        "wales_documents_ingested, northern_ireland_documents_ingested) "
+        "or the mise tasks (biep:v3:m5, m6, m7) instead."
     )
 
-    results: dict[str, int] = {}
-    for juris in SCT_WLS_NI_JURISDICTIONS:
-        pipeline, source = sct_wls_ni_jurisdiction_pipeline(juris)
-        load_info = pipeline.run(source)
-        results[juris] = (
-            len(load_info.load_packages) if load_info.load_packages else 0
-        )
-    return {"rows_by_jurisdiction": results}
 
-
-@asset(
-    group_name=SCT_WLS_NI_EXTRACTION_GROUP,
-    description="Generic SCT + WLS + NI BAML extraction (BIEP v3).",
-)
-def sct_wls_ni_extractions(context: AssetExecutionContext) -> dict[str, Any]:
-    if not BAML_AVAILABLE:
-        return {"rows_extracted": 0}
-    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
-    from dlt_sources.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
-        SCT_WLS_NI_JURISDICTIONS,
+def sct_wls_ni_extractions():
+    raise NotImplementedError(
+        "sct_wls_ni_extractions is a re-export shim. "
+        "Use the per-jurisdiction assets instead."
     )
-    total = 0
-    for juris in SCT_WLS_NI_JURISDICTIONS:
-        subjects = query_by_jurisdiction(juris)
-        for row in subjects:
-            baml_fn_name = row.baml_function
-            fn_name = baml_fn_name.removeprefix("b.")
-            fn = getattr(b, fn_name, None)
-            if fn is None:
-                context.log.warning(
-                    "sct_wls_ni_extractions: BAML function %r not found for %r",
-                    fn_name, row.subject_slug,
-                )
-                continue
-            total += 1
-            # Stub: a real impl would invoke the 4-path ensemble here.
-            # See meaisinfhoghlaim.ocr.ensemble.ensembled_extractor.EnsembledExtractor.extract(
-            #     pdf_path=..., baml_function=row.baml_function.removeprefix("b."),
-            #     jurisdiction=juris, scope="education", subject=row.subject_slug,
-            #     board=row.board, qualification_level=row.qualification_level, language=row.language,
-            # )
-    return {"rows_extracted": total}
 
 
-@asset(
-    group_name=SCT_WLS_NI_EMBEDDING_GROUP,
-    description="Generic SCT + WLS + NI CocoIndex embedding (BIEP v3).",
-)
-def sct_wls_ni_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
-    from dlt_sources.british_isles.sct_wls_ni.education.sct_wls_ni_jurisdiction_pipeline import (
-        SCT_WLS_NI_JURISDICTIONS,
+def sct_wls_ni_embeddings():
+    raise NotImplementedError(
+        "sct_wls_ni_embeddings is a re-export shim. "
+        "Use the per-jurisdiction assets instead."
     )
-    total = 0
-    for juris in SCT_WLS_NI_JURISDICTIONS:
-        total += len(query_by_jurisdiction(juris))
-    return {"cohorts_to_embed": total}
 
 
-@asset_check(asset=sct_wls_ni_extractions)
-def sct_wls_ni_extractions_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
-    return AssetCheckResult(
-        passed=True, severity="WARN",
-        metadata={"ragas_score": 0.85, "threshold": 0.70},
+def sct_wls_ni_extractions_ragas_check():
+    raise NotImplementedError(
+        "sct_wls_ni_extractions_ragas_check is a re-export shim."
     )
 
 
@@ -119,4 +109,11 @@ __all__ = [
     "sct_wls_ni_extractions",
     "sct_wls_ni_embeddings",
     "sct_wls_ni_extractions_ragas_check",
+    # Re-export the per-jurisdiction proper assets for backward compat
+    "scotland_documents_ingested", "scotland_extractions", "scotland_embeddings",
+    "scotland_documents_ingested_check", "scotland_extractions_ragas_check", "scotland_lance_chunks_check",
+    "wales_documents_ingested", "wales_extractions", "wales_embeddings",
+    "wales_documents_ingested_check", "wales_extractions_ragas_check", "wales_lance_chunks_check",
+    "northern_ireland_documents_ingested", "northern_ireland_extractions", "northern_ireland_embeddings",
+    "northern_ireland_documents_ingested_check", "northern_ireland_extractions_ragas_check", "northern_ireland_lance_chunks_check",
 ]

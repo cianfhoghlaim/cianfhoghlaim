@@ -123,3 +123,27 @@ function ExtractNIExamPaper(
     {{ ctx.output_format }}
   "#
 }
+
+test ExtractNIExamPaper {
+  functions [ExtractNIExamPaper]
+  args {
+    pdf_text #"
+      Mathematics GCSE
+      CCEA Examination Paper NI-MAT-GCSE-P1-2024
+      Duration: 2 hours
+      Total marks: 100
+
+      Section A (40 marks)
+      Q1. [5 marks] Simplify 3x + 2x - x.
+      Q2. [5 marks] Solve the equation 2x^2 + 5x - 3 = 0.
+
+      Section B (60 marks)
+      Q3. [10 marks] Solve the simultaneous equations.
+      Q4. [15 marks] Calculate the area of the triangle.
+      Q5. [15 marks] Prove the trigonometric identity.
+      Q6. [20 marks] Use calculus to find the maximum volume.
+    "#
+    subject "MATHEMATICS"
+    level "GCSE"
+  }
+}

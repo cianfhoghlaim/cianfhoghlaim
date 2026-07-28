@@ -137,3 +137,27 @@ function ExtractScotlandSyllabus(
     {{ ctx.output_format }}
   "#
 }
+
+test ExtractScotlandSyllabus {
+  functions [ExtractScotlandSyllabus]
+  args {
+    pdf_text #"
+      Mathematics Higher
+      SQA Qualification Specification
+
+      The Higher Mathematics Course enables learners to develop knowledge
+      and skills in algebra, geometry, calculus, and statistics. The course
+      is assessed via a single external examination worth 100 marks.
+
+      Topics:
+      - Algebra (AO1): 20%
+      - Calculus (AO2): 25%
+      - Geometry (AO3): 15%
+      - Statistics (AO4): 20%
+      - Number Theory (AO5): 10%
+      - Proof and Reasoning (AO6): 10%
+    "#
+    subject "MATHEMATICS"
+    level "HIGHER"
+  }
+}

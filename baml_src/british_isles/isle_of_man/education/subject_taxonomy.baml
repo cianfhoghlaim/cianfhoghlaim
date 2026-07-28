@@ -119,3 +119,26 @@ function ExtractIsleOfManSyllabus(
     {{ ctx.output_format }}
   "#
 }
+
+test ExtractIsleOfManSyllabus {
+  functions [ExtractIsleOfManSyllabus]
+  args {
+    pdf_text #"
+      Mathematics GCSE
+      Isle of Man Department of Education, Sport and Culture
+
+      The IoM GCSE Mathematics course is taught in English and is
+      modelled on the English GCSE. The course is assessed via three
+      written papers. The Isle of Man has a unique Manx Gaelic language
+      GCSE that teaches basic Manx vocabulary and grammar.
+
+      Topics:
+      - Number (AO1): 25%
+      - Algebra (AO2): 30%
+      - Geometry (AO3): 20%
+      - Statistics (AO4): 25%
+    "#
+    subject "MATHEMATICS"
+    level "GCSE"
+  }
+}

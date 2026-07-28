@@ -119,3 +119,25 @@ function ExtractGuernseySyllabus(
     {{ ctx.output_format }}
   "#
 }
+
+test ExtractGuernseySyllabus {
+  functions [ExtractGuernseySyllabus]
+  args {
+    pdf_text #"
+      Mathematics GCSE
+      States of Guernsey Education Services
+
+      The Guernsey GCSE Mathematics course is taught in English and is
+      modelled on the English GCSE with Guernsey-specific additions. The
+      course is assessed via three written papers.
+
+      Topics:
+      - Number (AO1): 25%
+      - Algebra (AO2): 30%
+      - Geometry (AO3): 20%
+      - Statistics (AO4): 25%
+    "#
+    subject "MATHEMATICS"
+    level "GCSE"
+  }
+}
