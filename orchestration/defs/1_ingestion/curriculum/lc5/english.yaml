@@ -19,7 +19,7 @@ attributes:
   subject: english
   subject_label: English (LC002)
   automation: on_cron
-  automation_cron: "0 5 * * *"
+  automation_cron: "0 0 1 9 *"
   state_backed: true
   state_refresh_interval: monthly
   asset_check: lc5_english_partition_count_min

@@ -38,6 +38,11 @@ from dagster import (
     asset_check,
 )
 
+from orchestration.automation.biiep_scheduling import (
+    make_weekly_smoke_test_automation,
+    make_eager_automation,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -82,8 +87,10 @@ LAKEHOUSE_SERVICES = (
     description=(
         "Smoke-test the 13 canonical lakehouse services. "
         "Returns 200 OK count + per-service status matrix. "
-        "Asset check `lakehouse_smoke_test_check` asserts all 13 respond 200 OK."
+        "Asset check `lakehouse_smoke_test_check` asserts all 13 respond 200 OK. "
+        "Triggers weekly (Monday 06:00 UTC) per the BIEP v3 scheduling policy."
     ),
+    automation_condition=make_weekly_smoke_test_automation(),
 )
 def lakehouse_smoke_test(context: AssetExecutionContext) -> dict[str, Any]:
     """Check that all 13 lakehouse services respond 200 OK."""
@@ -141,8 +148,10 @@ def lakehouse_smoke_test_check(context, lakehouse_smoke_test: dict[str, Any]) ->
         "Run `mise run baml:generate` and assert exit 0. "
         "The 3 BIEP v3 BAML functions (ExtractUKQualSpec, ExtractSyllabusDiagram, "
         "ExtractCrossLinguisticConcept) MUST compile cleanly. "
-        "Asset check `baml_codegen_check` asserts exit 0."
+        "Asset check `baml_codegen_check` asserts exit 0. "
+        "Triggers weekly (Monday 06:00 UTC) per the BIEP v3 scheduling policy."
     ),
+    automation_condition=make_weekly_smoke_test_automation(),
 )
 def baml_codegen_gate(context: AssetExecutionContext) -> dict[str, Any]:
     """Run `mise run baml:generate` and capture the exit code + stdout."""
@@ -187,8 +196,10 @@ def baml_codegen_check(context, baml_codegen_gate: dict[str, Any]) -> AssetCheck
     description=(
         "SELECT COUNT(*) FROM cianfhoghlaim.education._registry.subjects. "
         "Must be >= 210 (Ireland 152 + England 276 - the duplicated 218 = 210 minimum). "
-        "Asset check `registry_seed_check` asserts count >= 210."
+        "Asset check `registry_seed_check` asserts count >= 210. "
+        "Triggers weekly (Monday 06:00 UTC) per the BIEP v3 scheduling policy."
     ),
+    automation_condition=make_weekly_smoke_test_automation(),
 )
 def registry_seed_count(context: AssetExecutionContext) -> dict[str, Any]:
     """Query the British Isles Subject Registry for the row count."""
@@ -239,8 +250,10 @@ def registry_seed_check(context, registry_seed_count: dict[str, Any]) -> AssetCh
     description=(
         "Check that the `cianhoghlaim` Lance namespace exists in the Lakekeeper "
         "Iceberg REST catalog. Asset check `lance_namespace_check` asserts the "
-        "namespace is registered."
+        "namespace is registered. "
+        "Triggers weekly (Monday 06:00 UTC) per the BIEP v3 scheduling policy."
     ),
+    automation_condition=make_weekly_smoke_test_automation(),
 )
 def lance_namespace_ready(context: AssetExecutionContext) -> dict[str, Any]:
     """Check the `cianhoghlaim` Lance namespace exists in Lakekeeper."""

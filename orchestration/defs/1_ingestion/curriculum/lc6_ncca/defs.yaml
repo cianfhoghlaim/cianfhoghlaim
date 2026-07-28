@@ -12,7 +12,7 @@ attributes:
   source_name: ncca_lc6
   module: cianfhoghlaim.dlt.british_isles.ireland.education.ncca
   schedule:
-    cron: "0 2 * * *"
+    cron: "0 0 1 9 *"
     timezone: UTC
   partitions:
     - cycle:

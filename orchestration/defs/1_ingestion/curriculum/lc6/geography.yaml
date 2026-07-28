@@ -19,7 +19,7 @@ attributes:
   subject: geography
   subject_label: Geography (LC-Geography)
   automation: on_cron
-  automation_cron: "0 4 * * *"
+  automation_cron: "0 0 1 9 *"
   state_backed: true
   state_refresh_interval: monthly
   asset_check: lc6_geography_partition_count_min
@@ -37,4 +37,4 @@ attributes:
     partitions: subject × language (geography × en + ga = 2 partitions)
     dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_geography
     baml_extractor: b.ExtractLC6Syllabus(subject="geography", ...)
-    notes: "Per-subject Geography NCCA source; daily 04:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/geography/."
+    notes: "Per-subject Geography NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/geography/."

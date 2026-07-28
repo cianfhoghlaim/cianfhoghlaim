@@ -47,6 +47,14 @@ from dagster import (
     define_asset_job,
 )
 
+# Per the BIEP v3 scheduling policy (yearly for education content).
+# See orchestration/automation/biiep_scheduling.py for the canonical cron definitions.
+from orchestration.automation.biiep_scheduling import (
+    make_ireland_lc_yearly_automation,
+    make_ireland_jc_yearly_automation,
+    make_nightly_audit_automation,
+)
+
 try:
     from baml_client import b  # type: ignore[import-not-found]
     BAML_AVAILABLE = True
@@ -110,8 +118,12 @@ IRELAND_LC_COHORTS = [
         "Replaces lc5_<subject>_ingested, jc_<subject>_ingested, "
         "jc_short_course_<course>_extracted, jc_cba_<cba>_extracted. "
         "Reads the canonical registry to discover all 544+ cohorts. "
-        "Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change."
+        "Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change. "
+        "Triggers YEARLY (1st September 00:00 UTC) for the LC subset + JC subset "
+        "via the BIEP v3 scheduling policy. "
+        "Also triggers event-driven via the NCCA/SEC ChangeDetection sensors."
     ),
+    automation_condition=make_ireland_lc_yearly_automation() | make_ireland_jc_yearly_automation(),
 )
 def ireland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all Ireland cohorts (544+ rows)."""
@@ -152,8 +164,12 @@ def ireland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]
         "For each cohort in the registry, invokes the registry's "
         "`baml_function` field (e.g. b.ExtractCurriculumSyllabus for LC, "
         "b.ExtractJCCurriculum for JC, b.ExtractCBADescriptor for CBAs). "
-        "Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change."
+        "Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change. "
+        "Triggers YEARLY (1st September 00:00 UTC) for the LC subset + JC subset "
+        "via the BIEP v3 scheduling policy. "
+        "Also triggers event-driven via the NCCA/SEC ChangeDetection sensors."
     ),
+    automation_condition=make_ireland_lc_yearly_automation() | make_ireland_jc_yearly_automation(),
 )
 def ireland_extractions(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 2 — BAML extraction for all Ireland cohorts.
@@ -230,8 +246,12 @@ def ireland_extractions(context: AssetExecutionContext) -> dict[str, Any]:
         "Generic Ireland CocoIndex embedding (BIEP v3). "
         "Drives the canonical cianfhoghlaim.<jurisdiction>.<stage>.<subject>.<level>_<lang> "
         "LanceDB tables. Replaces the per-subject CocoIndex Apps. "
-        "Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change."
+        "Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change. "
+        "Triggers YEARLY (1st September 00:00 UTC) for the LC subset + JC subset "
+        "via the BIEP v3 scheduling policy. "
+        "Also triggers event-driven via the NCCA/SEC ChangeDetection sensors."
     ),
+    automation_condition=make_ireland_lc_yearly_automation() | make_ireland_jc_yearly_automation(),
 )
 def ireland_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 3 — CocoIndex embedding for all Ireland cohorts.

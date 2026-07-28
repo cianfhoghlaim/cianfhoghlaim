@@ -21,7 +21,7 @@ attributes:
   subject: computer_science
   subject_label: Computer Science (LC-Computer-Science)
   automation: on_cron
-  automation_cron: "0 4 * * *"
+  automation_cron: "0 0 1 9 *"
   state_backed: true
   state_refresh_interval: monthly
   asset_check: lc6_computer_science_partition_count_min
@@ -39,4 +39,4 @@ attributes:
     partitions: subject × language (computer_science × en + ga = 2 partitions)
     dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_computer_science
     baml_extractor: b.ExtractLC6Syllabus(subject="computer_science", ...)
-    notes: "Per-subject Computer Science NCCA source; daily 04:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/computer_science/."
+    notes: "Per-subject Computer Science NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/computer_science/."

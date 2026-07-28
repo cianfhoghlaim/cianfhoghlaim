@@ -13,7 +13,7 @@ attributes:
   source_name: sec_lc6
   module: cianfhoghlaim.dlt.british_isles.ireland.education.examinations
   schedule:
-    cron: "0 3 * * *"
+    cron: "0 0 1 9 *"
     timezone: UTC
   partitions:
     - subject:

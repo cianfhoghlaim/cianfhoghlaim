@@ -8,13 +8,21 @@
 # Routes through BAML `b.ExtractCircular` from
 # `baml/education/lc_extraction/circular_extraction.baml`.
 #
+# Cron schedule: MONTHLY (1st of each month, 00:00 UTC) per the
+# 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change +
+# the user direction (2026-07-28). Circulars are published irregularly
+# but at high frequency; a monthly poll covers the typical cadence.
+# The operator can also re-run the assets manually between monthly
+# crons if needed.
+#
 # Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+# Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-england-v1/
 type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
 attributes:
   source_name: gov_ie_circulars
   module: cianfhoghlaim.dlt.british_isles.ireland.education.gov_ie_circulars
   schedule:
-    cron: "0 * * * *"
+    cron: "0 0 1 * *"
     timezone: UTC
   partitions:
     - dept:

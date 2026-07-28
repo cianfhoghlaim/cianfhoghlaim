@@ -206,3 +206,43 @@ openspec archive 2026-08-13-biep-v3-systematic-download-ireland-england-v1 --yes
   pipeline is stable
 - Welsh (Wales) and Scots Gaelic (Scotland) language variants in the
   England pipeline — defer to the SCT/WLS/NI follow-up
+
+## BIEP v3 scheduling policy (per the 2026-07-28 user direction)
+
+Per the user direction: "all the schedules for these education official
+documents should be yearly for exam papers, marking schemes, syllabus
+and monthly for more regular types like government circulars."
+
+### Scheduling policy
+
+| Document class | Cadence | Cron |
+|:--|:--|:--|
+| NCCA + SEC + AQA + OCR + Edexcel education content (LC, JC, A-Level, GCSE) | **Yearly** | `0 0 1 9 *` (1st September 00:00 UTC = start of academic year) |
+| gov.ie education circulars (and equivalents) | **Monthly** | `0 0 1 * *` (1st of each month) |
+| M0 foundation assets (lakehouse_smoke_test, baml_codegen_gate, registry_seed_count, lance_namespace_ready) | **Weekly** | `0 6 * * 1` (Monday 06:00 UTC) |
+| BIEP v3 RAGAS + audit + asset checks | **Nightly** | `0 0 * * *` (00:00 UTC) |
+| ChangeDetection.io sensors (NCCA, SEC, AQA, OCR, Edexcel, WJEC, CCEA, JCQ, IoM, Jersey, Guernsey) | **Event-driven** (eager) | n/a |
+
+### Scheduling implementation tasks (15 of 15 complete)
+
+- [x] S.1 Create `orchestration/automation/biiep_scheduling.py` with `YEARLY_ACADEMIC_CRON`, `MONTHLY_CIRCULARS_CRON`, `WEEKLY_SMOKE_TEST_CRON`, `NIGHTLY_AUDIT_CRON` constants + `make_*_automation()` factories
+- [x] S.2 Refactor `orchestration/automation/biiep_daily_automation.py` to a thin re-export shim (backward-compat aliases for legacy callers)
+- [x] S.3 Retire the 6-hour `biiep_ocr_ensemble_schedule` (`ScheduleDefinition`) in `orchestration/defs/2_materials/ocr_comparison/ensemble_comparison/biiep_ocr_ensemble.py:128`
+- [x] S.4 Update the 6 lc6 subject YAMLs (`lc6/{mathematics,chemistry,geography,english,gaeilge,computer_science}.yaml`) to use `automation_cron: "0 0 1 9 *"`
+- [x] S.5 Update the 2 lc5 YAMLs (`lc5/{defs,english}.yaml`) to use yearly cron
+- [x] S.6 Update the 2 ie_ncca/ie_sec YAMLs to use yearly cron
+- [x] S.7 Update the 3 lc6_ncca/lc6_examinations/primary YAMLs to use yearly cron
+- [x] S.8 Update the 2 primary_jc_combined/junior_cycle YAMLs to use yearly cron
+- [x] S.9 Update the gov.ie circulars cron from hourly (`0 * * * *`) to monthly (`0 0 1 * *`)
+- [x] S.10 Update the 3 M0 foundation assets (`lakehouse_smoke_test`, `baml_codegen_gate`, `registry_seed_count`, `lance_namespace_ready`) to use `make_weekly_smoke_test_automation()` (Monday 06:00 UTC)
+- [x] S.11 Update the 3 M1 generic Ireland assets (`ireland_documents_ingested`, `ireland_extractions`, `ireland_embeddings`) to use `make_ireland_lc_yearly_automation() | make_ireland_jc_yearly_automation()` (1st September 00:00 UTC)
+- [x] S.12 Update the `M0_FOUNDATION_GROUP` docstrings to document the new schedule
+- [x] S.13 Remove the unused `ScheduleDefinition` import from `biiep_ocr_ensemble.py`
+- [x] S.14 Add a comment block at the retired 6-hour schedule location explaining the new yearly + event-driven pattern
+- [x] S.15 Update the openspec change tasks.md to record the scheduling policy
+
+## M2 (Ireland Junior Cycle) implementation
+
+The 16 M2 tasks per the openspec change are listed below. As of the
+last commit (533076c75), the M1 (Ireland Leaving Cycle) is complete.
+M2 is the next milestone.

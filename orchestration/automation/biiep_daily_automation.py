@@ -1,96 +1,68 @@
-"""Daily 8-jurisdiction declarative automation — BIEP v3 P2.
+"""BIEP v3 scheduling — yearly education content + monthly circulars.
 
-Per the 2026-08-08-biep-v3-production-readiness-v1 change +
-2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
+Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
 
-Triggers the canonical daily backfill for all 8 BIEP v3 jurisdictions
-at staggered UTC times per the M1 spec:
-- Ireland Leaving Cycle: 02:00 UTC
-- Ireland Junior Cycle:  02:30 UTC
-- England A-Level:        03:00 UTC
-- England GCSE:           03:30 UTC
-- Scotland:               04:00 UTC
-- Wales:                  04:00 UTC
-- Northern Ireland:       04:00 UTC
-- Crown Dependencies:     04:30 UTC
+This file is a **thin re-export shim** for the canonical
+`orchestration.automation.biiep_scheduling` module. It exists for
+backward compatibility with the legacy
+`biiep_daily_automation.py` callers (the 2026-08-08 production-readiness
+change imported the per-jurisdiction daily factories from this module).
 
-Replaces the dangling 6-hour `ScheduleDefinition` that targets a
-non-existent job.
+**All daily crons have been retired in favour of yearly crons** for
+education content (NCCA, SEC, AQA, OCR, Edexcel) and monthly crons
+for government circulars. See the canonical module for details.
+
+Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-england-v1/
+openspec/specs/british-isles-education-pipeline-v3/spec.md
 """
 from __future__ import annotations
 
-from dagster import AutomationCondition
-
-# The canonical 8 jurisdictions
-EIGHT_JURISDICTIONS = (
-    "ireland", "england", "scotland", "wales",
-    "northern_ireland", "jersey", "guernsey", "isle_of_man",
+from .biiep_scheduling import (
+    EIGHT_JURISDICTIONS,
+    MONTHLY_CIRCULARS_CRON,
+    NIGHTLY_AUDIT_CRON,
+    WEEKLY_SMOKE_TEST_CRON,
+    YEARLY_ACADEMIC_CRON,
+    make_eager_automation,
+    make_england_a_level_yearly_automation,
+    make_england_gcse_yearly_automation,
+    make_ireland_jc_yearly_automation,
+    make_ireland_lc_yearly_automation,
+    make_monthly_circulars_automation,
+    make_nightly_audit_automation,
+    make_weekly_smoke_test_automation,
+    make_yearly_education_automation,
 )
 
-
 # -----------------------------------------------------------------------------
-# Per-milestone daily automation cron schedules
+# Backward-compat aliases (the legacy daily factories)
 # -----------------------------------------------------------------------------
+# These are kept so that legacy callers (e.g. `biiep_daily_automation.py`
+# references in the 2026-08-08 change) don't break. New code MUST use
+# the canonical `make_*_yearly_automation()` factories below.
 
-# Format: (milestone, jurisdiction, stage, UTC_hour, UTC_minute)
-DAILY_CRON_SCHEDULES = (
-    # M1 — Ireland Leaving Cycle (12 cohorts, EN + GA)
-    ("m1", "ireland", "leaving_cycle", 2, 0),
-    # M2 — Ireland Junior Cycle (140 cohorts, EN + GA)
-    ("m2", "ireland", "junior_cycle", 2, 30),
-    # M3 — England A-Level (147 cohorts, AQA + OCR + Edexcel)
-    ("m3", "england", "a_level", 3, 0),
-    # M4 — England GCSE (129 cohorts, AQA + OCR + Edexcel)
-    ("m4", "england", "gcse", 3, 30),
-    # Reserved for the 4 follow-up jurisdictions (deferred to a different change)
-    ("sct_wls_ni", "scotland+waales+ni", "all", 4, 0),
-    ("crown", "jersey+guernsey+isle_of_man", "all", 4, 30),
-)
+make_biiep_v3_daily_automation = make_england_a_level_yearly_automation  # alias to yearly
+"""Backward-compat alias; new code must use `make_yearly_education_automation`."""
 
-
-def make_biiep_v3_daily_automation() -> AutomationCondition:
-    """Daily automation for the BIEP v3 ingestion root.
-
-    Triggers at midnight UTC. Eager downstream (extraction → embedding).
-    """
-    return AutomationCondition.cron("@daily")
-
-
-def make_per_jurisdiction_daily_automation(jurisdiction: str) -> AutomationCondition:
-    """Per-jurisdiction daily automation.
-
-    Triggers at midnight UTC. Eager downstream.
-    """
-    return AutomationCondition.cron(f"@daily[{jurisdiction}]")
-
-
-def make_ireland_lc_daily_automation() -> AutomationCondition:
-    """Daily automation for Ireland LC (M1) — 02:00 UTC."""
-    return AutomationCondition.cron("0 2 * * *")
-
-
-def make_ireland_jc_daily_automation() -> AutomationCondition:
-    """Daily automation for Ireland JC (M2) — 02:30 UTC."""
-    return AutomationCondition.cron("30 2 * * *")
-
-
-def make_england_a_level_daily_automation() -> AutomationCondition:
-    """Daily automation for England A-Level (M3) — 03:00 UTC."""
-    return AutomationCondition.cron("0 3 * * *")
-
-
-def make_england_gcse_daily_automation() -> AutomationCondition:
-    """Daily automation for England GCSE (M4) — 03:30 UTC."""
-    return AutomationCondition.cron("30 3 * * *")
+make_per_jurisdiction_daily_automation = make_ireland_lc_yearly_automation  # alias to yearly
+"""Backward-compat alias; new code must use the per-milestone yearly factories."""
 
 
 __all__ = [
     "EIGHT_JURISDICTIONS",
-    "DAILY_CRON_SCHEDULES",
-    "make_biiep_v3_daily_automation",
-    "make_per_jurisdiction_daily_automation",
-    "make_ireland_lc_daily_automation",
-    "make_ireland_jc_daily_automation",
-    "make_england_a_level_daily_automation",
-    "make_england_gcse_daily_automation",
+    "YEARLY_ACADEMIC_CRON",
+    "MONTHLY_CIRCULARS_CRON",
+    "WEEKLY_SMOKE_TEST_CRON",
+    "NIGHTLY_AUDIT_CRON",
+    "make_yearly_education_automation",
+    "make_monthly_circulars_automation",
+    "make_weekly_smoke_test_automation",
+    "make_nightly_audit_automation",
+    "make_eager_automation",
+    "make_ireland_lc_yearly_automation",
+    "make_ireland_jc_yearly_automation",
+    "make_england_a_level_yearly_automation",
+    "make_england_gcse_yearly_automation",
+    "make_biiep_v3_daily_automation",  # backward-compat alias (now yearly)
+    "make_per_jurisdiction_daily_automation",  # backward-compat alias (now yearly)
 ]

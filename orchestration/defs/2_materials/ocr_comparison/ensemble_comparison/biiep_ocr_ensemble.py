@@ -24,7 +24,6 @@ from dagster import (
     sensor,
     MaterializeResult,
     AssetKey,
-    ScheduleDefinition,
 )
 
 try:
@@ -124,13 +123,35 @@ def biiep_ocr_ensemble_ragas_check(context: AssetCheckExecutionContext) -> Asset
     )
 
 
-# Dagster cron: every 6 hours (the BIEP v2 ensemble orchestration cadence).
-biiep_ocr_ensemble_schedule = ScheduleDefinition(
-    name="biiep_ocr_ensemble_every_6h",
-    job_name="biiep_ocr_ensemble_job",
-    cron_schedule="0 */6 * * *",
-    execution_timezone="UTC",
-)
+# The legacy 6-hour `biiep_ocr_ensemble_schedule` was retired in the
+# 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
+#
+# The 4-path OCR ensemble (`biiep_ocr_ensemble` below) is now triggered
+# by:
+# - **Yearly** automation on 1st September, 00:00 UTC (the canonical
+#   BIEP v3 yearly tick for the NCCA + SEC + AQA + OCR + Edexcel
+#   education content refresh). See
+#   `orchestration.automation.biiep_scheduling.YEARLY_ACADEMIC_CRON`.
+# - **Event-driven** automation via the ChangeDetection.io sensors
+#   (the AQA/OCR/Edexcel/NCCA/SEC/WJEC/CCEA/JCQ/IoM/Jersey/Guernsey
+#   sensors). When a new spec is published, the sensor fires and the
+#   ensemble re-runs against the new PDF.
+#
+# The 4-path ensemble is also manually triggerable via
+# `mise run dagster:oideachais -- --select biiep_ocr_ensemble`.
+#
+# The legacy 6-hour schedule was retired because:
+# 1. Education content (syllabus, exam papers, marking schemes) is
+#    published annually, not every 6 hours.
+# 2. The 6-hour cadence produced 4 unnecessary ensemble runs per day
+#    per cohort (12 cohorts × 4 paths = 48 unnecessary runs/day).
+# 3. The ChangeDetection.io sensors + yearly cron are sufficient to
+#    catch ad-hoc updates without waste.
+#
+# The 6-hour cadence was originally proposed in
+# `openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/`
+# as a precaution during the BIEP v2 ensemble development; the BIEP v3
+# production-readiness change replaced it with yearly + event-driven.
 
 
 def get_biiep_ocr_ensemble_spec() -> AssetSpec:

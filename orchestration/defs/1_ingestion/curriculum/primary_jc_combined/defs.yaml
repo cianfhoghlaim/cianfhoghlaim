@@ -23,7 +23,7 @@ attributes:
   source_name: ireland_primary_jc
   module: cianfhoghlaim.dlt.british_isles.ireland.education.primary_jc_combined
   schedule:
-    cron: "0 5 * * *"
+    cron: "0 0 1 9 *"
     timezone: UTC
   partitions:
     - stage:

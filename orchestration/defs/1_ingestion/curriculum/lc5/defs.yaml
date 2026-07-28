@@ -13,6 +13,6 @@ attributes:
   domain: curriculum
   nation: ie
   automation: on_cron
-  automation_cron: "0 5 * * *"
+  automation_cron: "0 0 1 9 *"
   state_backed: true
   state_refresh_interval: monthly

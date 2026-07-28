@@ -21,7 +21,7 @@ attributes:
   subject: gaeilge
   subject_label: Gaeilge (LC-Gaeilge, taught in Irish)
   automation: on_cron
-  automation_cron: "0 4 * * *"
+  automation_cron: "0 0 1 9 *"
   state_backed: true
   state_refresh_interval: monthly
   asset_check: lc6_gaeilge_partition_count_min
@@ -39,4 +39,4 @@ attributes:
     partitions: subject × language (gaeilge × en + ga = 2 partitions; default `ga`)
     dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_gaeilge
     baml_extractor: b.ExtractLC6Syllabus(subject="gaeilge", ...)
-    notes: "Per-subject Gaeilge NCCA source; daily 04:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/gaeilge/. Default language is `ga` (Gaeilge is taught in Irish)."
+    notes: "Per-subject Gaeilge NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/gaeilge/. Default language is `ga` (Gaeilge is taught in Irish)."

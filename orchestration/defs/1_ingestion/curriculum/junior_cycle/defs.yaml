@@ -22,7 +22,7 @@ attributes:
   source_name: ireland_junior_cycle
   module: cianfhoghlaim.dlt.british_isles.ireland.education.junior_cycle
   schedule:
-    cron: "0 4 * * 1"
+    cron: "0 0 1 9 *"
     timezone: UTC
   partitions:
     - subject:

@@ -17,7 +17,7 @@ attributes:
   source_name: ireland_primary
   module: cianfhoghlaim.dlt.british_isles.ireland.education.primary
   schedule:
-    cron: "0 4 * * *"
+    cron: "0 0 1 9 *"
     timezone: UTC
   partitions:
     - area:
