@@ -108,7 +108,7 @@ def make_yearly_education_automation() -> AutomationCondition:
 
     Triggers on 1st September, 00:00 UTC.
     """
-    return AutomationCondition.cron(YEARLY_ACADEMIC_CRON)
+    return AutomationCondition.on_cron(YEARLY_ACADEMIC_CRON, cron_timezone="UTC")
 
 
 def make_monthly_circulars_automation() -> AutomationCondition:
@@ -116,7 +116,7 @@ def make_monthly_circulars_automation() -> AutomationCondition:
 
     Triggers on 1st of each month, 00:00 UTC.
     """
-    return AutomationCondition.cron(MONTHLY_CIRCULARS_CRON)
+    return AutomationCondition.on_cron(MONTHLY_CIRCULARS_CRON, cron_timezone="UTC")
 
 
 def make_weekly_smoke_test_automation() -> AutomationCondition:
@@ -124,7 +124,7 @@ def make_weekly_smoke_test_automation() -> AutomationCondition:
 
     Triggers on Monday, 06:00 UTC.
     """
-    return AutomationCondition.cron(WEEKLY_SMOKE_TEST_CRON)
+    return AutomationCondition.on_cron(WEEKLY_SMOKE_TEST_CRON, cron_timezone="UTC")
 
 
 def make_nightly_audit_automation() -> AutomationCondition:
@@ -132,7 +132,7 @@ def make_nightly_audit_automation() -> AutomationCondition:
 
     Triggers at 00:00 UTC.
     """
-    return AutomationCondition.cron(NIGHTLY_AUDIT_CRON)
+    return AutomationCondition.on_cron(NIGHTLY_AUDIT_CRON, cron_timezone="UTC")
 
 
 def make_eager_automation() -> AutomationCondition:

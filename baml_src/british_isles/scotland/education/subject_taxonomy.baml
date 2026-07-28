@@ -71,3 +71,69 @@ enum SCQFSubject {
   CHILD_CARE_AND_DEVELOPMENT
   OTHER
 }
+
+// ============================================================================
+// BAML function — the Scotland (SQA) syllabus extractor (BIEP v3)
+// ============================================================================
+//
+// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change
+// + the 2026-07-30-biep-v3-sct-wls-ni-v1 change (now promoted to a
+// per-jurisdiction proper pipeline).
+//
+// Extracts the structured syllabus data from a Scotland (SQA) PDF
+// specification for any (subject, level) cohort.
+
+class ScotlandSyllabusSpec {
+  source_pdf string
+  source_pages int
+  subject SCQFSubject
+  level SCQFLevel
+  title string                       @description("The full title of the qualification (e.g. 'Mathematics Higher')")
+  version string                    @description("e.g. '2024' or '2025-onwards'")
+  first_teaching_year int?
+  last_certification_year int?
+  total_marks int
+  component_papers int               @description("Number of exam papers (typically 1-3 for Scotland)")
+
+  // Topic coverage
+  topics ScotlandTopic[]
+
+  // Assessment structure
+  assessment_objectives ScotlandAssessmentObjective[]
+
+  // Cross-references
+  external_assessment_pct int       @description("Percentage of the grade from the external exam (rest is coursework)")
+  coursework_pct int
+}
+
+class ScotlandTopic {
+  topic_code string                   @description("e.g. 'MTH-3.1' or 'CH-2.4'")
+  topic_label string                  @description("Human-readable topic title")
+  strand string                       @description("The topic strand (e.g. 'Algebra', 'Calculus', 'Cell Biology')")
+  learning_outcomes string[]
+  weighting_pct int
+}
+
+class ScotlandAssessmentObjective {
+  ao_id string                        @description("e.g. 'AO1' or 'AO2.1'")
+  ao_label string
+  ao_description string
+  weighting_pct int
+}
+
+function ExtractScotlandSyllabus(
+  pdf_text: string,
+  subject: SCQFSubject?,
+  level: SCQFLevel?,
+) -> ScotlandSyllabusSpec {  client BIEPV3Extract
+  prompt #"
+    Extract the structured syllabus data from this Scotland (SQA)
+    qualification PDF for the subject {{ subject }} at the
+    {{ level }} level.
+
+    PDF text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
+}

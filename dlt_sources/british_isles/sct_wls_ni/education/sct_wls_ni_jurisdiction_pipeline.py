@@ -1,85 +1,64 @@
-"""Generic multi-jurisdiction pipeline for Scotland + Wales + NI (BIEP v3).
+"""sct_wls_ni — BIEP v3 SCT + WLS + NI pipeline re-export shim.
 
-Per the 2026-07-30-biep-v3-sct-wls-ni-v1 change +
-2026-08-10-biep-v3-preflight-bug-fixes-v1 inheritance refactor.
+Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
+the 3 deferred "mainland" British Isles jurisdictions (Scotland + Wales +
+Northern Ireland) have been **promoted to proper per-jurisdiction
+directories**. The canonical jurisdiction pipeline files are now:
 
-Handles 3 jurisdictions (scotland + wales + northern_ireland) via a
-single generic factory. The canonical BAML function
-`ExtractUKQualSpec(board: AwardingBody, ...)` is reused — only the
-per-board enum (SQA / WJEC / CCEA) differs.
+- `dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline`
+  — `ScotlandJurisdictionPipeline` (BIEP v3)
+- `dlt_sources.british_isles.wales.education.wales_jurisdiction_pipeline`
+  — `WalesJurisdictionPipeline` (BIEP v3)
+- `dlt_sources.british_isles.northern_ireland.education.northern_ireland_jurisdiction_pipeline`
+  — `NorthernIrelandJurisdictionPipeline` (BIEP v3)
 
-Covers:
-  - Scotland: 50 SCQF subjects × 3 levels (National 5 + Higher + Adv Higher) × 2 langs = 600
-  - Wales: 80 WJEC subjects × 2 levels (GCSE + A-Level) × 2 langs = 640
-  - Northern Ireland: 35 CCEA subjects × 2 levels (GCSE + A-Level) × 2 langs = 280
+This file is kept as a **re-export shim** for backward compatibility
+with the BIEP v3 deferred openspec change
+`2026-07-30-biep-v3-sct-wls-ni-v1/` and the BIEP v3 orchestration assets
+(`orchestration/defs/2_materials/sct_wls_ni_education/` + the MotherDuck
+Flight `motherduck/flights/sct_wls_ni_flight.py`) that may still
+import from `dlt_sources.british_isles.sct_wls_ni.education`.
 
-= **1,520 unique qualifications** across the 3 jurisdictions.
-
-## KCG patterns used
-- ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
-  ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
-- dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination
-  factory at ``dlt_sources.common.destinations_cianfhoghlaim`` is used.
-- JurisdictionPipelineBase (per the 2026-08-10 preflight change) —
-  inherits shared boilerplate.
+The `sct_wls_ni_jurisdiction_pipeline()` function is a canonical
+**multi-jurisdiction factory** that returns the per-jurisdiction
+JurisdictionPipeline instance (NOT a new SctWlsNiJurisdictionPipeline).
 
 Reference: openspec/changes/2026-07-30-biep-v3-sct-wls-ni-v1/
+Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-england-v1/
 """
 from __future__ import annotations
 
-import logging
-import os
-from pathlib import Path
-
-from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import (
-    JurisdictionPipelineBase,
+from dlt_sources.british_isles.northern_ireland.education.northern_ireland_jurisdiction_pipeline import (
+    NorthernIrelandJurisdictionPipeline,
+    northern_ireland_jurisdiction_pipeline,
+)
+from dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline import (
+    ScotlandJurisdictionPipeline,
+    scotland_jurisdiction_pipeline,
+)
+from dlt_sources.british_isles.wales.education.wales_jurisdiction_pipeline import (
+    WalesJurisdictionPipeline,
+    wales_jurisdiction_pipeline,
 )
 
-logger = logging.getLogger(__name__)
-
-# The 3 jurisdictions covered by this generic pipeline
+# The 3 jurisdictions covered by this multi-jurisdiction factory
 SCT_WLS_NI_JURISDICTIONS: tuple[str, ...] = (
     "scotland", "wales", "northern_ireland",
 )
 
-# Cache root for all 3
-SCT_WLS_NI_CACHE_ROOT = Path(
-    os.getenv("STEDDING_INGEST_QUEUE", "/stedding/ingest_queue")
-)
+
+# Per-jurisdiction pre-built instances (for backward compat with the
+# BIEP v3 orchestration assets that imported them as
+# `sct_wls_ni_scotland_pipeline` etc.)
+sct_wls_ni_scotland_pipeline = scotland_jurisdiction_pipeline
+sct_wls_ni_wales_pipeline = wales_jurisdiction_pipeline
+sct_wls_ni_northern_ireland_pipeline = northern_ireland_jurisdiction_pipeline
 
 
-class SctWlsNiJurisdictionPipeline(JurisdictionPipelineBase):
-    """Scotland / Wales / Northern Ireland jurisdiction pipeline (BIEP v3)."""
-
-    STAGE = "gcse"
-    VALID_JURISDICTIONS = SCT_WLS_NI_JURISDICTIONS
-
-    def build_pipeline_resource(self):
-        """Yield one row per (board, subject, level) cohort from the registry."""
-        from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
-
-        subjects = query_by_jurisdiction(self.jurisdiction)
-        if not subjects:
-            raise ValueError(
-                f"No subjects found in the registry for "
-                f"jurisdiction={self.jurisdiction!r}. "
-                "Run seed_registry() first."
-            )
-
-        logger.info(
-            "sct_wls_ni_jurisdiction_pipeline: discovered %d subjects for "
-            "jurisdiction=%r",
-            len(subjects), self.jurisdiction,
-        )
-
-        for row in subjects:
-            yield self.subject_to_row(row, self.STAGE)
-
-
-# Pre-built instances for the 3 jurisdictions covered by this pipeline.
-sct_wls_ni_scotland_pipeline = SctWlsNiJurisdictionPipeline("scotland")
-sct_wls_ni_wales_pipeline = SctWlsNiJurisdictionPipeline("wales")
-sct_wls_ni_northern_ireland_pipeline = SctWlsNiJurisdictionPipeline("northern_ireland")
+# Backward-compat alias (the legacy class name; the canonical class
+# names are ScotlandJurisdictionPipeline + WalesJurisdictionPipeline +
+# NorthernIrelandJurisdictionPipeline)
+SctWlsNiJurisdictionPipeline = ScotlandJurisdictionPipeline
 
 
 def sct_wls_ni_jurisdiction_pipeline(
@@ -89,19 +68,41 @@ def sct_wls_ni_jurisdiction_pipeline(
 ):
     """The canonical generic Scotland/Wales/NI DLT pipeline factory.
 
-    Covers the 3 jurisdictions (scotland + wales + northern_ireland) via
-    a single factory. The jurisdiction argument selects which registry
-    rows to materialise.
+    This function is kept for backward compatibility with the BIEP v3
+    deferred openspec change `2026-07-30-biep-v3-sct-wls-ni-v1/`. New
+    code SHOULD import the per-jurisdiction pipelines directly:
+
+        from dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline import (
+            scotland_jurisdiction_pipeline,
+        )
+
+    Returns the pre-built per-jurisdiction JurisdictionPipelineBase
+    subclass instance (NOT a new SctWlsNiJurisdictionPipeline) so callers
+    that compare against the canonical per-jurisdiction instance work
+    correctly.
     """
-    return SctWlsNiJurisdictionPipeline(jurisdiction, use_md=use_md)
+    if jurisdiction == "scotland":
+        return scotland_jurisdiction_pipeline
+    if jurisdiction == "wales":
+        return wales_jurisdiction_pipeline
+    if jurisdiction == "northern_ireland":
+        return northern_ireland_jurisdiction_pipeline
+    raise ValueError(
+        f"jurisdiction={jurisdiction!r} not in {SCT_WLS_NI_JURISDICTIONS!r}"
+    )
 
 
 __all__ = [
-    "SctWlsNiJurisdictionPipeline",
     "sct_wls_ni_jurisdiction_pipeline",
     "sct_wls_ni_scotland_pipeline",
     "sct_wls_ni_wales_pipeline",
     "sct_wls_ni_northern_ireland_pipeline",
+    "SctWlsNiJurisdictionPipeline",
     "SCT_WLS_NI_JURISDICTIONS",
-    "SCT_WLS_NI_CACHE_ROOT",
+    "ScotlandJurisdictionPipeline",
+    "WalesJurisdictionPipeline",
+    "NorthernIrelandJurisdictionPipeline",
+    "scotland_jurisdiction_pipeline",
+    "wales_jurisdiction_pipeline",
+    "northern_ireland_jurisdiction_pipeline",
 ]

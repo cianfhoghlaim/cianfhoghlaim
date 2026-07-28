@@ -1,75 +1,62 @@
-"""Generic Crown Dependencies pipeline (BIEP v3).
+"""crown_dependencies — BIEP v3 Crown Dependencies pipeline re-export shim.
 
-Per the 2026-07-31-biep-v3-crown-dependencies-v1 change +
-2026-08-10-biep-v3-preflight-bug-fixes-v1 inheritance refactor.
+Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
+the 3 deferred Crown Dependencies (Jersey + Guernsey + Isle of Man) have
+been **promoted to proper per-jurisdiction directories**. The canonical
+jurisdiction pipeline files are now:
 
-Handles the 3 Crown Dependencies (Jersey + Guernsey + Isle of Man) via
-a single generic factory. The 3 jurisdictions use the English GCSE +
-A-Level system (with a small number of additional local qualifications
-like French Baccalauréat in Jersey).
+- `dlt_sources.british_isles.jersey.education.jersey_jurisdiction_pipeline`
+  — `JerseyJurisdictionPipeline` (BIEP v3)
+- `dlt_sources.british_isles.guernsey.education.guernsey_jurisdiction_pipeline`
+  — `GuernseyJurisdictionPipeline` (BIEP v3)
+- `dlt_sources.british_isles.isle_of_man.education.isle_of_man_jurisdiction_pipeline`
+  — `IsleOfManJurisdictionPipeline` (BIEP v3)
 
-Covers:
-  - Jersey: 30 subjects × 4 levels (GCSE + A-Level + IB + French Bac) × 2 langs = 240
-  - Guernsey: 30 subjects × 4 levels × 2 langs = 240
-  - Isle of Man: 30 subjects × 4 levels × 2 langs = 240
+This file is kept as a **re-export shim** for backward compatibility
+with the BIEP v3 deferred openspec change
+`2026-07-31-biep-v3-crown-dependencies-v1/` and the BIEP v3
+orchestration assets
+(`orchestration/defs/2_materials/crown_dependencies_education/` + the
+MotherDuck Flight
+`motherduck/flights/crown_dependencies_flight.py`) that may still
+import from `dlt_sources.british_isles.crown_dependencies.education`.
 
-= **720 unique qualifications** across the 3 Crown Dependencies.
-
-## KCG patterns used
-- ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
-  ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
-- dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination
-  factory at ``dlt_sources.common.destinations_cianfhoghlaim`` is used.
-- JurisdictionPipelineBase (per the 2026-08-10 preflight change) —
-  inherits shared boilerplate.
+The `crown_dependencies_jurisdiction_pipeline()` function is a canonical
+**multi-jurisdiction factory** that returns the per-jurisdiction
+JurisdictionPipeline instance (NOT a new CrownDependenciesJurisdictionPipeline).
 
 Reference: openspec/changes/2026-07-31-biep-v3-crown-dependencies-v1/
+Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-england-v1/
 """
 from __future__ import annotations
 
-import logging
-
-from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import (
-    JurisdictionPipelineBase,
+from dlt_sources.british_isles.guernsey.education.guernsey_jurisdiction_pipeline import (
+    GuernseyJurisdictionPipeline,
+    guernsey_jurisdiction_pipeline,
+)
+from dlt_sources.british_isles.isle_of_man.education.isle_of_man_jurisdiction_pipeline import (
+    IsleOfManJurisdictionPipeline,
+    isle_of_man_jurisdiction_pipeline,
+)
+from dlt_sources.british_isles.jersey.education.jersey_jurisdiction_pipeline import (
+    JerseyJurisdictionPipeline,
+    jersey_jurisdiction_pipeline,
 )
 
-logger = logging.getLogger(__name__)
-
+# The 3 jurisdictions covered by this multi-jurisdiction factory
 CROWN_DEPENDENCIES: tuple[str, ...] = ("jersey", "guernsey", "isle_of_man")
 
 
-class CrownDependenciesJurisdictionPipeline(JurisdictionPipelineBase):
-    """Crown Dependencies (Jersey / Guernsey / Isle of Man) pipeline (BIEP v3)."""
-
-    STAGE = "gcse"
-    VALID_JURISDICTIONS = CROWN_DEPENDENCIES
-
-    def build_pipeline_resource(self):
-        """Yield one row per (board, subject, level) cohort from the registry."""
-        from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
-
-        subjects = query_by_jurisdiction(self.jurisdiction)
-        if not subjects:
-            raise ValueError(
-                f"No subjects found in the registry for "
-                f"jurisdiction={self.jurisdiction!r}. "
-                "Run seed_registry() first."
-            )
-
-        logger.info(
-            "crown_dependencies_jurisdiction_pipeline: discovered %d subjects "
-            "for %r",
-            len(subjects), self.jurisdiction,
-        )
-
-        for row in subjects:
-            yield self.subject_to_row(row, self.STAGE)
+# Per-jurisdiction pre-built instances (for backward compat with the
+# BIEP v3 orchestration assets that imported them as
+# `crown_jersey_pipeline` etc.)
+crown_jersey_pipeline = jersey_jurisdiction_pipeline
+crown_guernsey_pipeline = guernsey_jurisdiction_pipeline
+crown_isle_of_man_pipeline = isle_of_man_jurisdiction_pipeline
 
 
-# Pre-built instances for the 3 Crown Dependencies.
-crown_jersey_pipeline = CrownDependenciesJurisdictionPipeline("jersey")
-crown_guernsey_pipeline = CrownDependenciesJurisdictionPipeline("guernsey")
-crown_isle_of_man_pipeline = CrownDependenciesJurisdictionPipeline("isle_of_man")
+# Backward-compat alias (the legacy class name)
+CrownDependenciesJurisdictionPipeline = JerseyJurisdictionPipeline
 
 
 def crown_dependencies_jurisdiction_pipeline(
@@ -79,18 +66,33 @@ def crown_dependencies_jurisdiction_pipeline(
 ):
     """The canonical generic Crown Dependencies DLT pipeline factory.
 
-    Handles the 3 Crown Dependencies (Jersey + Guernsey + Isle of Man)
-    via a single factory function. The jurisdiction argument selects
-    which registry rows to materialise.
+    Returns the pre-built per-jurisdiction JurisdictionPipelineBase
+    subclass instance (NOT a new CrownDependenciesJurisdictionPipeline) so
+    callers that compare against the canonical per-jurisdiction instance
+    work correctly.
     """
-    return CrownDependenciesJurisdictionPipeline(jurisdiction, use_md=use_md)
+    if jurisdiction == "jersey":
+        return jersey_jurisdiction_pipeline
+    if jurisdiction == "guernsey":
+        return guernsey_jurisdiction_pipeline
+    if jurisdiction == "isle_of_man":
+        return isle_of_man_jurisdiction_pipeline
+    raise ValueError(
+        f"jurisdiction={jurisdiction!r} not in {CROWN_DEPENDENCIES!r}"
+    )
 
 
 __all__ = [
-    "CrownDependenciesJurisdictionPipeline",
     "crown_dependencies_jurisdiction_pipeline",
     "crown_jersey_pipeline",
     "crown_guernsey_pipeline",
     "crown_isle_of_man_pipeline",
+    "CrownDependenciesJurisdictionPipeline",
     "CROWN_DEPENDENCIES",
+    "JerseyJurisdictionPipeline",
+    "GuernseyJurisdictionPipeline",
+    "IsleOfManJurisdictionPipeline",
+    "jersey_jurisdiction_pipeline",
+    "guernsey_jurisdiction_pipeline",
+    "isle_of_man_jurisdiction_pipeline",
 ]

@@ -53,3 +53,69 @@ enum JerseySubject {
   DESIGN_AND_TECHNOLOGY
   OTHER
 }
+
+// ============================================================================
+// BAML function — the Jersey syllabus extractor (BIEP v3)
+// ============================================================================
+//
+// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change
+// + the 2026-07-31-biep-v3-crown-dependencies-v1 change (now promoted to
+// a per-jurisdiction proper pipeline).
+//
+// Extracts the structured syllabus data from a Jersey PDF specification.
+// Jersey has its own curriculum (a hybrid of English GCSE + French
+// Baccalauréat). The Jersey Curriculum is administered by the States of
+// Jersey Education Department.
+
+class JerseySyllabusSpec {
+  source_pdf string
+  source_pages int
+  subject JerseySubject
+  level JerseyLevel
+  title string                       @description("The full title of the qualification (e.g. 'Mathematics GCSE')")
+  version string                    @description("e.g. '2024' or '2025-onwards'")
+  first_teaching_year int?
+  last_certification_year int?
+  total_marks int
+  component_papers int
+
+  // French Baccalauréat flag
+  is_french_bac bool                 @description("True if this is a French Baccalauréat qualification")
+
+  // Topic coverage
+  topics JerseyTopic[]
+  assessment_objectives JerseyAssessmentObjective[]
+}
+
+class JerseyTopic {
+  topic_code string
+  topic_label string
+  strand string
+  learning_outcomes string[]
+  weighting_pct int
+}
+
+class JerseyAssessmentObjective {
+  ao_id string
+  ao_label string
+  ao_description string
+  weighting_pct int
+}
+
+function ExtractJerseySyllabus(
+  pdf_text: string,
+  subject: JerseySubject?,
+  level: JerseyLevel?,
+) -> JerseySyllabusSpec {  client BIEPV3Extract
+  prompt #"
+    Extract the structured syllabus data from this Jersey (States of
+    Jersey Education Department) PDF specification for the subject
+    {{ subject }} at the {{ level }} level. Flag whether the
+    qualification is a French Baccalauréat via the is_french_bac field.
+
+    PDF text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
+}

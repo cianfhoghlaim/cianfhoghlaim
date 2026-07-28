@@ -65,3 +65,61 @@ enum CCEASubject {
   NUTRITION_AND_FOOD_SCIENCE
   OTHER
 }
+
+// ============================================================================
+// BAML function — the Northern Ireland (CCEA) exam paper extractor (BIEP v3)
+// ============================================================================
+//
+// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change
+// + the 2026-07-30-biep-v3-sct-wls-ni-v1 change (now promoted to a
+// per-jurisdiction proper pipeline).
+//
+// Extracts the structured exam paper data from a Northern Ireland (CCEA)
+// PDF exam paper for any (subject, level) cohort.
+
+class NorthernIrelandExamPaper {
+  source_pdf string
+  source_pages int
+  subject CCEASubject
+  level CCEALevel
+  paper_code string                   @description("e.g. 'NI-MAT-GCSE-P1-2024'")
+  exam_year int
+  total_marks int
+  duration_minutes int
+
+  // Question structure
+  question_sections NISection[]
+}
+
+class NISection {
+  section_id string                   @description("e.g. 'Section A' or 'Section B'")
+  section_title string
+  total_marks int
+  questions NIQuestion[]
+}
+
+class NIQuestion {
+  question_id string                  @description("e.g. 'Q1' or 'Q2a'")
+  question_text string
+  total_marks int
+  part_breakdown string?              @description("For multi-part questions")
+  topics_assessed string[]
+  ao_ids string[]                     @description("Assessment objective IDs (e.g. ['AO1', 'AO2'])")
+}
+
+function ExtractNIExamPaper(
+  pdf_text: string,
+  subject: CCEASubject?,
+  level: CCEALevel?,
+) -> NorthernIrelandExamPaper {  client BIEPV3Extract
+  prompt #"
+    Extract the structured exam paper data from this Northern Ireland
+    (CCEA) PDF exam paper for the subject {{ subject }} at the
+    {{ level }} level.
+
+    PDF text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
+}

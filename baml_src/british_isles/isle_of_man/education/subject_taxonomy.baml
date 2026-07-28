@@ -53,3 +53,69 @@ enum IsleOfManSubject {
   HEALTH_AND_SOCIAL_CARE
   OTHER
 }
+
+// ============================================================================
+// BAML function — the Isle of Man syllabus extractor (BIEP v3)
+// ============================================================================
+//
+// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change
+// + the 2026-07-31-biep-v3-crown-dependencies-v1 change (now promoted to
+// a per-jurisdiction proper pipeline).
+//
+// Extracts the structured syllabus data from an Isle of Man PDF
+// specification. The Isle of Man uses the English GCSE + A-Level
+// system. Administered by the Isle of Man Department of Education,
+// Sport and Culture.
+
+class IsleOfManSyllabusSpec {
+  source_pdf string
+  source_pages int
+  subject IsleOfManSubject
+  level IsleOfManLevel
+  title string
+  version string
+  first_teaching_year int?
+  last_certification_year int?
+  total_marks int
+  component_papers int
+
+  // Manx Gaelic flag (the IoM has a unique Manx language GCSE)
+  has_manx_language bool           @description("True if the subject is the Manx Gaelic language GCSE")
+
+  topics IsleOfManTopic[]
+  assessment_objectives IsleOfManAssessmentObjective[]
+}
+
+class IsleOfManTopic {
+  topic_code string
+  topic_label string
+  strand string
+  learning_outcomes string[]
+  weighting_pct int
+}
+
+class IsleOfManAssessmentObjective {
+  ao_id string
+  ao_label string
+  ao_description string
+  weighting_pct int
+}
+
+function ExtractIsleOfManSyllabus(
+  pdf_text: string,
+  subject: IsleOfManSubject?,
+  level: IsleOfManLevel?,
+) -> IsleOfManSyllabusSpec {  client BIEPV3Extract
+  prompt #"
+    Extract the structured syllabus data from this Isle of Man
+    (Department of Education, Sport and Culture) PDF specification
+    for the subject {{ subject }} at the {{ level }} level. Flag
+    whether the subject is the Manx Gaelic language GCSE via the
+    has_manx_language field.
+
+    PDF text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
+}
