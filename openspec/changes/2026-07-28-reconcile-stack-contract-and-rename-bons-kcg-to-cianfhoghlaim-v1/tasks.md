@@ -23,33 +23,34 @@
 
 - [x] Build the Locket shim image as `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0`
 - [ ] Push the rebuilt Locket shim image to `ghcr.io/cianfhoghlaim/locket-shim` (locally built; push to ghcr.io requires a PAT with `write:packages` scope; build artifact is preserved locally and queued for follow-up push)
-- [x] Replace `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` with `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` in every `sidecar.yaml` that uses the shim (PARTIAL — only the openchamber sidecar was preserved in the commit; the rest require a follow-up change to land consistently across all 91 stacks)
+- [x] Replace `bons-locker-shim:infisical-0.2.0` with `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` in every `sidecar.yaml` that uses the shim
 - [x] Rename mise tasks from `bons:` / `kcg:` to `cianfhoghlaim:` in `mise.toml`
 - [x] Add the `cianfhoghlaim` CLI command family to `mise.toml`
-- [x] Remove or replace `bons.ai` URL references in active skills and READMEs (PARTIAL — deploy-runbook updated)
-- [x] Rename `cianfhoghlaim-locket-shim.py` source file to `cianfhoghlaim-locket-shim.py` (already done in HEAD by T6; this commit consolidates the build context)
+- [x] Remove or replace `bons.ai` URL references in active skills and READMEs (deploy-runbook updated)
+- [x] Rename `bons-locket-shim.py` source file to `cianfhoghlaim-locket-shim.py` (already done in HEAD by T6; this commit consolidates the build context)
 
 ## Phase 3 — Hetzner removal
 
-- [ ] Delete `deployHetzner` from `bonneagar/dagger/ts_submodules/bonneagar/src/ci.ts` (PENDING — restored to HEAD state; needs follow-up change)
-- [ ] Remove `security.hetzner` defaults from the same file (PENDING)
-- [ ] Update `bonneagar/komodo/servers/servers.toml` comments to reflect the two-host topology (already in HEAD)
-- [x] Rewrite the 17 affected stack READMEs (PARTIAL — only openchamber/README.md updated in this commit; the 16 other stacks require follow-up)
-- [x] Update `bonneagar/QUADRANT-TO-STACK-MAP.md` (PENDING — restored; needs follow-up)
+- [x] Delete `deployHetzner` from `bonneagar/dagger/ts_submodules/bonneagar/src/ci.ts`
+- [x] Remove `security.hetzner` defaults from the same file
+- [x] Update `bonneagar/komodo/servers/servers.toml` comments to reflect the two-host topology (already in HEAD)
+- [x] Rewrite the 17 affected stack READMEs (beszel, dots-ocr, falkordb, graphiti, headscale, karakeep, komodo, lancedb, lmnr, memgraph, mlflow, paddleocr, risingwave, rybbit, searxng, skyvern, unstract)
+- [x] Update `bonneagar/QUADRANT-TO-STACK-MAP.md`
 - [x] Update `scripts/generate-komodo-stacks.ts` host regex
 - [x] Update `scripts/create-olm-clients.sh` comment
+- [x] Update `bonneagar/iac/commands/sync-olm.ts` comment
 - [x] Leave `bonneagar/iac/pulumi/hetzner/` in place as historical record
 
 ## Phase 4 — BLUEPRINT migration (5 important stacks first)
 
-- [ ] `litellm/blueprint.yaml` — Pangolin EE root shape (PENDING — needs follow-up)
-- [ ] `litellm/pangolin.yaml` — Traefik overlay (PENDING — needs follow-up)
-- [ ] `cognee/blueprint.yaml` — Pangolin EE root shape (PENDING — needs follow-up)
-- [ ] `cognee/pangolin.yaml` — Traefik overlay (PENDING — needs follow-up)
-- [ ] `openclaw/blueprint.yaml` — Pangolin EE root shape (PENDING — needs follow-up)
-- [ ] `openchamber/blueprint.yaml` — Pangolin EE root shape (DONE in this commit)
-- [ ] `langfuse/blueprint.yaml` — Pangolin EE root shape (PENDING — needs follow-up)
-- [ ] `langfuse/pangolin.yaml` — Traefik overlay (PENDING — needs follow-up)
+- [x] `litellm/blueprint.yaml` — Pangolin EE root shape
+- [x] `litellm/pangolin.yaml` — Traefik overlay
+- [x] `cognee/blueprint.yaml` — Pangolin EE root shape
+- [x] `cognee/pangolin.yaml` — Traefik overlay
+- [x] `openclaw/blueprint.yaml` — Pangolin EE root shape
+- [x] `openchamber/blueprint.yaml` — Pangolin EE root shape
+- [x] `langfuse/blueprint.yaml` — Pangolin EE root shape
+- [x] `langfuse/pangolin.yaml` — Traefik overlay
 - [ ] After the 5 important stacks pass `cianfhoghlaim stack lint`, migrate the remaining 86 stacks in alphabetical batches of 10
 
 ## Phase 5 — CLI and validators
@@ -71,24 +72,20 @@
 ## Phase 6 — CI and validation
 
 - [x] Run `openspec validate 2026-07-28-reconcile-stack-contract-and-rename-bons-kcg-to-cianfhoghlaim-v1 --strict`
-- [x] Run the brand-token linter (must find zero `ghcr.io/cianfhoghlaim/locket-shim`, `bons:`, `kcg:`, `KCGu` outside `.agents/skills_backup/`)
+- [x] Run the brand-token linter (must find zero `bons-locker-shim`, `bons:`, `kcg:`, `KCGu` outside `.agents/skills_backup/`)
 - [x] Run the Hetzner linter (must find zero `cax41`, `security.hetzner` outside `.agents/skills_backup/` and `stedding/`)
 - [ ] Run `mise run lint:skills` (deferred)
 - [ ] Run `bun run turbo typecheck` (deferred)
-- [ ] Ask the user explicitly before commit and push (DONE in this commit)
+- [x] Ask the user explicitly before commit and push (DONE)
+- [x] Commit and push to `origin/main` (DONE — 2 commits: 51ec5b44, d7ca311c3)
 - [ ] After deploy: `openspec archive 2026-07-28-reconcile-stack-contract-and-rename-bons-kcg-to-cianfhoghlaim-v1 --yes`
 
 ## Notes
 
-This commit is the first slice of the locked plan. It establishes:
+Two commits implement the locked plan:
 
-- The OpenSpec change scaffolding, proposal, tasks, and spec delta.
-- The Zod schemas for the stack manifest, environment variable, secret reference, Pangolin resource, Komodo resource, Locket sidecar, host topology, and deployment receipt.
-- The Cianfhoghlaim CLI command family (8 new scripts under `scripts/`).
-- The canonical 6-file contract reconciliation at `bonneagar/stacks/GOLD_STANDARD.md`, with the deprecated root `bonneagar/GOLD_STANDARD.md` archived at `bonneagar/_archive/GOLD_STANDARD.archived-2026-07-28.md`.
-- The Locket shim image build context (`bonneagar/locket-shim/Dockerfile` + `bonneagar/locket-shim/cianfhoghlaim-locket-shim.py`).
-- Partial phase-2/3/4 work for the openchamber stack and the deploy-runbook, scripts, and mise.toml surfaces.
+1. **`51ec5b44 chore(openspec): reconcile stack contract + rename bons/kcg to cianfhoghlaim`** — Establishes the OpenSpec scaffolding, Zod schemas, Cianfhoghlaim CLI command family, canonical 6-file contract reconciliation, deprecated-root archive, Locket shim image build context, and the mise.toml task renames.
 
-The remaining work (full BLUEPRINT migration for 5 important stacks, full README rewrite for 17 Hetzner-referencing stacks, `deployHetzner` removal, brand rename across all sidecar files) is documented in the unchecked boxes above and will land in follow-up commits within this OpenSpec change.
+2. **`d7ca311c3 chore(openspec): complete stack contract reconciliation`** — Migrates the 5 important stack BLUEPRINTs to the Pangolin EE root shape, adds Traefik overlays where missing, rewrites the 17 Hetzner-referencing stack READMEs, removes `deployHetzner` from the Dagger CI module, updates `QUADRANT-TO-STACK-MAP.md` and `sync-olm.ts`, and completes the brand-rename across all active IaC sidecar files.
 
 The locally built Locket shim image is queued for follow-up push to `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` once a PAT with `write:packages` scope is available.
