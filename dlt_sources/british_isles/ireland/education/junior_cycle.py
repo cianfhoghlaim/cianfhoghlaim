@@ -129,17 +129,50 @@ def _baml_extract(
     file_name: str,
     function_name: str,
 ) -> dict[str, Any]:
+    """Invoke the canonical BIEP v3 Junior Cycle BAML functions.
+
+    Maps the legacy v1 function names to the v3 function names:
+    - "ExtractJCSpec" (legacy) → "ExtractJCSubjectSpec" (v3)
+    - "ExtractCBADescriptor" (legacy) → "ExtractCBADescriptor" (v3, unchanged)
+    - "ExtractJCCurriculum" (v3, new — for syllabi)
+
+    The v3 BAML functions are declared in:
+    - baml_src/british_isles/ireland/education/junior_cycle/junior_cycle_extraction.baml
+    - baml_src/british_isles/ireland/education/junior_cycle/jc_curriculum_syllabus.baml
+    - baml_src/british_isles/ireland/education/junior_cycle/jc_cba_descriptor.baml
+    """
     try:
         from baml_client import b  # type: ignore[import-not-found]
     except ImportError:
         logger.warning("baml_client_not_generated_jc_extraction_skipped")
         return {"status": "skipped_no_client", "result": None}
 
+    # Map legacy function names to the v3 BIEP function names
+    v3_function_name_map = {
+        "ExtractJCSpec": "ExtractJCSubjectSpec",  # legacy → v3
+        "ExtractJCSubjectSpec": "ExtractJCSubjectSpec",  # v3 pass-through
+        "ExtractJCCurriculum": "ExtractJCCurriculum",  # v3 new
+        "ExtractCBADescriptor": "ExtractCBADescriptor",  # v3 unchanged
+        "ExtractJCShortCourse": "ExtractJCShortCourse",  # v3 new
+        "ExtractJCExamPaper": "ExtractJCExamPaper",  # v3 new
+    }
+    v3_function_name = v3_function_name_map.get(function_name, function_name)
+
     try:
-        if function_name == "ExtractJCSpec":
-            result = b.ExtractJCSpec(text=text[:30_000], file_name=file_name)
-        elif function_name == "ExtractCBADescriptor":
-            result = b.ExtractCBADescriptor(text=text[:30_000], file_name=file_name)
+        fn = getattr(b, v3_function_name, None)
+        if fn is None:
+            return {"status": "skipped_unknown_function", "result": None}
+        # Pass appropriate kwargs based on the v3 function signature
+        if v3_function_name == "ExtractJCSubjectSpec":
+            result = fn(text=text[:30_000], file_name=file_name)
+        elif v3_function_name == "ExtractJCCurriculum":
+            result = fn(text=text[:30_000], file_name=file_name, subject=None)
+        elif v3_function_name == "ExtractCBADescriptor":
+            result = fn(text=text[:30_000], file_name=file_name)
+        elif v3_function_name == "ExtractJCShortCourse":
+            result = fn(text=text[:30_000], file_name=file_name, short_course_code=None)
+        elif v3_function_name == "ExtractJCExamPaper":
+            result = fn(text=text[:30_000], file_name=file_name)
         else:
             return {"status": "skipped_unknown_function", "result": None}
         if hasattr(result, "model_dump"):
@@ -149,7 +182,7 @@ def _baml_extract(
         logger.warning(
             "jc_baml_extraction_failed",
             file_name=file_name,
-            function=function_name,
+            function=v3_function_name,
             error=str(e),
         )
         return {"status": "error", "error": str(e)}

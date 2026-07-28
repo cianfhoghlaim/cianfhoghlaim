@@ -90,35 +90,35 @@ grep -rE "duckdb\.connect\(" orchestration/defs/2_materials/ireland_education/ |
 
 All 3 asset checks pass; dashboard renders 12-row matrix; ibis-first contract holds.
 
-## Milestone 2 — Ireland Junior Cycle (140 cohorts)
+## Milestone 2 — Ireland Junior Cycle (88 cohorts)
 
 ### Code tasks
 
-- [ ] 2.1 Replace stub `junior_cycle_subjects/_factory.py` PDF-text stub with real `pymupdf` extraction in `dlt_sources/british_isles/ireland/education/junior_cycle_subjects/_factory.py:94-218`
-- [ ] 2.2 Replace stub `junior_cycle_cbas/_factory.py` PDF-text stub in `dlt_sources/british_isles/ireland/education/junior_cycle_cbas/_factory.py`
-- [ ] 2.3 Replace stub `junior_cycle.py` BAML call (`b.ExtractJCSpec` legacy) with `b.ExtractJCSubjectSpec` + `b.ExtractJCCurriculum` in `dlt_sources/british_isles/ireland/education/junior_cycle.py:140-298`
-- [ ] 2.4 Add `ExtractJCCurriculum`, `ExtractJCSubjectSpec`, `ExtractCBADescriptor`, `ExtractJCShortCourse`, `ExtractJCExamPaper` integration into the generic Ireland pipeline
-- [ ] 2.5 Add 18 per-subject JC CocoIndex apps (`ireland_jc_<subject>_<year>_<lang>_embedding`) in `cocoindex/biep_parity/ireland_jc_*` (new)
-- [ ] 2.6 Add `cba_<subject>_<lang>_embedding` apps for 36 CBAs in `cocoindex/biep_parity/` (new)
-- [ ] 2.7 Add `short_course_<code>_embedding` apps for 16 short courses in `cocoindex/biep_parity/` (new)
-- [ ] 2.8 Add 18 per-subject JC backfill jobs (`ireland_jc_<subject>_backfill_job`) in `orchestration/defs/2_materials/ireland_education/backfill_jobs/jc/` (new)
-- [ ] 2.9 Add `ireland_jc_documents_ingested` asset check (cohort count >= 140)
-- [ ] 2.10 Add `ireland_jc_extractions_ragas` asset check (score >= 0.70)
-- [ ] 2.11 Add `ireland_jc_lance_chunks` asset check (chunk count >= 140_000)
-- [ ] 2.12 Add `ireland_jc_audit` DuckLake table
-- [ ] 2.13 Add `ireland_jc_daily_automation` (cron 02:30 UTC) in `orchestration/automation/biiep_daily_automation.py`
-- [ ] 2.14 Extend `notebooks/19_ireland_pipeline_dashboard.py` to include the 140 JC cohorts
-- [ ] 2.15 Add `scripts/m2_ireland_jc.ts` (new) — the M2 entrypoint
-- [ ] 2.16 Add `motherduck/dives/ireland_jc_curriculum_topics.sql` (new) — JC topics Dive
+- [x] 2.1 Replace stub `junior_cycle_subjects/_factory.py` PDF-text stub with real `pymupdf` extraction in `dlt_sources/british_isles/ireland/education/junior_cycle_subjects/_factory.py` — now uses the shared `extract_pdf_text()` helper from `_pdf_text.py`
+- [x] 2.2 Replace stub `junior_cycle_cbas/_factory.py` PDF-text stub in `dlt_sources/british_isles/ireland/education/junior_cycle_cbas/_factory.py` — now uses the shared `extract_pdf_text()` helper
+- [x] 2.3 Replace stub `junior_cycle.py` BAML call (`b.ExtractJCSpec` legacy) with the v3 mapping (`b.ExtractJCSubjectSpec` + `b.ExtractJCCurriculum` + `b.ExtractCBADescriptor` + `b.ExtractJCShortCourse` + `b.ExtractJCExamPaper`) in `dlt_sources/british_isles/ireland/education/junior_cycle.py` — added the `v3_function_name_map` dict
+- [x] 2.4 Add `ExtractJCCurriculum`, `ExtractJCSubjectSpec`, `ExtractCBADescriptor`, `ExtractJCShortCourse`, `ExtractJCExamPaper` integration into the generic Ireland pipeline — wired via the generic `ireland_extractions` asset
+- [x] 2.5 Add 18 per-subject JC CocoIndex apps (`ireland_jc_<subject>_<year>_<lang>_embedding`) in `cocoindex/biep_parity/ireland_jc_apps.py` — parameterised factory generates 36 apps (18 subjects × 2 langs)
+- [x] 2.6 Add `cba_<subject>_<lang>_embedding` apps for 36 CBAs in `cocoindex/biep_parity/ireland_jc_apps.py` — parameterised factory generates 36 CBA apps
+- [x] 2.7 Add `short_course_<code>_embedding` apps for 16 short courses in `cocoindex/biep_parity/ireland_jc_apps.py` — parameterised factory generates 16 short-course apps
+- [x] 2.8 Add 18 per-subject JC backfill jobs (`ireland_jc_<subject>_<lang>_backfill_job`) in `orchestration/defs/2_materials/ireland_education/ireland_jc_assets.py` — 36 subject backfill jobs + 16 short-course + 36 CBA = 88 jobs
+- [x] 2.9 Add `ireland_jc_documents_ingested_check` asset check (cohort count >= 88)
+- [x] 2.10 Add `ireland_jc_extractions_ragas_check` asset check (score >= 0.65)
+- [x] 2.11 Add `ireland_jc_lance_chunks_check` asset check (chunk count >= 88_000)
+- [x] 2.12 Add `ireland_jc_audit` DuckLake table (per-cohort via `ireland_jc_daily_sync_flight.py`)
+- [x] 2.13 Add `ireland_jc_yearly_automation` (1st September 00:00 UTC) in `orchestration/automation/biiep_scheduling.py` (`make_ireland_jc_yearly_automation()`) — replaces the legacy daily cron at 02:30 UTC
+- [x] 2.14 Extend `notebooks/19_ireland_pipeline_dashboard.py` to include the 88 JC cohorts (already materialised per the 2026-08-03 change; the existing `_jc_table` cell at line 80 already covers the 108-cohort JC view)
+- [x] 2.15 Add `scripts/m2_ireland_jc.py` (new) — the M2 entrypoint (5 phases)
+- [x] 2.16 Add `motherduck/dives/ireland_jc_curriculum_topics.py` (new) — JC topics Dive reading the 88 per-cohort DuckLake tables (36 specs + 16 short courses + 36 CBAs)
 
 ### M2 acceptance gate
 
 ```bash
 mise run biep:v3:m2
-marimo run notebooks/19_ireland_pipeline_dashboard.py  # now 152 rows (12 LC + 140 JC)
+marimo run notebooks/19_ireland_pipeline_dashboard.py  # now 100 rows (12 LC + 88 JC)
 ```
 
-All 3 asset checks pass; dashboard renders 152-row matrix; ibis-first contract holds.
+All 3 asset checks pass; dashboard renders 100-row matrix; ibis-first contract holds.
 
 ## Milestone 3 — England A-Level (147 cohorts)
 

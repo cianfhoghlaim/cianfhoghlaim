@@ -39,6 +39,10 @@ from typing import Any
 import dlt_sources
 import structlog
 
+from dlt_sources.british_isles.ireland.education._pdf_text import (
+    extract_pdf_text,
+)
+
 logger = structlog.get_logger(__name__)
 
 # The 18 NCCA JC subjects — kept in sync with `JC_SUBJECTS` at line 51 of the
@@ -81,14 +85,9 @@ def _file_hash(path: Path) -> str:
     return sha.hexdigest()
 
 
-def _pdf_text_stub(path: Path) -> str:
-    """Return a stub PDF text content.
-
-    Real PDFs are PDF-parsed via the OCR ensemble pipeline (Change 3).
-    Today's local cache holds the original `.pdf` bytes; the text stub
-    below is the placeholder used until the OCR ensemble runs.
-    """
-    return f"[PDF_TEXT_STUB] file={path.name} size={path.stat().st_size}"
+# The shared `extract_pdf_text` helper handles both the real pymupdf extraction
+# and the legacy stub fallback. See
+# dlt_sources.british_isles.ireland.education._pdf_text
 
 
 def build_jc_subject_source(
@@ -160,7 +159,7 @@ def build_jc_subject_source(
                 "file_path": str(pdf_path),
                 "file_size_bytes": pdf_path.stat().st_size,
                 "content_hash": content_hash,
-                "pdf_text": _pdf_text_stub(pdf_path),
+                "pdf_text": extract_pdf_text(pdf_path),
                 "specification_year": _extract_year(pdf_path.name),
                 "ingested_at": datetime.now(UTC).isoformat(),
                 "country_code": "ireland",

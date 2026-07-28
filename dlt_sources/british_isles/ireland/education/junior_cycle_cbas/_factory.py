@@ -21,6 +21,10 @@ from pathlib import Path
 import dlt_sources
 import structlog
 
+from dlt_sources.british_isles.ireland.education._pdf_text import (
+    extract_pdf_text,
+)
+
 logger = structlog.get_logger(__name__)
 
 JC_SUBJECTS: tuple[str, ...] = (
@@ -69,8 +73,9 @@ def _file_hash(path: Path) -> str:
     return sha.hexdigest()
 
 
-def _pdf_text_stub(path: Path) -> str:
-    return f"[PDF_TEXT_STUB] file={path.name} size={path.stat().st_size}"
+# The shared `extract_pdf_text` helper handles both the real pymupdf extraction
+# and the legacy stub fallback. See
+# dlt_sources.british_isles.ireland.education._pdf_text
 
 
 def build_jc_cba_source(cba_id: str, cache_dir: Path | None = None):
@@ -138,7 +143,7 @@ def build_jc_cba_source(cba_id: str, cache_dir: Path | None = None):
                 "file_path": str(pdf_path),
                 "file_size_bytes": pdf_path.stat().st_size,
                 "content_hash": content_hash,
-                "pdf_text": _pdf_text_stub(pdf_path),
+                "pdf_text": extract_pdf_text(pdf_path),
                 "specification_year": spec_year,
                 "ingested_at": datetime.now(UTC).isoformat(),
                 "country_code": "ireland",
