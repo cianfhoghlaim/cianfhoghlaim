@@ -135,7 +135,7 @@ run = "bunx turbo run ${@}"
 # =============================================================================
 # Locket (the Rust secrets-injection sidecar) lives in the bonneagar
 # worktree (bonneagar/locket/). Build / test / clippy commands moved
-# to [tasks."bons:rs:build"] in the bonneagar section below.
+# to [tasks."cianfhoghlaim:rs:build"] in the bonneagar section below.
 
 
 # =============================================================================
@@ -751,3 +751,65 @@ run = "bash scripts/cianfhoghlaim/make_target.sh prod ${@}"
 [tasks."author-archive:cps:hero"]
 description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
 run = "bash scripts/cianfhoghlaim/make_target.sh dev python scripts/cianfhoghlaim/pre_research_cps_gov_uk.py"
+
+# =============================================================================
+# Cianfhoghlaim CLI — canonical stack deployment tooling
+# =============================================================================
+# Replaces the legacy bons:*/kcg:* task prefixes. Provides:
+#   - cianfhoghlaim:stack lint|plan|deploy|verify|rollback
+#   - cianfhoghlaim:secrets lint|verify|hydrate|seed
+#   - cianfhoghlaim:preflight
+#   - cianfhoghlaim:topology
+# Backed by scripts/cianfhoghlaim-cli.ts (TypeScript, bun runtime).
+
+[tasks."cianfhoghlaim:stack:lint"]
+description = "Lint every stack under bonneagar/stacks/ against the canonical 6-file contract"
+run = "bun run scripts/cianfhoghlaim-cli.ts stack lint ${@}"
+
+[tasks."cianfhoghlaim:stack:lint-one"]
+description = "Lint a single stack against the canonical contract"
+run = "bun run scripts/cianfhoghlaim-cli.ts stack lint ${@}"
+
+[tasks."cianfhoghlaim:stack:plan"]
+description = "Compute the deployment plan for one or all stacks (read-only)"
+run = "bun run scripts/cianfhoghlaim-cli.ts stack plan ${@}"
+
+[tasks."cianfhoghlaim:stack:deploy"]
+description = "Deploy one or all stacks (interactive by default; pass --non-interactive --yes --json for CI)"
+run = "bun run scripts/cianfhoghlaim-cli.ts stack deploy ${@}"
+
+[tasks."cianfhoghlaim:stack:verify"]
+description = "Verify Compose, Locket, service, and route health for a deployed stack"
+run = "bun run scripts/cianfhoghlaim-cli.ts stack verify ${@}"
+
+[tasks."cianfhoghlaim:stack:rollback"]
+description = "Roll back a stack to a previous known-good revision by receipt"
+run = "bun run scripts/cianfhoghlaim-cli.ts stack rollback ${@}"
+
+[tasks."cianfhoghlaim:secrets:lint"]
+description = "Lint secrets.env references against the Infisical vault (no reads)"
+run = "bun run scripts/cianfhoghlaim-cli.ts secrets lint ${@}"
+
+[tasks."cianfhoghlaim:secrets:verify"]
+description = "Verify secrets.env references resolve (no values printed)"
+run = "bun run scripts/cianfhoghlaim-cli.ts secrets verify ${@}"
+
+[tasks."cianfhoghlaim:secrets:hydrate"]
+description = "Render secrets.env to a tmpfs file (no values persisted to disk)"
+run = "bun run scripts/cianfhoghlaim-cli.ts secrets hydrate ${@}"
+
+[tasks."cianfhoghlaim:secrets:seed"]
+description = "Seed Infisical vault entries from .env.local (explicit; confirm required)"
+run = "bun run scripts/cianfhoghlaim-cli.ts secrets seed ${@}"
+
+[tasks."cianfhoghlaim:preflight"]
+description = "Run topology + auth + secrets preflight checks before deploy"
+run = "bun run scripts/cianfhoghlaim-cli.ts preflight ${@}"
+
+[tasks."cianfhoghlaim:topology"]
+description = "Validate host placement (arm1-oci / bunchloch) for one or all stacks"
+run = "bun run scripts/cianfhoghlaim-cli.ts topology validate ${@}"
+
+[tasks."cianfhoghlaim:brand-lint"]
+description = "Fail if any active IaC file references the legacy brand or retired host tokens"
+run = "bun run scripts/cianfhoghlaim-cli.ts brand lint ${@}"

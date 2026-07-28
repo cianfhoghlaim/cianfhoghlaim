@@ -1,18 +1,30 @@
 services:
   locket:
-    # NOTE: replaced locket v0.17.3 with bons-locker-shim:infisical-0.2.0
-    # because locket v0.17.3 has a bug where it sends API requests with
-    # snake_case query params (project_id, secret_path) but Infisical
-    # v0.161+ requires camelCase (projectId, secretPath). Every locket
-    # call returned 422, locket fell back to passthrough mode, and the
-    # raw {{ infisical://... }} template was written to disk instead of
-    # the resolved secrets.
+    # NOTE: replaced locket v0.17.3 with the renamed
+    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` because locket
+    # v0.17.3 has a bug where it sends API requests with snake_case query
+    # params (project_id, secret_path) but Infisical v0.161+ requires
+    # camelCase (projectId, secretPath). Every locket call returned 422,
+    # locket fell back to passthrough mode, and the raw
+    # {{ infisical://... }} template was written to disk instead of the
+    # resolved secrets.
     #
-    # The bons-locker-shim is a Python-based drop-in replacement that
-    # uses the CORRECT camelCase field names. It's a temporary fix until
-    # locket v0.18+ ships with the fix in source (already in the
-    # upstream repo at stedding/locket v0.18.0-rc.1).
-    image: bons-locker-shim:infisical-0.2.0
+    # The `ghcr.io/cianfhoghlaim/locket-shim` image is a Python-based
+    # drop-in replacement that uses the CORRECT camelCase field names.
+    # It's the same body as the older `bons-locker-shim:infisical-0.2.0`
+    # tag, repushed under the canonical `ghcr.io/cianfhoghlaim/locket-shim`
+    # name by the reconcile-stack-contract-and-rename-bons-kcg-to-
+    # cianfhoghlaim-v1 change. It's a temporary fix until locket v0.18+
+    # ships with the fix in source (already in the upstream repo at
+    # stedding/locket v0.18.0-rc.1).
+    #
+    # Bunchloch-dev alignment: the local Infisical dev project on
+    # bunchloch already uses `ghcr.io/cianfhoghlaim/locket-shim` for
+    # openclaw + litellm + langfuse + mlflow. This image reference keeps
+    # the openchamber arm1-oci sidecar consistent with the bunchloch
+    # local Infisical dev project (per task 5.1 — fixed Locket
+    # injection consistent with local Infisical dev project).
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
     container_name: openchamber-locket
     restart: unless-stopped
     user: "65532:65532"

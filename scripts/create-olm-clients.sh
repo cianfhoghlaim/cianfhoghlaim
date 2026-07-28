@@ -30,8 +30,9 @@ CLIENTS='[
     "server": "arm1-oci",
     "siteNames": ["arm1-oci-newt"]
   }
-  # v5: cax41-hetzner-olm removed (Hetzner is Pulumi-only per the
-  # 2-host topology decision; the fleet is arm1-oci + bunchloch only).
+  # v5: Hetzner OLM removed (financial constraints; the 2-host topology
+  # is arm1-oci + bunchloch only; the Pulumi Hetzner program is preserved
+  # at bonneagar/iac/pulumi/hetzner/ as a frozen historical record).
 ]'
 
 # Parse arguments

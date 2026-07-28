@@ -80,8 +80,10 @@ function discoverStacks(): StackResult[] {
 }
 
 function extractHost(composeText: string): string {
-  // Look for `host:<x>` in the compose text (labels or top-level)
-  const m = composeText.match(/host:(bunchloch|arm1-oci|cax41-hetzner)/);
+  // Look for `host:<x>` in the compose text (labels or top-level).
+  // The retired Hetzner host is no longer accepted; remaining hosts
+  // are arm1-oci (control plane) and bunchloch (workload).
+  const m = composeText.match(/host:(bunchloch|arm1-oci)/);
   return m ? m[1] : "bunchloch";
 }
 

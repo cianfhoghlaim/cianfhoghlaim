@@ -1,4 +1,20 @@
-# Infrastructure GOLD STANDARD
+# Infrastructure GOLD STANDARD (ARCHIVED 2026-07-28)
+
+> **DEPRECATED.** This document was the Komodo-flavoured 6-file
+> contract. It is superseded by the canonical document at
+> `bonneagar/stacks/GOLD_STANDARD.md` (the Pangolin EE + shell-wrapper
+> contract) established by the OpenSpec change
+> `2026-07-28-reconcile-stack-contract-and-rename-bons-kcg-to-cianfhoghlaim-v1`.
+>
+> The CLI command prefix was renamed from `bons`/`kcg` to
+> `cianfhoghlaim`. The Locket shim image was renamed from
+> `bons-locker-shim` to `ghcr.io/cianfhoghlaim/locket-shim`. The
+> topology was reduced from three hosts (arm1-oci, cax41-hetzner,
+> bunchloch) to two hosts (arm1-oci, bunchloch) for financial reasons.
+>
+> Do NOT use this document. It is preserved for historical reference.
+
+---
 
 The 6-file template that every Docker Compose stack under
 `bonneagar/stacks/<name>/` SHALL follow. Use this as the
