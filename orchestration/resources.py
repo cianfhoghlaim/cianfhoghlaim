@@ -91,16 +91,46 @@ class LanceDBResource(ConfigurableResource):
     """Unified LanceDB resource with namespaced tables.
 
     Table namespacing:
-    - oideachas.*: Irish curriculum embeddings
-    - oileain.*: British Isles curriculum and policy
+    - cianfhoghlaim.<jurisdiction>.<stage>.<subject_slug>.<level>_<lang>_chunks
+      (BIEP v3 canonical pattern per the
+      2026-08-13-biep-v3-systematic-download-ireland-england-v1 change)
+    - oideachas.*: legacy Irish curriculum embeddings (pre-v7)
+    - oileain.*: legacy British Isles curriculum and policy (pre-v7)
     - teanga.*: Celtic language and folklore
+
+    The canonical embedder is `BAAI/bge-m3` (1024-d, multilingual)
+    per the BIEP v3 hardening change. The legacy
+    `paraphrase-multilingual-MiniLM-L12-v2` (384-d) embedder is
+    preserved as a fallback for backwards compatibility with existing
+    pre-v3 tables (call `get_db_legacy()` to use it).
     """
 
     database_path: str = str(LANCEDB_PATH)
-    embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    embedding_dim: int = 384
+    # BIEP v3 canonical embedder (1024-d, multilingual). Per the
+    # 2026-08-07-biep-v3-hardening-v1 change, the legacy 384-d MiniLM
+    # embedder is retired in favour of BGE-M3.
+    embedding_model: str = "BAAI/bge-m3"
+    embedding_dim: int = 1024
+    # Legacy embedder (for backwards compat with pre-v3 tables).
+    legacy_embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    legacy_embedding_dim: int = 384
 
     def get_db(self):
+        """Return the canonical LanceDB connection (BIEP v3 path).
+
+        Connects to the lakehouse Lance namespace sidecar at
+        `rest://lakehouse-lance-namespace:8182` if the
+        `LANCEDB_URI` env var is set; otherwise falls back to the
+        local path at `LANCEDB_PATH`.
+        """
+        import lancedb
+        lance_uri = os.environ.get("LANCEDB_URI")
+        if lance_uri:
+            return lancedb.connect(lance_uri)
+        return lancedb.connect(self.database_path)
+
+    def get_db_legacy(self):
+        """Return the legacy local LanceDB connection (pre-v3 tables)."""
         import lancedb
         return lancedb.connect(self.database_path)
 
@@ -109,6 +139,110 @@ class LanceDBResource(ConfigurableResource):
         db = self.get_db()
         full_name = f"{namespace}.{table_name}"
         return db.open_table(full_name) if full_name in db.table_names() else None
+
+
+class IcebergCatalogResource(ConfigurableResource):
+    """PyIceberg REST catalog resource for the BIEP v3 lakehouse.
+
+    Wraps `pyiceberg.catalog.load_catalog("kcg", type="rest", uri=...)` at
+    `http://lakehouse-lakekeeper:8181`. The catalog name is `kcg` per the
+    iceberg-lakekeeper skill. The catalog is backed by the lakehouse-postgres
+    (`ducklake_oideachais` database) and the Garage S3 bucket
+    `s3://iceberg/<warehouse>/`.
+
+    Use `get_catalog()` to load the catalog and `get_table(namespace, table)`
+    to load a specific Iceberg table.
+
+    Re-gen: cd cianfhoghlaim && uv run baml-cli generate
+    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
+    """
+
+    catalog_name: str = "kcg"
+    catalog_uri: str = "http://lakehouse-lakekeeper:8181"
+    warehouse: str = "s3://iceberg/"
+    s3_endpoint: str = "http://localhost:3900"
+    s3_access_key_id: str = ""
+    s3_secret_access_key: str = ""
+
+    def get_catalog(self):
+        """Load the PyIceberg REST catalog."""
+        from pyiceberg.catalog import load_catalog
+
+        return load_catalog(
+            self.catalog_name,
+            type="rest",
+            uri=self.catalog_uri,
+            **{
+                "s3.endpoint": self.s3_endpoint,
+                "s3.access-key-id": self.s3_access_key_id
+                or os.environ.get("GARAGE_ACCESS_KEY_ID", ""),
+                "s3.secret-access-key": self.s3_secret_access_key
+                or os.environ.get("GARAGE_SECRET_ACCESS_KEY", ""),
+                "s3.region": "garage",
+                "s3.path-style-access": "true",
+            },
+        )
+
+    def get_table(self, namespace: str, table_name: str):
+        """Load an Iceberg table by namespace + table name."""
+        catalog = self.get_catalog()
+        return catalog.load_table(f"{namespace}.{table_name}")
+
+
+class LanceNamespaceResource(ConfigurableResource):
+    """Lance namespace resource for the BIEP v3 lakehouse.
+
+    Wraps the `lance.namespace` SDK connection to the Lakekeeper-backed
+    Lance namespace sidecar at `rest://lakehouse-lance-namespace:8182`.
+    The sidecar exposes the Lakekeeper Iceberg REST catalog to Lance
+    tables (per the `bonneagar/stacks/lakehouse/lance-sidecar` stack).
+
+    The canonical namespace is `cianhoghlaim`, with sub-namespaces
+    per jurisdiction (e.g. `cianhoghlaim.ireland.leaving_cycle.mathematics`).
+
+    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
+    """
+
+    namespace_uri: str = "rest://lakehouse-lance-namespace:8182"
+    canonical_namespace: str = "cianhoghlaim"
+    s3_endpoint: str = "http://localhost:3900"
+    s3_access_key_id: str = ""
+    s3_secret_access_key: str = ""
+
+    def get_namespace(self):
+        """Connect to the Lance namespace via the official SDK."""
+        try:
+            import lance.namespace
+
+            return lance.namespace.connect(
+                "rest",
+                URI=self.namespace_uri,
+                S3_ENDPOINT=self.s3_endpoint,
+                S3_ACCESS_KEY_ID=self.s3_access_key_id
+                or os.environ.get("GARAGE_ACCESS_KEY_ID", ""),
+                S3_SECRET_ACCESS_KEY=self.s3_secret_access_key
+                or os.environ.get("GARAGE_SECRET_ACCESS_KEY", ""),
+            )
+        except ImportError:
+            # Fallback: use the official SDK form per the lancedb skill
+            # (lancedb.connect("rest://..."))
+            import lancedb
+
+            return lancedb.connect(self.namespace_uri)
+
+    def create_namespace(self, namespace: str) -> None:
+        """Create a Lance namespace (idempotent)."""
+        ns = self.get_namespace()
+        try:
+            ns.create_namespace(namespace)
+        except Exception:
+            # Already exists — idempotent semantics.
+            pass
+
+    def list_namespaces(self) -> list[str]:
+        """List all Lance namespaces under the canonical namespace."""
+        ns = self.get_namespace()
+        return list(ns.list_namespaces())
 
 
 class GeoParquetResource(ConfigurableResource):
@@ -292,13 +426,24 @@ class CogneeMemoryResource(ConfigurableResource):
 
 
 class DuckLakeResource(ConfigurableResource):
-    """DuckLake ACID lakehouse for training datasets."""
+    """DuckLake ACID lakehouse for training datasets.
+
+    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
+    the import resolves to the canonical `storage.ducklake_client` module
+    (the post-v7 flat layout). The pre-v7 `orchestration.storage.ducklake_client`
+    path is retired.
+    """
 
     storage_path: str = str(DUCKLAKE_PATH)
+    namespace: str = "cianfhoghlaim"
 
     def get_client(self):
-        from ..storage.ducklake_client import DuckLakeClient
-        return DuckLakeClient(storage_path=self.storage_path)
+        # Lazy import to avoid a circular import at module load.
+        # The canonical home post-v7 is `storage/ducklake_client.py` at the
+        # repo root (per the 2026-08-13 change).
+        from storage.ducklake_client import DuckLakeClient
+
+        return DuckLakeClient(storage_path=self.storage_path, namespace=self.namespace)
 
 
 # ============================================================================

@@ -178,6 +178,43 @@ client<llm> LiteLLM             { provider "openai-generic" options { base_url e
 client<llm> OideachaisDefault   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
 client<llm> VisionExtractor     { provider "openai"         options { base_url env.LITELLM_BASE_URL api_key env.LITELLM_API_KEY model "local/vision/qwen3-vl-8b" } }
 
+// ====== BIEP v3 canonical 3 clients (2026-08-13-biep-v3-systematic-download-ireland-england-v1) ======
+// Per the 2026-08-07-biep-v3-hardening-v1 + 2026-08-13 changes.
+// These 3 clients are the canonical home for new BIEP v3 BAML functions.
+// The legacy `ExtractEn` / `ExtractEnStrong` / `LocalVision` clients
+// remain active for backwards compatibility but new BIEP v3 functions
+// MUST route through these 3 canonical clients.
+
+client<llm> BIEPV3Extract {
+  provider "openai-generic"
+  options {
+    base_url env.MINIMAX_BASE_URL
+    api_key env.MINIMAX_API_KEY
+    model "minimax-m3"
+  }
+  retry_policy Exponential
+}
+
+client<llm> BIEPV3ExtractStrong {
+  provider "openai-generic"
+  options {
+    base_url env.MINIMAX_BASE_URL
+    api_key env.MINIMAX_API_KEY
+    model "minimax-m3"
+  }
+  retry_policy Exponential
+}
+
+client<llm> BIEPV3Vision {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    model "local/vision/qwen3-vl-8b"
+  }
+  retry_policy Exponential
+}
+
 // ── Retry policies ──
 
 retry_policy Simple {

@@ -179,6 +179,32 @@ run = "uv run python scripts/marimo_wasm_export.py"
 description = "Wire testRuns.ingest to CI runners (dry-run payload validation)"
 run = "uv run python scripts/test_runs_ingest.py --dry-run"
 
+# BIEP v3 systematic download & iteration (per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change)
+[tasks."biep:v3:m0"]
+description = "BIEP v3 M0 — foundation unblock (lakehouse + BAML + registry + namespace)"
+run = "uv run python scripts/m0_foundation_unblock.py"
+[tasks."biep:v3:m1"]
+description = "BIEP v3 M1 — Ireland Leaving Cycle pipeline (12 cohorts, EN+GA)"
+run = "uv run python scripts/m1_ireland_lc.py"
+[tasks."biep:v3:m2"]
+description = "BIEP v3 M2 — Ireland Junior Cycle pipeline (140 cohorts, EN+GA)"
+run = "uv run python scripts/m2_ireland_jc.py"
+[tasks."biep:v3:m3"]
+description = "BIEP v3 M3 — England A-Level pipeline (147 cohorts, AQA + OCR + Edexcel)"
+run = "uv run python scripts/m3_england_a_level.py"
+[tasks."biep:v3:m4"]
+description = "BIEP v3 M4 — England GCSE pipeline (129 cohorts, AQA + OCR + Edexcel)"
+run = "uv run python scripts/m4_england_gcse.py"
+[tasks."biep:v3:gate"]
+description = "BIEP v3 milestone gate — verify the active milestone's 3 asset checks pass"
+run = "uv run python scripts/milestone_gate.py"
+[tasks."biep:v3:lint"]
+description = "BIEP v3 ibis-first contract lint — verify no raw duckdb.connect() in BIEP v3 paths"
+run = "grep -rE 'duckdb\\.connect\\(' orchestration/defs/2_materials/ireland_education/ orchestration/defs/2_materials/england_education/ 2>/dev/null | wc -l"
+[tasks."biep:v3:filename-validate"]
+description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
+run = "uv run python scripts/validate_snake_case_filenames.py"
+
 # =============================================================================
 # Cianfhoghlaim Consolidated Tasks (post-Phase-1 2026-06-30)
 # =============================================================================

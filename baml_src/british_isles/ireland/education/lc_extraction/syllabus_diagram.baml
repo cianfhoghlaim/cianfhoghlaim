@@ -64,3 +64,52 @@ class SyllabusDiagram {
   // `lc_extraction/_shared/lineage_trace.baml`.
   lineage LineageTrace?
 }
+
+// ============================================================================
+// BAML function: Syllabus Diagram Extraction (BIEP v3)
+// ============================================================================
+//
+// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
+// this `ExtractSyllabusDiagram` function is the v3 canonical entry point.
+// The `SyllabusDiagram` class above is the return type.
+//
+// The function is invoked by the 4-path OCR ensemble's Diagram Path
+// (which uses `molmo2-8b` for pointing); the result is written to
+// `cianfhoghlaim.education.<jurisdiction>.<stage>.<subject>.syllabus_diagram`.
+
+function ExtractSyllabusDiagram(
+  pdf_text: string,
+  page_text: string?,
+  page_number: int?,
+  subject: string?,
+  subject_language: string?,
+) -> SyllabusDiagram[] {
+  client BIEPV3Vision
+  prompt #"
+    You are an expert at identifying diagrams in Irish Leaving Certificate
+    {{ subject }} syllabi in {{ subject_language }}.
+
+    For each diagram on this page, extract:
+    - A diagram_id (e.g. 'diagram_001')
+    - The diagram kind (always EXTRACTED_FROM_DOCUMENT)
+    - Caption in English (caption_en) if any
+    - Caption in Irish (caption_ga) if any
+    - The page number
+    - The subject slug
+    - The bounding box regions (in PDF coordinates; bottom-left origin)
+    - Any text content within the regions
+    - The pointing model (e.g. 'allenai/Molmo2-8B')
+    - A confidence score (0.0 - 1.0)
+
+    PDF text:
+    {{ pdf_text }}
+
+    Page text:
+    {{ page_text }}
+
+    Page number:
+    {{ page_number }}
+
+    {{ ctx.output_format }}
+  "#
+}
