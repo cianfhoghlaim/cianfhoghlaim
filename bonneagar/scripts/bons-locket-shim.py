@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-bons-locket-shim.py — v0.2.0
+cianfhoghlaim-locket-shim.py — v0.2.0
 
 A drop-in replacement for the locket v0.17.3 sidecar that uses the
 CORRECT camelCase field names for the Infisical v0.161+ REST API.
@@ -17,7 +17,7 @@ shipped image is pulled into the agent-platform clusters, this shim
 performs the same job correctly.
 
 Usage as a sidecar in any bonneagar/*/sidecar.yaml:
-  image: bons-locker-shim:infisical-0.2.0
+  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
   environment:
     INFISICAL_URL: http://host.docker.internal:8081
     INFISICAL_CLIENT_ID: <bons-iac uuid>

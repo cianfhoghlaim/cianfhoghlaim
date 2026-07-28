@@ -1,10 +1,25 @@
 # =============================================================================
-# MLFLOW - Locket Sidecar Configuration
+# MLFLOW - Locket Sidecar Configuration (ghcr.io/cianfhoghlaim/locket-shim)
+# =============================================================================
+# Uses ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0 -- the v0.2.0 drop-in that sends
+# camelCase query params (projectId/secretPath/secretType) to Infisical
+# v0.161+, replacing the broken locket v0.17.3 (snake_case -> 422 ->
+# passthrough). See bonneagar/scripts/cianfhoghlaim-locket-shim.py for the shim
+# implementation and stacks/{openclaw,langfuse,litellm}/sidecar.yaml for
+# the canonical pattern.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml \
+#                  --env-file .env.local.deploy up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml \
+#                  -f sidecar.yaml --env-file .env.local.deploy up -d
 # =============================================================================
 
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    # (see openclaw/sidecar.yaml for full context). Same shim, env-driven.
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
     container_name: mlflow-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -12,41 +27,65 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    command:
-      - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--map=/templates:/run/secrets/locket"
-      - "--mode=${LOCKET_MODE:-watch}"
+    # NOTE: read_only: false -- the shim writes to /run/secrets/locket/*
+    # which is a dedicated tmpfs volume (driver_opts mode:755). The shim
+    # needs to create temp files in /tmp (which is the container's /tmp
+    # tmpfs) during atomic writes. We keep cap_drop: [ALL] +
+    # no-new-privileges for the rest of the hardening.
+    read_only: false
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
+      INFISICAL_DEFAULT_PATH: /mlflow
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
-      - mlflow-secrets:/run/secrets/locket
+      - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
-      interval: 10s
-      timeout: 5s
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
       retries: 3
       start_period: 5s
     networks:
       - mlflow
+      - lakehouse
 
+  # mlflow service -- receives resolved secrets via the .env.local.deploy
+  # file (loaded by docker compose --env-file). The locket sidecar is
+  # also mounted (read-only) for the future when the mlflow service is
+  # upgraded to source /run/secrets/locket/secrets.env.
   mlflow:
     depends_on:
       locket:
         condition: service_healthy
     volumes:
-      - mlflow-secrets:/run/secrets/locket:ro
+      - stack-secrets:/run/secrets/locket:ro
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
 
 volumes:
-  mlflow-secrets:
+  stack-secrets:
     driver: local
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+      o: uid=65532,gid=65532,mode=755
+
+networks:
+  mlflow:
+    external: true
+    name: mlflow_mlflow
+  lakehouse:
+    external: true
+    name: lakehouse_lakehouse

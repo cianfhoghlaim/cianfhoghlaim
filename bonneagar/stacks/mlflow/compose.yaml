@@ -9,11 +9,15 @@
 #   (bucket=mlflow-artifacts, auto-created by the lakehouse `garage-init`).
 # - The custom image bakes psycopg2-binary + boto3 so the cold-start
 #   install no longer delays the server boot.
+# - Updated 2026-07-28: switched to ghcr.io/cianfhoghlaim/locket-shim sidecar (sidecar.yaml).
+#   Port mapping changed to 127.0.0.1:5050:5000 (was 0.0.0.0:5000:5000)
+#   to dodge macOS AirPlay Receiver which reserves port 5000.
 #
 # USAGE:
-#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
-#   Development: docker compose -f compose.yaml -f sidecar.yaml up -d
-#                 (relies on .env for local secrets — see .env.example)
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml \
+#                  --env-file .env.local.deploy up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml \
+#                  -f sidecar.yaml --env-file .env.local.deploy up -d
 # =============================================================================
 
 name: mlflow
@@ -26,7 +30,7 @@ services:
   # + boto3 baked in, eliminating the 30s pip-install on first boot.
   # ---------------------------------------------------------------------------
   mlflow:
-    # Pinned 2026-07-06 (was `ghcr.io/mlflow/mlflow:v2.22.4` — bumped to v3.12.0
+    # Pinned 2026-07-06 (was `ghcr.io/mlflow/mlflow:v2.22.4` -- bumped to v3.12.0
     # per the upgrade-4-stacks-with-infisical openspec change). The
     # v3.5.0+ security middleware requires --allowed-hosts and
     # --cors-allowed-origins when binding to 0.0.0.0.
@@ -37,7 +41,11 @@ services:
     container_name: mlflow
     restart: unless-stopped
     ports:
-      - "${MLFLOW_PORT:-5000}:5000"
+      # 127.0.0.1 binding -- port 5000 on macOS is reserved by AirPlay
+      # Receiver (ControlCe / commplex-main). Use MLFLOW_PORT to override
+      # (5050 in the dev .env.local.deploy). Public exposure is via the
+      # Pangolin private-resource mlflow.cianfhoghlaim.ie -> mlflow:5000.
+      - "127.0.0.1:${MLFLOW_PORT:-5050}:5000"
     environment:
       # Centralised lakehouse-postgres (db=mlflow)
       MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:-devpassword}@lakehouse-postgres:5432/mlflow
@@ -49,25 +57,25 @@ services:
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-garage}
       MLFLOW_S3_IGNORE_TLS: "true"
       # v3.5.0+ security middleware (mandatory when binding 0.0.0.0)
-      MLFLOW_ALLOWED_HOSTS: "localhost,127.0.0.1,mlflow.cianfhoghlaim.ie"
+      MLFLOW_ALLOWED_HOSTS: "localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie"
       MLFLOW_CORS_ALLOWED_ORIGINS: "https://oideachais.cianfhoghlaim.ie,http://localhost:3335"
     command:
       - mlflow
       - server
       - --backend-store-uri
-      - "$${MLFLOW_BACKEND_STORE_URI}"
+      - "${MLFLOW_BACKEND_STORE_URI}"
       - --default-artifact-root
-      - "$${MLFLOW_DEFAULT_ARTIFACT_ROOT}"
+      - "${MLFLOW_DEFAULT_ARTIFACT_ROOT}"
       - --host
       - "0.0.0.0"
       - --port
       - "5000"
       - --allowed-hosts
-      - "localhost,127.0.0.1,mlflow.cianfhoghlaim.ie"
+      - "localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie"
       - --cors-allowed-origins
       - "https://oideachais.cianfhoghlaim.ie,http://localhost:3335"
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
-    # deploy-mlflow-bunchloch.toml — see the file header.
+    # deploy-mlflow-bunchloch.toml -- see the file header.
     depends_on: []
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
@@ -85,7 +93,7 @@ services:
       - lakehouse
 
   # ---------------------------------------------------------------------------
-  # (postgres + minio + minio-init REMOVED 2026-07-30 — uses centralised
+  # (postgres + minio + minio-init REMOVED 2026-07-30 -- uses centralised
   # lakehouse-postgres + lakehouse-garage. The `mlflow` database and the
   # `mlflow-artifacts` bucket are auto-created by the lakehouse stack's
   # init-db.sql and garage-init respectively.)

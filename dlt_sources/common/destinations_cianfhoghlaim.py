@@ -35,7 +35,6 @@ import os
 from typing import Any
 
 import dlt
-import dlt_sources
 from dlt.destinations.impl.ducklake.configuration import DuckLakeCredentials
 
 # DuckLake 1.0 helpers (the 2026-04-13 launch features).
@@ -338,6 +337,23 @@ def create_pipeline(
         destination=destination,
         dataset_name=dataset_name,
         **kwargs,
+    )
+
+
+def observe_pipeline_run(
+    pipeline_name: str,
+    dataset_name: str,
+    table_name: str,
+) -> Any:
+    """Return the shared MLflow + Langfuse observer for a DLT run."""
+    from .observability import DltRunConfig, DltRunObserver
+
+    return DltRunObserver(
+        DltRunConfig(
+            pipeline_name=pipeline_name,
+            dataset_name=dataset_name,
+            table_name=table_name,
+        )
     )
 
 
