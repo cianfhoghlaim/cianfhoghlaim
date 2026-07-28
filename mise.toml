@@ -205,6 +205,134 @@ run = "grep -rE 'duckdb\\.connect\\(' orchestration/defs/2_materials/ireland_edu
 description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
 run = "uv run python scripts/validate_snake_case_filenames.py"
 
+# meaisinfhoghlaim v3 operator surface
+[tasks."meaisin:v3:setup"]
+description = "meaisinfhoghlaim v3 full setup — Python + CUDA + 24-model registry + HF watchdog + OCR harness + 4 openspec changes + lint:skills"
+run = "uv run python scripts/meaisin_v3_setup.py"
+[tasks."meaisin:v3:status"]
+description = "meaisinfhoghlaim v3 full status — 24-model registry + 7 converters + RAGAS ensemble + 12 agents + mise tasks + openspec changes"
+run = "uv run python scripts/meaisin_v3_status.py"
+
+# 24 OCR/VLM model entrypoint tasks
+[tasks."meaisin:ocr:test:deepseek-ocr-2"]
+description = "meaisinfhoghlaim OCR entrypoint for deepseek-ocr-2"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_deepseek_ocr_2_extract.py"
+[tasks."meaisin:ocr:test:docling-serve"]
+description = "meaisinfhoghlaim OCR entrypoint for docling-serve"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_docling_serve_extract.py"
+[tasks."meaisin:ocr:test:dots-ocr"]
+description = "meaisinfhoghlaim OCR entrypoint for dots-ocr"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_dots_ocr_extract.py"
+[tasks."meaisin:ocr:test:gemma-3-4b"]
+description = "meaisinfhoghlaim OCR entrypoint for gemma-3-4b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_gemma_3_4b_extract.py"
+[tasks."meaisin:ocr:test:glm-4.6v-flash"]
+description = "meaisinfhoghlaim OCR entrypoint for glm-4.6v-flash"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_glm_4.6v_flash_extract.py"
+[tasks."meaisin:ocr:test:internvl3-8b"]
+description = "meaisinfhoghlaim OCR entrypoint for internvl3-8b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_internvl3_8b_extract.py"
+[tasks."meaisin:ocr:test:llama-3.2-vision-11b"]
+description = "meaisinfhoghlaim OCR entrypoint for llama-3.2-vision-11b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_llama_3.2_vision_11b_extract.py"
+[tasks."meaisin:ocr:test:molmo2-4b"]
+description = "meaisinfhoghlaim OCR entrypoint for molmo2-4b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_molmo2_4b_extract.py"
+[tasks."meaisin:ocr:test:molmo2-8b"]
+description = "meaisinfhoghlaim OCR entrypoint for molmo2-8b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_molmo2_8b_extract.py"
+[tasks."meaisin:ocr:test:olmocr-2-7b-1025"]
+description = "meaisinfhoghlaim OCR entrypoint for olmocr-2-7b-1025"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_olmocr_2_7b_1025_extract.py"
+[tasks."meaisin:ocr:test:paddleocr-vl-1.6"]
+description = "meaisinfhoghlaim OCR entrypoint for paddleocr-vl-1.6"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_paddleocr_vl_1.6_extract.py"
+[tasks."meaisin:ocr:test:qwen3-vl-30b-a3b"]
+description = "meaisinfhoghlaim OCR entrypoint for qwen3-vl-30b-a3b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3_vl_30b_a3b_extract.py"
+[tasks."meaisin:ocr:test:qwen3-vl-4b"]
+description = "meaisinfhoghlaim OCR entrypoint for qwen3-vl-4b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3_vl_4b_extract.py"
+[tasks."meaisin:ocr:test:qwen3-vl-8b"]
+description = "meaisinfhoghlaim OCR entrypoint for qwen3-vl-8b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3_vl_8b_extract.py"
+[tasks."meaisin:ocr:test:qwen3.6-27b-mtp"]
+description = "meaisinfhoghlaim OCR entrypoint for qwen3.6-27b-mtp"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3.6_27b_mtp_extract.py"
+[tasks."meaisin:ocr:test:uccix-llama-3.1-8b"]
+description = "meaisinfhoghlaim OCR entrypoint for uccix-llama-3.1-8b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_uccix_llama_3.1_8b_extract.py"
+[tasks."meaisin:ocr:test:uccix-llama2-13b"]
+description = "meaisinfhoghlaim OCR entrypoint for uccix-llama2-13b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_uccix_llama2_13b_extract.py"
+[tasks."meaisin:ocr:test:uccix-mistral-24b"]
+description = "meaisinfhoghlaim OCR entrypoint for uccix-mistral-24b"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_uccix_mistral_24b_extract.py"
+[tasks."meaisin:ocr:test:unstract-api"]
+description = "meaisinfhoghlaim OCR entrypoint for unstract-api"
+run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_unstract_api_extract.py"
+
+# 7 document converter entrypoint tasks
+[tasks."meaisin:converter:test:docling"]
+description = "meaisinfhoghlaim converter entrypoint for docling"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_docling_extract.py"
+[tasks."meaisin:converter:test:marker"]
+description = "meaisinfhoghlaim converter entrypoint for marker"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_marker_extract.py"
+[tasks."meaisin:converter:test:unstructured"]
+description = "meaisinfhoghlaim converter entrypoint for unstructured"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_unstructured_extract.py"
+[tasks."meaisin:converter:test:deepseekocr"]
+description = "meaisinfhoghlaim converter entrypoint for deepseekocr"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_deepseekocr_extract.py"
+[tasks."meaisin:converter:test:pymupdf4llm"]
+description = "meaisinfhoghlaim converter entrypoint for pymupdf4llm"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_pymupdf4llm_extract.py"
+[tasks."meaisin:converter:test:curriculum_document"]
+description = "meaisinfhoghlaim converter entrypoint for curriculum_document"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_curriculum_document_extract.py"
+[tasks."meaisin:converter:test:pdf_factory"]
+description = "meaisinfhoghlaim converter entrypoint for pdf_factory"
+run = "uv run python scripts/meaisin_ocr_htr_tests/converter_pdf_factory_extract.py"
+
+# 12 agent entrypoint tasks
+[tasks."meaisin:agent:test:root"]
+description = "meaisinfhoghlaim Agent entrypoint for root"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_root_extract.py"
+[tasks."meaisin:agent:test:curriculum"]
+description = "meaisinfhoghlaim Agent entrypoint for curriculum"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_curriculum_extract.py"
+[tasks."meaisin:agent:test:translation"]
+description = "meaisinfhoghlaim Agent entrypoint for translation"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_translation_extract.py"
+[tasks."meaisin:agent:test:corpus"]
+description = "meaisinfhoghlaim Agent entrypoint for corpus"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_corpus_extract.py"
+[tasks."meaisin:agent:test:geospatial"]
+description = "meaisinfhoghlaim Agent entrypoint for geospatial"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_geospatial_extract.py"
+[tasks."meaisin:agent:test:statistics"]
+description = "meaisinfhoghlaim Agent entrypoint for statistics"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_statistics_extract.py"
+[tasks."meaisin:agent:test:research"]
+description = "meaisinfhoghlaim Agent entrypoint for research"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_research_extract.py"
+[tasks."meaisin:agent:test:curriculum_comparison"]
+description = "meaisinfhoghlaim Agent entrypoint for curriculum_comparison"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_curriculum_comparison_extract.py"
+[tasks."meaisin:agent:test:bunchloch_research"]
+description = "meaisinfhoghlaim Agent entrypoint for bunchloch_research"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_bunchloch_research_extract.py"
+[tasks."meaisin:agent:test:ag_ui_curriculum"]
+description = "meaisinfhoghlaim Agent entrypoint for ag_ui_curriculum"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_ag_ui_curriculum_extract.py"
+[tasks."meaisin:agent:test:site_analysis"]
+description = "meaisinfhoghlaim Agent entrypoint for site_analysis"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_site_analysis_extract.py"
+[tasks."meaisin:agent:test:hitl_agent"]
+description = "meaisinfhoghlaim Agent entrypoint for hitl_agent"
+run = "uv run python scripts/meaisin_ocr_htr_tests/agent_hitl_agent_extract.py"
+
 # Per-jurisdiction entries (the 6 deferred jurisdictions)
 [tasks."biep:v3:m5"]
 description = "BIEP v3 M5 — Scotland pipeline (150 cohorts, SQA × 3 levels)"

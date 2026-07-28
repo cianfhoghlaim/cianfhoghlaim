@@ -123,6 +123,30 @@ function ExtractHiddenHeritagesTale(
   prompt #"Auto-generated extraction prompt."#
 }
 
+test ExtractHiddenHeritagesTale {
+  functions [ExtractHiddenHeritagesTale]
+  args {
+    page_content #"
+      The Three Sorrows of Storytelling
+      NFC: tale-1234
+      Collector: Séamus Ó Conghaile (Dublin, 1938)
+      Informant: Mícheál Ó Briain (Galway, 1870-1952)
+
+      There were once three sorrows that came to storytelling in Ireland:
+      the loss of the old language, the emigrant that never came home,
+      and the song that died on the lips. The first sorrow was the
+      language of the Gaels, which died a little each time the last
+      speaker of a dialect passed away. The second was the broken
+      promise of the boy who went to Boston and never returned.
+      The third was the song that was sung only once, and then
+      mislaid, and no one could remember how the second verse
+      went after the fire of the cottage of Mícheál Ó Briain in
+      the year of the great wind.
+    "#
+    tale_id "tale-1234"
+  }
+}
+
 // Extract tales listing from browse page
 function ExtractTalesListing(
   page_content: string,
