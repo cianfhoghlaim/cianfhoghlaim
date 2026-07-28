@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Connects to the LiteLLM gateway for LLM access and Garage S3 for document storage.
+Deployed via Komodo on bunchloch. Connects to the LiteLLM gateway for LLM access and Garage S3 for document storage.
 
 ## Environment Variables
 

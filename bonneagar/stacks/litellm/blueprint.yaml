@@ -1,13 +1,22 @@
-# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# =============================================================================
+# LITELLM — Pangolin EE root blueprint (private resource)
+# =============================================================================
+# Generated from the canonical Cianfhoghlaim 6-file stack contract.
 # See: https://docs.pangolin.net/manage/blueprints
+# Roles contain RBAC role names only; middleware references live in
+# pangolin.yaml (the Traefik overlay).
+
 private-resources:
   litellm:
-    name: "LiteLLM Gateway"
-    mode: "http"
+    name: LiteLLM Gateway
+    mode: http
+    sites:
+      - bunchloch
+    destination: litellm
     destination-port: 4000
-    full-domain: "litellm.cianfhoghlaim.ie"
-    protocol: "http"
+    full-domain: litellm.cianfhoghlaim.ie
+    ssl: true
+    scheme: https
+    enabled: true
     roles:
-      - "Member"
-    destination: "litellm"
-
+      - Member

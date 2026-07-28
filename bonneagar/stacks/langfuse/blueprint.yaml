@@ -1,13 +1,21 @@
-# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
-# See: https://docs.pangolin.net/manage/blueprints
+# =============================================================================
+# LANGFUSE — Pangolin EE root blueprint (private resource)
+# =============================================================================
+# Generated from the canonical Cianfhoghlaim 6-file stack contract.
+# Roles contain RBAC role names only; middleware references live in
+# pangolin.yaml (the Traefik overlay).
+
 private-resources:
   langfuse:
-    name: "Langfuse"
-    mode: "http"
+    name: Langfuse
+    mode: http
+    sites:
+      - bunchloch
+    destination: langfuse
     destination-port: 3000
-    full-domain: "langfuse.cianfhoghlaim.ie"
-    protocol: "http"
+    full-domain: langfuse.cianfhoghlaim.ie
+    ssl: true
+    scheme: https
+    enabled: true
     roles:
-      - "Member"
-    destination: "langfuse"
-
+      - Member

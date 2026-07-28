@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Requires API keys for the LLM gateway (LiteLLM) for vision processing. Locket resolves credentials from Infisical.
+Deployed via Komodo on bunchloch. Requires API keys for the LLM gateway (LiteLLM) for vision processing. Locket resolves credentials from Infisical.
 
 ## Environment Variables
 

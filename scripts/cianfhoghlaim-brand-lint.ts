@@ -3,7 +3,7 @@
  * scripts/cianfhoghlaim-brand-lint.ts
  *
  * Brand and Hetzner linter. Fails if any active file references:
- *   - bons, bons-locker-shim, bons-locket-shim (legacy brand)
+ *   - ghcr.io/cianfhoghlaim/locket-shim, cianfhoghlaim-locket-shim (legacy brand)
  *   - kcg (legacy CLI prefix)
  *   - KCGu (legacy host alias)
  *   - cax41, cax41-hetzner, cax41-workloads (retired host)
@@ -51,6 +51,7 @@ const EXCLUDED_DIRS = new Set([
   "bonneagar/stacks/openclaw/skills-curated",
   "bonneagar/stacks/GOLD_STANDARD.md",
   "scripts/cianfhoghlaim-brand-lint.ts",
+  "scripts/cianfhoghlaim-brand-rename.ts",
   "scripts/cianfhoghlaim-preflight.ts",
   "scripts/cianfhoghlaim-stack-lint.ts",
   "scripts/cianfhoghlaim-cli.ts",

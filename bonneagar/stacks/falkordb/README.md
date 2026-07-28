@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Redis-compatible port exposed for application connections.
+Deployed via Komodo on bunchloch. Redis-compatible port exposed for application connections.
 
 ## Environment Variables
 

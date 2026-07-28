@@ -28,7 +28,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. LanceDB's data viewer provides a web UI for browsing collections and running queries.
+Deployed via Komodo on bunchloch. LanceDB's data viewer provides a web UI for browsing collections and running queries.
 
 ## Environment Variables
 

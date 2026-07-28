@@ -26,7 +26,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner.
+Deployed via Komodo on bunchloch.
 
 ## Environment Variables
 

@@ -71,11 +71,13 @@ counterpart is produced by the audit scripts under
 | changedetection | `bonneagar/stacks/changedetection/` | bunchloch | (per Komodo) | `bonneagar/deploy-runbooks/changedetection.md` |
 | bytebase | `bonneagar/stacks/bytebase/` | arm1-oci | (per Komodo) | `bonneagar/deploy-runbooks/bytebase.md` |
 
-> **v5 update:** The `bonneagar/ansible/` directory was pruned
+> **v5/v7 update:** The `bonneagar/ansible/` directory was pruned
 > in the v5 drift refactor (functionally dead per the prior
-> runbook's own admission). Hetzner is Pulumi-only (no
-> `cax41-hetzner` references in inventory / IaC / ansible).
-> The 2-host topology is `arm1-oci` + `bunchloch` only.
+> runbook's own admission). The Hetzner Pulumi program at
+> `bonneagar/iac/pulumi/hetzner/` is preserved as a frozen
+> historical record (the host was retired 2026-07-28 for
+> financial constraints). The 2-host topology is
+> `arm1-oci` + `bunchloch` only.
 
 ## 6. Domain → Host routing summary
 

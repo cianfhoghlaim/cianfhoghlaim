@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Requires co-located Redis for caching.
+Deployed via Komodo on bunchloch. Requires co-located Redis for caching.
 
 ## Environment Variables
 

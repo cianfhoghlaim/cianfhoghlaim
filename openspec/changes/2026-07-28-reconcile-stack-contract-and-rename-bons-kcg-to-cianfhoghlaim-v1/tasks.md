@@ -23,11 +23,11 @@
 
 - [x] Build the Locket shim image as `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0`
 - [ ] Push the rebuilt Locket shim image to `ghcr.io/cianfhoghlaim/locket-shim` (locally built; push to ghcr.io requires a PAT with `write:packages` scope; build artifact is preserved locally and queued for follow-up push)
-- [x] Replace `bons-locker-shim:infisical-0.2.0` with `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` in every `sidecar.yaml` that uses the shim (PARTIAL — only the openchamber sidecar was preserved in the commit; the rest require a follow-up change to land consistently across all 91 stacks)
+- [x] Replace `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` with `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` in every `sidecar.yaml` that uses the shim (PARTIAL — only the openchamber sidecar was preserved in the commit; the rest require a follow-up change to land consistently across all 91 stacks)
 - [x] Rename mise tasks from `bons:` / `kcg:` to `cianfhoghlaim:` in `mise.toml`
 - [x] Add the `cianfhoghlaim` CLI command family to `mise.toml`
 - [x] Remove or replace `bons.ai` URL references in active skills and READMEs (PARTIAL — deploy-runbook updated)
-- [x] Rename `bons-locket-shim.py` source file to `cianfhoghlaim-locket-shim.py` (already done in HEAD by T6; this commit consolidates the build context)
+- [x] Rename `cianfhoghlaim-locket-shim.py` source file to `cianfhoghlaim-locket-shim.py` (already done in HEAD by T6; this commit consolidates the build context)
 
 ## Phase 3 — Hetzner removal
 
@@ -71,7 +71,7 @@
 ## Phase 6 — CI and validation
 
 - [x] Run `openspec validate 2026-07-28-reconcile-stack-contract-and-rename-bons-kcg-to-cianfhoghlaim-v1 --strict`
-- [x] Run the brand-token linter (must find zero `bons-locker-shim`, `bons:`, `kcg:`, `KCGu` outside `.agents/skills_backup/`)
+- [x] Run the brand-token linter (must find zero `ghcr.io/cianfhoghlaim/locket-shim`, `bons:`, `kcg:`, `KCGu` outside `.agents/skills_backup/`)
 - [x] Run the Hetzner linter (must find zero `cax41`, `security.hetzner` outside `.agents/skills_backup/` and `stedding/`)
 - [ ] Run `mise run lint:skills` (deferred)
 - [ ] Run `bun run turbo typecheck` (deferred)

@@ -1,12 +1,21 @@
-# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
-# See: https://docs.pangolin.net/manage/blueprints
+# =============================================================================
+# OPENCLAW — Pangolin EE root blueprint (private resource)
+# =============================================================================
+# Generated from the canonical Cianfhoghlaim 6-file stack contract.
+# Roles contain RBAC role names only; middleware references live in
+# pangolin.yaml (the Traefik overlay).
+
 private-resources:
   openclaw:
-    name: "OpenClaw Gateway"
-    mode: "http"
+    name: OpenClaw Gateway
+    mode: http
+    sites:
+      - bunchloch
+    destination: openclaw
     destination-port: 18789
-    full-domain: "openclaw.cianfhoghlaim.ie"
-    protocol: "http"
+    full-domain: openclaw.cianfhoghlaim.ie
+    ssl: true
+    scheme: https
+    enabled: true
     roles:
-      - "Member"
-    destination: "openclaw"
+      - Member

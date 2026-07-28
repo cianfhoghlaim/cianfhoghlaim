@@ -5,10 +5,13 @@ import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { ensurePangolinAuth } from "../auth.ts";
 import { CLI_FLAGS } from "../cli.ts";
 
-// The OLM clients. v5: cax41-hetzner-olm removed (Hetzner is
-// Pulumi-only per the 2-host topology decision). The arm1-oci-olm
-// is the only canonical OLM client; bunchloch also gets a Newt
-// tunnel (via stacks/pangolin/newt.yaml) for service exposure.
+// The OLM clients. Hetzner OLM removed 2026-07-28 (financial
+// constraints; the 2-host topology is arm1-oci + bunchloch only;
+// the Pulumi Hetzner program is preserved at
+// bonneagar/iac/pulumi/hetzner/ as a frozen historical record).
+// The arm1-oci-olm is the only canonical OLM client; bunchloch
+// also gets a Newt tunnel (via stacks/pangolin/newt.yaml) for
+// service exposure.
 const OLM_CLIENTS = [
   { name: "arm1-oci-olm", siteId: 2 },
 ];

@@ -1,14 +1,30 @@
-# Cognee — Pangolin private-resource route
+# =============================================================================
+# COGNEE — Pangolin Traefik Routing Overlay
+# =============================================================================
 # Routes cognee.cianfhoghlaim.ie → cognee container at port 8000.
 # The cognee container listens on 8000 internally; the host maps 8100:8000.
-# TinyAuth is OMITTED — the FastAPI agents (sruth/oideachais) call Cognee directly
-# over the Docker network, not via Pangolin; the route is for ad-hoc UI access.
-pangolin:
-  private-resources:
+# TinyAuth (Pocket ID OIDC) + secure-headers are applied at the Traefik
+# layer; the Pangolin blueprint (blueprint.yaml) declares RBAC roles only.
+
+http:
+  routers:
     cognee:
-      name: cognee
-      mode: http
-      full-domain: cognee.cianfhoghlaim.ie
-      destination-port: 8000
-      protocol: http
-      roles[0]: tinyauth@file
+      entryPoints:
+        - https
+      rule: "Host(`cognee.cianfhoghlaim.ie`)"
+      service: cognee
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+      priority: 100
+
+  services:
+    cognee:
+      loadBalancer:
+        servers:
+          - url: "http://cognee:8000"
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 3s

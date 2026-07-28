@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Requires PostgreSQL and Meilisearch (both co-located in the compose stack). Locket resolves `KARAKEEP_DB_PASSWORD` and `KARAKEEP_MEILISEARCH_KEY` from Infisical.
+Deployed via Komodo on bunchloch. Requires PostgreSQL and Meilisearch (both co-located in the compose stack). Locket resolves `KARAKEEP_DB_PASSWORD` and `KARAKEEP_MEILISEARCH_KEY` from Infisical.
 
 ## Environment Variables
 

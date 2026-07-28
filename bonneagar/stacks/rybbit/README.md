@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Connects to the RabbitMQ broker running in the Dagster or n8n stacks.
+Deployed via Komodo on bunchloch. Connects to the RabbitMQ broker running in the Dagster or n8n stacks.
 
 ## Environment Variables
 

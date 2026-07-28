@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Locket resolves PostgreSQL credentials and Kafka connection details from Infisical.
+Deployed via Komodo on bunchloch. Locket resolves PostgreSQL credentials and Kafka connection details from Infisical.
 
 ## Environment Variables
 

@@ -11,9 +11,8 @@ services:
     #
     # The `ghcr.io/cianfhoghlaim/locket-shim` image is a Python-based
     # drop-in replacement that uses the CORRECT camelCase field names.
-    # It's the same body as the older `bons-locker-shim:infisical-0.2.0`
-    # tag, repushed under the canonical `ghcr.io/cianfhoghlaim/locket-shim`
-    # name by the reconcile-stack-contract-and-rename-bons-kcg-to-
+    # It's a temporary fix until upstream locket v0.18+ ships with
+    # the camelCase change in source.
     # cianfhoghlaim-v1 change. It's a temporary fix until locket v0.18+
     # ships with the fix in source (already in the upstream repo at
     # stedding/locket v0.18.0-rc.1).

@@ -1,12 +1,31 @@
-# LiteLLM — Pangolin private-resource route
+# =============================================================================
+# LITELLM — Pangolin Traefik Routing Overlay
+# =============================================================================
 # Routes litellm.cianfhoghlaim.ie → litellm container at port 4000.
-# TinyAuth Member role required (operator-only).
-pangolin:
-  private-resources:
+# TinyAuth (Pocket ID OIDC) + secure-headers middlewares are applied at
+# the Traefik layer; the Pangolin blueprint (blueprint.yaml) declares
+# RBAC roles only.
+
+http:
+  routers:
     litellm:
-      name: litellm
-      mode: http
-      full-domain: litellm.cianfhoghlaim.ie
-      destination-port: 4000
-      protocol: http
-      roles[0]: secure-headers@file
+      entryPoints:
+        - https
+      rule: "Host(`litellm.cianfhoghlaim.ie`)"
+      service: litellm
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - tinyauth
+        - secure-headers
+      priority: 100
+
+  services:
+    litellm:
+      loadBalancer:
+        servers:
+          - url: "http://litellm:4000"
+        healthCheck:
+          path: /health/liveliness
+          interval: 30s
+          timeout: 3s

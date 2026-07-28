@@ -6,7 +6,7 @@ Beszel is a lightweight, self-hosted server monitoring solution consisting of a 
 
 ## Why This Matters for Kings' College Galway
 
-The Kings' College Galway infrastructure spans three physical hosts (arm1-oci, cax41-hetzner, bunchloch MacBook) running 89 Docker Compose stacks. Beszel provides a single dashboard showing resource utilisation across all three nodes, alerting when the MacBook's 48 GB unified memory approaches saturation during LLM inference or when the ARM1's 24 GB RAM is strained by concurrent data pipelines. This is operational visibility without the complexity of a full Prometheus/Grafana stack for infrastructure monitoring (Prometheus is reserved for application-level metrics).
+The Kings' College Galway infrastructure spans two physical hosts (arm1-oci Oracle Cloud ARM free tier + bunchloch MacBook M4 Max) running the Docker Compose stacks. Beszel provides a single dashboard showing resource utilisation across both nodes, alerting when the MacBook's 48 GB unified memory approaches saturation during LLM inference or when the ARM1's 24 GB RAM is strained by concurrent data pipelines. This is operational visibility without the complexity of a full Prometheus/Grafana stack for infrastructure monitoring (Prometheus is reserved for application-level metrics).
 
 ## Key Features
 

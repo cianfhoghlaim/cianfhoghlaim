@@ -1,13 +1,31 @@
-# Langfuse v3 — Pangolin private-resource route
+# =============================================================================
+# LANGFUSE — Pangolin Traefik Routing Overlay
+# =============================================================================
 # Routes langfuse.cianfhoghlaim.ie → langfuse-web container at port 3000.
-# The langfuse-web container listens on 3000 internally; the host maps 3001:3000.
-# TinyAuth is OMITTED — Langfuse has its own built-in authentication.
-pangolin:
-  private-resources:
+# The langfuse-web container listens on 3000 internally; the host maps
+# 3001:3000. Langfuse has its own built-in authentication, so TinyAuth
+# is OMITTED at the Traefik layer; the secure-headers middleware is
+# applied. The Pangolin blueprint (blueprint.yaml) declares RBAC roles only.
+
+http:
+  routers:
     langfuse:
-      name: langfuse
-      mode: http
-      full-domain: langfuse.cianfhoghlaim.ie
-      destination-port: 3000
-      protocol: http
-      roles[0]: secure-headers@file
+      entryPoints:
+        - https
+      rule: "Host(`langfuse.cianfhoghlaim.ie`)"
+      service: langfuse
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+      priority: 100
+
+  services:
+    langfuse:
+      loadBalancer:
+        servers:
+          - url: "http://langfuse-web:3000"
+        healthCheck:
+          path: /api/public/health
+          interval: 30s
+          timeout: 3s

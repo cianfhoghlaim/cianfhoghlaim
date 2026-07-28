@@ -6,7 +6,7 @@ Headscale is an open-source implementation of the Tailscale control server. It l
 
 ## Why This Matters for Kings' College Galway
 
-While Pangolin provides the primary zero-trust tunnel infrastructure, Headscale provides an alternative mesh VPN for developer access and cross-server connectivity. It enables direct peer-to-peer WireGuard connections between the MacBook (bunchloch), the ARM server (arm1-oci), and the Hetzner node (cax41-hetzner) without routing through Pangolin. This is useful for high-bandwidth operations like syncing the 124 GB HuggingFace cache between servers or accessing GPU-accelerated services on the MacBook's unified memory from remote locations.
+While Pangolin provides the primary zero-trust tunnel infrastructure, Headscale provides an alternative mesh VPN for developer access and cross-server connectivity. It enables direct peer-to-peer WireGuard connections between the MacBook (bunchloch) and the ARM server (arm1-oci) without routing through Pangolin. This is useful for high-bandwidth operations like syncing the 124 GB HuggingFace cache between servers or accessing GPU-accelerated services on the MacBook's unified memory from remote locations.
 
 ## Key Features
 

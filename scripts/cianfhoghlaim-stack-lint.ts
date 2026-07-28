@@ -109,7 +109,7 @@ function lintCompose(stack: string, dir: string, diagnostics: Diag[]): void {
         stack,
         file: "compose.yaml",
         line: i + 1,
-        message: "bons-locker-shim is renamed to ghcr.io/cianfhoghlaim/locket-shim",
+        message: "ghcr.io/cianfhoghlaim/locket-shim is renamed to ghcr.io/cianfhoghlaim/locket-shim",
       });
     }
   }
@@ -131,7 +131,7 @@ function lintSidecar(stack: string, dir: string, diagnostics: Diag[]): void {
         stack,
         file: "sidecar.yaml",
         line: i + 1,
-        message: "bons-locker-shim is renamed to ghcr.io/cianfhoghlaim/locket-shim",
+        message: "ghcr.io/cianfhoghlaim/locket-shim is renamed to ghcr.io/cianfhoghlaim/locket-shim",
       });
     }
     if (/\bimage:\s*\S+/.test(line) && !/locket/i.test(line) && !/locker/i.test(line)) {

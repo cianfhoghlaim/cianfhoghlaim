@@ -36,10 +36,10 @@ const TARGET_EXTS = new Set([".md", ".yaml", ".yml", ".ts", ".tsx", ".js", ".mjs
 // Replacement rules (order matters — longer first)
 const REPLACEMENTS: Array<[RegExp, string]> = [
   // Image references
-  [/ghcr.io/cianfhoghlaim/locket-shim:infisical-0\.2\.0/g, "ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0"],
-  [/ghcr.io/cianfhoghlaim/locket-shim:0\.2\.0/g, "ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0"],
-  [/ghcr.io/cianfhoghlaim/locket-shim\b/g, "ghcr.io/cianfhoghlaim/locket-shim"],
-  [/cianfhoghlaim-locket-shim\b/g, "cianfhoghlaim-locket-shim"],
+  [/bons-locker-shim:infisical-0\.2\.0/g, "ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0"],
+  [/bons-locker-shim:0\.2\.0/g, "ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0"],
+  [/\bbons-locker-shim\b/g, "ghcr.io/cianfhoghlaim/locket-shim"],
+  [/\bbons-locket-shim\b/g, "cianfhoghlaim-locket-shim"],
   // Domain references
   [/bons\.ai\/docs\/locket/g, "docs.cianfhoghlaim.ie/locket"],
 ];
@@ -49,6 +49,10 @@ const EXCLUDED_DIRS = new Set([
   ".agents/skills_backup",
   "stedding",
   "bonneagar/_archive",
+  "bonneagar/iac/pulumi/hetzner",
+  "bonneagar/stacks/openclaw/skills-curated",
+  "bonneagar/stacks/GOLD_STANDARD.md",
+  "scripts/cianfhoghlaim-brand-rename.ts",
   ".research",
   ".git",
   "node_modules",

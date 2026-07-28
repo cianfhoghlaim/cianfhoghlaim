@@ -40,7 +40,7 @@ export class CI {
     sshKey: Secret,
     opToken: Secret,
     opConnectHost: string,
-    targetHosts: string = "security.hetzner",
+    targetHosts: string = "arm1-oci",
     dryRun: boolean = false
   ): Promise<string> {
     const results: string[] = [];
@@ -111,7 +111,7 @@ export class CI {
   async deployObservability(
     ansibleDir: Directory,
     sshKey: Secret,
-    host: string = "security.hetzner"
+    host: string = "arm1-oci"
   ): Promise<string> {
     const bonneagar = new Bonneagar(ansibleDir);
 
@@ -131,7 +131,7 @@ export class CI {
   async deployStorage(
     ansibleDir: Directory,
     sshKey: Secret,
-    host: string = "security.hetzner"
+    host: string = "arm1-oci"
   ): Promise<string> {
     const bonneagar = new Bonneagar(ansibleDir);
 
@@ -142,49 +142,6 @@ export class CI {
       "storage",
       host
     );
-  }
-
-  /**
-   * Full Hetzner deployment
-   */
-  @func()
-  async deployHetzner(
-    ansibleDir: Directory,
-    sshKey: Secret,
-    domain: string = "baile.ie"
-  ): Promise<string> {
-    const results: string[] = [];
-    const bonneagar = new Bonneagar(ansibleDir);
-
-    // Deploy 1Password Connect first
-    results.push("=== Deploying 1Password Connect ===");
-    const opResult = await bonneagar.runPlaybook(
-      "playbooks/deploy-infrastructure.yml",
-      "inventory/hosts.yml",
-      undefined,
-      "onepassword",
-      "security.hetzner"
-    );
-    results.push(opResult);
-
-    // Deploy Pangolin
-    results.push("\n=== Deploying Pangolin ===");
-    const pangolinResult = await bonneagar.deployPangolin(
-      "security.hetzner",
-      sshKey,
-      domain
-    );
-    results.push(pangolinResult);
-
-    // Deploy Komodo
-    results.push("\n=== Deploying Komodo ===");
-    const komodoResult = await bonneagar.deployKomodo(
-      "security.hetzner",
-      sshKey
-    );
-    results.push(komodoResult);
-
-    return results.join("\n");
   }
 
   /**

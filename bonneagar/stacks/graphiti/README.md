@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Requires a running Neo4j instance. Locket resolves `OPENAI_API_KEY` and `NEO4J_PASSWORD` from Infisical.
+Deployed via Komodo on bunchloch. Requires a running Neo4j instance. Locket resolves `OPENAI_API_KEY` and `NEO4J_PASSWORD` from Infisical.
 
 ## Environment Variables
 

@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Models are downloaded on first run and cached in a Docker volume.
+Deployed via Komodo on bunchloch. Models are downloaded on first run and cached in a Docker volume.
 
 ## Environment Variables
 

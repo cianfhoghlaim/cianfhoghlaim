@@ -6,7 +6,7 @@ Komodo is an open-source container orchestration platform by Moghtech that provi
 
 ## Why This Matters for Kings' College Galway
 
-Komodo is the deployment engine for all 89 stacks. Every `compose.yaml` + `sidecar.yaml` in this repository is synced from Forgejo to Komodo, which applies them to the correct server (arm1-oci, cax41-hetzner, or bunchloch MacBook). When a new OCR model is added, the `olmocr` stack is updated in Forgejo, Komodo detects the change, and redeploys — no SSH, no manual `docker compose`, no downtime from misconfiguration. This GitOps loop is what makes the infrastructure reproducible rather than artisanal.
+Komodo is the deployment engine for all stacks. Every `compose.yaml` + `sidecar.yaml` in this repository is synced from Forgejo to Komodo, which applies them to the correct server (arm1-oci or bunchloch MacBook). When a new OCR model is added, the `olmocr` stack is updated in Forgejo, Komodo detects the change, and redeploys — no SSH, no manual `docker compose`, no downtime from misconfiguration. This GitOps loop is what makes the infrastructure reproducible rather than artisanal.
 
 ## Key Features
 

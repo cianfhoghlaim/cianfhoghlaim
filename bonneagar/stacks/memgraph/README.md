@@ -27,7 +27,7 @@ docker compose up -d
 
 ### Production (via Komodo)
 
-Deployed via Komodo on cax41-hetzner. Locket resolves `MEMGRAPH_PASSWORD` from Infisical.
+Deployed via Komodo on bunchloch. Locket resolves `MEMGRAPH_PASSWORD` from Infisical.
 
 ## Environment Variables
 
