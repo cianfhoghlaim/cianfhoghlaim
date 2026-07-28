@@ -83,7 +83,7 @@ function ExtractAQAQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> AQAQualSpec {  client ExtractEn
+) -> AQAQualSpec {  client BIEPV3Extract
   prompt #"Auto-generated extraction prompt."#
 }
 
@@ -91,7 +91,7 @@ function ExtractOCRQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> OCRQualSpec {  client ExtractEn
+) -> OCRQualSpec {  client BIEPV3Extract
   prompt #"Auto-generated extraction prompt."#
 }
 
@@ -99,7 +99,7 @@ function ExtractEdexcelQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> EdexcelQualSpec {  client ExtractEn
+) -> EdexcelQualSpec {  client BIEPV3Extract
   prompt #"Auto-generated extraction prompt."#
 }
 

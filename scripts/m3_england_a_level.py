@@ -16,6 +16,8 @@ Exits 0 iff all 3 asset checks pass:
 - england_a_level_documents_ingested_check (cohort count >= 147)
 - england_a_level_extractions_ragas_check (score >= 0.70)
 - england_a_level_lance_chunks_check (chunk count >= 147_000)
+
+YEARLY automation (1st September 00:00 UTC) per the BIEP v3 scheduling policy.
 """
 
 from __future__ import annotations
@@ -44,7 +46,7 @@ def main() -> int:
     logger.info("=== M3 Phase A: Ingestion (147 England A-Level cohorts) ===")
     if not run([
         "uv", "run", "dagster", "asset", "materialize",
-        "--select", "england_a_level_documents_ingested",
+        "--select", "england_documents_ingested",
         "-m", "orchestration.definitions",
     ]):
         return 1
@@ -53,7 +55,7 @@ def main() -> int:
     logger.info("=== M3 Phase B: Extraction (4-path OCR + RAGAS) ===")
     if not run([
         "uv", "run", "dagster", "asset", "materialize",
-        "--select", "england_a_level_extractions",
+        "--select", "england_extractions",
         "-m", "orchestration.definitions",
     ]):
         return 1
@@ -62,7 +64,7 @@ def main() -> int:
     logger.info("=== M3 Phase C: Embedding (CocoIndex v1 Apps) ===")
     if not run([
         "uv", "run", "dagster", "asset", "materialize",
-        "--select", "england_a_level_embeddings",
+        "--select", "england_embeddings",
         "-m", "orchestration.definitions",
     ]):
         return 1
@@ -85,7 +87,7 @@ def main() -> int:
     ]):
         return 1
 
-    logger.info("M3 complete. All 3 asset checks pass; 147 England A-Level cohorts (AQA+OCR+Edexcel) materialised.")
+    logger.info("M3 complete. All 3 asset checks pass; 147 England A-Level cohorts (49×3 AQA+OCR+Edexcel) materialised.")
     return 0
 
 

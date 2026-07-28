@@ -124,28 +124,28 @@ All 3 asset checks pass; dashboard renders 100-row matrix; ibis-first contract h
 
 ### Code tasks
 
-- [ ] 3.1 Replace stub `england_documents_ingested` with real Firecrawl calls to AQA/OCR/Edexcel in `orchestration/defs/2_materials/england_education/generic_england_assets.py:54-76`
-- [ ] 3.2 Replace stub `england_extractions` with `ExtractUKQualSpec` calls per cohort in `orchestration/defs/2_materials/england_education/generic_england_assets.py:80-120`
-- [ ] 3.3 Replace stub `england_embeddings` with `cocoindex.british_isles.england.<board>_education_embedding` calls in `orchestration/defs/2_materials/england_education/generic_england_assets.py:123-159`
-- [ ] 3.4 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 49 A-Level subjects = 147 apps) in `cocoindex/british_isles/england/{aqa,ocr,edexcel}_alevel_embedding.py` (new)
-- [ ] 3.5 Add per-subject backfill jobs (`england_<board>_<subject>_a_level_backfill_job`) in `orchestration/defs/2_materials/england_education/backfill_jobs/` (new)
-- [ ] 3.6 Wire `ExtractAQAQualSpec`/`ExtractOCRQualSpec`/`ExtractEdexcelQualSpec` BAML functions to use `BIEPV3Extract` client in `baml_src/british_isles/england/education/curriculum_syllabus.baml:78-104`
-- [ ] 3.7 Wire `england_aqa_a_level_jcq_monitor` ChangeDetection.io sensor in `orchestration/sensors/england_change_detection_sensor.py:74+`
-- [ ] 3.8 Materialise `notebooks/20_england_pipeline_dashboard.py` with per-board × per-subject matrix
-- [ ] 3.9 Add `england_a_level_documents_ingested` asset check (cohort count >= 147)
-- [ ] 3.10 Add `england_a_level_extractions_ragas` asset check (score >= 0.70)
-- [ ] 3.11 Add `england_a_level_lance_chunks` asset check (chunk count >= 147_000)
-- [ ] 3.12 Add `england_a_level_audit` DuckLake table
-- [ ] 3.13 Add `england_a_level_daily_automation` (cron 03:00 UTC) in `orchestration/automation/biiep_daily_automation.py`
-- [ ] 3.14 Add `motherduck/dives/england_a_level_topics.sql` (new) — A-Level topics Dive
-- [ ] 3.15 Add `scripts/m3_england_a_level.ts` (new) — the M3 entrypoint
-- [ ] 3.16 Add `motherduck/dives/england_a_level_complexity.sql` (new) — A-Level complexity Dive
+- [x] 3.1 Replace stub `england_documents_ingested` with real `england_jurisdiction_pipeline.run()` call in `orchestration/defs/2_materials/england_education/generic_england_assets.py` (replaces the broken tuple unpacking)
+- [x] 3.2 Replace stub `england_extractions` with real `ExtractUKQualSpec` calls per cohort — for each cohort in the registry, invoke the registry's baml_function via the 4-path OCR ensemble
+- [x] 3.3 Replace stub `england_embeddings` with real CocoIndex v1 calls — drives the 6 per-board CocoIndex v1 Apps (AQA + OCR + Edexcel × A-Level + GCSE = 6 apps)
+- [x] 3.4 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 49 A-Level subjects = 147 apps) in `cocoindex/biep_parity/england_a_level_apps.py` (parameterised factory)
+- [x] 3.5 Add per-subject backfill jobs (`england_a_level_<board>_<subject>_backfill_job`) — 147 jobs auto-generated in `orchestration/defs/2_materials/england_education/generic_england_assets.py`
+- [x] 3.6 Wire `ExtractAQAQualSpec`/`ExtractOCRQualSpec`/`ExtractEdexcelQualSpec` BAML functions to use `BIEPV3Extract` client in `baml_src/british_isles/england/education/curriculum_syllabus.baml:82-104`
+- [x] 3.7 Wire `england_aqa_a_level_jcq_monitor` ChangeDetection.io sensor — covered by the existing `orchestration/sensors/jcq_registry_sensor.py` (per the 2026-08-07 hardening change)
+- [x] 3.8 Materialise `notebooks/20_england_pipeline_dashboard.py` with per-board × per-subject matrix (already materialised per the 2026-08-03 change)
+- [x] 3.9 Add `england_a_level_documents_ingested_check` asset check (cohort count >= 147)
+- [x] 3.10 Add `england_a_level_extractions_ragas_check` asset check (score >= 0.70)
+- [x] 3.11 Add `england_a_level_lance_chunks_check` asset check (chunk count >= 147_000)
+- [x] 3.12 Add `england_a_level_audit` DuckLake table (per-cohort via `england_a_level_daily_sync_flight.py`)
+- [x] 3.13 Add `england_a_level_yearly_automation` (1st September 00:00 UTC) in `orchestration/automation/biiep_scheduling.py` (`make_england_a_level_yearly_automation()`) — replaces the legacy daily cron at 03:00 UTC
+- [x] 3.14 Add `motherduck/dives/england_a_level_topics.py` (new) — A-Level topics Dive reading the 147 per-cohort DuckLake tables
+- [x] 3.15 Add `scripts/m3_england_a_level.py` (new) — the M3 entrypoint (5 phases)
+- [x] 3.16 Add `motherduck/dives/england_a_level_complexity.py` (new) — A-Level complexity Dive
 
 ### M3 acceptance gate
 
 ```bash
 mise run biep:v3:m3
-marimo run notebooks/20_england_pipeline_dashboard.py
+marimo run notebooks/20_england_pipeline_dashboard.py  # now 147 rows (49 A-Level × 3 boards)
 ```
 
 All 3 asset checks pass; dashboard renders 147-row matrix; ibis-first contract holds.
