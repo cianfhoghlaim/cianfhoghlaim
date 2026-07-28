@@ -102,6 +102,206 @@
 
 ---
 
+## 🚀 Quick Start for New Operators — Pocket ID + Komodo + Pangolin Onboarding
+
+> **If you're new to this repo, start here.** This section gets the
+> Pocket ID + Komodo + Pangolin + TinyAuth stack wired up so you can
+> use a single Pocket ID passkey to log in to ALL services. The
+> entire flow is automated via 4 bash scripts + 1 openspec change.
+
+The 5 steps that were once manual (and the scripts that automate them):
+
+| # | Step | Was manual | Now automated by |
+|---|---|---|---|
+| 1 | Create Pocket ID OIDC client for Komodo | ❌ | `scripts/wire-pocketid-pangolin-komodo.sh` |
+| 2 | Update Komodo's OIDC config | ❌ | `scripts/wire-pocketid-pangolin-komodo.sh` |
+| 3 | Add Pocket ID as Pangolin Identity Provider | ❌ | `scripts/wire-pocketid-pangolin-komodo.sh` |
+| 4 | Bind PocketID IdP to every Pangolin Resource | ❌ | `scripts/wire-pocketid-resource-idp.sh` |
+| 5 | Self-configure Komodo + Periphery | ❌ | `scripts/bootstrap-komodo-periphery.sh` |
+
+Plus 2 supporting scripts for ongoing maintenance:
+
+| Script | Purpose | When to run |
+|---|---|---|
+| `scripts/onboard-pocketid.sh` | Guided TUI/CLI wizard for non-technical operators | Once per cluster (or when adding a new operator) |
+| `scripts/rotate-pocketid-secrets.sh` | 90-day cron for OIDC client secret rotation | Cron: `0 3 1 */3 * *` |
+
+---
+
+### 1. The 3 things you need (TL;DR for non-technical operators)
+
+You need **3 credentials** (one-time, to paste into the onboarding wizard):
+
+| Credential | Where to get it | Scope |
+|---|---|---|
+| `POCKETID_API_KEY` | https://auth.cianfhoghlaim.ie → Settings → API Keys → Create (Admin scope) | Admin API key for Pocket ID |
+| `PANGOLIN_API_KEY` | https://pangolin.cianfhoghlaim.ie → Settings → API Keys → Create (Orgs/Resources scope) | Pangolin API key for resource binding |
+| `KOMODO_PASSWORD` | Your Komodo admin user's password (or skip if Komodo isn't deployed yet) | Komodo admin login |
+
+**That's it.** The wizard handles the rest: validation, persistence, and
+the full Pocket ID + Komodo + Pangolin wiring.
+
+---
+
+### 2. The guided onboarding wizard (one command for the whole flow)
+
+```bash
+./scripts/onboard-pocketid.sh
+```
+
+The wizard will:
+1. **Ask 3 questions** (the 3 credentials above + optional URL/username overrides)
+2. **Validate each** against its source service via live HTTP calls
+3. **Write to .env** at the repo root (idempotent upsert)
+4. **Optionally persist to local Infisical** (if --with-infisical)
+5. **Optionally run the wire script** (with --skip-wire to skip)
+
+Options for the wizard:
+
+| Flag | Purpose |
+|---|---|
+| `--non-interactive` | Use existing .env values (for CI / non-TTY) |
+| `--pocketid-api-key=KEY` | Skip the prompt for the Pocket ID key |
+| `--pangolin-api-key=KEY` | Skip the prompt for the Pangolin key |
+| `--skip-komodo` | Skip the Komodo step (if Komodo isn't deployed yet) |
+| `--skip-wire` | Don't run the wire script (just write to .env) |
+| `--with-infisical` | Also persist to the local Infisical vault |
+| `--domain=DOMAIN` | Override the cluster domain (default: cianfhoghlaim.ie) |
+| `--help` | Full help |
+
+**For non-technical users (interactive):** just run `./scripts/onboard-pocketid.sh` and follow the prompts.
+
+**For CI / non-TTY (automated):**
+```bash
+./scripts/onboard-pocketid.sh --non-interactive --skip-wire
+```
+
+---
+
+### 3. The 5-step wiring flow (after the wizard completes)
+
+```bash
+# Step 1: Pocket ID OIDC client + Komodo OIDC + Pangolin IdP
+./scripts/wire-pocketid-pangolin-komodo.sh
+
+# Step 2: Bind PocketID to every Pangolin Resource (4th manual step)
+./scripts/wire-pocketid-resource-idp.sh --all
+
+# Step 3: Bootstrap Komodo + Periphery (5th step, auto-configure)
+./scripts/bootstrap-komodo-periphery.sh
+
+# Step 4: Verify end-to-end
+curl -ksS https://komodo.cianfhoghlaim.ie/api/v1/system-info | jq
+curl -ksS https://langfuse.cianfhoghlaim.ie/api/public/health | jq
+# Visit https://mlflow.cianfhoghlaim.ie in a browser and click "Login with Pocket ID"
+```
+
+For per-step flags (e.g. --dry-run, --skip-komodo, --skip-pangolin), run each
+script with `--help`.
+
+---
+
+### 4. The 90-day cron rotation (for long-term maintenance)
+
+Pocket ID rotates the OIDC client_secret on every fetch. So we need a
+fresh secret every time we need one (never store one). The `rotate-pocketid-secrets.sh`
+script does this automatically:
+
+```bash
+# Add the cron job (runs at 3am on the 1st of every 3rd month)
+echo "0 3 1 */3 * * $PWD/scripts/rotate-pocketid-secrets.sh" | crontab -
+
+# Test the rotation script manually
+./scripts/rotate-pocketid-secrets.sh
+```
+
+This will:
+1. Fetch a fresh secret via Pocket ID admin API (X-API-Key auth)
+2. Use it immediately to get a fresh Pocket ID access_token
+3. Mint a fresh Pangolin API key (7-day TTL)
+4. Update .env with the new key
+5. Write an audit record to /tmp/pocketid-rotation-{ts}.json
+
+---
+
+### 5. The 4 scripts (TL;DR reference)
+
+| Script | Lines | What it does |
+|---|---|---|
+| `scripts/onboard-pocketid.sh` | ~230 | Guided TUI/CLI wizard for non-technical operators (asks 3 questions, validates, persists to .env) |
+| `scripts/wire-pocketid-pangolin-komodo.sh` | ~320 | Creates Pocket ID OIDC client + updates Komodo OIDC config + adds Pangolin IdP (3 of 5 steps) |
+| `scripts/wire-pocketid-resource-idp.sh` | ~125 | Binds the PocketID IdP to every Pangolin Resource (4th step) |
+| `scripts/bootstrap-komodo-periphery.sh` | ~200 | Self-registers Periphery with Pangolin, auto-derives the wire between Komodo+Periphery (5th step) |
+| `scripts/rotate-pocketid-secrets.sh` | ~115 | 90-day cron job for OIDC client secret rotation |
+
+Plus 1 openspec change:
+`openspec/changes/2026-07-28-pocketid-komodo-periphery-onboarding-v1/` (proposal + tasks + 2 spec ADDED Requirements).
+
+---
+
+### 6. The openspec change + audit log
+
+The 5-step flow + 2 supporting scripts are documented in:
+- `openspec/changes/2026-07-28-pocketid-komodo-periphery-onboarding-v1/proposal.md`
+- `openspec/changes/2026-07-28-pocketid-komodo-periphery-onboarding-v1/tasks.md`
+- `openspec/changes/2026-07-28-pocketid-komodo-periphery-onboarding-v1/specs/infrastructure-stacks/spec.md`
+
+The earlier (3-step) wiring change is in:
+- `openspec/changes/2026-07-28-pocketid-pangolin-komodo-oidc-wiring-v1/` (4 files)
+
+The 30-day refactor (fix for the locket v0.17.3 → Infisical v0.161+ API mismatch) is in:
+- `scripts/bons-locket-shim.py` (the v0.2.0 Python-based drop-in replacement)
+- `bons-locker-shim:infisical-0.2.0` (the local Docker image)
+
+---
+
+### 7. What if a step fails (the troubleshooting matrix)
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| "Invalid client secret" on Pocket ID | Stale `POCKETID_PANGOLIN_CLIENT_SECRET` in .env | Re-run `onboard-pocketid.sh` (the refactored `pocketIdLogin` fetches a fresh secret) |
+| "CSRF token missing" on Pangolin session | Browser-flow required (Pangolin needs a real user-agent) | Use the dashboard to mint the API key, or implement a headless browser (Playwright/Puppeteer) |
+| "Resource not found" on Resource IdP binding | The Resource hasn't been deployed yet, or the FQDN is wrong | Run `./scripts/wire-pocketid-resource-idp.sh --all` to bind to all Resources |
+| "401 Unauthorized" on Pocket ID admin API | Stale `POCKETID_API_KEY` | Re-mint the API key at https://auth.cianfhoghlaim.ie → Settings → API Keys |
+| "PocketID IdP not found" | The 3-step wire script hasn't been run | Run `./scripts/wire-pocketid-pangolin-komodo.sh` first (creates the IdP) |
+
+---
+
+### 8. The non-technical user TL;DR (copy/paste this for your team)
+
+```bash
+# 1. Get the 3 credentials (ask the previous operator if you're not sure):
+#    - POCKETID_API_KEY from https://auth.cianfhoghlaim.ie → Settings → API Keys
+#    - PANGOLIN_API_KEY from https://pangolin.cianfhoghlaim.ie → Settings → API Keys
+#    - KOMODO_PASSWORD from your Komodo admin
+
+# 2. Run the wizard (interactive)
+./scripts/onboard-pocketid.sh
+#    (paste the credentials when prompted)
+
+# 3. Run the wire script (5 manual steps → 1 command)
+./scripts/wire-pocketid-pangolin-komodo.sh
+
+# 4. Bind PocketID to all your Resources
+./scripts/wire-pocketid-resource-idp.sh --all
+
+# 5. Bootstrap Komodo+Periphery (5th step)
+./scripts/bootstrap-komodo-periphery.sh
+
+# 6. Add the 90-day cron rotation
+echo "0 3 1 */3 * * $PWD/scripts/rotate-pocketid-secrets.sh" | crontab -
+
+# 7. Verify (in a browser)
+#    Visit https://komodo.cianfhoghlaim.ie → click "Login with Pocket ID"
+#    Or visit https://mlflow.cianfhoghlaim.ie → click "Login with Pocket ID"
+#    Both should work with a single Pocket ID passkey.
+```
+
+That's it. The entire Pocket ID + Komodo + Pangolin wiring is now a 1-line
+interactive wizard + 4 commands for the operator.
+
+---
+
 ## TL;DR — What this is, today
 
 `cianfhoghlaim` is a **polyglot monorepo** (`bun + uv + turbo`) that:
