@@ -190,6 +190,61 @@ def _step_1_to_4(mo):
 
 
 @app.cell
+def _step_biep_v3_intro(mo):
+    """BIEP v3 systematic download + iterate — the new flagship surface.
+
+    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
+    """
+    from notebooks._shared.area_shims.leaving_cert import biiep_v3_overview
+    mo.md(
+        biiep_v3_overview("all")
+        + "\n\n## 5 jurisdiction dashboards (operator consoles)\n\n"
+        + "- **`notebooks/19_ireland_pipeline_dashboard.py`** 🇮🇪 — Ireland LC + JC "
+        + "(100 cohorts = 12 LC + 88 JC)\n"
+        + "- **`notebooks/20_england_pipeline_dashboard.py`** 🏴󠁧󠁢󠁥󠁮󠁧󠁿 — England A-Level + GCSE "
+        + "(276 cohorts = 147 A-Level + 129 GCSE)\n"
+        + "- **`notebooks/21_sct_wls_ni_pipeline_dashboard.py`** 🏴󠁧󠁢󠁳󠁣󠁴󠁿🏴󠁧󠁢󠁷󠁬󠁳󠁿🇬🇧 — "
+        + "Scotland + Wales + Northern Ireland (380 cohorts, **deferred**)\n"
+        + "- **`notebooks/22_crown_dependencies_dashboard.py`** 🇯🇪🇬🇬🇮🇲 — "
+        + "Jersey + Guernsey + Isle of Man (360 cohorts, **deferred**)\n"
+        + "- **`notebooks/23_8_jurisdiction_overview.py`** 🌐 — all 8 British Isles "
+        + "jurisdictions (1,560 cohorts)\n\n"
+        "## 2 operator consoles (in-progress consolidation)\n\n"
+        + "- **`notebooks/10_biep_pipeline_lakehouse_03_dlt_pipeline_overview.py`** 📦 — "
+        + "the 28+ BIEP v3 DLT source catalog\n"
+        + "- **`notebooks/10_biep_pipeline_lakehouse_04_cocoindex_embedding_coverage.py`** 🧠 — "
+        + "the 372+ CocoIndex v1 Apps catalog\n"
+    )
+    return (biiep_v3_overview,)
+
+
+@app.cell
+def _step_biep_v3_commands(mo):
+    """BIEP v3 canonical operator commands.
+
+    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
+    """
+    from notebooks._shared.area_shims.leaving_cert import BIEP_V3_OPERATOR_COMMANDS
+    mo.md(
+        "## BIEP v3 operator commands\n\n"
+        "```bash\n"
+        + "\n".join(BIEP_V3_OPERATOR_COMMANDS)
+        + "\n```\n\n"
+        + "### Interactive pipeline operations (via the dashboards)\n\n"
+        + "Each of the 5 jurisdiction dashboards (notebooks 19-23) has a "
+        + "`_asset_check_status()` cell with a **Run `dagster asset check`** "
+        + "button that invokes the live asset check for the selected milestone "
+        + "and displays the exit code + stdout + stderr.\n\n"
+        + "The 2 catalog dashboards (notebooks 10_03, 10_04) have a "
+        + "`_run_source()` + `_run_app()` cell with a **Run source (smoke "
+        + "test)** button that invokes `dlt pipeline run` for the selected "
+        + "DLT source or `dagster asset materialize` for the selected "
+        + "CocoIndex v1 App.\n"
+    )
+    return (BIEP_V3_OPERATOR_COMMANDS,)
+
+
+@app.cell
 def _nb_utils_tour(mo):
     mo.md(
         """
