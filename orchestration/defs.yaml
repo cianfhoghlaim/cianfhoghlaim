@@ -1,34 +1,28 @@
-# cianfhoghlaim/dagster_defs/defs.yaml — the new (2026-06) `defs/` mount point.
+# cianfhoghlaim/dagster_defs/defs.yaml — the canonical (2026-06) `defs/` mount point.
 #
-# Per the Dagster 1.10 Components preview
+# Per the Dagster 1.13+ Components API
 # (`docs.dagster.io/api/dagster/components`), the canonical way to
 # mount multiple Components + Python modules in a `defs/` folder is
 # to declare them in a `defs.yaml` at the root of the folder. The
-# `dg load_from_defs_folder()` helper then constructs the `Definitions`.
+# `dg load_defs()` helper then constructs the `Definitions`.
 #
-# This file is the root of the oideachais `defs/` folder and mounts:
-# - The `assets/` Python module (the legacy hand-written assets).
-# - The `sensors/` Python module (the directory-watch sensors).
-# - The `schedules.py` module (the cron schedules).
-# - The 3 KCG-specific Components (via Python post-processing).
+# This file is the root of the orchestration `defs/` folder and mounts:
+# - The 5-layer YAML defs (1_ingestion/, 2_materials/, 3_model_lifecycle/,
+#   4_asset_generation/, 5_agent_ops/) — the 833 DAG asset definitions
+# - The orchestration/sensors/ Python module (the 11 sensors re-exported
+#   via orchestration/sensors/__init__.py)
+# - The 5 KCG Components (auto-discovered via [tool.dg] registry_modules
+#   = ['orchestration.components'] in pyproject.toml)
 #
-# The `dg list components` command discovers the 3 KCG components
-# automatically (per the `[tool.dg] registry_modules` setting in
-# `cianfhoghlaim/pyproject.toml`).
+# Historical note: An earlier version of this file (per the 2026-06-30
+# change) had a `post_processing` block that tagged the legacy 3
+# KCG components (celtic_dlt_source + celtic_lancedb_hnsw +
+# celtic_cocoindex_v1). The post-v7 update expanded to 5 KCG Components
+# (CelticIngestionComponent + CelticMaterialsComponent +
+# CelticModelLifecycleComponent + CelticAssetGenerationComponent +
+# CelticAgentOpsComponent) and removed the post_processing block — the
+# 5 components are now declared via the `[tool.dg]` section in
+# pyproject.toml and discovered by `dg list components`.
 ---
 type: dagster.DefsFolderComponent
 attributes: {}
-post_processing:
-  assets:
-    # The 3 KCG-specific Components that need a defs.yaml entry to
-    # appear in `dg list defs`. Each is instantiated from Python
-    # (not YAML) so we can pass the source_id directly.
-    - target: "tag:kcg_component=celtic_dlt_source"
-      attributes:
-        tags: {kcg_component: "celtic_dlt_source"}
-    - target: "tag:kcg_component=celtic_lancedb_hnsw"
-      attributes:
-        tags: {kcg_component: "celtic_lancedb_hnsw"}
-    - target: "tag:kcg_component=celtic_cocoindex_v1"
-      attributes:
-        tags: {kcg_component: "celtic_cocoindex_v1"}

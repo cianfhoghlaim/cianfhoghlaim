@@ -1,10 +1,11 @@
-"""Custom defs/ folder walker for Dagster 1.10.9.
+"""Custom defs/ folder walker for Dagster <1.13.
 
-Per the 2026-08-13 Phase A plan:
+Per the 2026-08-14 v8 update, Dagster >=1.13 is canonical and
+`dg.load_defs()` (orchestration/definitions.py:71) is the PRIMARY
+load path. This walker is the FALLBACK for environments where
+Dagster <1.13 is installed.
 
-Dagster 1.10.9 doesn't have `dg.load_defs()` (1.13+) or
-`dg.load_from_defs_folder()` (1.11+). We need a custom walker
-that recursively loads:
+The walker recursively loads:
 
   - Hand-written @asset / @asset_check / @job / @sensor /
     @schedule decorators (anywhere in the orchestration/defs/
@@ -14,10 +15,10 @@ that recursively loads:
 
 WORKAROUND for Python 3.13 tokenizer bug: identifiers starting
 with a digit (e.g. 2_materials, 3_model_lifecycle) cause a
-SyntaxError when used in from x.2_materials import ... statements.
-We work around by using importlib.util.spec_from_file_location
-to load modules without going through the standard import statement
-parser.
+SyntaxError when used in `from x.2_materials import ...` statements.
+We work around by using `importlib.util.spec_from_file_location`
+to load modules without going through the standard import
+statement parser.
 """
 from __future__ import annotations
 
@@ -70,7 +71,12 @@ def _discover_modules(defs_root: Path) -> list[ModuleType]:
 
 
 def load_defs_via_walker(defs_root: Path) -> dg.Definitions:
-    """Walk defs_root, load all assets/checks/jobs/sensors/schedules."""
+    """Walk defs_root, load all assets/checks/jobs/sensors/schedules.
+
+    FALLBACK path: used when `dg.load_defs()` is unavailable
+    (Dagster <1.13). The PRIMARY path in definitions.py is
+    `dg.load_defs()` which uses the 5 KCG Components.
+    """
     modules = _discover_modules(defs_root)
     if not modules:
         return dg.Definitions()
