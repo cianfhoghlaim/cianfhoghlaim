@@ -23,7 +23,7 @@ from cocoindex.resources.id import IdGenerator
 from cocoindex.ops.text import RecursiveSplitter
 from numpy.typing import NDArray
 
-from cianfhoghlaim.cocoindex._lifespan import (
+from .._shared._lifespan import (
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,
