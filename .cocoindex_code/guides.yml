@@ -1,0 +1,326 @@
+# ccc guides.yml — concept guides for Cianfhoghlaim monorepo
+#
+# Loaded by ccc at search time. Each entry maps a high-level concept
+# to the canonical files that best describe it. When a search query
+# matches a guide's description, ccc returns a [guide] hit pointing
+# the user at the canonical set, even if no individual file scored
+# high on its own.
+#
+# Schema:
+#   - title:        short label
+#   - description:  what this guide is for (used for matching)
+#   - files:        list of file paths (relative to project root) to surface
+#   - tags:         optional list of keywords for matching
+#   - domain:       optional human-readable category
+
+- title: "Cognee knowledge graph architecture"
+  description: |
+    How Cognee, Graphiti, FalkorDB, Langfuse, the Lakehouse, and the
+    ccc semantic search fit together to form the documentation cognition
+    pipeline. Start here if you want to understand the full stack.
+  files:
+    - docs/01-cognee/README.md
+    - docs/01-cognee/ARCHITECTURE.md
+    - docs/01-cognee/COGNEE_INTEGRATION.md
+    - docs/01-cognee/MCP_SERVERS.md
+    - docs/01-cognee/INGESTION.md
+    - docs/01-cognee/CCC_INTEGRATION.md
+    - docs/01-cognee/INFRASTRUCTURE.md
+  tags: [cognee, graphiti, knowledge-graph, mcp, cognition, ingestion]
+  domain: "01-cognee"
+
+- title: "Platform architecture & infrastructure"
+  description: |
+    The top-level architecture, secrets management, deployment
+    strategy, and infrastructure stacks (Pangolin, Komodo, Pocket ID,
+    Locket, Infisical, etc.).
+  files:
+    - docs/01-platform-architecture/platform-overview.md
+    - docs/01-platform-architecture/monorepo-strategy.md
+    - docs/01-platform-architecture/infrastructure-stacks.md
+    - docs/01-platform-architecture/secrets-management.md
+    - docs/01-platform-architecture/komodo-gitops.md
+    - docs/01-platform-architecture/pangolin-networking.md
+  tags: [architecture, infrastructure, pangolin, komodo, deployment]
+  domain: "01-platform-architecture"
+
+- title: "Data platform: lakehouse, Dagster, DLT"
+  description: |
+    The data-platform stack: DuckDB, DuckLake, Iceberg, Lakekeeper,
+    S3 (Garage + Cloudflare R2), MotherDuck, LanceDB, Dagster
+    orchestration, DLT pipelines, and the SQLMesh semantic layer.
+  files:
+    - docs/02-data-platform/data-architecture.md
+    - docs/02-data-platform/dagster-orchestration.md
+    - docs/02-data-platform/dlt-pipelines.md
+  tags: [data, dagster, dlt, lakehouse, iceberg, sqlmesh, lance]
+  domain: "02-data-platform"
+
+- title: "AI/ML: models, training, OCR, RAG, Celtic AI"
+  description: |
+    ML models, fine-tuning (Unsloth, LoRA, QLoRA, TRL), OCR/HTR for
+    Celtic manuscripts, RAG evaluation, vector embeddings, and
+    Celtic-language AI (Irish, Welsh, Scottish Gaelic, Manx).
+  files:
+    - docs/04-ai-ml/fine-tuning-guide.md
+    - docs/04-ai-ml/ocr-htr.md
+    - docs/04-ai-ml/rag-evaluation.md
+    - docs/04-ai-ml/knowledge-graphs.md
+    - docs/04-ai-ml/vector-embeddings.md
+    - docs/04-ai-ml/celtic-language-ai.md
+    - docs/04-ai-ml/ml-pipelines.md
+  tags: [ai, ml, training, ocr, rag, celtic, irish, welsh, embeddings]
+  domain: "04-ai-ml"
+
+- title: "Agent frameworks: ADK, Agno, Stagehand, Pydantic AI"
+  description: |
+    Agent framework patterns and implementations: Google ADK
+    (root agent + specialist routing), Agno (team-based research),
+    Stagehand (vision-driven browser automation), Pydantic AI
+    (type-safe agents), and the AG-UI protocol.
+  files:
+    - docs/03-agents/agent-frameworks.md
+    - docs/03-agents/browser-automation.md
+    - docs/03-agents/mcp-servers.md
+    - docs/03-agents/baml-extraction.md
+  tags: [agents, adk, agno, stagehand, pydantic, mcp, browser]
+  domain: "03-agents"
+
+- title: "Frontend stack: TanStack Start, Convex, Hono, Better Auth"
+  description: |
+    The frontend web stack: TanStack Start (isomorphic functions,
+    RSC), Convex (realtime backend), Hono API, Better Auth
+    authentication, CopilotKit, and the design system.
+  files:
+    - docs/05-web/frontend-stack.md
+    - docs/05-web/convex-hono-auth.md
+    - docs/05-web/ui-components.md
+  tags: [frontend, web, tanstack, convex, hono, auth, ui]
+  domain: "05-web"
+
+- title: "Educational platform: oideachais, Leaving Cert, Irish curriculum"
+  description: |
+    The educational platform: oideachais monorepo, Dagster pipelines
+    for NCCA/SEC exam data, BAML extraction of curriculum documents,
+    the leaving-cert-2026 OpenSpec change, and the assessment
+    generation flow.
+  files:
+    - docs/06-product/educational-platform.md
+    - docs/02-architecture/EDUCATION_ARCHITECTURE.md
+    - docs/02-architecture/OIDEACHAIS_PIPELINE.md
+    - docs/02-architecture/SRUTH_OVERVIEW.md
+  tags: [oideachais, education, irish, curriculum, leaving-cert, ncca, sec]
+  domain: "06-product"
+
+- title: "Celtic MMO: Tuatha, crypteolas, game dev"
+  description: |
+    The Celtic MMO (tuatha monorepo): Babylon.js scenes, the 5
+    element connective tissue (Talamh/Uisce/Tine/Aer/Anam),
+    the crypteolas Web3/crypto integration, Anam SBT contracts,
+    and the game development stack.
+  files:
+    - docs/06-product/celtic-mmo.md
+    - docs/06-product/crypteolas.md
+    - docs/06-product/game-development.md
+  tags: [tuatha, mmo, celtic, game, babylonjs, crypteolas, anam]
+  domain: "06-product"
+
+- title: "BAML: type-safe LLM extraction"
+  description: |
+    BAML (Basically A Made-up Language) for type-safe LLM extraction.
+    Schema design, prompt engineering, multi-model orchestration,
+    automatic retries, and validation patterns.
+  files:
+    - docs/03-agents/baml-extraction.md
+    - tuatha/crypteolas/baml_src/clients.baml
+  tags: [baml, llm, extraction, schema, type-safe, prompt]
+  domain: "03-agents"
+
+- title: "Celtic language AI: Irish, Welsh, Scottish, Manx, Cornish, Breton"
+  description: |
+    AI tooling for Celtic languages: tokenisers, ASR (wav2vec2),
+    translation (NLLB, m2m-100, Helsinki-Opus-MT), OCR for
+    manuscript images, and the bilingual edtech platform.
+  files:
+    - docs/04-ai-ml/celtic-language-ai.md
+    - docs/05-celtic-language/BILINGUAL_EDTECH.md
+    - docs/05-celtic-language/CELTIC_AI_RESOURCES.md
+    - docs/05-celtic-language/LANGUAGE_ARCHITECTURE.md
+    - docs/05-celtic-language/IRISH_HUGGINGFACE.md
+  tags: [celtic, irish, welsh, scottish, manx, cornish, breton, translation, asr]
+  domain: "05-celtic-language"
+
+- title: "Audit & consolidation history"
+  description: |
+    The 2026-06-06 retrospective on the 1,038 -> 36 file
+    consolidation, plus the readiness audits for CocoIndex, Cognee,
+    and the agent skill consumability.
+  files:
+    - docs/02-audit/consolidation_plan.md
+    - docs/02-audit/cocoindex_readiness_audit.md
+    - docs/02-audit/cognee_readiness_audit.md
+    - docs/02-audit/agent_skill_consumability.md
+    - docs/02-audit/discovery_inventory.md
+  tags: [audit, consolidation, retrospective, readiness]
+  domain: "02-audit"
+
+- title: "Patterns: BAML, data pipeline, embeddings, observability, storage, web"
+  description: |
+    Domain-specific patterns: BAML extraction, data pipeline
+    composition, embedding strategies, observability (Langfuse,
+    Pydantic Logfire), storage backends, and web frontend patterns.
+  files:
+    - docs/01-patterns/BAML.md
+    - docs/01-patterns/DATA_PIPELINE.md
+    - docs/01-patterns/EMBEDDINGS.md
+    - docs/01-patterns/OBSERVABILITY.md
+    - docs/01-patterns/STORAGE.md
+    - docs/01-patterns/WEB.md
+  tags: [patterns, baml, pipeline, embeddings, observability, storage, web]
+  domain: "01-patterns"
+
+- title: "Pipelines: Dagster definitions, API, browser orchestrator, embeddings"
+  description: |
+    Concrete pipeline code: Dagster asset definitions, the
+    curriculum embedding flow, the AG-UI protocol, the browser
+    orchestrator, and the storage init for the multi-database
+    layer.
+  files:
+    - docs/03-pipelines/dagster_definitions.py
+    - docs/03-pipelines/dagster_factories.py
+    - docs/03-pipelines/api_main.py
+    - docs/03-pipelines/curriculum_embedding.py
+    - docs/03-pipelines/storage_init.py
+    - docs/03-pipelines/observability_init.py
+    - docs/03-pipelines/ag_ui_protocol.py
+    - docs/03-pipelines/durable_orchestrator.py
+  tags: [pipelines, dagster, api, embeddings, storage, ag-ui]
+  domain: "03-pipelines"
+
+- title: "Standards: project conventions, observability patterns"
+  description: |
+    Project standards: code conventions, the mandatory constraints
+    (DuckDB single-thread, embedding batching, BAML schema
+    validation, etc.), and observability patterns.
+  files:
+    - docs/07-standards/project-conventions.md
+    - docs/07-standards/observability-patterns.md
+  tags: [standards, conventions, constraints, observability]
+  domain: "07-standards"
+
+- title: "Examples: BEADS tracker, data architecture, frontend, fine-tuning"
+  description: |
+    Worked examples for common workflows: BEADS task tracking, the
+    data architecture review, the frontend stack setup, LLM
+    fine-tuning, and the OpenSpec agent patterns.
+  files:
+    - docs/08-examples/BEADS TRACKER.md
+    - docs/08-examples/DATA_ARCHITECTURE.md
+    - docs/08-examples/FRONTEND_STACK.md
+    - docs/08-examples/MODEL_FINETUNING.md
+    - docs/08-examples/IMPLEMENTATION_GUIDE.md
+    - docs/08-examples/OIDEACHAIS_SPEC.md
+    - docs/08-examples/OPENSPEC_AGENTS.md
+    - docs/08-examples/SUBJECT_IMPLEMENTATIONS.md
+  tags: [examples, beads, fine-tuning, openspec, frontend]
+  domain: "08-examples"
+
+- title: "Skills: agno, baml, cocoindex, dagster, dlt, duckdb, graphiti"
+  description: |
+    Per-tool skill documentation: the Claude skill bundles for
+    agno, baml, cocoindex (ccc), dagster, dlt, duckdb, graphiti,
+    lancdb, memgraph, and others. Use these as a reference for
+    how each tool is configured in this monorepo.
+  files:
+    - docs/07-skills/agno.md
+    - docs/07-skills/baml.md
+    - docs/07-skills/cocoindex.md
+    - docs/07-skills/dagster.md
+    - docs/07-skills/dlt.md
+    - docs/07-skills/duckdb.md
+    - docs/07-skills/graphiti.md
+    - docs/07-skills/lancedb.md
+    - docs/07-skills/memgraph.md
+  tags: [skills, agno, baml, cocoindex, dagster, dlt, duckdb, graphiti, lancedb]
+  domain: "07-skills"
+
+- title: "Hackathons: Build Small 2026 + others"
+  description: |
+    The hackathon submission material. The Build Small 2026
+    submission is 4 HuggingFace Spaces built on the spaces/
+    directory: An Scrudu (An Scrudu), Meaisin Cliste, Cianfhoghlaim
+    (RPG), and Anam Tuatha (integration).
+  files:
+    - doc/hackathons/build-small-2026-plan.md
+    - doc/hackathons/build-small-2026-blog.md
+    - doc/hackathons/cognee-integration-audit-2026-06-10.md
+  tags: [hackathon, build-small-2026, huggingface, gradio]
+  domain: "09-hackathons"
+
+- title: "Core: PROJECT_SPEC, CONSTRAINTS, AGENTS, CLAUDE"
+  description: |
+    The project's foundational documents: PROJECT_SPEC (what
+    we're building), CONSTRAINTS (what we MUST not violate),
+    AGENTS (how agents should behave), and CLAUDE (the
+    Cianfhoghlaim context).
+  files:
+    - docs/CLAUDE.md
+    - docs/PROJECT_SPEC.md
+    - docs/CONSTRAINTS.md
+    - docs/AGENTS.md
+  tags: [core, project-spec, constraints, agents, claude]
+  domain: "00-core"
+
+- title: "Package ecosystem: external skill templates"
+  description: |
+    External skill-template bundles (from the `docs_examples_consolidated/`
+    and `00-package-ecosystem/` directories). Use these as starting
+    points for new skills; don't reinvent.
+  files:
+    - docs/docs_examples_consolidated/
+  tags: [packages, skills, examples, templates]
+  domain: "00-package-ecosystem"
+
+- title: "openspec archive search"
+  description: |
+    How to find any openspec change (pending or archived) by keyword,
+    spec, or implementation status. Use when the user asks "what
+    changes have we made for X", "is there a spec for Y", or "where
+    is the BIEP v3 Ireland full coverage spec". 14 pending + 303
+    archived.
+  files:
+    - openspec/changes/2026-08-15-knowledge-sync-loop-v1/proposal.md
+    - openspec/changes/2026-07-28-biep-v3-ireland-full-coverage-v1/proposal.md
+    - openspec/specs/knowledge-sync-loop/spec.md
+    - openspec/specs/agent-platform-cluster/spec.md
+    - openspec/AGENTS.md
+  tags: [openspec, changes, specs, archive, knowledge]
+  domain: "00-openspec"
+
+- title: "dagster-asset-graph"
+  description: |
+    The 5-layer Dagster asset graph (per the dagster-5-layer-component-architecture
+    spec) + the canonical 5 KCG Components + the Layer 6 sync loop. Use when
+    the user asks "how do I validate Dagster assets", "what are the 5 layers
+    of the defs/ tree", "where is the asset sync dashboard", or "how do I
+    write a Dagster asset health check". ~833 assets + 5 layers + 5 KCG
+    Components + 4 derived components. Per the
+    2026-08-15-retroactive-pre-v7-cleanup-v1 change (Layer 6).
+  files:
+    - orchestration/defs/1_ingestion/
+    - orchestration/defs/2_materials/
+    - orchestration/defs/3_model_lifecycle/
+    - orchestration/defs/4_asset_generation/
+    - orchestration/defs/5_agent_ops/
+    - orchestration/components/layer1_ingestion.py
+    - orchestration/components/layer2_materials.py
+    - orchestration/components/layer3_model_lifecycle.py
+    - orchestration/components/layer4_asset_generation.py
+    - orchestration/components/layer5_agent_ops.py
+    - orchestration/defs/sync_assets.py
+    - scripts/sync/dagster.sh
+    - scripts/sync_dagster_assets_to_cognee.py
+    - notebooks/25_dagster_sync_dashboard.py
+    - .agents/skills/dagster-asset-sync/SKILL.md
+  tags: [dagster, asset, sync, defs, 5-layer, kcg-component, layer6]
+  domain: "02-data-platform"

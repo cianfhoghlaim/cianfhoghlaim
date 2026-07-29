@@ -66,10 +66,17 @@ PATTERN_DEFINING_FILES = {
 
 
 def find_latest_report() -> Path | None:
-    """Find the most recent stedding/sync-reports/paths-{date}.md."""
+    """Find the most recent stedding/sync-reports/paths-{date}.md.
+
+    Filters out the paths-fix-* reports (those are the fix-applied reports
+    produced BY this script, not the upstream sync:paths reports it consumes).
+    """
     if not REPORTS_DIR.is_dir():
         return None
-    reports = sorted(REPORTS_DIR.glob("paths-*.md"), reverse=True)
+    reports = sorted(
+        p for p in REPORTS_DIR.glob("paths-*.md")
+        if not p.name.startswith("paths-fix-")
+    )
     return reports[0] if reports else None
 
 

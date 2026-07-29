@@ -22,6 +22,7 @@ first**; the rest of the file is the full 34-spec catalogue.
 | [`agent-memory-systems`](specs/agent-memory-systems/spec.md) | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
 | [`indexing-and-cognition`](specs/indexing-and-cognition/spec.md) | shared | CCC v1 code search + Cognee knowledge graph + OpenCode agent/MCP registry |
 | [`knowledge-sync-loop`](specs/knowledge-sync-loop/spec.md) | shared | 5-layer pull-based sync (paths / CCC / Cognee / skills / MCP) + 6 `mise run sync:*` tasks + 3 feedback loops — keeps all 8 knowledge surfaces in sync |
+| [`retrospective-cleanup`](specs/retrospective-cleanup/spec.md) | shared | **NEW 2026-08-15**: Retroactive cleanup of the 1959 pre-v7 path drift occurrences (47 auto-fixable + 1912 manual) + the Layer 6 sync:dagster + the safe --fix mode |
 | [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 
 > **Note:** `tuatha-platform` has been **retired** (2026-07-06 by the
