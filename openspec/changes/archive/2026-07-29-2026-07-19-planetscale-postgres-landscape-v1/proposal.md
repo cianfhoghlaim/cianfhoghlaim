@@ -1,3 +1,9 @@
+## Deferred — PlanetScale Postgres phase on hold
+
+This change is **deferred indefinitely**. The PlanetScale Postgres centralisation was proposed in 2026-07-19 as a future architecture direction, but the operator confirmed the BIEP v3 lakehouse pattern (Garage S3 + DuckLake + Lakekeeper + Lance namespace, fully wired in `bonneagar/stacks/lakehouse/`) is the canonical data plane. PlanetScale migration was a hypothetical future path, not an active deliverable.
+
+All 17 spec deltas in `specs/<various>/spec.md` reference MODIFIED headers that don't exist verbatim in the canonical specs (the canonical specs were built around the BIEP v3 lakehouse architecture, not PlanetScale). Archived alongside the deferred state to preserve the audit trail. No code or IaC changes made — the BIEP v3 lakehouse (`md:cianfhoghlaim`) remains the canonical data plane.
+
 # 2026-07-19-planetscale-postgres-landscape-v1
 
 > **Status:** Draft — Text/Intelligence only. No code, IaC, or Python changes.
