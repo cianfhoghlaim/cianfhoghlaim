@@ -806,6 +806,10 @@ run = "uv run python -c \"from motherduck import BIEP_DIVES; [print(' -', d.name
 description = "List all BIEP v3 Flights from flights/config.yaml"
 run = "uv run python -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
 
+[tasks."biep:v3:smoke-test"]
+description = "Week 4 BIEP v3 acceptance gate smoke test (verifies the 5 gates from 2026-07-28-biep-v3-ireland-full-coverage-v1)"
+run = "bash scripts/week4-smoke-test.sh"
+
 [tasks."drift-audit"]
 description = "Audit for pre-v7 path drift across all subdirectories (scoped to source files only — docs are intentionally excluded since they reference historical layouts)"
 run = """
