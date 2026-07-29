@@ -1,3 +1,13 @@
+## Forward seed — Deferred to BIEP v3 extension (tracked by issue #140)
+
+This change is a **forward-looking seed** for the British Isles v3 extension that covers Scotland (SQA), Wales (WJEC), Northern Ireland (CCEA), and the Crown Dependencies (Jersey, Guernsey, Isle of Man). The work is explicitly tracked by issue #140 (`BIEP v3 extension: Scotland (SQA) + Wales (WJEC) + Northern Ireland (CCEA) + Crown Dependencies`) which lays out the 3 milestone rollout:
+
+- `2026-08-XX-biep-v3-ext-m4-sct-wls-ni-v1` (~320 cohorts: Scotland ~120 + Wales ~80 + NI ~60)
+- `2026-08-XX-biep-v3-ext-m5-crown-dependencies-v1` (~120 cohorts: Jersey + Guernsey + IoM)
+- `2026-08-XX-biep-v3-ext-m6-monarch-common-protocol-v1` (Cambridge Intl. + Edexcel IAL shared by IoM, Jersey, Guernsey)
+
+The canonical BIEP v3 systematic download change (`2026-08-13-biep-v3-systematic-download-ireland-england-v1`, archived 2026-07-29) covers the Ireland + England phase. The change is archived here for the audit trail + to clear the active list; reopen when the 3 milestone changes are scheduled.
+
 # 2026-07-31-biep-v3-crown-dependencies-v1 (REVISED — Phase A merge complete)
 
 ## Why

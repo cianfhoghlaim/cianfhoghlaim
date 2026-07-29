@@ -195,3 +195,33 @@ EU multilingual pipeline.
   `european-union-official-language-pipeline` as the EU
   institutional entry point
 
+### Requirement: PlanetScale Postgres Centralisation (cianfhoghlaim-pipeline)
+
+The system SHALL migrate the main 50-requirement cianfhoghlaim-pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) such that its DuckLake metadata backend moves from PlanetScale MySQL to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (row 4: DuckLake tables).
+
+#### Scenario: DuckLake metadata backend moves from MySQL → PG
+
+- **GIVEN** the Phase C change has archived
+- **WHEN** DuckLake queries run
+- **THEN** the metadata backend SHALL be PlanetScale PG (per the umbrella spec R6 conventions: PgBouncer pool or direct depending on the consumer)
+- **AND** the prior PlanetScale MySQL connection SHALL be retired
+
+#### Scenario: The oideachais lakehouse rows in R7
+
+- **GIVEN** the operator opens `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7
+- **WHEN** they look for the lakehouse rows
+- **THEN** Lakekeeper (row 1), Dagster / DuckLake (row 3), and DuckLake tables (row 4) SHALL all be present
+- **AND** each row SHALL reference the Phase B or Phase C change that performs the swap
+
+### Requirement: Gaois + Celtic language pipeline cross-referenced from cianfhoghlaim-pipeline
+
+The `cianfhoghlaim-pipeline` capability MUST cross-reference the new
+[`celtic-language-pipeline`](../celtic-language-pipeline/spec.md)
+capability in the `## Cross-references` section.
+
+#### Scenario: A new file in the Gaois expansion obeys the cross-region contract
+
+- **WHEN** a developer reads the `cianfhoghlaim-pipeline` spec
+- **THEN** the `## Cross-references` section MUST list `celtic-language-pipeline`
+  alongside `british-isles-education-pipeline`
+

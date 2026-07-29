@@ -1,3 +1,19 @@
+## Deferred — Blocked on CocoIndex factory dedup pattern (centralized-model-schema-registry Phase 7)
+
+This change is **deferred**. The 40 remaining tasks (Phases 1.6 - 4.6 across 4 streams: youtube_kg, package_changelog, codebase_git_history, repo_arch_docs) require the CocoIndex factory dedup pattern that is Phase 7 of the centralized-model-schema-registry change, which was itself explicitly deferred per its tasks.md header note.
+
+The 10 completed Phase 0 + Phase 1.1-1.5 tasks (4 codeolas primitive ports + 1 partial youtube_kg CocoIndex flow) shipped via commits `1afc4201f` (CocoIndex sruth/ cleanup) + `4f676a65b` (V1_APPS dynamic + BIEP v3 clients reconcile) + the parallel-session work.
+
+Per the original plan (`2026-07-14-multimodal-code-and-media-intel-v1` proposal.md Phase 4.5: "End-to-end smoke test: run the App on the cianfhoghlaim repo"), the 4-stream CocoIndex rollout is a substantial feature delivery (4 DLT sources + 4 BAML classes + 4 CocoIndex v1 Apps + 4 L3 Component definitions + 4 asset files + 4 CocoIndex quality gates + 1 smoke test) that should be a dedicated wave once the CocoIndex factory dedup pattern lands.
+
+## Follow-up
+
+When the CocoIndex factory dedup pattern lands (centralized-model-schema-registry-v1 Phase 7 follow-up), reopen this change and complete:
+- Stream 1 (YouTube Knowledge Graph): 5 tasks (1.6-1.7, video_kg CocoIndex completion)
+- Stream 2 (Package Changelog): 6 tasks (2.1-2.6)
+- Stream 3 (Codebase Git History): 6 tasks (3.1-3.6)
+- Stream 4 (Repo Arch Docs): 6 tasks (4.1-4.6)
+- End-to-end smoke test: 4.5
 # 2026-07-14-multimodal-code-and-media-intel-v1
 
 ## Why

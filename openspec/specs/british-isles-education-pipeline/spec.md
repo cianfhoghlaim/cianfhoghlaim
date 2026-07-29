@@ -1575,3 +1575,114 @@ ingestion defs YAMLs at
 - **AND** the asset check on the L2 defs SHALL be `irish_fada`
       (asserts Irish text preserves the síneadh fada)
 
+### Requirement: 24 BIEP tables are exposed via schema_introspect()
+
+The system SHALL expose the 24 BIEP DuckDB tables (6 subjects × 4
+tables: `_topics`, `_syllabus`, `_papers`, `_marking`) + the per-
+jurisdiction cohort tables + the leabharlann tables via
+`notebooks/_shared/schema.py:schema_introspect(conn)` returning
+`list[dict]` of `{table_name, schema_name, column_name, column_type,
+source: "duckdb" | "lance" | "baml"}`.
+
+#### Scenario: schema_introspect() returns every BIEP table
+
+- **GIVEN** the BIEP MotherDuck + DuckLake lakehouse at
+  `md:cianfhoghlaim` populated
+- **WHEN** the operator runs
+  `python3 -c "from notebooks._shared.schema import schema_introspect; from notebooks._shared.db import connect_md; print(len(schema_introspect(connect_md())))"`
+- **THEN** the output is `>= 200` (24 BIEP tables × ~8 columns + 40+
+  per-jurisdiction cohort tables + LanceDB + BAML)
+
+#### Scenario: BIEP subject panels consume schema_introspect()
+
+- **GIVEN** the BIEP subject panel notebooks (e.g. the 7-tab
+  `notebooks/40_leaving_cert_subject_panel.py`)
+- **WHEN** the operator opens the notebook
+- **THEN** the column metadata is read from `schema_introspect()`,
+  not from raw `DESCRIBE <table>` queries
+- **AND** the column count matches the BIEP v3 contract
+
+### Requirement: Scotland + Wales + NI pipelines cover all 380 cohorts
+
+The system SHALL provide a generic multi-jurisdiction DLT pipeline
+(`dlt/british_isles/sct_wls_ni/education/sct_wls_ni_jurisdiction_pipeline.py`)
+that handles Scotland + Wales + Northern Ireland via a single factory
+function. The pipeline SHALL materialise 380+ cohorts:
+
+- Scotland: 50 SCQF subjects × 3 levels (National 5 + Higher + Adv Higher) = 150 cohorts
+- Wales: 80 WJEC subjects × 2 levels (GCSE + A-Level) = 160 cohorts
+- Northern Ireland: 35 CCEA subjects × 2 levels (GCSE + A-Level) = 70 cohorts
+
+#### Scenario: 3-jurisdiction pipeline emits 380+ rows
+
+- **WHEN** `seed_registry()` is run + the lakehouse stack is healthy
+- **THEN** the `sct_wls_ni_jurisdiction_pipeline(jurisdiction)` factory
+  materialises ≥380 rows total across the 3 jurisdictions
+- **AND** the companion notebook Tab 2 shows
+  `scotland >= 150, wales >= 160, northern_ireland >= 70`
+
+#### Scenario: 3 generic Dagster assets handle all 3 jurisdictions
+
+- **WHEN** `dg list assets | grep sct_wls_ni_` runs
+- **THEN** 4 assets are listed:
+  - `sct_wls_ni_documents_ingested` (Layer 1, iterates over 3 jurisdictions)
+  - `sct_wls_ni_extractions` (Layer 2, iterates over 3 jurisdictions)
+  - `sct_wls_ni_embeddings` (Layer 3, iterates over 3 jurisdictions)
+  - `sct_wls_ni_extractions_ragas_check` (Layer 2 asset_check)
+- **AND** zero per-jurisdiction per-subject assets are present
+
+### Requirement: All 8 British Isles jurisdictions are covered (BIEP v3 complete)
+
+The system SHALL provide a generic Crown Dependencies DLT pipeline
+(`dlt/british_isles/crown_dependencies/education/crown_dependencies_jurisdiction_pipeline.py`)
+that handles the 3 Crown Dependencies (Jersey + Guernsey + Isle of Man).
+
+This completes the BIEP v3 rollout: **all 8 British Isles
+jurisdictions** are now covered by generic jurisdiction pipelines
+driven by the canonical British Isles subject registry.
+
+Coverage summary:
+
+| Jurisdiction | Awarding body | Cohorts |
+|---|---|---|
+| Ireland (NCCA + SEC) | NCCA + SEC | 384 LC + 108 JC + 16 short courses + 36 CBAs = 544 |
+| England (AQA + OCR + Edexcel) | 3 boards | 43 GCSE × 3 + 49 A-Level × 3 = 276 |
+| Scotland (SQA) | SQA | 50 × 3 = 150 |
+| Wales (WJEC) | WJEC | 80 × 2 = 160 |
+| Northern Ireland (CCEA) | CCEA | 35 × 2 = 70 |
+| Jersey | States of Jersey | 30 × 4 = 120 |
+| Guernsey | States of Guernsey | 30 × 4 = 120 |
+| Isle of Man | Isle of Man DESC | 30 × 4 = 120 |
+| **TOTAL** | | **~1,560** |
+
+#### Scenario: 8 jurisdictions all have non-zero registry counts
+
+- **WHEN** `seed_registry()` is run
+- **THEN** every one of the 8 British Isles jurisdictions has ≥90 rows
+  in `cianfhoghlaim.education._registry.subjects`
+- **AND** the companion notebook Tab 2 (Nation comparison) shows
+  non-zero row counts for all 8
+
+#### Scenario: BIEP v3 8-jurisdiction pipeline infrastructure is complete
+
+- **WHEN** `dg list assets | grep -E "(ireland_|england_|sct_wls_ni_|crown_dependencies_)"` runs
+- **THEN** 16 generic assets are listed (8 jurisdictions × 2 assets each
+  in 2 of the 3 layers: ingestion + extraction — the embedding layer
+  is shared across jurisdictions)
+- **AND** zero per-jurisdiction per-subject per-board assets exist
+
+### Requirement: Gaois + Celtic language pipeline cross-referenced from british-isles-education-pipeline
+
+The `british-isles-education-pipeline` capability MUST cross-reference the
+new [`celtic-language-pipeline`](../celtic-language-pipeline/spec.md)
+capability in the `## Cross-references` section, since the 7 language/
+source groups (Gaois, Dúchas, Heritage, Canuint, UD Celtic, Local documents,
+Celtic curriculum) are consumed by the bilingual alignment with the
+Irish education stages (Aistear, Primary, Junior Cycle, Senior Cycle,
+Tertiary).
+
+#### Scenario: A new file in the language expansion obeys the cross-region contract
+
+- **WHEN** a developer reads the `british-isles-education-pipeline` spec
+- **THEN** the `## Cross-references` section MUST list `celtic-language-pipeline`
+

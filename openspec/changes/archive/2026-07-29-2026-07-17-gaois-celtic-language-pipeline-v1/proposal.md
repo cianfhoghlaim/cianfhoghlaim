@@ -1,3 +1,15 @@
+## Deferred — Separate Celtic language campaign (not part of active ops cleanup)
+
+This change is **deferred indefinitely**. The 5 done tasks are the foundation
+(Celtic language registration + Gaeilge basic pipeline). The remaining 94 tasks
+across the 6 Celtic language streams (Scottish Gaelic, Welsh, Cornish, Manx,
+Breton, Cornish) require dedicated content sourcing + translation model wiring
++ per-language curriculum sources — a multi-week campaign separate from the
+cleanup waves.
+
+The Celtic asset generation spec at `openspec/specs/celtic-asset-generation/spec.md`
+provides the framework; this change can be reopened when the Celtic language
+sourcing campaign starts.
 # 2026-07-17-gaois-celtic-language-pipeline-v1
 
 ## Why
