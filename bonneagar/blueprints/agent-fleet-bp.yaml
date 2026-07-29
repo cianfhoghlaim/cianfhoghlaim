@@ -1,0 +1,38 @@
+# Agent-Fleet Pangolin site blueprint
+#
+# Bundles the 12 agent private resources + the 3 control-plane
+# surfaces (hermes + openclaw + openchamber) into a single
+# blueprint that `km apply blueprint` mounts in one shot.
+#
+# Reference: openspec/changes/2026-08-14-agents-fleet-wiring-parity-v1
+
+name: agent-fleet-bp
+description: The Cianfhoghlaim agent-fleet blueprint — bundles 12 main agents + 8 NCCA subjects + 3 educational agents + 3 control-plane surfaces.
+
+resources:
+  - pangolin.private-resources.agent-fleet.curriculum_agent
+  - pangolin.private-resources.agent-fleet.translation_agent
+  - pangolin.private-resources.agent-fleet.corpus_agent
+  - pangolin.private-resources.agent-fleet.research_agent
+  - pangolin.private-resources.agent-fleet.geospatial_agent
+  - pangolin.private-resources.agent-fleet.statistics_agent
+  - pangolin.private-resources.agent-fleet.curriculum_comparison_agent
+  - pangolin.private-resources.agent-fleet.mcp_curriculum_agent
+  - pangolin.private-resources.agent-fleet.agui_curriculum_agent
+  - pangolin.private-resources.agent-fleet.education_research_agent
+  - pangolin.private-resources.agent-fleet.bunchloch_research_agent
+  - pangolin.private-resources.agent-fleet.root_agent
+
+# The 3 control-plane surfaces are existing resources that this
+# blueprint depends on (but does NOT redeclare).
+depends_on:
+  - pangolin.private-resources.hermes-arm1-oci
+  - pangolin.private-resources.openclaw-arm1-oci
+  - pangolin.private-resources.openchamber-arm1-oci
+
+labels:
+  - "komodo.skip=true"
+  - "host:bunchloch"
+  - "tier:control-plane"
+  - "type:agent-fleet"
+  - "domain:*.cianfhoghlaim.ie"

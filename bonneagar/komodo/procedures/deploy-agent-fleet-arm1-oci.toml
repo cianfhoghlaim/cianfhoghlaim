@@ -1,0 +1,76 @@
+# =============================================================================
+# DEPLOY AGENT-FLEET-ARM1-OCI PROCEDURE
+# =============================================================================
+# Bundles the 12-agent fleet + the 8 NCCA subject specialists + the
+# 3 educational agents into a single 6-stage omnibus procedure
+# for arm1-oci (Oracle Cloud Free Tier, Frankfurt).
+#
+# This is the arm1-oci variant of deploy-agent-fleet-bunchloch.toml.
+# It uses the `preflight:arm-oci` safety script as Stage 1
+# (per the 2026-07-09-v6-drift-remediation-and-repo-boundary-lockdown-v1
+# change).
+#
+# Architecture:
+#   Stage 1: pre-reqs (preflight:arm-oci + cross-cutting prerequisites)
+#   Stage 2: control-plane foundation (pangolin + langfuse + observability)
+#   Stage 3: DeployStack 8 supporting stacks (lakehouse + litellm +
+#            mlflow + cognee + graphiti + lancedb + falkordb + mlflow)
+#   Stage 4: DeployStack 3 agent surfaces (hermes + openclaw + openchamber)
+#   Stage 5: Pangolin routes (12 + 8 + 3 agents)
+#   Stage 6: health verify
+
+server_id = "arm1-oci"
+
+[tasks.preflight]
+description = "preflight:arm-oci + cross-cutting prerequisites"
+run = '''
+bun run preflight:arm-oci --strict || exit 1
+km run procedure pangolin-first || exit 1
+km run procedure komodo-core || exit 1
+km run procedure infisical-first || exit 1
+km run procedure locket-deploy || exit 1
+'''
+
+[tasks.stage2]
+description = "control-plane foundation (pangolin + langfuse + observability)"
+run = '''
+km stack deploy pangolin --non-interactive --yes
+km stack deploy langfuse --non-interactive --yes
+km stack deploy observability --non-interactive --yes
+'''
+
+[tasks.stage3]
+description = "DeployStack 8 supporting stacks"
+run = '''
+km stack deploy lakehouse --non-interactive --yes
+km stack deploy litellm --non-interactive --yes
+km stack deploy mlflow --non-interactive --yes
+km stack deploy cognee --non-interactive --yes
+km stack deploy graphiti --non-interactive --yes
+km stack deploy lancedb --non-interactive --yes
+km stack deploy falkordb --non-interactive --yes
+km stack deploy memgraph --non-interactive --yes
+'''
+
+[tasks.stage4]
+description = "DeployStack 3 agent surfaces (hermes + openclaw + openchamber)"
+run = '''
+km stack deploy hermes --non-interactive --yes
+km stack deploy openclaw --non-interactive --yes
+km stack deploy openchamber --non-interactive --yes
+'''
+
+[tasks.stage5]
+description = "Pangolin routes (12 + 8 + 3 agents)"
+run = '''
+km apply blueprint agent-fleet-bp --non-interactive --yes
+km init allowlist --blueprint agent-fleet-bp
+'''
+
+[tasks.health]
+description = "Health verify: 12 + 8 + 3 agents reachable via *.cianfhoghlaim.ie"
+run = '''
+curl -fsS https://hermes.cianfhoghlaim.ie/api/health || exit 1
+curl -fsS https://openclaw.cianfhoghlaim.ie/api/health || exit 1
+curl -fsS https://openchamber.cianfhoghlaim.ie/api/health || exit 1
+'''

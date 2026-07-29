@@ -1,0 +1,72 @@
+# =============================================================================
+# DEPLOY AGENT-FLEET-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Bundles the 12-agent fleet + the 8 NCCA subject specialists + the
+# 3 educational agents into a single 4-stage omnibus procedure
+# for bunchloch (MacBook M4).
+#
+# This is the bundling procedure for the new agent-fleet surface
+# (added by the 2026-08-14-agents-fleet-wiring-parity-v1 change).
+# It assumes the prerequisite procedures (pangolin-first +
+# komodo-core + infisical-first + locket-deploy) have already
+# completed.
+#
+# Architecture:
+#   Stage 1: pre-reqs (cross-cutting prerequisites verified)
+#   Stage 2: DeployStack 8 supporting stacks
+#            (lakehouse + litellm + langfuse + mlflow +
+#             cognee + graphiti + lancedb + falkordb)
+#   Stage 3: DeployStack 3 agent surfaces (hermes + openclaw + openchamber)
+#   Stage 4: health verify (12 + 8 + 3 agents reachable)
+
+server_id = "bunchloch"
+
+[tasks.pre-reqs]
+description = "Verify cross-cutting prerequisites"
+run = '''
+echo "Verifying cross-cutting prerequisites..."
+km run procedure pangolin-first || exit 1
+km run procedure komodo-core || exit 1
+km run procedure infisical-first || exit 1
+km run procedure locket-deploy || exit 1
+'''
+
+[tasks.stage2]
+description = "DeployStack 8 supporting stacks (lakehouse + litellm + langfuse + mlflow + cognee + graphiti + lancedb + falkordb)"
+run = '''
+km stack deploy lakehouse --non-interactive --yes
+km stack deploy litellm --non-interactive --yes
+km stack deploy langfuse --non-interactive --yes
+km stack deploy mlflow --non-interactive --yes
+km stack deploy cognee --non-interactive --yes
+km stack deploy graphiti --non-interactive --yes
+km stack deploy lancedb --non-interactive --yes
+km stack deploy falkordb --non-interactive --yes
+'''
+
+[tasks.stage3]
+description = "DeployStack 3 agent surfaces (hermes + openclaw + openchamber)"
+run = '''
+km stack deploy hermes --non-interactive --yes
+km stack deploy openclaw --non-interactive --yes
+km stack deploy openchamber --non-interactive --yes
+'''
+
+[tasks.health]
+description = "Health verify: 12 + 8 + 3 agents reachable"
+run = '''
+# 12 main agents via AGENT_REGISTRY
+python -c "from cianfhoghlaim.agents import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12" || exit 1
+
+# 8 NCCA subject specialists
+for s in gael math appm chem comp engl geog hist; do
+    python -c "from cianfhoghlaim.agents.tuatha import ${s}_agent" || exit 1
+done
+
+# 3 educational agents
+python -c "from cianfhoghlaim.agents.meaisinfhoghlaim.educational import academic_history_agent" || exit 1
+python -c "from cianfhoghlaim.agents.meaisinfhoghlaim.educational import celtic_grammar_agent" || exit 1
+python -c "from cianfhoghlaim.agents.meaisinfhoghlaim.educational import celtic_morphology_agent" || exit 1
+
+echo "12 + 8 + 3 agents reachable"
+'''

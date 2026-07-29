@@ -74,6 +74,18 @@ run = "uv run ruff check ."
 description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count) for every skill"
 run = "bash .agents/skills/lint-skills.sh"
 
+[tasks."agents:smoke"]
+description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
+run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"
+
+[tasks."agents:audit"]
+description = "Direct-import audit + AGENT_REGISTRY validation for the 12-agent fleet"
+run = "uv run python -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from cianfhoghlaim.agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
+
+[tasks."agents:reproduce"]
+description = "Operator's one-shot: reproduce the 12-agent fleet + 8 NCCA subject specialists + 3 educational agents from cold to green"
+run = "bash scripts/reproducers/agents-fleet-reproducer.sh"
+
 [tasks."pipelines:parity"]
 description = "Per-jurisdiction matrix across baml_src/, dlt/, orchestration/, cocoindex/. Set PIPELINE_PARITY_STRICT=1 for non-zero exit on missing layers."
 run = "python3 scripts/check_pipeline_parity.py"

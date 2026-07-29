@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from dataclasses import dataclass, field
 from typing import Any, Callable, Awaitable, TYPE_CHECKING
 
@@ -628,3 +629,81 @@ if _env_disable_wire():
             cognee_wired=False,
             memory_backend_kind=None,
         )
+
+
+# ---------------------------------------------------------------------------
+# Back-compat alias: the 8 NCCA subject agents are also re-exported
+# through the parent `agents.agent_registry.AGENT_REGISTRY` for
+# uniform dispatch (added by the
+# 2026-08-14-agents-fleet-wiring-parity-v1 change).
+# ---------------------------------------------------------------------------
+
+
+def register_ncca_subjects_in_agent_registry() -> None:
+    """Register the 8 NCCA subject agents in the parent AGENT_REGISTRY.
+
+    This is the back-compat alias that lets the 8 NCCA subject
+    agents be dispatched through the same surface as the 12 main
+    agents. Maps each NCCA slug → the parent AgentFleetWiring
+    fields. Called once at module-load time.
+    """
+    # Use sys.modules directly (more robust than `..` relative imports
+    # which can fail in dynamic-import contexts).
+    parent_registry_mod = sys.modules.get("agents.agent_registry")
+    if parent_registry_mod is None:
+        logger.debug(
+            "register_ncca_subjects_in_agent_registry(): parent "
+            "agent_registry not in sys.modules"
+        )
+        return
+
+    AGENT_REGISTRY = parent_registry_mod.AGENT_REGISTRY
+    AgentFleetWiring = parent_registry_mod.AgentFleetWiring
+    AgentFramework = parent_registry_mod.AgentFramework
+
+    # SUBJECT_WIRING is keyed by NCCA subject name (e.g. "gaeilge"),
+    # not by module slug. Map NCCA name → module_slug → agent_name.
+    ncca_name_to_agent_name = {
+        "gaeilge": "gael_agent",
+        "mathematics": "math_agent",
+        "applied_mathematics": "appm_agent",
+        "chemistry": "chem_agent",
+        "computer_science": "comp_agent",
+        "english": "engl_agent",
+        "geography": "geog_agent",
+        "history": "hist_agent",
+    }
+
+    for ncca_name, wiring in SUBJECT_WIRING.items():
+        agent_name = ncca_name_to_agent_name.get(ncca_name)
+        if agent_name is None:
+            continue
+        if agent_name in AGENT_REGISTRY:
+            continue  # already registered
+        try:
+            AGENT_REGISTRY[agent_name] = AgentFleetWiring(
+                agent_name=agent_name,
+                module_slug=wiring.module_slug,
+                module_path=f"cianfhoghlaim.agents.tuatha.{wiring.module_slug}_agent",
+                framework=AgentFramework.ADK,
+                display_name=wiring.display_name,
+                baml_prefix=wiring.baml_prefix,
+                langfuse_trace_name=wiring.langfuse_trace_name,
+                cognee_dataset=wiring.cognee_dataset,
+                letta_agent_id=f"kcg-{wiring.module_slug}-agent",
+                litellm_routing_key=wiring.module_slug,
+            )
+            logger.debug(
+                "register_ncca_subjects_in_agent_registry(): %s "
+                "registered",
+                agent_name,
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug(
+                "register_ncca_subjects_in_agent_registry(%s): %s",
+                agent_name, exc,
+            )
+
+
+# Run the back-compat registration once at module load.
+register_ncca_subjects_in_agent_registry()

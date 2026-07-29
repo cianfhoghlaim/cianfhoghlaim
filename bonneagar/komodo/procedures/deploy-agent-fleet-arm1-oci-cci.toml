@@ -1,0 +1,53 @@
+# =============================================================================
+# DEPLOY AGENT-FLEET-ARM1-OCI-CCI PROCEDURE
+# =============================================================================
+# The arm1-oci-cci (operator-monitoring) variant of the agent-fleet
+# bundling procedure. Same scope as deploy-agent-fleet-arm1-oci but
+# reduced to 5 stages — no observability stack, no langfuse stage 2,
+# since arm1-oci-cci is the operator-monitoring surface.
+#
+# Use case: when the operator wants to verify the agent fleet is
+# healthy on arm1-oci without provisioning the full observability
+# stack.
+
+server_id = "arm1-oci-cci"
+
+[tasks.preflight]
+description = "preflight:arm-oci-cci + cross-cutting prerequisites"
+run = '''
+bun run preflight:arm-oci-cci --strict || exit 1
+km run procedure komodo-core || exit 1
+km run procedure infisical-first || exit 1
+km run procedure locket-deploy || exit 1
+'''
+
+[tasks.stage2]
+description = "DeployStack 8 supporting stacks"
+run = '''
+km stack deploy lakehouse --non-interactive --yes
+km stack deploy litellm --non-interactive --yes
+km stack deploy cognee --non-interactive --yes
+km stack deploy graphiti --non-interactive --yes
+km stack deploy lancedb --non-interactive --yes
+km stack deploy falkordb --non-interactive --yes
+'''
+
+[tasks.stage3]
+description = "DeployStack 3 agent surfaces (hermes + openclaw + openchamber)"
+run = '''
+km stack deploy hermes --non-interactive --yes
+km stack deploy openclaw --non-interactive --yes
+km stack deploy openchamber --non-interactive --yes
+'''
+
+[tasks.stage4]
+description = "Pangolin routes (12 + 8 + 3 agents)"
+run = '''
+km apply blueprint agent-fleet-bp --non-interactive --yes
+'''
+
+[tasks.health]
+description = "Health verify: 12 + 8 + 3 agents reachable"
+run = '''
+python -c "from cianfhoghlaim.agents import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12" || exit 1
+'''

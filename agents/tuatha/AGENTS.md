@@ -9,14 +9,27 @@
 > not a financial token) — all consolidated into the `tuath` uv
 > workspace member.*
 
+> **v7 flattening note (2026-07-17):** The `cianfhoghlaim/`
+> nesting is removed — the Python package is the repo itself.
+> The 4 former quadrant AGENTS.md files live directly under
+> their respective sub-packages.
+
+> **Wiring parity note (2026-08-14):** The 8 NCCA subject
+> specialists (`gael_agent`, `math_agent`, `appm_agent`,
+> `chem_agent`, `comp_agent`, `engl_agent`, `geog_agent`,
+> `hist_agent`) are re-exported through the canonical
+> `AGENT_REGISTRY` via
+> `agents/tuatha/wiring.py:register_ncca_subjects_in_agent_registry()`.
+> The total agent count is now 20 (12 main + 8 NCCA subject).
+
 > **v4 consolidation note (2026-06-28):** `sruth/tuatha/` was
 > merged into `cianfhoghlaim/` per
 > `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`.
-> The Babylon.js client now lives at `cianfhoghlaim/web/apps/tuatha-ui/`,
-> SpacetimeDB server at `cianfhoghlaim/agents/tuatha/game/`,
+> The Babylon.js client now lives at `web/apps/tuatha-ui/`,
+> SpacetimeDB server at `agents/tuatha/game/`,
 > and the Crypteolas achievement ledger at
-> `cianfhoghlaim/agents/tuatha/crypteolas/`. The standalone
-> crypteolas snapshot was preserved at `cianfhoghlaim/docs/legacy/crypteolas/`.
+> `agents/tuatha/crypteolas/`. The standalone
+> crypteolas snapshot was preserved at `docs/legacy/crypteolas/`.
 
 ## Priority quick reference
 
