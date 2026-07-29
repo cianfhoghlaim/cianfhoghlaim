@@ -826,6 +826,10 @@ run = "uv run python -c \"import yaml; [print(' -', f.get('flight', f.get('name'
 description = "5-step bring-up smoke test for a fresh operator (per bonneagar/README.md 'Quick start' section)"
 run = "bash scripts/bring-up-smoke-test.sh"
 
+[tasks."sync:dagster"]
+description = "Layer 6: validate ~833 Dagster assets via AST parsing + per-group breakdown (per the 2026-08-15-retroactive-pre-v7-cleanup-v1 change)"
+run = "bash scripts/sync/dagster.sh"
+
 # -----------------------------------------------------------------------------
 # Knowledge-Sync-Loop — the 5-layer pull-based sync architecture
 # (per openspec/changes/2026-08-15-knowledge-sync-loop-v1)
@@ -836,7 +840,7 @@ run = "bash scripts/bring-up-smoke-test.sh"
 # -----------------------------------------------------------------------------
 
 [tasks."sync:paths"]
-description = "Layer 1: detect pre-v7 path drift in source files (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
+description = "Layer 1: detect pre-v7 path drift in source files (per the 2026-08-15-knowledge-sync-loop-v1 change); supports --fix mode for the 3 safe patterns (per the 2026-08-15-retroactive-pre-v7-cleanup-v1 change)"
 run = "bash scripts/sync/paths.sh"
 
 [tasks."sync:ccc"]
