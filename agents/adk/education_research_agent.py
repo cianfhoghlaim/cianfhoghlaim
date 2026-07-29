@@ -70,7 +70,7 @@ class ResearchEscalationChecker(BaseAgent):
 
 # Research planner
 education_research_planner = LlmAgent(
-    model=config.model_name,
+    model=litellm_model("minimax"),
     name="education_research_planner",
     description="Plans education research across British Isles nations.",
     instruction=f"""
@@ -105,7 +105,7 @@ education_research_planner = LlmAgent(
 
 # Main researcher
 education_researcher = LlmAgent(
-    model=config.model_name,
+    model=litellm_model("minimax"),
     name="education_researcher",
     description="Executes education research plan with web search.",
     planner=BuiltInPlanner(
@@ -145,7 +145,7 @@ education_researcher = LlmAgent(
 
 # Research evaluator
 education_research_evaluator = LlmAgent(
-    model=config.model_name,
+    model=litellm_model("minimax"),
     name="research_evaluator",
     description="Evaluates education research quality.",
     instruction=f"""
@@ -179,7 +179,7 @@ education_research_evaluator = LlmAgent(
 
 # Follow-up researcher
 follow_up_researcher = LlmAgent(
-    model=config.model_name,
+    model=litellm_model("minimax"),
     name="follow_up_researcher",
     description="Executes follow-up research queries.",
     planner=BuiltInPlanner(
@@ -200,7 +200,7 @@ follow_up_researcher = LlmAgent(
 
 # Report composer
 education_report_composer = LlmAgent(
-    model=config.model_name,
+    model=litellm_model("minimax"),
     name="education_report_composer",
     include_contents="none",
     description="Composes final cited education research report.",
@@ -255,7 +255,7 @@ education_research_pipeline = SequentialAgent(
 # Main interactive agent
 education_research_agent = LlmAgent(
     name="education_research_agent",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Interactive education research assistant for British Isles.",
     instruction=f"""
     You are an education research assistant specializing in British Isles education systems.

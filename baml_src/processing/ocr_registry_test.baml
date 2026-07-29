@@ -1,4 +1,4 @@
-""// BAML Test block for the meaisinfhoghlaim v5 24-model OCR registry.
+// BAML Test block for the meaisinfhoghlaim v5 24-model OCR registry.
 //
 // Per the meaisinfhoghlaim v5 umbrella spec + the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
 //
@@ -46,4 +46,4 @@ test SelectOCRBackend {
     pdf_path "s3://garage/cianfhoghlaim/ireland/sample.pdf"
   }
 }
-"""
+

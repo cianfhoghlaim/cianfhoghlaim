@@ -55,7 +55,7 @@ class ResearchFeedback(BaseModel):
 # Research planner agent
 research_planner = LlmAgent(
     name="celtic_education_research_planner",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Plans Celtic education research by generating targeted search queries.",
     instruction="""You are a Celtic education research planner.
 
@@ -84,7 +84,7 @@ Output your queries as a structured list.""",
 # Research executor agent
 researcher = LlmAgent(
     name="celtic_education_researcher",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Executes Celtic education research using web search.",
     instruction="""You are a Celtic education researcher with expertise in:
 - Irish education system (Primary, Junior Cycle, Senior Cycle, Leaving Certificate)
@@ -122,7 +122,7 @@ Provide detailed research notes with source attributions.""",
 # Research evaluator agent
 evaluator = LlmAgent(
     name="celtic_education_research_evaluator",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Evaluates Celtic education research quality.",
     instruction="""You are a Celtic education research evaluator.
 
@@ -154,7 +154,7 @@ Consider Celtic education-specific aspects:
 # Research composer agent
 composer = LlmAgent(
     name="celtic_education_research_composer",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Composes final Celtic education research report with citations.",
     instruction="""You are a Celtic education research composer.
 

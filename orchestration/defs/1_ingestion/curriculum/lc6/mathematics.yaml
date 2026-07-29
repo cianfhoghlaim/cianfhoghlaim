@@ -35,6 +35,8 @@ attributes:
     spec: british-isles-education-pipeline
     lc_subject: mathematics
     partitions: subject × language (mathematics × en + ga = 2 partitions)
-    dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_mathematics
+    dlt_source: cianfhoghlaim.dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline
+    # UPDATED 2026-08-15: stale v7 path replaced with the live
+    # ireland_jurisdiction_pipeline registry runner (post-v7 flattening)
     baml_extractor: b.ExtractLC6Syllabus(subject="mathematics", ...)
     notes: "Per-subject Mathematics NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/mathematics/."

@@ -35,6 +35,8 @@ attributes:
     spec: british-isles-education-pipeline
     lc_subject: english
     partitions: subject × language (english × en + ga = 2 partitions)
-    dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_english
+    dlt_source: cianfhoghlaim.dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline
+    # UPDATED 2026-08-15: stale v7 path replaced with the live
+    # ireland_jurisdiction_pipeline registry runner (post-v7 flattening)
     baml_extractor: b.ExtractLC6Syllabus(subject="english", ...)
     notes: "Per-subject English NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/english/."

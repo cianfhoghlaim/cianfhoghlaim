@@ -21,6 +21,7 @@ import datetime
 import logging
 
 from google.adk.agents import LlmAgent
+from .litellm_agent import litellm_model
 
 from .config import config
 from .tools.dev_env import (
@@ -138,7 +139,7 @@ Go n-éirí an t-ádh leat! (Good luck!)
 
 dev_env_demo_agent = LlmAgent(
     name="dev_env_demo_agent",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description=(
         "Demonstrates the 8 dev-env tools (ccc_search, ccc_index, "
         "drift_detect, firecrawl_refactor_discover, hf_best_model, "

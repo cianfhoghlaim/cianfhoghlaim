@@ -8,6 +8,8 @@ across British Isles nations (England, Scotland, Wales, Northern Ireland, Irelan
 import datetime
 
 from google.adk.agents import LlmAgent
+
+from .litellm_agent import litellm_model
 from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
@@ -45,7 +47,7 @@ class BenchmarkReport(BaseModel):
 # --- Statistics Agent ---
 statistics_agent = LlmAgent(
     name="statistics_agent",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Analyzes education statistics across British Isles nations.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
@@ -120,7 +122,7 @@ statistics_agent = LlmAgent(
 
 trend_analyst = LlmAgent(
     name="trend_analyst",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Analyzes education trends over time.",
     instruction="""
     You analyze education statistics trends over time.
@@ -158,7 +160,7 @@ trend_analyst = LlmAgent(
 
 benchmarking_analyst = LlmAgent(
     name="benchmarking_analyst",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Benchmarks education performance across nations.",
     instruction="""
     You benchmark education performance across British Isles nations.
@@ -197,7 +199,7 @@ benchmarking_analyst = LlmAgent(
 
 data_gap_identifier = LlmAgent(
     name="data_gap_identifier",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Identifies gaps in education data availability.",
     instruction="""
     You identify gaps and limitations in education statistics.

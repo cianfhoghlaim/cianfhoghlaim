@@ -17,6 +17,11 @@ callers can do:
 The legacy `OCR_MODELS` and `VLM_MODELS` aliases are also exposed
 for back-compat with pre-v4 callers (they collapse to the v4
 `VISION_MODELS` dict).
+
+The unified ``MODEL_REGISTRY`` (added 2026-08-15 by the
+``centralized-model-registry`` openspec change) is the single
+source of truth for ALL model choices across the platform —
+not just OCR/VLM. See ``meaisinfhoghlaim.models.model_registry``.
 """
 
 from __future__ import annotations
@@ -42,6 +47,18 @@ from meaisinfhoghlaim.models.registry import (
     select_ocr_backend,
 )
 
+# The unified MODEL_REGISTRY (added 2026-08-15 by the
+# `centralized-model-registry` openspec change). This is the
+# single source of truth for ALL model choices across the platform
+# — not just OCR/VLM. See `meaisinfhoghlaim.models.model_registry`.
+from meaisinfhoghlaim.models.model_registry import (
+    MODEL_REGISTRY,
+    ModelFamily,
+    ModelRegistryEntry,
+    filter_models,
+    model_for,
+)
+
 # Legacy back-compat aliases (the pre-v4 OCR/VLM registries).
 # Pre-v4, the lakehouse had two separate dicts — `OCR_MODELS` (10
 # entries) and `VLM_MODELS` (6 entries). The v4 registry collapses
@@ -54,6 +71,9 @@ __all__ = [
     "CLASSICAL_OCR",
     "MODEL_BACKEND",
     "MODEL_CAPABILITY",
+    "MODEL_REGISTRY",
+    "ModelFamily",
+    "ModelRegistryEntry",
     "OCR_MODELS",
     "TEXT_MODELS",
     "VISION_MODELS",
@@ -67,9 +87,11 @@ __all__ = [
     "OCRModel",
     "all_classical_stacks",
     "all_models",
+    "filter_models",
     "get_default_for_m4_max",
     "get_optimal_for_m4",
     "get_optimal_for_m4_id",
+    "model_for",
     "select_ocr_backend",
 ]
 

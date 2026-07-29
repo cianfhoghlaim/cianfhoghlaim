@@ -2,33 +2,54 @@
 Agent configuration for Tuath.
 
 Configures LLM models with Celtic language support.
+
+DEPRECATED 2026-08-15: this AgentConfig has been merged into the
+canonical ``agents.adk.config.AgentConfig`` (the
+``centralized-model-registry`` change). All model defaults now flow
+through ``MODEL_REGISTRY.resolve(family, role)``. This file is
+retained as a back-compat shim; new code should import from
+``agents.adk.config``.
 """
 
 import os
 from dataclasses import dataclass
 
+# Resolve from MODEL_REGISTRY (the SSOT)
+try:
+    from meaisinfhoghlaim.models import MODEL_REGISTRY
+    _DEFAULT_TEXT_LLM = MODEL_REGISTRY.resolve("text_llm", "default")
+    _DEFAULT_IRISH = MODEL_REGISTRY.resolve("text_llm", "irish")
+    _DEFAULT_EMBEDDER = MODEL_REGISTRY.resolve("embedder", "default")
+except Exception:
+    _DEFAULT_TEXT_LLM = "gemini-2.0-flash"
+    _DEFAULT_IRISH = "gemini-2.0-flash"
+    _DEFAULT_EMBEDDER = "BAAI/bge-m3"
+
 
 @dataclass
 class AgentConfig:
-    """Configuration for Tuath agents."""
+    """Configuration for Tuath agents (DEPRECATED — use agents.adk.config.AgentConfig)."""
 
     # Primary orchestrator model (high capability, multilingual)
-    orchestrator_model: str = "gemini-2.0-flash"
+    orchestrator_model: str = _DEFAULT_TEXT_LLM
 
     # Worker model for specialized tasks
-    worker_model: str = "gemini-2.0-flash"
+    worker_model: str = _DEFAULT_TEXT_LLM
 
     # Fast model for simple routing/classification
-    fast_model: str = "gemini-2.0-flash"
+    fast_model: str = _DEFAULT_TEXT_LLM
 
-    # Irish language model (UCCIX-Llama2-13B for Irish text generation)
-    irish_model: str = "uccix/uccix-llama2-13b"
+    # Irish language model (resolved via MODEL_REGISTRY.resolve(
+    # family="text_llm", role="irish") — migrates the legacy
+    # uccix/uccix-llama2-13b to the registry's Irish path)
+    irish_model: str = _DEFAULT_IRISH
 
-    # Multilingual reasoning model (Qwen3 supports Celtic languages)
-    multilingual_model: str = "qwen/qwen2.5-72b-instruct"
+    # Multilingual reasoning model (resolved via MODEL_REGISTRY at
+    # runtime; falls back to gemini-2.0-flash if import fails)
+    multilingual_model: str = _DEFAULT_TEXT_LLM
 
-    # Embedding model for semantic search
-    embedding_model: str = "BAAI/bge-m3"
+    # Embedding model for semantic search (resolved via MODEL_REGISTRY)
+    embedding_model: str = _DEFAULT_EMBEDDER
 
     # Max tokens for responses
     max_output_tokens: int = 4096

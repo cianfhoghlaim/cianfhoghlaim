@@ -74,6 +74,10 @@ run = "uv run ruff check ."
 description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count) for every skill"
 run = "bash .agents/skills/lint-skills.sh"
 
+[tasks."lint:registry"]
+description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/ for hardcoded model strings not routed through MODEL_REGISTRY. Part of the `centralized-model-registry` capability — see openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
+run = ".venv/bin/python3 scripts/registry_audit.py --strict"
+
 [tasks."agents:smoke"]
 description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
 run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"
@@ -794,9 +798,21 @@ run = "mise run baml:test ${@:-}"
 description = "List all 105 active marimo notebooks"
 run = "uv run python notebooks/cli.py list 2>/dev/null || echo 'notebooks/cli.py broken — see notebooks/README.md'"
 
+[tasks."notebook:control-panel"]
+description = "Open the Cianfhoghlaim 5-tab deployment control panel marimo notebook (Models, Pipelines, Datasets, Stacks, Registry). Reads/writes deployment-choice.yaml. See openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
+run = "marimo edit notebooks/00_control_panel.py"
+
 [tasks."notebook:smoke"]
 description = "Smoke-test the canonical nb_utils helpers"
 run = "uv run python -c \"from notebooks.nb_utils import connect_biep_lakehouse, BIEP_SUBJECTS, lc_subject_query; print('OK:', len(BIEP_SUBJECTS), 'BIEP subjects,', lc_subject_query.__name__, 'ready')\""
+
+[tasks."models:list"]
+description = "List every MODEL_REGISTRY entry (the unified model registry). Part of the `centralized-model-registry` capability."
+run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY; [print(f'  {e.family:12s} {e.role:18s} {e.key:40s} {e.display_name}') for e in MODEL_REGISTRY.entries()]; s = MODEL_REGISTRY.summary(); print(f'\\nTotal: {s[\\\"total\\\"]} entries ({s[\\\"available\\\"]} available, {s[\\\"deprecated\\\"]} deprecated)')\""
+
+[tasks."models:count"]
+description = "Print the MODEL_REGISTRY entry count by family (informational)."
+run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY; s = MODEL_REGISTRY.summary(); [print(f'  {fam:12s} {count:3d}') for fam, count in s['by_family'].items()]; print(f'  {\\\"TOTAL\\\":12s} {s[\\\"total\\\"]:3d}')\""
 
 [tasks."motherduck:list-dives"]
 description = "List all 53 MotherDuck Dives"

@@ -8,6 +8,7 @@ across England, Scotland, Wales, Northern Ireland, and Ireland.
 import datetime
 
 from google.adk.agents import LlmAgent
+from .litellm_agent import litellm_model
 from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
@@ -45,7 +46,7 @@ class SchoolAccessAnalysis(BaseModel):
 # --- Geospatial Agent ---
 geospatial_agent = LlmAgent(
     name="geospatial_agent",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Analyzes education data at LSOA/Data Zone level.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
@@ -126,7 +127,7 @@ geospatial_agent = LlmAgent(
 
 deprivation_analyst = LlmAgent(
     name="deprivation_analyst",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Analyzes links between deprivation and education.",
     instruction="""
     You analyze relationships between socioeconomic deprivation and education outcomes.
@@ -174,7 +175,7 @@ deprivation_analyst = LlmAgent(
 
 school_accessibility_analyst = LlmAgent(
     name="school_accessibility_analyst",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Analyzes school accessibility and provision.",
     instruction="""
     You analyze school accessibility and geographic provision.
@@ -224,7 +225,7 @@ school_accessibility_analyst = LlmAgent(
 
 regional_comparison_analyst = LlmAgent(
     name="regional_comparison_analyst",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Compares education metrics across regions.",
     instruction="""
     You compare education metrics across regions and local authorities.

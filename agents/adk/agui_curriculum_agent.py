@@ -17,6 +17,7 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from google.adk.agents import LlmAgent
+from .litellm_agent import litellm_model
 from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
@@ -264,7 +265,7 @@ Current date: {datetime.datetime.now().strftime("%Y-%m-%d")}
 
 agui_curriculum_agent = LlmAgent(
     name="agui_curriculum_agent",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="AG-UI enabled curriculum assistant with real-time UI updates.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)

@@ -10,12 +10,48 @@ import os
 from dataclasses import dataclass, field
 
 
+# Resolve model defaults from the unified MODEL_REGISTRY (the single
+# source of truth, per the `centralized-model-registry` openspec
+# capability). Falls back to the historical gemini-2.0-flash default
+# if the registry import fails (e.g. optional-dep issues at import time).
+def _default_text_llm_model() -> str:
+    """Return the canonical default text LLM model from MODEL_REGISTRY."""
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "default")
+    except Exception:
+        # Fallback: matches the historical pre-registry default.
+        return "gemini-2.0-flash"
+
+
+def _default_irish_model() -> str:
+    """Return the canonical Irish-language model from MODEL_REGISTRY."""
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "irish")
+    except Exception:
+        return "gemini-2.0-flash"
+
+
+def _default_embedding_model() -> str:
+    """Return the canonical embedder model from MODEL_REGISTRY."""
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("embedder", "default")
+    except Exception:
+        return "BAAI/bge-m3"
+
+
 @dataclass
 class AgentConfig:
     """Configuration for Celtic Education AI agents."""
 
-    # Model settings
-    model_name: str = "gemini-2.0-flash"
+    # Model settings — all resolved from MODEL_REGISTRY (the SSOT).
+    # Per the `centralized-model-registry` capability change, these
+    # defaults are computed lazily so they reflect the live registry
+    # at first-instantiation time (no stale hardcoded strings).
+    model_name: str = field(default_factory=_default_text_llm_model)
+    irish_model: str = field(default_factory=_default_irish_model)
     temperature: float = 0.7
     max_output_tokens: int = 8192
 
@@ -44,7 +80,9 @@ class AgentConfig:
         default_factory=lambda: ["ga", "gd", "cy", "br", "gv", "kw", "en"]
     )
 
-    # Translation model settings
+    # Translation model settings (resolved via MODEL_REGISTRY.filter(
+    # family="translation"); falls back to historical defaults if the
+    # registry import fails).
     translation_models: dict = field(
         default_factory=lambda: {
             "opus_mt": "Helsinki-NLP/opus-mt-{src}-{tgt}",
@@ -53,8 +91,8 @@ class AgentConfig:
         }
     )
 
-    # Embedding model
-    embedding_model: str = "BAAI/bge-m3"
+    # Embedding model — resolved via MODEL_REGISTRY (lazy default).
+    embedding_model: str = field(default_factory=_default_embedding_model)
     embedding_dim: int = 1024
 
     # API keys (from environment)

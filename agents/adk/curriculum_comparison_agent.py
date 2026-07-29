@@ -7,6 +7,7 @@ Specialized agent for comparing curricula across British Isles nations.
 import datetime
 
 from google.adk.agents import LlmAgent
+from .litellm_agent import litellm_model
 from google.adk.planners import BuiltInPlanner
 from google.genai import types as genai_types
 from pydantic import BaseModel
@@ -46,7 +47,7 @@ class SubjectComparison(BaseModel):
 # --- Curriculum Comparison Agent ---
 curriculum_comparison_agent = LlmAgent(
     name="curriculum_comparison_agent",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Compares curricula and learning outcomes across British Isles nations.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
@@ -109,7 +110,7 @@ curriculum_comparison_agent = LlmAgent(
 
 learning_outcome_mapper = LlmAgent(
     name="learning_outcome_mapper",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Maps learning outcomes between national curricula.",
     instruction="""
     You map equivalent learning outcomes across national curricula.
@@ -135,7 +136,7 @@ learning_outcome_mapper = LlmAgent(
 
 assessment_comparator = LlmAgent(
     name="assessment_comparator",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Compares assessment approaches across nations.",
     instruction="""
     You compare assessment methods across British Isles education systems.
@@ -176,7 +177,7 @@ assessment_comparator = LlmAgent(
 
 bilingual_curriculum_expert = LlmAgent(
     name="bilingual_curriculum_expert",
-    model=config.model_name,
+    model=litellm_model("minimax"),
     description="Expert on bilingual and Celtic language education.",
     instruction="""
     You are an expert on bilingual education in the British Isles.

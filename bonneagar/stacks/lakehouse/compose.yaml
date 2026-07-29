@@ -151,7 +151,7 @@ services:
 
         ACCESS_KEY_ID=$$(echo "$$KEY_RESPONSE" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
         echo "Access Key ID: $$ACCESS_KEY_ID"
-echo "Creating buckets..."
+        echo "Creating buckets..."
         # CHANGED 2026-08-01 (lakehouse-and-reproducible-deploy-v1):
         # Renamed the lakehouse-internal bucket from `ducklake` to
         # `ducklake-cianfhoghlaim` to match the canonical default in

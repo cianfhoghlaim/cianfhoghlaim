@@ -400,7 +400,20 @@ use **Agno** for multi-agent teams with Z.ai GLM-4.6
 
 ## KCG LiteLLM wire-up (Agent 63 — 2026-06-29)
 
-**The 32 `LlmAgent(model=config.model_name)` constructors in `meaisínfhoghlaim/agents/` hardcode `"gemini-2.0-flash"`** and route through Google's native `generativelanguage.googleapis.com` endpoint via `GOOGLE_API_KEY`, BYPASSING the KCG `minimax` 7-tier LiteLLM fallback alias (Agent 06 P0-#1 drift finding). ADK 1.5+ ships `from google.adk.models.lite_llm import LiteLlm` — a 1-line swap per agent.
+**Historical drift (RESOLVED 2026-08-15)**: the 32 `LlmAgent(model=config.model_name)` constructors historically hardcoded `"gemini-2.0-flash"`, BYPASSING the KCG `minimax` 7-tier LiteLLM fallback alias (Agent 06 P0-#1 drift finding). As of `2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1`, all 32 sites now resolve through the unified `MODEL_REGISTRY` (`meaisinfhoghlaim.models.MU_REGISTRY.resolve("text_llm", "default")`), so the default flows through the LiteLLM alias without further code changes.
+
+For new agent code, prefer the `LiteLlm` model wrapper (ADK 1.5+) to make the LiteLLM routing explicit:
+
+```python
+from google.adk.models.lite_llm import LiteLlm
+from collections.abc import Callable
+
+def _minimax_model() -> LiteLlm:
+    """Resolve the KCG `minimax` 7-tier LiteLLM alias at agent-construction time."""
+    return LiteLlm(
+        model="minimax",                                                  # KCG canonical alias
+        api_base=os.getenv("LITELLM_API_BASE", "https://litellm.cianfhoghlaim.ie"),
+    )
 
 ```python
 from google.adk.models.lite_llm import LiteLlm

@@ -37,6 +37,8 @@ attributes:
     spec: british-isles-education-pipeline
     lc_subject: gaeilge
     partitions: subject × language (gaeilge × en + ga = 2 partitions; default `ga`)
-    dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_gaeilge
+    dlt_source: cianfhoghlaim.dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline
+    # UPDATED 2026-08-15: stale v7 path replaced with the live
+    # ireland_jurisdiction_pipeline registry runner (post-v7 flattening)
     baml_extractor: b.ExtractLC6Syllabus(subject="gaeilge", ...)
     notes: "Per-subject Gaeilge NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/gaeilge/. Default language is `ga` (Gaeilge is taught in Irish)."

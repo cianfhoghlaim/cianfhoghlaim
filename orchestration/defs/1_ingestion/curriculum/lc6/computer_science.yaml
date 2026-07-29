@@ -37,6 +37,8 @@ attributes:
     spec: british-isles-education-pipeline
     lc_subject: computer_science
     partitions: subject × language (computer_science × en + ga = 2 partitions)
-    dlt_source: cianfhoghlaim.dlt.british_isles.ireland.education.ncca_computer_science
+    dlt_source: cianfhoghlaim.dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline
+    # UPDATED 2026-08-15: stale v7 path replaced with the live
+    # ireland_jurisdiction_pipeline registry runner (post-v7 flattening)
     baml_extractor: b.ExtractLC6Syllabus(subject="computer_science", ...)
     notes: "Per-subject Computer Science NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/computer_science/."
