@@ -104,7 +104,7 @@ JC_LANGUAGES: tuple[str, ...] = ("en", "ga")
 
 
 @dataclass
-class JCChunk:
+class JuniorCycleChunk:
     """One chunked + embedded Junior Cycle row (per subject / year / language)."""
 
     chunk_id: str

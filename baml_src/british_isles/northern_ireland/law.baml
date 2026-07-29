@@ -1,6 +1,6 @@
 // NI law extraction BAML schema (BIEP parity).
 
-class NILawDocument {
+class NorthernIrelandLawDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class NILawDocument {
   content_hash string?
 }
 
-function ExtractNILawDocument(
+function ExtractNorthernIrelandLawDocument(
   nation: string,
   language: string,
   text: string
-) -> NILawDocument {  client ExtractEn
+) -> NorthernIrelandLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

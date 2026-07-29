@@ -1,7 +1,7 @@
 // GEO education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class GEOSubjectCurriculum {
+class GeorgiaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Georgia")
@@ -12,11 +12,11 @@ class GEOSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractGEOSubjectCurriculum(
+function ExtractGeorgiaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> GEOSubjectCurriculum {  client ExtractEn
+) -> GeorgiaSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

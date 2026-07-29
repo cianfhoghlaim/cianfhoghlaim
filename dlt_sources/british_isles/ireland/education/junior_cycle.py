@@ -20,7 +20,7 @@ Datasets produced (3 resources):
   cba_tasks            — CBATask[] (2 per JC subject, BAML-extracted)
 
 BAML extraction (per `baml/education/stages/junior_cycle.baml`):
-  b.ExtractJCSpec(text)           -> JCSubjectSpec
+  b.ExtractJCSpec(text)           -> JuniorCycleSubjectSpec
   b.ExtractCBADescriptor(text)    -> CBATask
 """
 

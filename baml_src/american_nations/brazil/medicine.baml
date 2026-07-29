@@ -1,6 +1,6 @@
 // BRA medicine extraction BAML schema.
 
-class BRAMedicineDocument {
+class BrazilMedicineDocument {
   anvisa_id string @description("The canonical per-medicine document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class BRAMedicineDocument {
   content_hash string?
 }
 
-function ExtractBRAMedicineDocument(
+function ExtractBrazilMedicineDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> BRAMedicineDocument {  client ExtractEn
+) -> BrazilMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

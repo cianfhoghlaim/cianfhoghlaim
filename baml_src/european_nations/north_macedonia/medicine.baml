@@ -1,7 +1,7 @@
 // MKD medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class MKDHealthGuidance {
+class NorthMacedoniaHealthGuidance {
   agency string @description("The issuing public-health agency of North Macedonia")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of North Macedonia")
@@ -13,10 +13,10 @@ class MKDHealthGuidance {
   content_hash string?
 }
 
-function ExtractMKDHealthGuidance(
+function ExtractNorthMacedoniaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> MKDHealthGuidance {  client ExtractEn
+) -> NorthMacedoniaHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

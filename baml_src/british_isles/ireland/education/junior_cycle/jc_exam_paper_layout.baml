@@ -29,7 +29,7 @@ enum JCQuestionType {
   PORTFOLIO     @description("Portfolio submission")
 }
 
-class JCQuestion {
+class JuniorCycleQuestion {
   q_id string
   part string?              @description("e.g. 'a', 'b(i)', 'c(ii)'")
   text_en string
@@ -40,7 +40,7 @@ class JCQuestion {
   related_cba_id string?   @description("Related CBA id, if any")
 }
 
-class JCExamSection {
+class JuniorCycleExamSection {
   section_id string
   section_name_en string
   section_name_ga string?
@@ -51,7 +51,7 @@ class JCExamSection {
   has_optional_questions bool
 }
 
-class JCExamPaper {
+class JuniorCycleExamPaper {
   // Document-level metadata
   subject string
   paper_code string         @description("e.g. 'JC001EN-2024-COMMON'")
@@ -81,11 +81,11 @@ class JCExamPaper {
 // Returns the canonical `JCExamPaper` Pydantic class with per-section
 // `JCQuestion[]` and per-paper `cba_marks` + `cba_percentage`.
 
-function ExtractJCExamPaper(
+function ExtractJuniorCycleExamPaper(
   pdf_text: string,
   subject: string?,
   level: string?,
   year: int?,
-) -> JCExamPaper {  client ExtractEn
+) -> JuniorCycleExamPaper {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

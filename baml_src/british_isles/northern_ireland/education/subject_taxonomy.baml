@@ -91,14 +91,14 @@ class NorthernIrelandExamPaper {
   question_sections NISection[]
 }
 
-class NISection {
+class NorthernIrelandSection {
   section_id string                   @description("e.g. 'Section A' or 'Section B'")
   section_title string
   total_marks int
   questions NIQuestion[]
 }
 
-class NIQuestion {
+class NorthernIrelandQuestion {
   question_id string                  @description("e.g. 'Q1' or 'Q2a'")
   question_text string
   total_marks int
@@ -107,7 +107,7 @@ class NIQuestion {
   ao_ids string[]                     @description("Assessment objective IDs (e.g. ['AO1', 'AO2'])")
 }
 
-function ExtractNIExamPaper(
+function ExtractNorthernIrelandExamPaper(
   pdf_text: string,
   subject: CCEASubject?,
   level: CCEALevel?,

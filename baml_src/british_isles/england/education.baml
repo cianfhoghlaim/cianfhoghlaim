@@ -1,6 +1,6 @@
 // EN education extraction BAML schema (BIEP parity).
 
-class ENEducationDocument {
+class EnglandEducationDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class ENEducationDocument {
   content_hash string?
 }
 
-function ExtractENEducationDocument(
+function ExtractEnglandEducationDocument(
   nation: string,
   language: string,
   text: string
-) -> ENEducationDocument {  client ExtractEn
+) -> EnglandEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

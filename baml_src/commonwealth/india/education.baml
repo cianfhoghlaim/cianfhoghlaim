@@ -1,6 +1,6 @@
 // India education extraction BAML schema.
 
-class INDEducationDocument {
+class IndiaEducationDocument {
   ncert_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class INDEducationDocument {
   content_hash string?
 }
 
-function ExtractINDEducationDocument(
+function ExtractIndiaEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> INDEducationDocument {  client ExtractEn
+) -> IndiaEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

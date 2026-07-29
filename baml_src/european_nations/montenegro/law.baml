@@ -1,7 +1,7 @@
 // MNE law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class MNEStatute {
+class MontenegroStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Montenegro)")
@@ -12,10 +12,10 @@ class MNEStatute {
   content_hash string?
 }
 
-function ExtractMNEStatute(
+function ExtractMontenegroStatute(
   nation: string,
   language: string,
   text: string
-) -> MNEStatute {  client ExtractEn
+) -> MontenegroStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

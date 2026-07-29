@@ -1,6 +1,6 @@
 // Spain education extraction BAML schema.
 
-class ESPEducationDocument {
+class SpainEducationDocument {
   mecd_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Spain")
@@ -11,10 +11,10 @@ class ESPEducationDocument {
   content_hash string?
 }
 
-function ExtractESPEducationDocument(
+function ExtractSpainEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> ESPEducationDocument {  client ExtractEn
+) -> SpainEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

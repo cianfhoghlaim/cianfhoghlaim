@@ -70,7 +70,7 @@ enum JCStrand {
   OTHER  @description("Catch-all for strands not explicitly enumerated")
 }
 
-class JCLearningOutcome {
+class JuniorCycleLearningOutcome {
   lo_id string
   year YearBand
   strand JCStrand
@@ -79,7 +79,7 @@ class JCLearningOutcome {
   blooms_taxonomy_level string?
 }
 
-class JCStrandDescriptor {
+class JuniorCycleStrandDescriptor {
   strand JCStrand
   year YearBand
   title_en string
@@ -88,7 +88,7 @@ class JCStrandDescriptor {
   estimated_hours int?
 }
 
-class JCCurriculumSpec {
+class JuniorCycleCurriculumSpec {
   // Document-level metadata
   subject JuniorCycleSubjectSlug
   language JuniorCycleLanguage
@@ -120,11 +120,11 @@ class JCCurriculumSpec {
 // Returns the canonical `JCCurriculumSpec` Pydantic class with per-year
 // `JCStrandDescriptor[]` and per-outcome `JCLearningOutcome[]`.
 
-function ExtractJCCurriculum(
+function ExtractJuniorCycleCurriculum(
   pdf_text: string,
   subject: string?,
   language: string?,
   year: int?,
-) -> JCCurriculumSpec {  client ExtractEn
+) -> JuniorCycleCurriculumSpec {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -34,7 +34,7 @@ EXAM_BOARD = "BIH-MoC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class BIHLanguageSource(NationSource):
+class BosniaAndHerzegovinaLanguageSource(NationSource):
     """Bosnia and Herzegovina Language DLT source."""
 
     def __init__(self) -> None:

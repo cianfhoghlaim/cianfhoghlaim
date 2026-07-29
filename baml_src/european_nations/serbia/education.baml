@@ -1,7 +1,7 @@
 // SRB education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class SRBSubjectCurriculum {
+class SerbiaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Serbia")
@@ -12,11 +12,11 @@ class SRBSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractSRBSubjectCurriculum(
+function ExtractSerbiaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> SRBSubjectCurriculum {  client ExtractEn
+) -> SerbiaSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

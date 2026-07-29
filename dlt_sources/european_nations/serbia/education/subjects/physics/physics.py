@@ -34,7 +34,7 @@ EXAM_BOARD = "ZVO"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class SRBPhysicsSource(NationSource):
+class SerbiaPhysicsSource(NationSource):
     """Serbia Physics DLT source."""
 
     def __init__(self) -> None:

@@ -1,6 +1,6 @@
 // MEX medicine extraction BAML schema.
 
-class MEXMedicineDocument {
+class MexicoMedicineDocument {
   ssa_id string @description("The canonical per-medicine document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class MEXMedicineDocument {
   content_hash string?
 }
 
-function ExtractMEXMedicineDocument(
+function ExtractMexicoMedicineDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> MEXMedicineDocument {  client ExtractEn
+) -> MexicoMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

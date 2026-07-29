@@ -1,6 +1,6 @@
 // India law extraction BAML schema.
 
-class INDLawDocument {
+class IndiaLawDocument {
   india_code_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class INDLawDocument {
   content_hash string?
 }
 
-function ExtractINDLawDocument(
+function ExtractIndiaLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> INDLawDocument {  client ExtractEn
+) -> IndiaLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

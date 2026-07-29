@@ -1,6 +1,6 @@
 // Australia medicine extraction BAML schema.
 
-class AUSMedicineDocument {
+class AustraliaMedicineDocument {
   tga_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class AUSMedicineDocument {
   content_hash string?
 }
 
-function ExtractAUSMedicineDocument(
+function ExtractAustraliaMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> AUSMedicineDocument {  client ExtractEn
+) -> AustraliaMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

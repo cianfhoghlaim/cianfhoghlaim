@@ -1,6 +1,6 @@
 // Spain law extraction BAML schema.
 
-class ESPLawDocument {
+class SpainLawDocument {
   boe_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Spain")
@@ -11,10 +11,10 @@ class ESPLawDocument {
   content_hash string?
 }
 
-function ExtractESPLawDocument(
+function ExtractSpainLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> ESPLawDocument {  client ExtractEn
+) -> SpainLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -1,6 +1,6 @@
 // Ukraine education extraction BAML schema.
 
-class UKREducationDocument {
+class UkraineEducationDocument {
   ministry_education_science_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Ukraine")
@@ -11,10 +11,10 @@ class UKREducationDocument {
   content_hash string?
 }
 
-function ExtractUKREducationDocument(
+function ExtractUkraineEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> UKREducationDocument {  client ExtractEn
+) -> UkraineEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -1,6 +1,6 @@
 // SCT medicine extraction BAML schema (BIEP parity).
 
-class SCTMedicineDocument {
+class ScotlandMedicineDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class SCTMedicineDocument {
   content_hash string?
 }
 
-function ExtractSCTMedicineDocument(
+function ExtractScotlandMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> SCTMedicineDocument {  client ExtractEn
+) -> ScotlandMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

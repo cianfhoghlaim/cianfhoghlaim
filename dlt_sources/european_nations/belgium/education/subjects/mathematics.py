@@ -29,7 +29,7 @@ from dlt_sources.european_nations._shared import (
 logger = structlog.get_logger(__name__)
 
 
-class BELMathematicsEducationSource(NationSource):
+class BelgiumMathematicsEducationSource(NationSource):
     """Belgium mathematics curriculum DLT source."""
 
     def __init__(self) -> None:
@@ -58,7 +58,7 @@ class BELMathematicsEducationSource(NationSource):
         )
 
 
-_NATION_SOURCE = BELMathematicsEducationSource()
+_NATION_SOURCE = BelgiumMathematicsEducationSource()
 
 
 @dlt.resource(
@@ -115,7 +115,7 @@ def bel_mathematics_source(language: str | None = None):
 
 
 __all__ = [
-    "BELMathematicsEducationSource",
+    "BelgiumMathematicsEducationSource",
     "bel_mathematics",
     "bel_mathematics_source",
 ]

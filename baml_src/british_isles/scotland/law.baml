@@ -1,6 +1,6 @@
 // SCT law extraction BAML schema (BIEP parity).
 
-class SCTLawDocument {
+class ScotlandLawDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class SCTLawDocument {
   content_hash string?
 }
 
-function ExtractSCTLawDocument(
+function ExtractScotlandLawDocument(
   nation: string,
   language: string,
   text: string
-) -> SCTLawDocument {  client ExtractEn
+) -> ScotlandLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -34,7 +34,7 @@ EXAM_BOARD = "DIC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class MKDChemistrySource(NationSource):
+class NorthMacedoniaChemistrySource(NationSource):
     """North Macedonia Chemistry DLT source."""
 
     def __init__(self) -> None:

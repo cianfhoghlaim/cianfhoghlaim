@@ -1,6 +1,6 @@
 // Germany education extraction BAML schema.
 
-class DEUEducationDocument {
+class GermanyEducationDocument {
   kmk_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Germany")
@@ -11,10 +11,10 @@ class DEUEducationDocument {
   content_hash string?
 }
 
-function ExtractDEUEducationDocument(
+function ExtractGermanyEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> DEUEducationDocument {  client ExtractEn
+) -> GermanyEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

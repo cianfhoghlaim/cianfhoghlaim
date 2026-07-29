@@ -22,7 +22,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class OASSource(NationSource):
+class OrganizationOfAmericanStatesSource(NationSource):
     """Organization of American States DLT source."""
 
     def __init__(self) -> None:

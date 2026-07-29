@@ -34,7 +34,7 @@ EXAM_BOARD = "ASCAP"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class ALBLanguageSource(NationSource):
+class AlbaniaLanguageSource(NationSource):
     """Albania Language DLT source."""
 
     def __init__(self) -> None:

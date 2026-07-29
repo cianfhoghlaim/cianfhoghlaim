@@ -79,7 +79,7 @@ enum JCLevel {
 // Classes
 // -----------------------------------------------------------------------------
 
-class JCLearningOutcomeStage {
+class JuniorCycleLearningOutcomeStage {
   lo_id string
     @description("Deterministic slug; e.g. 'sci_year_1_bio_cells'")
   text_en string
@@ -95,7 +95,7 @@ class JCLearningOutcomeStage {
     @description("ISO 8601 datetime of BAML extraction")
 }
 
-class JCStrandStage {
+class JuniorCycleStrandStage {
   strand_id string
     @description("Deterministic slug")
   title_en string
@@ -105,7 +105,7 @@ class JCStrandStage {
   outcomes JCLearningOutcomeStage[]
 }
 
-class JCSubjectSpecStage {
+class JuniorCycleSubjectSpecStage {
   // Document-level metadata
   subject JCSubject
   language string
@@ -143,9 +143,9 @@ class JCSubjectSpecStage {
 // Mirrors the BIEP v1 `ExtractCurriculumSyllabus` shape but constrained
 // to the 3 JC year levels (Year 1 + Year 2 + Year 3 only — no TY, no LC).
 
-function ExtractJCSubjectSpec(
+function ExtractJuniorCycleSubjectSpec(
   text: string,
   subject: string,
-) -> JCSubjectSpecStage {  client ExtractEn
+) -> JuniorCycleSubjectSpecStage {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

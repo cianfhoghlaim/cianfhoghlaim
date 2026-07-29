@@ -34,7 +34,7 @@ EXAM_BOARD = "NAEC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class GEOPhysicsSource(NationSource):
+class GeorgiaPhysicsSource(NationSource):
     """Georgia Physics DLT source."""
 
     def __init__(self) -> None:

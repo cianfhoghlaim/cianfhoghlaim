@@ -1,6 +1,6 @@
 // VEN medicine extraction BAML schema.
 
-class VENMedicineDocument {
+class VenezuelaMedicineDocument {
   mpps_id string @description("The canonical per-medicine document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class VENMedicineDocument {
   content_hash string?
 }
 
-function ExtractVENMedicineDocument(
+function ExtractVenezuelaMedicineDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> VENMedicineDocument {  client ExtractEn
+) -> VenezuelaMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -1,6 +1,6 @@
 // JERSEY education extraction BAML schema (BIEP parity Crown layer).
 
-class JERSEYEducationDocument {
+class JerseyEducationDocument {
   url string @description("Canonical document URL")
   language string @description("The official language of the row")
   island string @description("Crown Dependency slug")
@@ -11,10 +11,10 @@ class JERSEYEducationDocument {
   content_hash string?
 }
 
-function ExtractJERSEYEducationDocument(
+function ExtractJerseyEducationDocument(
   island: string,
   language: string,
   text: string
-) -> JERSEYEducationDocument {  client ExtractEn
+) -> JerseyEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -1,6 +1,6 @@
 // Italy medicine extraction BAML schema.
 
-class ITAMedicineDocument {
+class ItalyMedicineDocument {
   aifa_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Italy")
@@ -11,10 +11,10 @@ class ITAMedicineDocument {
   content_hash string?
 }
 
-function ExtractITAMedicineDocument(
+function ExtractItalyMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> ITAMedicineDocument {  client ExtractEn
+) -> ItalyMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

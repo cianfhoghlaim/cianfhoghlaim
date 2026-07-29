@@ -1,7 +1,7 @@
 // MNE education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class MNESubjectCurriculum {
+class MontenegroSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Montenegro")
@@ -12,11 +12,11 @@ class MNESubjectCurriculum {
   content_hash string?
 }
 
-function ExtractMNESubjectCurriculum(
+function ExtractMontenegroSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> MNESubjectCurriculum {  client ExtractEn
+) -> MontenegroSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

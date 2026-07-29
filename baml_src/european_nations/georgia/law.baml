@@ -1,7 +1,7 @@
 // GEO law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class GEOStatute {
+class GeorgiaStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Georgia)")
@@ -12,10 +12,10 @@ class GEOStatute {
   content_hash string?
 }
 
-function ExtractGEOStatute(
+function ExtractGeorgiaStatute(
   nation: string,
   language: string,
   text: string
-) -> GEOStatute {  client ExtractEn
+) -> GeorgiaStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

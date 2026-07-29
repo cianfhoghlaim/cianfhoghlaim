@@ -35,7 +35,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class VENLawSource(NationSource):
+class VenezuelaLawSource(NationSource):
     """Tribunal Supremo de Justicia DLT source."""
 
     def __init__(self) -> None:
@@ -52,7 +52,7 @@ class VENLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = VENLawSource()
+_NATION_SOURCE = VenezuelaLawSource()
 
 
 @dlt.resource(
@@ -110,7 +110,7 @@ def tsj_source(language: str | None = None):
 
 
 __all__ = [
-    "VENLawSource",
+    "VenezuelaLawSource",
     "tsj",
     "tsj_source",
 ]

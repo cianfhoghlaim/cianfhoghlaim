@@ -1,7 +1,7 @@
 // ALB medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class ALBHealthGuidance {
+class AlbaniaHealthGuidance {
   agency string @description("The issuing public-health agency of Albania")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of Albania")
@@ -13,10 +13,10 @@ class ALBHealthGuidance {
   content_hash string?
 }
 
-function ExtractALBHealthGuidance(
+function ExtractAlbaniaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> ALBHealthGuidance {  client ExtractEn
+) -> AlbaniaHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

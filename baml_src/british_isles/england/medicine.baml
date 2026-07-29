@@ -1,6 +1,6 @@
 // EN medicine extraction BAML schema (BIEP parity).
 
-class ENMedicineDocument {
+class EnglandMedicineDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class ENMedicineDocument {
   content_hash string?
 }
 
-function ExtractENMedicineDocument(
+function ExtractEnglandMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> ENMedicineDocument {  client ExtractEn
+) -> EnglandMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

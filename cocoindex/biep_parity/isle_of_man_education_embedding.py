@@ -35,7 +35,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class ISLE_OF_MANEducationChunk:
+class IsleOfManEducationChunk:
     chunk_id: str
     island: str
     language: str
@@ -61,7 +61,7 @@ async def process_isle_of_man_education_file(
     for chunk in chunks:
         vec = await coco.use_context(EMBEDDER).embed(chunk.text)
         table.declare_row(
-            row=ISLE_OF_MANEducationChunk(
+            row=IsleOfManEducationChunk(
                 chunk_id=await id_gen.next_id(chunk.text),
                 island="isle_of_man",
                 language=language,
@@ -80,7 +80,7 @@ async def app_main() -> None:
         LANCE_DB,
         table_name=TABLE_NAME,
         table_schema=await lancedb.TableSchema.from_class(
-            ISLE_OF_MANEducationChunk, primary_key=["chunk_id"]
+            IsleOfManEducationChunk, primary_key=["chunk_id"]
         ),
     )
     target_table.declare_vector_index(column="embedding")
@@ -107,7 +107,7 @@ isle_of_man_education_embedding = coco.App(
 
 
 __all__ = [
-    "ISLE_OF_MANEducationChunk",
+    "IsleOfManEducationChunk",
     "TABLE_DESCRIPTION",
     "TABLE_NAME",
     "isle_of_man_education_embedding",

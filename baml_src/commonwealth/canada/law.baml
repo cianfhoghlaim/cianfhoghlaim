@@ -1,6 +1,6 @@
 // CAN law extraction BAML schema.
 
-class CANLawDocument {
+class CanadaLawDocument {
   federal_laws_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class CANLawDocument {
   content_hash string?
 }
 
-function ExtractCANLawDocument(
+function ExtractCanadaLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> CANLawDocument {  client ExtractEn
+) -> CanadaLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

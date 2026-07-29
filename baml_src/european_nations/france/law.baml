@@ -1,6 +1,6 @@
 // France law extraction BAML schema.
 
-class FRALawDocument {
+class FranceLawDocument {
   legifrance_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of France")
@@ -11,10 +11,10 @@ class FRALawDocument {
   content_hash string?
 }
 
-function ExtractFRALawDocument(
+function ExtractFranceLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> FRALawDocument {  client ExtractEn
+) -> FranceLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

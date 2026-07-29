@@ -34,7 +34,7 @@ EXAM_BOARD = "MASH"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class XKXPhysicsSource(NationSource):
+class KosovoPhysicsSource(NationSource):
     """Kosovo Physics DLT source."""
 
     def __init__(self) -> None:

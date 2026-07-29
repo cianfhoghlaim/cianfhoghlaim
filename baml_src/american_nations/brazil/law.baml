@@ -1,6 +1,6 @@
 // BRA law extraction BAML schema.
 
-class BRALawDocument {
+class BrazilLawDocument {
   planalto_id string @description("The canonical per-law document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class BRALawDocument {
   content_hash string?
 }
 
-function ExtractBRALawDocument(
+function ExtractBrazilLawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> BRALawDocument {  client ExtractEn
+) -> BrazilLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

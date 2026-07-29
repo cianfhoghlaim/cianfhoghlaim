@@ -1,7 +1,7 @@
 // MNE medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class MNEHealthGuidance {
+class MontenegroHealthGuidance {
   agency string @description("The issuing public-health agency of Montenegro")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of Montenegro")
@@ -13,10 +13,10 @@ class MNEHealthGuidance {
   content_hash string?
 }
 
-function ExtractMNEHealthGuidance(
+function ExtractMontenegroHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> MNEHealthGuidance {  client ExtractEn
+) -> MontenegroHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

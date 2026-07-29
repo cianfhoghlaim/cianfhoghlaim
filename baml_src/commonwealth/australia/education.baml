@@ -1,6 +1,6 @@
 // Australia education extraction BAML schema.
 
-class AUSEducationDocument {
+class AustraliaEducationDocument {
   acara_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class AUSEducationDocument {
   content_hash string?
 }
 
-function ExtractAUSEducationDocument(
+function ExtractAustraliaEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> AUSEducationDocument {  client ExtractEn
+) -> AustraliaEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

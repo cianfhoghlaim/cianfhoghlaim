@@ -11,7 +11,7 @@ from motherduck.dives import save_dive
 DIVE_NAME = "commonwealth_curriculum_matrix"
 DIVE_DESCRIPTION = (
     "Cross-nation curriculum coverage matrix for the 5 Commonwealth "
-    "pilot nations (Australia / CAN / New Zealand / India / South Africa). "
+    "pilot nations (Australia / Canada / New Zealand / India / South Africa). "
     "Rows: country + domain. Columns: language. Cells: row count."
 )
 

@@ -1,7 +1,7 @@
 // SRB law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class SRBStatute {
+class SerbiaStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Serbia)")
@@ -12,10 +12,10 @@ class SRBStatute {
   content_hash string?
 }
 
-function ExtractSRBStatute(
+function ExtractSerbiaStatute(
   nation: string,
   language: string,
   text: string
-) -> SRBStatute {  client ExtractEn
+) -> SerbiaStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

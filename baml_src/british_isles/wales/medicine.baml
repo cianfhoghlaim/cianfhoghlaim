@@ -1,6 +1,6 @@
 // WLS medicine extraction BAML schema (BIEP parity).
 
-class WLSMedicineDocument {
+class WalesMedicineDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class WLSMedicineDocument {
   content_hash string?
 }
 
-function ExtractWLSMedicineDocument(
+function ExtractWalesMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> WLSMedicineDocument {  client ExtractEn
+) -> WalesMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

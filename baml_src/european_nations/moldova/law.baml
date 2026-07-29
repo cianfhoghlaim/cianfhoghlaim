@@ -1,7 +1,7 @@
 // MDA law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class MDAStatute {
+class MoldovaStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Moldova)")
@@ -12,10 +12,10 @@ class MDAStatute {
   content_hash string?
 }
 
-function ExtractMDAStatute(
+function ExtractMoldovaStatute(
   nation: string,
   language: string,
   text: string
-) -> MDAStatute {  client ExtractEn
+) -> MoldovaStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -1,6 +1,6 @@
 // Spain medicine extraction BAML schema.
 
-class ESPMedicineDocument {
+class SpainMedicineDocument {
   mscbs_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Spain")
@@ -11,10 +11,10 @@ class ESPMedicineDocument {
   content_hash string?
 }
 
-function ExtractESPMedicineDocument(
+function ExtractSpainMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> ESPMedicineDocument {  client ExtractEn
+) -> SpainMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

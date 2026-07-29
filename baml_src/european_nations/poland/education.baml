@@ -1,6 +1,6 @@
 // Poland education extraction BAML schema.
 
-class POLEducationDocument {
+class PolandEducationDocument {
   men_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Poland")
@@ -11,10 +11,10 @@ class POLEducationDocument {
   content_hash string?
 }
 
-function ExtractPOLEducationDocument(
+function ExtractPolandEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> POLEducationDocument {  client ExtractEn
+) -> PolandEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -34,7 +34,7 @@ EXAM_BOARD = "MECC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class MDABiologySource(NationSource):
+class MoldovaBiologySource(NationSource):
     """Moldova Biology DLT source."""
 
     def __init__(self) -> None:

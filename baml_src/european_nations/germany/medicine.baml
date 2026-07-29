@@ -1,6 +1,6 @@
 // Germany medicine extraction BAML schema.
 
-class DEUMedicineDocument {
+class GermanyMedicineDocument {
   rki_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Germany")
@@ -11,10 +11,10 @@ class DEUMedicineDocument {
   content_hash string?
 }
 
-function ExtractDEUMedicineDocument(
+function ExtractGermanyMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> DEUMedicineDocument {  client ExtractEn
+) -> GermanyMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

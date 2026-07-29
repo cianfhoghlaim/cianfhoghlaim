@@ -22,7 +22,7 @@
 >    (`cross_archive_biep_edges.py` + `university_cross_archive.py`)
 >    minus the leabharlann → culture-heritage edges.
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Leabharlann cognify *(updated from "3 corpora" to "6 sub-corpora")*
 

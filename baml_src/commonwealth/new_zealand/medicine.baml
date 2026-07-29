@@ -1,6 +1,6 @@
 // New Zealand medicine extraction BAML schema.
 
-class NZLMedicineDocument {
+class NewZealandMedicineDocument {
   medsafe_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class NZLMedicineDocument {
   content_hash string?
 }
 
-function ExtractNZLMedicineDocument(
+function ExtractNewZealandMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> NZLMedicineDocument {  client ExtractEn
+) -> NewZealandMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

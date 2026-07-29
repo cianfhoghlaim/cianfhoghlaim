@@ -1,6 +1,6 @@
 // EN law extraction BAML schema (BIEP parity).
 
-class ENLawDocument {
+class EnglandLawDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class ENLawDocument {
   content_hash string?
 }
 
-function ExtractENLawDocument(
+function ExtractEnglandLawDocument(
   nation: string,
   language: string,
   text: string
-) -> ENLawDocument {  client ExtractEn
+) -> EnglandLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

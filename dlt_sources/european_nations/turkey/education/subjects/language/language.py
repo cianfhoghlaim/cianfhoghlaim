@@ -34,7 +34,7 @@ EXAM_BOARD = "MEB"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class TURLanguageSource(NationSource):
+class TurkeyLanguageSource(NationSource):
     """Turkey Language DLT source."""
 
     def __init__(self) -> None:

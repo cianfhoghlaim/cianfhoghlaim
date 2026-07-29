@@ -1474,6 +1474,60 @@ The spec MAY keep bare `cianfhoghlaim.*` documentation shorthand for MotherDuck/
 - **THEN** the schema reference is preserved as documentation shorthand
 - **AND** it is not treated as a Python import path
 
+### Requirement: Global jurisdiction display-name convention
+
+The cianfhoghlaim-pipeline capability MUST adopt the global jurisdiction
+display-name convention declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec: full country / state names in every display string,
+short IDs in every identifier.
+
+#### Scenario: A new jurisdiction file obeys the convention
+
+- **WHEN** a developer reads the cianfhoghlaim-pipeline spec
+- **THEN** the `## Cross-references` section MUST point at the
+  `cross-region-pipeline/spec.md` rename convention
+
+### Requirement: Embedder env-var contract
+
+MUST export 2 embedder env vars via `secrets.env`. Every data-plane
+stack (`lakehouse`, `oideachais`, `dagster`, `motherduck`, `marimo`)
+MUST set the following:
+
+- `CIANFHOGHLAIM_EMBED_MODEL` (default `BAAI/bge-m3`)
+- `CIANFHOGHLAIM_EMBED_DIM` (default `1024`)
+
+The canonical CocoIndex v1 App entry point at
+`cocoindex/_shared/_lifespan.py` reads these env vars at module
+load (lines 99-108) and constructs the shared
+`SentenceTransformerEmbedder(EMBED_MODEL)` for the 14 v1 Apps.
+
+The dlt observability helper at
+`dlt_sources/common/observability.py` reads these via the embedded
+MLflow tracking URI; downstream BAML extractions + LanceDB
+vector embeddings read them via the CocoIndex lifespan.
+
+#### Scenario: an operator swaps the embedder for an OCR-HTR experiment
+
+```
+# Operator overrides in .env.local:
+CIANFHOGHLAIM_EMBED_MODEL=sentence-transformers/all-mpnet-base-v2
+CIANFHOGHLAIM_EMBED_DIM=768
+# restarts the dagster webserver + dagster daemon
+# the next materialisation uses the new embedder
+# the old 1024-dim tables are preserved (legacy_embedding_dim=384)
+```
+
+#### Scenario: an operator reverts to the canonical embedder
+
+```
+# Operator unsets the overrides:
+CIANFHOGHLAIM_EMBED_MODEL=           # unset → default
+CIANFHOGHLAIM_EMBED_DIM=             # unset → default 1024
+# restarts dagster
+# materialisations resume using BAAI/bge-m3 (the canonical embedder)
+```
+
 ## Components
 
 | Component | Path | Purpose |

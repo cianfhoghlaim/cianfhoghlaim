@@ -1,6 +1,6 @@
 // NI medicine extraction BAML schema (BIEP parity).
 
-class NIMedicineDocument {
+class NorthernIrelandMedicineDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class NIMedicineDocument {
   content_hash string?
 }
 
-function ExtractNIMedicineDocument(
+function ExtractNorthernIrelandMedicineDocument(
   nation: string,
   language: string,
   text: string
-) -> NIMedicineDocument {  client ExtractEn
+) -> NorthernIrelandMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

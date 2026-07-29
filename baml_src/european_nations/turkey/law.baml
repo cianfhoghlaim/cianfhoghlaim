@@ -1,7 +1,7 @@
 // TUR law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class TURStatute {
+class TurkeyStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Turkey)")
@@ -12,10 +12,10 @@ class TURStatute {
   content_hash string?
 }
 
-function ExtractTURStatute(
+function ExtractTurkeyStatute(
   nation: string,
   language: string,
   text: string
-) -> TURStatute {  client ExtractEn
+) -> TurkeyStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

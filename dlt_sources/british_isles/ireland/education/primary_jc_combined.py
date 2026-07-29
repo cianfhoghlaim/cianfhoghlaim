@@ -29,7 +29,7 @@ Datasets produced (3 resources):
 BAML extraction (per `baml/education/primary/primary_extraction.baml`
 and `baml/education/junior_cycle/junior_cycle_extraction.baml`):
   b.ExtractPrimaryArea(text, area)            -> PrimaryAreaSpecStage
-  b.ExtractJCSubjectSpec(text, subject)        -> JCSubjectSpecStage
+  b.ExtractJCSubjectSpec(text, subject)        -> JuniorCycleSubjectSpecStage
 """
 
 from __future__ import annotations

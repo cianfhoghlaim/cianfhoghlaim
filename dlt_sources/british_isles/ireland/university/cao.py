@@ -31,7 +31,7 @@ Datasets produced (2 resources):
   tertiary_cao_application_rounds — one row per (round_id, year)
 
 BAML extraction (per `baml/education/university/university_extraction.baml`):
-  b.ExtractCAOChoice(text, cao_code) -> CAOChoice
+  b.ExtractCAOChoice(text, cao_code) -> CaliforniaOChoice
 """
 
 from __future__ import annotations

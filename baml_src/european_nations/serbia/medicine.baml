@@ -1,7 +1,7 @@
 // SRB medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class SRBHealthGuidance {
+class SerbiaHealthGuidance {
   agency string @description("The issuing public-health agency of Serbia")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of Serbia")
@@ -13,10 +13,10 @@ class SRBHealthGuidance {
   content_hash string?
 }
 
-function ExtractSRBHealthGuidance(
+function ExtractSerbiaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> SRBHealthGuidance {  client ExtractEn
+) -> SerbiaHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

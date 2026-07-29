@@ -1,6 +1,6 @@
 // WLS education extraction BAML schema (BIEP parity).
 
-class WLSEducationDocument {
+class WalesEducationDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class WLSEducationDocument {
   content_hash string?
 }
 
-function ExtractWLSEducationDocument(
+function ExtractWalesEducationDocument(
   nation: string,
   language: string,
   text: string
-) -> WLSEducationDocument {  client ExtractEn
+) -> WalesEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

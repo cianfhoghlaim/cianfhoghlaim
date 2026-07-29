@@ -1,6 +1,6 @@
 // Poland medicine extraction BAML schema.
 
-class POLMedicineDocument {
+class PolandMedicineDocument {
   nfz_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Poland")
@@ -11,10 +11,10 @@ class POLMedicineDocument {
   content_hash string?
 }
 
-function ExtractPOLMedicineDocument(
+function ExtractPolandMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> POLMedicineDocument {  client ExtractEn
+) -> PolandMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

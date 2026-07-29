@@ -1,6 +1,6 @@
 // Ukraine medicine extraction BAML schema.
 
-class UKRMedicineDocument {
+class UkraineMedicineDocument {
   ministry_health_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Ukraine")
@@ -11,10 +11,10 @@ class UKRMedicineDocument {
   content_hash string?
 }
 
-function ExtractUKRMedicineDocument(
+function ExtractUkraineMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> UKRMedicineDocument {  client ExtractEn
+) -> UkraineMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

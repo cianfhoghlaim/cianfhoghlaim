@@ -1,6 +1,6 @@
 // Poland law extraction BAML schema.
 
-class POLLawDocument {
+class PolandLawDocument {
   sejm_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Poland")
@@ -11,10 +11,10 @@ class POLLawDocument {
   content_hash string?
 }
 
-function ExtractPOLLawDocument(
+function ExtractPolandLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> POLLawDocument {  client ExtractEn
+) -> PolandLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

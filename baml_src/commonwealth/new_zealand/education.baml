@@ -1,6 +1,6 @@
 // New Zealand education extraction BAML schema.
 
-class NZLEducationDocument {
+class NewZealandEducationDocument {
   nzqa_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class NZLEducationDocument {
   content_hash string?
 }
 
-function ExtractNZLEducationDocument(
+function ExtractNewZealandEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> NZLEducationDocument {  client ExtractEn
+) -> NewZealandEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

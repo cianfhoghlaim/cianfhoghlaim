@@ -1,6 +1,6 @@
 // WLS law extraction BAML schema (BIEP parity).
 
-class WLSLawDocument {
+class WalesLawDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class WLSLawDocument {
   content_hash string?
 }
 
-function ExtractWLSLawDocument(
+function ExtractWalesLawDocument(
   nation: string,
   language: string,
   text: string
-) -> WLSLawDocument {  client ExtractEn
+) -> WalesLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

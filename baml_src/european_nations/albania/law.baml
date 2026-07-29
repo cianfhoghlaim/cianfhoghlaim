@@ -1,7 +1,7 @@
 // ALB law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class ALBStatute {
+class AlbaniaStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Albania)")
@@ -12,10 +12,10 @@ class ALBStatute {
   content_hash string?
 }
 
-function ExtractALBStatute(
+function ExtractAlbaniaStatute(
   nation: string,
   language: string,
   text: string
-) -> ALBStatute {  client ExtractEn
+) -> AlbaniaStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

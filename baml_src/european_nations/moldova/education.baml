@@ -1,7 +1,7 @@
 // MDA education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class MDASubjectCurriculum {
+class MoldovaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Moldova")
@@ -12,11 +12,11 @@ class MDASubjectCurriculum {
   content_hash string?
 }
 
-function ExtractMDASubjectCurriculum(
+function ExtractMoldovaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> MDASubjectCurriculum {  client ExtractEn
+) -> MoldovaSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

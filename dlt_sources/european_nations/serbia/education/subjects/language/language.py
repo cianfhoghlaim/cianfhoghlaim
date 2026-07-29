@@ -34,7 +34,7 @@ EXAM_BOARD = "ZVO"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class SRBLanguageSource(NationSource):
+class SerbiaLanguageSource(NationSource):
     """Serbia Language DLT source."""
 
     def __init__(self) -> None:

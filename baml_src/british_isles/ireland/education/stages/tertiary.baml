@@ -71,7 +71,7 @@ class MatriculationRequirement {
   @@stream.done
 }
 
-class CAOCourse {
+class CaliforniaOCourse {
   course_code string             @description("e.g., 'GY101' (Arts, UCG), 'GY301' (Medicine, UCG), 'CK101', 'TR001'")
   title_en string
   title_ga string?
@@ -140,7 +140,7 @@ class ApplicationTimeline {
   @@stream.done
 }
 
-class CAOGradeProfile {
+class CaliforniaOGradeProfile {
   course_code string
   year int
   median_points int
@@ -170,7 +170,7 @@ class MatriculationAudit {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractCAOCourseList(page_markdown: string, year: int) -> CAOCourse[] {  client ExtractEn
+function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }
 
@@ -211,7 +211,7 @@ function AuditMatriculation(institution: string,
 // From-URL extraction functions (merged from cianfhoghlaim_other/tertiary.baml)
 // =============================================================================
 
-function ExtractCAOCourseListFromUrl(page_url: string, year: int) -> CAOCourse[] {  client ExtractEn
+function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }
 

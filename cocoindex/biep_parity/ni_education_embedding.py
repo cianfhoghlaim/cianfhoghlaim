@@ -40,7 +40,7 @@ _splitter = RecursiveSplitter()
 
 
 @dataclass
-class NIEducationChunk:
+class NorthernIrelandEducationChunk:
     chunk_id: str
     nation: str
     subject: str
@@ -69,7 +69,7 @@ async def process_ni_education_file(
     for chunk in chunks:
         vec = await coco.use_context(EMBEDDER).embed(chunk.text)
         table.declare_row(
-            row=NIEducationChunk(
+            row=NorthernIrelandEducationChunk(
                 chunk_id=await id_gen.next_id(chunk.text),
                 nation="ni",
                 subject=subject,
@@ -89,7 +89,7 @@ async def app_main() -> None:
         LANCE_DB,
         table_name=TABLE_NAME,
         table_schema=await lancedb.TableSchema.from_class(
-            NIEducationChunk, primary_key=["chunk_id"]
+            NorthernIrelandEducationChunk, primary_key=["chunk_id"]
         ),
     )
     target_table.declare_vector_index(column="embedding")
@@ -116,7 +116,7 @@ ni_education_embedding = coco.App(
 
 
 __all__ = [
-    "NIEducationChunk",
+    "NorthernIrelandEducationChunk",
     "TABLE_DESCRIPTION",
     "TABLE_NAME",
     "ni_education_embedding",

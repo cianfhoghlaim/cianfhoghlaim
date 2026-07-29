@@ -34,7 +34,7 @@ EXAM_BOARD = "ASCAP"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class ALBPhysicsSource(NationSource):
+class AlbaniaPhysicsSource(NationSource):
     """Albania Physics DLT source."""
 
     def __init__(self) -> None:

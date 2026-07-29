@@ -34,7 +34,7 @@ EXAM_BOARD = "MPS-MoE"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class MNEComputingScienceSource(NationSource):
+class MontenegroComputingScienceSource(NationSource):
     """Montenegro Computing Science DLT source."""
 
     def __init__(self) -> None:

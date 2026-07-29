@@ -1,7 +1,7 @@
 // TUR education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class TURSubjectCurriculum {
+class TurkeySubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Turkey")
@@ -12,11 +12,11 @@ class TURSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractTURSubjectCurriculum(
+function ExtractTurkeySubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> TURSubjectCurriculum {  client ExtractEn
+) -> TurkeySubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

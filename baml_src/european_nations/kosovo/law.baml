@@ -1,7 +1,7 @@
 // XKX law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class XKXStatute {
+class KosovoStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (Kosovo)")
@@ -12,10 +12,10 @@ class XKXStatute {
   content_hash string?
 }
 
-function ExtractXKXStatute(
+function ExtractKosovoStatute(
   nation: string,
   language: string,
   text: string
-) -> XKXStatute {  client ExtractEn
+) -> KosovoStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

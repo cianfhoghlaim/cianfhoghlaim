@@ -34,7 +34,7 @@ EXAM_BOARD = "MASH"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class XKXLanguageSource(NationSource):
+class KosovoLanguageSource(NationSource):
     """Kosovo Language DLT source."""
 
     def __init__(self) -> None:

@@ -1,6 +1,6 @@
 // SCT education extraction BAML schema (BIEP parity).
 
-class SCTEducationDocument {
+class ScotlandEducationDocument {
   url string @description("Canonical syllabus / document URL")
   language string @description("The official language of the row")
   nation string @description("ISO 3166-1 alpha-3 or British Isles legacy slug")
@@ -13,10 +13,10 @@ class SCTEducationDocument {
   content_hash string?
 }
 
-function ExtractSCTEducationDocument(
+function ExtractScotlandEducationDocument(
   nation: string,
   language: string,
   text: string
-) -> SCTEducationDocument {  client ExtractEn
+) -> ScotlandEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

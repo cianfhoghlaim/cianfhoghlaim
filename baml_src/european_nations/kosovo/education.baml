@@ -1,7 +1,7 @@
 // XKX education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class XKXSubjectCurriculum {
+class KosovoSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Kosovo")
@@ -12,11 +12,11 @@ class XKXSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractXKXSubjectCurriculum(
+function ExtractKosovoSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> XKXSubjectCurriculum {  client ExtractEn
+) -> KosovoSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

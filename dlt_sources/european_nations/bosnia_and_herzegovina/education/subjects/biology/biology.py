@@ -34,7 +34,7 @@ EXAM_BOARD = "BIH-MoC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class BIHBiologySource(NationSource):
+class BosniaAndHerzegovinaBiologySource(NationSource):
     """Bosnia and Herzegovina Biology DLT source."""
 
     def __init__(self) -> None:

@@ -23,7 +23,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class PAHOSource(NationSource):
+class PanAmericanHealthOrganizationSource(NationSource):
     """Pan American Health Organization DLT source."""
 
     def __init__(self) -> None:

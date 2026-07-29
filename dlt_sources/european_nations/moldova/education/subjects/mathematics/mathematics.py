@@ -34,7 +34,7 @@ EXAM_BOARD = "MECC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class MDAMathematicsSource(NationSource):
+class MoldovaMathematicsSource(NationSource):
     """Moldova Mathematics DLT source."""
 
     def __init__(self) -> None:

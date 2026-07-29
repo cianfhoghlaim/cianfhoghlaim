@@ -34,7 +34,7 @@ EXAM_BOARD = "NAEC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class GEOMathematicsSource(NationSource):
+class GeorgiaMathematicsSource(NationSource):
     """Georgia Mathematics DLT source."""
 
     def __init__(self) -> None:

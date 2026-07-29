@@ -510,7 +510,7 @@ class QQIAward {
 // CAOChoice — a CAO course choice entry (cao_code, points, institution)
 // =============================================================================
 
-class CAOChoice {
+class CaliforniaOChoice {
   cao_code string @description("5-character CAO course code, e.g. 'CK101', 'GY101', 'DC001', 'TR085'")
   year int @description("The year this entry applies to (e.g. 2025)")
   institution_id string @description("The institution id, e.g. 'ie-university-galway' (cross-ref to `University.institution_id`)")
@@ -570,10 +570,10 @@ function ExtractQQIAward(
   prompt #"Auto-generated extraction prompt."#
 }
 
-function ExtractCAOChoice(
+function ExtractCaliforniaOChoice(
   page_markdown: string,
   cao_code: string
-) -> CAOChoice {  client ExtractEn
+) -> CaliforniaOChoice {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }
 

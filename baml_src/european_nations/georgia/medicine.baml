@@ -1,7 +1,7 @@
 // GEO medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class GEOHealthGuidance {
+class GeorgiaHealthGuidance {
   agency string @description("The issuing public-health agency of Georgia")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of Georgia")
@@ -13,10 +13,10 @@ class GEOHealthGuidance {
   content_hash string?
 }
 
-function ExtractGEOHealthGuidance(
+function ExtractGeorgiaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> GEOHealthGuidance {  client ExtractEn
+) -> GeorgiaHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

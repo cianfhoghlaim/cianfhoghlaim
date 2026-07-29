@@ -1,6 +1,6 @@
 // VEN law extraction BAML schema.
 
-class VENLawDocument {
+class VenezuelaLawDocument {
   tsj_id string @description("The canonical per-law document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class VENLawDocument {
   content_hash string?
 }
 
-function ExtractVENLawDocument(
+function ExtractVenezuelaLawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> VENLawDocument {  client ExtractEn
+) -> VenezuelaLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

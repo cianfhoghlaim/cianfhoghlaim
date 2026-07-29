@@ -34,7 +34,7 @@ EXAM_BOARD = "NAEC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class GEOLanguageSource(NationSource):
+class GeorgiaLanguageSource(NationSource):
     """Georgia Language DLT source."""
 
     def __init__(self) -> None:

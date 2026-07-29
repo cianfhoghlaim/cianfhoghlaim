@@ -1,6 +1,6 @@
 // MEX law extraction BAML schema.
 
-class MEXLawDocument {
+class MexicoLawDocument {
   dof_id string @description("The canonical per-law document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class MEXLawDocument {
   content_hash string?
 }
 
-function ExtractMEXLawDocument(
+function ExtractMexicoLawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> MEXLawDocument {  client ExtractEn
+) -> MexicoLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -34,7 +34,7 @@ EXAM_BOARD = "MEB"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class TURChemistrySource(NationSource):
+class TurkeyChemistrySource(NationSource):
     """Turkey Chemistry DLT source."""
 
     def __init__(self) -> None:

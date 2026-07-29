@@ -1,7 +1,7 @@
 // MKD law extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class MKDStatute {
+class NorthMacedoniaStatute {
   statute_id string @description("The canonical per-statute document id")
   title string
   jurisdiction string @description("The jurisdiction (North Macedonia)")
@@ -12,10 +12,10 @@ class MKDStatute {
   content_hash string?
 }
 
-function ExtractMKDStatute(
+function ExtractNorthMacedoniaStatute(
   nation: string,
   language: string,
   text: string
-) -> MKDStatute {  client ExtractEn
+) -> NorthMacedoniaStatute {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -1,7 +1,7 @@
 // ALB education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class ALBSubjectCurriculum {
+class AlbaniaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Albania")
@@ -12,11 +12,11 @@ class ALBSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractALBSubjectCurriculum(
+function ExtractAlbaniaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> ALBSubjectCurriculum {  client ExtractEn
+) -> AlbaniaSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

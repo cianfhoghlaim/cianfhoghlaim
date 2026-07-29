@@ -34,7 +34,7 @@ EXAM_BOARD = "MASH"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class XKXComputingScienceSource(NationSource):
+class KosovoComputingScienceSource(NationSource):
     """Kosovo Computing Science DLT source."""
 
     def __init__(self) -> None:

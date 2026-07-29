@@ -47,7 +47,7 @@ class DiveSpec:
 
 
 def _build_ni_unions() -> str:
-    """Build the UNION ALL clauses for the 70 NI cohorts."""
+    """Build the UNION ALL clauses for the 70 Northern Ireland cohorts."""
     unions = []
     for level in NI_LEVELS:
         for subject in NI_SUBJECTS:
@@ -90,14 +90,14 @@ NI_CURRICULUM_TOPICS_DIVE = DiveSpec(
     charts=[
         {
             "type": "bar",
-            "title": "Exam paper component structure per NI subject (bar chart)",
+            "title": "Exam paper component structure per Northern Ireland subject (bar chart)",
             "x": "subject",
             "y": "total_marks",
             "facet": "level",
         },
         {
             "type": "bar",
-            "title": "Exam paper duration per NI subject (bar chart)",
+            "title": "Exam paper duration per Northern Ireland subject (bar chart)",
             "x": "subject",
             "y": "duration_minutes",
             "facet": "level",

@@ -1,7 +1,7 @@
 // MKD education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class MKDSubjectCurriculum {
+class NorthMacedoniaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of North Macedonia")
@@ -12,11 +12,11 @@ class MKDSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractMKDSubjectCurriculum(
+function ExtractNorthMacedoniaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> MKDSubjectCurriculum {  client ExtractEn
+) -> NorthMacedoniaSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

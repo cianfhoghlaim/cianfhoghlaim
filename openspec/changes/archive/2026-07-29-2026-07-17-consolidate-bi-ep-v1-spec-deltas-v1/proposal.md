@@ -1,3 +1,9 @@
+## Deferred — Work moot (superseded by source archives)
+
+This change is **superseded by the 7 source archives** referenced in its own `tasks.md` (`2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1`, `2026-07-13-baml-final-cleanup-v1`, `2026-07-13-biep-v1-phase-1-1-english-wiring-v1`, `2026-07-13-biep-v1-phases-6-7-unblock-v1`, `2026-07-13-fix-baml-50-out-of-scope-errors-v1`, `2026-07-13-fix-per-subject-marimo-baml-calls-v1`, `2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1`, `2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1`) + the 2026-07-29 cleanup wave that archived them all. The 9 ADDED Requirements, 6 BAML ADDEDs, 3 sub-corpora cognify MODIFIEDs, and 11-marimo count claims have all already been applied to the canonical specs (`british-isles-education-pipeline` at 28 Requirements, `cianfhoghlaim-baml-schemas` at 8 Requirements).
+
+The change remains in the openspec archive for audit-trail purposes; see the [PROPOSAL_NOTE.md](PROPOSAL_NOTE.md) for the per-area reduncancy mapping.
+
 # 2026-07-17-consolidate-bi-ep-v1-spec-deltas-v1
 
 ## Why

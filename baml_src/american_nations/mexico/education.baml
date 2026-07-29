@@ -1,6 +1,6 @@
 // MEX education extraction BAML schema.
 
-class MEXEducationDocument {
+class MexicoEducationDocument {
   sep_id string @description("The canonical per-education document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class MEXEducationDocument {
   content_hash string?
 }
 
-function ExtractMEXEducationDocument(
+function ExtractMexicoEducationDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> MEXEducationDocument {  client ExtractEn
+) -> MexicoEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

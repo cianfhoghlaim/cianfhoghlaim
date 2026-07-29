@@ -34,7 +34,7 @@ EXAM_BOARD = "NAEC"
 DEFAULT_LEVEL = "upper_secondary"
 
 
-class GEOChemistrySource(NationSource):
+class GeorgiaChemistrySource(NationSource):
     """Georgia Chemistry DLT source."""
 
     def __init__(self) -> None:

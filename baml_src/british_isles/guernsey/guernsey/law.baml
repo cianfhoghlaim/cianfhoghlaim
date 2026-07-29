@@ -1,6 +1,6 @@
 // GUERNSEY law extraction BAML schema (BIEP parity Crown layer).
 
-class GUERNSEYLawDocument {
+class GuernseyLawDocument {
   url string @description("Canonical document URL")
   language string @description("The official language of the row")
   island string @description("Crown Dependency slug")
@@ -11,10 +11,10 @@ class GUERNSEYLawDocument {
   content_hash string?
 }
 
-function ExtractGUERNSEYLawDocument(
+function ExtractGuernseyLawDocument(
   island: string,
   language: string,
   text: string
-) -> GUERNSEYLawDocument {  client ExtractEn
+) -> GuernseyLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

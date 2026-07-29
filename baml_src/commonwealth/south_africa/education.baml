@@ -1,6 +1,6 @@
 // South Africa education extraction BAML schema.
 
-class ZAFEducationDocument {
+class SouthAfricaEducationDocument {
   dbe_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class ZAFEducationDocument {
   content_hash string?
 }
 
-function ExtractZAFEducationDocument(
+function ExtractSouthAfricaEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> ZAFEducationDocument {  client ExtractEn
+) -> SouthAfricaEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

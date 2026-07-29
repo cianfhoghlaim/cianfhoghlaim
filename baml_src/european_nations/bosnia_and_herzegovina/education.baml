@@ -1,7 +1,7 @@
 // BIH education extraction BAML schema (EU candidate/neighbour
 // full-depth expansion).
 
-class BIHSubjectCurriculum {
+class BosniaAndHerzegovinaSubjectCurriculum {
   nation string @description("ISO 3166-1 alpha-3 (lowercase)")
   subject string @description("Subject slug (e.g. mathematics, chemistry)")
   language string @description("Official language of Bosnia and Herzegovina")
@@ -12,11 +12,11 @@ class BIHSubjectCurriculum {
   content_hash string?
 }
 
-function ExtractBIHSubjectCurriculum(
+function ExtractBosniaAndHerzegovinaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
   text: string
-) -> BIHSubjectCurriculum {  client ExtractEn
+) -> BosniaAndHerzegovinaSubjectCurriculum {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

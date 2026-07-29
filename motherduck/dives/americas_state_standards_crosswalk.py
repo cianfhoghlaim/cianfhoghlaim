@@ -2,7 +2,7 @@
 
 A read-only MotherDuck dashboard that surfaces the cross-state
 standards cross-reference for the Americas pilot jurisdictions (US-CA
-+ BRA + MEX + VEN).
++ Brazil + Mexico + Venezuela).
 """
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from motherduck.dives import save_dive
 DIVE_NAME = "americas_state_standards_crosswalk"
 DIVE_DESCRIPTION = (
     "Cross-jurisdiction standards cross-reference for the Americas "
-    "pilot jurisdictions (US-CA / BRA / MEX / VEN). "
+    "pilot jurisdictions (California / Brazil / Mexico / Venezuela). "
     "Rows: jurisdiction + subject. Columns: language. Cells: row count."
 )
 

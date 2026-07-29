@@ -1,6 +1,6 @@
 // New Zealand law extraction BAML schema.
 
-class NZLLawDocument {
+class NewZealandLawDocument {
   nz_legislation_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class NZLLawDocument {
   content_hash string?
 }
 
-function ExtractNZLLawDocument(
+function ExtractNewZealandLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> NZLLawDocument {  client ExtractEn
+) -> NewZealandLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

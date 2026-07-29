@@ -1,7 +1,7 @@
 // XKX medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class XKXHealthGuidance {
+class KosovoHealthGuidance {
   agency string @description("The issuing public-health agency of Kosovo")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of Kosovo")
@@ -13,10 +13,10 @@ class XKXHealthGuidance {
   content_hash string?
 }
 
-function ExtractXKXHealthGuidance(
+function ExtractKosovoHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> XKXHealthGuidance {  client ExtractEn
+) -> KosovoHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

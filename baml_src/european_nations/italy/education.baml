@@ -1,6 +1,6 @@
 // Italy education extraction BAML schema.
 
-class ITAEducationDocument {
+class ItalyEducationDocument {
   miur_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string @description("The official language of Italy")
@@ -11,10 +11,10 @@ class ITAEducationDocument {
   content_hash string?
 }
 
-function ExtractITAEducationDocument(
+function ExtractItalyEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> ITAEducationDocument {  client ExtractEn
+) -> ItalyEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

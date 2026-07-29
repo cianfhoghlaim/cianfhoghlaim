@@ -18,7 +18,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class IDBSource(NationSource):
+class InterAmericanDevelopmentBankSource(NationSource):
     """Inter-American Development Bank DLT source."""
 
     def __init__(self) -> None:

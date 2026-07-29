@@ -1,6 +1,6 @@
 // CAN education extraction BAML schema.
 
-class CANEducationDocument {
+class CanadaEducationDocument {
   cmec_id string @description("The canonical per-education document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class CANEducationDocument {
   content_hash string?
 }
 
-function ExtractCANEducationDocument(
+function ExtractCanadaEducationDocument(
   country_code: string,
   language: string,
   text: string
-) -> CANEducationDocument {  client ExtractEn
+) -> CanadaEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

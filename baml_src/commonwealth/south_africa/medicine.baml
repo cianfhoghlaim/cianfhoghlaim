@@ -1,6 +1,6 @@
 // South Africa medicine extraction BAML schema.
 
-class ZAFMedicineDocument {
+class SouthAfricaMedicineDocument {
   sahpra_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class ZAFMedicineDocument {
   content_hash string?
 }
 
-function ExtractZAFMedicineDocument(
+function ExtractSouthAfricaMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> ZAFMedicineDocument {  client ExtractEn
+) -> SouthAfricaMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

@@ -35,7 +35,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class MEXGovernmentSource(NationSource):
+class MexicoGovernmentSource(NationSource):
     """Gobierno de México portal DLT source."""
 
     def __init__(self) -> None:
@@ -52,7 +52,7 @@ class MEXGovernmentSource(NationSource):
         )
 
 
-_NATION_SOURCE = MEXGovernmentSource()
+_NATION_SOURCE = MexicoGovernmentSource()
 
 
 @dlt.resource(
@@ -110,7 +110,7 @@ def gob_mx_source(language: str | None = None):
 
 
 __all__ = [
-    "MEXGovernmentSource",
+    "MexicoGovernmentSource",
     "gob_mx",
     "gob_mx_source",
 ]

@@ -1,6 +1,6 @@
 // South Africa law extraction BAML schema.
 
-class ZAFLawDocument {
+class SouthAfricaLawDocument {
   sa_government_gazette_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class ZAFLawDocument {
   content_hash string?
 }
 
-function ExtractZAFLawDocument(
+function ExtractSouthAfricaLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> ZAFLawDocument {  client ExtractEn
+) -> SouthAfricaLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

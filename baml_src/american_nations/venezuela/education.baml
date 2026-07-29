@@ -1,6 +1,6 @@
 // VEN education extraction BAML schema.
 
-class VENEducationDocument {
+class VenezuelaEducationDocument {
   mppeuct_id string @description("The canonical per-education document id")
   jurisdiction string @description("ISO 3166-1 alpha-3 or sub-state slug")
   country_code string? @description("ISO 3166-1 alpha-3 (lowercase)")
@@ -12,10 +12,10 @@ class VENEducationDocument {
   content_hash string?
 }
 
-function ExtractVENEducationDocument(
+function ExtractVenezuelaEducationDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> VENEducationDocument {  client ExtractEn
+) -> VenezuelaEducationDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

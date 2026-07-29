@@ -1,6 +1,6 @@
 // Australia law extraction BAML schema.
 
-class AUSLawDocument {
+class AustraliaLawDocument {
   federal_register_legislation_id string @description("The canonical per-law document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class AUSLawDocument {
   content_hash string?
 }
 
-function ExtractAUSLawDocument(
+function ExtractAustraliaLawDocument(
   country_code: string,
   language: string,
   text: string
-) -> AUSLawDocument {  client ExtractEn
+) -> AustraliaLawDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

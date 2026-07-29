@@ -84,7 +84,7 @@ class CBATask {
   @@stream.done
 }
 
-class JCWellbeingStatement {
+class JuniorCycleWellbeingStatement {
   statement_en string
   statement_ga string?
   indicator string            @description("e.g., 'physical activity', 'mental health', 'citizenship'")
@@ -106,7 +106,7 @@ class JcLearningOutcome {
   strand_unit string?
 }
 
-class JCSubjectSpec {
+class JuniorCycleSubjectSpec {
   subject JuniorCycleSubject
   short_course JuniorCycleShortCourse?  @description("Populated only for short courses")
   specification_year int
@@ -130,8 +130,8 @@ class L2LPOutcome {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractJCSpec(text: string,
-  subject: string) -> JCSubjectSpec {  client ExtractEn
+function ExtractJuniorCycleSpec(text: string,
+  subject: string) -> JuniorCycleSubjectSpec {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }
 
@@ -145,10 +145,10 @@ function ExtractShortCourse(text: string,
 }
 
 
-function ExtractJCSpecFromUrl(
+function ExtractJuniorCycleSpecFromUrl(
   source_url: string,
   subject: JuniorCycleSubject
-) -> JCSubjectSpec {  client ExtractEn
+) -> JuniorCycleSubjectSpec {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }
 

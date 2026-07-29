@@ -1,7 +1,7 @@
 // BIH medicine / public-health extraction BAML schema (EU
 // candidate/neighbour full-depth expansion).
 
-class BIHHealthGuidance {
+class BosniaAndHerzegovinaHealthGuidance {
   agency string @description("The issuing public-health agency of Bosnia and Herzegovina")
   advisory_id string @description("The canonical per-advisory document id")
   language string @description("Official language of Bosnia and Herzegovina")
@@ -13,10 +13,10 @@ class BIHHealthGuidance {
   content_hash string?
 }
 
-function ExtractBIHHealthGuidance(
+function ExtractBosniaAndHerzegovinaHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> BIHHealthGuidance {  client ExtractEn
+) -> BosniaAndHerzegovinaHealthGuidance {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

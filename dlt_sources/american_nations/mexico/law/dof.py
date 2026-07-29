@@ -35,7 +35,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class MEXLawSource(NationSource):
+class MexicoLawSource(NationSource):
     """Diario Oficial de la Federación DLT source."""
 
     def __init__(self) -> None:
@@ -52,7 +52,7 @@ class MEXLawSource(NationSource):
         )
 
 
-_NATION_SOURCE = MEXLawSource()
+_NATION_SOURCE = MexicoLawSource()
 
 
 @dlt.resource(
@@ -110,7 +110,7 @@ def dof_source(language: str | None = None):
 
 
 __all__ = [
-    "MEXLawSource",
+    "MexicoLawSource",
     "dof",
     "dof_source",
 ]

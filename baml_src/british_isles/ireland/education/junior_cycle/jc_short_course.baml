@@ -10,7 +10,7 @@
 //
 // Reference: openspec/changes/2026-07-20-biep-v2-junior-cycle-extraction-v1/
 
-class JCShortCourse {
+class JuniorCycleShortCourse {
   // Course identifiers
   course_slug string         @description("One of the 16 JC_SHORT_COURSES")
   course_code string?        @description("NCCA short-course code, e.g. 'JC-SC-COD'")
@@ -47,9 +47,9 @@ class JCShortCourse {
 // ============================================================================
 // Returns the canonical `JCShortCourse` Pydantic class.
 
-function ExtractJCShortCourse(
+function ExtractJuniorCycleShortCourse(
   pdf_text: string,
   course_slug: string?,
-) -> JCShortCourse {  client ExtractEn
+) -> JuniorCycleShortCourse {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }

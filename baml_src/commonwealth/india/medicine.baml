@@ -1,6 +1,6 @@
 // India medicine extraction BAML schema.
 
-class INDMedicineDocument {
+class IndiaMedicineDocument {
   nmc_id string @description("The canonical per-medicine document id")
   country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
   language string
@@ -11,10 +11,10 @@ class INDMedicineDocument {
   content_hash string?
 }
 
-function ExtractINDMedicineDocument(
+function ExtractIndiaMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> INDMedicineDocument {  client ExtractEn
+) -> IndiaMedicineDocument {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
 }
