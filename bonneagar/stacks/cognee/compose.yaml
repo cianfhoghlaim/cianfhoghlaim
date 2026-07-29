@@ -64,6 +64,15 @@ services:
       # behind Pocket ID SSO on the Pangolin route).
       REQUIRE_AUTHENTICATION: ${REQUIRE_AUTHENTICATION:-false}
       ENABLE_BACKEND_ACCESS_CONTROL: ${ENABLE_BACKEND_ACCESS_CONTROL:-false}
+      # OpenTelemetry → logfire collector (fans out to BOTH logfire cloud AND
+      # langfuse). See spec delta on `agent-observability` for the rationale.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: cognee
+      # Langfuse SDK-side traces (cost + prompt metadata for cognify() LLM calls).
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
     healthcheck:
       # Note: healthcheck runs INSIDE the container on port 8000 (not the
       # host-mapped 8100).

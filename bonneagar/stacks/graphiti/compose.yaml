@@ -43,6 +43,15 @@ services:
       # LLM API key for entity extraction (the LLM provider is the
       # canonical Bolmo / Molmo2 / Qwen3-VL via LiteLLM).
       OPENAI_API_KEY: ${OPENAI_API_KEY:?must be set}
+      # OpenTelemetry → logfire collector (the collector fans out to BOTH
+      # logfire cloud AND langfuse per spec delta on `agent-observability`).
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: graphiti
+      # Langfuse SDK-side traces (cost + prompt metadata).
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
     healthcheck:
       test:
         - CMD
@@ -73,7 +82,10 @@ services:
   # dependency (see bonneagar/komodo/procedures/deploy-graphiti-bunchloch.toml).
   # ---------------------------------------------------------------------------
   falkordb:
-    image: falkordb/falkordb:latest
+    # Pinned 2026-07-30 (was :latest — env-contract-and-observability-fanout-v1).
+    # v1.1.2 = current upstream stable; tracks the v1.1.x release line. Floats
+    # on `latest` risk mutation on rollback (episodes go stale).
+    image: falkordb/falkordb:v1.1.2
     container_name: graphiti-falkordb-local
     restart: unless-stopped
     ports:

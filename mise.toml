@@ -734,6 +734,75 @@ run = "bun run --cwd bonneagar iac:plan ${@:-}"
 description = "IaC health check: verify Komodo + Pangolin + Infisical state is consistent"
 run = "bun run --cwd bonneagar iac:health ${@:-}"
 
+# -----------------------------------------------------------------------------
+# Colon-name aliases for the hyphenated IaC tasks (so docs that say
+# `mise run iac:bootstrap` and `mise run preflight:arm-oci` work too).
+# -----------------------------------------------------------------------------
+
+[tasks."iac:bootstrap"]
+description = "Alias for iac-bootstrap (docs use the colon form)"
+run = "mise run iac-bootstrap ${@:-}"
+
+[tasks."iac:plan"]
+description = "Alias for iac-plan (docs use the colon form)"
+run = "mise run iac-plan ${@:-}"
+
+[tasks."iac:health"]
+description = "Alias for iac-health (docs use the colon form)"
+run = "mise run iac-health ${@:-}"
+
+[tasks."iac:deploy"]
+description = "Deploy the 30 key stacks end-to-end (alias for bun run --cwd bonneagar iac:deploy)"
+run = "bun run --cwd bonneagar iac:deploy ${@:-}"
+
+[tasks."iac:teardown"]
+description = "Reverse of iac:bootstrap (requires --force)"
+run = "bun run --cwd bonneagar iac:teardown ${@:-}"
+
+[tasks."preflight:arm-oci"]
+description = "Alias for preflight-arm-oci (docs use the colon form)"
+run = "mise run preflight-arm-oci ${@:-}"
+
+[tasks."dagster:oideachais"]
+description = "Alias for dagster:dev (the historical code-location name)"
+run = "mise run dagster:dev ${@:-}"
+
+[tasks."validate-stacks"]
+description = "Validate all 89 stacks against the 6-file GOLD_STANDARD (alias for cic:stack-doctor)"
+run = "mise run cic:stack-doctor ${@:-}"
+
+[tasks."baml:cli-test"]
+description = "Hard BAML test gate (alias for baml:test)"
+run = "mise run baml:test ${@:-}"
+
+[tasks."notebook:list"]
+description = "List all 105 active marimo notebooks"
+run = "uv run python notebooks/cli.py list 2>/dev/null || echo 'notebooks/cli.py broken — see notebooks/README.md'"
+
+[tasks."notebook:smoke"]
+description = "Smoke-test the canonical nb_utils helpers"
+run = "uv run python -c \"from notebooks.nb_utils import connect_biep_lakehouse, BIEP_SUBJECTS, lc_subject_query; print('OK:', len(BIEP_SUBJECTS), 'BIEP subjects,', lc_subject_query.__name__, 'ready')\""
+
+[tasks."motherduck:list-dives"]
+description = "List all 53 MotherDuck Dives"
+run = "uv run python -c \"from motherduck import BIEP_DIVES; [print(' -', d.name) for d in BIEP_DIVES]; print('BIEP v1: ', len(BIEP_DIVES), 'dives')\""
+
+[tasks."motherduck:list-flights"]
+description = "List all BIEP v3 Flights from flights/config.yaml"
+run = "uv run python -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
+
+[tasks."drift-audit"]
+description = "Audit for pre-v7 path drift across all subdirectories"
+run = """
+echo "=== Pre-v7 path drift audit ==="
+for pattern in 'cianfhoghlaim/dlt/' 'cianfhoghlaim/baml/' 'infrastructure/stacks/' 'infrastructure/komodo/' 'sruth/cianfhoghlaim/'; do
+  count=$(grep -rE "$pattern" . --include='*.md' --include='*.py' --include='*.ts' --include='*.toml' --include='*.yaml' --include='*.baml' 2>/dev/null | grep -v node_modules | grep -v .venv | grep -v .turbo | grep -v __pycache__ | wc -l)
+  echo "$pattern: $count occurrences"
+done
+echo "=== v7 flat 'cianfhoghlaim.X.Y' in Python imports (should be 0 outside docs) ==="
+grep -rE "from cianfhoghlaim\\.[a-z]+\\." --include='*.py' . 2>/dev/null | grep -v node_modules | grep -v .venv | grep -v .cocoindex_code | grep -v __pycache__ | wc -l
+"""
+
 # =============================================================================
 # Codebase indexing (ccc / cocoindex-code) and OpenSpec
 # =============================================================================
@@ -991,6 +1060,10 @@ run = "bun run scripts/cianfhoghlaim-cli.ts stack rollback ${@}"
 [tasks."cianfhoghlaim:secrets:lint"]
 description = "Lint secrets.env references against the Infisical vault (no reads)"
 run = "bun run scripts/cianfhoghlaim-cli.ts secrets lint ${@}"
+
+[tasks."stack-doctor:strict"]
+description = "CI gate: stack-doctor --strict + --check-grammar (fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env)"
+run = "bash scripts/stack-doctor.sh --strict --check-grammar"
 
 [tasks."cianfhoghlaim:secrets:verify"]
 description = "Verify secrets.env references resolve (no values printed)"

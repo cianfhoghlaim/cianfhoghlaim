@@ -1,15 +1,29 @@
 # OpenTelemetry Collector configuration for the Logfire stack.
 # ----------------------------------------------------------------------------
 # Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP),
-# batches them, and forwards to Logfire cloud via the logfire exporter.
+# batches them, and forwards to BOTH backends via a fan-out exporter:
 #
-# The logfire exporter is part of opentelemetry-collector-contrib
-# (https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/logfireexporter).
-# It uses HTTP/2 with the project URL + token from environment.
+#   1. Logfire cloud   (SaaS — https://logfire.pydantic.dev)  via logfire exporter + LOGFIRE_TOKEN
+#   2. Langfuse         (self-hosted — langfuse-web:3000)      via otlphttp exporter + LANGFUSE_PUBLIC_KEY/SECRET_KEY
 #
-# Note: when LOGFIRE_TOKEN is empty, the exporter fails per OTEL convention
-# (no silent data loss; matches the SaaS-only graceful-degradation in
-# sruth/oideachais/observability/logfire_config.py).
+# Per spec delta openspec/changes/2026-07-30-env-contract-and-observability-fanout-v1/
+# specs/agent-observability/spec.md Requirement "Logfire collector fan-out to
+# Langfuse + Logfire": every trace MUST reach both backends so the agent
+# fleet and the data-plane fleet share a single observability surface.
+#
+# The langfuse exporter is configured with the HTTP/OTLP endpoint
+# http://langfuse-web:3000/api/public/otel (the langfuse v3 OTel/HTTP
+# ingestion endpoint). Headers carry basic auth
+# (base64-encoded LANGFUSE_PUBLIC_KEY:LANGFUSE_SECRET_KEY).
+#
+# Note: when LOGFIRE_TOKEN is empty, the logfire exporter fails per OTEL
+# convention (no silent data loss). When LANGFUSE_PUBLIC_KEY / SECRET_KEY
+# are empty, the langfuse exporter logs a warning and drops traces (the
+# collector still forwards to logfire).
+#
+# Updated 2026-07-30:
+#   - Added `langfuse` exporter (otlphttp → langfuse-web:3000/api/public/otel)
+#   - Added to the `traces` pipeline as a fan-out (exporters list = [logfire, langfuse, debug])
 
 receivers:
   otlp:
@@ -41,6 +55,14 @@ exporters:
   # Logfire cloud (SaaS) — requires LOGFIRE_TOKEN env var.
   logfire:
     timeout: 30s
+  # Langfuse self-hosted — forwards via OTLP/HTTP to langfuse-web:3000/api/public/otel.
+  # Requires LANGFUSE_PUBLIC_KEY + LANGFUSE_SECRET_KEY env vars; if empty,
+  # the exporter logs a warning and drops traces (collector still forwards to logfire).
+  otlphttp/langfuse:
+    endpoint: http://langfuse-web:3000/api/public/otel
+    timeout: 30s
+    headers:
+      Authorization: "Basic ${env:LANGFUSE_AUTH_HEADER}"
   # Local debug logging so we can see OTEL pipeline activity.
   debug:
     verbosity: basic
@@ -61,7 +83,8 @@ service:
     traces:
       receivers: [otlp]
       processors: [memory_limiter, resource/logfire_metadata, batch]
-      exporters: [logfire, debug]
+      # Fan-out: every trace goes to BOTH logfire cloud AND langfuse.
+      exporters: [logfire, otlphttp/langfuse, debug]
   telemetry:
     metrics:
       address: 0.0.0.0:8889

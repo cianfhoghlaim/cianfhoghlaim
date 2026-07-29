@@ -31,11 +31,13 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 STRICT=0
 EMIT_MD=""
 JSON_MODE=0
+CHECK_GRAMMAR=0
 shift_next=0
 for arg in "$@"; do
   case "$arg" in
     --strict) STRICT=1 ;;
     --json)   JSON_MODE=1 ;;
+    --check-grammar) CHECK_GRAMMAR=1 ;;
     --emit-md)
       shift_next=1
       ;;
@@ -139,6 +141,40 @@ for stack in "$REPO_ROOT/$STACKS_DIR"/*/; do
   [ -d "$stack" ] || continue
   audit_stack "$stack"
 done
+
+# ----------------------------------------------------------------------------
+# Grammar check (--check-grammar): flag any secrets.env that mixes bare + Jinja
+# ----------------------------------------------------------------------------
+GRAMMAR_FILE="$(mktemp)"
+trap 'rm -f "$CRITICALS_FILE" "$WARNINGS_FILE" "$INFOS_FILE" "$DOCS_MISSING_FILE" "$GRAMMAR_FILE"' EXIT
+
+if [ "$CHECK_GRAMMAR" = "1" ]; then
+  for stack in "$REPO_ROOT/$STACKS_DIR"/*/; do
+    [ -d "$stack" ] || continue
+    [ -f "$stack/secrets.env" ] || continue
+    stack_name=$(basename "$stack")
+    # Count bare-form lines (infisical://dev-baile/<svc>/<key>) — outside of
+    # comments or Jinja braces. Pattern requires the bare infisical:// prefix.
+    bare_count=$(grep -cE '^[[:space:]]*[^#[:space:]][^=]*=infisical://dev-baile/' "$stack/secrets.env" 2>/dev/null | tr -d ' ')
+    bare_count=${bare_count:-0}
+    # Count Jinja-wrapped lines: KEY={{ infisical:///... }}
+    jinja_count=$(grep -cE '^[[:space:]]*[^#[:space:]][^=]*=\{\{[[:space:]]*infisical:' "$stack/secrets.env" 2>/dev/null | tr -d ' ')
+    jinja_count=${jinja_count:-0}
+    # Mixed if both > 0
+    if [ "$bare_count" -gt 0 ] && [ "$jinja_count" -gt 0 ]; then
+      echo "$stack_name: MIXED-GRAMMAR (bare=$bare_count jinja=$jinja_count)" >> "$GRAMMAR_FILE"
+    fi
+  done
+  grammar_count=$(wc -l < "$GRAMMAR_FILE" | tr -d ' ')
+  if [ "$grammar_count" -gt 0 ]; then
+    cat "$GRAMMAR_FILE" >> "$WARNINGS_FILE"
+    echo ""
+    echo "## GRAMMAR (CI gate --check-grammar)"
+    echo ""
+    cat "$GRAMMAR_FILE"
+    echo ""
+  fi
+fi
 
 # ----------------------------------------------------------------------------
 # Per-stack doc check

@@ -63,9 +63,9 @@ services:
       # Langfuse Observability
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-dev}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-sk-lf-dev}
-      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       # Logfire (OTel collector for self-hosted trace sink)
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire:4317}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
       # LanceDB (the lakehouse-lance-namespace REST adapter)
       LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
     volumes:
