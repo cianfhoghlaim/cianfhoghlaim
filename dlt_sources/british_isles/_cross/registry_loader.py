@@ -39,15 +39,27 @@ logger = logging.getLogger(__name__)
 def load_ireland_subjects() -> list[SubjectRegistryRow]:
     """Load the 64 Ireland Leaving Cert + 18 JC + 16 short courses + 36 CBAs.
 
-    Sourced from `dlt/british_isles/ireland/education/_shared/education_level.baml`
+    Sourced from `dlt_sources/british_isles/ireland/education/_shared/education_level.baml`
     (the canonical 64-value `LeavingCertSubject` enum) and the
     `JC_SUBJECTS` + `JC_SHORT_COURSES` lists in
-    `dlt/british_isles/ireland/education/junior_cycle.py`.
+    `dlt_sources/british_isles/ireland/education/junior_cycle.py`.
 
-    Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change, this
-    loader returns the FULL 134+ row seed (64 LC × 3 levels × 2 langs +
-    18 JC × 3 years × 2 langs + 16 short courses + 36 CBAs).
+    Per the 2026-07-28-biep-v3-ireland-full-coverage-v1 change + the
+    2026-08-10-biep-v3-preflight-bug-fixes-v1 inheritance refactor,
+    this loader returns the FULL **544** Ireland row seed:
+
+      - 64 LC subjects × 3 qualification levels × 2 languages = 384 cohorts
+      - 18 JC subjects × 3 years × 2 languages = 108 cohorts
+      - 16 JC short courses × 1 level × 1 language = 16 cohorts
+      - 36 JC CBAs × 1 year × 1 language = 36 cohorts
+      - = **544 total cohorts**.
+
+    (Historical note: the original proposal/spec claimed "134+ rows"
+    using a partial 4-subject LC baseline; the full seed was expanded
+    to 544 by the 2026-08-10 preflight change. This docstring is the
+    canonical source of truth.)
     """
+    # Ireland cohorts: 384 LC + 108 JC + 16 short courses + 36 CBAs = 544 total
     rows: list[SubjectRegistryRow] = []
 
     # Canonical 64 Ireland LC subjects (from education_level.baml)

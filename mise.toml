@@ -867,24 +867,26 @@ description = "Run the upstream_api_surface v1 CocoIndex App (walks 5 cocoindex 
 run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.upstream_api_surface:UpstreamApiSurface"
 
 [tasks."baml:generate"]
-description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
+description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file). Post-v7 the baml_src/ directory is canonical; the symlink guard was removed because baml_src/ always exists."
 run = """
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-if [ ! -e "$ROOT_DIR/baml_src" ]; then
-  ln -s baml "$ROOT_DIR/baml_src"
-fi
 cd "$ROOT_DIR"
+if [ ! -e "$ROOT_DIR/baml_src/baml.toml" ]; then
+  echo "ERROR: $ROOT_DIR/baml_src/baml.toml not found — are you in the cianfhoghlaim repo root?" >&2
+  exit 1
+fi
 uv run baml-cli generate --from baml_src
 """
 
 [tasks."baml:test"]
-description = "Run BAML test blocks with baml-cli (hard CI gate)"
+description = "Run BAML test blocks with baml-cli (hard CI gate). Post-v7 the baml_src/ directory is canonical; the symlink guard was removed because baml_src/ always exists."
 run = """
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-if [ ! -e "$ROOT_DIR/baml_src" ]; then
-  ln -s baml "$ROOT_DIR/baml_src"
-fi
 cd "$ROOT_DIR"
+if [ ! -e "$ROOT_DIR/baml_src/baml.toml" ]; then
+  echo "ERROR: $ROOT_DIR/baml_src/baml.toml not found — are you in the cianfhoghlaim repo root?" >&2
+  exit 1
+fi
 uv run baml-cli test --from baml_src
 """
 
