@@ -149,7 +149,7 @@ class CelticAgentOpsComponent(Component):
         def _agent_routing(
             asset_context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
-            from cianfhoghlaim.agents import ROUTING_KEYWORDS
+            from agents.routing_keywords import ROUTING_KEYWORDS
 
             bucket = ROUTING_KEYWORDS.get(self.agent_name, [])
             missing = [kw for kw in self.routing_keywords if kw not in bucket]
@@ -297,7 +297,7 @@ class CelticAgentOpsComponent(Component):
         if not self.routing_keywords:
             return
         try:
-            from cianfhoghlaim.agents import ROUTING_KEYWORDS
+            from agents.routing_keywords import ROUTING_KEYWORDS
 
             existing = list(ROUTING_KEYWORDS.get(self.agent_name, []))
             merged = list(dict.fromkeys(existing + self.routing_keywords))

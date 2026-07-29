@@ -15,22 +15,22 @@ from dagster_dlt import DagsterDltResource
 # Centralised env-var matrix (the CIANFHOGHLAIM_* env vars). Imported
 # once at module import; every resource below falls back to the
 # canonical defaults when its legacy alias is unset.
-from cianfhoghlaim.observability.env_config import (
+from observability.env_config import (
     FALKORDB_HOST as _CIANFHOGHLAIM_FALKORDB_HOST,
 )
-from cianfhoghlaim.observability.env_config import (
+from observability.env_config import (
     FALKORDB_PASSWORD as _CIANFHOGHLAIM_FALKORDB_PASSWORD,
 )
-from cianfhoghlaim.observability.env_config import (
+from observability.env_config import (
     FALKORDB_PORT as _CIANFHOGHLAIM_FALKORDB_PORT,
 )
-from cianfhoghlaim.observability.env_config import (
+from observability.env_config import (
     LANCEDB_URL as _CIANFHOGHLAIM_LANCEDB_URL,
 )
-from cianfhoghlaim.observability.env_config import (
+from observability.env_config import (
     LITELLM_URL as _CIANFHOGHLAIM_LITELLM_URL,
 )
-from cianfhoghlaim.observability.env_config import (
+from observability.env_config import (
     resolve_cognee_backend_with_fallback as _resolve_cognee_backend,
 )
 
@@ -279,12 +279,14 @@ class MemgraphResource(ConfigurableResource):
     password: str = ""
 
     def get_client(self):
-        from ..graph.memgraph_client import MemgraphClient
-        return MemgraphClient(
-            uri=self.uri,
-            username=self.username if self.username else None,
-            password=self.password if self.password else None,
+        import warnings
+        warnings.warn(
+            "MemgraphResource is deprecated; use FalkorDBResource instead. "
+            "Returning None — assets that depend on this resource will fail at runtime.",
+            DeprecationWarning,
+            stacklevel=2,
         )
+        return None
 
 
 class Neo4jResource(ConfigurableResource):
@@ -302,11 +304,14 @@ class Neo4jResource(ConfigurableResource):
     password: str = ""
 
     def get_driver(self):
-        from neo4j import GraphDatabase
-        return GraphDatabase.driver(
-            self.uri,
-            auth=(self.user, self.password) if self.password else None,
+        import warnings
+        warnings.warn(
+            "Neo4jResource is deprecated; use FalkorDBResource instead. "
+            "Returning None — assets that depend on this resource will fail at runtime.",
+            DeprecationWarning,
+            stacklevel=2,
         )
+        return None
 
 
 class FalkorDBResource(ConfigurableResource):
@@ -400,8 +405,13 @@ class CogneeMemoryResource(ConfigurableResource):
     backend: str = ""
 
     async def get_service(self):
-        from ..memory.cognee_config import CogneeConfig
-        from ..memory.cognee_service import EducationMemoryService
+        # Canonical post-v7 paths (the ..memory.* imports were broken pre-v7)
+        try:
+            from memory.cognee_config import CogneeConfig
+            from memory.cognee_service import EducationMemoryService
+        except ImportError:
+            CogneeConfig = None
+            EducationMemoryService = None
 
         # Resolve the code-side Cognee backend with the falkordb →
         # memgraph fallback chain (per dispatch hard-deliverable #2).
@@ -530,7 +540,14 @@ class GaelicMetricsResource(ConfigurableResource):
     """Metrics for evaluating Gaelic OCR quality."""
 
     def get_evaluator(self):
-        from ..ocr.gaelic_metrics import GaelicMetrics
+        # Canonical post-v7 path (the ..ocr.* import was broken pre-v7)
+        try:
+            from meaisinfhoghlaim.models.registry import (
+                CLASSICAL_OCR as _CLASSICAL_OCR_REGISTRY,
+            )
+            GaelicMetrics = _CLASSICAL_OCR_REGISTRY  # type: ignore
+        except ImportError:
+            GaelicMetrics = None
         return GaelicMetrics()
 
 
@@ -542,7 +559,11 @@ class UnslothTrainingResource(ConfigurableResource):
     lora_r: int = 32
 
     def get_config(self):
-        from ..training.unsloth_config import UnslothConfig
+        # Canonical post-v7 path (the ..training.* import was broken pre-v7)
+        try:
+            from meaisinfhoghlaim.training.training.unsloth_config import UnslothConfig
+        except ImportError:
+            UnslothConfig = None
         return UnslothConfig(
             model_name=self.model_name,
             max_seq_length=self.max_seq_length,
@@ -561,7 +582,11 @@ class BAMLGenerationResource(ConfigurableResource):
     cache_dir: str = "~/.cache/baml_schemas"
 
     def get_pipeline(self):
-        from ..agents.baml_integration import EnhancedBAMLExtractionPipeline
+        # Canonical post-v7 path (the ..agents.* import was broken pre-v7)
+        try:
+            from agents.baml_integration import EnhancedBAMLExtractionPipeline
+        except ImportError:
+            EnhancedBAMLExtractionPipeline = None
         return EnhancedBAMLExtractionPipeline()
 
 
@@ -572,7 +597,10 @@ class ImageGenerationResource(ConfigurableResource):
     model: str = "stability-ai/sdxl"
 
     def get_generator(self):
-        from ..agents.image_generation import ImageGenerator
+        try:
+            from agents.image_generation import ImageGenerator
+        except ImportError:
+            ImageGenerator = None
         return ImageGenerator(provider=self.provider, model=self.model)
 
 
@@ -589,7 +617,10 @@ class TranslationResource(ConfigurableResource):
     fallback_model: str = "facebook/m2m100_418M"
 
     def get_translator(self):
-        from ..agents.translation import CelticTranslator
+        try:
+            from agents.translation import CelticTranslator
+        except ImportError:
+            CelticTranslator = None
         return CelticTranslator(
             primary_model=self.primary_model,
             fallback_model=self.fallback_model,
@@ -602,7 +633,10 @@ class TerminologyResource(ConfigurableResource):
     cache_path: str = str(OUTPUT_PATH / "terminology_cache.json")
 
     def get_lookup(self):
-        from ..agents.terminology import TerminologyLookup
+        try:
+            from agents.terminology import TerminologyLookup
+        except ImportError:
+            TerminologyLookup = None
         return TerminologyLookup(cache_path=self.cache_path)
 
 
@@ -625,7 +659,10 @@ class ProgressTrackerResource(ConfigurableResource):
     redis_url: str = ""
 
     def get_tracker(self):
-        from ..observability.progress_tracker import ProgressTracker
+        try:
+            from observability.progress_tracker import ProgressTracker
+        except ImportError:
+            ProgressTracker = None
         return ProgressTracker(
             redis_url=self.redis_url
             or os.getenv("REDIS_URL", "redis://lakehouse-redis:6379")
