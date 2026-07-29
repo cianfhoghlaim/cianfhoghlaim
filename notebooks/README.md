@@ -1,6 +1,6 @@
 # `notebooks/` — Marimo dashboards for the BIEP lakehouse
 
-> **The 101 active marimo notebooks for the British-Isles Education Pipeline (BIEP). Each notebook is a reactive dashboard AND a standalone CLI script (dual-mode).**
+> **The 107 active marimo notebooks for the British-Isles Education Pipeline (BIEP). Each notebook is a reactive dashboard AND a standalone CLI script (dual-mode).**
 >
 > Post-v7 flattening (2026-07-17) the canonical layout is **flat-numbered** — `notebooks/<NN>_<topic>_<NN>_<slug>.py` files at the repo root, not the 11-group subdirectory layout that older docs describe.
 
@@ -12,6 +12,10 @@ uv run marimo edit notebooks/01_overview_setup.py
 
 # CLI — invoke from any cwd (the notebook's @__main__ guard detects <flags>)
 uv run notebooks/01_overview_setup.py --query "Dagster asset"
+
+# The 5-tab deployment control panel (Models / Pipelines / Datasets / Stacks / Registry)
+mise run notebook:control-panel
+# or: marimo edit notebooks/00_control_panel.py
 
 # Discover + run via the CLI wrapper
 uv run python notebooks/cli.py list
@@ -29,6 +33,8 @@ notebooks/
 ├── __marimo__/                  # Marimo session cache (auto-generated)
 ├── _shared/                     # Canonical helpers (see "Canonical helpers" below)
 │   ├── db.py                    # ibis-first lakehouse connection helpers
+│   ├── schema.py                # 5 lakehouse introspection helpers (NEW 2026-08-15)
+│   ├── deployment_choice.py     # atomic read/write of deployment-choice.yaml (NEW)
 │   ├── area_shims/              # Per-area shims (leaving_cert.py for BIEP v3 dashboards)
 │   └── ...
 ├── analysis_plan/               # 5 markdown files (aistear / primary / junior_cycle / senior_cycle / tertiary)
@@ -37,6 +43,7 @@ notebooks/
 ├── nb_utils.py                  # The legacy canonical helper module (re-exports from _shared/db.py)
 ├── cli.py                       # The `notebooks` CLI wrapper (list + run + edit + dashboard subcommands)
 │
+├── 00_control_panel.py                                            # NEW 2026-08-15: the 5-tab deployment control panel
 ├── 01_overview_setup.py                                              # BIEP overview + setup
 ├── 02_education_overview.py                                          # Education overview
 ├── 05_england_aqa_ocr_edexcel.py                                     # England AQA / OCR / Edexcel OCR comparison
@@ -134,17 +141,18 @@ notebooks/
 
 | Prefix | Group | Count |
 |:--|:--|--:|
+| `00_` | **Deployment control panel** (NEW 2026-08-15: the 5-tab marimo control panel reading `MODEL_REGISTRY` + `notebooks/_shared/schema.py` + writing `deployment-choice.yaml`) | 1 |
 | `01_` | Overview + setup | 1 |
 | `02_` | Education overview | 1 |
 | `05_` | England AQA / OCR / Edexcel OCR comparison | 1 |
 | `06_celtic_languages_` | Celtic-language corpus (Gaois / Dúchas / Heritage / Canúint / UD / Local / Curriculum) | 8 |
 | `07_` | Junior Cycle Ireland | 1 |
 | `08_` | OCR ensemble audit | 1 |
-| `10_biep_pipeline_lakehouse_` | BIEP lakehouse (curriculum_educator / ducklake_explorer / knowledge_graph / lakehouse_inspector / syllabus_visualizer / all_nations / dlt_pipeline_overview / cocoindex_embedding_coverage / university_courses / marking_scheme_analyzer / exam_papers_explorer / subject_full_pipeline / leabharlann_full_stack_demo / pipeline_e2e_test / leabharlann_descriptive / dpre_lag_analysis / semantic_search) | 17 |
+| `10_biep_pipeline_lakehouse_` | BIEP lakehouse (curriculum_educator / ducklake_explorer / knowledge_graph / lakehouse_inspector / syllabus_visualizer / all_nations / dlt_pipeline_overview / cocoindex_embedding_coverage / university_courses / marking_scheme_analyzer / exam_papers_explorer / subject_full_pipeline / leabharlann_full_stack_demo / pipeline_e2e_test / leabharlarn_descriptive / dpre_lag_analysis / semantic_search) | 17 |
 | `11_irish_law_` | Irish law (personal_injury / courts / WRC / citizensinformation / gov_ie_legal / unified_cross_source) | 6 |
 | `12_corpus_overview_` | Corpus overview (BIEP / Leabharlann / Cognee / embedding_coverage / BAML_extraction_log / university_matrix / QQI_NFQ / Gaeilge_coverage / CocoIndex_v1_conformance / ... + 1 shared) | 21 |
 | `13_official_media_` | Official media (official_media / email_inbox_triage / post_trends / mention_network / fediverse_coverage / cross_archive / moderation_sentiment) | 7 |
-| `14_dev_env_tools_` | Dev-env tools (ccc_search / drift_detect / firecrawl_refactor / hf_best_model / openspec_list / mise_lint_skills) | 6 |
+| `14_dev_env_tools_` | Dev-env tools (ccc_search / drift_detect / firecrawl_refactor / hf_best_model / openspec_list / mise_lint_skills / model_registry) | 7 |
 | `15_observability_` | Observability (BAML_drift_audit / Irish_extraction_quality / Cognee_KG) | 3 |
 | `16_speedrun_mmo_` | SpeedRunEthereum challenges (12 numbered + 1 shared) | 12 |
 | `17_academic_history_` | Academic history (UoG maths + module map + Stats labs) | 9 |
@@ -157,7 +165,7 @@ notebooks/
 | `40_` | LC subject panel (the canonical 6-subject dashboard) | 1 |
 | `ie_law_explorer.py` | Pre-numbering legacy (Irish Law standalone) | 1 |
 
-**Total**: 101 active notebooks.
+**Total**: 107 active notebooks.
 
 ## Dual-mode pattern (`@app.cell` + `if __name__ == "__main__":`)
 
@@ -191,6 +199,26 @@ from notebooks._shared.db import (
 )
 ```
 
+`_shared/schema.py` (NEW 2026-08-15) is the canonical **lakehouse introspection** home — 5 helpers that walk the BIEP + LanceDB + BAML surface:
+
+```python
+from notebooks._shared.schema import (
+    schema_introspect,               # every BIEP DuckDB table + column metadata
+    schema_introspect_table,         # the canonical column metadata for any table
+    schema_introspect_full,          # DuckDB + LanceDB + BAML union (Tab 3 in 00_control_panel)
+    list_dlt_sources,                # all 920 @dlt.source decorated functions + their primary keys
+    list_cocoindex_apps,             # all 94+ CocoIndex Apps + their LanceDB mount targets
+    list_baml_classes,               # all 838 BAML class definitions + their parent files
+    read_deployment_choice,          # read deployment-choice.yaml (atomic + fcntl.flock)
+    write_deployment_choice,         # write deployment-choice.yaml (atomic + fcntl.flock)
+    deployment_choice_path,          # canonical path to deployment-choice.yaml
+)
+```
+
+`_shared/deployment_choice.py` (NEW 2026-08-15) is the atomic write layer for `deployment-choice.yaml` — the canonical enablement file consumed by the 00_control_panel notebook, the web UI, and the CLI.
+
+`_shared/db.py` + `_shared/schema.py` + `_shared/deployment_choice.py` are the three canonical helpers. Every notebook in this directory uses one or more of these.
+
 `nb_utils.py` (269 lines) is the legacy module that re-exports from `_shared/db.py` + adds the BIEP-specific helpers:
 
 ```python
@@ -210,6 +238,24 @@ from notebooks.nb_utils import (
 ```
 
 > **Historical note**: The README used to claim `from cianfhoghlaim.notebooks import ...` for these helpers. Post-v7, the canonical import is `from notebooks._shared.db import ...` or `from notebooks.nb_utils import ...`. The pre-v7 path would fail with `ModuleNotFoundError`.
+
+## Deployment choice + the control panel
+
+`deployment-choice.yaml` (repo root) is the **canonical enablement file** — every model, pipeline, dataset, and stack is recorded here as `enabled_<key>: bool`. It is read and written by 3 surfaces:
+
+1. **`notebooks/00_control_panel.py`** — the 5-tab marimo notebook (Models / Pipelines / Datasets / Stacks / Registry).
+2. **The web UI** (deferred to issue #143) — at `web/apps/cianfhoghlaim-web/control-panel/` (planned).
+3. **The CLI** — `bun run cianfhoghlaim models list` / `models enable <key>` / `pipelines list` / etc.
+
+Open the control panel:
+
+```bash
+mise run notebook:control-panel
+# or
+marimo edit notebooks/00_control_panel.py
+```
+
+The control panel reads from `MODEL_REGISTRY` (52 entries / 7 families) + `notebooks/_shared/schema.py` introspection helpers, and writes the toggle state back to `deployment-choice.yaml` (atomic + `fcntl.flock`).
 
 ## BIEP canonical constants
 

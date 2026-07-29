@@ -8,11 +8,15 @@
 
 Demonstrates `openspec_list_specs` from
 `cianfhoghlaim.agents.adk.tools.dev_env` — lists all openspec
-capability specs (currently 37), filterable by quadrant.
+capability specs (currently 75, including the 3 new post-2026-08-15
+specs: centralized-model-registry, centralized-schema-registry,
+deployment-control-panel), filterable by quadrant.
 
 See also:
 - `openspec/AGENTS.md`
+- `openspec/changes/archive/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/`
 - `.agents/skills/indexing-and-cognition/SKILL.md`
+- `.agents/skills/centralized-registry/SKILL.md`
 """
 
 import marimo

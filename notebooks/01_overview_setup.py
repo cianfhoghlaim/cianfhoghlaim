@@ -14,6 +14,8 @@ tutorial (per `openspec/specs/end-to-end-llm-zoomcamp-style-tutorial/spec.md`).
 The table of contents:
 
 - **Step 0**: dev env setup + `nb_utils` tour (this notebook)
+- **Step 0.4**: the centralized registries (NEW 2026-08-15: MODEL_REGISTRY +
+  schema introspection + deployment-choice.yaml + 00_control_panel)
 - **Step 0.5**: the BAML+CocoIndex tutorial track (5 notebooks at
   `notebooks/13_baml_cocoindex_tutorial/`)
 - **Step 1**: vision models (notebook `02_vision_models/`)
@@ -117,7 +119,68 @@ def _step_0(mo):
     ```bash
     uv run cianfhoghlaim-marimo edit 01_ccc_search
     uv run cianfhoghlaim-marimo run  02_drift_detect -- --help
+    """
+    )
+    return
+
+
+@app.cell
+def _centralized_registries(mo):
+    """Step 0 cell: show the new centralized registries (2026-08-15).
+
+    Adds a "centralized registries" pointer between Step 0 (env setup)
+    and Step 0.5 (the BAML+CocoIndex tutorial track). The 4 canonical
+    artifacts are surfaced so a new operator knows where to look.
+    """
+    mo.md(
+        """
+    ## Step 0.4: the centralized registries (NEW 2026-08-15)
+
+    The platform now has a single source of truth for every model,
+    schema, pipeline, and stack. Four canonical artifacts:
+
+    1. **`MODEL_REGISTRY`** (`meaisinfhoghlaim/models/model_registry.py`)
+       — 52 entries across 7 families (ocr_vision / text_llm /
+       embedder / rerank / image_gen / voice / translation). Resolve
+       via `model_for(family, role, language)` or `filter_models(family)`.
+
+    2. **`schema` introspection** (`notebooks/_shared/schema.py`)
+       — 5 helpers: `schema_introspect`, `schema_introspect_table`,
+       `schema_introspect_full`, `list_dlt_sources` (1963),
+       `list_cocoindex_apps` (~53), `list_baml_classes` (838).
+
+    3. **`deployment-choice.yaml`** (repo root)
+       — the canonical enablement file. Read/written by the notebook +
+       web UI + CLI. 50 enabled models + 28 enabled pipelines + 8 enabled
+       stacks + the dataset + monitoring sections.
+
+    4. **`notebooks/00_control_panel.py`** — the 5-tab marimo control
+       panel (Models / Pipelines / Datasets / Stacks / Registry).
+
+    **Open the control panel:**
+
+    ```bash
+    mise run notebook:control-panel
+    # or: marimo edit notebooks/00_control_panel.py
     ```
+
+    **Audit drift:**
+
+    ```bash
+    mise run lint:registry
+    # Expected: "Found 0 hardcoded model strings in audited files"
+    ```
+
+    **Resolve a model in Python:**
+
+    ```python
+    from meaisinfhoghlaim.models import model_for
+    default = model_for("text_llm", "default")           # → "minimax-m3"
+    irish  = model_for("text_llm", "irish", language="ga")
+    embed  = model_for("embedder", "default")            # → "BAAI/bge-m3"
+    ```
+
+    Reference: openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/
     """
     )
     return
@@ -297,8 +360,9 @@ def _cli_main(argv=None) -> int:
         help="0 = full overview; 1..4 = jump to that step (default: 0)",
     )
     args = parser.parse_args(argv)
-    print("[01_overview_setup] Welcome + Step 0 + Step 0.5 + Steps 1-4")
+    print("[01_overview_setup] Welcome + Step 0 + Step 0.4 + Step 0.5 + Steps 1-4")
     print(f"  Section: {args.section} (0 = full)")
+    print("  Step 0.4: 4 canonical centralized registries (MODEL_REGISTRY + schema.py + deployment-choice.yaml + 00_control_panel)")
     print("  Step 0.5: 5-notebook BAML+CocoIndex tutorial track")
     print("  Run: uv run cianfhoghlaim-marimo edit 01_overview_setup")
     return 0

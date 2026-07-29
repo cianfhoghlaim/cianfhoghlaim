@@ -12,9 +12,17 @@ Demonstrates `drift_detect` from
 in `pyproject.toml` against the latest PyPI release for a curated list
 of packages known to drift frequently in the Cianfhoghlaim stack.
 
+Also includes the centralized registry drift check (post-2026-08-15):
+`scripts/registry_audit.py` detects hardcoded model strings in
+`agents/`, `baml_src/`, `notebooks/`, `web/`, `orchestration/`,
+`spaces/` that bypass the `MODEL_REGISTRY`. Run via
+`mise run lint:registry` (or here, via the dev_env drift cell).
+
 See also:
 - `openspec/changes/2026-07-04-dev-env-setup-latest-packages-and-wire-25-notebooks/`
+- `openspec/changes/archive/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/`
 - `.agents/skills/change-detection/SKILL.md`
+- `.agents/skills/centralized-registry/SKILL.md`
 """
 
 import marimo

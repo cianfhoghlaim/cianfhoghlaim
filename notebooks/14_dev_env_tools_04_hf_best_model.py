@@ -11,9 +11,18 @@ Demonstrates `hf_best_model` from
 `cianfhoghlaim.agents.adk.tools.dev_env` — recommends the best
 HuggingFace Hub model for a task + hardware constraint + benchmark.
 
+Post-2026-08-15, this notebook also cross-references the centralized
+`MODEL_REGISTRY` (52 entries across 7 families at
+`meaisinfhoghlaim/models/model_registry.py`). When the recommendation
+matches a known `MODEL_REGISTRY` entry, the registry's canonical key
++ upstream_id + backend are surfaced in the result panel. This keeps
+HF best-model queries consistent with the canonical model list.
+
 See also:
 - `.agents/skills/huggingface/SKILL.md`
 - `.agents/skills/huggingface/huggingface-best/SKILL.md`
+- `.agents/skills/centralized-registry/SKILL.md`
+- `meaisinfhoghlaim/models/README.md`
 """
 
 import marimo

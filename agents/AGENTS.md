@@ -279,3 +279,72 @@ participates in the formal feedback loop:
 The lint script `mise run lint:skills` enforces the 4 metadata
 rules (frontmatter, name match, description length, line count)
 on every skill in `.agents/skills/`.
+
+## LiteLlm migration (NEW 2026-08-15)
+
+Historical drift (RESOLVED 2026-08-15): the 32 `LlmAgent(model=config.model_name)` constructors in `agents/adk/*` were hardcoding `"gemini-2.0-flash"`, BYPASSING the KCG `minimax` 7-tier LiteLLM fallback alias (the Agent 06 P0-#1 drift finding). All 32 sites now route through `MODEL_REGISTRY`.
+
+The new canonical surface is **`agents/adk/litellm_agent.py`** (129 LOC), which exposes two helpers:
+
+```python
+from agents.adk.litellm_agent import make_litellm_agent, litellm_model
+
+# Option A: Construct an LlmAgent with explicit LiteLlm routing
+agent = make_litellm_agent(
+    name="my_agent",
+    description="Routes through the KCG minimax LiteLLM gateway.",
+    model_alias="minimax",  # the canonical 7-tier fallback
+    temperature=0.7,
+    max_output_tokens=8192,
+    tools=[my_tool],
+    instruction="...",
+)
+
+# Option B: Use the model wrapper directly with the canonical LlmAgent
+from google.adk.agents import LlmAgent
+agent = LlmAgent(
+    name="my_agent",
+    model=litellm_model("minimax"),
+    description="...",
+)
+```
+
+The two helpers read the LiteLLM gateway URL from `LITELLM_API_BASE` (defaults to `https://litellm.cianfhoghlaim.ie`) and the API key from `LITELLM_API_KEY` (injected by the Locket sidecar at runtime).
+
+**To add a new agent**:
+
+1. Add a new entry to `agents/agent_registry.py:AGENT_REGISTRY` with `framework`, `module_path`, `display_name`, `baml_prefix`, `langfuse_trace_name`, `cognee_dataset`, `letta_agent_id`, `litellm_routing_key`.
+2. Create the agent file at `agents/adk/<name>_agent.py` with:
+   ```python
+   from .litellm_agent import make_litellm_agent
+   my_agent = make_litellm_agent(
+       name="my_agent",
+       description="...",
+       model_alias="curriculum",  # the canonical LiteLLM routing key
+       tools=[...],
+       instruction="...",
+   )
+   ```
+3. The 12-agent fleet is auto-discovered via `agents/agent_registry.py:AGENT_REGISTRY` — no manual wiring needed.
+
+**For LiteLlm alias resolution**: if you need to override the model, use the `model_alias` parameter — never hardcode a model string. The available aliases are defined in `bonneagar/stacks/litellm/config/config.yaml` and regenerated from `MODEL_REGISTRY` on every `mise run cic:meaisin:litellm-regenerate`.
+
+## Model registry for agents (NEW 2026-08-15)
+
+Every agent field that touches a model (the `model_name`, `irish_model`, `embedding_model`, `translation_models` dict on `AgentConfig`) now uses a lazy `default_factory` that resolves through `MODEL_REGISTRY`:
+
+```python
+from meaisinfhoghlaim.models import model_for
+
+config = AgentConfig()  # all model fields resolve via MODEL_REGISTRY
+config.model_name       # → "minimax-m3"  (was hardcoded "gemini-2.0-flash")
+config.irish_model       # → "uccix-mistral-24b"
+config.embedding_model   # → "BAAI/bge-m3"
+```
+
+The legacy `agents/adk/tuatha_config.py:AgentConfig` is deprecated (marked back-compat shim) — its `orchestrator_model` + `worker_model` + `fast_model` + `irish_model` + `multilingual_model` all resolve through `MODEL_REGISTRY` too.
+
+---
+
+**Last updated**: 2026-08-15 (added the LiteLlm migration section + the Model registry for agents section).
+**Owner**: Build agent.

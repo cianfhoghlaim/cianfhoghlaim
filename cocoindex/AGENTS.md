@@ -162,3 +162,53 @@ Confirmed LanceDB target table naming patterns:
 - [`../orchestration/README.md`](../orchestration/README.md) — the Dagster orchestration layer
 - [`../motherduck/README.md`](../motherduck/README.md) — the MotherDuck Dives + Flights
 - [`../LEGBACK_ALIASES.md`](LEGACY_ALIASES.md) — the v7 ISO-3 → snake_case rename map (historical)
+
+## The factory pattern (NEW 2026-08-15)
+
+When you need **N nearly-identical CocoIndex Apps** that differ only by a config row (ISO code, subject, jurisdiction, etc.), **collapse them into one factory-driven module + N 1-line re-export shims**. The canonical example is `cocoindex/european_nations/_factory.py`:
+
+- **Before**: 40 nation CocoIndex Apps at `cocoindex/european_nations/{alb,aut,bel,...}/education_embedding.py` (~5,400 LOC, ~135 LOC each)
+- **After**: 1 factory module (`cocoindex/european_nations/_factory.py`, 224 LOC) + 40 1-line re-export shims (`from cocoindex.european_nations._factory import alb_education_embedding  # noqa: F401`, ~400 LOC)
+- **Net reduction**: ~4,776 LOC
+
+The factory pattern:
+
+```python
+@dataclass(frozen=True)
+class NationConfig:
+    iso3: str          # 3-letter ISO code (e.g. "alb", "deu")
+    iso2: str          # 2-letter ISO code (e.g. "al", "de")
+    app_slug: str      # function name suffix (e.g. "alb")
+    display_name: str  # e.g. "Albania"
+    table_suffix: str  # e.g. "alb.education_chunks"
+
+
+NATION_CONFIG: list[NationConfig] = [
+    NationConfig("alb", "al", "alb", "Albania",  "alb.education_chunks"),
+    NationConfig("aut", "at", "aut", "Austria",  "aut.education_chunks"),
+    # ... 38 more rows
+]
+
+for _nation in NATION_CONFIG:
+    _Chunk = _build_chunk_class(_nation)
+    _process_fn = _build_process_fn(_nation, _Chunk)
+    _main = _build_app_main(_nation, _Chunk, _process_fn)
+    _app = coco.App(coco.AppConfig(name=f"{_nation.app_slug}_education_embedding", ...), _main)
+    globals()[f"{_nation.app_slug}_education_embedding"] = _app
+```
+
+Each factory-built App still conforms to R1+R2+R3+R4 (imports `shared_lifespan`, declares `coco.App(...)` at module scope, mounts the LanceDB target via `lancedb.mount_table_target`, declares the `embedding` vector index). The factory is the **single source of truth** for the per-nation pattern.
+
+**To add a new jurisdiction**:
+1. Add a `NationConfig` row to `NATION_CONFIG`
+2. The factory will instantiate a new `coco.App` at module import time
+3. The L3 Component `defs.yaml` picks it up automatically
+
+**To add a new jurisdiction family** (e.g. law, medicine): mirror the factory pattern with a separate `_law_factory.py` (do not pile into the same factory).
+
+**Reference**: see issue #145 for the Irish LC + BI parity rollouts.
+
+---
+
+**Last updated**: 2026-08-15 (added the factory pattern section + the 40 European-nation collapse stats).
+**Owner**: Build agent.

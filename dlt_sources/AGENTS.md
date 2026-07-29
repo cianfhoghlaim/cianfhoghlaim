@@ -207,3 +207,45 @@ remaining.
 - [`../motherduck/README.md`](../motherduck/README.md) — MotherDuck Dives + Flights
 - [`../orchestration/README.md`](../orchestration/README.md) — Dagster orchestration layer
 - [`../dlt_sources/LEGACY_ALIASES.md`](LEGACY_ALIASES.md) — the v7 ISO-3 → snake_case rename map
+
+## Schema introspection (NEW 2026-08-15)
+
+The canonical way to introspect the 920 `@dlt.source` + ~4,900 `@dlt.resource` decorated functions across `dlt_sources/` is via the 5 helpers in `notebooks/_shared/schema.py`:
+
+```python
+from notebooks._shared.schema import (
+    list_dlt_sources,                # returns 1963 rows (sources + resources)
+    schema_introspect,               # returns BIEP DuckDB column metadata
+    schema_introspect_full,          # DuckDB + LanceDB + BAML union
+)
+```
+
+The helpers walk `dlt_sources/**/*.py` via AST parsing, extracting:
+
+- `source_name` (the function name)
+- `file_path` (relative to the repo root)
+- `primary_key` (from the `@dlt.source(primary_key=...)` decorator)
+- `destinations` (from `dlt.destinations.*(...)` calls)
+- `dagster_asset` (the asset that wraps the source)
+
+**To check if a DLT source is wired correctly** without running the full pipeline:
+
+```bash
+PYTHONPATH="$PWD/notebooks/_shared:$PWD" uv run python -c "
+import sys, types
+sys.modules['ibis'] = types.ModuleType('ibis')
+import schema
+for s in schema.list_dlt_sources():
+    if 'ireland' in s['file_path']:
+        print(s)
+"
+```
+
+**Reuse the `JurisdictionPipelineBase`** at `british_isles/_cross/jurisdiction_pipeline_base.py:33` for any new jurisdiction pipeline — don't hand-roll a new pipeline class.
+
+**The 619 empty placeholder YAMLs** in `orchestration/defs/1_ingestion/{american_nations,commonwealth,european_nations,...}/` are **audited as dead** (per the 2026-08-15 audit). They reference nations/stages that have already been absorbed into the v3 generic pipeline pattern. They are NOT loaded by `mise run dagster:dev` and can be safely deleted in the cleanup follow-up (issue #146).
+
+---
+
+**Last updated**: 2026-08-15 (added the schema introspection section + the 619-empty-YAML audit note).
+**Owner**: Build agent.

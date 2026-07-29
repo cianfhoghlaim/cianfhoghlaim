@@ -34,11 +34,19 @@ If the index is missing or stale, the agent **owns** running
 ### Priority openspec commands
 
 ```bash
-openspec list --specs              # list all 32 capability specs
+openspec list --specs              # list all 75 capability specs (3 new post-2026-08-15)
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy
 ```
+
+The **3 new post-2026-08-15 specs** (centralized-model-registry + centralized-schema-registry + deployment-control-panel) join the priority list:
+
+| Spec | One-liner |
+|:--|:--|
+| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (52 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-schema-registry`](openspec/specs/centralized-schema-registry/spec.md) | BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
+| [`deployment-control-panel`](openspec/specs/deployment-control-panel/spec.md) | The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 
 ### Priority mise tasks
 
@@ -156,9 +164,47 @@ bun run setup
 # expands to: mise install && bun install && uv sync && bun run secrets:env && bun run secrets:init
 ```
 
-> **Note:** The `mise run lint:skills` task currently reports **53
+> **Note:** The `mise run lint:skills` task currently reports **153
 > skills pass** (the v4 consolidation reduced the skill count from
 > the historical 123 — see `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
+
+### Centralized registries (post-2026-08-15)
+
+The platform now has **one canonical source of truth** for every model, schema, pipeline, and stack — replacing the ~70 hardcoded model strings + 96 hand-written Pydantic duplicates + 54 nearly-identical CocoIndex Apps that the audit found.
+
+| Asset | Path | Purpose |
+|:--|:--|:--|
+| **`MODEL_REGISTRY`** | `meaisinfhoghlaim/models/model_registry.py` | 52 entries across 7 families (ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation). Use `model_for(family, role, language)` or `filter_models(family)`. |
+| **`schema` introspection** | `notebooks/_shared/schema.py` | 5 helpers: `schema_introspect(conn)`, `schema_introspect_table(conn, name)`, `list_dlt_sources()`, `list_cocoindex_apps()`, `list_baml_classes()`. |
+| **Deployment control panel** | `notebooks/00_control_panel.py` | The 5-tab marimo notebook (Models / Pipelines / Datasets / Stacks / Registry). Operates on `deployment-choice.yaml`. |
+| **`deployment-choice.yaml`** | repo root | The canonical enablement file. Read/written by the notebook + web UI + CLI. |
+| **`registry_audit.py`** | `scripts/registry_audit.py` | Detects hardcoded model strings that bypass `MODEL_REGISTRY`. Wired as `mise run lint:registry`. |
+| **`litellm_agent.py`** | `agents/adk/litellm_agent.py` | The `make_litellm_agent()` helper + `litellm_model("minimax")` wrapper for ADK agents. |
+| **CocoIndex factory pattern** | `cocoindex/european_nations/_factory.py` | Reference for collapsing N CocoIndex Apps into 1 factory. Used by the 40 European-nation Apps. |
+| **Dagster `JurisdictionAssetsBase`** | `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py` | The base class for the 10 per-jurisdiction Dagster asset wrappers. |
+
+**Quick start for the most common needs:**
+
+```python
+# 1. Pick a model (replaces hardcoded "gemini-2.0-flash" etc.)
+from meaisinfhoghlaim.models import model_for
+default = model_for("text_llm", "default")              # → "minimax-m3"
+irish  = model_for("text_llm", "irish", language="ga")  # → "uccix-mistral-24b"
+embed  = model_for("embedder", "default")               # → "BAAI/bge-m3"
+
+# 2. Discover the lakehouse schema (replaces hardcoded table lists)
+from notebooks._shared.schema import (
+    list_dlt_sources, list_cocoindex_apps, list_baml_classes,
+)
+print(f"DLT sources: {len(list_dlt_sources())}")        # → 1963
+print(f"CocoIndex Apps: {len(list_cocoindex_apps())}")  # → ~53 (factory Apps + shims)
+print(f"BAML classes: {len(list_baml_classes())}")      # → 838
+
+# 3. Open the deployment control panel
+# $ mise run notebook:control-panel
+# (or: marimo edit notebooks/00_control_panel.py)
+```
+
 
 ## Secrets Bootstrap (do not skip)
 
@@ -365,6 +411,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 ### Codebase Exploration & General Development
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
+- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (52 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
 
 ### Core Data Platform (`dlt/` + `orchestration/`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.

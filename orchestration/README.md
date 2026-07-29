@@ -209,3 +209,64 @@ registered alongside the engineering code-location
 - `.agents/skills/cianfhoghlaim-cocoindex-v1/SKILL.md` (R1–R4 contract)
 - `.agents/skills/dlt/SKILL.md` (DLT integration)
 - `.agents/skills/agent-fleet-orchestration/SKILL.md` (12-agent fleet)
+
+## `JurisdictionAssetsBase` (NEW 2026-08-15)
+
+The canonical base class for the **10 per-jurisdiction Dagster asset wrappers**. Lives at `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py` (263 LOC).
+
+Each of the 10 jurisdictions (`ireland`, `england`, `scotland`, `wales`, `ni`, `sct_wls_ni`, `isle_of_man`, `jersey`, `guernsey`, `crown_dependencies`) has a ~378-LOC asset file at `orchestration/defs/2_materials/<jurisdiction>_education/generic_<jur>_assets.py`. After the rollout (issue #146), each becomes a ~30-LOC subclass:
+
+```python
+from orchestration.defs.2_materials._base.jurisdiction_assets_base import make_jurisdiction_assets
+
+def pipeline_factory():
+    from dlt_sources.british_isles.<jur>.education.<jur>_jurisdiction_pipeline import (
+        <jur>_jurisdiction_pipeline,
+    )
+    return <jur>_jurisdiction_pipeline()
+
+<jur>_assets = make_jurisdiction_assets(
+    jurisdiction_name="<jur>",
+    pipeline_factory=pipeline_factory,
+).build_asset()
+```
+
+**Net reduction** when the 10 files are migrated: ~3,300 LOC.
+
+The base class also exposes:
+- `IrelandAssets` (the reference implementation; the only one with explicit subclass code today)
+- `make_jurisdiction_assets(jurisdiction_name, pipeline_factory, ...)` — the dynamic factory for one-line rollouts
+- `all_jurisdiction_assets()` — returns the list of all 10 Dagster `AssetsDefinition` objects (for the `Definitions` resolver)
+
+**To add a new jurisdiction asset**:
+1. Create the jurisdiction pipeline in `dlt_sources/british_isles/<jur>/education/<jur>_jurisdiction_pipeline.py` (subclass `JurisdictionPipelineBase`)
+2. Subclass `JurisdictionAssetsBase` in the new jurisdiction asset file
+3. The asset's group_name + partition_defs inherit from the base class
+
+**To migrate an existing jurisdiction asset**:
+1. Read `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py` — the API is stable
+2. Replace the per-jurisdiction ~378-LOC wrapper with the ~30-LOC subclass
+3. Verify the asset key + partition definitions are unchanged
+
+## Schema introspection
+
+To introspect the 920 `@dlt.source` + ~4,900 `@dlt.resource` decorated functions from a Dagster asset (or any Python context), use:
+
+```python
+from notebooks._shared.schema import list_dlt_sources
+sources = list_dlt_sources()  # returns 1963 dicts (sources + resources)
+for s in sources:
+    if s["dagster_asset"] is not None:
+        print(s)
+```
+
+## `orchestration/defs/1_ingestion/` cleanup
+
+The 619 empty placeholder YAMLs in `orchestration/defs/1_ingestion/{american_nations,commonwealth,european_nations,...}/` are **audited as dead** (per the 2026-08-15 audit). They reference nations/stages that have already been absorbed into the v3 generic pipeline pattern. They are NOT loaded by `mise run dagster:dev` and can be safely deleted in the cleanup follow-up (issue #146).
+
+The 6 stale LC6 YAMLs at `orchestration/defs/1_ingestion/curriculum/lc6/{mathematics,chemistry,geography,gaeilge,english,computer_science}.yaml` were **updated 2026-08-15** to point at the live `ireland_jurisdiction_pipeline` runner (replacing pre-v7 `cianfhoghlaim.dlt.*` paths).
+
+---
+
+**Last updated**: 2026-08-15 (added the JurisdictionAssetsBase section + the schema introspection pointer + the 1_ingestion cleanup note).
+**Owner**: Build agent.

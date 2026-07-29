@@ -16,9 +16,18 @@ around the v1 CocoIndex Code LanceDB index at
 Pattern: "ccc before grep" — always run semantic code search BEFORE
 `rg` / `grep` to surface contextually relevant chunks.
 
+Post-2026-08-15, this notebook adds a `centralized_registry` preset
+that searches the 4 canonical artifacts (MODEL_REGISTRY +
+notebooks/_shared/schema.py + 00_control_panel + deployment-choice.yaml)
++ the 3 openspec specs + the lint:registry helper. Use this preset to
+discover what's currently registered, what was recently changed, and
+what the canonical API surface looks like.
+
 See also:
 - `.agents/skills/ccc/SKILL.md`
+- `.agents/skills/centralized-registry/SKILL.md`
 - `openspec/changes/2026-07-06-add-dev-env-demo-tools-to-adk-agents/`
+- `openspec/changes/archive/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/`
 """
 
 import marimo
