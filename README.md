@@ -302,6 +302,57 @@ interactive wizard + 4 commands for the operator.
 
 ---
 
+## 🚀 Quick Start for New Operators — Tuatha (Educational MMO)
+
+Tuatha is the educational Massive Multiplayer Online game world of the
+Cianfhoghlaim platform — the public face where students pilot avatars
+through procedurally-generated Celtic landscapes and run quests tied to
+the BIEP Leaving Certificate syllabus. Tuatha is the **only stack that
+is publicly reachable**: game at `https://tuath.cianfhoghlaim.ie`,
+API + UI TinyAuth passkey-gated.
+
+The Tuatha IaC stack now ships the same GOLD_STANDARD contract that
+Pocket ID has demonstrated works (7 files, 4 onboarding scripts, 90-day
+cron rotation). To bring it up from scratch:
+
+```bash
+# 1. Run the Tuatha onboarding wizard (12 secrets collected, written to .env)
+./scripts/onboard-tuatha.sh
+
+# 2. One-command local dev (builds api/ui/game containers, seeds SpacetimeDB,
+#    runs both dlt sources → local DuckDB at ./tuatha.duckdb)
+./tuatha/scripts/bootstrap.sh
+
+# 3. Optionally install the 90-day secret rotation cron
+sudo ./scripts/rotate-tuatha-secrets.sh --install-cron
+```
+
+| Surface | URL | Auth |
+|:--|:--|:--|
+| Babylon.js game client | `https://tuath.cianfhoghlaim.ie` | public, rate-limited |
+| FastAPI surface | `https://tuath-api.cianfhoghlaim.ie` | TinyAuth passkey (Pocket ID) |
+| TanStack UI dashboard | `https://tuath-ui.cianfhoghlaim.ie` | TinyAuth passkey (Pocket ID) |
+
+The 4 onboarding scripts in `scripts/` follow the exact same naming
+convention, colour scheme, arg shape, and audit-record pattern as the 4
+Pocket ID scripts. Once you learn one set you've learned the other.
+
+| Script | Purpose | Mirrors |
+|:--|:--|:--|
+| `scripts/onboard-tuatha.sh` | TUI/CLI wizard → writes 12 secrets to `.env` | `scripts/onboard-pocketid.sh` |
+| `scripts/wire-tuatha.sh` | ONE-SHOT Pocket ID OIDC client + 3 Pangolin resources + Komodo trigger + Infisical seed | `scripts/wire-pocketid-pangolin-komodo.sh` |
+| `scripts/wire-tuatha-resource-idp.sh` | Binds Pocket ID as Resource IdP for the 2 TinyAuth-gated routes | `scripts/wire-pocketid-resource-idp.sh` |
+| `scripts/rotate-tuatha-secrets.sh --install-cron` | 90-day cron rotation of Pocket ID + Pangolin + Komodo + Infisical keys | `scripts/rotate-pocketid-secrets.sh` |
+
+The dlt pipeline surfaces both Tuatha event streams into the central
+`md:cianfhoghlaim` MotherDuck lakehouse at
+`cianfhoghlaim.tuatha.player_assets` and
+`cianfhoghlaim.tuatha.credential_events`. See
+[`tuatha/README.md`](./tuatha/README.md) and the dlt sub-dir
+[`tuatha/dlt/`](./tuatha/dlt/) for the full reference.
+
+---
+
 ## TL;DR — What this is, today
 
 `cianfhoghlaim` is a **polyglot monorepo** (`bun + uv + turbo`) that:
