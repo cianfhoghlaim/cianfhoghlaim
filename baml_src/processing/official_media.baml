@@ -1,7 +1,7 @@
-// oideachais/baml_src/official_media.baml
+// cianfhoghlaim/baml_src/official_media.baml
 //
 // Stage-2 BAML fallback for the official-media Instagram export pipeline.
-// Invoked by `oideachais.dlt_sources.official_media.classifier.classify_with_baml`
+// Invoked by `dlt_sources.official_media.classifier.classify_with_baml`
 // when the cheap heuristic matches but the username is not in any allowlist YAML.
 //
 // The function returns a structured classification that the allowlist
@@ -9,8 +9,8 @@
 //   Intelligence / University / Party / Jurisdiction / Agency /
 //   EmergencyService / Military / Government / Other
 //
-// See `oideachais/AGENTS.md` (official-media-pipeline spec) and
-// `oideachais/dlt_sources/official_media/classifier.py` for the
+// See `../openspec/specs/official-media-pipeline/spec.md` and
+// `../dlt_sources/official_media/classifier.py` for the
 // Python-side consumer.
 
 class OfficialMediaCategory {

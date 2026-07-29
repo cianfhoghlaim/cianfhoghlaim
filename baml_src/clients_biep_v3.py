@@ -1,26 +1,38 @@
 """BIEP v3 canonical BAML clients.
 
-Per the 2026-08-07-biep-v3-hardening-v1 change.
+Per the 2026-08-07-biep-v3-hardening-v1 change + the
+2026-08-08-baml-clients-biep-v3-reconciliation-v1 follow-up.
 
-Replaces the fragmented client setup (ExtractEn, ExtractEnStrong,
-LlamaSwapClient, LocalVision, etc.) with 3 canonical clients that
-all active BIEP v3 jurisdiction functions route through.
+The 3 canonical clients are wired in `baml_src/clients.baml` and
+all active BIEP v3 jurisdiction functions route through them.
+The model strings here MUST match the `model` fields in
+`clients.baml` lines 188-216 — the Python module is the spec, the
+BAML clients are the implementation.
+
+Historical note: an earlier version of this file declared
+Gemma 3 4B + 27B + qwen3-vl-8b (per the 2026-07-13 Gemma 3 launch
+announcement). The BAML clients were never updated to match;
+they remained on `minimax-m3` (the coding-plan API). This file
+was updated post-v8 to match the actual BAML wiring.
 """
 from __future__ import annotations
 
-# BIEPV3Extract — the canonical light-weight client (Gemma 3 4B)
-# Per the 2026-08-07 hardening change. Replaces ExtractEn.
-BIEPV3Extract = "gemma-3-4b-it"
+# BIEPV3Extract — the canonical light-weight text client.
+# Routes through the minimax-m3 (coding-plan API).
+# Per clients.baml lines 188-196.
+BIEPV3Extract = "minimax-m3"
 
-# BIEPV3ExtractStrong — the canonical detail-rich text client (Gemma 3 27B)
-# Replaces ExtractEnStrong. Used for high-fidelity text-only extraction
-# (curriculum syllabus, marking scheme analysis) where a vision-language
-# model would be slower + more expensive + lower text fidelity.
-BIEPV3ExtractStrong = "gemma-3-27b-it"
+# BIEPV3ExtractStrong — the canonical detail-rich text client.
+# Same model as BIEPV3Extract (both route through the same
+# minimax-m3 instance); the Strong variant uses higher max_tokens
+# + longer timeout per the CANONICAL_CLIENTS table below.
+# Per clients.baml lines 198-206.
+BIEPV3ExtractStrong = "minimax-m3"
 
 # BIEPV3Vision — the canonical vision client for the 4-path OCR ensemble
-# Routes through llama-swap with qwen3-vl-8b.
-BIEPV3Vision = "qwen3-vl-8b-it-via-llama-swap"
+# Routes through LiteLLM to the local qwen3-vl-8b server.
+# Per clients.baml lines 208-216.
+BIEPV3Vision = "local/vision/qwen3-vl-8b"
 
 
 # The 3 canonical clients, with documented retry + timeout + max_tokens.
