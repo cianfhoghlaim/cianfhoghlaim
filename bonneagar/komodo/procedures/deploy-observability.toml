@@ -52,7 +52,7 @@ execution = { type = "DeployStack", params = { stack = "langfuse" } }
 # STAGE 3: Logfire (SaaS collector)
 # =============================================================================
 # Logfire is SaaS at https://logfire.pydantic.dev. The local
-# infrastructure/stacks/logfire/ deploys an OpenTelemetry Collector that
+# bonneagar/stacks/logfire/ deploys an OpenTelemetry Collector that
 # forwards OTLP traces to Logfire cloud.
 # -----------------------------------------------------------------------------
 

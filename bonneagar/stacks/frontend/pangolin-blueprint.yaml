@@ -6,7 +6,7 @@
 # Pangolin + Pocket ID OIDC.
 #
 # Pattern reference: https://github.com/fosrl/pangolin
-# See: infrastructure/stacks/frontend/pangolin.yaml for the
+# See: bonneagar/stacks/frontend/pangolin.yaml for the
 # composable version of this same map.
 
 # ============================================================================

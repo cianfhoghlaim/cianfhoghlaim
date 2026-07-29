@@ -12,7 +12,7 @@ class TranslationAgent:
 
     Real implementation: thin wrapper around litellm.completion(model="litellm/irish").
     The Irish alias falls back from UCCIX → Qomhrá → BritLLM per
-    `infrastructure/stacks/litellm/config/config.yaml`.
+    `bonneagar/stacks/litellm/config/config.yaml`.
     """
 
     def __init__(self, model: str | None = None) -> None:

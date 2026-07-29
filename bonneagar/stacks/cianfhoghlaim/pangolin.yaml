@@ -2,7 +2,7 @@
 # Oideachais — Pangolin Traefik routing (MERGED canonical)
 # =============================================================================
 # Replaces both /cianfhoghlaim/pangolin.yaml and the prior
-# /infrastructure/stacks/cianfhoghlaim/pangolin.yaml.
+# /bonneagar/stacks/cianfhoghlaim/pangolin.yaml.
 #
 # Routes:
 #   cianfhoghlaim.cianfhoghlaim.ie     → frontend (Pocket ID SSO)
@@ -118,7 +118,7 @@ http:
         addVaryHeader: true
 
     # VPN-only middleware is defined globally in the Pangolin stack at
-    # /infrastructure/stacks/pangolin/. This label is
+    # /bonneagar/stacks/pangolin/. This label is
     # applied on top to gate dagster.* behind a Pangolin WireGuard peer.
 
     # api-ratelimit and tinyauth are provided by the pangolin stack too.

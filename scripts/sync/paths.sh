@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 # Layer 1: detect pre-v7 path drift in source files
-# Per the 2026-08-15-knowledge-sync-loop-v1 change.
+# Per the 2026-08-15-knowledge-sync-loop-v1 change (the foundation)
+# + the 2026-08-15-retroactive-pre-v7-cleanup-v1 change (the --fix mode)
+#
+# Usage:
+#   bash scripts/sync/paths.sh              # detect only (exit 1 if drift found)
+#   bash scripts/sync/paths.sh --fix       # detect + auto-fix the 3 safe patterns
+#
+# The 3 safe auto-fix patterns (per sync_paths_fix.py):
+#   sruth/cianfhoghlaim/        -> . (the pre-v7 repo rename)
+#   infrastructure/stacks/      -> bonneagar/stacks/  (the IaC move)
+#   infrastructure/komodo/      -> bonneagar/komodo/  (the IaC move)
+#
+# The 2 manual patterns (require human review):
+#   cianfhoghlaim/dlt/          -> documented in the per-directory diagnostic report
+#   cianfhoghlaim/baml/         -> documented in the per-directory diagnostic report
+
 set -uo pipefail
 mkdir -p stedding/sync-reports
 REPORT="stedding/sync-reports/paths-$(date +%Y-%m-%d).md"
@@ -32,4 +47,16 @@ REPORT="stedding/sync-reports/paths-$(date +%Y-%m-%d).md"
   fi
 } > "$REPORT"
 cat "$REPORT"
+
+# Handle --fix mode
+if [ "${1:-}" = "--fix" ]; then
+    echo ""
+    echo "=== Running auto-fix mode (per the 2026-08-15-retroactive-pre-v7-cleanup-v1 change) ==="
+    python3 scripts/sync_paths_fix.py
+    echo ""
+    echo "=== Re-running sync:paths to verify the count dropped ==="
+    bash "$0" 2>&1 | tail -15
+    exit $?
+fi
+
 [ "$total_drift" -eq 0 ]

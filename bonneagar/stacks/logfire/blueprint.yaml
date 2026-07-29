@@ -7,7 +7,7 @@
 #   - `.agents/skills/kcg-pangolin-stack/SKILL.md` §"The 4 host tags" —
 #     logfire is classified as a "Reference stack (not deployed)" with no
 #     host tag.
-#   - `infrastructure/stacks/logfire/README.md` §"Why an OTEL Collector?" —
+#   - `bonneagar/stacks/logfire/README.md` §"Why an OTEL Collector?" —
 #     explains the SaaS-only UI decision and the local-only OTLP ingestion.
 #
 # This blueprint.yaml is kept as a stub for Komodo stack registry consistency

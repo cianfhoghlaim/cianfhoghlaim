@@ -6,7 +6,7 @@ services:
   # ---------------------------------------------------------------------------
   cianfhoghlaim-web:
     build:
-      context: ../../../../sruth/cianfhoghlaim/web/apps/web
+      context: ../../../../.web/apps/web
       dockerfile: Dockerfile
     image: ghcr.io/cianfhoghlaim/cianfhoghlaim-web:0.1.0
     container_name: cianfhoghlaim-web
@@ -33,7 +33,7 @@ services:
   # ---------------------------------------------------------------------------
   cianfhoghlaim-api:
     build:
-      context: ../../../../sruth/cianfhoghlaim/web/apps/api
+      context: ../../../../.web/apps/api
       dockerfile: Dockerfile
     image: ghcr.io/cianfhoghlaim/cianfhoghlaim-api:0.1.0
     container_name: cianfhoghlaim-api

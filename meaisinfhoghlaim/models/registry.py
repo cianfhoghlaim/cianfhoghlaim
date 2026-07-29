@@ -761,37 +761,37 @@ VISION_MODELS: dict[str, OCRModel] = {
 
 CLASSICAL_OCR: dict[str, dict[str, Any]] = {
     "docling-serve": {
-        "stack": "infrastructure/stacks/ocr-classical/docling-serve/",
+        "stack": "bonneagar/stacks/ocr-classical/docling-serve/",
         "image": "docker.io/ds4sd/docling-serve:latest",
         "port": 5001,
         "notes": "IBM Docling — 258M params, DocTags layout. The 'safety net' when VLM extraction fails.",
     },
     "paddleocr": {
-        "stack": "infrastructure/stacks/ocr-classical/paddleocr/",
+        "stack": "bonneagar/stacks/ocr-classical/paddleocr/",
         "image": "docker.io/paddlepaddle/paddleocr:latest",
         "port": 8888,
         "notes": "PaddlePaddle OCR — multilingual, first-party GGUF.",
     },
     "tesseract": {
-        "stack": "infrastructure/stacks/ocr-classical/tesseract/",
+        "stack": "bonneagar/stacks/ocr-classical/tesseract/",
         "image": "docker.io/tesseractshadow/tesseract4re:latest",
         "port": 8889,
         "notes": "Tesseract 4 — clean printed-text baseline.",
     },
     "tesseract-shadow": {
-        "stack": "infrastructure/stacks/ocr-classical/tesseract-shadow/",
+        "stack": "bonneagar/stacks/ocr-classical/tesseract-shadow/",
         "image": "docker.io/tesseractshadow/tesseract4re:latest-shadow",
         "port": 8890,
         "notes": "Tesseract 4 shadow variant — second independent tesseract deployment for A/B comparison + drift detection.",
     },
     "unstract": {
-        "stack": "infrastructure/stacks/ocr-classical/unstract/",
+        "stack": "bonneagar/stacks/ocr-classical/unstract/",
         "image": "docker.io/unstract/api:latest",
         "port": 8002,
         "notes": "Unstract — no-code LLM-powered document extraction (prompts-based). Best for unstructured PDFs and schema-driven extraction.",
     },
     "dots-ocr": {
-        "stack": "infrastructure/stacks/ocr-classical/dots-ocr/",
+        "stack": "bonneagar/stacks/ocr-classical/dots-ocr/",
         "image": "docker.io/rednote-hilab/dots.ocr-serve:latest",
         "port": 8001,
         "notes": "rednote-hilab Dots-OCR — 3.0B layout specialist (vs the VLM `dots-ocr` key).",
@@ -996,7 +996,7 @@ class ClassicalOCRStack:
 
     The v4 spec keeps the 6 classical OCR stacks separate from the
     `VISION_MODELS` dict (which is vision-LLM only). They live at
-    `infrastructure/stacks/ocr-classical/{stack}/` and are exposed
+    `bonneagar/stacks/ocr-classical/{stack}/` and are exposed
     through the `CLASSICAL_OCR` dict.
     """
 

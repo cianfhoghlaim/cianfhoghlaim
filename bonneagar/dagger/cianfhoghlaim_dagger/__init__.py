@@ -224,7 +224,7 @@ def locket_secrets_env(
 ) -> str:
     """Render the ``secrets.env`` template that Locket consumes at runtime.
 
-    Format (per ``infrastructure/stacks/GOLD_STANDARD.md``):
+    Format (per ``bonneagar/stacks/GOLD_STANDARD.md``):
 
         # service: <service_name>
         # vault: <vault>

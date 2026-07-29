@@ -1,6 +1,6 @@
 # Logfire — local dev override
 # ----------------------------------------------------------------------------
-# Mirrors the pattern in infrastructure/stacks/cognee/compose.dev.yaml.
+# Mirrors the pattern in bonneagar/stacks/cognee/compose.dev.yaml.
 # Replaces the production Locket sidecar with a no-op alpine container and
 # sources secrets from the local .env (hydrated by mise hooks from Infisical).
 # ----------------------------------------------------------------------------

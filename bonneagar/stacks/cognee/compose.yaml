@@ -2,7 +2,7 @@
 # Serves 6 Cognee datasets (aistear, primary, junior_cycle, senior_cycle, tertiary, cross_stage)
 # via the REST API on port 8000. Joins the lakehouse_lakehouse external network.
 #
-# LLM is provided by the LiteLLM proxy (infrastructure/stacks/litellm).
+# LLM is provided by the LiteLLM proxy (bonneagar/stacks/litellm).
 # Default model: deepseek/deepseek-chat (works around the Gemini 403 block).
 # Override with LLM_MODEL=local/irish/uccix to use the local Irish GGUF.
 #

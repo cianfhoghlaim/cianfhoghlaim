@@ -17,21 +17,21 @@ attributes:
   ragas_metric_class: cianfhoghlaim.meaisinfhoghlaim.evaluation.ragas_biiep_ensemble.evaluate_ensemble
   unstract_workflows:
     - name: aqa_gcse_spec
-      file: infrastructure/stacks/unstract/workflow_data/aqa_gcse_spec.json
+      file: bonneagar/stacks/unstract/workflow_data/aqa_gcse_spec.json
       jurisdictions: [england]
       boards: [aqa, ocr, edexcel]
       qualification_levels: [gcse]
     - name: aqa_a_level_spec
-      file: infrastructure/stacks/unstract/workflow_data/aqa_a_level_spec.json
+      file: bonneagar/stacks/unstract/workflow_data/aqa_a_level_spec.json
       jurisdictions: [england]
       boards: [aqa, ocr, edexcel]
       qualification_levels: [a_level]
     - name: ncca_jc_cba
-      file: infrastructure/stacks/unstract/workflow_data/ncca_jc_cba.json
+      file: bonneagar/stacks/unstract/workflow_data/ncca_jc_cba.json
       jurisdictions: [ireland]
       scopes: [cbas]
     - name: sec_lc_marking
-      file: infrastructure/stacks/unstract/workflow_data/sec_lc_marking.json
+      file: bonneagar/stacks/unstract/workflow_data/sec_lc_marking.json
       jurisdictions: [ireland]
       qualification_levels: [lc]
   ragas_threshold: 0.70
