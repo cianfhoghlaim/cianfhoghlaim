@@ -1,12 +1,19 @@
 # Cianfhoghlaim Dagster Layer — 5-Layer Component Architecture
 
-The `cianfhoghlaim/dagster/` module is the canonical Dagster layer for
+The `orchestration/` module is the canonical Dagster layer for
 the Cianfhoghlaim platform. As of the
 **2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture**
 change, the layer is organised into exactly **5 layers**, with
 **one KCG-specific Dagster Component per layer** and a **YAML
-`defs/` tree** that emits 260+ assets organised into 5 hierarchical
+`defs/` tree** that emits ~833 assets organised into 5 hierarchical
 groups.
+
+Post-v7 flattening: `orchestration/` is the canonical home (was
+`cianfhoghlaim/dagster/` pre-v7). The pyproject.toml pins
+`dagster>=1.13` so `dg.load_defs()` is the canonical load path.
+The `[tool.dg]` section (also in pyproject.toml) declares
+`registry_modules = ["orchestration.components"]` so `dg list components`
+auto-discovers the 5 KCG Components.
 
 ## The 5 layers
 
@@ -33,13 +40,24 @@ groups.
 Each Component is a subclass of `dagster.Component` and emits exactly
 one or more `@asset` definitions via `build_defs()`. They are
 auto-discovered by the `dg` CLI via the
-`[tool.dg].registry_modules = ["cianfhoghlaim.dagster.components"]`
-entry in `cianfhoghlaim/pyproject.toml`.
+`[tool.dg].registry_modules = ["orchestration.components"]`
+entry in `pyproject.toml`.
+
+Plus 5 derived Components (post-2026-08-03):
+
+| Class | File | Purpose |
+|:--|:--|:--|
+| `BIEPSubjectComponent` | `components/biep_subject_component.py` | The base class — shared boilerplate for all BIEP jurisdiction components |
+| `JuniorCycleSubjectComponent` | `components/junior_cycle_subject_component.py` | The 18 NCCA JC subjects (english + gaeilge + mathematics + ...) |
+| `JuniorCycleShortCourseComponent` | `components/junior_cycle_subject_component.py` | The 16 JC short courses (coding + chinese + japanese + ...) |
+| `JuniorCycleCBAComponent` | `components/junior_cycle_subject_component.py` | The 36 JC CBAs (18 subjects × 2 CBAs each) |
+| `EnglandBoardSubjectComponent` | `components/england_board_subject_component.py` | The 49 England A-Level subjects (AQA + OCR + Edexcel per board) |
+| `EnglandCrossBoardComparatorComponent` | `components/england_cross_board_comparator_component.py` | Cross-board per-subject comparator (AQA vs OCR vs Edexcel) |
 
 ## The 5-layer `defs/` tree
 
 ```
-cianfhoghlaim/dagster/defs/
+orchestration/defs/
 ├── 1_ingestion/                        # L1 CelticIngestionComponent
 │   ├── curriculum/                     # MultiPartition by (cycle, language, subject)
 │   ├── law/                           # 7 nation @dlt_assets consolidated
@@ -125,9 +143,14 @@ rule + fix instructions.
    avoid polluting the trace history
 
 The 12 agents (1 custom + 8 ADK + 3 Agno) are listed in
-`meaisinfhoghlaim/agents/routing_keywords.py`. The voice agent
+`agents/routing_keywords.py` (post-v7 path; was
+`meaisinfhoghlaim/agents/routing_keywords.py` pre-v7). The voice agent
 (pipecat/voice_agent) is **deferred to a follow-on change** per user
 direction.
+
+Note: The `5_agent_ops/adk/` directory contains 15 sub-dirs (not 8).
+The 15 = 8 ADK agents + 7 ADK agents wrapped by `BIEPSubjectComponent`
+for the per-jurisdiction subjects (per the 2026-08-03 BIEP v3 fan-out).
 
 ## Developer workflow
 
@@ -137,7 +160,8 @@ The canonical 1.13+ workflow uses the `dg` CLI:
 # List all 5 KCG Components
 dg list components
 
-# List all 260+ assets organised into 5 nested groups
+# List all ~833 assets organised into 5 nested groups
+# (95 hand-written @asset decorators + 783 YAML defs + 11 sensors)
 dg list defs
 
 # Validate all defs.yaml files
@@ -157,15 +181,15 @@ dg scaffold defs CelticMaterialsComponent leaving_cert_english \
 
 # Scaffold a new L3 v1 App asset
 dg scaffold defs CelticModelLifecycleComponent new_v1_app \
-  --app-name NewApp --module cianfhoghlaim.cocoindex.new_v1_app \
-  --embedding-model BAAI/bge-large-en-v1.5
+  --app-name NewApp --module cocoindex.new_v1_app \
+  --embedding-model BAAI/bge-m3
 
 # Scaffold a new L5 agent asset
 dg scaffold defs CelticAgentOpsComponent hybrid_agent \
   --agent-name hybrid_agent --framework agno --routing-keywords hybrid
 
-# Local dev server
-dg dev  # http://localhost:3335
+# Local dev server (canonical Dagster port: 3000)
+mise run dagster:dev  # http://localhost:3000
 ```
 
 ## Code-location registration
