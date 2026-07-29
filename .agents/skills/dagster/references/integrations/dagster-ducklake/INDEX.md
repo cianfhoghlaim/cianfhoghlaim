@@ -65,7 +65,7 @@ load_info = pipeline.run(site_analysis_source(), dataset_name="cianfhoghlaim.sit
 
 - `storage/ducklake_client.py` — the canonical DuckLake
   client (Postgres catalog + Garage S3 object store)
-- `cianfhoghlaim-pipeline` spec — the single `md:oideachais` (MotherDuck)
+- `cianfhoghlaim-pipeline` spec — the single `md:cianfhoghlaim` (MotherDuck)
   database + single `ducklake:oideachais` (Garage S3) catalog
 - `orchestration/defs/` — the 21+ asset modules that
   write to DuckLake via the resource above

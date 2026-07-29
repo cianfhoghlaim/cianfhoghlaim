@@ -121,7 +121,7 @@ from DuckDB.
 ```python
 @app.cell
 def _():
-    con = duckdb.connect("md:oideachais")
+    con = duckdb.connect("md:cianfhoghlaim")
     return (con,)
 
 

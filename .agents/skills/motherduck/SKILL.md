@@ -83,14 +83,14 @@ uvx mcp-server-motherduck \
 
 # MotherDuck cloud (KCG read-only consumer)
 uvx mcp-server-motherduck \
-  --db-path md:cianhoghlaim \
+  --db-path md:cianfhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
   --read-only --saas-mode
 
 # Production: streaming HTTP + timeout
 uvx mcp-server-motherduck \
   --transport stream \
-  --db-path md:cianhoghlaim \
+  --db-path md:cianfhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
   --saas-mode \
   --max-rows 4096 --max-chars 200000 \
@@ -109,7 +109,7 @@ uvx mcp-server-motherduck \
       "command": "uvx",
       "args": [
         "mcp-server-motherduck",
-        "--db-path", "md:oideachais",
+        "--db-path", "md:cianfhoghlaim",
         "--motherduck-token", "<YOUR_MOTHERDUCK_TOKEN_HERE>",
         "--read-only", "--saas-mode"
       ]
@@ -277,7 +277,7 @@ save_dive(
   `gov.ie/.../circulars/...` for cross-referencing with NCCA
   syllabus changes.
 - **Cross-Dive joins** — the marimo notebooks use
-  `duckdb.connect("md:cianhoghlaim")` to join across all 4 Dives
+  `duckdb.connect("md:cianfhoghlaim")` to join across all 4 Dives
   for end-to-end analytics.
 
 Cross-references:
@@ -296,8 +296,8 @@ Cross-references:
 
 Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 
-- The canonical MotherDuck database alias is `md:cianfhoghlaim` (NOT `md:oideachais`
-  which was the pre-v7 name). The pre-v7 BIEP Dives that referenced `md:oideachais`
+- The canonical MotherDuck database alias is `md:cianfhoghlaim` (NOT `md:cianfhoghlaim`
+  which was the pre-v7 name). The pre-v7 BIEP Dives that referenced `md:cianfhoghlaim`
   were migrated to `md:cianfhoghlaim` in the P1 lakehouse-population change.
 - MotherDuck Flights are now configured via
   `openspec/changes/2026-08-02-biep-v3-motherduck-flights-v1/` (the canonical

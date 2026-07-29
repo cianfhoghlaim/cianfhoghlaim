@@ -55,7 +55,7 @@ When assuming the `data-engineer` persona, use these rules:
   - `DUCKLAKE_BUCKET` (default `ducklake-cianfhoghlaim`)
   - `CIANFHOGHLAIM_EMBED_MODEL` (default `BAAI/bge-m3`)
   - `CIANFHOGHLAIM_EMBED_DIM` (default `1024`)
-- **Source location**: `dlt_sources` lives at `dlt/`
+- **Source location**: `dlt_sources` lives at `dlt_sources/`
   (NOT `data_platform/dlt_sources/`, which is a deprecated
   path mentioned in the old skill; NOT `dlt/`,
   which was the pre-v4 path).
@@ -464,10 +464,10 @@ Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 - The canonical CLI entry point is `python -m cianfhoghlaim.dlt.cli run-pipeline`
   (NOT `python -m cianfhoghlaim.dlt.run_pipeline` which was the pre-v7 name)
 - The new BIEP v3 jurisdiction pipelines live at:
-  - `dlt/british_isles/ireland/education/ireland_jurisdiction_pipeline.py`
-  - `dlt/british_isles/england/education/england_jurisdiction_pipeline.py`
-  - `dlt/british_isles/sct_wls_ni/education/sct_wls_ni_jurisdiction_pipeline.py`
-  - `dlt/british_isles/crown_dependencies/education/crown_dependencies_jurisdiction_pipeline.py`
+  - `dlt_sources/british_isles/ireland/education/ireland_jurisdiction_pipeline.py`
+  - `dlt_sources/british_isles/england/education/england_jurisdiction_pipeline.py`
+  - `dlt_sources/british_isles/sct_wls_ni/education/sct_wls_ni_jurisdiction_pipeline.py`
+  - `dlt_sources/british_isles/crown_dependencies/education/crown_dependencies_jurisdiction_pipeline.py`
 - Each pipeline uses `dlt.common.curriculum_registry.SubjectRegistry` for canonical subject metadata
 - The destination is configured via `dlt.common.destinations_cianfhoghlaim.get_dlt_destination(use_ducklake=True)`
 - The 4 destinations: local DuckDB, MotherDuck BYOB, Garage S3 + Lakekeeper, R2 + Lakekeeper

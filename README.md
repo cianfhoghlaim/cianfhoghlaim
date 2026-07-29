@@ -20,6 +20,18 @@
 
 ---
 
+## Mise Tasks (priority quick reference)
+
+The 3 priority `mise run` tasks shipped by the 2026-07-30 → 2026-08-01 trilogy at a glance. **Read this first**; the full priority quick-refs are in [`AGENTS.md`](AGENTS.md).
+
+| Task | One-line purpose |
+|:--|:--|
+| [`cic:stack-doctor`](AGENTS.md) | Validate all 89 Docker Compose stacks against the 6-file `GOLD_STANDARD` (the canonical CI gate) |
+| [`stack-doctor:strict`](AGENTS.md) | `cic:stack-doctor` + `--strict --check-grammar` — fails on missing `infisical://` refs OR mixed bare/Jinja grammar in any `secrets.env` (Change 1, 2026-07-30) |
+| [`deploy:full`](bonneagar/AGENTS.md#deployfull-orchestrator) | One-command 7-phase full-stack deploy orchestrator (preflight → control-plane → lakehouse → data → agents → materialize → sensor health), with a resumable checkpoint at `~/.cianfhoghlaim/deploy-state.json` (Change 3, 2026-08-01) |
+
+---
+
 ## Addendum — A note for anyone looking at this project right now
 
 > **The project is sprawling on purpose.** It is a research-and-deployment

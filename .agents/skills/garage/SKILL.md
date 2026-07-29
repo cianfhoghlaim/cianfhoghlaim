@@ -8,7 +8,7 @@ description: |
   replication_mode removed in v2.0.0 2025-06-14).
 when_to_load:
   - "Garage", "S3", "object storage", or "Deuxfleurs" mentioned
-  - Touching `infrastructure/stacks/{garage,lakehouse}/`
+  - Touching `bonneagar/stacks/lakehouse/` (Garage v2.3.0 runs embedded here)
   - Wiring Dagster/DLT/DuckLake to S3 endpoints
   - Adding a Firecrawl monitor for Garage releases
 ---
@@ -17,10 +17,11 @@ when_to_load:
 
 ## TL;DR
 - **Upstream latest**: v2.3.0 (2026-04-16). Cianfhoghlaim pinned: v1.0.1 — 18 months stale.
-- **Critical drift**: `infrastructure/stacks/{garage,lakehouse}/garage.toml` uses `replication_mode = "1"` (removed v2.0.0). Will fail to start on v2.x.
-- **The single-node flag** (v2.3.0) obsoletes the 90-line `garage-init` service in `infrastructure/stacks/lakehouse/compose.yaml:71-160`.
+- **Critical drift**: `bonneagar/stacks/lakehouse/garage.toml` uses `replication_mode = "1"` (removed v2.0.0). Will fail to start on v2.x.
+- **The single-node flag** (v2.3.0) obsoletes the 90-line `garage-init` service in `bonneagar/stacks/lakehouse/compose.yaml:71-160`.
+- **Garage is no longer a standalone stack**: the legacy `infrastructure/stacks/garage/` was retired in the 2026-08-01 trilogy; Garage v2.3.0 runs as an embedded service inside `bonneagar/stacks/lakehouse/` (port 3900-3904).
 
-## Verified-live v2.3.0 single-node init (REPLACES garage-init)
+## Verified-live v2.3.0 single-node init inside the lakehouse stack (REPLACES garage-init)
 ```bash
 docker run -d --name garage-container \
   -p 3900:3900 -p 3901:3901 -p 3902:3902 -p 3903:3903 \

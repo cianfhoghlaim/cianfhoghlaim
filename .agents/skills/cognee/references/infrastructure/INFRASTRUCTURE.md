@@ -33,49 +33,6 @@ docker compose up -d
 # Services: garage, lakekeeper, lance-namespace, postgres
 ```
 
-## LakeFS — Data Versioning for Curriculum Datasets
-
-**Stack**: `infrastructure/stacks/lakefs/`  
-**Port**: 8000
-
-### Role in the Cognition Pipeline
-
-LakeFS provides Git-like versioning for the data that Cognee processes:
-
-```
-main branch (production):
-  ├── curriculum/leaving_cert_mathematics.parquet  ← current syllabus
-  ├── cognee/knowledge_graph_2026-06-05.json       ← latest KG snapshot
-  └── embeddings/bge-m3_2026-06-01.lance
-
-experiment/cognee-v1.1 branch:
-  └── cognee/knowledge_graph_2026-06-05.json       ← test run with new Cognee model
-
-2023-reform branch:
-  ├── curriculum/leaving_cert_mathematics.parquet  ← pre-reform syllabus
-  └── embeddings/bge-m3_2023.lance
-```
-
-### Why LakeFS Matters
-
-- **Experiment isolation**: Test new Cognee configurations on a branch without affecting production data
-- **Rollback**: If a cognify run produces degraded entity extraction, revert to the previous KG snapshot
-- **Audit trail**: Every curriculum dataset change is a commit with author, timestamp, and message
-
-### Key Operations
-
-```bash
-# Create experiment branch
-lakectl branch create lakefs://curriculum/experiment/cognee-v1.1 \
-  --source lakefs://curriculum/main
-
-# After validating extraction quality, merge to production
-lakectl merge lakefs://curriculum/experiment/cognee-v1.1 lakefs://curriculum/main
-
-# View commit history
-lakectl log lakefs://curriculum/main
-```
-
 ## Dozzle — Container Log Monitoring
 
 **Stack**: `infrastructure/stacks/dozzle/`  

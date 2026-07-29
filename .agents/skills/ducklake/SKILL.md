@@ -1,6 +1,6 @@
 ---
 name: ducklake
-description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical KCG sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*` schemas in the `md:oideachais` MotherDuck database.
+description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical KCG sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*` schemas in the `md:cianfhoghlaim` MotherDuck database.
 ---
 
 # DuckLake Expert Assistant
@@ -29,7 +29,7 @@ lakehouse sink with this topology:
 ```
 ┌──────────────────────┐    ┌──────────────────────┐
 │  DuckDB (MotherDuck) │    │  DuckLake (Garage S3) │
-│  md:oideachais       │    │  ducklake bucket      │
+│  md:cianfhoghlaim       │    │  ducklake bucket      │
 │  single database     │    │  + Postgres catalog   │
 │  per-domain schemas  │    │  + Lakekeeper Iceberg │
 └──────────────────────┘    └──────────────────────┘
@@ -41,7 +41,7 @@ lakehouse sink with this topology:
    └──────────────────────┘
 ```
 
-- **Single `md:oideachais` (MotherDuck) database** + single
+- **Single `md:cianfhoghlaim` (MotherDuck) database** + single
   `ducklake:oideachais` (Garage S3) catalog
 - **Schemas of the form `cianfhoghlaim.{domain}.{nation}`**
   (e.g. `cianfhoghlaim.education.ie`, `cianfhoghlaim.medicine.ni`)
@@ -929,7 +929,7 @@ con.execute("""
     )
 """)
 con.execute("""
-    ATTACH 'ducklake:md:oideachais' AS oideachais (
+    ATTACH 'ducklake:md:cianfhoghlaim' AS oideachais (
         TYPE ducklake,
         SECRET r2_secret,
         CATALOG postgres_catalog
@@ -941,8 +941,8 @@ con.execute("""
 
 ```python
 import duckdb
-con = duckdb.connect("md:oideachais")
-# `md:oideachais` is the MotherDuck database name;
+con = duckdb.connect("md:cianfhoghlaim")
+# `md:cianfhoghlaim` is the MotherDuck database name;
 # the MOTHERDUCK_TOKEN env var authenticates.
 ```
 
@@ -1048,7 +1048,7 @@ con.execute("""
     )
 """)
 con.execute("""
-    ATTACH 'ducklake:md:oideachais' AS oideachais (
+    ATTACH 'ducklake:md:cianfhoghlaim' AS oideachais (
         TYPE ducklake,
         SECRET motherduck_secret,
         CATALOG postgres_catalog

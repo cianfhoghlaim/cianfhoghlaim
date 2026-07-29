@@ -205,7 +205,7 @@ connection (the canonical way to read from DuckLake):
 @app.cell
 def _():
     import duckdb
-    con = duckdb.connect("md:oideachais")
+    con = duckdb.connect("md:cianfhoghlaim")
     return (con,)
 
 
@@ -398,7 +398,7 @@ per-subject marimo notebooks** (Mathematics, Chemistry, Geography,
 Gaeilge, English, Computer Science) at
 `notebooks/lc_<subject>_dashboard.py`. Each
 notebook is a federated SQL front-end over the DuckLake +
-LanceDB combination, reading via `mo.sql(engine=md:oideachais)`:
+LanceDB combination, reading via `mo.sql(engine=md:cianfhoghlaim)`:
 
 ```python
 # /// script
@@ -412,7 +412,7 @@ app = mo.App(width="medium")
 @app.cell
 def _():
     import duckdb
-    con = duckdb.connect("md:oideachais")  # MotherDuck + DuckLake
+    con = duckdb.connect("md:cianfhoghlaim")  # MotherDuck + DuckLake
     return (con,)
 
 
@@ -444,7 +444,7 @@ def _(result):
   `lc_gaeilge_dashboard.py`, `lc_english_dashboard.py`,
   `lc_computer_science_dashboard.py` at
   `notebooks/`.
-- **Federated SQL** — `duckdb.connect("md:oideachais")` reads
+- **Federated SQL** — `duckdb.connect("md:cianfhoghlaim")` reads
   DuckLake tables AND LanceDB tables via `lance_scan()` in the
   same SQL query (so a single notebook joins BAML-extracted
   syllabus topics with vector-search retrieval).
@@ -468,11 +468,11 @@ Cross-references:
 - [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) —
   the LanceDB tables joined via `lance_scan()`
 - [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
-  the `md:oideachais` connection string
+  the `md:cianfhoghlaim` connection string
 - [`.agents/skills/duckdb/SKILL.md`](../duckdb/SKILL.md) —
   the `lance_scan()` integration
 - [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
-  the DuckLake `ATTACH` for the same `md:oideachais` database
+  the DuckLake `ATTACH` for the same `md:cianfhoghlaim` database
 
 ## Examples
 

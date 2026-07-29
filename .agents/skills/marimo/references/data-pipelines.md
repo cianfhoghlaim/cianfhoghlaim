@@ -143,7 +143,7 @@ import duckdb
 
 @app.cell
 def _():
-    con = duckdb.connect("md:oideachais")
+    con = duckdb.connect("md:cianfhoghlaim")
     return (con,)
 
 
@@ -165,7 +165,7 @@ def _():
 @app.cell
 def _():
     import duckdb
-    con = duckdb.connect()  # or md:oideachais, or a DuckDB file
+    con = duckdb.connect()  # or md:cianfhoghlaim, or a DuckDB file
     return (con,)
 
 

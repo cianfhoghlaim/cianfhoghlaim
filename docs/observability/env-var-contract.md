@@ -9,11 +9,16 @@
 > **Owner:** observability skill (`.agents/skills/agent-observability/`)
 > **Spec:** `openspec/changes/2026-07-30-.../specs/agent-observability/spec.md`
 
-## The 17 canonical variables
+## The 48 canonical variables
 
-The contract is partitioned into 4 groups: Langfuse SDK (4 vars),
-MLflow tracking (3 vars), Logfire / OTel fan-out (7 vars), and
-shared cluster (3 vars).
+The contract is partitioned into 10 groups: 4 observability groups
+(Langfuse SDK + MLflow + Logfire/OTel + shared cluster = 17 vars),
+plus 6 additional reference groups (data ingestion, DuckLake write
+path, MotherDuck federated analytics, LanceDB, S3/Garage, and
+embedder/model registry = 31 vars). The 17 observability variables
+remain the most-critical reference for any tracing-related question;
+the 31 additional vars are appended below for the
+2026-08-02 drift-audit remediation.
 
 ### Group 1 — Langfuse SDK (4 vars)
 
@@ -52,7 +57,97 @@ shared cluster (3 vars).
 | `INFISICAL_PROJECT_ID` | UUID | yes (operator-side) | `.env` only | The `dev-baile` workspace UUID. Canonical value (verified live 2026-07-29): `d900f50a-acbf-446b-b4f6-e439710253e4`. |
 | `INFISICAL_ENV` | string | no (default `dev`) | `.env` only | The environment slug. Canonical: `dev-baile` (not `dev` — the human-readable name differs from the slug). |
 
-## How the 17 variables flow through the platform
+## Beyond observability — additional canonical env vars
+
+The 2026-08-02 drift audit identified 30+ additional env vars that
+the BIEP data platform, scraping layer, and lakehouse stack depend
+on. They are appended here in Groups 5-10 to give the team a single
+canonical reference. **Do not move tracing-related questions off the
+original 17 vars** — those remain the source of truth for
+Langfuse / MLflow / Logfire wiring.
+
+### Group 5 — Data ingestion & scraping (6 vars)
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `USE_LOCAL_SCRAPES` | bool | no (default `true`) | env block only | If true, route all dlt extractions to `stedding/ingest_queue/` instead of live web scraping (saves Firecrawl credits + bypasses rate limits). Per agent critical protocol #2. |
+| `STEDDING_INGEST_QUEUE` | path | no (default `stedding/ingest_queue/`) | env block only | Local fixture path for offline extraction fallback. |
+| `FIRECRAWL_API_KEY` | string | yes (prod) | `infisical://dev-baile/firecrawl/api_key` | Firecrawl scraping API key. Used by `dlt_sources/british_isles/ireland/`, `agents/`, etc. |
+| `BROWSERBASE_API_KEY` | string | yes (prod) | `infisical://dev-baile/browserbase/api_key` | Browserbase hosted-browser API key. |
+| `BROWSERBASE_PROJECT_ID` | string | yes (prod) | `infisical://dev-baile/browserbase/project_id` | Browserbase project ID. |
+| `CRAWL4AI_ENABLED` | bool | no (default `true`) | env block only | Toggle for the Crawl4AI scraper fallback. |
+
+### Group 6 — DuckLake write path (9 vars)
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `USE_DUCKLAKE` | bool | no (default `true`) | env block only | Switch between DuckLake (production) and local DuckDB (dev). |
+| `DLT_ENVIRONMENT` | enum | no (default `local`) | env block only | `local` or `production`. Selects which destination factory branch is used. |
+| `DUCKLAKE_BUCKET` | string | no (default `ducklake-cianfhoghlaim`) | `infisical://dev-baile/lakehouse/bucket_name` | The canonical Garage S3 bucket for DuckLake writes. **Must match the bucket created by `lakehouse/compose.yaml`'s `garage-init` service.** |
+| `DUCKLAKE_POSTGRES_HOST` | string | yes (prod) | `infisical://dev-baile/lakehouse/postgres_host` | Host of the centralised lakehouse-postgres. Canonical: `lakehouse-postgres`. |
+| `DUCKLAKE_POSTGRES_PORT` | int | no (default `5432`) | env block only | Port. |
+| `DUCKLAKE_POSTGRES_USER` | string | no (default `lakekeeper`) | `infisical://dev-baile/lakehouse/postgres_user` | Owner of the 6 `ducklake_*` databases. |
+| `DUCKLAKE_POSTGRES_PASSWORD` | string | yes (prod) | `infisical://dev-baile/lakehouse/postgres_password` | Owner password. |
+| `DUCKLAKE_POSTGRES_DB` | string | per-namespace | `infisical://dev-baile/<namespace>/postgres_db` | One of 6 active: `ducklake_oideachais`, `ducklake_crypteolas`, `ducklake_croilar`, `ducklake_tuath`, `ducklake_meaisinfhoghlaim`, `ducklake_aleyum` (legacy). |
+| `DUCKLAKE_POSTGRES_SSLMODE` | enum | no (default `disable`) | env block only | `disable` (dev), `prefer` (laptop), `require` (managed). |
+
+### Group 7 — MotherDuck federated analytics (6 vars)
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `MOTHERDUCK_TOKEN` | string | yes | `infisical://dev-baile/motherduck/token` | MotherDuck service-account PAT (canonical path; not `lakehouse/token`). |
+| `MOTHERDUCK_MODE` | enum | no (default `byob`) | `infisical://dev-baile/motherduck/mode` | `managed` / `byob` / `byoc`. |
+| `MOTHERDUCK_DATABASE` | string | no (default `cianfhoghlaim`) | `infisical://dev-baile/motherduck/database` | Database name. **Post-v7 canonical alias is `md:cianfhoghlaim` (NOT `md:oideachais`).** |
+| `MOTHERDUCK_S3_BUCKET` | string | no (default `ducklake-cianfhoghlaim`) | `infisical://dev-baile/motherduck/s3_bucket` | S3 bucket for `byob`/`byoc`. |
+| `MOTHERDUCK_S3_ENDPOINT` | string | no (default `http://lakehouse-garage:3900`) | `infisical://dev-baile/motherduck/s3_endpoint` | S3 endpoint URL. |
+| `MOTHERDUCK_ENABLED` | bool | no (default `true`) | env block only | Toggle for the MotherDuck federated query path. |
+
+### Group 8 — Vector store (LanceDB) (3 vars)
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `LANCEDB_URI` | string | yes | `infisical://dev-baile/lancedb/uri` | Canonical: `rest://lakehouse-lance-namespace:8182` (the Lance Namespace REST adapter inside the lakehouse stack). |
+| `LANCEDB_API_KEY` | string | yes (prod) | `infisical://dev-baile/lancedb/api_key` | Bearer token for the Lance Namespace REST adapter. |
+| `LANCEDB_VIEWER_ADMIN_TOKEN` | string | yes (prod) | `infisical://dev-baile/lakehouse/lancedb_viewer_admin_token` | Admin token for the standalone LanceDB viewer UI. |
+
+### Group 9 — S3 / Garage (9 vars)
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `AWS_ACCESS_KEY_ID` | string | yes (prod) | `infisical://dev-baile/garage/access_key_id` | S3 access key for the lakehouse-garage instance. |
+| `AWS_SECRET_ACCESS_KEY` | string | yes (prod) | `infisical://dev-baile/garage/secret_access_key` | S3 secret access key. |
+| `AWS_ENDPOINT_URL` | string | yes (prod) | `infisical://dev-baile/garage/s3_endpoint` | Canonical: `http://lakehouse-garage:3900`. |
+| `AWS_REGION` | string | no (default `garage`) | env block only | S3 region. The literal string `garage` (the Garage instance name). |
+| `AWS_DEFAULT_REGION` | string | no (default `garage`) | env block only | Fallback if `AWS_REGION` unset. |
+| `GARAGE_ACCESS_KEY_ID` | string | yes (prod) | `infisical://dev-baile/garage/access_key_id` | Same as `AWS_ACCESS_KEY_ID`; the `GARAGE_*` prefix is a backward-compat alias. |
+| `GARAGE_SECRET_ACCESS_KEY` | string | yes (prod) | `infisical://dev-baile/garage/secret_access_key` | Same as `AWS_SECRET_ACCESS_KEY`. |
+| `GARAGE_RPC_SECRET` | string | yes (prod) | `infisical://dev-baile/lakehouse/rpc_secret` | Garage internal RPC secret. |
+| `GARAGE_ADMIN_TOKEN` | string | yes (prod) | `infisical://dev-baile/lakehouse/admin_token` | Garage admin API token. |
+
+### Group 10 — Embedder / model registry (5 vars)
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `CIANFHOGHLAIM_EMBED_MODEL` | string | yes | `infisical://dev-baile/embed/model` | Canonical: `BAAI/bge-m3`. Read by `cocoindex/_shared/_lifespan.py:103`. |
+| `CIANFHOGHLAIM_EMBED_DIM` | int | yes | `infisical://dev-baile/embed/dim` | Canonical: `1024`. |
+| `MLFLOW_EXPERIMENT_NAME` | string | no (default `dlt-pipelines`) | env block only | Default MLflow experiment for `dlt` pipelines. |
+| `MLFLOW_S3_ENDPOINT_URL` | string | yes (prod) | `infisical://dev-baile/lakehouse/s3_endpoint` | MLflow's S3 endpoint. Canonical: `http://lakehouse-garage:3900`. |
+| `BIEP_REGISTRY_URI` | string | no (default `md:cianfhoghlaim`) | env block only | The v7 source-of-truth DuckDB registry location for the BIEP v3 notebook set. |
+
+## Why these groups
+
+This document now covers **48 canonical env vars** (up from 17 in the
+2026-07-30 baseline). The 17 observability vars in Groups 1-4 remain
+the most-critical reference for any tracing-related question — if
+you are debugging Langfuse, MLflow, or Logfire wiring, start there.
+The 31 additional vars in Groups 5-10 were added as part of the
+2026-08-02 drift-audit remediation to give the data-platform team a
+single canonical reference for the BIEP ingestion → DuckLake →
+MotherDuck → LanceDB pipeline. Groups 5-10 are scoped to the data
+plane; per-LLM-provider keys remain out of scope (see
+`docs/llm-env-var-contract.md` TODO).
+
+## How the 48 variables flow through the platform
 
 ```
 Operator's .env (local)
@@ -116,17 +211,28 @@ The third check is the contract-enforcement for this table — it
 prevents the "silent Langfuse loss" pattern (the agent-os bug fixed
 in this change).
 
-## Why 17 variables (not 50)?
+## Why 17 + 31 = 48 variables (not 50)?
 
-The 17 variables are the **set that spans the full observability
-stack** — every variable in this table is read by at least 2 stacks;
-every observability use case is covered.
+The 17 observability variables are the **set that spans the full
+observability stack** — every variable in Groups 1-4 is read by at
+least 2 stacks; every Langfuse / MLflow / Logfire / OTel use case is
+covered.
 
-Variables that exist but are NOT in this contract:
-- Per-service debug knobs (`LOG_LEVEL`, `LOGFIRE_VERBOSITY`)
+The 31 additional variables in Groups 5-10 are the **set that
+spans the data plane** — every variable in Groups 5-10 is read by
+at least one dlt pipeline, BAML extraction, CocoIndex flow, or
+MotherDuck federated query path.
+
+Variables that exist but are NOT in this 48-var contract:
+- Per-service debug knobs (`LOG_LEVEL`, `LOGFIRE_VERBOSITY`,
+  `OTEL_LOG_LEVEL`)
 - Per-LLM-provider keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`,
-  `GEMINI_API_KEY`) — see `docs/llm-env-var-contract.md` (TODO)
+  `GEMINI_API_KEY`, `KIMI_API_KEY`, `DEEPSEEK_API_KEY`, `ZAI_API_KEY`,
+  `MINIMAX_API_KEY`, `MIMO_API_KEY`) — see
+  `docs/llm-env-var-contract.md` (TODO)
 - Per-stack port mappings — see `infrastructure-stacks` spec
+- Per-Langfuse-project keys (one set per project, all templated
+  from the same 4 Group-1 vars)
 
 ## Cross-references
 

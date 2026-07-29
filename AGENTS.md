@@ -8,7 +8,7 @@ The 5 priority skills, the 4 priority commands, the 4 priority
 compose stacks, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is detail.
 
-### Priority skills (6 of 123)
+### Priority skills (7 of 153)
 
 | Skill | When to load |
 |:--|:--|
@@ -16,7 +16,8 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`ccc`](.agents/skills/ccc/SKILL.md) | **Code search** — use `ccc search` before `grep` / `find` |
 | [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
 | [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
-| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (32 specs, 4 shared) |
+| [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
+| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (75 specs, 4 shared) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
 
 ### ccc code search (always use before grep)
@@ -46,6 +47,10 @@ mise run lint:skills               # validate .agents/skills/ metadata (53/53 as
 mise run turbo dev                 # monorepo dev (bun + uv + turbo)
 mise run secrets:init              # sync .infisical.env → dev-baile vault
 mise run dagster:oideachais        # launch the lakehouse Dagster UI
+# Shipped by the 2026-07-30 → 2026-08-01 openspec trilogy (3 new tasks):
+mise run cic:stack-doctor          # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD (canonical CI gate)
+mise run stack-doctor:strict       # cic:stack-doctor + --strict --check-grammar (fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env; NEW in Change 1, 2026-07-30)
+mise run deploy:full               # one-command 7-phase full-stack deploy orchestrator with resumable checkpoint at ~/.cianfhoghlaim/deploy-state.json; entry shell + TS state machine; NEW in Change 3, 2026-08-01
 ```
 
 ### Priority compose stacks (4 of 88)

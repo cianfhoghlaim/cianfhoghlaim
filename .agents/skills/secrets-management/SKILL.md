@@ -300,7 +300,7 @@ project path to `cianfhoghlaim/`):
 
 | Secret | Purpose |
 |:--|:--|
-| `MOTHERDUCK_TOKEN` | Business-tier PAT for the `md:oideachais` DB |
+| `MOTHERDUCK_TOKEN` | Business-tier PAT for the `md:cianfhoghlaim` DB |
 | `BAML_LLM_API_KEY` | BAML client for `ExtractCurriculumSyllabus` + 4 sibling functions |
 | `BGE_M3_MODEL_PATH` | Optional override; defaults to `BAAI/bge-m3` HF cache |
 | `LANCEDB_GARAGE_KEY_ID` | S3 access for the 24+1 LanceDB companion tables |

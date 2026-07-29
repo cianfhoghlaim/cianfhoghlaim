@@ -36,9 +36,7 @@ const APPLY = process.argv.includes("--apply");
 // These get a noop pangolin.yaml so stack-doctor doesn't complain about
 // a missing file.
 const NON_WEB_FACING_STACKS = new Set([
-  "garage", // S3 — internal only, no HTTP UI
   "lakedb", // (alias)
-  "lakefs", // git-for-data — non-web-facing (may add later)
   "infisical-postgres", // (alias)
   "komodo-postgres", // (alias)
   "komodo-ferretdb", // (alias)

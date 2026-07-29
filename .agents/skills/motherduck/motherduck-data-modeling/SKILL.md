@@ -112,7 +112,7 @@ CREATE SECRET garage_secret (
     KEY_ID 'GK...',
     SECRET '...',
     REGION 'garage',
-    ENDPOINT 'lakehouse-garage.s3.kcg.local',
+    ENDPOINT 'lakehouse-garage:3900',
     URL_STYLE 'path',
     USE_SSL false
 );

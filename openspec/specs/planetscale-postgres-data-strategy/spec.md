@@ -195,7 +195,7 @@ The procedure is per-stack, atomic, and reverts via `git revert` + PlanetScale P
 
 - **GIVEN** the operator has created `lakekeeper` on the PlanetScale branch
 - **WHEN** Phase B.0 ships
-- **THEN** `bonneagar/stacks/lakekeeper/compose.yaml` SHALL remove the `postgres` + `lakekeeper-migrate` services
+- **THEN** `bonneagar/stacks/lakehouse/compose.yaml` SHALL remove the local `postgres` + `lakekeeper-migrate` services from the `lakekeeper` service block (Lakekeeper now lives inside the centralised `lakehouse` stack, not a standalone stack)
 - **AND** the `lakekeeper` service env SHALL use `infisical://dev-baile/lakekeeper/database_url`
 - **AND** migrations SHALL run idempotently on first start
 - **AND** `bun run iac:health --stack lakekeeper` SHALL return green

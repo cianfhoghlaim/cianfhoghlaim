@@ -39,7 +39,7 @@ don't want to operate storage.
 ```sql
 -- Create a database; storage is managed
 CREATE DATABASE oideachais;
-ATTACH 'md:oideachais' AS oideachais;
+ATTACH 'md:cianfhoghlaim' AS cianfhoghlaim;
 ```
 
 ### 2. BYOB — Bring Your Own Bucket (KCG preferred for production)

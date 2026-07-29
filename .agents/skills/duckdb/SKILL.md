@@ -1,6 +1,6 @@
 ---
 name: duckdb
-description: Expert assistance for DuckDB analytical database. Use when users need fast OLAP queries, file-based analytics, Parquet processing, embedded SQL, or local-first data analysis. Powers the BIEP federated SQL layer (`duckdb.connect("md:oideachais")` + `lance_scan()` joins DuckLake + LanceDB) for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) and `gov.ie` circulars.
+description: Expert assistance for DuckDB analytical database. Use when users need fast OLAP queries, file-based analytics, Parquet processing, embedded SQL, or local-first data analysis. Powers the BIEP federated SQL layer (`duckdb.connect("md:cianfhoghlaim")` + `lance_scan()` joins DuckLake + LanceDB) for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) and `gov.ie` circulars.
 ---
 
 # DuckDB - In-Process Analytical Database
@@ -370,7 +370,7 @@ The post-v4 BIEP (`openspec/changes/lc6-biep/`) uses DuckDB as
 the **federated SQL layer** that joins DuckLake (the OLTP sink
 for BAML-extracted rows) with LanceDB (the vector store for
 chunks) via `lance_scan()`. The canonical connection string is
-`md:oideachais` (MotherDuck + DuckLake + Lance Namespace sidecar
+`md:cianfhoghlaim` (MotherDuck + DuckLake + Lance Namespace sidecar
 on port 9000):
 
 ```sql
@@ -400,7 +400,7 @@ LIMIT 25;
 import duckdb
 
 # The KCG-preferred pattern: federated SQL via MotherDuck + DuckLake
-con = duckdb.connect("md:oideachais")  # MOTHERDUCK_TOKEN from Infisical
+con = duckdb.connect("md:cianfhoghlaim")  # MOTHERDUCK_TOKEN from Infisical
 
 # Pull the Mathematics syllabus topics (DuckLake) + LanceDB chunks in one go
 df = con.execute("""
@@ -433,7 +433,7 @@ df = con.execute("""
   populates `cianfhoghlaim.education.ie.gov_circulars_archive`
   in DuckLake + `cianfhoghlaim.education.ie.gov_circulars` in LanceDB.
 - **Federated SQL** — the marimo notebooks use
-  `duckdb.connect("md:oideachais")` to combine BAML-extracted
+  `duckdb.connect("md:cianfhoghlaim")` to combine BAML-extracted
   DuckLake rows with vector-search LanceDB results in a single
   query.
 - **`QUALIFY` for "latest version"** — the BIEP curriculum
@@ -443,7 +443,7 @@ df = con.execute("""
 
 Cross-references:
 - [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
-  the DuckLake `ATTACH` for the same `md:oideachais` database
+  the DuckLake `ATTACH` for the same `md:cianfhoghlaim` database
 - [`.agents/skills/lancedb/SKILL.md`](../lancedb/SKILL.md) —
   the LanceDB `lance_scan()` integration
 - [`.agents/skills/motherduck/SKILL.md`](../motherduck/SKILL.md) —
@@ -451,5 +451,5 @@ Cross-references:
 - [`.agents/skills/marimo/SKILL.md`](../marimo/SKILL.md) — the 6
   per-subject notebooks
 - [`.agents/skills/ibis/SKILL.md`](../ibis/SKILL.md) — the Ibis
-  backend on top of `md:oideachais`
+  backend on top of `md:cianfhoghlaim`
 - **GitHub**: https://github.com/duckdb/duckdb

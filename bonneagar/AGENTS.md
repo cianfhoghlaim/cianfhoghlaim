@@ -28,6 +28,10 @@ mise run iac-plan            # alias: bun run iac:plan
 mise run iac-bootstrap        # alias: bun run iac:bootstrap
 # Validate all 89 stacks against the 6-file GOLD_STANDARD
 mise run cic:stack-doctor    # the stack-doctor audit (CI gate)
+# CI-strict variant: stack-doctor --strict --check-grammar
+mise run stack-doctor:strict # fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env (NEW in Change 1, 2026-07-30)
+# One-command 7-phase full-stack deploy orchestrator
+mise run deploy:full         # resumable checkpoint at ~/.cianfhoghlaim/deploy-state.json (NEW in Change 3, 2026-08-01)
 # Mandatory preflight before any arm1-oci mutation
 mise run preflight-arm-oci   # ALIAS NOTE: docs say preflight:arm-oci but the canonical name uses a hyphen
 ```
@@ -58,6 +62,10 @@ mise run lint:skills         # validate .agents/skills/ metadata (53/53 pass)
 mise run sync                # mise install + uv sync + bun install
 mise run iac:health          # 6-way health check
 ```
+
+## `deploy:full` orchestrator
+
+`mise run deploy:full` is the one-command, end-to-end bringup for the entire platform. It is invoked as a **shell entry** (`scripts/deploy-full.sh`) that runs `preflight-arm-oci` then delegates to a **TypeScript state machine** (`scripts/deploy-full.ts`) which owns the resumable checkpoint at `~/.cianfhoghlaim/deploy-state.json`. The state machine walks 7 ordered phases — `(1) preflight → (2) control-plane-up → (3) lakehouse-up → (4) data-stacks-up → (5) agent-surfaces-up → (6) dagster-materialize → (7) dagster-sensor-health-gate` — and skips any phase whose checkpoint is already `success`. Re-run with no args to resume from the last failed phase; pass `--phase=N` to run a single phase or `--dry-run` to log without mutating state. Shipped by openspec Change 3 (`2026-08-01-lakehouse-and-reproducible-deploy-v1`); see [`scripts/deploy-full.ts`](scripts/deploy-full.ts) + [`scripts/deploy-full.sh`](scripts/deploy-full.sh).
 
 ## Overview
 

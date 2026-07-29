@@ -32,7 +32,7 @@ LIMIT 10;
 
 ```python
 # MotherDuck database (the oideachais lakehouse)
-con.execute("ATTACH 'md:oideachais' AS oideachais")
+con.execute("ATTACH 'md:cianfhoghlaim' AS oideachais")
 
 # Join: Lance embeddings + DuckDB metadata
 results = con.execute("""
@@ -55,7 +55,7 @@ results = con.execute("""
 import ibis
 
 # Connect to DuckDB
-db = ibis.duckdb.connect("md:oideachais")
+db = ibis.duckdb.connect("md:cianfhoghlaim")
 
 # Reference the Lance view as an Ibis table
 books = db.table("books")
@@ -80,7 +80,7 @@ import duckdb
 def con():
     c = duckdb.connect()
     c.execute("INSTALL lance; LOAD lance;")
-    c.execute("ATTACH 'md:oideachais' AS oideachais")
+    c.execute("ATTACH 'md:cianfhoghlaim' AS oideachais")
     c.execute("""
         CREATE VIEW books AS
         SELECT * FROM lance_scan('s3://lance/leabharlann_books')

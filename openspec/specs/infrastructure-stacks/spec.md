@@ -2299,6 +2299,87 @@ $ curl http://lakehouse-lance-namespace:8182/health
 {"status":"ok"}
 ```
 
+### Requirement: PlanetScale Postgres Centralisation (infrastructure-stacks)
+
+The system SHALL consolidate the data substrates of its 94 Docker Compose stacks according to the canonical decision matrix in `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7.
+
+#### Scenario: An operator audits a stack's substrate choice
+
+- **GIVEN** the operator opens `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7
+- **WHEN** they look up `<stack>` in the 28-row matrix
+- **THEN** they see the current substrate, target substrate, compatibility verdict, and env var name
+- **AND** they see whether Phase B or Phase C owns the swap
+
+#### Scenario: Phase B archives
+
+- **GIVEN** `2026-07-XX-planetscale-postgres-migration-phase-b-v1` has archived
+- **WHEN** the operator inspects `bonneagar/stacks/<stack>/compose.yaml` for an ⭐-easy stack
+- **THEN** the env var SHALL point at PlanetScale PostgreSQL
+- **AND** the credentials SHALL be Locket-injected from Infisical path `dev-baile/<stack>/database_url`
+- **AND** the local `postgres` service SHALL be removed (or kept as a Phase B optional for fallback)
+
+### Requirement: Lakekeeper → PlanetScale PG (Phase B.0 hard switch)
+
+The system SHALL migrate Lakekeeper from its local `postgres:16-alpine` container + `lakekeeper-migrate` companion to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R9.
+
+#### Scenario: Lakekeeper compose.yaml after Phase B.0
+
+- **GIVEN** the operator has created `lakekeeper` on the PlanetScale branch
+- **WHEN** `bonneagar/stacks/lakehouse/compose.yaml` is inspected
+- **THEN** the local `postgres` service SHALL be absent (or replaced with PlanetScale connection)
+- **AND** the local `lakekeeper-migrate` service SHALL be absent (or its migrations SHALL run idempotently on first start)
+- **AND** the `lakekeeper` service env SHALL use `infisical://dev-baile/lakekeeper/database_url` for both `LAKEKEEPER__PG_DATABASE_URL_READ` + `_WRITE`
+- **AND** `LAKEKEEPER__PG_ENCRYPTION_KEY` SHALL resolve via Locket
+
+### Requirement: Convex → PlanetScale PG (Phase B.0 hard switch, clean start)
+
+The system SHALL migrate Convex self-host from embedded SQLite to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R9.
+
+#### Scenario: Convex compose.yaml after Phase B.0
+
+- **GIVEN** the operator has created `convex_production` on the PlanetScale branch
+- **AND** the self-hosted Convex deployment has no production data
+- **WHEN** `bonneagar/stacks/convex/compose.yaml` is inspected
+- **THEN** the local `convex-data` SQLite volume SHALL be absent
+- **AND** the `backend` service env SHALL use `infisical://dev-baile/convex/database_url`
+- **AND** `INSTANCE_SECRET` SHALL resolve via Locket
+
+### Requirement: Dagster / DuckLake → PlanetScale PG (Phase B.0 env swap only)
+
+The system SHALL migrate Dagster / DuckLake's metadata DB env var to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R9, while keeping the local `dagster-postgres` container in place as a fallback (retired in Phase B.1).
+
+#### Scenario: Dagster Dockerfile.dagster after Phase B.0
+
+- **GIVEN** the operator has created `dagster_state` on the PlanetScale branch
+- **WHEN** `bonneagar/stacks/dagster/Dockerfile.dagster` is inspected
+- **THEN** `DUCKLAKE_POSTGRES_HOST` SHALL be set to `infisical://dev-baile/dagster/database_url`
+- **AND** `DUCKLAKE_POSTGRES_SSLMODE` SHALL be `require`
+- **AND** the local `dagster-postgres` container SHALL remain in compose.yaml
+
+### Requirement: deployment-choice.yaml is the canonical enablement file for the 88+ stacks
+
+The system SHALL register `deployment-choice.yaml` (committed, ~100
+LOC) as the canonical enablement file for the 88+ Docker Compose
+stacks in `bonneagar/stacks/`. The file SHALL have a section
+`enabled_stacks: dict[str, bool]` listing every stack with on/off
+toggle. The CLI + marimo + web UI all read from and write to this
+file.
+
+#### Scenario: enabled_stacks section is populated
+
+- **GIVEN** the `deployment-choice.yaml` committed
+- **WHEN** the operator reads the file
+- **THEN** the `enabled_stacks` section contains every Docker Compose
+  stack with `true` (except for any stacks marked as
+  `disabled_by_default: true` in `bonneagar/stacks/INDEX.md`)
+
+#### Scenario: Stack toggle writes deployment-choice.yaml
+
+- **GIVEN** the marimo notebook open with Tab 4 "Stacks" visible
+- **WHEN** the operator toggles off `lakehouse` and clicks "Save"
+- **THEN** `deployment-choice.yaml` is updated with
+  `enabled_stacks: {lakehouse: false, ...}`
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |
@@ -2331,7 +2412,6 @@ $ curl http://lakehouse-lance-namespace:8182/health
 | graphiti | Temporal knowledge graph | Internal |
 | cognee | AI memory system | Internal |
 | convex | Real-time backend | Cloud |
-| lakefs | Data versioning | Internal |
 | lakekeeper | Iceberg catalog (standalone) | Internal |
 | mathesar | Database UI | Internal |
 | nimtable | Analytics table viewer | Internal |

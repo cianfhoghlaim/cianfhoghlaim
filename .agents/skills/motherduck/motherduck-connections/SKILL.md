@@ -37,14 +37,14 @@ The KCG-preferred connection. Use `duckdb` >= 1.1.
 ```python
 import duckdb
 
-con = duckdb.connect("md:oideachais?motherduck_token=...")
+con = duckdb.connect("md:cianfhoghlaim?motherduck_token=...")
 # OR, preferred for KCG:
-con = duckdb.connect("md:oideachais", config={"motherduck_token": token})
+con = duckdb.connect("md:cianfhoghlaim", config={"motherduck_token": token})
 ```
 
 ```typescript
 import { Database } from "duckdb";
-const db = new Database("md:oideachais?motherduck_token=...");
+const db = new Database("md:cianfhoghlaim?motherduck_token=...");
 ```
 
 Pros: full DuckDB SQL, `mcp-server-motherduck` compatible, no
@@ -80,7 +80,7 @@ TL;DR:
 
 ```bash
 uvx mcp-server-motherduck \
-    --db-path md:oideachais \
+    --db-path md:cianfhoghlaim \
     --motherduck-token "$MOTHERDUCK_TOKEN" \
     --read-only --saas-mode \
     --max-rows 256 --max-chars 50000 \

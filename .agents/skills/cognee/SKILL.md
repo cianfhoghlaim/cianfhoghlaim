@@ -603,7 +603,6 @@ KCG-specific ports:
 | Stack | Stack path | Port | Role in cognition pipeline |
 |:--|:--|:--|:--|
 | **Lakehouse** | `infrastructure/stacks/lakehouse/` | 3900-3904 (Garage S3), 8181 (Lakekeeper), 8182 (Lance Namespace) | Single Parquet + Lance + Iceberg namespace; ACID transactions between Dagster writes (cognify) and app reads (GraphRAG) |
-| **LakeFS** | `infrastructure/stacks/lakefs/` | 8000 | Git-like versioning of cognition data; `main` (production) + `experiment/cognee-v1.1` + `2023-reform` branches |
 | **Dozzle** | `infrastructure/stacks/dozzle/` | 8080 | Real-time container logs (cognee, graphiti-neo4j-1, falkordb, langfuse-*) |
 | **Beszel** | `infrastructure/stacks/beszel/` | 8090 | Host metrics across `cax41-hetzner` (32 GB), `arm1-oci` (24 GB), `bunchloch` (48 GB unified) |
 
