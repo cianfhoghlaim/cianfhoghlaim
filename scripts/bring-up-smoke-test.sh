@@ -138,8 +138,8 @@ fi
 # ============================================================================
 section "Step 5: lint:skills (54/54 expected)"
 
-if mise run lint:skills 2>&1 | tail -3 | grep -q "56 skills pass"; then
-    pass "lint:skills: 56 skills pass (53 + knowledge-sync-loop + dagster-asset-sync)"
+if mise run lint:skills 2>&1 | tail -3 | grep -q "57 skills pass"; then
+    pass "lint:skills: 57 skills pass (53 + knowledge-sync-loop + dagster-asset-sync + baml-schema-sync)"
 else
     fail "lint:skills: did not return '56 skills pass'"
 fi
@@ -269,6 +269,38 @@ else
     fail "scripts/sync/dagster.sh missing or not executable"
 fi
 
+
+
+# ============================================================================
+# Step 7: sync:baml (Layer 7 — BAML schema surface validation)
+# ============================================================================
+section "Step 7: sync:baml (Layer 7 — BAML schema surface validation)"
+
+if bash scripts/sync/baml.sh 2>&1 | tail -10 | grep -q "OK:.*.baml files"; then
+    pass "sync:baml runs + reports the 320 .baml files (Layer 7)"
+else
+    fail "sync:baml output missing 'OK: 320 .baml files'"
+fi
+if [ -d ".agents/skills/baml-schema-sync" ]; then
+    pass "baml-schema-sync skill directory exists"
+else
+    fail "baml-schema-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_baml_schemas.py" ]; then
+    pass "scripts/cognee_ingest_baml_schemas.py exists"
+else
+    fail "scripts/cognee_ingest_baml_schemas.py missing"
+fi
+if [ -f "notebooks/26_baml_sync_dashboard.py" ]; then
+    pass "notebooks/26_baml_sync_dashboard.py (Layer 7 dashboard) exists"
+else
+    fail "notebooks/26_baml_sync_dashboard.py missing"
+fi
+if grep -q "baml-function-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "22nd CCC concept guide (baml-function-search) is in guides.yml"
+else
+    fail "22nd CCC concept guide missing"
+fi
 # ============================================================================
 # Summary
 # ============================================================================

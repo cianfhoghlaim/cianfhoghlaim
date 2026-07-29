@@ -324,3 +324,21 @@
     - .agents/skills/dagster-asset-sync/SKILL.md
   tags: [dagster, asset, sync, defs, 5-layer, kcg-component, layer6]
   domain: "02-data-platform"
+
+- title: "baml-function-search"
+  description: |
+    How to find any BAML extraction function by name, output type, or client
+    model. Use when the user asks 'what BAML functions extract X', 'which
+    function uses the minimax-m3 client', or 'how do I call the
+    ExtractCurriculumSyllabus function'. 320 .baml files + 558 functions + 33
+    LLM clients. Per the 2026-08-15-baml-sync-loop-v1 change (Layer 7).
+  files:
+    - baml_src/british_isles/ireland/education/lc_extraction/curriculum_syllabus.baml
+    - baml_src/british_isles/ireland/education/lc_extraction/exam_paper_layout.baml
+    - baml_src/british_isles/ireland/education/lc_extraction/marking_scheme.baml
+    - baml_src/british_isles/ireland/education/lc_extraction/cross_linguistic.baml
+    - baml_src/british_isles/ireland/education/lc_extraction/syllabus_diagram.baml
+    - baml_src/clients.baml
+    - baml_src/clients_biep_v3.py
+  tags: [baml, extraction, functions, clients, schema]
+  domain: "00-baml"
