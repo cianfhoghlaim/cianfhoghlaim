@@ -848,6 +848,142 @@ The system SHALL require:
 - **AND** `.forgejo/workflows/skill-refs-check.yaml` SHALL exist
   with the same checks (so both CI systems enforce the gate)
 
+### Requirement: PlanetScale Postgres Centralisation (agent-platform-cluster)
+
+The system SHALL migrate the 8-stack agent-platform-cluster (`lakehouse` + `litellm` + `langfuse` + `mlflow` + `logfire` + `cognee` + `graphiti` + `lancedb` + 3 agent surfaces) per the canonical 28-row matrix in `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7.
+
+#### Scenario: A consumer reads the cluster spec
+
+- **GIVEN** the cluster spec is opened alongside the planetscale-postgres-data-strategy umbrella
+- **WHEN** they look up `langfuse` / `mlflow` / `cognee` / `logfire`
+- **THEN** they see the PlanetScale PG row in the matrix
+- **AND** the cluster member row is annotated with "target: PlanetScale PG"
+
+#### Scenario: Cognee moves to PlanetScale PG
+
+- **GIVEN** the Phase B change has archived
+- **WHEN** `bonneagar/stacks/cognee/compose.yaml` is inspected
+- **THEN** `cognee-postgres` SHALL be removed
+- **AND** `DATABASE_URL` SHALL point at PlanetScale PG
+- **AND** the `pgvector` extension SHALL be enabled on the PlanetScale branch
+
+### Requirement: LiteLLM config is regenerated from MODEL_REGISTRY
+
+The system SHALL regenerate
+`bonneagar/stacks/litellm/config/config.yaml` from `MODEL_REGISTRY`
+on every `mise run cic:meaisin:litellm-regenerate`. The 5 M3
+chokepoint aliases (`kimi/k2`, `glm/5.1`, `minimax/m2.5`, `mimo/2.5`,
+`deepseek/flash`) + the 24 `local/vision/*` entries SHALL all be
+derived from `MODEL_REGISTRY`.
+
+#### Scenario: LiteLLM config is generated from MODEL_REGISTRY
+
+- **GIVEN** the `MODEL_REGISTRY` populated
+- **WHEN** the operator runs
+  `mise run cic:meaisin:litellm-regenerate`
+- **THEN** `bonneagar/stacks/litellm/config/config.yaml` is regenerated
+  from `MODEL_REGISTRY`
+- **AND** the file contains no hand-edited model_list entries
+- **AND** the 5 ghost-model references (`qwen3-vl-235b-a22b`,
+  `glm-4.6v-full`, `qwen3.6-35b-a3b-mtp`, `gemma-4-31B`,
+  `gemma-3-27b-it`) are removed
+
+### Requirement: Deployment control panel consumes sync reports
+
+The system SHALL provide a marimo notebook
+`notebooks/24_deployment_control_panel.py` that reads the latest
+sync report from `stedding/sync-reports/all-{date}.md` and surfaces
+the per-layer status + the model registry + the MCP server health.
+
+This requirement was added in the
+`2026-08-15-knowledge-sync-loop-v1` change (Change B — the
+model-registry change consumes the sync reports as the canonical
+"operator's eye" on the repo's knowledge state).
+
+#### Scenario: Deployment control panel shows 5 layer statuses
+
+- **GIVEN** the latest `stedding/sync-reports/all-{date}.md` exists
+- **WHEN** a user opens `notebooks/24_deployment_control_panel.py` in marimo
+- **THEN** the notebook SHALL display the 5 sync layer statuses
+  (paths / ccc / cognee / skills / mcp) at the top with
+  pass/fail/info indicators
+- **AND** the notebook SHALL list the 14 MCP servers (from
+  `opencode.json`)
+- **AND** the notebook SHALL list the 54+ agent skills
+- **AND** the notebook SHALL have an expander that shows the full
+  sync report
+
+### Requirement: sync_health Dagster asset emits sync metadata
+
+The system SHALL provide a Dagster asset `sync_health` at
+`orchestration/defs/sync_assets.py` that reads the latest
+`stedding/sync-reports/all-{date}.md` and emits metadata for the
+5 sync layers.
+
+This requirement was added in the
+`2026-08-15-knowledge-sync-loop-v1` change (Change B — the sync
+metadata is consumed by the deployment control panel + the
+`stale_skill_alert` Dagster job).
+
+#### Scenario: sync_health materializes on cron
+
+- **GIVEN** the `0 */4 * * *` cron fires (every 4 hours)
+- **WHEN** the `sync_health` asset materializes
+- **THEN** it SHALL emit the following Dagster metadata:
+  `paths_sync_time`, `ccc_chunk_count`, `cognee_cluster_count`,
+  `skill_pass_rate`, `mcp_server_count_healthy`,
+  `layer_statuses` (per-layer pass/fail), `path_pattern_counts`
+  (per-pattern count from the paths report)
+- **AND** it SHALL trigger a downstream Dagster job
+  `stale_skill_alert` if `skill_pass_rate < 0.95`
+
+### Requirement: sync_report_sensor fires on new reports
+
+The system SHALL provide a Dagster sensor `sync_report_sensor` that
+fires when a new `stedding/sync-reports/all-{date}.md` file is
+created (i.e. after `mise run sync:all`).
+
+#### Scenario: sync_report_sensor fires on new file
+
+- **GIVEN** the sensor is running with `minimum_interval_seconds=3600`
+- **WHEN** a new `stedding/sync-reports/all-{date}.md` file is created
+  (e.g. after `mise run sync:all`)
+- **THEN** the sensor SHALL enqueue a `RunRequest` for the
+  `sync_health` asset
+- **AND** the `sync_health` asset SHALL re-materialize
+- **AND** the `sync_health_refresh` job SHALL complete within 60 seconds
+
+### Requirement: deployment-choice.yaml is the canonical enablement file
+
+The system SHALL provide a `deployment-choice.yaml` file at the
+repo root that records which families in `MODEL_REGISTRY` are
+enabled for production (default: all). The file SHALL have the
+shape:
+
+```yaml
+enabled_families:
+  - ocr_vision
+  - text_llm
+  - embedder
+  - image_gen
+  - voice
+  - translation
+enabled_jurisdictions:
+  - ireland
+  - england
+disabled_families: []
+disabled_models: []
+```
+
+#### Scenario: deployment-choice.yaml is read at startup
+
+- **WHEN** the agent runtime (hermes / openclaw / openchamber) starts
+- **THEN** it SHALL read `deployment-choice.yaml`
+- **AND** the runtime SHALL only call `MODEL_REGISTRY.model_for(...)`
+  for families in `enabled_families`
+- **AND** if `deployment-choice.yaml` is missing, the runtime SHALL
+  default to all-families-enabled + log a warning
+
 ## Cross-references
 
 - [`agent-memory-systems`](../agent-memory-systems/spec.md) — the 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph)

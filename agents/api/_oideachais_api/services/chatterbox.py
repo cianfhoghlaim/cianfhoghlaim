@@ -10,7 +10,8 @@ For Production: Finetune with Irish speech data (see taighde/teanga/chatterbox-f
 
 import asyncio
 import io
-from dataclasses import dataclass
+import os
+from dataclasses import dataclass, field
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
@@ -28,11 +29,31 @@ class IrishDialect(StrEnum):
     STANDARD = "standard"
 
 
+def _default_tts_model_name() -> str:
+    """Resolve the canonical Chatterbox TTS model from MODEL_REGISTRY.
+
+    Per the centralized-model-registry openspec change, the TTS
+    model is resolved via ``MODEL_REGISTRY.resolve("voice", "tts")``
+    which maps to ``chatterbox`` (the canonical short key). Falls
+    back to the historical ``ResembleAI/chatterbox`` HF ID when the
+    registry import fails (e.g. minimal container builds).
+    """
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("voice", "tts")
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return "ResembleAI/chatterbox"
+
+
 @dataclass
 class TTSConfig:
     """TTS configuration."""
 
-    model_name: str = "ResembleAI/chatterbox"
+    model_name: str = field(
+        default_factory=lambda: os.environ.get(
+            "CHATTERBOX_MODEL", _default_tts_model_name()
+        )
+    )
     device: str = "auto"  # auto, cuda, mps, cpu
     sample_rate: int = 24000
     voices_dir: Path = Path("voices")

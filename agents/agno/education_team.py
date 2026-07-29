@@ -166,10 +166,41 @@ class EducationResponse(BaseModel):
 # Agent Definitions
 # =============================================================================
 
-# Default model configuration
-DEFAULT_MODEL = os.getenv("AGNO_DEFAULT_MODEL", "gpt-4o")
-GEMINI_MODEL = os.getenv("AGNO_GEMINI_MODEL", "gemini-2.0-flash")
-CLAUDE_MODEL = os.getenv("AGNO_CLAUDE_MODEL", "claude-sonnet-4-20250514")
+# Model configuration — all resolved via MODEL_REGISTRY (the
+# centralized-model-registry openspec change). The role mapping:
+#   default → text_llm/default   (minimax-m3, the canonical M3 alias)
+#   gemini  → text_llm/strong    (gemini-2.5-pro, the Google strong path)
+#   claude  → text_llm/long_context (claude-sonnet-4-20250514, the Anthropic path)
+# The historical env-var overrides (AGNO_DEFAULT_MODEL etc.) are
+# preserved as fallback strings so a deployed container can still
+# override the model via env without re-resolving the registry.
+def _default_text_llm_model() -> str:
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "default")
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return "minimax-m3"
+
+
+def _strong_text_llm_model() -> str:
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "strong")
+    except Exception:  # noqa: BLE001
+        return "gemini-2.5-pro"
+
+
+def _long_context_text_llm_model() -> str:
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "long_context")
+    except Exception:  # noqa: BLE001
+        return "claude-sonnet-4-20250514"
+
+
+DEFAULT_MODEL = os.getenv("AGNO_DEFAULT_MODEL", _default_text_llm_model())
+GEMINI_MODEL = os.getenv("AGNO_GEMINI_MODEL", _strong_text_llm_model())
+CLAUDE_MODEL = os.getenv("AGNO_CLAUDE_MODEL", _long_context_text_llm_model())
 
 
 def get_model(model_type: str = "default"):

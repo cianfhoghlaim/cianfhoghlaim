@@ -1,28 +1,8 @@
 # centralized-model-registry Specification
 
 ## Purpose
-
-`centralized-model-registry` is the single canonical model registry for
-the Cianfhoghlaim platform. It subsumes the existing 22-entry
-`VISION_MODELS` in `meaisinfhoghlaim/models/registry.py` plus the 4
-other model families (Text LLM, Embedding, Reranking, Image-Gen,
-Voice/ASR/TTS, Translation) that today are scattered across 5 separate
-ad-hoc registries + ~30 LiteLLM aliases + 21 BAML clients + 32
-hardcoded agent sites + 8 embedder hardcoded sites + 6 hackathon HF
-Inference fallbacks + 5 ghost-model references in `litellm/config.yaml`.
-
-The single source of truth is `meaisinfhoghlaim/models/registry.py:MODEL_REGISTRY`,
-keyed by `(family, role)` rather than just `key`. Every LiteLLM alias,
-BAML client, agent model field, embedder dropdown, image-gen list,
-voice model, and translation model routes through `MODEL_REGISTRY.resolve(family, role, language)`
-or `MODEL_REGISTRY.filter(family)`.
-
-The canonical operator-facing usage docs are at
-`.agents/skills/agent-fleet-orchestration/SKILL.md` and
-`.agents/skills/litellm/SKILL.md`.
-
-## ADDED Requirements
-
+TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+## Requirements
 ### Requirement: Single canonical model registry covering all model families
 
 The system SHALL provide a single canonical `MODEL_REGISTRY` dict at
@@ -211,3 +191,19 @@ detected that does not exist in `MODEL_REGISTRY`.
 - **THEN** the output includes `lint:registry: OK`
 - **AND** the existing CI pipeline (`.github/workflows/`)
   includes a step that runs `mise run lint:registry`
+
+### Requirement: Registry audit is a CI gate
+
+The system SHALL run `mise run lint:registry` in the `.forgejo/workflows/`
+CI on every commit. The CI gate SHALL fail any commit that introduces
+a hardcoded model string outside the `MODEL_REGISTRY` whitelist
+(detected via `scripts/registry_audit.py --strict`).
+
+#### Scenario: hardcoded model string blocks PR
+
+- **GIVEN** a PR adds `LlmAgent(model="custom-llama-3-70b")` to a Python file
+- **WHEN** the CI runs `mise run lint:registry`
+- **THEN** the audit SHALL flag the hardcoded model string
+- **AND** the CI gate SHALL exit non-zero
+- **AND** the PR SHALL be blocked from merge
+

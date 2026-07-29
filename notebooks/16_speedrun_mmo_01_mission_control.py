@@ -445,12 +445,25 @@ def _(mo, os, pathlib):
 
 @app.cell
 def _(mo):
+    # Embedder options resolved via MODEL_REGISTRY (the
+    # centralized-model-registry openspec change). Render the
+    # full ``embedder`` family so the operator can pick between
+    # the canonical bge-m3, the english-only bge-large-en-v1.5,
+    # and the lightweight MiniLM-L6-v2.
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        _embedder_keys = [
+            entry.key for entry in MODEL_REGISTRY.filter(family="embedder")
+        ]
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        _embedder_keys = ["BAAI/bge-m3", "all-MiniLM-L6-v2"]
+
     search_input = mo.ui.text(
         label="Search query:", value="leaving cert biology markings"
     )
     model_selector = mo.ui.dropdown(
-        options=["BAAI/bge-m3", "all-MiniLM-L6-v2"],
-        value="BAAI/bge-m3",
+        options=_embedder_keys,
+        value=_embedder_keys[0] if _embedder_keys else "BAAI/bge-m3",
         label="Embedding model",
     )
     search_btn = mo.ui.run_button(label="🔍 Semantic search")

@@ -1,4 +1,9 @@
 """
+[deferred-orphan] — this test file lives in the deprecated `tests_pkg_temp/`
+directory and references pre-v7 sruth/oideachais/tests/ paths. Marked for
+deletion in a follow-up change. Per the 2026-08-15-knowledge-sync-loop-v1
+change (Phase 2 / T2.1). Do NOT add new tests here.
+
 Tests for Canuint.ie word-level alignment pipeline.
 
 Tests cover:

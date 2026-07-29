@@ -438,14 +438,13 @@ model_list:
       api_key: not-needed
       timeout: 600
     model_info:
-      description: "Alias: math → Qwen 3.6 27B MTP (best for marking-scheme post-processing), falls back to Qwen 3.6 35B-A3B MTP, then to GLM-4.6"
+      description: "Alias: math → Qwen 3.6 27B MTP (best for marking-scheme post-processing), falls back to GLM-4.6 (the qwen3.6-35b-a3b-mtp ghost model was removed 2026-08-15: doesn't fit M4 48GB)"
       capabilities: ["math", "reasoning", "alias"]
       tier: paid
       # litellm 1.x wants dict form
       fallback_chain:
         - primary: local/vision/qwen3.6-27b-mtp
           fallbacks:
-            - local/vision/qwen3.6-35b-a3b-mtp
             - openai/glm-4.6
 
   - model_name: extract

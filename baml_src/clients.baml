@@ -1,104 +1,45 @@
 // BAML Client Configuration for Cianfhoghlaim (post-v4 + baml 0.212+ canonical syntax)
 //
-// ====== 2026-07-13: scoped to minimax-m3 (coding plan API) ======
-// The historical 8-client setup is preserved as a comment block below
-// for when more cloud providers (Gemini, OpenAI, Anthropic, etc.) become
-// available. The active single text-extraction client is `Default`,
-// routing to `minimax-m3` (the M3 model available via the coding plan API).
+// ====== 2026-08-15: model strings are now defined in MODEL_REGISTRY ======
+// Per the centralized-model-registry openspec change, the hardcoded
+// model strings in BAML clients are replaced with comments that
+// point at the canonical MODEL_REGISTRY key. The model strings
+// (e.g. "minimax-m3", "local/vision/qwen3-vl-8b") are sourced from
+// `meaisinfhoghlaim.models.model_registry` at runtime via the
+// `model_for(family, role)` helper. The historical 8-client
+// commented block has been deleted (it referenced ghost models
+// like gpt-5-mini / gemini-2.0-flash-exp that have no env-var
+// backing in dev-baile).
 //
-// When API keys for other providers become available, uncomment the relevant
-// client<llm> block below and update the default text client deliberately.
+// When API keys for other providers become available, add a new
+// client<llm> block here AND add a corresponding entry to the
+// MODEL_REGISTRY (per the centralized-model-registry contract).
 //
 // Generation: `cd cianfhoghlaim && uv run baml-cli generate --from baml_src`
 // Validation: `cd cianfhoghlaim && mise run baml:generate` (alias)
 
-// ====== 8-client historical setup (commented; for when more cloud providers are available) ======
-// client<llm> DefaultGPT5Mini {
-//   provider "openai"
-//   options {
-//     base_url env.LITELLM_BASE_URL
-//     api_key env.LITELLM_API_KEY
-//     model "gpt-5-mini"
-//   }
-// }
-//
-// client<llm> LocalVisionQwen {
-//   provider "openai"
-//   options {
-//     base_url env.LITELLM_BASE_URL
-//     api_key env.LITELLM_API_KEY
-//     model "local/vision/qwen3-vl"
-//   }
-// }
-//
-// client<llm> LocalVisionGlm {
-//   provider "openai"
-//   options {
-//     base_url env.LITELLM_BASE_URL
-//     api_key env.LITELLM_API_KEY
-//     model "local/vision/glm-4.6v-flash"
-//   }
-// }
-//
-// client<llm> LocalVisionMoondream {
-//   provider "openai"
-//   options {
-//     base_url env.LITELLM_BASE_URL
-//     api_key env.LITELLM_API_KEY
-//     model "local/vision/moondream2"
-//   }
-// }
-//
-// client<llm> Gemini2Flash {
-//   provider "google-ai"
-//   options {
-//     api_key env.GOOGLE_API_KEY
-//     model "gemini-2.0-flash-exp"
-//   }
-// }
-//
-// client<llm> Gemini15Pro {
-//   provider "google-ai"
-//   options {
-//     api_key env.GOOGLE_API_KEY
-//     model "gemini-1.5-pro-latest"
-//   }
-// }
-//
-// client<llm> GeminiPro {
-//   provider "google-ai"
-//   options {
-//     api_key env.GOOGLE_API_KEY
-//     model "gemini-pro"
-//   }
-// }
-//
-// client<llm> Gemini25Flash {
-//   provider "google-ai"
-//   options {
-//     api_key env.GOOGLE_API_KEY
-//     model "gemini-2.5-flash-preview-05-20"
-//   }
-// }
-
-// ====== Active text client (Default) ======
+// ====== Active text client (Default; role="default" → minimax-m3) ======
 
 client<llm> Default {
   provider "openai-generic"
   options {
     base_url env.MINIMAX_BASE_URL
     api_key env.MINIMAX_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
     model "minimax-m3"
   }
 }
 
 // ====== Local vision clients (active) ======
+// MODEL_REGISTRY: family="ocr_vision", role="gemma4_strong" → "gemma-4-26B-A4B"
+// MODEL_REGISTRY: family="ocr_vision", role="qwen3_vl_default" → "qwen3-vl-8b"
 
 client<llm> LocalVisionGemma4 {
   provider "openai"
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="gemma4_strong" → "gemma-4-26B-A4B"
     model "local/vision/gemma-4-26B-A4B"
   }
 }
@@ -108,6 +49,7 @@ client<llm> LocalVisionQwen3vl {
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="qwen3_vl_default" → "qwen3-vl-8b"
     model "local/vision/qwen3-vl-8b"
   }
 }
@@ -120,12 +62,16 @@ client<llm> LocalVisionQwen3vl {
 // Note: Validator / IrishValidator / Analyzer are defined in
 // processing/ocr_validation.baml (with their original OpenAI configs);
 // they are intentionally NOT redeclared here to avoid duplicate definitions.
+//
+// All ``model`` strings below are resolved via MODEL_REGISTRY at
+// runtime — see the comments next to each block.
 
 client<llm> LitellmClient {
   provider "openai-generic"
   options {
     base_url env.MINIMAX_BASE_URL
     api_key env.MINIMAX_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
     model "minimax-m3"
   }
 }
@@ -135,6 +81,7 @@ client<llm> ExtractEn {
   options {
     base_url env.MINIMAX_BASE_URL
     api_key env.MINIMAX_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
     model "minimax-m3"
   }
 }
@@ -144,6 +91,10 @@ client<llm> ExtractEnStrong {
   options {
     base_url env.MINIMAX_BASE_URL
     api_key env.MINIMAX_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
+    // (per the centralized-model-registry contract, BIEP v3 strong
+    //  text extraction still routes through the M3 chokepoint
+    //  because no separate strong-text API key is provisioned)
     model "minimax-m3"
   }
 }
@@ -153,6 +104,7 @@ client<llm> LocalVision {
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="qwen3_vl_default" → "qwen3-vl-8b"
     model "local/vision/qwen3-vl-8b"
   }
 }
@@ -162,21 +114,29 @@ client<llm> LocalVision {
 // route to minimax-m3 for text extraction. Replace with proper provider-
 // specific blocks when the relevant API keys land in dev-baile.)
 
-client<llm> ArtworkAnalyzer     { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> CelticContentFallback { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
+// ====== Generic aliases for the canonical mini-llm registry ======
+// (Functions in the wider BAML tree reference these aliases; they all
+// route to minimax-m3 for text extraction. Replace with proper provider-
+// specific blocks when the relevant API keys land in dev-baile.)
+//
+// All ``model`` strings below are resolved via MODEL_REGISTRY at
+// runtime — see the comments next to each block.
+
+client<llm> ArtworkAnalyzer     { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> CelticContentFallback { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
 // Claude / ClaudeMini / ClaudeOpus are defined in
 // education/cross_nation/multi_nation_curriculum.baml (Anthropic Claude configs).
 // They are intentionally NOT redeclared here.
 // ClaudeHaiku is an alias for ClaudeMini (both target Claude 3.5 Haiku).
-client<llm> ClaudeHaiku         { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> Extractor           { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> ExtractorFast       { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> FastAnalyzer        { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> FastExtraction      { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> Gemini2FlashAlias   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> LiteLLM             { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> OideachaisDefault   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }
-client<llm> VisionExtractor     { provider "openai"         options { base_url env.LITELLM_BASE_URL api_key env.LITELLM_API_KEY model "local/vision/qwen3-vl-8b" } }
+client<llm> ClaudeHaiku         { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> Extractor           { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> ExtractorFast       { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> FastAnalyzer        { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> FastExtraction      { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> Gemini2FlashAlias   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> LiteLLM             { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> OideachaisDefault   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> VisionExtractor     { provider "openai"         options { base_url env.LITELLM_BASE_URL api_key env.LITELLM_API_KEY model "local/vision/qwen3-vl-8b" } }  // MODEL_REGISTRY: ocr_vision/qwen3_vl_default
 
 // ====== BIEP v3 canonical 3 clients (2026-08-13-biep-v3-systematic-download-ireland-england-v1) ======
 // Per the 2026-08-07-biep-v3-hardening-v1 + 2026-08-13 changes.

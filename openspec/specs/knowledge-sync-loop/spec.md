@@ -1,9 +1,9 @@
 # Knowledge Sync Loop
 
-> **The 5-layer pull-based sync architecture that keeps all 8 knowledge surfaces in the cianfhoghlaim repo in sync — openspec, skills, MCP, code (CCC), docs (Cognee), Dagster, agent definitions, and the lakehouse.**
+## Purpose
 
-## ADDED Requirements
-
+The 5-layer pull-based sync architecture that keeps all 8 knowledge surfaces in the cianfhoghlaim repo in sync — openspec, skills, MCP, code (CCC), docs (Cognee), Dagster, agent definitions, and the lakehouse.
+## Requirements
 ### Requirement: Layer 1 — Path sync
 
 The system SHALL provide a `mise run sync:paths` task that detects
@@ -232,6 +232,33 @@ sync health reports.
   (paths / ccc / cognee / skills / mcp) with pass/fail indicators
 - **AND** the notebook SHALL drill down to the per-layer reports
   via sidebar links
+
+### Requirement: sync:all operator egress notification
+
+The system SHALL emit a single Slack notification (or local desktop
+notification when no Slack is configured) after every successful
+`mise run sync:all` invocation. The notification SHALL include:
+- The total sync duration (seconds)
+- The 5 layer pass/fail summary
+- A link to the latest `stedding/sync-reports/all-{date}.md` report
+- A one-line "all 5 layers healthy" or "N layers failed" verdict
+
+#### Scenario: sync:all succeeds with all 5 layers healthy
+
+- **GIVEN** the operator runs `mise run sync:all`
+- **WHEN** all 5 layer scripts exit 0
+- **THEN** the system SHALL emit a notification with verdict
+  "all 5 layers healthy" + the report link
+- **AND** the notification SHALL arrive within 60 seconds of the
+  last layer completing
+
+#### Scenario: sync:all fails on 1+ layer
+
+- **GIVEN** the operator runs `mise run sync:all`
+- **WHEN** at least 1 layer script exits non-zero
+- **THEN** the system SHALL emit a notification with verdict
+  "N layers failed (see report)" + the report link
+- **AND** the notification SHALL highlight the failed layer names
 
 ## Cross-references
 

@@ -131,12 +131,20 @@ def get_or_create_architect_agent(client=None):
                 logger.info(f"Found existing ProjectArchitect agent: {agent.id}")
                 return agent
 
-        # Create new agent
+        # Create new agent — model resolved via MODEL_REGISTRY (the
+        # centralized-model-registry openspec change; role="long_context"
+        # maps to claude-sonnet-4-20250514).
+        try:
+            from meaisinfhoghlaim.models import MODEL_REGISTRY
+            _llm = MODEL_REGISTRY.resolve("text_llm", "long_context")
+        except Exception:  # noqa: BLE001 — registry unavailable in dev
+            _llm = "claude-sonnet-4-20250514"
+
         agent = client.agents.create(
             name="ProjectArchitect",
             system=PROJECT_ARCHITECT_SYSTEM,
             include_base_tools=True,
-            llm="claude-sonnet-4-20250514",  # Use Claude for best results
+            llm=_llm,  # resolved via MODEL_REGISTRY.resolve("text_llm", "long_context")
         )
         logger.info(f"Created ProjectArchitect agent: {agent.id}")
         return agent

@@ -43,6 +43,33 @@ from .config import config
 logger = logging.getLogger(__name__)
 
 
+def _email_triage_model() -> str:
+    """Resolve the email-triage LLM via MODEL_REGISTRY (the
+    centralized-model-registry openspec change). The role
+    ``email_triage_strong`` is the disambiguated lookup that maps to
+    ``gemini-2.5-pro`` (the Google ADK strong path). Falls back to
+    ``MODEL_REGISTRY.resolve("text_llm", "strong")`` for back-compat,
+    and to the historical ``gemini-2.5-pro`` hardcoded string when
+    the registry is unavailable. The env var
+    ``EMAIL_TRIAGE_MODEL`` overrides the registry lookup for prod /
+    dev convenience.
+    """
+    override = os.environ.get("EMAIL_TRIAGE_MODEL")
+    if override:
+        return override
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "email_triage_strong")
+    except KeyError:
+        try:
+            from meaisinfhoghlaim.models import MODEL_REGISTRY
+            return MODEL_REGISTRY.resolve("text_llm", "strong")
+        except Exception:  # noqa: BLE001
+            return "gemini-2.5-pro"
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return "gemini-2.5-pro"
+
+
 # =============================================================================
 # Response Models (the typed contracts for the 4 tool responses)
 # =============================================================================
@@ -501,7 +528,7 @@ find_loose_threads_tool = FunctionTool(func=find_loose_threads)
 
 email_triage_agent = LlmAgent(
     name="email_triage",
-    model="gemini-2.5-pro",
+    model=_email_triage_model(),
     description=(
         "Triage a personal inbox across 4 accounts (DKIT.ie Microsoft 365, "
         "2 Gmail, Hotmail). Classifies each thread into 1 of 9 EmailClass "

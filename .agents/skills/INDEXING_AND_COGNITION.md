@@ -33,7 +33,7 @@ Cognee, then merges.
 | Chunks | **257,957** |
 | Files | **8,845** |
 | Top languages | javascript (218,719), python (15,236), markdown (8,615), css (4,750), json (2,421), yaml (2,317), typescript (1,666), tsx (1,269), rust (445) |
-| Concept guides | **19** in `.cocoindex_code/guides.yml` (loaded into search results when matched) |
+| Concept guides | **20** in `.cocoindex_code/guides.yml` (loaded into search results when matched) — the 20th is `openspec-archive-search` (added by the `2026-08-15-knowledge-sync-loop-v1` change) |
 
 The index is **already healthy and ccc-ready** — no initial
 build needed. The round-1 `cocoindex_readiness_audit`
@@ -394,17 +394,25 @@ top-level registries wired into OpenCode. It was added in the
 `centralize-agent-context-and-automate` openspec change
 (2026-06-27) to give a one-glance view of the agent surface.
 
-### 8.1 The 7 OpenCode agents (`opencode.json` → `agent`)
+### 8.1 The 14 OpenCode agents (`opencode.json` → `agent`)
 
 | Agent | Type | Skill filter | Subagent? | Specialises in |
 |:--|:--|:--|:--|:--|
-| `build` | Primary | (none — sees all 53 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
-| `plan` | Primary | (none — sees all 53 skills) | No | Default PLAN agent. Read-only by design. |
-| `data-platform` | Subagent | 15 skills (dlt, dagster, baml, cognee, ccc, motherduck, lancedb, cocoindex, duckdb, ducklake, dlthub, ibis, marimo, langfuse, mlflow) | Yes (`subagent_type: data-platform`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
-| `infrastructure` | Subagent | 15 skills (komodo, pangolin, pulumi, dagger, dagger-pipelines, secrets-management, cloudflare, ccc, dlthub, cocoindex, langfuse, mlflow, risingwave, olake, effect-ts) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
-| `agent-platform` | Subagent | 23 skills (baml, litellm, agent-observability, agent-memory-systems, langfuse, mlflow, ragas, cognee, graphiti-core, lancedb, falkordb, memgraph, unsloth, huggingface, agno, google-adk, dignified-python, pydantic, ccc, dlthub, dagster, duckdb, cocoindex) | Yes (`subagent_type: agent-platform`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
-| `frontend-apps` | Subagent | 20 skills (tanstack-start, copilotkit, hono, convex, better-auth, baml, dagster, dlt, agentic-frontend-frameworks, babylonjs, orpc, effect-ts, cloudflare, ag-ui, marimo, dignified-python, pydantic, ccc, langfuse, cocoindex) | Yes (`subagent_type: frontend-apps`) | Multi-persona portfolio + Tuatha MMO (Convex + Hono + TanStack + BetterAuth + Babylon.js) |
-| `research` | Subagent | 11 skills (browserbase, firecrawl, ccc, cognee, agent-observability, change-detection, crawl4ai, langfuse, mlflow, baml, cocoindex) | Yes (`subagent_type: research`) | Browser-driven autonomous investigation (BrowserBase + Firecrawl + Cognee) |
+| `build` | Primary | (none — sees all 153 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
+| `plan` | Primary | (none — sees all 153 skills) | No | Default PLAN agent. Read-only by design. |
+| `data-platform` | Subagent | 16 skills (dlt, dagster, baml, cognee, ccc, motherduck, lancedb, cocoindex, duckdb, ducklake, dlthub, ibis, marimo, langfuse, mlflow, centralized-registry) | Yes (`subagent_type: data-platform`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
+| `infrastructure` | Subagent | 16 skills (komodo, pangolin, pulumi, dagger, dagger-pipelines, secrets-management, cloudflare, ccc, dlthub, cocoindex, langfuse, mlflow, risingwave, olake, effect-ts, centralized-registry) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
+| `agent-platform` | Subagent | 24 skills (baml, litellm, agent-observability, agent-memory-systems, langfuse, mlflow, ragas, cognee, graphiti-core, lancedb, falkordb, memgraph, unsloth, huggingface, agno, google-adk, dignified-python, pydantic, ccc, dlthub, dagster, duckdb, cocoindex, centralized-registry) | Yes (`subagent_type: agent-platform`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
+| `frontend-apps` | Subagent | 21 skills (tanstack-start, copilotkit, hono, convex, better-auth, baml, dagster, dlt, agentic-frontend-frameworks, babylonjs, orpc, effect-ts, cloudflare, ag-ui, marimo, dignified-python, pydantic, ccc, langfuse, cocoindex, centralized-registry) | Yes (`subagent_type: frontend-apps`) | Multi-persona portfolio + Tuatha MMO (Convex + Hono + TanStack + BetterAuth + Babylon.js) |
+| `research` | Subagent | 12 skills (browserbase, firecrawl, ccc, cognee, agent-observability, change-detection, crawl4ai, langfuse, mlflow, baml, cocoindex, centralized-registry) | Yes (`subagent_type: research`) | Browser-driven autonomous investigation (BrowserBase + Firecrawl + Cognee) |
+| `dev-env-demo` | Subagent | 8 tools | Yes | Dev-env demo agent |
+| `orchestrator` | Subagent | (none) | Yes | End-to-end BIEP orchestrator |
+| `deep-cuts` | Subagent | (none) | Yes | Structural analyser |
+| `notebooks` | Subagent | 5 | Yes | Marimo authoring |
+| `baml` | Subagent | 4 | Yes | BAML schema authoring |
+| `dagster` | Subagent | 6 | Yes | Dagster asset authoring |
+| `mise` | Subagent | 8 | Yes | mise.toml task authoring |
+| `proposal-author` | Subagent | 3 | Yes | OpenSpec change authoring |
 
 **Key invariants:**
 
@@ -481,17 +489,24 @@ row to the §3 table and bump the totals.
 ### 8.4 Registry health checks
 
 ```bash
-# 7 agents, 9 MCPs
+# 14 agents, 12 MCPs
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"
-# Expected: MCPs: 9  Agents: 7
+# Expected: MCPs: 12  Agents: 14
+
+# 5-layer sync health (knowledge-sync-loop, per 2026-08-15-knowledge-sync-loop-v1)
+# Layers: paths / ccc / cognee / skills / mcp
+# Orchestrator: mise run sync:all (writes stedding/sync-reports/all-{date}.md)
+mise run sync:all
+# The deployment control panel (notebooks/00_control_panel.py)
+# consumes the per-layer reports.
 
 # Per-subagent skill counts
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print({k: len(v.get('skill_filter', [])) \
        for k, v in cfg['agent'].items()})"
-# Expected: build=0, plan=0, data-platform=15, infrastructure=15,
-#           agent-platform=23, frontend-apps=20, research=11
+# Expected: build=0, plan=0, data-platform=16, infrastructure=16,
+#           agent-platform=24, frontend-apps=21, research=12
 
 # 13 model-layer agents
 python3 -c "
@@ -514,9 +529,48 @@ bun run validate-ccc-freshness
 # Exits 1 if >7d old on main / >24h on feature branches
 ```
 
+### 8.5 Centralized registries (NEW 2026-08-15)
+
+The platform now has a single source of truth for every model, schema, pipeline, and stack. Four canonical artifacts:
+
+| Artifact | Path | Purpose |
+|:--|:--|:--|
+| `MODEL_REGISTRY` | `meaisinfhoghlaim/models/model_registry.py` | 52 entries across 7 families. Resolve via `model_for(family, role, language)` or `filter_models(family)`. |
+| `schema` introspection | `notebooks/_shared/schema.py` | 5 helpers: `schema_introspect`, `schema_introspect_table`, `schema_introspect_full`, `list_dlt_sources`, `list_cocoindex_apps`, `list_baml_classes`. |
+| `deployment-choice.yaml` | repo root | The canonical enablement file. Read/written by the marimo notebook + web UI + CLI. |
+| 00_control_panel notebook | `notebooks/00_control_panel.py` | The 5-tab marimo control panel (Models / Pipelines / Datasets / Stacks / Registry). |
+
+```bash
+# Audit: detect hardcoded model strings that bypass MODEL_REGISTRY
+mise run lint:registry
+# Expected: "Found 0 hardcoded model strings in audited files"
+
+# List every MODEL_REGISTRY entry grouped by family
+mise run models:list
+# Expected: 52 entries (ocr_vision 20 / text_llm 13 / embedder 3 / rerank 3 /
+#           image_gen 5 / voice 5 / translation 3)
+
+# Open the deployment control panel
+mise run notebook:control-panel
+# or: marimo edit notebooks/00_control_panel.py
+
+# Verify the schema introspection helpers
+PYTHONPATH="$PWD/notebooks/_shared:$PWD" uv run python -c "
+import sys, types
+sys.modules['ibis'] = types.ModuleType('ibis')
+import schema
+print(f'DLT sources: {len(schema.list_dlt_sources())}')
+print(f'CocoIndex Apps: {len(schema.list_cocoindex_apps())}')
+print(f'BAML classes: {len(schema.list_baml_classes())}')
+"
+# Expected: 1963, ~53 (factory + shims), 838
+```
+
+The 3 openspec specs are at `openspec/specs/centralized-model-registry/`, `centralized-schema-registry/`, and `deployment-control-panel/`. The change proposal is archived at `openspec/changes/archive/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/`.
+
 ---
 
-**Last updated:** 2026-06-29 (post-`skill_filter` audit pass: replaced ~35 legacy non-resolvable skill names with current top-level skills; counts unchanged at `data-platform=15, infrastructure=15, agent-platform=23, frontend-apps=20, research=11`).
+**Last updated:** 2026-08-15 (post-`centralized-model-registry` change: added §8.5 with the 4 canonical artifacts + 3 new specs + 4 new mise tasks).
 **Owner:** Build agent (canonical home: `.agents/skills/INDEXING_AND_COGNITION.md`).
 
 ---

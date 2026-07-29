@@ -35,9 +35,34 @@ import gradio as gr
 
 logger = logging.getLogger(__name__)
 
-# Default Space env vars (overridden by HuggingFace Space settings)
-SUGGESTION_MODEL = os.getenv("SUGGESTION_MODEL", "unsloth/gemma-3-4b-it-GGUF")
-EXPLANATION_MODEL = os.getenv("EXPLANATION_MODEL", "unsloth/gemma-4-26B-A4B-it-GGUF")
+# Default Space env vars (overridden by HuggingFace Space settings).
+# The two model strings are resolved via MODEL_REGISTRY (the
+# centralized-model-registry openspec change). The SUGGESTION_MODEL
+# env var can still override (for prod / A/B test convenience).
+def _suggestion_model() -> str:
+    override = os.getenv("SUGGESTION_MODEL")
+    if override:
+        return override
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "pdf_review_suggestion")
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return "unsloth/gemma-3-4b-it-GGUF"
+
+
+def _explanation_model() -> str:
+    override = os.getenv("EXPLANATION_MODEL")
+    if override:
+        return override
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "pdf_review_explanation")
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return "unsloth/gemma-4-26B-A4B-it-GGUF"
+
+
+SUGGESTION_MODEL = _suggestion_model()
+EXPLANATION_MODEL = _explanation_model()
 SUGGESTION_DURATION = int(os.getenv("SUGGESTION_DURATION", "60"))  # seconds
 EXPLANATION_DURATION = int(os.getenv("EXPLANATION_DURATION", "120"))
 

@@ -66,9 +66,31 @@ LITELLM_MASTER_KEY: Final[str] = os.environ.get(
 # the 2026-06 hackathon). Used only when the LiteLLM gateway is
 # unreachable. In the KCG production stack, the LiteLLM gateway
 # always wins.
-HACKATHON_PRIMARY_MODEL: Final[str] = "Qwen/Qwen2.5-7B-Instruct"
-HACKATHON_FALLBACK_1_MODEL: Final[str] = "meta-llama/Llama-3.1-8B-Instruct"
-HACKATHON_FALLBACK_2_MODEL: Final[str] = "google/gemma-2-9b-it"
+#
+# The 3 chain entries are now resolved via MODEL_REGISTRY (the
+# centralized-model-registry openspec change). They are explicitly
+# marked as the "text_llm" family with the roles ``hackathon_primary``,
+# ``hackathon_fallback_1`` and ``hackathon_fallback_2`` respectively.
+# If MODEL_REGISTRY is unavailable (e.g. minimal container builds),
+# the historical hardcoded HF IDs are preserved as the fallback
+# string.
+def _hackathon_model(role: str, fallback: str) -> str:
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", role)
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return fallback
+
+
+HACKATHON_PRIMARY_MODEL: Final[str] = _hackathon_model(
+    "hackathon_primary", "Qwen/Qwen2.5-7B-Instruct"
+)
+HACKATHON_FALLBACK_1_MODEL: Final[str] = _hackathon_model(
+    "hackathon_fallback_1", "meta-llama/Llama-3.1-8B-Instruct"
+)
+HACKATHON_FALLBACK_2_MODEL: Final[str] = _hackathon_model(
+    "hackathon_fallback_2", "google/gemma-2-9b-it"
+)
 
 HF_INFERENCE_BASE_URL: Final[str] = (
     os.environ.get("HF_INFERENCE_URL")

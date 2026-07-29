@@ -1,11 +1,17 @@
 """
-Generate the v4 litellm/config/config.yaml from the VISION_MODELS registry.
+Generate the v4 litellm/config/config.yaml from the MODEL_REGISTRY.
 
-Per the 2026-06-29 OCR/VLM registry change, the litellm config MUST be
-generated from the v4 `cianfhoghlaim.ocr.models.VISION_MODELS` dict to
-ensure consistency. This script reads the registry and emits a complete
-litellm config with one entry per VISION_MODEL, plus the v4 aliases
-(vision, ocr, diagram, gaelic, irish).
+Per the 2026-08-15 centralized-model-registry openspec change, this
+script reads from the canonical ``MODEL_REGISTRY`` (not just the
+legacy ``VISION_MODELS`` / ``TEXT_MODELS`` dicts) and emits a complete
+litellm config with one entry per ``ocr_vision`` / ``text_llm``
+family entry, plus the v4 aliases (vision, ocr, diagram, gaelic,
+irish, math, extract, default).
+
+The legacy ``cianfhoghlaim.ocr.models.VISION_MODELS`` is still
+imported for back-compat but the script prefers
+``MODEL_REGISTRY.filter(family="ocr_vision")`` so any new entries
+added to the registry are picked up automatically.
 
 Usage:
     python scripts/generate_litellm_config.py > cianfhoghlaim/stacks/litellm/config/config.yaml
@@ -33,6 +39,18 @@ from cianfhoghlaim.ocr.models import (  # noqa: E402
     ModelBackend,
     ModelCapability,
 )
+
+# Per the centralized-model-registry openspec change, the canonical
+# source of truth is now ``meaisinfhoghlaim.models.MODEL_REGISTRY``.
+# We import it lazily (after the path shim above) so the script
+# can still run in minimal container builds where the model_registry
+# module isn't installed.
+try:
+    from meaisinfhoghlaim.models import MODEL_REGISTRY  # noqa: E402
+    _HAS_REGISTRY = True
+except Exception:  # noqa: BLE001
+    MODEL_REGISTRY = None
+    _HAS_REGISTRY = False
 
 # ─── Backend routing per VISION_MODEL.backend ───
 
@@ -238,13 +256,25 @@ def render_aliases() -> str:
 
 
 def render_text_models() -> str:
-    """Render the v4 TEXT_MODELS section (for the agent fleet)."""
+    """Render the v4 TEXT_MODELS section (for the agent fleet).
+
+    Per the centralized-model-registry openspec change, prefer the
+    ``text_llm`` family from ``MODEL_REGISTRY`` (which subsumes the
+    legacy ``TEXT_MODELS`` dict). Falls back to the legacy dict when
+    the registry is unavailable.
+    """
     out = StringIO()
     out.write("  # =========================================================================\n")
     out.write("  # LOCAL TEXT MODELS (via llama-swap) — for the agent fleet\n")
     out.write("  # =========================================================================\n\n")
-    for key, model in TEXT_MODELS.items():
-        out.write(render_model_entry(key, model))
+    if _HAS_REGISTRY:
+        for entry in MODEL_REGISTRY.filter(family="text_llm"):
+            # Use the entry as a shim: render_model_entry reads .backend,
+            # .unsloth_id, .upstream_id, .capabilities, .role, .notes.
+            out.write(render_model_entry(entry.key, entry))
+    else:
+        for key, model in TEXT_MODELS.items():
+            out.write(render_model_entry(key, model))
     return out.getvalue()
 
 
@@ -292,15 +322,47 @@ def main() -> int:
     # Track which keys have been rendered to avoid duplicates
     rendered_keys: set[str] = set()
 
+    # Per the centralized-model-registry openspec change, prefer the
+    # ``ocr_vision`` family from ``MODEL_REGISTRY`` (which subsumes
+    # the legacy ``VISION_MODELS`` dict). Falls back to the legacy
+    # dict when the registry is unavailable.
+    if _HAS_REGISTRY:
+        ocr_vision_entries = MODEL_REGISTRY.filter(family="ocr_vision")
+    else:
+        ocr_vision_entries = [
+            # Each VISION_MODELS entry is an OCRModel; ModelRegistryEntry
+            # is API-compatible for render_model_entry().
+            type("ShimEntry", (), {
+                "key": key,
+                "backend": model.backend,
+                "unsloth_id": model.unsloth_id,
+                "upstream_id": model.upstream_id,
+                "capabilities": model.capabilities,
+                "role": getattr(model, "role", "default"),
+                "notes": model.notes,
+                "arm1_oci_required": getattr(model, "arm1_oci_required", False),
+                "unsloth_features": getattr(model, "unsloth_features", []),
+            })
+            for key, model in VISION_MODELS.items()
+        ]
+
     # Group by backend
     by_backend: dict[ModelBackend, list[tuple[str, object]]] = {
         ModelBackend.LLAMASWAP: [],
         ModelBackend.MLX: [],
         ModelBackend.TRANSFORMERS: [],
     }
-    for key, model in VISION_MODELS.items():
-        if model.backend in by_backend:
-            by_backend[model.backend].append((key, model))
+    for entry in ocr_vision_entries:
+        # OCR vision entries may have a `backend` of either ModelBackend
+        # enum or string; normalize to the enum for the grouping check.
+        backend = entry.backend
+        if isinstance(backend, str):
+            try:
+                backend = ModelBackend(backend)
+            except ValueError:
+                continue
+        if backend in by_backend:
+            by_backend[backend].append((entry.key, entry))
 
     # Render each backend section
     backend_titles = {
@@ -320,11 +382,18 @@ def main() -> int:
     out.write("  # =========================================================================\n")
     out.write("  # LOCAL TEXT MODELS (via llama-swap) — for the agent fleet\n")
     out.write("  # =========================================================================\n\n")
-    for key, model in TEXT_MODELS.items():
-        if key in rendered_keys:
-            continue  # already rendered as a vision model
-        out.write(render_model_entry(key, model))
-        rendered_keys.add(key)
+    if _HAS_REGISTRY:
+        for entry in MODEL_REGISTRY.filter(family="text_llm"):
+            if entry.key in rendered_keys:
+                continue
+            out.write(render_model_entry(entry.key, entry))
+            rendered_keys.add(entry.key)
+    else:
+        for key, model in TEXT_MODELS.items():
+            if key in rendered_keys:
+                continue  # already rendered as a vision model
+            out.write(render_model_entry(key, model))
+            rendered_keys.add(key)
 
     # Aliases
     out.write(render_aliases())

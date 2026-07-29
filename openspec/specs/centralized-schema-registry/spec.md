@@ -1,23 +1,8 @@
 # centralized-schema-registry Specification
 
 ## Purpose
-
-`centralized-schema-registry` is the single canonical schema source
-for the Cianfhoghlaim platform. BAML (`baml_src/`) is the source of
-truth for all structured data shapes; Pydantic + Zod are codegen;
-DuckDB tables are introspected from BAML; the 96 hand-written Pydantic
-duplicates in `dlt_sources/.../subjects/<subject>/schema.py` are
-removed; the BAML TypeScript codegen (`baml_client_ts/`) is activated;
-and a central DuckDB schema introspection view
-(`notebooks/_shared/schema.py`) exposes every BIEP table + every
-LanceDB table + every BAML class.
-
-The canonical operator-facing usage docs are at
-`.agents/skills/baml/SKILL.md` and
-`.agents/skills/motherduck/SKILL.md`.
-
-## ADDED Requirements
-
+TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+## Requirements
 ### Requirement: BAML is the single source of truth for all structured data shapes
 
 The system SHALL treat BAML (`baml_src/**/*.baml`) as the single
@@ -178,3 +163,20 @@ The system SHALL provide a `notebooks/_shared/schema.py` module with
 - **WHEN** the operator runs
   `python3 -c "from notebooks._shared.schema import list_baml_classes; print(len(list_baml_classes()))"`
 - **THEN** the output is `>= 838`
+
+### Requirement: Auto-derive Pydantic from BAML via baml_client.b
+
+The system SHALL provide an auto-derive hook that emits the Pydantic
+v2 models from the canonical BAML `class` declarations at
+`baml_src/`. The hook SHALL be invoked via `mise run baml:derive-pydantic`
+and SHALL produce the Pydantic models in `baml_client/baml_client/basalt/`.
+
+#### Scenario: Pydantic models are auto-derived from BAML
+
+- **GIVEN** a new BAML `class Foo { ... }` is added to `baml_src/`
+- **WHEN** the operator runs `mise run baml:derive-pydantic`
+- **THEN** the corresponding Pydantic `class Foo(BaseModel): ...` SHALL
+  appear in `baml_client/baml_client/basalt/`
+- **AND** the Pydantic model SHALL have the same field names + types
+  as the BAML class
+

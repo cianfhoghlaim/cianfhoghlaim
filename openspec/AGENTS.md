@@ -6,10 +6,13 @@ The 5 priority specs, the 4 priority commands, the 5 priority
 skills, and the 1 priority mise task at the glance. **Read this
 first**; the rest of the file is the full 34-spec catalogue.
 
-### Priority specs (8 of 48)
+### Priority specs (11 of 75)
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
+| [`centralized-model-registry`](specs/centralized-model-registry/spec.md) | shared | **NEW 2026-08-15**: The single canonical model registry (52 entries / 7 families: ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-schema-registry`](specs/centralized-schema-registry/spec.md) | shared | **NEW 2026-08-15**: BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
+| [`deployment-control-panel`](specs/deployment-control-panel/spec.md) | shared | **NEW 2026-08-15**: The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 | [`british-isles-education-pipeline`](specs/british-isles-education-pipeline/spec.md) | cianfhoghlaim | The flagship — 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
 | [`cianfhoghlaim-educational-mmo`](specs/cianfhoghlaim-educational-mmo/spec.md) | cianfhoghlaim | 8 NCCA LC subjects × per-subject quest packs × 8 ADK agents × hybrid x402 credential × TanStack Start 2D client |
 | [`dagster-5-layer-component-architecture`](specs/dagster-5-layer-component-architecture/spec.md) | shared | 5 KCG Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components + R1–R4 conformance at scaffold time |
@@ -18,6 +21,7 @@ first**; the rest of the file is the full 34-spec catalogue.
 | [`infrastructure-stacks`](specs/infrastructure-stacks/spec.md) | shared | 94 Docker Compose stacks at `bonneagar/stacks/` + stack-doctor + Pangolin + Infisical + Locket + Komodo resource-syncs |
 | [`agent-memory-systems`](specs/agent-memory-systems/spec.md) | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
 | [`indexing-and-cognition`](specs/indexing-and-cognition/spec.md) | shared | CCC v1 code search + Cognee knowledge graph + OpenCode agent/MCP registry |
+| [`knowledge-sync-loop`](specs/knowledge-sync-loop/spec.md) | shared | 5-layer pull-based sync (paths / CCC / Cognee / skills / MCP) + 6 `mise run sync:*` tasks + 3 feedback loops — keeps all 8 knowledge surfaces in sync |
 | [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 
 > **Note:** `tuatha-platform` has been **retired** (2026-07-06 by the

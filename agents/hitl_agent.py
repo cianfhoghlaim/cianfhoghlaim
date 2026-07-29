@@ -103,8 +103,18 @@ if HAS_PYDANTIC_AI:
         """
         from pydantic_ai import Agent
 
+        # Resolve the default model via MODEL_REGISTRY (the
+        # centralized-model-registry openspec change; role="fast"
+        # maps to gpt-4o-mini). Falls back to the historical
+        # gpt-4o-mini default if the registry import fails.
+        try:
+            from meaisinfhoghlaim.models import MODEL_REGISTRY
+            _default_model = MODEL_REGISTRY.resolve("text_llm", "fast")
+        except Exception:  # noqa: BLE001 — registry unavailable in dev
+            _default_model = "gpt-4o-mini"
+
         agent = Agent(
-            "gpt-4o-mini",  # Default model, can be overridden
+            _default_model,  # resolved via MODEL_REGISTRY.resolve("text_llm", "fast")
             deps_type=StateDeps[OideachasHITLState],
             system_prompt=OIDEACHAIS_SYSTEM_PROMPT,
         )
@@ -446,20 +456,29 @@ def create_exam_validation_agent() -> Any:
 
 def create_hitl_app(
     context: ApprovalContext = ApprovalContext.GENERAL,
-    model: str = "gpt-4o-mini",
+    model: str | None = None,
 ) -> Any:
     """
     Create AG-UI app for HITL workflow.
 
     Args:
         context: Approval workflow context
-        model: LLM model to use
+        model: LLM model to use. If None, resolved via MODEL_REGISTRY
+            (role="fast" → gpt-4o-mini).
 
     Returns:
         AG-UI ASGI app
     """
     if not HAS_PYDANTIC_AI:
         raise ImportError("pydantic_ai and ag-ui required")
+
+    # Resolve model via MODEL_REGISTRY when caller didn't pass one.
+    if model is None:
+        try:
+            from meaisinfhoghlaim.models import MODEL_REGISTRY
+            model = MODEL_REGISTRY.resolve("text_llm", "fast")
+        except Exception:  # noqa: BLE001 — registry unavailable in dev
+            model = "gpt-4o-mini"
 
     from .hitl_state import (
         create_content_curation_state,

@@ -382,6 +382,120 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
                 "Requires GOOGLE_API_KEY in .infisical.env."
             ),
         ),
+        "email_triage_gemini_2_5_pro": ModelRegistryEntry(
+            key="email_triage_gemini_2_5_pro",
+            family="text_llm",
+            role="email_triage_strong",
+            display_name="Gemini 2.5 Pro (disambiguated email_triage_strong)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="google/gemini-2.5-pro",
+            backend="google",
+            available=True,
+            litellm_alias="gemini/gemini-2.5-pro",
+            env_var="EMAIL_TRIAGE_MODEL",
+            notes=(
+                "Disambiguated lookup for the email_triage_agent "
+                "(`agents/adk/email_triage_agent.py:_email_triage_model`). "
+                "The 2-key disambiguation was needed because the "
+                "existing `text_llm/strong` role is the local Qwen "
+                "3.6 27B MTP path (no Google API key required); the "
+                "email_triage agent needs the Google path explicitly."
+            ),
+        ),
+        "unsloth/gemma-3-4b-it-GGUF": ModelRegistryEntry(
+            key="unsloth/gemma-3-4b-it-GGUF",
+            family="text_llm",
+            role="pdf_review_suggestion",
+            display_name="Gemma 3 4B (Unsloth GGUF, pdf-review ZeroGPU)",
+            unsloth_id="unsloth/gemma-3-4b-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-3-4b-it",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var="SUGGESTION_MODEL",
+            notes=(
+                "ZeroGPU inference for the pdf-review Space "
+                "(`spaces/oideachais-pdf-review/app.py:39`). 4 GB GGUF; "
+                "runs inside the @spaces.GPU worker boundary."
+            ),
+        ),
+        "unsloth/gemma-4-26B-A4B-it-GGUF": ModelRegistryEntry(
+            key="unsloth/gemma-4-26B-A4B-it-GGUF",
+            family="text_llm",
+            role="pdf_review_explanation",
+            display_name="Gemma 4 26B-A4B (Unsloth GGUF, pdf-review ZeroGPU)",
+            unsloth_id="unsloth/gemma-4-26B-A4B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-4-26B-A4B-it",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var="EXPLANATION_MODEL",
+            notes=(
+                "ZeroGPU inference for the pdf-review Space "
+                "(`spaces/oideachais-pdf-review/app.py:40`). 14 GB MoE; "
+                "requires ZeroGPU large sizing per HuggingFace Spaces spec."
+            ),
+        ),
+        # The 3 hackathon fallback roles — used by the hand-rolled HF
+        # Inference chain in `spaces/_common/baml_client.py:69-71` when
+        # the LiteLLM gateway is unreachable. Historical hardcoded HF
+        # IDs preserved verbatim; consumers should migrate to the
+        # canonical LiteLLM path in production.
+        "Qwen/Qwen2.5-7B-Instruct": ModelRegistryEntry(
+            key="Qwen/Qwen2.5-7B-Instruct",
+            family="text_llm",
+            role="hackathon_primary",
+            display_name="Qwen 2.5 7B (hackathon HF primary)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="Qwen/Qwen2.5-7B-Instruct",
+            backend="hf_inference",
+            available=True,
+            litellm_alias=None,
+            env_var="HACKATHON_PRIMARY_MODEL",
+            notes=(
+                "Hand-rolled HF Inference primary in the 2026-06 hackathon "
+                "chain (`spaces/_common/baml_client.py:69`). "
+                "Used only when the LiteLLM gateway is unreachable."
+            ),
+        ),
+        "meta-llama/Llama-3.1-8B-Instruct": ModelRegistryEntry(
+            key="meta-llama/Llama-3.1-8B-Instruct",
+            family="text_llm",
+            role="hackathon_fallback_1",
+            display_name="Llama 3.1 8B (hackathon HF fallback 1)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="meta-llama/Llama-3.1-8B-Instruct",
+            backend="hf_inference",
+            available=True,
+            litellm_alias=None,
+            env_var="HACKATHON_FALLBACK_1_MODEL",
+            notes=(
+                "Hand-rolled HF Inference fallback 1 in the 2026-06 hackathon "
+                "chain (`spaces/_common/baml_client.py:70`)."
+            ),
+        ),
+        "google/gemma-2-9b-it": ModelRegistryEntry(
+            key="google/gemma-2-9b-it",
+            family="text_llm",
+            role="hackathon_fallback_2",
+            display_name="Gemma 2 9B IT (hackathon HF fallback 2)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="google/gemma-2-9b-it",
+            backend="hf_inference",
+            available=True,
+            litellm_alias=None,
+            env_var="HACKATHON_FALLBACK_2_MODEL",
+            notes=(
+                "Hand-rolled HF Inference fallback 2 in the 2026-06 hackathon "
+                "chain (`spaces/_common/baml_client.py:71`)."
+            ),
+        ),
     }
     return entries
 

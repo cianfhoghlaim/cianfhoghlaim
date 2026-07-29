@@ -94,14 +94,31 @@ def _imports():
 @app.cell
 def _search_controls(mo):
     """Build the 4 filter dropdowns + the text input."""
+    # Embedder options are resolved from MODEL_REGISTRY (the
+    # centralized-model-registry openspec change). We render the
+    # full ``embedder`` family as the dropdown so the operator can
+    # pick between the canonical bge-m3, the english-only
+    # bge-large-en-v1.5, and the lightweight MiniLM-L6-v2.
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        _embedder_keys = [
+            entry.key for entry in MODEL_REGISTRY.filter(family="embedder")
+        ]
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        _embedder_keys = [
+            "BAAI/bge-m3",
+            "BAAI/bge-large-en-v1.5",
+            "all-MiniLM-L6-v2",
+        ]
+
     search_input = mo.ui.text(
         placeholder="Search the BIEP + leabharlann corpora (EN or GA)...",
         value="",
         label="Query",
     )
     embedder_dropdown = mo.ui.dropdown(
-        options=["BAAI/bge-m3", "BAAI/bge-large-en-v1.5"],
-        value="BAAI/bge-m3",
+        options=_embedder_keys,
+        value=_embedder_keys[0] if _embedder_keys else "BAAI/bge-m3",
         label="Embedder",
     )
     subject_filter = mo.ui.multiselect(

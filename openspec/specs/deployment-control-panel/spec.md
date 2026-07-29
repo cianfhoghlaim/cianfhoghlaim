@@ -1,36 +1,8 @@
 # deployment-control-panel Specification
 
 ## Purpose
-
-`deployment-control-panel` is the centralized area for an operator to
-choose what models, pipelines, datasets, and stacks are currently
-enabled in a deployment of the Cianfhoghlaim platform. It provides
-3 surfaces (marimo notebook + web UI + CLI) that all read from and
-write to a single `deployment-choice.yaml` file at the repo root.
-
-The 3 surfaces are:
-
-1. **Marimo notebook** at `notebooks/00_control_panel.py` with 5 tabs
-   (Models, Pipelines, Datasets, Stacks, Registry)
-2. **Web UI** at `web/apps/cianfhoghlaim-web/control-panel/` with 5
-   TanStack Start routes (TanStack Start + Convex + Hono + oRPC)
-3. **CLI** extending `scripts/cianfhoghlaim-cli.ts` with
-   `models list/enable/disable`, `pipelines list/enable/disable`,
-   `stacks list/enable/disable`, `registry audit`,
-   `schema introspect <table>` subcommands
-
-The single source of truth for "what's enabled" is
-`deployment-choice.yaml` (committed, ~100 LOC). The 3 surfaces all
-read from and write to this file via
-`notebooks/_shared/deployment_choice.py:read_choice() / write_choice()`
-(with `fcntl.flock` for concurrent-write safety).
-
-The canonical operator-facing usage docs are at
-`.agents/skills/agentic-frontend-frameworks/SKILL.md` and
-`.agents/skills/marimo/SKILL.md`.
-
-## ADDED Requirements
-
+TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+## Requirements
 ### Requirement: One marimo control-panel notebook with 5 tabs
 
 The system SHALL provide a marimo notebook at
@@ -236,3 +208,23 @@ write_choice()` helpers.
   `qwen3-vl-8b` as disabled
 - **AND** the changes made in any surface propagate to the other
   2 surfaces on next read
+
+### Requirement: Audit log for control-panel actions
+
+The system SHALL record every change made through the deployment
+control panel (model enable/disable + jurisdiction enable/disable) in
+a `stedding/deployment-control-panel/audit.log` file. Each line
+SHALL be a JSON object with the timestamp, the user (from
+Pocket ID OIDC), the action type, and the changed value.
+
+#### Scenario: operator disables a model via the control panel
+
+- **GIVEN** the operator opens the marimo control panel
+- **WHEN** they click "disable" on `minimax-m3` in the text_llm family
+- **THEN** the system SHALL append a JSON line to
+  `stedding/deployment-control-panel/audit.log`:
+  `{"timestamp": "...", "user": "...", "action": "disable",
+   "family": "text_llm", "model": "minimax-m3"}`
+- **AND** the next `mise run sync:all` SHALL reflect the change in
+  the deployment-choice.yaml
+
