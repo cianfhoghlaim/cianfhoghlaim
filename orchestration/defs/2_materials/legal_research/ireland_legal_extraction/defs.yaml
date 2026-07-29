@@ -20,7 +20,7 @@
 # cianfhoghlaim.education.ie.irish_statute_book.acts.
 #
 # Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractPIABPage
   source_asset: 1_ingestion/law/ie/injuries_board

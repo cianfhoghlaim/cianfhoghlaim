@@ -5,7 +5,7 @@
 # `cianfhoghlaim.commonwealth.can.qc.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_group: quebec_montreal_education
   embedding_model: BAAI/bge-m3

@@ -11,7 +11,7 @@
 # The English directory mirrors the gaeilge asymmetry: files live at the root,
 # there is no `en/` subdir, and the default language is `en` (the syllabus is
 # monolingual in English).
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: cianfhoghlaim.filesystem.leaving_cert.english
   domain: curriculum

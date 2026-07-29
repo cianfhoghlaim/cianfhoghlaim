@@ -4,7 +4,7 @@
 # Per the cianfhoghlaim-pipeline spec, the 5 high-churn sources
 # (NCCA/SEC/CCEA/SQA/WJEC) use the state-backed Component pattern
 # with state_refresh_interval="monthly" (per user direction).
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: ie.education.ncca
   domain: curriculum

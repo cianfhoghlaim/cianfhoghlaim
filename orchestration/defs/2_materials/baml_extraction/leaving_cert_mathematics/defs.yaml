@@ -4,7 +4,7 @@
 # BAML extraction (ExtractLeavingCertSyllabus). Partitioned by
 # (cycle, language, subject) with a baml_fidelity check that asserts
 # >= 95% of expected learning outcomes are recovered.
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractLeavingCertSyllabus
   source_asset: 1_ingestion/curriculum/ie/education

@@ -6,7 +6,7 @@
 # for text-heavy PDFs).
 #
 # Per openspec/changes/2026-07-03-gemini-6-corpus-pipeline/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: cianfhoghlaim.filesystem.gemini_corpus
   domain: legal_research

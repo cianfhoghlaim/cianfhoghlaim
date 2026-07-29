@@ -5,7 +5,7 @@
 #
 # Per the openspec change
 # 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1.
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.GradeChemistryResponse
   baml_explain_function: b.ExplainChemistryMarkingScheme

@@ -6,7 +6,7 @@
 # `cianfhoghlaim/baml/education/university/math_validation.py`.
 #
 # Per openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: cianfhoghlaim.baml.education.university.math_validation.validate_formula_record
   source_asset: 2_materials/baml_extraction/uog_math_coursework

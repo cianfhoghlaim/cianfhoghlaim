@@ -4,7 +4,7 @@
 # Per the cianfhoghlaim-pipeline spec — `NCCA + SEC + DES root PDFs embedding`
 # Requirement. Embeds the root-level PDF corpus (the canonical syllabus
 # source documents) into LanceDB.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: RootPdfsEmbedding
   module: cianfhoghlaim.cocoindex.root_pdfs_embedding

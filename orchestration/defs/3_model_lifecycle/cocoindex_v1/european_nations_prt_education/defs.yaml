@@ -5,7 +5,7 @@
 # the shared `cianfhoghlaim.lc.european_nations.prt.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_group: european_nations_prt_education
   embedding_model: BAAI/bge-m3

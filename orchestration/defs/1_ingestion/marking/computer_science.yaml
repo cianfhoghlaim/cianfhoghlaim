@@ -10,7 +10,7 @@
 #
 # Per the openspec change
 # 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1.
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: filesystem.marking.computer_science
   domain: marking

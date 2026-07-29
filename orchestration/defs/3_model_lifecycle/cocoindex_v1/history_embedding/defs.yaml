@@ -4,7 +4,7 @@
 # Per the british-isles-education-pipeline spec — `Leaving Certificate
 # History syllabuses + exam papers + marking schemes` Requirement.
 # LanceDB table: `cianfhoghlaim.lc.history.<level>_<language>`.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: HistoryEmbedding
   module: cianfhoghlaim.cocoindex.history_embedding

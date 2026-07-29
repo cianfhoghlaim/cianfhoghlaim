@@ -5,7 +5,7 @@
 # for the 6 subdirs × 216 docs` Requirement. The 6 corpora (aigne, gaeilge,
 # gemini_deep_research, mata, ollscoil_na_gaillimhe, zotero) share a single
 # `leabharlann_chunks` LanceDB table.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: LeabharlannFlow
   module: cianfhoghlaim.cocoindex.leabharlann_flow

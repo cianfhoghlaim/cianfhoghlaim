@@ -8,7 +8,7 @@
 # `source_id="european_nations.che.education.subjects.physics"`.
 #
 # Reference: openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_name: european_nations_che_physics
   module: cianfhoghlaim.dlt.european_nations.che.education.subjects.physics

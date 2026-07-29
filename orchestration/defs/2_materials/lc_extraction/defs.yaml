@@ -11,7 +11,7 @@
 #   - b.ExtractSyllabusDiagram       (NEW 2026-07-03; molmo2-8b pointing)
 #
 # Per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractCurriculumSyllabus
   source_asset: 1_ingestion/curriculum/ie/lc5

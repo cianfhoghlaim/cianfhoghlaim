@@ -1,7 +1,7 @@
 # defs/1_ingestion/site_analysis/ie_das/defs.yaml
 #
 # L1 CelticIngestionComponent for the Discovery & Analytical Services (IE).
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: ie.site_analysis.das
   domain: site_analysis

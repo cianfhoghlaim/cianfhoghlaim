@@ -7,7 +7,7 @@
 # - agent_memory_curriculum_agent
 # - agent_event_curriculum_agent
 # - agent_trace_curriculum_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: curriculum_agent
   framework: adk

@@ -3,7 +3,7 @@
 # 5 separate CocoIndex v1 Apps (one per source), all R1-R4 conformant.
 # Each App reads from its source's L2 DuckLake tables and writes to
 # its source's LanceDB table.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   apps:
     - app_name: PIABEmbedding

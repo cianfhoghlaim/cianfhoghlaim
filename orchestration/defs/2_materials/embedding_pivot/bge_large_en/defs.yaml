@@ -2,7 +2,7 @@
 #
 # L2 CelticMaterialsComponent for the embedding pivot (BAAI/bge-large-en-v1.5
 # → LanceDB). 100-row upsert batch minimum per the embedding-pipeline skill.
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: embed.bge_large_en_v1_5
   source_asset: 1_ingestion/curriculum/ie/education

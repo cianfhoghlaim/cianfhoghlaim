@@ -11,7 +11,7 @@
 #   via `_append_routing_keywords` at scaffold time
 # - `tools` are the 10 academic_history_agent tools
 # - `cognee_dataset` is `cianfhoghlaim_history` (per the wire-up)
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: academic_history_agent
   framework: custom

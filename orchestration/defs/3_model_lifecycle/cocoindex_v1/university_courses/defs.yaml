@@ -4,7 +4,7 @@
 # Per the cianfhoghlaim-cocoindex-v1 skill, the R1–R4 conformance contract
 # is enforced at build_defs time by the Component. is_virtual=True so
 # the LanceDB table mirrors its L1 upstream automatically.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: UniversityCoursesApp
   module: cianfhoghlaim.cocoindex.university_courses

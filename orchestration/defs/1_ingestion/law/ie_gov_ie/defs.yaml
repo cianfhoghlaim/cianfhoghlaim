@@ -9,7 +9,7 @@
 # sub-tree); the existing `ie_doj` defs are kept for backwards compat.
 #
 # Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: ie.law.gov_ie
   domain: law

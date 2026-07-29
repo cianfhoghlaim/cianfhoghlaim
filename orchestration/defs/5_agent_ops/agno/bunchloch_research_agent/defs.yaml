@@ -7,7 +7,7 @@
 # - agent_memory_bunchloch_research_agent
 # - agent_event_bunchloch_research_agent
 # - agent_trace_bunchloch_research_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: bunchloch_research_agent
   framework: agno

@@ -3,7 +3,7 @@
 # L1 CelticIngestionComponent for the leabharlann books corpus
 # (filesystem DLT source). This is the 4th leabharlann v1 App
 # (leabharlann_books_embedding in the 3_model_lifecycle/ tree).
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: filesystem.leabharlann_books
   domain: filesystem

@@ -18,7 +18,7 @@
 # - agent_memory_gael_agent
 # - agent_event_gael_agent
 # - agent_trace_gael_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: gael_agent
   framework: adk

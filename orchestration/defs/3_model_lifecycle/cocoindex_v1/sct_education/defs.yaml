@@ -5,7 +5,7 @@
 # the shared `cianfhoghlaim.lc.sct.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-12-british-isles-parity-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_group: sct_education
   embedding_model: BAAI/bge-m3

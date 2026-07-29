@@ -3,7 +3,7 @@
 # L4 CelticAssetGenerationComponent for the primary curriculum
 # marimo dashboard. The dashboard itself lives in
 # cianfhoghlaim/notebooks/dashboards/education/primary_curriculum.py.
-type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+type: orchestration.components.CelticAssetGenerationComponent
 attributes:
   dashboard_kind: marimo
   dashboard_path: cianfhoghlaim/notebooks/dashboards/education/primary_curriculum.py

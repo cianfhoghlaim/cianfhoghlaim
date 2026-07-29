@@ -7,7 +7,7 @@
 # - agent_memory_translation_agent
 # - agent_event_translation_agent
 # - agent_trace_translation_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: translation_agent
   framework: adk

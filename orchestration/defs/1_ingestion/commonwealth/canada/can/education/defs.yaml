@@ -8,7 +8,7 @@
 # the DuckLake table ``oideachais.education.commonwealth.can``.
 #
 # Reference: openspec/changes/2026-07-11-commonwealth-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_can_education
   module: cianfhoghlaim.dlt.commonwealth.can.education.cmec

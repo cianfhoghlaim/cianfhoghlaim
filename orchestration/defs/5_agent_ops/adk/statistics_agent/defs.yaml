@@ -7,7 +7,7 @@
 # - agent_memory_statistics_agent
 # - agent_event_statistics_agent
 # - agent_trace_statistics_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: statistics_agent
   framework: adk

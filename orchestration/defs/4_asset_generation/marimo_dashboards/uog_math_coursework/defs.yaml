@@ -5,7 +5,7 @@
 # `cianfhoghlaim/notebooks/14_academic_history/`.
 #
 # Per openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/
-type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+type: orchestration.components.CelticAssetGenerationComponent
 attributes:
   dashboard_kind: marimo
   dashboard_path: cianfhoghlaim/notebooks/14_academic_history

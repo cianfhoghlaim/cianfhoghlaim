@@ -7,7 +7,7 @@
 # subject, language).
 #
 # Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_name: ncca_lc6
   module: cianfhoghlaim.dlt.british_isles.ireland.education.ncca

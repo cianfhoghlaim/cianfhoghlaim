@@ -5,7 +5,7 @@
 # output` Requirement. The R1–R4 conformance contract is enforced at
 # build_defs time by the Component; this App is R4-exempt because it
 # emits GeoParquet (no embedding column).
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: ApplePhotosGeospatial
   module: cianfhoghlaim.cocoindex.apple_photos_geospatial

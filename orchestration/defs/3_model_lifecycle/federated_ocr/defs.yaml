@@ -6,7 +6,7 @@
 # `meaisinfhoghlaim/federated/`. The CelticFederatedOcrComponent
 # emits 1 Dagster `@asset` — `irish_ocr_federated_smoke` — on a
 # 30-minute cron cadence to keep the federated simulator warm.
-type: cianfhoghlaim.orchestration.components.CelticFederatedOcrComponent
+type: orchestration.components.CelticFederatedOcrComponent
 attributes:
   source_module: cianfhoghlaim.meaisinfhoghlaim.federated
   model_name: gemma-3-4b

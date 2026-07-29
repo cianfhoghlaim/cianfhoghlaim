@@ -3,7 +3,7 @@
 # L4 CelticAssetGenerationComponent for the TanStack Start
 # /curriculum browser page. The page itself lives in
 # cianfhoghlaim/web/apps/cianfhoghlaim-web/src/routes/curriculum.tsx.
-type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+type: orchestration.components.CelticAssetGenerationComponent
 attributes:
   dashboard_kind: tanstack_page
   dashboard_path: cianfhoghlaim/web/apps/cianfhoghlaim-web/src/routes/curriculum.tsx

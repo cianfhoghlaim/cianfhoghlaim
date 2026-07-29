@@ -10,7 +10,7 @@
 #
 # Per openspec/changes/2026-07-15-cianfhoghlaim-leabharlann-v1/specs/
 # cianfhoghlaim-leabharlann/spec.md — the Phase 1 wrap-up requirement.
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractLeabharlannDoc
   source_asset: 1_ingestion/filesystem/leabharlann_books

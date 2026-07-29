@@ -7,7 +7,7 @@
 # - agent_memory_root_agent
 # - agent_event_root_agent
 # - agent_trace_root_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: root_agent
   framework: custom

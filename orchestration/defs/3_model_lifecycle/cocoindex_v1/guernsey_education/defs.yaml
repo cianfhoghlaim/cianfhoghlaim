@@ -5,7 +5,7 @@
 # the shared `cianfhoghlaim.lc.guernsey.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-12-british-isles-parity-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_group: guernsey_education
   embedding_model: BAAI/bge-m3

@@ -2,7 +2,7 @@
 #
 # L2 CelticMaterialsComponent for the PDF processing pipeline
 # (133 leaving_certificate PDFs × Docling + OCR ensemble + BAML extraction).
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractLeavingCertMarkingScheme
   source_asset: 1_ingestion/curriculum/ie/education

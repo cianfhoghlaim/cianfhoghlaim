@@ -7,7 +7,7 @@
 # routes them through `select_ocr_backend()` for downstream VLM/OCR.
 #
 # Per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: cianfhoghlaim.filesystem.leaving_cert
   domain: curriculum

@@ -5,7 +5,7 @@
 # cross-subject mastery` Requirement. The 8 subjects × 5 competencies ×
 # 4 levels × 2 languages = 320 cross-subject mastery vectors are emitted
 # to the `cianfhoghlaim.lc.cross_subject.competencies` LanceDB table.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: CrossSubjectCompetencyEmbedding
   module: cianfhoghlaim.cocoindex.cross_subject_competency_embedding

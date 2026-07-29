@@ -7,7 +7,7 @@
 # - agent_memory_geospatial_agent
 # - agent_event_geospatial_agent
 # - agent_trace_geospatial_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: geospatial_agent
   framework: adk

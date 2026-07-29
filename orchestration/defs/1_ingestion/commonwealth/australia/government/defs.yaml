@@ -8,7 +8,7 @@
 # the DuckLake table ``oideachais.government.commonwealth.aus``.
 #
 # Reference: openspec/changes/2026-07-11-commonwealth-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_aus_government
   module: cianfhoghlaim.dlt.commonwealth.aus.government.gov_au

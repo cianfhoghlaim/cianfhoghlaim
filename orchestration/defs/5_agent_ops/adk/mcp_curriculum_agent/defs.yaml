@@ -7,7 +7,7 @@
 # - agent_memory_mcp_curriculum_agent
 # - agent_event_mcp_curriculum_agent
 # - agent_trace_mcp_curriculum_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: mcp_curriculum_agent
   framework: adk

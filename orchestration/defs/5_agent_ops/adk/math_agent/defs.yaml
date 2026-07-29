@@ -6,7 +6,7 @@
 # Feat C (2026-07-10) added the `cognify` + `langfuse_callbacks`
 # blocks so the math_agent emits to `cianfhoghlaim_lc_mathematics`
 # and opens a per-subject Langfuse trace at `agent.math.<verb>`.
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: math_agent
   framework: adk

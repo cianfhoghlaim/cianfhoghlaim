@@ -5,7 +5,7 @@
 # 9 subjects × 2 qualification levels × 3 layers = 54 AQA Dagster assets
 # (Layer 1: DLT ingest, Layer 2: BAML Extract, Layer 3: CocoIndex embed).
 
-type: cianfhoghlaim.orchestration.components.EnglandBoardSubjectComponent
+type: orchestration.components.EnglandBoardSubjectComponent
 
 attributes:
   exam_board: aqa

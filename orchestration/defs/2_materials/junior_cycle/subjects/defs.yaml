@@ -6,7 +6,7 @@
 # Each subject has its own `defs.yaml` in this directory with the canonical
 # 5-layer group_name convention.
 
-type: cianfhoghlaim.orchestration.components.JuniorCycleSubjectComponent
+type: orchestration.components.JuniorCycleSubjectComponent
 
 # The 4 layers per subject:
 #   Layer 1 (Ingestion):  jc_<subject>_ingested

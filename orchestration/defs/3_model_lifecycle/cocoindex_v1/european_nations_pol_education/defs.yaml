@@ -5,7 +5,7 @@
 # `cianfhoghlaim.european_nations.pol.education_chunks` LanceDB table.
 #
 # Reference: openspec/changes/2026-07-15-eu-pilot-upgrade-v1/
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_group: european_nations_pol_education
   embedding_model: BAAI/bge-m3

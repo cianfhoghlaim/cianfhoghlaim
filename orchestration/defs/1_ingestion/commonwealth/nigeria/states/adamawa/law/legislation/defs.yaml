@@ -3,7 +3,7 @@
 # L1 CelticIngestionComponent for the Adamawa law DLT source.
 #
 # Reference: openspec/changes/2026-07-12-commonwealth-nigeria-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_nga_state_nga_ada_legislation
   module: cianfhoghlaim.dlt.commonwealth.nga.states.Adamawa State.law.legislation

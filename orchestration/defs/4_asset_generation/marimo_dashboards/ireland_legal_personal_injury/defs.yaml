@@ -4,7 +4,7 @@
 # marimo notebook (PIAB → High Court flow).
 #
 # Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
-type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+type: orchestration.components.CelticAssetGenerationComponent
 attributes:
   dashboard_kind: marimo
   dashboard_path: cianfhoghlaim/notebooks/12_ireland_law/01_personal_injury_journey.py

@@ -7,7 +7,7 @@
 # media_literacy, personal_professional_development, digital_media,
 # athletic_studies.
 
-type: cianfhoghlaim.orchestration.components.JuniorCycleShortCourseComponent
+type: orchestration.components.JuniorCycleShortCourseComponent
 
 attributes:
   baml_function: ExtractJCShortCourse

@@ -6,7 +6,7 @@
 # The canonical 36 CBA IDs are computed at runtime by
 # `dlt/british_isles/ireland/education/junior_cycle_cbas/_factory.py:list_jc_cba_ids()`.
 
-type: cianfhoghlaim.orchestration.components.JuniorCycleCBAComponent
+type: orchestration.components.JuniorCycleCBAComponent
 
 attributes:
   baml_function: ExtractCBADescriptor

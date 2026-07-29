@@ -3,7 +3,7 @@
 # L2 CelticMaterialsComponent for the Leaving Cert Gaeilge
 # BAML extraction with the irish_fada check (asserts Irish text
 # preserves the síneadh fada).
-type: cianfhoghlaim.orchestration.components.CelticMaterialsComponent
+type: orchestration.components.CelticMaterialsComponent
 attributes:
   baml_function: b.ExtractLeavingCertSyllabus
   source_asset: 1_ingestion/curriculum/ie/education

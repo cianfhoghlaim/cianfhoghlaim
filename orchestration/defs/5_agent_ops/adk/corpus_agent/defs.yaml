@@ -7,7 +7,7 @@
 # - agent_memory_corpus_agent
 # - agent_event_corpus_agent
 # - agent_trace_corpus_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: corpus_agent
   framework: adk

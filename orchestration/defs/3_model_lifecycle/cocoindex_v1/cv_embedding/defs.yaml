@@ -4,7 +4,7 @@
 # Per the croilar-cv-extraction spec — `Author CV BAML + CocoIndex v1`
 # Requirement. Embeds the author's CV / achievements / teaching PDFs into
 # LanceDB for semantic search.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: CVEmbedding
   module: cianfhoghlaim.cocoindex.cv_embedding

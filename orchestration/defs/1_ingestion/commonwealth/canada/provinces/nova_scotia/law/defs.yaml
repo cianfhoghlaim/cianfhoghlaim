@@ -7,7 +7,7 @@
 # `source_id="commonwealth.can.ns.law.legislation"`.
 #
 # Reference: openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_name: commonwealth_can_ns_law
   module: cianfhoghlaim.dlt.commonwealth.can.ns.law.legislation

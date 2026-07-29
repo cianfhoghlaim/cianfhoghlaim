@@ -7,7 +7,7 @@
 # - agent_memory_education_research_agent
 # - agent_event_education_research_agent
 # - agent_trace_education_research_agent
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: education_research_agent
   framework: agno

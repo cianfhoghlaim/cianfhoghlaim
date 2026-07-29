@@ -3,7 +3,7 @@
 # L4 CelticAssetGenerationComponent for the oRPC /curriculum/search
 # route. The route itself lives in
 # cianfhoghlaim/web/api/orpc/curriculum/search.ts.
-type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+type: orchestration.components.CelticAssetGenerationComponent
 attributes:
   dashboard_kind: orpc_route
   dashboard_path: cianfhoghlaim/web/api/orpc/curriculum/search.ts

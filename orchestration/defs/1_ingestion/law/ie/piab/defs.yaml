@@ -3,7 +3,7 @@
 # CelticIngestionComponent that wires the PIAB DLT source to Dagster.
 # Uses the canonical group_name 1_ingestion/law/ie/piab + a daily
 # 0 5 * * * cron (matches the absorbed proposal's schedule).
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: ie.law.piab
   domain: law

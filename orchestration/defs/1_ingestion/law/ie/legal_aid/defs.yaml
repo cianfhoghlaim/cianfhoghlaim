@@ -1,5 +1,5 @@
 # defs.yaml — Pick-8 IE/law L1 (Ingestion) component for the Legal Aid Board source.
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: ie.law.legal_aid
   domain: law

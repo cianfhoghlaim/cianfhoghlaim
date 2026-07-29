@@ -27,7 +27,7 @@
 # -----------------------------------------------------------------------------
 # Source 1: the 8 universities (TCD, UCD, UCC, UoG, UL, DCU, MU, RCSI)
 # -----------------------------------------------------------------------------
-- type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+- type: orchestration.components.CelticIngestionComponent
   attributes:
     source_name: ireland_tertiary_universities
     module: cianfhoghlaim.dlt.british_isles.ireland.university.universities
@@ -64,7 +64,7 @@
 # -----------------------------------------------------------------------------
 # Source 2: the 5 Technological Universities (TUD, MTU, TUS, ATU, SETU)
 # -----------------------------------------------------------------------------
-- type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+- type: orchestration.components.CelticIngestionComponent
   attributes:
     source_name: ireland_tertiary_tus
     module: cianfhoghlaim.dlt.british_isles.ireland.university.tus
@@ -98,7 +98,7 @@
 # -----------------------------------------------------------------------------
 # Source 3: QQI awards at NFQ 6-10
 # -----------------------------------------------------------------------------
-- type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+- type: orchestration.components.CelticIngestionComponent
   attributes:
     source_name: ireland_tertiary_qqi
     module: cianfhoghlaim.dlt.british_isles.ireland.university.qqi_awards
@@ -134,7 +134,7 @@
 # -----------------------------------------------------------------------------
 # Source 4: CAO Central Applications Office
 # -----------------------------------------------------------------------------
-- type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+- type: orchestration.components.CelticIngestionComponent
   attributes:
     source_name: ireland_tertiary_cao
     module: cianfhoghlaim.dlt.british_isles.ireland.university.cao
@@ -167,7 +167,7 @@
 # -----------------------------------------------------------------------------
 # Source 5: SOLAS Further Education + Training + 16 ETBs
 # -----------------------------------------------------------------------------
-- type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+- type: orchestration.components.CelticIngestionComponent
   attributes:
     source_name: ireland_tertiary_solas
     module: cianfhoghlaim.dlt.british_isles.ireland.university.solas

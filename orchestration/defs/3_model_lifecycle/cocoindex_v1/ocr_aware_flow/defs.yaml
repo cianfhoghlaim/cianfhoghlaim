@@ -5,7 +5,7 @@
 # Requirement. Walks the 5 educational stages (early_childhood, primary,
 # junior_cycle, senior_cycle, leaving_cert) and selects an OCR backend
 # per file from the 11 vision + 4 classical OCR registry.
-type: cianfhoghlaim.orchestration.components.CelticModelLifecycleComponent
+type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: IrelandSyllabusOCRFflow
   module: cianfhoghlaim.cocoindex.ocr_aware_flow

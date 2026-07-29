@@ -2,7 +2,7 @@
 #
 # Per the 2026-07-21-biep-v2-england-aqa-ocr-baml-pipeline-v1 change.
 
-type: cianfhoghlaim.orchestration.components.EnglandBoardSubjectComponent
+type: orchestration.components.EnglandBoardSubjectComponent
 
 attributes:
   exam_board: ocr

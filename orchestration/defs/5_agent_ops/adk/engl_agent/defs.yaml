@@ -2,7 +2,7 @@
 #
 # L5 CelticAgentOpsComponent for the engl_agent (ADK) — one of the
 # 8 NCCA subject agents for the British Isles Educational MMO.
-type: cianfhoghlaim.orchestration.components.CelticAgentOpsComponent
+type: orchestration.components.CelticAgentOpsComponent
 attributes:
   agent_name: engl_agent
   framework: adk

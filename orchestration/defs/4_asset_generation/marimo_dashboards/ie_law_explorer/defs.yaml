@@ -3,7 +3,7 @@
 # Single unified `ie_law_explorer` marimo dashboard that joins across
 # all 5 sources (piab, courts, judgements, court_rules, legal_aid) +
 # the cross-source statute linkage.
-type: cianfhoghlaim.orchestration.components.CelticAssetGenerationComponent
+type: orchestration.components.CelticAssetGenerationComponent
 attributes:
   dashboard_kind: marimo
   dashboard_path: cianfhoghlaim/notebooks/ie_law_explorer.py

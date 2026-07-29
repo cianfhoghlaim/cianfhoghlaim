@@ -2,7 +2,7 @@
 #
 # L1 CelticIngestionComponent for the SEC examinations source (IE).
 # state_backed: true with state_refresh_interval=monthly (per user direction).
-type: cianfhoghlaim.orchestration.components.CelticIngestionComponent
+type: orchestration.components.CelticIngestionComponent
 attributes:
   source_id: ie.education.examinations
   domain: curriculum

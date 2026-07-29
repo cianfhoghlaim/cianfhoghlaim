@@ -9,7 +9,7 @@
 # The asset is invoked by the 72 JC + 81 England Dagster assets.
 # Each call writes the 4-path DuckLake rows + the voted canonical.
 
-type: cianfhoghlaim.orchestration.components.BIEPOCREnsembleComponent
+type: orchestration.components.BIEPOCREnsembleComponent
 
 attributes:
   asset_key: biiep_ocr_ensemble
