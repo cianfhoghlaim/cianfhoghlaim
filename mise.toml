@@ -838,9 +838,70 @@ run = "bash scripts/bring-up-smoke-test.sh"
 description = "Layer 6: validate Dagster definitions via AST parsing + per-group breakdown and include results in the unified sync report"
 run = "bash scripts/sync/dagster.sh"
 
+# -----------------------------------------------------------------------------
+# BAML Schema Sync Loop — the 7th sync layer (per 2026-08-15-baml-sync-loop-v1)
+# Layer 7 covers the 320 .baml files (558 functions + 838 classes + 288
+# enums + 33 LLM clients). The orchestrator runs 5 sub-layers.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:baml-drift"]
+description = "BAML Layer 1: detect reference + syntax drift in the 320 .baml files"
+run = "bash scripts/sync/baml-drift.sh"
+
+[tasks."sync:baml-ccc"]
+description = "BAML Layer 2: append the 22nd CCC concept guide (baml-function-search) + reindex"
+run = "bash scripts/sync/baml-ccc.sh"
+
+[tasks."sync:baml-cognee"]
+description = "BAML Layer 3: ingest the 320 .baml files into the 11th Cognee cluster (baml_schemas)"
+run = "bash scripts/sync/baml-cognee.sh"
+
+[tasks."sync:baml-test"]
+description = "BAML Layer 4: run baml-cli test on the 11 test blocks"
+run = "bash scripts/sync/baml-test.sh"
+
+[tasks."sync:baml-lint"]
+description = "BAML Layer 5: BAML lint gate (client references + model drift)"
+run = "bash scripts/sync/baml-lint.sh"
+
+[tasks."sync:baml"]
+description = "BAML orchestrator: runs sync:baml-drift + sync:baml-ccc + sync:baml-cognee + sync:baml-test + sync:baml-lint in sequence + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/baml-all-$(date +%Y-%m-%d).md"
+{
+  echo "# BAML Schema Sync — Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-15-baml-sync-loop-v1 change (Layer 7)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+for layer in drift ccc cognee test lint; do
+  echo "## Sub-layer: sync:baml:$layer" >> "$REPORT"
+  echo '```' >> "$REPORT"
+  bash "scripts/sync/baml-$layer.sh" >> "$REPORT" 2>&1
+  echo '```' >> "$REPORT"
+  echo "" >> "$REPORT"
+done
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 BAML sub-layers completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
+
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
 run = "bash scripts/sync/drift_docs.sh"
+
+[tasks."sync:spec-agents"]
+description = "Layer 8: regenerate the per-spec AGENTS.md files (78 siblings of openspec/specs/<name>/spec.md). Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change's `repo-hygiene-agent-routing` spec."
+run = "bash scripts/sync/spec_agents.sh ${@:-}"
 
 # -----------------------------------------------------------------------------
 # Knowledge-Sync-Loop — the 5-layer pull-based sync architecture
