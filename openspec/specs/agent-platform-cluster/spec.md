@@ -481,6 +481,217 @@ actionable error message.
 - **AND** the operator can run any one of them in any order (each is
   idempotent and health-checks its own state)
 
+### Requirement: OpenChamber uses the existing Bunchloch OpenCode server
+
+The agent-platform cluster SHALL support OpenChamber as a Bunchloch development
+surface backed by the existing host OpenCode `1.17.9` server. OpenChamber MUST
+use an explicit external-server configuration with `OPENCODE_HOST`,
+`OPENCODE_PORT=4096`, and `OPENCODE_SKIP_START=true`, and MUST NOT create a
+parallel bundled OpenCode runtime for this surface.
+
+#### Scenario: The external host is the sole OpenCode runtime
+
+- **WHEN** OpenChamber is started for Bunchloch development
+- **THEN** requests are sent to the host OpenCode server at port `4096`
+- **AND** no in-container OpenCode process is started or used as a fallback
+
+### Requirement: Host OpenCode sessions and MCP configuration remain authoritative
+
+The cluster SHALL preserve the host OpenCode server as the owner of OpenCode
+sessions, project metadata, enabled MCP configuration, and related credentials.
+OpenChamber MUST consume those resources through the external server rather than
+copying, rehydrating, or shadowing them in its own config volume.
+
+#### Scenario: Existing sessions are visible through OpenChamber
+
+- **WHEN** the host OpenCode server has an existing session for
+  `/Users/cianmacandeisigh/dev/kings_college_galway`
+- **THEN** OpenChamber can list and reopen that session through the external
+  server
+- **AND** the session resolves to the identical absolute repository path
+
+#### Scenario: Enabled MCP list is preserved
+
+- **WHEN** the host OpenCode server exposes its enabled MCP list
+- **THEN** OpenChamber displays or can query the same enabled MCP names and
+  statuses through the external server
+- **AND** no MCP credential or configuration is duplicated into the
+  OpenChamber-owned persistent volume
+
+### Requirement: Agent-surface parity verification
+
+The agent-platform cluster SHALL provide a verification procedure for the
+Bunchloch OpenChamber surface that checks OpenChamber `/health`, host OpenCode
+`/global/health`, session visibility, the enabled MCP list, the identical
+repository mount, git availability, and loopback-only binding. The procedure
+MUST fail if any parity check fails or if plaintext secrets are detected.
+
+#### Scenario: Full parity verification passes
+
+- **WHEN** the verification procedure runs after both services start
+- **THEN** OpenChamber `/health` and OpenCode `/global/health` return HTTP 200
+- **AND** an existing host session opens at the canonical repository path with
+  the expected enabled MCP list
+- **AND** git, secret, mount, and loopback checks all pass
+
+#### Scenario: A parity check fails
+
+- **WHEN** the external server is unavailable, a session is missing, an MCP
+  list differs, or a security check fails
+- **THEN** the verification procedure exits non-zero
+- **AND** it reports the failed check without printing secret values
+
+### Requirement: Bundling procedure `deploy-agent-fleet-bunchloch`
+
+The system SHALL provide a Komodo procedure
+`deploy-agent-fleet-bunchloch.toml` at
+`bonneagar/komodo/procedures/` that bundles the 12 main
+agents + the 8 NCCA subject agents + the 3 educational agents
+into a single 4-stage omnibus:
+
+- **Stage 1**: pre-reqs (cross-cutting prerequisites)
+- **Stage 2**: DeployStack 8 supporting stacks (lakehouse + litellm + langfuse + mlflow + cognee + graphiti + lancedb + falkordb)
+- **Stage 3**: DeployStack 3 agent surfaces (hermes + openclaw + openchamber)
+- **Stage 4**: health verify (12 agents reachable, 8 NCCA agents reachable, 3 educational agents reachable)
+
+The procedure SHALL accept `--skip=<stage>` flags like the
+existing `deploy-agent-platform-cluster-bunchloch` omnibus.
+
+#### Scenario: `deploy-agent-fleet-bunchloch` completes all 4 stages
+
+- **GIVEN** the 8 supporting stacks are deployed (lakehouse + litellm + langfuse + mlflow + cognee + graphiti + lancedb + falkordb)
+- **WHEN** `km run procedure deploy-agent-fleet-bunchloch`
+- **THEN** the 3 agent surfaces SHALL be deployed (hermes + openclaw + openchamber)
+- **AND** the 12 main agents SHALL be reachable via `AGENT_REGISTRY`
+- **AND** the 8 NCCA subject agents SHALL be reachable via `agents.tuatha.<slug>_agent`
+- **AND** the 3 educational agents SHALL be reachable via `agents.meaisinfhoghlaim.educational.<slug>_agent`
+
+#### Scenario: `--skip=` flag accepts per-stage names
+
+- **GIVEN** the operator wants to skip the agent surfaces (already deployed)
+- **WHEN** `km run procedure deploy-agent-fleet-bunchloch --skip=stage3`
+- **THEN** Stages 1, 2, 4 SHALL run
+- **AND** Stage 3 SHALL be skipped
+- **AND** the procedure SHALL exit 0
+
+### Requirement: Bundling procedure `deploy-agent-fleet-arm1-oci`
+
+The system SHALL provide a Komodo procedure
+`deploy-agent-fleet-arm1-oci.toml` at
+`bonneagar/komodo/procedures/` that mirrors the bunchloch
+procedure but adapted for `arm1-oci` (the 6-stage omnibus with
+`preflight:arm-oci`):
+
+- **Stage 1**: pre-reqs (`preflight:arm-oci` + cross-cutting prerequisites)
+- **Stage 2**: control-plane foundation (pangolin + langfuse + observability)
+- **Stage 3**: 8 supporting stacks (lakehouse + litellm + mlflow + cognee + graphiti + lancedb + falkordb + mlflow)
+- **Stage 4**: 3 agent surfaces (hermes + openclaw + openchamber)
+- **Stage 5**: Pangolin routes (12 agents + 8 NCCA + 3 educational)
+- **Stage 6**: health verify
+
+The procedure SHALL have `server_id = "arm1-oci"` at the top
+of the file (the cross-host dispatch convention from the
+`2026-07-13-deploy-agent-platform-cluster-arm1-oci-and-remote-dev-workflow`
+change).
+
+#### Scenario: `deploy-agent-fleet-arm1-oci` runs `preflight:arm-oci` as Stage 1
+
+- **GIVEN** the arm1-oci host is reachable
+- **WHEN** `km run procedure deploy-agent-fleet-arm1-oci`
+- **THEN** Stage 1 SHALL run `preflight:arm-oci` first
+- **AND** if `preflight:arm-oci` returns ALL CHECKS PASSED,
+  Stages 2-6 SHALL proceed
+- **AND** if `preflight:arm-oci` reports any failure, the
+  procedure SHALL exit with a non-zero status
+
+#### Scenario: `deploy-agent-fleet-arm1-oci` has `server_id = "arm1-oci"`
+
+- **GIVEN** `bonneagar/komodo/procedures/deploy-agent-fleet-arm1-oci.toml`
+- **WHEN** `head -1 deploy-agent-fleet-arm1-oci.toml`
+- **THEN** the output SHALL be `server_id = "arm1-oci"`
+
+### Requirement: Operator runbooks `agent-fleet-*-2026-08.md`
+
+The system SHALL provide 2 operator runbooks at
+`bonneagar/deploy-runbooks/`:
+
+- `agent-fleet-bunchloch-2026-08.md` — the operator's
+  quick-start for bunchloch (the `bun run deploy-agent-fleet-bunchloch`
+  5-command sequence)
+- `agent-fleet-arm1-oci-2026-08.md` — the operator's
+  quick-start for arm1-oci (the `bun run deploy-agent-fleet-arm1-oci`
+  6-command sequence with WARP + Locket)
+
+Each runbook SHALL include:
+
+- Pre-flight checks (the 4 outputs the operator must verify)
+- Bundled procedure invocation (the 1 `km run` command)
+- Post-archive verification (the 3 health endpoints)
+- Rollback (the 1 `km run procedure rollback` command)
+
+#### Scenario: `agent-fleet-bunchloch-2026-08.md` runbook exists
+
+- **GIVEN** `bonneagar/deploy-runbooks/agent-fleet-bunchloch-2026-08.md`
+- **WHEN** tested against the current bunchloch state
+- **THEN** the runbook's 5-command sequence SHALL result in
+  all 12 + 8 + 3 agents being reachable within 10 min
+
+#### Scenario: `agent-fleet-arm1-oci-2026-08.md` runbook exists
+
+- **GIVEN** `bonneagar/deploy-runbooks/agent-fleet-arm1-oci-2026-08.md`
+- **WHEN** tested against the current arm1-oci state
+- **THEN** the runbook's 6-command sequence SHALL result in
+  all 12 + 8 + 3 agents being reachable via `*.cianfhoghlaim.ie`
+  within 15 min
+- **AND** the 3 health endpoints SHALL return 200:
+  - `https://hermes.cianfhoghlaim.ie/api/health`
+  - `https://openclaw.cianfhoghlaim.ie/api/health`
+  - `https://openchamber.cianfhoghlaim.ie/api/health`
+
+### Requirement: iac:rotate-auth mints fresh Pangolin + Komodo + Infisical credentials via Pocket ID OIDC
+
+The system SHALL provide a `bun run iac:rotate-auth` command that
+auto-rotates the 3 critical IaC credentials via the Pocket ID OIDC
+`client_credentials` flow. The rotation is idempotent and emits a JSON
+audit record.
+
+The command:
+1. Discovers Pocket ID's `.well-known/openid-configuration`
+2. POSTs to Pocket ID's `/oidc/token` with `grant_type=client_credentials`
+3. Receives an `access_token` (JWT)
+4. POSTs to Pangolin's form-login endpoint to exchange the JWT for a Pangolin session cookie
+5. Mints a fresh Pangolin API key via `PUT /org/{orgId}/api-key` → writes to `PANGOLIN_API_KEY` in `~/.env`
+6. Reads `KOMODO_PASSWORD` from Infisical (using the universal auth client) → writes to `~/.env`
+7. Reads the `INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET` from the Infisical vault → writes to `~/.env`
+8. Emits a JSON audit record to `/tmp/auth-rotation-{ts}.json`
+
+The command SHALL be wired into `iac:auth.ts` to replace the existing
+`// TODO: Pocket ID OIDC client_credentials flow` placeholder.
+
+#### Scenario: rotation succeeds
+
+- **GIVEN** the Pocket ID OIDC client is configured (client_id + client_secret in `~/.env`)
+- **AND** the Infisical universal auth client is functional
+- **WHEN** `bun run iac:rotate-auth` runs
+- **THEN** all 3 credentials are written to `~/.env` (PANGOLIN_API_KEY, KOMODO_PASSWORD, INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET)
+- **AND** a JSON audit record is emitted to `/tmp/auth-rotation-{ts}.json`
+- **AND** the procedure exits 0
+
+#### Scenario: rotation fails (Pocket ID unreachable)
+
+- **WHEN** the Pocket ID endpoint returns 503 (unreachable)
+- **THEN** the command exits 1
+- **AND** the existing credentials in `~/.env` are NOT modified
+- **AND** a JSON audit record is emitted to `/tmp/auth-rotation-failed-{ts}.json` with the failure reason
+
+#### Scenario: rotated credentials are used by iac:sync:sites
+
+- **WHEN** `bun run iac:rotate-auth` has just succeeded
+- **AND** `bun run iac:sync:sites` runs immediately afterward
+- **THEN** the `iac:sync:sites` command uses the freshly-minted `PANGOLIN_API_KEY`
+- **AND** the Pangolin Integrations API call succeeds (no 401)
+- **AND** the bunchloch-newt site is provisioned + credentials written
+
 ## Cross-references
 
 - [`agent-memory-systems`](../agent-memory-systems/spec.md) — the 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph)

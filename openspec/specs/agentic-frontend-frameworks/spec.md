@@ -241,16 +241,16 @@ The 12 components SHALL be: `<CiButton>`, `<CiProgressRing>`,
 
 ### Requirement: (R7 REMOVED 2026-07-09 — Brown Ajah theming)
 
-The Brown Ajah Wheel of Time theming (Aes Sedai / Amyrlin Seat /
-Dragon Reborn / Dragon Banner / Tuatha'an + the "Aes Sedai — servants
-of all" tagline) was removed per the
+The system SHALL render an **accurate** map of the British Isles (NOT
+fictional). The Brown Ajah Wheel of Time theming (Aes Sedai / Amyrlin
+Seat / Dragon Reborn / Dragon Banner / Tuatha'an + the "Aes Sedai —
+servants of all" tagline) was removed per the
 `2026-07-09-remove-brown-ajah-theming-v1` change. The mythology /
 historical-sources theming layer is deferred to BIEP-v2 (see the
 `british-isles-education-pipeline` spec). The accurate British Isles
 map remains (kept below).
 
-The system SHALL render an **accurate** map of the British Isles (NOT
-fictional). The 6 subnations SHALL be: Éire (Ireland, v1 active) +
+The 6 subnations SHALL be: Éire (Ireland, v1 active) +
 Northern Ireland + Scotland + England + Wales + Isle of Man. The 5 NCCA
 Key Competencies SHALL be the 5 land-marks (Dublin + Edinburgh +
 Cardiff + London + Douglas) plus a 6th Belfast node (Cross-Border
@@ -283,6 +283,158 @@ Moycullen).
 - **THEN** no text matches the regex `Ci[ae]n M[ae]c a[nm] D[ée]isi[gh]`
 - **AND** no text matches the family surnames Deacy, Lyons, Morris, Conroy
 - **AND** no text references the 3 Gemini Deep Research warrants
+
+### Requirement: Per-subject Convex + TanStack interactive web surface for the 6 BIEP v1 LC subjects
+
+The system SHALL ship a per-subject Convex + TanStack interactive web
+surface for each of the 6 BIEP v1 LC subjects: Mathematics, Chemistry,
+Geography, Gaeilge, English, Computer Science (per the user's locked
+plan; Applied Maths + History are out of scope).
+
+For each of the 6 subjects, the system SHALL ship:
+- 5 per-subject TanStack Start route files at
+  `apps/cianfhoghlaim-leaving-cert/apps/web/src/routes/en/subjects/<subject>/`
+  named `index.tsx`, `syllabus.tsx`, `exam-papers.tsx`,
+  `marking-schemes.tsx`, `study-plan.tsx` (30 files total).
+- 6 per-subject Convex files at `convex/<subject>/` named
+  `schema.ts`, `createSession.ts`, `getSession.ts`,
+  `updateSession.ts`, `generateStudyPlan.ts`,
+  `discussExamPaper.ts` (36 files total).
+- 1 per-subject BAML backend file at
+  `baml/education/web/<subject>_web.baml` exposing the functions
+  `WebStudyPlan`, `WebExamPaperDiscussion`, and
+  `WebMarkingSchemeExplanation` (6 files total).
+
+Total: 30 + 36 + 6 = 72 per-subject source files.
+
+The per-subject Convex `generateStudyPlan` action SHALL call into the
+per-subject BAML `WebStudyPlan` function. The per-subject Convex
+`discussExamPaper` action SHALL call into the per-subject BAML
+`WebExamPaperDiscussion` function. The per-subject BAML backend files
+SHALL delegate to the existing per-subject foundation at
+`baml/education/subjects/qpack_<subject>.baml`.
+
+Per-subject route trees are added alongside (not replacing) the
+existing flat `apps/.../routes/en/subjects/<subject>.tsx` files so
+existing book-marks resolve to the new per-subject directories.
+
+#### Scenario: Mathematics per-subject study plan generation
+
+- **GIVEN** the user is on `/en/subjects/mathematics/study-plan`
+- **WHEN** they press "Start studying" with `weeksUntilExam=12`,
+  `targetLevel="hl"`, `language="en"`
+- **THEN** the `convex/mathematics/createSession.ts` mutation runs and
+  returns a session id
+- **AND** the `convex/mathematics/generateStudyPlan.ts` action runs
+  and calls `b.WebStudyPlan(subject="mathematics", ...)`
+- **AND** the `WebStudyPlan` function returns a
+  `MathematicsWebStudyPlanResponse` (bilingual EN+GA) with at least 12
+  weeks + 3-5 milestones
+- **AND** the response is persisted to the `study_plans` table by the
+  `insertStudyPlan` internal mutation
+- **AND** the UI re-renders the per-subject plan in real time via the
+  Convex subscription
+
+#### Scenario: Chemistry per-subject exam paper discussion
+
+- **GIVEN** the user is on `/en/subjects/chemistry/exam-papers`
+- **WHEN** they click a past paper question for the 2024 LC Chemistry
+  HL paper
+- **THEN** the `convex/chemistry/discussExamPaper.ts` action runs and
+  calls `b.WebExamPaperDiscussion(subject="chemistry", paper_year=2024,
+  paper_level="LC_HL", paper_language="EN", question_text="...")`
+- **AND** the `WebExamPaperDiscussion` function returns a
+  `ChemistryWebExamPaperDiscussionResponse` with a PCLM marking-scheme
+  explanation + a model answer outline + common student mistakes +
+  follow-up questions
+- **AND** the response is persisted to the
+  `exam_paper_discussions` table
+
+#### Scenario: Geography per-subject marking scheme explanation
+
+- **GIVEN** the user is on `/en/subjects/geography/marking-schemes`
+- **WHEN** they select the 2023 LC Geography OL paper
+- **THEN** the per-subject BAML `WebMarkingSchemeExplanation` function
+  (at `baml/education/web/geography_web.baml`) returns a
+  `GeographyWebMarkingSchemeExplanationResponse` with sections +
+  questions + PCLM patterns
+- **AND** the response renders in the UI without writing to Convex
+  (this function is read-only)
+
+#### Scenario: Gaeilge per-subject bilingual handling
+
+- **GIVEN** the user is on `/ga/subjects/gaeilge` (the Irish-language
+  mirror of the Gaeilge BIEP page)
+- **WHEN** they press "Start studying" with `language="ga"`
+- **THEN** the per-subject Convex action accepts the Gaeilge language
+  flag
+- **AND** the per-subject BAML backend responds in Gaeilge
+  (or bilingual EN+GA where Gaeilge is the primary)
+- **AND** the `study_plans.plan_json` row is tagged `language="ga"`
+
+#### Scenario: English per-subject session progress
+
+- **GIVEN** the user has an active English study session
+- **WHEN** they complete a syllabus topic on
+  `/en/subjects/english/syllabus`
+- **THEN** the `convex/english/updateSession.ts` mutation runs with
+  `messageCountDelta=1`
+- **AND** the session's `message_count` and `last_active_at` are
+  patched in the `study_sessions` table
+
+#### Scenario: Computer Science per-subject BAML delegation
+
+- **GIVEN** the `baml/education/web/computer_science_web.baml` backend
+- **WHEN** any of `WebStudyPlan`, `WebExamPaperDiscussion`, or
+  `WebMarkingSchemeExplanation` is invoked
+- **THEN** the function delegates to the foundation at
+  `baml/education/subjects/qpack_computer_science.baml` for the
+  per-subject syllabus + past-paper grounding
+
+### Requirement: 5th-surface lock — no 6th surface without a separate openspec change
+
+The system SHALL NOT add a 6th row to the 4 canonical surfaces table
+without first opening a separate openspec change that explicitly amends
+this requirement.
+
+The current 5-surface table (per this spec's R-5Surface requirement) is
+locked as of the archive date of
+`2026-07-18-british-isles-portal-activation-v3`.
+
+#### Scenario: A developer asks for a 6th surface
+
+- **GIVEN** a developer asks "can I add a 6th surface to the table?"
+- **WHEN** the openspec change is reviewed
+- **THEN** the reviewer MUST reject any PR that adds a 6th row without a
+  separate openspec change explicitly amending this requirement
+
+### Requirement: 5th-surface activation marker
+
+The system SHALL publish the 5th surface (`cianfhoghlaim-leaving-cert`)
+to `portal.cianfhoghlaim.ie` via the `portal-cloudflare-r2` stack
+(see `openspec/changes/2026-07-18-british-isles-portal-activation-v3/`).
+
+The Pangolin resource binding SHALL live at
+`bonneagar/pangolin/resources/portal.yaml`.
+
+#### Scenario: portal.cianfhoghlaim.ie resolves
+
+- **WHEN** the operator opens `https://portal.cianfhoghlaim.ie`
+- **THEN** the British Isles map renders with Éire active
+- **AND** at least 1 NCCA subject (Mathematics) shows the 6-section shell
+- **AND** the CopilotKit sidebar is mounted with EN+GA
+
+### Requirement: Pocket ID SSO as the 7th layer authentication provider
+
+The system SHALL document Pocket ID OIDC as the canonical SSO provider
+in the 7-layer agentic-frontend-framework stack spec. The 5 OIDC
+audiences are documented in the `infrastructure-stacks` spec.
+
+#### Scenario: A new agent surface is added
+
+- **WHEN** a developer looks at the 7-layer stack spec
+- **THEN** they see Pocket ID OIDC as the canonical SSO provider
+- **AND** they see the 5 OIDC audiences
 
 ## Cross-references
 

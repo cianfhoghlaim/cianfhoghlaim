@@ -43,9 +43,7 @@ weekly releases, the platform drifts silently from upstream
 best practice. This capability is the steady-state ingestion
 pipeline that closes that gap and serves as the enforcement
 layer for CocoIndex v1 conformance (REFACTORING.md item 12).
-
 ## Requirements
-
 ### Requirement: Upstream Blog Monitor
 
 The system SHALL expose a CocoIndex v1 App at
@@ -272,3 +270,87 @@ blog posts by the `ExtractBlogPostMetadata` BAML function.
 - **AND** the Firecrawl monitor `--goal` strings for each of
   the 4 packages SHALL mention at least 3 of the 6 enum values
   so the LLM judge can classify accurately
+
+### Requirement: Phase 1 completion
+
+The system SHALL complete Phase 1 of the `upstream-package-monitoring`
+capability with all five baseline requirements functional: three
+CocoIndex v1 Apps, four Firecrawl monitors, one n8n webhook bridge, and
+one breaking-change sensor wired for the MotherDuck / dltHub / LanceDB /
+CocoIndex upstream surface.
+
+#### Scenario: End-to-end upstream monitoring surfaces are present
+
+- **GIVEN** the data-platform agent checks out the
+  `pick-4-biep-v1` branch
+- **WHEN** it inspects the upstream-package-monitoring implementation
+- **THEN** the three CocoIndex v1 Apps SHALL exist at
+  `cocoindex/upstream_blog_monitor.py`,
+  `cocoindex/upstream_api_surface.py`, and
+  `cocoindex/cocoindex_v1_conformance.py`
+- **AND** the four Firecrawl monitor entrypoints SHALL exist at
+  `scripts/upstream/motherduck_monitor.py`,
+  `scripts/upstream/dlthub_monitor.py`,
+  `scripts/upstream/lancedb_monitor.py`, and
+  `scripts/upstream/cocoindex_monitor.py`
+- **AND** the FastAPI n8n webhook bridge SHALL exist at
+  `web/hono-api/src/routes/upstream_webhook.py`
+- **AND** the Dagster breaking-change sensor SHALL exist at
+  `orchestration/sensors/upstream_breaking_change_sensor.py`
+- **AND** all listed Python files SHALL AST-parse cleanly.
+
+#### Scenario: Firecrawl monitor data path is wired
+
+- **GIVEN** one of the four Firecrawl monitor entrypoints runs with an
+  available Firecrawl MCP / API scrape surface
+- **WHEN** it fetches a canonical changelog, blog, docs, or GitHub
+  releases URL
+- **THEN** it SHALL call BAML `ExtractPackageRelease` to extract
+  structured release metadata
+- **AND** it SHALL write the extracted row to
+  `md:cianfhoghlaim_upstream.upstream_monitoring`
+- **AND** it SHALL trigger the n8n webhook bridge at
+  `https://n8n.cianfhoghlaim.ie/webhook/upstream-breaking-change`
+  whenever the release includes at least one breaking change.
+
+#### Scenario: Breaking-change sensor routes new MotherDuck rows
+
+- **GIVEN** `md:cianfhoghlaim_upstream.upstream_monitoring` contains a new
+  row with `is_breaking = TRUE`
+- **WHEN** `upstream_breaking_change_sensor` evaluates
+- **THEN** it SHALL emit a downstream materialisation request tagged with
+  the upstream package, version, release-notes URL, and content hash
+- **AND** it SHALL advance its cursor so the same breaking-change row is
+  not re-alerted on the next sensor tick.
+
+### Requirement: BIEP v2 England change sensor
+
+The system SHALL provide 1 Dagster sensor at
+`orchestration/defs/sensors/england_change_detection_sensor.py` that
+re-runs the Change 2 England BAML extraction whenever a ChangeDetection.io
+monitor (per `infrastructure-stacks/spec.md` Requirement "ChangeDetection.io
+for England awarding bodies") fires for any of the 3 awarding bodies.
+
+The sensor MUST:
+
+- Subscribe to the 3 ChangeDetection.io webhook endpoints (one per board)
+- Resolve to the per-board DAG asset key (e.g.
+  `eng_aqa_mathematics_ingested` for an AQA maths change)
+- Trigger the dagster job `england_england_re_extraction_job`
+- Emit a Langfuse trace event with the change metadata
+- Write an audit row to
+  `cianfhoghlaim.education.british_isles.england.changes`
+
+#### Scenario: England AQA GCSE math change triggers re-extraction
+
+- **GIVEN** the ChangeDetection.io `aqa_monitor.yaml` fires for the
+  GCSE Mathematics specification page
+- **WHEN** the webhook posts to the sensor
+- **THEN** the sensor resolves
+  `asset_key=eng_aqa_mathematics_ingested`
+- **AND** the dagster job `england_england_re_extraction_job` materialises
+- **AND** the re-extraction produces the 4-path ensemble output + the
+  voted canonical row
+- **AND** the audit table `cianfhoghlaim.education.british_isles.england.changes`
+  records the change with `ragas_score` and `extraction_status='success'`
+

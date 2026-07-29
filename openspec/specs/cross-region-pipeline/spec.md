@@ -1,5 +1,7 @@
-## ADDED Requirements
+## Purpose
 
+This umbrella spec extends `cianfhoghlaim-pipeline` (the British Isles scoped pipeline) into a 6-region federation (British Isles + European Union + European Nations + Commonwealth + Americas + Global Official). It defines the canonical path contract, source_id shape, partition contract, DuckLake namespace shape, and cross-nation BAML classifier that all new DLT sources in the 6 supported regions must obey.
+## Requirements
 ### Requirement: Canonical cross-region DLT path contract
 
 The system SHALL route every new DLT source for any of the 6 supported
@@ -160,6 +162,176 @@ change touches too many enums, define a parallel `GlobalJurisdiction`
    level=BRA_HIGHER_EDUCATION)`
 - **AND** the resulting `CrossNationCurriculumSpec` SHALL carry the
   canonical jurisdiction + region + language metadata
+
+### Requirement: Americas pipeline obeys the cross-region contract
+
+The system MUST route every new Americas pipeline through the canonical
+cross-region path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Americas files live at
+`dlt/americas/<jurisdiction>/<domain>/<source>.py` with the canonical
+`source_id` + partition + DuckLake namespace contract.
+
+#### Scenario: A new California education source obeys the contract
+
+- **WHEN** a developer adds the CDE source
+- **THEN** it MUST be created at
+  `dlt/americas/us/us_ca/education/cde.py`
+- **AND** its `source_id` MUST be
+  `americas.us.us_ca.education.cde`
+- **AND** it MUST NOT be created at `dlt/california/cde.py` or any
+  other non-conformant path
+
+### Requirement: Commonwealth of Nations pipeline obeys the cross-region contract
+
+The system MUST route every new Commonwealth pipeline through the
+canonical cross-region path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Commonwealth files live at
+`dlt/commonwealth/<iso3>/<domain>/<source>.py` (per-nation) or
+`dlt/commonwealth/official/<source>.py` (institutional).
+
+#### Scenario: A new Australian curriculum source obeys the contract
+
+- **WHEN** a developer adds the ACARA source
+- **THEN** it MUST be created at `dlt/commonwealth/aus/education/acara.py`
+- **AND** its `source_id` MUST be `commonwealth.aus.education.acara`
+- **AND** it MUST NOT be created at `dlt/aus/acara.py` or any other
+  non-conformant path
+
+### Requirement: EU nations + Ukraine pipeline obeys the cross-region contract
+
+The system MUST route every new per-nation pipeline through the
+canonical cross-region path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Per-nation files live at
+`dlt/european_nations/<iso3>/<domain>/<source>.py` with the
+canonical `source_id` + partition + DuckLake namespace contract.
+
+#### Scenario: A new French statute-book source obeys the contract
+
+- **WHEN** a developer adds the Légifrance source
+- **THEN** it MUST be created at
+  `dlt/european_nations/fra/law/legifrance.py`
+- **AND** its `source_id` MUST be `european_nations.fra.law.legifrance`
+- **AND** it MUST NOT be created at any legacy path
+  (`dlt/eu/fra/law/`, `dlt/europeanunion/fra/law/`, etc.)
+
+### Requirement: EU institutional pipeline obeys the cross-region contract
+
+The system MUST route every new EU institutional pipeline through the
+canonical cross-region path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. EU institutional files live at
+`dlt/european_union/<institution>/<source>.py` and obey the canonical
+`source_id` + partition + DuckLake namespace contract.
+
+#### Scenario: A new EU institutional source obeys the contract
+
+- **WHEN** a developer adds a new EMA medicines register source
+- **THEN** it MUST be created at
+  `dlt/european_union/medicine/ema_medicines_register.py`
+- **AND** its `source_id` MUST be
+  `european_union.medicine.ema_medicines_register`
+- **AND** its asset key MUST be
+  `european_union.medicine.ema_medicines_register`
+- **AND** it MUST NOT be created at the legacy paths
+  (`dlt/eu/`, `dlt/european_union/ema.py`, etc.)
+
+### Requirement: Nigeria pipeline obeys the cross-region contract
+
+The system MUST route every Nigerian pipeline through the canonical
+cross-region path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Nigerian federal files live at
+`dlt/commonwealth/nga/<domain>/<source>.py`; state files live at
+`dlt/commonwealth/nga/states/<state_slug>/<domain>/<source>.py`.
+
+#### Scenario: A new Nigerian federal source obeys the contract
+
+- **WHEN** a developer adds the NUC source
+- **THEN** it MUST be created at
+  `dlt/commonwealth/nga/education/nuc.py`
+- **AND** its `source_id` MUST be
+  `commonwealth.nga.education.nuc`
+- **AND** it MUST NOT be created at `dlt/nigeria/nuc.py` or any
+  other non-conformant path
+
+### Requirement: Canada provinces obey the cross-region contract
+
+The system MUST route every new Canadian provincial pipeline
+through the canonical cross-region path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Provincial files live at
+`dlt/commonwealth/can/<prov>/<domain>/<source>.py` with the
+canonical `source_id` + partition + DuckLake namespace contract.
+
+#### Scenario: A new Quebec education source obeys the contract
+
+- **WHEN** a developer adds the MEES source
+- **THEN** it MUST be created at
+  `dlt/commonwealth/can/qc/education/mees.py`
+- **AND** its `source_id` MUST be
+  `commonwealth.can.qc.education.mees`
+- **AND** it MUST NOT be created at `dlt/canada/qc/mees.py` or any
+  other non-conformant path
+
+### Requirement: British Isles parity pipeline obeys the cross-region contract
+
+The system MUST route every British Isles per-nation + per-subject
+pipeline through the canonical cross-region path contract
+declared by the [`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Per-nation + per-subject files live at
+`dlt/british_isles/<nation>/<domain>/<source>.py` (matching the
+existing British Isles contract).
+
+#### Scenario: A new Scottish per-subject source obeys the contract
+
+- **WHEN** a developer adds a new SQA mathematics source
+- **THEN** it MUST be created at
+  `dlt/british_isles/scotland/education/subjects/mathematics.py`
+- **AND** its `source_id` MUST be
+  `british_isles.scotland.education.subjects.mathematics`
+- **AND** it MUST NOT be created at
+  `dlt/scotland/mathematics.py` or any other non-conformant path
+
+### Requirement: EU full-depth pipeline obeys the cross-region contract
+
+The system MUST route every per-subject DLT source for the EU
+nations full-depth expansion through the canonical cross-region
+path contract declared by the
+[`cross-region-pipeline`](../../../specs/cross-region-pipeline/spec.md)
+umbrella spec. Per-subject files live at
+`dlt/european_nations/<iso3>/education/subjects/<subject>.py`.
+
+#### Scenario: A new Czech mathematics source obeys the contract
+
+- **WHEN** a developer adds the CZE mathematics source
+- **THEN** it MUST be created at
+  `dlt/european_nations/cze/education/subjects/mathematics.py`
+- **AND** its `source_id` MUST be
+  `european_nations.cze.education.subjects.mathematics`
+- **AND** it MUST NOT be created at `dlt/czechia/mathematics.py` or
+  any other non-conformant path
+
+### Requirement: EU multilingual pipeline obeys the cross-region contract
+
+The system MUST route the EU multilingual alignment pipeline through
+the canonical cross-region path contract. The bilingual English +
+Irish extraction files live at `dlt/european_union/<institution>/`
+(unchanged), the bilingual extraction function is in
+`baml/european_union/_shared/eu_document.baml`.
+
+#### Scenario: A new bilingual extraction function is added
+
+- **WHEN** a developer adds the
+  `ExtractEUDocumentBilingualEnGa` function
+- **THEN** it MUST live in
+  `baml/european_union/_shared/eu_document.baml`
+- **AND** it MUST be importable via
+  `from cianfhoghlaim.baml_client import b`
+- **AND** the function MUST accept `institution: EUInstitution`
+  and `language: EULanguage` parameters
 
 ## Cross-references
 

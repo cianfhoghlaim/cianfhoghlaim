@@ -34,22 +34,20 @@ Each step is one marimo notebook. Editing a cell causes dependent cells to re-ru
 - `docs/agents/five-tangent-modernization.md` (the 5-tangent companion doc)
 - `openspec/specs/cianfhoghlaim-marimo-dashboards/spec.md` (the older notebook-spec this composes with)
 - `openspec/specs/dlthub-platform-integration/spec.md` (the dlthub wire-up exercised in step 7)
-
 ## Requirements
-
 ### Requirement: 8-step tutorial presence
 
-The system SHALL provide exactly 8 marimo notebooks at `cianfhoghlaim/notebooks/{01..08}_*.py`, one per numbered tutorial step.
+The system SHALL provide exactly 8 marimo notebooks at `notebooks/{01..08}_*.py`, one per numbered tutorial step.
 
 #### Scenario: All 8 notebooks present
 
-- **WHEN** the user runs `ls cianfhoghlaim/notebooks/{01..08}_*.py`
+- **WHEN** the user runs `ls notebooks/{01..08}_*.py`
 - **THEN** exactly 8 files exist
 - **AND** `marimo edit 01_overview_setup.py` renders without error
 
 ### Requirement: Legacy preservation
 
-The system SHALL preserve the existing 50+ stage-specific notebooks under `cianfhoghlaim/notebooks/legacy/` (unmodified) so the existing per-subject / per-corpus analyses remain reachable.
+The system SHALL preserve the existing 50+ stage-specific notebooks under `notebooks/legacy/` (unmodified) so the existing per-subject / per-corpus analyses remain reachable.
 
 #### Scenario: Legacy discovery
 
@@ -94,16 +92,16 @@ The system SHALL provide a `docs/agents/five-tangent-modernization.md` companion
 
 ### Requirement: Workshop vendoring
 
-The system SHALL vendor the `DataTalksClub/llm-zoomcamp/cohorts/2026/workshops/dlt` workshop at `cianfhoghlaim/dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/` as a read-only reference (MIT-licensed, sparse-checkout, regenerable). The vendored workshop is NOT imported — it's documentation only.
+The system SHALL vendor the `DataTalksClub/llm-zoomcamp/cohorts/2026/workshops/dlt` workshop at `dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/` as a read-only reference (MIT-licensed, sparse-checkout, regenerable). The vendored workshop is NOT imported — it's documentation only.
 
 #### Scenario: Reference workshop present
 
-- **WHEN** the user runs `ls cianfhoghlaim/dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/`
+- **WHEN** the user runs `ls dlthub-ai-workbench/external/llm-zoomcamp-dlt-workshop/`
 - **THEN** the dlt workshop files exist (e.g. `01-overview.ipynb`, `02-dlt-resources.ipynb`)
 
 ### Requirement: 5-notebook BAML+CocoIndex tutorial track
 
-The system SHALL provide 5 marimo tutorial notebooks at `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/` (a new directory following the existing 01-12 numbering scheme) covering the full BAML 0.223.0 + CocoIndex v1 + vision-model stack. The 5 notebooks SHALL be:
+The system SHALL provide 5 marimo tutorial notebooks at `notebooks/13_baml_cocoindex_tutorial/` (a new directory following the existing 01-12 numbering scheme) covering the full BAML 0.223.0 + CocoIndex v1 + vision-model stack. The 5 notebooks SHALL be:
 
 1. `01_baml_post_v4_syntax.py` — canonical post-v4 BAML 0.223.0 syntax (`generator` block + `field Type` whitespace + `enum` / `class` / `function` + `@description` + `image` + `@stream.*` + `?` optionality)
 2. `02_qpack_8_subject_walkthrough.py` — the 8 `qpack_<subject>.baml` files, demonstrating the `paragraph → LO[] → FormativeItem → Score → Validate` pattern across all 8 LC subjects (40+ BAML calls)
@@ -113,7 +111,7 @@ The system SHALL provide 5 marimo tutorial notebooks at `cianfhoghlaim/notebooks
 
 #### Scenario: 5 tutorial files present and CLI-discoverable
 
-- **GIVEN** the 5 follow-up tutorials exist at `cianfhoghlaim/notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
+- **GIVEN** the 5 follow-up tutorials exist at `notebooks/13_baml_cocoindex_tutorial/{01..05}_*.py`
 - **WHEN** the user runs `uv run cianfhoghlaim-marimo list 13_baml_cocoindex_tutorial`
 - **THEN** the CLI returns exactly 5 entries
 - **AND** `uv run cianfhoghlaim-marimo edit 13_baml_cocoindex_tutorial/01_baml_post_v4_syntax` opens marimo edit without error
@@ -129,11 +127,86 @@ The system SHALL provide 5 marimo tutorial notebooks at `cianfhoghlaim/notebooks
 
 ### Requirement: `01_overview_setup.py` Step 0.5 pointer
 
-The system SHALL append a "Step 0.5: the BAML+CocoIndex tutorial track" Markdown cell to `cianfhoghlaim/notebooks/01_overview_setup.py`'s table of contents between Step 0 (env setup) and Step 1 (vision models). The pointer SHALL link to the 5 tutorial notebooks in `notebooks/13_baml_cocoindex_tutorial/` and SHALL list their purpose in 1-line summaries.
+The system SHALL append a "Step 0.5: the BAML+CocoIndex tutorial track" Markdown cell to `notebooks/01_overview_setup.py`'s table of contents between Step 0 (env setup) and Step 1 (vision models). The pointer SHALL link to the 5 tutorial notebooks in `notebooks/13_baml_cocoindex_tutorial/` and SHALL list their purpose in 1-line summaries.
 
 #### Scenario: Step 0.5 pointer cell renders in marimo
 
-- **WHEN** the user runs `marimo edit cianfhoghlaim/notebooks/01_overview_setup.py`
+- **WHEN** the user runs `marimo edit notebooks/01_overview_setup.py`
 - **THEN** the notebook renders with a "Step 0.5: the BAML+CocoIndex tutorial track" Markdown cell
 - **AND** the cell lists all 5 tutorial notebooks with their 1-line summaries
 - **AND** the cell does not depend on any of the 5 tutorial notebooks existing (it links to the dir by reference)
+
+### Requirement: 5 Gaeilge (Irish-language) counterpart tutorials
+
+The system SHALL provide 5 Gaeilge (Irish-language) counterpart tutorial notebooks at `notebooks/13_baml_cocoindex_tutorial/*_ga.py` that demonstrate the bilingual EN+GA extraction path through the same BAML 0.223.0 + CocoIndex v1 + vision-model stack as the 5 English tutorials. The 5 _ga notebooks SHALL be:
+
+1. `01_baml_post_v4_syntax_ga.py` — bilingual EN+GA syntax additions (`enum GaeilgeLanguage`, `class BilingualText`, `function ExtractBilingualText`, `function ExtractStrandGaStatement`) plus a `bilingual(en, ga)` rendering helper
+2. `02_qpack_8_subject_walkthrough_ga.py` — the 6 GA-LC-subject qpack variants (gaeilge + mathematics + history + geography + chemistry + applied_mathematics) with the `Extract<Subject>GaStatement` functions
+3. `03_education_pdf_vision_pipeline_ga.py` — the side-by-side `gemma-4-26B-A4B` vs `qwen3-vl-8b` vision model comparison on Gaeilge NCCA PDFs (handling the síneadh fada + dual-column Irish+English layout)
+4. `04_cocoindex_baml_integration_ga.py` — the 3 CocoIndex+BAML integration patterns applied to GA content (the bilingual `ExtractBilingualText` calls + the `language: "ga"` discriminator)
+5. `05_post_v4_duplicate_audit_and_migration_ga.py` — the bilingual audit of the 10 BAML additions (4 in `_shared/content_types.baml` + 6 GA-qpack variants), confirming 0 new duplicates and 0 new residual errors
+
+The system SHALL also extend `baml/education/_shared/content_types.baml` with the `enum GaeilgeLanguage` discriminant and the `function ExtractBilingualText(content) -> BilingualText` + `function ExtractStrandGaStatement(paragraph) -> string[]` extraction primitives, and SHALL extend each of the 6 GA-LC-subject qpack files (`qpack_gaeilge.baml`, `qpack_mathematics.baml`, `qpack_history.baml`, `qpack_geography.baml`, `qpack_chemistry.baml`, `qpack_applied_mathematics.baml`) with an `Extract<Subject>GaStatement(paragraph) -> string[]` function that uses `client default` and the `[EN-only]` fallback marker for LOs the NCCA did not translate.
+
+#### Scenario: 5 _ga companion files present and AST-parse cleanly
+
+- **GIVEN** the 5 _ga counterpart tutorials exist at `notebooks/13_baml_cocoindex_tutorial/{01..05}_*_ga.py`
+- **WHEN** the user runs `for nb in <the 5 _ga paths>; do python3 -c "import ast; ast.parse(open('$nb').read())"; done`
+- **THEN** all 5 files AST-parse without error
+- **AND** the `baml/education/_shared/content_types.baml` file contains the `enum GaeilgeLanguage { GA EN }` declaration + the `function ExtractBilingualText` + the `function ExtractStrandGaStatement`
+- **AND** each of the 6 GA-LC-subject qpack files contains the `Extract<Subject>GaStatement` function
+
+#### Scenario: GA side-by-side vision comparison in tutorial 3 _ga
+
+- **GIVEN** the `03_education_pdf_vision_pipeline_ga.py` tutorial renders
+- **WHEN** the user clicks the side-by-side cell
+- **THEN** the cell runs the same Gaeilge NCCA PDF diagram page through both vision models (`gemma-4-26B-A4B` and `qwen3-vl-8b`)
+- **AND** the cell notes the GA-specific challenges (síneadh fada fidelity + dual-column Irish+English layout)
+- **AND** the cell emits a marimo `mo.ui.table` with the side-by-side comparison + a `match_confidence` Jaccard similarity score
+
+#### Scenario: bilingual extraction primitives in `_shared/content_types.baml`
+
+- **WHEN** the user runs `grep -n "GaeilgeLanguage\|ExtractBilingualText\|ExtractStrandGaStatement" baml/education/_shared/content_types.baml`
+- **THEN** the output shows exactly 4 matches: 1 for `GaeilgeLanguage` enum + 1 for `ExtractBilingualText` function + 1 for `ExtractStrandGaStatement` function + 1 for the comment header
+- **AND** the `GaeilgeLanguage` enum values are unquoted (BAML enum syntax requires unquoted all-caps values, NOT quoted string values)
+
+#### Scenario: 6 GA-qpack variants expose `Extract<Subject>GaStatement`
+
+- **WHEN** the user runs `grep -l "ExtractGaelGaStatement\|ExtractMathGaStatement\|ExtractHistGaStatement\|ExtractGeogGaStatement\|ExtractChemGaStatement\|ExtractAppmGaStatement" baml/education/subjects/*.baml`
+- **THEN** exactly 6 files match (one per GA-LC-subject qpack)
+- **AND** each qpack file's `Extract<Subject>GaStatement` function uses `client default` (NOT `client ExtractEn`)
+- **AND** each qpack file's `Extract<Subject>GaStatement` function signature is `(paragraph: string) -> string[]` (matching the EN `Extract<Subject>LOStatement` shape)
+
+#### Scenario: README.md is updated with the 5 _ga companion entries
+
+- **WHEN** the user reads `notebooks/13_baml_cocoindex_tutorial/README.md`
+- **THEN** the README lists both the 5 English tutorials AND the 5 _ga Gaeilge counterparts
+- **AND** the README cross-references `openspec/changes/2026-07-13-baml-cocoindex-tutorials-ga-v1/`
+
+### Requirement: Per-subject marimo notebooks invoke BAML quest functions
+
+The system SHALL ensure all 12 per-subject interactive marimo notebooks (6 study tools in `notebooks/12_subject_study_tools/` plus 6 dashboards in `notebooks/leaving_cert/`) invoke the generated per-subject BAML client functions instead of recording dead-code dictionaries or stale placeholder state.
+
+The six study-tool notebooks SHALL invoke the corresponding `Generate<Subject>FormativeItem(lo_code, difficulty, level, topic)` function and surface either the generated item or the caught BAML error in the marimo output. The six `leaving_cert` dashboards SHALL invoke the canonical `Generate<Subject>QuestPack(syllabus, past_papers, marking_schemes, level)` function for their subject, using the exact generated qpack function names (`GenerateMathQuestPack`, `GenerateChemQuestPack`, `GenerateCompQuestPack`, `GenerateEnglQuestPack`, `GenerateGaelQuestPack`, `GenerateGeogQuestPack`).
+
+#### Scenario: Study-tool notebooks call real formative-item functions
+
+- **GIVEN** the six study-tool notebooks exist under `notebooks/12_subject_study_tools/`
+- **WHEN** the per-subject BAML cell is inspected
+- **THEN** each notebook calls its generated `b.Generate<Subject>FormativeItem(...)` function with `lo_code`, `difficulty`, `level`, and `topic`
+- **AND** none of the six notebooks records a `{"function": "Generate<Subject>FormativeItem", "status": "invoked"}` dictionary placeholder
+- **AND** the marimo output includes the generated result or the caught error state.
+
+#### Scenario: Leaving-cert dashboards use canonical quest-pack signatures
+
+- **GIVEN** the six `leaving_cert/<subject>.py` dashboards exist
+- **WHEN** their quest-pack BAML cells are inspected
+- **THEN** each dashboard calls its generated `Generate<Subject>QuestPack` function with `syllabus`, `past_papers`, `marking_schemes`, and `level`
+- **AND** none of the six dashboards calls the stale `(topic, level, language, n_items)` signature
+- **AND** Computer Science, English, Gaeilge, and Geography use the generated abbreviated qpack names (`Comp`, `Engl`, `Gael`, `Geog`) rather than non-existent long-form function names.
+
+#### Scenario: All 12 notebooks remain syntactically valid
+
+- **WHEN** the user runs `ast.parse` over the 6 study-tool notebooks and 6 `leaving_cert` dashboards
+- **THEN** all 12 notebooks parse successfully.
+

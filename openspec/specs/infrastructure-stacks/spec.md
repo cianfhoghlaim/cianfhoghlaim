@@ -1376,6 +1376,585 @@ The system SHALL have a populated lakehouse with:
 - **THEN** the dashboard MUST query `cianfhoghlaim.education._registry.subjects`
 - **AND** show all 8 jurisdictions with their subject counts
 
+### Requirement: Locket sidecar pattern for Infisical v0.161+ requires locket >= v0.18 or a request transformer
+
+The system SHALL ensure that the locket sidecar (`ghcr.io/bpbradley/locket:infisical`)
+used by every agent surface (openclaw, hermes, litellm, langfuse) is
+compatible with the Infisical server version it authenticates against.
+
+#### Scenario: Locket v0.17.3 with Infisical v0.161+ server
+
+- **GIVEN** a stack with locket sidecar image
+  `ghcr.io/bpbradley/locket:infisical` (tag ≤ `v0.17.3`)
+- **AND** an Infisical server image `infisical/infisical` (tag ≥ `v0.161.0`)
+- **WHEN** the locket sidecar starts in `watch` or `one-shot` mode
+- **THEN** the locket sends `GET /api/v4/secrets/<KEY>?project_id=...&secret_path=...&secret_type=...`
+  with **snake_case** query parameter names
+- **AND** the Infisical server returns HTTP 422 `ValidationFailure`
+  because v0.161+ requires **camelCase** query parameter names
+  (`projectId`, `secretPath`, `secretType`)
+- **AND** the locket catches the 422 and falls back to "policy=passthrough"
+  — writing the raw `{{ infisical://... }}` template to the destination
+  instead of the resolved secrets
+- **AND** the consumer container (openclaw, hermes) tries to `source
+  /run/secrets/locket/secrets.env` in `/bin/sh`, which interprets each
+  `{{ infisical:///... }}` line as a command and fails with
+  `not found`, causing the container to crash
+
+**Acceptable workarounds (any one):**
+
+1. **Upgrade locket** to a version that uses camelCase field names
+   (e.g. `ghcr.io/bpbradley/locket:infisical-v0.18` or a `bons-locket:infisical`
+   fork) — the canonical fix.
+2. **Downgrade Infisical** to a version that accepts snake_case
+   field names (e.g. `infisical/infisical:v0.160.0`).
+3. **Add a request transformer** in the locket sidecar
+   (e.g. a `mitmproxy` sidecar that rewrites `project_id` → `projectId`
+   in outgoing requests).
+4. **Patch the locket source** in `stedding/locket/src/provider/infisical.rs`
+   (change the `SecretQueryParams` struct's `serde(rename_all = "snake_case")`
+   to `"camelCase"`) and rebuild the image.
+
+**Verification:** `curl http://<infisical>/api/v4/secrets/<KEY>?projectId=...&secretPath=...`
+returns HTTP 200 with the resolved secret value (NOT 422).
+
+### Requirement: Hermes s6-overlay requires running as root with cap_add [SETUID, SETGID]
+
+The system SHALL ensure that any NousResearch/hermes-agent container
+(image tag ≥ `v2026.7.1`) is configured to satisfy s6-overlay's init
+constraints when deployed via docker compose.
+
+#### Scenario: Hermes s6-overlay init phase
+
+- **GIVEN** a hermes container with `image: nousresearch/hermes-agent:v2026.7.1`
+- **AND** the image's s6-overlay init phase requires:
+  - `/run` writable by the container user (s6-overlay checks
+    `fatal: /run belongs to uid X instead of Y`)
+  - `/opt/data` accessible by the internal `hermes` user (uid 10000)
+    which the `main-wrapper.sh: cd /opt/data` step needs
+  - `SETUID` + `SETGID` capabilities for s6-overlay's `suexec` to
+    transition between root and the `hermes` user
+- **WHEN** the container is configured with:
+  - `user: 10000:10000` (the internal hermes user) + `read_only: true`
+    + `no-new-privileges: true` + `cap_drop: [ALL]`
+- **THEN** s6-overlay fails with `fatal: /run belongs to uid 0 instead of
+  10000, ... lacking the privileges to fix it`
+- **AND** the `tmpfs: /run:mode:1777` workaround is REJECTED by the
+  Docker daemon with `invalid tmpfs option ["mode:1777"]` when
+  `no-new-privileges: true` is set
+
+**Acceptable configurations (any one):**
+
+1. **Canonical upstream pattern** (recommended): `user: "0:0"` (root),
+   no `read_only`, no `no-new-privileges`, `cap_drop: [ALL]`. The s6-overlay
+   entrypoint runs as root (allowed to chown /run + /opt/data), then
+   transitions to user 10000 via the s6 service definitions. This is the
+   upstream pattern documented in the hermes-agent image.
+
+2. **Sidecar pattern** (if root is unacceptable): add a chmod
+   `init` container that runs as root before the main hermes container,
+   performs the necessary chowns on /run + /opt/data, then EXITS
+   (the main container is started only after the init exits).
+   The main container then starts with `user: 10000:10000` and the
+   pre-chowned /run + /opt/data.
+
+3. **Custom base image** (most invasive): fork hermes-agent to
+   remove s6-overlay (replace with a pure dumb-init or tini). Allows
+   running as non-root from the start.
+
+### Requirement: ChangeDetection.io for England awarding bodies
+
+The system SHALL provide 3 ChangeDetection.io monitors in
+`bonneagar/stacks/changedetection/monitors/`:
+
+- `aqa_monitor.yaml` — AQA spec pages
+  (`https://www.aqa.org.uk/subjects/<subject>/specifications`)
+- `ocr_monitor.yaml` — OCR spec pages
+  (`https://www.ocr.org.uk/qualifications/<subject>/`)
+- `edexcel_monitor.yaml` — Edexcel spec pages
+  (`https://qualifications.pearson.com/en/qualifications/edexcel-<subject>.html`)
+
+Each monitor MUST:
+
+- Use `web_scraping` mode + CSS selector for the spec version + PDF link
+- Trigger a webhook to
+  `http://dagster-webhook:8080/webhooks/england_change_detection`
+- Be uploaded to the dev ChangeDetection.io vault via the ChangeDetection.io
+  REST API
+
+The system SHALL also provide 1 DuckLake audit table
+`cianfhoghlaim.education.british_isles.england.changes` with the 11 columns
+declared in the proposal.
+
+#### Scenario: AQA maths GCSE spec change detected
+
+- **GIVEN** AQA publishes a new version of the GCSE Mathematics specification
+- **WHEN** the ChangeDetection.io `aqa_monitor.yaml` detects the change
+- **THEN** the monitor posts a webhook payload to
+  `http://dagster-webhook:8080/webhooks/england_change_detection`
+- **AND** the Dagster sensor `england_change_detection_sensor` fires
+- **AND** the sensor triggers the `england_england_re_extraction_job`
+  for `(board=aqa, subject=mathematics, qualification_level=gcse)`
+- **AND** a new row lands in
+  `cianfhoghlaim.education.british_isles.england.changes` with
+  `board='aqa'`, `subject='mathematics'`, `qualification_level='gcse'`
+- **AND** a Slack alert posts to `#kcg-biep-v2`
+- **AND** an email alert posts to `kcg-curriculum@cianfhoghlaim.ie`
+- **AND** the re-extraction runs the full Change 3 ensemble (BAML +
+  Unstract + qwen3-vl-8b + gemma-4-26B-A4B + RAGAS vote)
+
+### Requirement: Pocket ID + Pangolin + Komodo OIDC wiring MUST be automatable via the bons IaC + the wire-pocketid-pangolin-komodo.sh script
+
+The system SHALL provide a single one-shot automation that wires Pocket ID
+as the OIDC identity provider for both Komodo (orchestrator) and
+Pangolin (proxy) so non-technical operators do not need to manually
+configure 4+ steps (Pocket ID OIDC client creation, Komodo OIDC config,
+Pangolin IDP creation, Pangolin Resource IdP binding).
+
+#### Scenario: Operator first deploys the cianfhoghlaim stack
+
+- GIVEN the operator has populated the repo's .env with the
+  required credentials (POCKETID_API_KEY, PANGOLIN_API_KEY, and
+  optionally KOMODO_PASSWORD)
+- WHEN the operator runs ./scripts/wire-pocketid-pangolin-komodo.sh
+- THEN the script:
+  - Creates (or finds) the komodo OIDC client in Pocket ID via
+    POST /api/oidc/clients + POST /api/oidc/clients/{id}/secret
+  - Updates Komodos OIDC config via POST /api/v1/set-core-config
+  - Creates (or finds) the Pocket ID Identity Provider in Pangolin
+    via POST /api/v1/idp
+  - Writes the credentials to .env + (optionally) to the local
+    Infisical vault at /komodo
+  - Writes an audit record to /tmp/wire-pocketid-pangolin-komodo-{ts}.json
+- AND the operator can verify the wiring by visiting
+  https://komodo.cianfhoghlaim.ie and https://pangolin.cianfhoghlaim.ie
+
+#### Scenario: Operator re-runs the script (idempotency)
+
+- GIVEN the wiring is already in place
+- WHEN the operator runs the script again
+- THEN each step checks for existing state first and skips
+
+#### Scenario: Operator wants to rotate the OIDC client secret
+
+- WHEN the operator runs the script with --force
+- THEN the script deletes the existing komodo OIDC client and creates a new one
+
+### Requirement: Pocket ID OIDC clients are reconciled idempotently by the bash script + Pocket ID admin API (re-running is a no-op)
+
+The system SHALL ensure that the wire-pocketid-pangolin-komodo.sh script
+never creates duplicate OIDC clients in Pocket ID, never overwrites valid
+Pangolin IdP configs, and never downgrades a working Komodo OIDC setup.
+
+#### Scenario: Partial deployment (Komodo not yet up)
+
+- WHEN the operator runs the script with --skip-komodo
+- THEN the script skips Step 2 (Komodo OIDC config update) with a warning log
+- AND still completes Steps 1, 3, 4, 5, 6 (Pocket ID + Pangolin + .env + audit)
+
+#### Scenario: Partial deployment (Pangolin not yet up)
+
+- WHEN the operator runs the script with --skip-pangolin
+- THEN the script skips Step 3 (Pangolin IDP creation) with a warning log
+- AND still completes Steps 1, 2, 4, 5, 6
+
+#### Scenario: Script runs against a non-existent Komodo/Pangolin (DNS failure)
+
+- WHEN the operator runs the script but Pocket ID / Pangolin / Komodo DNS resolution fails
+- THEN the script logs the DNS failure and exits with a clear error code
+
+#### Scenario: Pocket ID rejects the client_secret fetch (auth or permission issue)
+
+- WHEN the Pocket ID admin API returns 401 or 403
+- THEN the script logs the error and exits with code 1
+
+### Requirement: PocketID IdP MUST be bound to every Pangolin Resource (4th manual step) — wired by wire-pocketid-resource-idp.sh
+
+The system SHALL ensure that the PocketID Identity Provider (created in
+step 3 by wire-pocketid-pangolin-komodo.sh) is bound to every Pangolin
+Resource (site) so that users in Pocket ID can access the Resource.
+
+#### Scenario: Operator runs wire-pocketid-resource-idp.sh --all
+
+- **WHEN** the operator runs `wire-pocketid-resource-idp.sh --all`
+- **THEN** the script:
+  - Lists all Resources in the org via `GET /api/v1/site-resources`
+  - For each Resource, calls `POST /v1/org/{orgId}/site-resource/{id}/idp`
+    with the PocketID IdP id
+  - Logs success/failure per Resource
+  - Writes an audit record
+
+#### Scenario: Operator runs wire-pocketid-resource-idp.sh --resource=mlflow.cianfhoghlaim.ie
+
+- **WHEN** the operator specifies a single Resource
+- **THEN** the script binds the PocketID IdP only to that Resource
+
+#### Scenario: A Resource already has the PocketID IdP bound
+
+- **WHEN** the operator runs the script multiple times
+- **THEN** the script detects the existing binding (via the Pangolin
+  Resource IdPs list) and skips the duplicate
+- **OR** the script logs a warning that the IdP is already bound
+
+### Requirement: Komodo + Periphery MUST be self-configured from the get-go (5th manual step) — wired by bootstrap-komodo-periphery.sh
+
+The system SHALL ensure that when a new Komodo + Periphery deployment is
+started, the auto-derive workflow runs and Periphery self-registers with
+Pangolin + auto-derives its API key from Pocket ID.
+
+#### Scenario: Operator runs bootstrap-komodo-periphery.sh after Komodo + Periphery are deployed
+
+- **WHEN** the operator runs `bootstrap-komodo-periphery.sh`
+- **THEN** the script:
+  1. Mints a fresh Pangolin API key (via Pocket ID OIDC client_credentials)
+  2. Self-registers Periphery with Pangolin (Newt protocol: POST /api/v1/newt)
+  3. Wipes stale credentials from .env
+  4. Verifies reachability of Komodo + Pangolin
+  5. Writes an audit record to /tmp/bootstrap-komodo-periphery-{ts}.json
+
+#### Scenario: PocketID secret rotation via cron
+
+- **WHEN** the cron job `rotate-pocketid-secrets.sh` runs (default: 3am on the 1st of every 3rd month)
+- **THEN** the script:
+  1. Fetches a fresh secret via Pocket ID admin API (X-API-Key auth)
+  2. Mints a fresh Pangolin API key (7-day TTL)
+  3. Updates .env atomically
+  4. Writes an audit record to /tmp/pocketid-rotation-{ts}.json
+  5. Exits 0 on success or 1 on failure (with the failure logged)
+
+### Requirement: Bunchloch OpenChamber external-development stack
+
+The Bunchloch OpenChamber development stack MUST pin OpenChamber to version
+`1.16.3` and SHALL run in explicit external OpenCode mode. The stack SHALL
+configure `OPENCODE_HOST` for the host OpenCode server at port `4096`, set
+`OPENCODE_PORT=4096`, and set `OPENCODE_SKIP_START=true`; it MUST NOT start a
+second bundled OpenCode server in the container.
+
+#### Scenario: External mode is selected explicitly
+
+- **WHEN** the Bunchloch OpenChamber development container starts
+- **THEN** its resolved environment contains the external OpenCode host,
+  port `4096`, and `OPENCODE_SKIP_START=true`
+- **AND** the container does not launch a bundled OpenCode daemon
+
+#### Scenario: The image is reproducible and git-capable
+
+- **WHEN** the OpenChamber image is inspected and executed
+- **THEN** its OpenChamber version is exactly `1.16.3`
+- **AND** `git --version` succeeds inside the container
+
+### Requirement: Identical absolute repository mount
+
+The Bunchloch OpenChamber development stack SHALL mount the host repository
+`/Users/cianmacandeisigh/dev/kings_college_galway` at that identical absolute
+path inside the container. The stack MUST preserve the path identity used by
+the host OpenCode server so session directory filters, worktrees, and git
+operations resolve to the same project.
+
+#### Scenario: Session project paths resolve identically
+
+- **WHEN** a user opens the canonical repository from OpenChamber
+- **THEN** the external OpenCode server receives
+  `/Users/cianmacandeisigh/dev/kings_college_galway` as the project path
+- **AND** git status and file discovery operate on the host checkout rather
+  than a container-only path
+
+### Requirement: Persistent OpenChamber configuration without application shadowing
+
+The Bunchloch development stack SHALL persist OpenChamber configuration and
+UI-owned state in a dedicated config volume under
+`/home/bun/.config/openchamber` (or an equivalent XDG config path). It MUST NOT
+mount that volume over `/home/bun/.openchamber` or any other application work
+directory containing the installed OpenChamber files.
+
+#### Scenario: Config survives recreation
+
+- **WHEN** the OpenChamber container is recreated
+- **THEN** UI configuration and preferences remain available from the
+  dedicated persistent config volume
+- **AND** the installed application files and runtime entrypoint remain visible
+  and executable
+
+#### Scenario: Application files are not shadowed
+
+- **WHEN** the running container is inspected
+- **THEN** `/home/bun/.openchamber` contains the installed OpenChamber runtime
+- **AND** no persistent config mount covers that application directory
+
+### Requirement: Infisical/Locket-only secret delivery
+
+The Bunchloch OpenChamber stack SHALL obtain runtime secrets through the
+canonical Infisical/Locket sidecar contract. It MUST NOT commit, bake, print,
+or pass plaintext secret values through stack files, image layers, example
+files, verification artifacts, or ordinary container environment declarations.
+
+#### Scenario: Secret injection succeeds
+
+- **WHEN** Locket becomes healthy and OpenChamber starts
+- **THEN** the required runtime secrets are available from the mounted
+  Locket-managed secret file
+- **AND** the OpenChamber service starts without a plaintext secret value in
+  the repository or image
+
+#### Scenario: Secret leakage is rejected
+
+- **WHEN** the implementation is inspected for secret delivery
+- **THEN** all secret entries resolve to Infisical references or runtime mounts
+- **AND** no secret value appears in `compose.yaml`, `.env.example`, the
+  Dockerfile, committed logs, or a deployment receipt
+
+### Requirement: Loopback-only Bunchloch exposure and correct health endpoints
+
+The Bunchloch OpenChamber development UI SHALL bind its host port to
+`127.0.0.1` only. Its health check MUST target OpenChamber's `/health` path,
+and the external host OpenCode health check MUST target `/global/health` on
+port `4096`; implementations MUST NOT substitute the legacy `/api/health`
+path for the OpenChamber dev check.
+
+#### Scenario: Local UI health is green
+
+- **WHEN** the Bunchloch stack is running
+- **THEN** `curl -fsS http://127.0.0.1:<dev-port>/health` returns HTTP 200
+- **AND** the published port is not bound to `0.0.0.0` or a public interface
+
+#### Scenario: External OpenCode health is green
+
+- **WHEN** host OpenCode 1.17.9 is running on port `4096`
+- **THEN** `curl -fsS http://127.0.0.1:4096/global/health` returns HTTP 200
+- **AND** the same `/global/health` endpoint is reachable from OpenChamber via
+  `host.docker.internal:4096`
+
+### Requirement: Locket sidecar env_file must be runtime-mounted, not host-validated
+
+The system SHALL declare every `env_file:` path consumed by a Locket-using
+service (openclaw, hermes, openchamber, langfuse, litellm, mlflow,
+logfire, etc.) as a path inside the `stack-secrets` tmpfs volume that is
+mounted into BOTH the locket sidecar AND the consuming service. The path
+SHALL NOT be validated against the host filesystem at compose-parse time.
+Stack-doctor MUST detect any `env_file:` entry whose source path is not
+either (a) a host file inside the stack directory, or (b) a tmpfs volume
+mount shared with a `locket` sidecar.
+
+#### Scenario: Parse-time env_file failure surfaces as a stack-doctor finding
+
+- **GIVEN** a developer commits a `sidecar.yaml` with
+  `services.openclaw.env_file: /run/secrets/locket/secrets.env` AND
+  no `stack-secrets` tmpfs volume shared with `locket`
+- **AND** the developer's local docker compose parse fails with
+  `env file /run/secrets/locket/secrets.env not found`
+- **WHEN** `bun run validate-stacks` runs against that stack
+- **THEN** the parse-time failure is reported as a **CRITICAL** finding
+- **AND** the developer MUST either add the `stack-secrets` volume
+  + mount OR replace the env_file with a host-readable bootstrap file
+
+#### Scenario: A correct sidecar contract passes the gate
+
+- **WHEN** the stack has `locket` + `<service>` both mounting
+  `stack-secrets:/run/secrets/locket[:ro]` AND
+  `env_file: /run/secrets/locket/secrets.env`
+- **THEN** the stack-doctor parse-time gate returns OK
+- **AND** `docker compose config` on the merged file resolves the
+  env_file reference without error
+
+### Requirement: Bunchloch fallback Infisical vault when arm1-OCI private resource is unhealthy
+
+The system SHALL provide a fallback deployment path on the `bunchloch`
+host that brings up a local Infisical vault (no Pangolin routing, port
+8081 bound to `127.0.0.1` only) when the arm1-OCI Pangolin private
+resource for `infisical.cianfhoghlaim.ie` is returning HTTP 5xx
+(specifically 502 Bad Gateway at the WireGuard hop). The fallback MUST
+seed a fresh `dev-baile` project with the 9 infisical paths consumed by
+the openclaw + hermes services, and MUST write the bons-iac Universal
+Auth client_id + client_secret to `/etc/komodo/secrets/infisical_secret`
+so the Komodo Periphery mounts it identically to the OCI path.
+
+The fallback MUST NOT modify the arm1-OCI Infisical vault. It MUST NOT
+expose the local Infisical via Pangolin. The fallback MUST be torn down
+with `docker compose -f bonneagar/stacks/infisical/compose.yaml down -v`
+once the OCI path is repaired.
+
+#### Scenario: Operator triggers the fallback when OCI is unhealthy
+
+- **GIVEN** `mise run preflight:arm-oci --skip-namespace` reports
+  `Infisical health: FAIL (502 Bad Gateway)`
+- **AND** bunchloch has >= 25 GB free disk + >= 2 GB RAM headroom
+- **WHEN** the operator runs
+  `docker compose -f bonneagar/stacks/infisical/compose.yaml up -d`
+- **THEN** the local Infisical backend (port 8081), postgres, and redis
+  containers start
+- **AND** `curl -fsS http://127.0.0.1:8081/api/status` returns 200
+- **AND** running
+  `bun run scripts/seed-bunchloch-fallback-vault.sh` populates the 9
+  openclaw + hermes infisical paths under `dev-baile/dev`
+
+#### Scenario: Locket resolves secrets from the fallback vault
+
+- **GIVEN** the local Infisical is up and the seed script has populated
+  the 9 secret paths
+- **AND** `/etc/komodo/secrets/infisical_secret` contains the bons-iac
+  Universal Auth client_id + client_secret
+- **WHEN** the operator runs
+  `cd bonneagar/stacks/openclaw && docker compose -f compose.yaml -f sidecar.yaml up -d`
+- **THEN** the locket sidecar healthcheck returns OK
+- **AND** `docker exec openclaw-locket -- /locket healthcheck` reports
+  >= 9 resolved secrets
+- **AND** the openclaw container starts with its env_file populated
+  (no parse-time `env file not found` error)
+
+#### Scenario: Fallback is torn down once the OCI path is repaired
+
+- **WHEN** the operator runs
+  `docker compose -f bonneagar/stacks/infisical/compose.yaml down -v`
+- **THEN** the 3 local Infisical containers stop and the named volume
+  is removed
+- **AND** no orphan processes reference the local Infisical backend
+- **AND** the operator can resume the canonical OCI path via
+  `km run procedure deploy-openclaw-bunchloch`
+
+### Requirement: Pangolin private-resource drift is detected and repaired via iac:sync:sites
+
+The system SHALL detect when any Pangolin private resource (of which
+`infisical.cianfhoghlaim.ie` is one of 6) returns HTTP 5xx for
+> 5 consecutive minutes, and SHALL provide the
+`iac:sync:sites` command as the canonical repair path. The command
+MUST be idempotent and MUST re-emit the private-resource YAML via the
+Pangolin Integrations API. The system SHALL NOT silently re-emit
+without operator confirmation — `iac:sync:sites` is gated behind a
+Komodo procedure that pauses for human approval after the dry-run.
+
+#### Scenario: A private resource returns 502 for > 5 minutes
+
+- **GIVEN** `https://infisical.cianfhoghlaim.ie/api/status` returns
+  502 across 6 consecutive 60-second polls
+- **WHEN** the operator runs
+  `km run procedure repair-pangolin-private-infisical-arm1-oci-v1`
+- **THEN** stage 2 of the procedure invokes `iac:sync:sites --dry-run`
+  and pauses for `--yes` confirmation
+- **AND** on `--yes`, `iac:sync:sites` re-emits the private resource
+- **AND** `/api/status` returns 200 within 60s of the re-emit
+- **AND** a JSON audit record is written to
+  `/tmp/infisical-pangolin-private-repair-${TS}.json`
+
+#### Scenario: iac:sync:sites is a no-op when the resource is healthy
+
+- **GIVEN** `/api/status` returns 200 on the first poll
+- **WHEN** the operator runs
+  `km run procedure repair-pangolin-private-infisical-arm1-oci-v1`
+- **THEN** stage 2 exits early with the message
+  `pangolin private resource healthy — no repair needed`
+- **AND** no re-emit is performed
+- **AND** stages 3-6 are skipped
+
+### Requirement: iac:rotate-auth must run after every Pangolin EE upgrade
+
+The system SHALL require `iac:rotate-auth` to be re-run within 24
+hours of any Pangolin EE upgrade that touches the Traefik forward-auth
+middleware, the Pangolin Integrations API, OR the WireGuard tunnel
+mutual-TLS handshake. The upgrade is detected by a mismatch between
+`pangolin.cianfhoghlaim.ie/api/v1/version` and the last recorded
+version in `~/.cache/bons-iac/pangolin-version.json`. The bons-iac
+CLI SHALL emit a `WARN: pangolin EE upgraded; rotate bons-iac
+client_secret` message when the operator runs any `iac:*` command
+after the mismatch is detected.
+
+#### Scenario: Operator runs iac:plan after a Pangolin upgrade
+
+- **GIVEN** `pangolin.cianfhoghlaim.ie/api/v1/version` returns
+  `vX.Y.Z` (newer than the cached version)
+- **WHEN** the operator runs `mise run iac:plan`
+- **THEN** the command emits
+  `WARN: pangolin EE upgraded from vA.B.C to vX.Y.Z; rotate bons-iac client_secret before applying changes`
+- **AND** the operator MUST run `mise run iac:rotate-auth` before
+  the next `iac:deploy` will succeed (the deploy gate rejects with
+  exit code 17)
+
+#### Scenario: iac:rotate-auth re-derives the infisical_secret file
+
+- **WHEN** the operator runs
+  `mise run iac:rotate-auth --target=bons-iac`
+- **THEN** a fresh client_secret is minted via `openssl rand -hex 32`
+- **AND** the new credential is pushed to the dev-baile project on
+  Infisical as `bons-iac/client_secret`
+- **AND** `/etc/komodo/secrets/infisical_secret` is rewritten with
+  the new credential (mode 0600, owner root)
+- **AND** `locket healthcheck` against the rotated credential returns
+  OK
+
+### Requirement: portal-cloudflare-r2 stack entry
+
+The system SHALL add a new stack at `bonneagar/stacks/portal-cloudflare-r2/`
+following the 6-file GOLD_STANDARD pattern (compose.yaml + wrangler.jsonc +
+Dockerfile + README.md + docs/STACK.md + Pangolin route).
+
+The stack SHALL host:
+- 1 Cloudflare R2 bucket (`cianfhoghlaim-pdfs`)
+- 1 Cloudflare Pages project (`portal`)
+- 1 Pangolin resource binding (`portal.cianfhoghlaim.ie` → Cloudflare tunnel)
+- 1 Locket sidecar (secret injection from Infisical `dev-baile`)
+- 1 Cloudflare Tunnel sidecar
+
+**No Cloudflare Worker is required.** Signed URLs are issued from the
+existing `hono-api` service (which already has S3 credentials via the
+Garage S3 backend). This keeps the project on the Cloudflare free tier
+with **no Workers Paid subscription required**.
+
+Free-tier limits SHALL be called out in the README (10 GB storage + 1M
+Class A ops/mo).
+
+#### Scenario: Operator reads the stack README
+
+- **WHEN** the operator opens `bonneagar/stacks/portal-cloudflare-r2/README.md`
+- **THEN** they see the 6-file pattern + the free-tier limits
+- **AND** the document notes that signed URLs are issued from Hono (no Workers Paid required)
+- **AND** the stack is `bun run iac:plan --stack portal-cloudflare-r2`-able
+
+#### Scenario: Stack deploys end-to-end
+
+- **GIVEN** the operator runs `bun run iac:deploy --stack portal-cloudflare-r2`
+- **WHEN** the deploy completes
+- **THEN** `portal.cianfhoghlaim.ie` resolves to the leaving-cert app
+- **AND** PDF assets download via Hono-issued signed R2 URLs (15-min TTL)
+
+### Requirement: Pocket ID SSO as the single OIDC provider
+
+The system SHALL use Pocket ID OIDC as the single SSO provider
+across all 5 canonical surfaces + the central portal. The 5 OIDC
+audiences SHALL be:
+
+| Audience | Surface |
+|---|---|
+| `convex_backend` | Convex (all surfaces) |
+| `croilar_web` | `croilar-web` |
+| `croilar_portal` | `croilar-portal` |
+| `leaving_cert_portal` | `cianfhoghlaim-leaving-cert` (5th surface) |
+| `portal` | `portal.cianfhoghlaim.ie` (central portal entry) |
+
+The Pocket ID instance SHALL live on `arm1-oci`.
+
+#### Scenario: An operator adds a new OIDC audience
+
+- **GIVEN** the operator wants to add a 6th audience for a future surface
+- **WHEN** they edit `bonneagar/iac/pocketid/audiences.yaml`
+- **THEN** the Pocket ID instance picks up the change via resource-sync
+- **AND** the new audience appears in the JWKS at `/.well-known/jwks.json`
+
+### Requirement: Sequential domain-by-domain migration as architectural principle
+
+The system SHALL document the sequential domain-by-domain migration
+principle (no big-bang cutovers) as a core IaC architectural rule.
+The pattern is operationalized by the feature-flag rollout documented
+in
+`openspec/changes/2026-07-18-british-isles-portal-activation-v3/specs/cianfhoghlaim-leaving-cert-portal/spec.md`
+R25.
+
+#### Scenario: A new stack is deployed
+
+- **GIVEN** the operator wants to deploy the `portal-cloudflare-r2` stack
+- **WHEN** they run `bun run iac:deploy --stack portal-cloudflare-r2`
+- **THEN** the rollout is gated by the `portal_rollout` feature flag
+- **AND** the rollout proceeds 10% → 50% → 100% over 7 days
+- **AND** any error rate spike triggers automatic rollback
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |

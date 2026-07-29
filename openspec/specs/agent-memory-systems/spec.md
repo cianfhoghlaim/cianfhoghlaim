@@ -201,6 +201,120 @@ instance (from `cianfhoghlaim/agents/tuatha/wiring.py`).
   `MemoryBackend` Protocol) or `None` (when the StorageBackend
   Protocol could not be imported — a graceful failure mode)
 
+### Requirement: 5-backend `MemoryLayer` Protocol via `agents/memory_layer.py`
+
+The system SHALL provide a `MemoryLayer` Protocol in
+`agents/memory_layer.py` that exposes 5 concrete backends:
+
+- **Cognee** — structured knowledge (entities + relationships)
+- **Graphiti** — temporal knowledge graph (bi-temporal)
+- **LanceDB** — vector RAG (HNSW)
+- **FalkorDB** — vector + graph hybrid (Redis-compatible)
+- **Memgraph** — production graph (Cypher + MAGE)
+
+The `get_default_memory_layer()` cached factory SHALL resolve
+to one of the 5 backends in the canonical order:
+Cognee → Graphiti → LanceDB → FalkorDB → Memgraph.
+
+Each `MemoryLayer` instance SHALL expose a `kind` attribute
+(one of `{"cognee", "graphiti", "lancedb", "falkordb", "memgraph"}`)
+and an `is_available()` method that returns `True` if the
+backend is reachable in the current environment.
+
+#### Scenario: `get_default_memory_layer` returns an implementation
+
+- **GIVEN** `agents/memory_layer.py`
+- **WHEN** `layer = get_default_memory_layer()`
+- **THEN** `isinstance(layer, MemoryLayer)` SHALL be `True`
+- **AND** `layer.kind` SHALL be one of
+  `{"cognee", "graphiti", "lancedb", "falkordb", "memgraph"}`
+- **AND** the returned layer SHALL be cached (subsequent calls
+  return the same instance)
+
+#### Scenario: 5 backends are available in the registry
+
+- **GIVEN** `agents/memory_layer.py`
+- **WHEN** `python -c "from cianfhoghlaim.agents.memory_layer import MEMORY_LAYERS; print(len(MEMORY_LAYERS))"`
+- **THEN** the output SHALL be 5
+- **AND** the keys SHALL be `{"cognee", "graphiti", "lancedb", "falkordb", "memgraph"}`
+
+### Requirement: Graceful degradation when memory backend unavailable
+
+The system SHALL NOT propagate `ConnectionError` or
+`RuntimeError` when any of the 5 memory backends are
+unreachable in the current environment. The cached
+`get_default_memory_layer()` factory SHALL fall through to
+the next available backend in the cascade order.
+
+Each agent SHALL attach a `memory_layer_kind` field that
+reports which backend was successfully resolved.
+
+#### Scenario: factory falls through to the next available backend
+
+- **GIVEN** Cognee is unreachable (e.g. port 8000 not listening)
+- **WHEN** `layer = get_default_memory_layer()`
+- **THEN** the factory SHALL fall through to Graphiti
+- **AND** if Graphiti is also unreachable, the factory SHALL
+  fall through to LanceDB
+- **AND** the cascade SHALL continue until a backend is found
+- **AND** the returned `layer.kind` SHALL be the first
+  available backend in the cascade order
+
+#### Scenario: 12 agents have a `memory_layer_kind` field populated
+
+- **GIVEN** the 12 agents are wired via `agents/wiring.py`
+- **WHEN** `python -c "from cianfhoghlaim.agents import AGENT_REGISTRY; [print(k, v.memory_layer_kind) for k, v in AGENT_REGISTRY.items()]"`
+- **THEN** the command exits 0
+- **AND** each agent SHALL have a `memory_layer_kind` field
+  set to one of the 5 backend kinds
+- **AND** no `ConnectionError` or `RuntimeError` SHALL be raised
+
+### Requirement: `MemoryBackend` Protocol is smoke-tested + the 8 NCCA agents have no direct graphiti/falkordb imports
+
+The system SHALL smoke-test the `MemoryBackend` Protocol +
+`get_default_backend()` factory
+(at `storage/memf.py`) in a CI-runnable pytest
+module that verifies the cascade behaviour
+(Graphiti → FalkorDB → InMemoryLanceDB) without requiring
+Graphiti or FalkorDB to be reachable in the test environment.
+
+The 8 NCCA subject ADK specialists
+(`agents/tuatha/{gael,math,hist,geog,chem,comp,engl,appm}_agent.py`)
+SHALL NOT import `graphiti_client`, `falkordb_client`, or
+`memgraph_client` directly; they MUST consume the canonical
+`MemoryBackend` Protocol via the
+`agents/tuatha/wiring.py` module's
+`get_default_backend()` binding (or `wire_subject_agent(...)`
+which delegates to it).
+
+#### Scenario: `test_memory_backend_smoke.py` exercises the 3-scenario factory contract
+
+- **GIVEN** `tests/test_memory_backend_smoke.py`
+- **WHEN** `uv run pytest tests/test_memory_backend_smoke.py`
+  runs in a CI environment without Graphiti / FalkorDB reachable
+- **THEN** 3 tests SHALL pass:
+  - `test_get_default_backend_returns_implementation` —
+    `isinstance(backend, MemoryBackend)` AND
+    `backend.kind in {"graphiti", "falkordb", "in_memory_lancedb"}`
+  - `test_add_episode_round_trips` — adding an `Episode`
+    followed by `await backend.search(query, k=1)` returns at
+    least 1 hit whose snippet contains the episode body
+  - `test_reset_default_backend_returns_fresh_instance` —
+    `reset_default_backend()` clears the cached singleton and
+    `get_default_backend()` returns a new instance
+
+#### Scenario: 8 NCCA subject agents have zero direct memory-client imports
+
+- **GIVEN** the 8 NCCA subject agent modules at
+  `agents/tuatha/{gael,math,hist,geog,chem,comp,engl,appm}_agent.py`
+- **WHEN** `grep -n "graphiti_client\|falkordb_client\|memgraph_client"
+  agents/tuatha/<slug>_agent.py` runs for each of
+  the 8 agents
+- **THEN** the output SHALL be empty (0 matches per agent)
+- **AND** each agent module SHALL import at least one symbol
+  from `agents/tuatha/wiring.py` (the canonical
+  wire-up module that depends on `get_default_backend()`)
+
 ## Cross-references
 
 - [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)
