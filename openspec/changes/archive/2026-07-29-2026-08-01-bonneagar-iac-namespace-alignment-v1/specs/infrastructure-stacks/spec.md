@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Bonneagar IaC uses `cianfhoghlaim` namespace
 

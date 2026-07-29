@@ -1,4 +1,4 @@
-# infrastructure-stacks — MODIFIED Requirements
+# Requirements
 
 > **MODIFIED** by `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`.
 
@@ -8,7 +8,7 @@ still correct post-v7. The 88 stacks continue to live at
 subdirectory) means the stack-doctor now runs from the repo root,
 not from the bonneagar subdirectory.
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: 88 Docker Compose stacks at bonneagar/stacks/
 

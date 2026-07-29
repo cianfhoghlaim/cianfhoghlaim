@@ -1,4 +1,4 @@
-# bonneagar-iac-merge — MODIFIED Requirements
+# Requirements
 
 > **MODIFIED** by `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`.
 
@@ -7,7 +7,7 @@ the IaC stays in the `bonneagar/` subdirectory. The user clarified
 mid-run that the `bonneagar/` subdir should be preserved, not flattened
 to repo root.
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Unified TypeScript IaC at bonneagar/iac/
 

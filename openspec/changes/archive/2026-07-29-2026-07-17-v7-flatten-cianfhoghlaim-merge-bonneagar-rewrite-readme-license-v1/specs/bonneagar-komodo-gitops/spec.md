@@ -1,4 +1,4 @@
-# bonneagar-komodo-gitops — MODIFIED Requirements
+# Requirements
 
 > **MODIFIED** by `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`.
 
@@ -10,7 +10,7 @@ subdirectory, not flattened). However, two changes are needed:
    deleted the `--cwd bonneagar` shim) is **reverted**.
 2. The repo URL in `CONFIG.gitRepo` is clarified.
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Resource-Sync Per Host
 

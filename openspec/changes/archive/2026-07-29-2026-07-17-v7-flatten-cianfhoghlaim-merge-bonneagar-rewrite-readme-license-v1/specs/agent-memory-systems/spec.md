@@ -1,4 +1,4 @@
-# agent-memory-systems — MODIFIED Scenarios
+# Scenarios
 
 > **MODIFIED** by `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`.
 

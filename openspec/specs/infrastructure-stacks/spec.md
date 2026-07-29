@@ -2033,6 +2033,52 @@ $ git commit -m "feat(tuatha): add TUATH_LANGFUSE_HOST env"
 hook: pre-commit exited with code 1
 ```
 
+### Requirement: Bonneagar IaC uses `cianfhoghlaim` namespace
+
+The system SHALL require the Bonneagar IaC stack catalogue to use the
+`cianfhoghlaim` namespace (not the pre-BIEP-v3 `oideachais` namespace).
+The canonical stack directory is `bonneagar/stacks/cianfhoghlaim/`.
+
+#### Scenario: Stack directory renamed
+
+- **WHEN** `ls bonneagar/stacks/` runs
+- **THEN** the canonical directory SHALL be `bonneagar/stacks/cianfhoghlaim/`
+  (not `bonnegar/stacks/oideachais/`)
+- **AND** the 6 files inside (`blueprint.yaml`, `compose.yaml`,
+  `compose.dev.yaml`, `pangolin.yaml`, `sidecar.yaml`, `secrets.env`)
+  SHALL all reference `cianfhoghlaim` (not `oideachais`)
+
+#### Scenario: Komodo resource files renamed
+
+- **WHEN** `ls bonneagar/komodo/{stacks,procedures}/` runs
+- **THEN** the 2 renamed files SHALL be present:
+  - `bonnegar/komodo/stacks/cianfhoghlaim-bunchloch.toml`
+  - `bonnegar/komodo/procedures/deploy-cianchfhoghlaim-bunchloch.toml`
+
+#### Scenario: Infisical secrets mirror the rename
+
+- **WHEN** `.infisical.env:685-686` is read
+- **THEN** the 2 secret paths SHALL be `infisical://dev-baile/cianfhoghlaim-llm/api_key` and
+  `infisical://dev-baile/cianfhoghlaim-llm/provider` (not `oideachais-llm/...`)
+- **AND** `bun run scripts/init-vault.ts` SHALL succeed cleanly
+
+### Requirement: NEW — IaC is reachable from repo root via --cwd
+
+The root `package.json` MUST provide `iac:*` scripts that delegate
+to the IaC via `bun run --cwd bonneagar`. The delegation MUST be
+the ONLY way to invoke the IaC from the root (no symlinks, no
+path manipulation, no shell aliases).
+
+After v7, the IaC is part of the main repo; reaching it from the
+repo root MUST go through this delegation.
+
+#### Scenario: Root package.json delegates iac:* to bonneagar/
+
+- **WHEN** a developer runs `bun run iac:health` from the repo root
+- **THEN** bun SHALL execute `bun run --cwd bonneagar iac:health`
+- **AND** the IaC SHALL run from `bonneagar/iac/cli.ts`
+- **AND** the exit code SHALL propagate to the root command
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |

@@ -1,4 +1,4 @@
-# data-engineering-pipeline-documentation — MODIFIED Requirements
+# Requirements
 
 > **MODIFIED** by `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1/`.
 
@@ -8,7 +8,7 @@ Post-v7, the `cianfhoghlaim/` prefix is dropped (the package is the
 repo root), so this collapses to
 `(bonneagar/, assets/, docs/stacks/, bonneagar/komodo/)`.
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: 4 canonical ops dirs at repo root
 

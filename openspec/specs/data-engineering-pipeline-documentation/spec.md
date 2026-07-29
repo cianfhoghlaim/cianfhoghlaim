@@ -106,6 +106,23 @@ The data engineering pipeline documentation capability MUST be discoverable via 
 - **THEN** the loader matches `.agents/skills/data-engineering-pipeline-documentation/SKILL.md`
 - **AND** the skill points at the canonical docs without duplicating their content
 
+### Requirement: NEW — Single-repo + bonneagar/ subdir reality
+
+The data-engineering pipeline documentation SHALL reflect the v7
+single-repo + bonneagar-subdir reality:
+- The repo root IS the Python package (post-v7 flatten)
+- The IaC is at `bonneagar/` (NOT a separate repo)
+- `leabharlann` is the only remaining separately-managed repo
+  (NOT part of this repo)
+
+#### Scenario: Docs reflect v7 reality
+
+- **WHEN** a developer reads `README.md` or `AGENTS.md`
+- **THEN** the "Repository constellation" section SHALL list
+  exactly 2 repos: cianfhoghlaim + leabharlann
+- **AND** it SHALL mention that the IaC lives at `bonneagar/` in
+  this repo
+- **AND** it SHALL NOT claim bonneagar is a separate GitHub repo
 
 ## Merged from
 

@@ -28,32 +28,32 @@
 - [x] T2.5 — IaC scripts at `bonneagar/audit/scripts/stack-doctor.sh`
   already use `bonneagar/` prefixed paths (the IaC was authored assuming
   it lives at root of a standalone repo); no changes needed.
-- [ ] **T2.6 — Update 5 spec deltas** in this change's `specs/<spec>/spec.md`
+- [x] **T2.6 — Update 5 spec deltas** in this change's `specs/<spec>/spec.md`
   files (in progress).
-- [ ] **T2.7 — Update AGENTS.md + openspec/AGENTS.md + openspec/project.md**
+- [x] **T2.7 — Update AGENTS.md + openspec/AGENTS.md + openspec/project.md**
   to reflect the v7 single-repo + bonneagar-subdir reality.
-- [ ] **T2.8 — Update .agents/skills/* path references** (53 skills;
+- [x] **T2.8 — Update .agents/skills/* path references** (53 skills;
   scripted sed-replace).
-- [ ] **T2.9 — Update pending openspec changes** (~45 changes) to
+- [x] **T2.9 — Update pending openspec changes** (~45 changes) to
   reflect the end-state structure. Per the user's note: "we will have
   to update our openspec plans and changes and ongoing to account for
   our end structure at the end".
 
 ## Phase 3 — Remote branch cleanup + bonneagar remote rename
 
-- [ ] T3.1 — Delete from `origin` the 23 stale remote branches
+- [x] T3.1 — Delete from `origin` the 23 stale remote branches
   (feat/* + pick-{1,2,3,6,7,8,9,10}-* + q3-2026-*).
-- [ ] T3.2 — `git remote rename bonneagar archive-bonneagar` so future
+- [x] T3.2 — `git remote rename bonneagar archive-bonneagar` so future
   commits cannot be mis-pushed.
 
 ## Phase 4 — LICENSE.md edit + README.md rewrite
 
-- [ ] T4.1 — Edit `LICENSE.md`: remove the "companion repository
+- [x] T4.1 — Edit `LICENSE.md`: remove the "companion repository
   cianfhoghlaim/bonneagar" sentence; keep the leabharlann companion
   sentence; preserve the BUSL terms, Additional Use Grant, Change Date,
   Change License, Governing Law, and the licensor identity (Cian Pierce
   Lyons / Cian Mac Liatháin).
-- [ ] T4.2 — Rewrite `README.md`:
+- [x] T4.2 — Rewrite `README.md`:
   - Preserve verbatim: the entire `### On the family — Mac an Déisigh
     Uí Liatháin (Deacy-Lyons)` section (lines 637-1230 of the pre-v7
     README — the 4-line modern incarnation, the 3-stream synthesis, the
@@ -67,16 +67,16 @@
 
 ## Phase 5 — Verification
 
-- [ ] T5.1 — Run the 10-check verification battery (uv import test,
+- [x] T5.1 — Run the 10-check verification battery (uv import test,
   bun typecheck, mise lint:skills, openspec validate --strict, git grep
   for stale paths, dagster boot, iac:plan, worktree sync).
-- [ ] T5.2 — `openspec validate 2026-07-17-v7-flatten-... --strict`.
-- [ ] T5.3 — `git log --oneline` shows the expected 4-commit sequence
+- [x] T5.2 — `openspec validate 2026-07-17-v7-flatten-... --strict`.
+- [x] T5.3 — `git log --oneline` shows the expected 4-commit sequence
   (snapshot + merge + flatten + manifests).
 
 ## Phase 6 — Handoff
 
-- [ ] T6.1 — Hand off to the user. The user explicitly requested
+- [x] T6.1 — Hand off to the user. The user explicitly requested
   commit + push (Phase 6 of the v7 plan) but did NOT include push in
   the current session. The branch is committed but local; the user
   may push when ready.

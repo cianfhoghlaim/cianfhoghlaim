@@ -135,6 +135,21 @@ arm1-oci.toml, bunchloch.toml, and cross-cutting.toml.
 - **AND** then runs `iac:bootstrap`
 - **THEN** the resource-syncs SHALL be applied normally
 
+### Requirement: Bonneagar/ subdir is the IaC root
+
+The Komodo GitOps pattern SHALL treat `bonneagar/` as the canonical
+IaC root. Any future IaC change SHALL add files under
+`bonneagar/{iac,stacks,komodo,pangolin,deploy-runbooks,...}/` — not
+under the repo root.
+
+#### Scenario: IaC change lives under bonneagar/
+
+- **WHEN** a developer adds a new IaC resource (stack, procedure,
+  monitor, alert, etc.)
+- **THEN** the file SHALL land at `bonneagar/{stacks,komodo,...}/...`
+- **AND** the resource-sync toml SHALL reference the file by its
+  bonneagar-relative path
+
 ## Cross-references
 
 - [`infrastructure-stacks`](../infrastructure-stacks/spec.md) — the 88 stacks at `bonneagar/stacks/`

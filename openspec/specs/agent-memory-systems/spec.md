@@ -315,6 +315,18 @@ which delegates to it).
   from `agents/tuatha/wiring.py` (the canonical
   wire-up module that depends on `get_default_backend()`)
 
+### Requirement: NEW — In-tree path references are repo-relative
+
+All documentation, scripts, and tools that reference IaC stack files MUST use the repo-relative path `bonneagar/stacks/<name>/...`, NOT the pre-v7 standalone-repo URL pattern. This MUST be enforced by a CI grep that fails the build if the pre-v7 URL pattern appears in any new commit.
+
+#### Scenario: Stack file path is repo-relative
+
+- **WHEN** a script or doc references an IaC stack file
+- **THEN** it SHALL use the path `bonneagar/stacks/<name>/<file>`
+  (relative to the repo root)
+- **AND** it SHALL NOT reference the standalone-repo URL
+  `https://github.com/cianfhoghlaim/bonneagar/...`
+
 ## Cross-references
 
 - [`.agents/skills/cognee/SKILL.md`](../../.agents/skills/cognee/SKILL.md)

@@ -192,6 +192,22 @@ edges for topo ordering.
 - **THEN** the proposal.md SHALL declare `Blocked by: none`
   in its `## Dependencies` section
 
+### Requirement: Bonneagar subdirectory preservation
+
+The `bonneagar/` subdirectory at the repo root SHALL contain the full
+IaC: 88 Docker Compose stacks + the unified TypeScript IaC + the
+Komodo resource-syncs + the Pangolin config + the audit scripts +
+the IaC's own pyproject.toml.
+
+#### Scenario: Bonneagar subdir is preserved across merges
+
+- **WHEN** any future change touches IaC files
+- **AND** the change is committed to the v7 main branch
+- **THEN** the IaC files SHALL continue to live at `bonneagar/{iac,stacks,
+  komodo,pangolin,...}/` paths
+- **AND** the root `package.json` SHALL retain the `--cwd bonneagar`
+  delegation in the `iac:*` scripts
+
 ## Cross-references
 
 - [`infrastructure-stacks`](../infrastructure-stacks/spec.md) — the 88 stacks at `bonneagar/stacks/` + the 6-file GOLD_STANDARD pattern
