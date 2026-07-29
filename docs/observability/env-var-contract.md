@@ -9,16 +9,16 @@
 > **Owner:** observability skill (`.agents/skills/agent-observability/`)
 > **Spec:** `openspec/changes/2026-07-30-.../specs/agent-observability/spec.md`
 
-## The 48 canonical variables
+## The 62 canonical variables
 
-The contract is partitioned into 10 groups: 4 observability groups
+The contract is partitioned into 11 groups: 4 observability groups
 (Langfuse SDK + MLflow + Logfire/OTel + shared cluster = 17 vars),
-plus 6 additional reference groups (data ingestion, DuckLake write
-path, MotherDuck federated analytics, LanceDB, S3/Garage, and
-embedder/model registry = 31 vars). The 17 observability variables
-remain the most-critical reference for any tracing-related question;
-the 31 additional vars are appended below for the
-2026-08-02 drift-audit remediation.
+plus 7 additional reference groups (data ingestion, DuckLake write
+path, MotherDuck federated analytics, LanceDB, S3/Garage,
+embedder/model registry, and meaisinfhoghlaim + OCR backends = 45 vars).
+The 17 observability variables remain the most-critical reference for
+any tracing-related question; the 45 additional vars are appended below
+for the 2026-08-02 drift-audit remediation.
 
 ### Group 1 — Langfuse SDK (4 vars)
 
@@ -131,23 +131,52 @@ Langfuse / MLflow / Logfire wiring.
 | `CIANFHOGHLAIM_EMBED_MODEL` | string | yes | `infisical://dev-baile/embed/model` | Canonical: `BAAI/bge-m3`. Read by `cocoindex/_shared/_lifespan.py:103`. |
 | `CIANFHOGHLAIM_EMBED_DIM` | int | yes | `infisical://dev-baile/embed/dim` | Canonical: `1024`. |
 | `MLFLOW_EXPERIMENT_NAME` | string | no (default `dlt-pipelines`) | env block only | Default MLflow experiment for `dlt` pipelines. |
-| `MLFLOW_S3_ENDPOINT_URL` | string | yes (prod) | `infisical://dev-baile/lakehouse/s3_endpoint` | MLflow's S3 endpoint. Canonical: `http://lakehouse-garage:3900`. |
+| `MLFLOW_S3_ENDPOINT_URL` | URL | yes (prod) | `infisical://dev-baile/lakehouse/s3_endpoint` | MLflow's S3 endpoint. Canonical: `http://lakehouse-garage:3900`. |
 | `BIEP_REGISTRY_URI` | string | no (default `md:cianfhoghlaim`) | env block only | The v7 source-of-truth DuckDB registry location for the BIEP v3 notebook set. |
+
+### Group 11 — Meaisinfhoghlaim + OCR backends (14 vars)
+
+Added 2026-08-02 (post-trilogy-cleanup). Covers the 7 OCR backend stacks
+(`paddleocr` + `dots-ocr` + `olmocr` + `docling-serve` + `mlx-omni` +
+`llama-swap` + `meaisinfoghlaim`) plus the `ocr-router` capability router
+and the `agent-os` cross-cutting stack. Backend URL vars are resolved at
+container runtime by the bons-locket-shim against the `dev-baile` Infisical
+project; the literals in the *default* column are the canonical in-cluster
+values, never hardcoded in production secrets.
+
+| Variable | Type | Required? | Resolved from | Description |
+|:--|:--|:--|:--|:--|
+| `FALKORDB_HOST` | string | yes | env block only | Canonical: `falkordb`. The Redis-protocol graph backend host used by Graphiti (knowledge-graph triangulation in the agents layer). |
+| `FALKORDB_PORT` | int | yes (default `6379`) | env block only | Port. Canonical: `6379` (the Redis default). |
+| `FALKORDB_PASSWORD` | string | yes (prod) | `infisical://dev-baile/falkordb/password` | FalkorDB auth password. Required when running the Graphiti stack in production. |
+| `CONFLUENT_API_KEY` | string | yes (prod) | `infisical://dev-baile/confluent/api_key` | Confluent Cloud API key for the `confluent-kafka` Kafka client (used by RisingWave + agent event streaming). |
+| `CONFLUENT_API_SECRET` | string | yes (prod) | `infisical://dev-baile/confluent/api_secret` | Confluent Cloud API secret (paired with `CONFLUENT_API_KEY`). |
+| `CONFLUENT_BOOTSTRAP_SERVERS` | string | yes (prod) | `infisical://dev-baile/confluent/bootstrap_servers` | Confluent Cloud bootstrap servers (canonical: `pkc-xxxxx.us-east-1.aws.confluent.cloud:9092`). |
+| `PADDLEOCR_URL` | URL | yes | env block only | Canonical: `http://paddleocr:8000/v1`. Endpoint for the `forms` capability (used by `umeaisínfhoghlaim.ocr.adapters`). |
+| `DOCLING_URL` | URL | yes | env block only | Canonical: `http://docling-serve:5001/v1`. Endpoint for the `doctags` capability (IBM Docling). |
+| `DOTS_OCR_URL` | URL | yes | env block only | Canonical: `http://dots-ocr:8001/v1`. Endpoint for the `tesseract-fallback` capability. |
+| `UNSTRACT_URL` | URL | yes | env block only | Canonical: `http://unstract:8002/v1`. Endpoint for the Unstract LLM-friendly parser (alternative to docling-serve). |
+| `HF_TOKEN` | string | yes (prod) | `infisical://dev-baile/huggingface/token` | HuggingFace Hub token — used by `llama-swap`, `mlx-omni`, `docling-serve`, `olmocr` for on-demand model downloads. |
+| `SLACK_WEBHOOK_URL` | URL | no (optional) | `infisical://dev-baile/slack/webhook_url` | Optional Slack incoming-webhook URL for agent ops alerts (used by `meaisinfhoghlaim/observability`). Empty by default — graceful skip. |
+| `OCR_WEBHOOK_URL` | URL | no (optional) | `infisical://dev-baile/ocr-router/webhook_url` | OCR completion webhook (per the BIEP v3 spec delta). Empty = graceful skip (no emission). |
+| `LITELLM_BASE_URL` | URL | yes | env block only | Canonical: `http://litellm:4000/v1`. The OpenAI-compatible base URL that all agent-OS instances and the 12-agent fleet point at. |
 
 ## Why these groups
 
-This document now covers **48 canonical env vars** (up from 17 in the
-2026-07-30 baseline). The 17 observability vars in Groups 1-4 remain
-the most-critical reference for any tracing-related question — if
-you are debugging Langfuse, MLflow, or Logfire wiring, start there.
-The 31 additional vars in Groups 5-10 were added as part of the
-2026-08-02 drift-audit remediation to give the data-platform team a
-single canonical reference for the BIEP ingestion → DuckLake →
-MotherDuck → LanceDB pipeline. Groups 5-10 are scoped to the data
-plane; per-LLM-provider keys remain out of scope (see
-`docs/llm-env-var-contract.md` TODO).
+This document now covers **62 canonical env vars** (up from 17 in the
+2026-07-30 baseline, 48 in the 2026-08-01 drift-audit baseline). The 17
+observability vars in Groups 1-4 remain the most-critical reference for
+any tracing-related question — if you are debugging Langfuse, MLflow, or
+Logfire wiring, start there. The 31 additional vars in Groups 5-10
+were added as part of the 2026-08-02 drift-audit remediation to give the
+data-platform team a single canonical reference for the BIEP ingestion
+→ DuckLake → MotherDuck → LanceDB pipeline. The 14 new vars in Group
+11 were added by the 2026-08-02 post-trilogy-cleanup pass to cover the
+meaisinfhoghlaim + 6 OCR backends + ocr-router + agent-os surface.
+Groups 5-11 are scoped to the data + agent plane; per-LLM-provider
+keys remain out of scope (see `docs/llm-env-var-contract.md` TODO).
 
-## How the 48 variables flow through the platform
+## How the 62 variables flow through the platform
 
 ```
 Operator's .env (local)
@@ -211,7 +240,7 @@ The third check is the contract-enforcement for this table — it
 prevents the "silent Langfuse loss" pattern (the agent-os bug fixed
 in this change).
 
-## Why 17 + 31 = 48 variables (not 50)?
+## Why 17 + 31 + 14 = 62 variables (not 50)?
 
 The 17 observability variables are the **set that spans the full
 observability stack** — every variable in Groups 1-4 is read by at

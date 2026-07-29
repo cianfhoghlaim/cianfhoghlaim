@@ -13,10 +13,16 @@ Target: LanceDB with FTS + vector indexes
 """
 
 import datetime
+import os
 from pathlib import Path
 
 import cocoindex
 import cocoindex.targets.lancedb as coco_lancedb
+
+# Canonical embedder env knob: CIANFHOGHLAIM_EMBED_MODEL (per the
+# centralized-model-registry openspec change). The previous hardcoded
+# "BAAI/bge-m3" string was replaced with the env-driven default.
+EMBED_MODEL = os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3")
 
 # Storage paths
 DATA_DIR = Path(__file__).parent.parent / "storage"
@@ -29,12 +35,13 @@ def embed_mythology_chunk(
     text: cocoindex.DataSlice[str],
 ) -> cocoindex.DataSlice[list[float]]:
     """
-    Embed mythology text using BGE-M3.
+    Embed mythology text using the canonical multilingual embedder.
 
-    Good for multilingual Celtic content including archaic forms.
+    Default is BGE-M3 (good for multilingual Celtic content including
+    archaic forms); override via ``CIANFHOGHLAIM_EMBED_MODEL``.
     """
     return text.transform(
-        cocoindex.functions.SentenceTransformerEmbed(model="BAAI/bge-m3")
+        cocoindex.functions.SentenceTransformerEmbed(model=EMBED_MODEL)
     )
 
 

@@ -15,6 +15,14 @@
 //   Path 2 (Unstract): client Unstract  — non-engineer-authored workflow
 //   Path 3 (qwen3-vl): client ExtractEnStrong (Qwen 3-VL 8B workhorse)
 //   Path 4 (gemma4):   client ExtractEnStrong (gemma-4-26B-A4B M4 default MoE)
+//
+// MODEL_REGISTRY canonical home:
+// Per the centralized-model-registry openspec change (2026-08-15),
+// the model strings (`docling`, `UNSTRACT_DEPLOYMENT_ID`) for these
+// clients are resolved via the unified `MODEL_REGISTRY` at
+// `meaisinfhoghlaim/models/model_registry.py` at runtime. The
+// `docling` backend is a REST adapter (not a model in the registry);
+// `UNSTRACT_DEPLOYMENT_ID` is a per-doc-type workflow ID, not a model.
 
 client<llm> Docling {
   provider "openai"  // Re-use the openai-compatible HTTP client for the Docling REST API.

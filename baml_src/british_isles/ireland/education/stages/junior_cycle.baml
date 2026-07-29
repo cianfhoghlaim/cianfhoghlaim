@@ -35,24 +35,31 @@ enum JuniorCycleSubject {
   JC_WELLBEING                  @description("Wellbeing is mandatory but not a graded subject")
 }
 
-enum JuniorCycleShortCourse {
-  JCS_CODING
-  JCS_CSPE                     @description("Civic, Social and Political Education")
-  JCS_DIGITAL_MEDIA_LITERACY
-  JCS_PHILOSOPHY
-  JCS_PE                        @description("Physical Education (short course)")
-  JCS_SPHE                      @description("Social, Personal and Health Education (short course)")
-  JCS_CHINESE_LANGUAGE_CULTURE
-  JCS_ARTISTIC_PERFORMANCE
-  JCS_CSI_FORENSIC
-  JCS_L2LP_HISTORY
-  JCS_L2LP_ENTERPRISE_ANIMATION
-  JCS_OTHER_A
-  JCS_OTHER_B
-  JCS_OTHER_C
-  JCS_OTHER_D
-  JCS_OTHER_E
-}
+// DEPRECATED 2026-08-15: the `enum JuniorCycleShortCourse` block
+// below was a legacy duplicate of the canonical
+// `class JuniorCycleShortCourse` declared at
+// baml_src/british_isles/ireland/education/junior_cycle/jc_short_course.baml:13.
+// The class is the SSOT per the centralized-schema-registry
+// capability. Removed to unblock `mise run baml:generate`.
+//
+// enum JuniorCycleShortCourse {
+//   JCS_CODING
+//   JCS_CSPE                     @description("Civic, Social and Political Education")
+//   JCS_DIGITAL_MEDIA_LITERACY
+//   JCS_PHILOSOPHY
+//   JCS_PE                        @description("Physical Education (short course)")
+//   JCS_SPHE                      @description("Social, Personal and Health Education (short course)")
+//   JCS_CHINESE_LANGUAGE_CULTURE
+//   JCS_ARTISTIC_PERFORMANCE
+//   JCS_CSI_FORENSIC
+//   JCS_L2LP_HISTORY
+//   JCS_L2LP_ENTERPRISE_ANIMATION
+//   JCS_OTHER_A
+//   JCS_OTHER_B
+//   JCS_OTHER_C
+//   JCS_OTHER_D
+//   JCS_OTHER_E
+// }
 
 enum AchievementLevel {
   Exceptional            @description("Exceptional achievement of the learning outcomes")

@@ -18,7 +18,10 @@ The 7 converters are:
 - curriculum_document (custom for cianfhoghlaim)
 - pdf_factory (custom PDF generator)
 """
-from __future__ import annotations
+# NOTE: `from __future__ import annotations` is intentionally NOT present.
+# Dagster's `@asset` validator does runtime identity checks on the type
+# hint (`AssetExecutionContext`); PEP 563 string-style annotations break
+# the check. Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change.
 
 import logging
 from typing import Any

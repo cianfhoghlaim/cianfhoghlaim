@@ -1,5 +1,18 @@
 name: lint-drift-docs
-on: [pull_request]
+
+# Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change
+# (the `centralize-cross-cutting-docs` spec). Validates every AGENTS.md
+# number claim against ground truth. Fails the PR on any drift.
+
+on:
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "openspec/AGENTS.md"
+      - "openspec/specs/**/AGENTS.md"
+      - "scripts/lint_drift_docs.py"
+      - ".github/workflows/lint-drift-docs.yaml"
+      - "mise.toml"
 
 jobs:
   check:
@@ -10,5 +23,16 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v3
 
-      - name: Validate AGENTS.md count claims
+      - name: Validate AGENTS.md number claims
         run: mise run lint:drift-docs
+
+      - name: Validate openspec change (strict)
+        # The change under review (if any) MUST validate --strict
+        run: |
+          for change in openspec/changes/*/; do
+            if [ -d "$change" ] && [ -f "$change/proposal.md" ]; then
+              id=$(basename "$change")
+              echo "Validating $id..."
+              mise exec -- openspec validate "$id" --strict
+            fi
+          done

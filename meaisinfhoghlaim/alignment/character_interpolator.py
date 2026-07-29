@@ -18,9 +18,9 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from cianfhoghlaim.observability.logging import get_logger
+import structlog
 
-logger = get_logger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 # Irish digraphs that should be treated as single phonological units

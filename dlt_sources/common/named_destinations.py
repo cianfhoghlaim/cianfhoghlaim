@@ -51,8 +51,8 @@ import dlt_sources
 
 DESTINATIONS: dict[str, dict[str, Any]] = {
     # The canonical BIEP v1 NCCA destination — the remote "warehouse"
-    # is the MotherDuck `oideachais` database (md:oideachais); when
-    # `USE_LOCAL_SCRAPES=true` or `MOTHERDUCK_TOKEN` is unset we
+    # is the MotherDuck `cianfhoghlaim` database (md:cianfhoghlaim);
+    # when `USE_LOCAL_SCRAPES=true` or `MOTHERDUCK_TOKEN` is unset we
     # transparently fall back to a local DuckDB at
     # `cianfhoghlaim.warehouse.duckdb`.
     "warehouse": {
@@ -91,7 +91,7 @@ def _warehouse_destination() -> Any:
             dataset_name="cianfhoghlaim.leaving_cert",
         )
     return dlt.destinations.motherduck(
-        credentials=f"md:oideachais?motherduck_token={motherduck_token}",
+        credentials=f"md:cianfhoghlaim?motherduck_token={motherduck_token}",
         dataset_name="leaving_cert",
     )
 

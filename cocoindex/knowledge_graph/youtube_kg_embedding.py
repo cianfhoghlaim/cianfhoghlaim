@@ -98,7 +98,11 @@ class VideoSegmentRecord:
     word_timestamps: str  # JSON-encoded [{word, t_start, t_end}, ...]
     channel_title: str
     language: str
-    embedding: Annotated[list[float], "BAAI/bge-m3"]
+    # Embedder model is sourced from cocoindex/_shared/_lifespan.py:EMBED_MODEL
+    # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
+    # "BAAI/bge-m3" string was replaced with the shared symbol so the
+    # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
+    embedding: Annotated[list[float], EMBED_MODEL]
 
 
 @dataclass
@@ -115,7 +119,11 @@ class VideoFrameCaptionRecord:
     has_code: bool
     diagram_points: list[str] = field(default_factory=list)
     image_path: str | None = None  # local PNG path
-    embedding: Annotated[list[float], "BAAI/bge-m3"]
+    # Embedder model is sourced from cocoindex/_shared/_lifespan.py:EMBED_MODEL
+    # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
+    # "BAAI/bge-m3" string was replaced with the shared symbol so the
+    # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
+    embedding: Annotated[list[float], EMBED_MODEL]
 
 
 @dataclass
@@ -131,7 +139,11 @@ class VideoTripleRecord:
     source_frame_idx: int | None = None
     source_segment_idx: int | None = None
     chain_summary: str | None = None  # populated when extracted via ExtractConceptChain
-    embedding: Annotated[list[float], "BAAI/bge-m3"]
+    # Embedder model is sourced from cocoindex/_shared/_lifespan.py:EMBED_MODEL
+    # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
+    # "BAAI/bge-m3" string was replaced with the shared symbol so the
+    # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
+    embedding: Annotated[list[float], EMBED_MODEL]
 
 
 # ---------------------------------------------------------------------------

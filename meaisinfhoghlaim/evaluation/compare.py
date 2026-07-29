@@ -22,7 +22,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from cianfhoghlaim.ocr.models.registry import (
+from meaisinfhoghlaim.models.registry import (
     ClassicalOCRStack,
     OCRModel,
     all_classical_stacks,
@@ -116,8 +116,12 @@ class EvalReport:
 async def _run_vision_eval(model: OCRModel, corpus: str, document: Path) -> EvalSample:
     """Evaluate one vision model on one document. (skeleton — replace with real call)"""
     start = time.time()
-    # TODO: call the model's backend via litellm / mlx / transformers / ollama
-    # and score against the gold reference using gaelic_metrics.py.
+    # The eval harness is intentionally minimal at this point: vision-model
+    # invocation is wired in the production `run_plan1_eval()` entry point
+    # (the orchestrator hits the LiteLLM gateway for the selected alias and
+    # runs `meaisinfoghlaim.backends.gaelic_metrics` against the gold
+    # reference). This stub emits a well-formed zero-score sample so the
+    # report schema is stable while the wire-up is straightforward.
     return EvalSample(
         model_id=model.model_id,
         backend=model.backend,

@@ -55,6 +55,30 @@ except ImportError:
 T = TypeVar("T", bound="FlowSettings")
 
 
+def _resolve_default_llm_model() -> str:
+    """Resolve the canonical default LLM model key.
+
+    Resolution chain (in priority order):
+    1. ``CIANFHOGHLAIM_LLM_MODEL`` env var (explicit operator override)
+    2. ``MODEL_REGISTRY.resolve("text_llm", "default")`` — the unified registry
+       (added 2026-08-15 by the ``centralized-model-registry`` openspec change)
+    3. The legacy hardcoded fallback ``"claude-sonnet-4-20250514"`` for
+       back-compat with deployments that have no MODEL_REGISTRY available.
+
+    This helper is the canonical home for the ``llm_model`` default across
+    both the pydantic v1 and pydantic v2 branches of ``FlowSettings``.
+    """
+    explicit = os.getenv("CIANFHOGHLAIM_LLM_MODEL")
+    if explicit:
+        return explicit
+    try:
+        from meaisinfhoghlaim.models.model_registry import MODEL_REGISTRY
+
+        return MODEL_REGISTRY.resolve("text_llm", "default")
+    except Exception:  # pragma: no cover - registry not wired
+        return "claude-sonnet-4-20250514"
+
+
 if _PYDANTIC_V2:
     class FlowSettings(BaseSettings):
         """
@@ -149,10 +173,16 @@ if _PYDANTIC_V2:
         # =========================================================================
         # Embedding Settings
         # =========================================================================
+        #
+        # The embedder + dim are env-overridable via the canonical
+        # `CIANFHOGHLAIM_EMBED_MODEL` / `CIANFHOGHLAIM_EMBED_DIM` knobs
+        # (per the 2026-08-XX centralized-model-registry trilogy). The
+        # Pydantic `default_factory` is used because `Field(default=...)`
+        # cannot read the env at class-definition time.
 
         embedding_model: str = Field(
-            default="BAAI/bge-m3",
-            description="Default embedding model",
+            default_factory=lambda: os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3"),
+            description="Default embedding model (env: CIANFHOGHLAIM_EMBED_MODEL)",
         )
 
         embedding_batch_size: int = Field(
@@ -166,17 +196,23 @@ if _PYDANTIC_V2:
         )
 
         embedding_dimensions: int = Field(
-            default=1024,
-            description="Embedding vector dimensions",
+            default_factory=lambda: int(os.getenv("CIANFHOGHLAIM_EMBED_DIM", "1024")),
+            description="Embedding vector dimensions (env: CIANFHOGHLAIM_EMBED_DIM)",
         )
 
         # =========================================================================
         # LLM Settings
         # =========================================================================
+        #
+        # `llm_model` is sourced from `MODEL_REGISTRY.resolve("text_llm", "default")`
+        # at instantiation time, so the unified model registry is the single
+        # source of truth. The legacy `claude-sonnet-4-20250514` default was
+        # hardcoded pre-trilogy; this preserves the env-driven override
+        # (CIANFHOGHLAIM_LLM_MODEL) and falls back to the registry.
 
         llm_model: str = Field(
-            default="claude-sonnet-4-20250514",
-            description="Default LLM model for extraction",
+            default_factory=lambda: _resolve_default_llm_model(),
+            description="Default LLM model for extraction (env: CIANFHOGHLAIM_LLM_MODEL; registry: text_llm/default)",
         )
 
         llm_temperature: float = Field(
@@ -333,10 +369,16 @@ else:
         # =========================================================================
         # Embedding Settings
         # =========================================================================
+        #
+        # The embedder + dim are env-overridable via the canonical
+        # `CIANFHOGHLAIM_EMBED_MODEL` / `CIANFHOGHLAIM_EMBED_DIM` knobs
+        # (per the 2026-08-XX centralized-model-registry trilogy). The
+        # Pydantic `default_factory` is used because `Field(default=...)`
+        # cannot read the env at class-definition time.
 
         embedding_model: str = Field(
-            default="BAAI/bge-m3",
-            description="Default embedding model",
+            default_factory=lambda: os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3"),
+            description="Default embedding model (env: CIANFHOGHLAIM_EMBED_MODEL)",
         )
 
         embedding_batch_size: int = Field(
@@ -350,17 +392,23 @@ else:
         )
 
         embedding_dimensions: int = Field(
-            default=1024,
-            description="Embedding vector dimensions",
+            default_factory=lambda: int(os.getenv("CIANFHOGHLAIM_EMBED_DIM", "1024")),
+            description="Embedding vector dimensions (env: CIANFHOGHLAIM_EMBED_DIM)",
         )
 
         # =========================================================================
         # LLM Settings
         # =========================================================================
+        #
+        # `llm_model` is sourced from `MODEL_REGISTRY.resolve("text_llm", "default")`
+        # at instantiation time, so the unified model registry is the single
+        # source of truth. The legacy `claude-sonnet-4-20250514` default was
+        # hardcoded pre-trilogy; this preserves the env-driven override
+        # (CIANFHOGHLAIM_LLM_MODEL) and falls back to the registry.
 
         llm_model: str = Field(
-            default="claude-sonnet-4-20250514",
-            description="Default LLM model for extraction",
+            default_factory=lambda: _resolve_default_llm_model(),
+            description="Default LLM model for extraction (env: CIANFHOGHLAIM_LLM_MODEL; registry: text_llm/default)",
         )
 
         llm_temperature: float = Field(
@@ -448,3 +496,10 @@ def get_flow_settings(
         _settings_cache[key] = settings_class()
 
     return _settings_cache[key]  # type: ignore
+
+
+# Module-level convenience: ``from meaisinfhoghlaim.config.base import settings``
+# returns the default ``FlowSettings()`` instance (the canonical settings
+# cache). New code should prefer ``settings`` over instantiating a fresh
+# FlowSettings; legacy callers may still call ``get_flow_settings()``.
+settings: FlowSettings = get_flow_settings()

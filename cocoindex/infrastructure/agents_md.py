@@ -98,7 +98,11 @@ class AgentsMdRecord:
     chunk_index: int
     text: str
     routing_tables: str  # serialized JSON of the 4 markdown table blocks
-    embedding: Annotated[list[float], "BAAI/bge-m3"]
+    # Embedder model is sourced from cocoindex/_shared/_lifespan.py:EMBED_MODEL
+    # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
+    # "BAAI/bge-m3" string was replaced with the shared symbol so the
+    # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
+    embedding: Annotated[list[float], EMBED_MODEL]
 
 
 # =============================================================================

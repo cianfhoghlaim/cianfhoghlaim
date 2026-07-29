@@ -57,14 +57,23 @@ def _intro(mo):
 
 @app.cell
 def _connect(duckdb, os):
+    """Connect to the canonical BIEP lakehouse via the shared helper.
+
+    Per the post-trilogy contract, this notebook routes through
+    `notebooks/_shared/db.py:connect_md()` (MotherDuck + `md:cianfhoghlaim`)
+    or `connect_local()` (in-memory DuckDB fallback) rather than calling
+    `ibis.duckdb.connect(...)` directly. The previous direct call
+    bypassed the helper and made the alias brittle.
+    """
+    import sys
+    sys.path.insert(0, "/Users/cianmacandeisigh/dev/kings_college_galway")
+    from notebooks._shared.db import connect_md, connect_local
+
     use_md = os.environ.get("MOTHERDUCK_ENABLED", "false").lower() == "true"
     if use_md:
-        token = os.environ.get("MOTHERDUCK_TOKEN", "")
-        if token:
-            duckdb.sql(f"SET motherduck_token='{token}'")
-        con = ibis.duckdb.connect("md:cianfhoghlaim", read_only=True)
+        con = connect_md(read_only=True)
     else:
-        con = ibis.duckdb.connect(os.environ.get("DUCKDB_PATH", "/tmp/cianfhoghlaim.duckdb"), read_only=True)
+        con = connect_local(read_only=True)
     return (con, use_md)
 
 

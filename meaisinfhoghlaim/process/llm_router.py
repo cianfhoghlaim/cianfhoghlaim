@@ -13,17 +13,85 @@ Based on patterns from sruth/browser/core/llm_router.py (current: meaisinfhoghla
 from __future__ import annotations
 
 import logging
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
-from cianfhoghlaim.core.utils import (
-    CircuitBreaker,  # Canonical home: sruth/oideachais/core/utils/circuit_breaker.py:54 (current: meaisinfhoghlaim/process/llm_router.py:CircuitBreaker)
-)
-from cianfhoghlaim.observability.settings_proxy import settings
-
 logger = logging.getLogger(__name__)
+
+
+# ─── Local-shim CircuitBreaker (replaces the old cianfhoghlaim.core.utils import) ─
+# The original lived at `sruth/oideachais/core/utils/circuit_breaker.py:54` (the
+# pre-v7 location). Post-v7 the canonical home is the local file; the surface
+# needed by `LLMRouter` is minimal (is_open / record_success / record_failure /
+# get_status). If a richer implementation is needed later, move it to
+# `meaisinfoghlaim/utils/circuit_breaker.py` and update this import.
+class CircuitBreaker:
+    """Minimal local circuit breaker (the old sruth/oideachais shim)."""
+
+    def __init__(
+        self,
+        failure_threshold: int = 5,
+        recovery_time: float = 60.0,
+    ) -> None:
+        self.failure_threshold = failure_threshold
+        self.recovery_time = recovery_time
+        self._failures: dict[str, int] = {}
+        self._opened_at: dict[str, float] = {}
+
+    def is_open(self, provider_name: str) -> bool:
+        opened = self._opened_at.get(provider_name)
+        if opened is None:
+            return False
+        if time.time() - opened >= self.recovery_time:
+            # Recovery window elapsed — half-open the circuit
+            self._failures[provider_name] = 0
+            self._opened_at.pop(provider_name, None)
+            return False
+        return True
+
+    def record_success(self, provider_name: str) -> None:
+        self._failures[provider_name] = 0
+        self._opened_at.pop(provider_name, None)
+
+    def record_failure(self, provider_name: str) -> None:
+        self._failures[provider_name] = self._failures.get(provider_name, 0) + 1
+        if self._failures[provider_name] >= self.failure_threshold:
+            self._opened_at[provider_name] = time.time()
+
+    def get_status(self, provider_name: str) -> str:
+        return "open" if self.is_open(provider_name) else "closed"
+
+
+# ─── Local-shim settings (replaces the old cianfhoghlaim.observability.settings_proxy) ─
+# The original was a Pydantic Settings proxy injected via Locket. The two
+# fields used by `LLMRouter` are local defaults; production overrides come
+# from the `MEISIN_CIRCUIT_*` env vars (resolved at process startup).
+class _RouterSettings:
+    failure_threshold: int = 5
+    recovery_time: float = 60.0
+
+    def __init__(self) -> None:
+        import os
+        self.failure_threshold = int(
+            os.environ.get("MEISIN_CIRCUIT_FAILURE_THRESHOLD", "5")
+        )
+        self.recovery_time = float(
+            os.environ.get("MEISIN_CIRCUIT_RECOVERY_TIME", "60.0")
+        )
+
+    @property
+    def circuit_failure_threshold(self) -> int:
+        return self.failure_threshold
+
+    @property
+    def circuit_recovery_time(self) -> float:
+        return self.recovery_time
+
+
+settings = _RouterSettings()
 
 
 class LLMCapability(Enum):

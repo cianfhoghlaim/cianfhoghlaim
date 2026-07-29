@@ -24,6 +24,34 @@ Usage:
 
     # Or compare multiple models
     results = await compare_ocr_models(image_bytes, models=["paddleocr", "docling"])
+
+═══════════════════════════════════════════════════════════════════════
+URL RESOLUTION CHAIN (post-trilogy, 2026-08-XX)
+═══════════════════════════════════════════════════════════════════════
+
+The 4 OCR backends (PaddleOCR / Docling / Dots.OCR / Unstract) route
+through the canonical in-network **ocr-router** service at
+``http://ocr-router:8090/v1`` — the sidecar that fronts the 4
+classical OCR engines + llama-swap + litellm. The legacy
+per-backend localhost defaults (``http://localhost:8000/5001/8001/8002``)
+were the v3 contract; the post-trilogy contract defaults to the
+ocr-router URL.
+
+Resolution chain for each backend (in priority order):
+  1. Explicit env override (``PADDLEOCR_URL`` / ``DOCLING_URL`` /
+     ``DOTS_OCR_URL`` / ``UNSTRACT_URL``) — used for canary rollouts,
+     operator overrides, or local-dev.
+  2. Canonical ocr-router URL (``http://ocr-router:8090/v1``) — the
+     production default. The in-network DNS name resolves to the
+     ocr-router sidecar in the KCG docker network.
+
+Per-backend mapping:
+  PADDLEOCR_URL → ``http://ocr-router:8090/v1/paddleocr`` (MCP)
+  DOCLING_URL   → ``http://ocr-router:8090/v1/docling``   (REST)
+  DOTS_OCR_URL  → ``http://ocr-router:8090/v1/dots-ocr``  (vLLM OAI-compatible)
+  UNSTRACT_URL  → ``http://ocr-router:8090/v1/unstract``  (REST)
+
+Reference: openspec/changes/2026-08-XX-biep-v3-production-readiness-v1/
 """
 
 from __future__ import annotations
@@ -53,25 +81,31 @@ class OCRBackend(str, Enum):
     UNSTRACT = "unstract"
 
 
-# Backend configurations
-OCR_BACKENDS = {
+# Canonical in-network ocr-router URL (the new post-trilogy default).
+# The controller fronts the 4 classical OCR backends + llama-swap + litellm.
+OCR_ROUTER_URL = os.getenv("OCR_ROUTER_URL", "http://ocr-router:8090/v1")
+
+
+# Backend configurations: explicit env override → ocr-router URL fallback.
+# (See the docstring at the top of this module for the full resolution chain.)
+OCR_BACKENDS: dict[str, dict[str, Any]] = {
     "paddleocr": {
-        "url": os.getenv("PADDLEOCR_URL", "http://localhost:8000"),
+        "url": os.getenv("PADDLEOCR_URL") or f"{OCR_ROUTER_URL}/paddleocr",
         "type": "mcp",
         "name": "PaddleOCR",
     },
     "docling": {
-        "url": os.getenv("DOCLING_URL", "http://localhost:5001"),
+        "url": os.getenv("DOCLING_URL") or f"{OCR_ROUTER_URL}/docling",
         "type": "rest",
         "name": "Docling",
     },
     "dots_ocr": {
-        "url": os.getenv("DOTS_OCR_URL", "http://localhost:8001"),
+        "url": os.getenv("DOTS_OCR_URL") or f"{OCR_ROUTER_URL}/dots-ocr",
         "type": "openai",
         "name": "Dots.OCR",
     },
     "unstract": {
-        "url": os.getenv("UNSTRACT_URL", "http://localhost:8002"),
+        "url": os.getenv("UNSTRACT_URL") or f"{OCR_ROUTER_URL}/unstract",
         "type": "rest",
         "name": "Unstract",
     },

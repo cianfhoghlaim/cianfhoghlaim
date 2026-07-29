@@ -122,4 +122,29 @@ if not _DEFS_AVAILABLE:
         _DEFS_LOADED_VIA = f"{_DEFS_LOADED_VIA} + empty (walker failed)"
 
 
+# ============================================================================
+# Schedules from `orchestration/automation/`
+# ============================================================================
+# `dg.load_defs()` only walks `orchestration/defs/`. The schedules in
+# `orchestration/automation/sync_schedules.py` (the daily sync_health
+# cron per the `knowledge-sync-loop` spec) live outside that tree, so
+# we merge them in here. Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1
+# change (the Daily sync_health cron requirement).
+
+try:
+    from orchestration.automation.sync_schedules import sync_schedules
+
+    if sync_schedules:
+        defs = dg.Definitions.merge(
+            defs,
+            dg.Definitions(schedules=sync_schedules),
+        )
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"sync_schedules_load_failed: {_exc}; continuing without the daily sync_health cron"
+    )
+
+
 __all__ = ["defs", "_DEFS_AVAILABLE", "_DEFS_LOADED_VIA"]

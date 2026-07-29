@@ -1,6 +1,8 @@
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    # Drop-in shim for the broken locket v0.17.3 (snake_case → 422 → passthrough
+    # bug). See bonneagar/scripts/cianfhoghlaim-locket-shim.py for the source.
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
     container_name: meaisinfhoghlaim-locket
     restart: unless-stopped
     user: "65532:65532"

@@ -29,6 +29,11 @@ DEFAULT_REPO_PATH = os.getenv(
 )
 DEFAULT_LANCEDB_URI = os.getenv("LANCEDB_URI", "./storage/data/lancedb")
 
+# Canonical embedder env knob: CIANFHOGHLAIM_EMBED_MODEL (per the
+# centralized-model-registry openspec change). The previous hardcoded
+# "BAAI/bge-m3" string was replaced with the env-driven default.
+EMBED_MODEL = os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3")
+
 # File patterns to index
 INCLUDE_PATTERNS = [
     "**/*.py",
@@ -119,10 +124,12 @@ def create_repo_embedding_flow():
 
             # Process each chunk
             with file_item["chunks"].row() as chunk:
-                # Generate embedding for chunk text
+                # Generate embedding for chunk text (canonical env knob
+                # CIANFHOGHLAIM_EMBED_MODEL is honoured; previous hardcoded
+                # "BAAI/bge-m3" was replaced with the env-driven default).
                 chunk["embedding"] = chunk["text"].transform(
                     functions.SentenceTransformerEmbed(
-                        model="BAAI/bge-m3",
+                        model=EMBED_MODEL,
                     )
                 )
 
@@ -240,8 +247,9 @@ async def search_code(
     except Exception:
         return []
 
-    # Generate query embedding
-    model = SentenceTransformer("BAAI/bge-m3")
+    # Generate query embedding (canonical env knob CIANFHOGHLAIM_EMBED_MODEL
+    # is honoured; previous hardcoded "BAAI/bge-m3" was replaced).
+    model = SentenceTransformer(EMBED_MODEL)
     query_embedding = model.encode(query).tolist()
 
     # Build search

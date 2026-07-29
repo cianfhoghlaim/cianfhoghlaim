@@ -333,6 +333,8 @@ function CompareOCRModels(
 client<llm> Validator {
   provider openai
   options {
+    // MODEL_REGISTRY: family="text_llm", role="fast" → "gpt-4o-mini"
+    // Canonical home: meaisinfhoghlaim/models/model_registry.py
     model "gpt-4o-mini"
     temperature 0.1
   }
@@ -341,6 +343,8 @@ client<llm> Validator {
 client<llm> IrishValidator {
   provider openai
   options {
+    // MODEL_REGISTRY: family="text_llm", role="strong" → "gpt-4o"
+    // (legacy; the canonical registry marks "gpt-4o" as available)
     model "gpt-4o"  // Better for Irish
     temperature 0.1
   }
@@ -349,6 +353,8 @@ client<llm> IrishValidator {
 client<llm> Analyzer {
   provider openai
   options {
+    // MODEL_REGISTRY: family="text_llm", role="strong" → "gpt-4o"
+    // Canonical home: meaisinfhoghlaim/models/model_registry.py
     model "gpt-4o"
     temperature 0.2
   }

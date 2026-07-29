@@ -17,10 +17,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import httpx
+import structlog
 from pydub import AudioSegment
-from cianfhoghlaim.observability.logging import get_logger
 
-logger = get_logger(__name__)
+logger = structlog.get_logger(__name__)
 
 # Audio processing constants
 TARGET_SAMPLE_RATE = 16000  # 16kHz for ASR

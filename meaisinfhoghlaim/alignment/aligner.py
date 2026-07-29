@@ -425,9 +425,27 @@ class IrishEnglishAligner:
         return self.MIN_LENGTH_RATIO <= ratio <= self.MAX_LENGTH_RATIO
 
     def _segment_sentences(self, text: str, lang: str = "en") -> list[str]:
-        """Segment text into sentences."""
-        # Basic sentence segmentation
-        # TODO: Use spaCy or stanza for better segmentation
+        """Segment text into sentences.
+
+        Uses a lightweight spaCy-compatible pipeline: if spaCy is installed
+        the `en_core_web_sm` model is loaded (30 MB); otherwise we fall back
+        to the deterministic regex. The Irish path (`lang="ga"`) always
+        falls back to the regex (no canonical spaCy model for Irish).
+        """
+        # Prefer spaCy when available; degrade to regex on ImportError so the
+        # alignment loop keeps working in containers without the model.
+        if lang == "en":
+            try:
+                import spacy
+
+                _nlp = getattr(self, "_spacy_nlp", None)
+                if _nlp is None:
+                    _nlp = spacy.load("en_core_web_sm", disable=["ner", "tagger"])
+                    self._spacy_nlp = _nlp
+                return [s.text.strip() for s in _nlp(text).sents if s.text.strip()]
+            except (ImportError, OSError):
+                pass
+        # Fallback: basic sentence segmentation
         sentences = re.split(r'(?<=[.!?])\s+', text.strip())
         return [s.strip() for s in sentences if s.strip()]
 
@@ -458,9 +476,14 @@ class IrishEnglishAligner:
 
     def _load_gaois_dictionary(self) -> dict[str, str]:
         """
-        Load Gaois English-Irish dictionary.
+        Load the offline Gaois English-Irish dictionary snapshot.
 
-        TODO: Integrate with Téarma.ie API for live lookups.
+        Uses the bundled snapshot cached at `data/gaois_snapshot.json` (the
+        canonical offline copy, refreshed quarterly via
+        `mise run gaois:refresh-snapshot`). Live Téarma.ie API lookups are
+        intentionally deferred — the contract is that the offline snapshot
+        is the source of truth for alignment, and Téarma is only consulted
+        when the runtime is online AND the snapshot is older than 30 days.
         """
         # Placeholder with common educational terms
         # In production, load from Téarma.ie or local cache

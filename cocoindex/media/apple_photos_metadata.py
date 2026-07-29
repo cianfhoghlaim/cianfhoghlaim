@@ -93,7 +93,11 @@ class ApplePhotoMetadataRecord:
     has_vehicle_hint: bool
     caption: str  # filled by the apple_photos_captioning Dagster asset
     routed_to_paperless_at: str | None  # ISO 8601; NULL = not yet routed
-    embedding: Annotated[list[float], "BAAI/bge-m3"]
+    # Embedder model is sourced from cocoindex/_shared/_lifespan.py:EMBED_MODEL
+    # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
+    # "BAAI/bge-m3" string was replaced with the shared symbol so the
+    # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
+    embedding: Annotated[list[float], EMBED_MODEL]
 
 
 # =============================================================================

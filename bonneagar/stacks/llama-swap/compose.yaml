@@ -23,6 +23,10 @@ services:
       # Apple Silicon: offload all layers to GPU
       - LLAMA_ARG_NGL=99
       - LLAMA_ARG_CTX_SIZE=32768
+      # OpenTelemetry fan-out (per env-contract-and-observability-fanout-v1)
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=llama-swap
     deploy:
       resources:
         reservations:
@@ -30,3 +34,13 @@ services:
             - driver: metal
               count: 1
               capabilities: [gpu]   # Apple Silicon M-series GPU (Metal backend)
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

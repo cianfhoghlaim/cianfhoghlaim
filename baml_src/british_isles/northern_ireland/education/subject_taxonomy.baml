@@ -88,14 +88,14 @@ class NorthernIrelandExamPaper {
   duration_minutes int
 
   // Question structure
-  question_sections NISection[]
+  question_sections NorthernIrelandSection[]
 }
 
 class NorthernIrelandSection {
   section_id string                   @description("e.g. 'Section A' or 'Section B'")
   section_title string
   total_marks int
-  questions NIQuestion[]
+  questions NorthernIrelandQuestion[]
 }
 
 class NorthernIrelandQuestion {

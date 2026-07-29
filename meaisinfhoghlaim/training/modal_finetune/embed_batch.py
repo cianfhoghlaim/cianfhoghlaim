@@ -24,14 +24,26 @@ CRITICAL CONSTRAINTS:
     - MIN_EMBEDDING_BATCH_SIZE = 100 (100x performance improvement)
     - HNSW index management for bulk inserts
     - SerialDatabaseExecutor for LanceDB writes
+
+EMBEDDER:
+    The embedder model is sourced from ``CIANFHOGHLAIM_EMBED_MODEL``
+    (defaults to ``BAAI/bge-m3`` per the
+    ``centralized-model-registry`` openspec change). The canonical
+    home lives in `meaisinfhoghlaim.config.base.FlowSettings`; this
+    module reads the env directly because Modal containers don't
+    have the full pydantic stack pre-loaded.
 """
 
+import os
 import time
 
 import modal
 import structlog
 
 logger = structlog.get_logger(__name__)
+
+# Canonical embedder — env override honours the trilogy contract.
+EMBED_MODEL = os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3")
 
 # Modal app configuration
 app = modal.App("curriculum-embeddings")
@@ -85,9 +97,9 @@ class EmbeddingService:
         import torch
         from sentence_transformers import SentenceTransformer
 
-        logger.info("loading_model", model="BAAI/bge-m3")
+        logger.info("loading_model", model=EMBED_MODEL)
         self.model = SentenceTransformer(
-            "BAAI/bge-m3",
+            EMBED_MODEL,
             device="cuda" if torch.cuda.is_available() else "cpu",
         )
         self.model.max_seq_length = 8192  # BGE-M3 supports long context
@@ -251,8 +263,8 @@ def process_curriculum_batch(
     logger.info("documents_loaded", count=total_documents)
 
     # Initialize model
-    logger.info("loading_model", model="BAAI/bge-m3")
-    model = SentenceTransformer("BAAI/bge-m3", device="cuda")
+    logger.info("loading_model", model=EMBED_MODEL)
+    model = SentenceTransformer(EMBED_MODEL, device="cuda")
 
     # Connect to LanceDB Cloud
     api_key = os.getenv("LANCEDB_API_KEY")
@@ -275,7 +287,7 @@ def process_curriculum_batch(
             "output_table": output_table,
             "batch_size": batch_size,
             "text_field": text_field,
-            "model": "BAAI/bge-m3",
+            "model": EMBED_MODEL,
             "total_documents": total_documents,
         })
 
@@ -363,7 +375,7 @@ def process_curriculum_batch(
                 "total_time_s": total_time,
                 "throughput_docs_per_s": throughput,
                 "output_table": output_table,
-                "model": "BAAI/bge-m3",
+                "model": EMBED_MODEL,
                 "batch_size": batch_size,
             }
         )
@@ -402,7 +414,7 @@ def embed_query(query: str) -> list[float]:
     """
     from sentence_transformers import SentenceTransformer
 
-    model = SentenceTransformer("BAAI/bge-m3", device="cuda")
+    model = SentenceTransformer(EMBED_MODEL, device="cuda")
 
     # Add query prefix for asymmetric search
     query_with_prefix = f"query: {query}"

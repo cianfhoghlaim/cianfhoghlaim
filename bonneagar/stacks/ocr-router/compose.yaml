@@ -78,8 +78,12 @@ services:
         condition: service_healthy
     networks:
       - cianfhoghlaim
+      - lakehouse
 
 networks:
   cianfhoghlaim:
     name: cianfhoghlaim
+    external: true
+  lakehouse:
+    name: lakehouse_lakehouse
     external: true

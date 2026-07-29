@@ -35,7 +35,7 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
 warnings.filterwarnings("ignore")
-from cianfhoghlaim.ocr.models import VISION_MODELS  # noqa: E402
+from meaisinfhoghlaim.ocr.models import VISION_MODELS  # noqa: E402
 
 HF_HUB_API = "https://huggingface.co/api/models/{model_id}"
 HF_HUB_TIMEOUT = 10.0

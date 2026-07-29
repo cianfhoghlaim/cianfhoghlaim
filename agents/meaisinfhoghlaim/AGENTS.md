@@ -1,10 +1,11 @@
 # agents/meaisinfhoghlaim — OCR/HTR/Alignment Sub-Package
 
 > **The OCR/HTR/alignment sub-package** for the agent fleet.
-> Houses the 10 OCR backends across 4 ensemble patterns + the
-> 3 alignment primitives + the 3 educational agents. The
-> canonical home for OCR/HTR processing of scanned curricula,
-> manuscripts, and historical documents.
+> Houses the 10 OCR backends (split across `meaisinfhoghlaim/backends/adapters.py`
+> for the 4 HTTP adapters + `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py`
+> for the 6 VLM/ensemble paths) + the 3 alignment primitives + the
+> 3 educational agents. The canonical home for OCR/HTR processing of
+> scanned curricula, manuscripts, and historical documents.
 
 ## Priority quick reference
 
@@ -45,9 +46,13 @@ python -c "from meaisinfhoghlaim.models.registry import VISION_MODELS; print(len
 `agents/meaisinfhoghlaim/` is the **OCR/HTR/alignment sub-package**
 for the agent fleet. It houses:
 
-- **10 OCR backends** across 4 ensemble patterns (the canonical
-  6 from `meaisinfhoghlaim/models/registry.py:CLASSICAL_OCR` + the
-  4 HTR/Dúchas specialists)
+- **10 OCR backends** split across 2 canonical surfaces:
+  - **4 HTTP adapters** at `meaisinfhoghlaim/backends/adapters.py`:
+    PaddleOCR / Docling / Dots-OCR / Unstract (the T4 modernisation
+    wired to the v4 6-entry `CLASSICAL_OCR` registry)
+  - **6 ensemble paths** at `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py`:
+    BAML (Phase B1 stub) + Unstract + qwen3-vl-8b + gemma-4-26B-A4B
+    + 2 reserved for future PH2 entrants
 - **3 alignment primitives** (cross-frame, cross-archive, cross-nation)
 - **3 educational agents** at `agents/meaisinfhoghlaim/educational/`
   - `academic_history_agent` — the cross-archive academic history
@@ -148,8 +153,9 @@ Plus two specialised aligners in `meaisinfhoghlaim/alignment/`:
 
 | If you want to... | Look at... |
 |:--|:--|
-| Add a new OCR backend | `meaisinfhoghlaim/models/registry.py` (add to `CLASSICAL_OCR`) |
-| Add a new ensemble pattern | `agents/meaisinfhoghlaim/ocr/ensemble/` |
+| Add a new HTTP OCR backend | `meaisinfhoghlaim/backends/adapters.py` (the 4 HTTP adapters: PaddleOCR / Docling / Dots-OCR / Unstract) |
+| Add a new VLM / ensemble path | `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py` (the 6 paths: BAML stub + Unstract + qwen3-vl-8b + gemma-4 + 2 reserved) |
+| Add a new model to the centralized registry | `meaisinfhoghlaim/models/model_registry.py` (the 52-entry `MODEL_REGISTRY` across 7 families) |
 | Add a new alignment primitive | `agents/meaisinfhoghlaim/alignment/` |
 | Modify an educational agent | `agents/meaisinfhoghlaim/educational/<slug>_agent.py` |
 | Add OCR/HTR Dagster assets | `orchestration/defs/5_agent_ops/ocr_assets/` |

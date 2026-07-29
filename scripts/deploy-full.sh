@@ -5,7 +5,7 @@
 # Per the 2026-08-01-lakehouse-and-reproducible-deploy-v1 openspec change:
 #
 #   "The system MUST provide a `mise run deploy:full` command that brings
-#    up the entire 91-stack platform in 7 phases with healthchecks + a
+#    up the entire 91-stack platform in 8 phases with healthchecks + a
 #    resumable checkpoint state file at `~/.cianfhoghlaim/deploy-state.json`."
 #
 # This shell script is the user-facing entry point. The TypeScript
@@ -19,14 +19,15 @@
 #   mise run deploy:full --dry-run        # dry-run (no mutations)
 #   bash scripts/deploy-full.sh --phase=4  # run only phase 4
 #
-# The 7 phases:
+# The 8 phases:
 #   1. preflight-arm-oci        — 4-check safety gate
 #   2. control-plane-up         — infisical + pangolin + komodo + pocket-id + tinyauth
 #   3. lakehouse-up             — postgres + garage + clickhouse + redis + lakekeeper + lance-namespace
 #   4. data-stacks-up           — litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb
-#   5. agent-surfaces-up        — openclaw + openchamber + hermes + ocr-router
-#   6. dagster-materialize      — BIEP v3 upstream + downstream assets
-#   7. dagster-sensor-health-gate — ocr_completion_sensor + 5 others report ACTIVE
+#   5. ocr-backends-up          — paddleocr + dots-ocr + olmocr + docling-serve + mlx-omni + llama-swap + meaisinfoghlaim (NEW 2026-08-02)
+#   6. agent-surfaces-up        — openclaw + openchamber + hermes + ocr-router
+#   7. dagster-materialize      — BIEP v3 upstream + downstream assets
+#   8. dagster-sensor-health-gate — ocr_completion_sensor + 5 others report ACTIVE
 # =============================================================================
 
 set -uo pipefail
@@ -35,7 +36,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TS_ORCHESTRATOR="${REPO_ROOT}/scripts/deploy-full.ts"
 STATE_FILE="${HOME}/.cianfhoghlaim/deploy-state.json"
 LOG_FILE="${HOME}/.cianfhoghlaim/deploy-$(date -u +%Y%m%dT%H%M%SZ).log"
-PHASE_NAMES=(preflight-arm-oci control-plane-up lakehouse-up data-stacks-up agent-surfaces-up dagster-materialize dagster-sensor-health-gate)
+PHASE_NAMES=(preflight-arm-oci control-plane-up lakehouse-up data-stacks-up ocr-backends-up agent-surfaces-up dagster-materialize dagster-sensor-health-gate)
 
 # --- Parse args ---
 SKIP_PREFLIGHT=false
@@ -47,8 +48,8 @@ for arg in "$@"; do
     --dry-run) DRY_RUN=true ;;
     --phase=*)
       ONLY_PHASE="${arg#--phase=}"
-      if ! [[ "$ONLY_PHASE" =~ ^[1-7]$ ]]; then
-        echo "ERROR: --phase must be 1-7; got '$ONLY_PHASE'" >&2
+      if ! [[ "$ONLY_PHASE" =~ ^[1-8]$ ]]; then
+        echo "ERROR: --phase must be 1-8; got '$ONLY_PHASE'" >&2
         exit 2
       fi
       ;;
@@ -59,7 +60,7 @@ Usage: $0 [options]
 Options:
   --skip-preflight       Skip the preflight-arm-oci safety gate (not recommended)
   --dry-run              Dry-run mode (no mutations; logs what would happen)
-  --phase=N              Run only phase N (1-7); other phases SKIPPED
+  --phase=N              Run only phase N (1-8); other phases SKIPPED
 
 Examples:
   $0                            # full deploy from phase 1

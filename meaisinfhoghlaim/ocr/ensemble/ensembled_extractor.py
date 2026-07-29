@@ -10,14 +10,43 @@ Each path output lands in its own per-jurisdiction DuckLake table.
 Then the RAGAS `biiep_extraction_consensus` metric votes the canonical row.
 
 Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
+
+OCR_WEBHOOK_URL emission (post-trilogy, 2026-08-XX):
+    On every successful extraction, the canonical envelope is POSTed to
+    ``os.getenv("OCR_WEBHOOK_URL", "")`` via ``httpx.AsyncClient`` using
+    a fire-and-forget async task. The webhook emission mirrors the
+    langfuse callback pattern (one-way, never blocks the extraction).
+
+    The payload schema (per the british-isles-education-pipeline-v3
+    spec delta on the OCR webhook delta):
+        {
+          "document_id": "<uuid>",
+          "capability": "<forms|layout|tables+latex|doctags|gaelic|english>",
+          "backend_used": "<paddleocr|mlx-omni|olmocr|docling-serve|llama-swap|dots-ocr>",
+          "model": "<model name>",
+          "result_url": "<s3://lakehouse/ocr/...>",
+          "duration_ms": <int>,
+          "trace_id": "<opentelemetry trace id>",
+          "completed_at": "<iso-8601 utc>"
+        }
+
+    Bearer auth: ``Authorization: Bearer ${OCR_WEBHOOK_TOKEN}`` if set.
+
+    If ``OCR_WEBHOOK_URL`` is empty (dev mode), the emission is silently
+    skipped (no error). The POST is wrapped in try/except so a webhook
+    failure never blocks the extraction result.
 """
 from __future__ import annotations
 
 import asyncio
 import hashlib
 import logging
+import os
+import time
+import uuid
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
@@ -154,6 +183,7 @@ class EnsembledExtractor:
         if not pdf_path.exists():
             raise FileNotFoundError(f"PDF not found: {pdf_path}")
 
+        start_time = time.time()
         content_hash = _file_hash(pdf_path)
         ingested_at = _now_iso()
 
@@ -216,6 +246,19 @@ class EnsembledExtractor:
         # below logs the path for observability.)
         self._land_paths_in_ducklake(result, jurisdiction, scope, subject, board)
 
+        # OCR_WEBHOOK_URL emission (post-trilogy delta). Fire-and-forget
+        # async POST — never blocks the extraction result. The payload
+        # conforms to the british-isles-education-pipeline-v3 spec delta.
+        self._emit_ocr_webhook(
+            result=result,
+            jurisdiction=jurisdiction,
+            scope=scope,
+            subject=subject,
+            board=board,
+            qualification_level=qualification_level,
+            elapsed_seconds=time.time() - start_time,
+        )
+
         return result
 
     # ─── 4-path runners (placeholders; real impls in production) ──────────
@@ -223,15 +266,21 @@ class EnsembledExtractor:
     async def _run_path_baml(
         self, pdf_path: Path, baml_function: str
     ) -> str:
-        """Path 1: Docling-serve -> text -> BAML function."""
+        """Path 1: Docling-serve -> text -> BAML function.
+
+        Phase B1 implementation (post-2026-08-16): the BAML path is
+        deferred. `_call_docling` produces the raw text; the BAML
+        extraction function (`baml_function`) is the canonical BAML
+        call site but the typed-schema codegen is not yet in place.
+        We raise `NotImplementedError` so the orchestrator can catch +
+        emit a `EnsemblePathOutput(error="baml_path_pending_phase_b1")`.
+        """
         try:
-            docling_text = await _call_docling(pdf_path, self.docling_url)
+            _docling_text = await _call_docling(pdf_path, self.docling_url)
         except Exception as e:
             logger.warning("docling_text_extraction_failed", error=str(e))
-            docling_text = pdf_path.read_bytes().decode("utf-8", errors="ignore")[:200_000]
-        # Real BAML call: `getattr(b, function_name)(text=docling_text)`
-        # Stub: return raw text with a sentinel.
-        return f"[BAML_PATH] {baml_function}(text={docling_text[:200]}...)"
+            _docling_text = pdf_path.read_bytes().decode("utf-8", errors="ignore")[:200_000]
+        raise NotImplementedError("BAML path pending Phase B1")
 
     async def _run_path_unstract(self, pdf_path: Path) -> str:
         """Path 2: Docling-serve -> Unstract workflow -> JSON."""
@@ -298,6 +347,92 @@ class EnsembledExtractor:
             ragas_score=result.ragas_score,
             voted_path=result.ragas_voted_path,
         )
+
+    # ─── OCR_WEBHOOK_URL emission (post-trilogy delta) ────────────────────
+
+    def _emit_ocr_webhook(
+        self,
+        result: EnsembleResult,
+        jurisdiction: str,
+        scope: str,
+        subject: str | None,
+        board: str | None,
+        qualification_level: str | None,
+        elapsed_seconds: float,
+    ) -> None:
+        """Fire-and-forget POST to ``OCR_WEBHOOK_URL`` on a successful extraction.
+
+        Mirrors the langfuse callback pattern (one-way, never blocks the
+        extraction result). The payload conforms to the
+        ``british-isles-education-pipeline-v3`` spec delta.
+
+        If ``OCR_WEBHOOK_URL`` is empty (dev mode), the emission is silently
+        skipped. A webhook failure is caught by the background task's
+        try/except — it never propagates back to the caller.
+        """
+        webhook_url = os.getenv("OCR_WEBHOOK_URL", "")
+        if not webhook_url:
+            return  # dev mode — skip silently
+
+        document_id = str(uuid.uuid4())
+        completed_at = datetime.now(UTC).isoformat()
+        duration_ms = int(elapsed_seconds * 1000)
+
+        # The capability + backend_used map to the 4-path ensemble + the
+        # 6 canonical BIEP v3 capabilities (forms | layout | tables+latex |
+        # doctags | gaelic | english). The python manifest supplies a
+        # stable mapping for the source quartet.
+        capability = _capability_for(
+            scope=scope, subject=subject, board=board,
+            qualification_level=qualification_level,
+        )
+        backend_used = _backend_used_for(result.ragas_voted_path or "baml")
+        model = _model_for_path(result.ragas_voted_path or "baml")
+        result_url = _result_s3_url(
+            jurisdiction=jurisdiction,
+            scope=scope,
+            subject=subject,
+            board=board,
+            content_hash=result.content_hash or "",
+        )
+
+        # Pull the OpenTelemetry trace id if available (best-effort;
+        # missing trace_id is fine — the webhook accepts null).
+        trace_id = _current_trace_id() or ""
+
+        envelope = {
+            "document_id": document_id,
+            "capability": capability,
+            "backend_used": backend_used,
+            "model": model,
+            "result_url": result_url,
+            "duration_ms": duration_ms,
+            "trace_id": trace_id,
+            "completed_at": completed_at,
+        }
+
+        # Fire-and-forget — schedule the POST in the background.
+        # If there's no running event loop (e.g. sync caller), fall back
+        # to a thread-pool dispatch so the main call still returns.
+        try:
+            loop = asyncio.get_running_loop()
+            loop.create_task(
+                _post_ocr_webhook(webhook_url, envelope),
+                name=f"ocr-webhook-{document_id}",
+            )
+        except RuntimeError:
+            # No running loop — fall back to background thread.
+            import threading
+
+            threading.Thread(
+                target=_post_ocr_webhook_sync,
+                args=(webhook_url, envelope),
+                daemon=True,
+                name=f"ocr-webhook-{document_id}",
+            ).start()
+
+
+# ─── Helpers ────────────────────────────────────────────────────────────
 
 
 # ─── Helpers ────────────────────────────────────────────────────────────
@@ -516,3 +651,158 @@ async def _call_gemma4(pdf_path: Path, endpoint: str) -> str:
             return '[{"vlm":"gemma-4-26B-A4B","stub":true}]'
     except Exception as e:
         return f'[{{"vlm":"gemma-4-26B-A4B","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
+
+
+# ─── OCR_WEBHOOK_URL helpers (post-trilogy) ──────────────────────────────
+
+
+# Stable mapping from the 4-path ensemble winner to the canonical BIEP
+# backend_used + model strings. The 6 canonical BIEP v3 capabilities are:
+#   forms | layout | tables+latex | doctags | gaelic | english
+_PATH_TO_BACKEND: dict[str, tuple[str, str]] = {
+    # path -> (backend_used, model)
+    "baml": ("docling-serve", "docling-serve"),
+    "unstract": ("llama-swap", "unstract-v1"),
+    "qwen3_vl": ("llama-swap", "qwen3-vl-8b"),
+    "gemma4": ("llama-swap", "gemma-4-26B-A4B"),
+}
+
+
+def _backend_used_for(path: str) -> str:
+    """Return the canonical `backend_used` for a 4-path ensemble winner."""
+    return _PATH_TO_BACKEND.get(path, ("paddleocr", "paddleocr-v4"))[0]
+
+
+def _model_for_path(path: str) -> str:
+    """Return the canonical `model` string for a 4-path ensemble winner."""
+    return _PATH_TO_BACKEND.get(path, ("paddleocr", "paddleocr-v4"))[1]
+
+
+def _capability_for(
+    scope: str | None,
+    subject: str | None,
+    board: str | None,
+    qualification_level: str | None,
+) -> str:
+    """Return the canonical BIEP v3 `capability` for the current extract call.
+
+    Picks from the 6 canonical capabilities: forms | layout |
+    tables+latex | doctags | gaelic | english. The default is ``doctags``
+    (the (subject, board, qualification_level) tuple drives the more
+    specific capability).
+    """
+    if subject == "gaeilge" or subject == "irish":
+        return "gaelic"
+    if subject == "english":
+        return "english"
+    if board and qualification_level == "a_level":
+        return "forms"
+    if qualification_level == "gcse":
+        return "tables+latex"
+    return "doctags"
+
+
+def _result_s3_url(
+    jurisdiction: str,
+    scope: str,
+    subject: str | None,
+    board: str | None,
+    content_hash: str,
+) -> str:
+    """Return the canonical S3 URL for the per-extraction result blob.
+
+    The path mirrors the BIEP v3 snake_case S3 contract:
+        ``s3://lakehouse/ocr/<jurisdiction>/<scope>/<subject>/<board>/<content_hash>.json``
+
+    Subject + board are optional; the URL elides them when missing.
+    """
+    parts = ["s3://lakehouse/ocr", jurisdiction, scope]
+    if subject:
+        parts.append(subject)
+    if board:
+        parts.append(board)
+    parts.append(f"{content_hash[:16] if content_hash else 'unknown'}.json")
+    return "/".join(parts)
+
+
+def _current_trace_id() -> str | None:
+    """Return the current OpenTelemetry trace id (best-effort, or None).
+
+    Falls back gracefully when OTel isn't installed or no trace is active.
+    """
+    try:
+        from opentelemetry import trace  # type: ignore[import-not-found]
+
+        span = trace.get_current_span()
+        if span is None:
+            return None
+        ctx = span.get_span_context()
+        if ctx is None or not ctx.is_valid:
+            return None
+        return format(ctx.trace_id, "032x")
+    except Exception:
+        return None
+
+
+async def _post_ocr_webhook(webhook_url: str, envelope: dict[str, Any]) -> None:
+    """Async POST the OCR_WEBHOOK envelope. Never raises."""
+    try:
+        import httpx
+    except ImportError:
+        logger.warning("ocr_webhook_skipped: httpx not installed")
+        return
+
+    headers = {"Content-Type": "application/json"}
+    token = os.getenv("OCR_WEBHOOK_TOKEN", "")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.post(webhook_url, json=envelope, headers=headers)
+            if resp.status_code >= 400:
+                logger.warning(
+                    "ocr_webhook_non_2xx",
+                    url=webhook_url,
+                    status=resp.status_code,
+                    body=resp.text[:200],
+                )
+    except Exception as e:  # noqa: BLE001 - never block the extraction
+        logger.warning(
+            "ocr_webhook_failed",
+            url=webhook_url,
+            error=type(e).__name__,
+            detail=str(e)[:200],
+        )
+
+
+def _post_ocr_webhook_sync(webhook_url: str, envelope: dict[str, Any]) -> None:
+    """Synchronous fallback for callers without a running event loop."""
+    try:
+        import httpx
+    except ImportError:
+        logger.warning("ocr_webhook_skipped: httpx not installed")
+        return
+
+    headers = {"Content-Type": "application/json"}
+    token = os.getenv("OCR_WEBHOOK_TOKEN", "")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    try:
+        with httpx.Client(timeout=10.0) as client:
+            resp = client.post(webhook_url, json=envelope, headers=headers)
+            if resp.status_code >= 400:
+                logger.warning(
+                    "ocr_webhook_non_2xx",
+                    url=webhook_url,
+                    status=resp.status_code,
+                    body=resp.text[:200],
+                )
+    except Exception as e:  # noqa: BLE001
+        logger.warning(
+            "ocr_webhook_failed",
+            url=webhook_url,
+            error=type(e).__name__,
+            detail=str(e)[:200],
+        )

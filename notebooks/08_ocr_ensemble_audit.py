@@ -93,11 +93,20 @@ def _filter_ui(mo):
 
 @app.cell
 def _ibis_conn(mo):
-    """The ibis-first contract per the BIEP v2 spec."""
-    import ibis
+    """The ibis-first contract per the BIEP v2 spec.
 
-    conn = ibis.duckdb.connect("md:cianfhoghlaim")
-    lance = ibis.lancedb.connect("rest://lakehouse-lance-namespace:8182")
+    Routes through the canonical `notebooks/_shared/db.py:connect_md()`
+    helper so the MotherDuck URI + read-only mode + post-trilogy
+    `md:cianfhoghlaim` alias are inherited from the shared surface.
+    The previous direct `ibis.duckdb.connect("md:cianfhoghlaim")` call
+    bypassed the helper and made the alias brittle.
+    """
+    import sys
+    sys.path.insert(0, "/Users/cianmacandeisigh/dev/kings_college_galway")
+    from notebooks._shared.db import connect_md, connect_lance
+
+    conn = connect_md()
+    lance = connect_lance()
     mo.md("✓ ibis-first contract wired — BIEP v2 DuckLake + Lance ready")
     return conn, lance
 

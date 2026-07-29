@@ -14,6 +14,21 @@
 //   client LlamaSwapClient
 //
 // Re-gen after changes:  `cd oideachais && uv run baml-cli generate`
+//
+// MODEL_REGISTRY canonical home:
+// Per the centralized-model-registry openspec change (2026-08-15),
+// the model strings (`qwen3-vl-8b`, `gemma-4-12B`, `qwen3.6-27b-mtp`)
+// below are resolved via the unified `MODEL_REGISTRY` at
+// `meaisinfhoghlaim/models/model_registry.py` at runtime. The
+// following entries map to this file's clients:
+//
+//   `qwen3-vl-8b`       → MODEL_REGISTRY → ocr_vision/qwen3_vl_default
+//   `gemma-4-12B`       → MODEL_REGISTRY → ocr_vision/gemma4_default
+//   `qwen3.6-27b-mtp`   → MODEL_REGISTRY → text_llm/strong
+//
+// When the registry is missing or unavailable, the BAML compiler
+// falls back to the literal model strings here. The Python runtime
+// resolves them via the registry at extraction time.
 
 client<llm> LlamaSwapClient {
   provider openai

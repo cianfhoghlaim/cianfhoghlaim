@@ -25,11 +25,36 @@ from __future__ import annotations
 import contextlib
 import json
 import logging
+import os
 import random
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+
+def _resolve_default_eval_model() -> str:
+    """Resolve the canonical RAGAS evaluation LLM model.
+
+    Resolution chain (in priority order):
+    1. ``CIANFHOGHLAIM_EVAL_MODEL`` env var (explicit operator override)
+    2. ``MODEL_REGISTRY.resolve("text_llm", "fast")`` — the unified
+       registry (added 2026-08-15 by the ``centralized-model-registry``
+       openspec change)
+    3. The legacy hardcoded fallback ``"gemini/gemini-1.5-flash"`` for
+       back-compat with deployments that have no MODEL_REGISTRY available.
+
+    This helper is the canonical home for the RAGAS eval LLM default.
+    """
+    explicit = os.getenv("CIANFHOGHLAIM_EVAL_MODEL")
+    if explicit:
+        return explicit
+    try:
+        from meaisinfhoghlaim.models.model_registry import MODEL_REGISTRY
+
+        return MODEL_REGISTRY.resolve("text_llm", "fast")
+    except Exception:  # pragma: no cover - registry not wired
+        return "gemini/gemini-1.5-flash"
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +177,7 @@ class AgenticRagEvaluator:
         generate_fn=None,
         num_queries: int = 3,
         enable_self_correction: bool = True,
-        model: str = "gemini/gemini-1.5-flash",
+        model: str | None = None,
     ):
         """
         Initialize agentic RAG evaluator.
@@ -162,13 +187,16 @@ class AgenticRagEvaluator:
             generate_fn: Function to generate answer (async)
             num_queries: Number of search queries to generate
             enable_self_correction: Whether to enable self-correction loop
-            model: LLM model for query generation and synthesis
+            model: LLM model for query generation and synthesis. If None,
+                the canonical default is resolved via
+                ``MODEL_REGISTRY.resolve("text_llm", "fast")`` (with
+                env-var override ``CIANFHOGHLAIM_EVAL_MODEL``).
         """
         self.search_fn = search_fn
         self.generate_fn = generate_fn
         self.num_queries = num_queries
         self.enable_self_correction = enable_self_correction
-        self.model = model
+        self.model = model if model is not None else _resolve_default_eval_model()
 
     async def generate_search_queries(self, question: str) -> list[str]:
         """

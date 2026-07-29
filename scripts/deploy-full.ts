@@ -5,16 +5,17 @@
  * Per the 2026-08-01-lakehouse-and-reproducible-deploy-v1 openspec change:
  *
  *   "The system MUST provide a `mise run deploy:full` command that brings
- *    up the entire 91-stack platform in 7 phases with healthchecks + a
+ *    up the entire 91-stack platform in 8 phases with healthchecks + a
  *    resumable checkpoint state file at `~/.cianfhoghlaim/deploy-state.json`.
- *    The 7 phases MUST be (in this order):
+ *    The 8 phases MUST be (in this order):
  *      1. preflight-arm-oci
  *      2. control-plane-up
  *      3. lakehouse-up
  *      4. data-stacks-up
- *      5. agent-surfaces-up
- *      6. dagster-materialize
- *      7. dagster-sensor-health-gate"
+ *      5. ocr-backends-up      (added 2026-08-02 post-trilogy-cleanup)
+ *      6. agent-surfaces-up
+ *      7. dagster-materialize
+ *      8. dagster-sensor-health-gate"
  *
  * This is the TypeScript state machine that owns the resumable checkpoint.
  * The shell entry (`scripts/deploy-full.sh`) delegates here after preflight.
@@ -29,6 +30,10 @@
  *   - Phases 6 + 7: were `uv run dagster ...` (drift — canonical CLI is
  *     `dg` per `dg.toml`); now `uv run dg launch --module
  *     orchestration.definitions --job <name>` and `uv run dg sensor list --json`
+ *   - Phase 5 (NEW 2026-08-02): `ocr-backends-up` — brings up the 7 OCR
+ *     backends (paddleocr + dots-ocr + olmocr + docling-serve + mlx-omni +
+ *     llama-swap + meaisinfoghlaim). Renumbered subsequent phases 5→6, 6→7,
+ *     7→8.
  *
  * Usage:
  *   bun run scripts/deploy-full.ts                    # full deploy from phase 1
@@ -74,6 +79,11 @@ interface Phase {
 // come up first (it's the chokepoint every agent surface talks to).
 const DATA_STACKS = ["litellm", "langfuse", "mlflow", "logfire", "cognee", "graphiti", "lancedb"] as const;
 
+// The 7 OCR backends (added in 2026-08-02 post-trilogy-cleanup). Order matters:
+// llama-swap is last because it holds the heavy on-device GGUF reservation
+// (32-48 GB RAM); running it first can starve the rest.
+const OCR_STACKS = ["paddleocr", "dots-ocr", "olmocr", "docling-serve", "mlx-omni", "llama-swap", "meaisinfoghlaim"] as const;
+
 // The 3 agent surfaces + the new ocr-router from Change 2.
 const AGENT_STACKS = ["openclaw", "openchamber", "hermes", "ocr-router"] as const;
 
@@ -105,19 +115,26 @@ const PHASES: Phase[] = [
   },
   {
     id: 5,
+    name: "ocr-backends-up",
+    description: `${OCR_STACKS.length} OCR backends: ${OCR_STACKS.join(", ")}`,
+    command: `loop:${OCR_STACKS.join(",")}`,
+    isMultiStack: true,
+  },
+  {
+    id: 6,
     name: "agent-surfaces-up",
     description: `${AGENT_STACKS.length} agent surfaces: ${AGENT_STACKS.join(", ")}`,
     command: `loop:${AGENT_STACKS.join(",")}`,
     isMultiStack: true,
   },
   {
-    id: 6,
+    id: 7,
     name: "dagster-materialize",
     description: "BIEP v3 Ireland LC5 materialise (the canonical smoke-test asset)",
     command: "uv run dg launch --module orchestration.definitions --job biiep_v3_ireland_lc5_materialize",
   },
   {
-    id: 7,
+    id: 8,
     name: "dagster-sensor-health-gate",
     description: "ocr_completion_sensor + 5 other sensors report ACTIVE state",
     command: `uv run dg sensor list --json | jq -e '[.[] | select(.sensorName == "ocr_completion_sensor" and .status == "STARTED")] | length == 1'`,

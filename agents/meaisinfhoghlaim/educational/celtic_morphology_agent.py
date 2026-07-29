@@ -38,7 +38,7 @@ except Exception:
 
 # Routing table (shared module)
 try:
-    from cianfhoghlaim.meaisinfhoghlaim.models.routing import (  # type: ignore[import-not-found]
+    from meaisinfhoghlaim.models.routing import (  # type: ignore[import-not-found]
         route_language,
     )
 

@@ -212,7 +212,7 @@ gracefully (returns `{}` or stub) when the target agent is unavailable.
 | Modify the routing keyword map | `agents/routing_keywords.py` (the 12-bucket seed) |
 | Modify the 8 NCCA subject specialists | `agents/tuatha/<slug>_agent.py` (back-compat via `agents/tuatha/wiring.py`) |
 | Modify the 3 educational agents | `agents/meaisinfhoghlaim/educational/<slug>_agent.py` |
-| Add a new OCR backend | `meaisinfhoghlaim/ocr/registry.py` (the 10-backends registry) |
+| Add a new OCR backend | `meaisinfhoghlaim/models/registry.py` (the canonical v4 registry) |
 | Add a new API route | `agents/api/routes/` (the 8 route categories) |
 | Add a new tool module | `agents/tools/` (the 9 tool modules) |
 | Deploy the agent fleet | `bonneagar/komodo/procedures/deploy-agent-fleet-{bunchloch,arm1-oci,arm1-oci-cci}.toml` (added by this change) |

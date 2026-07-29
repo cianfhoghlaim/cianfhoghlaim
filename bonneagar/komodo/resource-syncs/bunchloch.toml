@@ -7,7 +7,7 @@
 # state with the TOMLs declared in resource_path.
 #
 # Scope (data plane + dev):
-#   - cianfhoghlaim + meaisínfhoghlaim + croílár  (BIEP + agent + portfolio)
+#   - cianfhoghlaim + meaisinfhoghlaim + croílár  (BIEP + agent + portfolio)
 #   - litellm + langfuse + mlflow + logfire     (LLM gateway + observability)
 #   - dagster + lakehouse + cognee + lancedb    (lakehouse + semantic memory)
 #   - falkordb + graphiti + memgraph            (graph backends)
@@ -55,7 +55,7 @@ resource_path = [
   "bonneagar/komodo/stacks/croilar-bunchloch.toml",
   "bonneagar/komodo/stacks/hermes-bunchloch.toml",
   "bonneagar/komodo/stacks/mailcow-dockerized-bunchloch.toml",
-  "bonneagar/komodo/stacks/meaisínfhoghlaim-bunchloch.toml",
+  "bonneagar/komodo/stacks/meaisinfoghlaim-bunchloch.toml",
   "bonneagar/komodo/stacks/cianfhoghlaim-bunchloch.toml",
   "bonneagar/komodo/stacks/newt-bunchloch.toml",
   "bonneagar/komodo/builds/openchamber-arm1-oci.toml",

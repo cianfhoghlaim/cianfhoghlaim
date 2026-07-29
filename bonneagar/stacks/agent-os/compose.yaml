@@ -37,18 +37,33 @@ services:
     environment:
       AGENT_OS_SERVICE_NAME: cianfhoghlaim
       AGENT_OS_PORT: 7777
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      # M3 chokepoint — all LLM calls flow through the canonical LiteLLM gateway.
+      # The AGNO_DEFAULT_MODEL / AGNO_CLAUDE_MODEL strings below are model
+      # ALIASES that LiteLLM resolves across its 36-model registry (per the
+      # litellm config.yaml fix in the trilogy Change 2).
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000/v1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      OPENAI_API_KEY: ${LITELLM_MASTER_KEY}
+      ANTHROPIC_API_KEY: ${LITELLM_MASTER_KEY}
       AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
       AGENT_OS_DB_URL: ${CIANFHGHLLAIM_DB_URL:-sqlite:///./storage/cianfhoghlaim.db}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
       BROWSER_AGENT_OS_URL: http://browser-agentos:7777
+      # ContextEnvelope cross-agent mesh (per 2026-07-31-agentic-mesh-and-ocr-pipeline-coherence-v1)
+      OPENCLAW_URL: ${OPENCLAW_URL}
+      OPENCHAMBER_URL: ${OPENCHAMBER_URL}
+      HERMES_URL: ${HERMES_URL}
+      CONTEXT_ENVELOPE_BRIDGE_TOKEN: ${CONTEXT_ENVELOPE_BRIDGE_TOKEN}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       AGNO_DEBUG: ${AGNO_DEBUG:-false}
+      # OpenTelemetry fanout (per the env-contract-and-observability-fanout-v1 change)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
+      OTEL_SERVICE_NAME: agent-os-oideachais
     volumes:
       - cianfhoghlaim-storage:/app/storage
     healthcheck:
@@ -63,6 +78,7 @@ services:
           memory: 2G
     networks:
       - cianfhoghlaim
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # CRYPTEOLAS AGENTOS - DeFi Protocol Analysis
@@ -80,8 +96,11 @@ services:
     environment:
       AGENT_OS_SERVICE_NAME: crypteolas
       AGENT_OS_PORT: 7777
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      # M3 chokepoint — all LLM calls flow through the canonical LiteLLM gateway.
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000/v1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      OPENAI_API_KEY: ${LITELLM_MASTER_KEY}
+      ANTHROPIC_API_KEY: ${LITELLM_MASTER_KEY}
       AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
       AGENT_OS_DB_URL: ${CRYPTEOLAS_DB_URL:-sqlite:///./storage/crypteolas.db}
@@ -92,10 +111,19 @@ services:
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
       OIDEACHAIS_AGENT_OS_URL: http://cianfhoghlaim-agentos:7777
       BROWSER_AGENT_OS_URL: http://browser-agentos:7777
+      # ContextEnvelope cross-agent mesh
+      OPENCLAW_URL: ${OPENCLAW_URL}
+      OPENCHAMBER_URL: ${OPENCHAMBER_URL}
+      HERMES_URL: ${HERMES_URL}
+      CONTEXT_ENVELOPE_BRIDGE_TOKEN: ${CONTEXT_ENVELOPE_BRIDGE_TOKEN}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       AGNO_DEBUG: ${AGNO_DEBUG:-false}
+      # OpenTelemetry fanout
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
+      OTEL_SERVICE_NAME: agent-os-crypteolas
     volumes:
       - crypteolas-storage:/app/storage
     healthcheck:
@@ -110,6 +138,7 @@ services:
           memory: 2G
     networks:
       - cianfhoghlaim
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # BROWSER AGENTOS - Web Automation Orchestration
@@ -127,8 +156,11 @@ services:
     environment:
       AGENT_OS_SERVICE_NAME: browser
       AGENT_OS_PORT: 7777
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      # M3 chokepoint — all LLM calls flow through the canonical LiteLLM gateway.
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000/v1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      OPENAI_API_KEY: ${LITELLM_MASTER_KEY}
+      ANTHROPIC_API_KEY: ${LITELLM_MASTER_KEY}
       AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
       AGENT_OS_DB_URL: ${BROWSER_DB_URL:-sqlite:///./storage/browser.db}
@@ -139,10 +171,19 @@ services:
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
       OIDEACHAIS_AGENT_OS_URL: http://cianfhoghlaim-agentos:7777
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
+      # ContextEnvelope cross-agent mesh
+      OPENCLAW_URL: ${OPENCLAW_URL}
+      OPENCHAMBER_URL: ${OPENCHAMBER_URL}
+      HERMES_URL: ${HERMES_URL}
+      CONTEXT_ENVELOPE_BRIDGE_TOKEN: ${CONTEXT_ENVELOPE_BRIDGE_TOKEN}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       AGNO_DEBUG: ${AGNO_DEBUG:-false}
+      # OpenTelemetry fanout
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
+      OTEL_SERVICE_NAME: agent-os-browser
     volumes:
       - browser-storage:/app/storage
     healthcheck:
@@ -157,10 +198,11 @@ services:
           memory: 2G
     networks:
       - cianfhoghlaim
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # CROILAR AGENTOS - Croílár (Personal Portfolio + CV + Data Engineering)
-  # Source: croilar/agent_os/ (renamed from sruth/aleyum/agent_os/)
+  # Source: croilar/agent_os/  (renamed from sruth/aleyum/agent_os/)
   # ---------------------------------------------------------------------------
   croilar-agentos:
     # build: skipped until croilar/ is wired to a Dockerfile; falls back to a stub image.
@@ -172,18 +214,30 @@ services:
     environment:
       AGENT_OS_SERVICE_NAME: croilar
       AGENT_OS_PORT: 7777
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      # M3 chokepoint — all LLM calls flow through the canonical LiteLLM gateway.
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000/v1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      OPENAI_API_KEY: ${LITELLM_MASTER_KEY}
+      ANTHROPIC_API_KEY: ${LITELLM_MASTER_KEY}
       AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
       AGENT_OS_DB_URL: ${CROILAR_DB_URL:-sqlite:///./storage/croilar.db}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
       OIDEACHAIS_AGENT_OS_URL: http://cianfhoghlaim-agentos:7777
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
+      # ContextEnvelope cross-agent mesh
+      OPENCLAW_URL: ${OPENCLAW_URL}
+      OPENCHAMBER_URL: ${OPENCHAMBER_URL}
+      HERMES_URL: ${HERMES_URL}
+      CONTEXT_ENVELOPE_BRIDGE_TOKEN: ${CONTEXT_ENVELOPE_BRIDGE_TOKEN}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       AGNO_DEBUG: ${AGNO_DEBUG:-false}
+      # OpenTelemetry fanout
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
+      OTEL_SERVICE_NAME: agent-os-croilar
     volumes:
       - croilar-storage:/app/storage
     healthcheck:
@@ -198,6 +252,7 @@ services:
           memory: 1G
     networks:
       - cianfhoghlaim
+      - lakehouse
 
 volumes:
   cianfhoghlaim-storage:
@@ -208,3 +263,6 @@ volumes:
 networks:
   cianfhoghlaim:
     driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

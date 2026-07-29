@@ -81,8 +81,15 @@ except ImportError as e:
 LANCEDB_URI = os.getenv("LANCEDB_URI", "rest://lance-api.cianfhoghlaim.ie")
 FALKORDB_URI = os.getenv("FALKORDB_URI", "falkor://localhost:6379")
 FALKORDB_GRAPH = os.getenv("DOCS_SKILLS_FALKORDB_GRAPH", "docs_skills_graph")
-EMBED_MODEL = os.getenv("DOCS_SKILLS_EMBED_MODEL", "BAAI/bge-m3")
-EMBED_DIM = 1024
+# Canonical embedder env knob: CIANFHOGHLAIM_EMBED_MODEL (per the
+# centralized-model-registry openspec change). The legacy DOCS_SKILLS_EMBED_MODEL
+# is honoured as a back-compat alias.
+EMBED_MODEL = (
+    os.getenv("CIANFHOGHLAIM_EMBED_MODEL")
+    or os.getenv("DOCS_SKILLS_EMBED_MODEL")
+    or "BAAI/bge-m3"
+)
+EMBED_DIM = int(os.getenv("CIANFHOGHLAIM_EMBED_DIM", "1024"))
 DOCS_REFRESH_INTERVAL = datetime.timedelta(seconds=int(os.getenv("DOCS_SKILLS_REFRESH_SECS", "30")))
 LANCEDB_TABLE = "docs_skills_chunks"
 

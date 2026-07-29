@@ -6,6 +6,14 @@ Fine-tunes base models on Celtic language data:
 - BritLLM-3B
 - UCCIX-13B
 - Qomhrá-Mistral-7B
+
+NOTE: The model strings here are upstream HuggingFace IDs for
+*fine-tuning base models*, not inference-time LLM choices. They sit
+outside the canonical ``MODEL_REGISTRY`` (which manages
+`text_llm`/`embedder`/etc. for inference). For inference-time LLM
+choices, use ``meaisinfhoghlaim.models.model_registry.MODEL_REGISTRY`
+or `model_for(family, role)`. See:
+    openspec/specs/centralized-model-registry/spec.md
 """
 
 from __future__ import annotations
@@ -20,7 +28,13 @@ from dagster import (
 
 
 class LLMTrainingConfig(Config):
-    """Configuration for LLM fine-tuning."""
+    """Configuration for LLM fine-tuning.
+
+    The defaults reference the upstream HuggingFace Mistral-7B base
+    model. Authors can override ``base_model`` with any upstream HF
+    ID; the canonical registry for *inference-time* LLM choices
+    lives at ``meaisinfhoghlaim.models.model_registry.MODEL_REGISTRY``.
+    """
     model_name: str = "qomhra-celtic-7b"
     base_model: str = "mistralai/Mistral-7B-v0.1"
     target_languages: list[str] = ["ga", "gd", "cy"]
@@ -32,7 +46,8 @@ class LLMTrainingConfig(Config):
     gpu_provider: str = "modal"
 
 
-# Celtic LLM base models
+# Celtic LLM base models (upstream HF IDs for fine-tuning, NOT
+# inference-time registry entries).
 CELTIC_BASE_MODELS = [
     {
         "name": "EuroLLM-22B",

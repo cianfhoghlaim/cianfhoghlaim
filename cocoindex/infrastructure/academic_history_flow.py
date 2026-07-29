@@ -53,8 +53,14 @@ except ImportError as exc:  # pragma: no cover - defensive
 
 # Shared lifespan (REFACTORING.md item 12).
 _EMBEDDER_FALLBACK: Any = None
-_EMBED_DIM_FALLBACK: int = 1024
-_EMBED_MODEL_FALLBACK: str = "BAAI/bge-m3"
+# Fallback EMBED_MODEL/DIM honour the canonical CIANFHOGHLAIM_EMBED_MODEL/DIM
+# env knobs (per the centralized-model-registry openspec change). The
+# previous hardcoded "BAAI/bge-m3" / 1024 values were replaced with the
+# env-driven defaults.
+_EMBED_DIM_FALLBACK: int = int(os.environ.get("CIANFHOGHLAIM_EMBED_DIM", "1024"))
+_EMBED_MODEL_FALLBACK: str = os.environ.get(
+    "CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3",
+)
 _LANCEDB_URI_FALLBACK: str = os.environ.get("LANCEDB_URI", "rest://lakehouse-lance-namespace:8182")
 _LANCE_DB_FALLBACK: Any = None
 

@@ -1,17 +1,26 @@
-// bonneagar/iac/commands/health.ts — 5-way health check
+// bonneagar/iac/commands/health.ts — 14-way health check
 //
-// Checks all 5 auth surfaces in the bons IaC:
+// Checks all 14 surfaces in the bons IaC:
 //   1. Komodo     — the GitOps orchestrator
 //   2. Pangolin   — the identity-aware reverse proxy + WireGuard server (gerbil)
 //   3. Infisical  — the secrets source of truth
 //   4. Newt       — the WireGuard client(s) on bunchloch + arm1-oci
 //   5. Pocket ID  — the OIDC identity provider (admin SSO for Pangolin + newt creds)
+//   6. Tinyauth   — the ForwardAuth middleware that fronts Pangolin
 //
-// Plus a 6th: Tinyauth (the ForwardAuth middleware that fronts Pangolin).
+// Workload-plane probes (added 2026-08-02 post-trilogy-cleanup):
+//   7.  meaisinfoghlaim (port 8080) — llama-swap OpenAI-compatible API
+//   8.  paddleocr        (port 8000) — forms OCR
+//   9.  dots-ocr         (port 8001) — tesseract fallback
+//   10. olmocr           (port 8003) — tables + latex
+//   11. docling-serve    (port 5001) — doctags
+//   12. mlx-omni         (port 10240) — MLX OpenAI-compatible gateway
+//   13. llama-swap       (port 8080) — GGUF model swapper
+//   14. ocr-router       (port 8090) — OCR capability router
 //
-// Exits 0 only if all 6 are healthy.
+// Exits 0 only if all 14 are healthy.
 
-import { log, logStep, logOk, logError } from "../cli.ts";
+import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { ensureKomodoAuth, ensurePangolinAuth, ensureInfisicalAuth } from "../auth.ts";
 import { pocketIdHealth } from "../auth-pocketid-admin.ts";
 import { exec } from "node:child_process";
@@ -22,8 +31,26 @@ const execAsync = promisify(exec);
 const TINYAUTH_URL = process.env.TINYAUTH_URL ?? "http://localhost:10000";
 const TINYAUTH_HEALTH_PATH = process.env.TINYAUTH_HEALTH_PATH ?? "/api/healthz";
 
+// Host the workload probes run against. Defaults to localhost (i.e. the
+// bunchloch host where iac:health is normally invoked). Override with
+// HEALTH_WORKLOAD_HOST for cross-host probes.
+const WORKLOAD_HOST = process.env.HEALTH_WORKLOAD_HOST ?? "127.0.0.1";
+const PROTO = process.env.HEALTH_PROTO ?? "http";
+
+// Per-stack probe config: [name, port, health-path].
+const WORKLOAD_PROBES: Array<[string, number, string]> = [
+  ["meaisinfoghlaim", 8080, "/health"],
+  ["paddleocr", 8000, "/health"],
+  ["dots-ocr", 8001, "/health"],
+  ["olmocr", 8003, "/health"],
+  ["docling-serve", 5001, "/v1/health"],
+  ["mlx-omni", 10240, "/v1/models"],
+  ["llama-swap", 8080, "/health"],
+  ["ocr-router", 8090, "/health"],
+];
+
 export async function health() {
-  logStep("Health check (5-way: komodo + pangolin + infisical + newt + pocket-id + tinyauth)");
+  logStep("Health check (14-way: komodo + pangolin + infisical + newt + pocket-id + tinyauth + 8 workload-plane probes)");
   let allOk = true;
 
   // 1. Komodo
@@ -155,6 +182,26 @@ export async function health() {
   } catch (e) {
     logError("tinyauth", e);
     allOk = false;
+  }
+
+  // 7-14. Workload-plane probes (meaisinfoghlaim + 6 OCR backends + ocr-router).
+  // Each probe hits the canonical /health endpoint (or the equivalent) on
+  // the configured port. 5s timeout. Failure is non-fatal for any one probe
+  // so the operator can see which specific backend is down.
+  for (const [name, port, path] of WORKLOAD_PROBES) {
+    const url = `${PROTO}://${WORKLOAD_HOST}:${port}${path}`;
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (r.ok) {
+        logOk(`${name}: ${url} returned ${r.status}`);
+      } else {
+        logError(`${name}: ${url} returned ${r.status}`);
+        allOk = false;
+      }
+    } catch (e) {
+      logError(`${name}: ${url} unreachable (${(e as Error).message.slice(0, 80)})`);
+      allOk = false;
+    }
   }
 
   finish(allOk);

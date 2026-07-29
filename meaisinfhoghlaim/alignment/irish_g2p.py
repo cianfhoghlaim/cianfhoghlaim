@@ -26,9 +26,9 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from cianfhoghlaim.observability.logging import get_logger
+import structlog
 
-logger = get_logger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class PhonemeFormat(Enum):

@@ -100,8 +100,15 @@ except ImportError as e:
 
 
 LANCEDB_URI = os.getenv("LANCEDB_URI", "rest://lance-api.cianfhoghlaim.ie")
-EMBED_MODEL = os.getenv("UNIFIED_EMBED_MODEL", "BAAI/bge-m3")
-EMBED_DIM = 1024
+# Canonical embedder env knob: CIANFHOGHLAIM_EMBED_MODEL (per the
+# centralized-model-registry openspec change). The legacy UNIFIED_EMBED_MODEL
+# is honoured as a back-compat alias.
+EMBED_MODEL = (
+    os.getenv("CIANFHOGHLAIM_EMBED_MODEL")
+    or os.getenv("UNIFIED_EMBED_MODEL")
+    or "BAAI/bge-m3"
+)
+EMBED_DIM = int(os.getenv("CIANFHOGHLAIM_EMBED_DIM", "1024"))
 REFRESH_INTERVAL = datetime.timedelta(seconds=int(os.getenv("UNIFIED_REFRESH_SECS", "3600")))
 LANCEDB_UNIFIED_TABLE = "unified_embeddings"
 LANCEDB_CODE_TABLE = "code_embeddings"

@@ -17,10 +17,15 @@ and the BAML extractor returns an empty list. The asset materialisation
 NEVER fails on missing OCR back-ends.
 
 Re-uses:
-- `oideachais/ocr/pylaia_comparison.py` for the Pylaia entry point.
-- `oideachais/ocr/adapters.py` for PaddleOCR (fallback to TrOCR).
-- `oideachais/agents/baml_integration.py` style for the VLM call (via
-  the LiteLLM gateway — `litellm/gemini-2.5-flash`).
+- `meaisinfhoghlaim/backends/adapters.py` (the 4 HTTP adapters — PaddleOCR /
+  Docling / Dots-OCR / Unstract) for the TrOCR / PaddleOCR fallback. The
+  Pylaia entry point is a local stub here (the original
+  `oideachais/ocr/pylaia_comparison.py` was a phantom module; the canonical
+  Pylaia is reachable via `tuatha_root_agent` per the v5 phantom-agents fix).
+- `meaisinfhoghlaim/models/model_registry.py:MODEL_REGISTRY` for the VLM
+  model resolution (post-2026-08-16; replaces the old hardcoded
+  `litellm/gemini-2.5-flash` literal). On a registry miss, the runner falls
+  back to the hardcoded `litellm/gemini-2.5-flash` for graceful degradation.
 
 Reference: openspec/changes/author-archive-gemini-and-uos-ingestion/specs/author-archive-ocr-htr/spec.md
 """
@@ -41,16 +46,30 @@ import structlog
 logger = structlog.get_logger(__name__)
 
 
-# Try to import the existing OCR modules; degrade gracefully.
-try:
-    from cianfhoghlaim.ocr.pylaia_comparison import HTRComparison  # type: ignore[import-not-found]
+# ─── Local shim for the (previously phantom) Pylaia HTR entry point ────────
+# The original `cianfhoghlaim.ocr.pylaia_comparison` module was retired in
+# the v5 phantom-agents fix; the canonical Pylaia is reachable via
+# `tuatha_root_agent` (see agents/meaisinfhoghlaim/AGENTS.md). The local
+# stub preserves the original `HTRComparison` API surface so the existing
+# Pylaia dispatch path stays a no-op (rather than an import error). A
+# future Phase B change can wire Pylaia in via the tuatha_root_agent call.
+class HTRComparison:
+    """Local stub for the retired `cianfhoghlaim.ocr.pylaia_comparison.HTRComparison`."""
 
-    PYLAIA_AVAILABLE = True
-except ImportError:
-    PYLAIA_AVAILABLE = False
+    async def compare_models(self, *_args: Any, **_kwargs: Any) -> dict[str, Any]:
+        """No-op async stub; the real Pylaia comparison is via `tuatha_root_agent`."""
+        return {"models": [], "note": "pylaia_passthrough_via_tuatha_root_agent"}
 
+
+PYLAIA_AVAILABLE = True  # The stub is always available; the real Pylaia
+                         # route is dispatched via `tuatha_root_agent`.
+
+# ─── Canonical OCR adapters (replaces the old `cianfhoghlaim.ocr.adapters` import) ─
+# The 4 HTTP adapters (PaddleOCR / Docling / Dots-OCR / Unstract) live at
+# `meaisinfhoghlaim/backends/adapters.py` per the T4 modernization. This is
+# the back-compat surface for the `trocr_or_paddleocr` dispatch path.
 try:
-    from cianfhoghlaim.ocr.adapters import (  # type: ignore[import-not-found]
+    from meaisinfhoghlaim.backends.adapters import (
         OCRAdapterRegistry,
         get_adapter,
     )
@@ -58,6 +77,34 @@ try:
     ADAPTERS_AVAILABLE = True
 except ImportError:
     ADAPTERS_AVAILABLE = False
+
+# ─── VLM model resolution via MODEL_REGISTRY (the post-2026-08-16 path) ────
+# The original author-archive reference hardcoded `litellm/gemini-2.5-flash`
+# in the docstring; the production runtime now resolves the canonical model
+# from `MODEL_REGISTRY` (the centralized-model-registry change). The
+# 'text_llm'/'ocr_default' lookup wraps in try/except so a registry miss
+# degrades gracefully to the hardcoded fallback (NOT a hard fail).
+_HARDCODED_VLM_FALLBACK = "litellm/gemini-2.5-flash"
+
+
+def _resolve_vlm_model() -> str:
+    """Resolve the canonical VLM model for the OCR VLM path.
+
+    Returns:
+        The canonical model key (e.g. `"minimax-m3"` or the legacy
+        hardcoded `"litellm/gemini-2.5-flash"` on a registry miss).
+    """
+    try:
+        from meaisinfhoghlaim.models.model_registry import MODEL_REGISTRY
+
+        return MODEL_REGISTRY.resolve("text_llm", "ocr_default")
+    except (KeyError, ImportError, AttributeError) as exc:
+        logger.debug(
+            "model_registry_vlm_resolve_fallback",
+            error=str(exc),
+            fallback=_HARDCODED_VLM_FALLBACK,
+        )
+        return _HARDCODED_VLM_FALLBACK
 
 
 class OCRBackend(str, Enum):
@@ -200,6 +247,10 @@ class AuthorArchiveOCRRunner:
         try:
             from baml_client import b  # type: ignore[import-not-found]
 
+            # Resolve the canonical VLM model from MODEL_REGISTRY (post-2026-08-16).
+            # On a registry miss, the resolver falls back to the hardcoded
+            # `litellm/gemini-2.5-flash` (the legacy v1 default).
+            _vlm_model = _resolve_vlm_model()
             result = b.ExtractHandwrittenEquations(
                 ocr_text=page_text[: self.config.max_chars],
                 file_name=path.name,

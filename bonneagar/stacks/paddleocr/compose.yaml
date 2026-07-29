@@ -7,6 +7,10 @@ services:
     ports: ["8000:8000"]
     environment:
       - PADDLEOCR_API_KEY=${PADDLEOCR_API_KEY:-not-needed}
+      # OpenTelemetry fan-out (per env-contract-and-observability-fanout-v1)
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=paddleocr
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/health || exit 1"]
       interval: 30s

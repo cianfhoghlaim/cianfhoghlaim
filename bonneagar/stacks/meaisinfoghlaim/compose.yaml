@@ -26,6 +26,10 @@ services:
       - HF_HOME=/stedding/huggingface
       - HF_HUB_CACHE=/stedding/huggingface/hub
       - HF_HUB_DOWNLOAD_TIMEOUT=600
+      # OpenTelemetry fan-out (per env-contract-and-observability-fanout-v1)
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=meaisinfhoghlaim
     ports:
       - "8080:8080"
     healthcheck:

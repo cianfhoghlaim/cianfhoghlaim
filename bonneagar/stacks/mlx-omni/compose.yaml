@@ -32,6 +32,10 @@ services:
       - MLX_OMNI_PORT=10240
       # Auto-load these MLX models at startup
       - MLX_OMNI_DEFAULT_MODEL=mlx-community/granite-docling-258M-MLX
+      # OpenTelemetry fan-out (per env-contract-and-observability-fanout-v1)
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=mlx-omni
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:10240/v1/models || exit 1"]
       interval: 30s
