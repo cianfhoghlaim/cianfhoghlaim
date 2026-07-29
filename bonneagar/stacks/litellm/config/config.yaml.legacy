@@ -1,0 +1,12 @@
+# Minimal litellm config — no models, just the gateway
+# The full config.yaml has schema mismatches with litellm v1.91
+# (fallback_chain expects dicts, the file has strings)
+# For local dev, this minimal config is sufficient.
+model_list: []
+router_settings: {}
+litellm_settings:
+  drop_params: true
+  set_verbose: false
+  request_timeout: 600
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
