@@ -3398,6 +3398,14 @@ addopts = "-ra -q"
 # =============================================================================
 # Workspace-level DAGSTER / DLT defaults
 # =============================================================================
+
+# Dagster Components (1.13+) — auto-discover the 5 KCG Components from
+# orchestration/components/. Without this section, `dg list components`
+# returns 0 (was the failure mode for the entire 5-layer DAG system).
+# The canonical home is orchestration.components.* (post-v7 flattened).
+[tool.dg]
+registry_modules = ["orchestration.components"]
+
 [tool.dlt]
 destination = "duckdb"
 
