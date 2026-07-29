@@ -531,8 +531,8 @@ description = "Run the sruth-browser pytest suite (4 test files + 1 conformant _
 run = "uv run pytest bonneagar/stacks/browser/tests/"
 
 [tasks."cic:stack-doctor"]
-description = "Validate all 94 Docker Compose stacks under bonneagar/stacks/ against the GOLD_STANDARD pattern"
-run = "uv run python -m cianfhoghlaim.stacks.cli check oideachais"
+description = "Validate all 89 Docker Compose stacks under bonneagar/stacks/ against the 6-file GOLD_STANDARD pattern (the canonical CI gate; was 'cic:stack-doctor:validate 94 stacks' pre-v7)"
+run = "bash scripts/stack-doctor.sh ${@:-}"
 
 # Per-package test runners
 [tasks."test:codeolas"]
@@ -805,6 +805,10 @@ run = "uv run python -c \"from motherduck import BIEP_DIVES; [print(' -', d.name
 [tasks."motherduck:list-flights"]
 description = "List all BIEP v3 Flights from flights/config.yaml"
 run = "uv run python -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
+
+[tasks."bring-up:smoke-test"]
+description = "5-step bring-up smoke test for a fresh operator (per bonneagar/README.md 'Quick start' section)"
+run = "bash scripts/bring-up-smoke-test.sh"
 
 [tasks."biep:v3:smoke-test"]
 description = "Week 4 BIEP v3 acceptance gate smoke test (verifies the 5 gates from 2026-07-28-biep-v3-ireland-full-coverage-v1)"
