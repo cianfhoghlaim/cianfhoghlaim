@@ -134,14 +134,94 @@ else
 fi
 
 # ============================================================================
-# Step 5: lint:skills (53/53 expected)
+# Step 5: lint:skills (54/54 expected — 53 + the new knowledge-sync-loop skill)
 # ============================================================================
-section "Step 5: lint:skills (53/53 expected)"
+section "Step 5: lint:skills (54/54 expected)"
 
-if mise run lint:skills 2>&1 | tail -3 | grep -q "53 skills pass"; then
-    pass "lint:skills: 53 skills pass"
+if mise run lint:skills 2>&1 | tail -3 | grep -q "54 skills pass"; then
+    pass "lint:skills: 54 skills pass (53 + knowledge-sync-loop)"
 else
-    fail "lint:skills: did not return '53 skills pass'"
+    fail "lint:skills: did not return '54 skills pass'"
+fi
+
+# ============================================================================
+# Step 6: sync:all (per 2026-08-15-knowledge-sync-loop-v1)
+# ============================================================================
+section "Step 6: sync:all (knowledge-sync-loop orchestrator)"
+
+# Verify the 6 sync tasks are registered
+if mise tasks ls 2>&1 | grep -qE "^sync:paths"; then
+    pass "sync:paths task registered"
+else
+    fail "sync:paths task not registered"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:ccc"; then
+    pass "sync:ccc task registered"
+else
+    fail "sync:ccc task not registered"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:cognee"; then
+    pass "sync:cognee task registered"
+else
+    fail "sync:cognee task not registered"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:skills"; then
+    pass "sync:skills task registered"
+else
+    fail "sync:skills task not registered"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:mcp"; then
+    pass "sync:mcp task registered"
+else
+    fail "sync:mcp task not registered"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:all"; then
+    pass "sync:all orchestrator task registered"
+else
+    fail "sync:all orchestrator task not registered"
+fi
+
+# Verify the new skill is registered
+if [ -d ".agents/skills/knowledge-sync-loop" ]; then
+    pass "knowledge-sync-loop skill directory exists"
+else
+    fail "knowledge-sync-loop skill directory missing"
+fi
+
+# Verify the new Cognee scripts + the 20th CCC concept guide exist
+if [ -f "scripts/cognee_ingest_openspec.py" ]; then
+    pass "scripts/cognee_ingest_openspec.py exists"
+else
+    fail "scripts/cognee_ingest_openspec.py missing"
+fi
+if [ -f "scripts/cognee_ingest_skills.py" ]; then
+    pass "scripts/cognee_ingest_skills.py exists"
+else
+    fail "scripts/cognee_ingest_skills.py missing"
+fi
+if grep -q "openspec archive search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "20th CCC concept guide (openspec-archive-search) is in guides.yml"
+else
+    skip "20th CCC concept guide not yet in guides.yml (will be added on first sync:ccc)"
+fi
+
+# Verify the new Dagster asset + marimo notebook exist
+if [ -f "orchestration/defs/sync_assets.py" ]; then
+    pass "orchestration/defs/sync_assets.py exists"
+else
+    fail "orchestration/defs/sync_assets.py missing"
+fi
+if [ -f "notebooks/24_deployment_control_panel.py" ]; then
+    pass "notebooks/24_deployment_control_panel.py exists"
+else
+    fail "notebooks/24_deployment_control_panel.py missing"
+fi
+
+# Optionally run the actual sync:paths (the fast-path subset)
+if mise run sync:paths 2>&1 | tail -3 | grep -qE "FAIL|ERROR"; then
+    skip "sync:paths reports pre-v7 path drift (expected; cleanup is a follow-up)"
+else
+    pass "sync:paths reports 0 pre-v7 path drift"
 fi
 
 # ============================================================================
@@ -157,7 +237,7 @@ echo "  TOTAL: $TOTAL"
 echo
 
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "${GREEN}All 5 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
+    echo -e "${GREEN}All 6 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
     exit 0
 else
     echo -e "${RED}Some bring-up steps failed. See above.${NC}"

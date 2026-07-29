@@ -428,3 +428,27 @@
       `deployment-control-panel`)
 - [ ] A.4 Open a follow-up issue for any Phase with remaining tasks
       (per the AGENTS.md "Landing the Plane" rule)
+## Phase 10 — Integration with the knowledge-sync-loop (knowledge-sync-loop-v1)
+
+> **Added in the 2026-08-15-knowledge-sync-loop-v1 change (Change B).**
+> Makes the deployment control panel the canonical "operator's eye"
+> on the repo's knowledge state. The model-registry change becomes the
+> **first consumer** of the sync reports.
+
+- [ ] 10.1 Verify `notebooks/24_deployment_control_panel.py` renders the
+      5 sync layer statuses + the 14 MCP servers + the 54+ skills
+      from the latest `stedding/sync-reports/all-{date}.md`
+- [ ] 10.2 Verify `orchestration/defs/sync_assets.py` parses + the
+      `sync_health` asset emits the 5 metadata keys (paths_sync_time,
+      ccc_chunk_count, cognee_cluster_count, skill_pass_rate,
+      mcp_server_count_healthy) + the 2 per-layer dictionaries
+- [ ] 10.3 Verify the new `sync_report_sensor` fires on new
+      `stedding/sync-reports/all-*.md` files
+- [ ] 10.4 Verify `mise run lint:skills` still reports 54 skills pass
+      (53 + the new `knowledge-sync-loop` skill)
+- [ ] 10.5 Quality gate: `openspec validate
+      2026-08-15-knowledge-sync-loop-v1 --strict` passes
+- [ ] 10.6 Quality gate: `openspec validate
+      2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1 --strict`
+      passes (after the spec delta is added)
+
