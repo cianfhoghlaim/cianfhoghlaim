@@ -12,7 +12,7 @@
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"lakehouse-pipeline-demo-ibis-first-bunchloch-local\">Lakehouse Pipeline Demo (ibis-first, bunchloch-local)</h1>\n<span class=\"paragraph\">The full local data plane, end-to-end, with <strong>ibis</strong> as the\ncanonical entrypoint (per the\n<a href=\".agents/skills/ibis/SKILL.md\">ibis skill</a> \u2014 <em>the KCG-preferred\nanalytics layer</em>).</span>\n<span class=\"paragraph\">The notebook executes in three steps:</span>\n<ol>\n<li><strong>Connect</strong> \u2014 <code>ibis.duckdb.connect()</code> to the local DuckLake catalog\n   on <code>lakehouse-postgres</code>; <code>ibis.lancedb.connect()</code> to the Lance\n   namespace sidecar at <code>rest://lakehouse-lance-namespace:8182</code>.</li>\n<li><strong>Smoke</strong> \u2014 list 6 tables, verify the <code>lakehouse_oideachais</code> schema\n   is queryable.</li>\n<li><strong>Preview</strong> \u2014 read the top of the empty BIEP tables.</li>\n</ol></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"lakehouse-pipeline-demo-ibis-first-bunchloch-local\">Lakehouse Pipeline Demo (ibis-first, bunchloch-local)</h1>\n<span class=\"paragraph\">The full local data plane, end-to-end, with <strong>ibis</strong> as the\ncanonical entrypoint (per the\n<a href=\".agents/skills/ibis/SKILL.md\">ibis skill</a> \u2014 <em>the KCG-preferred\nanalytics layer</em>).</span>\n<span class=\"paragraph\">The notebook executes in three steps:</span>\n<ol>\n<li><strong>Connect</strong> \u2014 <code>ibis.duckdb.connect()</code> to the local DuckLake catalog\n   on <code>lakehouse-postgres</code>; <code>ibis.lancedb.connect()</code> to the Lance\n   namespace sidecar at <code>rest://lakehouse-lance-namespace:8182</code>.</li>\n<li><strong>Smoke</strong> \u2014 list 6 tables, verify the <code>lakehouse_cianfhoghlaim</code> schema\n   is queryable.</li>\n<li><strong>Preview</strong> \u2014 read the top of the empty BIEP tables.</li>\n</ol></span>"
           }
         }
       ],
@@ -58,7 +58,7 @@
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-2-list-the-biep-tables-against-the-local-lakekeeper\">Step 2 \u2014 List the BIEP tables (against the local Lakekeeper)</h2>\n<span class=\"paragraph\">The 6 BIEP subject namespaces live in the <code>lakehouse_oideachais</code>\nDuckLake catalog and are mirrored as Iceberg tables in Lakekeeper.\nEach subject has 4 tables \u2014 one per (level \u00d7 language).</span></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-2-list-the-biep-tables-against-the-local-lakekeeper\">Step 2 \u2014 List the BIEP tables (against the local Lakekeeper)</h2>\n<span class=\"paragraph\">The 6 BIEP subject namespaces live in the <code>lakehouse_cianfhoghlaim</code>\nDuckLake catalog and are mirrored as Iceberg tables in Lakekeeper.\nEach subject has 4 tables \u2014 one per (level \u00d7 language).</span></span>"
           }
         }
       ],

@@ -1,21 +1,21 @@
 name: frontend
 
 services:
-  oideachais-web:
+  cianfhoghlaim-web:
     env_file:
       - .env
     develop:
       watch:
         - action: rebuild
-          path: ../../../../oideachais/web/apps/web/src
+          path: ../../../../cianfhoghlaim/web/apps/web/src
 
-  oideachais-api:
+  cianfhoghlaim-api:
     env_file:
       - .env
     develop:
       watch:
         - action: rebuild
-          path: ../../../../oideachais/web/apps/api/src
+          path: ../../../../cianfhoghlaim/web/apps/api/src
 
   tuatha-ui:
     env_file:

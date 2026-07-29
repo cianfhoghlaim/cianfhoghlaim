@@ -38,13 +38,13 @@ services:
       # startup; litellm alias names like "embedding" or "embedding-curriculum"
       # are not tiktoken-recognizable).
       EMBEDDING_MODEL: ${COGNEE_EMBEDDING_MODEL:-openai/text-embedding-3-small}
-      COGNEE_DATABASES: oideachais.aistear,oideachais.primary,oideachais.junior_cycle,oideachais.senior_cycle,oideachais.tertiary,oideachais.cross_stage
+      COGNEE_DATABASES: cianfhoghlaim.education.aistear,cianfhoghlaim.education.primary,cianfhoghlaim.education.junior_cycle,cianfhoghlaim.education.senior_cycle,cianfhoghlaim.education.tertiary,cianfhoghlaim.education.cross_stage
       COGNEE_STORAGE: postgresql
       COGNEE_POSTGRES_HOST: cognee-postgres
       COGNEE_POSTGRES_PORT: "5432"
       COGNEE_POSTGRES_USER: cognee
       COGNEE_POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
-      COGNEE_POSTGRES_DB: cognee_oideachais
+      COGNEE_POSTGRES_DB: cognee_cianfhoghlaim
       VECTOR_DB_PROVIDER: pgvector
       # Unified provider uses the same Postgres for both relational and graph
       # (avoids the need for a separate Neo4j / FalkorDB instance).
@@ -52,7 +52,7 @@ services:
       DB_PROVIDER: postgres
       DB_HOST: cognee-postgres
       DB_PORT: "5432"
-      DB_NAME: cognee_oideachais
+      DB_NAME: cognee_cianfhoghlaim
       DB_USERNAME: cognee
       DB_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
       GRAPH_DATABASE_PROVIDER: postgres
@@ -102,9 +102,9 @@ services:
     environment:
       POSTGRES_USER: cognee
       POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
-      POSTGRES_DB: cognee_oideachais
+      POSTGRES_DB: cognee_cianfhoghlaim
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "cognee", "-d", "cognee_oideachais"]
+      test: ["CMD", "pg_isready", "-U", "cognee", "-d", "cognee_cianfhoghlaim"]
       interval: 5s
       timeout: 3s
       retries: 10

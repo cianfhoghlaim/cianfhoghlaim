@@ -31,7 +31,7 @@ start() {
   nohup bun dev --port 3003 > "$CROILAR_WEB_LOG" 2>&1 &
   echo $! > /tmp/croilar-web.pid
 
-  echo "==> Starting croilar-portal on :3002 (avoids 3000 conflict with oideachais-frontend)"
+  echo "==> Starting croilar-portal on :3002 (avoids 3000 conflict with cianfhoghlaim-frontend)"
   cd "$ROOT/croilar/apps/portal"
   nohup bun dev --port 3002 > "$CROILAR_PORTAL_LOG" 2>&1 &
   echo $! > /tmp/croilar-portal.pid

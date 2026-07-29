@@ -1,7 +1,7 @@
 """Thin wrapper around ``BackendRouter`` for the ``author-archive-v1`` pipeline.
 
 The :class:`ScrapeStrategist` is the single entry point used by the
-oideachais Dagster assets. It:
+cianfhoghlaim Dagster assets. It:
 
 - picks the cheapest viable backend for each call (Crawl4AI for bulk
   scraping, Firecrawl only for pre-research and anti-bot pages)

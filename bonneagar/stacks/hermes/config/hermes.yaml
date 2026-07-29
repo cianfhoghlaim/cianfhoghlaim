@@ -151,7 +151,7 @@ workspace:
   curated_skills:
     - dagster
     - dlt
-    - oideachais-baml-schemas
+    - cianfhoghlaim-baml-schemas
     - ccc
     - browser-tools
     - litellm

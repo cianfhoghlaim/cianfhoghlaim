@@ -113,7 +113,7 @@ pip install --extra-index-url https://git.cianfhoghlaim.ie/api/packages/cianfhog
 For Cianfhoghlaim packages, use the `cianfhoghlaim-` prefix:
 
 - `cianfhoghlaim-shared` - Shared utilities
-- `cianfhoghlaim-oideachais` - Education pipeline
+- `cianfhoghlaim-core` - Education pipeline
 - `cianfhoghlaim-tuath` - Game/narrative system
 - `cianfhoghlaim-crypteolas` - Crypto intelligence
 

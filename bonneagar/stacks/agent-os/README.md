@@ -43,7 +43,7 @@ This stack is deployed via Komodo on arm1-oci. Komodo syncs from the Forgejo rep
 | `AGNO_DEFAULT_MODEL` | No | Default Agno model | `gpt-4o` |
 | `AGNO_CLAUDE_MODEL` | No | Claude model | `claude-sonnet-4-20250514` |
 | `AGENT_OS_SECRET_KEY` | Yes | Shared A2A secret | — |
-| `OIDEACHAIS_DB_URL` | No | Oideachais DB URL | `sqlite:///./storage/oideachais.db` |
+| `CIANFHGHLLAIM_DB_URL` | No | Cianfhoghlaim DB URL | `sqlite:///./storage/cianfhoghlaim.db` |
 | `CRYPTEOLAS_DB_URL` | No | Crypteolas DB URL | `sqlite:///./storage/crypteolas.db` |
 | `BROWSER_DB_URL` | No | Browser DB URL | `sqlite:///./storage/browser.db` |
 | `CROILAR_DB_URL` | No | Croilar DB URL | `sqlite:///./storage/croilar.db` |
@@ -58,7 +58,7 @@ This stack is deployed via Komodo on arm1-oci. Komodo syncs from the Forgejo rep
 | `AGNO_DEBUG` | No | Enable Agno debug mode | `false` |
 
 ## Access
-- **URLs**: `https://agents.oideachais.cianfhoghlaim.ie`, `https://agents.crypteolas.cianfhoghlaim.ie`, `https://agents.browser.cianfhoghlaim.ie`, `https://agents.croilar.cianfhoghlaim.ie`
+- **URLs**: `https://agents.cianfhoghlaim.cianfhoghlaim.ie`, `https://agents.crypteolas.cianfhoghlaim.ie`, `https://agents.browser.cianfhoghlaim.ie`, `https://agents.croilar.cianfhoghlaim.ie`
 - **Internal ports**: 7777 per agent (mapped to host ports 7771-7774)
 - **Auth**: Shared secret key (`AGENT_OS_SECRET_KEY`) + Pangolin Member role
 

@@ -1,11 +1,11 @@
 # =============================================================================
 # OIDEACHAIS-BUNCHLOCH — Cianfhoghlaim Education Platform on MacBook M4
 # =============================================================================
-# CANONICAL komodo stack for the oideachais deployment.
+# CANONICAL komodo stack for the cianfhoghlaim deployment.
 #
-# Replaces the prior /oideachais/compose.yaml + sidecar.yaml + pangolin.yaml
+# Replaces the prior /oideachais/compose.yaml + sidecar.yaml + pangolin.yaml (was pre-v7)
 # + blueprint.yaml quartet with a single, komodo-managed stack at
-# bonneagar/stacks/oideachais/.
+# bonneagar/stacks/cianfhoghlaim/.
 #
 # Architecture:
 #   bunchloch (MacBook M4 Max) hosts the three app containers:
@@ -20,27 +20,27 @@
 #   Routing: Pocket ID SSO on web/api/dagster, API-key auth on api,
 #     VPN-only on dagster — see ../pangolin.yaml.
 #
-# Procedure: deploy-oideachais-bunchloch (4 stages)
+# Procedure: deploy-cianfhoghlaim-bunchloch (4 stages)
 # =============================================================================
 
 [[stack]]
-name = "oideachais-bunchloch"
-description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA. Merged canonical stack at bonneagar/stacks/oideachais/."
+name = "cianfhoghlaim-bunchloch"
+description = "Cianfhoghlaim education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA. Merged canonical stack at bonneagar/stacks/cianfhoghlaim/."
 tags = [
   "host:bunchloch",
   "tier:development",
   "type:education",
   "pipeline:sruth",
-  "stack:oideachais",
+  "stack:cianfhoghlaim",
   "merged:canonical",
 ]
 
 [stack.config]
 server_id = "bunchloch"
-run_directory = "/etc/komodo/oideachais"
+run_directory = "/etc/komodo/cianfhoghlaim"
 file_paths = [
-  "bonneagar/stacks/oideachais/compose.yaml",
-  "bonneagar/stacks/oideachais/sidecar.yaml",
+  "bonneagar/stacks/cianfhoghlaim/compose.yaml",
+  "bonneagar/stacks/cianfhoghlaim/sidecar.yaml",
 ]
 environment = """
 DAGSTER_PORT=3335

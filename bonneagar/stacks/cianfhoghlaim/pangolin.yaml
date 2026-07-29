@@ -1,18 +1,18 @@
 # =============================================================================
 # Oideachais — Pangolin Traefik routing (MERGED canonical)
 # =============================================================================
-# Replaces both /oideachais/pangolin.yaml and the prior
-# /infrastructure/stacks/oideachais/pangolin.yaml.
+# Replaces both /cianfhoghlaim/pangolin.yaml and the prior
+# /infrastructure/stacks/cianfhoghlaim/pangolin.yaml.
 #
 # Routes:
-#   oideachais.cianfhoghlaim.ie     → frontend (Pocket ID SSO)
-#   api.oideachais.cianfhoghlaim.ie → api      (Pocket ID SSO, API key, CORS)
-#   dagster.oideachais.cianfhoghlaim.ie → dagster (Pocket ID SSO, VPN-only)
+#   cianfhoghlaim.cianfhoghlaim.ie     → frontend (Pocket ID SSO)
+#   api.cianfhoghlaim.cianfhoghlaim.ie → api      (Pocket ID SSO, API key, CORS)
+#   dagster.cianfhoghlaim.cianfhoghlaim.ie → dagster (Pocket ID SSO, VPN-only)
 #   agent.os.cianfhoghlaim.ie      → agent_os (Agno AgentOS, Pocket ID SSO, VPN-only)
 #   adk.cianfhoghlaim.ie           → adk_agents (Google ADK, Pocket ID SSO, VPN-only)
 #
 # This file is consumed by Traefik labels on the production compose. The
-# komodo deploy procedure (deploy-oideachais-bunchloch) applies the
+# komodo deploy procedure (deploy-cianfhoghlaim-bunchloch) applies the
 # rich Pocket ID + VPN-only resources via the Pangolin Integration API.
 # =============================================================================
 
@@ -21,10 +21,10 @@ http:
     # -------------------------------------------------------------------------
     # PUBLIC — TanStack Start SPA (Pocket ID SSO via TinyAuth)
     # -------------------------------------------------------------------------
-    oideachais-web:
+    cianfhoghlaim-web:
       entryPoints: [https]
-      rule: "Host(`oideachais.cianfhoghlaim.ie`)"
-      service: oideachais-web
+      rule: "Host(`cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-web
       tls: { certResolver: letsencrypt }
       middlewares: [tinyauth]
       priority: 100
@@ -32,21 +32,21 @@ http:
     # -------------------------------------------------------------------------
     # PUBLIC — FastAPI AG-UI Streaming Backend (Pocket ID + API key + CORS)
     # -------------------------------------------------------------------------
-    oideachais-api:
+    cianfhoghlaim-api:
       entryPoints: [https]
-      rule: "Host(`api.oideachais.cianfhoghlaim.ie`)"
-      service: oideachais-api
+      rule: "Host(`api.cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-api
       tls: { certResolver: letsencrypt }
-      middlewares: [tinyauth, api-ratelimit, oideachais-cors]
+      middlewares: [tinyauth, api-ratelimit, cianfhoghlaim-cors]
       priority: 100
 
     # -------------------------------------------------------------------------
     # INTERNAL — Dagster UI (Pocket ID SSO, VPN-only)
     # -------------------------------------------------------------------------
-    oideachais-dagster:
+    cianfhoghlaim-dagster:
       entryPoints: [https]
-      rule: "Host(`dagster.oideachais.cianfhoghlaim.ie`)"
-      service: oideachais-dagster
+      rule: "Host(`dagster.cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-dagster
       tls: { certResolver: letsencrypt }
       middlewares: [tinyauth, vpn-only]
       priority: 100
@@ -54,10 +54,10 @@ http:
     # -------------------------------------------------------------------------
     # INTERNAL — Agno AgentOS (Celtic Education agents, VPN-only)
     # -------------------------------------------------------------------------
-    oideachais-agent-os:
+    cianfhoghlaim-agent-os:
       entryPoints: [https]
       rule: "Host(`agent.os.cianfhoghlaim.ie`)"
-      service: oideachais-agent-os
+      service: cianfhoghlaim-agent-os
       tls: { certResolver: letsencrypt }
       middlewares: [tinyauth, vpn-only]
       priority: 100
@@ -65,51 +65,51 @@ http:
     # -------------------------------------------------------------------------
     # INTERNAL — Google ADK agents (Celtic Education multi-agent orchestrator, VPN-only)
     # -------------------------------------------------------------------------
-    oideachais-adk-agents:
+    cianfhoghlaim-adk-agents:
       entryPoints: [https]
       rule: "Host(`adk.cianfhoghlaim.ie`)"
-      service: oideachais-adk-agents
+      service: cianfhoghlaim-adk-agents
       tls: { certResolver: letsencrypt }
       middlewares: [tinyauth, vpn-only]
       priority: 100
 
   services:
-    oideachais-web:
+    cianfhoghlaim-web:
       loadBalancer:
         servers:
-          - url: "http://cianfhoghlaim-oideachais-frontend:3000"
+          - url: "http://cianfhoghlaim-cianfhoghlaim-frontend:3000"
 
-    oideachais-api:
+    cianfhoghlaim-api:
       loadBalancer:
         servers:
-          - url: "http://cianfhoghlaim-oideachais-api:8000"
+          - url: "http://cianfhoghlaim-cianfhoghlaim-api:8000"
 
-    oideachais-dagster:
+    cianfhoghlaim-dagster:
       loadBalancer:
         servers:
-          - url: "http://cianfhoghlaim-oideachais-dagster:3000"
+          - url: "http://cianfhoghlaim-cianfhoghlaim-dagster:3000"
 
-    oideachais-agent-os:
+    cianfhoghlaim-agent-os:
       loadBalancer:
         servers:
-          - url: "http://cianfhoghlaim-oideachais-agent-os:7777"
+          - url: "http://cianfhoghlaim-cianfhoghlaim-agent-os:7777"
 
-    oideachais-adk-agents:
+    cianfhoghlaim-adk-agents:
       loadBalancer:
         servers:
-          - url: "http://cianfhoghlaim-oideachais-adk-agents:7778"
+          - url: "http://cianfhoghlaim-cianfhoghlaim-adk-agents:7778"
 
   middlewares:
-    # CORS for the API — lets the frontend at oideachais.cianfhoghlaim.ie
-    # call api.oideachais.cianfhoghlaim.ie directly.
-    oideachais-cors:
+    # CORS for the API — lets the frontend at cianfhoghlaim.cianfhoghlaim.ie
+    # call api.cianfhoghlaim.cianfhoghlaim.ie directly.
+    cianfhoghlaim-cors:
       headers:
         accessControlAllowMethods:
           - GET
           - POST
           - OPTIONS
         accessControlAllowOriginList:
-          - "https://oideachais.cianfhoghlaim.ie"
+          - "https://cianfhoghlaim.cianfhoghlaim.ie"
         accessControlAllowHeaders:
           - Content-Type
           - Authorization

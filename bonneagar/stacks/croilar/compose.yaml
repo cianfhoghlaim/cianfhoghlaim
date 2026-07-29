@@ -14,7 +14,7 @@ name: aleyum
 services:
   # ---------------------------------------------------------------------------
   # Postgres (bundled with croilar; used for dagster run_storage + event_log
-  # and shared with the oideachais lakehouse stack via the
+  # and shared with the cianfhoghlaim lakehouse stack via the
   # cianfhoghlaim-postgres_croilar external network)
   # ---------------------------------------------------------------------------
   postgres:

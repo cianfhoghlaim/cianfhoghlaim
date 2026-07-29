@@ -29,7 +29,7 @@ services:
       - stack
 
   # 4 agent services all consume the same shared secrets (LLM keys + AGENT_OS_SECRET_KEY)
-  oideachais-agentos:
+  cianfhoghlaim-agentos:
     depends_on:
       locket:
         condition: service_healthy

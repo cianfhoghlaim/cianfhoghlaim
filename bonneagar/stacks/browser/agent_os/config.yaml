@@ -68,7 +68,7 @@ a2a:
   enabled: true
   require_service_auth: false
   allowed_services:
-    - oideachais
+    - cianfhoghlaim
     - crypteolas
     - aleyum
 

@@ -1,0 +1,18 @@
+# =============================================================================
+# OCR-ROUTER - Pangolin auto-discovery labels
+# =============================================================================
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+#
+# Single private route (TinyAuth + secure-headers middleware, Pocket ID
+# passkey-gated). The router is internal-use primarily — the BIEP v3
+# Dagster pipelines call it via the in-network URL (http://ocr-router:8090);
+# the Pangolin route exists for operator-driven debugging.
+# =============================================================================
+
+services:
+  ocr-router:
+    labels:
+      - "pangolin.resource.name=OCR Router"
+      - "pangolin.resource.domain=ocr-router.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://ocr-router:8090"
+      - "pangolin.resource.middlewares=tinyauth,secure-headers"

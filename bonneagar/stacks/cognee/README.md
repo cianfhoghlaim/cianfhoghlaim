@@ -142,12 +142,12 @@ cross-stage synthesis:
 
 | Dataset | Stage | Source |
 |:--|:--|:--|
-| `oideachais.aistear` | Early childhood (0-6) | Aistear framework PDFs |
-| `oideachais.primary` | Primary (4-12) | NCCA primary curriculum |
-| `oideachais.junior_cycle` | Junior cycle (12-16) | NCCA junior cycle spec |
-| `oideachais.senior_cycle` | Senior cycle (16-19) | NCCA leaving cert spec |
-| `oideachais.tertiary` | Tertiary / FET | QQI awards + HE frameworks |
-| `oideachais.cross_stage` | Bridges between stages | Computed cross-stage edges (BRIDGES_TO, PREPARES_FOR, etc.) |
+| `cianfhoghlaim.education.aistear` | Early childhood (0-6) | Aistear framework PDFs |
+| `cianfhoghlaim.education.primary` | Primary (4-12) | NCCA primary curriculum |
+| `cianfhoghlaim.education.junior_cycle` | Junior cycle (12-16) | NCCA junior cycle spec |
+| `cianfhoghlaim.education.senior_cycle` | Senior cycle (16-19) | NCCA leaving cert spec |
+| `cianfhoghlaim.education.tertiary` | Tertiary / FET | QQI awards + HE frameworks |
+| `cianfhoghlaim.education.cross_stage` | Bridges between stages | Computed cross-stage edges (BRIDGES_TO, PREPARES_FOR, etc.) |
 
 The 8 cross-stage edge types are enumerated in `blueprint.yaml`.
 

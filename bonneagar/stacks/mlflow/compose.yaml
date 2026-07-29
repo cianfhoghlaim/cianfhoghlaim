@@ -58,7 +58,7 @@ services:
       MLFLOW_S3_IGNORE_TLS: "true"
       # v3.5.0+ security middleware (mandatory when binding 0.0.0.0)
       MLFLOW_ALLOWED_HOSTS: "localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie"
-      MLFLOW_CORS_ALLOWED_ORIGINS: "https://oideachais.cianfhoghlaim.ie,http://localhost:3335"
+      MLFLOW_CORS_ALLOWED_ORIGINS: "https://cianfhoghlaim.cianfhoghlaim.ie,http://localhost:3335"
       # OpenTelemetry → logfire collector (fans out to BOTH logfire cloud
       # AND langfuse). mlflow 3.x exposes native OTel via `mlflow.tracing`.
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
@@ -78,7 +78,7 @@ services:
       - --allowed-hosts
       - "localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie"
       - --cors-allowed-origins
-      - "https://oideachais.cianfhoghlaim.ie,http://localhost:3335"
+      - "https://cianfhoghlaim.cianfhoghlaim.ie,http://localhost:3335"
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
     # deploy-mlflow-bunchloch.toml -- see the file header.
     depends_on: []

@@ -42,7 +42,7 @@ logfire.configure(
 logfire.info("Extracted {n} learning outcomes", n=42)
 ```
 
-This is what `sruth/oideachais/observability/logfire_config.py` does today.
+This is what `sruth/cianfhoghlaim/observability/logfire_config.py` does today.
 The SDK sends HTTPS directly to Logfire cloud — the local collector is
 bypassed.
 

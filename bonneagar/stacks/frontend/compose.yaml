@@ -4,15 +4,15 @@ services:
   # ---------------------------------------------------------------------------
   # OIDEACHAIS-WEB (TanStack Start + Convex)
   # ---------------------------------------------------------------------------
-  oideachais-web:
+  cianfhoghlaim-web:
     build:
-      context: ../../../../sruth/oideachais/web/apps/web
+      context: ../../../../sruth/cianfhoghlaim/web/apps/web
       dockerfile: Dockerfile
-    image: ghcr.io/cianfhoghlaim/oideachais-web:0.1.0
-    container_name: oideachais-web
+    image: ghcr.io/cianfhoghlaim/cianfhoghlaim-web:0.1.0
+    container_name: cianfhoghlaim-web
     restart: unless-stopped
     ports:
-      - "${OIDEACHAIS_WEB_PORT:-3001}:3001"
+      - "${CIANFHGHLLAIM_WEB_PORT:-3001}:3001"
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://convex-backend:3210}
@@ -31,15 +31,15 @@ services:
   # ---------------------------------------------------------------------------
   # OIDEACHAIS-API (Hono + oRPC + Better Auth)
   # ---------------------------------------------------------------------------
-  oideachais-api:
+  cianfhoghlaim-api:
     build:
-      context: ../../../../sruth/oideachais/web/apps/api
+      context: ../../../../sruth/cianfhoghlaim/web/apps/api
       dockerfile: Dockerfile
-    image: ghcr.io/cianfhoghlaim/oideachais-api:0.1.0
-    container_name: oideachais-api
+    image: ghcr.io/cianfhoghlaim/cianfhoghlaim-api:0.1.0
+    container_name: cianfhoghlaim-api
     restart: unless-stopped
     ports:
-      - "${OIDEACHAIS_API_PORT:-8787}:8787"
+      - "${CIANFHGHLLAIM_API_PORT:-8787}:8787"
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: "8787"

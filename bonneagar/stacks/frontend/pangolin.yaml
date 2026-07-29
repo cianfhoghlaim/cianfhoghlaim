@@ -4,23 +4,23 @@
 # Pocket ID OIDC authentication. Service is per-subdomain, not shared.
 http:
   routers:
-    oideachais-web:
-      rule: "Host(`oideachais.cianfhoghlaim.ie`)"
-      service: oideachais-web
+    cianfhoghlaim-web:
+      rule: "Host(`cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-web
       entryPoints:
         - websecure
       tls: {}
       middlewares:
         - oidc-auth
 
-    oideachais-api:
-      rule: "Host(`oideachais-api.cianfhoghlaim.ie`)"
-      service: oideachais-api
+    cianfhoghlaim-api:
+      rule: "Host(`cianfhoghlaim-api.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-api
       entryPoints:
         - websecure
       tls: {}
       middlewares:
-        - cors-oideachais
+        - cors-cianchfhoghlaim
 
     tuatha-ui:
       rule: "Host(`tuath.cianfhoghlaim.ie`)"
@@ -48,14 +48,14 @@ http:
         - oidc-auth
 
   services:
-    oideachais-web:
+    cianfhoghlaim-web:
       loadBalancer:
         servers:
-          - url: "http://oideachais-web:3001"
-    oideachais-api:
+          - url: "http://cianfhoghlaim-web:3001"
+    cianfhoghlaim-api:
       loadBalancer:
         servers:
-          - url: "http://oideachais-api:8787"
+          - url: "http://cianfhoghlaim-api:8787"
     tuatha-ui:
       loadBalancer:
         servers:
@@ -78,7 +78,7 @@ http:
           - "X-Forwarded-User"
           - "X-Forwarded-Groups"
           - "X-Forwarded-Email"
-    cors-oideachais:
+    cors-cianchfhoghlaim:
       headers:
         accessControlAllowMethods:
           - GET
@@ -89,8 +89,8 @@ http:
         accessControlAllowHeaders:
           - "*"
         accessControlAllowOriginList:
-          - "https://oideachais.cianfhoghlaim.ie"
-          - "https://oideachais-api.cianfhoghlaim.ie"
+          - "https://cianfhoghlaim.cianfhoghlaim.ie"
+          - "https://cianfhoghlaim-api.cianfhoghlaim.ie"
     cors-tuatha:
       headers:
         accessControlAllowMethods:

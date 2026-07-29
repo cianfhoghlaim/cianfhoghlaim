@@ -191,7 +191,7 @@ description = "Letta stateful agent memory layer on :8283 (uses lakehouse-postgr
 # Dependency: dagster depends on lakehouse (Stage 1) + litellm (Stage 3).
 # motherduck is a SaaS (motherduck.com) — no container is deployed; the
 # "bring-up" step validates the MOTHERDUCK_TOKEN env var and the
-# md:oideachais database reachability.
+# md:cianfhoghlaim database reachability.
 # garage is a sub-service of the lakehouse stack — verified separately.
 # -----------------------------------------------------------------------------
 
@@ -204,7 +204,7 @@ description = "Dagster orchestration daemon + webserver on :3335 (uses lakehouse
 
 [[procedure.config.stages.executions]]
 execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "if [ -n \"$MOTHERDUCK_TOKEN\" ]; then curl -fsS --max-time 10 -H \"Authorization: Bearer $MOTHERDUCK_TOKEN\" https://api.motherduck.com/v1/databases 2>&1 | head -3 && echo OK_MOTHERDUCK || echo INFO_MOTHERDUCK_SAAS_REFERENCE_ONLY; else echo INFO_MOTHERDUCK_SAAS_NO_TOKEN_SET; fi" } }
-description = "Validate the MotherDuck SaaS connection (no container; verifies MOTHERDUCK_TOKEN env var and md:oideachais reachability)."
+description = "Validate the MotherDuck SaaS connection (no container; verifies MOTHERDUCK_TOKEN env var and md:cianfhoghlaim reachability)."
 
 [[procedure.config.stages.executions]]
 execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "[ -n \"$(docker ps --format '{{.Names}}' | grep -x 'lakehouse-garage')\" ] && docker exec lakehouse-garage /garage -c /etc/garage.toml node id 2>&1 | head -3" } }

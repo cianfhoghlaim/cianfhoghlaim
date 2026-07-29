@@ -30,7 +30,7 @@ services:
     # `locket` repo at https://github.com/cianfhoghlaim/locket
     # (private). Update this tag when a new release is published.
     image: ghcr.io/bpbradley/locket:infisical
-    container_name: cianfhoghlaim-oideachais-locket
+    container_name: cianfhoghlaim-cianfhoghlaim-locket
     restart: unless-stopped
     env_file:
       - ./secrets.env

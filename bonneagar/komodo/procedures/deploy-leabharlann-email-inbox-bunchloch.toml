@@ -7,7 +7,7 @@
 #   1. Mailcow self-hosted email server (15 containers + the
 #      mailcow-export companion) on bunchloch
 #   2. Lakehouse (Garage S3 + Postgres + Lakekeeper + Lance NS) —
-#      shared with oideachais
+#      shared with cianfhoghlaim
 #   3. Oideachais ADK agents + the 5 new leabharlann_inbox_*
 #      Dagster assets (which read the MBOX exports from
 #      /srv/mailcow-exports/)
@@ -18,7 +18,7 @@
 #   bunchloch (MacBook M4 Max) hosts:
 #     - mailcow-dockerized-bunchloch   (15 + 1 containers, ~3 GB)
 #     - lakehouse-oci                  (Garage + Postgres + Lakekeeper)
-#     - oideachais-bunchloch           (Dagster + FastAPI + TanStack +
+#     - cianfhoghlaim-bunchloch           (Dagster + FastAPI + TanStack +
 #                                       ADK agents including the new
 #                                       email_triage agent on :7778)
 #   arm1-oci hosts:
@@ -36,7 +36,7 @@
 [[procedure]]
 name = "deploy-leabharlann-email-inbox-bunchloch"
 server_id = "bunchloch"
-description = "Deploy the end-to-end leabharlann email inbox pipeline to bunchloch (MacBook M4) — mailcow stack → lakehouse → oideachais ADK + Dagster → Pangolin routes → health checks (6 stages)"
+description = "Deploy the end-to-end leabharlann email inbox pipeline to bunchloch (MacBook M4) — mailcow stack → lakehouse → cianfhoghlaim ADK + Dagster → Pangolin routes → health checks (6 stages)"
 
 # =============================================================================
 # STAGE 0: Prerequisites
@@ -68,7 +68,7 @@ execution = { type = "RunProcedure", params = { procedure = "deploy-mailcow-dock
 # The data plane. The new leabharlann_inbox_research_links asset
 # needs the existing leabharlann_gemini_deep_research_raw LanceDB
 # table; the leabharlann_inbox_baml_classify + thread_extract
-# assets write to the ducklake_oideachais.inbox_* tables.
+# assets write to the ducklake_cianfhoghlaim.inbox_* tables.
 # -----------------------------------------------------------------------------
 
 [[procedure.config.stages]]
@@ -87,10 +87,10 @@ execution = { type = "DeployStack", params = { stack = "lakehouse-oci" } }
 # -----------------------------------------------------------------------------
 
 [[procedure.config.stages]]
-name = "oideachais-adk-dagster"
+name = "cianfhoghlaim-adk-dagster"
 
 [[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "oideachais-bunchloch" } }
+execution = { type = "DeployStack", params = { stack = "cianfhoghlaim-bunchloch" } }
 
 [[procedure.config.stages.executions]]
 execution = { type = "RunBuild", params = { build = "leabharlann-inbox-register-adk-agent" } }
@@ -99,7 +99,7 @@ execution = { type = "RunBuild", params = { build = "leabharlann-inbox-register-
 # STAGE 4: Pangolin Routes
 # =============================================================================
 # Already applied by stage 1 of the mailcow procedure, but re-applied
-# idempotently here in case stage 3 (oideachais) redeployed.
+# idempotently here in case stage 3 (cianfhoghlaim) redeployed.
 # -----------------------------------------------------------------------------
 
 [[procedure.config.stages]]
@@ -109,7 +109,7 @@ name = "pangolin-routes"
 execution = { type = "RunBuild", params = { build = "apply-mailcow-routes" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunBuild", params = { build = "apply-oideachais-routes" } }
+execution = { type = "RunBuild", params = { build = "apply-cianchfhoghlaim-routes" } }
 
 # =============================================================================
 # STAGE 5: Health Checks

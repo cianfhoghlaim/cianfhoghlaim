@@ -1,6 +1,6 @@
 # LanceDB — local dev override
 # ----------------------------------------------------------------------------
-# See oideachais compose.dev.yaml for the rationale (no-op locket, env_file).
+# See cianfhoghlaim compose.dev.yaml for the rationale (no-op locket, env_file).
 # ----------------------------------------------------------------------------
 
 services:

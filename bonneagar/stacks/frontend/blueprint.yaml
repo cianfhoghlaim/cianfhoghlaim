@@ -5,15 +5,15 @@
 # applied separately by the Komodo periphery runner.
 
 name: frontend
-description: Cianfhoghlaim 5 frontend workspaces (oideachais-web, oideachais-api, tuatha-ui, croilar-web, croilar-portal)
+description: Cianfhoghlaim 5 frontend workspaces (cianfhoghlaim-web, cianfhoghlaim-api, tuatha-ui, croilar-web, croilar-portal)
 server: arm1-oci
 compose:
   path: ./compose.yaml
   run_docker_tag: ghcr.io/bpbradley/locket:infisical
 resources:
-  - name: oideachais-web
+  - name: cianfhoghlaim-web
     kind: stack
-  - name: oideachais-api
+  - name: cianfhoghlaim-api
     kind: stack
   - name: tuatha-ui
     kind: stack
@@ -25,8 +25,8 @@ schedule:
   cron: "0 */6 * * *"
   auto_update: true
 links:
-  - https://oideachais.cianfhoghlaim.ie
-  - https://oideachais-api.cianfhoghlaim.ie
+  - https://cianfhoghlaim.cianfhoghlaim.ie
+  - https://cianfhoghlaim-api.cianfhoghlaim.ie
   - https://tuath.cianfhoghlaim.ie
   - https://croilar.cianfhoghlaim.ie
   - https://portal.cianfhoghlaim.ie

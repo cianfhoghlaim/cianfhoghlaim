@@ -2,13 +2,13 @@
 # AGENT-OS - Production Runtime for AI Agents
 # =============================================================================
 # Multi-service deployment for Agno AgentOS instances. 4 domains:
-#   - oideachais-agentos: Irish Education & Curriculum (port 7772)
+#   - cianfhoghlaim-agentos: Irish Education & Curriculum (port 7772)
 #   - crypteolas-agentos: DeFi Protocol Analysis        (port 7771)
 #   - browser-agentos:   Web Automation Orchestration    (port 7773)
 #   - croilar-agentos:   Croílár (Personal Portfolio + CV + Data Eng) (port 7774)
 #
 # Build contexts (post v2 restructure):
-#   oideachais  -> sruth/oideachais/data_platform/agent_os/
+#   cianfhoghlaim  -> sruth/cianfhoghlaim/data_platform/agent_os/
 #   crypteolas  -> tuatha/crypteolas/agent_os/
 #   browser     -> infrastructure/browser/agent_os/
 #   croilar     -> croilar/agent_os/  (NEW — was sruth/aleyum/agent_os/)
@@ -23,25 +23,25 @@ name: agent-os
 services:
   # ---------------------------------------------------------------------------
   # OIDEACHAIS AGENTOS - Irish Education & Curriculum
-  # Source: sruth/oideachais/data_platform/agent_os/
+  # Source: sruth/cianfhoghlaim/data_platform/agent_os/
   # ---------------------------------------------------------------------------
-  oideachais-agentos:
+  cianfhoghlaim-agentos:
     build:
-      context: ../../../sruth/oideachais
+      context: ../../../sruth/cianfhoghlaim
       dockerfile: data_platform/agent_os/Dockerfile
-    image: ghcr.io/cianfhoghlaim/agent-os-oideachais:local
-    container_name: oideachais-agentos
+    image: ghcr.io/cianfhoghlaim/agent-os-cianchfhoghlaim:local
+    container_name: cianfhoghlaim-agentos
     restart: unless-stopped
     ports:
       - "${OIDEACHAIS_PORT:-7772}:7777"
     environment:
-      AGENT_OS_SERVICE_NAME: oideachais
+      AGENT_OS_SERVICE_NAME: cianfhoghlaim
       AGENT_OS_PORT: 7777
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
-      AGENT_OS_DB_URL: ${OIDEACHAIS_DB_URL:-sqlite:///./storage/oideachais.db}
+      AGENT_OS_DB_URL: ${CIANFHGHLLAIM_DB_URL:-sqlite:///./storage/cianfhoghlaim.db}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
       BROWSER_AGENT_OS_URL: http://browser-agentos:7777
@@ -50,7 +50,7 @@ services:
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       AGNO_DEBUG: ${AGNO_DEBUG:-false}
     volumes:
-      - oideachais-storage:/app/storage
+      - cianfhoghlaim-storage:/app/storage
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
       interval: 30s
@@ -90,7 +90,7 @@ services:
       X402_NETWORK: ${X402_NETWORK:-base}
       X402_SKIP_VERIFICATION: ${X402_SKIP_VERIFICATION:-false}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
-      OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
+      OIDEACHAIS_AGENT_OS_URL: http://cianfhoghlaim-agentos:7777
       BROWSER_AGENT_OS_URL: http://browser-agentos:7777
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
@@ -137,7 +137,7 @@ services:
       STAGEHAND_ENABLED: ${STAGEHAND_ENABLED:-true}
       CRAWL4AI_ENABLED: ${CRAWL4AI_ENABLED:-true}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
-      OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
+      OIDEACHAIS_AGENT_OS_URL: http://cianfhoghlaim-agentos:7777
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
@@ -178,7 +178,7 @@ services:
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
       AGENT_OS_DB_URL: ${CROILAR_DB_URL:-sqlite:///./storage/croilar.db}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
-      OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
+      OIDEACHAIS_AGENT_OS_URL: http://cianfhoghlaim-agentos:7777
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
@@ -200,7 +200,7 @@ services:
       - cianfhoghlaim
 
 volumes:
-  oideachais-storage:
+  cianfhoghlaim-storage:
   crypteolas-storage:
   browser-storage:
   croilar-storage:

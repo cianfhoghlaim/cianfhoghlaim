@@ -7,8 +7,8 @@ independent services and routed through Pangolin + Traefik.
 
 | Service | Port | Subdomain | Stack |
 |:--|:--|:--|:--|
-| `oideachais-web` | 3001 | `oideachais.cianfhoghlaim.ie` | TanStack Start + Hono + Convex + CopilotKit + BAML |
-| `oideachais-api` | 8787 | `oideachais-api.cianfhoghlaim.ie` | Hono + oRPC + Better Auth + LiteLLM |
+| `cianfhoghlaim-web` | 3001 | `cianfhoghlaim.cianfhoghlaim.ie` | TanStack Start + Hono + Convex + CopilotKit + BAML |
+| `cianfhoghlaim-api` | 8787 | `cianfhoghlaim-api.cianfhoghlaim.ie` | Hono + oRPC + Better Auth + LiteLLM |
 | `tuatha-ui` | 3004 | `tuath.cianfhoghlaim.ie` | TanStack Start + Babylon.js + SIWE + x402 + SpacetimeDB |
 | `croilar-web` | 3003 | `croilar.cianfhoghlaim.ie` | Vite SPA + Radix + i18n (en/ga) |
 | `croilar-portal` | 3000 | `portal.cianfhoghlaim.ie` | TanStack Start + AI SDK + MCP-UI + Komodo |
@@ -16,12 +16,12 @@ independent services and routed through Pangolin + Traefik.
 ## Architecture
 
 ```
-Browser (https://oideachais.cianfhoghlaim.ie)
+Browser (https://cianfhoghlaim.cianfhoghlaim.ie)
    │
-   ├─ oideachais-web (TanStack Start SSR, port 3001)
-   │     └─ /api, /rpc, /api-reference → oideachais-api
+   ├─ cianfhoghlaim-web (TanStack Start SSR, port 3001)
+   │     └─ /api, /rpc, /api-reference → cianfhoghlaim-api
    │
-   ├─ oideachais-api (Hono + oRPC, port 8787)
+   ├─ cianfhoghlaim-api (Hono + oRPC, port 8787)
    │     ├─ /api/auth/*        → Better Auth (OIDC issuer)
    │     ├─ /rpc/*             → oRPC contract-first RPC
    │     ├─ /api-reference/*  → OpenAPI / Swagger
@@ -90,6 +90,6 @@ for port in 3001 8787 3004 3003 3000; do
 done
 
 # Health endpoints
-curl http://localhost:8787/         # oideachais-api root
+curl http://localhost:8787/         # cianfhoghlaim-api root
 curl http://localhost:3000/         # croilar-portal root
 ```

@@ -50,7 +50,7 @@ def _():
     1. **Connect** — `ibis.duckdb.connect()` to the local DuckLake catalog
        on `lakehouse-postgres`; `ibis.lancedb.connect()` to the Lance
        namespace sidecar at `rest://lakehouse-lance-namespace:8182`.
-    2. **Smoke** — list 6 tables, verify the `lakehouse_oideachais` schema
+    2. **Smoke** — list 6 tables, verify the `lakehouse_cianfhoghlaim` schema
        is queryable.
     3. **Preview** — read the top of the empty BIEP tables.
         """
@@ -84,7 +84,7 @@ def _(environment, os):
                 f"port={os.getenv('LOCAL_PORT', '5432')} "
                 f"user={os.getenv('LOCAL_USER', 'lakekeeper')} "
                 f"password={os.getenv('LOCAL_PASSWORD', 'devpassword')} "
-                f"dbname={os.getenv('LOCAL_DBNAME', 'ducklake_oideachais')}"
+                f"dbname={os.getenv('LOCAL_DBNAME', 'ducklake_cianfhoghlaim')}"
             ),
             "data_path": "s3://iceberg/",
             "lance_root": "s3://lance/",
@@ -122,7 +122,7 @@ def _(mo):
     mo.md("""
     ## Step 2 — List the BIEP tables (against the local Lakekeeper)
 
-    The 6 BIEP subject namespaces live in the ``lakehouse_oideachais``
+    The 6 BIEP subject namespaces live in the ``lakehouse_cianfhoghlaim``
     DuckLake catalog and are mirrored as Iceberg tables in Lakekeeper.
     Each subject has 4 tables — one per (level × language).
     """)

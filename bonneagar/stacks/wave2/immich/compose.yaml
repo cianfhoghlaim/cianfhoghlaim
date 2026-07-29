@@ -11,7 +11,7 @@
 #
 # Immich is referenced in the `apple-photos-ingestion` skill as the
 # downstream consumer of the Apple Photos library extraction (via
-# the `oideachais-mcp-filesystem` MCP server).
+# the `cianfhoghlaim-mcp-filesystem` MCP server).
 #
 # USAGE:
 #   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d

@@ -12,7 +12,7 @@ services:
     ports: ["2718:2718"]
     command: ["edit", "/notebooks/dashboards/mmo/mission_control.py", "--host=0.0.0.0", "--port=2718", "--headless"]
     volumes:
-      # Fixed volume path 2026-07-02 (was `../../oideachais/notebooks` — that
+      # Fixed volume path 2026-07-02 (was `../../cianfhoghlaim/notebooks` — that
       # path no longer exists after the 2026-06-28 v4 consolidation moved
       # all 4 quadrants into the single `cianfhoghlaim/` package; canonical
       # notebooks directory is now `../../cianfhoghlaim/notebooks/`).

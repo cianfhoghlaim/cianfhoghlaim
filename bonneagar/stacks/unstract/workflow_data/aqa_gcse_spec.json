@@ -54,6 +54,6 @@
   "output_settings": {
     "format": "json",
     "destination": "duckdb",
-    "ducklake_namespace": "oideachais.education.british_isles.england.aqa.{subject}.{qualification_level}.unstract_json"
+    "ducklake_namespace": "cianfhoghlaim.education.british_isles.england.aqa.{subject}.{qualification_level}.unstract_json"
   }
 }

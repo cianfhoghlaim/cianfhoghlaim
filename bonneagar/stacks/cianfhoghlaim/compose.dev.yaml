@@ -16,7 +16,7 @@
 services:
   locket:
     image: alpine:3.20
-    container_name: cianfhoghlaim-oideachais-locket-dev
+    container_name: cianfhoghlaim-cianfhoghlaim-locket-dev
     restart: "no"
     command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
     networks:

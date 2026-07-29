@@ -24,7 +24,7 @@
 -- ---------------------------------------------------------------------------
 -- DuckLake catalog databases (per project)
 -- ---------------------------------------------------------------------------
-CREATE DATABASE ducklake_oideachais;
+CREATE DATABASE ducklake_cianfhoghlaim;
 CREATE DATABASE ducklake_crypteolas;
 CREATE DATABASE ducklake_aleyum;  -- legacy: sruth/aleyum, superseded by croilar
 CREATE DATABASE ducklake_croilar;
@@ -56,7 +56,7 @@ CREATE DATABASE litellm;         -- litellm stack model registry (was: standalon
 -- MLFLOW_DB_PASSWORD / LITELLM_DB_PASSWORD env vars when each downstream
 -- stack connects. Using ONE superuser keeps the auth model simple.
 -- ---------------------------------------------------------------------------
-GRANT ALL PRIVILEGES ON DATABASE ducklake_oideachais     TO lakekeeper;
+GRANT ALL PRIVILEGES ON DATABASE ducklake_cianfhoghlaim     TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_crypteolas     TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_aleyum         TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_croilar        TO lakekeeper;

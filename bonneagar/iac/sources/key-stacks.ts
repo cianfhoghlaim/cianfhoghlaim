@@ -52,14 +52,14 @@ export const KEY_STACKS_5_GROUP_MODEL = [
 
   // ============================ user-facing-web (6) ============================
   // All on bunchloch. The IaC deploys these fifth.
-  "oideachais",
+  "cianfhoghlaim",
   "ci/hf-watchdog",  // path syntax for sub-stack; cf. stacks/ci/hf-watchdog/
 
-  // (oideachais_dagster, oideachais-api, oideachais-frontend,
-  // oideachais-agent-os, oideachais-adk-agents were phantom
+  // (cianfhoghlaim_dagster, cianfhoghlaim-api, cianfhoghlaim-frontend,
+  // cianfhoghlaim-agent-os, cianfhoghlaim-adk-agents were phantom
   // entries — they're SERVICES within the oideachais stack,
   // not separate top-level stacks. The IaC deploys them via
-  // stacks/oideachais/pangolin.yaml's 5 service targets.)
+  // stacks/cianfhoghlaim/pangolin.yaml's 5 service targets.)
 
   // ============================ ci (1) ============================
   // (ci/hf-watchdog is already counted in user-facing-web)
@@ -82,7 +82,7 @@ export function getKeyStacksByGroup(): Record<string, string[]> {
     "data-engineering": ["dagster", "lakehouse", "marimo", "cognee", "langfuse", "llama-swap", "falkordb", "graphiti", "litellm", "logfire", "lancedb", "qdrant"],
     "agent-platform": ["agent-os", "openclaw", "openchamber", "memgraph", "mlx-omni", "lmnr", "hermes"],
     "language-model": ["mlflow", "motherduck", "nimtable", "invokeai", "r2", "mlx-omni"],
-    "user-facing-web": ["oideachais", "ci/hf-watchdog"],
+    "user-facing-web": ["cianfhoghlaim", "ci/hf-watchdog"],
     ci: ["ci/hf-watchdog"],
   };
 }

@@ -2,7 +2,7 @@
 # BUNCHLOCH SUPPORT STACKS — litellm, lancedb, langfuse
 # =============================================================================
 # Deployed on bunchloch (MacBook M4 Max) per session decision.
-# These are prerequisites for the oideachais deploy procedure.
+# These are prerequisites for the cianfhoghlaim deploy procedure.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -10,7 +10,7 @@
 # -----------------------------------------------------------------------------
 [[stack]]
 name = "litellm-bunchloch"
-description = "LiteLLM gateway — OpenAI-compatible proxy to Gemini / Anthropic / OpenAI / OpenCode Go / Z.AI. Required for oideachais api/dagster/frontend LLM calls."
+description = "LiteLLM gateway — OpenAI-compatible proxy to Gemini / Anthropic / OpenAI / OpenCode Go / Z.AI. Required for cianfhoghlaim api/dagster/frontend LLM calls."
 tags = [
   "host:bunchloch",
   "tier:development",
@@ -73,7 +73,7 @@ branch = "main"
 # -----------------------------------------------------------------------------
 [[stack]]
 name = "langfuse-bunchloch"
-description = "Langfuse v3 — LLM observability (traces, scores, prompts). Receives events from oideachais api/dagster/frontend."
+description = "Langfuse v3 — LLM observability (traces, scores, prompts). Receives events from cianfhoghlaim api/dagster/frontend."
 tags = [
   "host:bunchloch",
   "tier:development",

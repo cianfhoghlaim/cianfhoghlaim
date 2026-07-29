@@ -1,9 +1,9 @@
 # Oideachais — Komodo Resource Sync Blueprint
 
-name: oideachais
+name: cianfhoghlaim
 description: "Celtic Education Lakehouse Engine — dagster webserver + FastAPI + TanStack Start frontend + Agno AgentOS + Google ADK agents"
 type: stack
-run_directory: infrastructure/stacks/oideachais
+run_directory: bonneagar/stacks/cianfhoghlaim
 files:
   - compose.yaml
   - sidecar.yaml

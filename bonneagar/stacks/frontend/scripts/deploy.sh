@@ -51,7 +51,7 @@ case "$CMD" in
     sleep 30
 
     PORTS=(3001 8787 3004 3003 3000)
-    SERVICES=(oideachais-web oideachais-api tuatha-ui croilar-web croilar-portal)
+    SERVICES=(cianfhoghlaim-web cianfhoghlaim-api tuatha-ui croilar-web croilar-portal)
     FAILED=0
     for i in "${!SERVICES[@]}"; do
       svc="${SERVICES[$i]}"
@@ -75,14 +75,14 @@ case "$CMD" in
     echo "==> All 5 services healthy."
     echo ""
     echo "Local URLs:"
-    echo "  oideachais-web:    http://localhost:3001"
-    echo "  oideachais-api:    http://localhost:8787"
+    echo "  cianfhoghlaim-web:    http://localhost:3001"
+    echo "  cianfhoghlaim-api:    http://localhost:8787"
     echo "  tuatha-ui:         http://localhost:3004"
     echo "  croilar-web:       http://localhost:3003"
     echo "  croilar-portal:    http://localhost:3000"
     echo ""
     echo "Production URLs (Pangolin routes):"
-    echo "  https://oideachais.cianfhoghlaim.ie"
+    echo "  https://cianfhoghlaim.cianfhoghlaim.ie"
     echo "  https://tuath.cianfhoghlaim.ie"
     echo "  https://croilar.cianfhoghlaim.ie"
     echo "  https://portal.cianfhoghlaim.ie"

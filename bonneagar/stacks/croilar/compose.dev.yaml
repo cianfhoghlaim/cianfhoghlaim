@@ -1,6 +1,6 @@
 # Croilar — local dev override
 # ----------------------------------------------------------------------------
-# Mirrors oideachais/litellm/lancedb/langfuse dev pattern: no-op locket sidecar
+# Mirrors cianfhoghlaim/litellm/lancedb/langfuse dev pattern: no-op locket sidecar
 # so the apps start without waiting on real Infisical-injection. Secrets come
 # from the mise-hydrated local .env via env_file.
 # ----------------------------------------------------------------------------

@@ -49,6 +49,6 @@
   "output_settings": {
     "format": "json",
     "destination": "duckdb",
-    "ducklake_namespace": "oideachais.leaving_cert.{subject}.{lang}.marking_schemes_extracted.unstract_json"
+    "ducklake_namespace": "cianfhoghlaim.leaving_cert.{subject}.{lang}.marking_schemes_extracted.unstract_json"
   }
 }

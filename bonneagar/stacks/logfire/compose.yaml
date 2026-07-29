@@ -56,7 +56,7 @@ services:
       # Forwarded to the collector via Locket sidecar (see secrets.env).
       # The logfire exporter pulls this from the env at runtime; if empty,
       # the collector starts but exports fail (matching the SaaS-only
-      # graceful-degradation pattern in sruth/oideachais/observability/logfire_config.py).
+      # graceful-degradation pattern in sruth/cianfhoghlaim/observability/logfire_config.py).
       LOGFIRE_TOKEN: ${LOGFIRE_TOKEN:-}
       LOGFIRE_PROJECT_NAME: ${LOGFIRE_PROJECT_NAME:-oideachas-celtic-education}
       LOGFIRE_ENVIRONMENT: ${LOGFIRE_ENVIRONMENT:-production}

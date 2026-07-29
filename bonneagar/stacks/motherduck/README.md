@@ -11,7 +11,7 @@ no local `docker compose up` to run.
 # mise-hydrated $MOTHERDUCK_TOKEN env var; see `.infisical.env`)
 uv run python -c "
 import duckdb
-con = duckdb.connect('md:oideachais?motherduck_token=' + open(os.environ['MOTHERDUCK_TOKEN_FILE']).read().strip())
+con = duckdb.connect('md:cianfhoghlaim?motherduck_token=' + open(os.environ['MOTHERDUCK_TOKEN_FILE']).read().strip())
 print(con.sql('SELECT schema_name FROM information_schema.schemata').fetchdf())
 "
 
@@ -24,7 +24,7 @@ python ./flights/lc_syllabus_topics_flight.py
 | Surface | Where | What |
 |:--|:--|:--|
 | BIEP Dives (4) | `bonneagar/stacks/motherduck/dives/` | Saved MotherDuck Dives (lc_syllabus_topics, lc_exam_difficulty, lc_marking_complexity, gov_circulars_archive) |
-| BIEP Flights | `bonneagar/stacks/motherduck/flights/` | Scheduled Python jobs that backfill BAML rows onto the `oideachais.lc.*` schemas |
+| BIEP Flights | `bonneagar/stacks/motherduck/flights/` | Scheduled Python jobs that backfill BAML rows onto the `cianfhoghlaim.lc.*` schemas |
 | CocoIndex vector targets | `bonneagar/stacks/lancedb/` | 7 v1 CocoIndex Apps fan out to BOTH MotherDuck (structured) AND LanceDB (vectors) |
 
 ## Bring-up token round-trip

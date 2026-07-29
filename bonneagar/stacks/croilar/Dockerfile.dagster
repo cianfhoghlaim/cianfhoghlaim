@@ -3,7 +3,7 @@
 # =============================================================================
 # Builds the croilar/a/ Dagster image with the music pipeline dependencies.
 #
-# Layout matches the oideachais dagster image for parity.
+# Layout matches the cianfhoghlaim dagster image for parity.
 # =============================================================================
 
 FROM python:3.12-slim

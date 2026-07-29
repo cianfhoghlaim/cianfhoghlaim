@@ -1,0 +1,12 @@
+# OCR Router — Private Resource Blueprint
+
+private-resources:
+  ocr-router:
+    name: "OCR / VLM Capability Router"
+    mode: "http"
+    destination: "ocr-router"
+    destination-port: 8090
+    full-domain: "ocr-router.cianfhoghlaim.ie"
+    protocol: "https"
+    roles:
+      - "Member"

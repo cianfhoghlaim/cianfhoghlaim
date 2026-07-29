@@ -1,7 +1,7 @@
 # =============================================================================
 # DAGSTER UNIFIED - Production Stack
 # =============================================================================
-# Runs the unified Dagster instance for the oideachais data platform.
+# Runs the unified Dagster instance for the cianfhoghlaim data platform.
 # Connects to the lakehouse for DuckLake / Garage S3 storage.
 #
 # USAGE:

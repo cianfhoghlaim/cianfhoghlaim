@@ -186,7 +186,7 @@ services:
   # POSTGRESQL - Centralised Database (12 databases)
   # ---------------------------------------------------------------------------
   # Hosts 12 databases shared across the platform:
-  #   6 DuckLake (ducklake_oideachais, _crypteolas, _aleyum, _croilar, _tuath,
+  #   6 DuckLake (ducklake_cianfhoghlaim, _crypteolas, _aleyum, _croilar, _tuath,
   #              _meaisinfhoghlaim)
   #   dagster_local, olake_state, nimtable, langfuse, mlflow, litellm
   # See init-db.sql for the complete list.

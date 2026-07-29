@@ -98,11 +98,11 @@ Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical d
 1. **`LANCEDB_URI=rest://lakehouse-lance-namespace:8182`** — every active srutha stack MUST default `LANCEDB_URI` to the lakehouse Lance namespace (not a local file path).
 2. **`ducklake_{namespace}` database** — every active srutha MUST have a dedicated `ducklake_{namespace}` database in `infrastructure/stacks/lakehouse/init-db.sql` for DuckLake write-ahead-log storage.
 
-The canonical factory for both contracts is `oideachais/dlt_utils/destinations.py:with_namespace()` (the `with_namespace()` method at line 289 of the file).
+The canonical factory for both contracts is `cianfhoghlaim/dlt_sources/destinations.py:with_namespace()` (the `with_namespace()` method at line 289 of the file).
 
 | Srutha | DuckLake DB | LANCEDB_URI | Stack |
 |:--|:--|:--|:--|
-| `oideachais` | `ducklake_oideachais` | `rest://lakehouse-lance-namespace:8182` | `infrastructure/stacks/oideachais/` |
+| `cianfhoghlaim` | `ducklake_cianfhoghlaim` | `rest://lakehouse-lance-namespace:8182` | `bonneagar/stacks/cianfhoghlaim/` |
 | `crypteolas` | `ducklake_crypteolas` | inherits `rest://...` | `infrastructure/stacks/tuatha/crypteolas/` |
 | `croilar` | `ducklake_croilar` | `rest://lakehouse-lance-namespace:8182` (was `./lancedb_data_cv`) | `infrastructure/stacks/croilar-{dagster,marimo}/` |
 | `tuath` | `ducklake_tuath` | inherits `rest://...` | `infrastructure/stacks/tuatha/` |

@@ -26,7 +26,7 @@ SHA256 digest and updates monthly via the renovate workflow.
 ## Why This Matters for Kings' College Galway
 
 Until now the platform only reached the user through the
-TanStack Start web apps (`oideachais.cianfhoghlaim.ie`,
+TanStack Start web apps (`cianfhoghlaim.cianfhoghlaim.ie`,
 `croilar.cianfhoghlaim.ie`, `tuatha.cianfhoghlaim.ie`). The
 openclaw gateway flips the model: **the platform reaches the
 user** through whatever chat surface they already use.

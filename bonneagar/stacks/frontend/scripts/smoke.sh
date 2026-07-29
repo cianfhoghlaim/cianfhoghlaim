@@ -14,7 +14,7 @@ STACK_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$STACK_DIR"
 
 PORTS=(3001 8787 3004 3003 3000)
-SERVICES=(oideachais-web oideachais-api tuatha-ui croilar-web croilar-portal)
+SERVICES=(cianfhoghlaim-web cianfhoghlaim-api tuatha-ui croilar-web croilar-portal)
 
 echo "==> Building and starting frontend stack (dev mode)…"
 docker compose -f compose.yaml -f compose.dev.yaml up -d --build
@@ -39,7 +39,7 @@ done
 
 echo ""
 echo "==> Health endpoints (detailed):"
-curl -sf http://localhost:8787/ && echo ""  # oideachais-api
+curl -sf http://localhost:8787/ && echo ""  # cianfhoghlaim-api
 echo ""
 
 if [[ $FAILED -gt 0 ]]; then

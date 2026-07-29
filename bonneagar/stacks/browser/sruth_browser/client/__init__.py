@@ -1,7 +1,7 @@
 """Browser client library for other sruth projects.
 
 This module provides a simple HTTP client interface to the browser agent service.
-Other flows (crypteolas, oideachais, aleyum, tuath) should import from here.
+Other flows (crypteolas, cianfhoghlaim, aleyum, tuath) should import from here.
 
 Usage:
     from sruth_browser.client import BrowserClient

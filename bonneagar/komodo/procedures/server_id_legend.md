@@ -39,7 +39,7 @@ procedures (and vice versa).
 | `deploy-logfire-bunchloch.toml` | Logfire Python OTel |
 | `deploy-mailcow-dockerized-bunchloch.toml` | Mailcow mail server |
 | `deploy-mlflow-bunchloch.toml` | MLflow experiment tracking |
-| `deploy-oideachais-bunchloch.toml` | Oideachais BIEP stack |
+| `deploy-cianchfhoghlaim-bunchloch.toml` | Cianfhoghlaim BIEP stack |
 | `deploy-openchamber-bunchloch.toml` | OpenChamber (bunchloch) |
 | `deploy-openclaw-bunchloch.toml` | OpenClaw (bunchloch) |
 | `deploy-newt-bunchloch.toml` | newt v1 (legacy, single WireGuard client on this Mac) |

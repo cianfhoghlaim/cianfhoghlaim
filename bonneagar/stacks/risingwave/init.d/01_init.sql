@@ -150,6 +150,6 @@ CREATE INDEX IF NOT EXISTS idx_audio_events_lang
 --     s3.access.key = 'lakehouse',
 --     s3.secret.key = 'devpassword',
 --     s3.path.style.access = 'true',
---     database.name = 'oideachais',
+--     database.name = 'cianfhoghlaim',
 --     table.name = 'agent_queries_hourly'
 -- ) FORMAT UPSERT ENCODE PARQUET (force_append_only = false);

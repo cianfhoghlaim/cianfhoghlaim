@@ -1,14 +1,14 @@
 # =============================================================================
 # Oideachais — Celtic Education Lakehouse Engine (MERGED canonical)
 # =============================================================================
-# This is the canonical oideachais deployment stack.
+# This is the canonical cianfhoghlaim deployment stack.
 #
 # Merged from the prior:
-#   - /sruth/oideachais/compose.yaml    (source-of-truth app Dockerfiles)
-#   - /sruth/oideachais/sidecar.yaml    (upstream locket Infisical)
-#   - /sruth/oideachais/pangolin.yaml   (Pocket ID + API key + VPN-only)
-#   - /sruth/oideachais/blueprint.yaml  (stale Hetzner routing — DELETED)
-#   - /infrastructure/stacks/oideachais/compose.yaml (pinned 0.2.0)
+#   - /sruth/cianfhoghlaim/compose.yaml    (source-of-truth app Dockerfiles; was sruth/cianfhoghlaim pre-v7)
+#   - /sruth/cianfhoghlaim/sidecar.yaml    (upstream locket Infisical)
+#   - /sruth/cianfhoghlaim/pangolin.yaml   (Pocket ID + API key + VPN-only)
+#   - /sruth/cianfhoghlaim/blueprint.yaml  (stale Hetzner routing — DELETED)
+#   - /bonneagar/stacks/cianfhoghlaim/compose.yaml (pinned 0.2.0)
 #
 # Architecture:
 #   bunchloch (MacBook M4 Max) hosts the three app containers:
@@ -35,22 +35,22 @@ services:
   # ---------------------------------------------------------------------------
   dagster:
     # image: pinned. The `build:` block is the canonical source of truth
-    # (build context is the repo root because the oideachais uv workspace
+    # (build context is the repo root because the cianfhoghlaim uv workspace
     # depends on sibling members sruth-browser/codeolas declared at the root
     # pyproject.toml). `pull_policy: never` forces compose to use the
     # existing tag rather than rebuild on every `up`. To rebuild:
     #   docker compose build dagster
-    image: oideachais-dev-dagster:latest
+    image: cianfhoghlaim-dev-dagster:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: sruth/oideachais/Dockerfile.dagster
-    container_name: cianfhoghlaim-oideachais-dagster
+      dockerfile: sruth/cianfhoghlaim/Dockerfile.dagster
+    container_name: cianfhoghlaim-cianfhoghlaim-dagster
     restart: unless-stopped
-    # Override the image CMD: the pre-built image has the oideachais root
-    # at /app/ and the actual venv with dagster at /app/oideachais/.venv/.
+    # Override the image CMD: the pre-built image has the cianfhoghlaim root
+    # at /app/ and the actual venv with dagster at /app/cianfhoghlaim/.venv/.
     # Run from there so `uv run` finds the venv.
-    working_dir: /app/oideachais
+    working_dir: /app/cianfhoghlaim
     command: ["uv", "run", "dagster", "dev", "-h", "0.0.0.0", "-p", "3000", "-w", "workspace.yaml"]
     ports:
       - "${DAGSTER_PORT:-3335}:3000"
@@ -74,15 +74,15 @@ services:
       - dagster_storage:/opt/dagster/storage
       # Persistent venv so `uv sync` (downloading torch, lancedb, etc.)
       # doesn't repeat on every container recreate.
-      - dagster_venv:/app/oideachais/.venv
-      - ../../../../sruth/oideachais/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - dagster_venv:/app/cianfhoghlaim/.venv
+      - ../../../../sruth/cianfhoghlaim/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - ../../../../stedding:/stedding:ro
-      # Live-bind the entire oideachais source tree so leaving_cert assets
+      # Live-bind the entire cianfhoghlaim source tree so leaving_cert assets
       # and any new code added to the host are picked up on Dagster restart.
-      # The container runs from /app/oideachais (uv workspace member).
+      # The container runs from /app/cianfhoghlaim (uv workspace member).
       # Read-write because Dagster writes session/state files into the
       # source tree (e.g. storage/sessions) at startup.
-      - ../../../../sruth/oideachais:/app/oideachais:rw
+      - ../../../../sruth/cianfhoghlaim:/app/cianfhoghlaim:rw
       # Locket secrets volume (injected at runtime by the sidecar).
       - locket_secrets:/run/secrets/locket:ro
     # Canonical depends_on for the locket sidecar (declared in
@@ -114,30 +114,30 @@ services:
   # ---------------------------------------------------------------------------
   api:
     # image: pinned. See dagster block for build/use rationale.
-    image: oideachais-dev-api:latest
+    image: cianfhoghlaim-dev-api:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: sruth/oideachais/Dockerfile
-    container_name: cianfhoghlaim-oideachais-api
+      dockerfile: sruth/cianfhoghlaim/Dockerfile
+    container_name: cianfhoghlaim-cianfhoghlaim-api
     restart: unless-stopped
-    # The api package is at /app/oideachais/api/ in the image (moved from
+    # The api package is at /app/cianfhoghlaim/api/ in the image (moved from
     # data_platform/api/ on 2026-06-11). The Dockerfile's CMD already uses
-    # --app-dir /app/oideachais; no override needed here.
+    # --app-dir /app/cianfhoghlaim; no override needed here.
     ports:
       - "${API_PORT:-8000}:8000"
     # Run as root in the container so the volume mount at
-    # /app/oideachais/storage/data can create its mountpoint in a writable
+    # /app/cianfhoghlaim/storage/data can create its mountpoint in a writable
     # rootfs layer (appuser can't create dirs in the read-only image layer).
     # The Dockerfile's USER appuser directive is overridden here.
     user: "0:0"
     volumes:
-      # The api/ package was moved up to oideachais/api/ on 2026-06-11.
+      # The api/ package was moved up to cianfhoghlaim/api/ on 2026-06-11.
       # Mount the parent so the api can hot-reload code via docker compose
       # restart; the previous data_platform/ path no longer exists.
-      - ../../../../sruth/oideachais:/app/oideachais:ro
+      - ../../../../sruth/cianfhoghlaim:/app/cianfhoghlaim:ro
       # Mount the data volume at a NEW path that doesn't exist in the
-      # image (the OLD path /app/oideachais/storage/data was baked into
+      # image (the OLD path /app/cianfhoghlaim/storage/data was baked into
       # the image's lower layer; the volume mount then fails with
       # 'read-only file system' when trying to create the mountpoint).
       # We symlink the new path to the old one in the CMD below.
@@ -152,7 +152,7 @@ services:
       DAGSTER_DEPLOYMENT: ${DAGSTER_DEPLOYMENT:-development}
       USE_DUCKLAKE: "${USE_DUCKLAKE:-true}"
       MOTHERDUCK_ENABLED: "${MOTHERDUCK_ENABLED:-false}"
-      DUCKDB_PATH: ${DUCKDB_PATH:-/app/oideachais/data_platform/.dlt/curriculum_unified/curriculum_unified.duckdb}
+      DUCKDB_PATH: ${DUCKDB_PATH:-/app/cianfhoghlaim/data_platform/.dlt/curriculum_unified/curriculum_unified.duckdb}
       LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
       LANCEDB_API_KEY: ${LANCEDB_API_KEY:-}
       LLM_API_KEY: ${LITELLM_MASTER_KEY:-${LLM_API_KEY:-}}
@@ -196,13 +196,13 @@ services:
   frontend:
     # image: pinned. Build context is the repo root because apps/web imports
     # @croilar/ui from the sibling croilar monorepo. The Dockerfile lives
-    # at sruth/oideachais/web/Dockerfile.
-    image: oideachais-dev-frontend:latest
+    # at sruth/cianfhoghlaim/web/Dockerfile.
+    image: cianfhoghlaim-dev-frontend:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: sruth/oideachais/web/Dockerfile
-    container_name: cianfhoghlaim-oideachais-frontend
+      dockerfile: sruth/cianfhoghlaim/web/Dockerfile
+    container_name: cianfhoghlaim-cianfhoghlaim-frontend
     restart: unless-stopped
     # Default host port is 3080 (not 3000) to avoid the reserved-port
     # collision with Forgejo (3000) and langfuse (3000). Override via
@@ -246,16 +246,16 @@ services:
   agent_os:
     # Local build artifact, `pull_policy: never` forces compose to
     # use the existing tag rather than rebuild on every `up`.
-    # The Dockerfile at sruth/oideachais/agent_os/Dockerfile builds
-    # `oideachais-dev-agentos:latest` from the root pyproject.toml
-    # (the agent_os/ sub-package is part of the oideachais uv
+    # The Dockerfile at sruth/cianfhoghlaim/agent_os/Dockerfile builds
+    # `cianfhoghlaim-dev-agentos:latest` from the root pyproject.toml
+    # (the agent_os/ sub-package is part of the cianfhoghlaim uv
     # workspace).
-    image: oideachais-dev-agentos:latest
+    image: cianfhoghlaim-dev-agentos:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: sruth/oideachais/agent_os/Dockerfile
-    container_name: cianfhoghlaim-oideachais-agent-os
+      dockerfile: sruth/cianfhoghlaim/agent_os/Dockerfile
+    container_name: cianfhoghlaim-cianfhoghlaim-agent-os
     restart: unless-stopped
     ports:
       - "${AGENT_OS_PORT:-7777}:7777"
@@ -292,15 +292,15 @@ services:
   adk_agents:
     # Local build artifact, `pull_policy: never` forces compose to
     # use the existing tag rather than rebuild on every `up`.
-    # The Dockerfile at sruth/oideachais/Dockerfile.adk builds
-    # `oideachais-dev-adk-agents:latest` from the root pyproject.toml
+    # The Dockerfile at sruth/cianfhoghlaim/Dockerfile.adk builds
+    # `cianfhoghlaim-dev-adk-agents:latest` from the root pyproject.toml
     # + the google-adk Python package.
-    image: oideachais-dev-adk-agents:latest
+    image: cianfhoghlaim-dev-adk-agents:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: sruth/oideachais/Dockerfile.adk
-    container_name: cianfhoghlaim-oideachais-adk-agents
+      dockerfile: sruth/cianfhoghlaim/Dockerfile.adk
+    container_name: cianfhoghlaim-cianfhoghlaim-adk-agents
     restart: unless-stopped
     ports:
       - "${ADK_PORT:-7778}:7778"

@@ -13,23 +13,23 @@
 # CIANFHOGHLAIM-OIDEACHAIS (Port conflicts resolved via subdomains)
 # ============================================================================
 
-# Public — oideachais.cianfhoghlaim.ie (default public route, OIDC-protected)
+# Public — cianfhoghlaim.cianfhoghlaim.ie (default public route, OIDC-protected)
 services:
-  oideachais-web:
+  cianfhoghlaim-web:
     labels:
-      - "pangolin.public-resources.oideachais-web.name=Oideachais Web"
-      - "pangolin.public-resources.oideachais-web.full-domain=oideachais.cianfhoghlaim.ie"
-      - "pangolin.public-resources.oideachais-web.protocol=http"
-      - "pangolin.public-resources.oideachais-web.targets[0].method=http"
-      - "pangolin.public-resources.oideachais-web.targets[0].port=3001"
+      - "pangolin.public-resources.cianfhoghlaim-web.name=Oideachais Web"
+      - "pangolin.public-resources.cianfhoghlaim-web.full-domain=cianfhoghlaim.cianfhoghlaim.ie"
+      - "pangolin.public-resources.cianfhoghlaim-web.protocol=http"
+      - "pangolin.public-resources.cianfhoghlaim-web.targets[0].method=http"
+      - "pangolin.public-resources.cianfhoghlaim-web.targets[0].port=3001"
 
-  # Private — oideachais-api.cianfhoghlaim.ie (OIDC + IP allowlist)
-  oideachais-api:
+  # Private — cianfhoghlaim-api.cianfhoghlaim.ie (OIDC + IP allowlist)
+  cianfhoghlaim-api:
     labels:
       - "pangolin.resource.name=Oideachais API"
-      - "pangolin.resource.domain=oideachais-api.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://oideachais-api:8787"
-      - "pangolin.resource.middlewares=oidc-oideachais,rate-limit"
+      - "pangolin.resource.domain=cianfhoghlaim-api.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://cianfhoghlaim-api:8787"
+      - "pangolin.resource.middlewares=oidc-cianchfhoghlaim,rate-limit"
       - "pangolin.resource.sso=Pocket ID"
 
 # ============================================================================
@@ -59,7 +59,7 @@ services:
       - "pangolin.public-resources.croilar-web.targets[0].port=3003"
 
 # ============================================================================
-# CROILAR-PORTAL (Port 3000 — CONFLICTS with oideachais-frontend)
+# CROILAR-PORTAL (Port 3000 — CONFLICTS with cianfhoghlaim-frontend)
 # Resolution: assign a different public domain, port 3000 stays local
 # ============================================================================
 
@@ -92,8 +92,8 @@ services:
 # PORT CONFLICT RESOLUTION NOTES
 # ============================================================================
 #
-# Conflict 1: oideachais-frontend (3000) vs croilar-portal (3000)
-#   → oideachais-frontend is the live production service
+# Conflict 1: cianfhoghlaim-frontend (3000) vs croilar-portal (3000)
+#   → cianfhoghlaim-frontend is the live production service
 #   → croilar-portal gets its own subdomain portal.cianfhoghlaim.ie
 #   → Both can run on different containers in the same Docker network
 #   → Local dev: only one can bind 3000 on host
@@ -102,21 +102,21 @@ services:
 #   → langfuse is the only service on 3001
 #   → No conflict
 #
-# Conflict 3: oideachais-api (8787) vs (none)
-#   → oideachais-api uses 8787, no conflict
+# Conflict 3: cianfhoghlaim-api (8787) vs (none)
+#   → cianfhoghlaim-api uses 8787, no conflict
 #
-# Conflict 4: langfuse-web (3000 internal) vs oideachais-frontend (3000)
+# Conflict 4: langfuse-web (3000 internal) vs cianfhoghlaim-frontend (3000)
 #   → langfuse-web maps 3001:3000 — no actual conflict
 #   → Both work because of port mapping
 #
 # DEPLOY ORDER (avoid 3000 host conflict in dev):
-#   1. Stop oideachais-frontend container (if not needed in dev)
+#   1. Stop cianfhoghlaim-frontend container (if not needed in dev)
 #   2. Start croilar-portal on 3000
 #   OR
 #   3. Map croilar-portal to 3000:3001 in docker-compose (host 3001, container 3000)
 #
 # KUBERNETES ALTERNATIVE: use NodePort services with assigned ranges
-#   - 30000-30010: public oideachais
+#   - 30000-30010: public cianfhoghlaim
 #   - 30020-30030: public tuatha
 #   - 30040-30050: public croilar-web
 #   - 30060-30070: private portal

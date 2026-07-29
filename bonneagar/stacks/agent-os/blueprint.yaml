@@ -41,13 +41,13 @@ private-resources:
       - "Member"
     destination: "crypteolas-agentos"
 
-  oideachais-agentos:
-    name: "oideachais AgentOS"
+  cianfhoghlaim-agentos:
+    name: "cianfhoghlaim AgentOS"
     mode: "http"
     destination-port: 7777
-    full-domain: "agents.oideachais.cianfhoghlaim.ie"
+    full-domain: "agents.cianfhoghlaim.cianfhoghlaim.ie"
     protocol: "http"
     roles:
       - "Member"
-    destination: "oideachais-agentos"
+    destination: "cianfhoghlaim-agentos"
 

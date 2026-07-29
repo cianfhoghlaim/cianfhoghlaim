@@ -6,7 +6,7 @@ Forgejo is a self-hosted Git service and software forge — a lightweight, commu
 
 ## Why This Matters for Kings' College Galway
 
-Forgejo is the canonical source of truth for the entire monorepo. Every `compose.yaml`, every BAML schema, every Dagster asset, every marimo notebook lives in Forgejo at `git.cianfhoghlaim.ie`. The built-in PyPI registry hosts internal Python packages (códeolas, sruth-browser, oideachais) that the Dagster pipeline imports — no dependency on PyPI.org for proprietary code. Forgejo Actions (via the Forgejo Runner stack) provide CI/CD for all 5 programming languages in the monorepo. This complete self-hosting of the software supply chain eliminates a critical attack vector — no code, no packages, and no CI secrets ever leave the infrastructure mesh.
+Forgejo is the canonical source of truth for the entire monorepo. Every `compose.yaml`, every BAML schema, every Dagster asset, every marimo notebook lives in Forgejo at `git.cianfhoghlaim.ie`. The built-in PyPI registry hosts internal Python packages (códeolas, sruth-browser, cianfhoghlaim) that the Dagster pipeline imports — no dependency on PyPI.org for proprietary code. Forgejo Actions (via the Forgejo Runner stack) provide CI/CD for all 5 programming languages in the monorepo. This complete self-hosting of the software supply chain eliminates a critical attack vector — no code, no packages, and no CI secrets ever leave the infrastructure mesh.
 
 ## Key Features
 

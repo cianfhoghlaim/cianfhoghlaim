@@ -14,7 +14,7 @@ Tuatha is the project's gamification + immersive-learning surface. Where Croíl�
 - **SpacetimeDB multiplayer state** — sub-millisecond state sync for avatars + quests + classroom events
 - **DuckDB + LanceDB backend** — local-first analytics, BIEP syllabus lookup, curriculum-graph RAG
 - **Langfuse + MLflow observability** — LLM call tracing + experiment tracking for the in-game tutor NPC
-- **dlt data ingestion** — player asset registry + credential events feed into the central `md:oideachais` MotherDuck lakehouse
+- **dlt data ingestion** — player asset registry + credential events feed into the central `md:cianfhoghlaim` MotherDuck lakehouse
 
 ## Deployment
 

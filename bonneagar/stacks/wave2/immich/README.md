@@ -4,7 +4,7 @@ Self-hosted Google Photos replacement. Provides photo + video
 backup, ML-powered face/object recognition, and timeline browsing.
 
 This stack is the downstream consumer of the Apple Photos library
-extraction (via the `oideachais-mcp-filesystem` MCP server) — see
+extraction (via the `cianfhoghlaim-mcp-filesystem` MCP server) — see
 the `apple-photos-ingestion` skill.
 
 ## Architecture

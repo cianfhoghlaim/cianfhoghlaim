@@ -4,7 +4,7 @@
 #   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
 #      resolves without booting the real Infisical-injection sidecar.
 #   2. `env_file: .env.dev` (this stack) provides all the dev secrets
-#      pointing at the lakehouse-postgres (db=cognee_oideachais) +
+#      pointing at the lakehouse-postgres (db=cognee_cianfhoghlaim) +
 #      lakehouse-lance-namespace (the 6 Cognee datasets use pgvector +
 #      lance-namespace for hybrid storage).
 #   3. The image is `cognee/cognee:1.2.2` (public Docker Hub).
