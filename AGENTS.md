@@ -8,7 +8,7 @@ The 5 priority skills, the 4 priority commands, the 4 priority
 compose stacks, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is detail.
 
-### Priority skills (7 of 153)
+### Priority skills (7 of 155)
 
 | Skill | When to load |
 |:--|:--|
@@ -17,7 +17,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
 | [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
 | [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
-| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (75 specs, 4 shared) |
+| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (79 specs, 4 shared) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
 
 ### ccc code search (always use before grep)
@@ -34,7 +34,7 @@ If the index is missing or stale, the agent **owns** running
 ### Priority openspec commands
 
 ```bash
-openspec list --specs              # list all 75 capability specs (3 new post-2026-08-15)
+openspec list --specs              # list all 79 capability specs (4 new post-2026-07-29)
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy
@@ -61,7 +61,15 @@ mise run stack-doctor:strict       # cic:stack-doctor + --strict --check-grammar
 mise run deploy:full               # one-command 7-phase full-stack deploy orchestrator with resumable checkpoint at ~/.cianfhoghlaim/deploy-state.json; entry shell + TS state machine; NEW in Change 3, 2026-08-01
 ```
 
-### Priority compose stacks (4 of 88)
+### Priority sync commands
+
+```bash
+mise run sync:all                  # run all 8 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents)
+mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth (per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change)
+mise run openspec:validate         # run `openspec validate --strict` against the pending change under review
+```
+
+### Priority compose stacks (4 of 89)
 
 | Stack | Port | Domain |
 |:--|--:|:--|
@@ -70,7 +78,7 @@ mise run deploy:full               # one-command 7-phase full-stack deploy orche
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 88 stacks is at
+The full inventory of 89 stacks is at
 [`../bonneagar/AGENTS.md`](../bonneagar/AGENTS.md) (the IaC
 repo owns the stack catalogue; see the `## IaC Repo Boundary`
 section below for the ownership table).
@@ -164,7 +172,7 @@ bun run setup
 # expands to: mise install && bun install && uv sync && bun run secrets:env && bun run secrets:init
 ```
 
-> **Note:** The `mise run lint:skills` task currently reports **153
+> **Note:** The `mise run lint:skills` task currently reports **157
 > skills pass** (the v4 consolidation reduced the skill count from
 > the historical 123 — see `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
 

@@ -1,0 +1,14 @@
+name: lint-drift-docs
+on: [pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      - name: Validate AGENTS.md count claims
+        run: mise run lint:drift-docs

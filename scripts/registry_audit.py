@@ -248,6 +248,24 @@ def main() -> int:
     repo_root = Path(args.repo_root).resolve()
     findings = audit_repo(repo_root)
 
+    drift_findings: list[dict[str, object]] = []
+    drift_script = Path(__file__).resolve().parent / "lint_drift_docs.py"
+    if drift_script.exists():
+        import subprocess
+        try:
+            subprocess.run(
+                [sys.executable, str(drift_script), "--json", "--dry-run"],
+                cwd=str(repo_root),
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            drift_findings.append({"warning": "lint_drift_docs timed out"})
+    if drift_findings:
+        findings = findings + drift_findings  # type: ignore[operator]
+
     if args.json:
         print(json.dumps({"findings": findings, "count": len(findings)}, indent=2))
     elif not findings:
