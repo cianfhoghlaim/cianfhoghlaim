@@ -23,7 +23,7 @@ canonical dev lakehouse via two contracts:
 The canonical factory for both contracts is
 `cianfhoghlaim/dlt_utils/destinations.py:with_namespace()` (the
 `with_namespace()` method at line 289 of the file). The 6 active
-srutha DBs are: `ducklake_oideachais`, `ducklake_crypteolas`,
+srutha DBs are: `ducklake_cianfhoghlaim`, `ducklake_crypteolas`,
 `ducklake_croilar`, `ducklake_tuath`, `ducklake_meaisinfhoghlaim`,
 `ducklake_aleyum` (legacy — superseded by croilar).
 
@@ -37,7 +37,7 @@ to resolve `lakehouse-postgres`, `lakehouse-garage`,
 #### Scenario: An active srutha needs LanceDB vector RAG
 
 - **GIVEN** an active srutha stack (e.g. `croilar-dagster`,
-  `croilar-marimo`, `oideachais`)
+  `croilar-marimo`, `cianfhoghlaim`)
 - **WHEN** the stack boots
 - **THEN** its `LANCEDB_URI` env var MUST default to
   `rest://lakehouse-lance-namespace:8182`
@@ -50,7 +50,7 @@ to resolve `lakehouse-postgres`, `lakehouse-garage`,
 
 #### Scenario: An active srutha needs DuckLake storage
 
-- **GIVEN** an active srutha (e.g. `oideachais`, `croilar`,
+- **GIVEN** an active srutha (e.g. `cianfhoghlaim`, `croilar`,
   `crypteolas`, `tuath`, `meaisinfhoghlaim`)
 - **WHEN** its Dagster code-location runs `with_namespace()` to
   materialise a DuckLake destination
@@ -128,7 +128,7 @@ $ curl -X GET http://lakehouse-garage:3900/v2/bucket
 The lakehouse stack MUST declare its internal bridge network as
 `external: true, name: lakehouse_lakehouse` in its own `compose.yaml`.
 This MUST match the network declaration that every downstream stack
-(langfuse, mlflow, litellm, cognee, dagster, marimo, oideachais,
+(langfuse, mlflow, litellm, cognee, dagster, marimo, cianfhoghlaim,
 graphiti, agent-os) declares against `lakehouse: name: lakehouse_lakehouse,
 external: true`.
 
@@ -160,7 +160,7 @@ networks:
 ### Requirement: MotherDuck hosting-mode env contract
 
 MUST export 4 MotherDuck env vars via `secrets.env`. Every data-plane
-stack (`lakehouse`, `oideachais`, `dagster`, `motherduck`, `marimo`)
+stack (`lakehouse`, `cianfhoghlaim`, `dagster`, `motherduck`, `marimo`)
 MUST set the following:
 
 - `MOTHERDUCK_MODE` (default `byob`)
@@ -188,7 +188,7 @@ MOTHERDUCK_DATABASE=cianfhoghlaim-prod
 # lakehouse/secrets.env:
 MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/token   # canonical
 
-# oideachais/secrets.env:
+# cianfhoghlaim/secrets.env:
 MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/token   # same canonical path
 # NOT: infisical://dev-baile/lakehouse/token              # forbidden duplicate
 ```

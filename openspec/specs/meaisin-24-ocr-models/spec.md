@@ -15,9 +15,7 @@ The 24 OCR/VLM models across 4 backends are:
 - **MLX** (4 entries: granite-docling-258M, dots-ocr, deepseek-ocr-2, gemma-4-E2B) — Apple Silicon MLX
 - **TRANSFORMERS** (6 entries: deepseek-ocr-2, olmocr-2-7b-1025, molmo2-4b, molmo2-8b, uccix-mistral-24b, uccix-llama-3.1-8b) — Python inline
 - **LLAMASWAP** (13 entries: the Unsloth GGUF family) — served via `llama-swap` at `ghcr.io/mostlygeek/llama-swap:v166`
-
 ## Requirements
-
 ### Requirement: 24-model v4 registry structure
 
 The system SHALL provide a canonical 24-entry `VISION_MODELS` dict
@@ -138,6 +136,28 @@ s3://garage/cianfhoghlaim/meaisin/ocr/<model_key>/<year>/<model_key>__<year>__<s
 
 - **WHEN** the operator runs `mise run meaisin:v3:status`
 - **THEN** the status script verifies the 24-model registry covers all 24 keys
+
+### Requirement: 24-model OCR/VLM registry is a subset view of MODEL_REGISTRY
+
+The system SHALL expose the existing 22-entry `VISION_MODELS` as a
+subset view of the new `MODEL_REGISTRY` via
+`MODEL_REGISTRY.filter(family="ocr_vision")`. The 24-model 2-axis
+partition (scope × model) MUST be preserved.
+
+#### Scenario: VISION_MODELS is a subset view
+
+- **GIVEN** the new `MODEL_REGISTRY` at
+  `meaisinfhoghlaim/models/registry.py`
+- **WHEN** the operator runs
+  `python3 -c "from meaisinfhoghlaim.models.registry import VISION_MODELS, MODEL_REGISTRY; assert VISION_MODELS == MODEL_REGISTRY.filter(family='ocr_vision')"`
+- **THEN** the assertion passes and the exit code is `0`
+
+#### Scenario: 2-axis partition is preserved
+
+- **GIVEN** the existing 24-model 2-axis partition (scope × model)
+- **WHEN** the `ocr_model_<key>_documents_ingested` asset materialises
+- **THEN** the partition key is `(scope="meaisin_ocr_vlm_<model_key>",
+  model="v4")` (unchanged from the existing contract)
 
 ## Cross-references
 

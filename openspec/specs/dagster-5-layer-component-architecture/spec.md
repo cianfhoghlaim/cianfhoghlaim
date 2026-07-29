@@ -339,3 +339,77 @@ SHALL be retired in favour of the per-milisdiction daily automation.
 - **AND** an alert is posted to the `#kcg-biep-v3` Slack channel via the
   `biiep_daily_automation` post-hook
 
+### Requirement: PlanetScale Postgres Centralisation (dagster-5-layer-component-architecture)
+
+The system SHALL migrate the Dagster 5-layer component architecture's Postgres-backed run history + event log storage to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (row 3: Dagster / DuckLake).
+
+#### Scenario: Dagster connects to PlanetScale PG
+
+- **GIVEN** the Phase B change has archived
+- **WHEN** `bonneagar/stacks/dagster/Dockerfile.dagster` env is read
+- **THEN** `DUCKLAKE_POSTGRES_HOST` SHALL point at PlanetScale PG
+- **AND** the `dagster_state` database SHALL be pre-created on the PlanetScale branch
+
+#### Scenario: DuckLake tables migrate (Phase C)
+
+- **GIVEN** the Phase C change has archived
+- **WHEN** DuckLake metadata is queried
+- **THEN** the underlying database SHALL be PlanetScale PG (not PlanetScale MySQL)
+- **AND** the schema SHALL match the prior MySQL schema after the migration
+
+### Requirement: Dagster DuckLake Postgres substrate — PlanetScale PG (Phase B.0 env swap)
+
+The system SHALL migrate Dagster's DuckLake metadata backend connection to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R9 (row 3: Dagster / DuckLake, row 4: DuckLake tables).
+
+#### Scenario: DUCKLAKE_POSTGRES_HOST env var after Phase B.0
+
+- **GIVEN** the operator has created `dagster_state` on the PlanetScale branch
+- **WHEN** `bonneagar/stacks/dagster/Dockerfile.dagster` env is read
+- **THEN** `DUCKLAKE_POSTGRES_HOST` SHALL point at `infisical://dev-baile/dagster/database_url`
+- **AND** `DUCKLAKE_POSTGRES_PORT` SHALL be `5432`
+- **AND** `DUCKLAKE_POSTGRES_SSLMODE` SHALL be `require`
+- **AND** `DUCKLAKE_POSTGRES_DB` SHALL be `dagster_state`
+
+#### Scenario: The local dagster-postgres container stays as a fallback
+
+- **GIVEN** Phase B.0 has shipped
+- **WHEN** `bonneagar/stacks/dagster/compose.yaml` is inspected
+- **THEN** the local `dagster-postgres` service SHALL still be present
+- **AND** it SHALL be marked as a fallback (Phase B.1 retires it)
+
+#### Scenario: Dagster assets read from PlanetScale PG
+
+- **GIVEN** the Phase B.0 PR has merged
+- **WHEN** a Dagster asset materializes
+- **THEN** the DuckLake metadata read SHALL go to PlanetScale PG
+- **AND** the BIEP lakehouse queries (which join Lance + DuckLake) SHALL continue to work
+
+### Requirement: Model Lifecycle Component consumes MODEL_REGISTRY
+
+The system SHALL update the 5-layer KCG Component architecture so
+that the Model Lifecycle layer consumes `MODEL_REGISTRY` for its
+CocoIndex v1 Apps + LLM routing + embedder configuration. The
+Ingestion / Materials / Asset Generation / Agent Operations layers
+remain unchanged.
+
+#### Scenario: Model Lifecycle layer reads from MODEL_REGISTRY
+
+- **GIVEN** the `MODEL_REGISTRY` populated
+- **WHEN** the operator runs
+  `mise run cocoindex:conformance`
+- **THEN** the R1+R2+R3+R4 linter reports that every CocoIndex App
+  imports `MODEL_REGISTRY` (or the legacy `VISION_MODELS` subset view)
+- **AND** the L3 Component `defs.yaml` files reference
+  `MODEL_REGISTRY.filter(family="ocr_vision")` for the embedder
+
+#### Scenario: Dagster 1_ingestion cleanup is registered
+
+- **GIVEN** the 619 empty placeholder YAMLs across
+  `orchestration/defs/1_ingestion/european_nations/`,
+  `orchestration/defs/1_ingestion/commonwealth/{canada,nigeria,australia}/`,
+  `orchestration/defs/1_ingestion/american_nations/`
+- **WHEN** the operator runs `mise run dagster:dev`
+- **THEN** the empty YAMLs are not loaded
+- **AND** the 10 per-jurisdiction `generic_<jur>_assets.py` files
+  use the new `JurisdictionAssetsBase`
+

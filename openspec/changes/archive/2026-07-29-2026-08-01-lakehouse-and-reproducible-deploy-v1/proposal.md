@@ -9,7 +9,7 @@ host" workflow.
 1. **The lakehouse external network is wrong.** The lakehouse stack
    declares `lakehouse: driver: bridge` (a local bridge). 9 downstream
    stacks (langfuse, mlflow, litellm, cognee, dagster, marimo,
-   oideachais, graphiti, agent-os) declare
+   cianfhoghlaim, graphiti, agent-os) declare
    `lakehouse: name: lakehouse_lakehouse, external: true`. The local
    bridge and the external net have **no endpoint** between them.
    This is the #1 critical gap.
@@ -48,7 +48,7 @@ plan (the user explicitly chose "Bundle all 4 fixes into Change 3").
   line (already exists). The canonical path is
   `dev-baile/motherduck/token` (the KCG-canonical path per the
   motherduck skill).
-- **MODIFIED**: 5 data-plane stacks (`lakehouse`, `oideachais`,
+- **MODIFIED**: 5 data-plane stacks (`lakehouse`, `cianfhoghlaim`,
   `dagster`, `motherduck`, `marimo`) — add 4 MOTHERDUCK_* env vars to
   each `secrets.env`:
   - `MOTHERDUCK_MODE` (default `byob`)
@@ -68,7 +68,7 @@ plan (the user explicitly chose "Bundle all 4 fixes into Change 3").
 
 ### Sub-area D — Embedder exports
 
-- **MODIFIED**: 5 data-plane stacks (`lakehouse`, `oideachais`,
+- **MODIFIED**: 5 data-plane stacks (`lakehouse`, `cianfhoghlaim`,
   `dagster`, `motherduck`, `marimo`) — add 2 env vars to each
   `secrets.env`:
   - `CIANFHOGHLAIM_EMBED_MODEL` (default `BAAI/bge-m3`)

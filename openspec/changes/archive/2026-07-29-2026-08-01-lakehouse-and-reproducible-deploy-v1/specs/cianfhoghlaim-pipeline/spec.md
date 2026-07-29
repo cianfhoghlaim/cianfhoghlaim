@@ -11,7 +11,7 @@ rebuilding the dlt pipeline.
 ### Requirement: Embedder env-var contract
 
 MUST export 2 embedder env vars via `secrets.env`. Every data-plane
-stack (`lakehouse`, `oideachais`, `dagster`, `motherduck`, `marimo`)
+stack (`lakehouse`, `cianfhoghlaim`, `dagster`, `motherduck`, `marimo`)
 MUST set the following:
 
 - `CIANFHOGHLAIM_EMBED_MODEL` (default `BAAI/bge-m3`)

@@ -412,6 +412,45 @@ PR #358, released with lance-namespace 0.9.0 on 2026-07-01).
 - **AND** zero requests in the access log SHALL carry
   `x-lance-ctx-*` headers (those would indicate a stale client)
 
+### Requirement: PlanetScale Postgres Centralisation (indexing-and-cognition)
+
+The system SHALL migrate the CCC v1 code-search + Cognee knowledge-graph host to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (row 7: Cognee + row 16: pgvector).
+
+#### Scenario: Cognee uses PlanetScale pgvector
+
+- **GIVEN** the Phase B change has archived
+- **WHEN** `bonneagar/stacks/cognee/compose.yaml` is inspected
+- **THEN** `DATABASE_URL` SHALL point at PlanetScale PG
+- **AND** `pgvector` SHALL be enabled on the PlanetScale branch
+- **AND** the CCC vector indexing pipeline SHALL continue to use pgvector (no behavioural change)
+
+### Requirement: OPENCODE_REGISTRY consumed by the central registry dashboard
+
+The system SHALL register the new `OPENCODE_REGISTRY` (derived from
+`opencode.json`'s `agent` + `mcp` + `provider` blocks) in
+`.agents/skills/INDEXING_AND_COGNITION.md` §8, replacing the partial
+53-skill claim. The 14 OpenCode agents + 12 MCP servers + 2 providers
++ 1 canonical model registry SHALL be the authoritative inventory.
+
+#### Scenario: INDEXING_AND_COGNITION.md §8 is updated
+
+- **GIVEN** the central registry dashboard at
+  `notebooks/00_control_panel.py` Tab 5 "Registry"
+- **WHEN** the operator opens the notebook
+- **THEN** Tab 5 displays the OPENCODE_REGISTRY inventory
+  (14 agents + 12 MCPs + 2 providers + 70 models)
+- **AND** the drift count from `mise run lint:registry` is shown
+
+#### Scenario: Skill count drift is reconciled
+
+- **GIVEN** the existing drift between the documented skill count
+  (53 in `AGENTS.md`, 123 in `openspec/AGENTS.md`, 153 actual
+  `SKILL.md` files)
+- **WHEN** the operator opens the control panel Tab 5
+- **THEN** the panel shows the actual `SKILL.md` count from
+  filesystem walk (`os.walk(".agents/skills/")`)
+- **AND** the documented count is reconciled to match
+
 ## Migrated from (2026-07-06)
 
 - `chunkhound-code-search` — the deprecated ChunkHound capability (semantic code search via MVCC + Tree-sitter + LanceDB) was superseded by this spec; users should now use the v1 `codebase_indexing` CocoIndex App

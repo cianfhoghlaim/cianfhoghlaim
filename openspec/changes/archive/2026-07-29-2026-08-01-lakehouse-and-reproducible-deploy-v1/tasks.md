@@ -8,10 +8,10 @@
 
 ## Sub-area B — MotherDuck token dedup + mode exports
 
-- [ ] **B.1** Edit `bonneagar/stacks/lakehouse/secrets.env`: remove duplicate `MOTHERDUCK_TOKEN=infisical://dev-baile/lakehouse/token` line (keep the canonical `dev-baile/motherduck/token` from oideachais)
+- [ ] **B.1** Edit `bonneagar/stacks/lakehouse/secrets.env`: remove duplicate `MOTHERDUCK_TOKEN=infisical://dev-baile/lakehouse/token` line (keep the canonical `dev-baile/motherduck/token` shared with cianfhoghlaim)
 - [ ] **B.2** Edit 5 data-plane stacks `secrets.env` to add `MOTHERDUCK_MODE` + `MOTHERDUCK_DATABASE` + `MOTHERDUCK_S3_BUCKET` + `MOTHERDUCK_S3_ENDPOINT`:
   - `lakehouse/secrets.env`
-  - `oideachais/secrets.env`
+  - `cianfhoghlaim/secrets.env`
   - `dagster/secrets.env`
   - `motherduck/secrets.env`
   - `marimo/secrets.env`

@@ -23,9 +23,7 @@ currently exposes:
 The canonical operator-facing usage docs are at
 [`.agents/skills/INDEXING_AND_COGNITION.md`](../../.agents/skills/INDEXING_AND_COGNITION.md)
 (see §8 of that file for the registry surface).
-
 ## Requirements
-
 ### Requirement: Functional subagent coverage of the v4 package
 
 The `opencode.json` `agent` registry SHALL define exactly **four
@@ -272,3 +270,42 @@ total skill count across all 5 functional + research subagents.
   listed in §8.4 of the INDEXING document (`build=0, plan=0,
   data-platform=15, infrastructure=15, agent-platform=23,
   frontend-apps=20, research=11`)
+
+### Requirement: PlanetScale Postgres Centralisation (agent-registry)
+
+The system SHALL migrate the 12-agent registry's observability substrate (logfire + langfuse) to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (rows 5 + 28).
+
+#### Scenario: A consumer reads the registry
+
+- **GIVEN** the registry spec is opened
+- **WHEN** they look at the per-agent metadata
+- **THEN** the `system_prompt` reference SHALL be preserved
+- **AND** the observability substrate for the registry's traces SHALL point at PlanetScale PG (logfire database)
+
+### Requirement: 12-agent fleet consumes MODEL_REGISTRY.resolve() for litellm_routing_key
+
+The system SHALL update `agents/agent_registry.py:39-184` so that
+each agent's `litellm_routing_key` resolves through
+`MODEL_REGISTRY.resolve("text_llm", role=<agent_key>)`. The 32
+hardcoded `gemini-2.0-flash` sites in `agents/adk/*` SHALL be replaced
+with `MODEL_REGISTRY.resolve(...)` calls.
+
+#### Scenario: Each agent's litellm_routing_key resolves through the registry
+
+- **GIVEN** the `MODEL_REGISTRY` populated with the `text_llm` family
+- **WHEN** the operator runs
+  `python3 -c "from agents.agent_registry import AGENT_REGISTRY; from meaisinfhoghlaim.models.registry import MODEL_REGISTRY; [print(k, MODEL_REGISTRY.resolve('text_llm', role=k)) for k in AGENT_REGISTRY]"`
+- **THEN** the output prints every agent's resolved model key
+- **AND** no hardcoded `gemini-2.0-flash` strings remain in
+  `agents/adk/*.py`
+
+#### Scenario: google-adk/SKILL.md drift signal is resolved
+
+- **GIVEN** the drift signal at `google-adk/SKILL.md:403-419`
+  ("32 LlmAgent(model=config.model_name) constructors hardcode
+  gemini-2.0-flash ... BYPASSING the KCG minimax 7-tier LiteLLM
+  fallback alias")
+- **WHEN** the operator runs `mise run lint:registry`
+- **THEN** the output contains `Found 0 hardcoded model strings in audited files`
+- **AND** the drift signal is removed from `google-adk/SKILL.md`
+

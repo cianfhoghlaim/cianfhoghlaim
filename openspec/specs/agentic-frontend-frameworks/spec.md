@@ -436,6 +436,49 @@ audiences are documented in the `infrastructure-stacks` spec.
 - **THEN** they see Pocket ID OIDC as the canonical SSO provider
 - **AND** they see the 5 OIDC audiences
 
+### Requirement: PlanetScale Postgres Centralisation (agentic-frontend-frameworks)
+
+The system SHALL migrate the 7-layer agentic-web stack's Convex self-host DB to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (row 2: Convex).
+
+#### Scenario: Convex connects to PlanetScale PG
+
+- **GIVEN** the Phase B change has archived
+- **WHEN** `bonneagar/stacks/convex/compose.yaml` is inspected
+- **THEN** `POSTGRES_URL` SHALL be set
+- **AND** `POSTGRES_URL` SHALL resolve via Locket to PlanetScale PG
+- **AND** the `convex-` prefixed schema SHALL be pre-created on the PlanetScale branch
+
+#### Scenario: Hono + oRPC env vars
+
+- **GIVEN** the Phase B change has archived
+- **WHEN** the leaving-cert app starts
+- **THEN** the per-subject Hono routes' `DATABASE_URL` env var SHALL point at PlanetScale PG (when they add Postgres connections in a follow-up)
+- **AND** no local Postgres container SHALL be required for the leaving-cert app's data plane
+
+### Requirement: Web UI control panel is registered as the 5th canonical surface
+
+The system SHALL register the new `web/apps/cianfhoghlaim-web/control-panel/`
+as the 5th canonical agentic web surface (TanStack Start + Convex +
+Hono + oRPC). The 5 surfaces are:
+
+1. `web/apps/cianfhoghlaim-web/` (the public web app)
+2. `web/apps/croilar-web/` (multi-persona portfolio)
+3. `web/apps/croilar-portal/` (portfolio dashboard)
+4. `web/apps/tuatha-ui/` (Túatha educational MMO)
+5. `web/apps/cianfhoghlaim-web/control-panel/` (NEW: deployment
+   control panel)
+
+#### Scenario: Control panel boots with all 5 routes
+
+- **GIVEN** `web/apps/cianfhoghlaim-web/` configured with the
+  control-panel routes
+- **WHEN** the operator runs `bun run dev` and navigates to
+  `http://localhost:3000/control-panel`
+- **THEN** all 5 routes render without error:
+  `/control-panel/models`, `/control-panel/pipelines`,
+  `/control-panel/datasets`, `/control-panel/stacks`,
+  `/control-panel/registry`
+
 ## Cross-references
 
 - [`.agents/skills/tanstack-start/SKILL.md`](../../.agents/skills/tanstack-start/SKILL.md)
