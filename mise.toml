@@ -807,15 +807,32 @@ description = "List all BIEP v3 Flights from flights/config.yaml"
 run = "uv run python -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
 
 [tasks."drift-audit"]
-description = "Audit for pre-v7 path drift across all subdirectories"
+description = "Audit for pre-v7 path drift across all subdirectories (scoped to source files only — docs are intentionally excluded since they reference historical layouts)"
 run = """
-echo "=== Pre-v7 path drift audit ==="
+echo "=== Pre-v7 path drift audit (source files only) ==="
+# The drift audit scans the 8 target subdirectories + the canonical
+# IaC root + the root pyproject.toml. Docs (.md) are excluded since
+# they legitimately reference pre-v7 layouts as historical notes.
 for pattern in 'cianfhoghlaim/dlt/' 'cianfhoghlaim/baml/' 'infrastructure/stacks/' 'infrastructure/komodo/' 'sruth/cianfhoghlaim/'; do
-  count=$(grep -rE "$pattern" . --include='*.md' --include='*.py' --include='*.ts' --include='*.toml' --include='*.yaml' --include='*.baml' 2>/dev/null | grep -v node_modules | grep -v .venv | grep -v .turbo | grep -v __pycache__ | wc -l)
-  echo "$pattern: $count occurrences"
+  count=$(grep -rE "$pattern" \
+    --include='*.py' \
+    --include='*.ts' \
+    --include='*.toml' \
+    --include='*.yaml' \
+    --include='*.baml' \
+    --include='*.tsx' \
+    --include='*.json' \
+    bonneagar/ dlt_sources/ orchestration/ baml_src/ cocoindex/ motherduck/ meaisinfhoghlaim/ agents/ observability/ \
+    pyproject.toml mise.toml turbo.json package.json tsconfig.json \
+    2>/dev/null | wc -l)
+  echo "$pattern: $count source occurrences"
 done
 echo "=== v7 flat 'cianfhoghlaim.X.Y' in Python imports (should be 0 outside docs) ==="
-grep -rE "from cianfhoghlaim\\.[a-z]+\\." --include='*.py' . 2>/dev/null | grep -v node_modules | grep -v .venv | grep -v .cocoindex_code | grep -v __pycache__ | wc -l
+grep -rE "from cianfhoghlaim\\.[a-z]+\\." --include='*.py' \
+  bonneagar/ dlt_sources/ orchestration/ baml_src/ cocoindex/ motherduck/ meaisinfhoghlaim/ agents/ observability/ \
+  2>/dev/null | wc -l
+echo "=== Total ==="
+echo "Done. Pass criterion: all counts should be 0 in active source."
 """
 
 # =============================================================================
