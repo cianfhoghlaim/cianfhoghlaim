@@ -161,9 +161,9 @@ else
 fi
 
 # ============================================================================
-# Gate 5: mise lint:skills (53/53)
+# Gate 5: mise lint:skills (54/54 — 53 + the new knowledge-sync-loop skill)
 # ============================================================================
-section "Gate 5: mise lint:skills (53/53)"
+section "Gate 5: mise lint:skills (54/54)"
 
 # Don't actually run mise tasks ls (it can be slow); just verify the lint script exists
 LINT_SCRIPT=".agents/skills/lint-skills.sh"
@@ -177,6 +177,32 @@ if [ -f "$LINT_SCRIPT" ]; then
     fi
 else
     fail "lint-skills.sh missing: $LINT_SCRIPT"
+fi
+
+# ============================================================================
+# Gate 6: sync:paths (Layer 1 of the knowledge-sync-loop-v1 architecture)
+# ============================================================================
+section "Gate 6: sync:paths (Layer 1 of knowledge-sync-loop)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:paths"; then
+    pass "sync:paths task registered"
+else
+    fail "sync:paths task not registered"
+fi
+if [ -d ".agents/skills/knowledge-sync-loop" ]; then
+    pass "knowledge-sync-loop skill directory exists"
+else
+    fail "knowledge-sync-loop skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_openspec.py" ]; then
+    pass "scripts/cognee_ingest_openspec.py exists"
+else
+    fail "scripts/cognee_ingest_openspec.py missing"
+fi
+if grep -q "openspec archive search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "20th CCC concept guide (openspec-archive-search) is in guides.yml"
+else
+    fail "20th CCC concept guide missing"
 fi
 
 # ============================================================================
