@@ -837,201 +837,27 @@ run = "bash scripts/bring-up-smoke-test.sh"
 
 [tasks."sync:paths"]
 description = "Layer 1: detect pre-v7 path drift in source files (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = '''
-# The 6 patterns scanned (each is a separate grep across the 8 target
-# subdirs + IaC root + root manifests).
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/paths-$$(date +%Y-%m-%d).md"
-{
-  echo "# Pre-v7 Path Drift Sync Report — $$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  for pattern in 'cianfhoghlaim/dlt/' 'cianfhoghlaim/baml/' 'infrastructure/stacks/' 'infrastructure/komodo/' 'sruth/cianfhoghlaim/' 'infrastructure/iac/dagster/'; do
-    count=$$(grep -rE "$$pattern" \\
-      --include='*.py' \\
-      --include='*.ts' \\
-      --include='*.toml' \\
-      --include='*.yaml' \\
-      --include='*.baml' \\
-      --include='*.tsx' \\
-      --include='*.json' \\
-      bonneagar/ dlt_sources/ orchestration/ baml_src/ cocoindex/ motherduck/ meaisinfhoghlaim/ agents/ observability/ \\
-      pyproject.toml mise.toml turbo.json package.json tsconfig.json \\
-      2>/dev/null | wc -l | tr -d ' ')
-    if [ "$$count" -gt 0 ]; then
-      echo "- \`$$pattern\`: **$$count** occurrences (NEEDS CLEANUP)"
-    else
-      echo "- \`$$pattern\`: 0 occurrences (clean)"
-    fi
-  done
-  echo ""
-  echo "Pass criterion: all counts should be 0 in active source."
-} > "$$REPORT"
-cat "$$REPORT"
-# Exit 0 if all counts are 0, exit 1 if any
-for pattern in 'cianfhoghlaim/dlt/' 'cianfhoghlaim/baml/' 'infrastructure/stacks/' 'infrastructure/komodo/' 'sruth/cianfhoghlaim/' 'infrastructure/iac/dagster/'; do
-  count=$$(grep -rE "$$pattern" \\
-    --include='*.py' \\
-    --include='*.ts' \\
-    --include='*.toml' \\
-    --include='*.yaml' \\
-    --include='*.baml' \\
-    --include='*.tsx' \\
-    --include='*.json' \\
-    bonneagar/ dlt_sources/ orchestration/ baml_src/ cocoindex/ motherduck/ meaisinfhoghlaim/ agents/ observability/ \\
-    pyproject.toml mise.toml turbo.json package.json tsconfig.json \\
-    2>/dev/null | wc -l | tr -d ' ')
-  if [ "$$count" -gt 0 ]; then
-    echo "ERROR: $$count occurrences of $$pattern remain"
-    exit 1
-  fi
-done
-echo "OK: 0 pre-v7 path drift in active source"
-'''
+run = "bash scripts/sync/paths.sh"
 
 [tasks."sync:ccc"]
 description = "Layer 2: refresh CCC index + append the 20th concept guide (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = '''
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/ccc-$$(date +%Y-%m-%d).md"
-# 1. Append the 20th concept guide (if not already present)
-uv run python scripts/sync_openspec_to_ccc.py 2>&1 | tee "$$REPORT"
-# 2. Refresh the CCC index (incremental; <10s on the M4 MacBook)
-echo "" >> "$$REPORT"
-echo "## CCC Index Refresh" >> "$$REPORT"
-echo '```' >> "$$REPORT"
-bun run ccc:index 2>&1 | tail -10 >> "$$REPORT" || echo "(ccc not installed; skipping incremental refresh)"
-echo '```' >> "$$REPORT"
-cat "$$REPORT"
-'''
+run = "bash scripts/sync/ccc.sh"
 
 [tasks."sync:cognee"]
 description = "Layer 3: ingest openspec + skills docs into Cognee (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = '''
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/cognee-$$(date +%Y-%m-%d).md"
-{
-  echo "# Cognee Ingestion Sync Report — $$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "## Cluster Counts (target: 10)"
-  echo ""
-  for cluster in docs-cognee docs-platform docs-data-platform docs-agents docs-models docs-web docs-ci openspec_changes openspec_specs agent_skills; do
-    echo "- \`$$cluster\`: pending cognify"
-  done
-  echo ""
-  echo "## Ingestion Scripts (target: 5 runs)"
-  echo ""
-  echo "1. scripts/cognee_ingest.py docs/01-cognee docs-cognee"
-  echo "2. scripts/cognee_ingest.py docs/01-platform-architecture docs-platform"
-  echo "3. scripts/cognee_ingest.py docs/02-data-platform docs-data-platform"
-  echo "4. scripts/cognee_ingest_openspec.py (openspec_changes + openspec_specs)"
-  echo "5. scripts/cognee_ingest_skills.py (agent_skills)"
-} > "$$REPORT"
-cat "$$REPORT"
-echo ""
-echo "Note: full cognify run is slow (~5-10 min for 7 docs/ dirs). Use 'cognee-mcp' for incremental queries."
-'''
+run = "bash scripts/sync/cognee.sh"
 
 [tasks."sync:skills"]
 description = "Layer 4: validate 57 agent skills (frontmatter + path references; per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = '''
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/skills-$$(date +%Y-%m-%d).md"
-{
-  echo "# Skills Sync Report — $$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "## Frontmatter Lint (canonical 53+ pass)"
-  echo '```'
-  bash .agents/skills/lint-skills.sh
-  echo '```'
-  echo ""
-  echo "## Path Reference Validation (custom check)"
-  echo '```'
-  uv run python scripts/validate_skill_references.py
-  echo '```'
-  echo ""
-  echo "## Stale Skills (>90 days since last update)"
-  STALE=$$(find .agents/skills -name 'SKILL.md' -mtime +90 2>/dev/null | wc -l | tr -d ' ')
-  TOTAL=$$(find .agents/skills -name 'SKILL.md' 2>/dev/null | wc -l | tr -d ' ')
-  echo "- Stale: $$STALE / $$TOTAL skills (>90 days)"
-} > "$$REPORT"
-cat "$$REPORT"
-'''
+run = "bash scripts/sync/skills.sh"
 
 [tasks."sync:mcp"]
 description = "Layer 5: ping all 14 MCP servers with 5s timeout (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = '''
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/mcp-$$(date +%Y-%m-%d).md"
-{
-  echo "# MCP Health Check Report — $$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "## Per-server health (5s timeout per server, 30s total)"
-  echo '```'
-  python3 -c "
-import json, subprocess
-with open('opencode.json') as f:
-    cfg = json.load(f)
-mcp_servers = cfg.get('mcp', {})
-for name, srv in mcp_servers.items():
-    if not isinstance(srv, dict):
-        continue
-    stype = srv.get('type', '?')
-    print(f'  - {name} ({stype}): registered')
-print(f'  Total: {len(mcp_servers)} MCP servers')
-"
-  echo '```'
-  echo ""
-  echo "Note: full health-check requires the MCP servers to be running. Use 'mise run sync:mcp' after a full deploy to verify."
-} > "$$REPORT"
-cat "$$REPORT"
-'''
+run = "bash scripts/sync/mcp.sh"
 
 [tasks."sync:all"]
 description = "Orchestrator: runs sync:paths + sync:ccc + sync:cognee + sync:skills + sync:mcp in sequence + writes a unified report"
-run = '''
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/all-$$(date +%Y-%m-%d).md"
-{
-  echo "# Knowledge Sync Loop — Full Report"
-  echo "Generated: $$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-15-knowledge-sync-loop-v1 change. Pull-based (not push-based). Run on-demand via 'mise run sync:all' or on cron via the 0 */4 * * * sync_health Dagster asset."
-  echo ""
-  echo "---"
-  echo ""
-} > "$$REPORT"
-
-# Run each layer
-for layer in paths ccc cognee skills mcp; do
-  echo "## Layer: sync:$$layer"
-  echo '```'
-  mise run sync:$$layer 2>&1 | tail -20
-  echo '```'
-  echo ""
-  # Append the per-layer report
-  if [ -f "stedding/sync-reports/$$layer-$$(date +%Y-%m-%d).md" ]; then
-    cat "stedding/sync-reports/$$layer-$$(date +%Y-%m-%d).md" >> "$$REPORT"
-  fi
-  echo ""
-done
-
-# Summary
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "- Layer 1 (paths): see above"
-  echo "- Layer 2 (ccc): see above"
-  echo "- Layer 3 (cognee): see above"
-  echo "- Layer 4 (skills): see above"
-  echo "- Layer 5 (mcp): see above"
-  echo ""
-  echo "All 5 layers completed. The deployment control panel (notebooks/24_deployment_control_panel.py) reads this report."
-} >> "$$REPORT"
-
-cat '$$REPORT'
-'''
+run = "bash scripts/sync/all.sh"
 
 [tasks."biep:v3:smoke-test"]
 description = "Week 4 BIEP v3 acceptance gate smoke test (verifies the 5 gates from 2026-07-28-biep-v3-ireland-full-coverage-v1)"
