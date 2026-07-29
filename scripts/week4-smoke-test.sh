@@ -206,6 +206,32 @@ else
 fi
 
 # ============================================================================
+# Gate 7: sync:dagster (Layer 6 — Dagster asset graph validation)
+# ============================================================================
+section "Gate 7: sync:dagster (Layer 6)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:dagster"; then
+    pass "sync:dagster task registered"
+else
+    fail "sync:dagster task not registered"
+fi
+if [ -f "scripts/sync/dagster.sh" ]; then
+    pass "scripts/sync/dagster.sh exists"
+else
+    fail "scripts/sync/dagster.sh missing"
+fi
+if [ -d ".agents/skills/dagster-asset-sync" ]; then
+    pass "dagster-asset-sync skill directory exists"
+else
+    fail "dagster-asset-sync skill directory missing"
+fi
+if [ -f "notebooks/25_dagster_sync_dashboard.py" ]; then
+    pass "notebooks/25_dagster_sync_dashboard.py exists"
+else
+    fail "notebooks/25_dagster_sync_dashboard.py missing"
+fi
+
+# ============================================================================
 # Summary
 # ============================================================================
 section "Summary"
@@ -218,7 +244,7 @@ echo "  TOTAL: $TOTAL"
 echo
 
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "${GREEN}All Week 4 BIEP v3 acceptance gates pass!${NC}"
+    echo -e "${GREEN}All Week 4 BIEP v3 + sync-loop acceptance gates pass!${NC}"
     exit 0
 else
     echo -e "${RED}Some gates failed. See above.${NC}"

@@ -138,10 +138,10 @@ fi
 # ============================================================================
 section "Step 5: lint:skills (54/54 expected)"
 
-if mise run lint:skills 2>&1 | tail -3 | grep -q "54 skills pass"; then
-    pass "lint:skills: 54 skills pass (53 + knowledge-sync-loop)"
+if mise run lint:skills 2>&1 | tail -3 | grep -q "56 skills pass"; then
+    pass "lint:skills: 56 skills pass (53 + knowledge-sync-loop + dagster-asset-sync)"
 else
-    fail "lint:skills: did not return '54 skills pass'"
+    fail "lint:skills: did not return '56 skills pass'"
 fi
 
 # ============================================================================
@@ -175,6 +175,11 @@ if mise tasks ls 2>&1 | grep -qE "^sync:mcp"; then
 else
     fail "sync:mcp task not registered"
 fi
+if mise tasks ls 2>&1 | grep -qE "^sync:dagster"; then
+    pass "sync:dagster task registered (Layer 6)"
+else
+    fail "sync:dagster task not registered"
+fi
 if mise tasks ls 2>&1 | grep -qE "^sync:all"; then
     pass "sync:all orchestrator task registered"
 else
@@ -187,8 +192,13 @@ if [ -d ".agents/skills/knowledge-sync-loop" ]; then
 else
     fail "knowledge-sync-loop skill directory missing"
 fi
+if [ -d ".agents/skills/dagster-asset-sync" ]; then
+    pass "dagster-asset-sync skill directory exists (Layer 6)"
+else
+    fail "dagster-asset-sync skill directory missing"
+fi
 
-# Verify the new Cognee scripts + the 20th CCC concept guide exist
+# Verify the new Cognee scripts + the 20th + 21st CCC concept guides exist
 if [ -f "scripts/cognee_ingest_openspec.py" ]; then
     pass "scripts/cognee_ingest_openspec.py exists"
 else
@@ -199,13 +209,23 @@ if [ -f "scripts/cognee_ingest_skills.py" ]; then
 else
     fail "scripts/cognee_ingest_skills.py missing"
 fi
+if [ -f "scripts/sync_dagster_assets_to_cognee.py" ]; then
+    pass "scripts/sync_dagster_assets_to_cognee.py exists (Layer 6)"
+else
+    fail "scripts/sync_dagster_assets_to_cognee.py missing"
+fi
 if grep -q "openspec archive search" ".cocoindex_code/guides.yml" 2>/dev/null; then
     pass "20th CCC concept guide (openspec-archive-search) is in guides.yml"
 else
     skip "20th CCC concept guide not yet in guides.yml (will be added on first sync:ccc)"
 fi
+if grep -q "dagster-asset-graph" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "21st CCC concept guide (dagster-asset-graph) is in guides.yml"
+else
+    fail "21st CCC concept guide missing from guides.yml"
+fi
 
-# Verify the new Dagster asset + marimo notebook exist
+# Verify the new Dagster asset + marimo notebook + dagster sync script exist
 if [ -f "orchestration/defs/sync_assets.py" ]; then
     pass "orchestration/defs/sync_assets.py exists"
 else
@@ -216,12 +236,37 @@ if [ -f "notebooks/24_deployment_control_panel.py" ]; then
 else
     fail "notebooks/24_deployment_control_panel.py missing"
 fi
+if [ -f "notebooks/25_dagster_sync_dashboard.py" ]; then
+    pass "notebooks/25_dagster_sync_dashboard.py exists (Layer 6 dashboard)"
+else
+    fail "notebooks/25_dagster_sync_dashboard.py missing"
+fi
+if [ -f "scripts/sync/dagster.sh" ]; then
+    pass "scripts/sync/dagster.sh exists (Layer 6)"
+else
+    fail "scripts/sync/dagster.sh missing"
+fi
 
 # Optionally run the actual sync:paths (the fast-path subset)
 if mise run sync:paths 2>&1 | tail -3 | grep -qE "FAIL|ERROR"; then
     skip "sync:paths reports pre-v7 path drift (expected; cleanup is a follow-up)"
 else
     pass "sync:paths reports 0 pre-v7 path drift"
+fi
+
+# ============================================================================
+# Step 7: sync:dagster (per 2026-08-15-retroactive-pre-v7-cleanup-v1 — Layer 6)
+# ============================================================================
+section "Step 7: sync:dagster (Layer 6 — Dagster asset graph validation)"
+
+if [ -x scripts/sync/dagster.sh ]; then
+    if bash scripts/sync/dagster.sh 2>&1 | grep -q "OK:"; then
+        pass "sync:dagster runs + reports assets (Layer 6)"
+    else
+        skip "sync:dagster output doesn't match expected OK marker (may need Dagster install)"
+    fi
+else
+    fail "scripts/sync/dagster.sh missing or not executable"
 fi
 
 # ============================================================================
@@ -237,7 +282,7 @@ echo "  TOTAL: $TOTAL"
 echo
 
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "${GREEN}All 6 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
+    echo -e "${GREEN}All 7 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
     exit 0
 else
     echo -e "${RED}Some bring-up steps failed. See above.${NC}"

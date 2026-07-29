@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """notebooks/24_deployment_control_panel.py — the sync health + model registry + schema + stacks dashboard.
 
-Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2).
+Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) +
+the 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Phase 8.1 — adds Layer 6).
 Consumes stedding/sync-reports/all-{date}.md and surfaces:
-- The 5 sync layer statuses (paths / ccc / cognee / skills / mcp)
+- The 6 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster)
 - The 14 MCP server health
 - The 70+ model names (from the model-registry change)
 - The 472 CocoIndex Apps
@@ -80,6 +81,12 @@ def __(mo, text):
     else:
         statuses["skills"] = "fail"
 
+    # Layer 6 (Dagster) — per 2026-08-15-retroactive-pre-v7-cleanup-v1
+    if "OK:" in text and "assets registered across the 5-layer defs/" in text:
+        statuses["dagster"] = "ok"
+    else:
+        statuses["dagster"] = "fail"
+
     # CCC + cognee + mcp are informational; mark as informational
     statuses["ccc"] = "info"
     statuses["cognee"] = "info"
@@ -96,12 +103,13 @@ def __(mo, statuses):
 
     mo.output.replace(
         mo.md(
-            f"## 5 Sync Layer Statuses\n\n"
+            f"## 6 Sync Layer Statuses\n\n"
             f"- **paths**: {statuses.get('paths', '?')} {'✅' if statuses.get('paths') == 'ok' else '❌'}\n"
             f"- **ccc**: {statuses.get('ccc', '?')} (informational)\n"
             f"- **cognee**: {statuses.get('cognee', '?')} (informational)\n"
             f"- **skills**: {statuses.get('skills', '?')} {'✅' if statuses.get('skills') == 'ok' else '❌'}\n"
-            f"- **mcp**: {statuses.get('mcp', '?')} (informational)\n\n"
+            f"- **mcp**: {statuses.get('mcp', '?')} (informational)\n"
+            f"- **dagster**: {statuses.get('dagster', '?')} {'✅' if statuses.get('dagster') == 'ok' else '❌'} (Layer 6, NEW)\n\n"
             f"**Summary**: {pass_count} pass / {fail_count} fail / {info_count} info\n"
         )
     )
