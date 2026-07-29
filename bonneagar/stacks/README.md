@@ -24,9 +24,8 @@ file groups them by which workspace-member quadrant consumes them.
 
 | If you need to... | Look at... |
 |:--|:--|
-| S3-compatible object storage | `infrastructure/stacks/garage/` (local, Hetzner) or Cloudflare R2 adapter |
+| S3-compatible object storage | `infrastructure/stacks/lakehouse/` (Garage v2.3.0 + Lance Namespace) — the standalone `garage/` stack was removed 2026-08-01 |
 | Iceberg / DuckLake catalog | `infrastructure/stacks/lakehouse/` (Lakekeeper + Lance Namespace + Postgres + Garage) |
-| Git-for-data | `infrastructure/stacks/lakefs/` |
 | Git hosting (self-hosted Forge) | `infrastructure/stacks/forgejo/` |
 | VPN / reverse proxy / OIDC | `infrastructure/stacks/pangolin/` |
 | Container orchestration | `infrastructure/stacks/komodo/` |

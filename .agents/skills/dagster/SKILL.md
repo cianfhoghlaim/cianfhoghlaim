@@ -425,28 +425,25 @@ defs = dg.Definitions(
 
 ### The KCG code-location pattern
 
-The Cianfhoghlaim platform runs 5 code-locations from a single Dagster UI:
-
-| Code-location | Path | Workspace member |
-|:--|:--|:--|
-| `oideachais` | `orchestration/defs/` | The lakehouse (280+ assets) |
-| `tuath` | `agents/tuatha/dagster_assets/` | The Celtic MMO |
-| `crypteolas` | `agents/crypteolas/dagster_assets/` | The crypto data platform |
-| `croilar` | `web/apps/croilar-portal/definitions.py` | The multi-persona portfolio |
-| `meaisin_heartbeat` | `agents/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
-
-All 5 are registered in the root `dg.toml` workspace file:
+REFRESHED 2026-08-01 (lakehouse-and-reproducible-deploy-v1):
+The Cianfhoghlaim platform runs **1 consolidated code-location**
+from a single Dagster UI (post-v7). The historical 5-code-location
+list was collapsed in the 2026-06-28 consolidation.
 
 ```toml
 # /Users/cianmacandeisigh/dev/kings_college_galway/dg.toml
+directory_type = "workspace"
 [workspace]
-name = "cianfhoghlaim"
-
 [[workspace.locations]]
-location = "cianfhoghlaim"
+path = "."
+code_location_name = "cianfhoghlaim"
+module_name = "orchestration.definitions"
+```
 
-[[workspace.locations]]
-location = "tuath"
+The single `orchestration.definitions` module aggregates 752
+sub-components via `dg.load_defs_via_walker(...)` (or the
+Dagster 1.13+ `dg.load_defs()` API path; see
+`orchestration/definitions.py:71-86`).
 
 ## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
 

@@ -10,7 +10,7 @@ on:
       - "**/*.baml"
       - "**/*.yaml"
       - "**/*.yml"
-      - "infrastructure/dagger/**"
+      - "bonneagar/dagger/**"
       - "mise.toml"
       - "pyproject.toml"
       - "turbo.json"
@@ -25,7 +25,7 @@ on:
       - "**/*.baml"
       - "**/*.yaml"
       - "**/*.yml"
-      - "infrastructure/dagger/**"
+      - "bonneagar/dagger/**"
       - "mise.toml"
       - "pyproject.toml"
       - "turbo.json"
@@ -57,9 +57,13 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           dagger version
 
+      # Post-v7 flattening: the IaC was re-merged into this repo at
+      # bonneagar/dagger/ (was previously at infrastructure/dagger/).
+      # The mise.toml task `dagger:test` is the canonical alias; the
+      # mise task `cic:stack-doctor` validates the 89 stacks.
       - name: Dagger test-all
         run: |
-          cd infrastructure/dagger
+          cd bonneagar/dagger
           dagger call test-all --source ../..
 
       - name: Dagger build-images (main only)
@@ -68,8 +72,17 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           echo "$GH_TOKEN" | docker login ghcr.io -u cianfhoghlaim --password-stdin
-          cd infrastructure/dagger
+          cd bonneagar/dagger
           dagger call build-images \
             --source ../.. \
             --registry=ghcr.io/cianfhoghlaim \
             --tag=${{ github.sha }}
+
+      - name: Validate 89 stacks against GOLD_STANDARD
+        # The stack-doctor CI gate (per .agents/skills/infrastructure-stacks)
+        # Replaces the previous 'cic:stack-doctor' run which referenced the
+        # broken 'cianfhoghlaim.stacks.cli' module path.
+        run: mise run cic:stack-doctor
+
+      - name: Lint skills (frontmatter + name + description + line count)
+        run: mise run lint:skills

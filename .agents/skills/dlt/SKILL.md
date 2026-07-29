@@ -42,6 +42,19 @@ When assuming the `data-engineer` persona, use these rules:
   local dev. Set `USE_DUCKLAKE=true` to switch to MotherDuck.
 - **Tests**: disable plugins during testing by setting
   `DLT_DISABLE_PLUGINS=true`.
+- **Canonical env vars** (per the 2026-08-01-lakehouse-and-reproducible-deploy-v1
+  openspec change — now exported by all 5 data-plane stacks
+  `secrets.env`):
+  - `USE_DUCKLAKE` (default `true`) — switch to MotherDuck
+  - `USE_LOCAL_SCRAPES` (default `true`) — offline fallback
+  - `MOTHERDUCK_TOKEN` (resolved from `infisical://dev-baile/motherduck/token`)
+  - `MOTHERDUCK_MODE` (default `byob`)
+  - `MOTHERDUCK_DATABASE` (default `cianfhoghlaim`)
+  - `MOTHERDUCK_S3_BUCKET` (default `ducklake-cianfhoghlaim`)
+  - `MOTHERDUCK_S3_ENDPOINT` (default `http://lakehouse-garage:3900`)
+  - `DUCKLAKE_BUCKET` (default `ducklake-cianfhoghlaim`)
+  - `CIANFHOGHLAIM_EMBED_MODEL` (default `BAAI/bge-m3`)
+  - `CIANFHOGHLAIM_EMBED_DIM` (default `1024`)
 - **Source location**: `dlt_sources` lives at `dlt/`
   (NOT `data_platform/dlt_sources/`, which is a deprecated
   path mentioned in the old skill; NOT `dlt/`,

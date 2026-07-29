@@ -25,34 +25,38 @@ jobs:
       - name: Install uv
         run: pip install uv
 
+      - name: Install mise
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # Post-v7 flattening (2026-07-17): the Python package is the
+      # repo root (was previously at cianfhoghlaim/). All `cd cianfhoghlaim`
+      # and `cd <repo>/cianfhoghlaim` references are removed.
       - name: Install dependencies
         run: |
-          cd cianfhoghlaim
           uv sync --extra dlthub-platform
 
       - name: Run baml-cli generate (canonical step)
         run: |
-          cd cianfhoghlaim
           mkdir -p baml_client_tests
           set -o pipefail
           mise run baml:generate 2>&1 | tee baml_client_tests/baml-generate-output.txt
 
       - name: Drift check (generated client diff)
         run: |
-          if ! git diff --exit-code cianfhoghlaim/baml_client/; then
-            echo "ERROR: baml_client/ has uncommitted drift. Run 'cd cianfhoghlaim && mise run baml:generate' and commit."
+          if ! git diff --exit-code baml_client/; then
+            echo "ERROR: baml_client/ has uncommitted drift. Run 'mise run baml:generate' and commit."
             exit 1
           fi
 
       - name: Run baml-cli test
         run: |
-          cd cianfhoghlaim
           set -o pipefail
           mise run baml:test 2>&1 | tee baml_client_tests/baml-test-output.txt
 
       - name: Run baml-cli check (schema validation)
         run: |
-          cd cianfhoghlaim
           set -o pipefail
           mise run baml:check 2>&1 | tee baml_client_tests/baml-check-output.txt || true
 
@@ -61,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: baml-ci-results
-          path: cianfhoghlaim/baml_client_tests/
+          path: baml_client_tests/
           if-no-files-found: warn
           retention-days: 30
 
@@ -86,7 +90,6 @@ jobs:
             ### How to fix
             1. Run the gate locally from the repo root:
                ```bash
-               cd cianfhoghlaim
                mise run baml:generate && mise run baml:test && mise run baml:check
                ```
             2. Fix any BAML parse/type/test failures reported by `baml-cli test`.

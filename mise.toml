@@ -211,8 +211,23 @@ run = "uv run python scripts/m4_england_gcse.py"
 description = "BIEP v3 milestone gate — verify the active milestone's 3 asset checks pass"
 run = "uv run python scripts/milestone_gate.py"
 [tasks."biep:v3:lint"]
-description = "BIEP v3 ibis-first contract lint — verify no raw duckdb.connect() in BIEP v3 paths"
-run = "grep -rE 'duckdb\\.connect\\(' orchestration/defs/2_materials/ireland_education/ orchestration/defs/2_materials/england_education/ 2>/dev/null | wc -l"
+description = "BIEP v3 ibis-first contract lint — verify no raw duckdb.connect() in BIEP v3 paths (the BIEP v3 spec mandates ibis-first per the lakehouse_pipeline contract; raw duckdb.connect() is a violation)"
+run = """
+# Scan the BIEP v3 Ireland + England paths for raw duckdb.connect() calls
+# (the BIEP v3 contract is ibis-first per british-isles-education-pipeline-v3/spec.md).
+VIOLATIONS=$(grep -rE "duckdb[.]connect[(]" \
+  orchestration/defs/2_materials/ireland_education/ \
+  orchestration/defs/2_materials/england_education/ \
+  2>/dev/null | wc -l)
+
+if [ "$VIOLATIONS" -gt 0 ]; then
+  echo "ERROR: $VIOLATIONS ibis-first violations found in BIEP v3 Ireland/England paths"
+  echo "       (raw duckdb.connect() instead of ibis.duckdb.connect())"
+  exit 1
+fi
+
+echo "OK: 0 ibis-first violations in BIEP v3 Ireland/England paths"
+"""
 [tasks."biep:v3:filename-validate"]
 description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
 run = "uv run python scripts/validate_snake_case_filenames.py"
@@ -913,6 +928,10 @@ run = "openspec validate ${1} --strict"
 [tasks."openspec:archive"]
 description = "Archive a deployed OpenSpec change"
 run = "openspec archive ${1} --yes"
+
+[tasks."deploy:full"]
+description = "Full-stack deploy orchestrator (7-phase state machine with resumable checkpoints) — per 2026-08-01-lakehouse-and-reproducible-deploy-v1"
+run = "bash scripts/deploy-full.sh ${@:-}"
 
 # =============================================================================
 # Utility Tasks

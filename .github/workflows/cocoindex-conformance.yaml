@@ -3,17 +3,17 @@ name: CocoIndex v1 conformance
 on:
   pull_request:
     paths:
-      - "cianfhoghlaim/cocoindex/**/*.py"
-      - "cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py"
-      - "cianfhoghlaim/dlt/common/site_crawler.py"
+      - "cocoindex/**/*.py"
+      - "dlt_sources/common/cocoindex_v1_migrate.py"
+      - "dlt_sources/common/site_crawler.py"
       - "openspec/changes/2026-07-09-cocoindex-v1-remaining-apps-v1/**"
       - "openspec/changes/2026-07-15-pipeline-architecture-clarity-v1/**"
   push:
     branches: [main, pick-4-biep-v1]
     paths:
-      - "cianfhoghlaim/cocoindex/**/*.py"
-      - "cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py"
-      - "cianfhoghlaim/dlt/common/site_crawler.py"
+      - "cocoindex/**/*.py"
+      - "dlt_sources/common/cocoindex_v1_migrate.py"
+      - "dlt_sources/common/site_crawler.py"
   workflow_dispatch:
 
 jobs:
@@ -34,13 +34,19 @@ jobs:
       - name: Install Python + uv + bun
         run: mise install
 
+      # Post-v7 flattening (2026-07-17): the CocoIndex v1 Apps live at
+      # cocoindex/** (was previously at cianfhoghlaim/cocoindex/**).
+      # The R1-R4 linter is at cocoindex/infrastructure/cocoindex_v1_conformance.py.
+      # AUDIT_EXIT is captured + propagated so the job fails when the
+      # audit finds violations (was previously captured but not propagated,
+      # so the job stayed green even when the audit failed).
       - name: Run the cocoindex_v1 conformance audit
         id: audit
         run: |
           set -o pipefail
+          AUDIT_EXIT=0
           mise run cocoindex:conformance 2>&1 | tee cocoindex-v1-conformance-report.txt || AUDIT_EXIT=$?
-          AUDIT_EXIT=${AUDIT_EXIT:-0}
-          echo "audit_exit_code=$AUDIT_EXIT" >> "$GITHUB_OUTPUT"
+          echo "AUDIT_EXIT=${AUDIT_EXIT:-0}" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -52,13 +58,19 @@ jobs:
           path: cocoindex-v1-conformance-report.txt
           if-no-files-found: warn
 
+      - name: Propagate audit exit (build is blocked if any R1-R4 violation found)
+        if: steps.audit.outputs.AUDIT_EXIT != '0'
+        run: |
+          echo "::error::cocoindex_v1 conformance audit returned non-zero (R1-R4 violation found)"
+          exit 1
+
       - name: Post PR comment on failure
         if: failure() && github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## CocoIndex v1 conformance check — ❌ FAILED
+            ## CocoIndex v1 conformance check — FAILED
 
             The `mise run cocoindex:conformance` audit found at least one
             R1 / R2 / R3 / R4 violation. Build is blocked.
@@ -73,8 +85,8 @@ jobs:
             1. Run the audit locally: `mise run cocoindex:conformance`
             2. The report lists every failing flow + the specific
                R1/R2/R3/R4 violation
-            3. Reference pattern: `cianfhoghlaim/cocoindex/mathematics_embedding.py`
-               (the canonical R1-R4 conforming flow)
+            3. Reference pattern: `cocoindex/biep_parity/ireland_lc_mathematics_embedding.py`
+               (the canonical R1-R4 conforming flow; post-v7 path)
             4. R4-exempt marker for non-LanceDB flows (e.g. GeoParquet):
                ```python
                # R4-exempt: <reason>

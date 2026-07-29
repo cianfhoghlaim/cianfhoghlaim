@@ -60,7 +60,7 @@ DuckDB dialect.
 
 | Flag | Default | When to override |
 |:--|:--|:--|
-| `--db-path` | `md:` | Use `/path/to/local.duckdb` for local-only; `md:oideachais` for the read-only KCG lakehouse; `s3://bucket/path.duckdb` for object-storage |
+| `--db-path` | `md:` | Use `/path/to/local.duckdb` for local-only; `md:cianfhoghlaim` for the read-only KCG lakehouse (post-v7 canonical); `s3://bucket/path.duckdb` for object-storage |
 | `--motherduck-token` | `$motherduck_token` env | Required for any `md:` access |
 | `--read-only` | `false` | **Always set true** for the KCG read-only consumer pattern |
 | `--saas-mode` | `false` | Enable in production for security: disables filesystem + write perms for local DuckDB |

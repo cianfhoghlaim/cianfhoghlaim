@@ -151,11 +151,17 @@ services:
 
         ACCESS_KEY_ID=$$(echo "$$KEY_RESPONSE" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
         echo "Access Key ID: $$ACCESS_KEY_ID"
-
-        echo "Creating buckets..."
+echo "Creating buckets..."
+        # CHANGED 2026-08-01 (lakehouse-and-reproducible-deploy-v1):
+        # Renamed the lakehouse-internal bucket from `ducklake` to
+        # `ducklake-cianfhoghlaim` to match the canonical default in
+        # `dlt_sources/common/destinations_cianfhoghlaim.py:109` and the
+        # new `DUCKLAKE_BUCKET=ducklake-cianfhoghlaim` env var exported
+        # by all 5 data-plane stacks.
         # 7 buckets total (3 lakehouse-internal + 4 for downstream consumers)
         # Per the centralise-data-plane rewrite (2026-07)
-        for bucket in iceberg lance ducklake langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
+
+        for bucket in iceberg lance ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
           curl -sf -X POST "$${ADMIN_URL}/v1/bucket" \
             -H "$${AUTH}" \
             -H "Content-Type: application/json" \
@@ -164,7 +170,7 @@ services:
         done
 
         echo "Getting bucket IDs and granting permissions..."
-        for bucket in iceberg lance ducklake langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
+        for bucket in iceberg lance ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
           BUCKET_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}")
           BUCKET_ID=$$(echo "$$BUCKET_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
           if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then
@@ -564,8 +570,18 @@ volumes:
 # NETWORKS
 # =============================================================================
 networks:
+  # CHANGED 2026-08-01 (lakehouse-and-reproducible-deploy-v1):
+  # Was `driver: bridge` (a LOCAL bridge that no downstream stack could reach).
+  # Now declared as `external: true, name: lakehouse_lakehouse` so it
+  # matches the declaration in langfuse, mlflow, litellm, cognee, dagster,
+  # marimo, oideachais, graphiti, agent-os (all 9 downstream stacks that
+  # declare `lakehouse: name: lakehouse_lakehouse, external: true`).
+  # This unblocks them all to resolve lakehouse-postgres / lakehouse-garage
+  # / lakehouse-redis etc. by name (the #1 critical gap per the
+  # 2026-07-29 full-tree audit).
   lakehouse:
-    driver: bridge
+    name: lakehouse_lakehouse
+    external: true
   # Pangolin network for production ingress - external in production
   # For local development, this will be created if it doesn't exist
   pangolin:
