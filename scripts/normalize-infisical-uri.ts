@@ -8,12 +8,67 @@
 // to the canonical 2-segment Infisical URI form
 //   infisical://dev-baile/<svc>/<key>
 // where <svc> is the parent stack directory name (or the ?path= folder).
+//
+// Usage:
+//   bun run scripts/normalize-infisical-uri.ts              (default: normalize, write files)
+//   bun run scripts/normalize-infisical-uri.ts --check-grammar  (CI gate: scan + exit 1 if MIXED)
+//
+// --check-grammar mirrors the detection logic in scripts/stack-doctor.sh
+// (lines 158-166): a stack's secrets.env is MIXED if it contains both at
+// least one `KEY=infisical://dev-baile/...` line AND at least one
+// `KEY={{ infisical:///... }}` line. Empty files (zero URI lines) are
+// also reported so the CI operator can see them, but they are NOT
+// mixed — they pass.
 
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, basename } from "node:path";
 
 const STACKS_DIR = "./stacks";
 
+// --------------------------------------------------------------------------
+// CLI parsing (--check-grammar | default = normalize)
+// --------------------------------------------------------------------------
+const args = process.argv.slice(2);
+const CHECK_GRAMMAR = args.includes("--check-grammar");
+
+// Bare: `KEY=infisical://dev-baile/...` outside of comments or Jinja braces.
+// Mirrors the stack-doctor.sh bash regex `^[[:space:]]*[^#[:space:]][^=]*=infisical://dev-baile/`.
+// JavaScript regex does NOT support POSIX classes (e.g. `[:space:]`) inside
+// `[]`, so we approximate with `\s` (whitespace) and a leading optional group.
+//   - `^\s*` = optional leading whitespace (tabs / spaces)
+//   - `[^#\s]` = first non-comment, non-blank char (the start of KEY)
+//   - `[^=]*` = rest of KEY (no `=` allowed — KEY is single token)
+//   - `=infisical:\/\/dev-baile\/` = the URI itself
+// The `\s` style matches space, tab, newline, but we anchored to `^` so
+// only the leading whitespace matters here.
+const BARE_DETECT_RE = /^\s*[^#\s][^=]*=infisical:\/\/dev-baile\//;
+// Jinja: `KEY={{ infisical:... }}` (note the inner whitespace inside `{{`)
+const JINJA_DETECT_RE = /^\s*[^#\s][^=]*=\{\{\s*infisical:/;
+
+function countGrammar(text: string): { bare: number; jinja: number } {
+  let bare = 0;
+  let jinja = 0;
+  for (const line of text.split("\n")) {
+    if (BARE_DETECT_RE.test(line)) bare++;
+    else if (JINJA_DETECT_RE.test(line)) jinja++;
+  }
+  return { bare, jinja };
+}
+
+function auditGrammarSecretsEnv(filePath: string): { bare: number; jinja: number; mixed: boolean; zero: boolean } {
+  const text = readFileSync(filePath, "utf8");
+  const { bare, jinja } = countGrammar(text);
+  return {
+    bare,
+    jinja,
+    mixed: bare > 0 && jinja > 0,
+    zero: bare === 0 && jinja === 0,
+  };
+}
+
+let mixedCount = 0;
+let zeroUriCount = 0;
+let totalGrammarFiles = 0;
 let totalReplacements = 0;
 let totalFiles = 0;
 
@@ -102,14 +157,57 @@ function walkSecretsEnv(dir: string, parentStack: string = ""): void {
       const stackName = parentStack || basename(full);
       walkSecretsEnv(full, stackName);
     } else if (entry === "secrets.env") {
-      const result = normalizeSecretsEnv(full, parentStack);
-      if (result.changed) {
-        totalReplacements += result.count;
-        totalFiles += 1;
-        console.log(`  ${full}: ${result.count} replacements`);
+      totalGrammarFiles++;
+      if (CHECK_GRAMMAR) {
+        const result = auditGrammarSecretsEnv(full);
+        const stackName = parentStack || basename(dir);
+        const tag = result.mixed ? "✗ MIXED" : result.zero ? "○ empty" : "✓ clean";
+        console.log(
+          `  [${stackName.padEnd(24)}] ${tag}  (bare=${result.bare} jinja=${result.jinja})`,
+        );
+        if (result.mixed) mixedCount++;
+        else if (result.zero) zeroUriCount++;
+      } else {
+        const result = normalizeSecretsEnv(full, parentStack);
+        if (result.changed) {
+          totalReplacements += result.count;
+          totalFiles += 1;
+          console.log(`  ${full}: ${result.count} replacements`);
+        }
       }
     }
   }
+}
+
+if (CHECK_GRAMMAR) {
+  console.log("=== Infisical URI Grammar Check (--check-grammar) ===");
+  walkSecretsEnv(STACKS_DIR);
+  console.log("");
+  console.log(`Scanned ${totalGrammarFiles} secrets.env files`);
+  console.log(`  mixed (grammar violation): ${mixedCount}`);
+  console.log(`  empty (no infisical URI):  ${zeroUriCount}`);
+  if (mixedCount > 0) {
+    console.error("");
+    console.error(`CI GATE FAILURE: ${mixedCount} secrets.env files mix bare + Jinja grammar.`);
+    console.error(
+      "Mixed grammar is a silent-integration-break risk: init-vault.ts reads the bare form,",
+    );
+    console.error(
+      "bons-locket-shim reads the Jinja form, and the two systems never see the same secret.",
+    );
+    console.error(
+      "Fix: re-run `bun run scripts/normalize-infisical-uri.ts` (no flag) to sweep to the",
+    );
+    console.error("canonical bare form, then re-run this check.");
+    process.exit(1);
+  }
+  // Empty-zero files are a soft warning, not a hard failure.
+  if (zeroUriCount > 0) {
+    console.warn(
+      `(note: ${zeroUriCount} secrets.env files have no infisical:// URIs — review manually)`,
+    );
+  }
+  process.exit(0);
 }
 
 console.log("=== Infisical URI Normalization ===");

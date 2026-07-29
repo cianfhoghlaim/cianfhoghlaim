@@ -12,7 +12,9 @@ change (spec delta on `agent-platform-cluster`, Requirement
 
 Public surface:
 
-- `ContextEnvelope` — the Pydantic v2 model (in `context_envelope.py`)
+- `ContextEnvelope` — the Pydantic v2 model (defined in
+  `context_envelope.py`; the spec-mandated hyphen path
+  `context-envelope.py` is a thin re-export shim around it)
 - `receive_envelope` (in 3 sibling modules: `openclaw_handler.py`,
   `openchamber_handler.py`, `hermes_handler.py`) — the per-surface
   unpack function
@@ -20,9 +22,11 @@ Public surface:
 
 The convention is: every cross-surface handoff is a `POST` to the
 recipient's surface URL with `Authorization: Basic <BRIDGE_TOKEN>`
-and a JSON body of `ContextEnvelope.model_dump_json()`. The recipient
-calls `receive_envelope(envelope)` and either accepts (returns
-`{"status": "received", ...}`) or rejects (`{"status": "rejected" | "expired", ...}`).
+and a JSON body of `ContextEnvelope.to_json()` (the canonical
+`model_dump_json()` wrapper). The recipient calls
+`ContextEnvelope.from_json(body_str)` to rehydrate, then
+`receive_envelope(envelope)` to either accept (returns
+`{"status": "received", ...}`) or reject (`{"status": "rejected" | "expired", ...}`).
 """
 
 from __future__ import annotations

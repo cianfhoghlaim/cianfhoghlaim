@@ -347,10 +347,12 @@ model_list:
       description: "Alias: vision → Qwen 3-VL 8B (Unsloth GGUF), falls back to Gemma 4 26B-A4B, then to cloud Gemini"
       capabilities: ["vision", "vlm", "alias"]
       tier: paid
+      # litellm 1.x wants dict form: [{primary: ...}, {fallbacks: [{...}, ...]}]
       fallback_chain:
-        - local/vision/qwen3-vl-8b
-        - local/vision/gemma-4-26B-A4B
-        - gemini/gemini-2.5-pro
+        - primary: local/vision/qwen3-vl-8b
+          fallbacks:
+            - local/vision/gemma-4-26B-A4B
+            - gemini/gemini-2.5-pro
 
   - model_name: ocr
     litellm_params:
@@ -362,10 +364,12 @@ model_list:
       description: "Alias: ocr → Qwen 3-VL 8B (workhorse for syllabus/past-paper OCR), falls back to GLM-4.6V Flash, then olmOCR-2-7B-1025"
       capabilities: ["ocr", "vision", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - local/vision/qwen3-vl-8b
-        - local/vision/glm-4.6v-flash
-        - local/vision/olmocr-2-7b-1025
+        - primary: local/vision/qwen3-vl-8b
+          fallbacks:
+            - local/vision/glm-4.6v-flash
+            - local/vision/olmocr-2-7b-1025
 
   - model_name: diagram
     litellm_params:
@@ -377,9 +381,11 @@ model_list:
       description: "Alias: diagram → Molmo2-8B (top workhorse for figure pointing), falls back to InternVL3_5-8B. Rewired 2026-07-31 to docling-serve."
       capabilities: ["diagram", "grounding", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - local/vision/molmo2-8b
-        - local/vision/internvl3-8b
+        - primary: local/vision/molmo2-8b
+          fallbacks:
+            - local/vision/internvl3-8b
 
   - model_name: gaelic
     litellm_params:
@@ -391,10 +397,12 @@ model_list:
       description: "Alias: gaelic → Gemma 4 26B-A4B (6 Celtic languages, M4 default), falls back to Qwen 3-VL 8B"
       capabilities: ["gaelic", "multilingual", "vision", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - local/vision/gemma-4-26B-A4B
-        - local/vision/qwen3-vl-8b
-        - local/vision/gemma-4-E4B
+        - primary: local/vision/gemma-4-26B-A4B
+          fallbacks:
+            - local/vision/qwen3-vl-8b
+            - local/vision/gemma-4-E4B
 
   - model_name: irish
     litellm_params:
@@ -406,9 +414,11 @@ model_list:
       description: "Alias: irish → UCCIX-Mistral-24B (modern Irish-language path, Nov 2025), falls back to Gemma 4 26B-A4B. Rewired 2026-07-31 to mlx-omni."
       capabilities: ["irish", "gaelic", "text", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - local/vision/uccix-mistral-24b
-        - local/vision/gemma-4-26B-A4B
+        - primary: local/vision/uccix-mistral-24b
+          fallbacks:
+            - local/vision/gemma-4-26B-A4B
 
   - model_name: default
     litellm_params:
@@ -431,10 +441,12 @@ model_list:
       description: "Alias: math → Qwen 3.6 27B MTP (best for marking-scheme post-processing), falls back to Qwen 3.6 35B-A3B MTP, then to GLM-4.6"
       capabilities: ["math", "reasoning", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - local/vision/qwen3.6-27b-mtp
-        - local/vision/qwen3.6-35b-a3b-mtp
-        - openai/glm-4.6
+        - primary: local/vision/qwen3.6-27b-mtp
+          fallbacks:
+            - local/vision/qwen3.6-35b-a3b-mtp
+            - openai/glm-4.6
 
   - model_name: extract
     litellm_params:
@@ -446,10 +458,12 @@ model_list:
       description: "Alias: extract → Gemma 4 12B Unified (good for BAML extraction with diagram support)"
       capabilities: ["vision", "vlm", "extraction", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - local/vision/gemma-4-12B
-        - local/vision/gemma-4-26B-A4B
-        - openai/glm-4.6
+        - primary: local/vision/gemma-4-12B
+          fallbacks:
+            - local/vision/gemma-4-26B-A4B
+            - openai/glm-4.6
 
   - model_name: embedding-bge-m3
     litellm_params:
@@ -459,9 +473,11 @@ model_list:
       description: "Alias: embedding-bge-m3 → 1024-dim multilingual embeddings (for the PDF processing pipeline Stage 5)"
       capabilities: ["embedding", "alias"]
       tier: paid
+      # litellm 1.x wants dict form
       fallback_chain:
-        - openai/text-embedding-3-small
-        - celtic/embedding/bge-m3
+        - primary: openai/text-embedding-3-small
+          fallbacks:
+            - celtic/embedding/bge-m3
 
   # ===========================================================================
   # M3 CHOKEPOINT — the 5 routing keywords (added 2026-07-08 by the

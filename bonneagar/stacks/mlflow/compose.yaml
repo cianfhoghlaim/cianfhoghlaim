@@ -64,6 +64,12 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_SERVICE_NAME: mlflow
+      # Langfuse SDK-side traces (cost + prompt metadata for tracking URLs
+      # served by mlflow). The mlflow UI shows "Trace in Langfuse" links that
+      # require LANGFUSE_HOST + PUBLIC_KEY + SECRET_KEY to resolve.
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
     command:
       - mlflow
       - server

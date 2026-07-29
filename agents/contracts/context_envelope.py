@@ -149,5 +149,35 @@ class ContextEnvelope(BaseModel):
             "Content-Type": "application/json",
         }
 
+    def to_json(self) -> str:
+        """Serialize the envelope to a UTF-8 JSON string.
+
+        The canonical wire format for cross-surface handoff. The recipient
+        calls `ContextEnvelope.from_json(json_str)` to rehydrate.
+
+        Example::
+
+            payload = envelope.to_json()
+            # → '{"sender":"openclaw","recipient":"hermes",...}'
+
+            # Rehydrate on the receiving surface:
+            envelope = ContextEnvelope.from_json(payload)
+        """
+        # `model_dump_json()` is the Pydantic v2 built-in; we wrap it for
+        # the canonical method name.
+        return self.model_dump_json()
+
+    @classmethod
+    def from_json(cls, json_str: str | bytes) -> "ContextEnvelope":
+        """Rehydrate an envelope from its JSON wire form.
+
+        Inverse of `to_json()`. Raises `pydantic.ValidationError` if the
+        payload is malformed or fails any field-level validator (e.g.
+        `expires_at < created_at`).
+        """
+        if isinstance(json_str, bytes):
+            json_str = json_str.decode("utf-8")
+        return cls.model_validate_json(json_str)
+
 
 __all__ = ["ContextEnvelope", "AgentSurface"]
