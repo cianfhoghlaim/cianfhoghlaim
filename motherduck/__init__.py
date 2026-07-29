@@ -28,12 +28,13 @@ from __future__ import annotations
 from .dives import (
     BIEP_DIVES,
     DiveRegistry,
+    DiveSpec,
     GOV_CIRCULARS_ARCHIVE_DIVE,
     LC_EXAM_DIFFICULTY_DIVE,
     LC_MARKING_COMPLEXITY_DIVE,
     LC_SYLLABUS_TOPICS_DIVE,
 )
-from .flights import lc_pdf_sync_flight_main
+from .flights import lc_pdf_sync_flight_main, run_flight
 
 
 def save_all() -> int:
@@ -50,6 +51,7 @@ __all__ = [
     # Dives (BIEP dashboard definitions)
     "BIEP_DIVES",
     "DiveRegistry",
+    "DiveSpec",
     "LC_SYLLABUS_TOPICS_DIVE",
     "LC_EXAM_DIFFICULTY_DIVE",
     "LC_MARKING_COMPLEXITY_DIVE",
@@ -57,4 +59,5 @@ __all__ = [
     "save_all",
     # Flights (scheduled Python jobs on MotherDuck compute)
     "lc_pdf_sync_flight_main",
+    "run_flight",
 ]

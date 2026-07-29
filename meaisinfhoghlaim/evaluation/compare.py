@@ -35,7 +35,7 @@ from cianfhoghlaim.ocr.models.registry import (
 # `cianfhoghlaim.meaisinfhoghlaim.backends.adapters` and are imported here
 # so `run_plan1_eval()` can call them directly. The previous TODO
 # ("hit the Docker stack via HTTP") is now resolved.
-from cianfhoghlaim.meaisinfhoghlaim.backends.adapters import (
+from meaisinfhoghlaim.backends.adapters import (
     DoclingAdapter,
     DotsOCRAdapter,
     OCRAdapterRegistry,
@@ -147,7 +147,7 @@ async def _run_classical_eval(
     report — we set `cer=1.0`, `wer=1.0`, `status="error"` in the
     metadata via the `notes` field.
     """
-    from cianfhoghlaim.meaisinfhoghlaim.backends.adapters import OCRResult
+    from meaisinfhoghlaim.backends.adapters import OCRResult
 
     start = time.time()
     adapter_cls = _CLASSICAL_ADAPTER_FOR_STACK.get(stack.stack_name)

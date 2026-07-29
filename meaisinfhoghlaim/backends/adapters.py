@@ -14,7 +14,7 @@ module (not from the legacy `oideachas.ocr.adapters` shim). The
 `meaisinfhoghlaim.evaluation.compare` (the standard OCR eval harness).
 
 Usage:
-    from cianfhoghlaim.meaisinfhoghlaim.backends.adapters import (
+    from meaisinfhoghlaim.backends.adapters import (
         get_adapter,
         compare_ocr_models,
     )

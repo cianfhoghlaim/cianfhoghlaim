@@ -1,16 +1,16 @@
 """Back-compat re-export shim for the v4 OCR/VLM model registry.
 
 The canonical implementation lives at
-`cianfhoghlaim.meaisinfhoghlaim.models.registry` (per the v4 platform
+`meaisinfhoghlaim.models.registry` (per the v4 platform
 convention: the outer `models/` package is canonical, not the nested
 `ocr/models/` sub-package).
 
 This shim re-exports the same symbols so legacy code that does
-`from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import VISION_MODELS`
+`from meaisinfhoghlaim.ocr.models.registry import VISION_MODELS`
 keeps working until v5. A `DeprecationWarning` is emitted on import;
 callers should migrate to:
 
-    from cianfhoghlaim.meaisinfhoghlaim.models.registry import VISION_MODELS
+    from meaisinfhoghlaim.models.registry import VISION_MODELS
 
 The shim will be removed in v5 of the registry.
 """
@@ -20,9 +20,9 @@ from __future__ import annotations
 import warnings as _warnings
 
 _warnings.warn(
-    "Importing from `cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry` is a "
+    "Importing from `meaisinfhoghlaim.ocr.models.registry` is a "
     "deprecated v4 back-compat shim. The canonical home is "
-    "`cianfhoghlaim.meaisinfhoghlaim.models.registry` (per the v4 platform "
+    "`meaisinfhoghlaim.models.registry` (per the v4 platform "
     "convention: the outer `models/` package is canonical). This shim will be "
     "removed in v5.",
     DeprecationWarning,
@@ -30,7 +30,7 @@ _warnings.warn(
 )
 
 # Re-export everything from the canonical v4 home.
-from cianfhoghlaim.meaisinfhoghlaim.models.registry import (  # noqa: E402
+from meaisinfhoghlaim.models.registry import (  # noqa: E402
     CLASSICAL_OCR,
     MODEL_BACKEND,
     MODEL_CAPABILITY,

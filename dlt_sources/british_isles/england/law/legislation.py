@@ -7,7 +7,7 @@ import dlt
 
 
 import dlt_sources
-from dlt_sources.law._legislation_helper import _crawl_legislation
+from dlt_sources.british_isles._legislation_helper import _crawl_legislation
 
 
 @dlt.source(name="en_legislation")

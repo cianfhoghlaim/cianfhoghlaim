@@ -40,7 +40,7 @@ except ImportError:
     MLFLOW_AVAILABLE = False
     mlflow = None  # type: ignore[assignment]
 
-from cianfhoghlaim.meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import (  # noqa: E402
+from meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import (  # noqa: E402
     EnsemblePathOutput,
     EnsembleResult,
 )

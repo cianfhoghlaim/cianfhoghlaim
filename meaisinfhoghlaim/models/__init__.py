@@ -8,7 +8,7 @@ kept as a back-compat shim.
 This `__init__.py` re-exports the symbols from `registry.py` so
 callers can do:
 
-    from cianfhoghlaim.meaisinfhoghlaim.models import (
+    from meaisinfhoghlaim.models import (
         VISION_MODELS,
         get_default_for_m4_max,
         select_ocr_backend,
@@ -21,7 +21,7 @@ for back-compat with pre-v4 callers (they collapse to the v4
 
 from __future__ import annotations
 
-from cianfhoghlaim.meaisinfhoghlaim.models.registry import (
+from meaisinfhoghlaim.models.registry import (
     CLASSICAL_OCR,
     MODEL_BACKEND,
     MODEL_CAPABILITY,
@@ -74,7 +74,7 @@ __all__ = [
 ]
 
 # Shared LlamaSwap routing table (added 2026-07-17)
-from cianfhoghlaim.meaisinfhoghlaim.models.routing import (
+from meaisinfhoghlaim.models.routing import (
     ROUTING_TABLE,
     RoutingConfig,
     route_language,

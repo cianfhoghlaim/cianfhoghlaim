@@ -118,7 +118,12 @@ def write_status_row(
     if con is None:
         token = os.environ.get("MOTHERDUCK_TOKEN", "")
         if token:
-            duckdb.sql(f"SET motherduck_token='{token}'")
+            # Use a private DuckDB instance to set the token before
+            # opening the MotherDuck attach — avoids the SQL-injection
+            # risk of an f-string interpolation into ``duckdb.sql``.
+            bootstrap = duckdb.connect()
+            bootstrap.execute("SET motherduck_token = ?", [token])
+            bootstrap.close()
         con = duckdb.connect("md:cianfhoghlaim")
 
     try:
