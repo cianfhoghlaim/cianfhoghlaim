@@ -3,7 +3,7 @@ reranker — v1 CocoIndex primitive (Phase 0 of
 `2026-07-14-multimodal-code-and-media-intel-v1`).
 
 Ported from the archived `códeolas`
-(`stedding/dev/cianfhoghlaim copy/sruth/códeolas/search/reranker.py:rerank_results`).
+(`cocoindex/_shared/reranker.py:rerank_results` (was `stedding/dev/cianfhoghlaim copy/sruth/códeolas/search/reranker.py` pre-v7)).
 
 The archived primitive supported Jina / Cohere / Aliyun as rerank
 providers via raw `aiohttp` calls. The v1 primitive wraps the same 3

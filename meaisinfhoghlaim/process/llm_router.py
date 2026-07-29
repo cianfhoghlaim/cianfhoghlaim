@@ -7,7 +7,7 @@ Routes LLM requests across multiple providers with:
 - Cost-aware routing
 - Model capability matching
 
-Based on patterns from sruth/browser/core/llm_router.py
+Based on patterns from sruth/browser/core/llm_router.py (current: meaisinfhoghlaim/process/llm_router.py)
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from enum import Enum
 from typing import Any
 
 from cianfhoghlaim.core.utils import (
-    CircuitBreaker,  # Canonical home: sruth/oideachais/core/utils/circuit_breaker.py:54
+    CircuitBreaker,  # Canonical home: sruth/oideachais/core/utils/circuit_breaker.py:54 (current: meaisinfhoghlaim/process/llm_router.py:CircuitBreaker)
 )
 from cianfhoghlaim.observability.settings_proxy import settings
 

@@ -8,9 +8,9 @@ line 685), the canonical home for the registry is
 `cianfhoghlaim/meaisinfhoghlaim/models/registry.py`.
 
 History:
-- Pre-v4: `sruth/oideachais/_oideachais_src/vlm_finetune_comparison.py`
+- Pre-v4: `sruth/oideachais/_oideachais_src/vlm_finetune_comparison.py` (current: `meaisinfhoghlaim/training/training/unsloth_trainer.py`)
   (the legacy single `VLM_MODELS` dict) +
-  `sruth/oideachais/_meaisinfhoghlaim_src/model_registry.py` (the
+  `sruth/oideachais/_meaisinfhoghlaim_src/model_registry.py` (current: `meaisinfhoghlaim/models/registry.py:VISION_MODELS`) (the
   separate `OCR_MODELS` dict).
 - 2026-06-28 (v4 consolidation): the two dicts were collapsed into a
   single 20-entry `VISION_MODELS` at

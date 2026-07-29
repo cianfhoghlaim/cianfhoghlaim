@@ -3,7 +3,7 @@ repo_type_detector — v1 CocoIndex primitive (Phase 0 of
 `2026-07-14-multimodal-code-and-media-intel-v1`).
 
 Ported from the archived `códeolas`
-(`stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/detector.py:RepoTypeDetector`).
+(`cocoindex/_shared/repo_type_detector.py:RepoTypeDetector` (was `stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/detector.py` pre-v7)).
 
 The archived detector used 6 marker sets (BACKEND / FRONTEND / LIBRARY /
 DATA_PIPELINE / INFRASTRUCTURE / MONOREPO) and a weighted-vote scoring

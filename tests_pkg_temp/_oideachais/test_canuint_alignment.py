@@ -480,4 +480,4 @@ class TestEndToEndPipeline:
             assert report.overall_score > 0
 
 
-# Run with: pytest sruth/oideachais/tests/test_canuint_alignment.py -v
+# Run with: pytest tests_pkg_temp/_oideachais/test_canuint_alignment.py -v  (was sruth/oideachais/tests/ pre-v7)

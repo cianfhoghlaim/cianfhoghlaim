@@ -241,7 +241,7 @@ def check_app_file(path: pathlib.Path) -> ConformanceReport:
 
 
 def run_conformance_check(
-    repo_root: pathlib.Path = pathlib.Path("sruth/cianfhoghlaim/cocoindex_flows"),
+    repo_root: pathlib.Path = pathlib.Path("cocoindex/infrastructure"),
 ) -> list[ConformanceReport]:
     """Walk every v1 App file and return a list of ConformanceReports.
 

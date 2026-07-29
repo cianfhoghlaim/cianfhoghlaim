@@ -3,7 +3,7 @@ multihop_search — v1 CocoIndex primitive (Phase 0 of
 `2026-07-14-multimodal-code-and-media-intel-v1`).
 
 Ported from the archived `códeolas`
-(`stedding/dev/cianfhoghlaim copy/sruth/códeolas/search/multihop.py:multihop_search`).
+(`cocoindex/knowledge_graph/multihop_search.py:multihop_search` (was `stedding/dev/cianfhoghlaim copy/sruth/códeolas/search/multihop.py` pre-v7)).
 
 The archived primitive took a `CodebaseAnalyzer` instance and iteratively
 called `analyzer.search(...)` with refined queries. The v1 primitive is

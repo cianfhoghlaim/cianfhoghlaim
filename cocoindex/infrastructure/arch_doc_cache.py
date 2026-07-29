@@ -3,7 +3,7 @@ arch_doc_cache — v1 CocoIndex primitive (Phase 0 of
 `2026-07-14-multimodal-code-and-media-intel-v1`).
 
 Ported from the archived `códeolas`
-(`stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/cache.py:ArchDocCache`).
+(`cocoindex/infrastructure/arch_doc_cache.py:ArchDocCache` (was `stedding/dev/cianfhoghlaim copy/sruth/códeolas/generators/reposwarm/cache.py` pre-v7)).
 
 The archived cache was DuckDB-backed (single-threaded via
 `SerialDatabaseExecutor`), keyed by `(repo_path, git_sha)` with a TTL.

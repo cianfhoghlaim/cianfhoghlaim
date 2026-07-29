@@ -13,7 +13,7 @@ Modal H100 80 GB is the right home for this fine-tune.
 
 Usage:
     # Direct Modal execution
-    modal run sruth/oideachais/modal/finetune_irish.py
+    modal run meaisinfhoghlaim/training/modal_finetune/finetune_irish.py (was sruth/oideachais/modal/ pre-v7)
     modal deploy sruth/oideachais/modal/finetune_irish.py
 
     # Dagster orchestration (preferred)
