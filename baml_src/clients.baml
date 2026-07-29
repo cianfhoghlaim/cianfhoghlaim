@@ -150,6 +150,7 @@ client<llm> BIEPV3Extract {
   options {
     base_url env.MINIMAX_BASE_URL
     api_key env.MINIMAX_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
     model "minimax-m3"
   }
   retry_policy Exponential
@@ -160,6 +161,7 @@ client<llm> BIEPV3ExtractStrong {
   options {
     base_url env.MINIMAX_BASE_URL
     api_key env.MINIMAX_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
     model "minimax-m3"
   }
   retry_policy Exponential
@@ -170,6 +172,7 @@ client<llm> BIEPV3Vision {
   options {
     base_url env.LITELLM_BASE_URL
     api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="qwen3_vl_default" → "qwen3-vl-8b"
     model "local/vision/qwen3-vl-8b"
   }
   retry_policy Exponential

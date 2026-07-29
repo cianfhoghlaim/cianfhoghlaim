@@ -1,13 +1,25 @@
 """BIEP v3 canonical BAML clients.
 
 Per the 2026-08-07-biep-v3-hardening-v1 change + the
-2026-08-08-baml-clients-biep-v3-reconciliation-v1 follow-up.
+2026-08-08-baml-clients-biep-v3-reconciliation-v1 follow-up + the
+2026-07-29-complete-remaining-model-registry-migrations-v1 follow-up.
 
 The 3 canonical clients are wired in `baml_src/clients.baml` and
 all active BIEP v3 jurisdiction functions route through them.
 The model strings here MUST match the `model` fields in
-`clients.baml` lines 188-216 — the Python module is the spec, the
-BAML clients are the implementation.
+`clients.baml` — the Python module is the spec, the BAML clients
+are the implementation.
+
+Per the centralized-model-registry openspec change, the 3 model
+strings below are resolved from MODEL_REGISTRY at import time:
+
+  BIEPV3Extract        → text_llm/default               → "minimax-m3"
+  BIEPV3ExtractStrong  → text_llm/default               → "minimax-m3"
+  BIEPV3Vision         → ocr_vision/qwen3_vl_default    → "qwen3-vl-8b"
+
+The historical hardcoded fallbacks are preserved for minimal
+container builds where MODEL_REGISTRY (meaisinfhoghlaim) is
+unavailable.
 
 Historical note: an earlier version of this file declared
 Gemma 3 4B + 27B + qwen3-vl-8b (per the 2026-07-13 Gemma 3 launch
@@ -17,22 +29,50 @@ was updated post-v8 to match the actual BAML wiring.
 """
 from __future__ import annotations
 
+# Historical hardcoded fallback chain — used when MODEL_REGISTRY is
+# unavailable. Per the centralized-model-registry contract, the
+# canonical source of truth is `meaisinfhoghlaim.models.MODEL_REGISTRY`.
+_BIEPV3_EXTRACT_FALLBACK = "minimax-m3"
+_BIEPV3_EXTRACT_STRONG_FALLBACK = "minimax-m3"
+_BIEPV3_VISION_FALLBACK = "local/vision/qwen3-vl-8b"
+
+
+def _resolve_text_llm_default() -> str:
+    """Resolve text_llm/default from MODEL_REGISTRY (minimax-m3)."""
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return MODEL_REGISTRY.resolve("text_llm", "default")
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return _BIEPV3_EXTRACT_FALLBACK
+
+
+def _resolve_ocr_vision_qwen3_vl_default() -> str:
+    """Resolve ocr_vision/qwen3_vl_default from MODEL_REGISTRY (qwen3-vl-8b).
+
+    The BAML routing layer expects the LiteLLM alias prefix
+    ``local/vision/`` so we reconstruct it from the registry key.
+    """
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        key = MODEL_REGISTRY.resolve("ocr_vision", "qwen3_vl_default")
+        return f"local/vision/{key}"
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return _BIEPV3_VISION_FALLBACK
+
+
 # BIEPV3Extract — the canonical light-weight text client.
 # Routes through the minimax-m3 (coding-plan API).
-# Per clients.baml lines 188-196.
-BIEPV3Extract = "minimax-m3"
+BIEPV3Extract = _resolve_text_llm_default()
 
 # BIEPV3ExtractStrong — the canonical detail-rich text client.
 # Same model as BIEPV3Extract (both route through the same
 # minimax-m3 instance); the Strong variant uses higher max_tokens
 # + longer timeout per the CANONICAL_CLIENTS table below.
-# Per clients.baml lines 198-206.
-BIEPV3ExtractStrong = "minimax-m3"
+BIEPV3ExtractStrong = _resolve_text_llm_default()
 
 # BIEPV3Vision — the canonical vision client for the 4-path OCR ensemble
 # Routes through LiteLLM to the local qwen3-vl-8b server.
-# Per clients.baml lines 208-216.
-BIEPV3Vision = "local/vision/qwen3-vl-8b"
+BIEPV3Vision = _resolve_ocr_vision_qwen3_vl_default()
 
 
 # The 3 canonical clients, with documented retry + timeout + max_tokens.

@@ -11,6 +11,7 @@ import { Hono } from "hono";
 import { streamAGUI } from "./agui_stream";
 import { AGENTS, getAgentById } from "../registry";
 import { ALL_ACTIONS } from "./actions";
+import { TEXT_LLM_DEFAULT_MODEL } from "../lib/model-registry";
 
 const copilotkitApp = new Hono();
 
@@ -51,11 +52,17 @@ copilotkitApp.get("/health", (c) => c.json({
 
 // Synthetic ADK team shape — wraps an AGENTS entry into a BuiltInAgent-compatible
 // object for the SSE stream.
+//
+// The `model` field is resolved from the canonical MODEL_REGISTRY_TS
+// mirror at `apps/api/src/lib/model-registry.ts` — the TypeScript
+// counterpart to `meaisinfhoghlaim.models.MODEL_REGISTRY.resolve("text_llm", "default")`.
+// Per the centralized-model-registry openspec change (2026-08-15) +
+// the 2026-07-29-complete-remaining-model-registry-migrations-v1 change.
 function makeSyntheticTeam(agent: typeof AGENTS[number]): BuiltInAgentLike {
   return {
     name: agent.id,
     description: agent.role,
-    model: "minimax-m3",
+    model: TEXT_LLM_DEFAULT_MODEL,
     systemPrompt: agent.system_prompt,
   };
 }

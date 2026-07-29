@@ -115,15 +115,66 @@ class CelticTranslator:
     2. Opus-MT for direct translation models
     3. M2M-100 for fallback and low-resource pairs
     4. Pivot through English for Celtic↔Celtic when needed
+
+    The `primary_model` + `fallback_model` defaults are resolved from
+    MODEL_REGISTRY (the centralized-model-registry openspec change,
+    2026-08-15):
+      primary  → translation/strong_multilingual  → nllb         (facebook/nllb-200-distilled-600M)
+      fallback → translation/multilingual         → m2m100       (facebook/m2m100_418M)
+    We use the ``upstream_id`` field (the canonical HuggingFace ID) so
+    that the transformers pipeline loader can resolve the model.
     """
+
+    # The historical hardcoded fallback chain — used when MODEL_REGISTRY
+    # is unavailable (e.g. minimal container builds).
+    _PRIMARY_MODEL_FALLBACK = "facebook/nllb-200-distilled-600M"
+    _FALLBACK_MODEL_FALLBACK = "facebook/m2m100_418M"
+
+    @staticmethod
+    def _resolve_translation_upstream(role: str) -> str:
+        """Resolve the upstream_id of a translation-family model from MODEL_REGISTRY.
+
+        Args:
+            role: One of ``"strong_multilingual"`` (NLLB) or
+                ``"multilingual"`` (M2M-100).
+
+        Returns:
+            The HuggingFace model ID (e.g. ``"facebook/nllb-200-distilled-600M"``).
+
+        Raises:
+            ImportError: If MODEL_REGISTRY is not importable.
+        """
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        entry = next(
+            (
+                e
+                for e in MODEL_REGISTRY.filter(family="translation")
+                if e.role == role
+            ),
+            None,
+        )
+        if entry is None:
+            raise KeyError(f"No translation entry with role={role!r} in MODEL_REGISTRY")
+        return entry.upstream_id
 
     def __init__(
         self,
-        primary_model: str = "facebook/nllb-200-distilled-600M",
-        fallback_model: str = "facebook/m2m100_418M",
+        primary_model: str | None = None,
+        fallback_model: str | None = None,
         device: str = "cpu",
         batch_size: int = 8,
     ):
+        # Resolve from MODEL_REGISTRY when not explicitly provided.
+        if primary_model is None:
+            try:
+                primary_model = self._resolve_translation_upstream("strong_multilingual")
+            except Exception:  # noqa: BLE001 — registry unavailable in dev
+                primary_model = self._PRIMARY_MODEL_FALLBACK
+        if fallback_model is None:
+            try:
+                fallback_model = self._resolve_translation_upstream("multilingual")
+            except Exception:  # noqa: BLE001 — registry unavailable in dev
+                fallback_model = self._FALLBACK_MODEL_FALLBACK
         self.primary_model = primary_model
         self.fallback_model = fallback_model
         self.device = device

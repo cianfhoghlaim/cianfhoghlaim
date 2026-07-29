@@ -44,13 +44,42 @@ LITELLM_URL = os.environ.get("LITELLM_URL", "http://localhost:4000")
 LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY", "sk-1234")
 
 # Model preferences (fallback chain)
-IMAGE_MODELS = [
+#
+# The canonical image_gen model keys are resolved from MODEL_REGISTRY
+# (the centralized-model-registry openspec change, 2026-08-15). The 5
+# LiteLLM image-gen aliases are:
+#   local/image/flux2-dev, local/image/z-image-turbo, local/image/qwen-image,
+#   local/image/sdxl, local/image/fibo
+#
+# We keep the historical hardcoded fallback chain for minimal container
+# builds where MODEL_REGISTRY (meaisinfhoghlaim) is unavailable.
+_IMAGE_MODEL_FALLBACK: list[str] = [
     "local/image/flux2-dev",
     "local/image/z-image-turbo",
     "local/image/qwen-image",
     "local/image/sdxl",
     "local/image/fibo",
 ]
+
+
+def _image_model_keys() -> list[str]:
+    """Resolve the canonical image_gen fallback chain from MODEL_REGISTRY.
+
+    Per the centralized-model-registry openspec change. Returns the 5
+    image-gen entries sorted by their registry key (deterministic order).
+    Falls back to the historical hardcoded chain if MODEL_REGISTRY is
+    unavailable.
+    """
+    try:
+        from meaisinfhoghlaim.models import MODEL_REGISTRY
+        return [e.key for e in MODEL_REGISTRY.filter(family="image_gen")]
+    except Exception:  # noqa: BLE001 — registry unavailable in dev
+        return list(_IMAGE_MODEL_FALLBACK)
+
+
+# Resolved at import time. Re-import this module after registry changes
+# to pick up new entries.
+IMAGE_MODELS: list[str] = _image_model_keys()
 
 
 class ImageSize(StrEnum):
