@@ -25,11 +25,13 @@ services:
   # OPENCLAW GATEWAY
   # ---------------------------------------------------------------------------
   openclaw:
-    # Pinned 2026-07-02 (was `1.0.0@sha256:0000...` — the `1.0.0` tag does not
-    # exist; the actual upstream uses date-based tags; latest published is
-    # `2026.2.6` per GHCR; the `@sha256:0000...` digest was a placeholder and
-    # would fail `docker compose pull`; replaced with the real semver tag).
-    image: ghcr.io/openclaw/openclaw:2026.2.6
+    # Pinned 2026-07-30 (per the 2026-07-30-pre-deploy-blockers-resolution-v1
+    # openspec change — closes GitHub issue #81). The SHA256 digest was
+    # fetched via `bash scripts/fetch-image-digest.sh
+    # ghcr.io/openclaw/openclaw:2026.2.6` (docker buildx imagetools inspect).
+    # Pin format: `ghcr.io/<org>/<repo>:<tag>@sha256:<64-hex>`.
+    # Update on the monthly renovate cycle (re-run the fetch script).
+    image: ghcr.io/openclaw/openclaw:2026.2.6@sha256:4efc318a6570e4aac66d8ce0ab94c9a577c2f5d4afe914aa73e9678f82799e26
     container_name: openclaw
     restart: unless-stopped
     user: "1000:1000"

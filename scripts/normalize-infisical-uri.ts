@@ -23,7 +23,10 @@
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join, basename } from "node:path";
 
-const STACKS_DIR = "./stacks";
+// Post-v7 (2026-07-17): the stacks directory is at `bonneagar/stacks/`,
+// not the legacy `./stacks/` (which was the pre-v7 path). Override with
+// `STACKS_DIR` env var if needed.
+const STACKS_DIR = process.env.STACKS_DIR ?? "bonneagar/stacks";
 
 // --------------------------------------------------------------------------
 // CLI parsing (--check-grammar | default = normalize)

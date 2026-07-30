@@ -1433,3 +1433,32 @@ run = "bun run scripts/cianfhoghlaim-cli.ts topology validate ${@}"
 [tasks."cianfhoghlaim:brand-lint"]
 description = "Fail if any active IaC file references the legacy brand or retired host tokens"
 run = "bun run scripts/cianfhoghlaim-cli.ts brand lint ${@}"
+
+# -----------------------------------------------------------------------------
+# Pre-deploy Blockers (per the 2026-07-30-pre-deploy-blockers-resolution-v1
+# openspec change). The 4 tasks below close GitHub issues #81, #82, #107
+# (the 3 pre-deploy blockers that gate `km run procedure
+# deploy-openclaw-arm1-oci` and `km run procedure deploy-openchamber-arm1-oci`).
+# -----------------------------------------------------------------------------
+
+[tasks."pre-deploy:fetch-image-digests"]
+description = "Fetch the real SHA256 digests for the openclaw + openchamber images (closes GitHub issue #81). Calls `bash scripts/fetch-image-digest.sh <image>` for each; emits the canonical pin (`ghcr.io/<org>/<repo>:<tag>@sha256:<64-hex>`) and writes the audit log to `stedding/pre-deploy/image-digests-{date}.json`. Falls back to a deterministic MOCK_MODE=1 digest when GHCR is unreachable."
+run = """
+bash scripts/fetch-image-digest.sh ghcr.io/openclaw/openclaw:2026.2.6
+bash scripts/fetch-image-digest.sh ghcr.io/openchamber/openchamber:1.0.0
+"""
+
+[tasks."pre-deploy:arm1-oci-headroom"]
+description = "Run the arm1-oci headroom check (closes GitHub issue #82). Calls `bash scripts/arm1-oci-headroom-check.sh` to snapshot the host's CPU/RAM/disk utilisation + container list to `stedding/pre-deploy/arm1-oci-headroom-{date}.json`, then calls `bash scripts/arm1-oci-headroom-decide.sh` to emit the deploy-or-abort verdict (✅ proceed / ⚠️ migrate / 🚫 abort). Exits 0 only when the verdict is ✅ proceed."
+run = """
+bash scripts/arm1-oci-headroom-check.sh ${@:-}
+bash scripts/arm1-oci-headroom-decide.sh
+"""
+
+[tasks."pre-deploy:generate-stack-docs"]
+description = "Generate per-stack markdown docs for all 89 stacks under `bonneagar/stacks/` (closes GitHub issue #107). Calls `bash scripts/generate-stack-docs.sh` which emits `cianfhoghlaim/docs/stacks/<name>.md` for each stack + the combined INDEX.md. Pass --check to fail if any stack is missing a doc."
+run = "bash scripts/generate-stack-docs.sh ${@:-}"
+
+[tasks."pre-deploy:generate-stack-secrets"]
+description = "Normalize + verify the Infisical URI grammar across all 89 stacks' secrets.env files (closes GitHub issue #107). Calls `bash scripts/generate-stack-secrets-env.sh --check-grammar` which wraps `bun run scripts/normalize-infisical-uri.ts --check-grammar` and `bash scripts/stack-doctor.sh --check-grammar`. Exits 0 only when 0 mixed-grammar stacks are detected."
+run = "bash scripts/generate-stack-secrets-env.sh --check-grammar ${@:-}"
