@@ -35,7 +35,7 @@ from pathlib import Path
 
 _KNOWN_MODEL_KEYS: set[str] = {
     # OCR / Vision
-    "deepseek-ocr-2", "docling-serve", "dots-ocr", "gemma-3-4b",
+    "deepseek-ocr-2", "docling-serve", "dots-ocr", "gemma-3-4b", "gemma-3-27b",
     "glm-4.6v-flash", "internvl3-8b", "llama-3.2-vision-11b",
     "molmo2-4b", "molmo2-8b", "olmocr-2-7b-1025", "paddleocr-vl-1.6",
     "qwen3-vl-30b-a3b", "qwen3-vl-4b", "qwen3-vl-8b", "qwen3.6-27b-mtp",
@@ -116,6 +116,10 @@ _PREFIXES = (
     "sentence-transformers/",
     # Docling / Unstract
     "docling", "unstract",
+    # Legacy models referenced in comments / regex patterns (the
+    # canonical MODEL_REGISTRY marks these deprecated or removed;
+    # the strings survive in non-runtime contexts like drift reports)
+    "gemma-3-27b",
 )
 
 # Build a single regex: a quoted or bare token that starts with a prefix.
