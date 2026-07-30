@@ -3,7 +3,7 @@ Registry audit script for the `centralized-model-registry` capability.
 
 Detects hardcoded **model names / model IDs** (not generic identifiers)
 in Python files under `agents/`, `baml_src/`, `notebooks/`, `web/`,
-`orchestration/`, and `spaces/` that are NOT routed through
+`orchestration/`, `spaces/`, and `meaisinfhoghlaim/` that are NOT routed through
 `MODEL_REGISTRY`. Exits non-zero if any hardcoded string is found
 (with --strict).
 
@@ -140,7 +140,15 @@ _MODEL_LIKE_PATTERN = re.compile(
 # ─── Directories + skip rules ──────────────────────────────────────────────
 
 
-_AUDIT_DIRS = ["agents", "baml_src", "notebooks", "web", "orchestration", "spaces"]
+_AUDIT_DIRS = [
+    "agents",
+    "baml_src",
+    "notebooks",
+    "web",
+    "orchestration",
+    "spaces",
+    "meaisinfhoghlaim",  # the OCR/HTR/alignment sub-package (per the 2026-07-30-drift-remediation-everything-bagel-v1 change)
+]
 
 _SKIP_PATTERNS = [
     "*/model_registry.py",      # the registry itself

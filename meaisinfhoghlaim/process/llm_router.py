@@ -19,6 +19,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
+from meaisinfhoghlaim.models import model_for
+
 logger = logging.getLogger(__name__)
 
 
@@ -310,7 +312,7 @@ class LLMRouter:
 ANTHROPIC_PROVIDER = LLMProvider(
     name="anthropic",
     api_key_env="ANTHROPIC_API_KEY",
-    default_model="claude-sonnet-4-20250514",
+    default_model=model_for("text_llm", "default"),
     capabilities={
         LLMCapability.TEXT_GENERATION,
         LLMCapability.CHAT,
@@ -327,7 +329,7 @@ ANTHROPIC_PROVIDER = LLMProvider(
 OPENAI_PROVIDER = LLMProvider(
     name="openai",
     api_key_env="OPENAI_API_KEY",
-    default_model="gpt-4o",
+    default_model=model_for("text_llm", "fast"),
     capabilities={
         LLMCapability.TEXT_GENERATION,
         LLMCapability.CHAT,
@@ -345,7 +347,7 @@ HUGGINGFACE_IRISH_PROVIDER = LLMProvider(
     name="huggingface",
     api_key_env="HF_TOKEN",
     base_url="https://api-inference.huggingface.co/models",
-    default_model="UCCIX-Llama2-13B-Instruct",
+    default_model=model_for("text_llm", "irish", language="ga"),
     capabilities={
         LLMCapability.TEXT_GENERATION,
         LLMCapability.CHAT,
@@ -360,7 +362,7 @@ HUGGINGFACE_IRISH_PROVIDER = LLMProvider(
 GEMINI_PROVIDER = LLMProvider(
     name="gemini",
     api_key_env="GOOGLE_API_KEY",
-    default_model="gemini-1.5-flash",
+    default_model=model_for("text_llm", "fast"),
     capabilities={
         LLMCapability.TEXT_GENERATION,
         LLMCapability.CHAT,

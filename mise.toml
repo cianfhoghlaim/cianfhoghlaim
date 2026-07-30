@@ -64,7 +64,7 @@ run = "uv run pytest"
 
 [tasks."validate-env"]
 description = "Smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix + all code-side consumers (introduced by pick-7-align-env)"
-run = "uv run python scripts/validate_env.py"
+run = ".venv/bin/python3 scripts/validate_env.py"
 
 [tasks.lint]
 description = "Lint all Python code with ruff"
@@ -75,7 +75,7 @@ description = "Validate the .agents/skills/ metadata (frontmatter, name match, d
 run = "bash .agents/skills/lint-skills.sh"
 
 [tasks."lint:registry"]
-description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/ for hardcoded model strings not routed through MODEL_REGISTRY. Part of the `centralized-model-registry` capability — see openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
+description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY. Part of the `centralized-model-registry` capability — see openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
 run = ".venv/bin/python3 scripts/registry_audit.py --strict"
 
 [tasks."lint:drift-docs"]
@@ -92,7 +92,7 @@ run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_aud
 
 [tasks."agents:audit"]
 description = "Direct-import audit + AGENT_REGISTRY validation for the 12-agent fleet"
-run = "uv run python -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from cianfhoghlaim.agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
+run = ".venv/bin/python3 -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from cianfhoghlaim.agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
 
 [tasks."agents:reproduce"]
 description = "Operator's one-shot: reproduce the 12-agent fleet + 8 NCCA subject specialists + 3 educational agents from cold to green"
@@ -180,7 +180,7 @@ run = "bunx turbo run ${@}"
 # See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
 
 [tasks."dagster:dev"]
-description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann + 12-agent fleet). Loads orchestration.definitions: 199 assets + 31 jobs + 6 schedules + 16 sensors + 22 asset checks."
+description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann + 12-agent fleet). Loads orchestration.definitions. The live asset + asset_check + job + sensor counts are emitted by `mise run sync:dagster` (Layer 6 — the canonical AST-walk count). Per the 2026-07-30-drift-remediation-everything-bagel-v1 change (the description no longer hardcodes a count)."
 run = "uv run dagster dev -m orchestration.definitions"
 
 # =============================================================================
@@ -197,31 +197,31 @@ run = "python3 -c \"from dlt_sources.british_isles._cross.registry_loader import
 
 [tasks."biep:v3:marimo:wasm:export"]
 description = "Export all 7 BIEP v3 jurisdiction dashboards to WebAssembly bundles + manifest"
-run = "uv run python scripts/marimo_wasm_export.py"
+run = ".venv/bin/python3 scripts/marimo_wasm_export.py"
 
 [tasks."biep:v3:test-runs:ingest"]
 description = "Wire testRuns.ingest to CI runners (dry-run payload validation)"
-run = "uv run python scripts/test_runs_ingest.py --dry-run"
+run = ".venv/bin/python3 scripts/test_runs_ingest.py --dry-run"
 
 # BIEP v3 systematic download & iteration (per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change)
 [tasks."biep:v3:m0"]
 description = "BIEP v3 M0 — foundation unblock (lakehouse + BAML + registry + namespace)"
-run = "uv run python scripts/m0_foundation_unblock.py"
+run = ".venv/bin/python3 scripts/m0_foundation_unblock.py"
 [tasks."biep:v3:m1"]
 description = "BIEP v3 M1 — Ireland Leaving Cycle pipeline (12 cohorts, EN+GA)"
-run = "uv run python scripts/m1_ireland_lc.py"
+run = ".venv/bin/python3 scripts/m1_ireland_lc.py"
 [tasks."biep:v3:m2"]
 description = "BIEP v3 M2 — Ireland Junior Cycle pipeline (140 cohorts, EN+GA)"
-run = "uv run python scripts/m2_ireland_jc.py"
+run = ".venv/bin/python3 scripts/m2_ireland_jc.py"
 [tasks."biep:v3:m3"]
 description = "BIEP v3 M3 — England A-Level pipeline (147 cohorts, AQA + OCR + Edexcel)"
-run = "uv run python scripts/m3_england_a_level.py"
+run = ".venv/bin/python3 scripts/m3_england_a_level.py"
 [tasks."biep:v3:m4"]
 description = "BIEP v3 M4 — England GCSE pipeline (129 cohorts, AQA + OCR + Edexcel)"
-run = "uv run python scripts/m4_england_gcse.py"
+run = ".venv/bin/python3 scripts/m4_england_gcse.py"
 [tasks."biep:v3:gate"]
 description = "BIEP v3 milestone gate — verify the active milestone's 3 asset checks pass"
-run = "uv run python scripts/milestone_gate.py"
+run = ".venv/bin/python3 scripts/milestone_gate.py"
 [tasks."biep:v3:lint"]
 description = "BIEP v3 ibis-first contract lint — verify no raw duckdb.connect() in BIEP v3 paths (the BIEP v3 spec mandates ibis-first per the lakehouse_pipeline contract; raw duckdb.connect() is a violation)"
 run = """
@@ -242,15 +242,15 @@ echo "OK: 0 ibis-first violations in BIEP v3 Ireland/England paths"
 """
 [tasks."biep:v3:filename-validate"]
 description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
-run = "uv run python scripts/validate_snake_case_filenames.py"
+run = ".venv/bin/python3 scripts/validate_snake_case_filenames.py"
 
 # meaisinfhoghlaim v3 operator surface
 [tasks."meaisin:v3:setup"]
 description = "meaisinfhoghlaim v3 full setup — Python + CUDA + 24-model registry + HF watchdog + OCR harness + 4 openspec changes + lint:skills"
-run = "uv run python scripts/meaisin_v3_setup.py"
+run = ".venv/bin/python3 scripts/meaisin_v3_setup.py"
 [tasks."meaisin:v3:status"]
 description = "meaisinfhoghlaim v3 full status — 24-model registry + 7 converters + RAGAS ensemble + 12 agents + mise tasks + openspec changes"
-run = "uv run python scripts/meaisin_v3_status.py"
+run = ".venv/bin/python3 scripts/meaisin_v3_status.py"
 
 # 24 OCR/VLM model entrypoint tasks
 [tasks."meaisin:ocr:test:deepseek-ocr-2"]
@@ -375,38 +375,38 @@ run = "uv run python scripts/meaisin_ocr_htr_tests/agent_hitl_agent_extract.py"
 # Per-jurisdiction entries (the 6 deferred jurisdictions)
 [tasks."biep:v3:m5"]
 description = "BIEP v3 M5 — Scotland pipeline (150 cohorts, SQA × 3 levels)"
-run = "uv run python scripts/m5_scotland.py"
+run = ".venv/bin/python3 scripts/m5_scotland.py"
 [tasks."biep:v3:m6"]
 description = "BIEP v3 M6 — Wales pipeline (160 cohorts, WJEC × 2 levels)"
-run = "uv run python scripts/m6_wales.py"
+run = ".venv/bin/python3 scripts/m6_wales.py"
 [tasks."biep:v3:m7"]
 description = "BIEP v3 M7 — Northern Ireland pipeline (70 cohorts, CCEA × 2 levels)"
-run = "uv run python scripts/m7_northern_ireland.py"
+run = ".venv/bin/python3 scripts/m7_northern_ireland.py"
 [tasks."biep:v3:m8"]
 description = "BIEP v3 M8 — Jersey pipeline (120 cohorts, 30 subjects × 4 levels)"
-run = "uv run python scripts/m8_jersey.py"
+run = ".venv/bin/python3 scripts/m8_jersey.py"
 [tasks."biep:v3:m9"]
 description = "BIEP v3 M9 — Guernsey pipeline (120 cohorts, 30 subjects × 4 levels)"
-run = "uv run python scripts/m9_guernsey.py"
+run = ".venv/bin/python3 scripts/m9_guernsey.py"
 [tasks."biep:v3:m10"]
 description = "BIEP v3 M10 — Isle of Man pipeline (120 cohorts, 30 subjects × 4 levels)"
-run = "uv run python scripts/m10_isle_of_man.py"
+run = ".venv/bin/python3 scripts/m10_isle_of_man.py"
 
 # Scanner entries
 [tasks."biep:v3:filesystem:monthly:sync"]
 description = "BIEP v3 filesystem monthly sync — runs the 11 canonical filesystem DLT sources + writes the monthly sync status"
-run = "uv run python motherduck/flights/filesystem_monthly_sync_flight.py"
+run = ".venv/bin/python3 motherduck/flights/filesystem_monthly_sync_flight.py"
 [tasks."biep:v3:language:monthly:sync"]
 description = "BIEP v3 language monthly sync — runs the 19 canonical language DLT sources + writes the monthly sync status"
-run = "uv run python motherduck/flights/language_monthly_sync_flight.py"
+run = ".venv/bin/python3 motherduck/flights/language_monthly_sync_flight.py"
 
 # Operator surface (Phase 5)
 [tasks."biep:v3:setup"]
 description = "BIEP v3 full setup — Docker + lakehouse stack + BAML codegen + registry seed + lance namespace + openspec validate + lint:skills"
-run = "uv run python scripts/biiep_v3_setup.py"
+run = ".venv/bin/python3 scripts/biiep_v3_setup.py"
 [tasks."biep:v3:status"]
 description = "BIEP v3 full status — lakehouse health + registry count + BAML codegen + asset count + MotherDuck Dive + Flight status"
-run = "uv run python scripts/biiep_v3_status.py"
+run = ".venv/bin/python3 scripts/biiep_v3_status.py"
 
 # =============================================================================
 # Cianfhoghlaim Consolidated Tasks (post-Phase-1 2026-06-30)
@@ -452,11 +452,11 @@ run = "uv run pytest tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py"
 
 [tasks."cic:ocr:eval"]
 description = "Run the Celtic OCR evaluation harness (multi-backend comparison)"
-run = "uv run python -m cianfhoghlaim.ocr.cli eval --backend mlx"
+run = ".venv/bin/python3 -m cianfhoghlaim.ocr.cli eval --backend mlx"
 
 [tasks."cic:ocr:registry-lint"]
 description = "Verify all v4 VISION_MODELS are live on HF Hub"
-run = "uv run python scripts/verify_hf_hub_audit.py --strict"
+run = ".venv/bin/python3 scripts/verify_hf_hub_audit.py --strict"
 
 [tasks."cic:baml:generate"]
 description = "Regenerate the baml_client/ Python module from baml_src/ (alias of baml:generate)"
@@ -468,7 +468,7 @@ run = "mise run baml:test"
 
 [tasks."cic:baml:lint"]
 description = "Lint all 56+ .baml schema files for consistency"
-run = "uv run python -c 'import pathlib; [print(p) for p in pathlib.Path(\"baml\").glob(\"*.baml\")]' | wc -l"
+run = ".venv/bin/python3 -c 'import pathlib; [print(p) for p in pathlib.Path(\"baml\").glob(\"*.baml\")]' | wc -l"
 
 [tasks."cic:cocoindex:index"]
 description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (alias of ccc:v1:index)"
@@ -476,11 +476,11 @@ run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:Co
 
 [tasks."cic:cocoindex:conformance"]
 description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract (R1-R4)"
-run = "uv run python -c 'import asyncio; from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
+run = ".venv/bin/python3 -c 'import asyncio; from cianfhoghlaim.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
 
 [tasks."cocoindex:conformance"]
 description = "Run the cocoindex_v1_migrate.py audit (R1-R4). Exits 1 on any violation. This is the CI gate (faster than the v1 App itself)."
-run = "uv run python dlt/common/cocoindex_v1_migrate.py --check-only"
+run = ".venv/bin/python3 dlt/common/cocoindex_v1_migrate.py --check-only"
 
 [tasks."cic:cocoindex:leabharlann-books"]
 description = "Index the leabharlann books corpus via the v1 leabharlann_books_embedding App"
@@ -500,23 +500,23 @@ run = "mise run dagster:dev"
 
 [tasks."cic:dagster:list-assets"]
 description = "List all 199 Dagster assets"
-run = "uv run python -m cianfhoghlaim.dagster.cli list-assets"
+run = ".venv/bin/python3 -m cianfhoghlaim.dagster.cli list-assets"
 
 [tasks."cic:dagster:materialise-leabharlann"]
 description = "Materialise the 19 leabharlann Dagster assets (books + zotero + takeout + cognify + inbox + demos)"
-run = "uv run python -m cianfhoghlaim.dagster.cli materialise-leabharlann"
+run = ".venv/bin/python3 -m cianfhoghlaim.dagster.cli materialise-leabharlann"
 
 [tasks."cic:dlt:dev-pipeline"]
 description = "Run an author-archive dlt pipeline against the local DuckDB target (DEV)"
-run = "uv run python -m cianfhoghlaim.dlt.cli run-pipeline --target dev"
+run = ".venv/bin/python3 -m cianfhoghlaim.dlt.cli run-pipeline --target dev"
 
 [tasks."cic:dlt:staging-pipeline"]
 description = "Run an author-archive dlt pipeline against the MotherDuck staging target"
-run = "uv run python -m cianfhoghlaim.dlt.cli run-pipeline --target staging"
+run = ".venv/bin/python3 -m cianfhoghlaim.dlt.cli run-pipeline --target staging"
 
 [tasks."cic:dlt:prod-pipeline"]
 description = "Run an author-archive dlt pipeline against the Garage S3 + Lakekeeper prod target"
-run = "uv run python -m cianfhoghlaim.dlt.cli run-pipeline --target prod"
+run = ".venv/bin/python3 -m cianfhoghlaim.dlt.cli run-pipeline --target prod"
 
 [tasks."cic:meaisin:registry-audit"]
 description = "One-shot HF Hub liveness check on all 24 v4 VISION_MODELS (alias of hf:verify-ocr-registry)"
@@ -804,7 +804,7 @@ run = "mise run baml:test ${@:-}"
 
 [tasks."notebook:list"]
 description = "List all 105 active marimo notebooks"
-run = "uv run python notebooks/cli.py list 2>/dev/null || echo 'notebooks/cli.py broken — see notebooks/README.md'"
+run = ".venv/bin/python3 notebooks/cli.py list 2>/dev/null || echo 'notebooks/cli.py broken — see notebooks/README.md'"
 
 [tasks."notebook:control-panel"]
 description = "Open the Cianfhoghlaim 5-tab deployment control panel marimo notebook (Models, Pipelines, Datasets, Stacks, Registry). Reads/writes deployment-choice.yaml. See openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
@@ -812,7 +812,7 @@ run = "marimo edit notebooks/00_control_panel.py"
 
 [tasks."notebook:smoke"]
 description = "Smoke-test the canonical nb_utils helpers"
-run = "uv run python -c \"from notebooks.nb_utils import connect_biep_lakehouse, BIEP_SUBJECTS, lc_subject_query; print('OK:', len(BIEP_SUBJECTS), 'BIEP subjects,', lc_subject_query.__name__, 'ready')\""
+run = ".venv/bin/python3 -c \"from notebooks.nb_utils import connect_biep_lakehouse, BIEP_SUBJECTS, lc_subject_query; print('OK:', len(BIEP_SUBJECTS), 'BIEP subjects,', lc_subject_query.__name__, 'ready')\""
 
 [tasks."models:list"]
 description = "List every MODEL_REGISTRY entry (the unified model registry). Part of the `centralized-model-registry` capability."
@@ -824,11 +824,11 @@ run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY
 
 [tasks."motherduck:list-dives"]
 description = "List all 53 MotherDuck Dives"
-run = "uv run python -c \"from motherduck import BIEP_DIVES; [print(' -', d.name) for d in BIEP_DIVES]; print('BIEP v1: ', len(BIEP_DIVES), 'dives')\""
+run = ".venv/bin/python3 -c \"from motherduck import BIEP_DIVES; [print(' -', d.name) for d in BIEP_DIVES]; print('BIEP v1: ', len(BIEP_DIVES), 'dives')\""
 
 [tasks."motherduck:list-flights"]
 description = "List all BIEP v3 Flights from flights/config.yaml"
-run = "uv run python -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
+run = ".venv/bin/python3 -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
 
 [tasks."bring-up:smoke-test"]
 description = "5-step bring-up smoke test for a fresh operator (per bonneagar/README.md 'Quick start' section)"
@@ -952,6 +952,64 @@ done
 cat "$REPORT"
 """
 
+# -----------------------------------------------------------------------------
+# DLT Source Sync Loop — the 9th sync layer (per 2026-08-15-dlt-sync-loop-v1)
+# Layer 9 covers the 928 DLT source files in 13 jurisdiction subdirs
+# at dlt_sources/. The orchestrator runs 5 sub-layers + writes a
+# unified report.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:dlt-drift"]
+description = "DLT Layer 1: detect source drift across the 928 DLT sources (duplicates, stale write_disposition, stale destinations)"
+run = "bash scripts/sync/dlt-drift.sh"
+
+[tasks."sync:dlt-ccc"]
+description = "DLT Layer 2: append the 24th CCC concept guide (dlt-source-search) + reindex"
+run = "bash scripts/sync/dlt-ccc.sh"
+
+[tasks."sync:dlt-cognee"]
+description = "DLT Layer 3: ingest the 928 DLT sources into the 13th Cognee cluster (dlt_sources)"
+run = "bash scripts/sync/dlt-cognee.sh"
+
+[tasks."sync:dlt-test"]
+description = "DLT Layer 4: dlt pipeline --dry-run on a sampling of the 13 subdirs"
+run = "bash scripts/sync/dlt-test.sh"
+
+[tasks."sync:dlt-lint"]
+description = "DLT Layer 5: per-jurisdiction stats (GOLD_STANDARD-style report for the 13 subdirs)"
+run = "bash scripts/sync/dlt-lint.sh"
+
+[tasks."sync:dlt"]
+description = "DLT orchestrator: runs sync:dlt-drift + sync:dlt-ccc + sync:dlt-cognee + sync:dlt-test + sync:dlt-lint in sequence + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/dlt-all-$(date +%Y-%m-%d).md"
+{
+  echo "# DLT Source Sync — Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-15-dlt-sync-loop-v1 change (Layer 9)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+for layer in drift ccc cognee test lint; do
+  echo "## Sub-layer: sync:dlt:$layer" >> "$REPORT"
+  echo '```' >> "$REPORT"
+  bash "scripts/sync/dlt-$layer.sh" >> "$REPORT" 2>&1
+  echo '```' >> "$REPORT"
+  echo "" >> "$REPORT"
+done
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 DLT sub-layers completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
+
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
 run = "bash scripts/sync/drift_docs.sh"
@@ -990,7 +1048,7 @@ description = "Layer 5: ping all 14 MCP servers with 5s timeout (per the sync lo
 run = "bash scripts/sync/mcp.sh"
 
 [tasks."sync:all"]
-description = "Orchestrator: runs paths + ccc + cognee + skills + mcp + drift-docs + spec-agents + dagster and writes a unified report"
+description = "Orchestrator: runs all 10 sync surfaces (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks) and writes a unified report"
 run = "bash scripts/sync/all.sh"
 
 [tasks."biep:v3:smoke-test"]
@@ -1048,7 +1106,7 @@ run = "uv run cocoindex update cianfhoghlaim.core.cocoindex.codebase_indexing:Co
 
 [tasks."ccc:v1:search"]
 description = "Semantic search the codebase_chunks LanceDB table via the v1 app (Python helper)"
-run = "uv run python -c 'import asyncio, sys; from cianfhoghlaim.core.cocoindex.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
+run = ".venv/bin/python3 -c 'import asyncio, sys; from cianfhoghlaim.core.cocoindex.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
 
 [tasks."validate-ccc-freshness"]
 description = "CI gate: exit 1 if CCC (CocoIndex Code) index is >7d old on main or >24h on feature branches"
@@ -1083,7 +1141,7 @@ run = "uv run cocoindex update -L cianfhoghlaim.core.cocoindex.upstream_blog_mon
 
 [tasks."upstream:conformance"]
 description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
-run = "uv run python -c 'import asyncio; from cianfhoghlaim.core.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
+run = ".venv/bin/python3 -c 'import asyncio; from cianfhoghlaim.core.cocoindex.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
 
 [tasks."upstream:api-surface"]
 description = "Run the upstream_api_surface v1 CocoIndex App (walks 5 cocoindex docs URLs + llms-full.txt)"
@@ -1115,15 +1173,15 @@ uv run baml-cli test --from baml_src
 
 [tasks."docs:cognee"]
 description = "Ingest canonical docs/ into the Cognee knowledge graph (bonneagar)"
-run = "(cd bonneagar && uv run python scripts/cognee-ingest-docs.py --all) || echo 'bonneagar/scripts/cognee-ingest-docs.py missing — see Stack Migrator backlog.'"
+run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --all) || echo 'bonneagar/scripts/cognee-ingest-docs.py missing — see Stack Migrator backlog.'"
 
 [tasks."docs:cognee:domain"]
 description = "Ingest a single canonical domain into the Cognee knowledge graph (bonneagar)"
-run = "(cd bonneagar && uv run python scripts/cognee-ingest-docs.py --domain ${@}) || true"
+run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --domain ${@}) || true"
 
 [tasks."docs:cognee:summary"]
 description = "Print the per-domain Cognee ingestion plan without executing (bonneagar)"
-run = "(cd bonneagar && uv run python scripts/cognee-ingest-docs.py --all --summary) || true"
+run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --all --summary) || true"
 
 [tasks."openspec:list"]
 description = "List OpenSpec specs and changes"

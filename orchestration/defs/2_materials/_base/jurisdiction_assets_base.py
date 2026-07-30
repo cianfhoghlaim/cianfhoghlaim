@@ -21,7 +21,6 @@ The full rollout saves ~3,300 LOC across 10 files (from ~3,800 to ~500).
 Reference:
     openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/
 """
-from __future__ import annotations
 
 import logging
 import os
@@ -81,7 +80,7 @@ class JurisdictionAssetsBase:
             partitions_def=getattr(
                 cls,
                 "partition_defs",
-                dg.DailyPartitionsDefinition(start="2024-01-01"),
+                dg.DailyPartitionsDefinition(start_date="2024-01-01"),
             ),
         )
         def _asset(context: dg.AssetExecutionContext) -> dg.MaterializeResult:

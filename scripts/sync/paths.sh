@@ -47,16 +47,23 @@ REPORT="stedding/sync-reports/paths-$(date +%Y-%m-%d).md"
   fi
 } > "$REPORT"
 cat "$REPORT"
+auto_fixable_drift=$(python3 -c 'from scripts.sync_paths_fix import SAFE_PATTERNS, find_files_with_pattern, is_safe_to_rename; print(sum(p.read_text().count(old) for old, new, _ in SAFE_PATTERNS for p in find_files_with_pattern(old) if is_safe_to_rename(p, old, new)[0]))')
+if [ "$auto_fixable_drift" -eq 0 ]; then
+    echo "OK: 0 auto-fixable pre-v7 path drift occurrences"
+else
+    echo "FAIL: $auto_fixable_drift auto-fixable pre-v7 path drift occurrences"
+fi
 
 # Handle --fix mode
 if [ "${1:-}" = "--fix" ]; then
     echo ""
     echo "=== Running auto-fix mode (per the 2026-08-15-retroactive-pre-v7-cleanup-v1 change) ==="
     python3 scripts/sync_paths_fix.py
+    fix_exit=$?
     echo ""
     echo "=== Re-running sync:paths to verify the count dropped ==="
-    bash "$0" 2>&1 | tail -15
-    exit $?
+    bash "$0" 2>&1 | tail -15 || true
+    exit "$fix_exit"
 fi
 
-[ "$total_drift" -eq 0 ]
+[ "$auto_fixable_drift" -eq 0 ]

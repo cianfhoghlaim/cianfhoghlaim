@@ -372,3 +372,22 @@
     - scripts/sync/stacks-health.sh
   tags: [stacks, iac, gold-standard, pangolin, locket, sidecar, layer8, bonneagar]
   domain: "06-iac"
+
+- title: "dlt-source-search"
+  description: |
+    How to find any DLT data source by name, jurisdiction, or output
+    destination. Use when the user asks 'is my DLT source up to date',
+    'how many DLT sources do we have', 'does my DLT source use the
+    canonical helpers', 'which DLT sources have drift'. 1903 .py files
+    + 865 @dlt.source + 924 @dlt.resource across 13 jurisdiction
+    subdirs. Per the 2026-08-15-dlt-sync-loop-v1 change (Layer 9).
+  files:
+    - dlt_sources/british_isles/ireland/education/ncca_jc_cba.py
+    - dlt_sources/commonwealth/australia/acara.py
+    - dlt_sources/commonwealth/new_zealand/education/nzqa.py
+    - dlt_sources/european_nations/france/education/education_gouv_fr.py
+    - dlt_sources/commonwealth/nigeria/federal/nigeria_federal.py
+    - dlt_sources/common/__init__.py
+    - scripts/cognee_ingest_dlt_sources.py
+  tags: [dlt, sources, jurisdictions, dlt_sources, common, ingestion]
+  domain: "00-dlt"

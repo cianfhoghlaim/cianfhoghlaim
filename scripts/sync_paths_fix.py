@@ -74,8 +74,11 @@ def find_latest_report() -> Path | None:
     if not REPORTS_DIR.is_dir():
         return None
     reports = sorted(
-        p for p in REPORTS_DIR.glob("paths-*.md")
-        if not p.name.startswith("paths-fix-")
+        (
+            p for p in REPORTS_DIR.glob("paths-*.md")
+            if not p.name.startswith("paths-fix-")
+        ),
+        reverse=True,
     )
     return reports[0] if reports else None
 

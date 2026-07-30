@@ -1,5 +1,4 @@
 """Dagster L2 asset: weekly audit of EU institutional English coverage."""
-from __future__ import annotations
 
 from datetime import UTC, datetime
 

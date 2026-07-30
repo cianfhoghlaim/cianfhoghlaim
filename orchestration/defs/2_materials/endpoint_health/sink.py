@@ -6,7 +6,6 @@ Per the
 `2026-07-12-british-isles-endpoint-recovery-v1 <../../../openspec/changes/2026-07-12-british-isles-endpoint-recovery-v1/>`_
 change. Cron: every 6 hours.
 """
-from __future__ import annotations
 
 import asyncio
 from datetime import UTC, datetime

@@ -24,7 +24,6 @@ extraction + L3 embedding) depend on.
 - httpx for HTTP health checks (per `.agents/skills/cloudflare/timeout.md`)
 """
 
-from __future__ import annotations
 
 import logging
 import os

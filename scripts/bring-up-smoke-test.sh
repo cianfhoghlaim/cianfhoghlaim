@@ -138,8 +138,8 @@ fi
 # ============================================================================
 section "Step 5: lint:skills (54/54 expected)"
 
-if mise run lint:skills 2>&1 | tail -3 | grep -q "58 skills pass"; then
-    pass "lint:skills: 58 skills pass (53 + knowledge-sync-loop + dagster-asset-sync + baml-schema-sync + stacks-sync)"
+if mise run lint:skills 2>&1 | tail -3 | grep -q "59 skills pass"; then
+    pass "lint:skills: 59 skills pass (53 + knowledge-sync-loop + dagster-asset-sync + baml-schema-sync + stacks-sync + dlt-sync)"
 else
     fail "lint:skills: did not return '58 skills pass' (got 57 or fewer)"
 fi
@@ -338,6 +338,37 @@ if grep -q "stack-catalog-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
 else
     fail "23rd CCC concept guide missing"
 fi
+
+# ============================================================================
+# Step 9: sync:dlt (Layer 9 — DLT source surface validation)
+# ============================================================================
+section "Step 9: sync:dlt (Layer 9 — DLT source surface validation)"
+
+if bash scripts/sync/dlt.sh 2>&1 | tail -10 | grep -q "Total .py files"; then
+    pass "sync:dlt runs + reports the 1903 .py files (Layer 9)"
+else
+    fail "sync:dlt output missing 'Total .py files'"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:dlt"; then
+    pass "sync:dlt task (Layer 9 orchestrator) registered"
+else
+    fail "sync:dlt task not registered"
+fi
+if [ -d ".agents/skills/dlt-sync" ]; then
+    pass "dlt-sync skill directory exists"
+else
+    fail "dlt-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_dlt_sources.py" ]; then
+    pass "scripts/cognee_ingest_dlt_sources.py exists (Layer 9 ingestor)"
+else
+    fail "scripts/cognee_ingest_dlt_sources.py missing"
+fi
+if [ -f "notebooks/28_dlt_sync_dashboard.py" ]; then
+    pass "notebooks/28_dlt_sync_dashboard.py (Layer 9 dashboard) exists"
+else
+    fail "notebooks/28_dlt_sync_dashboard.py missing"
+fi
 # ============================================================================
 # Summary
 # ============================================================================
@@ -391,4 +422,35 @@ if grep -q "stack-catalog-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
     pass "23rd CCC concept guide (stack-catalog-search) is in guides.yml"
 else
     fail "23rd CCC concept guide missing"
+fi
+
+# ============================================================================
+# Step 9: sync:dlt (Layer 9 — DLT source surface validation)
+# ============================================================================
+section "Step 9: sync:dlt (Layer 9 — DLT source surface validation)"
+
+if bash scripts/sync/dlt.sh 2>&1 | tail -10 | grep -q "Total .py files"; then
+    pass "sync:dlt runs + reports the 1903 .py files (Layer 9)"
+else
+    fail "sync:dlt output missing 'Total .py files'"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:dlt"; then
+    pass "sync:dlt task (Layer 9 orchestrator) registered"
+else
+    fail "sync:dlt task not registered"
+fi
+if [ -d ".agents/skills/dlt-sync" ]; then
+    pass "dlt-sync skill directory exists"
+else
+    fail "dlt-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_dlt_sources.py" ]; then
+    pass "scripts/cognee_ingest_dlt_sources.py exists (Layer 9 ingestor)"
+else
+    fail "scripts/cognee_ingest_dlt_sources.py missing"
+fi
+if [ -f "notebooks/28_dlt_sync_dashboard.py" ]; then
+    pass "notebooks/28_dlt_sync_dashboard.py (Layer 9 dashboard) exists"
+else
+    fail "notebooks/28_dlt_sync_dashboard.py missing"
 fi

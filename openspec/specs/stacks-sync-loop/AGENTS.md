@@ -1,6 +1,6 @@
-# `baml-sync-loop` — Agent Routing
+# `stacks-sync-loop` — Agent Routing
 
-> The Layer 7 of the 6-layer pull-based sync architecture. Validates the 320 .baml files (558 functions + 838 classes + 288 enums + 33 LLM clients) + closes the biggest remaining gap in the sync loop.
+> The Layer 8 of the 8-layer pull-based sync architecture. Validates the 89 Docker Compose stacks at `bonneagar/stacks/` (per `infrastructure-stacks` spec) + closes the IaC surface gap detected in the W...
 
 ## Routing
 
@@ -17,7 +17,7 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 
 ## Key sources
 
-- `openspec/specs/baml-sync-loop/spec.md` — the canonical spec
+- `openspec/specs/stacks-sync-loop/spec.md` — the canonical spec
 - `openspec/specs/repo-hygiene-agent-routing/spec.md` — the per-spec AGENTS.md convention
 
 ## Adjacent specs
@@ -27,7 +27,7 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 ## DO NOT
 
 - Hand-edit this file (the generator will overwrite it). To customise,
-  edit `openspec/specs/baml-sync-loop/spec.md` and re-run
+  edit `openspec/specs/stacks-sync-loop/spec.md` and re-run
   `uv run python scripts/sync/spec_agents.py`.
 
 ## Skill pointers

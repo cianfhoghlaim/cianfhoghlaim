@@ -2,7 +2,6 @@
 ``#upstream-endpoints`` whenever one of the 39 canonical British
 Isles endpoints falls below 200 for 2 consecutive probes.
 """
-from __future__ import annotations
 
 import asyncio
 from collections import Counter

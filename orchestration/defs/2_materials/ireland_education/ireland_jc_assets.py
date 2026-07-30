@@ -22,7 +22,6 @@ backfill jobs (18 JC + 36 CBA + 16 short course).
 - yearly automation (1st September 00:00 UTC) per the BIEP v3
   scheduling policy.
 """
-from __future__ import annotations
 
 import logging
 from typing import Any

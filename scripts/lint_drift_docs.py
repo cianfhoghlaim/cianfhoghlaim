@@ -1,4 +1,4 @@
-"""lint_drift_docs.py — the anti-drift gate for AGENTS.md number claims.
+r"""lint_drift_docs.py — the anti-drift gate for AGENTS.md number claims.
 
 Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change
 (see openspec/changes/2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1/specs/centralize-cross-cutting-docs/spec.md).

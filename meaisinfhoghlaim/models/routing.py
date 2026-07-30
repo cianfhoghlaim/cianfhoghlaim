@@ -16,10 +16,10 @@ Per-language + per-source routing:
 | `duchas`                | `*`      | `LlamaSwap`       | `molmo2-8b`         | Diagram pointing specialist  |
 | `duchas`                | `*`      | `LlamaSwap`       | `dots-ocr`          | Layout specialist            |
 | `heritage`              | `*`      | `LlamaSwap`       | `gemma-4-26B-A4B`   | Multilingual MoE            |
-| `canuint`               | `*`      | `LlamaSwap`       | `qwen3-vl-8b`       | Audio + text multimodal      |
+| `canuint`               | `*`      | `LlamaSwap`       | registry OCR default     | Audio + text multimodal      |
 | `ud_celtic`             | `ga`     | `LlamaSwap`       | `uccix-mistral-24b` | Irish treebank               |
 | `ud_celtic`             | `*`      | `LlamaSwap`       | `gemma-4-26B-A4B`   | Other Celtic treebanks       |
-| `local_documents`       | `*`      | `LlamaSwap`       | `qwen3-vl-8b`       | OCR workhorse                |
+| `local_documents`       | `*`      | `LlamaSwap`       | registry OCR default     | OCR workhorse                |
 | `celtic_curriculum`     | `ga`     | `LlamaSwap`       | `uccix-mistral-24b` | Irish curriculum             |
 | `celtic_curriculum`     | `cy`     | `LlamaSwap`       | `gemma-4-26B-A4B`   | Welsh curriculum             |
 | `celtic_curriculum`     | `gd`     | `LlamaSwap`       | `gemma-4-26B-A4B`   | Scottish Gaelic curriculum   |
@@ -33,6 +33,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+
+from meaisinfhoghlaim.models.model_registry import model_for
 
 
 @dataclass
@@ -61,12 +63,12 @@ ROUTING_TABLE: dict[tuple[str, str], "RoutingConfig"] = {
     # Heritage + Hidden Heritages
     ("heritage", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
     # Canuint (audio + text)
-    ("canuint", "*"): RoutingConfig(client="LlamaSwap", model="qwen3-vl-8b", tier="tier2_medium"),
+    ("canuint", "*"): RoutingConfig(client="LlamaSwap", model=model_for("ocr_vision", "default"), tier="tier2_medium"),
     # Universal Dependencies Celtic Treebanks
     ("ud_celtic", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
     ("ud_celtic", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
     # Local documents by subject (OCR)
-    ("local_documents", "*"): RoutingConfig(client="LlamaSwap", model="qwen3-vl-8b", tier="tier2_medium"),
+    ("local_documents", "*"): RoutingConfig(client="LlamaSwap", model=model_for("ocr_vision", "default"), tier="tier2_medium"),
     # Celtic curriculum (6 Celtic languages)
     ("celtic_curriculum", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
     ("celtic_curriculum", "cy"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),

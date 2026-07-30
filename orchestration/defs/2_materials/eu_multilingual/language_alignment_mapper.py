@@ -1,5 +1,4 @@
 """Dagster L2 asset: map EU bilingual documents to British Isles corpus for alignment."""
-from __future__ import annotations
 
 from datetime import UTC, datetime
 

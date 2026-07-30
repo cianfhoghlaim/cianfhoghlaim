@@ -66,7 +66,7 @@ OCR_MODELS = (
 
 def _make_ocr_model_assets(model_key: str) -> Any:
     """Factory: build the 3 generic + 3 check assets for one OCR/VLM model."""
-    asset_prefix = f"ocr_model_{model_key.replace('-', '_')}"
+    asset_prefix = f"ocr_model_{model_key.replace('-', '_').replace('.', '_')}"
 
     @asset(
         group_name=f"1_ingestion_meaisin_ocr_vlm_{asset_prefix}",
