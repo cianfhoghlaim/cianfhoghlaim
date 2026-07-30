@@ -138,10 +138,10 @@ fi
 # ============================================================================
 section "Step 5: lint:skills (54/54 expected)"
 
-if mise run lint:skills 2>&1 | tail -3 | grep -q "57 skills pass"; then
-    pass "lint:skills: 57 skills pass (53 + knowledge-sync-loop + dagster-asset-sync + baml-schema-sync)"
+if mise run lint:skills 2>&1 | tail -3 | grep -q "58 skills pass"; then
+    pass "lint:skills: 58 skills pass (53 + knowledge-sync-loop + dagster-asset-sync + baml-schema-sync + stacks-sync)"
 else
-    fail "lint:skills: did not return '56 skills pass'"
+    fail "lint:skills: did not return '58 skills pass' (got 57 or fewer)"
 fi
 
 # ============================================================================
@@ -301,6 +301,43 @@ if grep -q "baml-function-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
 else
     fail "22nd CCC concept guide missing"
 fi
+
+# ============================================================================
+# Step 8: sync:stacks (Layer 8 — IaC stacks surface validation)
+# Per the 2026-08-15-stacks-sync-loop-v1 change
+# ============================================================================
+section "Step 8: sync:stacks (Layer 8 — IaC stacks surface validation)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:stacks"; then
+    pass "sync:stacks task registered"
+else
+    fail "sync:stacks task not registered"
+fi
+if [ -f "scripts/sync/stacks.sh" ] && [ -f "scripts/sync/stacks-drift.sh" ] && [ -f "scripts/sync/stacks-ccc.sh" ] && [ -f "scripts/sync/stacks-cognee.sh" ] && [ -f "scripts/sync/stacks-validate.sh" ] && [ -f "scripts/sync/stacks-health.sh" ]; then
+    pass "All 6 sync:stacks sub-layer scripts exist (drift + ccc + cognee + validate + health + orchestrator)"
+else
+    fail "One or more sync:stacks sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/stacks-sync" ]; then
+    pass "stacks-sync skill directory exists"
+else
+    fail "stacks-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_stacks_catalog.py" ]; then
+    pass "scripts/cognee_ingest_stacks_catalog.py exists (Layer 8 ingestor)"
+else
+    fail "scripts/cognee_ingest_stacks_catalog.py missing"
+fi
+if [ -f "notebooks/27_stacks_sync_dashboard.py" ]; then
+    pass "notebooks/27_stacks_sync_dashboard.py (Layer 8 dashboard) exists"
+else
+    fail "notebooks/27_stacks_sync_dashboard.py missing"
+fi
+if grep -q "stack-catalog-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "23rd CCC concept guide (stack-catalog-search) is in guides.yml"
+else
+    fail "23rd CCC concept guide missing"
+fi
 # ============================================================================
 # Summary
 # ============================================================================
@@ -314,9 +351,44 @@ echo "  TOTAL: $TOTAL"
 echo
 
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "${GREEN}All 7 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
+    echo -e "${GREEN}All 8 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
     exit 0
 else
     echo -e "${RED}Some bring-up steps failed. See above.${NC}"
     exit 1
+fi
+# ============================================================================
+# Step 8: sync:stacks (Layer 8 — IaC stacks surface validation)
+# ============================================================================
+section "Step 8: sync:stacks (Layer 8 — IaC stacks surface validation)"
+
+if bash scripts/sync/stacks.sh 2>&1 | tail -10 | grep -q "Total stacks:"; then
+    pass "sync:stacks runs + reports the 87 stacks (Layer 8)"
+else
+    fail "sync:stacks output missing 'Total stacks:'"
+fi
+if mise tasks ls 2>&1 | grep -qE "^sync:stacks"; then
+    pass "sync:stacks task registered"
+else
+    fail "sync:stacks task not registered"
+fi
+if [ -d ".agents/skills/stacks-sync" ]; then
+    pass "stacks-sync skill directory exists"
+else
+    fail "stacks-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_stacks_catalog.py" ]; then
+    pass "scripts/cognee_ingest_stacks_catalog.py exists (Layer 8 ingestor)"
+else
+    fail "scripts/cognee_ingest_stacks_catalog.py missing"
+fi
+if [ -f "notebooks/27_stacks_sync_dashboard.py" ]; then
+    pass "notebooks/27_stacks_sync_dashboard.py (Layer 8 dashboard) exists"
+else
+    fail "notebooks/27_stacks_sync_dashboard.py missing"
+fi
+if grep -q "stack-catalog-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "23rd CCC concept guide (stack-catalog-search) is in guides.yml"
+else
+    fail "23rd CCC concept guide missing"
 fi

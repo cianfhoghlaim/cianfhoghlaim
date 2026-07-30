@@ -342,3 +342,33 @@
     - baml_src/clients_biep_v3.py
   tags: [baml, extraction, functions, clients, schema]
   domain: "00-baml"
+
+- title: "stack-catalog-search"
+  description: |
+    How to find any of the 89 Docker Compose stacks at bonneagar/stacks/ by
+    name, GOLD_STANDARD status, or host placement. Use when the user asks
+    'which stack runs X service', 'is stack Y missing sidecar.yaml', 'what
+    stacks are on bunchloch vs arm1-oci', or 'how do I add a new stack'.
+    89 stacks + the 6-file GOLD_STANDARD pattern (compose.yaml + sidecar.yaml
+    + secrets.env + pangolin.yaml + blueprint.yaml + .env.example). Per the
+    2026-08-15-stacks-sync-loop-v1 change (Layer 8).
+  files:
+    - bonneagar/stacks/litellm/compose.yaml
+    - bonneagar/stacks/litellm/sidecar.yaml
+    - bonneagar/stacks/litellm/secrets.env
+    - bonneagar/stacks/litellm/pangolin.yaml
+    - bonneagar/stacks/litellm/blueprint.yaml
+    - bonneagar/stacks/langfuse/compose.yaml
+    - bonneagar/stacks/langfuse/sidecar.yaml
+    - bonneagar/stacks/lakehouse/compose.yaml
+    - bonneagar/stacks/komodo/compose.yaml
+    - bonneagar/stacks/pangolin/compose.yaml
+    - bonneagar/stacks/openclaw/compose.yaml
+    - scripts/stack-doctor.sh
+    - scripts/sync/stacks-drift.sh
+    - scripts/sync/stacks-ccc.sh
+    - scripts/sync/stacks-cognee.sh
+    - scripts/sync/stacks-validate.sh
+    - scripts/sync/stacks-health.sh
+  tags: [stacks, iac, gold-standard, pangolin, locket, sidecar, layer8, bonneagar]
+  domain: "06-iac"

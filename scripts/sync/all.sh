@@ -19,7 +19,7 @@ REPORT="stedding/sync-reports/all-$(date +%Y-%m-%d).md"
   echo ""
 } > "$REPORT"
 
-for layer in paths ccc cognee skills mcp dagster drift_docs spec_agents baml; do
+for layer in paths ccc cognee skills mcp dagster drift_docs spec_agents baml stacks; do
   echo "## Layer: sync:$layer" >> "$REPORT"
   echo '```' >> "$REPORT"
   bash "scripts/sync/$layer.sh" >> "$REPORT" 2>&1
