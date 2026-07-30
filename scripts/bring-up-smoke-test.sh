@@ -277,9 +277,9 @@ fi
 section "Step 7: sync:baml (Layer 7 — BAML schema surface validation)"
 
 if bash scripts/sync/baml.sh 2>&1 | tail -10 | grep -q "OK:.*.baml files"; then
-    pass "sync:baml runs + reports the 320 .baml files (Layer 7)"
+    pass "sync:baml runs + reports the .baml files (Layer 7)"
 else
-    fail "sync:baml output missing 'OK: 320 .baml files'"
+    fail "sync:baml output missing 'OK: N .baml files'"
 fi
 if [ -d ".agents/skills/baml-schema-sync" ]; then
     pass "baml-schema-sync skill directory exists"

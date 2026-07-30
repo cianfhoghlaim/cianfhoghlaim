@@ -232,6 +232,43 @@ else
 fi
 
 # ============================================================================
+# Gate 8: sync:baml (Layer 7 — BAML schema surface validation)
+# Per the 2026-08-15-baml-sync-loop-v1 change
+# ============================================================================
+section "Gate 8: sync:baml (Layer 7)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:baml"; then
+    pass "sync:baml task registered"
+else
+    fail "sync:baml task not registered"
+fi
+if [ -f "scripts/sync/baml.sh" ]; then
+    pass "scripts/sync/baml.sh exists"
+else
+    fail "scripts/sync/baml.sh missing"
+fi
+if [ -f "scripts/sync/baml-drift.sh" ] && [ -f "scripts/sync/baml-ccc.sh" ] && [ -f "scripts/sync/baml-cognee.sh" ] && [ -f "scripts/sync/baml-test.sh" ] && [ -f "scripts/sync/baml-lint.sh" ]; then
+    pass "All 5 sync:baml sub-layer scripts exist (drift + ccc + cognee + test + lint)"
+else
+    fail "One or more sync:baml sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/baml-schema-sync" ]; then
+    pass "baml-schema-sync skill directory exists"
+else
+    fail "baml-schema-sync skill directory missing"
+fi
+if [ -f "notebooks/26_baml_sync_dashboard.py" ]; then
+    pass "notebooks/26_baml_sync_dashboard.py exists"
+else
+    fail "notebooks/26_baml_sync_dashboard.py missing"
+fi
+if [ -f "scripts/cognee_ingest_baml_schemas.py" ]; then
+    pass "scripts/cognee_ingest_baml_schemas.py exists"
+else
+    fail "scripts/cognee_ingest_baml_schemas.py missing"
+fi
+
+# ============================================================================
 # Summary
 # ============================================================================
 section "Summary"

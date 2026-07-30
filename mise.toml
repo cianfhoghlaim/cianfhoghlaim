@@ -80,11 +80,11 @@ run = ".venv/bin/python3 scripts/registry_audit.py --strict"
 
 [tasks."lint:drift-docs"]
 description = "Validate every AGENTS.md number claim (specs/skills/stacks/models/notebooks) against ground truth. Exits 1 on any mismatch; writes JSON + MD report to stedding/sync-reports/docs-drift-{date}.{json,md}. Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change (the `centralize-cross-cutting-docs` spec)."
-run = "uv run python scripts/lint_drift_docs.py"
+run = ".venv/bin/python3 scripts/lint_drift_docs.py"
 
 [tasks."lint:drift-docs:dry-run"]
 description = "Same as lint:drift-docs but exits 0 always (prints the report)"
-run = "uv run python scripts/lint_drift_docs.py --dry-run"
+run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
 
 [tasks."agents:smoke"]
 description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"

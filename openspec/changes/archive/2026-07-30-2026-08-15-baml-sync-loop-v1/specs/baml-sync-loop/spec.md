@@ -1,73 +1,8 @@
 # BAML Schema Sync Loop (Layer 7)
 
-## Purpose
+> **The Layer 7 of the 6-layer pull-based sync architecture. Validates the 320 .baml files (558 functions + 838 classes + 288 enums + 33 LLM clients) + closes the biggest remaining gap in the sync loop.**
 
-The Layer 7 of the 6-layer pull-based sync architecture. Validates the 320 .baml files (558 functions + 838 classes + 288 enums + 33 LLM clients) + closes the biggest remaining gap in the sync loop.
-## Requirements
-### Requirement: Layer 1 — sync:baml-drift
-
-The system SHALL provide a `bash scripts/sync/baml-drift.sh` task that detects reference + syntax drift in the 320 .baml files.
-
-#### Scenario: BAML drift detection runs cleanly
-
-- **WHEN** `bash scripts/sync/baml-drift.sh` is invoked
-- **THEN** the task SHALL scan all `baml_src/**/*.baml` files
-- **AND** the task SHALL detect:
-  - References to non-existent types/functions
-  - Python type annotations not matching BAML output_type
-  - Duplicate function names within the same file
-  - Missing `@description` on output fields
-  - Client references that don't exist in `clients.baml`
-
-### Requirement: Layer 2 — sync:baml-ccc
-
-The system SHALL provide a `bash scripts/sync/baml-ccc.sh` task that ingests the 320 .baml files into the 22nd CCC concept guide `baml-function-search`.
-
-#### Scenario: baml-function-search concept guide surfaces 320 .baml files
-
-- **WHEN** `bash scripts/sync/baml-ccc.sh` is invoked
-- **THEN** the task SHALL walk `baml_src/` via AST parsing
-- **AND** it SHALL append the 22nd concept guide to `.cocoindex_code/guides.yml`
-- **AND** the guide SHALL list the 558 functions + 838 classes + 288 enums
-
-### Requirement: Layer 3 — sync:baml-cognee
-
-The system SHALL provide a `bash scripts/sync/baml-cognee.sh` task that ingests the 320 .baml files into a new `baml_schemas` Cognee cluster.
-
-#### Scenario: baml_schemas cluster grows over time
-
-- **WHEN** `bash scripts/sync/baml-cognee.sh` is invoked
-- **THEN** the task SHALL ingest the 320 .baml files
-- **AND** the cluster SHALL have a per-file summary
-
-### Requirement: Layer 4 — sync:baml-test
-
-The system SHALL provide a `bash scripts/sync/baml-test.sh` task that runs `baml-cli test` on all 320 .baml files.
-
-#### Scenario: baml-cli test runs cleanly
-
-- **WHEN** `bash scripts/sync/baml-test.sh` is invoked
-- **THEN** the task SHALL run `baml-cli test` on each .baml file
-- **AND** the task SHALL aggregate failures to a single report
-
-### Requirement: Layer 5 — sync:baml-lint
-
-The system SHALL provide a `bash scripts/sync/baml-lint.sh` task that runs the BAML linter.
-
-#### Scenario: baml-cli lint runs cleanly
-
-- **WHEN** `bash scripts/sync/baml-lint.sh` is invoked
-- **THEN** the task SHALL run `baml-cli lint` on all 320 .baml files
-
-### Requirement: Layer 6 — sync:baml orchestrator
-
-The system SHALL provide a `bash scripts/sync/baml.sh` task that runs all 5 layers in sequence.
-
-#### Scenario: sync:baml orchestrator runs all 6 layers
-
-- **WHEN** `bash scripts/sync/baml.sh` is invoked
-- **THEN** the task SHALL run sync:baml-drift + sync:baml-ccc + sync:baml-cognee + sync:baml-test + sync:baml-lint in sequence
-- **AND** the task SHALL write a unified report to `stedding/sync-reports/baml-{date}.md`
+## ADDED Requirements
 
 ### Requirement: Layer 1 — `sync:baml-drift`
 
@@ -147,3 +82,12 @@ BAML evolution feedback loop.
 - **AND** the task SHALL update the 22nd CCC concept guide to
   include the newly-modified file
 
+## Cross-references
+
+- `openspec/changes/2026-08-15-knowledge-sync-loop-v1/` (the foundation)
+- `openspec/changes/2026-08-15-retroactive-pre-v7-cleanup-v1/` (Layer 6 extension)
+- `baml_src/` (the 320 .baml files)
+- `scripts/sync/` (the existing 7 sync scripts)
+- `.agents/skills/knowledge-sync-loop/SKILL.md` (the parent sync loop skill)
+- `.agents/skills/dagster-asset-sync/SKILL.md` (the Layer 6 skill)
+- `.agents/skills/baml-schema-sync/SKILL.md` (this skill, Layer 7)

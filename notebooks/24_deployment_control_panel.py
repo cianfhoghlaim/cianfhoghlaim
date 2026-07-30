@@ -2,9 +2,10 @@
 """notebooks/24_deployment_control_panel.py — the sync health + model registry + schema + stacks dashboard.
 
 Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) +
-the 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Phase 8.1 — adds Layer 6).
+the 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Phase 8.1 — adds Layer 6) +
+the 2026-08-15-baml-sync-loop-v1 change (Phase 6 — adds Layer 7 / BAML).
 Consumes stedding/sync-reports/all-{date}.md and surfaces:
-- The 6 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster)
+- The 7 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster / baml)
 - The 14 MCP server health
 - The 70+ model names (from the model-registry change)
 - The 472 CocoIndex Apps
@@ -69,7 +70,9 @@ def __(mo, latest, mtime, text):
 
 @app.cell
 def __(mo, text):
-    # Parse the 5 layer statuses from the report text
+    # Parse the 7 layer statuses from the report text
+    # (6 from the original sync-loop + Layer 7 (BAML) added by
+    # the 2026-08-15-baml-sync-loop-v1 change)
     statuses = {}
     if "OK: 0 pre-v7 path drift" in text:
         statuses["paths"] = "ok"
@@ -87,6 +90,13 @@ def __(mo, text):
     else:
         statuses["dagster"] = "fail"
 
+    # Layer 7 (BAML) — per 2026-08-15-baml-sync-loop-v1
+    # Look for the baml sync report line "OK: N .baml files registered across the 7 clusters"
+    if "OK:" in text and ".baml files registered across the 7 clusters" in text:
+        statuses["baml"] = "ok"
+    else:
+        statuses["baml"] = "fail"
+
     # CCC + cognee + mcp are informational; mark as informational
     statuses["ccc"] = "info"
     statuses["cognee"] = "info"
@@ -96,20 +106,21 @@ def __(mo, text):
 
 @app.cell
 def __(mo, statuses):
-    # Display the 5 layer statuses
+    # Display the 7 layer statuses
     pass_count = sum(1 for s in statuses.values() if s == "ok")
     fail_count = sum(1 for s in statuses.values() if s == "fail")
     info_count = sum(1 for s in statuses.values() if s == "info")
 
     mo.output.replace(
         mo.md(
-            f"## 6 Sync Layer Statuses\n\n"
+            f"## 7 Sync Layer Statuses\n\n"
             f"- **paths**: {statuses.get('paths', '?')} {'✅' if statuses.get('paths') == 'ok' else '❌'}\n"
             f"- **ccc**: {statuses.get('ccc', '?')} (informational)\n"
             f"- **cognee**: {statuses.get('cognee', '?')} (informational)\n"
             f"- **skills**: {statuses.get('skills', '?')} {'✅' if statuses.get('skills') == 'ok' else '❌'}\n"
             f"- **mcp**: {statuses.get('mcp', '?')} (informational)\n"
-            f"- **dagster**: {statuses.get('dagster', '?')} {'✅' if statuses.get('dagster') == 'ok' else '❌'} (Layer 6, NEW)\n\n"
+            f"- **dagster**: {statuses.get('dagster', '?')} {'✅' if statuses.get('dagster') == 'ok' else '❌'} (Layer 6)\n"
+            f"- **baml**: {statuses.get('baml', '?')} {'✅' if statuses.get('baml') == 'ok' else '❌'} (Layer 7, NEW)\n\n"
             f"**Summary**: {pass_count} pass / {fail_count} fail / {info_count} info\n"
         )
     )
