@@ -204,7 +204,7 @@
       "api": "anthropic",
       "options": {
         "apiKey": "{env:MINIMAX_API_KEY}",
-        "baseURL": "https://api.minimax.io/anthropic/v1"
+        "baseURL": "https://litellm.cianfhoghlaim.ie"
       },
       "models": {
         "MiniMax-M3": {
@@ -262,7 +262,8 @@
         "marimo",
         "langfuse",
         "mlflow",
-        "apple-photos"
+        "apple-photos",
+        "centralized-registry"
       ]
     },
     "infrastructure": {
@@ -287,7 +288,8 @@
         "risingwave",
         "olake",
         "effect-ts",
-        "apple-photos"
+        "apple-photos",
+        "centralized-registry"
       ]
     },
     "agent-platform": {
@@ -320,7 +322,8 @@
         "dagster",
         "duckdb",
         "cocoindex",
-        "apple-photos"
+        "apple-photos",
+        "centralized-registry"
       ]
     },
     "frontend-apps": {
@@ -350,7 +353,8 @@
         "ccc",
         "langfuse",
         "cocoindex",
-        "apple-photos"
+        "apple-photos",
+        "centralized-registry"
       ]
     },
     "research": {
@@ -370,7 +374,8 @@
         "mlflow",
         "baml",
         "cocoindex",
-        "apple-photos"
+        "apple-photos",
+        "centralized-registry"
       ],
       "color": "#8a5f3a"
     },
@@ -401,7 +406,8 @@
         "motherduck",
         "duckdb",
         "ducklake",
-        "ibis"
+        "ibis",
+        "centralized-registry"
       ],
       "prompt": "You are the canonical Cianfhoghlaim marimo-notebook subagent. ROLE: Author, debug, and refactor the 109 marimo notebooks under `notebooks/`. KEY PATHS: notebooks/_shared/db.py, notebooks/nb_utils.py, notebooks/cli.py. WORKFLOW: 1. Receive task from build agent. 2. Read notebooks/README.md + openspec/specs/oideachais-marimo-dashboards/spec.md. 3. Use ccc. 4. For new notebooks: start from notebooks/_shared/ and follow the dual-mode guard. 5. For SQL: prefer ibis.duckdb.connect over raw duckdb.connect. 6. For WASM: mise run biep:v3:marimo:wasm:export. CONSTRAINTS: dual-mode mandatory; use ibis.duckdb.connect not duckdb.connect (per R9); never hardcode credentials; canonical MotherDuck alias is md:cianhoghlaim (NOT md:oideachais)."
     },
@@ -414,7 +420,8 @@
         "baml",
         "dagster",
         "dlt",
-        "cognee"
+        "cognee",
+        "centralized-registry"
       ],
       "prompt": "You are the canonical Cianfhoghlaim BAML authoring subagent. ROLE: Author, lint, and regenerate the 319 BAML files. BAML compiler is **0.223.0** post-v7. KEY PATHS: baml_src/, baml_src/baml.toml, baml_src/clients.baml. WORKFLOW: 1. Read .agents/skills/baml/SKILL.md + openspec/specs/oideachais-baml-schemas/spec.md. 2. Use ccc. 3. Follow the 8 patterns in baml/SKILL.md. 4. After any .baml edit: run mise run cic:baml:generate. 5. CI gate: mise run cic:baml:test. CONSTRAINTS: BAML 0.223.0 enforces 5 compile-error categories (NO class field defaults; NO unterminated strings; ALL test blocks use lowercase test; every function has client <Name>; NO string-literal type refs). Cross-file imports use from ..shared.file."
     },
@@ -429,7 +436,8 @@
         "dlt",
         "baml",
         "marimo",
-        "cognee"
+        "cognee",
+        "centralized-registry"
       ],
       "prompt": "You are the canonical Cianfhoghlaim Dagster authoring subagent. ROLE: Author, scaffold, and refactor the 5 KCG Components and 199+ assets. Canonical code-location is `orchestration.definitions` post-v7. KEY PATHS: orchestration/definitions.py, orchestration/components/layer{1..5}_*.py, orchestration/defs/{1_ingestion,2_materials,...}/, dg.toml (`module_name = \"orchestration.definitions\"`). WORKFLOW: 1. Read .agents/skills/dagster/SKILL.md + orchestration/README.md. 2. Use ccc. 3. For new assets: `dg scaffold defs`. 4. `dg check yaml`. 5. Verify: `mise run cic:dagster:dev` boots on :3335. CONSTRAINTS: 5 KCG Components are non-negotiable; use relative imports; prefer MultiPartitionsDefinition; prefer AutomationCondition.cron(); Dagster UI runs on port 3335; Dagster version 1.13+."
     },
@@ -446,7 +454,8 @@
         "komodo",
         "infisical",
         "locket",
-        "dlt"
+        "dlt",
+        "centralized-registry"
       ],
       "prompt": "You are the canonical Cianfhoghlaim mise-task authoring subagent. ROLE: Author, refactor, and lint the **131** task blocks in `mise.toml`. KEY PATHS: mise.toml, .infisical.env, scripts/init-vault.ts. WORKFLOW: 1. Receive task from build agent. 2. Read mise.toml. 3. For new Python task: prefix with `cic:`. 4. For new Dagster: forward to `mise run dagster:dev`. 5. For IaC: `cd bonneagar && ./scripts/stack.sh ${1} up -d`. 6. Verify: `mise run doctor` + `mise tasks`. CONSTRAINTS: 8 task categories (Python/TS/Schema/Dagster/BAML/Secret/IaC/OpenSpec); `cic:` is canonical; 3 author-archive targets; NEVER inline `cd bonneagar && mise run` in cianfhoghlaim-side tasks."
     },
@@ -458,7 +467,8 @@
       "skill_filter": [
         "openspec",
         "data-engineering-pipeline-documentation",
-        "dagger-pipelines"
+        "dagger-pipelines",
+        "centralized-registry"
       ],
       "prompt": "You are the canonical Cianfhoghlaim openspec change-author subagent. ROLE: Draft, validate, and archive `openspec/changes/<id>/` proposals. You are the WRITES-side companion to the read-only `plan` subagent. KEY PATHS: openspec/AGENTS.md, openspec/changes/<id>/{proposal.md, tasks.md, specs/<capability>/spec.md}, openspec/specs/<capability>/spec.md. WORKFLOW: 1. Receive request. 2. mkdir openspec/changes/<id>/specs/<capability>/. 3. Write proposal.md (MUST include ## Dependencies). 4. Write tasks.md. 5. Write spec deltas using ## ADDED Requirements / ## MODIFIED Requirements / ## REMOVED Requirements headers. 6. openspec validate <id> --strict. CONSTRAINTS: SHALL/MUST required in Requirement bodies; every Requirement needs >=1 Scenario with WHEN/THEN/AND; change CANNOT archive until blockers archive; DO NOT edit openspec/specs/<capability>/spec.md directly."
     }

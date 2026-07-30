@@ -67,8 +67,12 @@ description = "Smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix + all code-si
 run = ".venv/bin/python3 scripts/validate_env.py"
 
 [tasks.lint]
-description = "Lint all Python code with ruff"
-run = "uv run ruff check ."
+description = "Aggregate lint gate — runs the canonical Python + skills-metadata + centralized-registry linters"
+run = """
+mise run lint:skills
+mise run lint:registry
+uv run ruff check .
+"""
 
 [tasks."lint:skills"]
 description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count) for every skill"
@@ -1064,6 +1068,63 @@ done
   echo "## Summary"
   echo ""
   echo "All 5 Agents sub-layers completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
+
+# -----------------------------------------------------------------------------
+# Notebooks Sync Loop — the 11th sync layer (per 2026-08-15-notebooks-sync-loop-v1)
+# Layer 11 covers the 104 notebook files at notebooks/. The orchestrator
+# runs 5 sub-layers + writes a unified report.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:notebooks-drift"]
+description = "Notebooks Layer 1: detect notebook registration drift across the 104 notebook files (unregistered notebooks + broken @app.cell decorators)"
+run = "bash scripts/sync/notebooks-drift.sh"
+
+[tasks."sync:notebooks-ccc"]
+description = "Notebooks Layer 2: append the 26th CCC concept guide (notebook-search) + reindex"
+run = "bash scripts/sync/notebooks-ccc.sh"
+
+[tasks."sync:notebooks-cognee"]
+description = "Notebooks Layer 3: ingest the 104 notebook files into the 15th Cognee cluster (notebooks)"
+run = "bash scripts/sync/notebooks-cognee.sh"
+
+[tasks."sync:notebooks-test"]
+description = "Notebooks Layer 4: notebook import test (verifies all 104 notebooks parse cleanly)"
+run = "bash scripts/sync/notebooks-test.sh"
+
+[tasks."sync:notebooks-lint"]
+description = "Notebooks Layer 5: per-prefix stats (20+ prefixes + 104 notebooks + canonical helpers)"
+run = "bash scripts/sync/notebooks-lint.sh"
+
+[tasks."sync:notebooks"]
+description = "Notebooks orchestrator: runs sync:notebooks-drift + sync:notebooks-ccc + sync:notebooks-cognee + sync:notebooks-test + sync:notebooks-lint in sequence + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/notebooks-all-$(date +%Y-%m-%d).md"
+{
+  echo "# Notebooks Sync -- Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-15-notebooks-sync-loop-v1 change (Layer 11)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+for layer in drift ccc cognee test lint; do
+  echo "## Sub-layer: sync:notebooks:$layer" >> "$REPORT"
+  echo '```' >> "$REPORT"
+  bash "scripts/sync/notebooks-$layer.sh" >> "$REPORT" 2>&1
+  echo '```' >> "$REPORT"
+  echo "" >> "$REPORT"
+done
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 Notebooks sub-layers completed."
 } >> "$REPORT"
 cat "$REPORT"
 """

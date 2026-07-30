@@ -53,6 +53,24 @@ app.get("/api/admin/stacks", requireAuth, requireOrg("admin"), async (c) => {
 });
 
 // ----------------------------------------------------------------------------
+// Deployment control panel endpoints (per openspec deployment-control-panel)
+// ----------------------------------------------------------------------------
+//
+// The 8 control-panel endpoints back the 5 tabs of the marimo notebook
+// at notebooks/00_control_panel.py and the TanStack Start route at
+// web/apps/cianfhoghlaim-web/src/routes/control-panel/index.tsx.
+// All endpoints delegate to the Python subprocess bridge at
+// web/hono-api/control-panel/_python_bridge.py (which calls into
+// MODEL_REGISTRY + notebooks/_shared/schema.py).
+//
+// Per the 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1
+// change (commit 48bfc9328).
+
+import controlPanelApp from "../control-panel";
+
+app.route("/api/control-panel", controlPanelApp);
+
+// ----------------------------------------------------------------------------
 // BIEP v1 lineage endpoints (per openspec R30 + R31)
 // ----------------------------------------------------------------------------
 //

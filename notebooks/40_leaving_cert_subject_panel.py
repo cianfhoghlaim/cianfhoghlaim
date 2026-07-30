@@ -42,6 +42,32 @@ Reference: openspec/changes/2026-07-25-flatten-notebooks-v1/
 
 import marimo
 
+
+# Centralized registries (per the `centralized-model-registry` capability).
+# When the 4 artifacts are available, surface them in the dashboard
+# header so operators know what models / pipelines / datasets / stacks
+# are enabled in this deployment.
+try:
+    from meaisinfhoghlaim.models import MODEL_REGISTRY, model_for  # noqa: E402
+    from notebooks._shared.schema import (  # noqa: E402
+        list_dlt_sources, list_cocoindex_apps, list_baml_classes,
+        read_deployment_choice,
+    )
+    _DEFAULT_LLM = model_for("text_llm", "default")
+    _REGISTRY_SUMMARY = MODEL_REGISTRY.summary()
+    _DLT_SOURCE_COUNT = len(list_dlt_sources())
+    _COCO_APP_COUNT = len(list_cocoindex_apps())
+    _BAML_CLASS_COUNT = len(list_baml_classes())
+    _ENABLED_MODELS = sum(
+        1 for v in read_deployment_choice().get("enabled_models", {}).values() if v
+    )
+except ImportError:
+    # Fallback for minimal container builds where the registry is unavailable
+    _DEFAULT_LLM = "minimax-m3"  # canonical M3 alias (the legacy hardcoded value)
+    _REGISTRY_SUMMARY = {"total": 0, "by_family": {}, "available": 0, "deprecated": 0}
+    _DLT_SOURCE_COUNT = _COCO_APP_COUNT = _BAML_CLASS_COUNT = 0
+    _ENABLED_MODELS = 0
+
 __generated_with_marimo__ = "0.13.0"
 app = marimo.App(width="full")
 

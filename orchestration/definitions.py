@@ -147,4 +147,56 @@ except Exception as _exc:  # pragma: no cover
     )
 
 
+# ============================================================================
+# Jurisdiction-level ingestion assets (post-2026-08-15)
+# ============================================================================
+# Per the `centralized-model-registry` + `dagster-5-layer-component-architecture`
+# capabilities (commits 0b731f3fd + 2e142f64c + 4ea9c1eed + 64659a6ad),
+# the 10 per-jurisdiction ingestion assets live as thin 30-LOC
+# `JurisdictionAssetsBase` subclasses at
+# `orchestration/defs/2_materials/_base/<jurisdiction>_assets.py`. These
+# subclass `jurisdiction_assets_base.py:JurisdictionAssetsBase` and
+# emit one canonical `<jurisdiction>_documents_ingested` Dagster asset
+# per jurisdiction. They are explicitly constructed + added to the
+# `Definitions` here (not via `load_defs()`, since the base class is
+# defined inline rather than via the standard `dg.asset` decorator).
+
+try:
+    from orchestration.defs.2_materials._base import (
+        ireland_assets,
+        england_assets,
+        scotland_assets,
+        wales_assets,
+        northern_ireland_assets,
+        sct_wls_ni_assets,
+        isle_of_man_assets,
+        jersey_assets,
+        guernsey_assets,
+        crown_dependencies_assets,
+    )
+
+    _jurisdiction_assets = [
+        ireland_assets.ireland_documents_ingested,
+        england_assets.england_documents_ingested,
+        scotland_assets.scotland_documents_ingested,
+        wales_assets.wales_documents_ingested,
+        northern_ireland_assets.northern_ireland_documents_ingested,
+        sct_wls_ni_assets.sct_wls_ni_documents_ingested,
+        isle_of_man_assets.isle_of_man_documents_ingested,
+        jersey_assets.jersey_documents_ingested,
+        guernsey_assets.guernsey_documents_ingested,
+        crown_dependencies_assets.crown_dependencies_documents_ingested,
+    ]
+    defs = dg.Definitions.merge(
+        defs,
+        dg.Definitions(assets=_jurisdiction_assets),
+    )
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"jurisdiction_assets_load_failed: {_exc}; continuing without the 10 jurisdiction assets"
+    )
+
+
 __all__ = ["defs", "_DEFS_AVAILABLE", "_DEFS_LOADED_VIA"]

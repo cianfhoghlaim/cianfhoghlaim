@@ -4,10 +4,12 @@ Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) + the
 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Layer 6) + the
 2026-08-15-baml-sync-loop-v1 change (Layer 7).
 
-The 6 assets (in 3 layers of the sync health surface):
+The 7 assets (in 4 layers of the sync health surface):
 - sync_health: reads the latest stedding/sync-reports/all-{date}.md
   and emits Dagster metadata (paths_sync_time, ccc_chunk_count,
-  cognee_cluster_count, skill_pass_rate, mcp_server_count_healthy)
+  cognee_cluster_count, skill_pass_rate, mcp_server_count_healthy,
+  registry_drift_count) — includes the centralized-registry drift
+  audit (post-2026-08-15)
 - stale_skill_alert: triggers a downstream job when skill_pass_rate
   drops below 0.95 (Layer 1-5)
 - dagster_sync_health: reads the latest stedding/sync-reports/dagster-{date}.md
@@ -16,6 +18,8 @@ The 6 assets (in 3 layers of the sync health surface):
 - baml_sync_health: reads the latest stedding/sync-reports/baml-{date}.md
   (Layer 7)
 - baml_sync_alert: triggers when baml_sync_health's drift_count > 0
+- registry_drift_alert: triggers when registry_drift_count > 0
+  (the centralized-model-registry capability)
 """
 # NOTE: `from __future__ import annotations` is intentionally NOT present.
 # Dagster's `@asset` validator does runtime identity checks on the type
@@ -375,6 +379,28 @@ def _parse_baml_report(report: Path) -> dict:
         "change via the baml_assets_sensor + a 0 */4 * * * cron."
     ),
 )
+def _get_registry_drift_count() -> int:
+    """Return the count of hardcoded model strings detected by
+    scripts/registry_audit.py. Invoked from sync_health metadata to
+    surface the centralized-model-registry drift count alongside the
+    6 other layer drift counts.
+
+    Per the centralized-model-registry capability (2026-08-15).
+    """
+    import subprocess
+    try:
+        proc = subprocess.run(
+            ["python3", "scripts/registry_audit.py"],
+            capture_output=True, text=True, cwd=str(Path(__file__).parents[3]),
+        )
+        for line in proc.stdout.splitlines():
+            if line.startswith("Found ") and "potential" in line:
+                return int(line.split()[1])
+    except Exception:
+        pass
+    return 0
+
+
 def baml_sync_health(context: AssetExecutionContext) -> dict:
     """The BAML schema health asset (Layer 7 of the sync loop)."""
     report = _latest_baml_report()
@@ -707,4 +733,119 @@ def agents_assets_sensor(
 agents_sync_health_job = define_asset_job(
     name="agents_sync_health_refresh",
     selection=[agents_sync_health],
+)
+
+
+# =============================================================================
+# Layer 11 - Notebooks Sync (per the 2026-08-15-notebooks-sync-loop-v1 change)
+# =============================================================================
+
+def _latest_notebooks_report() -> Path | None:
+    """Find the most recent stedding/sync-reports/notebooks-{date}.md."""
+    if not REPORTS_DIR.is_dir():
+        return None
+    reports = sorted(REPORTS_DIR.glob("notebooks-*.md"), reverse=True)
+    return reports[0] if reports else None
+
+
+def _parse_notebooks_report(report: Path) -> dict:
+    """Extract the 2 notebooks sync metrics from a sync:notebooks report."""
+    metrics = {
+        "file_count": 0,
+        "cell_count": 0,
+    }
+    if not report.is_file():
+        return metrics
+    text = report.read_text()
+    m = re.search(r"Total notebook files:\s*(\d+)", text)
+    if m:
+        metrics["file_count"] = int(m.group(1))
+    m = re.search(r"Total @app\.cell decorators:\s*(\d+)", text)
+    if m:
+        metrics["cell_count"] = int(m.group(1))
+    return metrics
+
+
+@asset(
+    group_name="3_model_lifecycle/sync_health",
+    description=(
+        "Reads the latest stedding/sync-reports/notebooks-{date}.md (Layer 11) "
+        "and emits Dagster metadata (file_count, cell_count). Per the "
+        "2026-08-15-notebooks-sync-loop-v1 change. Fires on every notebook "
+        "file change via the notebooks_assets_sensor + a 0 */4 * * * cron."
+    ),
+)
+def notebooks_sync_health(context: AssetExecutionContext) -> dict:
+    """The notebooks sync health asset (Layer 11 of the sync loop)."""
+    report = _latest_notebooks_report()
+    if not report:
+        context.log.warning(f"No notebooks sync reports found in {REPORTS_DIR}")
+        return {"status": "missing", "report": None}
+
+    metrics = _parse_notebooks_report(report)
+    mtime = datetime.fromtimestamp(report.stat().st_mtime, tz=timezone.utc)
+
+    context.add_asset_metadata(
+        {
+            "report_path": MetadataValue.path(str(report)),
+            "report_modified": MetadataValue.text(mtime.isoformat()),
+            "file_count": MetadataValue.int(metrics["file_count"]),
+            "cell_count": MetadataValue.int(metrics["cell_count"]),
+            "metrics": MetadataValue.json(metrics),
+        }
+    )
+
+    return {
+        "status": "ok" if metrics["file_count"] > 0 else "degraded",
+        "report": str(report),
+        **metrics,
+    }
+
+
+@asset(
+    group_name="3_model_lifecycle/sync_health",
+    description=(
+        "Triggers when notebooks_sync_health's file_count drops below the "
+        "expected baseline OR when the cell_count is 0. Logs a warning + "
+        "opens a follow-up sync:notebooks run."
+    ),
+)
+def notebooks_sync_alert(context: AssetExecutionContext) -> dict:
+    """The notebooks sync degradation alert."""
+    nb_health = notebooks_sync_health(context.op_context)  # type: ignore
+    file_count = nb_health.get("file_count", 0)
+    cell_count = nb_health.get("cell_count", 0)
+    if file_count == 0 or cell_count == 0:
+        context.log.warning(
+            f"Notebooks degraded: file_count={file_count}, cell_count={cell_count}"
+        )
+    return {
+        "file_count": file_count,
+        "cell_count": cell_count,
+        "alert": file_count == 0 or cell_count == 0,
+    }
+
+
+@sensor(
+    job_name="notebooks_sync_health_refresh",
+    minimum_interval_seconds=3600,
+    description=(
+        "Fires when a new stedding/sync-reports/notebooks-{date}.md is created "
+        "(i.e. after 'mise run sync:notebooks') OR when a file under notebooks/ "
+        "changes. Triggers the notebooks_sync_health asset to re-materialize."
+    ),
+)
+def notebooks_assets_sensor(
+    context: SensorEvaluationContext,
+) -> None:
+    """Sensor that fires on new notebooks sync reports OR notebook file changes."""
+    latest = _latest_notebooks_report()
+    if not latest:
+        return
+    yield RunRequest(run_key=f"notebooks_sync_health_{latest.name}")
+
+
+notebooks_sync_health_job = define_asset_job(
+    name="notebooks_sync_health_refresh",
+    selection=[notebooks_sync_health],
 )

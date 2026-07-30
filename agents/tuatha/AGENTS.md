@@ -43,6 +43,7 @@ rest of the file is the full 4-stream routing.
 |:--|:--|
 | [`babylonjs`](../.agents/skills/babylonjs/SKILL.md) | Babylon.js 7 + WebGPU (the MMO client renderer) |
 | [`tuatha-mmo`](../.agents/skills/tuatha-mmo/SKILL.md) | The Tuatha Celtic MMO + Crypteolas achievement-ledger (4 sub-modules) |
+| [`centralized-registry`](../.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas.** Load when adding/changing/toggling any model, schema, pipeline, or stack. The Tuatha tools (8 files) now resolve embedders via `MODEL_REGISTRY.resolve("embedder", "default")` instead of hardcoded `BAAI/bge-m3`. |
 | [`pent-elemental-cosmology`](../.agents/skills/pent-elemental-cosmology/SKILL.md) | The 5 Pent-Elemental realms (Spirit / Water / Fire / Earth / Air) + Anam Cara + Geasa |
 | [`tuatha-achievement-ledger`](../.agents/skills/tuatha-achievement-ledger/SKILL.md) | The 8-field skill-tree badge schema + the 5 masteries + the cryptographic evidence chain |
 | [`tuatha-mcp-server-tools`](../.agents/skills/tuatha-mcp-server-tools/SKILL.md) | The 5 MCP tools + the canonical home + the broken-import bug + the shim pattern |
