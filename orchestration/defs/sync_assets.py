@@ -587,3 +587,124 @@ stacks_sync_health_job = define_asset_job(
     name="stacks_sync_health_refresh",
     selection=[stacks_sync_health],
 )
+
+
+# =============================================================================
+# Layer 10 — Agent Definitions Sync (per the 2026-08-15-agent-definitions-sync-loop-v1 change)
+# =============================================================================
+
+def _latest_agents_report() -> Path | None:
+    """Find the most recent stedding/sync-reports/agents-{date}.md."""
+    if not REPORTS_DIR.is_dir():
+        return None
+    reports = sorted(REPORTS_DIR.glob("agents-*.md"), reverse=True)
+    return reports[0] if reports else None
+
+
+def _parse_agents_report(report: Path) -> dict:
+    """Extract the 3 agents sync metrics from a sync:agents report."""
+    metrics = {
+        "file_count": 0,
+        "agents_md_count": 0,
+        "ncca_subject_count": 0,
+    }
+    if not report.is_file():
+        return metrics
+    text = report.read_text()
+    m = re.search(r"Total \.py files:\s*(\d+)", text)
+    if m:
+        metrics["file_count"] = int(m.group(1))
+    m = re.search(r"Total AGENTS\.md:\s*(\d+)", text)
+    if m:
+        metrics["agents_md_count"] = int(m.group(1))
+    m = re.search(r"Total NCCA subject specialists:\s*(\d+)", text)
+    if m:
+        metrics["ncca_subject_count"] = int(m.group(1))
+    return metrics
+
+
+@asset(
+    group_name="3_model_lifecycle/sync_health",
+    description=(
+        "Reads the latest stedding/sync-reports/agents-{date}.md (Layer 10) "
+        "and emits Dagster metadata (file_count, agents_md_count, "
+        "ncca_subject_count). Per the 2026-08-15-agent-definitions-sync-loop-v1 "
+        "change. Fires on every agent file change via the agents_assets_sensor + "
+        "a 0 */4 * * * cron."
+    ),
+)
+def agents_sync_health(context: AssetExecutionContext) -> dict:
+    """The agent definitions health asset (Layer 10 of the sync loop)."""
+    report = _latest_agents_report()
+    if not report:
+        context.log.warning(f"No agents sync reports found in {REPORTS_DIR}")
+        return {"status": "missing", "report": None}
+
+    metrics = _parse_agents_report(report)
+    mtime = datetime.fromtimestamp(report.stat().st_mtime, tz=timezone.utc)
+
+    context.add_asset_metadata(
+        {
+            "report_path": MetadataValue.path(str(report)),
+            "report_modified": MetadataValue.text(mtime.isoformat()),
+            "file_count": MetadataValue.int(metrics["file_count"]),
+            "agents_md_count": MetadataValue.int(metrics["agents_md_count"]),
+            "ncca_subject_count": MetadataValue.int(metrics["ncca_subject_count"]),
+            "metrics": MetadataValue.json(metrics),
+        }
+    )
+
+    return {
+        "status": "ok" if metrics["file_count"] > 0 else "degraded",
+        "report": str(report),
+        **metrics,
+    }
+
+
+@asset(
+    group_name="3_model_lifecycle/sync_health",
+    description=(
+        "Triggers when agents_sync_health's file_count drops below the "
+        "expected baseline OR when the agents_md_count is less than 5. "
+        "Logs a warning + opens a follow-up sync:agents run."
+    ),
+)
+def agents_sync_alert(context: AssetExecutionContext) -> dict:
+    """The agent definitions degradation alert."""
+    agents_health = agents_sync_health(context.op_context)  # type: ignore
+    file_count = agents_health.get("file_count", 0)
+    agents_md = agents_health.get("agents_md_count", 0)
+    if file_count == 0 or agents_md < 5:
+        context.log.warning(
+            f"Agents degraded: file_count={file_count}, agents_md={agents_md}"
+        )
+    return {
+        "file_count": file_count,
+        "agents_md_count": agents_md,
+        "alert": file_count == 0 or agents_md < 5,
+    }
+
+
+@sensor(
+    job_name="agents_sync_health_refresh",
+    minimum_interval_seconds=3600,
+    description=(
+        "Fires when a new stedding/sync-reports/agents-{date}.md is created "
+        "(i.e. after 'mise run sync:agents') OR when a file under agents/ "
+        "changes. Triggers the agents_sync_health asset to re-materialize."
+    ),
+)
+def agents_assets_sensor(
+    context: SensorEvaluationContext,
+) -> None:
+    """Sensor that fires on new agents sync reports OR agent file changes."""
+    latest = _latest_agents_report()
+    if not latest:
+        return
+    yield RunRequest(run_key=f"agents_sync_health_{latest.name}")
+
+
+agents_sync_health_job = define_asset_job(
+    name="agents_sync_health_refresh",
+    selection=[agents_sync_health],
+)

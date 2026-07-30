@@ -391,3 +391,27 @@
     - scripts/cognee_ingest_dlt_sources.py
   tags: [dlt, sources, jurisdictions, dlt_sources, common, ingestion]
   domain: "00-dlt"
+
+- title: "agent-fleet-search"
+  description: |
+    How to find any agent in the 12-agent fleet + the 8 NCCA subject
+    specialists by name, subdir, or capability. Use when the user asks
+    'are all agents registered', 'is the agent fleet healthy', 'what are
+    the NCCA subject specialists', 'does the agent registry match the
+    12-agent fleet'. 188 .py files across 7 agent subdirs. Per the
+    2026-08-15-agent-definitions-sync-loop-v1 change (Layer 10).
+  files:
+    - agents/AGENTS.md
+    - agents/agent_registry.py
+    - agents/tuatha/AGENTS.md
+    - agents/tuatha/agents/math_agent.py
+    - agents/tuatha/agents/gael_agent.py
+    - agents/tuatha/agents/engl_agent.py
+    - agents/tuatha/agents/chem_agent.py
+    - agents/tuatha/agents/geog_agent.py
+    - agents/tuatha/agents/comp_agent.py
+    - agents/tuatha/agents/hist_agent.py
+    - agents/tuatha/agents/appm_agent.py
+    - scripts/cognee_ingest_agent_definitions.py
+  tags: [agents, fleet, ncca, agents_md, agents_definitions, ingestor]
+  domain: "00-agents"

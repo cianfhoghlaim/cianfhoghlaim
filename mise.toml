@@ -1010,6 +1010,64 @@ done
 cat "$REPORT"
 """
 
+# -----------------------------------------------------------------------------
+# Agent Definitions Sync Loop — the 10th sync layer (per 2026-08-15-agent-definitions-sync-loop-v1)
+# Layer 10 covers the 188 agent files + 12-agent fleet + 8 NCCA subject
+# specialists across 7 subdirs at agents/. The orchestrator runs 5
+# sub-layers + writes a unified report.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:agents-drift"]
+description = "Agents Layer 1: detect agent registration drift across the 188 agent files (unregistered agents + stale model refs)"
+run = "bash scripts/sync/agents-drift.sh"
+
+[tasks."sync:agents-ccc"]
+description = "Agents Layer 2: append the 25th CCC concept guide (agent-fleet-search) + reindex"
+run = "bash scripts/sync/agents-ccc.sh"
+
+[tasks."sync:agents-cognee"]
+description = "Agents Layer 3: ingest the 188 agent files into the 14th Cognee cluster (agent_definitions)"
+run = "bash scripts/sync/agents-cognee.sh"
+
+[tasks."sync:agents-test"]
+description = "Agents Layer 4: agent registration test (verifies all 12-agent fleet + 8 NCCA subjects are registered)"
+run = "bash scripts/sync/agents-test.sh"
+
+[tasks."sync:agents-lint"]
+description = "Agents Layer 5: per-subdir stats (the 7 agent subdirs + 5 AGENTS.md + 8 NCCA subject specialists)"
+run = "bash scripts/sync/agents-lint.sh"
+
+[tasks."sync:agents"]
+description = "Agents orchestrator: runs sync:agents-drift + sync:agents-ccc + sync:agents-cognee + sync:agents-test + sync:agents-lint in sequence + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/agents-all-$(date +%Y-%m-%d).md"
+{
+  echo "# Agents Sync -- Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-15-agent-definitions-sync-loop-v1 change (Layer 10)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+for layer in drift ccc cognee test lint; do
+  echo "## Sub-layer: sync:agents:$layer" >> "$REPORT"
+  echo '```' >> "$REPORT"
+  bash "scripts/sync/agents-$layer.sh" >> "$REPORT" 2>&1
+  echo '```' >> "$REPORT"
+  echo "" >> "$REPORT"
+done
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 Agents sub-layers completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
+
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
 run = "bash scripts/sync/drift_docs.sh"
