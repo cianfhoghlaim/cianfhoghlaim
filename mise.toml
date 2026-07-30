@@ -82,6 +82,14 @@ run = "bash .agents/skills/lint-skills.sh"
 description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY. Part of the `centralized-model-registry` capability — see openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
 run = ".venv/bin/python3 scripts/registry_audit.py --strict"
 
+[tasks."pre-commit-install"]
+description = "Install the centralized-registry pre-commit hook"
+run = "pre-commit install && pre-commit run --all-files"
+
+[tasks."pre-commit-run"]
+description = "Run the centralized-registry pre-commit hook on all files"
+run = "pre-commit run --all-files"
+
 [tasks."lint:drift-docs"]
 description = "Validate every AGENTS.md number claim (specs/skills/stacks/models/notebooks) against ground truth. Exits 1 on any mismatch; writes JSON + MD report to stedding/sync-reports/docs-drift-{date}.{json,md}. Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change (the `centralize-cross-cutting-docs` spec)."
 run = ".venv/bin/python3 scripts/lint_drift_docs.py"

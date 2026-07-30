@@ -269,6 +269,22 @@ collapses 40 nation CocoIndex Apps into one factory. See
 
 - `openspec/changes/archive/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/`
   (the archived change record)
+
+## Pre-commit hook
+
+A pre-commit hook blocks commits that introduce hardcoded model strings:
+
+```bash
+mise run pre-commit-install  # install the hook
+mise run pre-commit-run      # run on all files manually
+git commit --no-verify       # skip (rare)
+```
+
+The hook runs `mise run lint:registry` (which invokes
+scripts/registry_audit.py) and fails the commit if any hardcoded
+model name/ID is found in `agents/`, `baml_src/`, `notebooks/`,
+`web/`, `orchestration/`, `spaces/`, or `meaisinfhoghlaim/` that
+isn't routed through `MODEL_REGISTRY`.
 - `openspec/specs/centralized-model-registry/spec.md` (4 Requirements)
 - `openspec/specs/centralized-schema-registry/spec.md` (4 Requirements)
 - `openspec/specs/deployment-control-panel/spec.md` (5 Requirements)
