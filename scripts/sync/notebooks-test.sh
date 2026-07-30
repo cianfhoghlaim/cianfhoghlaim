@@ -19,8 +19,12 @@ REPORT="stedding/sync-reports/notebooks-test-$(date +%Y-%m-%d).md"
   echo "## Summary"
   echo ""
   total=0
-  for f in notebooks/[0-9]*_*.py 2>/dev/null; do
-    total=$((total + 1))
+  for f in notebooks/[0-9]*_*.py; do
+    # If the glob doesn't match, bash sets $f to the literal pattern.
+    # Skip the literal pattern (it's not a real file).
+    if [ -f "$f" ]; then
+      total=$((total + 1))
+    fi
   done
   echo "- Total notebook files: $total"
   echo ""

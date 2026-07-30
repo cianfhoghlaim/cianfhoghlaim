@@ -1100,7 +1100,7 @@ run = "bash scripts/sync/notebooks-lint.sh"
 
 [tasks."sync:notebooks"]
 description = "Notebooks orchestrator: runs sync:notebooks-drift + sync:notebooks-ccc + sync:notebooks-cognee + sync:notebooks-test + sync:notebooks-lint in sequence + writes a unified report"
-run = """
+run = '''
 mkdir -p stedding/sync-reports
 REPORT="stedding/sync-reports/notebooks-all-$(date +%Y-%m-%d).md"
 {
@@ -1127,7 +1127,7 @@ done
   echo "All 5 Notebooks sub-layers completed."
 } >> "$REPORT"
 cat "$REPORT"
-"""
+'''
 
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
