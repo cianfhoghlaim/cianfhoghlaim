@@ -162,31 +162,31 @@ except Exception as _exc:  # pragma: no cover
 # defined inline rather than via the standard `dg.asset` decorator).
 
 try:
-    from orchestration.defs.2_materials._base import (
-        ireland_assets,
-        england_assets,
-        scotland_assets,
-        wales_assets,
-        northern_ireland_assets,
-        sct_wls_ni_assets,
-        isle_of_man_assets,
-        jersey_assets,
-        guernsey_assets,
-        crown_dependencies_assets,
-    )
+    # NOTE: The static `from orchestration.defs.2_materials._base import ...`
+    # is intentionally NOT used because `2_materials` is an invalid Python
+    # identifier (the `2_` is parsed as an incomplete PEP 515 underscore-
+    # separated numeric literal). Use a dynamic import via `importlib`
+    # to bypass the tokenizer. Per the 2026-07-30-cascading-registry-integration-v1
+    # commit that introduced the static form (regressed at parse time).
+    #
+    # Each jurisdiction file (e.g. `ireland_assets.py`) is a SUBMODULE of
+    # `_base`, not an attribute of the `_base` package. Import each
+    # submodule dynamically + reference its canonical
+    # `<jurisdiction>_documents_ingested` attribute.
+    import importlib
 
-    _jurisdiction_assets = [
-        ireland_assets.ireland_documents_ingested,
-        england_assets.england_documents_ingested,
-        scotland_assets.scotland_documents_ingested,
-        wales_assets.wales_documents_ingested,
-        northern_ireland_assets.northern_ireland_documents_ingested,
-        sct_wls_ni_assets.sct_wls_ni_documents_ingested,
-        isle_of_man_assets.isle_of_man_documents_ingested,
-        jersey_assets.jersey_documents_ingested,
-        guernsey_assets.guernsey_documents_ingested,
-        crown_dependencies_assets.crown_dependencies_documents_ingested,
+    _jurisdiction_names = [
+        "ireland", "england", "scotland", "wales", "northern_ireland",
+        "sct_wls_ni", "isle_of_man", "jersey", "guernsey",
+        "crown_dependencies",
     ]
+
+    _jurisdiction_assets = []
+    for _name in _jurisdiction_names:
+        _submodule = importlib.import_module(
+            f"orchestration.defs.2_materials._base.{_name}_assets"
+        )
+        _jurisdiction_assets.append(getattr(_submodule, f"{_name}_documents_ingested"))
     defs = dg.Definitions.merge(
         defs,
         dg.Definitions(assets=_jurisdiction_assets),

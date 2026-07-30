@@ -37,6 +37,7 @@ from pathlib import Path
 
 from dagster import (
     AssetExecutionContext,
+    AssetSelection,
     MetadataValue,
     SensorEvaluationContext,
     asset,
@@ -193,7 +194,7 @@ def sync_report_sensor(
 # Define a job for the sync_health asset
 sync_health_job = define_asset_job(
     name="sync_health_refresh",
-    selection=[sync_health],
+    selection=AssetSelection.assets(sync_health),
 )
 
 
@@ -317,7 +318,7 @@ def dagster_assets_sensor(
 
 dagster_sync_health_job = define_asset_job(
     name="dagster_sync_health_refresh",
-    selection=[dagster_sync_health],
+    selection=AssetSelection.assets(dagster_sync_health),
 )
 
 
@@ -369,16 +370,6 @@ def _parse_baml_report(report: Path) -> dict:
     return metrics
 
 
-@asset(
-    group_name="3_model_lifecycle/sync_health",
-    description=(
-        "Reads the latest stedding/sync-reports/baml-{date}.md (Layer 7) "
-        "and emits Dagster metadata (baml_file_count, function_count, "
-        "class_count, client_count, test_block_count, drift_count). Per the "
-        "2026-08-15-baml-sync-loop-v1 change. Fires on every .baml file "
-        "change via the baml_assets_sensor + a 0 */4 * * * cron."
-    ),
-)
 def _get_registry_drift_count() -> int:
     """Return the count of hardcoded model strings detected by
     scripts/registry_audit.py. Invoked from sync_health metadata to
@@ -401,6 +392,16 @@ def _get_registry_drift_count() -> int:
     return 0
 
 
+@asset(
+    group_name="3_model_lifecycle/sync_health",
+    description=(
+        "Reads the latest stedding/sync-reports/baml-{date}.md (Layer 7) "
+        "and emits Dagster metadata (baml_file_count, function_count, "
+        "class_count, client_count, test_block_count, drift_count). Per the "
+        "2026-08-15-baml-sync-loop-v1 change. Fires on every .baml file "
+        "change via the baml_assets_sensor + a 0 */4 * * * cron."
+    ),
+)
 def baml_sync_health(context: AssetExecutionContext) -> dict:
     """The BAML schema health asset (Layer 7 of the sync loop)."""
     report = _latest_baml_report()
@@ -473,7 +474,7 @@ def baml_assets_sensor(
 
 baml_sync_health_job = define_asset_job(
     name="baml_sync_health_refresh",
-    selection=[baml_sync_health],
+    selection=AssetSelection.assets(baml_sync_health),
 )
 
 
@@ -611,7 +612,7 @@ def stacks_assets_sensor(
 
 stacks_sync_health_job = define_asset_job(
     name="stacks_sync_health_refresh",
-    selection=[stacks_sync_health],
+    selection=AssetSelection.assets(stacks_sync_health),
 )
 
 
@@ -732,7 +733,7 @@ def agents_assets_sensor(
 
 agents_sync_health_job = define_asset_job(
     name="agents_sync_health_refresh",
-    selection=[agents_sync_health],
+    selection=AssetSelection.assets(agents_sync_health),
 )
 
 
@@ -847,5 +848,5 @@ def notebooks_assets_sensor(
 
 notebooks_sync_health_job = define_asset_job(
     name="notebooks_sync_health_refresh",
-    selection=[notebooks_sync_health],
+    selection=AssetSelection.assets(notebooks_sync_health),
 )
