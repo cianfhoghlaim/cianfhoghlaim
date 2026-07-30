@@ -369,6 +369,86 @@ if [ -f "notebooks/28_dlt_sync_dashboard.py" ]; then
 else
     fail "notebooks/28_dlt_sync_dashboard.py missing"
 fi
+
+# ============================================================================
+# Step 10: sync:agents (Layer 10 — Agent definitions surface validation)
+# Per the 2026-08-15-agent-definitions-sync-loop-v1 change
+# ============================================================================
+section "Step 10: sync:agents (Layer 10 — Agent definitions surface validation)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:agents"; then
+    pass "sync:agents task registered"
+else
+    fail "sync:agents task not registered"
+fi
+if [ -f "scripts/sync/agents.sh" ] && [ -f "scripts/sync/agents-drift.sh" ] && [ -f "scripts/sync/agents-ccc.sh" ] && [ -f "scripts/sync/agents-cognee.sh" ] && [ -f "scripts/sync/agents-test.sh" ] && [ -f "scripts/sync/agents-lint.sh" ]; then
+    pass "All 6 sync:agents sub-layer scripts exist (drift + ccc + cognee + test + lint + orchestrator)"
+else
+    fail "One or more sync:agents sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/agents-sync" ]; then
+    pass "agents-sync skill directory exists"
+else
+    fail "agents-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_agent_definitions.py" ]; then
+    pass "scripts/cognee_ingest_agent_definitions.py exists (Layer 10 ingestor)"
+else
+    fail "scripts/cognee_ingest_agent_definitions.py missing"
+fi
+if [ -f "notebooks/29_agents_sync_dashboard.py" ]; then
+    pass "notebooks/29_agents_sync_dashboard.py (Layer 10 dashboard) exists"
+else
+    fail "notebooks/29_agents_sync_dashboard.py missing"
+fi
+if grep -q "agent-fleet-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "25th CCC concept guide (agent-fleet-search) is in guides.yml"
+else
+    fail "25th CCC concept guide missing"
+fi
+
+# ============================================================================
+# Step 11: sync:notebooks (Layer 11 — Marimo notebooks surface validation)
+# Per the 2026-08-15-notebooks-sync-loop-v1 change
+# ============================================================================
+section "Step 11: sync:notebooks (Layer 11 — Marimo notebooks surface validation)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:notebooks"; then
+    pass "sync:notebooks task registered"
+else
+    fail "sync:notebooks task not registered"
+fi
+if [ -f "scripts/sync/notebooks.sh" ] && [ -f "scripts/sync/notebooks-drift.sh" ] && [ -f "scripts/sync/notebooks-ccc.sh" ] && [ -f "scripts/sync/notebooks-cognee.sh" ] && [ -f "scripts/sync/notebooks-test.sh" ] && [ -f "scripts/sync/notebooks-lint.sh" ]; then
+    pass "All 6 sync:notebooks sub-layer scripts exist (drift + ccc + cognee + test + lint + orchestrator)"
+else
+    fail "One or more sync:notebooks sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/notebooks-sync" ]; then
+    pass "notebooks-sync skill directory exists (Layer 11)"
+else
+    fail "notebooks-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_notebooks.py" ]; then
+    pass "scripts/cognee_ingest_notebooks.py exists (Layer 11 ingestor)"
+else
+    fail "scripts/cognee_ingest_notebooks.py missing"
+fi
+if [ -f "notebooks/30_notebooks_sync_dashboard.py" ]; then
+    pass "notebooks/30_notebooks_sync_dashboard.py (Layer 11 dashboard) exists"
+else
+    fail "notebooks/30_notebooks_sync_dashboard.py missing"
+fi
+if grep -q "notebook-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "26th CCC concept guide (notebook-search) is in guides.yml"
+else
+    fail "26th CCC concept guide missing"
+fi
+if grep -q "notebooks_sync_health" "orchestration/defs/sync_assets.py" 2>/dev/null; then
+    pass "orchestration/defs/sync_assets.py has the notebooks_sync_health asset (Layer 11 Dagster wiring)"
+else
+    fail "orchestration/defs/sync_assets.py missing the notebooks_sync_health asset"
+fi
+
 # ============================================================================
 # Summary
 # ============================================================================
@@ -382,75 +462,9 @@ echo "  TOTAL: $TOTAL"
 echo
 
 if [ "$FAIL" -eq 0 ]; then
-    echo -e "${GREEN}All 8 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
+    echo -e "${GREEN}All 11 bring-up steps work! (with Step 2 skipped per user direction)${NC}"
     exit 0
 else
     echo -e "${RED}Some bring-up steps failed. See above.${NC}"
     exit 1
-fi
-# ============================================================================
-# Step 8: sync:stacks (Layer 8 — IaC stacks surface validation)
-# ============================================================================
-section "Step 8: sync:stacks (Layer 8 — IaC stacks surface validation)"
-
-if bash scripts/sync/stacks.sh 2>&1 | tail -10 | grep -q "Total stacks:"; then
-    pass "sync:stacks runs + reports the 87 stacks (Layer 8)"
-else
-    fail "sync:stacks output missing 'Total stacks:'"
-fi
-if mise tasks ls 2>&1 | grep -qE "^sync:stacks"; then
-    pass "sync:stacks task registered"
-else
-    fail "sync:stacks task not registered"
-fi
-if [ -d ".agents/skills/stacks-sync" ]; then
-    pass "stacks-sync skill directory exists"
-else
-    fail "stacks-sync skill directory missing"
-fi
-if [ -f "scripts/cognee_ingest_stacks_catalog.py" ]; then
-    pass "scripts/cognee_ingest_stacks_catalog.py exists (Layer 8 ingestor)"
-else
-    fail "scripts/cognee_ingest_stacks_catalog.py missing"
-fi
-if [ -f "notebooks/27_stacks_sync_dashboard.py" ]; then
-    pass "notebooks/27_stacks_sync_dashboard.py (Layer 8 dashboard) exists"
-else
-    fail "notebooks/27_stacks_sync_dashboard.py missing"
-fi
-if grep -q "stack-catalog-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
-    pass "23rd CCC concept guide (stack-catalog-search) is in guides.yml"
-else
-    fail "23rd CCC concept guide missing"
-fi
-
-# ============================================================================
-# Step 9: sync:dlt (Layer 9 — DLT source surface validation)
-# ============================================================================
-section "Step 9: sync:dlt (Layer 9 — DLT source surface validation)"
-
-if bash scripts/sync/dlt.sh 2>&1 | tail -10 | grep -q "Total .py files"; then
-    pass "sync:dlt runs + reports the 1903 .py files (Layer 9)"
-else
-    fail "sync:dlt output missing 'Total .py files'"
-fi
-if mise tasks ls 2>&1 | grep -qE "^sync:dlt"; then
-    pass "sync:dlt task (Layer 9 orchestrator) registered"
-else
-    fail "sync:dlt task not registered"
-fi
-if [ -d ".agents/skills/dlt-sync" ]; then
-    pass "dlt-sync skill directory exists"
-else
-    fail "dlt-sync skill directory missing"
-fi
-if [ -f "scripts/cognee_ingest_dlt_sources.py" ]; then
-    pass "scripts/cognee_ingest_dlt_sources.py exists (Layer 9 ingestor)"
-else
-    fail "scripts/cognee_ingest_dlt_sources.py missing"
-fi
-if [ -f "notebooks/28_dlt_sync_dashboard.py" ]; then
-    pass "notebooks/28_dlt_sync_dashboard.py (Layer 9 dashboard) exists"
-else
-    fail "notebooks/28_dlt_sync_dashboard.py missing"
 fi

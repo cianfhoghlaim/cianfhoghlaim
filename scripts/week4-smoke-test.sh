@@ -311,6 +311,95 @@ else
 fi
 
 # ============================================================================
+# Gate 10: sync:agents (Layer 10 — Agent definitions surface validation)
+# Per the 2026-08-15-agent-definitions-sync-loop-v1 change
+# ============================================================================
+section "Gate 10: sync:agents (Layer 10)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:agents"; then
+    pass "sync:agents task registered"
+else
+    fail "sync:agents task not registered"
+fi
+if [ -f "scripts/sync/agents.sh" ]; then
+    pass "scripts/sync/agents.sh exists"
+else
+    fail "scripts/sync/agents.sh missing"
+fi
+if [ -f "scripts/sync/agents-drift.sh" ] && [ -f "scripts/sync/agents-ccc.sh" ] && [ -f "scripts/sync/agents-cognee.sh" ] && [ -f "scripts/sync/agents-test.sh" ] && [ -f "scripts/sync/agents-lint.sh" ]; then
+    pass "All 5 sync:agents sub-layer scripts exist (drift + ccc + cognee + test + lint)"
+else
+    fail "One or more sync:agents sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/agents-sync" ]; then
+    pass "agents-sync skill directory exists"
+else
+    fail "agents-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_agent_definitions.py" ]; then
+    pass "scripts/cognee_ingest_agent_definitions.py exists"
+else
+    fail "scripts/cognee_ingest_agent_definitions.py missing"
+fi
+if [ -f "notebooks/29_agents_sync_dashboard.py" ]; then
+    pass "notebooks/29_agents_sync_dashboard.py exists"
+else
+    fail "notebooks/29_agents_sync_dashboard.py missing"
+fi
+if grep -q "agent-fleet-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "25th CCC concept guide (agent-fleet-search) is in guides.yml"
+else
+    fail "25th CCC concept guide missing"
+fi
+
+# ============================================================================
+# Gate 11: sync:notebooks (Layer 11 — Marimo notebooks surface validation)
+# Per the 2026-08-15-notebooks-sync-loop-v1 change
+# ============================================================================
+section "Gate 11: sync:notebooks (Layer 11)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:notebooks"; then
+    pass "sync:notebooks task registered"
+else
+    fail "sync:notebooks task not registered"
+fi
+if [ -f "scripts/sync/notebooks.sh" ]; then
+    pass "scripts/sync/notebooks.sh exists"
+else
+    fail "scripts/sync/notebooks.sh missing"
+fi
+if [ -f "scripts/sync/notebooks-drift.sh" ] && [ -f "scripts/sync/notebooks-ccc.sh" ] && [ -f "scripts/sync/notebooks-cognee.sh" ] && [ -f "scripts/sync/notebooks-test.sh" ] && [ -f "scripts/sync/notebooks-lint.sh" ]; then
+    pass "All 5 sync:notebooks sub-layer scripts exist (drift + ccc + cognee + test + lint)"
+else
+    fail "One or more sync:notebooks sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/notebooks-sync" ]; then
+    pass "notebooks-sync skill directory exists"
+else
+    fail "notebooks-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_notebooks.py" ]; then
+    pass "scripts/cognee_ingest_notebooks.py exists"
+else
+    fail "scripts/cognee_ingest_notebooks.py missing"
+fi
+if [ -f "notebooks/30_notebooks_sync_dashboard.py" ]; then
+    pass "notebooks/30_notebooks_sync_dashboard.py exists"
+else
+    fail "notebooks/30_notebooks_sync_dashboard.py missing"
+fi
+if grep -q "notebook-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "26th CCC concept guide (notebook-search) is in guides.yml"
+else
+    fail "26th CCC concept guide missing"
+fi
+if grep -q "notebooks_sync_health" "orchestration/defs/sync_assets.py" 2>/dev/null; then
+    pass "orchestration/defs/sync_assets.py has the notebooks_sync_health asset (Layer 11)"
+else
+    fail "orchestration/defs/sync_assets.py missing the notebooks_sync_health asset"
+fi
+
+# ============================================================================
 # Summary
 # ============================================================================
 section "Summary"

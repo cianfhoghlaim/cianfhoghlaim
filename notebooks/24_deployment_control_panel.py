@@ -4,9 +4,10 @@
 Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) +
 the 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Phase 8.1 — adds Layer 6) +
 the 2026-08-15-baml-sync-loop-v1 change (Phase 6 — adds Layer 7 / BAML) +
-the 2026-08-15-stacks-sync-loop-v1 change (Layer 8 — adds stacks).
+the 2026-08-15-stacks-sync-loop-v1 change (Layer 8 — adds stacks) +
+the 2026-08-15-agent-definitions-sync-loop-v1 change (Layer 10 — adds agents).
 Consumes stedding/sync-reports/all-{date}.md and surfaces:
-- The 8 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster / baml / stacks)
+- The 9 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster / baml / stacks / agents)
 - The 14 MCP server health
 - The 70+ model names (from the model-registry change)
 - The 472 CocoIndex Apps
@@ -108,6 +109,15 @@ def __(mo, text):
     else:
         statuses["stacks"] = "fail"
 
+    # Layer 10 (agents) — per 2026-08-15-agent-definitions-sync-loop-v1
+    # Look for the agents sync report line "OK: N .py files registered across the 7 agent subdirs"
+    if "OK:" in text and ".py files registered across the 7 agent subdirs" in text:
+        statuses["agents"] = "ok"
+    elif "OK:" in text and ".py files registered across the" in text and "agent subdirs" in text:
+        statuses["agents"] = "ok"
+    else:
+        statuses["agents"] = "fail"
+
     # CCC + cognee + mcp are informational; mark as informational
     statuses["ccc"] = "info"
     statuses["cognee"] = "info"
@@ -117,14 +127,14 @@ def __(mo, text):
 
 @app.cell
 def __(mo, statuses):
-    # Display the 8 layer statuses
+    # Display the 9 layer statuses (added Layer 10 agents per 2026-08-15-agent-definitions-sync-loop-v1)
     pass_count = sum(1 for s in statuses.values() if s == "ok")
     fail_count = sum(1 for s in statuses.values() if s == "fail")
     info_count = sum(1 for s in statuses.values() if s == "info")
 
     mo.output.replace(
         mo.md(
-            f"## 8 Sync Layer Statuses\n\n"
+            f"## 9 Sync Layer Statuses\n\n"
             f"- **paths**: {statuses.get('paths', '?')} {'✅' if statuses.get('paths') == 'ok' else '❌'}\n"
             f"- **ccc**: {statuses.get('ccc', '?')} (informational)\n"
             f"- **cognee**: {statuses.get('cognee', '?')} (informational)\n"
@@ -132,7 +142,8 @@ def __(mo, statuses):
             f"- **mcp**: {statuses.get('mcp', '?')} (informational)\n"
             f"- **dagster**: {statuses.get('dagster', '?')} {'✅' if statuses.get('dagster') == 'ok' else '❌'} (Layer 6)\n"
             f"- **baml**: {statuses.get('baml', '?')} {'✅' if statuses.get('baml') == 'ok' else '❌'} (Layer 7)\n"
-            f"- **stacks**: {statuses.get('stacks', '?')} {'✅' if statuses.get('stacks') == 'ok' else '❌'} (Layer 8, NEW)\n\n"
+            f"- **stacks**: {statuses.get('stacks', '?')} {'✅' if statuses.get('stacks') == 'ok' else '❌'} (Layer 8)\n"
+            f"- **agents**: {statuses.get('agents', '?')} {'✅' if statuses.get('agents') == 'ok' else '❌'} (Layer 10, NEW)\n\n"
             f"**Summary**: {pass_count} pass / {fail_count} fail / {info_count} info\n"
         )
     )
