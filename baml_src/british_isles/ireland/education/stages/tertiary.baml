@@ -193,7 +193,7 @@ function ExtractApplicationTimeline(page_markdown: string,
 }
 
 
-function EstimateCoursePoints(course: CAOCourse,
+function EstimateCoursePoints(course: SOLASCourse,
   historical_points: int[],
   applicant_profile: string) -> CoursePointsPrediction {  client ExtractEn
   prompt #"Auto-generated extraction prompt."#
