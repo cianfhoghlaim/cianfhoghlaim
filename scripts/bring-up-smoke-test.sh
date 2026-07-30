@@ -138,10 +138,10 @@ fi
 # ============================================================================
 section "Step 5: lint:skills (54/54 expected)"
 
-if mise run lint:skills 2>&1 | tail -3 | grep -q "60 skills pass"; then
+if mise run lint:skills 2>&1 | tail -3 | grep -q "61 skills pass"; then
     pass "lint:skills: 60 skills pass (53 + knowledge-sync-loop + dagster-asset-sync + baml-schema-sync + stacks-sync + dlt-sync + agents-sync)"
 else
-    fail "lint:skills: did not return '58 skills pass' (got 57 or fewer)"
+    fail "lint:skills: did not return '61 skills pass' (got 57 or fewer)"
 fi
 
 # ============================================================================

@@ -415,3 +415,27 @@
     - scripts/cognee_ingest_agent_definitions.py
   tags: [agents, fleet, ncca, agents_md, agents_definitions, ingestor]
   domain: "00-agents"
+
+- title: "notebook-search"
+  description: |
+    How to find any marimo notebook by prefix, cluster, or capability.
+    Use when the user asks 'are all notebooks registered', 'is the
+    notebook fleet healthy', 'how many notebooks are there', 'does
+    the notebook registry match the CI flow'. 104 .py files across
+    20+ numeric prefixes. Per the 2026-08-15-notebooks-sync-loop-v1
+    change (Layer 11).
+  files:
+    - notebooks/_shared/db.py
+    - notebooks/_shared/area_shims/leaving_cert.py
+    - notebooks/cli.py
+    - notebooks/01_overview_setup.py
+    - notebooks/02_education_overview.py
+    - notebooks/10_biep_pipeline_lakehouse_01_ducklake_explorer.py
+    - notebooks/24_deployment_control_panel.py
+    - notebooks/26_baml_sync_dashboard.py
+    - notebooks/27_stacks_sync_dashboard.py
+    - notebooks/28_dlt_sync_dashboard.py
+    - notebooks/29_agents_sync_dashboard.py
+    - scripts/cognee_ingest_notebooks.py
+  tags: [notebooks, marimo, app_cell, notebooks, ingestor, dashboard]
+  domain: "00-notebooks"
