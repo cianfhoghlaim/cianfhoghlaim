@@ -1,6 +1,6 @@
 # `agent-definitions-sync-loop` — Agent Routing
 
-> **The Layer 10 of the 10-layer pull-based sync architecture. Validates the 188 agent files + the 12-agent fleet + the 8 NCCA subject specialists.**
+> The Layer 10 of the 10-layer pull-based sync architecture. Validates the
 
 ## Routing
 

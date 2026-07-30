@@ -397,6 +397,54 @@ of Northern Ireland, and the
 [Deacy Tribe of the Morris-Conroy tribes of
 Galway](cian_mac_an_déisigh_uí_liatháin/identity/lineage).
 
+## Centralized Registries (the single source of truth)
+
+The platform has **one canonical source of truth** for every model,
+schema, pipeline, and stack (post-2026-08-15). It replaces the ~70
+hardcoded model strings + 96 hand-written Pydantic duplicates + 54
+nearly-identical CocoIndex Apps that the audit found.
+
+**The 4 canonical artifacts:**
+
+- [`meaisinfhoghlaim/models/model_registry.py`](meaisinfhoghlaim/models/model_registry.py) — the 58-entry `MODEL_REGISTRY` across 7 families (ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation).
+- [`notebooks/_shared/schema.py`](notebooks/_shared/schema.py) — the 5 introspection helpers (`schema_introspect`, `schema_introspect_table`, `list_dlt_sources`, `list_cocoindex_apps`, `list_baml_classes`).
+- [`notebooks/00_control_panel.py`](notebooks/00_control_panel.py) — the 5-tab marimo control panel (Models / Pipelines / Datasets / Stacks / Registry).
+- [`deployment-choice.yaml`](deployment-choice.yaml) — the canonical enablement file (read/written by the notebook + web UI + CLI).
+
+**The 4 supporting artifacts:**
+
+- [`scripts/registry_audit.py`](scripts/registry_audit.py) — drift detector (fails CI on hardcoded model strings).
+- [`agents/adk/litellm_agent.py`](agents/adk/litellm_agent.py) — `make_litellm_agent()` + `litellm_model("minimax")` wrappers.
+- [`orchestration/defs/2_materials/_base/jurisdiction_assets_base.py`](orchestration/defs/2_materials/_base/jurisdiction_assets_base.py) — the `JurisdictionAssetsBase` for the 10 per-jurisdiction Dagster asset wrappers.
+- 3 CocoIndex factories (`cocoindex/european_nations/_factory.py` et al.).
+
+**The canonical `model_for()` pattern:**
+
+```python
+from meaisinfhoghlaim.models import model_for
+
+default = model_for("text_llm", "default")              # → "minimax-m3"
+irish   = model_for("text_llm", "irish", language="ga")  # → "uccix-mistral-24b"
+embed   = model_for("embedder", "default")               # → "BAAI/bge-m3"
+```
+
+**The canonical `schema_introspect()` pattern:**
+
+```python
+from notebooks._shared.schema import schema_introspect, list_dlt_sources
+conn = connect_md()  # ibis.duckdb.connect("md:cianfhoghlaim")
+rows = schema_introspect(conn)             # every BIEP DuckDB table's columns
+print(f"{len(list_dlt_sources())} DLT sources, {len(rows)} columns")
+```
+
+**Lint gate:** `mise run lint:registry` — fails on any hardcoded
+model string in `agents/`, `baml_src/`, `notebooks/`, `web/`,
+`orchestration/`, `spaces/`, `meaisinfhoghlaim/`.
+
+Full guide: [`.agents/skills/centralized-registry/SKILL.md`](.agents/skills/centralized-registry/SKILL.md).
+
+---
+
 ## Monorepo Topology (v7 — Flattened Polyglot)
 
 Two language graphs live side by side, orchestrated by `turbo.json`

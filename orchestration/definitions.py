@@ -199,4 +199,38 @@ except Exception as _exc:  # pragma: no cover
     )
 
 
+# ============================================================================
+# Layer 9 — Centralized-model-registry drift alert (per the
+# 2026-08-15-cascading-registry-integration-v2 spec delta on
+# dagster-5-layer-component-architecture). Wires the FULL sensor + job +
+# asset that the cascading-registry-integration-v1 commit (9f4391bcd)
+# deferred. The definitions live in `orchestration/defs/sync_assets.py`
+# (next to the sibling Layer 1-8 sync_health surface) and are merged in
+# here defensively even though `dg.load_defs()` already auto-discovers
+# them — the explicit merge is the canonical wiring per the task spec.
+# ============================================================================
+
+try:
+    from orchestration.defs.sync_assets import (
+        materialize_registry_drift_alert_job,
+        registry_drift_alert,
+        registry_drift_alert_sensor,
+    )
+
+    defs = dg.Definitions.merge(
+        defs,
+        dg.Definitions(
+            assets=[registry_drift_alert],
+            jobs=[materialize_registry_drift_alert_job],
+            sensors=[registry_drift_alert_sensor],
+        ),
+    )
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"registry_drift_alert_load_failed: {_exc}; continuing without the Layer 9 drift alert"
+    )
+
+
 __all__ = ["defs", "_DEFS_AVAILABLE", "_DEFS_LOADED_VIA"]

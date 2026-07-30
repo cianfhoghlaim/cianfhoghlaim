@@ -15,13 +15,36 @@ commands at a glance. **Read this first**.
 | `soulbound_svg.py` | `render_soulbound_svg` | The deterministic Celtic-knot SVG (Anam wallet) |
 | `i18n.py` | `I18N_STRINGS`, `translate`, `set_lang` | The bilingual EN/GA toggle |
 
-### Priority skills (3 of 108)
+### Priority skills (4 of 108)
 
 | Skill | When to load |
 |:--|:--|
 | [`motherduck-connections`](../../.agents/skills/motherduck-connections/SKILL.md) | Wire the LiteLLM gateway (the Spaces' primary LLM tier) |
 | [`agent-observability`](../../.agents/skills/agent-observability/SKILL.md) | Langfuse auto-traces every LiteLLM call |
+| [`centralized-registry`](../../.agents/skills/centralized-registry/SKILL.md) | The single source of truth for models + schemas + pipelines + stacks |
 | [`browser-tools`](../../.agents/skills/browser-tools/SKILL.md) | The 5-element palette is the Spaces' visual identity (apply via `apply_celtic_theme`) |
+
+## Centralized Registries
+
+The `_common` bundle is the Spaces' single import point, so all
+5 active Spaces should route their model choices through the
+canonical `MODEL_REGISTRY` rather than the hackathon fallback
+chains. The 4 canonical artifacts:
+
+- `meaisinfhoghlaim/models/model_registry.py` — the 58-entry
+  `MODEL_REGISTRY` across 7 families. Use `model_for("text_llm",
+  "default")` → `"minimax-m3"` rather than hardcoded strings.
+- `notebooks/_shared/schema.py` — 5 introspection helpers
+  (`schema_introspect`, `list_dlt_sources`, `list_cocoindex_apps`,
+  `list_baml_classes`, `read_deployment_choice`).
+- `notebooks/00_control_panel.py` — the 5-tab marimo control panel.
+- `deployment-choice.yaml` (repo root) — the enablement file.
+
+Supporting artifacts: `scripts/registry_audit.py` (drift detector),
+`agents/adk/litellm_agent.py` (LiteLLM helper). The cascade target
+is "no hardcoded model strings" — enforced by
+`mise run lint:registry`. See
+`.agents/skills/centralized-registry/SKILL.md` for the full guide.
 
 ### ccc + openspec commands
 

@@ -35,4 +35,4 @@ ccc:v1:search              # Search the codebase_chunks LanceDB table
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-07-30; do not hand-edit -->

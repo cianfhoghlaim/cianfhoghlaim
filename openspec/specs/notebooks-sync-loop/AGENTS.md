@@ -1,6 +1,6 @@
 # `notebooks-sync-loop` — Agent Routing
 
-> The Layer 11 of the 11-layer pull-based sync architecture.
+> The Layer 11 of the 11-layer pull-based sync architecture. Validates the 119 notebook files at `notebooks/` (20+ numeric prefixes, 108 `@app.cell` decorators) + closes the last remaining gap in the sy...
 
 ## Routing
 

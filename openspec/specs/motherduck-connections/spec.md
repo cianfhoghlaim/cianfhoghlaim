@@ -1,12 +1,8 @@
-# Spec delta: `motherduck-connections`
+# motherduck-connections Specification
 
-This delta is part of the openspec change
-`2026-08-15-cascading-registry-integration-v1`. It updates the
-MotherDuck connection inventory to include the 5th web surface
-(deployment control panel).
-
-## ADDED Requirements
-
+## Purpose
+TBD - created by archiving change 2026-08-15-cascading-registry-integration-v1. Update Purpose after archive.
+## Requirements
 ### Requirement: motherduck-connections MUST register the 5th web surface
 
 The system SHALL update `openspec/specs/motherduck-connections/spec.md`
@@ -32,3 +28,4 @@ inventory. The 5 surfaces are listed in `agentic-frontend-frameworks/spec.md`.
 - **THEN** `schema_introspect_full(connect_md())` returns the union of
   DuckDB + LanceDB + BAML columns
 - **AND** the deployment control panel Tab 3 "Datasets" displays this surface
+

@@ -2,9 +2,11 @@
 
 Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) + the
 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Layer 6) + the
-2026-08-15-baml-sync-loop-v1 change (Layer 7).
+2026-08-15-baml-sync-loop-v1 change (Layer 7) + the
+2026-08-15-cascading-registry-integration-v2 spec delta (Layer 9).
 
-The 7 assets (in 4 layers of the sync health surface):
+The 8 assets + 1 sensor + 1 op + 1 job (in 5 layers of the sync
+health surface):
 - sync_health: reads the latest stedding/sync-reports/all-{date}.md
   and emits Dagster metadata (paths_sync_time, ccc_chunk_count,
   cognee_cluster_count, skill_pass_rate, mcp_server_count_healthy,
@@ -18,8 +20,17 @@ The 7 assets (in 4 layers of the sync health surface):
 - baml_sync_health: reads the latest stedding/sync-reports/baml-{date}.md
   (Layer 7)
 - baml_sync_alert: triggers when baml_sync_health's drift_count > 0
-- registry_drift_alert: triggers when registry_drift_count > 0
-  (the centralized-model-registry capability)
+- registry_drift_alert (Layer 9): surfaces the count of hardcoded
+  model strings detected by scripts/registry_audit.py via Dagster
+  metadata (drift_count + drift_files + last_check timestamp).
+  Backed by the registry_drift_alert_sensor + the
+  materialize_registry_drift_alert_job (with the
+  materialize_registry_drift_alert_op). The full sensor + job +
+  asset wiring was deferred by the
+  2026-08-15-cascading-registry-integration-v1 commit (9f4391bcd);
+  see the
+  openspec/changes/2026-08-15-cascading-registry-integration-v2/specs/dagster-5-layer-component-architecture/spec.md
+  delta for the spec delta.
 """
 # NOTE: `from __future__ import annotations` is intentionally NOT present.
 # Dagster's `@asset` validator does runtime identity checks on the type
@@ -30,6 +41,7 @@ The 7 assets (in 4 layers of the sync health surface):
 # restoration of the 4 assets that were accidentally truncated by
 # commit 91b85c1c1).
 
+import json
 import os
 import re
 from datetime import datetime, timezone
@@ -37,14 +49,24 @@ from pathlib import Path
 
 from dagster import (
     AssetExecutionContext,
+    AssetKey,
+    AssetMaterialization,
     AssetSelection,
+    Failure,
     MetadataValue,
+    RunRequest,
     SensorEvaluationContext,
+    SensorResult,
     asset,
     define_asset_job,
+    get_dagster_logger,
+    job,
+    op,
     sensor,
-    RunRequest,
 )
+
+
+log = get_dagster_logger(__name__)
 
 
 REPORTS_DIR = Path("stedding/sync-reports")
@@ -390,6 +412,39 @@ def _get_registry_drift_count() -> int:
     except Exception:
         pass
     return 0
+
+
+def _get_registry_drift_files() -> list[str]:
+    """Return the sorted, deduplicated list of files flagged by
+    scripts/registry_audit.py --json. Used by the registry_drift_alert
+    sensor + asset + op to emit drift_files metadata alongside
+    _get_registry_drift_count().
+
+    Per the centralized-model-registry capability (2026-08-15).
+    """
+    import subprocess
+    try:
+        proc = subprocess.run(
+            ["python3", "scripts/registry_audit.py", "--json"],
+            capture_output=True,
+            text=True,
+            cwd=str(Path(__file__).parents[3]),
+            timeout=120,
+        )
+        # registry_audit.py exits 0 (clean) or 1 (with --strict + findings).
+        # We treat both as valid JSON; only non-zero + non-one returncodes
+        # cause us to fall through to the empty list.
+        if proc.returncode not in (0, 1):
+            return []
+        payload = json.loads(proc.stdout)
+        findings = payload.get("findings", [])
+        return sorted({
+            str(f["file"])
+            for f in findings
+            if isinstance(f, dict) and "file" in f
+        })
+    except Exception:
+        return []
 
 
 @asset(
@@ -850,3 +905,188 @@ notebooks_sync_health_job = define_asset_job(
     name="notebooks_sync_health_refresh",
     selection=AssetSelection.assets(notebooks_sync_health),
 )
+
+
+# =============================================================================
+# Layer 9 — Centralized-model-registry drift alert (per the
+# 2026-08-15-cascading-registry-integration-v2 spec delta on
+# dagster-5-layer-component-architecture). Wires the FULL sensor +
+# materialize job + asset that the cascading-registry-integration-v1
+# commit (9f4391bcd) deferred. The helper _get_registry_drift_count()
+# added in that commit is reused for the count; the sibling helper
+# _get_registry_drift_files() (added above) supplies the file list.
+# Spec delta:
+# openspec/changes/2026-08-15-cascading-registry-integration-v2/specs/dagster-5-layer-component-architecture/spec.md
+# =============================================================================
+
+REGISTRY_DRIFT_ALERT_ASSET_KEY: AssetKey = AssetKey(["registry", "drift_alert"])
+REGISTRY_DRIFT_CURSOR_KEY = "registry_drift_count"
+
+
+@asset(
+    key=REGISTRY_DRIFT_ALERT_ASSET_KEY,
+    group_name="3_model_lifecycle/sync_health",
+    description=(
+        "Surfaces the count of hardcoded model strings detected by "
+        "scripts/registry_audit.py via Dagster metadata "
+        "(drift_count + drift_files + last_check timestamp + alert bool). "
+        "The asset fires via the registry_drift_alert_sensor + the "
+        "materialize_registry_drift_alert_job (with the "
+        "materialize_registry_drift_alert_op). Per the "
+        "2026-08-15-cascading-registry-integration-v2 spec delta on "
+        "dagster-5-layer-component-architecture."
+    ),
+)
+def registry_drift_alert(context: AssetExecutionContext) -> dict:
+    """The centralized-model-registry drift alert asset (Layer 9)."""
+    drift_count = _get_registry_drift_count()
+    drift_files = _get_registry_drift_files()
+    last_check = datetime.now(timezone.utc).isoformat()
+    context.add_asset_metadata(
+        {
+            "drift_count": MetadataValue.int(drift_count),
+            "drift_files": MetadataValue.json(drift_files),
+            "last_check": MetadataValue.text(last_check),
+            "alert": MetadataValue.bool(drift_count > 0),
+        }
+    )
+    return {
+        "drift_count": drift_count,
+        "drift_files": drift_files,
+        "last_check": last_check,
+        "alert": drift_count > 0,
+    }
+
+
+@op(
+    description=(
+        "Re-invokes scripts/registry_audit.py, logs the drift count + "
+        "file count, emits a Dagster AssetMaterialization for the "
+        "registry/drift_alert asset, and raises a Failure if drift > 0 so "
+        "the materialize_registry_drift_alert_job fails loudly. Per the "
+        "2026-08-15-cascading-registry-integration-v2 spec delta."
+    ),
+)
+def materialize_registry_drift_alert_op(context) -> None:
+    """Op that re-runs scripts/registry_audit.py + emits a materialization."""
+    drift_count = _get_registry_drift_count()
+    drift_files = _get_registry_drift_files()
+    last_check = datetime.now(timezone.utc).isoformat()
+
+    context.log.info(
+        "registry_drift_alert: drift_count=%d drift_files=%d",
+        drift_count,
+        len(drift_files),
+    )
+
+    yield AssetMaterialization(
+        asset_key=REGISTRY_DRIFT_ALERT_ASSET_KEY,
+        description=(
+            f"registry_drift_alert: drift_count={drift_count} "
+            f"drift_files={len(drift_files)}"
+        ),
+        metadata={
+            "drift_count": MetadataValue.int(drift_count),
+            "drift_files": MetadataValue.json(drift_files),
+            "last_check": MetadataValue.text(last_check),
+        },
+    )
+
+    if drift_count > 0:
+        raise Failure(
+            description=(
+                f"centralized-model-registry drift detected: "
+                f"{drift_count} hardcoded model string(s) across "
+                f"{len(drift_files)} file(s). Sample files: "
+                f"{drift_files[:5]}"
+            )
+        )
+
+
+@job(
+    name="materialize_registry_drift_alert",
+    description=(
+        "Re-runs scripts/registry_audit.py + emits a Dagster "
+        "AssetMaterialization for the registry/drift_alert asset. "
+        "Fails loudly (via materialize_registry_drift_alert_op) if any "
+        "hardcoded model strings are detected. Per the "
+        "2026-08-15-cascading-registry-integration-v2 spec delta on "
+        "dagster-5-layer-component-architecture."
+    ),
+)
+def materialize_registry_drift_alert_job() -> None:
+    """The job that materializes the registry_drift_alert asset on drift."""
+    materialize_registry_drift_alert_op()
+
+
+@sensor(
+    job_name="materialize_registry_drift_alert",
+    minimum_interval_seconds=3600,
+    description=(
+        "Fires the materialize_registry_drift_alert job whenever "
+        "scripts/registry_audit.py detects new hardcoded model strings "
+        "(drift_count > 0). Tracks the last reported drift count via a "
+        "JSON cursor (key=REGISTRY_DRIFT_CURSOR_KEY) so the same drift "
+        "count does not re-fire the job on consecutive ticks. Always "
+        "emits a SensorResult with an AssetMaterialization for the "
+        "registry/drift_alert asset so the Dagster event log carries a "
+        "per-tick audit record. Per the "
+        "2026-08-15-cascading-registry-integration-v2 spec delta on "
+        "dagster-5-layer-component-architecture."
+    ),
+)
+def registry_drift_alert_sensor(
+    context: SensorEvaluationContext,
+) -> SensorResult:
+    """Sensor that detects centralized-model-registry drift.
+
+    Uses the existing _get_registry_drift_count() helper (added in
+    commit 9f4391bcd) for the count + the sibling
+    _get_registry_drift_files() helper for the file list. Tracks the
+    last reported drift count in a JSON cursor to dedup consecutive
+    ticks. Always emits an AssetMaterialization for the
+    registry/drift_alert asset so the Dagster event log carries a
+    per-tick audit record.
+    """
+    drift_count = _get_registry_drift_count()
+    drift_files = _get_registry_drift_files()
+    last_check = datetime.now(timezone.utc).isoformat()
+
+    cursor_str = context.cursor or "{}"
+    try:
+        cursor_obj = json.loads(cursor_str)
+    except (TypeError, ValueError):
+        cursor_obj = {}
+    last_reported = int(cursor_obj.get(REGISTRY_DRIFT_CURSOR_KEY, 0))
+
+    run_requests: list[RunRequest] = []
+    if drift_count > 0 and drift_count != last_reported:
+        run_requests.append(
+            RunRequest(
+                run_key=f"registry_drift_alert_{drift_count}",
+                tags={
+                    "drift_count": str(drift_count),
+                    "drift_files_count": str(len(drift_files)),
+                    "dagster.sensor": "registry_drift_alert",
+                },
+            )
+        )
+
+    return SensorResult(
+        run_requests=run_requests,
+        cursor=json.dumps({REGISTRY_DRIFT_CURSOR_KEY: drift_count}),
+        asset_materializations=[
+            AssetMaterialization(
+                asset_key=REGISTRY_DRIFT_ALERT_ASSET_KEY,
+                description=(
+                    f"registry_drift_alert: drift_count={drift_count} "
+                    f"drift_files={len(drift_files)}"
+                ),
+                metadata={
+                    "drift_count": MetadataValue.int(drift_count),
+                    "drift_files": MetadataValue.json(drift_files),
+                    "last_check": MetadataValue.text(last_check),
+                },
+            )
+        ],
+    )

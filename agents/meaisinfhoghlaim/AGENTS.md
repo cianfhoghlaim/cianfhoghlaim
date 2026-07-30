@@ -9,14 +9,50 @@
 
 ## Priority quick reference
 
-### Priority skills (4 of 53)
+### Priority skills (5 of 53)
 
 | Skill | When to load |
 |:--|:--|
 | [`agent-observability`](../.agents/skills/agent-observability/SKILL.md) | The 5-layer observability stack (used by OCR/HTR pipelines) |
 | [`cognee`](../.agents/skills/cognee/SKILL.md) | The knowledge graph backend (used by OCR/HTR pipelines) |
 | [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction patterns for OCR outputs |
+| [`centralized-registry`](../.agents/skills/centralized-registry/SKILL.md) | The single source of truth for models + schemas + pipelines + stacks |
 | [`dignified-python`](../.agents/skills/dignified-python/SKILL.md) | Production Python standards |
+
+## Centralized Registries
+
+The `meaisinfhoghlaim/` package hosts the **canonical 4-artifact
+centralized registry** (per the 2026-08-15
+`centralized-model-registry` + `centralized-schema-registry` +
+`deployment-control-panel` openspec change):
+
+- **Canonical (4):**
+  - `meaisinfhoghlaim/models/model_registry.py` — the 58-entry
+    `MODEL_REGISTRY` across 7 families (ocr_vision / text_llm /
+    embedder / rerank / image_gen / voice / translation).
+  - `notebooks/_shared/schema.py` — the 5 introspection helpers
+    (`schema_introspect`, `list_dlt_sources`, `list_cocoindex_apps`,
+    `list_baml_classes`, `read_deployment_choice`).
+  - `notebooks/00_control_panel.py` — the 5-tab marimo control
+    panel (Models / Pipelines / Datasets / Stacks / Registry).
+  - `deployment-choice.yaml` (repo root) — the enablement file.
+- **Supporting (4):**
+  - `scripts/registry_audit.py` — drift detector (fails CI on
+    hardcoded model strings).
+  - `agents/adk/litellm_agent.py` — `make_litellm_agent()` helper
+    + `litellm_model("minimax")` wrapper.
+  - `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py`
+    — `JurisdictionAssetsBase` (the 10 per-jurisdiction Dagster
+    asset base class).
+  - 3 CocoIndex factories (`european_nations/_factory.py` et al.).
+- **Cascade target:** all subagents use `MODEL_REGISTRY.resolve()`
+  (or `model_for()`) instead of hardcoded model strings.
+- **Lint gate:** `mise run lint:registry` — fails on any hardcoded
+  model string in `agents/`, `baml_src/`, `notebooks/`, `web/`,
+  `orchestration/`, `spaces/`, `meaisinfhoghlaim/`.
+
+See `.agents/skills/centralized-registry/SKILL.md` for the full
+guide.
 
 ### Priority commands
 
