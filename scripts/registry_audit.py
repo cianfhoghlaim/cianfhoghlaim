@@ -286,7 +286,8 @@ def main() -> int:
         print(f"Found {len(findings)} potential hardcoded model string(s):")
         by_file: dict[str, list[dict[str, object]]] = {}
         for f in findings:
-            by_file.setdefault(f["file"], []).append(f)
+            file_path = str(f["file"])
+            by_file.setdefault(file_path, []).append(f)
         for file_path, file_findings in sorted(by_file.items()):
             print(f"\n  {file_path} ({len(file_findings)} finding(s)):")
             for f in file_findings[:5]:

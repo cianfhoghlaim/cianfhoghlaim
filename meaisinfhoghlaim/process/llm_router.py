@@ -244,11 +244,11 @@ class LLMRouter:
                 tool_calls=response.choices[0].message.tool_calls,
             )
 
-        except ImportError:
+        except ImportError as exc:
             # Fallback without litellm
             raise NotImplementedError(
                 "LiteLLM not installed. Install with: pip install litellm"
-            )
+            ) from exc
 
     async def complete(
         self,

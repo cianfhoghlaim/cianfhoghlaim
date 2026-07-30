@@ -57,7 +57,7 @@ rest of the file is the full 4-stream routing.
 
 ```bash
 bun run ccc:search "SpacetimeDB table migration"      # semantic code search
-openspec list --specs                                 # 82 specs total
+openspec list --specs                                 # 83 specs total
 openspec validate <change-id> --strict                # MUST pass before commit
 openspec archive <change-id> --yes                    # after deploy
 ```
