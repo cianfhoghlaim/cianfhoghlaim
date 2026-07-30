@@ -895,6 +895,63 @@ done
 cat "$REPORT"
 """
 
+# -----------------------------------------------------------------------------
+# Stacks Sync Loop — the 8th sync layer (per 2026-08-15-stacks-sync-loop-v1)
+# Layer 8 covers the 89 Docker Compose stacks at bonneagar/stacks/ + the
+# 6-file GOLD_STANDARD pattern. The orchestrator runs 5 sub-layers.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:stacks-drift"]
+description = "Stacks Layer 1: detect GOLD_STANDARD violations + name collisions in the 89 stacks at bonneagar/stacks/"
+run = "bash scripts/sync/stacks-drift.sh"
+
+[tasks."sync:stacks-ccc"]
+description = "Stacks Layer 2: append the 23rd CCC concept guide (stack-catalog-search) + reindex"
+run = "bash scripts/sync/stacks-ccc.sh"
+
+[tasks."sync:stacks-cognee"]
+description = "Stacks Layer 3: ingest the 89 stack catalogs into the 12th Cognee cluster (stacks_catalog)"
+run = "bash scripts/sync/stacks-cognee.sh"
+
+[tasks."sync:stacks-validate"]
+description = "Stacks Layer 4: run stack-doctor.sh + parse the output (109 CRITICALS)"
+run = "bash scripts/sync/stacks-validate.sh"
+
+[tasks."sync:stacks-health"]
+description = "Stacks Layer 5: per-stack health report (GOLD_STANDARD status + drift count + Cognee cluster populated + CCC indexed)"
+run = "bash scripts/sync/stacks-health.sh"
+
+[tasks."sync:stacks"]
+description = "Stacks orchestrator: runs sync:stacks-drift + sync:stacks-ccc + sync:stacks-cognee + sync:stacks-validate + sync:stacks-health in sequence + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/stacks-all-$(date +%Y-%m-%d).md"
+{
+  echo "# Stacks Sync — Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-15-stacks-sync-loop-v1 change (Layer 8)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+for layer in drift ccc cognee validate health; do
+  echo "## Sub-layer: sync:stacks:$layer" >> "$REPORT"
+  echo '```' >> "$REPORT"
+  bash "scripts/sync/stacks-$layer.sh" >> "$REPORT" 2>&1
+  echo '```' >> "$REPORT"
+  echo "" >> "$REPORT"
+done
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 stacks sub-layers completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
+
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
 run = "bash scripts/sync/drift_docs.sh"

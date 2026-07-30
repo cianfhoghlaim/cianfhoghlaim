@@ -269,6 +269,48 @@ else
 fi
 
 # ============================================================================
+# Gate 9: sync:stacks (Layer 8 — IaC stacks surface validation)
+# Per the 2026-08-15-stacks-sync-loop-v1 change
+# ============================================================================
+section "Gate 9: sync:stacks (Layer 8)"
+
+if mise tasks ls 2>&1 | grep -qE "^sync:stacks"; then
+    pass "sync:stacks task registered"
+else
+    fail "sync:stacks task not registered"
+fi
+if [ -f "scripts/sync/stacks.sh" ]; then
+    pass "scripts/sync/stacks.sh exists"
+else
+    fail "scripts/sync/stacks.sh missing"
+fi
+if [ -f "scripts/sync/stacks-drift.sh" ] && [ -f "scripts/sync/stacks-ccc.sh" ] && [ -f "scripts/sync/stacks-cognee.sh" ] && [ -f "scripts/sync/stacks-validate.sh" ] && [ -f "scripts/sync/stacks-health.sh" ]; then
+    pass "All 5 sync:stacks sub-layer scripts exist (drift + ccc + cognee + validate + health)"
+else
+    fail "One or more sync:stacks sub-layer scripts missing"
+fi
+if [ -d ".agents/skills/stacks-sync" ]; then
+    pass "stacks-sync skill directory exists"
+else
+    fail "stacks-sync skill directory missing"
+fi
+if [ -f "scripts/cognee_ingest_stacks_catalog.py" ]; then
+    pass "scripts/cognee_ingest_stacks_catalog.py exists"
+else
+    fail "scripts/cognee_ingest_stacks_catalog.py missing"
+fi
+if [ -f "notebooks/27_stacks_sync_dashboard.py" ]; then
+    pass "notebooks/27_stacks_sync_dashboard.py exists"
+else
+    fail "notebooks/27_stacks_sync_dashboard.py missing"
+fi
+if grep -q "stack-catalog-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "23rd CCC concept guide (stack-catalog-search) is in guides.yml"
+else
+    fail "23rd CCC concept guide missing"
+fi
+
+# ============================================================================
 # Summary
 # ============================================================================
 section "Summary"

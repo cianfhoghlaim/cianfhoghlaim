@@ -3,13 +3,14 @@
 
 Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) +
 the 2026-08-15-retroactive-pre-v7-cleanup-v1 change (Phase 8.1 — adds Layer 6) +
-the 2026-08-15-baml-sync-loop-v1 change (Phase 6 — adds Layer 7 / BAML).
+the 2026-08-15-baml-sync-loop-v1 change (Phase 6 — adds Layer 7 / BAML) +
+the 2026-08-15-stacks-sync-loop-v1 change (Layer 8 — adds stacks).
 Consumes stedding/sync-reports/all-{date}.md and surfaces:
-- The 7 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster / baml)
+- The 8 sync layer statuses (paths / ccc / cognee / skills / mcp / dagster / baml / stacks)
 - The 14 MCP server health
 - The 70+ model names (from the model-registry change)
 - The 472 CocoIndex Apps
-- The 88+ stacks
+- The 89 stacks
 
 Run via: uv run marimo edit notebooks/24_deployment_control_panel.py
 """
@@ -70,9 +71,10 @@ def __(mo, latest, mtime, text):
 
 @app.cell
 def __(mo, text):
-    # Parse the 7 layer statuses from the report text
+    # Parse the 8 layer statuses from the report text
     # (6 from the original sync-loop + Layer 7 (BAML) added by
-    # the 2026-08-15-baml-sync-loop-v1 change)
+    # the 2026-08-15-baml-sync-loop-v1 change + Layer 8 (stacks) added by
+    # the 2026-08-15-stacks-sync-loop-v1 change)
     statuses = {}
     if "OK: 0 pre-v7 path drift" in text:
         statuses["paths"] = "ok"
@@ -97,6 +99,15 @@ def __(mo, text):
     else:
         statuses["baml"] = "fail"
 
+    # Layer 8 (stacks) — per 2026-08-15-stacks-sync-loop-v1
+    # Look for the stacks sync report line "OK: N stacks registered across the 87-stack catalog"
+    if "OK:" in text and "stacks registered across the 87-stack catalog" in text:
+        statuses["stacks"] = "ok"
+    elif "OK:" in text and "stacks registered across the" in text and "stack catalog" in text:
+        statuses["stacks"] = "ok"
+    else:
+        statuses["stacks"] = "fail"
+
     # CCC + cognee + mcp are informational; mark as informational
     statuses["ccc"] = "info"
     statuses["cognee"] = "info"
@@ -106,21 +117,22 @@ def __(mo, text):
 
 @app.cell
 def __(mo, statuses):
-    # Display the 7 layer statuses
+    # Display the 8 layer statuses
     pass_count = sum(1 for s in statuses.values() if s == "ok")
     fail_count = sum(1 for s in statuses.values() if s == "fail")
     info_count = sum(1 for s in statuses.values() if s == "info")
 
     mo.output.replace(
         mo.md(
-            f"## 7 Sync Layer Statuses\n\n"
+            f"## 8 Sync Layer Statuses\n\n"
             f"- **paths**: {statuses.get('paths', '?')} {'✅' if statuses.get('paths') == 'ok' else '❌'}\n"
             f"- **ccc**: {statuses.get('ccc', '?')} (informational)\n"
             f"- **cognee**: {statuses.get('cognee', '?')} (informational)\n"
             f"- **skills**: {statuses.get('skills', '?')} {'✅' if statuses.get('skills') == 'ok' else '❌'}\n"
             f"- **mcp**: {statuses.get('mcp', '?')} (informational)\n"
             f"- **dagster**: {statuses.get('dagster', '?')} {'✅' if statuses.get('dagster') == 'ok' else '❌'} (Layer 6)\n"
-            f"- **baml**: {statuses.get('baml', '?')} {'✅' if statuses.get('baml') == 'ok' else '❌'} (Layer 7, NEW)\n\n"
+            f"- **baml**: {statuses.get('baml', '?')} {'✅' if statuses.get('baml') == 'ok' else '❌'} (Layer 7)\n"
+            f"- **stacks**: {statuses.get('stacks', '?')} {'✅' if statuses.get('stacks') == 'ok' else '❌'} (Layer 8, NEW)\n\n"
             f"**Summary**: {pass_count} pass / {fail_count} fail / {info_count} info\n"
         )
     )
