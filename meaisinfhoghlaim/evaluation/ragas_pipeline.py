@@ -776,3 +776,99 @@ def compare_evaluation_runs(
     except Exception as e:
         logger.error(f"Run comparison failed: {e}")
         return {"error": str(e)}
+
+
+# ============================================================================
+# Per-subject RAGAS runner integration (Plan 1, 2026-08-15)
+# ============================================================================
+# Wraps the canonical PerSubjectRunner (from per_subject_runner.py) with the
+# existing CurriculumEvaluationDataset helper (create_curriculum_eval_dataset)
+# + the existing golden-baseline loader (golden_baselines.py).
+#
+# Per the 2026-08-15 meaisinfoghlaim-ireland-england-roadmap (Plan 1).
+# ============================================================================
+
+
+async def run_per_subject_eval(
+    jurisdiction: str,
+    stage: str,
+    subject: str,
+    board=None,
+    language: str = "en",
+    threshold: float | None = None,
+    size: int = 100,
+    experiment_name: str = "biiep_v3",
+):
+    """Run the canonical per-subject RAGAS eval (Plan 1 wiring).
+
+    1. Build the CurriculumEvaluationDataset from the cohort
+    2. Load the golden baseline (from golden_baselines.py)
+    3. Run PerSubjectRunner
+    4. Aggregate the result via ScoreAggregator
+
+    Returns:
+        dict with the per-cohort PerSubjectEvalResult.summary() output
+        + the per-jurisdiction JurisdictionalRagasReport.summary() output.
+    """
+    from meaisinfoghlaim.evaluation.golden_baselines import GoldenBaselineStore
+    from meaisinfoghlaim.evaluation.per_subject_runner import CohortKey, PerSubjectRunner
+    from meaisinfoghlaim.evaluation.score_aggregator import ScoreAggregator
+
+    cohort = CohortKey(
+        jurisdiction=jurisdiction,
+        stage=stage,
+        subject=subject,
+        board=board,
+        language=language,
+    )
+
+    # Build the dataset (uses this file's existing helper)
+    dataset = await create_curriculum_eval_dataset(
+        jurisdiction=jurisdiction,
+        stage=stage,
+        subject=subject,
+        board=board,
+        size=size,
+    )
+
+    # Load the golden baseline (from Plan 1 module 3)
+    store = GoldenBaselineStore()
+    baseline_questions = store.get(cohort)
+
+    # Run the canonical per-subject runner (from Plan 1 module 1)
+    runner = PerSubjectRunner(mlflow_experiment=experiment_name)
+    result = await runner.run(
+        jurisdiction=jurisdiction,
+        stage=stage,
+        subject=subject,
+        golden_baselines=[
+            {
+                "id": q.id,
+                "question": q.question,
+                "ground_truth": q.ground_truth,
+                "question_ga": q.question_ga,
+                "ground_truth_ga": q.ground_truth_ga,
+                "domain": q.domain,
+                "subject": q.subject,
+                "level": q.level,
+                "difficulty": q.difficulty,
+                "source": q.source,
+                "metadata": q.metadata,
+            }
+            for q in baseline_questions
+        ] if baseline_questions else None,
+        board=board,
+        language=language,
+        threshold=threshold,
+        metadata={"source": "run_per_subject_eval"},
+    )
+
+    # Aggregate via ScoreAggregator (from Plan 1 module 4)
+    agg = ScoreAggregator()
+    agg.add(cohort, result)
+    report = agg.jurisdiction_report(jurisdiction)
+
+    return {
+        "per_subject_result": result.summary(),
+        "jurisdiction_report": report.summary() if report is not None else None,
+    }

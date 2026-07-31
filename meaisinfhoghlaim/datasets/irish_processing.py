@@ -644,3 +644,29 @@ def get_irish_quality_score(text: str) -> float:
     processor = IrishOCRProcessor()
     analysis = processor.analyze_irish_quality(text)
     return analysis.quality_score
+
+
+
+# ============================================================================
+# Plan 4 integration notes (2026-08-15-meaisinfoghlaim-ireland-england-roadmap)
+# ============================================================================
+# This module can be wired into the canonical per-cohort registry + lifecycle
+# via the Plan 4 helpers:
+#
+#   from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
+#   from meaisinfoghlaim.datasets.cohort_lifecycle import CohortLifecycle
+#   from meaisinfoghlaim.datasets._factory import build_extraction_dataset
+#
+# Usage:
+#   registry = CohortRegistry()
+#   cohort = registry.get_or_create(
+#       jurisdiction='ireland', stage='lc',
+#       subject='irish', year=2026,
+#   )
+#   lifecycle = CohortLifecycle(registry)
+#   lifecycle.transition(cohort.cohort_id, CohortLifecycleState.EXTRACTING)
+#
+# The BilingualCoverageAuditor (Plan 2) gates extraction at >= 95% per-subject.
+# The CrossQualificationSubjectMap (Plan 3) provides the canonical subject
+# equivalences for cross-jurisdiction comparison.
+# ============================================================================
