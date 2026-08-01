@@ -1,0 +1,111 @@
+# =============================================================================
+# ALEYUM - Music Intelligence Pipeline
+# =============================================================================
+# Data pipelines for music discovery, Spotify/SoundCloud ingestion, and embeddings.
+#
+# USAGE:
+#   Default (cache only):     docker compose up -d
+#   With Dagster pipelines:   docker compose --profile dagster up -d
+#   With secrets:             op run --env-file=.op.env -- docker compose up -d
+# =============================================================================
+
+name: aleyum
+
+services:
+  # ---------------------------------------------------------------------------
+  # DragonflyDB (Redis-compatible cache for rate limiting)
+  # ---------------------------------------------------------------------------
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    container_name: aleyum-dragonfly
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6381}:6379"
+    volumes:
+      - dragonfly-data:/data
+    ulimits:
+      memlock: -1
+    networks:
+      - aleyum
+
+  # ---------------------------------------------------------------------------
+  # Dagster - Music Pipeline Orchestration
+  # Start with: docker compose --profile dagster up -d
+  # ---------------------------------------------------------------------------
+  dagster-webserver:
+    profiles: ["dagster"]
+    build:
+      context: .
+      dockerfile: Dockerfile.dagster
+    container_name: aleyum-dagster-web
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/opt/dagster/app"]
+    ports:
+      - "${DAGSTER_PORT:-3106}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      PYTHONPATH: /opt/dagster/app
+      # Storage paths
+      DUCKDB_PATH: /data/aleyum.duckdb
+      LANCEDB_PATH: /data/music_vectors.lance
+      # Music APIs
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      # Cloud Storage
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      # GitHub
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - .:/opt/dagster/app:ro
+      - aleyum-data:/data
+      - dagster-storage:/opt/dagster/dagster_home
+    depends_on:
+      - dagster-daemon
+    networks:
+      - aleyum
+
+  dagster-daemon:
+    profiles: ["dagster"]
+    build:
+      context: .
+      dockerfile: Dockerfile.dagster
+    container_name: aleyum-dagster-daemon
+    command: ["dagster-daemon", "run", "-w", "/opt/dagster/app"]
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      PYTHONPATH: /opt/dagster/app
+      # Storage paths
+      DUCKDB_PATH: /data/aleyum.duckdb
+      LANCEDB_PATH: /data/music_vectors.lance
+      # Music APIs
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      # Cloud Storage
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      # GitHub
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - .:/opt/dagster/app:ro
+      - aleyum-data:/data
+      - dagster-storage:/opt/dagster/dagster_home
+    networks:
+      - aleyum
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  aleyum-data:
+    driver: local
+  dagster-storage:
+    driver: local
+  dragonfly-data:
+    driver: local
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  aleyum:
+    driver: bridge

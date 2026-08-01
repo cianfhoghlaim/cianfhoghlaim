@@ -1,0 +1,35 @@
+{
+  "source_id": "wjec_gcse_cymraeg",
+  "region": "wales",
+  "language": {
+    "primary": "en",
+    "secondary": ["cy"]
+  },
+  "content": {
+    "markdown": "# GCSE Core Cymraeg (Made for Wales)\n\n## Teaching Start Date\nThe qualification begins teaching in September 2025.\n\n## Assessment Structure\nThe qualification comprises two units with non-examination assessments:\n- **Unit 1**: Scheduled November 30 - December 3, 2026\n- **Unit 2**: Scheduled February 23-26, 2027\n\n(Qualification code: 3040CS)\n\n## Key Content Areas\nThe program emphasizes six primary objectives:\n\n1. Understanding the world around us\n2. Appreciation of Welsh language value beyond classroom settings\n3. Language use connected to learner interests\n4. Practical Welsh for socializing and employment contexts\n5. Exposure to rich and diverse Welsh materials across multiple formats\n6. Building confident Welsh language communication abilities\n\n## Available Resources\n- **Digital Resources Platform**: Free tailored materials accessible via the dedicated resources website\n- **Professional Learning Courses**: Specialized training programs for educators\n- **Subject Support**: Dedicated officers available via email (Cymraegcraidd@cbac.co.uk)",
+    "extracted_text": "The qualification begins teaching in September 2025. The qualification comprises two units with non-examination assessments."
+  },
+  "metadata": {
+    "title": {
+      "en": "GCSE Core Cymraeg - Made for Wales",
+      "cy": "TGAU Craidd Cymraeg - Gwnaed ar gyfer Cymru"
+    },
+    "url": "https://www.wjec.co.uk/qualifications/gcse-core-cymraeg-teaching-from-2025/",
+    "og:locale": "en_GB",
+    "document_type": "qualification_specification",
+    "education_level": "gcse",
+    "qualification_code": "3040CS",
+    "first_teaching": "2025-09",
+    "assessment_dates": {
+      "unit_1": "2026-11-30 to 2026-12-03",
+      "unit_2": "2027-02-23 to 2027-02-26"
+    },
+    "scraped_at": "2025-12-18T00:00:00Z",
+    "source_org": "WJEC"
+  },
+  "provenance": {
+    "scrapeId": "sample-wjec-001",
+    "tool": "webfetch",
+    "creditsUsed": 0
+  }
+}

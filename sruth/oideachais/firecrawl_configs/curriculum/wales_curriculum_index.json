@@ -1,0 +1,349 @@
+{
+  "$schema": "./SCHEMA.json",
+  "version": "1.0.0",
+  "generated_at": "2025-01-05",
+  "jurisdiction": "wales",
+
+  "sources": {
+    "hwb": {
+      "base_url": "https://hwb.gov.wales",
+      "languages": {
+        "en": "",
+        "cy": "/cy"
+      }
+    },
+    "wjec": {
+      "base_url": "https://www.wjec.co.uk",
+      "languages": {
+        "en": ""
+      }
+    },
+    "cbac": {
+      "base_url": "https://www.cbac.co.uk",
+      "languages": {
+        "cy": ""
+      }
+    },
+    "qualifications_wales": {
+      "base_url": "https://qualifications.wales",
+      "languages": {
+        "en": "",
+        "cy": "/cy"
+      }
+    }
+  },
+
+  "key_stages": {
+    "foundation": {
+      "name": {"en": "Foundation Phase", "cy": "Cyfnod Sylfaen"},
+      "age_range": "3-7",
+      "years": 4,
+      "description": {"en": "Nursery to Year 2", "cy": "Meithrin i Blwyddyn 2"}
+    },
+    "ks2": {
+      "name": {"en": "Key Stage 2", "cy": "Cyfnod Allweddol 2"},
+      "age_range": "7-11",
+      "years": 4,
+      "description": {"en": "Year 3 to Year 6", "cy": "Blwyddyn 3 i Blwyddyn 6"}
+    },
+    "ks3": {
+      "name": {"en": "Key Stage 3", "cy": "Cyfnod Allweddol 3"},
+      "age_range": "11-14",
+      "years": 3,
+      "description": {"en": "Year 7 to Year 9", "cy": "Blwyddyn 7 i Blwyddyn 9"}
+    },
+    "ks4": {
+      "name": {"en": "Key Stage 4", "cy": "Cyfnod Allweddol 4"},
+      "age_range": "14-16",
+      "years": 2,
+      "certification": "GCSE",
+      "description": {"en": "Year 10 to Year 11", "cy": "Blwyddyn 10 i Blwyddyn 11"}
+    }
+  },
+
+  "areas_of_learning_experience": {
+    "expressive_arts": {
+      "name": {"en": "Expressive Arts", "cy": "Yr Celfyddydau Mynegiannol"},
+      "slug": "expressive-arts"
+    },
+    "health_wellbeing": {
+      "name": {"en": "Health and Well-being", "cy": "Iechyd a Lles"},
+      "slug": "health-and-wellbeing"
+    },
+    "humanities": {
+      "name": {"en": "Humanities", "cy": "y Dyniaethau"},
+      "slug": "humanities"
+    },
+    "languages_literacy_communication": {
+      "name": {"en": "Languages, Literacy and Communication", "cy": "Ieithoedd, Llythrennedd a Chyfathrebu"},
+      "slug": "languages-literacy-communication"
+    },
+    "mathematics_numeracy": {
+      "name": {"en": "Mathematics and Numeracy", "cy": "Mathemateg a Rhifedd"},
+      "slug": "mathematics-numeracy"
+    },
+    "science_technology": {
+      "name": {"en": "Science and Technology", "cy": "Gwyddoniaeth a Thechnoleg"},
+      "slug": "science-technology"
+    }
+  },
+
+  "subjects": [
+    {
+      "slug": "mathematics",
+      "name": {"en": "Mathematics", "cy": "Mathemateg"},
+      "key_stages": ["foundation", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "mathematics_numeracy",
+      "urls": {
+        "hwb": "/curriculum-for-wales/mathematics-numeracy/",
+        "wjec": "/qualifications/mathematics-gcse/",
+        "cbac": "/cymwysterau/mathemateg-tgau/"
+      }
+    },
+    {
+      "slug": "english",
+      "name": {"en": "English", "cy": "Saesneg"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "languages_literacy_communication",
+      "urls": {
+        "hwb": "/curriculum-for-wales/languages-literacy-communication/",
+        "wjec": "/qualifications/english-language-gcse/",
+        "wjec_literature": "/qualifications/english-literature-gcse/"
+      }
+    },
+    {
+      "slug": "welsh",
+      "name": {"en": "Welsh", "cy": "Cymraeg"},
+      "key_stages": ["foundation", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "languages_literacy_communication",
+      "urls": {
+        "hwb": "/curriculum-for-wales/languages-literacy-communication/welsh-language/",
+        "wjec": "/qualifications/welsh-language-gcse/",
+        "cbac": "/cymwysterau/cymraeg-iaith-tgau/"
+      }
+    },
+    {
+      "slug": "welsh_second_language",
+      "name": {"en": "Welsh Second Language", "cy": "Cymraeg Ail Iaith"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "languages_literacy_communication",
+      "urls": {
+        "hwb": "/curriculum-for-wales/languages-literacy-communication/welsh-second-language/",
+        "wjec": "/qualifications/welsh-second-language-gcse/"
+      }
+    },
+    {
+      "slug": "science",
+      "name": {"en": "Science", "cy": "Gwyddoniaeth"},
+      "key_stages": ["ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "science_technology",
+      "urls": {
+        "hwb": "/curriculum-for-wales/science-technology/",
+        "wjec": "/qualifications/science-gcse/"
+      }
+    },
+    {
+      "slug": "biology",
+      "name": {"en": "Biology", "cy": "Bioleg"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "aole": "science_technology",
+      "urls": {
+        "wjec": "/qualifications/biology-gcse/",
+        "cbac": "/cymwysterau/bioleg-tgau/"
+      }
+    },
+    {
+      "slug": "chemistry",
+      "name": {"en": "Chemistry", "cy": "Cemeg"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "aole": "science_technology",
+      "urls": {
+        "wjec": "/qualifications/chemistry-gcse/",
+        "cbac": "/cymwysterau/cemeg-tgau/"
+      }
+    },
+    {
+      "slug": "physics",
+      "name": {"en": "Physics", "cy": "Ffiseg"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "aole": "science_technology",
+      "urls": {
+        "wjec": "/qualifications/physics-gcse/",
+        "cbac": "/cymwysterau/ffiseg-tgau/"
+      }
+    },
+    {
+      "slug": "history",
+      "name": {"en": "History", "cy": "Hanes"},
+      "key_stages": ["ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "humanities",
+      "urls": {
+        "hwb": "/curriculum-for-wales/humanities/",
+        "wjec": "/qualifications/history-gcse/",
+        "cbac": "/cymwysterau/hanes-tgau/"
+      }
+    },
+    {
+      "slug": "geography",
+      "name": {"en": "Geography", "cy": "Daearyddiaeth"},
+      "key_stages": ["ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "humanities",
+      "urls": {
+        "hwb": "/curriculum-for-wales/humanities/",
+        "wjec": "/qualifications/geography-gcse/",
+        "cbac": "/cymwysterau/daearyddiaeth-tgau/"
+      }
+    },
+    {
+      "slug": "religious_studies",
+      "name": {"en": "Religious Studies", "cy": "Astudiaethau Crefyddol"},
+      "key_stages": ["ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "hwb": "/curriculum-for-wales/humanities/",
+        "wjec": "/qualifications/religious-studies-gcse/"
+      }
+    },
+    {
+      "slug": "computing",
+      "name": {"en": "Computing", "cy": "Cyfrifiadureg"},
+      "key_stages": ["ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "science_technology",
+      "urls": {
+        "hwb": "/curriculum-for-wales/science-technology/",
+        "wjec": "/qualifications/computer-science-gcse/"
+      }
+    },
+    {
+      "slug": "art_and_design",
+      "name": {"en": "Art and Design", "cy": "Celf a Dylunio"},
+      "key_stages": ["foundation", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "expressive_arts",
+      "urls": {
+        "hwb": "/curriculum-for-wales/expressive-arts/",
+        "wjec": "/qualifications/art-and-design-gcse/"
+      }
+    },
+    {
+      "slug": "music",
+      "name": {"en": "Music", "cy": "Cerddoriaeth"},
+      "key_stages": ["foundation", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "expressive_arts",
+      "urls": {
+        "hwb": "/curriculum-for-wales/expressive-arts/",
+        "wjec": "/qualifications/music-gcse/"
+      }
+    },
+    {
+      "slug": "drama",
+      "name": {"en": "Drama", "cy": "Drama"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "aole": "expressive_arts",
+      "urls": {
+        "wjec": "/qualifications/drama-gcse/"
+      }
+    },
+    {
+      "slug": "physical_education",
+      "name": {"en": "Physical Education", "cy": "Addysg Gorfforol"},
+      "key_stages": ["foundation", "ks2", "ks3", "ks4"],
+      "aole": "health_wellbeing",
+      "urls": {
+        "hwb": "/curriculum-for-wales/health-and-wellbeing/"
+      }
+    },
+    {
+      "slug": "business_studies",
+      "name": {"en": "Business Studies", "cy": "Astudioiadau Busnes"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "wjec": "/qualifications/business-studies-gcse/"
+      }
+    },
+    {
+      "slug": "media_studies",
+      "name": {"en": "Media Studies", "cy": "Astudioiadau'r Cyfryngau"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "wjec": "/qualifications/media-studies-gcse/"
+      }
+    },
+    {
+      "slug": "food_nutrition",
+      "name": {"en": "Food and Nutrition", "cy": "Bwyd a Maeth"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "wjec": "/qualifications/food-and-nutrition-gcse/"
+      }
+    },
+    {
+      "slug": "design_technology",
+      "name": {"en": "Design and Technology", "cy": "Dylunio a Thechnoleg"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "wjec": "/qualifications/design-and-technology-gcse/"
+      }
+    },
+    {
+      "slug": "modern_foreign_languages",
+      "name": {"en": "Modern Foreign Languages", "cy": "Ieithoedd Tramor Modern"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "wjec_french": "/qualifications/french-gcse/",
+        "wjec_german": "/qualifications/german-gcse/",
+        "wjec_spanish": "/qualifications/spanish-gcse/"
+      }
+    }
+  ],
+
+  "qualifications": {
+    "gcse": {
+      "name": {"en": "General Certificate of Secondary Education", "cy": "Tystysgrif Gyffredin Addysg Uwchradd"},
+      "age": "16",
+      "levels": ["foundation", "higher"],
+      "equivalent": ["junior_cert", "national_5"]
+    },
+    "a_level": {
+      "name": {"en": "GCE Advanced Level", "cy": "GCE Safon Uwch"},
+      "age": "18",
+      "levels": ["A", "B", "C", "D", "E"],
+      "equivalent": ["leaving_cert", "higher", "advanced_higher"]
+    }
+  },
+
+  "cross_curricular_skills": {
+    "literacy": {"en": "Literacy", "cy": "Llythrennedd"},
+    "numeracy": {"en": "Numeracy", "cy": "Rhifedd"},
+    "digital_competence": {"en": "Digital Competence", "cy": "Cymhwysedd Digidol"},
+    "critical_thinking": {"en": "Critical Thinking and Problem Solving", "cy": "Meini Prawf a Datrys Problem"}
+  },
+
+  "document_types": {
+    "specification": "WJEC/CBAC qualification specification",
+    "syllabus": "Course syllabus",
+    "past_paper": "Past examination paper",
+    "mark_scheme": "Marking scheme",
+    "examiner_report": "Examiner report",
+    "guidelines": "Teaching guidelines",
+    "statement_of_what_matters": "Curriculum for Wales Statement of What Matters"
+  }
+}

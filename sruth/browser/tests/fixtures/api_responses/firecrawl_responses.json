@@ -1,0 +1,93 @@
+{
+  "scrape_success": {
+    "success": true,
+    "data": {
+      "content": "# Page Title\n\nThis is the markdown content extracted from the page.\n\n## Section 1\n\nSome paragraph text here.\n\n## Section 2\n\n- List item 1\n- List item 2\n- List item 3",
+      "html": "<!DOCTYPE html><html><head><title>Page Title</title></head><body><h1>Page Title</h1><p>Content</p></body></html>",
+      "metadata": {
+        "title": "Page Title",
+        "description": "Page description for SEO",
+        "language": "en",
+        "sourceURL": "https://example.com/page",
+        "statusCode": 200
+      },
+      "links": [
+        "https://example.com/link1",
+        "https://example.com/link2",
+        "https://example.com/link3"
+      ]
+    }
+  },
+  "scrape_error": {
+    "success": false,
+    "error": "Failed to scrape URL: Connection timeout"
+  },
+  "map_success": {
+    "success": true,
+    "links": [
+      "https://example.com/",
+      "https://example.com/about",
+      "https://example.com/products",
+      "https://example.com/products/item-1",
+      "https://example.com/products/item-2",
+      "https://example.com/blog",
+      "https://example.com/blog/post-1",
+      "https://example.com/contact"
+    ]
+  },
+  "search_success": {
+    "success": true,
+    "data": [
+      {
+        "url": "https://example.com/result1",
+        "title": "First Search Result",
+        "description": "Description of the first search result with relevant content."
+      },
+      {
+        "url": "https://example.com/result2",
+        "title": "Second Search Result",
+        "description": "Description of the second search result."
+      },
+      {
+        "url": "https://example.com/result3",
+        "title": "Third Search Result",
+        "description": "Description of the third search result."
+      }
+    ]
+  },
+  "crawl_started": {
+    "success": true,
+    "id": "crawl-job-123-abc",
+    "url": "https://example.com"
+  },
+  "crawl_status_running": {
+    "success": true,
+    "status": "scraping",
+    "current": 5,
+    "total": 20,
+    "data": []
+  },
+  "crawl_status_completed": {
+    "success": true,
+    "status": "completed",
+    "current": 20,
+    "total": 20,
+    "data": [
+      {
+        "url": "https://example.com/page1",
+        "content": "Page 1 content",
+        "metadata": {"title": "Page 1"}
+      },
+      {
+        "url": "https://example.com/page2",
+        "content": "Page 2 content",
+        "metadata": {"title": "Page 2"}
+      }
+    ]
+  },
+  "rate_limit_error": {
+    "success": false,
+    "error": "Rate limit exceeded. Please try again later.",
+    "retryAfter": 60
+  }
+}

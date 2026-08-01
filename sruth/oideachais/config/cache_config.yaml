@@ -1,0 +1,52 @@
+# Cache Configuration for Curriculum RAG
+# Based on LightRAG multi-level caching patterns
+
+cache:
+  backend: memory  # Options: memory, redis, sqlite
+
+  # Query result cache
+  query:
+    ttl: 3600  # 1 hour
+    max_size: 10000
+
+  # Keyword extraction cache
+  keyword:
+    ttl: 86400  # 24 hours (keywords are stable)
+    max_size: 50000
+
+  # Embedding cache with similarity lookup
+  embedding:
+    ttl: 604800  # 7 days
+    similarity_threshold: 0.95  # Return cached if similarity >= 0.95
+    max_size: 100000
+
+  # LLM response cache
+  llm:
+    ttl: 86400  # 24 hours
+    max_size: 5000
+
+  # Curriculum-specific caches (long TTLs - content rarely changes)
+  curriculum_codes:
+    ttl: 2592000  # 30 days
+    max_size: 50000
+
+  prerequisite_chains:
+    ttl: 2592000  # 30 days
+    max_size: 10000
+
+  learning_outcomes:
+    ttl: 31536000  # 1 year (very stable)
+    max_size: 50000
+
+# Redis configuration (if using redis backend)
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+  password: null
+  key_prefix: "oideachais:"
+
+# Cleanup settings
+maintenance:
+  cleanup_interval_seconds: 3600  # Run cleanup every hour
+  cleanup_batch_size: 1000

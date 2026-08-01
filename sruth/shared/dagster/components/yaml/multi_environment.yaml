@@ -1,0 +1,104 @@
+# Multi-Environment Pipeline Configuration
+# Defines environment-specific overrides for all components
+
+environments:
+  # Local development
+  local:
+    storage:
+      backend: "duckdb"
+      duckdb_path: "./data.duckdb"
+
+    iceberg:
+      catalog_uri: "sqlite:///data/catalog.db"
+      warehouse: "file:///data/warehouse"
+      namespace: "dev"
+
+    browser:
+      headless: false
+      timeout: 60.0
+      enable_screenshot: true
+
+    observability:
+      langfuse:
+        enabled: false
+      mlflow:
+        enabled: false
+      logfire:
+        enabled: false
+
+    concurrency:
+      duckdb: 1  # Single-threaded
+      browser: 2
+
+  # Staging environment
+  staging:
+    storage:
+      backend: "iceberg"
+      lakekeeper_uri: "${STAGING_LAKEKEEPER_URI:-http://lakekeeper.staging:8181}"
+      s3_endpoint: "${STAGING_S3_ENDPOINT:-http://minio.staging:9000}"
+
+    iceberg:
+      catalog_uri: "${STAGING_LAKEKEEPER_URI}"
+      warehouse: "${STAGING_S3_BUCKET:-s3://staging-warehouse}"
+      namespace: "staging"
+
+    browser:
+      headless: true
+      timeout: 30.0
+      backend_preference: "crawl4ai"
+
+    observability:
+      langfuse:
+        enabled: true
+        host: "${LANGFUSE_STAGING_HOST}"
+      mlflow:
+        enabled: true
+        tracking_uri: "${MLFLOW_STAGING_URI}"
+
+    concurrency:
+      duckdb: 1
+      browser: 3
+      firecrawl: 2
+
+  # Production environment
+  production:
+    storage:
+      backend: "iceberg"
+      lakekeeper_uri: "${LAKEKEEPER_CATALOG_URI}"
+      s3_endpoint: "${GARAGE_ENDPOINT_URL}"
+
+    iceberg:
+      catalog_uri: "${LAKEKEEPER_CATALOG_URI}"
+      warehouse: "${ICEBERG_WAREHOUSE}"
+      namespace: "production"
+      table_properties:
+        write.format.default: "parquet"
+        write.compression-codec: "zstd"
+        write.parquet.page-size-bytes: "2097152"
+
+    browser:
+      headless: true
+      timeout: 30.0
+      backend_preference: "stagehand"
+
+    observability:
+      langfuse:
+        enabled: true
+        host: "${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}"
+      mlflow:
+        enabled: true
+        tracking_uri: "${MLFLOW_TRACKING_URI:-https://mlflow.cianfhoghlaim.ie}"
+      datadog:
+        enabled: true
+        site: "${DD_SITE:-datadoghq.eu}"
+
+    concurrency:
+      duckdb: 1
+      browser: 5
+      firecrawl: 3
+      api_rate_limit: 10
+
+# Environment activation
+# Set SRUTH_ENV=local|staging|production to activate
+environment_variable: "SRUTH_ENV"
+default_environment: "local"

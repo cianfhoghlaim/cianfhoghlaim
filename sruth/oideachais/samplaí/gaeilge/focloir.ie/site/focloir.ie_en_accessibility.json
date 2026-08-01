@@ -1,0 +1,19 @@
+{
+  "markdown": "# Accessibility\n\nWherever possible, this site has been built to be accessible to all visitors regardless of ability. The main sections of the site are shown at the top of the page.\n\nThe site may be viewed in any browser or using any device, but looks best in a browser which complies with web standards created by the World Wide Web Consortium (W3C), the people who invented the web itself. The W3C created these standards so that the web would work better for everyone. New browsers, in general, support these W3C standards; old browsers, in general, don't.\n\nTo increase the text size in most browsers you can use the **CTRL** key in conjunction with the **MOUSE WHEEL**, or the **CTRL** key in conjunction with the **PLUS SIGN** key.\n\nThis site is built to comply with WAI AAA standards. Navigation of the site, including menus, tables and forms, follows the procedures outlined in these standards.\n\nNew English-Irish Dictionary from Foras na Gaeilge",
+  "metadata": {
+    "viewport": "width=device-width, initial-scale=1",
+    "description": "New English-Irish Dictionary from Foras na Gaeilge",
+    "language": "en",
+    "favicon": "https://focloir.ie/favicon.ico",
+    "scrapeId": "019b0e62-f616-7373-b481-13261800323b",
+    "sourceURL": "https://focloir.ie/en/accessibility",
+    "url": "https://focloir.ie/en/accessibility",
+    "statusCode": 200,
+    "contentType": "text/html; charset=utf-8",
+    "timezone": "America/New_York",
+    "proxyUsed": "basic",
+    "cacheState": "miss",
+    "indexId": "954b6264-322a-4851-9a5e-186510ed25da",
+    "creditsUsed": 1
+  }
+}

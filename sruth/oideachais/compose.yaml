@@ -1,0 +1,100 @@
+# =============================================================================
+# OIDEACHAIS - Celtic Education Platform
+# =============================================================================
+# Pan-Celtic curriculum search, AG-UI streaming, and learning outcomes API.
+#
+# USAGE:
+#   Development:  docker compose -f compose.yaml -f compose.dev.yaml up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: oideachais
+
+services:
+  # ---------------------------------------------------------------------------
+  # API - FastAPI Backend with AG-UI Streaming
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oideachais-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      # Application
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Database paths (inside container)
+      DUCKDB_PATH: /app/storage/data/celtic_education.duckdb
+      LANCEDB_PATH: /app/storage/data/curriculum_vectors.lance
+      # LLM Configuration
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      LLM_MODEL: ${LLM_MODEL:-claude-sonnet-4-20250514}
+      # Observability (optional)
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-}
+      DD_SERVICE: oideachais-api
+      DD_ENV: ${ENVIRONMENT:-production}
+    volumes:
+      - oideachais-data:/app/storage/data
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    networks:
+      - oideachais
+
+  # ---------------------------------------------------------------------------
+  # FRONTEND - TanStack Start Web Application
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: oideachais-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${ENVIRONMENT:-production}
+      VITE_API_URL: ${API_URL:-http://api:8000}
+      VITE_API_PUBLIC_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - oideachais
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  oideachais-data:
+    driver: local
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  oideachais:
+    driver: bridge

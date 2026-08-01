@@ -1,0 +1,219 @@
+# Example: Complete Irish Education Pipeline
+# Shows how to combine multiple components for a full pipeline
+
+# This is a complete example of a component-based pipeline for processing
+# Irish education data from multiple sources
+
+# ============================================================================
+# 1. STORAGE LAYER - Iceberg with Lakekeeper
+# ============================================================================
+
+component: sruth.shared.dagster.components.IcebergIOComponent
+id: "iceberg_storage"
+attributes:
+  name: "iceberg_io"
+  catalog_uri: "${LAKEKEEPER_CATALOG_URI:-http://lakekeeper:8181}"
+  warehouse: "${ICEBERG_WAREHOUSE:-s3://garage/warehouse}"
+  namespace: "irish_education"
+  s3_endpoint: "${GARAGE_ENDPOINT_URL:-http://garage:3900}"
+  s3_access_key: "${GARAGE_ACCESS_KEY:-garage_key}"
+  s3_secret_key: "${GARAGE_SECRET_KEY:-garage_secret}"
+  compute_kind: "polars"
+
+# ============================================================================
+# 2. BROWSER SCRAPING - SEC Exam Materials
+# ============================================================================
+
+component: sruth.shared.dagster.components.BrowserScrapeComponent
+id: "sec_scraper"
+attributes:
+  asset_key: ["sec", "exam_materials"]
+  asset_name: "exam_materials"
+  group_name: "ingestion"
+  urls: ["https://www.examinations.ie/exammaterialarchive/"]
+  extract_instruction: "Extract exam paper PDFs with year, subject, level, and download URL"
+  extract_formats: ["json", "links"]
+  browser_backend: "stagehand"
+  headless: true
+
+# ============================================================================
+# 3. DLT ASSET - NCCA Curriculum
+# ============================================================================
+
+component: sruth.shared.dagster.components.DLTAssetComponent
+id: "ncca_curriculum"
+attributes:
+  asset_key: ["ncca", "curriculum", "pages"]
+  asset_name: "curriculum_pages"
+  group_name: "ingestion"
+  source_module: "sruth.oideachais.dlt_sources.curriculum_source"
+  pipeline_name: "ncca_curriculum"
+  dataset_name: "curriculum"
+  write_disposition: "merge"
+  primary_key: "url"
+
+  # Multi-dimensional partitioning
+  partitions:
+    cycle:
+      type: "static"
+      values: ["junior_cycle", "senior_cycle"]
+    subject:
+      type: "static"
+      values: ["mathematics", "english", "irish", "science", "history"]
+    language:
+      type: "static"
+      values: ["en", "ga"]
+
+# ============================================================================
+# 4. EMBEDDINGS ASSET - Vector Search
+# ============================================================================
+
+component: sruth.shared.dagster.components.DLTAssetComponent
+id: "curriculum_embeddings"
+attributes:
+  asset_key: ["curriculum", "embeddings"]
+  asset_name: "document_embeddings"
+  group_name: "embeddings"
+  source_module: "sruth.oideachais.dlt_sources.embedding_source"
+  pipeline_name: "curriculum_embeddings"
+  dataset_name: "embeddings"
+  write_disposition: "replace"
+  primary_key: "doc_id"
+
+  # No partitions for embeddings (process all together)
+  partitions: null
+
+  # Embedding configuration
+  model: "BAAI/bge-m3"
+  batch_size: 100
+  dimension: 1024
+
+# ============================================================================
+# 5. DAGSTER JOB - Orchestration
+# ============================================================================
+
+# This defines the dependency graph and execution order
+jobs:
+  curriculum_ingestion:
+    description: "Ingest and process Irish curriculum data"
+    assets:
+      # Ingestion layer (parallel)
+      - "ncca_curriculum"
+      - "sec_scraper"
+
+    # Processing layer (depends on ingestion)
+    dependencies:
+      "curriculum_embeddings":
+        depends_on: ["ncca_curriculum"]
+
+    # Scheduling
+    schedule:
+      cron: "0 2 * * *"  # Daily at 2 AM
+      timezone: "Europe/Dublin"
+
+# ============================================================================
+# 6. OBSERVABILITY - Unified Tracing
+# ============================================================================
+
+observability:
+  langfuse:
+    enabled: "${LANGFUSE_ENABLED:-true}"
+    public_key: "${LANGFUSE_PUBLIC_KEY}"
+    secret_key: "${LANGFUSE_SECRET_KEY}"
+    host: "${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}"
+
+  mlflow:
+    enabled: "${MLFLOW_ENABLED:-true}"
+    tracking_uri: "${MLFLOW_TRACKING_URI:-https://mlflow.cianfhoghlaim.ie}"
+    experiment_name: "irish_curriculum"
+
+  datadog:
+    enabled: "${DD_ENABLED:-false}"
+    api_key: "${DD_API_KEY}"
+    site: "${DD_SITE:-datadoghq.eu}"
+    service: "sruth-curriculum"
+
+# ============================================================================
+# 7. RESOURCE DEPENDENCIES
+# ============================================================================
+
+resources:
+  iceber_io:
+    component: "iceberg_storage"
+
+  browser:
+    preferred_backend: "stagehand"
+    headless: true
+    timeout: 30.0
+
+# ============================================================================
+# 8. ENVIRONMENT OVERRIDES
+# ============================================================================
+
+environments:
+  development:
+    # Single subject for quick testing
+    ncca_curriculum:
+      partitions:
+        subject:
+          values: ["mathematics"]
+        language:
+          values: ["en"]
+
+    # Disable observability for dev
+    observability:
+      langfuse:
+        enabled: false
+      mlflow:
+        enabled: false
+
+  production:
+    # Full production config
+    ncca_curriculum:
+      max_retries: 5
+      retry_delay: 60
+
+    # Full observability
+    observability:
+      langfuse:
+        enabled: true
+      mlflow:
+        enabled: true
+      datadog:
+        enabled: true
+
+# ============================================================================
+# USAGE INSTRUCTIONS
+# ============================================================================
+
+# To use this pipeline:
+#
+# 1. Create definitions.py:
+#    ```python
+#    from dagster import Definitions, load_definitions_from_yaml
+#    from sruth.shared.dagster.components import (
+#        DLTAssetComponent,
+#        IcebergIOComponent,
+#        BrowserScrapeComponent,
+#    )
+#
+#    defs = load_definitions_from_yaml("example_pipeline.yaml")
+#    ```
+#
+# 2. Set environment variables:
+#    ```bash
+#    export LAKEKEEPER_CATALOG_URI="http://lakekeeper:8181"
+#    export GARAGE_ENDPOINT_URL="http://garage:3900"
+#    export LANGFUSE_PUBLIC_KEY="your-key"
+#    export LANGFUSE_SECRET_KEY="your-secret"
+#    ```
+#
+# 3. Run Dagster:
+#    ```bash
+#    dagster dev
+#    ```
+#
+# 4. Materialize assets:
+#    ```bash
+#    dagster dev asset materialize ncca_curriculum
+#    ```

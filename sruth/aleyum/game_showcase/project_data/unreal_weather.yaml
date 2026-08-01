@@ -1,0 +1,107 @@
+# Unreal Weather Simulation
+# Niagara-based weather system with real-time data
+
+title: "Celtic Weather System"
+subtitle: "Unreal Engine 5 Niagara Weather Simulation"
+category: unreal
+order: 4
+
+description: |
+  Large-scale weather simulation for Unreal Engine 5 using Niagara VFX.
+  Features Grid2D wind field modules, custom HLSL bicubic interpolation,
+  Large World Coordinates for precision at Celtic region scales, and
+  real-time streaming from meteorological APIs.
+
+technologies:
+  - Unreal Engine 5.4
+  - Niagara VFX System
+  - Grid2D Data Interface
+  - HLSL Custom Modules
+  - Large World Coordinates
+  - SpacetimeDB
+
+features:
+  - Grid2D wind field with bicubic sampling
+  - Large World Coordinates (Celtic region scale)
+  - Custom Niagara modules in HLSL
+  - Real-time weather API integration
+  - Region-based LOD for particle density
+  - Celtic zone atmospheric effects
+
+zones:
+  - name: Connemara
+    weather: Atlantic maritime
+    particles: rain, sea spray, fog
+
+  - name: Highlands
+    weather: Mountain climate
+    particles: mist, snow, wind
+
+  - name: Anglesey
+    weather: Coastal winds
+    particles: sand, sea foam
+
+media:
+  thumbnail: "/portfolio/unreal/weather-thumbnail.png"
+  video: "https://www.youtube.com/watch?v=EXAMPLE"
+  gallery:
+    - "/portfolio/unreal/niagara-graph.png"
+    - "/portfolio/unreal/rain-system.png"
+    - "/portfolio/unreal/fog-volumes.png"
+  demo: null  # Video showcase
+
+code_samples:
+  - title: "Grid2D Wind Module (HLSL)"
+    language: hlsl
+    code: |
+      // Niagara Grid2D custom module for wind sampling
+      void SampleWindField(
+          in float3 WorldPosition,
+          in float Time,
+          out float3 WindVelocity,
+          out float WindStrength
+      ) {
+          // Convert world position to grid UV
+          float2 gridUV = WorldToGridUV(WorldPosition.xy);
+
+          // Sample wind field with bicubic interpolation
+          float3 wind = SampleBicubic(WindFieldTexture, gridUV);
+
+          // Apply Large World Coordinates offset
+          wind += LWC_GetTileOffset(WorldPosition);
+
+          WindVelocity = wind;
+          WindStrength = length(wind);
+      }
+
+  - title: "Weather Zone Blueprint"
+    language: cpp
+    code: |
+      UCLASS()
+      class ACelticWeatherZone : public AActor {
+          GENERATED_BODY()
+
+          UPROPERTY(EditAnywhere)
+          TObjectPtr<UNiagaraComponent> ParticleSystem;
+
+          UPROPERTY(EditAnywhere)
+          FString ZoneId;
+
+          UFUNCTION()
+          void OnWeatherUpdate(const FWeatherData& Data) {
+              ParticleSystem->SetVariableFloat(
+                  "WindStrength", Data.WindSpeed
+              );
+              ParticleSystem->SetVariableVec3(
+                  "WindDirection", Data.WindDirection
+              );
+          }
+      };
+
+links:
+  docs: "/docs/unreal-weather"
+  github: "https://github.com/example/celtic-weather-ue5"
+
+dates:
+  started: "2024-04"
+  completed: null

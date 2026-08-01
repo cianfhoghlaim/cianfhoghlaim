@@ -1,0 +1,41 @@
+# NCCA REST API Source Component
+# Defines REST API source for NCCA curriculum data
+
+component: sruth.shared.dagster.components.DLTSourceComponent
+
+attributes:
+  name: "ncca_curriculum_api"
+  source_type: "rest"
+
+  # API endpoint
+  base_url: "https://curriculumonline.ie/api"
+
+  # Authentication (none required for public NCCA API)
+  auth_type: "none"
+  headers:
+    Accept: "application/json"
+    User-Agent: "Cianfhoghlaim/1.0"
+
+  # Pagination configuration
+  paginator_type: "page"
+  page_param: "page"
+  page_size: 50
+  cursor_param: "cursor"
+
+  # Rate limiting
+  rate_limit: 0.5  # seconds between requests
+
+  # Resources to extract
+  resources:
+    - name: "curriculum_pages"
+      endpoint: "/curriculum"
+      primary_key: "slug"
+      write_disposition: "merge"
+      incremental:
+        cursor_path: "updated_at"
+        initial_value: "2024-01-01"
+
+    - name: "learning_outcomes"
+      endpoint: "/outcomes"
+      primary_key: "id"
+      write_disposition: "merge"
