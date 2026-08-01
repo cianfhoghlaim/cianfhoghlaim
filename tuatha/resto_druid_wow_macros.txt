@@ -1,0 +1,38 @@
+VER 3 0100000000000006 "1" "INV_MISC_QUESTIONMARK"
+
+#showtooltip
+/cast [@mouseover, mod:shift]  Ironbark; [@mouseover,help,nodead][help,nodead][@player] Rejuvenation
+END
+
+VER 3 0100000000000011 "2" "INV_MISC_QUESTIONMARK"
+#showtooltip
+/cast [mod:shift] Barkskin; [@mouseover,help,nodead][help,nodead][@player] Regrowth
+END
+
+VER 3 0100000000000010 "4" "INV_MISC_QUESTIONMARK"
+#showtooltip
+/cast [mod:shift] Tranquility; Wild Growth;
+END
+
+VER 3 010000000000000E "3" "INV_MISC_QUESTIONMARK"
+/cast [mod:shift,@mouseover,help,nodead][mod:shift,help,nodead][mod:shift,@player] Nature's Swiftness; [@mouseover,help,nodead][help,nodead][@player] Swiftmend
+END
+
+VER 3 010000000000001D "R" "134400"
+#showtooltip
+/cast [mod:shift, @mouseover,help,nodead][@player] Nature's Cure; [@mouseover,help,nodead][help,nodead][@player] Lifebloom
+END
+
+VER 3 010000000000000E "speedforce" "INV_MISC_QUESTIONMARK"
+#showtooltip
+/cast [mod:shift] Ursol's Vortex; Tiger Dash;
+ 
+END
+VER 3 0100000000000018 "fly shadowfax" "134400"
+/cast [mod:shift]  Wild Charge; Stampeding Roar;
+END
+
+VER 3 010000000000000A "animorphs" "INV_MISC_QUESTIONMARK"
+#showtooltip 
+/cast [mod:shift] Bear Form; Cat Form;
+END
