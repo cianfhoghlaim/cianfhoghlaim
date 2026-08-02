@@ -1,0 +1,33 @@
+{
+  "name": "api-unified",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Unified API demonstrating MCP, oRPC, and AI streaming in a single Hono app",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "test:endpoints": "tsx examples/test-all-endpoints.ts",
+    "examples:client": "tsx examples/client.ts",
+    "examples:curl": "./examples/curl-examples.sh"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.2",
+    "@orpc/server": "^1.8.6",
+    "@orpc/openapi": "^1.8.6",
+    "@orpc/zod": "^1.8.6",
+    "@orpc/json-schema": "^1.8.6",
+    "@ai-sdk/anthropic": "^2.0.1",
+    "hono": "^4.10.4",
+    "ai": "^5.0.8",
+    "zod": "^3.25.76",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
