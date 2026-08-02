@@ -1,0 +1,62 @@
+[package]
+name = "godot-bindings"
+version = "0.4.4"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+keywords = ["gamedev", "godot", "engine", "ffi", "sys"]
+categories = ["game-engines", "graphics"]
+description = "Internal crate used by godot-rust"
+repository = "https://github.com/godot-rust/gdext"
+homepage = "https://godot-rust.github.io"
+
+# Since features are additive, and we want the user to user prebuilt by default, we need to have `prebuilt-godot` as the
+# default feature. However, it's not possible to _disable_ the prebuilt dependency when specifying `api-custom` (without
+# requiring no-default-features), so we unfortunately still need to depend on prebuilt and just ignore it.
+# The artifact generator explicitly excludes that though (to avoid a quasi-circular dependency back to its repo).
+[features]
+experimental-wasm-nothreads = []
+
+# [version-sync] [[
+#  [line] api-$kebabVersion = []
+api-4-2 = []
+api-4-2-1 = []
+api-4-2-2 = []
+api-4-3 = []
+api-4-4 = []
+api-4-5 = []
+# ]]
+
+default = []
+
+api-custom = ["dep:bindgen", "dep:regex", "dep:which"]
+api-custom-json = ["dep:nanoserde", "dep:bindgen", "dep:regex", "dep:which"]
+api-custom-extheader = []
+
+# Safeguard levels (see godot/lib.rs for detailed documentation).
+safeguards-dev-balanced = []
+safeguards-release-disengaged = []
+
+[dependencies]
+gdextension-api = { workspace = true }
+
+bindgen = { workspace = true, optional = true }
+regex = { workspace = true, optional = true }
+which = { workspace = true, optional = true }
+# Required by `api-custom-json` to parse the extension API JSON (to get the Godot version).
+nanoserde = { workspace = true, optional = true }
+
+[dev-dependencies]
+# For tests, we need regex unconditionally.
+regex = { workspace = true }
+
+# https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+features = ["experimental-godot-api"]
+rustdoc-args = ["--cfg", "published_docs"]
+rustc-args = ["--cfg", "published_docs"]
+
+# Enabled only for godot-bindings; the others have it set via build.rs.
+# Necessary to avoid warnings in release workflow.
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(published_docs)'] }

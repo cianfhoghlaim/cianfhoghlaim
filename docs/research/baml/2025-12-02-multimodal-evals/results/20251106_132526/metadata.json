@@ -1,0 +1,8 @@
+{
+  "run_id": "20251106_132526",
+  "run_name": "baseline",
+  "timestamp": "2025-11-06T13:25:26.770067",
+  "total_receipts": 21,
+  "data_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels",
+  "results_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/results/20251106_132526"
+}

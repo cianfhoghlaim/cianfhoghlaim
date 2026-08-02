@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun astro add:*)",
+      "Bash(bun add:*)",
+      "Bash(bun run:*)",
+      "WebSearch",
+      "Bash(cat:*)",
+      "Bash(bunx tsc:*)",
+      "Bash(bunx biome format:*)",
+      "Bash(npx drizzle-kit generate)",
+      "Bash(bun test:*)",
+      "Bash(bunx projen:*)",
+      "Bash(platform/emoji-reactions/package.json)",
+      "Bash(chmod:*)",
+      "Bash(xargs cat:*)",
+      "Bash(bun install)",
+      "Bash(find:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "Bash(bunx wrangler types:*)",
+      "Bash(bunx wrangler:*)",
+      "Bash(for dir in leaderboard player-learned-phrases player-stats share-cards)",
+      "Bash(do echo \"=== $dir ===\" cat /Users/rawkode/Code/src/github.com/rawkode-academy/rawkode-academy/projects/rawkode.academy/games/secrets-of-kubernetes/$dir/package.json)",
+      "Bash(python3:*)",
+      "Bash(bun -e:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cue mod tidy:*)",
+      "Bash(cue mod get:*)",
+      "WebFetch(domain:posthog.com)",
+      "mcp__posthog__event-definitions-list",
+      "mcp__posthog__properties-list",
+      "mcp__posthog__dashboard-create",
+      "mcp__posthog__query-run",
+      "mcp__posthog__docs-search",
+      "mcp__posthog__insight-create-from-query",
+      "mcp__posthog__add-insight-to-dashboard",
+      "Bash(bunx astro check:*)",
+      "Bash(ls:*)"
+    ],
+    "deny": []
+  }
+}

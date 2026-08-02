@@ -1,0 +1,10 @@
+.env
+node_modules
+tmp
+downloads
+.DS_Store
+dist
+cache.json
+python/venv/
+*.node_modules
+package-lock.json

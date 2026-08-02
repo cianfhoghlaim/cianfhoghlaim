@@ -1,0 +1,1828 @@
+version: '1.0'
+storage_root: ./models
+
+# ===========================================================================
+# CHAT TEMPLATES - Reference for fine-tuning dataset formatting
+# ===========================================================================
+chat_templates:
+  gemma:
+    format: "<start_of_turn>user\n{input}<end_of_turn>\n<start_of_turn>model\n{output}<end_of_turn>"
+    bos_token: "<bos>"
+    eos_token: "<eos>"
+    models: [gemma-3n, gemma-27b-vision]
+
+  nemotron:
+    format: "<extra_id_0>System\n{system}\n<extra_id_1>User\n{input}\n<extra_id_2>Assistant\n<think>{reasoning}</think>{output}"
+    reasoning_tokens: ["<think>", "</think>"]
+    models: [nemotron-3-nano]
+
+  qwen:
+    format: "<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{input}<|im_end|>\n<|im_start|>assistant\n{output}<|im_end|>"
+    models: [qwen3-vl-30b, qwen3-next-80b]
+
+  glm4:
+    format: "[gMASK]<sop><|system|>\n{system}<|user|>\n{input}<|assistant|>\n{output}"
+    models: [glm-4.6v-flash]
+
+  chatml:
+    format: "<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{input}<|im_end|>\n<|im_start|>assistant\n{output}<|im_end|>"
+    note: "Default for most vision models"
+    models: [moondream2]
+
+# ===========================================================================
+# DATASET FORMAT STANDARDS
+# ===========================================================================
+dataset_formats:
+  jsonl_chat:
+    description: "Standard chat format for LLM fine-tuning"
+    schema:
+      messages:
+        - role: "system | user | assistant"
+          content: "text or multimodal content"
+    frameworks: [unsloth, transformers, LLaMA-Factory]
+
+  jsonl_vision:
+    description: "Multimodal format for VLM fine-tuning"
+    schema:
+      messages:
+        - role: user
+          content:
+            - type: image
+              image: "PIL.Image or base64 or file path"
+            - type: text
+              text: "instruction"
+        - role: assistant
+          content: "response text"
+    frameworks: [unsloth, LLaMA-Factory]
+
+  coco:
+    description: "COCO format for segmentation/detection"
+    schema:
+      images: [{id, file_name, width, height}]
+      annotations: [{id, image_id, category_id, segmentation, bbox}]
+    mask_formats: ["RLE", "polygon", "PNG"]
+    frameworks: [ultralytics, segment-anything-2]
+
+  vidore:
+    description: "Visual Document Retrieval benchmark format"
+    schema:
+      query: "text query"
+      positive_passages: [{image, page_id}]
+      negative_passages: [{image, page_id}]
+    frameworks: [colpali-engine]
+
+models:
+  mlx/ocr/olmocr-2-7b-mlx-8bit:
+    name: olmOCR-2-7B-1025-MLX-8bit
+    hf_repo: richardyoung/olmOCR-2-7B-1025-MLX-8bit
+    format: mlx
+    category: ocr
+    backend: mlx-omni-server
+    port: 10240
+    size_gb: 4.0
+    status: ready
+    description: OCR specialist model for document text extraction
+    capabilities:
+    - ocr
+    - document_parsing
+    - text_extraction
+    hardware:
+      cuda: false
+      mps: true
+      cpu: true
+      vram_gb: 5
+    training:
+      dataset_format: jsonl_vision
+      input_schema:
+        image: "PDF page or document image (PNG/JPG/TIFF)"
+        text: "Ground truth text output"
+      preprocessing:
+        - "PDF to image conversion (300 DPI recommended)"
+        - "Document anchoring metadata injection"
+        - "Max image size: 4096x4096"
+      frameworks: [transformers, unsloth]
+    inference:
+      input_format: image
+      output_format: text
+      supported_files: [.pdf, .png, .jpg, .jpeg, .tiff]
+      max_input_size: "4096x4096 pixels"
+      api_compatible: OpenAI
+  mlx/document/granite-docling-258M-mlx:
+    name: granite-docling-258M-mlx
+    hf_repo: ibm-granite/granite-docling-258M-mlx
+    format: mlx
+    category: document
+    backend: mlx-omni-server
+    port: 10240
+    size_gb: 0.5
+    status: ready
+    description: Lightweight document understanding model
+    capabilities:
+    - document_layout
+    - table_extraction
+    - structure_analysis
+    hardware:
+      cuda: false
+      mps: true
+      cpu: true
+      vram_gb: 1
+    training:
+      dataset_format: jsonl_vision
+      input_schema:
+        image: "Document page image"
+        output: "Structured document elements (tables, headers, sections)"
+      preprocessing:
+        - "PDF rendering at 72-300 DPI"
+        - "Image normalization"
+      frameworks: [transformers]
+      note: "Tiny model - fast layout analysis"
+    inference:
+      input_format: image
+      output_format: structured_json
+      supported_files: [.pdf, .png, .jpg, .jpeg]
+      output_elements: [tables, headers, sections, paragraphs]
+      api_compatible: custom
+  mlx/image/fibo-mlx-8bit:
+    name: Fibo-mlx-8bit
+    hf_repo: briaai/Fibo-mlx-8bit
+    format: mlx
+    category: image_generation
+    backend: mlx-omni-server
+    port: 10240
+    size_gb: 8.0
+    status: ready
+    description: Image generation model optimized for Apple Silicon
+    capabilities:
+    - image_generation
+    - text_to_image
+  gguf/ocr/olmocr-2-7b-gguf:
+    name: olmOCR-2-7B-1025-GGUF
+    hf_repo: richardyoung/olmOCR-2-7B-1025-GGUF
+    format: gguf
+    category: ocr
+    backend: llama-swap
+    port: 8080
+    size_gb: 4.5
+    status: ready
+    description: OCR model in GGUF format for llama.cpp
+    capabilities:
+    - ocr
+    - document_parsing
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 5
+    training:
+      dataset_format: jsonl_vision
+      input_schema:
+        image: "PDF page or document image"
+        text: "Ground truth text output"
+      preprocessing:
+        - "PDF to image conversion (300 DPI recommended)"
+        - "Document anchoring metadata"
+      frameworks: [transformers, unsloth]
+    inference:
+      input_format: image
+      output_format: text
+      supported_files: [.pdf, .png, .jpg, .jpeg, .tiff]
+      max_input_size: "4096x4096 pixels"
+      api_compatible: OpenAI
+  gguf/vision/qwen3-vl-30b-gguf:
+    name: Qwen3-VL-30B-A3B-Instruct-GGUF
+    hf_repo: unsloth/Qwen3-VL-30B-A3B-Instruct-GGUF
+    format: gguf
+    category: vision
+    backend: llama-swap
+    port: 8080
+    size_gb: 18.0
+    status: ready
+    description: Vision-Language model for multimodal understanding
+    capabilities:
+    - vision
+    - vlm
+    - image_understanding
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 20
+    training:
+      dataset_format: jsonl_vision
+      chat_template: qwen
+      input_schema:
+        messages:
+          - role: user
+            content:
+              - type: image
+                image: "PIL.Image or base64"
+              - type: text
+                text: "instruction"
+          - role: assistant
+            content: "response text"
+      preprocessing:
+        - "Resize images to 448-1024px (model handles dynamic resolution)"
+        - "Normalize pixel values"
+      frameworks: [unsloth, LLaMA-Factory, transformers]
+    inference:
+      input_format: multimodal
+      output_format: text
+      supported_files: [.png, .jpg, .jpeg, .webp, .gif]
+      max_resolution: 2048
+      max_context: 32768
+      api_compatible: OpenAI
+  gguf/vision/gemma-3-27b-it-gguf:
+    name: gemma-3-27b-it-GGUF
+    hf_repo: unsloth/gemma-3-27b-it-GGUF
+    format: gguf
+    category: vision
+    backend: llama-swap
+    port: 8080
+    size_gb: 16.0
+    status: ready
+    description: Gemma 27B with vision capabilities
+    capabilities:
+    - vision
+    - general
+    - instruction_following
+    quantization: Q4_K_M
+  gguf/general/gemma-3n-e2b-gguf:
+    name: gemma-3n-E2B-it-GGUF
+    hf_repo: unsloth/gemma-3n-E2B-it-GGUF
+    format: gguf
+    category: general
+    backend: llama-swap
+    port: 8080
+    size_gb: 2.5
+    status: ready
+    description: Lightweight Gemma model for general tasks
+    capabilities:
+    - general
+    - instruction_following
+    - fast_inference
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 3
+    training:
+      dataset_format: jsonl_chat
+      chat_template: gemma
+      input_schema:
+        messages:
+          - role: user
+            content: "instruction"
+          - role: assistant
+            content: "response"
+      preprocessing:
+        - "Standard tokenization"
+        - "Max sequence length: 8192"
+      frameworks: [unsloth, transformers, vLLM]
+      note: "Excellent for quick fine-tuning experiments"
+    inference:
+      input_format: text
+      output_format: text
+      max_context: 8192
+      api_compatible: OpenAI
+  gguf/general/qwen3-next-80b-gguf:
+    name: Qwen3-Next-80B-A3B-Instruct-GGUF
+    hf_repo: unsloth/Qwen3-Next-80B-A3B-Instruct-GGUF
+    format: gguf
+    category: general
+    backend: llama-swap
+    port: 8080
+    size_gb: 45.0
+    status: ready
+    description: Large Qwen model for complex reasoning
+    capabilities:
+    - reasoning
+    - instruction_following
+    - complex_tasks
+    quantization: Q4_K_M
+
+  # ===========================================================================
+  # NEW GGUF MODELS - User Requested (llama-swap compatible)
+  # ===========================================================================
+  gguf/general/nemotron-3-nano-30b:
+    name: Nemotron-3-Nano-30B-A3B-GGUF
+    hf_repo: unsloth/Nemotron-3-Nano-30B-A3B-GGUF
+    format: gguf
+    category: general
+    backend: llama-swap
+    port: 8080
+    size_gb: 18.0
+    status: pending
+    description: NVIDIA Nemotron hybrid MoE model - 30B total, 3B active params
+    capabilities:
+    - reasoning
+    - instruction_following
+    - complex_tasks
+    - moe_efficient
+    quantization: Q4_K_M
+    architecture:
+      type: Hybrid MoE
+      layers: 23 Mamba-2/MoE + 6 Attention
+      active_params: 3B
+      context_length: 262144
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 20
+    training:
+      dataset_format: jsonl_chat
+      chat_template: nemotron
+      input_schema:
+        messages:
+          - role: system
+            content: "system prompt"
+          - role: user
+            content: "instruction"
+          - role: assistant
+            content: "reasoning wrapped in <think></think> then answer"
+      preprocessing:
+        - "Standard tokenization"
+        - "Supports reasoning tokens <think></think>"
+      frameworks: [unsloth, transformers, vLLM]
+      note: "MoE architecture - only 3B params active during inference"
+    inference:
+      input_format: text
+      output_format: text
+      max_context: 262144
+      reasoning_tokens: ["<think>", "</think>"]
+      api_compatible: OpenAI
+
+  gguf/vision/glm-4.6v-flash:
+    name: GLM-4.6V-Flash-GGUF
+    hf_repo: unsloth/GLM-4.6V-Flash-GGUF
+    format: gguf
+    category: vision
+    backend: llama-swap
+    port: 8080
+    size_gb: 6.0
+    status: pending
+    description: Fast vision-language model with native function calling (Zhipu AI)
+    capabilities:
+    - vision
+    - vlm
+    - function_calling
+    - 128k_context
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 8
+    training:
+      dataset_format: jsonl_vision
+      chat_template: glm4
+      input_schema:
+        messages:
+          - role: user
+            content:
+              - type: image
+                image: "PIL.Image or base64"
+              - type: text
+                text: "instruction"
+          - role: assistant
+            content: "response or function call"
+      preprocessing:
+        - "Resize images to 1024px max dimension"
+        - "GLM4 supports native function calling in training data"
+      frameworks: [unsloth, transformers]
+    inference:
+      input_format: multimodal
+      output_format: text
+      supported_files: [.png, .jpg, .jpeg, .webp]
+      max_resolution: 1024
+      max_context: 131072
+      api_compatible: OpenAI
+
+  gguf/vision/moondream2:
+    name: Moondream2-GGUF
+    hf_repo: vikhyatk/moondream2
+    format: gguf
+    category: vision
+    backend: llama-swap
+    port: 8080
+    size_gb: 1.5
+    status: pending
+    description: Lightweight vision model for fast inference (1.8B params)
+    capabilities:
+    - vision
+    - image_captioning
+    - object_detection
+    - fast_inference
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 2
+    training:
+      dataset_format: jsonl_vision
+      chat_template: chatml
+      input_schema:
+        messages:
+          - role: user
+            content:
+              - type: image
+              - type: text
+                text: "instruction"
+          - role: assistant
+            content: "response"
+      preprocessing:
+        - "Resize images to 378px (model native resolution)"
+        - "SigLIP vision encoder"
+      frameworks: [transformers]
+      note: "Small model - fine-tuning possible on consumer hardware"
+    inference:
+      input_format: multimodal
+      output_format: text
+      supported_files: [.png, .jpg, .jpeg, .webp]
+      max_resolution: 378
+      max_context: 4096
+      api_compatible: OpenAI
+
+  gguf/general/functiongemma-270m:
+    name: FunctionGemma-270M-IT
+    hf_repo: google/functiongemma-270m-it
+    format: gguf
+    category: general
+    backend: llama-swap
+    port: 8080
+    size_gb: 0.5
+    status: pending
+    description: Lightweight function calling specialist from Google
+    capabilities:
+    - function_calling
+    - tool_use
+    - fast_inference
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 1
+    training:
+      dataset_format: jsonl_chat
+      chat_template: gemma
+      input_schema:
+        messages:
+          - role: system
+            content: "Available tools: [{name, description, parameters}]"
+          - role: user
+            content: "user query"
+          - role: assistant
+            content: "function_call or response"
+      preprocessing:
+        - "Tools schema in system prompt"
+        - "Function call format: {name, arguments}"
+      frameworks: [transformers]
+      note: "Tiny model - very fast for routing decisions"
+    inference:
+      input_format: text
+      output_format: text
+      max_context: 8192
+      function_calling: native
+      api_compatible: OpenAI
+
+  gguf/general/t5gemma-2:
+    name: T5Gemma-2
+    hf_repo: google/t5gemma-2
+    format: safetensors
+    category: general
+    backend: mlx-omni-server
+    port: 10240
+    size_gb: 2.0
+    status: pending
+    description: Text-to-text model from Google T5Gemma collection
+    capabilities:
+    - text_generation
+    - translation
+    - summarization
+
+  # ===========================================================================
+  # DOCUMENT RETRIEVAL MODELS (ColVision family from foinse/colpali)
+  # NOTE: These require dedicated LanceDB endpoint, NOT llama-swap compatible
+  # Integration: Use with LanceDB for multi-vector storage (1030 patches × 128 dims)
+  # ===========================================================================
+  retrieval/colqwen2.5-v0.2:
+    name: ColQwen2.5-v0.2
+    hf_repo: vidore/colqwen2.5-v0.2
+    format: safetensors
+    category: retrieval
+    backend: lancedb
+    size_gb: 6.0
+    status: pending
+    description: State-of-art document retrieval (89.4 ViDoRe benchmark)
+    capabilities:
+    - document_retrieval
+    - visual_search
+    - multi_vector_embedding
+    benchmark:
+      vidore_score: 89.4
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      mps_note: "Use torch 2.5.1 on macOS (2.6.0 has issues)"
+      vram_gb: 8
+    training:
+      dataset_format: vidore
+      input_schema:
+        query: "text query"
+        positive_doc: "document image (PDF page rendered)"
+        negative_docs: ["hard negative documents"]
+      preprocessing:
+        - "PDF to image (one per page)"
+        - "1030 patches per page (448px resolution)"
+        - "Hard negative mining for contrastive loss"
+      frameworks: [colpali-engine, transformers]
+      benchmark: ViDoRe
+    inference:
+      input_format: multimodal
+      output_format: embeddings
+      embedding_dims: "128 per patch × 1030 patches"
+      storage: LanceDB
+      storage_note: "Requires multi-vector storage support"
+      api_compatible: custom
+
+  retrieval/colqwen2-v1.0:
+    name: ColQwen2-v1.0
+    hf_repo: vidore/colqwen2-v1.0
+    format: safetensors
+    category: retrieval
+    backend: lancedb
+    size_gb: 4.0
+    status: pending
+    description: Document retrieval model (89.3 ViDoRe benchmark)
+    capabilities:
+    - document_retrieval
+    - visual_search
+    benchmark:
+      vidore_score: 89.3
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 6
+    training:
+      dataset_format: vidore
+      input_schema:
+        query: "text query"
+        positive_doc: "document image"
+        negative_docs: ["hard negatives"]
+      preprocessing:
+        - "PDF to image rendering"
+        - "Patch extraction (1030 patches)"
+      frameworks: [colpali-engine, transformers]
+      benchmark: ViDoRe
+    inference:
+      input_format: multimodal
+      output_format: embeddings
+      embedding_dims: "128 × 1030 patches"
+      storage: LanceDB
+      api_compatible: custom
+
+  retrieval/colpali-v1.3:
+    name: ColPali-v1.3
+    hf_repo: vidore/colpali-v1.3
+    format: safetensors
+    category: retrieval
+    backend: lancedb
+    size_gb: 3.0
+    status: pending
+    description: Lightweight document retrieval based on PaliGemma
+    capabilities:
+    - document_retrieval
+    - visual_search
+    benchmark:
+      vidore_score: 84.8
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 4
+    training:
+      dataset_format: vidore
+      input_schema:
+        query: "text query"
+        positive_doc: "document image"
+        negative_docs: ["hard negatives"]
+      preprocessing:
+        - "PDF to image"
+        - "PaliGemma vision encoder"
+      frameworks: [colpali-engine, transformers]
+      benchmark: ViDoRe
+      note: "Lighter than ColQwen, good for constrained environments"
+    inference:
+      input_format: multimodal
+      output_format: embeddings
+      embedding_dims: "128 × 1030 patches"
+      storage: LanceDB
+      api_compatible: custom
+
+  # ===========================================================================
+  # SEGMENTATION MODELS (from foinse/sam3d-api and notebooks)
+  # NOTE: SAM2 has limited MPS support - CUDA recommended for video
+  # ===========================================================================
+  segmentation/sam2:
+    name: SAM2-Hiera-Large
+    hf_repo: facebook/sam2-hiera-large
+    format: safetensors
+    category: segmentation
+    backend: dedicated
+    size_gb: 2.5
+    status: pending
+    description: Segment Anything Model 2 for image/video segmentation (Meta)
+    capabilities:
+    - segmentation
+    - object_detection
+    - video_segmentation
+    hardware:
+      cuda: true
+      mps: partial
+      cpu: true
+      mps_note: "Image segmentation works; video requires CUDA for full Triton support"
+      vram_gb: 8
+    training:
+      dataset_format: coco
+      input_schema:
+        images: [{id, file_name, width, height}]
+        annotations:
+          - segmentation: "RLE or polygon"
+            bbox: [x, y, w, h]
+            category_id: int
+      mask_format: "COCO RLE (train) or PNG (val/test)"
+      preprocessing:
+        - "Standard COCO annotation format"
+        - "Image resizing to model resolution"
+      frameworks: [segment-anything-2, ultralytics]
+    inference:
+      input_format: "image + prompts"
+      output_format: masks
+      prompt_types: [points, boxes, text]
+      supported_files: [.png, .jpg, .mp4]
+      video_note: "Video segmentation requires CUDA"
+      api_compatible: custom
+
+  segmentation/grounding-dino:
+    name: GroundingDINO-Base
+    hf_repo: IDEA-Research/grounding-dino-base
+    format: safetensors
+    category: segmentation
+    backend: dedicated
+    size_gb: 0.8
+    status: pending
+    description: Text-grounded zero-shot object detection
+    capabilities:
+    - object_detection
+    - text_grounding
+    - zero_shot
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 4
+    training:
+      dataset_format: coco
+      input_schema:
+        images: [{id, file_name, width, height}]
+        annotations:
+          - bbox: [x, y, w, h]
+            category_id: int
+            category_name: "text description"
+      preprocessing:
+        - "COCO format with text descriptions"
+        - "Grounding phrases for each category"
+      frameworks: [groundingdino, transformers]
+    inference:
+      input_format: "image + text prompts"
+      output_format: "bounding boxes + scores"
+      prompt_example: "person. car. dog."
+      supported_files: [.png, .jpg, .jpeg]
+      api_compatible: custom
+
+  segmentation/moge-depth:
+    name: MoGe-ViT-Large
+    hf_repo: Ruicheng/moge-vitl
+    format: safetensors
+    category: segmentation
+    backend: dedicated
+    size_gb: 1.2
+    status: pending
+    description: Depth estimation for 3D reconstruction
+    capabilities:
+    - depth_estimation
+    - 3d_reconstruction
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 4
+
+  # ===========================================================================
+  # GEOSPATIAL MODELS (from foinse/olmoearth_projects)
+  # Flexible hardware - works on CUDA/MPS/CPU via rslearn backend
+  # ===========================================================================
+  geospatial/olmo-earth-base:
+    name: OlmoEarth-v1-Base
+    hf_repo: allenai/OlmoEarth-v1-Base
+    format: safetensors
+    category: geospatial
+    backend: dedicated
+    size_gb: 0.4
+    status: pending
+    description: Remote sensing foundation model (~90M params)
+    capabilities:
+    - geospatial
+    - satellite_imagery
+    - earth_observation
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 2
+    training:
+      dataset_format: geotiff
+      input_schema:
+        image: "satellite imagery (Sentinel-2, Landsat, etc.)"
+        labels: "classification or regression targets"
+      preprocessing:
+        - "Tile to 224x224 patches"
+        - "Normalize to sensor-specific ranges"
+        - "Multi-band stacking (RGB + NIR + SWIR)"
+      frameworks: [rslearn, olmoearth-runner, transformers]
+    inference:
+      input_format: image
+      output_format: embeddings
+      supported_files: [.tif, .geotiff, .nc]
+      patch_size: 224
+      api_compatible: custom
+
+  geospatial/olmo-earth-lfmc:
+    name: OlmoEarth-v1-FT-LFMC
+    hf_repo: allenai/OlmoEarth-v1-FT-LFMC-Base
+    format: safetensors
+    category: geospatial
+    backend: dedicated
+    size_gb: 0.4
+    status: pending
+    description: Fine-tuned for Live Fuel Moisture Content estimation
+    capabilities:
+    - geospatial
+    - wildfire_prediction
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 2
+    training:
+      dataset_format: geotiff
+      input_schema:
+        image: "satellite imagery"
+        labels: "LFMC values (0-300% moisture content)"
+      preprocessing:
+        - "Tile to 224x224 patches"
+        - "Temporal stacking for time series"
+      frameworks: [rslearn, transformers]
+      task: regression
+    inference:
+      input_format: image
+      output_format: "LFMC predictions (percentage)"
+      supported_files: [.tif, .geotiff]
+      use_case: "Wildfire risk assessment"
+      api_compatible: custom
+
+  geospatial/olmo-earth-forest:
+    name: OlmoEarth-v1-FT-ForestLoss
+    hf_repo: allenai/OlmoEarth-v1-FT-ForestLossDriver-Base
+    format: safetensors
+    category: geospatial
+    backend: dedicated
+    size_gb: 0.4
+    status: pending
+    description: Fine-tuned for forest loss driver classification
+    capabilities:
+    - geospatial
+    - deforestation_analysis
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 2
+    training:
+      dataset_format: geotiff
+      input_schema:
+        image: "satellite imagery"
+        labels: "forest loss driver class (agriculture, logging, fire, etc.)"
+      preprocessing:
+        - "Tile to 224x224 patches"
+        - "Multi-temporal stacking"
+      frameworks: [rslearn, transformers]
+      task: classification
+    inference:
+      input_format: image
+      output_format: "forest loss driver classification"
+      classes: [agriculture, logging, fire, urbanization, natural]
+      supported_files: [.tif, .geotiff]
+      api_compatible: custom
+
+  # ===========================================================================
+  # AUDIO MODELS (from foinse/sam-audio)
+  # WARNING: SAM-Audio requires CUDA - NOT compatible with Apple Silicon MPS
+  # CPU fallback available but requires audio chunking for long files
+  # ===========================================================================
+  audio/sam-audio-base:
+    name: SAM-Audio-Base
+    hf_repo: facebook/sam-audio-base
+    format: safetensors
+    category: audio
+    backend: dedicated
+    size_gb: 1.0
+    status: pending
+    description: Audio separation model (Meta) - CUDA recommended
+    capabilities:
+    - audio_separation
+    - source_separation
+    hardware:
+      cuda: true
+      mps: false
+      cpu: true
+      cpu_note: "Works with audio chunking workaround for long files"
+      vram_gb: 16
+    training:
+      dataset_format: custom
+      input_schema:
+        audio: "mixture audio file (WAV/MP3/FLAC)"
+        target: "isolated source audio"
+        prompt: "text | image | time_span identifying source"
+      preprocessing:
+        - "Resample to 16kHz"
+        - "Audio normalization"
+        - "Prompt conditioning preparation"
+      frameworks: [transformers, pytorch]
+    inference:
+      input_format: "audio + prompt"
+      output_format: audio
+      supported_files: [.wav, .mp3, .flac]
+      sample_rate: 16000
+      prompt_types: [text, image, time_span]
+      api_compatible: custom
+
+  audio/sam-audio-large:
+    name: SAM-Audio-Large
+    hf_repo: facebook/sam-audio-large
+    format: safetensors
+    category: audio
+    backend: dedicated
+    size_gb: 2.0
+    status: pending
+    description: Large audio separation model - CUDA recommended
+    capabilities:
+    - audio_separation
+    - source_separation
+    - high_quality
+    hardware:
+      cuda: true
+      mps: false
+      cpu: true
+      cpu_note: "Works with audio chunking workaround"
+      vram_gb: 24
+    training:
+      dataset_format: custom
+      input_schema:
+        audio: "mixture audio file"
+        target: "isolated source audio"
+        prompt: "text | image | time_span"
+      preprocessing:
+        - "Resample to 16kHz"
+        - "Audio normalization"
+      frameworks: [transformers, pytorch]
+      note: "Higher quality separation than base model"
+    inference:
+      input_format: "audio + prompt"
+      output_format: audio
+      supported_files: [.wav, .mp3, .flac]
+      sample_rate: 16000
+      prompt_types: [text, image, time_span]
+      api_compatible: custom
+
+  # ===========================================================================
+  # INVOKEAI IMAGE GENERATION MODELS
+  # ===========================================================================
+  invokeai/image/z-image-turbo:
+    name: Z-Image-Turbo
+    hf_repo: Tongyi-MAI/Z-Image-Turbo
+    format: safetensors
+    category: image_generation
+    backend: invokeai
+    port: 9090
+    size_gb: 12.0
+    status: pending
+    description: Fast Lumina2-based image generation (Alibaba) - FLUX quality at SDXL speed
+    capabilities:
+    - image_generation
+    - text_to_image
+    - fast_inference
+    - regional_guidance
+  invokeai/image/sdxl-base:
+    name: SDXL Base 1.0
+    hf_repo: stabilityai/stable-diffusion-xl-base-1.0
+    format: safetensors
+    category: image_generation
+    backend: invokeai
+    port: 9090
+    size_gb: 6.9
+    status: pending
+    description: High-quality SDXL base model for professional image generation
+    capabilities:
+    - image_generation
+    - text_to_image
+    - inpainting
+    - outpainting
+
+  # ===========================================================================
+  # NEW INVOKEAI IMAGE GENERATION MODELS (GGUF diffusion - User Requested)
+  # ===========================================================================
+  invokeai/image/flux2-dev:
+    name: FLUX.2-dev-GGUF
+    hf_repo: unsloth/FLUX.2-dev-GGUF
+    format: gguf
+    category: image_generation
+    backend: invokeai
+    port: 9090
+    size_gb: 12.0
+    status: pending
+    description: High-quality FLUX.2 image generation model (GGUF for local inference)
+    capabilities:
+    - image_generation
+    - text_to_image
+    - high_fidelity
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 16
+    training:
+      dataset_format: custom
+      input_schema:
+        image: "target image (PNG/JPG)"
+        prompt: "text description"
+        negative_prompt: "optional"
+      preprocessing:
+        - "Variable resolution (aspect ratio preserved)"
+        - "Caption generation if missing"
+      frameworks: [diffusers, kohya_ss]
+      note: "LoRA fine-tuning most common"
+    inference:
+      input_format: text
+      output_format: image
+      supported_outputs: [.png, .jpg, .webp]
+      resolution: "512-2048px (variable)"
+      api_compatible: "OpenAI (images endpoint)"
+
+  invokeai/image/z-image-turbo-gguf:
+    name: Z-Image-Turbo-GGUF
+    hf_repo: vantagewithai/Z-Image-Turbo-GGUF
+    format: gguf
+    category: image_generation
+    backend: invokeai
+    port: 9090
+    size_gb: 5.0
+    status: pending
+    description: Fast GGUF image generation - FLUX quality at SDXL speed
+    capabilities:
+    - image_generation
+    - text_to_image
+    - fast_inference
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 8
+    training:
+      dataset_format: custom
+      input_schema:
+        image: "target image"
+        prompt: "text description"
+      frameworks: [diffusers, kohya_ss]
+    inference:
+      input_format: text
+      output_format: image
+      supported_outputs: [.png, .jpg, .webp]
+      resolution: "up to 2048px"
+      steps: "4-8 steps (turbo)"
+      api_compatible: "OpenAI (images endpoint)"
+
+  invokeai/image/qwen-image:
+    name: Qwen-Image-GGUF
+    hf_repo: unsloth/Qwen-Image-GGUF
+    format: gguf
+    category: image_generation
+    backend: invokeai
+    port: 9090
+    size_gb: 8.0
+    status: pending
+    description: Qwen image generation with complex text rendering
+    capabilities:
+    - image_generation
+    - text_to_image
+    - text_rendering
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 10
+    training:
+      dataset_format: custom
+      input_schema:
+        image: "target image"
+        prompt: "text description (supports complex text in image)"
+      frameworks: [diffusers]
+      note: "Specialized for generating images with readable text"
+    inference:
+      input_format: text
+      output_format: image
+      supported_outputs: [.png, .jpg, .webp]
+      special_capability: "Accurate text rendering in images"
+      api_compatible: "OpenAI (images endpoint)"
+
+  invokeai/image/qwen-image-edit:
+    name: Qwen-Image-Edit-2511-GGUF
+    hf_repo: unsloth/Qwen-Image-Edit-2511-GGUF
+    format: gguf
+    category: image_generation
+    backend: invokeai
+    port: 9090
+    size_gb: 8.0
+    status: pending
+    description: Qwen image editing model - enhanced consistency
+    capabilities:
+    - image_editing
+    - inpainting
+    - outpainting
+    - style_transfer
+    quantization: Q4_K_M
+    hardware:
+      cuda: true
+      mps: true
+      cpu: true
+      vram_gb: 10
+    training:
+      dataset_format: custom
+      input_schema:
+        source_image: "original image"
+        target_image: "edited result"
+        edit_instruction: "text description of edit"
+        mask: "optional inpainting mask"
+      frameworks: [diffusers]
+    inference:
+      input_format: "image + text instruction"
+      output_format: image
+      edit_types: [inpainting, outpainting, style_transfer, object_removal]
+      supported_files: [.png, .jpg, .webp]
+      api_compatible: "OpenAI (images endpoint)"
+
+  # ===========================================================================
+  # CELTIC LANGUAGE MODELS - Large Language Models
+  # ===========================================================================
+  celtic/llm/eurollm-22b:
+    name: EuroLLM-22B-Instruct
+    hf_repo: utter-project/EuroLLM-22B-Instruct-2512
+    format: safetensors
+    category: celtic_llm
+    backend: transformers
+    size_gb: 45.0
+    status: catalog
+    description: EU multilingual LLM with Irish support (22.6B params, 4T tokens)
+    celtic_languages: [ga]
+    all_languages: [bg, hr, cs, da, nl, en, et, fi, fr, de, el, hu, ga, it, lv, lt, mt, pl, pt, ro, sk, sl, es, sv]
+    license: Apache 2.0
+    capabilities:
+    - instruction_following
+    - translation
+    - multilingual_generation
+    architecture:
+      type: Dense Transformer
+      layers: 56
+      context_length: 32768
+
+  celtic/llm/britllm-caernarfon-3b:
+    name: BritLLM Caernarfon 3B
+    hf_repo: britllm/britllm-3b-v0.1
+    format: safetensors
+    category: celtic_llm
+    backend: transformers
+    size_gb: 6.0
+    status: catalog
+    description: British Isles multilingual LLM (Irish, Scottish Gaelic, Welsh)
+    celtic_languages: [ga, gd, cy]
+    other_languages: [en, sco]
+    license: ODC-By 1.0
+    capabilities:
+    - celtic_language_generation
+    - british_isles_multilingual
+    benchmarks:
+      briteval_irish_mean: 46.2
+      briteval_welsh_mean: 55.2
+      briteval_scottish_gaelic_mean: 42.1
+
+  celtic/llm/uccix-llama2-13b:
+    name: UCCIX-Llama2-13B
+    hf_repo: UCC-NLP/UCCIX-Llama2-13B
+    format: safetensors
+    category: celtic_llm
+    backend: transformers
+    size_gb: 26.0
+    status: catalog
+    description: Irish-enhanced LLM based on Llama 2 (UCC NLP)
+    celtic_languages: [ga]
+    base_model: Llama 2 13B
+    capabilities:
+    - irish_generation
+    - irish_instruction_following
+    research_paper: "Reasoning Transfer for Extremely Low-Resource Languages"
+
+  celtic/llm/qomhra-mistral-7b:
+    name: Qomhrá-Mistral-7B
+    hf_repo: Qomhraiche/Qomhra-Mistral-7B
+    format: safetensors
+    category: celtic_llm
+    backend: transformers
+    size_gb: 14.0
+    status: catalog
+    description: Irish conversational AI based on Mistral 7B
+    celtic_languages: [ga]
+    base_model: Mistral 7B
+    training_dataset: Qomhrá 30K (synthetic instruction pairs)
+    capabilities:
+    - irish_conversation
+    - irish_instruction_following
+    training:
+      dataset_format: jsonl_chat
+      languages: [ga]
+      input_schema:
+        messages:
+          - role: user
+            content: "Irish instruction"
+          - role: assistant
+            content: "Irish response"
+      datasets:
+        - "Qomhrá-30K (synthetic Irish instruction pairs)"
+        - "CulturaX-ga (Irish web crawl)"
+      frameworks: [unsloth, transformers]
+      note: "Based on Mistral 7B, Irish fine-tuned"
+    inference:
+      input_format: text
+      output_format: text
+      api_compatible: OpenAI
+
+  celtic/llm/salamandra-2b-irish:
+    name: Salamandra 2B Irish
+    hf_repo: BSC-LT/salamandra-2b
+    format: safetensors
+    category: celtic_llm
+    backend: transformers
+    size_gb: 4.0
+    status: catalog
+    description: Multilingual model with Irish support (Barcelona Supercomputing Center)
+    celtic_languages: [ga]
+    capabilities:
+    - irish_generation
+    - multilingual
+
+  # ===========================================================================
+  # CELTIC LANGUAGE MODELS - Encoder Models (BERT-style)
+  # ===========================================================================
+  celtic/encoder/gabert:
+    name: gaBERT
+    hf_repo: DCU-NLP/bert-base-irish-cased-v1
+    format: safetensors
+    category: celtic_encoder
+    backend: transformers
+    size_gb: 0.5
+    status: catalog
+    description: Irish BERT model for NER, POS tagging, classification
+    celtic_languages: [ga]
+    architecture: BERT Base
+    parameters: 110M
+    capabilities:
+    - named_entity_recognition
+    - pos_tagging
+    - text_classification
+    training:
+      dataset_format: "CoNLL / IOB2"
+      languages: [ga]
+      input_schema:
+        tokens: ["word1", "word2", "..."]
+        labels: ["B-PER", "O", "B-LOC", "..."]
+      tasks: [ner, pos_tagging, classification]
+      frameworks: [transformers, spacy]
+      note: "Pre-trained on Irish Wikipedia and news"
+    inference:
+      input_format: text
+      output_format: "token labels or embeddings"
+      tasks: [NER, POS, classification, embeddings]
+      api_compatible: custom
+
+  celtic/encoder/ga-electra:
+    name: Irish ELECTRA
+    hf_repo: DCU-NLP/electra-base-irish
+    format: safetensors
+    category: celtic_encoder
+    backend: transformers
+    size_gb: 0.5
+    status: catalog
+    description: Efficient Irish language understanding model
+    celtic_languages: [ga]
+    architecture: ELECTRA
+    capabilities:
+    - efficient_nlu
+    - token_classification
+
+  celtic/encoder/welsh-bert:
+    name: Welsh BERT
+    hf_repo: Portalingual/Welsh-BERT
+    format: safetensors
+    category: celtic_encoder
+    backend: transformers
+    size_gb: 0.5
+    status: catalog
+    description: Welsh BERT trained on Wikipedia and CorCenCC
+    celtic_languages: [cy]
+    architecture: BERT
+    capabilities:
+    - welsh_nlu
+    - text_classification
+
+  # ===========================================================================
+  # CELTIC LANGUAGE MODELS - Speech (ASR/TTS)
+  # ===========================================================================
+  celtic/speech/abair-tts:
+    name: ABAIR TTS
+    url: https://www.abair.ie
+    provider: Trinity College Dublin
+    category: celtic_speech
+    type: text_to_speech
+    status: external
+    description: High-quality Irish TTS with dialect support
+    celtic_languages: [ga]
+    dialects: [Connacht, Munster, Ulster]
+    capabilities:
+    - text_to_speech
+    - dialect_voices
+    - api_access
+
+  celtic/speech/abair-asr:
+    name: ABAIR ASR
+    url: https://www.abair.ie/recognition
+    provider: Trinity College Dublin
+    category: celtic_speech
+    type: asr
+    status: external
+    description: Irish automatic speech recognition
+    celtic_languages: [ga]
+    capabilities:
+    - speech_recognition
+
+  celtic/speech/eist-asr:
+    name: ÈIST ASR
+    url: https://blogs.ed.ac.uk/garg/2025/06/04/gaelic-in-the-digital-age-inside-the-eist-project/
+    provider: University of Edinburgh / GARG
+    category: celtic_speech
+    type: asr
+    status: external
+    description: Scottish Gaelic ASR (~90% accuracy for broadcast content)
+    celtic_languages: [gd]
+    accuracy: "~90% for broadcast content"
+    api_status: Coming Autumn 2025
+    capabilities:
+    - speech_recognition
+    - code_switching
+    - subtitle_generation
+    partners: [NVIDIA, BBC ALBA, University of Glasgow]
+
+  celtic/speech/macsen-asr:
+    name: Macsen ASR
+    url: https://techiaith.cymru/products/macsen/?lang=en
+    provider: Techiaith / Bangor University
+    category: celtic_speech
+    type: voice_assistant_asr
+    status: external
+    description: Welsh voice assistant with local processing
+    celtic_languages: [cy]
+    capabilities:
+    - speech_recognition
+    - local_processing
+    - open_source
+
+  celtic/speech/trawsgrifiwr:
+    name: Trawsgrifiwr
+    url: https://trawsgrifiwr.techiaith.cymru/
+    provider: Techiaith
+    category: celtic_speech
+    type: transcription
+    status: external
+    description: Welsh speech transcription service
+    celtic_languages: [cy]
+    capabilities:
+    - speech_transcription
+
+  celtic/speech/breton-tts:
+    name: Breton TTS Corpus Model
+    url: https://hal.science/hal-03944464
+    provider: Academic research
+    category: celtic_speech
+    type: text_to_speech
+    status: research
+    description: Breton TTS trained on 20 hours of read speech
+    celtic_languages: [br]
+    capabilities:
+    - text_to_speech
+
+  celtic/speech/manx-asr:
+    name: Manx ASR Research
+    url: https://arxiv.org/html/2510.04832v1
+    provider: Academic research
+    category: celtic_speech
+    type: asr_research
+    status: research
+    description: Demonstrates ASR viability for extremely low-resource languages
+    celtic_languages: [gv]
+    significance: 40 minutes of pronunciation data produces usable ASR
+    capabilities:
+    - speech_recognition_research
+
+  # ===========================================================================
+  # CELTIC LANGUAGE MODELS - Translation
+  # ===========================================================================
+  celtic/translation/seamless-m4t:
+    name: Seamless Communication (Meta)
+    hf_repo: facebook/seamless-m4t-v2-large
+    provider: Meta AI
+    category: celtic_translation
+    type: multilingual_translation
+    status: catalog
+    description: Multilingual translation + speech-to-text (Irish, Welsh)
+    celtic_languages: [ga, cy]
+    capabilities:
+    - speech_to_text
+    - text_translation
+
+  celtic/translation/nllb:
+    name: NLLB (No Language Left Behind)
+    hf_repo: facebook/nllb-200-distilled-600M
+    provider: Meta AI
+    category: celtic_translation
+    type: translation
+    status: catalog
+    description: 200-language translation model (Irish, Scottish Gaelic, Welsh, Breton)
+    celtic_languages: [ga, gd, cy, br]
+    capabilities:
+    - translation
+
+  celtic/translation/intergaelic:
+    name: Intergaelic
+    url: http://www.intergaelic.com/gd-ga/trans/
+    provider: Kevin Scannell
+    category: celtic_translation
+    type: rule_based_statistical
+    status: external
+    description: Inter-Gaelic translation (Irish ↔ Scottish Gaelic ↔ Manx)
+    celtic_languages: [ga, gd, gv]
+    language_pairs:
+    - [ga, gd]
+    - [ga, gv]
+    - [gd, gv]
+    capabilities:
+    - gaelic_translation
+
+  # ===========================================================================
+  # CELTIC LANGUAGE MODELS - Benchmarks & Datasets
+  # ===========================================================================
+  celtic/benchmark/irish-blimp:
+    name: Irish-BLiMP
+    type: benchmark
+    category: celtic_benchmark
+    status: reference
+    description: Benchmark of Linguistic Minimal Pairs for Irish (1020 pairs)
+    celtic_languages: [ga]
+    size: 1020 minimal pairs
+    categories: [agreement, mutation, case, definiteness]
+    results:
+      human_baseline: 90.1
+      gpt5: 73.5
+      llama3_70b: 67.8
+
+  celtic/benchmark/lc2024:
+    name: LC2024
+    type: benchmark
+    category: celtic_benchmark
+    status: reference
+    description: First Irish mathematical reasoning benchmark (Leaving Cert)
+    celtic_languages: [ga]
+    size: 55 questions
+    topics: [algebra, geometry, trigonometry, statistics]
+
+  celtic/benchmark/briteval:
+    name: BritEval
+    url: https://llm.org.uk/
+    type: benchmark
+    category: celtic_benchmark
+    status: reference
+    description: Benchmark for British Isles languages
+    celtic_languages: [ga, gd, cy]
+    components: [ARC-e, PIQA, XNLI]
+
+  celtic/dataset/culturax-ga:
+    name: CulturaX-ga
+    type: dataset
+    category: celtic_dataset
+    status: reference
+    description: Large-scale Irish web crawl for pre-training
+    celtic_languages: [ga]
+    use: pre-training
+
+  celtic/dataset/qomhra-30k:
+    name: Qomhrá 30K
+    type: dataset
+    category: celtic_dataset
+    status: reference
+    description: Synthetic Irish instruction pairs (30K samples)
+    celtic_languages: [ga]
+    size: 30000
+    use: instruction_tuning
+
+  celtic/dataset/arcosg:
+    name: ARCOSG
+    url: https://github.com/Gaelic-Algorithmic-Research-Group/ARCOSG
+    type: dataset
+    category: celtic_dataset
+    status: reference
+    description: Annotated Reference Corpus of Scottish Gaelic (100K+ tokens)
+    celtic_languages: [gd]
+    format: [CoNLL, XML]
+    tokens: 100000+
+
+  celtic/dataset/corcencc:
+    name: CorCenCC
+    url: https://corcencc.org/
+    type: dataset
+    category: celtic_dataset
+    status: reference
+    description: National Corpus of Contemporary Welsh (13.5M tokens)
+    celtic_languages: [cy]
+    size: 13.5M tokens
+    features: [written, spoken, pos_tagged]
+
+  # ===========================================================================
+  # CELTIC LANGUAGE MODELS - Upcoming/Announced
+  # ===========================================================================
+  celtic/upcoming/uk-llm:
+    name: UK-LLM
+    url: https://www.genai.ac.uk/
+    provider: UK Government / NVIDIA
+    category: celtic_upcoming
+    status: announced
+    description: UK sovereign AI with Celtic language support
+    celtic_languages: [cy, ga, gd, kw]
+    base: NVIDIA Nemotron
+    partners: [Bangor University, NVIDIA]
+
+  celtic/upcoming/eist-api:
+    name: ÈIST Public API
+    provider: University of Edinburgh
+    category: celtic_upcoming
+    status: announced
+    description: Public API for Scottish Gaelic ASR (Expected Autumn 2025)
+    celtic_languages: [gd]
+
+groups:
+  # ===========================================================================
+  # FALLBACK CHAINS (updated with new models)
+  # ===========================================================================
+  # OCR: olmocr2 -> granite-docling
+  # Vision: glm-4.6v-flash -> qwen3-vl -> moondream2 -> glm-4.6v (cloud)
+  # Image: flux2-dev -> z-image-turbo -> qwen-image -> sdxl -> fibo
+  # Reasoning: nemotron-3-nano -> gemma-3n -> glm-4.6 (cloud)
+  # ===========================================================================
+
+  ocr:
+    description: OCR and document processing models
+    primary: mlx/ocr/olmocr-2-7b-mlx-8bit
+    fallbacks:
+    - mlx/document/granite-docling-258M-mlx
+
+  vision:
+    description: Vision and multimodal models
+    primary: gguf/vision/glm-4.6v-flash        # NEW: Local GLM vision
+    fallbacks:
+    - gguf/vision/qwen3-vl-30b-gguf
+    - gguf/vision/moondream2                   # NEW: Lightweight fallback
+    - cloud/glm-4.6v
+
+  document:
+    description: Document understanding models
+    primary: mlx/document/granite-docling-258M-mlx
+    fallbacks:
+    - mlx/ocr/olmocr-2-7b-mlx-8bit
+
+  extraction:
+    description: Structured data extraction models
+    primary: cloud/gemini-2.5-pro
+    fallbacks:
+    - cloud/glm-4.6v
+    - cloud/gemini-2.5-flash
+
+  image:
+    description: Image generation models
+    primary: invokeai/image/flux2-dev          # NEW: FLUX primary
+    fallbacks:
+    - invokeai/image/z-image-turbo-gguf        # NEW: Fast GGUF
+    - invokeai/image/qwen-image                # NEW: Qwen image
+    - invokeai/image/sdxl-base
+    - mlx/image/fibo-mlx-8bit
+
+  image_edit:
+    description: Image editing models
+    primary: invokeai/image/qwen-image-edit    # NEW: Dedicated editing
+    fallbacks:
+    - invokeai/image/sdxl-base
+
+  general:
+    description: General purpose models (fast)
+    primary: gguf/general/gemma-3n-e2b-gguf
+    fallbacks:
+    - cloud/glm-4.6
+
+  reasoning:
+    description: Heavy reasoning models
+    primary: gguf/general/nemotron-3-nano-30b  # NEW: Nemotron primary
+    fallbacks:
+    - gguf/general/gemma-3n-e2b-gguf
+    - cloud/glm-4.6
+
+  tools:
+    description: Function calling models
+    primary: gguf/general/functiongemma-270m   # NEW: FunctionGemma
+    fallbacks:
+    - gguf/vision/glm-4.6v-flash
+    - cloud/glm-4.6
+
+  retrieval:
+    description: Document retrieval models (LanceDB backend, NOT llama-swap)
+    primary: retrieval/colqwen2.5-v0.2
+    fallbacks:
+    - retrieval/colqwen2-v1.0
+    - retrieval/colpali-v1.3
+    note: "Requires dedicated LanceDB endpoint with multi-vector storage"
+
+  segmentation:
+    description: Image segmentation models
+    primary: segmentation/sam2
+    fallbacks:
+    - segmentation/grounding-dino
+    note: "SAM2 video features require CUDA; image segmentation works on MPS"
+
+  geospatial:
+    description: Earth observation models (MPS compatible)
+    primary: geospatial/olmo-earth-base
+    fallbacks:
+    - geospatial/olmo-earth-lfmc
+    - geospatial/olmo-earth-forest
+
+  audio:
+    description: Audio processing models (CUDA recommended)
+    primary: audio/sam-audio-large
+    fallbacks:
+    - audio/sam-audio-base
+
+  # ===========================================================================
+  # CELTIC LANGUAGE GROUPS
+  # ===========================================================================
+  celtic_irish:
+    description: Irish (Gaeilge) language models
+    primary: celtic/llm/qomhra-mistral-7b
+    fallbacks:
+    - celtic/llm/uccix-llama2-13b
+    - celtic/llm/britllm-caernarfon-3b
+    - celtic/llm/salamandra-2b-irish
+
+  celtic_scottish_gaelic:
+    description: Scottish Gaelic (Gàidhlig) language models
+    primary: celtic/llm/britllm-caernarfon-3b
+    fallbacks:
+    - celtic/translation/nllb
+
+  celtic_welsh:
+    description: Welsh (Cymraeg) language models
+    primary: celtic/llm/britllm-caernarfon-3b
+    fallbacks:
+    - celtic/encoder/welsh-bert
+    - celtic/translation/nllb
+
+  celtic_encoder:
+    description: Celtic language NLU/classification models
+    primary: celtic/encoder/gabert
+    fallbacks:
+    - celtic/encoder/ga-electra
+    - celtic/encoder/welsh-bert
+
+  celtic_translation:
+    description: Celtic language translation models
+    primary: celtic/translation/nllb
+    fallbacks:
+    - celtic/translation/seamless-m4t
+    - celtic/translation/intergaelic
+
+  celtic_speech:
+    description: Celtic language speech models
+    primary: celtic/speech/abair-tts
+    fallbacks:
+    - celtic/speech/eist-asr
+    - celtic/speech/macsen-asr
+
+# ===========================================================================
+# CLOUD MODEL REFERENCES
+# ===========================================================================
+cloud_models:
+  gemini-2.5-pro:
+    provider: google
+    model_id: gemini-2.5-pro-preview-06-05
+  gemini-2.5-flash:
+    provider: google
+    model_id: gemini-2.5-flash-preview-05-20
+  glm-4.6:
+    provider: z.ai
+    model_id: glm-4.6
+  glm-4.6v:
+    provider: z.ai
+    model_id: glm-4.6v
+    capabilities: [vision, text]
+
+# ===========================================================================
+# TRAINED MODELS (Cloud Credits Pipeline - Phase 3)
+# ===========================================================================
+trained_models:
+  # HTR Model (Modal - $280 credits)
+  htr/pylaia-irish-htr:
+    name: PyLaia Irish HTR
+    base_model: PyLaia (BLSTM + CTC)
+    training_platform: modal
+    training_data: duchas.ie Schools Collection
+    format: pytorch
+    category: htr
+    status: training
+    description: Irish historical handwriting recognition from Dúchas.ie
+    metrics:
+      target_cer: 0.15
+      target_wer: 0.25
+    mlflow_experiment: oideachais-htr
+    hub_id: cianfhoghlaim/pylaia-irish-htr
+    hardware:
+      training: A100-40GB
+      inference: T4
+      vram_gb: 8
+    training_config:
+      batch_size: 16
+      epochs: 100
+      learning_rate: 3e-4
+      rnn_layers: 4
+      rnn_units: 256
+
+  # TTS Models (Modal - $280 credits)
+  tts/chatterbox-irish-connacht:
+    name: Chatterbox Irish TTS (Connacht)
+    base_model: resemble-ai/chatterbox
+    training_platform: modal
+    training_data: canuint.ie Connacht dialect
+    format: pytorch
+    category: tts
+    status: training
+    description: Irish TTS for Connacht dialect (Conamara, Aran)
+    metrics:
+      target_mos: 3.5
+    mlflow_experiment: oideachais-tts
+    hub_id: cianfhoghlaim/chatterbox-irish-connacht
+    hardware:
+      training: A100-40GB
+      inference: T4
+      vram_gb: 4
+    training_config:
+      sample_rate: 22050
+      batch_size: 32
+      epochs: 200
+
+  tts/chatterbox-irish-munster:
+    name: Chatterbox Irish TTS (Munster)
+    base_model: resemble-ai/chatterbox
+    training_platform: modal
+    training_data: canuint.ie Munster dialect
+    format: pytorch
+    category: tts
+    status: pending
+    description: Irish TTS for Munster dialect (Kerry, Cork, Waterford)
+    mlflow_experiment: oideachais-tts
+    hub_id: cianfhoghlaim/chatterbox-irish-munster
+
+  tts/chatterbox-irish-ulster:
+    name: Chatterbox Irish TTS (Ulster)
+    base_model: resemble-ai/chatterbox
+    training_platform: modal
+    training_data: canuint.ie Ulster dialect
+    format: pytorch
+    category: tts
+    status: pending
+    description: Irish TTS for Ulster dialect (Donegal)
+    mlflow_experiment: oideachais-tts
+    hub_id: cianfhoghlaim/chatterbox-irish-ulster
+
+  # Curriculum LLM (Anyscale - $100 credits)
+  llm/irish-curriculum-llm:
+    name: Irish Curriculum LLM
+    base_model: ReliableAI/UCCIX-Llama2-13B-Instruct
+    training_platform: anyscale
+    training_data: SEC exam papers, marking schemes, curriculum specs
+    format: lora
+    category: llm
+    status: training
+    description: Bilingual Irish education LLM for Leaving Certificate
+    metrics:
+      target_perplexity: 12.0
+      target_irlbench_improvement: 0.10
+    mlflow_experiment: oideachais-curriculum
+    hub_id: cianfhoghlaim/irish-curriculum-llm
+    hardware:
+      training: 4x A10G (Ray distributed)
+      inference: A10G or T4
+      vram_gb: 16
+    training_config:
+      lora_r: 64
+      lora_alpha: 128
+      batch_size: 4
+      epochs: 3
+      learning_rate: 2e-4
+
+  # OCR Model (Google Cloud - £280 credits)
+  ocr/granite-docling-irish:
+    name: Granite Docling Irish OCR
+    base_model: ibm-granite/granite-docling-258m-base
+    training_platform: vertex_ai
+    training_data: SEC exam papers with ground truth
+    format: pytorch
+    category: ocr
+    status: pending
+    description: Document extraction for Irish exam papers with tables and LaTeX
+    metrics:
+      target_cer: 0.10
+      target_table_f1: 0.85
+    mlflow_experiment: oideachais-ocr
+    hub_id: cianfhoghlaim/granite-docling-irish
+    hardware:
+      training: n1-standard-8 + T4
+      inference: T4
+      vram_gb: 8
+    training_config:
+      batch_size: 8
+      epochs: 10
+      learning_rate: 5e-5
+
+# ===========================================================================
+# MODEL GROUPS FOR TRAINED PIPELINE
+# ===========================================================================
+model_groups:
+  celtic_trained:
+    description: Fine-tuned models for Irish education
+    primary: llm/irish-curriculum-llm
+    fallbacks:
+    - celtic/llm/uccix-llama2-13b
+    note: "Use trained models when available, fallback to base Celtic models"
+
+  irish_htr:
+    description: Irish handwriting recognition
+    primary: htr/pylaia-irish-htr
+    fallbacks:
+    - mlx/ocr/olmocr-2-7b-mlx-8bit
+    note: "PyLaia for historical handwriting, olmOCR for modern documents"
+
+  irish_tts:
+    description: Irish text-to-speech by dialect
+    connacht: tts/chatterbox-irish-connacht
+    munster: tts/chatterbox-irish-munster
+    ulster: tts/chatterbox-irish-ulster
+    fallback: celtic/speech/abair-tts
+
+  irish_ocr:
+    description: Irish document OCR
+    primary: ocr/granite-docling-irish
+    fallbacks:
+    - mlx/ocr/olmocr-2-7b-mlx-8bit
+    - segmentation/grounding-dino

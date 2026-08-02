@@ -1,0 +1,40 @@
+default_language_version:
+  python: python3
+
+exclude: |
+  (?x)^(
+    sentry-cocoa/.*|
+    sentry-godot/.*
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v20.1.0
+    hooks:
+      - id: clang-format
+        files: \.(c|h|cpp|hpp|cc|hh|cxx|hxx|m|mm|inc|java)$
+        types_or: [text]
+
+  - repo: local
+    hooks:
+      - id: copyright-headers
+        name: copyright-headers
+        language: python
+        entry: python misc/scripts/copyright_headers.py
+        files: \.(c|h|cpp|hpp|cc|hh|cxx|hxx|m|mm|inc|java|ts)$
+        exclude: |
+          (?x)^(
+            android/libs/.*|
+            ios/libs/.*|
+            common/include/godot_cpp/.*|
+            android/src/main/java/com/google.*|
+          )$
+
+      - id: format-typescript
+        name: Format Typescript
+        description: "Format Typescript"
+        language: node
+        files: \.(js|jsx|ts|tsx)$
+        types_or: [text]
+        entry: prettier --write --ignore-unknown --config .prettierrc
+        additional_dependencies: ["prettier@3.5.0"]

@@ -1,0 +1,8 @@
+{
+  "run_id": "20251107_072836",
+  "run_name": "50 gemini flash, both discounts",
+  "timestamp": "2025-11-07T07:28:36.243946",
+  "total_receipts": 51,
+  "data_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/larger_training_wheels",
+  "results_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/results/20251107_072836"
+}

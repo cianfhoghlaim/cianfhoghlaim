@@ -1,0 +1,27 @@
+[package]
+name = "godot-cell"
+version = "0.4.4"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+keywords = ["gamedev", "godot", "engine", "ffi"]
+categories = ["game-engines", "graphics"]
+description = "Internal crate used by godot-rust"
+repository = "https://github.com/godot-rust/gdext"
+homepage = "https://godot-rust.github.io"
+
+[features]
+proptest = ["dep:proptest"]
+
+[dependencies]
+proptest = { workspace = true, optional = true }
+
+# https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+features = ["experimental-godot-api", "experimental-threads"]
+rustdoc-args = ["--cfg", "published_docs"]
+rustc-args = ["--cfg", "published_docs"]
+
+# Currently causes "unused manifest key" warnings. Maybe re-enable in the future, to make `published_docs` known.
+#[lints.rust]
+#unexpected_cfgs = { level = "warn", check-cfg = ['cfg(published_docs)'] }

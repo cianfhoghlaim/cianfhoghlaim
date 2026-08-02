@@ -1,0 +1,41 @@
+name: 'transform'
+version: '1.0.0'
+
+profile: 'transform'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  transform:
+    stage:
+      +database: stage
+      +materialized: table
+      deezer_social_networks:
+        +schema: dsn
+      million_song_dataset_spotify_lastfm:
+        +schema: msdsl
+      the_atlas_of_economic_complexity:
+        +schema: taoec
+      depression_detection:
+        +schema: dd
+    marts:
+      +materialized: table
+      graphs:
+        +database: graphs
+        music_taste:
+          +schema: music_taste
+        econ_comp:
+          +schema: econ_comp
+      analytics:
+        +database: analytics
+        the_atlas_of_economic_complexity:
+          +schema: taoec

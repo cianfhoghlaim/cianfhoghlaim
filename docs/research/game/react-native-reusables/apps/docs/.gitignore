@@ -1,0 +1,35 @@
+# deps
+/node_modules
+
+# generated content
+.contentlayer
+.content-collections
+.source
+
+# test & build
+/coverage
+/.next/
+/out/
+/build
+*.tsbuildinfo
+/dist
+
+# misc
+.DS_Store
+*.pem
+/.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# others
+.env*.local
+.vercel
+next-env.d.ts
+
+# local registry
+public/local
+registry/new-york.local.json
+registry/nativewind.local.json
+registry/uniwind.local.json

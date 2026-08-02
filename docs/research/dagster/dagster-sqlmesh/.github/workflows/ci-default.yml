@@ -1,0 +1,86 @@
+# NOTE: This name appears in GitHub's Checks API and in workflow's status badge.
+name: ci-default
+env:
+  # CI variables
+  DOCKER_PLATFORM: "amd64"
+
+# Trigger the workflow when:
+on:
+  # A push occurs to one of the matched branches.
+  push:
+    branches:
+      - main
+  # Or when a pull request event occurs for a pull request against one of the
+  # matched branches.
+  pull_request:
+    branches:
+      - main
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  merge_group:
+
+# Cancel in progress jobs on new pushes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    # NOTE: This name appears in GitHub's Checks API.
+    name: test
+    environment: testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python_version: ["3.11", "3.12"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Check out pull request's HEAD commit instead of the merge commit to
+          # prevent gitlint from failing due to too long commit message titles,
+          # e.g. "Merge 3e621938d65caaa67f8e35d145335d889d470fc8 into 19a39b2f66cd7a165082d1486b2f1eb36ec2354a".
+          ref: ${{ github.event.pull_request.head.sha }}
+          # Fetch all history so gitlint can check the relevant commits.
+          fetch-depth: "0"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: pnpm commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python_version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+
+      - name: Type Check (Python)
+        run: |
+          pnpm pyright
+
+      - name: Lint (Python)
+        run: |
+          uv run ruff check
+
+      - name: Test (Python)
+        run: |
+          uv run pytest
+
+      - name: Run the sample dagster project
+        run: |
+          uv run dagster job execute -f sample/dagster_project/definitions.py -j all_assets_job
+      

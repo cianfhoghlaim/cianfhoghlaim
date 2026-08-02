@@ -1,0 +1,83 @@
+[project]
+name = "dagster-sqlmesh"
+version = "0.22.0"
+description = ""
+authors = [
+    {name = "Reuven Gonzales", email = "reuven@karibalabs.co"}
+]
+license = {text = "Apache-2.0"}
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "dagster>=1.7.8",
+    "sqlmesh>=0.188",
+    "pytest>=8.3.2",
+    "pyarrow>=18.0.0",
+    "pydantic>=2.11.5",
+]
+
+[dependency-groups]
+dev = [
+    "ipython>=8.26.0",
+    "pdbpp>=0.10.3",
+    "dagster-webserver>=1.8.1",
+    "ruff==0.10.0",
+    "polars>=1.5.0",
+    "dagster-duckdb-polars>=0.24.2",
+    "fastapi", # this is for sqlmesh ui
+    "sse-starlette",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pyright]
+exclude = [
+    ".venv",
+    "**/.venv",
+    "node_modules",
+    "**/.git",
+    "**/.github",
+    "**/.vscode",
+    "**/.idea",
+    "**/.pytest_cache",
+]
+pythonVersion = "3.11"
+reportUnknownParameterType = true
+reportMissingTypeStubs = false
+reportUnusedImports = true
+reportUnnecessaryTypeIgnoreComment = true
+useLibraryCodeForTypes = true
+reportMissingReturnType = true
+reportIncompleteStub = true
+reportUntypedFunctionDecorator = false
+reportPrivateImportUsage = false
+
+[tool.ruff.lint]
+# Ignore E402: Module level import not at top of file
+ignore = ["E402", "E712"]
+select = [
+    'I001',    # isort
+    "E4",      # pycodestyle errors
+    "E7",      # pycodestyle errors
+    "E9",      # pycodestyle errors
+    "F",       # pyflakes
+    "F401",    # unused imports
+    "F403",    # star imports usage
+    "F405",    # star imports usage
+    "F821",    # undefined names
+    "UP",      # pyupgrade (modernize Python code)
+    "RUF"      # ruff-specific rules
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = ["dagster_sqlmesh"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+combine-as-imports = true
+split-on-trailing-comma = true

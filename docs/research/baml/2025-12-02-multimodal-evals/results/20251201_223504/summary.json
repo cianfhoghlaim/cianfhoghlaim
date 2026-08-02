@@ -1,0 +1,40 @@
+{
+  "total_receipts": 350,
+  "successful_extractions": 349,
+  "extraction_success_rate": 0.9971428571428571,
+  "overall_passed": 327,
+  "overall_pass_rate": 0.9342857142857143,
+  "evaluation_statistics": {
+    "sum_validation": {
+      "passed": 335,
+      "total": 349,
+      "pass_rate": 0.9598853868194842
+    },
+    "positive_values": {
+      "passed": 347,
+      "total": 349,
+      "pass_rate": 0.994269340974212
+    },
+    "subtotal_consistency": {
+      "passed": 336,
+      "total": 349,
+      "pass_rate": 0.9627507163323782
+    },
+    "unit_price_accuracy": {
+      "passed": 343,
+      "total": 349,
+      "pass_rate": 0.9828080229226361
+    },
+    "grand_total_calculation": {
+      "passed": 344,
+      "total": 349,
+      "pass_rate": 0.9856733524355301
+    },
+    "data_completeness": {
+      "passed": 348,
+      "total": 349,
+      "pass_rate": 0.997134670487106
+    }
+  },
+  "timestamp": "2025-12-01T22:35:04.071780"
+}

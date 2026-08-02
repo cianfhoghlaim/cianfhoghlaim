@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(devenv:*)",
+      "Bash(direnv allow:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(cuenv -e production exec -- uv run:*)"
+    ],
+    "deny": []
+  }
+}
