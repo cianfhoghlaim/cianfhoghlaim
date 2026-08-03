@@ -1,1 +1,0 @@
-"""Tests package for the Cianfhoghlaim Educational MMO."""
