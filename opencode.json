@@ -2,6 +2,18 @@
   "$schema": "https://opencode.ai/config.json",
   "snapshot": false,
   "mcp": {
+    "dlt-workspace-mcp": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "dlthub",
+        "ai",
+        "mcp",
+        "--stdio"
+      ],
+      "enabled": true
+    },
     "browserbase": {
       "type": "remote",
       "url": "https://mcp.browserbase.com/mcp",
@@ -18,7 +30,7 @@
         "-y",
         "firecrawl-mcp"
       ],
-      "env": {
+      "environment": {
         "FIRECRAWL_API_KEY": "infisical://dev-baile/firecrawl/api_key"
       },
       "enabled": true
@@ -30,7 +42,7 @@
         "-y",
         "@infisical/mcp"
       ],
-      "env": {
+      "environment": {
         "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "${INFISICAL_CLIENT_ID}",
         "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "${INFISICAL_SECRET}",
         "INFISICAL_HOST_URL": "http://localhost:8081",
@@ -48,7 +60,7 @@
         "--read-write",
         "--allow-switch-databases"
       ],
-      "env": {
+      "environment": {
         "MOTHERDUCK_TOKEN": "infisical://dev-baile/motherduck/token"
       },
       "enabled": true
@@ -76,7 +88,7 @@
         "uvx",
         "cognee-mcp"
       ],
-      "env": {
+      "environment": {
         "COGNEE_API_URL": "http://localhost:8100",
         "COGNEE_API_KEY": "infisical://dev-baile/cognee/api_key",
         "LLM_API_KEY": "${DEEPSEEK_API_KEY}"
@@ -92,7 +104,7 @@
         "-m",
         "graphiti_core.mcp"
       ],
-      "env": {
+      "environment": {
         "NEO4J_URI": "bolt://localhost:7687",
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "devpassword"
@@ -106,7 +118,7 @@
         "-y",
         "@langfuse/mcp"
       ],
-      "env": {
+      "environment": {
         "LANGFUSE_PUBLIC_KEY": "infisical://dev-baile/langfuse/public_key",
         "LANGFUSE_SECRET_KEY": "infisical://dev-baile/langfuse/secret_key",
         "LANGFUSE_HOST": "https://langfuse.cianfhoghlaim.ie"
@@ -122,7 +134,7 @@
         "-m",
         "hermes_agent.mcp"
       ],
-      "env": {
+      "environment": {
         "HERMES_API_URL": "http://hermes:9119",
         "HERMES_API_KEY": "infisical://dev-baile/hermes/api_server_key"
       },
@@ -137,7 +149,7 @@
         "-m",
         "cianfhoghlaim.cocoindex.agent_registry"
       ],
-      "env": {
+      "environment": {
         "OPENCODE_JSON_PATH": "./opencode.json"
       },
       "enabled": false
@@ -151,7 +163,7 @@
         "-m",
         "cianfhoghlaim.cocoindex.agents_md"
       ],
-      "env": {
+      "environment": {
         "AGENTS_MD_REPO_ROOT": "./"
       },
       "enabled": false
@@ -165,7 +177,7 @@
         "-m",
         "cianfhoghlaim.cocoindex.apple_photos_metadata"
       ],
-      "env": {
+      "environment": {
         "LEABHARLANN_PHOTOS_ROOT": "./leabharlann/photos",
         "LEABHARLANN_PHOTOS_INCLUDE_GPS": "false"
       },

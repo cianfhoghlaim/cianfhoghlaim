@@ -52,11 +52,9 @@ Run with:
     mise run notebook:control-panel
 """
 
-from __future__ import annotations
-
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.23.13"
 app = marimo.App(width="medium", app_title="Cianfhoghlaim Control Panel")
 
 
@@ -93,56 +91,46 @@ def imports():
     from db import connect_md, LAKEHOUSE_URI_DEFAULT
 
     return (
+        MODEL_REGISTRY,
+        connect_md,
+        deployment_choice_path,
+        filter_models,
+        list_baml_classes,
+        list_cocoindex_apps,
+        list_dlt_sources,
         mo,
         pd,
-        yaml,
-        Path,
-        Any,
-        schema_module,
-        schema_introspect,
-        schema_introspect_full,
-        schema_introspect_table,
-        list_dlt_sources,
-        list_cocoindex_apps,
-        list_baml_classes,
         read_deployment_choice,
+        schema_introspect_full,
         write_deployment_choice,
-        deployment_choice_path,
-        MODEL_REGISTRY,
-        model_for,
-        filter_models,
-        connect_md,
-        LAKEHOUSE_URI_DEFAULT,
     )
 
 
 @app.cell
 def intro(mo):
-    mo.md(
-        f"""
-        # Cianfhoghlaim Deployment Control Panel
+    mo.md(f"""
+    # Cianfhoghlaim Deployment Control Panel
 
-        The single source of truth for what models, pipelines, datasets,
-        and stacks are currently enabled in this deployment.
+    The single source of truth for what models, pipelines, datasets,
+    and stacks are currently enabled in this deployment.
 
-        All 5 tabs read from and write to
-        `deployment-choice.yaml` at the repo root. The same file is
-        shared with the **web UI control panel** (`web/apps/...
-        /control-panel/`) and the **CLI** (`scripts/cianfhoghlaim-cli.ts`).
+    All 5 tabs read from and write to
+    `deployment-choice.yaml` at the repo root. The same file is
+    shared with the **web UI control panel** (`web/apps/...
+    /control-panel/`) and the **CLI** (`scripts/cianfhoghlaim-cli.ts`).
 
-        Use the 5 tabs to:
-        1. **Models** — toggle AI/LLM/VLM models on/off
-        2. **Pipelines** — toggle DLT sources + CocoIndex Apps on/off
-        3. **Datasets** — inspect BIEP DuckDB tables + LanceDB mounts + BAML classes
-        4. **Stacks** — toggle Docker Compose stacks on/off
-        5. **Registry** — inspect the full `MODEL_REGISTRY` + drift count
-        """
-    )
+    Use the 5 tabs to:
+    1. **Models** — toggle AI/LLM/VLM models on/off
+    2. **Pipelines** — toggle DLT sources + CocoIndex Apps on/off
+    3. **Datasets** — inspect BIEP DuckDB tables + LanceDB mounts + BAML classes
+    4. **Stacks** — toggle Docker Compose stacks on/off
+    5. **Registry** — inspect the full `MODEL_REGISTRY` + drift count
+    """)
     return
 
 
 @app.cell
-def load_state(deployment_choice_path, read_deployment_choice):
+def load_state(MODEL_REGISTRY_entries, read_deployment_choice):
     # Load the current deployment-choice.yaml
     state = read_deployment_choice()
     if not state:
@@ -165,20 +153,13 @@ def load_state(deployment_choice_path, read_deployment_choice):
 
 
 @app.cell
-def MODEL_REGISTRY_entries(MODEL_REGISTRY):
+def MODEL_REGISTRY_entries():
     # Cache the full MODEL_REGISTRY entries (used by Tab 1 + Tab 5)
-    return list(MODEL_REGISTRY.entries())
+    return
 
 
 @app.cell
-def tab_models(
-    mo,
-    pd,
-    state,
-    write_deployment_choice,
-    deployment_choice_path,
-    filter_models,
-):
+def tab_models(filter_models, mo, pd, state, write_deployment_choice):
     """Tab 1: Models — toggle every MODEL_REGISTRY entry on/off."""
     # Group entries by family
     fam_models = filter_models("ocr_vision") + filter_models("text_llm") + \
@@ -245,30 +226,16 @@ def tab_models(
             family_checkboxes, state, write_deployment_choice,
         ),
     )
-
-    return mo.vstack([summary, df, controls, save_button])
-
-
-def _save_models(family_checkboxes, state, write_deployment_choice):
-    """Persist the model toggles to deployment-choice.yaml."""
-    new_state = dict(state)
-    new_state["enabled_models"] = {}
-    for fam, checkbox in family_checkboxes.items():
-        # Marimo returns the selected keys as a list
-        selected = set(checkbox.value or [])
-        for key in [opt for opt in checkbox.options]:
-            new_state["enabled_models"][key] = key in selected
-    write_deployment_choice(new_state)
-    return "Saved!"
+    return
 
 
 @app.cell
 def tab_pipelines(
+    list_cocoindex_apps,
+    list_dlt_sources,
     mo,
     pd,
     state,
-    list_dlt_sources,
-    list_cocoindex_apps,
     write_deployment_choice,
 ):
     """Tab 2: Pipelines — toggle DLT sources + CocoIndex Apps."""
@@ -319,38 +286,11 @@ def tab_pipelines(
             dlt_checkbox, coco_checkbox, state, write_deployment_choice,
         ),
     )
-
-    return mo.vstack([
-        summary,
-        mo.md("### DLT Sources (first 50):"),
-        dlt_df.head(50),
-        dlt_checkbox,
-        mo.md("### CocoIndex Apps (first 50):"),
-        coco_df.head(50),
-        coco_checkbox,
-        save_button,
-    ])
-
-
-def _save_pipelines(dlt_checkbox, coco_checkbox, state, write_deployment_choice):
-    new_state = dict(state)
-    new_state["enabled_pipelines"] = {}
-    for k in dlt_checkbox.options:
-        new_state["enabled_pipelines"][k] = k in set(dlt_checkbox.value or [])
-    for k in coco_checkbox.options:
-        new_state["enabled_pipelines"][k] = k in set(coco_checkbox.value or [])
-    write_deployment_choice(new_state)
-    return "Saved!"
+    return
 
 
 @app.cell
-def tab_datasets(
-    mo,
-    pd,
-    state,
-    schema_introspect_full,
-    connect_md,
-):
+def tab_datasets(connect_md, mo, pd, schema_introspect_full):
     """Tab 3: Datasets — read-only introspection of every BIEP table."""
     summary = mo.md(
         """
@@ -395,12 +335,11 @@ def tab_datasets(
         Showing the first 200 rows.
         """
     )
-
-    return mo.vstack([summary, source_summary, df.head(200)])
+    return
 
 
 @app.cell
-def tab_stacks(mo, pd, state, write_deployment_choice):
+def tab_stacks(mo, state, write_deployment_choice):
     """Tab 4: Stacks — toggle Docker Compose stacks on/off."""
     summary = mo.md(
         """
@@ -438,21 +377,11 @@ def tab_stacks(mo, pd, state, write_deployment_choice):
             stack_checkbox, state, write_deployment_choice,
         ),
     )
-
-    return mo.vstack([summary, stack_checkbox, save_button])
-
-
-def _save_stacks(stack_checkbox, state, write_deployment_choice):
-    new_state = dict(state)
-    new_state["enabled_stacks"] = {}
-    for k in stack_checkbox.options:
-        new_state["enabled_stacks"][k] = k in set(stack_checkbox.value or [])
-    write_deployment_choice(new_state)
-    return "Saved!"
+    return
 
 
 @app.cell
-def tab_registry(mo, pd, MODEL_REGISTRY, filter_models, list_baml_classes):
+def tab_registry(MODEL_REGISTRY, filter_models, list_baml_classes, mo, pd):
     """Tab 5: Registry — full MODEL_REGISTRY view + drift warnings."""
     summary = mo.md(
         """
@@ -507,26 +436,23 @@ def tab_registry(mo, pd, MODEL_REGISTRY, filter_models, list_baml_classes):
         - **Deprecated models**: {sum(1 for e in all_entries if not e.available)}
         """
     )
-
-    return mo.vstack([summary, fam_df, drift_warning, all_df.head(100)])
+    return
 
 
 @app.cell
-def status_footer(mo, deployment_choice_path):
-    mo.md(
-        f"""
-        ---
+def status_footer(deployment_choice_path, mo):
+    mo.md(f"""
+    ---
 
-        **State file**: `{deployment_choice_path()}`
+    **State file**: `{deployment_choice_path()}`
 
-        Changes persist immediately. The CLI (`bun run cianfhoghlaim
-        models list`) and the web UI (`web/apps/...
-        /control-panel/`) read the same file.
+    Changes persist immediately. The CLI (`bun run cianfhoghlaim
+    models list`) and the web UI (`web/apps/...
+    /control-panel/`) read the same file.
 
-        For the canonical drift audit, run `mise run lint:registry
-        --strict` from the repo root.
-        """
-    )
+    For the canonical drift audit, run `mise run lint:registry
+    --strict` from the repo root.
+    """)
     return
 
 
