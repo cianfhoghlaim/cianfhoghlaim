@@ -1,0 +1,122 @@
+[
+  {
+    "show": "charmed",
+    "genres": ["Fantasy", "Drama", "Supernatural"]
+  },
+  {
+    "show": "avatar: the last airbender",
+    "genres": ["Action", "Adventure", "Fantasy", "Animation"]
+  },
+  {
+    "show": "the worst witch",
+    "genres": ["Fantasy", "Children's", "Drama"]
+  },
+  {
+    "show": "stargate sg-1",
+    "genres": ["Sci-Fi", "Adventure", "Action"]
+  },
+  {
+    "show": "stargate atlantis",
+    "genres": ["Sci-Fi", "Adventure", "Action"]
+  },
+  {
+    "show": "pippy longstockings",
+    "genres": ["Children's", "Adventure", "Comedy"]
+  },
+  {
+    "show": "babar",
+    "genres": ["Animation", "Children's", "Adventure"]
+  },
+  {
+    "show": "hercules tv show animated",
+    "genres": ["Animation", "Adventure", "Fantasy", "Comedy"]
+  },
+  {
+    "show": "dexters lab",
+    "genres": ["Animation", "Comedy", "Sci-Fi"]
+  },
+  {
+    "show": "earthworm jim",
+    "genres": ["Animation", "Comedy", "Adventure", "Sci-Fi"]
+  },
+  {
+    "show": "bananas in pyjamas",
+    "genres": ["Children's", "Educational"]
+  },
+  {
+    "show": "punk'd",
+    "genres": ["Reality", "Comedy", "Prank"]
+  },
+  {
+    "show": "scare tactics",
+    "genres": ["Reality", "Comedy", "Horror", "Prank"]
+  },
+  {
+    "show": "the hills",
+    "genres": ["Reality", "Drama"]
+  },
+  {
+    "show": "the osobornes",
+    "genres": ["Reality", "Comedy"]
+  },
+  {
+    "show": "x factor",
+    "genres": ["Reality", "Music", "Competition"]
+  },
+  {
+    "show": "the voice",
+    "genres": ["Reality", "Music", "Competition"]
+  },
+  {
+    "show": "masked singer",
+    "genres": ["Reality", "Music", "Competition", "Game Show"]
+  },
+  {
+    "show": "handy manny",
+    "genres": ["Animation", "Children's", "Educational"]
+  },
+  {
+    "show": "dora",
+    "genres": ["Animation", "Children's", "Educational", "Adventure"]
+  },
+  {
+    "show": "bob the builder",
+    "genres": ["Animation", "Children's", "Educational"]
+  },
+  {
+    "show": "pok\u00e9mon",
+    "genres": ["Animation", "Action", "Adventure", "Fantasy"]
+  },
+  {
+    "show": "the oc",
+    "genres": ["Drama", "Teen Drama", "Romance"]
+  },
+  {
+    "show": "one tree hill",
+    "genres": ["Drama", "Teen Drama", "Romance"]
+  },
+  {
+    "show": "simple life",
+    "genres": ["Reality", "Comedy"]
+  },
+  {
+    "show": "zoey 101",
+    "genres": ["Comedy", "Drama", "Teen Drama"]
+  },
+  {
+    "show": "sleepover club",
+    "genres": ["Comedy", "Drama", "Children's"]
+  },
+  {
+    "show": "hey arnold",
+    "genres": ["Animation", "Comedy", "Drama"]
+  },
+  {
+    "show": "simpsons",
+    "genres": ["Animation", "Comedy", "Sitcom"]
+  },
+  {
+    "show": "time commanders",
+    "genres": ["Reality", "History", "Game Show"]
+  }
+]
