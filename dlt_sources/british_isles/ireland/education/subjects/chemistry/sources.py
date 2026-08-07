@@ -1,5 +1,20 @@
 """Chemistry DLT source — Cianfhoghlaim Oideachais.
 
+DEPRECATED (2026-08-06) — superseded by the consolidated 6-subject LC
+filesystem source at ``dlt_sources/filesystem/leaving_cert_source.py``
+(``lc5_documents`` resource), which covers chemistry plus 5 other
+subjects, reads the same local corpus
+(``leaving_certificate/chemistry/{en,ga}/``), and carries the v4
+``select_ocr_backend()`` model-routing heuristic. This module is kept
+in place (not deleted) for reference only — do not extend it. New work
+should target ``leaving_cert_source.py``.
+
+Note: the sibling ``schema.py`` in this package is ALSO deprecated and
+is additionally broken (unfilled ``{prefix}...`` template literal inside
+a live import statement — raises SyntaxError/NameError on import). This
+module (``sources.py``) does not import ``schema.py``, so it remains
+importable on its own, but should not be relied on for new pipelines.
+
 Reads the NCCA Leaving Certificate Chemistry PDFs from
 `cianfhoghlaim/leaving_certificate/chemistry/en/`. 2 NCCA levels (OL + HL).
 """

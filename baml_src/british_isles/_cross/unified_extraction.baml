@@ -81,7 +81,49 @@ function ExtractLC6Syllabus(
   text: string,
   language: string,
 ) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  // Real extraction prompt (2026-08-06 token-plan-apis change, Phase 2b).
+  // The previous placeholder ("Auto-generated extraction prompt.") rendered a
+  // system-only chat with no user content, which the MiniMax-M3 endpoint
+  // rejects with 400 "chat content is empty". Style follows the working
+  // ExtractUKQualSpec prompt in british_isles/england/education/
+  // curriculum_syllabus.baml.
+  prompt #"
+    You are extracting the official NCCA Leaving Certificate syllabus for the
+    subject {{ subject }} from the document text below (language: {{ language }}).
+
+    Extract:
+    - subject: the LC6Subject enum value matching {{ subject }}
+      (mathematics -> MATHEMATICS, chemistry -> CHEMISTRY,
+      geography -> GEOGRAPHY, gaeilge -> GAEILGE, english -> ENGLISH,
+      computer_science -> COMPUTER_SCIENCE).
+    - language: EN if {{ language }} is "en", GA if {{ language }} is "ga".
+    - source_pdf: the PDF filename if it appears in the text; otherwise "".
+    - source_pages: the PDF page count if stated in the text; otherwise null.
+    - level: the NCCA stage if stated (LC_FL / LC_OL / LC_HL / JC); otherwise null.
+    - topic_count: the total number of top-level topics / modules / strands
+      in the syllabus, counted from the actual text.
+    - learning_outcome_count: the total number of learning outcomes across
+      all topics, counted from the actual text.
+    - document: the full SyllabusDocument (module_topics with their learning
+      outcomes, cross_curricular themes, assessment_objectives).
+    - extracted_at: the current ISO datetime.
+    - extracted_by: always "lc6_unified_extractor".
+
+    Count carefully from the actual text; do not invent topics or outcomes.
+    Output exactly one complete JSON object. Never use ellipses (...) or
+    comments; list every module_topic in full with all of its
+    learning_outcomes, however long the list is.
+    document.stage MUST be one of JC / LC_OL / LC_HL / LC_FDN, never null —
+    for a combined Ordinary+Higher syllabus document use LC_HL.
+    document.source_pages: the page count if stated in the text, else null.
+
+    {{ _.role("user") }}
+    Document text (subject: {{ subject }}, language: {{ language }}):
+
+    {{ text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +141,44 @@ function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  cl
 }
 
 function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  // Real extraction prompt (2026-08-06 token-plan-apis change, Phase 2b) —
+  // behaves exactly like ExtractLC6Syllabus with subject pinned to chemistry.
+  // The previous placeholder rendered a system-only chat that the MiniMax-M3
+  // endpoint rejects with 400 "chat content is empty".
+  prompt #"
+    You are extracting the official NCCA Leaving Certificate CHEMISTRY
+    syllabus from the document text below (language: {{ language }}).
+
+    Extract:
+    - subject: CHEMISTRY (pinned).
+    - language: EN if {{ language }} is "en", GA if {{ language }} is "ga".
+    - source_pdf: the PDF filename if it appears in the text; otherwise "".
+    - source_pages: the PDF page count if stated in the text; otherwise null.
+    - level: the NCCA stage if stated (LC_OL / LC_HL); otherwise null.
+    - topic_count: the total number of top-level topics / modules / strands
+      in the syllabus, counted from the actual text.
+    - learning_outcome_count: the total number of learning outcomes across
+      all topics, counted from the actual text.
+    - document: the full SyllabusDocument (module_topics with their learning
+      outcomes, cross_curricular themes, assessment_objectives).
+    - extracted_at: the current ISO datetime.
+    - extracted_by: always "lc6_unified_extractor".
+
+    Count carefully from the actual text; do not invent topics or outcomes.
+    Output exactly one complete JSON object. Never use ellipses (...) or
+    comments; list every module_topic in full with all of its
+    learning_outcomes, however long the list is.
+    document.stage MUST be one of JC / LC_OL / LC_HL / LC_FDN, never null —
+    for the combined Ordinary+Higher chemistry syllabus use LC_HL.
+    document.source_pages: the page count if stated in the text, else null.
+
+    {{ _.role("user") }}
+    Document text (subject: chemistry, language: {{ language }}):
+
+    {{ text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn

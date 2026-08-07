@@ -82,8 +82,15 @@ except ImportError:
 # The original author-archive reference hardcoded `litellm/gemini-2.5-flash`
 # in the docstring; the production runtime now resolves the canonical model
 # from `MODEL_REGISTRY` (the centralized-model-registry change). The
-# 'text_llm'/'ocr_default' lookup wraps in try/except so a registry miss
+# 'text_llm'/'default' lookup wraps in try/except so a registry miss
 # degrades gracefully to the hardcoded fallback (NOT a hard fail).
+#
+# NOTE (2026-08-07): this used to resolve role "ocr_default", which was
+# never a registered role in any family — resolve() always raised KeyError
+# and this always silently took the hardcoded fallback below. Fixed to
+# resolve the real "default" role in "text_llm" (-> minimax-m3, which is
+# natively multimodal per the centralized-model-registry proposal, so it's
+# a correct choice for the OCR VLM path, not just a fallback of convenience).
 _HARDCODED_VLM_FALLBACK = "litellm/gemini-2.5-flash"
 
 
@@ -97,7 +104,7 @@ def _resolve_vlm_model() -> str:
     try:
         from meaisinfhoghlaim.models.model_registry import MODEL_REGISTRY
 
-        return MODEL_REGISTRY.resolve("text_llm", "ocr_default")
+        return MODEL_REGISTRY.resolve("text_llm", "default")
     except (KeyError, ImportError, AttributeError) as exc:
         logger.debug(
             "model_registry_vlm_resolve_fallback",

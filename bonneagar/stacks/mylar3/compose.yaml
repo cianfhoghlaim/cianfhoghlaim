@@ -1,0 +1,53 @@
+# =============================================================================
+# Mylar3 - Comic Book Downloader
+# =============================================================================
+# Automated comic book downloader for usenet and torrents.
+# https://github.com/mylar3/mylar3
+# =============================================================================
+
+name: mylar3
+
+services:
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "${MYLAR_PORT:-8090}:8090"
+
+    volumes:
+      - mylar3-config:/config
+      - ${COMICS_PATH:-./comics}:/comics
+      - ${DOWNLOADS_PATH:-./downloads}:/downloads
+
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-UTC}
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - tools
+
+volumes:
+  mylar3-config:
+
+networks:
+  tools:
+    external: true

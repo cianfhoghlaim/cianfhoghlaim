@@ -1,0 +1,52 @@
+# =============================================================================
+# Komga - Comic/Manga Server
+# =============================================================================
+# Media server for comics/mangas with OPDS support.
+# https://github.com/gotson/komga
+# =============================================================================
+
+name: komga
+
+services:
+  komga:
+    image: gotson/komga:latest
+    container_name: komga
+    restart: unless-stopped
+
+    user: "${PUID:-1000}:${PGID:-1000}"
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "${KOMGA_PORT:-25600}:25600"
+
+    volumes:
+      - komga-config:/config
+      - ${COMICS_PATH:-./comics}:/data
+
+    environment:
+      - TZ=${TZ:-UTC}
+      - JAVA_OPTS=-Xmx1g
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:25600/api/v1/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - tools
+
+volumes:
+  komga-config:
+
+networks:
+  tools:
+    external: true

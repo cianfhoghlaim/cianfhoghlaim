@@ -257,6 +257,59 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
                 "12 agents in agents/agent_registry.py)."
             ),
         ),
+        # ── Qwen token plan (Qwen Cloud, served via DashScope) ──
+        # Per openspec/changes/2026-08-06-token-plan-apis-lc-doc-pipeline-
+        # and-edge-tls-remediation-v1/specs/centralized-model-registry/spec.md.
+        # backend="dashscope" is a direct hosted-API call to DashScope's
+        # OpenAI-compatible endpoint (mirrors the "anthropic" / "openai" /
+        # "google" hosted-API backend convention used below) — NOT
+        # "opencode_go" (that's the OpenCode Zen gateway used by minimax-m3
+        # and the M3 chokepoint keywords) and NOT "llama-swap" (that's the
+        # local GGUF path used by qwen3.6-27b-mtp just below). The base URL
+        # is env-driven via DASHSCOPE_BASE_URL — never hardcoded here.
+        "qwen3.7-plus": ModelRegistryEntry(
+            key="qwen3.7-plus",
+            family="text_llm",
+            role="token_plan_primary",
+            display_name="Qwen 3.7 Plus (DashScope token plan, primary)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="qwen/qwen3.7-plus",
+            backend="dashscope",
+            available=True,
+            litellm_alias="dashscope/qwen3.7-plus",
+            env_var="DASHSCOPE_API_KEY",
+            notes=(
+                "Qwen Cloud token-plan primary text model, served via "
+                "DashScope's OpenAI-compatible endpoint "
+                "({DASHSCOPE_BASE_URL}, currently "
+                "https://coding.dashscope.aliyuncs.com/v1). Used as the "
+                "secondary cross-check client (alongside minimax-m3) for "
+                "the lc6 BAML extraction functions "
+                "(ExtractCurriculumSyllabus, ExtractExamPaperLayout, "
+                "ExtractMarkingSchemeGuideline, ExtractCrossLinguisticConcept). "
+                "See baml_src/clients.baml `ExtractQwenCrossCheck`."
+            ),
+        ),
+        "qwen3-coder-next": ModelRegistryEntry(
+            key="qwen3-coder-next",
+            family="text_llm",
+            role="token_plan_coding",
+            display_name="Qwen3 Coder Next (DashScope token plan, coding)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="qwen/qwen3-coder-next",
+            backend="dashscope",
+            available=True,
+            litellm_alias="dashscope/qwen3-coder-next",
+            env_var="DASHSCOPE_API_KEY",
+            notes=(
+                "Qwen Cloud token-plan coding model, served via DashScope's "
+                "OpenAI-compatible endpoint ({DASHSCOPE_BASE_URL}). Used by "
+                "the opencode `qwen` provider (opencode.json) for coding-"
+                "agent tasks; not currently wired into a BAML client."
+            ),
+        ),
         "qwen3.6-27b-mtp": ModelRegistryEntry(
             key="qwen3.6-27b-mtp",
             family="text_llm",
@@ -368,7 +421,7 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
         "gemini-2.5-pro": ModelRegistryEntry(
             key="gemini-2.5-pro",
             family="text_llm",
-            role="strong",
+            role="strong_hosted",
             display_name="Gemini 2.5 Pro (Google ADK strong)",
             unsloth_id=None,
             mlx_id=None,
@@ -379,7 +432,18 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             env_var="GOOGLE_API_KEY",
             notes=(
                 "Strong Google model used by the email_triage_agent. "
-                "Requires GOOGLE_API_KEY in .infisical.env."
+                "Requires GOOGLE_API_KEY in .infisical.env. Role was "
+                "originally 'strong', duplicating qwen3.6-27b-mtp's role — "
+                "since resolve() is a first-match linear scan, that made "
+                "this entry permanently unreachable via resolve('text_llm', "
+                "'strong'), which always returned qwen3.6-27b-mtp instead "
+                "(that entry's own notes confirm this was the intended "
+                "'strong' default for the agent fleet, so it keeps the "
+                "role). Renamed to 'strong_hosted' (2026-08-07) so this "
+                "entry is independently resolvable for callers who "
+                "specifically want a hosted API model with no local-GGUF "
+                "dependency, without changing existing resolve('text_llm', "
+                "'strong') behavior."
             ),
         ),
         "email_triage_gemini_2_5_pro": ModelRegistryEntry(
@@ -844,6 +908,38 @@ class _ModelRegistry:
             _translation_entries(),
         ):
             self._entries.update(fam)
+        self._warn_on_duplicate_roles()
+
+    def _warn_on_duplicate_roles(self) -> None:
+        """Log a warning for any (family, role) claimed by >1 entry.
+
+        `resolve()` is a first-match linear scan over insertion order, so a
+        silent duplicate makes one entry permanently unreachable via
+        `resolve()` (it's still reachable by key). This doesn't raise —
+        some duplication may be intentional (e.g. a deprecated entry kept
+        for `filter()` visibility) — but it makes the collision visible
+        instead of a mystery, unlike the `strong` role duplicate found
+        2026-08-07 (qwen3.6-27b-mtp vs. gemini-2.5-pro) that shadowed
+        gemini-2.5-pro from every `resolve("text_llm", "strong")` caller
+        with no warning at all.
+        """
+        import logging
+
+        seen: dict[tuple[str, str], str] = {}
+        for entry in self._entries.values():
+            fr = (entry.family, entry.role)
+            if fr in seen:
+                logging.getLogger(__name__).warning(
+                    "model_registry_duplicate_role",
+                    extra={
+                        "family": entry.family,
+                        "role": entry.role,
+                        "shadowed_key": seen[fr],
+                        "winning_key": entry.key,
+                    },
+                )
+            else:
+                seen[fr] = entry.key
 
     # ── Iteration / inspection ──
 

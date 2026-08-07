@@ -32,7 +32,16 @@ if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
 warnings.filterwarnings("ignore")
-from cianfhoghlaim.ocr.models import (  # noqa: E402
+# NOTE (2026-08-07): was `from cianfhoghlaim.ocr.models import ...` — that
+# package does not exist anywhere in this environment (ModuleNotFoundError,
+# confirmed: `cianfhoghlaim` isn't pip-installed and there's no local
+# `cianfhoghlaim/` package), so this script has been unable to run at all,
+# not just unable to emit the M3 chokepoint block. `meaisinfhoghlaim.models
+# .registry` is the equivalent, currently-populated module (same 5 symbols,
+# 24-entry VISION_MODELS). Left as a narrow import-path fix; the many other
+# `cianfhoghlaim.*` imports found repo-wide (cocoindex/, cli.py, etc.) are a
+# separate, larger legacy-import cleanup, out of scope here.
+from meaisinfhoghlaim.models.registry import (  # noqa: E402
     CLASSICAL_OCR,
     TEXT_MODELS,
     VISION_MODELS,
@@ -80,9 +89,21 @@ def render_model_entry(key: str, model) -> str:
     else:
         litellm_model = f"openai/{key}"
 
-    # Capabilities
-    caps = [c.value for c in model.capabilities if c.value != "diagram"]
-    if ModelCapability.DIAGRAM in model.capabilities:
+    # Capabilities. NOTE (2026-08-07): `ModelRegistryEntry` (the canonical
+    # meaisinfhoghlaim.models.model_registry.MODEL_REGISTRY class) never
+    # had a `.capabilities` field — only the legacy `OCRModel`/`TEXT_MODELS`
+    # shim objects do. That made this line an unconditional AttributeError
+    # crash for every MODEL_REGISTRY-sourced entry, meaning the
+    # `_HAS_REGISTRY = True` code path (the "prefer the centralized
+    # registry" path this script's docstring describes) had never actually
+    # completed a run. Defaulting to `[]` is a safe, honest fix — this
+    # field is descriptive metadata in the output YAML (LiteLLM doesn't
+    # enforce it), not something to guess a value for. Deciding whether
+    # `ModelRegistryEntry` SHOULD gain a `capabilities` field is a separate,
+    # larger design decision, out of scope here.
+    model_capabilities = getattr(model, "capabilities", None) or []
+    caps = [c.value for c in model_capabilities if c.value != "diagram"]
+    if ModelCapability.DIAGRAM in model_capabilities:
         caps.append("diagram")
 
     # Description
@@ -106,11 +127,14 @@ def render_model_entry(key: str, model) -> str:
         out.write(f"      unsloth_id: \"{model.unsloth_id}\"\n")
     out.write(f"      upstream_id: \"{model.upstream_id}\"\n")
     out.write(f"      tier: paid\n")
-    if model.arm1_oci_required:
+    # Same rationale as `capabilities` above: `ModelRegistryEntry` has
+    # neither field, so default rather than crash.
+    if getattr(model, "arm1_oci_required", False):
         out.write(f"      arm1_oci_only: true\n")
-    if "moe_12x" in model.unsloth_features:
+    unsloth_features = getattr(model, "unsloth_features", None) or []
+    if "moe_12x" in unsloth_features:
         out.write(f"      moe: true\n")
-    if "mtp_speculative" in model.unsloth_features:
+    if "mtp_speculative" in unsloth_features:
         out.write(f"      mtp_speculative: true\n")
     out.write(f"\n")
     return out.getvalue()
@@ -401,7 +425,44 @@ def main() -> int:
     # Router settings
     out.write(render_router_settings())
 
-    sys.stdout.write(out.getvalue())
+    # ── Safety check (2026-08-07): this generator does NOT emit the
+    # hand-maintained "M3 chokepoint" or "token-plan direct endpoint"
+    # sections — render_model_entry() only knows the `local/vision/{key}`
+    # naming convention (BACKEND_URLS covers llama-swap/mlx/transformers),
+    # not the hosted-API aliasing (`kimi/k2`, `minimax-m3`, `minimax-direct`,
+    # `dashscope/qwen3.7-plus`, ...) those sections use. Piping this
+    # script's output straight over the committed config.yaml — as its own
+    # header comment says to — WILL silently delete both sections. Warn
+    # loudly on stderr so `mise run litellm:regenerate > config.yaml`
+    # doesn't destroy them without anyone noticing; this is not a fix, only
+    # a guard, until render_model_entry() is generalized to also emit the
+    # hosted-API naming convention (a real design decision, out of scope
+    # for this pass — see the comment on `capabilities` above for what
+    # else changed here 2026-08-07).
+    _HAND_MAINTAINED_NAMES = (
+        "kimi/k2", "glm/5.1", "minimax/m2.5", "mimo/2.5", "deepseek/flash",
+        "minimax-m3", "minimax-direct",
+        "dashscope/qwen3.7-plus", "dashscope/qwen3-coder-next",
+    )
+    generated = out.getvalue()
+    missing = [
+        n for n in _HAND_MAINTAINED_NAMES
+        if f"model_name: {n}\n" not in generated
+    ]
+    if missing:
+        print(
+            "WARNING: this generator does NOT emit the following "
+            "hand-maintained model_list entries, present in the committed "
+            f"config.yaml: {missing}. Redirecting this script's output "
+            "over config.yaml will DELETE them. Do not run "
+            "`mise run litellm:regenerate > config.yaml` until "
+            "render_model_entry() is extended to cover hosted-API "
+            "aliasing, or manually re-merge these sections back in "
+            "after regenerating.",
+            file=sys.stderr,
+        )
+
+    sys.stdout.write(generated)
     return 0
 
 
