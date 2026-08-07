@@ -109,6 +109,26 @@ client<llm> LocalVision {
   }
 }
 
+// ====== Qwen token plan (DashScope) — secondary cross-check client ======
+// MODEL_REGISTRY: family="text_llm", role="token_plan_primary" → "qwen3.7-plus"
+// Direct DashScope OpenAI-compatible endpoint (base_url is env-driven via
+// DASHSCOPE_BASE_URL so switching between the coding-plan endpoint and the
+// international console endpoint is a one-line .infisical.env change).
+// Used as the secondary cross-check client (alongside Default/minimax-m3)
+// for the lc6 extraction functions; retry_policy Simple — Exponential is
+// reserved for the 3 canonical BIEP v3 clients above.
+
+client<llm> ExtractQwenCrossCheck {
+  provider "openai-generic"
+  options {
+    base_url env.DASHSCOPE_BASE_URL
+    api_key env.DASHSCOPE_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="token_plan_primary" → "qwen3.7-plus"
+    model "qwen3.7-plus"
+  }
+  retry_policy Simple
+}
+
 // ====== Generic aliases for the canonical mini-llm registry ======
 // (Functions in the wider BAML tree reference these aliases; they all
 // route to minimax-m3 for text extraction. Replace with proper provider-

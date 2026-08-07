@@ -257,6 +257,59 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
                 "12 agents in agents/agent_registry.py)."
             ),
         ),
+        # ── Qwen token plan (Qwen Cloud, served via DashScope) ──
+        # Per openspec/changes/2026-08-06-token-plan-apis-lc-doc-pipeline-
+        # and-edge-tls-remediation-v1/specs/centralized-model-registry/spec.md.
+        # backend="dashscope" is a direct hosted-API call to DashScope's
+        # OpenAI-compatible endpoint (mirrors the "anthropic" / "openai" /
+        # "google" hosted-API backend convention used below) — NOT
+        # "opencode_go" (that's the OpenCode Zen gateway used by minimax-m3
+        # and the M3 chokepoint keywords) and NOT "llama-swap" (that's the
+        # local GGUF path used by qwen3.6-27b-mtp just below). The base URL
+        # is env-driven via DASHSCOPE_BASE_URL — never hardcoded here.
+        "qwen3.7-plus": ModelRegistryEntry(
+            key="qwen3.7-plus",
+            family="text_llm",
+            role="token_plan_primary",
+            display_name="Qwen 3.7 Plus (DashScope token plan, primary)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="qwen/qwen3.7-plus",
+            backend="dashscope",
+            available=True,
+            litellm_alias="dashscope/qwen3.7-plus",
+            env_var="DASHSCOPE_API_KEY",
+            notes=(
+                "Qwen Cloud token-plan primary text model, served via "
+                "DashScope's OpenAI-compatible endpoint "
+                "({DASHSCOPE_BASE_URL}, currently "
+                "https://coding.dashscope.aliyuncs.com/v1). Used as the "
+                "secondary cross-check client (alongside minimax-m3) for "
+                "the lc6 BAML extraction functions "
+                "(ExtractCurriculumSyllabus, ExtractExamPaperLayout, "
+                "ExtractMarkingSchemeGuideline, ExtractCrossLinguisticConcept). "
+                "See baml_src/clients.baml `ExtractQwenCrossCheck`."
+            ),
+        ),
+        "qwen3-coder-next": ModelRegistryEntry(
+            key="qwen3-coder-next",
+            family="text_llm",
+            role="token_plan_coding",
+            display_name="Qwen3 Coder Next (DashScope token plan, coding)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="qwen/qwen3-coder-next",
+            backend="dashscope",
+            available=True,
+            litellm_alias="dashscope/qwen3-coder-next",
+            env_var="DASHSCOPE_API_KEY",
+            notes=(
+                "Qwen Cloud token-plan coding model, served via DashScope's "
+                "OpenAI-compatible endpoint ({DASHSCOPE_BASE_URL}). Used by "
+                "the opencode `qwen` provider (opencode.json) for coding-"
+                "agent tasks; not currently wired into a BAML client."
+            ),
+        ),
         "qwen3.6-27b-mtp": ModelRegistryEntry(
             key="qwen3.6-27b-mtp",
             family="text_llm",

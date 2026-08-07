@@ -159,7 +159,16 @@ def schema_introspect(conn: Any) -> list[dict[str, Any]]:
     except Exception:
         return rows
 
-    for r in result.fetchall():
+    # ibis >= 9 returns a pandas DataFrame from .execute(); older
+    # duckdb result objects expose .fetchall(). Normalise both.
+    if hasattr(result, "fetchall"):
+        records = result.fetchall()
+    elif hasattr(result, "to_dict"):
+        records = result.to_dict("records")
+    else:
+        records = list(result)
+
+    for r in records:
         if hasattr(r, "_asdict"):
             d = r._asdict()
         elif isinstance(r, dict):

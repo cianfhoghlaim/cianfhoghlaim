@@ -8,6 +8,25 @@ is now the single source of truth. The hand-written schema was
 explicitly documented as a BAML mirror.
 
 Per the ``centralized-schema-registry`` capability (2026-08-15).
+
+ADDITIONALLY DEPRECATED (2026-08-06) as part of the LC ingestion
+consolidation — the canonical replacement for the whole
+``subjects/chemistry`` package (this file + ``sources.py``) is
+``dlt_sources/filesystem/leaving_cert_source.py`` (``lc5_documents``
+resource), which covers chemistry across 6 subjects.
+
+BROKEN — DO NOT IMPORT. The ``from ... import (...)`` block below
+contains unfilled ``{prefix}Name``-style template literals (e.g.
+``{prefix}BilingualText``) left over from an unrendered code-generation
+template. This is invalid Python and raises ``SyntaxError`` (or
+``NameError``/``ImportError`` once the ``{prefix}`` tokens are lexed as
+attribute access) at import time. Confirmed as of 2026-08-06 that
+nothing else in the repo imports this module (grep for
+``subjects.chemistry.schema`` / ``subjects/chemistry/schema`` found no
+external callers — the package ``__init__.py`` only imports from
+``.sources``, never from ``.schema``). Left in place, un-repaired, as
+this module is being retired rather than fixed; see ``sources.py`` in
+this same directory for the parallel deprecation note.
 """
 from __future__ import annotations
 

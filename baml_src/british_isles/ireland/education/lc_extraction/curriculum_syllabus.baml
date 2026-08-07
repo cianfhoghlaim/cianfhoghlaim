@@ -55,7 +55,11 @@ class SyllabusDocument {
   language SyllabusLanguage
   stage NCCAStage
   source_pdf string
-  source_pages int
+  // Nullable (2026-08-06 token-plan-apis change, Phase 2b): the model
+  // cannot know the PDF page count from extracted text alone. Matches
+  // the already-nullable LCSyllabus.source_pages in
+  // british_isles/_cross/unified_extraction.baml.
+  source_pages int?
 
   // Document content
   module_topics ModuleTopic[]

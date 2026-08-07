@@ -47,6 +47,8 @@ _KNOWN_MODEL_KEYS: set[str] = {
     "deepseek-v4-flash", "minimax-m3",
     "claude-sonnet-4-20250514", "gpt-4o-mini", "gemini-2.5-pro",
     "gemini-2.0-flash",
+    # Qwen token plan (DashScope) — see model_registry.py's _text_llm_entries
+    "qwen3.7-plus", "qwen3-coder-next",
     # Embedder
     "BAAI/bge-m3", "BAAI/bge-large-en-v1.5", "all-MiniLM-L6-v2",
     # Rerank
