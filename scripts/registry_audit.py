@@ -49,6 +49,12 @@ _KNOWN_MODEL_KEYS: set[str] = {
     "gemini-2.0-flash",
     # Qwen token plan (DashScope) — see model_registry.py's _text_llm_entries
     "qwen3.7-plus", "qwen3-coder-next",
+    # Pre-existing registry keys found missing from this whitelist by
+    # tests/test_registry_audit.py::test_known_model_keys_covers_registry
+    # (2026-08-07) — unrelated to the token-plan change, just never added.
+    "email_triage_gemini_2_5_pro", "granite-docling-258M",
+    "Qwen/Qwen2.5-7B-Instruct", "meta-llama/Llama-3.1-8B-Instruct",
+    "google/gemma-2-9b-it", "unsloth/gemma-3-4b-it-GGUF",
     # Embedder
     "BAAI/bge-m3", "BAAI/bge-large-en-v1.5", "all-MiniLM-L6-v2",
     # Rerank

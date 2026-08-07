@@ -50,6 +50,14 @@ ALLOWED_API_BASES = {
     "http://llama-swap:8080/v1",
     "http://mlx-omni:10240/v1",
     "http://transformers:5000/v1",
+    "http://docling-serve:5001/v1",
+    "http://olmocr:8003/v1",
+    # M3 chokepoint (OpenCode Go) — pre-existing, added 2026-07-08
+    "${OPENCODE_GO_BASE_URL:-https://opencode.ai/zen/go/v1}",
+    # Token-plan direct endpoints — added 2026-08-07, see
+    # openspec/changes/2026-08-06-token-plan-apis-lc-doc-pipeline-and-edge-tls-remediation-v1
+    "${MINIMAX_BASE_URL:-https://api.minimax.io/v1}",
+    "${DASHSCOPE_BASE_URL:-https://coding.dashscope.aliyuncs.com/v1}",
 }
 
 

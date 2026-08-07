@@ -219,3 +219,49 @@ def test_audit_filters_by_path(tmp_path: Path) -> None:
         f"Expected 0 findings for tests/-only repo, got "
         f"{payload['count']}: {payload['findings']}"
     )
+
+
+# ─── 6 — _KNOWN_MODEL_KEYS stays in sync with MODEL_REGISTRY ────
+
+
+def test_known_model_keys_covers_registry() -> None:
+    """Every ``MODEL_REGISTRY`` key must appear in the audit's
+    ``_KNOWN_MODEL_KEYS`` whitelist.
+
+    ``_KNOWN_MODEL_KEYS`` is a hand-maintained set (kept
+    import-free so the pre-commit hook stays fast — it does not
+    import ``MODEL_REGISTRY``), which means "add a model to the
+    registry" and "add it to this set" are two separate manual
+    edits that can silently drift apart: a new registry key whose
+    string form isn't whitelisted here would fail
+    ``mise run lint:registry --strict`` the first time anyone's
+    code legitimately references it. This test makes that drift a
+    loud, immediate CI failure instead of a confusing lint error
+    discovered later, without changing the audit script's speed or
+    import profile.
+
+    Only checks ``key`` (the canonical registry identifier) — not
+    every ``unsloth_id``/``mlx_id``/``upstream_id``/``litellm_alias``
+    variant also present in ``_KNOWN_MODEL_KEYS``, since those are
+    denser and independently curated for prefix-matching reasons
+    (see ``_PREFIXES`` in the audit script).
+    """
+    import importlib.util
+
+    audit_spec = importlib.util.spec_from_file_location(
+        "registry_audit", _AUDIT_SCRIPT
+    )
+    assert audit_spec is not None and audit_spec.loader is not None
+    audit_module = importlib.util.module_from_spec(audit_spec)
+    audit_spec.loader.exec_module(audit_module)
+
+    from meaisinfhoghlaim.models.model_registry import MODEL_REGISTRY
+
+    registry_keys = {entry.key for entry in MODEL_REGISTRY.filter()}
+    missing = sorted(registry_keys - audit_module._KNOWN_MODEL_KEYS)
+    assert not missing, (
+        "MODEL_REGISTRY has keys not in scripts/registry_audit.py's "
+        f"_KNOWN_MODEL_KEYS whitelist: {missing}. Add them to "
+        "_KNOWN_MODEL_KEYS or mise run lint:registry --strict will "
+        "fail the first time this key string is used in audited code."
+    )

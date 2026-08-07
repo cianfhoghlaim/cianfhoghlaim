@@ -575,6 +575,60 @@ model_list:
       vendor: minimax
       cluster: m3-chokepoint
 
+  # ===========================================================================
+  # TOKEN-PLAN DIRECT ENDPOINTS — MiniMax coding plan + Qwen Cloud (DashScope)
+  # (added 2026-08-07 per openspec change
+  # 2026-08-06-token-plan-apis-lc-doc-pipeline-and-edge-tls-remediation-v1).
+  # Both bypass OpenCode Go entirely — direct vendor endpoints, env-driven
+  # base URLs (see meaisinfhoghlaim/models/model_registry.py's
+  # "qwen3.7-plus" / "qwen3-coder-next" entries and .infisical.env's
+  # MINIMAX_*/DASHSCOPE_* section). These are separate model_names from
+  # `minimax-m3` above (the OpenCode Go alias) — pick this cluster when you
+  # want the direct token-plan endpoint, not the OpenCode Go gateway.
+  # ===========================================================================
+
+  - model_name: minimax-direct
+    litellm_params:
+      model: openai/minimax-m3
+      api_base: ${MINIMAX_BASE_URL:-https://api.minimax.io/v1}
+      api_key: ${MINIMAX_API_KEY}
+      timeout: 600
+    model_info:
+      description: "MiniMax coding-plan direct endpoint (api.minimax.io/v1) — 1M context, native multimodality, bypasses OpenCode Go"
+      capabilities: ["text", "reasoning", "code", "agentic", "vision"]
+      tier: paid
+      upstream: minimax-m3
+      vendor: minimax
+      cluster: token-plan-direct
+
+  - model_name: dashscope/qwen3.7-plus
+    litellm_params:
+      model: openai/qwen3.7-plus
+      api_base: ${DASHSCOPE_BASE_URL:-https://coding.dashscope.aliyuncs.com/v1}
+      api_key: ${DASHSCOPE_API_KEY}
+      timeout: 600
+    model_info:
+      description: "Qwen Cloud token-plan flagship (DashScope) — text_llm/token_plan_primary in MODEL_REGISTRY"
+      capabilities: ["text", "reasoning", "code", "multilingual"]
+      tier: paid
+      upstream: qwen3.7-plus
+      vendor: alibaba
+      cluster: token-plan-direct
+
+  - model_name: dashscope/qwen3-coder-next
+    litellm_params:
+      model: openai/qwen3-coder-next
+      api_base: ${DASHSCOPE_BASE_URL:-https://coding.dashscope.aliyuncs.com/v1}
+      api_key: ${DASHSCOPE_API_KEY}
+      timeout: 600
+    model_info:
+      description: "Qwen Cloud token-plan coding specialist (DashScope) — text_llm/token_plan_coding in MODEL_REGISTRY"
+      capabilities: ["text", "reasoning", "code", "tool-use"]
+      tier: paid
+      upstream: qwen3-coder-next
+      vendor: alibaba
+      cluster: token-plan-direct
+
 router_settings:
   # Master fallback chain (per the v4 spec + litellm-minimax-vendor-derisking change)
   num_retries: 3

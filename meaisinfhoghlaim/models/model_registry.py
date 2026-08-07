@@ -421,7 +421,7 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
         "gemini-2.5-pro": ModelRegistryEntry(
             key="gemini-2.5-pro",
             family="text_llm",
-            role="strong",
+            role="strong_hosted",
             display_name="Gemini 2.5 Pro (Google ADK strong)",
             unsloth_id=None,
             mlx_id=None,
@@ -432,7 +432,18 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             env_var="GOOGLE_API_KEY",
             notes=(
                 "Strong Google model used by the email_triage_agent. "
-                "Requires GOOGLE_API_KEY in .infisical.env."
+                "Requires GOOGLE_API_KEY in .infisical.env. Role was "
+                "originally 'strong', duplicating qwen3.6-27b-mtp's role — "
+                "since resolve() is a first-match linear scan, that made "
+                "this entry permanently unreachable via resolve('text_llm', "
+                "'strong'), which always returned qwen3.6-27b-mtp instead "
+                "(that entry's own notes confirm this was the intended "
+                "'strong' default for the agent fleet, so it keeps the "
+                "role). Renamed to 'strong_hosted' (2026-08-07) so this "
+                "entry is independently resolvable for callers who "
+                "specifically want a hosted API model with no local-GGUF "
+                "dependency, without changing existing resolve('text_llm', "
+                "'strong') behavior."
             ),
         ),
         "email_triage_gemini_2_5_pro": ModelRegistryEntry(
@@ -897,6 +908,38 @@ class _ModelRegistry:
             _translation_entries(),
         ):
             self._entries.update(fam)
+        self._warn_on_duplicate_roles()
+
+    def _warn_on_duplicate_roles(self) -> None:
+        """Log a warning for any (family, role) claimed by >1 entry.
+
+        `resolve()` is a first-match linear scan over insertion order, so a
+        silent duplicate makes one entry permanently unreachable via
+        `resolve()` (it's still reachable by key). This doesn't raise —
+        some duplication may be intentional (e.g. a deprecated entry kept
+        for `filter()` visibility) — but it makes the collision visible
+        instead of a mystery, unlike the `strong` role duplicate found
+        2026-08-07 (qwen3.6-27b-mtp vs. gemini-2.5-pro) that shadowed
+        gemini-2.5-pro from every `resolve("text_llm", "strong")` caller
+        with no warning at all.
+        """
+        import logging
+
+        seen: dict[tuple[str, str], str] = {}
+        for entry in self._entries.values():
+            fr = (entry.family, entry.role)
+            if fr in seen:
+                logging.getLogger(__name__).warning(
+                    "model_registry_duplicate_role",
+                    extra={
+                        "family": entry.family,
+                        "role": entry.role,
+                        "shadowed_key": seen[fr],
+                        "winning_key": entry.key,
+                    },
+                )
+            else:
+                seen[fr] = entry.key
 
     # ── Iteration / inspection ──
 
