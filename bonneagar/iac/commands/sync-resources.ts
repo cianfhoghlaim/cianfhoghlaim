@@ -6,8 +6,12 @@ import { discoverResources } from "../sources/discover-resources.ts";
 import { ensurePangolinAuth } from "../auth.ts";
 import { CLI_FLAGS } from "../cli.ts";
 
-// The 3 manually-created resources that override the blueprints (per DEPLOYMENT-STRATEGY.md blocker #2)
-const MANUAL_OVERRIDE_NICE_IDS = new Set(["komodo", "cal-diy", "infisical"]);
+// The 4 manually-created resources that override the blueprints (per
+// DEPLOYMENT-STRATEGY.md blocker #2). `openchamber` added 2026-08-07 — same
+// shadowing pattern (existing resource skips the create path, so a stale
+// site/destination binding never gets corrected without an explicit
+// delete+recreate).
+const MANUAL_OVERRIDE_NICE_IDS = new Set(["komodo", "cal-diy", "infisical", "openchamber"]);
 
 export async function syncResources() {
   logStep("sync-resources");
@@ -16,7 +20,13 @@ export async function syncResources() {
   const { data: existing } = await client.listResources();
   const existingByNiceId = new Map(existing.siteResources.map((r) => [r.niceId, r]));
 
-  const iacResources = discoverResources();
+  // Live site name -> siteId map, so discoverResources() can resolve each
+  // stack's `site:` field against reality instead of a hardcoded guess.
+  const { data: sitesData } = await client.listSites();
+  const siteIdsByName = Object.fromEntries(sitesData.sites.map((s) => [s.name, s.id as number]));
+  log(`  resolved ${Object.keys(siteIdsByName).length} live sites: ${Object.entries(siteIdsByName).map(([n, i]) => `${n}=${i}`).join(", ")}`);
+
+  const iacResources = discoverResources(undefined, { siteIdsByName });
   if (iacResources.length === 0) {
     logWarn("no Pangolin resources discovered in any stack's pangolin.yaml");
     return;
