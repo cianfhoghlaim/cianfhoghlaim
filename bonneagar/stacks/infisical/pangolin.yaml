@@ -9,13 +9,20 @@
 # 5. protocol            - http / https
 # 6. roles[0]            - the Traefik role
 #
-# NOTE: The local Infisical on bunchloch is NOT exposed via Pangolin
-# (it stays on host port 8081 only — Locket sidecars reach it over the
-# `bunchloch-infra` Docker network at http://infisical-backend:8080).
-# This file is committed for parity + the future arm1-oci promotion.
+# NOTE (2026-08-07, verified live): the arm1-oci Infisical IS exposed via
+# Pangolin, right now, at infisical.cianfhoghlaim.ie — the comment that
+# used to be here ("NOT exposed via Pangolin... committed for parity +
+# the future arm1-oci promotion") was stale/aspirational and contradicted
+# by the live Pangolin DB. What was actually broken: the private resource
+# existed but was bound to the offline "bunchloch" site with a LAN
+# destination (192.168.0.206:8081) unreachable from arm1 — hence the
+# persistent HTTP 000. `site: oracle` below is the fix (see
+# discover-resources.ts's resolveSiteId() and PANGOLIN-SETUP.md for why
+# the live site is named "oracle", not "oci.arm1" or "arm1-oci").
 # =============================================================================
 
 pangolin:
+  site: oracle
   private-resources:
     infisical:
       name: "Infisical Vault"
