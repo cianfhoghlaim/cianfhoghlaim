@@ -78,7 +78,64 @@ function ExtractExamPaperLayout(
   paper_code: string?,
   year: int?,
 ) -> ExamPaper {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are an expert at reading official Irish Leaving Certificate exam
+    papers (State Examinations Commission format) and extracting their
+    complete question structure with fidelity to the source — every
+    question, part, and mark allocation below MUST come from the PDF
+    text given; never invent a question or a mark total.
+
+    Subject: {{ subject }}
+    Paper code (if known): {{ paper_code }}
+    Year (if known): {{ year }}
+
+    From the exam paper text below, extract:
+    - subject: the subject slug
+    - paper_code: the paper's own code if visible in the text (e.g.
+      'LC022ALP000EV'), else the paper_code given above
+    - language: 'EN' or 'GA' based on the language of the paper text
+    - level: 'OL', 'HL', or 'FDN' — read from the paper's own cover page
+      / header text (e.g. 'Ordinary Level', 'Higher Level')
+    - year: the exam year stated on the paper, else the year given above
+    - source_pdf: leave as an empty string; the Python caller fills this
+      in from the actual file path
+    - source_pages / total_pages: your best count of distinct pages
+      represented in the text (equal to each other)
+    - sections: every distinct section (e.g. 'Section A', 'Section B')
+      you can identify, each with:
+      - section_id / section_name (from the paper's own headings)
+      - instructions: any instruction text specific to that section
+        ('Answer any three questions from this section', etc.)
+      - questions: every question and sub-part in that section, each with:
+        - q_id (e.g. '1', '2') and part (e.g. 'a', 'b(i)', 'c(ii)';
+          use 'a' if the question has no lettered sub-parts)
+        - text_en / text_ga (whichever language this paper is in;
+          leave the other empty)
+        - question_type: SHORT_ANSWER, EXTENDED_RESPONSE,
+          WORKED_SOLUTION, STRUCTURE_DRAWING, DIAGRAM_BASED, ESSAY,
+          PRACTICAL, MULTIPLE_CHOICE, or FILL_IN_BLANK — infer from the
+          question's own instruction verb and format
+        - marks: the marks allocated to that specific part, as stated
+          in the paper (usually in brackets, e.g. '[10 marks]')
+        - related_lo_id: omit unless the paper itself cross-references a
+          syllabus learning-outcome code
+      - total_marks: sum of that section's question marks
+    - total_marks: sum across all sections
+    - total_questions: count of top-level questions (not sub-parts)
+    - duration_minutes: the exam duration if stated on the cover page
+    - has_formula_sheet / has_data_booklet: true only if the paper text
+      explicitly references an accompanying formula sheet or data
+      booklet
+    - formula_sheet_pages: only if stated
+
+    If a field has no support in the text, leave it empty or its
+    numeric default rather than fabricating content.
+
+    Exam paper PDF text:
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 // ============================================================================
