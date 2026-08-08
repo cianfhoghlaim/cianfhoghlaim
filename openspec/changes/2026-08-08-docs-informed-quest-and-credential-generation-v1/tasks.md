@@ -121,33 +121,102 @@
   validator, which would have failed argument validation on every
   real call.
 
-## Phase 5 — Client wiring — DONE
+## Phase 5 — Client wiring — DONE (scope narrowed from the original
+description below — see 5.1-note)
 
 - [x] 5.1 Added a `questPacks` table to `convex/schema.ts` (packId,
   subject, framework, level, bilingual title/description, totals,
-  losCovered, items (opaque JSON), prerequisites, crossSubjectLinks,
-  generatedAt/By). Indexed by `(subject, level)` only — Convex indexes
-  require scalar fields, arrays aren't indexable.
-- [x] 5.2 New `convex/questPacks.ts` — `create` mutation +
-  `listBySubjectLevel`/`listBySubject` queries.
+  losCovered, items (opaque JSON via `v.any()` — item shape's `topic`/
+  `item_type` enums differ per subject, so the BAML class is the
+  source of truth, not this schema), prerequisites, crossSubjectLinks,
+  generatedAt/By). **Note (redo pass)**: indexed by `by_subject` +
+  `by_pack_id`, not `(subject, level)` — `quest_pack_assets.py` (built
+  in this same redo pass, see Phase 2.2) generates exactly one Higher
+  Level pack per subject today, not one per level, so a level-scoped
+  index wasn't needed; `questPacks:create` deletes any existing row
+  for the subject before inserting (idempotent re-materialisation).
+- [x] 5.2 New `convex/questPacks.ts` — `create` mutation (replace
+  semantics per 5.1-note) + `getBySubject`/`listAll` queries (not
+  `listBySubjectLevel`, per the same scope narrowing).
 - [x] 5.3 Replaced `realm/$subject.tsx`'s hardcoded `QuestPackCard`
-  counts with a real `useQuery` call, grouped by level, with loading/
-  empty states; wired the "Start" button's `onClick`.
+  counts with a real `useQuery(api.questPacks.getBySubject, ...)`
+  call, with loading/empty/generated states; "Start" expands the
+  pack's first real formative item inline (a fuller attempt-taking UI
+  is separate future work, not fabricated here).
 - [x] 5.4 **Found and fixed**: the app had no `ConvexProvider`/
-  `ConvexReactClient` anywhere — added to `__root.tsx`.
-- [ ] 5.5 **Follow-on**: `convex/_generated/` doesn't exist — `convex
-  codegen` requires `CONVEX_DEPLOYMENT` (a live, authenticated Convex
-  project — `npx convex dev` login). Not fabricable in this
-  environment.
+  `ConvexReactClient` anywhere — added to `__root.tsx`, alongside
+  `CopilotKit` (pulled forward from
+  `2026-08-08-agui-generative-credential-ui-v1` Phase 1, since both
+  providers had to land in the same root component).
+- [ ] 5.5 **Follow-on, still blocked**: `convex/_generated/` doesn't
+  exist — `convex codegen` requires `CONVEX_DEPLOYMENT` (a live,
+  authenticated Convex project — `npx convex dev` login). Not
+  fabricable in this environment. All new/edited `.ts` files
+  (`questPacks.ts`, `x402Payments.ts`, `badges.ts`, and every route
+  importing `convex/_generated/api`) are written correctly against
+  this not-yet-generated API and will resolve once codegen runs.
+- [x] 5.6 **New in this redo pass, not in the original Phase 5**:
+  found the app has no Vite/TanStack Start entry bootstrap at all — no
+  `index.html`, no client entry, `vite.config.ts` registers only the
+  router plugin (`TanStackRouterVite`), not `tanstackStart()`, despite
+  `@tanstack/react-start` being a declared dependency. Flagged as a
+  separate, pre-existing, out-of-scope blocker rather than fabricated
+  from memory of a fast-moving meta-framework's exact bootstrap API
+  (risk of a plausible-looking but non-functional scaffold). Route
+  files are still written correctly against the repo's existing
+  `createRootRoute`/`createFileRoute` conventions.
+
+## Phase 5b — Additional bugs found while re-verifying this pass (new)
+
+Discovered and fixed while rebuilding `quest_pack_assets.py` and
+wiring the Convex read/write paths — none of these were caught by the
+original (lost) session's Phase 1-5 work, since none of it had been
+run live end-to-end before the data loss:
+
+- [x] The 3 base extraction functions this change's "Why" section
+  described as "real and working"
+  (`ExtractCurriculumSyllabus`/`ExtractExamPaperLayout`/
+  `ExtractMarkingSchemeGuideline`) were themselves still literal
+  `"Auto-generated extraction prompt."` placeholders — the "real and
+  working" claim was true of the extraction *schema*, not the prompt
+  bodies. Fixed with real prompts grounded in each function's class
+  schema.
+- [x] **Systemic bug**: every prompt ending directly in
+  `{{ ctx.output_format }}` with no `{{ _.role("user") }}` marker
+  renders as a single system-role message with no user turn — MiniMax
+  rejects this as "chat content is empty" (HTTP 400). Found via live
+  smoke test of `ExtractCurriculumSyllabus`; fixed in all 5 Ireland LC
+  extraction files (the 3 above plus `cross_linguistic.baml` and
+  `syllabus_diagram.baml`, both pre-existing and never live-tested
+  before). A repo-wide sweep found 6 more files with the same gap,
+  outside this change's scope (Crown Dependencies `subject_taxonomy.baml`
+  files) — left unfixed, tracked separately.
+- [x] `tuatha/badges/ledger.py`'s `fetch_badges_for_student()` and
+  `fetch_badges_since()` (the latter called directly by
+  `daily_credential_anchor`) sent query args that didn't match
+  `badges.ts`'s validators (`student_id` vs `studentId`; an ISO string
+  vs the required epoch-ms `sinceMs`), and `SkillTreeBadge(**row)`
+  could never have worked against a real Convex row (flat/camelCase
+  vs. the model's nested/snake_case shape). Fixed both call sites plus
+  added a `_row_to_badge()` mapper; also found `issue_badge()`'s write
+  path never sent `evidence.feedback_en/feedback_ga/source_pdf/
+  source_page` at all — added the missing Convex columns and mapping.
+- [x] Live-verified `ExtractCurriculumSyllabus` end-to-end against the
+  real chemistry syllabus PDF after both fixes above: 90 real learning
+  outcomes extracted across the syllabus's 5 strands, correctly
+  grounded in the source text (module names, strand structure, exact
+  learning-outcome wording) — not fabricated.
 
 ## Phase 6 — Verification
 
 - [x] 6.1 `openspec validate 2026-08-08-docs-informed-quest-and-
   credential-generation-v1 --strict`.
-- [x] 6.2 For ≥1 Ireland LC subject and ≥1 Ireland JC level, confirmed
-  generated-content shape traces to real source-PDF pages via the
-  rewritten prompts' `evidence` field requirements. England (GCSE/
-  A-Level) tracing is blocked on Phase 3.2.
+- [x] 6.2 For ≥1 Ireland LC subject (chemistry) and ≥1 Ireland JC
+  level, confirmed generated-content shape traces to real source-PDF
+  pages via the rewritten prompts' `evidence` field requirements —
+  **and**, in this redo pass, confirmed live against the real MiniMax
+  API (see Phase 5b's last item), not just via BAML compilation.
+  England (GCSE/A-Level) tracing is blocked on Phase 3.2.
 - [x] 6.3 Ran `uv run python scripts/sync/spec_agents.py` — completes
   successfully; nothing of this change's to regenerate until archived.
 - [x] 6.4 Ran `mise run lint:drift-docs` — fails only on pre-existing,
