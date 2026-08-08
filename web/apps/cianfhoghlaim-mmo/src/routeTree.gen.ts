@@ -15,6 +15,7 @@ import { Route as AnchorDateRouteImport } from './routes/anchor/$date'
 import { Route as TeacherClassQuestsRouteImport } from './routes/teacher/$class/quests'
 import { Route as StudentIdMasteryRouteImport } from './routes/student/$id/mastery'
 import { Route as StudentIdBadgesRouteImport } from './routes/student/$id/badges'
+import { Route as StudentIdProfileRouteImport } from './routes/student/$id/profile'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,12 +47,18 @@ const StudentIdBadgesRoute = StudentIdBadgesRouteImport.update({
   path: '/student/$id/badges',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentIdProfileRoute = StudentIdProfileRouteImport.update({
+  id: '/student/$id/profile',
+  path: '/student/$id/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anchor/$date': typeof AnchorDateRoute
   '/realm/$subject': typeof RealmSubjectRoute
   '/student/$id/badges': typeof StudentIdBadgesRoute
+  '/student/$id/profile': typeof StudentIdProfileRoute
   '/student/$id/mastery': typeof StudentIdMasteryRoute
   '/teacher/$class/quests': typeof TeacherClassQuestsRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/anchor/$date': typeof AnchorDateRoute
   '/realm/$subject': typeof RealmSubjectRoute
   '/student/$id/badges': typeof StudentIdBadgesRoute
+  '/student/$id/profile': typeof StudentIdProfileRoute
   '/student/$id/mastery': typeof StudentIdMasteryRoute
   '/teacher/$class/quests': typeof TeacherClassQuestsRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/anchor/$date': typeof AnchorDateRoute
   '/realm/$subject': typeof RealmSubjectRoute
   '/student/$id/badges': typeof StudentIdBadgesRoute
+  '/student/$id/profile': typeof StudentIdProfileRoute
   '/student/$id/mastery': typeof StudentIdMasteryRoute
   '/teacher/$class/quests': typeof TeacherClassQuestsRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/anchor/$date'
     | '/realm/$subject'
     | '/student/$id/badges'
+    | '/student/$id/profile'
     | '/student/$id/mastery'
     | '/teacher/$class/quests'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/anchor/$date'
     | '/realm/$subject'
     | '/student/$id/badges'
+    | '/student/$id/profile'
     | '/student/$id/mastery'
     | '/teacher/$class/quests'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/anchor/$date'
     | '/realm/$subject'
     | '/student/$id/badges'
+    | '/student/$id/profile'
     | '/student/$id/mastery'
     | '/teacher/$class/quests'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   AnchorDateRoute: typeof AnchorDateRoute
   RealmSubjectRoute: typeof RealmSubjectRoute
   StudentIdBadgesRoute: typeof StudentIdBadgesRoute
+  StudentIdProfileRoute: typeof StudentIdProfileRoute
   StudentIdMasteryRoute: typeof StudentIdMasteryRoute
   TeacherClassQuestsRoute: typeof TeacherClassQuestsRoute
 }
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentIdBadgesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/$id/profile': {
+      id: '/student/$id/profile'
+      path: '/student/$id/profile'
+      fullPath: '/student/$id/profile'
+      preLoaderRoute: typeof StudentIdProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnchorDateRoute: AnchorDateRoute,
   RealmSubjectRoute: RealmSubjectRoute,
   StudentIdBadgesRoute: StudentIdBadgesRoute,
+  StudentIdProfileRoute: StudentIdProfileRoute,
   StudentIdMasteryRoute: StudentIdMasteryRoute,
   TeacherClassQuestsRoute: TeacherClassQuestsRoute,
 }
