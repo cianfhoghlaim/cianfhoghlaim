@@ -19,27 +19,31 @@ function SHALL contain a placeholder prompt body.
 
 #### Scenario: Mathematics pipeline runs end-to-end
 
-- **GIVEN** the 7 Mathematics PDFs in
+- **GIVEN** the Mathematics PDFs in
   `cianfhoghlaim/leaving_certificate/mathematics/{en,ga}/`
-- **WHEN** the user materialises the 6 Mathematics Dagster assets
-- **THEN** the `math_syllabus_raw` asset produces ≥1 `MathSyllabusTopic` per topic
-- **AND** the `math_quest_pack` asset produces ≥1 `FormativeItem` per learning outcome
-- **AND** the `math_embedding` asset populates the LanceDB table
-  `cianfhoghlaim.lc.mathematics.embeddings` with ≥1 BGE-M3 1024-dim
-  vector per quest item
-- **AND** the marimo notebook at
-  `cianfhoghlaim/notebooks/leaving_cert/mathematics.py` renders
-  the 8-subject NCCA syllabus landscape with bilingual EN + GA content
+- **WHEN** the user materialises the `mathematics_quest_pack` Dagster
+  asset (`orchestration/defs/2_materials/lc_extraction/
+  quest_pack_assets.py`)
+- **THEN** the asset extracts the real syllabus + past papers +
+  marking schemes via the v3 extraction functions
+- **AND** the asset calls `GenerateMathQuestPack` and writes the
+  resulting `MathQuestPack` to the Convex `questPacks` table
+- **AND** the pack's `items` reference real `evidence.source_page`
+  values from the extracted syllabus, not fabricated content
+
+Per-subject LanceDB embedding assets and marimo notebooks are real,
+separate future work — not claimed as built by this scenario.
 
 #### Scenario: Generated formative item cites real extraction, not a placeholder
 
-- **GIVEN** a Mathematics `SyllabusDocument` record extracted by
-  `ExtractCurriculumSyllabus` from a real ingested LC PDF, with
-  `source_page` evidence
-- **WHEN** `GenerateMathFormativeItem` is called with that
-  `SyllabusDocument` as input
-- **THEN** the returned `MathFormativeItem`'s content is traceable to
-  the input `SyllabusDocument`'s `source_page`
+- **GIVEN** a `MathEvidenceLink` built from a real
+  `SyllabusDocument` (extracted by `ExtractCurriculumSyllabus` from a
+  real ingested LC PDF), carrying its `source_page` and verbatim
+  `excerpt_en`
+- **WHEN** `GenerateMathFormativeItem(lo_code, difficulty, level,
+  topic, evidence=<that MathEvidenceLink>)` runs
+- **THEN** the returned `MathFormativeItem.evidence` matches the input
+  evidence's `source_pdf`/`source_page`
 - **AND** the BAML function body is not the literal string
   `"Auto-generated extraction prompt."`
 
@@ -56,34 +60,45 @@ function SHALL contain a placeholder prompt body.
 The system SHALL generate formative quest packs keyed to NCCA learning
 outcomes + past paper questions + marking schemes, for both the Leaving
 Certificate and Junior Cycle programmes. Each quest pack SHALL be
-bilingual EN + GA, and SHALL support the 3 NCCA levels (Higher /
-Ordinary / Foundation where applicable) for Leaving Cert subjects. The
-quest pack SHALL contain ≥1 `FormativeItem` per NCCA learning outcome,
-with difficulty range 1-5, and SHALL reference the source NCCA PDF page
-in its `evidence.source_page` field. Quest-pack generation functions
+bilingual EN + GA (except a subject whose corpus is genuinely
+single-medium, e.g. gaeilge's Irish-medium exam papers), and SHALL
+support the NCCA levels a subject's corpus provides evidence for. A
+quest pack SHALL contain a bounded number of `FormativeItem`s (up to
+15, prioritising breadth of module/topic coverage over exhaustive
+learning-outcome coverage — an unbounded "one item per LO" requirement
+was found, via a live end-to-end run, to make generation calls
+time out for syllabi with dozens of learning outcomes), each with
+difficulty range 1-5, and SHALL reference the source NCCA PDF page in
+its `evidence.source_page` field. Quest-pack generation functions
 SHALL consume real extraction output (`SyllabusDocument`, `ExamPaper`,
 `MarkingScheme`) — content SHALL NOT be generated from a learning-outcome
 code string alone.
 
-#### Scenario: Quest pack generated for a Mathematics LO
+#### Scenario: Quest pack generated for Mathematics
 
-- **GIVEN** a Mathematics learning outcome `LC-MATHS-LO-2.4`
-- **WHEN** the BAML function `GenerateMathFormativeItem(syllabus:
-  SyllabusDocument, lo_code="LC-MATHS-LO-2.4", difficulty=3)` runs
-- **THEN** the output is a `MathFormativeItem` with `text_en`, `text_ga`,
-  `marking_scheme_en`, `marking_scheme_ga`, `evidence.source_page` ≥1,
-  and `difficulty == 3`
+- **GIVEN** a Mathematics `SyllabusDocument` with multiple
+  `module_topics`, each with its own learning outcomes
+- **WHEN** `GenerateMathQuestPack(syllabus, past_papers,
+  marking_schemes, level="LC_HL")` runs
+- **THEN** the output `MathQuestPack.items` contains up to 15
+  `MathFormativeItem`s, each with `prompt`, `expected_answer`,
+  `marking_scheme` (bilingual `text_en`/`text_ga`), `evidence.source_page`
+  ≥1, and `difficulty` in 1-5
+- **AND** `los_covered` lists exactly the LO codes of the generated
+  items, not every LO in the syllabus
 - **AND** the output content reflects the actual syllabus text passed
   in, not a generic template
 
 #### Scenario: Gaeilge quest pack is Irish-only
 
-- **GIVEN** a Gaeilge learning outcome `LC-GAEL-LO-3.1`
-- **WHEN** the BAML function `GenerateGaelFormativeItem("LC-GAEL-LO-3.1", difficulty=2)` runs
-- **THEN** the output's `text_en` is null (Gaeilge is taught in Irish only)
-- **AND** the output's `text_ga` is the canonical Irish phrasing
-- **AND** the output's `marking_scheme_en` is null
-- **AND** the output's `marking_scheme_ga` is the canonical Irish marking scheme
+- **GIVEN** a Gaeilge learning outcome `LC-GAEL-LO-3.1` and its
+  `GaelEvidenceLink` (source PDF page + verbatim Irish excerpt)
+- **WHEN** `GenerateGaelFormativeItem(lo_code="LC-GAEL-LO-3.1",
+  difficulty=2, level="LC_HL", topic="...", evidence=...)` runs
+- **THEN** the output `prompt.text_en` is null (Gaeilge is taught in
+  Irish only) and `prompt.text_ga` is the canonical Irish phrasing
+- **AND** the output `marking_scheme.text_en` is null and
+  `marking_scheme.text_ga` is the canonical Irish marking scheme
 
 #### Scenario: Junior Cycle quest pack issues a JCPA-framework badge
 
@@ -197,6 +212,6 @@ certification-and-reporting.pdf`).
   problem-solving
 - **WHEN** `issue_badge()` is called
 - **THEN** the resulting `SkillTreeBadge`'s `key_competencies` includes
-  `"thinking_and_solving_problems"`
+  `KeyCompetency.THINKING_AND_SOLVING_PROBLEMS`
 - **AND** the badge's `evidence_type` is set correctly for the
   evidence kind that triggered issuance
