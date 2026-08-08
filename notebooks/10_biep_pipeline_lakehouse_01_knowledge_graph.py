@@ -101,6 +101,18 @@ def _intro(mo):
 
         Falls back to a synthetic 60-node KG when the lakehouse /
         FalkorDB / Cognee are unreachable.
+
+        > ⚠️ **Synthetic data, always**: per the
+        > 2026-08-08-lakehouse-extensive-hydration-v1 change — despite
+        > the "falls back to synthetic" framing above, this notebook
+        > currently has no real FalkorDB/Cognee query path at all; the
+        > graph below is ALWAYS the deterministic 60-node synthetic KG,
+        > not a fallback triggered by an unreachable connection. The
+        > ✅ marks in the requirements-status table further down
+        > describe what the underlying pipeline assets do elsewhere in
+        > the codebase, not what this notebook itself has verified live.
+        > Wiring a real query path here is out of scope for that change
+        > and flagged as separate follow-up work.
         """
     )
     return  # (no-op; marimo-safe)

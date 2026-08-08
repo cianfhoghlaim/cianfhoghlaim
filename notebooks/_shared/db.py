@@ -90,7 +90,13 @@ def connect_md(*, read_only: bool = True) -> Any:
         except Exception:
             pass  # fall through to :memory:
 
-    return ibis.duckdb.connect(":memory:", read_only=read_only)
+    # DuckDB refuses to even open a read_only `:memory:` connection at
+    # all (confirmed live: `Cannot launch in-memory database in
+    # read-only mode`) -- found while fixing the identical bug in
+    # `connect_local_lakehouse()` below, per the
+    # 2026-08-08-lakehouse-extensive-hydration-v1 change. `:memory:` has
+    # no real data to protect, so it's always opened read-write here.
+    return ibis.duckdb.connect(":memory:", read_only=False)
 
 
 def connect_local(*, read_only: bool = True) -> Any:
@@ -107,7 +113,13 @@ def connect_local(*, read_only: bool = True) -> Any:
             "install with `uv add ibis-framework[duckdb]`."
         ) from exc
 
-    return ibis.duckdb.connect(":memory:", read_only=read_only)
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: with
+    # its own `read_only=True` default, this used to ALWAYS raise
+    # (DuckDB refuses read-only `:memory:` connections outright) --
+    # directly contradicting this function's own docstring ("Always
+    # succeeds"). `:memory:` has no real data to protect, so it's
+    # always opened read-write.
+    return ibis.duckdb.connect(":memory:", read_only=False)
 
 
 def connect_local_lakehouse(*, read_only: bool = True) -> Any:
@@ -119,23 +131,49 @@ def connect_local_lakehouse(*, read_only: bool = True) -> Any:
     MotherDuck. Falls back to ``:memory:`` if the local lakehouse stack
     is down or unreachable.
 
-    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
-    the canonical DuckLake catalog DB is `ducklake_cianfhoghlaim`
-    (post-v7 namespace alignment). The canonical S3 path is
-    `s3://ducklake-cianhoghlaim/<namespace>/<dataset>/`.
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    function was previously unusable in practice, for 3 independent
+    reasons found while live-verifying the real local stack (which IS
+    genuinely up and reachable in this environment, contrary to several
+    other places in this codebase that assumed it was down):
+
+    1. The healthcheck did an HTTP GET against
+       ``http://localhost:5433`` — a raw Postgres wire-protocol port,
+       not an HTTP endpoint. Every real request against it raises
+       (confirmed live: ``httpx.RemoteProtocolError``), so this
+       function ALWAYS reported the stack as down and fell to
+       ``:memory:``, even when Postgres was perfectly healthy. Replaced
+       with a plain TCP socket connect check against
+       ``(pg_host, pg_port)``.
+    2. The default bucket name (``ducklake-cianhoghlaim`` — note the
+       typo, missing the "f") didn't match either the intended
+       convention (``ducklake-cianfhoghlaim``, per
+       ``dlt_sources/common/destinations_cianfhoghlaim.py``'s old
+       default) OR, more importantly, the REAL live catalog's actual
+       registered DATA_PATH, live-verified via a direct ``ATTACH`` to be
+       ``s3://ducklake/cianfhoghlaim/`` — a real ``DUCKLAKE_BUCKET``
+       env var (default ``"ducklake"``) is now used, matching the
+       canonical destination factory.
+    3. ``DATA_PATH 's3://{bucket}/'`` had no namespace sub-path at all,
+       so even with the right bucket name it wouldn't match the real
+       catalog's registered path (which has a ``/cianfhoghlaim/``
+       suffix) — a DuckLake ``ATTACH`` with the wrong DATA_PATH fails
+       outright ("does not match existing data path in the catalog").
+       Fixed to append the namespace.
 
     Environment variables honoured (in order of precedence):
     - ``DUCKLAKE_POSTGRES_HOST`` (default: `localhost`)
     - ``DUCKLAKE_POSTGRES_PORT`` (default: `5433`)
     - ``DUCKLAKE_POSTGRES_DB`` (default: `ducklake_cianfhoghlaim`)
     - ``DUCKLAKE_POSTGRES_USER`` (default: `lakekeeper`)
-    - ``DUCKLAKE_POSTGRES_PASSWORD`` (default: empty)
-    - ``GARAGE_S3_ENDPOINT`` (default: `http://localhost:3900`)
-    - ``GARAGE_BUCKET`` (default: `ducklake-cianhoghlaim`)
-    - ``GARAGE_ACCESS_KEY_ID`` (default: empty)
-    - ``GARAGE_SECRET_ACCESS_KEY`` (default: empty)
-    - ``DUCKLAKE_HEALTHCHECK_URL`` (default: `http://localhost:5433`)
-      — used to short-circuit if the local stack is down
+    - ``DUCKLAKE_POSTGRES_PASSWORD`` > ``POSTGRES_PASSWORD`` (the real
+      compose-stack var, Infisical-first/`.env.dev`-fallback) >
+      ``"devpassword"`` last resort
+    - ``AWS_ENDPOINT_URL`` / ``GARAGE_S3_ENDPOINT`` (default:
+      `http://localhost:3900`)
+    - ``DUCKLAKE_BUCKET`` (default: `ducklake`, live-verified)
+    - ``AWS_ACCESS_KEY_ID`` / ``GARAGE_ACCESS_KEY_ID`` (default: empty)
+    - ``AWS_SECRET_ACCESS_KEY`` / ``GARAGE_SECRET_ACCESS_KEY`` (default: empty)
     """
     try:
         import ibis  # type: ignore[import-not-found]
@@ -145,28 +183,50 @@ def connect_local_lakehouse(*, read_only: bool = True) -> Any:
             "install with `uv add ibis-framework[duckdb]`."
         ) from exc
 
-    # Short-circuit if the local lakehouse stack is down (no Postgres)
-    healthcheck_url = os.environ.get("DUCKLAKE_HEALTHCHECK_URL", "http://localhost:5433")
-    try:
-        import httpx  # type: ignore[import-not-found]
-        resp = httpx.get(healthcheck_url, timeout=2.0)
-        if resp.status_code >= 400:
-            return ibis.duckdb.connect(":memory:", read_only=read_only)
-    except Exception:
-        return ibis.duckdb.connect(":memory:", read_only=read_only)
-
-    # Build the DuckLake ATTACH SQL using the canonical 3-tier env matrix
     pg_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
-    pg_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433")
+    pg_port = int(os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433"))
+
+    # Short-circuit if the local lakehouse stack is down. A plain TCP
+    # connect to the Postgres port, not an HTTP GET (the previous
+    # bug -- see docstring point 1).
+    import socket
+
+    try:
+        with socket.create_connection((pg_host, pg_port), timeout=2.0):
+            pass
+    except OSError:
+        return ibis.duckdb.connect(":memory:", read_only=False)
+
     pg_db = os.environ.get("DUCKLAKE_POSTGRES_DB", "ducklake_cianfhoghlaim")
     pg_user = os.environ.get("DUCKLAKE_POSTGRES_USER", "lakekeeper")
-    pg_password = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD", "")
-    garage_endpoint = os.environ.get("GARAGE_S3_ENDPOINT", "http://localhost:3900")
-    garage_bucket = os.environ.get("GARAGE_BUCKET", "ducklake-cianhoghlaim")
-    garage_access_key = os.environ.get("GARAGE_ACCESS_KEY_ID", "")
-    garage_secret_key = os.environ.get("GARAGE_SECRET_ACCESS_KEY", "")
+    pg_password = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
+        "POSTGRES_PASSWORD", "devpassword"
+    )
+    garage_endpoint = os.environ.get(
+        "AWS_ENDPOINT_URL", os.environ.get("GARAGE_S3_ENDPOINT", "http://localhost:3900")
+    )
+    namespace = "cianfhoghlaim"
+    garage_bucket = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
+    garage_access_key = os.environ.get(
+        "AWS_ACCESS_KEY_ID", os.environ.get("GARAGE_ACCESS_KEY_ID", "")
+    )
+    garage_secret_key = os.environ.get(
+        "AWS_SECRET_ACCESS_KEY", os.environ.get("GARAGE_SECRET_ACCESS_KEY", "")
+    )
 
-    conn = ibis.duckdb.connect(":memory:", read_only=read_only)
+    # A 4th real bug found live-verifying this function: DuckDB refuses
+    # to even open a `read_only=True` `:memory:` connection at all --
+    # confirmed live: `Cannot launch in-memory database in read-only
+    # mode`, independent of anything CREATE SECRET/ATTACH does. The
+    # local `:memory:` session is transient scratch space for the
+    # ATTACH itself, not the real lakehouse data, so it's always opened
+    # read-write. NOTE: this means the `read_only` parameter currently
+    # has no effect on the returned connection's access to the attached
+    # lakehouse catalog either -- enforcing true read-only access against
+    # the real DuckLake data (if DuckLake's ATTACH syntax supports a
+    # READ_ONLY option) is flagged as separate follow-up work, not
+    # silently claimed to work here.
+    conn = ibis.duckdb.connect(":memory:", read_only=False)
     try:
         # 1. Set up the S3 secret for Garage
         conn.raw_sql(
@@ -174,7 +234,7 @@ def connect_local_lakehouse(*, read_only: bool = True) -> Any:
             CREATE OR REPLACE SECRET lakehouse_s3 (
                 TYPE S3,
                 PROVIDER config,
-                ENDPOINT '{garage_endpoint}',
+                ENDPOINT '{garage_endpoint.replace("http://", "").replace("https://", "")}',
                 URL_STYLE 'path',
                 USE_SSL false,
                 REGION 'garage',
@@ -187,13 +247,13 @@ def connect_local_lakehouse(*, read_only: bool = True) -> Any:
         conn.raw_sql(
             f"""
             ATTACH 'ducklake:postgres:dbname={pg_db} host={pg_host} port={pg_port} user={pg_user} password={pg_password}'
-            AS lakehouse (DATA_PATH 's3://{garage_bucket}/')
+            AS lakehouse (DATA_PATH 's3://{garage_bucket}/{namespace}/')
             """
         )
         return conn
     except Exception:  # noqa: BLE001
         # If the ATTACH fails (e.g. Postgres is up but DuckLake isn't), fall back to :memory:
-        return ibis.duckdb.connect(":memory:", read_only=read_only)
+        return ibis.duckdb.connect(":memory:", read_only=False)
 
 
 def connect_lance(*, namespace: str = "cianhoghlaim") -> Any:

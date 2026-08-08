@@ -113,6 +113,7 @@ def _lag_query(con, pd, window_days):
     Synthetic fallback: deterministic DataFrame with 10 OCR models ×
     14 days of plausible lag values (0.5–25 s).
     """
+    lag_is_synthetic = False
     try:
         df = con.sql(
             f"""
@@ -126,6 +127,12 @@ def _lag_query(con, pd, window_days):
             """
         ).execute()
     except Exception:
+        # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change:
+        # this used to fall back to fabricated data with no visible
+        # signal to the reader that the chart isn't showing real
+        # materialization lags -- now flagged via lag_is_synthetic,
+        # surfaced in the _synthetic_warning footer cell below.
+        lag_is_synthetic = True
         _random_mod = __import__("random")
         _lag_rng = _random_mod.Random(7)
         _lag_models = [
@@ -139,7 +146,7 @@ def _lag_query(con, pd, window_days):
                     {"day": _d, "ocr_model": _model, "avg_lag_s": _lag_rng.uniform(0.5, 25.0)}
                 )
         df = pd.DataFrame(_lag_rows)
-    return (df,)
+    return df, lag_is_synthetic
 
 
 @app.cell
@@ -169,6 +176,7 @@ def _corr_query(con, pd):
     (one row per (model, document)). Falls back to synthetic
     negative-correlation data (high WER → low confidence).
     """
+    corr_is_synthetic = False
     try:
         df_corr = con.sql(
             """
@@ -181,6 +189,7 @@ def _corr_query(con, pd):
             """
         ).execute()
     except Exception:
+        corr_is_synthetic = True
         _random_mod2 = __import__("random")
         _corr_rng = _random_mod2.Random(13)
         _corr_models = [
@@ -201,7 +210,7 @@ def _corr_query(con, pd):
                     }
                 )
         df_corr = pd.DataFrame(_corr_rows)
-    return (df_corr,)
+    return df_corr, corr_is_synthetic
 
 
 @app.cell
@@ -218,6 +227,27 @@ def _corr_chart(alt, df_corr):
     )
     chart_corr
     return (chart_corr,)
+
+
+@app.cell
+def _synthetic_warning(mo, lag_is_synthetic, corr_is_synthetic):
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: a
+    # connection failure used to silently render fabricated data with
+    # no visible signal — this makes it loud instead.
+    if lag_is_synthetic or corr_is_synthetic:
+        _which = []
+        if lag_is_synthetic:
+            _which.append("materialization-lag")
+        if corr_is_synthetic:
+            _which.append("BAML-confidence-vs-WER")
+        mo.md(
+            f"> ⚠️ **Synthetic data**: the real `cianfhoghlaim."
+            f"ocr_materialization_lags` / `oideachais_dbt."
+            f"ocr_confidence_by_model` table(s) were unreachable, so the "
+            f"{' and '.join(_which)} chart(s) above are rendering "
+            f"deterministic synthetic data, not real pipeline metrics."
+        )
+    return
 
 
 if __name__ == "__main__":
