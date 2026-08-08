@@ -210,15 +210,39 @@ run live end-to-end before the data loss:
 ## Phase 6 — Verification
 
 - [x] 6.1 `openspec validate 2026-08-08-docs-informed-quest-and-
-  credential-generation-v1 --strict`.
+  credential-generation-v1 --strict`, and separately
+  `openspec validate --changes --strict` — all 4 sibling changes in
+  this batch pass.
 - [x] 6.2 For ≥1 Ireland LC subject (chemistry) and ≥1 Ireland JC
   level, confirmed generated-content shape traces to real source-PDF
-  pages via the rewritten prompts' `evidence` field requirements —
-  **and**, in this redo pass, confirmed live against the real MiniMax
-  API (see Phase 5b's last item), not just via BAML compilation.
+  pages via the rewritten prompts' `evidence` field requirements.
   England (GCSE/A-Level) tracing is blocked on Phase 3.2.
-- [x] 6.3 Ran `uv run python scripts/sync/spec_agents.py` — completes
-  successfully; nothing of this change's to regenerate until archived.
-- [x] 6.4 Ran `mise run lint:drift-docs` — fails only on pre-existing,
-  unrelated drift (a stale "92 stacks" claim in `AGENTS.md`, real
-  count 93) — not caused by this change.
+- [x] 6.5 **Full live end-to-end run of `chemistry_quest_pack`'s
+  extraction chain**, run twice (the first run is what surfaced Phase
+  5b's bugs; this is the confirming re-run after all 3 fixes landed):
+  real syllabus extraction (90 LOs across 5 strands) → 2 real exam
+  papers extracted in full (`LC022ALP000EV.pdf`, `LC022GLP000EV.pdf` —
+  genuine question-by-question content, e.g. real electrolysis
+  questions) → 1 real marking scheme extracted (correctly returning
+  `year: null` rather than failing validation) →
+  `GenerateChemQuestPack` succeeded, producing exactly 15
+  `ChemFormativeItem`s (the new cap, not the old unbounded
+  "every LO" instruction that timed out), each with real bilingual
+  EN/GA prompts/hints/marking schemes grounded in verbatim syllabus
+  excerpts (e.g. weak-acid `Ka` derivation, atomic-model comparison),
+  real cross-subject links (LC-MATHS, LC-APPM, Physics, Biology), and
+  `evidence.source_page`/`excerpt_en` tracing to the actual syllabus
+  text — nothing fabricated. This is the first time this pipeline
+  (or its predecessor in the original, lost session) had been run
+  live end-to-end from raw PDFs to a finished quest pack.
+- [ ] 6.3 `scripts/sync/spec_agents.py` — **not re-run in this redo
+  pass**; carried forward from the original (lost) session's claim
+  without re-verification. Flagged rather than silently restated as
+  done.
+- [x] 6.4 Ran `mise run lint:drift-docs:dry-run` (the safe,
+  always-exits-0 variant). Result: 4 pre-existing, unrelated drift
+  violations — `AGENTS.md`/`bonneagar/AGENTS.md` claim "89 stacks",
+  real count 92 — none touching this change's files. (The original
+  session's tasks.md claimed a different, now-stale "92 vs 93" drift
+  reading; this is the current, actually-re-run result, not a repeat
+  of that claim.)
