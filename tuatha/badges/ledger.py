@@ -14,7 +14,7 @@ import os
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-from .schema import EvidenceLink, EvidenceType, KeyCompetency, SkillTreeBadge
+from .schema import BilingualText, EvidenceLink, EvidenceType, KeyCompetency, SkillTreeBadge
 
 
 async def issue_badge(
@@ -117,6 +117,13 @@ async def issue_badge(
                 "evidenceItemId": badge.evidence.item_id,
                 "evidenceResponse": badge.evidence.response,
                 "evidenceScorePct": badge.evidence.score_pct,
+                # Previously dropped silently (found while adding the
+                # read-path fix below): the badges table now has
+                # matching evidence* columns to receive these.
+                "evidenceFeedbackEn": badge.evidence.feedback_en,
+                "evidenceFeedbackGa": badge.evidence.feedback_ga,
+                "evidenceSourcePdf": badge.evidence.source_pdf,
+                "evidenceSourcePage": badge.evidence.source_page,
                 "evidenceHash": badge.evidence_hash,
                 "signature": badge.signature,
                 "keyCompetencies": [kc.value for kc in badge.key_competencies],
@@ -154,14 +161,57 @@ async def issue_badge(
     return badge
 
 
+def _row_to_badge(row: dict[str, Any]) -> SkillTreeBadge:
+    """Reconstruct a SkillTreeBadge from a Convex `badges` row.
+
+    Found while wiring the read path: the row is flat and camelCase
+    (Convex's own shape, per `convex/schema.ts`), while `SkillTreeBadge`
+    is nested and snake_case (`competency_text: BilingualText`,
+    `evidence: EvidenceLink`) — the same mismatch `issue_badge()`'s
+    write path already had to fix, mirrored here for reads. Without
+    this mapper, `SkillTreeBadge(**row)` would raise a Pydantic
+    validation error on every real row (unknown fields `studentId` /
+    `competencyTextEn` / `_id` / `_creationTime`, missing required
+    fields `student_id` / `competency_text` / `evidence`).
+    """
+    return SkillTreeBadge(
+        id=row.get("_id", row.get("id", "")),
+        student_id=row["studentId"],
+        framework=row["framework"],
+        level=row["level"],
+        subject=row["subject"],
+        competency_code=row["competencyCode"],
+        competency_text=BilingualText(
+            text_en=row["competencyTextEn"], text_ga=row.get("competencyTextGa")
+        ),
+        key_competencies=[KeyCompetency(kc) for kc in row.get("keyCompetencies", [])],
+        evidence_type=EvidenceType(row.get("evidenceType", EvidenceType.FORMATIVE_ITEM.value)),
+        date_earned=datetime.fromtimestamp(row["dateEarned"] / 1000, tz=timezone.utc),
+        agent_issuer=row["agentIssuer"],
+        evidence=EvidenceLink(
+            item_id=row["evidenceItemId"],
+            response=row["evidenceResponse"],
+            score_pct=row["evidenceScorePct"],
+            feedback_en=row.get("evidenceFeedbackEn") or "",
+            feedback_ga=row.get("evidenceFeedbackGa"),
+            source_pdf=row.get("evidenceSourcePdf"),
+            source_page=row.get("evidenceSourcePage"),
+        ),
+        evidence_hash=row["evidenceHash"],
+        signature=row["signature"],
+        on_chain_anchor=row.get("onChainAnchor"),
+        anchor_date=row.get("anchorDate"),
+    )
+
+
 async def fetch_badges_for_student(student_id: str) -> list[SkillTreeBadge]:
     """Return all SkillTreeBadges for a student, ordered by date_earned desc."""
     try:
         from convex import ConvexClient
 
         client = ConvexClient(os.environ.get("CONVEX_URL", "http://localhost:3210"))
-        rows = client.query("badges:listByStudent", {"student_id": student_id})
-        return [SkillTreeBadge(**r) for r in rows]
+        rows = client.query("badges:listByStudent", {"studentId": student_id})
+        return [_row_to_badge(r) for r in rows]
     except ImportError:
         return []
 
@@ -174,8 +224,9 @@ async def fetch_badges_since(since_iso: str) -> list[SkillTreeBadge]:
     try:
         from convex import ConvexClient
 
+        since_ms = int(datetime.fromisoformat(since_iso).timestamp() * 1000)
         client = ConvexClient(os.environ.get("CONVEX_URL", "http://localhost:3210"))
-        rows = client.query("badges:listSince", {"since": since_iso})
-        return [SkillTreeBadge(**r) for r in rows]
+        rows = client.query("badges:listSince", {"sinceMs": since_ms})
+        return [_row_to_badge(r) for r in rows]
     except ImportError:
         return []
