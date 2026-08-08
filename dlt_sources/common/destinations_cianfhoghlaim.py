@@ -117,16 +117,22 @@ def _build_local_destination(namespace: str) -> Any:
     catalog_uri = f"postgresql://{postgres_user}:{postgres_pass}@{postgres_host}:{postgres_port}/{postgres_db}"
 
     # S3/Garage storage config.
-    # The canonical bucket name is `ducklake-cianfhoghlaim`. Override via
-    # DUCKLAKE_BUCKET env var.
+    # Live-verified (2026-08-08-lakehouse-extensive-hydration-v1 change,
+    # against the actual running lakehouse-garage + lakehouse-postgres
+    # containers): the real deployed bucket is `ducklake`, not
+    # `ducklake-cianfhoghlaim` as this default previously claimed --
+    # attaching with the wrong DATA_PATH fails outright ("does not match
+    # existing data path in the catalog"). Override via DUCKLAKE_BUCKET
+    # env var (already correctly set to "ducklake" in the real deployed
+    # environment; this default now matches it instead of contradicting
+    # it when the env var happens to be unset).
     #
     # Note this is a deliberately DIFFERENT bucket from the one
     # `dlt_sources/filesystem/pdf_download_source.py` uploads raw PDF
     # blobs to (bucket "garage", key prefix "oideachais/leaving_cert/...").
     # That's an intentional separation of concerns -- raw source PDFs vs.
-    # DuckLake's own Parquet-backed tables -- not leftover inconsistency;
-    # see the 2026-08-08-lakehouse-extensive-hydration-v1 change.
-    bucket_name = os.environ.get("DUCKLAKE_BUCKET", "ducklake-cianfhoghlaim")
+    # DuckLake's own Parquet-backed tables -- not leftover inconsistency.
+    bucket_name = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
     bucket_url = f"s3://{bucket_name}/{namespace}/"
     endpoint_url = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900")
     # Map the lakehouse's GARAGE_* env vars to the AWS_* naming

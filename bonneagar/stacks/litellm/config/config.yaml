@@ -635,12 +635,15 @@ router_settings:
   timeout: 600
   retry_policy: exponential_backoff_retry
 
+  # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this used
+  # to be a bare list of model-name strings, which litellm's
+  # Router.validate_fallbacks() rejects outright ("Item 'qwen3-vl-8b' is
+  # not a dictionary") -- crash-looping the entire litellm container on
+  # every startup attempt (confirmed via `docker logs litellm`), not just
+  # blocking the vision route. litellm's real schema requires each
+  # fallbacks entry to be `{primary_model: [fallback_model, ...]}`.
   fallbacks:
-    - qwen3-vl-8b
-    - gemma-4-26B-A4B
-    - glm-4.6v-flash
-    - openai/glm-4.6
-    - gemini/gemini-2.5-pro
+    - qwen3-vl-8b: [gemma-4-26B-A4B, glm-4.6v-flash, openai/glm-4.6, gemini/gemini-2.5-pro]
 
   # Vendor-de-risking for MiniMax-M3 (per the litellm-minimax-vendor-derisking change)
   # The `minimax` alias uses 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2)
@@ -650,8 +653,7 @@ router_settings:
     - priority: 0
       content_policy: "irish-curriculum"
       fallbacks:
-        - qwen3-vl-8b
-        - gemma-4-26B-A4B
+        - qwen3-vl-8b: [gemma-4-26B-A4B]
 
 litellm_settings:
   drop_params: true
