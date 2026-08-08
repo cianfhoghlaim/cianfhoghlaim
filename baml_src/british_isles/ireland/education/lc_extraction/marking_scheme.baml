@@ -36,7 +36,12 @@ class MarkingScheme {
   scheme_code string
   language string
   level string
-  year int
+  // Nullable (found via a live smoke test 2026-08-08): not every
+  // marking-scheme guideline document states its year explicitly in
+  // extractable text, and the caller doesn't always know it either
+  // (quest_pack_assets.py passes year=None) — matches the
+  // already-nullable SyllabusDocument.source_pages pattern.
+  year int?
   source_pdf string
 
   grade_descriptors GradeDescriptor[]
@@ -85,7 +90,8 @@ function ExtractMarkingSchemeGuideline(
       text, else derive a short slug from the subject and year
     - language: 'EN' or 'GA' based on the language of the text
     - level: 'OL', 'HL', or 'FDN' — read from the document's own header
-    - year: the year stated in the document, else the year given above
+    - year: the year stated in the document, else the year given above,
+      else null if truly undeterminable — do not guess a year
     - source_pdf: leave as an empty string; the Python caller fills this
       in from the actual file path
     - grade_descriptors: every distinct grade band the document

@@ -195,7 +195,11 @@ function GenerateAppmQuestPack(
     - level: LC_HL
     - title / description: bilingual; text_ga null only if the syllabus text
       itself is English-only (the common case for Applied Mathematics)
-    - items: one AppmFormativeItem per learning outcome actually present in
+    - items: select up to 15 learning outcomes spanning as many distinct
+      module_topics as the syllabus has (breadth over exhaustive LO
+      coverage — a quest pack is a bounded, completable unit, not the
+      entire syllabus in one response), and generate one AppmFormativeItem
+      per selected LO, drawn from
       syllabus.module_topics[].learning_outcomes — prefer WORKED_SOLUTION or
       VISUAL_INTERPRETATION for mechanics outcomes involving forces/motion
       diagrams, PROOF where the syllabus asks students to derive a result;
@@ -204,7 +208,8 @@ function GenerateAppmQuestPack(
       near-complete worked solution; evidence.source_page and
       evidence.excerpt_en copied verbatim from the grounding syllabus text,
       never invented; evidence.source_pdf from syllabus.source_pdf
-    - los_covered: every lo actually present in the syllabus
+    - los_covered: exactly the LO codes of the items you actually
+      generated above (not the full syllabus's LO list)
     - total_items / total_marks / est_time_minutes: sums over the actual items
     - prerequisites: pure Mathematics LO codes (LC-MATHS-LO-*) the syllabus
       text implies as background (calculus, vectors, trigonometry)
@@ -215,7 +220,8 @@ function GenerateAppmQuestPack(
 
     Count and cite carefully from the actual text. Output exactly one complete
     JSON object matching AppmQuestPack. Never use ellipses (...) or comments;
-    include every item in full, however long the list is.
+    include every one of your selected items in full (up to 15 — never
+    truncate a generated item, but do not exceed the cap either).
 
     {{ _.role("user") }}
     {{ ctx.output_format }}

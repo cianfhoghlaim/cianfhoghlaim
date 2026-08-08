@@ -183,8 +183,12 @@ function GenerateGaelQuestPack(
     - level: an GaelNCCALevel a fhreagraíonn do {{ level }}
     - title / description: text_ga i gcónaí, text_en null (ní hé Béarla an
       teanga theagaisc)
-    - items: mír amháin GaelFormativeItem do gach toradh foghlama atá i
-      láthair go hiarbhír in syllabus.module_topics[].learning_outcomes —
+    - items: roghnaigh suas le 15 thoradh foghlama a chlúdaíonn an oiread
+      module_topics ar leith agus is féidir (leithead seachas clúdach
+      iomlán ar gach toradh foghlama — is aonad teoranta, inchríochnaithe
+      é paca cuest, ní an siollabas ar fad in aon fhreagra amháin), agus
+      gin mír amháin GaelFormativeItem do gach toradh foghlama roghnaithe,
+      bunaithe ar syllabus.module_topics[].learning_outcomes —
       prompt/expected_answer/marking_scheme bunaithe ar théacs iarbhír an
       tsiollabais; nuair a mheaitseálann related_lo_id ceist ó pháipéar a
       chuaigh thart, cuir a stíl agus a leithdháileadh marcanna san áireamh;
@@ -192,7 +196,8 @@ function GenerateGaelQuestPack(
       evidence.source_page agus evidence.excerpt_ga (móide excerpt_en más
       ann dó) cóipeáilte go litriúil ón téacs bunaidh, ná cum riamh iad;
       evidence.source_pdf ó syllabus.source_pdf
-    - los_covered: gach toradh foghlama atá sa siollabas iarbhír
+    - los_covered: díreach cóid na dtorthaí foghlama atá sna míreanna a
+      ghin tú thuas (ní liosta iomlán an tsiollabais)
     - total_items / total_marks / est_time_minutes: suimeanna ó na míreanna iarbhír
     - prerequisites / cross_subject_links: an méid a luann réimse
       cross_curricular nó assessment_objectives an tsiollabais amháin
@@ -201,7 +206,9 @@ function GenerateGaelQuestPack(
 
     Áirigh agus luaigh go cúramach ón téacs iarbhír. Aschur díreach amháin
     réad JSON iomlán a fhreagraíonn do GaelQuestPack. Ná húsáid ellipses
-    (...) ná nótaí; cuir gach mír san áireamh ina hiomláine.
+    (...) ná nótaí; cuir gach ceann de na míreanna roghnaithe san áireamh
+    ina hiomláine (suas le 15 — ná giorraigh mír a ghineann tú, ach ná
+    sáraigh an uasteorainn ach oiread).
 
     {{ _.role("user") }}
     {{ ctx.output_format }}

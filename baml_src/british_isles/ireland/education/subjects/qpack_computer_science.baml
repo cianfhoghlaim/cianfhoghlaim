@@ -157,7 +157,11 @@ function GenerateCompQuestPack(syllabus: SyllabusDocument, past_papers: ExamPape
     - level: the CompNCCALevel matching {{ level }}
     - title / description: text_ga always populated; text_en only if
       derivable from the source
-    - items: one CompFormativeItem per learning outcome actually present in
+    - items: select up to 15 learning outcomes spanning as many distinct
+      module_topics as the syllabus has (breadth over exhaustive LO
+      coverage — a quest pack is a bounded, completable unit, not the
+      entire syllabus in one response), and generate one CompFormativeItem
+      per selected LO, drawn from
       syllabus.module_topics[].learning_outcomes — prefer CODE_COMPLETION/
       CODE_TRACE/DEBUGGING item types where the syllabus text describes
       programming outcomes, ALGORITHM_DESIGN for computational-thinking
@@ -166,7 +170,8 @@ function GenerateCompQuestPack(syllabus: SyllabusDocument, past_papers: ExamPape
       near-complete solution; evidence.source_page and evidence.excerpt_ga
       (+ excerpt_en if available) copied verbatim from the grounding text,
       never invented; evidence.source_pdf from syllabus.source_pdf
-    - los_covered: every lo actually present in the syllabus
+    - los_covered: exactly the LO codes of the items you actually
+      generated above (not the full syllabus's LO list)
     - total_items / total_marks / est_time_minutes: sums over the actual items
     - prerequisites / cross_subject_links: only what the syllabus's
       cross_curricular field or assessment_objectives actually name
@@ -175,7 +180,8 @@ function GenerateCompQuestPack(syllabus: SyllabusDocument, past_papers: ExamPape
 
     Count and cite carefully from the actual text. Output exactly one complete
     JSON object matching CompQuestPack. Never use ellipses (...) or comments;
-    include every item in full, however long the list is.
+    include every one of your selected items in full (up to 15 — never
+    truncate a generated item, but do not exceed the cap either).
 
     {{ _.role("user") }}
     {{ ctx.output_format }}

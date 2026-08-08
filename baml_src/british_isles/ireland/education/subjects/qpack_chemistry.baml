@@ -173,7 +173,11 @@ function GenerateChemQuestPack(
     - level: the ChemNCCALevel matching {{ level }}
     - title / description: bilingual; text_ga null only if the syllabus text
       itself is English-only
-    - items: one ChemFormativeItem per learning outcome actually present in
+    - items: select up to 15 learning outcomes spanning as many distinct
+      module_topics as the syllabus has (breadth over exhaustive LO
+      coverage — a quest pack is a bounded, completable unit, not the
+      entire syllabus in one response), and generate one ChemFormativeItem
+      per selected LO, drawn from
       syllabus.module_topics[].learning_outcomes — prompt/expected_answer/
       marking_scheme grounded in the real syllabus wording, including
       mandatory-experiment procedure detail where the syllabus names one;
@@ -183,7 +187,8 @@ function GenerateChemQuestPack(
       evidence.excerpt_en/excerpt_ga copied verbatim from the grounding
       syllabus text, never invented; evidence.source_pdf from
       syllabus.source_pdf
-    - los_covered: every lo actually present in the syllabus
+    - los_covered: exactly the LO codes of the items you actually
+      generated above (not the full syllabus's LO list)
     - total_items / total_marks / est_time_minutes: sums over the actual items
     - prerequisites / cross_subject_links: only what the syllabus's
       cross_curricular field or assessment_objectives actually name
@@ -192,7 +197,8 @@ function GenerateChemQuestPack(
 
     Count and cite carefully from the actual text. Output exactly one complete
     JSON object matching ChemQuestPack. Never use ellipses (...) or comments;
-    include every item in full, however long the list is.
+    include every one of your selected items in full (up to 15 — never
+    truncate a generated item, but do not exceed the cap either).
 
     {{ _.role("user") }}
     {{ ctx.output_format }}

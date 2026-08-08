@@ -84,6 +84,16 @@ client<llm> ExtractEn {
     // MODEL_REGISTRY: family="text_llm", role="default" → "minimax-m3"
     model "minimax-m3"
   }
+  // Added 2026-08-08: a live quest-pack-generation smoke test hit
+  // real "Timeout (408)" errors from MiniMax on 2 of 3 back-to-back
+  // extraction calls in the same run (exam-paper extraction) despite
+  // an earlier, larger call (syllabus extraction) succeeding —
+  // consistent with transient flakiness under repeated real-API load
+  // rather than a payload-size problem. Every other client in this
+  // file already carries a retry_policy except this one and
+  // ExtractEnStrong; this was the load-bearing chokepoint client with
+  // none.
+  retry_policy Simple
 }
 
 client<llm> ExtractEnStrong {
