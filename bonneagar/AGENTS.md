@@ -26,7 +26,7 @@ mise run iac-health          # alias: bun run iac:health
 mise run iac-plan            # alias: bun run iac:plan
 # Full bootstrap (Pulumi → Infisical → Pangolin → Komodo → Newt → all syncs)
 mise run iac-bootstrap        # alias: bun run iac:bootstrap
-# Validate all 89 stacks against the 6-file GOLD_STANDARD
+# Validate all 93 stacks against the 6-file GOLD_STANDARD
 mise run cic:stack-doctor    # the stack-doctor audit (CI gate)
 # CI-strict variant: stack-doctor --strict --check-grammar
 mise run stack-doctor:strict # fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env (NEW in Change 1, 2026-07-30)
@@ -65,15 +65,15 @@ mise run iac:health          # 6-way health check
 
 ## `deploy:full` orchestrator
 
-`mise run deploy:full` is the one-command, end-to-end bringup for the entire platform. It is invoked as a **shell entry** (`scripts/deploy-full.sh`) that runs `preflight-arm-oci` then delegates to a **TypeScript state machine** (`scripts/deploy-full.ts`) which owns the resumable checkpoint at `~/.cianfhoghlaim/deploy-state.json`. The state machine walks 7 ordered phases — `(1) preflight → (2) control-plane-up → (3) lakehouse-up → (4) data-stacks-up → (5) agent-surfaces-up → (6) dagster-materialize → (7) dagster-sensor-health-gate` — and skips any phase whose checkpoint is already `success`. Re-run with no args to resume from the last failed phase; pass `--phase=N` to run a single phase or `--dry-run` to log without mutating state. Shipped by openspec Change 3 (`2026-08-01-lakehouse-and-reproducible-deploy-v1`); see [`scripts/deploy-full.ts`](scripts/deploy-full.ts) + [`scripts/deploy-full.sh`](scripts/deploy-full.sh).
+`mise run deploy:full` is the one-command, end-to-end bringup for the entire platform. It is invoked as a **shell entry** (`scripts/deploy-full.sh`) that runs `preflight-arm-oci` then delegates to a **TypeScript state machine** (`scripts/deploy-full.ts`) which owns the resumable checkpoint at `~/.cianfhoghlaim/deploy-state.json`. The state machine walks 10 ordered phases — `(1) preflight-arm-oci → (2) iac-auth-rotate → (3) pocketid-oidc-wire → (4) pangolin-client-install → (5) control-plane-up → (6) lakehouse-up → (7) data-stacks-up → (8) ocr-backends-up → (9) agent-surfaces-up → (10) dagster-materialize-and-sensor-health-gate` — and skips any phase whose checkpoint is already `success`. Re-run with no args to resume from the last failed phase; pass `--phase=N` to run a single phase or `--dry-run` to log without mutating state. Shipped by openspec Change 3 (`2026-08-01-lakehouse-and-reproducible-deploy-v1`) and extended to 10 phases by the `2026-08-15-pangolin-pocketid-komodo-infisical-mesh-remediation-v1` change; see [`scripts/deploy-full.ts`](scripts/deploy-full.ts) + [`scripts/deploy-full.sh`](scripts/deploy-full.sh).
 
 ## Overview
 
 `bonneagar/` is the **IaC subdirectory** of the Cianfhoghlaim monorepo. It houses:
 
-- **`iac/`** — The merged TypeScript IaC (3 typed clients + 4 discoverers + 24 CLI commands). The canonical entry point for `iac:*` operations.
-- **`stacks/`** — **89 directories** forming the Docker Compose stack catalogue. 85 of them follow the 6-file GOLD_STANDARD pattern (`compose.yaml` + `sidecar.yaml` + `secrets.env` + `pangolin.yaml` + `blueprint.yaml` + `.env.example`).
-- **`komodo/`** — Raw GitOps resources that Komodo Core pulls via Forgejo: **116 stack TOML files**, **61 procedure TOML files**, **4 resource-syncs**, **3 builds**, **1 server**.
+- **`iac/`** — The merged TypeScript IaC (3 typed clients + 4 discoverers + 26 CLI commands — added `iac:bootstrap-pangolin-client` + `iac:sync:clients` in the 2026-08-15 openspec change). The canonical entry point for `iac:*` operations.
+- **`stacks/`** — **93 directories** forming the Docker Compose stack catalogue (added `stacks/newt-arm1-oci/` in the 2026-08-15 openspec change). 81 of them follow the 6-file GOLD_STANDARD pattern (`compose.yaml` + `sidecar.yaml` + `secrets.env` + `pangolin.yaml` + `blueprint.yaml` + `.env.example`).
+- **`komodo/`** — Raw GitOps resources that Komodo Core pulls via Forgejo: **116 stack TOML files**, **63 procedure TOML files** (added 2 for deploy-pangolin-client-arm1-oci + deploy-pangolin-client-bunchloch), **4 resource-syncs**, **3 builds**, **1 server**.
 - **`pangolin/`** — Pangolin config: 3 YAML files (`agent-fleet.yaml` + `blueprint.yaml` + `private-resources.blueprint.yaml`) + 4 sub-dirs.
 - **`deploy-runbooks/`** — 7 markdown runbooks for the user-named deploy targets (full-local-agent-platform-stack, local-infisical, openclaw-hermes, pocketid-pangolin-komodo, repair-pangolin, agent-fleet-arm1-oci, agent-fleet-bunchloch).
 - **`dagger/`** — Dagger CI/CD module (Python + TS) with 8 callable functions across 3 pipelines.
@@ -84,16 +84,24 @@ mise run iac:health          # 6-way health check
 - **`_archive/`** — 1 archived file (the Komodo-flavoured 6-file contract, superseded by `bonneagar/stacks/GOLD_STANDARD.md`).
 - **`stedding/`** — Empty placeholder; canonical GGUF cache mount path.
 
-## The 89-stack inventory
+## The 90-stack inventory
 
-The canonical inventory lives at `bonneagar/stacks/INDEX.md` (auto-generated by the stack-doctor audit). The live count is 89 stacks (lowercase directories). 85 of them follow the 6-file GOLD_STANDARD contract; the 4 outliers are:
+The canonical inventory lives at `bonneagar/stacks/INDEX.md` (auto-generated by the stack-doctor audit). The live count is 93 stacks (lowercase directories; added `stacks/newt-arm1-oci/` in the 2026-08-15 openspec change). 81 of them follow the 6-file GOLD_STANDARD contract; the 12 outliers are:
 
 | Stack | Missing | Reason |
 |:--|:--|:--|
 | `browser` | `sidecar.yaml` + `secrets.env` + `blueprint.yaml` + `.env.example` | Deferred per stack-doctor TODO |
+| `chartdb` | Same as above | Deferred |
+| `komga` | Same as above | Deferred |
 | `ludusavi` | Same as above | Deferred |
 | `moonlight` | Same as above | Deferred |
+| `mylar3` | Same as above | Deferred |
 | `storybook` | Same as above | Deferred |
+| `wave2` | Same as above | Meta-stack (sentinel placeholder) |
+| `motherduck` | `blueprint.yaml` (no komodo.toml either) | Pangolin-exempt |
+| `pangolin` | `blueprint.yaml` | Self-referential (the Pangolin control plane itself) |
+| `croilar` | `blueprint.yaml` | Pangolin-exempt |
+| `newt` | `compose.yaml` | Non-Docker stack (WireGuard tunnel client binary) |
 
 `wave2/` is a meta-stack directory containing 7 sub-stacks (`kavita/`, `immich/`, `khoj/`, `outline/`, `mealie/`, `siyuan/`, `letta/`); its `compose.yaml` is a sentinel placeholder.
 
@@ -144,7 +152,7 @@ The canonical inventory lives at `bonneagar/stacks/INDEX.md` (auto-generated by 
 
 ### The 4 source-discoverers
 
-- `sources/discover-stacks.ts` — walks `bonneagar/stacks/*/compose.yaml` (89 stacks)
+- `sources/discover-stacks.ts` — walks `bonneagar/stacks/*/compose.yaml` (93 stacks)
 - `sources/discover-resources.ts` — walks `pangolin.yaml` files (~30 Pangolin-routed)
 - `sources/discover-secrets.ts` — walks `secrets.env` files (200+ Infisical refs)
 - `sources/key-stacks.ts` — the curated 30-stack list (5-group model filter)
