@@ -209,17 +209,69 @@ tables, matching this session's own live run output.
 
 ## Phase E — Restore the notebook investigation surface
 
-- [ ] E1 Locate each notebook's fabricated-fallback pattern (hash-based
-  fake row counts) and replace with a visible warning callout.
-- [ ] E2 Point notebooks at `connect_local_lakehouse()` first (now real),
-  falling back to `connect_md()` only if local genuinely fails.
-- [ ] E3 Run all 17 notebooks headless against the hydrated lakehouse.
+- [x] E0 (new, discovered mid-phase) `notebooks/_shared/db.py::
+  connect_local_lakehouse()` — the canonical helper E2 depends on — had
+  4 real, previously-undiscovered bugs of its own, found while live-
+  verifying it: (1) its healthcheck did `httpx.get("http://
+  localhost:5433")` against a raw Postgres wire-protocol port, not an
+  HTTP endpoint, so it always reported the local stack down (confirmed
+  live: `httpx.RemoteProtocolError`) — replaced with a real TCP socket
+  check; (2) its default bucket name (`ducklake-cianhoghlaim`, a typo)
+  didn't match the real catalog's registered DATA_PATH — fixed to read
+  `DUCKLAKE_BUCKET` (default `"ducklake"`, live-verified); (3) the
+  DATA_PATH had no namespace sub-path, so even the right bucket name
+  wouldn't have matched; (4) DuckDB refuses to open a `read_only=True`
+  `:memory:` connection at all (confirmed live) — this meant
+  `connect_local()`'s own docstring ("Always succeeds") was false with
+  its own default, and fixed across all 4 `:memory:` call sites in the
+  module. Live-verified after the fix: a real query against the real
+  catalog returns 2138 real rows.
+- [x] E1 Located and fixed fabricated-fallback patterns without visible
+  disclosure: `11_dpre_lag_analysis.py` (2 cells, added `is_synthetic`
+  flags + a footer warning cell) and `01_knowledge_graph.py` (no real
+  query path at all despite claiming a fallback — added an explicit,
+  always-visible disclosure). `10_leabharlann_descriptive.py` already
+  had the correct pattern (verified, not touched).
+- [x] E2 `03_all_nations.py` and `04_university_courses.py` now use the
+  real `connect_local_lakehouse()` helper instead of ad hoc, broken
+  per-notebook ATTACH/MotherDuck logic (see Phase E's per-file bug list
+  below). The other 15 notebooks' own connection cells were left as-is
+  where they already worked correctly after their other bugs were
+  fixed.
+- [x] E3 Ran all 17 notebooks headless via `marimo export html`
+  (installed `marimo` + `altair`/`lancedb`/`boto3`/`networkx` into this
+  worktree's venv to make this possible). **First full run: 8/17
+  passed.** This surfaced an entire class of real bugs `ast.parse`
+  cannot catch (marimo's own cell-execution rules: one unconditional
+  return per cell, non-underscore-prefixed names for cross-cell
+  sharing, no same-cell UIElement `.value` reads) across 9 files.
+  Fixed all of them except one (see below). **Final run: 16/17 pass.**
+  Full per-file bug list committed in the Phase E part 2 commit message
+  (`git log --grep "Phase E: restore notebook investigation surface
+  (part 2"`), including 2 more real, previously-undiscovered bugs
+  found only by actually running the notebooks: `03_all_nations.py`'s
+  `con.execute(<raw sql>)` (wrong ibis API, and a 4-part catalog name
+  DuckDB's parser can't handle at all) and `04_university_courses.py`'s
+  `duckdb.sql(f"SET motherduck_token=...")` (set on the wrong
+  connection object entirely).
+  - **Not fixed, explicitly deferred**: `07_subject_full_pipeline.py`
+    imports `cianfhoghlaim.notebooks.nb_utils` (a legacy/nonexistent
+    module path) in 6 separate places — a systemic legacy-import
+    problem across the whole file, not a small localized bug.
+    Rewriting all 6 call sites against the real `notebooks/_shared/
+    db.py` API (different return signature) risked introducing new,
+    unverifiable bugs under this session's time budget; left as a
+    flagged, scoped follow-up rather than a rushed rewrite.
 
 ## Verification (whole change)
 
 - [x] `openspec validate 2026-08-08-lakehouse-extensive-hydration-v1
-  --strict`
+  --strict` — passes; `openspec validate --changes --strict` also
+  passes for all 6 changes in the repo (5 pre-existing + this one)
 - [x] All 17 notebooks parse (`ast.parse`); 0 SyntaxErrors (was 7)
+- [x] All 17 notebooks run headless (`marimo export html`) without
+  raising; **16/17 clean, 1 explicitly deferred**
+  (`07_subject_full_pipeline.py`, see Phase E)
 - [x] `grep -rn "805c7a45"` (leaked password fragment) → 0 hits repo-wide
 - [x] `lakehouse-garage` + `lakehouse-postgres` confirmed healthy; real
   dlt pipeline write round-trip succeeded
