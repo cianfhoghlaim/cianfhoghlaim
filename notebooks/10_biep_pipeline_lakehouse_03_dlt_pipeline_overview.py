@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 """Show the 28+ BIEP v3 DLT sources — 8 British Isles jurisdictions × 4 domains + special.
 
+
+
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   marimo>=0.13,
+#   duckdb>=1.0,
+#   ibis-framework[duckdb]>=9.0,
+#   pandas>=2.2,
+#   altair>=5.0,
+#   pyarrow>=15,
+#   anywidget>=0.9,
+#   traitlets>=5.14,
+# ]
+# ///
 Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
 
 This is the **operator console** for the BIEP v3 DLT source catalog.

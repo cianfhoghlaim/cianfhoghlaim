@@ -7,6 +7,7 @@
  *
  *   stack lint|plan|deploy|verify|rollback
  *   secrets lint|verify|hydrate|seed
+ *   notebook check|gate|wasm-export
  *   preflight
  *   topology validate
  *   brand lint
@@ -183,6 +184,26 @@ const COMMANDS: Record<string, Command> = {
     name: "brand",
     description: "Brand and retired-host linter (fails on legacy brand tokens or retired host references)",
     run: async (args) => runScript(BRAND_LINT_SCRIPT, args),
+  },
+  "notebook:check": {
+    name: "notebook:check",
+    description: "Run marimo check on every BIEP v3 marimo notebook (25 total — 17 lakehouse explorers + 6 jurisdiction dashboards + 2 educative)",
+    run: async (args) => runScript("scripts/_run_mise_task.ts", ["biep:v3:marimo:all", ...args]),
+  },
+  "notebook:gate": {
+    name: "notebook:gate",
+    description: "Invoke the dual-mode CLI gate for a BIEP jurisdiction (e.g. --milestone=m1 --jurisdiction=ireland → dispatches to `mise run biep:v3:ireland:gate`)",
+    run: async (args) => {
+      const milestone = args.find((a) => a.startsWith("--milestone="))?.split("=")[1] ?? "m1";
+      const jurisdiction = args.find((a) => a.startsWith("--jurisdiction="))?.split("=")[1] ?? "ireland";
+      const task = `biep:v3:${jurisdiction}:gate`;
+      return runScript("scripts/_run_mise_task.ts", [task, `--milestone=${milestone}`]);
+    },
+  },
+  "notebook:wasm-export": {
+    name: "notebook:wasm-export",
+    description: "Export all 16 BIEP v3 marimo dashboards to WebAssembly bundles (per the 2026-08-10-marimo-v14-cascading-effects-verification-v1 change)",
+    run: async (args) => runScript("scripts/marimo_wasm_export.py", args),
   },
 };
 

@@ -257,12 +257,9 @@ run = ".venv/bin/python3 scripts/test_runs_ingest.py --dry-run"
 [tasks."biep:v3:m0"]
 description = "BIEP v3 M0 — foundation unblock (lakehouse + BAML + registry + namespace)"
 run = ".venv/bin/python3 scripts/m0_foundation_unblock.py"
-[tasks."biep:v3:m-aistear"]
-description = "BIEP v3 M-Aistear — Ireland Aistear (Early Childhood) pipeline (14 cohorts, 4 themes × 4 age bands × 3 lang mediums)"
-run = ".venv/bin/python3 scripts/m_aistear.py"
-[tasks."biep:v3:m-primary"]
-description = "BIEP v3 M-Primary — Ireland Primary Curriculum pipeline (64 cohorts, 4 areas × 8 year levels × 2 langs)"
-run = ".venv/bin/python3 scripts/m_primary.py"
+# NOTE: `biep:v3:m-aistear` + `biep:v3:m-primary` were removed in 2026-08-10-marimo-v14-cascading-effects-verification-v1
+# because scripts/m_aistear.py + scripts/m_primary.py do not exist (per the 2026-08-09-biiep-v3-4-stage-ireland-education-rollout-v1 change).
+# Use `biep:v3:aistear:gate` + `biep:v3:primary:gate` (the dual-mode CLI gates) instead.
 [tasks."biep:v3:m1"]
 description = "BIEP v3 M1 — Ireland Leaving Cycle pipeline (12 cohorts, EN+GA)"
 run = ".venv/bin/python3 scripts/m1_ireland_lc.py"
@@ -363,10 +360,36 @@ run = "marimo edit notebooks/academic_history.py"
 description = "Open the irish_law grouped dashboard (Irish legal corpus — consolidates 11_*)"
 run = "marimo edit notebooks/irish_law.py"
 
+# Tier 3 grouped dashboards — marimo check gates (per the 2026-08-10-marimo-v14-cascading-effects-verification-v1 change)
+[tasks."biep:v3:marimo:meaisin:check"]
+description = "Run marimo check on the meaisin_ops_console grouped dashboard (12-agent fleet operator console — consolidates 60-64)"
+run = "uv run marimo check notebooks/meaisin_ops_console.py"
+[tasks."biep:v3:marimo:celtic:check"]
+description = "Run marimo check on the celtic_languages grouped dashboard (7 Celtic languages — consolidates 06_*)"
+run = "uv run marimo check notebooks/celtic_languages.py"
+[tasks."biep:v3:marimo:corpus:check"]
+description = "Run marimo check on the corpus_overview grouped dashboard (BIEP + Leabharlann corpus — consolidates 12_*)"
+run = "uv run marimo check notebooks/corpus_overview.py"
+[tasks."biep:v3:marimo:speedrun:check"]
+description = "Run marimo check on the speedrun_mmo grouped dashboard (Túatha educational MMO — consolidates 16_*)"
+run = "uv run marimo check notebooks/speedrun_mmo.py"
+[tasks."biep:v3:marimo:academic:check"]
+description = "Run marimo check on the academic_history grouped dashboard (M.Sc. AI 25/26 academic history — consolidates 17_*)"
+run = "uv run marimo check notebooks/academic_history.py"
+[tasks."biep:v3:marimo:irish_law:check"]
+description = "Run marimo check on the irish_law grouped dashboard (Irish legal corpus — consolidates 11_*)"
+run = "uv run marimo check notebooks/irish_law.py"
+[tasks."biep:v3:marimo:grouped:check"]
+description = "Run marimo check on ALL 7 Tier 3 grouped dashboards + sync_health in one go"
+run = ".venv/bin/python3 -c \"import subprocess; [\n  subprocess.call(['uv', 'run', 'marimo', 'check', n])\n  for n in [\n    'notebooks/meaisin_ops_console.py',\n    'notebooks/celtic_languages.py',\n    'notebooks/corpus_overview.py',\n    'notebooks/speedrun_mmo.py',\n    'notebooks/academic_history.py',\n    'notebooks/irish_law.py',\n    'notebooks/sync_health.py',\n  ]\n]\""
+
 # Tier 4 sync health (per the 2026-08-10-marimo-v14-sync-health-dashboard-consolidation-v1 change)
 [tasks."biep:v3:marimo:sync:dev"]
 description = "Open the sync_health grouped dashboard (11 sync layer health — consolidates 14/15/25/26/27/28/29/30)"
 run = "marimo edit notebooks/sync_health.py"
+[tasks."biep:v3:marimo:sync:check"]
+description = "Run marimo check on the sync_health grouped dashboard (11 sync layer health)"
+run = "uv run marimo check notebooks/sync_health.py"
 
 # meaisinfhoghlaim v3 operator surface
 [tasks."meaisin:v3:setup"]

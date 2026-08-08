@@ -102,7 +102,7 @@ stack file modified under bonneagar/stacks/<stack>/
 | Change proposal | `openspec/changes/2026-08-15-stacks-sync-loop-v1/proposal.md` |
 | Ingestor | `scripts/cognee_ingest_stacks_catalog.py` |
 | Dagster asset | `orchestration/defs/sync_assets.py::stacks_sync_health` |
-| Dashboard | `notebooks/27_stacks_sync_dashboard.py` |
+| Dashboard | `notebooks/sync_health.py` (Stacks tab) |
 | Control panel integration | `notebooks/24_deployment_control_panel.py` (statuses["stacks"]) |
 | CCC guide | `.cocoindex_code/guides.yml::stack-catalog-search` (23rd) |
 | Stack audit | `scripts/stack-doctor.sh` |

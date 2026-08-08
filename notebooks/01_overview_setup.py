@@ -1,8 +1,8 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.13.0",
-#     "duckdb>=1.0",
+#   "marimo>=0.13", "ibis-framework[duckdb]>=9.0", "pandas>=2.2", "altair>=5.0", "pyarrow>=15",
+#   "anywidget>=0.9", "traitlets>=5.14",
 # ]
 # ///
 """01 — Overview + Setup (the welcome notebook).
@@ -40,7 +40,7 @@ from __future__ import annotations
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 
@@ -344,6 +344,7 @@ def _nb_utils_tour(mo):
 
 # =============================================================================
 # Dual-mode entry: marimo app OR standalone CLI script
+# Per https://docs.marimo.io/guides/scripts/ — the canonical pattern.
 # =============================================================================
 def _cli_main(argv=None) -> int:
     """Run the tutorial as a CLI script from any cwd."""
@@ -370,7 +371,6 @@ def _cli_main(argv=None) -> int:
 
 if __name__ == "__main__":
     import sys
-
     if len(sys.argv) > 1 and sys.argv[1] not in ("run", "edit"):
         sys.exit(_cli_main())
     app.run()

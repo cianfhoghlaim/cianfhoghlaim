@@ -462,6 +462,22 @@ def _(result):
   that re-runs the notebook with `--headless` and asserts no
   cell errors.
 
+## v14 Helper Modules
+
+The v14 notebook surface centralises reusable behaviour in three helper modules:
+
+- `notebooks/_shared/marimo_patterns.py` — canonical dashboard patterns,
+  including registry headers, dual-mode execution, and shared layout helpers.
+- `notebooks/_shared/area_shims/biiep_v3_dashboard.py` — shared BIEP v3
+  jurisdiction dashboard cells and the eight-cell dashboard surface.
+- `notebooks/_shared/ragas_gauge.py` — reusable RAGAS quality gauge rendering
+  for notebook evaluation panels.
+
+LLM routing uses the `LITELLM_BASE_URL` constant from the shared helpers rather
+than hardcoding a gateway URL. These helpers are used by the 17 BIEP v3
+jurisdiction dashboards, the 7 grouped dashboards, and the consolidated
+`notebooks/sync_health.py` dashboard.
+
 Cross-references:
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the
   `cianfhoghlaim.leaving_cert.<subject>_<lang>` tables

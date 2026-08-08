@@ -54,7 +54,7 @@ writes a unified report to `stedding/sync-reports/notebooks-all-{date}.md`.
 | 15th Cognee cluster | `notebooks` | the 104 notebook files |
 | `notebooks_sync_health` asset | `orchestration/defs/sync_assets.py` | Dagster asset |
 | `scripts/cognee_ingest_notebooks.py` | ingestor | The canonical Cognee cluster ingestor |
-| `notebooks/30_notebooks_sync_dashboard.py` | dashboard | Layer 11 marimo surface |
+| `notebooks/sync_health.py` | dashboard | Notebooks tab in the grouped sync-health marimo surface |
 
 ## Notebooks evolution feedback loop
 
@@ -77,7 +77,7 @@ notebook file modified
 | See the per-prefix breakdown | `cat stedding/sync-reports/notebooks-$(date +%Y-%m-%d).md` |
 | Add a new notebook | Create the .py file in the right prefix dir + register it in `notebooks/cli.py` GROUPS + update `notebooks/AGENTS.md` + run `sync:notebooks` |
 | Fix a registration drift | `sync:notebooks-drift` will list the unregistered notebooks; register + re-run |
-| See the notebooks dashboard | Open `notebooks/30_notebooks_sync_dashboard.py` |
+| See the notebooks dashboard | Open `notebooks/sync_health.py` (Notebooks tab) |
 | Run the notebook import test | `uv run python -c "import notebooks.X"` |
 
 ## Cross-references

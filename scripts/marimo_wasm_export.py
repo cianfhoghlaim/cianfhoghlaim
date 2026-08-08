@@ -23,15 +23,25 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-# The 7 BIEP v3 jurisdiction dashboard notebooks to export
+# The 16 BIEP v3 jurisdiction + grouped dashboards to export
+# (per the 2026-08-10-marimo-v14-cascading-effects-verification-v1 change)
 DASHBOARD_NOTEBOOKS = [
-    "18_cianfhoghlaim_subject_registry",
     "19_ireland_pipeline_dashboard",
     "20_england_pipeline_dashboard",
     "21_sct_wls_ni_pipeline_dashboard",
     "22_crown_dependencies_dashboard",
     "23_8_jurisdiction_overview",
+    "24_deployment_control_panel",
+    "26_aistear_dashboard",
+    "27_primary_dashboard",
     "40_leaving_cert_subject_panel",
+    "meaisin_ops_console",
+    "celtic_languages",
+    "corpus_overview",
+    "speedrun_mmo",
+    "academic_history",
+    "irish_law",
+    "sync_health",
 ]
 
 # The canonical Cianfhoghlaim theme (CSS-only — applied at runtime via a
@@ -116,8 +126,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--notebooks-root",
-        default="notebooks/leaving_cert/03_leaving_cert",
-        help="Root directory containing the BIEP v3 notebook .py files (default: leaving_cert/03_leaving_cert)",
+        default="notebooks",
+        help="Root directory containing the BIEP v3 notebook .py files (default: notebooks — the post-v7 flat layout)",
     )
     parser.add_argument(
         "--output-root",
