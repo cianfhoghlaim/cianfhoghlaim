@@ -123,6 +123,7 @@ function ExtractMarkingSchemeGuideline(
     Marking scheme PDF text:
     {{ pdf_text }}
 
+    {{ _.role("user") }}
     {{ ctx.output_format }}
   "#
 }

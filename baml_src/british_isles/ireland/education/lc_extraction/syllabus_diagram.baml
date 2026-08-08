@@ -110,6 +110,7 @@ function ExtractSyllabusDiagram(
     Page number:
     {{ page_number }}
 
+    {{ _.role("user") }}
     {{ ctx.output_format }}
   "#
 }

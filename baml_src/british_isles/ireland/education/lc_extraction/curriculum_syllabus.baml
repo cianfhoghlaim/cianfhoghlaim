@@ -139,6 +139,7 @@ function ExtractCurriculumSyllabus(
     Syllabus PDF text:
     {{ pdf_text }}
 
+    {{ _.role("user") }}
     {{ ctx.output_format }}
   "#
 }
