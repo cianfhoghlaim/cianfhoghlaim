@@ -11,14 +11,11 @@ import dlt
 import re
 from collections.abc import Iterator
 
-import dlt_sources
+import structlog
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 
-try:
-    from dlt_sources.common.http_client import canuint_client  # noqa: F401
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+logger = structlog.get_logger(__name__)
 
 
 from ._canuint_helpers import (

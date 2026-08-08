@@ -23,6 +23,7 @@ from __future__ import annotations
 import zipfile
 from collections.abc import Iterator
 from datetime import UTC, datetime
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
@@ -39,9 +40,14 @@ except ImportError:  # observability package not in this monorepo
     logger = _logging.getLogger(__name__)
 
 
+# dlt_sources.common.http_client (the previous import here) itself imports
+# a nonexistent top-level `settings` module and always fails — the real,
+# already-fixed HTTP client factories (that don't depend on the missing
+# `shared`/`settings` packages) live in _http_factories.py; every sibling
+# helper in this repo that needed this same fix already points there.
 try:
-    from dlt_sources.common.http_client import tearma_client  # type: ignore[import-not-found]
-except ImportError:  # shared package not in this monorepo
+    from dlt_sources.common._http_factories import tearma_client
+except ImportError:
     tearma_client = None  # type: ignore[assignment]
 
 

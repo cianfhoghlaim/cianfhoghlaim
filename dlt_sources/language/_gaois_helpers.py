@@ -6,10 +6,13 @@ Phase 3D of openspec change.
 
 from __future__ import annotations
 
+# See the identical note in _tearma_helpers.py: dlt_sources.common.http_client
+# always fails (imports a nonexistent top-level `settings` module) — use the
+# already-fixed _http_factories.py instead.
 try:
-    from dlt_sources.common.http_client import ainm_client, logainm_client, tearma_client
+    from dlt_sources.common._http_factories import ainm_client, logainm_client, tearma_client
 except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+    pass  # would only happen if _http_factories.py itself is missing
 
 
 LOGAINM_COUNTIES = {

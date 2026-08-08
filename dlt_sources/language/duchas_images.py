@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from typing import Any
 from xml.etree import ElementTree as ET
 
-import dlt_sources
+import structlog
 from dlt.sources import DltResource
 
 try:
@@ -23,10 +23,7 @@ try:
 except ImportError:
     pass  # dlt.sources.incremental moved; use dlt.sources.incremental.IncrementalCursorProvider instead
 
-try:
-    from dlt_sources.common.http_client import doras_client, duchas_client  # noqa: F401
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+logger = structlog.get_logger(__name__)
 
 
 from ._duchas_images_helpers import (

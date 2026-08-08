@@ -41,6 +41,44 @@ _.file = '.env'
 MISE_ENV_FILE = ".env"
 PYTHONPATH = "."
 UV_PROJECT_ENVIRONMENT = ".venv"
+# Ireland education local-scrape-cache root. Several dlt_sources/british_isles/ireland
+# sources default this to the non-existent absolute path /stedding/ingest_queue; the
+# real, populated cache (~15,800 files: ncca.ie, examinations.ie, curriculumonline.ie,
+# oide.ie) lives at stedding/site_scrape_samples/ — this makes that the default so
+# USE_LOCAL_SCRAPES=true sources find it without per-file edits.
+STEDDING_INGEST_QUEUE = "{{config_root}}/stedding/site_scrape_samples"
+# dlt_sources/common/destinations_cianfhoghlaim.py's local DuckLake path
+# (get_dlt_destination(use_ducklake=True)) reads DUCKLAKE_POSTGRES_USER /
+# DUCKLAKE_POSTGRES_PASSWORD, defaulting to a hardcoded "lakekeeper"/
+# "devpassword" that doesn't match the running lakehouse Postgres
+# container's real credentials (which come from POSTGRES_USER /
+# POSTGRES_PASSWORD in .env). Aliased here rather than baking a value in —
+# never read the password itself, just point the differently-named var at
+# the one the lakehouse compose stack already sets.
+DUCKLAKE_POSTGRES_USER = "{{env.POSTGRES_USER}}"
+DUCKLAKE_POSTGRES_PASSWORD = "{{env.POSTGRES_PASSWORD}}"
+# registry_api.py / registry_loader.py's BIEP_REGISTRY_URI defaults to
+# "md:cianfhoghlaim" (MotherDuck cloud — confirmed elsewhere in this repo
+# to be an empty account, unusable locally). This string carries NO
+# credentials — host/port/dbname only. Auth comes from the standard libpq
+# PGUSER/PGPASSWORD env vars below, which DuckDB's postgres extension
+# reads automatically; duckdb.connect() on a credential-free string never
+# has a secret to echo back through SHOW DATABASES/current_catalog(),
+# unlike embedding user=...password=... directly in the connection string
+# (confirmed unsafe earlier this session — see the
+# kcg-ducklake-connstring-password-exposure memory note).
+BIEP_REGISTRY_URI = "ducklake:postgres:host=localhost port=5433 dbname=ducklake_cianfhoghlaim"
+PGUSER = "{{env.DUCKLAKE_POSTGRES_USER}}"
+PGPASSWORD = "{{env.DUCKLAKE_POSTGRES_PASSWORD}}"
+# destinations_cianfhoghlaim.py's _build_local_destination() defaults
+# DUCKLAKE_BUCKET to "ducklake-cianfhoghlaim", but the already-seeded local
+# DuckLake catalog (Postgres, ~1,990 registry rows from a prior session)
+# was actually initialized against bucket "ducklake" (namespace as a path
+# prefix inside it, not baked into the bucket name) — confirmed via a real
+# DuckLake "DATA_PATH parameter does not match existing data path in the
+# catalog" error. Matching the existing catalog here rather than risking a
+# second, orphaned bucket/catalog split.
+DUCKLAKE_BUCKET = "ducklake"
 # Post-Phase-1 (2026-06-30): the consolidated pyproject.toml lived at
 # cianfhoghlaim/pyproject.toml. Post-v7 (2026-07-17): the package is the
 # repo itself, so pyproject.toml is at the root. The stamp is bumped to

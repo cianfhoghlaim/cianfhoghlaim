@@ -9,6 +9,7 @@ becomes ~25 LOC of subclass definitions.
 """
 from __future__ import annotations
 
+import hashlib
 from datetime import UTC, datetime
 from typing import Any, ClassVar
 
@@ -56,7 +57,9 @@ class JurisdictionPipelineBase:
     VALID_JURISDICTIONS: ClassVar[tuple[str, ...]] = VALID_JURISDICTIONS
     VALID_STAGES: ClassVar[tuple[str, ...]] = VALID_STAGES
     WRITE_DISPOSITION: ClassVar[str] = "merge"
-    PRIMARY_KEY: ClassVar[list[str]] = ["content_hash"]
+    # natural_key (not content_hash) is the stable per-cohort identity used for
+    # merge/dedup — see subject_to_row() for why content_hash was split in two.
+    PRIMARY_KEY: ClassVar[list[str]] = ["natural_key"]
 
     def __init__(
         self,
@@ -95,12 +98,35 @@ class JurisdictionPipelineBase:
         stage = stage or self.STAGE
         board = getattr(row, "board", None) or "none"
         qual_level = getattr(row, "qualification_level", None) or "untiered"
-        # Compute the content_hash deterministically so re-runs are idempotent
-        # (the dlt @dlt.resource uses primary_key=["content_hash"]).
-        content_hash = (
+        # natural_key: the stable identity of *which cohort this is* (jurisdiction
+        # + stage + subject + board + level + language). Used as the merge/primary
+        # key so re-runs are idempotent — this was formerly mislabeled "content_hash"
+        # even though it never hashed anything and never reflected fetched content.
+        natural_key = (
             f"{self.jurisdiction}|{stage}|{row.subject_slug}|{board}|"
             f"{qual_level}|{row.language}"
         )
+        # content_sha256: a real hash, but of this class's own visibility limit —
+        # JurisdictionPipelineBase maps SubjectRegistryRow → cohort dict; it never
+        # fetches document bytes, so this can only detect a change to the registry
+        # row's own metadata (source_url moved, display name updated, etc.), not a
+        # change to the underlying document. Real per-document content hashing
+        # belongs in the sources that actually download bytes (e.g.
+        # dlt_sources/filesystem/leaving_cert_source.py) — do not treat this field
+        # as a substitute for that.
+        content_sha256 = hashlib.sha256(
+            "|".join(
+                str(v)
+                for v in (
+                    row.source_url,
+                    row.display_name_en,
+                    row.display_name_local,
+                    row.concept,
+                    row.baml_function,
+                    row.last_verified,
+                )
+            ).encode("utf-8")
+        ).hexdigest()
         return {
             "source_id": (
                 f"british_isles.{self.jurisdiction}.education.{stage}."
@@ -124,7 +150,8 @@ class JurisdictionPipelineBase:
                 f"cianfhoghlaim.education.{self.jurisdiction}.{stage}."
                 f"{board}.{row.subject_slug}"
             ),
-            "content_hash": content_hash,
+            "natural_key": natural_key,
+            "content_sha256": content_sha256,
         }
 
     def build_pipeline(self, dataset_name: str | None = None) -> Any:
@@ -146,9 +173,18 @@ class JurisdictionPipelineBase:
         )
 
     def run(self, dataset_name: str | None = None) -> Any:
-        """Convenience: build pipeline + run the resource + return load_info."""
+        """Convenience: build pipeline + run the resource + return load_info.
+
+        Passes WRITE_DISPOSITION/PRIMARY_KEY through explicitly — previously
+        declared as class constants but never applied, so every run replaced
+        rather than merged.
+        """
         pipeline = self.build_pipeline(dataset_name=dataset_name)
-        load_info = pipeline.run(self.build_pipeline_resource())
+        load_info = pipeline.run(
+            self.build_pipeline_resource(),
+            write_disposition=self.WRITE_DISPOSITION,
+            primary_key=self.PRIMARY_KEY,
+        )
         return load_info
 
 

@@ -23,8 +23,9 @@ from datetime import UTC, datetime
 from typing import Any
 
 import dlt_sources
+import httpx
 import structlog
-from dlt_sources.common.http_client import dfe_explore_client
+from dlt_sources.common._http_factories import dfe_explore_client
 
 logger = structlog.get_logger(__name__)
 

@@ -11,19 +11,15 @@ import dlt
 import re
 from collections.abc import Iterator
 
-import dlt_sources
+import structlog
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
-
-try:
-    from dlt_sources.common.http_client import ainm_client, logainm_client, tearma_client  # noqa: F401
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
-
 
 from ._gaois_helpers import (
     _get_ainm_factory,
 )
+
+logger = structlog.get_logger(__name__)
 
 
 def ainm_source(
@@ -35,6 +31,14 @@ def ainm_source(
 
     Note: Ainm.ie does not have a public API, so this scrapes
     the directory and biography pages.
+
+    CONFIRMED LIVE (2026-08-08): the hardcoded /ga/ainm?letter=X path is
+    stale — even after handling the ASP.NET AspxAutoDetectCookieSupport
+    redirect, that path 404s, and the site's homepage redirect-loops under
+    a plain httpx client. The current real site structure needs fresh
+    reverse-engineering (browser devtools, not guessed URL patterns) —
+    not attempted here; degrades cleanly (per-letter 404/redirect errors
+    caught and logged, no crash) in the meantime.
 
     Args:
         profession: Filter by profession/occupation

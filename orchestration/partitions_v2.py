@@ -29,6 +29,7 @@ from typing import Any
 
 from dagster import (
     Array,
+    DynamicPartitionsDefinition,
     Field,
     MultiPartitionsDefinition,
     Noneable,
@@ -302,7 +303,11 @@ year_partitions = StaticPartitionsDefinition(
 # Generic 2-axis `scope × year` partition (used by all 5 BIEP v3
 # jurisdiction pipelines)
 biiep_v3_scope_year_partition = MultiPartitionsDefinition(
-    partitions={
+    # NOTE: "cianhoghlaim_scope" (missing f) is the pre-existing, documented
+    # partition-name typo tracked separately — fixing it requires a LanceDB
+    # table migration (see the KCG refactor roadmap's Plan 2), not just a
+    # string swap, so it is deliberately left as-is here.
+    partitions_defs={
         "scope": DynamicPartitionsDefinition(name="cianhoghlaim_scope"),
         "year": year_partitions,
     }

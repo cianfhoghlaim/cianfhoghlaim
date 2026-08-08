@@ -73,7 +73,11 @@ _DEFS_AVAILABLE: bool = False
 try:
     from orchestration import defs as _defs_pkg
 
-    defs = dg.load_defs(defs_root=Path(_defs_pkg.__file__).parent)
+    # dg.load_defs() takes the `defs` ModuleType itself (per the installed
+    # Dagster 1.13 signature), not a Path — passing Path(_defs_pkg.__file__)
+    # made get_project_root() call getattr(<Path>, "__file__", None), which is
+    # always None for a Path, masquerading as the "no __init__.py" failure.
+    defs = dg.load_defs(defs_root=_defs_pkg)
     _DEFS_AVAILABLE = True
     _DEFS_LOADED_VIA = "dg.load_defs (Dagster 1.13+ canonical)"
 except AttributeError:

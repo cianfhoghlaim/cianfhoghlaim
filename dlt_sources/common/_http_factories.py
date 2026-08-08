@@ -101,8 +101,13 @@ def tearma_client() -> HttpClientFactory:
 
 
 def logainm_client() -> HttpClientFactory:
+    # The bare www.logainm.ie root 404s on API paths like "places" —
+    # confirmed live (dlt_sources/language/logainm.py's placenames_resource
+    # hit a real 404 against https://www.logainm.ie/places). The actual
+    # REST API lives under /api/v1.0 (Doras extended endpoints under
+    # /api/v1.1, per dlt_sources/language/gaois.py's own docstring).
     return _factory(
-        "https://www.logainm.ie",
+        "https://www.logainm.ie/api/v1.0",
         headers={"User-Agent": "cianfhoghlaim-dlt/1.0", "Accept": "application/json"},
     )
 

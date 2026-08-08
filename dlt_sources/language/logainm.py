@@ -10,13 +10,10 @@ import dlt
 
 from collections.abc import Iterator
 
-import dlt_sources
+import structlog
 from dlt.sources import DltResource
 
-try:
-    from dlt_sources.common.http_client import ainm_client, logainm_client, tearma_client  # noqa: F401
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+logger = structlog.get_logger(__name__)
 
 
 from ._gaois_helpers import (
@@ -25,6 +22,11 @@ from ._gaois_helpers import (
 )
 
 
+# CONFIRMED LIVE (2026-08-08): every path under https://www.logainm.ie/api/
+# (v1.0 and v1.1/Doras) returns a bare 401 with no WWW-Authenticate header
+# or error body, regardless of query params — this needs a real API key
+# issued by GAOIS/Fiontar, not a code fix. Not attempted here (never
+# fabricate/request credentials on the user's behalf).
 def logainm_source(
     query: str | None = None,
     county: str | None = None,

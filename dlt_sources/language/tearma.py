@@ -9,7 +9,7 @@ API: https://www.tearma.ie/api/
 Download: https://www.tearma.ie/ioslodail/
 
 Usage:
-    from dlt_sources.british_isles.ireland.culture.tearma import tearma_source
+    from dlt_sources.language.tearma import tearma_source
 
     pipeline = dlt.pipeline(
         pipeline_name="tearma",
@@ -19,9 +19,9 @@ Usage:
 
 Split out of the legacy `dlt_sources/tearma.py` flat file in Phase 4
 (oideachais-audit-phase-4-consolidate-legacy-dirs). The companion
-search source lives at `cianfhoghlaim.dlt.british_isles.ireland.culture.tearma_search`.
+search source lives at `dlt_sources.language.tearma_search`.
 Shared helpers + module constants + `TerminologyLinker` live at
-`cianfhoghlaim.dlt.british_isles.ireland.culture._tearma_helpers`.
+`dlt_sources.language._tearma_helpers`.
 """
 from __future__ import annotations
 import dlt
@@ -31,7 +31,7 @@ from collections.abc import Iterator
 from typing import Any
 
 import dlt_sources
-from dlt_sources.british_isles.ireland.culture._tearma_helpers import _load_tearma_terms
+from dlt_sources.language._tearma_helpers import _load_tearma_terms
 
 
 @dlt.source(name="tearma")

@@ -96,8 +96,8 @@ def _crawl_exam_board(
             max_pages=max_pages // len(urls_to_crawl),
             max_depth=3,
         ):
-            url = page.get("url", "")
-            title = page.get("title", "")
+            url = page.get("url") or ""
+            title = page.get("title") or ""
 
             # Try to extract subject
             subject = None
@@ -171,7 +171,7 @@ def _crawl_gov_uk_curriculum(
             max_pages=max_pages // len(urls_to_crawl),
             max_depth=4,
         ):
-            url = page.get("url", "")
+            url = page.get("url") or ""
 
             # Determine key stage from URL
             detected_stage = stage
@@ -186,7 +186,7 @@ def _crawl_gov_uk_curriculum(
 
             # Detect subject from URL
             subject = None
-            title = page.get("title", "")
+            title = page.get("title") or ""
             for subj in NC_SUBJECTS:
                 subj_pattern = subj.replace("_", "-")
                 if subj_pattern in url.lower() or subj in title.lower():

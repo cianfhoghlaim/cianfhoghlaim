@@ -138,18 +138,20 @@ def scrape_page(url: str, formats: list[str] | None = None) -> dict[str, Any]:
                 "scraped_at": datetime.now(UTC).isoformat(),
             }
         else:
-            # Use Firecrawl (sync)
-            result = client.scrape_url(url, params={"formats": formats})
-            metadata = result.get("metadata", {})
+            # Use Firecrawl (sync). Same v1->v2 SDK shift as crawl_website()
+            # below: scrape() (not scrape_url(params=...)) takes flat
+            # kwargs and returns a pydantic Document, not a raw dict.
+            doc = client.scrape(url, formats=formats)
+            metadata = doc.metadata
 
             return {
-                "url": metadata.get("sourceURL", url),
-                "title": metadata.get("title"),
-                "description": metadata.get("description"),
-                "markdown": result.get("markdown"),
-                "html": result.get("html"),
-                "links": result.get("links", []),
-                "language": metadata.get("language"),
+                "url": metadata.url if metadata else url,
+                "title": metadata.title if metadata else None,
+                "description": metadata.description if metadata else None,
+                "markdown": doc.markdown,
+                "html": doc.html,
+                "links": doc.links or [],
+                "language": metadata.language if metadata else None,
                 "status": "success",
                 "backend": client_type,
                 "scraped_at": datetime.now(UTC).isoformat(),
@@ -255,29 +257,33 @@ def crawl_website(
                     "crawled_at": datetime.now(UTC).isoformat(),
                 }
         else:
-            # Use Firecrawl (sync)
-            crawl_config = {
-                "limit": max_pages,
-                "maxDepth": max_depth,
-                "scrapeOptions": {"formats": formats},
-            }
+            # Use Firecrawl (sync). The installed SDK (firecrawl>=4.31) is the
+            # v2 client: crawl() takes flat kwargs (limit/max_discovery_depth/
+            # include_paths/exclude_paths), not the old crawl_url(url,
+            # params={...}) dict + camelCase-key shape, and returns a
+            # pydantic CrawlJob (data: list[Document]) rather than a raw
+            # dict with dict pages — client.crawl_url(params=...) raised
+            # `TypeError: unexpected keyword argument 'params'` before this
+            # fix, which was silently masked whenever the client itself was
+            # unavailable (client_unavailable path never reaches this code).
+            crawl_job = client.crawl(
+                base_url,
+                limit=max_pages,
+                max_discovery_depth=max_depth,
+                include_paths=include_paths,
+                exclude_paths=exclude_paths,
+                formats=formats,
+            )
 
-            if include_paths:
-                crawl_config["includePaths"] = include_paths
-            if exclude_paths:
-                crawl_config["excludePaths"] = exclude_paths
-
-            result = client.crawl_url(base_url, params=crawl_config, poll_interval=5)
-
-            for page in result.get("data", []):
-                metadata = page.get("metadata", {})
+            for doc in crawl_job.data:
+                metadata = doc.metadata
                 yield {
-                    "url": metadata.get("sourceURL"),
-                    "title": metadata.get("title"),
-                    "description": metadata.get("description"),
-                    "markdown": page.get("markdown"),
-                    "links": page.get("links", []),
-                    "language": metadata.get("language"),
+                    "url": metadata.url if metadata else None,
+                    "title": metadata.title if metadata else None,
+                    "description": metadata.description if metadata else None,
+                    "markdown": doc.markdown,
+                    "links": doc.links or [],
+                    "language": metadata.language if metadata else None,
                     "status": "success",
                     "backend": client_type,
                     "crawled_at": datetime.now(UTC).isoformat(),

@@ -15,7 +15,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 - Automatic retries
 
 Usage:
-    from dlt_sources.british_isles.ireland.culture.duchas import duchas_source
+    from dlt_sources.language.duchas import duchas_source
 
     pipeline = dlt.pipeline(
         pipeline_name="duchas",
