@@ -50,7 +50,7 @@ async def score_math_response(
         # 3. Emit a SkillTreeBadge if eligible
         if score.badge_earned:
             try:
-                from cianfhoghlaim.badges import issue_badge
+                from cianfhoghlaim.tuatha.badges import issue_badge
 
                 badge = await issue_badge(
                     student_id=None,  # Resolved from session in the real flow

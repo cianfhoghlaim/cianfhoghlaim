@@ -78,7 +78,13 @@ CREEDANCHOR_ABI = [
     },
 ]
 
-CONTRACT_SOURCE_PATH = Path(__file__).resolve().parents[3] / "infrastructure" / "contracts" / "CredAnchor.sol"
+# Fixed 2026-08-08 (docs-informed-quest-and-credential-generation-v1 /
+# learn-to-earn-x402-credential-pipeline-v1): this previously pointed at
+# `infrastructure/contracts/CredAnchor.sol` (parents[3]), a path that
+# doesn't exist anywhere in the repo — same bug class as the
+# `cianfhoghlaim.badges` import-path bugs fixed elsewhere in this
+# change. `CredAnchor.sol` is a sibling of this file.
+CONTRACT_SOURCE_PATH = Path(__file__).resolve().parent / "CredAnchor.sol"
 
 
 def load_contract_source() -> str:

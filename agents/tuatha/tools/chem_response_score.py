@@ -37,7 +37,7 @@ async def score_chem_response(
 
         if score.badge_earned:
             try:
-                from cianfhoghlaim.badges import issue_badge
+                from cianfhoghlaim.tuatha.badges import issue_badge
 
                 level_slug = score.lo_code.split("-")[-2] if "-" in score.lo_code else "hl"
                 await issue_badge(

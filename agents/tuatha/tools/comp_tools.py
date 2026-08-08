@@ -82,7 +82,7 @@ async def score_comp_response(item_id: str, student_response: str, response_form
         score = b.ScoreCompFormativeResponse(item=item, attempt={"item_id": item_id, "student_response": student_response, "response_format": response_format, "time_taken_seconds": time_taken_seconds, "hints_used": hints_used})
         if score.badge_earned:
             try:
-                from cianfhoghlaim.badges import issue_badge
+                from cianfhoghlaim.tuatha.badges import issue_badge
                 await issue_badge(student_id=None, framework="ncca-lc", level=score.lo_code.split("-")[-2] if "-" in score.lo_code else "hl", subject="computer_science", competency_code=score.lo_code, agent_issuer="comp_agent", evidence={"item_id": item_id, "response": student_response, "score_pct": score.partial_credit_pct})
             except ImportError:
                 pass
