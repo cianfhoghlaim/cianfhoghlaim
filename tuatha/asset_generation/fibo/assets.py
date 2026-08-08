@@ -349,16 +349,22 @@ async def generated_images(
 # subject, and turns each genuinely-detected diagram into a FIBO config
 # — never a fabricated concept.
 #
-# Known limitation, inherited from `ExtractSyllabusDiagram`'s existing
-# signature (not introduced here, not fixed here): the function is
-# declared `client BIEPV3Vision` but takes no `image` parameter — it
-# only ever sees extracted PDF text, so detection is textual (figure
-# captions, "Figure N:" references, diagram-adjacent prose), not true
-# vision-based bounding-box pointing despite the vision client and the
-# molmo2-8b framing in this file's module docstring. Wiring an actual
-# page-image input through BAML (image param + client that accepts
-# multimodal content) is real future work, out of scope here — this
-# asset uses the function exactly as it's currently defined.
+# Per the 2026-08-08-lakehouse-extensive-hydration-v1 change:
+# `ExtractSyllabusDiagram` now accepts an optional `image: image[]?`
+# param (baml_src/british_isles/ireland/education/lc_extraction/
+# syllabus_diagram.baml), closing the gap this comment used to document
+# ("declared client BIEPV3Vision but takes no image parameter"). This
+# asset now renders the syllabus PDF's first few pages via
+# `meaisinfhoghlaim.document_factory.pdf_to_image_bridge` and passes
+# them alongside `pdf_text`, so detection is genuinely vision-based
+# (real pixels) for those pages instead of text-inferred from figure
+# captions / "Figure N:" references alone. Bounded to
+# `MAX_DIAGRAM_IMAGE_PAGES` pages (not the whole document) to keep the
+# request size and per-call cost reasonable — a real, documented
+# narrowing, not a silent one. Rendering degrades gracefully to `None`
+# per page (pymupdf missing, corrupt page, etc.), so a partially- or
+# fully-failed render still falls through to the function's existing
+# text-only path rather than failing the whole extraction.
 #
 # Self-contained PDF discovery (not importing
 # orchestration/defs/2_materials/lc_extraction/quest_pack_assets.py's
@@ -371,6 +377,12 @@ LEAVING_CERT_ROOT_FOR_FIBO = REPO_ROOT_FOR_FIBO / "leaving_certificate"
 _SYLLABUS_KEYWORDS_FOR_FIBO = ("syllabus", "specification")
 _DATE_SUFFIX_RE_FOR_FIBO = re.compile(r"_\d{4}-\d{2}-\d{2}(?=\.pdf$)", re.IGNORECASE)
 MAX_DIAGRAM_TEXT_CHARS = 60_000
+MAX_DIAGRAM_IMAGE_PAGES = 8
+"""Cap on how many rendered page images are sent per ExtractSyllabusDiagram
+call — a real bound, not the whole document, to keep request size/cost
+reasonable (mirrors the qpack-generation item cap fixed in
+2026-08-08-docs-informed-quest-and-credential-generation-v1 for the same
+"unbounded generation -> HTTP timeout" reason)."""
 
 
 def _find_english_syllabus_pdf(subject: str) -> Path | None:
@@ -479,10 +491,31 @@ async def fibo_configs_from_syllabus_diagrams(
         )
         return MaterializeResult(metadata={"configs_generated": MetadataValue.int(0)})
 
+    page_count = len(reader.pages)
+    image_page_count = min(page_count, MAX_DIAGRAM_IMAGE_PAGES)
+    rendered_images = []
+    try:
+        from meaisinfhoghlaim.document_factory.pdf_to_image_bridge import (
+            pdf_page_to_baml_image,
+        )
+
+        for page_number in range(1, image_page_count + 1):
+            img = pdf_page_to_baml_image(syllabus_pdf, page_number)
+            if img is not None:
+                rendered_images.append(img)
+    except ImportError:
+        context.log.warning(
+            "fibo_configs_from_syllabus_diagrams: pdf_to_image_bridge not "
+            "importable; falling back to text-only diagram detection"
+        )
+
     context.log.info(
-        "fibo_configs_from_syllabus_diagrams: extracting diagrams from %s (subject=%s)",
+        "fibo_configs_from_syllabus_diagrams: extracting diagrams from %s "
+        "(subject=%s, %d/%d page image(s) rendered)",
         syllabus_pdf.name,
         config.subject,
+        len(rendered_images),
+        page_count,
     )
     try:
         diagrams = b.ExtractSyllabusDiagram(
@@ -491,6 +524,7 @@ async def fibo_configs_from_syllabus_diagrams(
             page_number=None,
             subject=config.subject,
             subject_language="EN",
+            image=rendered_images or None,
         )
     except Exception as exc:  # noqa: BLE001 — BAML error types are not stable API
         context.log.error(
