@@ -10,10 +10,9 @@ from collections.abc import Iterator
 
 from dlt.sources import DltResource
 
-try:
-    from dlt_sources.common.http_client import ainm_client, logainm_client, tearma_client  # noqa: F401
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+from dlt_sources.language.ainm import ainm_source
+from dlt_sources.language.logainm import logainm_source
+from dlt_sources.language.tearma import tearma_source
 
 
 def gaois_combined_source(
@@ -21,7 +20,7 @@ def gaois_combined_source(
     max_placenames: int = 500,
     max_terms: int = 200,
     max_biographies: int = 100,
-) -> Iterator[DltResource]:
+) -> list[DltResource]:
     """
     Combined source for all GAOIS databases.
 
@@ -31,19 +30,37 @@ def gaois_combined_source(
         max_terms: Maximum terminology entries
         max_biographies: Maximum biographical entries
 
-    Yields:
-        Combined DLT resources from all GAOIS databases
+    Returns:
+        Combined DLT resources from all GAOIS databases.
+
+    Was previously a generator function that did
+    `for resource in <sub_source>(): yield resource` for each of the 3
+    sub-sources. That has two compounding bugs:
+    1. `TypeError: Parametrized resource 'placenames' is not callable...`
+       when the resulting bare generator was passed to `pipeline.run()` —
+       fixed by returning a fully materialized `list[DltResource]`
+       instead (same pattern `all_exam_boards_source()`/
+       `leaving_cert_source.py` already use elsewhere in this repo).
+    2. `tearma_source()` is `@dlt.source`-decorated, and iterating a
+       `DltSource` directly (`for x in tearma_source()`) yields its
+       *data rows*, not its `DltResource` objects — the loop variable
+       named `resource` was actually holding raw term dicts. The
+       correct accessor for a source's resource objects is
+       `.resources.values()` (a `DltResourcesDict`). Confirmed live:
+       without this, `pipeline.run()` raised `ResourceNameMissing`
+       trying to auto-wrap a raw dict as a resource.
+       `logainm_source()`/`ainm_source()` are plain generators that
+       already yield `DltResource` objects directly, not `DltSource`s,
+       so they don't need `.resources`.
     """
-    # Yield placenames
-    for resource in logainm_source(
-        county=logainm_county, max_results=max_placenames
-    ):
-        yield resource
+    resources: list[DltResource] = []
+    resources.extend(logainm_source(county=logainm_county, max_results=max_placenames))
 
-    # Yield terminology
-    for resource in tearma_source(max_terms=max_terms):
-        yield resource
+    # tearma_source() doesn't support a max_terms cap (it's a bulk-export
+    # source, not a paginated query) — max_terms is accepted here for
+    # API-compatibility with the other 2 sources but currently unused;
+    # capping would need slicing the export itself.
+    resources.extend(tearma_source().resources.values())
 
-    # Yield biographies
-    for resource in ainm_source(max_entries=max_biographies):
-        yield resource
+    resources.extend(ainm_source(max_entries=max_biographies))
+    return resources

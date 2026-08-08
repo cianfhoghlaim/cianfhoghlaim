@@ -44,14 +44,32 @@ from orchestration.components.layer5_agent_ops import (
     CelticAgentOpsComponent,
 )
 
+# BIEP v3 jurisdiction-scoped Components — referenced by `type:` in
+# defs/2_materials/{ireland_education,england_education}/**/defs.yaml but
+# previously not re-exported here, so `[tool.dg] registry_modules =
+# ["orchestration.components"]` (and dg.load_defs()'s own YAML resolution)
+# couldn't find them by attribute lookup on this module.
+from orchestration.components.biep_subject_component import (
+    BIEPSubjectComponent,
+)
+from orchestration.components.england_board_subject_component import (
+    EnglandBoardSubjectComponent,
+)
+from orchestration.components.england_cross_board_comparator_component import (
+    EnglandCrossBoardComparatorComponent,
+)
+
 # Backward-compat aliases (the 3 legacy `celtic_*` Components were
 # replaced in the 5-layer rewrite; existing consumers can import
 # the new names without breaking).
 __all__ = [
+    "BIEPSubjectComponent",
     "CelticAgentOpsComponent",
     "CelticAssetGenerationComponent",
     "CelticIngestionComponent",
     "CelticMaterialsComponent",
     "CelticModelLifecycleComponent",
     "ConformanceError",
+    "EnglandBoardSubjectComponent",
+    "EnglandCrossBoardComparatorComponent",
 ]

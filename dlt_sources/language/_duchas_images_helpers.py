@@ -10,15 +10,19 @@ import re
 from typing import Any
 from xml.etree import ElementTree as ET
 
+import structlog
+
 try:
     from dlt.sources.incremental import Incremental  # noqa: F401
 except ImportError:
     pass  # dlt.sources.incremental moved; use dlt.sources.incremental.IncrementalCursorProvider instead
 
-try:
-    from dlt_sources.common.http_client import doras_client, duchas_client
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+# See the identical note in dlt_sources/language/_tearma_helpers.py:
+# dlt_sources.common.http_client always fails (imports a nonexistent
+# top-level `settings` module) — use the already-fixed _http_factories.py.
+from dlt_sources.common._http_factories import doras_client, duchas_client
+
+logger = structlog.get_logger(__name__)
 
 
 DORAS_IIIF = "https://doras.gaois.ie/islandora/object"

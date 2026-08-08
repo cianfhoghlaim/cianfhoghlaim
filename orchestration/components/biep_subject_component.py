@@ -17,12 +17,17 @@ The 5-layer convention is preserved:
 Reference: openspec/changes/2026-07-27-biep-v3-canonical-registry-v1/
 openspec/changes/2026-08-03-biep-v3-orchestration-components-partitions-sensors-v1/
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations`: Dagster's Resolvable
+# derives each Component's YAML schema from `inspect.signature(__init__)`
+# without resolving forward references, so postponed-evaluation string
+# annotations (e.g. "str" instead of the type str) crash deep inside
+# dagster.components.resolved.base with `AttributeError: 'str' object has
+# no attribute '__name__'`. Python 3.13 supports `X | Y` union syntax
+# natively, so this file doesn't need the future import anyway.
 import logging
 from typing import Any
 
-from dagster import Component, ComponentLoadContext, Definitions
+from dagster import Component, ComponentLoadContext, Definitions, Resolvable
 
 try:
     from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
@@ -34,12 +39,20 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-class BIEPSubjectComponent(Component):
+class BIEPSubjectComponent(Component, Resolvable):
     """The canonical BIEP v3 Component for the British Isles subject registry.
 
     Reads `cianfhoghlaim.education._registry.subjects` filtered by
     `jurisdiction` (one of the 8 British Isles jurisdictions) and
     creates the per-jurisdiction asset partition set.
+
+    Subclasses `Resolvable` (in addition to `Component`) so `dg.load_defs()`
+    can instantiate this — and EnglandBoardSubjectComponent /
+    EnglandCrossBoardComparatorComponent, which inherit resolvability through
+    this base — from a YAML `type:` + `attributes:` block. Component alone
+    does not provide YAML resolution in Dagster 1.13; every field must come
+    from a fully type-annotated `__init__` (already true here), a dataclass,
+    a pydantic model, or a `@record`.
     """
 
     def __init__(self, jurisdiction: str):
@@ -77,43 +90,57 @@ class BIEPSubjectComponent(Component):
         # Build the 3 canonical assets (ingestion + extraction + embedding)
         # backed by the registry rows. Each asset has a key derived from
         # the row's (jurisdiction, subject_slug, board, qualification_level, language).
-        from orchestration.defs.2_materials.ireland_education.generic_ireland_assets import (
-            ireland_documents_ingested,
-            ireland_extractions,
-            ireland_embeddings,
+        #
+        # `2_materials` is not a valid Python identifier (the tokenizer reads
+        # `2_` as an incomplete numeric literal), so these must be dynamic
+        # imports via importlib — same workaround orchestration/definitions.py
+        # already uses for the same digit-prefixed layer directory. The
+        # literal `from orchestration.defs.2_materials...` form previously
+        # here was a dormant SyntaxError: nothing imported this module before
+        # it was wired into orchestration/components/__init__.py.
+        import importlib
+
+        _ireland_mod = importlib.import_module(
+            "orchestration.defs.2_materials.ireland_education.generic_ireland_assets"
         )
-        from orchestration.defs.2_materials.england_education.generic_england_assets import (
-            england_documents_ingested,
-            england_extractions,
-            england_embeddings,
+        _england_mod = importlib.import_module(
+            "orchestration.defs.2_materials.england_education.generic_england_assets"
         )
 
         # Per-jurisdiction asset lookup
         asset_lookup = {
-            "ireland": (ireland_documents_ingested, ireland_extractions, ireland_embeddings),
-            "england": (england_documents_ingested, england_extractions, england_embeddings),
+            "ireland": (
+                _ireland_mod.ireland_documents_ingested,
+                _ireland_mod.ireland_extractions,
+                _ireland_mod.ireland_embeddings,
+            ),
+            "england": (
+                _england_mod.england_documents_ingested,
+                _england_mod.england_extractions,
+                _england_mod.england_embeddings,
+            ),
         }
         # For SCT/WLS/NI + Crown Dependencies, the assets are aggregated
         # in their respective modules
         try:
-            from orchestration.defs.2_materials.sct_wls_ni_education.generic_sct_wls_ni_assets import (
-                sct_wls_ni_documents_ingested,
-                sct_wls_ni_extractions,
-                sct_wls_ni_embeddings,
+            _sct_wls_ni_mod = importlib.import_module(
+                "orchestration.defs.2_materials.sct_wls_ni_education.generic_sct_wls_ni_assets"
             )
             asset_lookup["scotland"] = asset_lookup["wales"] = asset_lookup["northern_ireland"] = (
-                sct_wls_ni_documents_ingested, sct_wls_ni_extractions, sct_wls_ni_embeddings,
+                _sct_wls_ni_mod.sct_wls_ni_documents_ingested,
+                _sct_wls_ni_mod.sct_wls_ni_extractions,
+                _sct_wls_ni_mod.sct_wls_ni_embeddings,
             )
         except ImportError:
             pass
         try:
-            from orchestration.defs.2_materials.crown_dependencies_education.generic_crown_dependencies_assets import (
-                crown_dependencies_documents_ingested,
-                crown_dependencies_extractions,
-                crown_dependencies_embeddings,
+            _crown_dep_mod = importlib.import_module(
+                "orchestration.defs.2_materials.crown_dependencies_education.generic_crown_dependencies_assets"
             )
             asset_lookup["jersey"] = asset_lookup["guernsey"] = asset_lookup["isle_of_man"] = (
-                crown_dependencies_documents_ingested, crown_dependencies_extractions, crown_dependencies_embeddings,
+                _crown_dep_mod.crown_dependencies_documents_ingested,
+                _crown_dep_mod.crown_dependencies_extractions,
+                _crown_dep_mod.crown_dependencies_embeddings,
             )
         except ImportError:
             pass

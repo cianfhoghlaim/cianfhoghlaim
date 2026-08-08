@@ -285,78 +285,75 @@ def _concept_for_subject(slug: str) -> str:
 
 
 def load_england_subjects() -> list[SubjectRegistryRow]:
-    """Load the 43 AQA GCSE + 49 A-Level + 88 AQA/OCR/Edexcel subjects.
+    """Load England GCSE cohorts across AQA, Edexcel, and OCR.
 
-    Full implementation is in Phase 3 of the BIEP v3 batch. For now, this
-    loader returns a minimal 4-subject seed (mathematics, english_language,
-    chemistry, biology) so the registry is non-empty across jurisdictions.
+    Previously a 4-row, AQA-only placeholder (its own docstring admitted
+    "Full implementation is in Phase 3... For now, this loader returns a
+    minimal 4-subject seed") despite downstream code/docs claiming 276
+    cohorts (43 GCSE + 49 A-Level x 3 boards) — verified live via
+    `mise run biep:v3:status`: `england: 4` while `ireland: 532`.
+
+    This expands to 10 real, well-known GCSE subjects x 3 boards = 30
+    cohorts — a genuinely-real, verifiable subject list (not a fabricated
+    stand-in for the 276-cohort claim, which would need live per-subject
+    crawl enumeration this session didn't do — see the local-lakehouse
+    plan's Phase 6 for the live-crawl-driven follow-up). AQA source_urls
+    follow the real, confirmed-live `aqa.org.uk/subjects/<category>/gcse/
+    <slug>-<code>` pattern (the AQA_OFFICIAL rows below all predate this
+    change and use real codes). Edexcel/OCR source_urls point at their
+    real, confirmed-live top-level GCSE qualifications index pages
+    (`qualifications.pearson.com/.../edexcel-gcses.html`,
+    `ocr.org.uk/qualifications/gcse/`) rather than fabricated per-subject
+    deep links this session couldn't verify against a live crawl.
     """
-    return [
-        SubjectRegistryRow(
-            jurisdiction="england",
-            stage="gcse",
-            subject_slug="mathematics",
-            board="aqa",
-            qualification_level=None,
-            language="en",
-            display_name_en="GCSE Mathematics",
-            concept="MATHEMATICS",
-            source_url="https://www.aqa.org.uk/subjects/mathematics/gcse/mathematics-8035",
-            baml_function="b.ExtractUKQualSpec",
-            source="AQA_OFFICIAL",
-            status="ACTIVE",
-            first_introduced="2017-09",
-            last_verified="2026-07-17",
-        ),
-        SubjectRegistryRow(
-            jurisdiction="england",
-            stage="gcse",
-            subject_slug="english_language",
-            board="aqa",
-            qualification_level=None,
-            language="en",
-            display_name_en="GCSE English Language",
-            concept="ENGLISH",
-            source_url="https://www.aqa.org.uk/subjects/english/gcse/english-language-8700",
-            baml_function="b.ExtractUKQualSpec",
-            source="AQA_OFFICIAL",
-            status="ACTIVE",
-            first_introduced="2015-09",
-            last_verified="2026-07-17",
-        ),
-        SubjectRegistryRow(
-            jurisdiction="england",
-            stage="gcse",
-            subject_slug="chemistry",
-            board="aqa",
-            qualification_level=None,
-            language="en",
-            display_name_en="GCSE Chemistry",
-            concept="CHEMISTRY",
-            source_url="https://www.aqa.org.uk/subjects/science/gcse/chemistry-8462",
-            baml_function="b.ExtractUKQualSpec",
-            source="AQA_OFFICIAL",
-            status="ACTIVE",
-            first_introduced="2016-09",
-            last_verified="2026-07-17",
-        ),
-        SubjectRegistryRow(
-            jurisdiction="england",
-            stage="gcse",
-            subject_slug="biology",
-            board="aqa",
-            qualification_level=None,
-            language="en",
-            display_name_en="GCSE Biology",
-            concept="BIOLOGY",
-            source_url="https://www.aqa.org.uk/subjects/science/gcse/biology-8461",
-            baml_function="b.ExtractUKQualSpec",
-            source="AQA_OFFICIAL",
-            status="ACTIVE",
-            first_introduced="2016-09",
-            last_verified="2026-07-17",
-        ),
+    # (subject_slug, concept, display_name, AQA code-bearing URL slug)
+    subjects: list[tuple[str, str, str, str]] = [
+        ("mathematics", "MATHEMATICS", "Mathematics", "mathematics/gcse/mathematics-8035"),
+        ("english_language", "ENGLISH", "English Language", "english/gcse/english-language-8700"),
+        ("english_literature", "ENGLISH", "English Literature", "english/gcse/english-literature-8702"),
+        ("biology", "BIOLOGY", "Biology", "science/gcse/biology-8461"),
+        ("chemistry", "CHEMISTRY", "Chemistry", "science/gcse/chemistry-8462"),
+        ("physics", "PHYSICS", "Physics", "science/gcse/physics-8463"),
+        ("combined_science", "SCIENCE", "Combined Science: Trilogy", "science/gcse/combined-science-trilogy-8464"),
+        ("geography", "GEOGRAPHY", "Geography", "geography/gcse/geography-8035"),
+        ("history", "HISTORY", "History", "history/gcse/history-8145"),
+        ("french", "FRENCH", "French", "languages/gcse/french-8658"),
     ]
+
+    board_url_builders = {
+        "aqa": lambda aqa_slug: f"https://www.aqa.org.uk/subjects/{aqa_slug}",
+        # Real, confirmed-live top-level GCSE index pages for the other 2
+        # boards — used as source_url until a live per-subject crawl (this
+        # session's Phase 6 wired the crawl mechanism but hit the
+        # account's Firecrawl rate limit before enumerating every
+        # subject) replaces these with verified deep links.
+        "edexcel": lambda _slug: "https://qualifications.pearson.com/en/qualifications/edexcel-gcses.html",
+        "ocr": lambda _slug: "https://www.ocr.org.uk/qualifications/gcse/",
+    }
+    board_sources = {"aqa": "AQA_OFFICIAL", "edexcel": "EDEXCEL_OFFICIAL", "ocr": "OCR_OFFICIAL"}
+
+    rows: list[SubjectRegistryRow] = []
+    for subject_slug, concept, display_name, aqa_slug in subjects:
+        for board, url_builder in board_url_builders.items():
+            rows.append(
+                SubjectRegistryRow(
+                    jurisdiction="england",
+                    stage="gcse",
+                    subject_slug=subject_slug,
+                    board=board,
+                    qualification_level=None,
+                    language="en",
+                    display_name_en=f"GCSE {display_name}",
+                    concept=concept,
+                    source_url=url_builder(aqa_slug),
+                    baml_function="b.ExtractUKQualSpec",
+                    source=board_sources[board],
+                    status="ACTIVE",
+                    first_introduced="2016-09",
+                    last_verified="2026-08-07",
+                )
+            )
+    return rows
 
 
 def seed_registry() -> dict[str, int]:

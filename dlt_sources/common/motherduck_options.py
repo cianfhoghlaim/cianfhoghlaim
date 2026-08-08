@@ -32,6 +32,7 @@ from __future__ import annotations
 import os
 from typing import Any, Literal
 
+import dlt
 import dlt_sources
 from dlt.destinations.impl.ducklake.configuration import DuckLakeCredentials
 

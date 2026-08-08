@@ -6,10 +6,10 @@ Phase 3D of openspec change.
 
 from __future__ import annotations
 
-try:
-    from dlt_sources.common.http_client import canuint_client
-except ImportError:
-    pass  # shared.http is unavailable; functions must lazy-import at call-time
+# See the identical note in dlt_sources/language/_tearma_helpers.py:
+# dlt_sources.common.http_client always fails (imports a nonexistent
+# top-level `settings` module) — use the already-fixed _http_factories.py.
+from dlt_sources.common._http_factories import canuint_client
 
 
 CANUINT_BASE = "https://www.canuint.ie"

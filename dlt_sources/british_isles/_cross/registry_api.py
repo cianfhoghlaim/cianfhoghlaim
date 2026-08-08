@@ -258,6 +258,7 @@ def insert_subject(row: SubjectRegistryRow, conn: Any | None = None) -> None:
     a new connection per call.
     """
     import duckdb  # type: ignore[import-not-found]
+    from dlt_sources.british_isles._cross.connection import _setup_s3_secret
     uri = os.getenv("BIEP_REGISTRY_URI", "md:cianfhoghlaim")
     schema = os.getenv("BIEP_REGISTRY_SCHEMA", DEFAULT_REGISTRY_SCHEMA)
 

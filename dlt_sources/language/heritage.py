@@ -1,5 +1,5 @@
 """
-oideachais.cianfhoghlaim.dlt.british_isles.ireland.culture.heritage — Ireland
+oideachais.dlt_sources.language.heritage — Ireland
 cultural-heritage DLT source.
 
 Phase 1 of the `ingest-culture-heritage` openspec change.

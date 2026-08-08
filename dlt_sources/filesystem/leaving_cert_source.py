@@ -52,6 +52,9 @@ DEFAULT_LC_ROOT = Path(
 
 # The 6 target subjects of the LC6-subject pipeline (added 2026-07-10:
 # english, per openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1)
+# Kept unchanged (not renamed/extended in place) because
+# lc_chemistry_pilot_assets.py and other Dagster assets reference it
+# directly as the canonical 6-subject cohort.
 LC6_SUBJECTS: tuple[str, ...] = (
     "chemistry",
     "computer_science",
@@ -60,6 +63,38 @@ LC6_SUBJECTS: tuple[str, ...] = (
     "geography",
     "mathematics",
 )
+
+# 7 more subjects confirmed to have real local PDFs under
+# leaving_certificate/<subject>/ that were never wired into a scan list
+# (biology/business/history/applied_mathematics have an en/ga split like
+# the LC6 subjects; french/technology/ukrainian are root-level single-
+# language like gaeilge/english below).
+LC_ADDITIONAL_SUBJECTS: tuple[str, ...] = (
+    "biology",
+    "business",
+    "history",
+    "applied_mathematics",
+    "french",
+    "technology",
+    "ukrainian",
+)
+
+# All 13 subjects with a real local PDF corpus today.
+LC_ALL_SUBJECTS: tuple[str, ...] = LC6_SUBJECTS + LC_ADDITIONAL_SUBJECTS
+
+# Subjects whose files live directly at the subject dir root rather than
+# split into en/ga subdirs, mapped to the default language to record for
+# them. gaeilge and english were the only 2 originally handled (as
+# hardcoded special cases in _scan_subject()); french/technology/ukrainian
+# have the identical root-level layout and are folded into the same
+# general-purpose lookup instead of adding 3 more special cases.
+LC_ROOT_LEVEL_SUBJECT_LANGUAGES: dict[str, str] = {
+    "gaeilge": "ga",
+    "english": "en",
+    "french": "en",
+    "technology": "en",
+    "ukrainian": "en",
+}
 
 # Maps each PDF kind (regex on filename) to the v4 registry model key
 # that `select_ocr_backend()` would select. Used downstream by the
@@ -240,35 +275,29 @@ def _classify_pdf(pdf_path: Path, language: str) -> str:
 
 
 def _scan_subject(subject_dir: Path) -> Iterator[dict[str, Any]]:
-    """Yield (file_path, language) tuples for one of the 6 LC subjects.
+    """Yield (file_path, language) tuples for one LC subject.
 
-    Handles 2 asymmetries:
-    - gaeilge: no en/ subdir; Irish files live at the root of `gaeilge/`.
-    - english: en-only at root (no ga/ subdir) — mirrors the gaeilge pattern
-      but with default language "en" since the LC English syllabus is
-      taught and examined in English.
+    Handles 2 layouts:
+    - Root-level, single-language (gaeilge, english, and — extended here —
+      french/technology/ukrainian): no en/ga split, files live directly in
+      the subject dir. Default language comes from
+      LC_ROOT_LEVEL_SUBJECT_LANGUAGES.
+    - en/ga split (chemistry, computer_science, geography, mathematics,
+      biology, business, history, applied_mathematics): files live under
+      <subject>/en/ and/or <subject>/ga/.
     """
     if not subject_dir.exists():
         logger.warning(f"lc_subject_dir_missing: {subject_dir}")
         return
 
-    if subject_dir.name == "gaeilge":
-        # Files at root (mostly GA; some EN-named may exist)
+    root_language = LC_ROOT_LEVEL_SUBJECT_LANGUAGES.get(subject_dir.name)
+    if root_language is not None:
         for ext in (".pdf",) + IMAGE_EXTENSIONS:
             for f in subject_dir.glob(f"*{ext}"):
                 yield {
                     "file_path": f,
-                    "language": "ga",  # default for gaeilge root
-                    "subject": "gaeilge",
-                }
-    elif subject_dir.name == "english":
-        # Files at root (EN-only; the English LC syllabus is monolingual)
-        for ext in (".pdf",) + IMAGE_EXTENSIONS:
-            for f in subject_dir.glob(f"*{ext}"):
-                yield {
-                    "file_path": f,
-                    "language": "en",  # default for english root
-                    "subject": "english",
+                    "language": root_language,
+                    "subject": subject_dir.name,
                 }
     else:
         for lang in ("en", "ga"):
@@ -387,19 +416,36 @@ def lc5_documents(
 
 
 def main() -> int:
-    """CLI entry — runs the pipeline against the local duckdb destination."""
-    import duckdb
-    con = duckdb.connect("lc5_ingest.duckdb")
+    """CLI entry — runs the pipeline against the local DuckLake bronze layer.
+
+    Previously wrote to an ad-hoc `lc5_ingest.duckdb` file in the current
+    working directory (untracked, not part of the running local lakehouse
+    stack). Repointed to the proven local DuckLake destination
+    (get_dlt_destination(use_ducklake=True) — Postgres:5433 catalog +
+    Garage S3:3900, already used by JurisdictionPipelineBase) so this
+    ingestion actually lands in the lakehouse rather than a scratch file.
+    Scans all 13 subjects with a real local PDF corpus (LC_ALL_SUBJECTS),
+    not just the original LC6.
+    """
+    from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
+
     pipeline = dlt.pipeline(
-        pipeline_name="lc5",
-        destination=dlt.destinations.duckdb("lc5_ingest.duckdb"),
-        dataset_name="curriculum_unified",
+        pipeline_name="lc_leaving_cert",
+        destination=get_dlt_destination(use_ducklake=True),
+        dataset_name="cianfhoghlaim.bronze.ireland_leaving_cert",
     )
-    load_info = pipeline.run(lc5_documents())
+    load_info = pipeline.run(lc5_documents(subjects=LC_ALL_SUBJECTS))
     print(load_info)
-    # Show the row count
-    df = con.execute("SELECT subject, language, COUNT(*) FROM curriculum_unified.lc5_documents GROUP BY subject, language").df()
-    print(df.to_string())
+    # Show the row count per subject/language via the pipeline's own
+    # destination client rather than a second, separate raw duckdb
+    # connection to a file dlt itself already manages.
+    with pipeline.sql_client() as client:
+        df = client.execute_sql(
+            "SELECT subject, language, COUNT(*) AS n FROM lc5_documents "
+            "GROUP BY subject, language ORDER BY subject, language"
+        )
+        for row in df:
+            print(row)
     return 0
 
 

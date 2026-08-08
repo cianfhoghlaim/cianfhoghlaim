@@ -10,6 +10,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import structlog
+
 from dlt_sources.constants.local_sources import (
     EXTRACTION_CONFIG,
     FILE_TYPE_EXTENSIONS,
@@ -19,6 +21,8 @@ from dlt_sources.constants.local_sources import (
     get_file_type,
     should_process_file,
 )
+
+logger = structlog.get_logger(__name__)
 
 
 def _compute_file_hash(path: Path, chunk_size: int = 8192) -> str:

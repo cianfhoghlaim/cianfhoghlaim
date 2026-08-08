@@ -33,7 +33,7 @@ class AQAQualSpec {
   component_papers int
 
   source_pdf string
-  source_pages int
+  source_pages int?
   language string?
 }
 
@@ -52,7 +52,7 @@ class OCRQualSpec {
   component_papers int
 
   source_pdf string
-  source_pages int
+  source_pages int?
   language string?
 }
 
@@ -71,7 +71,7 @@ class EdexcelQualSpec {
   component_papers int
 
   source_pdf string
-  source_pages int
+  source_pages int?
   language string?
 }
 
@@ -79,12 +79,42 @@ class EdexcelQualSpec {
 // BAML functions — the 3 England board-specific extractors (BIEP v2)
 // ============================================================================
 
+// The 3 functions below were `prompt #"Auto-generated extraction
+// prompt."#` — a placeholder that was never filled in. That renders as a
+// system-only chat with no user content, which MiniMax (BIEPV3Extract)
+// rejects with 400 "chat content is empty" — the exact bug class already
+// documented and fixed for Ireland's chemistry BAML functions and for
+// ExtractUKQualSpec above (missing `{{ _.role("user") }}` marker). No
+// live caller currently routes through these 3 (the v3 generic pipeline
+// uses ExtractUKQualSpec instead — see above), so this was dormant, not
+// yet hit in production. Given real prompts here rather than leaving
+// live callers, if any use them via backwards compatibility.
+
 function ExtractAQAQualSpec(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
 ) -> AQAQualSpec {  client BIEPV3Extract
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract the qualification specification from this AQA further education
+    document at {{ qualification_level }} level for the subject {{ subject }}.
+
+    Look for:
+    - Specification code (e.g. '8035' for AQA GCSE Maths).
+    - Total marks for the qualification.
+    - Assessment objectives with their weightings.
+    - Component papers count.
+    - First teaching year and last certification year.
+    - Source PDF page count (leave null if extracting from a crawled web
+      page rather than an actual PDF).
+
+    {{ _.role("user") }}
+    Document text (AQA {{ qualification_level }}, subject: {{ subject }}):
+
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 function ExtractOCRQualSpec(
@@ -92,7 +122,26 @@ function ExtractOCRQualSpec(
   subject: string?,
   qualification_level: string?,
 ) -> OCRQualSpec {  client BIEPV3Extract
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract the qualification specification from this OCR further education
+    document at {{ qualification_level }} level for the subject {{ subject }}.
+
+    Look for:
+    - Specification code (e.g. 'J560' for OCR GCSE Maths).
+    - Total marks for the qualification.
+    - Assessment objectives with their weightings.
+    - Component papers count.
+    - First teaching year and last certification year.
+    - Source PDF page count (leave null if extracting from a crawled web
+      page rather than an actual PDF).
+
+    {{ _.role("user") }}
+    Document text (OCR {{ qualification_level }}, subject: {{ subject }}):
+
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 function ExtractEdexcelQualSpec(
@@ -100,7 +149,27 @@ function ExtractEdexcelQualSpec(
   subject: string?,
   qualification_level: string?,
 ) -> EdexcelQualSpec {  client BIEPV3Extract
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract the qualification specification from this Edexcel further
+    education document at {{ qualification_level }} level for the subject
+    {{ subject }}.
+
+    Look for:
+    - Specification code (e.g. '1MA1' for Edexcel GCSE Maths).
+    - Total marks for the qualification.
+    - Assessment objectives with their weightings.
+    - Component papers count.
+    - First teaching year and last certification year.
+    - Source PDF page count (leave null if extracting from a crawled web
+      page rather than an actual PDF).
+
+    {{ _.role("user") }}
+    Document text (Edexcel {{ qualification_level }}, subject: {{ subject }}):
+
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 // ============================================================================
@@ -132,7 +201,7 @@ class UKQualificationSpec {
   component_papers int
 
   source_pdf string
-  source_pages int
+  source_pages int?
   language string?
 }
 
@@ -155,6 +224,9 @@ function ExtractUKQualSpec(
     - Component papers count.
     - First teaching year and last certification year.
     - Source PDF page count.
+
+    {{ _.role("user") }}
+    Document text ({{ board }} {{ qualification_level }}, subject: {{ subject }}):
 
     {{ pdf_text }}
 

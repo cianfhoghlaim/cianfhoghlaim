@@ -17,19 +17,29 @@ replaces the 33 per-subject BAML extraction asset modules.
       subject: mathematics
       language: en
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations` — Dagster's
+# Resolvable derives the YAML schema from real (not postponed-string) type
+# annotations; see the identical note in biep_subject_component.py.
+from dataclasses import dataclass
 from typing import Any, Literal
 
 import dagster as dg
-from dagster.components import Component, ComponentLoadContext
+from dagster.components import Component, ComponentLoadContext, Resolvable
 
 PartitionStrategy = Literal["by_cycle", "by_subject", "by_nation", "none"]
 AssetCheckKind = Literal["row_count", "baml_fidelity", "irish_fada", "lang_detect"]
 
 
-class CelticMaterialsComponent(Component):
+@dataclass
+class CelticMaterialsComponent(Component, Resolvable):
     """Layer 2 Materials Component.
+
+    `@dataclass` + `Resolvable`: the class body below has always looked like
+    dataclass fields, but without an actual `@dataclass` decorator Dagster's
+    Resolvable machinery can't find them via `dataclasses.fields()` (nor a
+    pydantic model, nor an annotated `__init__` — none of which this class
+    had), so `dg.load_defs()` raised "Component is not resolvable from
+    YAML, but attributes were provided."
 
     Wraps one BAML extraction function as a partitioned Dagster asset
     with a partition-aware @asset_check. Emits 1 @asset + 1 @asset_check.
@@ -73,7 +83,12 @@ class CelticMaterialsComponent(Component):
         group_name = f"2_materials_baml_extraction_{self.subject}"
         asset_name = f"{self.subject}_baml_extraction"
         partitions_def = self._resolve_partitions(ireland_curriculum_partitions)
-        automation_condition = dg.AutomationCondition.cron(self.automation_cron)
+        # AutomationCondition.cron() was renamed to .on_cron() in the
+        # installed Dagster 1.13 — this same rename is needed in the other 4
+        # layer*.py Components (layer1/3/4/5) but those are outside this
+        # plan's Ireland/England/lc_extraction scope, left for the separate
+        # KCG refactor roadmap.
+        automation_condition = dg.AutomationCondition.on_cron(self.automation_cron)
 
         @dg.asset(
             name=asset_name,
@@ -85,10 +100,15 @@ class CelticMaterialsComponent(Component):
             ),
             partitions_def=partitions_def,
             automation_condition=automation_condition,
-            deps=[dg.AssetDep(self.source_asset)],
+            # source_asset is written "1_ingestion/curriculum/ie/lc5" in YAML
+            # (Dagster's own convention for displaying a multi-segment
+            # AssetKey) — AssetDep needs the actual AssetKey, not the raw
+            # slash-joined string, which fails Dagster's ^[A-Za-z0-9_]+$
+            # single-name validation.
+            deps=[dg.AssetDep(dg.AssetKey(self.source_asset.split("/")))],
         )
         def _baml_asset(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # The actual BAML call is wired at build time via the
             # baml_function reference. We emit metadata about the
@@ -96,7 +116,7 @@ class CelticMaterialsComponent(Component):
             # baml_src/curriculum.baml (or the equivalent per-subject
             # BAML file).
             partition_key = (
-                asset_context.partition_key if asset_context.has_partition_key else "default"
+                context.partition_key if context.has_partition_key else "default"
             )
             return dg.MaterializeResult(
                 metadata={
@@ -118,10 +138,10 @@ class CelticMaterialsComponent(Component):
             partitions_def=partitions_def,
         )
         def _baml_check(
-            asset_context: dg.AssetCheckExecutionContext,
+            context: dg.AssetCheckExecutionContext,
         ) -> dg.AssetCheckResult:
             partition_key = (
-                asset_context.partition_key if asset_context.has_partition_key else "default"
+                context.partition_key if context.has_partition_key else "default"
             )
             return dg.AssetCheckResult(
                 passed=True,
