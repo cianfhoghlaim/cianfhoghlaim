@@ -137,17 +137,81 @@ class ChemQuestPackValidation {
   warnings string[]
 }
 
+// ============================================================================
+// Real generation prompts (2026-08-08 docs-informed-quest-and-credential-
+// generation-v1 change). Grounded in the v3 extraction types rather than
+// the superseded `_legacy/pdfs/leaving_cert_syllabus.baml` types.
+// `level: JC` is Junior Cycle Science — no separate file.
+// ============================================================================
+
 function GenerateChemQuestPack(
-  syllabus: LeavingCertSyllabus,
-  past_papers: PastPaper[],
-  marking_schemes: MarkingSchemeSec[],
+  syllabus: SyllabusDocument,
+  past_papers: ExamPaper[],
+  marking_schemes: MarkingScheme[],
   level: string
 ) -> ChemQuestPack {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are building a Chemistry formative-assessment quest pack for NCCA
+    students at level {{ level }} ("JC" = Junior Cycle Science; "LC_OL"/
+    "LC_HL" = Leaving Cert Ordinary/Higher Chemistry). Ground every item in
+    the official syllabus, past exam papers, and marking scheme guidance
+    below — do not invent topics, learning outcomes, or questions beyond
+    what these documents actually establish.
+
+    Official syllabus:
+    {{ syllabus }}
+
+    Past exam papers (for question style + marks allocation reference):
+    {{ past_papers }}
+
+    Marking scheme guidance (for grading bands + common-error reference):
+    {{ marking_schemes }}
+
+    Build a ChemQuestPack:
+    - subject: "chemistry"
+    - framework: "ncca-lc" if level starts with "LC", "ncca-jc" if level is "JC"
+    - level: the ChemNCCALevel matching {{ level }}
+    - title / description: bilingual; text_ga null only if the syllabus text
+      itself is English-only
+    - items: one ChemFormativeItem per learning outcome actually present in
+      syllabus.module_topics[].learning_outcomes — prompt/expected_answer/
+      marking_scheme grounded in the real syllabus wording, including
+      mandatory-experiment procedure detail where the syllabus names one;
+      where a past-paper question's related_lo_id matches, mirror its
+      question style and mark allocation; hints escalate from a light nudge
+      to a near-complete worked solution; evidence.source_page and
+      evidence.excerpt_en/excerpt_ga copied verbatim from the grounding
+      syllabus text, never invented; evidence.source_pdf from
+      syllabus.source_pdf
+    - los_covered: every lo actually present in the syllabus
+    - total_items / total_marks / est_time_minutes: sums over the actual items
+    - prerequisites / cross_subject_links: only what the syllabus's
+      cross_curricular field or assessment_objectives actually name
+    - generated_at: current ISO-8601 datetime
+    - generated_by: "chem_agent"
+
+    Count and cite carefully from the actual text. Output exactly one complete
+    JSON object matching ChemQuestPack. Never use ellipses (...) or comments;
+    include every item in full, however long the list is.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ExtractChemLOStatement(paragraph: string) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract every distinct NCCA Chemistry learning-outcome statement from the
+    syllabus paragraph below. Return each as its own string, verbatim from
+    the text — do not merge multiple outcomes into one string, and do not
+    paraphrase.
+
+    {{ _.role("user") }}
+    Paragraph:
+    {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -161,25 +225,113 @@ function ExtractChemLOStatement(paragraph: string) -> string[] {  client Extract
 // fallback path is the common case.
 
 function ExtractChemGaStatement(paragraph: string) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract every distinct Irish-language (Gaeilge) NCCA Chemistry
+    learning-outcome statement from the syllabus paragraph below. Return each
+    as its own string, verbatim from the text. If the paragraph is
+    English-only, return an empty list rather than translating.
+
+    {{ _.role("user") }}
+    Paragraph:
+    {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 function GenerateChemFormativeItem(
   lo_code: string,
   difficulty: int,
   level: string,
-  topic: string
+  topic: string,
+  evidence: ChemEvidenceLink
 ) -> ChemFormativeItem {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are writing a single formative-assessment item for NCCA Chemistry
+    learning outcome {{ lo_code }} (topic: {{ topic }}, level: {{ level }},
+    target difficulty: {{ difficulty }}/5).
+
+    Ground the item entirely in this verbatim evidence from the official
+    syllabus — do not write a generic chemistry question unrelated to it:
+
+    {{ evidence }}
+
+    Build a ChemFormativeItem:
+    - id: a fresh UUID
+    - lo_code: {{ lo_code }}, level: the ChemNCCALevel matching {{ level }},
+      topic: the ChemTopicArea matching {{ topic }}
+    - item_type: choose the type that best fits the evidence (e.g.
+      STRUCTURE_DRAWING for bonding outcomes, LAB_PROCEDURE for mandatory
+      experiments, BALANCE_EQUATION for stoichiometry)
+    - difficulty: {{ difficulty }}
+    - prompt / expected_answer / marking_scheme: bilingual, derived from the
+      evidence excerpt, not a generic template
+    - common_errors: plausible mistakes for this specific outcome
+    - hints: exactly 4, escalating from a light nudge to a near-complete
+      worked solution
+    - evidence: pass the input evidence through unchanged
+    - feedback_channel: LAB_ASSISTANT for practical items, CHEM_TUTOR for
+      calculation items, CURRICULUM_LOOKUP for definitional items
+    - est_time_minutes: realistic for the item's difficulty (1-30)
+
+    Output exactly one complete JSON object matching ChemFormativeItem.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ScoreChemFormativeResponse(
   item: ChemFormativeItem,
   attempt: ChemFormativeItemAttempt
 ) -> ChemScoreBreakdown {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are marking a student's response to a Chemistry formative item,
+    using the item's own marking scheme — do not apply an external standard.
+
+    Item (including its expected_answer and marking_scheme):
+    {{ item }}
+
+    Student attempt:
+    {{ attempt }}
+
+    Build a ChemScoreBreakdown:
+    - item_id: {{ item.id }}, lo_code: {{ item.lo_code }}
+    - total_marks: derived from item.marking_scheme's stated allocation
+    - marks_awarded / marks_per_step: award partial credit per the marking
+      scheme's per-step breakdown, not all-or-nothing, unless the marking
+      scheme itself is all-or-nothing
+    - is_correct: true iff marks_awarded == total_marks
+    - partial_credit_pct: marks_awarded / total_marks * 100
+    - feedback_en / feedback_ga: specific to what the student actually wrote,
+      referencing item.common_errors where applicable
+    - next_recommended_lo: a plausible next LO only if the response reveals a
+      specific gap; otherwise null
+    - badge_earned: true iff partial_credit_pct >= 80
+
+    Output exactly one complete JSON object matching ChemScoreBreakdown.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ValidateChemQuestPack(pack: ChemQuestPack) -> ChemQuestPackValidation {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Validate the internal consistency of this ChemQuestPack — every item's
+    lo_code SHOULD appear in los_covered, total_items SHOULD equal
+    items.length, total_marks SHOULD equal the sum of each item's marking
+    scheme allocation, and no item SHOULD have an empty evidence.excerpt_en
+    and evidence.excerpt_ga.
+
+    Quest pack:
+    {{ pack }}
+
+    Build a ChemQuestPackValidation: pack_id from the input, is_valid true
+    only if no errors were found, errors for any hard inconsistency listed
+    above, warnings for anything suspicious but not necessarily wrong.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }

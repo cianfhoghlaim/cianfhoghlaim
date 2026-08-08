@@ -145,17 +145,81 @@ class GaelQuestPackValidation {
   warnings string[]
 }
 
+// ============================================================================
+// Real generation prompts (2026-08-08 docs-informed-quest-and-credential-
+// generation-v1 change). Grounded in the v3 extraction types. `level: JC`
+// is Junior Cycle Gaeilge — no separate file. Gaeilge content is Irish-
+// medium: text_ga is always required and canonical; text_en is null for
+// content fields (only used for citation/helper translation), matching the
+// existing GaelBilingualText nullability.
+// ============================================================================
+
 function GenerateGaelQuestPack(
-  syllabus: LeavingCertSyllabus,
-  past_papers: PastPaper[],
-  marking_schemes: MarkingSchemeSec[],
+  syllabus: SyllabusDocument,
+  past_papers: ExamPaper[],
+  marking_schemes: MarkingScheme[],
   level: string
 ) -> GaelQuestPack {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Tá tú ag tógáil pacáiste ceartúcháin fhoirmitheach Gaeilge do mhic léinn
+    NCCA ag leibhéal {{ level }} ("JC" = Sraith Shóisearach; "LC_FL"/"LC_OL"/
+    "LC_HL" = Ardteistiméireacht Bhonn/Ghnáth/Ard). Bunaigh gach mír ar an
+    siollabas oifigiúil, ar na scrúdpháipéir a chuaigh thart, agus ar an
+    treoir maidir leis an scéim mharcála thíos — ná cum ábhar nach bhfuil sa
+    téacs bunaidh.
+
+    Siollabas oifigiúil:
+    {{ syllabus }}
+
+    Scrúdpháipéir a chuaigh thart:
+    {{ past_papers }}
+
+    Treoir maidir leis an scéim mharcála:
+    {{ marking_schemes }}
+
+    Tóg GaelQuestPack:
+    - subject: "gaeilge"
+    - framework: "ncca-lc" má thosaíonn level le "LC", "ncca-jc" más "JC" é
+    - level: an GaelNCCALevel a fhreagraíonn do {{ level }}
+    - title / description: text_ga i gcónaí, text_en null (ní hé Béarla an
+      teanga theagaisc)
+    - items: mír amháin GaelFormativeItem do gach toradh foghlama atá i
+      láthair go hiarbhír in syllabus.module_topics[].learning_outcomes —
+      prompt/expected_answer/marking_scheme bunaithe ar théacs iarbhír an
+      tsiollabais; nuair a mheaitseálann related_lo_id ceist ó pháipéar a
+      chuaigh thart, cuir a stíl agus a leithdháileadh marcanna san áireamh;
+      leideanna ag méadú ó leid éadrom go freagra beagnach iomlán; tá
+      evidence.source_page agus evidence.excerpt_ga (móide excerpt_en más
+      ann dó) cóipeáilte go litriúil ón téacs bunaidh, ná cum riamh iad;
+      evidence.source_pdf ó syllabus.source_pdf
+    - los_covered: gach toradh foghlama atá sa siollabas iarbhír
+    - total_items / total_marks / est_time_minutes: suimeanna ó na míreanna iarbhír
+    - prerequisites / cross_subject_links: an méid a luann réimse
+      cross_curricular nó assessment_objectives an tsiollabais amháin
+    - generated_at: dáta-am ISO-8601 reatha
+    - generated_by: "gael_agent"
+
+    Áirigh agus luaigh go cúramach ón téacs iarbhír. Aschur díreach amháin
+    réad JSON iomlán a fhreagraíonn do GaelQuestPack. Ná húsáid ellipses
+    (...) ná nótaí; cuir gach mír san áireamh ina hiomláine.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ExtractGaelLOStatement(paragraph: string) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Bain amach gach ráiteas toraidh foghlama Gaeilge NCCA ar leith ón
+    mhír shiollabais thíos. Cuir gach ceann ar ais mar théad ar leith, go
+    litriúil ón téacs — ná cumaisc ilthorthaí i dtéad amháin.
+
+    {{ _.role("user") }}
+    Mír:
+    {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -169,25 +233,107 @@ function ExtractGaelLOStatement(paragraph: string) -> string[] {  client Extract
 // run either path without code changes.
 
 function ExtractGaelGaStatement(paragraph: string) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Bain amach gach ráiteas toraidh foghlama Gaeilge ar leith ón mhír
+    shiollabais thíos, go litriúil. Seo an leagan Gaeilge-tosaithe den
+    aisghabhálaí céanna — filleann sé an chéanna liosta téad más féidir,
+    ach tugann tosaíocht don leagan Gaeilge nuair a bhíonn dhá leagan ann.
+
+    {{ _.role("user") }}
+    Mír:
+    {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 function GenerateGaelFormativeItem(
   lo_code: string,
   difficulty: int,
   level: string,
-  topic: string
+  topic: string,
+  evidence: GaelEvidenceLink
 ) -> GaelFormativeItem {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Tá tú ag scríobh mír aonair measúnaithe fhoirmithigh do thoradh foghlama
+    Gaeilge NCCA {{ lo_code }} (ábhar: {{ topic }}, leibhéal: {{ level }},
+    deacracht sprioctha: {{ difficulty }}/5).
+
+    Bunaigh an mhír go hiomlán ar an fhianaise litriúil seo ón siollabas
+    oifigiúil — ná scríobh ceist ghinearálta Gaeilge nach mbaineann léi:
+
+    {{ evidence }}
+
+    Tóg GaelFormativeItem:
+    - id: UUID nua
+    - lo_code: {{ lo_code }}, level: an GaelNCCALevel a fhreagraíonn do
+      {{ level }}, topic: an GaelTopicArea a fhreagraíonn do {{ topic }}
+    - item_type: roghnaigh an cineál is fearr a oireann don fhianaise (m.sh.
+      LEAMHTHUISCINT_ITEM do léamhthuiscint, GRAMADACH_ITEM do ghramadach,
+      FILIOCHT_ANALYSIS d'anailís fhilíochta)
+    - difficulty: {{ difficulty }}
+    - prompt / expected_answer / marking_scheme: text_ga i gcónaí, bunaithe
+      ar shliocht na fianaise, ní teimpléad ginearálta
+    - common_errors: earráidí dóchúla don toradh sonrach seo
+    - hints: 4 go díreach, ag méadú ó leid éadrom go freagra beagnach iomlán
+    - evidence: cuir an fhianaise ionchuir ar aghaidh gan athrú
+    - feedback_channel: GAEL_TUTOR d'aiseolas ábhair, GRAMADACH_REVIEW do
+      mhíreanna gramadaí
+    - est_time_minutes: réalaíoch don deacracht (1-30)
+
+    Aschur díreach amháin réad JSON iomlán a fhreagraíonn do GaelFormativeItem.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ScoreGaelFormativeResponse(
   item: GaelFormativeItem,
   attempt: GaelFormativeItemAttempt
 ) -> GaelScoreBreakdown {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Tá tú ag marcáil freagra mic léinn ar mhír fhoirmitheach Gaeilge, ag
+    baint úsáide as scéim mharcála na míre féin.
+
+    Mír (lena n-áirítear expected_answer agus marking_scheme):
+    {{ item }}
+
+    Iarracht an mhic léinn:
+    {{ attempt }}
+
+    Tóg GaelScoreBreakdown:
+    - item_id: {{ item.id }}, lo_code: {{ item.lo_code }}
+    - total_marks: díorthaithe ó leithdháileadh scéim mharcála na míre
+    - marks_awarded / marks_per_step: creidmheas páirteach de réir na scéime
+    - is_correct: fíor más ionann marks_awarded agus total_marks
+    - partial_credit_pct: marks_awarded / total_marks * 100
+    - feedback_ga: aiseolas sonrach, i nGaeilge i gcónaí; feedback_en: roghnach
+    - next_recommended_lo: an chéad toradh eile is dóchúil, más ábhartha
+    - badge_earned: fíor más >= 80 é partial_credit_pct
+
+    Aschur díreach amháin réad JSON iomlán a fhreagraíonn do GaelScoreBreakdown.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ValidateGaelQuestPack(pack: GaelQuestPack) -> GaelQuestPackValidation {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Deimhnigh comhsheasmhacht inmheánach an GaelQuestPack seo — ba chóir go
+    mbeadh lo_code gach míre in los_covered, total_items comhionann le
+    items.length, total_marks comhionann le suim leithdháileadh gach míre,
+    agus gan aon mhír le evidence.excerpt_ga folamh.
+
+    Pacáiste ceistiúcháin:
+    {{ pack }}
+
+    Tóg GaelQuestPackValidation: pack_id ón ionchur, is_valid fíor mura
+    bhfuarthas aon earráid, errors do neamhréireachtaí crua, warnings do
+    aon rud amhrasach ach ceart go leor.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
