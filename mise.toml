@@ -343,6 +343,31 @@ run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.g
 description = "Run marimo check on every BIEP v3 marimo notebook (17 lakehouse explorers + 6 jurisdiction dashboards + 2 educative = 25 notebooks)"
 run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')) + ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/23_8_jurisdiction_overview.py', 'notebooks/24_deployment_control_panel.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py', 'notebooks/40_leaving_cert_subject_panel.py', 'notebooks/00_marimo_patterns_tour.py', 'notebooks/00_biep_v3_dashboard_template.py']; [subprocess.run(['marimo', 'check', n]) for n in notebooks]; print(f'Checked {len(notebooks)} notebooks')\""
 
+# Tier 3 grouped dashboards (per the 2026-08-10-marimo-v14-tier3-grouped-dashboards-consolidation-v1 change)
+[tasks."biep:v3:marimo:meaisin:dev"]
+description = "Open the meaisin_ops_console grouped dashboard (12-agent fleet operator console — consolidates 60-64)"
+run = "marimo edit notebooks/meaisin_ops_console.py"
+[tasks."biep:v3:marimo:celtic:dev"]
+description = "Open the celtic_languages grouped dashboard (7 Celtic languages — consolidates 06_*)"
+run = "marimo edit notebooks/celtic_languages.py"
+[tasks."biep:v3:marimo:corpus:dev"]
+description = "Open the corpus_overview grouped dashboard (BIEP + Leabharlann corpus — consolidates 12_*)"
+run = "marimo edit notebooks/corpus_overview.py"
+[tasks."biep:v3:marimo:speedrun:dev"]
+description = "Open the speedrun_mmo grouped dashboard (Túatha educational MMO — consolidates 16_*)"
+run = "marimo edit notebooks/speedrun_mmo.py"
+[tasks."biep:v3:marimo:academic:dev"]
+description = "Open the academic_history grouped dashboard (M.Sc. AI 25/26 academic history — consolidates 17_*)"
+run = "marimo edit notebooks/academic_history.py"
+[tasks."biep:v3:marimo:irish_law:dev"]
+description = "Open the irish_law grouped dashboard (Irish legal corpus — consolidates 11_*)"
+run = "marimo edit notebooks/irish_law.py"
+
+# Tier 4 sync health (per the 2026-08-10-marimo-v14-sync-health-dashboard-consolidation-v1 change)
+[tasks."biep:v3:marimo:sync:dev"]
+description = "Open the sync_health grouped dashboard (11 sync layer health — consolidates 14/15/25/26/27/28/29/30)"
+run = "marimo edit notebooks/sync_health.py"
+
 # meaisinfhoghlaim v3 operator surface
 [tasks."meaisin:v3:setup"]
 description = "meaisinfhoghlaim v3 full setup — Python + CUDA + 24-model registry + HF watchdog + OCR harness + 4 openspec changes + lint:skills"
@@ -852,6 +877,10 @@ run = "bun run scripts/preflight-arm-oci.ts ${@:-}"
 description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt -> all syncs)"
 run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
 
+[tasks."iac-bootstrap-pangolin-client"]
+description = "Idempotent: install the pangolin CLI + mint a Pangolin machine client + render the newt compose (per the 2026-08-15 openspec change)"
+run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
+
 [tasks."iac-plan"]
 description = "IaC diff: declared vs actual state (no mutation)"
 run = "bun run --cwd bonneagar iac:plan ${@:-}"
@@ -868,6 +897,10 @@ run = "bun run --cwd bonneagar iac:health ${@:-}"
 [tasks."iac:bootstrap"]
 description = "Alias for iac-bootstrap (docs use the colon form)"
 run = "mise run iac-bootstrap ${@:-}"
+
+[tasks."iac:bootstrap-pangolin-client"]
+description = "Alias for iac-bootstrap-pangolin-client (docs use the colon form)"
+run = "mise run iac-bootstrap-pangolin-client ${@:-}"
 
 [tasks."iac:plan"]
 description = "Alias for iac-plan (docs use the colon form)"
