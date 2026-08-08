@@ -109,7 +109,7 @@ def _source_table(mo):
     """The 28+ DLT sources table (8 BIEP jurisdictions × 4 domains)."""
     import pandas as pd
 
-    sources = [
+    _sources = [
         # Ireland (active — 6 LC + 18 JC + 16 short + 36 CBA)
         ("ireland", "education", "ncca_lc", "ncca", "leaving_cycle", "0 4 * * *", "yearly"),
         ("ireland", "education", "sec_lc", "sec", "leaving_cycle", "0 3 * * *", "yearly"),
@@ -149,7 +149,7 @@ def _source_table(mo):
     ]
 
     df = pd.DataFrame(
-        sources,
+        _sources,
         columns=[
             "jurisdiction", "domain", "source_id", "board",
             "stage", "cron", "status",
@@ -166,7 +166,12 @@ def _source_table(mo):
 @app.cell
 def _source_dropdown(mo):
     """Dropdown to pick a source for the sample query."""
-    sources = [
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell's `sources` collided with `_source_table`'s own local
+    # `sources` list -- a genuine MultipleDefinitionError, confirmed
+    # live. Neither is consumed by another cell, so both are now
+    # cell-local (underscore-prefixed).
+    _sources = [
         "ncca_lc", "sec_lc", "gov_ie_circulars", "junior_cycle", "junior_cycle_cbas",
         "junior_cycle_short_courses", "irish_statute_book", "hse_guidance", "cso_ireland",
         "aqa_a_level", "ocr_a_level", "edexcel_a_level",
@@ -177,7 +182,7 @@ def _source_dropdown(mo):
         "jersey_gcse", "guernsey_gcse", "iom_gcse",
     ]
     source_dropdown = mo.ui.dropdown(
-        options=sources,
+        options=_sources,
         value="ncca_lc",
         label="DLT source",
     )

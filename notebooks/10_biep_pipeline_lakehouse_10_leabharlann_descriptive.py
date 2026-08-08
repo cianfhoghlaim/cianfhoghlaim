@@ -74,7 +74,7 @@ def _setup(mo):
     load_dotenv()
     # Pattern A6: `md:cianfhoghlaim?motherduck_token=$MOTHERDUCK_TOKEN` (prod) vs
     # local DuckDB (dev). The .infisical.env template hydrates MOTHERDUCK_TOKEN.
-    con = ibis.ibis.duckdb.connect("md:cianfhoghlaim")
+    con = ibis.duckdb.connect("md:cianfhoghlaim")
     return alt, con, ibis, pd
 
 

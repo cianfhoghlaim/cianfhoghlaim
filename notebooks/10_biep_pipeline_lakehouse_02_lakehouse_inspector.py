@@ -145,6 +145,16 @@ def _(
         return out
 
     refresh = mo.ui.run_button(label="Re-run health checks")
+    return health, refresh
+
+
+@app.cell
+def _(health, mo, refresh):
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: marimo
+    # disallows reading a UIElement's `.value` in the same cell that
+    # constructs it (confirmed live: "Accessing the value of a UIElement
+    # in the cell that created it is not allowed") -- `refresh` is now
+    # created in the cell above and its `.value` is only read here.
     if refresh.value:
         h = health()
         health_ui = mo.vstack([
@@ -153,7 +163,7 @@ def _(
         ])
     else:
         health_ui = mo.vstack([refresh, mo.md("*Click the button to refresh.*")])
-    return health, health_ui, refresh
+    return (health_ui,)
 
 
 @app.cell

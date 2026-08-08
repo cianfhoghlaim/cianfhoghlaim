@@ -72,28 +72,25 @@ def _():
     import marimo as mo
     import pandas as pd
 
-    # Primary path: MotherDuck + DuckLake lakehouse. Fall back to local DuckDB.
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: the
+    # old MotherDuck path called `duckdb.sql(f"SET motherduck_token=...")`
+    # against DuckDB's implicit global default connection -- a DIFFERENT
+    # connection object than the one `ibis.duckdb.connect("md:cianfhoghlaim")`
+    # creates right after, so the SET never actually reached the
+    # connection that needed it (confirmed live: "unrecognized
+    # configuration parameter motherduck_token", since the local-only
+    # `ibis.duckdb.connect(":memory:")` fallback doesn't have the
+    # motherduck extension loaded either). Replaced with the real,
+    # live-verified canonical connection helper (`notebooks/_shared/
+    # db.py`), which tries the real local DuckLake stack first.
     try:
-        import duckdb
-        import ibis  # ibis-first entrypoint
-        db_path = os.environ.get(
-            "CIANFHOGHLAIS_UOG_DUCKDB", "/tmp/cianfhoghlaim.duckdb"
-        )
-        if os.path.exists(db_path):
-            engine = ibis.duckdb.connect(db_path, read_only=True)
-            ENGINE_LABEL = f"local DuckDB ({db_path})"
-        else:
-            token = os.environ.get("MOTHERDUCK_TOKEN", "")
-            if token:
-                duckdb.sql(f"SET motherduck_token='{token}'")
-                engine = ibis.duckdb.connect("md:cianfhoghlaim")
-                ENGINE_LABEL = "md:cianfhoghlaim (MotherDuck + DuckLake)"
-            else:
-                ENGINE_LABEL = "MotherDuck (no token — set MOTHERDUCK_TOKEN)"
-                engine = None
+        from notebooks._shared.db import connect_local_lakehouse
+
+        engine = connect_local_lakehouse(read_only=True)
+        ENGINE_LABEL = "local DuckLake (Garage + Postgres)"
     except ImportError:
         engine = None
-        ENGINE_LABEL = "duckdb not installed"
+        ENGINE_LABEL = "ibis not installed"
 
     mo.md(
         f"""
@@ -142,6 +139,15 @@ def _(tab):
 @app.cell
 def _(engine, mo, pd):
     """Tab 1 content — M.Sc. AI 25/26 modules."""
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell used to have 3 mid-cell `return` statements plus a dead,
+    # unreachable `return (tab,)` after the real return (referencing
+    # `tab`, a name from a different cell entirely) -- marimo requires
+    # a single unconditional return at the end of a cell (confirmed
+    # live: "SyntaxError: 'return' outside function"). Also fixed
+    # `engine.execute(<raw sql>)` -> `engine.sql(<raw sql>)` (ibis's
+    # `.execute()` expects an expression object, not a raw string; see
+    # the identical fix in 03_all_nations.py).
     mo.md(
         """
         ## M.Sc. AI 25/26 modules
@@ -151,30 +157,33 @@ def _(engine, mo, pd):
         """
     )
     if engine is None:
-        return mo.md("*No data backend available — render stub table below.*"), pd.DataFrame()
-    try:
-        df = engine.execute(
-            """
-            SELECT
-                module_code,
-                module_title,
-                ects,
-                semester,
-                programme_codes,
-                source_url
-            FROM cianfhoghlaim.education.ie.university_modules
-            WHERE programme_codes LIKE '%MSCAI%'
-              AND academic_year = 2025
-            ORDER BY module_code
-            """
-        ).to_pandas()
-    except Exception as exc:  # noqa: BLE001
-        return mo.md(f"*Query failed: {exc}*"), pd.DataFrame()
-    if df.empty:
-        return mo.md("*No M.Sc. AI 25/26 modules yet — run `uog_extract_modules`.*"), df
-    table = mo.ui.table(df, label="M.Sc. AI 25/26 modules")
-    return table, df
-    return (tab,)
+        _table = mo.md("*No data backend available — render stub table below.*")
+    else:
+        try:
+            _df = engine.sql(
+                """
+                SELECT
+                    module_code,
+                    module_title,
+                    ects,
+                    semester,
+                    programme_codes,
+                    source_url
+                FROM cianfhoghlaim.education.ie.university_modules
+                WHERE programme_codes LIKE '%MSCAI%'
+                  AND academic_year = 2025
+                ORDER BY module_code
+                """
+            ).to_pandas()
+        except Exception as exc:  # noqa: BLE001
+            _table = mo.md(f"*Query failed: {exc}*")
+        else:
+            if _df.empty:
+                _table = mo.md("*No M.Sc. AI 25/26 modules yet — run `uog_extract_modules`.*")
+            else:
+                _table = mo.ui.table(_df, label="M.Sc. AI 25/26 modules")
+    _table
+    return
 
 
 # =============================================================================
@@ -185,6 +194,11 @@ def _(engine, mo, pd):
 @app.cell
 def _(engine, mo, pd):
     """Tab 2 content — all UoG courses with search + filter."""
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: same
+    # multi-return / engine.execute() / dead-trailing-return fixes as
+    # Tab 1 above. `search`/`school_filter`/`nfq_filter`/`filtered`/
+    # `table` weren't consumed by any other cell, so all are now
+    # cell-local.
     mo.md(
         """
         ## All UoG courses
@@ -194,64 +208,51 @@ def _(engine, mo, pd):
         """
     )
     if engine is None:
-        return (
-            mo.md("*No data backend available.*"),
-            mo.ui.text(placeholder="search…"),
-            pd.DataFrame(),
-        )
-    try:
-        df = engine.execute(
-            """
-            SELECT
-                course_code,
-                course_title,
-                nfq_level,
-                stage,
-                school,
-                ects,
-                programme_codes,
-                source_url
-            FROM cianfhoghlaim.education.ie.university_courses
-            ORDER BY school, course_code
-            """
-        ).to_pandas()
-    except Exception as exc:  # noqa: BLE001
-        return (
-            mo.md(f"*Query failed: {exc}*"),
-            mo.ui.text(placeholder="search…"),
-            pd.DataFrame(),
-        )
-    search = mo.ui.text(placeholder="search title/code…", value="")
-    school_filter = mo.ui.multiselect(
-        options=sorted(df["school"].dropna().unique().tolist()) if not df.empty else [],
-        value=[],
-        label="School",
-    )
-    nfq_filter = mo.ui.multiselect(
-        options=sorted(df["nfq_level"].dropna().unique().tolist()) if not df.empty else [],
-        value=[],
-        label="NFQ Level",
-    )
-    filtered = df
-    if search.value:
-        mask = (
-            df["course_title"].str.contains(search.value, case=False, na=False)
-            | df["course_code"].astype(str).str.contains(search.value, case=False, na=False)
-        )
-        filtered = filtered[mask]
-    if school_filter.value:
-        filtered = filtered[filtered["school"].isin(school_filter.value)]
-    if nfq_filter.value:
-        filtered = filtered[filtered["nfq_level"].isin(nfq_filter.value)]
-    table = mo.ui.table(filtered, label=f"All UoG courses ({len(filtered)} rows)")
-    return (
-        filtered,
-        nfq_filter,
-        school_filter,
-        search,
-        table,
-    )
-    return (tab,)
+        mo.md("*No data backend available.*")
+    else:
+        try:
+            _df = engine.sql(
+                """
+                SELECT
+                    course_code,
+                    course_title,
+                    nfq_level,
+                    stage,
+                    school,
+                    ects,
+                    programme_codes,
+                    source_url
+                FROM cianfhoghlaim.education.ie.university_courses
+                ORDER BY school, course_code
+                """
+            ).to_pandas()
+        except Exception as exc:  # noqa: BLE001
+            mo.md(f"*Query failed: {exc}*")
+        else:
+            _search = mo.ui.text(placeholder="search title/code…", value="")
+            _school_filter = mo.ui.multiselect(
+                options=sorted(_df["school"].dropna().unique().tolist()) if not _df.empty else [],
+                value=[],
+                label="School",
+            )
+            _nfq_filter = mo.ui.multiselect(
+                options=sorted(_df["nfq_level"].dropna().unique().tolist()) if not _df.empty else [],
+                value=[],
+                label="NFQ Level",
+            )
+            _filtered = _df
+            if _search.value:
+                _mask = (
+                    _df["course_title"].str.contains(_search.value, case=False, na=False)
+                    | _df["course_code"].astype(str).str.contains(_search.value, case=False, na=False)
+                )
+                _filtered = _filtered[_mask]
+            if _school_filter.value:
+                _filtered = _filtered[_filtered["school"].isin(_school_filter.value)]
+            if _nfq_filter.value:
+                _filtered = _filtered[_filtered["nfq_level"].isin(_nfq_filter.value)]
+            mo.ui.table(_filtered, label=f"All UoG courses ({len(_filtered)} rows)")
+    return
 
 
 # =============================================================================
@@ -262,6 +263,10 @@ def _(engine, mo, pd):
 @app.cell
 def _(engine, mo, pd):
     """Tab 3 content — reading lists with group-by toggle."""
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: same
+    # multi-return / engine.execute() / dead-trailing-return fixes as
+    # Tabs 1-2 above. Nothing downstream consumed
+    # df/flat/group_by/rows/table, so all are now cell-local.
     mo.md(
         """
         ## Reading lists
@@ -271,48 +276,46 @@ def _(engine, mo, pd):
         """
     )
     if engine is None:
-        return (
-            mo.md("*No data backend available.*"),
-            mo.ui.radio(options=["module", "isbn"]),
-            pd.DataFrame(),
+        mo.md("*No data backend available.*")
+    else:
+        _group_by = mo.ui.radio(
+            options=["module", "isbn"],
+            value="module",
+            label="Group by",
         )
-    group_by = mo.ui.radio(
-        options=["module", "isbn"],
-        value="module",
-        label="Group by",
-    )
-    try:
-        df = engine.execute(
-            """
-            SELECT
-                m.module_code,
-                m.module_title,
-                m.recommended_reading
-            FROM cianfhoghlaim.education.ie.university_modules m
-            WHERE m.recommended_reading IS NOT NULL
-              AND m.recommended_reading != ''
-            ORDER BY m.module_code
-            """
-        ).to_pandas()
-    except Exception as exc:  # noqa: BLE001
-        return mo.md(f"*Query failed: {exc}*"), group_by, pd.DataFrame()
-    if df.empty:
-        return mo.md("*No reading lists yet — run `uog_extract_modules`.*"), group_by, df
-    rows: list[dict[str, str]] = []
-    for _, r in df.iterrows():
-        rows.append(
-            {
-                "module_code": r["module_code"],
-                "module_title": r["module_title"],
-                "reading_summary": str(r["recommended_reading"])[:200],
-            }
-        )
-    flat = pd.DataFrame(rows)
-    if group_by.value == "isbn":
-        flat = flat.rename(columns={"module_code": "module_count_per_book"})
-    table = mo.ui.table(flat, label=f"Reading lists (grouped by {group_by.value})")
-    return df, flat, group_by, rows, table
-    return (tab,)
+        try:
+            _df = engine.sql(
+                """
+                SELECT
+                    m.module_code,
+                    m.module_title,
+                    m.recommended_reading
+                FROM cianfhoghlaim.education.ie.university_modules m
+                WHERE m.recommended_reading IS NOT NULL
+                  AND m.recommended_reading != ''
+                ORDER BY m.module_code
+                """
+            ).to_pandas()
+        except Exception as exc:  # noqa: BLE001
+            mo.md(f"*Query failed: {exc}*")
+        else:
+            if _df.empty:
+                mo.md("*No reading lists yet — run `uog_extract_modules`.*")
+            else:
+                _rows: list[dict[str, str]] = []
+                for _, _r in _df.iterrows():
+                    _rows.append(
+                        {
+                            "module_code": _r["module_code"],
+                            "module_title": _r["module_title"],
+                            "reading_summary": str(_r["recommended_reading"])[:200],
+                        }
+                    )
+                _flat = pd.DataFrame(_rows)
+                if _group_by.value == "isbn":
+                    _flat = _flat.rename(columns={"module_code": "module_count_per_book"})
+                mo.ui.table(_flat, label=f"Reading lists (grouped by {_group_by.value})")
+    return
 
 
 # =============================================================================
@@ -338,45 +341,49 @@ def _(engine, mo, pd):
         stored in FalkorDB.
         """
     )
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: same
+    # multi-return / engine.execute() / dead-trailing-return fixes as
+    # Tabs 1-3 above. Nothing downstream consumed courses/uog, so both
+    # are now cell-local.
     if engine is None:
-        return mo.md("*No data backend available.*"), pd.DataFrame()
-    try:
-        uog = engine.execute(
-            """
-            SELECT file_hash, course_code, module_title, document_kind
-            FROM author_archive_uog_artifact
-            ORDER BY course_code
-            """
-        ).to_pandas()
-    except Exception as exc:  # noqa: BLE001
-        uog = pd.DataFrame({"info": [f"UoG artefacts query failed: {exc}"]})
-    try:
-        courses = engine.execute(
-            """
-            SELECT course_code, course_title, school, source_url
-            FROM cianfhoghlaim.education.ie.university_courses
-            ORDER BY course_code
-            """
-        ).to_pandas()
-    except Exception as exc:  # noqa: BLE001
-        courses = pd.DataFrame({"info": [f"Course descriptors query failed: {exc}"]})
-    mo.vstack(
-        [
-            mo.md("### Personal UoG artefacts (left)"),
-            mo.ui.table(uog, label="UoG artefacts"),
-            mo.md("### Scraped UoG course descriptors (right)"),
-            mo.ui.table(courses, label="Course descriptors"),
-            mo.md(
-                "*The new `UoGArtifact-MATCHES-CourseDescriptor` Cognee "
-                "edge joins these two tables on `course_code` (exact) "
-                "or title fuzzy match (> 0.85). Run "
-                "`populate_cross_archive_edges(course_descriptors=...)` "
-                "to populate the edges.*"
-            ),
-        ]
-    )
-    return courses, uog
-    return (tab,)
+        mo.md("*No data backend available.*")
+    else:
+        try:
+            _uog = engine.sql(
+                """
+                SELECT file_hash, course_code, module_title, document_kind
+                FROM author_archive_uog_artifact
+                ORDER BY course_code
+                """
+            ).to_pandas()
+        except Exception as exc:  # noqa: BLE001
+            _uog = pd.DataFrame({"info": [f"UoG artefacts query failed: {exc}"]})
+        try:
+            _courses = engine.sql(
+                """
+                SELECT course_code, course_title, school, source_url
+                FROM cianfhoghlaim.education.ie.university_courses
+                ORDER BY course_code
+                """
+            ).to_pandas()
+        except Exception as exc:  # noqa: BLE001
+            _courses = pd.DataFrame({"info": [f"Course descriptors query failed: {exc}"]})
+        mo.vstack(
+            [
+                mo.md("### Personal UoG artefacts (left)"),
+                mo.ui.table(_uog, label="UoG artefacts"),
+                mo.md("### Scraped UoG course descriptors (right)"),
+                mo.ui.table(_courses, label="Course descriptors"),
+                mo.md(
+                    "*The new `UoGArtifact-MATCHES-CourseDescriptor` Cognee "
+                    "edge joins these two tables on `course_code` (exact) "
+                    "or title fuzzy match (> 0.85). Run "
+                    "`populate_cross_archive_edges(course_descriptors=...)` "
+                    "to populate the edges.*"
+                ),
+            ]
+        )
+    return
 
 
 if __name__ == "__main__":

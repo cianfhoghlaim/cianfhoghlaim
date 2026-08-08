@@ -67,7 +67,7 @@ def _():
            and hybrid text/vector search.
         """
     )
-    return (mo,)
+    return ibis, mo
 
 
 @app.cell
@@ -279,11 +279,25 @@ def _(language_selector, mo, subject_selector):
     )
     run_query = mo.ui.run_button(label="Execute against md:cianfhoghlaim")
     mo.vstack([mo.md("### Query the BIEP lakehouse"), sql_area, run_query])
-    return
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell used to `return` nothing, so sql_area/run_query were never
+    # actually reachable by the next cell -- masked before this fix
+    # because that cell was itself an unparsable app._unparsable_cell(...)
+    # raw string that marimo's dependency graph never real-checked.
+    return run_query, sql_area
 
 
-app._unparsable_cell(
-    r"""
+@app.cell
+def _(ibis, mo, run_query, sql_area):
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell used to be an unparsable app._unparsable_cell(...) raw string
+    # (marimo's own escape hatch for a cell whose source doesn't parse
+    # as Python at all) -- the same botched-refactor pattern found and
+    # fixed elsewhere in this notebook fleet (a dedented comment line
+    # broke the enclosing `if` block's indentation). ast.parse on the
+    # whole .py file didn't catch this, since the broken code lived
+    # inside a string literal -- only actually running the notebook
+    # (via `marimo export html`) surfaced it.
     import pandas as pd
 
     mo.stop(
@@ -293,10 +307,9 @@ app._unparsable_cell(
 
     output_ui = None
     try:
-        token = os.environ.get("MOTHERDUCK_TOKEN", "")
-        if token:
-            # ibis.duckdb.connect() picks up the MotherDuck token from the
-    # connection URL (?motherduck_token=...) so no global SET is needed.
+        # ibis.duckdb.connect() picks up the MotherDuck token from the
+        # connection URL (?motherduck_token=...) so no global SET is
+        # needed, regardless of whether MOTHERDUCK_TOKEN happens to be set.
         con = ibis.duckdb.connect("md:cianfhoghlaim")
         df = con.execute(sql_area.value).to_pandas()
         con.close()
@@ -313,9 +326,7 @@ app._unparsable_cell(
             kind="danger",
         )
     output_ui
-    """,
-    name="_"
-)
+    return
 
 
 @app.cell

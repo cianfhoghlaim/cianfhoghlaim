@@ -190,26 +190,35 @@ def _(mo):
 @app.cell
 def _(mo, pipeline, query_input, run_button):
     """Execute query and show results."""
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell and the table-preview cell below it both exported the same
+    # non-underscore names (client/columns/df/pd/rows) -- a genuine
+    # MultipleDefinitionError, confirmed live via `marimo export html`.
+    # Neither is consumed as a parameter anywhere else in this notebook,
+    # so both are now cell-local (underscore-prefixed). Also removed
+    # `result` from the return tuple -- it was never assigned anywhere
+    # in this cell, a real dead reference that would have raised
+    # NameError the first time this cell's return tuple was evaluated.
     mo.stop(not run_button.value, mo.md("*Click 'Run Query' to execute*"))
 
     try:
-        with pipeline.sql_client() as client:
-            with client.execute_query(query_input.value) as cursor:
-                columns = [col[0] for col in cursor.description] if cursor.description else []
-                rows = cursor.fetchall()
+        with pipeline.sql_client() as _client:
+            with _client.execute_query(query_input.value) as _cursor:
+                _columns = [col[0] for col in _cursor.description] if _cursor.description else []
+                _rows = _cursor.fetchall()
 
-        if rows:
+        if _rows:
             # Create table from results
-            import pandas as pd
+            import pandas as _pd
 
-            df = pd.DataFrame(rows, columns=columns)
-            mo.ui.table(df)
+            _df = _pd.DataFrame(_rows, columns=_columns)
+            mo.ui.table(_df)
         else:
             mo.md("*No results returned*")
 
     except Exception as e:
         mo.md(f"**Query Error:** `{e}`")
-    return client, columns, df, pd, result, rows
+    return
 
 
 @app.cell
@@ -241,26 +250,26 @@ def _(mo):
 def _(mo, pipeline, preview_limit, table_select):
     """Show table preview."""
     try:
-        import pandas as pd
+        import pandas as _pd
 
-        table_name = table_select.value
-        limit = preview_limit.value
+        _table_name = table_select.value
+        _limit = preview_limit.value
 
-        with pipeline.sql_client() as client:
-            query = f"SELECT * FROM curriculum.{table_name} LIMIT {limit}"
-            with client.execute_query(query) as cursor:
-                columns = [col[0] for col in cursor.description] if cursor.description else []
-                rows = cursor.fetchall()
+        with pipeline.sql_client() as _client:
+            _query = f"SELECT * FROM curriculum.{_table_name} LIMIT {_limit}"
+            with _client.execute_query(_query) as _cursor:
+                _columns = [col[0] for col in _cursor.description] if _cursor.description else []
+                _rows = _cursor.fetchall()
 
-        if rows:
-            df = pd.DataFrame(rows, columns=columns)
-            mo.ui.table(df)
+        if _rows:
+            _df = _pd.DataFrame(_rows, columns=_columns)
+            mo.ui.table(_df)
         else:
-            mo.md(f"*Table `{table_name}` is empty*")
+            mo.md(f"*Table `{_table_name}` is empty*")
 
     except Exception as e:
         mo.md(f"**Error:** `{e}`")
-    return client, columns, df, limit, pd, query, result, rows, table_name
+    return
 
 
 @app.cell
