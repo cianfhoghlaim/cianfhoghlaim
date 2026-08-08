@@ -11,8 +11,19 @@ Reference: openspec/specs/british-isles-education-pipeline-v3/spec.md
 """
 from __future__ import annotations
 
-import anywidget
-import traitlets
+try:
+    import anywidget
+    import traitlets
+    _ANYWIDGET_AVAILABLE = True
+except ImportError:
+    # anywidget + traitlets are only installed inside the marimo runtime
+    # (per the PEP 723 inline deps). At module import time outside that
+    # runtime (e.g. `from notebooks import ...`), the imports fail.
+    # The class definition below is conditional on these imports being
+    # available.
+    anywidget = None  # type: ignore[assignment]
+    traitlets = None  # type: ignore[assignment]
+    _ANYWIDGET_AVAILABLE = False
 
 
 # Canonical RAGAS thresholds
@@ -48,8 +59,10 @@ def ragas_status_emoji(score: float) -> str:
         return "❌"
 
 
-class RAGASGaugeWidget(anywidget.AnyWidget):
-    """The canonical RAGAS gauge widget for the BIEP jurisdiction dashboards.
+if _ANYWIDGET_AVAILABLE:
+
+    class RAGASGaugeWidget(anywidget.AnyWidget):
+        """The canonical RAGAS gauge widget for the BIEP jurisdiction dashboards.
 
     Renders a circular progress gauge + colour band + sparkline of the
     last N RAGAS scores from the audit table. The widget is fully
@@ -217,6 +230,26 @@ class RAGASGaugeWidget(anywidget.AnyWidget):
           {sparkline}
         </div>
         """
+
+else:
+
+    class RAGASGaugeWidget:  # type: ignore[no-redef]
+        """Stub class — anywidget is not installed in this runtime.
+
+        The real RAGASGaugeWidget is only available inside marimo's
+        PEP 723 venv (which installs anywidget + traitlets). This stub
+        prevents ``from notebooks._shared.ragas_gauge import RAGASGaugeWidget``
+        from raising ImportError when the notebooks package is imported
+        from outside the marimo runtime (e.g. from CLI scripts or tests).
+        """
+
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            raise ImportError(
+                "RAGASGaugeWidget requires anywidget + traitlets, which are "
+                "only installed inside the marimo PEP 723 runtime. "
+                "Run via `uv run marimo edit <notebook>.py` or "
+                "`python <notebook>.py` (which uses uv to install the deps)."
+            )
 
 
 # Convenience: __all__

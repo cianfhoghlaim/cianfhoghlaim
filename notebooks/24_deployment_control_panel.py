@@ -1,4 +1,10 @@
-#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "marimo>=0.13", "ibis-framework[duckdb]>=9.0", "pandas>=2.2", "altair>=5.0", "pyarrow>=15",
+#   "anywidget>=0.9", "traitlets>=5.14",
+# ]
+# ///
 """notebooks/24_deployment_control_panel.py — the sync health + model registry + schema + stacks dashboard.
 
 Per the 2026-08-15-knowledge-sync-loop-v1 change (Day 2) +

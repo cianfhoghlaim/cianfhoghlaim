@@ -4,6 +4,25 @@
 # ///
 """Shared helpers for the Cianfhoghlaim notebooks (British-Isles Education pipeline).
 
+**DEPRECATED — kept for back-compat only.** New code should use:
+
+- ``notebooks._shared.marimo_patterns`` (R1 + P1-P6 helpers —
+  ``setup_biep_registry_header``, ``llm_chat_with_prompts``,
+  ``cli_argparser_biep``, ``LITELLM_BASE_URL``, etc.)
+- ``notebooks._shared.area_shims.biiep_v3_dashboard``
+  (R2 + R3 — ``build_biep_v3_dashboard(jurisdiction, milestone, deferred)``)
+- ``notebooks._shared.db`` (the ibis-first connect helper —
+  ``connect_md``, ``connect_local``, ``connect_local_lakehouse``, etc.)
+- ``notebooks._shared.ragas_gauge`` (P5 — the ``RAGASGaugeWidget`` anywidget)
+
+This module will be removed once ``notebooks/01_overview_setup.py`` +
+``notebooks/ie_law_explorer.py`` (the only remaining consumers) are
+refactored to the v14 standard.
+
+Per the 2026-08-10-marimo-v14-cascading-effects-verification-v1
+OpenSpec change + the 2026-08-10-marimo-v14-ireland-england-dashboards-refactor-v1
+OpenSpec change.
+
 Importable from any notebook under ``cianfhoghlaim/notebooks/`` (or from
 the v4-consolidated venv via ``uv run --with``). Centralises:
 

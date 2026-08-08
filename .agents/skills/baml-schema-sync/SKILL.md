@@ -54,7 +54,7 @@ report to `stedding/sync-reports/baml-all-{date}.md`.
 | 11th Cognee cluster | `baml_schemas` | the 320 .baml files |
 | `baml_sync_health` asset | `orchestration/defs/sync_assets.py` | Dagster asset |
 | `scripts/cognee_ingest_baml_schemas.py` | the canonical ingestor |
-| `notebooks/26_baml_sync_dashboard.py` | the Layer 7 dashboard |
+| `notebooks/sync_health.py` (BAML tab) | the Layer 7 dashboard |
 
 ## BAML evolution feedback loop
 
@@ -77,7 +77,7 @@ feedback loop:
 | See the per-cluster breakdown | `cat stedding/sync-reports/baml-$(date +%Y-%m-%d).md` |
 | Add a new BAML function | Create the .baml file with `function` + `client X` + run `sync:baml` |
 | Fix a BAML drift | `sync:baml` will show the broken file; fix + re-run |
-| See the BAML sync dashboard | Open `notebooks/26_baml_sync_dashboard.py` |
+| See the BAML sync dashboard | Open `notebooks/sync_health.py` (BAML tab) |
 | Run the BAML tests | `mise run baml:test` (the canonical entry point) |
 
 ## Cross-references

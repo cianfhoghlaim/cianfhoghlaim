@@ -73,9 +73,9 @@ After sync, the Cognee graph has **8 typed clusters** (was 7):
 - `cognee_docs`, `openspec_changes`, `openspec_specs`, `agent_skills`
 - (5 existing) + `dagster_assets` (new)
 
-## The new marimo notebook: 25_dagster_sync_dashboard.py
+## The consolidated marimo dashboard: sync_health.py
 
-The Dagster asset sync dashboard. Reads the latest
+The Dagster tab in `notebooks/sync_health.py` reads the latest
 `stedding/sync-reports/dagster-{date}.md` and surfaces:
 
 - The per-layer breakdown table
@@ -85,7 +85,7 @@ The Dagster asset sync dashboard. Reads the latest
 
 Run via:
 ```bash
-uv run marimo edit notebooks/25_dagster_sync_dashboard.py
+uv run marimo edit notebooks/sync_health.py
 ```
 
 ## The new CCC concept guide: dagster-asset-graph
@@ -101,7 +101,7 @@ canonical files (the 5 layer folders + the 5 KCG Component classes).
 | Validate the Dagster asset graph | `mise run sync:dagster` |
 | Re-ingest into Cognee | `mise run sync:dagster && uv run python scripts/sync_dagster_assets_to_cognee.py` |
 | See the asset health in Dagster UI | Open `dagster_sync_health` asset at `orchestration/defs/sync_assets.py` |
-| See the asset sync dashboard | `uv run marimo edit notebooks/25_dagster_sync_dashboard.py` |
+| See the asset sync dashboard | `uv run marimo edit notebooks/sync_health.py` (Dagster tab) |
 | Read the latest report | `cat stedding/sync-reports/dagster-{date}.md` |
 | Run all 6 sync layers | `mise run sync:all` |
 
@@ -112,7 +112,7 @@ canonical files (the 5 layer folders + the 5 KCG Component classes).
 - `scripts/sync/dagster.sh` (the Layer 6 sync script)
 - `scripts/sync_dagster_assets_to_cognee.py` (the Cognee ingest)
 - `orchestration/defs/sync_assets.py` (the `dagster_sync_health` asset)
-- `notebooks/25_dagster_sync_dashboard.py` (the dashboard)
+- `notebooks/sync_health.py` (Dagster tab) (the dashboard)
 - `.cocoindex_code/guides.yml` (the 21st CCC concept guide)
 - `.agents/skills/knowledge-sync-loop/SKILL.md` (the parent sync loop skill)
 - `.agents/skills/dagster/SKILL.md` (the core Dagster skill)

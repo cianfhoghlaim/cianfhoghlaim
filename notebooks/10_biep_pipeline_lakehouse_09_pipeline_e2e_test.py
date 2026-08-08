@@ -1,13 +1,18 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.13.0",
-#     "duckdb>=1.0",
-#     "lancedb>=0.20",
-#     "boto3>=1.34",
-#     "pandas>=2.0",
-#     "dlt>=1.0",
-#     "sentence-transformers>=3.0",
+#   marimo>=0.13,
+#   duckdb>=1.0,
+#   ibis-framework[duckdb]>=9.0,
+#   pandas>=2.2,
+#   altair>=5.0,
+#   pyarrow>=15,
+#   anywidget>=0.9,
+#   traitlets>=5.14,
+#   lancedb>=0.20,
+#   boto3>=1.34,
+#   dlt>=1.0,
+#   sentence-transformers>=3.0,
 # ]
 # ///
 """End-to-end pipeline testing — BIEP MotherDuck + DuckLake + LanceDB.
@@ -36,7 +41,7 @@ from notebooks._shared.marimo_patterns import (
 )
 
 
-__generated_with = "0.23.8"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 

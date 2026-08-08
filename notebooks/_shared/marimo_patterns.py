@@ -586,9 +586,10 @@ def cli_argparser_biep(notebook_name: str) -> argparse.ArgumentParser:
         "--milestone",
         type=str,
         default="m1",
-        choices=["m0", "m1", "m2", "m3", "m4"],
         help="BIEP v3 milestone (M0=foundation, M1=Ireland LC, M2=Ireland JC, "
-             "M3=England A-Level, M4=England GCSE). Default: m1.",
+             "M3=England A-Level, M4=England GCSE, M5-M10=deferred jurisdictions, "
+             "M-Aistear + M-Primary=4-stage rollout). Default: m1. "
+             "Each dashboard validates the milestone against its own asset_check_map.",
     )
     parser.add_argument(
         "--asset-check",
