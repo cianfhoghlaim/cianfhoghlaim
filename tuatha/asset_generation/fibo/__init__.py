@@ -10,7 +10,11 @@ Components:
 - assets: Dagster assets for the generation pipeline
 """
 
-from .assets import fibo_json_configs, generated_images
+from .assets import (
+    fibo_configs_from_syllabus_diagrams,
+    fibo_json_configs,
+    generated_images,
+)
 from .resources import FiboResource, ValidationResource
 from .schemas import (
     CurriculumConcept,
@@ -33,4 +37,5 @@ __all__ = [
     # Assets
     "fibo_json_configs",
     "generated_images",
+    "fibo_configs_from_syllabus_diagrams",
 ]
