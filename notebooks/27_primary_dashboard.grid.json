@@ -1,0 +1,12 @@
+{
+  "columns": [
+    {
+      "width": "30%",
+      "cells": ["_intro"]
+    },
+    {
+      "width": "70%",
+      "cells": ["_dashboard"]
+    }
+  ]
+}

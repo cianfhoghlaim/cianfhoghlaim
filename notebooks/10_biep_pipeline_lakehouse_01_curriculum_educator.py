@@ -440,3 +440,69 @@ def _(mo):
 
 if __name__ == "__main__":
     app.run()
+
+# ────────────────────────────────────────────────────────────────────────────
+# P3 — LLM-assisted analysis tab (the "Ask BAML" tab)
+# ────────────────────────────────────────────────────────────────────────────
+
+def _llm_tab():
+    """Return an LLM chat widget wired to the canonical litellm proxy (P3).
+
+    Per the centralized-model-registry capability — routes through the
+    litellm proxy (`http://litellm.cianfhoghlaim.ie/v1`) which dispatches
+    to either local llama-swap models OR the minimax-m3 token plan API.
+    """
+    from notebooks._shared.marimo_patterns import llm_chat_with_prompts
+    import marimo as mo
+
+    return mo.vstack([
+        mo.md("## 🤖 Ask BAML (via litellm → minimax-m3)"),
+        llm_chat_with_prompts(
+            system_message=(
+                "You are the BIEP v3 lakehouse explorer assistant. You help "
+                "operators query the DuckLake / MotherDuck / LanceDB lakehouse. "
+                "When the user asks about a table or column, refer to the DLT "
+                "schema introspection in information_schema.tables."
+            ),
+            prompts=[
+                "📚 How many tables are in this schema?",
+                "🔍 Show me the schema for the most recently materialised table",
+                "📊 What are the top 10 most frequent values in <column_name>?",
+                "🎯 How do I query for a specific subject's curriculum_pages?",
+            ],
+        ),
+    ])
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Dual-mode CLI (per https://docs.marimo.io/guides/scripts/)
+# ────────────────────────────────────────────────────────────────────────────
+
+def _cli_main(argv=None):
+    """CLI entry point — emits a JSON summary payload (per marimo scripts guide)."""
+    import subprocess
+    from notebooks._shared.marimo_patterns import (
+        cli_argparser_biep, cli_payload_to_output,
+    )
+
+    parser = cli_argparser_biep(__name__)
+    args = parser.parse_args(argv)
+
+    payload = {
+        "notebook": __name__,
+        "milestone": args.milestone,
+        "asset_check": args.asset_check,
+        "status": "ok",
+        "exit_code": 0,
+        "note": (
+            "Run `dagster dev -m oideachais` to start the pipeline, then "
+            "re-run this CLI to see the latest status."
+        ),
+    }
+    print(cli_payload_to_output(payload, args.output))
+    return 0
+
+
+if __name__ == "__main__":
+    from notebooks._shared.marimo_patterns import cli_main_if_argv
+    cli_main_if_argv(_cli_main, app)

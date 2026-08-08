@@ -257,6 +257,12 @@ run = ".venv/bin/python3 scripts/test_runs_ingest.py --dry-run"
 [tasks."biep:v3:m0"]
 description = "BIEP v3 M0 — foundation unblock (lakehouse + BAML + registry + namespace)"
 run = ".venv/bin/python3 scripts/m0_foundation_unblock.py"
+[tasks."biep:v3:m-aistear"]
+description = "BIEP v3 M-Aistear — Ireland Aistear (Early Childhood) pipeline (14 cohorts, 4 themes × 4 age bands × 3 lang mediums)"
+run = ".venv/bin/python3 scripts/m_aistear.py"
+[tasks."biep:v3:m-primary"]
+description = "BIEP v3 M-Primary — Ireland Primary Curriculum pipeline (64 cohorts, 4 areas × 8 year levels × 2 langs)"
+run = ".venv/bin/python3 scripts/m_primary.py"
 [tasks."biep:v3:m1"]
 description = "BIEP v3 M1 — Ireland Leaving Cycle pipeline (12 cohorts, EN+GA)"
 run = ".venv/bin/python3 scripts/m1_ireland_lc.py"
@@ -277,7 +283,15 @@ description = "BIEP v3 ibis-first contract lint — verify no raw duckdb.connect
 run = """
 # Scan the BIEP v3 Ireland + England paths for raw duckdb.connect() calls
 # (the BIEP v3 contract is ibis-first per british-isles-education-pipeline-v3/spec.md).
-VIOLATIONS=$(grep -rE "duckdb[.]connect[(]" \
+#
+# 2026-08-08 fix (per issue #153): the previous regex `duckdb[.]connect[(]`
+# matched the substring inside docstring mentions of `ibis.duckdb.connect()`,
+# producing 10 false positives. The new regex `(^|[^a-zA-Z_.])duckdb[.]connect[(]`
+# requires a non-identifier prefix before `duckdb.connect(`, which excludes
+# `ibis.duckdb.connect(`, `my_ibis.duckdb.connect(`, and similar. The
+# `(^|[...])` alternation is needed because grep -E doesn't support
+# lookbehind.
+VIOLATIONS=$(grep -rE "(^|[^a-zA-Z_.])duckdb[.]connect[(]" \
   orchestration/defs/2_materials/ireland_education/ \
   orchestration/defs/2_materials/england_education/ \
   2>/dev/null | wc -l)
@@ -293,6 +307,41 @@ echo "OK: 0 ibis-first violations in BIEP v3 Ireland/England paths"
 [tasks."biep:v3:filename-validate"]
 description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
 run = ".venv/bin/python3 scripts/validate_snake_case_filenames.py"
+
+# BIEP v3 marimo v14 features (per the 2026-08-10-marimo-v14-ireland-england-dashboards-refactor-v1 change)
+[tasks."biep:v3:marimo:dev"]
+description = "Open all 6 BIEP v3 jurisdiction dashboards in marimo edit mode (Ireland + England + Aistear + Primary + SCT/WLS/NI + Crown)"
+run = ".venv/bin/python3 -c \"import subprocess, sys; notebooks = ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py']; procs = [subprocess.Popen(['marimo', 'edit', n]) for n in notebooks]; [p.wait() for p in procs]\""
+[tasks."biep:v3:marimo:check"]
+description = "Run marimo check on all 6 BIEP v3 jurisdiction dashboards (validates the marimo v14 refactor: tabbed operator console + LLM tab + RAGAS gauge + dual-mode CLI)"
+run = ".venv/bin/python3 -c \"import subprocess, sys; notebooks = ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py', 'notebooks/00_marimo_patterns_tour.py', 'notebooks/00_biep_v3_dashboard_template.py']; [subprocess.run(['marimo', 'check', n]) for n in notebooks]\""
+[tasks."biep:v3:ireland:gate"]
+description = "BIEP v3 Ireland gate — invoke the M1/M2 asset check via the dual-mode CLI (per https://docs.marimo.io/guides/scripts/)"
+run = "python3 notebooks/19_ireland_pipeline_dashboard.py --milestone m1 --asset-check documents_ingested --output table"
+[tasks."biep:v3:england:gate"]
+description = "BIEP v3 England gate — invoke the M3/M4 asset check via the dual-mode CLI (per https://docs.marimo.io/guides/scripts/)"
+run = "python3 notebooks/20_england_pipeline_dashboard.py --milestone m3 --asset-check documents_ingested --output table"
+[tasks."biep:v3:aistear:gate"]
+description = "BIEP v3 Aistear gate — invoke the M-Aistear asset check via the dual-mode CLI"
+run = "python3 notebooks/26_aistear_dashboard.py --milestone m-aistear --asset-check documents_ingested --output table"
+[tasks."biep:v3:primary:gate"]
+description = "BIEP v3 Primary gate — invoke the M-Primary asset check via the dual-mode CLI"
+run = "python3 notebooks/27_primary_dashboard.py --milestone m-primary --asset-check documents_ingested --output table"
+[tasks."biep:v3:sct-wls-ni:gate"]
+description = "BIEP v3 SCT/WLS/NI gate — invoke the deferred milestone asset check (returns exit code 0 with deferred status)"
+run = "python3 notebooks/21_sct_wls_ni_pipeline_dashboard.py --milestone m5 --asset-check documents_ingested --output json"
+[tasks."biep:v3:crown:gate"]
+description = "BIEP v3 Crown Dependencies gate — invoke the deferred milestone asset check (returns exit code 0 with deferred status)"
+run = "python3 notebooks/22_crown_dependencies_dashboard.py --milestone m7 --asset-check documents_ingested --output json"
+[tasks."biep:v3:marimo:lakehouse:dev"]
+description = "Open all 17 BIEP v3 lakehouse explorers in marimo edit mode (DuckLake + Lakehouse + All Nations + CocoIndex + Marking + Exam Papers + Subject + Leabharlann + E2E + DPRE + Semantic Search)"
+run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')); procs = [subprocess.Popen(['marimo', 'edit', n]) for n in notebooks]; [p.wait() for p in procs]\""
+[tasks."biep:v3:marimo:lakehouse:check"]
+description = "Run marimo check on all 17 BIEP v3 lakehouse explorers (validates the R1+R3+P3+P6 refactor: setup_biep_registry_header + tabbed operator console + LLM tab + dual-mode CLI)"
+run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')); [subprocess.run(['marimo', 'check', n]) for n in notebooks]\""
+[tasks."biep:v3:marimo:all"]
+description = "Run marimo check on every BIEP v3 marimo notebook (17 lakehouse explorers + 6 jurisdiction dashboards + 2 educative = 25 notebooks)"
+run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')) + ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/23_8_jurisdiction_overview.py', 'notebooks/24_deployment_control_panel.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py', 'notebooks/40_leaving_cert_subject_panel.py', 'notebooks/00_marimo_patterns_tour.py', 'notebooks/00_biep_v3_dashboard_template.py']; [subprocess.run(['marimo', 'check', n]) for n in notebooks]; print(f'Checked {len(notebooks)} notebooks')\""
 
 # meaisinfhoghlaim v3 operator surface
 [tasks."meaisin:v3:setup"]
@@ -502,7 +551,7 @@ run = "uv run pytest tests/_meaisinfhoghlaim/test_ocr_vlm_registry.py"
 
 [tasks."cic:ocr:eval"]
 description = "Run the Celtic OCR evaluation harness (multi-backend comparison)"
-run = ".venv/bin/python3 -m cianfhoghlaim.ocr.cli eval --backend mlx"
+run = ".venv/bin/python3 -m meaisinfhoghlaim.cli eval --backend mlx"
 
 [tasks."cic:ocr:registry-lint"]
 description = "Verify all v4 VISION_MODELS are live on HF Hub"
