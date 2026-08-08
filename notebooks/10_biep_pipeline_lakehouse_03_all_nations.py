@@ -52,8 +52,8 @@ def _imports():
     import os
     import marimo as mo
     import duckdb
-import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
-    return duckdb, mo, os
+    import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
+    return duckdb, ibis, mo, os
 
 
 @app.cell
@@ -71,7 +71,7 @@ def _header(mo):
 
 
 @app.cell
-def _connect(duckdb, os):
+def _connect(duckdb, ibis, os):
     con = ibis.duckdb.connect(":memory:")
     token = os.environ.get("MOTHERDUCK_TOKEN", "")
     if token:

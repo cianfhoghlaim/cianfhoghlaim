@@ -92,6 +92,7 @@ enabled_datasets:
   guernsey_education: true
 enabled_stacks:
   litellm: true
+  llama_swap: true
   langfuse: true
   mlflow: true
   cognee: true

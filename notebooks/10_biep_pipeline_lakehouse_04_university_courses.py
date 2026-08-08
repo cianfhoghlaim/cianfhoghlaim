@@ -75,7 +75,7 @@ def _():
     # Primary path: MotherDuck + DuckLake lakehouse. Fall back to local DuckDB.
     try:
         import duckdb
-import ibis  # ibis-first entrypoint
+        import ibis  # ibis-first entrypoint
         db_path = os.environ.get(
             "CIANFHOGHLAIS_UOG_DUCKDB", "/tmp/cianfhoghlaim.duckdb"
         )

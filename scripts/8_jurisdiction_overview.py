@@ -18,6 +18,15 @@ def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
     """Open a DuckLake connection configured for local Garage."""
     KEY = os.environ["AWS_ACCESS_KEY_ID"]
     SECRET = os.environ["AWS_SECRET_ACCESS_KEY"]
+    # Established secret-loading convention (bonneagar/stacks/lakehouse/secrets.env):
+    # POSTGRES_PASSWORD is Infisical-first in prod (resolved by the locket
+    # sidecar into the container env), .env.dev-fallback in local dev.
+    # DUCKLAKE_POSTGRES_PASSWORD is an explicit override some callers use
+    # (see dlt_sources/common/destinations_cianfhoghlaim.py); "devpassword"
+    # is the last-resort default when neither is set.
+    PG_PASSWORD = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
+        "POSTGRES_PASSWORD", "devpassword"
+    )
 
     con = duckdb.connect(":memory:")
     con.execute("INSTALL ducklake; LOAD ducklake;")
@@ -30,7 +39,7 @@ def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
     con.execute(
         "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
         "host=localhost port=5433 user=lakekeeper "
-        "password=805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9' "
+        f"password={PG_PASSWORD}' "
         "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
     )
     con.execute("USE cianfhoghlaim;")

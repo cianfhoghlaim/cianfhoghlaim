@@ -71,7 +71,7 @@ def _():
     from datetime import UTC, datetime, timedelta
 
     import duckdb
-import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
+    import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
     import lancedb
     import boto3
     import pandas as pd
@@ -105,6 +105,7 @@ import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse chang
         boto3,
         datetime,
         duckdb,
+        ibis,
         lancedb,
         mo,
         os,
@@ -214,7 +215,7 @@ def _(mo):
 
 @app.cell
 def _(
-    DUCKDB_PATH, MOTHERDUCK_ENABLED, duckdb, mo, os, pathlib, pd, query_input,
+    DUCKDB_PATH, MOTHERDUCK_ENABLED, duckdb, ibis, mo, os, pathlib, pd, query_input,
     run_query_btn,
 ):
     query_result: pd.DataFrame = pd.DataFrame()
@@ -290,7 +291,7 @@ def _(mo, pd, query_result):
 
 @app.cell
 def _(
-    DUCKDB_PATH, MOTHERDUCK_ENABLED, cycle_filter, duckdb, material_filter,
+    DUCKDB_PATH, MOTHERDUCK_ENABLED, cycle_filter, duckdb, ibis, material_filter,
     mo, os, pathlib, pd, subject_filter, year_range,
 ):
     df = pd.DataFrame()

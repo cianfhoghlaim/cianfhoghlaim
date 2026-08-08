@@ -63,7 +63,7 @@ def _():
     import os
     import pathlib
     import duckdb
-import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
+    import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse change)
     import pandas as pd
     import altair as alt
     import marimo as mo
@@ -91,7 +91,7 @@ import ibis  # ibis-first entrypoint (per wire-biep-notebooks-to-lakehouse chang
         | Biology / Chemistry | Mandatory keywords + experiment steps | |
         """
     )
-    return alt, duckdb, mo, os, pathlib, pd
+    return alt, duckdb, ibis, mo, os, pathlib, pd
 
 
 @app.cell
@@ -154,7 +154,7 @@ def _(mo, pd):
 
 @app.cell
 def _(
-    DUCKDB_PATH, MOTHERDUCK_ENABLED, duckdb, mo, os, pathlib, pd, subject_filter,
+    DUCKDB_PATH, MOTHERDUCK_ENABLED, duckdb, ibis, mo, os, pathlib, pd, subject_filter,
     level_filter, year_range,
 ):
     schemes = pd.DataFrame()

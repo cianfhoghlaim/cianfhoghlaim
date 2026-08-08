@@ -94,12 +94,25 @@ def _build_local_destination(namespace: str) -> Any:
       * Postgres DB: ducklake_{namespace}
       * DuckLake   : {namespace}
     """
-    # PostgreSQL catalog config
+    # PostgreSQL catalog config. Precedence: explicit DUCKLAKE_POSTGRES_*
+    # override > the bonneagar/stacks/lakehouse compose stack's own
+    # POSTGRES_* vars (secrets.env is Infisical-first in prod, resolved by
+    # the locket sidecar into the container env; .env.dev is the local-dev
+    # fallback for the same names) > a last-resort hardcoded dev default.
+    # Without the POSTGRES_* fallback, this silently used "devpassword"
+    # even when the real compose-stack password was set under POSTGRES_*,
+    # since nothing in the stack ever exports DUCKLAKE_POSTGRES_* itself.
     postgres_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
     postgres_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433")
-    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{namespace}")
-    postgres_user = os.environ.get("DUCKLAKE_POSTGRES_USER", "lakekeeper")
-    postgres_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD", "devpassword")
+    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB") or os.environ.get(
+        "POSTGRES_DB", f"ducklake_{namespace}"
+    )
+    postgres_user = os.environ.get("DUCKLAKE_POSTGRES_USER") or os.environ.get(
+        "POSTGRES_USER", "lakekeeper"
+    )
+    postgres_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
+        "POSTGRES_PASSWORD", "devpassword"
+    )
 
     catalog_uri = f"postgresql://{postgres_user}:{postgres_pass}@{postgres_host}:{postgres_port}/{postgres_db}"
 

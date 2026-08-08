@@ -2,7 +2,7 @@
 Oideachais · Lakehouse Inspector
 
 Cross-flow operator console for the unified lakehouse at
-`infrastructure/stacks/lakehouse/`. Brings together the four services
+`bonneagar/stacks/lakehouse/`. Brings together the four services
 (Garage, Lakekeeper, Lance Namespace, DuckLake) and the cross-flow search
 client so you can verify stack health and run ad-hoc queries without leaving
 the notebook.
@@ -56,13 +56,14 @@ def _():
     import pathlib
     import sys
     import duckdb
+    import ibis
     import requests
     import pandas as pd
     import lancedb
     import boto3
     import marimo as mo
 
-    _platform = os.path.abspath(os.path.join(os.getcwd(), "infrastructure/stacks/lakehouse"))
+    _platform = os.path.abspath(os.path.join(os.getcwd(), "bonneagar/stacks/lakehouse"))
     if _platform not in sys.path:
         sys.path.insert(0, _platform)
 
@@ -70,7 +71,7 @@ def _():
         """
         # Lakehouse Inspector
 
-        Cross-flow operator console for the `infrastructure/stacks/lakehouse/`
+        Cross-flow operator console for the `bonneagar/stacks/lakehouse/`
         stack: Garage S3, Lakekeeper Iceberg catalog, Lance Namespace sidecar,
         DuckLake tables.
 
@@ -84,7 +85,7 @@ def _():
         or protocol docs in one call.
         """
     )
-    return boto3, duckdb, lancedb, mo, os, pathlib, pd, requests, sys
+    return boto3, duckdb, ibis, lancedb, mo, os, pathlib, pd, requests, sys
 
 @app.cell
 def _(mo, os):
@@ -265,7 +266,7 @@ def _(mo, os, pathlib):
 
 
 @app.cell
-def _(duckdb, mo, os, pathlib, run_btn, sql_input):
+def _(duckdb, ibis, mo, os, pathlib, run_btn, sql_input):
     if not run_btn.value:
         result_ui = mo.md("*Click *Execute* to run the query.*")
     else:
@@ -303,7 +304,7 @@ def _(mo, sys):
         cross_ui = mo.callout(
             mo.md(
                 "**Cross-flow client not importable.** "
-                "Run from the repo root, or set `PYTHONPATH=infrastructure/stacks/lakehouse`."
+                "Run from the repo root, or set `PYTHONPATH=bonneagar/stacks/lakehouse`."
             ),
             kind="warn",
         )
