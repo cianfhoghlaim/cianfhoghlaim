@@ -8,14 +8,23 @@ from typing import Any
 async def generate_hist_item(
     lo_code: str,
     difficulty: int,
+    evidence: dict[str, Any],
     level: str = "lc_hl",
     topic: str = "",
 ) -> dict[str, Any]:
+    """`evidence` (`HistEvidenceLink`-shaped: source_pdf, source_page,
+    excerpt_en, excerpt_ga, ncca_url) is required — see
+    `docs-informed-quest-and-credential-generation-v1`.
+    """
     try:
         from cianfhoghlaim.baml_client import b
 
         item = b.GenerateHistFormativeItem(
-            lo_code=lo_code, difficulty=difficulty, level=level, topic=topic
+            lo_code=lo_code,
+            difficulty=difficulty,
+            level=level,
+            topic=topic,
+            evidence=evidence,
         )
         return {
             "id": item.id or str(uuid.uuid4()),
