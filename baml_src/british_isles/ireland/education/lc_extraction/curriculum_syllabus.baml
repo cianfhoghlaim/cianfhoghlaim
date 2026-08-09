@@ -93,7 +93,55 @@ function ExtractCurriculumSyllabus(
   subject: string?,
   language: string?,
 ) -> SyllabusDocument {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are an expert at reading official NCCA (National Council for
+    Curriculum and Assessment) Irish Leaving Certificate syllabus
+    documents and extracting their structure with complete fidelity —
+    every fact below MUST be grounded in the PDF text given; never invent
+    a module, learning outcome, or hour count that isn't actually present.
+
+    Subject: {{ subject }}
+    Language of this PDF: {{ language }}
+
+    From the syllabus text below, extract:
+    - subject: the subject slug (e.g. 'chemistry', 'mathematics')
+    - language: EN, GA, or EN_AND_GA depending on what you observe in the text
+    - stage: JC, LC_OL, LC_HL, or LC_FDN — NCCA syllabi usually cover
+      multiple levels in one document; pick the stage that best matches
+      the section you are reading, or LC_HL if the document does not
+      distinguish levels
+    - source_pdf: leave as an empty string if not derivable from the text;
+      the Python caller fills this in from the actual file path
+    - module_topics: every distinct module/unit/strand you can find, each with:
+      - module_id (a short stable slug, e.g. 'M1', derived from the
+        syllabus's own numbering if present)
+      - name_en / name_ga (name_ga only if the Irish-language term
+        appears in the text)
+      - type: CORE, OPTIONAL, SPECIALISM, PRACTICAL, or ASSESSMENT,
+        based on how the syllabus itself describes the module
+      - learning_outcomes: the exact (or lightly normalised) learning
+        outcome statements listed under that module — do not paraphrase
+        away specific verbs ('describe', 'derive', 'evaluate') since
+        they are pedagogically load-bearing
+      - estimated_hours: only if the syllabus states a number of hours
+        or class periods for the module; otherwise omit
+    - total_learning_outcomes: the count of all learning_outcomes across
+      all module_topics
+    - cross_curricular: any explicitly named links to other subjects or
+      cross-curricular themes (e.g. literacy, numeracy, key competencies)
+    - assessment_objectives: the syllabus's own stated assessment
+      objectives / aims for how students will be examined
+
+    If a field has no support in the text, leave it empty rather than
+    fabricating content — an empty list is a correct and expected answer
+    for a syllabus section that doesn't mention cross-curricular links.
+
+    Syllabus PDF text:
+    {{ pdf_text }}
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 // ============================================================================

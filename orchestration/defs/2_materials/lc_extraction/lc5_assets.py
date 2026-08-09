@@ -48,11 +48,24 @@ from typing import Any
 from dagster import AssetExecutionContext, asset
 
 try:
-    from baml_client import b
+    from baml_client import b  # type: ignore[import-not-found]
     BAML_AVAILABLE = True
 except ImportError:
-    BAML_AVAILABLE = False
-    b = None
+    try:
+        # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change:
+        # the bare `from baml_client import b` form above doesn't
+        # resolve in every environment (the generated client's actual
+        # importable path is `baml_client.baml_client.sync_client`) --
+        # matching the fallback already used by the sibling
+        # quest_pack_assets.py and tuatha/asset_generation/fibo/assets.py
+        # in this same codebase, rather than leaving BAML_AVAILABLE
+        # permanently False (and every one of these 24 assets a
+        # permanent stub) whenever only the first form fails.
+        from baml_client.baml_client.sync_client import b  # type: ignore[import-not-found]
+        BAML_AVAILABLE = True
+    except ImportError:
+        BAML_AVAILABLE = False
+        b = None
 
 try:
     from dlt_sources.filesystem.leaving_cert_source import lc5_documents
@@ -168,7 +181,14 @@ def lc5_mathematics_ingested(context: AssetExecutionContext) -> dict[str, Any]:
 
 
 def _make_subject_extraction_asset(subject: str, kind: str):
-    """Factory for the 24 per-subject BAML extraction assets (4 kinds × 6 subjects)."""
+    """Factory for the per-subject BAML extraction assets (4 kinds × 6 subjects).
+
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: exactly
+    one of these 24 assets (lc5_chemistry_diagrams_extracted) has been
+    un-stubbed into a real implementation, defined separately below and
+    excluded from this factory's loop. The other 23 remain stubs —
+    explicitly scoped future work (tasks.md), not silently claimed done.
+    """
     baml_function_map = {
         "syllabus": "ExtractCurriculumSyllabus",
         "papers": "ExtractExamPaperLayout",
@@ -195,9 +215,111 @@ def _make_subject_extraction_asset(subject: str, kind: str):
     return lc5_extraction_asset
 
 
-# Generate the 24 BAML extraction assets (6 subjects × 4 kinds)
+@asset(
+    name="lc5_chemistry_diagrams_extracted",
+    group_name="2_materials_lc_diagrams_lc5_chemistry",
+    description="Real ExtractSyllabusDiagram (image + text) for chemistry LC",
+    deps=["lc5_chemistry_ingested"],
+)
+def lc5_chemistry_diagrams_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+    """The one un-stubbed diagram-extraction asset (per the
+    2026-08-08-lakehouse-extensive-hydration-v1 change) — calls the real,
+    now image-capable `ExtractSyllabusDiagram` against chemistry's actual
+    English-medium syllabus PDF, rendering page images via
+    `meaisinfhoghlaim.document_factory.pdf_to_image_bridge` alongside the
+    extracted text (mirrors `tuatha/asset_generation/fibo/assets.py::
+    fibo_configs_from_syllabus_diagrams`, which does the same thing for
+    the FIBO diagram-generation pipeline). Reuses the sibling
+    `quest_pack_assets.py`'s `_classify_pdfs`/`_extract_pdf_text`/
+    `LEAVING_CERT_ROOT` — same directory, same layer, not a cross-layer
+    import.
+
+    Returns an explicit empty/skip result (not a Failure) when BAML,
+    pypdf, or the syllabus PDF itself aren't available — matching this
+    module's and quest_pack_assets.py's existing graceful-degradation
+    convention.
+    """
+    if not BAML_AVAILABLE:
+        context.log.warning("lc5_chemistry_diagrams_extracted: baml_client not importable; skipping")
+        return {"rows": 0, "subject": "chemistry", "kind": "diagrams"}
+
+    # Leading-digit directory name ("2_materials") makes a static
+    # `from orchestration.defs.2_materials... import` illegal Python
+    # syntax -- importlib.import_module() is the established pattern
+    # for this in the repo (see orchestration/definitions.py,
+    # orchestration/components/biep_subject_component.py).
+    import importlib
+
+    _qpack = importlib.import_module(
+        "orchestration.defs.2_materials.lc_extraction.quest_pack_assets"
+    )
+    _classify_pdfs = _qpack._classify_pdfs
+    _extract_pdf_text = _qpack._extract_pdf_text
+
+    buckets = _classify_pdfs("chemistry")
+    syllabus_entries = [e for e in buckets["syllabus"] if e["language"] == "en"]
+    if not syllabus_entries:
+        context.log.warning(
+            "lc5_chemistry_diagrams_extracted: no English-medium syllabus PDF found"
+        )
+        return {"rows": 0, "subject": "chemistry", "kind": "diagrams"}
+
+    syllabus_path = min(syllabus_entries, key=lambda e: len(e["path"].name))["path"]
+    text = _extract_pdf_text(syllabus_path)
+    if not text.strip():
+        context.log.warning(
+            "lc5_chemistry_diagrams_extracted: no extractable text layer in %s",
+            syllabus_path.name,
+        )
+        return {"rows": 0, "subject": "chemistry", "kind": "diagrams"}
+
+    rendered_images = []
+    try:
+        from pypdf import PdfReader
+
+        from meaisinfhoghlaim.document_factory.pdf_to_image_bridge import (
+            pdf_page_to_baml_image,
+        )
+
+        page_count = len(PdfReader(str(syllabus_path)).pages)
+        for page_number in range(1, min(page_count, 8) + 1):
+            img = pdf_page_to_baml_image(syllabus_path, page_number)
+            if img is not None:
+                rendered_images.append(img)
+    except ImportError:
+        context.log.warning(
+            "lc5_chemistry_diagrams_extracted: pdf_to_image_bridge/pypdf not "
+            "importable; falling back to text-only diagram detection"
+        )
+
+    try:
+        diagrams = b.ExtractSyllabusDiagram(
+            pdf_text=text,
+            page_text=None,
+            page_number=None,
+            subject="chemistry",
+            subject_language="EN",
+            image=rendered_images or None,
+        )
+    except Exception as exc:  # BAML error types are not stable API
+        context.log.error("lc5_chemistry_diagrams_extracted: extraction failed: %s", exc)
+        return {"rows": 0, "subject": "chemistry", "kind": "diagrams"}
+
+    context.add_output_metadata({
+        "row_count": len(diagrams),
+        "images_rendered": len(rendered_images),
+        "syllabus_pdf": syllabus_path.name,
+    })
+    return {"rows": len(diagrams), "subject": "chemistry", "kind": "diagrams"}
+
+
+# Generate the remaining 23 BAML extraction assets (6 subjects × 4 kinds,
+# minus lc5_chemistry_diagrams_extracted defined above as the one real
+# implementation).
 for _subject in LC6_SUBJECTS:
     for _kind in ("syllabus", "papers", "marking", "diagrams"):
+        if _subject == "chemistry" and _kind == "diagrams":
+            continue
         globals()[f"lc5_{_subject}_{_kind}_extracted"] = _make_subject_extraction_asset(_subject, _kind)
 
 

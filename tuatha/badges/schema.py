@@ -39,6 +39,37 @@ class EvidenceLink(BaseModel):
     source_page: Optional[int] = None
 
 
+class KeyCompetency(str, Enum):
+    """The 7 NCCA senior-cycle key competencies, bounded by literacies +
+    numeracy per `leaving_certificate/the-potential-of-technology-to-
+    support-online-certification-and-reporting.pdf` Figure 1 (H2 Learning
+    for NCCA, Aug 2024). Added by `docs-informed-quest-and-credential-
+    generation-v1` to ground `SkillTreeBadge` in the NCCA's own
+    terminology rather than inventing a competency taxonomy from scratch.
+    """
+
+    THINKING_AND_SOLVING_PROBLEMS = "THINKING_AND_SOLVING_PROBLEMS"
+    BEING_CREATIVE = "BEING_CREATIVE"
+    COMMUNICATING = "COMMUNICATING"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+    PARTICIPATING_IN_SOCIETY = "PARTICIPATING_IN_SOCIETY"
+    CULTIVATING_WELLBEING = "CULTIVATING_WELLBEING"
+    MANAGING_LEARNING_AND_SELF = "MANAGING_LEARNING_AND_SELF"
+
+
+class EvidenceType(str, Enum):
+    """Distinguishes the kind of evidence that triggered badge issuance,
+    per the NCCA's own "recording/reporting/certifying" terminology (same
+    source PDF as `KeyCompetency`). `FORMATIVE_ITEM` is a single scored
+    formative-assessment response; `CLASSROOM_BASED_ASSESSMENT` mirrors
+    the NCCA's own Junior Cycle CBA terminology for a larger, teacher-
+    assessed body of work.
+    """
+
+    FORMATIVE_ITEM = "FORMATIVE_ITEM"
+    CLASSROOM_BASED_ASSESSMENT = "CLASSROOM_BASED_ASSESSMENT"
+
+
 class SkillTreeBadge(BaseModel):
     """One earned educational credential.
 
@@ -54,6 +85,19 @@ class SkillTreeBadge(BaseModel):
     subject: str = Field(description="Canonical slug, e.g. 'mathematics', 'gaeilge'")
     competency_code: str = Field(description="NCCA LO code, e.g. 'LC-MATHS-LO-2.4'")
     competency_text: BilingualText
+    key_competencies: list[KeyCompetency] = Field(
+        default_factory=list,
+        description=(
+            "Which of the NCCA's 7 senior-cycle key competencies this "
+            "badge evidences (e.g. THINKING_AND_SOLVING_PROBLEMS for a "
+            "worked-solution item). May be empty for badges issued before "
+            "this field existed; new issuance SHOULD always populate it."
+        ),
+    )
+    evidence_type: EvidenceType = Field(
+        default=EvidenceType.FORMATIVE_ITEM,
+        description="The kind of evidence that triggered issuance.",
+    )
     date_earned: datetime
     agent_issuer: str = Field(description="Agent that issued the badge, e.g. 'math_agent'")
     evidence: EvidenceLink

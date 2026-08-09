@@ -64,25 +64,35 @@ class PDFConverter(DocumentConverter):
 
 # Map of converter names to their module paths and class names
 # This allows lazy loading - modules aren't imported until needed
+#
+# Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: these used
+# to point at a nonexistent `oideachais.document_factory.converters.*`
+# package (no top-level `oideachais` package exists anywhere in the
+# repo), so every `_load_converter()` call raised `ModuleNotFoundError`,
+# silently caught by `except ImportError` — `get_best_converter()` /
+# `list_available_converters()` always returned nothing. The real
+# package (confirmed: the converter files themselves already use
+# relative imports `from ..base import ...`) is `meaisinfhoghlaim.
+# document_factory.converters`.
 CONVERTER_REGISTRY: dict[str, tuple[str, str]] = {
     "pymupdf4llm": (
-        "oideachais.document_factory.converters.pymupdf4llm_converter",
+        "meaisinfhoghlaim.document_factory.converters.pymupdf4llm_converter",
         "PyMuPDF4LLMConverter",
     ),
     "marker": (
-        "oideachais.document_factory.converters.marker_converter",
+        "meaisinfhoghlaim.document_factory.converters.marker_converter",
         "MarkerConverter",
     ),
     "docling": (
-        "oideachais.document_factory.converters.docling_converter",
+        "meaisinfhoghlaim.document_factory.converters.docling_converter",
         "DoclingConverter",
     ),
     "deepseekocr": (
-        "oideachais.document_factory.converters.deepseekocr_converter",
+        "meaisinfhoghlaim.document_factory.converters.deepseekocr_converter",
         "DeepSeekOCRConverter",
     ),
     "unstructured": (
-        "oideachais.document_factory.converters.unstructured_converter",
+        "meaisinfhoghlaim.document_factory.converters.unstructured_converter",
         "UnstructuredConverter",
     ),
 }

@@ -69,11 +69,11 @@ def _():
         mise directory hook — no hard-coded secrets in this notebook.
         """
     )
-    return boto3, duckdb, mo, os, pd, use_md
+    return boto3, duckdb, ibis, mo, os, pd, use_md
 
 
 @app.cell
-def _(duckdb, mo, os, use_md):
+def _(duckdb, ibis, mo, os, use_md):
     AWS_ENDPOINT = os.getenv("AWS_ENDPOINT_URL", "http://localhost:3900")
     AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID", "")
     AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")

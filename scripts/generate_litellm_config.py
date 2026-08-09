@@ -303,7 +303,19 @@ def render_text_models() -> str:
 
 
 def render_router_settings() -> str:
-    """Render the router_settings section (preserved from v3)."""
+    """Render the router_settings section (preserved from v3).
+
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change:
+    `fallbacks` used to be a bare list of model-name strings, which
+    litellm's `Router.validate_fallbacks()` rejects outright ("Item
+    'qwen3-vl-8b' is not a dictionary") -- this crash-looped the whole
+    litellm container on every startup (confirmed live via `docker logs
+    litellm`), not just the vision route. litellm's real schema requires
+    each `fallbacks` entry to be `{primary_model: [fallback_model, ...]}`.
+    Fixed here (the generator, the actual source of truth) as well as in
+    the currently-checked-in `bonneagar/stacks/litellm/config/config.yaml`
+    output, so regenerating the config doesn't reintroduce the bug.
+    """
     return """router_settings:
   # Master fallback chain (per the v4 spec + litellm-minimax-vendor-derisking change)
   num_retries: 3
@@ -311,11 +323,7 @@ def render_router_settings() -> str:
   retry_policy: exponential_backoff_retry
 
   fallbacks:
-    - qwen3-vl-8b
-    - gemma-4-26B-A4B
-    - glm-4.6v-flash
-    - openai/glm-4.6
-    - gemini/gemini-2.5-pro
+    - qwen3-vl-8b: [gemma-4-26B-A4B, glm-4.6v-flash, openai/glm-4.6, gemini/gemini-2.5-pro]
 
   # Vendor-de-risking for MiniMax-M3 (per the litellm-minimax-vendor-derisking change)
   # The `minimax` alias uses 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2)
@@ -324,7 +332,8 @@ def render_router_settings() -> str:
   contexts:
     - priority: 0
       content_policy: "irish-curriculum"
-      fallbacks: ["qwen3-vl-8b", "gemma-4-26B-A4B"]
+      fallbacks:
+        - qwen3-vl-8b: [gemma-4-26B-A4B]
 
 litellm_settings:
   drop_params: true

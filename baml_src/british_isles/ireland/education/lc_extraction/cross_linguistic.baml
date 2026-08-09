@@ -80,6 +80,7 @@ function ExtractCrossLinguisticConcept(
     Concept ID (optional):
     {{ concept_id }}
 
+    {{ _.role("user") }}
     {{ ctx.output_format }}
   "#
 }

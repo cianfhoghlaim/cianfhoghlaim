@@ -1,6 +1,6 @@
 # Badges — Hybrid x402 educational credential subsystem
 
-The `cianfhoghlaim.badges` subsystem implements the hybrid
+The `cianfhoghlaim.tuatha.badges` subsystem implements the hybrid
 educational credential for the Cianfhoghlaim Educational MMO.
 
 ## Design
@@ -40,7 +40,7 @@ class SkillTreeBadge(BaseModel):
 ## Usage
 
 ```python
-from cianfhoghlaim.badges import issue_badge, fetch_badges_for_student
+from cianfhoghlaim.tuatha.badges import issue_badge, fetch_badges_for_student
 
 # Issue a new badge after quest completion
 badge = await issue_badge(

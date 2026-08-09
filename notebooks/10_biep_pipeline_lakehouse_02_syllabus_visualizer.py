@@ -76,7 +76,7 @@ def _():
         similar outcomes across cycles.
         """
     )
-    return alt, duckdb, mo, os, pathlib, pd
+    return alt, duckdb, ibis, mo, os, pathlib, pd
 
 
 @app.cell
@@ -120,7 +120,7 @@ def _(mo):
 
 
 @app.cell
-def _(DUCKDB_PATH, MOTHERDUCK_ENABLED, cycle_filter, duckdb, mo, os, pathlib, pd):
+def _(DUCKDB_PATH, MOTHERDUCK_ENABLED, cycle_filter, duckdb, ibis, mo, os, pathlib, pd):
     pages = pd.DataFrame()
     err = None
 
