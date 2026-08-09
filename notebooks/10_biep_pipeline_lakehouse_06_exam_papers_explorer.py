@@ -1,13 +1,17 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo>=0.13.0",
-#     "duckdb>=1.0",
-#     "altair>=5.0",
-#     "lancedb>=0.20",
-#     "boto3>=1.34",
-#     "pandas>=2.0",
-#     "requests>=2.31",
+#   marimo>=0.13,
+#   duckdb>=1.0,
+#   ibis-framework[duckdb]>=9.0,
+#   pandas>=2.2,
+#   altair>=5.0,
+#   pyarrow>=15,
+#   anywidget>=0.9,
+#   traitlets>=5.14,
+#   lancedb>=0.20,
+#   boto3>=1.34,
+#   requests>=2.31,
 # ]
 # ///
 """Oideachais · Exam Papers Explorer.
@@ -36,31 +40,18 @@ from __future__ import annotations
 import marimo
 
 
-# Centralized registries (per the `centralized-model-registry` capability).
-# Cascading effect: this notebook now uses MODEL_REGISTRY + the 5 schema
-# introspection helpers from notebooks/_shared/schema.py instead of
-# hardcoded table lists / hardcoded schema strings.
-try:
-    from meaisinfhoghlaim.models import MODEL_REGISTRY, model_for  # noqa: E402
-    from notebooks._shared.schema import (  # noqa: E402
-        list_dlt_sources, list_cocoindex_apps, list_baml_classes,
-        schema_introspect, schema_introspect_table, read_deployment_choice,
-    )
-    _DEFAULT_LLM = model_for("text_llm", "default")
-    _REGISTRY_SUMMARY = MODEL_REGISTRY.summary()
-    _DLT_SOURCE_COUNT = len(list_dlt_sources())
-    _COCO_APP_COUNT = len(list_cocoindex_apps())
-    _BAML_CLASS_COUNT = len(list_baml_classes())
-    _ENABLED_MODELS = sum(
-        1 for v in read_deployment_choice().get("enabled_models", {}).values() if v
-    )
-except ImportError:
-    _DEFAULT_LLM = "minimax-m3"  # fallback (the legacy hardcoded value)
-    _REGISTRY_SUMMARY = {"total": 0, "by_family": {}, "available": 0, "deprecated": 0}
-    _DLT_SOURCE_COUNT = _COCO_APP_COUNT = _BAML_CLASS_COUNT = 0
-    _ENABLED_MODELS = 0
+# R1 — `setup_biep_registry_header()` collapses the 14-line header
+# (per the 2026-08-10-marimo-v14-ireland-england-dashboards-refactor-v1 change)
+from notebooks._shared.marimo_patterns import (
+    cli_argparser_biep,
+    cli_main_if_argv,
+    cli_payload_to_output,
+    llm_chat_with_prompts,
+    setup_biep_registry_header,
+)
 
-__generated_with = "0.23.8"
+
+__generated_with = "0.14.10"
 app = marimo.App(width="wide")
 
 
@@ -497,3 +488,55 @@ def _(
 
 if __name__ == "__main__":
     app.run()
+
+# ────────────────────────────────────────────────────────────────────────────
+# P3 — LLM-assisted analysis tab (the "Ask BAML" tab)
+# ────────────────────────────────────────────────────────────────────────────
+
+@app.cell
+def _llm_tab(mo):
+    """P3 — LLM-assisted analysis tab via mo.ui.chat + mo.ai.llm.openai()."""
+    _chat = llm_chat_with_prompts(
+        system_message=(
+            "You are the BIEP v3 lakehouse explorer assistant. You help "
+            "operators query the DuckLake / MotherDuck / LanceDB lakehouse. "
+            "When the user asks about a table or column, refer to the DLT "
+            "schema introspection in information_schema.tables."
+        ),
+        prompts=[
+            "📚 How many tables are in this schema?",
+            "🔍 Show me the schema for the most recently materialised table",
+            "📊 What are the top 10 most frequent values in <column_name>?",
+            "🎯 How do I query for a specific subject's curriculum_pages?",
+        ],
+    )
+    mo.vstack([mo.md("## 🤖 Ask BAML (via litellm → minimax-m3)"), _chat])
+    return (_chat,)
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Dual-mode CLI (per https://docs.marimo.io/guides/scripts/)
+# ────────────────────────────────────────────────────────────────────────────
+
+def _cli_main(argv=None):
+    """CLI entry point — emits a JSON summary payload (per marimo scripts guide)."""
+    parser = cli_argparser_biep("BIEP lakehouse explorer")
+    args = parser.parse_args(argv)
+
+    payload = {
+        "notebook": __name__,
+        "milestone": args.milestone,
+        "asset_check": args.asset_check,
+        "status": "ok",
+        "exit_code": 0,
+        "note": (
+            "Run `dagster dev -m oideachais` to start the pipeline, then "
+            "re-run this CLI to see the latest status."
+        ),
+    }
+    print(cli_payload_to_output(payload, args.output))
+    return 0
+
+
+if __name__ == "__main__":
+    cli_main_if_argv(_cli_main, app)

@@ -139,6 +139,21 @@ def _(is_script_mode, train_button, lr_slider, run_training, X_data, y_data):
     return (results,)
 ```
 
+## Dual-mode CLI
+
+Marimo notebooks can be both interactive dashboards and standalone CLI
+scripts. Follow the [marimo scripts guide](https://docs.marimo.io/guides/scripts/)
+and use the shared helpers:
+
+- `cli_argparser_biep` — build the standard BIEP argument parser.
+- `cli_main_if_argv` — enter CLI execution when arguments are present.
+- `cli_payload_to_output` — serialise the CLI result for machine-readable output.
+
+The pattern is demonstrated by:
+`notebooks/19_ireland_pipeline_dashboard.py`,
+`notebooks/00_marimo_patterns_tour.py`, and
+`notebooks/00_biep_v3_dashboard_template.py`.
+
 ## State and Reactivity
 
 Variables between cells define the reactivity of the notebook for 99% of the use-cases out there. No special state management needed. Don't mutate objects across cells (e.g., `my_list.append()`); create new objects instead. Avoid `mo.state()` unless you need bidirectional UI sync or accumulated callback state. See [STATE.md](references/STATE.md) for details.

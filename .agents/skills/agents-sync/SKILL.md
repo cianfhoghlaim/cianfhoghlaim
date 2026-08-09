@@ -55,7 +55,7 @@ writes a unified report to `stedding/sync-reports/agents-all-{date}.md`.
 | 14th Cognee cluster | `agent_definitions` | the 188 agent files |
 | `agents_sync_health` asset | `orchestration/defs/sync_assets.py` | Dagster asset |
 | `scripts/cognee_ingest_agent_definitions.py` | ingestor | The canonical Cognee cluster ingestor |
-| `notebooks/29_agents_sync_dashboard.py` | dashboard | Layer 10 marimo surface |
+| `notebooks/sync_health.py` | dashboard | Agents tab in the grouped sync-health marimo surface |
 
 ## Agent definitions evolution feedback loop
 
@@ -78,7 +78,7 @@ agent file modified
 | See the per-subdir breakdown | `cat stedding/sync-reports/agents-$(date +%Y-%m-%d).md` |
 | Add a new agent | Create the .py file in the right subdir + register it in `agent_registry.py` + add it to routing keywords + update `agents/AGENTS.md` + run `sync:agents` |
 | Fix a registration drift | `sync:agents-drift` will list the unregistered agents; register + re-run |
-| See the agent definitions dashboard | Open `notebooks/29_agents_sync_dashboard.py` |
+| See the agent definitions dashboard | Open `notebooks/sync_health.py` (Agents tab) |
 | Run the agent registration test | `mise run agents:smoke` |
 
 ## Cross-references
