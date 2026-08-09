@@ -1,0 +1,23 @@
+# defs.yaml — Aistear cognify (per the 2026-08-10-knowledge-graph-population-v1 change)
+#
+# Wires the aistear_cognify.py adapter into Dagster. Mirrors
+# orchestration/defs/3_model_lifecycle/cognify/cross_stage_cognify/defs.yaml
+# (the only previously-registered cognify adapter).
+#
+# Adapter: scripts/graph_storage/cognify/cognee_integration/aistear_cognify.py
+# Edge types: 12 AistearPrinciple-BELONGS_TO->AistearTheme + 12 ALIGNS_WITH + 23 SUPPORTED_BY + 23 TARGETS
+# Dataset: cianfhoghlaim.education.aistear
+type: orchestration.components.KCGCognifyComponent
+attributes:
+  stage: aistear
+  dataset: cianfhoghlaim.education.aistear
+  edge_types:
+    - BELONGS_TO
+    - ALIGNS_WITH
+    - SUPPORTED_BY
+    - TARGETS
+  source_adapter: scripts.graph_storage.cognify.cognee_integration.aistear_cognify
+  asset_check_kind: edges_count
+  assertion: edges_count >= 1
+  automation_cron: "0 3 * * *"
+  grouping: 3_model_lifecycle.cognify.aistear

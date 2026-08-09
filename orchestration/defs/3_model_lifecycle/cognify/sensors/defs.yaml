@@ -1,0 +1,45 @@
+# defs.yaml — Cognify ingest sensors (per C2)
+#
+# Per the 2026-08-10-knowledge-graph-population-v1 change: registers 7
+# cognee_ingest_*.py scripts as Dagster sensors watching the relevant
+# root directories.
+type: orchestration.components.CognifyIngestSensorsComponent
+attributes:
+  sensors_module: orchestration.defs.3_model_lifecycle.cognify.sensors.cognify_sensors
+  sensors:
+    - name: baml_schemas_sensor
+      cognee_script: scripts/cognee_ingest_baml_schemas.py
+      watch_path: baml_src/
+      interval_seconds: 60
+      target_dataset: baml_schemas
+    - name: dlt_sources_sensor
+      cognee_script: scripts/cognee_ingest_dlt_sources.py
+      watch_path: dlt_sources/
+      interval_seconds: 120
+      target_dataset: dlt_sources
+    - name: skills_sensor
+      cognee_script: scripts/cognee_ingest_skills.py
+      watch_path: .agents/skills/
+      interval_seconds: 120
+      target_dataset: agent_skills
+    - name: agent_definitions_sensor
+      cognee_script: scripts/cognee_ingest_agent_definitions.py
+      watch_path: agents/
+      interval_seconds: 120
+      target_dataset: agent_definitions
+    - name: openspec_sensor
+      cognee_script: scripts/cognee_ingest_openspec.py
+      watch_path: openspec/changes/
+      interval_seconds: 120
+      target_dataset: openspec_changes
+    - name: stacks_catalog_sensor
+      cognee_script: scripts/cognee_ingest_stacks_catalog.py
+      watch_path: bonneagar/stacks/
+      interval_seconds: 300
+      target_dataset: stacks_catalog
+    - name: notebooks_sensor
+      cognee_script: scripts/cognee_ingest_notebooks.py
+      watch_path: notebooks/
+      interval_seconds: 300
+      target_dataset: notebooks
+  grouping: 3_model_lifecycle.cognify.sensors

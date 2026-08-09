@@ -1,0 +1,25 @@
+# defs.yaml — University cognify (per the 2026-08-10-knowledge-graph-population-v1 change)
+#
+# Wires the university_cognify.py adapter into Dagster.
+#
+# Adapter: scripts/graph_storage/cognify/cognee_integration/university_cognify.py
+# Edge types: 4500 CAOCourse-OFFERED_BY + AWARDS + DELIVERS + TEACHES + LADDERS_INTO + ALTERNATIVE_TO + REQUIRES + HAS_NFQ_LEVEL
+# Dataset: cianfhoghlaim.education.university
+type: orchestration.components.KCGCognifyComponent
+attributes:
+  stage: university
+  dataset: cianfhoghlaim.education.university
+  edge_types:
+    - OFFERED_BY
+    - AWARDS
+    - DELIVERS
+    - TEACHES
+    - LADDERS_INTO
+    - ALTERNATIVE_TO
+    - REQUIRES
+    - HAS_NFQ_LEVEL
+  source_adapter: scripts.graph_storage.cognify.cognee_integration.university_cognify
+  asset_check_kind: edges_count
+  assertion: edges_count >= 100
+  automation_cron: "0 3 * * *"
+  grouping: 3_model_lifecycle.cognify.university

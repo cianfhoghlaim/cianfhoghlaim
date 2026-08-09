@@ -1,0 +1,21 @@
+# defs.yaml — LC subject pilot factory (per the 2026-08-10-baml-extraction-completion-v1 change)
+#
+# Registers 6 LC subjects × 3 assets + 3 checks = 36 Dagster objects via
+# `lc_subjects_assets.py:get_lc_subject_assets` + `get_lc_subject_asset_checks`.
+type: orchestration.components.KCGSubjectPilotFactoryComponent
+attributes:
+  subjects:
+    - mathematics
+    - chemistry
+    - geography
+    - english
+    - gaeilge
+    - computer_science
+  factory_module: orchestration.defs.2_materials.lc_extraction.lc_subjects
+  factory_function: lc_subject_pilot_factory
+  source_module: orchestration.defs.2_materials.lc_extraction.lc_subjects_assets
+  source_functions:
+    assets: get_lc_subject_assets
+    asset_checks: get_lc_subject_asset_checks
+  automation_cron: "0 4 * * *"  # Daily after cognify (0 3 * * *)
+  grouping: 2_materials.lc_extraction.subjects
