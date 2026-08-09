@@ -29,6 +29,7 @@ models:
   # ─── Gemma 4 family (Google, 2026) — Tier-1 default family ───────────────
   "gemma-4-E2B":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8081"
     args:
       - "-m"
       - "/models/gguf/gemma-4-E2B/gemma-4-e2b-it-q4_k_m.gguf"
@@ -45,6 +46,7 @@ models:
 
   "gemma-4-E4B":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8082"
     args:
       - "-m"
       - "/models/gguf/gemma-4-E4B/gemma-4-e4b-it-q4_k_m.gguf"
@@ -61,6 +63,7 @@ models:
 
   "gemma-4-12B":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8083"
     args:
       - "-m"
       - "/models/gguf/gemma-4-12B/gemma-4-12b-it-q4_k_m.gguf"
@@ -77,6 +80,7 @@ models:
 
   "gemma-4-26B-A4B":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8084"
     args:
       - "-m"
       - "/models/gguf/gemma-4-26B-A4B/gemma-4-26b-a4b-it-q4_k_m.gguf"
@@ -94,6 +98,7 @@ models:
   # ─── Qwen 3-VL (Alibaba, Oct 2025) — PRIMARY WORKHORSE ──────────────────
   "qwen3-vl-4b":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8085"
     args:
       - "-m"
       - "/models/gguf/qwen3-vl-4b/qwen3-vl-4b-instruct-q4_k_m.gguf"
@@ -110,6 +115,7 @@ models:
 
   "qwen3-vl-8b":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8086"
     args:
       - "-m"
       - "/models/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf"
@@ -128,6 +134,7 @@ models:
 
   "qwen3-vl-30b-a3b":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8087"
     args:
       - "-m"
       - "/models/gguf/qwen3-vl-30b-a3b/qwen3-vl-30b-a3b-instruct-q4_k_m.gguf"
@@ -147,6 +154,7 @@ models:
   # ─── Qwen 3.6 (Alibaba, Apr 2026) — MTP speculative decoding ────────────
   "qwen3.6-27b-mtp":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8088"
     args:
       - "-m"
       - "/models/gguf/qwen3.6-27b-mtp/qwen3.6-27b-mtp-q4_k_m.gguf"
@@ -164,6 +172,7 @@ models:
   # ─── InternVL3 (Aug 2025) — document understanding specialist ────────────
   "internvl3-8b":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8089"
     args:
       - "-m"
       - "/models/gguf/internvl3-8b/internvl3-8b-q4_k_m.gguf"
@@ -183,6 +192,7 @@ models:
   # ─── GLM-4.6V Flash (zai-org, Dec 2025) — fast / low-cost ───────────────
   "glm-4.6v-flash":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8090"
     args:
       - "-m"
       - "/models/gguf/glm-4.6v-flash/glm-4.6v-flash-q4_k_m.gguf"
@@ -202,6 +212,7 @@ models:
   # ─── PaddleOCR-VL (Jun 2026) — multilingual OCR specialist ──────────────
   "paddleocr-vl-1.6":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8091"
     args:
       - "-m"
       - "/models/gguf/paddleocr-vl-1.6/paddleocr-vl-1.6-q4_k_m.gguf"
@@ -221,6 +232,7 @@ models:
   # ─── Llama 3.2 Vision (legacy, kept for back-compat) ─────────────────────
   "llama-3.2-vision-11b":
     cmd: /usr/local/bin/llama-server
+    proxy: "http://localhost:8092"
     args:
       - "-m"
       - "/models/gguf/llama-3.2-vision-11b/llama-3.2-11b-vision-instruct-q4_k_m.gguf"
