@@ -88,6 +88,18 @@ def _intro(mo):
 
         Falls back to a synthetic 60-node KG when the lakehouse /
         FalkorDB / Cognee are unreachable.
+
+        > ⚠️ **Synthetic data, always**: per the
+        > 2026-08-08-lakehouse-extensive-hydration-v1 change — despite
+        > the "falls back to synthetic" framing above, this notebook
+        > currently has no real FalkorDB/Cognee query path at all; the
+        > graph below is ALWAYS the deterministic 60-node synthetic KG,
+        > not a fallback triggered by an unreachable connection. The
+        > ✅ marks in the requirements-status table further down
+        > describe what the underlying pipeline assets do elsewhere in
+        > the codebase, not what this notebook itself has verified live.
+        > Wiring a real query path here is out of scope for that change
+        > and flagged as separate follow-up work.
         """
     )
     return  # (no-op; marimo-safe)
@@ -351,27 +363,37 @@ def _stage_chart(alt, edges_df, mo, nodes_df):
 @app.cell
 def _centrality(g, mo, nx, pd):
     """Top-15 nodes by in-degree centrality (the curriculum knowledge hubs)."""
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: marimo
+    # requires a cell's return tuple to be a single unconditional
+    # statement, not one reachable from multiple mid-cell `return`
+    # branches -- confirmed live via `marimo export html`
+    # ("SyntaxError: 'return' outside function"). Restructured to set
+    # `_df` in both branches and return once at the end, matching the
+    # `mo.stop()` early-exit idiom already used correctly elsewhere in
+    # this notebook fleet (e.g. 01_curriculum_educator.py).
     if len(g) == 0:
-        return mo.md("(no nodes in current filter)"), pd.DataFrame()
-    _centrality = nx.in_degree_centrality(g)
-    _top = sorted(_centrality.items(), key=lambda kv: -kv[1])[:15]
-    _df = pd.DataFrame(_top, columns=["node_id", "centrality"])
-    mo.md(
-        f"""
-        ## Top-15 knowledge hubs (in-degree centrality)
+        mo.md("(no nodes in current filter)")
+        _df = pd.DataFrame()
+    else:
+        _centrality = nx.in_degree_centrality(g)
+        _top = sorted(_centrality.items(), key=lambda kv: -kv[1])[:15]
+        _df = pd.DataFrame(_top, columns=["node_id", "centrality"])
+        mo.md(
+            f"""
+            ## Top-15 knowledge hubs (in-degree centrality)
 
-        The nodes below are the curriculum knowledge hubs — they
-        are referenced by the most cross-stage or cross-archive
-        edges. The SC subjects and University institutions
-        typically rank highest, since the Senior Cycle stage is
-        the bridge to tertiary education.
+            The nodes below are the curriculum knowledge hubs — they
+            are referenced by the most cross-stage or cross-archive
+            edges. The SC subjects and University institutions
+            typically rank highest, since the Senior Cycle stage is
+            the bridge to tertiary education.
 
-        | node_id | centrality |
-        |:--|--:|
-        """ + "\n".join(
-            f"| `{n}` | {c:.3f} |" for n, c in _top
+            | node_id | centrality |
+            |:--|--:|
+            """ + "\n".join(
+                f"| `{n}` | {c:.3f} |" for n, c in _top
+            )
         )
-    )
     return (_df,)
 
 
@@ -379,39 +401,48 @@ def _centrality(g, mo, nx, pd):
 def _search(query, g, mo, nodes_df):
     """Live Cognee-style search — filter the KG by query."""
     if not query.value:
-        return mo.md("(type a query above to filter the KG)"), nodes_df
-    _q = query.value.lower().strip()
-    _matched = nodes_df[
-        nodes_df["label"].str.lower().str.contains(_q, na=False)
-        | nodes_df["node_type"].str.lower().str.contains(_q, na=False)
-        | nodes_df["dataset"].str.lower().str.contains(_q, na=False)
-        | nodes_df["node_id"].str.lower().str.contains(_q, na=False)
-    ]
-    mo.md(
-        f"""
-        ## Search results for `{query.value}`
+        mo.md("(type a query above to filter the KG)")
+        matched_nodes = nodes_df
+    else:
+        _q = query.value.lower().strip()
+        matched_nodes = nodes_df[
+            nodes_df["label"].str.lower().str.contains(_q, na=False)
+            | nodes_df["node_type"].str.lower().str.contains(_q, na=False)
+            | nodes_df["dataset"].str.lower().str.contains(_q, na=False)
+            | nodes_df["node_id"].str.lower().str.contains(_q, na=False)
+        ]
+        mo.md(
+            f"""
+            ## Search results for `{query.value}`
 
-        Matched **{len(_matched)} of {len(nodes_df)}** nodes.
-        """
-    )
-    return (_matched,)
+            Matched **{len(matched_nodes)} of {len(nodes_df)}** nodes.
+            """
+        )
+    return (matched_nodes,)
 
 
 @app.cell
-def _render_search_table(_matched, alt, mo):
-    if _matched is None or len(_matched) == 0:
-        return mo.md("(no matches)")
-    _table = (
-        alt.Chart(_matched)
-        .mark_text()
-        .encode(
-            x=alt.value(0),
-            y=alt.Y("row_number:O", axis=None),
-            text=alt.Text("label:N"),
-            color=alt.Color("dataset:N"),
+def _render_search_table(matched_nodes, alt, mo):
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: a
+    # leading underscore in marimo means "cell-local, never exported" --
+    # this cell used to try consuming `_matched` from `_search`'s
+    # return tuple, which marimo genuinely can't wire across cells
+    # (confirmed live: "Names prefixed with an underscore are local to
+    # the cell that defines them"). Renamed to `matched_nodes`.
+    if matched_nodes is None or len(matched_nodes) == 0:
+        _table = mo.md("(no matches)")
+    else:
+        _table = (
+            alt.Chart(matched_nodes)
+            .mark_text()
+            .encode(
+                x=alt.value(0),
+                y=alt.Y("row_number:O", axis=None),
+                text=alt.Text("label:N"),
+                color=alt.Color("dataset:N"),
+            )
+            .properties(height=max(20 * len(matched_nodes), 80))
         )
-        .properties(height=max(20 * len(_matched), 80))
-    )
     _table
     return
 

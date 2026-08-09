@@ -94,19 +94,45 @@ def _build_local_destination(namespace: str) -> Any:
       * Postgres DB: ducklake_{namespace}
       * DuckLake   : {namespace}
     """
-    # PostgreSQL catalog config
+    # PostgreSQL catalog config. Precedence: explicit DUCKLAKE_POSTGRES_*
+    # override > the bonneagar/stacks/lakehouse compose stack's own
+    # POSTGRES_* vars (secrets.env is Infisical-first in prod, resolved by
+    # the locket sidecar into the container env; .env.dev is the local-dev
+    # fallback for the same names) > a last-resort hardcoded dev default.
+    # Without the POSTGRES_* fallback, this silently used "devpassword"
+    # even when the real compose-stack password was set under POSTGRES_*,
+    # since nothing in the stack ever exports DUCKLAKE_POSTGRES_* itself.
     postgres_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
     postgres_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433")
-    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{namespace}")
-    postgres_user = os.environ.get("DUCKLAKE_POSTGRES_USER", "lakekeeper")
-    postgres_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD", "devpassword")
+    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB") or os.environ.get(
+        "POSTGRES_DB", f"ducklake_{namespace}"
+    )
+    postgres_user = os.environ.get("DUCKLAKE_POSTGRES_USER") or os.environ.get(
+        "POSTGRES_USER", "lakekeeper"
+    )
+    postgres_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
+        "POSTGRES_PASSWORD", "devpassword"
+    )
 
     catalog_uri = f"postgresql://{postgres_user}:{postgres_pass}@{postgres_host}:{postgres_port}/{postgres_db}"
 
     # S3/Garage storage config.
-    # The canonical bucket name is `ducklake-cianfhoghlaim` (per the
-    # 2026-08-13 lakehouse deploy). Override via DUCKLAKE_BUCKET env var.
-    bucket_name = os.environ.get("DUCKLAKE_BUCKET", "ducklake-cianfhoghlaim")
+    # Live-verified (2026-08-08-lakehouse-extensive-hydration-v1 change,
+    # against the actual running lakehouse-garage + lakehouse-postgres
+    # containers): the real deployed bucket is `ducklake`, not
+    # `ducklake-cianfhoghlaim` as this default previously claimed --
+    # attaching with the wrong DATA_PATH fails outright ("does not match
+    # existing data path in the catalog"). Override via DUCKLAKE_BUCKET
+    # env var (already correctly set to "ducklake" in the real deployed
+    # environment; this default now matches it instead of contradicting
+    # it when the env var happens to be unset).
+    #
+    # Note this is a deliberately DIFFERENT bucket from the one
+    # `dlt_sources/filesystem/pdf_download_source.py` uploads raw PDF
+    # blobs to (bucket "garage", key prefix "oideachais/leaving_cert/...").
+    # That's an intentional separation of concerns -- raw source PDFs vs.
+    # DuckLake's own Parquet-backed tables -- not leftover inconsistency.
+    bucket_name = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
     bucket_url = f"s3://{bucket_name}/{namespace}/"
     endpoint_url = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900")
     # Map the lakehouse's GARAGE_* env vars to the AWS_* naming

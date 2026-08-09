@@ -82,7 +82,7 @@ def _():
         | Biology / Chemistry | Mandatory keywords + experiment steps | |
         """
     )
-    return alt, duckdb, mo, os, pathlib, pd
+    return alt, duckdb, ibis, mo, os, pathlib, pd
 
 
 @app.cell
@@ -145,7 +145,7 @@ def _(mo, pd):
 
 @app.cell
 def _(
-    DUCKDB_PATH, MOTHERDUCK_ENABLED, duckdb, mo, os, pathlib, pd, subject_filter,
+    DUCKDB_PATH, MOTHERDUCK_ENABLED, duckdb, ibis, mo, os, pathlib, pd, subject_filter,
     level_filter, year_range,
 ):
     schemes = pd.DataFrame()

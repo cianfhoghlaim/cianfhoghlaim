@@ -135,7 +135,7 @@ async def _call_credanchor_publish(batch_id: str, merkle_root: str) -> str:
         contract_address = os.environ["CIANFHOGHLAIM_CREDANCHOR_ADDRESS"]
         contract = w3.eth.contract(
             address=contract_address, abi=__import__("importlib").import_module(
-                "cianfhoghlaim.badges.anchor_contract"
+                "cianfhoghlaim.tuatha.badges.anchor_contract"
             ).CREEDANCHOR_ABI
         )
         tx = contract.functions.publish(batch_id, merkle_root).transact(

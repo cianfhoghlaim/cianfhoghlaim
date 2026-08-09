@@ -64,52 +64,52 @@ def _header(mo):
 
 
 @app.cell
-def _connect(duckdb, os):
-    con = ibis.duckdb.connect(":memory:")
-    token = os.environ.get("MOTHERDUCK_TOKEN", "")
-    if token:
-        try:
-            # ibis.duckdb.connect() picks up the MotherDuck token from the
-# connection URL (?motherduck_token=...) so no global SET is needed.
-            con.execute("ATTACH 'md:cianfhoghlaim' (TYPE MOTHERDUCK);")
-            con.execute("USE oideachais;")
-            _kind = "motherduck"
-        except Exception:  # noqa: BLE001
-            _kind = "local_fallback"
-            con.execute("INSTALL ducklake; LOAD ducklake;")
-            con.execute(
-                "ATTACH 'ducklake' (TYPE DUCKLAKE, "
-                "DATA_PATH 's3://ducklake/oideachais/');"
-            )
-            con.execute("USE oideachais;")
-    else:
-        try:
-            con.execute("INSTALL ducklake; LOAD ducklake;")
-            con.execute(
-                "ATTACH 'ducklake' (TYPE DUCKLAKE, "
-                "DATA_PATH 's3://ducklake/oideachais/');"
-            )
-            con.execute("USE oideachais;")
-            _kind = "local_ducklake"
-        except Exception:  # noqa: BLE001
-            _kind = "unavailable"
+def _connect():
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell's own hand-rolled DuckLake ATTACH (`ATTACH 'ducklake' (TYPE
+    # DUCKLAKE, DATA_PATH ...)`) used a syntax that requires a
+    # pre-created DuckDB SECRET named "ducklake" that never existed here
+    # (confirmed live: `Secret "ducklake" was not found`) -- on top of
+    # the separate `.execute()` vs `.raw_sql()` bug already fixed above.
+    # Rather than debug a 3rd, notebook-specific ATTACH variant, this
+    # now uses the real, live-verified canonical connection helper
+    # (`notebooks/_shared/db.py::connect_local_lakehouse()`, tries the
+    # real local DuckLake stack first, falls back to `connect_md()` for
+    # MotherDuck, matching this notebook's own original docstring
+    # intent) rather than reinventing per-notebook ATTACH logic.
+    from notebooks._shared.db import connect_local_lakehouse
+
+    # No `USE <schema>` needed -- the query below (`_summary`) already
+    # fully-qualifies every table as `cianfhoghlaim.education.<nation>.
+    # <entity>`. The `USE oideachais;` this cell used to run doesn't
+    # correspond to any schema in the real catalog (confirmed live:
+    # a raw DuckDB parser error) and served no purpose given the
+    # already-qualified queries below.
+    con = connect_local_lakehouse(read_only=True)
     return (con,)
 
 
 @app.cell
 def _summary(con):
-    rows = con.execute(
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: the
+    # original query referenced `cianfhoghlaim.education.<nation>.
+    # <entity>` -- a 4-part catalog.schema.subschema.table name DuckDB's
+    # parser can't handle at all (confirmed live: "NameListToString NOT
+    # IMPLEMENTED"), against per-nation sub-schemas/tables
+    # (`ncca_pages`, `ccea_pages`, `dfe_statistics`, ...) that don't
+    # exist in the real catalog either -- the catalog alias
+    # (`cianfhoghlaim.` — the real one, attached by
+    # connect_local_lakehouse(), is `lakehouse.`) was also wrong.
+    # Rewritten against the REAL live schema
+    # (`lakehouse.education.subjects`, one row per jurisdiction/subject,
+    # live-verified to hold real BIEP registry data) to give the same
+    # "rows per nation" summary this cell is meant to show.
+    rows = con.raw_sql(
         """
-        SELECT 'ie' AS nation, 'NCCA' AS entity, count(*) AS n
-        FROM cianfhoghlaim.education.ie.ncca_pages
-        UNION ALL
-        SELECT 'ni', 'CCEA', count(*) FROM cianfhoghlaim.education.ni.ccea_pages
-        UNION ALL
-        SELECT 'en', 'DfE',  count(*) FROM cianfhoghlaim.education.en.dfe_statistics
-        UNION ALL
-        SELECT 'sct', 'CfE', count(*) FROM cianfhoghlaim.education.sct.cfe_pages
-        UNION ALL
-        SELECT 'wls', 'CfW', count(*) FROM cianfhoghlaim.education.wls.cfw_pages
+        SELECT jurisdiction AS nation, count(*) AS n
+        FROM lakehouse.education.subjects
+        GROUP BY jurisdiction
+        ORDER BY jurisdiction
         """
     ).fetchall()
     return (rows,)

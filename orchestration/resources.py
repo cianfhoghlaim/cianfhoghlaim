@@ -438,22 +438,82 @@ class CogneeMemoryResource(ConfigurableResource):
 class DuckLakeResource(ConfigurableResource):
     """DuckLake ACID lakehouse for training datasets.
 
-    Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
-    the import resolves to the canonical `storage.ducklake_client` module
-    (the post-v7 flat layout). The pre-v7 `orchestration.storage.ducklake_client`
-    path is retired.
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: the
+    top-level `storage.ducklake_client` module this used to import never
+    actually existed in the repo (a `ModuleNotFoundError` waiting to
+    happen for any asset that called `get_client()`), and 3 other
+    divergent DuckLake client implementations existed elsewhere
+    (`orchestration/storage/ducklake_client.py`,
+    `sruth/oideachais/storage/{ducklake_client,ducklake,config}.py`)
+    disagreeing on catalog backend / env var names. The canonical
+    implementation is now `dlt_sources.common.destinations_cianfhoghlaim`
+    — it's the only one using dlt's first-party `DuckLakeCredentials`
+    config object instead of hand-rolled `ATTACH` SQL strings.
     """
 
     storage_path: str = str(DUCKLAKE_PATH)
     namespace: str = "cianfhoghlaim"
 
-    def get_client(self):
-        # Lazy import to avoid a circular import at module load.
-        # The canonical home post-v7 is `storage/ducklake_client.py` at the
-        # repo root (per the 2026-08-13 change).
-        from storage.ducklake_client import DuckLakeClient
+    def get_dlt_destination(self, use_ducklake: bool | None = None):
+        """Return a dlt destination for this resource's namespace.
 
-        return DuckLakeClient(storage_path=self.storage_path, namespace=self.namespace)
+        Use this from any Dagster asset that wants to write via a dlt
+        pipeline: ``dlt.pipeline(destination=resource.get_dlt_destination())``.
+        """
+        from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
+
+        return get_dlt_destination(use_ducklake=use_ducklake, namespace=self.namespace)
+
+    def get_client(self):
+        """Return a raw DuckDB connection attached to the DuckLake catalog.
+
+        Use this for direct SQL queries (asset checks, verification
+        scripts) rather than dlt pipeline writes.
+        """
+        import os
+
+        import duckdb
+
+        con = duckdb.connect(":memory:")
+        con.execute("INSTALL ducklake; LOAD ducklake;")
+        con.execute("INSTALL httpfs; LOAD httpfs;")
+
+        aws_key = os.environ.get("AWS_ACCESS_KEY_ID") or os.environ.get(
+            "GARAGE_ACCESS_KEY_ID", ""
+        )
+        aws_secret = os.environ.get("AWS_SECRET_ACCESS_KEY") or os.environ.get(
+            "GARAGE_SECRET_ACCESS_KEY", ""
+        )
+        endpoint = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900").replace(
+            "http://", ""
+        )
+        if aws_key and aws_secret:
+            con.execute(
+                f"CREATE SECRET ducklake_s3 (TYPE S3, PROVIDER config, "
+                f"KEY_ID '{aws_key}', SECRET '{aws_secret}', REGION 'garage', "
+                f"ENDPOINT '{endpoint}', USE_SSL false, URL_STYLE 'path')"
+            )
+
+        pg_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
+        pg_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433")
+        pg_db = os.environ.get("DUCKLAKE_POSTGRES_DB") or os.environ.get(
+            "POSTGRES_DB", f"ducklake_{self.namespace}"
+        )
+        pg_user = os.environ.get("DUCKLAKE_POSTGRES_USER") or os.environ.get(
+            "POSTGRES_USER", "lakekeeper"
+        )
+        pg_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
+            "POSTGRES_PASSWORD", "devpassword"
+        )
+        bucket = os.environ.get("DUCKLAKE_BUCKET", "ducklake-cianfhoghlaim")
+        con.execute(
+            f"ATTACH 'ducklake:postgres:dbname={pg_db} host={pg_host} "
+            f"port={pg_port} user={pg_user} password={pg_pass}' "
+            f"AS {self.namespace} "
+            f"(DATA_PATH 's3://{bucket}/{self.namespace}/')"
+        )
+        con.execute(f"USE {self.namespace};")
+        return con
 
 
 # ============================================================================

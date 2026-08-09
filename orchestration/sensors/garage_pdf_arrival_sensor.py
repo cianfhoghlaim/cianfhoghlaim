@@ -13,6 +13,7 @@ from dagster import (
     RunRequest,
     SensorEvaluationContext,
     SkipReason,
+    define_asset_job,
     sensor,
 )
 
@@ -20,6 +21,25 @@ logger = logging.getLogger(__name__)
 
 
 GARAGE_BUCKET_URL = "s3://garage/cianfhoghlaim"
+
+# Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this sensor
+# declared `job_name="garage_pdf_arrival_job"` with no matching job defined
+# anywhere in the repo — any RunRequest it emitted would have failed
+# Dagster's job-resolution at launch. Wire it to the real asset that
+# re-ingests the filesystem sources (including the Garage-backed
+# `pdf_download_source`) into DuckLake, now that
+# `filesystem_documents_ingested` actually reaches DuckLake/Garage
+# (previously hardcoded to `destination="duckdb"`, an ephemeral local
+# file — see `orchestration/defs/2_materials/filesystem_pipelines/
+# generic_filesystem_assets.py`).
+#
+# Note: 8 other sensors in this package (`ncca_registry_sensor`,
+# `sqa_registry_sensor`, etc.) have the identical dangling-`job_name`
+# pattern — out of scope here, flagged as a separate follow-up.
+garage_pdf_arrival_job = define_asset_job(
+    name="garage_pdf_arrival_job",
+    selection=["filesystem_documents_ingested"],
+)
 
 # The 8 BIEP v3 jurisdiction prefixes (one per jurisdiction + stage)
 BIEP_V3_PREFIXES = [

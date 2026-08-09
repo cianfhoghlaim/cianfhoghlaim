@@ -159,17 +159,91 @@ class MathQuestPack {
 // BAML functions
 // ============================================================================
 
+// ============================================================================
+// Real generation prompts (2026-08-08 docs-informed-quest-and-credential-
+// generation-v1 change). Every function below is grounded in the v3
+// extraction types (`SyllabusDocument`, `ExamPaper`, `MarkingScheme` —
+// `lc_extraction/{curriculum_syllabus,exam_paper_layout,marking_scheme}.baml`)
+// rather than the superseded `_legacy/pdfs/leaving_cert_syllabus.baml`
+// types, and rather than an unadorned LO code string. `level: JC` (the
+// existing `MathNCCALevel` member) is Junior Cycle — no separate file.
+
 function GenerateMathQuestPack(
-  syllabus: LeavingCertSyllabus,
-  past_papers: PastPaper[],
-  marking_schemes: MarkingSchemeSec[],
+  syllabus: SyllabusDocument,
+  past_papers: ExamPaper[],
+  marking_schemes: MarkingScheme[],
   level: string
 ) -> MathQuestPack {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are building a Mathematics formative-assessment quest pack for NCCA
+    students at level {{ level }} ("JC" = Junior Cycle; "LC_FL"/"LC_OL"/"LC_HL"
+    = Leaving Cert Foundation/Ordinary/Higher). Ground every item in the
+    official syllabus, past exam papers, and marking scheme guidance below —
+    do not invent topics, learning outcomes, or questions beyond what these
+    documents actually establish.
+
+    Official syllabus:
+    {{ syllabus }}
+
+    Past exam papers (for question style + marks allocation reference):
+    {{ past_papers }}
+
+    Marking scheme guidance (for grading bands + common-error reference):
+    {{ marking_schemes }}
+
+    Build a MathQuestPack:
+    - subject: "mathematics"
+    - framework: "ncca-lc" if level starts with "LC", "ncca-jc" if level is "JC"
+    - level: the MathNCCALevel matching {{ level }}
+    - title / description: bilingual; text_ga null only if the syllabus text
+      itself is English-only
+    - items: select up to 15 learning outcomes spanning as many distinct
+      module_topics as the syllabus has (breadth over exhaustive LO
+      coverage — a quest pack is a bounded, completable unit, not the
+      entire syllabus in one response), and generate one MathFormativeItem
+      per selected LO, drawn from
+      syllabus.module_topics[].learning_outcomes — prompt/expected_answer/
+      marking_scheme grounded in the real syllabus wording; where a past-paper
+      question's related_lo_id matches the outcome, mirror its question style
+      and mark allocation; hints escalate from a light nudge (hints[0]) to a
+      near-complete worked solution (hints[3]); evidence.source_page and
+      evidence.excerpt_en/excerpt_ga copied verbatim from the syllabus text
+      that grounds the item, never invented; evidence.source_pdf from
+      syllabus.source_pdf
+    - los_covered: exactly the LO codes of the items you actually
+      generated above (not the full syllabus's LO list)
+    - total_items / total_marks / est_time_minutes: sums over the actual items
+    - prerequisites: LO codes from earlier syllabus modules the items assume
+    - cross_subject_links: only topics the syllabus's cross_curricular field
+      or assessment_objectives actually name
+    - generated_at: current ISO-8601 datetime
+    - generated_by: "math_agent"
+
+    Count and cite carefully from the actual text. Output exactly one complete
+    JSON object matching MathQuestPack. Never use ellipses (...) or comments;
+    include every one of your selected items in full (up to 15 — never
+    truncate a generated item, but do not exceed the cap either).
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ExtractMathLOStatement(paragraph: string) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract every distinct NCCA Mathematics learning-outcome statement from
+    the syllabus paragraph below. A learning outcome is a specific, testable
+    statement of what a student should be able to do (e.g. "solve quadratic
+    equations by factorising, completing the square, and using the formula").
+    Return each as its own string, verbatim from the text — do not merge
+    multiple outcomes into one string, and do not paraphrase.
+
+    {{ _.role("user") }}
+    Paragraph:
+    {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -182,23 +256,97 @@ function ExtractMathLOStatement(paragraph: string) -> string[] {  client Extract
 // EN-only) but the shape is canonical so the GA path runs end-to-end.
 
 function ExtractMathGaStatement(paragraph: string) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Extract every distinct Irish-language (Gaeilge) NCCA Mathematics
+    learning-outcome statement from the syllabus paragraph below. Return each
+    as its own string, verbatim from the text. If the paragraph is
+    English-only (the common case for LC Mathematics), return an empty list
+    rather than translating — this function only returns statements that are
+    actually present in Irish in the source text.
+
+    {{ _.role("user") }}
+    Paragraph:
+    {{ paragraph }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
 function GenerateMathFormativeItem(
   lo_code: string,
   difficulty: int,
   level: string,
-  topic: string
+  topic: string,
+  evidence: MathEvidenceLink
 ) -> MathFormativeItem {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are writing a single formative-assessment item for NCCA Mathematics
+    learning outcome {{ lo_code }} (topic: {{ topic }}, level: {{ level }},
+    target difficulty: {{ difficulty }}/5).
+
+    Ground the item entirely in this verbatim evidence from the official
+    syllabus — do not write a generic maths question unrelated to it:
+
+    {{ evidence }}
+
+    Build a MathFormativeItem:
+    - id: a fresh UUID
+    - lo_code: {{ lo_code }}, level: the MathNCCALevel matching {{ level }},
+      topic: the MathTopicArea matching {{ topic }}
+    - item_type: choose the type that best fits what evidence.excerpt_en/
+      excerpt_ga actually describes (e.g. WORKED_SOLUTION for a multi-step
+      calculation, CONCEPTUAL for an explain-why outcome)
+    - difficulty: {{ difficulty }}
+    - prompt / expected_answer / marking_scheme: bilingual, derived from the
+      evidence excerpt, not a generic template
+    - common_errors: plausible mistakes for this specific outcome
+    - hints: exactly 4, escalating from a light nudge to a near-complete
+      worked solution
+    - evidence: pass the input evidence through unchanged
+    - feedback_channel: MATH_TUTOR for calculation items, CURRICULUM_LOOKUP
+      for definitional/conceptual items
+    - est_time_minutes: realistic for the item's difficulty (1-30)
+
+    Output exactly one complete JSON object matching MathFormativeItem.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 function ScoreMathFormativeResponse(
   item: MathFormativeItem,
   attempt: MathFormativeItemAttempt
 ) -> MathScoreBreakdown {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    You are marking a student's response to a Mathematics formative item,
+    using the item's own marking scheme — do not apply an external standard.
+
+    Item (including its expected_answer and marking_scheme):
+    {{ item }}
+
+    Student attempt:
+    {{ attempt }}
+
+    Build a MathScoreBreakdown:
+    - item_id: {{ item.id }}, lo_code: {{ item.lo_code }}
+    - total_marks: derived from item.marking_scheme's stated allocation
+    - marks_awarded / marks_per_step: award partial credit per the marking
+      scheme's per-step breakdown, not all-or-nothing, unless the marking
+      scheme itself is all-or-nothing
+    - is_correct: true iff marks_awarded == total_marks
+    - partial_credit_pct: marks_awarded / total_marks * 100
+    - feedback_en / feedback_ga: specific to what the student actually wrote,
+      referencing item.common_errors where applicable
+    - next_recommended_lo: a plausible next LO only if the response reveals a
+      specific gap; otherwise null
+    - badge_earned: true iff partial_credit_pct >= 80
+
+    Output exactly one complete JSON object matching MathScoreBreakdown.
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 // ============================================================================
@@ -206,7 +354,25 @@ function ScoreMathFormativeResponse(
 // ============================================================================
 
 function ValidateMathQuestPack(pack: MathQuestPack) -> MathQuestPackValidation {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    Validate the internal consistency of this MathQuestPack — every item's
+    lo_code SHOULD appear in los_covered, total_items SHOULD equal
+    items.length, total_marks SHOULD equal the sum of each item's marking
+    scheme allocation, and no item SHOULD have an empty evidence.excerpt_en
+    and evidence.excerpt_ga (a missing source excerpt means the item isn't
+    actually grounded in the syllabus).
+
+    Quest pack:
+    {{ pack }}
+
+    Build a MathQuestPackValidation: pack_id from the input, is_valid true
+    only if no errors were found, errors for any hard inconsistency listed
+    above, warnings for anything suspicious but not necessarily wrong (e.g.
+    an unusually short excerpt).
+
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+  "#
 }
 
 class MathQuestPackValidation {

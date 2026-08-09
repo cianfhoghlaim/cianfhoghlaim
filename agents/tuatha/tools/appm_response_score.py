@@ -37,7 +37,7 @@ async def score_appm_response(
 
         if score.badge_earned:
             try:
-                from cianfhoghlaim.badges import issue_badge
+                from cianfhoghlaim.tuatha.badges import issue_badge
                 await issue_badge(
                     student_id=None,
                     framework="ncca-lc",

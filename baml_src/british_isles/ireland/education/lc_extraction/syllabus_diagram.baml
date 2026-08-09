@@ -76,6 +76,19 @@ class SyllabusDiagram {
 // The function is invoked by the 4-path OCR ensemble's Diagram Path
 // (which uses `molmo2-8b` for pointing); the result is written to
 // `cianfhoghlaim.education.<jurisdiction>.<stage>.<subject>.syllabus_diagram`.
+//
+// Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+// function used to be declared `client BIEPV3Vision` (a real,
+// correctly-configured vision client routing through litellm ->
+// llama-swap -> qwen3-vl-8b) but had no `image` parameter at all --
+// vision framing with no pixels behind it, confirmed by the one real
+// caller's own code comment (`tuatha/asset_generation/fibo/assets.py::
+// fibo_configs_from_syllabus_diagrams`). `image` is now optional
+// (`image[]?`) rather than required so existing text-only callers keep
+// working unchanged; callers that render and pass real page images get
+// genuine vision-based diagram detection instead of caption-only
+// text inference. See `meaisinfhoghlaim/document_factory/
+// pdf_to_image_bridge.py` for the PDF-page-to-`baml_py.Image` adapter.
 
 function ExtractSyllabusDiagram(
   pdf_text: string,
@@ -83,6 +96,7 @@ function ExtractSyllabusDiagram(
   page_number: int?,
   subject: string?,
   subject_language: string?,
+  image: image[]?,
 ) -> SyllabusDiagram[] {
   client BIEPV3Vision
   prompt #"
@@ -101,6 +115,23 @@ function ExtractSyllabusDiagram(
     - The pointing model (e.g. 'allenai/Molmo2-8B')
     - A confidence score (0.0 - 1.0)
 
+    {% if image %}
+    The rendered page image(s) follow -- use them as the primary source
+    for diagram detection and bounding-box regions; the extracted text
+    below is secondary context (captions, figure references) that may
+    help you label what you see, but the image is ground truth for
+    anything visual (shapes, layout, axes, apparatus, maps).
+    {% for img in image %}
+    {{ img }}
+    {% endfor %}
+    {% else %}
+    No page image was provided for this call -- detect diagrams from
+    textual evidence only (figure captions, "Figure N:" references in
+    the text below). Do not fabricate bounding-box coordinates you
+    cannot actually see; set a lower confidence_score to reflect that
+    this is text-inferred, not vision-detected.
+    {% endif %}
+
     PDF text:
     {{ pdf_text }}
 
@@ -110,6 +141,7 @@ function ExtractSyllabusDiagram(
     Page number:
     {{ page_number }}
 
+    {{ _.role("user") }}
     {{ ctx.output_format }}
   "#
 }

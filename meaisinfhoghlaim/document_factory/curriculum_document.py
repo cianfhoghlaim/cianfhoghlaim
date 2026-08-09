@@ -16,7 +16,7 @@ import hashlib
 import logging
 from datetime import datetime
 from enum import StrEnum
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -226,7 +226,14 @@ class CurriculumDocument(BaseModel):
     # ==========================================================================
 
     # Weights for completeness calculation (based on historical-document-analysis)
-    COMPLETENESS_WEIGHTS = {
+    # ClassVar annotation is required, not cosmetic: Pydantic v2 treats any
+    # un-annotated class attribute on a BaseModel as an attempted model
+    # field and raises PydanticUserError at class-definition time --
+    # previously blocking `import meaisinfhoghlaim.document_factory`
+    # entirely (found while wiring the 2026-08-08-lakehouse-extensive-
+    # hydration-v1 change's pdf_to_image_bridge.py, whose parent
+    # package's __init__.py eagerly imports this module).
+    COMPLETENESS_WEIGHTS: ClassVar[dict[str, float]] = {
         # Core curriculum metadata (40%)
         "title": 0.05,
         "subject": 0.10,
