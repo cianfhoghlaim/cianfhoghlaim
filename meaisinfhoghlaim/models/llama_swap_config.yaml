@@ -238,21 +238,34 @@ models:
       - "${LLAMA_ARG_TEMP:-0.0}"
 
   # ─── Gemma 3 (legacy, kept for back-compat) ─────────────────────────────
-  "gemma-3-4b":
-    cmd: /usr/local/bin/llama-server
-    args:
-      - "-m"
-      - "/models/gguf/gemma-3-4b/gemma-3-4b-it-q4_k_m.gguf"
-      - "--alias"
-      - "gemma-3-4b"
-      - "--port"
-      - "${LLAMA_ARG_PORT:-8093}"
-      - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
-      - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
-      - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+  # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this entry
+  # is temporarily disabled. llama-swap refuses to load the ENTIRE config
+  # because of it (confirmed live: "model gemma-3-4b: proxy uses ${PORT}
+  # but cmd does not - ${PORT} is only available when used in cmd"),
+  # which blocked every other model (including qwen3-vl-8b) from being
+  # served at all. No `proxy:` field is set anywhere for this entry (or
+  # any other) in this file, so this is llama-swap's own internal default-
+  # proxy validation failing against this specific entry for a reason not
+  # fully diagnosed here -- root-caused only far enough to confirm this
+  # is the one entry that fails it (other entries share the identical
+  # `--port "${LLAMA_ARG_PORT:-NNNN}"` pattern without tripping it).
+  # Re-enabling this entry (and fixing whatever llama-swap actually wants
+  # here) is flagged as separate follow-up work, not attempted further.
+  # "gemma-3-4b":
+  #   cmd: /usr/local/bin/llama-server
+  #   args:
+  #     - "-m"
+  #     - "/models/gguf/gemma-3-4b/gemma-3-4b-it-q4_k_m.gguf"
+  #     - "--alias"
+  #     - "gemma-3-4b"
+  #     - "--port"
+  #     - "${LLAMA_ARG_PORT:-8093}"
+  #     - "-ngl"
+  #     - "${LLAMA_ARG_NGL:-99}"
+  #     - "-c"
+  #     - "${LLAMA_ARG_CTX_SIZE:-32768}"
+  #     - "--temp"
+  #     - "${LLAMA_ARG_TEMP:-0.0}"
 
 # =============================================================================
 # Health endpoint + OpenAI-compatible proxy configuration
