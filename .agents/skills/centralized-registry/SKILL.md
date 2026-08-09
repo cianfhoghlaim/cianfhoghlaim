@@ -257,6 +257,27 @@ The canonical example: `cocoindex/european_nations/_factory.py`
 collapses 40 nation CocoIndex Apps into one factory. See
 `cocoindex/AGENTS.md` "The factory pattern" section.
 
+## 7. CocoIndex factory pattern
+
+The canonical example: `cocoindex/european_nations/_factory.py`
+collapses 40 nation CocoIndex Apps into one factory. See
+`cocoindex/AGENTS.md` "The factory pattern" section.
+
+## Marimo v14 Helper Modules
+
+The canonical shared notebook helpers are:
+
+- `notebooks/_shared/marimo_patterns.py` — reusable v14 dashboard patterns
+  and CLI/interactive execution helpers.
+- `notebooks/_shared/area_shims/biiep_v3_dashboard.py` — BIEP v3 dashboard
+  surface and area-specific shims.
+- `notebooks/_shared/ragas_gauge.py` — RAGAS evaluation gauge rendering.
+
+Use `LITELLM_BASE_URL` for LLM routing in notebooks and helper modules; do not
+introduce hardcoded gateway URLs. The helpers support the 17 BIEP v3 dashboards,
+the 7 grouped dashboards, and the consolidated `notebooks/sync_health.py`
+sync-health dashboard.
+
 ## 8. The 3 openspec capabilities
 
 | Spec | One-liner |

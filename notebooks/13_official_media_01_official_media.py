@@ -1,4 +1,13 @@
 """
+
+
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "marimo>=0.13", "duckdb>=1.0", "ibis-framework[duckdb]>=9.0", "pandas>=2.2",
+#   "altair>=5.0", "pyarrow>=15", "anywidget>=0.9", "traitlets>=5.14",
+# ]
+# ///
 cianfhoghlaim.notebooks.dashboards.official_media — Marimo mission control.
 
 Phase 6 of the official-media-pipeline openspec change. A single-page
@@ -17,7 +26,7 @@ from __future__ import annotations
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.14.10"
 app = marimo.App(width="wide")
 
 

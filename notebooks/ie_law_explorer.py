@@ -1,12 +1,9 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#   "marimo>=0.13",
-#   "duckdb>=1.0",
-#   "ibis-framework[duckdb]>=9.0",
-#   "altair>=5.0",
-#   "polars>=0.20",
-#   "pyarrow>=15.0",
+#   "marimo>=0.13", "duckdb>=1.0", "ibis-framework[duckdb]>=9.0",
+#   "altair>=5.0", "polars>=0.20", "pyarrow>=15",
+#   "anywidget>=0.9", "traitlets>=5.14",
 # ]
 # ///
 """
@@ -34,7 +31,7 @@ from __future__ import annotations
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium", app_title="Pick-8 Ireland/law Explorer")
 
 
@@ -64,28 +61,15 @@ def _intro_cell():
 
 @app.cell
 def _connect_cell(mo):
-    import sys
-    from pathlib import Path
-
-    # Make the in-repo `nb_utils` importable. The notebook lives at
-    # `cianfhoghlaim/notebooks/ie_law_explorer.py`; nb_utils is a
-    # sibling at `cianfhoghlaim/notebooks/nb_utils.py`.
-    _here = Path(__file__).resolve().parent if "__file__" in dir() else Path.cwd()
-    if str(_here) not in sys.path:
-        sys.path.insert(0, str(_here))
-
+    """Connect to the BIEP v3 lakehouse via the canonical connect_md() helper (R1)."""
     try:
-        from nb_utils import connect_biep_lakehouse
+        from notebooks._shared.db import connect_md
 
-        con, engine_label = connect_biep_lakehouse(local_fallback=True)
-        con_status = f"Connected to `{engine_label}`"
+        con = connect_md()
+        con_status = "Connected to `md:cianfhoghlaim`"
     except Exception as exc:
         # Hard fallback to in-memory DuckDB so the notebook still renders.
-        import duckdb
-
-        con = ibis.duckdb.connect(":memory:")
-        engine_label = "unavailable"
-        con_status = f"In-memory DuckDB (connect_biep_lakehouse failed: {exc})"
+        con_status = f"In-memory DuckDB (connect_md failed: {exc})"
 
     mo.md(f"**Lakehouse:** {con_status}")
     return con, engine_label

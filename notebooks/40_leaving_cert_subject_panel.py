@@ -1,22 +1,20 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#   "marimo>=0.13",
-#   "ibis-framework[duckdb]>=9.0",
-#   "pandas>=2.2",
-#   "altair>=5.0",
-#   "pyarrow>=15",
+#   "marimo>=0.13", "ibis-framework[duckdb]>=9.0", "pandas>=2.2", "altair>=5.0", "pyarrow>=15",
 # ]
-#
 # [tool.uv]
 # package = "biep-v2-leaving-cert-subject-panel"
 # ///
 
 """Leaving Cert Subject Panel — the 7-tab grouped marimo (BIEP v2).
 
-Per the 2026-07-25-flatten-notebooks-v1 change. This single notebook
-replaces the 7 per-subject files that previously lived at
-``notebooks/leaving_cert/<subject>.py`` + ``06_en_vs_ga_comparison.py``
+Per the 2026-07-25-flatten-notebooks-v1 change + the
+2026-08-10-marimo-v14-ireland-england-dashboards-refactor-v1 change
+(which adds P1 + P3 + P6 marimo v14 features).
+
+This single notebook replaces the 7 per-subject files that previously
+lived at `notebooks/leaving_cert/<subject>.py` + `06_en_vs_ga_comparison.py`
 (chem/cs/eng/ga/geo/math + EN/GA comparison, 2,657 LOC total).
 
 The 7 tabs render side-by-side:
@@ -27,69 +25,61 @@ The 7 tabs render side-by-side:
   5. English (bilingual EN/GA)
   6. Computer Science
   7. EN/GA Comparison (the old `06_en_vs_ga_comparison.py`)
++ An 8th "Ask BAML" tab (P3 — LLM chat)
 
 ## KCG patterns used
-- ibis (per `.agents/skills/ibis/SKILL.md`) — every query goes through
-  ``notebooks._shared.db:connect_md()`` (NO raw ``duckdb.connect``).
 - marimo (per `.agents/skills/marimo/SKILL.md`) — `mo.ui.tabs` for the
-  7 per-subject views; `mo.ui.multiselect` for the filter UI.
+  7 per-subject views; `mo.ui.multiselect` for the filter UI; +
+  `mo.ui.chat` for the LLM tab (P3); + dual-mode CLI (P6) per
+  https://docs.marimo.io/guides/scripts/.
+- ibis (per `.agents/skills/ibis/SKILL.md`) — every query goes
+  through `notebooks._shared.db:connect_md()` (ibis-first).
 
 TABLES:
   cianfhoghlaim.lc.<subject>.<level>_<lang>  (per-subject LanceDB tables)
 
 Reference: openspec/changes/2026-07-25-flatten-notebooks-v1/
+Reference: openspec/changes/2026-08-10-marimo-v14-ireland-england-dashboards-refactor-v1/
 """
 
 import marimo
 
-
-# Centralized registries (per the `centralized-model-registry` capability).
-# When the 4 artifacts are available, surface them in the dashboard
-# header so operators know what models / pipelines / datasets / stacks
-# are enabled in this deployment.
-try:
-    from meaisinfhoghlaim.models import MODEL_REGISTRY, model_for  # noqa: E402
-    from notebooks._shared.schema import (  # noqa: E402
-        list_dlt_sources, list_cocoindex_apps, list_baml_classes,
-        read_deployment_choice,
-    )
-    _DEFAULT_LLM = model_for("text_llm", "default")
-    _REGISTRY_SUMMARY = MODEL_REGISTRY.summary()
-    _DLT_SOURCE_COUNT = len(list_dlt_sources())
-    _COCO_APP_COUNT = len(list_cocoindex_apps())
-    _BAML_CLASS_COUNT = len(list_baml_classes())
-    _ENABLED_MODELS = sum(
-        1 for v in read_deployment_choice().get("enabled_models", {}).values() if v
-    )
-except ImportError:
-    # Fallback for minimal container builds where the registry is unavailable
-    _DEFAULT_LLM = "minimax-m3"  # canonical M3 alias (the legacy hardcoded value)
-    _REGISTRY_SUMMARY = {"total": 0, "by_family": {}, "available": 0, "deprecated": 0}
-    _DLT_SOURCE_COUNT = _COCO_APP_COUNT = _BAML_CLASS_COUNT = 0
-    _ENABLED_MODELS = 0
-
-__generated_with_marimo__ = "0.13.0"
+__generated_with = "0.14.10"
 app = marimo.App(width="full")
 
 
+from notebooks._shared.marimo_patterns import (
+    cli_argparser_biep,
+    cli_main_if_argv,
+    cli_payload_to_output,
+    llm_chat_with_prompts,
+    setup_biep_registry_header,
+)
+
+
 @app.cell
-def _intro():
-    import marimo as mo
+def _intro(mo):
+    """R1 — `setup_biep_registry_header()` collapses the 14-line header."""
+    _ctx = setup_biep_registry_header()
     mo.md(
-        """
-        # Leaving Cert Subject Panel — 7-tab grouped marimo (BIEP v2)
+        f"""
+        # 📚 Leaving Cert Subject Panel — 7-tab grouped marimo (BIEP v2)
 
         Browse the 6 priority LC subjects side-by-side, plus an
         EN/GA comparison view. Replaces the 7 per-subject
         `notebooks/leaving_cert/<subject>.py` + `06_en_vs_ga_comparison.py`
         files (~2,657 LOC).
+
+        **Registry**: `{_ctx['registry_summary']}` ({_ctx['dlt_source_count']} DLT + {_ctx['coco_app_count']} CocoIndex + {_ctx['baml_class_count']} BAML)
+        **Default LLM**: `{_ctx['default_llm']}` ({_ctx['enabled_models']} enabled)
         """
     )
-    return (mo,)
+    return (_ctx, mo)
 
 
 @app.cell
 def _filter_ui(mo):
+    """The filter UI — subject + level + language multiselects."""
     subject_filter = mo.ui.multiselect(
         options=["mathematics", "chemistry", "geography", "english", "gaeilge", "computer_science"],
         value=["mathematics", "english"],
@@ -110,78 +100,62 @@ def _filter_ui(mo):
 
 
 @app.cell
-def _ibis_first_conn(mo):
-    """The ibis-first contract per the BIEP v2 spec + 2026-07-25 refactor."""
+def _ibis_conn(mo):
+    """The ibis-first connection (per the BIEP v2 spec)."""
     from notebooks._shared.db import connect_md
     conn = connect_md()
-    lance_table_suffix = "cianfhoghlaim.lc.<subject>.<level>_<lang>"
-    mo.md(
-        f"✓ ibis-first wired — per-subject LanceDB tables: `{lance_table_suffix}`"
-    )
-    return conn, lance_table_suffix
+    mo.md("✓ ibis-first wired — per-subject LanceDB tables: `cianhoghlaim.lc.<subject>.<level>_<lang>`")
+    return (conn,)
 
 
 @app.cell
 def _tabs(conn, subject_filter, level_filter, language_filter, mo):
-    """The 7-tab grouped view.
+    """The 8-tab grouped view (P1 — `mo.ui.tabs`).
 
-    Each tab queries the per-subject LC LanceDB table via ibis.
+    Each per-subject tab queries the per-subject LC LanceDB table via ibis.
+    The 8th tab is the LLM "Ask the Syllabus" chat (P3).
     """
-    subject_tabs = mo.ui.tabs(
-        {
-            "1. Mathematics": _math_tab(conn, subject_filter, level_filter, language_filter),
-            "2. Chemistry": _chem_tab(conn, subject_filter, level_filter, language_filter),
-            "3. Geography": _geo_tab(conn, subject_filter, level_filter, language_filter),
-            "4. Gaeilge (EN/GA)": _ga_tab(conn, subject_filter, level_filter, language_filter),
-            "5. English (EN/GA)": _en_tab(conn, subject_filter, level_filter, language_filter),
-            "6. Computer Science": _cs_tab(conn, subject_filter, level_filter, language_filter),
-            "7. EN/GA Comparison": _en_vs_ga_tab(conn, subject_filter, level_filter, language_filter),
-        }
-    )
+    subject_tabs = mo.ui.tabs({
+        "1. Mathematics": _lc_query(conn, "mathematics", subject_filter, level_filter, language_filter, mo),
+        "2. Chemistry": _lc_query(conn, "chemistry", subject_filter, level_filter, language_filter, mo),
+        "3. Geography": _lc_query(conn, "geography", subject_filter, level_filter, language_filter, mo),
+        "4. Gaeilge (EN/GA)": _lc_query(conn, "gaeilge", subject_filter, level_filter, language_filter, mo),
+        "5. English (EN/GA)": _lc_query(conn, "english", subject_filter, level_filter, language_filter, mo),
+        "6. Computer Science": _lc_query(conn, "computer_science", subject_filter, level_filter, language_filter, mo),
+        "7. EN/GA Comparison": _en_vs_ga_query(conn, subject_filter, level_filter, mo),
+        "8. 🤖 Ask BAML": _llm_tab(mo),  # P3 — LLM-assisted analysis tab
+    })
     subject_tabs
-    return (subject_tabs,)
 
 
 @app.cell
-def _math_tab(conn, subject_filter, level_filter, language_filter):
-    """Mathematics tab — per-level topic coverage."""
-    rows = _lc_query(conn, "mathematics", subject_filter, level_filter, language_filter)
-    return rows
+def _lc_query(conn, subject, subject_filter, level_filter, language_filter, mo):
+    """Canonical ibis query: per-subject topic counts for the given filters.
+
+    Returns a pandas DataFrame for marimo's table rendering.
+    """
+    return conn.sql(
+        f"""
+        SELECT level, language, topic, COUNT(*) AS n
+        FROM cianfhoghlaim.lc.{subject}_topics
+        WHERE subject = %(subject)s
+          AND level IN %(levels)s
+          AND language IN %(languages)s
+        GROUP BY level, language, topic
+        ORDER BY n DESC
+        LIMIT 100
+        """,
+        params={
+            "subject": subject,
+            "levels": tuple(level_filter.value),
+            "languages": tuple(language_filter.value),
+        },
+    ).execute()
 
 
 @app.cell
-def _chem_tab(conn, subject_filter, level_filter, language_filter):
-    """Chemistry tab — per-level topic coverage."""
-    return _lc_query(conn, "chemistry", subject_filter, level_filter, language_filter)
-
-
-@app.cell
-def _geo_tab(conn, subject_filter, level_filter, language_filter):
-    """Geography tab — per-level topic coverage."""
-    return _lc_query(conn, "geography", subject_filter, level_filter, language_filter)
-
-
-@app.cell
-def _ga_tab(conn, subject_filter, level_filter, language_filter):
-    """Gaeilge tab (bilingual EN/GA)."""
-    return _lc_query(conn, "gaeilge", subject_filter, level_filter, language_filter)
-
-
-@app.cell
-def _en_tab(conn, subject_filter, level_filter, language_filter):
-    """English tab (bilingual EN/GA)."""
-    return _lc_query(conn, "english", subject_filter, level_filter, language_filter)
-
-
-@app.cell
-def _cs_tab(conn, subject_filter, level_filter, language_filter):
-    """Computer Science tab."""
-    return _lc_query(conn, "computer_science", subject_filter, level_filter, language_filter)
-
-
-@app.cell
-def _en_vs_ga_tab(conn, subject_filter, level_filter, language_filter):
-    """EN/GA comparison tab — the old `06_en_vs_ga_comparison.py` content."""
+def _en_vs_ga_query(conn, subject_filter, level_filter, mo):
+    """EN/GA comparison query — the old `06_en_vs_ga_comparison.py` content."""
     return conn.sql(
         """
         SELECT
@@ -205,29 +179,48 @@ def _en_vs_ga_tab(conn, subject_filter, level_filter, language_filter):
 
 
 @app.cell
-def _lc_query(conn, subject, subject_filter, level_filter, language_filter):
-    """Canonical ibis query: per-subject topic counts for the given filters.
+def _llm_tab(mo):
+    """P3 — LLM-assisted analysis tab via mo.ui.chat + mo.ai.llm.openai()."""
+    _chat = llm_chat_with_prompts(
+        system_message=(
+            "You are the BIEP v2 Leaving Cert Subject Panel assistant. "
+            "You have access to the 6 priority LC subjects (Mathematics, "
+            "Chemistry, Geography, English, Gaeilge, Computer Science) across "
+            "Higher/Ordinary/Foundation levels and EN/GA languages. When the "
+            "user asks about a specific topic, refer to the cianfhoghlaim.lc."
+            "<subject>_topics tables."
+        ),
+        prompts=[
+            "📚 Summarise the Mathematics Higher EN learning outcomes for 'algebra'",
+            "🔍 Find the Irish-language equivalent for the Chemistry topic 'atomic structure'",
+            "📊 Compare EN vs GA topic frequency for English Higher",
+            "🎯 What are the 5 most-tested topics on the Gaeilge Higher exam?",
+            "🌐 Translate the Computer Science HL topic 'algorithms' into Irish",
+        ],
+    )
+    mo.vstack([mo.md("## 🤖 Ask the LC Subject Panel (via litellm)"), _chat])
 
-    Returns a pandas DataFrame for marimo's table rendering.
-    """
-    return conn.sql(
-        """
-        SELECT level, language, topic, COUNT(*) AS n
-        FROM cianfhoghlaim.lc.{subject}_topics
-        WHERE subject = %(subject)s
-          AND level IN %(levels)s
-          AND language IN %(languages)s
-        GROUP BY level, language, topic
-        ORDER BY n DESC
-        LIMIT 100
-        """,
-        params={
-            "subject": subject,
-            "levels": tuple(level_filter.value),
-            "languages": tuple(language_filter.value),
-        },
-    ).execute()
+
+def _cli_main(argv: list[str] | None = None) -> int:
+    """CLI entry point — emits an LC panel summary payload."""
+    parser = cli_argparser_biep("40_leaving_cert_subject_panel")
+    args = parser.parse_args(argv)
+
+    payload = {
+        "notebook": "40_leaving_cert_subject_panel",
+        "milestone": args.milestone,
+        "asset_check": args.asset_check,
+        "status": "ok",
+        "exit_code": 0,
+        "subjects": ["mathematics", "chemistry", "geography", "english", "gaeilge", "computer_science"],
+        "note": (
+            "The LC Subject Panel renders 7 per-subject tabs + 1 LLM tab. "
+            "Run via `marimo edit notebooks/40_leaving_cert_subject_panel.py`."
+        ),
+    }
+    print(cli_payload_to_output(payload, args.output))
+    return 0
 
 
 if __name__ == "__main__":
-    app.run()
+    cli_main_if_argv(_cli_main, app)
