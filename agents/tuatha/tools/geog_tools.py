@@ -55,11 +55,15 @@ async def lookup_geog_marking_scheme(lo_code: str) -> dict[str, Any]:
         return {"lo_code": lo_code, "error": "marking scheme lookup failed"}
 
 
-async def generate_geog_item(lo_code: str, difficulty: int, level: str = "lc_hl", topic: str = "") -> dict[str, Any]:
+async def generate_geog_item(lo_code: str, difficulty: int, evidence: dict[str, Any], level: str = "lc_hl", topic: str = "") -> dict[str, Any]:
+    """`evidence` (`GeogEvidenceLink`-shaped: source_pdf, source_page,
+    excerpt_ga, excerpt_en, ncca_url) is required — see
+    `docs-informed-quest-and-credential-generation-v1`.
+    """
     try:
         from cianfhoghlaim.baml_client import b
         import uuid
-        item = b.GenerateGeogFormativeItem(lo_code=lo_code, difficulty=difficulty, level=level, topic=topic)
+        item = b.GenerateGeogFormativeItem(lo_code=lo_code, difficulty=difficulty, level=level, topic=topic, evidence=evidence)
         return {"id": item.id or str(uuid.uuid4()), "lo_code": item.lo_code, "level": item.level, "topic": item.topic, "difficulty": item.difficulty, "prompt_en": item.prompt.text_en, "expected_answer_en": item.expected_answer.text_en, "marking_scheme_en": item.marking_scheme.text_en, "hints": [{"en": h.text_en, "ga": h.text_ga} for h in item.hints], "feedback_channel": item.feedback_channel, "est_time_minutes": item.est_time_minutes}
     except Exception as exc:
         return {"lo_code": lo_code, "error": f"Item generation failed: {exc}"}
@@ -77,7 +81,7 @@ async def score_geog_response(item_id: str, student_response: str, response_form
         score = b.ScoreGeogFormativeResponse(item=item, attempt={"item_id": item_id, "student_response": student_response, "response_format": response_format, "time_taken_seconds": time_taken_seconds, "hints_used": hints_used})
         if score.badge_earned:
             try:
-                from cianfhoghlaim.badges import issue_badge
+                from cianfhoghlaim.tuatha.badges import issue_badge
                 await issue_badge(student_id=None, framework="ncca-lc", level=score.lo_code.split("-")[-2] if "-" in score.lo_code else "hl", subject="geography", competency_code=score.lo_code, agent_issuer="geog_agent", evidence={"item_id": item_id, "response": student_response, "score_pct": score.partial_credit_pct})
             except ImportError:
                 pass

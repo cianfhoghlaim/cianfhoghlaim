@@ -73,8 +73,13 @@ PAYMENT_TOKENS = {
     },
 }
 
-# Payment receiver address
-RECEIVER_ADDRESS = "0x742d35Cc6634C0532925a3b8D42C2f39edE3e8C1"
+# Payment receiver address. Sourced from env config (real deployment);
+# falls back to a documented dev placeholder — the same address the
+# original hardcoded constant used, kept only as the dev default.
+RECEIVER_ADDRESS = os.environ.get(
+    "CIANFHOGHLAIM_X402_RECEIVER_ADDRESS",
+    "0x742d35Cc6634C0532925a3b8D42C2f39edE3e8C1",
+)
 
 # RPC endpoints (use environment variables in production)
 RPC_ENDPOINTS = {
@@ -93,9 +98,106 @@ CHAINLINK_FEEDS = {
 # Minimum confirmations required
 MIN_CONFIRMATIONS = 2
 
-# In-memory payment tracking (use database in production)
+# In-memory payment tracking — FALLBACK ONLY. Per
+# `learn-to-earn-x402-credential-pipeline-v1`: the primary store is now
+# the Convex `x402Payments` table (via `_ConvexPaymentStore` below), so
+# payment state survives a process restart. These dicts remain as the
+# degraded-mode store when the `convex` package isn't installed or
+# `CONVEX_URL` isn't reachable — matching the graceful-degradation
+# pattern already used by `tuatha/badges/ledger.py`.
 _payment_requests: dict[str, dict] = {}
 _completed_payments: dict[str, dict] = {}
+
+
+class _ConvexPaymentStore:
+    """Durable x402 payment state backed by the Convex `x402Payments`
+    table, with transparent fallback to the in-memory dicts above when
+    the `convex` package isn't installed. Mirrors the try/except
+    ImportError pattern in `tuatha/badges/ledger.py`.
+    """
+
+    @staticmethod
+    def _client():
+        from convex import ConvexClient
+
+        return ConvexClient(os.environ.get("CONVEX_URL", "http://localhost:3210"))
+
+    @classmethod
+    def create(cls, payment_id: str, record: dict) -> None:
+        try:
+            client = cls._client()
+            client.mutation(
+                "x402Payments:create",
+                {
+                    "paymentId": payment_id,
+                    "resourceType": record["resource_type"],
+                    "priceUsd": record["price_usd"],
+                    "priceCrypto": record["price_crypto"],
+                    "token": record["token"],
+                    "createdAt": record["created_at"],
+                    "expiresAt": record["expires_at"],
+                },
+            )
+        except ImportError:
+            _payment_requests[payment_id] = record
+
+    @classmethod
+    def get(cls, payment_id: str) -> dict | None:
+        try:
+            client = cls._client()
+            row = client.query("x402Payments:getByPaymentId", {"paymentId": payment_id})
+            if row is None:
+                return None
+            return {
+                "resource_type": row["resourceType"],
+                "price_usd": row["priceUsd"],
+                "price_crypto": row["priceCrypto"],
+                "token": row["token"],
+                "status": row["status"],
+                "created_at": row["createdAt"],
+                "expires_at": row["expiresAt"],
+                "transaction_hash": row.get("transactionHash"),
+                "failure_reason": row.get("failureReason"),
+            }
+        except ImportError:
+            return _payment_requests.get(payment_id) or _completed_payments.get(payment_id)
+
+    @classmethod
+    def mark_verified(cls, payment_id: str, transaction_hash: str, verified_at: str) -> None:
+        try:
+            client = cls._client()
+            client.mutation(
+                "x402Payments:markVerified",
+                {
+                    "paymentId": payment_id,
+                    "transactionHash": transaction_hash,
+                    "verifiedAt": verified_at,
+                },
+            )
+        except ImportError:
+            record = _payment_requests.get(payment_id, {})
+            record.update(
+                {
+                    "status": "verified",
+                    "transaction_hash": transaction_hash,
+                    "verified_at": verified_at,
+                }
+            )
+            _completed_payments[payment_id] = record
+
+    @classmethod
+    def mark_failed(cls, payment_id: str, status: str, failure_reason: str | None = None) -> None:
+        try:
+            client = cls._client()
+            client.mutation(
+                "x402Payments:markFailed",
+                {"paymentId": payment_id, "status": status, "failureReason": failure_reason},
+            )
+        except ImportError:
+            if payment_id in _payment_requests:
+                _payment_requests[payment_id]["status"] = status
+                if failure_reason:
+                    _payment_requests[payment_id]["failure_reason"] = failure_reason
 
 # Web3 instances (lazily initialized)
 _web3_instances: dict[str, "Web3"] = {}
@@ -226,16 +328,20 @@ async def request_payment(
         eth_price_usd = await get_eth_price_usd("base")
         price_crypto = config["price_usd"] / eth_price_usd
 
-    # Store payment request
-    _payment_requests[payment_id] = {
-        "resource_type": resource_type,
-        "price_usd": config["price_usd"],
-        "price_crypto": price_crypto,
-        "token": token,
-        "created_at": datetime.now(UTC).isoformat(),
-        "expires_at": expires_at.isoformat(),
-        "status": "pending",
-    }
+    # Store payment request (durably, in Convex — falls back to
+    # in-memory if the `convex` package isn't installed)
+    _ConvexPaymentStore.create(
+        payment_id,
+        {
+            "resource_type": resource_type,
+            "price_usd": config["price_usd"],
+            "price_crypto": price_crypto,
+            "token": token,
+            "created_at": datetime.now(UTC).isoformat(),
+            "expires_at": expires_at.isoformat(),
+            "status": "pending",
+        },
+    )
 
     return PaymentRequirement(
         resource_type=resource_type,
@@ -261,18 +367,17 @@ async def verify_payment(proof: PaymentProof) -> PaymentStatus:
     4. Token type matches
     5. Sufficient confirmations
     """
-    if proof.payment_id not in _payment_requests:
+    payment_request = _ConvexPaymentStore.get(proof.payment_id)
+    if payment_request is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Payment request not found",
         )
 
-    payment_request = _payment_requests[proof.payment_id]
-
     # Check expiry
     expires_at = datetime.fromisoformat(payment_request["expires_at"])
     if datetime.now(UTC) > expires_at:
-        payment_request["status"] = "expired"
+        _ConvexPaymentStore.mark_failed(proof.payment_id, "expired")
         return PaymentStatus(
             payment_id=proof.payment_id,
             status="expired",
@@ -301,8 +406,9 @@ async def verify_payment(proof: PaymentProof) -> PaymentStatus:
         )
 
         if not verification_result["success"]:
-            payment_request["status"] = "failed"
-            payment_request["failure_reason"] = verification_result["reason"]
+            _ConvexPaymentStore.mark_failed(
+                proof.payment_id, "failed", verification_result["reason"]
+            )
             return PaymentStatus(
                 payment_id=proof.payment_id,
                 status="failed",
@@ -315,10 +421,9 @@ async def verify_payment(proof: PaymentProof) -> PaymentStatus:
         logger.warning(f"On-chain verification skipped for {proof.payment_id} - web3 not available")
 
     # Mark as verified
-    payment_request["status"] = "verified"
-    payment_request["transaction_hash"] = proof.transaction_hash
-    payment_request["verified_at"] = datetime.now(UTC).isoformat()
-    _completed_payments[proof.payment_id] = payment_request
+    _ConvexPaymentStore.mark_verified(
+        proof.payment_id, proof.transaction_hash, datetime.now(UTC).isoformat()
+    )
 
     return PaymentStatus(
         payment_id=proof.payment_id,
@@ -510,8 +615,14 @@ async def get_eth_price_usd(chain: str = "base") -> float:
 @router.get("/status/{payment_id}")
 async def get_payment_status(payment_id: str) -> PaymentStatus:
     """Get the status of a payment."""
-    if payment_id in _completed_payments:
-        payment = _completed_payments[payment_id]
+    payment = _ConvexPaymentStore.get(payment_id)
+    if payment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Payment not found",
+        )
+
+    if payment["status"] == "verified":
         return PaymentStatus(
             payment_id=payment_id,
             status="verified",
@@ -520,30 +631,22 @@ async def get_payment_status(payment_id: str) -> PaymentStatus:
             message="Payment verified",
         )
 
-    if payment_id in _payment_requests:
-        payment = _payment_requests[payment_id]
-        expires_at = datetime.fromisoformat(payment["expires_at"])
-
-        if datetime.now(UTC) > expires_at:
-            return PaymentStatus(
-                payment_id=payment_id,
-                status="expired",
-                resource_type=payment["resource_type"],
-                access_granted=False,
-                message="Payment request expired",
-            )
-
+    expires_at = datetime.fromisoformat(payment["expires_at"])
+    if datetime.now(UTC) > expires_at:
         return PaymentStatus(
             payment_id=payment_id,
-            status="pending",
+            status="expired",
             resource_type=payment["resource_type"],
             access_granted=False,
-            message="Awaiting payment",
+            message="Payment request expired",
         )
 
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Payment not found",
+    return PaymentStatus(
+        payment_id=payment_id,
+        status="pending",
+        resource_type=payment["resource_type"],
+        access_granted=False,
+        message="Awaiting payment",
     )
 
 
@@ -567,7 +670,7 @@ def create_402_response(
     price_crypto = config["price_usd"] if token == "USDC" else config["price_usd"] / 2500.0
 
     # Store payment request
-    _payment_requests[payment_id] = {
+    _ConvexPaymentStore.create(payment_id, {
         "resource_type": resource_type,
         "price_usd": config["price_usd"],
         "price_crypto": price_crypto,
@@ -575,7 +678,7 @@ def create_402_response(
         "created_at": datetime.now(UTC).isoformat(),
         "expires_at": expires_at.isoformat(),
         "status": "pending",
-    }
+    })
 
     return JSONResponse(
         status_code=status.HTTP_402_PAYMENT_REQUIRED,
@@ -614,8 +717,10 @@ def check_payment_or_free(
     Returns True if access should be granted, False otherwise.
     """
     # Check for valid payment
-    if payment_id and payment_id in _completed_payments:
-        return True
+    if payment_id:
+        payment = _ConvexPaymentStore.get(payment_id)
+        if payment is not None and payment["status"] == "verified":
+            return True
 
     # Check for free usage
     if session_id:

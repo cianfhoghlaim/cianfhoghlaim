@@ -13,15 +13,29 @@ from typing import Any
 async def generate_math_item(
     lo_code: str,
     difficulty: int,
+    evidence: dict[str, Any],
     level: str = "lc_hl",
     topic: str = "",
 ) -> dict[str, Any]:
-    """Generate a single formative item for the given NCCA LO."""
+    """Generate a single formative item for the given NCCA LO.
+
+    `evidence` is required (per the `docs-informed-quest-and-credential-
+    generation-v1` change) — a dict shaped like `MathEvidenceLink`
+    (`source_pdf`, `source_page`, `excerpt_en`, `excerpt_ga`, `ncca_url`)
+    carrying the verbatim syllabus text this item must be grounded in.
+    Callers should source it from the same extraction/lookup path
+    `math_syllabus_lookup.lookup_math_lo()` already returns an `evidence`
+    field for.
+    """
     try:
         from cianfhoghlaim.baml_client import b  # type: ignore
 
         item = b.GenerateMathFormativeItem(
-            lo_code=lo_code, difficulty=difficulty, level=level, topic=topic
+            lo_code=lo_code,
+            difficulty=difficulty,
+            level=level,
+            topic=topic,
+            evidence=evidence,
         )
         return {
             "id": item.id or str(uuid.uuid4()),

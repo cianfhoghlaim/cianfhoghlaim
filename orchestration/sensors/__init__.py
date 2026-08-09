@@ -42,7 +42,7 @@ from .jersey_registry_sensor import jersey_registry_sensor
 from .guernsey_registry_sensor import guernsey_registry_sensor
 
 # 3 cross-cutting sensors
-from .garage_pdf_arrival_sensor import garage_pdf_arrival_sensor
+from .garage_pdf_arrival_sensor import garage_pdf_arrival_job, garage_pdf_arrival_sensor
 from .ocr_completion_sensor import ocr_completion_sensor
 from .upstream_breaking_change_sensor import upstream_breaking_change_sensor
 
@@ -59,6 +59,7 @@ __all__ = [
     "guernsey_registry_sensor",
     # 3 cross-cutting sensors
     "garage_pdf_arrival_sensor",
+    "garage_pdf_arrival_job",
     "ocr_completion_sensor",
     "upstream_breaking_change_sensor",
 ]

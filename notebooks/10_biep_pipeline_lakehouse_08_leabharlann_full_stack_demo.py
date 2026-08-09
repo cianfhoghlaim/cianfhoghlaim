@@ -94,7 +94,7 @@ def _():
         if token:
             try:
                 duckdb.sql(f"SET motherduck_token='{token}'")
-                con = ibis.ibis.duckdb.connect("md:cianfhoghlaim")
+                con = ibis.duckdb.connect("md:cianfhoghlaim")
                 df = con.execute(
                     "SELECT * FROM leabharlann.full_stack_demo "
                     "ORDER BY started_at DESC LIMIT 1"

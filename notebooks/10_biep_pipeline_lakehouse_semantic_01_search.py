@@ -57,8 +57,13 @@ app = marimo.App(width="wide")
 
 
 @app.cell
-def _header():
-    import marimo as mo
+def _header(mo):
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+    # cell used to `import marimo as mo` locally and also return it,
+    # colliding with the `_imports` cell's own `mo` export (confirmed
+    # live: "MultipleDefinitionError: The variable 'mo' was defined by
+    # another cell"). Now takes `mo` as a parameter from `_imports`
+    # instead of re-importing/re-exporting it.
     mo.md(
         r"""
         # Semantic Search — BIEP + Leabharlann
@@ -77,7 +82,7 @@ def _header():
         Reference: `openspec/specs/oideachais-semantic-search/spec.md`
         """
     )
-    return (mo,)
+    return
 
 
 @app.cell
@@ -93,14 +98,14 @@ def _imports():
         sys.path.insert(0, str(_repo_root))
 
     try:
-        from cianfhoghlaim.storage.cognify.rules import semantic_search as _ss
-        _SS_AVAILABLE = True
+        from cianfhoghlaim.storage.cognify.rules import semantic_search as ss
+        SS_AVAILABLE = True
     except ImportError as e:  # noqa: BLE001
         mo.md(f"⚠️ Could not import cognify.rules.semantic_search: {e}")
-        _SS_AVAILABLE = False
-        _ss = None
+        SS_AVAILABLE = False
+        ss = None
 
-    return (mo, _ss, _SS_AVAILABLE)
+    return (mo, ss, SS_AVAILABLE)
 
 
 @app.cell
@@ -202,119 +207,130 @@ def _render_controls(mo, search_input, embedder_dropdown, subject_filter, level_
 
 
 @app.cell
-def _do_search(_ss, _SS_AVAILABLE, search_input, embedder_dropdown, subject_filter, level_filter, language_filter, year_filter, top_k_dropdown, mode_dropdown):
+def search_results(ss, SS_AVAILABLE, search_input, embedder_dropdown, subject_filter, level_filter, language_filter, year_filter, top_k_dropdown, mode_dropdown):
     """Run the search when the query is non-empty."""
-    if not _SS_AVAILABLE:
-        return None
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: marimo
+    # requires a cell's return to be a single unconditional statement,
+    # not reachable from multiple mid-cell `return` branches (confirmed
+    # live: "SyntaxError: 'return' outside function"). Restructured to
+    # assign a single `search_results` local and return once at the end.
     q = (search_input.value or "").strip()
-    if not q:
-        return None
-    top_k = int(top_k_dropdown.value)
-    filters = _ss.SearchFilter(
-        corpora=tuple(subject_filter.value or ()),
-        subjects=tuple(subject_filter.value or ()),
-        levels=tuple(level_filter.value or ()),
-        languages=tuple(language_filter.value or ()),
-        years=tuple(int(y) for y in (year_filter.value or [])),
-    )
-    mode = mode_dropdown.value
-    if mode == "bm25":
-        return _ss.bm25_search(q, top_k=top_k, filters=filters)
-    if mode == "hybrid":
-        return _ss.hybrid_search(
-            q,
-            top_k=top_k,
-            model=embedder_dropdown.value,
-            filters=filters,
+    if not SS_AVAILABLE or not q:
+        search_results = None
+    else:
+        top_k = int(top_k_dropdown.value)
+        filters = ss.SearchFilter(
+            corpora=tuple(subject_filter.value or ()),
+            subjects=tuple(subject_filter.value or ()),
+            levels=tuple(level_filter.value or ()),
+            languages=tuple(language_filter.value or ()),
+            years=tuple(int(y) for y in (year_filter.value or [])),
         )
-    # default: vector
-    return _ss.semantic_search(
-        q,
-        top_k=top_k,
-        model=embedder_dropdown.value,
-        filters=filters,
-    )
+        mode = mode_dropdown.value
+        if mode == "bm25":
+            search_results = ss.bm25_search(q, top_k=top_k, filters=filters)
+        elif mode == "hybrid":
+            search_results = ss.hybrid_search(
+                q,
+                top_k=top_k,
+                model=embedder_dropdown.value,
+                filters=filters,
+            )
+        else:
+            # default: vector
+            search_results = ss.semantic_search(
+                q,
+                top_k=top_k,
+                model=embedder_dropdown.value,
+                filters=filters,
+            )
+    return (search_results,)
 
 
 @app.cell
-def _results_panel(mo, _do_search, _ss):
+def results_panel(mo, search_results, ss):
     """Render the results list with pagination (5 results per page)."""
     PAGE_SIZE = 5
-    if _do_search is None:
-        return mo.md(
+    if search_results is None:
+        _panel = mo.md(
             "_Enter a query above to begin searching the BIEP + leabharlann corpora._"
-        ), 0
-    total = len(_do_search)
-    if total == 0:
-        return mo.md(
+        )
+    elif len(search_results) == 0:
+        _panel = mo.md(
             "_No results found. The cognify rules will populate results once the "
             "BIEP v1 Dagster assets have run the per-subject CocoIndex flows._"
-        ), 0
-    pages = (total + PAGE_SIZE - 1) // PAGE_SIZE
-    page_state = mo.ui.slider(
-        start=1, stop=max(1, pages), value=1, label=f"Page (of {pages})"
-    )
-    start = (page_state.value - 1) * PAGE_SIZE
-    end = start + PAGE_SIZE
-    rows = []
-    for r in _do_search[start:end]:
-        rows.append(
-            f"- **{r.corpus}** · score={r.score:.3f} · model={r.model_name}\n"
-            f"  {r.text[:200]}{'...' if len(r.text) > 200 else ''}\n"
-            f"  source: `{r.source_url}`"
         )
-    panel = mo.vstack(
-        [
-            mo.md(
-                f"### Results — {total} matches (showing {start+1}-{min(end, total)})"
-            ),
-            mo.md("\n".join(rows)),
-        ]
-    )
-    return panel, pages
+    else:
+        _total = len(search_results)
+        _pages = (_total + PAGE_SIZE - 1) // PAGE_SIZE
+        _page_state = mo.ui.slider(
+            start=1, stop=max(1, _pages), value=1, label=f"Page (of {_pages})"
+        )
+        _start = (_page_state.value - 1) * PAGE_SIZE
+        _end = _start + PAGE_SIZE
+        _rows = []
+        for r in search_results[_start:_end]:
+            _rows.append(
+                f"- **{r.corpus}** · score={r.score:.3f} · model={r.model_name}\n"
+                f"  {r.text[:200]}{'...' if len(r.text) > 200 else ''}\n"
+                f"  source: `{r.source_url}`"
+            )
+        _panel = mo.vstack(
+            [
+                mo.md(
+                    f"### Results — {_total} matches (showing {_start+1}-{min(_end, _total)})"
+                ),
+                mo.md("\n".join(_rows)),
+            ]
+        )
+    return _panel
 
 
 @app.cell
-def _detail_panel(mo, _do_search, _ss):
+def detail_panel(mo, search_results, ss):
     """Render the bilingual EN+GA highlight panel for the top result."""
-    if _do_search is None or len(_do_search) == 0:
-        return mo.md("")
-    top = _do_search[0]
-    return mo.vstack(
-        [
-            mo.md("### Top result — bilingual highlight"),
-            mo.md(f"**Corpus:** `{top.corpus}` · **Score:** `{top.score:.3f}`"),
-            mo.md(f"**Source:** `{top.source_url}`"),
-            mo.md(f"**EN:** {top.highlight_en or '(no English highlight)'}"),
-            mo.md(f"**GA:** {top.highlight_ga or '(no Irish highlight)'}"),
-            mo.md(f"**Model:** `{top.model_name}`"),
-        ]
-    )
+    if search_results is None or len(search_results) == 0:
+        _panel = mo.md("")
+    else:
+        top = search_results[0]
+        _panel = mo.vstack(
+            [
+                mo.md("### Top result — bilingual highlight"),
+                mo.md(f"**Corpus:** `{top.corpus}` · **Score:** `{top.score:.3f}`"),
+                mo.md(f"**Source:** `{top.source_url}`"),
+                mo.md(f"**EN:** {top.highlight_en or '(no English highlight)'}"),
+                mo.md(f"**GA:** {top.highlight_ga or '(no Irish highlight)'}"),
+                mo.md(f"**Model:** `{top.model_name}`"),
+            ]
+        )
+    return _panel
 
 
 @app.cell
-def _telemetry_footer(mo, _do_search, _ss, embedder_dropdown, mode_dropdown):
+def telemetry_footer(mo, search_results, ss, embedder_dropdown, mode_dropdown):
     """Render the search-telemetry footer."""
-    if _do_search is None:
-        return mo.md("")
-    # The rules module emits structlog records on every search.
-    # We mirror the key fields here as a compact summary.
-    return mo.md(
-        f"_Telemetry: embedder=`{embedder_dropdown.value}` · "
-        f"mode=`{mode_dropdown.value}` · "
-        f"result_count=`{len(_do_search)}` · "
-        f"see `langfuse` or `mlflow` for the full LatencySpan._"
-    )
+    if search_results is None:
+        _footer = mo.md("")
+    else:
+        # The rules module emits structlog records on every search.
+        # We mirror the key fields here as a compact summary.
+        _footer = mo.md(
+            f"_Telemetry: embedder=`{embedder_dropdown.value}` · "
+            f"mode=`{mode_dropdown.value}` · "
+            f"result_count=`{len(search_results)}` · "
+            f"see `langfuse` or `mlflow` for the full LatencySpan._"
+        )
+    return _footer
 
 
 @app.cell
-def _main(mo, _results_panel, _detail_panel, _telemetry_footer):
+def _main(mo, results_panel, detail_panel, telemetry_footer):
     """Compose the main layout."""
     return mo.vstack(
         [
-            _results_panel,
-            _detail_panel,
-            _telemetry_footer,
+            results_panel,
+            detail_panel,
+            telemetry_footer,
         ]
     )
 

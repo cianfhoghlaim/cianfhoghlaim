@@ -40,11 +40,11 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import json
 import logging
 import os
 import time
 import uuid
-from collections.abc import Iterator
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -593,22 +593,50 @@ async def _call_unstract(pdf_path: Path, unstract_url: str, workflow_id: str) ->
 
 
 async def _call_qwen3_vl(pdf_path: Path, endpoint: str) -> str:
-    """Call the qwen3-vl-8b VLM via LiteLLM and return the JSON response."""
-    # Per the 2026-08-08 change: real httpx implementation.
+    """Call the qwen3-vl-8b VLM via LiteLLM and return the JSON response.
+
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this used
+    to send `"content": f"Extract ... at {pdf_path}"` -- a plain text
+    string containing a local filesystem path, which a remote litellm/
+    llama-swap container obviously can't read. No image data ever left
+    the process despite the docstring claiming "page-level image -> JSON"
+    and a prior comment claiming "real httpx implementation". Now renders
+    page 1 (representative sample -- true all-page processing is future
+    work, not attempted here) via
+    `meaisinfhoghlaim.document_factory.pdf_to_image_bridge` and sends a
+    proper OpenAI-compatible `image_url` content block, matching the
+    already-correct pattern in
+    `sruth/shared/extraction/docling_resource.py::ocr_page_vlm()`.
+    """
     try:
         import httpx  # type: ignore[import-not-found]
+
+        from meaisinfhoghlaim.document_factory.pdf_to_image_bridge import (
+            render_pdf_page_to_data_uri,
+        )
+
+        image_url = render_pdf_page_to_data_uri(pdf_path, page_number=1)
+        content: Any = (
+            [
+                {"type": "text", "text": "Extract the structured content from this document page."},
+                {"type": "image_url", "image_url": {"url": image_url}},
+            ]
+            if image_url is not None
+            # Rendering failed (pymupdf missing, corrupt PDF, ...) --
+            # degrade to a text-only prompt rather than crashing, but
+            # never silently send a bare filesystem path as "content"
+            # again.
+            else "Extract the structured content from this document. "
+                 "(No page image was available to attach for this call.)"
+        )
+
         timeout = httpx.Timeout(180.0)
         async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(
                 f"{endpoint.rstrip('/')}/v1/chat/completions",
                 json={
                     "model": "local/vision/qwen3-vl-8b",
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": f"Extract the structured content from this document at {pdf_path}",
-                        }
-                    ],
+                    "messages": [{"role": "user", "content": content}],
                     "max_tokens": 4096,
                 },
             )
@@ -626,17 +654,49 @@ async def _call_qwen3_vl(pdf_path: Path, endpoint: str) -> str:
 
 
 async def _call_gemma4(pdf_path: Path, endpoint: str) -> str:
-    """Call the gemma-4-26B-A4B MoE VLM via llama-swap and return the JSON response."""
-    # Per the 2026-08-08 change: real httpx implementation.
+    """Call the gemma-4-26B-A4B MoE VLM via llama-swap and return the JSON response.
+
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: same fake
+    text-only-path bug as `_call_qwen3_vl` above, fixed the same way --
+    render page 1 and attach it. This endpoint is llama.cpp's own raw
+    `/completion` API (not litellm's OpenAI-compatible `/v1/chat/
+    completions`), so the multimodal contract is different: llama.cpp
+    server expects an `image_data: [{"data": <base64>, "id": <int>}]`
+    array alongside a prompt that references the image via a `[img-<id>]`
+    marker, per llama.cpp server's own documented multimodal API. This
+    has NOT been verified against a live llama-swap instance in this
+    environment (no live services running here) -- flagged explicitly
+    rather than silently assumed correct; verify against Phase D's live
+    stack before relying on it.
+    """
     try:
+        import base64 as _base64
+
         import httpx  # type: ignore[import-not-found]
+
+        from meaisinfhoghlaim.document_factory.pdf_to_image_bridge import (
+            render_pdf_page_to_bytes,
+        )
+
+        image_bytes = render_pdf_page_to_bytes(pdf_path, page_number=1)
+        if image_bytes is not None:
+            prompt = "Extract the structured content from this document page: [img-1]"
+            image_data = [{"data": _base64.b64encode(image_bytes).decode("ascii"), "id": 1}]
+        else:
+            prompt = (
+                "Extract structured content from this document. "
+                "(No page image was available to attach for this call.)"
+            )
+            image_data = []
+
         timeout = httpx.Timeout(180.0)
         async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(
                 f"{endpoint.rstrip('/')}/completion",
                 json={
                     "model": "gemma-4-26B-A4B",
-                    "prompt": f"Extract structured content from {pdf_path}",
+                    "prompt": prompt,
+                    "image_data": image_data,
                     "max_tokens": 4096,
                 },
             )
@@ -767,7 +827,7 @@ async def _post_ocr_webhook(webhook_url: str, envelope: dict[str, Any]) -> None:
                     status=resp.status_code,
                     body=resp.text[:200],
                 )
-    except Exception as e:  # noqa: BLE001 - never block the extraction
+    except Exception as e:
         logger.warning(
             "ocr_webhook_failed",
             url=webhook_url,
@@ -799,7 +859,7 @@ def _post_ocr_webhook_sync(webhook_url: str, envelope: dict[str, Any]) -> None:
                     status=resp.status_code,
                     body=resp.text[:200],
                 )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.warning(
             "ocr_webhook_failed",
             url=webhook_url,

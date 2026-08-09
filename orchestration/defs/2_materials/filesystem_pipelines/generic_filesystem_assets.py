@@ -125,25 +125,48 @@ def filesystem_documents_ingested(context: AssetExecutionContext) -> dict[str, A
         previews,
     ]
 
+    import dlt
+
+    from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
+
     rows_landed = 0
+    failed_sources: list[str] = []
     for source in sources:
+        source_name = getattr(source, "__name__", repr(source))
         try:
-            import dlt
             pipeline = dlt.pipeline(
-                pipeline_name=f"filesystem_{source.__name__}",
-                destination="duckdb",
+                pipeline_name=f"filesystem_{source_name}",
+                # Previously hardcoded `destination="duckdb"`, which landed
+                # in an ephemeral local file — the real DuckLake/Garage
+                # lakehouse was never reached by this asset, unlike each
+                # source's own standalone `main()`. `use_ducklake=None`
+                # honours the USE_DUCKLAKE env var (defaults to true),
+                # matching every other real caller of this helper.
+                destination=get_dlt_destination(use_ducklake=None),
+                dataset_name="cianfhoghlaim.bronze.filesystem",
             )
             load_info = pipeline.run(source)
             if load_info.load_packages:
                 for lp in load_info.load_packages:
                     rows_landed += getattr(lp, "jobs", {}).get("completed", 0) if hasattr(lp, "jobs") else 0
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception:
+            # Previously a bare `except Exception: pass` that silently
+            # swallowed every failure. Log with the real traceback so a
+            # broken source is visible in the Dagster run log instead of
+            # just quietly contributing 0 rows.
+            context.log.exception("filesystem source %s failed to ingest", source_name)
+            failed_sources.append(source_name)
 
     context.log.info("filesystem_documents_ingested: %d rows landed", rows_landed)
+    if failed_sources:
+        context.log.warning(
+            "filesystem_documents_ingested: %d/%d sources failed: %s",
+            len(failed_sources), len(sources), ", ".join(failed_sources),
+        )
     return {
         "rows": rows_landed,
         "sources": len(FILESYSTEM_SOURCES),
+        "failed_sources": failed_sources,
     }
 
 

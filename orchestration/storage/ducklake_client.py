@@ -1,32 +1,47 @@
 """
-DuckLake Client (BIEP v3 canonical home).
+DuckLake Client — DEPRECATED, kept only for backwards compatibility.
 
-This is the canonical DuckLake client for the cianfhoghlaim platform
-(post-v7 flatten). The 882-line legacy version lives at
-`stedding/stedding/flows/education/storage/ducklake_client.py` and is
-retained for backwards compatibility; this module is the successor and
-the one imported by `orchestration.resources.DuckLakeResource.get_client()`.
+Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this module's
+docstring used to claim it was "the canonical DuckLake client... imported
+by `orchestration.resources.DuckLakeResource.get_client()`" and that it
+"MUST be importable as `storage.ducklake_client.DuckLakeClient`" per a
+`2026-08-13-biep-v3-systematic-download-ireland-england-v1` change —
+that top-level `storage` package never existed anywhere in the repo, so
+every real call to `DuckLakeResource.get_client()` raised
+`ModuleNotFoundError` until this pass fixed it.
 
-The client wraps the canonical DuckDB `ATTACH 'ducklake:...'` pattern
-(see `scripts/verify_ducklake_population.py`, `scripts/8_jurisdiction_overview.py`)
-and exposes a small Python API for `DuckLakeResource` consumption.
+The actual canonical implementation is now
+`dlt_sources.common.destinations_cianfhoghlaim` — it's the only one of
+the 4+ divergent DuckLake client implementations that existed across the
+repo (this file, `sruth/oideachais/storage/{ducklake_client,ducklake,
+config}.py`, `sruth/crypteolas/storage/ducklake_client.py`) using dlt's
+first-party `DuckLakeCredentials` config object instead of hand-rolled
+`ATTACH` SQL strings, and it already documents the canonical bucket name
+(`ducklake-cianfhoghlaim`) and env var names. `DuckLakeResource` in
+`orchestration/resources.py` now wraps that module directly and no
+longer imports anything from here.
 
-Connection pattern:
+Verified (grep, root `cianfhoghlaim`/`orchestration` package only) that
+nothing in the root package imports `DuckLakeClient` from this file
+anymore — it's kept in place rather than deleted only because the
+sibling `sruth/oideachais/` and `sruth/crypteolas/` packages (separate
+`pyproject.toml` workspaces, not reachable from `orchestration/` code
+regardless) still define their own near-duplicate versions of this same
+class. Consolidating those is flagged as separate follow-up work, out of
+scope here since it crosses a package boundary this change doesn't
+otherwise touch.
+
+Original docstring content (connection pattern, credential tiers) below
+is still accurate as a description of this file's own behavior if it is
+used directly — just not as "the" canonical path anymore.
 
     client = DuckLakeClient(storage_path="./storage/data/ducklake")
     with client.connect() as conn:
         rows = conn.execute("SELECT * FROM cianfhoghlaim.education.ireland.leaving_cycle.mathematics").fetchall()
 
-The connection uses the canonical 3-tier lakehouse credentials:
-
 - Local: PostgreSQL `ducklake_oideachais` (created by `lakehouse-postgres` init-db.sql)
         + Garage S3 `s3://ducklake-cianfhoghlaim/<namespace>/<dataset>/`
 - Production: Cloudflare R2 + PlanetScale Postgres (override via env vars)
-
-Per the BIEP v3 systematic download change
-(`openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-england-v1`),
-this module MUST be importable as `storage.ducklake_client.DuckLakeClient`
-(NOT as `orchestration.storage.ducklake_client.DuckLakeClient`).
 """
 
 from __future__ import annotations

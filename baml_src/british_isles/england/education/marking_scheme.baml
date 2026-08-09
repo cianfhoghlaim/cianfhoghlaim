@@ -58,5 +58,41 @@ function ExtractAQAMarkingScheme(
   subject: string?,
   qualification_level: string?,
 ) -> AQAMarkingScheme {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  // Real extraction prompt (2026-08-08 docs-informed-quest-and-credential-
+  // generation-v1 change) — same fix as ExtractAQAExamPaper above.
+  prompt #"
+    You are extracting the grade-boundary / marking guidance for an AQA
+    GCSE/A-Level {{ subject }} qualification ({{ qualification_level }}
+    level) from the document text below.
+
+    Extract:
+    - board: AQA.
+    - qualification_level: the QualificationLevel matching
+      {{ qualification_level }}.
+    - subject: the subject slug; use {{ subject }} if given, otherwise
+      infer it from the document title.
+    - grade_boundaries: every grade boundary stated in the text, each
+      with its grade (a GCSEGrade value like "GRADE_9".."GRADE_1" for
+      GCSE, or an ALevelGrade value like "A_STAR".."U" for A-Level —
+      choose the scheme matching {{ qualification_level }}),
+      raw_mark_min, raw_mark_max, and ums_mark (null if the board
+      doesn't publish UMS for this qualification).
+    - component_weights: the per-component weighting percentages, in
+      the order the components are listed in the text.
+    - source_pdf: the PDF filename if it appears in the text; otherwise "".
+    - source_pages: the PDF page count if stated; otherwise estimate
+      from text length (never leave unset).
+    - year: the year the grade boundaries apply to; null if not stated.
+
+    Extract only what is actually present in the text; do not invent
+    boundaries. Output exactly one complete JSON object. Never use
+    ellipses (...) or comments; list every grade_boundary in full.
+
+    {{ _.role("user") }}
+    Document text (subject: {{ subject }}, qualification_level: {{ qualification_level }}):
+
+    {{ pdf_text }}
+
+    {{ ctx.output_format }}
+  "#
 }

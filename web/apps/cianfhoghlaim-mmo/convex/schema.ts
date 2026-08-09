@@ -6,6 +6,11 @@
 // - students — student pseudonyms (never PII)
 // - questAttempts — per-quest attempt history
 // - mastery — cross-subject mastery rollup (cached for fast UI reads)
+// - questPacks — docs-informed generated quest packs (2026-08-08
+//   docs-informed-quest-and-credential-generation-v1)
+// - x402Payments — durable x402 payment state (2026-08-08
+//   learn-to-earn-x402-credential-pipeline-v1, replacing
+//   agents/api/routes/routes/payments.py's in-memory dicts)
 
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
@@ -26,11 +31,24 @@ export default defineSchema({
     competencyCode: v.string(), // e.g. 'LC-MATHS-LO-2.4'
     competencyTextEn: v.string(),
     competencyTextGa: v.optional(v.string()),
+    // Per docs-informed-quest-and-credential-generation-v1: grounds the
+    // badge in the NCCA's own key-competency + evidence-type terminology
+    // (see tuatha/badges/schema.py's KeyCompetency / EvidenceType enums).
+    keyCompetencies: v.array(v.string()),
+    evidenceType: v.string(), // 'FORMATIVE_ITEM' | 'CLASSROOM_BASED_ASSESSMENT'
     dateEarned: v.number(), // epoch ms
     agentIssuer: v.string(), // 'math_agent', 'gael_agent', etc.
     evidenceItemId: v.string(),
     evidenceResponse: v.string(),
     evidenceScorePct: v.number(),
+    // Previously dropped on write (tuatha/badges/schema.py's EvidenceLink
+    // has these fields but ledger.py's Convex mutation never sent them) —
+    // added so a badge round-trips through Convex without losing the
+    // feedback text or the source-PDF citation.
+    evidenceFeedbackEn: v.optional(v.string()),
+    evidenceFeedbackGa: v.optional(v.string()),
+    evidenceSourcePdf: v.optional(v.string()),
+    evidenceSourcePage: v.optional(v.number()),
     evidenceHash: v.string(), // SHA-256, used as Merkle leaf
     signature: v.string(), // ETH signature from agent wallet
     onChainAnchor: v.optional(v.string()), // Base L2 tx_hash
@@ -63,6 +81,12 @@ export default defineSchema({
     displayName: v.optional(v.string()), // Optional display name (teacher view)
     school: v.optional(v.string()),
     classSlug: v.optional(v.string()),
+    // Per learn-to-earn-x402-credential-pipeline-v1: the student's SIWE-
+    // authenticated wallet address, when they've connected one. Optional
+    // — badge issuance and off-chain credentials work fully without it;
+    // only AchievementToken minting (tuatha/badges/ledger.py's step 6)
+    // needs it, and skips gracefully when absent.
+    walletAddress: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_pseudonym", ["pseudonymHash"])
@@ -106,4 +130,59 @@ export default defineSchema({
   })
     .index("by_student", ["studentId"])
     .index("by_subject", ["subject"]),
+
+  // One row per docs-informed generated quest pack (one per subject,
+  // Higher Level, English-medium — see
+  // orchestration/defs/2_materials/lc_extraction/quest_pack_assets.py's
+  // module docstring for the full scoping). `items` is the formative-
+  // item array as `model_dump(mode="json")`'d from the subject's
+  // `<Prefix>FormativeItem` BAML type — stored as `v.any()` rather than
+  // a hand-written validator because the item shape's `topic`/
+  // `item_type` enums differ per subject (MathTopicArea vs
+  // ChemTopicArea, etc.); the source of truth for that shape is the
+  // BAML class, not this schema.
+  // Indexes:
+  //   by_subject: the realm/$subject.tsx route's primary query
+  //   by_pack_id: idempotent re-writes on asset re-materialisation
+  questPacks: defineTable({
+    packId: v.string(), // MathQuestPack.id etc. — UUID from the BAML function
+    subject: v.string(),
+    framework: v.string(), // 'ncca-lc' or 'ncca-jc'
+    level: v.string(), // e.g. 'LC_HL'
+    titleEn: v.string(),
+    titleGa: v.optional(v.string()),
+    descriptionEn: v.string(),
+    descriptionGa: v.optional(v.string()),
+    totalItems: v.number(),
+    totalMarks: v.number(),
+    estTimeMinutes: v.number(),
+    losCovered: v.array(v.string()),
+    items: v.any(),
+    prerequisites: v.array(v.string()),
+    crossSubjectLinks: v.array(v.string()),
+    generatedAt: v.string(), // ISO datetime
+    generatedBy: v.string(), // e.g. 'math_agent'
+  })
+    .index("by_subject", ["subject"])
+    .index("by_pack_id", ["packId"]),
+
+  // Durable x402 payment state — the primary store for
+  // agents/api/routes/routes/payments.py's `_ConvexPaymentStore`
+  // (replacing the in-memory `_payment_requests`/`_completed_payments`
+  // dicts, which lost all state on every process restart).
+  // Indexes:
+  //   by_payment_id: the store's sole lookup key
+  x402Payments: defineTable({
+    paymentId: v.string(),
+    resourceType: v.string(),
+    priceUsd: v.number(),
+    priceCrypto: v.string(),
+    token: v.string(),
+    status: v.string(), // 'pending' | 'verified' | 'failed' | 'expired'
+    createdAt: v.string(), // ISO datetime
+    expiresAt: v.string(), // ISO datetime
+    transactionHash: v.optional(v.string()),
+    verifiedAt: v.optional(v.string()),
+    failureReason: v.optional(v.string()),
+  }).index("by_payment_id", ["paymentId"]),
 });
