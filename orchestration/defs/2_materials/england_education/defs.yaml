@@ -1,0 +1,20 @@
+# defs.yaml — England BIEP pipeline (per the 2026-08-10-england-biiep-pipeline-v1 change)
+#
+# Wires 6 asset groups (3 GCSE + 3 A-Level) for the 3 England boards.
+# Each group activates 43 (GCSE) or 49 (A-Level) CocoIndex Apps.
+type: orchestration.components.EnglandBoardSubjectComponent
+attributes:
+  boards:
+    - aqa
+    - ocr
+    - edexcel
+  qualifications:
+    - gcse
+    - a_level
+  source_modules:
+    gcse: dlt_sources.british_isles.england.education.gcse.england_gcse_sources
+    a_level: dlt_sources.british_isles.england.education.a_level.england_a_level_sources
+  dagster_module: orchestration.defs.2_materials.england_education.england_assets
+  total_cocoindex_apps: 276
+  automation_cron: "0 2 * * *"  # Before LC at 0 4
+  grouping: 2_materials.england_education

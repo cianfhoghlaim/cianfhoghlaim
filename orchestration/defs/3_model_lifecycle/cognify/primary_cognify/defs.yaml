@@ -1,0 +1,22 @@
+# defs.yaml — Primary cognify (per the 2026-08-10-knowledge-graph-population-v1 change)
+#
+# Wires the primary_cognify.py adapter into Dagster.
+#
+# Adapter: scripts/graph_storage/cognify/cognee_integration/primary_cognify.py
+# Edge types: 2400 PrimaryLearningOutcome-BELONGS_TO->CurricularArea + DEVELOPS + STAGE_OF + STRAND_OF + ASSESSED_VIA
+# Dataset: cianfhoghlaim.education.primary
+type: orchestration.components.KCGCognifyComponent
+attributes:
+  stage: primary
+  dataset: cianfhoghlaim.education.primary
+  edge_types:
+    - BELONGS_TO
+    - DEVELOPS
+    - STAGE_OF
+    - STRAND_OF
+    - ASSESSED_VIA
+  source_adapter: scripts.graph_storage.cognify.cognee_integration.primary_cognify
+  asset_check_kind: edges_count
+  assertion: edges_count >= 100
+  automation_cron: "0 3 * * *"
+  grouping: 3_model_lifecycle.cognify.primary
