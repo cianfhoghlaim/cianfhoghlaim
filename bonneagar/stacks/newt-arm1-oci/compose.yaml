@@ -1,0 +1,109 @@
+# =============================================================================
+# NEWT — Pangolin WireGuard tunnel client (arm1-oci)
+# =============================================================================
+# Long-running container that runs the fossorial/newt image as the
+# WireGuard tunnel client for the arm1-oci Oracle host. Connects the
+# arm1-oci services (hermes + openclaw + openchamber + the 12-agent
+# fleet) to the Pangolin mesh on cianfhoghlaim.ie so they're reachable
+# from a browser on bunchloch (or any other Pangolin-connected device)
+# via https://*.cianfhoghlaim.ie.
+#
+# ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+# openspec change). Replaces the older stacks/pangolin/newt.yaml that
+# was the v3 pattern.
+#
+# USAGE:
+#   cd /etc/komodo/sruth/bonneagar/stacks/newt-arm1-oci
+#   docker compose up -d
+#
+# Security model (3-layer):
+#   1. PANGOLIN_CLIENT_ARM1_OCI_ID + _SECRET are fetched at runtime by
+#      the bons-locket-shim sidecar from Infisical
+#      dev-baile /pangolin/clients/arm1-oci/
+#   2. The newt container reads them from /run/secrets/locket/{ID,SECRET}
+#      (tmpfs volume, mode 755, owned by uid 65532)
+#   3. WireGuard UDP traffic is on port 51820 (outbound-only; no inbound)
+#
+# Image pinning: ghcr.io/fosrl/newt@sha256:<64-hex> (NEWT_VERSION=1.14.0)
+# (no :latest). Update on the monthly renovate cycle. See IMAGE file
+# in the parent stacks/newt/ directory for the canonical pin.
+# =============================================================================
+
+name: newt-arm1-oci
+
+services:
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: newt-arm1-oci-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    secrets:
+      - infisical_secret
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV:-dev}
+      INFISICAL_DEFAULT_PATH: /pangolin/newt-arm1-oci
+      LOCKET_MODE: watch
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 5s
+    networks:
+      - pangolin
+
+  newt:
+    image: ghcr.io/fosrl/newt@sha256:60c78391e3b5cb8a260490fb26b8b7329ed5448077629da89a564af80d3a9fad    # NEWT_VERSION=1.14.0
+    container_name: newt-arm1-oci
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      NEWT_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      LOG_LEVEL: INFO
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export NEWT_ID=$$(cat /run/secrets/locket/NEWT_ARM1_ID | tr -d '\n' | tr -d '\r')
+        export NEWT_SECRET=$$(cat /run/secrets/locket/NEWT_ARM1_SECRET | tr -d '\n' | tr -d '\r')
+        exec /entrypoint.sh newt
+    networks:
+      - pangolin
+    labels:
+      - "komodo.skip=true"
+
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-/etc/komodo/secrets/infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=755
+
+networks:
+  pangolin:
+    driver: bridge

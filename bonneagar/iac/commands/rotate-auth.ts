@@ -19,8 +19,17 @@
 //     (those are operator-mint-then-save-to-Infisical flows; see
 //     PANGOLIN-SETUP.md Manual Steps 2 + 3)
 //
+// FIXED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2 openspec
+// change): previously the Pangolin rotation wrote the whole PocketIdAdminKey
+// object to PANGOLIN_API_KEY instead of just the apiKey string. The mint
+// now also records the apiKeyId, lastChars, name, and createdAt metadata
+// in the audit JSON.
+//
 // Spec: openspec/changes/2026-07-14-repair-bonneagar-iac-3-way-auth-v1
 // =============================================================================
+
+// Load the repo-root .env into process.env
+import "../load-env.ts";
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -65,12 +74,22 @@ export async function rotateAuth() {
   // -----------------------------------------------------------------------
   // 1. Pangolin API key (via Pocket ID OIDC, if configured)
   // -----------------------------------------------------------------------
+  // FIXED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+  // openspec change): previously this wrote the whole PocketIdAdminKey
+  // object to PANGOLIN_API_KEY; now it correctly extracts the .apiKey
+  // string and records the metadata in the audit record.
   if (process.env.POCKETID_PANGOLIN_CLIENT_ID && process.env.POCKETID_PANGOLIN_CLIENT_SECRET) {
     try {
       const newApiKey = await pocketIdLogin();
-      envUpdated = upsertEnvVar(envUpdated, "PANGOLIN_API_KEY", newApiKey);
-      record.results.pangolin = { status: "ok", apiKeyId: "(see /v1/org/.../api-key for the new id)" };
-      logOk("PANGOLIN_API_KEY rotated via Pocket ID OIDC");
+      envUpdated = upsertEnvVar(envUpdated, "PANGOLIN_API_KEY", newApiKey.apiKey);
+      record.results.pangolin = {
+        status: "ok",
+        apiKeyId: newApiKey.apiKeyId,
+        lastChars: newApiKey.lastChars,
+        name: newApiKey.name,
+        createdAt: newApiKey.createdAt,
+      };
+      logOk(`PANGOLIN_API_KEY rotated via Pocket ID OIDC (apiKeyId=${newApiKey.apiKeyId}, lastChars=...${newApiKey.lastChars}, createdAt=${newApiKey.createdAt})`);
     } catch (e) {
       const reason = (e as Error).message;
       record.results.pangolin = { status: "failed", reason };
@@ -79,7 +98,7 @@ export async function rotateAuth() {
   } else {
     record.results.pangolin = {
       status: "skipped",
-      reason: "POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET not in env; see PANGOLIN-SETUP.md Manual Step 1 to mint them",
+      reason: "POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET not in env; run `bun run iac:bootstrap-pocketid-admin` first to create the pangolin OIDC client",
     };
     logWarn("Pangolin: skipped (no Pocket ID client configured)");
   }

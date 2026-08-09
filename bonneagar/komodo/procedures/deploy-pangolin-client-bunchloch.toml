@@ -1,0 +1,37 @@
+# =============================================================================
+# deploy-pangolin-client-bunchloch — Idempotent Pangolin client bootstrap for bunchloch
+# =============================================================================
+# ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+# openspec change). The single command that:
+#   1. Calls bun run iac:bootstrap-pangolin-client --host=bunchloch --type=user
+#      (mints the Pangolin USER client for the operator-laptop
+#       + writes the credentials to .env + Infisical)
+#   2. Prints the pangolin login command for the operator
+#   3. Verifies the macOS Pangolin.app picks up the credentials
+#
+# Run via:
+#   km run procedure deploy-pangolin-client-bunchloch
+# =============================================================================
+
+[procedure]
+name = "deploy-pangolin-client-bunchloch"
+description = "Idempotent: mint a Pangolin user client for bunchloch + print login command (per the 2026-08-15 openspec change)"
+stage = "production"
+
+[[procedure.stages.stage]]
+name = "iac-bootstrap"
+description = "Call iac:bootstrap-pangolin-client to mint the Pangolin user client"
+cmd = "bun run iac:bootstrap-pangolin-client --host=bunchloch --type=user"
+
+[[procedure.stages.stage]]
+name = "print-login-command"
+description = "Print the pangolin login command for the operator"
+cmd = "echo 'Run on the Mac: pangolin login --id <CLIENT_ID> --secret <CLIENT_SECRET> --endpoint https://pangolin.cianfhoghlaim.ie'"
+
+[[procedure.stages.stage]]
+name = "health-verify"
+description = "Verify the macOS Pangolin.app is running + the WireGuard tunnel is up"
+cmd = "pgrep -x Pangolin > /dev/null && echo 'Pangolin.app is running' || echo 'WARN: Pangolin.app is NOT running on the Mac'"
+
+[procedure.config]
+server_id = "bunchloch"
