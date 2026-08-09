@@ -81,8 +81,26 @@ def render_model_entry(key: str, model) -> str:
         # LITELLM backend — skip (these are routed through BAML clients)
         return ""
 
-    # Build the litellm model id (use the unsloth_id or upstream_id with org prefix)
-    if model.unsloth_id:
+    # Build the litellm model id.
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: for the
+    # LLAMASWAP backend, this MUST be `key` (the short alias, e.g.
+    # "qwen3-vl-8b") -- that's the literal string llama-swap's own
+    # `models:` dict is keyed by (confirmed live via `curl .../v1/models`
+    # and by meaisinfhoghlaim/models/llama_swap_config.yaml's own entry
+    # names), and litellm forwards this value verbatim as the upstream
+    # "model" field in its request to llama-swap's OpenAI-compatible API.
+    # Using the unsloth_id/upstream_id (HuggingFace-repo-style names like
+    # "Qwen3-VL-8B-Instruct-GGUF") instead -- what this branch did before
+    # -- produced a request llama-swap always 404s on: {"error": "no
+    # router for requested model", "src": "llama-swap"} (confirmed live).
+    # MLX-omni and the transformers backend are left on the previous
+    # unsloth_id/upstream_id-based logic below -- those services are
+    # commonly driven by full HF-style model IDs rather than a static
+    # alias registry, and neither was live-verified this pass, so that
+    # behavior is left unchanged rather than guessed at.
+    if model.backend == ModelBackend.LLAMASWAP:
+        litellm_model = f"openai/{key}"
+    elif model.unsloth_id:
         litellm_model = f"openai/{model.unsloth_id.split('/')[-1]}"
     elif model.upstream_id:
         litellm_model = f"openai/{model.upstream_id.split('/')[-1]}"
