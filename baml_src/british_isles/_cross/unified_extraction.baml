@@ -13,11 +13,19 @@
 // `LCSyllabus` return type that carries the per-subject
 // discriminator.
 //
-// Per the british-isles-education-pipeline (BIEP) v1 spec,
-// the 6 in-scope subjects are: Mathematics, Chemistry,
+// Per the british-isles-education-pipeline (BIEP) v1 spec, the
+// original 6 in-scope subjects were: Mathematics, Chemistry,
 // Geography, Gaeilge, English, Computer Science (the user's
-// locked plan). Applied Mathematics and History are out of
-// scope per the user.
+// locked plan at the time; Applied Mathematics and History were
+// out of scope). Per the lakehouse-multi-subject-multi-model-
+// rollout change, widened to all 13 subjects with a real local
+// PDF corpus under leaving_certificate/ (LC_ALL_SUBJECTS in
+// dlt_sources/filesystem/leaving_cert_source.py) -- confirmed
+// live that scripts/hydrate_lc_full_corpus.py already defaults
+// to calling this function for all 13 subjects, so the 7 missing
+// enum values were a real, silent blocker for those subjects
+// (structured-output validation failure, since no enum value
+// existed for them to map to).
 //
 // Routes to the `Default` client (minimax-m3 per commit
 // `667635dfd`).
@@ -41,12 +49,21 @@
 // canonical entry point for the BIEP v1 per-subject pipeline.
 
 enum LC6Subject {
-  MATHEMATICS      @description("Leaving Certificate Mathematics (LC-2015 spec)")
-  CHEMISTRY        @description("Leaving Certificate Chemistry (OL + HL)")
-  GEOGRAPHY        @description("Leaving Certificate Geography (OL + HL)")
-  GAEILGE          @description("Leaving Certificate Gaeilge (FL + OL + HL, taught in Irish)")
-  ENGLISH          @description("Leaving Certificate English (OL + HL)")
-  COMPUTER_SCIENCE @description("Leaving Certificate Computer Science (OL + HL, introduced 2020)")
+  MATHEMATICS         @description("Leaving Certificate Mathematics (LC-2015 spec)")
+  CHEMISTRY           @description("Leaving Certificate Chemistry (OL + HL)")
+  GEOGRAPHY           @description("Leaving Certificate Geography (OL + HL)")
+  GAEILGE             @description("Leaving Certificate Gaeilge (FL + OL + HL, taught in Irish)")
+  ENGLISH             @description("Leaving Certificate English (OL + HL)")
+  COMPUTER_SCIENCE    @description("Leaving Certificate Computer Science (OL + HL, introduced 2020)")
+  // 7 more subjects added per the lakehouse-multi-subject-multi-model-
+  // rollout change (LC_ADDITIONAL_SUBJECTS in leaving_cert_source.py).
+  BIOLOGY             @description("Leaving Certificate Biology (OL + HL)")
+  BUSINESS            @description("Leaving Certificate Business (OL + HL)")
+  HISTORY             @description("Leaving Certificate History (OL + HL)")
+  APPLIED_MATHEMATICS @description("Leaving Certificate Applied Mathematics (OL + HL)")
+  FRENCH              @description("Leaving Certificate French (OL + HL)")
+  TECHNOLOGY          @description("Leaving Certificate Technology (OL + HL)")
+  UKRAINIAN           @description("Leaving Certificate Ukrainian (OL + HL)")
 }
 
 enum LC6Language {
@@ -95,7 +112,10 @@ function ExtractLC6Syllabus(
     - subject: the LC6Subject enum value matching {{ subject }}
       (mathematics -> MATHEMATICS, chemistry -> CHEMISTRY,
       geography -> GEOGRAPHY, gaeilge -> GAEILGE, english -> ENGLISH,
-      computer_science -> COMPUTER_SCIENCE).
+      computer_science -> COMPUTER_SCIENCE, biology -> BIOLOGY,
+      business -> BUSINESS, history -> HISTORY,
+      applied_mathematics -> APPLIED_MATHEMATICS, french -> FRENCH,
+      technology -> TECHNOLOGY, ukrainian -> UKRAINIAN).
     - language: EN if {{ language }} is "en", GA if {{ language }} is "ga".
     - source_pdf: the PDF filename if it appears in the text; otherwise "".
     - source_pages: the PDF page count if stated in the text; otherwise null.
