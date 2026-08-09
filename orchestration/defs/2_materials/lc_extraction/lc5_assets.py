@@ -112,7 +112,7 @@ def lc5_chemistry_ingested(context: AssetExecutionContext) -> dict[str, Any]:
         context.log.warning("DLT source not available; returning stub")
         return {"rows": 0, "subject": "chemistry"}
     context.log.info("ingesting chemistry LC PDFs")
-    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    rows = list(lc5_documents())  # type: ignore[misc]
     chemistry_rows = [r for r in rows if r["subject"] == "chemistry"]
     context.add_output_metadata({"row_count": len(chemistry_rows)})
     return {"rows": len(chemistry_rows), "subject": "chemistry"}
@@ -123,7 +123,7 @@ def lc5_computer_science_ingested(context: AssetExecutionContext) -> dict[str, A
     """Layer 1 ingestion for computer_science (LC219) — 11 PDFs across en/ga."""
     if not DLT_AVAILABLE:
         return {"rows": 0, "subject": "computer_science"}
-    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    rows = list(lc5_documents())  # type: ignore[misc]
     cs_rows = [r for r in rows if r["subject"] == "computer_science"]
     context.add_output_metadata({"row_count": len(cs_rows)})
     return {"rows": len(cs_rows), "subject": "computer_science"}
@@ -136,7 +136,7 @@ def lc5_english_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     if not DLT_AVAILABLE:
         return {"rows": 0, "subject": "english"}
     context.log.info("ingesting english LC PDFs")
-    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    rows = list(lc5_documents())  # type: ignore[misc]
     en_rows = [r for r in rows if r["subject"] == "english"]
     context.add_output_metadata({"row_count": len(en_rows)})
     return {"rows": len(en_rows), "subject": "english"}
@@ -147,7 +147,7 @@ def lc5_gaeilge_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 ingestion for gaeilge (LC001) — 11 PDFs at root, GLM-4.6V routing."""
     if not DLT_AVAILABLE:
         return {"rows": 0, "subject": "gaeilge"}
-    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    rows = list(lc5_documents())  # type: ignore[misc]
     ga_rows = [r for r in rows if r["subject"] == "gaeilge"]
     context.add_output_metadata({"row_count": len(ga_rows)})
     return {"rows": len(ga_rows), "subject": "gaeilge"}
@@ -158,7 +158,7 @@ def lc5_geography_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 ingestion for geography (LC005) — 18 PDFs + 1 JPG across en/ga."""
     if not DLT_AVAILABLE:
         return {"rows": 0, "subject": "geography"}
-    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    rows = list(lc5_documents())  # type: ignore[misc]
     geo_rows = [r for r in rows if r["subject"] == "geography"]
     context.add_output_metadata({"row_count": len(geo_rows)})
     return {"rows": len(geo_rows), "subject": "geography"}
@@ -169,7 +169,7 @@ def lc5_mathematics_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 ingestion for mathematics (LC003) — 16 PDFs across en/ga."""
     if not DLT_AVAILABLE:
         return {"rows": 0, "subject": "mathematics"}
-    rows = list(lc5_documents(root_path="cianfhoghlaim/leaving_certificate"))  # type: ignore[misc]
+    rows = list(lc5_documents())  # type: ignore[misc]
     math_rows = [r for r in rows if r["subject"] == "mathematics"]
     context.add_output_metadata({"row_count": len(math_rows)})
     return {"rows": len(math_rows), "subject": "mathematics"}

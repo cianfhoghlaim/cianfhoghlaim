@@ -144,10 +144,29 @@ IMAGE_EXTENSIONS: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".tiff")
 # unavailable. Only qwen3-vl-8b needs this fallback — the other 3 backend
 # choices (glm-4.6v-flash, gemma-4-26B-A4B, molmo2-8b, docling-serve) are
 # left untouched.
+#
+# Per the lakehouse-multi-subject-multi-model-rollout change: this used to
+# default to `http://localhost:{port}/health` hitting llama-swap's
+# per-model port (8086) directly. That port is never published to the host
+# by `bonneagar/stacks/llama-swap/compose.yaml` (only the aggregate proxy,
+# :8080, is) -- confirmed live, every real LC PDF was silently falling back
+# to the paid MiniMax-M3 cloud model because this health check could never
+# succeed, even with a fully healthy local qwen3-vl-8b. The real production
+# call path (BAML's `BIEPV3Vision` client) goes through `env.LITELLM_BASE_URL`
+# -> litellm -> llama-swap :8080, but litellm's `/v1/models` requires
+# Authorization (confirmed live: 401 without a bearer token), whereas
+# llama-swap's own aggregate `/v1/models` on :8080 is unauthenticated and
+# already published to the host -- confirmed live: lists the exact real
+# alias "qwen3-vl-8b". Checking llama-swap directly avoids needing to plumb
+# a litellm API key into this health check while still confirming the
+# thing that actually matters: the model is loaded and reachable.
 LLAMA_SWAP_QWEN3_VL_8B_PORT = os.environ.get("LLAMA_SWAP_QWEN3_VL_8B_PORT", "8086")
-LLAMA_SWAP_QWEN3_VL_8B_HEALTH_URL = os.environ.get(
-    "LLAMA_SWAP_QWEN3_VL_8B_HEALTH_URL",
-    f"http://localhost:{LLAMA_SWAP_QWEN3_VL_8B_PORT}/health",
+_LLAMA_SWAP_BASE_URL = (
+    os.environ.get("LLAMA_SWAP_BASE_URL") or "http://localhost:8080"
+).rstrip("/")
+LLAMA_SWAP_QWEN3_VL_8B_MODELS_URL = os.environ.get(
+    "LLAMA_SWAP_QWEN3_VL_8B_MODELS_URL",
+    f"{_LLAMA_SWAP_BASE_URL}/v1/models",
 )
 
 # Per tasks.md §1.6 / specs/centralized-model-registry: MiniMax token-plan
@@ -157,19 +176,30 @@ MINIMAX_MODEL = "MiniMax-M3"
 
 
 def _llama_swap_qwen_healthy(timeout: float = 2.0) -> bool:
-    """GET the llama-server `/health` endpoint for qwen3-vl-8b on :8086.
+    """GET llama-swap's published aggregate `/v1/models` (:8080) and
+    confirm qwen3-vl-8b is listed.
 
-    Returns False (never raises) on connection-refused, timeout, or any
-    other transport error — the caller treats False as "fall back to
-    MiniMax-M3".
+    Checks the same llama-swap tier the real `BIEPV3Vision` BAML client's
+    litellm->llama-swap route ultimately depends on, instead of probing
+    llama-swap's unpublished per-model port (:8086) directly -- see the
+    module-level comment above `LLAMA_SWAP_QWEN3_VL_8B_MODELS_URL` for why.
+
+    Returns False (never raises) on connection-refused, timeout, any
+    other transport error, or a response that doesn't list the model —
+    the caller treats False as "fall back to MiniMax-M3".
     """
     try:
-        resp = httpx.get(LLAMA_SWAP_QWEN3_VL_8B_HEALTH_URL, timeout=timeout)
-        return resp.status_code == 200
-    except (httpx.ConnectError, httpx.TimeoutException, httpx.TransportError, OSError) as e:
+        resp = httpx.get(LLAMA_SWAP_QWEN3_VL_8B_MODELS_URL, timeout=timeout)
+        if resp.status_code != 200:
+            return False
+        model_ids = {m.get("id", "") for m in resp.json().get("data", [])}
+        return any(
+            "qwen3-vl-8b" in model_id for model_id in model_ids
+        )
+    except (httpx.ConnectError, httpx.TimeoutException, httpx.TransportError, OSError, ValueError) as e:
         logger.info(
             "llama_swap_qwen3_vl_8b_unhealthy",
-            url=LLAMA_SWAP_QWEN3_VL_8B_HEALTH_URL,
+            url=LLAMA_SWAP_QWEN3_VL_8B_MODELS_URL,
             error=str(e),
         )
         return False
@@ -230,25 +260,23 @@ def select_ocr_backend(model_key: str, file_name: str = "") -> dict[str, Any]:
     `model_key` is the v4 registry key already picked by `_classify_pdf()`
     (e.g. "qwen3-vl-8b", "glm-4.6v-flash", "gemma-4-26B-A4B", "molmo2-8b",
     "docling-serve"). Only "qwen3-vl-8b" is health-checked + has a
-    fallback wired up — it is the one confirmed unavailable in this
-    (no-Docker) environment. The other 3 backend choices are returned
-    unchanged.
+    fallback wired up. The other 3 backend choices are returned unchanged.
     """
     if model_key != "qwen3-vl-8b":
         return {"backend": model_key, "reason": "no fallback configured for this backend"}
 
     if _llama_swap_qwen_healthy():
-        return {"backend": "qwen3-vl-8b", "reason": "llama-swap :8086 /health OK"}
+        return {"backend": "qwen3-vl-8b", "reason": "llama-swap /v1/models lists qwen3-vl-8b"}
 
     probe = _minimax_multimodal_fallback(file_name)
     if probe["ok"]:
         return {
             "backend": "minimax-m3",
-            "reason": "llama-swap :8086 unreachable -> MiniMax-M3 multimodal fallback",
+            "reason": "litellm/llama-swap unreachable -> MiniMax-M3 multimodal fallback",
         }
     return {
         "backend": "minimax-m3-failed",
-        "reason": f"llama-swap :8086 unreachable AND MiniMax-M3 fallback failed: {probe['error']}",
+        "reason": f"litellm/llama-swap unreachable AND MiniMax-M3 fallback failed: {probe['error']}",
     }
 
 
