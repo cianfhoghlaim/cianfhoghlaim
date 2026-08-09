@@ -282,7 +282,15 @@ models:
 # =============================================================================
 # Health endpoint + OpenAI-compatible proxy configuration
 # =============================================================================
-healthCheckTimeout: 30
+# Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: 30s was too
+# short for CPU-only model loads on Docker Desktop macOS (no GPU
+# passthrough -- see compose.yaml note). Confirmed live: qwen3-vl-8b
+# (4.7GB Q4_K_M + 1.1GB F16 mmproj) takes ~81s to load and start serving
+# when run directly with the exact same args llama-swap uses. Larger
+# models in this config (e.g. qwen3-vl-30b-a3b, qwen3.6-27b-mtp,
+# gemma-4-26B-A4B) will take longer still on CPU, so this is set
+# generously rather than tuned to the smallest model.
+healthCheckTimeout: 300
 logLevel: info
 
 # Models that are MLX-only (NOT served here, but documented for reference):
