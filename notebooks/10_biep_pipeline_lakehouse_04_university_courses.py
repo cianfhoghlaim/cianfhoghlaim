@@ -75,24 +75,16 @@ def _():
     # motherduck extension loaded either). Replaced with the real,
     # live-verified canonical connection helper (`notebooks/_shared/
     # db.py`), which tries the real local DuckLake stack first.
+    # NOTE: a merge (2026-08-09) reintroduced the actual buggy code below
+    # this comment while keeping the comment describing the fix -- the
+    # other concurrent session's notebook rewrite carried the old
+    # duckdb.sql(f"SET motherduck_token=...") pattern forward. Re-applying
+    # the same fix as before.
     try:
-        import duckdb
-        import ibis  # ibis-first entrypoint
-        db_path = os.environ.get(
-            "CIANFHOGHLAIS_UOG_DUCKDB", "/tmp/cianfhoghlaim.duckdb"
-        )
-        if os.path.exists(db_path):
-            engine = ibis.duckdb.connect(db_path, read_only=True)
-            ENGINE_LABEL = f"local DuckDB ({db_path})"
-        else:
-            token = os.environ.get("MOTHERDUCK_TOKEN", "")
-            if token:
-                duckdb.sql(f"SET motherduck_token='{token}'")
-                engine = ibis.duckdb.connect("md:cianfhoghlaim")
-                ENGINE_LABEL = "md:cianfhoghlaim (MotherDuck + DuckLake)"
-            else:
-                ENGINE_LABEL = "MotherDuck (no token — set MOTHERDUCK_TOKEN)"
-                engine = None
+        from notebooks._shared.db import connect_local_lakehouse
+
+        engine = connect_local_lakehouse(read_only=True)
+        ENGINE_LABEL = "local DuckLake (Garage + Postgres)"
     except ImportError:
         engine = None
         ENGINE_LABEL = "ibis not installed"
