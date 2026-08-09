@@ -1,0 +1,12 @@
+# =============================================================================
+# NEWT (arm1-oci) — Pangolin Traefik Routing
+# =============================================================================
+# NEWT — the newt client connects OUTBOUND to Pangolin on
+# cianfhoghlaim.ie (not the other way around), so there is no inbound
+# Traefik route to publish.
+#
+# This pangolin.yaml file is a no-op (intentionally empty of routes)
+# per the canonical pattern documented in stacks/newt/pangolin.yaml.
+# =============================================================================
+
+# No routes — newt is an outbound-only client.

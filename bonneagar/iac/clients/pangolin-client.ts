@@ -11,6 +11,7 @@ import type {
   PangolinResource,
   PangolinBlueprint,
   PangolinOlmClient,
+  PangolinClientCert,
 } from "../models/pangolin.ts";
 
 export class PangolinClient {
@@ -147,6 +148,59 @@ export class PangolinClient {
       headers: { Authorization: `Bearer ${this.apiKey}` },
     });
     if (!r.ok) throw new Error(`pangolin delete blueprint ${id} failed: ${r.status} ${await r.text()}`);
+  }
+
+  // -----------------------------------------------------------------------
+  // Client Management (Integrations API)
+  // -----------------------------------------------------------------------
+  // ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+  // openspec change). The Pangolin client-mgmt surface is at
+  // `/v1/org/{orgId}/clients` (NOT `/v1/api/v1/integration/clients` —
+  // the latter is a 404 on this server; the docs at
+  // https://docs.pangolin.net/manage/clients/install-client are
+  // aspirational). The endpoint returns ALL clients (OLM + user +
+  // machine) — filter by `type` client-side if needed.
+  //
+  // Per https://docs.pangolin.net/manage/clients/install-client:
+  //   - User clients are minted for operator-laptop use (the macOS .app
+  //     picks them up via `pangolin login --id <id> --secret <secret>
+  //     --endpoint https://pangolin.cianfhoghlaim.ie`).
+  //   - Machine clients are minted for server-side use (the newt
+  //     container + the pangolin CLI in headless mode).
+  //   - The `secret` field is write-only (returned ONCE on create).
+  // -----------------------------------------------------------------------
+  listClients() {
+    return this.callGet<{ data: { clients: PangolinClientCert[] } }>(
+      `/org/${this.orgId}/clients`,
+    );
+  }
+  getClient(id: number) {
+    return this.callGet<{ data: PangolinClientCert }>(
+      `/org/${this.orgId}/clients/${id}`,
+    );
+  }
+  createClient(opts: {
+    name: string;
+    type: "user" | "machine";
+    siteIds?: number[];
+    expiresIn?: number;
+  }) {
+    return this.call<{ data: { id: number; clientId: string; secret: string } }>(
+      `/org/${this.orgId}/clients`,
+      { name: opts.name, type: opts.type, siteIds: opts.siteIds, expiresIn: opts.expiresIn ?? 0 },
+    );
+  }
+  async deleteClient(id: number) {
+    const r = await fetch(
+      `${this.base}/org/${this.orgId}/clients/${id}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${this.apiKey}` },
+      },
+    );
+    if (!r.ok) {
+      throw new Error(`pangolin delete client ${id} failed: ${r.status} ${await r.text()}`);
+    }
   }
 
   // -----------------------------------------------------------------------

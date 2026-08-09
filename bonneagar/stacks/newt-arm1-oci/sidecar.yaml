@@ -1,0 +1,27 @@
+# =============================================================================
+# NEWT (arm1-oci) — Locket sidecar (sentinel — locket is inline in compose.yaml)
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern, every stack has a sidecar.yaml.
+# For newt-arm1-oci the Locket is declared INLINE in compose.yaml (matching
+# the openclaw/openchamber pattern). This sidecar.yaml is a sentinel that
+# stack-doctor can grep for; the actual locket service lives at
+# compose.yaml:locket.
+# =============================================================================
+
+services:
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: newt-arm1-oci-sidecar-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    networks:
+      - pangolin
+
+networks:
+  pangolin:
+    driver: bridge

@@ -66,6 +66,11 @@ resource_path = [
   "bonneagar/komodo/procedures/deploy-pocket-id-arm1-oci.toml",
   "bonneagar/komodo/procedures/deploy-pangolin-newt-arm1-oci.toml",
   "bonneagar/komodo/procedures/deploy-newt-bunchloch-v2.toml",
+  # ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+  # openspec change): 2 new procedures that mint + deploy the Pangolin
+  # machine + user clients for arm1-oci + bunchloch.
+  "bonneagar/komodo/procedures/deploy-pangolin-client-arm1-oci.toml",
+  "bonneagar/komodo/procedures/deploy-pangolin-client-bunchloch.toml",
   "bonneagar/komodo/procedures/server_id_legend.md",
   "bonneagar/komodo/servers/*.toml",
 ]

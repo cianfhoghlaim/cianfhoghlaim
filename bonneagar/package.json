@@ -8,6 +8,7 @@
   "scripts": {
     "iac:bootstrap": "cd iac && bun run bootstrap",
     "iac:bootstrap-pocketid-admin": "cd iac && bun run bootstrap-pocketid-admin",
+    "iac:bootstrap-pangolin-client": "cd iac && bun run bootstrap-pangolin-client",
     "iac:bootstrap-infisical": "cd iac && bun run bootstrap-infisical",
     "iac:bootstrap-locket-binary": "cd iac && bun run bootstrap-locket-binary",
     "iac:bootstrap-control-plane": "cd iac && bun run bootstrap-control-plane",
@@ -24,6 +25,7 @@
     "iac:sync:secrets": "cd iac && bun run sync:secrets",
     "iac:sync:resources": "cd iac && bun run sync:resources",
     "iac:sync:procedures": "cd iac && bun run sync:procedures",
-    "iac:sync:resource-syncs": "cd iac && bun run sync:resource-syncs"
+    "iac:sync:resource-syncs": "cd iac && bun run sync:resource-syncs",
+    "iac:sync:clients": "cd iac && bun run sync:clients"
   }
 }

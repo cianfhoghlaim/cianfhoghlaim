@@ -34,7 +34,7 @@ If the index is missing or stale, the agent **owns** running
 ### Priority openspec commands
 
 ```bash
-openspec list --specs              # list all 80 capability specs (1 new post-2026-08-15 — secrets-management)
+openspec list --specs              # list all 89 capability specs (1 new post-2026-08-15 — bonneagar-infra-remediation-v2)
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy

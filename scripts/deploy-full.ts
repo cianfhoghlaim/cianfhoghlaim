@@ -5,17 +5,19 @@
  * Per the 2026-08-01-lakehouse-and-reproducible-deploy-v1 openspec change:
  *
  *   "The system MUST provide a `mise run deploy:full` command that brings
- *    up the entire 91-stack platform in 8 phases with healthchecks + a
+ *    up the entire 91-stack platform in 10 phases with healthchecks + a
  *    resumable checkpoint state file at `~/.cianfhoghlaim/deploy-state.json`.
- *    The 8 phases MUST be (in this order):
+ *    The 10 phases MUST be (in this order):
  *      1. preflight-arm-oci
- *      2. control-plane-up
- *      3. lakehouse-up
- *      4. data-stacks-up
- *      5. ocr-backends-up      (added 2026-08-02 post-trilogy-cleanup)
- *      6. agent-surfaces-up
- *      7. dagster-materialize
- *      8. dagster-sensor-health-gate"
+ *      2. iac-auth-rotate         (added 2026-08-15 per the bonneagar-infra-remediation-v2 openspec change)
+ *      3. pocketid-oidc-wire      (added 2026-08-15)
+ *      4. pangolin-client-install (added 2026-08-15)
+ *      5. control-plane-up
+ *      6. lakehouse-up
+ *      7. data-stacks-up
+ *      8. ocr-backends-up         (added 2026-08-02 post-trilogy-cleanup)
+ *      9. agent-surfaces-up
+ *     10. dagster-materialize-and-sensor-health-gate (combined)"
  *
  * This is the TypeScript state machine that owns the resumable checkpoint.
  * The shell entry (`scripts/deploy-full.sh`) delegates here after preflight.
@@ -34,6 +36,12 @@
  *     backends (paddleocr + dots-ocr + olmocr + docling-serve + mlx-omni +
  *     llama-swap + meaisinfoghlaim). Renumbered subsequent phases 5→6, 6→7,
  *     7→8.
+ *
+ * EXTENDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+ * openspec change): 3 NEW phases (iac-auth-rotate, pocketid-oidc-wire,
+ * pangolin-client-install) inserted between the preflight and control-plane;
+ * dagster-materialize + dagster-sensor-health-gate merged into one phase
+ * 10 to keep the total at 10 phases.
  *
  * Usage:
  *   bun run scripts/deploy-full.ts                    # full deploy from phase 1
@@ -95,49 +103,67 @@ const PHASES: Phase[] = [
     command: "bun run scripts/preflight-arm-oci.ts",
   },
   {
+    // ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+    // openspec change). 3-way credential rotation: Pangolin + Komodo + Infisical.
     id: 2,
+    name: "iac-auth-rotate",
+    description: "iac:rotate-auth — 3-way credential rotation (Pangolin API key + Komodo password + Infisical token)",
+    command: `bun run --cwd ${REPO_ROOT}/bonneagar iac:rotate-auth`,
+  },
+  {
+    // ADDED 2026-08-15: wire Pocket ID as OIDC for Komodo + Pangolin.
+    id: 3,
+    name: "pocketid-oidc-wire",
+    description: "iac:wire-pocketid-as-oidc — wire Pocket ID as the OIDC IdP for Komodo + Pangolin (idempotent)",
+    command: `bun run --cwd ${REPO_ROOT}/bonneagar iac:wire-pocketid-as-oidc --domain=cianfhoghlaim.ie`,
+  },
+  {
+    // ADDED 2026-08-15: install pangolin CLI + mint Pangolin client + render newt compose.
+    id: 4,
+    name: "pangolin-client-install",
+    description: "iac:bootstrap-pangolin-client — install pangolin CLI + mint a Pangolin client + render newt compose for arm1-oci",
+    command: `bun run --cwd ${REPO_ROOT}/bonneagar iac:bootstrap-pangolin-client --host=arm1-oci --type=machine`,
+  },
+  {
+    id: 5,
     name: "control-plane-up",
     description: `infisical + pangolin + komodo + pocket-id + tinyauth (target=${CONTROL_PLANE_TARGET})`,
     command: `bun run --cwd ${REPO_ROOT}/bonneagar iac:bootstrap-control-plane --target=${CONTROL_PLANE_TARGET}`,
   },
   {
-    id: 3,
+    id: 6,
     name: "lakehouse-up",
     description: "postgres + garage + clickhouse + redis + lakekeeper + lance-namespace",
     command: `cd ${REPO_ROOT} && docker compose -f bonneagar/stacks/lakehouse/compose.yaml -f bonneagar/stacks/lakehouse/sidecar.yaml up -d`,
   },
   {
-    id: 4,
+    id: 7,
     name: "data-stacks-up",
     description: `${DATA_STACKS.length} data stacks: ${DATA_STACKS.join(", ")}`,
     command: `loop:${DATA_STACKS.join(",")}`,
     isMultiStack: true,
   },
   {
-    id: 5,
+    id: 8,
     name: "ocr-backends-up",
     description: `${OCR_STACKS.length} OCR backends: ${OCR_STACKS.join(", ")}`,
     command: `loop:${OCR_STACKS.join(",")}`,
     isMultiStack: true,
   },
   {
-    id: 6,
+    id: 9,
     name: "agent-surfaces-up",
     description: `${AGENT_STACKS.length} agent surfaces: ${AGENT_STACKS.join(", ")}`,
     command: `loop:${AGENT_STACKS.join(",")}`,
     isMultiStack: true,
   },
   {
-    id: 7,
-    name: "dagster-materialize",
-    description: "BIEP v3 Ireland LC5 materialise (the canonical smoke-test asset)",
-    command: "uv run dg launch --module orchestration.definitions --job biiep_v3_ireland_lc5_materialize",
-  },
-  {
-    id: 8,
-    name: "dagster-sensor-health-gate",
-    description: "ocr_completion_sensor + 5 other sensors report ACTIVE state",
-    command: `uv run dg sensor list --json | jq -e '[.[] | select(.sensorName == "ocr_completion_sensor" and .status == "STARTED")] | length == 1'`,
+    // COMBINED 2026-08-15: the original 7 (dagster-materialize) + 8 (dagster-sensor-health-gate)
+    // are merged into a single phase 10 to keep the total at 10 phases.
+    id: 10,
+    name: "dagster-materialize-and-sensor-health-gate",
+    description: "BIEP v3 materialise (the canonical smoke-test asset) + verify ocr_completion_sensor + 5 others are STARTED",
+    command: `uv run dg launch --module orchestration.definitions --job biiep_v3_ireland_lc5_materialize && uv run dg sensor list --json | jq -e '[.[] | select(.sensorName == "ocr_completion_sensor" and .status == "STARTED")] | length == 1'`,
   },
 ];
 

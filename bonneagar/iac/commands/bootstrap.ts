@@ -33,6 +33,7 @@ import { syncAlerts } from "./sync-alerts.ts";
 import { syncSchedules } from "./sync-schedules.ts";
 import { syncActionRecipients } from "./sync-action-recipients.ts";
 import { syncOlm } from "./sync-olm.ts";
+import { syncClients } from "./sync-clients.ts";
 import { pocketIdHealth } from "../auth-pocketid-admin.ts";
 import { ensureBonsIacClient } from "./bootstrap-pocketid-admin.ts";
 import { bootstrapInfisical } from "./bootstrap-infisical.ts";
@@ -167,6 +168,7 @@ export async function bootstrap() {
   if (CLI_FLAGS.withSchedules) await syncSchedules();
   await syncActionRecipients();
   await syncOlm();
+  await syncClients();
 
   // =======================================================================
   // Phase 8: Optional blueprint import

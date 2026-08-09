@@ -11,6 +11,7 @@
   "scripts": {
     "bootstrap": "bun run cli.ts bootstrap",
     "bootstrap-pocketid-admin": "bun run cli.ts bootstrap-pocketid-admin",
+    "bootstrap-pangolin-client": "bun run cli.ts bootstrap-pangolin-client",
     "bootstrap-infisical": "bun run cli.ts bootstrap-infisical",
     "bootstrap-locket-binary": "bun run cli.ts bootstrap-locket-binary",
     "bootstrap-control-plane": "bun run cli.ts bootstrap-control-plane",
@@ -27,7 +28,8 @@
     "sync:secrets": "bun run cli.ts sync:secrets",
     "sync:resources": "bun run cli.ts sync:resources",
     "sync:procedures": "bun run cli.ts sync:procedures",
-    "sync:resource-syncs": "bun run cli.ts sync:resource-syncs"
+    "sync:resource-syncs": "bun run cli.ts sync:resource-syncs",
+    "sync:clients": "bun run cli.ts sync:clients"
   },
   "devDependencies": {
     "@types/bun": "latest"
