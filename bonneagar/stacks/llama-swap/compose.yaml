@@ -31,9 +31,21 @@ services:
       # Symlink to the v4 config
       - ./config.yaml:/etc/llama-swap/config.yaml:ro
       # GGUF cache — populated by the Dagster `model_conversion` asset
-      - ../../stedding/huggingface/gguf:/models/gguf:ro
-      - ../../stedding/huggingface/unsloth:/models/unsloth:ro
-      - ../../stedding/huggingface/mlx-community:/models/mlx-community:ro
+      # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+      # was `../../stedding/...` (2 levels up), which resolves to
+      # `bonneagar/stedding/...` -- a real but EMPTY directory
+      # (confirmed live: `find` returns nothing under it) that is NOT
+      # where GGUF weights actually get downloaded to
+      # (`<repo-root>/stedding/huggingface/gguf/`, 3 levels up from
+      # this file's directory). The identical `../../stedding/...`
+      # pattern in `bonneagar/stacks/litellm/compose.yaml` has the same
+      # off-by-one bug -- flagged there too, not fixed (litellm doesn't
+      # hard-require its HF cache mount to be non-empty to run, so it
+      # wasn't blocking; this one is load-bearing for actually finding
+      # the model weights).
+      - ../../../stedding/huggingface/gguf:/models/gguf:ro
+      - ../../../stedding/huggingface/unsloth:/models/unsloth:ro
+      - ../../../stedding/huggingface/mlx-community:/models/mlx-community:ro
     environment:
       # CPU-only (no Metal passthrough in Docker Desktop on macOS — see
       # note above); 0 GPU layers offloaded.
