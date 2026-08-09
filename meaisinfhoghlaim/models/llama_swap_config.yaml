@@ -9,9 +9,25 @@
 #
 # Each `models:` entry maps an OpenAI-compatible model alias to a `cmd` +
 # `args:` block. The Cmd is the `llama-server` binary shipped inside the
-# `ghcr.io/mostlygeek/llama-swap:v166` container (at /usr/local/bin/llama-server).
-# The Args use environment-variable substitution (${LLAMA_ARG_*}) so the
-# compose.yaml can override them at runtime.
+# `ghcr.io/mostlygeek/llama-swap:cpu` container (at /app/llama-server --
+# confirmed live via `docker exec llama-swap which llama-server`; the
+# `:v166` tag referenced here previously never existed in the GHCR
+# registry, and /usr/local/bin/llama-server isn't where this image puts
+# the binary).
+#
+# Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: Args are
+# literal values, NOT shell-expanded. llama-swap does a direct fork/exec
+# of `cmd` (confirmed live via debug logs: "Executing start command:
+# /app/llama-server, env: " -- no shell involved), so ${VAR:-default}
+# syntax is never expanded and gets passed to llama-server as a literal
+# string, which then fails to parse it (confirmed live: `error while
+# handling argument "--port": stoi`). That syntax only works inside an
+# actual docker-compose.yaml (interpolated by compose itself before the
+# container starts) -- it's meaningless here, where this file is read
+# directly by the llama-swap Go binary. Every arg below is now a literal
+# value (port matches each model's own `proxy:` field; -ngl is 0 for
+# CPU-only, matching compose.yaml's LLAMA_ARG_NGL=0 and the lack of GPU
+# passthrough in Docker Desktop on macOS).
 #
 # 14 GGUF entries registered here:
 #   gemma-4-E2B, gemma-4-E4B, gemma-4-12B, gemma-4-26B-A4B
@@ -36,13 +52,13 @@ models:
       - "--alias"
       - "gemma-4-E2B"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8081}"
+      - "8081"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   "gemma-4-E4B":
     cmd: /app/llama-server
@@ -53,13 +69,13 @@ models:
       - "--alias"
       - "gemma-4-E4B"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8082}"
+      - "8082"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   "gemma-4-12B":
     cmd: /app/llama-server
@@ -70,13 +86,13 @@ models:
       - "--alias"
       - "gemma-4-12B"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8083}"
+      - "8083"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   "gemma-4-26B-A4B":
     cmd: /app/llama-server
@@ -87,13 +103,13 @@ models:
       - "--alias"
       - "gemma-4-26B-A4B"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8084}"
+      - "8084"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── Qwen 3-VL (Alibaba, Oct 2025) — PRIMARY WORKHORSE ──────────────────
   "qwen3-vl-4b":
@@ -105,13 +121,13 @@ models:
       - "--alias"
       - "qwen3-vl-4b"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8085}"
+      - "8085"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   "qwen3-vl-8b":
     cmd: /app/llama-server
@@ -124,13 +140,13 @@ models:
       - "--alias"
       - "qwen3-vl-8b"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8086}"
+      - "8086"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   "qwen3-vl-30b-a3b":
     cmd: /app/llama-server
@@ -143,13 +159,13 @@ models:
       - "--alias"
       - "qwen3-vl-30b-a3b"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8087}"
+      - "8087"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── Qwen 3.6 (Alibaba, Apr 2026) — MTP speculative decoding ────────────
   "qwen3.6-27b-mtp":
@@ -161,13 +177,13 @@ models:
       - "--alias"
       - "qwen3.6-27b-mtp"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8088}"
+      - "8088"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── InternVL3 (Aug 2025) — document understanding specialist ────────────
   "internvl3-8b":
@@ -181,13 +197,13 @@ models:
       - "--alias"
       - "internvl3-8b"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8089}"
+      - "8089"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── GLM-4.6V Flash (zai-org, Dec 2025) — fast / low-cost ───────────────
   "glm-4.6v-flash":
@@ -201,13 +217,13 @@ models:
       - "--alias"
       - "glm-4.6v-flash"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8090}"
+      - "8090"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── PaddleOCR-VL (Jun 2026) — multilingual OCR specialist ──────────────
   "paddleocr-vl-1.6":
@@ -221,13 +237,13 @@ models:
       - "--alias"
       - "paddleocr-vl-1.6"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8091}"
+      - "8091"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── Llama 3.2 Vision (legacy, kept for back-compat) ─────────────────────
   "llama-3.2-vision-11b":
@@ -241,13 +257,13 @@ models:
       - "--alias"
       - "llama-3.2-vision-11b"
       - "--port"
-      - "${LLAMA_ARG_PORT:-8092}"
+      - "8092"
       - "-ngl"
-      - "${LLAMA_ARG_NGL:-99}"
+      - "0"
       - "-c"
-      - "${LLAMA_ARG_CTX_SIZE:-32768}"
+      - "32768"
       - "--temp"
-      - "${LLAMA_ARG_TEMP:-0.0}"
+      - "0.0"
 
   # ─── Gemma 3 (legacy, kept for back-compat) ─────────────────────────────
   # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this entry
@@ -271,13 +287,13 @@ models:
   #     - "--alias"
   #     - "gemma-3-4b"
   #     - "--port"
-  #     - "${LLAMA_ARG_PORT:-8093}"
+  #     - "8093"
   #     - "-ngl"
-  #     - "${LLAMA_ARG_NGL:-99}"
+  #     - "0"
   #     - "-c"
-  #     - "${LLAMA_ARG_CTX_SIZE:-32768}"
+  #     - "32768"
   #     - "--temp"
-  #     - "${LLAMA_ARG_TEMP:-0.0}"
+  #     - "0.0"
 
 # =============================================================================
 # Health endpoint + OpenAI-compatible proxy configuration
