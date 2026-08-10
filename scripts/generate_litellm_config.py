@@ -383,6 +383,13 @@ litellm_settings:
   set_verbose: false
   telemetry: false
   cache: false
+  # Per the lakehouse-multi-subject-multi-model-rollout change: these
+  # env vars were already passed into the litellm container but were
+  # completely inert without a success_callback/failure_callback entry
+  # -- live-verified this doesn't break requests (degrades gracefully
+  # to a "client disabled" warning when the Langfuse keys are empty).
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
   # Per openspec/changes/litellm-minimax-vendor-derisking/:
   # The 3 OpenCode Go slots are rotated via 3 separate env vars
   # (OPENCODE_GO_API_KEY_0, _1, _2). See compose.yaml env section.
