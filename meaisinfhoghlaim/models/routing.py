@@ -34,7 +34,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from meaisinfhoghlaim.models.model_registry import model_for
+# Per the lakehouse-multi-subject-multi-model-rollout change: the
+# module-level model_for("ocr_vision", "default") calls this file used
+# to make were removed (ocr_vision no longer supports role-based
+# resolve() at all -- see model_registry.py::_ocr_vision_entries()'s
+# docstring), so the `model_for` import is no longer needed here.
 
 
 @dataclass
@@ -63,12 +67,21 @@ ROUTING_TABLE: dict[tuple[str, str], "RoutingConfig"] = {
     # Heritage + Hidden Heritages
     ("heritage", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
     # Canuint (audio + text)
-    ("canuint", "*"): RoutingConfig(client="LlamaSwap", model=model_for("ocr_vision", "default"), tier="tier2_medium"),
+    # Per the lakehouse-multi-subject-multi-model-rollout change:
+    # ocr_vision entries no longer support resolve(family, role) at all
+    # (see model_registry.py::_ocr_vision_entries()'s docstring) --
+    # model_for("ocr_vision", "default") used to raise a collision-prone
+    # KeyError-then-first-registered-wins lookup that resolved to
+    # "gemma-4-12B" (the first tier2_medium-tagged entry in VISION_MODELS'
+    # dict order). Hardcoded to that same literal value here to preserve
+    # existing routing behavior exactly, without depending on a resolve()
+    # semantics that no longer exists for this family.
+    ("canuint", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-12B", tier="tier2_medium"),
     # Universal Dependencies Celtic Treebanks
     ("ud_celtic", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
     ("ud_celtic", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    # Local documents by subject (OCR)
-    ("local_documents", "*"): RoutingConfig(client="LlamaSwap", model=model_for("ocr_vision", "default"), tier="tier2_medium"),
+    # Local documents by subject (OCR) — same fix/rationale as "canuint" above.
+    ("local_documents", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-12B", tier="tier2_medium"),
     # Celtic curriculum (6 Celtic languages)
     ("celtic_curriculum", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
     ("celtic_curriculum", "cy"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),

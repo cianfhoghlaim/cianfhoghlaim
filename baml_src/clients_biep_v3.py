@@ -13,9 +13,15 @@ are the implementation.
 Per the centralized-model-registry openspec change, the 3 model
 strings below are resolved from MODEL_REGISTRY at import time:
 
-  BIEPV3Extract        → text_llm/default               → "minimax-m3"
-  BIEPV3ExtractStrong  → text_llm/default               → "minimax-m3"
-  BIEPV3Vision         → ocr_vision/qwen3_vl_default    → "qwen3-vl-8b"
+  BIEPV3Extract        → text_llm/default (resolve)      → "minimax-m3"
+  BIEPV3ExtractStrong  → text_llm/default (resolve)      → "minimax-m3"
+  BIEPV3Vision         → ocr_vision, keyed lookup         → "local/vision/qwen3-vl-8b"
+
+  Per the lakehouse-multi-subject-multi-model-rollout change:
+  BIEPV3Vision now uses a direct MODEL_REGISTRY.get("qwen3-vl-8b") keyed
+  lookup rather than resolve(family, role) -- ocr_vision entries no
+  longer participate in role-based resolution at all (see
+  model_registry.py::_ocr_vision_entries()'s docstring for why).
 
 The historical hardcoded fallbacks are preserved for minimal
 container builds where MODEL_REGISTRY (meaisinfhoghlaim) is
@@ -47,15 +53,29 @@ def _resolve_text_llm_default() -> str:
 
 
 def _resolve_ocr_vision_qwen3_vl_default() -> str:
-    """Resolve ocr_vision/qwen3_vl_default from MODEL_REGISTRY (qwen3-vl-8b).
+    """Resolve the default OCR vision client (qwen3-vl-8b) from MODEL_REGISTRY.
 
-    The BAML routing layer expects the LiteLLM alias prefix
-    ``local/vision/`` so we reconstruct it from the registry key.
+    Per the lakehouse-multi-subject-multi-model-rollout change: this
+    used to call ``MODEL_REGISTRY.resolve("ocr_vision", "qwen3_vl_default")``,
+    a role that never existed in the registry's role-map (confirmed
+    live: always raised ``KeyError``, silently caught by the broad
+    ``except Exception`` below, meaning this function's "resolve from
+    the centralized registry" docstring claim never actually executed —
+    it always fell through to the hardcoded ``_BIEPV3_VISION_FALLBACK``
+    string, which happened to be correct by coincidence).
+
+    `ocr_vision` entries no longer use `resolve(family, role)` at all
+    (see `model_registry.py::_ocr_vision_entries()` for why) — a direct
+    keyed lookup is the correct tool here for "give me the one specific
+    default model this caller needs", and it actually executes/resolves
+    for real, unlike the old dead code path.
     """
     try:
         from meaisinfhoghlaim.models import MODEL_REGISTRY
-        key = MODEL_REGISTRY.resolve("ocr_vision", "qwen3_vl_default")
-        return f"local/vision/{key}"
+        entry = MODEL_REGISTRY.get("qwen3-vl-8b")
+        if entry is not None and entry.litellm_alias:
+            return entry.litellm_alias
+        return _BIEPV3_VISION_FALLBACK
     except Exception:  # noqa: BLE001 — registry unavailable in dev
         return _BIEPV3_VISION_FALLBACK
 

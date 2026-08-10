@@ -15,13 +15,23 @@ other 4 model families:
 6. ``voice`` — the 5 voice/ASR/TTS models (whisper-large + wav2vec2-irish + chatterbox + aba-tts)
 7. ``translation`` — the 3 translation models (opus-mt + m2m100 + nllb)
 
-The canonical API is the 2-axis key (family, role). Consumers resolve
-a specific model via:
+The canonical API is the 2-axis key (family, role) for families where a
+single "the" model per role genuinely makes sense:
 
     MODEL_REGISTRY.resolve("text_llm", "default")           # -> "minimax-m3"
-    MODEL_REGISTRY.resolve("ocr_vision", "diagram")         # -> "molmo2-8b"
     MODEL_REGISTRY.resolve("voice", "tts")                 # -> "ResembleAI/chatterbox"
     MODEL_REGISTRY.filter(family="embedder")                # -> list of 3 entries
+
+Per the lakehouse-multi-subject-multi-model-rollout change,
+`ocr_vision` is the one family where `resolve(family, role)` is NOT the
+right tool — the platform's actual goal there is comparing multiple
+models against the same input (cost/quality benchmarking), not
+resolving a single "the" model. Use `filter()` for `ocr_vision`:
+
+    MODEL_REGISTRY.filter(family="ocr_vision", available=True)
+    # -> every real candidate model, each with full metadata (backend,
+    #    litellm_alias, tier, notes, ...), for running a comparison
+    #    across all of them rather than picking one.
 
 This module is the canonical home for the
 `centralized-model-registry` openspec capability. The legacy
@@ -101,6 +111,17 @@ class ModelRegistryEntry:
         notes: Free-form documentation.
         languages: Languages this model is specialized for (None =
             language-agnostic).
+        tier: Free-form descriptive grouping (e.g. the original OCRModel
+            tier: ``"tier1_heavy"`` / ``"tier2_medium"`` / ``"tier3_light"``
+            / ``"specialist"`` / ``"legacy"``). Purely descriptive
+            metadata, distinct from `role` -- per the
+            lakehouse-multi-subject-multi-model-rollout change,
+            `ocr_vision` entries no longer collapse this grouping into
+            `role` (that caused 15 silent `resolve(family, role)`
+            collisions, e.g. 9 different OCR models all claiming
+            `role="specialist"`, since `resolve()`'s single-winner
+            semantics are wrong for a family the platform wants to
+            compare across, not arbitrate a single "the" model for).
     """
 
     key: str
@@ -116,6 +137,7 @@ class ModelRegistryEntry:
     env_var: str | None = None
     notes: str = ""
     languages: list[str] | None = None
+    tier: str | None = None
 
 
 # ─── The 5 model families ──────────────────────────────────────────────────
@@ -123,11 +145,33 @@ class ModelRegistryEntry:
 
 # 1. ocr_vision — pull from the existing VISION_MODELS dict
 def _ocr_vision_entries() -> dict[str, ModelRegistryEntry]:
-    """Project the 22-entry VISION_MODELS into ModelRegistryEntry form.
+    """Project the 24-entry VISION_MODELS into ModelRegistryEntry form.
 
-    Each VISION_MODELS key maps to one entry with role derived from the
-    existing `role: ModelRole` field on OCRModel
-    (tier1_heavy | tier2_medium | tier3_light | specialist | legacy).
+    Per the lakehouse-multi-subject-multi-model-rollout change: `role`
+    used to be derived from OCRModel's tier field (tier1_heavy ->
+    "primary", tier2_medium -> "default", etc.), collapsing 24 distinct
+    models into only 5 buckets -- confirmed live this caused 15 silent
+    `(family, role)` collisions (e.g. 9 different models all claiming
+    `role="specialist"`, first-registered winning, the rest permanently
+    unreachable via `resolve()`). That's the wrong tool for this family:
+    the platform's actual goal for `ocr_vision` is comparing multiple
+    models against the same input (cost/quality benchmarking), not
+    having `resolve()` arbitrarily pick a single "the" model per role.
+
+    Fix: `role` is now the model's own unique `key` (so `resolve(
+    "ocr_vision", <any-key>)` degrades to a harmless, always-correct
+    keyed lookup -- no collisions possible, since keys are already
+    unique). The original tier grouping is preserved as purely
+    descriptive metadata on the new `tier` field instead. Real
+    model-comparison code should use `MODEL_REGISTRY.filter(
+    family="ocr_vision", available=True)` to get every real candidate
+    with full metadata, not `resolve()`, which was never the right tool
+    for "give me several models to compare."
+
+    Other families (text_llm, embedder, rerank, image_gen, voice,
+    translation) are untouched -- their `resolve(family, role)`
+    single-winner semantics are correct for genuinely-interchangeable
+    "give me the default/strong/fast model for this family" use cases.
     """
     entries: dict[str, ModelRegistryEntry] = {}
     for vkey, vmodel in VISION_MODELS.items():
@@ -136,22 +180,23 @@ def _ocr_vision_entries() -> dict[str, ModelRegistryEntry]:
         role_str = getattr(vmodel, "role", "specialist")
         if hasattr(role_str, "value"):  # backwards-compat if it's an enum
             role_str = role_str.value
-        # Map the tier to a (family, role) pair
-        role_map = {
+        # Preserve the original tier grouping as descriptive metadata
+        # only -- no longer used as the resolve() lookup key.
+        tier_map = {
             "tier1_heavy": "primary",
             "tier2_medium": "default",
             "tier3_light": "lightweight",
             "specialist": "specialist",
             "legacy": "legacy",
         }
-        role = role_map.get(role_str, role_str)
+        tier = tier_map.get(role_str, role_str)
         # vmodel.backend is a ModelBackend enum OR a string
         backend_raw = getattr(vmodel, "backend", "unknown")
         backend_val = backend_raw.value if hasattr(backend_raw, "value") else str(backend_raw)
         entries[vkey] = ModelRegistryEntry(
             key=vkey,
             family="ocr_vision",
-            role=role,
+            role=vkey,  # unique per model -- see docstring for why
             display_name=getattr(vmodel, "name", vkey),
             unsloth_id=getattr(vmodel, "unsloth_id", None),
             mlx_id=getattr(vmodel, "mlx_id", None),
@@ -160,6 +205,7 @@ def _ocr_vision_entries() -> dict[str, ModelRegistryEntry]:
             available=getattr(vmodel, "available", True),
             litellm_alias=f"local/vision/{vkey}" if getattr(vmodel, "available", True) else None,
             notes=getattr(vmodel, "notes", ""),
+            tier=tier,
         )
     return entries
 
