@@ -15,7 +15,7 @@ services:
       - HF_HOME=/stedding/huggingface
       - HF_HUB_CACHE=/stedding/huggingface/hub
     volumes:
-      - ../../stedding/huggingface:/stedding/huggingface:ro
+      - ../../../stedding/huggingface:/stedding/huggingface:ro
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8765/health || exit 1"]
       interval: 30s; timeout: 10s; retries: 3; start_period: 30s

@@ -6,7 +6,7 @@ services:
   # ---------------------------------------------------------------------------
   calcom-web:
     build:
-      context: ../../stedding/repos/cal.diy
+      context: ../../../stedding/repos/cal.diy
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_LICENSE_CONSENT=agree

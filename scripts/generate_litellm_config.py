@@ -71,12 +71,37 @@ BACKEND_URLS = {
     ModelBackend.LITELLM: None,  # routed through BAML clients, no direct URL
 }
 
+# Per the lakehouse-multi-subject-multi-model-rollout change: the
+# TRANSFORMERS entry in BACKEND_URLS above points at a service that was
+# NEVER real -- no `bonneagar/stacks/transformers/` directory exists
+# anywhere in the repo. The checked-in config.yaml already hand-patches
+# every TRANSFORMERS-backend model to a real service (per its own
+# "2026-07-31 REWIRED to real backends" comment block), but this
+# generator was never updated to match -- running the documented regen
+# command (`python scripts/generate_litellm_config.py > config.yaml`,
+# per this file's own header) would silently revert that fix. There's no
+# single correct URL for "the" TRANSFORMERS backend (each model was
+# rewired to a *different* real service), so this is a per-key override
+# checked before the generic BACKEND_URLS fallback, mirroring the exact
+# routing already checked into config.yaml.
+TRANSFORMERS_BACKEND_OVERRIDES = {
+    "deepseek-ocr-2": "http://docling-serve:5001/v1",
+    "molmo2-4b": "http://docling-serve:5001/v1",
+    "molmo2-8b": "http://docling-serve:5001/v1",
+    "olmocr-2-7b-1025": "http://olmocr:8003/v1",
+    "uccix-mistral-24b": "http://mlx-omni:10240/v1",
+    "uccix-llama-3.1-8b": "http://mlx-omni:10240/v1",
+}
+
 BACKEND_API_KEY = "not-needed"  # all local services share this
 
 
 def render_model_entry(key: str, model) -> str:
     """Render a single litellm model_list entry."""
-    api_base = BACKEND_URLS.get(model.backend)
+    if model.backend == ModelBackend.TRANSFORMERS and key in TRANSFORMERS_BACKEND_OVERRIDES:
+        api_base = TRANSFORMERS_BACKEND_OVERRIDES[key]
+    else:
+        api_base = BACKEND_URLS.get(model.backend)
     if api_base is None:
         # LITELLM backend — skip (these are routed through BAML clients)
         return ""

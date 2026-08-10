@@ -21,8 +21,8 @@ services:
     ports:
       - "10240:10240"   # mlx-omni OpenAI-compatible API
     volumes:
-      - ../../stedding/huggingface/mlx:/models:ro
-      - ../../stedding/huggingface:/stedding/huggingface:ro
+      - ../../../stedding/huggingface/mlx:/models:ro
+      - ../../../stedding/huggingface:/stedding/huggingface:ro
     environment:
       - HF_HOME=/stedding/huggingface
       - HF_HUB_CACHE=/stedding/huggingface/hub

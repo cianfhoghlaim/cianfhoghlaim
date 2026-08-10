@@ -38,7 +38,7 @@ services:
       - "4000:4000" # Map the container port to the host
     volumes:
       - ./config:/app/config:ro
-      - ../../stedding/huggingface:/stedding/huggingface:ro  # shared HF cache (read-only)
+      - ../../../stedding/huggingface:/stedding/huggingface:ro  # shared HF cache (read-only)
     environment:
       # Gateway
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?LITELLM_MASTER_KEY must be set via Locket/Infisical}

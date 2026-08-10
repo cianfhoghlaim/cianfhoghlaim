@@ -29,7 +29,7 @@ services:
       - OTEL_SERVICE_NAME=docling-serve
     volumes:
       - docling_models:/home/docling/models
-      - ../../stedding/huggingface:/stedding/huggingface:ro
+      - ../../../stedding/huggingface:/stedding/huggingface:ro
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:5001/v1/health || exit 1"]
       interval: 30s

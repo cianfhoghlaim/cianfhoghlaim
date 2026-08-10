@@ -15,7 +15,7 @@ services:
     # the Phase 5 Dagster model_conversion asset, or pre-existing .gguf files
     # downloaded directly from unsloth/).
     volumes:
-      - ../../stedding/huggingface/gguf:/models:ro
+      - ../../../stedding/huggingface/gguf:/models:ro
       - ./llama-swap-config.yaml:/etc/llama-swap/config.yaml:ro
     command:
       - "--config"

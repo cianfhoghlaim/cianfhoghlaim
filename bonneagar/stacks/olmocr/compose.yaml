@@ -17,7 +17,7 @@ services:
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_SERVICE_NAME=olmocr
     volumes:
-      - ../../stedding/huggingface:/stedding/huggingface:ro
+      - ../../../stedding/huggingface:/stedding/huggingface:ro
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8003/health || exit 1"]
       interval: 30s
