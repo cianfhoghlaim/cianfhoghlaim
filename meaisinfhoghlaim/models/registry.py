@@ -750,10 +750,14 @@ VISION_MODELS: dict[str, OCRModel] = {
         ),
     ),
 }
-# Total: 26 entries (24 v4 + 2 v5 BIEP v2 entrants)
-# Verified live on HF Hub 2026-06-29 for the original 24; the 2 v5
-# entries (unstract-api, docling-serve) are the Unstract + Docling HTTP
-# APIs from the bonneagar stacks (no HF model ID).
+# Total: 24 entries. Live-confirmed count (len(VISION_MODELS) == 24) --
+# this comment previously said 26 ("24 v4 + 2 v5 BIEP v2 entrants":
+# unstract-api, docling-serve). Both of those keys are real and present
+# (confirmed), so the "+2" in the old comment was simply an arithmetic
+# error, not a sign either was dropped — they're 2 of the 24, not
+# additional to it. No duplicate-key issue is silently hiding entries
+# either (confirmed via a live count, not just re-reading this dict
+# literal).
 
 
 # ─── Classical OCR (Docker compose stacks) ──────────────────────────────────

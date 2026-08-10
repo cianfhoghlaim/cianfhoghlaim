@@ -5,7 +5,9 @@
 # (24-entry VISION_MODELS dict, Unsloth-first fallback chain)
 #
 # This file is symlinked from:
-#   bonneagar/stacks/llama-swap/config.yaml → ../../ocr/models/llama_swap_config.yaml
+#   bonneagar/stacks/llama-swap/config.yaml → ../../../meaisinfhoghlaim/models/llama_swap_config.yaml
+#   (confirmed live via `readlink`; the old ../../ocr/models/... path
+#   predates the registry's move back to meaisinfhoghlaim/models/)
 #
 # Each `models:` entry maps an OpenAI-compatible model alias to a `cmd`
 # (the full command line, binary + all flags, as ONE folded string) plus
