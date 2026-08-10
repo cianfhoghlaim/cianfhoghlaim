@@ -100,6 +100,14 @@ class OCRExtractionMetrics:
     estimated_cost: float = 0.0
     success: bool = True
     error: str | None = None
+    # Added per the lakehouse-multi-subject-multi-model-rollout change,
+    # for real cross-model resource-cost comparison (not just per-call
+    # cost/latency) -- model_size_gb from the registry/GGUF file size,
+    # ram_mb from a live measurement where available (both optional
+    # since not every caller can supply them, e.g. cloud-API models
+    # have no local GGUF file or measurable local RAM footprint).
+    model_size_gb: float | None = None
+    ram_mb: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -112,6 +120,8 @@ class OCRExtractionMetrics:
             "estimated_cost": round(self.estimated_cost, 6),
             "success": self.success,
             "error": self.error,
+            "model_size_gb": self.model_size_gb,
+            "ram_mb": self.ram_mb,
         }
 
 
@@ -200,6 +210,12 @@ class OCRObservability:
                 estimated_cost=estimated_cost,
                 success=trace_ctx.success,
                 error=trace_ctx.error,
+                # Read from metadata (set_result's metadata= or the
+                # trace_extraction() caller's initial metadata=) rather
+                # than new constructor params, matching how `backend`
+                # above already flows through.
+                model_size_gb=trace_ctx.metadata.get("model_size_gb"),
+                ram_mb=trace_ctx.metadata.get("ram_mb"),
             )
             self._metrics.append(metrics)
 

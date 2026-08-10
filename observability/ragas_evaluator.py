@@ -105,20 +105,36 @@ class RagasEvaluator:
 
     def __init__(
         self,
-        model: str = "gemini/gemini-1.5-flash",
+        model: str = "minimax-m3",
         embeddings_model: str = "text-embedding-3-small",
     ):
         """
         Initialize Ragas evaluator.
 
         Args:
-            model: LLM model for evaluation (LiteLLM format)
+            model: LLM model for evaluation. Routed through the local
+                litellm gateway (LITELLM_BASE_URL, default
+                http://localhost:4000/v1) as an OpenAI-compatible model
+                name -- per the lakehouse-multi-subject-multi-model-
+                rollout change, this used to default to
+                "gemini/gemini-1.5-flash" but was never actually wired
+                into the real evaluate() call below (confirmed live:
+                `self.model` was dead -- ragas fell back to its own
+                default OpenAI resolution regardless, which fails in
+                this environment since OPENAI_API_KEY is a placeholder
+                dev key, not a real one). Now defaults to "minimax-m3",
+                the same real, already-working text model this repo's
+                BAML clients use, routed via the local litellm gateway.
             embeddings_model: Embedding model for semantic similarity
+                (not yet wired into evaluate() either -- same class of
+                gap, left as a separate, smaller follow-up since none of
+                the metrics this module currently calls need embeddings).
         """
         self.model = model
         self.embeddings_model = embeddings_model
         self._metrics = None
         self._initialized = False
+        self._llm = None
 
     def _initialize(self) -> bool:
         """Initialize Ragas metrics lazily."""
@@ -138,8 +154,13 @@ class RagasEvaluator:
                 faithfulness,
             )
 
-            # Configure LLM (using LiteLLM via environment)
-            os.environ.setdefault("LITELLM_MODEL", self.model)
+            # Build a real ragas LLM wrapper pointed at the local litellm
+            # gateway, so evaluate() actually uses `self.model` instead
+            # of silently falling back to ragas's own default OpenAI
+            # resolution (confirmed live: that default fails here, since
+            # OPENAI_API_KEY is a placeholder dev key in this
+            # environment, not a real one).
+            self._llm = self._build_llm()
 
             self._metrics = {
                 "faithfulness": faithfulness,
@@ -156,6 +177,47 @@ class RagasEvaluator:
         except Exception as e:
             logger.error(f"Failed to initialize Ragas: {e}")
             return False
+
+    def _build_llm(self):
+        """Build a real ragas LLM wrapper routed through the local
+        litellm gateway, so `self.model` (an OpenAI-compatible model
+        name litellm already knows how to route, e.g. "minimax-m3" or
+        "local/vision/qwen3-vl-8b") is what actually judges each
+        evaluation, not ragas's own default OpenAI resolution.
+
+        Returns None (not raises) on any failure -- evaluate() falls
+        back to ragas's default LLM resolution in that case, same
+        graceful-degradation contract as the rest of this module.
+        """
+        try:
+            from openai import OpenAI
+            from ragas.llms import llm_factory
+
+            # NOTE: our "litellm" here is the litellm PROXY SERVICE
+            # (bonneagar/stacks/litellm), reached over plain HTTP as an
+            # OpenAI-compatible REST endpoint -- not the `litellm`
+            # Python SDK package (confirmed live: not installed in this
+            # environment). ragas's `adapter="litellm"` is for the SDK
+            # client object specifically and expects instructor-SDK
+            # patching that a raw HTTP client doesn't have -- confirmed
+            # live: passing a plain openai.OpenAI() client with
+            # adapter="litellm" produced `Completions.create() got an
+            # unexpected keyword argument 'response_model'`. The correct
+            # adapter for a real openai.OpenAI()-shaped client pointed
+            # at any OpenAI-compatible REST endpoint (which is exactly
+            # what our litellm proxy is) is the default "openai" adapter.
+            base_url = (
+                os.environ.get("CIANFHOGHLAIM_LITELLM_URL")
+                or os.environ.get("LITELLM_BASE_URL")
+                or "http://localhost:4000/v1"
+            )
+            api_key = os.environ.get("LITELLM_MASTER_KEY", "not-needed")
+            client = OpenAI(base_url=base_url, api_key=api_key)
+            return llm_factory(self.model, client=client)
+        except Exception as e:  # noqa: BLE001 — best-effort, graceful fallback
+            logger.warning(f"Could not build litellm-routed ragas LLM ({e}); "
+                            "falling back to ragas's default LLM resolution")
+            return None
 
     async def evaluate(
         self,
@@ -201,17 +263,36 @@ class RagasEvaluator:
             else:
                 selected_metrics = list(self._metrics.values())
 
-            # Run evaluation
-            result = evaluate(dataset, metrics=selected_metrics)
+            # Run evaluation. Pass llm=self._llm (built in _initialize())
+            # so this actually uses `self.model` via the local litellm
+            # gateway -- confirmed live this was previously silently
+            # ignored, falling back to ragas's own default OpenAI
+            # resolution regardless of what self.model was set to.
+            result = evaluate(dataset, metrics=selected_metrics, llm=self._llm)
 
-            # Parse results
+            # Parse results. Per the lakehouse-multi-subject-multi-model-
+            # rollout change: ragas 0.4.x's EvaluationResult has no
+            # dict-style .get() (confirmed live: `'EvaluationResult'
+            # object has no attribute 'get'`) -- only `.to_pandas()` is
+            # a stable public accessor, so read each metric as the mean
+            # of its column (NaN-safe: pandas .mean() skips NaN rows,
+            # returning NaN itself only if ALL rows are NaN for that
+            # metric, which we normalize to None).
+            df = result.to_pandas()
+
+            def _metric_mean(col: str) -> float | None:
+                if col not in df.columns:
+                    return None
+                val = df[col].mean()
+                return None if val != val else float(val)  # NaN != NaN
+
             eval_result = EvaluationResult(
-                faithfulness=result.get("faithfulness"),
-                answer_relevancy=result.get("answer_relevancy"),
-                context_precision=result.get("context_precision"),
-                context_recall=result.get("context_recall"),
-                answer_correctness=result.get("answer_correctness"),
-                sample_scores=result.to_pandas().to_dict("records") if hasattr(result, "to_pandas") else [],
+                faithfulness=_metric_mean("faithfulness"),
+                answer_relevancy=_metric_mean("answer_relevancy"),
+                context_precision=_metric_mean("context_precision"),
+                context_recall=_metric_mean("context_recall"),
+                answer_correctness=_metric_mean("answer_correctness"),
+                sample_scores=df.to_dict("records"),
                 metadata={"sample_count": len(samples), "model": self.model},
             )
 
