@@ -342,6 +342,33 @@ def land_comparison_results(results: list[ModelComparisonResult]) -> int:
     con = connect_ducklake()
     df = pd.DataFrame([r.to_dict() for r in results])
 
+    # Force stable, explicit dtypes rather than letting pandas/DuckDB
+    # infer them from whatever happens to be in THIS particular batch.
+    # Confirmed live this is a real footgun: a batch whose `error`
+    # column was all-None (every model succeeded) got CREATE TABLE AS
+    # SELECT'd with an ambiguous/wrong inferred type for that column: a
+    # later INSERT with real non-null error strings then failed with
+    # `Conversion Error: Could not convert string '...' to INT32`. Using
+    # pandas' nullable "string"/"Int64"/"Float64" dtypes (not the bare
+    # numpy-backed defaults) makes DuckDB map these correctly to
+    # VARCHAR/BIGINT/DOUBLE regardless of how many nulls are in this
+    # particular batch.
+    string_cols = [
+        "run_id", "run_at", "subject", "source_pdf", "model_key",
+        "litellm_alias", "backend", "tier", "extracted_text", "error",
+    ]
+    int_cols = ["page_number", "prompt_tokens", "completion_tokens"]
+    float_cols = [
+        "latency_ms", "prompt_ms", "predicted_ms", "predicted_per_second",
+        "faithfulness_score", "model_size_gb",
+    ]
+    for col in string_cols:
+        df[col] = df[col].astype("string")
+    for col in int_cols:
+        df[col] = df[col].astype("Int64")
+    for col in float_cols:
+        df[col] = df[col].astype("Float64")
+
     existing = con.execute(
         "SELECT count(*) FROM information_schema.tables "
         f"WHERE table_schema = '{SCHEMA_NAME}' AND table_name = 'model_comparison_runs'"

@@ -67,10 +67,22 @@ DEFAULT_BAML_FUNCTION = "b.ExtractJCCurriculum"
 def biiep_ocr_ensemble(context: AssetExecutionContext) -> dict[str, Any]:
     """The orchestrator for the BIEP v2 OCR ensemble.
 
-    The real implementation will iterate over all incoming PDFs in the
-    BIEP v2 jurisdiction pipelines (JC + England) and call
-    `EnsembledExtractor.extract()` for each. The output schema is the
-    materialized DuckLake rows for the 4 paths + the voted canonical.
+    Per the lakehouse-multi-subject-multi-model-rollout change: this was
+    a confirmed stub, unconditionally returning
+    `{"rows_landed": 0, "ragas_passed": False, "ragas_score": 0.0}` even
+    when `ENSEMBLE_AVAILABLE` was True. Wired to a real implementation,
+    but a SMALLER one than this asset's original full vision (iterate
+    all 154 BIEP v2 jurisdiction × subject × board assets via
+    `EnsembledExtractor`, landing 4*154 per-path + 154 voted rows) --
+    that needs a deep understanding of the BIEP v2 jurisdiction-pipeline
+    asset graph not investigated this pass, and guessing at it risks a
+    plausible-looking but wrong implementation. Instead, this now runs
+    the real `meaisinfhoghlaim.models.benchmark` cross-model comparison
+    harness (the same one built this change) against the real local LC
+    corpus, landing genuine rows into `leaving_cert.model_comparison_runs`
+    -- a real, working, verified implementation, scoped down rather than
+    guessed up. Widening this to the full 154-asset multi-jurisdiction
+    ensemble scope is flagged as separate, larger follow-up work.
     """
     if not ENSEMBLE_AVAILABLE:
         context.log.warning(
@@ -83,21 +95,65 @@ def biiep_ocr_ensemble(context: AssetExecutionContext) -> dict[str, Any]:
             "voted_path": None,
         }
 
-    # Real implementation walks the 154 BIEP v2 Dagster assets and runs
-    # the ensemble for each jurisdiction × (subject) × (board) triple.
-    extractor = EnsembledExtractor()  # type: ignore[abstract]
-    context.log.info(
-        "biiep_ocr_ensemble_initialized",
-        ensemble_class=type(extractor).__name__,
+    from pathlib import Path
+
+    from meaisinfhoghlaim.models.benchmark import (
+        compare_models,
+        land_comparison_results,
+        log_comparison_to_observability,
     )
 
-    # Placeholder: real impl materializes 4 * 154 = 616 DuckLake rows per
-    # materialise-all + 154 voted canonical rows.
+    repo_root = Path(__file__).resolve().parents[5]
+    pdf_path = (
+        repo_root
+        / "leaving_certificate"
+        / "chemistry"
+        / "en"
+        / "SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf"
+    )
+    if not pdf_path.exists():
+        context.log.warning(
+            "biiep_ocr_ensemble: seed PDF not found at %s; returning stub output",
+            pdf_path,
+        )
+        return {
+            "rows_landed": 0,
+            "ragas_passed": False,
+            "ragas_score": 0.0,
+            "voted_path": None,
+        }
+
+    results = compare_models(pdf_path, page_number=1, subject="chemistry")
+    rows_landed = land_comparison_results(results)
+    log_comparison_to_observability(results, pdf_path.name)
+
+    scored = [r for r in results if r.faithfulness_score is not None]
+    ragas_score = (
+        sum(r.faithfulness_score for r in scored) / len(scored) if scored else 0.0
+    )
+    # Only consider models that actually succeeded -- confirmed live this
+    # was a real bug: with every faithfulness score None (ragas judge
+    # unreachable), `max(results, key=...)` picked whichever model
+    # happened to be first in list order regardless of `success`, once
+    # landing "deepseek-ocr-2" (which had `success=False`) as the
+    # "voted" model.
+    successful = [r for r in results if r.success]
+    voted = max(successful, key=lambda r: r.faithfulness_score or 0.0, default=None)
+
+    context.log.info(
+        f"biiep_ocr_ensemble_complete: rows_landed={rows_landed} "
+        f"ragas_score={ragas_score} voted_path={voted.model_key if voted else None}"
+    )
+    context.add_output_metadata({
+        "rows_landed": rows_landed,
+        "ragas_score": ragas_score,
+        "models_compared": [r.model_key for r in results],
+    })
     return {
-        "rows_landed": 0,
-        "ragas_passed": False,
-        "ragas_score": 0.0,
-        "voted_path": None,
+        "rows_landed": rows_landed,
+        "ragas_passed": ragas_score >= 0.70,
+        "ragas_score": ragas_score,
+        "voted_path": voted.model_key if voted else None,
     }
 
 
@@ -109,17 +165,47 @@ def biiep_ocr_ensemble(context: AssetExecutionContext) -> dict[str, Any]:
     ),
 )
 def biiep_ocr_ensemble_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
-    """Dagster asset_check: ragas_score >= 0.70."""
+    """Dagster asset_check: ragas_score >= 0.70.
+
+    Per the lakehouse-multi-subject-multi-model-rollout change: this
+    used to unconditionally hardcode `{"ragas_score": 0.85, "threshold":
+    0.70}` -- a fake, always-passing check. Now queries the real
+    `leaving_cert.model_comparison_runs` table the asset above actually
+    lands rows into, using the most recent run's real average
+    faithfulness score.
+    """
     if not RAGAS_AVAILABLE:
         return AssetCheckResult(
             passed=False, severity="WARN",
             metadata={"reason": "RAGAS not available"},
         )
 
-    # Real implementation queries the ensemble's logged RAGAS scores.
+    threshold = 0.70
+    try:
+        from scripts.hydrate_lc_full_corpus import connect_ducklake
+
+        con = connect_ducklake()
+        row = con.execute(
+            "SELECT avg(faithfulness_score) FROM leaving_cert.model_comparison_runs "
+            "WHERE run_id = (SELECT run_id FROM leaving_cert.model_comparison_runs "
+            "ORDER BY run_at DESC LIMIT 1) AND faithfulness_score IS NOT NULL"
+        ).fetchone()
+        ragas_score = float(row[0]) if row and row[0] is not None else None
+    except Exception as exc:  # noqa: BLE001 — no landed data yet, or DuckLake unreachable
+        return AssetCheckResult(
+            passed=False, severity="WARN",
+            metadata={"reason": f"could not query real ragas_score: {exc}"},
+        )
+
+    if ragas_score is None:
+        return AssetCheckResult(
+            passed=False, severity="WARN",
+            metadata={"reason": "no scored comparison runs found yet", "threshold": threshold},
+        )
+
     return AssetCheckResult(
-        passed=True, severity="WARN",
-        metadata={"ragas_score": 0.85, "threshold": 0.70},
+        passed=ragas_score >= threshold, severity="WARN",
+        metadata={"ragas_score": ragas_score, "threshold": threshold},
     )
 
 
