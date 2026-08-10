@@ -64,7 +64,7 @@ INFISICAL_CLIENT_ID=7177c4ef-2688-4afa-982b-cc749d3ea3ad
 INFISICAL_SECRET_FILE=/Users/cianmacandeisigh/.locket/infisical_secret
 LOCKET_MODE=watch
 POSTGRES_USER=lakekeeper
-POSTGRES_PASSWORD=805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9
+POSTGRES_PASSWORD=devpassword
 CLICKHOUSE_USER=oideachais
 CLICKHOUSE_PASSWORD=062974092ef788bf2e402790481386f23503758dd3271b06
 GARAGE_ACCESS_KEY_ID=GK3b427f19ad3fd54647e9a1ac
@@ -73,7 +73,7 @@ REDIS_PASSWORD=18418e0af8227b72b6fcbb39fa2da50115f156c07dfc7870
 LITELLM_MASTER_KEY=sk-litellm-master-bb06b71044e9c018b08e72b4d4c8da42ddfaaef6
 LITELLM_SALT_KEY=0b4c81e2bf5dd86d
 LITELLM_LOG=INFO
-LITELLM_DATABASE_URL=postgresql://lakekeeper:805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9@lakehouse-postgres:5432/litellm
+LITELLM_DATABASE_URL=postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/litellm
 MLFLOW_TRACKING_URI=http://mlflow:5000
 LANCEDB_API_KEY=
 EOF
@@ -120,9 +120,9 @@ INFISICAL_SECRET_FILE=/Users/cianmacandeisigh/.locket/infisical_secret
 LOCKET_MODE=watch
 
 # Lakehouse Postgres (db=langfuse)
-DATABASE_URL=postgresql://lakekeeper:805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9@lakehouse-postgres:5432/langfuse
+DATABASE_URL=postgresql://lakekeeper:devpassword@lakehouse-postgres:5432/langfuse
 POSTGRES_USER=lakekeeper
-POSTGRES_PASSWORD=805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9
+POSTGRES_PASSWORD=devpassword
 
 # Lakehouse Redis (CORRECT port: internal 6379, NOT host-mapped 6381)
 REDIS_HOST=lakehouse-redis

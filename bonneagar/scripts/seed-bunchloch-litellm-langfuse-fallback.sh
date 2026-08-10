@@ -45,7 +45,14 @@ INFISICAL_USER_JWT="${INFISICAL_USER_JWT:?must be set (operator's org admin JWT 
 # -----------------------------------------------------------------------
 
 # Real lakehouse creds (from running containers — verified live 2026-07-24)
-LAKEHOUSE_PG_PW="805c7a4565f7ddf9bea11b6ffbd9a11f536cfe3beaaee7f9"
+# Per the lakehouse-multi-subject-multi-model-rollout change: LAKEHOUSE_PG_PW
+# used to be a real, leaked Postgres password hardcoded here. This script
+# seeds real secrets INTO Infisical, so (unlike the plain .env.dev-fallback
+# files elsewhere) it genuinely needs the real value at run time -- fixed
+# by requiring the operator to supply it via env var, same convention this
+# script already uses for INFISICAL_USER_JWT just above, rather than
+# hardcoding it in a file committed to git.
+LAKEHOUSE_PG_PW="${LAKEHOUSE_PG_PW:?must be set (real Postgres password for lakehouse-postgres, not committed to git)}"
 LAKEHOUSE_REDIS_PW="c9f2e6ea1204a94234d7fba213dc7a7b"
 LAKEHOUSE_CH_PW="ae57586ac13250297988258bf39a0365"
 LAKEHOUSE_CH_USER="clickhouse"
