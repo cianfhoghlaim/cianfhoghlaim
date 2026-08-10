@@ -1,19 +1,19 @@
-"""Operator-facing CLI for the meaisinfoghlaim evaluation harness.
+"""Operator-facing CLI for the meaisinfhoghlaim evaluation harness.
 
-Per the 2026-08-15 meaisinfoghlaim-ireland-england-roadmap (Plan 1).
+Per the 2026-08-15 meaisinfhoghlaim-ireland-england-roadmap (Plan 1).
 
 Usage:
     # Run a per-subject RAGAS eval
-    python -m meaisinfoghlaim.evaluation.cli eval         --jurisdiction=ireland --stage=lc --subject=mathematics --language=en
+    python -m meaisinfhoghlaim.evaluation.cli eval         --jurisdiction=ireland --stage=lc --subject=mathematics --language=en
 
     # Seed a golden baseline (interactive)
-    python -m meaisinfoghlaim.evaluation.cli seed-golden         --jurisdiction=ireland --stage=lc --subject=chemistry
+    python -m meaisinfhoghlaim.evaluation.cli seed-golden         --jurisdiction=ireland --stage=lc --subject=chemistry
 
     # Show the cross-jurisdiction RAGAS report (aggregates from MLflow)
-    python -m meaisinfoghlaim.evaluation.cli report
+    python -m meaisinfhoghlaim.evaluation.cli report
 
     # Show per-cohort threshold compliance (Ireland vs England)
-    python -m meaisinfoghlaim.evaluation.cli compliance
+    python -m meaisinfhoghlaim.evaluation.cli compliance
 
 The CLI uses argparse for subcommand routing. The default subcommand
 is eval (so calling the CLI without a subcommand runs the per-subject
@@ -29,17 +29,17 @@ import logging
 import sys
 from typing import Any
 
-from meaisinfoghlaim.evaluation.golden_baselines import (
+from meaisinfhoghlaim.evaluation.golden_baselines import (
     GoldenBaseline,
     GoldenQuestion,
     GoldenBaselineStore,
 )
-from meaisinfoghlaim.evaluation.per_subject_runner import (
+from meaisinfhoghlaim.evaluation.per_subject_runner import (
     CohortKey,
     PerSubjectRunner,
 )
-from meaisinfoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
-from meaisinfoghlaim.evaluation.score_aggregator import ScoreAggregator
+from meaisinfhoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
+from meaisinfhoghlaim.evaluation.score_aggregator import ScoreAggregator
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +61,7 @@ async def cmd_eval(args: argparse.Namespace) -> int:
     if not baselines:
         logger.warning(
             "No golden baseline for %s; using the synthetic placeholder. "
-            "Seed one via: python -m meaisinfoghlaim.evaluation.cli seed-golden %s %s %s",
+            "Seed one via: python -m meaisinfhoghlaim.evaluation.cli seed-golden %s %s %s",
             cohort, args.jurisdiction, args.stage, args.subject,
         )
     runner = PerSubjectRunner()
@@ -200,7 +200,7 @@ def cmd_report(args: argparse.Namespace) -> int:
             )
         except Exception:
             continue
-        from meaisinfoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
+        from meaisinfhoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
 
         cohort = CohortKey(
             jurisdiction=cohort_jurisdiction,
@@ -259,7 +259,7 @@ def cmd_compliance(args: argparse.Namespace) -> int:
             )
         except Exception:
             continue
-        from meaisinfoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
+        from meaisinfhoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
 
         cohort = CohortKey(jurisdiction=j, stage=s, subject=sub)
         result = PerSubjectEvalResult(
@@ -283,7 +283,7 @@ def cmd_compliance(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="meaisinfoghlaim-evaluation",
+        prog="meaisinfhoghlaim-evaluation",
         description="Per-cohort RAGAS eval + golden baseline management for the Ireland+England pipeline.",
     )
     sub = parser.add_subparsers(dest="cmd")

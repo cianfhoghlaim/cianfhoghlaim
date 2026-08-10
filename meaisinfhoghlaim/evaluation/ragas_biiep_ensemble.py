@@ -19,9 +19,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 try:
+    # Per the lakehouse-multi-subject-multi-model-rollout change:
+    # `answer_relevance` isn't a real ragas.metrics export (the real
+    # name is `answer_relevancy`, confirmed live) -- aliased on import
+    # so the rest of this file's field/variable naming stays unchanged.
     from ragas.metrics import (  # type: ignore[import-not-found]
         faithfulness,
-        answer_relevance,
+        answer_relevancy as answer_relevance,
         context_precision,
     )
     from ragas import evaluate  # type: ignore[import-not-found]

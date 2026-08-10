@@ -785,7 +785,7 @@ def compare_evaluation_runs(
 # existing CurriculumEvaluationDataset helper (create_curriculum_eval_dataset)
 # + the existing golden-baseline loader (golden_baselines.py).
 #
-# Per the 2026-08-15 meaisinfoghlaim-ireland-england-roadmap (Plan 1).
+# Per the 2026-08-15 meaisinfhoghlaim-ireland-england-roadmap (Plan 1).
 # ============================================================================
 
 
@@ -810,9 +810,9 @@ async def run_per_subject_eval(
         dict with the per-cohort PerSubjectEvalResult.summary() output
         + the per-jurisdiction JurisdictionalRagasReport.summary() output.
     """
-    from meaisinfoghlaim.evaluation.golden_baselines import GoldenBaselineStore
-    from meaisinfoghlaim.evaluation.per_subject_runner import CohortKey, PerSubjectRunner
-    from meaisinfoghlaim.evaluation.score_aggregator import ScoreAggregator
+    from meaisinfhoghlaim.evaluation.golden_baselines import GoldenBaselineStore
+    from meaisinfhoghlaim.evaluation.per_subject_runner import CohortKey, PerSubjectRunner
+    from meaisinfhoghlaim.evaluation.score_aggregator import ScoreAggregator
 
     cohort = CohortKey(
         jurisdiction=jurisdiction,

@@ -21,7 +21,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from meaisinfoghlaim.evaluation.ragas_metrics import (
+from meaisinfhoghlaim.evaluation.ragas_metrics import (
     RagasFourMetricScore,
     compute_ragas_metrics,
 )

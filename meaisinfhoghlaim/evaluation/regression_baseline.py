@@ -1,6 +1,6 @@
 """UC 5: RegressionBaseline + RegressionDiff (Plan 3).
 
-Per the 2026-08-15-meaisinfoghlaim-ireland-england-roadmap (Plan 3, UC 5).
+Per the 2026-08-15-meaisinfhoghlaim-ireland-england-roadmap (Plan 3, UC 5).
 
 The canonical per-subject regression baseline + diff. Stores golden baseline
 content for (subject, stage, board, year) tuples + detects content drift
@@ -26,7 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     Board,
     QualificationLevel,
     RegressionBaseline,

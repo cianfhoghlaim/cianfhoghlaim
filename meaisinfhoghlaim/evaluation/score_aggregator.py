@@ -1,6 +1,6 @@
 """Per-jurisdiction RAGAS score aggregator.
 
-Per the 2026-08-15 meaisinfoghlaim-ireland-england-roadmap (Plan 1).
+Per the 2026-08-15 meaisinfhoghlaim-ireland-england-roadmap (Plan 1).
 
 Aggregates per-cohort PerSubjectEvalResult objects into:
   - Per-(jurisdiction, stage) RAGAS report (mean of N cohorts)
@@ -25,11 +25,11 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Iterable
 
-from meaisinfoghlaim.evaluation.per_subject_runner import (
+from meaisinfhoghlaim.evaluation.per_subject_runner import (
     CohortKey,
     PerSubjectEvalResult,
 )
-from meaisinfoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
+from meaisinfhoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
 
 
 # BIEP v3 gate threshold (locked 2026-08-15)

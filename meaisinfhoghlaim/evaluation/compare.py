@@ -119,7 +119,7 @@ async def _run_vision_eval(model: OCRModel, corpus: str, document: Path) -> Eval
     # The eval harness is intentionally minimal at this point: vision-model
     # invocation is wired in the production `run_plan1_eval()` entry point
     # (the orchestrator hits the LiteLLM gateway for the selected alias and
-    # runs `meaisinfoghlaim.backends.gaelic_metrics` against the gold
+    # runs `meaisinfhoghlaim.backends.gaelic_metrics` against the gold
     # reference). This stub emits a well-formed zero-score sample so the
     # report schema is stable while the wire-up is straightforward.
     return EvalSample(

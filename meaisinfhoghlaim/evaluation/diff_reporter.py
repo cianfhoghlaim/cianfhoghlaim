@@ -1,6 +1,6 @@
 """Regression report generator (Plan 3 UC 5).
 
-Per the 2026-08-15-meaisinfoghlaim-ireland-england-roadmap (Plan 3, UC 5).
+Per the 2026-08-15-meaisinfhoghlaim-ireland-england-roadmap (Plan 3, UC 5).
 
 Generates the canonical regression report (HTML + Markdown) for a
 RegressionDiff. Consumed by Plan 5\'s ``meaisin_regression_summary``
@@ -17,7 +17,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
-from meaisinfoghlaim.evaluation.regression_baseline import RegressionDiff
+from meaisinfhoghlaim.evaluation.regression_baseline import RegressionDiff
 
 logger = logging.getLogger(__name__)
 

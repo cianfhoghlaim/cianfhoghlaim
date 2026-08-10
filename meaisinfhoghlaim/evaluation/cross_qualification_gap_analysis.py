@@ -1,6 +1,6 @@
 """UC cross-qual: CrossQualificationGapAnalyzerRuntime (Plan 3).
 
-Per the 2026-08-15-meaisinfoghlaim-ireland-england-roadmap (Plan 3).
+Per the 2026-08-15-meaisinfhoghlaim-ireland-england-roadmap (Plan 3).
 
 The runtime gap analyzer. Given (qualification_a, jurisdiction_a, subject_a),
 finds topics NOT covered by any equivalent (qualification_b, jurisdiction_b,
@@ -17,11 +17,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.cross_qualification_subject_map import CrossQualificationSubjectMap
-from meaisinfoghlaim.alignment.cross_qualification_topic_alignment import (
+from meaisinfhoghlaim.alignment.cross_qualification_subject_map import CrossQualificationSubjectMap
+from meaisinfhoghlaim.alignment.cross_qualification_topic_alignment import (
     CrossQualificationTopicAligner,
 )
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     CrossQualificationGap,
     QualificationLevel,
 )

@@ -17,23 +17,23 @@ All harnesses log to the canonical MLflow experiment `biiep_v3`.
 """
 
 # Re-exports for the per-subject RAGAS eval workflow (Plan 1)
-from meaisinfoghlaim.evaluation.ragas_metrics import (
+from meaisinfhoghlaim.evaluation.ragas_metrics import (
     RagasFourMetricScore,
     RAGAS_AVAILABLE,
     compute_ragas_metrics,
 )
-from meaisinfoghlaim.evaluation.per_subject_runner import (
+from meaisinfhoghlaim.evaluation.per_subject_runner import (
     CohortKey,
     PerSubjectEvalResult,
     PerSubjectRunner,
 )
-from meaisinfoghlaim.evaluation.golden_baselines import (
+from meaisinfhoghlaim.evaluation.golden_baselines import (
     GOLDEN_BASELINES_ROOT,
     GoldenBaseline,
     GoldenBaselineStore,
     GoldenQuestion,
 )
-from meaisinfoghlaim.evaluation.score_aggregator import (
+from meaisinfhoghlaim.evaluation.score_aggregator import (
     CrossJurisdictionReport,
     JurisdictionalRagasReport,
     ScoreAggregator,

@@ -1,6 +1,6 @@
 """Bilingual EN<->GA coverage audit (Plan 2, UC 7 + UC 10).
 
-Per the 2026-08-15-meaisinfoghlaim-ireland-england-roadmap (Plan 2).
+Per the 2026-08-15-meaisinfhoghlaim-ireland-england-roadmap (Plan 2).
 
 The canonical per-cohort bilingual coverage audit. Gates at >= 95%
 bilingual coverage per the locked BIEP v3 threshold.
@@ -25,8 +25,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.bilingual_concept_registry import BilingualConceptRegistry
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.bilingual_concept_registry import BilingualConceptRegistry
+from meaisinfhoghlaim.alignment.schema import (
     BilingualCoverageAudit,
     LanguagePair,
     Stage,

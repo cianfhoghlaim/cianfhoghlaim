@@ -1,6 +1,6 @@
-"""Canonical 4-metric RAGAS scorer for the meaisinfoghlaim evaluation harness.
+"""Canonical 4-metric RAGAS scorer for the meaisinfhoghlaim evaluation harness.
 
-Per the 2026-08-15 meaisinfoghlaim-ireland-england-roadmap (Plan 1).
+Per the 2026-08-15 meaisinfhoghlaim-ireland-england-roadmap (Plan 1).
 
 The 4 canonical metrics:
   - faithfulness      (the answer is grounded in the retrieved context)
@@ -90,9 +90,16 @@ class RagasFourMetricScore:
 # Try to import the real RAGAS package; fall back to deterministic synthetic
 # scorer if unavailable.
 try:
+    # Per the lakehouse-multi-subject-multi-model-rollout change: this
+    # was `answer_relevance` -- not a real ragas.metrics export (the
+    # real name is `answer_relevancy`, confirmed live). Silently masked
+    # forever by the except ImportError fallback below, since the real
+    # `ragas` package was never installed until this same change --
+    # RAGAS_AVAILABLE was False for a second, independent reason beyond
+    # the package being missing.
     from ragas.metrics import (  # type: ignore[import-not-found]
         faithfulness as _r_faithfulness,
-        answer_relevance as _r_answer_relevance,
+        answer_relevancy as _r_answer_relevance,
         context_precision as _r_context_precision,
         context_recall as _r_context_recall,
     )
@@ -124,7 +131,7 @@ def compute_ragas_metrics(dataset: Sequence[dict[str, Any]]) -> RagasFourMetricS
 
     if RAGAS_AVAILABLE and _r_evaluate is not None:
         try:
-            from meaisinfoghlaim.evaluation.ragas_biiep_ensemble import (
+            from meaisinfhoghlaim.evaluation.ragas_biiep_ensemble import (
                 evaluate_ensemble as _evaluate_ensemble,
             )
             ragas_score_obj = _evaluate_ensemble(dataset)
