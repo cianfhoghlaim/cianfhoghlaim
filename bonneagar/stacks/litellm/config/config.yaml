@@ -660,6 +660,22 @@ litellm_settings:
   set_verbose: false
   telemetry: false
   cache: false
+  # Per the lakehouse-multi-subject-multi-model-rollout change: the
+  # litellm container already receives LANGFUSE_HOST/LANGFUSE_PUBLIC_KEY/
+  # LANGFUSE_SECRET_KEY (compose.yaml env), but this litellm_settings
+  # block had no success_callback/failure_callback entry at all -- those
+  # env vars were completely inert without this, so litellm never
+  # actually sent any traces to Langfuse despite the stack being wired
+  # for it end to end otherwise. This is the single highest-leverage fix
+  # for observability: every future litellm call gets automatic tracing
+  # with zero per-call code changes, once real (non-empty) Langfuse keys
+  # are populated via bonneagar/scripts/seed-bunchloch-litellm-langfuse-
+  # fallback.sh (confirmed live: LANGFUSE_PUBLIC_KEY/LANGFUSE_SECRET_KEY
+  # are currently empty in the running container -- litellm's Langfuse
+  # integration degrades gracefully when they're unset, logging a
+  # warning rather than failing requests, confirmed live this change).
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
   # Per openspec/changes/litellm-minimax-vendor-derisking/:
   # The 3 OpenCode Go slots are rotated via 3 separate env vars
   # (OPENCODE_GO_API_KEY_0, _1, _2). See compose.yaml env section.
