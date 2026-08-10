@@ -1,35 +1,36 @@
 """
-LC6-subject Dagster asset module — per-subject pipeline for the 6
-NCCA Leaving Certificate subjects:
-  - chemistry (LC022)
-  - computer_science (LC219)
-  - english (LC002)
-  - gaeilge (LC001)
-  - geography (LC005)
-  - mathematics (LC003)
+LC-subject Dagster asset module — per-subject pipeline, originally for
+the 6 NCCA Leaving Certificate "LC6" subjects, widened per the
+lakehouse-multi-subject-multi-model-rollout change to all 13 subjects
+with a real local PDF corpus under leaving_certificate/:
+  - chemistry (LC022), computer_science (LC219), english (LC002),
+    gaeilge (LC001), geography (LC005), mathematics (LC003)  [original 6]
+  - biology, business, history, applied_mathematics, french, technology,
+    ukrainian  [7 more, added this change]
 
 Pipeline stages (per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/,
-updated for english by openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/):
+updated for english by openspec/changes/2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1/,
+widened to 13 subjects by the lakehouse-multi-subject-multi-model-rollout change):
 
-  Layer 1 (Ingestion):  6 per-subject dlt assets
-                         - lc5_chemistry_ingested
-                         - lc5_computer_science_ingested
-                         - lc5_english_ingested
-                         - lc5_gaeilge_ingested
-                         - lc5_geography_ingested
-                         - lc5_mathematics_ingested
+  Layer 1 (Ingestion):  13 per-subject dlt assets
+                         - lc5_<subject>_ingested (one per LC_ALL_SUBJECTS entry)
                          (each runs cianfhoghlaim.dlt.filesystem.leaving_cert_source
                           filtered by subject)
 
-  Layer 2 (Materials):  6 BAML extraction assets (each subject × 4 functions)
-                         - lc5_<subject>_syllabus_extracted (ExtractCurriculumSyllabus)
-                         - lc5_<subject>_papers_extracted    (ExtractExamPaperLayout)
-                         - lc5_<subject>_marking_extracted   (ExtractMarkingSchemeGuideline)
-                         - lc5_<subject>_diagrams_extracted  (ExtractSyllabusDiagram via molmo2-8b)
+  Layer 2 (Materials):  13 subjects × 4 BAML extraction assets
+                         - lc5_<subject>_syllabus_extracted (ExtractCurriculumSyllabus) — real for all 13
+                         - lc5_<subject>_papers_extracted    (ExtractExamPaperLayout) — real for all 13
+                         - lc5_<subject>_marking_extracted   (ExtractMarkingSchemeGuideline) — real for all 13
+                         - lc5_<subject>_diagrams_extracted  (ExtractSyllabusDiagram) — real for chemistry
+                           only; the other 12 subjects remain stubs (same proven
+                           pdf_to_image_bridge.py pattern, ~12x the per-subject
+                           effort, explicitly scoped as follow-up, not required
+                           for "fully populate" since diagrams are bonus signal)
 
-  Layer 3 (Lifecycle):  6 cognify assets + 1 cross-subject Graphiti stream
+  Layer 3 (Lifecycle):  6 cognify assets (original LC6 scope, not yet widened)
+                         + 1 cross-subject Graphiti stream
                          - lc5_<subject>_cognified
-                         - lc5_cross_subject_graphiti_stream (6 subjects merged)
+                         - lc5_cross_subject_graphiti_stream
 
 Each asset is keyed by the 5-layer group_name convention
 "<N>_<layer>/<domain>/<slug>" with lc5_ prefix.
@@ -68,11 +69,19 @@ except ImportError:
         b = None
 
 try:
-    from dlt_sources.filesystem.leaving_cert_source import lc5_documents
+    from dlt_sources.filesystem.leaving_cert_source import LC_ALL_SUBJECTS, lc5_documents
     DLT_AVAILABLE = True
 except ImportError:
     DLT_AVAILABLE = False
     lc5_documents = None
+    # Fallback so LC_ALL_SUBJECTS below still has the real 13-subject
+    # value even if dlt_sources isn't importable in this environment
+    # (matches this module's existing graceful-degradation convention).
+    LC_ALL_SUBJECTS = (
+        "chemistry", "computer_science", "english", "gaeilge", "geography",
+        "mathematics", "biology", "business", "history",
+        "applied_mathematics", "french", "technology", "ukrainian",
+    )
 
 try:
     import cognee
@@ -89,8 +98,20 @@ except ImportError:
     Graphiti = None
 
 
-# The 6 LC subjects (must match cianfhoghlaim.dlt.filesystem.leaving_cert_source.LC6_SUBJECTS)
-LC6_SUBJECTS: tuple[str, ...] = (
+# Per the lakehouse-multi-subject-multi-model-rollout change: this used
+# to be a hand-duplicated 6-subject tuple (this file's own prior comment
+# flagged the duplication risk: "must match ... LC6_SUBJECTS"). Now
+# imported directly from dlt_sources.filesystem.leaving_cert_source so
+# there's exactly one source of truth for "all real local LC subjects" —
+# confirmed live: all 13 subjects have a real local PDF corpus under
+# leaving_certificate/<subject>/.
+LC6_SUBJECTS: tuple[str, ...] = LC_ALL_SUBJECTS
+
+# The original 6 subjects the Layer 1 ingestion assets below were
+# hand-written for, kept separate from the 7 new ones (added via a
+# factory further down) to avoid touching the 6 already-working,
+# individually-named assets' behavior/identity.
+_ORIGINAL_LC6_SUBJECTS: tuple[str, ...] = (
     "chemistry",
     "computer_science",
     "english",
@@ -98,10 +119,14 @@ LC6_SUBJECTS: tuple[str, ...] = (
     "geography",
     "mathematics",
 )
+_NEW_LC_SUBJECTS: tuple[str, ...] = tuple(
+    s for s in LC_ALL_SUBJECTS if s not in _ORIGINAL_LC6_SUBJECTS
+)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Layer 1: Ingestion (6 per-subject assets)
+# Layer 1: Ingestion (13 per-subject assets: 6 original, hand-written below,
+# + 7 new, factory-generated further down to avoid touching the originals)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
@@ -175,19 +200,64 @@ def lc5_mathematics_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     return {"rows": len(math_rows), "subject": "mathematics"}
 
 
+def _make_ingestion_asset(subject: str):
+    """Factory for the 7 new Layer 1 ingestion assets (biology, business,
+    history, applied_mathematics, french, technology, ukrainian), added
+    per the lakehouse-multi-subject-multi-model-rollout change. The
+    original 6 subjects keep their hand-written functions above
+    unchanged (same asset identity/behavior, lower regression risk) —
+    this factory only covers the 7 new ones.
+    """
+
+    @asset(
+        name=f"lc5_{subject}_ingested",
+        group_name="1_ingestion_curriculum_lc5",
+        description=f"Ingest {subject} LC PDFs via select_ocr_backend() routing",
+    )
+    def lc5_ingestion_asset(context: AssetExecutionContext) -> dict[str, Any]:
+        if not DLT_AVAILABLE:
+            context.log.warning("DLT source not available; returning stub")
+            return {"rows": 0, "subject": subject}
+        context.log.info(f"ingesting {subject} LC PDFs")
+        rows = list(lc5_documents())  # type: ignore[misc]
+        subject_rows = [r for r in rows if r["subject"] == subject]
+        context.add_output_metadata({"row_count": len(subject_rows)})
+        return {"rows": len(subject_rows), "subject": subject}
+
+    lc5_ingestion_asset.__name__ = f"lc5_{subject}_ingested"
+    return lc5_ingestion_asset
+
+
+for _new_subject in _NEW_LC_SUBJECTS:
+    globals()[f"lc5_{_new_subject}_ingested"] = _make_ingestion_asset(_new_subject)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
-# Layer 2: BAML materials extraction (6 subjects × 4 BAML functions = 24 assets)
+# Layer 2: BAML materials extraction (13 subjects × 4 BAML functions = 52 assets)
 # ─────────────────────────────────────────────────────────────────────────────
 
 
 def _make_subject_extraction_asset(subject: str, kind: str):
-    """Factory for the per-subject BAML extraction assets (4 kinds × 6 subjects).
+    """Factory for the per-subject BAML extraction assets (4 kinds × 13 subjects).
 
-    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: exactly
-    one of these 24 assets (lc5_chemistry_diagrams_extracted) has been
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change, exactly
+    one of these 52 assets (lc5_chemistry_diagrams_extracted) was
     un-stubbed into a real implementation, defined separately below and
-    excluded from this factory's loop. The other 23 remain stubs —
-    explicitly scoped future work (tasks.md), not silently claimed done.
+    excluded from this factory's loop.
+
+    Per the lakehouse-multi-subject-multi-model-rollout change: "syllabus"
+    / "papers" / "marking" are now ALSO real for every subject here —
+    `ExtractCurriculumSyllabus` / `ExtractExamPaperLayout` /
+    `ExtractMarkingSchemeGuideline` all take free-text `subject: string?`
+    (no enum, unlike `ExtractLC6Syllabus`), and were already proven
+    working via `quest_pack_assets.py`'s real call sites, which this
+    factory mirrors (same `_classify_pdfs`/`_extract_pdf_text`/
+    `SUBJECT_PRIMARY_LANGUAGE` reuse, same directory/layer, not a
+    cross-layer import). Only "diagrams" remains a stub here for the 12
+    non-chemistry subjects — same proven pattern as
+    `lc5_chemistry_diagrams_extracted` below, but ~12x the per-subject
+    effort (image rendering per page), explicitly scoped as follow-up
+    rather than attempted for all 13 in this pass.
     """
     baml_function_map = {
         "syllabus": "ExtractCurriculumSyllabus",
@@ -196,6 +266,8 @@ def _make_subject_extraction_asset(subject: str, kind: str):
         "diagrams": "ExtractSyllabusDiagram",
     }
     baml_function = baml_function_map[kind]
+    # Maps this asset's "kind" to _classify_pdfs()'s bucket key.
+    bucket_key_map = {"syllabus": "syllabus", "papers": "exam_paper", "marking": "marking_scheme"}
 
     @asset(
         name=f"lc5_{subject}_{kind}_extracted",
@@ -203,13 +275,101 @@ def _make_subject_extraction_asset(subject: str, kind: str):
         description=f"BAML {baml_function} for the {subject} LC subject",
     )
     def lc5_extraction_asset(context: AssetExecutionContext) -> dict[str, Any]:
-        """Stub for the {baml_function} extraction of {subject}."""
+        """Real {baml_function} extraction for {subject} (diagrams: still a stub except chemistry)."""
         if not BAML_AVAILABLE:
+            context.log.warning(f"lc5_{subject}_{kind}_extracted: baml_client not importable; skipping")
             return {"rows": 0, "subject": subject, "kind": kind}
+
+        if kind == "diagrams":
+            # Stub for every subject except chemistry (see
+            # lc5_chemistry_diagrams_extracted below) — explicitly scoped
+            # follow-up, not silently claimed done.
+            context.log.info(
+                f"lc5_{subject}_diagrams_extracted: diagram extraction not yet "
+                "wired for this subject (chemistry-only so far)"
+            )
+            return {"rows": 0, "subject": subject, "kind": kind}
+
         context.log.info(f"running {baml_function} for {subject}")
-        # Real call would be: b.{baml_function}(source_pdf=..., subject=subject, ...)
-        # Per CHANGE B1: BAML functions live in cianfhoghlaim/baml_src/education/lc_extraction/
-        return {"rows": 0, "subject": subject, "kind": kind}
+
+        # Leading-digit directory name ("2_materials") makes a static
+        # import illegal Python syntax -- importlib.import_module() is
+        # the established pattern for this in the repo (see
+        # lc5_chemistry_diagrams_extracted below, orchestration/definitions.py).
+        import importlib
+
+        _qpack = importlib.import_module(
+            "orchestration.defs.2_materials.lc_extraction.quest_pack_assets"
+        )
+        _classify_pdfs = _qpack._classify_pdfs
+        _extract_pdf_text = _qpack._extract_pdf_text
+        primary_language = _qpack.SUBJECT_PRIMARY_LANGUAGE.get(subject, "en")
+
+        try:
+            buckets = _classify_pdfs(subject)
+        except Exception as exc:  # noqa: BLE001 — filesystem/glob errors, not a stable API
+            context.log.warning(f"lc5_{subject}_{kind}_extracted: _classify_pdfs failed: {exc}")
+            return {"rows": 0, "subject": subject, "kind": kind}
+
+        bucket_key = bucket_key_map[kind]
+        entries = [e for e in buckets.get(bucket_key, []) if e["language"] == primary_language]
+        if not entries:
+            context.log.warning(
+                f"lc5_{subject}_{kind}_extracted: no {primary_language}-medium "
+                f"{bucket_key} PDF found"
+            )
+            return {"rows": 0, "subject": subject, "kind": kind}
+
+        results: list[Any] = []
+        if kind == "syllabus":
+            # Single canonical document — prefer the shortest filename
+            # among candidates, same tie-break quest_pack_assets.py uses.
+            entry = min(entries, key=lambda e: len(e["path"].name))
+            text = _extract_pdf_text(entry["path"])
+            if not text.strip():
+                context.log.warning(
+                    f"lc5_{subject}_{kind}_extracted: no extractable text layer "
+                    f"in {entry['path'].name}"
+                )
+                return {"rows": 0, "subject": subject, "kind": kind}
+            try:
+                results.append(
+                    b.ExtractCurriculumSyllabus(
+                        pdf_text=text, subject=subject, language=primary_language.upper()
+                    )
+                )
+            except Exception as exc:  # noqa: BLE001 — BAML error types are not stable API
+                context.log.error(f"lc5_{subject}_{kind}_extracted: extraction failed: {exc}")
+                return {"rows": 0, "subject": subject, "kind": kind}
+        else:
+            # papers / marking — potentially multiple documents per subject.
+            for entry in entries:
+                text = _extract_pdf_text(entry["path"])
+                if not text.strip():
+                    context.log.warning(
+                        f"lc5_{subject}_{kind}_extracted: no extractable text "
+                        f"layer in {entry['path'].name}; skipping this document"
+                    )
+                    continue
+                try:
+                    if kind == "papers":
+                        item = b.ExtractExamPaperLayout(
+                            pdf_text=text, subject=subject, paper_code=None, year=None
+                        )
+                    else:  # marking
+                        item = b.ExtractMarkingSchemeGuideline(
+                            pdf_text=text, subject=subject, year=None, paper=None
+                        )
+                except Exception as exc:  # noqa: BLE001 — BAML error types are not stable API
+                    context.log.warning(
+                        f"lc5_{subject}_{kind}_extracted: extraction failed for "
+                        f"{entry['path'].name}: {exc}"
+                    )
+                    continue
+                results.append(item)
+
+        context.add_output_metadata({"row_count": len(results)})
+        return {"rows": len(results), "subject": subject, "kind": kind}
 
     lc5_extraction_asset.__name__ = f"lc5_{subject}_{kind}_extracted"
     return lc5_extraction_asset
@@ -313,9 +473,11 @@ def lc5_chemistry_diagrams_extracted(context: AssetExecutionContext) -> dict[str
     return {"rows": len(diagrams), "subject": "chemistry", "kind": "diagrams"}
 
 
-# Generate the remaining 23 BAML extraction assets (6 subjects × 4 kinds,
-# minus lc5_chemistry_diagrams_extracted defined above as the one real
-# implementation).
+# Generate the remaining 51 BAML extraction assets (13 subjects × 4
+# kinds, minus lc5_chemistry_diagrams_extracted defined above as the one
+# real diagrams implementation). syllabus/papers/marking are real for
+# all 13; diagrams is real for chemistry only, stub for the other 12
+# (see _make_subject_extraction_asset's docstring).
 for _subject in LC6_SUBJECTS:
     for _kind in ("syllabus", "papers", "marking", "diagrams"):
         if _subject == "chemistry" and _kind == "diagrams":
@@ -378,9 +540,14 @@ def lc5_mathematics_cognified(context: AssetExecutionContext) -> dict[str, Any]:
 def lc5_cross_subject_graphiti_stream(context: AssetExecutionContext) -> dict[str, Any]:
     """Cross-subject Graphiti temporal stream — 6 subjects merged into a FalkorDB graph.
 
+    Still scoped to the original 6 subjects (Layer 3/cognify wasn't
+    widened to 13 this pass, unlike Layers 1-2) — uses
+    _ORIGINAL_LC6_SUBJECTS rather than the now-13-subject LC6_SUBJECTS so
+    this doesn't misreport a subject count Layer 3 doesn't actually cover.
+
     Nodes: Subject, Topic, LearningOutcome, Question, Year, ModuleKind
     Edges: HAS_TOPIC, ASSESSED_BY, EVOLVED_TO, EN_CORRESPONDS_TO_GA (cross-linguistic)
     """
     if not GRAPHITI_AVAILABLE:
-        return {"episodes": 0, "subjects": len(LC6_SUBJECTS)}
-    return {"episodes": 0, "subjects": len(LC6_SUBJECTS)}
+        return {"episodes": 0, "subjects": len(_ORIGINAL_LC6_SUBJECTS)}
+    return {"episodes": 0, "subjects": len(_ORIGINAL_LC6_SUBJECTS)}
