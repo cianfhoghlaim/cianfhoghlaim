@@ -75,14 +75,35 @@ services:
       # Persistent venv so `uv sync` (downloading torch, lancedb, etc.)
       # doesn't repeat on every container recreate.
       - dagster_venv:/app/cianfhoghlaim/.venv
-      - ../../../../sruth/cianfhoghlaim/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
-      - ../../../../stedding:/stedding:ro
+      # FLAGGED, not fixed, per the lakehouse-multi-subject-multi-model-
+      # rollout change: `sruth/cianfhoghlaim` is stale -- the user
+      # confirmed `sruth/` is now purely an archive of pre-refactor
+      # project formats, not live code. But this file's staleness turned
+      # out to be much bigger than 2 volume mounts: build `dockerfile:`
+      # paths for 5 separate services in this same file (dagster, the
+      # main api service, web, agent_os, adk -- see their `build:`
+      # blocks below) ALSO reference `sruth/cianfhoghlaim/Dockerfile*`.
+      # None of those exact Dockerfile names/paths (Dockerfile.dagster,
+      # a root-level Dockerfile, Dockerfile.adk) were found live at repo
+      # root -- confirmed via a repo-wide `find`. Some services may have
+      # a live replacement already (e.g. `agents/api/agent_os/Dockerfile`,
+      # `web/apps/cianfhoghlaim-web/Dockerfile` look like plausible
+      # matches) but this isn't a confirmed 1:1 mapping, and this
+      # `dagster.yaml` mount specifically has NO live equivalent found
+      # at all (`orchestration/defs.yaml` exists but is a different kind
+      # of config -- code-location/defs, not Dagster's instance-level
+      # dagster.yaml: run storage, compute log manager, etc.). Rewriting
+      # 5 services' build contexts blind risks silently breaking
+      # deployment in a way that's hard to detect later -- needs a
+      # broader decision/investigation than this pass, not a guess-fix.
+      - ../../../sruth/cianfhoghlaim/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - ../../../stedding:/stedding:ro
       # Live-bind the entire cianfhoghlaim source tree so leaving_cert assets
       # and any new code added to the host are picked up on Dagster restart.
       # The container runs from /app/cianfhoghlaim (uv workspace member).
       # Read-write because Dagster writes session/state files into the
       # source tree (e.g. storage/sessions) at startup.
-      - ../../../../sruth/cianfhoghlaim:/app/cianfhoghlaim:rw
+      - ../../../sruth/cianfhoghlaim:/app/cianfhoghlaim:rw
       # Locket secrets volume (injected at runtime by the sidecar).
       - locket_secrets:/run/secrets/locket:ro
     # Canonical depends_on for the locket sidecar (declared in
@@ -135,7 +156,12 @@ services:
       # The api/ package was moved up to cianfhoghlaim/api/ on 2026-06-11.
       # Mount the parent so the api can hot-reload code via docker compose
       # restart; the previous data_platform/ path no longer exists.
-      - ../../../../sruth/cianfhoghlaim:/app/cianfhoghlaim:ro
+      # Depth fixed (4 -> 3 levels) per the lakehouse-multi-subject-
+      # multi-model-rollout change -- same off-by-one bug as the dagster
+      # service's identical mount above; the `sruth/cianfhoghlaim` source
+      # path itself is left as-is (flagged, not repointed -- see the
+      # dagster service's volumes: comment above for why).
+      - ../../../sruth/cianfhoghlaim:/app/cianfhoghlaim:ro
       # Mount the data volume at a NEW path that doesn't exist in the
       # image (the OLD path /app/cianfhoghlaim/storage/data was baked into
       # the image's lower layer; the volume mount then fails with
