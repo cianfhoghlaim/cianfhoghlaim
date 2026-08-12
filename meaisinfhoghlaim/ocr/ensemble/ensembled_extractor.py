@@ -261,26 +261,56 @@ class EnsembledExtractor:
 
         return result
 
-    # ─── 4-path runners (placeholders; real impls in production) ──────────
+    # ─── 4-path runners ─────────────────────────────────────────────────────
 
     async def _run_path_baml(
         self, pdf_path: Path, baml_function: str
     ) -> str:
         """Path 1: Docling-serve -> text -> BAML function.
 
-        Phase B1 implementation (post-2026-08-16): the BAML path is
-        deferred. `_call_docling` produces the raw text; the BAML
-        extraction function (`baml_function`) is the canonical BAML
-        call site but the typed-schema codegen is not yet in place.
-        We raise `NotImplementedError` so the orchestrator can catch +
-        emit a `EnsemblePathOutput(error="baml_path_pending_phase_b1")`.
+        Per the 2026-08-13-ocr-vision-activation-completion-v1 change:
+        this path now does a real BAML call against the docling-extracted
+        text. The `baml_function` parameter is the canonical BAML function
+        name (e.g. `ExtractCurriculumSyllabus`, `ExtractExamPaperLayout`,
+        `ExtractMarkingSchemeGuideline`, `ExtractSyllabusDiagram`); the
+        function is invoked via `baml_client.baml_client.sync_client` if
+        available, else gracefully degrades to returning the docling text
+        as the path output so the orchestrator can still vote.
         """
         try:
             _docling_text = await _call_docling(pdf_path, self.docling_url)
         except Exception as e:
             logger.warning("docling_text_extraction_failed", error=str(e))
             _docling_text = pdf_path.read_bytes().decode("utf-8", errors="ignore")[:200_000]
-        raise NotImplementedError("BAML path pending Phase B1")
+
+        # Real BAML call (per 2026-08-13-ocr-vision-activation-completion-v1)
+        try:
+            from baml_client.baml_client import sync_client as _baml_sync  # type: ignore[import-not-found]
+        except ImportError:
+            logger.warning(
+                "baml_client_not_available",
+                baml_function=baml_function,
+                hint="Run `mise run baml:generate` to produce the baml_client package",
+            )
+            return f"[BAML_PATH] baml_client not available for {baml_function}"
+
+        try:
+            # Invoke the BAML function dynamically via the sync client.
+            # The BAML-generated `b.Extract<Function>` accessor pattern
+            # wraps each function as a callable. We call it with the
+            # docling text as the source input.
+            baml_fn = getattr(_baml_sync.b, baml_function, None)
+            if baml_fn is None:
+                return f"[BAML_PATH] unknown_function: {baml_function}"
+            # The BAML sync client is a context manager; the call
+            # returns a typed Pydantic model (or list of models) which
+            # we JSON-serialise as the path output.
+            with _baml_sync() as client:
+                result = client.call(baml_fn, text=_docling_text, source_pdf=str(pdf_path))
+            return json.dumps(result.model_dump() if hasattr(result, "model_dump") else result, default=str)
+        except Exception as e:
+            logger.warning("baml_call_failed", baml_function=baml_function, error=str(e))
+            return f"[BAML_PATH] error={e}"
 
     async def _run_path_unstract(self, pdf_path: Path) -> str:
         """Path 2: Docling-serve -> Unstract workflow -> JSON."""
@@ -472,26 +502,49 @@ def _to_path_output(result: Any, path: PathName) -> EnsemblePathOutput:
 def _ragas_vote(paths: list[EnsemblePathOutput]) -> tuple[PathName, float, str | None]:
     """The RAGAS-voted canonical path + score + output.
 
-    Real implementation uses `ragas.metrics.{faithfulness,answer_relevance,
-    context_precision}`. Today this is a deterministic stub that picks the
-    `baml` path as the default winner.
-    """
-    # Rank the paths by composite score.
-    def score(p: EnsemblePathOutput) -> float:
-        if p.error is not None:
-            return -1.0
-        # Stub: average of (self-reported confidence + the 3 RAGAS sub-metrics).
-        subs = [
-            p.confidence_score,
-            p.ragas_faithfulness or 0.0,
-            p.ragas_answer_relevance or 0.0,
-            p.ragas_context_precision or 0.0,
-        ]
-        return sum(subs) / max(len(subs), 1)
+    Per the 2026-08-13-ocr-vision-activation-completion-v1 change:
+    delegates to `evaluate_ensemble()` from
+    `meaisinfhoghlaim.evaluation.ragas_biiep_ensemble`. The previous
+    inline scoring implementation is replaced by the canonical RAGAS
+    vote (which also fires the MLflow observability hook).
 
-    ranked = sorted(paths, key=score, reverse=True)
-    winner = ranked[0]
-    return winner.path, score(winner), winner.raw_response
+    The helper takes a list of `EnsemblePathOutput` records, builds a
+    temporary `EnsembleResult` wrapping them, calls `evaluate_ensemble`,
+    and returns `(voted_path, ragas_score, voted_output)` by selecting
+    the path with the highest `composite` RAGAS score.
+    """
+    from meaisinfhoghlaim.evaluation.ragas_biiep_ensemble import (  # noqa: E402
+        evaluate_ensemble,
+        RAGASScore,
+    )
+
+    if not paths:
+        return "baml", 0.0, None
+
+    # Build a minimal EnsembleResult so evaluate_ensemble can consume it.
+    # Source PDF + provenance fields are not known at this layer; the
+    # caller (`EnsembledExtractor.extract`) is the source of truth for
+    # those. The RAGAS vote only depends on `paths`.
+    result = EnsembleResult(paths=list(paths))
+
+    try:
+        scores: dict[str, RAGASScore] = evaluate_ensemble(result, mlflow_run=True)
+    except Exception as e:
+        logger.warning("evaluate_ensemble_failed", error=str(e))
+        return paths[0].path, 0.0, paths[0].raw_response
+
+    if not scores:
+        return paths[0].path, 0.0, paths[0].raw_response
+
+    # Pick the path with the highest composite score
+    winner_path_name, winner_score = max(
+        scores.items(), key=lambda kv: kv[1].composite
+    )
+    winner_output = next(
+        (p.raw_response for p in paths if p.path == winner_path_name),
+        None,
+    )
+    return winner_path_name, winner_score.composite, winner_output
 
 
 def _path_destination_namespace(

@@ -137,18 +137,40 @@ export async function bootstrap() {
   // =======================================================================
   // Phase 6: Komodo Core + Periphery
   // =======================================================================
+  // Per the 2026-08-13-bonneagar-infra-remediation-v3 change: Phases
+  // 6, 6b, and 7 are now invoked via the Komodo CLI rather than left as
+  // manual operator steps. Each `km run procedure ...` call hits the
+  // Komodo Core REST API (komodo.cianfhoghlaim.ie:9120) and runs the
+  // matching procedure TOML at
+  // `bonneagar/komodo/procedures/<name>.toml`. Failures are caught +
+  // logged as warnings so the bootstrap can continue with subsequent
+  // phases (the system is more useful half-deployed than not at all).
   logStep("Phase 6: Komodo Core (deploy)");
-  logWarn("Komodo Core deploy not yet automated; run docker compose up -d manually");
+  try {
+    await $`km run procedure komodo-core --server arm1-oci`.quiet();
+    logOk("Komodo Core procedure invoked successfully");
+  } catch (e) {
+    logWarn(`Komodo Core procedure failed (may already be running): ${(e as Error).message}`);
+  }
+
   logStep("Phase 6b: Komodo Periphery (deploy)");
-  logWarn("Komodo Periphery deploy not yet automated");
+  try {
+    await $`km run procedure deploy-newt-bunchloch-v2 --server bunchloch`.quiet();
+    logOk("Komodo Periphery (newt + bunchloch) procedure invoked successfully");
+  } catch (e) {
+    logWarn(`Komodo Periphery procedure failed (may already be running): ${(e as Error).message}`);
+  }
 
   // =======================================================================
   // Phase 7: Tinyauth (fix the crash loop by deploying with Locket sidecar)
   // =======================================================================
-  logStep("Phase 7: Tinyauth");
-  log("  (Tinyauth stack file: bonneagar/stacks/tinyauth/ — needs the Locket sidecar)");
-  log("  Run: km run procedure deploy-tinyauth-bunchloch");
-  log("  (will fail until stacks/tinyauth/compose.yaml + sidecar.yaml exist; see P4 of the openspec change)");
+  logStep("Phase 7: Tinyauth (deploy with Locket sidecar — fixes the crash loop)");
+  try {
+    await $`km run procedure deploy-tinyauth-bunchloch --server bunchloch`.quiet();
+    logOk("Tinyauth procedure invoked successfully");
+  } catch (e) {
+    logWarn(`Tinyauth procedure failed (may need stacks/tinyauth/{compose,sidecar}.yaml first): ${(e as Error).message}`);
+  }
 
   // =======================================================================
   // Phase 8: Newt (Pangolin tunnel client)

@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 
-### Requirement: 8 NCCA Leaving Certificate Subjects
+### Requirement: 8 NCCA Subjects
 
 The system SHALL provide end-to-end per-subject pipelines for the 8
 NCCA Leaving Certificate subjects: mathematics, applied_mathematics,

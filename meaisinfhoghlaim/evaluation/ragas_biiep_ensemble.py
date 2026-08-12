@@ -3,16 +3,20 @@
 Per the 2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1 change.
 
 Registers the canonical RAGAS metric `biiep_extraction_consensus`
-(logged to MLflow experiment `biiep_v2`) and provides:
+(logged to MLflow experiment `biiep_v3` — per the
+`MLFLOW_EXPERIMENT_NAME` constant below; the previous docstring
+referenced `biiep_v2` which was a documentation drift corrected by the
+`2026-08-13-ocr-vision-activation-completion-v1` change) and provides:
   - `biiep_extraction_consensus` — the consensus scorer (3 sub-metrics +
     the composite vote)
   - `evaluate_ensemble(ensemble_result)` — convenience entrypoint that
     runs the 3 sub-metrics on the 4 paths and returns a `RAGASScore`
-  - `register_biiep_v2_metrics(mlflow_client)` — one-time setup helper
+  - `register_biiep_v3_metrics(mlflow_client)` — one-time setup helper
 
 This is the RAGAS integration for the BIEP v2 4-path ensemble.
 
 Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
+Reference: openspec/changes/2026-08-13-ocr-vision-activation-completion-v1/
 """
 from __future__ import annotations
 

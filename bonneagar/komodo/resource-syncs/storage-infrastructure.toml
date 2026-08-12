@@ -11,7 +11,14 @@ description = "Storage stack infrastructure as code"
 
 [resource_sync.config]
 # Repository configuration - Forgejo at git.cianfhoghlaim.ie
-repo = "cliste/bonneagar"
+# Per the 2026-08-13-bonneagar-infra-remediation-v3 change: reconciled
+# from the stale `cliste/bonneagar` (the pre-2026-07-17-v7-flatten
+# GitHub namespace) to match the 3 sibling resource-syncs in this
+# directory. The 2026-07-17 v7 flatten merged the standalone
+# `github.com/cianfhoghlaim/bonneagar` repo into this monorepo; the
+# `cliste/bonneagar` value would have been silently failing or polling
+# a stale fork, masked by Komodo's `delete = false` safety.
+repo = "cianfhoghlaim/bonneagar"
 git_account = "forgejo"
 branch = "main"
 

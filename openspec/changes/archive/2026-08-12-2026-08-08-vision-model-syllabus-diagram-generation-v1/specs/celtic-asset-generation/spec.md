@@ -1,6 +1,6 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
-### Requirement: Purpose-section accuracy note
+### Requirement: Purpose-section accuracy note (visibility)
 
 The `celtic-asset-generation` spec's Purpose section SHALL carry an
 explicit note that the "4 successive INDEPENDENT asset-generation
@@ -23,8 +23,6 @@ for what actually runs today).
   `tuatha/asset_generation/fibo/` for the real, working pipeline
 - **AND** the note does not claim the 4-pipeline / 6-Celtic-language /
   4-game-engine-exporter structure is implemented
-
-## ADDED Requirements
 
 ### Requirement: FIBO 2D educational diagram generation (as-built)
 
