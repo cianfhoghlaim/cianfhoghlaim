@@ -185,16 +185,25 @@ try:
         "crown_dependencies",
     ]
 
-    _jurisdiction_assets = []
-    for _name in _jurisdiction_names:
-        _submodule = importlib.import_module(
-            f"orchestration.defs.2_materials._base.{_name}_assets"
-        )
-        _jurisdiction_assets.append(getattr(_submodule, f"{_name}_documents_ingested"))
-    defs = dg.Definitions.merge(
-        defs,
-        dg.Definitions(assets=_jurisdiction_assets),
-    )
+    # DISABLED 2026-08-13. This merge is now redundant AND harmful.
+    #
+    # It was written when `dg.load_defs()` always failed and everything came
+    # from the `_defs_walker` fallback. The primary path now works, and it
+    # auto-discovers these same `_base` modules — so merging them again
+    # produced duplicate asset keys, which made
+    # `Definitions.validate_loadable()` raise and the code location show
+    # ZERO assets in `dagster dev`.
+    #
+    # It is also the WRONG copy: the `_base` assets are broken at runtime.
+    # `_base/{ireland,england}_assets.py` pass a pipeline INSTANCE where
+    # `jurisdiction_assets_base.py` expects a factory, so their asset bodies
+    # raise `TypeError: 'IrelandJurisdictionPipeline' object is not callable`
+    # on their first line. The working definitions of the same keys live in
+    # `2_materials/<jurisdiction>_education/generic_*_assets.py`.
+    #
+    # Left in place (not deleted) because the `_base` factory is still the
+    # intended long-term shape — repairing it is Wave 1 of the KCG roadmap.
+    _jurisdiction_assets: list = []
 except Exception as _exc:  # pragma: no cover
     import structlog
 
@@ -221,10 +230,16 @@ try:
         registry_drift_alert_sensor,
     )
 
+    # Assets omitted: `dg.load_defs()` already auto-discovers
+    # `registry_drift_alert` from `orchestration/defs/sync_assets.py` (as the
+    # comment above notes), so merging it again duplicated the
+    # `registry/drift_alert` key. Only the job + sensor are merged, which
+    # the auto-discovery does NOT pick up — the walker only collected
+    # jobs/sensors from a module-level `defs` attribute that no module
+    # defines.
     defs = dg.Definitions.merge(
         defs,
         dg.Definitions(
-            assets=[registry_drift_alert],
             jobs=[materialize_registry_drift_alert_job],
             sensors=[registry_drift_alert_sensor],
         ),
