@@ -32,7 +32,10 @@ PG_PORT: int = int(os.getenv("PG_PORT", "5433"))
 PG_USER: str = os.getenv("PG_USER", "lakekeeper")
 PG_PASSWORD: str = os.getenv("PG_PASSWORD", "")
 PG_DB: str = os.getenv("PG_DB", "ducklake_cianfhoghlaim")
-S3_BUCKET: str = os.getenv("S3_BUCKET", "ducklake-cianfhoghlaim")
+# Default must match `destinations_cianfhoghlaim.py` / `mise.toml` — the
+# live-seeded catalog uses `ducklake`. `DUCKLAKE_BUCKET` is the canonical
+# env var; `S3_BUCKET` is kept as a legacy override.
+S3_BUCKET: str = os.getenv("S3_BUCKET") or os.getenv("DUCKLAKE_BUCKET", "ducklake")
 S3_ENDPOINT: str = os.getenv("S3_ENDPOINT", "http://localhost:3900")
 S3_REGION: str = os.getenv("S3_REGION", "garage")
 

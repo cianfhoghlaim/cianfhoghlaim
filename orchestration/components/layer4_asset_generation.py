@@ -18,19 +18,30 @@ TanStack Start page generation assets.
       refresh_on: ["0 6 * * *"]
       slug: primary_curriculum
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations` — Dagster's
+# Resolvable derives the YAML schema from real (not postponed-string) type
+# annotations; see the identical note in layer1_ingestion.py /
+# layer2_materials.py. With postponed annotations, `get_model_cls()` raises
+# `AttributeError: 'str' object has no attribute '__name__'`.
 import os
+from dataclasses import dataclass, field
 from typing import Literal
 
 import dagster as dg
-from dagster.components import Component, ComponentLoadContext
+from dagster.components import Component, ComponentLoadContext, Resolvable
 
 DashboardKind = Literal["marimo", "tanstack_page", "orpc_route", "hono_route"]
 
 
-class CelticAssetGenerationComponent(Component):
+@dataclass
+class CelticAssetGenerationComponent(Component, Resolvable):
     """Layer 4 Asset Generation Component.
+
+    `@dataclass` + `Resolvable`: without them Dagster derives
+    `EmptyAttributesModel` (which forbids every extra field), so all 10
+    `4_asset_generation/**/defs.yaml` files failed schema validation and
+    the whole layer contributed zero assets. Same fix as
+    `CelticIngestionComponent` / `CelticMaterialsComponent`.
 
     Wraps one marimo dashboard / TanStack Start page / oRPC route /
     Hono route as a Dagster asset that triggers re-materialisation on
@@ -58,9 +69,13 @@ class CelticAssetGenerationComponent(Component):
 
     dashboard_kind: DashboardKind
     dashboard_path: str
-    upstream_assets: list[str] = []  # noqa: RUF012 — Dagster Component mutable default
-    refresh_on: list[str] = ["0 6 * * *"]  # noqa: RUF012 — Dagster Component mutable default
+    upstream_assets: list[str] = field(default_factory=list)
+    refresh_on: list[str] = field(default_factory=lambda: ["0 6 * * *"])
     slug: str = ""
+    # Supplied by marimo_dashboards/uog_math_coursework/defs.yaml — the list
+    # of notebook stems that make up a multi-notebook dashboard. Surfaced in
+    # asset metadata; emitting one asset per notebook is follow-on work.
+    notebooks: list[str] = field(default_factory=list)
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 1 @asset that re-runs the dashboard/page on upstream
@@ -68,12 +83,21 @@ class CelticAssetGenerationComponent(Component):
         slug = self.slug or os.path.splitext(os.path.basename(self.dashboard_path))[0]
         group_name = f"4_asset_generation_{self.dashboard_kind}_{slug}"
         asset_name = f"{self.dashboard_kind}_{slug}"
-        deps = [dg.AssetDep(key) for key in self.upstream_assets]
+        # `upstream_assets` are written "2_materials/ie_law/court_rules" in
+        # YAML — Dagster's display convention for a multi-segment AssetKey.
+        # Passing that string straight to AssetDep fails Dagster's
+        # ^[A-Za-z0-9_]+$ single-name validation, so split it into segments.
+        # Same fix already present in layer2_materials.py.
+        deps = [
+            dg.AssetDep(dg.AssetKey(key.split("/"))) for key in self.upstream_assets
+        ]
 
         # Compose multiple cron expressions into a single
         # AutomationCondition (OR'd).
+        # `.cron()` was renamed `.on_cron()` in the installed Dagster 1.13 —
+        # the old name raises AttributeError at defs-build time.
         cron_conditions = [
-            dg.AutomationCondition.cron(expr) for expr in self.refresh_on
+            dg.AutomationCondition.on_cron(expr) for expr in self.refresh_on
         ]
         if len(cron_conditions) == 1:
             automation_condition = cron_conditions[0]

@@ -59,6 +59,29 @@ from orchestration.components.england_cross_board_comparator_component import (
     EnglandCrossBoardComparatorComponent,
 )
 
+# Same class of bug as the 3 BIEP v3 Components above — these exist and
+# are already referenced by `type:` in defs/1_ingestion/curriculum/junior_cycle/**
+# and defs/3_model_lifecycle/** defs.yaml files, but were never re-exported
+# here, so `dg.load_defs()`'s YAML resolution couldn't find them by
+# attribute lookup on this module (DagsterUnresolvableSymbolError).
+from orchestration.components.junior_cycle_subject_component import (
+    JuniorCycleCBAComponent,
+    JuniorCycleShortCourseComponent,
+    JuniorCycleSubjectComponent,
+)
+from orchestration.components.layer3_model_lifecycle import (
+    CelticFederatedOcrComponent,
+)
+
+# Same class of bug again — these three were referenced by `type:` in
+# defs/3_model_lifecycle/cognify/** and defs/2_materials/lc_extraction/
+# lc_subjects/ but the classes existed nowhere in the repo at all.
+from orchestration.components.kcg_cognify_component import (
+    CognifyIngestSensorsComponent,
+    KCGCognifyComponent,
+    KCGSubjectPilotFactoryComponent,
+)
+
 # Backward-compat aliases (the 3 legacy `celtic_*` Components were
 # replaced in the 5-layer rewrite; existing consumers can import
 # the new names without breaking).
@@ -66,10 +89,17 @@ __all__ = [
     "BIEPSubjectComponent",
     "CelticAgentOpsComponent",
     "CelticAssetGenerationComponent",
+    "CelticFederatedOcrComponent",
     "CelticIngestionComponent",
     "CelticMaterialsComponent",
     "CelticModelLifecycleComponent",
+    "CognifyIngestSensorsComponent",
     "ConformanceError",
     "EnglandBoardSubjectComponent",
     "EnglandCrossBoardComparatorComponent",
+    "JuniorCycleCBAComponent",
+    "JuniorCycleShortCourseComponent",
+    "JuniorCycleSubjectComponent",
+    "KCGCognifyComponent",
+    "KCGSubjectPilotFactoryComponent",
 ]

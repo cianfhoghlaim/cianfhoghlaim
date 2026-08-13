@@ -455,6 +455,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "dagster" },
     { name = "dagster-dbt" },
+    { name = "dagster-dlt" },
     { name = "dlt", extra = ["duckdb", "filesystem", "motherduck"] },
     { name = "duckdb" },
     { name = "fastapi" },
@@ -489,6 +490,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12" },
     { name = "dagster", specifier = ">=1.13" },
     { name = "dagster-dbt", specifier = ">=0.29" },
+    { name = "dagster-dlt", specifier = ">=0.29" },
     { name = "dlt", extras = ["duckdb", "motherduck", "filesystem"], specifier = ">=1.5" },
     { name = "duckdb", specifier = ">=1.4" },
     { name = "fastapi", specifier = ">=0.115.0,<0.140" },
@@ -669,6 +671,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/36/6d/32a7055b7711b2b1fcfbbdaa617430b6e2654f1a8c9fe3219b91112a435c/dagster_dbt-0.29.17.tar.gz", hash = "sha256:df8ae2d127a9317ed9456000c119d2f722a665571f5e498ffc4e2d8e349b5601", size = 918107, upload-time = "2026-08-07T18:45:29.236Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/03/a3/2a84043957059e9eb3111bb3adb434953959986d684e72fced8c258ad7f5/dagster_dbt-0.29.17-py3-none-any.whl", hash = "sha256:a9d67a24829d2667dc6b5b5a149f1748a8534696f48a73070016d68f117eb567", size = 131586, upload-time = "2026-08-07T18:45:27.644Z" },
+]
+
+[[package]]
+name = "dagster-dlt"
+version = "0.29.17"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "dagster" },
+    { name = "dlt" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/69/c4/e5050a054a94bd73ddad5fe7753135e8dfdf6322308006d204c62cb24326/dagster_dlt-0.29.17.tar.gz", hash = "sha256:de7be3860fc391c5bd336ac0e2102046adf36173d6c33692608228bbec05056c", size = 232666, upload-time = "2026-08-07T18:46:16.572Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/60/cb9017fe551597a61f93ddb4d1358306e8dd4a012946d60851d2c34e8207/dagster_dlt-0.29.17-py3-none-any.whl", hash = "sha256:fc1f469a35c2d16cab8642eebeb5ba2bd98f7aed060e41cb185d5489d7d856dd", size = 21171, upload-time = "2026-08-07T18:46:15.476Z" },
 ]
 
 [[package]]

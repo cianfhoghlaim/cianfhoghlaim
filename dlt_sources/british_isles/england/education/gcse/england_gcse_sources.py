@@ -132,7 +132,7 @@ def make_gcse_resource(board: str):
             "language": {"data_type": "text"},
         },
     )
-    def gcse_<board>_subjects(
+    def _gcse_board_subjects(
         root_path: str = str(
             Path(
                 os.environ.get(
@@ -162,8 +162,13 @@ def make_gcse_resource(board: str):
                 }
             )
 
-    gcse_<board>_subjects.__name__ = f"gcse_{board}_subjects"
-    return gcse_<board>_subjects
+    # The `@dlt.resource(name=...)` above already sets the real registered
+    # resource name; this just gives the returned callable a matching
+    # __name__ for introspection/debugging (a previous version used a
+    # literal `gcse_<board>_subjects` placeholder in the `def` line itself
+    # — a hard SyntaxError).
+    _gcse_board_subjects.__name__ = f"gcse_{board}_subjects"
+    return _gcse_board_subjects
 
 
 # Pre-built resources for the 3 boards

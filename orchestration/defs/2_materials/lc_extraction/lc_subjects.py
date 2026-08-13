@@ -20,8 +20,13 @@ Usage:
     for subject in LC_SUBJECTS:
         ingested, ingested_check, cross_checked, cross_checked_check, loaded, loaded_check = lc_subject_pilot_factory(subject)
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations` — with it active,
+# `inspect.signature()` returns string annotations (e.g. "AssetExecutionContext")
+# instead of the resolved class, and Dagster's `_validate_context_type_hint`
+# checks `params[0].annotation in [AssetExecutionContext, ...]` by identity,
+# which a string never matches — every @asset here would raise
+# "Cannot annotate `context` parameter with type AssetExecutionContext."
+# The working sibling `lc_chemistry_pilot_assets.py` also omits this import.
 import os
 import subprocess
 from typing import Any
@@ -150,7 +155,16 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         return (None,) * 6
     baml_function = LC_BAML_FUNCTIONS.get(subject, "ExtractCurriculumSyllabus")
 
+    # NOTE: the inner `def`s below use plain, non-interpolated names and
+    # get their real per-subject name via the `name=`/`asset=` kwargs at
+    # decoration time. A previous version tried literal `lc_<subject>_...`
+    # placeholder tokens in the `def` line itself (a hard SyntaxError) and
+    # then attempted to fix the name via `fn.__name__ = f"..."` *after*
+    # decoration — that's a no-op for Dagster, which captures the asset
+    # key from `__name__` at decoration time, not afterwards.
+
     @asset(
+        name=f"lc_{subject}_pilot_ingested",
         group_name="2_materials_lc_extraction",
         description=(
             f"LC {subject} pilot: scan `stedding/site_scrape_samples/lc/{subject}/` "
@@ -158,11 +172,9 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
             "2026-08-10-baml-extraction-completion-v1 change."
         ),
     )
-    def lc_<subject>_pilot_ingested(context: AssetExecutionContext) -> dict[str, Any]:
+    def ingested(context: AssetExecutionContext) -> dict[str, Any]:
         pdfs = _resolve_pdf_paths(subject)
-        context.log.info(
-            f"lc_<subject>_pilot_ingested: {len(pdfs)} PDFs found"
-        )
+        context.log.info(f"lc_{subject}_pilot_ingested: {len(pdfs)} PDFs found")
         return {
             "subject": subject,
             "pdf_count": len(pdfs),
@@ -170,8 +182,8 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
             "pdf_paths": pdfs[:50],  # cap for materialization metadata
         }
 
-    @asset_check(asset=lc_<subject>_pilot_ingested)
-    def lc_<subject>_pilot_ingested_check(context) -> AssetCheckResult:
+    @asset_check(asset=ingested, name=f"lc_{subject}_pilot_ingested_check")
+    def ingested_check(context) -> AssetCheckResult:
         pdfs = _resolve_pdf_paths(subject)
         return AssetCheckResult(
             passed=len(pdfs) > 0,
@@ -179,13 +191,14 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         )
 
     @asset(
+        name=f"lc_{subject}_pilot_cross_checked",
         group_name="2_materials_lc_extraction",
         description=(
             f"LC {subject} BAML cross-check via primary + secondary BAML clients. "
             f"Routes through `{IRISH_BAML_CLIENT}` for gaeilge."
         ),
     )
-    def lc_<subject>_pilot_cross_checked(context: AssetExecutionContext) -> dict[str, Any]:
+    def cross_checked(context: AssetExecutionContext) -> dict[str, Any]:
         pdfs = _resolve_pdf_paths(subject)
         cross_check_results: list[dict[str, Any]] = []
         for pdf_path in pdfs[:5]:  # cap for smoke test
@@ -209,15 +222,15 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
             )
 
         context.log.info(
-            f"lc_<subject>_pilot_cross_checked: {len(cross_check_results)} results"
+            f"lc_{subject}_pilot_cross_checked: {len(cross_check_results)} results"
         )
         return {
             "subject": subject,
             "cross_check_results": cross_check_results,
         }
 
-    @asset_check(asset=lc_<subject>_pilot_cross_checked)
-    def lc_<subject>_pilot_cross_checked_check(context) -> AssetCheckResult:
+    @asset_check(asset=cross_checked, name=f"lc_{subject}_pilot_cross_checked_check")
+    def cross_checked_check(context) -> AssetCheckResult:
         return AssetCheckResult(
             passed=True,
             severity="WARN",
@@ -225,13 +238,14 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         )
 
     @asset(
+        name=f"lc_{subject}_pilot_loaded",
         group_name="2_materials_lc_extraction",
         description=(
             f"LC {subject} pilot: write rows to MotherDuck "
-            f"`md:cianfhoghlaim.cianfhoghlaim.lc_<subject>_<level>_<language>`."
+            f"`md:cianfhoghlaim.cianfhoghlaim.lc_{subject}_<level>_<language>`."
         ),
     )
-    def lc_<subject>_pilot_loaded(context: AssetExecutionContext) -> dict[str, Any]:
+    def loaded(context: AssetExecutionContext) -> dict[str, Any]:
         # The loading step is delegated to scripts/load_lc_chemistry_pilot.py
         # (canonical pattern from the chemistry pilot)
         script = (
@@ -264,8 +278,8 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         except Exception as e:  # noqa: BLE001
             return {"subject": subject, "loaded": False, "error": str(e)}
 
-    @asset_check(asset=lc_<subject>_pilot_loaded)
-    def lc_<subject>_pilot_loaded_check(context) -> AssetCheckResult:
+    @asset_check(asset=loaded, name=f"lc_{subject}_pilot_loaded_check")
+    def loaded_check(context) -> AssetCheckResult:
         # Approximate row count for the asset check
         expected = LC_ESTIMATED_ROW_COUNTS.get(subject, 1)
         return AssetCheckResult(
@@ -276,14 +290,6 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
                 "expected_min_rows": expected,
             },
         )
-
-    # Rename the inner functions so Dagster sees unique names per subject
-    ingested.__name__ = f"lc_{subject}_pilot_ingested"
-    ingested_check.__name__ = f"lc_{subject}_pilot_ingested_check"
-    cross_checked.__name__ = f"lc_{subject}_pilot_cross_checked"
-    cross_checked_check.__name__ = f"lc_{subject}_pilot_cross_checked_check"
-    loaded.__name__ = f"lc_{subject}_pilot_loaded"
-    loaded_check.__name__ = f"lc_{subject}_pilot_loaded_check"
 
     return (
         ingested,

@@ -16,13 +16,17 @@ filesystem scan) automatically. The R1-R4 conformance contract
       embedding_model: BAAI/bge-large-en-v1.5
       hnsw_index: true
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations` — Dagster's
+# Resolvable derives the YAML schema from real (not postponed-string) type
+# annotations; see the identical note in layer1_ingestion.py /
+# layer2_materials.py. With postponed annotations, `get_model_cls()` raises
+# `AttributeError: 'str' object has no attribute '__name__'`.
 import importlib
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 import dagster as dg
-from dagster.components import Component, ComponentLoadContext
+from dagster.components import Component, ComponentLoadContext, Resolvable
 
 EmbeddingModel = Literal["BAAI/bge-m3", "BAAI/bge-large-en-v1.5"]
 
@@ -37,8 +41,20 @@ class ConformanceError(Exception):
         super().__init__(f"[{rule}] {message}\nFix: {fix}")
 
 
-class CelticModelLifecycleComponent(Component):
+@dataclass
+class CelticModelLifecycleComponent(Component, Resolvable):
     """Layer 3 Model Lifecycle Component.
+
+    `@dataclass` + `Resolvable`: without them Dagster derives
+    `EmptyAttributesModel` (which forbids every extra field), so all 97
+    `3_model_lifecycle/cocoindex_v1/**/defs.yaml` files failed schema
+    validation. Same fix as `CelticIngestionComponent`.
+
+    NOTE: the 97 YAML files use TWO incompatible shapes — 34 supply the
+    singular `app_name` + `module` this class declares, and 60 supply an
+    `apps:` LIST plus `app_group` / `schedule`, which this class has never
+    supported. The list shape is accepted below as `apps` and each entry
+    is expanded into its own asset; see `_iter_app_specs()`.
 
     Wraps one CocoIndex v1 App as a `is_virtual=True` Dagster asset. The
     R1-R4 conformance contract is enforced at scaffold time by
@@ -56,13 +72,152 @@ class CelticModelLifecycleComponent(Component):
             table. Default: True.
         conformance_required: Whether to enforce R1-R4. Default: True.
             Disable only for App migrations in flight.
+        apps: The multi-app shape — a list of
+            `{app_name, module, source?, lance_table?}` mappings. Mutually
+            exclusive with the singular `app_name`/`module` pair; supply
+            exactly one of the two forms.
+        app_group: Group label for the multi-app shape (e.g.
+            "americas_california_education"). Defaults to the single app's
+            snake-cased name.
+        schedule: `{cron, timezone}` for the multi-app shape. Translated
+            into an `AutomationCondition.on_cron`.
+        tags / metadata: Freeform documentation surfaced in asset metadata.
+        r4_exempt / r4_exempt_reason: Skip the R4 conformance rule (an App
+            with no embedding column, e.g. GeoParquet output). BEHAVIOURAL.
+        automation / automation_cron: Override the automation condition,
+            mirroring `CelticIngestionComponent`. BEHAVIOURAL.
     """
 
-    app_name: str
-    module: str
-    embedding_model: EmbeddingModel = "BAAI/bge-large-en-v1.5"
+    app_name: str | None = None
+    module: str | None = None
+    # Nullable: `apple_photos_geospatial` sets `embedding_model: null` because
+    # it writes GeoParquet and has no embedding column (it is also r4_exempt).
+    embedding_model: EmbeddingModel | None = "BAAI/bge-large-en-v1.5"
     hnsw_index: bool = True
     conformance_required: bool = True
+    apps: list[dict[str, Any]] = field(default_factory=list)
+    app_group: str | None = None
+    schedule: dict[str, Any] = field(default_factory=dict)
+    tags: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    # --- behavioural ---
+    r4_exempt: bool = False
+    r4_exempt_reason: str | None = None
+    automation: Literal["eager", "on_cron"] | None = None
+    automation_cron: str | None = None
+
+    # --- documentation / lineage hints ---
+    # Every field below is already supplied by one or more
+    # `3_model_lifecycle/cocoindex_v1/**/defs.yaml` files and was previously
+    # rejected outright (the class derived `EmptyAttributesModel`). They are
+    # surfaced verbatim in the asset's MaterializeResult metadata and do not
+    # otherwise change behaviour. Declared explicitly rather than via a
+    # catch-all so `scripts/audit_defs_yaml.py` keeps its teeth: a genuinely
+    # new key still fails loudly instead of being silently swallowed.
+    table_name: str | None = None
+    table_name_pattern: str | None = None
+    lance_tables: list[str] = field(default_factory=list)
+    lance_table_format: str | None = None
+    source_asset: str | None = None
+    source_tables: list[str] = field(default_factory=list)
+    languages: list[str] = field(default_factory=list)
+    depts: list[str] = field(default_factory=list)
+    corpora: list[str] = field(default_factory=list)
+    # Deliberately `Any` — these three are genuinely heterogeneous across the
+    # files that use them, and narrowing them re-breaks the layer:
+    #   subjects         list[dict] in lc_subjects, not list[str]
+    #   backbones        a dict {caption, audio_leg, ...} in youtube_kg
+    #   cognify_datasets an int COUNT (5, 6) in lc_cognify / gemini_corpus
+    # They are documentation only; a schema that describes them precisely
+    # would mean splitting this component, which is follow-on work.
+    subjects: Any = None
+    backbones: Any = None
+    cognify_datasets: Any = None
+    # Also `Any` — an int COUNT in lc_cognify / gemini_corpus, same as
+    # `cognify_datasets` above.
+    graphiti_streams: Any = None
+    falkordb_label: str | None = None
+    ducklake_source: str | None = None
+    ocr_registry: str | None = None
+    privacy_gate: str | None = None
+    # `factory_pattern`/`factory_module` document that the `apps:` entry is a
+    # factory collapsing N jurisdictions into one module; the apps list is
+    # still supplied alongside, so no extra resolution logic is needed.
+    factory_pattern: bool = False
+    factory_module: str | None = None
+    # `schedules` is a *named* schedule map ({name: {cron, timezone}}) used by
+    # one file. Not yet emitted as real dg.ScheduleDefinitions — declared so
+    # the file loads; emitting them is follow-on work.
+    schedules: dict[str, Any] = field(default_factory=dict)
+    total_vectors: int | None = None
+    expected_total_documents: int | None = None
+    refresh_interval_secs: int | None = None
+    frame_sample_fps: float | None = None
+    audio_leg: dict[str, Any] = field(default_factory=dict)
+
+    def _iter_app_specs(self) -> list[dict[str, Any]]:
+        """Normalise the THREE YAML shapes to a single list of app specs.
+
+        The 97 `3_model_lifecycle/cocoindex_v1/**/defs.yaml` files were
+        written against three different mental models of this Component:
+
+          1. singular   `app_name:` + `module:`                  (34 files)
+          2. list       `apps: [{app_name, module, ...}]`        (60 files)
+          3. per-subject `subjects: [{name, app_name, module}]`  (lc_subjects)
+
+        Returns a list of `{app_name, module, ...}` mappings. Raises if none
+        is populated, rather than silently emitting nothing — an empty
+        Definitions is how this layer previously reported success while
+        doing nothing.
+        """
+        if self.apps:
+            return self._validate_specs([dict(a) for a in self.apps], "apps")
+        # Shape 3: `subjects` is normally a documentation list of plain
+        # strings, but lc_subjects uses it to carry full app specs.
+        if isinstance(self.subjects, list) and any(
+            isinstance(s, dict) and s.get("module") for s in self.subjects
+        ):
+            specs = [dict(s) for s in self.subjects if isinstance(s, dict)]
+            return self._validate_specs(specs, "subjects")
+        if self.app_name and self.module:
+            return [{"app_name": self.app_name, "module": self.module}]
+        if self.app_name:
+            # Shape 4: graph-only stage — `3_model_lifecycle/lc_cognify` and
+            # `legal_research/gemini_corpus` name an app but no `module:`,
+            # because they describe a cognify / Graphiti / FalkorDB fan-out
+            # rather than a CocoIndex App. The asset is still DEFINED (so the
+            # graph is the same on every machine); `_resolve_app()` raises a
+            # precise Failure at execute time.
+            return [{"app_name": self.app_name, "module": None}]
+        raise ValueError(
+            "CelticModelLifecycleComponent needs one of: `app_name` (with or "
+            "without `module`), a non-empty `apps:` list, or a `subjects:` "
+            f"list carrying app specs. Got app_name={self.app_name!r}, "
+            f"module={self.module!r}, apps={len(self.apps)} entries."
+        )
+
+    def _validate_specs(
+        self, specs: list[dict[str, Any]], source_key: str
+    ) -> list[dict[str, Any]]:
+        """Every spec must name both an app and a module — fail loudly if not."""
+        for i, spec in enumerate(specs):
+            if not spec.get("app_name") or not spec.get("module"):
+                raise ValueError(
+                    f"CelticModelLifecycleComponent[{self.app_group or '?'}]: "
+                    f"{source_key}[{i}] needs both `app_name` and `module`; "
+                    f"got {sorted(spec)}"
+                )
+        return specs
+
+    def _automation_condition(self) -> dg.AutomationCondition:
+        """Explicit `automation_cron` wins, then `schedule.cron`, else eager."""
+        cron = self.automation_cron or (self.schedule or {}).get("cron")
+        if self.automation == "eager":
+            return dg.AutomationCondition.eager().resolve_through_virtual()
+        if cron:
+            return dg.AutomationCondition.on_cron(cron).resolve_through_virtual()
+        return dg.AutomationCondition.eager().resolve_through_virtual()
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 1 `is_virtual=True` @asset for the CocoIndex v1 App.
@@ -73,52 +228,116 @@ class CelticModelLifecycleComponent(Component):
         ConformanceError is raised with the exact rule + fix
         instructions.
         """
-        if self.conformance_required:
-            self._check_r1_to_r4()
+        # NOTE: conformance is checked at EXECUTE time (inside the asset
+        # body), not here. It imports the App's module, and CocoIndex modules
+        # are currently unimportable — the PyPI `cocoindex` package is not
+        # installed and the repo's own `cocoindex/` directory shadows the
+        # name. Raising here took down the entire code location, so every
+        # YAML Component in the repo silently vanished. See the class
+        # docstring's "assets are always defined" note.
+        automation_condition = self._automation_condition()
+        assets = [
+            self._build_app_asset(spec, automation_condition)
+            for spec in self._iter_app_specs()
+        ]
+        return dg.Definitions(assets=assets)
 
-        asset_name = f"{_to_snake(self.app_name)}_app"
-        group_name = f"3_model_lifecycle_cocoindex_v1_{_to_snake(self.app_name)}"
-        automation_condition = (
-            dg.AutomationCondition.eager().resolve_through_virtual()
+    def _build_app_asset(
+        self,
+        spec: dict[str, Any],
+        automation_condition: dg.AutomationCondition,
+    ) -> dg.AssetsDefinition:
+        """Emit one `is_virtual=True` @asset for a single app spec.
+
+        Kept as its own method so the closure captures THIS spec — building
+        the assets inline in a loop would have every closure see the last
+        iteration's values.
+        """
+        app_name: str = spec["app_name"]
+        # `None` for the graph-only shape (see `_iter_app_specs` shape 4).
+        module_path: str | None = spec.get("module")
+
+        asset_name = f"{_to_snake(app_name)}_app"
+        group_name = (
+            f"3_model_lifecycle_cocoindex_v1_"
+            f"{_to_snake(self.app_group or app_name)}"
         )
 
-        # Look up the App instance via reflection so we can fail fast
-        # at build time if the module doesn't export the expected App.
-        try:
-            mod = importlib.import_module(self.module)
-        except ImportError as exc:
-            raise dg.Failure(
-                description=(
-                    f"cocoindex_v1_module_import_failed module={self.module} err={exc}"
+        def _resolve_app() -> Any:
+            """Import the module and reflect the App — at EXECUTE time."""
+            if module_path is None:
+                raise dg.Failure(
+                    description=(
+                        f"cocoindex_app_has_no_module app_name={app_name}. This "
+                        "defs.yaml describes a graph-only stage (cognify / "
+                        "Graphiti / FalkorDB) but is typed as "
+                        "CelticModelLifecycleComponent, which builds CocoIndex "
+                        "Apps. Either add `module: <path.to.app_module>`, or "
+                        "retype it to KCGCognifyComponent and give it `stage`, "
+                        "`dataset` and `source_adapter`."
+                    )
                 )
-            ) from exc
+            return _import_and_find_app()
 
-        app = self._find_app(mod, self.app_name)
-        if app is None:
-            raise dg.Failure(
-                description=(
-                    f"cocoindex_app_not_found name={self.app_name} module={self.module}"
+        def _import_and_find_app() -> Any:
+            """Import the module and reflect the App.
+
+            Deliberately not done at defs-build time: `dg.load_defs()` aborts
+            the whole code location on the first exception, so an unimportable
+            App module would (and did) take every other Component down with
+            it. Failing here still fails loudly, just scoped to the one asset.
+            """
+            try:
+                mod = importlib.import_module(module_path)
+            except ImportError as exc:
+                raise dg.Failure(
+                    description=(
+                        f"cocoindex_v1_module_import_failed module={module_path} "
+                        f"err={exc}. Note: 88 of the 95 L3 defs.yaml files still "
+                        "use the pre-refactor flat layout "
+                        "(`cianfhoghlaim.cocoindex.<app>`) while the real package "
+                        "is `cocoindex/<subpkg>/<app>` at the repo root, AND the "
+                        "PyPI `cocoindex` package is not installed. Both are "
+                        "Wave 0 items in the KCG refactor roadmap."
+                    )
+                ) from exc
+
+            app = self._find_app(mod, app_name)
+            if app is None:
+                raise dg.Failure(
+                    description=(
+                        f"cocoindex_app_not_found name={app_name} module={module_path}"
+                    )
                 )
-            )
+            return app
 
         @dg.asset(
             name=asset_name,
             group_name=group_name,
             compute_kind="cocoindex",
             description=(
-                f"L3 CocoIndex v1 App: {self.app_name} "
-                f"(module={self.module}, embedding={self.embedding_model})"
+                f"L3 CocoIndex v1 App: {app_name} "
+                f"(module={module_path}, embedding={self.embedding_model})"
             ),
             automation_condition=automation_condition,
             is_virtual=True,
+            tags={t: "" for t in self.tags},
         )
         def _cocoindex_app_asset(
             asset_context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
+            # Conformance + module resolution happen here, at execute time.
+            # `_resolve_app()` runs first so the graph-only shape raises its
+            # own precise "no module" Failure rather than a confusing
+            # conformance error about a None module path.
+            app = _resolve_app()
+            if self.conformance_required and module_path is not None:
+                self._check_module_r1_to_r4(module_path)
+
             update = getattr(app, "update", None)
             if update is None:
                 raise dg.Failure(
-                    description=f"cocoindex_app_has_no_update_method name={self.app_name}"
+                    description=f"cocoindex_app_has_no_update_method name={app_name}"
                 )
             try:
                 import asyncio
@@ -129,25 +348,48 @@ class CelticModelLifecycleComponent(Component):
                     update()
             except Exception as exc:  # pragma: no cover
                 asset_context.log.warning(
-                    f"cocoindex_update_failed name={self.app_name} err={exc}"
+                    f"cocoindex_update_failed name={app_name} err={exc}"
                 )
                 return dg.MaterializeResult(
                     metadata={"skipped": True, "reason": str(exc)}
                 )
-            return dg.MaterializeResult(
-                metadata={
-                    "app_name": self.app_name,
-                    "module": self.module,
-                    "embedding_model": self.embedding_model,
-                    "hnsw_index": self.hnsw_index,
-                    "layer": "3_model_lifecycle",
-                }
-            )
+            result_metadata: dict[str, Any] = {
+                "app_name": app_name,
+                "module": module_path,
+                "embedding_model": self.embedding_model,
+                "hnsw_index": self.hnsw_index,
+                "layer": "3_model_lifecycle",
+            }
+            for key in ("source", "lance_table"):
+                if spec.get(key):
+                    result_metadata[key] = spec[key]
+            if self.metadata:
+                result_metadata.update(self.metadata)
+            return dg.MaterializeResult(metadata=result_metadata)
 
-        return dg.Definitions(assets=[_cocoindex_app_asset])
+        return _cocoindex_app_asset
 
     def _check_r1_to_r4(self) -> None:
-        """Enforce the 4-rule R1-R4 conformance contract.
+        """Enforce the R1-R4 conformance contract for every declared app."""
+        for spec in self._iter_app_specs():
+            self._check_module_r1_to_r4(spec["module"])
+
+    def _r4_is_required(self) -> bool:
+        """R4 (`@coco.fn(` present) is skippable for Apps with no embedding
+        column — e.g. the GeoParquet writer. An exemption must state a
+        reason, so the escape hatch can't be used silently."""
+        if not self.r4_exempt:
+            return True
+        if not self.r4_exempt_reason:
+            raise ConformanceError(
+                rule="R4",
+                message="r4_exempt: true was set without an r4_exempt_reason",
+                fix="Add `r4_exempt_reason: <why this App has no embedding column>`",
+            )
+        return False
+
+    def _check_module_r1_to_r4(self, module_path: str) -> None:
+        """Enforce the 4-rule R1-R4 conformance contract on one module.
 
         R1: Module imports `from ._lifespan import shared_lifespan`
         R2: Module imports the canonical ContextKeys (LANCE_DB, EMBEDDER,
@@ -157,11 +399,11 @@ class CelticModelLifecycleComponent(Component):
         R4: At least one `@coco.fn(` decorator is present
         """
         try:
-            mod = importlib.import_module(self.module)
+            mod = importlib.import_module(module_path)
         except ImportError as exc:
             raise ConformanceError(
                 rule="R0",
-                message=f"module {self.module!r} failed to import: {exc}",
+                message=f"module {module_path!r} failed to import: {exc}",
                 fix="Check the module path + the `from ._lifespan import shared_lifespan` line",
             ) from exc
 
@@ -169,7 +411,7 @@ class CelticModelLifecycleComponent(Component):
         if not src:
             raise ConformanceError(
                 rule="R0",
-                message=f"module {self.module!r} has no __file__ (dynamic module?)",
+                message=f"module {module_path!r} has no __file__ (dynamic module?)",
                 fix="Use a file-backed Python module under cianfhoghlaim/cocoindex/",
             )
 
@@ -227,12 +469,17 @@ class CelticModelLifecycleComponent(Component):
                 fix="Move the `coco.App(coco.AppConfig(name=...))` construction to module scope",
             )
 
-        # R4: at least one `@coco.fn(` decorator
-        if "@coco.fn(" not in source_text:
+        # R4: at least one `@coco.fn(` decorator, unless explicitly exempted
+        # with a stated reason (see `_r4_is_required`).
+        if self._r4_is_required() and "@coco.fn(" not in source_text:
             raise ConformanceError(
                 rule="R4",
                 message="no `@coco.fn(` decorator found",
-                fix="Add `@coco.fn(memo=True)` to your processing function",
+                fix=(
+                    "Add `@coco.fn(memo=True)` to your processing function, or "
+                    "set `r4_exempt: true` + `r4_exempt_reason: <why>` if this "
+                    "App legitimately has no embedding column"
+                ),
             )
 
     def _find_app(self, mod: Any, app_name: str) -> Any:
@@ -254,8 +501,13 @@ def _to_snake(name: str) -> str:
     return s.lower()
 
 
-class CelticFederatedOcrComponent(Component):
+@dataclass
+class CelticFederatedOcrComponent(Component, Resolvable):
     """Layer 3 Federated-OCR Component (NEW for T4 of the 5-tangent plan).
+
+    `@dataclass` + `Resolvable`: without them Dagster derives
+    `EmptyAttributesModel` (which forbids every extra field), so
+    `3_model_lifecycle/federated_ocr/defs.yaml` failed schema validation.
 
     Wraps `cianfhoghlaim.meaisinfhoghlaim.federated.run_federated_training()`
     as a Dagster `@asset` with a cron automation condition. Per the
@@ -320,7 +572,7 @@ class CelticFederatedOcrComponent(Component):
             group_name=group_name,
             compute_kind="federated-learning",
             description=description,
-            automation_condition=dg.AutomationCondition.cron(
+            automation_condition=dg.AutomationCondition.on_cron(
                 self.automation_cron
             ),
         )

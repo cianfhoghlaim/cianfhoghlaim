@@ -237,4 +237,32 @@ except Exception as _exc:  # pragma: no cover
     )
 
 
+# ============================================================================
+# `dagster-dlt` resource — required by any `@dlt_assets`-decorated asset
+# (e.g. `orchestration/defs/2_materials/endpoint_health/sink.py`, the
+# Phase 5 reference migration off the hand-rolled `dlt.pipeline().run()`
+# pattern). `orchestration/resources.py`'s `all_resources` dict already
+# builds a `DagsterDltResource()` instance under the "dlt" key, but that
+# dict was never actually consumed by any `Definitions` construction —
+# every `@dlt_assets` asset would fail at runtime with a missing required
+# resource. This merge is the fix: it's what actually supplies the "dlt"
+# resource key at runtime.
+# ============================================================================
+
+try:
+    from dagster_dlt import DagsterDltResource
+
+    defs = dg.Definitions.merge(
+        defs,
+        dg.Definitions(resources={"dlt": DagsterDltResource()}),
+    )
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"dlt_resource_wiring_failed: {_exc}; @dlt_assets-decorated assets "
+        "will fail at runtime with a missing 'dlt' resource"
+    )
+
+
 __all__ = ["defs", "_DEFS_AVAILABLE", "_DEFS_LOADED_VIA"]

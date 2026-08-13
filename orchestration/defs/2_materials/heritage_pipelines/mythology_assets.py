@@ -17,7 +17,7 @@ from dagster import (
     asset,
 )
 
-from dlt_utils import create_pipeline
+from dlt_sources.common.destinations_tuatha import create_pipeline
 
 # Partitions for mythology traditions/cycles
 tradition_partitions = StaticPartitionsDefinition([

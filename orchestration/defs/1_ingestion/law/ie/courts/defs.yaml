@@ -6,7 +6,7 @@ attributes:
   nation: ie
   automation: on_cron
   automation_cron: "0 5 * * *"
-  dlt_source: cianfhoghlaim.dlt.british_isles.ie.law.courts.courts_source
+  dlt_source: dlt_sources.british_isles.ireland.education.law.courts.courts_source
   destination_tables:
     - cianfhoghlaim.law.ie.courts_forms
     - cianfhoghlaim.law.ie.court_fees

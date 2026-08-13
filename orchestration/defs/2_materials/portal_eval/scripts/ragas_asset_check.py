@@ -24,8 +24,20 @@ import logging
 import sys
 from typing import Any
 
-import mlflow
-from mlflow.tracking import MlflowClient
+# NOTE: `mlflow` is imported inside `get_latest_scores()`, not here.
+# Anything under `orchestration/defs/` is imported by `dg.load_defs()` at
+# definitions-build time, so a module-scope import of a heavy, optional
+# package makes the ENTIRE code location fail to load — which is what
+# happened here until 2026-08-13 (`load_defs failed: No module named
+# 'mlflow' ... falling back to _defs_walker`, and the walker ignores all
+# YAML, so all 171 Components silently vanished).
+#
+# This is deferral, not suppression: the import below is unguarded, so
+# calling this check without mlflow installed still raises ImportError
+# loudly at the call site. Separately, `mlflow` IS a real dependency of
+# this repo (15 module-scope importers across observability/,
+# meaisinfhoghlaim/ and dlt_sources/) and is missing from both
+# pyproject.toml and uv.lock — that belongs to the Wave 0 P0 train.
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("ragas_asset_check")
@@ -35,6 +47,9 @@ EXPERIMENT_NAME = "portal_study_plan_eval"
 
 def get_latest_scores(metric: str, lookback: int = 10) -> list[float]:
     """Read the latest N runs from the MLflow experiment and return the metric values."""
+    import mlflow
+    from mlflow.tracking import MlflowClient
+
     mlflow.set_tracking_uri("http://mlflow.cianfhoghlaim.ie")
     client = MlflowClient()
     exp = client.get_experiment_by_name(EXPERIMENT_NAME)

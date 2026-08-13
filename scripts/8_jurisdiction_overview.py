@@ -13,6 +13,11 @@ import os
 
 import duckdb
 
+# Canonical DuckLake bucket. Must match `destinations_cianfhoghlaim.py` and
+# `mise.toml` — the live-seeded catalog uses `ducklake`. This was hardcoded
+# to `ducklake-cianfhoghlaim` with no env override until 2026-08-13.
+BUCKET: str = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
+
 
 def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
     """Open a DuckLake connection configured for local Garage."""
@@ -40,7 +45,7 @@ def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
         "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
         "host=localhost port=5433 user=lakekeeper "
         f"password={PG_PASSWORD}' "
-        "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
+        f"AS cianfhoghlaim (DATA_PATH 's3://{BUCKET}/cianfhoghlaim/')"
     )
     con.execute("USE cianfhoghlaim;")
     return con
@@ -73,7 +78,7 @@ def main() -> int:
         "northern_ireland", "jersey", "guernsey", "isle_of_man",
     ]:
         glob = (
-            f"s3://ducklake-cianfhoghlaim/cianfhoghlaim/"
+            f"s3://{BUCKET}/cianfhoghlaim/"
             f"{jurisdiction}_education/{jurisdiction}_subjects/*.parquet"
         )
         try:

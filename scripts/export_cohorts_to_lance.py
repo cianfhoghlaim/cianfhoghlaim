@@ -30,6 +30,12 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 LANCEDB_PATH = REPO_ROOT / "storage" / "data" / "lancedb"
 LANCEDB_PATH.mkdir(parents=True, exist_ok=True)
 
+# Canonical DuckLake bucket. Must match `destinations_cianfhoghlaim.py` and
+# `mise.toml` — the live-seeded catalog uses `ducklake`. This was hardcoded to
+# `ducklake-cianfhoghlaim` with no env override until 2026-08-13, which is why
+# the datasets on disk are stale (last written 2026-07-19).
+BUCKET = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
+
 
 def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
     """Open a DuckLake connection configured for local Garage."""
@@ -59,7 +65,7 @@ def get_duckdb_connection() -> duckdb.DuckDBPyConnection:
         "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
         "host=localhost port=5433 user=lakekeeper "
         f"password={PG_PASSWORD}' "
-        "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
+        f"AS cianfhoghlaim (DATA_PATH 's3://{BUCKET}/cianfhoghlaim/')"
     )
     con.execute("USE cianfhoghlaim;")
     return con
@@ -82,7 +88,7 @@ def export_jurisdiction_to_lance(
     # catalog doesn't expose these as tables (they're managed by dlt's staging
     # layer), so we read the Parquet files directly.
     parquet_glob = (
-        f"s3://ducklake-cianfhoghlaim/cianfhoghlaim/"
+        f"s3://{BUCKET}/cianfhoghlaim/"
         f"{jurisdiction}_education/{jurisdiction}_subjects/*.parquet"
     )
     try:

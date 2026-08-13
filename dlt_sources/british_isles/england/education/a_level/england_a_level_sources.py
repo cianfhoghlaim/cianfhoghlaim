@@ -131,7 +131,7 @@ def make_a_level_resource(board: str):
             "language": {"data_type": "text"},
         },
     )
-    def a_level_<board>_subjects(
+    def _a_level_board_subjects(
         root_path: str = str(
             Path(
                 os.environ.get(
@@ -160,8 +160,9 @@ def make_a_level_resource(board: str):
                 }
             )
 
-    a_level_<board>_subjects.__name__ = f"a_level_{board}_subjects"
-    return a_level_<board>_subjects
+    # See the identical note in england_gcse_sources.py's make_gcse_resource.
+    _a_level_board_subjects.__name__ = f"a_level_{board}_subjects"
+    return _a_level_board_subjects
 
 
 # Pre-built resources for the 3 boards
