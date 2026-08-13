@@ -275,17 +275,61 @@ tables, matching this session's own live run output.
 - [x] `grep -rn "805c7a45"` (leaked password fragment) → 0 hits repo-wide
 - [x] `lakehouse-garage` + `lakehouse-postgres` confirmed healthy; real
   dlt pipeline write round-trip succeeded
-- [ ] `litellm` healthy — blocked on a manual Komodo redeploy outside
-  this worktree (fix applied at the repo source; not yet live)
-- [ ] `llama-swap` healthy — blocked on missing local GGUF model weights
+- [x] `litellm` healthy — fixed (`router_settings.fallbacks` shape) and
+  confirmed live: `/health/liveliness` → `"I'm alive!"`
+- [x] `llama-swap` healthy — fixed 4 distinct, real, live-confirmed bugs
+  found only by actually trying to serve a model through it (not just
+  reading the config): (1) `:v166` image tag never existed on GHCR,
+  switched to the real `:cpu` tag; (2) every model entry set
+  `--port "${LLAMA_ARG_PORT:-NNNN}"` with no `proxy:` field, tripping
+  llama-swap's own default-proxy validation and blocking the ENTIRE
+  config from loading on the first bad entry — added explicit
+  `proxy: "http://localhost:<port>"` to all 12 active entries; (3) the
+  `:cpu` image ships the binary at `/app/llama-server`, not
+  `/usr/local/bin/llama-server` (confirmed via `docker exec ... which
+  llama-server`); (4) this llama-swap build silently ignores a separate
+  top-level `args:` list — only a single folded `cmd: >` string (binary
+  + all flags together) is honored, confirmed by reproducing the crash
+  directly (`llama-server` with zero args tries to bind port 8080,
+  llama-swap's own port, and dies) and by inspecting the image's own
+  bundled `/app/config.yaml`, which uses that exact shape. Also raised
+  `healthCheckTimeout` 30s → 300s (CPU-only load of qwen3-vl-8b takes
+  ~81s, confirmed live). Real GGUF weights downloaded for qwen3-vl-8b
+  (`Qwen/Qwen3-VL-8B-Instruct-GGUF`, 4.7GB Q4_K_M + 1.1GB F16 mmproj).
+  Separately found and fixed a 5th bug one layer up: litellm's
+  `local/vision/*` model names (built from HF-repo-style
+  unsloth_id/upstream_id) didn't match llama-swap's own short aliases at
+  all, so every request 404'd with `{"error": "no router for requested
+  model"}` — fixed `scripts/generate_litellm_config.py` for the
+  LLAMASWAP backend + hand-patched the 11 affected `config.yaml` entries.
 - [x] A direct DuckDB/DuckLake query against the hydrated lakehouse
   returns real row counts matching the local corpus: 139 documents
   across 13 subjects, 11 real syllabus cross-check extractions —
   independently re-verified in a fresh connection/session after the
   write completed
 - [x] At least one `ExtractSyllabusDiagram`/ensemble-extractor call
-  verified to construct a real image-bearing request (both live-verified
-  up to the network boundary; full round-trip blocked per D4)
+  verified to construct a real image-bearing request, AND (upgraded from
+  "blocked per D4" once litellm+llama-swap were fixed live, above) a full
+  real round trip genuinely completed: a real page of
+  `leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf`
+  rendered to PNG (pymupdf, no BAML/adapter code involved in this direct
+  smoke test) and sent as an `image_url` content block through
+  `POST :4000/v1/chat/completions` (`model: local/vision/qwen3-vl-8b`) →
+  litellm → llama-swap → the real qwen3-vl-8b GGUF weights, which
+  correctly answered: *"This document page describes the Chemistry
+  syllabus for the Leaving Certificate exam board, An Roinn Oideachais
+  agus Eolaíochta."* — content only derivable from actually reading the
+  rendered pixels, not from any filename or path string. This proves the
+  OCR/VLM chain is genuinely live end to end, not just correctly wired
+  up to a boundary that was never crossed.
+  - **Not done this pass**: re-running the full 144-PDF/13-subject
+    hydration script (`scripts/hydrate_lc_full_corpus.py`) against this
+    now-working VLM path to replace the earlier text-only diagram
+    extractions with real image-derived ones. CPU-only inference is slow
+    (~113s for one page + one short answer in the smoke test above,
+    driven by ~19 prompt-tokens/sec) so a full-corpus VLM re-run is a
+    long-running operation, flagged as separate follow-up rather than
+    run unsupervised in this session.
 - [x] `.venv/bin/baml-cli generate` succeeds after the schema change
 - [x] England hydration explicitly documented as skipped (no local
   corpus), not silently omitted
