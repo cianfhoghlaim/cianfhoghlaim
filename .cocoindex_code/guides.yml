@@ -12,20 +12,29 @@
 #   - files:        list of file paths (relative to project root) to surface
 #   - tags:         optional list of keywords for matching
 #   - domain:       optional human-readable category
+#
+# Post-2026-08-13: every entry points at real on-disk paths (the
+# `mise run lint:guides-yml` validation gate enforces this).
+# The pre-v7 `docs/0X-*/` directories were absorbed into per-area
+# AGENTS.md files + per-skill .agents/skills/<skill>/SKILL.md files;
+# see `docs/INTEGRATIONS_INDEX.md` for the full legacy → new mapping.
 
 - title: "Cognee knowledge graph architecture"
   description: |
     How Cognee, Graphiti, FalkorDB, Langfuse, the Lakehouse, and the
     ccc semantic search fit together to form the documentation cognition
     pipeline. Start here if you want to understand the full stack.
+    Post-v7, the 7 legacy docs/01-cognee/*.md files were consolidated
+    into the single .agents/skills/INDEXING_AND_COGNITION.md + the
+    cognee + ccc skills.
   files:
-    - docs/01-cognee/README.md
-    - docs/01-cognee/ARCHITECTURE.md
-    - docs/01-cognee/COGNEE_INTEGRATION.md
-    - docs/01-cognee/MCP_SERVERS.md
-    - docs/01-cognee/INGESTION.md
-    - docs/01-cognee/CCC_INTEGRATION.md
-    - docs/01-cognee/INFRASTRUCTURE.md
+    - .agents/skills/INDEXING_AND_COGNITION.md
+    - .agents/skills/cognee/SKILL.md
+    - .agents/skills/ccc/SKILL.md
+    - .agents/skills/agent-memory-systems/SKILL.md
+    - .agents/skills/graphiti/SKILL.md
+    - openspec/specs/indexing-and-cognition/spec.md
+    - openspec/specs/agent-memory-systems/spec.md
   tags: [cognee, graphiti, knowledge-graph, mcp, cognition, ingestion]
   domain: "01-cognee"
 
@@ -33,251 +42,342 @@
   description: |
     The top-level architecture, secrets management, deployment
     strategy, and infrastructure stacks (Pangolin, Komodo, Pocket ID,
-    Locket, Infisical, etc.).
+    Locket, Infisical, etc.). Post-v7, the 6 legacy
+    docs/01-platform-architecture/*.md files were absorbed into
+    bonneagar/AGENTS.md + the komodo / pangolin / secrets-management
+    skills.
   files:
-    - docs/01-platform-architecture/platform-overview.md
-    - docs/01-platform-architecture/monorepo-strategy.md
-    - docs/01-platform-architecture/infrastructure-stacks.md
-    - docs/01-platform-architecture/secrets-management.md
-    - docs/01-platform-architecture/komodo-gitops.md
-    - docs/01-platform-architecture/pangolin-networking.md
-  tags: [architecture, infrastructure, pangolin, komodo, deployment]
+    - bonneagar/AGENTS.md
+    - .agents/skills/secrets-management/SKILL.md
+    - .agents/skills/komodo/SKILL.md
+    - .agents/skills/pangolin/SKILL.md
+    - .agents/skills/stacks-sync/SKILL.md
+    - openspec/specs/infrastructure-stacks/spec.md
+    - openspec/specs/bonneagar-iac-merge/spec.md
+  tags: [architecture, infrastructure, pangolin, komodo, deployment, locket, infisical]
   domain: "01-platform-architecture"
 
-- title: "Data platform: lakehouse, Dagster, DLT"
+- title: "Data platform: lakehouse, Dagster, DLT, BAML, CocoIndex"
   description: |
     The data-platform stack: DuckDB, DuckLake, Iceberg, Lakekeeper,
     S3 (Garage + Cloudflare R2), MotherDuck, LanceDB, Dagster
-    orchestration, DLT pipelines, and the SQLMesh semantic layer.
+    orchestration, DLT pipelines, BAML extraction, CocoIndex v1
+    embeddings. Post-v7, the 3 legacy docs/02-data-platform/*.md
+    files were absorbed into dlt_sources/DATA_PLATFORM_ROUTER.md +
+    the 5 per-area AGENTS.md files (added by the
+    2026-08-13-skill-consolidation-and-extension-v1 change).
   files:
-    - docs/02-data-platform/data-architecture.md
-    - docs/02-data-platform/dagster-orchestration.md
-    - docs/02-data-platform/dlt-pipelines.md
-  tags: [data, dagster, dlt, lakehouse, iceberg, sqlmesh, lance]
-  domain: "02-data-platform"
+    - dlt_sources/DATA_PLATFORM_ROUTER.md
+    - dlt_sources/AGENTS.md
+    - baml_src/AGENTS.md
+    - cocoindex/AGENTS.md
+    - orchestration/AGENTS.md
+    - meaisinfhoghlaim/README.md
+    - motherduck/README.md
+    - openspec/specs/british-isles-education-pipeline/spec.md
+    - openspec/specs/dagster-5-layer-component-architecture/spec.md
+  tags: [data, dagster, dlt, lakehouse, iceberg, sqlmesh, lance, baml, cocoindex, motherduck]
+  domain: "01-data-platform"
 
-- title: "AI/ML: models, training, OCR, RAG, Celtic AI"
+- title: "AI/ML: models, training, OCR/VLM, RAG, Celtic AI"
   description: |
-    ML models, fine-tuning (Unsloth, LoRA, QLoRA, TRL), OCR/HTR for
-    Celtic manuscripts, RAG evaluation, vector embeddings, and
-    Celtic-language AI (Irish, Welsh, Scottish Gaelic, Manx).
+    ML models, fine-tuning (Unsloth, LoRA, QLoRA, TRL), OCR/VLM
+    (the 22-entry VISION_MODELS + 6 CLASSICAL_OCR backends + the
+    BIEP v2 4-path EnsembledExtractor), RAG evaluation, vector
+    embeddings, and Celtic-language AI (Irish, Welsh, Scottish
+    Gaelic, Manx). Post-v7, the 7 legacy docs/04-ai-ml/*.md files
+    were absorbed into centralized-registry §11 OCR/VLM Pipeline
+    (added 2026-08-13) + meaisinfhoghlaim/README.md.
   files:
-    - docs/04-ai-ml/fine-tuning-guide.md
-    - docs/04-ai-ml/ocr-htr.md
-    - docs/04-ai-ml/rag-evaluation.md
-    - docs/04-ai-ml/knowledge-graphs.md
-    - docs/04-ai-ml/vector-embeddings.md
-    - docs/04-ai-ml/celtic-language-ai.md
-    - docs/04-ai-ml/ml-pipelines.md
-  tags: [ai, ml, training, ocr, rag, celtic, irish, welsh, embeddings]
-  domain: "04-ai-ml"
+    - .agents/skills/centralized-registry/SKILL.md
+    - .agents/skills/unsloth/SKILL.md
+    - .agents/skills/ragas/SKILL.md
+    - .agents/skills/agent-observability/SKILL.md
+    - .agents/skills/huggingface/SKILL.md
+    - .agents/skills/langfuse/SKILL.md
+    - meaisinfhoghlaim/README.md
+    - meaisinfhoghlaim/AGENTS.md
+    - openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md
+    - openspec/specs/celtic-language-pipeline/spec.md
+    - openspec/specs/centralized-model-registry/spec.md
+  tags: [ai, ml, training, ocr, vlm, vision, rag, celtic, irish, welsh, embeddings, fine-tuning]
+  domain: "02-ai-ml"
 
-- title: "Agent frameworks: ADK, Agno, Stagehand, Pydantic AI"
+- title: "Agent frameworks: ADK, Agno, Pydantic AI, LangGraph"
   description: |
     Agent framework patterns and implementations: Google ADK
     (root agent + specialist routing), Agno (team-based research),
-    Stagehand (vision-driven browser automation), Pydantic AI
-    (type-safe agents), and the AG-UI protocol.
+    Pydantic AI (type-safe agents), LangGraph, and the AG-UI
+    protocol. Post-v7, the 4 legacy docs/03-agents/*.md files were
+    absorbed into agent-fleet-orchestration + the google-adk +
+    pydantic skills.
   files:
-    - docs/03-agents/agent-frameworks.md
-    - docs/03-agents/browser-automation.md
-    - docs/03-agents/mcp-servers.md
-    - docs/03-agents/baml-extraction.md
-  tags: [agents, adk, agno, stagehand, pydantic, mcp, browser]
-  domain: "03-agents"
+    - .agents/skills/agent-fleet-orchestration/SKILL.md
+    - .agents/skills/google-adk/SKILL.md
+    - .agents/skills/agno/SKILL.md
+    - .agents/skills/pydantic/building-pydantic-ai-agents/SKILL.md
+    - .agents/skills/ag-ui/SKILL.md
+    - .agents/skills/agents-sync/SKILL.md
+    - agents/AGENTS.md
+    - agents/meaisinfhoghlaim/AGENTS.md
+    - openspec/specs/agent-registry/spec.md
+  tags: [agents, adk, agno, pydantic, langgraph, mcp, browser, fleet]
+  domain: "02-agents"
 
-- title: "Frontend stack: TanStack Start, Convex, Hono, Better Auth"
+- title: "Frontend stack: TanStack Start, Convex, Hono, Better Auth, CopilotKit"
   description: |
     The frontend web stack: TanStack Start (isomorphic functions,
     RSC), Convex (realtime backend), Hono API, Better Auth
-    authentication, CopilotKit, and the design system.
+    authentication, CopilotKit (v2 + AG-UI), and the design system.
+    Post-v7, the 3 legacy docs/05-web/*.md files were absorbed into
+    the agentic-frontend-frameworks skill + web/apps/AGENTS.md.
   files:
-    - docs/05-web/frontend-stack.md
-    - docs/05-web/convex-hono-auth.md
-    - docs/05-web/ui-components.md
-  tags: [frontend, web, tanstack, convex, hono, auth, ui]
-  domain: "05-web"
+    - .agents/skills/agentic-frontend-frameworks/SKILL.md
+    - .agents/skills/tanstack-start/SKILL.md
+    - .agents/skills/copilotkit/skills/copilotkit-develop/SKILL.md
+    - .agents/skills/copilotkit/skills/react-core/SKILL.md
+    - .agents/skills/copilotkit/skills/runtime/SKILL.md
+    - .agents/skills/convex/SKILL.md
+    - .agents/skills/hono/SKILL.md
+    - .agents/skills/better-auth/SKILL.md
+    - openspec/specs/agentic-frontend-frameworks/spec.md
+  tags: [frontend, web, tanstack, convex, hono, auth, ui, copilotkit, ag-ui]
+  domain: "02-web"
 
 - title: "Educational platform: oideachais, Leaving Cert, Irish curriculum"
   description: |
     The educational platform: oideachais monorepo, Dagster pipelines
     for NCCA/SEC exam data, BAML extraction of curriculum documents,
-    the leaving-cert-2026 OpenSpec change, and the assessment
-    generation flow.
+    the British Isles Education Pipeline (BIEP v3), and the assessment
+    generation flow. Post-v7, the legacy docs/06-product/*.md +
+    docs/02-architecture/*.md files were absorbed into
+    british-isles-education-pipeline spec + agents/meaisinfhoghlaim/.
   files:
-    - docs/06-product/educational-platform.md
-    - docs/02-architecture/EDUCATION_ARCHITECTURE.md
-    - docs/02-architecture/OIDEACHAIS_PIPELINE.md
-    - docs/02-architecture/SRUTH_OVERVIEW.md
-  tags: [oideachais, education, irish, curriculum, leaving-cert, ncca, sec]
-  domain: "06-product"
+    - openspec/specs/british-isles-education-pipeline/spec.md
+    - openspec/specs/british-isles-education-pipeline-v3/spec.md
+    - agents/meaisinfhoghlaim/AGENTS.md
+    - agents/meaisinfhoghlaim/educational/
+    - dlt_sources/british_isles/ireland/education/ireland_jurisdiction_pipeline.py
+    - dlt_sources/british_isles/england/education/england_jurisdiction_pipeline.py
+    - baml_src/british_isles/ireland/education/lc_extraction/
+    - cocoindex/biep_parity/ireland_lc_mathematics_embedding.py
+  tags: [oideachais, education, irish, curriculum, leaving-cert, ncca, sec, biep]
+  domain: "04-product"
 
 - title: "Celtic MMO: Tuatha, crypteolas, game dev"
   description: |
     The Celtic MMO (tuatha monorepo): Babylon.js scenes, the 5
     element connective tissue (Talamh/Uisce/Tine/Aer/Anam),
     the crypteolas Web3/crypto integration, Anam SBT contracts,
-    and the game development stack.
+    and the game development stack. Post-v7, the legacy
+    docs/06-product/*.md files were absorbed into
+    agents/tuatha/AGENTS.md.
   files:
-    - docs/06-product/celtic-mmo.md
-    - docs/06-product/crypteolas.md
-    - docs/06-product/game-development.md
+    - agents/tuatha/AGENTS.md
+    - .agents/skills/babylonjs/SKILL.md
+    - tuatha/dlt/
+    - web/apps/tuatha-ui/
+    - web/apps/tuatha-demo/
+    - openspec/specs/cianfhoghlaim-educational-mmo/spec.md
   tags: [tuatha, mmo, celtic, game, babylonjs, crypteolas, anam]
-  domain: "06-product"
+  domain: "04-product"
 
 - title: "BAML: type-safe LLM extraction"
   description: |
     BAML (Basically A Made-up Language) for type-safe LLM extraction.
     Schema design, prompt engineering, multi-model orchestration,
-    automatic retries, and validation patterns.
+    automatic retries, and validation patterns. The 320 .baml files +
+    558 functions + 33 LLM clients live at baml_src/. Post-v7, the
+    legacy docs/03-agents/baml-extraction.md was absorbed into
+    baml_src/AGENTS.md.
   files:
-    - docs/03-agents/baml-extraction.md
-    - tuatha/crypteolas/baml_src/clients.baml
+    - baml_src/AGENTS.md
+    - baml_src/clients.baml
+    - baml_src/clients_biep_v3.py
+    - .agents/skills/baml/SKILL.md
+    - .agents/skills/baml-schema-sync/SKILL.md
+    - openspec/specs/cianfhoghlaim-baml-schemas/spec.md
+    - openspec/specs/centralized-schema-registry/spec.md
   tags: [baml, llm, extraction, schema, type-safe, prompt]
-  domain: "03-agents"
+  domain: "08-baml"
 
 - title: "Celtic language AI: Irish, Welsh, Scottish, Manx, Cornish, Breton"
   description: |
     AI tooling for Celtic languages: tokenisers, ASR (wav2vec2),
     translation (NLLB, m2m-100, Helsinki-Opus-MT), OCR for
-    manuscript images, and the bilingual edtech platform.
+    manuscript images, and the bilingual edtech platform. Post-v7,
+    the legacy docs/04-ai-ml/celtic-language-ai.md +
+    docs/05-celtic-language/*.md files were absorbed into the
+    celtic-language-pipeline spec + meaisinfhoghlaim/alignment/.
   files:
-    - docs/04-ai-ml/celtic-language-ai.md
-    - docs/05-celtic-language/BILINGUAL_EDTECH.md
-    - docs/05-celtic-language/CELTIC_AI_RESOURCES.md
-    - docs/05-celtic-language/LANGUAGE_ARCHITECTURE.md
-    - docs/05-celtic-language/IRISH_HUGGINGFACE.md
-  tags: [celtic, irish, welsh, scottish, manx, cornish, breton, translation, asr]
-  domain: "05-celtic-language"
+    - openspec/specs/celtic-language-pipeline/spec.md
+    - meaisinfhoghlaim/README.md
+    - meaisinfhoghlaim/alignment/aligner.py
+    - meaisinfhoghlaim/alignment/colpali_aligner.py
+    - meaisinfhoghlaim/alignment/irish_g2p.py
+    - meaisinfhoghlaim/alignment/bilingual_concept_registry.py
+    - meaisinfhoghlaim/datasets/irish_htr_dataset.py
+    - dlt_sources/language/
+    - .agents/skills/centralized-registry/SKILL.md
+  tags: [celtic, irish, welsh, scottish, manx, cornish, breton, translation, asr, alignment]
+  domain: "03-celtic"
 
 - title: "Audit & consolidation history"
   description: |
-    The 2026-06-06 retrospective on the 1,038 -> 36 file
-    consolidation, plus the readiness audits for CocoIndex, Cognee,
-    and the agent skill consumability.
+    The 2026-06-28 v4 consolidation + the 2026-07-06 + 2026-08-15
+    drift audits + the retrospective cleanup. The pre-v7
+    docs/02-audit/*.md files were absorbed into docs/audits/ +
+    docs/audit/.
   files:
-    - docs/02-audit/consolidation_plan.md
-    - docs/02-audit/cocoindex_readiness_audit.md
-    - docs/02-audit/cognee_readiness_audit.md
-    - docs/02-audit/agent_skill_consumability.md
-    - docs/02-audit/discovery_inventory.md
-  tags: [audit, consolidation, retrospective, readiness]
-  domain: "02-audit"
+    - docs/audits/2026-07-06-drift-audit.md
+    - docs/audit/baml-merger-plan.md
+    - docs/audit/dagster-component-migration-plan.md
+    - docs/audit/ocr-model-audit.md
+    - docs/audit/stacks-deferral-note.md
+    - docs/audit/web-app-consolidation-plan.md
+    - openspec/changes/archive/2026-06-28-2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/proposal.md
+    - openspec/specs/retrospective-cleanup/spec.md
+  tags: [audit, consolidation, retrospective, readiness, drift]
+  domain: "05-audit"
 
 - title: "Patterns: BAML, data pipeline, embeddings, observability, storage, web"
   description: |
     Domain-specific patterns: BAML extraction, data pipeline
     composition, embedding strategies, observability (Langfuse,
-    Pydantic Logfire), storage backends, and web frontend patterns.
+    Pydantic Logfire, MLflow), storage backends, and web frontend
+    patterns. Post-v7, the legacy docs/01-patterns/*.md files were
+    absorbed into the per-area .agents/skills/<skill>/SKILL.md files.
   files:
-    - docs/01-patterns/BAML.md
-    - docs/01-patterns/DATA_PIPELINE.md
-    - docs/01-patterns/EMBEDDINGS.md
-    - docs/01-patterns/OBSERVABILITY.md
-    - docs/01-patterns/STORAGE.md
-    - docs/01-patterns/WEB.md
+    - .agents/skills/baml/SKILL.md
+    - .agents/skills/dlt/SKILL.md
+    - .agents/skills/cocoindex/SKILL.md
+    - .agents/skills/lancedb/SKILL.md
+    - .agents/skills/langfuse/SKILL.md
+    - .agents/skills/mlflow/SKILL.md
+    - .agents/skills/pydantic/logfire-instrumentation/SKILL.md
+    - .agents/skills/agent-observability/SKILL.md
+    - .agents/skills/dignified-python/SKILL.md
   tags: [patterns, baml, pipeline, embeddings, observability, storage, web]
-  domain: "01-patterns"
+  domain: "05-patterns"
 
-- title: "Pipelines: Dagster definitions, API, browser orchestrator, embeddings"
+- title: "Pipelines: Dagster, DLT, CocoIndex, BAML, marimo"
   description: |
-    Concrete pipeline code: Dagster asset definitions, the
-    curriculum embedding flow, the AG-UI protocol, the browser
-    orchestrator, and the storage init for the multi-database
-    layer.
+    Concrete pipeline code: Dagster asset definitions (the 5-layer
+    KCG component architecture), DLT sources, BAML extraction,
+    CocoIndex v1 Apps, and marimo notebooks. Post-v7, the legacy
+    docs/03-pipelines/*.py files were absorbed into
+    orchestration/AGENTS.md + dlt_sources/DATA_PLATFORM_ROUTER.md.
   files:
-    - docs/03-pipelines/dagster_definitions.py
-    - docs/03-pipelines/dagster_factories.py
-    - docs/03-pipelines/api_main.py
-    - docs/03-pipelines/curriculum_embedding.py
-    - docs/03-pipelines/storage_init.py
-    - docs/03-pipelines/observability_init.py
-    - docs/03-pipelines/ag_ui_protocol.py
-    - docs/03-pipelines/durable_orchestrator.py
-  tags: [pipelines, dagster, api, embeddings, storage, ag-ui]
-  domain: "03-pipelines"
+    - orchestration/AGENTS.md
+    - orchestration/definitions.py
+    - orchestration/defs/1_ingestion/
+    - orchestration/defs/2_materials/
+    - orchestration/defs/3_model_lifecycle/
+    - orchestration/defs/4_asset_generation/
+    - orchestration/defs/5_agent_ops/
+    - dlt_sources/DATA_PLATFORM_ROUTER.md
+    - .agents/skills/dagster/SKILL.md
+  tags: [pipelines, dagster, api, embeddings, storage, marimo]
+  domain: "06-pipelines"
 
-- title: "Standards: project conventions, observability patterns"
+- title: "Standards: project conventions, dignified Python, observability patterns"
   description: |
     Project standards: code conventions, the mandatory constraints
-    (DuckDB single-thread, embedding batching, BAML schema
-    validation, etc.), and observability patterns.
+    (relative imports, USE_LOCAL_SCRAPES, R1-R4 conformance,
+    MODEL_REGISTRY-only, factory pattern), and observability
+    patterns. Post-v7, the legacy docs/07-standards/*.md files were
+    absorbed into root AGENTS.md + dignified-python skill.
   files:
-    - docs/07-standards/project-conventions.md
-    - docs/07-standards/observability-patterns.md
-  tags: [standards, conventions, constraints, observability]
-  domain: "07-standards"
+    - AGENTS.md
+    - .agents/skills/dignified-python/SKILL.md
+    - .agents/skills/dagster/erk-skills/dignified-python-312/SKILL.md
+    - .agents/skills/dagster/erk-skills/dignified-python-313/SKILL.md
+    - .agents/skills/centralized-registry/SKILL.md
+    - docs/INTEGRATIONS_INDEX.md
+  tags: [standards, conventions, constraints, observability, dignified-python]
+  domain: "06-standards"
 
-- title: "Examples: BEADS tracker, data architecture, frontend, fine-tuning"
+- title: "Examples: openspec changes, BIEP v3, BAML extraction, agents"
   description: |
-    Worked examples for common workflows: BEADS task tracking, the
-    data architecture review, the frontend stack setup, LLM
-    fine-tuning, and the OpenSpec agent patterns.
+    Worked examples for common workflows: openspec changes (the
+    canonical recipe), the BIEP v3 Ireland pipeline (the reference
+    implementation), the BAML extraction pattern, the agent fleet
+    registry. Post-v7, the legacy docs/08-examples/*.md files were
+    absorbed into openspec/changes/ + .agents/skills/.
   files:
-    - docs/08-examples/BEADS TRACKER.md
-    - docs/08-examples/DATA_ARCHITECTURE.md
-    - docs/08-examples/FRONTEND_STACK.md
-    - docs/08-examples/MODEL_FINETUNING.md
-    - docs/08-examples/IMPLEMENTATION_GUIDE.md
-    - docs/08-examples/OIDEACHAIS_SPEC.md
-    - docs/08-examples/OPENSPEC_AGENTS.md
-    - docs/08-examples/SUBJECT_IMPLEMENTATIONS.md
-  tags: [examples, beads, fine-tuning, openspec, frontend]
-  domain: "08-examples"
+    - openspec/AGENTS.md
+    - openspec/project.md
+    - openspec/changes/2026-08-13-skill-consolidation-and-extension-v1/
+    - openspec/changes/2026-08-13-guides-yml-repair-and-docs-integrations-index-v1/
+    - openspec/changes/archive/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/
+    - .agents/skills/agent-fleet-orchestration/SKILL.md
+    - .agents/skills/dlt/SKILL.md
+  tags: [examples, openspec, biep, baml, agents]
+  domain: "07-examples"
 
-- title: "Skills: agno, baml, cocoindex, dagster, dlt, duckdb, graphiti"
+- title: "Skills: the 61 .agents/skills/<skill>/SKILL.md files"
   description: |
-    Per-tool skill documentation: the Claude skill bundles for
-    agno, baml, cocoindex (ccc), dagster, dlt, duckdb, graphiti,
-    lancdb, memgraph, and others. Use these as a reference for
-    how each tool is configured in this monorepo.
+    The canonical agent skill surface. 61 skills under
+    .agents/skills/ — each with a YAML frontmatter block (name +
+    description), a 4-rule metadata lint enforced by
+    `mise run lint:skills`, and either inline content or a
+    router to references/. Post-v7, the legacy docs/07-skills/*.md
+    mirror was retired; the canonical home is .agents/skills/.
   files:
-    - docs/07-skills/agno.md
-    - docs/07-skills/baml.md
-    - docs/07-skills/cocoindex.md
-    - docs/07-skills/dagster.md
-    - docs/07-skills/dlt.md
-    - docs/07-skills/duckdb.md
-    - docs/07-skills/graphiti.md
-    - docs/07-skills/lancedb.md
-    - docs/07-skills/memgraph.md
-  tags: [skills, agno, baml, cocoindex, dagster, dlt, duckdb, graphiti, lancedb]
-  domain: "07-skills"
+    - .agents/skills/centralized-registry/SKILL.md
+    - .agents/skills/dlt/SKILL.md
+    - .agents/skills/baml/SKILL.md
+    - .agents/skills/cocoindex/SKILL.md
+    - .agents/skills/dagster/SKILL.md
+    - .agents/skills/cognee/SKILL.md
+    - .agents/skills/motherduck/SKILL.md
+    - .agents/skills/lancedb/SKILL.md
+    - .agents/skills/duckdb/SKILL.md
+    - .agents/skills/INDEXING_AND_COGNITION.md
+  tags: [skills, agno, baml, cocoindex, dagster, dlt, duckdb, graphiti, lancedb, registry]
+  domain: "05-skills"
 
 - title: "Hackathons: Build Small 2026 + others"
   description: |
     The hackathon submission material. The Build Small 2026
     submission is 4 HuggingFace Spaces built on the spaces/
-    directory: An Scrudu (An Scrudu), Meaisin Cliste, Cianfhoghlaim
-    (RPG), and Anam Tuatha (integration).
+    directory: An Scrudu, Meaisin Cliste, Cianfhoghlaim (RPG), and
+    Anam Tuatha (integration). Post-v7, the legacy
+    doc/hackathons/*.md files were absorbed into docs/research/.
   files:
-    - doc/hackathons/build-small-2026-plan.md
-    - doc/hackathons/build-small-2026-blog.md
-    - doc/hackathons/cognee-integration-audit-2026-06-10.md
+    - docs/research/
+    - docs/legacy/cianfhoghlaim-pkg-readme.md
+    - .agents/skills/huggingface/huggingface-spaces/SKILL.md
   tags: [hackathon, build-small-2026, huggingface, gradio]
   domain: "09-hackathons"
 
-- title: "Core: PROJECT_SPEC, CONSTRAINTS, AGENTS, CLAUDE"
+- title: "Core: AGENTS.md, openspec/AGENTS.md, PROJECT_SPEC, CONSTRAINTS"
   description: |
-    The project's foundational documents: PROJECT_SPEC (what
-    we're building), CONSTRAINTS (what we MUST not violate),
-    AGENTS (how agents should behave), and CLAUDE (the
-    Cianfhoghlaim context).
+    The project's foundational documents: AGENTS.md (the canonical
+    agent instructions), openspec/AGENTS.md (the openspec
+    workflow), PROJECT_SPEC (what we're building), CONSTRAINTS
+    (what we MUST not violate). Post-v7, the legacy
+    docs/{CLAUDE,PROJECT_SPEC,CONSTRAINTS,AGENTS}.md files were
+    absorbed into root AGENTS.md + openspec/AGENTS.md.
   files:
-    - docs/CLAUDE.md
-    - docs/PROJECT_SPEC.md
-    - docs/CONSTRAINTS.md
-    - docs/AGENTS.md
-  tags: [core, project-spec, constraints, agents, claude]
+    - AGENTS.md
+    - openspec/AGENTS.md
+    - openspec/project.md
+    - README.md
+    - docs/INTEGRATIONS_INDEX.md
+  tags: [core, project-spec, constraints, agents, claude, openspec]
   domain: "00-core"
 
 - title: "Package ecosystem: external skill templates"
   description: |
     External skill-template bundles (from the `docs_examples_consolidated/`
-    and `00-package-ecosystem/` directories). Use these as starting
-    points for new skills; don't reinvent.
+    and `00-package-ecosystem/` directories). Post-v7, the legacy
+    docs/docs_examples_consolidated/ directory was absorbed into
+    .agents/skills/_template/ (the canonical template scaffold).
   files:
-    - docs/docs_examples_consolidated/
+    - .agents/skills/_template/
+    - .agents/skills/improve-skills/SKILL.md
+    - .agents/skills/dagster/erk-skills/skill-creator/SKILL.md
   tags: [packages, skills, examples, templates]
   domain: "00-package-ecosystem"
 
@@ -289,11 +389,12 @@
     is the BIEP v3 Ireland full coverage spec". 14 pending + 303
     archived.
   files:
-    - openspec/changes/2026-08-15-knowledge-sync-loop-v1/proposal.md
-    - openspec/changes/2026-07-28-biep-v3-ireland-full-coverage-v1/proposal.md
+    - openspec/AGENTS.md
     - openspec/specs/knowledge-sync-loop/spec.md
     - openspec/specs/agent-platform-cluster/spec.md
-    - openspec/AGENTS.md
+    - openspec/specs/indexing-and-cognition/spec.md
+    - openspec/changes/
+    - openspec/changes/archive/
   tags: [openspec, changes, specs, archive, knowledge]
   domain: "00-openspec"
 
@@ -318,12 +419,11 @@
     - orchestration/components/layer4_asset_generation.py
     - orchestration/components/layer5_agent_ops.py
     - orchestration/defs/sync_assets.py
-    - scripts/sync/dagster.sh
     - scripts/sync_dagster_assets_to_cognee.py
-    - notebooks/25_dagster_sync_dashboard.py
+    - notebooks/sync_health.py
     - .agents/skills/dagster-asset-sync/SKILL.md
   tags: [dagster, asset, sync, defs, 5-layer, kcg-component, layer6]
-  domain: "02-data-platform"
+  domain: "06-pipelines"
 
 - title: "baml-function-search"
   description: |
@@ -333,6 +433,7 @@
     ExtractCurriculumSyllabus function'. 320 .baml files + 558 functions + 33
     LLM clients. Per the 2026-08-15-baml-sync-loop-v1 change (Layer 7).
   files:
+    - baml_src/AGENTS.md
     - baml_src/british_isles/ireland/education/lc_extraction/curriculum_syllabus.baml
     - baml_src/british_isles/ireland/education/lc_extraction/exam_paper_layout.baml
     - baml_src/british_isles/ireland/education/lc_extraction/marking_scheme.baml
@@ -340,16 +441,18 @@
     - baml_src/british_isles/ireland/education/lc_extraction/syllabus_diagram.baml
     - baml_src/clients.baml
     - baml_src/clients_biep_v3.py
+    - .agents/skills/baml/SKILL.md
+    - .agents/skills/baml-schema-sync/SKILL.md
   tags: [baml, extraction, functions, clients, schema]
-  domain: "00-baml"
+  domain: "08-baml"
 
 - title: "stack-catalog-search"
   description: |
-    How to find any of the 89 Docker Compose stacks at bonneagar/stacks/ by
+    How to find any of the 93 Docker Compose stacks at bonneagar/stacks/ by
     name, GOLD_STANDARD status, or host placement. Use when the user asks
     'which stack runs X service', 'is stack Y missing sidecar.yaml', 'what
     stacks are on bunchloch vs arm1-oci', or 'how do I add a new stack'.
-    89 stacks + the 6-file GOLD_STANDARD pattern (compose.yaml + sidecar.yaml
+    93 stacks + the 6-file GOLD_STANDARD pattern (compose.yaml + sidecar.yaml
     + secrets.env + pangolin.yaml + blueprint.yaml + .env.example). Per the
     2026-08-15-stacks-sync-loop-v1 change (Layer 8).
   files:
@@ -365,13 +468,9 @@
     - bonneagar/stacks/pangolin/compose.yaml
     - bonneagar/stacks/openclaw/compose.yaml
     - scripts/stack-doctor.sh
-    - scripts/sync/stacks-drift.sh
-    - scripts/sync/stacks-ccc.sh
-    - scripts/sync/stacks-cognee.sh
-    - scripts/sync/stacks-validate.sh
-    - scripts/sync/stacks-health.sh
+    - .agents/skills/stacks-sync/SKILL.md
   tags: [stacks, iac, gold-standard, pangolin, locket, sidecar, layer8, bonneagar]
-  domain: "06-iac"
+  domain: "05-iac"
 
 - title: "dlt-source-search"
   description: |
@@ -382,60 +481,62 @@
     + 865 @dlt.source + 924 @dlt.resource across 13 jurisdiction
     subdirs. Per the 2026-08-15-dlt-sync-loop-v1 change (Layer 9).
   files:
-    - dlt_sources/british_isles/ireland/education/ncca_jc_cba.py
-    - dlt_sources/commonwealth/australia/acara.py
+    - dlt_sources/DATA_PLATFORM_ROUTER.md
+    - dlt_sources/AGENTS.md
+    - dlt_sources/british_isles/ireland/education/
+    - dlt_sources/commonwealth/australia/
     - dlt_sources/commonwealth/new_zealand/education/nzqa.py
-    - dlt_sources/european_nations/france/education/education_gouv_fr.py
-    - dlt_sources/commonwealth/nigeria/federal/nigeria_federal.py
+    - dlt_sources/commonwealth/nigeria/
+    - dlt_sources/european_nations/france/education/
     - dlt_sources/common/__init__.py
-    - scripts/cognee_ingest_dlt_sources.py
+    - .agents/skills/dlt/SKILL.md
+    - .agents/skills/dlt-sync/SKILL.md
   tags: [dlt, sources, jurisdictions, dlt_sources, common, ingestion]
-  domain: "00-dlt"
+  domain: "08-dlt"
 
 - title: "agent-fleet-search"
   description: |
-    How to find any agent in the 12-agent fleet + the 8 NCCA subject
-    specialists by name, subdir, or capability. Use when the user asks
+    How to find any agent in the 12-agent fleet + the 4 educational
+    agents by name, subdir, or capability. Use when the user asks
     'are all agents registered', 'is the agent fleet healthy', 'what are
     the NCCA subject specialists', 'does the agent registry match the
-    12-agent fleet'. 188 .py files across 7 agent subdirs. Per the
+    12-agent fleet'. Post-v7, the agent files moved from
+    agents/tuatha/agents/ to agents/meaisinfhoghlaim/. Per the
     2026-08-15-agent-definitions-sync-loop-v1 change (Layer 10).
   files:
     - agents/AGENTS.md
     - agents/agent_registry.py
-    - agents/tuatha/AGENTS.md
-    - agents/tuatha/agents/math_agent.py
-    - agents/tuatha/agents/gael_agent.py
-    - agents/tuatha/agents/engl_agent.py
-    - agents/tuatha/agents/chem_agent.py
-    - agents/tuatha/agents/geog_agent.py
-    - agents/tuatha/agents/comp_agent.py
-    - agents/tuatha/agents/hist_agent.py
-    - agents/tuatha/agents/appm_agent.py
-    - scripts/cognee_ingest_agent_definitions.py
+    - agents/meaisinfhoghlaim/AGENTS.md
+    - agents/meaisinfhoghlaim/educational/academic_history_agent.py
+    - agents/meaisinfhoghlaim/educational/celtic_grammar_agent.py
+    - agents/meaisinfhoghlaim/educational/celtic_morphology_agent.py
+    - .agents/skills/agent-fleet-orchestration/SKILL.md
+    - .agents/skills/agents-sync/SKILL.md
   tags: [agents, fleet, ncca, agents_md, agents_definitions, ingestor]
-  domain: "00-agents"
+  domain: "08-agents"
 
 - title: "notebook-search"
   description: |
     How to find any marimo notebook by prefix, cluster, or capability.
     Use when the user asks 'are all notebooks registered', 'is the
     notebook fleet healthy', 'how many notebooks are there', 'does
-    the notebook registry match the CI flow'. 104 .py files across
-    20+ numeric prefixes. Per the 2026-08-15-notebooks-sync-loop-v1
-    change (Layer 11).
+    the notebook registry match the CI flow'. 54 marimo notebooks
+    across the 11 BIEP v3 per-jurisdiction dashboards + the 7 grouped
+    dashboards + the 00_control_panel. Per the
+    2026-08-15-notebooks-sync-loop-v1 change (Layer 11).
   files:
     - notebooks/_shared/db.py
     - notebooks/_shared/area_shims/leaving_cert.py
     - notebooks/cli.py
+    - notebooks/00_control_panel.py
     - notebooks/01_overview_setup.py
     - notebooks/02_education_overview.py
     - notebooks/10_biep_pipeline_lakehouse_01_ducklake_explorer.py
     - notebooks/24_deployment_control_panel.py
-    - notebooks/26_baml_sync_dashboard.py
-    - notebooks/27_stacks_sync_dashboard.py
-    - notebooks/28_dlt_sync_dashboard.py
-    - notebooks/29_agents_sync_dashboard.py
-    - scripts/cognee_ingest_notebooks.py
-  tags: [notebooks, marimo, app_cell, notebooks, ingestor, dashboard]
-  domain: "00-notebooks"
+    - notebooks/26_aistear_dashboard.py
+    - notebooks/27_primary_dashboard.py
+    - notebooks/28_knowledge_graph_health.py
+    - notebooks/sync_health.py
+    - .agents/skills/notebooks-sync/SKILL.md
+  tags: [notebooks, marimo, app_cell, ingestor, dashboard]
+  domain: "08-notebooks"

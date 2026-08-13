@@ -136,6 +136,14 @@ run = ".venv/bin/python3 scripts/lint_drift_docs.py"
 description = "Same as lint:drift-docs but exits 0 always (prints the report)"
 run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
 
+[tasks."lint:guides-yml"]
+description = "Validate every path in .cocoindex_code/guides.yml resolves on disk. Exits 1 if any path is missing; writes JSON report to stedding/sync-reports/guides-yml-{date}.json. Per the 2026-08-13-guides-yml-repair-and-docs-integrations-index-v1 change (the indexing-and-cognition spec delta)."
+run = "uv run python scripts/lint_guides_yml.py"
+
+[tasks."lint:guides-yml:dry-run"]
+description = "Same as lint:guides-yml but exits 0 always (prints the report)"
+run = "uv run python scripts/lint_guides_yml.py --dry-run"
+
 # =============================================================================
 # 2026-08-15-lakehouse-memory-stack-deep-integration-v1 (Phase E)
 # =============================================================================
