@@ -3,6 +3,12 @@
 # =============================================================================
 # High-performance graph database with MAGE algorithms and Lab UI.
 #
+# Updated for the 2026-08-15-lakehouse-memory-stack-deep-integration-v1
+# change (Phase C — image pinning):
+# - `memgraph-mage` pinned from `:latest` to `3.6.0` (the canonical 3.x
+#   release line per the memgraph skill; verified 2026-08-15).
+# - `memgraph-lab` pinned from `:latest` to `3.6.0` (matches memgraph).
+#
 # USAGE:
 #   Development:  docker compose --env-file ../../.env.local up -d
 #   Production:   locket exec --env-file secrets.env -- docker compose up -d
@@ -16,7 +22,7 @@ services:
   # MEMGRAPH - Graph Database with MAGE Algorithms
   # ---------------------------------------------------------------------------
   memgraph:
-    image: memgraph/memgraph-mage:latest
+    image: memgraph/memgraph-mage:3.6.0
     container_name: memgraph
     restart: unless-stopped
     ports:
@@ -25,6 +31,14 @@ services:
     environment:
       MEMGRAPH_USER: ${MEMGRAPH_USER:-memgraph}
       MEMGRAPH_PASSWORD: ${MEMGRAPH_PASSWORD:-devpassword}
+      # Enterprise license path (optional — only required for Enterprise
+      # features like multi-state replication; CE works without it).
+      # Resolved from the dev-baile Infisical vault per the
+      # 2026-08-15-lakehouse-memory-stack change (Phase B).
+      MEMGRAPH_LICENSE_FILE_PATH: ${MEMGRAPH_LICENSE_FILE_PATH:-}
+      # OpenTelemetry fan-out (added Phase B so memgraph queries can be
+      # traced via the otelcol → logfire cloud + langfuse path).
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
     volumes:
       - memgraph-lib:/var/lib/memgraph
       - memgraph-log:/var/log/memgraph
@@ -42,7 +56,7 @@ services:
   # MEMGRAPH LAB - Web UI
   # ---------------------------------------------------------------------------
   memgraph-lab:
-    image: memgraph/lab:latest
+    image: memgraph/lab:3.6.0
     container_name: memgraph-lab
     restart: unless-stopped
     ports:

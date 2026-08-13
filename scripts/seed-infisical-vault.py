@@ -126,6 +126,48 @@ SECRETS = {
     "mlflow/uri": "http://mlflow:5000",
 }
 
+# =============================================================================
+# 2026-08-15-lakehouse-memory-stack-deep-integration-v1 — Phase B additions
+# =============================================================================
+# The 30 new keys required by the unified memory-stack secrets contract.
+# See proposal.md "The ~30 new Infisical keys" section.
+SECRETS.update({
+    # Cognee — Galileo + LanceDB companion + PlanetScale override
+    "cognee/galileo_api_key": "placeholder-set-via-infisical-ui-" + gen(8),
+    "cognee/lancedb_namespace_token": gen(32),
+    "cognee/planetscale_database_url": "postgresql://placeholder:placeholder@placeholder.psdb.cloud:5432/cognee?sslmode=require",
+    # Graphiti — LiteLLM base URL + FalkorDB vector index + LanceDB companion
+    "graphiti/openai_base_url": "http://litellm:4000/v1",
+    "graphiti/falkordb_vector_index": "graphiti_temporal_" + gen(8),
+    # (LANCEDB_API_KEY already exists at the lancedb/ path — see below)
+    # FalkorDB — vector.so module URL + cluster mode toggle
+    "falkordb/vector_module_url": "https://github.com/FalkorDB/FalkorDB/releases/download/v4.18.11/vector.so",
+    "falkordb/cluster_mode": "no",
+    # Memgraph — Enterprise license + OTLP + Langfuse fan-out
+    "memgraph/license_file_path": "/etc/memgraph/license.json",
+    # (MEMGRAPH_OTEL_EXPORTER_OTLP_ENDPOINT reuses logfire/otel_endpoint — see below)
+    # LanceDB — Namespace token + Garage endpoint
+    "lancedb/namespace_token": gen(32),
+    "lancedb/garage_endpoint": "http://lakehouse-garage:3900",
+    # Langfuse — OTLP fan-out + ClickHouse URL + Redis URL + PlanetScale override
+    "langfuse/clickhouse_url": "clickhouse://oideachais:" + gen(16) + "@lakehouse-clickhouse:9000/oideachais",
+    "langfuse/redis_url": "redis://:" + gen(16) + "@lakehouse-redis:6379/0",
+    "langfuse/planetscale_database_url": "postgresql://placeholder:placeholder@placeholder.psdb.cloud:5432/langfuse?sslmode=require",
+    # MLflow — PlanetScale override + Garage S3 endpoint
+    "mlflow/planetscale_database_url": "postgresql://placeholder:placeholder@placeholder.psdb.cloud:5432/mlflow?sslmode=require",
+    "mlflow/s3_endpoint": "http://lakehouse-garage:3900",
+    # LiteLLM — OTLP fan-out + Gemini preview + Galileo observability
+    "litellm/langfuse_otel_endpoint": "http://logfire-otel:4317",
+    "litellm/gemini_api_key": "placeholder-set-via-infisical-ui-" + gen(8),
+    "litellm/galileo_api_key": "placeholder-set-via-infisical-ui-" + gen(8),
+    # Lakehouse — PlanetScale component creds + ClickHouse/Redis TLS + R2 endpoint
+    "lakehouse/planetscale_username": "placeholder",
+    "lakehouse/planetscale_host": "placeholder.psdb.cloud",
+    "lakehouse-clickhouse/tls_cert": "placeholder-tls-cert-" + gen(8),
+    "lakehouse-redis/tls_cert": "placeholder-tls-cert-" + gen(8),
+    "lakehouse/r2_endpoint_url": "https://placeholder.r2.cloudflarestorage.com",
+})
+
 # Group by prefix
 prefixes = {}
 for k in SECRETS:

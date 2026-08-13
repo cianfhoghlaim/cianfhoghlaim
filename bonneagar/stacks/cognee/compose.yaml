@@ -73,6 +73,16 @@ services:
       LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      # PlanetScale PG override (added 2026-08-15-lakehouse-memory-stack
+      # Phase C; when set, the local cognee-postgres container is bypassed).
+      PLANETSCALE_DATABASE_URL: ${PLANETSCALE_DATABASE_URL:-}
+      # Galileo AI observability (added Phase C; optional token-pricing +
+      # drift alerts). Resolved from dev-baile/cognee/galileo_api_key.
+      GALILEO_API_KEY: ${GALILEO_API_KEY:-}
+      # Lance Namespace 0.9 contract token (added Phase C; the v0.9
+      # `header.<name>` context-header prefix replaces the pre-v0.9
+      # `x-lance-ctx-<name>` convention).
+      LANCEDB_NAMESPACE_TOKEN: ${LANCEDB_NAMESPACE_TOKEN:-}
     healthcheck:
       # Note: healthcheck runs INSIDE the container on port 8000 (not the
       # host-mapped 8100).

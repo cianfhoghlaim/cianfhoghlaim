@@ -136,6 +136,17 @@ run = ".venv/bin/python3 scripts/lint_drift_docs.py"
 description = "Same as lint:drift-docs but exits 0 always (prints the report)"
 run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
 
+# =============================================================================
+# 2026-08-15-lakehouse-memory-stack-deep-integration-v1 (Phase E)
+# =============================================================================
+[tasks."lakehouse:memory:doctor"]
+description = "Probe the 5 memory backends (cognee + graphiti + lancedb + falkordb + memgraph) and emit a JSON health report to stedding/memory-health/<utc-ts>.json. Per the agent-memory-systems + agent-platform-cluster spec deltas of the 2026-08-15 change."
+run = "bun run scripts/lakehouse-memory-doctor.ts"
+
+[tasks."lakehouse:memory:doctor:strict"]
+description = "Same as lakehouse:memory:doctor but exits 1 if any backend is not healthy (used by deploy-full.sh Phase 7)"
+run = "bun run scripts/lakehouse-memory-doctor.ts --strict"
+
 [tasks."agents:smoke"]
 description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
 run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"

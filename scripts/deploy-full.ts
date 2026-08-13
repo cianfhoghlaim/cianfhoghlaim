@@ -81,6 +81,9 @@ interface Phase {
   // `command` is either a string (run as bash -c) or a function (run via Bun.spawn with array args)
   command: string | { cmd: string[]; cwd?: string };
   isMultiStack?: boolean; // phase 4/5 iterate a stack list
+  // Optional `postCommand` runs after the multi-stack bringup completes
+  // (added 2026-08-15-lakehouse-memory-stack for the Phase 7 doctor probe).
+  postCommand?: string;
 }
 
 // The 7 data-stacks (Lakehouse owns its own phase). Order matters: litellm must
@@ -139,9 +142,15 @@ const PHASES: Phase[] = [
   {
     id: 7,
     name: "data-stacks-up",
-    description: `${DATA_STACKS.length} data stacks: ${DATA_STACKS.join(", ")}`,
+    description: `${DATA_STACKS.length} data stacks: ${DATA_STACKS.join(", ")} → +memory-stack doctor probe (per the 2026-08-15-lakehouse-memory-stack-deep-integration-v1 change)`,
     command: `loop:${DATA_STACKS.join(",")}`,
     isMultiStack: true,
+    // After the multi-stack bringup completes, run the lakehouse memory
+    // doctor (Phase E of the 2026-08-15 change). The doctor probes the 5
+    // memory backends (cognee + graphiti + lancedb + falkordb + memgraph)
+    // + emits a JSON health report. The phase fails if any backend is
+    // not healthy.
+    postCommand: `bun run ${REPO_ROOT}/scripts/lakehouse-memory-doctor.ts --strict`,
   },
   {
     id: 8,
@@ -295,6 +304,43 @@ async function runPhase(phase: Phase, state: State): Promise<boolean> {
     state.phases[phase.id] = { ...state.phases[phase.id]!, status: "complete", completedAt: new Date().toISOString() };
     saveState(state);
     log("OK", `[phase ${phase.id}] ${phase.name}: complete (${stacks.length} stacks up)`);
+
+    // Run the optional postCommand (added 2026-08-15-lakehouse-memory-stack
+    // for the Phase 7 memory doctor probe). If it fails, mark the phase as
+    // failed and return false.
+    if (phase.postCommand) {
+      log("INFO", `[phase ${phase.id}] running postCommand: ${phase.postCommand}`);
+      if (DRY_RUN) {
+        log("INFO", `  [dry-run] would run postCommand: ${phase.postCommand}`);
+      } else {
+        try {
+          const postRc = await runShell(phase.postCommand);
+          if (postRc !== 0) {
+            state.phases[phase.id] = {
+              ...state.phases[phase.id]!,
+              status: "failed",
+              error: `postCommand exit code ${postRc}`,
+              completedAt: new Date().toISOString(),
+            };
+            saveState(state);
+            log("ERR", `[phase ${phase.id}] ${phase.name}: FAILED at postCommand (memory doctor)`);
+            return false;
+          }
+          log("OK", `[phase ${phase.id}] postCommand: memory doctor passed`);
+        } catch (e) {
+          log("ERR", `[phase ${phase.id}] postCommand threw: ${e instanceof Error ? e.message : String(e)}`);
+          state.phases[phase.id] = {
+            ...state.phases[phase.id]!,
+            status: "failed",
+            error: `postCommand threw: ${e instanceof Error ? e.message : String(e)}`,
+            completedAt: new Date().toISOString(),
+          };
+          saveState(state);
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 
