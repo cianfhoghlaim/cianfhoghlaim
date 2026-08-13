@@ -136,6 +136,14 @@ run = ".venv/bin/python3 scripts/lint_drift_docs.py"
 description = "Same as lint:drift-docs but exits 0 always (prints the report)"
 run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
 
+[tasks."lint:drift-docs:rebaseline"]
+description = "Auto-fix the stale count claims reported by lint:drift-docs (safe --fix mode per the retrospective-cleanup spec). Writes the fix to disk. Per the 2026-08-13-count-drift-rebase-and-indexing-cognition-cleanup-v1 change."
+run = "uv run python scripts/rebaseline_drift_docs.py --apply"
+
+[tasks."lint:drift-docs:rebaseline:dry-run"]
+description = "Dry-run the auto-fix (prints the planned diff, exits 0, does not modify any files)"
+run = "uv run python scripts/rebaseline_drift_docs.py"
+
 [tasks."lint:guides-yml"]
 description = "Validate every path in .cocoindex_code/guides.yml resolves on disk. Exits 1 if any path is missing; writes JSON report to stedding/sync-reports/guides-yml-{date}.json. Per the 2026-08-13-guides-yml-repair-and-docs-integrations-index-v1 change (the indexing-and-cognition spec delta)."
 run = "uv run python scripts/lint_guides_yml.py"

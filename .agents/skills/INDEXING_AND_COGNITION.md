@@ -285,7 +285,7 @@ exposes the following tools to every agent:
 | **motherduck** | DuckDB / MotherDuck analytics | 8 | ✅ Yes (always on) |
 | **infisical** | Secrets management | 10 | ✅ Yes (always on) |
 
-**Total: 9 MCP servers, 75+ tools** wired in `opencode.json`.
+**Total: 15 MCP servers, 100+ tools** wired in `opencode.json`.
 
 All secrets are auto-hydrated from Infisical (`dev-baile`
 environment) — never hard-coded in `opencode.json`.
@@ -398,8 +398,8 @@ top-level registries wired into OpenCode. It was added in the
 
 | Agent | Type | Skill filter | Subagent? | Specialises in |
 |:--|:--|:--|:--|:--|
-| `build` | Primary | (none — sees all 153 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
-| `plan` | Primary | (none — sees all 153 skills) | No | Default PLAN agent. Read-only by design. |
+| `build` | Primary | (none — sees all 162 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
+| `plan` | Primary | (none — sees all 162 skills) | No | Default PLAN agent. Read-only by design. |
 | `data-platform` | Subagent | 16 skills (dlt, dagster, baml, cognee, ccc, motherduck, lancedb, cocoindex, duckdb, ducklake, dlthub, ibis, marimo, langfuse, mlflow, centralized-registry) | Yes (`subagent_type: data-platform`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
 | `infrastructure` | Subagent | 16 skills (komodo, pangolin, pulumi, dagger, dagger-pipelines, secrets-management, cloudflare, ccc, dlthub, cocoindex, langfuse, mlflow, risingwave, olake, effect-ts, centralized-registry) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
 | `agent-platform` | Subagent | 24 skills (baml, litellm, agent-observability, agent-memory-systems, langfuse, mlflow, ragas, cognee, graphiti-core, lancedb, falkordb, memgraph, unsloth, huggingface, agno, google-adk, dignified-python, pydantic, ccc, dlthub, dagster, duckdb, cocoindex, centralized-registry) | Yes (`subagent_type: agent-platform`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
@@ -417,15 +417,15 @@ top-level registries wired into OpenCode. It was added in the
 **Key invariants:**
 
 - **Primary agents (`build`, `plan`) keep no `skill_filter`** —
-  they need the full 123-skill surface to act as escape hatches
+  they need the full 162-skill surface to act as escape hatches
   when a subagent's scoped skills turn out to be insufficient.
 - **Subagent `skill_filter` is opt-in** — a subagent without a
-  `skill_filter` falls back to the unfiltered default (all 123
+  `skill_filter` falls back to the unfiltered default (all 162
   skills), which preserves the legacy behaviour.
 - **Subagent `prompt` is required** — the skill_filter is paired
   with a one-line role prompt that names the quadrant and its
   primary tools.
-- **The 5 sruth-subagents are dispatched via the `task` tool**
+- **The 5 functional subagents are dispatched via the `task` tool**
   with `subagent_type` set to one of `data-platform`,
   `infrastructure`, `agent-platform`, `frontend-apps`, or
   `research`. The `general` and
@@ -465,9 +465,11 @@ MODEL_LAYER_AGENTS: tuple[str, ...] = (
 needs new skills, adding them to the relevant `skill_filter`
 in `opencode.json`.
 
-### 8.3 The 9 MCP servers (`opencode.json` → `mcp`)
+### 8.3 The 15 MCP servers (`opencode.json` → `mcp`)
 
-See §3 for the full inventory. The 9 servers are:
+See §3 for the full inventory. The 15 servers are:
+
+**Always-on (9 — the canonical inventory):**
 
 1. `cocoindex-code` (semantic code search, 9 tools)
 2. `cognee` (knowledge graph over docs, 10 tools)
@@ -479,6 +481,15 @@ See §3 for the full inventory. The 9 servers are:
 8. `motherduck` (DuckDB / MotherDuck analytics, 8 tools)
 9. `infisical` (secrets management, 10 tools)
 
+**Conditionally enabled (6 — added by recent changes):**
+
+10. `dlt-workspace-mcp` (DLT workspace operations)
+11. `hermes` (the multi-channel agent gateway)
+12. `agent-registry` (the 12-agent fleet registry)
+13. `agents-md` (AGENTS.md file registry)
+14. `apple-photos` (Apple Photos ingestion)
+15. `huggingface` (HuggingFace Hub operations)
+
 **Add a new MCP server** by appending an entry to `mcp` in
 `opencode.json` with `command` (the stdio entrypoint),
 optional `enabled: true` (default), and any required
@@ -489,10 +500,10 @@ row to the §3 table and bump the totals.
 ### 8.4 Registry health checks
 
 ```bash
-# 14 agents, 12 MCPs
+# 15 agents, 15 MCPs
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"
-# Expected: MCPs: 12  Agents: 14
+# Expected: MCPs: 15  Agents: 15
 
 # 5-layer sync health (knowledge-sync-loop, per 2026-08-15-knowledge-sync-loop-v1)
 # Layers: paths / ccc / cognee / skills / mcp
@@ -583,26 +594,32 @@ subagents were rewritten to align with the new tree.
 
 ### 9.1 Directory migration map
 
-| Former surface (pre-2026-06-28) | Current path (v4) |
+| Former surface (pre-2026-06-28) | Current path (v7) |
 |:--|:--|
-| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | `cianfhoghlaim/` root with `dlt/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
-| Oideachais official-media DLT source | `dlt/official_media/` |
-| Oideachais BAML schemas | `baml/` |
+| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | repo root with `dlt_sources/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
+| Oideachais official-media DLT source | `dlt_sources/official_media/` |
+| Oideachais BAML schemas | `baml_src/` |
 | Oideachais notebooks | `notebooks/` |
 | Oideachais TanStack Start app | `web/apps/cianfhoghlaim-web/` |
-| Meaisínfhoghlaim agents, OCR, and LLM stack | `agents/` + `agents/meaisinfhoghlaim/` |
+| Meaisínfhoghlaim agents, OCR, and LLM stack | `agents/` + `meaisinfhoghlaim/` |
 | Meaisínfhoghlaim agent registry | `agents/` |
-| Meaisínfhoghlaim OCR registry | `agents/meaisinfhoghlaim/ocr/` |
-| Meaisínfhoghlaim language data | `dlt/language/` |
+| Meaisínfhoghlaim OCR registry | `meaisinfhoghlaim/ocr/` |
+| Meaisínfhoghlaim language data | `dlt_sources/language/` |
 | Tuatha Babylon.js MMO + Crypteolas | `agents/tuatha/` + `web/apps/tuatha-ui/` |
 | Tuatha UI | `web/apps/tuatha-ui/` |
 | Croílár portfolio + portal | `web/apps/croilar-web/` + `web/apps/croilar-portal/` |
-| Codeolas code intelligence library | `libraries/codeolas/` |
+| Codeolas code intelligence library | (removed in v7 — absorbed into `libraries/codeolas/` under `sruth/`) |
 | Cognee stack | `bonneagar/stacks/cognee/` |
 | Graphiti stack | `bonneagar/stacks/graphiti/` |
 | Infisical stack | `bonneagar/stacks/infisical/` |
 | Pangolin stack | `bonneagar/stacks/pangolin/` |
-| Cognee graph models scripts | `cianfhoghlaim/cognify/cognee_integration/graph_models/` |
+| Cognee graph models scripts | `orchestration/defs/3_model_lifecycle/cognify/` |
+
+> **Updated 2026-08-13** (per the count drift rebase) — every
+> path in the table now resolves on disk post-v7 flattening.
+> The data engineering surface is now routed via
+> `dlt_sources/DATA_PLATFORM_ROUTER.md` (added by the
+> 2026-08-13-skill-consolidation-and-extension-v1 change).
 
 ### 9.2 Subagent migration map
 
