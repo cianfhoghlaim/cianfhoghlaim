@@ -53,4 +53,8 @@ mise run cic:baml:lint              # Lint all 56+ .baml schema files for consis
 | [`ccc`](../.agents/skills/ccc/SKILL.md) | Semantic code search across the BAML + Python client |
 | [`motherduck`](../.agents/skills/motherduck/SKILL.md) | The BIEP lakehouse that the BAML outputs land in |
 
+## Data platform router
+
+> **The single router for the 5 per-area data platform docs** is at [`../dlt_sources/DATA_PLATFORM_ROUTER.md`](../dlt_sources/DATA_PLATFORM_ROUTER.md). Documents the 6 critical conventions (relative imports / `USE_LOCAL_SCRAPES` / zero absolute namespaces / R1-R4 conformance / MODEL_REGISTRY-only / factory pattern) that apply ACROSS all 5 sub-packages.
+
 <!-- generated: 2026-07-29; do not hand-edit -->

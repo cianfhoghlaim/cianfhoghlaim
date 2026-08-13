@@ -653,3 +653,124 @@ This rewrite is tracked by
 [`openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/`](../../openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/)
 and defines a new canonical spec:
 [`openspec/specs/agent-registry/spec.md`](../../openspec/specs/agent-registry/spec.md).
+
+---
+
+## 10. Code-search canonical entrypoint
+
+Three surfaces expose the Cianfhoghlaim codebase to agents.
+This section resolves the dual CLI vs v1 App vs graph
+companion split that the `ccc` skill's DEPRECATION NOTICE
+banner + the `cocoindex/codebase_indexing.py` v1 App
+introduced.
+
+### 10.1 The 3 surfaces
+
+| Surface | Entry point | Use for |
+|:--|:--|:--|
+| **CCC CLI** (kept for developer shortcuts) | `bun run ccc:search "<query>"` | One-off terminal searches; quick discovery; `ccc --help` introspection |
+| **CocoIndex v1 App** (canonical replacement) | `from cocoindex.codebase_indexing import code_search` | Pipelines + Python embedding into agent code; the post-deprecation canonical |
+| **Graph companion** (code-structure queries) | `search_code_graph(file_path=..., node_type=...)` | "What calls function X?" / "What implements interface Y?" queries |
+
+### 10.2 Decision matrix — which surface for which task
+
+| Task | Surface | Why |
+|:--|:--|:--|
+| "Find the file that implements X" | CCC CLI (`bun run ccc:search`) | Fastest path; ad-hoc; no code change |
+| "Find the file that implements X" (in an agent) | v1 App (`code_search`) | Type-safe Python API; no subprocess |
+| "What functions does this file contain?" | Graph companion (`search_code_graph(file_path=..., node_type="Function")`) | Returns a list of 7-typed nodes (File/Function/Class/Method/Module/Interface/Variable) |
+| "What calls function X?" | Graph companion (`search_code_graph(node_type="Function", calls="X")`) | 7-typed edge traversal (CONTAINS / IMPORTS / CALLS / EXTENDS / IMPLEMENTS / USES / DEFINES) |
+| "Find all FastAPI routes in this repo" | Infrastructure companion (`search_api_endpoints(framework="fastapi")`) | Scoped to a specific surface |
+| "What config files exist at depth ≤ 4?" | Infrastructure companion (`search_config(query=..., kind="compose")`) | 12 typed config kinds |
+| Production embedding pipeline | v1 App (`code_search` in a Dagster asset) | The Dagster `codebase` asset group wraps this |
+
+### 10.3 Code samples
+
+```python
+# Surface 1 — CCC CLI (terminal)
+# $ bun run ccc:search "Dagster asset partition definition"
+# Returns ranked [file_path, line_range, score] tuples.
+
+# Surface 2 — CocoIndex v1 App (Python)
+from cocoindex.codebase_indexing import code_search
+results = code_search("BAML extraction function", limit=5)
+for r in results:
+    print(f"{r['file_path']}:{r['line_range']}  score={r['score']:.3f}")
+
+# Surface 3 — Graph companion (code-structure)
+from cocoindex.codebase_indexing import search_code_graph
+
+# "What calls run_conformance_check?"
+callers = search_code_graph(
+    node_type="Function",
+    calls="run_conformance_check",
+)
+# Returns the list of Function nodes that CALL run_conformance_check
+```
+
+### 10.4 The 4 infrastructure companions
+
+The v1 App also exposes 4 typed "infrastructure companions"
+that index the configuration surface (rather than source
+code). All registered in
+`orchestration/defs/unified_embedding_assets.py`:
+
+| Companion | Indexes | Query helper | Use for |
+|:--|:--|:--|:--|
+| `api_endpoints` | FastAPI / Hono / TanStack Start / Convex HTTP routes | `search_api_endpoints(query, framework=None, method=None, limit=20)` | "Show me all FastAPI POST routes" |
+| `filesystem_layout` | Every directory up to depth 4 with per-dir file-type histogram | `search_filesystem(query, min_depth=None, limit=10)` | "What directories live at depth 3?" |
+| `storage_backends` | 9 backend kinds (lancedb / duckdb / ducklake / postgres / garage / r2 / d1 / kv / iceberg) | `search_storage(query, kind=None, limit=20)` | "List all LanceDB indexes" |
+| `config_files` | 12 config kinds (compose / mise / package / pyproject / turbo / wrangler / env / k8s / pulumi / dg / github / justfile) | `search_config(query, kind=None, limit=15)` | "Show me all Docker Compose stacks" |
+
+Each companion writes to its own LanceDB table; the
+unified v1 App + the 4 companions share the same
+embedder (`BAAI/bge-m3`, 1024-d) per
+`cocoindex/_shared/_lifespan.py:107`.
+
+### 10.5 The DEPRECATION NOTICE context
+
+The `ccc` skill carries a DEPRECATION NOTICE banner
+because the canonical replacement is the v1 App. The CLI
+itself is **kept on disk** (the `bun run ccc:init`,
+`bun run ccc:index`, `bun run ccc:search` developer
+shortcuts are still useful) but new production code MUST
+route through `cocoindex.codebase_indexing.code_search` or
+the graph companion.
+
+The `ccc` retirement was scheduled for 2026-07-15 but was
+retained past that date by user direction
+(`openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1`).
+
+### 10.6 Quick reference
+
+```bash
+# CLI shortcuts (kept for developer ergonomics)
+bun run ccc:init       # first time only (creates .cocoindex_code/)
+bun run ccc:index      # incremental refresh (<10s) / full rebuild (~2-5 min)
+bun run ccc:search "your query"
+ccc describe .         # project overview
+ccc describe cocoindex/_lifespan.py    # per-file summary
+ccc status             # chunk count + file count + language histogram
+
+# v1 App (Python — canonical replacement)
+uv run python -c "from cocoindex.codebase_indexing import code_search; print(code_search('BAML extraction', limit=5))"
+
+# Graph companion
+uv run python -c "from cocoindex.codebase_indexing import search_code_graph; print(search_code_graph(file_path='meaisinfhoghlaim/models/registry.py', node_type='Function'))"
+
+# Infrastructure companions
+uv run python -c "from cocoindex.codebase_indexing import search_api_endpoints; print(search_api_endpoints(framework='fastapi', method='POST'))"
+```
+
+### 10.7 Cross-references
+
+- [`./ccc/SKILL.md`](ccc/SKILL.md) — the CCC CLI skill (with the DEPRECATION NOTICE banner)
+- [`./cocoindex/SKILL.md`](cocoindex/SKILL.md) — the CocoIndex v1 master skill
+- [`../../cocoindex/codebase_indexing.py`](../../cocoindex/codebase_indexing.py) — the v1 App canonical source
+- [`../../cocoindex/AGENTS.md`](../../cocoindex/AGENTS.md) — the CocoIndex embedding layer
+- [`../../orchestration/defs/unified_embedding_assets.py`](../../orchestration/defs/unified_embedding_assets.py) — the 4 infrastructure companions
+
+---
+
+**Last updated**: 2026-08-13 (added §10 Code-search canonical entrypoint — resolves the CLI vs v1 App vs graph companion split; 3 surfaces + decision matrix + code samples + 4 infrastructure companions).
+**Owner**: Build agent.

@@ -212,3 +212,7 @@ Each factory-built App still conforms to R1+R2+R3+R4 (imports `shared_lifespan`,
 
 **Last updated**: 2026-08-15 (added the factory pattern section + the 40 European-nation collapse stats).
 **Owner**: Build agent.
+
+## Data platform router
+
+> **The single router for the 5 per-area data platform docs** is at [`../dlt_sources/DATA_PLATFORM_ROUTER.md`](../dlt_sources/DATA_PLATFORM_ROUTER.md). Documents the 6 critical conventions (relative imports / `USE_LOCAL_SCRAPES` / zero absolute namespaces / R1-R4 conformance / MODEL_REGISTRY-only / factory pattern) that apply ACROSS all 5 sub-packages.

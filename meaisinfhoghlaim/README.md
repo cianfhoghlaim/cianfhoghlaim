@@ -252,3 +252,7 @@ mise run meaisin:agent:hitl_agent
 - [`../openspec/AGENTS.md`](../openspec/AGENTS.md) — openspec workflow
 - [`../.agents/skills/agent-fleet-orchestration/SKILL.md`](../.agents/skills/agent-fleet-orchestration/SKILL.md) — the 12-agent fleet wiring
 - [`../.agents/skills/meaisin-ocr/SKILL.md`](../.agents/skills/meaisin-ocr/SKILL.md) — OCR/HTR skill (if present)
+
+## Data platform router
+
+> **The single router for the 5 per-area data platform docs** is at [`../dlt_sources/DATA_PLATFORM_ROUTER.md`](../dlt_sources/DATA_PLATFORM_ROUTER.md). Documents the 6 critical conventions (relative imports / `USE_LOCAL_SCRAPES` / zero absolute namespaces / R1-R4 conformance / MODEL_REGISTRY-only / factory pattern) that apply ACROSS all 5 sub-packages.
