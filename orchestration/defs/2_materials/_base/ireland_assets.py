@@ -14,5 +14,13 @@ from __future__ import annotations
 
 from .jurisdiction_assets_base import IrelandAssets
 
+# DISABLED 2026-08-13 — was a module-level asset constant. See the identical
+# note in the sibling `<jurisdiction>_assets.py` files: `dg.load_defs()`
+# auto-discovers module-scope AssetsDefinitions, and this duplicated the key
+# owned by `2_materials/ireland_education/generic_ireland_assets.py`, making
+# `Definitions.validate_loadable()` raise. This copy is also the broken one
+# (`TypeError: 'IrelandJurisdictionPipeline' object is not callable`).
+#
 # The reference implementation: IrelandAssets is the explicit subclass.
-ireland_documents_ingested = IrelandAssets.build_asset()
+def build_ireland_documents_ingested():
+    return IrelandAssets.build_asset()
