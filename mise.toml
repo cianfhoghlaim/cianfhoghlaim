@@ -688,7 +688,7 @@ run = ".venv/bin/python3 -c 'import asyncio; from cianfhoghlaim.cocoindex.cocoin
 
 [tasks."cocoindex:conformance"]
 description = "Run the cocoindex_v1_migrate.py audit (R1-R4). Exits 1 on any violation. This is the CI gate (faster than the v1 App itself)."
-run = ".venv/bin/python3 dlt/common/cocoindex_v1_migrate.py --check-only"
+run = ".venv/bin/python3 dlt_sources/common/cocoindex_v1_migrate.py --check-only"
 
 [tasks."cic:cocoindex:leabharlann-books"]
 description = "Index the leabharlann books corpus via the v1 leabharlann_books_embedding App"
