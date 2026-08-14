@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "moduleDetection": "force",
+    "allowJs": false,
+    "noEmit": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@cianfhoghlaim/ui-kit": ["./packages/ui-kit/src/index.ts"],
+      "@cianfhoghlaim/ui-kit/*": ["./packages/ui-kit/*"],
+      "@cianfhoghlaim/auth": ["./packages/auth/src/index.ts"],
+      "@cianfhoghlaim/db": ["./packages/db/src/index.ts"]
+    },
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules", ".turbo", "dist", ".next"]
+}
