@@ -20,6 +20,10 @@
 # =============================================================================
 
 set -uo pipefail
+# Explicitly disable -e (inherited from `bash -e` in CI); we use explicit
+# `if ! cmd` / `if cmd` guards everywhere instead. Without `set +e`,
+# `grep -c` returning 1 (no matches) would halt the script mid-audit.
+set +e
 
 STACKS_DIR="${STACKS_DIR:-bonneagar/stacks}"
 DOCS_DIR="${DOCS_DIR:-cianfhoghlaim/docs/stacks}"
