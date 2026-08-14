@@ -178,6 +178,25 @@ run = "bun run scripts/lakehouse-memory-doctor.ts"
 description = "Same as lakehouse:memory:doctor but exits 1 if any backend is not healthy (used by deploy-full.sh Phase 7)"
 run = "bun run scripts/lakehouse-memory-doctor.ts --strict"
 
+# =============================================================================
+# 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 (Phase D)
+# =============================================================================
+[tasks."lakehouse:preflight"]
+description = "Local-bunchloch lakehouse preflight: 5 required endpoints + 12 postgres databases + 8 Garage buckets + (graceful) cognify stack status. Per the infrastructure-stacks spec delta of the 2026-08-15 change. Use --strict-cognify to require the cognify backends for BIEP M5+."
+run = "python3 scripts/lakehouse_preflight.py"
+
+[tasks."lakehouse:preflight:json"]
+description = "Same as lakehouse:preflight but emits JSON to stdout (machine-readable)"
+run = "python3 scripts/lakehouse_preflight.py --json"
+
+[tasks."lakehouse:preflight:strict-cognify"]
+description = "Same as lakehouse:preflight but REQUIRES the cognify backends (used by BIEP M5+ milestones)"
+run = "python3 scripts/lakehouse_preflight.py --strict-cognify"
+
+[tasks."lakehouse:buckets:audit"]
+description = "Audit the 8 canonical Garage S3 buckets via the admin API (urllib3 — no awscli dep). Per the 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 change."
+run = "python3 scripts/audit_lakehouse_buckets.py"
+
 [tasks."agents:smoke"]
 description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
 run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"

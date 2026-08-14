@@ -1,0 +1,42 @@
+# defs/1_ingestion/curriculum/lc6/geography.yaml
+#
+# L1 CelticIngestionComponent for the BIEP v1 Geography NCCA
+# crawl. Per-subject source — Geography only (the 3rd of 6).
+#
+# Per the british-isles-education-pipeline spec — the per-subject
+# NCCA syllabus ingestion for the 6 BIEP v1 LC subjects. The
+# Geography variant feeds the Geography cocoindex App + the
+# Geography marimo notebook + the geog_agent + the 4 MotherDuck
+# Dives (lc_syllabus_topics, lc_exam_difficulty,
+# lc_marking_complexity, etc.).
+#
+# Reference: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1/
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: filesystem.leaving_cert.geography
+  domain: curriculum
+  nation: ie
+  subject: geography
+  subject_label: Geography (LC-Geography)
+  automation: on_cron
+  automation_cron: "0 0 1 9 *"
+  state_backed: true
+  state_refresh_interval: monthly
+  asset_check: lc6_geography_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - lc6
+    - geography
+    - ncca
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1
+    spec: british-isles-education-pipeline
+    lc_subject: geography
+    partitions: subject × language (geography × en + ga = 2 partitions)
+    dlt_source: cianfhoghlaim.dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline
+    # UPDATED 2026-08-15: stale v7 path replaced with the live
+    # ireland_jurisdiction_pipeline registry runner (post-v7 flattening)
+    baml_extractor: b.ExtractLC6Syllabus(subject="geography", ...)
+    notes: "Per-subject Geography NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/geography/."

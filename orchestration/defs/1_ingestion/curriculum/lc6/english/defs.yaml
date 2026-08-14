@@ -1,0 +1,42 @@
+# defs/1_ingestion/curriculum/lc6/english.yaml
+#
+# L1 CelticIngestionComponent for the BIEP v1 English NCCA
+# crawl. Per-subject source — English only (the 5th of 6).
+#
+# Per the british-isles-education-pipeline spec — the per-subject
+# NCCA syllabus ingestion for the 6 BIEP v1 LC subjects. The
+# English variant feeds the English cocoindex App + the English
+# marimo notebook + the engl_agent + the 4 MotherDuck Dives
+# (lc_syllabus_topics, lc_exam_difficulty,
+# lc_marking_complexity, etc.).
+#
+# Reference: openspec/changes/2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1/
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: filesystem.leaving_cert.english
+  domain: curriculum
+  nation: ie
+  subject: english
+  subject_label: English (LC-English)
+  automation: on_cron
+  automation_cron: "0 0 1 9 *"
+  state_backed: true
+  state_refresh_interval: monthly
+  asset_check: lc6_english_partition_count_min
+  asset_check_min_rows: 1
+  tags:
+    - biep
+    - lc6
+    - english
+    - ncca
+    - ingestion
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-syllabus-ingestion-v1
+    spec: british-isles-education-pipeline
+    lc_subject: english
+    partitions: subject × language (english × en + ga = 2 partitions)
+    dlt_source: cianfhoghlaim.dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline
+    # UPDATED 2026-08-15: stale v7 path replaced with the live
+    # ireland_jurisdiction_pipeline registry runner (post-v7 flattening)
+    baml_extractor: b.ExtractLC6Syllabus(subject="english", ...)
+    notes: "Per-subject English NCCA source; yearly 1st September 00:00 UTC cron. Honours USE_LOCAL_SCRAPES=true to read from stedding/ingest_queue/ncca/english/."

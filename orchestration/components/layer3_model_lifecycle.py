@@ -546,7 +546,11 @@ class CelticFederatedOcrComponent(Component, Resolvable):
     num_rounds: int = 10
     data_dir: str = "/tmp/irish_htr_dataset_dummy"
     server_address: str = "localhost:8080"
-    automation_cron: str = "*/30 * * * *"
+    # DEFERRED per the 2026-08-15-dagster-load-path-repair change: default
+    # to `"manual"` so BIEP M1-M4 do not trigger the federated simulator.
+    # Set `automation_cron: "*/30 * * * *"` (or any non-manual value)
+    # once the federated OCR subsystem is on the bringup list.
+    automation_cron: str = "manual"
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 1 @asset: `irish_ocr_federated_smoke`.
@@ -567,14 +571,19 @@ class CelticFederatedOcrComponent(Component, Resolvable):
             f"subsystem warm."
         )
 
+        # DEFERRED: explicit `manual()` automation condition unless the
+        # defs.yaml overrides via `automation_cron:`.
+        if self.automation_cron == "manual":
+            _automation = dg.AutomationCondition.manual()
+        else:
+            _automation = dg.AutomationCondition.on_cron(self.automation_cron)
+
         @dg.asset(
             name=asset_name,
             group_name=group_name,
             compute_kind="federated-learning",
             description=description,
-            automation_condition=dg.AutomationCondition.on_cron(
-                self.automation_cron
-            ),
+            automation_condition=_automation,
         )
         def _federated_smoke(
             context: dg.AssetExecutionContext,

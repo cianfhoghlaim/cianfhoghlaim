@@ -55,7 +55,11 @@ class KCGCognifyComponent(Component, Resolvable):
         edge_types: The graph edge types this stage is expected to produce.
         asset_check_kind: The check kind (e.g. "edges_count").
         assertion: Human-readable assertion, e.g. "edges_count >= 1".
-        automation_cron: Cron for the AutomationCondition.
+        automation_cron: Cron for the AutomationCondition. Default is
+            `"manual"` (DEFERRED per the 2026-08-15-dagster-load-path-repair
+            change) — assets do NOT auto-trigger in BIEP M1-M4. Operators
+            launch them by hand once the cognify stack (cognee + graphiti +
+            falkordb + lancedb + memgraph) is up.
         grouping: Documentation label from the YAML; the Dagster group_name
             is derived from `stage` so it stays a valid identifier.
     """
@@ -66,12 +70,24 @@ class KCGCognifyComponent(Component, Resolvable):
     edge_types: list[str] = field(default_factory=list)
     asset_check_kind: str = "edges_count"
     assertion: str = "edges_count >= 1"
-    automation_cron: str = "0 3 * * *"
+    # DEFERRED per the 2026-08-15-dagster-load-path-repair change: default
+    # to `"manual"` so BIEP M1-M4 do not trigger this asset. Set
+    # `automation_cron: "0 3 * * *"` (or any non-manual value) once the
+    # cognify stack is on the bringup list.
+    automation_cron: str = "manual"
     grouping: str = ""
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         asset_name = f"{self.stage}_cognified"
         group_name = f"3_model_lifecycle_cognify_{self.stage}"
+
+        # DEFERRED: explicit `manual()` automation condition unless the
+        # defs.yaml overrides via `automation_cron:`. The per-asset check
+        # (fail-loudly contract) still fires on manual launch.
+        if self.automation_cron == "manual":
+            _automation = dg.AutomationCondition.manual()
+        else:
+            _automation = dg.AutomationCondition.on_cron(self.automation_cron)
 
         @dg.asset(
             name=asset_name,
@@ -81,7 +97,7 @@ class KCGCognifyComponent(Component, Resolvable):
                 f"L3 cognify: {self.stage} -> {self.dataset} "
                 f"(edges: {', '.join(self.edge_types) or 'unspecified'})"
             ),
-            automation_condition=dg.AutomationCondition.on_cron(self.automation_cron),
+            automation_condition=_automation,
         )
         def _cognify_asset(context: dg.AssetExecutionContext) -> dg.MaterializeResult:
             # Imported here, not at module scope: anything under

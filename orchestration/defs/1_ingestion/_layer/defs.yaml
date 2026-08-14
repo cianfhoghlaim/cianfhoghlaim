@@ -1,0 +1,17 @@
+# orchestration/defs/1_ingestion/_layer/defs.yaml
+#
+# Layer 1 Ingestion root mount (added by the 2026-08-15-dagster-load-path-repair
+# change). Without this `DefsFolderComponent` mount, `dg.load_defs()`
+# cannot discover the law/ + curriculum/ + lc6/ subtrees below.
+#
+# Per the dagster-5-layer-component-architecture spec, every directory
+# that contains Component YAML children MUST have an explicit mount
+# point (either a bare `defs.yaml` Component OR an `_layer/defs.yaml`
+# `DefsFolderComponent`). This file is the latter.
+#
+# Subtrees below 1_ingestion/:
+#   - law/                    (5 IE law sources under law/ie/)
+#   - curriculum/             (LC6 + future cohorts)
+#   - curriculum/lc6/         (6 LC6 subject sources — `.yaml` → defs.yaml)
+type: dagster.DefsFolderComponent
+attributes: {}

@@ -1,0 +1,7 @@
+# orchestration/defs/2_materials/embedding_pivot/_layer/defs.yaml
+#
+# L2 embedding_pivot sub-mount (added by the 2026-08-15-dagster-load-path-repair
+# change). Walks into the 1+ BGE embedding children:
+#   - bge_large_en/        (CelticMaterialsComponent for BAAI/bge-large-en-v1.5)
+type: dagster.DefsFolderComponent
+attributes: {}
