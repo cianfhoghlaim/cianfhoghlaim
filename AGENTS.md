@@ -17,7 +17,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
 | [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
 | [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
-| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (92 specs, 4 shared — added secrets-management in the 2026-08-15 openspec change) |
+| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (94 specs, 4 shared — added secrets-management in the 2026-08-15 openspec change) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
 
 ### ccc code search (always use before grep)
@@ -78,7 +78,7 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 93 stacks is at
+The full inventory of 94 stacks is at
 [`../bonneagar/AGENTS.md`](../bonneagar/AGENTS.md) (the IaC
 repo owns the stack catalogue; see the `## IaC Repo Boundary`
 section below for the ownership table).

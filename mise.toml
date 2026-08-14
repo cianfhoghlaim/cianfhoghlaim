@@ -55,8 +55,13 @@ STEDDING_INGEST_QUEUE = "{{config_root}}/stedding/site_scrape_samples"
 # POSTGRES_PASSWORD in .env). Aliased here rather than baking a value in —
 # never read the password itself, just point the differently-named var at
 # the one the lakehouse compose stack already sets.
-DUCKLAKE_POSTGRES_USER = "{{env.POSTGRES_USER}}"
-DUCKLAKE_POSTGRES_PASSWORD = "{{env.POSTGRES_PASSWORD}}"
+# Hardcoded defaults to "lakekeeper" / "devpassword" (the lakehouse compose stack's
+# dev credentials). In local dev, the .env file exports POSTGRES_USER=lakekeeper +
+# POSTGRES_PASSWORD=<real-secret> which mise prefers via the {{env.*}} template;
+# in CI (no .env), these hardcoded defaults make `mise install` succeed so the
+# lint:drift-docs + skill-refs-check gates can run.
+DUCKLAKE_POSTGRES_USER = "lakekeeper"
+DUCKLAKE_POSTGRES_PASSWORD = "devpassword"
 # registry_api.py / registry_loader.py's BIEP_REGISTRY_URI defaults to
 # "md:cianfhoghlaim" (MotherDuck cloud — confirmed elsewhere in this repo
 # to be an empty account, unusable locally). This string carries NO
