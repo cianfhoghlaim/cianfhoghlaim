@@ -599,12 +599,45 @@ convention: the outer `models/` package is canonical).
 The `meaisinfhoghlaim/ocr/` shim will be removed in v5 of
 the registry.
 
-### 11.12 Quick routing — "I want to add X, where do I go?"
+### 11.12 The `image_generation_agent` consumer (NEW 2026-08-13)
+
+The `image_generation_agent` (registered in
+`agents/agent_registry.py:AGENT_REGISTRY` as the 13th main agent,
+per Phase L of the
+2026-08-13-web-monorepo-consolidation-and-agent-integration-v1 change)
+consumes the 5 `image_gen` MODEL_REGISTRY entries for 2D asset
+generation + Babylon.js texture creation.
+
+The agent's 5 tools live at `agents/adk/tools/image_generation.py`:
+
+| Tool | Purpose | Role |
+|:--|:--|:--|
+| `list_image_models` | List the 5 `image_gen` entries + availability | (inspector) |
+| `generate_2d_asset` | Generate a 2D image (subject illustration, sprite, diagram) | `default`, `fast`, `bilingual`, `legacy` |
+| `generate_texture` | Generate a Babylon.js PBR texture | `diagrams` |
+| `style_match` | Generate N style-preserved variants | `default` |
+| `cocoindex_register` | Register the generated asset in the CocoIndex | (always) |
+
+The BAML client wiring is at `baml_src/clients_image_gen.baml` with
+5 client<llm> blocks (ImageGenDefault + ImageGenFast +
+ImageGenBilingual + ImageGenLegacy + ImageGenDiagrams). Each client
+routes via `model_for('image_gen', role)` — never hardcodes a model
+string.
+
+The CocoIndex flow is at
+`cocoindex/media/image_generation_flow.py` (R1–R4 conformance +
+the canonical `bge-m3` embedder + LanceDB target table
+`cianhoghlaim.media.image_gen_chunks`).
+
+### 11.13 Quick routing — "I want to add X, where do I go?"
 
 | If you want to... | Look at... |
 |:--|:--|
 | Add a new OCR/VLM model | `meaisinfhoghlaim/models/registry.py:VISION_MODELS` (or `model_registry.py:MODEL_REGISTRY` for the 7-family view) |
 | Add a new classical OCR backend | `meaisinfhoghlaim/models/registry.py:CLASSICAL_OCR` + `bonneagar/stacks/ocr-classical/<name>/` |
+| Add a new image_gen model | `meaisinfhoghlaim/models/model_registry.py:MODEL_REGISTRY` (family=`image_gen`) + `agents/adk/image_generation_agent.py` |
+| Add a new `image_gen` BAML client | `baml_src/clients_image_gen.baml` + `agents/adk/tools/image_generation.py` |
+| Run the image_gen agent | `agents/adk/image_generation_agent.py:image_generation_agent` |
 | Wire a model into BAML | `baml_src/clients_ocr_ensemble.baml` (the 3 ensemble clients) |
 | Run the 4-path ensemble | `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py:EnsembledExtractor` |
 | Add a new PDF converter | `meaisinfhoghlaim/document_factory/converters/<name>_converter.py` + register in `pdf_factory.py` |
@@ -614,7 +647,7 @@ the registry.
 | Configure local inference | `meaisinfhoghlaim/models/llama_swap_config.yaml` (the llama-swap config) |
 | Pick the optimal M4-Max model | `select_optimal_for_m4_max()` (the dispatch helper) |
 
-### 11.13 Cross-references
+### 11.14 Cross-references
 
 - [`meaisinfhoghlaim/README.md`](../../meaisinfhoghlaim/README.md) — the deeper sub-package docs (the canonical home for OCR/HTR/Alignment)
 
@@ -644,5 +677,5 @@ federates `firecrawl_search` + Cognee + Graphiti + LanceDB over the
 
 ---
 
-**Last updated**: 2026-08-13 (added §11 OCR/VLM Pipeline + the 22-entry `ocr_vision` table + 6 `CLASSICAL_OCR` table + the 4-path ensemble + 7 PDF converters + 4 alignment methods + Irish HTR + M4-Max dispatch + llama-swap + BAML ensemble clients + RAGAS voting + the back-compat shim warning).
+**Last updated**: 2026-08-13 (added §11.12 image_generation_agent consumer row + the 5 `image_gen` BAML clients + the CocoIndex flow + the 5 tools; updated the routing table with the image_gen entry).
 **Owner**: Build agent.

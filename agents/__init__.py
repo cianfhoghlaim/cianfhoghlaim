@@ -1,17 +1,19 @@
 """
-Celtic Education Agents — the 12-agent fleet.
+Celtic Education Agents — the 13-agent fleet.
 
 Provides AI agents for the Celtic Education Platform, organized as
-a 12-agent fleet spanning 5 frameworks (Custom + ADK + Agno +
+a 13-agent fleet spanning 5 frameworks (Custom + ADK + Agno +
 Pipecat + CopilotKit).
 
 Framework split:
 
 - **Custom** (1): ``root_agent`` — the query router + orchestrator
-- **ADK** (8): ``curriculum_agent`` + ``translation_agent`` +
+- **ADK** (9): ``curriculum_agent`` + ``translation_agent`` +
   ``corpus_agent`` + ``research_agent`` + ``geospatial_agent`` +
   ``statistics_agent`` + ``curriculum_comparison_agent`` +
-  ``mcp_curriculum_agent``
+  ``mcp_curriculum_agent`` + ``image_generation_agent`` (per
+  2026-08-13-web-monorepo-consolidation-and-agent-integration-v1,
+  Phase L)
 - **Agno** (3): ``education_research_agent`` +
   ``bunchloch_research_agent`` + ``agui_curriculum_agent``
 - **Pipecat** (deferred — voice channel)
@@ -19,21 +21,23 @@ Framework split:
 
 Sub-packages:
 
-- :mod:`agents.adk` — the 8 ADK agents + the canonical root_agent
+- :mod:`agents.adk` — the 9 ADK agents + the canonical root_agent
 - :mod:`agents.agno` — the 3 Agno agents + the EducationTeam
 - :mod:`agents.tuatha` — the 8 NCCA subject specialists (gael +
   math + appm + chem + comp + engl + geog + hist)
 - :mod:`agents.api` — the Hono API routes for the agent fleet
-- :mod:`agents.tools` — the 9 tool modules (curriculum, corpus,
-  geospatial, statistics, terminology, etc.)
+- :mod:`agents.tools` — the 10 tool modules (curriculum, corpus,
+  geospatial, statistics, terminology, image_generation, etc.)
 - :mod:`agents.meaisinfhoghlaim` — the OCR/HTR/alignment sub-package
 
 Centralized wiring (added by the
-``2026-08-14-agents-fleet-wiring-parity-v1`` change):
+``2026-08-14-agents-fleet-wiring-parity-v1`` change; extended
+by ``2026-08-13-web-monorepo-consolidation-and-agent-integration-v1``
+Phase L to include ``image_generation_agent``):
 
 - :mod:`agents.wiring` — ``AgentFleetWiring`` dataclass + ``wire_agent``
 - :mod:`agents.agent_registry` — ``AGENT_REGISTRY`` dict (the single
-  source of truth for the 12 main agents)
+  source of truth for the 13 main agents)
 - :mod:`agents._workflow_handlers` — 4 shared async dispatchers
 - :mod:`agents.observability_hooks` — the 5-layer observability
   wiring (Langfuse + Logfire + MLflow + RAGAS + structlog)

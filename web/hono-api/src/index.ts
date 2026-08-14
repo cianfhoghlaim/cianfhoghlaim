@@ -5,6 +5,7 @@ import { requireAuth, requireOrg } from "./middleware";
 
 import lineageBySubject from "./routes/lineage/[subject]";
 import pdfWildcard from "./routes/pdf/[...r2-key]";
+import imageGeneration from "./routes/copilotkit/image-generation";
 
 const app = new Hono();
 
@@ -80,6 +81,18 @@ app.route("/api/control-panel", controlPanelApp);
 
 app.route("/", lineageBySubject);
 app.route("/", pdfWildcard);
+
+// ----------------------------------------------------------------------------
+// Image generation CopilotKit actions (Phase L)
+// ----------------------------------------------------------------------------
+//
+// Per the 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1
+// change (Phase L), the `image_generation_agent` is the 13th main ADK
+// agent. Its 5 tools (list_image_models / generate_2d_asset /
+// generate_texture / style_match / cocoindex_register) are exposed via
+// the unified Hono gateway at `/api/copilotkit/image-gen/*`.
+
+app.route("/api/copilotkit/image-gen", imageGeneration);
 
 const port = parseInt(process.env.PORT ?? "4000", 10);
 console.log(`[croilar-hono-api] Listening on port ${port}`);

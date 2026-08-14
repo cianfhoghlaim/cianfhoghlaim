@@ -11,6 +11,9 @@ Provides AI agents for the Celtic Education Platform:
 - Geospatial Agent: LSOA/Data Zone spatial analysis
 - Statistics Agent: Education metrics and benchmarking
 - Curriculum Comparison Agent: Cross-nation curriculum mapping
+- Image Generation Agent: consumes the 5 ``image_gen`` MODEL_REGISTRY
+  entries for 2D assets + Babylon.js textures (per
+  2026-08-13-web-monorepo-consolidation-and-agent-integration-v1, Phase L)
 """
 from .agui_curriculum_agent import (
     AGUIEventType,
@@ -112,6 +115,10 @@ from .geospatial_agent import (
     geospatial_agent,
     regional_comparison_analyst,
     school_accessibility_analyst,
+)
+from .image_generation_agent import (
+    image_generation_agent,
+    wire_image_generation_agent,
 )
 from .mythology_narrator_agent import mythology_narrator_agent
 from .quest_guide_agent import quest_guide_agent
@@ -236,6 +243,9 @@ __all__ = [
     "generate_search_queries",
     "geospatial_agent",
     "get_corpus_stats",
+    # Image Generation (Phase L)
+    "image_generation_agent",
+    "wire_image_generation_agent",
     "get_curriculum_framework",
     "get_document",
     "get_education_levels",
