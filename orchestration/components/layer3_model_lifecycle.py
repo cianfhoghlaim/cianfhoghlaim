@@ -324,7 +324,7 @@ class CelticModelLifecycleComponent(Component, Resolvable):
             tags={t: "" for t in self.tags},
         )
         def _cocoindex_app_asset(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # Conformance + module resolution happen here, at execute time.
             # `_resolve_app()` runs first so the graph-only shape raises its
@@ -347,7 +347,7 @@ class CelticModelLifecycleComponent(Component, Resolvable):
                 else:
                     update()
             except Exception as exc:  # pragma: no cover
-                asset_context.log.warning(
+                context.log.warning(
                     f"cocoindex_update_failed name={app_name} err={exc}"
                 )
                 return dg.MaterializeResult(
@@ -577,7 +577,7 @@ class CelticFederatedOcrComponent(Component, Resolvable):
             ),
         )
         def _federated_smoke(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             started_at = _dt.now(tz=_tz.utc)
             try:
@@ -607,7 +607,7 @@ class CelticFederatedOcrComponent(Component, Resolvable):
 
             finished_at = _dt.now(tz=_tz.utc)
             duration_seconds = (finished_at - started_at).total_seconds()
-            asset_context.log.info(
+            context.log.info(
                 f"irish_ocr_federated_smoke: status={status} "
                 f"duration={duration_seconds:.2f}s"
             )

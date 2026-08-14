@@ -152,6 +152,16 @@ run = "uv run python scripts/lint_guides_yml.py"
 description = "Same as lint:guides-yml but exits 0 always (prints the report)"
 run = "uv run python scripts/lint_guides_yml.py --dry-run"
 
+# -----------------------------------------------------------------------------
+# Firecrawl Budget Lint — added by the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1
+# change. Reads cianfhoghlaim.firecrawl_meta.scrapes (the append-only scrape log
+# populated by FirecrawlMCPClient) + flags any pipeline exceeding 150% of its
+# monthly allocation (defined in deployment-choice.yaml).
+# -----------------------------------------------------------------------------
+[tasks."lint:firecrawl-budget"]
+description = "Firecrawl budget linter — exit 1 if any pipeline exceeds 150% of its monthly allocation. Per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change."
+run = "uv run python scripts/lint_firecrawl_budget.py"
+
 # =============================================================================
 # 2026-08-15-lakehouse-memory-stack-deep-integration-v1 (Phase E)
 # =============================================================================
@@ -1310,6 +1320,48 @@ cat "$REPORT"
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
 run = "bash scripts/sync/drift_docs.sh"
+
+# -----------------------------------------------------------------------------
+# Firecrawl Dual-Search Sync Loop — the 12th sync layer
+# (per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change)
+#
+# Layer 12 covers the Firecrawl MCP ↔ ccc dual-search architecture. The
+# 27-31st concept guides live in .cocoindex_code/guides.yml. The orchestrator
+# runs the CCC index refresh + writes a unified report.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:firecrawl-ccc"]
+description = "Firecrawl Layer 2: append the 27-31st CCC concept guides (firecrawl-search + firecrawl-mcp-tools + firecrawl-research-index + firecrawl-developer-index + firecrawl-corpus) + reindex"
+run = "bash scripts/sync/firecrawl-ccc.sh"
+
+[tasks."sync:firecrawl"]
+description = "Firecrawl orchestrator: runs sync:firecrawl-ccc + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/firecrawl-all-$(date +%Y-%m-%d).md"
+{
+  echo "# Firecrawl Sync — Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change (Layer 12)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+echo "## Sub-layer: sync:firecrawl-ccc" >> "$REPORT"
+echo '```' >> "$REPORT"
+bash scripts/sync/firecrawl-ccc.sh >> "$REPORT" 2>&1
+echo '```' >> "$REPORT"
+echo "" >> "$REPORT"
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 Firecrawl concept guides + CCC index refresh completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
 
 [tasks."sync:spec-agents"]
 description = "Layer 8: regenerate the per-spec AGENTS.md files (78 siblings of openspec/specs/<name>/spec.md). Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change's `repo-hygiene-agent-routing` spec."

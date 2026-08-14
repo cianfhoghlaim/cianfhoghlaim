@@ -64,6 +64,30 @@ bun run ccc:search "spec delta format"      # find prior art in the openspec arc
 bun run ccc:search "AGENTS.md convention"   # find per-spec AGENTS.md generator pattern
 ```
 
+### Firecrawl search (for upstream-version verification, added 2026-08-14)
+
+Every openspec change that pins a dependency version in `pyproject.toml` / `package.json` / `mise.toml` MUST cite at least one Firecrawl result proving the version is current. Pair with a `ccc:search` query so both tool names appear in the Langfuse trace.
+
+```bash
+# Via the FirecrawlMCPClient wrapper (Pydantic + Langfuse @observe)
+python -c "from agents.meaisinfhoghlaim.firecrawl_mcp import FirecrawlMCPClient; c = FirecrawlMCPClient(); print(c.search('Dagster 1.13 release notes', categories=['developer'], limit=3))"
+
+# Or via MCP directly (keyless tier — search/scrape/parse only)
+# firecrawl_search "Dagster 1.13 release notes" --categories developer --limit 3
+```
+
+### Routing table: when to use firecrawl_search vs ccc:search
+
+| Question | Tool | Output |
+|:--|:--|:--|
+| "What does our code do for X?" | `bun run ccc:search "X"` | local code |
+| "What does our docs corpus say about X?" | `cognee.search(X)` | local docs |
+| "What does upstream say about X right now?" | `firecrawl_search` (categories: `["developer"]`) | live web |
+| "What does the upstream source code actually say?" | `firecrawl_developer_search` | GitHub issues/PRs/README |
+| "Show me the page at <known URL>" | `firecrawl_scrape` | page markdown + summary |
+| "Find papers / read passages / citations" | `firecrawl_research_*` | 43M-paper index |
+| "Recurring check on a page" | `firecrawl_monitor_*` (deferred to v2) | webhook + email notifications |
+
 ## Quick Reference
 
 ```bash

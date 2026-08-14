@@ -116,6 +116,74 @@ class CrawledPage:
 
 
 # ---------------------------------------------------------------------------
+# PII / ZDR policy (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change)
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ScrapePolicy:
+    """The per-source scrape policy.
+
+    The policy propagates to every Firecrawl scrape call. The 3 PII
+    sources (HSE + Scottish NHS + Welsh health) set
+    `sensitivity="pii"` to flip `redact_pii` + `zero_data_retention`
+    on. All other sources default to `sensitivity="none"`.
+    """
+
+    sensitivity: str = "none"  # "none" | "pii" | "phi" | "secret"
+    redact_pii: bool = False
+    zero_data_retention: bool = False
+    cache_max_age_ms: int = 7 * 86_400_000  # 7 days for non-PII; 24h for PII
+    requires_interact: bool = False  # examinations.ie login-gated
+    persistent_profile: str | None = None  # e.g. "state-exams-ie"
+
+    def __post_init__(self) -> None:
+        # Auto-derive redact_pii + zero_data_retention from sensitivity
+        if self.sensitivity != "none":
+            object.__setattr__(self, "redact_pii", True)
+            object.__setattr__(self, "zero_data_retention", True)
+        # PII sources use a shorter cache window (24h)
+        if self.sensitivity != "none" and self.cache_max_age_ms == 7 * 86_400_000:
+            object.__setattr__(self, "cache_max_age_ms", 86_400_000)
+
+    def to_firecrawl_params(self) -> dict[str, Any]:
+        """Convert to Firecrawl scrape params."""
+        params: dict[str, Any] = {"maxAge": self.cache_max_age_ms}
+        if self.redact_pii:
+            params["redactPII"] = True
+        if self.zero_data_retention:
+            params["zeroDataRetention"] = True
+        if self.persistent_profile:
+            params["profile"] = {
+                "name": self.persistent_profile,
+                "saveChanges": False,
+            }
+        return params
+
+
+# Per-source policy table (the canonical 3 PII sources + the 1
+# login-gated persistent profile).
+SOURCE_POLICIES: dict[str, ScrapePolicy] = {
+    "hse": ScrapePolicy(sensitivity="pii"),
+    "gov_scot_statistics": ScrapePolicy(sensitivity="pii"),
+    "welsh_medium": ScrapePolicy(sensitivity="pii"),
+    "examinations_ie_papers": ScrapePolicy(
+        sensitivity="pii",
+        persistent_profile="state-exams-ie",
+    ),
+    "examinations_ie_marking": ScrapePolicy(
+        sensitivity="pii",
+        persistent_profile="state-exams-ie",
+    ),
+}
+
+
+def get_policy(source_key: str) -> ScrapePolicy:
+    """Return the policy for a source (default: non-PII, 7-day cache)."""
+    return SOURCE_POLICIES.get(source_key, ScrapePolicy())
+
+
+# ---------------------------------------------------------------------------
 # Backend selection
 # ---------------------------------------------------------------------------
 
@@ -283,12 +351,33 @@ def _scrape_via_firecrawl(
     firecrawl: Any,
     url: str,
     formats: list[str] | None = None,
+    policy: ScrapePolicy | None = None,
 ) -> CrawledPage:
-    """Scrape a single URL via the Firecrawl Python SDK."""
+    """Scrape a single URL via the Firecrawl Python SDK.
+
+    Per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change,
+    the `:policy` argument propagates the per-source PII flags
+    (`redact_pii`, `zero_data_retention`, `cache_max_age_ms`, ...)
+    into the Firecrawl params.
+    """
     formats = formats or ["markdown", "links"]
+    policy = policy or ScrapePolicy()
+    params: dict[str, Any] = {"formats": formats}
+    params.update(policy.to_firecrawl_params())
     try:
-        result = firecrawl.scrape_url(url, params={"formats": formats})
+        result = firecrawl.scrape_url(url, params=params)
         metadata = result.get("metadata") or {}
+        # Merge the policy flags into the metadata for downstream
+        # logging (the firecrawl_meta.scrapes row records them).
+        policy_metadata = {
+            "redact_pii": policy.redact_pii,
+            "zero_data_retention": policy.zero_data_retention,
+            "sensitivity": policy.sensitivity,
+            "cache_max_age_ms": policy.cache_max_age_ms,
+        }
+        if policy.persistent_profile:
+            policy_metadata["persistent_profile"] = policy.persistent_profile
+        metadata = {**metadata, "_policy": policy_metadata}
         return CrawledPage(
             url=metadata.get("sourceURL", url),
             title=metadata.get("title"),
@@ -364,7 +453,13 @@ def _scrape_via_local_cache(url: str) -> CrawledPage:
 # ---------------------------------------------------------------------------
 
 
-def scrape_url(url: str, formats: list[str] | None = None) -> CrawledPage:
+def scrape_url(
+    url: str,
+    formats: list[str] | None = None,
+    *,
+    policy: ScrapePolicy | None = None,
+    source_key: str | None = None,
+) -> CrawledPage:
     """Scrape a single page. Dispatches to the first available backend.
 
     Args:
@@ -372,6 +467,9 @@ def scrape_url(url: str, formats: list[str] | None = None) -> CrawledPage:
         formats: optional list of output formats (default: `["markdown",
             "links"]`). Valid values: `"markdown"`, `"html"`, `"links"`,
             `"json"`, `"summary"`.
+        policy: optional `ScrapePolicy` for PII flags. If None, the
+            policy is resolved from `source_key` via `get_policy()`.
+        source_key: optional source key (e.g. `"hse"`) for policy lookup.
 
     Returns:
         A `CrawledPage` instance with `status="success"` on success or
@@ -385,12 +483,17 @@ def scrape_url(url: str, formats: list[str] | None = None) -> CrawledPage:
                 f"Invalid format(s): {bad}. Valid: {sorted(VALID_FORMATS)}"
             )
 
+    # Resolve the policy
+    if policy is None and source_key is not None:
+        policy = get_policy(source_key)
+    policy = policy or ScrapePolicy()
+
     choice = _pick_backend()
 
     if choice.backend_name == "browser":
         return _scrape_via_browser(choice.client, url, formats)
     if choice.backend_name == "firecrawl":
-        return _scrape_via_firecrawl(choice.client, url, formats)
+        return _scrape_via_firecrawl(choice.client, url, formats, policy=policy)
     if choice.backend_name == "local_cache":
         return _scrape_via_local_cache(url)
 

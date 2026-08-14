@@ -1,22 +1,27 @@
 ---
 name: indexing-and-cognition
-description: Consolidated setup + MCP reference for the two agent knowledge surfaces — ccc (CocoIndex Code, semantic code search) and cognee (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available for code search?", "what MCP tools are available for doc cognition?", "where is the dual-search workflow documented?", or "why isn't ccc finding X?". Single source of truth for the indexing + cognition half of the agent stack. Lives at .agents/skills/INDEXING_AND_COGNITION.md (this file).
+description: Consolidated setup + MCP reference for the three agent knowledge surfaces — ccc (CocoIndex Code, semantic code search), cognee (knowledge graph over docs), and firecrawl_mcp (live web via the 12 Firecrawl MCP tools). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available for code search?", "what MCP tools are available for doc cognition?", "where is the dual-search workflow documented?", "when should I use firecrawl_search vs ccc:search?", or "why isn't ccc finding X?". Single source of truth for the indexing + cognition half of the agent stack. Lives at .agents/skills/INDEXING_AND_COGNITION.md (this file).
 ---
 
 # Indexing & Cognition — Setup + MCP Reference
 
-The Cianfhoghlaim monorepo runs **two parallel knowledge surfaces**
+The Cianfhoghlaim monorepo runs **three parallel knowledge surfaces**
 that every agent consumes via MCP:
 
 | Surface | What it indexes | Backend | MCP server | Use for |
 |:--|:--|:--|:--|:--|
 | **CCC** (CocoIndex Code) | 8,845 source files / 257,957 chunks | SQLite + BGE-M3 embeddings | `cocoindex-code` (`ccc mcp`) | "Where is BAML extraction implemented?" "What calls `run_conformance_check`?" |
 | **Cognee** | Docs (1,743 `.md` files, ~2,242 docs across 7 typed clusters) | Neo4j graph + LanceDB vectors + DeepSeek V4 Pro | `cognee` (`cognee-mcp`) | "What is the architecture pattern for the agent fleet?" "How does the cognify pipeline differ across stages?" |
+| **Firecrawl MCP** | Live web (search / scrape / crawl / map / agent / interact / batch / parse / research / developer) | Firecrawl SaaS + 12 MCP tools + 43M-paper Research Index | `firecrawl` (the platform-level MCP) | "What does upstream say about X right now?" "Find the GitHub issue about this bug" "Find papers on BAML / OCR / curriculum" |
 
-**The dual-search insight:** CCC returns code; Cognee returns docs.
-An agent asking "find how BAML extraction is implemented" gets
-the code file from CCC and the architecture explanation from
-Cognee, then merges.
+**The triple-search insight (post-2026-08-14):** CCC returns code;
+Cognee returns docs; Firecrawl MCP returns live upstream state. An
+agent asking "find how BAML extraction is implemented, and does the
+upstream BAML still require the same patterns?" gets the code file
+from CCC, the architecture explanation from Cognee, AND the current
+upstream state from Firecrawl — then merges. The
+[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
+spec formalises the contract.
 
 ---
 

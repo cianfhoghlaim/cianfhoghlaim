@@ -11,8 +11,11 @@ Includes:
 - Teacher census
 - School meals
 - Pupil census
-"""
 
+**PII source** (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1
+change): set `SENSITIVITY = "pii"` so every Firecrawl scrape call
+flips `redact_pii=True` + `zero_data_retention=True`.
+"""
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import Any
@@ -20,6 +23,12 @@ from typing import Any
 import dlt_sources
 
 from dlt_sources.common.firecrawl_source import crawl_website, scrape_page
+from dlt_sources.common.site_crawler import get_policy
+
+# PII source flag — propagates to the Firecrawl scrape policy.
+SENSITIVITY = "pii"
+SOURCE_KEY = "gov_scot_statistics"
+_SOURCE_POLICY = get_policy(SOURCE_KEY)
 
 # Key statistics publications
 SCOT_STATISTICS = {

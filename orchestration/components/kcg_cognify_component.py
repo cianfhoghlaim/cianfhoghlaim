@@ -27,6 +27,7 @@ graph stays reproducible across machines; only execution depends on the stack.
 # derives the YAML schema from real (not postponed-string) type annotations.
 import importlib
 import logging
+import pathlib
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -34,6 +35,9 @@ import dagster as dg
 from dagster.components import Component, ComponentLoadContext, Resolvable
 
 logger = logging.getLogger(__name__)
+
+# orchestration/components/kcg_cognify_component.py -> repo root
+_REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 
 
 @dataclass
@@ -79,7 +83,7 @@ class KCGCognifyComponent(Component, Resolvable):
             ),
             automation_condition=dg.AutomationCondition.on_cron(self.automation_cron),
         )
-        def _cognify_asset(ctx: dg.AssetExecutionContext) -> dg.MaterializeResult:
+        def _cognify_asset(context: dg.AssetExecutionContext) -> dg.MaterializeResult:
             # Imported here, not at module scope: anything under
             # orchestration/defs is imported at defs-build time, so a
             # module-scope import of an adapter that needs cognee would take
@@ -124,10 +128,10 @@ class KCGCognifyComponent(Component, Resolvable):
             name=f"{self.stage}_cognify_{self.asset_check_kind}",
             description=f"{self.assertion} (stage={self.stage})",
         )
-        def _cognify_check(ctx: dg.AssetCheckExecutionContext) -> dg.AssetCheckResult:
+        def _cognify_check(context: dg.AssetCheckExecutionContext) -> dg.AssetCheckResult:
             # Reads the materialisation's real metadata. If the asset did not
             # report `edges_written`, this FAILS rather than assuming success.
-            record = ctx.instance.get_latest_materialization_event(
+            record = context.instance.get_latest_materialization_event(
                 _cognify_asset.key
             )
             entries = (
@@ -203,11 +207,78 @@ class CognifyIngestSensorsComponent(Component, Resolvable):
                 )
             )
 
+        # Every sensor targets a `cognee_ingest_<x>_job` by name. None of
+        # those jobs existed anywhere in the repo, so mounting the sensors
+        # alone made `Definitions.validate_loadable()` raise
+        # ("targets job ... which was not found in this repository") — which
+        # is why these sensors had never been loaded at all. Build the job
+        # each sensor names, from the `cognee_script` the YAML already
+        # declares for it.
+        jobs = [self._build_ingest_job(spec) for spec in self.sensors]
+
+        # Emit the JOBS only, not the sensors.
+        #
+        # `cognify_sensors.py` defines the sensors at module scope and now sits
+        # in an auto-discovered directory, so `dg.load_defs()` already picks
+        # them up; returning them here too raised "Duplicate definition found
+        # for agent_definitions_sensor". The jobs, by contrast, exist nowhere
+        # else — without them the sensors are unloadable ("targets job ...
+        # which was not found in this repository"), which is why this whole
+        # sensor set had never loaded.
+        #
+        # `found` is still computed above so a sensor named in the YAML but
+        # missing from the module fails loudly rather than silently.
         logger.info(
-            "CognifyIngestSensorsComponent: mounted %d sensors from %s",
-            len(found), self.sensors_module,
+            "CognifyIngestSensorsComponent: verified %d sensors in %s; "
+            "emitting %d ingest jobs they target",
+            len(found), self.sensors_module, len(jobs),
         )
-        return dg.Definitions(sensors=found)
+        return dg.Definitions(jobs=jobs)
+
+    def _build_ingest_job(self, spec: dict[str, Any]) -> dg.JobDefinition:
+        """One job per sensor, running that sensor's `cognee_script`.
+
+        Named to match the sensor's `job_name`, which is derived from the
+        sensor name: `<x>_sensor` -> `cognee_ingest_<x>_job`.
+        """
+        sensor_name: str = spec["name"]
+        stem = sensor_name.removesuffix("_sensor")
+        job_name = f"cognee_ingest_{stem}_job"
+        script: str = spec.get("cognee_script", f"scripts/cognee_ingest_{stem}.py")
+        target_dataset: str = spec.get("target_dataset", stem)
+        watch_path: str = spec.get("watch_path", "")
+
+        @dg.op(name=f"run_{job_name}")
+        def _run_ingest(context: dg.OpExecutionContext) -> None:
+            import subprocess
+            import sys
+
+            script_path = _REPO_ROOT / script
+            if not script_path.exists():
+                raise dg.Failure(
+                    description=(
+                        f"cognee_ingest_script_missing job={job_name} "
+                        f"path={script_path}"
+                    )
+                )
+            context.log.info(
+                f"cognee_ingest start job={job_name} script={script} "
+                f"dataset={target_dataset} watching={watch_path}"
+            )
+            # `check=True`: a non-zero exit must fail the run. Cognee has
+            # never been brought up in this deployment, so these WILL fail
+            # until it is — loudly, which is the point.
+            subprocess.run(
+                [sys.executable, str(script_path)],
+                cwd=_REPO_ROOT,
+                check=True,
+            )
+
+        @dg.job(name=job_name, description=f"Run {script} -> cognee dataset {target_dataset}")
+        def _ingest_job() -> None:
+            _run_ingest()
+
+        return _ingest_job
 
 
 @dataclass
@@ -253,14 +324,29 @@ class KCGSubjectPilotFactoryComponent(Component, Resolvable):
                 )
             )
 
+        # Deliberately does NOT emit the assets, even though it resolved the
+        # functions that build them.
+        #
+        # `lc_subjects_assets.py` binds `LC_SUBJECT_ASSETS` /
+        # `LC_SUBJECT_ASSET_CHECKS` at module scope precisely so Dagster's
+        # module scan can find them, and that module now sits in an
+        # auto-discovered directory. Emitting them here as well produced
+        # duplicate keys (`lc_mathematics_pilot_ingested`, ...), which made
+        # `Definitions.validate_loadable()` raise.
+        #
+        # The module-scope bindings are kept as the owner because they work on
+        # BOTH load paths — `dg.load_defs()` and the `_defs_walker` fallback —
+        # whereas this Component only runs on the former. This build_defs
+        # therefore validates the wiring (the functions exist and are
+        # callable) and emits nothing.
+        n_assets = len(list(assets_fn()))
+        n_checks = len(list(checks_fn()))
         logger.info(
-            "KCGSubjectPilotFactoryComponent: expanding %d LC subjects",
-            len(self.subjects),
+            "KCGSubjectPilotFactoryComponent: verified %d assets + %d checks "
+            "for %d LC subjects; ownership left to %s's module-scope bindings",
+            n_assets, n_checks, len(self.subjects), self.source_module,
         )
-        return dg.Definitions(
-            assets=list(assets_fn()),
-            asset_checks=list(checks_fn()),
-        )
+        return dg.Definitions()
 
 
 __all__ = [

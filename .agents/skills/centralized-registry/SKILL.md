@@ -617,6 +617,23 @@ the registry.
 ### 11.13 Cross-references
 
 - [`meaisinfhoghlaim/README.md`](../../meaisinfhoghlaim/README.md) — the deeper sub-package docs (the canonical home for OCR/HTR/Alignment)
+
+### 12. Firecrawl MCP — the external search surface (NEW 2026-08-14)
+
+Per the `2026-08-14-firecrawl-mcp-ccc-dual-search-v1` change, **Firecrawl MCP
+is the canonical external search surface** (analogous to how ccc is the
+internal code search surface and Cognee is the internal docs search
+surface). The FirecrawlMCPClient wrapper at
+`agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes all 12 MCP tools
+with Pydantic validation + Langfuse `@observe`. The agent routing table
+for ccc vs cognee vs firecrawl_search is documented at `AGENTS.md`
+§"Triple-search architecture" and the
+[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
+spec. The Firecrawl API key lives in Infisical under the
+`firecrawl-api-key` secret (per the `.agents/skills/secrets-management/SKILL.md`
+contract). The agent reference corpus (built by the Phase 4a change)
+federates `firecrawl_search` + Cognee + Graphiti + LanceDB over the
+`docs_index` table.
 - [`meaisinfhoghlaim/AGENTS.md`](../../meaisinfhoghlaim/AGENTS.md) — the agent routing for the meaisinfhoghlaim sub-tree
 - [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](../../openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md) — the 10 OCR backends across the canonical 6
 - [`openspec/specs/meaisin-24-ocr-models/spec.md`](../../openspec/specs/meaisin-24-ocr-models/spec.md) — the 24 VISION_MODELS spec (v4 registry)

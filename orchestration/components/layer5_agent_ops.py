@@ -139,13 +139,13 @@ class CelticAgentOpsComponent(Component, Resolvable):
             automation_condition=dg.AutomationCondition.on_cron("*/5 * * * *"),
         )
         def _agent_health(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # The real ping is wired at build time via the agent's
             # /health endpoint. The asset emits metadata about the
             # invocation; the operator can wire a downstream
             # @asset_check that asserts healthy=True.
-            asset_context.log.info(
+            context.log.info(
                 f"Pinging {health_endpoint} for {self.agent_name}"
             )
             return dg.MaterializeResult(
@@ -170,7 +170,7 @@ class CelticAgentOpsComponent(Component, Resolvable):
             automation_condition=dg.AutomationCondition.eager(),
         )
         def _agent_routing(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             from agents.routing_keywords import ROUTING_KEYWORDS
 
@@ -197,7 +197,7 @@ class CelticAgentOpsComponent(Component, Resolvable):
             automation_condition=dg.AutomationCondition.on_cron("*/10 * * * *"),
         )
         def _agent_memory(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # The real read/write happens via the Letta client at
             # runtime. The asset emits metadata about the
@@ -223,7 +223,7 @@ class CelticAgentOpsComponent(Component, Resolvable):
             automation_condition=dg.AutomationCondition.on_cron("*/5 * * * *"),
         )
         def _agent_event(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             event_payload = {
                 "agent_id": self.agent_name,
@@ -231,7 +231,7 @@ class CelticAgentOpsComponent(Component, Resolvable):
                 "timestamp": int(__import__("time").time()),
                 "payload": {"framework": self.framework},
             }
-            asset_context.log.info(
+            context.log.info(
                 f"Publishing {event_payload['event_type']} to "
                 f"{self.event_stream} at {self.event_stream_endpoint}"
             )
@@ -257,7 +257,7 @@ class CelticAgentOpsComponent(Component, Resolvable):
             automation_condition=dg.AutomationCondition.on_cron("*/5 * * * *"),
         )
         def _agent_trace(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # Per user direction, the Langfuse smoke-test span is
             # NOT persisted to the trace history. The asset still

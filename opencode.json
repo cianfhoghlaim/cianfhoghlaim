@@ -31,7 +31,7 @@
         "firecrawl-mcp"
       ],
       "environment": {
-        "FIRECRAWL_API_KEY": "infisical://dev-baile/firecrawl/api_key"
+        "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
       },
       "enabled": true
     },

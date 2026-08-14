@@ -121,7 +121,7 @@ class _JuniorCycleFactoryBase(Component, Resolvable):
             automation_condition=dg.AutomationCondition.on_cron(self.automation_cron),
             deps=[dg.AssetDep(dg.AssetKey(self.source_asset.split("/")))],
         )
-        def _jc_asset(ctx: dg.AssetExecutionContext) -> dg.MaterializeResult:
+        def _jc_asset(context: dg.AssetExecutionContext) -> dg.MaterializeResult:
             return dg.MaterializeResult(
                 metadata={
                     "item": item,

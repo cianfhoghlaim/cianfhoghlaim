@@ -540,3 +540,108 @@
     - .agents/skills/notebooks-sync/SKILL.md
   tags: [notebooks, marimo, app_cell, ingestor, dashboard]
   domain: "08-notebooks"
+
+- title: "firecrawl-search"
+  description: |
+    The canonical "use firecrawl_search vs ccc:search" routing reference. Use when the
+    agent needs to search the live web for upstream package state, news, or
+    competitive intelligence. The Firecrawl MCP complements ccc:search (local code)
+    and Cognee (local docs) as the 3rd leg of the dual-search architecture (per the
+    2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change). Always pair with a
+    ccc:search query in the same agent session so both tool names appear in the
+    Langfuse trace.
+  files:
+    - agents/meaisinfhoghlaim/firecrawl_mcp/client.py
+    - agents/meaisinfhoghlaim/firecrawl_mcp/__init__.py
+    - openspec/specs/dual-search-architecture/spec.md
+    - openspec/changes/archive/2026-08-14-2026-08-14-firecrawl-mcp-ccc-dual-search-v1/proposal.md
+    - .agents/skills/browser-tools/SKILL.md
+  tags: [firecrawl, search, mcp, dual-search, ccc, external, web]
+  domain: "00-dual-search"
+
+- title: "firecrawl-mcp-tools"
+  description: |
+    The 12 Firecrawl MCP tools + their use cases. Use when the agent needs to
+    pick between firecrawl_search / firecrawl_scrape / firecrawl_crawl /
+    firecrawl_map / firecrawl_agent / firecrawl_interact / firecrawl_batch_scrape /
+    firecrawl_monitor_* / firecrawl_research_* / firecrawl_developer_search /
+    firecrawl_parse / firecrawl_ask. The canonical FirecrawlMCPClient wrapper
+    is at agents/meaisinfhoghlaim/firecrawl_mcp/client.py — every method has
+    Pydantic validation + Langfuse @observe. Per the 2026-08-14 change.
+  files:
+    - agents/meaisinfhoghlaim/firecrawl_mcp/client.py
+    - openspec/specs/dual-search-architecture/spec.md
+    - openspec/changes/archive/2026-08-14-2026-08-14-firecrawl-mcp-ccc-dual-search-v1/specs/dual-search-architecture/spec.md
+  tags: [firecrawl, mcp, tools, scrape, crawl, map, agent, interact, batch, monitor, parse]
+  domain: "00-dual-search"
+
+- title: "firecrawl-research-index"
+  description: |
+    The 43M-paper Firecrawl Research Index (PubMed + bioRxiv + medRxiv + arXiv).
+    Use when the agent needs to find papers, read passages, or follow citations
+    for BAML schema design rationale, OCR model choice, curriculum comparison,
+    or RAGAS rubric citations. Per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1
+    change + the upstream-package-monitoring spec.
+  files:
+    - agents/meaisinfhoghlaim/firecrawl_mcp/client.py
+    - openspec/specs/upstream-package-monitoring/spec.md
+    - openspec/specs/dual-search-architecture/spec.md
+  tags: [firecrawl, research, papers, pubmed, arxiv, biorxiv, medrxiv, citations]
+  domain: "00-dual-search"
+
+- title: "firecrawl-developer-index"
+  description: |
+    The Firecrawl Developer Index (GitHub issues + merged PRs + READMEs + curated
+    docs). Use when the agent needs primary-source answers about an upstream
+    package behaviour, API drift, or breaking changes — "why does dagster.asset_check
+    raise X" → search dagster-io/dagster issues. Complements ccc:search (our own
+    code) with upstream context. Per the 2026-08-14 change.
+  files:
+    - agents/meaisinfhoghlaim/firecrawl_mcp/client.py
+    - openspec/specs/dual-search-architecture/spec.md
+    - openspec/changes/archive/2026-08-14-2026-08-14-firecrawl-mcp-ccc-dual-search-v1/proposal.md
+  tags: [firecrawl, developer, github, issues, pull-requests, readme, primary-source]
+  domain: "00-dual-search"
+
+- title: "firecrawl-corpus"
+  description: |
+    The agent reference corpus built by the
+    2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change (Phase 4a).
+    The corpus has 2 layers: the 17-package software stack docs (CocoIndex,
+    Dagster, DLT, BAML, MotherDuck, DuckDB, LanceDB, Pydantic AI, FastAPI,
+    Hono, TanStack Start, CopilotKit, OpenCode, Infisical, LiteLLM, Langfuse,
+    Firecrawl) + the 17-domain education corpus (NCCA, examinations.ie,
+    SQA, Pearson, WJEC, gov.ie, etc.). Stored in
+    `cianfhoghlaim.firecrawl_corpus.docs.<package>` + `docs_index`
+    (BAAI/bge-m3 1024-d embeddings). Queried via the polyglot memory
+    router at `agents/meaisinfhoghlaim/firecrawl_mcp/memory/router.py`
+    (Graphiti for temporal + LanceDB for vector + Cognee for cross-doc).
+    The budget tracker at `orchestration/defs/4_budget/firecrawl_budget_asset.py`
+    + sensor at `orchestration/defs/sensors/examinations_paper_sensor.py`
+    monitor the daily spend on the `firecrawl_meta.scrapes` log.
+  files:
+    - agents/meaisinfhoghlaim/firecrawl_mcp/corpus.py
+    - agents/meaisinfhoghlaim/firecrawl_mcp/memory/__init__.py
+    - agents/meaisinfhoghlaim/firecrawl_mcp/memory/graphiti_store.py
+    - agents/meaisinfhoghlaim/firecrawl_mcp/memory/lancedb_store.py
+    - agents/meaisinfhoghlaim/firecrawl_mcp/memory/cognee_store.py
+    - agents/meaisinfhoghlaim/firecrawl_mcp/memory/router.py
+    - notebooks/01_corpus/01_software_stack_crawl.py
+    - notebooks/01_corpus/02_education_corpus_crawl.py
+    - notebooks/_shared/firecrawl_corpus_loader.py
+    - notebooks/_shared/firecrawl_meta_schema.sql
+    - orchestration/defs/4_memory/docs_index_memory_job.py
+    - orchestration/defs/4_budget/firecrawl_budget_asset.py
+    - orchestration/defs/sensors/examinations_paper_sensor.py
+    - scripts/lint_firecrawl_budget.py
+    - dlt_sources/british_isles/ireland/education/examinations_papers.py
+    - dlt_sources/british_isles/ireland/education/examinations_marking_schemes.py
+    - bonneagar/stacks/state-exams-ie/compose.yaml
+    - bonneagar/stacks/state-exams-ie/sidecar.yaml
+    - bonneagar/stacks/state-exams-ie/secrets.env
+    - bonneagar/stacks/state-exams-ie/pangolin.yaml
+    - bonneagar/stacks/state-exams-ie/blueprint.yaml
+    - bonneagar/stacks/state-exams-ie/.env.example
+    - openspec/specs/firecrawl-corpus-and-portals/spec.md
+  tags: [firecrawl, corpus, embeddings, lance, bge-m3, software-stack, education, polyglot-memory]
+  domain: "00-dual-search"

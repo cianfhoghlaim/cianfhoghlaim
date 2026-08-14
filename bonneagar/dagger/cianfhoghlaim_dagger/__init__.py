@@ -278,6 +278,14 @@ WEB_SECRETS: list[InfisicalSecret] = [
     InfisicalSecret("oideachais", "browserbase-api-key"),
 ]
 
+# The 2 SEC credentials for the state-exams-ie persistent profile vault
+# (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change). The
+# vault container reads them at startup via the Locket sidecar.
+EXAMINATIONS_IE_SECRETS: list[InfisicalSecret] = [
+    InfisicalSecret("cianfhoghlaim", "examinations-ie/username"),
+    InfisicalSecret("cianfhoghlaim", "examinations-ie/password"),
+]
+
 DATA_SECRETS: list[InfisicalSecret] = [
     InfisicalSecret("oideachais", "github-access-token"),
     InfisicalSecret("oideachais", "motherduck-token"),

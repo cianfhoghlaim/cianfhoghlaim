@@ -187,7 +187,7 @@ class CelticIngestionComponent(Component, Resolvable):
             automation_condition=automation_condition,
             tags={t: "" for t in self.tags},
         )
-        def _dlt_asset(asset_context: dg.AssetExecutionContext) -> dg.MaterializeResult:
+        def _dlt_asset(context: dg.AssetExecutionContext) -> dg.MaterializeResult:
             os.environ.setdefault("USE_LOCAL_SCRAPES", "true")
             dlt = __import__("dlt")
             destination = get_dlt_destination()

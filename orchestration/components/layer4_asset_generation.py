@@ -121,9 +121,9 @@ class CelticAssetGenerationComponent(Component, Resolvable):
             deps=deps,
         )
         def _dashboard_asset(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
-            asset_context.log.info(
+            context.log.info(
                 f"Re-materialising {self.dashboard_kind} at {self.dashboard_path}"
             )
             # The actual re-materialisation is a no-op for the asset

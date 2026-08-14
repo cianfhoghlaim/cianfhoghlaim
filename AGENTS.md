@@ -129,6 +129,53 @@ explanation from cognee, then merges.
             Agent (merged)
 ```
 
+## Triple-search architecture (ccc + cognee + firecrawl_mcp)
+
+Per the `2026-08-14-firecrawl-mcp-ccc-dual-search-v1` change, the
+agent stack now has **3 complementary search surfaces**. ccc and
+cognee are local + free; firecrawl_mcp is external + metered. Every
+agent session that runs `firecrawl_search` MUST also emit a
+`ccc:search` query so both tool names appear in the Langfuse trace.
+
+```
+        ccc (code)              cognee (docs)       firecrawl_mcp (live web)
+            │                       │                       │
+            │   semantic/local      │   semantic/local      │   semantic/external
+            │   FREE                │   FREE                │   metered (credits)
+            │                       │                       │
+            ▼                       ▼                       ▼
+        ──────────────┬─────────────┴───────────────┬───────────────────
+                      ▼                             ▼
+              Local-fast lane                  External-deep lane
+                      │                             │
+                      └──────────────┬──────────────┘
+                                     ▼
+                            Agent (3-way merged)
+```
+
+**Routing table** (which tool wins for each question type):
+
+| Question type | Tool | Why |
+|:--|:--|:--|
+| "What is in our code that does X?" | `bun run ccc:search "X"` | Local, FREE, semantic, instant |
+| "What does our docs corpus say about X?" | `cognee.search(X)` | Local, FREE, semantic |
+| "What does upstream say about X **right now**?" | `firecrawl_search` (categories: `developer`) | External, metered, fresh |
+| "Show me the **page** at <known URL>" | `firecrawl_scrape` | Replaces ad-hoc `webfetch` |
+| "Find every URL on a domain" | `firecrawl_map` (with `search:`) | Faster than crawling whole site |
+| "Pull all pages from a path" | `firecrawl_crawl` | Bounded, async, with `includePaths` regex |
+| "Investigate across unknown sources" | `firecrawl_agent` | Autonomous, async, multi-source |
+| "Operate a login-gated page" | `firecrawl_interact` | Playwright-style, profile-aware |
+| "Parse a local PDF/DOCX/XLSX" | `firecrawl_parse` | Two-call upload handoff |
+| "Find papers / read passages / citations" | `firecrawl_research_*` | 43M-paper PubMed/bioRxiv/arXiv index |
+| "Find a primary-source coding answer" | `firecrawl_developer_search` | GitHub issues/PRs/README/curated docs |
+| "Self-debug a Firecrawl call that failed" | `firecrawl_scrape /support/ask` | Agent-to-agent support |
+
+The `FirecrawlMCPClient` wrapper at
+`agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes all 12 MCP
+tools with Pydantic validation + Langfuse `@observe`. See the
+[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
+spec for the formal requirements.
+
 ### Python graph (uv workspace)
 
 Post-v7, the root `pyproject.toml` IS the package — no workspace
