@@ -214,8 +214,8 @@ over raw `duckdb` SQL, per the canonical KCG pattern documented in
 
 ### Requirement: BIEP Notebooks — ibis-first refactor of all 11 files
 
-All 11 BIEP subject + leabharlann notebooks under
-`cianfhoghlaim/notebooks/04_biep_motherduck/` MUST use
+The system SHALL refactor all 11 BIEP subject + leabharlann notebooks
+under `cianfhoghlaim/notebooks/04_biep_motherduck/` to use
 `ibis.duckdb.connect()` as the canonical KCG entrypoint (per the
 `wire-biep-notebooks-to-lakehouse` change spec). The system SHALL
 reject any raw `duckdb.connect()` call or any `.fetchdf()` call

@@ -89,9 +89,8 @@ services:
     # sidecar.yaml). Each app service MUST wait for locket to be
     # healthy before starting so the secrets volume is mounted
     # and the env file is loaded.
-    depends_on:
-      locket:
-        condition: service_healthy
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
     env_file:
       - /run/secrets/locket/secrets.env
     healthcheck:
@@ -170,9 +169,8 @@ services:
     # sidecar.yaml). Each app service MUST wait for locket to be
     # healthy before starting so the secrets volume is mounted
     # and the env file is loaded.
-    depends_on:
-      locket:
-        condition: service_healthy
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
     env_file:
       - /run/secrets/locket/secrets.env
     healthcheck:
@@ -219,9 +217,8 @@ services:
     # sidecar.yaml). Each app service MUST wait for locket to be
     # healthy before starting so the secrets volume is mounted
     # and the env file is loaded.
-    depends_on:
-      locket:
-        condition: service_healthy
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
     env_file:
       - /run/secrets/locket/secrets.env
     volumes:
@@ -270,9 +267,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    depends_on:
-      locket:
-        condition: service_healthy
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
     env_file:
       - /run/secrets/locket/secrets.env
     volumes:
@@ -315,9 +311,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    depends_on:
-      locket:
-        condition: service_healthy
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
     env_file:
       - /run/secrets/locket/secrets.env
     volumes:
@@ -339,6 +334,14 @@ volumes:
   dagster_storage:
   dagster_venv:
   api_data:
+  # tmpfs volume mounted by the locket sidecar at /run/secrets/locket:ro
+  # (declared in sidecar.yaml; defined here so docker compose config validates)
+  locket_secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1m,uid=1000
 
 # =============================================================================
 # NETWORKS

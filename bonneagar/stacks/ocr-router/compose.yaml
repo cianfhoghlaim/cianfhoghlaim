@@ -73,9 +73,8 @@ services:
         limits:
           cpus: '2'
           memory: 2G
-    depends_on:
-      locket:
-        condition: service_healthy
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
     networks:
       - cianfhoghlaim
       - lakehouse

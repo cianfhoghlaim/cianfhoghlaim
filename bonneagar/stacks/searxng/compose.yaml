@@ -13,7 +13,10 @@ services:
       - searxng_data:/data
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8080/healthz || exit 1"]
-      interval: 30s; timeout: 10s; retries: 3; start_period: 15s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     networks: [cianfhoghlaim]
   redis:
     image: redis:7-alpine

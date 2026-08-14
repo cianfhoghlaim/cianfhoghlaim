@@ -53,7 +53,7 @@ services:
     volumes:
       - prompt_studio_data:/app/prompt-studio-data
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
     environment:
       - ENVIRONMENT=development
       - APPLICATION_NAME=unstract-backend
@@ -250,7 +250,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-callback-v2:
     <<: *host_gateway
@@ -277,7 +277,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-file-processing-v2:
     <<: *host_gateway
@@ -330,7 +330,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-general-v2:
     <<: *host_gateway
@@ -358,7 +358,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-notification-v2:
     <<: *host_gateway
@@ -407,7 +407,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-log-consumer-v2:
     <<: *host_gateway
@@ -457,7 +457,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-log-history-scheduler-v2:
     <<: *host_gateway
@@ -526,7 +526,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
 
   worker-executor-v2:
     <<: *host_gateway
@@ -561,7 +561,7 @@ services:
       - traefik.enable=false
     volumes:
       - ./workflow_data:/data
-      - ${TOOL_REGISTRY_CONFIG_SRC_PATH}:/data/tool_registry_config
+      - ${TOOL_REGISTRY_CONFIG_SRC_PATH:-./tool_registry_config}:/data/tool_registry_config
       - prompt_studio_data:/app/prompt-studio-data
 
 

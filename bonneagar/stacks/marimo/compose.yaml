@@ -20,7 +20,10 @@ services:
       - marimo_data:/home/marimo
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:2718/api/health || exit 1"]
-      interval: 30s; timeout: 10s; retries: 3; start_period: 15s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     deploy:
       resources:
         limits: {memory: 2G, cpus: '2'}

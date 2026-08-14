@@ -99,8 +99,7 @@ services:
     depends_on:
       cognee-postgres:
         condition: service_healthy
-      locket:
-        condition: service_healthy
+      # locket: # sidecar-injected at deploy time via -f sidecar.yaml
     networks:
       - lakehouse
       - cianfhoghlaim

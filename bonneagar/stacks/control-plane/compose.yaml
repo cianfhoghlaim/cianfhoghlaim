@@ -96,7 +96,6 @@ services:
     container_name: control-plane-pocket-id
     restart: unless-stopped
     <<: *locket-common
-    container_name: control-plane-pocket-id
     environment:
       APP_URL: ${POCKETID_URL}
       TRUST_PROXY: "true"
