@@ -23,6 +23,9 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v3
 
+      - name: Sync uv deps
+        run: mise exec -- uv sync
+
       - name: Validate AGENTS.md number claims
         run: mise run lint:drift-docs
 
