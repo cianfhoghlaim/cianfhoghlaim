@@ -505,7 +505,10 @@ class DuckLakeResource(ConfigurableResource):
         pg_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
             "POSTGRES_PASSWORD", "devpassword"
         )
-        bucket = os.environ.get("DUCKLAKE_BUCKET", "ducklake-cianfhoghlaim")
+        # Default must match `dlt_sources/common/destinations_cianfhoghlaim.py`
+        # and `mise.toml` — the live-verified bucket is `ducklake`. Attaching
+        # with a DATA_PATH the catalog doesn't know fails outright.
+        bucket = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
         con.execute(
             f"ATTACH 'ducklake:postgres:dbname={pg_db} host={pg_host} "
             f"port={pg_port} user={pg_user} password={pg_pass}' "

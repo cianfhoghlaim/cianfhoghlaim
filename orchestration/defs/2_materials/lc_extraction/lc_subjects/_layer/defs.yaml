@@ -1,0 +1,7 @@
+# orchestration/defs/2_materials/lc_extraction/lc_subjects/_layer/defs.yaml
+#
+# L2 LC subjects extraction sub-mount (added by the
+# 2026-08-15-dagster-load-path-repair change). Walks into the
+# KCGSubjectPilotFactoryComponent defs files.
+type: dagster.DefsFolderComponent
+attributes: {}

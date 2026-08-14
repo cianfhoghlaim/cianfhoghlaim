@@ -26,4 +26,10 @@ async function main() {
         console.log("Failed to create env:", e.message);
     }
 }
-main().catch(console.error);
+// A script that cannot do its job must not report success. This previously
+// used `.catch(console.error)`, so a fresh clone without Infisical machine
+// credentials saw `bun run setup` exit 0 having configured nothing.
+main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+});

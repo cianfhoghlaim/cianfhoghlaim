@@ -20,7 +20,23 @@ def _pipeline_factory():
     return sct_wls_ni_jurisdiction_pipeline()
 
 
-sct_wls_ni_documents_ingested = make_jurisdiction_assets(
-    jurisdiction_name="sct_wls_ni",
-    pipeline_factory=_pipeline_factory,
-).build_asset()
+# DISABLED 2026-08-13 — was a module-level asset constant.
+#
+# `dg.load_defs()` auto-discovers every AssetsDefinition at module scope in
+# the defs tree. This module defines the SAME asset key as the working
+# definition in `2_materials/<jurisdiction>_education/`, so having both at
+# module scope produced a duplicate key, which made
+# `Definitions.validate_loadable()` raise and the code location show ZERO
+# assets.
+#
+# This copy is also the broken one: `_pipeline_factory()` calls a pipeline
+# INSTANCE, and `JurisdictionPipelineBase` defines no `__call__`, so the
+# asset body raises `TypeError: object is not callable` on its first line.
+#
+# Kept as a builder FUNCTION so the factory shape survives for the Wave 1
+# repair while staying invisible to auto-discovery.
+def build_sct_wls_ni_documents_ingested():
+    return make_jurisdiction_assets(
+        jurisdiction_name="sct_wls_ni",
+        pipeline_factory=_pipeline_factory,
+    ).build_asset()

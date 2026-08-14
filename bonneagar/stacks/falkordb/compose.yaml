@@ -3,6 +3,14 @@
 # =============================================================================
 # High-performance graph database with Redis protocol compatibility.
 #
+# Updated for the 2026-08-15-lakehouse-memory-stack-deep-integration-v1
+# change (Phase C — image pinning + vector.so loadmodule):
+# - Image pinned from `:latest` to `v4.18.11` (the upstream stable verified
+#   2026-06-29 by the falkordb skill).
+# - Added `--loadmodule /etc/falkordb/vector.so` to the container command
+#   so the vector-search capability is enabled (closes the open production
+#   drift alert flagged by the falkordb skill since Wave 1).
+#
 # USAGE:
 #   Development:  docker compose --env-file ../../.env.local up -d
 #   Production:   locket exec --env-file secrets.env -- docker compose up -d
@@ -16,9 +24,16 @@ services:
   # FALKORDB - Graph Database
   # ---------------------------------------------------------------------------
   falkordb:
-    image: falkordb/falkordb:latest
+    # Pinned 2026-08-15 (was :latest; v4.18.11 = upstream stable verified by
+    # the falkordb skill). Floats on `:latest` risk silent image drift +
+    # module incompatibility.
+    image: falkordb/falkordb:v4.18.11
     container_name: falkordb
     restart: unless-stopped
+    # --loadmodule /etc/falkordb/vector.so enables FalkorDB's vector-search
+    # capability (the `db.idx.vector.queryNodes` procedure used by Graphiti's
+    # hybrid queries). The .so is bundled inside the v4.18.11 image.
+    command: ["falkordb", "--loadmodule", "/etc/falkordb/vector.so", "--requirepass", "${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set}"]
     ports:
       - "${FALKORDB_PORT:-6379}:6379"
       - "${FALKORDB_UI_PORT:-3000}:3000"
@@ -28,7 +43,15 @@ services:
     volumes:
       - falkordb-data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      test:
+        - CMD
+        - redis-cli
+        - -p
+        - "6379"
+        - -a
+        - "${FALKORDB_PASSWORD}"
+        - --no-auth-warning
+        - ping
       interval: 10s
       timeout: 5s
       retries: 5

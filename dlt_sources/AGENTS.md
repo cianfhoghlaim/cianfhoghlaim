@@ -249,3 +249,7 @@ for s in schema.list_dlt_sources():
 
 **Last updated**: 2026-08-15 (added the schema introspection section + the 619-empty-YAML audit note).
 **Owner**: Build agent.
+
+## Data platform router
+
+> **The single router for the 5 per-area data platform docs** is at [`DATA_PLATFORM_ROUTER.md`](DATA_PLATFORM_ROUTER.md). Co-located with this file; added by `openspec/changes/2026-08-13-skill-consolidation-and-extension-v1/`. Documents the 6 critical conventions (relative imports / `USE_LOCAL_SCRAPES` / zero absolute namespaces / R1-R4 conformance / MODEL_REGISTRY-only / factory pattern) that apply ACROSS all 5 sub-packages.

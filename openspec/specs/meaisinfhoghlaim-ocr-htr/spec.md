@@ -119,12 +119,12 @@ uccix-mistral-24b, uccix-llama-3.1-8b`.
 
 ### Requirement: LC5 + Gemini pipelines use the v4 registry
 
-The Leaving Certificate 5-subject pipeline (per
+The system SHALL route the Leaving Certificate 5-subject pipeline (per
 `openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/`)
 and the Gemini 6-corpus pipeline (per
-`openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`) SHALL route
-all PDF ingestion through `select_ocr_backend()` for the LC5 corpus
-and through `qwen3-vl-8b` for the Gemini corpus.
+`openspec/changes/2026-07-03-gemini-6-corpus-pipeline/`) through
+`select_ocr_backend()` for the LC5 corpus and through `qwen3-vl-8b` for
+the Gemini corpus.
 
 #### Scenario: LC5 syllabus PDFs route through `gemma-4-26B-A4B`
 

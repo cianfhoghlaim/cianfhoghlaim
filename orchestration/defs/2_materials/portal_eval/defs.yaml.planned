@@ -1,0 +1,72 @@
+# ============================================================================
+# NOT LOADED — renamed `defs.yaml` -> `defs.yaml.planned` on 2026-08-13.
+#
+# This file has never been loadable by Dagster. Two independent reasons:
+#   1. Until 2026-08-13 it opened with a Python `"""` docstring, so
+#      `dg.load_defs()` died on `yaml.ParserError` at line 1 — and
+#      `orchestration/definitions.py` caught that and silently fell back to
+#      `_defs_walker`, which only walks `*.py`. One malformed file therefore
+#      disabled ALL 171 `defs.yaml` Components in the repo.
+#   2. Once the docstring was fixed, it still fails: the `version/flags/
+#      groups/checks` schema below is invented, not Dagster's. Dagster's
+#      `ComponentFileModel` requires a `type:` field and forbids extras.
+#
+# Its two executables don't resolve either — `notebooks.mlflow_register.
+# log_run`, and `scripts/ragas_asset_check.py`, which raises
+# `ModuleNotFoundError: mlflow` on import.
+#
+# The design intent (below) is real and worth keeping. To revive it, rewrite
+# as a proper Component (`type:` + `attributes:`, see any sibling defs.yaml)
+# and rename back to `defs.yaml`. Dagster only reads files named exactly
+# `defs.yaml`, so this name is inert.
+# ============================================================================
+
+# defs.yaml — Portal study plan eval (R13 + R16).
+#
+# Dagster asset graph for the central portal study-plan pipeline. Runs
+# the BAML extract backfill + a RAGAS eval as a Dagster `asset_check`.
+#
+# Per openspec/changes/2026-07-18-british-isles-portal-activation-v3/
+# R13 (MotherDuck Dive + daily Flight) + R16 (Storybook + Langfuse +
+# MLflow + RAGAS).
+#
+# Layers (per dagster-5-layer-component-architecture):
+#
+#   1_ingestion/    — no new sources (the leaving-cert pipelines own them)
+#   2_materials/    — baml_extract.py + cocoindex_update.py
+#   3_model_life/   — (none for the portal — a thin wrapper)
+#   4_asset_gen/    — lc_study_plan_dive.py + lc_study_plan_flight.py
+#   5_agent_ops/    — (none for now)
+#
+# This file is a placeholder for the future `5_agent_ops/portal_chat_eval/`
+# layer. The asset_check below blocks Phase 5 (`iac:deploy`) if the
+# RAGAS scores drop below the 0.85 faithfulness baseline.
+#
+# NOTE: this header was a Python `"""` docstring until 2026-08-13. YAML has
+# no docstring syntax, so `dg.load_defs()` died on `yaml.ParserError` at line
+# 1 — and `orchestration/definitions.py` caught it and silently fell back to
+# `_defs_walker`, which only walks `*.py`. One malformed file therefore
+# disabled all 171 `defs.yaml` Components. Keep this header as `#` comments.
+
+version: 1
+
+flags:
+  pydantic: 2
+
+groups:
+  - group_name: portal_eval
+    assets:
+      - id: lc_study_plan_extracted
+        executable: notebooks.mlflow_register.log_run
+        config:
+          required: true
+          group_name: portal_eval
+          deps: [b.ExtractStudyPlan]
+
+checks:
+  - id: ragas_faithfulness_min_0_85
+    asset: lc_study_plan_extracted
+    executable: scripts.ragas_asset_check
+    config:
+      threshold: 0.85
+      metric: faithfulness

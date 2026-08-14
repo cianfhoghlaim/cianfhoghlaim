@@ -82,18 +82,19 @@ services:
   # dependency (see bonneagar/komodo/procedures/deploy-graphiti-bunchloch.toml).
   # ---------------------------------------------------------------------------
   falkordb:
-    # Pinned 2026-07-30 (was :latest — env-contract-and-observability-fanout-v1).
-    # v1.1.2 = current upstream stable; tracks the v1.1.x release line. Floats
-    # on `latest` risk mutation on rollback (episodes go stale).
-    image: falkordb/falkordb:v1.1.2
+    # Pinned 2026-08-15 (was v1.1.2 — centralise-data-plane; now v4.18.11 to
+    # match the canonical falkordb stack pin and unlock vector-search via
+    # vector.so per the 2026-08-15-lakehouse-memory-stack change Phase C).
+    image: falkordb/falkordb:v4.18.11
     container_name: graphiti-falkordb-local
     restart: unless-stopped
+    # Load vector.so so Graphiti's hybrid queries (vector + graph) work in
+    # the standalone-deploy path. Closes the open prod-drift alert.
+    command: ["falkordb", "--loadmodule", "/etc/falkordb/vector.so", "--port", "6379", "--cluster-enabled", "no"]
     ports:
       - "127.0.0.1:6380:6379"
     volumes:
       - falkordb_graphiti_data:/data
-    environment:
-      - FALKORDB_ARGS=--port 6379 --cluster-enabled no
     healthcheck:
       test: ["CMD", "redis-cli", "-p", "6379", "ping"]
       interval: 5s

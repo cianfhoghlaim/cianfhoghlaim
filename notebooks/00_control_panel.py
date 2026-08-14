@@ -382,13 +382,17 @@ def tab_stacks(mo, state, write_deployment_choice):
 
 @app.cell
 def tab_registry(MODEL_REGISTRY, filter_models, list_baml_classes, mo, pd):
-    """Tab 5: Registry — full MODEL_REGISTRY view + drift warnings."""
+    """Tab 5: Registry — full MODEL_REGISTRY view + drift warnings +
+    memory-doctor surface (added by the 2026-08-15-lakehouse-memory-stack
+    change so operators have a one-click link to the 5-backend doctor).
+    """
     summary = mo.md(
         """
         ## Tab 5. Registry
 
         The full `MODEL_REGISTRY` view + drift count (run
-        `mise run lint:registry` for the canonical check).
+        `mise run lint:registry` for the canonical check) + the
+        memory-stack doctor shortcut.
         """
     )
 
@@ -421,6 +425,53 @@ def tab_registry(MODEL_REGISTRY, filter_models, list_baml_classes, mo, pd):
 
     # BAML count for comparison
     baml_count = len(list_baml_classes())
+
+    # NEW 2026-08-15 — memory doctor card. Surfaces the latest JSON
+    # health report emitted by `mise run lakehouse:memory:doctor` so the
+    # operator can see the 5-backend status without leaving the control
+    # panel.
+    import glob
+    import json as _json
+    import os as _os
+
+    _reports = sorted(
+        glob.glob("stedding/memory-health/*.json"),
+        key=_os.path.getmtime,
+        reverse=True,
+    )[:5]
+    _report_rows = []
+    for _path in _reports:
+        try:
+            with open(_path) as _f:
+                _data = _json.load(_f)
+            _ts = _data.get("timestamp", "?")
+            _healthy = _data.get("healthy", "?")
+            _report_rows.append(
+                {"file": _os.path.basename(_path), "timestamp": _ts,
+                 "healthy": _healthy}
+            )
+        except (OSError, _json.JSONDecodeError):
+            continue
+
+    memory_doctor_card = mo.md(
+        f"""
+        ### 🩺 Memory Doctor (NEW 2026-08-15)
+
+        The 5-backend memory stack (cognee + graphiti + lancedb +
+        falkordb + memgraph) is wired into the canonical lakehouse via
+        the `2026-08-15-lakehouse-memory-stack-deep-integration-v1`
+        openspec change. One-click navigation:
+
+        - **Open the notebook**: `marimo edit notebooks/24_lakehouse_memory_doctor.py`
+        - **CLI doctor**: `mise run lakehouse:memory:doctor`
+        - **Recent health reports** (last 5):
+        {''.join(f'  - `{r["file"]}` — {r["timestamp"]} — {r["healthy"]} healthy\\n' for r in _report_rows) if _report_rows else '  - _No reports yet — run `mise run lakehouse:memory:doctor` to generate one_\\n'}
+
+        > The doctor writes JSON reports to `stedding/memory-health/<utc-ts>.json`
+        > and is invoked by `deploy:full --phase=7` after the data-stacks
+        > come up (see `agent-platform-cluster` spec delta R).
+        """
+    )
 
     drift_warning = mo.md(
         f"""

@@ -54,4 +54,8 @@ mise run lint:drift-docs             # Anti-drift lint (validates every AGENTS.m
 | [`centralized-registry`](../.agents/skills/centralized-registry/SKILL.md) | The single source of truth for models + schemas |
 | [`motherduck`](../.agents/skills/motherduck/SKILL.md) | MotherDuck storage pattern (the BIEP lakehouse sink) |
 
+## Data platform router
+
+> **The single router for the 5 per-area data platform docs** is at [`../dlt_sources/DATA_PLATFORM_ROUTER.md`](../dlt_sources/DATA_PLATFORM_ROUTER.md). Documents the 6 critical conventions (relative imports / `USE_LOCAL_SCRAPES` / zero absolute namespaces / R1-R4 conformance / MODEL_REGISTRY-only / factory pattern) that apply ACROSS all 5 sub-packages.
+
 <!-- generated: 2026-07-29; do not hand-edit -->

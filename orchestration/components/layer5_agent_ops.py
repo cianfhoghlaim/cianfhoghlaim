@@ -30,13 +30,17 @@ change (per user direction).
         - ncca
         - leaving cert
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations` — Dagster's
+# Resolvable derives the YAML schema from real (not postponed-string) type
+# annotations; see the identical note in layer1_ingestion.py /
+# layer2_materials.py. With postponed annotations, `get_model_cls()` raises
+# `AttributeError: 'str' object has no attribute '__name__'`.
 import logging
-from typing import Literal
+from dataclasses import dataclass, field
+from typing import Any, Literal
 
 import dagster as dg
-from dagster.components import Component, ComponentLoadContext
+from dagster.components import Component, ComponentLoadContext, Resolvable
 
 Framework = Literal["custom", "adk", "agno"]   # pipecat deferred
 MemoryBackend = Literal["letta", "graphiti", "cognee", "lancedb"]
@@ -46,8 +50,14 @@ EventStream = Literal["risingwave", "kafka", "nats"]
 logger = logging.getLogger(__name__)
 
 
-class CelticAgentOpsComponent(Component):
+@dataclass
+class CelticAgentOpsComponent(Component, Resolvable):
     """Layer 5 Agent Operations Component.
+
+    `@dataclass` + `Resolvable`: without them Dagster derives
+    `EmptyAttributesModel` (which forbids every extra field), so all 21
+    `5_agent_ops/**/defs.yaml` files failed schema validation and the whole
+    layer contributed zero assets. Same fix as `CelticIngestionComponent`.
 
     Wraps one agent from the 12-agent fleet as 5 Dagster assets. The
     Component also appends `routing_keywords` to
@@ -83,14 +93,27 @@ class CelticAgentOpsComponent(Component):
 
     agent_name: str
     framework: Framework
-    tools: list[str] = []  # noqa: RUF012 — Dagster Component mutable default
+    tools: list[str] = field(default_factory=list)
     memory_backend: MemoryBackend = "letta"
     event_stream: EventStream = "risingwave"
     event_stream_endpoint: str = "risingwave.cianfhoghlaim.ie:4566"
     langfuse_trace_tag: str = ""
     langfuse_drop_smoke_spans: bool = True
-    routing_keywords: list[str] = []  # noqa: RUF012 — Dagster Component mutable default
+    routing_keywords: list[str] = field(default_factory=list)
     health_endpoint: str = ""
+    # Fields the 5_agent_ops defs.yaml files already supply but which were
+    # never declared here. Documentation/lineage hints surfaced in asset
+    # metadata; they do not change build_defs' behaviour.
+    #   langfuse_callbacks (8 files), cognify (8), module (1),
+    #   privacy_gate (1), pseudonymous_user (1)
+    # A mapping, not a list — the 8 adk agent defs.yaml supply
+    # `{trace_name, flush_interval}`.
+    langfuse_callbacks: dict[str, Any] = field(default_factory=dict)
+    cognify: dict[str, Any] = field(default_factory=dict)
+    cognee_dataset: str | None = None
+    module: str | None = None
+    privacy_gate: str | None = None
+    pseudonymous_user: bool = False
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 5 @assets per agent:
@@ -113,16 +136,16 @@ class CelticAgentOpsComponent(Component):
                 f"L5 health check for {self.agent_name} ({self.framework}) at "
                 f"{health_endpoint}"
             ),
-            automation_condition=dg.AutomationCondition.cron("*/5 * * * *"),
+            automation_condition=dg.AutomationCondition.on_cron("*/5 * * * *"),
         )
         def _agent_health(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # The real ping is wired at build time via the agent's
             # /health endpoint. The asset emits metadata about the
             # invocation; the operator can wire a downstream
             # @asset_check that asserts healthy=True.
-            asset_context.log.info(
+            context.log.info(
                 f"Pinging {health_endpoint} for {self.agent_name}"
             )
             return dg.MaterializeResult(
@@ -147,7 +170,7 @@ class CelticAgentOpsComponent(Component):
             automation_condition=dg.AutomationCondition.eager(),
         )
         def _agent_routing(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             from agents.routing_keywords import ROUTING_KEYWORDS
 
@@ -171,10 +194,10 @@ class CelticAgentOpsComponent(Component):
                 f"L5 Letta memory check for {self.agent_name} "
                 f"(backend={self.memory_backend})"
             ),
-            automation_condition=dg.AutomationCondition.cron("*/10 * * * *"),
+            automation_condition=dg.AutomationCondition.on_cron("*/10 * * * *"),
         )
         def _agent_memory(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # The real read/write happens via the Letta client at
             # runtime. The asset emits metadata about the
@@ -197,10 +220,10 @@ class CelticAgentOpsComponent(Component):
                 f"L5 RisingWave event publish for {self.agent_name} at "
                 f"{self.event_stream_endpoint}"
             ),
-            automation_condition=dg.AutomationCondition.cron("*/5 * * * *"),
+            automation_condition=dg.AutomationCondition.on_cron("*/5 * * * *"),
         )
         def _agent_event(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             event_payload = {
                 "agent_id": self.agent_name,
@@ -208,7 +231,7 @@ class CelticAgentOpsComponent(Component):
                 "timestamp": int(__import__("time").time()),
                 "payload": {"framework": self.framework},
             }
-            asset_context.log.info(
+            context.log.info(
                 f"Publishing {event_payload['event_type']} to "
                 f"{self.event_stream} at {self.event_stream_endpoint}"
             )
@@ -231,10 +254,10 @@ class CelticAgentOpsComponent(Component):
                 f"L5 Langfuse trace for {self.agent_name} (tag: {trace_tag}, "
                 f"drop_smoke_spans: {self.langfuse_drop_smoke_spans})"
             ),
-            automation_condition=dg.AutomationCondition.cron("*/5 * * * *"),
+            automation_condition=dg.AutomationCondition.on_cron("*/5 * * * *"),
         )
         def _agent_trace(
-            asset_context: dg.AssetExecutionContext,
+            context: dg.AssetExecutionContext,
         ) -> dg.MaterializeResult:
             # Per user direction, the Langfuse smoke-test span is
             # NOT persisted to the trace history. The asset still

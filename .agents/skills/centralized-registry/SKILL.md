@@ -1,11 +1,11 @@
 ---
 name: centralized-registry
-description: The single source of truth for models, schemas, pipelines, and stacks. Load when adding/changing/toggling any model, schema, pipeline, or stack. Covers MODEL_REGISTRY (52 entries / 7 families), notebooks/_shared/schema.py (5 introspection helpers), deployment-choice.yaml (the enablement file), notebooks/00_control_panel.py (the 5-tab marimo control panel), and the central registry audit via mise run lint:registry. Per the centralized-model-registry + centralized-schema-registry + deployment-control-panel openspec capabilities (post-2026-08-15).
+description: The single source of truth for models, schemas, pipelines, and stacks. Load when adding/changing/toggling any model, schema, pipeline, or stack. Covers MODEL_REGISTRY (52 entries / 7 families including the 22-entry ocr_vision subset + 6 CLASSICAL_OCR backends + BIEP v2 4-path ensemble), notebooks/_shared/schema.py (5 introspection helpers), deployment-choice.yaml (the enablement file), notebooks/00_control_panel.py (the 5-tab marimo control panel), and the central registry audit via mise run lint:registry. Per the centralized-model-registry + centralized-schema-registry + deployment-control-panel openspec capabilities (post-2026-08-15; §11 OCR/VLM Pipeline added 2026-08-13).
 ---
 
 # Centralized Registries — Models, Schemas, Pipelines, Stacks
 
-**Version**: 2026-08-15 | **Last Updated**: 2026-08-15
+**Version**: 2026-08-13 | **Last Updated**: 2026-08-13 (added §11 OCR/VLM Pipeline)
 
 The Cianfhoghlaim platform now has **one canonical source of truth** for
 every model, schema, pipeline, and stack. This replaces the ~70
@@ -328,3 +328,321 @@ isn't routed through `MODEL_REGISTRY`.
 | [#144](https://github.com/cianfhoghlaim/cianfhoghlaim/issues/144) | Pydantic dedup rollout (7 remaining subjects) | ~1320 LOC reduction |
 | [#145](https://github.com/cianfhoghlaim/cianfhoghlaim/issues/145) | CocoIndex factory rollout (Irish LC + BI parity) | 14 files → 2 factories |
 | [#146](https://github.com/cianfhoghlaim/cianfhoghlaim/issues/146) | Dagster JurisdictionAssetsBase rollout | ~3300 LOC reduction |
+
+---
+
+## 11. OCR/VLM Pipeline
+
+The OCR/VLM surface lives under `meaisinfhoghlaim/`. This
+section is the canonical entrypoint for any agent adding,
+modifying, or evaluating vision models, OCR backends,
+PDF converters, alignment methods, or the BIEP v2 4-path
+ensemble.
+
+### 11.1 The `ocr_vision` family in `MODEL_REGISTRY`
+
+The `ocr_vision` family is a 22-entry subset view of
+`MODEL_REGISTRY` exposed via
+`MODEL_REGISTRY.filter(family="ocr_vision")`. Each entry
+groups by `role` into 4 tiers:
+
+| Tier | Models |
+|:--|:--|
+| **tier1_heavy** (≥ 27B params, full-document) | `qwen3-vl-30b-a3b`, `qwen3.6-27b-mtp` |
+| **tier2_medium** (8-12B params, page-level) | `gemma-4-12B`, `gemma-4-26B-A4B`, `glm-4.6v-flash`, `qwen3-vl-8b`, `internvl3-8b` |
+| **tier3_light** (≤ 4B params, fast inference) | `gemma-4-E2B`, `gemma-4-E4B`, `qwen3-vl-4b` |
+| **specialist** (single-purpose OCR/VLM) | `deepseek-ocr-2`, `olmocr-2-7b-1025`, `granite-docling-258M`, `uccix-mistral-24b`, `uccix-llama-3.1-8b`, `dots-ocr`, `paddleocr-vl-1.6`, `molmo2-4b`, `molmo2-8b`, `unstract-api`, `docling-serve` |
+| **legacy** (deprecated, kept for back-compat) | `uccix-llama2-13b`, `llama-3.2-vision-11b` |
+
+Resolve via the canonical 2-axis key:
+
+```python
+from meaisinfhoghlaim.models import MODEL_REGISTRY
+
+# Pick the M4-Max optimal model
+m4_max = MODEL_REGISTRY.resolve("ocr_vision", "tier1_heavy")
+# → "qwen3-vl-30b-a3b"
+
+# Pick by language
+irish_specialist = MODEL_REGISTRY.filter(family="ocr_vision", role="specialist")
+# → 11 entries (deepseek-ocr-2, olmocr-2-7b-1025, ...)
+
+# List all available (non-legacy)
+available = MODEL_REGISTRY.filter(family="ocr_vision", available=True)
+# → 20 entries (excludes the 2 legacy entries)
+```
+
+### 11.2 The 6 `CLASSICAL_OCR` backends
+
+The classical OCR registry (`meaisinfhoghlaim/models/registry.py:CLASSICAL_OCR`)
+holds 6 Docker-backed backends — each runs as a separate
+Compose stack at `bonneagar/stacks/ocr-classical/<name>/`:
+
+| Key | Image | Port | Notes |
+|:--|:--|--:|:--|
+| `docling-serve` | `docker.io/ds4sd/docling-serve:latest` | 5001 | IBM Docling — 258M params, DocTags layout. The "safety net" when VLM extraction fails. |
+| `paddleocr` | `docker.io/paddlepaddle/paddleocr:latest` | 8888 | PaddlePaddle OCR — multilingual, first-party GGUF. |
+| `paddleocr-vl` | `docker.io/paddlepaddle/paddleocr-vl:latest` | 8889 | PaddleOCR-VL — vision-language variant for diagrams. |
+| `tesseract` | `docker.io/tesseractshadow/tesseract4re:latest` | 8880 | Tesseract 4 + LSTM. English/Irish/Latin scripts. |
+| `pylaia` | `docker.io/ocrhn/pylaia:latest` | 8881 | PyLaia HTR — best for handwritten Irish manuscripts. |
+| `trocr` | `docker.io/microsoft/trocr:latest` | 8882 | Microsoft TrOCR — transformer-based HTR for printed + handwritten. |
+
+All 6 are wrapped by `meaisinfhoghlaim/backends/adapters.py:OCRAdapterRegistry`
+(the 4th backend protocol) and are reachable via the
+`select_ocr_backend()` helper:
+
+```python
+from meaisinfhoghlaim.models.registry import CLASSICAL_OCR, select_ocr_backend
+backend = select_ocr_backend(task="handwritten_irish", quality="high")
+# → "pylaia" (the optimal choice for handwritten Irish manuscripts)
+```
+
+### 11.3 The BIEP v2 4-path ensemble (`EnsembledExtractor`)
+
+The flagship extraction pipeline. Located at
+`meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py:EnsembledExtractor`.
+Runs 4 OCR paths in parallel via `asyncio.gather`:
+
+| Path | Tool | Input | Output format |
+|:--|:--|:--|:--|
+| 1. **BAML** | `Docling-serve` → text → BAML function | PDF | Typed Pydantic row |
+| 2. **Unstract** | `Docling-serve` → Unstract workflow → JSON | PDF | Structured JSON |
+| 3. **qwen3_vl** | `qwen3-vl-8b` page-level image → JSON | Page images | Structured JSON |
+| 4. **gemma4** | `gemma-4-26B-A4B` page-level image → JSON | Page images | Structured JSON |
+
+Each path output lands in its own per-jurisdiction DuckLake
+table. The RAGAS `biiep_extraction_consensus` metric then
+votes the canonical row.
+
+**Webhook emission** (post-2026-08-15): on every successful
+extraction, the canonical envelope is POSTed to
+`os.getenv("OCR_WEBHOOK_URL", "")` via `httpx.AsyncClient`
+(fire-and-forget). Schema (per
+`british-isles-education-pipeline-v3` spec delta):
+
+```python
+{
+  "document_id": "<uuid>",
+  "capability": "<forms|layout|tables+latex|doctags|gaelic|english>",
+  "backend_used": "<paddleocr|mlx-omni|olmocr|docling-serve|llama-swap|dots-ocr>",
+  "model": "<model name>",
+  "result_url": "<s3://lakehouse/ocr/...>",
+  "duration_ms": <int>,
+  "trace_id": "<opentelemetry trace id>",
+  "completed_at": "<iso-8601 utc>"
+}
+```
+
+Invocation:
+
+```python
+from meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import EnsembledExtractor
+
+extractor = EnsembledExtractor(
+    document_id="<uuid>",
+    pdf_path="leabharlann/ncca/lc_mathematics_2024.pdf",
+    jurisdiction="ireland",
+)
+result = await extractor.extract()
+# `result` is a RAGAS-voted Envelope with the canonical row
+```
+
+### 11.4 The 7 PDF converters (`meaisinfhoghlaim/document_factory/`)
+
+Each converter transforms a PDF into markdown/dict/structured
+output. All live under
+`meaisinfhoghlaim/document_factory/converters/`:
+
+| Converter | Module | Best for |
+|:--|:--|:--|
+| `docling` | `docling_converter.py` | Layout-aware extraction (DocTags) |
+| `marker` | `marker_converter.py` | High-quality markdown + figure extraction |
+| `unstructured` | `unstructured_converter.py` | Partitioning + element classification |
+| `deepseekocr` | `deepseekocr_converter.py` | Compressed-document specialist (DeepSeek-OCR-2) |
+| `pymupdf4llm` | `pymupdf4llm_converter.py` | Fast text extraction (PyMuPDF4LLM) |
+| `curriculum_document` | `../curriculum_document.py` | Curriculum document representation |
+| `pdf_factory` | `../pdf_factory.py` | Orchestrator — picks the right converter per document |
+
+The `pdf_factory` is the canonical entrypoint — it routes
+each PDF to the optimal converter based on document type,
+language, and quality requirements.
+
+### 11.5 The 4 alignment methods + `ColPaliAligner`
+
+`meaisinfhoghlaim/alignment/aligner.py` ships 4 methods
+for Irish-English cross-lingual alignment:
+
+| Method | Best for | Quality |
+|:--|:--|:--|
+| `VecAlign` | Large parallel corpora | High (deep embedding) |
+| `HunAlign` | Medium corpora, sentence-level | Medium (HMM-based) |
+| `GaoisAlign` | Irish terminology alignment | High (Gaois-trained) |
+| `Hybrid` | Production (VecAlign + HunAlign fallback) | Highest |
+
+Plus the `ColPaliAligner` (`colpali_aligner.py`) for
+manuscript bbox extraction — uses ColPali vision embeddings
+to map extracted text back to manuscript page coordinates.
+
+```python
+from meaisinfhoghlaim.alignment import aligner
+
+a = aligner.IrishEnglishAligner(method="hybrid")
+result = a.align_parallel_texts(
+    irish=["Tá an lá go hálainn.", "Is maith liom an Ghaeilge."],
+    english=["The day is beautiful.", "I like Irish."],
+)
+# → AlignmentResult with per-sentence confidence scores
+```
+
+### 11.6 The Irish HTR dataset
+
+`meaisinfhoghlaim/datasets/irish_htr_dataset.py` (25KB) is
+the canonical training dataset for Irish handwriting
+recognition (HTR). Built from 3 sources:
+
+1. **NLI manuscripts** (National Library of Ireland) — scanned
+   18th-19th century Irish-language manuscripts
+2. **RIA archives** (Royal Irish Academy) — handwritten
+   letters + diaries
+3. **School copybooks** — modern (20th century) school
+   copybook scans
+
+The dataset is the training source for the `pylaia` classical
+backend + the `uccix-mistral-24b` specialist VLM.
+
+### 11.7 The M4-Max dispatch helper
+
+`meaisinfhoghlaim/models/registry.py:select_optimal_for_m4_max()`
+returns the recommended OCR/VLM model for the M4 Max 64GB
+workstation:
+
+```python
+from meaisinfhoghlaim.models.registry import select_optimal_for_m4_max
+
+m4_max_model = select_optimal_for_m4_max()
+# → "gemma-4-26B-A4B" (the M4-Max optimal choice)
+
+# With a constraint
+m4_max_irish = select_optimal_for_m4_max(task="irish_handwritten")
+# → "uccix-mistral-24b" (the Irish HTR specialist)
+```
+
+### 11.8 llama-swap GGUF inference
+
+The local inference path is configured by
+`meaisinfhoghlaim/models/llama_swap_config.yaml` (the
+llama-swap GGUF server config). It exposes all 22
+`VISION_MODELS` entries as GGUF endpoints behind a single
+OpenAI-compatible API:
+
+```yaml
+# llama_swap_config.yaml — relevant snippet
+models:
+  "qwen3-vl-8b":
+    name: "Qwen3-VL-8B-Instruct"
+    gguf: "unsloth/Qwen3-VL-8B-Instruct-GGUF"
+    cmd: >-
+      llama-server -m unsloth/Qwen3-VL-8B-Instruct-GGUF/qwen3-vl-8b-instruct-q4_k_m.gguf
+      --port 8080 --host 0.0.0.0 -ngl 99
+```
+
+The `docling-serve` classical backend is the safety net —
+when llama-swap is unavailable, the adapter falls back
+automatically.
+
+### 11.9 BAML `clients_ocr_ensemble.baml` patterns
+
+`baml_src/clients_ocr_ensemble.baml` declares the 3
+ensemble clients used by the BIEP v2 4-path pipeline:
+
+| Client | Provider | Used by |
+|:--|:--|:--|
+| `LocalVision` | llama-swap | Path 3 (qwen3_vl) + Path 4 (gemma4) |
+| `ExtractEnStrong` | BAML function (calls Path 1) | Path 1 (BAML) |
+| `UnstractFlow` | Unstract API | Path 2 (Unstract) |
+
+Each client references `MODEL_REGISTRY` (no hardcoded
+model strings) and exposes a typed BAML function that
+the BIEP v2 pipeline consumes.
+
+### 11.10 RAGAS-voted chunk emission
+
+The `EnsembledExtractor` emits RAGAS-voted chunks after
+the 4-path consensus. The voting metric is
+`biiep_extraction_consensus` (registered in
+`scripts/ragas_metrics.py`). Each chunk carries:
+
+- `chunk_id` (UUID)
+- `document_id` (parent PDF)
+- `path_votes` (4 booleans — which paths agreed)
+- `consensus_score` (RAGAS score, 0-1)
+- `text` (the canonical chunk text)
+- `bbox` (page-level coordinates, from ColPali)
+
+### 11.11 The `meaisinfhoghlaim/ocr/` back-compat shim
+
+The nested `meaisinfhoghlaim/ocr/` sub-package exists for
+**back-compat only**. It re-exports `VISION_MODELS` + the
+ensemble with a `DeprecationWarning`:
+
+```python
+# LEGACY — emits DeprecationWarning
+from meaisinfhoghlaim.ocr.models.registry import VISION_MODELS
+
+# CANONICAL — no warning
+from meaisinfhoghlaim.models.registry import VISION_MODELS
+```
+
+The canonical home for all OCR/VLM models is
+**`meaisinfhoghlaim.models.registry`** (per the v4 platform
+convention: the outer `models/` package is canonical).
+The `meaisinfhoghlaim/ocr/` shim will be removed in v5 of
+the registry.
+
+### 11.12 Quick routing — "I want to add X, where do I go?"
+
+| If you want to... | Look at... |
+|:--|:--|
+| Add a new OCR/VLM model | `meaisinfhoghlaim/models/registry.py:VISION_MODELS` (or `model_registry.py:MODEL_REGISTRY` for the 7-family view) |
+| Add a new classical OCR backend | `meaisinfhoghlaim/models/registry.py:CLASSICAL_OCR` + `bonneagar/stacks/ocr-classical/<name>/` |
+| Wire a model into BAML | `baml_src/clients_ocr_ensemble.baml` (the 3 ensemble clients) |
+| Run the 4-path ensemble | `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py:EnsembledExtractor` |
+| Add a new PDF converter | `meaisinfhoghlaim/document_factory/converters/<name>_converter.py` + register in `pdf_factory.py` |
+| Add a new alignment method | `meaisinfhoghlaim/alignment/aligner.py:AlignmentMethod` (StrEnum) |
+| Evaluate a new OCR backend | `meaisinfhoghlaim/evaluation/` (the OCR evaluation harness) |
+| Train an Irish HTR model | `meaisinfhoghlaim/datasets/irish_htr_dataset.py` (25KB training data) |
+| Configure local inference | `meaisinfhoghlaim/models/llama_swap_config.yaml` (the llama-swap config) |
+| Pick the optimal M4-Max model | `select_optimal_for_m4_max()` (the dispatch helper) |
+
+### 11.13 Cross-references
+
+- [`meaisinfhoghlaim/README.md`](../../meaisinfhoghlaim/README.md) — the deeper sub-package docs (the canonical home for OCR/HTR/Alignment)
+
+### 12. Firecrawl MCP — the external search surface (NEW 2026-08-14)
+
+Per the `2026-08-14-firecrawl-mcp-ccc-dual-search-v1` change, **Firecrawl MCP
+is the canonical external search surface** (analogous to how ccc is the
+internal code search surface and Cognee is the internal docs search
+surface). The FirecrawlMCPClient wrapper at
+`agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes all 12 MCP tools
+with Pydantic validation + Langfuse `@observe`. The agent routing table
+for ccc vs cognee vs firecrawl_search is documented at `AGENTS.md`
+§"Triple-search architecture" and the
+[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
+spec. The Firecrawl API key lives in Infisical under the
+`firecrawl-api-key` secret (per the `.agents/skills/secrets-management/SKILL.md`
+contract). The agent reference corpus (built by the Phase 4a change)
+federates `firecrawl_search` + Cognee + Graphiti + LanceDB over the
+`docs_index` table.
+- [`meaisinfhoghlaim/AGENTS.md`](../../meaisinfhoghlaim/AGENTS.md) — the agent routing for the meaisinfhoghlaim sub-tree
+- [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](../../openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md) — the 10 OCR backends across the canonical 6
+- [`openspec/specs/meaisin-24-ocr-models/spec.md`](../../openspec/specs/meaisin-24-ocr-models/spec.md) — the 24 VISION_MODELS spec (v4 registry)
+- [`openspec/specs/celtic-language-pipeline/spec.md`](../../openspec/specs/celtic-language-pipeline/spec.md) — the 6 Celtic-language OCR consumer
+- [`.agents/skills/centralized-registry/SKILL.md`](./SKILL.md) — this skill (the canonical model registry)
+- [`.agents/skills/baml/SKILL.md`](../baml/SKILL.md) — the BAML extraction pattern
+- [`.agents/skills/cocoindex/SKILL.md`](../cocoindex/SKILL.md) — the CocoIndex v1 embedding layer
+
+---
+
+**Last updated**: 2026-08-13 (added §11 OCR/VLM Pipeline + the 22-entry `ocr_vision` table + 6 `CLASSICAL_OCR` table + the 4-path ensemble + 7 PDF converters + 4 alignment methods + Irish HTR + M4-Max dispatch + llama-swap + BAML ensemble clients + RAGAS voting + the back-compat shim warning).
+**Owner**: Build agent.

@@ -17,6 +17,12 @@ ENDPOINT = os.environ["AWS_ENDPOINT_URL"].replace("http://", "")
 PG_PASSWORD = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD") or os.environ.get(
     "POSTGRES_PASSWORD", "devpassword"
 )
+# Canonical DuckLake bucket. Must match `destinations_cianfhoghlaim.py` and
+# `mise.toml` — the live-seeded catalog uses `ducklake`. The nine paths below
+# were hardcoded to `ducklake-cianfhoghlaim` with no env override until
+# 2026-08-13, so this "verification" script read an empty/absent bucket and
+# reported zeros.
+BUCKET = os.environ.get("DUCKLAKE_BUCKET", "ducklake")
 
 con = duckdb.connect(":memory:")
 con.execute("INSTALL ducklake; LOAD ducklake;")
@@ -30,19 +36,22 @@ con.execute(
     "ATTACH 'ducklake:postgres:dbname=ducklake_cianfhoghlaim "
     "host=localhost port=5433 user=lakekeeper "
     f"password={PG_PASSWORD}' "
-    "AS cianfhoghlaim (DATA_PATH 's3://ducklake-cianfhoghlaim/cianfhoghlaim/')"
+    f"AS cianfhoghlaim (DATA_PATH 's3://{BUCKET}/cianfhoghlaim/')"
 )
 con.execute("USE cianfhoghlaim;")
 
 paths = [
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/england_education/england_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/scotland_education/scotland_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/wales_education/wales_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/northern_ireland_education/northern_ireland_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/jersey_education/jersey_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/guernsey_education/guernsey_subjects/*.parquet",
-    "s3://ducklake-cianfhoghlaim/cianfhoghlaim/isle_of_man_education/isle_of_man_subjects/*.parquet",
+    f"s3://{BUCKET}/cianfhoghlaim/{j}_education/{j}_subjects/*.parquet"
+    for j in (
+        "ireland",
+        "england",
+        "scotland",
+        "wales",
+        "northern_ireland",
+        "jersey",
+        "guernsey",
+        "isle_of_man",
+    )
 ]
 
 print("Lakehouse population (Parquet files):")
@@ -57,7 +66,7 @@ print()
 print("Sample ireland row:")
 for r in con.execute(
     "SELECT jurisdiction, subject, language, source_url FROM "
-    "read_parquet('s3://ducklake-cianfhoghlaim/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet') "
+    f"read_parquet('s3://{BUCKET}/cianfhoghlaim/ireland_education/ireland_subjects/*.parquet') "
     "LIMIT 3"
 ).fetchall():
     print(f"  {r}")

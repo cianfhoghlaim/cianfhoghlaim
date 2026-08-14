@@ -1,0 +1,35 @@
+name: state-exams-ie-sidecar
+
+# =============================================================================
+# STATE-EXAMS-IE SIDECAR — Locket + Pangolin
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern (per the
+# `infrastructure-stacks` spec). The Locket sidecar reads the 2
+# Infisical secrets at startup + injects them into the vault
+# container. The Pangolin resource gives the cabinet a public
+# hostname.
+# =============================================================================
+
+services:
+  state-exams-ie-vault:
+    labels:
+      # Locket sidecar injects the 2 Infisical secrets
+      locket.inficorn: "true"
+      locket.inficorn.project: "cianfhoghlaim"
+      locket.inficorn.environment: "dev-baile"
+      locket.inficorn.secret-prefix: "examinations-ie"
+    environment:
+      # The 2 Infisical secrets (injected by Locket at startup)
+      EXAMINATIONS_IE_USERNAME: "${infisical://dev-baile/cianfhoghlaim/examinations-ie/username}"
+      EXAMINATIONS_IE_PASSWORD: "${infisical://dev-baile/cianfhoghlaim/examinations-ie/password}"
+    networks:
+      - state-exams-ie-net
+      - pangolin-private
+
+networks:
+  state-exams-ie-net:
+    external: true
+    name: state-exams-ie-net
+  pangolin-private:
+    external: true
+    name: pangolin-private

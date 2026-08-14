@@ -17,7 +17,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
 | [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
 | [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
-| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (89 specs, 4 shared — added secrets-management in the 2026-08-15 openspec change) |
+| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (94 specs, 4 shared — added secrets-management in the 2026-08-15 openspec change) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
 
 ### ccc code search (always use before grep)
@@ -34,7 +34,7 @@ If the index is missing or stale, the agent **owns** running
 ### Priority openspec commands
 
 ```bash
-openspec list --specs              # list all 89 capability specs (1 new post-2026-08-15 — bonneagar-infra-remediation-v2)
+openspec list --specs              # list all 92 capability specs (1 new post-2026-08-15 — bonneagar-infra-remediation-v2)
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy
@@ -78,7 +78,7 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 92 stacks is at
+The full inventory of 94 stacks is at
 [`../bonneagar/AGENTS.md`](../bonneagar/AGENTS.md) (the IaC
 repo owns the stack catalogue; see the `## IaC Repo Boundary`
 section below for the ownership table).
@@ -128,6 +128,53 @@ explanation from cognee, then merges.
                     ▼
             Agent (merged)
 ```
+
+## Triple-search architecture (ccc + cognee + firecrawl_mcp)
+
+Per the `2026-08-14-firecrawl-mcp-ccc-dual-search-v1` change, the
+agent stack now has **3 complementary search surfaces**. ccc and
+cognee are local + free; firecrawl_mcp is external + metered. Every
+agent session that runs `firecrawl_search` MUST also emit a
+`ccc:search` query so both tool names appear in the Langfuse trace.
+
+```
+        ccc (code)              cognee (docs)       firecrawl_mcp (live web)
+            │                       │                       │
+            │   semantic/local      │   semantic/local      │   semantic/external
+            │   FREE                │   FREE                │   metered (credits)
+            │                       │                       │
+            ▼                       ▼                       ▼
+        ──────────────┬─────────────┴───────────────┬───────────────────
+                      ▼                             ▼
+              Local-fast lane                  External-deep lane
+                      │                             │
+                      └──────────────┬──────────────┘
+                                     ▼
+                            Agent (3-way merged)
+```
+
+**Routing table** (which tool wins for each question type):
+
+| Question type | Tool | Why |
+|:--|:--|:--|
+| "What is in our code that does X?" | `bun run ccc:search "X"` | Local, FREE, semantic, instant |
+| "What does our docs corpus say about X?" | `cognee.search(X)` | Local, FREE, semantic |
+| "What does upstream say about X **right now**?" | `firecrawl_search` (categories: `developer`) | External, metered, fresh |
+| "Show me the **page** at <known URL>" | `firecrawl_scrape` | Replaces ad-hoc `webfetch` |
+| "Find every URL on a domain" | `firecrawl_map` (with `search:`) | Faster than crawling whole site |
+| "Pull all pages from a path" | `firecrawl_crawl` | Bounded, async, with `includePaths` regex |
+| "Investigate across unknown sources" | `firecrawl_agent` | Autonomous, async, multi-source |
+| "Operate a login-gated page" | `firecrawl_interact` | Playwright-style, profile-aware |
+| "Parse a local PDF/DOCX/XLSX" | `firecrawl_parse` | Two-call upload handoff |
+| "Find papers / read passages / citations" | `firecrawl_research_*` | 43M-paper PubMed/bioRxiv/arXiv index |
+| "Find a primary-source coding answer" | `firecrawl_developer_search` | GitHub issues/PRs/README/curated docs |
+| "Self-debug a Firecrawl call that failed" | `firecrawl_scrape /support/ask` | Agent-to-agent support |
+
+The `FirecrawlMCPClient` wrapper at
+`agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes all 12 MCP
+tools with Pydantic validation + Langfuse `@observe`. See the
+[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
+spec for the formal requirements.
 
 ### Python graph (uv workspace)
 

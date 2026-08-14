@@ -39,36 +39,18 @@ _scotland_module = importlib.import_module(
         "materials", "2_materials"
     )
 )
-scotland_documents_ingested = _scotland_module.scotland_documents_ingested
-scotland_extractions = _scotland_module.scotland_extractions
-scotland_embeddings = _scotland_module.scotland_embeddings
-scotland_documents_ingested_check = _scotland_module.scotland_documents_ingested_check
-scotland_extractions_ragas_check = _scotland_module.scotland_extractions_ragas_check
-scotland_lance_chunks_check = _scotland_module.scotland_lance_chunks_check
 
 _wales_module = importlib.import_module(
     "orchestration.defs.materials.wales_education.wales_assets".replace(
         "materials", "2_materials"
     )
 )
-wales_documents_ingested = _wales_module.wales_documents_ingested
-wales_extractions = _wales_module.wales_extractions
-wales_embeddings = _wales_module.wales_embeddings
-wales_documents_ingested_check = _wales_module.wales_documents_ingested_check
-wales_extractions_ragas_check = _wales_module.wales_extractions_ragas_check
-wales_lance_chunks_check = _wales_module.wales_lance_chunks_check
 
 _ni_module = importlib.import_module(
     "orchestration.defs.materials.northern_ireland_education.northern_ireland_assets".replace(
         "materials", "2_materials"
     )
 )
-northern_ireland_documents_ingested = _ni_module.northern_ireland_documents_ingested
-northern_ireland_extractions = _ni_module.northern_ireland_extractions
-northern_ireland_embeddings = _ni_module.northern_ireland_embeddings
-northern_ireland_documents_ingested_check = _ni_module.northern_ireland_documents_ingested_check
-northern_ireland_extractions_ragas_check = _ni_module.northern_ireland_extractions_ragas_check
-northern_ireland_lance_chunks_check = _ni_module.northern_ireland_lance_chunks_check
 
 
 # Backward-compat stubs — the legacy sct_wls_ni_* names raise
@@ -104,16 +86,16 @@ def sct_wls_ni_extractions_ragas_check():
     )
 
 
+# Aliases REMOVED 2026-08-13. These re-exported the per-jurisdiction assets
+# for backward compatibility, but `dg.load_defs()` auto-discovers the
+# ORIGINALS directly from `2_materials/<jurisdiction>_education/`. Having
+# both at module scope produced 18 duplicate asset keys, which made
+# `Definitions.validate_loadable()` raise and the code location show ZERO
+# assets. Import from the owning module instead.
+
 __all__ = [
     "sct_wls_ni_documents_ingested",
     "sct_wls_ni_extractions",
     "sct_wls_ni_embeddings",
     "sct_wls_ni_extractions_ragas_check",
-    # Re-export the per-jurisdiction proper assets for backward compat
-    "scotland_documents_ingested", "scotland_extractions", "scotland_embeddings",
-    "scotland_documents_ingested_check", "scotland_extractions_ragas_check", "scotland_lance_chunks_check",
-    "wales_documents_ingested", "wales_extractions", "wales_embeddings",
-    "wales_documents_ingested_check", "wales_extractions_ragas_check", "wales_lance_chunks_check",
-    "northern_ireland_documents_ingested", "northern_ireland_extractions", "northern_ireland_embeddings",
-    "northern_ireland_documents_ingested_check", "northern_ireland_extractions_ragas_check", "northern_ireland_lance_chunks_check",
 ]

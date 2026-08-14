@@ -1,0 +1,50 @@
+# ============================================================================
+# NOT LOADED — renamed `defs.yaml` -> `defs.yaml.planned` on 2026-08-13.
+#
+# Two independent reasons this could never have worked:
+#   1. `type: dagster.schedule` is not a Component. Dagster 1.13 exposes
+#      `dagster.schedule` as a DECORATOR FUNCTION; the only Component
+#      subclasses under `dagster.*` are DefinitionsComponent,
+#      DefsFolderComponent, FunctionComponent, PythonScriptComponent,
+#      SqlComponent, StateBackedComponent, TemplatedSqlComponent and
+#      UvRunComponent. Loading this raised "Component type dagster.schedule
+#      is of type <class 'function'>", which aborted `dg.load_defs()` for
+#      the ENTIRE code location.
+#   2. The job it targets, `cocoindex_v1_assets_job`, is defined nowhere in
+#      the repo — this file is its only mention.
+#
+# To revive: add a `.py` module in this directory that defines BOTH the job
+# and the schedule in Python, e.g.
+#
+#     import dagster as dg
+#     cocoindex_v1_assets_job = dg.define_asset_job(
+#         "cocoindex_v1_assets_job",
+#         selection=dg.AssetSelection.tag("cocoindex-v1", ""),
+#     )
+#     daily_cocoindex_v1_assets_materialize = dg.ScheduleDefinition(
+#         job=cocoindex_v1_assets_job,
+#         cron_schedule="0 3 * * *",
+#         execution_timezone="UTC",
+#     )
+#
+# Note the selection: the group `cocoindex_v1` referenced below does not
+# exist either. `CelticModelLifecycleComponent` emits groups named
+# `3_model_lifecycle_cocoindex_v1_<app>`, and tags each asset with the
+# `tags:` list from its defs.yaml (most carry `cocoindex-v1`).
+# ============================================================================
+
+# defs/3_model_lifecycle/cocoindex_v1/_schedules/defs.yaml
+#
+# The canonical daily_cocoindex_v1_assets_materialize schedule.
+# Triggers the L3 model-lifecycle CocoIndex v1 App materialization at
+# 03:00 UTC every day. Targets the `cocoindex_v1/*` asset group.
+type: dagster.schedule
+attributes:
+  name: daily_cocoindex_v1_assets_materialize
+  cron_schedule: "0 3 * * *"
+  execution_timezone: UTC
+  job:
+    name: cocoindex_v1_assets_job
+    selection:
+      groups:
+        - cocoindex_v1

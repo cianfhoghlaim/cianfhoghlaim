@@ -448,6 +448,21 @@ if grep -q "notebooks_sync_health" "orchestration/defs/sync_assets.py" 2>/dev/nu
 else
     fail "orchestration/defs/sync_assets.py missing the notebooks_sync_health asset"
 fi
+if grep -q "firecrawl-search" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "27th CCC concept guide (firecrawl-search) is in guides.yml"
+else
+    fail "27th CCC concept guide (firecrawl-search) missing"
+fi
+if grep -q "firecrawl-mcp-tools" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "28th CCC concept guide (firecrawl-mcp-tools) is in guides.yml"
+else
+    fail "28th CCC concept guide (firecrawl-mcp-tools) missing"
+fi
+if grep -q "firecrawl-corpus" ".cocoindex_code/guides.yml" 2>/dev/null; then
+    pass "31st CCC concept guide (firecrawl-corpus) is in guides.yml"
+else
+    fail "31st CCC concept guide (firecrawl-corpus) missing"
+fi
 
 # ============================================================================
 # Summary

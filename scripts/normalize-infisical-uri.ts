@@ -76,18 +76,25 @@ let totalReplacements = 0;
 let totalFiles = 0;
 
 // Match either:
-//   {{ infisical:///<key>[?query] }}            (stack-name is implied from file dir)
-//   {{ infisical:///<svc>/<key>[?query] }}       (svc is explicit)
-const JINJA_URI_RE = /\{\{\s*infisical:\/\/\/([^}]+)\s*\}\}/g;
+//   {{ infisical:///<key>[?query] }}                                  (stack-name is implied from file dir)
+//   {{ infisical:///<svc>/<key>[?query] }}                             (svc is explicit)
+//   {{ infisical://dev-baile/<svc>/<key> }}                            (canonical URI wrapped in Jinja — 3rd grammar)
+const JINJA_URI_RE = /\{\{\s*infisical:\/\/(?:\/\/|\/\/dev-baile\/)([^}]+)\s*\}\}/g;
 
 // Also handle the malformed bare form that resulted from a prior pass:
 //   infisical://dev-baile/<key>?path=/<folder>
 const BARE_URI_RE = /infisical:\/\/dev-baile\/([A-Za-z0-9_-]+)\?path=\/([A-Za-z0-9_-]+)/g;
 
 function parseInner(inner: string, stackName: string): { svc: string; key: string } {
-  // inner is the part after `infisical:///`, e.g. "croilar/db_url" or "postgres_user?path=/pangolin"
+  // inner is the part after `infisical:///` (or `infisical://dev-baile/`), e.g.
+  //   "croilar/db_url" or "postgres_user?path=/pangolin" or
+  //   "dev-baile/croilar/db_url" (for the 3rd-grammar Jinja form)
   const [pathPart, queryPart] = inner.split("?");
-  const parts = pathPart.split("/").filter(Boolean);
+  let parts = pathPart.split("/").filter(Boolean);
+  // 3rd-grammar: leading `dev-baile` segment is the env name (drop it)
+  if (parts.length >= 3 && parts[0] === "dev-baile") {
+    parts = parts.slice(1);
+  }
   // Look for ?path=/<folder> in the query
   let folderSvc: string | null = null;
   if (queryPart) {

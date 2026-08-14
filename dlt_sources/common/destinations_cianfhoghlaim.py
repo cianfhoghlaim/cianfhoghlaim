@@ -32,6 +32,7 @@ bucket partitioning — are exposed via the
 from __future__ import annotations
 
 import os
+import socket
 from typing import Any
 
 import dlt
@@ -214,6 +215,56 @@ def _build_production_destination(namespace: str) -> Any:
     return dlt.destinations.ducklake(credentials=credentials)
 
 
+def _verify_ducklake_connectivity(env: str) -> bool:
+    """Verify DuckLake infrastructure (S3/Garage + PostgreSQL catalog) is
+    actually reachable before building a DuckLake destination.
+
+    Ported from `sruth/oideachais/dlt_utils/destinations.py` — this file
+    had no pre-flight check at all, so an unreachable DuckLake backend
+    (Postgres catalog down, Garage down) previously failed silently
+    downstream at `pipeline.run()` time instead of falling back cleanly
+    to DuckDB. Reuses the same env vars already read elsewhere in this
+    file (`DUCKLAKE_POSTGRES_HOST`/`_PORT`, `AWS_ENDPOINT_URL`) rather
+    than introducing new ones.
+
+    Returns True if connectivity is verified, False otherwise.
+    """
+    if env == "production":
+        # Production: check PostgreSQL (PlanetScale) connectivity
+        pg_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "eu-west-3.pg.psdb.cloud")
+        pg_port = int(os.environ.get("DUCKLAKE_POSTGRES_PORT", "5432"))
+        try:
+            with socket.create_connection((pg_host, pg_port), timeout=3):
+                return True
+        except (OSError, socket.timeout, ConnectionRefusedError):
+            return False
+    else:
+        # Local: check Garage S3 and PostgreSQL — both must be reachable
+        s3_host = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900")
+        s3_host = s3_host.replace("http://", "").replace("https://", "").split(":")[0]
+        s3_port = 3900
+
+        pg_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
+        pg_port = int(os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433"))
+
+        s3_reachable = False
+        pg_reachable = False
+
+        try:
+            with socket.create_connection((s3_host, s3_port), timeout=2):
+                s3_reachable = True
+        except (OSError, socket.timeout, ConnectionRefusedError):
+            pass
+
+        try:
+            with socket.create_connection((pg_host, pg_port), timeout=2):
+                pg_reachable = True
+        except (OSError, socket.timeout, ConnectionRefusedError):
+            pass
+
+        return s3_reachable and pg_reachable
+
+
 def get_dlt_destination(
     use_ducklake: bool | None = None,
     namespace: str = DEFAULT_NAMESPACE,
@@ -270,6 +321,20 @@ def get_dlt_destination(
         return get_duckdb_fallback_destination(namespace=namespace)
 
     env = os.environ.get("DLT_ENVIRONMENT", "local").lower()
+
+    # Verify connectivity before returning a DuckLake destination — an
+    # unreachable Postgres catalog / S3 backend should fall back to plain
+    # DuckDB with a visible warning, not fail silently downstream.
+    if not _verify_ducklake_connectivity(env):
+        import warnings
+
+        warnings.warn(
+            f"DuckLake connectivity check failed for env={env!r} "
+            f"(namespace={namespace!r}). Falling back to DuckDB. Set "
+            "USE_DUCKLAKE=false to suppress this warning.",
+            stacklevel=2,
+        )
+        return get_duckdb_fallback_destination(namespace=namespace)
 
     if env == "production":
         return _build_production_destination(namespace)

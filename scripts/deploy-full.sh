@@ -28,6 +28,7 @@
 #   5. control-plane-up         — infisical + pangolin + komodo + pocket-id + tinyauth
 #   6. lakehouse-up             — postgres + garage + clickhouse + redis + lakekeeper + lance-namespace
 #   7. data-stacks-up           — litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb
+#                                  → +memory-stack doctor probe (NEW 2026-08-15)
 #   8. ocr-backends-up          — paddleocr + dots-ocr + olmocr + docling-serve + mlx-omni + llama-swap + meaisinfoghlaim (NEW 2026-08-02)
 #   9. agent-surfaces-up        — openclaw + openchamber + hermes + ocr-router
 #  10. dagster-materialize-and-sensor-health-gate — BIEP v3 materialise + sensor health gate (combined)

@@ -1,0 +1,33 @@
+name: state-exams-ie-pangolin
+
+# =============================================================================
+# STATE-EXAMS-IE — Pangolin resource binding
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern. The 6-label Pangolin resource
+# exposes the cabinet's POST /auth/login endpoint to the agent
+# runtime (so the Firecrawl MCP can re-authenticate on session
+# timeout).
+# =============================================================================
+
+resources:
+  state-exams-ie-auth:
+    hosts:
+      - state-exams-ie-auth.cianfhoghlaim.ie
+    targets:
+      - service: state-exams-ie-vault
+        port: 8765
+    auth:
+      type: password
+      username: ${SEC_USERNAME}
+      password: ${SEC_PASSWORD}
+    tls:
+      enabled: true
+      cert: /etc/pangolin/certs/cianfhoghlaim.ie.crt
+      key: /etc/pangolin/certs/cianfhoghlaim.ie.key
+    headers:
+      - name: X-Forwarded-For
+        value: %client_ip
+    labels:
+      tier: "auth"
+      purpose: "firecrawl-profile-vault"
+      owner: "state-exams-ie"

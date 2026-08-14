@@ -1,0 +1,6 @@
+# orchestration/defs/2_materials/england_education/aqa/_layer/defs.yaml
+#
+# L2 England AQA sub-mount (added by the 2026-08-15-dagster-load-path-repair
+# change). Walks into the AQA-specific CelticMaterialsComponent defs files.
+type: dagster.DefsFolderComponent
+attributes: {}

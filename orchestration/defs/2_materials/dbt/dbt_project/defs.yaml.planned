@@ -1,0 +1,44 @@
+# ============================================================================
+# NOT LOADED — renamed `defs.yaml` -> `defs.yaml.planned` on 2026-08-13.
+#
+# Three reasons, any one of which is fatal:
+#   1. `project_dir: cianfhoghlaim/dbt_project` does not exist, and never has
+#      in this repo. The only `dbt_project.yml` outside vendored/`stedding/`
+#      trees is `sruth/data-engineering/dbt_project/` — the unrelated
+#      `pypi_analytics` demo project, NOT the 3 models named below.
+#   2. The schema is the pre-1.13 `dagster_dbt` one. The installed
+#      `DbtProjectComponent` requires a top-level `project` field and knows
+#      nothing about `dbt:` or `asset_attributes:` (it uses `translation:`).
+#   3. Even with a correct path, that project has no compiled
+#      `target/manifest.json`, so defs-build would fail without
+#      `prepare_if_dev`.
+#
+# Because `dg.load_defs()` aborts on the FIRST bad file, this one file was
+# enough to send the entire code location down the `_defs_walker` fallback,
+# which ignores every YAML Component in the repo.
+#
+# To revive: create the dbt project (or point at a real one), then rewrite as
+#     type: dagster_dbt.DbtProjectComponent
+#     attributes:
+#       project: <path/to/dbt_project>
+#       prepare_if_dev: true
+#       translation: { group_name: 2_materials_dbt, ... }
+# Note `group_name` must be a valid identifier — "2_materials/dbt" is not.
+# ============================================================================
+
+# defs/2_materials/dbt/weekly_downloads/defs.yaml
+#
+# L2 DbtProjectComponent for the 3 dbt-duckdb models
+# (weekly_downloads, language_distribution, ocr_confidence_by_model).
+# Replaces the hand-written @dbt_assets decorator + DbtCliResource
+# in the legacy cianfhoghlaim.orchestration/definitions.py.
+type: dagster_dbt.DbtProjectComponent
+attributes:
+  dbt:
+    project_dir: cianfhoghlaim/dbt_project
+  asset_attributes:
+    key: "2_materials/dbt/{{ node.name }}"
+    group_name: 2_materials/dbt
+    automation_condition:
+      type: cron
+      cron_schedule: "0 6 * * *"

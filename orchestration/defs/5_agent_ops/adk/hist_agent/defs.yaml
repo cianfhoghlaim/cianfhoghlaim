@@ -36,6 +36,8 @@ attributes:
     - the morrígan
     - war
     - revolution
-    - 1916
-    - 1798
+    # Quoted: bare 1916/1798 parse as YAML ints, but routing_keywords is a
+    # list of search strings.
+    - "1916"
+    - "1798"
     - brehon law

@@ -25,7 +25,10 @@ services:
       - paperless_consume:/usr/src/paperless/consume
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/api/ || exit 1"]
-      interval: 30s; timeout: 10s; retries: 3; start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     deploy:
       resources:
         limits: {memory: 2G, cpus: '2'}
@@ -41,7 +44,9 @@ services:
     volumes: [paperless_pg_data:/var/lib/postgresql/data]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d paperless -U paperless"]
-      interval: 10s; timeout: 5s; retries: 5
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks: [cianfhoghlaim]
   redis:
     image: redis:7-alpine
@@ -50,7 +55,9 @@ services:
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s; timeout: 5s; retries: 5
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks: [cianfhoghlaim]
 volumes:
   paperless_data: {driver: local}

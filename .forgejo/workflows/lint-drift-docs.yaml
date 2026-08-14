@@ -10,5 +10,9 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v3
 
-      - name: Validate AGENTS.md count claims
-        run: mise run lint:drift-docs
+      # lint_drift_docs.py is stdlib-only — run via the system python
+      # (the .venv path is broken in CI because pyproject.toml's forced
+      # include for .archive/meaisinfhoghlaim/legacy_model_registry.py
+      # fails uv sync; the linter itself doesn't need the venv).
+      - name: Validate AGENTS.md number claims
+        run: mise exec -- python3 scripts/lint_drift_docs.py

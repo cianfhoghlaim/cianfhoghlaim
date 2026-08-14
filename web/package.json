@@ -1,0 +1,31 @@
+{
+  "name": "@cianfhoghlaim/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --concurrency=20",
+    "dev:oideachais": "cd apps/oideachais && bun run dev",
+    "dev:croilar": "cd apps/croilar && bun run dev",
+    "dev:dashboard": "cd apps/oideachais-dashboard && bun run dev",
+    "dev:cianfhoghlaim": "cd apps/cianfhoghlaim && bun run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules .turbo"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "bun@1.2.0"
+}

@@ -30,36 +30,18 @@ _jersey_module = importlib.import_module(
         "materials", "2_materials"
     )
 )
-jersey_documents_ingested = _jersey_module.jersey_documents_ingested
-jersey_extractions = _jersey_module.jersey_extractions
-jersey_embeddings = _jersey_module.jersey_embeddings
-jersey_documents_ingested_check = _jersey_module.jersey_documents_ingested_check
-jersey_extractions_ragas_check = _jersey_module.jersey_extractions_ragas_check
-jersey_lance_chunks_check = _jersey_module.jersey_lance_chunks_check
 
 _guernsey_module = importlib.import_module(
     "orchestration.defs.materials.guernsey_education.guernsey_assets".replace(
         "materials", "2_materials"
     )
 )
-guernsey_documents_ingested = _guernsey_module.guernsey_documents_ingested
-guernsey_extractions = _guernsey_module.guernsey_extractions
-guernsey_embeddings = _guernsey_module.guernsey_embeddings
-guernsey_documents_ingested_check = _guernsey_module.guernsey_documents_ingested_check
-guernsey_extractions_ragas_check = _guernsey_module.guernsey_extractions_ragas_check
-guernsey_lance_chunks_check = _guernsey_module.guernsey_lance_chunks_check
 
 _iom_module = importlib.import_module(
     "orchestration.defs.materials.isle_of_man_education.isle_of_man_assets".replace(
         "materials", "2_materials"
     )
 )
-isle_of_man_documents_ingested = _iom_module.isle_of_man_documents_ingested
-isle_of_man_extractions = _iom_module.isle_of_man_extractions
-isle_of_man_embeddings = _iom_module.isle_of_man_embeddings
-isle_of_man_documents_ingested_check = _iom_module.isle_of_man_documents_ingested_check
-isle_of_man_extractions_ragas_check = _iom_module.isle_of_man_extractions_ragas_check
-isle_of_man_lance_chunks_check = _iom_module.isle_of_man_lance_chunks_check
 
 
 # Backward-compat stubs — the legacy crown_dependencies_* names raise
@@ -95,16 +77,16 @@ def crown_dependencies_extractions_ragas_check():
     )
 
 
+# Aliases REMOVED 2026-08-13. These re-exported the per-jurisdiction assets
+# for backward compatibility, but `dg.load_defs()` auto-discovers the
+# ORIGINALS directly from `2_materials/<jurisdiction>_education/`. Having
+# both at module scope produced 18 duplicate asset keys, which made
+# `Definitions.validate_loadable()` raise and the code location show ZERO
+# assets. Import from the owning module instead.
+
 __all__ = [
     "crown_dependencies_documents_ingested",
     "crown_dependencies_extractions",
     "crown_dependencies_embeddings",
     "crown_dependencies_extractions_ragas_check",
-    # Re-export the per-jurisdiction proper assets for backward compat
-    "jersey_documents_ingested", "jersey_extractions", "jersey_embeddings",
-    "jersey_documents_ingested_check", "jersey_extractions_ragas_check", "jersey_lance_chunks_check",
-    "guernsey_documents_ingested", "guernsey_extractions", "guernsey_embeddings",
-    "guernsey_documents_ingested_check", "guernsey_extractions_ragas_check", "guernsey_lance_chunks_check",
-    "isle_of_man_documents_ingested", "isle_of_man_extractions", "isle_of_man_embeddings",
-    "isle_of_man_documents_ingested_check", "isle_of_man_extractions_ragas_check", "isle_of_man_lance_chunks_check",
 ]

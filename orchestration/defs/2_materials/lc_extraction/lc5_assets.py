@@ -313,12 +313,86 @@ def lc5_chemistry_diagrams_extracted(context: AssetExecutionContext) -> dict[str
     return {"rows": len(diagrams), "subject": "chemistry", "kind": "diagrams"}
 
 
-# Generate the remaining 23 BAML extraction assets (6 subjects × 4 kinds,
-# minus lc5_chemistry_diagrams_extracted defined above as the one real
-# implementation).
+@asset(
+    name="lc5_computer_science_papers_extracted",
+    group_name="2_materials_lc_papers_lc5_computer_science",
+    description="Real ExtractExamPaperLayout (text-only) for computer_science LC",
+    deps=["lc5_computer_science_ingested"],
+)
+def lc5_computer_science_papers_extracted(context: AssetExecutionContext) -> dict[str, Any]:
+    """The second un-stubbed LC5 asset (per the
+    `2026-08-10-baml-extraction-completion-v1` change kickstart on
+    2026-08-13) — calls the real `ExtractExamPaperLayout` against the
+    smallest English-medium computer_science exam paper PDF in the
+    corpus. Text-only path (no image bridge needed) — `ExamPaper` is a
+    small typed schema (`Question[]` with `question_number`,
+    `marks`, `parts[]`) that's well within the text layer's resolution.
+
+    Mirrors `lc5_chemistry_diagrams_extracted`'s graceful-degradation
+    convention: returns `{"rows": 0, ...}` on BAML / pypdf / corpus
+    unavailability rather than raising.
+    """
+    if not BAML_AVAILABLE:
+        context.log.warning("lc5_computer_science_papers_extracted: baml_client not importable; skipping")
+        return {"rows": 0, "subject": "computer_science", "kind": "papers"}
+
+    import importlib
+
+    _qpack = importlib.import_module(
+        "orchestration.defs.2_materials.lc_extraction.quest_pack_assets"
+    )
+    _classify_pdfs = _qpack._classify_pdfs
+    _extract_pdf_text = _qpack._extract_pdf_text
+
+    buckets = _classify_pdfs("computer_science")
+    papers_entries = [e for e in buckets["papers"] if e["language"] == "en"]
+    if not papers_entries:
+        context.log.warning(
+            "lc5_computer_science_papers_extracted: no English-medium exam paper PDF found"
+        )
+        return {"rows": 0, "subject": "computer_science", "kind": "papers"}
+
+    paper_path = min(papers_entries, key=lambda e: len(e["path"].name))["path"]
+    text = _extract_pdf_text(paper_path)
+    if not text.strip():
+        context.log.warning(
+            "lc5_computer_science_papers_extracted: no extractable text layer in %s",
+            paper_path.name,
+        )
+        return {"rows": 0, "subject": "computer_science", "kind": "papers"}
+
+    try:
+        exam_paper = b.ExtractExamPaperLayout(
+            pdf_text=text,
+            page_text=None,
+            page_number=None,
+            subject="computer_science",
+            subject_language="EN",
+        )
+    except Exception as exc:  # BAML error types are not stable API
+        context.log.error(
+            "lc5_computer_science_papers_extracted: extraction failed: %s", exc
+        )
+        return {"rows": 0, "subject": "computer_science", "kind": "papers"}
+
+    question_count = len(exam_paper.questions) if hasattr(exam_paper, "questions") else 0
+    context.add_output_metadata({
+        "row_count": question_count,
+        "exam_paper_pdf": paper_path.name,
+    })
+    return {"rows": question_count, "subject": "computer_science", "kind": "papers"}
+
+
+# Generate the remaining 22 BAML extraction assets (6 subjects × 4 kinds,
+# minus lc5_chemistry_diagrams_extracted (line 218) and
+# lc5_computer_science_papers_extracted (line 315) defined above as real
+# implementations).
 for _subject in LC6_SUBJECTS:
     for _kind in ("syllabus", "papers", "marking", "diagrams"):
+        # Skip the 2 real implementations defined above.
         if _subject == "chemistry" and _kind == "diagrams":
+            continue
+        if _subject == "computer_science" and _kind == "papers":
             continue
         globals()[f"lc5_{_subject}_{_kind}_extracted"] = _make_subject_extraction_asset(_subject, _kind)
 

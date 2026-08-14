@@ -1,5 +1,5 @@
 {
-  "name": "@croilar/auth",
+  "name": "@cianfhoghlaim/auth",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,6 +9,7 @@
     "lint": "echo ok"
   },
   "dependencies": {
+    "@cianfhoghlaim/ui-kit": "workspace:*",
     "better-auth": "^1.3.11"
   },
   "devDependencies": {

@@ -158,6 +158,11 @@ _AUDIT_DIRS = [
     "meaisinfhoghlaim",  # the OCR/HTR/alignment sub-package (per the 2026-07-30-drift-remediation-everything-bagel-v1 change)
 ]
 
+# Compose YAML files to audit for hardcoded model strings (added
+# 2026-08-15-lakehouse-memory-stack — Phase E gap G9 closure). Walked
+# recursively under `bonneagar/stacks/*/compose*.yaml`.
+_COMPOSE_AUDIT_GLOB = "bonneagar/stacks/*/compose*.yaml"
+
 _SKIP_PATTERNS = [
     "*/model_registry.py",      # the registry itself
     "*/registry.py",            # the OCR/VLM registry (canonical home)
@@ -252,6 +257,69 @@ def audit_repo(repo_root: Path) -> list[dict[str, object]]:
             if _is_skipped(path):
                 continue
             findings.extend(audit_file(path))
+
+    # NEW 2026-08-15-lakehouse-memory-stack — audit compose YAML files
+    # for hardcoded model strings in ENV-VAR VALUES. Closes gap G9.
+    # Targeted detection: only flag lines that look like
+    #   LLM_MODEL: gemini-2.5-pro
+    #   OPENAI_MODEL: gpt-4o-mini
+    # i.e. where the LHS is a known model-selection env-var key.
+    # This avoids false positives on container names like
+    # `services.llama-swap.image: llama-swap:latest` that match the
+    # `llama-` prefix but are service identifiers, not model strings.
+    import re as _re
+
+    _COMPOSE_ENV_VAR_KEYS = (
+        # LLM selection
+        r"LLM_MODEL\b",
+        r"OPENAI_MODEL\b",
+        r"ANTHROPIC_MODEL\b",
+        r"COGNEE_LLM_MODEL\b",
+        r"COGNEE_EMBEDDING_MODEL\b",
+        r"LITELLM_MODEL\b",
+        r"LITELLM_LLM_MODEL\b",
+        r"LITELLM_EMBEDDING_MODEL\b",
+        r"DEFAULT_MODEL\b",
+        # LiteLLM routing keyword
+        r"COGNEE_LLM\b",
+        # OCR/VLM routing
+        r"OCR_ROUTER_DEFAULT_BACKEND\b",
+        # Embedder selection
+        r"EMBEDDING_MODEL\b",
+        r"OPENAI_EMBEDDING_MODEL\b",
+        r"COHERE_EMBEDDING_MODEL\b",
+    )
+    _COMPOSE_MODEL_LINE = _re.compile(
+        r"^\s*(?:-\s*)?(?:" + "|".join(_COMPOSE_ENV_VAR_KEYS) + r")\s*[:=]\s*"
+        r"[\"\']?"
+        r"(?P<model>(?:" + _PREFIX_ALT + r")[\w./\-]+)"
+        r"[\"\']?"
+        r"\s*$"
+    )
+
+    for pattern in (_COMPOSE_AUDIT_GLOB,):
+        for compose_path in repo_root.glob(pattern):
+            if not compose_path.is_file():
+                continue
+            try:
+                text = compose_path.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            for line_no, line in enumerate(text.splitlines(), 1):
+                stripped = line.strip()
+                if stripped.startswith("#"):
+                    continue
+                m = _COMPOSE_MODEL_LINE.search(line)
+                if not m:
+                    continue
+                findings.append(
+                    {
+                        "file": str(compose_path.relative_to(repo_root)),
+                        "lineno": line_no,
+                        "match": m.group("model"),
+                        "kind": "compose_yaml",
+                    }
+                )
     return findings
 
 

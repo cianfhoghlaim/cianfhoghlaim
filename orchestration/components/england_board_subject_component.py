@@ -31,7 +31,7 @@ class EnglandBoardSubjectComponent(BIEPSubjectComponent):
 
     def __init__(
         self,
-        exam_board: str,
+        exam_board: str | None = None,
         subject_slug: str | None = None,
         qualification_level: str = "gcse",
         baml_function: str | None = None,
@@ -44,9 +44,28 @@ class EnglandBoardSubjectComponent(BIEPSubjectComponent):
         cognify_dataset: str | None = None,
         automation_cron: str | None = None,
         dagster_group_name_prefix: str | None = None,
+        # --- layer-descriptor form ---
+        # `2_materials/england_education/defs.yaml` (the directory's own
+        # defs file, as opposed to the aqa/ocr/edexcel ones beneath it)
+        # describes the WHOLE england_education layer rather than one board:
+        # it lists every board and qualification instead of naming one.
+        # `exam_board` is therefore optional, exactly as `subject_slug`
+        # already is for the "describes a whole board" case above.
+        boards: list[str] | None = None,
+        qualifications: list[str] | None = None,
+        source_modules: dict[str, str] | None = None,
+        dagster_module: str | None = None,
+        total_cocoindex_apps: int | None = None,
+        grouping: str | None = None,
     ):
         super().__init__(jurisdiction="england")
         self.exam_board = exam_board
+        self.boards = boards
+        self.qualifications = qualifications
+        self.source_modules = source_modules
+        self.dagster_module = dagster_module
+        self.total_cocoindex_apps = total_cocoindex_apps
+        self.grouping = grouping
         self.subject_slug = subject_slug
         self.qualification_level = qualification_level
         self.baml_function = baml_function
@@ -61,6 +80,21 @@ class EnglandBoardSubjectComponent(BIEPSubjectComponent):
         self.dagster_group_name_prefix = dagster_group_name_prefix
 
     def build_defs(self, context: ComponentLoadContext) -> Definitions:
+        if self.exam_board is None:
+            # Layer-descriptor form (see __init__): no single board to build.
+            # Must declare the boards it covers, so a defs.yaml that simply
+            # forgot `exam_board` still fails loudly.
+            if not self.boards:
+                raise ValueError(
+                    "EnglandBoardSubjectComponent needs either `exam_board` "
+                    "(per-board form) or `boards` (layer-descriptor form)."
+                )
+            logger.info(
+                "EnglandBoardSubjectComponent: england layer descriptor — "
+                "boards=%s qualifications=%s",
+                self.boards, self.qualifications,
+            )
+            return Definitions()
         if self.exam_board not in ("aqa", "ocr", "edexcel"):
             raise ValueError(f"Unknown exam board: {self.exam_board!r}")
         logger.info(

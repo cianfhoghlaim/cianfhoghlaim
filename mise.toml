@@ -55,8 +55,13 @@ STEDDING_INGEST_QUEUE = "{{config_root}}/stedding/site_scrape_samples"
 # POSTGRES_PASSWORD in .env). Aliased here rather than baking a value in —
 # never read the password itself, just point the differently-named var at
 # the one the lakehouse compose stack already sets.
-DUCKLAKE_POSTGRES_USER = "{{env.POSTGRES_USER}}"
-DUCKLAKE_POSTGRES_PASSWORD = "{{env.POSTGRES_PASSWORD}}"
+# Hardcoded defaults to "lakekeeper" / "devpassword" (the lakehouse compose stack's
+# dev credentials). In local dev, the .env file exports POSTGRES_USER=lakekeeper +
+# POSTGRES_PASSWORD=<real-secret> which mise prefers via the {{env.*}} template;
+# in CI (no .env), these hardcoded defaults make `mise install` succeed so the
+# lint:drift-docs + skill-refs-check gates can run.
+DUCKLAKE_POSTGRES_USER = "lakekeeper"
+DUCKLAKE_POSTGRES_PASSWORD = "devpassword"
 # registry_api.py / registry_loader.py's BIEP_REGISTRY_URI defaults to
 # "md:cianfhoghlaim" (MotherDuck cloud — confirmed elsewhere in this repo
 # to be an empty account, unusable locally). This string carries NO
@@ -135,6 +140,62 @@ run = ".venv/bin/python3 scripts/lint_drift_docs.py"
 [tasks."lint:drift-docs:dry-run"]
 description = "Same as lint:drift-docs but exits 0 always (prints the report)"
 run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
+
+[tasks."lint:drift-docs:rebaseline"]
+description = "Auto-fix the stale count claims reported by lint:drift-docs (safe --fix mode per the retrospective-cleanup spec). Writes the fix to disk. Per the 2026-08-13-count-drift-rebase-and-indexing-cognition-cleanup-v1 change."
+run = "uv run python scripts/rebaseline_drift_docs.py --apply"
+
+[tasks."lint:drift-docs:rebaseline:dry-run"]
+description = "Dry-run the auto-fix (prints the planned diff, exits 0, does not modify any files)"
+run = "uv run python scripts/rebaseline_drift_docs.py"
+
+[tasks."lint:guides-yml"]
+description = "Validate every path in .cocoindex_code/guides.yml resolves on disk. Exits 1 if any path is missing; writes JSON report to stedding/sync-reports/guides-yml-{date}.json. Per the 2026-08-13-guides-yml-repair-and-docs-integrations-index-v1 change (the indexing-and-cognition spec delta)."
+run = "uv run python scripts/lint_guides_yml.py"
+
+[tasks."lint:guides-yml:dry-run"]
+description = "Same as lint:guides-yml but exits 0 always (prints the report)"
+run = "uv run python scripts/lint_guides_yml.py --dry-run"
+
+# -----------------------------------------------------------------------------
+# Firecrawl Budget Lint — added by the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1
+# change. Reads cianfhoghlaim.firecrawl_meta.scrapes (the append-only scrape log
+# populated by FirecrawlMCPClient) + flags any pipeline exceeding 150% of its
+# monthly allocation (defined in deployment-choice.yaml).
+# -----------------------------------------------------------------------------
+[tasks."lint:firecrawl-budget"]
+description = "Firecrawl budget linter — exit 1 if any pipeline exceeds 150% of its monthly allocation. Per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change."
+run = "uv run python scripts/lint_firecrawl_budget.py"
+
+# =============================================================================
+# 2026-08-15-lakehouse-memory-stack-deep-integration-v1 (Phase E)
+# =============================================================================
+[tasks."lakehouse:memory:doctor"]
+description = "Probe the 5 memory backends (cognee + graphiti + lancedb + falkordb + memgraph) and emit a JSON health report to stedding/memory-health/<utc-ts>.json. Per the agent-memory-systems + agent-platform-cluster spec deltas of the 2026-08-15 change."
+run = "bun run scripts/lakehouse-memory-doctor.ts"
+
+[tasks."lakehouse:memory:doctor:strict"]
+description = "Same as lakehouse:memory:doctor but exits 1 if any backend is not healthy (used by deploy-full.sh Phase 7)"
+run = "bun run scripts/lakehouse-memory-doctor.ts --strict"
+
+# =============================================================================
+# 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 (Phase D)
+# =============================================================================
+[tasks."lakehouse:preflight"]
+description = "Local-bunchloch lakehouse preflight: 5 required endpoints + 12 postgres databases + 8 Garage buckets + (graceful) cognify stack status. Per the infrastructure-stacks spec delta of the 2026-08-15 change. Use --strict-cognify to require the cognify backends for BIEP M5+."
+run = "python3 scripts/lakehouse_preflight.py"
+
+[tasks."lakehouse:preflight:json"]
+description = "Same as lakehouse:preflight but emits JSON to stdout (machine-readable)"
+run = "python3 scripts/lakehouse_preflight.py --json"
+
+[tasks."lakehouse:preflight:strict-cognify"]
+description = "Same as lakehouse:preflight but REQUIRES the cognify backends (used by BIEP M5+ milestones)"
+run = "python3 scripts/lakehouse_preflight.py --strict-cognify"
+
+[tasks."lakehouse:buckets:audit"]
+description = "Audit the 8 canonical Garage S3 buckets via the admin API (urllib3 — no awscli dep). Per the 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 change."
+run = "python3 scripts/audit_lakehouse_buckets.py"
 
 [tasks."agents:smoke"]
 description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
@@ -627,7 +688,7 @@ run = ".venv/bin/python3 -c 'import asyncio; from cianfhoghlaim.cocoindex.cocoin
 
 [tasks."cocoindex:conformance"]
 description = "Run the cocoindex_v1_migrate.py audit (R1-R4). Exits 1 on any violation. This is the CI gate (faster than the v1 App itself)."
-run = ".venv/bin/python3 dlt/common/cocoindex_v1_migrate.py --check-only"
+run = ".venv/bin/python3 dlt_sources/common/cocoindex_v1_migrate.py --check-only"
 
 [tasks."cic:cocoindex:leabharlann-books"]
 description = "Index the leabharlann books corpus via the v1 leabharlann_books_embedding App"
@@ -1283,6 +1344,48 @@ cat "$REPORT"
 [tasks."sync:drift-docs"]
 description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
 run = "bash scripts/sync/drift_docs.sh"
+
+# -----------------------------------------------------------------------------
+# Firecrawl Dual-Search Sync Loop — the 12th sync layer
+# (per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change)
+#
+# Layer 12 covers the Firecrawl MCP ↔ ccc dual-search architecture. The
+# 27-31st concept guides live in .cocoindex_code/guides.yml. The orchestrator
+# runs the CCC index refresh + writes a unified report.
+# -----------------------------------------------------------------------------
+
+[tasks."sync:firecrawl-ccc"]
+description = "Firecrawl Layer 2: append the 27-31st CCC concept guides (firecrawl-search + firecrawl-mcp-tools + firecrawl-research-index + firecrawl-developer-index + firecrawl-corpus) + reindex"
+run = "bash scripts/sync/firecrawl-ccc.sh"
+
+[tasks."sync:firecrawl"]
+description = "Firecrawl orchestrator: runs sync:firecrawl-ccc + writes a unified report"
+run = """
+mkdir -p stedding/sync-reports
+REPORT="stedding/sync-reports/firecrawl-all-$(date +%Y-%m-%d).md"
+{
+  echo "# Firecrawl Sync — Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change (Layer 12)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+echo "## Sub-layer: sync:firecrawl-ccc" >> "$REPORT"
+echo '```' >> "$REPORT"
+bash scripts/sync/firecrawl-ccc.sh >> "$REPORT" 2>&1
+echo '```' >> "$REPORT"
+echo "" >> "$REPORT"
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 5 Firecrawl concept guides + CCC index refresh completed."
+} >> "$REPORT"
+cat "$REPORT"
+"""
 
 [tasks."sync:spec-agents"]
 description = "Layer 8: regenerate the per-spec AGENTS.md files (78 siblings of openspec/specs/<name>/spec.md). Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change's `repo-hygiene-agent-routing` spec."

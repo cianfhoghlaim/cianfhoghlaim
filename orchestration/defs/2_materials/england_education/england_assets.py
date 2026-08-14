@@ -11,8 +11,10 @@ Wires 6 asset groups:
 Each wraps the DLT source + BAML extraction + CocoIndex embedding +
 MotherDuck load.
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations` — see the identical
+# note in ../lc_extraction/lc_subjects.py: it breaks Dagster's
+# `_validate_context_type_hint` for every `context: AssetExecutionContext`
+# annotated @asset in this file.
 from typing import Any
 
 try:
@@ -41,9 +43,17 @@ from dlt_sources.british_isles.england.education.a_level.england_a_level_sources
 
 
 def _england_loaded_asset(qualification: str, board: str, dlt_source):
-    """Create one `<board>_<qualification>_loaded` Dagster asset."""
+    """Create one `{board}_{qualification}_loaded` Dagster asset.
+
+    The inner `def`s use plain names and get their real per-board/
+    qualification name via the `name=`/`asset=` kwargs at decoration time
+    (a previous version used literal `<board>`/`<qualification>` tokens in
+    the `def` line — a hard SyntaxError — then tried to fix the name via
+    `fn.__name__ = f"..."` after decoration, which is a no-op for Dagster).
+    """
 
     @asset(
+        name=f"england_{board}_{qualification}_loaded",
         group_name="2_materials_england_education",
         description=(
             f"England {qualification.upper()} {board.upper()} ingestion: "
@@ -51,12 +61,10 @@ def _england_loaded_asset(qualification: str, board: str, dlt_source):
             f"Per the 2026-08-10-england-biiep-pipeline-v1 change."
         ),
     )
-    def england_<board>_<qualification>_loaded(context: AssetExecutionContext) -> dict[str, Any]:
+    def loaded(context: AssetExecutionContext) -> dict[str, Any]:
         # Yield rows from the DLT source
         rows = list(dlt_source())
-        context.log.info(
-            f"england_<board>_<qualification>_ingested: {len(rows)} rows"
-        )
+        context.log.info(f"england_{board}_{qualification}_ingested: {len(rows)} rows")
         return {
             "qualification": qualification,
             "board": board,
@@ -64,8 +72,8 @@ def _england_loaded_asset(qualification: str, board: str, dlt_source):
             "subjects": sorted(set(r["subject"] for r in rows)),
         }
 
-    @asset_check(asset=england_<board>_<qualification>_loaded)
-    def england_<board>_<qualification>_loaded_check(context) -> AssetCheckResult:
+    @asset_check(asset=loaded, name=f"england_{board}_{qualification}_loaded_check")
+    def loaded_check(context) -> AssetCheckResult:
         # Cross-board coverage check: every AQA subject should have a
         # corresponding OCR + Edexcel subject.
         return AssetCheckResult(
@@ -78,12 +86,7 @@ def _england_loaded_asset(qualification: str, board: str, dlt_source):
             },
         )
 
-    england_<board>_<qualification>_loaded.__name__ = f"england_{board}_{qualification}_loaded"
-    england_<board>_<qualification>_loaded_check.__name__ = f"england_{board}_{qualification}_loaded_check"
-    return (
-        england_<board>_<qualification>_loaded,
-        england_<board>_<qualification>_loaded_check,
-    )
+    return (loaded, loaded_check)
 
 
 # Build all 6 asset groups
@@ -101,4 +104,12 @@ for _qual, _board, _src in [
     _england_assets.extend([_loaded, _check])
 
 
-__all__ = [a.__name__ for a in _england_assets]
+# NOTE: `dg.load_assets_from_modules`/`load_asset_checks_from_modules`
+# (used by both the primary `dg.load_defs()` component-tree scan and the
+# `_defs_walker.py` fallback) discover assets bound as a module-level
+# `list[AssetsDefinition | AssetChecksDefinition]` on their own — `__all__`
+# isn't required for that. (A previous version tried
+# `[a.__name__ for a in _england_assets]` here — `AssetsDefinition` has no
+# `__name__` attribute, so every import of this module raised
+# AttributeError.)
+__all__ = ["_england_assets"]

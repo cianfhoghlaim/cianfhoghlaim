@@ -152,16 +152,22 @@ services:
         ACCESS_KEY_ID=$$(echo "$$KEY_RESPONSE" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
         echo "Access Key ID: $$ACCESS_KEY_ID"
         echo "Creating buckets..."
-        # CHANGED 2026-08-01 (lakehouse-and-reproducible-deploy-v1):
-        # Renamed the lakehouse-internal bucket from `ducklake` to
-        # `ducklake-cianfhoghlaim` to match the canonical default in
-        # `dlt_sources/common/destinations_cianfhoghlaim.py:109` and the
-        # new `DUCKLAKE_BUCKET=ducklake-cianfhoghlaim` env var exported
-        # by all 5 data-plane stacks.
-        # 7 buckets total (3 lakehouse-internal + 4 for downstream consumers)
-        # Per the centralise-data-plane rewrite (2026-07)
+        # REVERTED 2026-08-13: the 2026-08-01 rename of `ducklake` ->
+        # `ducklake-cianfhoghlaim` was made to match a default in
+        # `destinations_cianfhoghlaim.py` that has since been corrected back
+        # to `ducklake` — the live-seeded catalog has always used `ducklake`,
+        # and attaching with a DATA_PATH the catalog doesn't know fails with
+        # "DATA_PATH parameter does not match existing data path in the
+        # catalog". A fresh `docker compose up` was provisioning a bucket
+        # nothing attaches to. `ducklake` is now the DuckLake bucket.
+        #
+        # `ducklake-cianfhoghlaim` is retained solely because
+        # `MOTHERDUCK_S3_BUCKET` still points at it for the BYOB/BYOC path;
+        # that path has no implementation in the code today. Do not use it
+        # for DuckLake.
+        # 8 buckets total (3 lakehouse-internal + 1 motherduck-byob + 4 downstream)
 
-        for bucket in iceberg lance ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
+        for bucket in iceberg lance ducklake ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
           curl -sf -X POST "$${ADMIN_URL}/v1/bucket" \
             -H "$${AUTH}" \
             -H "Content-Type: application/json" \
@@ -170,7 +176,7 @@ services:
         done
 
         echo "Getting bucket IDs and granting permissions..."
-        for bucket in iceberg lance ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
+        for bucket in iceberg lance ducklake ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
           BUCKET_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}")
           BUCKET_ID=$$(echo "$$BUCKET_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
           if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then

@@ -4,6 +4,11 @@ cianfhoghlaim.cianfhoghlaim.dlt.british_isles.ireland.medicine.hse — Health Se
 Source: `https://www.hse.ie` (public service). Crawled with Firecrawl
 through the shared firecrawl_source router. Yields one page dict per
 URL in `HSE_URLS`.
+
+**PII source** (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1
+change): set `SENSITIVITY = "pii"` so every Firecrawl scrape call
+flips `redact_pii=True` + `zero_data_retention=True` + uses a 24h
+cache window instead of the default 7d.
 """
 from __future__ import annotations
 import dlt
@@ -15,7 +20,12 @@ from typing import Any
 import dlt_sources
 import structlog
 
-from dlt_sources.common.site_crawler import crawl_site
+from dlt_sources.common.site_crawler import crawl_site, get_policy
+
+# PII source flag — propagates to the Firecrawl scrape policy.
+SENSITIVITY = "pii"
+SOURCE_KEY = "hse"
+_SOURCE_POLICY = get_policy(SOURCE_KEY)
 
 def _crawl_source(*args, **kwargs):
     # The legacy _crawl_source took (source_name, base_url, ...) — source_name

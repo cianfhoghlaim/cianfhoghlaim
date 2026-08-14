@@ -20,7 +20,7 @@ replaces the 33 per-subject BAML extraction asset modules.
 # Deliberately NOT `from __future__ import annotations` — Dagster's
 # Resolvable derives the YAML schema from real (not postponed-string) type
 # annotations; see the identical note in biep_subject_component.py.
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 import dagster as dg
@@ -66,13 +66,59 @@ class CelticMaterialsComponent(Component, Resolvable):
             group_name when partition_strategy == "by_cycle".
     """
 
-    baml_function: str
-    source_asset: str
+    # `subject` must stay first: it is the only field without a default, and
+    # a dataclass cannot place a non-default field after a defaulted one.
     subject: str
+    # Singular form (most files). Optional because 5 files use the plural
+    # form below instead — see `_resolved_baml_functions` / `_resolved_source_assets`.
+    baml_function: str | None = None
+    source_asset: str | None = None
     partition_strategy: PartitionStrategy = "by_cycle"
     asset_check_kind: AssetCheckKind = "row_count"
     language: str = "en"
     automation_cron: str = "0 4 * * *"
+
+    # --- plural form ---
+    # `2_materials/{ie_law,eu_multilingual,...}/defs.yaml` describe ONE subject
+    # extracted by SEVERAL BAML functions from SEVERAL upstream assets. The
+    # component still emits one asset per subject; the plural lists become the
+    # full dep set and are recorded in metadata. Supply either the singular
+    # pair or these lists, not both.
+    baml_functions: list[str] = field(default_factory=list)
+    source_assets: list[str] = field(default_factory=list)
+    auxiliary_baml_functions: list[str] = field(default_factory=list)
+
+    # --- behavioural ---
+    automation: Literal["eager", "on_cron"] | None = None
+
+    # --- documentation / lineage hints (surfaced in asset metadata) ---
+    validators: list[str] = field(default_factory=list)
+    output_table: str | None = None
+    privacy_gate: str | None = None
+    cross_source_linkage: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def _resolved_baml_functions(self) -> list[str]:
+        """Normalise the singular/plural BAML function forms to one list."""
+        if self.baml_functions:
+            return list(self.baml_functions)
+        if self.baml_function:
+            return [self.baml_function]
+        raise ValueError(
+            f"CelticMaterialsComponent[{self.subject}] needs either "
+            "`baml_function` or a non-empty `baml_functions` list."
+        )
+
+    def _resolved_source_assets(self) -> list[str]:
+        """Normalise the singular/plural source asset forms to one list."""
+        if self.source_assets:
+            return list(self.source_assets)
+        if self.source_asset:
+            return [self.source_asset]
+        raise ValueError(
+            f"CelticMaterialsComponent[{self.subject}] needs either "
+            "`source_asset` or a non-empty `source_assets` list."
+        )
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         """Emit 1 partitioned @asset + 1 partition-aware @asset_check."""
@@ -88,24 +134,30 @@ class CelticMaterialsComponent(Component, Resolvable):
         # layer*.py Components (layer1/3/4/5) but those are outside this
         # plan's Ireland/England/lc_extraction scope, left for the separate
         # KCG refactor roadmap.
-        automation_condition = dg.AutomationCondition.on_cron(self.automation_cron)
+        if self.automation == "eager":
+            automation_condition = dg.AutomationCondition.eager()
+        else:
+            automation_condition = dg.AutomationCondition.on_cron(self.automation_cron)
+
+        baml_functions = self._resolved_baml_functions()
+        source_assets = self._resolved_source_assets()
 
         @dg.asset(
             name=asset_name,
             group_name=group_name,
             compute_kind="baml",
             description=(
-                f"L2 BAML extraction: {self.baml_function} on "
-                f"{self.source_asset} (subject={self.subject})"
+                f"L2 BAML extraction: {', '.join(baml_functions)} on "
+                f"{', '.join(source_assets)} (subject={self.subject})"
             ),
             partitions_def=partitions_def,
             automation_condition=automation_condition,
-            # source_asset is written "1_ingestion/curriculum/ie/lc5" in YAML
+            # A source asset is written "1_ingestion/curriculum/ie/lc5" in YAML
             # (Dagster's own convention for displaying a multi-segment
             # AssetKey) — AssetDep needs the actual AssetKey, not the raw
             # slash-joined string, which fails Dagster's ^[A-Za-z0-9_]+$
             # single-name validation.
-            deps=[dg.AssetDep(dg.AssetKey(self.source_asset.split("/")))],
+            deps=[dg.AssetDep(dg.AssetKey(s.split("/"))) for s in source_assets],
         )
         def _baml_asset(
             context: dg.AssetExecutionContext,
@@ -118,16 +170,27 @@ class CelticMaterialsComponent(Component, Resolvable):
             partition_key = (
                 context.partition_key if context.has_partition_key else "default"
             )
-            return dg.MaterializeResult(
-                metadata={
-                    "baml_function": self.baml_function,
-                    "subject": self.subject,
-                    "language": self.language,
-                    "partition_key": partition_key,
-                    "layer": "2_materials",
-                    "partition_strategy": self.partition_strategy,
-                }
-            )
+            result_metadata: dict[str, Any] = {
+                "baml_functions": baml_functions,
+                "source_assets": source_assets,
+                "subject": self.subject,
+                "language": self.language,
+                "partition_key": partition_key,
+                "layer": "2_materials",
+                "partition_strategy": self.partition_strategy,
+            }
+            for key, value in (
+                ("auxiliary_baml_functions", self.auxiliary_baml_functions),
+                ("validators", self.validators),
+                ("output_table", self.output_table),
+                ("privacy_gate", self.privacy_gate),
+                ("cross_source_linkage", self.cross_source_linkage),
+            ):
+                if value:
+                    result_metadata[key] = value
+            if self.metadata:
+                result_metadata.update(self.metadata)
+            return dg.MaterializeResult(metadata=result_metadata)
 
         @dg.asset_check(
             asset=_baml_asset,

@@ -189,7 +189,10 @@ def list_flows() -> list[Path]:
     """All `.py` files under `cianfhoghlaim/cocoindex/` (excluding cache + non-flow)."""
     if not COCOINDEX_ROOT.exists():
         return []
-    flows = sorted(p for p in COCOINDEX_ROOT.glob("*.py") if not p.name.startswith("_"))
+    # Recurse into nested directories (european_nations/, knowledge_graph/,
+    # commonwealth/, etc.) — the v7-flatten moved every per-jurisdiction
+    # CocoIndex flow into a nested sub-tree.
+    flows = sorted(p for p in COCOINDEX_ROOT.rglob("*.py") if not p.name.startswith("_"))
     return flows
 
 

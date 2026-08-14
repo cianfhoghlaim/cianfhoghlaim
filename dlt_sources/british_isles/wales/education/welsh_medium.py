@@ -4,16 +4,25 @@ import dlt
 Education WLS source: welsh_medium_source
 
 Split from uk/wales/curriculum_for_wales.py in Phase 3D.
-"""
 
+**PII source** (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1
+change): set `SENSITIVITY = "pii"` so every Firecrawl scrape call
+flips `redact_pii=True` + `zero_data_retention=True`.
+"""
 from datetime import UTC, datetime
 
 import dlt_sources
 
 from dlt_sources.common.firecrawl_source import crawl_website
+from dlt_sources.common.site_crawler import get_policy
 from ._curriculum_for_wales_helpers import (
     HWB_URLS,
 )
+
+# PII source flag — propagates to the Firecrawl scrape policy.
+SENSITIVITY = "pii"
+SOURCE_KEY = "welsh_medium"
+_SOURCE_POLICY = get_policy(SOURCE_KEY)
 
 
 def welsh_medium_source(max_pages: int = 100):

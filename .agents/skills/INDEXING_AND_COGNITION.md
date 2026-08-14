@@ -1,22 +1,27 @@
 ---
 name: indexing-and-cognition
-description: Consolidated setup + MCP reference for the two agent knowledge surfaces — ccc (CocoIndex Code, semantic code search) and cognee (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available for code search?", "what MCP tools are available for doc cognition?", "where is the dual-search workflow documented?", or "why isn't ccc finding X?". Single source of truth for the indexing + cognition half of the agent stack. Lives at .agents/skills/INDEXING_AND_COGNITION.md (this file).
+description: Consolidated setup + MCP reference for the three agent knowledge surfaces — ccc (CocoIndex Code, semantic code search), cognee (knowledge graph over docs), and firecrawl_mcp (live web via the 12 Firecrawl MCP tools). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available for code search?", "what MCP tools are available for doc cognition?", "where is the dual-search workflow documented?", "when should I use firecrawl_search vs ccc:search?", or "why isn't ccc finding X?". Single source of truth for the indexing + cognition half of the agent stack. Lives at .agents/skills/INDEXING_AND_COGNITION.md (this file).
 ---
 
 # Indexing & Cognition — Setup + MCP Reference
 
-The Cianfhoghlaim monorepo runs **two parallel knowledge surfaces**
+The Cianfhoghlaim monorepo runs **three parallel knowledge surfaces**
 that every agent consumes via MCP:
 
 | Surface | What it indexes | Backend | MCP server | Use for |
 |:--|:--|:--|:--|:--|
 | **CCC** (CocoIndex Code) | 8,845 source files / 257,957 chunks | SQLite + BGE-M3 embeddings | `cocoindex-code` (`ccc mcp`) | "Where is BAML extraction implemented?" "What calls `run_conformance_check`?" |
 | **Cognee** | Docs (1,743 `.md` files, ~2,242 docs across 7 typed clusters) | Neo4j graph + LanceDB vectors + DeepSeek V4 Pro | `cognee` (`cognee-mcp`) | "What is the architecture pattern for the agent fleet?" "How does the cognify pipeline differ across stages?" |
+| **Firecrawl MCP** | Live web (search / scrape / crawl / map / agent / interact / batch / parse / research / developer) | Firecrawl SaaS + 12 MCP tools + 43M-paper Research Index | `firecrawl` (the platform-level MCP) | "What does upstream say about X right now?" "Find the GitHub issue about this bug" "Find papers on BAML / OCR / curriculum" |
 
-**The dual-search insight:** CCC returns code; Cognee returns docs.
-An agent asking "find how BAML extraction is implemented" gets
-the code file from CCC and the architecture explanation from
-Cognee, then merges.
+**The triple-search insight (post-2026-08-14):** CCC returns code;
+Cognee returns docs; Firecrawl MCP returns live upstream state. An
+agent asking "find how BAML extraction is implemented, and does the
+upstream BAML still require the same patterns?" gets the code file
+from CCC, the architecture explanation from Cognee, AND the current
+upstream state from Firecrawl — then merges. The
+[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
+spec formalises the contract.
 
 ---
 
@@ -285,7 +290,7 @@ exposes the following tools to every agent:
 | **motherduck** | DuckDB / MotherDuck analytics | 8 | ✅ Yes (always on) |
 | **infisical** | Secrets management | 10 | ✅ Yes (always on) |
 
-**Total: 9 MCP servers, 75+ tools** wired in `opencode.json`.
+**Total: 15 MCP servers, 100+ tools** wired in `opencode.json`.
 
 All secrets are auto-hydrated from Infisical (`dev-baile`
 environment) — never hard-coded in `opencode.json`.
@@ -398,8 +403,8 @@ top-level registries wired into OpenCode. It was added in the
 
 | Agent | Type | Skill filter | Subagent? | Specialises in |
 |:--|:--|:--|:--|:--|
-| `build` | Primary | (none — sees all 153 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
-| `plan` | Primary | (none — sees all 153 skills) | No | Default PLAN agent. Read-only by design. |
+| `build` | Primary | (none — sees all 162 skills) | No | Default BUILD agent. Tools: bash, read, write, edit, glob, grep, webfetch, task, skill, todowrite |
+| `plan` | Primary | (none — sees all 162 skills) | No | Default PLAN agent. Read-only by design. |
 | `data-platform` | Subagent | 16 skills (dlt, dagster, baml, cognee, ccc, motherduck, lancedb, cocoindex, duckdb, ducklake, dlthub, ibis, marimo, langfuse, mlflow, centralized-registry) | Yes (`subagent_type: data-platform`) | Celtic education data platform (DLT + BAML + Dagster + CocoIndex + MotherDuck) |
 | `infrastructure` | Subagent | 16 skills (komodo, pangolin, pulumi, dagger, dagger-pipelines, secrets-management, cloudflare, ccc, dlthub, cocoindex, langfuse, mlflow, risingwave, olake, effect-ts, centralized-registry) | Yes (`subagent_type: infrastructure`) | 94-stack infrastructure mesh (Komodo + Pangolin + Locket + Infisical) |
 | `agent-platform` | Subagent | 24 skills (baml, litellm, agent-observability, agent-memory-systems, langfuse, mlflow, ragas, cognee, graphiti-core, lancedb, falkordb, memgraph, unsloth, huggingface, agno, google-adk, dignified-python, pydantic, ccc, dlthub, dagster, duckdb, cocoindex, centralized-registry) | Yes (`subagent_type: agent-platform`) | AI/ML services (agents, OCR, fine-tuning, BAML, LLM routing) |
@@ -417,15 +422,15 @@ top-level registries wired into OpenCode. It was added in the
 **Key invariants:**
 
 - **Primary agents (`build`, `plan`) keep no `skill_filter`** —
-  they need the full 123-skill surface to act as escape hatches
+  they need the full 162-skill surface to act as escape hatches
   when a subagent's scoped skills turn out to be insufficient.
 - **Subagent `skill_filter` is opt-in** — a subagent without a
-  `skill_filter` falls back to the unfiltered default (all 123
+  `skill_filter` falls back to the unfiltered default (all 162
   skills), which preserves the legacy behaviour.
 - **Subagent `prompt` is required** — the skill_filter is paired
   with a one-line role prompt that names the quadrant and its
   primary tools.
-- **The 5 sruth-subagents are dispatched via the `task` tool**
+- **The 5 functional subagents are dispatched via the `task` tool**
   with `subagent_type` set to one of `data-platform`,
   `infrastructure`, `agent-platform`, `frontend-apps`, or
   `research`. The `general` and
@@ -465,9 +470,11 @@ MODEL_LAYER_AGENTS: tuple[str, ...] = (
 needs new skills, adding them to the relevant `skill_filter`
 in `opencode.json`.
 
-### 8.3 The 9 MCP servers (`opencode.json` → `mcp`)
+### 8.3 The 15 MCP servers (`opencode.json` → `mcp`)
 
-See §3 for the full inventory. The 9 servers are:
+See §3 for the full inventory. The 15 servers are:
+
+**Always-on (9 — the canonical inventory):**
 
 1. `cocoindex-code` (semantic code search, 9 tools)
 2. `cognee` (knowledge graph over docs, 10 tools)
@@ -479,6 +486,15 @@ See §3 for the full inventory. The 9 servers are:
 8. `motherduck` (DuckDB / MotherDuck analytics, 8 tools)
 9. `infisical` (secrets management, 10 tools)
 
+**Conditionally enabled (6 — added by recent changes):**
+
+10. `dlt-workspace-mcp` (DLT workspace operations)
+11. `hermes` (the multi-channel agent gateway)
+12. `agent-registry` (the 12-agent fleet registry)
+13. `agents-md` (AGENTS.md file registry)
+14. `apple-photos` (Apple Photos ingestion)
+15. `huggingface` (HuggingFace Hub operations)
+
 **Add a new MCP server** by appending an entry to `mcp` in
 `opencode.json` with `command` (the stdio entrypoint),
 optional `enabled: true` (default), and any required
@@ -489,10 +505,10 @@ row to the §3 table and bump the totals.
 ### 8.4 Registry health checks
 
 ```bash
-# 14 agents, 12 MCPs
+# 15 agents, 15 MCPs
 python3 -c "import json; cfg=json.load(open('opencode.json')); \
 print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"
-# Expected: MCPs: 12  Agents: 14
+# Expected: MCPs: 15  Agents: 15
 
 # 5-layer sync health (knowledge-sync-loop, per 2026-08-15-knowledge-sync-loop-v1)
 # Layers: paths / ccc / cognee / skills / mcp
@@ -583,26 +599,32 @@ subagents were rewritten to align with the new tree.
 
 ### 9.1 Directory migration map
 
-| Former surface (pre-2026-06-28) | Current path (v4) |
+| Former surface (pre-2026-06-28) | Current path (v7) |
 |:--|:--|
-| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | `cianfhoghlaim/` root with `dlt/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
-| Oideachais official-media DLT source | `dlt/official_media/` |
-| Oideachais BAML schemas | `baml/` |
+| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | repo root with `dlt_sources/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
+| Oideachais official-media DLT source | `dlt_sources/official_media/` |
+| Oideachais BAML schemas | `baml_src/` |
 | Oideachais notebooks | `notebooks/` |
 | Oideachais TanStack Start app | `web/apps/cianfhoghlaim-web/` |
-| Meaisínfhoghlaim agents, OCR, and LLM stack | `agents/` + `agents/meaisinfhoghlaim/` |
+| Meaisínfhoghlaim agents, OCR, and LLM stack | `agents/` + `meaisinfhoghlaim/` |
 | Meaisínfhoghlaim agent registry | `agents/` |
-| Meaisínfhoghlaim OCR registry | `agents/meaisinfhoghlaim/ocr/` |
-| Meaisínfhoghlaim language data | `dlt/language/` |
+| Meaisínfhoghlaim OCR registry | `meaisinfhoghlaim/ocr/` |
+| Meaisínfhoghlaim language data | `dlt_sources/language/` |
 | Tuatha Babylon.js MMO + Crypteolas | `agents/tuatha/` + `web/apps/tuatha-ui/` |
 | Tuatha UI | `web/apps/tuatha-ui/` |
 | Croílár portfolio + portal | `web/apps/croilar-web/` + `web/apps/croilar-portal/` |
-| Codeolas code intelligence library | `libraries/codeolas/` |
+| Codeolas code intelligence library | (removed in v7 — absorbed into `libraries/codeolas/` under `sruth/`) |
 | Cognee stack | `bonneagar/stacks/cognee/` |
 | Graphiti stack | `bonneagar/stacks/graphiti/` |
 | Infisical stack | `bonneagar/stacks/infisical/` |
 | Pangolin stack | `bonneagar/stacks/pangolin/` |
-| Cognee graph models scripts | `cianfhoghlaim/cognify/cognee_integration/graph_models/` |
+| Cognee graph models scripts | `orchestration/defs/3_model_lifecycle/cognify/` |
+
+> **Updated 2026-08-13** (per the count drift rebase) — every
+> path in the table now resolves on disk post-v7 flattening.
+> The data engineering surface is now routed via
+> `dlt_sources/DATA_PLATFORM_ROUTER.md` (added by the
+> 2026-08-13-skill-consolidation-and-extension-v1 change).
 
 ### 9.2 Subagent migration map
 
@@ -653,3 +675,124 @@ This rewrite is tracked by
 [`openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/`](../../openspec/changes/2026-06-28-rewrite-subagent-foundation-for-cianfhoghlaim-consolidation/)
 and defines a new canonical spec:
 [`openspec/specs/agent-registry/spec.md`](../../openspec/specs/agent-registry/spec.md).
+
+---
+
+## 10. Code-search canonical entrypoint
+
+Three surfaces expose the Cianfhoghlaim codebase to agents.
+This section resolves the dual CLI vs v1 App vs graph
+companion split that the `ccc` skill's DEPRECATION NOTICE
+banner + the `cocoindex/codebase_indexing.py` v1 App
+introduced.
+
+### 10.1 The 3 surfaces
+
+| Surface | Entry point | Use for |
+|:--|:--|:--|
+| **CCC CLI** (kept for developer shortcuts) | `bun run ccc:search "<query>"` | One-off terminal searches; quick discovery; `ccc --help` introspection |
+| **CocoIndex v1 App** (canonical replacement) | `from cocoindex.codebase_indexing import code_search` | Pipelines + Python embedding into agent code; the post-deprecation canonical |
+| **Graph companion** (code-structure queries) | `search_code_graph(file_path=..., node_type=...)` | "What calls function X?" / "What implements interface Y?" queries |
+
+### 10.2 Decision matrix — which surface for which task
+
+| Task | Surface | Why |
+|:--|:--|:--|
+| "Find the file that implements X" | CCC CLI (`bun run ccc:search`) | Fastest path; ad-hoc; no code change |
+| "Find the file that implements X" (in an agent) | v1 App (`code_search`) | Type-safe Python API; no subprocess |
+| "What functions does this file contain?" | Graph companion (`search_code_graph(file_path=..., node_type="Function")`) | Returns a list of 7-typed nodes (File/Function/Class/Method/Module/Interface/Variable) |
+| "What calls function X?" | Graph companion (`search_code_graph(node_type="Function", calls="X")`) | 7-typed edge traversal (CONTAINS / IMPORTS / CALLS / EXTENDS / IMPLEMENTS / USES / DEFINES) |
+| "Find all FastAPI routes in this repo" | Infrastructure companion (`search_api_endpoints(framework="fastapi")`) | Scoped to a specific surface |
+| "What config files exist at depth ≤ 4?" | Infrastructure companion (`search_config(query=..., kind="compose")`) | 12 typed config kinds |
+| Production embedding pipeline | v1 App (`code_search` in a Dagster asset) | The Dagster `codebase` asset group wraps this |
+
+### 10.3 Code samples
+
+```python
+# Surface 1 — CCC CLI (terminal)
+# $ bun run ccc:search "Dagster asset partition definition"
+# Returns ranked [file_path, line_range, score] tuples.
+
+# Surface 2 — CocoIndex v1 App (Python)
+from cocoindex.codebase_indexing import code_search
+results = code_search("BAML extraction function", limit=5)
+for r in results:
+    print(f"{r['file_path']}:{r['line_range']}  score={r['score']:.3f}")
+
+# Surface 3 — Graph companion (code-structure)
+from cocoindex.codebase_indexing import search_code_graph
+
+# "What calls run_conformance_check?"
+callers = search_code_graph(
+    node_type="Function",
+    calls="run_conformance_check",
+)
+# Returns the list of Function nodes that CALL run_conformance_check
+```
+
+### 10.4 The 4 infrastructure companions
+
+The v1 App also exposes 4 typed "infrastructure companions"
+that index the configuration surface (rather than source
+code). All registered in
+`orchestration/defs/unified_embedding_assets.py`:
+
+| Companion | Indexes | Query helper | Use for |
+|:--|:--|:--|:--|
+| `api_endpoints` | FastAPI / Hono / TanStack Start / Convex HTTP routes | `search_api_endpoints(query, framework=None, method=None, limit=20)` | "Show me all FastAPI POST routes" |
+| `filesystem_layout` | Every directory up to depth 4 with per-dir file-type histogram | `search_filesystem(query, min_depth=None, limit=10)` | "What directories live at depth 3?" |
+| `storage_backends` | 9 backend kinds (lancedb / duckdb / ducklake / postgres / garage / r2 / d1 / kv / iceberg) | `search_storage(query, kind=None, limit=20)` | "List all LanceDB indexes" |
+| `config_files` | 12 config kinds (compose / mise / package / pyproject / turbo / wrangler / env / k8s / pulumi / dg / github / justfile) | `search_config(query, kind=None, limit=15)` | "Show me all Docker Compose stacks" |
+
+Each companion writes to its own LanceDB table; the
+unified v1 App + the 4 companions share the same
+embedder (`BAAI/bge-m3`, 1024-d) per
+`cocoindex/_shared/_lifespan.py:107`.
+
+### 10.5 The DEPRECATION NOTICE context
+
+The `ccc` skill carries a DEPRECATION NOTICE banner
+because the canonical replacement is the v1 App. The CLI
+itself is **kept on disk** (the `bun run ccc:init`,
+`bun run ccc:index`, `bun run ccc:search` developer
+shortcuts are still useful) but new production code MUST
+route through `cocoindex.codebase_indexing.code_search` or
+the graph companion.
+
+The `ccc` retirement was scheduled for 2026-07-15 but was
+retained past that date by user direction
+(`openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1`).
+
+### 10.6 Quick reference
+
+```bash
+# CLI shortcuts (kept for developer ergonomics)
+bun run ccc:init       # first time only (creates .cocoindex_code/)
+bun run ccc:index      # incremental refresh (<10s) / full rebuild (~2-5 min)
+bun run ccc:search "your query"
+ccc describe .         # project overview
+ccc describe cocoindex/_lifespan.py    # per-file summary
+ccc status             # chunk count + file count + language histogram
+
+# v1 App (Python — canonical replacement)
+uv run python -c "from cocoindex.codebase_indexing import code_search; print(code_search('BAML extraction', limit=5))"
+
+# Graph companion
+uv run python -c "from cocoindex.codebase_indexing import search_code_graph; print(search_code_graph(file_path='meaisinfhoghlaim/models/registry.py', node_type='Function'))"
+
+# Infrastructure companions
+uv run python -c "from cocoindex.codebase_indexing import search_api_endpoints; print(search_api_endpoints(framework='fastapi', method='POST'))"
+```
+
+### 10.7 Cross-references
+
+- [`./ccc/SKILL.md`](ccc/SKILL.md) — the CCC CLI skill (with the DEPRECATION NOTICE banner)
+- [`./cocoindex/SKILL.md`](cocoindex/SKILL.md) — the CocoIndex v1 master skill
+- [`../../cocoindex/codebase_indexing.py`](../../cocoindex/codebase_indexing.py) — the v1 App canonical source
+- [`../../cocoindex/AGENTS.md`](../../cocoindex/AGENTS.md) — the CocoIndex embedding layer
+- [`../../orchestration/defs/unified_embedding_assets.py`](../../orchestration/defs/unified_embedding_assets.py) — the 4 infrastructure companions
+
+---
+
+**Last updated**: 2026-08-13 (added §10 Code-search canonical entrypoint — resolves the CLI vs v1 App vs graph companion split; 3 surfaces + decision matrix + code samples + 4 infrastructure companions).
+**Owner**: Build agent.

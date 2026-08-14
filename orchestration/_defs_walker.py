@@ -50,7 +50,7 @@ def _discover_modules(defs_root: Path) -> list[ModuleType]:
         else:
             rel = py_file.relative_to(defs_root).with_suffix("")
         parts = list(rel.parts)
-        if parts[-1] == "__init__":
+        if parts and parts[-1] == "__init__":
             parts = parts[:-1]
         mod_name = ".".join([pkg_root] + parts) if parts else pkg_root
         if not mod_name:

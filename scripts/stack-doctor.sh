@@ -20,6 +20,10 @@
 # =============================================================================
 
 set -uo pipefail
+# Explicitly disable -e (inherited from `bash -e` in CI); we use explicit
+# `if ! cmd` / `if cmd` guards everywhere instead. Without `set +e`,
+# `grep -c` returning 1 (no matches) would halt the script mid-audit.
+set +e
 
 STACKS_DIR="${STACKS_DIR:-bonneagar/stacks}"
 DOCS_DIR="${DOCS_DIR:-cianfhoghlaim/docs/stacks}"
@@ -105,7 +109,11 @@ audit_stack() {
 
   if [ "$has_compose" -eq 1 ] && [ "$has_env" -eq 1 ]; then
     if command -v docker >/dev/null 2>&1; then
-      if ! docker compose -f "$stack_path/compose.yaml" --env-file "$stack_path/.env.example" config --quiet 2>/dev/null; then
+      # --no-env-resolution: runtime env_file paths like
+      # /run/secrets/locket/secrets.env are written by the Locket sidecar
+      # at runtime and don't exist on the host at config-validation time.
+      # We only validate compose-file syntax, not runtime secret injection.
+      if ! docker compose -f "$stack_path/compose.yaml" --env-file "$stack_path/.env.example" config --quiet --no-env-resolution 2>/dev/null; then
         echo "$name: docker compose config --quiet failed" >> "$CRITICALS_FILE"
         return
       fi

@@ -95,11 +95,11 @@ the new canonical import path.
 
 ### Requirement: DLT sources MUST NOT import `_crawl_source` across packages
 
-The pre-existing pattern of importing the leading-underscore `_crawl_source`
-helper from `dlt/british_isles/ireland/education/curriculum.py` into other
-packages (e.g., `dlt/british_isles/ireland/law/citizensinformation.py`)
-MUST be replaced with `from cianfhoghlaim.dlt.common.site_crawler import
-crawl_site`.
+The system MUST replace the pre-existing pattern of importing the
+leading-underscore `_crawl_source` helper from
+`dlt/british_isles/ireland/education/curriculum.py` into other packages
+(e.g., `dlt/british_isles/ireland/law/citizensinformation.py`) with
+`from cianfhoghlaim.dlt.common.site_crawler import crawl_site`.
 
 #### Scenario: No cross-package private-helper imports
 
@@ -111,9 +111,9 @@ crawl_site`.
 
 ### Requirement: The cocoindex-conformance CI gate MUST run on every PR
 
-A new GitHub Actions workflow at
-`.github/workflows/cocoindex-conformance.yaml` MUST run on every push to
-main + every PR open/synchronize. The workflow MUST execute:
+The system SHALL run a new GitHub Actions workflow at
+`.github/workflows/cocoindex-conformance.yaml` on every push to main +
+every PR open/synchronize. The workflow MUST execute:
 
 1. `uv run python cianfhoghlaim/dlt/common/cocoindex_v1_migrate.py --check-only`
    with `continue-on-error: false` (the hard R1+R2+R3+R4 gate)

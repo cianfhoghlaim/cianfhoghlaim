@@ -1,0 +1,11 @@
+# orchestration/defs/1_ingestion/law/ie/_layer/defs.yaml
+#
+# L1 Ireland law sub-mount (added by the 2026-08-15-dagster-load-path-repair
+# change). Walks into the 5 IE law sources:
+#   - piab/             (Personal Injuries Assessment Board)
+#   - court_rules/      (Courts Service rules)
+#   - legal_aid/        (Legal Aid Board)
+#   - courts/           (Courts Service judgements)
+#   - judgements/       (Court of Appeal judgements)
+type: dagster.DefsFolderComponent
+attributes: {}

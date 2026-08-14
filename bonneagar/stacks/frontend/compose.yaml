@@ -17,8 +17,7 @@ services:
       NODE_ENV: ${NODE_ENV:-production}
       VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://convex-backend:3210}
       VITE_HONO_API_URL: ${VITE_HONO_API_URL:-http://hono-api:4000}
-    depends_on:
-      - hono-api
+    # depends_on: hono-api  # hono-api lives at web/hono-api/ (separate workspace); deployed as a sibling service
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/"]
       interval: 30s
@@ -107,8 +106,7 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       VITE_HONO_API_URL: ${VITE_HONO_API_URL:-http://hono-api:4000}
-    depends_on:
-      - hono-api
+    # depends_on: hono-api  # hono-api lives at web/hono-api/ (separate workspace); deployed as a sibling service
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3003/"]
       interval: 30s

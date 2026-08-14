@@ -74,22 +74,65 @@ The system SHALL maintain a dlthub Platform workspace rooted at `cianfhoghlaim/`
 
 The system SHALL have the 8 production dlthub AI toolkits installed into the Claude Code plugin directory via `dlthub ai toolkit install <name>` (`init`, `rest-api-pipeline`, `sql-database-pipeline`, `filesystem-pipeline`, `dlthub-platform`, `data-exploration`, `data-quality`, `transformations`).
 
+#### Scenario: The 8 toolkits are listed by `dlthub ai toolkit list`
+
+- **WHEN** the operator runs `dlthub ai toolkit list` on a workstation that has completed onboarding
+- **THEN** the command SHALL exit 0 and the output SHALL contain all 8 toolkit names (`init`, `rest-api-pipeline`, `sql-database-pipeline`, `filesystem-pipeline`, `dlthub-platform`, `data-exploration`, `data-quality`, `transformations`)
+
 ### Requirement: MCP Server Support
 
 The system SHALL include `fastmcp-slim[server]` as a runtime dependency in `pyproject.toml` so the `dlthub ai mcp run` command can launch the dlt-workspace MCP server.
+
+#### Scenario: `fastmcp-slim[server]` is importable in the dlt workspace venv
+
+- **GIVEN** a fresh checkout of the repo at `b3ef241bf` (or later)
+- **WHEN** the operator runs `uv sync && dlthub ai mcp run --stdio`
+- **THEN** the command SHALL exit 0 and the 8 MCP tools (`list_tables`, `preview_table`, `execute_sql_query`, `get_row_counts`, `display_schema`, `get_local_pipeline_state`, `secrets_view_redacted`, `secrets_update_fragment`) SHALL be registered over stdio
 
 ### Requirement: Workbench Vendoring
 
 The system SHALL vendor a copy of the upstream `dlt-hub/dlthub-ai-workbench` repository at `cianfhoghlaim/dlthub-ai-workbench/`, kept in lock-step with upstream release tags.
 
+#### Scenario: Vendored workbench matches upstream release tag
+
+- **GIVEN** the upstream `dlt-hub/dlthub-ai-workbench` repo has a release tag `v1.28.4`
+- **WHEN** the KCG vendor mirror is refreshed via `bun run scripts/vendor-dlthub-workbench.ts`
+- **THEN** `cianfhoghlaim/dlthub-ai-workbench/CHANGELOG.md` SHALL contain `v1.28.4` as the most-recent entry
+- **AND** `git -C cianfhoghlaim/dlthub-ai-workbench describe --tags` SHALL return `v1.28.4`
+
 ### Requirement: Deployment Manifest Authoring
 
 The system SHALL maintain a deployment manifest at `cianfhoghlaim/__deployment__.py` that registers every BIEP batch pipeline as a `@run.pipeline(name)` decorated function from `dlt.hub` and lists them in `__all__`.
+
+#### Scenario: All BIEP batch pipelines are discoverable in `__all__`
+
+- **WHEN** the operator runs `python -c "from cianfhoghlaim.__deployment__ import __all__; print(len(__all__))"`
+- **THEN** the count SHALL equal the number of `@run.pipeline`-decorated batch pipelines (no `@run.interactive` marimo modules)
+- **AND** every entry SHALL be importable without raising `ImportError`
 
 ### Requirement: Run vs Serve Hygiene
 
 The system SHALL distinguish batch jobs (`@run.pipeline` / `@run.job`) from interactive jobs (`@run.interactive` / marimo modules), and SHALL fail predictably when `dlthub run` is called on an interactive job or vice versa.
 
+#### Scenario: `dlthub run` on an interactive job fails predictably
+
+- **GIVEN** `cianfhoghlaim/__deployment__.py` exposes an interactive `@run.interactive` job named `jobs.workspace.dashboard`
+- **WHEN** the operator runs `dlthub run jobs.workspace.dashboard`
+- **THEN** the command SHALL exit non-zero with the error message:
+  `Matched jobs are interactive (not allowed here): jobs.workspace.dashboard. Use the 'serve' command instead.`
+
+#### Scenario: `dlthub serve` on a batch job fails predictably
+
+- **GIVEN** `cianfhoghlaim/__deployment__.py` exposes a batch `@run.pipeline` job named `ingest_lc_mathematics`
+- **WHEN** the operator runs `dlthub serve ingest_lc_mathematics`
+- **THEN** the command SHALL exit non-zero with an error message indicating the job is batch, not interactive
+
 ### Requirement: Runbook for Diagnosing dlthub CLI Errors
 
 The system SHALL provide a runbook at `docs/agents/dlthub-run-vs-serve.md` documenting the `run`/`serve` split, the 5 most common error messages and their recovery, the 5-step `dlthub ai status` health check, and the canonical happy-path workflow.
+
+#### Scenario: Runbook references all 5 canonical error messages
+
+- **WHEN** the operator greps `docs/agents/dlthub-run-vs-serve.md` for the 5 known error message fragments
+- **THEN** the file SHALL contain all 5 fragments and the corresponding recovery steps
+- **AND** the file SHALL link to the `dlthub-platform` skill for the canonical 5-step health-check procedure

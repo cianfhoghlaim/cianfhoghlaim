@@ -156,6 +156,7 @@ are registered (per the `defs/browser/auth_assets.py` pattern).
 
 ## History
 
+- 2026-08-14: Firecrawl MCP promoted to the canonical **external search surface** of the agent stack (per the `2026-08-14-firecrawl-mcp-ccc-dual-search-v1` change). The `FirecrawlMCPClient` wrapper at `agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes all 12 MCP tools with Pydantic + Langfuse `@observe`. The complete routing table (ccc vs cognee vs firecrawl_mcp) lives at `AGENTS.md` §"Triple-search architecture" and the [`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md) spec.
 - 2026-06-28: v4 consolidation (5 quadrants → 1 cianfhoghlaim package)
 - 2026-06-29: Browser stack + Crawl4AI refactor
   - Phase A: DAG integration (new `defs/browser/` Component)
