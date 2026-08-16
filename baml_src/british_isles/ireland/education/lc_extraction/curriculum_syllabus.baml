@@ -7,6 +7,12 @@
 // physics, biology, geography, english, gaeilge, french, history, business,
 // accounting, art, music, computer_science. Each follows the canonical
 // `{{ _.role("user") }}` + `{{ ctx.output_format }}` marker pattern.
+//
+// The SubjectArea enum below covers ALL 46 subjects across the 4 stages:
+// - 14 LC (Ireland Leaving Certificate)
+// - 8 JC (Ireland Junior Cycle)
+// - 9 GCSE (England General Certificate of Secondary Education)
+// - 15 A-Level (England GCE Advanced Level)
 
 function ExtractCurriculumSyllabus(text: string, subject: string) -> CurriculumSyllabus {
   client MiniMaxM3Client
