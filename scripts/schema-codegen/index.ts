@@ -94,27 +94,32 @@ function parseArgs(argv: readonly string[]): CliArgs {
 }
 
 function printHelp(): void {
-  console.log(`schema-codegen — the BAML → Zod → Convex → CopilotKit → AG-UI pipeline
+  console.log("schema-codegen — the BAML → Zod → Convex → CopilotKit → AG-UI pipeline");
 
-Usage:
-  bun run scripts/schema-codegen/index.ts                       # default: all 5 steps
-  bun run scripts/schema-codegen/index.ts --step <1-5>          # run a single step
-  bun run scripts/schema-codegen/index.ts --subject mathematics  # limit to one subject
-  bun run scripts/schema-codegen/index.ts --stage lc             # limit to one stage
-  bun run scripts/schema-codegen/index.ts --dry-run             # preview only
-  bun run scripts/schema-codegen/index.ts --help
+  console.log("");
 
-Steps (run in dependency order):
-  1. baml-to-ts            — wraps `baml-cli generate` (TypeScript target)
-  2. convex-from-zod      — Zod → Convex table validator generator
-  3. copilotkit-actions   — Zod → CopilotKit useCopilotAction registry generator
-  4. ag-ui-types          — Zod → AG-UI 17-event-type generator
-  5. per-subject-routes   — Per-subject TanStack Start route generator
+  console.log("Usage:");
+  console.log("  bun run scripts/schema-codegen/index.ts                       # default: all 5 steps");
+  console.log("  bun run scripts/schema-codegen/index.ts --step <1-5>          # run a single step");
+  console.log("  bun run scripts/schema-codegen/index.ts --subject mathematics  # limit to one subject");
+  console.log("  bun run scripts/schema-codegen/index.ts --stage lc             # limit to one stage");
+  console.log("  bun run scripts/schema-codegen/index.ts --dry-run             # preview only");
+  console.log("  bun run scripts/schema-codegen/index.ts --help");
 
-Reference:
-  openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/
-  specs/schema-driven-codegen/spec.md
-`);
+  console.log("");
+
+  console.log("Steps (run in dependency order):");
+  console.log("  1. baml-to-ts            — wraps baml-cli generate (TypeScript target)");
+  console.log("  2. convex-from-zod      — Zod → Convex table validator generator");
+  console.log("  3. copilotkit-actions   — Zod → CopilotKit useCopilotAction registry generator");
+  console.log("  4. ag-ui-types          — Zod → AG-UI 17-event-type generator");
+  console.log("  5. per-subject-routes   — Per-subject TanStack Start route generator");
+
+  console.log("");
+
+  console.log("Reference:");
+  console.log("  openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/");
+  console.log("  specs/schema-driven-codegen/spec.md");
 }
 
 // =============================================================================

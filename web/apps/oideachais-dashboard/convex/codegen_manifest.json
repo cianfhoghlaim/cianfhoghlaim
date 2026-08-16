@@ -1,0 +1,46 @@
+{
+  "generated_at": "2026-08-16T12:05:52.766351+00:00",
+  "per_change": "2026-08-13-web-monorepo-consolidation-and-agent-integration-v1",
+  "phase_7": "schema-driven codegen pipeline",
+  "subject_count": 46,
+  "subjects": {
+    "lc": 14,
+    "jc": 8,
+    "gcse": 9,
+    "a_level": 15
+  },
+  "generated_artifacts": {
+    "baml_client_manifest": 1,
+    "convex_schemas": {
+      "lc": 28,
+      "jc": 16,
+      "gcse": 18,
+      "a_level": 30
+    },
+    "hono_copilotkit_actions": {
+      "lc": 14,
+      "jc": 8,
+      "gcse": 9,
+      "a_level": 15
+    },
+    "frontend_copilotkit_actions": {
+      "lc": 14,
+      "jc": 8,
+      "gcse": 9,
+      "a_level": 15
+    },
+    "ag_ui_types": {
+      "lc": 14,
+      "jc": 8,
+      "gcse": 9,
+      "a_level": 15
+    },
+    "tanstack_routes": {
+      "lc": 14,
+      "jc": 8,
+      "gcse": 9,
+      "a_level": 15
+    }
+  },
+  "total_generated_files": 277
+}

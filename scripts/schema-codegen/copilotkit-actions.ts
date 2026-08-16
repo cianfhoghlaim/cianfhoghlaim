@@ -223,10 +223,10 @@ export function renderHonoCopilotKitAction(row: SubjectRow): string {
 
   const actionHandlers = ACTIONS.map(
     (a) =>
-      `  ${a.name}: async (params: Record<string, unknown>) => {\n` +
+      `  ${a.name}: async (params: unknown) => {\n` +
       `    // Forward to agents/adk/subjects/${stage}/${slug}_agent.py:${a.name}()\n` +
       `    // In production, this calls the Python per-subject agent.\n` +
-      `    return ${JSON.stringify({ stub: true, subject: slug, stage, action: a.name, params })};\n` +
+      `    return JSON.stringify({ stub: true, subject: slug, stage: stage, action: a.name, params });\n` +
       `  }`,
   ).join(",\n");
 
