@@ -1,4 +1,17 @@
 # =============================================================================
+# DEPRECATED 2026-08-15: This stack has been consolidated into
+# `bonneagar/stacks/lakehouse/compose.yaml` per the
+# 2026-08-15-lakehouse-unified-data-plane-v1 change. The standalone
+# files (compose.yaml / sidecar.yaml / secrets.env / blueprint.yaml /
+# pangolin.yaml / README.md) are kept as readable shadow stacks for
+# one release cycle; they will be deleted in
+# 2026-XX-XX-delete-deprecated-graph-db-stacks.
+# DO NOT DEPLOY THIS STACK — deploy the unified lakehouse instead
+# (it brings up memgraph + memgraph-lab on the shared
+# lakehouse_lakehouse network).
+# =============================================================================
+
+# =============================================================================
 # MEMGRAPH - In-Memory Graph Database
 # =============================================================================
 # High-performance graph database with MAGE algorithms and Lab UI.

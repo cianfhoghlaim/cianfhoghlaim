@@ -193,6 +193,20 @@ run = "python3 scripts/lakehouse_preflight.py --json"
 description = "Same as lakehouse:preflight but REQUIRES the cognify backends (used by BIEP M5+ milestones)"
 run = "python3 scripts/lakehouse_preflight.py --strict-cognify"
 
+# 2026-08-15-lakehouse-unified-data-plane-v1 — canonical bring-up/teardown
+# aliases for the unified 16-service stack (11 data plane + 5 graph DB).
+[tasks."lakehouse:up"]
+description = "Canonical bring-up for the unified lakehouse stack (16 services: 11 data plane + 5 graph DB) — wraps scripts/lakehouse_unified_up.sh. Per the 2026-08-15-lakehouse-unified-data-plane-v1 change."
+run = "bash scripts/lakehouse_unified_up.sh ${@:-}"
+
+[tasks."lakehouse:down"]
+description = "Canonical teardown for the unified lakehouse stack (16 services) — wraps scripts/lakehouse_unified_down.sh. Per the 2026-08-15-lakehouse-unified-data-plane-v1 change."
+run = "bash scripts/lakehouse_unified_down.sh ${@:-}"
+
+[tasks."lakehouse:preflight:unified"]
+description = "Alias for lakehouse:preflight --strict-cognify (the 4 graph DB backends are now REQUIRED, not optional). Per the 2026-08-15-lakehouse-unified-data-plane-v1 change."
+run = "python3 scripts/lakehouse_preflight.py --strict-cognify"
+
 [tasks."lakehouse:buckets:audit"]
 description = "Audit the 8 canonical Garage S3 buckets via the admin API (urllib3 — no awscli dep). Per the 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 change."
 run = "python3 scripts/audit_lakehouse_buckets.py"

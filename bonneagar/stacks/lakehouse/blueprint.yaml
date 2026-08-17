@@ -112,3 +112,55 @@ private-resources:
       - "Member"
     destination: "lancedb-viewer"
 
+  # ---------------------------------------------------------------------------
+  # Graph DB backends (lakehouse-unified-data-plane 2026-08-15)
+  # ---------------------------------------------------------------------------
+  # Added 2026-08-15 — the 5 graph DB backends (cognee + graphiti + falkordb +
+  # memgraph + memgraph-lab) are now part of the unified lakehouse stack.
+  # The standalone stacks (cognee/, graphiti/, falkordb/, memgraph/, lancedb/)
+  # are deprecated and carry 1-line banners pointing at this blueprint.
+
+  # Cognee knowledge graph builder (port 8000)
+  cognee:
+    name: "Cognee Knowledge Graph"
+    mode: "http"
+    destination-port: 8000
+    full-domain: "cognee.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "cognee"
+
+  # Graphiti bi-temporal KG API (port 8001)
+  graphiti:
+    name: "Graphiti Temporal Knowledge Graph"
+    mode: "http"
+    destination-port: 8001
+    full-domain: "graphiti.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "graphiti"
+
+  # FalkorDB Browser UI (port 3000)
+  falkordb-browser:
+    name: "FalkorDB Browser"
+    mode: "http"
+    destination-port: 3000
+    full-domain: "falkordb.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "falkordb"
+
+  # Memgraph Lab UI (port 3001)
+  memgraph-lab:
+    name: "Memgraph Lab"
+    mode: "http"
+    destination-port: 3001
+    full-domain: "memgraph.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "memgraph-lab"
+

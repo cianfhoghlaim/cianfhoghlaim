@@ -90,6 +90,47 @@ services:
     volumes:
       - lakehouse-secrets:/run/secrets/locket:ro
 
+  # ---------------------------------------------------------------------------
+  # Graph DB Service Overrides - Add Locket Dependency
+  # ---------------------------------------------------------------------------
+  # Added 2026-08-15 (lakehouse-unified-data-plane-v1). The 5 graph DB
+  # services join the shared lakehouse_lakehouse network and consume
+  # secrets from the single unified Locket sidecar (no Locket per stack).
+  cognee:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
+  graphiti:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
+  falkordb:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
+  memgraph:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
+  memgraph-lab:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - lakehouse-secrets:/run/secrets/locket:ro
+
 # =============================================================================
 # SECRETS
 # =============================================================================
