@@ -346,5 +346,71 @@ The legacy `agents/adk/tuatha_config.py:AgentConfig` is deprecated (marked back-
 
 ---
 
-**Last updated**: 2026-08-15 (added the LiteLlm migration section + the Model registry for agents section).
+## Web integration surface (NEW 2026-08-13)
+
+The `agents/` tree now wires to the consolidated `web/` surface via
+the `web_integration` field on every agent in `agents/agent_registry.py:AGENT_REGISTRY`.
+
+**The 4 consolidated web apps:**
+
+| App | Domain | Subjects |
+|:--|:--|:--|
+| `oideachais` | cianfhoghlaim.ie | LC + JC + GCSE + A-Level (per-subject pages) |
+| `croilar` | croilar.cianfhoghlaim.ie | Multi-persona portfolio |
+| `oideachais-dashboard` | dashboard.cianfhoghlaim.ie | Operator dashboard |
+| `cianfhoghlaim` | cianfhoghlaim.ie (homepage) | Central homepage with agentic chat |
+
+**The 13-agent fleet → web app binding:**
+
+| Agent | Bound to | Route |
+|:--|:--|:--|
+| `root_agent` | `cianfhoghlaim` | `/` (homepage chat fallback) |
+| `curriculum_agent` | `oideachais` + `cianfhoghlaim` | `/<stage>/<subject>/` |
+| `translation_agent` | `oideachais` | `/<stage>/<subject>/` |
+| `corpus_agent` | `oideachais` | `/<stage>/<subject>/` |
+| `research_agent` | `cianfhoghlaim` | `/` (homepage chat) |
+| `education_research_agent` | `cianfhoghlaim` | `/` (homepage chat) |
+| `bunchloch_research_agent` | `none` | (headless — no web binding) |
+| `geospatial_agent` | `oideachais` | `/<stage>/<subject>/` |
+| `statistics_agent` | `oideachais-dashboard` | `/health/` |
+| `curriculum_comparison_agent` | `oideachais` + `cianfhoghlaim` | `/<stage>/<subject>/compare/` |
+| `agui_curriculum_agent` | `cianfhoghlaim` | `/` (AG-UI streaming) |
+| `mcp_curriculum_agent` | `oideachais` | `/<stage>/<subject>/` (MCP bridge) |
+| `image_generation_agent` | `oideachais` + `oideachais-dashboard` | `/assets/image_gen/$id` |
+
+**The single canonical router is at
+[`./WEB_INTEGRATION.md`](./WEB_INTEGRATION.md).** It documents:
+
+- The per-app CopilotKit action bindings (Phase G)
+- The Hono API gateway at `web/hono-api/src/routes/copilotkit/`
+- The subject-aware routing from the homepage chat to the
+  per-subject agents (Phase T + Phase U)
+- The 60 per-subject agent surface (one per subject × stage)
+
+**The new `image_generation_agent` (Phase L)** consumes the 5
+`image_gen` MODEL_REGISTRY entries:
+
+- `local/image/flux2-dev` (role: default — subject illustrations)
+- `local/image/z-image-turbo` (role: fast — fast iteration)
+- `local/image/qwen-image` (role: bilingual — bilingual EN/GA)
+- `local/image/sdxl` (role: legacy — SDXL generation)
+- `local/image/fibo` (role: diagrams — Babylon.js textures)
+
+The 5 tools are at `agents/adk/tools/image_generation.py` and are
+auto-registered in the agent's `tools=` list. The BAML client is at
+`baml_src/clients_image_gen.baml` (5 client<llm> blocks). The
+CocoIndex flow is at `cocoindex/media/image_generation_flow.py` (R1–R4
+conformance + the canonical `bge-m3` embedder).
+
+**DO NOT** for the web integration surface:
+
+- **Never** hardcode a model string in the `web_integration` binding
+- **Never** create a per-app `apps/<app>/apps/api/src/` for
+  CopilotKit actions — they live at `web/hono-api/src/routes/copilotkit/`
+- **Never** skip the `web_integration` field when adding a new agent
+
+---
+
+**Last updated**: 2026-08-13 (added the Web integration surface section; integrated
+the image_generation_agent into the 13-agent fleet).
 **Owner**: Build agent.

@@ -1,0 +1,47 @@
+{
+  "subject": "physics",
+  "results": [
+    {
+      "pdf_path": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+      "subject": "physics",
+      "language": "en",
+      "path_1_baml": {
+        "stub": true,
+        "backend": "Docling-serve \u2192 BAML",
+        "output_type": "Pydantic row",
+        "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+        "subject": "physics",
+        "baml_function": "ExtractCurriculumSyllabus(text, 'physics')"
+      },
+      "path_2_unstract": {
+        "stub": true,
+        "backend": "Docling-serve \u2192 Unstract",
+        "output_type": "JSON",
+        "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf"
+      },
+      "path_3_qwen3_vl": {
+        "stub": true,
+        "backend": "qwen3-vl-8b",
+        "output_type": "JSON",
+        "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+        "model_registry_key": "local/vision/qwen3-vl-8b"
+      },
+      "path_4_gemma4": {
+        "stub": true,
+        "backend": "gemma-4-26B-A4B",
+        "output_type": "JSON",
+        "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+        "model_registry_key": "local/vision/gemma-4-26B-A4B"
+      },
+      "ragas_consensus": {
+        "stub": true,
+        "metric": "biiep_extraction_consensus",
+        "consensus_score": 0.0,
+        "winning_path": null
+      },
+      "duration_ms": 0
+    }
+  ],
+  "total_processed": 1,
+  "generated_at": "2026-08-13"
+}

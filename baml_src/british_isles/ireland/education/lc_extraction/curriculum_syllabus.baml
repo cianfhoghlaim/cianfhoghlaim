@@ -1,10 +1,18 @@
-// Real BAML extraction prompts for the 6 LC priority subjects.
-// Per the 2026-08-10-baml-extraction-completion-v1 change.
+// Real BAML extraction prompts for ALL 14 LC subjects.
+// Per the 2026-08-10-baml-extraction-completion-v1 change +
+// the 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1 change (Phase 1).
 //
 // Replaces the "Auto-generated extraction prompt" stub with subject-specific
-// prompts for mathematics, applied_mathematics, chemistry, geography, english,
-// gaeilge, computer_science. Each follows the canonical `{{ _.role("user") }}` +
-// `{{ ctx.output_format }}` marker pattern.
+// prompts for the 14 LC subjects: mathematics, applied_mathematics, chemistry,
+// physics, biology, geography, english, gaeilge, french, history, business,
+// accounting, art, music, computer_science. Each follows the canonical
+// `{{ _.role("user") }}` + `{{ ctx.output_format }}` marker pattern.
+//
+// The SubjectArea enum below covers ALL 46 subjects across the 4 stages:
+// - 14 LC (Ireland Leaving Certificate)
+// - 8 JC (Ireland Junior Cycle)
+// - 9 GCSE (England General Certificate of Secondary Education)
+// - 15 A-Level (England GCE Advanced Level)
 
 function ExtractCurriculumSyllabus(text: string, subject: string) -> CurriculumSyllabus {
   client MiniMaxM3Client
@@ -47,6 +55,46 @@ function ExtractCurriculumSyllabus(text: string, subject: string) -> CurriculumS
     {% elif subject == "applied_mathematics" %}
     - Topics: Statistics, Mechanics, Dynamics, Probability
     - LO codes use prefix "LC-APM-LO-NNN"
+    {% elif subject == "physics" %}
+    - Topics span Mechanics, Waves, Light, Electricity & Magnetism, Modern Physics, Particle Physics
+    - LO codes use prefix "LC-PHYS-LO-NNN"
+    - Capture all formula references as a separate `formulas` array
+    - Include SI units + significant figures conventions
+    {% elif subject == "biology" %}
+    - Topics span the 3 units: The Study of Life, The Cell, The Organism
+    - LO codes use prefix "LC-BIO-LO-NNN"
+    - Capture diagrams (cell structure, organ systems, ecosystems) under `prescribed_texts`
+    - Note practical activities (mandatory 30%) under `assessment_objectives`
+    {% elif subject == "history" %}
+    - Topics span Early Modern Ireland (1494-1815), Modern Ireland (1815-1989), Contemporary World (1945-present)
+    - LO codes use prefix "LC-HIST-LO-NNN"
+    - Capture source-handling skills under `key_competencies`
+    - Note the document-based research report under `assessment_objectives`
+    {% elif subject == "french" %}
+    - Capture the prescribed texts (literary extracts, films) under `prescribed_texts`
+    - LO codes use prefix "LC-FREN-LO-NNN"
+    - Note the 4 language skills (reading, writing, listening, speaking) under `assessment_objectives`
+    - Include Gaélisation na bhFréamhacha for cultural context
+    {% elif subject == "business" %}
+    - Topics span People in Business, Enterprise, Managing 1, Managing 2, Business in Action, Skills
+    - LO codes use prefix "LC-BUS-LO-NNN"
+    - Capture case studies under `key_competencies`
+    - Include the applied business question under `assessment_objectives`
+    {% elif subject == "accounting" %}
+    - Topics span Financial Accounting, Management Accounting, Finance, Taxation, Auditing
+    - LO codes use prefix "LC-ACCT-LO-NNN"
+    - Capture formulas (ratios, NPV, IRR) under `formulas`
+    - Note the structured questions under `assessment_objectives`
+    {% elif subject == "art" %}
+    - Topics span Core (drawing + appreciation) + 3 specialisms (painting, sculpture, graphic design)
+    - LO codes use prefix "LC-ART-LO-NNN"
+    - Capture the prescribed visits (gallery + museum) under `key_competencies`
+    - Note the practical course work (50%) under `assessment_objectives`
+    {% elif subject == "music" %}
+    - Topics span Composition, Performance, Listening, Music Technology
+    - LO codes use prefix "LC-MUS-LO-NNN"
+    - Capture the prescribed works (Bach, Mozart, Beatles, etc.) under `prescribed_texts`
+    - Note the 3 components (performance 50% + composition 25% + listening 25%) under `assessment_objectives`
     {% endif %}
 
     {{ ctx.output_format }}
@@ -80,6 +128,54 @@ function ExtractExamPaperLayout(text: string, subject: string) -> ExamPaperLayou
     {% elif subject == "english" %}
     - 2 papers: Paper 1 (comprehension + composition), Paper 2 (single text study)
     - Section I + Section II in each
+    {% elif subject == "physics" %}
+    - 2 papers: Paper 1 (150 marks), Paper 2 (150 marks)
+    - Section A: 4 short questions × 25 marks = 100 marks (obligatory)
+    - Section B: 5 questions out of 6 × 10 marks = 50 marks
+    - 10 experiments from the syllabus must be known
+    {% elif subject == "biology" %}
+    - 2 papers: Paper 1 (150 marks), Paper 2 (150 marks)
+    - Section A: 5 short questions × 30 marks = 150 marks (obligatory)
+    - Section B: 3 questions out of 6 × 50 marks = 150 marks
+    - 22 mandatory practical activities
+    {% elif subject == "geography" %}
+    - 1 paper (300 marks), 3 sections
+    - Section 1: Short questions (answer 10 from 12)
+    - Section 2: Physical/Regional geography topics
+    - Section 3: Human/Regional geography topics
+    {% elif subject == "gaeilge" %}
+    - 2 papers: Paper 1 (comprehension + composition), Paper 2 (literature)
+    - Béaltriail (oral exam) is separate + worth 40% of total
+    {% elif subject == "computer_science" %}
+    - 2 papers: Paper 1 (Short questions), Paper 2 (Long questions)
+    - No coursework
+    {% elif subject == "applied_mathematics" %}
+    - 2 papers, each 150 marks
+    - 10 short questions (Section A) + 6 long questions (Section B, choose 5)
+    {% elif subject == "french" %}
+    - 2 papers: Paper 1 (listening + reading + writing), Paper 2 (comprehension + written production)
+    - Oral exam (worth 25%) separate from written papers
+    {% elif subject == "history" %}
+    - 1 paper (300 marks), 3 sections
+    - Section 1: Document-based question (100 marks)
+    - Section 2: Three essays from Ireland topic (100 marks)
+    - Section 3: Three essays from European + World topic (100 marks)
+    {% elif subject == "business" %}
+    - 1 paper (400 marks), 7 sections
+    - Absent students apply for the Listening Comprehension (LC) day
+    - Applied Business Question (ABQ) is a mandatory project
+    {% elif subject == "accounting" %}
+    - 1 paper (400 marks), 2 sections
+    - Section 1: Financial Accounting (250 marks)
+    - Section 2: Management Accounting + Finance (150 marks)
+    {% elif subject == "art" %}
+    - 2 papers: Paper 1 (Imaginative Composition), Paper 2 (Critical Engagement)
+    - Coursework is 50% of total (practical + research)
+    {% elif subject == "music" %}
+    - 1 paper (400 marks), 4 sections
+    - Performing (50%): Core + 3 specialist pieces
+    - Composing (25%): 3 compositions + 1 IPC
+    - Listening (25%): 4 set works + unfamiliar
     {% endif %}
 
     {{ ctx.output_format }}
@@ -112,6 +208,51 @@ function ExtractMarkingSchemeGuideline(text: string, subject: string) -> Marking
     {% elif subject == "english" %}
     - Grading is more qualitative for composition (60-70% on ideas + structure)
     - Comprehension is quantitative
+    {% elif subject == "physics" %}
+    - Two papers each 150 marks, total 300 marks
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    - 10 prescribed experiments must be demonstrable
+    {% elif subject == "biology" %}
+    - Two papers each 150 marks, total 300 marks
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    - 22 mandatory practical activities must be recorded
+    {% elif subject == "geography" %}
+    - Single paper 300 marks
+    - 4 separate questions to be answered (out of 12)
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    {% elif subject == "gaeilge" %}
+    - 3 components: paistí (Béaltriail 40%), scríbhneoireacht (30%), léamhthuiscint (30%)
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    {% elif subject == "computer_science" %}
+    - Two papers each 150 marks, total 300 marks
+    - 8 short questions (Section A) + 6 long questions (Section B)
+    {% elif subject == "applied_mathematics" %}
+    - Two papers each 150 marks, total 300 marks
+    - 10 short questions (Section A) + 6 long questions (Section B, choose 5)
+    {% elif subject == "french" %}
+    - 3 components: Production écrite (15%), Production orale (25%), Compréhension écrite (35%), Compréhension orale (25%)
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    {% elif subject == "history" %}
+    - Single paper 300 marks
+    - Document-based research report (200 marks) + 3 essays (100 marks)
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    {% elif subject == "business" %}
+    - Single paper 400 marks
+    - Applied Business Question (ABQ) is mandatory (60% of final grade)
+    - 3 short questions (Section A) + 4 long questions (Section B)
+    {% elif subject == "accounting" %}
+    - Single paper 400 marks
+    - Section 1: 6 questions (choose 5) | Section 2: 6 questions (choose 4)
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    {% elif subject == "art" %}
+    - 2 papers: Paper 1 (Imaginative Composition), Paper 2 (Critical Engagement)
+    - Coursework is 50% of total (practical + research)
+    - Grade boundaries: H1 ≥ 90%, H7 ≥ 30%, O1 ≥ 60%, O8 ≥ 30%
+    {% elif subject == "music" %}
+    - 1 paper (400 marks), 4 sections
+    - Performing (50%): Core + 3 specialist pieces
+    - Composing (25%): 3 compositions + 1 IPC
+    - Listening (25%): 4 set works + unfamiliar
     {% endif %}
 
     {{ ctx.output_format }}
@@ -141,6 +282,30 @@ function ExtractSyllabusDiagram(text: string, subject: string) -> SyllabusDiagra
     - Diagrams are typically geological cross-sections, climate graphs, or population pyramids
     {% elif subject == "computer_science" %}
     - Diagrams are flowcharts, network topologies, or sorting algorithm visualisations
+    {% elif subject == "physics" %}
+    - Diagrams are typically circuit diagrams, ray diagrams, force diagrams, field line diagrams
+    {% elif subject == "biology" %}
+    - Diagrams are typically cell structure, organ systems, food webs, population pyramids, genetic crosses
+    {% elif subject == "mathematics" %}
+    - Diagrams are typically graphs, Venn diagrams, geometric diagrams, statistical distributions
+    {% elif subject == "english" %}
+    - Diagrams are typically character maps, narrative structure diagrams, textual evidence tables
+    {% elif subject == "gaeilge" %}
+    - Diagrams are typically scéim filíochta, léaráidí saolré, sceitse dílleachta
+    {% elif subject == "applied_mathematics" %}
+    - Diagrams are typically cost-revenue graphs, probability trees, time series, stress-strain curves
+    {% elif subject == "french" %}
+    - Diagrams are typically binary trees, syntactic structures, register shift diagrams
+    {% elif subject == "history" %}
+    - Diagrams are typically timelines, source matrices, cause-effect diagrams, demographic pyramids
+    {% elif subject == "business" %}
+    - Diagrams are typically break-even charts, cash flow diagrams, SWOT analysis diagrams, org charts
+    {% elif subject == "accounting" %}
+    - Diagrams are typically accounts flow, financial statement structure diagrams, ratio analysis charts
+    {% elif subject == "art" %}
+    - Diagrams are typically composition studies, perspective diagrams, art history timeline diagrams
+    {% elif subject == "music" %}
+    - Diagrams are typically form and structure diagrams, harmonic analysis diagrams, set work timeline diagrams
     {% endif %}
 
     {{ ctx.output_format }}

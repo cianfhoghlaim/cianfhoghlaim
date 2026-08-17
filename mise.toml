@@ -249,6 +249,22 @@ run = "bun run schema:generate"
 description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts). Per openspec R30."
 run = "bun run schema:validate"
 
+[tasks."codegen:all"]
+description = "Run the full schema-driven codegen pipeline (BAML → Zod → Convex → CopilotKit → AG-UI → per-subject routes) for all 60 subjects × 4 stages. Per openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/ Phase O."
+run = "bun run scripts/schema-codegen/index.ts"
+
+[tasks."codegen:all:dry-run"]
+description = "Dry-run the schema-driven codegen pipeline (preview without writing files). Per Phase O."
+run = "bun run scripts/schema-codegen/index.ts --dry-run"
+
+[tasks."codegen:subject"]
+description = "Run the schema-driven codegen pipeline for one subject (e.g. mise run codegen:subject mathematics). Per Phase O."
+run = "bun run scripts/schema-codegen/index.ts --subject"
+
+[tasks."codegen:stage"]
+description = "Run the schema-driven codegen pipeline for one stage (lc | jc | gcse | a-level). Per Phase O."
+run = "bun run scripts/schema-codegen/index.ts --stage"
+
 [tasks."lineage:validate"]
 description = "CI drift gate for the PDF lineage registry (filesystem walk vs committed registry). Per openspec R27."
 run = "bun run lineage:validate"

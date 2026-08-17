@@ -1,0 +1,3634 @@
+{
+  "generated_at": "2026-08-16T11:43:51.877936+00:00",
+  "per_change": "2026-08-13-web-monorepo-consolidation-and-agent-integration-v1",
+  "phase_5": "OCR/VLM 4-path ensemble runner",
+  "stages": {
+    "lc": {
+      "stage": "lc",
+      "pdf_root": "leaving_certificate",
+      "subject_count": 15,
+      "subjects": {
+        "mathematics": {
+          "subject": "mathematics",
+          "pdf_count": 3,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf",
+              "stage": "lc",
+              "subject": "mathematics",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf",
+                "stage": "lc",
+                "subject": "mathematics",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "mathematics",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "mathematics",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/applied_mathematics/ga/Leaving-Certificate-Specification-Applied-Mathematics_GA.pdf",
+              "stage": "lc",
+              "subject": "mathematics",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/applied_mathematics/ga/Leaving-Certificate-Specification-Applied-Mathematics_GA.pdf",
+                "stage": "lc",
+                "subject": "mathematics",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/ga/Leaving-Certificate-Specification-Applied-Mathematics_GA.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/ga/Leaving-Certificate-Specification-Applied-Mathematics_GA.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/applied_mathematics/ga/Leaving-Certificate-Specification-Applied-Mathematics_GA.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "applied_mathematics": {
+          "subject": "applied_mathematics",
+          "pdf_count": 0,
+          "results": []
+        },
+        "chemistry": {
+          "subject": "chemistry",
+          "pdf_count": 8,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SC-Chemistry-Specification-EN_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SC-Chemistry-Specification-GA_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "chemistry",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "chemistry",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "physics": {
+          "subject": "physics",
+          "pdf_count": 1,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+              "stage": "lc",
+              "subject": "physics",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+                "stage": "lc",
+                "subject": "physics",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/physics/en/LC_Physics_Syllabus_EN.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "biology": {
+          "subject": "biology",
+          "pdf_count": 4,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/biology/en/SC-BIOLOGY-Spec-ENG.pdf",
+              "stage": "lc",
+              "subject": "biology",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/biology/en/SC-BIOLOGY-Spec-ENG.pdf",
+                "stage": "lc",
+                "subject": "biology",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/en/SC-BIOLOGY-Spec-ENG.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/en/SC-BIOLOGY-Spec-ENG.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/en/SC-BIOLOGY-Spec-ENG.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/biology/en/SCSEC07_Biology_Syllabus_Eng.pdf",
+              "stage": "lc",
+              "subject": "biology",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/biology/en/SCSEC07_Biology_Syllabus_Eng.pdf",
+                "stage": "lc",
+                "subject": "biology",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/en/SCSEC07_Biology_Syllabus_Eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/en/SCSEC07_Biology_Syllabus_Eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/en/SCSEC07_Biology_Syllabus_Eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/biology/ga/SC-BIOLOGY-Spec-GA.pdf",
+              "stage": "lc",
+              "subject": "biology",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/biology/ga/SC-BIOLOGY-Spec-GA.pdf",
+                "stage": "lc",
+                "subject": "biology",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SC-BIOLOGY-Spec-GA.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SC-BIOLOGY-Spec-GA.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SC-BIOLOGY-Spec-GA.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "biology",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "biology",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "geography": {
+          "subject": "geography",
+          "pdf_count": 8,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SC-Geography-Spec-ENG-INT_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/ga/LC-Geography-specification-GA.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/ga/LC-Geography-specification-GA_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/LC-Geography-specification-GA_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "geography",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "geography",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "gaeilge": {
+          "subject": "gaeilge",
+          "pdf_count": 28,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/computer_science/ga/LC-Computer-Science-specification-updated-as-Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/computer_science/ga/LC-Computer-Science-specification-updated-as-Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/computer_science/ga/LC-Computer-Science-specification-updated-as-Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/computer_science/ga/LC-Computer-Science-specification-updated-as-Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/computer_science/ga/LC-Computer-Science-specification-updated-as-Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/LC001ALP100IV.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP100IV.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP100IV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP100IV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP100IV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/LC001ALP200IV.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP200IV.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP200IV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP200IV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001ALP200IV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/LC001BLP100IV.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/LC001BLP100IV.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001BLP100IV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001BLP100IV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001BLP100IV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/LC001GLP100IV.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP100IV.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP100IV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP100IV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP100IV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/LC001GLP200IV.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP200IV.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP200IV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP200IV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/LC001GLP200IV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/lc_irish_foundation.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/gaeilge/lc_irish_foundation_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/gaeilge/lc_irish_foundation_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "gaeilge",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "gaeilge",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "english": {
+          "subject": "english",
+          "pdf_count": 10,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/english/LC002ALP100EV.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/LC002ALP100EV.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002ALP100EV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002ALP100EV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002ALP100EV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/LC002ALP200EV.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/LC002ALP200EV.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002ALP200EV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002ALP200EV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002ALP200EV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/LC002GLP100EV.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/LC002GLP100EV.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002GLP100EV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002GLP100EV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002GLP100EV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/LC002GLP200EV.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/LC002GLP200EV.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002GLP200EV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002GLP200EV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/LC002GLP200EV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/SC-English-Spec-ENG-INT.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/SC-English-Spec-ENG-INT_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SC-English-Spec-ENG-INT_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/SCSEC14_English_Syllabus.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/english/SCSEC14_English_Syllabus_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/english/SCSEC14_English_Syllabus_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "english",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "english",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "french": {
+          "subject": "french",
+          "pdf_count": 7,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/french/LC010ALP000BV.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/LC010ALP000BV.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010ALP000BV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010ALP000BV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010ALP000BV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/LC010ALPA00BV.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/LC010ALPA00BV.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010ALPA00BV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010ALPA00BV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010ALPA00BV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/LC010GLP000BV.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/LC010GLP000BV.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010GLP000BV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010GLP000BV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010GLP000BV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/LC010GLPA00BV.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/LC010GLPA00BV.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010GLPA00BV.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010GLPA00BV.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/LC010GLPA00BV.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_guidelines_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/french/SCSEC15_French_syllabus_eng.pdf",
+              "stage": "lc",
+              "subject": "french",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_eng.pdf",
+                "stage": "lc",
+                "subject": "french",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/french/SCSEC15_French_syllabus_eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "history": {
+          "subject": "history",
+          "pdf_count": 8,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History-guidelines_eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/en/SCSEC20_History_syllabus_eng_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+              "stage": "lc",
+              "subject": "history",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+                "stage": "lc",
+                "subject": "history",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "business": {
+          "subject": "business",
+          "pdf_count": 4,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/business/en/SC-Business-Spec-ENG.pdf",
+              "stage": "lc",
+              "subject": "business",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/business/en/SC-Business-Spec-ENG.pdf",
+                "stage": "lc",
+                "subject": "business",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/en/SC-Business-Spec-ENG.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/en/SC-Business-Spec-ENG.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/en/SC-Business-Spec-ENG.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/business/en/SCSEC08_Business_syllabus_Eng.pdf",
+              "stage": "lc",
+              "subject": "business",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/business/en/SCSEC08_Business_syllabus_Eng.pdf",
+                "stage": "lc",
+                "subject": "business",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/en/SCSEC08_Business_syllabus_Eng.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/en/SCSEC08_Business_syllabus_Eng.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/en/SCSEC08_Business_syllabus_Eng.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/business/ga/SC-Business-Spec-GA-1.pdf",
+              "stage": "lc",
+              "subject": "business",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/business/ga/SC-Business-Spec-GA-1.pdf",
+                "stage": "lc",
+                "subject": "business",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SC-Business-Spec-GA-1.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SC-Business-Spec-GA-1.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SC-Business-Spec-GA-1.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            },
+            {
+              "pdf_path": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+              "stage": "lc",
+              "subject": "business",
+              "language": "ga",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+                "stage": "lc",
+                "subject": "business",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "accounting": {
+          "subject": "accounting",
+          "pdf_count": 1,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/accounting/en/LC_Accounting_Syllabus_EN.pdf",
+              "stage": "lc",
+              "subject": "accounting",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/accounting/en/LC_Accounting_Syllabus_EN.pdf",
+                "stage": "lc",
+                "subject": "accounting",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/accounting/en/LC_Accounting_Syllabus_EN.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/accounting/en/LC_Accounting_Syllabus_EN.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/accounting/en/LC_Accounting_Syllabus_EN.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "art": {
+          "subject": "art",
+          "pdf_count": 1,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/art/en/Leaving-Certificate-Art-Specification_EN.pdf",
+              "stage": "lc",
+              "subject": "art",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/art/en/Leaving-Certificate-Art-Specification_EN.pdf",
+                "stage": "lc",
+                "subject": "art",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/art/en/Leaving-Certificate-Art-Specification_EN.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/art/en/Leaving-Certificate-Art-Specification_EN.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/art/en/Leaving-Certificate-Art-Specification_EN.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "music": {
+          "subject": "music",
+          "pdf_count": 1,
+          "results": [
+            {
+              "pdf_path": "leaving_certificate/music/en/LC_Music_Syllabus_EN.pdf",
+              "stage": "lc",
+              "subject": "music",
+              "language": "en",
+              "path_1_baml": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 BAML",
+                "output_type": "Pydantic row",
+                "source_pdf": "leaving_certificate/music/en/LC_Music_Syllabus_EN.pdf",
+                "stage": "lc",
+                "subject": "music",
+                "baml_function": "ExtractCurriculumSyllabus"
+              },
+              "path_2_unstract": {
+                "stub": true,
+                "backend": "Docling-serve \u2192 Unstract",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/music/en/LC_Music_Syllabus_EN.pdf"
+              },
+              "path_3_qwen3_vl": {
+                "stub": true,
+                "backend": "qwen3-vl-8b",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/music/en/LC_Music_Syllabus_EN.pdf",
+                "model_registry_key": "local/vision/qwen3-vl-8b"
+              },
+              "path_4_gemma4": {
+                "stub": true,
+                "backend": "gemma-4-26B-A4B",
+                "output_type": "JSON",
+                "source_pdf": "leaving_certificate/music/en/LC_Music_Syllabus_EN.pdf",
+                "model_registry_key": "local/vision/gemma-4-26B-A4B"
+              },
+              "ragas_consensus": {
+                "stub": true,
+                "metric": "biiep_extraction_consensus",
+                "consensus_score": 0.0,
+                "winning_path": null
+              },
+              "duration_ms": 0
+            }
+          ]
+        },
+        "computer_science": {
+          "subject": "computer_science",
+          "pdf_count": 0,
+          "results": []
+        }
+      },
+      "processed_at": "2026-08-16T11:43:51.878172+00:00"
+    }
+  },
+  "total_pdfs": 84,
+  "total_subjects": 15,
+  "total_paths": 4
+}

@@ -126,7 +126,7 @@ jobs:
       - name: Run openspec validate --strict
         run: |
           set -o pipefail
-          mise run -- bunx openspec validate --strict 2>&1 | tee openspec-validate-report.txt
+          mise run -- bunx openspec validate --strict --all 2>&1 | tee openspec-validate-report.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

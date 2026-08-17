@@ -1,10 +1,10 @@
 """Agent fleet registry.
 
-The single source of truth for the 12 main agents in the
+The single source of truth for the 13 main agents in the
 Cianfhoghlaim agent fleet. The 8 NCCA subject agents are
 re-exported through ``agents/tuatha/wiring.py`` for back-compat.
 
-The 12 main agents are:
+The 13 main agents are:
 
 - ``root_agent`` (Custom) — the query router + orchestrator
 - ``curriculum_agent`` (ADK) — 5-nation curriculum search
@@ -18,8 +18,12 @@ The 12 main agents are:
 - ``curriculum_comparison_agent`` (ADK) — cross-nation mapping
 - ``agui_curriculum_agent`` (Agno) — AG-UI streaming (CopilotKit consumer)
 - ``mcp_curriculum_agent`` (ADK) — MCP-server-bridged curriculum agent
+- ``image_generation_agent`` (ADK) — consumes the 5 ``image_gen``
+  MODEL_REGISTRY entries for 2D assets + Babylon.js textures
 
 Reference: openspec/changes/2026-08-14-agents-fleet-wiring-parity-v1.
+Extended by openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/
+(Phase L — image_generation_agent).
 """
 from __future__ import annotations
 
@@ -32,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# The 12-agent fleet registry.
+# The 13-agent fleet registry.
 # ---------------------------------------------------------------------------
 
 
@@ -181,6 +185,22 @@ AGENT_REGISTRY: dict[str, AgentFleetWiring] = {
         letta_agent_id="kcg-mcp-curriculum-agent",
         litellm_routing_key="mcp_curriculum",
     ),
+    # ---------------------------------------------------------------------
+    # Image generation agent (per 2026-08-13-web-monorepo-
+    # consolidation-and-agent-integration-v1, Phase L)
+    # ---------------------------------------------------------------------
+    "image_generation_agent": AgentFleetWiring(
+        agent_name="image_generation_agent",
+        module_slug="image_generation",
+        module_path="cianfhoghlaim.agents.adk.image_generation_agent",
+        framework=AgentFramework.ADK,
+        display_name="Image Generation Agent",
+        baml_prefix="ImageGen",
+        langfuse_trace_name="agent.image_generation.generate",
+        cognee_dataset="oideachais_image_generation",
+        letta_agent_id="kcg-image-generation-agent",
+        litellm_routing_key="image_generation",
+    ),
 }
 
 
@@ -205,7 +225,7 @@ FRAMEWORK_AVAILABLE: dict[AgentFramework, bool] = {
 
 
 def list_agent_names() -> list[str]:
-    """Return the sorted list of the 12 main agent names."""
+    """Return the sorted list of the 13 main agent names."""
     return sorted(AGENT_REGISTRY.keys())
 
 
