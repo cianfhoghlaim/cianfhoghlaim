@@ -2,38 +2,44 @@
 """Lakehouse preflight — CI-friendly health check for the bunchloch lakehouse.
 
 Per the 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1
-openspec change. Validates:
+openspec change + the 2026-08-15-lakehouse-unified-data-plane-v1 extension.
 
-  1. The 5 REQUIRED endpoints (all must respond 200):
-     - Nimtable (Iceberg catalog UI)        → http://localhost:3018/
-     - Olake (CDC engine)                   → http://localhost:3901/health
-     - LanceDB Viewer                       → http://localhost:8081/healthz
-     - Lance namespace sidecar             → http://localhost:8182/v1/info
-     - Lakekeeper (REST catalog)            → http://localhost:8181/health
+Validates:
 
-  2. The 12 POSTGRES databases (created by init-db.sql):
+  1. The 9 REQUIRED endpoints (all must respond 200 / TCP connect OK):
+     - Lakehouse data plane (5):
+       - Nimtable (Iceberg catalog UI)        → http://localhost:3018/
+       - Olake (CDC engine)                   → http://localhost:3901/health
+       - LanceDB Viewer                       → http://localhost:8081/healthz
+       - Lance namespace sidecar              → http://localhost:8182/v1/info
+       - Lakekeeper (REST catalog)            → http://localhost:8181/health
+     - Graph DB backends (4 — ADDED 2026-08-15 lakehouse-unified-data-plane-v1):
+       - cognee      → http://localhost:8000/health
+       - graphiti    → http://localhost:8001/healthcheck
+       - falkordb    → falkordb:6379 (TCP probe)
+       - memgraph    → memgraph:7687 (TCP probe)
+
+  2. The 13 POSTGRES databases (created by init-db.sql):
      - ducklake_{cianfhoghlaim,crypteolas,aleyum,croilar,tuath,meaisinfhoghlaim}
      - dagster_local, olake_state, nimtable
      - langfuse, mlflow, litellm
+     - cognee_cianfhoghlaim   (ADDED 2026-08-15)
 
   3. The 8 GARAGE buckets (created by garage-init):
      - iceberg, lance, ducklake, ducklake-cianfhoghlaim
      - langfuse-events, langfuse-media, langfuse-exports
      - mlflow-artifacts
 
-  4. The 5 OPTIONAL memory backends (graceful skip when not deployed):
-     - cognee      → http://localhost:8100/health
-     - graphiti    → http://localhost:8000/healthcheck
-     - falkordb    → redis-cli -h falkordb ping
-     - memgraph    → http://localhost:7687 (Bolt endpoint)
-     - lancedb     → the lance-namespace sidecar (already in #1)
+  4. The OPTIONAL lancedb-lakehouse-viewer check (the lance-namespace
+     sidecar is already in #1).
 
-The cognify probe is REQUIRED only when BIEP M5+ (cognify) is on the
-bringup list. For M1-M4 (Ireland LC + JC, England A-Level + GCSE),
-it's OPTIONAL — operators run the preflight without the cognify stack.
+The 4 graph DB backends are now REQUIRED (per the
+2026-08-15-lakehouse-unified-data-plane-v1 change — they are part of
+the unified lakehouse stack). Operators that don't need graph memory
+can pass `--skip-cognify` to keep the 4 endpoints optional.
 
 Exit codes:
-  0 = all required probes passed (cognify probes may be skipped)
+  0 = all required probes passed (optional probes may be skipped)
   1 = at least one required probe failed (actionable error)
   2 = script error (missing env vars, docker not running)
 
@@ -56,8 +62,9 @@ from urllib import error as urllib_error
 from urllib import request as urllib_request
 
 
-# 5 required lakehouse endpoints
+# 9 required lakehouse endpoints (5 data plane + 4 graph DB)
 REQUIRED_ENDPOINTS: list[tuple[str, str, str, str]] = [
+    # --- Lakehouse data plane (5) ---
     (
         "Nimtable",
         "http://localhost:3018/",
@@ -88,9 +95,34 @@ REQUIRED_ENDPOINTS: list[tuple[str, str, str, str]] = [
         "Iceberg REST catalog",
         "GET /health",
     ),
+    # --- Graph DB backends (4 — added 2026-08-15) ---
+    (
+        "Cognee",
+        "http://localhost:8000/health",
+        "Knowledge graph builder (pghybrid)",
+        "GET /health",
+    ),
+    (
+        "Graphiti",
+        "http://localhost:8001/healthcheck",
+        "Bi-temporal KG API (FalkorDB backend)",
+        "GET /healthcheck",
+    ),
+    (
+        "FalkorDB",
+        "falkordb:6379",
+        "Graph DB + vector.so hybrid (AOF)",
+        "TCP probe",
+    ),
+    (
+        "Memgraph",
+        "memgraph:7687",
+        "Bolt graph DB + MAGE algorithms",
+        "TCP probe",
+    ),
 ]
 
-# 12 expected postgres databases
+# 13 expected postgres databases (12 + cognee_cianfhoghlaim)
 EXPECTED_DATABASES: tuple[str, ...] = (
     "ducklake_cianfhoghlaim",
     "ducklake_crypteolas",
@@ -104,33 +136,19 @@ EXPECTED_DATABASES: tuple[str, ...] = (
     "langfuse",
     "mlflow",
     "litellm",
+    "cognee_cianfhoghlaim",  # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1)
 )
 
-# 5 optional (cognify) memory backends — probed but skipped when not deployed
+# 4 optional (cognify) memory backends — when the operator passes
+# --skip-cognify, these are probed but a failure is graceful (skipped).
+# These were REQUIRED before 2026-08-15; now they're OPTIONAL to preserve
+# back-compat for operators that don't run the full unified stack.
 OPTIONAL_COGNIFY: list[tuple[str, str, str, str]] = [
     (
-        "cognee",
-        "http://cognee:8000/health",
-        "Structured KG",
-        "GET /health",
-    ),
-    (
-        "graphiti",
-        "http://graphiti:8000/healthcheck",
-        "Temporal KG",
-        "GET /healthcheck",
-    ),
-    (
-        "falkordb",
-        "falkordb:6379",
-        "Vector+graph hybrid (vector.so)",
-        "TCP probe",
-    ),
-    (
-        "memgraph",
-        "memgraph:7687",
-        "Production graph (Cypher + MAGE)",
-        "TCP probe",
+        "memgraph-lab",
+        "http://localhost:3001/",
+        "Memgraph Web UI (Cypher IDE + graph viz)",
+        "GET /",
     ),
 ]
 
@@ -392,7 +410,7 @@ def main() -> int:
             print(f"  {mark} {r['name']:30} ({r['latency_ms']}ms) — {r['detail']}")
         # Databases
         if not args.skip_databases and isinstance(summary["databases"], list) and summary["databases"]:
-            print(f"\nPOSTGRES databases ({12 - summary['summary']['databases_missing']}/12 present):")
+            print(f"\nPOSTGRES databases ({len(EXPECTED_DATABASES) - summary['summary']['databases_missing']}/{len(EXPECTED_DATABASES)} present):")
             if isinstance(summary["databases"][0], dict) and "error" in summary["databases"][0]:
                 print(f"  ✗ {summary['databases'][0]['error']}")
             else:

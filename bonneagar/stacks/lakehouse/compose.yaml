@@ -1,11 +1,13 @@
 # =============================================================================
-# LAKEHOUSE - Centralised Data Plane Stack
+# LAKEHOUSE - Unified Data Plane + Graph DB Stack (2026-08-15 consolidation)
 # =============================================================================
-# The 11-service data plane for the whole Cianfhoghlaim platform.
+# The unified 16-service data plane for the whole Cianfhoghlaim platform.
 # Hosts the S3-compatible object store (Garage), the columnar Postgres
-# with 12 databases, the clickhouse columnar engine, the Redis queue,
-# the Iceberg REST catalog (Lakekeeper), the Lance vector namespace,
-# and the 3 secondary services (Nimtable UI, Olake CDC, LanceDB Viewer).
+# with 13 databases (12 + cognee_cianfhoghlaim), the clickhouse columnar
+# engine, the Redis queue, the Iceberg REST catalog (Lakekeeper), the
+# Lance vector namespace, the 3 secondary services (Nimtable UI, Olake
+# CDC, LanceDB Viewer), and the 5 graph DB backends (Cognee + Graphiti +
+# FalkorDB + Memgraph + Memgraph Lab).
 #
 # Planetscale PostgreSQL is supported as an OPTIONAL override via the
 # PLANETSCALE_DATABASE_URL env var — but the default (and recommended)
@@ -20,25 +22,41 @@
 #   Development:  docker compose --env-file ../../.env.local up -d
 #   Production:   locket exec --env-file secrets.env -- docker compose up -d
 #   Standalone:   docker compose up -d  (uses defaults)
+#   ONE COMMAND:  mise run lakehouse:up  (canonical entry-point)
 #
-# SERVICES:
-#   - garage:            S3-compatible storage (7 buckets total)
-#   - garage-init:       Bucket initialization (iceberg, lance, ducklake,
-#                        langfuse-events, langfuse-media, langfuse-exports,
-#                        mlflow-artifacts) [centralise-data-plane 2026-07]
-#   - postgres:          Centralised Postgres with 12 databases (ducklake_*,
-#                        dagster_local, olake_state, nimtable, langfuse,
-#                        mlflow, litellm) [centralise-data-plane 2026-07]
-#   - clickhouse:        Centralised columnar engine (consumed by langfuse)
-#                        [centralise-data-plane 2026-07]
-#   - redis:             Centralised queue (consumed by langfuse)
-#                        [centralise-data-plane 2026-07]
+# SERVICES (16 total — added 5 graph DB backends 2026-08-15):
+#   - garage:             S3-compatible storage (7 buckets total)
+#   - garage-init:        Bucket initialization (iceberg, lance, ducklake,
+#                         langfuse-events, langfuse-media, langfuse-exports,
+#                         mlflow-artifacts) [centralise-data-plane 2026-07]
+#   - postgres:           Centralised Postgres with 13 databases (ducklake_*,
+#                         dagster_local, olake_state, nimtable, langfuse,
+#                         mlflow, litellm, cognee_cianfhoghlaim)
+#                         [centralise-data-plane 2026-07]
+#   - clickhouse:         Centralised columnar engine (consumed by langfuse)
+#                         [centralise-data-plane 2026-07]
+#   - redis:              Centralised queue (consumed by langfuse)
+#                         [centralise-data-plane 2026-07]
 #   - lakekeeper-migrate: Database migrations
-#   - lakekeeper:        Iceberg REST Catalog (port 8181)
-#   - lance-namespace:   Lance table registration sidecar (port 8182)
-#   - nimtable:          Iceberg catalog UI (port 3018) [extend-lakehouse-with-nimtable-olake-lancedb]
-#   - olake:             CDC engine (ephemeral admin) [extend-lakehouse-with-nimtable-olake-lancedb]
-#   - lancedb-viewer:    LanceDB table viewer (port 8081) [extend-lakehouse-with-nimtable-olake-lancedb]
+#   - lakekeeper:         Iceberg REST Catalog (port 8181)
+#   - lance-namespace:    Lance table registration sidecar (port 8182)
+#   - nimtable:           Iceberg catalog UI (port 3018) [extend-lakehouse-with-nimtable-olake-lancedb]
+#   - olake:              CDC engine (ephemeral admin) [extend-lakehouse-with-nimtable-olake-lancedb]
+#   - lancedb-viewer:     LanceDB table viewer (port 8081) [extend-lakehouse-with-nimtable-olake-lancedb]
+#   - cognee:             Knowledge graph builder (port 8000) [lakehouse-unified-data-plane 2026-08-15]
+#                         - uses shared lakehouse-postgres at cognee_cianfhoghlaim
+#                         - LLM via LiteLLM at http://litellm:4000/v1
+#                         - vectors via Lance Namespace at rest://lakehouse-lance-namespace:8182
+#   - graphiti:           Bi-temporal KG API (port 8000) [lakehouse-unified-data-plane 2026-08-15]
+#                         - uses shared falkordb at falkordb:6379
+#   - falkordb:           Graph DB + vector.so hybrid (port 6379, UI 3000)
+#                         [lakehouse-unified-data-plane 2026-08-15]
+#                         - --appendonly yes --appendfsync everysec (AOF persistence)
+#                         - FALKORDB_ARGS=THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000
+#                         - --loadmodule /etc/falkordb/vector.so (hybrid queries)
+#   - memgraph:           Bolt graph DB + MAGE algorithms (port 7687, HTTP 7444)
+#                         [lakehouse-unified-data-plane 2026-08-15]
+#   - memgraph-lab:       Memgraph Web UI (port 3000) [lakehouse-unified-data-plane 2026-08-15]
 # =============================================================================
 
 name: lakehouse
@@ -559,6 +577,279 @@ services:
     networks:
       - lakehouse
       - pangolin
+
+  # ---------------------------------------------------------------------------
+  # COGNEE - Knowledge Graph Builder (uses shared lakehouse-postgres)
+  # ---------------------------------------------------------------------------
+  # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1). The 6-dataset
+  # knowledge graph builder for the BIEP v3 cognify stage. Connects to:
+  #   - shared lakehouse-postgres at database `cognee_cianfhoghlaim`
+  #     (NO separate cognee-postgres container — closed by this change)
+  #   - LiteLLM gateway at http://litellm:4000/v1 (LLM + embeddings)
+  #   - Lance Namespace at rest://lakehouse-lance-namespace:8182 (vectors)
+  #   - Logfire collector at http://logfire-otel:4317 (OTel traces)
+  #   - Langfuse at http://langfuse:3000 (LLM cost + prompt metadata)
+  # USE_UNIFIED_PROVIDER=pghybrid so postgres serves BOTH vector + graph.
+  # ---------------------------------------------------------------------------
+  cognee:
+    # Pinned 2026-07-02 (was :latest; 1.2.2 = current Docker Hub stable)
+    image: cognee/cognee:1.2.2
+    container_name: lakehouse-cognee
+    restart: unless-stopped
+    ports:
+      - "${COGNEE_PORT:-8000}:8000"
+    environment:
+      # The cognee LLM client adds `Authorization: Bearer <LLM_API_KEY>` to
+      # every request. If LLM_API_KEY is the LiteLLM master key, litellm
+      # forwards it as the upstream DeepSeek key (which DeepSeek rejects).
+      # Solution: set LLM_API_KEY to a placeholder so litellm falls back to
+      # its own configured DEEPSEEK_API_KEY env var.
+      LLM_API_KEY: ${COGNEE_LLM_API_KEY:-no-key-needed}
+      LLM_PROVIDER: openai
+      LLM_BASE_URL: http://litellm:4000/v1
+      LLM_MODEL: ${COGNEE_LLM_MODEL:-deepseek/deepseek-chat}
+      EMBEDDING_API_KEY: ${COGNEE_EMBEDDING_API_KEY:-no-key-needed}
+      EMBEDDING_PROVIDER: openai
+      EMBEDDING_BASE_URL: http://litellm:4000/v1
+      # Use the full litellm model path so tiktoken can auto-detect the
+      # tokenizer (cognee validates EMBEDDING_MODEL against tiktoken at
+      # startup).
+      EMBEDDING_MODEL: ${COGNEE_EMBEDDING_MODEL:-openai/text-embedding-3-small}
+      COGNEE_DATABASES: ${COGNEE_DATABASES:-cianfhoghlaim.education.aistear,cianfhoghlaim.education.primary,cianfhoghlaim.education.junior_cycle,cianfhoghlaim.education.senior_cycle,cianfhoghlaim.education.tertiary,cianfhoghlaim.education.cross_stage}
+      COGNEE_STORAGE: postgresql
+      # Shared lakehouse-postgres at cognee_cianfhoghlaim database (added
+      # to init-db.sql by this change). The password is the SAME as
+      # POSTGRES_PASSWORD (Locket resolves both from the same source).
+      COGNEE_POSTGRES_HOST: postgres
+      COGNEE_POSTGRES_PORT: "5432"
+      COGNEE_POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
+      COGNEE_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
+      COGNEE_POSTGRES_DB: cognee_cianfhoghlaim
+      VECTOR_DB_PROVIDER: pgvector
+      USE_UNIFIED_PROVIDER: pghybrid
+      DB_PROVIDER: postgres
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cognee_cianfhoghlaim
+      DB_USERNAME: ${POSTGRES_USER:-lakekeeper}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
+      GRAPH_DATABASE_PROVIDER: postgres
+      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
+      LANCEDB_NAMESPACE_TOKEN: ${LANCEDB_NAMESPACE_TOKEN:-}
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      REQUIRE_AUTHENTICATION: ${REQUIRE_AUTHENTICATION:-false}
+      ENABLE_BACKEND_ACCESS_CONTROL: ${ENABLE_BACKEND_ACCESS_CONTROL:-false}
+      # OpenTelemetry → logfire collector (fans out to logfire cloud + langfuse)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: cognee
+      # Langfuse SDK-side traces
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      # PlanetScale PG override (optional; opt-in to managed PG)
+      PLANETSCALE_DATABASE_URL: ${PLANETSCALE_DATABASE_URL:-}
+      # Galileo AI observability (optional)
+      GALILEO_API_KEY: ${GALILEO_API_KEY:-}
+    healthcheck:
+      # Healthcheck runs INSIDE the container on port 8000
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8G
+    depends_on:
+      postgres:
+        condition: service_healthy
+      # locket injected via -f sidecar.yaml
+    networks:
+      - lakehouse
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # GRAPHITI - Bi-temporal Knowledge Graph API
+  # ---------------------------------------------------------------------------
+  # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1). Uses the unified
+  # falkordb container (port 6379) as its graph backend. The Neo4j
+  # backend was REMOVED (no Neo4j stack exists in KCG).
+  # ---------------------------------------------------------------------------
+  graphiti:
+    build:
+      context: .
+    image: graphiti:local
+    container_name: lakehouse-graphiti
+    restart: unless-stopped
+    ports:
+      - "${GRAPHITI_PORT:-8001}:8000"
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    environment:
+      # FalkorDB backend (unified with the lakehouse stack)
+      FALKORDB_HOST: falkordb
+      FALKORDB_PORT: 6379
+      FALKORDB_DATABASE: ${FALKORDB_GRAPHITI_DB:-default_db}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}
+      GRAPHITI_BACKEND: falkordb
+      PORT: 8000
+      db_backend: falkordb
+      # LLM API key (canonical backbone is LiteLLM at http://litellm:4000/v1)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?OPENAI_API_KEY must be set via Locket/Infisical}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-http://litellm:4000/v1}
+      # OpenTelemetry → logfire collector
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: graphiti
+      # Langfuse SDK-side traces
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthcheck')"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # FALKORDB - Graph DB + vector.so hybrid (consumed by Graphiti + standalone)
+  # ---------------------------------------------------------------------------
+  # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1). Redis-protocol
+  # graph DB with vector-search capability (the `db.idx.vector.queryNodes`
+  # procedure used by Graphiti's hybrid queries). Production-tuned per
+  # the official FalkorDB Docker best practices (verified 2026-08-15):
+  #   --appendonly yes --appendfsync everysec   (AOF persistence)
+  #   FALKORDB_ARGS=THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000
+  #   --loadmodule /etc/falkordb/vector.so     (hybrid vector+graph)
+  #   --cluster-enabled no                      (single-node dev default)
+  # ---------------------------------------------------------------------------
+  falkordb:
+    # Pinned 2026-08-15 (was :latest; v4.18.11 = upstream stable)
+    image: falkordb/falkordb:v4.18.11
+    container_name: lakehouse-falkordb
+    restart: unless-stopped
+    command:
+      - "falkordb"
+      - "--loadmodule"
+      - "/etc/falkordb/vector.so"
+      - "--requirepass"
+      - "${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}"
+      - "--appendonly"
+      - "yes"
+      - "--appendfsync"
+      - "everysec"
+      - "--cluster-enabled"
+      - "no"
+      - "--port"
+      - "6379"
+    ports:
+      - "127.0.0.1:${FALKORDB_PORT:-6379}:6379"
+      - "127.0.0.1:${FALKORDB_UI_PORT:-3000}:3000"
+    environment:
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}
+      BROWSER: "1"
+      FALKORDB_ARGS: ${FALKORDB_ARGS:-THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000}
+      VECTOR_MODULE_URL: ${VECTOR_MODULE_URL:-/etc/falkordb/vector.so}
+      CLUSTER_MODE: ${CLUSTER_MODE:-no}
+    volumes:
+      - lakehouse-falkordb-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - -p
+        - "6379"
+        - -a
+        - "${FALKORDB_PASSWORD}"
+        - --no-auth-warning
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - lakehouse
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  # ---------------------------------------------------------------------------
+  # MEMGRAPH - In-Memory Graph DB with MAGE Algorithms
+  # ---------------------------------------------------------------------------
+  # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1). Bolt protocol
+  # + in-memory storage + MAGE graph algorithms. NO Postgres needed
+  # (Memgraph is self-contained; the Bolt protocol uses TCP/7687).
+  # ---------------------------------------------------------------------------
+  memgraph:
+    # Pinned 2026-08-15 (was :latest; 3.6.0 = canonical 3.x release line)
+    image: memgraph/memgraph-mage:3.6.0
+    container_name: lakehouse-memgraph
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MEMGRAPH_BOLT_PORT:-7687}:7687"
+      - "127.0.0.1:${MEMGRAPH_HTTP_PORT:-7444}:7444"
+    environment:
+      MEMGRAPH_USER: ${MEMGRAPH_USER:-memgraph}
+      MEMGRAPH_PASSWORD: ${MEMGRAPH_PASSWORD:-devpassword}
+      MEMGRAPH_LICENSE_FILE_PATH: ${MEMGRAPH_LICENSE_FILE_PATH:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+    volumes:
+      - lakehouse-memgraph-lib:/var/lib/memgraph
+      - lakehouse-memgraph-log:/var/log/memgraph
+    command: ["--log-level=${MEMGRAPH_LOG_LEVEL:-WARNING}"]
+    healthcheck:
+      test: ["CMD", "echo", ">", "/dev/tcp/localhost/7687"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - lakehouse
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # MEMGRAPH-LAB - Web UI for Memgraph
+  # ---------------------------------------------------------------------------
+  # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1). Browser-based
+  # Cypher query IDE + graph visualisation. Connects to memgraph:7687
+  # via QUICK_CONNECT_MG_HOST/MG_PORT.
+  # ---------------------------------------------------------------------------
+  memgraph-lab:
+    # Pinned 2026-08-15 (was :latest; 3.6.0 = matches memgraph-mage)
+    image: memgraph/lab:3.6.0
+    container_name: lakehouse-memgraph-lab
+    restart: unless-stopped
+    ports:
+      - "${MEMGRAPH_LAB_PORT:-3001}:3000"
+    environment:
+      QUICK_CONNECT_MG_HOST: memgraph
+      QUICK_CONNECT_MG_PORT: "7687"
+    depends_on:
+      memgraph:
+        condition: service_started
+    networks:
+      - lakehouse
+      - pangolin
 # =============================================================================
 # VOLUMES
 # =============================================================================
@@ -571,6 +862,9 @@ volumes:
   lakehouse-redis-data:
   olake_state:
   nimtable_data:
+  lakehouse-falkordb-data:        # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1)
+  lakehouse-memgraph-lib:         # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1)
+  lakehouse-memgraph-log:         # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1)
 
 # =============================================================================
 # NETWORKS

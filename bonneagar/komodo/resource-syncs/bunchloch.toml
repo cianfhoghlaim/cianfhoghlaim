@@ -9,8 +9,13 @@
 # Scope (data plane + dev):
 #   - cianfhoghlaim + meaisinfhoghlaim + croílár  (BIEP + agent + portfolio)
 #   - litellm + langfuse + mlflow + logfire     (LLM gateway + observability)
-#   - dagster + lakehouse + cognee + lancedb    (lakehouse + semantic memory)
-#   - falkordb + graphiti + memgraph            (graph backends)
+#   - dagster + lakehouse                       (unified lakehouse + graph DB)
+#                                                 (the cognee + graphiti + falkordb +
+#                                                  memgraph + lancedb stacks were
+#                                                  consolidated into lakehouse by
+#                                                  the 2026-08-15-lakehouse-unified-data-plane-v1
+#                                                  change — see the lakehouse stack
+#                                                  compose.yaml for the 16 services)
 #   - hermes + openclaw + openchamber           (autonomous agent runtime + UI surfaces)
 #   - mailcow + browser + media                 (daily-driver stacks)
 #   - newt (Pangolin client) + komodo-periphery (operator-laptop site infrastructure)
@@ -47,11 +52,17 @@ branch = "main"
 #   - builds:     per-build registrations (code-owned Docker images)
 #   - servers:    shared Periphery registrations
 # Per the 2-host topology (no 3rd host), no per-host procedure split.
+# REMOVED 2026-08-15-lakehouse-unified-data-plane-v1:
+#   - cognee-bunchloch.toml         (now in lakehouse)
+#   - falkordb-bunchloch.toml       (now in lakehouse)
+#   - graphiti-bunchloch.toml       (now in lakehouse)
+#   - memgraph-bunchloch.toml       (now in lakehouse)
+#   - lancedb-bunchloch.toml        (now in lakehouse)
+# The single lakehouse-bunchloch.toml entry covers all 16 unified services.
 resource_path = [
   "bonneagar/komodo/stacks/bunchloch-analytics.toml",
   "bonneagar/komodo/stacks/bunchloch-media.toml",
   "bonneagar/komodo/stacks/bunchloch-support.toml",
-  "bonneagar/komodo/stacks/cognee-bunchloch.toml",
   "bonneagar/komodo/stacks/croilar-bunchloch.toml",
   "bonneagar/komodo/stacks/hermes-bunchloch.toml",
   "bonneagar/komodo/stacks/mailcow-dockerized-bunchloch.toml",
