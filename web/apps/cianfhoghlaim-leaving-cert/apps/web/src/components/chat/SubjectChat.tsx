@@ -6,8 +6,8 @@
 "use client";
 
 import * as React from "react";
-import { CopilotKit, useChat } from "@copilotkit/react-core";
-import { CopilotChat } from "@copilotkit/react-ui";
+import { CopilotKit, useChat } from "@copilotkit/react-core/v2";
+import { CopilotChat } from "@copilotkit/react-ui/v2";
 import "@copilotkit/react-ui/styles.css";
 
 import { AGENTS, getAgentById } from "@/lib/registry";

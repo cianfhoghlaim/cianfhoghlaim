@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { CopilotChat } from "@copilotkit/react-ui";
-import { useCopilotAction } from "@copilotkit/react-core";
+import { CopilotChat } from "@copilotkit/react-ui/v2";
+import { useCopilotAction } from "@copilotkit/react-core/v2";
 import { api } from "../../../convex/_generated/api";
 import { SUBJECTS } from "../__root";
 import { BadgeCard, type BadgeCardData } from "../../components/BadgeCard";

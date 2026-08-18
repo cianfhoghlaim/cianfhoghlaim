@@ -1,7 +1,7 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { Calculator, FlaskConical, Globe, History, BookOpen, Languages, Code, Cog, GraduationCap } from "lucide-react";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
-import { CopilotKit } from "@copilotkit/react-core";
+import { CopilotKit } from "@copilotkit/react-core/v2";
 
 const SUBJECTS = [
   { slug: "mathematics", name_en: "Mathematics", name_ga: "Matamaitic", icon: Calculator },
