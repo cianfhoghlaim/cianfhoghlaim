@@ -667,4 +667,126 @@ Cross-references:
 - [`.agents/skills/change-detection/SKILL.md`](../change-detection/SKILL.md) —
   the NCCA / SEC / `gov.ie` sitemap-hash sensors
 
+---
+
+## ClientRegistry pattern (added 2026-08-17)
+
+Per `https://docs.boundaryml.com/guide/baml-advanced/llm-client-registry`,
+the canonical BAML pattern for **per-function primary + fallback
+chains** is `ClientRegistry`. Each function declares its own primary
+client + ordered fallbacks via `baml_options={"client_registry": ...}`,
+and BAML automatically retries through the chain on failure.
+
+This replaces the bare `client "MyClient"` field on `@function` with
+explicit fallbacks at the BAML layer (in addition to the LiteLLM
+gateway fallbacks).
+
+### Canonical example (chemistry extraction with Irish fallback)
+
+```baml
+// 1. Declare the primary + fallback clients
+client<llm> ExtractChemPrimary {
+  provider "openai-generic"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    model "minimax-m3"
+  }
+}
+
+client<llm> ExtractChemFallback {
+  provider "openai-generic"
+  options {
+    base_url env.DASHSCOPE_BASE_URL
+    api_key env.DASHSCOPE_API_KEY
+    model "qwen3.7-plus"
+  }
+}
+
+// 2. Declare the ClientRegistry (in baml_src/clients.baml)
+client_registry ExtractChemRegistry {
+  name "chemistry_en_extract_registry"
+  primary "ExtractChemPrimary"
+  fallbacks ["ExtractChemFallback"]
+}
+
+// 3. Each function opts in via `client_registry`
+function ExtractChemSyllabus(text: string, source_pdf: string) -> ChemSyllabus {
+  client_registry ExtractChemRegistry
+  prompt #"
+    {{ ctx.output_format }}
+    Extract from: {{ text }}
+  "#
+}
+```
+
+### Adopted by 6 LC subjects (per `2026-08-17-baml-extraction-completion-v1`)
+
+All 6 LC subject extractors MUST declare a `ClientRegistry`:
+
+| Subject | Primary client | Fallback chain |
+|:--|:--|:--|
+| Chemistry | `ExtractChemPrimary` (minimax-m3) | `ExtractChemFallback` (qwen3.7-plus) |
+| Mathematics | `ExtractMathPrimary` | `ExtractMathFallback` |
+| Geography | `ExtractGeoPrimary` | `ExtractGeoFallback` |
+| Gaeilge | `ExtractGaeilgePrimary` (uccix-mistral-24b) | `ExtractGaeilgeFallback` (claude-sonnet-4-5) |
+| English | `ExtractEnPrimary` | `ExtractEnFallback` |
+| Computer Science | `ExtractCompSciPrimary` | `ExtractCompSciFallback` |
+
+The registry name MUST follow the pattern
+`<subject>_<language>_<extraction>_registry` (e.g.
+`chemistry_en_extract_registry`).
+
+---
+
+## Collector API (added 2026-08-17)
+
+Per `https://docs.boundaryml.com/guide/baml-advanced/collector-track-tokens`,
+the BAML `Collector` class exposes per-call observability:
+- `collector.last.usage.input_tokens` / `output_tokens` — for the Langfuse billing pipeline
+- `collector.last.raw_llm_response` — for the marimo audit notebook's side-by-side provenance display
+- `collector.last.calls[-1].http_response` — for the regression alert when a provider silently changes response shape
+
+### Canonical example (BIEP OCR ensemble Path 1)
+
+```python
+from baml_py import Collector
+
+collector = Collector(name="biep_ocr_extract_chem")
+
+result = b.ExtractChemSyllabus(
+    text=docling_text,
+    source_pdf=str(pdf_path),
+    baml_options={"collector": collector},
+)
+
+# After the call, access observability
+print(collector.last.usage.input_tokens)     # → 1234
+print(collector.last.raw_llm_response)       # → raw model output
+for call in collector.last.calls:
+    print(call.http_response)                # → per-call HTTP response
+```
+
+### Wired in `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py`
+
+The `EnsembledExtractor._run_path_baml()` method (added by
+`2026-08-17-hygiene-drift-cleanup-v1` P1.8) wires the Collector and
+populates the new observability fields on `EnsemblePathOutput`:
+
+```python
+collector = baml_py.Collector(name=f"biep_ocr_{baml_function}")
+result = b.ExtractChemSyllabus(
+    text=_docling_text,
+    source_pdf=str(pdf_path),
+    baml_options={"collector": collector},
+)
+# path_output.usage_input_tokens = collector.last.usage.input_tokens
+# path_output.raw_llm_response = collector.last.raw_llm_response
+# path_output.http_responses = [str(c.http_response) for c in collector.last.calls]
+```
+
+This closes the false-success loop in the OCR ensemble (the MLflow
+observability hook only fires when `evaluate_ensemble()` is called
+with populated per-path usage + raw_response fields).
+
 [Collector](https://docs.boundaryml.com/ref/baml_client/collector.md) · [@trace](https://docs.boundaryml.com/ref/baml_client/collector.md#tags) · [client<llm>](https://docs.boundaryml.com/ref/baml/client-llm.md) · [Changelog](https://docs.boundaryml.com/changelog/changelog.md) · [docs llms.txt](https://docs.boundaryml.com/llms.txt)

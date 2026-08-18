@@ -54,5 +54,41 @@ function SuggestUIComponents(
   cognee_index_summary: string,
   stage: string
 ) -> UIComponentSuggestion[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+  prompt #"
+    {{ _.role("user") }}
+    {{ ctx.output_format }}
+
+    You are a UI architect for the Cianfhoghlaim educational platform.
+    Given the extracted subjects for a stage and the current Cognee
+    knowledge-graph index summary, suggest 3-7 UI components that would
+    surface this content to learners.
+
+    Stage: {{ stage }}
+
+    Extracted subjects for this stage (one per line):
+    {{ extracted_subjects }}
+
+    Cognee index summary (truncated):
+    {{ cognee_index_summary }}
+
+    For each component, return:
+    - route_slug: a URL path the component should live at
+      (e.g., '/en/stages/aistear', '/ga/ábhair/matamaitic',
+      '/en/subjects/chemistry')
+    - kind: one of the UIComponentKind enum values (e.g.,
+      FLASHCARD_DECK, CONCEPT_MAP, PRACTICE_QUIZ, VIDEO_PLAYLIST,
+      GLOSSARY, TIMELINE, COMPARISON_TABLE, MIND_MAP,
+      INTERACTIVE_DEMO)
+    - title_en: the English title
+    - title_ga: the Irish title (or null if English-only)
+    - keywords: list of keywords the component should match
+      (e.g., ['Well-being', 'primary_strand:Number', 'learning_outcome:LO-2.1'])
+    - data_source: the LanceDB table or Cognee dataset name that
+      should back this component
+    - priority: 1-5 for build order (1 = highest priority)
+    - rationale_en: 1-2 sentence justification in English
+    - rationale_ga: 1-2 sentence justification in Irish (or null)
+
+    Return ONLY the structured UIComponentSuggestion array. No prose.
+  "#
 }

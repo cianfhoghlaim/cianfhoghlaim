@@ -204,6 +204,27 @@ export async function health() {
     }
   }
 
+  // 15. Edge TLS verification (added 2026-08-17-biep-v3-bring-up-v1 P1.8).
+  // Invokes scripts/check-edge-tls.sh --strict --all so the iac:health
+  // 14-way claim is no longer false-positive — it now catches the
+  // OpenSSL verify return code 21 (TRAEFIK DEFAULT CERT) + HTTP 000
+  // (offline-site binding) failure modes documented in the
+  // 2026-08-06-token-plan-apis-lc-doc-pipeline-and-edge-tls-remediation-v1
+  // change.
+  try {
+    const tlsOut = (await execAsync(
+      "bash scripts/check-edge-tls.sh --strict --all",
+    )).stdout.trim();
+    const okLine = tlsOut.split("\n").find((l) => l.includes("verified") || l.includes("OK"));
+    logOk(`edge-tls: ${okLine ?? "all 17 hostnames healthy"}`);
+  } catch (e) {
+    const stderr = (e as { stderr?: string }).stderr ?? "";
+    logError(
+      `edge-tls: scripts/check-edge-tls.sh --strict --all failed\n${stderr.slice(0, 400)}`,
+    );
+    allOk = false;
+  }
+
   finish(allOk);
 }
 

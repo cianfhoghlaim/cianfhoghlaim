@@ -68,6 +68,17 @@ class EnsemblePathOutput:
     ragas_context_precision: float | None = None
     error: str | None = None
 
+    # BAML Collector observability fields (added by
+    # 2026-08-17-hygiene-drift-cleanup-v1 P1.8). Populated when the
+    # path's runtime supports BAML Collector (only the BAML path
+    # today; Unstract / qwen3-vl / gemma4 leave these None until
+    # their runtimes gain Collector parity).
+    usage_input_tokens: int | None = None
+    usage_output_tokens: int | None = None
+    usage_total_tokens: int | None = None
+    raw_llm_response: str | None = None
+    http_responses: list[str] = field(default_factory=list)
+
 
 @dataclass
 class EnsembleResult:
@@ -97,6 +108,11 @@ class EnsembleResult:
     board: str | None = None
     qualification_level: str | None = None
     subject: str | None = None
+
+    # Rows actually written to DuckLake by `_land_paths_in_ducklake`. Stays
+    # 0 if the landing did not run, so a caller can never report a row count
+    # the store does not have.
+    rows_landed: int = 0
 
     @property
     def ragas_passed(self) -> bool:
@@ -140,6 +156,11 @@ class EnsembledExtractor:
         self.qwen3_vl_endpoint = qwen3_vl_endpoint
         self.gemma4_endpoint = gemma4_endpoint
         self.ragas_threshold = ragas_threshold
+        # Stashed observations from the most recent BAML Collector
+        # invocation (Path 1). Read by _to_path_output after the
+        # asyncio.gather() completes. Added by
+        # 2026-08-17-hygiene-drift-cleanup-v1 P1.8.
+        self._last_baml_collector_observations: dict[str, Any] | None = None
 
     # ─── Public API ────────────────────────────────────────────────────────
 
@@ -200,8 +221,16 @@ class EnsembledExtractor:
 
         # Materialise as EnsemblePathOutputs (gracefully degrade on per-path
         # failures — the RAGAS vote still runs on whatever succeeded).
+        # Added by 2026-08-17-hygiene-drift-cleanup-v1 P1.8: the BAML
+        # path's collector observations are read from the closure-bound
+        # attribute set during _run_path_baml(); the other 3 paths leave
+        # the observation kwargs as None until their runtimes gain
+        # Collector parity.
         paths = [
-            _to_path_output(path_results[0], "baml"),
+            _to_path_output(
+                path_results[0], "baml",
+                collector_observations=self._last_baml_collector_observations,
+            ),
             _to_path_output(path_results[1], "unstract"),
             _to_path_output(path_results[2], "qwen3_vl"),
             _to_path_output(path_results[3], "gemma4"),
@@ -242,9 +271,10 @@ class EnsembledExtractor:
         )
 
         # Land each path's row + the voted canonical in the per-jurisdiction
-        # DuckLake namespace. (Real implementation hits dlt destination; stub
-        # below logs the path for observability.)
-        self._land_paths_in_ducklake(result, jurisdiction, scope, subject, board)
+        # DuckLake namespace, via the canonical dlt destination factory.
+        result.rows_landed = self._land_paths_in_ducklake(
+            result, jurisdiction, scope, subject, board
+        )
 
         # OCR_WEBHOOK_URL emission (post-trilogy delta). Fire-and-forget
         # async POST — never blocks the extraction result. The payload
@@ -302,12 +332,50 @@ class EnsembledExtractor:
             baml_fn = getattr(_baml_sync.b, baml_function, None)
             if baml_fn is None:
                 return f"[BAML_PATH] unknown_function: {baml_function}"
+            # Wire BAML Collector API for observability (added by
+            # 2026-08-17-hygiene-drift-cleanup-v1 P1.8) — populates
+            # usage_input_tokens + raw_llm_response + http_responses on
+            # the EnsemblePathOutput so MLflow can record the per-call
+            # telemetry via evaluate_ensemble().
+            #
+            # The Collector is module-level-scoped; we lazily import
+            # baml_py so the ensemble can still load when the
+            # baml-py extra is not installed.
+            collector = None
+            try:
+                from baml_py import Collector as _BamlCollector
+                collector = _BamlCollector(name=f"biep_ocr_{baml_function}")
+            except ImportError:
+                logger.debug("baml_py_collector_unavailable", baml_function=baml_function)
             # The BAML sync client is a context manager; the call
             # returns a typed Pydantic model (or list of models) which
             # we JSON-serialise as the path output.
             with _baml_sync() as client:
-                result = client.call(baml_fn, text=_docling_text, source_pdf=str(pdf_path))
-            return json.dumps(result.model_dump() if hasattr(result, "model_dump") else result, default=str)
+                baml_kwargs = {"text": _docling_text, "source_pdf": str(pdf_path)}
+                if collector is not None:
+                    baml_kwargs["baml_options"] = {"collector": collector}
+                result = client.call(baml_fn, **baml_kwargs)
+            json_response = json.dumps(
+                result.model_dump() if hasattr(result, "model_dump") else result,
+                default=str,
+            )
+            # Stash the collector observations on the closure-bound
+            # attribute so _to_path_output can read them after the
+            # asyncio.gather() completes (collector is per-call, not
+            # per-path-output).
+            if collector is not None and hasattr(collector, "last") and collector.last is not None:
+                self._last_baml_collector_observations = {
+                    "usage_input_tokens": getattr(collector.last.usage, "input_tokens", None) if collector.last.usage else None,
+                    "usage_output_tokens": getattr(collector.last.usage, "output_tokens", None) if collector.last.usage else None,
+                    "raw_llm_response": collector.last.raw_llm_response,
+                    "http_responses": [
+                        str(getattr(c, "http_response", ""))
+                        for c in (collector.last.calls or [])
+                    ],
+                }
+            else:
+                self._last_baml_collector_observations = None
+            return json_response
         except Exception as e:
             logger.warning("baml_call_failed", baml_function=baml_function, error=str(e))
             return f"[BAML_PATH] error={e}"
@@ -349,34 +417,97 @@ class EnsembledExtractor:
         scope: str,
         subject: str | None,
         board: str | None,
-    ) -> None:
+    ) -> int:
         """Land each path's output + the voted canonical row in DuckLake.
 
-        Real implementation will route through
-        `dlt.common.destinations_oideachais.with_namespace('oideachais')`.
-        Today this logs the destination for observability — the full
-        DuckLake landing is wired through the Change 5 sensor for the
-        freshness guarantee.
+        Returns the number of rows actually written (4 path rows + 1 voted
+        row per PDF, when all four paths ran).
+
+        IMPLEMENTED 2026-08-14. This was previously two `logger.info` calls
+        with a docstring promising a "real implementation" — so the flagship
+        4-path ensemble produced no persisted output at all, while its
+        Dagster asset check reported success. Routed through the canonical
+        `get_dlt_destination()` so it honours the same DuckLake/DuckDB tier
+        selection as every other writer.
         """
+        import dlt
+
+        from dlt_sources.common.destinations_cianfhoghlaim import (
+            get_dlt_destination,
+        )
+
+        rows: list[dict[str, Any]] = []
         for path in result.paths:
-            ns = _path_destination_namespace(
-                jurisdiction, scope, subject, board, path.path,
+            rows.append(
+                {
+                    "namespace": _path_destination_namespace(
+                        jurisdiction, scope, subject, board, path.path,
+                    ),
+                    "row_kind": "path",
+                    "path": path.path,
+                    "raw_response": path.raw_response,
+                    "confidence_score": path.confidence_score,
+                    "schema_valid": path.schema_valid,
+                    "ragas_faithfulness": path.ragas_faithfulness,
+                    "ragas_answer_relevance": path.ragas_answer_relevance,
+                    "ragas_context_precision": path.ragas_context_precision,
+                    "error": path.error,
+                    "source_pdf": result.source_pdf,
+                    "content_hash": result.content_hash,
+                    "ingested_at": result.ingested_at,
+                    "jurisdiction": jurisdiction,
+                    "scope": scope,
+                    "subject": subject or result.subject,
+                    "board": board or result.board,
+                    "qualification_level": result.qualification_level,
+                }
             )
-            logger.info(
-                "ensemble_path_landing",
-                namespace=ns,
-                path=path.path,
-                source_pdf=result.source_pdf,
-            )
-        ns_voted = _path_destination_namespace(
-            jurisdiction, scope, subject, board, "voted_canonical",
+
+        rows.append(
+            {
+                "namespace": _path_destination_namespace(
+                    jurisdiction, scope, subject, board, "voted_canonical",
+                ),
+                "row_kind": "voted_canonical",
+                "path": result.ragas_voted_path,
+                "raw_response": result.voted_output,
+                "confidence_score": result.ragas_score,
+                "schema_valid": True,
+                "voted_canonical_id": result.voted_canonical_id,
+                "source_pdf": result.source_pdf,
+                "content_hash": result.content_hash,
+                "ingested_at": result.ingested_at,
+                "jurisdiction": jurisdiction,
+                "scope": scope,
+                "subject": subject or result.subject,
+                "board": board or result.board,
+                "qualification_level": result.qualification_level,
+            }
+        )
+
+        pipeline = dlt.pipeline(
+            pipeline_name="biiep_ocr_ensemble",
+            destination=get_dlt_destination(),
+            dataset_name="ocr_ensemble",
+            dev_mode=False,
+        )
+        # `content_hash` + `path` identify a row uniquely, so re-running the
+        # ensemble on the same PDF updates rather than duplicates.
+        load_info = pipeline.run(
+            rows,
+            table_name="ensemble_paths",
+            write_disposition="merge",
+            primary_key=["content_hash", "row_kind", "path"],
         )
         logger.info(
-            "ensemble_voted_landing",
-            namespace=ns_voted,
+            "ensemble_landed",
+            rows=len(rows),
+            source_pdf=result.source_pdf,
             ragas_score=result.ragas_score,
             voted_path=result.ragas_voted_path,
+            loads_ids=str(load_info.loads_ids[0]) if load_info.loads_ids else "",
         )
+        return len(rows)
 
     # ─── OCR_WEBHOOK_URL emission (post-trilogy delta) ────────────────────
 
@@ -481,8 +612,18 @@ def _now_iso() -> str:
     return datetime.now(UTC).isoformat()
 
 
-def _to_path_output(result: Any, path: PathName) -> EnsemblePathOutput:
-    """Normalise an asyncio path result into an EnsemblePathOutput."""
+def _to_path_output(
+    result: Any,
+    path: PathName,
+    collector_observations: dict[str, Any] | None = None,
+) -> EnsemblePathOutput:
+    """Normalise an asyncio path result into an EnsemblePathOutput.
+
+    The optional `collector_observations` dict (only populated for the
+    BAML path today, via the `baml_py.Collector` API) populates the
+    observability fields on the EnsemblePathOutput. Added by
+    2026-08-17-hygiene-drift-cleanup-v1 P1.8.
+    """
     if isinstance(result, Exception):
         return EnsemblePathOutput(
             path=path,
@@ -491,11 +632,16 @@ def _to_path_output(result: Any, path: PathName) -> EnsemblePathOutput:
             schema_valid=False,
             error=str(result),
         )
+    obs = collector_observations or {}
     return EnsemblePathOutput(
         path=path,
         raw_response=str(result) if result is not None else "",
         confidence_score=0.9 if result else 0.0,
         schema_valid=True,
+        usage_input_tokens=obs.get("usage_input_tokens"),
+        usage_output_tokens=obs.get("usage_output_tokens"),
+        raw_llm_response=obs.get("raw_llm_response"),
+        http_responses=list(obs.get("http_responses") or []),
     )
 
 

@@ -13,10 +13,17 @@ dependencies = [
     "anthropic>=0.106.0",
     "baml-py>=0.222.0",
     "beautifulsoup4>=4.12",
+    # CocoIndex bumped to >=1.0.20 (from historical >=1.0.14) by the
+    # 2026-08-17-hygiene-drift-cleanup-v1 change (P2.1). v1.0.15-v1.0.20
+    # are additive: BigQuery/Snowflake/Valkey target connectors,
+    # LiveMap, rate limiting, batched target writes, zvec FTS fields,
+    # preserve target invalidation, the `deps=` parameter on
+    # `@coco.fn` for memoization (cocoindex-io/cocoindex#1836).
+    "cocoindex>=1.0.20,<2.0.0",
     "dagster>=1.13",
     "dagster-dbt>=0.29",
     "dagster-dlt>=0.29",
-    "dlt[duckdb,motherduck,filesystem]>=1.5",
+    "dlt[duckdb,motherduck,filesystem]>=1.28.1",
     "duckdb>=1.4",
     "fastapi>=0.115.0,<0.140",
     "firecrawl>=4.28.2",
