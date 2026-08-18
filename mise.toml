@@ -137,6 +137,18 @@ run = ".venv/bin/python3 scripts/lint_locket_version.py"
 description = "Audit dlt_sources/**/*.py for nested_hints() calls containing `__` path fragments (per dlt-hub/dlt#4247 the dlt 1.28 normalizer silently strips these). Added by 2026-08-17-hygiene-drift-cleanup-v1 (P2.6)"
 run = ".venv/bin/python3 scripts/lint_dlt_nested_hints.py"
 
+[tasks."lint:litellm-router-fallbacks"]
+description = "Audit bonneagar/stacks/litellm/config/config.yaml for bare-list router_settings.fallbacks (per the 2026-07-29-lakehouse-extensive-hydration-v1 change the litellm 1.x Router validates the dict form). Added by 2026-08-17-biep-v3-bring-up-v1 (P2.15)"
+run = ".venv/bin/python3 scripts/lint_litellm_router_fallbacks.py"
+
+[tasks."lint:baml-stub-prompts"]
+description = "Audit baml_src/**/*.baml for the literal stub string 'Auto-generated extraction prompt.' (per the centralized-schema-registry spec the 832-of-838 stub class is the regression to prevent). Added by 2026-08-17-biep-v3-bring-up-v1 (P2.16)"
+run = ".venv/bin/python3 scripts/lint_baml_stub_prompts.py"
+
+[tasks."lint:copilotkit-actions-stubbed"]
+description = "Audit web/apps/cianfhoghlaim-leaving-cert/apps/api/src/copilotkit/actions.ts for 'TBD' placeholder returns (per the agentic-frontend-frameworks spec the 12-of-14 stub class is the regression to prevent). Added by 2026-08-17-biep-v3-bring-up-v1 (P2.17)"
+run = ".venv/bin/python3 scripts/lint_copilotkit_actions_stubbed.py"
+
 [tasks."pre-commit-install"]
 description = "Install the centralized-registry pre-commit hook"
 run = "pre-commit install && pre-commit run --all-files"
