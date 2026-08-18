@@ -160,7 +160,7 @@ services:
   # LOCKET — Infisical secret injection sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
     container_name: pangolin-locket
     user: "65532:65532"
     restart: unless-stopped

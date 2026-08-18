@@ -53,30 +53,48 @@ class RoutingConfig:
 # Canonical routing table.
 # Key: (source_group, language) where language can be "*" for default.
 # Value: RoutingConfig with the LiteLLM client + model to dispatch to.
+#
+# Migrated to MODEL_REGISTRY lookups by 2026-08-17-hygiene-drift-cleanup-v1
+# (P3.1). The 15 hardcoded model strings (6 x uccix-mistral-24b + 8 x
+# gemma-4-26B-A4B + 1 x molmo2-8b) are now resolved via `model_for()`:
+#   - "uccix-mistral-24b"   -> model_for("text_llm", "irish", language="ga")
+#   - "gemma-4-26B-A4B"     -> model_for("text_llm", "default")
+#   - "molmo2-8b"           -> model_for("ocr_vision", "specialist")
+#
+# Model registry keys resolve at runtime to the same string they had
+# before (per `meaisinfhoghlaim/models/model_registry.py` and the
+# `centralized-model-registry` spec), but now any deployment-time model
+# swap (e.g. swap uccix-mistral-24b for a newer Irish-tuned model)
+# requires only a MODEL_REGISTRY edit + registry_audit.py check.
+DEFAULT_TEXT_MODEL = model_for("text_llm", "default")
+IRISH_TEXT_MODEL = model_for("text_llm", "irish", language="ga")
+DIAGRAM_OCR_MODEL = model_for("ocr_vision", "specialist")
+DEFAULT_OCR_MODEL = model_for("ocr_vision", "default")
+
 ROUTING_TABLE: dict[tuple[str, str], "RoutingConfig"] = {
     # Gaois APIs (Téarma + Logainm + Ainm)
-    ("gaois", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
-    ("gaois", "en"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    ("gaois", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
+    ("gaois", "ga"): RoutingConfig(client="LlamaSwap", model=IRISH_TEXT_MODEL, tier="tier2_medium"),
+    ("gaois", "en"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
+    ("gaois", "*"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
     # Dúchas National Folklore Collection
-    ("duchas", "*"): RoutingConfig(client="LlamaSwap", model="molmo2-8b", tier="specialist"),
+    ("duchas", "*"): RoutingConfig(client="LlamaSwap", model=DIAGRAM_OCR_MODEL, tier="specialist"),
     # Heritage + Hidden Heritages
-    ("heritage", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
+    ("heritage", "*"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
     # Canuint (audio + text)
-    ("canuint", "*"): RoutingConfig(client="LlamaSwap", model=model_for("ocr_vision", "default"), tier="tier2_medium"),
+    ("canuint", "*"): RoutingConfig(client="LlamaSwap", model=DEFAULT_OCR_MODEL, tier="tier2_medium"),
     # Universal Dependencies Celtic Treebanks
-    ("ud_celtic", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
-    ("ud_celtic", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
+    ("ud_celtic", "ga"): RoutingConfig(client="LlamaSwap", model=IRISH_TEXT_MODEL, tier="tier2_medium"),
+    ("ud_celtic", "*"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
     # Local documents by subject (OCR)
-    ("local_documents", "*"): RoutingConfig(client="LlamaSwap", model=model_for("ocr_vision", "default"), tier="tier2_medium"),
+    ("local_documents", "*"): RoutingConfig(client="LlamaSwap", model=DEFAULT_OCR_MODEL, tier="tier2_medium"),
     # Celtic curriculum (6 Celtic languages)
-    ("celtic_curriculum", "ga"): RoutingConfig(client="LlamaSwap", model="uccix-mistral-24b", tier="tier2_medium"),
-    ("celtic_curriculum", "cy"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    ("celtic_curriculum", "gd"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    ("celtic_curriculum", "br"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    ("celtic_curriculum", "gv"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    ("celtic_curriculum", "kw"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
-    ("celtic_curriculum", "*"): RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium"),
+    ("celtic_curriculum", "ga"): RoutingConfig(client="LlamaSwap", model=IRISH_TEXT_MODEL, tier="tier2_medium"),
+    ("celtic_curriculum", "cy"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
+    ("celtic_curriculum", "gd"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
+    ("celtic_curriculum", "br"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
+    ("celtic_curriculum", "gv"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
+    ("celtic_curriculum", "kw"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
+    ("celtic_curriculum", "*"): RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium"),
 }
 
 
@@ -84,7 +102,8 @@ def route_language(source_group: str, language: str) -> RoutingConfig:
     """Look up the routing decision for a (source_group, language) pair.
 
     Falls back to the "*" wildcard if the exact language match is
-    missing, then to the default fallback `gemma-4-26B-A4B`.
+    missing, then to the default fallback DEFAULT_TEXT_MODEL
+    (model_for("text_llm", "default")).
     """
     key = (source_group, language)
     if key in ROUTING_TABLE:
@@ -94,7 +113,7 @@ def route_language(source_group: str, language: str) -> RoutingConfig:
     if wildcard_key in ROUTING_TABLE:
         return ROUTING_TABLE[wildcard_key]
     # Final fallback: multilingual MoE
-    return RoutingConfig(client="LlamaSwap", model="gemma-4-26B-A4B", tier="tier2_medium")
+    return RoutingConfig(client="LlamaSwap", model=DEFAULT_TEXT_MODEL, tier="tier2_medium")
 
 
 def get_baml_client(source_group: str, language: str) -> str:

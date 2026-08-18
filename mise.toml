@@ -125,6 +125,18 @@ run = "bash .agents/skills/lint-skills.sh"
 description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY. Part of the `centralized-model-registry` capability — see openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
 run = ".venv/bin/python3 scripts/registry_audit.py --strict"
 
+[tasks."lint:dagster:sensor-job-coverage"]
+description = "Audit that every @sensor(job_name=...) in orchestration/sensors/ has a matching define_asset_job in orchestration/sensors/jobs.py or garage_pdf_arrival_sensor.py. Closes the 8-of-8 silent failure class per the 2026-08-08-lakehouse-extensive-hydration-v1 change. Added by 2026-08-17-hygiene-drift-cleanup-v1 (P1.7)"
+run = ".venv/bin/python3 scripts/dagster_sensor_job_coverage_lint.py"
+
+[tasks."lint:locket-version"]
+description = "Audit that every compose.yaml in bonneagar/stacks/**/ referencing pbradley/locket:infisical is >= v0.18.0 OR substitutes the cianfhoghlaim/locket-shim image. Closes the 422-on-Infisical-v0.161+ regression per the 2026-08-15-bonneagar-infra-remediation-v2 change. Added by 2026-08-17-hygiene-drift-cleanup-v1 (P2.10)"
+run = ".venv/bin/python3 scripts/lint_locket_version.py"
+
+[tasks."lint:dlt:nested-hints"]
+description = "Audit dlt_sources/**/*.py for nested_hints() calls containing `__` path fragments (per dlt-hub/dlt#4247 the dlt 1.28 normalizer silently strips these). Added by 2026-08-17-hygiene-drift-cleanup-v1 (P2.6)"
+run = ".venv/bin/python3 scripts/lint_dlt_nested_hints.py"
+
 [tasks."pre-commit-install"]
 description = "Install the centralized-registry pre-commit hook"
 run = "pre-commit install && pre-commit run --all-files"
