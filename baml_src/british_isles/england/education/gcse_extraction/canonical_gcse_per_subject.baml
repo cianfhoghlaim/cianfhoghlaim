@@ -387,7 +387,7 @@ function ExtractGCSECurriculumSyllabus(
   subject: GCSEPrioritySubjectSlug,
   exam_board: GCSEExamBoard,
 ) -> GCSESyllabusSpec {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
     {{ _.role("user") }}
     You are an expert at reading official awarding-body GCSE specification
@@ -481,7 +481,7 @@ function ExtractGCSEExamPaperLayout(
   subject: GCSEPrioritySubjectSlug,
   exam_board: GCSEExamBoard,
 ) -> GCSEExamPaper {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
     {{ _.role("user") }}
     You are an expert GCSE exam paper layout extractor for `{{ subject }}` (board: {{ exam_board }}).
@@ -531,9 +531,9 @@ function ExtractGCSEMarkingSchemeGuideline(
   subject: GCSEPrioritySubjectSlug,
   exam_board: GCSEExamBoard,
 ) -> GCSEExamPaperMarkingScheme {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     You are an expert GCSE marking scheme extractor for `{{ subject }}` (board: {{ exam_board }}).
 
     Extract:
@@ -567,9 +567,9 @@ function ExtractGCSESyllabusDiagram(
   pdf_text: string,
   subject: GCSEPrioritySubjectSlug,
 ) -> GCSESyllabusDiagram[] {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     Extract diagrams from the GCSE `{{ subject }}` syllabus.
 
     For each diagram:
@@ -596,7 +596,7 @@ function ExtractGCSESyllabusDiagram(
     Syllabus PDF text:
     {{ pdf_text }}
 
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     {{ ctx.output_format }}
   "#
 }
@@ -606,9 +606,9 @@ function ExtractGCSECrossSubjectTopics(
   subject: GCSEPrioritySubjectSlug,
   exam_board: GCSEExamBoard,
 ) -> GCSECrossSubjectTopicSet {
-  client BiepGeneralClient
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     Extract the cross-subject topic map for GCSE `{{ subject }}` (board: {{ exam_board }}).
 
     For each topic:
@@ -627,23 +627,7 @@ function ExtractGCSECrossSubjectTopics(
 }
 
 // ============================================================================
-// Clients (the 4 extraction backends)
+// Clients (use the canonical clients from baml_src/clients.baml)
+// The duplicates below were removed per the 2026-08-26-mega-3a-baml-and-adk-v1
+// change (the canonical clients are defined in clients.baml).
 // ============================================================================
-
-client<llm> MiniMaxM3Client {
-  provider "openai-generic"
-  options {
-    base_url env.MINIMAX_BASE_URL
-    api_key env.MINIMAX_API_KEY
-    model "minimax-m3"
-  }
-}
-
-client<llm> BiepGeneralClient {
-  provider "openai-generic"
-  options {
-    base_url env.MINIMAX_BASE_URL
-    api_key env.MINIMAX_API_KEY
-    model "minimax-m3"
-  }
-}

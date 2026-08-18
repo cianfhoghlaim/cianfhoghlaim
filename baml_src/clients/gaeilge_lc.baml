@@ -1,17 +1,17 @@
-# BAML client for the Irish-language LC subject pilot (per the 2026-08-10-baml-extraction-completion-v1 change).
-#
-# Routes through LiteLLM `uccix-mistral-24b` (the Modern Irish language path
-# from MODEL_REGISTRY), not MiniMax-M3 (the default for English).
-#
-# Use this client for any BAML function invoked from the gaeilge subject
-# pilot (or any other Irish-language extraction).
+// BAML client for the Irish-language LC subject pilot (per the 2026-08-10-baml-extraction-completion-v1 change).
+//
+// Routes through LiteLLM `uccix-mistral-24b` (the Modern Irish language path
+// from MODEL_REGISTRY), not MiniMax-M3 (the default for English).
+//
+// Use this client for any BAML function invoked from the gaeilge subject
+// pilot (or any other Irish-language extraction).
 
 client<llm> GaeilgeLCClient {
-  provider litellm
+  provider "openai-generic"
   options {
-    model uccix-mistral-24b
-    api_base "http://litellm:4000/v1"
+    base_url "http://litellm:4000/v1"
     api_key env.MISTRAL_API_KEY
+    model "uccix-mistral-24b"
     max_tokens 8192
     temperature 0.0
   }
@@ -19,6 +19,8 @@ client<llm> GaeilgeLCClient {
 
 retry_policy GaeilgeLCRetry {
   max_retries 3
-  strategy exponential_backoff
-  initial_delay 2000
+  strategy {
+    type exponential_backoff
+    delay 2000
+  }
 }

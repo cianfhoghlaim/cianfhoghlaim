@@ -216,9 +216,9 @@ function ExtractALevelCurriculumSyllabus(
   subject: ALevelPrioritySubjectSlug,
   exam_board: ALevelExamBoard,
 ) -> ALevelSyllabusSpec {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     You are an expert at reading official awarding-body A-Level specification
     documents (AQA / OCR / Edexcel) and extracting their structure with complete
     fidelity — every fact below MUST be grounded in the PDF text given; never
@@ -331,9 +331,9 @@ function ExtractALevelExamPaperLayout(
   subject: ALevelPrioritySubjectSlug,
   exam_board: ALevelExamBoard,
 ) -> ALevelExamPaper {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     You are an expert A-Level exam paper layout extractor for `{{ subject }}` (board: {{ exam_board }}).
 
     Extract:
@@ -379,9 +379,9 @@ function ExtractALevelMarkingSchemeGuideline(
   subject: ALevelPrioritySubjectSlug,
   exam_board: ALevelExamBoard,
 ) -> ALevelExamPaperMarkingScheme {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     You are an expert A-Level marking scheme extractor for `{{ subject }}` (board: {{ exam_board }}).
 
     Extract:
@@ -411,9 +411,9 @@ function ExtractALevelSyllabusDiagram(
   pdf_text: string,
   subject: ALevelPrioritySubjectSlug,
 ) -> ALevelSyllabusDiagram[] {
-  client MiniMaxM3Client
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     Extract diagrams from the A-Level `{{ subject }}` syllabus.
 
     For each diagram:
@@ -448,9 +448,9 @@ function ExtractALevelCrossSubjectTopics(
   subject: ALevelPrioritySubjectSlug,
   exam_board: ALevelExamBoard,
 ) -> ALevelCrossSubjectTopicSet {
-  client BiepGeneralClient
+  client LitellmClient
   prompt #"
-    {{ _.role("user" }}
+    {{ _.role("user") }}
     Extract the cross-subject topic map for A-Level `{{ subject }}` (board: {{ exam_board }}).
 
     For each topic:
@@ -469,23 +469,8 @@ function ExtractALevelCrossSubjectTopics(
 }
 
 // ============================================================================
-// Clients (the 4 extraction backends)
+// Clients (use the canonical clients from baml_src/clients.baml:
+//   LitellmClient (minimax-m3) + LocalVisionQwen3vl + LocalVisionGemma4)
+// The duplicates below were removed per the 2026-08-26-mega-3a-baml-and-adk-v1
+// change (the canonical clients are defined in clients.baml).
 // ============================================================================
-
-client<llm> MiniMaxM3Client {
-  provider "openai-generic"
-  options {
-    base_url env.MINIMAX_BASE_URL
-    api_key env.MINIMAX_API_KEY
-    model "minimax-m3"
-  }
-}
-
-client<llm> BiepGeneralClient {
-  provider "openai-generic"
-  options {
-    base_url env.MINIMAX_BASE_URL
-    api_key env.MINIMAX_API_KEY
-    model "minimax-m3"
-  }
-}
