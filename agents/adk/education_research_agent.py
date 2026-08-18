@@ -25,6 +25,7 @@ from .callbacks.citation_callbacks import (
     format_education_citations_callback,
 )
 from .config import config
+from .litellm_agent import litellm_model
 
 
 # --- Structured Output Models ---

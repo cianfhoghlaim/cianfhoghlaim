@@ -11,6 +11,7 @@ Tracks learning outcomes and provides hints.
 
 import datetime
 
+from .litellm_agent import litellm_model
 from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 
