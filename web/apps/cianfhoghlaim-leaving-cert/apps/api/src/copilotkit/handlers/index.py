@@ -197,7 +197,7 @@ async def lookup_learning_outcome(args: dict[str, Any]) -> dict[str, Any]:
 async def get_strand_graph(args: dict[str, Any]) -> dict[str, Any]:
     """Query FalkorDB for the strand/strand-unit graph for one LO."""
     try:
-        from meaisinfoghlaim.alignment.cross_qualification_topic_alignment import (  # type: ignore[import-not-found]
+        from meaisinfhoghlaim.alignment.cross_qualification_topic_alignment import (  # type: ignore[import-not-found]
             CrossQualificationTopicAligner,
         )
 

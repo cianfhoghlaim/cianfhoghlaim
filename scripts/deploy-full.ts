@@ -93,7 +93,7 @@ const DATA_STACKS = ["litellm", "langfuse", "mlflow", "logfire", "cognee", "grap
 // The 7 OCR backends (added in 2026-08-02 post-trilogy-cleanup). Order matters:
 // llama-swap is last because it holds the heavy on-device GGUF reservation
 // (32-48 GB RAM); running it first can starve the rest.
-const OCR_STACKS = ["paddleocr", "dots-ocr", "olmocr", "docling-serve", "mlx-omni", "llama-swap", "meaisinfoghlaim"] as const;
+const OCR_STACKS = ["paddleocr", "dots-ocr", "olmocr", "docling-serve", "mlx-omni", "llama-swap"] as const;
 
 // The 3 agent surfaces + the new ocr-router from Change 2.
 const AGENT_STACKS = ["openclaw", "openchamber", "hermes", "ocr-router"] as const;

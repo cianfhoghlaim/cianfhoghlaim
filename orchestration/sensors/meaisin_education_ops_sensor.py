@@ -30,11 +30,11 @@ _LAST_SEEN: dict = {}
 def _load_lifecycle():
     """Lazy-import the lifecycle collaborator (avoids heavy import at module load)."""
     try:
-        from meaisinfoghlaim.datasets.cohort_lifecycle import (
+        from meaisinfhoghlaim.datasets.cohort_lifecycle import (
             CohortLifecycle,
             CohortLifecycleState,
         )
-        from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
+        from meaisinfhoghlaim.datasets.cohort_registry import CohortRegistry
         return CohortLifecycle, CohortLifecycleState, CohortRegistry
     except ImportError:
         logger.warning(

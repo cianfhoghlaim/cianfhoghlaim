@@ -9,14 +9,14 @@ import asyncio
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.bilingual_concept_registry import (
+from meaisinfhoghlaim.alignment.bilingual_concept_registry import (
     BilingualConceptRegistry,
     LanguagePair,
 )
-from meaisinfoghlaim.alignment.cross_linguistic import (
+from meaisinfhoghlaim.alignment.cross_linguistic import (
     ExtractCrossLinguisticHandler,
 )
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     BilingualConcept,
     Stage,
 )

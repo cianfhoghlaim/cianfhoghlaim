@@ -26,7 +26,7 @@ from __future__ import annotations
 import re
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Literal
+from typing import Any, ClassVar, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -293,7 +293,7 @@ class BilingualCoverageAudit(BaseModel):
     gap_topics: list[str] = Field(default_factory=list, description="Topics missing EN or GA coverage")
 
     # The gate
-    THRESHOLD = 0.95
+    THRESHOLD: ClassVar[float] = 0.95
     passed_threshold: bool = Field(default=False)
 
     duration_s: float = Field(default=0.0)
@@ -506,7 +506,7 @@ class CrossQualificationGap(BaseModel):
         default_factory=list,
         description="The qualification_b values where this topic might be covered",
     )
-    severity: Literal = Field(
+    severity: Literal["low", "medium", "high"] = Field(
         default="medium",
         description="The gap severity (operator-curated or auto-inferred)",
     )

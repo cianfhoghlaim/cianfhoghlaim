@@ -1,6 +1,6 @@
-// bonneagar/iac/commands/health.ts — 14-way health check
+// bonneagar/iac/commands/health.ts — 13-way health check
 //
-// Checks all 14 surfaces in the bons IaC:
+// Checks all 13 surfaces in the bons IaC:
 //   1. Komodo     — the GitOps orchestrator
 //   2. Pangolin   — the identity-aware reverse proxy + WireGuard server (gerbil)
 //   3. Infisical  — the secrets source of truth
@@ -8,15 +8,16 @@
 //   5. Pocket ID  — the OIDC identity provider (admin SSO for Pangolin + newt creds)
 //   6. Tinyauth   — the ForwardAuth middleware that fronts Pangolin
 //
-// Workload-plane probes (added 2026-08-02 post-trilogy-cleanup):
-//   7.  meaisinfoghlaim (port 8080) — llama-swap OpenAI-compatible API
-//   8.  paddleocr        (port 8000) — forms OCR
-//   9.  dots-ocr         (port 8001) — tesseract fallback
-//   10. olmocr           (port 8003) — tables + latex
-//   11. docling-serve    (port 5001) — doctags
-//   12. mlx-omni         (port 10240) — MLX OpenAI-compatible gateway
-//   13. llama-swap       (port 8080) — GGUF model swapper
-//   14. ocr-router       (port 8090) — OCR capability router
+// Workload-plane probes (added 2026-08-02 post-trilogy-cleanup;
+// the duplicate "meaisinfoghlaim" probe on the same port 8080 was
+// removed 2026-08-19 — llama-swap below is the same service):
+//   7.  paddleocr        (port 8000) — forms OCR
+//   8.  dots-ocr         (port 8001) — tesseract fallback
+//   9.  olmocr           (port 8003) — tables + latex
+//   10. docling-serve    (port 5001) — doctags
+//   11. mlx-omni         (port 10240) — MLX OpenAI-compatible gateway
+//   12. llama-swap       (port 8080) — GGUF model swapper
+//   13. ocr-router       (port 8090) — OCR capability router
 //
 // Exits 0 only if all 14 are healthy.
 
@@ -39,7 +40,6 @@ const PROTO = process.env.HEALTH_PROTO ?? "http";
 
 // Per-stack probe config: [name, port, health-path].
 const WORKLOAD_PROBES: Array<[string, number, string]> = [
-  ["meaisinfoghlaim", 8080, "/health"],
   ["paddleocr", 8000, "/health"],
   ["dots-ocr", 8001, "/health"],
   ["olmocr", 8003, "/health"],
@@ -184,7 +184,7 @@ export async function health() {
     allOk = false;
   }
 
-  // 7-14. Workload-plane probes (meaisinfoghlaim + 6 OCR backends + ocr-router).
+  // 7-13. Workload-plane probes (llama-swap + 5 OCR backends + ocr-router).
   // Each probe hits the canonical /health endpoint (or the equivalent) on
   // the configured port. 5s timeout. Failure is non-fatal for any one probe
   // so the operator can see which specific backend is down.

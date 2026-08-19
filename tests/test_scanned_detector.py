@@ -2,7 +2,7 @@
 
 Per the 2026-08-17-biep-v3-bring-up-v1 change (P2.13): the
 `is_scanned_pdf()` function in
-`meaisinfoghlaim/backends/scanned_detector.py` is the canonical
+`meaisinfhoghlaim/backends/scanned_detector.py` is the canonical
 scanned-PDF detector for the BIEP v3 OCR fanout layer (per the
 `2026-08-10-ocr-vision-activation-v1` change).
 
@@ -18,10 +18,10 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
-# Make meaisinfoghlaim importable when running from the repo root
+# Make meaisinfhoghlaim importable when running from the repo root
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from meaisinfoghlaim.backends.scanned_detector import (  # noqa: E402
+from meaisinfhoghlaim.backends.scanned_detector import (  # noqa: E402
     BLANK_PAGE_RATIO_THRESHOLD,
     IMAGE_HEAVY_THRESHOLD,
     TEXT_DENSITY_THRESHOLD,

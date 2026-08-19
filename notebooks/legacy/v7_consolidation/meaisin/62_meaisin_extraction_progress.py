@@ -35,7 +35,7 @@ def imports():
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
 
-    from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
+    from meaisinfhoghlaim.datasets.cohort_registry import CohortRegistry
     return CohortRegistry, mo
 
 

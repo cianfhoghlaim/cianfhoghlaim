@@ -17,7 +17,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
-from meaisinfoghlaim.evaluation.regression_baseline import RegressionDiff
+from meaisinfhoghlaim.evaluation.regression_baseline import RegressionDiff
 
 logger = logging.getLogger(__name__)
 

@@ -29,17 +29,17 @@ import logging
 import sys
 from typing import Any
 
-from meaisinfoghlaim.evaluation.golden_baselines import (
+from meaisinfhoghlaim.evaluation.golden_baselines import (
     GoldenBaseline,
     GoldenQuestion,
     GoldenBaselineStore,
 )
-from meaisinfoghlaim.evaluation.per_subject_runner import (
+from meaisinfhoghlaim.evaluation.per_subject_runner import (
     CohortKey,
     PerSubjectRunner,
 )
-from meaisinfoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
-from meaisinfoghlaim.evaluation.score_aggregator import ScoreAggregator
+from meaisinfhoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
+from meaisinfhoghlaim.evaluation.score_aggregator import ScoreAggregator
 
 logger = logging.getLogger(__name__)
 
@@ -200,7 +200,7 @@ def cmd_report(args: argparse.Namespace) -> int:
             )
         except Exception:
             continue
-        from meaisinfoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
+        from meaisinfhoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
 
         cohort = CohortKey(
             jurisdiction=cohort_jurisdiction,
@@ -259,7 +259,7 @@ def cmd_compliance(args: argparse.Namespace) -> int:
             )
         except Exception:
             continue
-        from meaisinfoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
+        from meaisinfhoghlaim.evaluation.per_subject_runner import PerSubjectEvalResult
 
         cohort = CohortKey(jurisdiction=j, stage=s, subject=sub)
         result = PerSubjectEvalResult(

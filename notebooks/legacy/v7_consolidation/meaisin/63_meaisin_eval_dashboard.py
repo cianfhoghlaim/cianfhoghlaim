@@ -33,9 +33,9 @@ def imports():
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
 
-    from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
-    from meaisinfoghlaim.datasets.cohort_audit import CohortAuditor
-    from meaisinfoghlaim.evaluation.regression_baseline import RegressionBaselineStore
+    from meaisinfhoghlaim.datasets.cohort_registry import CohortRegistry
+    from meaisinfhoghlaim.datasets.cohort_audit import CohortAuditor
+    from meaisinfhoghlaim.evaluation.regression_baseline import RegressionBaselineStore
     return (
         CohortAuditor,
         CohortRegistry,

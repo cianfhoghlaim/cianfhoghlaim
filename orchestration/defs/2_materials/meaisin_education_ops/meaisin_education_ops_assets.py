@@ -47,9 +47,9 @@ def _safe_asset_decorators():
 def _safe_lifecycle_load():
     """Lazy-import the Plan 4 collaborators."""
     try:
-        from meaisinfoghlaim.datasets.cohort_lifecycle import CohortLifecycle
-        from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
-        from meaisinfoghlaim.datasets.cohort_audit import CohortAuditor
+        from meaisinfhoghlaim.datasets.cohort_lifecycle import CohortLifecycle
+        from meaisinfhoghlaim.datasets.cohort_registry import CohortRegistry
+        from meaisinfhoghlaim.datasets.cohort_audit import CohortAuditor
         return CohortLifecycle, CohortRegistry, CohortAuditor
     except ImportError:
         return None, None, None
@@ -58,13 +58,13 @@ def _safe_lifecycle_load():
 def _safe_alignment_load():
     """Lazy-import the Plan 2 + Plan 3 alignment collaborators."""
     try:
-        from meaisinfoghlaim.alignment.bilingual_concept_registry import (
+        from meaisinfhoghlaim.alignment.bilingual_concept_registry import (
             BilingualConceptRegistry,
         )
-        from meaisinfoghlaim.alignment.qualification_normalizer import (
+        from meaisinfhoghlaim.alignment.qualification_normalizer import (
             QualificationNormalizer,
         )
-        from meaisinfoghlaim.alignment.cross_qualification_subject_map import (
+        from meaisinfhoghlaim.alignment.cross_qualification_subject_map import (
             CrossQualificationSubjectMap,
         )
         return BilingualConceptRegistry, QualificationNormalizer, CrossQualificationSubjectMap
@@ -75,18 +75,18 @@ def _safe_alignment_load():
 def _safe_evaluation_load():
     """Lazy-import the Plan 1 + Plan 2 evaluation collaborators."""
     try:
-        from meaisinfoghlaim.evaluation.per_subject_runner import (
+        from meaisinfhoghlaim.evaluation.per_subject_runner import (
             CohortKey,
             PerSubjectRunner,
         )
-        from meaisinfoghlaim.evaluation.score_aggregator import (
+        from meaisinfhoghlaim.evaluation.score_aggregator import (
             ScoreAggregator,
         )
-        from meaisinfoghlaim.evaluation.regression_baseline import (
+        from meaisinfhoghlaim.evaluation.regression_baseline import (
             RegressionBaselineStore,
             RegressionDiffer,
         )
-        from meaisinfoghlaim.evaluation.diff_reporter import DiffReporter
+        from meaisinfhoghlaim.evaluation.diff_reporter import DiffReporter
         return (
             CohortKey, PerSubjectRunner, ScoreAggregator,
             RegressionBaselineStore, RegressionDiffer, DiffReporter,
