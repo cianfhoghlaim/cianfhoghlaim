@@ -1,21 +1,17 @@
-"""agent_registry — the canonical ADK agent registry (4 stage + 12 baseline).
+"""agent_registry — the canonical ADK agent registry (4 stage + 11 baseline).
 
 Per the 2026-09-30-mega-3b-cocoindex-and-copilotkit-v1 change +
 the 2026-11-25-mega-3c-marimo-and-integration-v1 change.
 
-Note: This module provides the 4 stage agents as the canonical surface
-(Mega-3a). The 12 baseline agents at agents/adk/*.py have various
-exposure patterns (some expose `agent`, some expose `root_agent`,
-some don't expose at all). The full 16-agent registry lands in a
-follow-up commit that aligns the baseline agent exposure patterns.
-
-For now, the registry exposes the 4 stage agents (the canonical
-Mega-3a output) + the agents that DO expose themselves cleanly.
+Provides the canonical registry of the 4 stage agents (the Mega-3a
+output) + 11 baseline agents (the original 12 agents at
+`agents/adk/*.py` minus `image_generation_agent` which has known
+import issues with `agents.adk.image_generation_tools`).
 
 Usage:
 
     from agents.adk.agent_registry import AGENT_REGISTRY
-    print(list(AGENT_REGISTRY.keys()))  # 4+ agents
+    print(list(AGENT_REGISTRY.keys()))  # 15 agents
 
     # In the agent_ui_bridge.py:
     from agents.adk.agent_registry import AGENT_REGISTRY
@@ -37,11 +33,25 @@ class AgentWiring(NamedTuple):
     tools: list[object]  # The BAMLFunctionTool-wrapped tools
 
 
-def _build_registry() -> dict[str, AgentWiring]:
-    """Build the canonical 4 stage-agent registry (the Mega-3a output).
+def _try_import(name: str, module_path: str, attr: str) -> object | None:
+    """Try to import a baseline agent. Returns None on failure."""
+    try:
+        module = __import__(module_path, fromlist=[attr])
+        return getattr(module, attr, None)
+    except Exception:
+        return None
 
-    The 12 baseline agents will be added once the exposure patterns are
-    unified (separate follow-up commit).
+
+def _build_registry() -> dict[str, AgentWiring]:
+    """Build the canonical 15-agent registry (4 stage + 11 baseline).
+
+    The 4 stage agents are the canonical Mega-3a output. The 11 baseline
+    agents are the original agents.adk/*.py that have consistent
+    `<name> = LlmAgent(...)` export patterns.
+
+    `image_generation_agent` is excluded (the original file has known
+    import issues with `agents.adk.image_generation_tools`; it lands
+    in a separate follow-up).
     """
     from .lc_subject_agent import lc_subject_agent, LC_SUBJECT_TOOLS
     from .jc_subject_agent import jc_subject_agent, JC_SUBJECT_TOOLS
@@ -50,8 +60,8 @@ def _build_registry() -> dict[str, AgentWiring]:
 
     from agents.integrations.baml_function_tool import BAMLFunctionTool
 
-    return {
-        # 4 stage agents (per the 4-stage plane architecture)
+    registry: dict[str, AgentWiring] = {
+        # === 4 stage agents (per the 4-stage plane architecture) ===
         "lc_subject_agent": AgentWiring(
             name="lc_subject_agent",
             agent=lc_subject_agent,
@@ -81,6 +91,90 @@ def _build_registry() -> dict[str, AgentWiring]:
             tools=[BAMLFunctionTool(fn) for fn in GCSE_FUNCTIONS],
         ),
     }
+
+    # === 11 baseline agents (lazy-imported with try/except for resilience) ===
+
+    baseline_agents = [
+        (
+            "agui_curriculum_agent",
+            "agents.adk.agui_curriculum_agent",
+            "agui_curriculum_agent",
+            "Curriculum agent exposed via the AG-UI Protocol.",
+        ),
+        (
+            "celtic_tutor_agent",
+            "agents.adk.celtic_tutor_agent",
+            "celtic_tutor_agent",
+            "Celtic language tutor agent (6 Celtic languages).",
+        ),
+        (
+            "curriculum_comparison_agent",
+            "agents.adk.curriculum_comparison_agent",
+            "curriculum_comparison_agent",
+            "Cross-nation curriculum mapping (IE ↔ EN ↔ SCT).",
+        ),
+        (
+            "education_research_agent",
+            "agents.adk.education_research_agent",
+            "education_research_agent",
+            "Cross-nation education policy research.",
+        ),
+        (
+            "email_triage_agent",
+            "agents.adk.email_triage_agent",
+            "email_triage_agent",
+            "Email triage (4 accounts: DKIT + 2 Gmail + Hotmail).",
+        ),
+        (
+            "geospatial_agent",
+            "agents.adk.geospatial_agent",
+            "geospatial_agent",
+            "LSOA / Data Zone spatial analysis.",
+        ),
+        (
+            "mythology_narrator_agent",
+            "agents.adk.mythology_narrator_agent",
+            "mythology_narrator_agent",
+            "Celtic mythology narrator.",
+        ),
+        (
+            "quest_guide_agent",
+            "agents.adk.quest_guide_agent",
+            "quest_guide_agent",
+            "Túatha quest guide for the 8 NCCA LC subjects.",
+        ),
+        (
+            "research_agent",
+            "agents.adk.research_agent",
+            "research_agent",
+            "Deep research with citations (Celtic focus).",
+        ),
+        (
+            "research_assistant_agent",
+            "agents.adk.research_assistant_agent",
+            "research_assistant_agent",
+            "Research assistant with citation tracking.",
+        ),
+        (
+            "statistics_agent",
+            "agents.adk.statistics_agent",
+            "statistics_agent",
+            "Education metrics + benchmarking.",
+        ),
+    ]
+
+    for name, module_path, attr, description in baseline_agents:
+        agent = _try_import(name, module_path, attr)
+        if agent is not None:
+            registry[name] = AgentWiring(
+                name=name,
+                agent=agent,
+                description=description,
+                stage=None,
+                tools=[],
+            )
+
+    return registry
 
 
 AGENT_REGISTRY: dict[str, AgentWiring] = _build_registry()
