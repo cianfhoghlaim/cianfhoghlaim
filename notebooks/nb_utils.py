@@ -1,4 +1,3 @@
-from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 """Shared helpers for the Cianfhoghlaim notebooks (British-Isles Education pipeline).
 
 **DEPRECATED — kept for back-compat only.** New code should use:
@@ -45,6 +44,8 @@ openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
 openspec/changes/2026-07-06-notebooks-flatten-refactor-and-wire-bi-ep/
 """
 from __future__ import annotations
+
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 
 import argparse
 import importlib.util
