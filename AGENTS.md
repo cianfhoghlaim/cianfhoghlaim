@@ -8,7 +8,7 @@ The 5 priority skills, the 4 priority commands, the 4 priority
 compose stacks, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is detail.
 
-### Priority skills (7 of 155)
+### Priority skills (7 of 64)
 
 | Skill | When to load |
 |:--|:--|
@@ -17,7 +17,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
 | [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
 | [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
-| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (94 specs, 4 shared — added secrets-management in the 2026-08-15 openspec change) |
+| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (96 capability specs) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
 
 ### ccc code search (always use before grep)
@@ -34,7 +34,7 @@ If the index is missing or stale, the agent **owns** running
 ### Priority openspec commands
 
 ```bash
-openspec list --specs              # list all 92 capability specs (1 new post-2026-08-15 — bonneagar-infra-remediation-v2)
+openspec list --specs              # list all 96 capability specs
 openspec list                      # list all pending changes
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec archive <change-id> --yes        # after deploy
@@ -51,12 +51,12 @@ The **3 new post-2026-08-15 specs** (centralized-model-registry + centralized-sc
 ### Priority mise tasks
 
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata (53/53 as of v4 consolidation)
+mise run lint:skills               # validate .agents/skills/ metadata
 mise run turbo dev                 # monorepo dev (bun + uv + turbo)
 mise run secrets:init              # sync .infisical.env → dev-baile vault
 mise run dagster:oideachais        # launch the lakehouse Dagster UI
 # Shipped by the 2026-07-30 → 2026-08-01 openspec trilogy (3 new tasks):
-mise run cic:stack-doctor          # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD (canonical CI gate)
+mise run cic:stack-doctor          # validate all 93 Docker Compose stacks against the 6-file GOLD_STANDARD (canonical CI gate)
 mise run stack-doctor:strict       # cic:stack-doctor + --strict --check-grammar (fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env; NEW in Change 1, 2026-07-30)
 mise run deploy:full               # one-command 7-phase full-stack deploy orchestrator with resumable checkpoint at ~/.cianfhoghlaim/deploy-state.json; entry shell + TS state machine; NEW in Change 3, 2026-08-01
 ```
@@ -69,7 +69,7 @@ mise run lint:drift-docs           # validate every AGENTS.md number claim again
 mise run openspec:validate         # run `openspec validate --strict` against the pending change under review
 ```
 
-### Priority compose stacks (4 of 89)
+### Priority compose stacks (4 of 93)
 
 | Stack | Port | Domain |
 |:--|--:|:--|
@@ -78,82 +78,27 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 94 stacks is at
-[`../bonneagar/AGENTS.md`](../bonneagar/AGENTS.md) (the IaC
-repo owns the stack catalogue; see the `## IaC Repo Boundary`
-section below for the ownership table).
+The full inventory of 93 stacks is at
+[`bonneagar/AGENTS.md`](bonneagar/AGENTS.md) (the IaC subdirectory
+owns the stack catalogue; see the `## Repo Boundary` section below).
 
-## Monorepo Topology (v7 — Flattened Polyglot)
+## Monorepo topology
 
-Cianfhoghlaim is a **bun + uv + turbo polyglot monorepo**. Two
-language graphs live side by side, orchestrated by `turbo.json`
-and a single `mise.toml` toolchain. Post-v7 (2026-07-17), the
-Python package IS the repo root — no more `cianfhoghlaim/`
-nesting.
+See [`README.md`](README.md#monorepo-topology-v7--flattened-polyglot)
+for the full TypeScript-workspace + Python-sub-package tables — kept
+in one place to avoid the two copies drifting apart (they had, badly,
+before the 2026-08 docs consolidation). Quick orientation: `agents/`,
+`baml_src/`, `cocoindex_flows/`, `dlt_sources/`, `orchestration/`,
+`meaisinfhoghlaim/` are the Python sub-packages; `web/apps/*` +
+`web/packages/*` are the bun workspaces; `bonneagar/` is the IaC
+subdirectory (see [`bonneagar/README.md`](bonneagar/README.md)).
 
-### TypeScript graph (bun workspaces)
+## Search: ccc + cognee + firecrawl_mcp
 
-The root `package.json` declares these `workspaces` and is the only manifest bun resolves:
-
-| Workspace | Path | Purpose |
-|:--|:--|:--|
-| `cianfhoghlaim-web` | `web/apps/cianfhoghlaim-web/` | TanStack Start + React front-end (the public web app) |
-| `tuatha-ui` | `web/apps/tuatha-ui/` | Túatha educational MMO front-end |
-| `croilar-web` | `web/apps/croilar-web/` | Croílár multi-persona portfolio |
-| `croilar-portal` | `web/apps/croilar-portal/` | Croílár portfolio dashboard |
-| `tuatha-demo` | `web/apps/tuatha-demo/` | Tuatha Babylon.js demo |
-| `game_showcase` | `web/apps/game_showcase/` | Web game showcase |
-| `cianfhoghlaim-mcp-filesystem` | `web/apps/cianfhoghlaim-mcp-filesystem/` | Filesystem MCP server for the data platform |
-| `hono-api` | `web/hono-api/` | Hono API gateway |
-
-The IaC (`iac:bootstrap`, `iac:health`, etc.) lives in the
-`bonneagar/` subdirectory and is reached via
-`bun run --cwd bonneagar ...`.
-
-## CCC + Cognee dual-search diagram
-
-ccc searches code; cognee searches docs. An agent asking "find how
-BAML extraction is implemented" gets the code file from ccc and the
-explanation from cognee, then merges.
-
-```
-        ccc                          cognee
-    (code search)             (docs cognition)
-       │                            │
-       ▼                            ▼
-  Find what BAML           Find what BAML extraction
-  extraction calls do      documentation says
-       │                            │
-       └────────────┬───────────────┘
-                    ▼
-            Agent (merged)
-```
-
-## Triple-search architecture (ccc + cognee + firecrawl_mcp)
-
-Per the `2026-08-14-firecrawl-mcp-ccc-dual-search-v1` change, the
-agent stack now has **3 complementary search surfaces**. ccc and
-cognee are local + free; firecrawl_mcp is external + metered. Every
-agent session that runs `firecrawl_search` MUST also emit a
-`ccc:search` query so both tool names appear in the Langfuse trace.
-
-```
-        ccc (code)              cognee (docs)       firecrawl_mcp (live web)
-            │                       │                       │
-            │   semantic/local      │   semantic/local      │   semantic/external
-            │   FREE                │   FREE                │   metered (credits)
-            │                       │                       │
-            ▼                       ▼                       ▼
-        ──────────────┬─────────────┴───────────────┬───────────────────
-                      ▼                             ▼
-              Local-fast lane                  External-deep lane
-                      │                             │
-                      └──────────────┬──────────────┘
-                                     ▼
-                            Agent (3-way merged)
-```
-
-**Routing table** (which tool wins for each question type):
+Three complementary surfaces. ccc and cognee are local + free;
+firecrawl_mcp is external + metered. Every agent session that runs
+`firecrawl_search` MUST also emit a `ccc:search` query so both tool
+names appear in the Langfuse trace.
 
 | Question type | Tool | Why |
 |:--|:--|:--|
@@ -168,49 +113,10 @@ agent session that runs `firecrawl_search` MUST also emit a
 | "Parse a local PDF/DOCX/XLSX" | `firecrawl_parse` | Two-call upload handoff |
 | "Find papers / read passages / citations" | `firecrawl_research_*` | 43M-paper PubMed/bioRxiv/arXiv index |
 | "Find a primary-source coding answer" | `firecrawl_developer_search` | GitHub issues/PRs/README/curated docs |
-| "Self-debug a Firecrawl call that failed" | `firecrawl_scrape /support/ask` | Agent-to-agent support |
 
 The `FirecrawlMCPClient` wrapper at
-`agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes all 12 MCP
-tools with Pydantic validation + Langfuse `@observe`. See the
-[`dual-search-architecture`](../openspec/specs/dual-search-architecture/spec.md)
-spec for the formal requirements.
-
-### Python graph (uv workspace)
-
-Post-v7, the root `pyproject.toml` IS the package — no workspace
-shell. The single Python package is `cianfhoghlaim` (uv-built from
-the repo root). Sub-packages:
-
-| Sub-package | Path | Purpose |
-|:--|:--|:--|
-| `agents` | `agents/` | The 12-agent meaisínfhoghlaim fleet + ADK shims |
-| `baml` | `baml/` | The BAML extraction schemas (LC + Celtic + multi-nation) |
-| `cocoindex` | `cocoindex/` | The CocoIndex v1 Apps (42+ flows) |
-| `dlt` | `dlt/` | DLT sources + destinations |
-| `orchestration` | `orchestration/` | Dagster assets + jobs + schedules + sensors |
-| `codeolas` | `libraries/codeolas/` | Code intelligence library (publishable sub-package) |
-
-**v4 consolidation (2026-06-28):** All 5 former quadrants
-(`sruth/oideachais`, `sruth/meaisinfhoghlaim`, `sruth/tuatha`,
-`sruth/croilar`, `sruth/codeolas`) plus `infrastructure/browser/` +
-`/leabharlann/` were merged into the single `cianfhoghlaim/` package
-(see `openspec/changes/archive/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
-The 4 former quadrant `sruth/<quadrant>/AGENTS.md` files were
-retired; the consolidated cianfhoghlaim sub-tree docs are at
-`AGENTS.md` + the per-area sub-package AGENTS.md
-files inside the repo.
-Plan 1 (active): Ireland (5 education stages × EN + GA) + leabharlann
-corpus (6 subdirs × 216 docs).
-
-Members import each other via `[tool.uv.sources]` (e.g. `cianfhoghlaim` imports
-`codeolas`).
-
-### Pipeline orchestration
-
-- `turbo.json` — cross-language task graph (`build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate`).
-- `mise.toml` — toolchain (`python 3.12`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`, `opencode`) **and** the developer task aliases (`mise turbo dev`, `mise ccc:search …`, `mise secrets:init`, `mise dagster:oideachais`, etc.).
-- `dg.toml` — Dagster `dg` workspace that loads `oideachais`, `tuatha`, `croilar`, and `meaisínfhoghlaim` code-locations into a single UI. (Phase 0.1 of `lateralise-british-isles-domains` added croilar + meaisínfhoghlaim.)
+`agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes the MCP
+tools with Pydantic validation + Langfuse `@observe`.
 
 ### Developer onboarding (one command)
 
@@ -219,46 +125,16 @@ bun run setup
 # expands to: mise install && bun install && uv sync && bun run secrets:env && bun run secrets:init
 ```
 
-> **Note:** The `mise run lint:skills` task currently reports **157
-> skills pass** (the v4 consolidation reduced the skill count from
-> the historical 123 — see `openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4/`).
+### Centralized registries
 
-### Centralized registries (post-2026-08-15)
-
-The platform now has **one canonical source of truth** for every model, schema, pipeline, and stack — replacing the ~70 hardcoded model strings + 96 hand-written Pydantic duplicates + 54 nearly-identical CocoIndex Apps that the audit found.
-
-| Asset | Path | Purpose |
-|:--|:--|:--|
-| **`MODEL_REGISTRY`** | `meaisinfhoghlaim/models/model_registry.py` | 52 entries across 7 families (ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation). Use `model_for(family, role, language)` or `filter_models(family)`. |
-| **`schema` introspection** | `notebooks/_shared/schema.py` | 5 helpers: `schema_introspect(conn)`, `schema_introspect_table(conn, name)`, `list_dlt_sources()`, `list_cocoindex_apps()`, `list_baml_classes()`. |
-| **Deployment control panel** | `notebooks/00_control_panel.py` | The 5-tab marimo notebook (Models / Pipelines / Datasets / Stacks / Registry). Operates on `deployment-choice.yaml`. |
-| **`deployment-choice.yaml`** | repo root | The canonical enablement file. Read/written by the notebook + web UI + CLI. |
-| **`registry_audit.py`** | `scripts/registry_audit.py` | Detects hardcoded model strings that bypass `MODEL_REGISTRY`. Wired as `mise run lint:registry`. |
-| **`litellm_agent.py`** | `agents/adk/litellm_agent.py` | The `make_litellm_agent()` helper + `litellm_model("minimax")` wrapper for ADK agents. |
-| **CocoIndex factory pattern** | `cocoindex/european_nations/_factory.py` | Reference for collapsing N CocoIndex Apps into 1 factory. Used by the 40 European-nation Apps. |
-| **Dagster `JurisdictionAssetsBase`** | `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py` | The base class for the 10 per-jurisdiction Dagster asset wrappers. |
-
-**Quick start for the most common needs:**
-
-```python
-# 1. Pick a model (replaces hardcoded "gemini-2.0-flash" etc.)
-from meaisinfhoghlaim.models import model_for
-default = model_for("text_llm", "default")              # → "minimax-m3"
-irish  = model_for("text_llm", "irish", language="ga")  # → "uccix-mistral-24b"
-embed  = model_for("embedder", "default")               # → "BAAI/bge-m3"
-
-# 2. Discover the lakehouse schema (replaces hardcoded table lists)
-from notebooks._shared.schema import (
-    list_dlt_sources, list_cocoindex_apps, list_baml_classes,
-)
-print(f"DLT sources: {len(list_dlt_sources())}")        # → 1963
-print(f"CocoIndex Apps: {len(list_cocoindex_apps())}")  # → ~53 (factory Apps + shims)
-print(f"BAML classes: {len(list_baml_classes())}")      # → 838
-
-# 3. Open the deployment control panel
-# $ mise run notebook:control-panel
-# (or: marimo edit notebooks/00_control_panel.py)
-```
+One canonical source of truth per model/schema/pipeline/stack concern
+— see [`README.md`](README.md#centralized-registries) for the current
+artifact list and [`.agents/skills/centralized-registry/SKILL.md`](.agents/skills/centralized-registry/SKILL.md)
+for the full guide, including the `model_for()` and `schema_introspect()`
+patterns. Two model registries currently co-exist
+(`meaisinfhoghlaim/models/registry.py` and the newer
+`model_registry.py`) — check both; see
+[`meaisinfhoghlaim/README.md#known-gaps`](meaisinfhoghlaim/README.md#known-gaps).
 
 
 ## Secrets Bootstrap (do not skip)
@@ -353,17 +229,18 @@ code.
 
 | Domain | Location |
 |:--|:--|
-| Data platform (DLT + Dagster + BAML + CocoIndex + marimo) | `{dlt,orchestration,baml,cocoindex,notebooks}/` |
-| Agent fleet (12 agents + OCR + BAML + LLM routing) | `agents/meaisinfhoghlaim/` |
+| Data platform (DLT + Dagster + BAML + CocoIndex + marimo) | `{dlt_sources,orchestration,baml_src,cocoindex_flows,notebooks}/` |
+| Agent fleet (13 root agents + 8 NCCA subjects) | `agents/` — see [`agents/README.md`](agents/README.md) |
+| OCR/HTR/alignment agents specifically | `agents/meaisinfhoghlaim/` |
 | Frontend apps (TanStack Start + Convex + Hono + CopilotKit) | `web/apps/*/` |
 | OpenSpec changes + specs | `openspec/` |
 | MotherDuck Dives/Flights metadata | `motherduck/` |
 | IaC (Komodo + Pangolin + Infisical clients) | `bonneagar/iac/` (IN THIS REPO) |
-| 88 Docker Compose stacks | `bonneagar/stacks/<name>/` |
+| 93 Docker Compose stacks | `bonneagar/stacks/<name>/` |
 | Komodo resource-syncs + procedures | `bonneagar/komodo/` |
 | Pangolin config | `bonneagar/pangolin/` |
 | Deploy runbooks | `bonneagar/deploy-runbooks/` |
-| Leabharlann corpus (216 docs × 6 subdirs) | `leabharlann/` (SEPARATE REPO at `github.com/cianfhoghlaim/leabharlann`) |
+| Leabharlann corpus | `leabharlann/` (SEPARATE REPO at `github.com/cianfhoghlaim/leabharlann`) |
 
 > **Hard rule**: An agent MUST NOT write into the `leabharlann/`
 > worktree from this repo (it's a separate repo with its own git
@@ -436,7 +313,6 @@ openspec change (see its
 |-------|---------|--------------|
 | [`dagster`](.agents/skills/dagster/SKILL.md) | Data orchestration platform | Asset-based pipelines (v1.13+), branch deployments, AI skills integration |
 | [`dlt`](.agents/skills/dlt/SKILL.md) | Data load tool for pipelines | dlt+ Projects & Cache, Pythonic pipelines, schema inference |
-| [`sqlmesh`](.agents/skills/sqlmesh/SKILL.md) | Data transformation framework | DuckDB integration, virtual data warehouse, CI/CD |
 
 ### Observability & Evaluation
 
@@ -449,8 +325,7 @@ openspec change (see its
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`copilotkit`](.agents/skills/copilotkit/SKILL.md) | AI agent UI framework | React components, multi-agent support, state management |
-| [`vinxi`](.agents/skills/vinxi/SKILL.md) | Full-stack framework (Poimandres) | Vite-based, server components, edge runtime |
+| [`copilotkit`](.agents/skills/copilotkit/skills/copilotkit-develop/SKILL.md) | AI agent UI framework (10 sub-skills — develop/setup/debug/upgrade/etc.) | React components, multi-agent support, state management |
 
 ### Model Training & Fine-tuning
 
@@ -480,8 +355,8 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
 
 ### Analytics & Notebooks (`notebooks/`)
-- **Data Exploration**: Load [`explore-data`](.agents/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
-- **Notebook Assembly**: Load [`build-notebook`](.agents/skills/build-notebook/SKILL.md) to translate the `analysis_plan.md` into a fully functional, highly reactive `marimo` Python notebook.
+- **Data Exploration**: Load [`explore-data`](.claude/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
+- **Notebook Assembly**: Load [`build-notebook`](.claude/skills/build-notebook/SKILL.md) to translate the `analysis_plan.md` into a fully functional, highly reactive `marimo` Python notebook.
 
 ## Tool Integration Patterns
 
@@ -518,7 +393,7 @@ Use [`ragas`](.agents/skills/ragas/SKILL.md) with [`langfuse`](.agents/skills/la
 
 1. **Define assets first** in Dagster for better observability
 2. **Use streaming support** in dlt (v1.4+) for real-time data
-3. **Integrate DuckDB** with sqlmesh for local development
+3. **Integrate DuckDB** with dlt/dagster for local development
 4. **Implement incremental loading** with cursor-based extraction
 
 ### Observability

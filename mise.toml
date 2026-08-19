@@ -1542,6 +1542,10 @@ run = "bun run scripts/validate-ccc-freshness.ts"
 description = "Idempotent installer for project git hooks (points core.hooksPath at the in-repo .githooks/ directory)"
 run = "bash scripts/install-hooks.sh"
 
+[tasks."claude:wire-skills"]
+description = "Symlink the curated .agents/skills/ subset into the gitignored .claude/skills/ so Claude Code can discover this project's own technology skills — idempotent, re-run after any .claude/ regeneration"
+run = "bash scripts/wire-claude-skills.sh"
+
 [tasks."docs:consolidate"]
 description = "Run the docs_skills_consolidation CocoIndex v1 App (batch / catch-up mode)"
 run = "uv run cocoindex update cocoindex_flows.infrastructure.docs_skills_consolidation:DocsSkillsConsolidation"
