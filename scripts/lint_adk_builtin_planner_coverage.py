@@ -26,9 +26,18 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ADK_DIR = REPO_ROOT / "agents" / "adk"
 
-# Matches `BuiltInPlanner(...)` — the hand-written pattern we want to eliminate
+# Matches `BuiltInPlanner(...)` — the hand-written pattern we want to eliminate.
+# The canonical pattern includes `thinking_config=genai_types.ThinkingConfig(include_thoughts=True)`.
+# The lint flags any hand-written `BuiltInPlanner` (regardless of pattern) + checks for
+# the canonical `include_thoughts=True` flag.
 BUILT_IN_PLANNER_PATTERN = re.compile(
     r"\bBuiltInPlanner\s*\(",
+    re.MULTILINE,
+)
+
+# Matches the canonical include_thoughts=True flag
+CANONICAL_THOUGHT_FLAG = re.compile(
+    r"include_thoughts\s*=\s*True",
     re.MULTILINE,
 )
 
@@ -40,7 +49,7 @@ HELPER_PATTERN = re.compile(
 
 
 def lint_file(path: Path) -> list[str]:
-    """Return a list of line numbers where BuiltInPlanner is used (not via helper)."""
+    """Return a list of line numbers where BuiltInPlanner is used without the canonical pattern."""
     violations = []
     try:
         content = path.read_text()
@@ -51,9 +60,26 @@ def lint_file(path: Path) -> list[str]:
     # Check if helper is used (then it's OK)
     if HELPER_PATTERN.search(content):
         return violations
-    for i, line in enumerate(content.splitlines(), 1):
-        if BUILT_IN_PLANNER_PATTERN.search(line):
-            violations.append(f"line {i}: {line.strip()[:80]}")
+    # The canonical pattern includes `include_thoughts=True` somewhere
+    # in the BuiltInPlanner call (across multiple lines)
+    for match in BUILT_IN_PLANNER_PATTERN.finditer(content):
+        # Find the matching closing paren
+        start = match.end() - 1
+        depth = 0
+        end = start
+        for i in range(start, min(start + 500, len(content))):
+            if content[i] == "(":
+                depth += 1
+            elif content[i] == ")":
+                depth -= 1
+                if depth == 0:
+                    end = i + 1
+                    break
+        planner_block = content[start:end]
+        # If the canonical include_thoughts=True is missing, flag it
+        if not CANONICAL_THOUGHT_FLAG.search(planner_block):
+            line_num = content[:match.start()].count("\n") + 1
+            violations.append(f"line {line_num}: BuiltInPlanner missing include_thoughts=True (canonical pattern)")
     return violations
 
 
@@ -66,13 +92,13 @@ def main() -> int:
         if violations:
             all_violations.append((path, violations))
     if all_violations:
-        print(f"FAIL: {sum(len(v) for _, v in all_violations)} ADK agents use hand-written BuiltInPlanner:", file=sys.stderr)
+        print(f"FAIL: {sum(len(v) for _, v in all_violations)} ADK agents use non-canonical BuiltInPlanner:", file=sys.stderr)
         for path, violations in all_violations:
             rel = path.relative_to(REPO_ROOT)
             for v in violations:
                 print(f"  {rel}: {v}", file=sys.stderr)
         return 1
-    print(f"OK: all ADK agents use the canonical planner helper.")
+    print(f"OK: all ADK agents use the canonical BuiltInPlanner with include_thoughts=True.")
     return 0
 
 
