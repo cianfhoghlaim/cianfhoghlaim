@@ -16,9 +16,6 @@
     "typecheck": "tsc --noEmit",
     "lint": "echo ok"
   },
-  "dependencies": {
-    "@cianfhoghlaim/db": "workspace:*"
-  },
   "devDependencies": {
     "typescript": "^5.8.3"
   }

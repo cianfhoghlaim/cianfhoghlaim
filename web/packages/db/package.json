@@ -9,7 +9,6 @@
     "lint": "echo ok"
   },
   "dependencies": {
-    "@cianfhoghlaim/ui-kit": "workspace:*",
     "convex": "^1.19.0"
   },
   "devDependencies": {

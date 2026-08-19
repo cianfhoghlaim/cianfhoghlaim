@@ -5,8 +5,7 @@
     ".env.locket",
     ".infisical.env",
     "mise.toml",
-    "pyproject.toml",
-    "**/pyproject.toml"
+    "pyproject.toml"
   ],
   "globalEnv": [
     "INFISICAL_*",
@@ -50,10 +49,6 @@
     },
     "clean": {
       "cache": false
-    },
-    "dagster": {
-      "cache": false,
-      "persistent": true
     },
     "ccc:index": {
       "cache": false
