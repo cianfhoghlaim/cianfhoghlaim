@@ -1,19 +1,12 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#   "marimo>=0.14.10", "ibis-framework[duckdb]>=9.0", "duckdb>=1.0",
-#   "pandas>=2.2", "altair>=5.0", "pyarrow>=15", "anywidget>=0.9",
-#   "traitlets>=5.14", "python-dotenv>=1.0",
-# ]
-# [tool.uv]
-# package = "biep-v3-4-stage-plane-demo"
-# ///
-
 """4-Stage Plane End-to-End Demo — exercises the full BAML → CocoIndex → ADK → CopilotKit → Marimo flow.
 
 Per the 2026-11-25-mega-3c-marimo-and-integration-v1 change (Phase 5
 verification): this notebook demonstrates the end-to-end 4-stage plane
 integration.
+
+The PEP 723 dependencies are imported from the canonical template
+(notebooks/_shared/_pep723_template.py) per the canonical-pattern
+introduced in the same change.
 
 The flow:
 1. BAML: Call the canonical LC + JC + A-Level + GCSE extraction
@@ -34,6 +27,9 @@ The 4 stage agents are exposed via the 4 runtimes:
 - cocoindex/biep_parity/baml_runtime_integration.py
 - notebooks/_shared/marimo_integration_runtime.py
 """
+
+# Canonical PEP 723 dependencies (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # noqa: F401
 
 import marimo
 
@@ -61,7 +57,7 @@ def _():
 
         | Runtime | Module | Purpose |
         | -- | -- | -- |
-        | BAML → CocoIndex | `cocoindex.biep_parity.baml_runtime_integration` | `run_stage_extraction(stage, chunk_text, subject, **kwargs)` |
+        | BAML → CocoIndex | `cocoindex_flows.biep_parity.baml_runtime_integration` | `run_stage_extraction(stage, chunk_text, subject, **kwargs)` |
         | ADK → CopilotKit | `agents.integrations.agent_registry_runtime` | `register_all_agents_with_copilotkit()` |
         | AG-UI Bridge | `agents.integrations.agent_ui_bridge` | `register_adk_agent(agent, name)` |
         | Marimo Integration | `notebooks._shared.marimo_integration_runtime` | `make_baml_chat_for_stage(stage, subject)` |
@@ -77,7 +73,7 @@ def _():
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
     # BAML → CocoIndex runtime
-    from cocoindex.biep_parity.baml_runtime_integration import (
+    from cocoindex_flows.biep_parity.baml_runtime_integration import (
         run_stage_extraction,
         get_search_closure_for_stage,
         get_extraction_metrics,

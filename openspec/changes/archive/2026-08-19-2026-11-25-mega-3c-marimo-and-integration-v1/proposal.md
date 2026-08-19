@@ -78,7 +78,7 @@ The v2 helper at `notebooks/_shared/biiep_v3_dashboard_v2.py` exposes
 | `agents/integrations/agent_ui_bridge.py` (FF.3) | 300 | ADK → CopilotKit (AG-UI Protocol) |
 | `notebooks/_shared/marimo_baml.py` (FF.2) | 200 | BAML → Marimo (chat + ai.llm) |
 | `notebooks/_shared/marimo_to_copilotkit.py` (FF.4) | 200 | Marimo → CopilotKit (tool) |
-| `cocoindex/_shared/cocoindex_query_api.py` (FF.5) | 250 | CocoIndex → Marimo (search closure) |
+| `cocoindex_flows/_shared/cocoindex_query_api.py` (FF.5) | 250 | CocoIndex → Marimo (search closure) |
 | `BAMLFunctionTool` (FF.1) | 200 | BAML → ADK (tool) |
 
 ## How changes — Phasing & Dedup Wins

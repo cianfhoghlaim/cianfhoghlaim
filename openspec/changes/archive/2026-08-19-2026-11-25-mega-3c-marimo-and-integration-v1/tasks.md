@@ -73,7 +73,7 @@
 
 ### TASK-M3C-5.1 — Wire BAML into the 7 BIEP CocoIndex v1 flows
 - **Status**: pending
-- **Files**: `cocoindex/biep_parity/4_stage_factory.py` + 7 flows
+- **Files**: `cocoindex_flows/biep_parity/4_stage_factory.py` + 7 flows
 - **What**: Each CocoIndex flow calls the corresponding BAML function
   via `BAMLFunctionTool`.
 
