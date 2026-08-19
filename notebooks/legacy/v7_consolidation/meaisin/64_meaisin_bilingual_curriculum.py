@@ -40,15 +40,15 @@ def imports():
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
 
-    from meaisinfoghlaim.alignment.bilingual_concept_registry import (
+    from meaisinfhoghlaim.alignment.bilingual_concept_registry import (
         BilingualConceptRegistry,
         LanguagePair,
     )
-    from meaisinfoghlaim.alignment.schema import (
+    from meaisinfhoghlaim.alignment.schema import (
         BilingualConcept,
         Stage,
     )
-    from meaisinfoghlaim.evaluation.bilingual_coverage_audit import (
+    from meaisinfhoghlaim.evaluation.bilingual_coverage_audit import (
         BilingualCoverageAuditor,
     )
     return (
@@ -109,7 +109,7 @@ def cohort_selector(imports):
 
 @app.cell
 def audit_runner(imports, cohort_key, language_pair, stage, subject_id, topic_ids):
-    from meaisinfoghlaim.alignment.schema import LanguagePair, Stage
+    from meaisinfhoghlaim.alignment.schema import LanguagePair, Stage
 
     BilingualConceptRegistry, BilingualCoverageAuditor, mo = imports
 

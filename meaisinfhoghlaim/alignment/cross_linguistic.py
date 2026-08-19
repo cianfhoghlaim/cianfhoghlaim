@@ -23,7 +23,7 @@ import asyncio
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     CrossLinguisticConcept,
     LanguagePair,
     Stage,

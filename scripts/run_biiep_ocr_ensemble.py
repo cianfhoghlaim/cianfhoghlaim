@@ -42,7 +42,7 @@ def main() -> int:
     print(f"Processing {len(pdfs)} PDFs through the BIEP v2 4-path ensemble")
 
     try:
-        from meaisinfoghlaim.ocr.ensemble.ensembled_extractor import EnsembledExtractor
+        from meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import EnsembledExtractor
     except ImportError as e:
         print(f"ERROR: EnsembledExtractor not available: {e}", file=sys.stderr)
         return 1

@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     Board,
     BoardDiff,
 )

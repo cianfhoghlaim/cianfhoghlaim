@@ -37,7 +37,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-from meaisinfoghlaim.alignment.schema import BilingualConcept, LanguagePair
+from meaisinfhoghlaim.alignment.schema import BilingualConcept, LanguagePair
 
 logger = logging.getLogger(__name__)
 

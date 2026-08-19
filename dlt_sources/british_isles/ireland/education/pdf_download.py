@@ -33,7 +33,7 @@ def pdf_download_source(
     Usage:
         pipeline = dlt.pipeline(...)
         pipeline.run(pdf_download_source(
-            duckdb_path="./curriculum_unified.duckdb",
+            duckdb_path="./data/curriculum_unified.duckdb",
             download_dir="./downloads/pdfs",
             cycle="senior_cycle",
             subject="mathematics",

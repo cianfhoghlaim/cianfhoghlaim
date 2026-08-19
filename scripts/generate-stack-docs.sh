@@ -6,7 +6,7 @@
 # (closes GitHub issue #107).
 #
 # USAGE:
-#   bash scripts/generate-stack-docs.sh                # writes to cianfhoghlaim/docs/stacks/
+#   bash scripts/generate-stack-docs.sh                # writes to docs/stacks/
 #   bash scripts/generate-stack-docs.sh --check       # exit 1 if any stack missing a doc
 #   bash scripts/generate-stack-docs.sh --out <path>  # custom output dir
 #
@@ -14,7 +14,7 @@
 #   1. Calls `bash scripts/stack-doctor.sh --emit-md <INDEX>` to write the
 #      single combined INDEX.md (the 1-shot dump of all 89 stacks).
 #   2. Then walks `bonneagar/stacks/*/` and emits a per-stack markdown
-#      doc to `cianfhoghlaim/docs/stacks/<name>.md`.
+#      doc to `docs/stacks/<name>.md`.
 #   3. Each per-stack doc follows the canonical 4-section outline:
 #         # <Stack Name>
 #         ## Purpose
@@ -30,7 +30,7 @@ set -uo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STACKS_DIR="${STACKS_DIR:-$REPO_ROOT/bonneagar/stacks}"
-DOCS_DIR_DEFAULT="$REPO_ROOT/cianfhoghlaim/docs/stacks"
+DOCS_DIR_DEFAULT="$REPO_ROOT/docs/stacks"
 OUT_DIR=""
 CHECK_ONLY=0
 
@@ -48,7 +48,7 @@ for arg in "$@"; do
       cat <<USAGE
 Usage: $0 [options]
   --check       exit 1 if any stack missing a doc (CI gate)
-  --out <path>  custom output dir (default: cianfhoghlaim/docs/stacks/)
+  --out <path>  custom output dir (default: docs/stacks/)
 USAGE
       exit 0
       ;;
@@ -160,7 +160,7 @@ ${image:-(none — no compose.yaml or no image: line)}
 
 ## See also
 
-- Index: \`cianfhoghlaim/docs/stacks/INDEX.md\`
+- Index: \`docs/stacks/INDEX.md\`
 - Deployment control panel: \`notebooks/00_control_panel.py\`
 STACK_DOC
   written=$((written + 1))

@@ -10,10 +10,10 @@
 "use client";
 
 import * as React from "react";
-import { CopilotKit } from "@copilotkit/react-core";
-import { CopilotSidebar, CopilotChat } from "@copilotkit/react-ui";
+import { CopilotKit } from "@copilotkit/react-core/v2";
+import { CopilotSidebar, CopilotChat } from "@copilotkit/react-ui/v2";
 import "@copilotkit/react-ui/styles.css";
-import { useChat } from "@copilotkit/react-core";
+import { useChat } from "@copilotkit/react-core/v2";
 
 import { listAllAgents } from "@/lib/agents";
 import { AGENTS } from "@/lib/registry";

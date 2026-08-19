@@ -4,8 +4,8 @@ import {
   ScrollRestoration,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { CopilotKit } from "@copilotkit/react-core";
-import { CopilotSidebar } from "@copilotkit/react-ui";
+import { CopilotKit } from "@copilotkit/react-core/v2";
+import { CopilotSidebar } from "@copilotkit/react-ui/v2";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { Header } from "~/components/layout/Header";
 import "@copilotkit/react-ui/styles.css";

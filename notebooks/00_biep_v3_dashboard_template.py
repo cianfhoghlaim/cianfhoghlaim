@@ -1,15 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#   "marimo>=0.13",
-#   "ibis-framework[duckdb]>=9.0",
-#   "pandas>=2.2",
-#   "altair>=5.0",
-#   "pyarrow>=15",
-#   "anywidget>=0.9",
-#   "traitlets>=5.14",
-# ]
-# ///
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 
 """BIEP v3 Dashboard Template — the canonical 8-cell template for any new BIEP jurisdiction dashboard.
 

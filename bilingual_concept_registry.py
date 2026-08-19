@@ -37,7 +37,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-from meaisinfoghlaim.alignment.schema import BilingualConcept, LanguagePair
+from meaisinfhoghlaim.alignment.schema import BilingualConcept, LanguagePair
 
 logger = logging.getLogger(__name__)
 
@@ -111,8 +111,7 @@ class BilingualConceptRegistry:
         self._cache[cache_key] = existing
         with path.open("w", encoding="utf-8") as f:
             for c in existing:
-                f.write(c.model_dump_json() + "
-")
+                f.write(c.model_dump_json() + "\n")
         logger.info(
             "Upserted bilingual concept %s -> %s at %s",
             concept.en_term, concept.ga_term, path,

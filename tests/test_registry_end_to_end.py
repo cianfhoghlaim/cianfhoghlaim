@@ -320,7 +320,7 @@ _ARTIFACTS: list[tuple[str, Path]] = [
     ),
     (
         "european_nations _factory.py",
-        _REPO_ROOT / "cocoindex" / "european_nations" / "_factory.py",
+        _REPO_ROOT / "cocoindex_flows" / "european_nations" / "_factory.py",
     ),
 ]
 

@@ -38,7 +38,7 @@ def _list_subjects() -> dict[str, Any]:
             "subject": slug,
             "baml": str(baml_file.relative_to(REPO_ROOT)),
             "agent": f"agents/tuatha/agents/{slug.replace('applied_mathematics', 'appm')}_agent.py",
-            "cocoindex": f"cocoindex/{slug}_embedding.py",
+            "cocoindex": f"cocoindex_flows/{slug}_embedding.py",
         })
     return {"subjects": subjects, "count": len(subjects)}
 

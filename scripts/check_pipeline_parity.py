@@ -18,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 BAML_SRC = REPO_ROOT / "baml_src"
 DLT = REPO_ROOT / "dlt"
 ORCHESTRATION = REPO_ROOT / "orchestration" / "defs" / "1_ingestion"
-COCOINDEX = REPO_ROOT / "cocoindex"
+COCOINDEX = REPO_ROOT / "cocoindex_flows"
 
 REGIONS = ("european_nations", "commonwealth", "british_isles",
            "american_nations", "european_union")
@@ -95,7 +95,7 @@ def main() -> int:
     for region, j in sorted(all_jurisdictions):
         row = layer_data[(region, j)]
         cells = []
-        for layer in ("baml_src", "dlt", "orchestration", "cocoindex"):
+        for layer in ("baml_src", "dlt", "orchestration", "cocoindex_flows"):
             present = row.get(layer, False)
             cells.append("OK" if present else "MISSING")
             if not present:

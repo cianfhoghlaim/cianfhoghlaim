@@ -15,11 +15,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.cross_qualification_topic_alignment import (
+from meaisinfhoghlaim.alignment.cross_qualification_topic_alignment import (
     CrossQualificationTopicAligner,
 )
-from meaisinfoghlaim.alignment.qualification_normalizer import QualificationNormalizer
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.qualification_normalizer import QualificationNormalizer
+from meaisinfhoghlaim.alignment.schema import (
     CrossJurisdictionDiff,
     QualificationLevel,
 )

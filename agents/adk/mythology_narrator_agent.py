@@ -11,6 +11,7 @@ Generates immersive NPC interactions and story content.
 
 import datetime
 
+from .litellm_agent import litellm_model
 from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 

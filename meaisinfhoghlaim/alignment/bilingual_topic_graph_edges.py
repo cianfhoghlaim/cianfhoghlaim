@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     BilingualTopicEdge,
     LanguagePair,
 )

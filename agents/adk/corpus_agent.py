@@ -11,6 +11,7 @@ Uses LanceDB for vector search and DuckDB for structured queries.
 """
 from __future__ import annotations
 
+from .litellm_agent import litellm_model
 from pydantic import BaseModel, Field
 
 

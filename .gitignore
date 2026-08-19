@@ -363,4 +363,4 @@ id_*
 *.tsbuildinfo
 # Scratch directory (session artifacts + filter-repo audit maps)
 .scratch/
-EMAIL-DRAFT-awootank.md
+EMAIL-DRAFT-awootank.md.tmp_dagster_home_nhzffdhn/

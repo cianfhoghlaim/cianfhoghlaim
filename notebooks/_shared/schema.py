@@ -19,7 +19,7 @@ Five canonical helpers that expose the lakehouse schema in a unified way:
 
 4. ``list_cocoindex_apps()`` — all 472 CocoIndex Apps + their
    LanceDB mount targets + their embedders (via AST parsing of
-   ``cocoindex/**/*.py``).
+   ``cocoindex_flows/**/*.py``).
 
 5. ``list_baml_classes()`` — all 838 BAML classes + their parent
    BAML files + their clients (via AST parsing of
@@ -449,7 +449,7 @@ def _detect_destinations(path: Path) -> list[str]:
 def list_cocoindex_apps() -> list[dict[str, Any]]:
     """List every CocoIndex v1 App (via ``coco.App`` + ``mount_table_target``)."""
     import ast
-    coco_root = _REPO_ROOT / "cocoindex"
+    coco_root = _REPO_ROOT / "cocoindex_flows"
     if not coco_root.exists():
         return []
 

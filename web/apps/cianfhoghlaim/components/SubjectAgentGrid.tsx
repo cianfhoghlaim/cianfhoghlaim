@@ -6,12 +6,18 @@
  * Surfaces the 60 per-subject agents (Phase 8) as interactive cards.
  * Each card links to the per-subject route (`/<stage>/<subject>/`) and
  * the per-subject marimo notebook (Phase 9).
+ *
+ * Per the 2026-09-30-mega-3b-cocoindex-and-copilotkit-v1 change: the
+ * subject grid uses the canonical SubjectGridSurface (the A2UI
+ * surface generator wrapper from a2ui/SubjectGridSurface.tsx) for
+ * the per-stage rendering.
  */
 
 "use client";
 
 import { type FC, useState } from "react";
 import Link from "next/link";
+import { SubjectGridSurface } from "./a2ui/SubjectGridSurface";
 
 export interface SubjectAgent {
   /** The stage ID (lc | jc | gcse | a_level) */
@@ -42,11 +48,41 @@ export interface SubjectAgentGridProps {
 }
 
 const STAGE_LABELS: Record<string, string> = {
-  lc: "Leaving Certificate (LC)",
-  jc: "Junior Cycle (JC)",
+  lc: "Leaving Certificate",
+  jc: "Junior Cycle",
   gcse: "GCSE",
   a_level: "A-Level",
 };
+
+// The canonical subject → icon mapping (per the A2UI surface generator)
+const SUBJECT_ICONS: Record<string, string> = {
+  mathematics: "∑",
+  english: "✎",
+  gaeilge: "á",
+  science: "⚛",
+  geography: "⛰",
+  history: "⏳",
+  cspE: "★",
+  sphe: "♥",
+  physics: "⚙",
+  chemistry: "⚗",
+  biology: "🌱",
+  french: "✓",
+  business: "📊",
+  accounting: "$",
+  art: "✦",
+  music: "♪",
+  computer_science: "▦",
+  economics: "📈",
+  history_of_art: "🖼",
+  politics: "⚐",
+  psychology: "ψ",
+  sociology: "⚖",
+};
+
+function getSubjectIcon(slug: string): string {
+  return SUBJECT_ICONS[slug] ?? "■";
+}
 
 const STAGE_ORDER: ReadonlyArray<string> = ["lc", "jc", "gcse", "a_level"];
 
@@ -68,6 +104,17 @@ export const SubjectAgentGrid: FC<SubjectAgentGridProps> = ({
 
   return (
     <div className="space-y-8">
+      {/* The A2UI subject_grid surface (per the 2026-09-30-mega-3b change) */}
+      <SubjectGridSurface
+        data={{
+          subjects: Object.values(grouped).flat().map((agent) => ({
+            slug: agent.subject,
+            display_name: agent.display_name,
+            icon: getSubjectIcon(agent.subject),
+            ncca_lo_prefix: agent.code,
+          })),
+        }}
+      />
       {STAGE_ORDER.map((stage) => {
         const stageAgents = grouped[stage] ?? [];
         if (stageAgents.length === 0) return null;

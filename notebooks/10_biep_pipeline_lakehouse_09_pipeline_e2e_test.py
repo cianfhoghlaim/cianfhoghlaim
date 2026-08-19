@@ -1,20 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#   marimo>=0.13,
-#   duckdb>=1.0,
-#   ibis-framework[duckdb]>=9.0,
-#   pandas>=2.2,
-#   altair>=5.0,
-#   pyarrow>=15,
-#   anywidget>=0.9,
-#   traitlets>=5.14,
-#   lancedb>=0.20,
-#   boto3>=1.34,
-#   dlt>=1.0,
-#   sentence-transformers>=3.0,
-# ]
-# ///
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 """End-to-end pipeline testing — BIEP MotherDuck + DuckLake + LanceDB.
 
 Verifies the British-Isles Education pipeline integration:

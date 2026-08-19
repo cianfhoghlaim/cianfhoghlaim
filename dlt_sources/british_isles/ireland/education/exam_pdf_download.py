@@ -29,7 +29,7 @@ def exam_pdf_download_source(
     Usage:
         pipeline = dlt.pipeline(...)
         pipeline.run(exam_pdf_download_source(
-            duckdb_path="./curriculum_unified.duckdb",
+            duckdb_path="./data/curriculum_unified.duckdb",
             download_dir="./downloads/examinations",
             level="leaving_certificate",
         ))

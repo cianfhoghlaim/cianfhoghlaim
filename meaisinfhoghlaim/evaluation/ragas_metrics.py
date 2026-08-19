@@ -124,7 +124,7 @@ def compute_ragas_metrics(dataset: Sequence[dict[str, Any]]) -> RagasFourMetricS
 
     if RAGAS_AVAILABLE and _r_evaluate is not None:
         try:
-            from meaisinfoghlaim.evaluation.ragas_biiep_ensemble import (
+            from meaisinfhoghlaim.evaluation.ragas_biiep_ensemble import (
                 evaluate_ensemble as _evaluate_ensemble,
             )
             ragas_score_obj = _evaluate_ensemble(dataset)

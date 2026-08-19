@@ -14,32 +14,31 @@ from __future__ import annotations
 
 from typing import Any
 
-from meaisinfoghlaim.alignment.bilingual_concept_registry import BilingualConceptRegistry
-from meaisinfoghlaim.alignment.bilingual_extraction import BilingualExtractionOrchestrator
-from meaisinfoghlaim.alignment.bilingual_topic_graph_edges import BilingualTopicGraphEdgeEmitter
-from meaisinfoghlaim.alignment.board_diff import BoardDiffer
-from meaisinfoghlaim.alignment.cross_jurisdiction_diff import CrossJurisdictionDiffer
-from meaisinfoghlaim.alignment.cross_qualification_gap_analysis import CrossQualificationGapAnalyzer
-from meaisinfoghlaim.alignment.cross_qualification_search import CrossQualificationSearcher
-from meaisinfoghlaim.alignment.cross_qualification_subject_map import (
+from meaisinfhoghlaim.alignment.bilingual_concept_registry import BilingualConceptRegistry
+from meaisinfhoghlaim.alignment.bilingual_extraction import BilingualExtractionOrchestrator
+from meaisinfhoghlaim.alignment.bilingual_topic_graph_edges import BilingualTopicGraphEdgeEmitter
+from meaisinfhoghlaim.alignment.board_diff import BoardDiffer
+from meaisinfhoghlaim.alignment.cross_jurisdiction_diff import CrossJurisdictionDiffer
+from meaisinfhoghlaim.alignment.cross_qualification_search import CrossQualificationSearcher
+from meaisinfhoghlaim.alignment.cross_qualification_subject_map import (
     CrossQualificationSubjectMap,
 )
-from meaisinfoghlaim.alignment.cross_qualification_topic_alignment import (
+from meaisinfhoghlaim.alignment.cross_qualification_topic_alignment import (
     CrossQualificationTopicAligner,
 )
-from meaisinfoghlaim.alignment.diagram_indexer import DiagramIndexer
-from meaisinfoghlaim.alignment.exam_marking_alignment import ExamMarkingAligner
-from meaisinfoghlaim.alignment.qualification_normalizer import QualificationNormalizer
-from meaisinfoghlaim.alignment.topic_graph import (
+from meaisinfhoghlaim.alignment.diagram_indexer import DiagramIndexer
+from meaisinfhoghlaim.alignment.exam_marking_alignment import ExamMarkingAligner
+from meaisinfhoghlaim.alignment.qualification_normalizer import QualificationNormalizer
+from meaisinfhoghlaim.alignment.topic_graph import (
     BilingualTopicGraphBuilder,
     TopicGraphBuilder,
 )
-from meaisinfoghlaim.evaluation.bilingual_coverage_audit import BilingualCoverageAuditor
-from meaisinfoghlaim.evaluation.cross_qualification_gap_analysis_runtime import (
+from meaisinfhoghlaim.evaluation.bilingual_coverage_audit import BilingualCoverageAuditor
+from meaisinfhoghlaim.evaluation.cross_qualification_gap_analysis import (
     CrossQualificationGapAnalyzerRuntime,
 )
-from meaisinfoghlaim.evaluation.diff_reporter import DiffReporter
-from meaisinfoghlaim.evaluation.regression_baseline import (
+from meaisinfhoghlaim.evaluation.diff_reporter import DiffReporter
+from meaisinfhoghlaim.evaluation.regression_baseline import (
     RegressionBaselineStore,
 )
 

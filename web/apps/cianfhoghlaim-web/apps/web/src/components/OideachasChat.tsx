@@ -1,4 +1,4 @@
-import { useCopilotChat, useCopilotAction } from "@copilotkit/react-core";
+import { useCopilotChat, useCopilotAction } from "@copilotkit/react-core/v2";
 import { TextMessage, Role } from "@copilotkit/runtime-client-gql";
 import { useState } from "react";
 import { client } from "../utils/orpc";

@@ -38,6 +38,8 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 from pydantic import BaseModel, Field
 
+from .litellm_agent import litellm_model
+
 from .config import config
 
 logger = logging.getLogger(__name__)

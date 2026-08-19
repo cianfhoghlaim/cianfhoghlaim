@@ -20,11 +20,11 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     CohortLifecycleState,
     CohortRow,
 )
-from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
+from meaisinfhoghlaim.datasets.cohort_registry import CohortRegistry
 
 logger = logging.getLogger(__name__)
 

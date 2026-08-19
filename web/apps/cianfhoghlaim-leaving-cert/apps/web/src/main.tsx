@@ -6,7 +6,7 @@ import * as React from "react";
 import ReactDOM from "react-dom/client";
 import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet, Link } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { CopilotKit } from "@copilotkit/react-core";
+import { CopilotKit } from "@copilotkit/react-core/v2";
 
 import "./app.css";
 import "./a2ui-theme.css";

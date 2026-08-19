@@ -28,7 +28,7 @@ import json
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.schema import DiagramIndexEntry
+from meaisinfhoghlaim.alignment.schema import DiagramIndexEntry
 
 logger = logging.getLogger(__name__)
 

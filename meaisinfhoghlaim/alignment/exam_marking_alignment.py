@@ -29,7 +29,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Any, Iterable
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     ExamMarkingAlignment,
 )
 

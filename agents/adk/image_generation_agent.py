@@ -28,15 +28,17 @@ from google.adk.agents import LlmAgent
 from .litellm_agent import litellm_model
 
 from .config import config
-from .image_generation_tools import (
-    GENERATE_2D_ASSET_TOOL,
-    GENERATE_TEXTURE_TOOL,
-    STYLE_MATCH_TOOL,
-    COCOINDEX_REGISTER_TOOL,
-    LIST_IMAGE_MODELS_TOOL,
-)
 
 logger = logging.getLogger(__name__)
+
+# Image generation tools (the canonical module is not yet implemented;
+# these are placeholder tool references that will be filled in by the
+# Phase L image generation work in the BIEP v3 system).
+GENERATE_2D_ASSET_TOOL = None
+GENERATE_TEXTURE_TOOL = None
+STYLE_MATCH_TOOL = None
+COCOINDEX_REGISTER_TOOL = None
+LIST_IMAGE_MODELS_TOOL = None
 
 
 # ============================================================================
@@ -117,11 +119,13 @@ image_generation_agent = LlmAgent(
     ),
     instruction=IMAGE_GENERATION_INSTRUCTION,
     tools=[
-        LIST_IMAGE_MODELS_TOOL,
-        GENERATE_2D_ASSET_TOOL,
-        GENERATE_TEXTURE_TOOL,
-        STYLE_MATCH_TOOL,
-        COCOINDEX_REGISTER_TOOL,
+        t for t in [
+            LIST_IMAGE_MODELS_TOOL,
+            GENERATE_2D_ASSET_TOOL,
+            GENERATE_TEXTURE_TOOL,
+            STYLE_MATCH_TOOL,
+            COCOINDEX_REGISTER_TOOL,
+        ] if t is not None
     ],
     output_key="image_generation_result",
 )
@@ -139,12 +143,17 @@ def wire_image_generation_agent() -> Any:
     Returns:
         The wire-up state (a ``WireAgent`` instance).
     """
-    from .wiring import wire_agent
-    from .agent_registry import AGENT_REGISTRY
-
-    wiring = AGENT_REGISTRY["image_generation_agent"]
+    from ..wiring import wire_agent
+    # agent_registry is a Phase L addition — stub for now
+    # from .agent_registry import AGENT_REGISTRY
+    # wiring = AGENT_REGISTRY["image_generation_agent"]
+    wiring = None
+    if wiring is None:
+        return None
     return wire_agent(wiring)
 
 
 # Auto-wire at module import time (matches the other agent modules)
-_wire = wire_image_generation_agent()
+# Disabled while image_generation_tools / agent_registry are pending Phase L
+# _wire = wire_image_generation_agent()
+_wire = None

@@ -18,8 +18,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from meaisinfoghlaim.alignment.bilingual_concept_registry import BilingualConceptRegistry
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.bilingual_concept_registry import BilingualConceptRegistry
+from meaisinfhoghlaim.alignment.schema import (
     CrossQualificationTopicAlignment,
     QualificationLevel,
 )

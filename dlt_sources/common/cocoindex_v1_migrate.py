@@ -40,7 +40,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-COCOINDEX_ROOT = Path(__file__).resolve().parents[2] / "cocoindex"
+COCOINDEX_ROOT = Path(__file__).resolve().parents[2] / "cocoindex_flows"
 """The `cianfhoghlaim/cocoindex/` directory.
 
 Computed from `dlt/common/cocoindex_v1_migrate.py`:

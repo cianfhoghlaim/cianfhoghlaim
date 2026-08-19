@@ -66,7 +66,6 @@ resource_path = [
   "bonneagar/komodo/stacks/croilar-bunchloch.toml",
   "bonneagar/komodo/stacks/hermes-bunchloch.toml",
   "bonneagar/komodo/stacks/mailcow-dockerized-bunchloch.toml",
-  "bonneagar/komodo/stacks/meaisinfoghlaim-bunchloch.toml",
   "bonneagar/komodo/stacks/cianfhoghlaim-bunchloch.toml",
   "bonneagar/komodo/stacks/newt-bunchloch.toml",
   "bonneagar/komodo/builds/openchamber-arm1-oci.toml",

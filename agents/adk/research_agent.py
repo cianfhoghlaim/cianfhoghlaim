@@ -25,6 +25,8 @@ from .callbacks.citation_callbacks import (
     citation_replacement_callback,
     collect_celtic_sources_callback,
 )
+from .litellm_agent import litellm_model
+
 from .config import config
 
 

@@ -26,6 +26,26 @@ from .agui_curriculum_agent import (
 from .agui_curriculum_agent import (
     TranslationRequest as AGUITranslationRequest,
 )
+
+# Stage agents (4-stage plane per the 2026-08-26-mega-3a-baml-and-adk-v1
+# change). Each agent is auto-generated from the corresponding BAML
+# stage template + uses `BAMLFunctionTool` to wire the per-stage
+# extraction functions.
+from .lc_subject_agent import lc_subject_agent, LC_SUBJECT_FUNCTIONS
+from .jc_subject_agent import jc_subject_agent, JC_SUBJECT_FUNCTIONS
+from .alevel_subject_agent import alevel_subject_agent, ALEVEL_FUNCTIONS
+from .gcse_subject_agent import gcse_subject_agent, GCSE_FUNCTIONS
+
+__all__ = [
+    "lc_subject_agent",
+    "LC_SUBJECT_FUNCTIONS",
+    "jc_subject_agent",
+    "JC_SUBJECT_FUNCTIONS",
+    "alevel_subject_agent",
+    "ALEVEL_FUNCTIONS",
+    "gcse_subject_agent",
+    "GCSE_FUNCTIONS",
+]
 from .callbacks import (
     citation_replacement_callback,
     classify_celtic_source,

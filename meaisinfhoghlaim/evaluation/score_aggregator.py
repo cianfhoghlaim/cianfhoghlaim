@@ -25,11 +25,11 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Iterable
 
-from meaisinfoghlaim.evaluation.per_subject_runner import (
+from meaisinfhoghlaim.evaluation.per_subject_runner import (
     CohortKey,
     PerSubjectEvalResult,
 )
-from meaisinfoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
+from meaisinfhoghlaim.evaluation.ragas_metrics import RagasFourMetricScore
 
 
 # BIEP v3 gate threshold (locked 2026-08-15)

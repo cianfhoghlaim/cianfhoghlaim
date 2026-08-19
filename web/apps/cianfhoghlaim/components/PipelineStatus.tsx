@@ -7,11 +7,16 @@
  * as a real-time status grid. The data is consumed from the per-subject
  * agents (Phase 8) + the 4-stage DLT registry (Phase 5) + the 4-stage
  * CocoIndex factory (Phase 6).
+ *
+ * Per the 2026-09-30-mega-3b-cocoindex-and-copilotkit-v1 change: the
+ * pipeline chart is now rendered via the canonical `ChartSurface` (the
+ * A2UI surface generator wrapper from `a2ui/ChartSurface.tsx`).
  */
 
 "use client";
 
 import { type FC, useEffect, useState } from "react";
+import { ChartSurface } from "./a2ui/ChartSurface";
 
 export interface PipelineStage {
   /** The stage ID (lc | jc | gcse | a_level | dlt | baml | cocoindex | ragas) */
@@ -130,6 +135,27 @@ export const PipelineStatus: FC<PipelineStatusProps> = ({
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {/* The A2UI chart surface (per the 2026-09-30-mega-3b change) */}
+        <ChartSurface
+          data={{
+            type: "bar",
+            title: "BIEP v3 Pipeline Health",
+            x_label: "Stage",
+            y_label: "Subjects processed / total",
+            series: [
+              {
+                name: "Subjects",
+                x: stages.map((s) => s.id),
+                y: stages.map((s) => s.subjects_processed),
+              },
+              {
+                name: "PDFs",
+                x: stages.map((s) => s.id),
+                y: stages.map((s) => s.pdfs_processed),
+              },
+            ],
+          }}
+        />
         {stages.map((stage) => (
           <div
             key={stage.id}

@@ -13,8 +13,8 @@ Storage:
   - On disk: ``stedding/education/eval_golden_baselines/`` as JSONL files
 
 Usage:
-    from meaisinfoghlaim.evaluation.golden_baselines import GoldenBaselineStore
-    from meaisinfoghlaim.evaluation.per_subject_runner import CohortKey
+    from meaisinfhoghlaim.evaluation.golden_baselines import GoldenBaselineStore
+    from meaisinfhoghlaim.evaluation.per_subject_runner import CohortKey
     store = GoldenBaselineStore()
     cohort = CohortKey("ireland", "lc", "mathematics")
     baselines = store.get(cohort)
@@ -30,7 +30,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from meaisinfoghlaim.evaluation.per_subject_runner import CohortKey
+from meaisinfhoghlaim.evaluation.per_subject_runner import CohortKey
 
 logger = logging.getLogger(__name__)
 

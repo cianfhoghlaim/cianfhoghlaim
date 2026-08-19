@@ -16,11 +16,11 @@
     "build-storybook": "storybook build -o .storybook-static"
   },
   "dependencies": {
-    "@copilotkit/a2ui-renderer": "^1.62.2",
-    "@copilotkit/react-core": "^1.62.0",
-    "@copilotkit/react-ui": "^1.62.0",
-    "@copilotkit/runtime": "^1.62.0",
-    "@copilotkit/runtime-client-gql": "^1.62.0",
+    "@copilotkit/a2ui-renderer": "^1.67.1",
+    "@copilotkit/react-core/v2": "^1.67.1",
+    "@copilotkit/react-ui": "^1.67.1",
+    "@copilotkit/runtime": "^1.67.1",
+    "@copilotkit/runtime-client-gql": "^1.67.1",
     "@copilotkit/shared": "^1.62.0",
     "@dagrejs/dagre": "^1.1.0",
     "@google/model-viewer": "^3.5.0",

@@ -24,14 +24,14 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Iterable
 
-from meaisinfoghlaim.alignment.schema import (
+from meaisinfhoghlaim.alignment.schema import (
     Board,
     CohortRow,
     DatasetConfig,
     LanguagePair,
     QualificationLevel,
 )
-from meaisinfoghlaim.datasets.cohort_registry import CohortRegistry
+from meaisinfhoghlaim.datasets.cohort_registry import CohortRegistry
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ _BAML_FUNCTIONS_PER_STAGE: dict = {
 _OCR_BACKEND_PER_STAGE: dict = {
     (QualificationLevel.LC, "ireland"): "paddleocr",
     (QualificationLevel.GCSE, "england"): "docling",
-    (QualitationLevel.A_LEVEL, "england"): "olmmocr",
+    (QualificationLevel.A_LEVEL, "england"): "olmmocr",
 }
 
 

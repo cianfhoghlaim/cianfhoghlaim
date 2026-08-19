@@ -13,6 +13,7 @@ BAML-extracted structured curriculum data.
 from __future__ import annotations
 
 import asyncio
+from .litellm_agent import litellm_model
 from dataclasses import dataclass
 from typing import Any
 
