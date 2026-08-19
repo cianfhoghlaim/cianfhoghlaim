@@ -89,21 +89,74 @@ class PrimaryCurriculumArea {
 function ExtractPrimaryFramework(text: string,
   stage: PrimaryStage,
   area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    PrimaryCurriculumArea {
+      name primaryareacode {},
+      rationale "",
+      rationale_ga null,
+      strands null,
+      source_url "",
+      document_year 0,
+    }
+  }
 }
 
 
 function ExtractPrimaryLearningOutcomes(text: string,
   stage: PrimaryStage,
   area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    PrimaryLearningOutcome[] {}
+  }
 }
 
 
 function ExtractPrimaryFrameworkFromUrl(source_url: string,
   stage: PrimaryStage,
   area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    PrimaryCurriculumArea {
+      name primaryareacode {},
+      rationale "",
+      rationale_ga null,
+      strands null,
+      source_url "",
+      document_year 0,
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

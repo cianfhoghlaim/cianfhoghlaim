@@ -6,6 +6,7 @@ import { requireAuth, requireOrg } from "./middleware";
 import lineageBySubject from "./routes/lineage/[subject]";
 import pdfWildcard from "./routes/pdf/[...r2-key]";
 import imageGeneration from "./routes/copilotkit/image-generation";
+import copilotkitRegistry from "./routes/copilotkit/registry";
 
 const app = new Hono();
 
@@ -93,6 +94,13 @@ app.route("/", pdfWildcard);
 // the unified Hono gateway at `/api/copilotkit/image-gen/*`.
 
 app.route("/api/copilotkit/image-gen", imageGeneration);
+
+// The agent_registry_runtime wire-up (Mega-3d Phase 2). The 3 routes
+// (config / events / agents) delegate to the canonical Python runtime
+// at `agents/integrations/agent_registry_runtime.py` and return the
+// JSON config / AG-UI events / agent names. This is the bridge between
+// the Python agent registry and the TanStack Start front-end.
+app.route("/api/copilotkit/registry", copilotkitRegistry);
 
 const port = parseInt(process.env.PORT ?? "4000", 10);
 console.log(`[croilar-hono-api] Listening on port ${port}`);

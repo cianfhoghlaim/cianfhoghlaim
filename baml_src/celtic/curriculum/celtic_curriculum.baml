@@ -88,17 +88,101 @@ class CurriculumUnit {
 
 // Extract curriculum unit from document
 function ExtractCurriculumUnit(document: string, language: CelticLanguageCurriculum, nation: string) -> CurriculumUnit {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CurriculumUnit {}
+  }
 }
 
 // Extract grammar explanation
 function ExtractGrammarTopic(content: string, language: CelticLanguageCurriculum) -> GrammarTopic {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    GrammarTopic {}
+  }
 }
 
 // Extract vocabulary from text
 function ExtractVocabulary(text: string, language: CelticLanguageCurriculum, theme: string?) -> VocabularySet {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    VocabularySet {}
+  }
 }
 
 // Generate learning outcome assessment
@@ -124,7 +208,31 @@ function GenerateAssessment(
   language: CelticLanguageCurriculum,
   question_count: int
 ) -> OutcomeAssessment {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Compare curriculum across Celtic nations
@@ -143,7 +251,31 @@ function CompareCelticCurricula(
   gaelic_content: string?,
   welsh_content: string?
 ) -> CurriculumComparison {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -177,7 +309,31 @@ function CompareCelticNations(
   topic_query: string,
   scope: string[],
 ) -> CelticCurriculumComparison {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -206,5 +362,33 @@ function ExtractCelticCurriculum(
   text: string,
   language: CelticLanguageCurriculum
 ) -> CelticCurriculumSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
+
+    Source type: PDF text from a Celtic-nation curriculum authority
+
+    Extract:
+    - language: the Celtic language
+    - stage: the educational stage (primary, secondary, etc.)
+    - learning_outcomes: list of learning outcomes with codes
+    - assessment_objectives: list of assessment objectives
+    - cross_curricular: cross-subject links
+
+    {% if language == 'ga' %}
+    - NCCA LO codes use prefix `JC-GAEL-LO-NNN`
+    {% elif language == 'cy' %}
+    - CBAC (Welsh) LO codes use prefix `CBAC-CYM-LO-NNN`
+    {% endif %}
+
+    The 6 Celtic languages are: ga (Irish), cy (Welsh), gd (Scottish Gaelic), br (Breton), kw (Cornish), gv (Manx). Each has its own national curriculum authority.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CelticCurriculumSpec {}
+  }
 }

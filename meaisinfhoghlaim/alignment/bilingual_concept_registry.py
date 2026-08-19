@@ -104,7 +104,7 @@ class BilingualConceptRegistry:
         self._cache[cache_key] = existing
         with path.open("w", encoding="utf-8") as f:
             for c in existing:
-                f.write(c.model_dump_json() + NL)
+                f.write(c.model_dump_json() + "\n")
         logger.info(
             "Upserted bilingual concept %s -> %s at %s",
             concept.en_term, concept.ga_term, path,

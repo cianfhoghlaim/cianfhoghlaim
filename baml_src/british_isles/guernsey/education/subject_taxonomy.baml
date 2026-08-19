@@ -118,6 +118,23 @@ function ExtractGuernseySyllabus(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    GuernseySyllabusSpec {
+      source_pdf "",
+      source_pages 0,
+      subject guernseysubject {},
+      level guernseylevel {},
+      title "",
+      version "",
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      component_papers 0,
+      topics null,
+      assessment_objectives null,
+    }
+  }
 }
 
 test ExtractGuernseySyllabus {

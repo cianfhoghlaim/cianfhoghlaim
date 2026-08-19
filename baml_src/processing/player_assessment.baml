@@ -98,7 +98,16 @@ function AnalyzePlayerResponse(
   language: CelticLanguage,
   skill_being_tested: SkillDomain
 ) -> ResponseAnalysis {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Generate adaptive assessment
@@ -141,7 +150,16 @@ function GenerateAdaptiveAssessment(
   focus_areas: SkillDomain[],
   question_count: int
 ) -> AdaptiveAssessment {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Placement test
@@ -165,7 +183,16 @@ function EvaluatePlacementTest(
   responses: PlacementResponse[],
   language: CelticLanguage
 ) -> PlacementResult {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 class PlacementResponse {
@@ -220,7 +247,16 @@ function GenerateProgressReport(
   language: CelticLanguage,
   period: string
 ) -> ProgressReport {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -259,5 +295,14 @@ function GenerateExitCardQuestions(
   num_questions: int,
   curriculum_extract: CircularExtraction?,
 ) -> ExitCardSet {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

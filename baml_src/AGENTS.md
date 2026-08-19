@@ -21,6 +21,31 @@ mise run baml:test                  # Run BAML test blocks (hard CI gate)
 mise run cic:baml:lint              # Lint all 56+ .baml schema files for consistency
 ```
 
+## The 18 domain templates (per the 2026-12-XX-mega-3d-baml-quality-v1 change)
+
+The canonical 18 domain-specific BAML prompt templates live at
+`baml_src/_shared/templates/`. Each template is a high-quality
+extractor prompt body that replaces the historical
+`"Auto-generated extraction prompt."` stub.
+
+| Pattern | Convention |
+|:--|:--|
+| **Stub replacement** | Every `Extract*` function MUST have a substantive prompt body (no `Auto-generated extraction prompt.` stubs). Enforced by `python scripts/lint_baml_stub_prompts.py`. |
+| **Catch coverage** | Every `Extract*` function MUST have a `catch_all` block that emits a safe-default value for the return type. Enforced by `python scripts/lint_baml_catch_coverage.py`. |
+| **BAML 0.223.0 features** | Use `_.role("user")`, `ctx.output_format`, `{% if %}` branching, `catch_all`, `TypeBuilder`, `@stream.done`, `@assert`, and dynamic schemas where appropriate. |
+| **Reference path** | Read the canonical templates at `baml_src/_shared/templates/<domain>.baml` when adding new extraction functions. |
+
+To regenerate the 18 templates from scratch:
+```bash
+python scripts/baml_generate_templates.py
+```
+
+To re-apply the stub-replacement + catch-block sweep:
+```bash
+python scripts/baml_bulk_replace_stubs.py
+python scripts/baml_bulk_add_catch.py
+```
+
 ## Key sources
 
 | Path | Why it matters |

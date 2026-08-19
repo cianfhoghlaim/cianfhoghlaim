@@ -69,7 +69,16 @@ class DuchasPersonNameExtraction {
 function ParseDuchasXML(
   xml_content: string
 ) -> DuchasXMLRecord {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -104,7 +113,20 @@ function ExtractHandwriting(
   page_image: image,
   context: DuchasXMLRecord?
 ) -> HandwritingExtraction {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    HandwritingExtraction {}
+  }
 }
 
 // Batch extraction for multi-page stories
@@ -125,7 +147,20 @@ function ExtractStory(
   page_images: image[],
   metadata: DuchasXMLRecord
 ) -> StoryExtraction {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    StoryExtraction {}
+  }
 }
 
 // ============================================================================

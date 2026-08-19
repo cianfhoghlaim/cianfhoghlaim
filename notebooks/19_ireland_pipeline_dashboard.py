@@ -146,6 +146,31 @@ def _dashboard(mo):
 
 
 # ────────────────────────────────────────────────────────────────────────────
+# Cell 3: The BAML chat for the LC stage (Phase 2 wire-up, Mega-3d)
+# ────────────────────────────────────────────────────────────────────────────
+
+@app.cell(column=2, hide_code=True)
+def _baml_chat_lc(mo):
+    """The BAML chat for the LC stage (per Mega-3d Phase 2 wire-up).
+
+    Routes through the canonical `make_baml_chat_for_stage` runtime
+    helper from `notebooks/_shared/marimo_integration_runtime.py`.
+    The stage = "lc" selects the LC6_FUNCTIONS list from
+    `notebooks/_shared/marimo_baml.py` (the 5 canonical lc6
+    extraction functions: ExtractCurriculumSyllabus,
+    ExtractExamPaperLayout, ExtractMarkingSchemeGuideline,
+    ExtractCrossLinguisticConcept, ExtractSyllabusDiagram).
+    """
+    from notebooks._shared.marimo_integration_runtime import (
+        make_baml_chat_for_stage,
+    )
+    chat = make_baml_chat_for_stage(stage="lc", subject=None)
+    if chat is None:
+        return mo.md("BAML chat unavailable (baml-py not installed).")
+    return chat
+
+
+# ────────────────────────────────────────────────────────────────────────────
 # Dual-mode CLI (per https://docs.marimo.io/guides/scripts/)
 # ────────────────────────────────────────────────────────────────────────────
 

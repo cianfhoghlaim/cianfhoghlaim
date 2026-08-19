@@ -17,7 +17,7 @@ wrapped in `mo.ui.tabs` (P1), and includes:
 Cross-references:
 - `baml_src/british_isles/_shared/junior_cycle_template.baml` (the 8 JC subjects)
 - `agents/adk/jc_subject_agent.py` (the JC ADK agent)
-- `cocoindex/biep_parity/4_stage_factory.py` (the JC CocoIndex Apps)
+- `cocoindex_flows/biep_parity/4_stage_factory.py` (the JC CocoIndex Apps)
 """
 
 import marimo
@@ -64,11 +64,29 @@ def _(tabs):
 
         - BAML template: `baml_src/british_isles/_shared/junior_cycle_template.baml`
         - ADK agent: `agents/adk/jc_subject_agent.py`
-        - CocoIndex factory: `cocoindex/biep_parity/4_stage_factory.py`
+        - CocoIndex factory: `cocoindex_flows/biep_parity/4_stage_factory.py`
         - Dashboard helper: `notebooks/_shared/biiep_v3_dashboard_v2.py`
         """
     )
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    """The BAML chat for the JC stage (per Mega-3d Phase 2 wire-up).
+
+    Routes through the canonical `make_baml_chat_for_stage` runtime
+    helper from `notebooks/_shared/marimo_integration_runtime.py`.
+    The stage = "jc" selects the JC_FUNCTIONS list from
+    `notebooks/_shared/marimo_baml.py`.
+    """
+    from notebooks._shared.marimo_integration_runtime import (
+        make_baml_chat_for_stage,
+    )
+    chat = make_baml_chat_for_stage(stage="jc", subject=None)
+    if chat is None:
+        return mo.md("BAML chat unavailable (baml-py not installed).")
+    return chat
 
 
 if __name__ == "__main__":

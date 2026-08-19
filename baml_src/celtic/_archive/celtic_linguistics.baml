@@ -198,7 +198,16 @@ function ExtractMorphology(
   context: string @description("Sentence or phrase containing the word"),
   language: CelticLanguageArchive @description("Celtic language of the word")
 ) -> LinguisticToken {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Analyze a complete sentence for linguistic annotation
@@ -206,12 +215,30 @@ function AnalyzeSentence(
   sentence: string @description("Celtic language sentence"),
   language: CelticLanguageArchive @description("Language of the sentence")
 ) -> LinguisticToken[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Identify the dialect of Irish text
 function IdentifyDialect(
   text: string @description("Irish language text sample")
 ) -> IrishDialectArchive {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

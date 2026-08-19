@@ -692,16 +692,16 @@ description = "Sync the cianfhoghlaim package (alias of sync — `--all-extras` 
 run = "mise run sync"
 
 [tasks."cic:lint"]
-description = "Lint cianfhoghlaim Python code with ruff"
-run = "uv run ruff check ."
+description = "Aggregate lint gate (alias of lint — was ruff-only, silently skipping the skills-metadata + centralized-registry checks the real gate runs)"
+run = "mise run lint"
 
 [tasks."cic:test"]
-description = "Run pytest on the consolidated cianfhoghlaim package"
-run = "uv run pytest tests/"
+description = "Run pytest on the cianfhoghlaim package (alias of test)"
+run = "mise run test"
 
 [tasks."cic:typecheck"]
-description = "Type-check cianfhoghlaim Python code with mypy"
-run = "uv run mypy ."
+description = "Type-check cianfhoghlaim Python code with mypy (alias of py:typecheck)"
+run = "mise run py:typecheck"
 
 [tasks."cic:build"]
 description = "Build the consolidated cianfhoghlaim wheel"
@@ -720,8 +720,8 @@ description = "Verify all v4 VISION_MODELS are live on HF Hub"
 run = ".venv/bin/python3 scripts/verify_hf_hub_audit.py --strict"
 
 [tasks."cic:baml:generate"]
-description = "Regenerate the baml_client/ Python module from baml_src/ (alias of baml:generate)"
-run = "uv run baml-cli generate"
+description = "Regenerate the baml_client/ Python module from baml_src/ (alias of baml:generate — was missing the baml_src/baml.toml guard and the --from baml_src flag)"
+run = "mise run baml:generate"
 
 [tasks."cic:baml:test"]
 description = "Run baml-cli test (alias of baml:test)"
@@ -1032,20 +1032,20 @@ run = "bun run --cwd bonneagar iac:health ${@:-}"
 # -----------------------------------------------------------------------------
 
 [tasks."iac:bootstrap"]
-description = "Alias for iac-bootstrap (docs use the colon form)"
-run = "mise run iac-bootstrap ${@:-}"
+description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt -> all syncs). Same command as iac-bootstrap (docs use the colon form; the hyphenated form is kept for bonneagar/AGENTS.md + openspec references)."
+run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
 
 [tasks."iac:bootstrap-pangolin-client"]
-description = "Alias for iac-bootstrap-pangolin-client (docs use the colon form)"
-run = "mise run iac-bootstrap-pangolin-client ${@:-}"
+description = "Idempotent: install the pangolin CLI + mint a Pangolin machine client + render the newt compose. Same command as iac-bootstrap-pangolin-client (docs use the colon form)."
+run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
 
 [tasks."iac:plan"]
-description = "Alias for iac-plan (docs use the colon form)"
-run = "mise run iac-plan ${@:-}"
+description = "IaC diff: declared vs actual state (no mutation). Same command as iac-plan (docs use the colon form; the hyphenated form is kept for bonneagar/AGENTS.md + openspec references)."
+run = "bun run --cwd bonneagar iac:plan ${@:-}"
 
 [tasks."iac:health"]
-description = "Alias for iac-health (docs use the colon form)"
-run = "mise run iac-health ${@:-}"
+description = "IaC health check: verify Komodo + Pangolin + Infisical state is consistent. Same command as iac-health (docs use the colon form; the hyphenated form is kept for bonneagar/AGENTS.md + an active openspec change)."
+run = "bun run --cwd bonneagar iac:health ${@:-}"
 
 [tasks."iac:deploy"]
 description = "Deploy the 30 key stacks end-to-end (alias for bun run --cwd bonneagar iac:deploy)"
@@ -1056,8 +1056,8 @@ description = "Reverse of iac:bootstrap (requires --force)"
 run = "bun run --cwd bonneagar iac:teardown ${@:-}"
 
 [tasks."preflight:arm-oci"]
-description = "Alias for preflight-arm-oci (docs use the colon form)"
-run = "mise run preflight-arm-oci ${@:-}"
+description = "Pre-flight gate (Pangolin + Komodo + Infisical health + namespace isolation) before any arm-oci stack deploy. Same command as preflight-arm-oci (docs use the colon form; the hyphenated form is kept for scripts/deploy-full.ts + AGENTS.md + openspec references)."
+run = "bun run scripts/preflight-arm-oci.ts ${@:-}"
 
 [tasks."dagster:oideachais"]
 description = "Alias for dagster:dev (the historical code-location name)"

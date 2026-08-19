@@ -82,7 +82,7 @@ function ExtractLC6Syllabus(
   language: string,
 ) -> LCSyllabus {  client ExtractEn
   // Real extraction prompt (2026-08-06 token-plan-apis change, Phase 2b).
-  // The previous placeholder ("Auto-generated extraction prompt.") rendered a
+  // The previous placeholder rendered a
   // system-only chat with no user content, which the MiniMax-M3 endpoint
   // rejects with 400 "chat content is empty". Style follows the working
   // ExtractUKQualSpec prompt in british_isles/england/education/
@@ -124,6 +124,12 @@ function ExtractLC6Syllabus(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +143,22 @@ function ExtractLC6Syllabus(
 // with the `subject` argument pinned.
 
 function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }
 
 function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
@@ -179,20 +200,86 @@ function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  cl
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }
 
 function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }
 
 function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }
 
 function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }
 
 function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LCSyllabus {
+      document syllabusdocument {},
+    }
+  }
 }

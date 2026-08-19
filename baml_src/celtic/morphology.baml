@@ -137,7 +137,16 @@ function ExtractVerbConjugation(
   verb: string @description("Verb infinitive or any form"),
   language: CelticLanguage @description("Language of the verb")
 ) -> VerbConjugation {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Extract noun declension
@@ -145,7 +154,16 @@ function ExtractNounDeclension(
   noun: string @description("Noun in any form"),
   language: CelticLanguage @description("Language of the noun")
 ) -> NounDeclension {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Identify conjugation/declension class
@@ -154,7 +172,16 @@ function IdentifyMorphologicalClass(
   pos: PartOfSpeech @description("Part of speech"),
   language: CelticLanguage @description("Language")
 ) -> string {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Compare adjectives
@@ -162,7 +189,16 @@ function CompareAdjective(
   adjective: string @description("Adjective in positive form"),
   language: CelticLanguage @description("Language")
 ) -> AdjectiveComparison {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -199,5 +235,18 @@ function ExtractCelticMorphology(
   language: CelticLanguageCurriculum,
   word_class_hint: string?
 ) -> CelticMorphologySpec[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CelticMorphologySpec[] {}
+  }
 }

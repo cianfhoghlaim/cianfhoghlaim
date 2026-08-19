@@ -1,6 +1,24 @@
 # `meaisinfhoghlaim/` — OCR/HTR/Alignment Sub-Package
 
-> **The canonical post-v7 Python sub-package for the OCR/HTR/alignment work — 26 VISION_MODELS, 6 CLASSICAL_OCR backends, 4 alignment methods, 4 educational agents, 1 BIEP v2 4-path ensemble.**
+> **The canonical post-v7 Python sub-package for the OCR/HTR/alignment work — 24 VISION_MODELS, 6 CLASSICAL_OCR backends, 4 alignment methods, 4 educational agents, 1 BIEP v2 4-path ensemble.**
+
+## Implementation decisions
+
+- **A 4-path ensemble, not a single "best" OCR model** — `ocr/ensemble/ensembled_extractor.py`
+  fans a document out to BAML/Docling, Unstract, Qwen3-VL, and Gemma-4
+  concurrently, lands each path's output in its own DuckLake table,
+  then runs a RAGAS `biiep_extraction_consensus` vote to pick the
+  winner. No single VLM is reliably best across the mix of typed PDFs,
+  scanned handwriting, and bilingual EN/GA documents this pipeline
+  processes — voting across paths outperforms picking one model
+  up-front.
+- **A single model registry, `models/registry.py`** — every backend
+  (llama-swap, LiteLLM, BAML clients, Dagster assets) resolves models
+  through `VISION_MODELS`/`CLASSICAL_OCR`/`TEXT_MODELS`, not hardcoded
+  strings, so an underlying model swap is a registry edit. (A newer,
+  broader `models/model_registry.py` — added 2026-08-15 — is meant to
+  eventually subsume this as a `family="ocr_vision"` filter view; as
+  of this writing both still exist independently — see Known gaps.)
 
 ## Quick start
 
@@ -9,7 +27,7 @@
 python -c "from meaisinfhoghlaim.models.registry import CLASSICAL_OCR; print(len(CLASSICAL_OCR))"
 # -> 6
 
-# The 26 VISION_MODELS (24 v4 + 2 v5 BIEP v2 entrants)
+# The 24 VISION_MODELS (22 v4 + 2 v5 BIEP v2 entrants)
 python -c "from meaisinfhoghlaim.models.registry import VISION_MODELS; print(len(VISION_MODELS))"
 # -> 24
 
@@ -67,7 +85,7 @@ meaisinfhoghlaim/
 ├── federated/                        # Federated OCR (Irish OCR ensemble)
 │   └── irish_ocr_federated.py        # Irish OCR federated smoke
 ├── models/                           # CANONICAL home for the OCR/VLM registry
-│   ├── registry.py                   # 26 VISION_MODELS + 6 CLASSICAL_OCR + 3 TEXT_MODELS
+│   ├── registry.py                   # 24 VISION_MODELS + 6 CLASSICAL_OCR + 3 TEXT_MODELS
 │   ├── routing.py                    # LlamaSwap routing table
 │   └── ci/                           # CI fixtures
 ├── ocr/                              # Back-compat shim + 4-path ensemble
@@ -120,7 +138,7 @@ meaisinfhoghlaim/
 the canonical `CLASSICAL_OCR` registry (it's reserved for v5 BIEP
 v2 entrants via `VISION_MODELS`).
 
-## The 26 VISION_MODELS
+## The 24 VISION_MODELS
 
 The canonical 26 VLM + OCR-vision models in
 `models/registry.py:VISION_MODELS`:
@@ -144,7 +162,7 @@ The canonical 26 VLM + OCR-vision models in
 - **Gemma 3 4B** (1) (legacy)
 - **v5 BIEP v2** (2): `unstract-api`, `docling-serve`
 
-Total: 24 v4 + 2 v5 = 26.
+Total: 24 (22 v4 + 2 v5 BIEP v2 entrants).
 
 ## The 4 alignment methods
 
@@ -240,7 +258,7 @@ mise run meaisin:agent:hitl_agent
 | Add a new OCR Docker stack | `bonneagar/stacks/<name>/` (6-file GOLD_STANDARD pattern) |
 | Add a new VLM model | `models/registry.py` (add to `VISION_MODELS`) |
 | Modify an educational agent | `agents/meaisinfhoghlaim/educational/<slug>_agent.py` |
-| Add OCR/HTR Dagster assets | `orchestration/defs/5_agent_ops/ocr_assets/` |
+| Add OCR/HTR Dagster assets | `orchestration/defs/5_agent_ops/meaisinfhoghlaim/` |
 | Deploy the OCR/HTR pipeline | `meaisinfhoghlaim/cli.py` |
 
 ## Cross-references
@@ -252,6 +270,25 @@ mise run meaisin:agent:hitl_agent
 - [`../openspec/AGENTS.md`](../openspec/AGENTS.md) — openspec workflow
 - [`../.agents/skills/agent-fleet-orchestration/SKILL.md`](../.agents/skills/agent-fleet-orchestration/SKILL.md) — the 12-agent fleet wiring
 - [`../.agents/skills/meaisin-ocr/SKILL.md`](../.agents/skills/meaisin-ocr/SKILL.md) — OCR/HTR skill (if present)
+
+## Known gaps
+
+- **Two model registries co-exist**: `models/registry.py` (this
+  package's own, 24 VISION_MODELS) and the newer, broader
+  `models/model_registry.py` (added 2026-08-15, meant to eventually
+  become the single source across all model families). Neither has
+  been retired yet — check both before assuming a model change only
+  needs one edit.
+- **`meaisinfoghlaim/`** (missing the second `h`) was a 1-file typo
+  package shadowing this one; fixed 2026-08-19 (moved the one real
+  file, fixed the 37 files that imported from the typo path). If you
+  see `meaisinfoghlaim` anywhere outside an openspec change-id, it's
+  either stale prose or a regression.
+- The BIEP v2 4-path ensemble (`ocr/ensemble/ensembled_extractor.py`)
+  posts completion webhooks to `$OCR_WEBHOOK_URL`; the consumer
+  (`orchestration/sensors/ocr_completion_sensor.py`) defaults to
+  `DefaultSensorStatus.STOPPED` — an operator has to explicitly enable
+  it before it starts consuming those webhooks.
 
 ## Data platform router
 

@@ -68,7 +68,7 @@ function ExtractAQAExamPaper(
   // generation-v1 change). Same placeholder-prompt bug class already fixed
   // for Ireland's lc_extraction functions and for England's own
   // ExtractUKQualSpec — this function was the one England extraction path
-  // still left as "Auto-generated extraction prompt.", which blocked any
+  // was still missing, which blocked any
   // downstream exam-paper-grounded quest-pack generation for England.
   prompt #"
     You are extracting the structure of an AQA GCSE/A-Level exam paper
@@ -113,4 +113,21 @@ function ExtractAQAExamPaper(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    AQAExamPaper {
+      board examboard {},
+      qualification_level qualificationlevel {},
+      subject "",
+      language null,
+      year 0,
+      source_pdf "",
+      total_pages 0,
+      total_marks 0,
+      duration_minutes null,
+      has_formula_sheet false,
+      has_data_booklet false,
+      sections null,
+    }
+  }
 }

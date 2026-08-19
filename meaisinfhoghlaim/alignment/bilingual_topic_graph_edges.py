@@ -94,7 +94,7 @@ class BilingualTopicGraphEdgeEmitter:
             path = self.output_root / f"{safe}__{language_pair_value}.jsonl"
             with path.open("w", encoding="utf-8") as f:
                 for e in cohort_edges:
-                    f.write(e.model_dump_json() + NL)
+                    f.write(e.model_dump_json() + "\n")
             logger.debug("Wrote %d edges to %s", len(cohort_edges), path)
 
     def read(self, cohort_key, language_pair):

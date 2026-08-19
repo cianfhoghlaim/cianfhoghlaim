@@ -294,27 +294,88 @@ class HybridProfile {
 
 // Extract profile from CV/resume document
 function ExtractProfileFromCV(document: string) -> HybridProfile {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    HybridProfile {}
+  }
 }
 
 // Extract profile from GitHub README
 function ExtractProfileFromGitHubReadme(readme: string, username: string) -> DeveloperProfile {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    DeveloperProfile {}
+  }
 }
 
 // Extract music profile from Spotify/SoundCloud data
 function ExtractMusicProfile(platformData: string, platform: PlatformType) -> MusicProfile {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    MusicProfile {}
+  }
 }
 
 // Extract game project details from documentation/README
 function ExtractGameProject(projectDocs: string) -> GameProject {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    GameProject {}
+  }
 }
 
 // Merge profiles from multiple sources into unified profile
 function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Generate profile summary for a specific tenant context
@@ -323,7 +384,16 @@ function GenerateProfileSummary(
     tenantType: ProfileType,
     maxLength: int
 ) -> string {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // =============================================================================

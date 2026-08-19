@@ -17,7 +17,7 @@ wrapped in `mo.ui.tabs` (P1), and includes:
 Cross-references:
 - `baml_src/british_isles/_shared/alevel_extraction_template.baml`
 - `agents/adk/alevel_subject_agent.py`
-- `cocoindex/biep_parity/4_stage_factory.py`
+- `cocoindex_flows/biep_parity/4_stage_factory.py`
 """
 
 import marimo
@@ -59,6 +59,24 @@ def _(tabs):
         """
     )
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    """The BAML chat for the A-Level stage (per Mega-3d Phase 2 wire-up).
+
+    Routes through the canonical `make_baml_chat_for_stage` runtime
+    helper from `notebooks/_shared/marimo_integration_runtime.py`.
+    The stage = "alevel" selects the QPACK_FUNCTIONS list from
+    `notebooks/_shared/marimo_baml.py`.
+    """
+    from notebooks._shared.marimo_integration_runtime import (
+        make_baml_chat_for_stage,
+    )
+    chat = make_baml_chat_for_stage(stage="alevel", subject=None)
+    if chat is None:
+        return mo.md("BAML chat unavailable (baml-py not installed).")
+    return chat
 
 
 if __name__ == "__main__":

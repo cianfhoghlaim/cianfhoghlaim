@@ -146,19 +146,119 @@ class HandwrittenEquation {
 // =============================================================================
 
 function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepResearchReport {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    GeminiDeepResearchReport {}
+  }
 }
 
 function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: string) -> UniversityOfGalwayArtifact {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    UniversityOfGalwayArtifact {}
+  }
 }
 
 function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> HandwrittenEquation[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    HandwrittenEquation[] {}
+  }
 }
 
 function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ZoteroPaper {}
+  }
 }
 
 // =============================================================================
@@ -282,7 +382,28 @@ function PreResearchSite(
   backend_payload: string,
   backend_name: string
 ) -> ResearchSiteMap {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -315,7 +436,28 @@ function CondenseToCriticalInfo(
   goal: string,
   max_output_bytes: int
 ) -> CondensedPage {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -348,7 +490,28 @@ function IdentifyUiPatterns(
   raw_markdown: string,
   goal: string
 ) -> UiIndicator[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -377,7 +540,28 @@ function VisualGroundingFromScreenshot(
   screenshot_description: string,
   natural_language_query: string
 ) -> GroundedElement {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -391,7 +575,28 @@ function SummarizeSite(
   sitemap_urls: string[],
   sample_markdown: string
 ) -> ResearchSiteMap {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // -----------------------------------------------------------------------------
@@ -419,7 +624,28 @@ function ClassifySiteCivic(
   site_structure_summary: string,
   primary_content_types: string[]
 ) -> AuthorArchiveCivicCategory {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting author/creator metadata from an archival document.
+
+    Source type: PDF text + filename
+
+    Extract:
+    - author_name: full name of the primary author/creator
+    - author_role: their role/title at time of creation
+    - organization: the affiliated organization (if any)
+    - publication_year: ISO year of publication or creation
+    - archive_collection: the canonical archive collection name
+    - shelfmark: the canonical shelfmark / call number
+
+    
+
+    The author archive includes a mix of academics, politicians, and educators. Use the document content (not the filename) to determine role and organization.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // =============================================================================

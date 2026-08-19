@@ -16,7 +16,7 @@ individually, none had **any callers** in active code.
 There is no canonical replacement (no other web-side BAML functions
 exist). If web routes need per-subject prompt templates, they should
 use a single parameterised BAML function with a `subject: str`
-argument (the same pattern as `cocoindex/subjects/lc_subject_embedding.py`).
+argument (the same pattern as `cocoindex_flows/subjects/lc_subject_embedding.py`).
 
 ## Revival
 

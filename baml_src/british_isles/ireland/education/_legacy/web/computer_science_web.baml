@@ -129,7 +129,16 @@ function ComputerScienceWebStudyPlan(
   language: ComputerScienceLanguage,
   focus_topics: string[]
 ) -> ComputerScienceWebStudyPlanResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function ComputerScienceWebExamPaperDiscussion(
@@ -139,7 +148,16 @@ function ComputerScienceWebExamPaperDiscussion(
   paper_language: ComputerScienceLanguage,
   question_text: string
 ) -> ComputerScienceWebExamPaperDiscussionResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function ComputerScienceWebMarkingSchemeExplanation(
@@ -148,5 +166,14 @@ function ComputerScienceWebMarkingSchemeExplanation(
   paper_level: ComputerScienceLevel,
   paper_language: ComputerScienceLanguage
 ) -> ComputerScienceWebMarkingSchemeExplanationResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

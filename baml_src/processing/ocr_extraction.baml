@@ -120,7 +120,20 @@ function ExtractHiddenHeritagesTale(
   page_content: string,
   tale_id: string
 ) -> HiddenHeritagesTale {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    HiddenHeritagesTale {}
+  }
 }
 
 test ExtractHiddenHeritagesTale {
@@ -152,7 +165,20 @@ function ExtractTalesListing(
   page_content: string,
   page_number: int
 ) -> TalesListingPage {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    TalesListingPage {}
+  }
 }
 
 // Summary of tales on a listing page

@@ -131,7 +131,16 @@ function MathematicsWebStudyPlan(
   language: MathematicsLanguage,
   focus_topics: string[]
 ) -> MathematicsWebStudyPlanResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function MathematicsWebExamPaperDiscussion(
@@ -141,7 +150,16 @@ function MathematicsWebExamPaperDiscussion(
   paper_language: MathematicsLanguage,
   question_text: string
 ) -> MathematicsWebExamPaperDiscussionResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function MathematicsWebMarkingSchemeExplanation(
@@ -150,5 +168,14 @@ function MathematicsWebMarkingSchemeExplanation(
   paper_level: MathematicsLevel,
   paper_language: MathematicsLanguage
 ) -> MathematicsWebMarkingSchemeExplanationResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

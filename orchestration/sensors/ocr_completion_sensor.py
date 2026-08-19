@@ -49,6 +49,7 @@ from typing import Any, Iterator
 from dagster import (
     AssetKey,
     AssetMaterialization,
+    DefaultSensorStatus,
     EventLogEntry,
     SensorEvaluationContext,
     SensorResult,
@@ -127,7 +128,7 @@ def _yield_run_requests(
         "and triggers the downstream BIEP v3 ingestion chain."
     ),
     minimum_interval_seconds=30,
-    default_status=None,  # let the operator decide; we skip gracefully when URL is unset
+    default_status=DefaultSensorStatus.STOPPED,  # operator opts in; we skip gracefully when URL is unset
 )
 def ocr_completion_sensor(context: SensorEvaluationContext) -> SensorResult:
     """OCR completion webhook sensor."""

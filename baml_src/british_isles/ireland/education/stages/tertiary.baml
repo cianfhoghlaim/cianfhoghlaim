@@ -171,39 +171,135 @@ class MatriculationAudit {
 // -----------------------------------------------------------------------------
 
 function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CaliforniaOCourse[] {}
+  }
 }
 
 function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    MatriculationRequirement[] {}
+  }
 }
 
 function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    QqiFetAward[] {}
+  }
 }
 
 function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    Apprenticeship {
+      programme_code "",
+      title_en "",
+      title_ga null,
+      duration_years 0,
+      nfq_level nfqlevel {},
+      consortia_partners null,
+      source_url "",
+    }
+  }
 }
 
 
 function ExtractApplicationTimeline(page_markdown: string,
   year: int) -> ApplicationTimeline {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ApplicationTimeline {
+      course_code "",
+      late_application_close null,
+      offer_round_2 null,
+      registration_open "",
+    }
+  }
 }
 
 
 function EstimateCoursePoints(course: SOLASCourse,
   historical_points: int[],
   applicant_profile: string) -> CoursePointsPrediction {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 
 function AuditMatriculation(institution: string,
   course_code: string,
   applicant_grades: string) -> MatriculationAudit {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 
@@ -212,16 +308,51 @@ function AuditMatriculation(institution: string,
 // =============================================================================
 
 function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CaliforniaOCourse[] {}
+  }
 }
 
 function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    MatriculationRequirement[] {}
+  }
 }
 
 function AuditMatriculationStdLib(
   institution: string,
   applicant_grades: map<string, string>
 ) -> MatriculationAudit {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

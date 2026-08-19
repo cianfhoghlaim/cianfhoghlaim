@@ -125,13 +125,13 @@ def evaluate_tick(context) -> Any:
 # parsed without Dagster installed). When Dagster is available, the sensor
 # is registered automatically on Dagster's startup.
 try:
-    from dagster import sensor, SensorEvaluationContext
+    from dagster import sensor, DefaultSensorStatus, SensorEvaluationContext
 
     @sensor(
         name="meaisin_education_ops_sensor",
-        description="Polls the meaisinfoghlaim cohort_lifecycle state machine + emits RunRequests on EXTRACTING/EVALUATING transitions",
+        description="Polls the meaisinfhoghlaim cohort_lifecycle state machine + emits RunRequests on EXTRACTING/EVALUATING transitions",
         minimum_interval_seconds=POLL_INTERVAL_SECONDS,
-        default_status=None,
+        default_status=DefaultSensorStatus.STOPPED,
     )
     def meaisin_education_ops_sensor(context: SensorEvaluationContext):
         """The Dagster-registered sensor entrypoint."""

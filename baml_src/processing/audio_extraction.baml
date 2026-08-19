@@ -112,7 +112,20 @@ function ExtractCanuintPage(
   page_content: string,
   barony_id: int
 ) -> CanuintRecording {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CanuintRecording {}
+  }
 }
 
 // Extract multiple recordings from barony listing page
@@ -121,7 +134,20 @@ function ExtractBaronyRecordings(
   barony_id: int,
   barony_name: string
 ) -> CanuintRecording[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CanuintRecording[] {}
+  }
 }
 
 // ============================================================================
@@ -180,5 +206,14 @@ function AnalyzeDialect(
   speaker: CanuintSpeaker,
   location: CanuintLocation
 ) -> DialectAnalysis {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

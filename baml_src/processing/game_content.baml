@@ -89,7 +89,27 @@ function GenerateLanguageQuest(
   zone: string,
   difficulty: QuestDifficulty
 ) -> Quest {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured game content from a game design document.
+
+    Source type: markdown game design document
+
+    Extract:
+    - game_title: the title of the game
+    - mechanics: list of game mechanics with descriptions
+    - levels: list of levels with difficulty + learning objectives
+    - subject_focus: the canonical subject slug (chemistry, mathematics, etc.)
+    - age_range: the target age range (e.g. '12-15')
+
+    
+
+    The game content is used by the Túatha educational MMO. The age_range + subject_focus drive the cohort matching.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Generate mythology-based quest
@@ -99,7 +119,27 @@ function GenerateMythologyQuest(
   language: CelticLanguage,
   difficulty: QuestDifficulty
 ) -> Quest {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured game content from a game design document.
+
+    Source type: markdown game design document
+
+    Extract:
+    - game_title: the title of the game
+    - mechanics: list of game mechanics with descriptions
+    - levels: list of levels with difficulty + learning objectives
+    - subject_focus: the canonical subject slug (chemistry, mathematics, etc.)
+    - age_range: the target age range (e.g. '12-15')
+
+    
+
+    The game content is used by the Túatha educational MMO. The age_range + subject_focus drive the cohort matching.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // NPC Generation
@@ -140,7 +180,27 @@ function GenerateNPC(
   language: CelticLanguage,
   mythological_inspiration: MythologicalCharacter?
 ) -> NPC {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured game content from a game design document.
+
+    Source type: markdown game design document
+
+    Extract:
+    - game_title: the title of the game
+    - mechanics: list of game mechanics with descriptions
+    - levels: list of levels with difficulty + learning objectives
+    - subject_focus: the canonical subject slug (chemistry, mathematics, etc.)
+    - age_range: the target age range (e.g. '12-15')
+
+    
+
+    The game content is used by the Túatha educational MMO. The age_range + subject_focus drive the cohort matching.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // World Building
@@ -182,7 +242,27 @@ function GenerateGameLocation(
   mythology_connection: MythologicalLocation?,
   language: CelticLanguage
 ) -> GameLocation {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured game content from a game design document.
+
+    Source type: markdown game design document
+
+    Extract:
+    - game_title: the title of the game
+    - mechanics: list of game mechanics with descriptions
+    - levels: list of levels with difficulty + learning objectives
+    - subject_focus: the canonical subject slug (chemistry, mathematics, etc.)
+    - age_range: the target age range (e.g. '12-15')
+
+    
+
+    The game content is used by the Túatha educational MMO. The age_range + subject_focus drive the cohort matching.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Item Generation
@@ -212,5 +292,25 @@ function GenerateGameItem(
   mythology_inspiration: string?,
   language: CelticLanguage
 ) -> GameItem {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured game content from a game design document.
+
+    Source type: markdown game design document
+
+    Extract:
+    - game_title: the title of the game
+    - mechanics: list of game mechanics with descriptions
+    - levels: list of levels with difficulty + learning objectives
+    - subject_focus: the canonical subject slug (chemistry, mathematics, etc.)
+    - age_range: the target age range (e.g. '12-15')
+
+    
+
+    The game content is used by the Túatha educational MMO. The age_range + subject_focus drive the cohort matching.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

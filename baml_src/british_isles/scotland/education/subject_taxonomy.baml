@@ -136,6 +136,21 @@ function ExtractScotlandSyllabus(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    ScotlandSyllabusSpec {
+      source_pdf "",
+      source_pages 0,
+      subject scqfsubject {},
+      level scqflevel {},
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      topics null,
+      assessment_objectives null,
+      coursework_pct 0,
+    }
+  }
 }
 
 test ExtractScotlandSyllabus {

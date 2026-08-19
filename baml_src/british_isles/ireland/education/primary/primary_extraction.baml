@@ -136,5 +136,33 @@ function ExtractPrimaryArea(
   text: string,
   area: string,
 ) -> PrimaryAreaSpecStage {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    PrimaryAreaSpecStage {
+      area primaryarea {},
+      language "",
+      year_levels null,
+      source_pdf "",
+      source_pages 0,
+      rationale_en "",
+      rationale_ga null,
+      strands null,
+      total_learning_outcomes 0,
+      integration_links null,
+      key_competencies null,
+      assessment_approach null,
+      extracted_at "",
+      extraction_confidence 0,
+    }
+  }
 }

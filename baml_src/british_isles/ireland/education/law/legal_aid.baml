@@ -46,12 +46,47 @@ function ExtractLegalAidPage(
   page_url: string,
   page_html: string,
 ) -> LegalAidPage {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LegalAidPage {
+      url "",
+      title "",
+      legal_aid_category legalaidcategory {},
+      eligibility_outcome legalaideligibilityoutcome {},
+    }
+  }
 }
 
 function ExtractLegalAidForm(
   page_url: string,
   page_html: string,
 ) -> LegalAidForm {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LegalAidForm {
+      url "",
+      form_title "",
+      legal_aid_category legalaidcategory {},
+    }
+  }
 }
