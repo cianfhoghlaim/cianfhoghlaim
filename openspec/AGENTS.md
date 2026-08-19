@@ -60,12 +60,24 @@ openspec archive <change-id> --yes        # after deploy
 
 ### Priority mise tasks
 
+The mise.toml task catalogue is now organized by **6 domain namespaces**
+(post the 2026-08-19-domain-driven-mise-task-catalog-v1 change).
+For openspec work specifically:
+
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata (157/157 pass as of v4 consolidation)
-mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth (per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change)
-mise run sync:all                  # run all 7 sync layers (paths + ccc + cognee + skills + mcp + drift-docs + dagster)
-mise run openspec:validate-all     # NEW: validate every change + every spec in strict mode (the CI gate)
+mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (131 items)
+mise run openspec:validate <id>   # validate one change with --strict (MUST pass before commit)
+mise run openspec:archive <id>    # archive a deployed change (merges deltas into canonical specs)
+mise run openspec:view            # interactive dashboard of all specs + changes (1.4+)
+mise run openspec:list-specs       # list all 97 capability specs
+mise run lint:skills               # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth
+mise run sync:all                  # run all 14 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)
 ```
+
+> **Back-compat:** the old bare/colon task names (e.g. `lint`,
+> `sync:all`, `dagster:dev`, `cic:stack-doctor`, `iac:health`) remain
+> valid for 1 release cycle as aliases.
 
 ### OPSX vs legacy schema (NEW 2026-08-19)
 

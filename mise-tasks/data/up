@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="DATA bring-up — the unified 16-service lakehouse stack (11 data plane + 5 graph DB)"
+set -euo pipefail
+
+bash scripts/lakehouse_unified_up.sh "$@"

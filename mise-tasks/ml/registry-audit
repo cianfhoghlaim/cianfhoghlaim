@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="ML registry audit — verify all 24 v4 VISION_MODELS are live on HF Hub"
+set -euo pipefail
+
+.venv/bin/python3 scripts/verify_hf_hub_audit.py --strict "$@"

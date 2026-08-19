@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="WEB per-app dev server — usage: mise run web:dev <app> (e.g. cianfhoghlaim-web, tuatha-ui, croilar-web)"
+set -euo pipefail
+
+APP="${1:?Usage: mise run web:dev <app-name> (e.g. cianfhoghlaim-web, tuatha-ui, croilar-web, oideachais-web)}"
+shift || true
+
+# Verify the app exists in web/apps/
+if [ ! -d "web/apps/$APP" ]; then
+  echo "ERROR: app 'web/apps/$APP' not found" >&2
+  echo "Available apps:" >&2
+  ls -1 web/apps/ | sed 's/^/  - web\/apps\//' >&2
+  exit 1
+fi
+
+echo "Starting dev server for web/apps/$APP via Turbo filter..."
+bunx turbo run dev --filter="$APP" "$@"

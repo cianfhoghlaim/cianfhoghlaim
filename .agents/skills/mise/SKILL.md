@@ -11,21 +11,55 @@ runner for this repo. The `mise.toml` at the repo root defines the 9
 task namespaces + ~60 file tasks in `mise-tasks/`. Local install:
 **`mise 2026.5.6`** (latest 2026.8.8 available).
 
-## Quick start — the 9 task namespaces
+## Quick start — the 6 domain namespaces
+
+The cianfhoghlaim `mise.toml` is organized by **domain** so a
+developer's mental model "I'm working on X today" maps directly to
+`mise run X` (post the 2026-08-19-domain-driven-mise-task-catalog-v1
+change). The 6 namespaces:
 
 | Namespace | Count | Purpose |
 |:--|:--|:--|
-| `core` | 7 | sync, test, lint, format, doctor, reset, clean |
-| `ts` | 4 | ts:install, ts:build, ts:typecheck, ts:lint |
-| `schema` | 2 | schema:generate, schema:validate |
-| `py` | 2 | py:typecheck, py:test |
-| `lint` | 4 | lint:skills, lint:registry, lint:guides-yml, lint:drift-docs |
-| `opencode` | 3 | opencode:index, opencode:search, opencode:validate |
-| `baml` | 3 | baml:generate, baml:test, baml:lint |
-| `openspec` | 4 | openspec:list, openspec:validate, openspec:archive, openspec:view |
-| `cic` | 10 | cic:dagster:dev, cic:stack-doctor, cic:baml:*, cic:lint, cic:test, cic:typecheck, cic:ocr:registry-lint, cic:cocoindex:conformance |
+| **`core`** | 8 + omnibus | The dev environment (sync, install, test, format, typecheck, doctor, lint, clean, reset) + cross-cutting CI gates (lint:*, sync:*) |
+| **`openspec`** | 8 | Change management (list, list-specs, view, validate, validate-all, status, show, archive) |
+| **`devops`** | 13 + omnibus | IaC + 89 Docker stacks + Komodo/Pangolin/Locket/Infisical + deploy (health, plan, bootstrap, validate-stacks, secrets:*, locket:exec, stack, preflight:arm-oci, bring-up:smoke-test, deploy:full) |
+| **`data`** | 11 + omnibus | The lakehouse + BIEP + Dagster + baml_src + CocoIndex + motherduck + notebooks (up, down, setup, status, dagster:up, schema:*, biep:milestone, biep:gate, marimo:wasm:export, cocoindex:conformance) |
+| **`ml`** | 6 + omnibus + 3 templates | meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet + MODEL_REGISTRY (registry:list, registry:audit, litellm:regenerate, agents:smoke, agents:audit, agents:reproduce, + ocr:test / converter:test / agent:test templates) |
+| **`web`** | 6 + omnibus | web/apps (12 apps) + web/packages (3 shared) + web/hono-api + Turborepo (install, build, typecheck, lint, format, dev) |
 
-**Total: ~75 TOML tasks** (down from 329 pre-refactor).
+**Total: ~89 TOML tasks** + 3 `[task_templates]` + ~17 file tasks in
+`mise-tasks/<domain>/` (down from 119 TOML + 9 file + 3 templates
+pre-refactor).
+
+### Daily "I'm working on X" workflow
+
+| Mental model | Command | What it does |
+|:--|:--|:--|
+| "I'm setting up the dev env" | `mise run core` | sync + install + lint + test + format |
+| "I'm working on CI" | `mise run core:ci` | lint + test + openspec:validate-all + devops:validate-stacks |
+| "I'm working on IaC" | `mise run devops` | health + bootstrap-pangolin-client + validate-stacks + validate-stacks:strict |
+| "I'm working on the data plane" | `mise run data` | setup + status + marimo-wasm-export + cocoindex-conformance |
+| "I'm working on OCR / agents / models" | `mise run ml` | registry:audit + agents:smoke + litellm:regenerate |
+| "I'm working on the web apps" | `mise run web` | install + build + typecheck + lint + format |
+
+### Back-compat aliases (1 release cycle)
+
+The old bare/colon task names remain valid as aliases:
+
+- `sync` → `core:sync` · `test` → `core:test` · `lint` → `core:lint` · `format` → `core:format` · `doctor` → `core:doctor`
+- `dagster:dev` → `data:dagster:up` · `dagster:oideachais` → `data:dagster:up` · `cic:dagster:dev` → `data:dagster:up`
+- `iac:bootstrap` → `devops:bootstrap` · `iac:health` → `devops:health` · `iac:plan` → `devops:plan` · `iac-bootstrap` → `devops:bootstrap` (etc.)
+- `cic:stack-doctor` → `devops:validate-stacks` · `stack-doctor` → `devops:validate-stacks` · `stack-doctor:strict` → `devops:validate-stacks:strict`
+- `cic:ocr:registry-lint` → `ml:registry:audit` · `cic:meaisin:litellm-regenerate` → `ml:litellm:regenerate`
+- `baml:generate` → `data:schema:generate` · `baml:test` → `data:schema:validate`
+- `schema:generate` → `data:schema:generate` · `schema:validate` → `data:schema:validate`
+- `biep:v3:setup` → `data:setup` · `biep:v3:status` → `data:status` · `biep:v3:m<n>` → `data:biep:milestone -- <n>`
+- `agents:smoke` → `ml:agents:smoke` · `agents:audit` → `ml:agents:audit` · `agents:reproduce` → `ml:agents:reproduce`
+- `secrets:init` → `devops:secrets:init` · `secrets:env` → `devops:secrets:env` · `locket:exec` → `devops:locket:exec`
+- `preflight:arm-oci` → `devops:preflight:arm-oci` · `bring-up:smoke-test` → `devops:bring-up:smoke-test` · `deploy:full` → `devops:deploy:full`
+- `ts:install` → `web:install` · `ts:build` → `web:build` · `ts:typecheck` → `web:typecheck` · `ts:lint` → `web:lint` · `turbo` → (use `bunx turbo run` directly)
+- `sync:all` → `core:sync:all` · `sync:paths` → `core:sync:paths` · ... · `sync:firecrawl` → `core:sync:firecrawl`
+- `lint:skills` → `core:lint:skills` · `lint:registry` → `core:lint:registry` · ... · `lint:firecrawl-budget` → `core:lint:firecrawl-budget`
 
 ## When to use which task type
 

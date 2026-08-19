@@ -50,21 +50,38 @@ The **3 new post-2026-08-15 specs** (centralized-model-registry + centralized-sc
 
 ### Priority mise tasks
 
+The mise.toml task catalogue is now organized by **6 domain namespaces**
+(post the 2026-08-19-domain-driven-mise-task-catalog-v1 change). Pick
+the task for the domain you're working on today:
+
 ```bash
-mise run lint:skills               # validate .agents/skills/ metadata
-mise run turbo dev                 # monorepo dev (bun + uv + turbo)
-mise run secrets:init              # sync .infisical.env → dev-baile vault
-mise run dagster:oideachais        # launch the lakehouse Dagster UI
-# Shipped by the 2026-07-30 → 2026-08-01 openspec trilogy (3 new tasks):
-mise run cic:stack-doctor          # validate all 93 Docker Compose stacks against the 6-file GOLD_STANDARD (canonical CI gate)
-mise run stack-doctor:strict       # cic:stack-doctor + --strict --check-grammar (fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env; NEW in Change 1, 2026-07-30)
-mise run deploy:full               # one-command 7-phase full-stack deploy orchestrator with resumable checkpoint at ~/.cianfhoghlaim/deploy-state.json; entry shell + TS state machine; NEW in Change 3, 2026-08-01
+# Daily "I'm working on X" commands (omnibus tasks per domain)
+mise run core                     # dev env (sync + install + lint + test + format)
+mise run core:ci                  # the canonical CI gate (lint + test + openspec:validate-all + devops:validate-stacks)
+mise run devops                   # IaC + 89 stacks + Komodo/Pangolin/Locket/Infisical
+mise run data                     # lakehouse + BIEP + Dagster + baml_src + CocoIndex + motherduck + notebooks
+mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet + MODEL_REGISTRY
+mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
+
+# Surgical subcommands (when you know exactly what you want)
+mise run lint:skills              # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
+mise run openspec:validate-all    # CI gate for every openspec change + spec (131 items pass)
+mise run devops:validate-stacks   # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD
+mise run data:dagster:up          # launch the Dagster UI on :3335
+mise run data:biep:milestone -- 1 # run BIEP v3 milestone m1
+mise run ml:registry:audit         # verify all 24 VISION_MODELS are live on HF Hub
+mise run web:dev tuatha-ui        # per-app dev server via Turbo filter
 ```
+
+> **Back-compat:** the old bare/colon task names (e.g. `lint`, `sync`,
+> `dagster:dev`, `cic:stack-doctor`, `iac:health`) remain valid for 1
+> release cycle as aliases.
 
 ### Priority sync commands
 
 ```bash
-mise run sync:all                  # run all 8 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents)
+mise run sync:all                  # run all 14 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)
 mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth (per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change)
 mise run openspec:validate         # run `openspec validate --strict` against the pending change under review
 ```

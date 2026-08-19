@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="WEB Cloudflare Pages deploy — deploy oideachais + croilar to CF Pages (the canonical CF deploy entry)"
+set -euo pipefail
+
+(cd bonneagar && bash scripts/deploy-cf.sh --all) || \
+  echo 'ERROR: bonneagar/scripts/deploy-cf.sh missing — see Stack Migrator backlog.'
