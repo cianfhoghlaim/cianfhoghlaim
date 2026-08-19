@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="DATA BIEP v3 status — lakehouse health + registry count + BAML codegen + asset count + MotherDuck Dive + Flight status"
+set -euo pipefail
+
+.venv/bin/python3 scripts/biiep_v3_status.py "$@"

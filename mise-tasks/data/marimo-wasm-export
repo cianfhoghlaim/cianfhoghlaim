@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="DATA marimo WebAssembly export — export all 7 BIEP v3 jurisdiction dashboards to WebAssembly bundles + manifest"
+set -euo pipefail
+
+.venv/bin/python3 scripts/marimo_wasm_export.py "$@"

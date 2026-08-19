@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="CORE omnibus — the daily dev env command (sync + install + lint + test + format)"
+set -euo pipefail
+
+echo "=== core omnibus ==="
+echo "[1/5] core:sync"
+mise run sync
+echo "[2/5] core:install (idempotent — bun install)"
+bun install
+echo "[3/5] core:lint"
+mise run lint
+echo "[4/5] core:test"
+mise run test
+echo "[5/5] core:format"
+mise run format
+echo ""
+echo "=== core omnibus: 5 gates passed ==="

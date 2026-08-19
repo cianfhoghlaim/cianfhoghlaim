@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description="CORE CI gate — the canonical CI pipeline (lint + test + openspec:validate-all + devops:validate-stacks)"
+set -euo pipefail
+
+echo "=== core:ci — 4 canonical gates ==="
+echo "[1/4] core:lint"
+mise run lint
+echo "[2/4] core:test"
+mise run test
+echo "[3/4] openspec:validate-all"
+mise run openspec:validate-all
+echo "[4/4] devops:validate-stacks"
+mise run devops:validate-stacks
+echo ""
+echo "=== core:ci: all 4 gates passed ==="

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description="CORE install — uv sync + bun install + mise install + bun pm trust"
+set -euo pipefail
+
+echo "=== core:install ==="
+echo "[1/4] uv sync (Python workspace)"
+uv sync
+echo "[2/4] bun install (TS workspaces)"
+bun install
+echo "[3/4] mise install (toolchain)"
+mise install
+echo "[4/4] bun pm trust --all (OpenSpec post-install script authorization)"
+bun pm trust --all 2>/dev/null || true
+echo ""
+echo "=== core:install: complete ==="

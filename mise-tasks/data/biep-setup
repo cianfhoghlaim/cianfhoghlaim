@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="DATA BIEP v3 setup — Docker + lakehouse + BAML codegen + registry seed + lance namespace + openspec + lint:skills"
+set -euo pipefail
+
+.venv/bin/python3 scripts/biiep_v3_setup.py "$@"
