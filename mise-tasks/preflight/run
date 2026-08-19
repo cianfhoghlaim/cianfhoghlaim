@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#MISE description="Pre-flight gates (arm-oci + lakehouse + iac)"
+#MISE alias=["preflight:arm-oci","preflight:lakehouse","preflight:iac"]
+set -euo pipefail
+
+GATE="${1:-arm-oci}"
+shift || true
+
+case "$GATE" in
+  arm-oci)
+    bun run scripts/preflight-arm-oci.ts "$@"
+    ;;
+  lakehouse)
+    python3 scripts/lakehouse_preflight.py "$@"
+    ;;
+  iac)
+    bun run --cwd bonneagar iac:health "$@"
+    ;;
+  *)
+    echo "Unknown preflight gate: $GATE" >&2
+    echo "Usage: mise run preflight [arm-oci|lakehouse|iac]" >&2
+    exit 1
+    ;;
+esac

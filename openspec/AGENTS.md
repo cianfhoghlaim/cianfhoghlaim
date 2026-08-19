@@ -2,11 +2,11 @@
 
 ## Priority quick reference
 
-The 5 priority specs, the 4 priority commands, the 5 priority
-skills, and the 1 priority mise task at the glance. **Read this
-first**; the rest of the file is the full 34-spec catalogue.
+The 13 priority specs, the 8 priority commands, the 9 priority
+skills, and the 4 priority mise tasks at a glance. **Read this
+first**; the rest of the file is the full 97-spec catalogue.
 
-### Priority specs (13 of 78)
+### Priority specs (14 of 97)
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
@@ -24,6 +24,7 @@ first**; the rest of the file is the full 34-spec catalogue.
 | [`knowledge-sync-loop`](specs/knowledge-sync-loop/spec.md) | shared | 5-layer pull-based sync (paths / CCC / Cognee / skills / MCP) + 6 `mise run sync:*` tasks + 3 feedback loops — keeps all 8 knowledge surfaces in sync |
 | [`retrospective-cleanup`](specs/retrospective-cleanup/spec.md) | shared | **NEW 2026-08-15**: Retroactive cleanup of the 1959 pre-v7 path drift occurrences (47 auto-fixable + 1912 manual) + the Layer 6 sync:dagster + the safe --fix mode |
 | [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
+| [`dev-tooling-surfaces`](specs/dev-tooling-surfaces/spec.md) | shared | **NEW 2026-08-19**: The canonical 3-tool developer surface — opencode (4 primary + 9 domain agents) + mise (9 task namespaces + task_templates + file tasks) + openspec (8 subcommands + spec-driven schema). Drives .agents/skills/{opencode,mise,openspec}/, .cocoindex_code/guides.yml, and the openspec/AGENTS.md routing table. |
 
 > **Note:** `tuatha-platform` has been **retired** (2026-07-06 by the
 > `2026-07-06-drift-cleanup-and-v4-alignment` change). Its content has
@@ -32,22 +33,30 @@ first**; the rest of the file is the full 34-spec catalogue.
 ### Priority commands
 
 ```bash
-openspec list --specs              # list all 34 capability specs
+openspec list --specs              # list all 97 capability specs (was 96; +1 for dev-tooling-surfaces)
 openspec list                      # list all pending changes
+openspec view                      # NEW 1.4: interactive dashboard of all specs + changes
+openspec status <change-id>        # NEW 1.4: per-artifact completion check
+openspec show <change-id|spec>     # NEW 1.4: formatted view of one item
+openspec instructions <artifact>   # NEW 1.4: enriched template for one artifact
 openspec validate <change-id> --strict    # MUST pass before commit
+openspec validate --all --strict   # NEW: CI gate (equivalent to mise run openspec:validate-all)
 openspec archive <change-id> --yes        # after deploy
 ```
 
-### Priority skills (5 of 123)
+### Priority skills (6 of 65)
 
 | Skill | When to load |
 |:--|:--|
+| [`openspec`](../.agents/skills/openspec/SKILL.md) | **NEW**: The 8 standard subcommands + spec delta format + legacy-vs-OPSX note |
 | [`data-engineering-pipeline-documentation`](../.agents/skills/data-engineering-pipeline-documentation/SKILL.md) | Router for STATUS.md + REFACTORING.md + per-area READMEs |
 | [`dagger-pipelines`](../.agents/skills/dagger-pipelines/SKILL.md) | The 8 callable Dagger functions + the 4 build pipelines |
 | [`infrastructure-stacks`](../.agents/skills/infrastructure-stacks/SKILL.md) | The 6-file GOLD_STANDARD pattern for Docker Compose stacks |
 | [`agent-memory-systems`](../.agents/skills/agent-memory-systems/SKILL.md) | The 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph) |
 | [`oideachais-cocoindex-v1`](../.agents/skills/oideachais-cocoindex-v1/SKILL.md) | CocoIndex v1 App canonical pattern + 4-rule conformance contract + `_lifespan.py` shared home (REFACTORING.md item 12 enforcement precondition) |
 | [`indexing-and-cognition`](../.agents/skills/INDEXING_AND_COGNITION.md) | CCC code search + Cognee knowledge graph (7 clusters) + OpenCode agent/MCP registry (7 agents, 10 MCPs, 13 model-layer agents) |
+| [`mise`](../.agents/skills/mise/SKILL.md) | **NEW**: mise-en-place task authoring (TOML tasks + file tasks + task_templates + monorepo mode) |
+| [`opencode`](../.agents/skills/opencode/SKILL.md) | **NEW**: OpenCode agent configuration (primary/subagent modes + permission API + MCP providers) |
 
 ### Priority mise tasks
 
@@ -55,7 +64,25 @@ openspec archive <change-id> --yes        # after deploy
 mise run lint:skills               # validate .agents/skills/ metadata (157/157 pass as of v4 consolidation)
 mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth (per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change)
 mise run sync:all                  # run all 7 sync layers (paths + ccc + cognee + skills + mcp + drift-docs + dagster)
+mise run openspec:validate-all     # NEW: validate every change + every spec in strict mode (the CI gate)
 ```
+
+### OPSX vs legacy schema (NEW 2026-08-19)
+
+OpenSpec 1.4 ships **two schemas**:
+
+- **Legacy `spec-driven` schema** (used by this repo) — proposal.md +
+  tasks.md + spec deltas under `openspec/changes/<id>/`. All 78 pending
+  + 96 archived changes use this format. Migration would require
+  re-archiving every change; not worth the cost.
+- **Experimental `OPSX` schema** — external YAML + Markdown templates,
+  DAG dependencies, `openspec status <id>` command. Available via
+  `openspec schemas` + `openspec schema which --all`. **NOT ADOPTED** in
+  this repo (per the `dev-tooling-surfaces` spec Requirement § openspec-
+  schema-stability).
+
+The new 1.4 subcommands (`view`, `status`, `show`, `instructions`,
+`schemas`) work with both schemas — no migration required to use them.
 
 ### ccc code search (for openspec work)
 

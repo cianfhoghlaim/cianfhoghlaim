@@ -160,7 +160,7 @@
     - dlt_sources/british_isles/ireland/education/ireland_jurisdiction_pipeline.py
     - dlt_sources/british_isles/england/education/england_jurisdiction_pipeline.py
     - baml_src/british_isles/ireland/education/lc_extraction/
-    - cocoindex/biep_parity/ireland_lc_mathematics_embedding.py
+    - cocoindex_flows/biep_parity/ireland_lc_mathematics_embedding.py
   tags: [oideachais, education, irish, curriculum, leaving-cert, ncca, sec, biep]
   domain: "04-product"
 
@@ -645,3 +645,71 @@
     - openspec/specs/firecrawl-corpus-and-portals/spec.md
   tags: [firecrawl, corpus, embeddings, lance, bge-m3, software-stack, education, polyglot-memory]
   domain: "00-dual-search"
+- title: "opencode-agent-search"
+  description: |
+    The 13 opencode agents (4 primary in opencode.json + 9 domain-specific in
+    .opencode/agents/<name>.md) + the 13 MCP servers + the 5 providers.
+    Use when the user asks 'which agent handles X', 'what agents are available',
+    'where is the data-platform agent prompt', 'how do I add a new domain agent',
+    or 'which MCP server should I use for Y'. Per the
+    2026-08-19-dev-tooling-refactor-mise-opencode-openspec-v1 change.
+  files:
+    - opencode.json
+    - .opencode/agents/data-platform.md
+    - .opencode/agents/infrastructure.md
+    - .opencode/agents/agent-platform.md
+    - .opencode/agents/frontend-apps.md
+    - .opencode/agents/notebooks.md
+    - .opencode/agents/baml.md
+    - .opencode/agents/dagster.md
+    - .opencode/agents/mise.md
+    - .opencode/agents/proposal-author.md
+    - .agents/skills/opencode/SKILL.md
+    - .opencode/agents/build.md
+    - .opencode/agents/plan.md
+    - .opencode/agents/research.md
+    - .opencode/agents/orchestrator.md
+    - openspec/specs/dev-tooling-surfaces/spec.md
+  tags: [opencode, agent, permission, mode, prompt, subagent, mcp, provider]
+  domain: "00-tooling"
+
+- title: "mise-task-search"
+  description: |
+    The 8 mise.toml task namespaces (core, ts, schema, py, lint, opencode,
+    baml, openspec, cic) + ~60 file tasks in mise-tasks/ + the
+    [task_templates] block for repeating patterns. Use when the user asks
+    'how do I run X', 'what's the canonical task name', 'which tasks depend
+    on lint', 'how do I add a new sync layer', or 'how do I migrate a legacy
+    task to the new template form'. Per the
+    2026-08-19-dev-tooling-refactor-mise-opencode-openspec-v1 change.
+  files:
+    - mise.toml
+    - .agents/skills/mise/SKILL.md
+    - .opencode/agents/mise.md
+    - openspec/specs/dev-tooling-surfaces/spec.md
+  tags: [mise, task, alias, depends, task_template, sync, lint, cic, file_task]
+  domain: "00-tooling"
+
+- title: "openspec-change-search"
+  description: |
+    The 78 pending + 96 archived openspec changes + the 8 standard subcommands
+    in OpenSpec 1.4 (list, view, show, status, validate, archive,
+    instructions, schemas) + the spec-delta format (ADDED/MODIFIED/REMOVED
+    Requirements + Scenario blocks). Use when the user asks 'what changes
+    are pending', 'what does the openspec schema look like', 'how do I write
+    a proposal', 'what's the difference between ADDED and MODIFIED
+    Requirements', or 'how do I validate a change before committing'.
+    Per the 2026-08-19-dev-tooling-refactor-mise-opencode-openspec-v1 change.
+  files:
+    - openspec/AGENTS.md
+    - openspec/project.md
+    - openspec/specs/
+    - openspec/changes/
+    - openspec/changes/archive/
+    - openspec/changes/archive/2026-08-19-2026-08-19-dev-tooling-refactor-mise-opencode-openspec-v1/proposal.md
+    - openspec/changes/archive/2026-08-19-2026-08-19-dev-tooling-refactor-mise-opencode-openspec-v1/tasks.md
+    - openspec/specs/dev-tooling-surfaces/spec.md
+    - .agents/skills/openspec/SKILL.md
+    - .opencode/agents/proposal-author.md
+  tags: [openspec, spec-driven, opsx, proposal, scenario, add, modified, removed, archive, validate]
+  domain: "00-tooling"

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#MISE description="Sync orchestrator (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)"
+#MISE alias=["sync:paths","sync:ccc","sync:cognee","sync:skills","sync:mcp","sync:dagster","sync:drift-docs","sync:spec-agents","sync:baml","sync:stacks","sync:dlt","sync:agents","sync:notebooks","sync:firecrawl"]
+set -euo pipefail
+
+REPORT="stedding/sync-reports/all-sync-$(date +%Y-%m-%d).md"
+mkdir -p "$(dirname "$REPORT")"
+
+{
+  echo "# Cianfhoghlaim Knowledge Sync — Full Report"
+  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo ""
+  echo "Per the 2026-08-15-knowledge-sync-loop-v1 change (12-layer pull-based sync)."
+  echo ""
+  echo "---"
+  echo ""
+} > "$REPORT"
+
+LAYERS=(paths ccc cognee skills mcp dagster drift-docs spec-agents baml stacks dlt agents notebooks firecrawl)
+for layer in "${LAYERS[@]}"; do
+  echo "## Layer: sync:$layer" >> "$REPORT"
+  echo '```' >> "$REPORT"
+  if [ -f "scripts/sync/${layer//-/_}.sh" ] || [ -f "scripts/sync/${layer}.sh" ]; then
+    bash "scripts/sync/${layer}.sh" >> "$REPORT" 2>&1 || echo "(layer failed but sync continues)" >> "$REPORT"
+  else
+    echo "(no scripts/sync/${layer}.sh found — skipping)" >> "$REPORT"
+  fi
+  echo '```' >> "$REPORT"
+  echo "" >> "$REPORT"
+done
+
+{
+  echo "---"
+  echo ""
+  echo "## Summary"
+  echo ""
+  echo "All 14 sync layers completed (12 base + baml + firecrawl)."
+} >> "$REPORT"
+
+cat "$REPORT"

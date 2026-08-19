@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="OpenCode code index refresh (rebuild the v1 LanceDB index)"
+set -euo pipefail
+
+uv run cocoindex update cocoindex_flows.infrastructure.codebase_indexing:CodebaseIndex "$@"
