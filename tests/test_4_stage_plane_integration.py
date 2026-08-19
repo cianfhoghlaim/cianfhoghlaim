@@ -224,3 +224,72 @@ def test_pep723_template_canonical() -> None:
     assert "anywidget>=0.9" in deps
     assert "traitlets>=5.14" in deps
     assert "python-dotenv>=1.0" in deps
+
+
+def test_lc_process_fn_delegates() -> None:
+    """Verify _build_lc_process_fn delegates to lc_extract_chunk via @baml_extraction_flow."""
+    import sys
+    sys.path.insert(0, str(REPO_ROOT))
+    baml_cocoindex = _load_module(
+        "baml_cocoindex_integration",
+        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+    )
+    factory_src = (REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_factory.py").read_text()
+    # The factory must expose _build_lc_process_fn
+    assert "_build_lc_process_fn" in factory_src
+    assert "from . import four_stage_extraction" in factory_src
+    # The factory must declare the LC subject config
+    assert "BIEPLeavingCycleSubjectConfig" in factory_src
+    assert "LC_SUBJECT_CONFIG" in factory_src
+    # The factory must reference the lc_extract_chunk delegate
+    assert "lc_extract_chunk" in factory_src
+    # The BAML helper decorator supports the LC stage
+    @baml_cocoindex.baml_extraction_flow("ExtractCurriculumSyllabus", stage="lc")
+    def lc_flow(chunk_text: str, subject: str) -> str:
+        return f"lc({chunk_text}, {subject})"
+    assert hasattr(lc_flow, "_baml_function_name")
+    assert lc_flow._baml_function_name == "ExtractCurriculumSyllabus"
+
+
+def test_gcse_process_fn_delegates() -> None:
+    """Verify _build_gcse_process_fn delegates to gcse_extract_chunk via @baml_extraction_flow."""
+    import sys
+    sys.path.insert(0, str(REPO_ROOT))
+    baml_cocoindex = _load_module(
+        "baml_cocoindex_integration",
+        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+    )
+    factory_src = (REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_factory.py").read_text()
+    # The factory must expose _build_gcse_process_fn
+    assert "_build_gcse_process_fn" in factory_src
+    # The factory must reference the gcse_extract_chunk delegate
+    assert "gcse_extract_chunk" in factory_src
+    # The BAML helper decorator supports the GCSE stage
+    @baml_cocoindex.baml_extraction_flow("ExtractGCSECurriculumSyllabus", stage="gcse")
+    def gcse_flow(chunk_text: str, subject: str, board: str) -> str:
+        return f"gcse({chunk_text}, {subject}, {board})"
+    assert hasattr(gcse_flow, "_baml_function_name")
+    assert gcse_flow._baml_function_name == "ExtractGCSECurriculumSyllabus"
+    assert gcse_flow._baml_stage == "gcse"
+
+
+def test_alevel_process_fn_delegates() -> None:
+    """Verify _build_a_level_process_fn delegates to alevel_extract_chunk via @baml_extraction_flow."""
+    import sys
+    sys.path.insert(0, str(REPO_ROOT))
+    baml_cocoindex = _load_module(
+        "baml_cocoindex_integration",
+        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+    )
+    factory_src = (REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_factory.py").read_text()
+    # The factory must expose _build_a_level_process_fn
+    assert "_build_a_level_process_fn" in factory_src
+    # The factory must reference the alevel_extract_chunk delegate
+    assert "alevel_extract_chunk" in factory_src
+    # The BAML helper decorator supports the A-Level stage
+    @baml_cocoindex.baml_extraction_flow("ExtractALevelCurriculumSyllabus", stage="alevel")
+    def alevel_flow(chunk_text: str, subject: str, exam_board: str) -> str:
+        return f"alevel({chunk_text}, {subject}, {exam_board})"
+    assert hasattr(alevel_flow, "_baml_function_name")
+    assert alevel_flow._baml_function_name == "ExtractALevelCurriculumSyllabus"
+    assert alevel_flow._baml_stage == "alevel"

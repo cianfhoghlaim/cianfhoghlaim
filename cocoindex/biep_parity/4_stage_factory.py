@@ -161,6 +161,15 @@ ENGLAND_BOARDS: tuple[str, ...] = ("aqa", "ocr", "edexcel")
 # ============================================================================
 
 @dataclass(frozen=True)
+class BIEPLeavingCycleSubjectConfig:
+    """One NCCA LC subject row."""
+
+    slug: str
+    display_name: str
+    languages: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class BIEPJuniorCycleSubjectConfig:
     """One NCCA JC subject row."""
 
@@ -188,6 +197,25 @@ class BIEPALevelPrioritySubjectConfig:
 
 
 # The 8 JC subjects (the canonical priority list)
+LC_SUBJECT_CONFIG: list[BIEPLeavingCycleSubjectConfig] = [
+    BIEPLeavingCycleSubjectConfig("mathematics",          "Mathematics",         ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("applied_mathematics",  "Applied Mathematics", ("en",)),
+    BIEPLeavingCycleSubjectConfig("chemistry",            "Chemistry",           ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("physics",              "Physics",             ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("biology",              "Biology",             ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("geography",            "Geography",           ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("gaeilge",              "Gaeilge",             ("ga",)),
+    BIEPLeavingCycleSubjectConfig("english",              "English",             ("en",)),
+    BIEPLeavingCycleSubjectConfig("french",               "French",              ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("history",              "History",             ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("business",             "Business",            ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("accounting",           "Accounting",          ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("art",                  "Art",                 ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("music",                "Music",               ("en", "ga")),
+    BIEPLeavingCycleSubjectConfig("computer_science",     "Computer Science",    ("en", "ga")),
+]
+
+
 JC_SUBJECT_CONFIG: list[BIEPJuniorCycleSubjectConfig] = [
     BIEPJuniorCycleSubjectConfig("mathematics", "Mathematics",       ("en", "ga")),
     BIEPJuniorCycleSubjectConfig("english",     "English",           ("en", "ga")),
@@ -313,6 +341,25 @@ A_LEVEL_SUBJECT_CONFIG: list[BIEPALevelPrioritySubjectConfig] = [
 _splitter = RecursiveSplitter()
 
 
+def _build_lc_chunk_class(
+    subject: BIEPLeavingCycleSubjectConfig, language: str
+):
+    """Build the per-subject chunk dataclass for the LC stage."""
+    @dataclass
+    class LeavingCycleChunk:
+        chunk_id: str
+        subject: str
+        language: str
+        level: str
+        filename: str
+        chunk_index: int
+        ncca_lo_code: str
+        topic_title: str
+        text: str
+        embedding: Annotated[NDArray, EMBEDDER]
+    return LeavingCycleChunk
+
+
 def _build_jc_chunk_class(
     subject: BIEPJuniorCycleSubjectConfig, language: str
 ):
@@ -407,6 +454,128 @@ def _build_jc_process_fn(
     return process_jc_chunk
 
 
+def _build_lc_process_fn(
+    subject: BIEPLeavingCycleSubjectConfig, language: str, Chunk
+):
+    """Build the per-subject CocoIndex process function for the LC stage.
+
+    Delegates to `four_stage_extraction.lc_extract_chunk` (the FF.6
+    BAML → CocoIndex wire-up) which calls
+    `b.ExtractCurriculumSyllabus(...)` and writes the result to the
+    canonical LanceDB table.
+    """
+    from . import four_stage_extraction
+
+    lc_extract_chunk = four_stage_extraction.lc_extract_chunk
+
+    @coco.fn(memo=True)
+    async def process_lc_chunk(
+        chunk_text: str,
+        subject: str,
+        language: str,
+        level: str,
+        filename: str,
+        chunk_index: int,
+        ncca_lo_code: str,
+        topic_title: str,
+        target_table: Any = None,
+    ) -> None:
+        """Process and embed a single LC chunk via the canonical BAML function."""
+        await lc_extract_chunk(
+            chunk_text=chunk_text,
+            subject=subject,
+            language=language,
+            ncca_lo_code=ncca_lo_code,
+            filename=filename,
+            chunk_index=chunk_index,
+            target_table=target_table,
+        )
+
+    return process_lc_chunk
+
+
+def _build_gcse_process_fn(
+    subject: BIEPGCSEPrioritySubjectConfig, board: str, language: str, Chunk
+):
+    """Build the per-subject CocoIndex process function for the GCSE stage.
+
+    Delegates to `four_stage_extraction.gcse_extract_chunk` (the FF.6
+    BAML → CocoIndex wire-up) which calls
+    `b.ExtractGCSECurriculumSyllabus(...)` and writes the result to the
+    canonical LanceDB table.
+    """
+    from . import four_stage_extraction
+
+    gcse_extract_chunk = four_stage_extraction.gcse_extract_chunk
+
+    @coco.fn(memo=True)
+    async def process_gcse_chunk(
+        chunk_text: str,
+        subject: str,
+        board: str,
+        qualification: str,
+        tier: str,
+        filename: str,
+        chunk_index: int,
+        spec_code: str,
+        target_table: Any = None,
+    ) -> None:
+        """Process and embed a single GCSE chunk via the canonical BAML function."""
+        await gcse_extract_chunk(
+            chunk_text=chunk_text,
+            subject=subject,
+            board=board,
+            language=language,
+            ncca_lo_code=spec_code,  # GCSE uses spec_code as the LO code
+            filename=filename,
+            chunk_index=chunk_index,
+            target_table=target_table,
+        )
+
+    return process_gcse_chunk
+
+
+def _build_a_level_process_fn(
+    subject: BIEPALevelPrioritySubjectConfig, board: str, language: str, Chunk
+):
+    """Build the per-subject CocoIndex process function for the A-Level stage.
+
+    Delegates to `four_stage_extraction.alevel_extract_chunk` (the FF.6
+    BAML → CocoIndex wire-up) which calls
+    `b.ExtractALevelCurriculumSyllabus(...)` and writes the result to
+    the canonical LanceDB table.
+    """
+    from . import four_stage_extraction
+
+    alevel_extract_chunk = four_stage_extraction.alevel_extract_chunk
+
+    @coco.fn(memo=True)
+    async def process_a_level_chunk(
+        chunk_text: str,
+        subject: str,
+        board: str,
+        qualification: str,
+        level: str,
+        filename: str,
+        chunk_index: int,
+        spec_code: str,
+        target_table: Any = None,
+    ) -> None:
+        """Process and embed a single A-Level chunk via the canonical BAML function."""
+        await alevel_extract_chunk(
+            chunk_text=chunk_text,
+            subject=subject,
+            board=board,
+            language=language,
+            ncca_lo_code=spec_code,  # A-Level uses spec_code as the LO code
+            filename=filename,
+            chunk_index=chunk_index,
+            target_table=target_table,
+        )
+
+    return process_a_level_chunk
+
+
 def _build_jc_app_main(
     subject: BIEPJuniorCycleSubjectConfig, language: str, Chunk, process_fn
 ):
@@ -470,12 +639,18 @@ __all__ = [
     "GCSE_SUBJECTS",
     "A_LEVEL_SUBJECTS",
     "ENGLAND_BOARDS",
+    "LC_SUBJECT_CONFIG",
     "JC_SUBJECT_CONFIG",
     "GCSE_SUBJECT_CONFIG",
     "A_LEVEL_SUBJECT_CONFIG",
+    "BIEPLeavingCycleSubjectConfig",
     "BIEPJuniorCycleSubjectConfig",
     "BIEPGCSEPrioritySubjectConfig",
     "BIEPALevelPrioritySubjectConfig",
+    "_build_lc_process_fn",
+    "_build_jc_process_fn",
+    "_build_gcse_process_fn",
+    "_build_a_level_process_fn",
     "get_4_stage_manifest",
     "shared_lifespan",
 ]
