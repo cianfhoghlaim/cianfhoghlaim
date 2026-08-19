@@ -25,6 +25,7 @@ from cocoindex.resources.id import IdGenerator
 from cocoindex.ops.text import RecursiveSplitter
 from numpy.typing import NDArray
 
+from baml_client.baml_client import b  # BAML → CocoIndex wire-up (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 from ..._shared._lifespan import (
     EMBEDDER,
     LANCE_DB,

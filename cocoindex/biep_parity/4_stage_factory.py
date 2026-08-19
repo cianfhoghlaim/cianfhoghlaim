@@ -158,7 +158,7 @@ ENGLAND_BOARDS: tuple[str, ...] = ("aqa", "ocr", "edexcel")
 
 # ============================================================================
 # The canonical subject config (per stage + languages)
-// ============================================================================
+# ============================================================================
 
 @dataclass(frozen=True)
 class BIEPJuniorCycleSubjectConfig:
@@ -372,8 +372,12 @@ def _build_jc_process_fn(
     subject: BIEPJuniorCycleSubjectConfig, language: str, Chunk
 ):
     """Build the per-subject CocoIndex process function for the JC stage."""
+    from . import four_stage_extraction
+
+    jc_extract_chunk = four_stage_extraction.jc_extract_chunk
+
     @coco.fn(memo=True)
-    def process_jc_chunk(
+    async def process_jc_chunk(
         chunk_text: str,
         subject: str,
         language: str,
@@ -382,10 +386,23 @@ def _build_jc_process_fn(
         chunk_index: int,
         ncca_lo_code: str,
         topic_title: str,
-        target_table: Annotated[Any, target_table := None],
+        target_table: Any = None,
     ) -> None:
-        """Process and embed a single JC chunk."""
-        ...
+        """Process and embed a single JC chunk via the canonical BAML function.
+
+        Delegates to jc_extract_chunk() (per the FF.6 BAML → CocoIndex
+        wire-up) which calls b.ExtractJuniorCycleCurriculum() and writes
+        the result to the canonical LanceDB table.
+        """
+        await jc_extract_chunk(
+            chunk_text=chunk_text,
+            subject=subject,
+            language=language,
+            ncca_lo_code=ncca_lo_code,
+            filename=filename,
+            chunk_index=chunk_index,
+            target_table=target_table,
+        )
 
     return process_jc_chunk
 
@@ -404,7 +421,7 @@ def _build_jc_app_main(
 
 # ============================================================================
 # Manifest (the canonical artifact)
-// ============================================================================
+# ============================================================================
 
 def get_4_stage_manifest() -> dict:
     """Return the canonical 4-stage CocoIndex factory manifest.
