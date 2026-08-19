@@ -90,7 +90,7 @@ The content was absorbed into:
 | `docs/03-pipelines/dagster_definitions.py` | GONE | `orchestration/definitions.py` + `orchestration/AGENTS.md` |
 | `docs/03-pipelines/dagster_factories.py` | GONE | `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py` |
 | `docs/03-pipelines/api_main.py` | GONE | `agents/api/` (the Hono API routes) |
-| `docs/03-pipelines/curriculum_embedding.py` | GONE | `cocoindex/biep_parity/` + `dlt_sources/DATA_PLATFORM_ROUTER.md` |
+| `docs/03-pipelines/curriculum_embedding.py` | GONE | `cocoindex_flows/biep_parity/` + `dlt_sources/DATA_PLATFORM_ROUTER.md` |
 | `docs/03-pipelines/storage_init.py` | GONE | `orchestration/storage/` + `dlt_sources/common/destinations_cianfhoghlaim.py` |
 | `docs/03-pipelines/observability_init.py` | GONE | `observability/` + `.agents/skills/agent-observability/SKILL.md` |
 | `docs/03-pipelines/ag_ui_protocol.py` | GONE | `agents/ag_ui/` + `.agents/skills/ag-ui/SKILL.md` |
@@ -123,7 +123,7 @@ The content was absorbed into:
 | `docs/08-examples/IMPLEMENTATION_GUIDE.md` | GONE | `openspec/AGENTS.md` §Workflow |
 | `docs/08-examples/OIDEACHAIS_SPEC.md` | GONE | `openspec/specs/british-isles-education-pipeline/spec.md` |
 | `docs/08-examples/OPENSPEC_AGENTS.md` | GONE | `openspec/AGENTS.md` + `agents/AGENTS.md` |
-| `docs/08-examples/SUBJECT_IMPLEMENTATIONS.md` | GONE | `baml_src/british_isles/ireland/education/` + `cocoindex/biep_parity/` |
+| `docs/08-examples/SUBJECT_IMPLEMENTATIONS.md` | GONE | `baml_src/british_isles/ireland/education/` + `cocoindex_flows/biep_parity/` |
 | `doc/hackathons/build-small-2026-plan.md` | GONE | `docs/research/` + `docs/legacy/cianfhoghlaim-pkg-readme.md` |
 | `doc/hackathons/build-small-2026-blog.md` | GONE | `docs/research/` |
 | `doc/hackathons/cognee-integration-audit-2026-06-10.md` | GONE | `.agents/skills/cognee/SKILL.md` (the current audit) |
@@ -148,7 +148,7 @@ subdirectories still hold active content:
 | `docs/comics/` | (illustrations + research) | Reference comic-book scans |
 | `docs/dagster/` | (legacy Dagster docs) | Pre-v7 Dagster definitions |
 | `docs/deploy-runbooks/` | 1+ files | The `PHASE_0.3_DEPLOY_RUNBOOK.md` + other deploy procedures |
-| `docs/dlthub-ai-workbench/` | (workbench artifacts) | dlthub AI workbench session outputs |
+| `dlthub-ai-workbench/` | (workbench artifacts) | dlthub AI workbench session outputs |
 | `docs/email-inbox/` | (inbox snapshots) | Reference email-inbox exports |
 | `docs/firecrawl/` | (Firecrawl session outputs) | Firecrawl scrape outputs |
 | `docs/lakehouse/` | (lakehouse docs) | Lakehouse architecture diagrams |
