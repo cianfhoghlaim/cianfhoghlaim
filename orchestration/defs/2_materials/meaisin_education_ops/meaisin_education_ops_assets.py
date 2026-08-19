@@ -193,6 +193,9 @@ if asset is not None:
         CohortLifecycle, CohortRegistry, CohortAuditor = _safe_lifecycle_load()
         if CohortRegistry is None:
             return {"status": "skipped"}
+        CohortKey, PerSubjectRunner, ScoreAggregator, RegressionBaselineStore, RegressionDiffer, DiffReporter = _safe_evaluation_load()
+        if RegressionBaselineStore is None:
+            return {"status": "skipped", "reason": "evaluation_module_unavailable"}
 
         registry = CohortRegistry()
         store = RegressionBaselineStore()

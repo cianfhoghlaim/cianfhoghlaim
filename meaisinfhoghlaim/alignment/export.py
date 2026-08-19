@@ -15,8 +15,12 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator, Sequence
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .aligner import AlignmentResult, ParallelPair
+
+if TYPE_CHECKING:
+    from datasets import Dataset
 
 # System prompts for different task types
 TRANSLATION_SYSTEM_PROMPT = """You are a bilingual Irish-English translator specializing in educational content.

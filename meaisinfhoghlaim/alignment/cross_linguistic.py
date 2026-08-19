@@ -87,7 +87,7 @@ class ExtractCrossLinguisticHandler:
         try:
             # The BAML function signature is documented in
             # baml_src/british_isles/ireland/education/lc_extraction/cross_linguistic.baml
-            result = b.ExtractCrossLinguisticConcept(
+            result = baml.ExtractCrossLinguisticConcept(
                 english_text=page_text,
                 irish_text="",  # BAML fills from cross-corpus if empty
                 subject=subject,

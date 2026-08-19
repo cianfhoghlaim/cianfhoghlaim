@@ -30,7 +30,10 @@ import random
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from observability import EvaluationSample
 
 
 def _resolve_default_eval_model() -> str:
@@ -90,7 +93,7 @@ class CurriculumEvaluationDataset:
 
     def to_samples(self) -> list[EvaluationSample]:
         """Convert to Ragas EvaluationSample format."""
-        from ..observability import EvaluationSample
+        from observability import EvaluationSample
 
         return [
             EvaluationSample(
