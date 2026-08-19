@@ -53,17 +53,65 @@ class VerificationSummary {
 }
 
 function ExtractIdentityDocument(text: string) -> IdentityDocument[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    IdentityDocument[] {}
+  }
 }
 
 function ExtractGardaVetting(text: string) -> GardaVetting[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    GardaVetting[] {}
+  }
 }
 
 function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistration[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ProfessionalRegistration[] {}
+  }
 }
 
 function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVetting[], regs: ProfessionalRegistration[]) -> VerificationSummary {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

@@ -139,7 +139,41 @@ class L2LPOutcome {
 
 function ExtractJuniorCycleSpec(text: string,
   subject: string) -> JuniorCycleSubjectSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
+
+    Source type: PDF text from NCCA Junior Cycle specifications
+
+    Extract:
+    - subject: the JC subject slug
+    - learning_outcomes: list of LOs with codes (JC-<SUBJ>-LO-NNN)
+    - strand_elements: list of strand elements
+    - cba_objectives: Classroom-Based Assessment objectives
+    - assessment_objectives: final exam assessment objectives
+
+    {% if subject == 'JCSubjectSlug.MATHEMATICS' %}
+    - Topics span Number, Algebra, Functions, Geometry, Statistics
+    - LO codes use prefix `JC-MATH-LO-NNN`
+    {% elif subject == 'JCSubjectSlug.ENGLISH' %}
+    - Capture the prescribed texts under `prescribed_texts`
+    {% endif %}
+
+    Junior Cycle has a different assessment structure (CBA + final exam) than Leaving Cert. Always capture both the CBA objectives and the final exam objectives.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    JuniorCycleSubjectSpec {
+      subject juniorcyclesubject {},
+      specification_year 0,
+      cba_tasks null,
+      specification_url "",
+    }
+  }
 }
 
 
@@ -148,7 +182,36 @@ function ExtractJuniorCycleSpec(text: string,
 
 function ExtractShortCourse(text: string,
   course_name: string) -> JuniorCycleShortCourse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
+
+    Source type: PDF text from NCCA Junior Cycle specifications
+
+    Extract:
+    - subject: the JC subject slug
+    - learning_outcomes: list of LOs with codes (JC-<SUBJ>-LO-NNN)
+    - strand_elements: list of strand elements
+    - cba_objectives: Classroom-Based Assessment objectives
+    - assessment_objectives: final exam assessment objectives
+
+    {% if subject == 'JCSubjectSlug.MATHEMATICS' %}
+    - Topics span Number, Algebra, Functions, Geometry, Statistics
+    - LO codes use prefix `JC-MATH-LO-NNN`
+    {% elif subject == 'JCSubjectSlug.ENGLISH' %}
+    - Capture the prescribed texts under `prescribed_texts`
+    {% endif %}
+
+    Junior Cycle has a different assessment structure (CBA + final exam) than Leaving Cert. Always capture both the CBA objectives and the final exam objectives.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    JuniorCycleShortCourse {}
+  }
 }
 
 
@@ -156,7 +219,41 @@ function ExtractJuniorCycleSpecFromUrl(
   source_url: string,
   subject: JuniorCycleSubject
 ) -> JuniorCycleSubjectSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
+
+    Source type: PDF text from NCCA Junior Cycle specifications
+
+    Extract:
+    - subject: the JC subject slug
+    - learning_outcomes: list of LOs with codes (JC-<SUBJ>-LO-NNN)
+    - strand_elements: list of strand elements
+    - cba_objectives: Classroom-Based Assessment objectives
+    - assessment_objectives: final exam assessment objectives
+
+    {% if subject == 'JCSubjectSlug.MATHEMATICS' %}
+    - Topics span Number, Algebra, Functions, Geometry, Statistics
+    - LO codes use prefix `JC-MATH-LO-NNN`
+    {% elif subject == 'JCSubjectSlug.ENGLISH' %}
+    - Capture the prescribed texts under `prescribed_texts`
+    {% endif %}
+
+    Junior Cycle has a different assessment structure (CBA + final exam) than Leaving Cert. Always capture both the CBA objectives and the final exam objectives.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    JuniorCycleSubjectSpec {
+      subject juniorcyclesubject {},
+      specification_year 0,
+      cba_tasks null,
+      specification_url "",
+    }
+  }
 }
 
 

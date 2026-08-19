@@ -65,25 +65,169 @@ class ProfessionalExperience {
 }
 
 function ExtractCV(text: string) -> EducationEntry[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured CV / resume data from a PDF.
+
+    Source type: PDF text from a CV or resume
+
+    Extract:
+    - name: the full name of the candidate
+    - email: primary email address
+    - education: list of education entries (degree, institution, year)
+    - experience: list of work experience entries
+    - publications: list of publications (if present)
+
+    
+
+    The CV is used for portfolio/agent attribution. Preserve the canonical ordering of education + experience entries.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    EducationEntry[] {}
+  }
 }
 
 function ExtractAward(text: string) -> Award[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured CV / resume data from a PDF.
+
+    Source type: PDF text from a CV or resume
+
+    Extract:
+    - name: the full name of the candidate
+    - email: primary email address
+    - education: list of education entries (degree, institution, year)
+    - experience: list of work experience entries
+    - publications: list of publications (if present)
+
+    
+
+    The CV is used for portfolio/agent attribution. Preserve the canonical ordering of education + experience entries.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    Award[] {}
+  }
 }
 
 function ExtractPublication(text: string) -> Publication[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured CV / resume data from a PDF.
+
+    Source type: PDF text from a CV or resume
+
+    Extract:
+    - name: the full name of the candidate
+    - email: primary email address
+    - education: list of education entries (degree, institution, year)
+    - experience: list of work experience entries
+    - publications: list of publications (if present)
+
+    
+
+    The CV is used for portfolio/agent attribution. Preserve the canonical ordering of education + experience entries.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    Publication[] {}
+  }
 }
 
 function ExtractReference(text: string) -> Reference[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured CV / resume data from a PDF.
+
+    Source type: PDF text from a CV or resume
+
+    Extract:
+    - name: the full name of the candidate
+    - email: primary email address
+    - education: list of education entries (degree, institution, year)
+    - experience: list of work experience entries
+    - publications: list of publications (if present)
+
+    
+
+    The CV is used for portfolio/agent attribution. Preserve the canonical ordering of education + experience entries.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    Reference[] {}
+  }
 }
 
 function ExtractSkills(text: string) -> SkillCategoryCv[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured CV / resume data from a PDF.
+
+    Source type: PDF text from a CV or resume
+
+    Extract:
+    - name: the full name of the candidate
+    - email: primary email address
+    - education: list of education entries (degree, institution, year)
+    - experience: list of work experience entries
+    - publications: list of publications (if present)
+
+    
+
+    The CV is used for portfolio/agent attribution. Preserve the canonical ordering of education + experience entries.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    SkillCategoryCv[] {}
+  }
 }
 
 function ExtractExperience(text: string) -> ProfessionalExperience[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured CV / resume data from a PDF.
+
+    Source type: PDF text from a CV or resume
+
+    Extract:
+    - name: the full name of the candidate
+    - email: primary email address
+    - education: list of education entries (degree, institution, year)
+    - experience: list of work experience entries
+    - publications: list of publications (if present)
+
+    
+
+    The CV is used for portfolio/agent attribution. Preserve the canonical ordering of education + experience entries.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ProfessionalExperience[] {}
+  }
 }

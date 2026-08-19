@@ -139,15 +139,42 @@ class GenerationSpec {
 // Extraction functions
 
 function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparison {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GenerateArtworkSpec(
@@ -156,15 +183,46 @@ function GenerateArtworkSpec(
   target_genre: MusicGenreArtwork,
   preferred_mood: MoodCategory?
 ) -> GenerationSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function ExtractColorPalette(artwork: image) -> ColorInfo[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ColorInfo[] {}
+  }
 }
 
 function GenerateVariationPrompt(artwork: image, variation_type: string) -> string {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Tests

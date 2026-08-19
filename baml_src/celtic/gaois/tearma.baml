@@ -281,14 +281,64 @@ class ITTerm {
 function ParseTearmaTerm(
   json_response: string
 ) -> TearmaTerm {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Parse Tearma search results
 function ParseTearmaSearchResults(
   json_response: string
 ) -> TearmaSearchResult {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Extract domain-specific terminology
@@ -296,7 +346,36 @@ function ExtractDomainTerminology(
   json_response: string,
   target_domain: TerminologyDomain
 ) -> TearmaDomainTerms {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    TearmaDomainTerms {}
+  }
 }
 
 // Extract educational terminology for curriculum alignment
@@ -305,7 +384,36 @@ function ExtractEducationalTerms(
   subject: string,
   level: string
 ) -> EducationalTerm[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    EducationalTerm[] {}
+  }
 }
 
 // Extract Irish grammar information from term
@@ -313,14 +421,68 @@ function ExtractIrishGrammar(
   term_text: string,
   context: string
 ) -> IrishGrammar {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    IrishGrammar {}
+  }
 }
 
 // Generate bilingual term card for vocabulary learning
 function GenerateTermCard(
   term: TearmaTerm
 ) -> string {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Link term to Logainm placenames (for geographic terminology)
@@ -328,7 +490,32 @@ function LinkTermToPlacenames(
   term: TearmaTerm,
   placename_contexts: string[]
 ) -> int[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Translate term between English and Irish with full context
@@ -337,7 +524,32 @@ function TranslateTerm(
   source_language: string,
   domain_context: TerminologyDomain?
 ) -> TearmaTerm {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -366,7 +578,32 @@ function FindFolkloreUsage(
   term: TearmaTerm,
   duchas_search_results: string
 ) -> TearmaFolkloreLink {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Combined lookup across Tearma and Logainm
@@ -386,5 +623,30 @@ function CrossReferencePlacenameElement(
   tearma_data: string,
   logainm_glossary: string
 ) -> BilingualPlaceTerm {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
+
+    Source type: JSON response or HTML page from tearma.ie
+
+    Extract:
+    - term_ga: the Irish term
+    - term_en: the English term
+    - domains: list of subject domains
+    - definitions: list of term definitions with language tag
+    - grammar: grammatical info (gender, declension, verb form)
+    - usage_examples: list of EN/GA usage examples
+
+    {% if language == 'ga' %}
+    - Preserve the full Irish grammar (gender + declension)
+    {% elif language == 'en' %}
+    - The grammar field is optional for English-only terms
+    {% endif %}
+
+    Tearma.ie is the authoritative Irish terminology source. Cross-reference the term with related Dúchas / Gaois records when the definitions overlap.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

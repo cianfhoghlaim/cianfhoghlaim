@@ -104,7 +104,16 @@ function IdentifyCognates(
   language: CelticLanguage @description("Language of the word"),
   meaning: string? @description("Meaning if known")
 ) -> CognateSet {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Compare vocabulary across two Celtic languages
@@ -113,7 +122,16 @@ function CompareCelticVocabulary(
   language_a: CelticLanguage @description("First language"),
   language_b: CelticLanguage @description("Second language to compare")
 ) -> CognatePair[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Identify false friends between Celtic languages
@@ -122,7 +140,16 @@ function IdentifyFalseFriends(
   language_a: CelticLanguage @description("First language"),
   language_b: CelticLanguage @description("Second language")
 ) -> FalseFriend? {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Explain sound changes in a cognate set
@@ -131,7 +158,16 @@ function ExplainSoundChanges(
   modern_form: string @description("Modern form in any Celtic language"),
   language: CelticLanguage @description("Language of modern form")
 ) -> SoundChange[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Generate cognate vocabulary for a semantic field
@@ -139,5 +175,14 @@ function GenerateCognateVocabulary(
   semantic_field: string @description("Topic: numbers, family, nature, etc."),
   languages: CelticLanguage[] @description("Languages to include")
 ) -> CognateSet[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

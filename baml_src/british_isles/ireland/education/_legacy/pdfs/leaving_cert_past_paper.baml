@@ -29,5 +29,25 @@ class PastPaper {
 }
 
 function ExtractPastPaper(pdf_text: string) -> PastPaper {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    PastPaper {
+      subject "",
+      year 0,
+      paper "",
+      level "",
+      totalMarks 0,
+      questions null,
+    }
+  }
 }

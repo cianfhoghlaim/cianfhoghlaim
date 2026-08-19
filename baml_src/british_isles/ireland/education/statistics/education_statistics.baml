@@ -208,7 +208,20 @@ function ExtractStatistics(
   document: string,
   expected_source: DataSource
 ) -> StatisticRecord[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    StatisticRecord[] {}
+  }
 }
 
 function CompareNationStatistics(
@@ -217,7 +230,16 @@ function CompareNationStatistics(
   academic_year: string,
   statistics: StatisticRecord[]
 ) -> NationComparison {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function AnalyzeTrend(
@@ -225,7 +247,16 @@ function AnalyzeTrend(
   nation: string,
   historical_data: TrendPoint[]
 ) -> TrendAnalysis {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function RankAreas(
@@ -234,13 +265,31 @@ function RankAreas(
   aggregation_level: AggregationLevel,
   statistics: StatisticRecord[]
 ) -> AreaRanking {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GenerateStatisticsQuery(
   natural_language_query: string
 ) -> StatisticsQuery {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // =============================================================================

@@ -118,6 +118,23 @@ function ExtractIsleOfManSyllabus(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    IsleOfManSyllabusSpec {
+      source_pdf "",
+      source_pages 0,
+      subject isleofmansubject {},
+      level isleofmanlevel {},
+      title "",
+      version "",
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      component_papers 0,
+      topics null,
+      assessment_objectives null,
+    }
+  }
 }
 
 test ExtractIsleOfManSyllabus {

@@ -125,7 +125,16 @@ function GaeilgeWebStudyPlan(
   language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
   focus_topics: string[]
 ) -> GaeilgeWebStudyPlanResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GaeilgeWebExamPaperDiscussion(
@@ -135,7 +144,16 @@ function GaeilgeWebExamPaperDiscussion(
   paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
   question_text: string
 ) -> GaeilgeWebExamPaperDiscussionResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GaeilgeWebMarkingSchemeExplanation(
@@ -144,5 +162,14 @@ function GaeilgeWebMarkingSchemeExplanation(
   paper_level: GaeilgeLevel,
   paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage"
 ) -> GaeilgeWebMarkingSchemeExplanationResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

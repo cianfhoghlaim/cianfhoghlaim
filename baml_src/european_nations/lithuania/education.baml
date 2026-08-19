@@ -19,5 +19,22 @@ function ExtractLithuaniaSubjectCurriculum(
   subject: string,
   text: string
 ) -> LithuaniaSubjectCurriculum {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    LithuaniaSubjectCurriculum {
+      title "",
+      source_url "",
+      content_hash null,
+    }
+  }
 }

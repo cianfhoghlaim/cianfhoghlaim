@@ -129,7 +129,16 @@ function GeographyWebStudyPlan(
   language: GeographyLanguage,
   focus_topics: string[]
 ) -> GeographyWebStudyPlanResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GeographyWebExamPaperDiscussion(
@@ -139,7 +148,16 @@ function GeographyWebExamPaperDiscussion(
   paper_language: GeographyLanguage,
   question_text: string
 ) -> GeographyWebExamPaperDiscussionResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GeographyWebMarkingSchemeExplanation(
@@ -148,5 +166,14 @@ function GeographyWebMarkingSchemeExplanation(
   paper_level: GeographyLevel,
   paper_language: GeographyLanguage
 ) -> GeographyWebMarkingSchemeExplanationResponse {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }

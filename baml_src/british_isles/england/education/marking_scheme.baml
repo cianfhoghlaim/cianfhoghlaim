@@ -95,4 +95,16 @@ function ExtractAQAMarkingScheme(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    AQAMarkingScheme {
+      board examboard {},
+      qualification_level qualificationlevel {},
+      subject "",
+      grade_boundaries null,
+      source_pdf "",
+      source_pages 0,
+      year null,
+    }
+  }
 }

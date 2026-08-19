@@ -69,7 +69,29 @@ function ExtractEnglishMarkingScheme(
   year: int?,
   level: string?,
 ) -> EnglishMarkingScheme {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    EnglishMarkingScheme {
+      scheme_code "",
+      year 0,
+      source_pdf "",
+      grade_descriptors null,
+      mark_allocations null,
+      subject_specific engsubjectdiscriminator {},
+      total_marks 0,
+      total_questions 0,
+    }
+  }
 }
 
 // test english_marking_extraction_smoke {

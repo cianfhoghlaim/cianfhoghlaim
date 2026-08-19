@@ -81,7 +81,20 @@ function ExtractVideoKnowledgeTriple(
   transcript: string,
   frame_captions: string[]
 ) -> KnowledgeTriple[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    KnowledgeTriple[] {}
+  }
 }
 
 
@@ -89,7 +102,20 @@ function ExtractConceptChain(
   triples: KnowledgeTriple[],
   video_id: string
 ) -> ConceptChain {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ConceptChain {}
+  }
 }
 
 
@@ -98,5 +124,18 @@ function ExtractFrameSequence(
   frame_paths: string[],
   fps_sampled: float
 ) -> VisualSequence {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    VisualSequence {}
+  }
 }

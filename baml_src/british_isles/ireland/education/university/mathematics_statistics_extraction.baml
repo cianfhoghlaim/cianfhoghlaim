@@ -573,7 +573,32 @@ function ExtractAcademicModuleSyllabus(
   pdf_text: string,
   module_code: string
 ) -> AcademicModuleDescriptor {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    AcademicModuleDescriptor {}
+  }
 }
 
 function ExtractCourseworkArtifact(
@@ -581,7 +606,32 @@ function ExtractCourseworkArtifact(
   file_name: string,
   document_kind: DocumentKind
 ) -> CourseworkArtifactExtraction {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CourseworkArtifactExtraction {}
+  }
 }
 
 function ExtractTertiaryExamPaper(
@@ -589,64 +639,324 @@ function ExtractTertiaryExamPaper(
   module_code: string,
   year: int
 ) -> TertiaryExamPaper {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    TertiaryExamPaper {
+      confidence 0,
+    }
+  }
 }
 
 function ExtractAssignmentBrief(
   pdf_text: string,
   module_code: string
 ) -> AssignmentBrief {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    AssignmentBrief {
+      confidence 0,
+    }
+  }
 }
 
 function ExtractStudentAnswerScript(
   pdf_text: string,
   assignment_id: string
 ) -> StudentAnswerScript {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    StudentAnswerScript {
+      confidence 0,
+    }
+  }
 }
 
 function ExtractWorkedSolution(
   pdf_text: string,
   question_id: string
 ) -> WorkedSolution {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    WorkedSolution {
+      confidence 0,
+    }
+  }
 }
 
 function ExtractFormulaRecords(
   pdf_text: string
 ) -> FormulaRecord[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    FormulaRecord[] {}
+  }
 }
 
 function ExtractTheorems(
   pdf_text: string
 ) -> TheoremRecord[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    TheoremRecord[] {}
+  }
 }
 
 function ExtractStatisticalProcedureRecords(
   pdf_text: string
 ) -> StatisticalProcedureRecord[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    StatisticalProcedureRecord[] {}
+  }
 }
 
 function ExtractNumericalMethodRecords(
   pdf_text: string
 ) -> NumericalMethodRecord[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    NumericalMethodRecord[] {}
+  }
 }
 
 function ExtractNonlinearSystemRecords(
   pdf_text: string
 ) -> NonlinearSystemRecord[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    NonlinearSystemRecord[] {}
+  }
 }
 
 function ExtractAcademicHistorySnapshot(
   history_json: string
 ) -> AcademicHistorySnapshot {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
+
+    Source type: PDF text from a university module descriptor
+
+    Extract:
+    - module_code: the canonical module code (e.g. 'MA216')
+    - module_title: the module title
+    - credits: ECTS credits
+    - learning_outcomes: list of LOs
+    - assessment_breakdown: breakdown of assessment weightings
+    - prerequisites: list of prerequisite modules
+
+    
+
+    University module descriptors follow a common template. The module_code is the canonical identifier (cross-reference with the University of Galway module registry).
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    AcademicHistorySnapshot {
+      confidence 0,
+    }
+  }
 }
 
 // =============================================================================

@@ -276,28 +276,79 @@ function ExtractCrossNationSpec(
   nation: Nation,
   level: NationEducationLevel
 ) -> CrossNationCurriculumSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CrossNationCurriculumSpec {
+      nation nation {},
+      level nationeducationlevel {},
+      framework curriculumframework {},
+      board null,
+      subject "",
+      learning_outcomes null,
+      assessment_structure null,
+      resources_required null,
+      source_url "",
+      last_crawled "",
+    }
+  }
 }
 
 function AlignOutcomes(
   source_outcomes: CrossNationLearningOutcome[],
   target_outcomes: CrossNationLearningOutcome[]
 ) -> OutcomeAlignment[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function CompareCurricula(
   specs: CrossNationCurriculumSpec[],
   subject: string
 ) -> CrossNationComparison {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function IdentifyResourceSharing(
   source_spec: CrossNationCurriculumSpec,
   target_specs: CrossNationCurriculumSpec[]
 ) -> ResourceSharingRecommendation[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 class ResourceSharingRecommendation {
@@ -320,7 +371,16 @@ class ResourceSharingRecommendation {
 // ============================================================================
 
 function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLevel[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -345,7 +405,16 @@ class TranslationResult {
 }
 
 function TranslateEducationalContent(request: TranslationRequest) -> TranslationResult {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================

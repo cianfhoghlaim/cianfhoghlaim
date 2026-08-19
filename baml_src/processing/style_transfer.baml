@@ -42,14 +42,58 @@ class StyleBlend {
 // Style transfer functions
 
 function ExtractStyleFeatures(artwork: image) -> StyleFeatures {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    StyleFeatures {}
+  }
 }
 
 function CreateStyleTransferSpec(
   content_prompt: string,
   style_reference: image
 ) -> StyleTransferSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function BlendStyles(
@@ -58,7 +102,27 @@ function BlendStyles(
   blend_ratio: float,
   content: string
 ) -> StyleBlend {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GenerateSeriesPrompts(
@@ -66,11 +130,51 @@ function GenerateSeriesPrompts(
   count: int,
   variation_axis: string
 ) -> string[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Album-specific functions
@@ -82,14 +186,54 @@ function GenerateAlbumCoverSpec(
   style_reference: image?,
   genre: string
 ) -> StyleTransferSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function GenerateSingleCoverVariation(
   original_album_cover: image,
   single_title: string
 ) -> string {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at generating a style transfer specification from a reference prompt.
+
+    Source type: free-form reference prompt text
+
+    Extract:
+    - style_name: the canonical style name (e.g. 'ukiyo-e', 'watercolor')
+    - palette: list of hex colour codes for the style
+    - line_work: description of the line work characteristics
+    - era: the era or time period the style evokes
+    - subject_matter: the typical subject matter for this style
+
+    
+
+    The style transfer spec drives a downstream image generation flow. The palette + line_work are the most critical fields.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // test style_extraction {

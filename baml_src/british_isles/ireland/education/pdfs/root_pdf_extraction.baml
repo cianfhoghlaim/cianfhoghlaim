@@ -43,7 +43,20 @@ class NCCAKeyCompetencyRootPdf {
 }
 
 function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    NCCAKeyCompetencyRootPdf[] {}
+  }
 }
 
 // ============================================================================
@@ -60,7 +73,23 @@ class PedagogySet {
 }
 
 function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    PedagogySet {
+      introduction bilingualtextrootpdf {},
+      evidence evidencelink {},
+    }
+  }
 }
 
 // ============================================================================
@@ -77,7 +106,23 @@ class CertGuidance {
 }
 
 function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CertGuidance {
+      introduction bilingualtextrootpdf {},
+      evidence evidencelink {},
+    }
+  }
 }
 
 // ============================================================================
@@ -94,7 +139,23 @@ class ExaminerCommentary {
 }
 
 function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ExaminerCommentary {
+      introduction bilingualtextrootpdf {},
+      evidence evidencelink {},
+    }
+  }
 }
 
 // ============================================================================
@@ -111,5 +172,21 @@ class AimsExpectations {
 }
 
 function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    AimsExpectations {
+      introduction bilingualtextrootpdf {},
+      evidence evidencelink {},
+    }
+  }
 }

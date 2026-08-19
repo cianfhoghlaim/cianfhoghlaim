@@ -115,6 +115,23 @@ function ExtractAQAQualSpec(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    AQAQualSpec {
+      board null,
+      qualification_level qualificationlevel {},
+      title "",
+      version "",
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      assessment_objectives null,
+      component_papers 0,
+      source_pdf "",
+      source_pages null,
+      language null,
+    }
+  }
 }
 
 function ExtractOCRQualSpec(
@@ -142,6 +159,23 @@ function ExtractOCRQualSpec(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    OCRQualSpec {
+      board null,
+      qualification_level qualificationlevel {},
+      title "",
+      version "",
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      assessment_objectives null,
+      component_papers 0,
+      source_pdf "",
+      source_pages null,
+      language null,
+    }
+  }
 }
 
 function ExtractEdexcelQualSpec(
@@ -170,6 +204,23 @@ function ExtractEdexcelQualSpec(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    EdexcelQualSpec {
+      board null,
+      qualification_level qualificationlevel {},
+      title "",
+      version "",
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      assessment_objectives null,
+      component_papers 0,
+      source_pdf "",
+      source_pages null,
+      language null,
+    }
+  }
 }
 
 // ============================================================================
@@ -232,4 +283,21 @@ function ExtractUKQualSpec(
 
     {{ ctx.output_format }}
   "#
+
+  catch_all (err) {
+    UKQualificationSpec {
+      board examboard {},
+      qualification_level qualificationlevel {},
+      title "",
+      version "",
+      first_teaching_year null,
+      last_certification_year null,
+      total_marks 0,
+      assessment_objectives null,
+      component_papers 0,
+      source_pdf "",
+      source_pages null,
+      language null,
+    }
+  }
 }

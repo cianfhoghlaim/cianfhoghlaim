@@ -283,21 +283,48 @@ class DuchasPhotograph {
 function ParseSchoolsVolume(
   json_response: string
 ) -> DuchasSchoolsVolume {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Parse CBED person response
 function ParsePerson(
   json_response: string
 ) -> DuchasPerson {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Parse CBEG photograph response
 function ParsePhotograph(
   json_response: string
 ) -> DuchasPhotograph {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Extract folklore topics from a Schools Collection item
@@ -305,7 +332,16 @@ function ClassifyFolkloreTopic(
   item_text: string,
   available_topics: DuchasSchoolsTopic[]
 ) -> DuchasSchoolsTopic[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Link Schools Collection story to modern Logainm places
@@ -313,7 +349,16 @@ function LinkStoryToPlaces(
   story: DuchasSchoolsItem,
   mentioned_places: string[]
 ) -> int[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -383,7 +428,20 @@ function ExtractDuchasManuscript(
   xml_record: string,
   image_path: string?
 ) -> DuchasManuscriptRecord {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    DuchasManuscriptRecord {}
+  }
 }
 
 // Extract 5-level bounding box alignment from a handwritten manuscript page
@@ -394,7 +452,20 @@ function ExtractDuchasImageBoundingBox(
   transcript: string,
   collection: DuchasCollection
 ) -> DuchasBoundingBox[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    DuchasBoundingBox[] {}
+  }
 }
 
 // Extract a transcription line-by-line from a handwritten manuscript page
@@ -404,5 +475,18 @@ function ExtractDuchasTranscription(
   collection: DuchasCollection,
   language_hint: string?
 ) -> DuchasTranscriptionLine[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    DuchasTranscriptionLine[] {}
+  }
 }

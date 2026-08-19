@@ -51,14 +51,32 @@ function GradeComputerScienceResponse(
   marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkAllocation",
   is_higher_level: bool,
 ) -> ComputerScienceGrade {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 function ExplainComputerScienceMarkingScheme(
   marking_scheme_id: string,
   marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme",
 ) -> ComputerScienceMarkingRationale {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // test computer_science_grading_smoke {

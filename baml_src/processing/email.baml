@@ -52,7 +52,16 @@ function ClassifyEmail(
   sender_domain: string,
   recipient_domain: string
 ) -> EmailClassificationResult {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // =============================================================================
@@ -73,7 +82,20 @@ function ExtractEmailThread(
   thread_messages: string[],
   thread_subject: string
 ) -> EmailThread {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    EmailThread {}
+  }
 }
 
 // =============================================================================
@@ -97,7 +119,16 @@ function LinkEmailToResearch(
   email_body: string,
   candidate_pdfs: CandidatePDF[]
 ) -> ResearchLink[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // =============================================================================

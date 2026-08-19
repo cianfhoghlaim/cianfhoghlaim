@@ -106,14 +106,62 @@ function ExtractGrammarPatterns(
   text: string @description("Celtic language text"),
   language: CelticLanguage @description("Language of the text")
 ) -> GrammarPattern[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Analyze Irish copula usage
 function ExtractIrishCopula(
   sentence: string @description("Irish sentence possibly containing copula")
 ) -> IrishCopulaPattern? {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Analyze VSO word order
@@ -121,14 +169,62 @@ function AnalyzeVSOOrder(
   sentence: string @description("Celtic sentence"),
   language: CelticLanguage @description("Language")
 ) -> VSOPattern {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Extract possession patterns
 function ExtractPossession(
   sentence: string @description("Sentence expressing possession")
 ) -> PossessionPattern {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Generate prepositional pronoun table
@@ -136,14 +232,62 @@ function GeneratePrepositionalPronouns(
   preposition: string @description("Base preposition"),
   language: CelticLanguage @description("Language")
 ) -> PrepositionalPronoun[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // Document mutation triggers
 function DocumentMutationTriggers(
   language: CelticLanguage @description("Language to document")
 ) -> MutationTriggerPattern[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
 
 // ============================================================================
@@ -171,5 +315,33 @@ function ExtractCelticGrammar(
   language: CelticLanguageCurriculum,
   max_patterns: int?
 ) -> CelticGrammarPattern[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
+
+    Source type: markdown pedagogical text
+
+    Extract:
+    - language: the Celtic language (ga, cy, gd, br, kw, gv)
+    - pattern_name: the name of the grammar pattern (e.g. 'Irish mutations')
+    - examples: list of example sentences demonstrating the pattern
+    - rules: list of formal rules for the pattern
+    - related_patterns: list of cross-references to related patterns
+
+    {% if language == 'ga' %}
+    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    {% elif language == 'cy' %}
+    - Capture the Welsh soft + nasal + aspirate mutations
+    {% endif %}
+
+    Celtic mutations are the most distinctive feature. Always capture the input → output transformation explicitly.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CelticGrammarPattern[] {}
+  }
 }

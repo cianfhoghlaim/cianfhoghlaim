@@ -18,7 +18,20 @@ class DocumentMetadata {
 
 function ExtractAllPdfMetadata(page_markdown: string,
   pdf_urls: string[]) -> DocumentMetadata[] {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    DocumentMetadata[] {}
+  }
 }
 
 
@@ -41,5 +54,22 @@ class CurriculumExtraction {
 }
 
 function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    CurriculumExtraction {
+      subject "",
+      topics null,
+      totalSuggestedHours 0,
+    }
+  }
 }

@@ -116,7 +116,26 @@ function ExtractImagePrompt(
   cycle: string,
   purpose: ImagePurpose
 ) -> ImagePromptSpec {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    ImagePromptSpec {
+      purpose imagepurpose {},
+      camera_angle cameraangle {},
+      lighting lightingstyle {},
+      mood mood {},
+      style visualstyle {},
+    }
+  }
 }
 
 function BuildFIBOConfig(
@@ -124,5 +143,14 @@ function BuildFIBOConfig(
   outcome_id: string,
   syllabus_path: string
 ) -> FIBOConfig {  client ExtractEn
-  prompt #"Auto-generated extraction prompt."#
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
 }
