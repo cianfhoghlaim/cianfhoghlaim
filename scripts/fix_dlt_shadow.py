@@ -40,7 +40,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # `dlt_sources.british_isles._cross.registry_loader`).
 TARGET_DIRS = [
     "dlt_sources", "orchestration", "baml_src", "motherduck",
-    "cocoindex", "meaisinfhoghlaim", "agents", "notebooks",
+    "cocoindex_flows", "meaisinfhoghlaim", "agents", "notebooks",
     "scripts", "tests",
 ]
 

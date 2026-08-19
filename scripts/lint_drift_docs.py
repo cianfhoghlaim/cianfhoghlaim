@@ -42,7 +42,7 @@ REPORT_DIR = REPO_ROOT / "stedding" / "sync-reports"
 AGENTS_FILES = [
     REPO_ROOT / "AGENTS.md",
     REPO_ROOT / "openspec" / "AGENTS.md",
-    REPO_ROOT / "cocoindex" / "AGENTS.md",
+    REPO_ROOT / "cocoindex_flows" / "AGENTS.md",
     REPO_ROOT / "dlt_sources" / "AGENTS.md",
     REPO_ROOT / "agents" / "AGENTS.md",
     REPO_ROOT / "agents" / "meaisinfhoghlaim" / "AGENTS.md",

@@ -39,7 +39,7 @@ def test_baml_cocoindex_integration_decorator() -> None:
     """Verify the @baml_extraction_flow decorator works."""
     baml_cocoindex = _load_module(
         "baml_cocoindex_integration",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "baml_cocoindex_integration.py"),
     )
 
     @baml_cocoindex.baml_extraction_flow("ExtractCurriculumSyllabus", stage="lc")
@@ -62,7 +62,7 @@ def test_4_stage_extractors() -> None:
     """Verify the 4 stage extractors are callable."""
     extraction = _load_module(
         "extraction",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_extraction.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "4_stage_extraction.py"),
     )
     assert "lc" in extraction.STAGE_EXTRACTORS
     assert "jc" in extraction.STAGE_EXTRACTORS
@@ -116,7 +116,7 @@ def test_cocoindex_query_api() -> None:
     sys.path.insert(0, str(REPO_ROOT))
     cocoindex_query_api = _load_module(
         "cocoindex_query_api",
-        str(REPO_ROOT / "cocoindex" / "_shared" / "cocoindex_query_api.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "_shared" / "cocoindex_query_api.py"),
     )
     assert "ireland_lc_mathematics_embedding" in cocoindex_query_api.BIEP_COCOINDEX_APPS
     assert "ireland_jc_mathematics_embedding" in cocoindex_query_api.BIEP_COCOINDEX_APPS
@@ -184,7 +184,7 @@ def test_4_stage_plane_consistency() -> None:
         "bi_factory.py",
     ]
     for factory in factories:
-        path = REPO_ROOT / "cocoindex" / "biep_parity" / factory
+        path = REPO_ROOT / "cocoindex_flows" / "biep_parity" / factory
         assert path.exists(), f"Missing CocoIndex factory: {factory}"
 
     # ADK: 4 stage agents
@@ -232,9 +232,9 @@ def test_lc_process_fn_delegates() -> None:
     sys.path.insert(0, str(REPO_ROOT))
     baml_cocoindex = _load_module(
         "baml_cocoindex_integration",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "baml_cocoindex_integration.py"),
     )
-    factory_src = (REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_factory.py").read_text()
+    factory_src = (REPO_ROOT / "cocoindex_flows" / "biep_parity" / "4_stage_factory.py").read_text()
     # The factory must expose _build_lc_process_fn
     assert "_build_lc_process_fn" in factory_src
     assert "from . import four_stage_extraction" in factory_src
@@ -257,9 +257,9 @@ def test_gcse_process_fn_delegates() -> None:
     sys.path.insert(0, str(REPO_ROOT))
     baml_cocoindex = _load_module(
         "baml_cocoindex_integration",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "baml_cocoindex_integration.py"),
     )
-    factory_src = (REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_factory.py").read_text()
+    factory_src = (REPO_ROOT / "cocoindex_flows" / "biep_parity" / "4_stage_factory.py").read_text()
     # The factory must expose _build_gcse_process_fn
     assert "_build_gcse_process_fn" in factory_src
     # The factory must reference the gcse_extract_chunk delegate
@@ -279,9 +279,9 @@ def test_alevel_process_fn_delegates() -> None:
     sys.path.insert(0, str(REPO_ROOT))
     baml_cocoindex = _load_module(
         "baml_cocoindex_integration",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_cocoindex_integration.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "baml_cocoindex_integration.py"),
     )
-    factory_src = (REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_factory.py").read_text()
+    factory_src = (REPO_ROOT / "cocoindex_flows" / "biep_parity" / "4_stage_factory.py").read_text()
     # The factory must expose _build_a_level_process_fn
     assert "_build_a_level_process_fn" in factory_src
     # The factory must reference the alevel_extract_chunk delegate
@@ -316,7 +316,7 @@ def test_4_stage_extraction_metrics() -> None:
     sys.path.insert(0, str(REPO_ROOT))
     baml_runtime = _load_module(
         "baml_runtime_integration",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_runtime_integration.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "baml_runtime_integration.py"),
     )
 
     # Reset metrics for a clean state
@@ -346,7 +346,7 @@ def test_baml_cocoindex_runtime_integration() -> None:
     sys.path.insert(0, str(REPO_ROOT))
     baml_runtime = _load_module(
         "baml_runtime_integration",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "baml_runtime_integration.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "baml_runtime_integration.py"),
     )
 
     # The 3 canonical helpers must exist
@@ -444,7 +444,7 @@ async def test_4_stage_plane_end_to_end() -> None:
     # 1. BAML: load 4_stage_extraction
     extraction = _load_module(
         "4_stage_extraction",
-        str(REPO_ROOT / "cocoindex" / "biep_parity" / "4_stage_extraction.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "biep_parity" / "4_stage_extraction.py"),
     )
     assert len(extraction.STAGE_EXTRACTORS) == 4
     for stage in ("lc", "jc", "alevel", "gcse"):
@@ -453,7 +453,7 @@ async def test_4_stage_plane_end_to_end() -> None:
     # 2. CocoIndex: load cocoindex_query_api
     query_api = _load_module(
         "cocoindex_query_api",
-        str(REPO_ROOT / "cocoindex" / "_shared" / "cocoindex_query_api.py"),
+        str(REPO_ROOT / "cocoindex_flows" / "_shared" / "cocoindex_query_api.py"),
     )
     search = query_api.get_search("ireland_lc_mathematics_embedding")
     assert callable(search)

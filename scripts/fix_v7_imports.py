@@ -27,7 +27,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # Directories to scan
 TARGET_DIRS = [
-    "dlt", "orchestration", "baml_src", "motherduck", "cocoindex",
+    "dlt", "orchestration", "baml_src", "motherduck", "cocoindex_flows",
     "meaisinfhoghlaim", "agents", "notebooks", "scripts",
 ]
 

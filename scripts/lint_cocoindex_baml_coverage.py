@@ -3,7 +3,7 @@
 
 Per the 2026-08-18-mega-3-fast-follow-v1 change (FF.6) + the
 2026-08-26-mega-3a-baml-and-adk-v1 change: every BIEP CocoIndex App in
-`cocoindex/biep_parity/*.py` MUST import at least 1 BAML function
+`cocoindex_flows/biep_parity/*.py` MUST import at least 1 BAML function
 via `from baml_client.async_client import b` (or the typed
 `from baml_client.types import ...`).
 
@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-BIE_PARITY = REPO_ROOT / "cocoindex" / "biep_parity"
+BIE_PARITY = REPO_ROOT / "cocoindex_flows" / "biep_parity"
 
 # Matches `from baml_client... import b` or `from baml_client.types import ...`
 BAML_IMPORT_PATTERN = re.compile(

@@ -81,9 +81,9 @@ def _load_agent_ui_bridge() -> Any:
 
 
 def _load_cocoindex_query_api() -> Any:
-    """Load cocoindex/_shared/cocoindex_query_api.py."""
+    """Load cocoindex_flows/_shared/cocoindex_query_api.py."""
     sys.path.insert(0, str(REPO_ROOT))
-    path = REPO_ROOT / "cocoindex" / "_shared" / "cocoindex_query_api.py"
+    path = REPO_ROOT / "cocoindex_flows" / "_shared" / "cocoindex_query_api.py"
     return _load_module("cocoindex_query_api", path)
 
 
