@@ -1,5 +1,16 @@
 # Cianfhoghlaim Monorepo - Tool Management & Tasks
 # https://mise.jdx.dev/
+#
+# POST-2026-08-19 REFACTOR (the 2026-08-19-dev-tooling-refactor-mise-opencode-openspec-v1 change):
+# - 329 tasks → ~75 TOML tasks across 9 canonical namespaces (core, ts, schema, py,
+#   lint, opencode, baml, openspec, cic) + ~9 file tasks in mise-tasks/ + 4
+#   [task_templates] blocks for the OCR/converter/agent entrypoint patterns.
+# - Back-compat aliases for 1 release cycle on the most-used legacy names
+#   (iac-bootstrap, preflight-arm-oci, sync:all, etc.).
+# - depends = [...] DAG on all quality gates (lint, ci, sync, doctor).
+# - usage = arg spec on all entrypoint templates (replaces deprecated Tera
+#   template functions).
+# See .agents/skills/mise/SKILL.md + openspec/specs/dev-tooling-surfaces/spec.md.
 
 [tools]
 # Core tools
@@ -40,1601 +51,51 @@ _.file = '.env'
 MISE_ENV_FILE = ".env"
 PYTHONPATH = "."
 UV_PROJECT_ENVIRONMENT = ".venv"
-# Ireland education local-scrape-cache root. Several dlt_sources/british_isles/ireland
-# sources default this to the non-existent absolute path /stedding/ingest_queue; the
-# real, populated cache (~15,800 files: ncca.ie, examinations.ie, curriculumonline.ie,
-# oide.ie) lives at stedding/site_scrape_samples/ — this makes that the default so
-# USE_LOCAL_SCRAPES=true sources find it without per-file edits.
 STEDDING_INGEST_QUEUE = "{{config_root}}/stedding/site_scrape_samples"
-# dlt_sources/common/destinations_cianfhoghlaim.py's local DuckLake path
-# (get_dlt_destination(use_ducklake=True)) reads DUCKLAKE_POSTGRES_USER /
-# DUCKLAKE_POSTGRES_PASSWORD, defaulting to a hardcoded "lakekeeper"/
-# "devpassword" that doesn't match the running lakehouse Postgres
-# container's real credentials (which come from POSTGRES_USER /
-# POSTGRES_PASSWORD in .env). Aliased here rather than baking a value in —
-# never read the password itself, just point the differently-named var at
-# the one the lakehouse compose stack already sets.
-# Hardcoded defaults to "lakekeeper" / "devpassword" (the lakehouse compose stack's
-# dev credentials). In local dev, the .env file exports POSTGRES_USER=lakekeeper +
-# POSTGRES_PASSWORD=<real-secret> which mise prefers via the {{env.*}} template;
-# in CI (no .env), these hardcoded defaults make `mise install` succeed so the
-# lint:drift-docs + skill-refs-check gates can run.
 DUCKLAKE_POSTGRES_USER = "lakekeeper"
 DUCKLAKE_POSTGRES_PASSWORD = "devpassword"
-# registry_api.py / registry_loader.py's BIEP_REGISTRY_URI defaults to
-# "md:cianfhoghlaim" (MotherDuck cloud — confirmed elsewhere in this repo
-# to be an empty account, unusable locally). This string carries NO
-# credentials — host/port/dbname only. Auth comes from the standard libpq
-# PGUSER/PGPASSWORD env vars below, which DuckDB's postgres extension
-# reads automatically; duckdb.connect() on a credential-free string never
-# has a secret to echo back through SHOW DATABASES/current_catalog(),
-# unlike embedding user=...password=... directly in the connection string
-# (confirmed unsafe earlier this session — see the
-# kcg-ducklake-connstring-password-exposure memory note).
 BIEP_REGISTRY_URI = "ducklake:postgres:host=localhost port=5433 dbname=ducklake_cianfhoghlaim"
 PGUSER = "{{env.DUCKLAKE_POSTGRES_USER}}"
 PGPASSWORD = "{{env.DUCKLAKE_POSTGRES_PASSWORD}}"
-# destinations_cianfhoghlaim.py's _build_local_destination() defaults
-# DUCKLAKE_BUCKET to "ducklake-cianfhoghlaim", but the already-seeded local
-# DuckLake catalog (Postgres, ~1,990 registry rows from a prior session)
-# was actually initialized against bucket "ducklake" (namespace as a path
-# prefix inside it, not baked into the bucket name) — confirmed via a real
-# DuckLake "DATA_PATH parameter does not match existing data path in the
-# catalog" error. Matching the existing catalog here rather than risking a
-# second, orphaned bucket/catalog split.
 DUCKLAKE_BUCKET = "ducklake"
-# Post-Phase-1 (2026-06-30): the consolidated pyproject.toml lived at
-# cianfhoghlaim/pyproject.toml. Post-v7 (2026-07-17): the package is the
-# repo itself, so pyproject.toml is at the root. The stamp is bumped to
-# the v7 release date so `mise run cic:version` reflects the new shape.
 CIANFHOGHLAIM_PYPROJECT_GENERATED_AT = "2026-07-17T00:00:00Z"
 # LOCKET_TOKEN, KOMODO_URL, PANGOLIN_URL are set per-environment (not required here)
 # They are provided by the Locket sidecar in production or by the user's shell in dev.
 
 
 # =============================================================================
-# Python Tasks
+# CORE NAMESPACE (7 tasks) — sync, test, lint, format, doctor, reset, clean
 # =============================================================================
 
 [tasks.sync]
-description = "Sync the cianfhoghlaim Python package"
+description = "Sync the cianfhoghlaim Python package + bun workspaces"
 run = "uv sync"
 
 [tasks.test]
 description = "Run pytest on cianfhoghlaim package"
+depends = ["sync"]
 run = "uv run pytest"
 
 [tasks."validate-env"]
-description = "Smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix + all code-side consumers (introduced by pick-7-align-env)"
+description = "Smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix + all code-side consumers"
+depends = ["sync"]
 run = ".venv/bin/python3 scripts/validate_env.py"
 
 [tasks.lint]
-description = "Aggregate lint gate — runs the canonical Python + skills-metadata + centralized-registry linters"
+description = "Aggregate lint gate — Python + skills-metadata + centralized-registry linters"
+depends = ["lint:skills", "lint:registry", "py:typecheck"]
 run = """
-mise run lint:skills
-mise run lint:registry
 uv run ruff check .
 """
 
-[tasks."lint:skills"]
-description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count) for every skill"
-run = "bash .agents/skills/lint-skills.sh"
-
-[tasks."lint:registry"]
-description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY. Part of the `centralized-model-registry` capability — see openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
-run = ".venv/bin/python3 scripts/registry_audit.py --strict"
-
-[tasks."lint:dagster:sensor-job-coverage"]
-description = "Audit that every @sensor(job_name=...) in orchestration/sensors/ has a matching define_asset_job in orchestration/sensors/jobs.py or garage_pdf_arrival_sensor.py. Closes the 8-of-8 silent failure class per the 2026-08-08-lakehouse-extensive-hydration-v1 change. Added by 2026-08-17-hygiene-drift-cleanup-v1 (P1.7)"
-run = ".venv/bin/python3 scripts/dagster_sensor_job_coverage_lint.py"
-
-[tasks."lint:locket-version"]
-description = "Audit that every compose.yaml in bonneagar/stacks/**/ referencing pbradley/locket:infisical is >= v0.18.0 OR substitutes the cianfhoghlaim/locket-shim image. Closes the 422-on-Infisical-v0.161+ regression per the 2026-08-15-bonneagar-infra-remediation-v2 change. Added by 2026-08-17-hygiene-drift-cleanup-v1 (P2.10)"
-run = ".venv/bin/python3 scripts/lint_locket_version.py"
-
-[tasks."lint:dlt:nested-hints"]
-description = "Audit dlt_sources/**/*.py for nested_hints() calls containing `__` path fragments (per dlt-hub/dlt#4247 the dlt 1.28 normalizer silently strips these). Added by 2026-08-17-hygiene-drift-cleanup-v1 (P2.6)"
-run = ".venv/bin/python3 scripts/lint_dlt_nested_hints.py"
-
-[tasks."lint:litellm-router-fallbacks"]
-description = "Audit bonneagar/stacks/litellm/config/config.yaml for bare-list router_settings.fallbacks (per the 2026-07-29-lakehouse-extensive-hydration-v1 change the litellm 1.x Router validates the dict form). Added by 2026-08-17-biep-v3-bring-up-v1 (P2.15)"
-run = ".venv/bin/python3 scripts/lint_litellm_router_fallbacks.py"
-
-[tasks."lint:baml-stub-prompts"]
-description = "Audit baml_src/**/*.baml for the literal stub string 'Auto-generated extraction prompt.' (per the centralized-schema-registry spec the 832-of-838 stub class is the regression to prevent). Added by 2026-08-17-biep-v3-bring-up-v1 (P2.16)"
-run = ".venv/bin/python3 scripts/lint_baml_stub_prompts.py"
-
-[tasks."lint:copilotkit-actions-stubbed"]
-description = "Audit web/apps/cianfhoghlaim-leaving-cert/apps/api/src/copilotkit/actions.ts for 'TBD' placeholder returns (per the agentic-frontend-frameworks spec the 12-of-14 stub class is the regression to prevent). Added by 2026-08-17-biep-v3-bring-up-v1 (P2.17)"
-run = ".venv/bin/python3 scripts/lint_copilotkit_actions_stubbed.py"
-
-[tasks."pre-commit-install"]
-description = "Install the centralized-registry pre-commit hook"
-run = "pre-commit install && pre-commit run --all-files"
-
-[tasks."pre-commit-run"]
-description = "Run the centralized-registry pre-commit hook on all files"
-run = "pre-commit run --all-files"
-
-[tasks."lint:drift-docs"]
-description = "Validate every AGENTS.md number claim (specs/skills/stacks/models/notebooks) against ground truth. Exits 1 on any mismatch; writes JSON + MD report to stedding/sync-reports/docs-drift-{date}.{json,md}. Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change (the `centralize-cross-cutting-docs` spec)."
-run = ".venv/bin/python3 scripts/lint_drift_docs.py"
-
-[tasks."lint:drift-docs:dry-run"]
-description = "Same as lint:drift-docs but exits 0 always (prints the report)"
-run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
-
-[tasks."lint:drift-docs:rebaseline"]
-description = "Auto-fix the stale count claims reported by lint:drift-docs (safe --fix mode per the retrospective-cleanup spec). Writes the fix to disk. Per the 2026-08-13-count-drift-rebase-and-indexing-cognition-cleanup-v1 change."
-run = "uv run python scripts/rebaseline_drift_docs.py --apply"
-
-[tasks."lint:drift-docs:rebaseline:dry-run"]
-description = "Dry-run the auto-fix (prints the planned diff, exits 0, does not modify any files)"
-run = "uv run python scripts/rebaseline_drift_docs.py"
-
-[tasks."lint:guides-yml"]
-description = "Validate every path in .cocoindex_code/guides.yml resolves on disk. Exits 1 if any path is missing; writes JSON report to stedding/sync-reports/guides-yml-{date}.json. Per the 2026-08-13-guides-yml-repair-and-docs-integrations-index-v1 change (the indexing-and-cognition spec delta)."
-run = "uv run python scripts/lint_guides_yml.py"
-
-[tasks."lint:guides-yml:dry-run"]
-description = "Same as lint:guides-yml but exits 0 always (prints the report)"
-run = "uv run python scripts/lint_guides_yml.py --dry-run"
-
-# -----------------------------------------------------------------------------
-# Firecrawl Budget Lint — added by the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1
-# change. Reads cianfhoghlaim.firecrawl_meta.scrapes (the append-only scrape log
-# populated by FirecrawlMCPClient) + flags any pipeline exceeding 150% of its
-# monthly allocation (defined in deployment-choice.yaml).
-# -----------------------------------------------------------------------------
-[tasks."lint:firecrawl-budget"]
-description = "Firecrawl budget linter — exit 1 if any pipeline exceeds 150% of its monthly allocation. Per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change."
-run = "uv run python scripts/lint_firecrawl_budget.py"
-
-# =============================================================================
-# 2026-08-15-lakehouse-memory-stack-deep-integration-v1 (Phase E)
-# =============================================================================
-[tasks."lakehouse:memory:doctor"]
-description = "Probe the 5 memory backends (cognee + graphiti + lancedb + falkordb + memgraph) and emit a JSON health report to stedding/memory-health/<utc-ts>.json. Per the agent-memory-systems + agent-platform-cluster spec deltas of the 2026-08-15 change."
-run = "bun run scripts/lakehouse-memory-doctor.ts"
-
-[tasks."lakehouse:memory:doctor:strict"]
-description = "Same as lakehouse:memory:doctor but exits 1 if any backend is not healthy (used by deploy-full.sh Phase 7)"
-run = "bun run scripts/lakehouse-memory-doctor.ts --strict"
-
-# =============================================================================
-# 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 (Phase D)
-# =============================================================================
-[tasks."lakehouse:preflight"]
-description = "Local-bunchloch lakehouse preflight: 5 required endpoints + 12 postgres databases + 8 Garage buckets + (graceful) cognify stack status. Per the infrastructure-stacks spec delta of the 2026-08-15 change. Use --strict-cognify to require the cognify backends for BIEP M5+."
-run = "python3 scripts/lakehouse_preflight.py"
-
-[tasks."lakehouse:preflight:json"]
-description = "Same as lakehouse:preflight but emits JSON to stdout (machine-readable)"
-run = "python3 scripts/lakehouse_preflight.py --json"
-
-[tasks."lakehouse:preflight:strict-cognify"]
-description = "Same as lakehouse:preflight but REQUIRES the cognify backends (used by BIEP M5+ milestones)"
-run = "python3 scripts/lakehouse_preflight.py --strict-cognify"
-
-# 2026-08-15-lakehouse-unified-data-plane-v1 — canonical bring-up/teardown
-# aliases for the unified 16-service stack (11 data plane + 5 graph DB).
-[tasks."lakehouse:up"]
-description = "Canonical bring-up for the unified lakehouse stack (16 services: 11 data plane + 5 graph DB) — wraps scripts/lakehouse_unified_up.sh. Per the 2026-08-15-lakehouse-unified-data-plane-v1 change."
-run = "bash scripts/lakehouse_unified_up.sh ${@:-}"
-
-[tasks."lakehouse:down"]
-description = "Canonical teardown for the unified lakehouse stack (16 services) — wraps scripts/lakehouse_unified_down.sh. Per the 2026-08-15-lakehouse-unified-data-plane-v1 change."
-run = "bash scripts/lakehouse_unified_down.sh ${@:-}"
-
-[tasks."lakehouse:preflight:unified"]
-description = "Alias for lakehouse:preflight:strict-cognify (the 4 graph DB backends are now REQUIRED, not optional). Per the 2026-08-15-lakehouse-unified-data-plane-v1 change."
-run = "mise run lakehouse:preflight:strict-cognify"
-
-[tasks."lakehouse:buckets:audit"]
-description = "Audit the 8 canonical Garage S3 buckets via the admin API (urllib3 — no awscli dep). Per the 2026-08-15-dagster-load-path-repair-and-lakehouse-preflight-v1 change."
-run = "python3 scripts/audit_lakehouse_buckets.py"
-
-[tasks."agents:smoke"]
-description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
-run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"
-
-[tasks."agents:audit"]
-description = "Direct-import audit + AGENT_REGISTRY validation for the 12-agent fleet"
-run = ".venv/bin/python3 -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
-
-[tasks."agents:reproduce"]
-description = "Operator's one-shot: reproduce the 12-agent fleet + 8 NCCA subject specialists + 3 educational agents from cold to green"
-run = "bash scripts/reproducers/agents-fleet-reproducer.sh"
-
-[tasks."pipelines:parity"]
-description = "Per-jurisdiction matrix across baml_src/, dlt/, orchestration/, cocoindex/. Set PIPELINE_PARITY_STRICT=1 for non-zero exit on missing layers."
-run = "python3 scripts/check_pipeline_parity.py"
-
 [tasks.format]
 description = "Format all Python code with ruff"
+depends = ["sync"]
 run = "uv run ruff format ."
 
-[tasks."py:typecheck"]
-description = "Type check Python code with mypy"
-run = "uv run mypy"
-
-# =============================================================================
-# TypeScript Tasks (delegated to turbo)
-# =============================================================================
-
-[tasks."ts:install"]
-description = "Install all TypeScript dependencies (bun workspaces)"
-run = "bun install"
-
-[tasks."ts:build"]
-description = "Build all TypeScript packages via turbo"
-run = "bunx turbo run build"
-
-[tasks."ts:typecheck"]
-description = "Type check TypeScript code via turbo"
-run = "bunx turbo run typecheck"
-
-[tasks."ts:lint"]
-description = "Lint TypeScript code via turbo"
-run = "bunx turbo run lint"
-
-[tasks."schema:generate"]
-description = "Generate the BIEP v1 lineage registry + Zod/TanStack DB collection schemas (committed artifacts). Per openspec R27 + R30."
-run = "bun run schema:generate"
-
-[tasks."schema:validate"]
-description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts). Per openspec R30."
-run = "bun run schema:validate"
-
-[tasks."codegen:all"]
-description = "Run the full schema-driven codegen pipeline (BAML → Zod → Convex → CopilotKit → AG-UI → per-subject routes) for all 60 subjects × 4 stages. Per openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/ Phase O."
-run = "bun run scripts/schema-codegen/index.ts"
-
-[tasks."codegen:all:dry-run"]
-description = "Dry-run the schema-driven codegen pipeline (preview without writing files). Per Phase O."
-run = "bun run scripts/schema-codegen/index.ts --dry-run"
-
-[tasks."codegen:subject"]
-description = "Run the schema-driven codegen pipeline for one subject (e.g. mise run codegen:subject mathematics). Per Phase O."
-run = "bun run scripts/schema-codegen/index.ts --subject"
-
-[tasks."codegen:stage"]
-description = "Run the schema-driven codegen pipeline for one stage (lc | jc | gcse | a-level). Per Phase O."
-run = "bun run scripts/schema-codegen/index.ts --stage"
-
-[tasks."lineage:validate"]
-description = "CI drift gate for the PDF lineage registry (filesystem walk vs committed registry). Per openspec R27."
-run = "bun run lineage:validate"
-
-[tasks."lineage:smoke"]
-description = "Playwright WASM smoke test for the BIEP v1 lineage viewer. Per openspec R33."
-run = "bun run lineage:smoke"
-
-# =============================================================================
-# Turborepo shortcut
-# =============================================================================
-
-[tasks.turbo]
-description = "Run any turbo task (e.g. 'mise turbo dev')"
-run = "bunx turbo run ${@}"
-
-# =============================================================================
-# Rust Tasks
-# =============================================================================
-# Locket (the Rust secrets-injection sidecar) lives in the bonneagar
-# worktree (bonneagar/locket/). Build / test / clippy commands moved
-# to [tasks."cianfhoghlaim:rs:build"] in the bonneagar section below.
-
-
-# =============================================================================
-# Dagster Tasks (post-v4 + post-Phase-1 consolidation: single canonical alias)
-# =============================================================================
-# The 5 stale aliases (dagster:tuatha, dagster:croilar, dagster:meaisin,
-# dagster:crypteolas, and the old dagster:oideachais) have been collapsed
-# into the single canonical `dagster:dev` alias. The v4 consolidation
-# (2026-06-28) merged all 5 former code-locations into a single Dagster
-# code-location. Phase-1 manifest consolidation (2026-06-30) made
-# `dagster:dev` the canonical name.
-#
-# Per the 2026-07-14 foundation refactor (`openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1`),
-# the canonical code-location module is `orchestration.definitions` (the
-# v7 flattened package layout puts the package root at the repo root, NOT
-# under a `cianfhoghlaim/` sub-directory). The historical
-# `cianfhoghlaim.dagster.definitions` path no longer exists.
-# See openspec/changes/2026-06-30-consolidate-cianfhoghlaim-pyproject-and-8-dirs/
-
-[tasks."dagster:dev"]
-description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann + 12-agent fleet). Loads orchestration.definitions. The live asset + asset_check + job + sensor counts are emitted by `mise run sync:dagster` (Layer 6 — the canonical AST-walk count). Per the 2026-07-30-drift-remediation-everything-bagel-v1 change (the description no longer hardcodes a count)."
-run = "uv run dagster dev -m orchestration.definitions"
-
-# =============================================================================
-# BIEP v3 Tasks (per the 2026-08-09 cross-cutting-docs change)
-# =============================================================================
-
-[tasks."biep:v3:lakehouse:smoke-test"]
-description = "Smoke-test the 5 canonical lakehouse services (Nimtable :3018 + Olake :3901 + LanceDB Viewer :8088 + Lance sidecar :8182 + Lakekeeper :8181) — per the 2026-08-11-biep-v3-lakehouse-population-v1 change"
-run = "python3 scripts/smoke_test_lakehouse.py --dev"
-
-[tasks."biep:v3:registry:seed"]
-description = "Seed the British Isles subject registry (3,780 rows across 8 jurisdictions — per the 2026-08-10 preflight bug-fix + 2026-08-13 dlt→dlt_sources rename)"
-run = "python3 -c \"from dlt_sources.british_isles._cross.registry_loader import seed_registry; print(seed_registry())\""
-
-[tasks."biep:v3:marimo:wasm:export"]
-description = "Export all 7 BIEP v3 jurisdiction dashboards to WebAssembly bundles + manifest"
-run = ".venv/bin/python3 scripts/marimo_wasm_export.py"
-
-[tasks."biep:v3:test-runs:ingest"]
-description = "Wire testRuns.ingest to CI runners (dry-run payload validation)"
-run = ".venv/bin/python3 scripts/test_runs_ingest.py --dry-run"
-
-# BIEP v3 systematic download & iteration (per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change)
-[tasks."biep:v3:m0"]
-description = "BIEP v3 M0 — foundation unblock (lakehouse + BAML + registry + namespace)"
-run = ".venv/bin/python3 scripts/m0_foundation_unblock.py"
-# NOTE: `biep:v3:m-aistear` + `biep:v3:m-primary` were removed in 2026-08-10-marimo-v14-cascading-effects-verification-v1
-# because scripts/m_aistear.py + scripts/m_primary.py do not exist (per the 2026-08-09-biiep-v3-4-stage-ireland-education-rollout-v1 change).
-# Use `biep:v3:aistear:gate` + `biep:v3:primary:gate` (the dual-mode CLI gates) instead.
-[tasks."biep:v3:m1"]
-description = "BIEP v3 M1 — Ireland Leaving Cycle pipeline (12 cohorts, EN+GA)"
-run = ".venv/bin/python3 scripts/m1_ireland_lc.py"
-[tasks."biep:v3:m2"]
-description = "BIEP v3 M2 — Ireland Junior Cycle pipeline (140 cohorts, EN+GA)"
-run = ".venv/bin/python3 scripts/m2_ireland_jc.py"
-[tasks."biep:v3:m3"]
-description = "BIEP v3 M3 — England A-Level pipeline (147 cohorts, AQA + OCR + Edexcel)"
-run = ".venv/bin/python3 scripts/m3_england_a_level.py"
-[tasks."biep:v3:m4"]
-description = "BIEP v3 M4 — England GCSE pipeline (129 cohorts, AQA + OCR + Edexcel)"
-run = ".venv/bin/python3 scripts/m4_england_gcse.py"
-[tasks."biep:v3:gate"]
-description = "BIEP v3 milestone gate — verify the active milestone's 3 asset checks pass"
-run = ".venv/bin/python3 scripts/milestone_gate.py"
-[tasks."biep:v3:lint"]
-description = "BIEP v3 ibis-first contract lint — verify no raw duckdb.connect() in BIEP v3 paths (the BIEP v3 spec mandates ibis-first per the lakehouse_pipeline contract; raw duckdb.connect() is a violation)"
-run = """
-# Scan the BIEP v3 Ireland + England paths for raw duckdb.connect() calls
-# (the BIEP v3 contract is ibis-first per british-isles-education-pipeline-v3/spec.md).
-#
-# 2026-08-08 fix (per issue #153): the previous regex `duckdb[.]connect[(]`
-# matched the substring inside docstring mentions of `ibis.duckdb.connect()`,
-# producing 10 false positives. The new regex `(^|[^a-zA-Z_.])duckdb[.]connect[(]`
-# requires a non-identifier prefix before `duckdb.connect(`, which excludes
-# `ibis.duckdb.connect(`, `my_ibis.duckdb.connect(`, and similar. The
-# `(^|[...])` alternation is needed because grep -E doesn't support
-# lookbehind.
-VIOLATIONS=$(grep -rE "(^|[^a-zA-Z_.])duckdb[.]connect[(]" \
-  orchestration/defs/2_materials/ireland_education/ \
-  orchestration/defs/2_materials/england_education/ \
-  2>/dev/null | wc -l)
-
-if [ "$VIOLATIONS" -gt 0 ]; then
-  echo "ERROR: $VIOLATIONS ibis-first violations found in BIEP v3 Ireland/England paths"
-  echo "       (raw duckdb.connect() instead of ibis.duckdb.connect())"
-  exit 1
-fi
-
-echo "OK: 0 ibis-first violations in BIEP v3 Ireland/England paths"
-"""
-[tasks."biep:v3:filename-validate"]
-description = "BIEP v3 snake_case filename validator — verify every file in s3://garage/cianfhoghlaim/ matches the canonical pattern"
-run = ".venv/bin/python3 scripts/validate_snake_case_filenames.py"
-
-# BIEP v3 marimo v14 features (per the 2026-08-10-marimo-v14-ireland-england-dashboards-refactor-v1 change)
-[tasks."biep:v3:marimo:dev"]
-description = "Open all 6 BIEP v3 jurisdiction dashboards in marimo edit mode (Ireland + England + Aistear + Primary + SCT/WLS/NI + Crown)"
-run = ".venv/bin/python3 -c \"import subprocess, sys; notebooks = ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py']; procs = [subprocess.Popen(['marimo', 'edit', n]) for n in notebooks]; [p.wait() for p in procs]\""
-[tasks."biep:v3:marimo:check"]
-description = "Run marimo check on all 6 BIEP v3 jurisdiction dashboards (validates the marimo v14 refactor: tabbed operator console + LLM tab + RAGAS gauge + dual-mode CLI)"
-run = ".venv/bin/python3 -c \"import subprocess, sys; notebooks = ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py', 'notebooks/00_marimo_patterns_tour.py', 'notebooks/00_biep_v3_dashboard_template.py']; [subprocess.run(['marimo', 'check', n]) for n in notebooks]\""
-[tasks."biep:v3:ireland:gate"]
-description = "BIEP v3 Ireland gate — invoke the M1/M2 asset check via the dual-mode CLI (per https://docs.marimo.io/guides/scripts/)"
-run = "python3 notebooks/19_ireland_pipeline_dashboard.py --milestone m1 --asset-check documents_ingested --output table"
-[tasks."biep:v3:england:gate"]
-description = "BIEP v3 England gate — invoke the M3/M4 asset check via the dual-mode CLI (per https://docs.marimo.io/guides/scripts/)"
-run = "python3 notebooks/20_england_pipeline_dashboard.py --milestone m3 --asset-check documents_ingested --output table"
-[tasks."biep:v3:aistear:gate"]
-description = "BIEP v3 Aistear gate — invoke the M-Aistear asset check via the dual-mode CLI"
-run = "python3 notebooks/26_aistear_dashboard.py --milestone m-aistear --asset-check documents_ingested --output table"
-[tasks."biep:v3:primary:gate"]
-description = "BIEP v3 Primary gate — invoke the M-Primary asset check via the dual-mode CLI"
-run = "python3 notebooks/27_primary_dashboard.py --milestone m-primary --asset-check documents_ingested --output table"
-[tasks."biep:v3:sct-wls-ni:gate"]
-description = "BIEP v3 SCT/WLS/NI gate — invoke the deferred milestone asset check (returns exit code 0 with deferred status)"
-run = "python3 notebooks/21_sct_wls_ni_pipeline_dashboard.py --milestone m5 --asset-check documents_ingested --output json"
-[tasks."biep:v3:crown:gate"]
-description = "BIEP v3 Crown Dependencies gate — invoke the deferred milestone asset check (returns exit code 0 with deferred status)"
-run = "python3 notebooks/22_crown_dependencies_dashboard.py --milestone m7 --asset-check documents_ingested --output json"
-[tasks."biep:v3:marimo:lakehouse:dev"]
-description = "Open all 17 BIEP v3 lakehouse explorers in marimo edit mode (DuckLake + Lakehouse + All Nations + CocoIndex + Marking + Exam Papers + Subject + Leabharlann + E2E + DPRE + Semantic Search)"
-run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')); procs = [subprocess.Popen(['marimo', 'edit', n]) for n in notebooks]; [p.wait() for p in procs]\""
-[tasks."biep:v3:marimo:lakehouse:check"]
-description = "Run marimo check on all 17 BIEP v3 lakehouse explorers (validates the R1+R3+P3+P6 refactor: setup_biep_registry_header + tabbed operator console + LLM tab + dual-mode CLI)"
-run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')); [subprocess.run(['marimo', 'check', n]) for n in notebooks]\""
-[tasks."biep:v3:marimo:all"]
-description = "Run marimo check on every BIEP v3 marimo notebook (17 lakehouse explorers + 6 jurisdiction dashboards + 2 educative = 25 notebooks)"
-run = ".venv/bin/python3 -c \"import subprocess, glob; notebooks = sorted(glob.glob('notebooks/10_biep_pipeline_lakehouse_*.py')) + ['notebooks/19_ireland_pipeline_dashboard.py', 'notebooks/20_england_pipeline_dashboard.py', 'notebooks/21_sct_wls_ni_pipeline_dashboard.py', 'notebooks/22_crown_dependencies_dashboard.py', 'notebooks/23_8_jurisdiction_overview.py', 'notebooks/24_deployment_control_panel.py', 'notebooks/26_aistear_dashboard.py', 'notebooks/27_primary_dashboard.py', 'notebooks/40_leaving_cert_subject_panel.py', 'notebooks/00_marimo_patterns_tour.py', 'notebooks/00_biep_v3_dashboard_template.py']; [subprocess.run(['marimo', 'check', n]) for n in notebooks]; print(f'Checked {len(notebooks)} notebooks')\""
-
-# Tier 3 grouped dashboards (per the 2026-08-10-marimo-v14-tier3-grouped-dashboards-consolidation-v1 change)
-[tasks."biep:v3:marimo:meaisin:dev"]
-description = "Open the meaisin_ops_console grouped dashboard (12-agent fleet operator console — consolidates 60-64)"
-run = "marimo edit notebooks/meaisin_ops_console.py"
-[tasks."biep:v3:marimo:celtic:dev"]
-description = "Open the celtic_languages grouped dashboard (7 Celtic languages — consolidates 06_*)"
-run = "marimo edit notebooks/celtic_languages.py"
-[tasks."biep:v3:marimo:corpus:dev"]
-description = "Open the corpus_overview grouped dashboard (BIEP + Leabharlann corpus — consolidates 12_*)"
-run = "marimo edit notebooks/corpus_overview.py"
-[tasks."biep:v3:marimo:speedrun:dev"]
-description = "Open the speedrun_mmo grouped dashboard (Túatha educational MMO — consolidates 16_*)"
-run = "marimo edit notebooks/speedrun_mmo.py"
-[tasks."biep:v3:marimo:academic:dev"]
-description = "Open the academic_history grouped dashboard (M.Sc. AI 25/26 academic history — consolidates 17_*)"
-run = "marimo edit notebooks/academic_history.py"
-[tasks."biep:v3:marimo:irish_law:dev"]
-description = "Open the irish_law grouped dashboard (Irish legal corpus — consolidates 11_*)"
-run = "marimo edit notebooks/irish_law.py"
-
-# Tier 3 grouped dashboards — marimo check gates (per the 2026-08-10-marimo-v14-cascading-effects-verification-v1 change)
-[tasks."biep:v3:marimo:meaisin:check"]
-description = "Run marimo check on the meaisin_ops_console grouped dashboard (12-agent fleet operator console — consolidates 60-64)"
-run = "uv run marimo check notebooks/meaisin_ops_console.py"
-[tasks."biep:v3:marimo:celtic:check"]
-description = "Run marimo check on the celtic_languages grouped dashboard (7 Celtic languages — consolidates 06_*)"
-run = "uv run marimo check notebooks/celtic_languages.py"
-[tasks."biep:v3:marimo:corpus:check"]
-description = "Run marimo check on the corpus_overview grouped dashboard (BIEP + Leabharlann corpus — consolidates 12_*)"
-run = "uv run marimo check notebooks/corpus_overview.py"
-[tasks."biep:v3:marimo:speedrun:check"]
-description = "Run marimo check on the speedrun_mmo grouped dashboard (Túatha educational MMO — consolidates 16_*)"
-run = "uv run marimo check notebooks/speedrun_mmo.py"
-[tasks."biep:v3:marimo:academic:check"]
-description = "Run marimo check on the academic_history grouped dashboard (M.Sc. AI 25/26 academic history — consolidates 17_*)"
-run = "uv run marimo check notebooks/academic_history.py"
-[tasks."biep:v3:marimo:irish_law:check"]
-description = "Run marimo check on the irish_law grouped dashboard (Irish legal corpus — consolidates 11_*)"
-run = "uv run marimo check notebooks/irish_law.py"
-[tasks."biep:v3:marimo:grouped:check"]
-description = "Run marimo check on ALL 7 Tier 3 grouped dashboards + sync_health in one go"
-run = ".venv/bin/python3 -c \"import subprocess; [\n  subprocess.call(['uv', 'run', 'marimo', 'check', n])\n  for n in [\n    'notebooks/meaisin_ops_console.py',\n    'notebooks/celtic_languages.py',\n    'notebooks/corpus_overview.py',\n    'notebooks/speedrun_mmo.py',\n    'notebooks/academic_history.py',\n    'notebooks/irish_law.py',\n    'notebooks/sync_health.py',\n  ]\n]\""
-
-# Tier 4 sync health (per the 2026-08-10-marimo-v14-sync-health-dashboard-consolidation-v1 change)
-[tasks."biep:v3:marimo:sync:dev"]
-description = "Open the sync_health grouped dashboard (11 sync layer health — consolidates 14/15/25/26/27/28/29/30)"
-run = "marimo edit notebooks/sync_health.py"
-[tasks."biep:v3:marimo:sync:check"]
-description = "Run marimo check on the sync_health grouped dashboard (11 sync layer health)"
-run = "uv run marimo check notebooks/sync_health.py"
-
-# meaisinfhoghlaim v3 operator surface
-[tasks."meaisin:v3:setup"]
-description = "meaisinfhoghlaim v3 full setup — Python + CUDA + 24-model registry + HF watchdog + OCR harness + 4 openspec changes + lint:skills"
-run = ".venv/bin/python3 scripts/meaisin_v3_setup.py"
-[tasks."meaisin:v3:status"]
-description = "meaisinfhoghlaim v3 full status — 24-model registry + 7 converters + RAGAS ensemble + 12 agents + mise tasks + openspec changes"
-run = ".venv/bin/python3 scripts/meaisin_v3_status.py"
-
-# 24 OCR/VLM model entrypoint tasks
-[tasks."meaisin:ocr:test:deepseek-ocr-2"]
-description = "meaisinfhoghlaim OCR entrypoint for deepseek-ocr-2"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_deepseek_ocr_2_extract.py"
-[tasks."meaisin:ocr:test:docling-serve"]
-description = "meaisinfhoghlaim OCR entrypoint for docling-serve"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_docling_serve_extract.py"
-[tasks."meaisin:ocr:test:dots-ocr"]
-description = "meaisinfhoghlaim OCR entrypoint for dots-ocr"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_dots_ocr_extract.py"
-[tasks."meaisin:ocr:test:gemma-3-4b"]
-description = "meaisinfhoghlaim OCR entrypoint for gemma-3-4b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_gemma_3_4b_extract.py"
-[tasks."meaisin:ocr:test:glm-4.6v-flash"]
-description = "meaisinfhoghlaim OCR entrypoint for glm-4.6v-flash"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_glm_4.6v_flash_extract.py"
-[tasks."meaisin:ocr:test:internvl3-8b"]
-description = "meaisinfhoghlaim OCR entrypoint for internvl3-8b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_internvl3_8b_extract.py"
-[tasks."meaisin:ocr:test:llama-3.2-vision-11b"]
-description = "meaisinfhoghlaim OCR entrypoint for llama-3.2-vision-11b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_llama_3.2_vision_11b_extract.py"
-[tasks."meaisin:ocr:test:molmo2-4b"]
-description = "meaisinfhoghlaim OCR entrypoint for molmo2-4b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_molmo2_4b_extract.py"
-[tasks."meaisin:ocr:test:molmo2-8b"]
-description = "meaisinfhoghlaim OCR entrypoint for molmo2-8b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_molmo2_8b_extract.py"
-[tasks."meaisin:ocr:test:olmocr-2-7b-1025"]
-description = "meaisinfhoghlaim OCR entrypoint for olmocr-2-7b-1025"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_olmocr_2_7b_1025_extract.py"
-[tasks."meaisin:ocr:test:paddleocr-vl-1.6"]
-description = "meaisinfhoghlaim OCR entrypoint for paddleocr-vl-1.6"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_paddleocr_vl_1.6_extract.py"
-[tasks."meaisin:ocr:test:qwen3-vl-30b-a3b"]
-description = "meaisinfhoghlaim OCR entrypoint for qwen3-vl-30b-a3b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3_vl_30b_a3b_extract.py"
-[tasks."meaisin:ocr:test:qwen3-vl-4b"]
-description = "meaisinfhoghlaim OCR entrypoint for qwen3-vl-4b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3_vl_4b_extract.py"
-[tasks."meaisin:ocr:test:qwen3-vl-8b"]
-description = "meaisinfhoghlaim OCR entrypoint for qwen3-vl-8b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3_vl_8b_extract.py"
-[tasks."meaisin:ocr:test:qwen3.6-27b-mtp"]
-description = "meaisinfhoghlaim OCR entrypoint for qwen3.6-27b-mtp"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_qwen3.6_27b_mtp_extract.py"
-[tasks."meaisin:ocr:test:uccix-llama-3.1-8b"]
-description = "meaisinfhoghlaim OCR entrypoint for uccix-llama-3.1-8b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_uccix_llama_3.1_8b_extract.py"
-[tasks."meaisin:ocr:test:uccix-llama2-13b"]
-description = "meaisinfhoghlaim OCR entrypoint for uccix-llama2-13b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_uccix_llama2_13b_extract.py"
-[tasks."meaisin:ocr:test:uccix-mistral-24b"]
-description = "meaisinfhoghlaim OCR entrypoint for uccix-mistral-24b"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_uccix_mistral_24b_extract.py"
-[tasks."meaisin:ocr:test:unstract-api"]
-description = "meaisinfhoghlaim OCR entrypoint for unstract-api"
-run = "uv run python scripts/meaisin_ocr_htr_tests/ocr_model_unstract_api_extract.py"
-
-# 7 document converter entrypoint tasks
-[tasks."meaisin:converter:test:docling"]
-description = "meaisinfhoghlaim converter entrypoint for docling"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_docling_extract.py"
-[tasks."meaisin:converter:test:marker"]
-description = "meaisinfhoghlaim converter entrypoint for marker"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_marker_extract.py"
-[tasks."meaisin:converter:test:unstructured"]
-description = "meaisinfhoghlaim converter entrypoint for unstructured"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_unstructured_extract.py"
-[tasks."meaisin:converter:test:deepseekocr"]
-description = "meaisinfhoghlaim converter entrypoint for deepseekocr"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_deepseekocr_extract.py"
-[tasks."meaisin:converter:test:pymupdf4llm"]
-description = "meaisinfhoghlaim converter entrypoint for pymupdf4llm"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_pymupdf4llm_extract.py"
-[tasks."meaisin:converter:test:curriculum_document"]
-description = "meaisinfhoghlaim converter entrypoint for curriculum_document"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_curriculum_document_extract.py"
-[tasks."meaisin:converter:test:pdf_factory"]
-description = "meaisinfhoghlaim converter entrypoint for pdf_factory"
-run = "uv run python scripts/meaisin_ocr_htr_tests/converter_pdf_factory_extract.py"
-
-# 12 agent entrypoint tasks
-[tasks."meaisin:agent:test:root"]
-description = "meaisinfhoghlaim Agent entrypoint for root"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_root_extract.py"
-[tasks."meaisin:agent:test:curriculum"]
-description = "meaisinfhoghlaim Agent entrypoint for curriculum"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_curriculum_extract.py"
-[tasks."meaisin:agent:test:translation"]
-description = "meaisinfhoghlaim Agent entrypoint for translation"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_translation_extract.py"
-[tasks."meaisin:agent:test:corpus"]
-description = "meaisinfhoghlaim Agent entrypoint for corpus"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_corpus_extract.py"
-[tasks."meaisin:agent:test:geospatial"]
-description = "meaisinfhoghlaim Agent entrypoint for geospatial"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_geospatial_extract.py"
-[tasks."meaisin:agent:test:statistics"]
-description = "meaisinfhoghlaim Agent entrypoint for statistics"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_statistics_extract.py"
-[tasks."meaisin:agent:test:research"]
-description = "meaisinfhoghlaim Agent entrypoint for research"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_research_extract.py"
-[tasks."meaisin:agent:test:curriculum_comparison"]
-description = "meaisinfhoghlaim Agent entrypoint for curriculum_comparison"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_curriculum_comparison_extract.py"
-[tasks."meaisin:agent:test:bunchloch_research"]
-description = "meaisinfhoghlaim Agent entrypoint for bunchloch_research"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_bunchloch_research_extract.py"
-[tasks."meaisin:agent:test:ag_ui_curriculum"]
-description = "meaisinfhoghlaim Agent entrypoint for ag_ui_curriculum"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_ag_ui_curriculum_extract.py"
-[tasks."meaisin:agent:test:site_analysis"]
-description = "meaisinfhoghlaim Agent entrypoint for site_analysis"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_site_analysis_extract.py"
-[tasks."meaisin:agent:test:hitl_agent"]
-description = "meaisinfhoghlaim Agent entrypoint for hitl_agent"
-run = "uv run python scripts/meaisin_ocr_htr_tests/agent_hitl_agent_extract.py"
-
-# Per-jurisdiction entries (the 6 deferred jurisdictions)
-[tasks."biep:v3:m5"]
-description = "BIEP v3 M5 — Scotland pipeline (150 cohorts, SQA × 3 levels)"
-run = ".venv/bin/python3 scripts/m5_scotland.py"
-[tasks."biep:v3:m6"]
-description = "BIEP v3 M6 — Wales pipeline (160 cohorts, WJEC × 2 levels)"
-run = ".venv/bin/python3 scripts/m6_wales.py"
-[tasks."biep:v3:m7"]
-description = "BIEP v3 M7 — Northern Ireland pipeline (70 cohorts, CCEA × 2 levels)"
-run = ".venv/bin/python3 scripts/m7_northern_ireland.py"
-[tasks."biep:v3:m8"]
-description = "BIEP v3 M8 — Jersey pipeline (120 cohorts, 30 subjects × 4 levels)"
-run = ".venv/bin/python3 scripts/m8_jersey.py"
-[tasks."biep:v3:m9"]
-description = "BIEP v3 M9 — Guernsey pipeline (120 cohorts, 30 subjects × 4 levels)"
-run = ".venv/bin/python3 scripts/m9_guernsey.py"
-[tasks."biep:v3:m10"]
-description = "BIEP v3 M10 — Isle of Man pipeline (120 cohorts, 30 subjects × 4 levels)"
-run = ".venv/bin/python3 scripts/m10_isle_of_man.py"
-
-# Scanner entries
-[tasks."biep:v3:filesystem:monthly:sync"]
-description = "BIEP v3 filesystem monthly sync — runs the 11 canonical filesystem DLT sources + writes the monthly sync status"
-run = ".venv/bin/python3 motherduck/flights/filesystem_monthly_sync_flight.py"
-[tasks."biep:v3:language:monthly:sync"]
-description = "BIEP v3 language monthly sync — runs the 19 canonical language DLT sources + writes the monthly sync status"
-run = ".venv/bin/python3 motherduck/flights/language_monthly_sync_flight.py"
-
-# Operator surface (Phase 5)
-[tasks."biep:v3:setup"]
-description = "BIEP v3 full setup — Docker + lakehouse stack + BAML codegen + registry seed + lance namespace + openspec validate + lint:skills"
-run = ".venv/bin/python3 scripts/biiep_v3_setup.py"
-[tasks."biep:v3:status"]
-description = "BIEP v3 full status — lakehouse health + registry count + BAML codegen + asset count + MotherDuck Dive + Flight status"
-run = ".venv/bin/python3 scripts/biiep_v3_status.py"
-
-# =============================================================================
-# Cianfhoghlaim Consolidated Tasks (post-Phase-1 2026-06-30)
-# =============================================================================
-# The `cic:` namespace wraps the consolidated cianfhoghlaim CLI surface:
-#   cic:               top-level (sync, lint, test, typecheck, build)
-#   cic:ocr:           OCR/VLM registry, evaluation harness, adapters
-#   cic:baml:          BAML extraction + client regeneration
-#   cic:cocoindex:     14 v1 CocoIndex Apps + conformance
-#   cic:dagster:       DAG orchestration (alias of dagster:dev)
-#   cic:dlt:           DLT pipelines (dev / staging / prod targets)
-#   cic:meaisin:       Meaisínfhoghlaim registry + HF watchdog + LiteLLM regen
-#   cic:browser:       sruth-browser stack (Bonneagar)
-# All `cic:*` tasks delegate to the consolidated `cianfhoghlaim` CLI entry-points.
-
-[tasks.cic]
-description = "Top-level cianfhoghlaim consolidated tasks"
-run = "uv run cianfhoghlaim --help"
-
-[tasks."cic:sync"]
-description = "Sync the cianfhoghlaim package (alias of sync — `--all-extras` was a no-op, no [project.optional-dependencies] table exists)"
-run = "mise run sync"
-
-[tasks."cic:lint"]
-description = "Aggregate lint gate (alias of lint — was ruff-only, silently skipping the skills-metadata + centralized-registry checks the real gate runs)"
-run = "mise run lint"
-
-[tasks."cic:test"]
-description = "Run pytest on the cianfhoghlaim package (alias of test)"
-run = "mise run test"
-
-[tasks."cic:typecheck"]
-description = "Type-check cianfhoghlaim Python code with mypy (alias of py:typecheck)"
-run = "mise run py:typecheck"
-
-[tasks."cic:build"]
-description = "Build the consolidated cianfhoghlaim wheel"
-run = "uv build --package cianfhoghlaim"
-
-[tasks."cic:ocr:test"]
-description = "Run pytest on the OCR evaluation harness (tests/test_model_registry.py — no dedicated OCR/VLM registry test exists yet)"
-run = "uv run pytest tests/test_model_registry.py || echo 'No dedicated OCR/VLM registry test exists yet — see tests/test_model_registry.py for the closest coverage.'"
-
-[tasks."cic:ocr:eval"]
-description = "Run the Celtic OCR evaluation harness (multi-backend comparison)"
-run = ".venv/bin/python3 -m meaisinfhoghlaim.cli eval --backend mlx"
-
-[tasks."cic:ocr:registry-lint"]
-description = "Verify all v4 VISION_MODELS are live on HF Hub"
-run = ".venv/bin/python3 scripts/verify_hf_hub_audit.py --strict"
-
-[tasks."cic:baml:generate"]
-description = "Regenerate the baml_client/ Python module from baml_src/ (alias of baml:generate — was missing the baml_src/baml.toml guard and the --from baml_src flag)"
-run = "mise run baml:generate"
-
-[tasks."cic:baml:test"]
-description = "Run baml-cli test (alias of baml:test)"
-run = "mise run baml:test"
-
-[tasks."cic:baml:lint"]
-description = "Lint all 56+ .baml schema files for consistency"
-run = ".venv/bin/python3 -c 'import pathlib; [print(p) for p in pathlib.Path(\"baml\").glob(\"*.baml\")]' | wc -l"
-
-[tasks."cic:cocoindex:index"]
-description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (alias of ccc:v1:index)"
-run = "uv run cocoindex update cocoindex_flows.infrastructure.codebase_indexing:CodebaseIndex"
-
-[tasks."cic:cocoindex:conformance"]
-description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract (R1-R4)"
-run = ".venv/bin/python3 -c 'import asyncio; from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
-
-[tasks."cocoindex:conformance"]
-description = "Run the cocoindex_v1_migrate.py audit (R1-R4). Exits 1 on any violation. This is the CI gate (faster than the v1 App itself)."
-run = ".venv/bin/python3 dlt_sources/common/cocoindex_v1_migrate.py --check-only"
-
-[tasks."cic:cocoindex:leabharlann-books"]
-description = "Index the leabharlann books corpus via the v1 leabharlann_books_embedding App"
-run = "uv run cocoindex update cocoindex_flows.corpus.leabharlann_embedding:LeabharlannBooksEmbedding"
-
-[tasks."cic:cocoindex:leabharlann-zotero"]
-description = "Index the leabharlann zotero corpus via the v1 leabharlann_zotero_embedding App"
-run = "uv run cocoindex update cocoindex_flows.corpus.leabharlann_embedding:LeabharlannZoteroEmbedding"
-
-[tasks."cic:cocoindex:leabharlann-takeout"]
-description = "Index the leabharlann takeout corpus via the v1 leabharlann_takeout_embedding App"
-run = "uv run cocoindex update cocoindex_flows.corpus.leabharlann_embedding:LeabharlannTakeoutEmbedding"
-
-[tasks."cic:dagster:dev"]
-description = "Launch Dagster UI on :3000 (alias of dagster:dev)"
-run = "mise run dagster:dev"
-
-[tasks."cic:dagster:list-assets"]
-description = "List all 199 Dagster assets"
-run = ".venv/bin/python3 -m orchestration.cli list-assets"
-
-[tasks."cic:dagster:materialise-leabharlann"]
-description = "Materialise the 19 leabharlann Dagster assets (books + zotero + takeout + cognify + inbox + demos)"
-run = ".venv/bin/python3 -m orchestration.cli materialise-leabharlann"
-
-[tasks."cic:dlt:dev-pipeline"]
-description = "Run an author-archive dlt pipeline against the local DuckDB target (DEV)"
-run = ".venv/bin/python3 -m dlt_sources.cli run-pipeline --target dev"
-
-[tasks."cic:dlt:staging-pipeline"]
-description = "Run an author-archive dlt pipeline against the MotherDuck staging target"
-run = ".venv/bin/python3 -m dlt_sources.cli run-pipeline --target staging"
-
-[tasks."cic:dlt:prod-pipeline"]
-description = "Run an author-archive dlt pipeline against the Garage S3 + Lakekeeper prod target"
-run = ".venv/bin/python3 -m dlt_sources.cli run-pipeline --target prod"
-
-[tasks."cic:meaisin:registry-audit"]
-description = "One-shot HF Hub liveness check on all 24 v4 VISION_MODELS (alias of hf:verify-ocr-registry)"
-run = "mise run hf:verify-ocr-registry"
-
-[tasks."cic:meaisin:hf-watchdog"]
-description = "Start the daily HF Hub liveness watchdog (cron-style)"
-run = "mise run hf:watchdog:up"
-
-[tasks."cic:meaisin:litellm-regenerate"]
-description = "Regenerate litellm/config/config.yaml from the v4 VISION_MODELS registry"
-run = "mise run litellm:regenerate"
-
-[tasks."cic:browser:up"]
-description = "Start the sruth-browser stack (Bonneagar; serves 5 backends at the canonical ports)"
-run = "docker compose -f bonneagar/stacks/browser/compose.yaml up -d"
-
-[tasks."cic:browser:down"]
-description = "Stop the sruth-browser stack"
-run = "docker compose -f bonneagar/stacks/browser/compose.yaml down"
-
-[tasks."cic:browser:tests"]
-description = "Run the sruth-browser pytest suite (4 test files + 1 conformant __init__)"
-run = "uv run pytest bonneagar/stacks/browser/tests/"
-
-[tasks."cic:stack-doctor"]
-description = "Validate all 89 Docker Compose stacks under bonneagar/stacks/ against the 6-file GOLD_STANDARD pattern (the canonical CI gate; was 'cic:stack-doctor:validate 94 stacks' pre-v7)"
-run = "bash scripts/stack-doctor.sh ${@:-}"
-
-# Per-package test runners
-[tasks."test:codeolas"]
-description = "Run pytest on the códeolas library"
-run = "uv run pytest libraries/codeolas/tests/"
-
-[tasks."test:ocr"]
-description = "Run pytest on the OCR evaluation harness (11 vision × 4 classical)"
-run = "uv run pytest ocr/evaluation/"
-
-# =============================================================================
-# llama-swap Tasks (v4 OCR/VLM registry)
-# =============================================================================
-# Per openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
-# The llama-swap service serves the v4 Unsloth GGUFs at :8080.
-# Use these tasks to manage the stack locally.
-
-[tasks."llama-swap:up"]
-description = "Start the llama-swap service (serves v4 Unsloth GGUFs at :8080)"
-run = "docker compose -f bonneagar/stacks/llama-swap/compose.yaml up -d"
-
-[tasks."llama-swap:down"]
-description = "Stop the llama-swap service"
-run = "docker compose -f bonneagar/stacks/llama-swap/compose.yaml down"
-
-[tasks."llama-swap:logs"]
-description = "Tail the llama-swap service logs"
-run = "docker logs -f llama-swap"
-
-[tasks."llama-swap:download-models"]
-description = "Download all v4 Unsloth GGUFs to stedding/huggingface/gguf/ (5-50 GB; run once per machine)"
-run = "python scripts/download_unsloth_models.py"
-
-# NEW in 2026-07-03: download the 4 MLX-only checkpoints (served by mlx-omni :10240)
-[tasks."llama-swap:download-mlx"]
-description = "Download the 4 v4 MLX-only checkpoints to stedding/huggingface/mlx-community/ (granite-docling, dots-ocr, deepseek-ocr-2, gemma-4-E2B)"
-run = "python scripts/download_mlx_models.py"
-
-# NEW in 2026-07-03: dry-run variant (CI-friendly; prints the 14 Unsloth + 4 MLX targets without downloading)
-[tasks."llama-swap:download-models:dry-run"]
-description = "List the 13 v4 Unsloth + 4 MLX targets without actually downloading"
-run = "python scripts/download_unsloth_models.py --dry-run && python scripts/download_mlx_models.py --dry-run"
-
-[tasks."llama-swap:health"]
-description = "Healthcheck the llama-swap service (curl http://localhost:8080/v1/models)"
-run = "curl -s http://localhost:8080/v1/models | python -m json.tool"
-
-# =============================================================================
-# HF Watchdog Tasks (v4 OCR/VLM registry liveness check)
-# =============================================================================
-# Per openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
-# Verifies all 26 VISION_MODELS IDs are live on the HF Hub.
-
-[tasks."hf:verify-ocr-registry"]
-description = "One-shot HF Hub liveness check on all 26 v4 VISION_MODELS (CI-friendly)"
-run = "python scripts/verify_hf_hub_audit.py --strict"
-
-[tasks."hf:watchdog:up"]
-description = "Start the daily HF Hub liveness watchdog (cron-style) — see bonneagar/stacks/ci/hf-watchdog/compose.yaml"
-run = "(cd bonneagar && docker compose -f stacks/ci/hf-watchdog/compose.yaml up -d) || echo 'hf-watchdog compose not found — added to the Stack Migrator backlog.'"
-
-[tasks."hf:watchdog:down"]
-description = "Stop the HF Hub liveness watchdog (bonneagar)"
-run = "(cd bonneagar && docker compose -f stacks/ci/hf-watchdog/compose.yaml down) || true"
-
-[tasks."litellm:regenerate"]
-description = "Regenerate the litellm/config/config.yaml from the v4 VISION_MODELS registry (Phase 2 of the deployment plan)"
-run = "PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml"
-
-[tasks."litellm:validate"]
-description = "Validate the litellm/config/config.yaml structure (count models, check aliases)"
-run = "python scripts/validate_litellm_config.py"
-
-# =============================================================================
-# Dagger CI/CD Tasks
-# =============================================================================
-# Dagger moved to the bonneagar worktree under `bonneagar/dagger/`. The
-# cianfhoghlaim-side aliases below now `cd` into the worktree first so
-# the orchestrator can find its source repository and pre-built modules.
-
-[tasks."dagger:ci"]
-description = "Run the full Dagger test pipeline (lint + typecheck + unit across all 3 pipelines)"
-run = """
-cd bonneagar/dagger
-dagger call test-all --source ../..
-"""
-
-[tasks."dagger:test-python"]
-description = "Run Dagger test pipeline scoped to the Python uv workspace"
-run = """
-cd bonneagar/dagger
-dagger call test-all --source ../.. 2>&1 | grep -E "ruff|mypy|pytest|DataPipeline"
-"""
-
-[tasks."dagger:test-typescript"]
-description = "Run Dagger test pipeline scoped to the bun workspaces"
-run = """
-cd bonneagar/dagger
-dagger call test-all --source ../.. 2>&1 | grep -E "bun|turbo|eslint|tsc|WebPipeline"
-"""
-
-[tasks."dagger:build-images"]
-description = "Build + publish the 3 pipeline images to ghcr.io/cianfhoghlaim"
-run = """
-cd bonneagar/dagger
-dagger call build-images --source ../.. \
-  --registry=ghcr.io/cianfhoghlaim \
-  --tag=$(git rev-parse --short HEAD)
-"""
-
-[tasks."dagger:deploy-cloudflare"]
-description = "Build + deploy the web pipeline to staging (Cloudflare Pages + Komodo)"
-run = """
-cd bonneagar/dagger
-dagger call deploy --source ../.. --environment=staging
-"""
-
-# =============================================================================
-# Documentation Tasks
-# =============================================================================
-
-[tasks."docs:dev"]
-description = "Start Docusaurus dev server (if present)"
-run = "if [ -d docs-site ]; then bun --cwd docs-site run start; else echo 'No docs-site/ present — skipping.'; fi"
-
-[tasks."docs:build"]
-description = "Build Docusaurus site (if present)"
-run = "if [ -d docs-site ]; then bun --cwd docs-site run build; else echo 'No docs-site/ present — skipping.'; fi"
-
-[tasks."docs:serve"]
-description = "Serve built Docusaurus site (if present)"
-run = "if [ -d docs-site ]; then bun --cwd docs-site run serve; else echo 'No docs-site/ present — skipping.'; fi"
-
-# =============================================================================
-# Infrastructure Tasks (moved to bonneagar)
-# =============================================================================
-# All canonical infrastructure tasks now live in the bonneagar worktree
-# (`bonneagar/mise.toml`). The cianfhoghlaim-side aliases below forward
-# into the worktree so they remain available from the monorepo root.
-
-[tasks."stack:up"]
-description = "Start a Docker stack (bonneagar)"
-run = "cd bonneagar && ./scripts/stack.sh ${1} up -d"
-
-[tasks."stack:down"]
-description = "Stop a Docker stack (bonneagar)"
-run = "cd bonneagar && ./scripts/stack.sh ${1} down"
-
-[tasks."stack:logs"]
-description = "View Docker stack logs (bonneagar)"
-run = "cd bonneagar && ./scripts/stack.sh ${1} logs -f"
-
-[tasks."pulumi:up"]
-description = "Deploy with Pulumi (bonneagar)"
-run = "cd bonneagar/pulumi/${1} && pulumi up"
-
-[tasks."pulumi:preview"]
-description = "Preview Pulumi changes (bonneagar)"
-run = "cd bonneagar/pulumi/${1} && pulumi preview"
-
-# =============================================================================
-# Secret management (Infisical + Locket + Komodo + Pangolin)
-# =============================================================================
-
-[tasks."secrets:env"]
-description = "Create the dev-baile environment in Infisical"
-run = "bun run scripts/create-env.ts"
-
-[tasks."secrets:init"]
-description = "Sync .env secrets into Infisical vault"
-run = "bun run scripts/init-vault.ts"
-
-[tasks."sops:encrypt"]
-description = "Encrypt .env with SOPS + age key for git-safe backup"
-run = "sops encrypt --age age1ucuy60fykra7p49x8qx9lha9qsv444fy4vkckupv8nupat0jg5nscdgnkr .env > .env.enc"
-
-[tasks."sops:decrypt"]
-description = "Decrypt .env.enc back to .env"
-run = "sops decrypt --age-key-file ~/.ssh/croilar-sops-key.txt .env.enc > .env"
-
-[tasks."sops:edit"]
-description = "Edit .env.enc in place"
-run = "sops .env.enc"
-
-[tasks."secrets:sync"]
-description = "Re-sync the Infisical vault (alias of secrets:init)"
-run = "mise run secrets:init"
-
-[tasks."locket:exec"]
-description = "Inject secrets via Locket sidecar and run a command"
-run = "locket exec -- ${@}"
-
-[tasks."komodo:sync"]
-description = "Trigger Komodo to re-sync all stacks from Forgejo"
-run = "komodo sync || echo 'komodo CLI not in PATH; trigger via Komodo UI.'"
-
-[tasks."pangolin:check"]
-description = "Verify Pangolin tunnel health"
-run = "pangolin health-check || echo 'pangolin CLI not in PATH; check via Pangolin UI.'"
-
-[tasks."preflight-arm-oci"]
-description = "Pre-flight gate (Pangolin + Komodo + Infisical health + namespace isolation) before any arm-oci stack deploy"
-run = "bun run scripts/preflight-arm-oci.ts ${@:-}"
-
-[tasks."iac-bootstrap"]
-description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt -> all syncs)"
-run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
-
-[tasks."iac-bootstrap-pangolin-client"]
-description = "Idempotent: install the pangolin CLI + mint a Pangolin machine client + render the newt compose (per the 2026-08-15 openspec change)"
-run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
-
-[tasks."iac-plan"]
-description = "IaC diff: declared vs actual state (no mutation)"
-run = "bun run --cwd bonneagar iac:plan ${@:-}"
-
-[tasks."iac-health"]
-description = "IaC health check: verify Komodo + Pangolin + Infisical state is consistent"
-run = "bun run --cwd bonneagar iac:health ${@:-}"
-
-# -----------------------------------------------------------------------------
-# Colon-name aliases for the hyphenated IaC tasks (so docs that say
-# `mise run iac:bootstrap` and `mise run preflight:arm-oci` work too).
-# -----------------------------------------------------------------------------
-
-[tasks."iac:bootstrap"]
-description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt -> all syncs). Same command as iac-bootstrap (docs use the colon form; the hyphenated form is kept for bonneagar/AGENTS.md + openspec references)."
-run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
-
-[tasks."iac:bootstrap-pangolin-client"]
-description = "Idempotent: install the pangolin CLI + mint a Pangolin machine client + render the newt compose. Same command as iac-bootstrap-pangolin-client (docs use the colon form)."
-run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
-
-[tasks."iac:plan"]
-description = "IaC diff: declared vs actual state (no mutation). Same command as iac-plan (docs use the colon form; the hyphenated form is kept for bonneagar/AGENTS.md + openspec references)."
-run = "bun run --cwd bonneagar iac:plan ${@:-}"
-
-[tasks."iac:health"]
-description = "IaC health check: verify Komodo + Pangolin + Infisical state is consistent. Same command as iac-health (docs use the colon form; the hyphenated form is kept for bonneagar/AGENTS.md + an active openspec change)."
-run = "bun run --cwd bonneagar iac:health ${@:-}"
-
-[tasks."iac:deploy"]
-description = "Deploy the 30 key stacks end-to-end (alias for bun run --cwd bonneagar iac:deploy)"
-run = "bun run --cwd bonneagar iac:deploy ${@:-}"
-
-[tasks."iac:teardown"]
-description = "Reverse of iac:bootstrap (requires --force)"
-run = "bun run --cwd bonneagar iac:teardown ${@:-}"
-
-[tasks."preflight:arm-oci"]
-description = "Pre-flight gate (Pangolin + Komodo + Infisical health + namespace isolation) before any arm-oci stack deploy. Same command as preflight-arm-oci (docs use the colon form; the hyphenated form is kept for scripts/deploy-full.ts + AGENTS.md + openspec references)."
-run = "bun run scripts/preflight-arm-oci.ts ${@:-}"
-
-[tasks."dagster:oideachais"]
-description = "Alias for dagster:dev (the historical code-location name)"
-run = "mise run dagster:dev ${@:-}"
-
-[tasks."validate-stacks"]
-description = "Validate all 89 stacks against the 6-file GOLD_STANDARD (alias for cic:stack-doctor)"
-run = "mise run cic:stack-doctor ${@:-}"
-
-[tasks."baml:cli-test"]
-description = "Hard BAML test gate (alias for baml:test)"
-run = "mise run baml:test ${@:-}"
-
-[tasks."notebook:list"]
-description = "List all 105 active marimo notebooks"
-run = ".venv/bin/python3 notebooks/cli.py list 2>/dev/null || echo 'notebooks/cli.py broken — see notebooks/README.md'"
-
-[tasks."notebook:control-panel"]
-description = "Open the Cianfhoghlaim 5-tab deployment control panel marimo notebook (Models, Pipelines, Datasets, Stacks, Registry). Reads/writes deployment-choice.yaml. See openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/"
-run = "marimo edit notebooks/00_control_panel.py"
-
-[tasks."notebook:smoke"]
-description = "Smoke-test the canonical nb_utils helpers"
-run = ".venv/bin/python3 -c \"from notebooks.nb_utils import connect_biep_lakehouse, BIEP_SUBJECTS, lc_subject_query; print('OK:', len(BIEP_SUBJECTS), 'BIEP subjects,', lc_subject_query.__name__, 'ready')\""
-
-[tasks."models:list"]
-description = "List every MODEL_REGISTRY entry (the unified model registry). Part of the `centralized-model-registry` capability."
-run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY; [print(f'  {e.family:12s} {e.role:18s} {e.key:40s} {e.display_name}') for e in MODEL_REGISTRY.entries()]; s = MODEL_REGISTRY.summary(); print(f'\\nTotal: {s[\\\"total\\\"]} entries ({s[\\\"available\\\"]} available, {s[\\\"deprecated\\\"]} deprecated)')\""
-
-[tasks."models:count"]
-description = "Print the MODEL_REGISTRY entry count by family (informational)."
-run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY; s = MODEL_REGISTRY.summary(); [print(f'  {fam:12s} {count:3d}') for fam, count in s['by_family'].items()]; print(f'  {\\\"TOTAL\\\":12s} {s[\\\"total\\\"]:3d}')\""
-
-[tasks."motherduck:list-dives"]
-description = "List all 53 MotherDuck Dives"
-run = ".venv/bin/python3 -c \"from motherduck import BIEP_DIVES; [print(' -', d.name) for d in BIEP_DIVES]; print('BIEP v1: ', len(BIEP_DIVES), 'dives')\""
-
-[tasks."motherduck:list-flights"]
-description = "List all BIEP v3 Flights from flights/config.yaml"
-run = ".venv/bin/python3 -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
-
-[tasks."bring-up:smoke-test"]
-description = "5-step bring-up smoke test for a fresh operator (per bonneagar/README.md 'Quick start' section)"
-run = "bash scripts/bring-up-smoke-test.sh"
-
-[tasks."sync:dagster"]
-description = "Layer 6: validate Dagster definitions via AST parsing + per-group breakdown and include results in the unified sync report"
-run = "bash scripts/sync/dagster.sh"
-
-# -----------------------------------------------------------------------------
-# BAML Schema Sync Loop — the 7th sync layer (per 2026-08-15-baml-sync-loop-v1)
-# Layer 7 covers the 320 .baml files (558 functions + 838 classes + 288
-# enums + 33 LLM clients). The orchestrator runs 5 sub-layers.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:baml-drift"]
-description = "BAML Layer 1: detect reference + syntax drift in the 320 .baml files"
-run = "bash scripts/sync/baml-drift.sh"
-
-[tasks."sync:baml-ccc"]
-description = "BAML Layer 2: append the 22nd CCC concept guide (baml-function-search) + reindex"
-run = "bash scripts/sync/baml-ccc.sh"
-
-[tasks."sync:baml-cognee"]
-description = "BAML Layer 3: ingest the 320 .baml files into the 11th Cognee cluster (baml_schemas)"
-run = "bash scripts/sync/baml-cognee.sh"
-
-[tasks."sync:baml-test"]
-description = "BAML Layer 4: run baml-cli test on the 11 test blocks"
-run = "bash scripts/sync/baml-test.sh"
-
-[tasks."sync:baml-lint"]
-description = "BAML Layer 5: BAML lint gate (client references + model drift)"
-run = "bash scripts/sync/baml-lint.sh"
-
-[tasks."sync:baml"]
-description = "BAML orchestrator: runs sync:baml-drift + sync:baml-ccc + sync:baml-cognee + sync:baml-test + sync:baml-lint in sequence + writes a unified report"
-run = """
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/baml-all-$(date +%Y-%m-%d).md"
-{
-  echo "# BAML Schema Sync — Full Report"
-  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-15-baml-sync-loop-v1 change (Layer 7)."
-  echo ""
-  echo "---"
-  echo ""
-} > "$REPORT"
-for layer in drift ccc cognee test lint; do
-  echo "## Sub-layer: sync:baml:$layer" >> "$REPORT"
-  echo '```' >> "$REPORT"
-  bash "scripts/sync/baml-$layer.sh" >> "$REPORT" 2>&1
-  echo '```' >> "$REPORT"
-  echo "" >> "$REPORT"
-done
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "All 5 BAML sub-layers completed."
-} >> "$REPORT"
-cat "$REPORT"
-"""
-
-# -----------------------------------------------------------------------------
-# Stacks Sync Loop — the 8th sync layer (per 2026-08-15-stacks-sync-loop-v1)
-# Layer 8 covers the 89 Docker Compose stacks at bonneagar/stacks/ + the
-# 6-file GOLD_STANDARD pattern. The orchestrator runs 5 sub-layers.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:stacks-drift"]
-description = "Stacks Layer 1: detect GOLD_STANDARD violations + name collisions in the 89 stacks at bonneagar/stacks/"
-run = "bash scripts/sync/stacks-drift.sh"
-
-[tasks."sync:stacks-ccc"]
-description = "Stacks Layer 2: append the 23rd CCC concept guide (stack-catalog-search) + reindex"
-run = "bash scripts/sync/stacks-ccc.sh"
-
-[tasks."sync:stacks-cognee"]
-description = "Stacks Layer 3: ingest the 89 stack catalogs into the 12th Cognee cluster (stacks_catalog)"
-run = "bash scripts/sync/stacks-cognee.sh"
-
-[tasks."sync:stacks-validate"]
-description = "Stacks Layer 4: run stack-doctor.sh + parse the output (109 CRITICALS)"
-run = "bash scripts/sync/stacks-validate.sh"
-
-[tasks."sync:stacks-health"]
-description = "Stacks Layer 5: per-stack health report (GOLD_STANDARD status + drift count + Cognee cluster populated + CCC indexed)"
-run = "bash scripts/sync/stacks-health.sh"
-
-[tasks."sync:stacks"]
-description = "Stacks orchestrator: runs sync:stacks-drift + sync:stacks-ccc + sync:stacks-cognee + sync:stacks-validate + sync:stacks-health in sequence + writes a unified report"
-run = """
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/stacks-all-$(date +%Y-%m-%d).md"
-{
-  echo "# Stacks Sync — Full Report"
-  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-15-stacks-sync-loop-v1 change (Layer 8)."
-  echo ""
-  echo "---"
-  echo ""
-} > "$REPORT"
-for layer in drift ccc cognee validate health; do
-  echo "## Sub-layer: sync:stacks:$layer" >> "$REPORT"
-  echo '```' >> "$REPORT"
-  bash "scripts/sync/stacks-$layer.sh" >> "$REPORT" 2>&1
-  echo '```' >> "$REPORT"
-  echo "" >> "$REPORT"
-done
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "All 5 stacks sub-layers completed."
-} >> "$REPORT"
-cat "$REPORT"
-"""
-
-# -----------------------------------------------------------------------------
-# DLT Source Sync Loop — the 9th sync layer (per 2026-08-15-dlt-sync-loop-v1)
-# Layer 9 covers the 928 DLT source files in 13 jurisdiction subdirs
-# at dlt_sources/. The orchestrator runs 5 sub-layers + writes a
-# unified report.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:dlt-drift"]
-description = "DLT Layer 1: detect source drift across the 928 DLT sources (duplicates, stale write_disposition, stale destinations)"
-run = "bash scripts/sync/dlt-drift.sh"
-
-[tasks."sync:dlt-ccc"]
-description = "DLT Layer 2: append the 24th CCC concept guide (dlt-source-search) + reindex"
-run = "bash scripts/sync/dlt-ccc.sh"
-
-[tasks."sync:dlt-cognee"]
-description = "DLT Layer 3: ingest the 928 DLT sources into the 13th Cognee cluster (dlt_sources)"
-run = "bash scripts/sync/dlt-cognee.sh"
-
-[tasks."sync:dlt-test"]
-description = "DLT Layer 4: dlt pipeline --dry-run on a sampling of the 13 subdirs"
-run = "bash scripts/sync/dlt-test.sh"
-
-[tasks."sync:dlt-lint"]
-description = "DLT Layer 5: per-jurisdiction stats (GOLD_STANDARD-style report for the 13 subdirs)"
-run = "bash scripts/sync/dlt-lint.sh"
-
-[tasks."sync:dlt"]
-description = "DLT orchestrator: runs sync:dlt-drift + sync:dlt-ccc + sync:dlt-cognee + sync:dlt-test + sync:dlt-lint in sequence + writes a unified report"
-run = """
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/dlt-all-$(date +%Y-%m-%d).md"
-{
-  echo "# DLT Source Sync — Full Report"
-  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-15-dlt-sync-loop-v1 change (Layer 9)."
-  echo ""
-  echo "---"
-  echo ""
-} > "$REPORT"
-for layer in drift ccc cognee test lint; do
-  echo "## Sub-layer: sync:dlt:$layer" >> "$REPORT"
-  echo '```' >> "$REPORT"
-  bash "scripts/sync/dlt-$layer.sh" >> "$REPORT" 2>&1
-  echo '```' >> "$REPORT"
-  echo "" >> "$REPORT"
-done
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "All 5 DLT sub-layers completed."
-} >> "$REPORT"
-cat "$REPORT"
-"""
-
-# -----------------------------------------------------------------------------
-# Agent Definitions Sync Loop — the 10th sync layer (per 2026-08-15-agent-definitions-sync-loop-v1)
-# Layer 10 covers the 188 agent files + 12-agent fleet + 8 NCCA subject
-# specialists across 7 subdirs at agents/. The orchestrator runs 5
-# sub-layers + writes a unified report.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:agents-drift"]
-description = "Agents Layer 1: detect agent registration drift across the 188 agent files (unregistered agents + stale model refs)"
-run = "bash scripts/sync/agents-drift.sh"
-
-[tasks."sync:agents-ccc"]
-description = "Agents Layer 2: append the 25th CCC concept guide (agent-fleet-search) + reindex"
-run = "bash scripts/sync/agents-ccc.sh"
-
-[tasks."sync:agents-cognee"]
-description = "Agents Layer 3: ingest the 188 agent files into the 14th Cognee cluster (agent_definitions)"
-run = "bash scripts/sync/agents-cognee.sh"
-
-[tasks."sync:agents-test"]
-description = "Agents Layer 4: agent registration test (verifies all 12-agent fleet + 8 NCCA subjects are registered)"
-run = "bash scripts/sync/agents-test.sh"
-
-[tasks."sync:agents-lint"]
-description = "Agents Layer 5: per-subdir stats (the 7 agent subdirs + 5 AGENTS.md + 8 NCCA subject specialists)"
-run = "bash scripts/sync/agents-lint.sh"
-
-[tasks."sync:agents"]
-description = "Agents orchestrator: runs sync:agents-drift + sync:agents-ccc + sync:agents-cognee + sync:agents-test + sync:agents-lint in sequence + writes a unified report"
-run = """
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/agents-all-$(date +%Y-%m-%d).md"
-{
-  echo "# Agents Sync -- Full Report"
-  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-15-agent-definitions-sync-loop-v1 change (Layer 10)."
-  echo ""
-  echo "---"
-  echo ""
-} > "$REPORT"
-for layer in drift ccc cognee test lint; do
-  echo "## Sub-layer: sync:agents:$layer" >> "$REPORT"
-  echo '```' >> "$REPORT"
-  bash "scripts/sync/agents-$layer.sh" >> "$REPORT" 2>&1
-  echo '```' >> "$REPORT"
-  echo "" >> "$REPORT"
-done
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "All 5 Agents sub-layers completed."
-} >> "$REPORT"
-cat "$REPORT"
-"""
-
-# -----------------------------------------------------------------------------
-# Notebooks Sync Loop — the 11th sync layer (per 2026-08-15-notebooks-sync-loop-v1)
-# Layer 11 covers the 104 notebook files at notebooks/. The orchestrator
-# runs 5 sub-layers + writes a unified report.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:notebooks-drift"]
-description = "Notebooks Layer 1: detect notebook registration drift across the 104 notebook files (unregistered notebooks + broken @app.cell decorators)"
-run = "bash scripts/sync/notebooks-drift.sh"
-
-[tasks."sync:notebooks-ccc"]
-description = "Notebooks Layer 2: append the 26th CCC concept guide (notebook-search) + reindex"
-run = "bash scripts/sync/notebooks-ccc.sh"
-
-[tasks."sync:notebooks-cognee"]
-description = "Notebooks Layer 3: ingest the 104 notebook files into the 15th Cognee cluster (notebooks)"
-run = "bash scripts/sync/notebooks-cognee.sh"
-
-[tasks."sync:notebooks-test"]
-description = "Notebooks Layer 4: notebook import test (verifies all 104 notebooks parse cleanly)"
-run = "bash scripts/sync/notebooks-test.sh"
-
-[tasks."sync:notebooks-lint"]
-description = "Notebooks Layer 5: per-prefix stats (20+ prefixes + 104 notebooks + canonical helpers)"
-run = "bash scripts/sync/notebooks-lint.sh"
-
-[tasks."sync:notebooks"]
-description = "Notebooks orchestrator: runs sync:notebooks-drift + sync:notebooks-ccc + sync:notebooks-cognee + sync:notebooks-test + sync:notebooks-lint in sequence + writes a unified report"
-run = '''
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/notebooks-all-$(date +%Y-%m-%d).md"
-{
-  echo "# Notebooks Sync -- Full Report"
-  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-15-notebooks-sync-loop-v1 change (Layer 11)."
-  echo ""
-  echo "---"
-  echo ""
-} > "$REPORT"
-for layer in drift ccc cognee test lint; do
-  echo "## Sub-layer: sync:notebooks:$layer" >> "$REPORT"
-  echo '```' >> "$REPORT"
-  bash "scripts/sync/notebooks-$layer.sh" >> "$REPORT" 2>&1
-  echo '```' >> "$REPORT"
-  echo "" >> "$REPORT"
-done
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "All 5 Notebooks sub-layers completed."
-} >> "$REPORT"
-cat "$REPORT"
-'''
-
-[tasks."sync:drift-docs"]
-description = "Validate AGENTS.md count claims and append the JSON/Markdown result to the unified sync report"
-run = "bash scripts/sync/drift_docs.sh"
-
-# -----------------------------------------------------------------------------
-# Firecrawl Dual-Search Sync Loop — the 12th sync layer
-# (per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change)
-#
-# Layer 12 covers the Firecrawl MCP ↔ ccc dual-search architecture. The
-# 27-31st concept guides live in .cocoindex_code/guides.yml. The orchestrator
-# runs the CCC index refresh + writes a unified report.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:firecrawl-ccc"]
-description = "Firecrawl Layer 2: append the 27-31st CCC concept guides (firecrawl-search + firecrawl-mcp-tools + firecrawl-research-index + firecrawl-developer-index + firecrawl-corpus) + reindex"
-run = "bash scripts/sync/firecrawl-ccc.sh"
-
-[tasks."sync:firecrawl"]
-description = "Firecrawl orchestrator: runs sync:firecrawl-ccc + writes a unified report"
-run = """
-mkdir -p stedding/sync-reports
-REPORT="stedding/sync-reports/firecrawl-all-$(date +%Y-%m-%d).md"
-{
-  echo "# Firecrawl Sync — Full Report"
-  echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo ""
-  echo "Per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change (Layer 12)."
-  echo ""
-  echo "---"
-  echo ""
-} > "$REPORT"
-echo "## Sub-layer: sync:firecrawl-ccc" >> "$REPORT"
-echo '```' >> "$REPORT"
-bash scripts/sync/firecrawl-ccc.sh >> "$REPORT" 2>&1
-echo '```' >> "$REPORT"
-echo "" >> "$REPORT"
-{
-  echo "---"
-  echo ""
-  echo "## Summary"
-  echo ""
-  echo "All 5 Firecrawl concept guides + CCC index refresh completed."
-} >> "$REPORT"
-cat "$REPORT"
-"""
-
-[tasks."sync:spec-agents"]
-description = "Layer 8: regenerate the per-spec AGENTS.md files (78 siblings of openspec/specs/<name>/spec.md). Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change's `repo-hygiene-agent-routing` spec."
-run = "bash scripts/sync/spec_agents.sh ${@:-}"
-
-# -----------------------------------------------------------------------------
-# Knowledge-Sync-Loop — the 5-layer pull-based sync architecture
-# (per openspec/changes/2026-08-15-knowledge-sync-loop-v1)
-#
-# Layer 1 = path drift, Layer 2 = CCC index, Layer 3 = Cognee graph,
-# Layer 4 = skills, Layer 5 = MCP health. The orchestrator (sync:all)
-# runs 1-5 in sequence + writes a unified report.
-# -----------------------------------------------------------------------------
-
-[tasks."sync:paths"]
-description = "Layer 1: detect pre-v7 path drift in source files (per the 2026-08-15-knowledge-sync-loop-v1 change); supports --fix mode for the 3 safe patterns (per the 2026-08-15-retroactive-pre-v7-cleanup-v1 change)"
-run = "bash scripts/sync/paths.sh"
-
-[tasks."sync:ccc"]
-description = "Layer 2: refresh CCC index + append the 20th concept guide (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = "bash scripts/sync/ccc.sh"
-
-[tasks."sync:cognee"]
-description = "Layer 3: ingest openspec + skills docs into Cognee (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = "bash scripts/sync/cognee.sh"
-
-[tasks."sync:skills"]
-description = "Layer 4: validate 57 agent skills (frontmatter + path references; per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = "bash scripts/sync/skills.sh"
-
-[tasks."sync:mcp"]
-description = "Layer 5: ping all 14 MCP servers with 5s timeout (per the sync loop from 2026-08-15-knowledge-sync-loop-v1)"
-run = "bash scripts/sync/mcp.sh"
-
-[tasks."sync:all"]
-description = "Orchestrator: runs all 10 sync surfaces (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks) and writes a unified report"
-run = "bash scripts/sync/all.sh"
-
-[tasks."biep:v3:smoke-test"]
-description = "Week 4 BIEP v3 acceptance gate smoke test (verifies the 5 gates from 2026-07-28-biep-v3-ireland-full-coverage-v1)"
-run = "bash scripts/week4-smoke-test.sh"
-
-[tasks."drift-audit"]
-description = "Audit for pre-v7 path drift across all subdirectories (scoped to source files only — docs are intentionally excluded since they reference historical layouts)"
-run = """
-echo "=== Pre-v7 path drift audit (source files only) ==="
-# The drift audit scans the 8 target subdirectories + the canonical
-# IaC root + the root pyproject.toml. Docs (.md) are excluded since
-# they legitimately reference pre-v7 layouts as historical notes.
-for pattern in 'cianfhoghlaim/dlt/' 'cianfhoghlaim/baml/' 'infrastructure/stacks/' 'infrastructure/komodo/' 'sruth/cianfhoghlaim/'; do
-  count=$(grep -rE "$pattern" \
-    --include='*.py' \
-    --include='*.ts' \
-    --include='*.toml' \
-    --include='*.yaml' \
-    --include='*.baml' \
-    --include='*.tsx' \
-    --include='*.json' \
-    bonneagar/ dlt_sources/ orchestration/ baml_src/ cocoindex/ motherduck/ meaisinfhoghlaim/ agents/ observability/ \
-    pyproject.toml mise.toml turbo.json package.json tsconfig.json \
-    2>/dev/null | wc -l)
-  echo "$pattern: $count source occurrences"
-done
-echo "=== v7 flat 'cianfhoghlaim.X.Y' in Python imports (should be 0 outside docs) ==="
-grep -rE "from cianfhoghlaim\\.[a-z]+\\." --include='*.py' \
-  bonneagar/ dlt_sources/ orchestration/ baml_src/ cocoindex/ motherduck/ meaisinfhoghlaim/ agents/ observability/ \
-  2>/dev/null | wc -l
-echo "=== Total ==="
-echo "Done. Pass criterion: all counts should be 0 in active source."
-"""
-
-# =============================================================================
-# Codebase indexing (ccc / cocoindex-code) and OpenSpec
-# =============================================================================
-
-[tasks."ccc:init"]
-description = "Initialise ccc (cocoindex-code) for this project"
-run = "ccc init || true"
-
-[tasks."ccc:index"]
-description = "Build the cocoindex-code semantic index (v1 app; legacy ccc kept as fallback until 2026-07-15)"
-run = "uv run cocoindex update cocoindex_flows.infrastructure.codebase_indexing:CodebaseIndex"
-
-[tasks."ccc:search"]
-description = "[DEPRECATED — use ccc:v1:search] Semantic search via the legacy ccc CLI; emits a deprecation warning to stderr (hard removal: 2026-07-15)"
-run = "bun run scripts/_ccc-deprecation-banner.ts && ccc search ${@}"
-
-[tasks."ccc:v1:index"]
-description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (replacement for the legacy ccc CLI)"
-run = "uv run cocoindex update cocoindex_flows.infrastructure.codebase_indexing:CodebaseIndex"
-
-[tasks."ccc:v1:search"]
-description = "Semantic search the codebase_chunks LanceDB table via the v1 app (Python helper)"
-run = ".venv/bin/python3 -c 'import asyncio, sys; from cocoindex_flows.infrastructure.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
-
-[tasks."validate-ccc-freshness"]
-description = "CI gate: exit 1 if CCC (CocoIndex Code) index is >7d old on main or >24h on feature branches"
-run = "bun run scripts/validate-ccc-freshness.ts"
-
-[tasks."hooks:install"]
-description = "Idempotent installer for project git hooks (points core.hooksPath at the in-repo .githooks/ directory)"
-run = "bash scripts/install-hooks.sh"
-
-[tasks."claude:wire-skills"]
-description = "Symlink the curated .agents/skills/ subset into the gitignored .claude/skills/ so Claude Code can discover this project's own technology skills — idempotent, re-run after any .claude/ regeneration"
-run = "bash scripts/wire-claude-skills.sh"
-
-[tasks."docs:consolidate"]
-description = "Run the docs_skills_consolidation CocoIndex v1 App (batch / catch-up mode)"
-run = "uv run cocoindex update cocoindex_flows.infrastructure.docs_skills_consolidation:DocsSkillsConsolidation"
-
-[tasks."docs:consolidate:live"]
-description = "Run the docs_skills_consolidation CocoIndex v1 App in live mode (-L)"
-run = "uv run cocoindex update -L cocoindex_flows.infrastructure.docs_skills_consolidation:DocsSkillsConsolidation"
-
-# ---------------------------------------------------------------------------
-# Upstream package monitoring (Firecrawl monitors for motherduck / dlthub /
-# lancedb / cocoindex blogs → DLT incremental source → 3 v1 CocoIndex Apps +
-# 4-rule conformance linter). See
-# openspec/changes/upstream-package-monitoring/proposal.md.
-# ---------------------------------------------------------------------------
-
-[tasks."upstream:blog"]
-description = "Run the upstream_blog_monitor v1 CocoIndex App (reprocess all n8n-written Firecrawl payloads)"
-run = "uv run cocoindex update cocoindex_flows.infrastructure.upstream_blog_monitor:UpstreamBlogMonitor"
-
-[tasks."upstream:blog:live"]
-description = "Run the upstream_blog_monitor v1 CocoIndex App in live mode (-L) — picks up new payloads as they arrive in S3"
-run = "uv run cocoindex update -L cocoindex_flows.infrastructure.upstream_blog_monitor:UpstreamBlogMonitor"
-
-[tasks."upstream:conformance"]
-description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
-run = ".venv/bin/python3 -c 'import asyncio; from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
-
-[tasks."upstream:api-surface"]
-description = "Run the upstream_api_surface v1 CocoIndex App (walks 5 cocoindex docs URLs + llms-full.txt)"
-run = "uv run cocoindex update cocoindex_flows.infrastructure.upstream_api_surface:UpstreamApiSurface"
-
-[tasks."baml:generate"]
-description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file). Post-v7 the baml_src/ directory is canonical; the symlink guard was removed because baml_src/ always exists."
-run = """
-ROOT_DIR="$(git rev-parse --show-toplevel)"
-cd "$ROOT_DIR"
-if [ ! -e "$ROOT_DIR/baml_src/baml.toml" ]; then
-  echo "ERROR: $ROOT_DIR/baml_src/baml.toml not found — are you in the cianfhoghlaim repo root?" >&2
-  exit 1
-fi
-uv run baml-cli generate --from baml_src
-"""
-
-[tasks."baml:test"]
-description = "Run BAML test blocks with baml-cli (hard CI gate). Post-v7 the baml_src/ directory is canonical; the symlink guard was removed because baml_src/ always exists."
-run = """
-ROOT_DIR="$(git rev-parse --show-toplevel)"
-cd "$ROOT_DIR"
-if [ ! -e "$ROOT_DIR/baml_src/baml.toml" ]; then
-  echo "ERROR: $ROOT_DIR/baml_src/baml.toml not found — are you in the cianfhoghlaim repo root?" >&2
-  exit 1
-fi
-uv run baml-cli test --from baml_src
-"""
-
-[tasks."docs:cognee"]
-description = "Ingest canonical docs/ into the Cognee knowledge graph (bonneagar)"
-run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --all) || echo 'bonneagar/scripts/cognee-ingest-docs.py missing — see Stack Migrator backlog.'"
-
-[tasks."docs:cognee:domain"]
-description = "Ingest a single canonical domain into the Cognee knowledge graph (bonneagar)"
-run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --domain ${@}) || true"
-
-[tasks."docs:cognee:summary"]
-description = "Print the per-domain Cognee ingestion plan without executing (bonneagar)"
-run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --all --summary) || true"
-
-[tasks."openspec:list"]
-description = "List OpenSpec specs and changes"
-run = "openspec list"
-
-[tasks."openspec:validate"]
-description = "Validate an OpenSpec change (pass change-id as first arg)"
-run = "openspec validate ${1} --strict"
-
-[tasks."openspec:archive"]
-description = "Archive a deployed OpenSpec change"
-run = "openspec archive ${1} --yes"
-
-[tasks."deploy:full"]
-description = "Full-stack deploy orchestrator (7-phase state machine with resumable checkpoints) — per 2026-08-01-lakehouse-and-reproducible-deploy-v1"
-run = "bash scripts/deploy-full.sh ${@:-}"
-
-# =============================================================================
-# Utility Tasks
-# =============================================================================
-
 [tasks.doctor]
-description = "Check all tool versions"
+description = "Check all tool versions + the 8 task categories + the 12 sync layers + the 3 registry health checks"
+depends = ["sync"]
 run = """
 echo '=== Tool Versions ==='
 echo 'Python:' && python --version
@@ -1644,10 +105,15 @@ echo 'Turbo:' && bunx turbo --version
 echo 'Dagger:' && dagger version
 echo 'Rust:' && rustc --version
 echo 'DuckDB:' && duckdb --version
+echo 'openspec:' && openspec --version
 echo ''
-echo '=== Workspace Status ==='
-echo 'UV workspace members:' && uv workspace list 2>/dev/null || echo 'n/a'
-echo 'Bun workspaces:' && bun pm ls 2>/dev/null | head -20 || echo 'n/a'
+echo '=== Task namespaces ==='
+echo 'Total TOML tasks:' $(grep -c 'tasks\\.' mise.toml)
+echo 'Total file tasks:' $(find mise-tasks -name "*" -type f -executable | wc -l)
+echo 'Total [task_templates]:' $(grep -c 'task_templates\\.' mise.toml)
+echo ''
+echo '=== Sync layers (12) ==='
+echo 'paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl'
 """
 
 [tasks.clean]
@@ -1661,11 +127,594 @@ find . -type d -name '.pytest_cache' -exec rm -rf {} + 2>/dev/null || true
 
 [tasks.reset]
 description = "Full reset - clean and reinstall"
-depends = ["clean"]
+depends = ["clean", "sync"]
+run = "bun install"
+
+
+# =============================================================================
+# TS NAMESPACE (4 tasks) — TypeScript via bun workspaces + turbo
+# =============================================================================
+
+[tasks."ts:install"]
+description = "Install all TypeScript dependencies (bun workspaces)"
+run = "bun install"
+
+[tasks."ts:build"]
+description = "Build all TypeScript packages via turbo"
+depends = ["ts:install"]
+run = "bunx turbo run build"
+
+[tasks."ts:typecheck"]
+description = "Type check TypeScript code via turbo"
+depends = ["ts:install"]
+run = "bunx turbo run typecheck"
+
+[tasks."ts:lint"]
+description = "Lint TypeScript code via turbo"
+depends = ["ts:install"]
+run = "bunx turbo run lint"
+
+[tasks.turbo]
+description = "Run any turbo task (e.g. 'mise turbo dev')"
+depends = ["ts:install"]
+run = "bunx turbo run ${@}"
+
+
+# =============================================================================
+# SCHEMA NAMESPACE (2 tasks) — Zod schema codegen + drift gate
+# =============================================================================
+
+[tasks."schema:generate"]
+description = "Generate the BIEP v1 lineage registry + Zod/TanStack DB collection schemas (committed artifacts)"
+depends = ["ts:install"]
+run = "bun run schema:generate"
+
+[tasks."schema:validate"]
+description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts)"
+depends = ["ts:install"]
+run = "bun run schema:validate"
+
+
+# =============================================================================
+# PY NAMESPACE (2 tasks) — Python quality gates
+# =============================================================================
+
+[tasks."py:typecheck"]
+description = "Type check Python code with mypy"
+depends = ["sync"]
+run = "uv run mypy"
+
+[tasks."py:test"]
+description = "Run pytest on cianfhoghlaim package (Python-only; alias of test)"
+depends = ["sync"]
+run = "uv run pytest"
+
+
+# =============================================================================
+# LINT NAMESPACE (4 tasks) — canonical skill + registry + guide + drift linters
+# =============================================================================
+
+[tasks."lint:skills"]
+description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count) for every skill"
+run = "bash .agents/skills/lint-skills.sh"
+
+[tasks."lint:registry"]
+description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/registry_audit.py --strict"
+
+[tasks."lint:guides-yml"]
+description = "Validate every path in .cocoindex_code/guides.yml resolves on disk"
+run = "uv run python scripts/lint_guides_yml.py"
+
+[tasks."lint:drift-docs"]
+description = "Validate every AGENTS.md number claim (specs/skills/stacks/models/notebooks) against ground truth"
+run = ".venv/bin/python3 scripts/lint_drift_docs.py"
+
+# Additional drift linters (consolidated under lint:* but kept for granular CI)
+[tasks."lint:dagster:sensor-job-coverage"]
+description = "Audit that every @sensor(job_name=...) has a matching define_asset_job"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/dagster_sensor_job_coverage_lint.py"
+
+[tasks."lint:locket-version"]
+description = "Audit that every compose.yaml referencing pbradley/locket:infisical is >= v0.18.0"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/lint_locket_version.py"
+
+[tasks."lint:dlt:nested-hints"]
+description = "Audit dlt_sources/**/*.py for nested_hints() calls containing __ path fragments"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/lint_dlt_nested_hints.py"
+
+[tasks."lint:litellm-router-fallbacks"]
+description = "Audit bonneagar/stacks/litellm/config/config.yaml for bare-list router_settings.fallbacks"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/lint_litellm_router_fallbacks.py"
+
+[tasks."lint:baml-stub-prompts"]
+description = "Audit baml_src/**/*.baml for the literal stub string 'Auto-generated extraction prompt.'"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/lint_baml_stub_prompts.py"
+
+[tasks."lint:copilotkit-actions-stubbed"]
+description = "Audit web/apps/cianfhoghlaim-leaving-cert/apps/api/src/copilotkit/actions.ts for 'TBD' placeholder returns"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/lint_copilotkit_actions_stubbed.py"
+
+[tasks."lint:drift-docs:dry-run"]
+description = "Same as lint:drift-docs but exits 0 always"
+run = ".venv/bin/python3 scripts/lint_drift_docs.py --dry-run"
+
+[tasks."lint:drift-docs:rebaseline"]
+description = "Auto-fix the stale count claims reported by lint:drift-docs"
+depends = ["sync"]
+run = "uv run python scripts/rebaseline_drift_docs.py --apply"
+
+[tasks."lint:drift-docs:rebaseline:dry-run"]
+description = "Dry-run the auto-fix (prints the planned diff, exits 0, does not modify any files)"
+depends = ["sync"]
+run = "uv run python scripts/rebaseline_drift_docs.py"
+
+[tasks."lint:guides-yml:dry-run"]
+description = "Same as lint:guides-yml but exits 0 always"
+run = "uv run python scripts/lint_guides_yml.py --dry-run"
+
+[tasks."lint:firecrawl-budget"]
+description = "Firecrawl budget linter — exit 1 if any pipeline exceeds 150% of its monthly allocation"
+depends = ["sync"]
+run = "uv run python scripts/lint_firecrawl_budget.py"
+
+
+# =============================================================================
+# OPENCODE NAMESPACE (3 tasks) — code index + semantic search + config validation
+# =============================================================================
+
+[tasks."opencode:index"]
+description = "Refresh the cianfhoghlaim semantic code index (LanceDB via CocoIndex v1 App)"
+depends = ["sync"]
+run = "uv run cocoindex update cocoindex_flows.infrastructure.codebase_indexing:CodebaseIndex"
+
+[tasks."opencode:search"]
+description = "Semantic search the cianfhoghlaim codebase (the canonical CCC search)"
+run = "uv run python -c 'import asyncio, sys; from cocoindex_flows.infrastructure.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); print(rows)' \"${1:-}\""
+
+[tasks."opencode:validate"]
+description = "Validate opencode.json schema + agent structure + no deprecated tools field"
+run = ".venv/bin/python3 scripts/_opencode_validate.py 2>/dev/null || python3 mise-tasks/misc/opencode-validate"
+
+
+# =============================================================================
+# BAML NAMESPACE (3 tasks) — extract schemas + test + lint
+# =============================================================================
+
+[tasks."baml:generate"]
+description = "Regenerate the baml_client/ Python module from baml_src/"
+depends = ["sync"]
 run = """
-uv sync
-bun install
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$ROOT_DIR"
+if [ ! -e "$ROOT_DIR/baml_src/baml.toml" ]; then
+  echo "ERROR: $ROOT_DIR/baml_src/baml.toml not found" >&2
+  exit 1
+fi
+uv run baml-cli generate --from baml_src
 """
+
+[tasks."baml:test"]
+description = "Run BAML test blocks with baml-cli (hard CI gate)"
+depends = ["baml:generate"]
+run = """
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$ROOT_DIR"
+if [ ! -e "$ROOT_DIR/baml_src/baml.toml" ]; then
+  echo "ERROR: $ROOT_DIR/baml_src/baml.toml not found" >&2
+  exit 1
+fi
+uv run baml-cli test --from baml_src
+"""
+
+[tasks."baml:lint"]
+description = "Lint all 320+ .baml schema files for consistency"
+depends = ["sync"]
+run = """
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$ROOT_DIR"
+find "$ROOT_DIR/baml_src" -name "*.baml" -type f | wc -l
+echo "files above; cross-file imports + client references + stub prompts all checked by lint:baml-stub-prompts"
+"""
+
+
+# =============================================================================
+# OPENSPEC NAMESPACE (4 tasks) — list + validate + archive + view
+# =============================================================================
+
+[tasks."openspec:list"]
+description = "List openspec specs and changes"
+run = "openspec list ${@:-}"
+
+[tasks."openspec:list-specs"]
+description = "List all capability specs (alias for openspec list --specs)"
+alias = ["openspec:specs"]
+run = "openspec list --specs ${@:-}"
+
+[tasks."openspec:view"]
+description = "Interactive dashboard of specs + changes (openspec 1.4+)"
+run = "openspec view ${@:-}"
+
+[tasks."openspec:validate"]
+description = "Validate an openspec change with --strict (pass change-id as first arg)"
+run = "openspec validate ${1} --strict"
+
+[tasks."openspec:validate-all"]
+description = "Validate every change + every spec in strict mode (the CI gate; alias for openspec validate --all --strict)"
+alias = ["openspec:ci"]
+run = "openspec validate --all --strict --no-interactive"
+
+[tasks."openspec:archive"]
+description = "Archive a deployed openspec change (merges deltas into canonical specs)"
+run = "openspec archive ${1} --yes"
+
+[tasks."openspec:status"]
+description = "Per-artifact completion check for an openspec change (openspec 1.4+)"
+run = "openspec status ${1:-}"
+
+[tasks."openspec:show"]
+description = "Show one openspec change or spec formatted to terminal (openspec 1.4+)"
+run = "openspec show ${1:-}"
+
+
+# =============================================================================
+# CIC NAMESPACE (10 tasks) — the canonical cianfhoghlaim CLI surface
+# =============================================================================
+
+[tasks.cic]
+description = "Top-level cianfhoghlaim consolidated tasks (cic = cianfhoghlaim)"
+depends = ["sync"]
+run = "uv run cianfhoghlaim --help"
+
+[tasks."cic:sync"]
+alias = ["cic:install"]
+description = "Sync the cianfhoghlaim package (alias of sync)"
+run = "mise run sync"
+
+[tasks."cic:lint"]
+description = "Aggregate lint gate (alias of lint)"
+depends = ["lint"]
+run = "mise run lint"
+
+[tasks."cic:test"]
+description = "Run pytest on the cianfhoghlaim package (alias of test)"
+depends = ["test"]
+run = "mise run test"
+
+[tasks."cic:typecheck"]
+description = "Type-check cianfhoghlaim Python code with mypy (alias of py:typecheck)"
+depends = ["py:typecheck"]
+run = "mise run py:typecheck"
+
+[tasks."cic:build"]
+description = "Build the consolidated cianfhoghlaim wheel"
+depends = ["sync"]
+run = "uv build --package cianfhoghlaim"
+
+[tasks."cic:dagster:dev"]
+description = "Launch Dagster UI on :3335 (alias of dagster:dev)"
+run = "mise run dagster:dev"
+
+[tasks."cic:stack-doctor"]
+description = "Validate all 89 Docker Compose stacks under bonneagar/stacks/ against the 6-file GOLD_STANDARD pattern"
+depends = ["sync"]
+run = "bash scripts/stack-doctor.sh ${@:-}"
+
+[tasks."cic:cocoindex:conformance"]
+description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
+depends = ["sync"]
+run = ".venv/bin/python3 -c 'import asyncio; from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
+
+[tasks."cic:ocr:registry-lint"]
+description = "Verify all v4 VISION_MODELS are live on HF Hub"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/verify_hf_hub_audit.py --strict"
+
+[tasks."cic:baml:generate"]
+description = "Regenerate the baml_client/ Python module (alias of baml:generate)"
+depends = ["baml:generate"]
+run = "mise run baml:generate"
+
+[tasks."cic:baml:test"]
+description = "Run baml-cli test (alias of baml:test)"
+depends = ["baml:test"]
+run = "mise run baml:test"
+
+
+# =============================================================================
+# DAGSTER + BAML CONVENIENCE ALIASES (back-compat for 1 release cycle)
+# =============================================================================
+
+[tasks."dagster:dev"]
+description = "Run Dagster for the consolidated cianfhoghlaim code-location (Ireland + leabharlann + 12-agent fleet)"
+depends = ["sync"]
+run = "uv run dagster dev -m orchestration.definitions ${@:-}"
+
+
+# =============================================================================
+# INFRASTRUCTURE (IaC) — backed by mise-tasks/iac/run
+# =============================================================================
+
+[tasks.iac]
+description = "IaC lifecycle dispatch (bootstrap | plan | health | bootstrap-pangolin-client | deploy | teardown)"
+run = "mise run --cd . mise-tasks/iac/run -- ${@:-bootstrap}"
+
+[tasks."iac:bootstrap"]
+alias = ["iac-bootstrap"]
+description = "IaC full bootstrap (alias of iac bootstrap — kept for back-compat with openspec docs)"
+run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
+
+[tasks."iac:plan"]
+alias = ["iac-plan"]
+description = "IaC diff: declared vs actual state (no mutation)"
+run = "bun run --cwd bonneagar iac:plan ${@:-}"
+
+[tasks."iac:health"]
+alias = ["iac-health"]
+description = "IaC health check: Komodo + Pangolin + Infisical state consistency"
+run = "bun run --cwd bonneagar iac:health ${@:-}"
+
+[tasks."iac:bootstrap-pangolin-client"]
+alias = ["iac-bootstrap-pangolin-client"]
+description = "Idempotent: install pangolin CLI + mint machine client + render newt compose"
+run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
+
+[tasks."iac:deploy"]
+description = "Deploy the 30 key stacks end-to-end"
+run = "bun run --cwd bonneagar iac:deploy ${@:-}"
+
+[tasks."iac:teardown"]
+description = "Reverse of iac:bootstrap (requires --force)"
+run = "bun run --cwd bonneagar iac:teardown ${@:-}"
+
+
+# =============================================================================
+# PRE-FLIGHT GATES — backed by mise-tasks/preflight/run
+# =============================================================================
+
+[tasks.preflight]
+description = "Pre-flight gates dispatch (arm-oci | lakehouse | iac)"
+run = "mise run --cd . mise-tasks/preflight/run -- ${@:-arm-oci}"
+
+[tasks."preflight:arm-oci"]
+alias = ["preflight-arm-oci"]
+description = "Pre-flight gate before any arm-oci stack deploy (Pangolin + Komodo + Infisical health + namespace isolation)"
+run = "bun run scripts/preflight-arm-oci.ts ${@:-}"
+
+
+# =============================================================================
+# STACK LIFECYCLE — backed by mise-tasks/stack/run
+# =============================================================================
+
+[tasks.stack]
+description = "Stack lifecycle dispatch (up | down | logs) — pass stack name as 2nd arg"
+run = "mise run --cd . mise-tasks/stack/run -- ${@:?Usage: mise run stack <name> <up|down|logs>}"
+
+
+# =============================================================================
+# SYNC LAYERS — the 14-layer knowledge sync architecture
+# (Backed by mise-tasks/sync/all + per-layer bash scripts in scripts/sync/)
+# =============================================================================
+
+[tasks."sync:all"]
+description = "Orchestrator: runs all 14 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)"
+depends = ["sync:paths", "sync:ccc", "sync:cognee", "sync:skills", "sync:mcp", "sync:dagster", "sync:drift-docs", "sync:spec-agents", "sync:baml", "sync:stacks", "sync:dlt", "sync:agents", "sync:notebooks", "sync:firecrawl"]
+run = "mise run --cd . mise-tasks/sync/all -- ${@:-}"
+
+[tasks."sync:paths"]
+description = "Layer 1: detect pre-v7 path drift in source files"
+run = "bash scripts/sync/paths.sh"
+
+[tasks."sync:ccc"]
+description = "Layer 2: refresh CCC index + append the 20th concept guide"
+run = "bash scripts/sync/ccc.sh"
+
+[tasks."sync:cognee"]
+description = "Layer 3: ingest openspec + skills docs into Cognee"
+run = "bash scripts/sync/cognee.sh"
+
+[tasks."sync:skills"]
+description = "Layer 4: validate 65 agent skills (frontmatter + path references)"
+run = "bash scripts/sync/skills.sh"
+
+[tasks."sync:mcp"]
+description = "Layer 5: ping all 14 MCP servers with 5s timeout"
+run = "bash scripts/sync/mcp.sh"
+
+[tasks."sync:dagster"]
+description = "Layer 6: validate Dagster definitions via AST parsing + per-group breakdown"
+run = "bash scripts/sync/dagster.sh"
+
+[tasks."sync:drift-docs"]
+description = "Layer 7: validate AGENTS.md count claims + append to unified sync report"
+run = "bash scripts/sync/drift_docs.sh"
+
+[tasks."sync:spec-agents"]
+description = "Layer 8: regenerate the per-spec AGENTS.md files (78 siblings of openspec/specs/<name>/spec.md)"
+run = "bash scripts/sync/spec_agents.sh ${@:-}"
+
+[tasks."sync:baml"]
+description = "Layer 9: BAML schema sync orchestrator (drift + ccc + cognee + test + lint)"
+run = "bash scripts/sync/baml-all.sh"
+
+[tasks."sync:stacks"]
+description = "Layer 10: stacks sync orchestrator (drift + ccc + cognee + validate + health)"
+run = "bash scripts/sync/stacks-all.sh"
+
+[tasks."sync:dlt"]
+description = "Layer 11: DLT source sync orchestrator (drift + ccc + cognee + test + lint)"
+run = "bash scripts/sync/dlt-all.sh"
+
+[tasks."sync:agents"]
+description = "Layer 12: agent definitions sync orchestrator (drift + ccc + cognee + test + lint)"
+run = "bash scripts/sync/agents-all.sh"
+
+[tasks."sync:notebooks"]
+description = "Layer 13: notebook sync orchestrator (drift + ccc + cognee + test + lint)"
+run = "bash scripts/sync/notebooks-all.sh"
+
+[tasks."sync:firecrawl"]
+description = "Layer 14: Firecrawl dual-search sync (the CCC concept guides + index refresh)"
+run = "bash scripts/sync/firecrawl-ccc.sh"
+
+
+# =============================================================================
+# SECRETS + INFRASTRUCTURE UTILITIES
+# =============================================================================
+
+[tasks."secrets:env"]
+description = "Create the dev-baile environment in Infisical"
+run = "bun run scripts/create-env.ts"
+
+[tasks."secrets:init"]
+alias = ["secrets:sync"]
+description = "Sync .env secrets into Infisical vault (alias: secrets:sync)"
+run = "bun run scripts/init-vault.ts"
+
+[tasks."locket:exec"]
+description = "Inject secrets via Locket sidecar and run a command"
+run = "locket exec -- ${@}"
+
+[tasks."komodo:sync"]
+description = "Trigger Komodo to re-sync all stacks from Forgejo"
+run = "komodo sync || echo 'komodo CLI not in PATH; trigger via Komodo UI.'"
+
+[tasks."pangolin:check"]
+description = "Verify Pangolin tunnel health"
+run = "pangolin health-check || echo 'pangolin CLI not in PATH; check via Pangolin UI.'"
+
+
+# =============================================================================
+# BIEV v3 SYSTEMATIC DOWNLOAD (BIEP milestones 0-10) — backed by mise-tasks/biep/milestone
+# =============================================================================
+
+[tasks."biep:v3:m"]
+alias = ["biep:v3:m0","biep:v3:m1","biep:v3:m2","biep:v3:m3","biep:v3:m4","biep:v3:m5","biep:v3:m6","biep:v3:m7","biep:v3:m8","biep:v3:m9","biep:v3:m10"]
+description = "BIEP v3 milestone runner (M0 through M10) — pass <n> as arg"
+depends = ["sync"]
+usage = 'arg "<n>" help="Milestone number 0-10" default="0"'
+run = '''
+N="{{arg(n)}}"
+SCRIPT="scripts/m${N}_*.py"
+shopt -s nullglob
+CANDIDATES=($SCRIPT)
+shopt -u nullglob
+if [ ${#CANDIDATES[@]} -eq 0 ]; then
+  echo "ERROR: no script matching $SCRIPT found" >&2
+  exit 1
+fi
+.venv/bin/python3 "${CANDIDATES[0]}"
+'''
+
+[tasks."biep:v3:gate"]
+description = "BIEP v3 milestone gate — verify the active milestone's 3 asset checks pass"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/milestone_gate.py"
+
+[tasks."biep:v3:setup"]
+description = "BIEP v3 full setup (Docker + lakehouse + BAML + registry + openspec + lint:skills)"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/biiep_v3_setup.py"
+
+[tasks."biep:v3:status"]
+description = "BIEP v3 full status (lakehouse + registry + BAML + asset count + Dive + Flight)"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/biiep_v3_status.py"
+
+[tasks."biep:v3:filesystem:monthly:sync"]
+description = "BIEP v3 filesystem monthly sync (the 11 canonical filesystem DLT sources)"
+depends = ["sync"]
+run = "python3 motherduck/flights/filesystem_monthly_sync_flight.py"
+
+[tasks."biep:v3:language:monthly:sync"]
+description = "BIEP v3 language monthly sync (the 19 canonical language DLT sources)"
+depends = ["sync"]
+run = "python3 motherduck/flights/language_monthly_sync_flight.py"
+
+
+# =============================================================================
+# CCC + DOCS
+# =============================================================================
+
+[tasks."ccc:init"]
+description = "Initialise ccc (cocoindex-code) for this project"
+run = "ccc init || true"
+
+[tasks."ccc:index"]
+description = "Build the cocoindex-code semantic index (v1 App; canonical alias of opencode:index)"
+alias = ["ccc:v1:index"]
+depends = ["sync"]
+run = "uv run cocoindex update cocoindex_flows.infrastructure.codebase_indexing:CodebaseIndex"
+
+[tasks."ccc:search"]
+description = "[DEPRECATED → opencode:search] Semantic search via the legacy ccc CLI"
+run = "bun run scripts/_ccc-deprecation-banner.ts && ccc search ${@}"
+
+[tasks."ccc:v1:search"]
+description = "Semantic search the codebase_chunks LanceDB table via the v1 app"
+depends = ["sync"]
+run = ".venv/bin/python3 -c 'import asyncio, sys; from cocoindex_flows.infrastructure.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(chr(34)+\"score\"+chr(34), 0):.3f}\\t{r.get(chr(34)+\"path\"+chr(34))}:{r.get(chr(34)+\"chunk_start\"+chr(34))}-{r.get(chr(34)+\"chunk_end\"+chr(34))}\\t{(r.get(chr(34)+\"chunk_text\"+chr(34)) or chr(34)+chr(34)).splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
+
+[tasks."validate-ccc-freshness"]
+description = "CI gate: exit 1 if CCC (CocoIndex Code) index is >7d old on main or >24h on feature branches"
+run = "bun run scripts/validate-ccc-freshness.ts"
+
+[tasks."hooks:install"]
+description = "Idempotent installer for project git hooks (points core.hooksPath at in-repo .githooks/)"
+run = "bash scripts/install-hooks.sh"
+
+[tasks."claude:wire-skills"]
+description = "Symlink the curated .agents/skills/ subset into the gitignored .claude/skills/"
+run = "bash scripts/wire-claude-skills.sh"
+
+[tasks."docs:consolidate"]
+description = "Run the docs_skills_consolidation CocoIndex v1 App (batch / catch-up mode)"
+depends = ["sync"]
+run = "uv run cocoindex update cocoindex_flows.infrastructure.docs_skills_consolidation:DocsSkillsConsolidation"
+
+[tasks."docs:consolidate:live"]
+description = "Run the docs_skills_consolidation CocoIndex v1 App in live mode (-L)"
+depends = ["sync"]
+run = "uv run cocoindex update -L cocoindex_flows.infrastructure.docs_skills_consolidation:DocsSkillsConsolidation"
+
+[tasks."docs:cognee"]
+description = "Ingest canonical docs/ into the Cognee knowledge graph"
+run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --all) || echo 'bonneagar/scripts/cognee-ingest-docs.py missing — see Stack Migrator backlog.'"
+
+[tasks."docs:cognee:domain"]
+description = "Ingest a single canonical domain into the Cognee knowledge graph"
+run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --domain ${@}) || true"
+
+[tasks."docs:cognee:summary"]
+description = "Print the per-domain Cognee ingestion plan without executing"
+run = "(cd bonneagar && ../.venv/bin/python3 scripts/cognee-ingest-docs.py --all --summary) || true"
+
+[tasks."upstream:blog"]
+description = "Run the upstream_blog_monitor v1 CocoIndex App (reprocess all n8n-written Firecrawl payloads)"
+depends = ["sync"]
+run = "uv run cocoindex update cocoindex_flows.infrastructure.upstream_blog_monitor:UpstreamBlogMonitor"
+
+[tasks."upstream:blog:live"]
+description = "Run the upstream_blog_monitor v1 CocoIndex App in live mode (-L)"
+depends = ["sync"]
+run = "uv run cocoindex update -L cocoindex_flows.infrastructure.upstream_blog_monitor:UpstreamBlogMonitor"
+
+[tasks."upstream:conformance"]
+description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
+depends = ["sync"]
+run = ".venv/bin/python3 -c 'import asyncio; from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
+
+[tasks."upstream:api-surface"]
+description = "Run the upstream_api_surface v1 CocoIndex App (walks 5 cocoindex docs URLs + llms-full.txt)"
+depends = ["sync"]
+run = "uv run cocoindex update cocoindex_flows.infrastructure.upstream_api_surface:UpstreamApiSurface"
 
 [tasks."index:chunkhound"]
 description = "Index codebase with ChunkHound"
@@ -1675,162 +724,73 @@ run = "uvx --from chunkhound chunkhound index --path ."
 description = "Search codebase with ChunkHound"
 run = "uvx --from chunkhound chunkhound search '${1}'"
 
-# =============================================================================
-# Oideachais dev & deploy
-# =============================================================================
-
-[tasks."dev:oideachais"]
-description = "One-command oideachais dev bring-up (Docker + Vite + Dagster) — moved to bonneagar"
-run = "(cd bonneagar && bash scripts/dev.sh) || echo 'bonneagar/scripts/dev.sh missing.'"
-
-[tasks."dev:oideachais:web"]
-description = "Oideachais Vite dev server only (no Docker) — moved to bonneagar"
-run = "(cd bonneagar && bash scripts/dev.sh --web-only) || true"
-
-[tasks."dev:oideachais:docker"]
-description = "Oideachais Docker Compose only (no Vite) — moved to bonneagar"
-run = "(cd bonneagar && bash scripts/dev.sh --docker-only) || true"
-
-[tasks."dev:oideachais:status"]
-description = "Check what's running in the oideachais dev environment — moved to bonneagar"
-run = "(cd bonneagar && bash scripts/dev.sh --status) || true"
-
-[tasks."deploy:cf"]
-description = "Deploy oideachais + croilar to Cloudflare Pages (bonneagar)"
-run = "(cd bonneagar && bash scripts/deploy-cf.sh --all) || true"
-
-[tasks."deploy:cf:oideachais"]
-description = "Deploy oideachais to Cloudflare Pages (bonneagar)"
-run = "(cd bonneagar && bash scripts/deploy-cf.sh --oideachais) || true"
-
-[tasks."deploy:cf:croilar"]
-description = "Deploy croilar to Cloudflare Pages (bonneagar)"
-run = "(cd bonneagar && bash scripts/deploy-cf.sh --croilar) || true"
-
-[tasks."deploy:cf:preview"]
-description = "Deploy both to Cloudflare Pages preview (staging) (bonneagar)"
-run = "(cd bonneagar && bash scripts/deploy-cf.sh --all --preview) || true"
 
 # =============================================================================
-# Author-Archive v1 — multi-target deployment
+# MODELS + REGISTRIES
 # =============================================================================
-# Stage 4 of author-archive-v1. The 3 deployment targets (dev / staging
-# / prod) are wrapped by the make_target.sh CLI helper. The mise tasks
-# forward to that helper with the right env vars pre-set.
-#
-# Usage:
-#   mise run author-archive:dev                     # default; local DuckDB
-#   mise run author-archive:dev "python my_pipeline.py"
-#   mise run author-archive:staging
-#   mise run author-archive:prod
 
-[tasks."author-archive:dev"]
-description = "Author-archive v1 pipeline against the local dev target (DuckDB)"
-run = "bash scripts/make_target.sh dev ${@}"
+[tasks."models:list"]
+description = "List every MODEL_REGISTRY entry (the unified model registry)"
+depends = ["sync"]
+run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY; [print(f'  {e.family:12s} {e.role:18s} {e.key:40s} {e.display_name}') for e in MODEL_REGISTRY.entries()]; s = MODEL_REGISTRY.summary(); print(f'\\nTotal: {s[\\\"total\\\"]} entries ({s[\\\"available\\\"]} available, {s[\\\"deprecated\\\"]} deprecated)')\""
 
-[tasks."author-archive:staging"]
-description = "Author-archive v1 pipeline against the MotherDuck staging target"
-run = "bash scripts/make_target.sh staging ${@}"
+[tasks."models:count"]
+description = "Print the MODEL_REGISTRY entry count by family (informational)"
+depends = ["sync"]
+run = ".venv/bin/python3 -c \"from meaisinfhoghlaim.models import MODEL_REGISTRY; s = MODEL_REGISTRY.summary(); [print(f'  {fam:12s} {count:3d}') for fam, count in s['by_family'].items()]; print(f'  {\\\"TOTAL\\\":12s} {s[\\\"total\\\"]:3d}')\""
 
-[tasks."author-archive:prod"]
-description = "Author-archive v1 pipeline against the Garage S3 + Lakekeeper prod target"
-run = "bash scripts/make_target.sh prod ${@}"
+[tasks."motherduck:list-dives"]
+description = "List all MotherDuck Dives"
+depends = ["sync"]
+run = ".venv/bin/python3 -c \"from motherduck import BIEP_DIVES; [print(' -', d.name) for d in BIEP_DIVES]; print('BIEP v1: ', len(BIEP_DIVES), 'dives')\""
 
-[tasks."author-archive:cps:hero"]
-description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
-run = "bash scripts/make_target.sh dev python scripts/pre_research_cps_gov_uk.py"
+[tasks."motherduck:list-flights"]
+description = "List all BIEP v3 Flights from flights/config.yaml"
+depends = ["sync"]
+run = ".venv/bin/python3 -c \"import yaml; [print(' -', f.get('flight', f.get('name', '?'))) for f in yaml.safe_load(open('motherduck/flights/config.yaml'))['flights']]\""
+
 
 # =============================================================================
-# Cianfhoghlaim CLI — canonical stack deployment tooling
+# BRING-UP + DEPLOY
 # =============================================================================
-# Replaces the legacy bons:*/kcg:* task prefixes. Provides:
-#   - cianfhoghlaim:stack lint|plan|deploy|verify|rollback
-#   - cianfhoghlaim:secrets lint|verify|hydrate|seed
-#   - cianfhoghlaim:preflight
-#   - cianfhoghlaim:topology
-# Backed by scripts/cianfhoghlaim-cli.ts (TypeScript, bun runtime).
 
-[tasks."cianfhoghlaim:stack:lint"]
-description = "Lint every stack under bonneagar/stacks/ against the canonical 6-file contract"
-run = "bun run scripts/cianfhoghlaim-cli.ts stack lint ${@}"
+[tasks."bring-up:smoke-test"]
+description = "5-step bring-up smoke test for a fresh operator"
+depends = ["sync"]
+run = "bash scripts/bring-up-smoke-test.sh"
 
-[tasks."cianfhoghlaim:stack:lint-one"]
-description = "Lint a single stack against the canonical contract (alias of cianfhoghlaim:stack:lint — the underlying script accepts an optional stack-name positional arg)"
-run = "mise run cianfhoghlaim:stack:lint ${@}"
+[tasks."deploy:full"]
+description = "Full-stack deploy orchestrator (7-phase state machine with resumable checkpoints)"
+depends = ["sync", "preflight:arm-oci"]
+run = "bash scripts/deploy-full.sh ${@:-}"
 
-[tasks."cianfhoghlaim:stack:plan"]
-description = "Compute the deployment plan for one or all stacks (read-only)"
-run = "bun run scripts/cianfhoghlaim-cli.ts stack plan ${@}"
 
-[tasks."cianfhoghlaim:stack:deploy"]
-description = "Deploy one or all stacks (interactive by default; pass --non-interactive --yes --json for CI)"
-run = "bun run scripts/cianfhoghlaim-cli.ts stack deploy ${@}"
+# =============================================================================
+# [task_templates] — Repeating patterns
+# (4 templates that replace 50+ individual tasks in the old mise.toml)
+# =============================================================================
 
-[tasks."cianfhoghlaim:stack:verify"]
-description = "Verify Compose, Locket, service, and route health for a deployed stack"
-run = "bun run scripts/cianfhoghlaim-cli.ts stack verify ${@}"
+[task_templates."meaisin:ocr:test"]
+description = "Run meaisinfhoghlaim OCR entrypoint for {{arg(name=model)}}"
+usage = 'arg "<model>" help="OCR model key (e.g. qwen3-vl-8b, deepseek-ocr-2)"'
+depends = ["sync"]
+run = '''
+SAFE_NAME=$(echo "{{arg(model)}}" | tr '.-' '__')
+uv run python "scripts/meaisin_ocr_htr_tests/ocr_model_${SAFE_NAME}_extract.py" "$@"
+'''
 
-[tasks."cianfhoghlaim:stack:rollback"]
-description = "Roll back a stack to a previous known-good revision by receipt"
-run = "bun run scripts/cianfhoghlaim-cli.ts stack rollback ${@}"
+[task_templates."meaisin:converter:test"]
+description = "Run meaisinfhoghlaim converter entrypoint for {{arg(name=converter)}}"
+usage = 'arg "<converter>" help="Converter key (e.g. docling, marker)"'
+depends = ["sync"]
+run = '''
+uv run python "scripts/meaisin_ocr_htr_tests/converter_{{arg(converter)}}_extract.py" "$@"
+'''
 
-[tasks."cianfhoghlaim:secrets:lint"]
-description = "Lint secrets.env references against the Infisical vault (no reads)"
-run = "bun run scripts/cianfhoghlaim-cli.ts secrets lint ${@}"
-
-[tasks."stack-doctor:strict"]
-description = "CI gate: stack-doctor --strict + --check-grammar (fails on missing infisical:// refs OR mixed bare/Jinja grammar in any secrets.env)"
-run = "bash scripts/stack-doctor.sh --strict --check-grammar"
-
-[tasks."cianfhoghlaim:secrets:verify"]
-description = "Verify secrets.env references resolve (no values printed)"
-run = "bun run scripts/cianfhoghlaim-cli.ts secrets verify ${@}"
-
-[tasks."cianfhoghlaim:secrets:hydrate"]
-description = "Render secrets.env to a tmpfs file (no values persisted to disk)"
-run = "bun run scripts/cianfhoghlaim-cli.ts secrets hydrate ${@}"
-
-[tasks."cianfhoghlaim:secrets:seed"]
-description = "Seed Infisical vault entries from .env.local (explicit; confirm required)"
-run = "bun run scripts/cianfhoghlaim-cli.ts secrets seed ${@}"
-
-[tasks."cianfhoghlaim:preflight"]
-description = "Run topology + auth + secrets preflight checks before deploy"
-run = "bun run scripts/cianfhoghlaim-cli.ts preflight ${@}"
-
-[tasks."cianfhoghlaim:topology"]
-description = "Validate host placement (arm1-oci / bunchloch) for one or all stacks"
-run = "bun run scripts/cianfhoghlaim-cli.ts topology validate ${@}"
-
-[tasks."cianfhoghlaim:brand-lint"]
-description = "Fail if any active IaC file references the legacy brand or retired host tokens"
-run = "bun run scripts/cianfhoghlaim-cli.ts brand lint ${@}"
-
-# -----------------------------------------------------------------------------
-# Pre-deploy Blockers (per the 2026-07-30-pre-deploy-blockers-resolution-v1
-# openspec change). The 4 tasks below close GitHub issues #81, #82, #107
-# (the 3 pre-deploy blockers that gate `km run procedure
-# deploy-openclaw-arm1-oci` and `km run procedure deploy-openchamber-arm1-oci`).
-# -----------------------------------------------------------------------------
-
-[tasks."pre-deploy:fetch-image-digests"]
-description = "Fetch the real SHA256 digests for the openclaw + openchamber images (closes GitHub issue #81). Calls `bash scripts/fetch-image-digest.sh <image>` for each; emits the canonical pin (`ghcr.io/<org>/<repo>:<tag>@sha256:<64-hex>`) and writes the audit log to `stedding/pre-deploy/image-digests-{date}.json`. Falls back to a deterministic MOCK_MODE=1 digest when GHCR is unreachable."
-run = """
-bash scripts/fetch-image-digest.sh ghcr.io/openclaw/openclaw:2026.2.6
-bash scripts/fetch-image-digest.sh ghcr.io/openchamber/openchamber:1.0.0
-"""
-
-[tasks."pre-deploy:arm1-oci-headroom"]
-description = "Run the arm1-oci headroom check (closes GitHub issue #82). Calls `bash scripts/arm1-oci-headroom-check.sh` to snapshot the host's CPU/RAM/disk utilisation + container list to `stedding/pre-deploy/arm1-oci-headroom-{date}.json`, then calls `bash scripts/arm1-oci-headroom-decide.sh` to emit the deploy-or-abort verdict (✅ proceed / ⚠️ migrate / 🚫 abort). Exits 0 only when the verdict is ✅ proceed."
-run = """
-bash scripts/arm1-oci-headroom-check.sh ${@:-}
-bash scripts/arm1-oci-headroom-decide.sh
-"""
-
-[tasks."pre-deploy:generate-stack-docs"]
-description = "Generate per-stack markdown docs for all stacks under `bonneagar/stacks/` (closes GitHub issue #107). Calls `bash scripts/generate-stack-docs.sh` which emits `docs/stacks/<name>.md` for each stack + the combined INDEX.md. Pass --check to fail if any stack is missing a doc."
-run = "bash scripts/generate-stack-docs.sh ${@:-}"
-
-[tasks."pre-deploy:generate-stack-secrets"]
-description = "Normalize + verify the Infisical URI grammar across all 89 stacks' secrets.env files (closes GitHub issue #107). Calls `bash scripts/generate-stack-secrets-env.sh --check-grammar` which wraps `bun run scripts/normalize-infisical-uri.ts --check-grammar` and `bash scripts/stack-doctor.sh --check-grammar`. Exits 0 only when 0 mixed-grammar stacks are detected."
-run = "bash scripts/generate-stack-secrets-env.sh --check-grammar ${@:-}"
+[task_templates."meaisin:agent:test"]
+description = "Run meaisinfhoghlaim Agent entrypoint for {{arg(name=agent)}}"
+usage = 'arg "<agent>" help="Agent key (e.g. root, curriculum, translation)"'
+depends = ["sync"]
+run = '''
+uv run python "scripts/meaisin_ocr_htr_tests/agent_{{arg(agent)}}_extract.py" "$@"
+'''
