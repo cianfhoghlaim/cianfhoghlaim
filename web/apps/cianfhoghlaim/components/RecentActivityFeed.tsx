@@ -6,11 +6,16 @@
  * Surfaces the live pipeline activity (Phase 4-9 outputs) for the
  * last 24 hours. Feeds from the per-subject BAML extraction runs
  * + the CocoIndex embed events + the RAGAS validation cycles.
+ *
+ * Per the 2026-09-30-mega-3b-cocoindex-and-copilotkit-v1 change: the
+ * activity feed is now rendered via the canonical `DashboardSurface`
+ * (the A2UI surface generator wrapper from `a2ui/DashboardSurface.tsx`).
  */
 
 "use client";
 
 import { type FC, useState } from "react";
+import { DashboardSurface } from "./a2ui/DashboardSurface";
 
 export type ActivityKind =
   | "syllabus_extraction"
@@ -175,6 +180,20 @@ export const RecentActivityFeed: FC<RecentActivityFeedProps> = ({
         </select>
       </div>
 
+      {/* The A2UI dashboard surface (per the 2026-09-30-mega-3b change) */}
+      <DashboardSurface
+        data={{
+          nations: ["ireland", "england", "scotland", "wales", "ni"],
+          subjects: ["mathematics", "english", "gaeilge", "science"],
+          cells: displayedEvents.map((e) => ({
+            nation: e.subject,
+            subject: e.kind,
+            lo_a: e.id,
+            lo_b: e.kind,
+            similarity: 1.0,
+          })),
+        }}
+      />
       <div className="space-y-2">
         {displayedEvents.length === 0 ? (
           <p className="text-sm text-slate-500 text-center py-6">

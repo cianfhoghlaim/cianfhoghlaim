@@ -13,11 +13,16 @@
  *   5. University
  *   6. Memory (the cross-subject competency backbone)
  *   7. Activity (the cross-stage usage patterns)
+ *
+ * Per the 2026-09-30-mega-3b-cocoindex-and-copilotkit-v1 change: the
+ * knowledge graph is now rendered via the canonical `GraphSurface`
+ * (the A2UI surface generator wrapper from `a2ui/GraphSurface.tsx`).
  */
 
 "use client";
 
 import { type FC, useState } from "react";
+import { GraphSurface } from "./a2ui/GraphSurface";
 
 export interface KnowledgeGraphNode {
   /** The cluster ID (aistear | primary | jc | lc | uni | memory | activity) */
@@ -150,6 +155,27 @@ export const KnowledgeGraphPanel: FC<KnowledgeGraphPanelProps> = ({
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+        {/* The A2UI graph surface (per the 2026-09-30-mega-3b change) */}
+        <GraphSurface
+          data={{
+            nodes: clusters.map((c) => ({
+              id: c.id,
+              label: c.name,
+              cluster: c.stage,
+            })),
+            edges: clusters.flatMap((c, i) =>
+              i < clusters.length - 1
+                ? [
+                    {
+                      source: c.id,
+                      target: clusters[i + 1].id,
+                      weight: 0.5,
+                    },
+                  ]
+                : [],
+            ),
+          }}
+        />
         {clusters.map((cluster) => (
           <button
             key={cluster.id}
