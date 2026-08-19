@@ -1,13 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#   "marimo>=0.14.10", "ibis-framework[duckdb]>=9.0", "duckdb>=1.0",
-#   "pandas>=2.2", "altair>=5.0", "pyarrow>=15", "anywidget>=0.9",
-#   "traitlets>=5.14", "python-dotenv>=1.0",
-# ]
-# [tool.uv]
-# package = "biep-v3-junior-cycle-dashboard"
-# ///
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 
 """BIEP v3 Junior Cycle pipeline dashboard — 8 NCCA Junior Cycle subjects at full scope.
 

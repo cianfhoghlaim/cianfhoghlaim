@@ -1,16 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#   "marimo>=0.13",
-#   "ibis-framework[duckdb]>=9.0",
-#   "pandas>=2.2",
-#   "altair>=5.0",
-#   "pyarrow>=15",
-# ]
-#
-# [tool.uv]
-# package = "biep-v2-england-explorer"
-# ///
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 
 """England AQA + OCR + Edexcel Explorer — side-by-side awarding-body comparison.
 

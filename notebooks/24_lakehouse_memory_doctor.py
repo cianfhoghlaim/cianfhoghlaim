@@ -1,14 +1,4 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = [
-#   marimo>=0.13,
-#   duckdb>=1.0,
-#   pandas>=2.2,
-#   altair>=5.0,
-#   pyarrow>=15,
-#   traitlets>=5.14,
-# ]
-# ///
+from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 """24 — Lakehouse Memory Doctor (5-backend health).
 
 Visualises the 2 ADDED Requirements of the

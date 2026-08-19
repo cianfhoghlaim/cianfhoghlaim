@@ -1,7 +1,9 @@
 """CocoIndex v1 factory for the 4-stage BIEP BIEP parity CocoIndex v1 Apps.
 
 Per the 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1 change
-(Phase 6 - extend CocoIndex factories to all 60 subjects).
+(Phase 6 - extend CocoIndex factories to all 60 subjects) +
+the 2026-11-25-mega-3c-marimo-and-integration-v1 change (FF.6:
+BAML → CocoIndex wiring).
 
 This module is the **canonical single source of truth** for the 4-stage
 CocoIndex v1 BIEP Apps:
@@ -16,9 +18,15 @@ Total: 11 + 16 + 27 + 45 = 99 CocoIndex Apps
 The factory instantiates 1-2 CocoIndex Apps per subject (English + Gaeilge variants)
 and embeds via the canonical BAAI/bge-m3 1024-d embedder.
 
+**BAML → CocoIndex wiring (FF.6)**: Each CocoIndex App calls the
+canonical BAML extraction function via `BAMLFunctionTool` (per the
+2026-08-26-mega-3a-baml-and-adk-v1 change). The 5 lc6 BAML functions
+are exposed as CocoIndex `@coco.fn` operations.
+
 Each App:
 - Reads from the canonical BIEP v3 DuckLake namespace
   `cianhoghlaim.education.<stage>.<board>.<subject>.voted_canonical`
+- Calls `b.Extract<Stage><Subject>(...)` for extraction
 - Embeds via the canonical BAAI/bge-m3 1024-d embedder
 - Writes to the canonical BIEP v3 LanceDB table
   `cianhoghlaim.<stage>.<board>.<subject>_<lang>_chunks`
@@ -28,12 +36,13 @@ Conforms to R1–R4 (imports shared_lifespan + LANCE_DB + EMBEDDER).
 Reference:
   openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/
   specs/per-subject-coverage/spec.md
+  openspec/changes/2026-11-25-mega-3c-marimo-and-integration-v1/specs/british-isles-education-pipeline-v3/spec.md
 """
 from __future__ import annotations
 
 import pathlib
 from dataclasses import dataclass
-from typing import Annotated
+from typing import Annotated, Any, Callable
 
 import cocoindex as coco
 from cocoindex.connectors import lancedb
@@ -47,6 +56,67 @@ from ..._shared._lifespan import (
     LANCE_DB,
     shared_lifespan,
 )
+
+# Lazy import for the BAML client (optional at type-check time)
+try:
+    from baml_client.baml_client import b
+    _HAS_BAML = True
+except ImportError:
+    _HAS_BAML = False
+    b = None  # type: ignore
+
+
+# ============================================================================
+# The 60-subject per-stage coverage matrix
+# ============================================================================
+
+# The 5 BAML extraction functions per stage (per the 5 stage templates
+# from the 2026-08-26-mega-3a-baml-and-adk-v1 change)
+LC_BAML_FUNCTIONS = (
+    "ExtractCurriculumSyllabus",
+    "ExtractExamPaperLayout",
+    "ExtractMarkingSchemeGuideline",
+    "ExtractCrossLinguisticConcept",
+    "ExtractSyllabusDiagram",
+)
+
+JC_BAML_FUNCTIONS = (
+    "ExtractJuniorCycleCurriculum",
+    "ExtractJuniorCycleExamPaper",
+    "ExtractJuniorCycleCBADescriptor",
+    "ExtractJuniorCycleShortCourse",
+)
+
+A_LEVEL_BAML_FUNCTIONS = (
+    "ExtractALevelCurriculumSyllabus",
+    "ExtractALevelExamPaperLayout",
+    "ExtractALevelMarkingSchemeGuideline",
+    "ExtractALevelSyllabusDiagram",
+    "ExtractALevelCrossSubjectTopics",
+    "ExtractALevelPerQuestionScheme",
+)
+
+GCSE_BAML_FUNCTIONS = (
+    "ExtractGCSECurriculumSyllabus",
+    "ExtractGCSEExamPaperLayout",
+    "ExtractGCSEMarkingSchemeGuideline",
+    "ExtractGCSESyllabusDiagram",
+    "ExtractGCSECrossSubjectTopics",
+    "ExtractGCSEPerQuestionScheme",
+)
+
+
+def get_baml_function(name: str) -> Callable[..., Any]:
+    """Look up a BAML function by name (for the 4-stage factories)."""
+    if not _HAS_BAML:
+        raise ImportError(
+            "baml-py is required for the 4-stage CocoIndex factories. "
+            "Install with `uv add baml-py` and run `mise run baml:generate`."
+        )
+    fn = getattr(b, name, None)
+    if fn is None:
+        raise ValueError(f"BAML function `{name}` does not exist.")
+    return fn
 
 
 # ============================================================================
