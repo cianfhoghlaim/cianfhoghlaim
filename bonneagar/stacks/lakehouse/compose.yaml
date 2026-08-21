@@ -213,17 +213,22 @@ services:
       - lakehouse
 
   # ---------------------------------------------------------------------------
-  # POSTGRESQL - Centralised Database (12 databases)
+  # POSTGRESQL - Centralised Database (14 databases)
   # ---------------------------------------------------------------------------
-  # Hosts 12 databases shared across the platform:
+  # Hosts 14 databases shared across the platform (added 2026-08-22):
   #   6 DuckLake (ducklake_cianfhoghlaim, _crypteolas, _aleyum, _croilar, _tuath,
   #              _meaisinfhoghlaim)
   #   dagster_local, olake_state, nimtable, langfuse, mlflow, litellm
+  #   cognee_cianfhoghlaim  (cognee knowledge graph builder — added 2026-08-15)
+  #   olake_source          (Olake CDC source DB — added 2026-08-22)
   # See init-db.sql for the complete list.
   # POSTGRES_PASSWORD must be set via Infisical (never hardcode).
+  # IMAGE: pgvector/pgvector:pg17 (was postgres:16-alpine — 2026-08-22 hardening).
+  # Includes pgvector (for Cognee vector storage) + postgresql-contrib (for
+  # Lakekeeper migrations — uuid-ossp/pgcrypto/pg_trgm/btree_gin/btree_gist).
   # ---------------------------------------------------------------------------
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg17
     container_name: lakehouse-postgres
     restart: unless-stopped
     ports:
@@ -429,6 +434,11 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
     networks:
       - lakehouse
       - pangolin
@@ -507,7 +517,11 @@ services:
       # Source Postgres (for the source connector — separate from state DB)
       SOURCE_DB_HOST: ${OLAKE_SOURCE_HOST:-postgres}
       SOURCE_DB_PORT: ${OLAKE_SOURCE_PORT:-5432}
-      SOURCE_DB_NAME: ${OLAKE_SOURCE_DB:-staging_pg}
+      # CHANGED 2026-08-22 (lakehouse-config-and-env-var-hardening-v1):
+      # olake_source is now created by lakehouse/init-db.sql so Olake CDC
+      # jobs have a real source DB to connect to (was the placeholder
+      # `staging_pg` which never existed).
+      SOURCE_DB_NAME: ${OLAKE_SOURCE_DB:-olake_source}
       SOURCE_DB_USER: ${OLAKE_SOURCE_USER:-lakekeeper}
       SOURCE_DB_PASSWORD: ${OLAKE_SOURCE_PASSWORD:-devpassword}
       SOURCE_DB_SSLMODE: ${OLAKE_SOURCE_SSLMODE:-prefer}
@@ -668,6 +682,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      lance-namespace:
+        condition: service_healthy  # ADDED 2026-08-22 — cognee writes vectors via Lance Namespace
       # locket injected via -f sidecar.yaml
     networks:
       - lakehouse
@@ -818,11 +834,19 @@ services:
       - lakehouse-memgraph-log:/var/log/memgraph
     command: ["--log-level=${MEMGRAPH_LOG_LEVEL:-WARNING}"]
     healthcheck:
-      test: ["CMD", "echo", ">", "/dev/tcp/localhost/7687"]
+      # CHANGED 2026-08-22: HTTP /status probe via the :7444 endpoint
+      # (the previous /dev/tcp probe only verified port reachability, not
+      # that the Bolt protocol was actually responsive).
+      test: ["CMD-SHELL", "curl -sf http://localhost:7444/status || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
     networks:
       - lakehouse
       - pangolin
@@ -847,6 +871,11 @@ services:
     depends_on:
       memgraph:
         condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
     networks:
       - lakehouse
       - pangolin
