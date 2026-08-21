@@ -1,5 +1,5 @@
-from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
-"""Per-subject BIEP pipeline — the canonical per-subject marimo template.
+"""
+# canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)Per-subject BIEP pipeline — the canonical per-subject marimo template.
 
 Per the 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1
 change (Phase 9 - per-subject notebooks).
@@ -39,7 +39,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     from notebooks._shared.marimo_patterns import setup_biep_registry_header
-    setup_biep_registry_header(app)
+    _ctx = setup_biep_registry_header()
     return
 
 
@@ -100,10 +100,12 @@ def _():
 def _(duckdb, ibis, pd):
     # Step 1: DLT — Read the canonical per-subject PDFs
     # (consumed from leaving_certificate/lc/gaeilge/)
-    pdf_root = f"leaving_certificate/lc/gaeilge"
-    conn = ibis.duckdb.connect(f"{pdf_root}.duckdb")
+    import os
+    pdf_root = os.environ.get("CIANFHOGHLAIM_LC_ROOT", "/Users/cianmacandeisigh/dev/kings_college_galway/leaving_certificate")
+    pdf_db = ":memory:"  # in-memory DuckDB so we don't fail-open the file (per 2026-08-21 audit)
+    conn = ibis.duckdb.connect(pdf_db)
     pdf_count = conn.execute("SELECT COUNT(*) FROM pdfs").scalar() if "pdfs" in conn.list_tables() else 0
-    df_pdfs = pd.DataFrame({"pdf_count": [pdf_count]})
+    df_pdfs = pd.DataFrame({"pdf_count": [pdf_count], "pdf_root": [pdf_root]})
     return conn, df_pdfs, pdf_root
 
 
@@ -261,4 +263,27 @@ def _():
 
 
 if __name__ == "__main__":
-    app.run()
+    from notebooks._shared.marimo_patterns import (
+        cli_argparser_biep, cli_main_if_argv,
+    )
+    def _cli_main(argv=None):
+        parser = cli_argparser_biep("notebooks_lc_gaeilge.py")
+        args = parser.parse_args(argv)
+        import subprocess, json
+        subprocess.run(
+            ["dagster", "asset", "materialize", "--asset-key", "sf_filesystem_leaving_cert_gaeilge"],
+            capture_output=True, text=True, timeout=60,
+        )
+        payload = {
+            "notebook": "notebooks/lc/gaeilge.py",
+            "milestone": args.milestone,
+            "asset_check": args.asset_check,
+            "jurisdiction": args.jurisdiction,
+            "pdf_root": "/leaving_certificate/gaeilge",
+            "dagster_run": "scheduled",
+        }
+        if args.output == "json": print(json.dumps(payload, indent=2))
+        elif args.output == "table":
+            for k, v in payload.items(): print(f"{k:30s} {v}")
+        return 0
+    cli_main_if_argv(_cli_main, app)
