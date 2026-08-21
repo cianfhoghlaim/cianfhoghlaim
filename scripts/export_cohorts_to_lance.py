@@ -4,7 +4,7 @@
 Per the 2026-08-13 lakehouse full activation plan (Phase 2.7):
 
 The original `consume_voted_ducklake_to_lance()` function (in
-`cocoindex/subjects/education_subject_embedding.py`) reads from
+`cocoindex_flows/subjects/education_subject_embedding.py`) reads from
 MotherDuck + assumes a `voted_canonical` table. Neither exists in
 our local deploy. This script adapts the same idea to our local
 DuckLake + writes to a local Lance dataset (file-based, no LanceDB

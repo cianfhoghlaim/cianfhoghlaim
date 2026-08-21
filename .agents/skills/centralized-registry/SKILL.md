@@ -253,13 +253,13 @@ current ~378-LOC. Full rollout saves ~3,300 LOC across 10 files
 
 ## 7. CocoIndex factory pattern
 
-The canonical example: `cocoindex/european_nations/_factory.py`
+The canonical example: `cocoindex_flows/european_nations/_factory.py`
 collapses 40 nation CocoIndex Apps into one factory. See
 `cocoindex/AGENTS.md` "The factory pattern" section.
 
 ## 7. CocoIndex factory pattern
 
-The canonical example: `cocoindex/european_nations/_factory.py`
+The canonical example: `cocoindex_flows/european_nations/_factory.py`
 collapses 40 nation CocoIndex Apps into one factory. See
 `cocoindex/AGENTS.md` "The factory pattern" section.
 
@@ -315,7 +315,7 @@ isn't routed through `MODEL_REGISTRY`.
 - `scripts/registry_audit.py` (the drift detector)
 - `agents/adk/litellm_agent.py` (the LiteLlm helper)
 - `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py`
-- `cocoindex/european_nations/_factory.py` (the factory pattern)
+- `cocoindex_flows/european_nations/_factory.py` (the factory pattern)
 - `deployment-choice.yaml` (the canonical enablement file)
 
 ## 10. The 6 follow-up issues
@@ -625,7 +625,7 @@ routes via `model_for('image_gen', role)` — never hardcodes a model
 string.
 
 The CocoIndex flow is at
-`cocoindex/media/image_generation_flow.py` (R1–R4 conformance +
+`cocoindex_flows/media/image_generation_flow.py` (R1–R4 conformance +
 the canonical `bge-m3` embedder + LanceDB target table
 `cianhoghlaim.media.image_gen_chunks`).
 

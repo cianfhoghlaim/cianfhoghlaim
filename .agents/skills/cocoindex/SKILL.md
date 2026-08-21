@@ -27,7 +27,7 @@ Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
 
 - CocoIndex Apps are now under `cianfhoghlaim.cocoindex.<subdir>` (NOT
   `cianfhoghlaim.cocoindex_flows.<subdir>`)
-- The shared lifespan is at `cianfhoghlaim.cocoindex._shared._lifespan`
+- The shared lifespan is at `cianfhoghlaim.cocoindex_flows._shared._lifespan`
   (use `from .._shared._lifespan import shared_lifespan, LANCE_DB, EMBEDDER`)
 - Each App's module-scope `app = coco.App(...)` MUST be named `app` for
   the R3 linter to pass; for Apps using other names (like
@@ -64,13 +64,13 @@ own state — only when an example writes to a target database).
 
 **Round 8 phase 1 (2026-06-23) — code-graph companion pattern:**
 
-The canonical v1 codebase indexer (`cocoindex/codebase_indexing.py`)
+The canonical v1 codebase indexer (`cocoindex_flows/codebase_indexing.py`)
 now has a code-graph companion v1 App (`codebase_graph_app`) that
 extracts AST relationships into 2 LanceDB tables
 (`codebase_graph` + `codebase_graph_edges`). 7 node types +
 7 edge types, 11 languages with Tree-sitter AST mappings,
 29+ languages detected via
-`cocoindex/chunking/languages.py`. The companion
+`cocoindex_flows/chunking/languages.py`. The companion
 App is driven by 3 Dagster assets in
 `orchestration/defs/3_model_lifecycle/codebase_assets.py`:
 `codebase_chunks`, `codebase_code_graph`, `codebase_architecture_docs`.
@@ -100,8 +100,8 @@ Driven by 4 Dagster assets in
 **Round 7 phase 3 (2026-06-24) — 2 v1 embedding Apps:**
 
 The unified embedding pipeline from
-`cocoindex/unified_embedding.py` is now on v1
-CocoIndex via 2 Apps in `cocoindex/unified_embedding.py`:
+`cocoindex_flows/unified_embedding.py` is now on v1
+CocoIndex via 2 Apps in `cocoindex_flows/unified_embedding.py`:
 
 - `unified_app` (v1 App `UnifiedEmbedding`) — reads from any DuckDB
   connection (default: `crypteolas_catalog.docs.scraped_documents`),
@@ -630,7 +630,7 @@ this repo is the source of one or more `DocSkill` nodes in the
 `docs_skills_graph` FalkorDB graph and one or more `docs_skills_chunks`
 rows in LanceDB.
 
-- **App**: `cocoindex/docs_skills_consolidation.py`
+- **App**: `cocoindex_flows/docs_skills_consolidation.py`
 - **Dagster assets**: `orchestration/defs/4_asset_generation/docs_skills_assets.py`
   (groups `docs_skills` + `codebase`)
 - **BAML schema**: `baml/docs_skills_consolidation.baml`
@@ -641,7 +641,7 @@ rows in LanceDB.
 
 The companion codebase-indexing v1 App (replacement for the legacy
 `ccc` CLI) lives at
-`cocoindex/codebase_indexing.py`; see the `ccc`
+`cocoindex_flows/codebase_indexing.py`; see the `ccc`
 skill's deprecation banner.
 
 **For comprehensive documentation:** <https://cocoindex.io/docs/>
@@ -741,7 +741,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 ### 2026-06-25 update (CocoIndex v1.0.7 + the `upstream-package-monitoring` skill)
 
 - **`cocoindex_v1_conformance` App** — the 14th v1 App in the KCG
-  oideachais tree (`cocoindex/cocoindex_v1_conformance.py`).
+  oideachais tree (`cocoindex_flows/infrastructure/cocoindex_v1_conformance.py`).
   It's a static AST linter that checks every other v1 App against
   the 4-rule conformance contract:
   - **R1** — `from ._lifespan import shared_lifespan` (delegates to
@@ -755,12 +755,12 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
   Run via `mise run upstream:conformance`. See the
   `cianfhoghlaim-cocoindex-v1` skill for the full 14-App registry.
 - **`upstream_api_surface` App** — the 15th v1 App
-  (`cocoindex/upstream_api_surface.py`). Watches
+  (`cocoindex_flows/upstream_api_surface.py`). Watches
   the 5 canonical cocoindex docs URLs + `llms-full.txt` and BAML-extracts
   `ApiChange` records via `ExtractCocoIndexApiChange`. See
   `openspec/changes/upstream-package-monitoring/proposal.md`.
 - **`upstream_blog_monitor` App** — the 16th v1 App
-  (`cocoindex/upstream_blog_monitor.py`).
+  (`cocoindex_flows/upstream_blog_monitor.py`).
   Reads Firecrawl-monitor payloads from
   `s3://cianfhoghlaim-upstream-webhooks/<package>/...`, BAML-extracts
   `BlogPostMetadata` via `ExtractBlogPostMetadata`, embeds chunks, and
@@ -785,7 +785,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) defines
 **7 v1 CocoIndex Apps** — one per LC subject plus the
 `gov.ie` circulars ingester — sharing the canonical
-`cocoindex/_lifespan.py` (the `LANCE_DB` +
+`cocoindex_flows/_lifespan.py` (the `LANCE_DB` +
 `EMBEDDER` + `RESOLVED_FILE_REGISTRY` triad per REFACTORING.md
 item 12). The BIEP uses `BAAI/bge-m3` (1024-d, multilingual)
 for the embedder so Gaeilge and English chunks share a single
@@ -858,7 +858,7 @@ The 7 BIEP v1 Apps follow this template — swap `MathChunk` for
 (`cianfhoghlaim.lc.<subject>.<level>_<lang>` /
 `cianfhoghlaim.education.ie.gov_circulars`), and update the source
 directory. All 7 import `shared_lifespan` from
-`cocoindex/_lifespan.py` to satisfy the v1
+`cocoindex_flows/_lifespan.py` to satisfy the v1
 conformance contract (`R1`–`R4` from
 `cianfhoghlaim-cocoindex-v1/SKILL.md`).
 
@@ -897,4 +897,4 @@ Cross-references:
 - [`.agents/skills/dagster/SKILL.md`](../dagster/SKILL.md) —
   the 42 lc5/lc6 assets
 
-> Docs badge: every page renders `v 1.0.7` / `Last reviewed Jun 23, 2026` — frozen since 2026-06-23, even after 7 newer releases. The "Copy page as Markdown" / "Open in ChatGPT" / "Open in Claude" buttons are present on every URL fetched in this verification (install path: `npx skills install cocoindex/cocoindex --skill <slug>`).
+> Docs badge: every page renders `v 1.0.7` / `Last reviewed Jun 23, 2026` — frozen since 2026-06-23, even after 7 newer releases. The "Copy page as Markdown" / "Open in ChatGPT" / "Open in Claude" buttons are present on every URL fetched in this verification (install path: `npx skills install cocoindex_flows/cocoindex --skill <slug>`).

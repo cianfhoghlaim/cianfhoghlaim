@@ -325,7 +325,7 @@ def _documentation(mo):
         ### CocoIndex skills
         - `.agents/skills/cocoindex/SKILL.md` — the canonical CocoIndex v1
           master router
-        - `cocoindex/_shared/_lifespan.py` — the canonical `shared_lifespan`
+        - `cocoindex_flows/_shared/_lifespan.py` — the canonical `shared_lifespan`
           + `LANCE_DB` + `EMBEDDER` ContextKeys (R1 + R2 conformance)
 
         ### R1–R4 conformance
@@ -346,16 +346,16 @@ def _documentation(mo):
         `dg.MetadataValue.md(...)` fix-instructions block.
 
         ### File locations
-        - `cocoindex/biep_parity/` — the 8 BIEP v3 Ireland apps + 2 BIEP v3
+        - `cocoindex_flows/biep_parity/` — the 8 BIEP v3 Ireland apps + 2 BIEP v3
           parity apps + 6 BIEP v1 parity apps
-        - `cocoindex/biep_parity/ireland_lc_*_embedding.py` — the 6
+        - `cocoindex_flows/biep_parity/ireland_lc_*_embedding.py` — the 6
           Ireland LC per-subject apps (mathematics, chemistry, geography,
           english, gaeilge, computer_science)
-        - `cocoindex/biep_parity/ireland_jc_apps.py` — the 88 Ireland JC
+        - `cocoindex_flows/biep_parity/ireland_jc_apps.py` — the 88 Ireland JC
           apps (parameterised factory)
-        - `cocoindex/biep_parity/england_a_level_apps.py` — the 147
+        - `cocoindex_flows/biep_parity/england_a_level_apps.py` — the 147
           England A-Level apps (parameterised factory)
-        - `cocoindex/biep_parity/england_gcse_apps.py` — the 129 England
+        - `cocoindex_flows/biep_parity/england_gcse_apps.py` — the 129 England
           GCSE apps (parameterised factory)
         """
     )
