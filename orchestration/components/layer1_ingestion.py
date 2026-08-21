@@ -158,7 +158,9 @@ class CelticIngestionComponent(Component, Resolvable):
         if self.automation == "on_dlt_freshness":
             return dg.AutomationCondition.any_deps_updated()
         # manual: never auto-materialise
-        return dg.AutomationCondition.manually()
+        # Dagster 1.13 has no `AutomationCondition.manually()` — `None` is how
+        # "never auto-materialise, launch by hand" is expressed.
+        return None
 
     def build_defs(self, context: ComponentLoadContext) -> dg.Definitions:
         # The state-backed path: re-implement the Component's lifecycle.
