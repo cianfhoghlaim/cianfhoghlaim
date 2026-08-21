@@ -12,7 +12,9 @@ services:
   # LOCKET - Secrets Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: olm-oracle-locket
     user: "65532:65532"
     restart: unless-stopped
@@ -24,7 +26,7 @@ services:
       - "--provider=infisical"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-url=$${INFISICAL_URL:-https://infisical.cianfhoghlaim.ie}"
       - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
       - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}"
       - "--connect.host=$${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}"
@@ -34,6 +36,7 @@ services:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
       - olm-oracle-secrets:/run/secrets/locket
     extra_hosts:
       - host.docker.internal:host-gateway

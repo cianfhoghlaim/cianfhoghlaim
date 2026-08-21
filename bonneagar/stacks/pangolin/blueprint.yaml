@@ -1,0 +1,156 @@
+# bonneagar/stacks/pangolin/blueprint.yaml
+#
+# ADDED 2026-08-21 (per the 2026-08-21-pangolin-infisical-komodo-core-24-7-redeploy-v1
+# openspec change). This file completes the 6-file GOLD_STANDARD pattern for the
+# pangolin stack (which previously had 5/6 — missing only blueprint.yaml; per the
+# stack-doctor audit that flagged `pangolin` as the 1 self-referential outlier).
+#
+# Per the 6-label pattern documented in openspec/specs/infrastructure-stacks/spec.md
+# `Requirement: Pangolin 6-Label Pattern`:
+#   1. pangolin.private-resources.<name>.name — unique slug
+#   2. pangolin.private-resources.<name>.mode — http / tcp / udp
+#   3. pangolin.private-resources.<name>.full-domain — the FQDN
+#   4. pangolin.private-resources.<name>.destination-port — the container port
+#   5. pangolin.private-resources.<name>.protocol — http / https
+#   6. pangolin.private-resources.<name>.roles[0] — the Traefik role
+#
+# This is a **rendered** Pangolin state — what the IaC sync-resources command
+# targets. The pangolin.yaml is the source-of-truth for what gets synced;
+# this blueprint.yaml is what Pangolin currently has (per the IaC reconcile loop).
+#
+# Per the change: the 4 manually-created private resources (komodo, cal-diy,
+# infisical, openchamber) are DELETE-then-CREATEd by iac:sync:resources via the
+# MANUAL_OVERRIDE_NICE_IDS set. The other resources listed here are the canonical
+# IaC-managed ones.
+#
+# Spec: openspec/changes/2026-08-21-pangolin-infisical-komodo-core-24-7-redeploy-v1/
+# =============================================================================
+
+pangolin:
+  private-resources:
+    # ------------------------------------------------------------------
+    # Core 24/7 control plane (the 4 stacks + the bundled services)
+    # ------------------------------------------------------------------
+    pangolin-dashboard:
+      name: pangolin-dashboard
+      mode: http
+      full-domain: pangolin.cianfhoghlaim.ie
+      destination-port: 3001
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    infisical-backend:
+      name: infisical-backend
+      mode: http
+      full-domain: infisical.cianfhoghlaim.ie
+      destination-port: 8080
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    infisical-backend-api:
+      name: infisical-backend-api
+      mode: http
+      full-domain: api.infisical.cianfhoghlaim.ie
+      destination-port: 8080
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    komodo-core:
+      name: komodo-core
+      mode: http
+      full-domain: komodo.cianfhoghlaim.ie
+      destination-port: 9120
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    forgejo:
+      name: forgejo
+      mode: http
+      full-domain: forgejo.cianfhoghlaim.ie
+      destination-port: 3000
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    # ------------------------------------------------------------------
+    # Bundled inside pangolin/compose.yaml
+    # ------------------------------------------------------------------
+    tinyauth:
+      name: tinyauth
+      mode: http
+      full-domain: auth.cianfhoghlaim.ie
+      destination-port: 8443
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    pocketid-admin:
+      name: pocketid-admin
+      mode: http
+      full-domain: pocketid.cianfhoghlaim.ie
+      destination-port: 1411
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    # ------------------------------------------------------------------
+    # Resource-sync-managed services (managed via bonneagar/komodo/resource-syncs/arm1-oci.toml)
+    # ------------------------------------------------------------------
+    garage-s3:
+      name: garage-s3
+      mode: http
+      full-domain: garage.cianfhoghlaim.ie
+      destination-port: 3900
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    middleware-manager:
+      name: middleware-manager
+      mode: http
+      full-domain: middleware.cianfhoghlaim.ie
+      destination-port: 8080
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    backrest:
+      name: backrest
+      mode: http
+      full-domain: backrest.cianfhoghlaim.ie
+      destination-port: 9911
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    beszel:
+      name: beszel
+      mode: http
+      full-domain: beszel.cianfhoghlaim.ie
+      destination-port: 8090
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    dozzle:
+      name: dozzle
+      mode: http
+      full-domain: dozzle.cianfhoghlaim.ie
+      destination-port: 8080
+      protocol: https
+      roles:
+        - secure-headers@file
+
+    # ------------------------------------------------------------------
+    # NOTE: the 4 manually-created private resources (komodo, cal-diy,
+    # infisical, openchamber) are DELETE-then-CREATEd by iac:sync:resources.
+    # They are NOT listed here because their YAML declarations are owned
+    # by the manual override set (MANUAL_OVERRIDE_NICE_IDS in
+    # bonneagar/iac/commands/sync-resources.ts). The IaC will delete the
+    # manual ones and recreate them per the canonical pattern when
+    # `mise run iac:sync:resources` runs in Phase 1 of the redeploy.
+    # ------------------------------------------------------------------

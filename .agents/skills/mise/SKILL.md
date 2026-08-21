@@ -247,6 +247,23 @@ run = "uv run dagster dev -m orchestration.definitions"
 - **NEVER** put `uv run python <long-script.py>` as a TOML one-liner —
   move to `mise-tasks/<namespace>/<name>.sh`.
 
+## `mise fmt` + `mise generate` (the newer subcommands)
+
+Mise 2026.5+ shipped two new top-level subcommands we use now:
+
+- **`mise fmt`** — auto-formats `mise.toml` (sorts keys, cleans whitespace). Would catch the manual TOML issues like escape conflicts and multi-line array problems.
+- **`mise generate`** — generates files for various tools/services (bootstrap scripts, devcontainer configs, GitHub Actions, git pre-commit hooks).
+
+### Tasks for the new subcommands
+
+| Task | Command | Purpose |
+|:--|:--|:--|
+| `core:mise:fmt` | `mise fmt` | Auto-format root `mise.toml` |
+| `core:mise:fmt:check` | `mise fmt --check` | CI gate (exits 1 on diff) |
+| `core:mise:fmt:all` | `mise fmt --all` | Format all subproject `mise.toml` files |
+| `core:mise:generate:pre-commit` | `mise generate git-pre-commit` | Generate a git pre-commit hook |
+| `core:mise:generate:devcontainer` | `mise generate devcontainer` | Generate a devcontainer config |
+
 ## Skill pointers
 
 - `mise.toml` — canonical task catalogue
@@ -261,4 +278,6 @@ run = "uv run dagster dev -m orchestration.definitions"
 - File tasks: <https://mise.jdx.dev/tasks/file-tasks.html>
 - Monorepo tasks: <https://mise.jdx.dev/tasks/monorepo.html>
 - Task configuration: <https://mise.jdx.dev/tasks/task-configuration.html>
+- `mise fmt`: <https://mise.jdx.dev/cli/fmt.html>
+- `mise generate`: <https://mise.jdx.dev/cli/generate.html>
 - This skill: `.agents/skills/mise/SKILL.md`

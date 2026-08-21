@@ -22,6 +22,7 @@
     "iac:health": "cd iac && bun run health",
     "iac:rotate-auth": "cd iac && bun run rotate-auth",
     "iac:teardown": "cd iac && bun run teardown --force",
+    "iac:teardown-stack": "cd iac && bun run teardown-stack",
     "iac:sync:secrets": "cd iac && bun run sync:secrets",
     "iac:sync:resources": "cd iac && bun run sync:resources",
     "iac:sync:procedures": "cd iac && bun run sync:procedures",

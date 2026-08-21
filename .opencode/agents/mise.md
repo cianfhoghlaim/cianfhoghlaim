@@ -31,6 +31,12 @@ You are the canonical Cianfhoghlaim mise-task authoring subagent. You author, re
 
 - `mise.toml` — the canonical task catalogue (9 namespaces after the 2026-08-19 refactor)
 - `mise-tasks/<namespace>/<name>.sh` — the file tasks (with `#MISE` frontmatter)
+
+# Bun 1.4+ API surface (for scripts that need them)
+- `Bun.cron("*/5 * * * *", () => ...)` — scheduled jobs (replaces node-cron)
+- `Bun.markdown` — markdown rendering (replaces marked)
+- `Bun.Image` — image processing (replaces sharp)
+- `Bun.serve({ port: 3000, routes: { "/": staticFile("public/index.html") } })` — static files (replaces serve-static)
 - `.infisical.env` — the secret template (committed)
 - `.env` — the hydrated runtime (gitignored, auto-hydrated via mise + Locket)
 - `scripts/init-vault.ts` — the Infisical vault sync script

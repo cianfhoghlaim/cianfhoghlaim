@@ -27,9 +27,10 @@ python = "3.13"
 uv = "latest"
 bun = "latest"
 dagger = "latest"
-# POST-2026-08-22: pin mise to 2026.8.10+ so [monorepo_root] is recognized
-# (was silently ignored on 2026.5.6; see openspec/changes/2026-08-22-mise-upgrade-monorepo-root-activation-v1/)
-mise = "2026.8.10"
+# NOTE: mise cannot self-install via [tools] mise. Install mise 2026.8.10+
+# manually via the standalone installer (https://mise.jdx.dev/installing-mise.html)
+# so that [monorepo_root] below is recognized (was silently ignored on 2026.5.6).
+# See openspec/changes/2026-08-22-mise-upgrade-monorepo-root-activation-v1/
 
 # Cloud & Infrastructure
 gh = "latest"
@@ -732,6 +733,11 @@ run = "openspec context-store --help"
 description = "OPENSPEC initiative — create and list coordinated initiatives (openspec 1.4+)"
 alias = ["openspec:init"]
 run = "openspec initiative --help"
+
+[tasks."openspec:upgrade"]
+description = "OPENSPEC upgrade — print the install command to upgrade openspec to the latest version (1.10+; user must run)"
+alias = ["openspec:version:upgrade"]
+run = "echo 'Run: bun add -g @fission-ai/openspec@latest' && openspec --version"
 
 
 # =============================================================================

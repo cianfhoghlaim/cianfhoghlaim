@@ -169,6 +169,27 @@ declare an informational dependency.
 - `.cocoindex_code/guides.yml#openspec archive search` — prior-art
   search across pending + archived
 
+## New in openspec 1.10 (2026-08-22)
+
+The latest openspec is **1.10.0** (we run 1.4.1). Upgrade via:
+
+```bash
+mise run openspec:upgrade  # prints the install command
+bun add -g @fission-ai/openspec@latest
+```
+
+The 1.10 release line adds:
+
+- **Stores Beta** — separates specs, changes, and planning context from a single repository (multi-repo support)
+- **`/opsx:explore`** — brownfield adoption mode (think before you commit)
+- **`/opsx:onboard`** — first-time walkthrough skill
+- **Improved change inference in `opsx apply`** — auto-detects target change from context
+- **"Prevent implementation during explore mode" guardrail** — keeps focus on thinking/discovery
+
+The spec-driven schema (our current workflow) is **stable** and
+backward-compatible. Upgrading to 1.10 should not break our existing
+78 pending + 96 archived changes.
+
 ## References
 
 - OpenSpec docs: <https://github.com/Fission-AI/OpenSpec>

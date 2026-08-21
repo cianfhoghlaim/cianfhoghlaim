@@ -52,6 +52,7 @@ export async function dispatch(command: string) {
     case "deploy": return (await import("./commands/deploy.ts")).deploy();
     case "bootstrap": return (await import("./commands/bootstrap.ts")).bootstrap();
     case "teardown": return (await import("./commands/teardown.ts")).teardown();
+    case "teardown-stack": return (await import("./commands/teardown-stack.ts")).teardownStack();
     case "health": return (await import("./commands/health.ts")).health();
     case "sync:secrets": return (await import("./commands/sync-secrets.ts")).syncSecrets();
     case "sync:resources": return (await import("./commands/sync-resources.ts")).syncResources();
@@ -91,6 +92,7 @@ Commands:
   deploy                            Deploy the 30 key stacks end-to-end
   bootstrap                         1-command full bootstrap (Pulumi → Infisical → Pangolin → Komodo → Newt)
   teardown                          Reverse of bootstrap (requires --force)
+  teardown-stack                    Per-host selective teardown (--host --keep/--exclude --include-volumes --force)
   health                            Health check all 3 systems
   bootstrap-pocketid-admin          Idempotent: create the bons-iac + pangolin OIDC clients in Pocket ID
   bootstrap-pangolin-client         Idempotent: install pangolin CLI + mint a Pangolin client + render newt compose
