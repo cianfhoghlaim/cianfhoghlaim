@@ -399,3 +399,60 @@ to select between `minimax-m3` + `uccix-mistral-24b` + `gemma-4-26B-A4B`
 - **THEN** the dropdown shows 4 options (minimax-m3, uccix-mistral-24b,
   gemma-4-26B-A4B, qwen3-vl-8b) + the default value is `minimax-m3`
 
+### Requirement: Post-v1 OCR ensemble additions (dots.mocr + OlmOCR-2 + PaddleOCR-VL-1.6)
+
+The system SHALL add 3 new OCR/VLM model entries to `MODEL_REGISTRY` per the upstream-version audit (Stedding 2026-08-21):
+
+1. `dots.mocr` (`rednote-hilab/dots.mocr`) — successor to `dots.ocr-1.5`; new SOTA on OmniDocBench v1.5 (1124.7 score). Provider: HF Hub (model pulled at runtime, not in 6-file compose).
+2. `olmocr-2` (`allenai/olmocr-2`) — successor to `olmocr`; 8B multimodal with 82.3 olmOCR-bench overall score. Provider: HF Hub.
+3. `paddleocr-vl-1.6` (PaddlePaddle) — successor to `paddleocr-vl-1.5`; ships with `paddleocr>=3.0.1` plugin support. Provider: PaddleOCR Python package.
+
+Each entry SHALL retain the canonical 9-attribute shape (key, family, role, unsloth_id, mlx_id, upstream_id, backend, available, notes).
+
+#### Scenario: dots.mocr is queryable and marked available
+
+- **GIVEN** the audit added `dots.mocr` to the OCR ensemble
+- **WHEN** the operator runs `python3 -c "from meaisinfhoghlaim.models.registry import MODEL_REGISTRY; e = MODEL_REGISTRY.resolve('ocr_vision', 'primary'); print(e.key)"`
+- **THEN** the output is `"dots.mocr"`
+- **AND** `e.available is True`
+- **AND** the previous primary `dots.ocr-1.5` is marked `available: False` with `notes: 'superseded by dots.mocr — see 2026-08-21-dotsocr-to-dotsmocr-v1'`
+
+#### Scenario: OlmOCR-2 is queryable as alternative
+
+- **WHEN** the operator runs `python3 -c "print(MODEL_REGISTRY.resolve('ocr_vision', 'alternative').key)"`
+- **THEN** the output is `"olmocr-2"`
+- **AND** the previous alternative `olmocr` is marked `available: False`
+
+#### Scenario: PaddleOCR-VL-1.6 is queryable as supplementary
+
+- **WHEN** the operator runs `python3 -c "print(MODEL_REGISTRY.resolve('ocr_vision', 'supplementary').key)"`
+- **THEN** the output is `"paddleocr-vl-1.6"`
+- **AND** `e.backend == "paddleocr"`
+- **AND** `e.notes` references the `paddleocr>=3.0.1` plugin dependency
+
+### Requirement: ModelRegistryEntry has the 7 canonical families
+
+The system SHALL register model entries across these 7 families in `MODEL_REGISTRY`: `ocr_vision`, `text_llm`, `embedder`, `rerank`, `image_gen`, `voice`, `translation`. The system MUST resolve models via `MODEL_REGISTRY.filter(family=...)` or `model_for(family, role)`.
+
+#### Scenario: 20 new unsloth-catalog entries
+
+- **GIVEN** the unsloth-catalog-as-of-2026-08-15 (per Firecrawl MCP scrape of `https://unsloth.ai/docs/get-started/unsloth-model-catalog`)
+- **WHEN** `meaisinfhoghlaim/models/model_registry.py` is updated with the 20 new entries (10 text_llm including Qwen3.8-27B + DeepSeek-V4-Pro/Flash + Kimi-K2.7-Code + Muse Glimmer + MiniMax-M2.5 + Magistral-Small + Nemotron-3.5-Lightning; 4 ocr_vision including Qwen3-VL-8B/32B Instruct + GLM-4.6V-Flash + DeepSeek-OCR-2; 2 image_gen including DiffusionGemma + Qwen-Image-2512; 2 embedder including Qwen3-Embedding-4B + EmbeddingGemma-300M; 2 voice including Orpheus-TTS-3B + Sesame-CSM-1B)
+- **THEN** `MODEL_REGISTRY.filter(family="text_llm")` returns 14 entries (was 9)
+- **AND** `MODEL_REGISTRY.filter(family="ocr_vision")` returns 26 entries (was 22)
+- **AND** `MODEL_REGISTRY.filter(family="image_gen")` returns 7 entries (was 5)
+- **AND** `MODEL_REGISTRY.filter(family="embedder")` returns 5 entries (was 3)
+- **AND** `MODEL_REGISTRY.filter(family="voice")` returns 7 entries (was 5)
+- **AND** `mise run lint:registry` exits 0 with no hardcoded model strings
+
+### Requirement: ModelBackend enum has UNSLOTH
+
+The `ModelBackend` enum SHALL include `UNSLOTH = "unsloth"` as a new backend value for models served via the Unsloth Studio OpenAI/Anthropic-compatible endpoint at `:8889`.
+
+#### Scenario: New UNSLOTH backend is registered
+
+- **WHEN** `meaisinfhoghlaim/models/registry.py:ModelBackend` is updated
+- **THEN** `ModelBackend.UNSLOTH.value == "unsloth"`
+- **AND** `MODEL_REGISTRY.filter(backend="unsloth")` returns exactly the 20 new entries
+- **AND** `mise run cic:meaisin:litellm-regenerate` regenerates litellm/config.yaml with 20 new `local/unsloth/<key>` aliases
+
