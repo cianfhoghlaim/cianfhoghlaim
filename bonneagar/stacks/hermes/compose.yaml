@@ -84,11 +84,17 @@ services:
       HERMES_PORT: "9119"
       HERMES_MCP_PORT: "9120"
       HERMES_LOG_LEVEL: ${HERMES_LOG_LEVEL:-info}
-      # LLM provider — LiteLLM is the only path (M3 chokepoint)
+      # LLM provider — LiteLLM is the primary path (M3 chokepoint)
       OPENAI_BASE_URL: http://litellm:4000/v1
       # OPENAI_API_KEY is injected by Locket from LITELLM_MASTER_KEY
       # 3-layer auth — operator's Pocket ID subject (from day one)
       HERMES_OPERATOR_POCKET_ID_SUBJECT: ${HERMES_OPERATOR_POCKET_ID_SUBJECT}
+      # Unsloth Studio fallback provider (per the 2026-08-21 change).
+      # When UNSLOTH_PROVIDER=true, the entrypoint runs `unsloth start hermes`
+      # against the unsloth-serve API at http://unsloth:8889/v1.
+      # UNSLOTH_API_KEY is injected by Locket from dev-baile/unsloth/api_key.
+      UNSLOTH_PROVIDER: ${UNSLOTH_PROVIDER:-false}
+      UNSLOTH_BASE_URL: http://unsloth:8889/v1
       # Observability
       OTEL_SERVICE_NAME: hermes-agent
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf

@@ -1,20 +1,29 @@
 """
-Modal GPU Job: Irish LLM Fine-tuning (v4 — Unsloth Gemma 4 31B)
+Modal GPU Job: Irish LLM Fine-tuning (v5 — Unsloth Qwen3.8-27B)
 
-Fine-tunes Gemma 4 31B (Unsloth GGUF) on Irish curriculum data
+Fine-tunes Qwen3.8-27B (Unsloth GGUF) on Irish curriculum data
 using Unsloth for 70% VRAM reduction.
+
+Per the 2026-08-21-unsloth-v5-integration-v1 change, the v5
+fine-tune target is Qwen3.8-27B (the new Unsloth flagship, 5.1M
+downloads in 5 days post-launch). The v4 target was Gemma 4 31B;
+Qwen3.8-27B is denser and more agentic-friendly for the Irish
+fine-tune use case.
 
 Per the 2026-06-29 v4 trim, the Modal GPU server is the primary
 target for fine-tuning the largest v4 models. The M4 Max 48 GB
-unified memory can serve Gemma 4 31B at Q4_K_M (~19 GB resident
-plus 6 GB KV cache) for inference, but the full 31B is too tight
+unified memory can serve Qwen3.8-27B at Q4_K_M (~16 GB resident
+plus 6 GB KV cache) for inference, but the full 27B is too tight
 for a 3-epoch Irish fine-tune (which needs ~30 GB at QLoRA r=16).
 Modal H100 80 GB is the right home for this fine-tune.
 
+For M4 Max 48 GB fine-tune, see finetune_unsloth_local.py (the
+v6 sibling that uses QLoRA r=8 to fit on 48 GB).
+
 Usage:
     # Direct Modal execution
-    modal run meaisinfhoghlaim/training/modal_finetune/finetune_irish.py (was sruth/oideachais/modal/ pre-v7)
-    modal deploy sruth/oideachais/modal/finetune_irish.py
+    modal run meaisinfhoghlaim/training/modal_finetune/finetune_irish.py
+    modal deploy meaisinfhoghlaim/training/modal_finetune/finetune_irish.py
 
     # Dagster orchestration (preferred)
     dagster asset materialize -m oideachais.dagster_defs --select modal_irish_llm_finetune
@@ -28,12 +37,12 @@ Observability:
     - Dagster Pipes for asset materialization
     - HuggingFace Hub for model publishing (Unsloth GGUF format)
 
-Training Configuration (v4):
-    - Base model: unsloth/gemma-4-31B-it-GGUF (the v4 31B dense SOTA)
+Training Configuration (v5):
+    - Base model: unsloth/Qwen3.8-27B-GGUF (the v5 27B dense SOTA)
     - Unsloth: 70% VRAM reduction, 2x faster training
     - LoRA: r=16, alpha=32 (optimal for Irish)
     - 4-bit quantization: QLoRA for memory efficiency
-    - 6 Celtic languages (per the v4 Gemma 4 capability)
+    - 6 Celtic languages (per the v5 Qwen3.8 capability)
 """
 
 import time
@@ -44,10 +53,13 @@ import modal
 app = modal.App("irish-llm-finetune")
 
 # Container image with training dependencies + observability
+# Per the 2026-08-21 change: pin `unsloth[colab-new]==2026.8.0`
+# (the stable PyPI release) instead of the git ref. The pinned
+# version matches the canonical Unsloth Studio CLI surface.
 training_image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
-        "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git",
+        "unsloth[colab-new]==2026.8.0",
         "torch>=2.1.0",
         "transformers>=4.36.0",
         "datasets>=2.16.0",
@@ -80,7 +92,7 @@ model_volume = modal.Volume.from_name("irish-llm-checkpoints", create_if_missing
     volumes={"/checkpoints": model_volume},
 )
 def finetune_irish_llm(
-    base_model: str = "unsloth/gemma-4-31B-it-GGUF",  # v4 — was unsloth/Llama-3.2-3B-Instruct
+    base_model: str = "unsloth/Qwen3.8-27B-GGUF",  # v5 — was unsloth/gemma-4-31B-it-GGUF (v4)
     dataset_name: str = "cianfhoghlaim/sec-exam-irish",
     max_steps: int = 1000,
     learning_rate: float = 2e-4,

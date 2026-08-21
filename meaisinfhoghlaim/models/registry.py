@@ -98,6 +98,10 @@ class ModelBackend(str, Enum):
     or upstream safetensors on M4 Max 48 GB / arm1-oci).
 
     Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
+
+    Reference: openspec/changes/2026-08-21-unsloth-v5-vision-llm-hermes-openclaw-opencode-marimo-integration-v1/
+    (adds `UNSLOTH` for the 20 new catalog entries served via the
+    Unsloth Studio headless endpoint — see `bonneagar/stacks/unsloth-serve/`).
     """
 
     LITELLM = "litellm"
@@ -106,6 +110,7 @@ class ModelBackend(str, Enum):
     LLAMASWAP = "llama-swap"  # NEW in v4 — Unsloth GGUFs served via llama-swap
     DOCLING = "docling"        # NEW in v5 (BIEP v2) — IBM Docling HTTP REST API
     UNSTRACT = "unstract"      # NEW in v5 (BIEP v2) — Unstract Prompt Studio workflow
+    UNSLOTH = "unsloth"        # NEW in v6 (Unsloth v5 integration) — Unsloth Studio :8889 OpenAI/Anthropic endpoint
 
 
 class ModelCapability(str, Enum):
@@ -693,6 +698,97 @@ VISION_MODELS: dict[str, OCRModel] = {
         available=True,
         max_resolution=(1280, 1280),
         notes="4B. 6 Celtic languages. Legacy — prefer Gemma 4 E4B.",
+    ),
+
+    # ─── v6 (Unsloth v5 integration) — added 2026-08-21 ───
+    # 4 new ocr_vision entries from the Unsloth catalog (per the 2026-08-21
+    # openspec change). All served via the unsloth-serve stack at :8889
+    # (Unsloth Studio headless OpenAI/Anthropic-compatible endpoint).
+    "qwen3-vl-8b-instruct": OCRModel(
+        key="qwen3-vl-8b-instruct",
+        name="Qwen 3-VL 8B Instruct (Unsloth Studio, replacement)",
+        unsloth_id="unsloth/Qwen3-VL-8B-Instruct-GGUF",
+        mlx_id=None,
+        upstream_id="Qwen/Qwen3-VL-8B-Instruct",
+        backend=ModelBackend.UNSLOTH,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.GROUNDING,
+            ModelCapability.TABLES,
+            ModelCapability.REASONING,
+            ModelCapability.MULTILINGUAL,
+        ],
+        unsloth_features=["dynamic_3_0_gguf", "fast_inference", "imatrix"],
+        role="tier2_medium",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(1280, 1280),
+        notes="8B Instruct, Qwen3-VL arch. Served via unsloth-serve. 256K context (extends to 1M). Replaces qwen3-vl-8b via llama-swap as the v6 default.",
+    ),
+    "qwen3-vl-32b-instruct": OCRModel(
+        key="qwen3-vl-32b-instruct",
+        name="Qwen 3-VL 32B Instruct (Unsloth Studio, strong)",
+        unsloth_id="unsloth/Qwen3-VL-32B-Instruct-GGUF",
+        mlx_id=None,
+        upstream_id="Qwen/Qwen3-VL-32B-Instruct",
+        backend=ModelBackend.UNSLOTH,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.GROUNDING,
+            ModelCapability.TABLES,
+            ModelCapability.LATEX,
+            ModelCapability.REASONING,
+            ModelCapability.MULTILINGUAL,
+        ],
+        unsloth_features=["dynamic_3_0_gguf", "fast_inference", "imatrix"],
+        role="tier1_heavy",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(2048, 2048),
+        notes="32B dense Instruct, Qwen3-VL arch. Strong tier. 256K context. Unsloth Dynamic 3.0 GGUF.",
+    ),
+    "glm-4.6v-flash": OCRModel(
+        key="glm-4.6v-flash",
+        name="GLM-4.6V-Flash (Unsloth Studio, fast)",
+        unsloth_id="unsloth/GLM-4.6V-Flash-GGUF",
+        mlx_id=None,
+        upstream_id="zai-org/GLM-4.6V-Flash",
+        backend=ModelBackend.UNSLOTH,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.MULTILINGUAL,
+            ModelCapability.TABLES,
+        ],
+        unsloth_features=["fast_inference", "imatrix"],
+        role="tier3_light",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(1280, 1280),
+        notes="GLM-4.6V-Flash (zai-org, Dec 2025). Fast / low-cost VLM. Served via unsloth-serve.",
+    ),
+    "deepseek-ocr-2": OCRModel(
+        key="deepseek-ocr-2",
+        name="DeepSeek-OCR 2 (Unsloth Studio, OCR specialist)",
+        unsloth_id="unsloth/DeepSeek-OCR-2-GGUF",
+        mlx_id=None,
+        upstream_id="deepseek-ai/DeepSeek-OCR-2",
+        backend=ModelBackend.UNSLOTH,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.GROUNDING,
+            ModelCapability.DIAGRAM,
+            ModelCapability.TABLES,
+        ],
+        unsloth_features=["dynamic_3_0_gguf", "fast_inference", "imatrix"],
+        role="specialist",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(2048, 2048),
+        notes="DeepSeek-OCR 2 (deepseek-ai, 2026). Layout specialist with grounding. Served via unsloth-serve.",
     ),
 
     # ─── v5 (BIEP v2) — Unstract API + Docling HTTP API (added 2026-07-22) ───

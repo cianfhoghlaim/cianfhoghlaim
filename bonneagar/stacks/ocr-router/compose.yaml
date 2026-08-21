@@ -52,6 +52,13 @@ services:
       OCR_DOCLING_SERVE_URL: ${OCR_DOCLING_SERVE_URL:-http://docling-serve:5001/v1}
       OCR_LLAMA_SWAP_URL: ${OCR_LLAMA_SWAP_URL:-http://llama-swap:8080/v1}
       OCR_DOTS_OCR_URL: ${OCR_DOTS_OCR_URL:-http://dots-ocr:8001/v1}
+      # Unsloth Studio (per the 2026-08-21 change). The 6 unsloth VLMs
+      # (qwen3-vl-8b-instruct + qwen3-vl-32b-instruct + glm-4.6v-flash +
+      # deepseek-ocr-2 + qwen3-vl-30b-a3b + qwen3-vl-235b-a22b) route
+      # through this URL when the dispatch matrix resolves the
+      # `vlm_strong` / `vlm_fast` / `vlm_ocr` / `vlm_default` /
+      # `vlm_heavy` / `vlm_reasoning` capability classes.
+      OCR_UNSLOTH_URL: ${OCR_UNSLOTH_URL:-http://unsloth:8889/v1}
       # Per-request timeout (ms).
       OCR_ROUTER_TIMEOUT_MS: ${OCR_ROUTER_TIMEOUT_MS:-30000}
       # Observability (per Change 1 of the env-contract-and-observability-fanout

@@ -18,16 +18,42 @@
 version: "0.17"
 
 # ---------------------------------------------------------------------------
-# LLM provider — LiteLLM is the only path (M3 chokepoint)
+# LLM providers — LiteLLM is the primary (M3 chokepoint);
+# Unsloth Studio is the local fallback when M3 quota is exhausted.
+# Per the 2026-08-21-unsloth-v5-integration-v1 change.
 # ---------------------------------------------------------------------------
+# The container entrypoint branches on UNSLOTH_PROVIDER:
+#   UNSLOTH_PROVIDER=true  → `unsloth start hermes --model unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL`
+#   UNSLOTH_PROVIDER=false (default) → existing Hermes CLI with LiteLLM
+# Both paths read the same UNSLOTH_API_KEY. Single shared secret.
 provider:
   name: litellm
   base_url: http://litellm:4000/v1
   model: minimax-m3
   api_key_env: OPENAI_API_KEY  # resolves to LITELLM_MASTER_KEY via Locket
 
-# LiteLLM handles fallback internally to its 70+ model routing
-fallback_chain: []
+# Unsloth Studio fallback provider (the 2nd provider block per the
+# 2026-08-21-unsloth-v5-integration-v1 change). Triggers when the
+# M3 chokepoint returns 429 or when the operator sets UNSLOTH_PROVIDER=true.
+unsloth_provider:
+  enabled: true
+  base_url: http://unsloth:8889/v1
+  api_key_env: UNSLOTH_API_KEY
+  anthropic_base_url: http://unsloth:8889  # for Anthropic-Messages API
+  default_model: unsloth/Qwen3.8-27B-GGUF
+  models:
+    - unsloth/Qwen3.8-27B-GGUF
+    - unsloth/DeepSeek-V4-Pro-0813-GGUF
+    - unsloth/Magistral-Small-2509-GGUF
+  trigger_on: rate_limit  # or 'manual' when UNSLOTH_PROVIDER=true
+
+# Hermes's own fallback chain (in addition to the LiteLLM upstream
+# fallback chain). When the unsloth_provider is enabled and the M3
+# chokepoint returns 429, hermes routes to the unsloth-serve API.
+fallback_chain:
+  - when: rate_limit
+    target: unsloth_provider
+    timeout: 30
 
 # ---------------------------------------------------------------------------
 # 3-layer auth — Layer 2: users.allowlist

@@ -105,6 +105,61 @@
           }
         }
       }
+    },
+    "unsloth-studio": {
+      "name": "Unsloth Studio (local unsloth-serve :8889) — the 2026-08-21 fallback when the M3 token plan quota is exhausted; same UNSLOTH_API_KEY as hermes/openclaw/openchamber",
+      "api": "openai",
+      "options": {
+        "apiKey": "{env:UNSLOTH_API_KEY}",
+        "baseURL": "http://unsloth:8889/v1/",
+        "timeout": 600000
+      },
+      "models": {
+        "unsloth/Qwen3.8-27B-GGUF": {
+          "id": "unsloth/Qwen3.8-27B-GGUF",
+          "name": "Local Qwen3.8 (Unsloth Studio, coding fallback)",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          }
+        },
+        "unsloth/DeepSeek-V4-Pro-0813-GGUF": {
+          "id": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+          "name": "Local DeepSeek-V4 Pro (Unsloth Studio, reasoning)",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          }
+        },
+        "unsloth/Kimi-K2.7-Code-GGUF": {
+          "id": "unsloth/Kimi-K2.7-Code-GGUF",
+          "name": "Local Kimi-K2.7 Code (Unsloth Studio)",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 32768
+          }
+        },
+        "unsloth/Muse-Glimmer-30B-GGUF": {
+          "id": "unsloth/Muse-Glimmer-30B-GGUF",
+          "name": "Local Muse Glimmer (Unsloth Studio)",
+          "attachment": true,
+          "reasoning": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 32768
+          }
+        }
+      }
     }
   },
   "mcp": {
