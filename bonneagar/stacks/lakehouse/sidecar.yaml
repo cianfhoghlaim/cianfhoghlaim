@@ -15,7 +15,9 @@ services:
   # LOCKET - Secret Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: lakehouse-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -33,6 +35,10 @@ services:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
+      # INFISICAL_FALLBACK_FILE is optional — only mount when set.
+      # Use ./secrets.env as the source when unset (acts as a no-op since
+      # `env-fallback.env` doesn't get overwritten).
+      - ${INFISICAL_FALLBACK_FILE:-./secrets.env}:/run/secrets/locket/env-fallback.env:ro
       - lakehouse-secrets:/run/secrets/locket
     healthcheck:
       test: ["CMD", "/locket", "healthcheck"]
