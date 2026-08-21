@@ -246,6 +246,74 @@ description = "Audit web/apps/cianfhoghlaim-leaving-cert/apps/api/src/copilotkit
 depends = ["sync"]
 run = ".venv/bin/python3 scripts/lint_copilotkit_actions_stubbed.py"
 
+[tasks."lint:mcp-gateway"]
+description = "Verify phantom MCP gateway at web/apps/croilar-portal/src/routes/api/mcp.gateway.ts carries KNOWN-ISSUE + TODO(mcp-bridge) markers (shared domain)"
+run = "bash scripts/lint_mcp_gateway.sh"
+
+[tasks."lint:mcp-runtime"]
+description = "Verify every `enabled: true` MCP entry in opencode.json has a corresponding mcp:smoke:<name> task (data domain)"
+run = "bash scripts/lint_mcp_runtime.sh"
+
+# =============================================================================
+# MCP SMOKE TASKS — one per enabled MCP server
+# Per openspec/changes/2026-08-21-fix-wired-but-unloaded-mcps-v1
+# Each task calls scripts/mcp_smoke.sh <name> with a 5s timeout per the
+# lint:mcp-runtime contract.
+# =============================================================================
+
+[tasks."mcp:smoke"]
+description = "Run all mcp:smoke:* tasks in sequence (data domain)"
+depends = ["mcp:smoke:dlt-workspace-mcp", "mcp:smoke:firecrawl", "mcp:smoke:motherduck", "mcp:smoke:chrome", "mcp:smoke:cocoindex-code", "mcp:smoke:huggingface"]
+run = "echo OK"
+
+[tasks."mcp:smoke:dlt-workspace-mcp"]
+description = "Smoke test: dlt-workspace-mcp (uv/dlthub on PATH)"
+run = "bash scripts/mcp_smoke.sh dlt-workspace-mcp"
+
+[tasks."mcp:smoke:firecrawl"]
+description = "Smoke test: firecrawl MCP (bun + bunx on PATH)"
+run = "bash scripts/mcp_smoke.sh firecrawl"
+
+[tasks."mcp:smoke:motherduck"]
+description = "Smoke test: motherduck MCP (uvx on PATH)"
+run = "bash scripts/mcp_smoke.sh motherduck"
+
+[tasks."mcp:smoke:chrome"]
+description = "Smoke test: chrome-devtools-mcp (bun + Chrome on PATH)"
+run = "bash scripts/mcp_smoke.sh chrome"
+
+[tasks."mcp:smoke:cocoindex-code"]
+description = "Smoke test: ccc MCP (ccc on PATH)"
+run = "bash scripts/mcp_smoke.sh cocoindex-code"
+
+[tasks."mcp:smoke:huggingface"]
+description = "Smoke test: huggingface MCP (huggingface.co reachable)"
+run = "bash scripts/mcp_smoke.sh huggingface"
+
+[tasks."mcp:smoke:crawl4ai"]
+description = "Smoke test: crawl4ai MCP v0.9.x (port 11235 reachable)"
+run = "bash scripts/mcp_smoke.sh crawl4ai"
+
+[tasks."mcp:smoke:cognee"]
+description = "Smoke test: cognee MCP (port 8100 reachable)"
+run = "bash scripts/mcp_smoke.sh cognee"
+
+[tasks."mcp:smoke:graphiti"]
+description = "Smoke test: graphiti MCP (port 8000 reachable)"
+run = "bash scripts/mcp_smoke.sh graphiti"
+
+[tasks."mcp:smoke:design-system"]
+description = "Smoke test: design-system MCP (design-system-server.py exists)"
+run = "bash scripts/mcp_smoke.sh design-system"
+
+[tasks."mcp:smoke:langfuse"]
+description = "Smoke test: langfuse MCP (port 3000 reachable)"
+run = "bash scripts/mcp_smoke.sh langfuse"
+
+[tasks."mcp:smoke:infisical"]
+description = "Smoke test: infisical MCP (port 8081 reachable)"
+run = "bash scripts/mcp_smoke.sh infisical"
+
 
 # =============================================================================
 # CORE:SYNC NAMESPACE — the 14-layer knowledge sync architecture
@@ -451,6 +519,11 @@ description = "Teardown the unified 16-service lakehouse stack"
 alias = ["lakehouse:down"]
 depends = ["sync"]
 run = "bash scripts/lakehouse_unified_down.sh ${@:-}"
+
+[tasks."data:stack-doctor"]
+description = "Lint the unified lakehouse stack — 17 services + 14 DBs + 10 private-resources + 5 routes + 58 infisical URIs + image pinning + no hardcoded absolute paths. Per the 2026-08-24-lakehouse-stack-doctor-and-env-var-cleanup-v1 change."
+alias = ["lakehouse:stack-doctor"]
+run = "bash scripts/lakehouse-stack-doctor.sh"
 
 [tasks."data:setup"]
 description = "BIEP v3 full setup — Docker + lakehouse + BAML codegen + registry seed + lance namespace + openspec + lint:skills"

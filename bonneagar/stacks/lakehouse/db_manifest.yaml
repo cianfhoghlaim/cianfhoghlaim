@@ -1,0 +1,87 @@
+# =============================================================================
+# LAKEHOUSE - Database Manifest (single source of truth for 14 databases)
+# =============================================================================
+# ADDED 2026-08-24 (lakehouse-stack-doctor-and-env-var-cleanup-v1).
+#
+# This file is the CANONICAL list of databases that the unified lakehouse
+# stack creates. Both `init-db.sql` (the SQL that creates them) and the
+# future Python-side `destinations_cianfhoghlaim.py` reference this list.
+#
+# Adding or renaming a database:
+#   1. Update this file FIRST
+#   2. Update `init-db.sql` (must match exactly — `lakehouse-stack-doctor.sh`
+#      catches drift)
+#   3. Update the per-database GRANTS at the bottom of `init-db.sql`
+#   4. Update `secrets.env` if adding a new per-service DB user
+# =============================================================================
+
+databases:
+
+  # 6 DuckLake catalog databases (per project). These store the DuckLake
+  # write-ahead-log + catalog metadata for each BIEP jurisdiction.
+  ducklake:
+    - ducklake_cianfhoghlaim
+    - ducklake_crypteolas
+    - ducklake_aleyum       # legacy: sruth/aleyum, superseded by croilar
+    - ducklake_croilar
+    - ducklake_tuath
+    - ducklake_meaisinfhoghlaim
+
+  # 1 Dagster metadata database (per-subject pipelines).
+  dagster:
+    - dagster_local
+
+  # 2 Lakehouse-internal metadata databases (CDC checkpoints + dashboard state).
+  lakehouse_internal:
+    - olake_state    # Olake CDC checkpoints (extend-lakehouse-with-nimtable-olake-lancedb)
+    - nimtable       # Nimtable dashboard state (extend-lakehouse-with-nimtable-olake-lancedb)
+
+  # 3 Downstream consumer databases (consumed by other stacks).
+  # These share the lakehouse-postgres container rather than running their own.
+  downstream:
+    - langfuse       # langfuse stack metadata
+    - mlflow         # mlflow stack backend store
+    - litellm        # litellm stack model registry
+
+  # 1 Graph DB backend database (added 2026-08-15).
+  # Cognee uses pgvector for vector storage AND the Postgres graph extension
+  # for graph storage (USE_UNIFIED_PROVIDER=pghybrid — dropped in PR #2).
+  graph_db:
+    - cognee_cianfhoghlaim
+
+  # 1 Olake CDC source DB (added 2026-08-22).
+  # Olake CDC jobs connect to this DB to capture changes for the
+  # olake → iceberg → lance pipeline. Was the placeholder `staging_pg`.
+  olake_source:
+    - olake_source
+
+# Total: 14 databases (6 ducklake + 1 dagster + 2 lakehouse_internal +
+#                   3 downstream + 1 graph_db + 1 olake_source)
+
+# Per-service users (created in init-db.sql for security best-practice).
+users:
+  - name: cognee
+    database: cognee_cianfhoghlaim
+    description: "Cognee KG builder (added 2026-08-23 for user isolation)"
+  # Future users:
+  # - name: langfuse
+  #   database: langfuse
+  # - name: mlflow
+  #   database: mlflow
+  # - name: litellm
+  #   database: litellm
+
+# Extensions (created in init-db.sql).
+extensions:
+  - uuid-ossp      # required by Lakekeeper migrations
+  - pgcrypto       # required by Lakekeeper migrations
+  - pg_trgm        # required by Lakekeeper migrations
+  - btree_gin      # required by Lakekeeper migrations
+  - btree_gist     # required by Lakekeeper migrations
+  - vector         # required by Cognee pgvector backend
+
+# Schema evolution rule: when adding a database, update:
+#   1. This file (this manifest)
+#   2. init-db.sql (CREATE DATABASE + GRANT statements)
+#   3. The Python destinations_cianfhoghlaim.py (when it reads from this manifest)
+#   4. secrets.env (if the database has a per-service user)

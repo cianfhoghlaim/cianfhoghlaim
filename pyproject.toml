@@ -13,6 +13,7 @@ dependencies = [
     "anthropic>=0.106.0",
     "baml-py>=0.222.0",
     "beautifulsoup4>=4.12",
+    "boto3>=1.43.77",   # ADDED 2026-08-24 (lakehouse-stack-doctor-and-env-var-cleanup-v1) — used by garage_init.py
     # CocoIndex bumped to >=1.0.20 (from historical >=1.0.14) by the
     # 2026-08-17-hygiene-drift-cleanup-v1 change (P2.1). v1.0.15-v1.0.20
     # are additive: BigQuery/Snowflake/Valkey target connectors,
@@ -23,6 +24,9 @@ dependencies = [
     "dagster>=1.13",
     "dagster-dbt>=0.29",
     "dagster-dlt>=0.29",
+    "dagster-webserver>=1.13",
+    "dagster-shared>=1.13",
+    "dagster-graphql>=1.13",
     "dlt[duckdb,motherduck,filesystem]>=1.28.1",
     "duckdb>=1.4",
     "fastapi>=0.115.0,<0.140",
