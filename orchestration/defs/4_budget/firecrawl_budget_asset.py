@@ -11,8 +11,13 @@ centralized-registry contract). The `mise run lint:firecrawl-budget`
 task reads the same table to surface the violations in the dev
 terminal.
 """
-from __future__ import annotations
-
+# Deliberately NOT `from __future__ import annotations`. Dagster 1.13 detects
+# the `context` parameter from its REAL annotation object; with postponed
+# annotations it sees the string "AssetExecutionContext" and raises
+# "Cannot annotate `context` parameter with type AssetExecutionContext",
+# which aborts `dg.load_defs()` for the ENTIRE code location (not just this
+# asset) and silently drops everything to the `_defs_walker` fallback.
+# Same constraint as the layer*.py Components.
 import json
 import os
 from datetime import UTC, datetime, timedelta

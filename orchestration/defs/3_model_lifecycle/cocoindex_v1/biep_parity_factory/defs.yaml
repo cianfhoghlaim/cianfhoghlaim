@@ -1,16 +1,16 @@
 # defs/3_model_lifecycle/cocoindex_v1/biep_parity_factory/defs.yaml
 #
 # L3 CocoIndex v1 component that wires the 8 BI-parity CocoIndex Apps
-# emitted by cocoindex/biep_parity/bi_factory.py.
+# emitted by cocoindex_flows/biep_parity/bi_factory.py.
 #
 # Per the `centralized-schema-registry` capability. The 8 hand-written
-# CocoIndex Apps at `cocoindex/biep_parity/{ga,en,ni,sct,wls,
+# CocoIndex Apps at `cocoindex_flows/biep_parity/{ga,en,ni,sct,wls,
 # isle_of_man,jersey,guernsey}_education_embedding.py` are now 1-line
 # shims that re-export from the factory. This single L3 component
 # replaces the 8 per-jurisdiction components.
 #
 # The factory module:
-#   cocoindex/biep_parity/bi_factory.py
+#   cocoindex_flows/biep_parity/bi_factory.py
 # exports 8 CocoIndex Apps at module import time (one per British
 # Isles jurisdiction). The Apps are named `<jurisdiction>_education_embedding`.
 #
@@ -23,7 +23,7 @@ attributes:
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true
-  factory_module: cianfhoghlaim.cocoindex.biep_parity.bi_factory
+  factory_module: cianfhoghlaim.cocoindex_flows.biep_parity.bi_factory
   factory_pattern: true
   apps:
     # 8 CocoIndex Apps (one per BI jurisdiction):
@@ -36,10 +36,10 @@ attributes:
     #   jersey_education_embedding
     #   guernsey_education_embedding
     - app_name: biep_parity_factory
-      module: cianfhoghlaim.cocoindex.biep_parity.bi_factory
+      module: cianfhoghlaim.cocoindex_flows.biep_parity.bi_factory
       source: biep_parity
       description: |
-        The 8 CocoIndex Apps from cocoindex/biep_parity/bi_factory.py.
+        The 8 CocoIndex Apps from cocoindex_flows/biep_parity/bi_factory.py.
         Each App writes to
         `cianhoghlaim.biep.<jurisdiction>.education_chunks`. The factory
         pattern collapsed ~970 LOC into 250 LOC (-74%).
@@ -55,7 +55,7 @@ attributes:
   metadata:
     openspec_change: 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1
     spec: centralized-schema-registry
-    factory_module: cocoindex.biep_parity.bi_factory
+    factory_module: cocoindex_flows.biep_parity.bi_factory
     jurisdiction_count: 8
     original_loc: 970
     factory_loc: 170

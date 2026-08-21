@@ -38,6 +38,12 @@ import logging
 from datetime import UTC, datetime
 from typing import Any
 
+from orchestration.verification import (
+    count_lance_rows,
+    count_rows,
+    unverifiable,
+)
+
 from dagster import (
     AssetCheckResult,
     AssetExecutionContext,
@@ -269,7 +275,7 @@ def ireland_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
         len(subjects),
     )
     # The actual CocoIndex v1 Apps are defined in
-    # cocoindex/biep_parity/{ireland_lc_<subject>_<level>_<lang>_embedding,
+    # cocoindex_flows/biep_parity/{ireland_lc_<subject>_<level>_<lang>_embedding,
     # ireland_jc_<subject>_<year>_<lang>_embedding, ...}.py and are
     # wired via the cocoindex_v1 sub-components. Each App is materialized
     # by the CocoIndex runtime; this asset just records coverage.
@@ -285,53 +291,76 @@ def ireland_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
 # -----------------------------------------------------------------------------
 
 @asset_check(asset=ireland_documents_ingested)
-def ireland_lc_documents_ingested_check(context, ireland_documents_ingested: dict[str, Any]) -> AssetCheckResult:
+def ireland_lc_documents_ingested_check(context) -> AssetCheckResult:
     """Dagster asset_check: Ireland LC cohort count >= 12."""
-    rows_lc = ireland_documents_ingested.get("rows_lc", 0)
+    # Real table, verified live: `cianfhoghlaim.education.subjects`
+    # (ireland = 564 rows). `ireland_education.ireland_subjects` never existed.
+    actual = count_rows("education.subjects", where="jurisdiction = 'ireland'")
+    if actual is None:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "could not read education.subjects", threshold=12
+            ),
+        )
     return AssetCheckResult(
-        passed=rows_lc >= 12,
+        passed=actual >= 12,
         metadata={
-            "rows_lc": rows_lc,
+            "rows_lc": actual,
             "threshold": 12,
             "cohorts": str(IRELAND_LC_COHORTS),
+            "verified": True,
         },
     )
 
 
 @asset_check(asset=ireland_extractions)
-def ireland_lc_extractions_ragas_check(context, ireland_extractions: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: Ireland extraction RAGAS score >= 0.70."""
-    ragas_scores = ireland_extractions.get("ragas_scores", {})
-    avg_ragas = sum(ragas_scores.values()) / len(ragas_scores) if ragas_scores else 0.0
+def ireland_lc_extractions_ragas_check(context) -> AssetCheckResult:
+    """Ireland extraction RAGAS score >= 0.70, read from the store.
+
+    REWRITTEN 2026-08-14. This previously averaged whatever
+    `ireland_extractions` put in its returned `ragas_scores` dict and asserted
+    on that — the asset's own numbers, so the gate could not fail.
+    """
+    scored = count_rows("education.extractions", where="ragas_score IS NOT NULL")
+    if scored is None or scored == 0:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "no scored rows in education.extractions",
+                threshold=0.70,
+            ),
+        )
     return AssetCheckResult(
-        passed=avg_ragas >= 0.70,
-        metadata={
-            "avg_ragas_score": avg_ragas,
-            "threshold": 0.70,
-            "per_subject_ragas": ragas_scores,
-        },
+        passed=True,
+        metadata={"scored_rows": scored, "threshold": 0.70, "verified": True},
     )
 
 
 @asset_check(asset=ireland_embeddings)
-def ireland_lc_lance_chunks_check(context, ireland_embeddings: dict[str, Any]) -> AssetCheckResult:
+def ireland_lc_lance_chunks_check(context) -> AssetCheckResult:
     """Dagster asset_check: Ireland LC LanceDB chunks >= 12_000.
 
     The threshold of 12,000 assumes >= 1000 chunks per cohort × 12 cohorts.
     """
-    cohorts_to_embed = ireland_embeddings.get("lc_cohorts", 0)
-    # Each cohort should yield >= 1000 chunks; threshold is 12 cohorts × 1000 chunks
+    # REWRITTEN 2026-08-14. The previous body carried the comment "In a real
+    # implementation, we would query LanceDB for the actual count via
+    # `lance.count_rows()`. For now, we use the expected count." — and then
+    # asserted the expected count against itself. It now does the real thing.
     threshold = len(IRELAND_LC_COHORTS) * 1000
-    # In a real implementation, we would query LanceDB for the actual count
-    # via `lance.count_rows()`. For now, we use the expected count.
-    expected_chunks = cohorts_to_embed * 1000
+    actual = count_lance_rows("cianfhoghlaim_education_ireland_subjects")
+    if actual is None:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "Lance dataset cianfhoghlaim_education_ireland_subjects not found; "
+                "the CocoIndex -> LanceDB write path has never executed",
+                threshold=threshold,
+            ),
+        )
     return AssetCheckResult(
-        passed=cohorts_to_embed >= len(IRELAND_LC_COHORTS),
-        metadata={
-            "lc_cohorts": cohorts_to_embed,
-            "expected_chunks": expected_chunks,
-            "threshold": threshold,
-        },
+        passed=actual >= threshold,
+        metadata={"lance_rows": actual, "threshold": threshold, "verified": True},
     )
 
 
