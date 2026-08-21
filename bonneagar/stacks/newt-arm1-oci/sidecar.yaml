@@ -11,6 +11,8 @@
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: newt-arm1-oci-sidecar-locket
     user: "65532:65532"
     restart: unless-stopped

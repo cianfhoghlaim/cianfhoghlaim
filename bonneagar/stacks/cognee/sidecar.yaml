@@ -2,7 +2,9 @@
 # Injects COGNEE_POSTGRES_PASSWORD, LITELLM_API_KEY, LANCEDB_API_KEY.
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     restart: unless-stopped
     container_name: cianfhoghlaim-cognee-locket
     user: "65532"
@@ -11,20 +13,37 @@ services:
     security_opt:
       - no-new-privileges:true
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
-      interval: 10s
-      timeout: 3s
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
       retries: 3
       start_period: 15s
     volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
       - type: tmpfs
         target: /run/secrets/locket
         tmpfs:
           mode: 0700
-    env_file:
-      - ./secrets.env
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL:-https://infisical.cianfhoghlaim.ie}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV:-dev}
+      INFISICAL_DEFAULT_PATH: /cognee
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
+    secrets:
+      - infisical_secret
     networks:
       - lakehouse
+
+secrets:
+  infisical_secret:
+    file: /Users/cianmacandeisigh/.locket/infisical_secret
 
 networks:
   lakehouse:

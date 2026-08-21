@@ -30,14 +30,16 @@ services:
   # + boto3 baked in, eliminating the 30s pip-install on first boot.
   # ---------------------------------------------------------------------------
   mlflow:
-    # Pinned 2026-07-06 (was `ghcr.io/mlflow/mlflow:v2.22.4` -- bumped to v3.12.0
-    # per the upgrade-4-stacks-with-infisical openspec change). The
-    # v3.5.0+ security middleware requires --allowed-hosts and
-    # --cors-allowed-origins when binding to 0.0.0.0.
+    # Bumped 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+    # ghcr.io/mlflow/mlflow:v3.12.0 → v3.15.1 (latest stable; the
+    # 3.15.0 release added MCP Registry + proxy-less presigned artifact
+    # upload + multi-modal attachments in judges). The 3.5.0+ security
+    # middleware is enforced via env vars below (canonical form, not
+    # CLI flags).
     build:
       context: .
       dockerfile: Dockerfile.mlflow
-    image: ghcr.io/mlflow/mlflow:v3.12.0
+    image: ghcr.io/mlflow/mlflow:v3.15.1
     container_name: mlflow
     restart: unless-stopped
     ports:
@@ -59,6 +61,9 @@ services:
       # v3.5.0+ security middleware (mandatory when binding 0.0.0.0)
       MLFLOW_ALLOWED_HOSTS: "localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie"
       MLFLOW_CORS_ALLOWED_ORIGINS: "https://cianfhoghlaim.cianfhoghlaim.ie,http://localhost:3335"
+      # mlflow 3.13+ requires this for legacy mlruns/ SQLite fallback support
+      # (per the 2026-08-21-mlflow-3.12-to-3.15.1-v1 openspec change)
+      MLFLOW_ALLOW_FILE_STORE: "true"
       # OpenTelemetry → logfire collector (fans out to BOTH logfire cloud
       # AND langfuse). mlflow 3.x exposes native OTel via `mlflow.tracing`.
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
@@ -70,6 +75,28 @@ services:
       LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      # ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+      # MLflow v3.5.0+ security middleware — canonical env var form
+      # (supersedes the --allowed-hosts / --cors-allowed-origins CLI flags).
+      # When bound to 0.0.0.0, the server locks to these hostnames + origins.
+      MLFLOW_SERVER_ALLOWED_HOSTS: ${MLFLOW_SERVER_ALLOWED_HOSTS:-localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie}
+      MLFLOW_SERVER_CORS_ALLOWED_ORIGINS: ${MLFLOW_SERVER_CORS_ALLOWED_ORIGINS:-https://cianfhoghlaim.cianfhoghlaim.ie,http://localhost:3335}
+      MLFLOW_SERVER_X_FRAME_OPTIONS: ${MLFLOW_SERVER_X_FRAME_OPTIONS:-SAMEORIGIN}
+      # MLFLOW_SERVER_DISABLE_SECURITY_MIDDLEWARE must NEVER be true in prod
+      # (we default to false explicitly so operators can audit).
+      MLFLOW_SERVER_DISABLE_SECURITY_MIDDLEWARE: ${MLFLOW_SERVER_DISABLE_SECURITY_MIDDLEWARE:-false}
+      # Native OTLP /v1/traces endpoint — MLflow 3.15.1 exposes this for fan-in
+      # from OTel-instrumented services (Java/Go/Rust/etc). Also used as the
+      # MLFLOW tracing backend for the mlflow.tracing module.
+      MLFLOW_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${MLFLOW_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-http://otel-collector:4317/v1/traces}
+      # Tracing tunables (per MLflow 3.15+ docs)
+      MLFLOW_TRACE_SAMPLING_RATIO: ${MLFLOW_TRACE_SAMPLING_RATIO:-1.0}
+      MLFLOW_ENABLE_ASYNC_TRACE_LOGGING: ${MLFLOW_ENABLE_ASYNC_TRACE_LOGGING:-true}
+      MLFLOW_ASYNC_TRACE_LOGGING_MAX_WORKERS: ${MLFLOW_ASYNC_TRACE_LOGGING_MAX_WORKERS:-10}
+      MLFLOW_ASYNC_TRACE_LOGGING_MAX_QUEUE_SIZE: ${MLFLOW_ASYNC_TRACE_LOGGING_MAX_QUEUE_SIZE:-1000}
+      MLFLOW_ASYNC_TRACE_LOGGING_RETRY_TIMEOUT: ${MLFLOW_ASYNC_TRACE_LOGGING_RETRY_TIMEOUT:-500}
+      # Combine OTel SDK + MLflow spans in the same app
+      MLFLOW_USE_DEFAULT_TRACER_PROVIDER: ${MLFLOW_USE_DEFAULT_TRACER_PROVIDER:-false}
     command:
       - mlflow
       - server
@@ -81,10 +108,6 @@ services:
       - "0.0.0.0"
       - --port
       - "5000"
-      - --allowed-hosts
-      - "localhost,localhost:*,127.0.0.1,127.0.0.1:*,mlflow.cianfhoghlaim.ie"
-      - --cors-allowed-origins
-      - "https://cianfhoghlaim.cianfhoghlaim.ie,http://localhost:3335"
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
     # deploy-mlflow-bunchloch.toml -- see the file header.
     depends_on: []

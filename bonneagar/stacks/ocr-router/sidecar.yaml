@@ -10,6 +10,8 @@
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: ocr-router-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -33,6 +35,7 @@ services:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
       test: ["CMD", "/usr/local/bin/locket", "healthcheck"]

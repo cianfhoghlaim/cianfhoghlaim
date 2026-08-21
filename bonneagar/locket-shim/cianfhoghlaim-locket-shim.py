@@ -231,6 +231,29 @@ def process_once(args: argparse.Namespace) -> dict[str, str]:
     with open(args.client_secret_file) as f:
         client_secret = f.read().strip()
 
+    # Load the fallback file (the 15-min hydrated .env mirror) once.
+    # Per the env-var fallback pattern (2026-08-21 openspec change), this
+    # file is the OCI Infisical source-of-truth with bounded drift (~15 min).
+    fallback: dict[str, str] = {}
+    fallback_path = Path(getattr(args, "fallback_file", ""))
+    if fallback_path.is_file():
+        try:
+            for line in fallback_path.read_text().splitlines():
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                k, _, v = line.partition("=")
+                fallback[k.strip()] = v.strip().strip('"').strip("'")
+            print(
+                f"  [shim]   loaded {len(fallback)} fallback(s) from {fallback_path}",
+                file=sys.stderr,
+            )
+        except Exception as e:
+            print(
+                f"  [shim]   warn: could not read fallback file {fallback_path}: {e}",
+                file=sys.stderr,
+            )
+
     secrets: dict[str, str] = {}
     for key, opts in refs:
         # Unwrapped form uses opts['path'] (may be empty -> default).
@@ -253,6 +276,12 @@ def process_once(args: argparse.Namespace) -> dict[str, str]:
             secrets[key] = value
             print(
                 f"  [shim]   resolved {secret_path}/{key} = {value[:20]}...",
+                file=sys.stderr,
+            )
+        elif key in fallback:
+            secrets[key] = fallback[key]
+            print(
+                f"  [shim]   fallback {secret_path}/{key} = {fallback[key][:20]}...",
                 file=sys.stderr,
             )
         else:
@@ -314,6 +343,18 @@ def parse_env_args() -> argparse.Namespace:
         "--debounce",
         type=float,
         default=float(os.environ.get("LOCKET_DEBOUNCE", "2")),
+    )
+    p.add_argument(
+        "--fallback-file",
+        default=os.environ.get(
+            "LOCKET_FALLBACK_FILE", "/run/secrets/locket/env-fallback.env"
+        ),
+        help=(
+            "Path to a read-only .env-style file with pre-resolved KEY=VALUE pairs. "
+            "When the OCI Infisical is unreachable, each unresolved KEY is looked "
+            "up here. Per the env-var fallback pattern added by the 2026-08-21 "
+            "openspec change; the file is the 15-min hydrated mirror of the OCI vault."
+        ),
     )
     return p.parse_args()
 
