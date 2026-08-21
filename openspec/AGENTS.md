@@ -70,7 +70,7 @@ mise run openspec:validate <id>   # validate one change with --strict (MUST pass
 mise run openspec:archive <id>    # archive a deployed change (merges deltas into canonical specs)
 mise run openspec:view            # interactive dashboard of all specs + changes (1.4+)
 mise run openspec:list-specs       # list all 97 capability specs
-mise run lint:skills               # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:skills               # validate .agents/skills/ metadata (166 skills pass)
 mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth
 mise run sync:all                  # run all 14 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)
 ```
