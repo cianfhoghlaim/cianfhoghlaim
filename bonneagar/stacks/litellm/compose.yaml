@@ -19,10 +19,13 @@ services:
   # ---------------------------------------------------------------------------
   litellm:
     # Pinned 2026-07-06 (was `ghcr.io/berriai/litellm:main-stable` — bumped
-    # to the `:database` variant of v1.91.0 per the upgrade-4-stacks-with-
-    # infisical change. The database variant bundles Prisma binaries
-    # required for the lakehouse-postgres (db=litellm) backend).
-    image: ghcr.io/berriai/litellm-database:v1.91.0
+    # to the `:database` variant per the upgrade-4-stacks-with-litellm
+    # series. Upgraded v1.91.0 → v1.97.0 per
+    # openspec/changes/2026-08-21-litellm-1.91-to-1.97-and-mcp-oauth-2.0-v1/
+    # (adds MCP Gateway GA + OAuth 2.0 v2 + tool-result guardrails).
+    # The database variant bundles Prisma binaries required for the
+    # lakehouse-postgres (db=litellm) backend.
+    image: ghcr.io/berriai/litellm-database:v1.97.0
     container_name: litellm
     restart: unless-stopped
     # Command: load the model registry from /app/config/config.yaml

@@ -67,10 +67,12 @@ mise run web                      # web/apps + web/packages + web/hono-api + Tur
 mise run lint:skills              # validate .agents/skills/ metadata (166 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
 mise run openspec:validate-all    # CI gate for every openspec change + spec (132 items pass)
-mise run devops:validate-stacks   # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD
+mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
 mise run data:dagster:up          # launch the Dagster UI on :3335
 mise run data:biep:milestone -- 1 # run BIEP v3 milestone m1
+mise run data:all:up               # bring up the FULL data plane (lakehouse + logfire + langfuse + mlflow + dagster)
 mise run ml:registry:audit         # verify all 22 ocr_vision models are live on HF Hub
+mise run ml:litellm:regenerate     # regenerate config.yaml from MODEL_REGISTRY (now auto-runs in CI per 2026-08-21)
 mise run web:dev tuatha-ui        # per-app dev server via Turbo filter
 ```
 
@@ -86,7 +88,7 @@ mise run lint:drift-docs           # validate every AGENTS.md number claim again
 mise run openspec:validate         # run `openspec validate --strict` against the pending change under review
 ```
 
-### Priority compose stacks (4 of 93)
+### Priority compose stacks (4 of 94)
 
 | Stack | Port | Domain |
 |:--|--:|:--|
