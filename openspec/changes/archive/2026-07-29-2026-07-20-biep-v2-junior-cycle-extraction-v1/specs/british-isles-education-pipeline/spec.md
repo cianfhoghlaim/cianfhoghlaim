@@ -13,7 +13,7 @@ NCCA JC subjects:
 - **4 BAML extraction functions** at
   `baml_src/british_isles/ireland/education/junior_cycle/`
   (ExtractJCCurriculum, ExtractCBADescriptor, ExtractJCShortCourse, ExtractJCExamPaper)
-- **1 CocoIndex v1 App** at `cocoindex/subjects/junior_cycle_embedding.py`
+- **1 CocoIndex v1 App** at `cocoindex_flows/subjects/junior_cycle_embedding.py`
   producing 36 LanceDB tables `cianfhoghlaim.jc.<subject>.<year>_<lang>`
   (18 subjects × 2 langs)
 - **72+ Dagster assets** at

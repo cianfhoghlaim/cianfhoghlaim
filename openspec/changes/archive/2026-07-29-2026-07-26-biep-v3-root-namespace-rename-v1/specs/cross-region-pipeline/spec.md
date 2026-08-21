@@ -15,7 +15,7 @@ cianfhoghlaim.<domain>.<jurisdiction>.<stage>[.<board>].<subject>[.<variant>]
 #### Scenario: All namespaces use `cianfhoghlaim` root
 
 - **WHEN** `grep -rn "oideachais\." baml_src/british_isles/ dlt/british_isles/
-   cocoindex/subjects/ cocoindex/british_isles/ dlt/common/ motherduck/
+   cocoindex_flows/subjects/ cocoindex_flows/british_isles/ dlt/common/ motherduck/
    orchestration/ web/apps/cianfhoghlaim-web/ web/hono-api/ openspec/specs/
    openspec/changes/ .agents/ AGENTS.md README.md mise.toml docs/`
   runs after the migration

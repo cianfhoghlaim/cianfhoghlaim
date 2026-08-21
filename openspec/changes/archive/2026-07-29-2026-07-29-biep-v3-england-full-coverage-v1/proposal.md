@@ -73,7 +73,7 @@ DLT resource, writes to the canonical
 - 81 per-board per-subject Dagster assets at
   `orchestration/defs/2_materials/england_education/{aqa,ocr,edexcel}/`
 - 3 board-specific CocoIndex Apps at
-  `cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`
+  `cocoindex_flows/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`
   (preserved; will be folded into the generic cocoindex App in a
   follow-up change)
 

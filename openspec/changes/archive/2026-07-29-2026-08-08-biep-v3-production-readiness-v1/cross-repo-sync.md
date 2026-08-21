@@ -13,7 +13,7 @@
    - real httpx calls for Docling + Unstract + qwen3-vl + gemma4
 2. Update meaisinfhoghlaim/evaluation/ragas_biiep_ensemble.py
    - biiep_v2 → biiep_v3 rename
-3. Create cocoindex/subjects/education_subject_embedding.py
+3. Create cocoindex_flows/subjects/education_subject_embedding.py
 4. Create orchestration/automation/{subject_backfill,biiep_daily_automation}.py
 ```
 

@@ -25,7 +25,7 @@ reference but new BIEP coverage MUST be authored against this v3 spec.
 - `orchestration/defs/2_materials/ireland_education/` — Ireland Dagster assets
 - `orchestration/defs/2_materials/england_education/` — England Dagster assets
 - `meaisinfhoghlaim/ocr/ensemble/` — 4-path OCR ensemble
-- `cocoindex/biep_parity/` — CocoIndex v1 Apps
+- `cocoindex_flows/biep_parity/` — CocoIndex v1 Apps
 - `notebooks/{18-23}_*_pipeline_dashboard.py` — marimo dashboards
 - `motherduck/dives/` — MotherDuck Dives
 - `bonneagar/stacks/lakehouse/` — Garage + Lakekeeper + Lance-namespace stack

@@ -125,10 +125,10 @@ cocoindex/
 ```
 
 Cross-jurisdiction apps get the `_cross/` suffix:
-- `cocoindex/european_nations_law_embedding.py` → `cocoindex/european_nations_cross/law_embedding.py`
-- `cocoindex/european_nations_medicine_embedding.py` → `cocoindex/european_nations_cross/medicine_embedding.py`
-- `cocoindex/commonwealth_education_embedding.py` → `cocoindex/commonwealth_cross/education_embedding.py`
-- `cocoindex/american_nations_california_education_embedding.py` → `cocoindex/american_nations/united_states/california_education_embedding.py`
+- `cocoindex/european_nations_law_embedding.py` → `cocoindex_flows/european_nations_cross/law_embedding.py`
+- `cocoindex/european_nations_medicine_embedding.py` → `cocoindex_flows/european_nations_cross/medicine_embedding.py`
+- `cocoindex/commonwealth_education_embedding.py` → `cocoindex_flows/commonwealth_cross/education_embedding.py`
+- `cocoindex/american_nations_california_education_embedding.py` → `cocoindex_flows/american_nations/united_states/california_education_embedding.py`
 
 ### Renames — `notebooks/`
 
@@ -194,6 +194,6 @@ No cross-repo impact. `leabharlann/` (separate repo) does not reference these di
 ## Out of scope
 
 - Renaming the `baml_src/`, `dlt/`, `orchestration/`, `cocoindex/`, `notebooks/` directories themselves.
-- Renaming cross-jurisdiction app names (e.g., `cocoindex/commonwealth_education_embedding.py` → `cocoindex/commonwealth_cross/education_embedding.py` IS in scope; renaming the underlying LanceDB table `oideachais.lc.<subject>` is OUT of scope and belongs in `oideachais-pipeline/spec.md` separately).
+- Renaming cross-jurisdiction app names (e.g., `cocoindex/commonwealth_education_embedding.py` → `cocoindex_flows/commonwealth_cross/education_embedding.py` IS in scope; renaming the underlying LanceDB table `oideachais.lc.<subject>` is OUT of scope and belongs in `oideachais-pipeline/spec.md` separately).
 - BAML class + function name renames (covered by `2026-07-14-rename-jurisdictions-to-full-names-v1`).
 - Renaming jurisdiction-specific `_shared/` files (`province.baml`, `jurisdiction.baml`) — keep their semantics, only move them.

@@ -73,7 +73,7 @@ plan (the user explicitly chose "Bundle all 4 fixes into Change 3").
   `secrets.env`:
   - `CIANFHOGHLAIM_EMBED_MODEL` (default `BAAI/bge-m3`)
   - `CIANFHOGHLAIM_EMBED_DIM` (default `1024`)
-- Only `cocoindex/_shared/_lifespan.py` reads these today; this
+- Only `cocoindex_flows/_shared/_lifespan.py` reads these today; this
   change lets any operator swap embedders via env.
 
 ### Sub-area E — Skill refresh

@@ -10,25 +10,25 @@
 
 ## Stage 1 — Create the parameterised flow
 
-- [ ] Create `cocoindex/subjects/lc_subject_embedding.py` (~250 LOC)
+- [ ] Create `cocoindex_flows/subjects/lc_subject_embedding.py` (~250 LOC)
   - Single `coco.App(coco.AppConfig(name="lc_subject_embedding"))` at module scope
   - `@coco.function(lifespan=shared_lifespan)` decorator
   - `lancedb.mount_table_target(LANCE_DB, "oideachais.lc.<subject>.<level>_<lang>")`
   - Drives all 6 BIEP v1 LC subjects (mathematics, chemistry, geography,
     english, gaeilge, computer_science)
-- [ ] Create `cocoindex/subjects/lc_subject_config.yaml` with the 6 subject rows
+- [ ] Create `cocoindex_flows/subjects/lc_subject_config.yaml` with the 6 subject rows
 - [ ] Verify the file passes `mise run cocoindex:v1-conformance`
 
 ## Stage 2 — Delete the 7 deprecated per-subject Apps
 
-- [ ] DELETE `cocoindex/subjects/chemistry_embedding.py`
-- [ ] DELETE `cocoindex/subjects/applied_mathematics_embedding.py`
-- [ ] DELETE `cocoindex/subjects/computer_science_embedding.py`
-- [ ] DELETE `cocoindex/subjects/english_embedding.py`
-- [ ] DELETE `cocoindex/subjects/geography_embedding.py`
-- [ ] DELETE `cocoindex/subjects/history_embedding.py`
-- [ ] DELETE `cocoindex/subjects/mathematics_embedding.py`
-- [ ] KEEP `cocoindex/subjects/cross_subject_competency_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/chemistry_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/applied_mathematics_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/computer_science_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/english_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/geography_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/history_embedding.py`
+- [ ] DELETE `cocoindex_flows/subjects/mathematics_embedding.py`
+- [ ] KEEP `cocoindex_flows/subjects/cross_subject_competency_embedding.py`
 
 ## Stage 3 — Update Dagster defs
 

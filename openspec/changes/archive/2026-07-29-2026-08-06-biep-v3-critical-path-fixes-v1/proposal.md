@@ -19,7 +19,7 @@ silent failures during the post-BIEP-v3 audit. These block the BIEP v3 stack
 from going to production:
 
 1. `notebooks/_shared/db.py:26` `LAKEHOUSE_URI_DEFAULT = "md:oideachais"` (24+ call-sites)
-2. `cocoindex/_shared/_lifespan.py:107` `EMBED_MODEL = "bge-large-en-v1.5"` (every docstring says `bge-m3`)
+2. `cocoindex_flows/_shared/_lifespan.py:107` `EMBED_MODEL = "bge-large-en-v1.5"` (every docstring says `bge-m3`)
 3. 4 BIEP v3 MotherDuck Flights exist on disk but NOT registered in `motherduck/flights/config.yaml`
 4. `motherduck/flights/lc_pdf_sync_flight.py:122` uses `md:oideachais`
 5. 6 missing jurisdiction loaders in `dlt/british_isles/_cross/registry_loader.py`
@@ -44,7 +44,7 @@ This change fixes all 10. Lives in the `cianfhoghlaim` + `bonnegar` repos.
 
 ### 2. Default embedder typo fix
 
-`cocoindex/_shared/_lifespan.py:107` — `EMBED_MODEL = "bge-large-en-v1.5"` → `"bge-m3"` (the multilingual 1024-d embedder that every docstring claims). Rename env var `OIDEACHAIS_EMBED_MODEL` → `CIANFHOGHLAIM_EMBED_MODEL`.
+`cocoindex_flows/_shared/_lifespan.py:107` — `EMBED_MODEL = "bge-large-en-v1.5"` → `"bge-m3"` (the multilingual 1024-d embedder that every docstring claims). Rename env var `OIDEACHAIS_EMBED_MODEL` → `CIANFHOGHLAIM_EMBED_MODEL`.
 
 ### 3. 4 BIEP v3 flights registered in config.yaml
 

@@ -12,7 +12,7 @@ SHALL verify that each LC subject that has BAML extraction in
 `baml_src/education/lc_extraction/` also has a DLT source in
 `dlt/british_isles/ireland/education/`, a Dagster asset in
 `orchestration/defs/1_ingestion/curriculum/lc6/`, and a CocoIndex
-embedding in `cocoindex/subjects/<subject>_embedding.py`.
+embedding in `cocoindex_flows/subjects/<subject>_embedding.py`.
 
 #### Scenario: Mathematics has parallel pipelines in every layer
 
@@ -22,4 +22,4 @@ embedding in `cocoindex/subjects/<subject>_embedding.py`.
 - **AND** `dlt/british_isles/ireland/education/` SHALL exist
 - **AND** `orchestration/defs/1_ingestion/curriculum/lc6/mathematics.yaml`
   SHALL exist
-- **AND** `cocoindex/subjects/mathematics_embedding.py` SHALL exist
+- **AND** `cocoindex_flows/subjects/mathematics_embedding.py` SHALL exist

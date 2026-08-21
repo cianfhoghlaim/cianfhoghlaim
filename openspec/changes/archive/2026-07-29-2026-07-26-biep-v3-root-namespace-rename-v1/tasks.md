@@ -26,7 +26,7 @@
 
 - [ ] Run `find ... -exec sed -i '' -e 's|oideachais\.|cianfhoghlaim.|g' ... {} \;`
   across `baml_src/british_isles/`, `dlt/british_isles/`, `dlt/common/`,
-  `cocoindex/subjects/`, `cocoindex/british_isles/`, `motherduck/`,
+  `cocoindex_flows/subjects/`, `cocoindex_flows/british_isles/`, `motherduck/`,
   `orchestration/`, `web/apps/cianfhoghlaim-web/`, `web/hono-api/`,
   `openspec/specs/`, `openspec/changes/`, `.agents/`, `notebooks/*.py`,
   `notebooks/_shared/`, `AGENTS.md`, `README.md`, `mise.toml`, `docs/`
@@ -48,7 +48,7 @@
 ## Stage 4 — Validation
 
 - [ ] `grep -rn "oideachais" baml_src/british_isles/ dlt/british_isles/
-   cocoindex/subjects/ cocoindex/british_isles/ dlt/common/ motherduck/
+   cocoindex_flows/subjects/ cocoindex_flows/british_isles/ dlt/common/ motherduck/
    orchestration/ web/apps/cianfhoghlaim-web/ web/hono-api/ openspec/specs/
    openspec/changes/ .agents/ AGENTS.md README.md mise.toml docs/`
   returns ZERO non-`_legacy`/non-`commonwealth`/non-`api_sources`/non-`archive` matches

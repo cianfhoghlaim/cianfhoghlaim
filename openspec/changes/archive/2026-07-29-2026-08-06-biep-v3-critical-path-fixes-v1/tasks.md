@@ -15,7 +15,7 @@
 
 ## Stage 2 — Default embedder typo fix
 
-- [ ] Edit `cocoindex/_shared/_lifespan.py:107` — `EMBED_MODEL = "bge-large-en-v1.5"` → `"bge-m3"`
+- [ ] Edit `cocoindex_flows/_shared/_lifespan.py:107` — `EMBED_MODEL = "bge-large-en-v1.5"` → `"bge-m3"`
 - [ ] Rename env var `OIDEACHAIS_EMBED_MODEL` → `CIANFHOGHLAIM_EMBED_MODEL`
 - [ ] Update `observability/env_config.LANCEDB_URL`
 

@@ -2,7 +2,7 @@
 
 ## Why
 
-The 8 CocoIndex v1 Apps at `cocoindex/subjects/<subject>_embedding.py`
+The 8 CocoIndex v1 Apps at `cocoindex_flows/subjects/<subject>_embedding.py`
 (1,581 LOC) are 90% identical scaffolding per the R1–R4 v1 conformance
 contract. Each re-declares the same `coco.App` + `lancedb.mount_table_target(LANCE_DB, ...)`
 + `BAAI/bge-m3` embedder pattern with only the subject name changing.
@@ -24,27 +24,27 @@ Collapsing the 7 near-clones into 1 parameterised `lc_subject_embedding.py`
 
 ### 1. Delete 7 per-subject CocoIndex Apps
 
-- DELETE `cocoindex/subjects/chemistry_embedding.py`
-- DELETE `cocoindex/subjects/applied_mathematics_embedding.py`
-- DELETE `cocoindex/subjects/computer_science_embedding.py`
-- DELETE `cocoindex/subjects/english_embedding.py`
-- DELETE `cocoindex/subjects/geography_embedding.py`
-- DELETE `cocoindex/subjects/history_embedding.py`
-- DELETE `cocoindex/subjects/mathematics_embedding.py`
+- DELETE `cocoindex_flows/subjects/chemistry_embedding.py`
+- DELETE `cocoindex_flows/subjects/applied_mathematics_embedding.py`
+- DELETE `cocoindex_flows/subjects/computer_science_embedding.py`
+- DELETE `cocoindex_flows/subjects/english_embedding.py`
+- DELETE `cocoindex_flows/subjects/geography_embedding.py`
+- DELETE `cocoindex_flows/subjects/history_embedding.py`
+- DELETE `cocoindex_flows/subjects/mathematics_embedding.py`
 
 (All 7 use the same R1–R4 pattern + the same `bge-m3` embedder + the same
 LanceDB table name shape.)
 
 ### 2. Create the parameterised flow
 
-- NEW `cocoindex/subjects/lc_subject_embedding.py` (~250 LOC) — declares
+- NEW `cocoindex_flows/subjects/lc_subject_embedding.py` (~250 LOC) — declares
   a single `coco.App(coco.AppConfig(name="lc_subject_embedding"))` with
   a `@coco.function` decorator that takes `subject: str` and produces
   the `oideachais.lc.<subject>.<level>_<lang>` LanceDB table.
 
 ### 3. Create the YAML config
 
-- NEW `cocoindex/subjects/lc_subject_config.yaml` (~30 LOC) — 6 subject
+- NEW `cocoindex_flows/subjects/lc_subject_config.yaml` (~30 LOC) — 6 subject
   rows driving the Dagster asset materialisations:
 
   ```yaml
@@ -65,7 +65,7 @@ LanceDB table name shape.)
 
 ### 4. Keep `cross_subject_competency_embedding.py`
 
-- KEEP `cocoindex/subjects/cross_subject_competency_embedding.py`
+- KEEP `cocoindex_flows/subjects/cross_subject_competency_embedding.py`
   (genuinely different semantics — cross-subject competency vector search
   is not a per-subject pattern)
 

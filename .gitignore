@@ -365,3 +365,6 @@ id_*
 .scratch/
 EMAIL-DRAFT-awootank.md.tmp_dagster_home_nhzffdhn/
 leabharlann/saontacht_oideachais
+# BAML sweep backup directories (created by the 478 stub + 375 catch sweepers)
+.baml_catch_backup/
+.baml_stubs_backup/

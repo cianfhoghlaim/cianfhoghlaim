@@ -33,9 +33,9 @@
 
 ## Stage 3 — CocoIndex v1 App
 
-- [ ] Create `cocoindex/subjects/junior_cycle_embedding.py` mirroring the existing `mathematics_embedding.py` pattern
+- [ ] Create `cocoindex_flows/subjects/junior_cycle_embedding.py` mirroring the existing `mathematics_embedding.py` pattern
 - [ ] Verify R1–R4 conformance:
-  - **R1** — `from cocoindex._shared._lifespan import shared_lifespan`
+  - **R1** — `from cocoindex_flows._shared._lifespan import shared_lifespan`
   - **R2** — Imports `LANCE_DB` + `EMBEDDER` from `_lifespan`
   - **R3** — `app = coco.App(coco.AppConfig(name="junior_cycle_embedding"))` at module scope
   - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`

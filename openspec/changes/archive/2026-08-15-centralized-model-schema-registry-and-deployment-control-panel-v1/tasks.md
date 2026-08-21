@@ -340,29 +340,29 @@
 
 ## Phase 7 — CocoIndex factory dedup (~10 h)
 
-- [ ] 7.1 Create `cocoindex/european_nations/_factory.py` with
+- [ ] 7.1 Create `cocoindex_flows/european_nations/_factory.py` with
       `NATION_CONFIG` (40 rows: `alb, aut, bel, bih, bgr, hrv, cyp,
       cze, dnk, est, fin, fra, geo, deu, grc, hun, isl, ita, xkx,
       lva, lie, ltu, lux, mlt, mda, mne, nld, mkd, nor, pol, prt,
       rou, srb, svk, svn, esp, swe, che, tur, ukr`) +
       `build_nation_app(nation) -> coco.App` function.
 - [ ] 7.2 Delete the 40
-      `cocoindex/european_nations/<nation>/education_embedding.py`
+      `cocoindex_flows/european_nations/<nation>/education_embedding.py`
       files (or make them 1-line shims that re-export the factory
       output).
-- [ ] 7.3 Create `cocoindex/biep_parity/ireland_lc_factory.py` with
+- [ ] 7.3 Create `cocoindex_flows/biep_parity/ireland_lc_factory.py` with
       `LC_SUBJECT_CONFIG` (6 rows × 2 langs: `(mathematics, en)`,
       `(mathematics, ga)`, `(chemistry, en)`, ..., `(computer_science,
       en)`, `(computer_science, ga)`) +
       `build_lc_app(subject, language) -> coco.App`.
 - [ ] 7.4 Delete the 6
-      `cocoindex/biep_parity/ireland_lc_<subject>_embedding.py` files.
-- [ ] 7.5 Create `cocoindex/biep_parity/bi_factory.py` with
+      `cocoindex_flows/biep_parity/ireland_lc_<subject>_embedding.py` files.
+- [ ] 7.5 Create `cocoindex_flows/biep_parity/bi_factory.py` with
       `JURISDICTION_CONFIG` (8 rows: `ga, en, ni, sct, wls,
       isle_of_man, jersey, guernsey`) +
       `build_bi_app(jurisdiction) -> coco.App`.
 - [ ] 7.6 Delete the 8
-      `cocoindex/biep_parity/{ga,en,ni,sct,wls,isle_of_man,jersey,guernsey}_education_embedding.py`
+      `cocoindex_flows/biep_parity/{ga,en,ni,sct,wls,isle_of_man,jersey,guernsey}_education_embedding.py`
       files.
 - [ ] 7.7 Update the 3 L3 Component `defs.yaml` files
       (`orchestration/defs/3_model_lifecycle/cocoindex_v1/european_nations/defs.yaml`,

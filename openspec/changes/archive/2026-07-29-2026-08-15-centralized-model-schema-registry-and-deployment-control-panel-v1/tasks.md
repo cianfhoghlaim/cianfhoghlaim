@@ -329,8 +329,8 @@
   the `@baml/cli` JS tool as a Node-side action).
 - `web/apps/.../control-panel/` (Phase 5: TanStack Start /
   Hono web UI).
-- `cocoindex/european_nations/_factory.py` +
-  `cocoindex/biep_parity/{ireland_lc,bi}_factory.py` (Phase 7).
+- `cocoindex_flows/european_nations/_factory.py` +
+  `cocoindex_flows/biep_parity/{ireland_lc,bi}_factory.py` (Phase 7).
 - `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py`
   (Phase 8: Dagster JurisdictionAssetsBase).
 

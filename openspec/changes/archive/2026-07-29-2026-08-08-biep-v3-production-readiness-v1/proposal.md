@@ -63,7 +63,7 @@ Retire the dangling 6-hour `ScheduleDefinition` at `biiep_ocr_ensemble.py:126-13
 
 ### 6. CocoIndex consumes voted DuckLake output
 
-`cocoindex/subjects/education_subject_embedding.py` (new, ~80 LOC)
+`cocoindex_flows/subjects/education_subject_embedding.py` (new, ~80 LOC)
 — a registry-driven app that reads typed/voted output from DuckLake
 tables and exports to consistent LanceDB tables.
 

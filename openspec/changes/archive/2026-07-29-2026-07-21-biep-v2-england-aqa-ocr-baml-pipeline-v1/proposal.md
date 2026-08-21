@@ -31,7 +31,7 @@ Science, History, Geography) × 2 qualification levels (GCSE, A-Level):
 - **27 per-subject DLT sources** (9 subjects × 3 boards) following the
   `ncca_<subject>.py` pattern
 - **3 CocoIndex v1 Apps** (one per awarding body) at
-  `cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`
+  `cocoindex_flows/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`
 - **81 Dagster L2 assets** at
   `orchestration/defs/2_materials/england_education/{aqa,ocr,edexcel}/`
   (27 × 3 layers: ingest → BAML extract → embed)
@@ -102,10 +102,10 @@ Each source MUST:
 ### 3. New CocoIndex v1 Apps
 
 3 CocoIndex v1 Apps at
-`cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
+`cocoindex_flows/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
 each conforming to R1–R4:
 
-- **R1** — `from cocoindex._shared._lifespan import shared_lifespan`
+- **R1** — `from cocoindex_flows._shared._lifespan import shared_lifespan`
 - **R2** — Imports `LANCE_DB` + `EMBEDDER` from `_lifespan`
 - **R3** — `app = coco.App(coco.AppConfig(name=...))` at module scope
 - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`

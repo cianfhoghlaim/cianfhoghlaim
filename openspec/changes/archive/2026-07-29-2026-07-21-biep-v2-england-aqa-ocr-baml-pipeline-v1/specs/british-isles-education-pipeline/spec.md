@@ -17,7 +17,7 @@ Physics, Computer Science, History, Geography) × 2 qualification levels
   (3 boards × 9 subjects), tagged with `country_code="england"`,
   `jurisdiction="england"`, `exam_board ∈ {aqa,ocr,edexcel}`,
   `qualification_level ∈ {gcse,a_level}`
-- **3 CocoIndex v1 Apps** at `cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
+- **3 CocoIndex v1 Apps** at `cocoindex_flows/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
   producing 27 LanceDB tables `cianfhoghlaim.england.<board>.<subject>.<level>`
 - **81+ Dagster assets** at
   `orchestration/defs/2_materials/england_education/{aqa,ocr,edexcel}/`

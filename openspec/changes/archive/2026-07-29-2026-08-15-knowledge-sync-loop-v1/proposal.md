@@ -105,11 +105,11 @@ The Week 4 `drift-audit` found 6 source files in `cocoindex/` + 1 in
 The new `sync:paths` task includes a one-time bulk sed:
 
 - `tests_pkg_temp/_oideachais/test_canuint_alignment.py` (1 ref) — file in the deprecated `tests_pkg_temp/` dir; mark for deletion in a follow-up
-- `cocoindex/knowledge_graph/multihop_search.py` (1 ref) — sed `sruth/cianfhoghlaim/cocoindex_flows` → `cocoindex/codebase_indexing`
-- `cocoindex/_shared/reranker.py` (1 ref) — same sed
-- `cocoindex/_shared/repo_type_detector.py` (1 ref) — same sed
-- `cocoindex/infrastructure/arch_doc_cache.py` (1 ref) — same sed
-- `cocoindex/infrastructure/cocoindex_v1_conformance.py` (1 ref) — same sed
+- `cocoindex_flows/knowledge_graph/multihop_search.py` (1 ref) — sed `sruth/cianfhoghlaim/cocoindex_flows` → `cocoindex/codebase_indexing`
+- `cocoindex_flows/_shared/reranker.py` (1 ref) — same sed
+- `cocoindex_flows/_shared/repo_type_detector.py` (1 ref) — same sed
+- `cocoindex_flows/infrastructure/arch_doc_cache.py` (1 ref) — same sed
+- `cocoindex_flows/infrastructure/cocoindex_v1_conformance.py` (1 ref) — same sed
 
 The `sync:paths` task runs the sed + verifies via `grep -c "sruth/" $file`
 that the count drops to 0.

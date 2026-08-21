@@ -65,9 +65,9 @@ mise run biep:v3:m0
 - [x] 1.3 Replace stub `ireland_embeddings` with real CocoIndex v1 wiring in `orchestration/defs/2_materials/ireland_education/generic_ireland_assets.py` — counts the 12 LC cohorts from the registry
 - [x] 1.4 Add per-subject backfill jobs (`ireland_lc_<subject>_<language>_backfill_job`) — 12 jobs auto-generated via `_make_ireland_lc_backfill_job()` at module load
 - [x] 1.5 Add daily automation `AutomationCondition.cron("0 2 * * *")` on `ireland_documents_ingested` in `orchestration/automation/biiep_daily_automation.py` (`make_ireland_lc_daily_automation()`)
-- [x] 1.6 Add 6 per-subject CocoIndex v1 Apps (`ireland_lc_<subject>_<level>_<lang>_embedding`) in `cocoindex/biep_parity/` (mathematics, chemistry, geography, english, gaeilge, computer_science)
-- [x] 1.7 Add `ga_education_embedding.py` CocoIndex app (currently missing) in `cocoindex/biep_parity/ga_education_embedding.py` (new)
-- [x] 1.8 Add `ireland_education_embedding.py` CocoIndex app (currently missing) in `cocoindex/biep_parity/ireland_education_embedding.py` (new)
+- [x] 1.6 Add 6 per-subject CocoIndex v1 Apps (`ireland_lc_<subject>_<level>_<lang>_embedding`) in `cocoindex_flows/biep_parity/` (mathematics, chemistry, geography, english, gaeilge, computer_science)
+- [x] 1.7 Add `ga_education_embedding.py` CocoIndex app (currently missing) in `cocoindex_flows/biep_parity/ga_education_embedding.py` (new)
+- [x] 1.8 Add `ireland_education_embedding.py` CocoIndex app (currently missing) in `cocoindex_flows/biep_parity/ireland_education_embedding.py` (new)
 - [x] 1.9 Materialise marimo notebook `notebooks/19_ireland_pipeline_dashboard.py` with per-cohort matrix (already materialised per the 2026-08-03 change; ibis-first via `notebooks/_shared/db.py:connect_md()`)
 - [x] 1.10 Add MotherDuck Dive `ireland_lc_syllabus_topics` in `motherduck/dives/ireland_lc_syllabus_topics.py` (new) — reads the BIEP v3 namespace `cianfhoghlaim.education.ireland.leaving_cycle.<subject>.<level>_<lang>.voted_canonical`
 - [x] 1.11 Add MotherDuck Flight `ireland_lc_daily_sync_flight` (cron 02:00 UTC) in `motherduck/flights/ireland_lc_daily_sync_flight.py` (new) — runs `mise run biep:v3:m1` + replicates to LanceDB + writes status to `cianfhoghlaim.education.ireland._audit.daily_sync_status`
@@ -98,9 +98,9 @@ All 3 asset checks pass; dashboard renders 12-row matrix; ibis-first contract ho
 - [x] 2.2 Replace stub `junior_cycle_cbas/_factory.py` PDF-text stub in `dlt_sources/british_isles/ireland/education/junior_cycle_cbas/_factory.py` — now uses the shared `extract_pdf_text()` helper
 - [x] 2.3 Replace stub `junior_cycle.py` BAML call (`b.ExtractJCSpec` legacy) with the v3 mapping (`b.ExtractJCSubjectSpec` + `b.ExtractJCCurriculum` + `b.ExtractCBADescriptor` + `b.ExtractJCShortCourse` + `b.ExtractJCExamPaper`) in `dlt_sources/british_isles/ireland/education/junior_cycle.py` — added the `v3_function_name_map` dict
 - [x] 2.4 Add `ExtractJCCurriculum`, `ExtractJCSubjectSpec`, `ExtractCBADescriptor`, `ExtractJCShortCourse`, `ExtractJCExamPaper` integration into the generic Ireland pipeline — wired via the generic `ireland_extractions` asset
-- [x] 2.5 Add 18 per-subject JC CocoIndex apps (`ireland_jc_<subject>_<year>_<lang>_embedding`) in `cocoindex/biep_parity/ireland_jc_apps.py` — parameterised factory generates 36 apps (18 subjects × 2 langs)
-- [x] 2.6 Add `cba_<subject>_<lang>_embedding` apps for 36 CBAs in `cocoindex/biep_parity/ireland_jc_apps.py` — parameterised factory generates 36 CBA apps
-- [x] 2.7 Add `short_course_<code>_embedding` apps for 16 short courses in `cocoindex/biep_parity/ireland_jc_apps.py` — parameterised factory generates 16 short-course apps
+- [x] 2.5 Add 18 per-subject JC CocoIndex apps (`ireland_jc_<subject>_<year>_<lang>_embedding`) in `cocoindex_flows/biep_parity/ireland_jc_apps.py` — parameterised factory generates 36 apps (18 subjects × 2 langs)
+- [x] 2.6 Add `cba_<subject>_<lang>_embedding` apps for 36 CBAs in `cocoindex_flows/biep_parity/ireland_jc_apps.py` — parameterised factory generates 36 CBA apps
+- [x] 2.7 Add `short_course_<code>_embedding` apps for 16 short courses in `cocoindex_flows/biep_parity/ireland_jc_apps.py` — parameterised factory generates 16 short-course apps
 - [x] 2.8 Add 18 per-subject JC backfill jobs (`ireland_jc_<subject>_<lang>_backfill_job`) in `orchestration/defs/2_materials/ireland_education/ireland_jc_assets.py` — 36 subject backfill jobs + 16 short-course + 36 CBA = 88 jobs
 - [x] 2.9 Add `ireland_jc_documents_ingested_check` asset check (cohort count >= 88)
 - [x] 2.10 Add `ireland_jc_extractions_ragas_check` asset check (score >= 0.65)
@@ -127,7 +127,7 @@ All 3 asset checks pass; dashboard renders 100-row matrix; ibis-first contract h
 - [x] 3.1 Replace stub `england_documents_ingested` with real `england_jurisdiction_pipeline.run()` call in `orchestration/defs/2_materials/england_education/generic_england_assets.py` (replaces the broken tuple unpacking)
 - [x] 3.2 Replace stub `england_extractions` with real `ExtractUKQualSpec` calls per cohort — for each cohort in the registry, invoke the registry's baml_function via the 4-path OCR ensemble
 - [x] 3.3 Replace stub `england_embeddings` with real CocoIndex v1 calls — drives the 6 per-board CocoIndex v1 Apps (AQA + OCR + Edexcel × A-Level + GCSE = 6 apps)
-- [x] 3.4 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 49 A-Level subjects = 147 apps) in `cocoindex/biep_parity/england_a_level_apps.py` (parameterised factory)
+- [x] 3.4 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 49 A-Level subjects = 147 apps) in `cocoindex_flows/biep_parity/england_a_level_apps.py` (parameterised factory)
 - [x] 3.5 Add per-subject backfill jobs (`england_a_level_<board>_<subject>_backfill_job`) — 147 jobs auto-generated in `orchestration/defs/2_materials/england_education/generic_england_assets.py`
 - [x] 3.6 Wire `ExtractAQAQualSpec`/`ExtractOCRQualSpec`/`ExtractEdexcelQualSpec` BAML functions to use `BIEPV3Extract` client in `baml_src/british_isles/england/education/curriculum_syllabus.baml:82-104`
 - [x] 3.7 Wire `england_aqa_a_level_jcq_monitor` ChangeDetection.io sensor — covered by the existing `orchestration/sensors/jcq_registry_sensor.py` (per the 2026-08-07 hardening change)
@@ -155,7 +155,7 @@ All 3 asset checks pass; dashboard renders 147-row matrix; ibis-first contract h
 ### Code tasks
 
 - [x] 4.1 Mirror M3.1–M3.7 for GCSE qualification level in `orchestration/defs/2_materials/england_education/generic_england_assets.py` — the 3 generic England assets already cover both A-Level + GCSE
-- [x] 4.2 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 43 GCSE subjects = 129 apps) in `cocoindex/biep_parity/england_gcse_apps.py` (parameterised factory)
+- [x] 4.2 Add 3 per-board CocoIndex apps (AQA + OCR + Edexcel × 43 GCSE subjects = 129 apps) in `cocoindex_flows/biep_parity/england_gcse_apps.py` (parameterised factory)
 - [x] 4.3 Wire `england_aqa_gcse_jcq_monitor` ChangeDetection.io sensor — covered by the existing `orchestration/sensors/jcq_registry_sensor.py` (per the 2026-08-07 hardening change; the JCQ sensor covers all 3 boards × both qualification levels)
 - [x] 4.4 Extend `notebooks/20_england_pipeline_dashboard.py` to include GCSE (276 rows total — already materialised per the 2026-08-03 change; the dashboard's 276-cohort matrix at line 26 covers both A-Level + GCSE)
 - [x] 4.5 Add `england_gcse_documents_ingested_check` asset check (cohort count >= 129)
